@@ -18,7 +18,6 @@ import {
   useGridApiContext,
   useGridSelector,
   GridCellEditStopReasons,
-  GridCellModes,
 } from '@mui/x-data-grid';
 import {
   NotRendered,
@@ -314,10 +313,6 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
       if (rootProps.editMode === 'row') {
         return;
       }
-      // Skip if handleChange's Enter path already stopped the cell (avoids duplicate publish on blur).
-      if (apiRef.current.getCellMode(id, field) !== GridCellModes.Edit) {
-        return;
-      }
       const params = apiRef.current.getCellParams(id, field);
       apiRef.current.publishEvent('cellEditStop', {
         ...params,
@@ -337,16 +332,23 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
 
   const handleChange = React.useCallback(
     async (event: React.SyntheticEvent, newValue: ValueOptions[]) => {
-      // Stop Enter propagation synchronously so the cell-level handler doesn't race the async commit.
-      let exitOnEnter = false;
       if (event.type === 'keydown') {
         const keyboardEvent = event.nativeEvent as KeyboardEvent;
         if (keyboardEvent.key === 'Enter') {
-          event.stopPropagation();
-          exitOnEnter = !keyboardEvent.ctrlKey && !keyboardEvent.metaKey;
+          if (keyboardEvent.ctrlKey || keyboardEvent.metaKey) {
+            // Ctrl/Cmd + Enter: stop propagation to prevent cell navigation
+            event.stopPropagation();
+          } else {
+            // Bare Enter: exit edit mode, ignore this selection change
+            const params = apiRef.current.getCellParams(id, field);
+            apiRef.current.publishEvent('cellEditStop', {
+              ...params,
+              reason: GridCellEditStopReasons.enterKeyDown,
+            });
+            return;
+          }
         }
       }
-
       const newValues = newValue.map((option) => getOptionValue(option));
 
       if (onValueChange) {
@@ -354,14 +356,6 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
       }
 
       await apiRef.current.setEditCellValue({ id, field, value: newValues }, event);
-
-      if (exitOnEnter) {
-        const params = apiRef.current.getCellParams(id, field);
-        apiRef.current.publishEvent('cellEditStop', {
-          ...params,
-          reason: GridCellEditStopReasons.enterKeyDown,
-        });
-      }
     },
     [apiRef, field, getOptionValue, id, onValueChange],
   );
