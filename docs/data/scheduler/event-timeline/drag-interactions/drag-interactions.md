@@ -46,8 +46,8 @@ Set the `areEventsResizable` property to `"start"` or `"end"` to enable resizing
 
 :::
 
-:::success
-For now, the editing form is not customizable, but you'll be able to apply the same logic there in the future.
+:::info
+Currently the editing form is not customizable, but in the future you'll be able to apply the same logic there.
 :::
 
 ## Only disable on some events
