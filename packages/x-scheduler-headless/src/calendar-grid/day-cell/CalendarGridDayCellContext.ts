@@ -7,9 +7,9 @@ export interface CalendarGridDayCellContext {
    */
   index: number;
   /**
-   * Whether this cell currently has keyboard focus.
+   * Whether this cell currently owns focus within the grid.
    * When `true`, interactive children (e.g. events) should use `tabIndex={0}`
-   * so they are reachable via Tab. When `false`, they should use `tabIndex={-1}`.
+   * so they are reachable via Tab; when `false`, they should use `tabIndex={-1}`.
    */
   hasFocus: boolean;
 }

@@ -20,7 +20,7 @@ export default function CustomLocaleTextTimeline() {
         localeText={{
           timelineResourceTitleHeader: 'Team member',
         }}
-        defaultView="months"
+        defaultPreset="monthAndYear"
       />
     </div>
   );

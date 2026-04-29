@@ -1,2 +1,2 @@
-export * from './eventTimelinePremiumViewSelectors';
+export * from './eventTimelinePremiumPresetSelectors';
 export * from './eventTimelinePremiumOccurrencePlaceholderSelectors';

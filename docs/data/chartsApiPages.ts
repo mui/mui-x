@@ -122,12 +122,25 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsRadialDataProvider',
   },
   {
+    pathname: '/x/api/charts/charts-radial-data-provider-premium',
+    title: 'ChartsRadialDataProviderPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/charts-radial-grid',
     title: 'ChartsRadialGrid',
   },
   {
+    pathname: '/x/api/charts/charts-radius-axis',
+    title: 'ChartsRadiusAxis',
+  },
+  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
+  },
+  {
+    pathname: '/x/api/charts/charts-rotation-axis',
+    title: 'ChartsRotationAxis',
   },
   {
     pathname: '/x/api/charts/charts-surface',

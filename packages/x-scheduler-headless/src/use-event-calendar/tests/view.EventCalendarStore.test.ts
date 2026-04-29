@@ -51,7 +51,7 @@ describe('View - EventCalendarStore', () => {
         adapter,
       );
 
-      expect(() => store.setView('week', {} as any)).to.throw(/not compatible/i);
+      expect(() => store.setView('week', {} as any)).to.throw(/is not part of the `views` prop/i);
     });
 
     it('should NOT mutate store when onViewChange cancels the change', () => {
@@ -66,6 +66,14 @@ describe('View - EventCalendarStore', () => {
 
       store.setView('day', {} as any);
       expect(store.state.view).to.equal('week');
+    });
+
+    it('should warn in dev when controlled without an onViewChange handler', () => {
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, view: 'week' }, adapter);
+
+      expect(() => store.setView('day', {} as any)).toWarnDev(
+        'MUI X Scheduler: EventCalendar is controlled (received a `view` prop) but `onViewChange` is not provided',
+      );
     });
   });
 
@@ -141,6 +149,18 @@ describe('View - EventCalendarStore', () => {
       store.switchToDay(adapter.date('2025-07-01', 'default'), {} as any);
       expect(store.state.view).to.equal('week');
       expect(store.state.visibleDate).toEqualDateTime('2025-06-15');
+    });
+  });
+
+  describe('Init validation', () => {
+    it('should throw at init when the initial view is not included in the views array', () => {
+      expect(
+        () =>
+          new EventCalendarStore(
+            { ...DEFAULT_PARAMS, defaultView: 'week', views: ['day', 'agenda'] },
+            adapter,
+          ),
+      ).to.throw(/is not part of the `views` prop/i);
     });
   });
 

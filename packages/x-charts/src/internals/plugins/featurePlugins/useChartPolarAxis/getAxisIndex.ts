@@ -1,4 +1,6 @@
 import { isOrdinalScale } from '../../../scaleGuards';
+import { getAsNumber } from '../../../getAsNumber';
+import { findClosestIndex } from '../../../findClosestIndex';
 import { type PolarAxisDefaultized } from '../../../../models/axis';
 import { clampAngleRad } from '../../../clampAngle';
 
@@ -10,17 +12,21 @@ export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: num
   const { scale, data: axisData, reverse } = axisConfig;
 
   if (!isOrdinalScale(scale)) {
-    throw new Error(
-      'MUI X Charts: getAxisValue is not implemented for polar continuous axes. ' +
-        'This function only supports ordinal (band/point) scales.',
-    );
+    if (axisData === undefined) {
+      return -1;
+    }
+
+    const angle = scale.range()[0] + clampAngleRad(pointerValue - scale.range()[0]);
+    const valueAsNumber = getAsNumber(scale.invert(angle));
+
+    return findClosestIndex(axisData, valueAsNumber);
   }
 
   if (!axisData) {
     return -1;
   }
 
-  const angleGap = clampAngleRad(pointerValue - Math.min(...scale.range()));
+  const angleGap = clampAngleRad(pointerValue - scale.range()[0]);
   const dataIndex =
     scale.bandwidth() === 0
       ? Math.floor((angleGap + scale.step() / 2) / scale.step()) % axisData.length
