@@ -1,7 +1,5 @@
 import type { SeriesLegendItemParams } from '../ChartsLegend';
-import type { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
 import type { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
-import type { ShowMarkParams } from '../models/seriesType/line';
 import type { SeriesProcessorResult } from './plugins/corePlugins/useChartSeriesConfig/types/seriesProcessor.types';
 import { getLabel } from './getLabel';
 
@@ -14,14 +12,6 @@ type SeriesTypeWithLegendFields = {
     ? T
     : never;
 }[ChartSeriesType];
-
-function getMarkShape(series: {
-  showMark?: boolean | ((params: ShowMarkParams) => boolean);
-  shape?: ChartsLabelMarkProps['markShape'];
-  [key: string]: unknown;
-}): SeriesLegendItemParams['markShape'] {
-  return series.showMark ? (series.shape ?? 'circle') : undefined;
-}
 
 /** One legend item per series. */
 export function getSeriesLegendItems<T extends SeriesTypeWithLegendFields>(
@@ -38,12 +28,13 @@ export function getSeriesLegendItems<T extends SeriesTypeWithLegendFields>(
       return acc;
     }
 
+    const s = series[seriesId] as any;
     acc.push({
       type,
-      markType: series[seriesId].labelMarkType ?? defaultMarkType,
-      markShape: getMarkShape(series[seriesId]),
+      markType: s.labelMarkType ?? defaultMarkType,
+      markShape: s.showMark ? (s.shape ?? 'circle') : undefined,
       seriesId,
-      color: series[seriesId].color,
+      color: s.color,
       label: formattedLabel,
     });
     return acc;
