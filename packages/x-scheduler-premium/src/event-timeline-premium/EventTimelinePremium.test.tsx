@@ -174,7 +174,7 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition).to.be.lessThanOrEqual(hourBoundaries.end);
     });
 
-    it('should render events correctly in the day preset', () => {
+    it('should render events correctly in the dayAndMonth preset', () => {
       const totalWidth = 6720; // 56 days * 120px
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
       renderTimeline({ preset: 'dayAndMonth' });
@@ -220,14 +220,21 @@ describe('<EventTimelinePremium />', () => {
 
       renderTimeline({ events: extendedEvents, preset: 'monthAndYear' });
 
-      const totalWidth = 180 * 36; // 36 months
+      // monthAndYear ticks per day (6px), so the total width depends on the actual
+      // calendar days in the visible range — read it from the grid CSS variables.
+      const grid = screen.getByRole('grid');
+      const totalWidth =
+        parseFloat(grid.style.getPropertyValue('--unit-width')) *
+        parseFloat(grid.style.getPropertyValue('--unit-count'));
+      const monthWidth = totalWidth / 36;
+
       const event1Element = screen.getByLabelText(event1.title);
       expect(event1Element).not.to.equal(null);
       const xPositioning = event1Element.style.getPropertyValue('--x-position');
 
       const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
 
-      expect(eventPosition).to.be.lessThanOrEqual(180); // first month
+      expect(eventPosition).to.be.lessThanOrEqual(monthWidth); // first month
 
       const nextMonthEventElement = screen.getByLabelText('Next month');
       expect(nextMonthEventElement).not.to.equal(null);
@@ -235,8 +242,8 @@ describe('<EventTimelinePremium />', () => {
 
       const eventPosition2 = (totalWidth * parseFloat(xPositioning2)) / 100;
 
-      expect(eventPosition2).to.be.greaterThanOrEqual(180); // second month
-      expect(eventPosition2).to.be.lessThanOrEqual(360); // second month
+      expect(eventPosition2).to.be.greaterThanOrEqual(monthWidth); // second month
+      expect(eventPosition2).to.be.lessThanOrEqual(monthWidth * 2); // second month
     });
 
     it('should render events correctly in the year preset', () => {

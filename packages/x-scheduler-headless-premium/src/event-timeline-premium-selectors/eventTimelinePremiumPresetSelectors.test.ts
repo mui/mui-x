@@ -97,11 +97,11 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
       const config = eventTimelinePremiumPresetSelectors.config(state);
 
-      // 36 months starting July 2025 → June 2028
+      // 36 months starting July 2025 → June 2028.
+      // 184 (Jul-Dec 2025) + 365 + 365 + 182 (Jan-Jun 2028, leap) = 1096 days.
       expect(config.start).toEqualDateTime('2025-07-01T00:00:00Z');
       expect(config.end).toEqualDateTime('2028-06-30T23:59:59.999Z');
-      // unitCount is computed from differenceInDays(end, start) + 1
-      expect(config.unitCount).to.equal(adapter.differenceInDays(config.end, config.start) + 1);
+      expect(config.unitCount).to.equal(1096);
     });
 
     it('should compute a variable unitCount for monthAndYear based on the days of each month in range', () => {
