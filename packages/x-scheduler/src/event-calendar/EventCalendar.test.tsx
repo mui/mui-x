@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@mui/internal-test-utils';
+import { screen, waitFor, within } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   createSchedulerRenderer,
@@ -123,14 +123,19 @@ describe('EventCalendar', () => {
         .resource(childResource)
         .build();
 
-      const { user } = render(<EventCalendar events={[childEvent]} resources={[parentResource]} />);
+      const { user, container } = render(
+        <EventCalendar events={[childEvent]} resources={[parentResource]} />,
+      );
+      // Previous tests may have left their rendered DOM in `<body>`; scope
+      // queries to this render's container so we only see this test's tree.
+      const view = within(container);
 
-      const tree = await screen.findByRole('tree');
+      const tree = await view.findByRole('tree');
       expect(tree).not.to.equal(null);
-      const treeItems = screen.getAllByRole('treeitem');
+      const treeItems = view.getAllByRole('treeitem');
       expect(treeItems.length).to.equal(2);
 
-      const runningTreeItem = screen.getByRole('treeitem', { name: 'Running' });
+      const runningTreeItem = view.getByRole('treeitem', { name: 'Running' });
       const runningCheckbox = runningTreeItem.querySelector(
         'input[type="checkbox"]',
       ) as HTMLInputElement;
@@ -140,7 +145,7 @@ describe('EventCalendar', () => {
       await waitFor(() => {
         expect(runningCheckbox.checked).to.equal(false);
       });
-      expect(screen.queryByRole('button', { name: /Morning Run/i })).to.equal(null);
+      expect(view.queryByRole('button', { name: /Morning Run/i })).to.equal(null);
     },
   );
 
