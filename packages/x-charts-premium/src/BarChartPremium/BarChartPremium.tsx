@@ -11,9 +11,10 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
+import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { BarPlot, FocusedBar, type BarSeries } from '@mui/x-charts/BarChart';
+import { FocusedBar, type BarSeries } from '@mui/x-charts/BarChart';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -24,6 +25,8 @@ import { useChartsContainerProProps } from '@mui/x-charts-pro/internals';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
+import { BarPlotPremium, type BarPlotPremiumRenderer } from './BarPlotPremium';
+import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import {
   type BarItemIdentifier,
@@ -43,7 +46,7 @@ export interface BarChartPremiumSlotProps extends BarChartProSlotProps {}
 
 export interface BarChartPremiumProps extends Omit<
   BarChartProProps,
-  'series' | 'onItemClick' | 'slots' | 'slotProps'
+  'series' | 'onItemClick' | 'slots' | 'slotProps' | 'renderer'
 > {
   /**
    * Overridable component slots.
@@ -67,6 +70,18 @@ export interface BarChartPremiumProps extends Omit<
    * An array of [[BarSeries]] or [[RangeBarSeries]] objects.
    */
   series: ReadonlyArray<BarSeries | RangeBarSeries>;
+  /**
+   * The type of renderer to use for the bar plot.
+   * - `svg-single`: Renders every bar in a `<rect />` element.
+   * - `svg-batch`: Batch renders bars in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   * - `webgl`: Renders bars using WebGL for better performance with very large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/bars/#performance
+   *
+   * Range bar series always render as SVG regardless of this setting.
+   *
+   * @default 'svg-single'
+   */
+  renderer?: BarPlotPremiumRenderer;
 }
 
 /**
@@ -90,7 +105,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   const {
     chartsWrapperProps,
     chartsContainerProps,
-    barPlotProps,
+    barPlotPremiumProps,
     rangeBarPlotProps,
     gridProps,
     clipPathProps,
@@ -116,6 +131,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
+  const renderer = barPlotPremiumProps.renderer;
 
   return (
     <ChartsDataProviderPremium<'bar' | 'rangeBar', BarChartPremiumPluginSignatures>
@@ -124,22 +140,29 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps}>
-          <ChartsGrid {...gridProps} />
-          <g {...clipPathGroupProps}>
-            <BarPlot {...barPlotProps} />
-            <RangeBarPlot {...rangeBarPlotProps} />
-            <ChartsOverlay {...overlayProps} />
-            <ChartsAxisHighlight {...axisHighlightProps} />
-            <FocusedBar />
-            <FocusedRangeBar />
-          </g>
-          <ChartsAxis {...chartsAxisProps} />
-          <ChartsZoomSlider />
-          <ChartsBrushOverlay />
-          <ChartsClipPath {...clipPathProps} />
-          {children}
-        </ChartsSurface>
+        <ChartsLayerContainer>
+          {renderer === 'webgl' && (
+            <ChartsWebGLLayer>
+              <BarPlotPremium {...barPlotPremiumProps} />
+            </ChartsWebGLLayer>
+          )}
+          <ChartsSvgLayer {...chartsSurfaceProps}>
+            <ChartsGrid {...gridProps} />
+            <g {...clipPathGroupProps}>
+              {renderer !== 'webgl' && <BarPlotPremium {...barPlotPremiumProps} />}
+              <RangeBarPlot {...rangeBarPlotProps} />
+              <ChartsOverlay {...overlayProps} />
+              <ChartsAxisHighlight {...axisHighlightProps} />
+              <FocusedBar />
+              <FocusedRangeBar />
+            </g>
+            <ChartsAxis {...chartsAxisProps} />
+            <ChartsZoomSlider />
+            <ChartsBrushOverlay />
+            <ChartsClipPath {...clipPathProps} />
+            {children}
+          </ChartsSvgLayer>
+        </ChartsLayerContainer>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartsDataProviderPremium>
