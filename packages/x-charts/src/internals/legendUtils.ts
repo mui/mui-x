@@ -15,8 +15,9 @@ type SeriesTypeWithLegendFields = {
 }[ChartSeriesType];
 
 function getMarkShape(series: {
-  showMark?: boolean | ((...args: any[]) => boolean);
+  showMark?: boolean | ((...args: unknown[]) => boolean);
   shape?: ChartsLabelMarkProps['markShape'];
+  [key: string]: unknown;
 }): SeriesLegendItemParams['markShape'] {
   return series.showMark ? (series.shape ?? 'circle') : undefined;
 }
