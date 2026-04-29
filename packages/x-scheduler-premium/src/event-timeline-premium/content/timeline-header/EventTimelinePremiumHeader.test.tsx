@@ -96,6 +96,23 @@ describe('<EventTimelinePremiumHeader />', () => {
     });
   });
 
+  describe('<time> semantics', () => {
+    it('should wrap every cell label in a <time> element with an ISO dateTime', () => {
+      renderHeader({ preset: 'dayAndHour' });
+
+      const hourCells = document.querySelectorAll<HTMLElement>(
+        `.${classes.headerCell}[data-unit="hour"]`,
+      );
+      expect(hourCells.length).to.equal(4 * 24);
+      hourCells.forEach((cell) => {
+        expect(cell.querySelector('time')).not.to.equal(null);
+      });
+
+      // Lock in tag + format together so a regression to <span> or a format change both fail.
+      expect(hourCells[0].querySelector('time[datetime="2025-07-03T00:00"]')).not.to.equal(null);
+    });
+  });
+
   describe('weekend marking', () => {
     // DEFAULT_TESTING_VISIBLE_DATE is 2025-07-03 (Thursday); visible range starts Monday Jun 30.
     it('should mark weekend day cells with data-weekend in `dayAndWeek` (where the day row is the leaf)', () => {

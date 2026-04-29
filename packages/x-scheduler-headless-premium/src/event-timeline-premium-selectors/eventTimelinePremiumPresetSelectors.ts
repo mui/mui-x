@@ -11,7 +11,7 @@ export const eventTimelinePremiumPresetSelectors = {
     (state: State) => state.preset,
     (adapter, visibleDate, preset) => {
       const config = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
-      if (process.env.NODE_ENV !== 'production' && !config) {
+      if (!config) {
         throw new Error(
           `MUI X Scheduler: No configuration registered for preset "${preset}". ` +
             `TimelineGridHeader cannot derive header rows or grid sizing without a config, so the timeline would render incorrectly. ` +

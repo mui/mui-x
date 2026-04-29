@@ -27,7 +27,7 @@ export function iterate(
   rangeStart: TemporalSupportedObject,
   rangeEnd: TemporalSupportedObject,
 ): IteratedCell[] {
-  if (process.env.NODE_ENV !== 'production' && adapter.isBefore(rangeEnd, rangeStart)) {
+  if (adapter.isBefore(rangeEnd, rangeStart)) {
     throw new Error(
       `MUI X Scheduler: TimelineGridHeader.iterate() received a range where rangeEnd is before rangeStart. ` +
         `The iteration would silently produce an empty header, masking the misconfiguration. ` +
@@ -48,15 +48,12 @@ export function iterate(
     // Guard against runaway iteration from a misconfigured preset (e.g. hour ticks over a
     // 100-year range).
     if (index >= 10_000) {
-      if (process.env.NODE_ENV !== 'production') {
-        throw new Error(
-          `MUI X Scheduler: TimelineGridHeader.iterate() produced more than 10,000 cells ` +
-            `for unit "${unit}" over a range ticked in "${tickUnit}". ` +
-            `This usually means the preset's \`unitCount\`/\`timeResolution\` span an unreasonably large period. ` +
-            `Reduce \`unitCount\` or pick a coarser \`timeResolution\`.`,
-        );
-      }
-      break;
+      throw new Error(
+        `MUI X Scheduler: TimelineGridHeader.iterate() produced more than 10,000 cells ` +
+          `for unit "${unit}" over a range ticked in "${tickUnit}". ` +
+          `This usually means the preset's \`unitCount\`/\`timeResolution\` span an unreasonably large period. ` +
+          `Reduce \`unitCount\` or pick a coarser \`timeResolution\`.`,
+      );
     }
     const nextCursor = addUnit(adapter, cursor, unit, 1);
     // First and last cells can extend past the visible range (e.g. a year cell
