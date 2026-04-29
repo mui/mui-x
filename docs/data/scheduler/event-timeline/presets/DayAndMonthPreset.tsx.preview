@@ -3,6 +3,6 @@
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
-  defaultPreset="day"
-  presets={['day']}
+  defaultPreset="dayAndMonth"
+  presets={['dayAndMonth']}
 />
