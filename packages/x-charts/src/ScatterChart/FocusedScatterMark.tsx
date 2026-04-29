@@ -21,6 +21,10 @@ export function FocusedScatterMark({ className, ...props }: React.SVGAttributes<
 
   const series = scatterSeries?.series[focusedItem.seriesId];
 
+  if (!series || series.hidden) {
+    return null;
+  }
+
   const xAxisId = series.xAxisId ?? xAxisIds[0];
   const yAxisId = series.yAxisId ?? yAxisIds[0];
 
