@@ -56,6 +56,8 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
     [adapter, days],
   );
 
+  const colOffset = showWeekNumber ? 2 : 1;
+
   return (
     <MonthViewRow
       className={classes.monthViewRow}
@@ -70,6 +72,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           className={classes.monthViewWeekNumberCell}
           role="rowheader"
           aria-label={localeText.weekNumberAriaLabel(weekNumber)}
+          aria-colindex={1}
         >
           {weekNumber}
         </MonthViewWeekNumberCell>
@@ -81,6 +84,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           day={day}
           maxEvents={maxEvents}
           row={occurrences}
+          colIndex={dayIdx + colOffset}
         />
       ))}
     </MonthViewRow>

@@ -394,4 +394,43 @@ describe('<MonthView />', () => {
       );
     });
   });
+
+  describe('aria semantics', () => {
+    it('should set aria-rowcount and aria-colcount on the grid root and aria indexes on cells', () => {
+      render(
+        <EventCalendarProvider {...standaloneDefaults}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      const grid = screen.getByRole('grid');
+      expect(grid.getAttribute('aria-colcount')).to.equal('7');
+      const rowCountAttr = Number(grid.getAttribute('aria-rowcount'));
+      expect(rowCountAttr).to.be.greaterThan(1);
+
+      const headerRow = within(grid)
+        .getAllByRole('row')
+        .find((row) => row.getAttribute('aria-rowindex') === '1');
+      expect(headerRow).not.to.equal(undefined);
+
+      const headerCells = within(headerRow!).getAllByRole('columnheader');
+      expect(headerCells.length).to.equal(7);
+      headerCells.forEach((cell, i) => {
+        expect(cell.getAttribute('aria-colindex')).to.equal(String(i + 1));
+      });
+
+      const dataRows = within(grid)
+        .getAllByRole('row')
+        .filter((row) => row.getAttribute('aria-rowindex') !== '1');
+      dataRows.forEach((row, weekIdx) => {
+        expect(row.getAttribute('aria-rowindex')).to.equal(String(weekIdx + 2));
+        const dayCells = within(row).getAllByRole('gridcell');
+        dayCells.forEach((cell, dayIdx) => {
+          expect(cell.getAttribute('aria-colindex')).to.equal(String(dayIdx + 1));
+        });
+      });
+    });
+  });
 });

@@ -232,4 +232,69 @@ describe('<EventTimelinePremiumHeader />', () => {
       });
     });
   });
+
+  describe('aria semantics', () => {
+    it('should set role="row" on each inner level row', () => {
+      renderHeader({ preset: 'dayAndHour' });
+
+      const levelRows = document.querySelectorAll<HTMLElement>(`.${classes.headerLevelRow}`);
+      expect(levelRows.length).to.equal(2);
+      levelRows.forEach((row) => {
+        expect(row.getAttribute('role')).to.equal('row');
+      });
+    });
+
+    it('should set role="columnheader" and aria-colindex on each header cell, offset by 1 for the title column', () => {
+      renderHeader({ preset: 'dayAndHour' });
+
+      const leafCells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit-leaf=""]`),
+      );
+      expect(leafCells.length).to.equal(4 * 24);
+      leafCells.forEach((cell, i) => {
+        expect(cell.getAttribute('role')).to.equal('columnheader');
+        expect(cell.getAttribute('aria-colindex')).to.equal(String(i + 2));
+      });
+    });
+
+    it('should set aria-colspan on grouping cells whose spanInTicks > 1 and omit it on single-tick cells', () => {
+      renderHeader({ preset: 'dayAndHour' });
+
+      const dayCells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
+      );
+      expect(dayCells.length).to.equal(4);
+      dayCells.forEach((cell) => {
+        expect(cell.getAttribute('aria-colspan')).to.equal('24');
+      });
+
+      const hourCells = document.querySelectorAll<HTMLElement>(
+        `.${classes.headerCell}[data-unit="hour"]`,
+      );
+      hourCells.forEach((cell) => {
+        expect(cell.getAttribute('aria-colspan')).to.equal(null);
+      });
+    });
+
+    it('should set aria-colspan to the clamped span on partial first/last grouping cells', () => {
+      renderHeader({ preset: 'dayAndMonth' });
+
+      const monthCells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="month"]`),
+      );
+      expect(monthCells.length).to.equal(2);
+      expect(monthCells[0].getAttribute('aria-colspan')).to.equal('29');
+      expect(monthCells[1].getAttribute('aria-colspan')).to.equal('27');
+    });
+
+    it('should set aria-colcount and aria-rowcount on the grid root', () => {
+      renderHeader({ preset: 'dayAndHour' });
+
+      const grid = screen.getByRole('grid');
+      // tickCount (4*24) + 1 title column = 97
+      expect(grid.getAttribute('aria-colcount')).to.equal(String(4 * 24 + 1));
+      // 1 header + 1 resource = 2
+      expect(grid.getAttribute('aria-rowcount')).to.equal('2');
+    });
+  });
 });

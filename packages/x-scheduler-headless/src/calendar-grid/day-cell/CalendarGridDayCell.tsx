@@ -108,18 +108,24 @@ export const CalendarGridDayCell = React.forwardRef(function CalendarGridDayCell
     .join(' ');
 
   const keyboardProps = {
-    // All cells are always tabbable so Tab flows through: cell → events → next cell → events.
-    // Arrow keys navigate programmatically via setFocusedCell, independent of tabIndex.
+    // Tab flows cell to events to next cell. Arrow keys navigate via setFocusedCell.
     tabIndex: 0,
     onKeyDown: handleKeyDown,
     onFocus: handleFocus,
   };
 
+  const elementAriaColIndex = (elementProps as { 'aria-colindex'?: number })['aria-colindex'];
+  const ariaColIndex = typeof elementAriaColIndex === 'number' ? elementAriaColIndex : index + 1;
+
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef, dropTargetRef, listItemRef, cellRef],
     props: [
       elementProps,
-      { role: 'gridcell', 'aria-labelledby': ariaLabelledBy || undefined },
+      {
+        role: 'gridcell',
+        'aria-labelledby': ariaLabelledBy || undefined,
+        'aria-colindex': ariaColIndex,
+      },
       keyboardProps,
       eventCreationProps,
     ],

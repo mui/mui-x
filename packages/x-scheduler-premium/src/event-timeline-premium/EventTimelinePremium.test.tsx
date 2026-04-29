@@ -368,4 +368,47 @@ describe('<EventTimelinePremium />', () => {
       ).to.equal(2);
     });
   });
+
+  describe('aria semantics', () => {
+    it('should mark the resource title header as columnheader at column 1', () => {
+      renderTimeline({ preset: 'dayAndHour' });
+
+      const titleHeader = document.querySelector<HTMLElement>(
+        `.${eventTimelinePremiumClasses.titleHeaderCell}`,
+      );
+      expect(titleHeader).not.to.equal(null);
+      expect(titleHeader!.getAttribute('role')).to.equal('columnheader');
+      expect(titleHeader!.getAttribute('aria-colindex')).to.equal('1');
+    });
+
+    it('should mark the events header cell wrapper as presentation so inner level rows carry semantics', () => {
+      renderTimeline({ preset: 'dayAndHour' });
+
+      const eventsHeader = document.querySelector<HTMLElement>(
+        `.${eventTimelinePremiumClasses.eventsHeaderCell}`,
+      );
+      expect(eventsHeader).not.to.equal(null);
+      expect(eventsHeader!.getAttribute('role')).to.equal('presentation');
+    });
+
+    it('should mark each title body cell as gridcell at column 1', () => {
+      renderTimeline({ preset: 'dayAndHour' });
+
+      const titleCells = document.querySelectorAll<HTMLElement>(
+        `.${eventTimelinePremiumClasses.titleCell}`,
+      );
+      expect(titleCells.length).to.equal(baseResources.length);
+      titleCells.forEach((cell) => {
+        expect(cell.getAttribute('role')).to.equal('gridcell');
+        expect(cell.getAttribute('aria-colindex')).to.equal('1');
+      });
+    });
+
+    it('should set aria-rowcount to header rows + resource rows on the grid root', () => {
+      renderTimeline({ preset: 'dayAndHour' });
+
+      const grid = screen.getByRole('grid');
+      expect(grid.getAttribute('aria-rowcount')).to.equal(String(1 + baseResources.length));
+    });
+  });
 });

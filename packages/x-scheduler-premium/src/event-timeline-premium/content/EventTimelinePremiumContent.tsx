@@ -420,12 +420,15 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             <EventTimelinePremiumTitleHeaderCell
               ref={titleHeaderRef}
               className={classes.titleHeaderCell}
+              role="columnheader"
+              aria-colindex={1}
             >
               {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
             </EventTimelinePremiumTitleHeaderCell>
             <EventTimelinePremiumEventsHeaderCell
               ref={eventsHeaderCellRef}
               className={classes.eventsHeaderCell}
+              role="presentation"
             >
               <EventTimelinePremiumEventsHeaderCellContent
                 ref={eventsHeaderRef}

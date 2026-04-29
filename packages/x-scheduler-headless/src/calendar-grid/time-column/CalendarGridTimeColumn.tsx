@@ -135,10 +135,18 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
     onFocus: handleFocus,
   };
 
+  const elementAriaColIndex = (elementProps as { 'aria-colindex'?: number })['aria-colindex'];
+  const ariaColIndex = typeof elementAriaColIndex === 'number' ? elementAriaColIndex : index + 1;
+
   const element = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, dropTargetRef, listItemRef, cellRef],
-    props: [elementProps, { role: 'gridcell' }, keyboardProps, eventCreationProps],
+    props: [
+      elementProps,
+      { role: 'gridcell', 'aria-colindex': ariaColIndex },
+      keyboardProps,
+      eventCreationProps,
+    ],
   });
 
   return (

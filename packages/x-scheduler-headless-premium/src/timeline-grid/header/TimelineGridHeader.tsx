@@ -36,11 +36,19 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
     const cells = iterate(adapter, level.unit, timeResolution, start, end);
 
     return (
-      <div key={`${level.unit}:${levelIndex}`} className={classNames?.row} data-level={levelIndex}>
+      <div
+        key={`${level.unit}:${levelIndex}`}
+        className={classNames?.row}
+        role="row"
+        data-level={levelIndex}
+      >
         {cells.map((cell) => (
           <div
             key={cell.key}
             className={[classNames?.cell, level.className].filter(Boolean).join(' ') || undefined}
+            role="columnheader"
+            aria-colindex={cell.index + 2}
+            aria-colspan={cell.spanInTicks > 1 ? cell.spanInTicks : undefined}
             data-level={levelIndex}
             data-unit={level.unit}
             data-index={cell.index}
