@@ -80,7 +80,7 @@ export function getComponentInfo(filename: string): ComponentInfo {
         },
       ];
     },
-    layoutConfigPath: 'docsx/src/modules/utils/dataGridLayoutConfig',
+    layoutConfigPath: 'docs/src/modules/utils/dataGridLayoutConfig',
   };
 }
 

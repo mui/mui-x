@@ -26,7 +26,7 @@ export default function DateLocaleTimeline() {
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
-          defaultView="months"
+          defaultPreset="monthAndYear"
         />
       </ThemeProvider>
     </div>

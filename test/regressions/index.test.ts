@@ -185,6 +185,57 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
+    it('should clamp the horizontal scroll position in the fluid width column dimensions scenario', async () => {
+      const route = '/test-regressions-data-grid/ColumnFluidWidthScrollClamp';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}AfterResize.png`);
+
+      await navigateToTest(route);
+
+      const testcase = await page.waitForSelector(
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      );
+
+      await page.getByRole('button', { name: 'Scroll to max' }).click();
+      await page.getByRole('button', { name: 'Shrink username' }).click();
+
+      await page.waitForFunction(() => {
+        const root = document.querySelector<HTMLElement>('.MuiDataGrid-root');
+        const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
+
+        if (!root || !virtualScroller) {
+          return false;
+        }
+
+        const rowWidth = Number.parseFloat(root.style.getPropertyValue('--DataGrid-rowWidth'));
+        const maxScrollLeft = Math.max(0, rowWidth - virtualScroller.clientWidth);
+
+        return maxScrollLeft === 0 && Math.abs(virtualScroller.scrollLeft) === 0;
+      });
+
+      const scrollState = await page.evaluate(() => {
+        const root = document.querySelector<HTMLElement>('.MuiDataGrid-root');
+        const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
+
+        if (!root || !virtualScroller) {
+          throw new Error('missing grid elements');
+        }
+
+        const rowWidth = Number.parseFloat(root.style.getPropertyValue('--DataGrid-rowWidth'));
+
+        return {
+          hasScrollX: root.style.getPropertyValue('--DataGrid-hasScrollX'),
+          maxScrollLeft: Math.max(0, rowWidth - virtualScroller.clientWidth),
+          scrollLeft: Math.abs(virtualScroller.scrollLeft),
+        };
+      });
+
+      expect(scrollState.maxScrollLeft).to.equal(0);
+      expect(scrollState.scrollLeft).to.equal(0);
+      expect(scrollState.hasScrollX).to.equal('0');
+
+      await testcase.screenshot({ path: screenshotPath, type: 'png' });
+    });
+
     it('should position charts axis tooltip 8px away from the pointer', async () => {
       const route = '/docs-charts-tooltip/Interaction';
       const axisScreenshotPath = path.resolve(screenshotDir, `.${route}AxisTooltip.png`);
