@@ -55,7 +55,7 @@ const ResourceMenuColorDot = styled('span', {
   },
 }));
 
-const ColorSelectionContainer = styled('div', {
+const ColorSelectionContainer = styled(ToggleGroup, {
   name: 'MuiEventDialog',
   slot: 'ColorSelectionContainer',
 })(({ theme }) => ({
@@ -249,7 +249,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           })}
         </Select>
       </FormControl>
-      <ToggleGroup
+      <ColorSelectionContainer
         value={color ? [color] : []}
         onValueChange={(values) => {
           const next = values[values.length - 1];
@@ -259,7 +259,6 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
         }}
         aria-label={localeText.colorPickerLabel}
         disabled={readOnly}
-        render={<ColorSelectionContainer />}
       >
         {EVENT_COLORS.map((colorOption) => (
           <ResourceMenuColorToggle
@@ -272,7 +271,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
             {color === colorOption && <CheckIcon fontSize="small" />}
           </ResourceMenuColorToggle>
         ))}
-      </ToggleGroup>
+      </ColorSelectionContainer>
     </React.Fragment>
   );
 }
