@@ -2,10 +2,12 @@ import { getPreviousNonEmptySeries } from './plugins/featurePlugins/useChartKeyb
 import { getMaxSeriesLength } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getMaxSeriesLength';
 import type { UseChartKeyboardNavigationSignature } from './plugins/featurePlugins/useChartKeyboardNavigation';
 import { getNextNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getNextNonEmptySeries';
+import { findVisibleDataIndex } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/findVisibleDataIndex';
 import type { ChartState } from './plugins/models/chart';
 import { seriesHasData } from './seriesHasData';
 import type { ChartSeriesType } from '../models/seriesType/config';
 import type { SeriesId, FocusedItemIdentifier } from '../models/seriesType';
+import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 
 type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
@@ -18,6 +20,16 @@ type StateParameters<SeriesType extends ChartSeriesType> = Pick<
   ChartState<[UseChartKeyboardNavigationSignature], [], SeriesType>,
   'series'
 >;
+
+function isSeriesHidden(
+  processedSeries: ProcessedSeries<ChartSeriesType>,
+  type: ChartSeriesType,
+  seriesId: SeriesId,
+): boolean {
+  const seriesItem = processedSeries[type]?.series[seriesId];
+  return Boolean(seriesItem && 'hidden' in seriesItem && seriesItem.hidden);
+}
+
 export function createGetNextIndexFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
@@ -40,7 +52,12 @@ export function createGetNextIndexFocusedItem<
     );
     let seriesId = currentItem?.seriesId;
     let type = currentItem?.type;
-    if (!type || seriesId == null || !seriesHasData(processedSeries, type, seriesId)) {
+    if (
+      !type ||
+      seriesId == null ||
+      !seriesHasData(processedSeries, type, seriesId) ||
+      isSeriesHidden(processedSeries, type, seriesId)
+    ) {
       const nextSeries = getNextNonEmptySeries<OutSeriesType>(
         processedSeries,
         compatibleSeriesTypes,
@@ -63,10 +80,24 @@ export function createGetNextIndexFocusedItem<
       dataIndex = Math.min(maxLength - 1, dataIndex);
     }
 
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex: dataIndex,
+      dataLength: maxLength,
+      direction: 1,
+      allowCycles,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
     return {
       type: type as OutSeriesType,
       seriesId,
-      dataIndex,
+      dataIndex: visibleDataIndex,
     };
   };
 }
@@ -93,7 +124,12 @@ export function createGetPreviousIndexFocusedItem<
     );
     let seriesId = currentItem?.seriesId;
     let type = currentItem?.type;
-    if (!type || seriesId == null || !seriesHasData(processedSeries, type, seriesId)) {
+    if (
+      !type ||
+      seriesId == null ||
+      !seriesHasData(processedSeries, type, seriesId) ||
+      isSeriesHidden(processedSeries, type, seriesId)
+    ) {
       const previousSeries = getPreviousNonEmptySeries<OutSeriesType>(
         processedSeries,
         compatibleSeriesTypes,
@@ -116,10 +152,24 @@ export function createGetPreviousIndexFocusedItem<
       dataIndex = Math.max(0, dataIndex);
     }
 
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex: dataIndex,
+      dataLength: maxLength,
+      direction: -1,
+      allowCycles,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
     return {
       type: type as OutSeriesType,
       seriesId,
-      dataIndex,
+      dataIndex: visibleDataIndex,
     };
   };
 }
@@ -156,12 +206,27 @@ export function createGetNextSeriesFocusedItem<
     type = nextSeries.type;
     seriesId = nextSeries.seriesId;
 
-    const dataIndex = currentItem?.dataIndex == null ? 0 : currentItem.dataIndex;
+    const data = processedSeries[type as OutSeriesType]!.series[seriesId].data;
+    const startIndex =
+      currentItem?.dataIndex == null ? 0 : Math.min(currentItem.dataIndex, data.length - 1);
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex,
+      dataLength: data.length,
+      direction: 1,
+      allowCycles: true,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
 
     return {
       type: type as OutSeriesType,
       seriesId,
-      dataIndex,
+      dataIndex: visibleDataIndex,
     };
   };
 }
@@ -198,12 +263,28 @@ export function createGetPreviousSeriesFocusedItem<
     seriesId = previousSeries.seriesId;
 
     const data = processedSeries[type as OutSeriesType]!.series[seriesId].data;
-    const dataIndex = currentItem?.dataIndex == null ? data.length - 1 : currentItem.dataIndex;
+    const startIndex =
+      currentItem?.dataIndex == null
+        ? data.length - 1
+        : Math.min(currentItem.dataIndex, data.length - 1);
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
+      type,
+      seriesId,
+      startIndex,
+      dataLength: data.length,
+      direction: -1,
+      allowCycles: true,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
 
     return {
       type: type as OutSeriesType,
       seriesId,
-      dataIndex,
+      dataIndex: visibleDataIndex,
     };
   };
 }

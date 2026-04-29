@@ -21,8 +21,8 @@ describe('<EventTimelinePremium /> - License', () => {
           resources={[]}
           events={[]}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          view="days"
-          views={['days']}
+          preset="dayAndMonth"
+          presets={['dayAndMonth']}
         />,
       ),
     ).toErrorDev(['MUI X: License key plan mismatch']);
@@ -38,8 +38,8 @@ describe('<EventTimelinePremium /> - License', () => {
           resources={[]}
           events={[]}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          view="days"
-          views={['days']}
+          preset="dayAndMonth"
+          presets={['dayAndMonth']}
         />,
       ),
     ).toErrorDev(['MUI X: Missing license key.']);

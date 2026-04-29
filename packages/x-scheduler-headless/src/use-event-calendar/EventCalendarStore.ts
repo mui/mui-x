@@ -36,9 +36,18 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig
 
 const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
   parameters: EventCalendarParameters<TEvent, TResource>,
-) => ({
-  views: parameters.views ?? DEFAULT_VIEWS,
-});
+) => {
+  const views = parameters.views ?? DEFAULT_VIEWS;
+  if (process.env.NODE_ENV !== 'production' && views.length === 0) {
+    throw new Error(
+      `MUI X Scheduler: EventCalendar received an empty \`views\` prop. ` +
+        `This leaves the calendar without any view to render. ` +
+        `Pass at least one view, or omit the prop to use the default set. ` +
+        `See https://mui.com/x/react-scheduler/event-calendar/views/ for more details.`,
+    );
+  }
+  return { views };
+};
 
 const mapper: SchedulerParametersToStateMapper<
   EventCalendarState,
@@ -91,7 +100,8 @@ export class ExtendableEventCalendarStore<
     super(parameters, adapter, instanceName, mapper);
 
     if (process.env.NODE_ENV !== 'production') {
-      // Add listeners to assert the state validity (not applied in prod)
+      // Assert the initial state validity; `subscribe` only fires on subsequent state changes.
+      this.assertViewValidity(this.state.view);
       this.subscribe((state) => {
         this.assertViewValidity(state.view);
         return null;
@@ -103,7 +113,10 @@ export class ExtendableEventCalendarStore<
     const views = this.state.views;
     if (!views.includes(view)) {
       throw new Error(
-        `MUI: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.\nPlease ensure that the requested view is included in the views array.`,
+        `MUI X Scheduler: EventCalendar received the view "${view}", which is not part of the \`views\` prop (received: ${views.join(', ')}). ` +
+          `This leaves the calendar in an inconsistent state where the current view is not one of the allowed options. ` +
+          `Add "${view}" to the \`views\` prop, or pass a view that is already included. ` +
+          `See https://mui.com/x/react-scheduler/event-calendar/views/ for more details.`,
       );
     }
   }
@@ -170,6 +183,11 @@ export class ExtendableEventCalendarStore<
    */
   public setView = (view: CalendarView, event: Event) => {
     const { view: viewProp, onViewChange } = this.parameters;
+    if (process.env.NODE_ENV !== 'production' && viewProp !== undefined && !onViewChange) {
+      warn(
+        'MUI X Scheduler: EventCalendar is controlled (received a `view` prop) but `onViewChange` is not provided. View changes will be silently ignored.',
+      );
+    }
     if (view !== this.state.view) {
       this.assertViewValidity(view);
 

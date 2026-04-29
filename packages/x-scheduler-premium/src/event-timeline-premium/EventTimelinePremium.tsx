@@ -38,6 +38,10 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     content: ['content'],
     grid: ['grid'],
     headerRow: ['headerRow'],
+    header: ['header'],
+    headerLevelRow: ['headerLevelRow'],
+    headerCell: ['headerCell'],
+    headerCellLabel: ['headerCellLabel'],
     titleHeaderCell: ['titleHeaderCell'],
     eventsHeaderCell: ['eventsHeaderCell'],
     eventsHeaderCellContent: ['eventsHeaderCellContent'],
@@ -55,29 +59,6 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     eventResizeHandler: ['eventResizeHandler'],
     eventLinesClamp: ['eventLinesClamp'],
     eventRecurringIcon: ['eventRecurringIcon'],
-    timeHeader: ['timeHeader'],
-    timeHeaderCell: ['timeHeaderCell'],
-    timeHeaderDayLabel: ['timeHeaderDayLabel'],
-    timeHeaderCellsRow: ['timeHeaderCellsRow'],
-    timeHeaderTimeCell: ['timeHeaderTimeCell'],
-    timeHeaderTimeLabel: ['timeHeaderTimeLabel'],
-    daysHeader: ['daysHeader'],
-    daysHeaderCell: ['daysHeaderCell'],
-    daysHeaderTime: ['daysHeaderTime'],
-    daysHeaderWeekDay: ['daysHeaderWeekDay'],
-    daysHeaderDayNumber: ['daysHeaderDayNumber'],
-    daysHeaderMonthStart: ['daysHeaderMonthStart'],
-    daysHeaderMonthStartLabel: ['daysHeaderMonthStartLabel'],
-    weeksHeader: ['weeksHeader'],
-    weeksHeaderCell: ['weeksHeaderCell'],
-    weeksHeaderDayLabel: ['weeksHeaderDayLabel'],
-    weeksHeaderDaysRow: ['weeksHeaderDaysRow'],
-    weeksHeaderDayCell: ['weeksHeaderDayCell'],
-    monthsHeader: ['monthsHeader'],
-    monthsHeaderYearLabel: ['monthsHeaderYearLabel'],
-    monthsHeaderMonthLabel: ['monthsHeaderMonthLabel'],
-    yearsHeader: ['yearsHeader'],
-    yearsHeaderYearLabel: ['yearsHeaderYearLabel'],
     ...eventDialogSlots,
   };
 
@@ -88,12 +69,6 @@ const EventTimelinePremiumRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
-  '--time-cell-width': '64px',
-  '--days-cell-width': '120px',
-  '--weeks-cell-width': 'calc(64px * 7)',
-  // Months view uses per-day units instead of per-month, so each column width = days in month × 6px
-  '--months-cell-width': '6px',
-  '--years-cell-width': '200px',
   boxSizing: 'border-box',
   '*, *::before, *::after': {
     boxSizing: 'inherit',
@@ -235,14 +210,20 @@ EventTimelinePremium.propTypes = {
     ampm: PropTypes.bool,
   }),
   /**
-   * The view initially displayed in the timeline.
-   * To render a controlled timeline, use the `view` prop.
-   * @default "time"
+   * The preset initially displayed in the timeline.
+   * To render a controlled timeline, use the `preset` prop.
+   * @default "dayAndHour"
    */
-  defaultView: PropTypes.oneOf(['days', 'months', 'time', 'weeks', 'years']),
+  defaultPreset: PropTypes.oneOf([
+    'dayAndHour',
+    'dayAndMonth',
+    'dayAndWeek',
+    'monthAndYear',
+    'year',
+  ]),
   /**
-   * The date initially used to determine the visible date range in each view.
-   * To render a controlled calendar, use the `visibleDate` prop.
+   * The date initially used to determine the visible date range.
+   * To render a controlled component, use the `visibleDate` prop.
    * @default today
    */
   defaultVisibleDate: PropTypes.instanceOf(Date),
@@ -318,9 +299,9 @@ EventTimelinePremium.propTypes = {
    */
   onPreferencesChange: PropTypes.func,
   /**
-   * Event handler called when the view changes.
+   * Event handler called when the preset changes.
    */
-  onViewChange: PropTypes.func,
+  onPresetChange: PropTypes.func,
   /**
    * Event handler called when the visible date changes.
    */
@@ -335,6 +316,20 @@ EventTimelinePremium.propTypes = {
   preferences: PropTypes.shape({
     ampm: PropTypes.bool,
   }),
+  /**
+   * The preset currently displayed in the timeline.
+   */
+  preset: PropTypes.oneOf(['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']),
+  /**
+   * The presets available in the timeline.
+   * The order is canonical (from most-zoomed-in to most-zoomed-out) and enforced internally,
+   * so a future zoom API (`zoomIn()` / `zoomOut()`) behaves consistently regardless of the order
+   * in which the presets are provided.
+   * @default ["dayAndHour", "dayAndMonth", "dayAndWeek", "monthAndYear", "year"]
+   */
+  presets: PropTypes.arrayOf(
+    PropTypes.oneOf(['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']).isRequired,
+  ),
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -369,18 +364,7 @@ EventTimelinePremium.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * The view currently displayed in the timeline.
-   */
-  view: PropTypes.oneOf(['days', 'months', 'time', 'weeks', 'years']),
-  /**
-   * The views available in the timeline.
-   * @default ["time", "days", "weeks", "months", "years"]
-   */
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['days', 'months', 'time', 'weeks', 'years']).isRequired,
-  ),
-  /**
-   * The date currently used to determine the visible date range in each view.
+   * The date currently used to determine the visible date range.
    */
   visibleDate: PropTypes.instanceOf(Date),
   /**

@@ -1,7 +1,7 @@
 import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
-  openPickerAsync,
+  openPicker,
   getFieldSectionsContainer,
   expectFieldValue,
 } from 'test/utils/pickers';
@@ -23,7 +23,7 @@ describe('<MobileDateTimeRangePicker />', () => {
     it('should cycle focused views among the visible step after selection', async () => {
       const { user } = render(<MobileDateTimeRangePicker />);
 
-      await openPickerAsync(user, {
+      await openPicker(user, {
         type: 'date-time-range',
         initialFocus: 'start',
         fieldType: 'single-input',

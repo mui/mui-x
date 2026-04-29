@@ -1,8 +1,12 @@
 import path from 'path';
 import fs from 'fs';
-import { LANGUAGES } from 'docsx/config';
-import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
-import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
+import { LANGUAGES } from '@mui/internal-core-docs/constants';
+import {
+  ProjectSettings,
+  ComponentReactApi,
+  HookReactApi,
+  findApiPages,
+} from '@mui/internal-api-docs-builder';
 import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
@@ -95,16 +99,12 @@ export default schedulerApiPages;
       'x-scheduler-premium/src/event-timeline-premium/content/EventTimelinePremiumContent.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-event/EventTimelinePremiumEvent.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-title-cell/EventTimelinePremiumTitleCell.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/DaysHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/MonthsHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/TimeHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/WeeksHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/YearsHeader.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-header/EventTimelinePremiumHeader.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/scheduler',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/scheduler',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/scheduler',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: [],

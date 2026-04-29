@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { warn } from '@base-ui/utils/warn';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
@@ -7,47 +8,59 @@ import {
   SchedulerStore,
 } from '@mui/x-scheduler-headless/internals';
 import { createChangeEventDetails } from '@mui/x-scheduler-headless/base-ui-copy';
-import type {
-  TemporalAdapter,
-  TemporalSupportedObject,
-} from '@mui/x-scheduler-headless/base-ui-copy';
-import { EventTimelinePremiumPreferences, EventTimelinePremiumView } from '../models';
+import { EventTimelinePremiumPreferences, EventTimelinePremiumPreset } from '../models';
 import {
   EventTimelinePremiumState,
   EventTimelinePremiumParameters,
 } from './EventTimelinePremiumStore.types';
 import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePremiumLazyLoadingPlugin';
-import { EVENT_TIMELINE_PREMIUM_VIEW_CONFIGS } from '../event-timeline-premium-selectors/eventTimelinePremiumViewSelectors';
+import {
+  EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS,
+  getPresetPxPerDay,
+} from '../internals/utils/preset-utils';
 
-// TODO(#21359): In the future, this config should become a prop so users can customize step sizes per view.
-const VIEW_NAVIGATION_STEP: Record<
-  EventTimelinePremiumView,
-  (
-    adapter: TemporalAdapter,
-    date: TemporalSupportedObject,
-    amount: number,
-  ) => TemporalSupportedObject
-> = {
-  time: (adapter, date, amount) => adapter.addDays(date, amount),
-  days: (adapter, date, amount) => adapter.addDays(date, amount),
-  weeks: (adapter, date, amount) => adapter.addWeeks(date, amount),
-  months: (adapter, date, amount) => adapter.addMonths(date, amount),
-  years: (adapter, date, amount) => adapter.addYears(date, amount),
-};
+// Sorted by descending px/day (most zoomed-in first). Each preset's `(timeResolution,
+// tickWidth)` must produce a unique px/day — otherwise the order is decided by
+// `Object.keys` insertion order, which is not a stable contract.
+const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = (
+  Object.keys(EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS) as EventTimelinePremiumPreset[]
+).sort((a, b) => getPresetPxPerDay(b) - getPresetPxPerDay(a));
 
-export const DEFAULT_VIEWS: EventTimelinePremiumView[] = [
-  'time',
-  'days',
-  'weeks',
-  'months',
-  'years',
-];
-export const DEFAULT_VIEW: EventTimelinePremiumView = 'time';
+export const DEFAULT_PRESETS: EventTimelinePremiumPreset[] = PRESET_ZOOM_ORDER;
+export const DEFAULT_PRESET: EventTimelinePremiumPreset = PRESET_ZOOM_ORDER[0];
+
+function sortPresetsByZoomOrder(
+  presets: EventTimelinePremiumPreset[],
+): EventTimelinePremiumPreset[] {
+  if (process.env.NODE_ENV !== 'production') {
+    if (presets.length === 0) {
+      throw new Error(
+        `MUI X Scheduler: EventTimelinePremium received an empty \`presets\` prop. ` +
+          `This leaves the timeline without any preset to render. ` +
+          `Pass at least one preset, or omit the prop to use the default set (${PRESET_ZOOM_ORDER.join(', ')}). ` +
+          `See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.`,
+      );
+    }
+    const unknown = presets.filter((preset) => !PRESET_ZOOM_ORDER.includes(preset));
+    if (unknown.length > 0) {
+      throw new Error(
+        `MUI X Scheduler: EventTimelinePremium received unknown preset(s) in the \`presets\` prop: ${unknown.join(', ')}. ` +
+          `These entries have no associated configuration, so the timeline cannot render them. ` +
+          `Remove the unknown preset(s), or use one of the built-in values (${PRESET_ZOOM_ORDER.join(', ')}). ` +
+          `See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.`,
+      );
+    }
+  }
+  // Iterating over `PRESET_ZOOM_ORDER` (instead of the input) yields a canonical,
+  // duplicate-free output even when runtime inputs (storage, URL params, dynamic
+  // registries) bypass the compile-time `EventTimelinePremiumPreset` union.
+  return PRESET_ZOOM_ORDER.filter((preset) => presets.includes(preset));
+}
 
 const deriveStateFromParameters = <TEvent extends object, TResource extends object>(
   parameters: EventTimelinePremiumParameters<TEvent, TResource>,
 ) => ({
-  views: parameters.views ?? DEFAULT_VIEWS,
+  presets: sortPresetsByZoomOrder(parameters.presets ?? DEFAULT_PRESETS),
 });
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
@@ -59,7 +72,7 @@ const mapper: SchedulerParametersToStateMapper<
   getInitialState: (schedulerInitialState, parameters) => ({
     ...schedulerInitialState,
     ...deriveStateFromParameters(parameters),
-    view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
+    preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
     preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
   }),
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
@@ -68,7 +81,7 @@ const mapper: SchedulerParametersToStateMapper<
       ...deriveStateFromParameters(parameters),
     };
 
-    updateModel(newState, 'view', 'defaultView');
+    updateModel(newState, 'preset', 'defaultPreset');
     updateModel(newState, 'preferences', 'defaultPreferences');
 
     return newState;
@@ -93,9 +106,10 @@ export class EventTimelinePremiumStore<
     super(parameters, adapter, 'EventTimelinePremiumStore', mapper);
 
     if (process.env.NODE_ENV !== 'production') {
-      // Add listeners to assert the state validity (not applied in prod)
+      // Assert the initial state validity; `subscribe` only fires on subsequent state changes.
+      this.assertPresetValidity(this.state.preset);
       this.subscribe((state) => {
-        this.assertViewValidity(state.view);
+        this.assertPresetValidity(state.preset);
         return null;
       });
     }
@@ -103,11 +117,14 @@ export class EventTimelinePremiumStore<
     this.lazyLoading = new EventTimelinePremiumLazyLoadingPlugin(this);
   }
 
-  private assertViewValidity(view: EventTimelinePremiumView) {
-    const views = this.state.views;
-    if (!views.includes(view)) {
+  private assertPresetValidity(preset: EventTimelinePremiumPreset) {
+    const presets = this.state.presets;
+    if (!presets.includes(preset)) {
       throw new Error(
-        `MUI: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.\nPlease ensure that the requested view is included in the views array.`,
+        `MUI X Scheduler: EventTimelinePremium received the preset "${preset}", which is not part of the \`presets\` prop (received: ${presets.join(', ')}). ` +
+          `This leaves the timeline in an inconsistent state where the current preset is not one of the allowed options. ` +
+          `Add "${preset}" to the \`presets\` prop, or pass a preset that is already included. ` +
+          `See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.`,
       );
     }
   }
@@ -121,12 +138,11 @@ export class EventTimelinePremiumStore<
   }
 
   /**
-   * Goes to the next visible date span based on the current view.
+   * Goes to the next visible date span based on the current preset.
    */
   public goToNextVisibleDate = (event: React.UIEvent) => {
-    const { adapter, visibleDate, view } = this.state;
-    const { unitCount } = EVENT_TIMELINE_PREMIUM_VIEW_CONFIGS[view];
-    const navigate = VIEW_NAVIGATION_STEP[view];
+    const { adapter, visibleDate, preset } = this.state;
+    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
     this.setVisibleDate({
       visibleDate: navigate(adapter, visibleDate, unitCount),
       event,
@@ -134,12 +150,11 @@ export class EventTimelinePremiumStore<
   };
 
   /**
-   * Goes to the previous visible date span based on the current view.
+   * Goes to the previous visible date span based on the current preset.
    */
   public goToPreviousVisibleDate = (event: React.UIEvent) => {
-    const { adapter, visibleDate, view } = this.state;
-    const { unitCount } = EVENT_TIMELINE_PREMIUM_VIEW_CONFIGS[view];
-    const navigate = VIEW_NAVIGATION_STEP[view];
+    const { adapter, visibleDate, preset } = this.state;
+    const { unitCount, navigate } = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
     this.setVisibleDate({
       visibleDate: navigate(adapter, visibleDate, -unitCount),
       event,
@@ -147,17 +162,22 @@ export class EventTimelinePremiumStore<
   };
 
   /**
-   * Sets the view of the timeline.
+   * Sets the preset of the timeline.
    */
-  public setView = (view: EventTimelinePremiumView, event: Event) => {
-    const { view: viewProp, onViewChange } = this.parameters;
-    if (view !== this.state.view) {
-      this.assertViewValidity(view);
+  public setPreset = (preset: EventTimelinePremiumPreset, event: Event) => {
+    const { preset: presetProp, onPresetChange } = this.parameters;
+    if (process.env.NODE_ENV !== 'production' && presetProp !== undefined && !onPresetChange) {
+      warn(
+        'MUI X Scheduler: EventTimelinePremium is controlled (received a `preset` prop) but `onPresetChange` is not provided. Preset changes will be silently ignored.',
+      );
+    }
+    if (preset !== this.state.preset) {
+      this.assertPresetValidity(preset);
       const eventDetails = createChangeEventDetails('none', event);
-      onViewChange?.(view, eventDetails);
+      onPresetChange?.(preset, eventDetails);
 
-      if (!eventDetails.isCanceled && viewProp === undefined) {
-        this.set('view', view);
+      if (!eventDetails.isCanceled && presetProp === undefined) {
+        this.set('preset', preset);
       }
     }
   };

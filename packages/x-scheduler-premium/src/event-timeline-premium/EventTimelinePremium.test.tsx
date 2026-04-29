@@ -16,7 +16,7 @@ import {
   SchedulerResource,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
-import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
+import { EventTimelinePremiumPreset } from '@mui/x-scheduler-headless-premium/models';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 
 const engineering = ResourceBuilder.new().build();
@@ -44,8 +44,8 @@ describe('<EventTimelinePremium />', () => {
   function renderTimeline(options?: {
     resources?: SchedulerResource[];
     events?: SchedulerEvent[];
-    view?: EventTimelinePremiumView;
-    views?: EventTimelinePremiumView[];
+    preset?: EventTimelinePremiumPreset;
+    presets?: EventTimelinePremiumPreset[];
     visibleDate?: TemporalSupportedObject;
     showCurrentTimeIndicator?: boolean;
     resourceColumnLabel?: string;
@@ -56,8 +56,10 @@ describe('<EventTimelinePremium />', () => {
         resources={options?.resources ?? baseResources}
         events={options?.events ?? baseEvents}
         visibleDate={options?.visibleDate ?? DEFAULT_TESTING_VISIBLE_DATE}
-        view={options?.view ?? 'days'}
-        views={options?.views ?? ['time', 'days', 'weeks', 'months', 'years']}
+        preset={options?.preset ?? 'dayAndMonth'}
+        presets={
+          options?.presets ?? ['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']
+        }
         showCurrentTimeIndicator={options?.showCurrentTimeIndicator}
         resourceColumnLabel={options?.resourceColumnLabel}
         localeText={options?.localeText}
@@ -119,8 +121,8 @@ describe('<EventTimelinePremium />', () => {
           resources={baseResources}
           events={baseEvents}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          view="days"
-          views={['days', 'weeks']}
+          preset="dayAndMonth"
+          presets={['dayAndMonth', 'dayAndWeek']}
         />,
       );
       baseEvents.forEach((eventItem) => {
@@ -141,7 +143,7 @@ describe('<EventTimelinePremium />', () => {
         .resource(engineering)
         .build();
 
-      renderTimeline({ events: [recurringEvent, singleEvent], view: 'days' });
+      renderTimeline({ events: [recurringEvent, singleEvent], preset: 'dayAndMonth' });
 
       const recurringEventElements = screen.getAllByLabelText(recurringEvent.title);
       expect(recurringEventElements.length).to.be.greaterThan(0);
@@ -157,10 +159,10 @@ describe('<EventTimelinePremium />', () => {
       ).to.equal(null);
     });
 
-    it('should render events correctly in the time view', () => {
+    it('should render events correctly in the dayAndHour preset', () => {
       const totalWidth = 6144; // 96 hours * 64px
       const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
-      renderTimeline({ view: 'time' });
+      renderTimeline({ preset: 'dayAndHour' });
 
       const eventElement = screen.getByLabelText(event1.title);
       expect(eventElement).not.to.equal(null);
@@ -172,10 +174,10 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition).to.be.lessThanOrEqual(hourBoundaries.end);
     });
 
-    it('should render events correctly in the days view', () => {
+    it('should render events correctly in the dayAndMonth preset', () => {
       const totalWidth = 6720; // 56 days * 120px
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
-      renderTimeline({ view: 'days' });
+      renderTimeline({ preset: 'dayAndMonth' });
 
       const eventElement = screen.getByLabelText(event3.title);
       expect(eventElement).not.to.equal(null);
@@ -187,7 +189,7 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
     });
 
-    it('should render events correctly in the weeks view', () => {
+    it('should render events correctly in the dayAndWeek preset', () => {
       const totalWidth = 64 * 7 * 16; // 64px * 7 days * 16 weeks
       const startOfWeek = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
       const weekDayNumber = adapter.differenceInDays(
@@ -196,7 +198,7 @@ describe('<EventTimelinePremium />', () => {
       );
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
 
-      renderTimeline({ view: 'weeks' });
+      renderTimeline({ preset: 'dayAndWeek' });
 
       const eventElement = screen.getByLabelText(event1.title);
       expect(eventElement).not.to.equal(null);
@@ -208,7 +210,7 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
     });
 
-    it('should render events correctly in the month view', () => {
+    it('should render events correctly in the monthAndYear preset', () => {
       const nextMonthEvent = EventBuilder.new()
         .title('Next month')
         .span('2025-08-04T13:00:00Z', '2025-09-04T14:30:00Z')
@@ -216,16 +218,23 @@ describe('<EventTimelinePremium />', () => {
         .build();
       const extendedEvents: SchedulerEvent[] = [...baseEvents, nextMonthEvent];
 
-      renderTimeline({ events: extendedEvents, view: 'months' });
+      renderTimeline({ events: extendedEvents, preset: 'monthAndYear' });
 
-      const totalWidth = 180 * 36; // 36 months
+      // monthAndYear ticks per day (6px), so the total width depends on the actual
+      // calendar days in the visible range — read it from the grid CSS variables.
+      const grid = screen.getByRole('grid');
+      const totalWidth =
+        parseFloat(grid.style.getPropertyValue('--unit-width')) *
+        parseFloat(grid.style.getPropertyValue('--unit-count'));
+      const monthWidth = totalWidth / 36;
+
       const event1Element = screen.getByLabelText(event1.title);
       expect(event1Element).not.to.equal(null);
       const xPositioning = event1Element.style.getPropertyValue('--x-position');
 
       const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
 
-      expect(eventPosition).to.be.lessThanOrEqual(180); // first month
+      expect(eventPosition).to.be.lessThanOrEqual(monthWidth); // first month
 
       const nextMonthEventElement = screen.getByLabelText('Next month');
       expect(nextMonthEventElement).not.to.equal(null);
@@ -233,11 +242,11 @@ describe('<EventTimelinePremium />', () => {
 
       const eventPosition2 = (totalWidth * parseFloat(xPositioning2)) / 100;
 
-      expect(eventPosition2).to.be.greaterThanOrEqual(180); // second month
-      expect(eventPosition2).to.be.lessThanOrEqual(360); // second month
+      expect(eventPosition2).to.be.greaterThanOrEqual(monthWidth); // second month
+      expect(eventPosition2).to.be.lessThanOrEqual(monthWidth * 2); // second month
     });
 
-    it('should render events correctly in the year view', () => {
+    it('should render events correctly in the year preset', () => {
       const thisYearEvent = EventBuilder.new()
         .span('2025-08-03T13:00:00Z', '2025-09-04T14:30:00Z')
         .resource(engineering)
@@ -247,7 +256,7 @@ describe('<EventTimelinePremium />', () => {
         .resource(engineering)
         .build();
 
-      renderTimeline({ events: [thisYearEvent, nextYearEvent], view: 'years' });
+      renderTimeline({ events: [thisYearEvent, nextYearEvent], preset: 'year' });
 
       const totalWidth = 30 * 200;
       const thisYearEventElement = screen.getByLabelText(thisYearEvent.title);
@@ -332,28 +341,31 @@ describe('<EventTimelinePremium />', () => {
     });
   });
 
-  describe('views', () => {
-    it('should render the correct header and updates CSS variable when switching views', async () => {
+  describe('presets', () => {
+    it('should set --unit-width to the preset tickWidth and render one row per header level', async () => {
       renderTimeline({
-        view: 'time',
-        views: ['days', 'time'],
+        preset: 'dayAndHour',
+        presets: ['dayAndMonth', 'dayAndHour'],
       });
 
       let rootElement = screen.getByRole('grid');
-      // The time header has 24 time cells (one for each hour)
-      expect(rootElement.querySelectorAll('time').length).to.be.greaterThan(0);
-
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('time-cell-width');
+      // dayAndHour: tickWidth = 64px, 2 header rows (day + hour).
+      expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('64px');
+      expect(
+        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
+      ).to.equal(2);
 
       renderTimeline({
-        view: 'days',
-        views: ['days', 'time'],
+        preset: 'dayAndMonth',
+        presets: ['dayAndMonth', 'dayAndHour'],
       });
 
       rootElement = screen.getAllByRole('grid').at(-1) as HTMLElement;
-      // Days header also has time elements for each day
-      expect(rootElement.querySelectorAll('time').length).to.be.greaterThan(0);
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('days-cell-width');
+      // day: tickWidth = 120px, 2 header rows (month + day).
+      expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('120px');
+      expect(
+        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
+      ).to.equal(2);
     });
   });
 });
