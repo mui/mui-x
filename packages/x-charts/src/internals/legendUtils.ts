@@ -1,6 +1,7 @@
 import type { SeriesLegendItemParams } from '../ChartsLegend';
 import type { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
 import type { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
+import type { ShowMarkParams } from '../models/seriesType/line';
 import type { SeriesProcessorResult } from './plugins/corePlugins/useChartSeriesConfig/types/seriesProcessor.types';
 import { getLabel } from './getLabel';
 
@@ -15,7 +16,7 @@ type SeriesTypeWithLegendFields = {
 }[ChartSeriesType];
 
 function getMarkShape(series: {
-  showMark?: boolean | ((...args: unknown[]) => boolean);
+  showMark?: boolean | ((params: ShowMarkParams) => boolean);
   shape?: ChartsLabelMarkProps['markShape'];
   [key: string]: unknown;
 }): SeriesLegendItemParams['markShape'] {
