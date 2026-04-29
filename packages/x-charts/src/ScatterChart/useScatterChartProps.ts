@@ -54,7 +54,10 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     [series],
   );
   const resolvedDisableHitArea = disableHitArea;
-  const useVoronoiOnItemClick = resolvedDisableHitArea !== true || renderer === 'svg-batch';
+  // 'svg-single' (and the undefined default) is the only renderer with per-item DOM events.
+  // Every other renderer needs voronoi-based click handling regardless of disableHitArea.
+  const useVoronoiOnItemClick =
+    resolvedDisableHitArea !== true || (renderer !== undefined && renderer !== 'svg-single');
   const chartsContainerProps: ChartsContainerProps<'scatter', ScatterChartPluginSignatures> = {
     ...other,
     series: seriesWithDefault,
