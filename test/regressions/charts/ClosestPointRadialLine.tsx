@@ -25,35 +25,44 @@ const series = [
   },
 ];
 
+const CURVES = ['natural', 'linear', 'catmullRom'] as const;
+const SCALES = ['linear', 'point', 'band'] as const;
 export default function ClosestPointRadialLine() {
   return (
     <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
-      {['linear', 'point', 'band'].map((scaleType, index) => {
-        return (
-          <div key={scaleType}>
-            <p>rotation-scale: {scaleType}</p>
-            <RadialLineChart
-              rotationAxis={[
-                {
-                  scaleType: scaleType as 'linear' | 'point' | 'band',
-                  data: [1, 2, 5, 8, 13],
-                },
-              ]}
-              radiusAxis={[{ minRadius: 10 }]}
-              height={HEIGHT}
-              width={WIDTH}
-              grid={{ rotation: true, radius: true }}
-              series={series.map((s) => ({
-                ...s,
-                curve: ['narural', 'linear', 'step'][index] as 'natural' | 'linear' | 'step',
-                area: true,
-              }))}
-            >
-              <Dots />
-            </RadialLineChart>
-          </div>
-        );
-      })}
+      {CURVES.map((curve) => (
+        <div key={curve}>
+          {SCALES.map((scaleType) => {
+            return (
+              <div key={scaleType}>
+                <p>
+                  {curve} / {scaleType}
+                </p>
+                <RadialLineChart
+                  hideLegend
+                  rotationAxis={[
+                    {
+                      scaleType: scaleType as 'linear' | 'point' | 'band',
+                      data: [1, 2, 5, 8, 13],
+                    },
+                  ]}
+                  radiusAxis={[{ minRadius: 10 }]}
+                  height={HEIGHT}
+                  width={WIDTH}
+                  grid={{ rotation: true, radius: true }}
+                  series={series.map((s) => ({
+                    ...s,
+                    curve: curve as 'natural' | 'linear' | 'catmullRom',
+                    area: true,
+                  }))}
+                >
+                  <Dots />
+                </RadialLineChart>
+              </div>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 }
