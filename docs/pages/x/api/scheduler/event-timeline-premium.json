@@ -28,7 +28,7 @@
     "defaultPreset": {
       "type": {
         "name": "enum",
-        "description": "'day'<br>&#124;&nbsp;'dayAndHour'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'"
+        "description": "'dayAndHour'<br>&#124;&nbsp;'dayAndMonth'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'"
       },
       "default": "\"dayAndHour\""
     },
@@ -63,15 +63,15 @@
     "preset": {
       "type": {
         "name": "enum",
-        "description": "'day'<br>&#124;&nbsp;'dayAndHour'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'"
+        "description": "'dayAndHour'<br>&#124;&nbsp;'dayAndMonth'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'"
       }
     },
     "presets": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;'day'<br>&#124;&nbsp;'dayAndHour'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'&gt;"
+        "description": "Array&lt;'dayAndHour'<br>&#124;&nbsp;'dayAndMonth'<br>&#124;&nbsp;'dayAndWeek'<br>&#124;&nbsp;'monthAndYear'<br>&#124;&nbsp;'year'&gt;"
       },
-      "default": "[\"dayAndHour\", \"day\", \"dayAndWeek\", \"monthAndYear\", \"year\"]"
+      "default": "[\"dayAndHour\", \"dayAndMonth\", \"dayAndWeek\", \"monthAndYear\", \"year\"]"
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
     "resourceColumnLabel": { "type": { "name": "string" } },
@@ -110,48 +110,6 @@
       "key": "currentTimeIndicatorCircle",
       "className": "MuiEventTimelinePremium-currentTimeIndicatorCircle",
       "description": "Styles applied to the current time indicator circle element.",
-      "isGlobal": false
-    },
-    {
-      "key": "daysHeader",
-      "className": "MuiEventTimelinePremium-daysHeader",
-      "description": "Styles applied to the days header root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "daysHeaderCell",
-      "className": "MuiEventTimelinePremium-daysHeaderCell",
-      "description": "Styles applied to days header cell elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "daysHeaderDayNumber",
-      "className": "MuiEventTimelinePremium-daysHeaderDayNumber",
-      "description": "Styles applied to days header day number elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "daysHeaderMonthStart",
-      "className": "MuiEventTimelinePremium-daysHeaderMonthStart",
-      "description": "Styles applied to days header month start elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "daysHeaderMonthStartLabel",
-      "className": "MuiEventTimelinePremium-daysHeaderMonthStartLabel",
-      "description": "Styles applied to days header month start label elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "daysHeaderTime",
-      "className": "MuiEventTimelinePremium-daysHeaderTime",
-      "description": "Styles applied to days header time elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "daysHeaderWeekDay",
-      "className": "MuiEventTimelinePremium-daysHeaderWeekDay",
-      "description": "Styles applied to days header week day elements.",
       "isGlobal": false
     },
     {
@@ -509,69 +467,39 @@
       "isGlobal": false
     },
     {
+      "key": "header",
+      "className": "MuiEventTimelinePremium-header",
+      "description": "Styles applied to the generic header (wraps all level rows).",
+      "isGlobal": false
+    },
+    {
+      "key": "headerCell",
+      "className": "MuiEventTimelinePremium-headerCell",
+      "description": "Styles applied to each cell inside a header level row.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerCellLabel",
+      "className": "MuiEventTimelinePremium-headerCellLabel",
+      "description": "Styles applied to the label element inside a header cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerLevelRow",
+      "className": "MuiEventTimelinePremium-headerLevelRow",
+      "description": "Styles applied to each level row inside the generic header.",
+      "isGlobal": false
+    },
+    {
       "key": "headerRow",
       "className": "MuiEventTimelinePremium-headerRow",
-      "description": "Styles applied to the header row element.",
-      "isGlobal": false
-    },
-    {
-      "key": "monthsHeader",
-      "className": "MuiEventTimelinePremium-monthsHeader",
-      "description": "Styles applied to the months header root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "monthsHeaderMonthLabel",
-      "className": "MuiEventTimelinePremium-monthsHeaderMonthLabel",
-      "description": "Styles applied to months header month label elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "monthsHeaderYearLabel",
-      "className": "MuiEventTimelinePremium-monthsHeaderYearLabel",
-      "description": "Styles applied to months header year label elements.",
+      "description": "Styles applied to the top row of the grid (contains the title and events headers).",
       "isGlobal": false
     },
     {
       "key": "root",
       "className": "MuiEventTimelinePremium-root",
       "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "timeHeader",
-      "className": "MuiEventTimelinePremium-timeHeader",
-      "description": "Styles applied to the time header root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "timeHeaderCell",
-      "className": "MuiEventTimelinePremium-timeHeaderCell",
-      "description": "Styles applied to time header cell elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "timeHeaderCellsRow",
-      "className": "MuiEventTimelinePremium-timeHeaderCellsRow",
-      "description": "Styles applied to the time header cells row element.",
-      "isGlobal": false
-    },
-    {
-      "key": "timeHeaderDayLabel",
-      "className": "MuiEventTimelinePremium-timeHeaderDayLabel",
-      "description": "Styles applied to the time header day label element.",
-      "isGlobal": false
-    },
-    {
-      "key": "timeHeaderTimeCell",
-      "className": "MuiEventTimelinePremium-timeHeaderTimeCell",
-      "description": "Styles applied to time header time cell elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "timeHeaderTimeLabel",
-      "className": "MuiEventTimelinePremium-timeHeaderTimeLabel",
-      "description": "Styles applied to time header time label elements.",
       "isGlobal": false
     },
     {
@@ -602,48 +530,6 @@
       "key": "titleSubGrid",
       "className": "MuiEventTimelinePremium-titleSubGrid",
       "description": "Styles applied to the title sub-grid element.",
-      "isGlobal": false
-    },
-    {
-      "key": "weeksHeader",
-      "className": "MuiEventTimelinePremium-weeksHeader",
-      "description": "Styles applied to the weeks header root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "weeksHeaderCell",
-      "className": "MuiEventTimelinePremium-weeksHeaderCell",
-      "description": "Styles applied to weeks header cell elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "weeksHeaderDayCell",
-      "className": "MuiEventTimelinePremium-weeksHeaderDayCell",
-      "description": "Styles applied to weeks header day cell elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "weeksHeaderDayLabel",
-      "className": "MuiEventTimelinePremium-weeksHeaderDayLabel",
-      "description": "Styles applied to weeks header day label elements.",
-      "isGlobal": false
-    },
-    {
-      "key": "weeksHeaderDaysRow",
-      "className": "MuiEventTimelinePremium-weeksHeaderDaysRow",
-      "description": "Styles applied to the weeks header days row element.",
-      "isGlobal": false
-    },
-    {
-      "key": "yearsHeader",
-      "className": "MuiEventTimelinePremium-yearsHeader",
-      "description": "Styles applied to the years header root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "yearsHeaderYearLabel",
-      "className": "MuiEventTimelinePremium-yearsHeaderYearLabel",
-      "description": "Styles applied to years header year label elements.",
       "isGlobal": false
     }
   ],
