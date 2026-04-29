@@ -28,7 +28,8 @@
     "eslint:ci": "eslint . --report-unused-disable-directives --max-warnings 0",
     "stylelint": "stylelint --reportInvalidScopeDisables --reportNeedlessDisables \"docs/**/*.?(c|m)[jt]s?(x)\" \"**/*.css\" --ignore-path .lintignore",
     "markdownlint": "markdownlint-cli2 \"**/*.md\"",
-    "valelint": "pnpm dlx --package @vvago/vale vale sync && git ls-files | grep -E \"\\.(md|mdx)$\" | xargs pnpm dlx --package @vvago/vale vale --filter='.Level==\"error\"'",
+    "vale:fix": "pnpm code-infra vale sync --vale-version $npm_package_config_valeVersion && git ls-files | grep -E \"\\.(md|mdx)$\" | xargs pnpm code-infra vale --vale-version $npm_package_config_valeVersion --filter='.Level==\"error\"' --auto-fix all",
+    "valelint": "pnpm code-infra vale sync --vale-version $npm_package_config_valeVersion && git ls-files | grep -E \"\\.(md|mdx)$\" | xargs pnpm code-infra vale --vale-version $npm_package_config_valeVersion --filter='.Level==\"error\"'",
     "prettier": "pretty-quick --ignore-path .lintignore --branch master",
     "prettier:all": "prettier --write . --ignore-path .lintignore",
     "proptypes": "tsx ./docs/scripts/generateProptypes.ts",
@@ -141,6 +142,9 @@
     "vitest": "catalog:",
     "yargs": "catalog:",
     "zod": "4.3.6"
+  },
+  "config": {
+    "valeVersion": "3.14.1"
   },
   "packageManager": "pnpm@10.30.1",
   "engines": {
