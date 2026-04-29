@@ -341,7 +341,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiMobileDatePicker",
   "forwardsRefTo": "HTMLDivElement",

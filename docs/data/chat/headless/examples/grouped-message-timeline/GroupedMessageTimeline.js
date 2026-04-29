@@ -9,16 +9,16 @@ import {
   createTimeWindowGroupKey,
 } from '@mui/x-chat/headless';
 
-import { createEchoAdapter } from 'docsx/data/chat/headless/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/headless/examples/shared/demoUtils';
 import {
   demoUsers,
   groupedTimelineMessages,
-} from 'docsx/data/chat/headless/examples/shared/demoData';
+} from 'docs/data/chat/headless/examples/shared/demoData';
 import {
   demoLocaleText,
   demoSlotProps,
   DemoToolbarButton,
-} from 'docsx/data/chat/headless/examples/shared/DemoPrimitives';
+} from 'docs/data/chat/headless/examples/shared/DemoPrimitives';
 
 export default function GroupedMessageTimeline() {
   const [windowMs, setWindowMs] = React.useState(5 * 60_000);

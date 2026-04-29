@@ -1,8 +1,12 @@
 import path from 'path';
 import fs from 'fs';
-import { LANGUAGES } from 'docsx/config';
-import { ProjectSettings, ComponentReactApi, HookReactApi } from '@mui-internal/api-docs-builder';
-import findApiPages from '@mui-internal/api-docs-builder/utils/findApiPages';
+import { LANGUAGES } from '@mui/internal-core-docs/constants';
+import {
+  ProjectSettings,
+  ComponentReactApi,
+  HookReactApi,
+  findApiPages,
+} from '@mui/internal-api-docs-builder';
 import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
 
@@ -108,7 +112,6 @@ export default chartsApiPages;
       'x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx',
       'x-charts-premium/src/HeatmapPremium/HeatmapPlotPremium.tsx',
       'x-charts-premium/src/HeatmapPremium/webgl/HeatmapWebGLPlot.tsx',
-      'x-charts-premium/src/HeatmapPremium/webgl/HeatmapWebGLRenderer.tsx',
       'x-charts-premium/src/ChartsWebGLLayer/ChartsWebGLLayer.tsx',
       'x-charts/src/ChartsLayerContainer/ChartsLayerContainer.tsx',
       'x-charts/src/ChartsSvgLayer/ChartsSvgLayer.tsx',
@@ -121,11 +124,13 @@ export default chartsApiPages;
       'x-charts-pro/src/ChartDataProviderPro/ChartDataProviderPro.tsx',
       'x-charts-premium/src/ChartDataProviderPremium/ChartDataProviderPremium.tsx',
       'x-charts-premium/src/CandlestickChart/seriesConfig/OHLCTooltipContent.tsx',
+      'x-charts-premium/src/RadialLineChart/RadialLine.tsx',
+      'x-charts-premium/src/RadialLineChart/RadialArea.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/charts',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/charts',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/charts',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: ['stripeColor'],

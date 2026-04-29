@@ -16,7 +16,7 @@ import {
   SchedulerResource,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
-import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
+import { EventTimelinePremiumPreset } from '@mui/x-scheduler-headless-premium/models';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 
 const engineering = ResourceBuilder.new().build();
@@ -44,8 +44,8 @@ describe('<EventTimelinePremium />', () => {
   function renderTimeline(options?: {
     resources?: SchedulerResource[];
     events?: SchedulerEvent[];
-    view?: EventTimelinePremiumView;
-    views?: EventTimelinePremiumView[];
+    preset?: EventTimelinePremiumPreset;
+    presets?: EventTimelinePremiumPreset[];
     visibleDate?: TemporalSupportedObject;
     showCurrentTimeIndicator?: boolean;
     resourceColumnLabel?: string;
@@ -56,8 +56,8 @@ describe('<EventTimelinePremium />', () => {
         resources={options?.resources ?? baseResources}
         events={options?.events ?? baseEvents}
         visibleDate={options?.visibleDate ?? DEFAULT_TESTING_VISIBLE_DATE}
-        view={options?.view ?? 'days'}
-        views={options?.views ?? ['time', 'days', 'weeks', 'months', 'years']}
+        preset={options?.preset ?? 'day'}
+        presets={options?.presets ?? ['dayAndHour', 'day', 'dayAndWeek', 'monthAndYear', 'year']}
         showCurrentTimeIndicator={options?.showCurrentTimeIndicator}
         resourceColumnLabel={options?.resourceColumnLabel}
         localeText={options?.localeText}
@@ -74,7 +74,7 @@ describe('<EventTimelinePremium />', () => {
       });
       // Check that we have one title cell per resource by counting the cells with IDs
       const resourceTitleCells = baseResources.map((resource) =>
-        document.getElementById(`EventTimelinePremiumTitleCell-${resource.id}`),
+        document.querySelector(`[id$="-EventTimelinePremiumTitleCell-${resource.id}"]`),
       );
       expect(resourceTitleCells.filter(Boolean).length).to.equal(baseResources.length);
     });
@@ -119,8 +119,8 @@ describe('<EventTimelinePremium />', () => {
           resources={baseResources}
           events={baseEvents}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          view="days"
-          views={['days', 'weeks']}
+          preset="day"
+          presets={['day', 'dayAndWeek']}
         />,
       );
       baseEvents.forEach((eventItem) => {
@@ -141,7 +141,7 @@ describe('<EventTimelinePremium />', () => {
         .resource(engineering)
         .build();
 
-      renderTimeline({ events: [recurringEvent, singleEvent], view: 'days' });
+      renderTimeline({ events: [recurringEvent, singleEvent], preset: 'day' });
 
       const recurringEventElements = screen.getAllByLabelText(recurringEvent.title);
       expect(recurringEventElements.length).to.be.greaterThan(0);
@@ -157,10 +157,10 @@ describe('<EventTimelinePremium />', () => {
       ).to.equal(null);
     });
 
-    it('should render events correctly in the time view', () => {
+    it('should render events correctly in the dayAndHour preset', () => {
       const totalWidth = 6144; // 96 hours * 64px
       const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
-      renderTimeline({ view: 'time' });
+      renderTimeline({ preset: 'dayAndHour' });
 
       const eventElement = screen.getByLabelText(event1.title);
       expect(eventElement).not.to.equal(null);
@@ -172,10 +172,10 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition).to.be.lessThanOrEqual(hourBoundaries.end);
     });
 
-    it('should render events correctly in the days view', () => {
+    it('should render events correctly in the day preset', () => {
       const totalWidth = 6720; // 56 days * 120px
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
-      renderTimeline({ view: 'days' });
+      renderTimeline({ preset: 'day' });
 
       const eventElement = screen.getByLabelText(event3.title);
       expect(eventElement).not.to.equal(null);
@@ -187,7 +187,7 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
     });
 
-    it('should render events correctly in the weeks view', () => {
+    it('should render events correctly in the dayAndWeek preset', () => {
       const totalWidth = 64 * 7 * 16; // 64px * 7 days * 16 weeks
       const startOfWeek = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
       const weekDayNumber = adapter.differenceInDays(
@@ -196,7 +196,7 @@ describe('<EventTimelinePremium />', () => {
       );
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
 
-      renderTimeline({ view: 'weeks' });
+      renderTimeline({ preset: 'dayAndWeek' });
 
       const eventElement = screen.getByLabelText(event1.title);
       expect(eventElement).not.to.equal(null);
@@ -208,7 +208,7 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
     });
 
-    it('should render events correctly in the month view', () => {
+    it('should render events correctly in the monthAndYear preset', () => {
       const nextMonthEvent = EventBuilder.new()
         .title('Next month')
         .span('2025-08-04T13:00:00Z', '2025-09-04T14:30:00Z')
@@ -216,7 +216,7 @@ describe('<EventTimelinePremium />', () => {
         .build();
       const extendedEvents: SchedulerEvent[] = [...baseEvents, nextMonthEvent];
 
-      renderTimeline({ events: extendedEvents, view: 'months' });
+      renderTimeline({ events: extendedEvents, preset: 'monthAndYear' });
 
       const totalWidth = 180 * 36; // 36 months
       const event1Element = screen.getByLabelText(event1.title);
@@ -237,7 +237,7 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition2).to.be.lessThanOrEqual(360); // second month
     });
 
-    it('should render events correctly in the year view', () => {
+    it('should render events correctly in the year preset', () => {
       const thisYearEvent = EventBuilder.new()
         .span('2025-08-03T13:00:00Z', '2025-09-04T14:30:00Z')
         .resource(engineering)
@@ -247,7 +247,7 @@ describe('<EventTimelinePremium />', () => {
         .resource(engineering)
         .build();
 
-      renderTimeline({ events: [thisYearEvent, nextYearEvent], view: 'years' });
+      renderTimeline({ events: [thisYearEvent, nextYearEvent], preset: 'year' });
 
       const totalWidth = 30 * 200;
       const thisYearEventElement = screen.getByLabelText(thisYearEvent.title);
@@ -332,28 +332,30 @@ describe('<EventTimelinePremium />', () => {
     });
   });
 
-  describe('views', () => {
-    it('should render the correct header and updates CSS variable when switching views', async () => {
+  describe('presets', () => {
+    it('should render the correct header and updates CSS variable when switching presets', async () => {
       renderTimeline({
-        view: 'time',
-        views: ['days', 'time'],
+        preset: 'dayAndHour',
+        presets: ['day', 'dayAndHour'],
       });
 
       let rootElement = screen.getByRole('grid');
-      // The time header has 24 time cells (one for each hour)
+      // The dayAndHour header has 24 time cells (one for each hour)
       expect(rootElement.querySelectorAll('time').length).to.be.greaterThan(0);
 
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('time-cell-width');
+      expect(rootElement.style.getPropertyValue('--unit-width')).to.contain(
+        'dayAndHour-cell-width',
+      );
 
       renderTimeline({
-        view: 'days',
-        views: ['days', 'time'],
+        preset: 'day',
+        presets: ['day', 'dayAndHour'],
       });
 
       rootElement = screen.getAllByRole('grid').at(-1) as HTMLElement;
-      // Days header also has time elements for each day
+      // The day header also has time elements for each day
       expect(rootElement.querySelectorAll('time').length).to.be.greaterThan(0);
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('days-cell-width');
+      expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('day-cell-width');
     });
   });
 });

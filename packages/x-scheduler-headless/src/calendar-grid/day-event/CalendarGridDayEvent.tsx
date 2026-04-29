@@ -57,7 +57,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const store = useEventCalendarStoreContext();
   const { id: rootId } = useCalendarGridRootContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
-  const { index: cellIndex } = useCalendarGridDayCellContext();
+  const { index: cellIndex, hasFocus: cellHasFocus } = useCalendarGridDayCellContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
@@ -137,6 +137,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const { getButtonProps, buttonRef } = useButton({
     disabled: !isInteractive,
     native: nativeButton,
+    tabIndex: cellHasFocus ? 0 : -1,
   });
 
   // Rendering hooks

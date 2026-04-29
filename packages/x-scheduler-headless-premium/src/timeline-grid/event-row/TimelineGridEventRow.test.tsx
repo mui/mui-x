@@ -12,7 +12,9 @@ describe('<TimelineGrid.EventRow />', () => {
       render(node) {
         return render(
           <EventTimelinePremiumProvider events={[]}>
-            <TimelineGrid.Root>{node}</TimelineGrid.Root>
+            <TimelineGrid.Root>
+              <TimelineGrid.SubGrid>{node}</TimelineGrid.SubGrid>
+            </TimelineGrid.Root>
           </EventTimelinePremiumProvider>,
         );
       },

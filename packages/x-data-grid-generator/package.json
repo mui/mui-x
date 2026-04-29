@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "9.0.1",
+  "version": "9.0.4",
   "author": "MUI Team",
   "description": "Generate fake data for demo purposes only.",
   "license": "UNLICENSED",
@@ -34,7 +34,7 @@
     "@mui/x-internals": "workspace:^",
     "chance": "catalog:",
     "clsx": "catalog:",
-    "lru-cache": "^11.2.2"
+    "lru-cache": "^11.3.5"
   },
   "devDependencies": {
     "@mui/icons-material": "catalog:",

@@ -42,12 +42,6 @@ export function isRowContextInitialized(renderContext: GridRenderContext) {
   return renderContext.firstRowIndex !== 0 || renderContext.lastRowIndex !== 0;
 }
 
-export function isRowRangeUpdated(range1: RowRange, range2: RowRange) {
-  return (
-    range1.firstRowIndex !== range2.firstRowIndex || range1.lastRowIndex !== range2.lastRowIndex
-  );
-}
-
 export const getCellValue = (
   row: GridValidRowModel,
   colDef: GridColDef,

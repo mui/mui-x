@@ -149,7 +149,7 @@ export const AgendaView = React.memo(
   ) {
     // Context hooks
     const adapter = useAdapterContext();
-    const { classes } = useEventCalendarStyledContext();
+    const { schedulerId, classes } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
 
     // Ref hooks
@@ -185,12 +185,12 @@ export const AgendaView = React.memo(
           <AgendaViewRow
             className={classes.agendaViewRow}
             key={date.key}
-            id={`AgendaViewRow-${date.key}`}
-            aria-labelledby={`DayHeaderCell-${date.key}`}
+            id={`${schedulerId}-AgendaViewRow-${date.key}`}
+            aria-labelledby={`${schedulerId}-DayHeaderCell-${date.key}`}
           >
             <DayHeaderCell
               className={classes.agendaViewDayHeaderCell}
-              id={`DayHeaderCell-${date.key}`}
+              id={`${schedulerId}-DayHeaderCell-${date.key}`}
               aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
               data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
             >

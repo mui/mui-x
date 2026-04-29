@@ -2,7 +2,7 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { screen, waitFor } from '@mui/internal-test-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
-import { adapterToUse, createPickerRenderer, openPickerAsync } from 'test/utils/pickers';
+import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
 
 describe('<DesktopTimePicker />', () => {
   const { render } = createPickerRenderer();
@@ -71,7 +71,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'time' });
+      await openPicker(user, { type: 'time' });
 
       await user.click(screen.getByRole('option', { name: '09:00 AM' }));
       expect(onChange.callCount).to.equal(1);
@@ -100,7 +100,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'time' });
+      await openPicker(user, { type: 'time' });
 
       await user.click(screen.getByRole('option', { name: '2 hours' }));
       expect(onChange.callCount).to.equal(1);
@@ -138,7 +138,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'time' });
+      await openPicker(user, { type: 'time' });
 
       await user.click(screen.getByRole('option', { name: '15 minutes' }));
       expect(onChange.callCount).to.equal(1);
@@ -181,7 +181,7 @@ describe('<DesktopTimePicker />', () => {
         />,
       );
 
-      await openPickerAsync(user, { type: 'time' });
+      await openPicker(user, { type: 'time' });
 
       await user.click(screen.getByRole('option', { name: 'PM' }));
       expect(onChange.callCount).to.equal(1);

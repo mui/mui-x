@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-chat-headless",
-  "version": "9.0.0-alpha.0",
+  "version": "9.0.0-alpha.2",
   "author": "MUI Team",
   "description": "The community edition of the headless MUI X Chat components, including core logic and unstyled UI.",
   "license": "MIT",
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@base-ui/react": "^1.0.0",
+    "@base-ui/react": "^1.4.1",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*"
   },

@@ -415,7 +415,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiDateTimePicker",
   "forwardsRefTo": "HTMLDivElement",
