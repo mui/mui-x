@@ -379,6 +379,11 @@ RichTreeViewPro.propTypes = {
   itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
   /**
+   * If `true`, the reordering of items is enabled.
+   * @default false
+   */
+  itemsReordering: PropTypes.bool,
+  /**
    * If `true`, a skeleton loading UI is displayed instead of the tree items.
    * @default false
    */
@@ -388,11 +393,6 @@ RichTreeViewPro.propTypes = {
    * @default 5
    */
   loadingItemsCount: PropTypes.number,
-  /**
-   * If `true`, the reordering of items is enabled.
-   * @default false
-   */
-  itemsReordering: PropTypes.bool,
   /**
    * Whether multiple items can be selected.
    * @default false
