@@ -800,6 +800,36 @@ describe('<DataGridPro /> - Edit components', () => {
       });
     });
 
+    it('should toggle highlighted option and exit edit mode on Enter', async () => {
+      defaultData.rows = [{ id: 0, tags: [] }];
+      const { user } = render(<TestCase />);
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      await user.keyboard('{ArrowDown}{Enter}');
+
+      expect(spiedSetEditCellValue.lastCall.args[0].value).to.deep.equal(['Option 1']);
+      await waitFor(() => {
+        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
+      });
+    });
+
+    it('should toggle highlighted option without exiting edit mode on Ctrl+Enter', async () => {
+      defaultData.rows = [{ id: 0, tags: [] }];
+      const { user } = render(<TestCase />);
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      await user.dblClick(cell);
+
+      await user.keyboard('{ArrowDown}{Control>}{Enter}{/Control}');
+
+      expect(spiedSetEditCellValue.lastCall.args[0].value).to.deep.equal(['Option 1']);
+      expect(cell).to.have.class('MuiDataGrid-cell--editing');
+    });
+
     it('should work with object value options', async () => {
       defaultData.columns = [
         {
