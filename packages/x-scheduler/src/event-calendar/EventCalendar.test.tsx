@@ -1,4 +1,4 @@
-import { screen, waitFor, within } from '@mui/internal-test-utils';
+import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
   createSchedulerRenderer,
@@ -143,7 +143,10 @@ describe('EventCalendar', () => {
 
       // ARIA tree pattern: focus the treeitem (a real user would Tab into the
       // tree and use Arrow keys to land here) and use Space to toggle selection.
-      runningTreeItem.focus();
+      // The focus() call updates the TreeView's focus store, so wrap in act().
+      act(() => {
+        runningTreeItem.focus();
+      });
       await user.keyboard(' ');
       await waitFor(() => {
         expect(runningCheckbox.checked).to.equal(false);
