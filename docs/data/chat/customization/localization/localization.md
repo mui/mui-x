@@ -1,6 +1,6 @@
 ---
 productId: x-chat
-title: Localization
+title: Chat - Localization
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatRoot

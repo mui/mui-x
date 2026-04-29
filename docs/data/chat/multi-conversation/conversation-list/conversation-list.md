@@ -12,7 +12,8 @@ components: ChatConversationList
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
+The conversation list is the sidebar that shows all available conversations and lets users switch between them.
+`@mui/x-chat` ships `ChatConversationList`, a single component with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
 
 {{"demo": "../../material/examples/multi-conversation/MultiConversation.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
@@ -55,7 +56,9 @@ Because the Material UI layer fills all slot defaults at instantiation, overrid
 
 ## Switching conversations
 
-The conversation list is rendered automatically when `ChatBox` is provided with more than one conversation. Clicking a row calls `onActiveConversationChange` with the conversation ID. Use controlled state to manage the active conversation:
+The conversation list is rendered automatically when `ChatBox` is provided with more than one conversation.
+Clicking a row calls `onActiveConversationChange` with the conversation ID.
+Use controlled state to manage the active conversation:
 
 ```tsx
 const [activeConversationId, setActiveConversationId] = React.useState('thread-a');
@@ -82,7 +85,9 @@ The item and all its sub-slots receive an `ownerState` prop that carries the cur
 | `focused`      | `boolean`          | This row currently has keyboard focus  |
 | `conversation` | `ChatConversation` | The full conversation data object      |
 
-The `selected` flag drives the row background (`palette.action.selected`). The `unread` flag drives bold title typography. The `focused` flag drives the `focus-visible` outline for keyboard accessibility.
+The `selected` flag drives the row background (`palette.action.selected`).
+The `unread` flag drives bold title typography.
+The `focused` flag drives the `focus-visible` outline for keyboard accessibility.
 
 Because the full `conversation` object is included, custom slot components can directly read fields such as `conversation.title`, `conversation.metadata`, `conversation.unreadCount`, and `conversation.lastMessageAt` without additional selectors.
 
@@ -183,7 +188,8 @@ const RichItemContent = React.forwardRef(function RichItemContent(
 <ChatConversationList slots={{ itemContent: RichItemContent }} />;
 ```
 
-When you replace `itemContent`, the `title` and `preview` slots are no longer rendered (they are children of the default `itemContent`). Render any equivalent content directly inside your custom component.
+When you replace `itemContent`, the `title` and `preview` slots are no longer rendered (they are children of the default `itemContent`).
+Render any equivalent content directly inside your custom component.
 
 ## Overriding the full item row
 
@@ -245,11 +251,13 @@ const CompactRow = React.forwardRef(function CompactRow(
 <ChatConversationList slots={{ item: CompactRow }} />;
 ```
 
-The `role="option"` and `aria-selected` attributes are set automatically before the slot renders, so they are present on the element even without the default styled item. Spread `...props` to pass them through.
+The `role="option"` and `aria-selected` attributes are set automatically before the slot renders, so they are present on the element even without the default styled item.
+Spread `...props` to pass them through.
 
 ## Full custom item renderer
 
-The `conversation` object in `ownerState` lets you derive everything you need to render a rich row without additional data fetching or selectors. The following example builds a full item renderer that shows an avatar with initials, a bold title for unread conversations, a truncated preview, a human-readable timestamp, and a count badge:
+The `conversation` object in `ownerState` lets you derive everything you need to render a rich row without additional data fetching or selectors.
+The following example builds a full item renderer that shows an avatar with initials, a bold title for unread conversations, a truncated preview, a human-readable timestamp, and a count badge:
 
 ```tsx
 import * as React from 'react';
@@ -402,7 +410,8 @@ Theme overrides apply globally across your application and are the lowest-fricti
 
 ## Controlling the list width
 
-The conversation list width is driven by the scroller slot. Override it through `slotProps`:
+The conversation list width is driven by the scroller slot.
+Override it through `slotProps`:
 
 ```tsx
 <ChatConversationList
@@ -422,9 +431,11 @@ Or set the CSS variable on a parent element to control the width from a layout l
 
 ## Accessibility notes
 
-The default list uses `role="listbox"` on the root and `role="option"` with `aria-selected` on each row. The component manages roving focus: only one row is in the tab order at a time, and `ArrowUp`, `ArrowDown`, `Home`, `End`, and `Enter` are handled automatically.
+The default list uses `role="listbox"` on the root and `role="option"` with `aria-selected` on each row.
+The component manages roving focus: only one row is in the tab order at a time, and `ArrowUp`, `ArrowDown`, `Home`, `End`, and `Enter` are handled automatically.
 
-Custom `item` slot components must forward all `...props` to the DOM element they render so the `role`, `aria-selected`, and keyboard handler props are preserved. Failing to spread `...props` breaks both keyboard navigation and screen-reader semantics.
+Custom `item` slot components must forward all `...props` to the DOM element they render so the `role`, `aria-selected`, and keyboard handler props are preserved.
+Failing to spread `...props` breaks both keyboard navigation and screen-reader semantics.
 
 Pass `aria-label` to the root through `slotProps`:
 

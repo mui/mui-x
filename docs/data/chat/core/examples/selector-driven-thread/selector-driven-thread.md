@@ -1,11 +1,11 @@
 ---
-title: Chat - Selector-driven thread
+title: Chat - Selector-Driven Thread
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Selector-driven thread
+# Chat - Selector-Driven Thread
 
 <p class="description">Render large custom threads efficiently with IDs at the list level and row-level message subscriptions.</p>
 

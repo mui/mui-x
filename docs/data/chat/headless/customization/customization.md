@@ -1,11 +1,11 @@
 ---
 productId: x-chat
-title: Chat - Headless customization
+title: Chat - Headless Customization
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless customization
+# Chat - Headless Customization
 
 <p class="description">Customize the headless primitives through slots, slotProps, and owner state while keeping the built-in structure and behavior.</p>
 

@@ -1,11 +1,11 @@
 ---
-title: Chat - Controlled state
+title: Chat - Controlled State
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Controlled state
+# Chat - Controlled State
 
 <p class="description">Drive the public chat models from React state while the runtime keeps normalized internals.</p>
 

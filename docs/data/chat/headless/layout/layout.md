@@ -1,13 +1,13 @@
 ---
 productId: x-chat
-title: Chat - Headless layout
+title: Chat - Headless Layout
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless layout
+# Chat - Headless Layout
 
-<p class="description">Use Chat.Root and Chat.Layout to define the main chat shell and split the interface into conversation and thread panes.</p>
+<p class="description">Define the main chat shell and split the interface into conversation and thread panes.</p>
 
 {{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js", "hideToolbar": true}}
 

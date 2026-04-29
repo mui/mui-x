@@ -1,11 +1,11 @@
 ---
-title: Chat - Tool approval and renderers
+title: Chat - Tool Approval and Renderers
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Tool approval and renderers
+# Chat - Tool Approval and Renderers
 
 <p class="description">Combine AI-native runtime features by approving a tool call and rendering a custom message part through the registry.</p>
 

@@ -1,11 +1,11 @@
 ---
-title: Chat - Two-pane inbox
+title: Chat - Two-Pane Inbox
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Two-pane inbox
+# Chat - Two-Pane Inbox
 
 <p class="description">Build the default desktop chat application layout with a conversation rail and active thread pane.</p>
 

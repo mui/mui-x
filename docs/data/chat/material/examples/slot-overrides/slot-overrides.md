@@ -1,11 +1,11 @@
 ---
-title: Chat - Slot overrides
+title: Chat - Slot Overrides
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Slot overrides
+# Chat - Slot Overrides
 
 <p class="description">Replace individual subcomponents inside ChatBox using the slots prop.</p>
 

@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Team Messaging demo
+title: Team Messaging Demo
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - Team Messaging demo
+# Chat - Team Messaging Demo
 
 <p class="description">A two-pane inbox layout with a conversation sidebar, thread switching, and per-conversation message state.</p>
 

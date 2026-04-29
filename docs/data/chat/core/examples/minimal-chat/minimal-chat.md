@@ -1,13 +1,13 @@
 ---
-title: Chat - Minimal core chat
+title: Chat - Minimal Core Chat
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Minimal core chat
+# Chat - Minimal Core Chat
 
-<p class="description">Start with the smallest working ChatProvider and useChat() setup.</p>
+<p class="description">Start with the smallest working chat setup using the core runtime and hooks.</p>
 
 This demo keeps the UI intentionally small to demonstrate the core pattern:
 

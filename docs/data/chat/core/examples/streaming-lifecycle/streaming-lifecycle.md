@@ -1,11 +1,11 @@
 ---
-title: Chat - Streaming lifecycle
+title: Chat - Streaming Lifecycle
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Streaming lifecycle
+# Chat - Streaming Lifecycle
 
 <p class="description">Observe the full runtime lifecycle for send, stream, stop, error, retry, and callbacks.</p>
 

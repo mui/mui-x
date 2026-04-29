@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Chat - Headless thread
+title: Chat - Headless Thread
 packageName: '@mui/x-chat/headless'
 components: ConversationRoot, ConversationHeader, ConversationTitle, ConversationSubtitle, ConversationHeaderActions
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless thread
+# Chat - Headless Thread
 
 <p class="description">Build the active conversation surface from thread primitives that derive their state from the selected conversation.</p>
 

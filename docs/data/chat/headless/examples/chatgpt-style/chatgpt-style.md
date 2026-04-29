@@ -1,11 +1,11 @@
 ---
-title: Chat - ChatGPT-style layout
+title: Chat - ChatGPT-Style Layout
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - ChatGPT-style layout
+# Chat - ChatGPT-Style Layout
 
 <p class="description">Replicate a ChatGPT-style two-pane layout with a sidebar conversation list and a clean message area.</p>
 

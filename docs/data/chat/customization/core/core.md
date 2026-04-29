@@ -1,6 +1,6 @@
 ---
 productId: x-chat
-title: Core
+title: Chat - Core
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---

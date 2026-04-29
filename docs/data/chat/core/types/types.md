@@ -1,11 +1,11 @@
 ---
 productId: x-chat
-title: Chat - Type augmentation
+title: Chat - Type Augmentation
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Type augmentation
+# Chat - Type Augmentation
 
 <p class="description">Extend the type system with app-specific metadata, typed tools, data parts, and custom message parts via module augmentation.</p>
 
@@ -158,7 +158,8 @@ The effect flows through:
 4. **Hooks**: `useChat().messages` and `useMessage(id)` return messages with augmented types.
 5. **Renderers**: `useChatPartRenderer('ticket-summary')` returns a renderer typed for the custom part.
 
-No runtime code changes are needed. The augmentation is purely compile-time.
+No runtime code changes are needed.
+The augmentation is purely compile-time.
 
 ## Gotchas
 

@@ -8,7 +8,7 @@ components: ChatMessageContent
 
 # Chat - Text and Markdown
 
-<p class="description">Render plain text and markdown content in chat messages using the ChatTextMessagePart type and the built-in markdown renderer.</p>
+<p class="description">Render plain text and markdown in chat messages with the built-in markdown parser.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -27,7 +27,8 @@ interface ChatTextMessagePart {
 }
 ```
 
-A message can contain multiple text parts alongside other part types (files, sources, tool calls). The `parts` array on `ChatMessage` holds them all:
+A message can contain multiple text parts alongside other part types (files, sources, tool calls).
+The `parts` array on `ChatMessage` holds them all:
 
 ```ts
 const message: ChatMessage = {
@@ -85,7 +86,8 @@ This lets you plug in any markdown library (react-markdown, remark, MDX) while k
 
 ## Streaming text
 
-Text parts support incremental delivery through the streaming protocol. The stream uses three chunk types to build up a text part:
+Text parts support incremental delivery through the streaming protocol.
+The stream uses three chunk types to build up a text part:
 
 | Chunk type   | Purpose                         |
 | :----------- | :------------------------------ |
@@ -93,7 +95,8 @@ Text parts support incremental delivery through the streaming protocol. The stre
 | `text-delta` | Appends a string fragment       |
 | `text-end`   | Marks the text part as complete |
 
-While tokens are arriving, the part's `state` field is `'streaming'`. Once the `text-end` chunk arrives, `state` transitions to `'done'`.
+While tokens are arriving, the part's `state` field is `'streaming'`.
+Once the `text-end` chunk arrives, `state` transitions to `'done'`.
 
 ```ts
 // During streaming

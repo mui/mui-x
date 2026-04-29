@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Chat - Headless composer
+title: Chat - Headless Composer
 packageName: '@mui/x-chat/headless'
 components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachButton, ComposerAttachmentList, ComposerLabel, ComposerToolbar, ComposerHelperText
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless composer
+# Chat - Headless Composer
 
 <p class="description">Assemble the draft surface from structural primitives that already handle submission, IME-safe Enter, attachments, helper text, and disabled states.</p>
 

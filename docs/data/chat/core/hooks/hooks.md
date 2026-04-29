@@ -1,11 +1,11 @@
 ---
 productId: x-chat
-title: Chat - Core hooks
+title: Chat - Core Hooks
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Core hooks
+# Chat - Core Hooks
 
 <p class="description">Read chat state and trigger runtime actions through hooks scoped to exactly the data your component needs.</p>
 
@@ -26,7 +26,7 @@ import {
 } from '@mui/x-chat/headless';
 ```
 
-All hooks must be called inside a `<ChatProvider>`.
+All hooks must be called inside a `ChatProvider`.
 
 The following demo shows hooks in action inside a minimal custom chat:
 

@@ -1,11 +1,11 @@
 ---
 productId: x-chat
-title: Chat - Core adapters
+title: Chat - Core Adapters
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Core adapters
+# Chat - Core Adapters
 
 <p class="description">Write a ChatAdapter to connect the core runtime to any backend—HTTP, SSE, WebSocket, or AI SDK.</p>
 

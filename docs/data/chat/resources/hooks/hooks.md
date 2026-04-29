@@ -261,9 +261,9 @@ const {
 
 The hook handles several details automatically:
 
-- **Object URL lifecycle**—preview URLs for image attachments are created on add and revoked on remove or unmount.
-- **IME safety**—`submit` is a no-op during an active IME composition session (relevant for East Asian input methods).
-- **Double-send prevention**—`submit` is blocked when `isSubmitting` is `true`.
+- **Object URL lifecycle**: preview URLs for image attachments are created on add and revoked on remove or unmount.
+- **IME safety**: `submit` is a no-op during an active IME composition session (relevant for East Asian input methods).
+- **Double-send prevention**: `submit` is blocked when `isSubmitting` is `true`.
 
 ```tsx
 function CustomComposer() {
@@ -411,8 +411,8 @@ Direct store access is considered advanced API and is more likely to require cha
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the interface that the actions in these hooks call into.
-- [Selectors Reference](/x/react-chat/resources/selectors/) for the full `chatSelectors` map used with `useChatStore()`.
-- [Controlled State](/x/react-chat/backend/controlled-state/) for `ChatProvider` props and the controlled/uncontrolled model.
-- [Events & Callbacks](/x/react-chat/resources/events-and-callbacks/) for `onFinish`, `onToolCall`, `onData`, and `onError`.
+- [Selectors reference](/x/react-chat/resources/selectors/) for the full `chatSelectors` map used with `useChatStore()`.
+- [Controlled state](/x/react-chat/backend/controlled-state/) for `ChatProvider` props and the controlled/uncontrolled model.
+- [Events and callbacks](/x/react-chat/resources/events-and-callbacks/) for `onFinish`, `onToolCall`, `onData`, and `onError`.
 
 ## API

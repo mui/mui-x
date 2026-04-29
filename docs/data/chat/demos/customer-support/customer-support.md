@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Customer Support demo
+title: Customer Support Demo
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - Customer Support demo
+# Chat - Customer Support Demo
 
 <p class="description">A compact, embedded chat widget suited for customer support overlays and space-constrained layouts.</p>
 

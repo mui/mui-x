@@ -17,9 +17,12 @@ For message content rendering (text, files, code blocks), see the [Message parts
 
 ## Message groups
 
-Consecutive messages from the same author are grouped together into a `ChatMessageGroup`. Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
+Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
+Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
 
-The grouping window defaults to 5 minutes (300,000 ms). Messages from the same author that arrive within this window are placed in the same group. Customize it through `slotProps`:
+The grouping window defaults to 5 minutes (300,000 ms).
+Messages from the same author that arrive within this window are placed in the same group.
+Customize it through `slotProps`:
 
 {{"demo": "../../material/message-list/MessageGrouping.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -43,7 +46,8 @@ Customize the date format through `slotProps`:
 The `ChatMessageAvatar` component renders the author's avatar for the first message in each group.
 Avatars are sourced from the `ChatUser.avatarUrl` field on the message's author.
 
-Within a group, subsequent messages omit the avatar entirely—the component returns `null` rather than rendering a placeholder. If no `avatarUrl` is set on the author and no custom `avatar` slot is provided, the avatar is also omitted for the first message in the group.
+Within a group, subsequent messages omit the avatar entirely—the component returns `null` rather than rendering a placeholder.
+If no `avatarUrl` is set on the author and no custom `avatar` slot is provided, the avatar is also omitted for the first message in the group.
 
 ## Timestamps and metadata
 
@@ -74,7 +78,8 @@ See [Variants and density](/x/react-chat/basics/variants-and-density/) for full 
 
 ## Density
 
-The `density` prop controls the vertical spacing between messages independently of the variant. Three values are available: `compact`, `standard` (default), and `comfortable`.
+The `density` prop controls the vertical spacing between messages independently of the variant.
+Three values are available: `compact`, `standard` (default), and `comfortable`.
 
 See [Variants and density](/x/react-chat/basics/variants-and-density/) for interactive density demos and guidance on combining variant and density.
 

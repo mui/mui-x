@@ -8,7 +8,7 @@ components: ChatMessageContent
 
 # Chat - Files and Images
 
-<p class="description">Display file attachments and inline image previews using the ChatFileMessagePart type.</p>
+<p class="description">Display file attachments and inline image previews in chat messages.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 

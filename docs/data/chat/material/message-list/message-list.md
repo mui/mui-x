@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Chat - Message list
+title: Chat - Message List
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: MessageListRoot, MessageListDateDivider, ScrollToBottomAffordance
 ---
 
-# Chat - Message list
+# Chat - Message List
 
 <p class="description">Display messages in a scrollable, auto-scrolling list with date dividers, message groups, and streaming indicators.</p>
 
@@ -90,7 +90,8 @@ Customize the date format through `slotProps`. The demo below uses a short month
 Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
 Within a group only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
 
-The grouping window defaults to 5 minutes (300,000 ms). Customize it through `slotProps`.
+The grouping window defaults to 5 minutes (300,000 ms).
+Customize it through `slotProps`.
 The demo below sets the window to 1 minute (60,000 ms)—notice how messages more than 1 minute apart start a new group with a fresh avatar:
 
 {{"demo": "MessageGrouping.js", "defaultCodeOpen": false, "bg": "inline"}}

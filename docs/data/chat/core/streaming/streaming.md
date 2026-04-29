@@ -1,11 +1,11 @@
 ---
 productId: x-chat
-title: Chat - Core streaming
+title: Chat - Core Streaming
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Core streaming
+# Chat - Core Streaming
 
 <p class="description">Understand the stream chunk protocol that turns adapter responses into normalized message state, including text, reasoning, tool, source, file, and data chunks.</p>
 

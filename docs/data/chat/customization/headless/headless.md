@@ -1,6 +1,6 @@
 ---
 productId: x-chat
-title: Headless Components
+title: Chat - Headless Components
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 components: ChatRoot

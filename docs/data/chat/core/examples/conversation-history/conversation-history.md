@@ -1,11 +1,11 @@
 ---
-title: Chat - Conversation history
+title: Chat - Conversation History
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Conversation history
+# Chat - Conversation History
 
 <p class="description">Use adapter-driven conversations, thread loading, and history paging without any structural UI components.</p>
 

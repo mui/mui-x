@@ -1,11 +1,11 @@
 ---
-title: Chat - Realtime thread sync
+title: Chat - Realtime Thread Sync
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Realtime thread sync
+# Chat - Realtime Thread Sync
 
 <p class="description">Use realtime events to add, update, remove, and rename conversations and messages.</p>
 

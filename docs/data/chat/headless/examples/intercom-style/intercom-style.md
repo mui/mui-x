@@ -1,11 +1,11 @@
 ---
-title: Chat - Intercom-style widget
+title: Chat - Intercom-Style Widget
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Intercom-style widget
+# Chat - Intercom-Style Widget
 
 <p class="description">Replicate the look and feel of an Intercom-style chat widget using headless slot customization.</p>
 

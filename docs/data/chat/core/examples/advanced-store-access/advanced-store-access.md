@@ -1,11 +1,11 @@
 ---
-title: Chat - Advanced store access
+title: Chat - Advanced Store Access
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Advanced store access
+# Chat - Advanced Store Access
 
 <p class="description">Use the store escape hatch to subscribe to exactly the runtime slices you want.</p>
 

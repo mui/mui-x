@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Chat - Headless composition
+title: Chat - Headless Composition
 packageName: '@mui/x-chat/headless'
 components: ChatRoot, ChatLayout
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless composition
+# Chat - Headless Composition
 
 <p class="description">Compose a complete chat UI from the headless namespaces while keeping styling decisions in your own code.</p>
 

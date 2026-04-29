@@ -15,16 +15,15 @@ Send any message and watch the agent plan animate through each step inside the c
 
 ## How it works
 
-When a tool call named `run_tasks` arrives, the default JSON accordion is replaced by a
-collapsible task list. Each step animates through `pending → running → done` and the
-list collapses automatically when all steps finish.
+When a tool call named `run_tasks` arrives, the default JSON accordion is replaced by a collapsible task list.
+Each step animates through `pending → running → done` and the list collapses automatically when all steps finish.
 
 The whole UI is a plain React component—no dedicated package export required.
 
 ## Providing a custom tool renderer
 
-Supply a `partRenderers` map to `ChatBox`. Each key is a message part type; the
-`dynamic-tool` key lets you intercept any tool call and render whatever you want:
+Supply a `partRenderers` map to `ChatBox`.
+Each key is a message part type; the `dynamic-tool` key lets you intercept any tool call and render whatever you want:
 
 ```tsx
 const partRenderers: ChatPartRendererMap = {

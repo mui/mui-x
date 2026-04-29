@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Chat - Headless message list
+title: Chat - Headless Message List
 packageName: '@mui/x-chat/headless'
 components: MessageListRoot
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless message list
+# Chat - Headless Message List
 
 <p class="description">Render ordered thread rows with date boundaries, history loading, scroll anchoring, and unseen-message tracking.</p>
 

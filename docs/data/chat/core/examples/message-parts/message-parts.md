@@ -1,11 +1,11 @@
 ---
-title: Chat - Message parts
+title: Chat - Message Parts
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Message parts
+# Chat - Message Parts
 
 <p class="description">Render reasoning, sources, files, step markers, and data parts with your own plain React markup.</p>
 

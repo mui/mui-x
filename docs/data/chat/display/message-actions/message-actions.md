@@ -33,7 +33,8 @@ The action bar is hidden by default (`opacity: 0`) and becomes visible when:
 - The user hovers over the parent `ChatMessage` row
 - Focus moves to an element inside the `ChatMessage` row (keyboard navigation)
 
-The transition uses a short opacity animation. When the user prefers reduced motion, the transition is disabled.
+The transition uses a short opacity animation.
+When the user prefers reduced motion, the transition is disabled.
 
 ```css
 /* Visibility is controlled by the parent message's hover/focus state */

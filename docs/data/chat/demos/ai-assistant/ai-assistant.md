@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: AI Assistant demo
+title: AI Assistant Demo
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - AI Assistant demo
+# Chat - AI Assistant Demo
 
 <p class="description">A full ChatGPT-style AI assistant with streaming responses, tool calling, and rich content rendering.</p>
 

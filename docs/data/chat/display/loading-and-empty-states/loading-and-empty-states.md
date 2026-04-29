@@ -29,7 +29,8 @@ import { ChatMessageSkeleton } from '@mui/x-chat';
 <ChatMessageSkeleton />
 ```
 
-By default, the skeleton renders 3 shimmer lines. The last line is shorter (60% width) to mimic the natural shape of a message.
+By default, the skeleton renders 3 shimmer lines.
+The last line is shorter (60% width) to mimic the natural shape of a message.
 
 ### Configuring the number of lines
 
@@ -81,7 +82,8 @@ Key characteristics of the empty state:
 
 ### Custom empty state content
 
-Provide custom empty state content by composing the thread from individual components. A common pattern is to display suggested prompts that help users start a conversation:
+Provide custom empty state content by composing the thread from individual components.
+A common pattern is to display suggested prompts that help users start a conversation:
 
 {{"demo": "CustomEmptyState.js", "defaultCodeOpen": false, "bg": "inline"}}
 

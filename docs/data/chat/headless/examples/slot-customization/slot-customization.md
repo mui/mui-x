@@ -1,11 +1,11 @@
 ---
-title: Chat - Slot customization
+title: Chat - Slot Customization
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Slot customization
+# Chat - Slot Customization
 
 <p class="description">Replace root, row, and leaf slots across the headless primitives to adapt them to a custom design system.</p>
 

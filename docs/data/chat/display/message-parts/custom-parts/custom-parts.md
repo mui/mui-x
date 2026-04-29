@@ -8,7 +8,7 @@ components: ChatMessageContent
 
 # Chat - Custom Parts
 
-<p class="description">Extend the message part system with app-specific content types using ChatDataMessagePart, the type registry, and custom renderers.</p>
+<p class="description">Extend the message part system with app-specific content types using the type registry and custom renderers.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -17,7 +17,8 @@ When your application needs domain-specific content—ticket cards, approval for
 
 ## Data parts
 
-`ChatDataMessagePart` is the built-in extensibility point for custom payloads. Data parts use a `type` string prefixed with `data-` and carry an arbitrary `data` payload:
+`ChatDataMessagePart` is the built-in extensibility point for custom payloads.
+Data parts use a `type` string prefixed with `data-` and carry an arbitrary `data` payload:
 
 ```ts
 interface ChatDataMessagePart {
@@ -28,7 +29,8 @@ interface ChatDataMessagePart {
 }
 ```
 
-The default renderer displays data parts as formatted JSON. Replace it with a custom renderer for richer UI.
+The default renderer displays data parts as formatted JSON.
+Replace it with a custom renderer for richer UI.
 
 ## Type registry pattern
 
@@ -142,8 +144,9 @@ Once declared, the augmentation affects everything at compile time:
 3. **Hooks**: `useChat().messages` returns messages with augmented part types
 4. **Renderers**: `useChatPartRenderer('ticket-summary')` returns a typed renderer
 
-No runtime code changes are needed. The augmentation is purely compile-time.
+No runtime code changes are needed.
+The augmentation is purely compile-time.
 
 ## See also
 
-- [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom part renderers
+- [Custom parts](/x/react-chat/display/message-parts/custom-parts/) for building custom part renderers

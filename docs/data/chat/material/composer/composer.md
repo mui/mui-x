@@ -74,7 +74,8 @@ The send button is automatically disabled when:
 - The composer is explicitly disabled.
 
 :::info
-The send button's visual disabled state checks only text content, not attachments. However, the underlying `submit()` function sends if either text or attachments are present.
+The send button's visual disabled state checks only text content, not attachments.
+However, the underlying `submit()` function sends if either text or attachments are present.
 :::
 
 ## Attach button

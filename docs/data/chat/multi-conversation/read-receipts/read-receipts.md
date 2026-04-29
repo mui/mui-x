@@ -12,7 +12,8 @@ components: ChatUnreadMarker
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Read receipts let users see which conversations have unread messages and mark them as read when opened. The system uses three pieces working together: the `readState` and `unreadCount` fields on `ChatConversation`, the `markRead()` adapter method, and the `read` realtime event.
+Read receipts let users see which conversations have unread messages and mark them as read when opened.
+The system uses three pieces working together: the `readState` and `unreadCount` fields on `ChatConversation`, the `markRead()` adapter method, and the `read` realtime event.
 
 ## Read and unread state
 
@@ -37,7 +38,8 @@ These fields are set when conversations are loaded through `listConversations()`
 
 ## Badge display in the conversation list
 
-The conversation list renders an unread badge automatically when a conversation has `unreadCount > 0` or `readState: 'unread'`. The `unreadBadge` slot displays the count, and the `title` slot renders in bold when the conversation is unread.
+The conversation list renders an unread badge automatically when a conversation has `unreadCount > 0` or `readState: 'unread'`.
+The `unreadBadge` slot displays the count, and the `title` slot renders in bold when the conversation is unread.
 
 The item's `ownerState` includes an `unread` boolean derived from the conversation's read state:
 
@@ -55,9 +57,11 @@ This `unread` flag drives both the badge visibility and the bold title weight in
 
 ## Showing the unread boundary
 
-`ChatUnreadMarker` is an in-thread divider that appears inside the message list at the boundary between already-read messages and the first unread message. It displays a "New messages" label (localizable via `unreadMarkerLabel`) styled as a horizontal rule with a centered caption.
+`ChatUnreadMarker` is an in-thread divider that appears inside the message list at the boundary between already-read messages and the first unread message.
+It displays a "New messages" label (localizable via `unreadMarkerLabel`) styled as a horizontal rule with a centered caption.
 
-The component is position-aware: it reads `unreadCount` and `readState` from the active `ChatConversation` and calculates which message index sits at the read/unread boundary. It renders itself only for that one message and returns `null` for every other message, so you can render it inside every list item without any extra bookkeeping:
+The component is position-aware: it reads `unreadCount` and `readState` from the active `ChatConversation` and calculates which message index sits at the read/unread boundary.
+It renders itself only for that one message and returns `null` for every other message, so you can render it inside every list item without any extra bookkeeping:
 
 ```tsx
 // Inside a custom renderItem callback
@@ -130,7 +134,8 @@ The runtime does not call `markRead` automatically—call it from your own UI ev
 
 ### Triggering `markRead` when a conversation becomes active
 
-The most common pattern is to mark a conversation as read the moment the user opens it. Use the `onActiveConversationChange` prop on `ChatBox` (or `ChatProvider`) to call the adapter:
+The most common pattern is to mark a conversation as read the moment the user opens it.
+Use the `onActiveConversationChange` prop on `ChatBox` (or `ChatProvider`) to call the adapter:
 
 ```tsx
 const adapter = React.useMemo(
@@ -159,7 +164,8 @@ const adapter = React.useMemo(
 
 ### Triggering `markRead` when the user scrolls to the bottom
 
-For long conversations you may prefer to mark messages as read only once the user has scrolled to the last message. Use the `onReachBottom` callback on the `messageList` slot combined with a ref to the current conversation:
+For long conversations you may prefer to mark messages as read only once the user has scrolled to the last message.
+Use the `onReachBottom` callback on the `messageList` slot combined with a ref to the current conversation:
 
 ```tsx
 const activeConversationIdRef = React.useRef<string | undefined>(undefined);

@@ -1,11 +1,11 @@
 ---
-title: Chat - Split layout
+title: Chat - Split Layout
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Split layout
+# Chat - Split Layout
 
 <p class="description">Place ChatMessageList and ChatComposer in separate DOM zones. Only ChatRoot is needed to connect them.</p>
 

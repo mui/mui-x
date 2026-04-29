@@ -69,13 +69,17 @@ This pattern works because of how the normalized store is structured:
 1. **`useMessageIds()`** subscribes to the `messageIds` array, which only changes when messages are added or removed—not when their content updates during streaming.
 2. **`useMessage(id)`** subscribes to a single message record. During streaming, only the row for the message being streamed re-renders.
 
-The result: sibling message rows and the parent thread component stay untouched during streaming. This scales to threads with hundreds of messages.
+The result: sibling message rows and the parent thread component stay untouched during streaming.
+This scales to threads with hundreds of messages.
 
 ### Why `useChat()` is less efficient for lists
 
-`useChat()` subscribes to multiple store slices at once and returns the full `messages` array. Any state change—including text deltas on a single message—causes the entire component to re-render. For a thread with many messages, this means re-rendering every row on every delta.
+`useChat()` subscribes to multiple store slices at once and returns the full `messages` array.
+Any state change—including text deltas on a single message—causes the entire component to re-render.
+For a thread with many messages, this means re-rendering every row on every delta.
 
-Use `useChat()` for small prototypes and components that need both state and actions. Use `useMessageIds()` + `useMessage(id)` for production message lists.
+Use `useChat()` for small prototypes and components that need both state and actions.
+Use `useMessageIds()` + `useMessage(id)` for production message lists.
 
 ## Memoization strategies
 
@@ -123,9 +127,9 @@ function Thread() {
 The store keeps messages and conversations in a normalized shape (`ids` + `byId` maps) rather than flat arrays.
 This design has three benefits:
 
-1. **Point updates**—Updating a single message during streaming does not rebuild the message array. Only the `messagesById` record changes.
-2. **Stable references**—The `messageIds` array only changes when messages are added or removed, not when their content updates. `useMessageIds()` stays stable during streaming.
-3. **Memoized derivation**—The `messages` selector rebuilds the array only when either `messageIds` or `messagesById` changes, and the result is reference-equal when inputs are unchanged.
+1. **Point updates**: Updating a single message during streaming does not rebuild the message array. Only the `messagesById` record changes.
+2. **Stable references**: The `messageIds` array only changes when messages are added or removed, not when their content updates. `useMessageIds()` stays stable during streaming.
+3. **Memoized derivation**: The `messages` selector rebuilds the array only when either `messageIds` or `messagesById` changes, and the result is reference-equal when inputs are unchanged.
 
 ## Handling large message lists
 
@@ -137,7 +141,7 @@ This design has three benefits:
 - Shows a scroll-to-bottom affordance when the user scrolls up.
 - Loads earlier messages with a "Load earlier messages" control when `listMessages` returns `hasMore: true`.
 
-The `autoScroll` feature flag allows tuning the scroll threshold:
+Use the `autoScroll` feature flag to tune the scroll threshold:
 
 ```tsx
 <ChatBox
@@ -170,9 +174,9 @@ The chat UI handles various edge cases in message content:
 
 ## Profiling tips
 
-1. **React DevTools Profiler**—Record a profiling session while streaming a response. Look for components that re-render on every delta but should not.
-2. **Highlight updates**—Enable "Highlight updates when components render" in React DevTools to visually see which components re-render during streaming.
-3. **Check subscription granularity**—If a component uses `useChat()` but only reads `isStreaming`, switch to `useChatStatus()` to avoid unnecessary message-triggered re-renders.
+1. **React DevTools Profiler**: Record a profiling session while streaming a response. Look for components that re-render on every delta but should not.
+2. **Highlight updates**: Enable "Highlight updates when components render" in React DevTools to visually see which components re-render during streaming.
+3. **Check subscription granularity**: If a component uses `useChat()` but only reads `isStreaming`, switch to `useChatStatus()` to avoid unnecessary message-triggered re-renders.
 
 ## See also
 

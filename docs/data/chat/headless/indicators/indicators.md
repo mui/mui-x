@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Chat - Headless indicators
+title: Chat - Headless Indicators
 packageName: '@mui/x-chat/headless'
 components: TypingIndicator, UnreadMarker, ScrollToBottomAffordance
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless indicators
+# Chat - Headless Indicators
 
 <p class="description">Use shared structural affordances for typing, unread boundaries, and scroll-to-bottom behavior.</p>
 

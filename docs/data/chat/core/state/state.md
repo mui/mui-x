@@ -1,11 +1,11 @@
 ---
 productId: x-chat
-title: Chat - State and store
+title: Chat - State and Store
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - State and store
+# Chat - State and Store
 
 <p class="description">Configure the runtime via ChatProvider props, choose controlled or uncontrolled state, and explore the normalized store.</p>
 
@@ -31,7 +31,8 @@ Each public state model supports both controlled and uncontrolled modes.
 Use `default*` props to let the runtime own the value, or pass the value directly to control it from React state.
 
 :::info
-Start with `initial*` (uncontrolled) props during prototyping, then switch to controlled props when you need to sync with external state. You can switch modes at any time without changing the runtime model.
+Start with `initial*` (uncontrolled) props during prototyping, then switch to controlled props when you need to sync with external state.
+You can switch modes at any time without changing the runtime model.
 :::
 
 | Model               | Controlled prop        | Default prop                  | Change callback              |

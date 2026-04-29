@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Chat - Headless messages
+title: Chat - Headless Messages
 packageName: '@mui/x-chat/headless'
 components: MessageRoot, MessageAvatar, MessageAuthorLabel, MessageContent, MessageMeta, MessageActions, MessageGroup, MessageListDateDivider
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless messages
+# Chat - Headless Messages
 
 <p class="description">Compose thread rows from message grouping primitives, message subparts, and default message-part renderers.</p>
 

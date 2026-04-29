@@ -1,13 +1,13 @@
 ---
-title: Chat - Tool call events
+title: Chat - Tool Call Events
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Tool call events
+# Chat - Tool Call Events
 
-<p class="description">Observe tool invocation state changes with onToolCall and drive side effects outside the message list.</p>
+<p class="description">Observe tool invocation state changes and drive side effects outside the message list.</p>
 
 This demo focuses on the `onToolCall` callback and how to use it for side effects that live outside the message store:
 

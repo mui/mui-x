@@ -1,11 +1,11 @@
 ---
 productId: x-chat
-title: Chat - Core selectors
+title: Chat - Core Selectors
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Core selectors
+# Chat - Core Selectors
 
 <p class="description">Subscribe to exactly the store slices you need with memoized selectors for efficient, granular rendering.</p>
 

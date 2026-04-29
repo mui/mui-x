@@ -1,11 +1,11 @@
 ---
-title: Chat - Type augmentation
+title: Chat - Type Augmentation
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Type augmentation
+# Chat - Type Augmentation
 
 <p class="description">Use TypeScript module augmentation to add app-specific metadata, typed tools, typed data-* parts, and custom message parts to the core runtime.</p>
 
