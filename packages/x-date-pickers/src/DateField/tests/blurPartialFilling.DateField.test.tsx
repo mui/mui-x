@@ -1,3 +1,4 @@
+import { waitFor } from '@mui/internal-test-utils';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { describeAdapters, getFieldInputRoot } from 'test/utils/pickers';
 
@@ -23,7 +24,9 @@ describeAdapters(
       // Blur the sections container to trigger validation
       await view.user.tab();
 
-      expect(fieldRoot).to.have.attribute('aria-invalid', 'true');
+      await waitFor(() => {
+        expect(fieldRoot).to.have.attribute('aria-invalid', 'true');
+      });
     });
 
     it('does not mark invalid on blur when all sections are empty', async () => {

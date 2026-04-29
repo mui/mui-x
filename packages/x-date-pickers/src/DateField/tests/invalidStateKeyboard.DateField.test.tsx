@@ -1,3 +1,4 @@
+import { waitFor } from '@mui/internal-test-utils';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { describeAdapters, getFieldInputRoot } from 'test/utils/pickers';
 
@@ -23,25 +24,33 @@ describeAdapters(
       const inputRoot = getFieldInputRoot();
 
       // Should be invalid now
-      expect(inputRoot).to.have.attribute('aria-invalid', 'true');
+      await waitFor(() => {
+        expect(inputRoot).to.have.attribute('aria-invalid', 'true');
+      });
 
       await view.selectSection('day');
 
       // Returns to valid after refocusing (incomplete date)
-      expect(inputRoot).to.have.attribute('aria-invalid', 'false');
+      await waitFor(() => {
+        expect(inputRoot).to.have.attribute('aria-invalid', 'false');
+      });
       await view.user.keyboard('05');
 
       await view.selectSection('year');
       await view.user.keyboard('2025');
 
       // Should now be invalid
-      expect(inputRoot).to.have.attribute('aria-invalid', 'true');
+      await waitFor(() => {
+        expect(inputRoot).to.have.attribute('aria-invalid', 'true');
+      });
 
       // Spin using keypress
       await view.user.keyboard('[ArrowUp][ArrowUp][ArrowDown]');
 
       // Should still be invalid despite cycling 3 times, must not flash to valid between spins
-      expect(inputRoot).to.have.attribute('aria-invalid', 'true');
+      await waitFor(() => {
+        expect(inputRoot).to.have.attribute('aria-invalid', 'true');
+      });
     });
   },
 );
