@@ -96,6 +96,23 @@ describe('<EventTimelinePremiumHeader />', () => {
     });
   });
 
+  describe('formatDate content', () => {
+    it('should render the formatDate result as the cell label', () => {
+      renderHeader({ preset: 'monthAndYear' });
+
+      // Visible range Jul 2025 → Jun 2028.
+      const yearCells = document.querySelectorAll<HTMLElement>(
+        `.${classes.headerCell}[data-unit="year"]`,
+      );
+      expect(yearCells[0].textContent).to.equal('2025');
+
+      const monthCells = document.querySelectorAll<HTMLElement>(
+        `.${classes.headerCell}[data-unit="month"]`,
+      );
+      expect(monthCells[0].textContent).to.equal('Jul');
+    });
+  });
+
   describe('<time> semantics', () => {
     it('should wrap every cell label in a <time> element with an ISO dateTime', () => {
       renderHeader({ preset: 'dayAndHour' });
@@ -114,21 +131,27 @@ describe('<EventTimelinePremiumHeader />', () => {
   });
 
   describe('weekend marking', () => {
-    // DEFAULT_TESTING_VISIBLE_DATE is 2025-07-03 (Thursday); visible range starts Monday Jun 30.
+    // DEFAULT_TESTING_VISIBLE_DATE is 2025-07-03 (Thursday); the test adapter has no
+    // locale configured, so date-fns starts weeks on Sunday → first cell is Sun Jun 29.
     it('should mark weekend day cells with data-weekend in `dayAndWeek` (where the day row is the leaf)', () => {
       renderHeader({ preset: 'dayAndWeek' });
 
-      const dayCells = document.querySelectorAll<HTMLElement>(
-        `.${classes.headerCell}[data-unit="day"]`,
+      const dayCells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
       );
-      const weekendCells = Array.from(dayCells).filter(
-        (cell) => cell.dataset.weekend !== undefined,
-      );
+      const weekendCells = dayCells.filter((cell) => cell.dataset.weekend !== undefined);
       // 16 weeks × 2 weekend days = 32 cells.
       expect(weekendCells.length).to.equal(32);
       weekendCells.forEach((cell) => {
         expect(cell.dataset.unitLeaf).to.equal(''); // leaf → colored red via CSS
       });
+
+      // First week: Sun Jun 29 → Sat Jul 5. Lock in that both Sun and Sat are flagged
+      // (a Sat-only or Sun-only bug would still pass the count check above).
+      const firstWeek = dayCells.slice(0, 7);
+      expect(firstWeek[0].dataset.weekend).to.equal(''); // Sun
+      [1, 2, 3, 4, 5].forEach((i) => expect(firstWeek[i].dataset.weekend).to.equal(undefined));
+      expect(firstWeek[6].dataset.weekend).to.equal(''); // Sat
     });
 
     it('should still expose data-weekend on day cells even when the day row is a grouping level (accessibility)', () => {
@@ -136,18 +159,22 @@ describe('<EventTimelinePremiumHeader />', () => {
       // still carry `data-weekend` for screen readers / custom CSS, but without data-unit-leaf.
       renderHeader({ preset: 'dayAndHour' });
 
-      const dayCells = document.querySelectorAll<HTMLElement>(
-        `.${classes.headerCell}[data-unit="day"]`,
+      const dayCells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
       );
-      const weekendCells = Array.from(dayCells).filter(
-        (cell) => cell.dataset.weekend !== undefined,
-      );
+      const weekendCells = dayCells.filter((cell) => cell.dataset.weekend !== undefined);
       // Visible range: Jul 3 (Thu), Jul 4 (Fri), Jul 5 (Sat), Jul 6 (Sun) → 2 weekend days.
       expect(weekendCells.length).to.equal(2);
       weekendCells.forEach((cell) => {
         // Grouping row → no leaf marker → CSS leaves it neutral, but the attribute is there.
         expect(cell.dataset.unitLeaf).to.equal(undefined);
       });
+
+      // Per-cell check: Sat (index 2) and Sun (index 3) are flagged, Thu/Fri are not.
+      expect(dayCells[0].dataset.weekend).to.equal(undefined); // Thu
+      expect(dayCells[1].dataset.weekend).to.equal(undefined); // Fri
+      expect(dayCells[2].dataset.weekend).to.equal(''); // Sat
+      expect(dayCells[3].dataset.weekend).to.equal(''); // Sun
     });
   });
 
