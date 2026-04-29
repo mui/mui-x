@@ -31,7 +31,7 @@ export const eventTimelinePremiumPresetSelectors = {
       const end = getEndDate(adapter, start, unitCount);
 
       return {
-        unitCount: getCssUnitCount ? getCssUnitCount(adapter, start, end) : unitCount,
+        tickCount: getCssUnitCount ? getCssUnitCount(adapter, start, end) : unitCount,
         start,
         end,
         tickWidth,

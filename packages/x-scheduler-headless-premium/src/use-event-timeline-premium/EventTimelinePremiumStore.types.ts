@@ -14,7 +14,7 @@ export interface EventTimelinePremiumState extends SchedulerState {
   /**
    * The presets available in the timeline.
    */
-  presets: EventTimelinePremiumPreset[];
+  presets: readonly EventTimelinePremiumPreset[];
   /**
    * Preferences for the timeline.
    */

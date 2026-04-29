@@ -19,9 +19,9 @@ import {
   getPresetPxPerDay,
 } from '../internals/utils/preset-utils';
 
-// Canonical zoom order derived from each preset's `(timeResolution, tickWidth)`: more
-// px per day = more zoomed in. Adding a new preset (or tweaking an existing
-// `tickWidth`) automatically places it at the right position.
+// Sorted by descending px/day (most zoomed-in first). Each preset's `(timeResolution,
+// tickWidth)` must produce a unique px/day — otherwise the order is decided by
+// `Object.keys` insertion order, which is not a stable contract.
 const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = (
   Object.keys(EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS) as EventTimelinePremiumPreset[]
 ).sort((a, b) => getPresetPxPerDay(b) - getPresetPxPerDay(a));
@@ -51,8 +51,7 @@ function sortPresetsByZoomOrder(
       );
     }
   }
-  // Dedupe and restrict to known presets, preserving the canonical order.
-  // Iterating over `PRESET_ZOOM_ORDER` (instead of the input) guarantees a canonical,
+  // Iterating over `PRESET_ZOOM_ORDER` (instead of the input) yields a canonical,
   // duplicate-free output even when runtime inputs (storage, URL params, dynamic
   // registries) bypass the compile-time `EventTimelinePremiumPreset` union.
   return PRESET_ZOOM_ORDER.filter((preset) => presets.includes(preset));

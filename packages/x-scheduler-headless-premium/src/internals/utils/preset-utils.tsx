@@ -4,20 +4,18 @@ import {
   TemporalSupportedObject,
   EventTimelinePremiumPreset,
   PresetConfig,
-  PresetHeaderLevelConfig,
   PresetHeaderUnit,
 } from '../../models';
 
+type FormatDate = (adapter: TemporalAdapter, date: TemporalSupportedObject) => string;
+
 const DAY_AND_HOUR_DAYS = 4;
 
-const formatYear: PresetHeaderLevelConfig['formatDate'] = (adapter, date) =>
-  String(adapter.getYear(date));
+const formatYear: FormatDate = (adapter, date) => String(adapter.getYear(date));
 
-const formatMonth3Letters: PresetHeaderLevelConfig['formatDate'] = (adapter, date) =>
-  adapter.format(date, 'month3Letters');
+const formatMonth3Letters: FormatDate = (adapter, date) => adapter.format(date, 'month3Letters');
 
-const formatWeekday1Letter: PresetHeaderLevelConfig['formatDate'] = (adapter, date) =>
-  adapter.format(date, 'weekday1Letter');
+const formatWeekday1Letter: FormatDate = (adapter, date) => adapter.format(date, 'weekday1Letter');
 
 function formatWeekDayMonthAndDayOfMonth(adapter: TemporalAdapter, date: TemporalSupportedObject) {
   const f = adapter.formats;
@@ -37,9 +35,8 @@ function formatHourLabel(adapter: TemporalAdapter, date: TemporalSupportedObject
   return adapter.formatByString(date, pattern);
 }
 
-export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Record<
-  EventTimelinePremiumPreset,
-  PresetConfig
+export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Readonly<
+  Record<EventTimelinePremiumPreset, PresetConfig>
 > = {
   dayAndHour: {
     timeResolution: 'hour',

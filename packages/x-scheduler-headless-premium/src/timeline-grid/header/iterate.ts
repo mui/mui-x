@@ -1,24 +1,5 @@
 import { TemporalAdapter, TemporalSupportedObject } from '@mui/x-scheduler-headless/base-ui-copy';
-import { PresetHeaderUnit } from '../../models';
-
-export interface IteratedCell {
-  /**
-   * Aligned start of the cell at its unit boundary (e.g. first day of month for a
-   * `month` row). Always `<= start`; for a partial first cell it sits before the
-   * visible range, so use `start` / `end` for layout math and `date` for labels.
-   */
-  date: TemporalSupportedObject;
-  /** Clamped start, always within the visible range. */
-  start: TemporalSupportedObject;
-  /** Clamped end (exclusive), always within the visible range. */
-  end: TemporalSupportedObject;
-  /** Cell width measured in `tickUnit` ticks. */
-  spanInTicks: number;
-  /** Stable key derived from the aligned start. */
-  key: string;
-  /** Index within the row. */
-  index: number;
-}
+import { IteratedCell, PresetHeaderUnit } from '../../models';
 
 export function iterate(
   adapter: TemporalAdapter,

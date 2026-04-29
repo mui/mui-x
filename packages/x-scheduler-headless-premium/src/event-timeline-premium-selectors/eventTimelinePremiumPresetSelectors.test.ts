@@ -51,7 +51,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
       const config = eventTimelinePremiumPresetSelectors.config(state);
 
-      expect(config.unitCount).to.equal(4 * 24);
+      expect(config.tickCount).to.equal(4 * 24);
       expect(config.start).toEqualDateTime('2025-07-03T00:00:00Z');
       expect(config.end).toEqualDateTime('2025-07-06T23:59:59.999Z');
     });
@@ -65,7 +65,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
       const config = eventTimelinePremiumPresetSelectors.config(state);
 
-      expect(config.unitCount).to.equal(8 * 7);
+      expect(config.tickCount).to.equal(8 * 7);
       expect(config.start).toEqualDateTime('2025-07-03T00:00:00Z');
       expect(config.end).toEqualDateTime('2025-08-27T23:59:59.999Z');
     });
@@ -80,7 +80,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       const config = eventTimelinePremiumPresetSelectors.config(state);
 
       // CSS ticks use the preset's `timeResolution` (days here); 16 weeks → 112 days.
-      expect(config.unitCount).to.equal(16 * 7);
+      expect(config.tickCount).to.equal(16 * 7);
       // July 3, 2025 is a Thursday → week starts Monday June 30
       expect(config.start).toEqualDateTime(adapter.startOfWeek(VISIBLE_DATE));
       expect(config.end).toEqualDateTime(
@@ -101,10 +101,10 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       // 184 (Jul-Dec 2025) + 365 + 365 + 182 (Jan-Jun 2028, leap) = 1096 days.
       expect(config.start).toEqualDateTime('2025-07-01T00:00:00Z');
       expect(config.end).toEqualDateTime('2028-06-30T23:59:59.999Z');
-      expect(config.unitCount).to.equal(1096);
+      expect(config.tickCount).to.equal(1096);
     });
 
-    it('should compute a variable unitCount for monthAndYear based on the days of each month in range', () => {
+    it('should compute a variable tickCount for monthAndYear based on the days of each month in range', () => {
       // Both ranges span the same 36 months starting in January, but the 2024 window contains
       // the 2024 leap day (Feb 29) while the 2025 window does not.
       const leapStart = getEventTimelinePremiumStateFromParameters({
@@ -121,7 +121,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       const leapConfig = eventTimelinePremiumPresetSelectors.config(leapStart);
       const nonLeapConfig = eventTimelinePremiumPresetSelectors.config(nonLeapStart);
 
-      expect(leapConfig.unitCount).to.equal(nonLeapConfig.unitCount + 1);
+      expect(leapConfig.tickCount).to.equal(nonLeapConfig.tickCount + 1);
     });
 
     it('should return the configuration for the year preset', () => {
@@ -133,7 +133,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
       const config = eventTimelinePremiumPresetSelectors.config(state);
 
-      expect(config.unitCount).to.equal(30);
+      expect(config.tickCount).to.equal(30);
       expect(config.start).toEqualDateTime('2025-01-01T00:00:00Z');
       expect(config.end).toEqualDateTime('2054-12-31T23:59:59.999Z');
     });

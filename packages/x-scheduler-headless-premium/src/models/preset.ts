@@ -14,29 +14,35 @@ export type EventTimelinePremiumPreset =
 export type PresetHeaderUnit = 'hour' | 'day' | 'week' | 'month' | 'year';
 
 /**
- * State exposed to a header level's `renderCell`.
+ * Output of `iterate()` — describes one header cell's position in the visible range.
  */
-export interface PresetHeaderCellState {
+export interface IteratedCell {
   /**
    * Aligned start of the cell at its unit boundary (e.g. first day of month for a
    * `month` row). Always `<= start`; for a partial first cell it sits before the
    * visible range, so use `start` / `end` for layout math and `date` for labels.
    */
   date: TemporalSupportedObject;
-  /** Clamped start of the cell, guaranteed to be within the visible range. */
+  /** Clamped start, always within the visible range. */
   start: TemporalSupportedObject;
-  /** Clamped end of the cell (exclusive), guaranteed to be within the visible range. */
+  /** Clamped end (exclusive), always within the visible range. */
   end: TemporalSupportedObject;
-  /** Stable key derived from the cell's aligned start. */
+  /** Cell width measured in `tickUnit` ticks. */
+  spanInTicks: number;
+  /** Stable key derived from the aligned start. */
   key: string;
-  /** Index of the cell within its row. */
+  /** Index within the row. */
   index: number;
+}
+
+/**
+ * State exposed to a header level's `renderCell`.
+ */
+export interface PresetHeaderCellState extends IteratedCell {
   /** Index of the row within the preset's `headers` array (0 = topmost). */
   level: number;
   /** The unit this row operates on. */
   unit: PresetHeaderUnit;
-  /** How many ticks (of the preset's `timeResolution`) the cell spans. */
-  spanInTicks: number;
   adapter: TemporalAdapter;
   /** `true` if hour labels should be rendered with AM/PM. */
   ampm: boolean;

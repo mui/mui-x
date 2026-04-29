@@ -106,7 +106,7 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
         role: 'grid',
         onBlur: handleBlur,
         style: {
-          [TimelineGridRootCssVars.unitCount]: presetConfig.unitCount,
+          [TimelineGridRootCssVars.unitCount]: presetConfig.tickCount,
           [TimelineGridRootCssVars.rowCount]: resources.length,
         } as React.CSSProperties,
       },
