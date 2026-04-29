@@ -47,6 +47,8 @@ export interface EventDialogClasses {
   eventDialogResourceMenuListSubheader: string;
   /** Styles applied to the event dialog resource menu color dot element. */
   eventDialogResourceMenuColorDot: string;
+  /** Styles applied to the event dialog resource menu color toggle group element. */
+  eventDialogResourceMenuColorToggleGroup: string;
   /** Styles applied to the event dialog resource menu color toggle element. */
   eventDialogResourceMenuColorToggle: string;
   /** Styles applied to the event dialog inline row element. */
@@ -120,6 +122,7 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogResourceMenuItem',
   'eventDialogResourceMenuListSubheader',
   'eventDialogResourceMenuColorDot',
+  'eventDialogResourceMenuColorToggleGroup',
   'eventDialogResourceMenuColorToggle',
   'eventDialogRecurrenceLabelContainer',
   'eventDialogRecurrenceSelectorContainer',
@@ -171,6 +174,7 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogResourceMenuItem: ['eventDialogResourceMenuItem'],
   eventDialogResourceMenuListSubheader: ['eventDialogResourceMenuListSubheader'],
   eventDialogResourceMenuColorDot: ['eventDialogResourceMenuColorDot'],
+  eventDialogResourceMenuColorToggleGroup: ['eventDialogResourceMenuColorToggleGroup'],
   eventDialogResourceMenuColorToggle: ['eventDialogResourceMenuColorToggle'],
   eventDialogRecurrenceLabelContainer: ['eventDialogRecurrenceLabelContainer'],
   eventDialogRecurrenceSelectorContainer: ['eventDialogRecurrenceSelectorContainer'],
