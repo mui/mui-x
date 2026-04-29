@@ -89,7 +89,7 @@ export class ScatterWebGLProgram {
     this.shaders.forEach((shader) => gl.deleteShader(shader));
   }
 
-  // Assumes the owning VAO is already bound.
+  // Assumes the owning VAO (Vertex Array Object) is already bound.
   private setupInstancedAttribute(
     name: string,
     size: 1 | 2 | 4,

@@ -101,7 +101,9 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
     children,
   } = useScatterChartProps({
     ...other,
-    renderer: renderer === 'webgl' ? 'svg-single' : renderer,
+    // webgl has no per-item DOM events (same as 'svg-batch'), so route click handling
+    // through voronoi by passing 'svg-batch' through to useScatterChartProps.
+    renderer: renderer === 'webgl' ? 'svg-batch' : renderer,
   });
 
   const { chartsDataProviderPremiumProps, chartsSurfaceProps } = useChartsContainerPremiumProps<

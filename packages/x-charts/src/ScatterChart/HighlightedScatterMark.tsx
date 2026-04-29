@@ -3,8 +3,8 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
 import { getValueToPositionMapper, useScatterSeriesContext, useXAxes, useYAxes } from '../hooks';
-import { useChartsContext } from '../context/ChartsProvider';
 import { selectorChartsHighlightedItem } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions';
 import { useStore } from '../internals/store/useStore';
 import { useUtilityClasses } from './scatterClasses';
 
@@ -21,10 +21,10 @@ export function HighlightedScatterMark({
   const theme = useTheme();
   const store = useStore();
   const highlightedItem = store.use(selectorChartsHighlightedItem);
+  const drawingArea = store.use(selectorChartDrawingArea);
   const scatterSeries = useScatterSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
-  const { instance } = useChartsContext();
   const classes = useUtilityClasses();
 
   if (
@@ -55,7 +55,15 @@ export function HighlightedScatterMark({
   const cx = getXPosition(scatterPoint.x);
   const cy = getYPosition(scatterPoint.y);
 
-  if (!instance.isPointInside(cx, cy)) {
+  // Allow a markerSize margin around the drawing area so the highlight ring stays
+  // visible at the edges (e.g. during keyboard navigation) without needing a clip-path.
+  const margin = series.markerSize;
+  if (
+    cx < drawingArea.left - margin ||
+    cx > drawingArea.left + drawingArea.width + margin ||
+    cy < drawingArea.top - margin ||
+    cy > drawingArea.top + drawingArea.height + margin
+  ) {
     return null;
   }
 
