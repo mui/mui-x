@@ -1,7 +1,7 @@
 ---
 title: React Radial Line chart
 productId: x-charts
-components: ChartsRadialDataProvider, ChartsRadialGrid, RadialLineChart, RadialMarkPlot, RadialLinePlot, RadialAreaPlot, ChartsRadiusAxis, ChartsRotationAxis
+components: ChartsRadialDataProvider, ChartsRadialDataProviderPremium, ChartsRadialGrid, RadialLineChart, RadialMarkPlot, RadialLinePlot, RadialAreaPlot, ChartsRadiusAxis, ChartsRotationAxis
 ---
 
 # Charts - Radial Lines
@@ -13,6 +13,12 @@ components: ChartsRadialDataProvider, ChartsRadialGrid, RadialLineChart, RadialM
 The `RadialLineChart` component accepts `series`, `rotationAxis`, and `radiusAxis` props to render data in polar coordinates.
 
 {{"demo": "BasicRadialLineChart.js", "bg": "outline"}}
+
+### Rotation axis
+
+Like for line series, the rotation axis can have any scale type.
+
+{{"demo": "ContinuousRadialLineChart.js", "bg": "outline"}}
 
 ## Radial coordinates
 
