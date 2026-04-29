@@ -1490,18 +1490,7 @@ describe('<DataGridPro /> - Filter', () => {
         expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript', 'ReactJavaScript']);
       });
 
-      it('should filter with operator "contains" with multiple values using AND logic', () => {
-        render(
-          <TestCaseMultiSelect
-            filterModel={{
-              items: [{ field: 'tags', operator: 'contains', value: ['React', 'TypeScript'] }],
-            }}
-          />,
-        );
-        expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript']);
-      });
-
-      it('should return no rows when no cell contains all filter values', () => {
+      it('should filter with operator "contains" with multiple values', () => {
         render(
           <TestCaseMultiSelect
             filterModel={{
@@ -1509,7 +1498,11 @@ describe('<DataGridPro /> - Filter', () => {
             }}
           />,
         );
-        expect(getColumnValues(0)).to.deep.equal([]);
+        expect(getColumnValues(0)).to.deep.equal([
+          'ReactTypeScript',
+          'VueJavaScript',
+          'ReactJavaScript',
+        ]);
       });
 
       it('should filter with operator "contains" with empty array', () => {

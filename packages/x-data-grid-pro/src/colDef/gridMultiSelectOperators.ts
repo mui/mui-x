@@ -25,7 +25,7 @@ export const getGridMultiSelectOperators = (): GridFilterOperator[] => [
         if (!Array.isArray(cellValue)) {
           return false;
         }
-        return filterValues.every((fv) => cellValue.some((val) => parseObjectValue(val) === fv));
+        return filterValues.some((fv) => cellValue.some((val) => parseObjectValue(val) === fv));
       };
     },
     InputComponent: GridFilterInputMultipleMultiSelect,
