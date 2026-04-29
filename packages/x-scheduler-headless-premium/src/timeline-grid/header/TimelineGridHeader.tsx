@@ -65,7 +65,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
                     spanInTicks: cell.spanInTicks,
                     unit: level.unit,
                   })
-                : (level.formatDate?.(adapter, cell.date) ?? '')}
+                : level.formatDate(adapter, cell.date)}
             </time>
           </div>
         ))}

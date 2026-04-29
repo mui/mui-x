@@ -60,10 +60,9 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Record<
     getStartDate: (adapter, visibleDate) => adapter.startOfDay(visibleDate),
     getEndDate: (adapter, start, unitCount) =>
       adapter.endOfDay(adapter.addDays(start, unitCount - 1)),
-    // Pin the CSS tick count so the grid width stays stable across DST. A tz-aware
-    // `differenceInHours` would return 95 on a spring-forward day, narrowing the
-    // grid by one cell width — `iterate()` still emits 24 hour cells regardless
-    // because it advances via `addHours`.
+    // `unitCount` is in days (the navigation step), but the grid ticks in hours. Pin
+    // the CSS tick count to `4 × 24` so the grid width stays stable across DST and
+    // matches the 24 hour cells `iterate()` emits per day.
     getCssUnitCount: () => DAY_AND_HOUR_DAYS * 24,
     navigate: (adapter, date, amount) => adapter.addDays(date, amount),
   },

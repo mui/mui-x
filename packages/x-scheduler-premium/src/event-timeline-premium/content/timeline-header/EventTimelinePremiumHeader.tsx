@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { eventTimelinePremiumClasses as classes } from '../../eventTimelinePremiumClasses';
@@ -73,12 +74,13 @@ export const EventTimelinePremiumHeader = React.forwardRef(function EventTimelin
   props: EventTimelinePremiumHeader.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
+  const { className, ...other } = props;
   const { classes: ctxClasses } = useEventTimelinePremiumStyledContext();
   return (
     <StyledTimelineGridHeader
       ref={forwardedRef}
-      {...props}
-      className={ctxClasses.header}
+      {...other}
+      className={clsx(ctxClasses.header, className)}
       classNames={{
         row: ctxClasses.headerLevelRow,
         cell: ctxClasses.headerCell,
@@ -89,5 +91,6 @@ export const EventTimelinePremiumHeader = React.forwardRef(function EventTimelin
 });
 
 export namespace EventTimelinePremiumHeader {
-  export interface Props extends TimelineGrid.Header.Props {}
+  // classNames is wired internally to the styled wrapper's slot classes, not user-facing.
+  export interface Props extends Omit<TimelineGrid.Header.Props, 'classNames'> {}
 }
