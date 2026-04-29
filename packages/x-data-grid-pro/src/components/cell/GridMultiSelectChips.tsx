@@ -3,12 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
-import {
-  gridClasses,
-  useGridRootProps,
-  useGridApiContext,
-  useGridEvent,
-} from '@mui/x-data-grid';
+import { gridClasses, useGridRootProps, useGridApiContext, useGridEvent } from '@mui/x-data-grid';
 import type { GridSlotProps, ValueOptions } from '@mui/x-data-grid';
 import { NotRendered } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
@@ -41,7 +36,10 @@ const Chip = styled(NotRendered<GridSlotProps['baseChip']>, {
 const RESIZE_THROTTLE_MS = 32;
 const HYSTERESIS_PX = 4;
 
-export interface GridMultiSelectChipsProps<V extends ValueOptions = ValueOptions> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface GridMultiSelectChipsProps<V extends ValueOptions = ValueOptions> extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   values: any[];
   field: string;
   columnWidth: number;
