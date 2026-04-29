@@ -10,6 +10,7 @@ import {
   schedulerOtherSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { Button } from '@base-ui/react/button';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
@@ -27,7 +28,10 @@ const EventItemCard = styled('div', {
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
   },
-
+  '&:focus-visible': {
+    outline: '2px solid var(--event-surface-accent)',
+    outlineOffset: 1,
+  },
   '&[data-variant="compact"], &[data-variant="regular"]': {
     containerType: 'inline-size',
     cursor: 'pointer',
@@ -166,6 +170,7 @@ export const EventItem = React.forwardRef(function EventItem(
     id: idProp,
     variant = 'regular',
     className,
+    onClick,
     ...other
   } = props;
 
@@ -285,21 +290,26 @@ export const EventItem = React.forwardRef(function EventItem(
   }, [variant, resource?.title, localeText, formatTime, occurrence, isRecurring, classes]);
 
   return (
-    // TODO: Use button
-    <EventItemCard
-      ref={forwardedRef}
-      id={id}
-      data-variant={variant}
-      data-palette={color}
-      data-editing={isEditing || undefined}
-      aria-labelledby={`${ariaLabelledBy} ${id}`}
-      {...other}
-      className={clsx(className, classes.eventItemCard, occurrence.className)}
+    <Button
+      nativeButton={false}
+      onClick={onClick}
+      render={
+        <EventItemCard
+          ref={forwardedRef}
+          id={id}
+          data-variant={variant}
+          data-palette={color}
+          data-editing={isEditing || undefined}
+          aria-labelledby={`${ariaLabelledBy} ${id}`}
+          {...other}
+          className={clsx(className, classes.eventItemCard, occurrence.className)}
+        />
+      }
     >
       <EventItemCardWrapper className={classes.eventItemCardWrapper} data-variant={variant}>
         {content}
       </EventItemCardWrapper>
-    </EventItemCard>
+    </Button>
   );
 });
 
