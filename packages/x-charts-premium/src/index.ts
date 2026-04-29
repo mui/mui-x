@@ -66,3 +66,4 @@ export * from './HeatmapPremium';
 export * from './ChartsWebGLLayer';
 export * from './CandlestickChart';
 export * from './RadialLineChart';
+export * from './RadialBarChart';

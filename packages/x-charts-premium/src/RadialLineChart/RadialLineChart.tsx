@@ -101,6 +101,8 @@ export interface RadialLineChartProps
   showToolbar?: boolean;
 }
 
+const seriesConfig = { radialLine: radialLineSeriesConfig };
+
 /**
  * Demos:
  *
@@ -136,7 +138,7 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
   return (
     <ChartsRadialDataProviderPremium<'radialLine', RadialLineChartPluginSignatures>
       {...chartsDataProviderProps}
-      seriesConfig={{ radialLine: radialLineSeriesConfig }}
+      seriesConfig={seriesConfig}
     >
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
