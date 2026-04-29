@@ -599,7 +599,7 @@ export const GridRootStyles = styled('div', {
       lineHeight: 'inherit',
     },
     [`& .${c['row--dynamicHeight']}`]: {
-      [`& .${c.multiSelectCell}, .${c.editMultiSelectCellValue}`]: {
+      [`& .${c.multiSelectCell}, .${c.editMultiSelectCell}`]: {
         flexWrap: 'wrap',
       },
     },

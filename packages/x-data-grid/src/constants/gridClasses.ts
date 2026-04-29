@@ -546,10 +546,6 @@ export interface GridClasses {
    */
   editMultiSelectCell: string;
   /**
-   * Styles applied to the edit multi-select cell value display element.
-   */
-  editMultiSelectCellValue: string;
-  /**
    * Styles applied to the filter icon element.
    */
   filterIcon: string;
@@ -1239,7 +1235,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'multiSelectCellPopup',
   'multiSelectCellPopperContent',
   'editMultiSelectCell',
-  'editMultiSelectCellValue',
   'filler',
   'filterForm',
   'filterFormDeleteIcon',

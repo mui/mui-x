@@ -29,7 +29,10 @@ import {
 import type { AutocompleteProps } from '@mui/x-data-grid/internals';
 import { autocompleteClasses } from '@mui/material/Autocomplete';
 import { inputBaseClasses } from '@mui/material/InputBase';
+import MUIModal from '@mui/material/Modal';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
+import { GridMultiSelectChips } from './GridMultiSelectChips';
 
 type OwnerState = DataGridProProcessedProps;
 
@@ -38,8 +41,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const slots = {
     root: ['editMultiSelectCell'],
-    value: ['editMultiSelectCellValue'],
     chip: ['editMultiSelectCellChip'],
+    chipHidden: ['editMultiSelectCellChip--hidden'],
+    overflow: ['editMultiSelectCellOverflow'],
     popup: ['editMultiSelectCellPopup'],
     popperContent: ['editMultiSelectCellPopperContent'],
   };
@@ -47,34 +51,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridEditMultiSelectCellRoot = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'EditMultiSelectCell',
-})({
-  display: 'flex',
-  alignItems: 'center',
-  width: '100%',
-  height: '100%',
-  position: 'relative',
-});
-
-const GridEditMultiSelectCellValue = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'EditMultiSelectCellValue',
-})({
-  display: 'flex',
-  alignItems: 'center',
-  gap: 4,
-  overflow: 'hidden',
-  width: '100%',
-  paddingInline: 10,
-});
-
 const GridEditMultiSelectCellPopper = styled(NotRendered<GridSlotProps['basePopper']>, {
   name: 'MuiDataGrid',
   slot: 'EditMultiSelectCellPopper',
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  zIndex: vars.zIndex.menu,
+  zIndex: vars.zIndex.modal,
   background: (theme.vars || theme).palette.background.paper,
   '&[data-popper-reference-hidden]': {
     opacity: 0,
@@ -103,10 +84,6 @@ const GridEditMultiSelectCellAutocomplete = styled(
     paddingBlock: 4,
   },
   [`& + .${autocompleteClasses.popper}`]: {
-    [`& .${autocompleteClasses.listbox}`]: {
-      boxSizing: 'border-box',
-      maxHeight: 'calc(var(--_rowHeight, 52px) * 3.5)',
-    },
     [`& .${autocompleteClasses.option}`]: {
       ...theme.typography.body2,
     },
@@ -138,10 +115,6 @@ export interface GridEditMultiSelectCellProps<
      */
     root?: React.HTMLAttributes<HTMLDivElement>;
     /**
-     * Props passed to the value element.
-     */
-    value?: React.HTMLAttributes<HTMLDivElement>;
-    /**
      * Props passed to the chip elements.
      * Can be an object or a function that receives the chip value and index.
      */
@@ -171,12 +144,55 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
   const { id, value: valueProp, field, row, colDef, cellMode, hasFocus, slotProps } = props;
 
   const apiRef = useGridApiContext();
+  const privateApiRef = useGridPrivateApiContext();
   const classes = useUtilityClasses(rootProps as OwnerState);
   const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [open, setOpen] = React.useState(true);
+  const isAutoHeight = privateApiRef.current.rowHasAutoHeight(id);
 
   const popupId = `${id}-${field}-multiselect-edit-popup`;
-  const showPopup = hasFocus && Boolean(anchorEl);
+  const showPopup = hasFocus && Boolean(anchorEl) && open;
+
+  const closePopup = (reason: GridCellEditStopReasons) => {
+    if (rootProps.editMode === 'row') {
+      setOpen(false);
+      return;
+    }
+    const params = apiRef.current.getCellParams(id, field);
+    apiRef.current.publishEvent('cellEditStop', { ...params, reason });
+  };
+
+  const handleModalClose = () => closePopup(GridCellEditStopReasons.cellFocusOut);
+
+  const handleKeyDownCapture = (event: React.KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      closePopup(GridCellEditStopReasons.escapeKeyDown);
+    }
+  };
+
+  const handleReopen = () => {
+    if (rootProps.editMode === 'row' && !open) {
+      setOpen(true);
+    }
+  };
+
+  const handleChipsKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' && rootProps.editMode === 'row' && !open) {
+      // Consume Enter so the grid's row-edit handler doesn't exit the row.
+      event.preventDefault();
+      event.stopPropagation();
+      setOpen(true);
+    }
+  };
+
+  // Row-mode dismiss: re-focus the chips view so the second Escape lets the grid
+  // exit row edit (via `cellKeyDown` → `useGridRowEditing`), and Enter can re-open.
+  React.useEffect(() => {
+    if (!open && rootProps.editMode === 'row' && anchorEl) {
+      anchorEl.focus({ preventScroll: true });
+    }
+  }, [open, rootProps.editMode, anchorEl]);
 
   const getOptionValue = (colDef as GridMultiSelectColDef).getOptionValue!;
   const getOptionLabel = (colDef as GridMultiSelectColDef).getOptionLabel!;
@@ -203,76 +219,87 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
     .filter((option): option is ValueOptions => option !== undefined);
 
   return (
-    <GridEditMultiSelectCellRoot
-      tabIndex={cellMode === 'edit' && rootProps.editMode === 'row' ? 0 : undefined}
-      ref={setAnchorEl}
-      aria-controls={showPopup ? popupId : undefined}
-      aria-expanded={showPopup}
-      {...slotProps?.root}
-      className={clsx(classes.root, slotProps?.root?.className)}
-    >
-      <GridEditMultiSelectCellValue
-        {...slotProps?.value}
-        className={clsx(classes.value, slotProps?.value?.className)}
-      >
-        {currentValue.map((val: any, index: number) => {
-          const option = optionByValue.get(val) ?? val;
-          const chipSlotProps =
-            typeof slotProps?.chip === 'function' ? slotProps.chip(option, index) : slotProps?.chip;
-          return (
-            <rootProps.slots.baseChip
-              key={index}
-              label={getOptionLabel(option)}
-              size="small"
-              variant="outlined"
-              {...chipSlotProps}
-              className={clsx(classes.chip, chipSlotProps?.className)}
-            />
-          );
-        })}
-      </GridEditMultiSelectCellValue>
-      <GridEditMultiSelectCellPopper
-        as={rootProps.slots.basePopper}
-        ownerState={rootProps as OwnerState}
-        id={popupId}
-        role="dialog"
-        aria-label={colDef.headerName || field}
-        open={showPopup}
-        target={anchorEl}
-        placement="bottom-start"
-        flip
-        material={{
-          container: anchorEl?.closest('[role="row"]'),
-          modifiers: [
-            {
-              name: 'offset',
-              options: { offset: [-1, -rowHeight + 1] }, // 1px compensate for the editing cell padding.
-            },
-          ],
+    <React.Fragment>
+      <GridMultiSelectChips
+        ref={setAnchorEl as React.Ref<HTMLDivElement>}
+        values={currentValue}
+        field={field}
+        columnWidth={colDef.computedWidth}
+        autoWrap={isAutoHeight}
+        optionByValue={optionByValue}
+        getOptionLabel={getOptionLabel}
+        classes={{
+          root: classes.root,
+          chip: classes.chip,
+          chipHidden: classes.chipHidden,
+          overflow: classes.overflow,
         }}
-        {...slotProps?.popper}
-        className={clsx(classes.popup, slotProps?.popper?.className)}
+        slotProps={{
+          root: {
+            tabIndex: cellMode === 'edit' && rootProps.editMode === 'row' ? 0 : undefined,
+            'aria-controls': showPopup ? popupId : undefined,
+            'aria-expanded': showPopup,
+            onClick: handleReopen,
+            onKeyDown: handleChipsKeyDown,
+            ...slotProps?.root,
+          },
+          chip: slotProps?.chip,
+          // No `overflow` slotProps → `+N` renders as a non-interactive indicator;
+          // clicks on the cell focus the autocomplete which opens the editor.
+        }}
+      />
+      <MUIModal
+        open={showPopup}
+        disableAutoFocus
+        disableEnforceFocus
+        disableRestoreFocus
+        onClose={handleModalClose}
+        slotProps={{ root: { style: { zIndex: 'auto' }}, backdrop: { invisible: true } }}
       >
-        <GridEditMultiSelectCellPopperContent
-          {...slotProps?.popperContent}
-          className={clsx(classes.popperContent, slotProps?.popperContent?.className)}
-          style={
-            {
-              '--_width': `${colDef.computedWidth}px`,
-              '--_rowHeight': `${rowHeight}px`,
-            } as React.CSSProperties
-          }
+        <GridEditMultiSelectCellPopper
+          as={rootProps.slots.basePopper}
+          ownerState={rootProps as OwnerState}
+          id={popupId}
+          role="dialog"
+          aria-label={colDef.headerName || field}
+          open={showPopup}
+          target={anchorEl}
+          placement="bottom-start"
+          flip
+          material={{
+            modifiers: [
+              {
+                name: 'offset',
+                options: { offset: [-1, -rowHeight + 1] }, // 1px compensate for the editing cell padding.
+              },
+            ],
+          }}
+          {...slotProps?.popper}
+          className={clsx(classes.popup, slotProps?.popper?.className)}
         >
-          <GridEditMultiSelectAutocomplete
-            {...(props as GridEditMultiSelectCellProps)}
-            valueOptions={valueOptions}
-            selectedOptions={selectedOptions}
-            getOptionValue={getOptionValue}
-            getOptionLabel={getOptionLabel}
-          />
-        </GridEditMultiSelectCellPopperContent>
-      </GridEditMultiSelectCellPopper>
-    </GridEditMultiSelectCellRoot>
+          <GridEditMultiSelectCellPopperContent
+            onKeyDownCapture={handleKeyDownCapture}
+            {...slotProps?.popperContent}
+            className={clsx(classes.popperContent, slotProps?.popperContent?.className)}
+            style={
+              {
+                '--_width': `${colDef.computedWidth}px`,
+                '--_rowHeight': `${rowHeight}px`,
+              } as React.CSSProperties
+            }
+          >
+            <GridEditMultiSelectAutocomplete
+              {...(props as GridEditMultiSelectCellProps)}
+              valueOptions={valueOptions}
+              selectedOptions={selectedOptions}
+              getOptionValue={getOptionValue}
+              getOptionLabel={getOptionLabel}
+              onDismiss={() => setOpen(false)}
+            />
+          </GridEditMultiSelectCellPopperContent>
+        </GridEditMultiSelectCellPopper>
+      </MUIModal>
+    </React.Fragment>
   );
 }
 
@@ -281,6 +308,7 @@ interface GridEditMultiSelectAutocompleteProps extends GridEditMultiSelectCellPr
   selectedOptions: ValueOptions[];
   getOptionValue: (option: ValueOptions) => string | number;
   getOptionLabel: (option: ValueOptions) => string;
+  onDismiss: () => void;
 }
 
 function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteProps) {
@@ -294,6 +322,7 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
     selectedOptions,
     getOptionValue,
     getOptionLabel,
+    onDismiss,
   } = props;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -311,6 +340,7 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
   const handleClose = React.useCallback(
     (_event: React.SyntheticEvent, reason: string) => {
       if (rootProps.editMode === 'row') {
+        onDismiss();
         return;
       }
       const params = apiRef.current.getCellParams(id, field);
@@ -322,7 +352,7 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
             : GridCellEditStopReasons.cellFocusOut,
       });
     },
-    [apiRef, field, id, rootProps.editMode],
+    [apiRef, field, id, onDismiss, rootProps.editMode],
   );
 
   const isOptionEqualToValue = React.useCallback(
@@ -338,8 +368,12 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
           if (keyboardEvent.ctrlKey || keyboardEvent.metaKey) {
             // Ctrl/Cmd + Enter: stop propagation to prevent cell navigation
             event.stopPropagation();
+          } else if (rootProps.editMode === 'row') {
+            // Row mode bare Enter: dismiss popup, keep cell focused, ignore this selection.
+            onDismiss();
+            return;
           } else {
-            // Bare Enter: exit edit mode, ignore this selection change
+            // Cell mode bare Enter: exit edit mode, ignore this selection change.
             const params = apiRef.current.getCellParams(id, field);
             apiRef.current.publishEvent('cellEditStop', {
               ...params,
@@ -357,7 +391,7 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
 
       await apiRef.current.setEditCellValue({ id, field, value: newValues }, event);
     },
-    [apiRef, field, getOptionValue, id, onValueChange],
+    [apiRef, field, getOptionValue, id, onDismiss, onValueChange, rootProps.editMode],
   );
 
   return (
