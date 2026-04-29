@@ -101,9 +101,10 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
     children,
   } = useScatterChartProps({
     ...other,
-    // webgl has no per-item DOM events (same as 'svg-batch'), so route click handling
-    // through voronoi by passing 'svg-batch' through to useScatterChartProps.
-    renderer: renderer === 'webgl' ? 'svg-batch' : renderer,
+    renderer: renderer === 'webgl' ? 'svg-single' : renderer,
+    // webgl has no per-circle DOM hit target, so disableHitArea is meaningless.
+    // Force it off so voronoi click handling is enabled.
+    disableHitArea: renderer === 'webgl' ? false : other.disableHitArea,
   });
 
   const { chartsDataProviderPremiumProps, chartsSurfaceProps } = useChartsContainerPremiumProps<
