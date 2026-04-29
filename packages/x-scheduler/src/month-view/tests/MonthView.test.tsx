@@ -25,6 +25,15 @@ describe('<MonthView />', () => {
     resources: [],
   };
 
+  const manyEvents = [
+    EventBuilder.new().singleDay('2025-05-01T08:00:00Z').title('Event 1').build(),
+    EventBuilder.new().singleDay('2025-05-01T09:00:00Z').title('Event 2').build(),
+    EventBuilder.new().singleDay('2025-05-01T10:00:00Z').title('Event 3').build(),
+    EventBuilder.new().singleDay('2025-05-01T11:00:00Z').title('Event 4').build(),
+    EventBuilder.new().singleDay('2025-05-01T12:00:00Z').title('Event 5').build(),
+    EventBuilder.new().singleDay('2025-05-01T13:00:00Z').title('Event 6').build(),
+  ];
+
   it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
     render(
       <EventCalendarProvider {...standaloneDefaults}>
@@ -96,14 +105,6 @@ describe('<MonthView />', () => {
   });
 
   it('should show "+N more..." when there are more events than fit in a cell', () => {
-    const manyEvents = [
-      EventBuilder.new().singleDay('2025-05-01T08:00:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T14:09:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T14:11:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T13:09:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T15:09:00Z').build(),
-    ];
-
     render(
       <EventCalendarProvider events={manyEvents} resources={[]}>
         <EventDialogProvider>
@@ -115,17 +116,7 @@ describe('<MonthView />', () => {
   });
 
   describe('Event keyboard accessibility in "more events" popover', () => {
-    it('should have tabindex and role="button" on events in the popover', async () => {
-      // Create 5+ events on the same day to trigger "+N more" button
-      const manyEvents = [
-        EventBuilder.new().singleDay('2025-05-01T08:00:00Z').title('Event 1').build(),
-        EventBuilder.new().singleDay('2025-05-01T09:00:00Z').title('Event 2').build(),
-        EventBuilder.new().singleDay('2025-05-01T10:00:00Z').title('Event 3').build(),
-        EventBuilder.new().singleDay('2025-05-01T11:00:00Z').title('Event 4').build(),
-        EventBuilder.new().singleDay('2025-05-01T12:00:00Z').title('Event 5').build(),
-        EventBuilder.new().singleDay('2025-05-01T13:00:00Z').title('Event 6').build(),
-      ];
-
+    async function renderAndOpenPopover() {
       const { user } = render(
         <EventCalendarProvider events={manyEvents} resources={[]}>
           <EventDialogProvider>
@@ -133,23 +124,18 @@ describe('<MonthView />', () => {
           </EventDialogProvider>
         </EventCalendarProvider>,
       );
-
-      // Verify "+N more" button is rendered
       const moreButton = await screen.findByRole('button', { name: /more/i });
-      expect(moreButton).not.to.equal(null);
-
-      // Click to open the popover
       await user.click(moreButton);
-
-      // Get the popover (MUI Popover renders as role="presentation")
       const popover = await screen.findByRole('presentation');
-      expect(popover).not.to.equal(null);
+      return { user, popover };
+    }
 
-      // Find all event buttons in the popover
+    it('should have tabindex and role="button" on events in the popover', async () => {
+      const { popover } = await renderAndOpenPopover();
+
       const eventButtons = within(popover).getAllByRole('button');
       expect(eventButtons.length).to.be.greaterThan(0);
 
-      // Verify each event button has proper accessibility attributes
       eventButtons.forEach((button) => {
         expect(button).to.have.attribute('tabindex', '0');
         expect(button).to.have.attribute('role', 'button');
@@ -157,79 +143,28 @@ describe('<MonthView />', () => {
     });
 
     it('should allow Enter key to activate events in the popover', async () => {
-      const manyEvents = [
-        EventBuilder.new().singleDay('2025-05-01T08:00:00Z').title('Event A').build(),
-        EventBuilder.new().singleDay('2025-05-01T09:00:00Z').title('Event B').build(),
-        EventBuilder.new().singleDay('2025-05-01T10:00:00Z').title('Event C').build(),
-        EventBuilder.new().singleDay('2025-05-01T11:00:00Z').title('Event D').build(),
-        EventBuilder.new().singleDay('2025-05-01T12:00:00Z').title('Event E').build(),
-        EventBuilder.new().singleDay('2025-05-01T13:00:00Z').title('Event F').build(),
-      ];
+      const { user, popover } = await renderAndOpenPopover();
 
-      const { user } = render(
-        <EventCalendarProvider events={manyEvents} resources={[]}>
-          <EventDialogProvider>
-            <MonthView />
-          </EventDialogProvider>
-        </EventCalendarProvider>,
-      );
-
-      // Open popover
-      const moreButton = await screen.findByRole('button', { name: /more/i });
-      await user.click(moreButton);
-
-      // Get popover and first event button
-      const popover = await screen.findByRole('presentation');
-      const eventButtons = within(popover).getAllByRole('button');
-      const firstEventButton = eventButtons[0];
-
-      // Focus the first event button
+      const firstEventButton = within(popover).getAllByRole('button')[0];
       firstEventButton.focus();
       expect(firstEventButton).to.equal(document.activeElement);
 
-      // Press Enter to activate
       await user.keyboard('{Enter}');
 
-      // Verify event dialog opened
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.to.equal(null);
       });
     });
 
     it('should allow Space key to activate events in the popover', async () => {
-      const manyEvents = [
-        EventBuilder.new().singleDay('2025-05-01T08:00:00Z').title('Event X').build(),
-        EventBuilder.new().singleDay('2025-05-01T09:00:00Z').title('Event Y').build(),
-        EventBuilder.new().singleDay('2025-05-01T10:00:00Z').title('Event Z').build(),
-        EventBuilder.new().singleDay('2025-05-01T11:00:00Z').title('Event W').build(),
-        EventBuilder.new().singleDay('2025-05-01T12:00:00Z').title('Event V').build(),
-        EventBuilder.new().singleDay('2025-05-01T13:00:00Z').title('Event U').build(),
-      ];
+      const { user, popover } = await renderAndOpenPopover();
 
-      const { user } = render(
-        <EventCalendarProvider events={manyEvents} resources={[]}>
-          <EventDialogProvider>
-            <MonthView />
-          </EventDialogProvider>
-        </EventCalendarProvider>,
-      );
-
-      // Open popover
-      const moreButton = await screen.findByRole('button', { name: /more/i });
-      await user.click(moreButton);
-
-      // Get popover and event button
-      const popover = await screen.findByRole('presentation');
-      const eventButtons = within(popover).getAllByRole('button');
-      const firstEventButton = eventButtons[0];
-
-      // Focus and press Space
+      const firstEventButton = within(popover).getAllByRole('button')[0];
       firstEventButton.focus();
       expect(firstEventButton).to.equal(document.activeElement);
 
       await user.keyboard(' ');
 
-      // Verify event dialog opened
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.to.equal(null);
       });
