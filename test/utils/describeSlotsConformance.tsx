@@ -4,9 +4,7 @@ import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 
 // Intentionally loose: the `props` object is built inside the helper with a dynamic slot-name
 // key, which cannot be statically matched against a component's typed `slotProps` shape without
-// an internal cast. Per-slot type-level coverage is enforced instead by the per-package
-// `slotDataAttributes.spec.ts` files that run `AssertAllSlotsAcceptDataAttributes` on every
-// typed slot-props interface.
+// an internal cast. The `unknown` indexed slot-prop bag below keeps that boundary explicit.
 interface DescribeSlotsConformanceSlotProps {
   [slotName: string]: unknown;
 }

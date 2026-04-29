@@ -1,12 +1,11 @@
 import type * as React from 'react';
-import type { DataAttributes } from '@mui/x-internals/types';
 
-export type ChartBaseCommonProps<T = HTMLElement> = React.DOMAttributes<T> &
-  React.AriaAttributes &
-  DataAttributes & {
-    className?: string;
-    style?: React.CSSProperties;
-  };
+export type ChartBaseCommonProps<T = HTMLElement> = React.DOMAttributes<T> & {
+  className?: string;
+  style?: React.CSSProperties;
+  [k: `aria-${string}`]: any;
+  [k: `data-${string}`]: any;
+};
 
 export type ChartBaseIconProps = ChartBaseCommonProps<SVGSVGElement> & {
   titleAccess?: string;

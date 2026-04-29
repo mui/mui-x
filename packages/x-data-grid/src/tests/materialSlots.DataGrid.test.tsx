@@ -40,7 +40,7 @@ describe('<DataGrid /> - Material Slots', () => {
             panel: { open: true },
             baseTextField: {
               slotProps: {
-                htmlInput: { 'data-testid': 'html-input-from-slotProps' },
+                htmlInput: { 'data-testid': 'html-input-from-slotProps' } as any,
               },
             },
           }}
@@ -89,7 +89,7 @@ describe('<DataGrid /> - Material Slots', () => {
           slotProps={{
             panel: { open: true },
             baseTextField: {
-              slotProps: { htmlInput: { 'data-testid': 'from-slotProps' } },
+              slotProps: { htmlInput: { 'data-testid': 'from-slotProps' } as any },
               material: {
                 slotProps: { htmlInput: { 'data-testid': 'from-material' } },
               } as any,
@@ -109,7 +109,7 @@ describe('<DataGrid /> - Material Slots', () => {
           slotProps={{
             baseCheckbox: {
               slotProps: {
-                htmlInput: { 'data-testid': 'checkbox-html-input' },
+                htmlInput: { 'data-testid': 'checkbox-html-input' } as any,
               },
             },
           }}
@@ -140,7 +140,7 @@ describe('<DataGrid /> - Material Slots', () => {
           slotProps={{
             baseCheckbox: {
               slotProps: {
-                htmlInput: { 'data-testid': 'from-slotProps' },
+                htmlInput: { 'data-testid': 'from-slotProps' } as any,
               },
               material: {
                 slotProps: { input: { 'data-from-material': 'true' } },
@@ -201,7 +201,7 @@ describe('<DataGrid /> - Material Slots', () => {
           filterModel={multiSelectFilterModel}
           slotProps={{
             panel: { open: true },
-            baseTextField: { 'data-testid': 'base-textfield-override' },
+            baseTextField: { 'data-testid': 'base-textfield-override' } as any,
           }}
         />,
       );
@@ -217,7 +217,7 @@ describe('<DataGrid /> - Material Slots', () => {
             panel: { open: true },
             baseTextField: {
               slotProps: {
-                htmlInput: { 'data-testid': 'ac-html-input' },
+                htmlInput: { 'data-testid': 'ac-html-input' } as any,
                 input: { className: 'ac-custom-input' },
                 inputLabel: { className: 'ac-custom-input-label' },
               },

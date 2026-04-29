@@ -123,12 +123,11 @@ describe('<DesktopDateRangePicker />', () => {
             popper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
-              'data-testid': 'popper',
             },
           }}
         />,
       );
-      const popper = screen.getByTestId('popper');
+      const popper = screen.getByRole('tooltip');
 
       fireEvent.click(popper);
       fireEvent.touchStart(popper);
