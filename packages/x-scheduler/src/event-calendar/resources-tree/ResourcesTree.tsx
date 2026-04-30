@@ -25,6 +25,9 @@ const ResourcesTreeRoot = styled('section', {
   padding: theme.spacing(1),
   overflowY: 'auto',
   scrollbarWidth: 'thin',
+  [`&[data-flat] .${treeItemClasses.iconContainer}`]: {
+    display: 'none',
+  },
 }));
 
 const ResourcesTreeLabel = styled(Typography, {
@@ -163,11 +166,14 @@ export const ResourcesTree = React.forwardRef(function ResourcesTree(
     return null;
   }
 
+  const isFlat = childrenLookup.size === 0;
+
   return (
     <ResourcesTreeRoot
       ref={forwardedRef}
       {...props}
       className={clsx(props.className, classes.resourcesTree)}
+      data-flat={isFlat || undefined}
     >
       <ResourcesTreeLabel id={headingId} className={classes.resourcesTreeLabel}>
         {localeText.resourcesLabel}
