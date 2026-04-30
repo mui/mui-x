@@ -4,17 +4,6 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
-    "axisHighlight": {
-      "type": {
-        "name": "shape",
-        "description": "{ radius?: 'line'<br>&#124;&nbsp;'none', rotation?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
-      },
-      "default": "{ rotation: 'line' }",
-      "seeMoreLink": {
-        "url": "https://mui.com/x/react-charts/highlighting",
-        "text": "highlighting docs"
-      }
-    },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
@@ -22,28 +11,27 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
-    "disableLineItemHighlight": { "type": { "name": "bool" } },
     "experimentalFeatures": { "type": { "name": "object" } },
     "grid": { "type": { "name": "shape", "description": "{ radius?: bool, rotation?: bool }" } },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radialLine' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radialLine' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radialBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radialBar' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radialLine' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex: number, seriesId: string, type: 'radialBar' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
       }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radialLine' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radialLine' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radialBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radialBar' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -105,15 +93,15 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radialLine' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex: number, seriesId: string, type: 'radialBar' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
       }
     },
     "width": { "type": { "name": "number" } }
   },
-  "name": "RadialLineChart",
+  "name": "RadialBarChart",
   "imports": [
-    "import { RadialLineChart } from '@mui/x-charts-premium/RadialLineChart';",
-    "import { RadialLineChart } from '@mui/x-charts-premium';"
+    "import { RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';",
+    "import { RadialBarChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },
@@ -131,12 +119,6 @@
       "class": null
     },
     {
-      "name": "line",
-      "description": "The component that renders the line.",
-      "default": "LineElementPath",
-      "class": null
-    },
-    {
       "name": "loadingOverlay",
       "description": "Overlay component rendered when the chart is in a loading state.",
       "default": "ChartsLoadingOverlay",
@@ -148,7 +130,6 @@
       "default": "ChartsNoDataOverlay",
       "class": null
     },
-    { "name": "radialLineHighlight", "description": "", "class": null },
     {
       "name": "toolbar",
       "description": "Custom component for the toolbar.",
@@ -163,9 +144,9 @@
     }
   ],
   "classes": [],
-  "muiName": "MuiRadialLineChart",
-  "filename": "/packages/x-charts-premium/src/RadialLineChart/RadialLineChart.tsx",
+  "muiName": "MuiRadialBarChart",
+  "filename": "/packages/x-charts-premium/src/RadialBarChart/RadialBarChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars</a></li></ul>",
   "cssComponent": false
 }

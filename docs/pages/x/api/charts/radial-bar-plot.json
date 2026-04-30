@@ -1,0 +1,14 @@
+{
+  "props": { "className": { "type": { "name": "string" } } },
+  "name": "RadialBarPlot",
+  "imports": [
+    "import { RadialBarPlot } from '@mui/x-charts-premium/RadialBarChart';",
+    "import { RadialBarPlot } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiRadialBarPlot",
+  "filename": "/packages/x-charts-premium/src/RadialBarChart/RadialBarPlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars</a></li></ul>",
+  "cssComponent": false
+}
