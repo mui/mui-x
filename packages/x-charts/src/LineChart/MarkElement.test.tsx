@@ -114,8 +114,11 @@ describe.for([
     expect(mark.getAttribute('pointer-events')).to.equal('none');
     expect(mark.getAttribute('opacity')).to.equal('0');
 
-    // It throws because `click` event cannot be fired on an element with `pointer-events: none`
-    await expect(async () => user.click(mark)).rejects.toThrow();
+    // Re-enable pointer-events checking for this specific assertion: the test
+    // asserts that user-event refuses to fire `click` on a `pointer-events: none`
+    // element. The shared setup defaults to `pointerEventsCheck: 0` for speed.
+    const strictUser = user.setup({ pointerEventsCheck: 1 });
+    await expect(async () => strictUser.click(mark)).rejects.toThrow();
     expect(onClick).not.toHaveBeenCalled();
   });
 
