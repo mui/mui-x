@@ -720,7 +720,7 @@ export type YAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleNam
 export type RotationAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
   ? MakeOptional<AxisConfig<S, V, ChartsRotationAxisProps>, 'id'>
   : never;
-export type RadiusAxis<S extends 'linear' = 'linear', V = any> = S extends 'linear'
+export type RadiusAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
   ? MakeOptional<AxisConfig<S, V, ChartsRadiusAxisProps>, 'id'>
   : never;
 
