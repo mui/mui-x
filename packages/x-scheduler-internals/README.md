@@ -1,7 +1,7 @@
 # MUI X Scheduler Internals
 
 This package is the Community plan edition of the internals of the scheduler components.
-It's part of [MUI X](https://mui.com/x/), an open-core extension of our Core libraries, with advanced components.
+It's part of [MUI X](https://mui.com/x/), an open-core extension of our Core libraries, with advanced components.
 
 ## Installation
 
