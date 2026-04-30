@@ -57,7 +57,7 @@ function seriesProcessor(
           d3Dataset[dataIndex][id] = value;
         }
       });
-    } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
+    } else if (dataset === undefined) {
       throw new Error(
         `MUI X Charts: Radial line series with id="${id}" has no data. ` +
           'The chart cannot render this series without data. ' +
@@ -65,29 +65,27 @@ function seriesProcessor(
       );
     }
 
-    if (process.env.NODE_ENV !== 'production') {
-      if (!data && dataset) {
-        const dataKey = series[id].dataKey;
+    if (!data && dataset) {
+      const dataKey = series[id].dataKey;
 
-        if (!dataKey && !series[id].valueGetter) {
-          throw new Error(
-            `MUI X Charts: Radial line series with id="${id}" has no data, no dataKey, and no valueGetter. ` +
-              'When using the dataset prop, each series must have a dataKey or valueGetter to identify which dataset values to use. ' +
-              'Add a dataKey or valueGetter property to the series configuration.',
-          );
-        }
+      if (!dataKey && !series[id].valueGetter) {
+        throw new Error(
+          `MUI X Charts: Radial line series with id="${id}" has no data, no dataKey, and no valueGetter. ` +
+            'When using the dataset prop, each series must have a dataKey or valueGetter to identify which dataset values to use. ' +
+            'Add a dataKey or valueGetter property to the series configuration.',
+        );
+      }
 
-        if (dataKey) {
-          dataset.forEach((entry, index) => {
-            const value = entry[dataKey];
-            if (value != null && typeof value !== 'number') {
-              warnOnce(
-                `MUI X Charts: your dataset key "${dataKey}" is used for plotting radial lines, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
+      if (process.env.NODE_ENV !== 'production' && dataKey) {
+        dataset.forEach((entry, index) => {
+          const value = entry[dataKey];
+          if (value != null && typeof value !== 'number') {
+            warnOnce(
+              `MUI X Charts: your dataset key "${dataKey}" is used for plotting radial lines, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
 Radial line plots only support numeric and null values.`,
-              );
-            }
-          });
-        }
+            );
+          }
+        });
       }
     }
   });
