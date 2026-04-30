@@ -7,11 +7,6 @@ import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { RangePosition } from '../models';
 import { isEndOfRange, isStartOfRange } from '../internals/utils/date-utils';
 
-const isEnabledButtonElement = (element: Element | null): element is HTMLButtonElement =>
-  isHTMLElement(element) &&
-  element.tagName === 'BUTTON' &&
-  !(element as HTMLButtonElement).disabled;
-
 interface UseDragRangeParams {
   disableDragEditing?: boolean;
   adapter: MuiPickersAdapter;
@@ -31,9 +26,6 @@ interface UseDragRangeEvents {
   onDragOver?: React.DragEventHandler<HTMLButtonElement>;
   onDragEnd?: React.DragEventHandler<HTMLButtonElement>;
   onDrop?: React.DragEventHandler<HTMLButtonElement>;
-  onTouchStart?: React.TouchEventHandler<HTMLButtonElement>;
-  onTouchMove?: React.TouchEventHandler<HTMLButtonElement>;
-  onTouchEnd?: React.TouchEventHandler<HTMLButtonElement>;
 }
 
 interface UseDragRangeResponse extends UseDragRangeEvents {
@@ -44,7 +36,7 @@ interface UseDragRangeResponse extends UseDragRangeEvents {
 
 /**
  * Finds the closest ancestor element (or the element itself) that has the specified data attribute.
- * This is needed because drag/touch events can target child elements (e.g., text spans)
+ * This is needed because drag events can target child elements (e.g., text spans)
  * inside the button, which don't have the data attributes directly.
  *
  * @param element The element to start searching from.
@@ -92,69 +84,6 @@ const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
   return element?.dataset.timestamp === event.dataTransfer.getData('draggingDate');
 };
 
-/**
- * Resolves a button element from a given element.
- * Searches both upward (ancestors) and downward (children) since:
- * - Touch events may target child elements inside the button (e.g., TouchRipple)
- * - `elementFromPoint` may return wrapper divs containing the button
- */
-const resolveButtonElement = (element: Element | null): HTMLButtonElement | null => {
-  if (!element) {
-    return null;
-  }
-
-  // Check if element itself is a valid button
-  if (isEnabledButtonElement(element)) {
-    return element;
-  }
-
-  // Search upward - element could be a child of the button (e.g., text span, TouchRipple)
-  const closestButton = element.closest('button');
-  if (isEnabledButtonElement(closestButton)) {
-    return closestButton;
-  }
-
-  // Search downward (breadth-first, max 3 levels) - element could be a wrapper containing the button.
-  // Day cells have shallow DOM, so a small depth limit keeps this efficient.
-  const queue: Array<{ el: Element; depth: number }> = Array.from(element.children).map((el) => ({
-    el,
-    depth: 1,
-  }));
-  const maxDepth = 3;
-  while (queue.length > 0) {
-    const { el: current, depth } = queue.shift()!;
-    if (isEnabledButtonElement(current)) {
-      return current;
-    }
-    if (depth < maxDepth) {
-      queue.push(...Array.from(current.children).map((el) => ({ el, depth: depth + 1 })));
-    }
-  }
-
-  return null;
-};
-
-const resolveElementFromTouch = (
-  event: React.TouchEvent<HTMLButtonElement>,
-  ignoreTouchTarget?: boolean,
-) => {
-  // don't parse multi-touch result
-  if (event.changedTouches?.length === 1 && event.touches.length <= 1) {
-    const element = document.elementFromPoint(
-      event.changedTouches[0].clientX,
-      event.changedTouches[0].clientY,
-    );
-    // `elementFromPoint` could have resolved preview div or wrapping div
-    // might need to recursively find the nested button
-    const buttonElement = resolveButtonElement(element);
-    if (ignoreTouchTarget && buttonElement === event.changedTouches[0].target) {
-      return null;
-    }
-    return buttonElement;
-  }
-  return null;
-};
-
 const useDragRangeEvents = ({
   adapter,
   setRangeDragDay,
@@ -193,36 +122,26 @@ const useDragRangeEvents = ({
     }
 
     event.stopPropagation();
+    // Read from `currentTarget` (the bound day button) rather than `target`,
+    // which can be a child element (e.g. text span, ripple).
+    const { timestamp, position } = event.currentTarget.dataset;
+    if (timestamp) {
+      // iOS 15 silently drops subsequent drag events unless `setData` is called here, and
+      // Android Chrome additionally requires a `text/plain` (or `text/uri-list`) entry —
+      // see https://github.com/atlassian/pragmatic-drag-and-drop element-adapter for the
+      // same workaround.
+      event.dataTransfer.setData('draggingDate', timestamp);
+      event.dataTransfer.setData('text/plain', timestamp);
+    }
     if (emptyDragImgRef.current) {
       event.dataTransfer.setDragImage(emptyDragImgRef.current, 0, 0);
     }
-    setRangeDragDay(newDate);
     event.dataTransfer.effectAllowed = 'move';
-    setIsDragging(true);
-    // Use currentTarget (the element the handler is attached to) rather than target
-    // because we need the button's dataset, not a potential child element's dataset.
-    const element = getClosestElementWithDataAttribute(event.currentTarget, 'timestamp');
-    const buttonDataset = element?.dataset;
-    if (buttonDataset?.timestamp) {
-      event.dataTransfer.setData('draggingDate', buttonDataset.timestamp);
-    }
-    if (buttonDataset?.position) {
-      onDatePositionChange(buttonDataset.position as RangePosition);
-    }
-  });
-
-  const handleTouchStart = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
-    const target = resolveElementFromTouch(event);
-    if (!target) {
-      return;
-    }
-
-    const newDate = resolveDateFromTarget(target, adapter, timezone);
-    if (!isElementDraggable(newDate)) {
-      return;
-    }
-
     setRangeDragDay(newDate);
+    setIsDragging(true);
+    if (position) {
+      onDatePositionChange(position as RangePosition);
+    }
   });
 
   const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
@@ -234,35 +153,6 @@ const useDragRangeEvents = ({
     event.stopPropagation();
     event.dataTransfer.dropEffect = 'move';
     setRangeDragDay(resolveDateFromTarget(getTarget(event.nativeEvent), adapter, timezone));
-  });
-
-  const handleTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
-    const target = resolveElementFromTouch(event);
-    if (!target) {
-      return;
-    }
-
-    const newDate = resolveDateFromTarget(target, adapter, timezone);
-    if (newDate) {
-      setRangeDragDay(newDate);
-    }
-
-    // this prevents initiating drag when user starts touchmove outside and then moves over a draggable element
-    const targetsAreIdentical = target === event.changedTouches[0].target;
-    if (!targetsAreIdentical || !isElementDraggable(newDate)) {
-      return;
-    }
-
-    // on mobile we should only initialize dragging state after move is detected
-    setIsDragging(true);
-
-    // Use currentTarget (the element the handler is attached to) rather than target
-    // because we need the button's dataset, not a potential child element's dataset.
-    const element = getClosestElementWithDataAttribute(event.currentTarget, 'position');
-    const buttonDataset = element?.dataset;
-    if (buttonDataset?.position) {
-      onDatePositionChange(buttonDataset.position as RangePosition);
-    }
   });
 
   const handleDragLeave = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
@@ -282,27 +172,6 @@ const useDragRangeEvents = ({
     event.preventDefault();
     event.stopPropagation();
     event.dataTransfer.dropEffect = 'move';
-  });
-
-  const handleTouchEnd = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
-    if (!isDragging) {
-      return;
-    }
-
-    setRangeDragDay(null);
-    setIsDragging(false);
-
-    const target = resolveElementFromTouch(event, true);
-    if (!target) {
-      return;
-    }
-
-    // make sure the focused element is the element where touch ended
-    target.focus();
-    const newDate = resolveDateFromTarget(target, adapter, timezone);
-    if (newDate) {
-      onDrop(newDate);
-    }
   });
 
   const handleDragEnd = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
@@ -343,9 +212,6 @@ const useDragRangeEvents = ({
     onDragOver: handleDragOver,
     onDragEnd: handleDragEnd,
     onDrop: handleDrop,
-    onTouchStart: handleTouchStart,
-    onTouchMove: handleTouchMove,
-    onTouchEnd: handleTouchEnd,
   };
 };
 
