@@ -400,6 +400,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'premium',
   },
   {
+    pathname: '/x/api/charts/radial-line-highlight-plot',
+    title: 'RadialLineHighlightPlot',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/radial-line-plot',
     title: 'RadialLinePlot',
     plan: 'premium',
