@@ -90,7 +90,7 @@ interface ResourceSelectProps {
   readOnly?: boolean;
   resourceId: string | null;
   onResourceChange: (value: SchedulerResourceId) => void;
-  onColorChange: (value: SchedulerEventColor) => void;
+  onColorChange: (value: SchedulerEventColor | null) => void;
   color: SchedulerEventColor | null;
 }
 
@@ -252,10 +252,8 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
       <ResourceMenuColorToggleGroup
         value={color ? [color] : []}
         onValueChange={(values) => {
-          const next = values[values.length - 1];
-          if (next) {
-            onColorChange(next as SchedulerEventColor);
-          }
+          const next = values[values.length - 1] as SchedulerEventColor | undefined;
+          onColorChange(next ?? null);
         }}
         aria-label={localeText.colorPickerLabel}
         disabled={readOnly}

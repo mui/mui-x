@@ -133,12 +133,8 @@ export function GeneralTab(props: GeneralTabProps) {
     setControlled(newState);
   };
 
-  const handleColorChange = (newColor: SchedulerEventColor) => {
-    if (!newColor) {
-      return;
-    }
-
-    const newState = { ...controlled, color: newColor === controlled.color ? null : newColor };
+  const handleColorChange = (newColor: SchedulerEventColor | null) => {
+    const newState = { ...controlled, color: newColor };
     pushPlaceholder(newState);
     setControlled(newState);
   };
