@@ -253,33 +253,27 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   /**
-   * If the new day does not have the same offset as the old one (when switching to summer day time for example),
-   * Then dayjs will not automatically adjust the offset (moment does).
-   * We have to parse again the value to make sure the `fixOffset` method is applied.
-   * See https://github.com/iamkun/dayjs/blob/b3624de619d6e734cd0ffdbbd3502185041c1b60/src/plugin/timezone/index.js#L72
+   * After operations like `set('hour', X)` or `add(1, 'month')`, the value's
+   * `$offset` may be stale if the new local time falls on the other side of a
+   * DST transition. dayjs does not automatically re-evaluate the offset for us
+   * (moment does), so we have to do it ourselves.
+   *
+   * Only relevant for timezone-aware values (created via `dayjs.tz(...)`).
+   * Plain `dayjs()` values rely on JS Date semantics, which already handle DST
+   * correctly via the system timezone, and UTC values have no DST. Touching
+   * either of those would either be a no-op or, worse, attach unwanted timezone
+   * metadata to a plain value (see https://github.com/mui/mui-x/issues/13290).
    */
   protected adjustOffset = (value: Dayjs) => {
     if (!this.hasTimezonePlugin()) {
       return value;
     }
-
-    const timezone = this.getTimezone(value);
-    if (timezone !== 'UTC') {
-      const fixedValue = value.tz(this.cleanTimezone(timezone), true);
-      // TODO: Simplify the case when we raise the `dayjs` peer dep to 1.11.12 (https://github.com/iamkun/dayjs/releases/tag/v1.11.12)
-      /* v8 ignore next 3 */
-      // @ts-ignore
-      if (fixedValue.$offset === (value.$offset ?? 0)) {
-        return value;
-      }
-      // Change only what is needed to avoid creating a new object with unwanted data
-      // Especially important when used in an environment where utc or timezone dates are used only in some places
-      // Reference: https://github.com/mui/mui-x/issues/13290
-      // @ts-ignore
-      value.$offset = fixedValue.$offset;
+    // @ts-ignore
+    const timezone = value.$x?.$timezone;
+    if (!timezone) {
+      return value;
     }
-
-    return value;
+    return value.tz(timezone, true);
   };
 
   public date = <T extends string | null | undefined>(
@@ -488,36 +482,39 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     return value >= start && value <= end;
   };
 
+  // The `dayjs` timezone plugin overrides `startOf` (and `endOf`, which dayjs
+  // implements via `startOf`) to handle DST correctly for timezone-aware
+  // values, so we don't need to call `adjustOffset` on these results.
   public startOfYear = (value: Dayjs) => {
-    return this.adjustOffset(value.startOf('year'));
+    return value.startOf('year');
   };
 
   public startOfMonth = (value: Dayjs) => {
-    return this.adjustOffset(value.startOf('month'));
+    return value.startOf('month');
   };
 
   public startOfWeek = (value: Dayjs) => {
-    return this.adjustOffset(this.setLocaleToValue(value).startOf('week'));
+    return this.setLocaleToValue(value).startOf('week');
   };
 
   public startOfDay = (value: Dayjs) => {
-    return this.adjustOffset(value.startOf('day'));
+    return value.startOf('day');
   };
 
   public endOfYear = (value: Dayjs) => {
-    return this.adjustOffset(value.endOf('year'));
+    return value.endOf('year');
   };
 
   public endOfMonth = (value: Dayjs) => {
-    return this.adjustOffset(value.endOf('month'));
+    return value.endOf('month');
   };
 
   public endOfWeek = (value: Dayjs) => {
-    return this.adjustOffset(this.setLocaleToValue(value).endOf('week'));
+    return this.setLocaleToValue(value).endOf('week');
   };
 
   public endOfDay = (value: Dayjs) => {
-    return this.adjustOffset(value.endOf('day'));
+    return value.endOf('day');
   };
 
   public addYears = (value: Dayjs, amount: number) => {

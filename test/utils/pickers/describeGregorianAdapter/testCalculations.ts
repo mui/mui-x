@@ -713,12 +713,33 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.setMonth(testDateIso, 4)).toEqualDateTime('2018-05-30T11:44:00.000Z');
   });
 
-  it('Method: setDate', () => {
-    expect(adapter.setDate(testDateIso, 15)).toEqualDateTime('2018-10-15T11:44:00.000Z');
+  describe('Method: setDate', () => {
+    it('should handle basic usecases', () => {
+      expect(adapter.setDate(testDateIso, 15)).toEqualDateTime('2018-10-15T11:44:00.000Z');
+    });
+
+    it.skipIf(!adapter.isTimezoneCompatible)('should update the offset when entering DST', () => {
+      // testDateLastNonDSTDay is 2022-03-27 in Europe/Paris (CET, the last
+      // non-DST day). Setting the date to 28 keeps us inside DST week, but
+      // the offset still needs to update because the local hour is now in
+      // CEST.
+      expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
+      expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.setDate(testDateLastNonDSTDay, 28));
+    });
   });
 
-  it('Method: setHours', () => {
-    expect(adapter.setHours(testDateIso, 0)).toEqualDateTime('2018-10-30T00:44:00.000Z');
+  describe('Method: setHours', () => {
+    it('should handle basic usecases', () => {
+      expect(adapter.setHours(testDateIso, 0)).toEqualDateTime('2018-10-30T00:44:00.000Z');
+    });
+
+    it.skipIf(!adapter.isTimezoneCompatible)('should update the offset when entering DST', () => {
+      // testDateLastNonDSTDay starts at 00:00 Europe/Paris CET. DST begins at
+      // 02:00 -> 03:00 the same day, so setting hours to 12 lands inside
+      // CEST and the offset must follow.
+      expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
+      expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.setHours(testDateLastNonDSTDay, 12));
+    });
   });
 
   it('Method: setMinutes', () => {
