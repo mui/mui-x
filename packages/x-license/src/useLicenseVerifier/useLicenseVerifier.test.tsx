@@ -13,8 +13,8 @@ import {
   TEST_KEY_EXPIRED_30DAYS,
   TEST_KEY_PRO_SUBSCRIPTION_FUTURE,
   TEST_KEY_PREMIUM_SUBSCRIPTION_FUTURE,
-  TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
-  TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3,
+  TEST_KEY_PRO_ANNUAL_Q1_2026,
+  TEST_KEY_PREMIUM_ANNUAL_Q1_2026,
 } from '../test-keys';
 
 const releaseDate = new Date(3000, 0, 0, 0, 0, 0, 0);
@@ -164,7 +164,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
       {
         planVersion: 'Q1-2026',
         planScope: 'pro',
-        licenseKey: TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
+        licenseKey: TEST_KEY_PRO_ANNUAL_Q1_2026,
         outOfScope: ['x-charts-premium', 'x-data-grid-premium'],
         notInInitial: [],
         notValidForPackage: [],
@@ -172,7 +172,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
       {
         planVersion: 'Q1-2026',
         planScope: 'premium',
-        licenseKey: TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3,
+        licenseKey: TEST_KEY_PREMIUM_ANNUAL_Q1_2026,
         outOfScope: [],
         notInInitial: [],
         notValidForPackage: [],

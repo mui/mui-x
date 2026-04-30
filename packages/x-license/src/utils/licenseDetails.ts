@@ -6,9 +6,8 @@ import { PlanScope, PlanVersion } from './licensePlan';
  * The version of the license key encoding format.
  * - `1`: Legacy format.
  * - `2`: Adds plan scope and license model.
- * - `3`: Adds quantity and app type.
  */
-export type KeyVersion = 1 | 2 | 3;
+export type KeyVersion = 1 | 2;
 
 /**
  * The details of a MUI X license.
@@ -18,7 +17,6 @@ export interface LicenseDetails {
    * The type of application the license covers.
    * - `'single'`: A single application.
    * - `'multi'`: Multiple applications.
-   * Only available in key version 3+.
    */
   appType?: AppType;
   /**
