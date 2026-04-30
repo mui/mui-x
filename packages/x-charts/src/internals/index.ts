@@ -65,6 +65,7 @@ export * from './legendUtils';
 export * from './getChartPoint';
 export * from './isDefined';
 export * from './getScale';
+export * from './getAsNumber';
 export * from './stacking';
 export * from './getCurve';
 export * from './getSymbol';

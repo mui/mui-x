@@ -14,6 +14,7 @@ import {
   isOrdinalScale,
 } from '@mui/x-charts/internals';
 import { evaluateCurveAtAngle, clampAngleRad } from '@mui/x-charts/internals';
+import { getAsNumber } from '@mui/x-charts/internals';
 import type { ScaleName, SeriesItemIdentifierWithType } from '@mui/x-charts/models';
 
 /**
@@ -58,8 +59,6 @@ function getBracketIndices(
   // For continuous axes, find the two adjacent data points surrounding pointX.
   const rotationValue = scale.invert(scale.range()[0] + clampAngleRad(angle - scale.range()[0]));
   const rotationAsNumber = rotationValue instanceof Date ? rotationValue.getTime() : rotationValue;
-
-  const getAsNumber = (v: any) => (v instanceof Date ? v.getTime() : v);
 
   // Find the rightmost index where data[i] <= rotationValue.
   let leftIndex = -1;

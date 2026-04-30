@@ -128,10 +128,16 @@ function findTForAngle(segment: CurveSegment, targetAngle: number): number {
     const dy = -Math.cos(targetAngle);
 
     if (Math.abs(dx) < EPSILON) {
+      if (Math.abs(DeltaX) < EPSILON) {
+        return -1;
+      }
       return -segment.x0 / DeltaX;
     }
 
     if (Math.abs(dy) < EPSILON) {
+      if (Math.abs(DeltaY) < EPSILON) {
+        return -1;
+      }
       return -segment.y0 / DeltaY;
     }
 
