@@ -515,22 +515,21 @@ export function useGridColumns(
     }
   }, [apiRef, logger, props.columnVisibilityModel]);
 
-  if (process.env.NODE_ENV !== 'production') {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    React.useEffect(() => {
-      if (props.signature !== GridSignature.DataGrid) {
-        return;
-      }
-      const hasMultiSelect = props.columns.some((col) => col.type === 'multiSelect');
-      if (hasMultiSelect) {
-        warnOnce([
-          'MUI X: The `multiSelect` column type is available in Pro and Premium versions',
-          'Use `<DataGridPro />` or `<DataGridPremium />` to render it correctly.',
-          'For more details, see https://mui.com/x/react-data-grid/column-definition/#multi-select',
-        ]);
-      }
-    }, [props.columns, props.signature]);
-  }
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === 'production') {
+      return;
+    }
+    if (props.signature !== GridSignature.DataGrid) {
+      return;
+    }
+    if (props.columns.some((col) => col.type === 'multiSelect')) {
+      warnOnce([
+        'MUI X: The `multiSelect` column type is available in Pro and Premium versions',
+        'Use `<DataGridPro />` or `<DataGridPremium />` to render it correctly.',
+        'For more details, see https://mui.com/x/react-data-grid/column-definition/#multi-select',
+      ]);
+    }
+  }, [props.columns, props.signature]);
 }
 
 function mergeColumnsState(columnsState: GridColumnsState) {

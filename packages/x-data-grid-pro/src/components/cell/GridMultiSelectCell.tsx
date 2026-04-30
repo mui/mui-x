@@ -127,16 +127,16 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
 
   const getOptionValue = (colDef as GridMultiSelectColDef).getOptionValue!;
   const getOptionLabel = (colDef as GridMultiSelectColDef).getOptionLabel!;
+  const valueOptions = isMultiSelectColDef(colDef) ? getValueOptions(colDef, { id, row }) : null;
   const optionByValue = React.useMemo(() => {
     const map = new Map<any, ValueOptions>();
-    const valueOptions = isMultiSelectColDef(colDef) ? getValueOptions(colDef, { id, row }) : null;
     if (valueOptions) {
       for (const opt of valueOptions) {
         map.set(getOptionValue(opt), opt);
       }
     }
     return map;
-  }, [colDef, id, row, getOptionValue]);
+  }, [valueOptions, getOptionValue]);
 
   // Reorder array to show filtered value first (improves UX when filtering).
   const arrayValue = React.useMemo(() => {

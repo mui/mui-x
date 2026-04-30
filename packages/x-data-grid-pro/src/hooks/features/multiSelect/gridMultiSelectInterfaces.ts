@@ -5,4 +5,6 @@
  */
 export interface GridMultiSelectInternalCache {
   subscribeDrag: (field: string, callback: (width: number) => void) => () => void;
+  broadcast: (field: string, width: number) => void;
+  teardown: () => void;
 }

@@ -113,8 +113,8 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
     prevArrayKeyRef.current = arrayKey;
   }, [arrayKey, autoWrap]);
 
-  // Re-measure when committed column width changes (apiRef.setColumnWidth or drag-stop state commit).
-  // Active drag flows through the shared multiSelect cache subscription below.
+  // Re-measure on committed column width changes; active drag flows through the
+  // shared subscription below.
   React.useEffect(() => {
     if (autoWrap || !containerRef.current) {
       return;
@@ -124,9 +124,6 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
     setContainerWidth(width);
   }, [columnWidth, autoWrap]);
 
-  // Subscribe to throttled drag-width broadcasts from the per-grid multiSelect cache.
-  // This replaces a per-cell `columnResize` listener so the EventManager listener
-  // count stays O(1) regardless of how many multiSelect cells are visible.
   React.useEffect(() => {
     if (autoWrap) {
       return undefined;

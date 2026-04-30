@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
+import { throttle, type Cancelable } from '@mui/x-internals/throttle';
 import {
   type GridStateColDef,
   type GridPipeProcessor,
@@ -14,14 +15,9 @@ import type { GridMultiSelectInternalCache } from './gridMultiSelectInterfaces';
 
 const RESIZE_THROTTLE_MS = 32;
 
-type DragSubscribers = Map<string, Set<(width: number) => void>>;
-
-const createMultiSelectCache = (): GridMultiSelectInternalCache & {
-  subscribers: DragSubscribers;
-} => {
-  const subscribers: DragSubscribers = new Map();
+const createMultiSelectCache = (): GridMultiSelectInternalCache => {
+  const subscribers = new Map<string, Set<(width: number) => void>>();
   return {
-    subscribers,
     subscribeDrag(field, callback) {
       let bucket = subscribers.get(field);
       if (!bucket) {
@@ -40,6 +36,12 @@ const createMultiSelectCache = (): GridMultiSelectInternalCache & {
         }
       };
     },
+    broadcast(field, width) {
+      subscribers.get(field)?.forEach((cb) => cb(width));
+    },
+    teardown() {
+      subscribers.clear();
+    },
   };
 };
 
@@ -52,55 +54,43 @@ export const useGridMultiSelectPreProcessors = (
     [props.columns],
   );
 
-  // Single per-grid drag-resize broadcaster. Replaces per-cell `columnResize`
-  // subscriptions to avoid the EventEmitter listener leak warning when many
-  // multiSelect cells are visible.
+  // Single per-grid drag broadcaster keeps the EventManager listener count O(1)
+  // even when many multiSelect cells are visible.
   if (!apiRef.current.caches.multiSelect) {
     apiRef.current.caches.multiSelect = createMultiSelectCache();
   }
-  const subscribers = (
-    apiRef.current.caches.multiSelect as ReturnType<typeof createMultiSelectCache>
-  ).subscribers;
+  const cache = apiRef.current.caches.multiSelect;
 
-  const throttleTimersRef = React.useRef(new Map<string, ReturnType<typeof setTimeout>>());
-  const pendingWidthsRef = React.useRef(new Map<string, number>());
+  const throttledByFieldRef = React.useRef(
+    new Map<string, ((width: number) => void) & Cancelable>(),
+  );
 
   useGridEvent(apiRef, 'columnResize', (params) => {
     if (params.colDef.type !== 'multiSelect') {
       return;
     }
     const { field } = params.colDef;
-    pendingWidthsRef.current.set(field, params.width);
-    if (throttleTimersRef.current.has(field)) {
-      return;
+    let throttled = throttledByFieldRef.current.get(field);
+    if (!throttled) {
+      throttled = throttle((width: number) => cache.broadcast(field, width), RESIZE_THROTTLE_MS);
+      throttledByFieldRef.current.set(field, throttled);
     }
-    const timer = setTimeout(() => {
-      throttleTimersRef.current.delete(field);
-      const width = pendingWidthsRef.current.get(field);
-      pendingWidthsRef.current.delete(field);
-      if (width === undefined) {
-        return;
-      }
-      subscribers.get(field)?.forEach((cb) => cb(width));
-    }, RESIZE_THROTTLE_MS);
-    throttleTimersRef.current.set(field, timer);
+    throttled(params.width);
   });
 
   useGridEvent(apiRef, 'columnResizeStop', () => {
-    throttleTimersRef.current.forEach((timer) => clearTimeout(timer));
-    throttleTimersRef.current.clear();
-    pendingWidthsRef.current.clear();
-    // The `columnWidth` prop change in each cell triggers its `useEffect` for the
-    // final sub-pixel-accurate `getBoundingClientRect` read.
+    throttledByFieldRef.current.forEach((t) => t.clear());
+    throttledByFieldRef.current.clear();
   });
 
   React.useEffect(() => {
-    const timers = throttleTimersRef.current;
+    const throttles = throttledByFieldRef.current;
     return () => {
-      timers.forEach((timer) => clearTimeout(timer));
-      timers.clear();
+      throttles.forEach((t) => t.clear());
+      throttles.clear();
+      cache.teardown();
     };
-  }, []);
+  }, [cache]);
 
   const applyMultiSelectDefaults = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
@@ -119,8 +109,7 @@ export const useGridMultiSelectPreProcessors = (
         }
         const userColumn = userColumnsLookup.get(field);
         const stateColumn = column as GridStateColDef;
-        // Apply multiSelect defaults, then user's explicit props.
-        // We use userColumn (not column) because column already has string defaults baked in.
+        // Spread `userColumn` (not `column`) — `column` already has string defaults baked in.
         newLookup[field] = {
           ...GRID_MULTI_SELECT_COL_DEF,
           ...userColumn,

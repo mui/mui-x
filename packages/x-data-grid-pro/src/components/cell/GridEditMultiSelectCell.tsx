@@ -192,13 +192,9 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
     }
   };
 
-  // Row-mode focus / open sync — split into two effects:
-  //  1. Focus-gain edge: scroll the cell into view (Modal locks body scroll and the
-  //     autocomplete input is body-portaled, so the browser default scroll-into-view
-  //     relied on by text-input cells doesn't fire). Reset `open` on focus loss so
-  //     re-entering auto-opens the popup.
-  //  2. Popup-closed-while-focused: DOM-focus the chips root so the next Tab / ESC
-  //     bubbles to the grid's `cellKeyDown`.
+  // The Modal locks body scroll and the autocomplete input is body-portaled, so the
+  // browser default scroll-into-view that text-input cells rely on doesn't fire here —
+  // call `apiRef.scrollToIndexes` on the focus-gain edge to bring the cell into view.
   const prevHasFocusRef = React.useRef(false);
   useEnhancedEffect(() => {
     if (rootProps.editMode !== 'row') {

@@ -1720,7 +1720,7 @@ describe('<DataGridPro /> - Filter', () => {
             { colDef, width: 250, element: null } as any,
             {} as any,
           );
-          // Throttle is leading-edge with a 32 ms tail; wait for it to flush.
+          // Trailing-edge throttle (32 ms); wait for it to flush.
           await sleep(60);
         });
         expect(received).to.deep.equal([250]);
