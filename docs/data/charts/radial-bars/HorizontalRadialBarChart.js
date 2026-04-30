@@ -16,28 +16,31 @@ const months = [
   'Dec',
 ];
 
-export default function BasicRadialBarChart() {
+export default function HorizontalRadialBarChart() {
   return (
     <RadialBarChart
       height={400}
       series={[
         {
-          data: [3, 5, 7, null, 12, 15, 18, 16, 13, 9, 6, 4],
+          data: [3, 5, 7, 9, 12, 15, 17, 16, 13, 9, 6, 4],
           label: 'Temperature',
+          layout: 'horizontal',
         },
         {
-          data: [12, 15, 18, 16, 13, null, 6, 4, 3, 5, 7, 9],
+          data: [9, 12, 15, 17, 16, 13, 9, 6, 4, 3, 5, 7],
           label: 'Temperature',
-          stack: 'a',
+          layout: 'horizontal',
+          stack: 'stack1',
         },
         {
-          data: [7, 9, 12, 15, 18, 16, 13, null, 6, 4, 3, 5],
+          data: [3, 5, 15, 3, 5, 7, 17, 16, 13, 9, 6, 4, 7, 9, 12],
           label: 'Temperature',
-          stack: 'a',
+          layout: 'horizontal',
+          stack: 'stack1',
         },
       ]}
-      rotationAxis={[{ scaleType: 'band', data: months }]}
-      radiusAxis={[{ scaleType: 'linear', minRadius: 20 }]}
+      radiusAxis={[{ scaleType: 'band', data: months }]}
+      rotationAxis={[{ scaleType: 'linear', max: 50 }]}
       grid={{ rotation: true, radius: true }}
     />
   );
