@@ -108,6 +108,7 @@
     "line": "The component that renders the line.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "radialLineHighlight": "",
     "toolbar": "Custom component for the toolbar.",
     "tooltip": "Custom component for the tooltip popper."
   }

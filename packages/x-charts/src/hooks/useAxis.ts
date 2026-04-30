@@ -14,7 +14,6 @@ import {
   type AxisId,
   type ChartsRadiusAxisProps,
   type ChartsRotationAxisProps,
-  type PolarAxisDefaultized,
   type ScaleName,
   type AxisScaleConfig,
   type ChartsXAxisProps,
@@ -185,7 +184,7 @@ export function useRadiusAxes() {
  */
 export function useRotationAxis(
   axisId?: AxisId,
-): PolarAxisDefaultized<ScaleName, any, ChartsRotationAxisProps> | undefined {
+): ComputedAxis<ScaleName, any, ChartsRotationAxisProps> | undefined {
   const store = useStore<[UseChartPolarAxisSignature]>();
   const { axis: rotationAxis, axisIds: rotationAxisIds } = store.use(selectorChartRotationAxis);
 
@@ -215,7 +214,7 @@ export function useRotationAxis(
  */
 export function useRadiusAxis(
   axisId?: AxisId,
-): PolarAxisDefaultized<ScaleName, any, ChartsRadiusAxisProps> | undefined {
+): ComputedAxis<ScaleName, any, ChartsRadiusAxisProps> | undefined {
   const store = useStore<[UseChartPolarAxisSignature]>();
   const { axis: radiusAxis, axisIds: radiusAxisIds } = store.use(selectorChartRadiusAxis);
 

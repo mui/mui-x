@@ -38,6 +38,11 @@ import { type ChartsToolbarSlots, type ChartsToolbarSlotProps } from '../Toolbar
 import { useRadialLineChartProps } from './useRadialLineChartProps';
 import { radialLineSeriesConfig } from './seriesConfig';
 import {
+  RadialLineHighlightPlot,
+  type RadialLineHighlightPlotSlots,
+  type RadialLineHighlightPlotSlotProps,
+} from './RadialLineHighlightPlot';
+import {
   ChartsRadialDataProviderPremium,
   type ChartsRadialDataProviderPremiumProps,
 } from '../ChartsRadialDataProviderPremium';
@@ -45,6 +50,7 @@ import {
 export interface RadialLineChartSlots
   extends
     LinePlotSlots,
+    RadialLineHighlightPlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
     ChartsTooltipSlots,
@@ -53,6 +59,7 @@ export interface RadialLineChartSlots
 export interface RadialLineChartSlotProps
   extends
     LinePlotSlotProps,
+    RadialLineHighlightPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
@@ -161,6 +168,7 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
           </g>
           <ChartsRadialAxisHighlight {...axisHighlightProps} />
           <RadialMarkPlot />
+          <RadialLineHighlightPlot slots={props.slots} slotProps={props.slotProps} />
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>

@@ -148,6 +148,7 @@
       "default": "ChartsNoDataOverlay",
       "class": null
     },
+    { "name": "radialLineHighlight", "description": "", "class": null },
     {
       "name": "toolbar",
       "description": "Custom component for the toolbar.",

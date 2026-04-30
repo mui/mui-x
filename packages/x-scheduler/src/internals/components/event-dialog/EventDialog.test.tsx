@@ -84,6 +84,8 @@ describe('<EventDialogContent open />', () => {
       false,
     );
     expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/personal/i);
+    expect(screen.getByRole('group', { name: /date & time/i })).to.not.equal(null);
+    expect(screen.getByRole('group', { name: /resource & color/i })).to.not.equal(null);
     // Verify recurrence tab is clickable (recurrence value tested in other tests)
     await user.click(screen.getByRole('tab', { name: /recurrence/i }));
     expect(screen.getByRole('combobox', { name: /recurrence/i })).to.not.equal(null);
@@ -1006,6 +1008,41 @@ describe('<EventDialogContent open />', () => {
           expect(intervalInput).not.to.have.attribute('disabled');
           const freqCombobox = within(repeatFieldset).getByRole('combobox');
           expect(freqCombobox).not.to.have.attribute('aria-disabled');
+        });
+
+        it('should give the "After" count input and "Until" date input accessible names', async () => {
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
+              <EventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom repeat rule/i }));
+
+          const endsFieldset = screen.getByRole('group', { name: /ends/i });
+          const countInput = within(endsFieldset).getByRole('spinbutton', { name: /after/i });
+          expect(countInput).to.not.equal(null);
+          const describedById = countInput.getAttribute('aria-describedby');
+          expect(describedById).to.not.equal(null);
+          expect(endsFieldset.querySelector(`[id="${describedById}"]`)?.textContent).to.equal(
+            'times',
+          );
+
+          const untilDate = endsFieldset.querySelector(
+            'input[type="date"]',
+          ) as HTMLInputElement | null;
+          expect(untilDate).to.not.equal(null);
+          const untilLabelledBy = untilDate!.getAttribute('aria-labelledby');
+          expect(untilLabelledBy).to.not.equal(null);
+          expect(endsFieldset.querySelector(`[id="${untilLabelledBy}"]`)?.textContent).to.equal(
+            'Until',
+          );
         });
 
         it('should submit custom recurrence with Ends: after', async () => {
