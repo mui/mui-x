@@ -20,12 +20,12 @@ export const getGridMultiSelectOperators = (): GridFilterOperator[] => [
       if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
         return null;
       }
-      const filterValues = filterItem.value.map(parseObjectValue);
+      const filterSet = new Set(filterItem.value.map(parseObjectValue));
       return (cellValue): boolean => {
         if (!Array.isArray(cellValue)) {
           return false;
         }
-        return filterValues.some((fv) => cellValue.some((val) => parseObjectValue(val) === fv));
+        return cellValue.some((val) => filterSet.has(parseObjectValue(val)));
       };
     },
     InputComponent: GridFilterInputMultipleMultiSelect,
@@ -36,12 +36,12 @@ export const getGridMultiSelectOperators = (): GridFilterOperator[] => [
       if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
         return null;
       }
-      const filterValues = filterItem.value.map(parseObjectValue);
+      const filterSet = new Set(filterItem.value.map(parseObjectValue));
       return (cellValue): boolean => {
         if (!Array.isArray(cellValue)) {
           return true;
         }
-        return !filterValues.some((fv) => cellValue.some((val) => parseObjectValue(val) === fv));
+        return !cellValue.some((val) => filterSet.has(parseObjectValue(val)));
       };
     },
     InputComponent: GridFilterInputMultipleMultiSelect,

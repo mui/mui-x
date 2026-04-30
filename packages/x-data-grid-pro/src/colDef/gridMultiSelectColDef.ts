@@ -16,6 +16,13 @@ const isArrayOfObjects = (options: ValueOptions[]): options is Array<Record<stri
   return typeof options[0] === 'object';
 };
 
+const multiSelectKey = (value: (string | number)[] | null | undefined) => {
+  if (!Array.isArray(value) || value.length === 0) {
+    return null;
+  }
+  return [...value].sort().join(',');
+};
+
 const defaultGetOptionValue = (value: ValueOptions) => {
   return isObject(value) ? value.value : value;
 };
@@ -49,12 +56,7 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   // @ts-ignore premium-only
   chartable: false,
   // @ts-ignore premium-only
-  groupingValueGetter: ((value: (string | number)[]) => {
-    if (!Array.isArray(value) || value.length === 0) {
-      return null;
-    }
-    return [...value].sort().join(',');
-  }) as any,
+  groupingValueGetter: ((value: (string | number)[]) => multiSelectKey(value)) as any,
   getOptionLabel: defaultGetOptionLabel,
   getOptionValue: defaultGetOptionValue,
   sortComparator: (v1, v2) => {
@@ -71,12 +73,7 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
     }
     return v1.join('').localeCompare(v2.join(''));
   },
-  rowSpanValueGetter: ((value: (string | number)[]) => {
-    if (!Array.isArray(value) || value.length === 0) {
-      return null;
-    }
-    return [...value].sort().join(',');
-  }) as any,
+  rowSpanValueGetter: ((value: (string | number)[]) => multiSelectKey(value)) as any,
   renderCell: renderMultiSelectCell,
   renderEditCell: renderEditMultiSelectCell,
   valueFormatter: (value: (string | number)[], row, colDef, apiRef) => {

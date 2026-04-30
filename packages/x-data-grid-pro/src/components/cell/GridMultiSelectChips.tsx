@@ -3,11 +3,12 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
-import { gridClasses, useGridRootProps, useGridApiContext, useGridEvent } from '@mui/x-data-grid';
+import { gridClasses, useGridRootProps } from '@mui/x-data-grid';
 import type { GridSlotProps, ValueOptions } from '@mui/x-data-grid';
 import { NotRendered } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { calculateVisibleCount } from '../../utils/multiSelectCellUtils';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 
 type OwnerState = DataGridProProcessedProps;
 
@@ -33,7 +34,6 @@ const Chip = styled(NotRendered<GridSlotProps['baseChip']>, {
   },
 });
 
-const RESIZE_THROTTLE_MS = 32;
 const HYSTERESIS_PX = 4;
 
 export interface GridMultiSelectChipsProps<V extends ValueOptions = ValueOptions> extends Omit<
@@ -80,7 +80,7 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
   } = props;
 
   const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
+  const privateApiRef = useGridPrivateApiContext();
   const ownerState = rootProps as OwnerState;
 
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -90,7 +90,10 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
   const chipWidthsRef = React.useRef<Map<number, number>>(new Map());
   const prevArrayKeyRef = React.useRef<string | null>(null);
   const prevVisibleCountRef = React.useRef<number>(values.length);
-  const resizeTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Stable `column.width - container.width` offset (cell padding + borders), so during
+  // active drag we can derive container width from the resize event's `params.width`
+  // without per-cell DOM reads.
+  const widthOffsetRef = React.useRef<number | null>(null);
 
   const [measuredCount, setMeasuredCount] = React.useState(0);
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
@@ -111,44 +114,33 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
   }, [arrayKey, autoWrap]);
 
   // Re-measure when committed column width changes (apiRef.setColumnWidth or drag-stop state commit).
-  // Active drag flows through the throttled `columnResize` handler below.
+  // Active drag flows through the shared multiSelect cache subscription below.
   React.useEffect(() => {
     if (autoWrap || !containerRef.current) {
       return;
     }
-    setContainerWidth(containerRef.current.getBoundingClientRect().width);
+    const width = containerRef.current.getBoundingClientRect().width;
+    widthOffsetRef.current = columnWidth - width;
+    setContainerWidth(width);
   }, [columnWidth, autoWrap]);
 
-  const commitContainerWidth = React.useCallback(() => {
-    resizeTimerRef.current = null;
-    if (containerRef.current) {
-      setContainerWidth(containerRef.current.getBoundingClientRect().width);
+  // Subscribe to throttled drag-width broadcasts from the per-grid multiSelect cache.
+  // This replaces a per-cell `columnResize` listener so the EventManager listener
+  // count stays O(1) regardless of how many multiSelect cells are visible.
+  React.useEffect(() => {
+    if (autoWrap) {
+      return undefined;
     }
-  }, []);
-
-  useGridEvent(apiRef, 'columnResize', (params) => {
-    if (autoWrap || params.colDef.field !== field) {
-      return;
+    const cache = privateApiRef.current.caches.multiSelect;
+    if (!cache) {
+      return undefined;
     }
-    if (resizeTimerRef.current !== null) {
-      return;
-    }
-    resizeTimerRef.current = setTimeout(commitContainerWidth, RESIZE_THROTTLE_MS);
-  });
-  useGridEvent(apiRef, 'columnResizeStop', () => {
-    if (resizeTimerRef.current !== null) {
-      clearTimeout(resizeTimerRef.current);
-    }
-    commitContainerWidth();
-  });
-  React.useEffect(
-    () => () => {
-      if (resizeTimerRef.current !== null) {
-        clearTimeout(resizeTimerRef.current);
+    return cache.subscribeDrag(field, (dragWidth) => {
+      if (widthOffsetRef.current !== null) {
+        setContainerWidth(dragWidth - widthOffsetRef.current);
       }
-    },
-    [],
-  );
+    });
+  }, [field, autoWrap, privateApiRef]);
 
   // Measure chip and container widths after render. `getBoundingClientRect` is sub-pixel,
   // which keeps the chip-fit math aligned with the browser's actual layout.

@@ -9,6 +9,7 @@ import type {
   ValueOptions,
   GridSlotProps,
 } from '@mui/x-data-grid';
+import type { GridAggregationCellMeta } from '@mui/x-data-grid/internals';
 import {
   getDataGridUtilityClass,
   useGridRootProps,
@@ -124,15 +125,18 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
   const cellRef = React.useRef<HTMLDivElement>(null);
   const overflowChipRef = React.useRef<HTMLDivElement>(null);
 
-  const valueOptions = isMultiSelectColDef(colDef) ? getValueOptions(colDef, { id, row }) : [];
   const getOptionValue = (colDef as GridMultiSelectColDef).getOptionValue!;
   const getOptionLabel = (colDef as GridMultiSelectColDef).getOptionLabel!;
-  const optionByValue = new Map<any, ValueOptions>();
-  if (valueOptions) {
-    for (const opt of valueOptions) {
-      optionByValue.set(getOptionValue(opt), opt);
+  const optionByValue = React.useMemo(() => {
+    const map = new Map<any, ValueOptions>();
+    const valueOptions = isMultiSelectColDef(colDef) ? getValueOptions(colDef, { id, row }) : null;
+    if (valueOptions) {
+      for (const opt of valueOptions) {
+        map.set(getOptionValue(opt), opt);
+      }
     }
-  }
+    return map;
+  }, [colDef, id, row, getOptionValue]);
 
   // Reorder array to show filtered value first (improves UX when filtering).
   const arrayValue = React.useMemo(() => {
@@ -141,19 +145,23 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
       return rawArrayValue;
     }
     const activeFilter = filterModel.items.find(
-      (item) => item.field === colDef.field && item.operator === 'contains' && item.value != null,
+      (item) =>
+        item.field === colDef.field &&
+        item.operator === 'contains' &&
+        Array.isArray(item.value) &&
+        item.value.length > 0,
     );
     if (!activeFilter) {
       return rawArrayValue;
     }
-    const filterValue = activeFilter.value;
-    const index = rawArrayValue.indexOf(filterValue);
+    const filterValues: any[] = activeFilter.value;
+    const index = rawArrayValue.findIndex((v) => filterValues.includes(v));
     if (index <= 0) {
       return rawArrayValue;
     }
     const reordered = [...rawArrayValue];
-    reordered.splice(index, 1);
-    reordered.unshift(filterValue);
+    const [match] = reordered.splice(index, 1);
+    reordered.unshift(match);
     return reordered;
   }, [value, filterModel.items, colDef.field]);
 
@@ -307,17 +315,18 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
 
 export { GridMultiSelectCell };
 
-export const renderMultiSelectCell = (params: GridMultiSelectCellProps) => {
-  const aggregation = (params as any).aggregation;
-  if (aggregation) {
-    if (aggregation.position === 'footer') {
-      return <GridFooterCell {...(params as any)} />;
+export const renderMultiSelectCell = (
+  params: GridMultiSelectCellProps & { aggregation?: GridAggregationCellMeta },
+) => {
+  if (params.aggregation) {
+    if (params.aggregation.position === 'footer') {
+      return <GridFooterCell {...params} />;
     }
-    return params.formattedValue ?? (params.value as any);
+    return params.formattedValue ?? params.value;
   }
   // On group rows, `value` is the grouping key (string) from `groupingValueGetter`, not the array.
   if (params.rowNode.type === 'group') {
-    return params.formattedValue ?? (params.value as any);
+    return params.formattedValue ?? params.value;
   }
   return <GridMultiSelectCell {...params} />;
 };

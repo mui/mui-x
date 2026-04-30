@@ -20,6 +20,7 @@ import {
   getGridStringOperators,
   type GridFilterItem,
 } from '@mui/x-data-grid-pro';
+import { unwrapPrivateAPI } from '@mui/x-data-grid-pro/internals';
 import {
   getColumnHeaderCell,
   getColumnValues,
@@ -1490,7 +1491,8 @@ describe('<DataGridPro /> - Filter', () => {
         expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript', 'ReactJavaScript']);
       });
 
-      it('should filter with operator "contains" with multiple values', () => {
+      it('should filter with operator "contains" with multiple values (OR semantics)', () => {
+        // contains [A, B] matches rows whose array contains A OR B (not AND).
         render(
           <TestCaseMultiSelect
             filterModel={{
@@ -1629,6 +1631,28 @@ describe('<DataGridPro /> - Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript', 'ReactJavaScript']);
     });
 
+    it('should reorder chips so the matched filter value comes first', () => {
+      render(
+        <TestCaseMultiSelect
+          rows={[{ id: 1, tags: ['React', 'TypeScript', 'JavaScript'] }]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              width: 400,
+              valueOptions: ['React', 'TypeScript', 'JavaScript'],
+            },
+          ]}
+          getRowHeight={() => 'auto'}
+          filterModel={{
+            items: [{ field: 'tags', operator: 'contains', value: ['JavaScript'] }],
+          }}
+        />,
+      );
+      const chips = document.querySelectorAll(`.${gridClasses.multiSelectCellChip}`);
+      expect(chips[0]).to.have.text('JavaScript');
+    });
+
     it('should render all chips without overflow when row has auto height', () => {
       render(
         <TestCaseMultiSelect
@@ -1649,6 +1673,79 @@ describe('<DataGridPro /> - Filter', () => {
         document.querySelectorAll(`.${gridClasses['multiSelectCellChip--hidden']}`),
       ).to.have.length(0);
       expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).to.equal(null);
+    });
+
+    describe('shared drag-resize subscription', () => {
+      const manyRows = Array.from({ length: 25 }, (_, i) => ({
+        id: i + 1,
+        tags: ['React', 'TypeScript'],
+      }));
+
+      it('should not add per-cell columnResize listeners (no listener leak)', () => {
+        render(<TestCaseMultiSelect rows={manyRows} />);
+        const privateApi = unwrapPrivateAPI(apiRef.current!);
+        const events = privateApi.eventManager.events;
+        const resizeListeners = events.columnResize
+          ? events.columnResize.regular.size + events.columnResize.highPriority.size
+          : 0;
+        const resizeStopListeners = events.columnResizeStop
+          ? events.columnResizeStop.regular.size + events.columnResizeStop.highPriority.size
+          : 0;
+        // Listener count must stay O(1) regardless of visible cell count.
+        expect(resizeListeners).to.be.lessThan(5);
+        expect(resizeStopListeners).to.be.lessThan(5);
+      });
+
+      it('should expose subscribeDrag on the multiSelect cache', () => {
+        render(<TestCaseMultiSelect />);
+        const privateApi = unwrapPrivateAPI(apiRef.current!);
+        const cache = privateApi.caches.multiSelect;
+        expect(cache).not.to.equal(undefined);
+        expect(typeof cache.subscribeDrag).to.equal('function');
+      });
+
+      it('should broadcast throttled drag width to subscribers', async () => {
+        render(<TestCaseMultiSelect />);
+        const privateApi = unwrapPrivateAPI(apiRef.current!);
+        const cache = privateApi.caches.multiSelect;
+        const received: number[] = [];
+        const unsubscribe = cache.subscribeDrag('tags', (width: number) => {
+          received.push(width);
+        });
+
+        const colDef = apiRef.current!.getColumn('tags');
+        await act(async () => {
+          apiRef.current!.publishEvent(
+            'columnResize',
+            { colDef, width: 250, element: null } as any,
+            {} as any,
+          );
+          // Throttle is leading-edge with a 32 ms tail; wait for it to flush.
+          await sleep(60);
+        });
+        expect(received).to.deep.equal([250]);
+        unsubscribe();
+      });
+
+      it('should stop receiving updates after unsubscribe', async () => {
+        render(<TestCaseMultiSelect />);
+        const privateApi = unwrapPrivateAPI(apiRef.current!);
+        const cache = privateApi.caches.multiSelect;
+        const received: number[] = [];
+        const unsubscribe = cache.subscribeDrag('tags', (w: number) => received.push(w));
+        unsubscribe();
+
+        const colDef = apiRef.current!.getColumn('tags');
+        await act(async () => {
+          apiRef.current!.publishEvent(
+            'columnResize',
+            { colDef, width: 300, element: null } as any,
+            {} as any,
+          );
+          await sleep(60);
+        });
+        expect(received).to.have.length(0);
+      });
     });
   });
 });

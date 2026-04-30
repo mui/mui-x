@@ -192,29 +192,40 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
     }
   };
 
-  // Row-mode focus / open sync.
-  //   - On focus loss, reset `open` so re-entering the cell auto-opens the popup.
-  //   - On focus, scroll the cell into view — the Modal locks body scroll and the
-  //     autocomplete input is in a body-portaled popper, so browser-default
-  //     scroll-into-view (relied on by text-input cells) doesn't fire here.
-  //   - When the popup is closed (post-ESC), DOM-focus the chips root so the next
-  //     Tab/ESC bubbles to the grid's `cellKeyDown`.
+  // Row-mode focus / open sync — split into two effects:
+  //  1. Focus-gain edge: scroll the cell into view (Modal locks body scroll and the
+  //     autocomplete input is body-portaled, so the browser default scroll-into-view
+  //     relied on by text-input cells doesn't fire). Reset `open` on focus loss so
+  //     re-entering auto-opens the popup.
+  //  2. Popup-closed-while-focused: DOM-focus the chips root so the next Tab / ESC
+  //     bubbles to the grid's `cellKeyDown`.
+  const prevHasFocusRef = React.useRef(false);
   useEnhancedEffect(() => {
     if (rootProps.editMode !== 'row') {
       return;
     }
     if (!hasFocus) {
       setOpen(true);
+      prevHasFocusRef.current = false;
       return;
     }
-    apiRef.current.scrollToIndexes({
-      colIndex: apiRef.current.getColumnIndex(field, true),
-      rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
-    });
-    if (!open) {
+    if (!prevHasFocusRef.current) {
+      apiRef.current.scrollToIndexes({
+        colIndex: apiRef.current.getColumnIndex(field, true),
+        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+      });
+      prevHasFocusRef.current = true;
+    }
+  }, [hasFocus, rootProps.editMode, apiRef, field, id]);
+
+  useEnhancedEffect(() => {
+    if (rootProps.editMode !== 'row') {
+      return;
+    }
+    if (hasFocus && !open) {
       anchorEl?.focus();
     }
-  }, [hasFocus, open, rootProps.editMode, anchorEl, apiRef, field, id]);
+  }, [hasFocus, open, rootProps.editMode, anchorEl]);
 
   const getOptionValue = (colDef as GridMultiSelectColDef).getOptionValue!;
   const getOptionLabel = (colDef as GridMultiSelectColDef).getOptionLabel!;
