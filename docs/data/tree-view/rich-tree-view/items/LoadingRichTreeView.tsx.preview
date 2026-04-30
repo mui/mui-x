@@ -1,0 +1,8 @@
+<Button onClick={handleToggle} variant="outlined" size="small" sx={{ alignSelf: 'start' }}>
+  {loading ? 'Load items' : 'Reset to loading'}
+</Button>
+<RichTreeView
+  loading={loading}
+  items={loading ? [] : MUI_X_PRODUCTS}
+  sx={{ minHeight: 200 }}
+/>
