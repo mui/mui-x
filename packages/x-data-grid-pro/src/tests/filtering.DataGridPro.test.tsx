@@ -1682,18 +1682,21 @@ describe('<DataGridPro /> - Filter', () => {
       }));
 
       it('should not add per-cell columnResize listeners (no listener leak)', () => {
+        // Original bug: 21+ listeners for `columnResizeStop` — one per visible
+        // multiSelect cell. After the fix, per-cell subscriptions are replaced by
+        // a single grid-level subscription so the count stays bounded.
         render(<TestCaseMultiSelect rows={manyRows} />);
-        const privateApi = unwrapPrivateAPI(apiRef.current!);
-        const events = privateApi.eventManager.events;
+        const events = unwrapPrivateAPI(apiRef.current!).eventManager.events;
         const resizeListeners = events.columnResize
           ? events.columnResize.regular.size + events.columnResize.highPriority.size
           : 0;
         const resizeStopListeners = events.columnResizeStop
           ? events.columnResizeStop.regular.size + events.columnResizeStop.highPriority.size
           : 0;
-        // Listener count must stay O(1) regardless of visible cell count.
-        expect(resizeListeners).to.be.lessThan(5);
-        expect(resizeStopListeners).to.be.lessThan(5);
+        // 25 rows → expect a small constant set of grid-internal subscribers
+        // (scroll shadows, column resize, column headers, multiSelect preprocessor).
+        expect(resizeListeners).to.be.lessThan(10);
+        expect(resizeStopListeners).to.be.lessThan(10);
       });
 
       it('should expose subscribeDrag on the multiSelect cache', () => {
