@@ -11,7 +11,7 @@
       "description": "The position of the axis in polar coordinates. It can be &#39;start&#39;, &#39;end&#39;, or a specific angle in degrees."
     },
     "tickLabelPosition": {
-      "description": "Set the position of the tick labels relative to the axis line. The before/after is defined based on clockwise direction."
+      "description": "Set the position of the tick labels relative to the axis line. The before/after is defined based on clockwise direction. The <code>auto</code> set it to &#39;before&#39; is position is &#39;start&#39; and &#39;after&#39; otherwise."
     },
     "tickPosition": {
       "description": "Set the position of the tick relative to the axis line. The before/after is defined based on clockwise direction."
