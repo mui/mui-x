@@ -125,10 +125,21 @@ export const ResourcesTree = React.forwardRef(function ResourcesTree(
     [childrenLookup],
   );
 
-  const selectedItems = React.useMemo(
-    () => flatList.filter((r) => visibleMap[r.id] !== false).map((r) => r.id),
-    [flatList, visibleMap],
-  );
+  const selectedItems = React.useMemo(() => {
+    // A resource is "fully selected" only if itself and every descendant are visible.
+    const fullyVisible = new Set<string>();
+    for (let i = flatList.length - 1; i >= 0; i -= 1) {
+      const resource = flatList[i];
+      if (visibleMap[resource.id] === false) {
+        continue;
+      }
+      const children = childrenLookup.get(resource.id);
+      if (!children || children.every((child) => fullyVisible.has(child.id))) {
+        fullyVisible.add(resource.id);
+      }
+    }
+    return flatList.filter((r) => fullyVisible.has(r.id)).map((r) => r.id);
+  }, [flatList, visibleMap, childrenLookup]);
 
   const defaultExpandedItems = React.useMemo(
     () => Array.from(childrenLookup.keys()),
@@ -139,10 +150,20 @@ export const ResourcesTree = React.forwardRef(function ResourcesTree(
     (event: React.SyntheticEvent | null, newSelectedIds: string[]) => {
       const newSelected = new Set(newSelectedIds);
       const newVisibleResources: Record<string, boolean> = {};
-      for (const resource of flatList) {
-        newVisibleResources[resource.id] = newSelected.has(resource.id);
+      // Walk in reverse (leaves before parents) so a parent is marked visible when any descendant is selected, even if the parent itself was removed.
+      for (let i = flatList.length - 1; i >= 0; i -= 1) {
+        const resource = flatList[i];
+        if (newSelected.has(resource.id)) {
+          newVisibleResources[resource.id] = true;
+          continue;
+        }
+        const children = childrenLookup.get(resource.id);
+        const hasVisibleDescendant = children?.some(
+          (child) => newVisibleResources[child.id] === true,
+        );
+        newVisibleResources[resource.id] = hasVisibleDescendant ?? false;
       }
-      store.setVisibleResources(newVisibleResources, event?.nativeEvent ?? new Event('change'));
+      store.setVisibleResources(newVisibleResources, event?.nativeEvent);
     },
   );
 
