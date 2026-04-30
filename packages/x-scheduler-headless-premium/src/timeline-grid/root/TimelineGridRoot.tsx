@@ -26,18 +26,16 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     ...elementProps
   } = componentProps;
 
-  if (process.env.NODE_ENV !== 'production') {
-    const seen = new Set<TimelineGridColumnType>();
-    for (const type of columnTypes) {
-      if (seen.has(type)) {
-        throw new Error(
-          `MUI X Scheduler: The \`columnTypes\` prop of <TimelineGrid.Root /> contains a duplicate entry "${type}". ` +
-            'Arrow-key navigation relies on each column type appearing exactly once. ' +
-            'Remove the duplicate entry.',
-        );
-      }
-      seen.add(type);
+  const seen = new Set<TimelineGridColumnType>();
+  for (const type of columnTypes) {
+    if (seen.has(type)) {
+      throw new Error(
+        `MUI X Scheduler: The \`columnTypes\` prop of <TimelineGrid.Root /> contains a duplicate entry "${type}". ` +
+          'Arrow-key navigation relies on each column type appearing exactly once. ' +
+          'Remove the duplicate entry.',
+      );
     }
+    seen.add(type);
   }
 
   // Context hooks
