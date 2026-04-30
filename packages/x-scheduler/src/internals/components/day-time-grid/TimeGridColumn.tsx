@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
+import { warnOnce } from '@mui/x-internals/warning';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
@@ -200,6 +201,12 @@ function ColumnInteractiveLayer({
         dayLayout?.orderedKeys.map((occurrenceKey) => {
           const position = dayLayout.positionByKey.get(occurrenceKey);
           if (!position) {
+            if (process.env.NODE_ENV !== 'production') {
+              warnOnce(
+                `MUI X Scheduler: occurrence "${occurrenceKey}" is in \`orderedKeys\` for day "${day.key}" ` +
+                  'but missing from `positionByKey`. The event will not render. This is an internal bug — please file an issue.',
+              );
+            }
             return null;
           }
           return (

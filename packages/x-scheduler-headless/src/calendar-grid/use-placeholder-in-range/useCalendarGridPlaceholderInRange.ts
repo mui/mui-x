@@ -116,11 +116,11 @@ export namespace useCalendarGridPlaceholderInRange {
      */
     day: SchedulerProcessedDate;
     /**
-     * The visible time range of the column.
+     * Start of the visible time range of the column.
      */
     start: TemporalSupportedObject;
     /**
-     * The visible time range of the column.
+     * End of the visible time range of the column.
      */
     end: TemporalSupportedObject;
   }

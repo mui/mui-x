@@ -184,23 +184,8 @@ export const MonthView = React.memo(
     const [maxEvents, setMaxEvents] = React.useState<number>(2);
 
     // Feature hooks
-    const { days } = useEventCalendarView(MONTH_VIEW_CONFIG);
-
-    const weeks = React.useMemo(() => {
-      const tempWeeks: SchedulerProcessedDate[][] = [];
-      let weekNumber: number | null = null;
-      for (const day of days) {
-        const prevWeek = tempWeeks[tempWeeks.length - 1];
-        const dayWeekNumber = adapter.getWeekNumber(day.value);
-        if (weekNumber !== dayWeekNumber) {
-          weekNumber = dayWeekNumber;
-          tempWeeks.push([day]);
-        } else {
-          prevWeek.push(day);
-        }
-      }
-      return tempWeeks;
-    }, [adapter, days]);
+    useEventCalendarView(MONTH_VIEW_CONFIG);
+    const weeks = useStore(store, monthVisibleRowsSelector);
 
     const monthViewRowsPerType = React.useMemo(
       () => ({ 'day-grid': weeks.length }) as const,

@@ -9,10 +9,7 @@ import {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import {
-  computeTimedLanes,
-  ComputeTimedLanesPrevious,
-} from '@mui/x-scheduler-headless/internals';
+import { computeTimedLanes, ComputeTimedLanesPrevious } from '@mui/x-scheduler-headless/internals';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 

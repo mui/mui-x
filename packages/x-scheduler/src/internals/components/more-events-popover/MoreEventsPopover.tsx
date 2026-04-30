@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
+import { warnOnce } from '@mui/x-internals/warning';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { SchedulerEventOccurrence, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
@@ -85,12 +86,20 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     const result: SchedulerEventOccurrence[] = [];
     for (const key of dayOccurrenceKeys) {
       const occurrence = visibleOccurrences.byKey.get(key);
-      if (occurrence) {
-        result.push(occurrence);
+      if (!occurrence) {
+        if (process.env.NODE_ENV !== 'production') {
+          warnOnce(
+            `MUI X Scheduler: occurrence "${key}" is referenced by day "${day.key}" but missing ` +
+              "from the occurrence index. It won't appear in the popover. " +
+              'This is an internal bug — please file an issue.',
+          );
+        }
+        continue;
       }
+      result.push(occurrence);
     }
     return result;
-  }, [dayOccurrenceKeys, visibleOccurrences]);
+  }, [dayOccurrenceKeys, visibleOccurrences, day.key]);
 
   React.useEffect(() => {
     subscribeCloseHandler(() => {

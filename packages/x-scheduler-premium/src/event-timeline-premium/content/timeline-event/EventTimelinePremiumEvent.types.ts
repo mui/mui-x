@@ -11,10 +11,6 @@ export interface EventTimelinePremiumEventProps extends React.HTMLAttributes<HTM
    */
   firstLane: number;
   /**
-   * 1-based last lane the event occupies (>= firstLane).
-   */
-  lastLane: number;
-  /**
    * The variant of the event, which determines its styling.
    */
   variant: 'regular' | 'placeholder';

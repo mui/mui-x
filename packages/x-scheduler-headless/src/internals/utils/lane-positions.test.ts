@@ -75,8 +75,12 @@ describe('lane-positions', () => {
       const day0 = result.byContainer.get(days[0].key)!;
       expect(day0.orderedKeys).to.have.length(1);
       expect(day0.positionByKey.get('A')).to.deep.equal({ firstLane: 1, lastLane: 1 });
-      expect(day0.cellSpanByKey.get('A')).to.equal(1);
-      expect(day0.invisibleKeys.has('A')).to.equal(false);
+      expect(day0.slotByKey.get('A')).to.deep.equal({
+        firstLane: 1,
+        lastLane: 1,
+        cellSpan: 1,
+        isInvisible: false,
+      });
     });
 
     it('should place concurrent occurrences on different lanes within the same day', () => {
@@ -102,14 +106,20 @@ describe('lane-positions', () => {
       expect(result.maxLane).to.equal(2);
 
       const day1 = result.byContainer.get(days[1].key)!;
-      expect(day1.positionByKey.get('B')).to.deep.equal({ firstLane: 2, lastLane: 2 });
-      expect(day1.cellSpanByKey.get('B')).to.equal(2);
-      expect(day1.invisibleKeys.has('B')).to.equal(false);
+      expect(day1.slotByKey.get('B')).to.deep.equal({
+        firstLane: 2,
+        lastLane: 2,
+        cellSpan: 2,
+        isInvisible: false,
+      });
 
       const day2 = result.byContainer.get(days[2].key)!;
-      expect(day2.positionByKey.get('B')).to.deep.equal({ firstLane: 2, lastLane: 2 });
-      expect(day2.cellSpanByKey.get('B')).to.equal(1);
-      expect(day2.invisibleKeys.has('B')).to.equal(true);
+      expect(day2.slotByKey.get('B')).to.deep.equal({
+        firstLane: 2,
+        lastLane: 2,
+        cellSpan: 1,
+        isInvisible: true,
+      });
     });
 
     it('should reuse the lowest available lane when an earlier lane frees up', () => {
@@ -152,8 +162,12 @@ describe('lane-positions', () => {
       );
 
       const week1Sun = result.byContainer.get(week1[0].key)!;
-      expect(week1Sun.positionByKey.get('A')).to.deep.equal({ firstLane: 1, lastLane: 1 });
-      expect(week1Sun.cellSpanByKey.get('A')).to.equal(4);
+      expect(week1Sun.slotByKey.get('A')).to.deep.equal({
+        firstLane: 1,
+        lastLane: 1,
+        cellSpan: 4,
+        isInvisible: false,
+      });
 
       const week2Sun = result.byContainer.get(week2[0].key)!;
       expect(week2Sun.positionByKey.get('B')).to.deep.equal({ firstLane: 1, lastLane: 1 });
@@ -166,8 +180,12 @@ describe('lane-positions', () => {
       ]);
 
       const day2 = result.byContainer.get(days[2].key)!;
-      expect(day2.positionByKey.get('A')).to.deep.equal({ firstLane: 1, lastLane: 1 });
-      expect(day2.cellSpanByKey.get('A')).to.equal(1);
+      expect(day2.slotByKey.get('A')).to.deep.equal({
+        firstLane: 1,
+        lastLane: 1,
+        cellSpan: 1,
+        isInvisible: false,
+      });
     });
 
     it('should respect the `shouldAddPosition` predicate', () => {

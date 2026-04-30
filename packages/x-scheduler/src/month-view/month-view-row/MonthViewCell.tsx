@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
+import { warnOnce } from '@mui/x-internals/warning';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
@@ -304,17 +305,23 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         {isLoading && <EventSkeleton data-variant="day-grid" />}
         {!isLoading &&
           visibleKeys.map((occurrenceKey) => {
-            const position = dayLayout?.positionByKey.get(occurrenceKey);
-            if (!position) {
+            const slot = dayLayout?.slotByKey.get(occurrenceKey);
+            if (!slot) {
+              if (process.env.NODE_ENV !== 'production') {
+                warnOnce(
+                  `MUI X Scheduler: occurrence "${occurrenceKey}" is in \`orderedKeys\` for day "${day.key}" ` +
+                    'but missing from `slotByKey`. The event will not render. This is an internal bug — please file an issue.',
+                );
+              }
               return null;
             }
             return (
               <MonthViewCellEvent
                 key={occurrenceKey}
                 occurrenceKey={occurrenceKey}
-                firstLane={position.firstLane}
-                cellSpan={dayLayout?.cellSpanByKey.get(occurrenceKey) ?? 1}
-                isInvisible={dayLayout?.invisibleKeys.has(occurrenceKey) ?? false}
+                firstLane={slot.firstLane}
+                cellSpan={slot.cellSpan}
+                isInvisible={slot.isInvisible}
               />
             );
           })}

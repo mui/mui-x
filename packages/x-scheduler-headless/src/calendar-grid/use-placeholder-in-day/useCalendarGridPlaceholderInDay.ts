@@ -116,7 +116,9 @@ export function useCalendarGridPlaceholderInDay(
       return null;
     }
 
-    // The dragged occurrence's own lane is excluded so the placeholder renders on top of it.
+    // Pick the smallest unused lane in the cell — but stop on the dragged occurrence's
+    // own lane so the placeholder reuses it and previews on top of the source event
+    // instead of stacking on a fresh lane.
     let lane = 1;
     if (dayLayout) {
       const used = dayLayout.usedLanes;

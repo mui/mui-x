@@ -64,23 +64,40 @@ export interface OccurrenceContainerLayout {
 }
 
 /**
+ * Atomic per-occurrence record inside a day-grid container.
+ *
+ * Bundles lane + cell-span + visibility into a single object so the layout cannot be
+ * inconsistent (e.g. a key present in one map but missing from another).
+ */
+export interface DayGridContainerSlot extends OccurrenceLanePosition {
+  /**
+   * How many consecutive cells the occurrence spans starting at this container.
+   * Always 1 for single-cell occurrences and for continuation cells.
+   */
+  cellSpan: number;
+  /**
+   * Whether this is a continuation marker that should render invisibly (it only reserves
+   * its lane in this container; the visible block is rendered in the occurrence's
+   * starting container).
+   */
+  isInvisible: boolean;
+}
+
+/**
  * Day-grid extension of `OccurrenceContainerLayout`.
  *
  * In a day-grid (Month view, all-day strip), an occurrence can span multiple cells
  * (multi-day events). On continuation cells the same lane is reserved invisibly.
+ *
+ * The `slotByKey` map is keyed identically to `orderedKeys` and carries the full
+ * per-occurrence record. Every key in `orderedKeys` has an entry in `slotByKey`.
  */
 export interface DayGridContainerLayout extends OccurrenceContainerLayout {
   /**
-   * For each occurrence visible in this container: how many consecutive cells the
-   * occurrence spans starting at this container. Always 1 for single-cell occurrences.
+   * Per-occurrence day-grid record. Every key in `orderedKeys` has an entry.
+   * Use this instead of `positionByKey` to read lane + span + visibility atomically.
    */
-  cellSpanByKey: ReadonlyMap<string, number>;
-  /**
-   * Subset of `orderedKeys` that are continuation markers and should render invisibly
-   * (they only reserve their lane in this container; the visible block is rendered in the
-   * occurrence's starting container).
-   */
-  invisibleKeys: ReadonlySet<string>;
+  slotByKey: ReadonlyMap<string, DayGridContainerSlot>;
 }
 
 /**

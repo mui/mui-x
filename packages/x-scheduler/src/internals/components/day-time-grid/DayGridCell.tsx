@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
+import { warnOnce } from '@mui/x-internals/warning';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
@@ -157,17 +158,23 @@ export function DayGridCell(props: DayGridCellProps) {
       <DayTimeGridAllDayEventsCellEvents className={classes.dayTimeGridAllDayEventsCellEvents}>
         {isLoading && <EventSkeleton data-variant="day-grid" />}
         {orderedKeys.map((occurrenceKey) => {
-          const position = dayLayout?.positionByKey.get(occurrenceKey);
-          if (!position) {
+          const slot = dayLayout?.slotByKey.get(occurrenceKey);
+          if (!slot) {
+            if (process.env.NODE_ENV !== 'production') {
+              warnOnce(
+                `MUI X Scheduler: occurrence "${occurrenceKey}" is in \`orderedKeys\` for day "${day.key}" ` +
+                  'but missing from `slotByKey`. The event will not render. This is an internal bug — please file an issue.',
+              );
+            }
             return null;
           }
           return (
             <DayGridCellEvent
               key={occurrenceKey}
               occurrenceKey={occurrenceKey}
-              firstLane={position.firstLane}
-              cellSpan={dayLayout?.cellSpanByKey.get(occurrenceKey) ?? 1}
-              isInvisible={dayLayout?.invisibleKeys.has(occurrenceKey) ?? false}
+              firstLane={slot.firstLane}
+              cellSpan={slot.cellSpan}
+              isInvisible={slot.isInvisible}
             />
           );
         })}

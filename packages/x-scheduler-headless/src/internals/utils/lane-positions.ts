@@ -8,14 +8,15 @@ import type {
   OccurrenceLanePosition,
   OccurrenceContainerLayout,
   DayGridContainerLayout,
+  DayGridContainerSlot,
 } from '../../models';
 import { sortEventOccurrences } from '../../sort-event-occurrences';
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 
 /**
  * Predicate deciding whether an occurrence should be assigned a lane in a day-grid /
- * time-grid container. Occurrences that return `false` are tracked for visibility but
- * carry no lane.
+ * time-grid container. Occurrences that return `false` are excluded from the layout
+ * entirely (not assigned a lane and not present in the container's `orderedKeys`).
  */
 export type ShouldAddPosition = (occurrence: SchedulerEventOccurrence, adapter: Adapter) => boolean;
 
@@ -39,8 +40,7 @@ export interface ComputeTimedLanesPrevious {
 interface DayGridLanesDayWorkBucket {
   orderedKeys: string[];
   positionByKey: Map<string, OccurrenceLanePosition>;
-  cellSpanByKey: Map<string, number>;
-  invisibleKeys: Set<string>;
+  slotByKey: Map<string, DayGridContainerSlot>;
   usedLanes: Set<number>;
   maxLane: number;
 }
@@ -97,8 +97,7 @@ export function computeDayGridLanes(parameters: {
       const dayWorkBucket: DayGridLanesDayWorkBucket = {
         orderedKeys: [],
         positionByKey: new Map(),
-        cellSpanByKey: new Map(),
-        invisibleKeys: new Set(),
+        slotByKey: new Map(),
         usedLanes: new Set(),
         maxLane: 1,
       };
@@ -159,11 +158,18 @@ export function computeDayGridLanes(parameters: {
 
         const position = internPosition(previous?.result.positionByKey, occurrence.key, lane, lane);
         dayWorkBucket.positionByKey.set(occurrence.key, position);
-        dayWorkBucket.cellSpanByKey.set(occurrence.key, cellSpan);
+        dayWorkBucket.slotByKey.set(
+          occurrence.key,
+          internDayGridSlot(
+            previous?.result.byContainer.get(day.key)?.slotByKey,
+            occurrence.key,
+            position,
+            cellSpan,
+            isInvisible,
+          ),
+        );
         dayWorkBucket.usedLanes.add(lane);
-        if (isInvisible) {
-          dayWorkBucket.invisibleKeys.add(occurrence.key);
-        } else if (!positionByKey.has(occurrence.key)) {
+        if (!isInvisible && !positionByKey.has(occurrence.key)) {
           // Register a global position on the FIRST visible cell of the run only.
           // (Multi-row events get one entry per row they appear in; we keep the leftmost.)
           positionByKey.set(occurrence.key, position);
@@ -191,8 +197,7 @@ export function computeDayGridLanes(parameters: {
       byContainer.set(day.key, {
         orderedKeys: dayWorkBucket.orderedKeys,
         positionByKey: dayWorkBucket.positionByKey,
-        cellSpanByKey: dayWorkBucket.cellSpanByKey,
-        invisibleKeys: dayWorkBucket.invisibleKeys,
+        slotByKey: dayWorkBucket.slotByKey,
         usedLanes: dayWorkBucket.usedLanes,
         maxLane: dayWorkBucket.maxLane,
       });
@@ -321,7 +326,9 @@ export function computeTimedLanes(parameters: {
         lastLane,
       );
       layout.positionByKey.set(occurrence.key, position);
-      layout.usedLanes.add(firstLane);
+      for (let lane = firstLane; lane <= lastLane; lane += 1) {
+        layout.usedLanes.add(lane);
+      }
       layout.orderedKeys.push(occurrence.key);
       positionByKey.set(occurrence.key, position);
     }
@@ -356,6 +363,30 @@ function internPosition(
     return prev;
   }
   return { firstLane, lastLane };
+}
+
+/**
+ * Reuse an existing `DayGridContainerSlot` when its fields are unchanged, so consumers
+ * doing `slotByKey.get(key)` get a stable reference across re-renders.
+ */
+function internDayGridSlot(
+  previousSlots: ReadonlyMap<string, DayGridContainerSlot> | undefined,
+  key: string,
+  position: OccurrenceLanePosition,
+  cellSpan: number,
+  isInvisible: boolean,
+): DayGridContainerSlot {
+  const prev = previousSlots?.get(key);
+  if (
+    prev !== undefined &&
+    prev.firstLane === position.firstLane &&
+    prev.lastLane === position.lastLane &&
+    prev.cellSpan === cellSpan &&
+    prev.isInvisible === isInvisible
+  ) {
+    return prev;
+  }
+  return { firstLane: position.firstLane, lastLane: position.lastLane, cellSpan, isInvisible };
 }
 
 function arraysShallowEqual<T>(a: readonly T[], b: readonly T[]): boolean {
@@ -420,14 +451,12 @@ function reuseDayGridRow(
     // Re-register global positions for occurrences whose first visible cell falls
     // in this row (mirrors the leftmost-cell rule used during fresh compute).
     for (const key of reusedLayout.orderedKeys) {
-      if (reusedLayout.invisibleKeys.has(key)) {
+      const slot = reusedLayout.slotByKey.get(key);
+      if (slot === undefined || slot.isInvisible) {
         continue;
       }
       if (!positionByKey.has(key)) {
-        const pos = reusedLayout.positionByKey.get(key);
-        if (pos !== undefined) {
-          positionByKey.set(key, pos);
-        }
+        positionByKey.set(key, reusedLayout.positionByKey.get(key)!);
       }
     }
   }

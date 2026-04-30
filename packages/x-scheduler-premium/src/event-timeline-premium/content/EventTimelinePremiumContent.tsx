@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
+import { warnOnce } from '@mui/x-internals/warning';
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import {
   TimelineGrid,
@@ -219,12 +220,11 @@ const EventTimelinePremiumEventsScrollbar = styled('div', {
 interface EventRowEventProps {
   occurrenceKey: string;
   firstLane: number;
-  lastLane: number;
   schedulerId: string | undefined;
 }
 
 const EventRowEvent = React.memo(function EventRowEvent(props: EventRowEventProps) {
-  const { occurrenceKey, firstLane, lastLane, schedulerId } = props;
+  const { occurrenceKey, firstLane, schedulerId } = props;
   const store = useEventTimelinePremiumStoreContext();
   const occurrence = useStore(
     store,
@@ -241,7 +241,6 @@ const EventRowEvent = React.memo(function EventRowEvent(props: EventRowEventProp
       <EventTimelinePremiumEvent
         occurrence={occurrence}
         firstLane={firstLane}
-        lastLane={lastLane}
         ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${occurrence.resource}`}
         variant="regular"
       />
@@ -284,6 +283,12 @@ function EventRowContent({ resourceId }: { resourceId: SchedulerResourceId }) {
       {orderedKeys.map((occurrenceKey) => {
         const lane = layout?.positionByKey.get(occurrenceKey);
         if (!lane) {
+          if (process.env.NODE_ENV !== 'production') {
+            warnOnce(
+              `MUI X Scheduler: occurrence "${occurrenceKey}" is in \`orderedKeys\` for resource "${resourceId}" ` +
+                'but missing from `positionByKey`. The event will not render. This is an internal bug — please file an issue.',
+            );
+          }
           return null;
         }
         return (
@@ -291,7 +296,6 @@ function EventRowContent({ resourceId }: { resourceId: SchedulerResourceId }) {
             key={occurrenceKey}
             occurrenceKey={occurrenceKey}
             firstLane={lane.firstLane}
-            lastLane={lane.lastLane}
             schedulerId={schedulerId}
           />
         );
@@ -301,7 +305,6 @@ function EventRowContent({ resourceId }: { resourceId: SchedulerResourceId }) {
           ref={placeholderRef}
           occurrence={placeholder.occurrence}
           firstLane={placeholder.firstLane}
-          lastLane={placeholder.lastLane}
           ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${placeholder.occurrence.resource}`}
           variant="placeholder"
         />

@@ -1,8 +1,12 @@
 import { spy } from 'sinon';
-import { adapter } from 'test/utils/scheduler';
+import { createSelectorMemoized } from '@base-ui/utils/store';
+import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { EventCalendarStore } from '../EventCalendarStore';
 import { EventCalendarState } from '../EventCalendarStore.types';
-import { SchedulerOccurrencesByDay } from '../../models';
+import { EventCalendarViewConfig, SchedulerOccurrencesByDay } from '../../models';
+import { eventCalendarOccurrencePositionSelectors } from '../../event-calendar-selectors';
+import { schedulerOtherSelectors } from '../../scheduler-selectors';
+import { processDate } from '../../process-date';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -189,6 +193,130 @@ describe('View - EventCalendarStore', () => {
       cleanup();
 
       expect(store.state.viewConfig).to.equal(null);
+    });
+  });
+
+  describe('Occurrence storage across view transitions', () => {
+    const VISIBLE_DATE = adapter.date('2024-01-15Z', 'default');
+
+    const dayVisibleDaysSelector = createSelectorMemoized(
+      schedulerOtherSelectors.visibleDate,
+      (state: EventCalendarState) => state.adapter,
+      (visibleDate, adapterArg) => [processDate(visibleDate, adapterArg)],
+    );
+
+    const weekVisibleDaysSelector = createSelectorMemoized(
+      schedulerOtherSelectors.visibleDate,
+      (state: EventCalendarState) => state.adapter,
+      (visibleDate, adapterArg) => {
+        const start = adapterArg.startOfWeek(visibleDate);
+        return Array.from({ length: 7 }, (_, i) =>
+          processDate(adapterArg.addDays(start, i), adapterArg),
+        );
+      },
+    );
+
+    const DAY_VIEW: EventCalendarViewConfig = {
+      siblingVisibleDateGetter: ({ state }) => state.visibleDate,
+      visibleDaysSelector: dayVisibleDaysSelector,
+      dayGrid: {},
+      timeGrid: {},
+    };
+
+    const WEEK_VIEW: EventCalendarViewConfig = {
+      siblingVisibleDateGetter: ({ state }) => state.visibleDate,
+      visibleDaysSelector: weekVisibleDaysSelector,
+      dayGrid: {},
+      timeGrid: {},
+    };
+
+    it('should populate occurrence-storage selectors immediately after setViewConfig', () => {
+      // Pre-mount window: viewConfig=null → empty fallbacks. After registration the same
+      // selector returns non-empty data without further state changes.
+      const event = EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z').build();
+      const store = new EventCalendarStore({ events: [event], visibleDate: VISIBLE_DATE }, adapter);
+
+      const beforeConfig = eventCalendarOccurrencePositionSelectors.dayGridPositions(store.state);
+      expect(beforeConfig.byContainer.size).to.equal(0);
+
+      store.setViewConfig(DAY_VIEW);
+
+      const afterConfig = eventCalendarOccurrencePositionSelectors.dayGridPositions(store.state);
+      expect(afterConfig.byContainer.size).to.equal(1);
+    });
+
+    it('should produce a fresh layout shape after switching from day-view to week-view config', () => {
+      // Switching views replaces visibleDaysSelector. The cached `previousDayGrid` is
+      // stale from the previous view — `canReuseDayGridRow` must reject those entries
+      // and the new view's selector must return its own correct shape.
+      const event = EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z').build();
+      const store = new EventCalendarStore({ events: [event], visibleDate: VISIBLE_DATE }, adapter);
+
+      store.setViewConfig(DAY_VIEW);
+      const dayGridForDayView = eventCalendarOccurrencePositionSelectors.dayGridPositions(
+        store.state,
+      );
+      expect(dayGridForDayView.byContainer.size).to.equal(1);
+
+      store.setViewConfig(WEEK_VIEW);
+      const dayGridForWeekView = eventCalendarOccurrencePositionSelectors.dayGridPositions(
+        store.state,
+      );
+      expect(dayGridForWeekView.byContainer.size).to.equal(7);
+      expect(dayGridForWeekView).not.to.equal(dayGridForDayView);
+    });
+
+    it('should refresh occurrence-storage selectors when visibleDate changes', () => {
+      const event1 = EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z').build();
+      const event2 = EventBuilder.new().id('B').singleDay('2024-01-22T10:00:00Z').build();
+      const store = new EventCalendarStore(
+        // `defaultVisibleDate` keeps the field uncontrolled so `switchToDay` can update it.
+        { events: [event1, event2], defaultVisibleDate: VISIBLE_DATE },
+        adapter,
+      );
+      store.setViewConfig(DAY_VIEW);
+
+      const occurrencesAtJan15 = eventCalendarOccurrencePositionSelectors.visibleOccurrences(
+        store.state,
+      );
+      expect(occurrencesAtJan15.byKey.has('A')).to.equal(true);
+      expect(occurrencesAtJan15.byKey.has('B')).to.equal(false);
+
+      store.switchToDay(adapter.date('2024-01-22Z', 'default'), {} as any);
+      const occurrencesAtJan22 = eventCalendarOccurrencePositionSelectors.visibleOccurrences(
+        store.state,
+      );
+      expect(occurrencesAtJan22.byKey.has('A')).to.equal(false);
+      expect(occurrencesAtJan22.byKey.has('B')).to.equal(true);
+    });
+
+    it('should keep day-grid positions stable when adding an event on a different day', () => {
+      // The `previous` cache + `canReuseDayGridRow` are supposed to keep unchanged days
+      // referentially stable across event additions. This test pins the contract for a
+      // multi-day view (week), where adding an event on day 6 should not invalidate
+      // day 0's layout.
+      const event1 = EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z').build();
+      const store = new EventCalendarStore(
+        { events: [event1], visibleDate: VISIBLE_DATE },
+        adapter,
+      );
+      store.setViewConfig(WEEK_VIEW);
+
+      const before = eventCalendarOccurrencePositionSelectors.dayGridPositions(store.state);
+      const day0Layout = before.byContainer.get(before.byContainer.keys().next().value!);
+
+      // Add an event on a different day via the public createEvent API.
+      store.createEvent({
+        title: 'B',
+        start: '2024-01-19T10:00:00Z',
+        end: '2024-01-19T11:00:00Z',
+      });
+
+      const after = eventCalendarOccurrencePositionSelectors.dayGridPositions(store.state);
+      const day0LayoutAfter = after.byContainer.get(after.byContainer.keys().next().value!);
+
+      // Day 0 (Jan 14, Sunday) is unaffected by adding an event on Jan 19.
+      expect(day0LayoutAfter).to.equal(day0Layout);
     });
   });
 });
