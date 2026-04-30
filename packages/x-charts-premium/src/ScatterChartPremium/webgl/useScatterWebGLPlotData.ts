@@ -111,14 +111,7 @@ export function useScatterWebGLPlotData(): ScatterWebGLPlotData {
         continue;
       }
 
-      const parsed = parseColor(s.color);
-      // parseColor returns 0..1; the GPU sees this back as a vec4 in 0..1 because
-      // the attribute is uploaded with normalized=true. Uint8Array assignment
-      // truncates non-integers, so round before storing.
-      const cr = Math.round(parsed[0] * 255);
-      const cg = Math.round(parsed[1] * 255);
-      const cb = Math.round(parsed[2] * 255);
-      const ca = Math.round(parsed[3] * 255);
+      const [cr, cg, cb, ca] = parseColor(s.color);
       const markerSize = s.markerSize ?? DEFAULT_MARKER_SIZE;
 
       for (let i = 0; i < data.length; i += 1) {
