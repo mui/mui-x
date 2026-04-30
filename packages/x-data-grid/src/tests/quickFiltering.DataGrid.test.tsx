@@ -203,6 +203,12 @@ describe('<DataGrid /> - Quick filter', () => {
         'true',
       );
 
+      // Wait for the input to receive focus before dispatching Escape; otherwise
+      // the keyboard event lands on the button and the close handler does not run.
+      await waitFor(() => {
+        expect(screen.getByRole<HTMLInputElement>('searchbox')).toHaveFocus();
+      });
+
       await user.keyboard('[Escape]');
 
       await waitFor(() => {
