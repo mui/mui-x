@@ -205,9 +205,11 @@ describe('<DataGrid /> - Quick filter', () => {
 
       await user.keyboard('[Escape]');
 
-      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
-        'false',
-      );
+      await waitFor(() => {
+        expect(
+          screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded'),
+        ).to.equal('false');
+      });
     });
 
     it('should clear the input when the escape key is pressed with a value and not collapse the input', async () => {

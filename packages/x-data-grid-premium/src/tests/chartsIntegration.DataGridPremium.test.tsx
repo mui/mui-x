@@ -788,7 +788,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
           .querySelector('[data-testid="AddIcon"]')!,
       );
 
-      expect(integrationContext!.chartStateLookup.test.values.length).to.equal(1);
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test.values.length).to.equal(1);
+      });
 
       // click on the second menu item (Add to Series)
       await user.click(screen.getAllByRole('menuitem')[1]);
@@ -804,7 +806,9 @@ describe('<DataGridPremium /> - Charts Integration', () => {
           .querySelector('[data-testid="AddIcon"]')!,
       );
 
-      expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(1);
+      await waitFor(() => {
+        expect(integrationContext!.chartStateLookup.test.dimensions.length).to.equal(1);
+      });
 
       // click on the first menu item (Add to Categories)
       await user.click(screen.getAllByRole('menuitem')[0]);

@@ -17,9 +17,9 @@ import { userEvent } from '@testing-library/user-event';
 // Speed up @testing-library/user-event by removing the setTimeout(0) yield
 // between events and the per-call CSS pointer-events check. Tests that
 // genuinely need the slower defaults can still pass them explicitly.
-const _origUserEventSetup = userEvent.setup;
+const originalUserEventSetup = userEvent.setup;
 userEvent.setup = (options = {}) =>
-  _origUserEventSetup({ delay: null, pointerEventsCheck: 0, ...options });
+  originalUserEventSetup({ delay: null, pointerEventsCheck: 0, ...options });
 
 setupVitest({ emotion: true });
 
