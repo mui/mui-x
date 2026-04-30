@@ -11,9 +11,7 @@ export function FocusedScatterMark({ className, ...props }: React.SVGAttributes<
   const focusedItem = useFocusedItem();
   const classes = useUtilityClasses();
 
-  const resolved = useScatterItemPosition(
-    focusedItem?.type === 'scatter' ? focusedItem : null,
-  );
+  const resolved = useScatterItemPosition(focusedItem?.type === 'scatter' ? focusedItem : null);
 
   if (!resolved) {
     return null;
