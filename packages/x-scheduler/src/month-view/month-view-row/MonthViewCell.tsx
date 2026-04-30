@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
+import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
@@ -10,13 +11,17 @@ import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   eventCalendarOccurrencePlaceholderSelectors,
+  eventCalendarOccurrencePositionSelectors,
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
+import {
+  SchedulerEventOccurrence,
+  SchedulerProcessedDate,
+} from '@mui/x-scheduler-headless/models';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
@@ -168,7 +173,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   props: MonthViewCellProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { day, row, maxEvents } = props;
+  const { day, maxEvents } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -186,7 +191,16 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   );
   const isToday = useStore(store, schedulerNowSelectors.isCurrentDay, day.value);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
-  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row, maxEvents);
+  const dayLayout = useStore(
+    store,
+    eventCalendarOccurrencePositionSelectors.dayGridLayoutForDay,
+    day.key,
+  );
+  const occurrencesIndex = useStore(
+    store,
+    eventCalendarOccurrencePositionSelectors.visibleOccurrences,
+  );
+  const placeholder = CalendarGrid.usePlaceholderInDay(day, maxEvents);
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
@@ -195,11 +209,21 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
 
-  const visibleOccurrences =
-    day.withPosition.length > maxEvents
-      ? day.withPosition.slice(0, maxEvents - 1)
-      : day.withPosition;
-  const hiddenCount = day.withPosition.length - visibleOccurrences.length;
+  const orderedKeys = dayLayout?.orderedKeys ?? EMPTY_ARRAY;
+  const visibleKeys =
+    orderedKeys.length > maxEvents ? orderedKeys.slice(0, maxEvents - 1) : orderedKeys;
+  const hiddenCount = orderedKeys.length - visibleKeys.length;
+
+  const visibleOccurrencesForPopover = React.useMemo(() => {
+    const result: SchedulerEventOccurrence[] = [];
+    for (const key of orderedKeys) {
+      const occurrence = occurrencesIndex.byKey.get(key);
+      if (occurrence) {
+        result.push(occurrence);
+      }
+    }
+    return result;
+  }, [orderedKeys, occurrencesIndex]);
 
   const cellNumberContent = (
     <MonthViewCellNumber className={classes.monthViewCellNumber}>
@@ -216,7 +240,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
-    startEditing(cellRef, placeholder);
+    startEditing(cellRef, placeholder.occurrence);
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
@@ -246,26 +270,41 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       <MonthViewCellEvents className={classes.monthViewCellEvents}>
         {isLoading && <EventSkeleton data-variant="day-grid" />}
         {!isLoading &&
-          visibleOccurrences.map((occurrence) => {
-            if (occurrence.position.isInvisible) {
+          visibleKeys.map((occurrenceKey) => {
+            const occurrence = occurrencesIndex.byKey.get(occurrenceKey);
+            const lane = dayLayout?.positionByKey.get(occurrenceKey);
+            const cellSpan = dayLayout?.cellSpanByKey.get(occurrenceKey) ?? 1;
+            if (!occurrence || !lane) {
+              return null;
+            }
+            const isInvisible = dayLayout?.invisibleKeys.has(occurrenceKey) ?? false;
+            if (isInvisible) {
               return (
-                <DayGridEvent key={occurrence.key} occurrence={occurrence} variant="invisible" />
+                <DayGridEvent
+                  key={occurrenceKey}
+                  occurrence={occurrence}
+                  variant="invisible"
+                  firstLane={lane.firstLane}
+                  cellSpan={cellSpan}
+                />
               );
             }
 
             return (
-              <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+              <EventDialogTrigger key={occurrenceKey} occurrence={occurrence}>
                 <DayGridEvent
                   occurrence={occurrence}
                   variant={
                     isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
                   }
+                  firstLane={lane.firstLane}
+                  cellSpan={cellSpan}
                 />
               </EventDialogTrigger>
             );
           })}
         {hiddenCount > 0 && (
-          <MoreEventsPopoverTrigger occurrences={day.withPosition} day={day}>
+          <MoreEventsPopoverTrigger occurrences={visibleOccurrencesForPopover} day={day}>
             <MonthViewMoreEvents
               size="small"
               aria-label={localeText.hiddenEvents(hiddenCount)}
@@ -277,7 +316,12 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         )}
         {placeholder != null && (
           <MonthViewPlaceholderEventContainer className={classes.monthViewPlaceholderContainer}>
-            <DayGridEvent occurrence={placeholder} variant="placeholder" />
+            <DayGridEvent
+              occurrence={placeholder.occurrence}
+              variant="placeholder"
+              firstLane={placeholder.firstLane}
+              cellSpan={placeholder.cellSpan}
+            />
           </MonthViewPlaceholderEventContainer>
         )}
       </MonthViewCellEvents>
@@ -286,7 +330,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 });
 
 interface MonthViewCellProps {
-  day: useEventOccurrencesWithDayGridPosition.DayData;
-  row: useEventOccurrencesWithDayGridPosition.ReturnValue;
+  day: SchedulerProcessedDate;
   maxEvents: number;
 }

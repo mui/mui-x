@@ -3,9 +3,11 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import {
+  SchedulerEventOccurrence,
+  SchedulerProcessedDate,
+} from '@mui/x-scheduler-headless/models';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
 import { EventItem } from '../event/event-item/EventItem';
 import { createModal } from '../create-modal';
@@ -51,7 +53,7 @@ const MoreEventsPopoverBody = styled('div', {
 interface MoreEventsData {
   occurrences: SchedulerEventOccurrence[];
   count: number;
-  day: useEventOccurrencesWithDayGridPosition.DayData;
+  day: SchedulerProcessedDate;
 }
 
 const MoreEventsPopover = createModal<MoreEventsData>({
@@ -125,7 +127,7 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
 
 interface MoreEventsPopoverTriggerProps extends React.HTMLAttributes<HTMLElement> {
   occurrences: SchedulerEventOccurrence[];
-  day: useEventOccurrencesWithDayGridPosition.DayData;
+  day: SchedulerProcessedDate;
   children: React.ReactNode;
 }
 

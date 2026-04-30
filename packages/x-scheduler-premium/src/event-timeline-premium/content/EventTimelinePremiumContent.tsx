@@ -7,10 +7,11 @@ import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import {
+  eventTimelineOccurrencePositionSelectors,
   eventTimelinePremiumPresetSelectors,
   timelineOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
-import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
+import { useTimelineGridEventRowContext } from '@mui/x-scheduler-headless-premium/timeline-grid/event-row/TimelineGridEventRowContext';
 import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import {
@@ -213,20 +214,27 @@ const EventTimelinePremiumEventsScrollbar = styled('div', {
   scrollbarWidth: 'thin',
 });
 
-function EventRowContent({
-  resourceId,
-  occurrences,
-  placeholder,
-}: {
-  resourceId: SchedulerResourceId;
-  occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
-  placeholder: useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
-}) {
+function EventRowContent({ resourceId }: { resourceId: SchedulerResourceId }) {
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
   const { onOpen: startEditing } = useEventDialogContext();
+  const { placeholder } = useTimelineGridEventRowContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
 
+  const orderedKeys = useStore(
+    store,
+    eventTimelineOccurrencePositionSelectors.occurrenceKeysForResource,
+    resourceId,
+  );
+  const visibleOccurrences = useStore(
+    store,
+    eventTimelineOccurrencePositionSelectors.visibleOccurrences,
+  );
+  const layout = useStore(
+    store,
+    eventTimelineOccurrencePositionSelectors.layoutForResource,
+    resourceId,
+  );
   const isCreatingAnEvent = useStore(
     store,
     timelineOccurrencePlaceholderSelectors.isCreatingInResource,
@@ -237,25 +245,36 @@ function EventRowContent({
     if (!isCreatingAnEvent || !placeholder || !placeholderRef.current) {
       return;
     }
-    startEditing(placeholderRef, placeholder);
+    startEditing(placeholderRef, placeholder.occurrence);
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
     <React.Fragment>
-      {occurrences.map((occurrence) => (
-        <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
-          <EventTimelinePremiumEvent
-            occurrence={occurrence}
-            ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${occurrence.resource}`}
-            variant="regular"
-          />
-        </EventDialogTrigger>
-      ))}
+      {orderedKeys.map((occurrenceKey) => {
+        const occurrence = visibleOccurrences.byKey.get(occurrenceKey);
+        const lane = layout?.positionByKey.get(occurrenceKey);
+        if (!occurrence || !lane) {
+          return null;
+        }
+        return (
+          <EventDialogTrigger key={occurrenceKey} occurrence={occurrence}>
+            <EventTimelinePremiumEvent
+              occurrence={occurrence}
+              firstLane={lane.firstLane}
+              lastLane={lane.lastLane}
+              ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${occurrence.resource}`}
+              variant="regular"
+            />
+          </EventDialogTrigger>
+        );
+      })}
       {placeholder != null && (
         <EventTimelinePremiumEvent
           ref={placeholderRef}
-          occurrence={placeholder}
-          ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${placeholder.resource}`}
+          occurrence={placeholder.occurrence}
+          firstLane={placeholder.firstLane}
+          lastLane={placeholder.lastLane}
+          ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${placeholder.occurrence.resource}`}
           variant="placeholder"
         />
       )}
@@ -462,13 +481,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                     resourceId={resourceId}
                     className={classes.eventsSubGridRow}
                   >
-                    {({ occurrences, placeholder }) => (
-                      <EventRowContent
-                        resourceId={resourceId}
-                        occurrences={occurrences}
-                        placeholder={placeholder}
-                      />
-                    )}
+                    <EventRowContent resourceId={resourceId} />
                   </EventTimelinePremiumEventsSubGridRow>
                 )}
               </EventTimelinePremiumEventsSubGrid>

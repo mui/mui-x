@@ -7,8 +7,10 @@ import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { sortEventOccurrences } from '@mui/x-scheduler-headless/sort-event-occurrences';
-import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
+import {
+  eventCalendarAgendaSelectors,
+  eventCalendarOccurrencePositionSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-headless/constants';
 import {
@@ -137,6 +139,7 @@ const AGENDA_VIEW_CONFIG: EventCalendarViewConfig = {
       AGENDA_VIEW_DAYS_AMOUNT * delta,
     ),
   visibleDaysSelector: eventCalendarAgendaSelectors.visibleDays,
+  visibleOccurrencesSelector: eventCalendarAgendaSelectors.visibleOccurrences,
 };
 
 /**
@@ -161,18 +164,24 @@ export const AgendaView = React.memo(
 
     // Feature hooks
     const { days } = useEventCalendarView(AGENDA_VIEW_CONFIG);
-    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
     // Selector hooks
     const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
+    const visibleOccurrences = useStore(
+      store,
+      eventCalendarOccurrencePositionSelectors.visibleOccurrences,
+    );
 
     const daysWithOccurrences = React.useMemo(
       () =>
         days.map((date) => {
-          const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || []);
-          return { date, occurrences };
+          const keys = visibleOccurrences.keysByDay.get(date.key) ?? [];
+          const occurrencesForDay = keys
+            .map((key) => visibleOccurrences.byKey.get(key))
+            .filter((occurrence): occurrence is NonNullable<typeof occurrence> => occurrence != null);
+          return { date, occurrences: sortEventOccurrences(occurrencesForDay) };
         }),
-      [days, occurrencesMap],
+      [days, visibleOccurrences],
     );
 
     return (

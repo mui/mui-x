@@ -6,7 +6,7 @@ describe('<TimelineGrid.EventRow />', () => {
   const { render } = createSchedulerRenderer();
 
   describeConformance(
-    <TimelineGrid.EventRow resourceId="r1">{() => null}</TimelineGrid.EventRow>,
+    <TimelineGrid.EventRow resourceId="r1" />,
     () => ({
       refInstanceof: window.HTMLDivElement,
       render(node) {

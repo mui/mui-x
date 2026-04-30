@@ -16,7 +16,6 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-even
 import type { EventCalendarState as State } from '@mui/x-scheduler-headless/use-event-calendar';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import clsx from 'clsx';
 import { MonthViewProps } from './MonthView.types';
@@ -115,24 +114,49 @@ const DAY_NUMBER_HEADER_HEIGHT = 22; // event height (18px) + gap (4px)
 const EVENT_HEIGHT = 18;
 const EVENT_GAP = 4; // theme.spacing(0.5) = 4px
 
+const monthVisibleDaysSelector = createSelectorMemoized(
+  (state: State) => state.adapter,
+  schedulerOtherSelectors.visibleDate,
+  eventCalendarPreferenceSelectors.showWeekends,
+  (adapter, visibleDate, showWeekends) =>
+    getDayList({
+      adapter,
+      start: adapter.startOfWeek(adapter.startOfMonth(visibleDate)),
+      end: adapter.endOfWeek(adapter.endOfMonth(visibleDate)),
+      excludeWeekends: !showWeekends,
+    }),
+);
+
+// Group the visible days into week rows so the day-grid algorithm restarts each
+// multi-day event's lane on the first day of every new week.
+const monthVisibleRowsSelector = createSelectorMemoized(
+  (state: State) => state.adapter,
+  monthVisibleDaysSelector,
+  (adapter, days) => {
+    const rows: SchedulerProcessedDate[][] = [];
+    let weekNumber: number | null = null;
+    for (const day of days) {
+      const dayWeekNumber = adapter.getWeekNumber(day.value);
+      if (weekNumber !== dayWeekNumber) {
+        weekNumber = dayWeekNumber;
+        rows.push([day]);
+      } else {
+        rows[rows.length - 1].push(day);
+      }
+    }
+    return rows;
+  },
+);
+
 const MONTH_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addMonths(
       state.adapter.startOfMonth(schedulerOtherSelectors.visibleDate(state)),
       delta,
     ),
-  visibleDaysSelector: createSelectorMemoized(
-    (state: State) => state.adapter,
-    schedulerOtherSelectors.visibleDate,
-    eventCalendarPreferenceSelectors.showWeekends,
-    (adapter, visibleDate, showWeekends) =>
-      getDayList({
-        adapter,
-        start: adapter.startOfWeek(adapter.startOfMonth(visibleDate)),
-        end: adapter.endOfWeek(adapter.endOfMonth(visibleDate)),
-        excludeWeekends: !showWeekends,
-      }),
-  ),
+  visibleDaysSelector: monthVisibleDaysSelector,
+  visibleRowsSelector: monthVisibleRowsSelector,
+  dayGrid: {},
 };
 
 /**
@@ -183,8 +207,6 @@ export const MonthView = React.memo(
       [weeks.length],
     );
 
-    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
-
     useResizeObserver(
       cellRef,
       () => {
@@ -232,7 +254,6 @@ export const MonthView = React.memo(
                   rowIndex={weekIdx}
                   maxEvents={maxEvents}
                   days={week}
-                  occurrencesMap={occurrencesMap}
                   firstDayRef={weekIdx === 0 ? cellRef : undefined}
                 />
               ))}

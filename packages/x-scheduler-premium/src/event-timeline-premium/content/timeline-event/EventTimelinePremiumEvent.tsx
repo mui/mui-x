@@ -129,7 +129,17 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
   props: EventTimelinePremiumEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, ariaLabelledBy, className, variant, id: idProp, style, ...other } = props;
+  const {
+    occurrence,
+    ariaLabelledBy,
+    className,
+    variant,
+    firstLane,
+    lastLane: _lastLane,
+    id: idProp,
+    style,
+    ...other
+  } = props;
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
@@ -158,7 +168,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     className: clsx(className, occurrence.className),
     style: {
       '--number-of-lines': 1,
-      '--row-index': occurrence.position.firstIndex,
+      '--row-index': firstLane,
     } as React.CSSProperties,
     'data-palette': color,
     ...other,

@@ -1,20 +1,40 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store/useStore';
-import { TemporalSupportedObject } from '../../models';
+import { SchedulerEventOccurrencePlaceholder, SchedulerProcessedDate } from '../../models';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
-import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
 import { useAdapterContext } from '../../use-adapter-context';
-import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
+import {
+  eventCalendarOccurrencePlaceholderSelectors,
+  eventCalendarOccurrencePositionSelectors,
+} from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
+export interface CalendarGridDayPlaceholder {
+  /**
+   * The bare placeholder occurrence (no positional metadata).
+   */
+  occurrence: SchedulerEventOccurrencePlaceholder;
+  /**
+   * 1-based lane (CSS row inside the day cell) the placeholder should render in.
+   */
+  firstLane: number;
+  /**
+   * Number of consecutive day cells the placeholder spans.
+   */
+  cellSpan: number;
+}
+
+/**
+ * Computes the placeholder occurrence (creation, drag, resize) to render in a day cell,
+ * and the lane / cell-span it should occupy.
+ */
 export function useCalendarGridPlaceholderInDay(
-  day: TemporalSupportedObject,
-  row: useEventOccurrencesWithDayGridPosition.ReturnValue,
+  day: SchedulerProcessedDate,
   maxEvents?: number,
-): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
+): CalendarGridDayPlaceholder | null {
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
@@ -22,7 +42,7 @@ export function useCalendarGridPlaceholderInDay(
   const rawPlaceholder = useStore(
     store,
     eventCalendarOccurrencePlaceholderSelectors.placeholderInDayCell,
-    day,
+    day.value,
     rowStart,
   );
 
@@ -30,6 +50,11 @@ export function useCalendarGridPlaceholderInDay(
     ? rawPlaceholder.eventId
     : null;
   const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
+  const dayLayout = useStore(
+    store,
+    eventCalendarOccurrencePositionSelectors.dayGridLayoutForDay,
+    day.key,
+  );
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
@@ -44,25 +69,25 @@ export function useCalendarGridPlaceholderInDay(
 
     // Creation mode
     if (rawPlaceholder.type === 'creation') {
-      const startProcessed = processDate(day, adapter);
+      const startProcessed = processDate(day.value, adapter);
       const endProcessed = processDate(
         adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
         adapter,
       );
-      const timezone = adapter.getTimezone(day);
+      const timezone = adapter.getTimezone(day.value);
       return {
-        ...sharedProperties,
-        title: '',
-        allDay: true,
-        displayTimezone: {
-          start: startProcessed,
-          end: endProcessed,
-          timezone,
+        occurrence: {
+          ...sharedProperties,
+          title: '',
+          allDay: true,
+          displayTimezone: {
+            start: startProcessed,
+            end: endProcessed,
+            timezone,
+          },
         },
-        position: {
-          index: 1,
-          daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
-        },
+        firstLane: 1,
+        cellSpan: adapter.differenceInDays(rawPlaceholder.end, day.value) + 1,
       };
     }
 
@@ -72,48 +97,42 @@ export function useCalendarGridPlaceholderInDay(
       const timezone = adapter.getTimezone(rawPlaceholder.start);
 
       return {
-        ...sharedProperties,
-        title: rawPlaceholder.eventData.title ?? '',
-        displayTimezone: {
-          start: startProcessed,
-          end: endProcessed,
-          timezone,
+        occurrence: {
+          ...sharedProperties,
+          title: rawPlaceholder.eventData.title ?? '',
+          displayTimezone: {
+            start: startProcessed,
+            end: endProcessed,
+            timezone,
+          },
         },
-        position: {
-          index: 1,
-          daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
-        },
+        firstLane: 1,
+        cellSpan: adapter.differenceInDays(rawPlaceholder.end, day.value) + 1,
       };
     }
 
-    let positionIndex = 1;
-    const targetDay = row.days.find((rowDay) => adapter.isSameDay(rowDay.value, day));
-    if (targetDay) {
-      const usedIndexes = new Set(
-        targetDay.withPosition
-          .filter((occ) => occ.key !== rawPlaceholder.occurrenceKey)
-          .map((occ) => occ.position.index),
-      );
-      while (usedIndexes.has(positionIndex)) {
-        positionIndex += 1;
+    // Internal drag/resize: pick the smallest lane not used by other occurrences in this cell.
+    // The dragged occurrence's own lane is excluded so the placeholder renders on top of it.
+    let lane = 1;
+    if (dayLayout) {
+      const used = dayLayout.usedLanes;
+      const draggedLane = dayLayout.positionByKey.get(rawPlaceholder.occurrenceKey)?.firstLane;
+      while (used.has(lane) && lane !== draggedLane) {
+        lane += 1;
       }
     }
 
-    // If the position exceeds the available event rows, clamp it so the
-    // placeholder renders on top of an existing event instead of overflowing.
-    if (maxEvents != null && positionIndex > maxEvents) {
-      positionIndex = maxEvents;
+    if (maxEvents != null && lane > maxEvents) {
+      lane = maxEvents;
     }
 
     return {
-      ...sharedProperties,
-      start: processDate(rawPlaceholder.start, adapter),
-      end: processDate(rawPlaceholder.end, adapter),
-      displayTimezone: { ...originalEvent!.displayTimezone },
-      position: {
-        index: positionIndex,
-        daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
+      occurrence: {
+        ...sharedProperties,
+        displayTimezone: { ...originalEvent!.displayTimezone },
       },
+      firstLane: lane,
+      cellSpan: adapter.differenceInDays(rawPlaceholder.end, day.value) + 1,
     };
-  }, [adapter, day, maxEvents, originalEvent, originalEventId, rawPlaceholder, row.days, rowEnd]);
+  }, [adapter, day, dayLayout, maxEvents, originalEvent, originalEventId, rawPlaceholder, rowEnd]);
 }

@@ -2,12 +2,16 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
+import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
+import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import {
+  eventCalendarOccurrencePlaceholderSelectors,
+  eventCalendarOccurrencePositionSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayGridEvent } from '../event';
 import { EventDialogTrigger } from '../event-dialog';
@@ -56,7 +60,7 @@ const DayTimeGridAllDayEventContainer = styled('div', {
 });
 
 export function DayGridCell(props: DayGridCellProps) {
-  const { day, row } = props;
+  const { day } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -73,16 +77,27 @@ export function DayGridCell(props: DayGridCellProps) {
     eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell,
     day.value,
   );
-  const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
+  const dayLayout = useStore(
+    store,
+    eventCalendarOccurrencePositionSelectors.dayGridLayoutForDay,
+    day.key,
+  );
+  const occurrencesIndex = useStore(
+    store,
+    eventCalendarOccurrencePositionSelectors.visibleOccurrences,
+  );
+  const placeholder = CalendarGrid.usePlaceholderInDay(day);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
-  const rowCount = Math.max(row.maxIndex, placeholder?.position.index ?? 0);
+  const orderedKeys = dayLayout?.orderedKeys ?? EMPTY_ARRAY;
+  const layoutMaxLane = dayLayout?.maxLane ?? 0;
+  const rowCount = Math.max(layoutMaxLane, placeholder?.firstLane ?? 0);
 
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
-    startEditing(cellRef, placeholder);
+    startEditing(cellRef, placeholder.occurrence);
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
@@ -102,22 +117,45 @@ export function DayGridCell(props: DayGridCellProps) {
     >
       <DayTimeGridAllDayEventsCellEvents className={classes.dayTimeGridAllDayEventsCellEvents}>
         {isLoading && <EventSkeleton data-variant="day-grid" />}
-        {day.withPosition.map((occurrence) => {
-          if (occurrence.position.isInvisible) {
+        {orderedKeys.map((occurrenceKey) => {
+          const occurrence = occurrencesIndex.byKey.get(occurrenceKey);
+          const lane = dayLayout?.positionByKey.get(occurrenceKey);
+          const cellSpan = dayLayout?.cellSpanByKey.get(occurrenceKey) ?? 1;
+          if (!occurrence || !lane) {
+            return null;
+          }
+          const isInvisible = dayLayout?.invisibleKeys.has(occurrenceKey) ?? false;
+          if (isInvisible) {
             return (
-              <DayGridEvent key={occurrence.key} occurrence={occurrence} variant="invisible" />
+              <DayGridEvent
+                key={occurrenceKey}
+                occurrence={occurrence}
+                variant="invisible"
+                firstLane={lane.firstLane}
+                cellSpan={cellSpan}
+              />
             );
           }
 
           return (
-            <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
-              <DayGridEvent occurrence={occurrence} variant="filled" />
+            <EventDialogTrigger key={occurrenceKey} occurrence={occurrence}>
+              <DayGridEvent
+                occurrence={occurrence}
+                variant="filled"
+                firstLane={lane.firstLane}
+                cellSpan={cellSpan}
+              />
             </EventDialogTrigger>
           );
         })}
         {placeholder != null && (
           <DayTimeGridAllDayEventContainer className={classes.dayTimeGridAllDayEventContainer}>
-            <DayGridEvent occurrence={placeholder} variant="placeholder" />
+            <DayGridEvent
+              occurrence={placeholder.occurrence}
+              variant="placeholder"
+              firstLane={placeholder.firstLane}
+              cellSpan={placeholder.cellSpan}
+            />
           </DayTimeGridAllDayEventContainer>
         )}
       </DayTimeGridAllDayEventsCellEvents>
@@ -126,8 +164,7 @@ export function DayGridCell(props: DayGridCellProps) {
 }
 
 interface DayGridCellProps {
-  day: useEventOccurrencesWithDayGridPosition.DayData;
-  row: useEventOccurrencesWithDayGridPosition.ReturnValue;
+  day: SchedulerProcessedDate;
 }
 
 /**

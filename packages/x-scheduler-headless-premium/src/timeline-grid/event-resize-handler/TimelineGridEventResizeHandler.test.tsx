@@ -17,17 +17,15 @@ describe('<TimelineGrid.EventResizeHandler />', () => {
           <TimelineGrid.Root>
             <TimelineGrid.SubGrid>
               <TimelineGrid.EventRow resourceId="r1">
-                {() => (
-                  <TimelineGrid.Event
-                    eventId="fake-id"
-                    occurrenceKey="fake-key"
-                    start={start}
-                    end={end}
-                    renderDragPreview={() => null}
-                  >
-                    {node}
-                  </TimelineGrid.Event>
-                )}
+                <TimelineGrid.Event
+                  eventId="fake-id"
+                  occurrenceKey="fake-key"
+                  start={start}
+                  end={end}
+                  renderDragPreview={() => null}
+                >
+                  {node}
+                </TimelineGrid.Event>
               </TimelineGrid.EventRow>
             </TimelineGrid.SubGrid>
           </TimelineGrid.Root>

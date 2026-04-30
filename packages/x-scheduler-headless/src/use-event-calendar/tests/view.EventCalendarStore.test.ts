@@ -2,8 +2,15 @@ import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
 import { EventCalendarStore } from '../EventCalendarStore';
 import { EventCalendarState } from '../EventCalendarStore.types';
+import { SchedulerOccurrencesByDay } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
+
+const EMPTY_VISIBLE_OCCURRENCES: SchedulerOccurrencesByDay = {
+  byKey: new Map(),
+  keysByDay: new Map(),
+  dayKeys: [],
+};
 
 describe('View - EventCalendarStore', () => {
   describe('Method: setView', () => {
@@ -174,6 +181,7 @@ describe('View - EventCalendarStore', () => {
       const cleanup = store.setViewConfig({
         siblingVisibleDateGetter,
         visibleDaysSelector: () => [],
+        visibleOccurrencesSelector: () => EMPTY_VISIBLE_OCCURRENCES,
       });
 
       expect(store.state.viewConfig?.siblingVisibleDateGetter).to.equal(siblingVisibleDateGetter);
