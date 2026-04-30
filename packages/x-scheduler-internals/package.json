@@ -2,7 +2,7 @@
   "name": "@mui/x-scheduler-internals",
   "version": "9.0.0-alpha.4",
   "author": "MUI Team",
-  "description": "The community edition of the internals of the scheduler components (MUI X).",
+  "description": "The community edition of the MUI X Scheduler internals.",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"

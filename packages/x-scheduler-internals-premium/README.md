@@ -1,6 +1,6 @@
 # MUI X Scheduler Internals Premium
 
-This package is the Premium plan edition of the internals of the scheduler components.
+This package is the Premium plan edition of the MUI X Scheduler internals.
 It's part of [MUI X](https://mui.com/x/), an open-core extension of our Core libraries, with advanced components.
 
 ## Installation
