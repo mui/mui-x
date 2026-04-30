@@ -29,19 +29,6 @@
     "tickLabelPosition": {
       "description": "Set the position of the tick labels relative to the axis line. The before/after is defined based on clockwise direction. Using <code>&#39;auto&#39;</code> sets it to <code>&#39;before&#39;</code> if position is <code>&#39;start&#39;</code> and <code>&#39;after&#39;</code> otherwise."
     },
-    "tickLabelStyle": { "description": "The style applied to ticks text." },
-    "tickMaxStep": {
-      "description": "Maximal step between two ticks. When using time data, the value is assumed to be in ms. Not supported by categorical axis (band, points)."
-    },
-    "tickMinStep": {
-      "description": "Minimal step between two ticks. When using time data, the value is assumed to be in ms. Not supported by categorical axis (band, points)."
-    },
-    "tickNumber": {
-      "description": "The number of ticks. This number is not guaranteed. Not supported by categorical axis (band, points)."
-    },
-    "tickPlacement": {
-      "description": "The placement of ticks in regard to the band interval. Only used if scale is &#39;band&#39;."
-    },
     "tickPosition": {
       "description": "Set the position of the tick relative to the axis line. The before/after is defined based on clockwise direction."
     },
