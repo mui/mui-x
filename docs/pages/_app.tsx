@@ -227,8 +227,8 @@ const CSB_CONFIG = {
       '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
       '@mui/x-scheduler': getMuiPackageVersion('x-scheduler', muiCommitRef),
       '@mui/x-scheduler-premium': getMuiPackageVersion('x-scheduler-premium', muiCommitRef),
-      '@mui/x-scheduler-headless': getMuiPackageVersion('x-scheduler-headless', muiCommitRef),
-      '@mui/x-scheduler-headless-premium': getMuiPackageVersion(
+      '@mui/x-scheduler-internals': getMuiPackageVersion('x-scheduler-headless', muiCommitRef),
+      '@mui/x-scheduler-internals-premium': getMuiPackageVersion(
         'x-scheduler-headless-premium',
         muiCommitRef,
       ),

@@ -7,7 +7,7 @@ import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-pr
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 import { SchedulerOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/models';
 // TODO: Estimate if we can avoid all imports from the headless package.
-import { buildIsValidDropTarget } from '@mui/x-scheduler-headless/build-is-valid-drop-target';
+import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
 import {
   defaultVisibleDate,
   initialEvents,

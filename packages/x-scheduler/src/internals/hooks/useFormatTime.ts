@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { schedulerPreferenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { formatHourAndMinutes } from '../utils/date-utils';
 
 export function useFormatTime() {

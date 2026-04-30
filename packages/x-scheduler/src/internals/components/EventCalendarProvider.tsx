@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useId } from '@base-ui/utils/useId';
-import { EventCalendarProvider as HeadlessEventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { EventCalendarProvider as HeadlessEventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { EventDialogStyledContext } from './event-dialog/EventDialogStyledContext';

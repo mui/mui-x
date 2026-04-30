@@ -61,7 +61,7 @@
     "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:^",
-    "@mui/x-scheduler-headless": "workspace:^",
+    "@mui/x-scheduler-internals": "workspace:^",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },

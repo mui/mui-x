@@ -1,6 +1,6 @@
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { Theme } from '@mui/material/styles';
-import { StandaloneEvent as HeadlessStandaloneEvent } from '@mui/x-scheduler-headless/standalone-event';
+import { StandaloneEvent as HeadlessStandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
 
 export interface StandaloneEventProps extends Omit<
   HeadlessStandaloneEvent.Props,

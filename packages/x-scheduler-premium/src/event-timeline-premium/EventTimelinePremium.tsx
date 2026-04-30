@@ -8,9 +8,9 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   useExtractEventTimelinePremiumParameters,
   useEventTimelinePremium,
-} from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
-import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
+} from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useId } from '@base-ui/utils/useId';
 import {
   eventDialogSlots,
