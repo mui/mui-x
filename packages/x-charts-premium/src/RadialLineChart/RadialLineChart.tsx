@@ -7,10 +7,6 @@ import {
   type ChartsSlotProps,
 } from '@mui/x-charts/internals';
 import {
-  Unstable_ChartsRadialDataProvider as ChartsRadialDataProvider,
-  type ChartsRadialDataProviderProps,
-} from '@mui/x-charts/ChartsRadialDataProvider';
-import {
   Unstable_ChartsRadialGrid as ChartsRadialGrid,
   type ChartsRadialGridProps,
 } from '@mui/x-charts/ChartsRadialGrid';
@@ -37,10 +33,20 @@ import type { LinePlotSlots, LinePlotSlotProps, LineSeries } from '../LineChart'
 import { type ChartsToolbarSlots, type ChartsToolbarSlotProps } from '../Toolbar';
 import { useRadialLineChartProps } from './useRadialLineChartProps';
 import { radialLineSeriesConfig } from './seriesConfig';
+import {
+  RadialLineHighlightPlot,
+  type RadialLineHighlightPlotSlots,
+  type RadialLineHighlightPlotSlotProps,
+} from './RadialLineHighlightPlot';
+import {
+  ChartsRadialDataProviderPremium,
+  type ChartsRadialDataProviderPremiumProps,
+} from '../ChartsRadialDataProviderPremium';
 
 export interface RadialLineChartSlots
   extends
     LinePlotSlots,
+    RadialLineHighlightPlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
     ChartsTooltipSlots,
@@ -49,6 +55,7 @@ export interface RadialLineChartSlots
 export interface RadialLineChartSlotProps
   extends
     LinePlotSlotProps,
+    RadialLineHighlightPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
@@ -58,7 +65,7 @@ export interface RadialLineChartSlotProps
 export interface RadialLineChartProps
   extends
     Omit<
-      ChartsRadialDataProviderProps<'radialLine', RadialLineChartPluginSignatures>,
+      ChartsRadialDataProviderPremiumProps<'radialLine', RadialLineChartPluginSignatures>,
       'series' | 'plugins' | 'zAxis' | 'slots' | 'slotProps'
     >,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
@@ -134,7 +141,7 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartsRadialDataProvider<'radialLine', RadialLineChartPluginSignatures>
+    <ChartsRadialDataProviderPremium<'radialLine', RadialLineChartPluginSignatures>
       {...chartsDataProviderProps}
       seriesConfig={{ radialLine: radialLineSeriesConfig }}
     >
@@ -149,12 +156,13 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
             <ChartsOverlay {...overlayProps} />
           </g>
           <RadialMarkPlot />
+          <RadialLineHighlightPlot slots={props.slots} slotProps={props.slotProps} />
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartsRadialDataProvider>
+    </ChartsRadialDataProviderPremium>
   );
 });
 
@@ -164,7 +172,10 @@ RadialLineChart.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
-    current: PropTypes.object,
+    current: PropTypes.shape({
+      exportAsImage: PropTypes.func.isRequired,
+      exportAsPrint: PropTypes.func.isRequired,
+    }),
   }),
   /**
    * Color palette used to colorize multiple series.
