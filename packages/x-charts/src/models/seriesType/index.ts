@@ -35,7 +35,7 @@ export type HighlightItemIdentifierWithType<SeriesType extends ChartSeriesType> 
   SeriesType extends any ? ChartsSeriesConfig[SeriesType]['highlightIdentifier'] : never;
 
 export type FocusedItemIdentifier<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  SeriesType extends 'line' | 'radar'
+  SeriesType extends 'line' | 'radar' | 'radialLine'
     ? DefaultizedProps<ChartsSeriesConfig[SeriesType]['itemIdentifier'], 'dataIndex'>
     : SeriesType extends 'heatmap'
       ? DefaultizedProps<ChartsSeriesConfig[SeriesType]['itemIdentifier'], 'xIndex' | 'yIndex'>
@@ -43,8 +43,19 @@ export type FocusedItemIdentifier<SeriesType extends ChartSeriesType = ChartSeri
 
 export { type SeriesId } from './common';
 export type { CartesianChartSeriesType, StackableChartSeriesType } from './config';
-export * from './line';
-export * from './bar';
+export type {
+  ShowMarkParams,
+  MarkShape,
+  LineSeriesType,
+  LineItemIdentifier,
+  DefaultizedLineSeriesType,
+} from './line';
+export type {
+  BarValueType,
+  BarSeriesType,
+  BarItemIdentifier,
+  DefaultizedBarSeriesType,
+} from './bar';
 export * from './scatter';
 export * from './pie';
 export * from './radar';

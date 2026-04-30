@@ -131,6 +131,7 @@ export const useGridDataSourcePremium = (
     groupedDataStrategyProcessor,
     nestedDataStrategyProcessor,
     events,
+    stopPolling,
   } = useGridDataSourceBasePro<GridPrivateApiPremium>(apiRef, props, {
     ...(!props.disableAggregation && Object.keys(aggregationModel).length > 0
       ? { handleEditRow: handleEditRowWithAggregation }
@@ -220,6 +221,12 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
     [apiRef, props.dataSource],
   );
 
+  const handleRowGroupingModelChange = React.useCallback(() => {
+    apiRef.current.setRows([]);
+    stopPolling();
+    debouncedFetchRows();
+  }, [apiRef, debouncedFetchRows, stopPolling]);
+
   const privateApi: GridDataSourcePremiumPrivateApi = {
     ...api.private,
     resolveGroupAggregation,
@@ -256,7 +263,7 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
   useGridEvent(
     apiRef,
     'rowGroupingModelChange',
-    runIf(!pivotActive, () => debouncedFetchRows()),
+    runIf(!pivotActive && !!props.dataSource, handleRowGroupingModelChange),
   );
   useGridEvent(
     apiRef,

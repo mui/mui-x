@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/focused-sankey-node',
+    'docs/translations/api-docs/charts/focused-sankey-node',
     false,
     /\.\/focused-sankey-node.*\.json$/,
   );

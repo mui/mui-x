@@ -3,6 +3,7 @@ import { useSeries } from '../hooks/useSeries';
 import { useColorProcessor } from '../internals/plugins/corePlugins/useChartSeries/useColorProcessor';
 import { type SeriesId } from '../models/seriesType/common';
 import {
+  type ChartSeriesDefaultized,
   type CartesianChartSeriesType,
   type ChartsSeriesConfig,
   type PolarChartSeriesType,
@@ -12,6 +13,8 @@ import { useStore } from '../internals/store/useStore';
 import { getLabel } from '../internals/getLabel';
 import { utcFormatter } from './utils';
 import {
+  useRadiusAxes,
+  useRadiusAxis,
   useRotationAxes,
   useRotationAxis,
   useXAxes,
@@ -33,6 +36,7 @@ import {
   type ComposableCartesianChartSeriesType,
   composableCartesianSeriesTypes,
 } from '../models/seriesType/composition';
+import type { MarkShape } from '../models/seriesType';
 
 export interface UseAxesTooltipReturnValue<
   SeriesType extends CartesianChartSeriesType | PolarChartSeriesType =
@@ -99,6 +103,17 @@ function defaultAxisTooltipConfig(
   };
 }
 
+function getSeriesMark<SeriesType extends CartesianChartSeriesType | PolarChartSeriesType>(
+  series: ChartSeriesDefaultized<SeriesType>,
+): MarkShape | undefined {
+  if (!('showMark' in series) || !series.showMark) {
+    return undefined;
+  }
+  if ('shape' in series && series.shape) {
+    return series.shape;
+  }
+  return 'circle';
+}
 /**
  * Returns the axes to display in the tooltip and the series item related to them.
  */
@@ -112,6 +127,7 @@ export function useAxesTooltip<
   const defaultXAxis = useXAxis();
   const defaultYAxis = useYAxis();
   const defaultRotationAxis = useRotationAxis();
+  const defaultRadiusAxis = useRadiusAxis();
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
 
@@ -127,6 +143,7 @@ export function useAxesTooltip<
   const { zAxis, zAxisIds } = useZAxes();
 
   const { rotationAxis } = useRotationAxes();
+  const { radiusAxis } = useRadiusAxes();
 
   const colorProcessors = useColorProcessor();
 
@@ -223,10 +240,7 @@ export function useAxesTooltip<
             formattedValue,
             formattedLabel,
             markType: seriesToAdd.labelMarkType,
-            markShape:
-              'showMark' in seriesToAdd && seriesToAdd.showMark
-                ? (seriesToAdd.shape ?? 'circle')
-                : undefined,
+            markShape: getSeriesMark(seriesToAdd),
           });
         }
       });
@@ -247,9 +261,12 @@ export function useAxesTooltip<
           return;
         }
 
-        const providedRotationAxisId: AxisId | undefined =
-          // @ts-expect-error Should be fixed when we introduce a polar series with a rotationAxisId
-          seriesToAdd.rotationAxisId ?? defaultRotationAxis?.id;
+        const providedRotationAxisId =
+          ('rotationAxisId' in seriesToAdd ? (seriesToAdd.rotationAxisId as AxisId) : undefined) ??
+          defaultRotationAxis?.id;
+        const providedRadiusAxisId =
+          ('radiusAxisId' in seriesToAdd ? (seriesToAdd.radiusAxisId as AxisId) : undefined) ??
+          defaultRadiusAxis?.id;
 
         const tooltipItemIndex = tooltipAxes.findIndex(
           ({ axisDirection, axisId }) =>
@@ -258,7 +275,15 @@ export function useAxesTooltip<
         // Test if the series uses the default axis
         if (tooltipItemIndex >= 0) {
           const { dataIndex } = tooltipAxes[tooltipItemIndex];
-          const color = colorProcessors[seriesType]?.(seriesToAdd)(dataIndex) ?? '';
+
+          const color =
+            colorProcessors[seriesType]?.(
+              seriesToAdd,
+              providedRotationAxisId !== undefined
+                ? rotationAxis[providedRotationAxisId]
+                : undefined,
+              providedRadiusAxisId !== undefined ? radiusAxis[providedRadiusAxisId] : undefined,
+            )(dataIndex) ?? '';
 
           const value = seriesToAdd.data[dataIndex] ?? null;
           const formattedValue = (seriesToAdd.valueFormatter as any)(value, {
@@ -273,7 +298,7 @@ export function useAxesTooltip<
             formattedValue,
             formattedLabel,
             markType: seriesToAdd.labelMarkType,
-            markShape: 'showMark' in seriesToAdd && seriesToAdd.showMark ? 'circle' : undefined,
+            markShape: getSeriesMark(seriesToAdd),
           });
         }
       });

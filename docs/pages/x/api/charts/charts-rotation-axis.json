@@ -1,0 +1,16 @@
+{
+  "props": {},
+  "name": "ChartsRotationAxis",
+  "imports": [
+    "import { ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';",
+    "import { ChartsRotationAxis } from '@mui/x-charts';",
+    "import { ChartsRotationAxis } from '@mui/x-charts-pro';",
+    "import { ChartsRotationAxis } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsRotationAxis",
+  "filename": "/packages/x-charts/src/ChartsRotationAxis/ChartsRotationAxis.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines</a></li></ul>",
+  "cssComponent": false
+}
