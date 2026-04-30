@@ -10,6 +10,10 @@ import {
   Unstable_ChartsRadialGrid as ChartsRadialGrid,
   type ChartsRadialGridProps,
 } from '@mui/x-charts/ChartsRadialGrid';
+import {
+  Unstable_ChartsRadialAxisHighlight as ChartsRadialAxisHighlight,
+  type ChartsRadialAxisHighlightProps,
+} from '@mui/x-charts/ChartsRadialAxisHighlight';
 import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsSurface } from '../ChartsSurface';
 import {
@@ -75,9 +79,15 @@ export interface RadialLineChartProps
    */
   series: Readonly<LineSeries[]>;
   /**
-   * Option to display a cartesian grid in the background.
+   * Option to display a radial grid in the background.
    */
   grid?: Pick<ChartsRadialGridProps, 'radius' | 'rotation'>;
+  /**
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @default { rotation: 'line' }
+   */
+  axisHighlight?: ChartsRadialAxisHighlightProps;
   /**
    * If `true`, the legend is not rendered.
    */
@@ -126,6 +136,7 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
     chartsWrapperProps,
     chartsContainerProps,
     gridProps,
+    axisHighlightProps,
     clipPathProps,
     clipPathGroupProps,
     overlayProps,
@@ -155,6 +166,7 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
             <RadialLinePlot />
             <ChartsOverlay {...overlayProps} />
           </g>
+          <ChartsRadialAxisHighlight {...axisHighlightProps} />
           <RadialMarkPlot />
           <RadialLineHighlightPlot slots={props.slots} slotProps={props.slotProps} />
           <ChartsClipPath {...clipPathProps} />
@@ -176,6 +188,15 @@ RadialLineChart.propTypes = {
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
     }),
+  }),
+  /**
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @default { rotation: 'line' }
+   */
+  axisHighlight: PropTypes.shape({
+    radius: PropTypes.oneOf(['line', 'none']),
+    rotation: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
    * Color palette used to colorize multiple series.
@@ -205,7 +226,7 @@ RadialLineChart.propTypes = {
    */
   experimentalFeatures: PropTypes.object,
   /**
-   * Option to display a cartesian grid in the background.
+   * Option to display a radial grid in the background.
    */
   grid: PropTypes.shape({
     radius: PropTypes.bool,
