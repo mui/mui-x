@@ -1,20 +1,7 @@
 import * as React from 'react';
 import { Unstable_RadialBarChart as RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
 
-const months = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
+const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
 
 export default function HorizontalRadialBarChart() {
   return (
@@ -22,25 +9,25 @@ export default function HorizontalRadialBarChart() {
       height={400}
       series={[
         {
-          data: [3, 5, 7, 9, 12, 15, 17, 16, 13, 9, 6, 4],
+          data: [3, 5, 7, 9],
           label: 'Temperature',
           layout: 'horizontal',
         },
         {
-          data: [9, 12, 15, 17, 16, 13, 9, 6, 4, 3, 5, 7],
+          data: [9, 12, 15, 17],
           label: 'Temperature',
           layout: 'horizontal',
           stack: 'stack1',
         },
         {
-          data: [3, 5, 15, 3, 5, 7, 17, 16, 13, 9, 6, 4, 7, 9, 12],
+          data: [3, 5, 15, 3],
           label: 'Temperature',
           layout: 'horizontal',
           stack: 'stack1',
         },
       ]}
-      radiusAxis={[{ scaleType: 'band', data: months }]}
-      rotationAxis={[{ scaleType: 'linear', max: 50 }]}
+      radiusAxis={[{ scaleType: 'band', data: quarters, minRadius: 50 }]}
+      rotationAxis={[{ scaleType: 'linear', endAngle: 270 }]}
       grid={{ rotation: true, radius: true }}
     />
   );
