@@ -8,3 +8,4 @@ export { TimelineGridCurrentTimeIndicator as CurrentTimeIndicator } from './curr
 export { TimelineGridRow as Row } from './row/TimelineGridRow';
 export { TimelineGridTitleRow as TitleRow } from './title-row/TimelineGridTitleRow';
 export { TimelineGridCell as Cell } from './cell/TimelineGridCell';
+export { TimelineGridHeader as Header } from './header/TimelineGridHeader';

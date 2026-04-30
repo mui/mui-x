@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   initialEvents,
@@ -7,8 +7,8 @@ import {
   defaultVisibleDate,
 } from '../../datasets/apartment-bookings';
 
-export default function DayPreset() {
-  const [events, setEvents] = React.useState(initialEvents);
+export default function DayAndMonthPreset() {
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
     <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
@@ -17,8 +17,8 @@ export default function DayPreset() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultPreset="day"
-        presets={['day']}
+        defaultPreset="dayAndMonth"
+        presets={['dayAndMonth']}
       />
     </div>
   );
