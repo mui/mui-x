@@ -258,11 +258,20 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
    * DST transition. dayjs does not automatically re-evaluate the offset for us
    * (moment does), so we have to do it ourselves.
    *
-   * Only relevant for timezone-aware values (created via `dayjs.tz(...)`).
-   * Plain `dayjs()` values rely on JS Date semantics, which already handle DST
-   * correctly via the system timezone, and UTC values have no DST. Touching
-   * either of those would either be a no-op or, worse, attach unwanted timezone
-   * metadata to a plain value (see https://github.com/mui/mui-x/issues/13290).
+   * Only relevant for timezone-aware values (created via `dayjs.tz(...)`):
+   * - Plain `dayjs()` values rely on JS Date semantics, which already handle
+   *   DST correctly via the system timezone. Touching them would attach
+   *   unwanted timezone metadata to a "plain" value (see #13290) or - worse -
+   *   corrupt `valueOf()` because the formula combines `$offset` and
+   *   `$d.getTimezoneOffset()` and only one of them tracks the new local hour
+   *   (see #21669).
+   * - UTC values have no DST.
+   *
+   * For timezone-aware values we mutate `$offset` directly (rather than
+   * returning the `value.tz(timezone, true)` result) because that round-trip
+   * drops `$x.$localOffset` and shifts `$d` via its internal "keep local time"
+   * adjustment, both of which break `valueOf()` and `getHours()` once the
+   * system timezone is non-UTC.
    */
   protected adjustOffset = (value: Dayjs) => {
     if (!this.hasTimezonePlugin()) {
@@ -273,7 +282,14 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     if (!timezone) {
       return value;
     }
-    return value.tz(timezone, true);
+    const fixedValue = value.tz(timezone, true);
+    // @ts-ignore
+    if (fixedValue.$offset === value.$offset) {
+      return value;
+    }
+    // @ts-ignore
+    value.$offset = fixedValue.$offset;
+    return value;
   };
 
   public date = <T extends string | null | undefined>(

@@ -115,6 +115,41 @@ describe('<AdapterDayjs />', () => {
       expect(summer.toDate().toISOString()).to.equal('2026-07-15T12:00:00.000Z');
     });
 
+    it('should not shift `$d` or drop `$x.$localOffset` on tz-aware values across `setHours` (regression #21669)', () => {
+      // The picker validates each hour option by calling
+      // `getHours(setHours(value, X)) === X`, where `getHours()` reads
+      // `$d.getHours()`. An earlier attempt at `adjustOffset` returned
+      // `value.tz(timezone, true)`, which has two side effects:
+      //  - the timezone plugin's "keep local time" branch runs an internal
+      //    `n.add(i - m, 'minute')` that shifts `$d` whenever the offset
+      //    changes;
+      //  - dayjs's `utcOffset(_, true)` does not set `$x.$localOffset`,
+      //    leaving the side table that `valueOf()` consults empty.
+      // For tz-aware values with `$x.$localOffset` set (the `dayjs.tz(...)`
+      // construction path - distinct from the adapter's `createTZDate` path
+      // which uses `.tz(tz, true)` and never sets `$localOffset`), those two
+      // shifts together caused `$d.getHours()` to land on the wrong side of
+      // the DST gap in a non-UTC system timezone. Mutating `$offset` in
+      // place avoids both - this test pins the invariants.
+      const value = dayjs.tz('2026-03-08T12:00:00', 'America/Los_Angeles');
+      // @ts-ignore - dayjs internals: the `dayjs.tz(...)` path goes through
+      // `utcOffset(c)` (no keep-local-time), which sets `$localOffset`.
+      const localOffsetBefore = value.$x.$localOffset;
+      expect(localOffsetBefore).not.to.equal(undefined);
+
+      const adapter = new AdapterDayjs();
+      for (const hour of [0, 1, 3, 4, 5, 11]) {
+        const dWithoutAdjust = (value.set('hour', hour) as Dayjs).$d.getTime();
+        const result = adapter.setHours(value, hour) as Dayjs;
+
+        // @ts-ignore - dayjs internals
+        expect(result.$d.getTime()).to.equal(dWithoutAdjust);
+        // @ts-ignore - dayjs internals
+        expect(result.$x.$localOffset).to.equal(localOffsetBefore);
+        expect(adapter.getHours(result)).to.equal(hour);
+      }
+    });
+
     describe('Time picker (regression #21669)', () => {
       const { render, adapter } = createPickerRenderer({ adapterName: 'dayjs' });
 
