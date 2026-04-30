@@ -2,11 +2,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
-import { getValueToPositionMapper, useScatterSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { selectorChartsHighlightedItem } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions';
 import { useStore } from '../internals/store/useStore';
 import { useUtilityClasses } from './scatterClasses';
+import { useScatterItemPosition } from './useScatterItemPosition';
 
 /**
  * Draws an SVG ring around the currently highlighted scatter point.
@@ -22,38 +22,21 @@ export function HighlightedScatterMark({
   const store = useStore();
   const highlightedItem = store.use(selectorChartsHighlightedItem);
   const drawingArea = store.use(selectorChartDrawingArea);
-  const scatterSeries = useScatterSeriesContext();
-  const { xAxis, xAxisIds } = useXAxes();
-  const { yAxis, yAxisIds } = useYAxes();
   const classes = useUtilityClasses();
 
-  if (
-    !highlightedItem ||
-    highlightedItem.type !== 'scatter' ||
-    highlightedItem.dataIndex === undefined ||
-    !scatterSeries
-  ) {
+  const isHighlightedScatter =
+    highlightedItem?.type === 'scatter' && highlightedItem.dataIndex !== undefined;
+  const resolved = useScatterItemPosition(
+    isHighlightedScatter
+      ? { seriesId: highlightedItem.seriesId, dataIndex: highlightedItem.dataIndex! }
+      : null,
+  );
+
+  if (!resolved) {
     return null;
   }
 
-  const series = scatterSeries.series[highlightedItem.seriesId];
-  if (!series) {
-    return null;
-  }
-
-  const xAxisId = series.xAxisId ?? xAxisIds[0];
-  const yAxisId = series.yAxisId ?? yAxisIds[0];
-
-  const getXPosition = getValueToPositionMapper(xAxis[xAxisId].scale);
-  const getYPosition = getValueToPositionMapper(yAxis[yAxisId].scale);
-
-  const scatterPoint = series.data[highlightedItem.dataIndex];
-  if (!scatterPoint) {
-    return null;
-  }
-
-  const cx = getXPosition(scatterPoint.x);
-  const cy = getYPosition(scatterPoint.y);
+  const { cx, cy, series } = resolved;
 
   // Allow a markerSize margin around the drawing area so the highlight ring stays
   // visible at the edges (e.g. during keyboard navigation) without needing a clip-path.
