@@ -32,7 +32,7 @@ export function useScatterItemPosition(
   }
 
   const series = scatterSeries.series[item.seriesId];
-  if (!series) {
+  if (!series || series.hidden) {
     return null;
   }
 

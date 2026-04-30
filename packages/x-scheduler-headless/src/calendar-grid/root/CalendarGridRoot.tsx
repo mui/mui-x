@@ -34,7 +34,13 @@ export const CalendarGridRoot = React.forwardRef(function CalendarGridRoot(
   const [focusedCell, setFocusedCellState] = React.useState<GridCellCoordinates | null>(null);
 
   const setFocusedCell = React.useCallback((coordinates: GridCellCoordinates) => {
-    setFocusedCellState(coordinates);
+    setFocusedCellState((prev) =>
+      prev?.rowType === coordinates.rowType &&
+      prev.rowIndex === coordinates.rowIndex &&
+      prev.columnIndex === coordinates.columnIndex
+        ? prev
+        : coordinates,
+    );
   }, []);
 
   const handleBlur = React.useCallback((event: React.FocusEvent<HTMLDivElement>) => {

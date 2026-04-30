@@ -6,7 +6,7 @@ import {
 } from '@mui/x-charts/internals';
 
 const keyboardFocusHandler: KeyboardFocusHandler<'radialLine', ComposableRadialChartSeriesType> =
-  createCommonKeyboardFocusHandler<'radialLine', ComposableRadialChartSeriesType>(
+  createCommonKeyboardFocusHandler<ComposableRadialChartSeriesType, 'radialLine'>(
     composableRadialSeriesTypes,
   );
 
