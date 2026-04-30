@@ -7,6 +7,43 @@ import { isBandScale } from '../../../../internals/scaleGuards';
 import { getDataIndexForOrdinalScaleValue } from '../../../../internals/invertScale';
 import { type BarItemIdentifier, type SeriesId } from '../../../../models';
 
+export function getBandIndex(bandAxis: ComputedAxis, stackConfig: { groupNumber: number, groupIndex: number }, coordinate: number) {
+  if (!isBandScale(bandAxis.scale)) {
+    return -1;
+  }
+  const dataIndex = getDataIndexForOrdinalScaleValue(bandAxis.scale, coordinate);
+
+
+  const { barWidth, offset } = getBandSize(
+    bandAxis.scale.bandwidth(),
+    stackConfig.groupNumber,
+    (bandAxis as ComputedAxis<'band'>).barGapRatio,
+  );
+
+  const barOffset = stackConfig.groupIndex * (barWidth + offset);
+  const bandValue = bandAxis.data?.[dataIndex];
+
+  if (bandValue == null) {
+    return -1;
+  }
+
+  const bandStart = bandAxis.scale(bandValue);
+
+  if (bandStart == null) {
+    return -1
+  }
+
+  const bandBarStart = bandStart + barOffset;
+  const bandBarEnd = bandBarStart + barWidth;
+  const bandBarMin = Math.min(bandBarStart, bandBarEnd);
+  const bandBarMax = Math.max(bandBarStart, bandBarEnd);
+
+  if (coordinate >= bandBarMin && coordinate <= bandBarMax) {
+    return dataIndex;
+  }
+  return -1;
+}
+
 export const selectorBarItemAtPosition = createSelector(
   selectorChartXAxis,
   selectorChartYAxis,
@@ -38,63 +75,35 @@ export const selectorBarItemAtPosition = createSelector(
 
         const bandAxis = aSeries.layout === 'horizontal' ? yAxis : xAxis;
         const continuousAxis = aSeries.layout === 'horizontal' ? xAxis : yAxis;
-        const bandScale = bandAxis.scale;
-        const svgPointBandCoordinate = aSeries.layout === 'horizontal' ? svgPoint.y : svgPoint.x;
+        const svgBandCoordinate = aSeries.layout === 'horizontal' ? svgPoint.y : svgPoint.x;
+        const svgValueCoordinate = aSeries.layout === 'horizontal' ? svgPoint.x : svgPoint.y;
 
-        if (!isBandScale(bandScale)) {
+        const dataIndex = getBandIndex(bandAxis, { groupNumber: stackingGroups.length, groupIndex: stackIndex }, svgBandCoordinate);
+
+        if (dataIndex === -1) {
           continue;
         }
 
-        const dataIndex = getDataIndexForOrdinalScaleValue(bandScale, svgPointBandCoordinate);
+        // The point is inside the band for this series
+        const bar = aSeries.visibleStackedData[dataIndex];
+        const start = continuousAxis.scale(bar[0]);
+        const end = continuousAxis.scale(bar[1]);
 
-        const { barWidth, offset } = getBandSize(
-          bandScale.bandwidth(),
-          stackingGroups.length,
-          (bandAxis as ComputedAxis<'band'>).barGapRatio,
-        );
-
-        const barOffset = stackIndex * (barWidth + offset);
-        const bandValue = bandAxis.data?.[dataIndex];
-
-        if (bandValue == null) {
+        if (start == null || end == null) {
           continue;
         }
 
-        const bandStart = bandScale(bandValue);
+        const continuousMin = Math.min(start, end);
+        const continuousMax = Math.max(start, end);
 
-        if (bandStart == null) {
-          continue;
-        }
-
-        const bandBarStart = bandStart + barOffset;
-        const bandBarEnd = bandBarStart + barWidth;
-        const bandBarMin = Math.min(bandBarStart, bandBarEnd);
-        const bandBarMax = Math.max(bandBarStart, bandBarEnd);
-
-        if (svgPointBandCoordinate >= bandBarMin && svgPointBandCoordinate <= bandBarMax) {
-          // The point is inside the band for this series
-          const svgPointContinuousCoordinate =
-            aSeries.layout === 'horizontal' ? svgPoint.x : svgPoint.y;
-          const bar = aSeries.visibleStackedData[dataIndex];
-          const start = continuousAxis.scale(bar[0]);
-          const end = continuousAxis.scale(bar[1]);
-
-          if (start == null || end == null) {
-            continue;
-          }
-
-          const continuousMin = Math.min(start, end);
-          const continuousMax = Math.max(start, end);
-
-          if (
-            svgPointContinuousCoordinate >= continuousMin &&
-            svgPointContinuousCoordinate <= continuousMax
-          ) {
-            item = {
-              seriesId,
-              dataIndex,
-            };
-          }
+        if (
+          svgValueCoordinate >= continuousMin &&
+          svgValueCoordinate <= continuousMax
+        ) {
+          item = {
+            seriesId,
+            dataIndex,
+          };
         }
       }
     }
