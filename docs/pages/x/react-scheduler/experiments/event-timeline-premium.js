@@ -71,7 +71,7 @@ const datasets = [
 
 const presetOptions = [
   { value: 'dayAndHour', label: 'Time' },
-  { value: 'day', label: 'Days' },
+  { value: 'dayAndMonth', label: 'Days' },
   { value: 'dayAndWeek', label: 'Weeks' },
   { value: 'monthAndYear', label: 'Months' },
   { value: 'year', label: 'Years' },

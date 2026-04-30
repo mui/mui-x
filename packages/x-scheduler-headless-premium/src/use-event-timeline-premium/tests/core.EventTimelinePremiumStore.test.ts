@@ -40,7 +40,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
         preset: 'dayAndHour',
-        presets: ['dayAndHour', 'day', 'dayAndWeek', 'monthAndYear', 'year'],
+        presets: ['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year'],
         visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: {},
         isLoading: false,
@@ -61,25 +61,25 @@ describe('Core - EventTimelinePremiumStore', () => {
 
     it('should re-sort the presets array when parameters update', () => {
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, presets: ['dayAndHour', 'day'] },
+        { ...DEFAULT_PARAMS, presets: ['dayAndHour', 'dayAndMonth'] },
         adapter,
       );
 
       store.updateStateFromParameters(
-        { ...DEFAULT_PARAMS, presets: ['year', 'day', 'dayAndHour'] },
+        { ...DEFAULT_PARAMS, presets: ['year', 'dayAndMonth', 'dayAndHour'] },
         adapter,
       );
 
-      expect(store.state.presets).to.deep.equal(['dayAndHour', 'day', 'year']);
+      expect(store.state.presets).to.deep.equal(['dayAndHour', 'dayAndMonth', 'year']);
     });
 
     it('should dedupe the presets array', () => {
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, presets: ['day', 'day', 'dayAndHour', 'day'] },
+        { ...DEFAULT_PARAMS, presets: ['dayAndMonth', 'dayAndMonth', 'dayAndHour', 'dayAndMonth'] },
         adapter,
       );
 
-      expect(store.state.presets).to.deep.equal(['dayAndHour', 'day']);
+      expect(store.state.presets).to.deep.equal(['dayAndHour', 'dayAndMonth']);
     });
 
     it('should throw when the presets array is empty', () => {
@@ -94,7 +94,7 @@ describe('Core - EventTimelinePremiumStore', () => {
           new EventTimelinePremiumStore(
             {
               ...DEFAULT_PARAMS,
-              presets: ['dayAndHour', 'notAPreset' as any, 'day'],
+              presets: ['dayAndHour', 'notAPreset' as any, 'dayAndMonth'],
             },
             adapter,
           ),
@@ -105,7 +105,7 @@ describe('Core - EventTimelinePremiumStore', () => {
       expect(
         () =>
           new EventTimelinePremiumStore(
-            { ...DEFAULT_PARAMS, preset: 'year', presets: ['dayAndHour', 'day'] },
+            { ...DEFAULT_PARAMS, preset: 'year', presets: ['dayAndHour', 'dayAndMonth'] },
             adapter,
           ),
       ).to.throw(/is not part of the `presets` prop/i);
@@ -113,13 +113,13 @@ describe('Core - EventTimelinePremiumStore', () => {
 
     it('should throw via the subscribe listener when a later state mutation makes the current preset fall out of the presets array', () => {
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, defaultPreset: 'day', presets: ['dayAndHour', 'day'] },
+        { ...DEFAULT_PARAMS, defaultPreset: 'dayAndMonth', presets: ['dayAndHour', 'dayAndMonth'] },
         adapter,
       );
 
       expect(() =>
         store.updateStateFromParameters(
-          { ...DEFAULT_PARAMS, defaultPreset: 'day', presets: ['dayAndHour'] },
+          { ...DEFAULT_PARAMS, defaultPreset: 'dayAndMonth', presets: ['dayAndHour'] },
           adapter,
         ),
       ).to.throw(/is not part of the `presets` prop/i);

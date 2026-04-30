@@ -19,7 +19,7 @@ const resources = allResources.slice(0, 5);
 
 const presetOptions = [
   { value: 'dayAndHour', label: 'Time' },
-  { value: 'day', label: 'Days' },
+  { value: 'dayAndMonth', label: 'Days' },
   { value: 'dayAndWeek', label: 'Weeks' },
   { value: 'monthAndYear', label: 'Months' },
   { value: 'year', label: 'Years' },
