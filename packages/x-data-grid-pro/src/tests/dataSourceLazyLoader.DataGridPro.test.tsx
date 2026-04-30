@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
-import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
 import { getCell, getRow } from 'test/utils/helperFn';
 import { type RefObject } from '@mui/x-internals/types';
 import {
@@ -10,6 +10,7 @@ import {
   type GridDataSource,
   type GridGetRowsParams,
   type GridGetRowsResponse,
+  type GridGroupNode,
   type GridRowSelectionModel,
   useGridApiRef,
   GRID_ROOT_GROUP_ID,
@@ -363,6 +364,287 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => {
         expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
       });
+    });
+  });
+
+  describe('Nested viewport loading', () => {
+    type TreeRow = {
+      id: string;
+      name: string;
+      value: number;
+      childrenCount: number;
+    };
+
+    const treeRows: Record<string, Omit<TreeRow, 'value'>[]> = {
+      '[]': [
+        { id: 'A', name: 'A', childrenCount: 2 },
+        { id: 'B', name: 'B', childrenCount: 0 },
+        { id: 'C', name: 'C', childrenCount: 0 },
+      ],
+      '["A"]': [
+        { id: 'A-0', name: 'A-0', childrenCount: 0 },
+        { id: 'A-1', name: 'A-1', childrenCount: 0 },
+      ],
+    };
+
+    function TestNestedDataSourceLazyLoader(
+      props: Partial<DataGridProProps> & {
+        onFetchRows: (params: GridGetRowsParams) => void;
+        transformRows?: (
+          rows: TreeRow[],
+          params: GridGetRowsParams,
+          requestCount: number,
+        ) => TreeRow[];
+      },
+    ) {
+      const { onFetchRows, transformRows = (rows) => rows, ...other } = props;
+      const requestCountRef = React.useRef(0);
+      apiRef = useGridApiRef();
+
+      const dataSource: GridDataSource = React.useMemo(
+        () => ({
+          getRows: async (params: GridGetRowsParams) => {
+            requestCountRef.current += 1;
+            onFetchRows(params);
+
+            const groupKeys = params.groupKeys ?? [];
+            const allRows = (treeRows[JSON.stringify(groupKeys)] ?? []).map((row) => ({
+              ...row,
+              value: requestCountRef.current,
+            }));
+            const start = typeof params.start === 'number' ? params.start : 0;
+            const end = typeof params.end === 'number' ? params.end : allRows.length - 1;
+            const rows = transformRows(allRows, params, requestCountRef.current);
+
+            return {
+              rows: rows.slice(start, end + 1),
+              rowCount: rows.length,
+            };
+          },
+          getGroupKey: (row) => row.name,
+          getChildrenCount: (row) => row.childrenCount,
+        }),
+        [onFetchRows, transformRows],
+      );
+
+      return (
+        <div style={{ width: 300, height: gridHeight }}>
+          <DataGridPro
+            apiRef={apiRef}
+            columns={[
+              { field: 'name', width: 160 },
+              { field: 'value', width: 120 },
+            ]}
+            dataSource={dataSource}
+            lazyLoading
+            treeData
+            initialState={{
+              pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+            }}
+            rowHeight={rowHeight}
+            columnHeaderHeight={columnHeaderHeight}
+            disableVirtualization={false}
+            {...other}
+          />
+        </div>
+      );
+    }
+
+    it('should periodically revalidate root rows when dataSourceRevalidateMs is set', async () => {
+      const localFetchRowsSpy = spy();
+      render(
+        <TestNestedDataSourceLazyLoader
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      localFetchRowsSpy.resetHistory();
+
+      await waitFor(() => {
+        expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
+      });
+      const rootRequest = localFetchRowsSpy.getCalls().find((call) => {
+        const params = call.firstArg as GridGetRowsParams;
+        return params.groupKeys?.length === 0;
+      })?.firstArg as GridGetRowsParams | undefined;
+      expect(rootRequest).not.to.equal(undefined);
+      expect(rootRequest?.start).to.equal(0);
+      expect(rootRequest?.end).to.equal(9);
+    });
+
+    it('should periodically revalidate expanded nested rows without setting children loading', async () => {
+      const localFetchRowsSpy = spy();
+      const { user } = render(
+        <TestNestedDataSourceLazyLoader
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      await user.click(within(getCell(0, 0)).getByRole('button'));
+      await waitFor(() => expect(apiRef.current!.getRow('A-0')).not.to.equal(null));
+
+      const setChildrenLoadingSpy = spy(apiRef.current!.dataSource, 'setChildrenLoading');
+      localFetchRowsSpy.resetHistory();
+      setChildrenLoadingSpy.resetHistory();
+
+      await waitFor(() => {
+        const hasNestedRequest = localFetchRowsSpy.getCalls().some((call) => {
+          const params = call.firstArg as GridGetRowsParams;
+          return (params.groupKeys?.length ?? 0) > 0;
+        });
+        expect(hasNestedRequest).to.equal(true);
+      });
+
+      const hasLoadingTrueCall = setChildrenLoadingSpy
+        .getCalls()
+        .some((call) => call.args[0] === 'A' && call.args[1] === true);
+      setChildrenLoadingSpy.restore();
+      expect(hasLoadingTrueCall).to.equal(false);
+    });
+
+    it('should not call getRows during polling when the cache entry is still valid', async () => {
+      const localFetchRowsSpy = spy();
+      render(
+        <TestNestedDataSourceLazyLoader
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      vi.useFakeTimers();
+      localFetchRowsSpy.resetHistory();
+
+      act(() => {
+        apiRef.current?.publishEvent('renderedRowsIntervalChange', {
+          firstRowIndex: 0,
+          lastRowIndex: 3,
+          firstColumnIndex: 0,
+          lastColumnIndex: 1,
+        });
+      });
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(20);
+      });
+
+      expect(localFetchRowsSpy.callCount).to.equal(0);
+
+      vi.useRealTimers();
+    });
+
+    it('should update same-id rows without losing nested selection', async () => {
+      const localFetchRowsSpy = spy();
+      const { user } = render(
+        <TestNestedDataSourceLazyLoader
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      await user.click(within(getCell(0, 0)).getByRole('button'));
+      await waitFor(() => expect(apiRef.current!.getRow('A-0')).not.to.equal(null));
+
+      act(() => {
+        apiRef.current?.selectRow('A-0', true);
+      });
+      const initialValue = apiRef.current!.getRow<TreeRow>('A-0')!.value;
+
+      localFetchRowsSpy.resetHistory();
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow<TreeRow>('A-0')!.value).to.be.greaterThan(initialValue);
+      });
+      expect(apiRef.current!.isRowSelected('A-0')).to.equal(true);
+    });
+
+    it('should collapse expanded nested rows without deleting skeleton rows through row updates', async () => {
+      const localFetchRowsSpy = spy();
+      const { user } = render(
+        <TestNestedDataSourceLazyLoader
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      await user.click(within(getCell(0, 0)).getByRole('button'));
+      await waitFor(() => expect(apiRef.current!.getRow('A-0')).not.to.equal(null));
+
+      await user.click(within(getCell(0, 0)).getByRole('button'));
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('A-0')).to.equal(null);
+      });
+    });
+
+    it('should replace different-id rows under the correct parent', async () => {
+      const localFetchRowsSpy = spy();
+      const transformRows = (rows: TreeRow[], params: GridGetRowsParams, requestCount: number) => {
+        if ((params.groupKeys?.length ?? 0) === 1 && requestCount > 2) {
+          return rows.map((row, index) =>
+            index === 0 ? { ...row, id: 'A-0-updated', name: 'A-0-updated' } : row,
+          );
+        }
+        return rows;
+      };
+      const { user } = render(
+        <TestNestedDataSourceLazyLoader
+          dataSourceCache={null}
+          dataSourceRevalidateMs={1}
+          onFetchRows={localFetchRowsSpy}
+          transformRows={transformRows}
+        />,
+      );
+
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+      await user.click(within(getCell(0, 0)).getByRole('button'));
+      await waitFor(() => expect(apiRef.current!.getRow('A-0')).not.to.equal(null));
+
+      localFetchRowsSpy.resetHistory();
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('A-0-updated')).not.to.equal(null);
+      });
+      expect(apiRef.current!.getRow('A-0')).to.equal(null);
+
+      const parentNode = apiRef.current!.getRowNode<GridGroupNode>('A')!;
+      expect(parentNode.children).to.include('A-0-updated');
+    });
+
+    it('should not periodically revalidate when dataSourceRevalidateMs is zero', async () => {
+      const localFetchRowsSpy = spy();
+      render(
+        <TestNestedDataSourceLazyLoader
+          dataSourceCache={null}
+          dataSourceRevalidateMs={0}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+
+      await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+
+      vi.useFakeTimers();
+      localFetchRowsSpy.resetHistory();
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(20);
+      });
+
+      expect(localFetchRowsSpy.callCount).to.equal(0);
+
+      vi.useRealTimers();
     });
   });
 

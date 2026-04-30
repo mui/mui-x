@@ -2,6 +2,8 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
 import { throttle } from '@mui/x-internals/throttle';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
 import {
   useGridEvent,
@@ -62,10 +64,14 @@ export const useGridDataSourceNestedLazyLoader = (
   privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'dataSource' | 'lazyLoading' | 'lazyLoadingRequestThrottleMs' | 'treeData'
+    | 'dataSource'
+    | 'lazyLoading'
+    | 'lazyLoadingRequestThrottleMs'
+    | 'treeData'
+    | 'dataSourceRevalidateMs'
   >,
 ): void => {
-  const isNestedLazyLoadingEnabled = useGridSelector(privateApiRef, () =>
+  const isDataNested = useGridSelector(privateApiRef, () =>
     props.treeData
       ? true
       : ((
@@ -79,16 +85,15 @@ export const useGridDataSourceNestedLazyLoader = (
     privateApiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.LazyLoadedGroupedData,
-      props.dataSource && props.lazyLoading && isNestedLazyLoadingEnabled
-        ? () => true
-        : () => false,
+      props.dataSource && props.lazyLoading && isDataNested ? () => true : () => false,
     );
-  }, [privateApiRef, props.lazyLoading, props.dataSource, isNestedLazyLoadingEnabled]);
+  }, [privateApiRef, props.lazyLoading, props.dataSource, isDataNested]);
 
   const [isStrategyActive, setIsStrategyActive] = React.useState(false);
   const renderedRowsIntervalCache = React.useRef(INTERVAL_CACHE_INITIAL_STATE);
   const rowsStale = React.useRef<boolean>(false);
   const draggedRowId = React.useRef<GridRowId | null>(null);
+  const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchRows = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
@@ -120,6 +125,88 @@ export const useGridDataSourceNestedLazyLoader = (
 
   const getChildrenCount = props.dataSource?.getChildrenCount;
   const getGroupKey = props.dataSource?.getGroupKey;
+
+  const revalidateRows = useEventCallback((firstRowIndex: number, lastRowIndex: number) => {
+    if (rowsStale.current || lastRowIndex <= firstRowIndex) {
+      return;
+    }
+
+    const expandedSortedRowIds = gridExpandedSortedRowIdsSelector(privateApiRef);
+    const sortModel = gridSortModelSelector(privateApiRef);
+    const filterModel = gridFilterModelSelector(privateApiRef);
+    const rowRangesByParent = new Map<GridRowId, { start: number; end: number }>();
+
+    for (let i = firstRowIndex; i < lastRowIndex && i < expandedSortedRowIds.length; i += 1) {
+      const rowId = expandedSortedRowIds[i];
+      const rowNode = gridRowNodeSelector(privateApiRef, rowId);
+      if (!rowNode || rowNode.type === 'skeletonRow' || rowNode.parent == null) {
+        continue;
+      }
+
+      const parentNode = gridRowNodeSelector(privateApiRef, rowNode.parent) as GridGroupNode | null;
+      if (!parentNode || parentNode.type !== 'group') {
+        continue;
+      }
+
+      const childIndex = parentNode.children.indexOf(rowId);
+      if (childIndex === -1) {
+        continue;
+      }
+
+      const existingRange = rowRangesByParent.get(rowNode.parent);
+      if (existingRange) {
+        existingRange.start = Math.min(existingRange.start, childIndex);
+        existingRange.end = Math.max(existingRange.end, childIndex);
+      } else {
+        rowRangesByParent.set(rowNode.parent, { start: childIndex, end: childIndex });
+      }
+    }
+
+    rowRangesByParent.forEach((range, parentId) => {
+      if (parentId === GRID_ROOT_GROUP_ID) {
+        debouncedFetchRows(
+          adjustRowParams({
+            start: range.start,
+            end: range.end,
+            sortModel,
+            filterModel,
+            groupKeys: [],
+          }),
+        );
+        return;
+      }
+
+      privateApiRef.current.dataSource.fetchRows(parentId, {
+        ...adjustRowParams({
+          start: range.start,
+          end: range.end,
+          sortModel,
+          filterModel,
+        }),
+        showChildrenLoading: false,
+      });
+    });
+  });
+
+  const stopPolling = React.useCallback(() => {
+    if (pollingIntervalRef.current !== null) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+  }, []);
+
+  const startPolling = useEventCallback(() => {
+    stopPolling();
+
+    if (props.dataSourceRevalidateMs <= 0) {
+      return;
+    }
+
+    pollingIntervalRef.current = setInterval(() => {
+      const { firstRowToRender, lastRowToRender } = renderedRowsIntervalCache.current;
+      revalidateRows(firstRowToRender, lastRowToRender);
+    }, props.dataSourceRevalidateMs);
+  });
 
   const addRootSkeletonRows = React.useCallback(() => {
     const tree = { ...privateApiRef.current.state.rows.tree };
@@ -234,6 +321,8 @@ export const useGridDataSourceNestedLazyLoader = (
         ...rowNode,
         children: newChildren,
       } as GridGroupNode;
+
+      privateApiRef.current.caches.rows.dataRowIdToModelLookup = dataRowIdToModelLookup;
 
       privateApiRef.current.setState((state) => ({
         ...state,
@@ -427,6 +516,52 @@ export const useGridDataSourceNestedLazyLoader = (
     [privateApiRef],
   );
 
+  const updateLoadedRows = React.useCallback(
+    (parentId: GridRowId, startIndex: number, rows: GridGetRowsResponse['rows']) => {
+      if (rows.length === 0) {
+        return true;
+      }
+
+      const tree = privateApiRef.current.state.rows.tree;
+      const parentNode = tree[parentId] as GridGroupNode | undefined;
+      if (!parentNode || parentNode.type !== 'group') {
+        return false;
+      }
+
+      const firstTargetRow = parentNode.children[startIndex];
+      if (!firstTargetRow || tree[firstTargetRow]?.type === 'skeletonRow') {
+        return false;
+      }
+
+      const existingRowIds = parentNode.children.slice(startIndex, startIndex + rows.length);
+      const newRowIds = rows.map((row) => gridRowIdSelector(privateApiRef, row));
+      const sameRowIds =
+        existingRowIds.length === newRowIds.length &&
+        existingRowIds.every((rowId, index) => rowId === newRowIds[index]);
+
+      if (!sameRowIds) {
+        return false;
+      }
+
+      const dataRowIdToModelLookup = privateApiRef.current.state.rows.dataRowIdToModelLookup;
+      const changedRows = rows.filter((row, index) => {
+        const existingRow = dataRowIdToModelLookup[existingRowIds[index]];
+        return !isDeepEqual(row, existingRow);
+      });
+
+      if (changedRows.length > 0) {
+        const parentPath =
+          parentId === GRID_ROOT_GROUP_ID
+            ? []
+            : ((parentNode as GridDataSourceGroupNode).path ?? []);
+        privateApiRef.current.updateNestedRows(changedRows, parentPath);
+      }
+
+      return true;
+    },
+    [privateApiRef],
+  );
+
   const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRootRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
@@ -455,8 +590,10 @@ export const useGridDataSourceNestedLazyLoader = (
             ? Math.max(filteredSortedRowIds.indexOf(fetchParams.start), 0)
             : fetchParams.start;
 
-        removeDuplicateRows(response.rows);
-        replaceNestedRows(startingIndex, response);
+        if (!updateLoadedRows(GRID_ROOT_GROUP_ID, startingIndex, response.rows)) {
+          removeDuplicateRows(response.rows);
+          replaceNestedRows(startingIndex, response);
+        }
       }
 
       rowsStale.current = false;
@@ -469,8 +606,16 @@ export const useGridDataSourceNestedLazyLoader = (
         false,
       );
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
+      startPolling();
     },
-    [privateApiRef, addRootSkeletonRows, replaceNestedRows, removeDuplicateRows],
+    [
+      privateApiRef,
+      addRootSkeletonRows,
+      replaceNestedRows,
+      removeDuplicateRows,
+      updateLoadedRows,
+      startPolling,
+    ],
   );
 
   const handleNestedDataUpdate = React.useCallback<
@@ -482,13 +627,15 @@ export const useGridDataSourceNestedLazyLoader = (
       }
       const { parentId, fetchParams, response } = params;
 
-      removeDuplicateRows(response.rows);
-
       // Get the relative start index from fetchParams
       const startIndex = typeof fetchParams.start === 'number' ? fetchParams.start : 0;
-      replaceNestedRows(startIndex, response, parentId);
+      if (!updateLoadedRows(parentId, startIndex, response.rows)) {
+        removeDuplicateRows(response.rows);
+        replaceNestedRows(startIndex, response, parentId);
+      }
+      startPolling();
     },
-    [replaceNestedRows, removeDuplicateRows],
+    [replaceNestedRows, removeDuplicateRows, updateLoadedRows, startPolling],
   );
 
   const handleRowCountChange = React.useCallback(
@@ -526,6 +673,8 @@ export const useGridDataSourceNestedLazyLoader = (
       });
 
       if (!skeletonRowsSection) {
+        revalidateRows(firstRowIndex, lastRowIndex);
+        startPolling();
         return;
       }
 
@@ -585,7 +734,7 @@ export const useGridDataSourceNestedLazyLoader = (
         }
       });
     },
-    [privateApiRef, debouncedFetchRows, adjustRowParams],
+    [privateApiRef, debouncedFetchRows, adjustRowParams, revalidateRows, startPolling],
   );
 
   const handleRenderedRowsIntervalChange = React.useCallback<
@@ -635,13 +784,23 @@ export const useGridDataSourceNestedLazyLoader = (
   React.useEffect(() => {
     return () => {
       throttledHandleRenderedRowsIntervalChange.clear();
+      stopPolling();
     };
-  }, [throttledHandleRenderedRowsIntervalChange]);
+  }, [throttledHandleRenderedRowsIntervalChange, stopPolling]);
+
+  React.useEffect(() => {
+    if (!isStrategyActive || props.dataSourceRevalidateMs <= 0) {
+      stopPolling();
+    }
+  }, [isStrategyActive, props.dataSourceRevalidateMs, stopPolling]);
+
+  React.useEffect(() => stopPolling, [stopPolling]);
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
       rowsStale.current = true;
       throttledHandleRenderedRowsIntervalChange.clear();
+      stopPolling();
       const paginationModel = gridPaginationModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
 
@@ -655,13 +814,14 @@ export const useGridDataSourceNestedLazyLoader = (
       privateApiRef.current.setLoading(true);
       debouncedFetchRows(getRowsParams);
     },
-    [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange],
+    [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange, stopPolling],
   );
 
   const handleGridFilterModelChange = React.useCallback<GridEventListener<'filterModelChange'>>(
     (newFilterModel) => {
       rowsStale.current = true;
       throttledHandleRenderedRowsIntervalChange.clear();
+      stopPolling();
 
       const paginationModel = gridPaginationModelSelector(privateApiRef);
       const sortModel = gridSortModelSelector(privateApiRef);
@@ -675,7 +835,7 @@ export const useGridDataSourceNestedLazyLoader = (
       privateApiRef.current.setLoading(true);
       debouncedFetchRows(getRowsParams);
     },
-    [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange],
+    [privateApiRef, debouncedFetchRows, throttledHandleRenderedRowsIntervalChange, stopPolling],
   );
 
   const handleDragStart = React.useCallback<GridEventListener<'rowDragStart'>>((row) => {
