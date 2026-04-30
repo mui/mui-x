@@ -11,6 +11,6 @@
   "muiName": "MuiChartsRadiusAxis",
   "filename": "/packages/x-charts/src/ChartsRadiusAxis/ChartsRadiusAxis.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars</a></li>\n<li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines</a></li></ul>",
   "cssComponent": false
 }
