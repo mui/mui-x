@@ -127,6 +127,7 @@ export default chartsApiPages;
       'x-charts-premium/src/RadialLineChart/RadialLine.tsx',
       'x-charts-premium/src/RadialLineChart/RadialArea.tsx',
       'x-charts-premium/src/RadialLineChart/RadialLineHighlightElement.tsx',
+      'x-charts-premium/src/RadialBarChart/RadialBarElement.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
