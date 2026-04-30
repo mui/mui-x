@@ -223,6 +223,14 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
       style: {
         cursor: 'grab',
         touchAction: 'none',
+        // iOS Safari needs `-webkit-user-drag: element` to fire `dragstart` from a
+        // long-press; without it the browser interprets the gesture as text selection
+        // and shows the callout instead. Suppressing the callout and selection keeps
+        // the text-selection UI from racing the drag intent.
+        WebkitUserDrag: 'element',
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        userSelect: 'none',
       },
     },
     {
