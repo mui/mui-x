@@ -1,6 +1,7 @@
 import { spy } from 'sinon';
 import { act, fireEvent, reactMajor, waitFor } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
+import { isJSDOM } from 'test/utils/skipIf';
 import { TreeItemLabel } from '@mui/x-tree-view/TreeItem';
 import { TreeViewAnyStore } from '../../models';
 
@@ -9,7 +10,7 @@ describeTreeView<TreeViewAnyStore>(
   ({ render, renderFromJSX, treeViewComponentName, TreeViewComponent, TreeItemComponent }) => {
     const isRichTreeView = treeViewComponentName.startsWith('RichTreeView');
 
-    it('should throw an error when two items have the same ID', () => {
+    it.skipIf(!isJSDOM)('should throw an error when two items have the same ID', () => {
       if (treeViewComponentName === 'SimpleTreeView') {
         // eslint-disable-next-line vitest/no-conditional-expect
         expect(() =>
@@ -264,7 +265,8 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         },
       );
 
-      it.skipIf(!isRichTreeView)(
+      // skip in browser: assertion depends on StrictMode-doubled render counts
+      it.skipIf(!isRichTreeView || !isJSDOM)(
         'should not re-render every children when updating the state on an item (flat tree)',
         () => {
           const spyLabel = spy((props) => <TreeItemLabel {...props} />);
@@ -307,7 +309,8 @@ Two items were provided with the same id in the \`items\` prop: "1"`,
         },
       );
 
-      it.skipIf(!isRichTreeView)(
+      // skip in browser: assertion depends on StrictMode-doubled render counts
+      it.skipIf(!isRichTreeView || !isJSDOM)(
         'should not re-render every children when updating the state on an item (nested tree)',
         () => {
           const spyLabel = spy((props) => <TreeItemLabel {...props} />);

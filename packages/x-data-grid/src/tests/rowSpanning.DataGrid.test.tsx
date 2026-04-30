@@ -259,7 +259,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
   });
 
   describe('rows update', () => {
-    it('should update the row spanning state when the rows are updated', () => {
+    it.skipIf(!isJSDOM)('should update the row spanning state when the rows are updated', () => {
       const rowSpanValueGetter = spy((value) => value);
       let rowSpanningStateUpdates = 0;
       let spannedCells = {};

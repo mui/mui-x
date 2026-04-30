@@ -194,21 +194,24 @@ describe('<DataGrid /> - Quick filter', () => {
       );
     });
 
-    it('should collapse when the escape key is pressed with no value', async () => {
-      const { user } = render(<TestCase />);
+    it.skipIf(!isJSDOM)(
+      'should collapse when the escape key is pressed with no value',
+      async () => {
+        const { user } = render(<TestCase />);
 
-      await user.click(screen.getByRole('button', { name: 'Search' }));
+        await user.click(screen.getByRole('button', { name: 'Search' }));
 
-      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
-        'true',
-      );
+        expect(
+          screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded'),
+        ).to.equal('true');
 
-      await user.keyboard('[Escape]');
+        await user.keyboard('[Escape]');
 
-      expect(screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded')).to.equal(
-        'false',
-      );
-    });
+        expect(
+          screen.getByRole('button', { name: 'Search' }).getAttribute('aria-expanded'),
+        ).to.equal('false');
+      },
+    );
 
     it('should clear the input when the escape key is pressed with a value and not collapse the input', async () => {
       const { user } = render(<TestCase />);

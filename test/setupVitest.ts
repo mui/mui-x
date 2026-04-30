@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, afterEach } from 'vitest';
+import { beforeAll, beforeEach, afterEach, vi } from 'vitest';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/licenseRelease';
 import { config } from 'react-transition-group';
@@ -10,6 +10,22 @@ import setupVitest from '@mui/internal-test-utils/setupVitest';
 import { configure, isJsdom } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/internals';
+
+// Disable React StrictMode in browser tests. StrictMode under React 19
+// double-mounts the test tree and double-fires effects, which adds ~25%
+// to browser test wallclock. jsdom is much faster and keeps StrictMode
+// for catch coverage. Override via vi.mock so every createRenderer call
+// site picks it up without any per-file changes.
+vi.mock('@mui/internal-test-utils', async (importActual) => {
+  const actual: any = await importActual();
+  if (actual.isJsdom?.()) {
+    return actual;
+  }
+  return {
+    ...actual,
+    createRenderer: (options: any = {}) => actual.createRenderer({ strict: false, ...options }),
+  };
+});
 
 (globalThis as any).MUI_TEST_ENV = true;
 

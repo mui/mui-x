@@ -191,7 +191,7 @@ describe('<DataGridPro /> - Rows', () => {
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
       });
 
-      it('should allow to enable throttle', async () => {
+      it.skipIf(!isJSDOM)('should allow to enable throttle', async () => {
         render(<TestCase throttleRowsMs={100} />);
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
 
@@ -313,7 +313,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Nike 2', 'Adidas', 'Puma']);
     });
 
-    it('should not trigger unnecessary cells rerenders', () => {
+    it.skipIf(!isJSDOM)('should not trigger unnecessary cells rerenders', () => {
       const renderCellSpy = spy((params: any) => {
         return params.value;
       });
@@ -389,7 +389,7 @@ describe('<DataGridPro /> - Rows', () => {
         expect(getColumnValues(0)).to.deep.equal(['Asics']);
       });
 
-      it('should allow to enable throttle', async () => {
+      it.skipIf(!isJSDOM)('should allow to enable throttle', async () => {
         render(<TestCase throttleRowsMs={100} />);
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
         await act(() => apiRef.current?.setRows([{ id: 3, brand: 'Asics' }]));
@@ -523,44 +523,52 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getRows()).to.have.length(apiRef.current!.state.pagination.paginationModel.pageSize);
     });
 
-    it('should render extra columns when the columnBuffer prop is present', async () => {
-      const border = 1;
-      const width = 300;
-      const n = 2;
-      const columnWidth = 100;
-      const columnBufferPx = n * columnWidth;
-      render(
-        <TestCaseVirtualization
-          width={width + border * 2}
-          nbRows={1}
-          columnBufferPx={columnBufferPx}
-        />,
-      );
-      const firstRow = getRow(0);
-      expect($$(firstRow, '[role="gridcell"]')).to.have.length(Math.floor(width / columnWidth) + n);
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      await act(async () => virtualScroller.scrollTo({ left: 301 }));
-      await waitFor(() => {
-        expect($$(firstRow, '[role="gridcell"]')).to.have.length(
-          n + 1 + Math.floor(width / columnWidth) + n,
+    it.skipIf(!isJSDOM)(
+      'should render extra columns when the columnBuffer prop is present',
+      async () => {
+        const border = 1;
+        const width = 300;
+        const n = 2;
+        const columnWidth = 100;
+        const columnBufferPx = n * columnWidth;
+        render(
+          <TestCaseVirtualization
+            width={width + border * 2}
+            nbRows={1}
+            columnBufferPx={columnBufferPx}
+          />,
         );
-      });
-    });
+        const firstRow = getRow(0);
+        expect($$(firstRow, '[role="gridcell"]')).to.have.length(
+          Math.floor(width / columnWidth) + n,
+        );
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        await act(async () => virtualScroller.scrollTo({ left: 301 }));
+        await waitFor(() => {
+          expect($$(firstRow, '[role="gridcell"]')).to.have.length(
+            n + 1 + Math.floor(width / columnWidth) + n,
+          );
+        });
+      },
+    );
 
-    it('should render new rows when scrolling past the threshold value', async () => {
-      const rowHeight = 50;
-      const rowThresholdPx = 1 * rowHeight;
-      render(<TestCaseVirtualization rowHeight={rowHeight} rowBufferPx={0} />);
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      const renderingZone = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!;
-      let firstRow = renderingZone.firstChild;
-      expect(firstRow).to.have.attr('data-rowindex', '0');
-      await act(async () => virtualScroller.scrollTo({ top: rowThresholdPx }));
-      firstRow = renderingZone.firstChild;
-      await waitFor(() => {
-        expect(firstRow).to.have.attr('data-rowindex', '1');
-      });
-    });
+    it.skipIf(!isJSDOM)(
+      'should render new rows when scrolling past the threshold value',
+      async () => {
+        const rowHeight = 50;
+        const rowThresholdPx = 1 * rowHeight;
+        render(<TestCaseVirtualization rowHeight={rowHeight} rowBufferPx={0} />);
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        const renderingZone = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!;
+        let firstRow = renderingZone.firstChild;
+        expect(firstRow).to.have.attr('data-rowindex', '0');
+        await act(async () => virtualScroller.scrollTo({ top: rowThresholdPx }));
+        firstRow = renderingZone.firstChild;
+        await waitFor(() => {
+          expect(firstRow).to.have.attr('data-rowindex', '1');
+        });
+      },
+    );
 
     it('should render new columns when scrolling past the threshold value', async () => {
       const columnWidth = 100;

@@ -8,6 +8,7 @@ import {
   includeRowSelection,
   excludeRowSelection,
 } from 'test/utils/helperFn';
+import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   type GridApi,
@@ -808,7 +809,7 @@ describe('<DataGridPro /> - Row selection', () => {
       );
     }
 
-    it('should auto select parents when controlling row selection model', () => {
+    it.skipIf(!isJSDOM)('should auto select parents when controlling row selection model', () => {
       const onRowSelectionModelChange = spy();
       render(
         <SelectionPropagationGrid

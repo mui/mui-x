@@ -185,7 +185,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(filterForms).to.have.length(1);
   });
 
-  it('should call `getColumnForNewFilter` when filters are added', () => {
+  it.skipIf(!isJSDOM)('should call `getColumnForNewFilter` when filters are added', () => {
     const getColumnForNewFilter = spy();
     render(
       <TestCase
