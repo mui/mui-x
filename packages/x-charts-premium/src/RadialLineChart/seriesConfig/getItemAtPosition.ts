@@ -13,8 +13,7 @@ import {
   getPolarAxisIndex,
   isOrdinalScale,
 } from '@mui/x-charts/internals';
-import { evaluateCurveAtAngle, clampAngleRad } from '@mui/x-charts/internals';
-import { getAsNumber } from '@mui/x-charts/internals';
+import { evaluateCurveAtAngle, clampAngleRad, getAsNumber } from '@mui/x-charts/internals';
 import type { ScaleName, SeriesItemIdentifierWithType } from '@mui/x-charts/models';
 
 /**
