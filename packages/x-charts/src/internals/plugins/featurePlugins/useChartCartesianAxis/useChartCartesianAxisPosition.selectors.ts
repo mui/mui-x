@@ -7,12 +7,15 @@ import { isBandScale } from '../../../../internals/scaleGuards';
 import { getDataIndexForOrdinalScaleValue } from '../../../../internals/invertScale';
 import { type BarItemIdentifier, type SeriesId } from '../../../../models';
 
-export function getBandIndex(bandAxis: ComputedAxis, stackConfig: { groupNumber: number, groupIndex: number }, coordinate: number) {
+export function getBandIndex(
+  bandAxis: ComputedAxis,
+  stackConfig: { groupNumber: number; groupIndex: number },
+  coordinate: number,
+) {
   if (!isBandScale(bandAxis.scale)) {
     return -1;
   }
   const dataIndex = getDataIndexForOrdinalScaleValue(bandAxis.scale, coordinate);
-
 
   const { barWidth, offset } = getBandSize(
     bandAxis.scale.bandwidth(),
@@ -30,7 +33,7 @@ export function getBandIndex(bandAxis: ComputedAxis, stackConfig: { groupNumber:
   const bandStart = bandAxis.scale(bandValue);
 
   if (bandStart == null) {
-    return -1
+    return -1;
   }
 
   const bandBarStart = bandStart + barOffset;
@@ -78,7 +81,11 @@ export const selectorBarItemAtPosition = createSelector(
         const svgBandCoordinate = aSeries.layout === 'horizontal' ? svgPoint.y : svgPoint.x;
         const svgValueCoordinate = aSeries.layout === 'horizontal' ? svgPoint.x : svgPoint.y;
 
-        const dataIndex = getBandIndex(bandAxis, { groupNumber: stackingGroups.length, groupIndex: stackIndex }, svgBandCoordinate);
+        const dataIndex = getBandIndex(
+          bandAxis,
+          { groupNumber: stackingGroups.length, groupIndex: stackIndex },
+          svgBandCoordinate,
+        );
 
         if (dataIndex === -1) {
           continue;
@@ -96,10 +103,7 @@ export const selectorBarItemAtPosition = createSelector(
         const continuousMin = Math.min(start, end);
         const continuousMax = Math.max(start, end);
 
-        if (
-          svgValueCoordinate >= continuousMin &&
-          svgValueCoordinate <= continuousMax
-        ) {
+        if (svgValueCoordinate >= continuousMin && svgValueCoordinate <= continuousMax) {
           item = {
             seriesId,
             dataIndex,

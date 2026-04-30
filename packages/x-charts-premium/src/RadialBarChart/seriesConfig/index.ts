@@ -4,7 +4,6 @@ import {
   identifierCleanerSeriesIdDataIndex,
   createIsHighlighted,
   createIsFaded,
-
   polarSeriesTypes,
 } from '@mui/x-charts/internals';
 import legendGetter from './legend';

@@ -8,7 +8,7 @@ import {
   selectorChartRotationAxis,
   getBandIndex,
   clampAngleRad,
-  generateSvg2rotation
+  generateSvg2rotation,
 } from '@mui/x-charts/internals';
 import type { SeriesItemIdentifierWithType } from '@mui/x-charts/models';
 
@@ -28,7 +28,10 @@ export default function getItemAtPosition(
   const defaultRotationAxisId = rotationAxisIds[0];
   const defaultRadiusAxisId = radiusAxisIds[0];
 
-  const polarCoordinate = { rotation: generateSvg2rotation(center)(point.x, point.y), radius: Math.sqrt((point.x - center.cx) ** 2 + (point.y - center.cy) ** 2) };
+  const polarCoordinate = {
+    rotation: generateSvg2rotation(center)(point.x, point.y),
+    radius: Math.sqrt((point.x - center.cx) ** 2 + (point.y - center.cy) ** 2),
+  };
 
   for (let stackIndex = 0; stackIndex < seriesState.stackingGroups.length; stackIndex += 1) {
     const group = seriesState.stackingGroups[stackIndex];
@@ -46,11 +49,18 @@ export default function getItemAtPosition(
       const bandAxis = series.layout === 'horizontal' ? radiusAxis : rotationAxis;
       const continuousAxis = series.layout === 'horizontal' ? rotationAxis : radiusAxis;
 
-      const clampedAngle = rotationAxis.scale.range()[0] + clampAngleRad(polarCoordinate.rotation - rotationAxis.scale.range()[0]);
+      const clampedAngle =
+        rotationAxis.scale.range()[0] +
+        clampAngleRad(polarCoordinate.rotation - rotationAxis.scale.range()[0]);
       const bandCoordinate = series.layout === 'horizontal' ? polarCoordinate.radius : clampedAngle;
-      const valueCoordinate = series.layout === 'horizontal' ? clampedAngle : polarCoordinate.radius;
+      const valueCoordinate =
+        series.layout === 'horizontal' ? clampedAngle : polarCoordinate.radius;
 
-      const dataIndex = getBandIndex(bandAxis, { groupNumber: seriesState.stackingGroups.length, groupIndex: stackIndex }, bandCoordinate);
+      const dataIndex = getBandIndex(
+        bandAxis,
+        { groupNumber: seriesState.stackingGroups.length, groupIndex: stackIndex },
+        bandCoordinate,
+      );
 
       if (dataIndex === -1) {
         continue;
@@ -68,10 +78,7 @@ export default function getItemAtPosition(
       const continuousMin = Math.min(start, end);
       const continuousMax = Math.max(start, end);
 
-      if (
-        valueCoordinate >= continuousMin &&
-        valueCoordinate <= continuousMax
-      ) {
+      if (valueCoordinate >= continuousMin && valueCoordinate <= continuousMax) {
         return {
           type: 'radialBar',
           seriesId,
@@ -82,5 +89,4 @@ export default function getItemAtPosition(
   }
 
   return undefined;
-
 }
