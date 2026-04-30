@@ -28,6 +28,9 @@ interface ProcessedRadialBarData {
 interface ProcessedRadialBarSeriesData {
   seriesId: SeriesId;
   data: ProcessedRadialBarData[];
+  layout: 'vertical' | 'horizontal';
+  rotationOrigin: number;
+  radiusOrigin: number;
 }
 
 export function useRadialBarPlotData(): {
@@ -78,24 +81,33 @@ function processRadialBarDataForPlot(
         const seriesItem = series[seriesId] as ChartSeriesDefaultized<'radialBar'>;
         const rotationAxisId = seriesItem.rotationAxisId ?? defaultRotationAxisId;
         const radiusAxisId = seriesItem.radiusAxisId ?? defaultRadiusAxisId;
+        const layout = seriesItem.layout;
+        const verticalLayout = layout === 'vertical';
 
-        const rotationAxisConfig = rotationAxes[rotationAxisId] as ComputedAxis<'band'>;
+        const rotationAxisConfig = rotationAxes[rotationAxisId];
         const radiusAxisConfig = radiusAxes[radiusAxisId];
 
-        const reverse = radiusAxisConfig.reverse ?? false;
-        const radiusScale = radiusAxisConfig.scale;
-        const rotationScale = rotationAxisConfig.scale;
-        const bandwidth = rotationScale.bandwidth();
+        const baseAxisConfig = (
+          verticalLayout ? rotationAxisConfig : radiusAxisConfig
+        ) as ComputedAxis<'band'>;
+        const valueAxisConfig = verticalLayout ? radiusAxisConfig : rotationAxisConfig;
+
+        const reverse = valueAxisConfig.reverse ?? false;
+        const baseScale = baseAxisConfig.scale;
+        const valueScale = valueAxisConfig.scale;
+
+        const rotationOrigin = rotationAxisConfig.scale(0) ?? 0;
+        const radiusOrigin = radiusAxisConfig.scale(0) ?? 0;
 
         const { barWidth: bandSlice, offset } = getBandSize(
-          bandwidth,
+          baseScale.bandwidth(),
           stackingGroups.length,
-          rotationAxisConfig.barGapRatio,
+          baseAxisConfig.barGapRatio,
         );
 
         const seriesDataPoints: ProcessedRadialBarData[] = [];
 
-        for (let dataIndex = 0; dataIndex < rotationAxisConfig.data!.length; dataIndex += 1) {
+        for (let dataIndex = 0; dataIndex < baseAxisConfig.data!.length; dataIndex += 1) {
           const seriesValue = seriesItem.data[dataIndex];
 
           if (seriesValue == null) {
@@ -103,21 +115,21 @@ function processRadialBarDataForPlot(
           }
 
           const stackValues = seriesItem.visibleStackedData[dataIndex];
-          const stackRadii = stackValues.map((v) => radiusScale(v)!);
-          const [minRadius, maxRadius] = findMinMax(stackRadii);
+          const stackCoords = stackValues.map((v) => valueScale(v)!);
+          const [minValueCoord, maxValueCoord] = findMinMax(stackCoords);
 
           let barSize = 0;
           if (seriesValue !== 0 && !seriesItem.hidden) {
-            barSize = Math.max(seriesItem.minBarSize ?? 0, maxRadius - minRadius);
+            barSize = Math.max(seriesItem.minBarSize ?? 0, maxValueCoord - minValueCoord);
           }
 
           const isPositive = reverse ? seriesValue < 0 : seriesValue > 0;
-          const innerRadius = isPositive ? maxRadius - barSize : minRadius;
-          const outerRadius = isPositive ? maxRadius : minRadius + barSize;
+          const valueStart = isPositive ? maxValueCoord - barSize : minValueCoord;
+          const valueEnd = isPositive ? maxValueCoord : minValueCoord + barSize;
 
-          const baseAngle = rotationScale(rotationAxisConfig.data![dataIndex])!;
-          const startAngle = baseAngle + groupIndex * (bandSlice + offset);
-          const endAngle = startAngle + bandSlice;
+          const baseStart =
+            baseScale(baseAxisConfig.data![dataIndex])! + groupIndex * (bandSlice + offset);
+          const baseEnd = baseStart + bandSlice;
 
           seriesDataPoints.push({
             seriesId,
@@ -125,16 +137,19 @@ function processRadialBarDataForPlot(
             hidden: seriesItem.hidden,
             color: seriesItem.color,
             value: seriesValue,
-            startAngle,
-            endAngle,
-            innerRadius,
-            outerRadius,
+            startAngle: verticalLayout ? baseStart : valueStart,
+            endAngle: verticalLayout ? baseEnd : valueEnd,
+            innerRadius: verticalLayout ? valueStart : baseStart,
+            outerRadius: verticalLayout ? valueEnd : baseEnd,
           });
         }
 
         return {
           seriesId,
           data: seriesDataPoints,
+          layout,
+          rotationOrigin,
+          radiusOrigin,
         };
       });
     },
