@@ -59,6 +59,49 @@ const DayTimeGridAllDayEventContainer = styled('div', {
   display: 'contents',
 });
 
+interface DayGridCellEventProps {
+  occurrenceKey: string;
+  firstLane: number;
+  cellSpan: number;
+  isInvisible: boolean;
+}
+
+const DayGridCellEvent = React.memo(function DayGridCellEvent(props: DayGridCellEventProps) {
+  const { occurrenceKey, firstLane, cellSpan, isInvisible } = props;
+  const store = useEventCalendarStoreContext();
+  const occurrence = useStore(
+    store,
+    eventCalendarOccurrencePositionSelectors.occurrenceByKey,
+    occurrenceKey,
+  );
+
+  if (!occurrence) {
+    return null;
+  }
+
+  if (isInvisible) {
+    return (
+      <DayGridEvent
+        occurrence={occurrence}
+        variant="invisible"
+        firstLane={firstLane}
+        cellSpan={cellSpan}
+      />
+    );
+  }
+
+  return (
+    <EventDialogTrigger occurrence={occurrence}>
+      <DayGridEvent
+        occurrence={occurrence}
+        variant="filled"
+        firstLane={firstLane}
+        cellSpan={cellSpan}
+      />
+    </EventDialogTrigger>
+  );
+});
+
 export function DayGridCell(props: DayGridCellProps) {
   const { day } = props;
 
@@ -81,10 +124,6 @@ export function DayGridCell(props: DayGridCellProps) {
     store,
     eventCalendarOccurrencePositionSelectors.dayGridLayoutForDay,
     day.key,
-  );
-  const occurrencesIndex = useStore(
-    store,
-    eventCalendarOccurrencePositionSelectors.visibleOccurrences,
   );
   const placeholder = CalendarGrid.usePlaceholderInDay(day);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
@@ -118,34 +157,18 @@ export function DayGridCell(props: DayGridCellProps) {
       <DayTimeGridAllDayEventsCellEvents className={classes.dayTimeGridAllDayEventsCellEvents}>
         {isLoading && <EventSkeleton data-variant="day-grid" />}
         {orderedKeys.map((occurrenceKey) => {
-          const occurrence = occurrencesIndex.byKey.get(occurrenceKey);
-          const lane = dayLayout?.positionByKey.get(occurrenceKey);
-          const cellSpan = dayLayout?.cellSpanByKey.get(occurrenceKey) ?? 1;
-          if (!occurrence || !lane) {
+          const position = dayLayout?.positionByKey.get(occurrenceKey);
+          if (!position) {
             return null;
           }
-          const isInvisible = dayLayout?.invisibleKeys.has(occurrenceKey) ?? false;
-          if (isInvisible) {
-            return (
-              <DayGridEvent
-                key={occurrenceKey}
-                occurrence={occurrence}
-                variant="invisible"
-                firstLane={lane.firstLane}
-                cellSpan={cellSpan}
-              />
-            );
-          }
-
           return (
-            <EventDialogTrigger key={occurrenceKey} occurrence={occurrence}>
-              <DayGridEvent
-                occurrence={occurrence}
-                variant="filled"
-                firstLane={lane.firstLane}
-                cellSpan={cellSpan}
-              />
-            </EventDialogTrigger>
+            <DayGridCellEvent
+              key={occurrenceKey}
+              occurrenceKey={occurrenceKey}
+              firstLane={position.firstLane}
+              cellSpan={dayLayout?.cellSpanByKey.get(occurrenceKey) ?? 1}
+              isInvisible={dayLayout?.invisibleKeys.has(occurrenceKey) ?? false}
+            />
           );
         })}
         {placeholder != null && (

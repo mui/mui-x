@@ -156,6 +156,5 @@ export namespace TimelineGridEventRow {
   }
 
   export interface Props
-    extends BaseUIComponentProps<'div', State>,
-      useEventRowDropTarget.Parameters {}
+    extends BaseUIComponentProps<'div', State>, useEventRowDropTarget.Parameters {}
 }

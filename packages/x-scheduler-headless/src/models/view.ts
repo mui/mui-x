@@ -17,12 +17,9 @@ export type EventCalendarShouldAddPosition = (
 ) => boolean;
 
 /**
- * Configuration defined by each view.
- *
- * Position selectors (day-grid / time-grid) are derived from this config by the
- * `eventCalendarOccurrencePositionSelectors` module — there's no per-view factory
- * boilerplate. Day/Week/Month views just declare `dayGrid` / `timeGrid` blocks with
- * the predicates they care about.
+ * Configuration registered by a view to drive `eventCalendarOccurrencePositionSelectors`.
+ * Should be declared as a module-level constant — recreating it on every render thrashes
+ * the per-config selector cache.
  */
 export interface EventCalendarViewConfig {
   siblingVisibleDateGetter: (
@@ -52,7 +49,7 @@ export interface EventCalendarViewConfig {
   /**
    * Declares that the view exposes a day-grid layout (Month view, Day/Week all-day
    * strip). The framework builds and memoizes the position selector for you.
-   * Omit for views that don't need a day-grid (Agenda).
+   * Omit for views that don't need a day-grid.
    */
   dayGrid?: {
     /**
@@ -63,7 +60,7 @@ export interface EventCalendarViewConfig {
   };
   /**
    * Declares that the view exposes a time-grid layout (Day/Week views' timed area).
-   * Omit for views that don't need a time-grid (Month, Agenda).
+   * Omit for views that don't need a time-grid.
    */
   timeGrid?: {
     /**

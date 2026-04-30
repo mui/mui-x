@@ -32,10 +32,12 @@ const WEEK_VIEW_CONFIG: EventCalendarViewConfig = {
     ),
   visibleDaysSelector: weekVisibleDaysSelector,
   dayGrid: {
-    shouldAddPosition: (occurrence, adapter) => isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
+    shouldAddPosition: (occurrence, adapter) =>
+      isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
   },
   timeGrid: {
-    shouldAddPosition: (occurrence, adapter) => !isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
+    shouldAddPosition: (occurrence, adapter) =>
+      !isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
     maxSpan: Number.POSITIVE_INFINITY,
   },
 };

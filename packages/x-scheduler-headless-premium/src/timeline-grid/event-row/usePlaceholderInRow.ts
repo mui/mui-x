@@ -32,8 +32,7 @@ export interface TimelineRowPlaceholder {
 
 /**
  * Computes the placeholder occurrence (creation, drag, resize) to render in a timeline
- * resource row. The dragged occurrence's lane is read from the precomputed
- * `positionByKey` selector in O(1) — replaces the previous `occurrences.find(...)`.
+ * resource row.
  */
 export function usePlaceholderInRow(
   resourceId: SchedulerResourceId | null,
@@ -56,12 +55,12 @@ export function usePlaceholderInRow(
   const positionForKey: OccurrenceLanePosition | null = useStore(
     store,
     eventTimelineOccurrencePositionSelectors.positionByKey,
-    rawPlaceholder && 'occurrenceKey' in rawPlaceholder ? rawPlaceholder.occurrenceKey : '',
+    rawPlaceholder && 'occurrenceKey' in rawPlaceholder ? rawPlaceholder.occurrenceKey : null,
   );
   const maxLane = useStore(
     store,
     eventTimelineOccurrencePositionSelectors.maxLaneForResource,
-    resourceId ?? '',
+    resourceId,
   );
 
   return React.useMemo(() => {

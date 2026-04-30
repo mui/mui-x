@@ -1,4 +1,4 @@
-import { Store } from '@base-ui/utils/store';
+import { ReactStore } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
@@ -66,7 +66,7 @@ export class SchedulerStore<
   TResource extends object,
   State extends SchedulerState,
   Parameters extends SchedulerParameters<TEvent, TResource>,
-> extends Store<State> {
+> extends ReactStore<State> {
   public parameters: Parameters;
 
   private initialParameters: Parameters | null = null;

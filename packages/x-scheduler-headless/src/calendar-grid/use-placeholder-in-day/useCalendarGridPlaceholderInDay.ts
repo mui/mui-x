@@ -111,7 +111,11 @@ export function useCalendarGridPlaceholderInDay(
       };
     }
 
-    // Internal drag/resize: pick the smallest lane not used by other occurrences in this cell.
+    // Internal drag/resize: drop the placeholder if the source event was deleted mid-drag.
+    if (!originalEvent) {
+      return null;
+    }
+
     // The dragged occurrence's own lane is excluded so the placeholder renders on top of it.
     let lane = 1;
     if (dayLayout) {
@@ -129,7 +133,7 @@ export function useCalendarGridPlaceholderInDay(
     return {
       occurrence: {
         ...sharedProperties,
-        displayTimezone: { ...originalEvent!.displayTimezone },
+        displayTimezone: { ...originalEvent.displayTimezone },
       },
       firstLane: lane,
       cellSpan: adapter.differenceInDays(rawPlaceholder.end, day.value) + 1,

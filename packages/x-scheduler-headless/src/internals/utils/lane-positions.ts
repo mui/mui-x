@@ -1,3 +1,5 @@
+// TODO: Use the Base UI warning utility once it supports cleanup in tests.
+import { warnOnce } from '@mui/x-internals/warning';
 import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
@@ -16,6 +18,23 @@ import type { Adapter } from '../../use-adapter/useAdapter.types';
  * carry no lane.
  */
 export type ShouldAddPosition = (occurrence: SchedulerEventOccurrence, adapter: Adapter) => boolean;
+
+/**
+ * Snapshot of the previous compute call. Passed back in to enable per-row /
+ * per-container layout reuse and per-occurrence position interning, so unchanged
+ * slices of the calendar return the same JS references and downstream subscriptions
+ * short-circuit.
+ */
+export interface ComputeDayGridLanesPrevious {
+  result: SchedulerOccurrencePositions<DayGridContainerLayout>;
+  occurrencesByDay: SchedulerOccurrencesByDay;
+}
+
+export interface ComputeTimedLanesPrevious {
+  result: SchedulerOccurrencePositions<OccurrenceContainerLayout>;
+  occurrencesByKey: ReadonlyMap<string, SchedulerEventOccurrence>;
+  containerKeysByContainer: ReadonlyMap<string, readonly string[]>;
+}
 
 interface DayGridLanesDayWorkBucket {
   orderedKeys: string[];
@@ -39,14 +58,20 @@ interface DayGridLanesDayWorkBucket {
  *
  * `cellSpan` for a starting cell is `min(durationInDays, daysRemainingInRow)`; on
  * continuation cells it is always 1.
+ *
+ * When `previous` is provided, every row whose inputs (per-day keys + referenced
+ * occurrence objects) are unchanged returns the same `DayGridContainerLayout`
+ * references as last time. Within recomputed rows, individual `OccurrenceLanePosition`
+ * objects are reused when an occurrence's `(firstLane, lastLane)` is unchanged.
  */
 export function computeDayGridLanes(parameters: {
   adapter: Adapter;
   rows: readonly (readonly SchedulerProcessedDate[])[];
   occurrencesByDay: SchedulerOccurrencesByDay;
   shouldAddPosition?: ShouldAddPosition;
+  previous?: ComputeDayGridLanesPrevious | null;
 }): SchedulerOccurrencePositions<DayGridContainerLayout> {
-  const { adapter, rows, occurrencesByDay, shouldAddPosition } = parameters;
+  const { adapter, rows, occurrencesByDay, shouldAddPosition, previous } = parameters;
 
   const positionByKey = new Map<string, OccurrenceLanePosition>();
   const byContainer = new Map<string, DayGridContainerLayout>();
@@ -56,6 +81,15 @@ export function computeDayGridLanes(parameters: {
   const workBucket: { [dayKey: string]: DayGridLanesDayWorkBucket } = {};
 
   for (const row of rows) {
+    if (canReuseDayGridRow(row, occurrencesByDay, previous)) {
+      reuseDayGridRow(row, previous!, byContainer, positionByKey);
+      const previousMaxLane = previous!.result.maxLane;
+      if (previousMaxLane > globalMaxLane) {
+        globalMaxLane = previousMaxLane;
+      }
+      continue;
+    }
+
     const rowSize = row.length;
 
     for (let dayIndex = 0; dayIndex < rowSize; dayIndex += 1) {
@@ -78,6 +112,11 @@ export function computeDayGridLanes(parameters: {
       for (const key of keys) {
         const occurrence = occurrencesByDay.byKey.get(key);
         if (!occurrence) {
+          warnOnce([
+            `MUI X Scheduler: occurrence "${key}" referenced by day "${day.key}" is missing from \`occurrencesByDay.byKey\`.`,
+            'The occurrence index was built inconsistently; the occurrence is omitted from the layout. ' +
+              'Make sure every key listed in `keysByDay` resolves in `byKey`.',
+          ]);
           continue;
         }
         const eligibleForLane = shouldAddPosition ? shouldAddPosition(occurrence, adapter) : true;
@@ -113,10 +152,12 @@ export function computeDayGridLanes(parameters: {
           lane = candidate;
           const durationInDays =
             adapter.differenceInDays(occurrence.displayTimezone.end.value, day.value) + 1;
-          cellSpan = Math.min(durationInDays, rowSize - dayIndex);
+          // Clamp to >= 1 — an occurrence visible on this day always spans at least one
+          // cell, even if its data is malformed (e.g. end < start on an in-flight resize).
+          cellSpan = Math.max(1, Math.min(durationInDays, rowSize - dayIndex));
         }
 
-        const position: OccurrenceLanePosition = { firstLane: lane, lastLane: lane };
+        const position = internPosition(previous?.result.positionByKey, occurrence.key, lane, lane);
         dayWorkBucket.positionByKey.set(occurrence.key, position);
         dayWorkBucket.cellSpanByKey.set(occurrence.key, cellSpan);
         dayWorkBucket.usedLanes.add(lane);
@@ -136,11 +177,12 @@ export function computeDayGridLanes(parameters: {
         }
       }
 
-      // 3. Sort orderedKeys by lane so render order matches the previous algorithm.
+      // 3. Sort by lane so events stack visually top-to-bottom (lane 1 first).
+      const positionByKeyForSort = dayWorkBucket.positionByKey;
       dayWorkBucket.orderedKeys.sort(
         (a, b) =>
-          dayWorkBucket.positionByKey.get(a)!.firstLane -
-          dayWorkBucket.positionByKey.get(b)!.firstLane,
+          (positionByKeyForSort.get(a)?.firstLane ?? 0) -
+          (positionByKeyForSort.get(b)?.firstLane ?? 0),
       );
     }
 
@@ -171,6 +213,11 @@ export function computeDayGridLanes(parameters: {
  *
  * The `containers` argument is a list of (containerKey, occurrenceKeys) pairs — in the
  * Calendar this is per-day, in the Timeline it's per-resource.
+ *
+ * When `previous` is provided, every container whose `keys` array AND every referenced
+ * occurrence object are unchanged returns the same `OccurrenceContainerLayout` reference
+ * as last time. Within recomputed containers, individual `OccurrenceLanePosition`
+ * objects are reused when their `(firstLane, lastLane)` is unchanged.
  */
 export function computeTimedLanes(parameters: {
   adapter: Adapter;
@@ -178,18 +225,52 @@ export function computeTimedLanes(parameters: {
   containers: ReadonlyArray<readonly [string, readonly string[]]>;
   maxSpan?: number;
   shouldAddPosition?: ShouldAddPosition;
+  previous?: ComputeTimedLanesPrevious | null;
 }): SchedulerOccurrencePositions<OccurrenceContainerLayout> {
-  const { adapter, occurrencesByKey, containers, maxSpan = 1, shouldAddPosition } = parameters;
+  const {
+    adapter,
+    occurrencesByKey,
+    containers,
+    maxSpan = 1,
+    shouldAddPosition,
+    previous,
+  } = parameters;
+
+  let effectiveMaxSpan = maxSpan;
+  if (maxSpan < 1) {
+    warnOnce([
+      `MUI X Scheduler: \`maxSpan\` must be >= 1 (received ${maxSpan}).`,
+      "Falling back to maxSpan=1. Set the view config's `timeGrid.maxSpan` to a positive integer (or omit it to default to 1).",
+    ]);
+    effectiveMaxSpan = 1;
+  }
 
   const positionByKey = new Map<string, OccurrenceLanePosition>();
   const byContainer = new Map<string, OccurrenceContainerLayout>();
   let globalMaxLane = 1;
 
   for (const [containerKey, keys] of containers) {
+    if (canReuseTimedContainer(containerKey, keys, occurrencesByKey, previous)) {
+      const reusedLayout = previous!.result.byContainer.get(containerKey)!;
+      byContainer.set(containerKey, reusedLayout);
+      for (const [k, pos] of reusedLayout.positionByKey) {
+        positionByKey.set(k, pos);
+      }
+      if (reusedLayout.maxLane > globalMaxLane) {
+        globalMaxLane = reusedLayout.maxLane;
+      }
+      continue;
+    }
+
     const eligible: SchedulerEventOccurrence[] = [];
     for (const key of keys) {
       const occurrence = occurrencesByKey.get(key);
       if (!occurrence) {
+        warnOnce([
+          `MUI X Scheduler: occurrence "${key}" referenced by container "${containerKey}" is missing from \`occurrencesByKey\`.`,
+          'The occurrence index was built inconsistently; the occurrence is omitted from the layout. ' +
+            'Make sure every key listed for a container resolves in `occurrencesByKey`.',
+        ]);
         continue;
       }
       const eligibleForLane = shouldAddPosition ? shouldAddPosition(occurrence, adapter) : true;
@@ -201,7 +282,12 @@ export function computeTimedLanes(parameters: {
     const sorted = sortEventOccurrences(eligible);
     const conflicts = buildOccurrenceConflicts(sorted);
     const { firstLaneByKey, maxLane: containerMaxLane } = buildFirstLaneByKey(conflicts);
-    const lastLaneByKey = buildLastLaneByKey(conflicts, firstLaneByKey, containerMaxLane, maxSpan);
+    const lastLaneByKey = buildLastLaneByKey(
+      conflicts,
+      firstLaneByKey,
+      containerMaxLane,
+      effectiveMaxSpan,
+    );
 
     const layout: {
       orderedKeys: string[];
@@ -218,15 +304,32 @@ export function computeTimedLanes(parameters: {
     for (const occurrence of sorted) {
       const firstLane = firstLaneByKey[occurrence.key];
       const lastLane = lastLaneByKey[occurrence.key];
-      const position: OccurrenceLanePosition = { firstLane, lastLane };
+      // Invariant: lane assignment must satisfy `1 <= firstLane <= lastLane`.
+      // Crashes loudly in dev if a future change to `buildFirstLaneByKey` /
+      // `buildLastLaneByKey` violates that contract.
+      if (process.env.NODE_ENV !== 'production' && (firstLane < 1 || lastLane < firstLane)) {
+        throw new Error(
+          `MUI X Scheduler: invalid lane assignment for occurrence "${occurrence.key}" in container "${containerKey}": ` +
+            `firstLane=${firstLane}, lastLane=${lastLane}. Expected 1 <= firstLane <= lastLane. ` +
+            `This is a bug in \`buildFirstLaneByKey\`/\`buildLastLaneByKey\`.`,
+        );
+      }
+      const position = internPosition(
+        previous?.result.positionByKey,
+        occurrence.key,
+        firstLane,
+        lastLane,
+      );
       layout.positionByKey.set(occurrence.key, position);
       layout.usedLanes.add(firstLane);
       layout.orderedKeys.push(occurrence.key);
       positionByKey.set(occurrence.key, position);
     }
 
+    const layoutPositionByKey = layout.positionByKey;
     layout.orderedKeys.sort(
-      (a, b) => layout.positionByKey.get(a)!.firstLane - layout.positionByKey.get(b)!.firstLane,
+      (a, b) =>
+        (layoutPositionByKey.get(a)?.firstLane ?? 0) - (layoutPositionByKey.get(b)?.firstLane ?? 0),
     );
 
     byContainer.set(containerKey, layout);
@@ -236,6 +339,129 @@ export function computeTimedLanes(parameters: {
   }
 
   return { positionByKey, byContainer, maxLane: globalMaxLane };
+}
+
+/**
+ * Reuse an existing `OccurrenceLanePosition` object when its `(firstLane, lastLane)`
+ * is unchanged, so downstream `dayGridPositionByKey(key)` subscriptions short-circuit.
+ */
+function internPosition(
+  previousPositions: ReadonlyMap<string, OccurrenceLanePosition> | undefined,
+  key: string,
+  firstLane: number,
+  lastLane: number,
+): OccurrenceLanePosition {
+  const prev = previousPositions?.get(key);
+  if (prev !== undefined && prev.firstLane === firstLane && prev.lastLane === lastLane) {
+    return prev;
+  }
+  return { firstLane, lastLane };
+}
+
+function arraysShallowEqual<T>(a: readonly T[], b: readonly T[]): boolean {
+  if (a === b) {
+    return true;
+  }
+  if (a.length !== b.length) {
+    return false;
+  }
+  for (let i = 0; i < a.length; i += 1) {
+    if (a[i] !== b[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * A row's day-grid layouts can be reused when every day in the row has the same
+ * occurrence keys (in the same order) AND every referenced occurrence object is
+ * reference-equal to its previous version. Lane assignment within a row depends on
+ * cross-day continuation, so this check has to be all-or-nothing per row.
+ */
+function canReuseDayGridRow(
+  row: readonly SchedulerProcessedDate[],
+  current: SchedulerOccurrencesByDay,
+  previous: ComputeDayGridLanesPrevious | null | undefined,
+): boolean {
+  if (!previous) {
+    return false;
+  }
+  for (const day of row) {
+    if (!previous.result.byContainer.has(day.key)) {
+      return false;
+    }
+    const newKeys = current.keysByDay.get(day.key);
+    const oldKeys = previous.occurrencesByDay.keysByDay.get(day.key);
+    if (newKeys === undefined || oldKeys === undefined) {
+      return false;
+    }
+    if (!arraysShallowEqual(newKeys, oldKeys)) {
+      return false;
+    }
+    for (const key of newKeys) {
+      if (current.byKey.get(key) !== previous.occurrencesByDay.byKey.get(key)) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function reuseDayGridRow(
+  row: readonly SchedulerProcessedDate[],
+  previous: ComputeDayGridLanesPrevious,
+  byContainer: Map<string, DayGridContainerLayout>,
+  positionByKey: Map<string, OccurrenceLanePosition>,
+): void {
+  for (const day of row) {
+    const reusedLayout = previous.result.byContainer.get(day.key)!;
+    byContainer.set(day.key, reusedLayout);
+    // Re-register global positions for occurrences whose first visible cell falls
+    // in this row (mirrors the leftmost-cell rule used during fresh compute).
+    for (const key of reusedLayout.orderedKeys) {
+      if (reusedLayout.invisibleKeys.has(key)) {
+        continue;
+      }
+      if (!positionByKey.has(key)) {
+        const pos = reusedLayout.positionByKey.get(key);
+        if (pos !== undefined) {
+          positionByKey.set(key, pos);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * A timed container's layout can be reused when its `keys` array (in the same order)
+ * AND every referenced occurrence object are reference-equal to their previous version.
+ */
+function canReuseTimedContainer(
+  containerKey: string,
+  newKeys: readonly string[],
+  current: ReadonlyMap<string, SchedulerEventOccurrence>,
+  previous: ComputeTimedLanesPrevious | null | undefined,
+): boolean {
+  if (!previous) {
+    return false;
+  }
+  if (!previous.result.byContainer.has(containerKey)) {
+    return false;
+  }
+  const oldKeys = previous.containerKeysByContainer.get(containerKey);
+  if (oldKeys === undefined) {
+    return false;
+  }
+  if (!arraysShallowEqual(newKeys, oldKeys)) {
+    return false;
+  }
+  for (const key of newKeys) {
+    if (current.get(key) !== previous.occurrencesByKey.get(key)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 /**

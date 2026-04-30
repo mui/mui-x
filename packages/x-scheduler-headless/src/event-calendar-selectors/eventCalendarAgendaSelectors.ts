@@ -29,6 +29,11 @@ interface AgendaCombined {
  * days actually have content (when `showEmptyDaysInAgenda` is off), so reusing the
  * intermediate `occurrencesByDay` saves one full re-expansion versus computing them
  * in two separate selectors.
+ *
+ * When `showEmptyDaysInAgenda` is `false`, the result may contain fewer than
+ * `AGENDA_VIEW_DAYS_AMOUNT` days: the chunked search stops once the horizon
+ * (`AGENDA_MAX_HORIZON_DAYS`) is reached or once a chunk yields no new days
+ * (e.g. `showWeekends=false` with no weekday events ahead).
  */
 const agendaCombinedSelector = createSelectorMemoized(
   (state: State) => state.adapter,
@@ -51,30 +56,43 @@ const agendaCombinedSelector = createSelectorMemoized(
   ): AgendaCombined => {
     const amount = AGENDA_VIEW_DAYS_AMOUNT;
 
-    // 1. First chunk of days
-    let accumulatedDays: SchedulerProcessedDate[] = getDayList({
+    // Mutable working set: each chunk extension appends to these maps in place,
+    // avoiding a full re-expansion of events for the entire `accumulatedDays` window.
+    const accumulatedDays: SchedulerProcessedDate[] = [];
+    const byKey = new Map<string, SchedulerEventOccurrence>();
+    const keysByDay = new Map<string, string[]>();
+    const dayKeys: string[] = [];
+
+    // 1. First chunk of days.
+    appendChunk({
       adapter,
-      start: visibleDate,
-      end: adapter.addDays(visibleDate, amount - 1),
-      excludeWeekends: !showWeekends,
-    });
-    let accumulatedOccurrences = computeOccurrencesByDay({
-      adapter,
-      days: accumulatedDays,
+      chunk: getDayList({
+        adapter,
+        start: visibleDate,
+        end: adapter.addDays(visibleDate, amount - 1),
+        excludeWeekends: !showWeekends,
+      }),
       events,
       visibleResources,
       displayTimezone,
       plan,
+      accumulatedDays,
+      byKey,
+      keysByDay,
+      dayKeys,
     });
 
     if (showEmptyDaysInAgenda) {
-      return { days: accumulatedDays, occurrences: accumulatedOccurrences };
+      return {
+        days: accumulatedDays,
+        occurrences: { byKey, keysByDay, dayKeys },
+      };
     }
 
     // 2. Drop empty days, extending forward in chunks until we collect `amount` days
     //    that contain occurrences (or until the horizon limit is reached).
     let daysWithEvents = accumulatedDays
-      .filter((day) => (accumulatedOccurrences.keysByDay.get(day.key)?.length ?? 0) > 0)
+      .filter((day) => (keysByDay.get(day.key)?.length ?? 0) > 0)
       .slice(0, amount);
 
     while (daysWithEvents.length < amount) {
@@ -96,16 +114,25 @@ const agendaCombinedSelector = createSelectorMemoized(
         end: adapter.addDays(nextStart, amount),
         excludeWeekends: !showWeekends,
       });
-      accumulatedDays = accumulatedDays.concat(more);
-      accumulatedOccurrences = computeOccurrencesByDay({
+      // No new days were generated for this chunk — extending further would just spin.
+      if (more.length === 0) {
+        break;
+      }
+      // Expand events for the new chunk only and merge into the existing maps.
+      // Re-expanding `accumulatedDays + more` each iteration is O(events × span)
+      // and dominates cost when events are sparse.
+      appendChunk({
         adapter,
-        days: accumulatedDays,
+        chunk: more,
         events,
         visibleResources,
         displayTimezone,
         plan,
+        accumulatedDays,
+        byKey,
+        keysByDay,
+        dayKeys,
       });
-      const keysByDay = accumulatedOccurrences.keysByDay;
       daysWithEvents = accumulatedDays
         .filter((day) => (keysByDay.get(day.key)?.length ?? 0) > 0)
         .slice(0, amount);
@@ -113,7 +140,7 @@ const agendaCombinedSelector = createSelectorMemoized(
 
     // The agenda only renders the days that survived filtering, so trim the
     // occurrences index to those days too.
-    const trimmed = trimOccurrencesToDays(accumulatedOccurrences, daysWithEvents);
+    const trimmed = trimOccurrencesToDays({ byKey, keysByDay, dayKeys }, daysWithEvents);
     return { days: daysWithEvents, occurrences: trimmed };
   },
 );
@@ -133,33 +160,50 @@ export const eventCalendarAgendaSelectors = {
   visibleOccurrences: visibleOccurrencesSelector,
 };
 
-interface ComputeOccurrencesByDayParameters {
+interface AppendChunkParameters {
   adapter: State['adapter'];
-  days: SchedulerProcessedDate[];
+  chunk: SchedulerProcessedDate[];
   events: ReturnType<typeof schedulerEventSelectors.processedEventList>;
   visibleResources: ReturnType<typeof schedulerResourceSelectors.visibleMap>;
   displayTimezone: ReturnType<typeof schedulerOtherSelectors.displayTimezone>;
   plan: ReturnType<typeof schedulerOtherSelectors.plan>;
+  accumulatedDays: SchedulerProcessedDate[];
+  byKey: Map<string, SchedulerEventOccurrence>;
+  keysByDay: Map<string, string[]>;
+  dayKeys: string[];
 }
 
-function computeOccurrencesByDay(
-  parameters: ComputeOccurrencesByDayParameters,
-): SchedulerOccurrencesByDay {
-  const { adapter, days, events, visibleResources, displayTimezone, plan } = parameters;
-  const byKey = new Map<string, SchedulerEventOccurrence>();
-  const keysByDay = new Map<string, string[]>();
-  const dayKeys: string[] = [];
-  for (const day of days) {
+/**
+ * Expands occurrences for `chunk` and merges them into the running maps in place.
+ * Each chunk's events are expanded once over its own `[start, end]` window — never
+ * across chunks already processed.
+ */
+function appendChunk(parameters: AppendChunkParameters): void {
+  const {
+    adapter,
+    chunk,
+    events,
+    visibleResources,
+    displayTimezone,
+    plan,
+    accumulatedDays,
+    byKey,
+    keysByDay,
+    dayKeys,
+  } = parameters;
+
+  for (const day of chunk) {
     keysByDay.set(day.key, []);
     dayKeys.push(day.key);
+    accumulatedDays.push(day);
   }
 
-  if (days.length === 0) {
-    return { byKey, keysByDay, dayKeys };
+  if (chunk.length === 0) {
+    return;
   }
 
-  const start = adapter.startOfDay(days[0].value);
-  const end = adapter.endOfDay(days[days.length - 1].value);
+  const start = adapter.startOfDay(chunk[0].value);
+  const end = adapter.endOfDay(chunk[chunk.length - 1].value);
   const occurrences = getOccurrencesFromEvents({
     adapter,
     start,
@@ -172,12 +216,10 @@ function computeOccurrencesByDay(
 
   for (const occurrence of occurrences) {
     byKey.set(occurrence.key, occurrence);
-    for (const dayKey of getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter)) {
+    for (const dayKey of getDaysTheOccurrenceIsVisibleOn(occurrence, chunk, adapter)) {
       keysByDay.get(dayKey)!.push(occurrence.key);
     }
   }
-
-  return { byKey, keysByDay, dayKeys };
 }
 
 function trimOccurrencesToDays(

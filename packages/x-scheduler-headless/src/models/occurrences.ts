@@ -1,8 +1,7 @@
 import type { SchedulerEventOccurrence } from './event';
 
 /**
- * O(1)-indexed snapshot of the occurrences that should render in a calendar view,
- * along with a per-day key list for fast cell-level reads.
+ * Indexed snapshot of occurrences for the visible range, with a per-day key list.
  */
 export interface SchedulerOccurrencesByDay {
   /**
@@ -55,8 +54,7 @@ export interface OccurrenceContainerLayout {
    */
   positionByKey: ReadonlyMap<string, OccurrenceLanePosition>;
   /**
-   * Lanes already used in this container. Precomputed so placeholder hooks
-   * don't have to rebuild this Set at read time.
+   * Lanes occupied in this container. Precomputed for O(1) lane-availability lookups.
    */
   usedLanes: ReadonlySet<number>;
   /**

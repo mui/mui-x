@@ -6,8 +6,6 @@ import type { TimelineRowPlaceholder } from './usePlaceholderInRow';
 export interface TimelineGridEventRowContext {
   /**
    * The id of the resource this row corresponds to.
-   * Exposed via context so children can read per-row data via selectors instead of receiving
-   * it as a render-prop argument.
    */
   resourceId: SchedulerResourceId;
   /**
@@ -18,7 +16,6 @@ export interface TimelineGridEventRowContext {
   hasFocus: boolean;
   /**
    * The placeholder to render in this row, or `null` when none is active.
-   * Exposed here so consumers don't need to thread it through props.
    */
   placeholder: TimelineRowPlaceholder | null;
   /**

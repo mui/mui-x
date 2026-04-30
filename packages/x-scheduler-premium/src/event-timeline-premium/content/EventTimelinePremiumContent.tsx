@@ -4,14 +4,16 @@ import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
-import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
+import {
+  TimelineGrid,
+  useTimelineGridEventRowContext,
+} from '@mui/x-scheduler-headless-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelineOccurrencePositionSelectors,
   eventTimelinePremiumPresetSelectors,
   timelineOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
-import { useTimelineGridEventRowContext } from '@mui/x-scheduler-headless-premium/timeline-grid/event-row/TimelineGridEventRowContext';
 import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import {
@@ -214,6 +216,39 @@ const EventTimelinePremiumEventsScrollbar = styled('div', {
   scrollbarWidth: 'thin',
 });
 
+interface EventRowEventProps {
+  occurrenceKey: string;
+  firstLane: number;
+  lastLane: number;
+  schedulerId: string | undefined;
+}
+
+const EventRowEvent = React.memo(function EventRowEvent(props: EventRowEventProps) {
+  const { occurrenceKey, firstLane, lastLane, schedulerId } = props;
+  const store = useEventTimelinePremiumStoreContext();
+  const occurrence = useStore(
+    store,
+    eventTimelineOccurrencePositionSelectors.occurrenceByKey,
+    occurrenceKey,
+  );
+
+  if (!occurrence) {
+    return null;
+  }
+
+  return (
+    <EventDialogTrigger occurrence={occurrence}>
+      <EventTimelinePremiumEvent
+        occurrence={occurrence}
+        firstLane={firstLane}
+        lastLane={lastLane}
+        ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${occurrence.resource}`}
+        variant="regular"
+      />
+    </EventDialogTrigger>
+  );
+});
+
 function EventRowContent({ resourceId }: { resourceId: SchedulerResourceId }) {
   const store = useEventTimelinePremiumStoreContext();
   const { schedulerId } = useEventTimelinePremiumStyledContext();
@@ -225,10 +260,6 @@ function EventRowContent({ resourceId }: { resourceId: SchedulerResourceId }) {
     store,
     eventTimelineOccurrencePositionSelectors.occurrenceKeysForResource,
     resourceId,
-  );
-  const visibleOccurrences = useStore(
-    store,
-    eventTimelineOccurrencePositionSelectors.visibleOccurrences,
   );
   const layout = useStore(
     store,
@@ -251,21 +282,18 @@ function EventRowContent({ resourceId }: { resourceId: SchedulerResourceId }) {
   return (
     <React.Fragment>
       {orderedKeys.map((occurrenceKey) => {
-        const occurrence = visibleOccurrences.byKey.get(occurrenceKey);
         const lane = layout?.positionByKey.get(occurrenceKey);
-        if (!occurrence || !lane) {
+        if (!lane) {
           return null;
         }
         return (
-          <EventDialogTrigger key={occurrenceKey} occurrence={occurrence}>
-            <EventTimelinePremiumEvent
-              occurrence={occurrence}
-              firstLane={lane.firstLane}
-              lastLane={lane.lastLane}
-              ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${occurrence.resource}`}
-              variant="regular"
-            />
-          </EventDialogTrigger>
+          <EventRowEvent
+            key={occurrenceKey}
+            occurrenceKey={occurrenceKey}
+            firstLane={lane.firstLane}
+            lastLane={lane.lastLane}
+            schedulerId={schedulerId}
+          />
         );
       })}
       {placeholder != null && (

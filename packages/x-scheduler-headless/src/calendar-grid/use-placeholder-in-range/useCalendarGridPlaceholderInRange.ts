@@ -32,8 +32,7 @@ export interface CalendarGridRangePlaceholder {
 
 /**
  * Computes the placeholder occurrence (creation, drag, resize) to render in a time-grid
- * day column. Reads the occurrence's lane via O(1) selector lookup so the per-render
- * `find` over the column's occurrence list is no longer needed.
+ * day column.
  */
 export function useCalendarGridPlaceholderInRange(
   parameters: useCalendarGridPlaceholderInRange.Parameters,
@@ -79,13 +78,17 @@ export function useCalendarGridPlaceholderInRange(
       },
     };
 
-    const fallbackLastLane = Math.max(dayLayout?.maxLane ?? 1, 1);
+    // Spans the full available width when no per-occurrence position is known. This is
+    // the right preview for: creation (no occurrence yet), external-drag (occurrence
+    // belongs to another calendar), and internal drag/resize when the column being
+    // previewed is not the column the occurrence currently lives in.
+    const fullWidthLastLane = Math.max(dayLayout?.maxLane ?? 1, 1);
 
     if (rawPlaceholder.type === 'creation') {
       return {
         occurrence: { ...sharedOccurrence, title: '' },
         firstLane: 1,
-        lastLane: fallbackLastLane,
+        lastLane: fullWidthLastLane,
       };
     }
 
@@ -93,7 +96,7 @@ export function useCalendarGridPlaceholderInRange(
       return {
         occurrence: { ...sharedOccurrence, title: rawPlaceholder.eventData.title ?? '' },
         firstLane: 1,
-        lastLane: fallbackLastLane,
+        lastLane: fullWidthLastLane,
       };
     }
 
@@ -101,7 +104,7 @@ export function useCalendarGridPlaceholderInRange(
     return {
       occurrence: sharedOccurrence,
       firstLane: position?.firstLane ?? 1,
-      lastLane: position?.lastLane ?? fallbackLastLane,
+      lastLane: position?.lastLane ?? fullWidthLastLane,
     };
   }, [rawPlaceholder, adapter, originalEvent, originalEventId, dayLayout]);
 }

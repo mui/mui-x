@@ -135,11 +135,14 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
     className,
     variant,
     firstLane,
-    lastLane: _lastLane,
+    // `lastLane` is reserved for multi-lane spans (`maxSpan > 1`); the current premium
+    // timeline always uses single-lane events, so we don't render it yet.
+    lastLane,
     id: idProp,
     style,
     ...other
   } = props;
+  void lastLane;
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();

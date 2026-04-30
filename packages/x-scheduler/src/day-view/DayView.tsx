@@ -21,10 +21,12 @@ const DAY_VIEW_CONFIG: EventCalendarViewConfig = {
     state.adapter.addDays(schedulerOtherSelectors.visibleDate(state), delta),
   visibleDaysSelector: dayVisibleDaysSelector,
   dayGrid: {
-    shouldAddPosition: (occurrence, adapter) => isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
+    shouldAddPosition: (occurrence, adapter) =>
+      isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
   },
   timeGrid: {
-    shouldAddPosition: (occurrence, adapter) => !isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
+    shouldAddPosition: (occurrence, adapter) =>
+      !isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
     maxSpan: Number.POSITIVE_INFINITY,
   },
 };

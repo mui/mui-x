@@ -1,8 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import type {
-  EventCalendarShouldAddPosition,
-  EventCalendarViewConfig,
   SchedulerEventOccurrence,
   SchedulerOccurrencesByDay,
   SchedulerOccurrencePositions,
@@ -10,6 +8,7 @@ import type {
   DayGridContainerLayout,
   OccurrenceLanePosition,
   SchedulerProcessedDate,
+  SchedulerProcessedEvent,
 } from '../models';
 import {
   schedulerEventSelectors,
@@ -20,24 +19,15 @@ import {
   getDaysTheOccurrenceIsVisibleOn,
   getOccurrencesFromEvents,
 } from '../internals/utils/event-utils';
-import { computeDayGridLanes, computeTimedLanes } from '../internals/utils/lane-positions';
+import {
+  computeDayGridLanes,
+  computeTimedLanes,
+  ComputeDayGridLanesPrevious,
+  ComputeTimedLanesPrevious,
+} from '../internals/utils/lane-positions';
 import type { EventCalendarState as State } from '../use-event-calendar';
 
-/**
- * Per-config cache for the lazily-built memoized selectors.
- *
- * Each view config object owns one set of selectors — built on first read and reused
- * for every subsequent read until the config is unmounted (at which point the WeakMap
- * entry becomes GC-eligible).
- */
-interface ConfigCache {
-  visibleOccurrences: (state: State) => SchedulerOccurrencesByDay;
-  dayGridPositions: ((state: State) => SchedulerOccurrencePositions<DayGridContainerLayout>) | null;
-  timeGridPositions:
-    | ((state: State) => SchedulerOccurrencePositions<OccurrenceContainerLayout>)
-    | null;
-}
-const configCache = new WeakMap<EventCalendarViewConfig, ConfigCache>();
+const EMPTY_DAYS = EMPTY_ARRAY as SchedulerProcessedDate[];
 
 const EMPTY_OCCURRENCES: SchedulerOccurrencesByDay = {
   byKey: new Map(),
@@ -57,156 +47,207 @@ const EMPTY_TIME_GRID_POSITIONS: SchedulerOccurrencePositions<OccurrenceContaine
   maxLane: 1,
 };
 
-function buildVisibleOccurrencesSelector(
-  visibleDaysSelector: (state: State) => SchedulerProcessedDate[],
-): (state: State) => SchedulerOccurrencesByDay {
-  return createSelectorMemoized(
-    (s: State) => s.adapter,
-    visibleDaysSelector,
-    schedulerEventSelectors.processedEventList,
-    schedulerResourceSelectors.visibleMap,
-    schedulerOtherSelectors.displayTimezone,
-    schedulerOtherSelectors.plan,
-    (adapter, days, events, visibleResources, displayTimezone, plan) => {
-      const byKey = new Map<string, SchedulerEventOccurrence>();
-      const keysByDay = new Map<string, string[]>();
-      const dayKeys: string[] = [];
-      for (const day of days) {
-        keysByDay.set(day.key, []);
-        dayKeys.push(day.key);
+function arraysShallowEqual<T>(a: readonly T[], b: readonly T[]): boolean {
+  if (a === b) {
+    return true;
+  }
+  if (a.length !== b.length) {
+    return false;
+  }
+  for (let i = 0; i < a.length; i += 1) {
+    if (a[i] !== b[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// `state.viewConfig` is null during the very first render of a view (the view registers
+// its config in `useOnMount`, which runs after render). The wrapper selectors below
+// guard for that window and return frozen empty values.
+const visibleDaysFromConfig = (state: State): SchedulerProcessedDate[] =>
+  state.viewConfig?.visibleDaysSelector(state) ?? EMPTY_DAYS;
+
+// Fallback row grouping for views that don't supply a `visibleRowsSelector` — wraps the
+// visible days as a single row (the right default for Day/Week, whose day-grid is the
+// all-day strip). Memoized so the wrapping array reference is stable.
+const fallbackRowsSelector = createSelectorMemoized(
+  visibleDaysFromConfig,
+  (days): SchedulerProcessedDate[][] => [days],
+);
+
+const rowsSelector = (state: State): SchedulerProcessedDate[][] => {
+  const customRowsSelector = state.viewConfig?.visibleRowsSelector;
+  if (customRowsSelector) {
+    return customRowsSelector(state);
+  }
+  return fallbackRowsSelector(state);
+};
+
+// Module-level previous result for visible-occurrences memoization. Reused per-day so
+// unchanged days keep the same `keysByDay.get(dayKey)` array reference, enabling
+// downstream `computeDayGridLanes` / `computeTimedLanes` to skip recomputing those days.
+let previousVisibleOccurrences: SchedulerOccurrencesByDay | null = null;
+// Maps each occurrence key to the SchedulerProcessedEvent that produced it. Threaded
+// back into `getOccurrencesFromEvents` so unchanged-event occurrences keep their JS
+// reference across recomputes — without this, every recompute would spread fresh
+// `{ ...event, key }` objects and downstream layout reuse would never trigger.
+let previousEventByKey: Map<string, SchedulerProcessedEvent> | null = null;
+
+const defaultVisibleOccurrencesSelector = createSelectorMemoized(
+  (s: State) => s.adapter,
+  visibleDaysFromConfig,
+  schedulerEventSelectors.processedEventList,
+  schedulerResourceSelectors.visibleMap,
+  schedulerOtherSelectors.displayTimezone,
+  schedulerOtherSelectors.plan,
+  (adapter, days, events, visibleResources, displayTimezone, plan) => {
+    const byKey = new Map<string, SchedulerEventOccurrence>();
+    const keysByDay = new Map<string, string[]>();
+    const dayKeys: string[] = [];
+    for (const day of days) {
+      keysByDay.set(day.key, []);
+      dayKeys.push(day.key);
+    }
+
+    if (days.length === 0) {
+      const result = { byKey, keysByDay, dayKeys };
+      previousVisibleOccurrences = result;
+      previousEventByKey = new Map();
+      return result;
+    }
+
+    const start = adapter.startOfDay(days[0].value);
+    const end = adapter.endOfDay(days[days.length - 1].value);
+    const newEventByKey = new Map<string, SchedulerProcessedEvent>();
+    const occurrences = getOccurrencesFromEvents({
+      adapter,
+      start,
+      end,
+      events,
+      visibleResources,
+      displayTimezone,
+      plan,
+      previous:
+        previousVisibleOccurrences !== null && previousEventByKey !== null
+          ? { byKey: previousVisibleOccurrences.byKey, eventByKey: previousEventByKey }
+          : undefined,
+      outEventByKey: newEventByKey,
+    });
+
+    for (const occurrence of occurrences) {
+      byKey.set(occurrence.key, occurrence);
+      for (const dayKey of getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter)) {
+        keysByDay.get(dayKey)!.push(occurrence.key);
       }
+    }
 
-      if (days.length === 0) {
-        return { byKey, keysByDay, dayKeys };
-      }
-
-      const start = adapter.startOfDay(days[0].value);
-      const end = adapter.endOfDay(days[days.length - 1].value);
-      const occurrences = getOccurrencesFromEvents({
-        adapter,
-        start,
-        end,
-        events,
-        visibleResources,
-        displayTimezone,
-        plan,
-      });
-
-      for (const occurrence of occurrences) {
-        byKey.set(occurrence.key, occurrence);
-        for (const dayKey of getDaysTheOccurrenceIsVisibleOn(occurrence, days, adapter)) {
-          keysByDay.get(dayKey)!.push(occurrence.key);
+    // Layer 3 reuse: when a day's keys array content matches the previous run's,
+    // swap in the previous reference so downstream `arraysShallowEqual` checks
+    // short-circuit on identity.
+    if (previousVisibleOccurrences !== null) {
+      for (const dayKey of dayKeys) {
+        const newKeys = keysByDay.get(dayKey)!;
+        const oldKeys = previousVisibleOccurrences.keysByDay.get(dayKey);
+        if (oldKeys !== undefined && arraysShallowEqual(newKeys, oldKeys)) {
+          keysByDay.set(dayKey, oldKeys as string[]);
         }
       }
+    }
 
-      return { byKey, keysByDay, dayKeys };
-    },
-  );
-}
-
-function buildDayGridPositionsSelector(parameters: {
-  visibleDaysSelector: (state: State) => SchedulerProcessedDate[];
-  visibleRowsSelector?: (state: State) => SchedulerProcessedDate[][];
-  visibleOccurrencesSelector: (state: State) => SchedulerOccurrencesByDay;
-  shouldAddPosition?: EventCalendarShouldAddPosition;
-}): (state: State) => SchedulerOccurrencePositions<DayGridContainerLayout> {
-  const { visibleDaysSelector, visibleRowsSelector, visibleOccurrencesSelector, shouldAddPosition } =
-    parameters;
-
-  const rowsSelector =
-    visibleRowsSelector ??
-    createSelectorMemoized(visibleDaysSelector, (days) => [days]);
-
-  return createSelectorMemoized(
-    (s: State) => s.adapter,
-    rowsSelector,
-    visibleOccurrencesSelector,
-    (adapter, rows, occurrencesByDay) =>
-      computeDayGridLanes({ adapter, rows, occurrencesByDay, shouldAddPosition }),
-  );
-}
-
-function buildTimeGridPositionsSelector(parameters: {
-  visibleOccurrencesSelector: (state: State) => SchedulerOccurrencesByDay;
-  shouldAddPosition?: EventCalendarShouldAddPosition;
-  maxSpan?: number;
-}): (state: State) => SchedulerOccurrencePositions<OccurrenceContainerLayout> {
-  const { visibleOccurrencesSelector, shouldAddPosition, maxSpan = 1 } = parameters;
-  return createSelectorMemoized(
-    (s: State) => s.adapter,
-    visibleOccurrencesSelector,
-    (adapter, occurrencesByDay) => {
-      const containers: [string, readonly string[]][] = [];
-      for (const dayKey of occurrencesByDay.dayKeys) {
-        containers.push([dayKey, occurrencesByDay.keysByDay.get(dayKey) ?? []]);
-      }
-      return computeTimedLanes({
-        adapter,
-        occurrencesByKey: occurrencesByDay.byKey,
-        containers,
-        maxSpan,
-        shouldAddPosition,
-      });
-    },
-  );
-}
-
-function getConfigCache(config: EventCalendarViewConfig): ConfigCache {
-  const cached = configCache.get(config);
-  if (cached) {
-    return cached;
-  }
-  const visibleOccurrences =
-    config.visibleOccurrencesSelector ??
-    buildVisibleOccurrencesSelector(config.visibleDaysSelector);
-  const dayGridPositions = config.dayGrid
-    ? buildDayGridPositionsSelector({
-        visibleDaysSelector: config.visibleDaysSelector,
-        visibleRowsSelector: config.visibleRowsSelector,
-        visibleOccurrencesSelector: visibleOccurrences,
-        shouldAddPosition: config.dayGrid.shouldAddPosition,
-      })
-    : null;
-  const timeGridPositions = config.timeGrid
-    ? buildTimeGridPositionsSelector({
-        visibleOccurrencesSelector: visibleOccurrences,
-        shouldAddPosition: config.timeGrid.shouldAddPosition,
-        maxSpan: config.timeGrid.maxSpan,
-      })
-    : null;
-  const entry: ConfigCache = { visibleOccurrences, dayGridPositions, timeGridPositions };
-  configCache.set(config, entry);
-  return entry;
-}
+    const result = { byKey, keysByDay, dayKeys };
+    previousVisibleOccurrences = result;
+    previousEventByKey = newEventByKey;
+    return result;
+  },
+);
 
 const visibleOccurrencesSelector = (state: State): SchedulerOccurrencesByDay => {
   const config = state.viewConfig;
   if (!config) {
     return EMPTY_OCCURRENCES;
   }
-  return getConfigCache(config).visibleOccurrences(state);
+  if (config.visibleOccurrencesSelector) {
+    return config.visibleOccurrencesSelector(state);
+  }
+  return defaultVisibleOccurrencesSelector(state);
 };
+
+// Module-level previous result + input. Threaded into `computeDayGridLanes` so unchanged
+// rows return the same `DayGridContainerLayout` references (and unchanged occurrences
+// keep the same `OccurrenceLanePosition` objects). Stale entries from a previous view
+// are detected by `canReuseDayGridRow` and discarded — keeping a stale `previous` is
+// only a performance concern (one wasted comparison), never a correctness one.
+let previousDayGrid: ComputeDayGridLanesPrevious | null = null;
+
+const defaultDayGridPositionsSelector = createSelectorMemoized(
+  (s: State) => s.adapter,
+  rowsSelector,
+  visibleOccurrencesSelector,
+  (s: State) => s.viewConfig?.dayGrid?.shouldAddPosition,
+  (adapter, rows, occurrencesByDay, shouldAddPosition) => {
+    const result = computeDayGridLanes({
+      adapter,
+      rows,
+      occurrencesByDay,
+      shouldAddPosition,
+      previous: previousDayGrid,
+    });
+    previousDayGrid = { result, occurrencesByDay };
+    return result;
+  },
+);
 
 const dayGridPositionsSelector = (
   state: State,
 ): SchedulerOccurrencePositions<DayGridContainerLayout> => {
-  const config = state.viewConfig;
-  if (!config) {
+  if (!state.viewConfig?.dayGrid) {
     return EMPTY_DAY_GRID_POSITIONS;
   }
-  const built = getConfigCache(config).dayGridPositions;
-  return built ? built(state) : EMPTY_DAY_GRID_POSITIONS;
+  return defaultDayGridPositionsSelector(state);
 };
+
+// Module-level previous result + container-key map for per-container reuse in
+// `computeTimedLanes`.
+let previousTimeGrid: ComputeTimedLanesPrevious | null = null;
+
+const defaultTimeGridPositionsSelector = createSelectorMemoized(
+  (s: State) => s.adapter,
+  visibleOccurrencesSelector,
+  (s: State) => s.viewConfig?.timeGrid?.shouldAddPosition,
+  (s: State) => s.viewConfig?.timeGrid?.maxSpan ?? 1,
+  (adapter, occurrencesByDay, shouldAddPosition, maxSpan) => {
+    const containers: [string, readonly string[]][] = [];
+    const containerKeysByContainer = new Map<string, readonly string[]>();
+    for (const dayKey of occurrencesByDay.dayKeys) {
+      const keys = occurrencesByDay.keysByDay.get(dayKey) ?? EMPTY_ARRAY;
+      containers.push([dayKey, keys]);
+      containerKeysByContainer.set(dayKey, keys);
+    }
+    const result = computeTimedLanes({
+      adapter,
+      occurrencesByKey: occurrencesByDay.byKey,
+      containers,
+      maxSpan,
+      shouldAddPosition,
+      previous: previousTimeGrid,
+    });
+    previousTimeGrid = {
+      result,
+      occurrencesByKey: occurrencesByDay.byKey,
+      containerKeysByContainer,
+    };
+    return result;
+  },
+);
 
 const timeGridPositionsSelector = (
   state: State,
 ): SchedulerOccurrencePositions<OccurrenceContainerLayout> => {
-  const config = state.viewConfig;
-  if (!config) {
+  if (!state.viewConfig?.timeGrid) {
     return EMPTY_TIME_GRID_POSITIONS;
   }
-  const built = getConfigCache(config).timeGridPositions;
-  return built ? built(state) : EMPTY_TIME_GRID_POSITIONS;
+  return defaultTimeGridPositionsSelector(state);
 };
 
 export const eventCalendarOccurrencePositionSelectors = {

@@ -18,10 +18,7 @@ import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import {
-  SchedulerEventOccurrence,
-  SchedulerProcessedDate,
-} from '@mui/x-scheduler-headless/models';
+import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
@@ -169,6 +166,57 @@ const MonthViewPlaceholderEventContainer = styled('div', {
   gap: theme.spacing(0.5),
 }));
 
+interface MonthViewCellEventProps {
+  occurrenceKey: string;
+  firstLane: number;
+  cellSpan: number;
+  isInvisible: boolean;
+}
+
+/**
+ * Leaf component for one event inside a month cell. Subscribes to a single occurrence
+ * via `occurrenceByKey` so it re-renders only when that specific event changes.
+ * `firstLane`/`cellSpan`/`isInvisible` are primitive props from the parent's day-layout
+ * (reference-stable when the day's content is unchanged), so the `React.memo` skips
+ * re-renders when only an unrelated day changed.
+ */
+const MonthViewCellEvent = React.memo(function MonthViewCellEvent(props: MonthViewCellEventProps) {
+  const { occurrenceKey, firstLane, cellSpan, isInvisible } = props;
+  const adapter = useAdapterContext();
+  const store = useEventCalendarStoreContext();
+  const occurrence = useStore(
+    store,
+    eventCalendarOccurrencePositionSelectors.occurrenceByKey,
+    occurrenceKey,
+  );
+
+  if (!occurrence) {
+    return null;
+  }
+
+  if (isInvisible) {
+    return (
+      <DayGridEvent
+        occurrence={occurrence}
+        variant="invisible"
+        firstLane={firstLane}
+        cellSpan={cellSpan}
+      />
+    );
+  }
+
+  return (
+    <EventDialogTrigger occurrence={occurrence}>
+      <DayGridEvent
+        occurrence={occurrence}
+        variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
+        firstLane={firstLane}
+        cellSpan={cellSpan}
+      />
+    </EventDialogTrigger>
+  );
+});
+
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
   props: MonthViewCellProps,
   ref: React.ForwardedRef<HTMLDivElement>,
@@ -196,10 +244,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     eventCalendarOccurrencePositionSelectors.dayGridLayoutForDay,
     day.key,
   );
-  const occurrencesIndex = useStore(
-    store,
-    eventCalendarOccurrencePositionSelectors.visibleOccurrences,
-  );
   const placeholder = CalendarGrid.usePlaceholderInDay(day, maxEvents);
 
   // Ref hooks
@@ -213,17 +257,6 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const visibleKeys =
     orderedKeys.length > maxEvents ? orderedKeys.slice(0, maxEvents - 1) : orderedKeys;
   const hiddenCount = orderedKeys.length - visibleKeys.length;
-
-  const visibleOccurrencesForPopover = React.useMemo(() => {
-    const result: SchedulerEventOccurrence[] = [];
-    for (const key of orderedKeys) {
-      const occurrence = occurrencesIndex.byKey.get(key);
-      if (occurrence) {
-        result.push(occurrence);
-      }
-    }
-    return result;
-  }, [orderedKeys, occurrencesIndex]);
 
   const cellNumberContent = (
     <MonthViewCellNumber className={classes.monthViewCellNumber}>
@@ -271,40 +304,22 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
         {isLoading && <EventSkeleton data-variant="day-grid" />}
         {!isLoading &&
           visibleKeys.map((occurrenceKey) => {
-            const occurrence = occurrencesIndex.byKey.get(occurrenceKey);
-            const lane = dayLayout?.positionByKey.get(occurrenceKey);
-            const cellSpan = dayLayout?.cellSpanByKey.get(occurrenceKey) ?? 1;
-            if (!occurrence || !lane) {
+            const position = dayLayout?.positionByKey.get(occurrenceKey);
+            if (!position) {
               return null;
             }
-            const isInvisible = dayLayout?.invisibleKeys.has(occurrenceKey) ?? false;
-            if (isInvisible) {
-              return (
-                <DayGridEvent
-                  key={occurrenceKey}
-                  occurrence={occurrence}
-                  variant="invisible"
-                  firstLane={lane.firstLane}
-                  cellSpan={cellSpan}
-                />
-              );
-            }
-
             return (
-              <EventDialogTrigger key={occurrenceKey} occurrence={occurrence}>
-                <DayGridEvent
-                  occurrence={occurrence}
-                  variant={
-                    isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
-                  }
-                  firstLane={lane.firstLane}
-                  cellSpan={cellSpan}
-                />
-              </EventDialogTrigger>
+              <MonthViewCellEvent
+                key={occurrenceKey}
+                occurrenceKey={occurrenceKey}
+                firstLane={position.firstLane}
+                cellSpan={dayLayout?.cellSpanByKey.get(occurrenceKey) ?? 1}
+                isInvisible={dayLayout?.invisibleKeys.has(occurrenceKey) ?? false}
+              />
             );
           })}
         {hiddenCount > 0 && (
-          <MoreEventsPopoverTrigger occurrences={visibleOccurrencesForPopover} day={day}>
+          <MoreEventsPopoverTrigger day={day}>
             <MonthViewMoreEvents
               size="small"
               aria-label={localeText.hiddenEvents(hiddenCount)}

@@ -340,12 +340,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
   const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
 
-  // Selector hooks (continued)
-  const dayGridPositions = useStore(
-    store,
-    eventCalendarOccurrencePositionSelectors.dayGridPositions,
-  );
-
   const formatTime = useFormatTime();
 
   const [hasScroll, setHasScroll] = React.useState(false);
@@ -368,13 +362,20 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   );
 
   useIsoLayoutEffect(() => {
-    const body = bodyRef.current;
-    const allDayHeader = allDayHeaderWrapperRef.current;
-    if (!body || !allDayHeader) {
-      return;
-    }
-    setHasScroll(body.scrollHeight > body.clientHeight);
-  }, [dayGridPositions]);
+    const recomputeHasScroll = () => {
+      const body = bodyRef.current;
+      const allDayHeader = allDayHeaderWrapperRef.current;
+      if (!body || !allDayHeader) {
+        return;
+      }
+      setHasScroll(body.scrollHeight > body.clientHeight);
+    };
+
+    recomputeHasScroll();
+    return store.observe(eventCalendarOccurrencePositionSelectors.dayGridPositions, () => {
+      recomputeHasScroll();
+    });
+  }, [store]);
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
 

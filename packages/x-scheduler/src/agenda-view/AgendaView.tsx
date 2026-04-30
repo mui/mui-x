@@ -178,7 +178,9 @@ export const AgendaView = React.memo(
           const keys = visibleOccurrences.keysByDay.get(date.key) ?? [];
           const occurrencesForDay = keys
             .map((key) => visibleOccurrences.byKey.get(key))
-            .filter((occurrence): occurrence is NonNullable<typeof occurrence> => occurrence != null);
+            .filter(
+              (occurrence): occurrence is NonNullable<typeof occurrence> => occurrence != null,
+            );
           return { date, occurrences: sortEventOccurrences(occurrencesForDay) };
         }),
       [days, visibleOccurrences],

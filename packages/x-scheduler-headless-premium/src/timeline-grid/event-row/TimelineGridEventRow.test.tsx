@@ -5,19 +5,16 @@ import { createSchedulerRenderer, describeConformance } from 'test/utils/schedul
 describe('<TimelineGrid.EventRow />', () => {
   const { render } = createSchedulerRenderer();
 
-  describeConformance(
-    <TimelineGrid.EventRow resourceId="r1" />,
-    () => ({
-      refInstanceof: window.HTMLDivElement,
-      render(node) {
-        return render(
-          <EventTimelinePremiumProvider events={[]}>
-            <TimelineGrid.Root>
-              <TimelineGrid.SubGrid>{node}</TimelineGrid.SubGrid>
-            </TimelineGrid.Root>
-          </EventTimelinePremiumProvider>,
-        );
-      },
-    }),
-  );
+  describeConformance(<TimelineGrid.EventRow resourceId="r1" />, () => ({
+    refInstanceof: window.HTMLDivElement,
+    render(node) {
+      return render(
+        <EventTimelinePremiumProvider events={[]}>
+          <TimelineGrid.Root>
+            <TimelineGrid.SubGrid>{node}</TimelineGrid.SubGrid>
+          </TimelineGrid.Root>
+        </EventTimelinePremiumProvider>,
+      );
+    },
+  }));
 });
