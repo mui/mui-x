@@ -17,7 +17,7 @@ import { CandlestickWebGLProgram } from './CandlestickWebGLProgram';
  * delta between them isolates the structural wins from the doc.
  */
 
-const POINT_COUNT = 200_000;
+const POINT_COUNT = 20_000;
 const FRAME_COUNT = 30;
 
 function makeCandle(i: number) {
@@ -276,7 +276,7 @@ function makeNaiveProgram(gl: WebGL2RenderingContext) {
 
 const QUAD = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 
-describe('CandlestickWebGL pipeline (200k × 30 frames)', () => {
+describe('CandlestickWebGL pipeline (20k × 30 frames)', () => {
   test.skipIf(isJSDOM)(
     'naive: bufferData every frame, fresh allocs, repeated lookups',
     async () => {

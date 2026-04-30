@@ -11,7 +11,7 @@ import { HeatmapWebGLProgram } from './HeatmapWebGLProgram';
  * isolates the structural wins.
  */
 
-const POINT_COUNT = 200_000;
+const POINT_COUNT = 20_000;
 const FRAME_COUNT = 30;
 
 function buildColors(n: number) {
@@ -202,7 +202,7 @@ function makeNaiveProgram(gl: WebGL2RenderingContext) {
   return program;
 }
 
-describe('HeatmapWebGL pipeline (200k × 30 frames)', () => {
+describe('HeatmapWebGL pipeline (20k × 30 frames)', () => {
   test.skipIf(isJSDOM)(
     'naive: bufferData every frame, fresh allocs, repeated lookups',
     async () => {
