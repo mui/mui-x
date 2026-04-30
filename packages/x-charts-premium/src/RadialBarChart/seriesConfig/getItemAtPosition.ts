@@ -8,6 +8,7 @@ import {
   selectorChartRotationAxis,
   getBandIndex,
   clampAngleRad,
+  generateSvg2rotation
 } from '@mui/x-charts/internals';
 import type { SeriesItemIdentifierWithType } from '@mui/x-charts/models';
 
@@ -27,7 +28,7 @@ export default function getItemAtPosition(
   const defaultRotationAxisId = rotationAxisIds[0];
   const defaultRadiusAxisId = radiusAxisIds[0];
 
-  const polarCoordinate = { rotation: Math.atan2(point.y - center.cy, point.x - center.cx), radius: Math.sqrt((point.x - center.cx) ** 2 + (point.y - center.cy) ** 2) };
+  const polarCoordinate = { rotation: generateSvg2rotation(center)(point.x, point.y), radius: Math.sqrt((point.x - center.cx) ** 2 + (point.y - center.cy) ** 2) };
 
   for (let stackIndex = 0; stackIndex < seriesState.stackingGroups.length; stackIndex += 1) {
     const group = seriesState.stackingGroups[stackIndex];
