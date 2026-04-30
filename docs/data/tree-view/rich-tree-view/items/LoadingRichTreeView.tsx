@@ -43,7 +43,12 @@ export default function LoadingRichTreeView() {
 
   return (
     <Stack spacing={2} sx={{ width: 300 }}>
-      <Button onClick={handleToggle} variant="outlined" size="small" sx={{ alignSelf: 'start' }}>
+      <Button
+        onClick={handleToggle}
+        variant="outlined"
+        size="small"
+        sx={{ alignSelf: 'start' }}
+      >
         {loading ? 'Load items' : 'Reset to loading'}
       </Button>
       <RichTreeView
