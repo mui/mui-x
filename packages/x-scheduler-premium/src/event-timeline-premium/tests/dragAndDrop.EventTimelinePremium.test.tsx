@@ -62,8 +62,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        preset="day"
-        presets={['day']}
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
         onEventsChange={handleEventsChange}
       />,
     );
@@ -103,8 +103,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        preset="day"
-        presets={['day']}
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
         onEventsChange={handleEventsChange}
       />,
     );
@@ -147,8 +147,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        preset="day"
-        presets={['day']}
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
         onEventsChange={handleEventsChange}
       />,
     );
@@ -195,8 +195,8 @@ describe('EventTimelinePremium - Drag and Drop', () => {
         resources={resources}
         events={[event]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        preset="day"
-        presets={['day']}
+        preset="dayAndMonth"
+        presets={['dayAndMonth']}
         onEventsChange={handleEventsChange}
       />,
     );
@@ -212,7 +212,7 @@ describe('EventTimelinePremium - Drag and Drop', () => {
     const sameRow = getEventRow(engineering.id);
 
     // Drag the start handle to an earlier position on the timeline.
-    // The "day" preset shows 56 days in 6720px (≈5px per hour).
+    // The "dayAndMonth" preset shows 56 days in 6720px (≈5px per hour).
     // The event at 09:00 is at ~pixel 45. Use targetClientX=20 (~04:00).
     await act(async () => {
       simulateDragAndDrop({
