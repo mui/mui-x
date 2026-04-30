@@ -38,6 +38,10 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     content: ['content'],
     grid: ['grid'],
     headerRow: ['headerRow'],
+    header: ['header'],
+    headerLevelRow: ['headerLevelRow'],
+    headerCell: ['headerCell'],
+    headerCellLabel: ['headerCellLabel'],
     titleHeaderCell: ['titleHeaderCell'],
     eventsHeaderCell: ['eventsHeaderCell'],
     eventsHeaderCellContent: ['eventsHeaderCellContent'],
@@ -55,29 +59,6 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     eventResizeHandler: ['eventResizeHandler'],
     eventLinesClamp: ['eventLinesClamp'],
     eventRecurringIcon: ['eventRecurringIcon'],
-    timeHeader: ['timeHeader'],
-    timeHeaderCell: ['timeHeaderCell'],
-    timeHeaderDayLabel: ['timeHeaderDayLabel'],
-    timeHeaderCellsRow: ['timeHeaderCellsRow'],
-    timeHeaderTimeCell: ['timeHeaderTimeCell'],
-    timeHeaderTimeLabel: ['timeHeaderTimeLabel'],
-    daysHeader: ['daysHeader'],
-    daysHeaderCell: ['daysHeaderCell'],
-    daysHeaderTime: ['daysHeaderTime'],
-    daysHeaderWeekDay: ['daysHeaderWeekDay'],
-    daysHeaderDayNumber: ['daysHeaderDayNumber'],
-    daysHeaderMonthStart: ['daysHeaderMonthStart'],
-    daysHeaderMonthStartLabel: ['daysHeaderMonthStartLabel'],
-    weeksHeader: ['weeksHeader'],
-    weeksHeaderCell: ['weeksHeaderCell'],
-    weeksHeaderDayLabel: ['weeksHeaderDayLabel'],
-    weeksHeaderDaysRow: ['weeksHeaderDaysRow'],
-    weeksHeaderDayCell: ['weeksHeaderDayCell'],
-    monthsHeader: ['monthsHeader'],
-    monthsHeaderYearLabel: ['monthsHeaderYearLabel'],
-    monthsHeaderMonthLabel: ['monthsHeaderMonthLabel'],
-    yearsHeader: ['yearsHeader'],
-    yearsHeaderYearLabel: ['yearsHeaderYearLabel'],
     ...eventDialogSlots,
   };
 
@@ -88,12 +69,6 @@ const EventTimelinePremiumRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
-  '--dayAndHour-cell-width': '64px',
-  '--day-cell-width': '120px',
-  '--dayAndWeek-cell-width': 'calc(64px * 7)',
-  // Each CSS unit is 1 day (6px); a month column therefore spans (days in that month) × 6px.
-  '--monthAndYear-cell-width': '6px',
-  '--year-cell-width': '200px',
   boxSizing: 'border-box',
   '*, *::before, *::after': {
     boxSizing: 'inherit',
@@ -239,7 +214,13 @@ EventTimelinePremium.propTypes = {
    * To render a controlled timeline, use the `preset` prop.
    * @default "dayAndHour"
    */
-  defaultPreset: PropTypes.oneOf(['day', 'dayAndHour', 'dayAndWeek', 'monthAndYear', 'year']),
+  defaultPreset: PropTypes.oneOf([
+    'dayAndHour',
+    'dayAndMonth',
+    'dayAndWeek',
+    'monthAndYear',
+    'year',
+  ]),
   /**
    * The date initially used to determine the visible date range.
    * To render a controlled component, use the `visibleDate` prop.
@@ -338,16 +319,16 @@ EventTimelinePremium.propTypes = {
   /**
    * The preset currently displayed in the timeline.
    */
-  preset: PropTypes.oneOf(['day', 'dayAndHour', 'dayAndWeek', 'monthAndYear', 'year']),
+  preset: PropTypes.oneOf(['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']),
   /**
    * The presets available in the timeline.
    * The order is canonical (from most-zoomed-in to most-zoomed-out) and enforced internally,
    * so a future zoom API (`zoomIn()` / `zoomOut()`) behaves consistently regardless of the order
    * in which the presets are provided.
-   * @default ["dayAndHour", "day", "dayAndWeek", "monthAndYear", "year"]
+   * @default ["dayAndHour", "dayAndMonth", "dayAndWeek", "monthAndYear", "year"]
    */
   presets: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'dayAndHour', 'dayAndWeek', 'monthAndYear', 'year']).isRequired,
+    PropTypes.oneOf(['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']).isRequired,
   ),
   /**
    * Whether the calendar is in read-only mode.

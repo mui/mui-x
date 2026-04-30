@@ -18,11 +18,11 @@ The `dayAndHour` preset displays a few days with hourly granularity—ideal for 
 
 {{"demo": "DayAndHourPreset.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Day preset
+## Day and month preset
 
-The `day` preset displays several weeks with daily granularity—ideal for bookings and short-term planning.
+The `dayAndMonth` preset displays several weeks with daily granularity grouped by month—ideal for bookings and short-term planning.
 
-{{"demo": "DayPreset.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "DayAndMonthPreset.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Day and week preset
 
