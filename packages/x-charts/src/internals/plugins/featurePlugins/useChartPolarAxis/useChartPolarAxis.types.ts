@@ -73,7 +73,7 @@ export type UseChartPolarAxisDefaultizedParameters = UseChartPolarAxisParameters
 export interface UseChartPolarAxisState {
   polarAxis: {
     rotation: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
-    radius: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
+    radius: AxisConfig<ScaleName, any, ChartsRadiusAxisProps>[];
   };
 }
 
