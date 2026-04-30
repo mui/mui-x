@@ -45,6 +45,7 @@ import {
   RADIAL_BAR_CHART_PLUGINS,
   type RadialBarChartPluginSignatures,
 } from './RadialBarChart.plugins';
+import { RadialBarPlot } from './RadialBarPlot';
 
 export type RadialBarSeries = MakeOptional<RadialBarSeriesType, 'type'>;
 
@@ -225,6 +226,7 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsRadialGrid {...gridProps} />
           <g {...clipPathGroupProps}>
+            <RadialBarPlot />
             <ChartsOverlay {...overlayProps} />
           </g>
           <ChartsClipPath {...clipPathProps} />
