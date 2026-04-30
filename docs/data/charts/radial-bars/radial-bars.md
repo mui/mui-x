@@ -1,7 +1,7 @@
 ---
 title: React Radial Bar chart
 productId: x-charts
-components: ChartsRadialDataProvider, ChartsRadialDataProviderPremium, ChartsRadialGrid, RadialBarChart, ChartsRadiusAxis, ChartsRotationAxis
+components: ChartsRadialDataProvider, ChartsRadialDataProviderPremium, ChartsRadialGrid, RadialBarChart, RadialBarPlot, ChartsRadiusAxis, ChartsRotationAxis
 ---
 
 # Charts - Radial Bars
