@@ -45,6 +45,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         visibleResources: {},
         isLoading: false,
         errors: [],
+        hasMounted: false,
       };
 
       // Ignore internal cache keys added by store effects

@@ -19,16 +19,9 @@ export class EventTimelinePremiumLazyLoadingPlugin<
     super(store);
     this.timelineStore = store;
 
-    // First selector evaluation returns `null` so the initial subscribe notification
-    // (fired by `updateStateFromParameters` on mount) is detected as "previous was null"
-    // and triggers an instant load. Mirrors the calendar's `previous.viewConfig == null`
-    // branch without exposing an imperative method.
-    let isFirstEvaluation = true;
-
     store.registerStoreEffect(
       (state) => {
-        if (isFirstEvaluation) {
-          isFirstEvaluation = false;
+        if (!state.hasMounted) {
           return null;
         }
         const viewConfig = eventTimelinePremiumPresetSelectors.config(state);
