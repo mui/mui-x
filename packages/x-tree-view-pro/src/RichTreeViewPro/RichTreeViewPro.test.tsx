@@ -58,7 +58,9 @@ describe('<RichTreeViewPro />', () => {
       // Resolve the fetch and wait for the state update
       await act(async () => {
         resolveRootFetch([{ id: '1', label: 'Item 1', childrenCount: 0 }]);
-        await new Promise((r) => setTimeout(r, 1));
+        await new Promise((r) => {
+          setTimeout(r, 1);
+        });
       });
 
       // Real tree should now be visible
@@ -91,7 +93,9 @@ describe('<RichTreeViewPro />', () => {
       // Resolve the fetch — but `loading` prop is still true
       await act(async () => {
         resolveRootFetch([{ id: '1', label: 'Item 1', childrenCount: 0 }]);
-        await new Promise((r) => setTimeout(r, 1));
+        await new Promise((r) => {
+          setTimeout(r, 1);
+        });
       });
 
       expect(screen.queryByRole('tree')).to.equal(null);
