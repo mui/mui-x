@@ -1,8 +1,11 @@
-import { screen } from '@mui/internal-test-utils';
+import * as React from 'react';
+import { spy } from 'sinon';
+import { screen, waitFor } from '@mui/internal-test-utils';
 import {
   EventTimelinePremium,
   eventTimelinePremiumClasses,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
 import {
   adapter,
   createSchedulerRenderer,
@@ -338,6 +341,95 @@ describe('<EventTimelinePremium />', () => {
       });
 
       expect(screen.getByText('Custom Locale')).not.to.equal(null);
+    });
+  });
+
+  describe('lazy loading', () => {
+    it('should call dataSource.getEvents when the timeline mounts', async () => {
+      const dataSource = {
+        getEvents: spy(async () => baseEvents),
+        updateEvents: async () => ({ success: true }),
+      };
+
+      render(
+        <EventTimelinePremium
+          resources={baseResources}
+          dataSource={dataSource}
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          defaultPreset="dayAndMonth"
+        />,
+      );
+
+      await waitFor(() => expect(dataSource.getEvents.callCount).to.be.greaterThanOrEqual(1));
+    });
+
+    it('should call dataSource.getEvents again when navigating to a different range', async () => {
+      const dataSource = {
+        getEvents: spy(async () => baseEvents),
+        updateEvents: async () => ({ success: true }),
+      };
+
+      function Test() {
+        const apiRef = useEventTimelinePremiumApiRef();
+        return (
+          <React.Fragment>
+            <EventTimelinePremium
+              resources={baseResources}
+              dataSource={dataSource}
+              defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+              defaultPreset="dayAndMonth"
+              apiRef={apiRef}
+            />
+            <button type="button" onClick={(event) => apiRef.current?.goToNextVisibleDate(event)}>
+              Next
+            </button>
+          </React.Fragment>
+        );
+      }
+
+      const { user } = render(<Test />);
+      await waitFor(() => expect(dataSource.getEvents.callCount).to.be.greaterThanOrEqual(1));
+
+      const initialCount = dataSource.getEvents.callCount;
+      await user.click(screen.getByRole('button', { name: 'Next' }));
+
+      await waitFor(() => expect(dataSource.getEvents.callCount).to.be.greaterThan(initialCount));
+    });
+
+    it('should render the skeleton while events are loading and remove it once they resolve', async () => {
+      let resolveFetch: (value: SchedulerEvent[]) => void = () => {};
+      const dataSource = {
+        getEvents: () =>
+          new Promise<SchedulerEvent[]>((resolve) => {
+            resolveFetch = resolve;
+          }),
+        updateEvents: async () => ({ success: true }),
+      };
+
+      render(
+        <EventTimelinePremium
+          resources={baseResources}
+          dataSource={dataSource}
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          defaultPreset="dayAndMonth"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.be.greaterThan(0);
+      });
+      expect(screen.queryByText(event1.title)).to.equal(null);
+
+      resolveFetch(baseEvents);
+
+      await waitFor(() => {
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.equal(0);
+      });
+      expect(screen.getByText(event1.title)).not.to.equal(null);
     });
   });
 

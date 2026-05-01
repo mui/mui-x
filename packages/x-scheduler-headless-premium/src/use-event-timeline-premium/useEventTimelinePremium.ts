@@ -17,7 +17,10 @@ export function useEventTimelinePremium<TEvent extends object, TResource extends
     [store, adapter, parameters],
   );
 
-  useOnMount(store.disposeEffect);
+  useOnMount(() => {
+    store.lazyLoading.fetchInitialRange();
+    return store.disposeEffect();
+  });
 
   return store;
 }

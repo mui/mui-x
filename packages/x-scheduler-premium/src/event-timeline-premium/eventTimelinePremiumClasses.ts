@@ -53,6 +53,8 @@ export interface EventTimelinePremiumClasses extends EventDialogClasses {
   eventLinesClamp: string;
   /** Styles applied to event recurring icon elements. */
   eventRecurringIcon: string;
+  /** Styles applied to event skeleton elements rendered while events are loading. */
+  eventSkeleton: string;
 }
 
 export type EventTimelinePremiumClassKey = keyof EventTimelinePremiumClasses;
@@ -89,6 +91,7 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'eventResizeHandler',
     'eventLinesClamp',
     'eventRecurringIcon',
+    'eventSkeleton',
     ...eventDialogClassKeys,
   ],
 );

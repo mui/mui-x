@@ -59,6 +59,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     eventResizeHandler: ['eventResizeHandler'],
     eventLinesClamp: ['eventLinesClamp'],
     eventRecurringIcon: ['eventRecurringIcon'],
+    eventSkeleton: ['eventSkeleton'],
     ...eventDialogSlots,
   };
 

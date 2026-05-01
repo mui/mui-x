@@ -4,7 +4,7 @@ import {
   EventTimelinePremiumParameters,
 } from '../EventTimelinePremiumStore.types';
 import type { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
-import { eventTimelinePremiumViewSelectors } from '../../event-timeline-premium-selectors';
+import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 
 export class EventTimelinePremiumLazyLoadingPlugin<
   TEvent extends object,
@@ -13,43 +13,37 @@ export class EventTimelinePremiumLazyLoadingPlugin<
   EventTimelinePremiumState,
   EventTimelinePremiumParameters<TEvent, any>
 > {
+  private timelineStore: EventTimelinePremiumStore<TEvent, any>;
+
   constructor(store: EventTimelinePremiumStore<TEvent, any>) {
     super(store);
+    this.timelineStore = store;
 
     store.registerStoreEffect(
       (state) => {
-        // Use the existing selector that calculates start/end based on view and visibleDate
-        const viewConfig = eventTimelinePremiumViewSelectors.config(state);
-
-        // Create a stable key to detect real changes in the range
-        const rangeKey = `${state.adapter.getTime(viewConfig.start)}|${state.adapter.getTime(viewConfig.end)}`;
-
-        return {
-          rangeKey,
-          viewConfig,
-        };
+        const viewConfig = eventTimelinePremiumPresetSelectors.config(state);
+        return `${state.adapter.getTime(viewConfig.start)}|${state.adapter.getTime(viewConfig.end)}`;
       },
 
-      (previous, next) => {
-        // Do nothing if the range didn't change
-        if (previous.rangeKey === next.rangeKey) {
+      (previousKey, nextKey) => {
+        if (previousKey === nextKey || !store.parameters.dataSource) {
           return;
         }
 
-        // Instant load on initial mount
-        const isInstantLoad = previous.viewConfig == null;
-
-        if (!store.parameters.dataSource) {
-          return;
-        }
-
-        const range = {
-          start: next.viewConfig.start,
-          end: next.viewConfig.end,
-        };
-
-        queueMicrotask(() => this.queueDataFetchForRange(range, isInstantLoad));
+        const viewConfig = eventTimelinePremiumPresetSelectors.config(store.state);
+        const range = { start: viewConfig.start, end: viewConfig.end };
+        queueMicrotask(() => this.queueDataFetchForRange(range, false));
       },
     );
   }
+
+  public fetchInitialRange = () => {
+    if (!this.timelineStore.parameters.dataSource) {
+      return;
+    }
+    const viewConfig = eventTimelinePremiumPresetSelectors.config(this.timelineStore.state);
+    queueMicrotask(() =>
+      this.queueDataFetchForRange({ start: viewConfig.start, end: viewConfig.end }, true),
+    );
+  };
 }
