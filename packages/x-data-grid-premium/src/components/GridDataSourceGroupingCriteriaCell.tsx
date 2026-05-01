@@ -66,7 +66,9 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
     } else {
       // Collapse the node and remove child rows from the grid
       apiRef.current.setRowChildrenExpansion(id, false);
-      apiRef.current.removeChildrenRows(id);
+      if (!rootProps.lazyLoading) {
+        apiRef.current.removeChildrenRows(id);
+      }
     }
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();

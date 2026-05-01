@@ -135,11 +135,21 @@ This is useful for dashboards such as stock tickers, where values can change eve
 
 ### Dynamically updated datasets
 
-The following demo uses `dataSourceRevalidateMs="3_000"` (3 seconds) to revalidate the current viewport and get the latest stock prices for the loaded rows.
+The following demos use `dataSourceRevalidateMs="3_000"` (3 seconds) to revalidate the current viewport and get the latest stock prices for the loaded rows.
 
-Note that the row IDs stay stable but the row values change over time.
+In the following demos, note that the row IDs stay stable but the row values change over time.
+
+#### Plain data
 
 {{"demo": "ServerSideLazyLoadingRevalidation.js", "bg": "inline"}}
+
+#### Tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+{{"demo": "ServerSideLazyLoadingTreeDataRevalidation.js", "bg": "inline"}}
+
+#### Row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+{{"demo": "ServerSideLazyLoadingGroupingRevalidation.js", "bg": "inline"}}
 
 ### Dynamically replaced datasets
 

@@ -6,357 +6,85 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import { alpha } from '@mui/material/styles';
+import { Chance } from 'chance';
 
-const PRICE_ROUNDING_FACTOR = 100;
+const chance = new Chance(42);
 
-const BASE_STOCK_TREE = [
-  {
-    id: 'tech',
-    name: 'Technology',
-    industries: [
-      {
-        id: 'software',
-        name: 'Software',
-        stocks: [
-          {
-            symbol: 'MSFT',
-            name: 'Microsoft',
-            basePrice: 430,
-            baseVolume: 18_000_000,
-          },
-          { symbol: 'ADBE', name: 'Adobe', basePrice: 560, baseVolume: 2_900_000 },
-          {
-            symbol: 'CRM',
-            name: 'Salesforce',
-            basePrice: 310,
-            baseVolume: 4_700_000,
-          },
-        ],
-      },
-      {
-        id: 'internet',
-        name: 'Internet Platforms',
-        stocks: [
-          {
-            symbol: 'GOOGL',
-            name: 'Alphabet',
-            basePrice: 195,
-            baseVolume: 24_000_000,
-          },
-          { symbol: 'META', name: 'Meta', basePrice: 505, baseVolume: 13_000_000 },
-          { symbol: 'NFLX', name: 'Netflix', basePrice: 660, baseVolume: 5_000_000 },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'finance',
-    name: 'Financial Services',
-    industries: [
-      {
-        id: 'banks',
-        name: 'Banks',
-        stocks: [
-          { symbol: 'JPM', name: 'JPMorgan', basePrice: 242, baseVolume: 9_500_000 },
-          {
-            symbol: 'BAC',
-            name: 'Bank of America',
-            basePrice: 47,
-            baseVolume: 44_000_000,
-          },
-          { symbol: 'C', name: 'Citigroup', basePrice: 74, baseVolume: 14_000_000 },
-        ],
-      },
-      {
-        id: 'payments',
-        name: 'Payments',
-        stocks: [
-          { symbol: 'V', name: 'Visa', basePrice: 345, baseVolume: 7_000_000 },
-          {
-            symbol: 'MA',
-            name: 'Mastercard',
-            basePrice: 505,
-            baseVolume: 3_300_000,
-          },
-          { symbol: 'PYPL', name: 'PayPal', basePrice: 82, baseVolume: 12_000_000 },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'energy',
-    name: 'Energy',
-    industries: [
-      {
-        id: 'integrated',
-        name: 'Integrated Oil & Gas',
-        stocks: [
-          {
-            symbol: 'XOM',
-            name: 'Exxon Mobil',
-            basePrice: 120,
-            baseVolume: 15_000_000,
-          },
-          { symbol: 'CVX', name: 'Chevron', basePrice: 170, baseVolume: 8_300_000 },
-          { symbol: 'SHEL', name: 'Shell', basePrice: 74, baseVolume: 7_400_000 },
-        ],
-      },
-      {
-        id: 'renewables',
-        name: 'Renewables',
-        stocks: [
-          {
-            symbol: 'NEE',
-            name: 'NextEra Energy',
-            basePrice: 76,
-            baseVolume: 11_000_000,
-          },
-          {
-            symbol: 'ENPH',
-            name: 'Enphase Energy',
-            basePrice: 124,
-            baseVolume: 5_200_000,
-          },
-          {
-            symbol: 'FSLR',
-            name: 'First Solar',
-            basePrice: 214,
-            baseVolume: 2_800_000,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'healthcare',
-    name: 'Healthcare',
-    industries: [
-      {
-        id: 'pharma',
-        name: 'Pharmaceuticals',
-        stocks: [
-          { symbol: 'PFE', name: 'Pfizer', basePrice: 31, baseVolume: 36_000_000 },
-          { symbol: 'MRK', name: 'Merck', basePrice: 132, baseVolume: 8_700_000 },
-          {
-            symbol: 'LLY',
-            name: 'Eli Lilly',
-            basePrice: 912,
-            baseVolume: 3_800_000,
-          },
-        ],
-      },
-      {
-        id: 'devices',
-        name: 'Medical Devices',
-        stocks: [
-          { symbol: 'ABT', name: 'Abbott', basePrice: 126, baseVolume: 5_100_000 },
-          { symbol: 'SYK', name: 'Stryker', basePrice: 337, baseVolume: 1_700_000 },
-          {
-            symbol: 'ISRG',
-            name: 'Intuitive Surgical',
-            basePrice: 490,
-            baseVolume: 1_300_000,
-          },
-        ],
-      },
-    ],
-  },
+const STOCKS = [
+  { symbol: 'AAPL', name: 'Apple Inc.' },
+  { symbol: 'MSFT', name: 'Microsoft Corporation' },
+  { symbol: 'GOOGL', name: 'Alphabet Inc.' },
+  { symbol: 'AMZN', name: 'Amazon.com, Inc.' },
+  { symbol: 'NVDA', name: 'NVIDIA Corporation' },
+  { symbol: 'META', name: 'Meta Platforms, Inc.' },
+  { symbol: 'TSLA', name: 'Tesla, Inc.' },
+  { symbol: 'JPM', name: 'JPMorgan Chase & Co.' },
+  { symbol: 'V', name: 'Visa Inc.' },
+  { symbol: 'JNJ', name: 'Johnson & Johnson' },
+  { symbol: 'WMT', name: 'Walmart Inc.' },
+  { symbol: 'PG', name: 'Procter & Gamble Co.' },
+  { symbol: 'MA', name: 'Mastercard Incorporated' },
+  { symbol: 'UNH', name: 'UnitedHealth Group' },
+  { symbol: 'DIS', name: 'The Walt Disney Company' },
+  { symbol: 'NFLX', name: 'Netflix, Inc.' },
+  { symbol: 'ADBE', name: 'Adobe Inc.' },
+  { symbol: 'CRM', name: 'Salesforce, Inc.' },
+  { symbol: 'INTC', name: 'Intel Corporation' },
+  { symbol: 'CSCO', name: 'Cisco Systems, Inc.' },
+  { symbol: 'PFE', name: 'Pfizer Inc.' },
+  { symbol: 'KO', name: 'The Coca-Cola Company' },
+  { symbol: 'PEP', name: 'PepsiCo, Inc.' },
+  { symbol: 'NKE', name: 'Nike, Inc.' },
+  { symbol: 'BA', name: 'The Boeing Company' },
+  { symbol: 'GS', name: 'The Goldman Sachs Group' },
+  { symbol: 'CAT', name: 'Caterpillar Inc.' },
+  { symbol: 'GE', name: 'General Electric Company' },
+  { symbol: 'XOM', name: 'Exxon Mobil Corporation' },
+  { symbol: 'CVX', name: 'Chevron Corporation' },
 ];
 
-const EXPERIMENTAL_SECTOR_SPECS = [
-  { id: 'consumer', name: 'Consumer Discretionary', code: 'CD' },
-  { id: 'staples', name: 'Consumer Staples', code: 'CS' },
-  { id: 'industrials', name: 'Industrials', code: 'IN' },
-  { id: 'materials', name: 'Materials', code: 'MT' },
-  { id: 'utilities', name: 'Utilities', code: 'UT' },
-  { id: 'real-estate', name: 'Real Estate', code: 'RE' },
-  { id: 'communications', name: 'Communications', code: 'CM' },
-  { id: 'transportation', name: 'Transportation', code: 'TR' },
-  { id: 'semiconductors', name: 'Semiconductors', code: 'SC' },
-  { id: 'aerospace', name: 'Aerospace & Defense', code: 'AD' },
-  { id: 'insurance', name: 'Insurance', code: 'IS' },
-  { id: 'media', name: 'Media & Entertainment', code: 'ME' },
-];
+const ROW_COUNT = 30;
 
-const EXPERIMENTAL_INDUSTRY_NAMES = [
-  'Large Cap',
-  'Mid Cap',
-  'Small Cap',
-  'International',
-  'High Dividend',
-  'Growth',
-  'Value',
-  'Cyclical',
-  'Defensive',
-  'Emerging Markets',
-  'Infrastructure',
-  'Special Situations',
-];
-
-const GENERATED_STOCKS_PER_INDUSTRY = 18;
-
-const experimentalStockTree = EXPERIMENTAL_SECTOR_SPECS.map(
-  (sector, sectorIndex) => ({
-    id: sector.id,
-    name: sector.name,
-    industries: EXPERIMENTAL_INDUSTRY_NAMES.map((industryName, industryIndex) => ({
-      id: industryName.toLowerCase().replaceAll(' ', '-'),
-      name: industryName,
-      stocks: Array.from(
-        { length: GENERATED_STOCKS_PER_INDUSTRY },
-        (_, stockIndex) => {
-          const stockNumber = stockIndex + 1;
-          const priceSeed =
-            sectorIndex * 151 + industryIndex * 43 + stockNumber * 17;
-          const volumeSeed =
-            sectorIndex * 790_000 + industryIndex * 310_000 + stockNumber * 95_000;
-
-          return {
-            symbol: `${sector.code}${industryIndex + 1}${stockNumber}`,
-            name: `${sector.name} ${industryName} ${stockNumber}`,
-            basePrice: 35 + (priceSeed % 650),
-            baseVolume: 800_000 + (volumeSeed % 48_000_000),
-          };
-        },
-      ),
-    })),
-  }),
-);
-
-const STOCK_TREE = [...BASE_STOCK_TREE, ...experimentalStockTree];
-
-const stockIndexBySymbol = new Map();
-let runningIndex = 0;
-STOCK_TREE.forEach((sector) => {
-  sector.industries.forEach((industry) => {
-    industry.stocks.forEach((stock) => {
-      stockIndexBySymbol.set(stock.symbol, runningIndex);
-      runningIndex += 1;
-    });
-  });
+// Generate base prices for each stock (deterministic)
+const basePrices = {};
+STOCKS.forEach((stock, i) => {
+  basePrices[stock.symbol] = 50 + ((i * 137 + 43) % 400);
 });
 
-const getTick = () => Math.floor(Date.now() / 2_000);
-
-function getLeafMetrics(stock, tick) {
-  const stockIndex = stockIndexBySymbol.get(stock.symbol) ?? 0;
-  const drift = Math.sin((tick + stockIndex) * 0.65) * 0.018;
-  const volumeDrift = Math.cos((tick + stockIndex) * 0.47) * 0.14;
-  const price =
-    Math.round(stock.basePrice * (1 + drift) * PRICE_ROUNDING_FACTOR) /
-    PRICE_ROUNDING_FACTOR;
-  const volume = Math.round(stock.baseVolume * (1 + volumeDrift));
-  return { price, volume };
-}
-
-function getIndustry(sectorName, industryName) {
-  return STOCK_TREE.find((sector) => sector.name === sectorName)?.industries.find(
-    (industry) => industry.name === industryName,
-  );
-}
-
-function getSectorSummaryRows(tick) {
-  return STOCK_TREE.map((sector) => {
-    let priceAccumulator = 0;
-    let volumeAccumulator = 0;
-    let stockCount = 0;
-
-    sector.industries.forEach((industry) => {
-      industry.stocks.forEach((stock) => {
-        const metrics = getLeafMetrics(stock, tick);
-        priceAccumulator += metrics.price;
-        volumeAccumulator += metrics.volume;
-        stockCount += 1;
-      });
-    });
-
-    return {
-      id: `sector-${sector.id}`,
-      name: sector.name,
-      symbol: '',
-      price:
-        Math.round((priceAccumulator / stockCount) * PRICE_ROUNDING_FACTOR) /
-        PRICE_ROUNDING_FACTOR,
-      volume: volumeAccumulator,
-      childrenCount: sector.industries.length,
-    };
-  });
-}
-
-function getIndustryRows(sectorName, tick) {
-  const sector = STOCK_TREE.find((candidate) => candidate.name === sectorName);
-  if (!sector) {
-    return [];
-  }
-
-  return sector.industries.map((industry) => {
-    let priceAccumulator = 0;
-    let volumeAccumulator = 0;
-
-    industry.stocks.forEach((stock) => {
-      const metrics = getLeafMetrics(stock, tick);
-      priceAccumulator += metrics.price;
-      volumeAccumulator += metrics.volume;
-    });
-
-    return {
-      id: `industry-${sector.id}-${industry.id}`,
-      name: industry.name,
-      symbol: '',
-      price:
-        Math.round(
-          (priceAccumulator / industry.stocks.length) * PRICE_ROUNDING_FACTOR,
-        ) / PRICE_ROUNDING_FACTOR,
-      volume: volumeAccumulator,
-      childrenCount: industry.stocks.length,
-    };
-  });
-}
-
-function getLeafRows(sectorName, industryName, tick) {
-  const industry = getIndustry(sectorName, industryName);
-  if (!industry) {
-    return [];
-  }
-
-  return industry.stocks.map((stock) => {
-    const metrics = getLeafMetrics(stock, tick);
-    return {
-      id: `stock-${stock.symbol}`,
-      name: stock.name,
-      symbol: stock.symbol,
-      price: metrics.price,
-      volume: metrics.volume,
-      childrenCount: 0,
-    };
-  });
-}
-
-function fakeTreeStockServer(params) {
-  const tick = getTick();
-  const groupKeys = params.groupKeys ?? [];
+// A simple fake server that returns stock rows with fluctuating prices.
+// Each call returns slightly different prices to simulate real-time market data.
+function fakeStockServer(params) {
   const start = typeof params.start === 'number' ? params.start : 0;
-  const end = typeof params.end === 'number' ? params.end : start + 9;
-  let allRows;
-  if (groupKeys.length === 0) {
-    allRows = getSectorSummaryRows(tick);
-  } else if (groupKeys.length === 1) {
-    allRows = getIndustryRows(groupKeys[0], tick);
-  } else {
-    allRows = getLeafRows(groupKeys[0], groupKeys[1], tick);
+  const end = typeof params.end === 'number' ? params.end : start + 14;
+
+  const rows = [];
+  for (let i = start; i <= end && i < ROW_COUNT; i += 1) {
+    const stock = STOCKS[i % STOCKS.length];
+    const base = basePrices[stock.symbol];
+    // Deterministic fluctuation ±2% on each call
+    const fluctuation = 1 + chance.floating({ min: -0.5, max: 0.5 }) * 0.04;
+    const price = Math.round(base * fluctuation * 100) / 100;
+    const change = Math.round((price - base) * 100) / 100;
+    const changePercent = Math.round((change / base) * 10000) / 100;
+    const volume = Math.floor(chance.floating({ min: 1_000_000, max: 51_000_000 }));
+
+    rows.push({
+      id: i,
+      symbol: stock.symbol,
+      name: stock.name,
+      price,
+      change,
+      changePercent,
+      volume,
+    });
   }
 
   return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        rows: allRows.slice(start, end + 1),
-        rowCount: allRows.length,
-      });
-    }, 50);
+    setTimeout(() => resolve({ rows, rowCount: ROW_COUNT }), 50);
   });
 }
 
-function FlashOnChange({ children, changeId, align = 'left', fontWeight }) {
+function FlashOnChange({ children, changeId, align = 'left', fontWeight, sx }) {
   const [flash, setFlash] = React.useState(false);
 
   React.useEffect(() => {
@@ -392,6 +120,7 @@ function FlashOnChange({ children, changeId, align = 'left', fontWeight }) {
             ? alpha(theme.palette.warning.main, 0.22)
             : 'transparent',
         }),
+        ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >
       {children}
@@ -400,31 +129,69 @@ function FlashOnChange({ children, changeId, align = 'left', fontWeight }) {
 }
 
 const columns = [
-  {
-    field: 'symbol',
-    headerName: 'Ticker',
-    width: 110,
-  },
+  { field: 'symbol', headerName: 'Symbol', width: 100 },
+  { field: 'name', headerName: 'Company', flex: 1, minWidth: 180 },
   {
     field: 'price',
     headerName: 'Price',
     type: 'number',
-    width: 120,
+    width: 110,
     renderCell: (params) => (
       <FlashOnChange
         changeId={params.value ?? 0}
         align="right"
-        fontWeight={params.row.childrenCount === 0 ? 'bold' : undefined}
+        fontWeight="bold"
+        sx={{
+          color: params.row.change >= 0 ? 'success.main' : 'error.main',
+        }}
       >
         ${params.value?.toFixed(2)}
       </FlashOnChange>
     ),
   },
   {
+    field: 'change',
+    headerName: 'Change',
+    type: 'number',
+    width: 100,
+    renderCell: (params) => {
+      const value = params.value ?? 0;
+      return (
+        <FlashOnChange
+          changeId={value}
+          align="right"
+          sx={{ color: value >= 0 ? 'success.main' : 'error.main' }}
+        >
+          {value >= 0 ? '+' : ''}
+          {value.toFixed(2)}
+        </FlashOnChange>
+      );
+    },
+  },
+  {
+    field: 'changePercent',
+    headerName: '% Change',
+    type: 'number',
+    width: 110,
+    renderCell: (params) => {
+      const value = params.value ?? 0;
+      return (
+        <FlashOnChange
+          changeId={value}
+          align="right"
+          sx={{ color: value >= 0 ? 'success.main' : 'error.main' }}
+        >
+          {value >= 0 ? '+' : ''}
+          {value.toFixed(2)}%
+        </FlashOnChange>
+      );
+    },
+  },
+  {
     field: 'volume',
     headerName: 'Volume',
     type: 'number',
-    width: 150,
+    width: 130,
     renderCell: (params) => (
       <FlashOnChange changeId={params.value ?? 0} align="right">
         {params.value?.toLocaleString()}
@@ -440,15 +207,13 @@ function ServerSideLazyLoadingRevalidation() {
   const dataSource = React.useMemo(
     () => ({
       getRows: async (params) => {
-        const response = await fakeTreeStockServer(params);
+        const response = await fakeStockServer(params);
 
         return {
           rows: response.rows,
           rowCount: response.rowCount,
         };
       },
-      getGroupKey: (row) => row.name,
-      getChildrenCount: (row) => row.childrenCount,
     }),
     [],
   );
@@ -460,9 +225,18 @@ function ServerSideLazyLoadingRevalidation() {
         spacing={1}
         sx={{
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-end',
         }}
       >
+        {useCache && (
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => apiRef.current?.dataSource.cache.clear()}
+          >
+            Clear cache
+          </Button>
+        )}
         <FormControlLabel
           control={
             <Switch
@@ -473,15 +247,6 @@ function ServerSideLazyLoadingRevalidation() {
           }
           label="Use cache"
         />
-        {useCache && (
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => apiRef.current?.dataSource.cache.clear()}
-          >
-            Clear cache
-          </Button>
-        )}
       </Stack>
       <div style={{ width: '100%', height: 360 }}>
         <DataGridPro
@@ -490,7 +255,6 @@ function ServerSideLazyLoadingRevalidation() {
           columns={columns}
           dataSource={dataSource}
           dataSourceCache={useCache ? undefined : null}
-          treeData
           lazyLoading
           dataSourceRevalidateMs={3_000}
           paginationModel={{ page: 0, pageSize: 10 }}
