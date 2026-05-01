@@ -73,6 +73,7 @@ const EventTimelinePremiumRoot = styled('div', {
   '*, *::before, *::after': {
     boxSizing: 'inherit',
   },
+  position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),

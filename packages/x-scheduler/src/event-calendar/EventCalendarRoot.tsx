@@ -38,6 +38,7 @@ const EventCalendarRootStyled = styled('div', {
   '*, *::before, *::after': {
     boxSizing: 'inherit',
   },
+  position: 'relative',
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
