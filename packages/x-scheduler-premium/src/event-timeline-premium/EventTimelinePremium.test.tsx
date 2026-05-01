@@ -6,6 +6,11 @@ import {
   eventTimelinePremiumClasses,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
+import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { EventTimelinePremiumStore } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
+import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
+import { EventTimelinePremiumErrorContainer } from './error-container';
+import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
 import {
   adapter,
   createSchedulerRenderer,
@@ -430,6 +435,121 @@ describe('<EventTimelinePremium />', () => {
         ).to.equal(0);
       });
       expect(screen.getByText(event1.title)).not.to.equal(null);
+    });
+  });
+
+  describe('error handling', () => {
+    function renderErrorContainer(initialErrors: Error[]) {
+      const store = new EventTimelinePremiumStore({ events: [] }, adapter);
+      store.set('errors', initialErrors);
+
+      return render(
+        <SchedulerStoreContext.Provider value={store as any}>
+          <EventTimelinePremiumStyledContext.Provider
+            value={{
+              schedulerId: 'test',
+              classes: eventTimelinePremiumClasses,
+              localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+            }}
+          >
+            <EventTimelinePremiumErrorContainer />
+          </EventTimelinePremiumStyledContext.Provider>
+        </SchedulerStoreContext.Provider>,
+      );
+    }
+
+    it('should render an error alert when dataSource.getEvents rejects', async () => {
+      const dataSource = {
+        getEvents: () => Promise.reject(new Error('Network error')),
+        updateEvents: async () => ({ success: true }),
+      };
+
+      render(
+        <EventTimelinePremium
+          resources={baseResources}
+          dataSource={dataSource}
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          defaultPreset="dayAndMonth"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Network error')).not.to.equal(null);
+      });
+    });
+
+    it('should render multiple alerts when state.errors contains multiple errors', () => {
+      renderErrorContainer([new Error('First error'), new Error('Second error')]);
+
+      expect(
+        document.querySelectorAll(`.${eventTimelinePremiumClasses.errorAlert}`).length,
+      ).to.equal(2);
+      expect(screen.getByText('First error')).not.to.equal(null);
+      expect(screen.getByText('Second error')).not.to.equal(null);
+    });
+
+    it('should remove only the dismissed alert and keep the others', async () => {
+      const { user } = renderErrorContainer([
+        new Error('First error'),
+        new Error('Second error'),
+      ]);
+
+      const closeButtons = screen.getAllByRole('button', { name: /close/i });
+      expect(closeButtons.length).to.equal(2);
+
+      await user.click(closeButtons[0]);
+
+      await waitFor(() => {
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.errorAlert}`).length,
+        ).to.equal(1);
+      });
+      expect(screen.queryByText('First error')).to.equal(null);
+      expect(screen.getByText('Second error')).not.to.equal(null);
+    });
+
+    it('should clear the error alert when a subsequent fetch succeeds', async () => {
+      let callCount = 0;
+      const dataSource = {
+        getEvents: () => {
+          callCount += 1;
+          if (callCount === 1) {
+            return Promise.reject(new Error('Transient error'));
+          }
+          return Promise.resolve(baseEvents);
+        },
+        updateEvents: async () => ({ success: true }),
+      };
+
+      function Test() {
+        const apiRef = useEventTimelinePremiumApiRef();
+        return (
+          <React.Fragment>
+            <EventTimelinePremium
+              resources={baseResources}
+              dataSource={dataSource}
+              defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+              defaultPreset="dayAndMonth"
+              apiRef={apiRef}
+            />
+            <button type="button" onClick={(event) => apiRef.current?.goToNextVisibleDate(event)}>
+              Next
+            </button>
+          </React.Fragment>
+        );
+      }
+
+      const { user } = render(<Test />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Transient error')).not.to.equal(null);
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Next' }));
+
+      await waitFor(() => {
+        expect(screen.queryByText('Transient error')).to.equal(null);
+      });
     });
   });
 

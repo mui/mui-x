@@ -40,13 +40,17 @@ const DEFAULT_PARAMS = {
 };
 
 describe('Lazy loading - EventTimelinePremiumStore', () => {
-  it('should fetch the visible range when fetchInitialRange is invoked', async () => {
+  it('should fetch the visible range on the first mount notification', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
       updateEvents: noopUpdateEvents,
     };
-    const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.lazyLoading.fetchInitialRange();
+    const params = { ...DEFAULT_PARAMS, dataSource };
+    const store = new EventTimelinePremiumStore(params, adapter);
+    // Simulate the React mount: `useEventTimelinePremium` calls `updateStateFromParameters`
+    // in `useIsoLayoutEffect`, which produces the first subscribe notification the plugin
+    // listens to in order to fire the initial fetch.
+    store.updateStateFromParameters(params, adapter);
 
     await flushEffect();
     await flushDebounce();
@@ -60,8 +64,12 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       getEvents: spy(async () => buildEvents()),
       updateEvents: noopUpdateEvents,
     };
-    const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.lazyLoading.fetchInitialRange();
+    const params = { ...DEFAULT_PARAMS, dataSource };
+    const store = new EventTimelinePremiumStore(params, adapter);
+    // Simulate the React mount: `useEventTimelinePremium` calls `updateStateFromParameters`
+    // in `useIsoLayoutEffect`, which produces the first subscribe notification the plugin
+    // listens to in order to fire the initial fetch.
+    store.updateStateFromParameters(params, adapter);
 
     await flushEffect();
     await flushDebounce();
@@ -79,8 +87,12 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       getEvents: spy(async () => buildEvents()),
       updateEvents: noopUpdateEvents,
     };
-    const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.lazyLoading.fetchInitialRange();
+    const params = { ...DEFAULT_PARAMS, dataSource };
+    const store = new EventTimelinePremiumStore(params, adapter);
+    // Simulate the React mount: `useEventTimelinePremium` calls `updateStateFromParameters`
+    // in `useIsoLayoutEffect`, which produces the first subscribe notification the plugin
+    // listens to in order to fire the initial fetch.
+    store.updateStateFromParameters(params, adapter);
 
     await flushEffect();
     await flushDebounce();
@@ -103,11 +115,9 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       getEvents: spy(async () => buildEvents()),
       updateEvents: noopUpdateEvents,
     };
-    const store = new EventTimelinePremiumStore(
-      { ...DEFAULT_PARAMS, defaultPreset: 'dayAndHour', dataSource },
-      adapter,
-    );
-    store.lazyLoading.fetchInitialRange();
+    const params = { ...DEFAULT_PARAMS, defaultPreset: 'dayAndHour' as const, dataSource };
+    const store = new EventTimelinePremiumStore(params, adapter);
+    store.updateStateFromParameters(params, adapter);
 
     await flushEffect();
     await flushDebounce();
@@ -142,8 +152,12 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       getEvents: spy(async () => buildEvents()),
       updateEvents: noopUpdateEvents,
     };
-    const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.lazyLoading.fetchInitialRange();
+    const params = { ...DEFAULT_PARAMS, dataSource };
+    const store = new EventTimelinePremiumStore(params, adapter);
+    // Simulate the React mount: `useEventTimelinePremium` calls `updateStateFromParameters`
+    // in `useIsoLayoutEffect`, which produces the first subscribe notification the plugin
+    // listens to in order to fire the initial fetch.
+    store.updateStateFromParameters(params, adapter);
 
     await flushEffect();
     await flushDebounce();

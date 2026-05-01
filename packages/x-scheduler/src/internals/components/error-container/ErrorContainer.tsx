@@ -1,4 +1,5 @@
 'use client';
+// TODO: unify with EventTimelinePremiumErrorContainer — both render the same Alert list off `state.errors` with different styled and store contexts.
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';

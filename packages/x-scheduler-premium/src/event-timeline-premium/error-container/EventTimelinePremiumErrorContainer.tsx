@@ -1,4 +1,5 @@
 'use client';
+// TODO: unify with ErrorContainer from `@mui/x-scheduler/internals` — the two only diverge by which styled and store contexts they read.
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';

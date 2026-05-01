@@ -1,4 +1,5 @@
 'use client';
+// TODO: unify with EventTimelinePremiumSkeleton — both render the same MUI Skeleton with different styled contexts.
 import Skeleton from '@mui/material/Skeleton';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';

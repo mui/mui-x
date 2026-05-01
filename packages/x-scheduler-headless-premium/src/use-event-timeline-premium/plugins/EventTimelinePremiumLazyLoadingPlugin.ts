@@ -19,8 +19,18 @@ export class EventTimelinePremiumLazyLoadingPlugin<
     super(store);
     this.timelineStore = store;
 
+    // First selector evaluation returns `null` so the initial subscribe notification
+    // (fired by `updateStateFromParameters` on mount) is detected as "previous was null"
+    // and triggers an instant load. Mirrors the calendar's `previous.viewConfig == null`
+    // branch without exposing an imperative method.
+    let isFirstEvaluation = true;
+
     store.registerStoreEffect(
       (state) => {
+        if (isFirstEvaluation) {
+          isFirstEvaluation = false;
+          return null;
+        }
         const viewConfig = eventTimelinePremiumPresetSelectors.config(state);
         return `${state.adapter.getTime(viewConfig.start)}|${state.adapter.getTime(viewConfig.end)}`;
       },
@@ -32,18 +42,21 @@ export class EventTimelinePremiumLazyLoadingPlugin<
 
         const viewConfig = eventTimelinePremiumPresetSelectors.config(store.state);
         const range = { start: viewConfig.start, end: viewConfig.end };
-        queueMicrotask(() => this.queueDataFetchForRange(range, false));
+        const isInstantLoad = previousKey === null;
+        queueMicrotask(() => {
+          this.queueDataFetchForRange(range, isInstantLoad).catch(this.handleFetchError);
+        });
       },
     );
   }
 
-  public fetchInitialRange = () => {
-    if (!this.timelineStore.parameters.dataSource) {
-      return;
-    }
-    const viewConfig = eventTimelinePremiumPresetSelectors.config(this.timelineStore.state);
-    queueMicrotask(() =>
-      this.queueDataFetchForRange({ start: viewConfig.start, end: viewConfig.end }, true),
-    );
+  private handleFetchError = (error: unknown) => {
+    const wrapped = error instanceof Error ? error : new Error(String(error));
+    const previousErrors = this.timelineStore.state.errors;
+    this.timelineStore.update({
+      ...this.timelineStore.state,
+      errors: [...previousErrors, wrapped],
+      isLoading: false,
+    });
   };
 }
