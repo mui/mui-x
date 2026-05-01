@@ -129,6 +129,15 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
           childrenCount: 1,
         },
       ],
+      '["Finance"]': [
+        {
+          id: 'industry-banking',
+          group: 'Banking',
+          sector: 'Finance',
+          industry: 'Banking',
+          childrenCount: 0,
+        },
+      ],
       '["Technology","Software"]': [
         {
           id: 'stock-msft',
@@ -151,10 +160,12 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       ],
     };
 
-    function TestNestedLazyRowGrouping(props: {
-      onFetchRows: (params: GridGetRowsParams) => void;
-    }) {
-      const { onFetchRows } = props;
+    function TestNestedLazyRowGrouping(
+      props: Partial<DataGridPremiumProps> & {
+        onFetchRows: (params: GridGetRowsParams) => void;
+      },
+    ) {
+      const { onFetchRows, ...other } = props;
       apiRef = useGridApiRef();
 
       const dataSource: GridDataSource = React.useMemo(
@@ -197,6 +208,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
             }}
             rowHeight={rowHeight}
             columnHeaderHeight={columnHeaderHeight}
+            {...other}
           />
         </div>
       );
@@ -239,6 +251,51 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       })?.firstArg as GridGetRowsParams | undefined;
 
       expect(technologyRequest?.groupFields).to.deep.equal(['sector', 'industry']);
+    });
+
+    it('should lazy load children for default-expanded row grouping groups', async () => {
+      const getRowsSpy = spy();
+      render(
+        <TestNestedLazyRowGrouping defaultGroupingExpansionDepth={1} onFetchRows={getRowsSpy} />,
+      );
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('industry-software')).not.to.equal(null);
+      });
+
+      const sectorNode = apiRef.current!.getRowNode<GridGroupNode>('sector-tech')!;
+      expect(sectorNode.childrenExpanded).to.equal(true);
+
+      const technologyRequest = getRowsSpy.getCalls().find((call) => {
+        const params = call.firstArg as GridGetRowsParams;
+        return JSON.stringify(params.groupKeys) === JSON.stringify(['Technology']);
+      })?.firstArg as GridGetRowsParams | undefined;
+      expect(technologyRequest?.groupFields).to.deep.equal(['sector', 'industry']);
+    });
+
+    it('should use isGroupExpandedByDefault for lazy-loaded row grouping groups', async () => {
+      const getRowsSpy = spy();
+      const isGroupExpandedByDefault = spy(
+        (node: GridGroupNode) => node.groupingField === 'sector' && node.groupingKey === 'Finance',
+      );
+      render(
+        <TestNestedLazyRowGrouping
+          defaultGroupingExpansionDepth={-1}
+          isGroupExpandedByDefault={isGroupExpandedByDefault}
+          onFetchRows={getRowsSpy}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('industry-banking')).not.to.equal(null);
+      });
+
+      const technologyNode = apiRef.current!.getRowNode<GridGroupNode>('sector-tech')!;
+      const financeNode = apiRef.current!.getRowNode<GridGroupNode>('sector-finance')!;
+      expect(technologyNode.childrenExpanded).to.equal(false);
+      expect(financeNode.childrenExpanded).to.equal(true);
+      expect(apiRef.current!.getRow('industry-software')).to.equal(null);
+      expect(isGroupExpandedByDefault.called).to.equal(true);
     });
 
     it('should lazy load leaves under the final row grouping level', async () => {

@@ -27,6 +27,7 @@ import {
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
+  gridRenderContextSelector,
   GridStrategyGroup,
   useGridRegisterStrategyProcessor,
   runIf,
@@ -38,6 +39,7 @@ import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection } from '../lazyLoader/utils';
 import { GRID_SKELETON_ROW_ROOT_ID } from '../lazyLoader/useGridLazyLoaderPreProcessors';
+import { checkGroupChildrenExpansion } from '../../../utils/tree/utils';
 
 type AdjustRowParams = Partial<Omit<GridGetRowsParams, 'start' | 'end'>> & {
   start: GridGetRowsParams['start'];
@@ -46,7 +48,18 @@ type AdjustRowParams = Partial<Omit<GridGetRowsParams, 'start' | 'end'>> & {
 
 type GridGetRowsParamsWithGrouping = GridGetRowsParams & {
   groupFields?: string[];
+  pivotModel?: unknown;
 };
+
+interface FetchSkeletonRowsOptions {
+  /**
+   * When `true`, the scan only fetches visible skeleton rows and skips the fallback
+   * revalidation path that normally runs when the viewport is already fully loaded.
+   * This is used after auto-expanding freshly inserted groups: if the expansion did
+   * not expose visible skeleton rows, there is no extra lazy-loading work to do.
+   */
+  skipFallbackRevalidation?: boolean;
+}
 
 const INTERVAL_CACHE_INITIAL_STATE = {
   firstRowToRender: 0,
@@ -73,6 +86,8 @@ export const useGridDataSourceNestedLazyLoader = (
     | 'lazyLoadingRequestThrottleMs'
     | 'treeData'
     | 'dataSourceRevalidateMs'
+    | 'defaultGroupingExpansionDepth'
+    | 'isGroupExpandedByDefault'
   >,
 ): void => {
   const isDataNested = useGridSelector(privateApiRef, () =>
@@ -261,6 +276,111 @@ export const useGridDataSourceNestedLazyLoader = (
     privateApiRef.current.publishEvent('rowsSet');
   }, [privateApiRef]);
 
+  const findSkeletonSectionAndFetchRows = React.useCallback(
+    (firstRowIndex: number, lastRowIndex: number, options: FetchSkeletonRowsOptions = {}) => {
+      const sortModel = gridSortModelSelector(privateApiRef);
+      const filterModel = gridFilterModelSelector(privateApiRef);
+      const currentVisibleRows = getVisibleRows(privateApiRef);
+
+      const skeletonRowsSection = findSkeletonRowsSection({
+        apiRef: privateApiRef,
+        visibleRows: currentVisibleRows.rows,
+        range: {
+          firstRowIndex,
+          lastRowIndex,
+        },
+      });
+
+      if (!skeletonRowsSection) {
+        if (!options.skipFallbackRevalidation) {
+          revalidateRows(firstRowIndex, lastRowIndex);
+          startPolling();
+        }
+        return false;
+      }
+
+      const expandedSortedRowIds = gridExpandedSortedRowIdsSelector(privateApiRef);
+      const skeletonNodesGroupedByParents = new Map<GridRowId, GridRowId[]>();
+
+      // Group skeleton rows by their parent
+      for (
+        let i = skeletonRowsSection.firstRowIndex;
+        i <= skeletonRowsSection.lastRowIndex;
+        i += 1
+      ) {
+        const rowId = expandedSortedRowIds[i];
+        const rowNode = gridRowNodeSelector(privateApiRef, rowId);
+        if (rowNode?.type === 'skeletonRow' && rowNode.parent != null) {
+          if (!skeletonNodesGroupedByParents.has(rowNode.parent)) {
+            skeletonNodesGroupedByParents.set(rowNode.parent, []);
+          }
+          skeletonNodesGroupedByParents.get(rowNode.parent)!.push(rowId);
+        }
+      }
+
+      // Process each parent group separately
+      skeletonNodesGroupedByParents.forEach((skeletonIds, parentId) => {
+        const parentNode = gridRowNodeSelector(privateApiRef, parentId) as GridGroupNode;
+        if (!parentNode) {
+          return;
+        }
+        const parentChildren = parentNode.children;
+
+        // Find the first and last skeleton row indexes relative to parent
+        const firstSkeletonIdx = parentChildren.indexOf(skeletonIds[0]);
+        const lastSkeletonIdx = parentChildren.indexOf(skeletonIds[skeletonIds.length - 1]);
+
+        if (firstSkeletonIdx === -1 || lastSkeletonIdx === -1) {
+          return;
+        }
+
+        if (parentId === GRID_ROOT_GROUP_ID) {
+          debouncedFetchRows(
+            adjustRowParams({
+              start: firstSkeletonIdx,
+              end: lastSkeletonIdx,
+              sortModel,
+              filterModel,
+              groupKeys: [],
+            }),
+          );
+        } else {
+          privateApiRef.current.dataSource.fetchRows(
+            parentId,
+            adjustRowParams({
+              start: firstSkeletonIdx,
+              end: lastSkeletonIdx,
+            }),
+          );
+        }
+      });
+
+      return true;
+    },
+    [privateApiRef, debouncedFetchRows, adjustRowParams, revalidateRows, startPolling],
+  );
+
+  const fetchVisibleSkeletonRows = React.useCallback(
+    (options: FetchSkeletonRowsOptions = {}) => {
+      const cachedInterval = renderedRowsIntervalCache.current;
+      let firstRowIndex = cachedInterval.firstRowToRender;
+      let lastRowIndex = cachedInterval.lastRowToRender;
+
+      if (lastRowIndex <= firstRowIndex) {
+        const renderContext = gridRenderContextSelector(privateApiRef);
+        firstRowIndex = renderContext.firstRowIndex;
+        lastRowIndex = renderContext.lastRowIndex;
+      }
+
+      if (lastRowIndex <= firstRowIndex) {
+        return false;
+      }
+
+      return findSkeletonSectionAndFetchRows(firstRowIndex, lastRowIndex, options);
+    },
+    [privateApiRef, findSkeletonSectionAndFetchRows],
+  );
+
   const cleanUpParentNodeAndGenerateSkeletonRows = React.useCallback(
     (parentId: GridRowId) => {
       const dataRowIdToModelLookup = { ...privateApiRef.current.state.rows.dataRowIdToModelLookup };
@@ -350,7 +470,7 @@ export const useGridDataSourceNestedLazyLoader = (
       parentId: GridRowId = GRID_ROOT_GROUP_ID,
     ) => {
       if (response.rows.length === 0) {
-        return;
+        return false;
       }
 
       const tree = { ...privateApiRef.current.state.rows.tree };
@@ -378,6 +498,13 @@ export const useGridDataSourceNestedLazyLoader = (
         props.treeData || !('groupFields' in fetchParams)
           ? []
           : ((fetchParams as GridGetRowsParamsWithGrouping).groupFields ?? []);
+      // The Premium pivoting pipe processor adds `pivotModel` only while pivoting is active.
+      // Match the non-lazy row grouping path by capping default expansion at the last
+      // row-grouping level when pivoting is active.
+      const isPivotingActive =
+        !props.treeData && (fetchParams as GridGetRowsParamsWithGrouping).pivotModel != null;
+      const maxDepth = isPivotingActive ? groupFields.length - 1 : undefined;
+      let hasAutoExpandedGroup = false;
 
       for (let i = 0; i < response.rows.length; i += 1) {
         const rowModel = response.rows[i];
@@ -398,6 +525,10 @@ export const useGridDataSourceNestedLazyLoader = (
         let rowTreeNodeConfig: GridLeafNode | GridDataSourceGroupNode;
 
         const groupingKey = getGroupKey(rowModel);
+        const previousNode = tree[rowId];
+        const previousChildrenExpanded =
+          previousNode?.type === 'group' ? previousNode.childrenExpanded : undefined;
+
         if (childrenCount === 0) {
           rowTreeNodeConfig = {
             id: rowId,
@@ -421,7 +552,7 @@ export const useGridDataSourceNestedLazyLoader = (
 
             tree[skeletonId] = skeletonRowNode;
           }
-          rowTreeNodeConfig = {
+          const groupNode: GridDataSourceGroupNode = {
             id: rowId,
             depth: parentDepth + 1,
             parent: parentId,
@@ -434,6 +565,20 @@ export const useGridDataSourceNestedLazyLoader = (
             serverChildrenCount: childrenCount,
             childrenFromPath: {},
           };
+          const childrenExpanded = checkGroupChildrenExpansion(
+            groupNode,
+            props.defaultGroupingExpansionDepth,
+            maxDepth,
+            props.isGroupExpandedByDefault,
+            previousChildrenExpanded,
+          );
+
+          rowTreeNodeConfig = {
+            ...groupNode,
+            childrenExpanded,
+          };
+
+          hasAutoExpandedGroup ||= childrenExpanded === true && previousChildrenExpanded == null;
         }
         dataRowIdToModelLookup[rowId] = rowModel;
         tree[rowId] = rowTreeNodeConfig;
@@ -477,8 +622,17 @@ export const useGridDataSourceNestedLazyLoader = (
         },
       }));
       privateApiRef.current.publishEvent('rowsSet');
+
+      return hasAutoExpandedGroup;
     },
-    [privateApiRef, getGroupKey, getChildrenCount, props.treeData],
+    [
+      privateApiRef,
+      getGroupKey,
+      getChildrenCount,
+      props.treeData,
+      props.defaultGroupingExpansionDepth,
+      props.isGroupExpandedByDefault,
+    ],
   );
 
   const removeDuplicateRows = React.useCallback(
@@ -577,6 +731,7 @@ export const useGridDataSourceNestedLazyLoader = (
       }
 
       const { response, fetchParams } = params;
+      let hasAutoExpandedGroup = false;
       const pageRowCount = privateApiRef.current.state.pagination.rowCount;
       if (
         (fetchParams as GridGetRowsParams).groupKeys?.length === 0 &&
@@ -600,7 +755,7 @@ export const useGridDataSourceNestedLazyLoader = (
 
         if (!updateLoadedRows(GRID_ROOT_GROUP_ID, startingIndex, response.rows)) {
           removeDuplicateRows(response.rows);
-          replaceNestedRows(startingIndex, response, fetchParams);
+          hasAutoExpandedGroup = replaceNestedRows(startingIndex, response, fetchParams);
         }
       }
 
@@ -614,6 +769,9 @@ export const useGridDataSourceNestedLazyLoader = (
         false,
       );
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
+      if (hasAutoExpandedGroup) {
+        fetchVisibleSkeletonRows({ skipFallbackRevalidation: true });
+      }
       startPolling();
     },
     [
@@ -622,6 +780,7 @@ export const useGridDataSourceNestedLazyLoader = (
       replaceNestedRows,
       removeDuplicateRows,
       updateLoadedRows,
+      fetchVisibleSkeletonRows,
       startPolling,
     ],
   );
@@ -637,13 +796,23 @@ export const useGridDataSourceNestedLazyLoader = (
 
       // Get the relative start index from fetchParams
       const startIndex = typeof fetchParams.start === 'number' ? fetchParams.start : 0;
+      let hasAutoExpandedGroup = false;
       if (!updateLoadedRows(parentId, startIndex, response.rows)) {
         removeDuplicateRows(response.rows);
-        replaceNestedRows(startIndex, response, fetchParams, parentId);
+        hasAutoExpandedGroup = replaceNestedRows(startIndex, response, fetchParams, parentId);
+      }
+      if (hasAutoExpandedGroup) {
+        fetchVisibleSkeletonRows({ skipFallbackRevalidation: true });
       }
       startPolling();
     },
-    [replaceNestedRows, removeDuplicateRows, updateLoadedRows, startPolling],
+    [
+      replaceNestedRows,
+      removeDuplicateRows,
+      updateLoadedRows,
+      fetchVisibleSkeletonRows,
+      startPolling,
+    ],
   );
 
   const handleRowCountChange = React.useCallback(
@@ -663,86 +832,6 @@ export const useGridDataSourceNestedLazyLoader = (
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
     },
     [privateApiRef, addRootSkeletonRows],
-  );
-
-  const findSkeletonSectionAndFetchRows = React.useCallback(
-    (firstRowIndex: number, lastRowIndex: number) => {
-      const sortModel = gridSortModelSelector(privateApiRef);
-      const filterModel = gridFilterModelSelector(privateApiRef);
-      const currentVisibleRows = getVisibleRows(privateApiRef);
-
-      const skeletonRowsSection = findSkeletonRowsSection({
-        apiRef: privateApiRef,
-        visibleRows: currentVisibleRows.rows,
-        range: {
-          firstRowIndex,
-          lastRowIndex,
-        },
-      });
-
-      if (!skeletonRowsSection) {
-        revalidateRows(firstRowIndex, lastRowIndex);
-        startPolling();
-        return;
-      }
-
-      const expandedSortedRowIds = gridExpandedSortedRowIdsSelector(privateApiRef);
-      const skeletonNodesGroupedByParents = new Map<GridRowId, GridRowId[]>();
-
-      // Group skeleton rows by their parent
-      for (
-        let i = skeletonRowsSection.firstRowIndex;
-        i <= skeletonRowsSection.lastRowIndex;
-        i += 1
-      ) {
-        const rowId = expandedSortedRowIds[i];
-        const rowNode = gridRowNodeSelector(privateApiRef, rowId);
-        if (rowNode?.type === 'skeletonRow' && rowNode.parent != null) {
-          if (!skeletonNodesGroupedByParents.has(rowNode.parent)) {
-            skeletonNodesGroupedByParents.set(rowNode.parent, []);
-          }
-          skeletonNodesGroupedByParents.get(rowNode.parent)!.push(rowId);
-        }
-      }
-
-      // Process each parent group separately
-      skeletonNodesGroupedByParents.forEach((skeletonIds, parentId) => {
-        const parentNode = gridRowNodeSelector(privateApiRef, parentId) as GridGroupNode;
-        if (!parentNode) {
-          return;
-        }
-        const parentChildren = parentNode.children;
-
-        // Find the first and last skeleton row indexes relative to parent
-        const firstSkeletonIdx = parentChildren.indexOf(skeletonIds[0]);
-        const lastSkeletonIdx = parentChildren.indexOf(skeletonIds[skeletonIds.length - 1]);
-
-        if (firstSkeletonIdx === -1 || lastSkeletonIdx === -1) {
-          return;
-        }
-
-        if (parentId === GRID_ROOT_GROUP_ID) {
-          debouncedFetchRows(
-            adjustRowParams({
-              start: firstSkeletonIdx,
-              end: lastSkeletonIdx,
-              sortModel,
-              filterModel,
-              groupKeys: [],
-            }),
-          );
-        } else {
-          privateApiRef.current.dataSource.fetchRows(
-            parentId,
-            adjustRowParams({
-              start: firstSkeletonIdx,
-              end: lastSkeletonIdx,
-            }),
-          );
-        }
-      });
-    },
-    [privateApiRef, debouncedFetchRows, adjustRowParams, revalidateRows, startPolling],
   );
 
   const handleRenderedRowsIntervalChange = React.useCallback<

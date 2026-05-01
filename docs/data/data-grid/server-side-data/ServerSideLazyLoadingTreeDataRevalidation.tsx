@@ -515,6 +515,15 @@ function ServerSideLazyLoadingTreeDataRevalidation() {
           justifyContent: 'flex-end',
         }}
       >
+        {useCache && (
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => apiRef.current?.dataSource.cache.clear()}
+          >
+            Clear cache
+          </Button>
+        )}
         <FormControlLabel
           control={
             <Switch
@@ -525,15 +534,6 @@ function ServerSideLazyLoadingTreeDataRevalidation() {
           }
           label="Use cache"
         />
-        {useCache && (
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => apiRef.current?.dataSource.cache.clear()}
-          >
-            Clear cache
-          </Button>
-        )}
       </Stack>
       <div style={{ width: '100%', height: 360 }}>
         <DataGridPro

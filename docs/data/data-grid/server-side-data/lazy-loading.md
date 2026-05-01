@@ -126,6 +126,24 @@ The demo below exhibits the behavior of the nested lazy loading with row groupin
 
 {{"demo": "ServerSideRowGroupingNestedLazyLoading.js", "bg": "inline"}}
 
+## Group expansion
+
+Group expansion with nested lazy loading works similarly to how it's described in the [client-side row grouping documentation](/x/react-data-grid/row-grouping/#group-expansion).
+The Data Grid expands newly loaded groups based on the `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault()` props, then fetches the visible child skeleton rows for those expanded groups.
+Groups that are loaded later while scrolling use the same behavior.
+
+### Tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+The following demo uses `defaultGroupingExpansionDepth={1}` to expand top-level tree data groups as they are loaded.
+
+{{"demo": "ServerSideLazyLoadingTreeDataGroupExpansion.js", "bg": "inline"}}
+
+### Row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+The following demo uses `defaultGroupingExpansionDepth={-1}` to expand all row grouping groups in a waterfall manner.
+
+{{"demo": "ServerSideLazyLoadingRowGroupingGroupExpansion.js", "bg": "inline"}}
+
 ## Dynamic data and cache revalidation
 
 When users scroll back to an already fetched range, the Data Grid performs a revalidation for that range. It checks the cache entry, and if it is outdated (or the cache is disabled), it refetches the data from the server, and updates only if the subset is _actually changed_ minimizing the row replacements in the Data Grid.

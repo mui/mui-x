@@ -380,10 +380,23 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         { id: 'A', name: 'A', childrenCount: 2 },
         { id: 'B', name: 'B', childrenCount: 0 },
         { id: 'C', name: 'C', childrenCount: 0 },
+        { id: 'D', name: 'D', childrenCount: 0 },
+        { id: 'E', name: 'E', childrenCount: 0 },
+        { id: 'F', name: 'F', childrenCount: 0 },
+        { id: 'G', name: 'G', childrenCount: 0 },
+        { id: 'H', name: 'H', childrenCount: 0 },
+        { id: 'I', name: 'I', childrenCount: 0 },
+        { id: 'J', name: 'J', childrenCount: 0 },
+        { id: 'K', name: 'K', childrenCount: 2 },
+        { id: 'L', name: 'L', childrenCount: 0 },
       ],
       '["A"]': [
         { id: 'A-0', name: 'A-0', childrenCount: 0 },
         { id: 'A-1', name: 'A-1', childrenCount: 0 },
+      ],
+      '["K"]': [
+        { id: 'K-0', name: 'K-0', childrenCount: 0 },
+        { id: 'K-1', name: 'K-1', childrenCount: 0 },
       ],
     };
 
@@ -474,6 +487,83 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(rootRequest).not.to.equal(undefined);
       expect(rootRequest?.start).to.equal(0);
       expect(rootRequest?.end).to.equal(9);
+    });
+
+    it('should lazy load children for default-expanded tree data groups', async () => {
+      const localFetchRowsSpy = spy();
+      render(
+        <TestNestedDataSourceLazyLoader
+          defaultGroupingExpansionDepth={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('A-0')).not.to.equal(null);
+      });
+
+      const parentNode = apiRef.current!.getRowNode<GridGroupNode>('A')!;
+      expect(parentNode.childrenExpanded).to.equal(true);
+
+      const nestedRequest = localFetchRowsSpy.getCalls().find((call) => {
+        const params = call.firstArg as GridGetRowsParams;
+        return JSON.stringify(params.groupKeys) === JSON.stringify(['A']);
+      })?.firstArg as GridGetRowsParams | undefined;
+      expect(nestedRequest).not.to.equal(undefined);
+    });
+
+    it('should apply default expansion to tree data groups loaded while scrolling', async () => {
+      const localFetchRowsSpy = spy();
+      render(
+        <TestNestedDataSourceLazyLoader
+          defaultGroupingExpansionDepth={1}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+
+      await waitFor(() => expect(apiRef.current!.getRow('A')).not.to.equal(null));
+      await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('K-0')).not.to.equal(null);
+      });
+
+      const scrolledParentNode = apiRef.current!.getRowNode<GridGroupNode>('K')!;
+      expect(scrolledParentNode.childrenExpanded).to.equal(true);
+
+      const scrolledNestedRequest = localFetchRowsSpy.getCalls().find((call) => {
+        const params = call.firstArg as GridGetRowsParams;
+        return JSON.stringify(params.groupKeys) === JSON.stringify(['K']);
+      })?.firstArg as GridGetRowsParams | undefined;
+      expect(scrolledNestedRequest).not.to.equal(undefined);
+    });
+
+    it('should use isGroupExpandedByDefault for lazy-loaded tree data groups', async () => {
+      const localFetchRowsSpy = spy();
+      const isGroupExpandedByDefault = spy((node: GridGroupNode) => node.id === 'K');
+      render(
+        <TestNestedDataSourceLazyLoader
+          defaultGroupingExpansionDepth={-1}
+          isGroupExpandedByDefault={isGroupExpandedByDefault}
+          onFetchRows={localFetchRowsSpy}
+        />,
+      );
+
+      await waitFor(() => expect(apiRef.current!.getRow('A')).not.to.equal(null));
+
+      const firstParentNode = apiRef.current!.getRowNode<GridGroupNode>('A')!;
+      expect(firstParentNode.childrenExpanded).to.equal(false);
+      expect(apiRef.current!.getRow('A-0')).to.equal(null);
+
+      await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow('K-0')).not.to.equal(null);
+      });
+
+      const scrolledParentNode = apiRef.current!.getRowNode<GridGroupNode>('K')!;
+      expect(scrolledParentNode.childrenExpanded).to.equal(true);
+      expect(isGroupExpandedByDefault.called).to.equal(true);
     });
 
     it('should periodically revalidate expanded nested rows without setting children loading', async () => {
