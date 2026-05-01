@@ -55,6 +55,12 @@ export interface EventTimelinePremiumClasses extends EventDialogClasses {
   eventRecurringIcon: string;
   /** Styles applied to event skeleton elements rendered while events are loading. */
   eventSkeleton: string;
+  /** Styles applied to the error container element. */
+  errorContainer: string;
+  /** Styles applied to error alert elements. */
+  errorAlert: string;
+  /** Styles applied to error message elements. */
+  errorMessage: string;
 }
 
 export type EventTimelinePremiumClassKey = keyof EventTimelinePremiumClasses;
@@ -92,6 +98,9 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'eventLinesClamp',
     'eventRecurringIcon',
     'eventSkeleton',
+    'errorContainer',
+    'errorAlert',
+    'errorMessage',
     ...eventDialogClassKeys,
   ],
 );
