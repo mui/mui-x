@@ -1,9 +1,9 @@
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   openPicker,
   getFieldInputRoot,
@@ -42,11 +42,14 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
 
       const expectedValueStr = `${expectedStartValueStr} – ${expectedEndValueStr}`;
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false, closeMobilePicker }) => {
+    setNewValue: async (
+      value,
+      { isOpened, applySameValue, setEndDate = false, closeMobilePicker, user },
+    ) => {
       if (!isOpened) {
-        openPicker({
+        await openPicker(user, {
           type: 'time-range',
           initialFocus: setEndDate ? 'end' : 'start',
           fieldType: 'single-input',
@@ -63,7 +66,7 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
       }
 
       // Go to the start date or the end date
-      fireEvent.click(screen.getByRole('tab', { name: setEndDate ? 'End' : 'Start' }));
+      await user.click(screen.getByRole('tab', { name: setEndDate ? 'End' : 'Start' }));
 
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hours = adapterToUse.format(
@@ -71,22 +74,21 @@ describe('<MobileTimeRangePicker /> - Describe Value Single Input', () => {
         hasMeridiem ? 'hours12h' : 'hours24h',
       );
       const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-      fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
-      fireEvent.click(
+      await user.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+      await user.click(
         screen.getByRole('option', {
           name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
         }),
       );
       if (hasMeridiem) {
-        fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+        await user.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
       }
 
       if (closeMobilePicker) {
         if (setEndDate) {
-          fireEvent.click(screen.getByRole('button', { name: /ok/i }));
+          await user.click(screen.getByRole('button', { name: /ok/i }));
         } else {
-          // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-          fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+          await user.keyboard('{Escape}');
         }
       }
 

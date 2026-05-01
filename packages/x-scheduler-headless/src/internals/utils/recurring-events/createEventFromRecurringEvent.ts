@@ -1,15 +1,11 @@
-import {
-  SchedulerEvent,
-  SchedulerEventCreationProperties,
-  SchedulerProcessedEvent,
-} from '../../../models';
+import { SchedulerEventCreationProperties, SchedulerProcessedEvent } from '../../../models';
 
 /**
  * Generates the property to pass to `store.updateEvents()` to create an event extracted from a potentially recurring event.
  */
 export function createEventFromRecurringEvent(
   originalEvent: SchedulerProcessedEvent,
-  changes: Partial<SchedulerEvent>,
+  changes: Partial<SchedulerEventCreationProperties>,
 ): SchedulerEventCreationProperties {
   const createdEvent: SchedulerEventCreationProperties = {
     ...originalEvent.modelInBuiltInFormat,

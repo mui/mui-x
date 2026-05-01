@@ -87,7 +87,7 @@
     },
     {
       "name": "loadingIcon",
-      "description": "The component that is rendered when the item is in an loading state.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.",
+      "description": "The component that is rendered when the item is in a loading state.\nWarning: This slot is only useful when using the `<RichTreeViewPro />` component is lazy loading is enabled.",
       "default": "TreeItemLoadingContainer",
       "class": "MuiTreeItem-loadingIcon"
     },
@@ -100,50 +100,7 @@
       "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "disabled",
-      "className": "Mui-disabled",
-      "description": "State class applied to the content element when the item is disabled.",
-      "isGlobal": true,
-      "isDeprecated": true
-    },
-    {
-      "key": "editable",
-      "className": "MuiTreeItem-editable",
-      "description": "State class applied to the content element when the item is editable.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
-      "key": "editing",
-      "className": "MuiTreeItem-editing",
-      "description": "State class applied to the content element when the item is being edited.",
-      "isGlobal": false,
-      "isDeprecated": true
-    },
-    {
-      "key": "expanded",
-      "className": "Mui-expanded",
-      "description": "State class applied to the content element when the item is expanded.",
-      "isGlobal": true,
-      "isDeprecated": true
-    },
-    {
-      "key": "focused",
-      "className": "Mui-focused",
-      "description": "State class applied to the content element when the item is focused.",
-      "isGlobal": true,
-      "isDeprecated": true
-    },
-    {
-      "key": "selected",
-      "className": "Mui-selected",
-      "description": "State class applied to the content element when the item is selected.",
-      "isGlobal": true,
-      "isDeprecated": true
-    }
-  ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": true,
   "muiName": "MuiTreeItem",

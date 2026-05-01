@@ -3,6 +3,7 @@ import {
   type CommonDefaultizedProps,
   type CommonSeriesType,
   type SeriesId,
+  type DatasetElementType,
 } from '@mui/x-charts/internals';
 import { type DefaultizedProps } from '@mui/x-internals/types';
 
@@ -10,12 +11,18 @@ import { type DefaultizedProps } from '@mui/x-internals/types';
 export type RangeBarValueType = [number, number];
 
 export interface RangeBarSeriesType
-  extends CommonSeriesType<RangeBarValueType | null>, CartesianSeriesType {
+  extends CommonSeriesType<RangeBarValueType | null, 'rangeBar'>, CartesianSeriesType {
   type: 'rangeBar';
   /**
    * Data associated to each range bar.
    */
   data?: ReadonlyArray<RangeBarValueType | null>;
+  /**
+   * A function to transform the dataset item into a range bar value.
+   * @param {DatasetElementType} item The full dataset item.
+   * @returns {RangeBarValueType | null} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => RangeBarValueType | null;
   /**
    * The keys used to retrieve data from the dataset. Must be provided if the `dataset` prop is used.
    */

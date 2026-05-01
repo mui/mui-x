@@ -3,17 +3,18 @@ import dayjs, { Dayjs } from 'dayjs';
 import Badge from '@mui/material/Badge';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { PickerDay, PickerDayProps } from '@mui/x-date-pickers/PickerDay';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 
 function getRandomNumber(min: number, max: number) {
+  // eslint-disable-next-line no-restricted-properties -- used for interactive server simulation
   return Math.round(Math.random() * (max - min) + min);
 }
 
 /**
  * Mimic fetch with abort controller https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
- * ⚠️ No IE11 support
+ * ⚠️ No IE 11 support
  */
 function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
   return new Promise<{ daysToHighlight: number[] }>((resolve, reject) => {
@@ -33,7 +34,7 @@ function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
 
 const initialValue = dayjs('2022-04-17');
 
-function ServerDay(props: PickersDayProps & { highlightedDays?: number[] }) {
+function ServerDay(props: PickerDayProps & { highlightedDays?: number[] }) {
   const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
   const isSelected =
@@ -45,7 +46,7 @@ function ServerDay(props: PickersDayProps & { highlightedDays?: number[] }) {
       overlap="circular"
       badgeContent={isSelected ? '🌚' : undefined}
     >
-      <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
+      <PickerDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
     </Badge>
   );
 }

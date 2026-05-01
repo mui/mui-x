@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { describeConformance } from 'test/utils/describeConformance';
-import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
+import { describeConformance } from 'test/utils/charts/describeConformance';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -12,22 +12,11 @@ describe('<BarChart />', () => {
     <BarChart height={100} width={100} series={[{ data: [100, 200] }]} />,
     () => ({
       classes: {} as any,
-      inheritComponent: 'svg',
+      inheritComponent: 'div',
       render,
       muiName: 'MuiBarChart',
       testComponentPropWith: 'div',
-      refInstanceof: window.SVGSVGElement,
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'slotPropsProp',
-        'slotPropsCallback',
-        'slotsProp',
-        'themeStyleOverrides',
-        'themeVariants',
-        'themeCustomPalette',
-        'themeDefaultProps',
-      ],
+      refInstanceof: window.HTMLDivElement,
     }),
   );
 
@@ -43,10 +32,9 @@ describe('<BarChart />', () => {
     expect(screen.getByText('No data to display')).toBeVisible();
   });
 
-  it('prioritizes `barLabel` from series over `barLabel` prop', () => {
+  it('show `barLabel` from series', () => {
     render(
       <BarChart
-        barLabel={() => 'Bar label from prop'}
         series={[{ data: [1], barLabel: () => 'Bar label from series' }]}
         width={100}
         height={100}
@@ -56,22 +44,6 @@ describe('<BarChart />', () => {
     );
 
     expect(screen.getByText('Bar label from series')).toBeVisible();
-  });
-
-  it("defaults to `barLabel` prop when `barLabel` from series isn't defined", () => {
-    render(
-      <BarChart
-        barLabel={() => 'Bar label from prop'}
-        series={[{ data: [1] }, { data: [1], barLabel: () => 'Bar label from 2nd series' }]}
-        width={100}
-        height={100}
-        xAxis={[{ data: ['A'] }]}
-        yAxis={[]}
-      />,
-    );
-
-    expect(screen.getByText('Bar label from prop')).toBeVisible();
-    expect(screen.getByText('Bar label from 2nd series')).toBeVisible();
   });
 
   const wrapper = ({ children }: { children?: React.ReactNode }) => (
@@ -94,7 +66,7 @@ describe('<BarChart />', () => {
         { wrapper },
       );
 
-      const bar = document.querySelector(`.${barElementClasses.root}`)!;
+      const bar = document.querySelector(`.${barClasses.element}`)!;
       await user.pointer({ target: bar, coords: { x: 200, y: 200 } });
 
       expect(await screen.findByRole('tooltip')).toBeVisible();
@@ -124,7 +96,7 @@ describe('<BarChart />', () => {
         { wrapper },
       );
 
-      const bar = document.querySelector(`.${barElementClasses.root}`)!;
+      const bar = document.querySelector(`.${barClasses.element}`)!;
 
       await user.pointer({ target: bar, coords: { x: 200, y: 200 } });
 
@@ -158,9 +130,16 @@ describe('<BarChart />', () => {
         { wrapper },
       );
 
-      const bars = document.querySelectorAll(`.${barElementClasses.root}`);
+      const bars = document.querySelectorAll(`.${barClasses.element}`);
 
-      await user.pointer({ target: bars[0] });
+      const barRect = bars[0].getBoundingClientRect();
+      await user.pointer({
+        target: bars[0],
+        coords: {
+          clientX: barRect.left + barRect.width / 2,
+          clientY: barRect.top + barRect.height / 2,
+        },
+      });
 
       expect([...bars].map((b) => b.getAttribute('data-highlighted'))).to.deep.equal([
         'true',
@@ -176,6 +155,58 @@ describe('<BarChart />', () => {
       ]);
     },
   );
+
+  it('should support axis valueGetter', async () => {
+    const dataset = [
+      { date: '2025-01-01', value: 100 },
+      { date: '2025-02-01', value: 200 },
+      { date: '2025-03-01', value: 300 },
+    ];
+
+    render(
+      <BarChart
+        dataset={dataset}
+        xAxis={[
+          {
+            scaleType: 'band',
+            valueGetter: (item) =>
+              new Date(item.date as string).toLocaleDateString('en-US', { month: 'short' }),
+          },
+        ]}
+        series={[{ dataKey: 'value' }]}
+        width={500}
+        height={300}
+      />,
+    );
+
+    const label = await screen.findByText('Jan');
+    expect(label).toBeVisible();
+  });
+
+  it('should support series valueGetter', async () => {
+    const dataset = [
+      { version: 'v1', count: '100' },
+      { version: 'v2', count: '200' },
+    ];
+
+    render(
+      <BarChart
+        dataset={dataset}
+        xAxis={[{ dataKey: 'version' }]}
+        series={[
+          {
+            valueGetter: (item) => parseFloat(item.count as string),
+            label: 'Count',
+          },
+        ]}
+        width={500}
+        height={300}
+      />,
+    );
+
+    const label = await screen.findByText('v1');
+    expect(label).toBeVisible();
+  });
 
   it('should support dataset with missing values', async () => {
     const dataset = [

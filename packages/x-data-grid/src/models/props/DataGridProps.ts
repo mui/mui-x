@@ -12,7 +12,11 @@ import type { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from
 import type { GridEventListener } from '../events';
 import type { GridCallbackDetails, GridLocaleText } from '../api';
 import type { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridColDef, GridListViewColDef } from '../colDef/gridColDef';
+import type {
+  GridColDef,
+  GridListViewColDef,
+  GridCheckboxSelectionColDef,
+} from '../colDef/gridColDef';
 import type { GridClasses } from '../../constants/gridClasses';
 import type {
   GridRowHeightParams,
@@ -49,6 +53,15 @@ export interface GridExperimentalFeatures {
    * Only works if NODE_ENV=test.
    */
   warnIfFocusStateIsNotSynced: boolean;
+  /**
+   * Sets the layout mode of the virtualizer.
+   * - `'uncontrolled'` (default): the browser controls scrolling and the virtualizer
+   *   positions rows using a filler element.
+   * - `'controlled'`: the virtualizer controls scrolling by translating the viewport,
+   *   enabling features such as sticky pinned rows and columns without extra DOM cost.
+   * @default 'uncontrolled'
+   */
+  virtualizerLayoutMode: 'controlled' | 'uncontrolled';
 }
 
 /**
@@ -354,6 +367,13 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * @default 0
    */
   throttleRowsMs: number;
+  /**
+   * If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired.
+   * If the refetched rows are different from the current rows, the grid will update the rows.
+   * Set to `0` to disable polling.
+   * @default 0
+   */
+  dataSourceRevalidateMs: number;
   /**
    * If `true`, reordering columns is disabled.
    * @default false
@@ -862,6 +882,15 @@ export interface DataGridPropsWithoutDefaultValue<
    * The options for autosize when user-initiated.
    */
   autosizeOptions?: GridAutosizeOptions;
+  /**
+   * Definition of the column rendered when the `checkboxSelection` prop is enabled.
+   *
+   * @warning
+   * Be careful when overriding `renderHeader` or `renderCell` in the `checkboxColDef` prop.
+   * The default implementation of these properties includes the logic for selecting all rows and selecting a single row, respectively.
+   * Overriding them without providing the same functionality will break the row selection.
+   */
+  checkboxColDef?: GridCheckboxSelectionColDef<R>;
   /**
    * Callback fired while a column is being resized.
    * @param {GridColumnResizeParams} params With all properties from [[GridColumnResizeParams]].

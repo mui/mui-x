@@ -36,7 +36,7 @@
         "description": "{<br />  /**<br />   * Value added to the default `outerRadius`.<br />   * Can be negative. It is ignored if you provide a `highlighted.outerRadius` value.<br />   */<br />  additionalRadius?: number<br />  innerRadius?: number<br />  outerRadius?: number<br />  cornerRadius?: number<br />  paddingAngle?: number<br />  arcLabelRadius?: number<br />  color?: string<br />}"
       }
     },
-    "highlightScope": { "type": { "description": "HighlightScope" } },
+    "highlightScope": { "type": { "description": "HighlightScope&lt;SeriesType&gt;" } },
     "id": { "type": { "description": "SeriesId" } },
     "innerRadius": { "type": { "description": "number | string" }, "default": "0" },
     "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },

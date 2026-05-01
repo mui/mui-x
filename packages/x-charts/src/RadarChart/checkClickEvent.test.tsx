@@ -1,8 +1,8 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
-import { RadarChart, type RadarChartProps } from '@mui/x-charts/RadarChart';
+import { RadarChart, radarClasses, type RadarChartProps } from '@mui/x-charts/RadarChart';
 import { isJSDOM } from 'test/utils/skipIf';
-import { CHART_SELECTOR } from '../tests/constants';
+import { chartsSvgLayerClasses } from '../ChartsSvgLayer';
 
 const config: RadarChartProps = {
   series: [
@@ -24,7 +24,7 @@ describe('RadarChart - click event', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
       const onAxisClick = vi.fn();
-      const { user } = render(
+      const { user, container } = render(
         <div
           style={{
             width: 100,
@@ -34,12 +34,14 @@ describe('RadarChart - click event', () => {
           <RadarChart {...config} onAxisClick={onAxisClick} />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
+      const layerContainer = container.querySelector<HTMLElement>(
+        `.${chartsSvgLayerClasses.root}`,
+      )!.parentElement!;
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 45, clientY: 15 },
         },
       ]);
@@ -53,7 +55,7 @@ describe('RadarChart - click event', () => {
       await user.pointer([
         {
           keys: '[MouseLeft]',
-          target: svg,
+          target: layerContainer,
           coords: { clientX: 80, clientY: 45 },
         },
       ]);
@@ -70,7 +72,7 @@ describe('RadarChart - click event', () => {
       'should provide the right context as second argument with startAngle=90',
       async () => {
         const onAxisClick = vi.fn();
-        const { user } = render(
+        const { user, container } = render(
           <div
             style={{
               width: 100,
@@ -84,12 +86,14 @@ describe('RadarChart - click event', () => {
             />
           </div>,
         );
-        const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
+        const layerContainer = container.querySelector<HTMLElement>(
+          `.${chartsSvgLayerClasses.root}`,
+        )!.parentElement!;
 
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 45, clientY: 15 },
           },
         ]);
@@ -103,7 +107,7 @@ describe('RadarChart - click event', () => {
         await user.pointer([
           {
             keys: '[MouseLeft]',
-            target: svg,
+            target: layerContainer,
             coords: { clientX: 80, clientY: 45 },
           },
         ]);
@@ -120,7 +124,7 @@ describe('RadarChart - click event', () => {
   describe('onMarkClick', () => {
     it('should add cursor="pointer" to mark elements', () => {
       render(<RadarChart {...config} onMarkClick={() => {}} />);
-      const marks = document.querySelectorAll<HTMLElement>('circle.MuiRadarSeriesPlot-mark');
+      const marks = document.querySelectorAll<HTMLElement>(`circle.${radarClasses.seriesMark}`);
 
       expect(Array.from(marks).map((rectangle) => rectangle.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -148,7 +152,7 @@ describe('RadarChart - click event', () => {
         </div>,
       );
 
-      const marks = document.querySelectorAll<HTMLElement>('circle.MuiRadarSeriesPlot-mark');
+      const marks = document.querySelectorAll<HTMLElement>(`circle.${radarClasses.seriesMark}`);
 
       await user.click(marks[0]);
       expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
@@ -176,7 +180,7 @@ describe('RadarChart - click event', () => {
   describe('onAreaClick', () => {
     it('should add cursor="pointer" to mark elements', () => {
       render(<RadarChart {...config} onAreaClick={() => {}} />);
-      const marks = document.querySelectorAll<HTMLElement>('path.MuiRadarSeriesPlot-area');
+      const marks = document.querySelectorAll<HTMLElement>(`path.${radarClasses.seriesArea}`);
 
       expect(Array.from(marks).map((rectangle) => rectangle.getAttribute('cursor'))).to.deep.equal([
         'pointer',
@@ -198,7 +202,7 @@ describe('RadarChart - click event', () => {
         </div>,
       );
 
-      const marks = document.querySelectorAll<HTMLElement>('path.MuiRadarSeriesPlot-area');
+      const marks = document.querySelectorAll<HTMLElement>(`path.${radarClasses.seriesArea}`);
 
       await user.pointer([
         {

@@ -5,7 +5,6 @@ import {
   randomId,
   randomBoolean,
 } from '@mui/x-data-grid-generator';
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient({
@@ -45,14 +44,16 @@ const fetchData = async (_parentId) => {
 
 export function FetchChildren() {
   return (
-    <RichTreeViewPro
-      items={[]}
-      dataSource={{
-        getChildrenCount: (item) => item?.childrenCount,
-        getTreeItems: fetchData,
-      }}
-      dataSourceCache={cache}
-    />
+    <div style={{ width: 300, height: 240 }}>
+      <RichTreeViewPro
+        items={[]}
+        dataSource={{
+          getChildrenCount: (item) => item?.childrenCount,
+          getTreeItems: fetchData,
+        }}
+        dataSourceCache={cache}
+      />
+    </div>
   );
 }
 

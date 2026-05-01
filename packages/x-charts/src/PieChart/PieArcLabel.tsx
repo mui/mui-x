@@ -1,31 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import composeClasses from '@mui/utils/composeClasses';
-import generateUtilityClass from '@mui/utils/generateUtilityClass';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useAnimatePieArcLabel } from '../hooks/animation/useAnimatePieArcLabel';
 import { type SeriesId } from '../models';
-
-export interface PieArcLabelClasses {
-  /** Styles applied to the root element. */
-  root: string;
-  /** Styles applied to the root element when highlighted. */
-  highlighted: string;
-  /** Styles applied to the root element when faded. */
-  faded: string;
-  /** Styles applied to the root element when animation is not skipped. */
-  animate: string;
-  /**
-   * Styles applied to the root element for a specified series.
-   * Needs to be suffixed with the series ID: `.${pieArcLabelClasses.series}-${seriesId}`.
-   */
-  series: string;
-}
-
-export type PieArcLabelClassKey = keyof PieArcLabelClasses;
+import { type PieClasses, pieClasses, useUtilityClasses } from './pieClasses';
 
 interface PieArcLabelOwnerState {
   seriesId: SeriesId;
@@ -33,35 +14,8 @@ interface PieArcLabelOwnerState {
   isFaded: boolean;
   isHighlighted: boolean;
   skipAnimation: boolean;
-  classes?: Partial<PieArcLabelClasses>;
+  classes?: Partial<PieClasses>;
 }
-
-export function getPieArcLabelUtilityClass(slot: string) {
-  return generateUtilityClass('MuiPieArcLabel', slot);
-}
-
-export const pieArcLabelClasses: PieArcLabelClasses = generateUtilityClasses('MuiPieArcLabel', [
-  'root',
-  'highlighted',
-  'faded',
-  'animate',
-  'series',
-]);
-
-const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
-  const { classes, seriesId, isFaded, isHighlighted, skipAnimation } = ownerState;
-  const slots = {
-    root: [
-      'root',
-      `series-${seriesId}`,
-      isHighlighted && 'highlighted',
-      isFaded && 'faded',
-      !skipAnimation && 'animate',
-    ],
-  };
-
-  return composeClasses(slots, getPieArcLabelUtilityClass, classes);
-};
 
 const PieArcLabelRoot = styled('text', {
   name: 'MuiPieArcLabel',
@@ -77,7 +31,7 @@ const PieArcLabelRoot = styled('text', {
   transitionDuration: `${ANIMATION_DURATION_MS}ms`,
   transitionProperty: 'opacity',
   transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
-  [`&.${pieArcLabelClasses.animate}`]: {
+  [`&.${pieClasses.animate}`]: {
     animationDuration: `${ANIMATION_DURATION_MS}ms`,
   },
   '@keyframes animate-opacity': {
@@ -89,8 +43,6 @@ export type PieArcLabelProps = PieArcLabelOwnerState &
   Omit<React.SVGProps<SVGTextElement>, 'ref' | 'color'> & {
     startAngle: number;
     endAngle: number;
-    innerRadius: number;
-    outerRadius: number;
     arcLabelRadius: number;
     cornerRadius: number;
     paddingAngle: number;
@@ -109,14 +61,13 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       endAngle,
       paddingAngle,
       arcLabelRadius,
-      innerRadius,
-      outerRadius,
       cornerRadius,
       formattedArcLabel,
       isHighlighted,
       isFaded,
       skipAnimation,
       hidden,
+      className,
       ...other
     } = props;
 
@@ -134,8 +85,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       cornerRadius,
       startAngle,
       endAngle,
-      innerRadius: arcLabelRadius,
-      outerRadius: arcLabelRadius,
+      arcLabelRadius,
       paddingAngle,
       skipAnimation,
       ref,
@@ -143,7 +93,9 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
 
     return (
       <PieArcLabelRoot
-        className={classes.root}
+        className={clsx(classes.arcLabel, className)}
+        data-highlighted={isHighlighted || undefined}
+        data-faded={isFaded || undefined}
         {...other}
         {...animatedProps}
         opacity={hidden ? 0 : 1}
@@ -166,10 +118,8 @@ PieArcLabel.propTypes = {
   endAngle: PropTypes.number.isRequired,
   formattedArcLabel: PropTypes.string,
   hidden: PropTypes.bool,
-  innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
-  outerRadius: PropTypes.number.isRequired,
   paddingAngle: PropTypes.number.isRequired,
   seriesId: PropTypes.string.isRequired,
   skipAnimation: PropTypes.bool.isRequired,

@@ -1,7 +1,7 @@
 ---
 title: Charts - Toolbar
 productId: x-charts
-components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInTrigger, ChartsToolbarZoomOutTrigger, ChartsToolbarPrintExportTrigger, ChartsToolbarImageExportTrigger
+components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInTrigger, ChartsToolbarZoomOutTrigger, ChartsToolbarRangeButtonTrigger, ChartsToolbarPrintExportTrigger, ChartsToolbarImageExportTrigger
 ---
 
 # Charts - Toolbar
@@ -25,7 +25,7 @@ For example, if the chart doesn't have zooming enabled, then the zoom buttons do
 You can customize basic components, such as buttons and tooltips, by passing custom elements to the `slots` prop of the chart.
 You can use this to replace the default buttons with components from your design system.
 
-If you're composing a custom component, you can provide these basic components as slots to `ChartDataProvider`.
+If you're composing a custom component, you can provide these basic components as slots to `ChartsDataProvider`.
 
 {{"demo": "ChartsToolbarCustomElements.js"}}
 
@@ -48,7 +48,7 @@ Alternatively, you can pass a function to the `render` prop, which receives the 
 
 The section below provides an example of this.
 
-## Fully custom toolbar
+### Fully custom toolbar
 
 You can partially or entirely replace the toolbar with a custom implementation to further customize its functionality.
 To do so, provide a custom component to the `toolbar` slot.
@@ -63,6 +63,82 @@ If you're replacing the toolbar with a custom one, the container should have the
 The `ChartsWrapper` component uses this class to place the toolbar relative to the legend and the chart.
 If you're composing a custom component without `ChartsWrapper`, you can ignore this information.
 :::
+
+## Range buttons
+
+Range buttons allow users to quickly zoom to predefined ranges from the toolbar.
+They work with both time-series and ordinal (band/point) axes.
+
+Pass the `rangeButtons` prop to the toolbar to configure the available ranges.
+Each button zooms the chart to show a specific portion of the data.
+
+{{"demo": "ChartsToolbarRangeButtons.js"}}
+
+### Range button values
+
+The `value` property of each range button supports the following formats:
+
+#### Calendar interval
+
+Use `{ unit, step }` to show a time period from the end of the data. The `step` defaults to `1`.
+Supported units: `'year'`, `'month'`, `'week'`, `'day'`, `'hour'`, `'minute'`, `'second'`, `'millisecond'`, and `'microsecond'`.
+
+```tsx
+{ label: '1M', value: { unit: 'month' } }
+{ label: '3M', value: { unit: 'month', step: 3 } }
+{ label: '1Y', value: { unit: 'year' } }
+```
+
+#### Absolute date range
+
+Use `[startDate, endDate]` to zoom to a fixed date range.
+
+```tsx
+{ label: '2024 H1', value: [new Date(2024, 0, 1), new Date(2024, 6, 1)] }
+```
+
+#### Function
+
+Use a function to compute custom zoom percentages (0–100).
+The function receives a params object with the axis context:
+
+- `scaleType` — The axis scale type (`'time'`, `'band'`, `'linear'`).
+- `data` — The axis data values (available for ordinal axes).
+- `domain` — The full domain bounds (`{ min, max }`). Timestamps for time axes, indices for ordinal.
+
+```tsx
+{ label: 'First half', value: () => ({ start: 0, end: 50 }) }
+{ label: 'Last 5 items', value: ({ data }) => {
+  const count = data.length;
+  return { start: ((count - 5) / (count - 1)) * 100, end: 100 };
+}}
+```
+
+#### Reset
+
+Use `null` to reset zoom to show all data.
+
+```tsx
+{ label: 'All', value: null }
+```
+
+The following demo shows all value types together:
+
+{{"demo": "ChartsToolbarRangeButtonValues.js"}}
+
+### Ordinal axes
+
+Range buttons also work with ordinal (band/point) axes.
+When the axis data contains date-like values, calendar intervals and absolute date ranges are matched against the data points automatically.
+Function values receive index-based domain bounds instead of timestamps.
+
+{{"demo": "ChartsToolbarOrdinalRangeButtons.js"}}
+
+### Custom toolbar with range buttons
+
+You can use `ChartsToolbarRangeButtonTrigger` directly in a custom toolbar to have full control over layout and behavior.
+
+{{"demo": "ChartsToolbarCustomRangeButtons.js"}}
 
 ## Accessibility
 

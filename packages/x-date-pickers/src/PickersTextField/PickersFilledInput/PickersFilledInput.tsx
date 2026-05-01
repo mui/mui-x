@@ -82,7 +82,7 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
           '&::after': {
             left: 0,
             bottom: 0,
-            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            // Doing the other way around crash on IE 11 "''" https://github.com/cssinjs/jss/issues/242
             content: '""',
             position: 'absolute',
             right: 0,
@@ -106,12 +106,15 @@ const PickersFilledInputRoot = styled(PickersInputBaseRoot, {
           '&::before': {
             borderBottom: `1px solid ${
               theme.vars
-                ? `rgba(${theme.vars.palette.common.onBackgroundChannel} / ${theme.vars.opacity.inputUnderline})`
+                ? theme.alpha(
+                    theme.vars.palette.common.onBackground,
+                    theme.vars.opacity.inputUnderline,
+                  )
                 : bottomLineColor
             }`,
             left: 0,
             bottom: 0,
-            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            // Doing the other way around crash on IE 11 "''" https://github.com/cssinjs/jss/issues/242
             content: '"\\00a0"',
             position: 'absolute',
             right: 0,
@@ -228,6 +231,8 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
     disableUnderline = false,
     hiddenLabel = false,
     classes: classesProp,
+    slots: inSlots,
+    slotProps: inSlotProps,
     ...other
   } = props;
 
@@ -240,9 +245,17 @@ const PickersFilledInput = React.forwardRef(function PickersFilledInput(
 
   return (
     <PickersInputBase
-      slots={{ root: PickersFilledInputRoot, input: PickersFilledSectionsContainer }}
-      slotProps={{ root: { disableUnderline }, input: { hiddenLabel } }}
       {...other}
+      slots={{
+        root: PickersFilledInputRoot,
+        input: PickersFilledSectionsContainer,
+        ...inSlots,
+      }}
+      slotProps={{
+        ...inSlotProps,
+        root: { disableUnderline, ...inSlotProps?.root },
+        input: { hiddenLabel, ...inSlotProps?.input },
+      }}
       label={label}
       classes={classes}
       ref={ref as any}
@@ -262,8 +275,8 @@ PickersFilledInput.propTypes = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
+  classes: PropTypes.object,
   className: PropTypes.string,
-  component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
@@ -283,14 +296,32 @@ PickersFilledInput.propTypes = {
       content: PropTypes.object.isRequired,
     }),
   ).isRequired,
+  /**
+   * End `InputAdornment` for this component.
+   */
   endAdornment: PropTypes.node,
+  /**
+   * If `true`, the input will take up the full width of its container.
+   * @default false
+   */
   fullWidth: PropTypes.bool,
   hiddenLabel: PropTypes.bool,
+  /**
+   * The id of the `input` element.
+   */
   id: PropTypes.string,
-  inputProps: PropTypes.object,
+  /**
+   * Pass a ref to the `input` element.
+   */
   inputRef: refType,
+  /**
+   * The label content.
+   */
   label: PropTypes.node,
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  /**
+   * Name attribute of the `input` element.
+   */
   name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
@@ -322,8 +353,10 @@ PickersFilledInput.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * Start `InputAdornment` for this component.
+   */
   startAdornment: PropTypes.node,
-  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

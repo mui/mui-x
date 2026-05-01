@@ -179,6 +179,10 @@ Starting with version `v8.x`, the new DOM structure is the default for all field
 
 #### Fallback to the non-accessible DOM structure
 
+:::info
+The `enableAccessibleFieldDOMStructure` prop has been removed in v9. The accessible DOM structure is now the only supported option.
+:::
+
 ```tsx
 <DateField enableAccessibleFieldDOMStructure={false} />
 <DatePicker enableAccessibleFieldDOMStructure={false} />
@@ -608,7 +612,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
 ### Slot: `field`
 
 - The component passed to the `field` slot no longer receives `InputProps` and `inputProps` props.
-  You now need to manually add the UI to open the picker using the `usePickerContext` hook:
+  You now need to manually add the UI to open the picker using the `usePickerContext()` hook:
 
   ```diff
    import { unstable_useDateField } from '@mui/x-date-pickers/DateField';
@@ -660,7 +664,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
    }
   ```
 
-  If you are using a custom editing behavior, instead of using the `openPickerAriaLabel` property returned by the `useXXXField` hooks, you can generate it manually:
+  If you are using a custom editing behavior, instead of using the `openPickerAriaLabel` property returned by the `useXXXField()` hooks, you can generate it manually:
 
   ```diff
   +import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
@@ -684,7 +688,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
 - The component passed to the `field` slot no longer receives the `value`, `onChange`, `timezone`, `format`, `disabled`, `className`, `sx`, `label`, `name`, `autoFocus`, `focused` and `readOnly` props.
-  You can use the `usePickerContext` hook instead:
+  You can use the `usePickerContext()` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -732,11 +736,11 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
   :::success
-  If you are using a hook like `useDateField`, you don't have to do anything, the values from the context are automatically applied.
+  If you are using a hook like `useDateField()`, you don't have to do anything, the values from the context are automatically applied.
   :::
 
 - The component passed to the `field` slot no longer receives a `ref`.
-  You can use the `usePickerContext` hook instead:
+  You can use the `usePickerContext()` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -781,7 +785,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   - `inputRef`: `undefined`
 
   :::success
-  If you are using a hook like `useDateField`, you don't have to do anything, the value from the context are automatically applied.
+  If you are using a hook like `useDateField()`, you don't have to do anything, the value from the context are automatically applied.
   :::
 
 ### Slot: `inputAdornment`
@@ -801,7 +805,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
 
 ### ⏩ Slot: `layout`
 
-- The `<PickersLayoutRoot />` and `<PickersLayoutContentWrapper />` components must now receive the `ownerState` returned by `usePickerLayout` instead of their props:
+- The `<PickersLayoutRoot />` and `<PickersLayoutContentWrapper />` components must now receive the `ownerState` returned by `usePickerLayout()` instead of their props:
 
   ```diff
   -const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
@@ -818,7 +822,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
 - The component passed to the `layout` slot no longer receives the `value` prop.
-  You can use the `usePickerContext` hook instead:
+  You can use the `usePickerContext()` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -832,7 +836,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
 - The component passed to the `layout` slot no longer receives the `disabled` and `readOnly` props.
-  You can use the `usePickerContext` hook instead:
+  You can use the `usePickerContext()` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -845,7 +849,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
 - The component passed to the `layout` slot no longer receives the `isRtl` prop.
-  You can use the `useRtl` hook from `@mui/system` instead:
+  You can use the `useRtl()` hook from `@mui/system` instead:
 
   ```diff
   +import { useRtl } from '@mui/system/RtlProvider';
@@ -855,7 +859,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
 - The component passed to the `layout` slot no longer receives the `orientation` and `isLandscape` props.
-  You can use the `usePickerContext` hook instead:
+  You can use the `usePickerContext()` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -869,7 +873,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
 - The component passed to the `layout` slot no longer receives the `wrapperVariant` prop.
-  You can use the `usePickerContext` hook instead:
+  You can use the `usePickerContext()` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -879,7 +883,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
 - The component passed to the `layout` slot no longer receives the `view`, `views` and `onViewChange` props.
-  You can use the `usePickerContext` hook instead:
+  You can use the `usePickerContext()` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -897,7 +901,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
 - The component passed to the `layout` slot no longer receives the `onClear`, `onSetToday`, `onAccept`, `onCancel`, `onOpen`, `onClose` `onDismiss`, `onChange` and `onSelectShortcut` props.
-  You can use the `usePickerActionsContext` or the `usePickerContext` hooks instead:
+  You can use the `usePickerActionsContext()` or the `usePickerContext()` hooks instead:
 
   ```diff
   +import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
@@ -952,12 +956,12 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
   :::success
-  The `usePickerContext` also contain all the actions returned by `usePickerActionsContext`.
-  The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
+  The `usePickerContext()` also contain all the actions returned by `usePickerActionsContext()`.
+  The only difference is that `usePickerActionsContext()` only contains variables with stable references that won't cause a re-render of your component.
   :::
 
 - The component passed to the `layout` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers.
-  You can use the `usePickerRangePositionContext` hook instead:
+  You can use the `usePickerRangePositionContext()` hook instead:
 
   ```diff
   +import { usePickerRangePositionContext } from '@mui/x-date-pickers-pro/hooks';
@@ -974,7 +978,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
 ### ⏩ Slot: `toolbar`
 
 - The component passed to the `toolbar` slot no longer receives the `value` prop.
-  You can use the `usePickerContext` hook instead:
+  You can use the `usePickerContext()` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -988,7 +992,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
 - The component passed to the `toolbar` slot no longer receives the `disabled` and `readOnly` props.
-  You can use the `usePickerContext` hook instead:
+  You can use the `usePickerContext()` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -1001,7 +1005,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
 - The component passed to the `toolbar` slot no longer receives the `isLandscape` prop.
-  You can use the `usePickerContext` hook instead:
+  You can use the `usePickerContext()` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -1012,7 +1016,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
 - The component passed to the `toolbar` slot no longer receives the `view`, `views` and `onViewChange` props.
-  You can use the `usePickerContext` hook instead:
+  You can use the `usePickerContext()` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -1028,7 +1032,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
 - The component passed to the `toolbar` slot no longer receives the `onChange` prop.
-  You can use the `usePickerActionsContext` or the `usePickerContext` hooks instead:
+  You can use the `usePickerActionsContext()` or the `usePickerContext()` hooks instead:
 
   ```diff
   +import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
@@ -1042,11 +1046,11 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
   :::success
-  The `usePickerContext` also contain all the actions returned by `usePickerActionsContext`.
-  The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
+  The `usePickerContext()` also contain all the actions returned by `usePickerActionsContext()`.
+  The only difference is that `usePickerActionsContext()` only contains variables with stable references that won't cause a re-render of your component.
   :::
 
-- The component passed to the `toolbar` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers, instead you can use the `usePickerRangePositionContext` hook:
+- The component passed to the `toolbar` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers, instead you can use the `usePickerRangePositionContext()` hook:
 
   ```diff
   +import { usePickerRangePositionContext } from '@mui/x-date-pickers-pro/hooks';
@@ -1063,7 +1067,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
 ### ⏩ Slot: `tabs`
 
 - The component passed to the `tabs` slot no longer receives the `view`, `views` and `onViewChange` props.
-  You can use the `usePickerContext` hook instead:
+  You can use the `usePickerContext()` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -1078,7 +1082,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   +const { onViewChange } = usePickerContext();
   ```
 
-- The component passed to the `tabs` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers, instead you can use the `usePickerRangePositionContext` hook:
+- The component passed to the `tabs` slot no longer receives the `rangePosition` and `onRangePositionChange` on range pickers, instead you can use the `usePickerRangePositionContext()` hook:
 
   ```diff
   +import { usePickerRangePositionContext } from '@mui/x-date-pickers-pro/hooks';
@@ -1095,7 +1099,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
 ### ⏩ Slot: `actionBar`
 
 - The component passed to the `actionBar` slot no longer receives the `onClear`, `onSetToday`, `onAccept` and `onCancel` props.
-  You can use the `usePickerActionsContext` or the `usePickerContext` hooks instead:
+  You can use the `usePickerActionsContext()` or the `usePickerContext()` hooks instead:
 
   ```diff
   +import { usePickerActionsContext } from '@mui/x-date-pickers/hooks';
@@ -1114,14 +1118,14 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
   :::success
-  The `usePickerContext` also contain all the actions returned by `usePickerActionsContext`.
-  The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
+  The `usePickerContext()` also contain all the actions returned by `usePickerActionsContext()`.
+  The only difference is that `usePickerActionsContext()` only contains variables with stable references that won't cause a re-render of your component.
   :::
 
 ### ⏩ Slot: `shortcuts`
 
 - The component passed to the `shortcuts` slot no longer receives the `isLandscape` prop.
-  You can use the `usePickerContext` hook instead:
+  You can use the `usePickerContext()` hook instead:
 
   ```diff
   +import { usePickerContext } from '@mui/x-date-pickers/hooks';
@@ -1132,7 +1136,7 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
 - The component passed to the `shortcuts` slot no longer receives the `onChange` prop.
-  You can use the `usePickerActionsContext` or the `usePickerContext` hooks instead:
+  You can use the `usePickerActionsContext()` or the `usePickerContext()` hooks instead:
 
   ```diff
   -const { onChange } = props;
@@ -1142,12 +1146,12 @@ If the updated values do not fit your use case, you can [override them](/x/react
   ```
 
   :::success
-  The `usePickerContext` also contain all the actions returned by `usePickerActionsContext`.
-  The only difference is that `usePickerActionsContext` only contains variables with stable references that won't cause a re-render of your component.
+  The `usePickerContext()` also contain all the actions returned by `usePickerActionsContext()`.
+  The only difference is that `usePickerActionsContext()` only contains variables with stable references that won't cause a re-render of your component.
   :::
 
 - The component passed to the `shortcuts` slot no longer receives the `isValid` prop.
-  You can use the `useIsValidValue` hook instead:
+  You can use the `useIsValidValue()` hook instead:
 
   ```diff
   +import { useIsValidValue } from '@mui/x-date-pickers/hooks';
@@ -1230,7 +1234,7 @@ The following variables and types have been renamed to have a coherent `Picker` 
 
 ### ⏩ `useMultiInputDateRangeField`
 
-This hook has been removed in favor of the new `useMultiInputRangeField` hook with an improved DX:
+This hook has been removed in favor of the new `useMultiInputRangeField()` hook with an improved DX:
 
 ```diff
  import useSlotProps from '@mui/utils/useSlotProps';
@@ -1281,7 +1285,7 @@ The associated types have also been removed. [Learn how to migrate them](/x/migr
 
 ### ⏩ `useMultiInputTimeRangeField`
 
-This hook has been removed in favor of the new `useMultiInputRangeField` hook with an improved DX:
+This hook has been removed in favor of the new `useMultiInputRangeField()` hook with an improved DX:
 
 ```diff
  import useSlotProps from '@mui/utils/useSlotProps';
@@ -1332,7 +1336,7 @@ The associated types have also been removed. [Learn how to migrate them](/x/migr
 
 ### ⏩ `useMultiInputDateTimeRangeField`
 
-This hook has been removed in favor of the new `useMultiInputRangeField` hook with an improved DX:
+This hook has been removed in favor of the new `useMultiInputRangeField()` hook with an improved DX:
 
 ```diff
  import useSlotProps from '@mui/utils/useSlotProps';
@@ -1423,7 +1427,7 @@ The associated types have also been removed. [Learn how to migrate them](/x/migr
 
 This hook has been removed. The custom field component now receives the `clearable` and `onClear` props.
 
-You can remove the `useClearableField` hook from your component and use the new props to conditionally render the clear button:
+You can remove the `useClearableField()` hook from your component and use the new props to conditionally render the clear button:
 
 ```diff
 -import { useClearableField } from '@mui/x-date-pickers-pro/hooks';
@@ -1969,8 +1973,8 @@ const theme = createTheme({
     MuiPickerPopper: {
       defaultProps: {
         // Those are now the props with support for theme default props
-        position: "bottom"
-        classes: { root: "custom-root-class}
+        position: 'bottom',
+        classes: { root: 'custom-root-class' },
       },
     },
   },

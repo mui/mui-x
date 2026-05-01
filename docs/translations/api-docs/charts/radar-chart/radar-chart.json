@@ -1,11 +1,21 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "className": { "description": "A CSS class name applied to the root element." },
     "colors": { "description": "Color palette used to colorize multiple series." },
+    "desc": {
+      "description": "The description of the chart. Used to provide an accessible description for the chart."
+    },
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
+    "disableKeyboardNavigation": {
+      "description": "If <code>true</code>, disables keyboard navigation for the chart."
+    },
     "divisions": { "description": "The number of divisions in the radar grid." },
+    "experimentalFeatures": {
+      "description": "Options to enable features planned for the next major."
+    },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
@@ -105,6 +115,9 @@
         "string": { "name": "string", "description": "The color to fill the stripe." }
       }
     },
+    "title": {
+      "description": "The title of the chart. Used to provide an accessible label for the chart."
+    },
     "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
@@ -114,6 +127,8 @@
   "slotDescriptions": {
     "baseButton": "",
     "baseIconButton": "",
+    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps&gt;</code>.",
+    "baseToggleButtonGroup": "",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",

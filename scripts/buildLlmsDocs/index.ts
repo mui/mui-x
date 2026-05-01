@@ -68,19 +68,18 @@
  * - **Root Index**: `x/llms.txt` (concatenates all project indexes)
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import yargs, { ArgumentsCamelCase } from 'yargs';
 import { kebabCase } from 'es-toolkit/string';
 import * as prettier from 'prettier';
-import { processMarkdownFile, processApiJson } from '@mui-internal-scripts/generate-llms-txt';
-import { ComponentInfo, ProjectSettings } from '@mui-internal/api-docs-builder';
+import { processMarkdownFile, processApiJson } from '@mui/internal-scripts/generate-llms-txt';
+import { findComponents, findPagesMarkdown } from '@mui/internal-api-docs-builder';
+import type { ComponentInfo, ProjectSettings } from '@mui/internal-api-docs-builder';
 import { getHeaders } from '@mui/internal-markdown';
-import findComponents from '@mui-internal/api-docs-builder/utils/findComponents';
-import findPagesMarkdown from '@mui-internal/api-docs-builder/utils/findPagesMarkdown';
-import { pageToTitleI18n } from 'docs/src/modules/utils/helpers';
-import type { MuiPage } from 'docs/src/MuiPage';
-import pages from 'docsx/data/pages';
+import { pageToTitleI18n } from '@mui/internal-core-docs/helpers';
+import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
+import pages from 'docs/data/pages';
 
 function processApiFile(filePath: string): string {
   const content = fs.readFileSync(filePath, 'utf-8');
@@ -550,7 +549,9 @@ function findProjectPagesSection(projectKey: string): MuiPage | null {
     'data-grid': '/x/react-data-grid-group',
     'date-pickers': '/x/react-date-pickers-group',
     charts: '/x/react-charts-group',
+    scheduler: '/x/react-scheduler-group',
     'tree-view': '/x/react-tree-view-group',
+    chat: '/x/react-chat-group',
   };
 
   const targetPathname = projectPathMap[projectKey];
@@ -658,6 +659,7 @@ function getProjectDisplayNameFromKey(projectKey: string): string {
       pages.find((page) => page.pathname.startsWith('/x/react-tree-view'))?.title || 'Tree View',
     scheduler:
       pages.find((page) => page.pathname.startsWith('/x/react-scheduler'))?.title || 'Scheduler',
+    chat: pages.find((page) => page.pathname.startsWith('/x/react-chat'))?.title || 'Chat',
   };
   return nameMap[projectKey] || projectKey;
 }
@@ -929,6 +931,9 @@ async function buildLlmsDocs(argv: ArgumentsCamelCase<CommandOptions>): Promise<
         }
         if (project.name.includes('scheduler')) {
           return 'scheduler';
+        }
+        if (project.name.includes('chat')) {
+          return 'chat';
         }
       }
       return 'unknown';

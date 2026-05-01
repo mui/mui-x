@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDataset } from '@mui/x-charts/hooks';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { LineHighlightPlot, LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -51,7 +51,7 @@ function DatasetStats() {
       }}
     >
       <div>
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
           Total Revenue
         </Typography>
         <Typography variant="h6" color="primary">
@@ -59,7 +59,7 @@ function DatasetStats() {
         </Typography>
       </div>
       <div>
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
           Total Expenses
         </Typography>
         <Typography variant="h6" color="error">
@@ -67,15 +67,18 @@ function DatasetStats() {
         </Typography>
       </div>
       <div>
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
           Net Profit
         </Typography>
-        <Typography variant="h6" color={profit >= 0 ? 'success.main' : 'error.main'}>
+        <Typography
+          variant="h6"
+          sx={{ color: profit >= 0 ? 'success.main' : 'error.main' }}
+        >
           ${profit.toLocaleString()}
         </Typography>
       </div>
       <div>
-        <Typography variant="caption" color="text.secondary">
+        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
           Data Points
         </Typography>
         <Typography variant="h6">{chartDataset.length}</Typography>
@@ -86,7 +89,7 @@ function DatasetStats() {
 
 export default function UseDataset() {
   return (
-    <ChartDataProvider
+    <ChartsDataProvider
       dataset={dataset}
       xAxis={[{ dataKey: 'month', scaleType: 'point' }]}
       series={[
@@ -119,6 +122,6 @@ export default function UseDataset() {
           <ChartsLegend direction="horizontal" />
         </Box>
       </Box>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   );
 }

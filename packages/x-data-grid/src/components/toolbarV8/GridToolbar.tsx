@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { GridMenu } from '../menu/GridMenu';
 import { Toolbar } from './Toolbar';

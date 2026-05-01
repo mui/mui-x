@@ -50,8 +50,7 @@ describe('<DataGrid /> - Cells', () => {
     });
   });
 
-  // Doesn't work with mocked window.getComputedStyle
-  describe.skipIf(isJSDOM)('prop: showCellVerticalBorder', () => {
+  describe('prop: showCellVerticalBorder', () => {
     function expectRightBorder(element: HTMLElement) {
       const computedStyle = window.getComputedStyle(element);
       const color = computedStyle.getPropertyValue('border-right-color');
@@ -174,73 +173,66 @@ describe('<DataGrid /> - Cells', () => {
     }).toWarnDev(['MUI X: The cell with id=1 and field=brand received focus.']);
   });
 
-  it.skipIf(isJSDOM)(
-    'should keep the focused cell/row rendered in the DOM if it scrolls outside the viewport',
-    async () => {
-      const rowHeight = 50;
-      const defaultData = getBasicGridData(20, 20);
+  it('should keep the focused cell/row rendered in the DOM if it scrolls outside the viewport', async () => {
+    const rowHeight = 50;
+    const defaultData = getBasicGridData(20, 20);
 
-      const { user } = render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid columns={defaultData.columns} rows={defaultData.rows} rowHeight={rowHeight} />
-        </div>,
-      );
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid columns={defaultData.columns} rows={defaultData.rows} rowHeight={rowHeight} />
+      </div>,
+    );
 
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
 
-      const cell = getCell(1, 3);
-      await user.click(cell);
+    const cell = getCell(1, 3);
+    await user.click(cell);
 
-      const activeElementTextContent = document.activeElement?.textContent;
-      const columnWidth = document.activeElement!.clientWidth;
+    const activeElementTextContent = document.activeElement?.textContent;
+    const columnWidth = document.activeElement!.clientWidth;
 
-      const tenRows = 10 * rowHeight;
-      fireEvent.scroll(virtualScroller, { target: { scrollTop: tenRows } });
-      expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
+    const tenRows = 10 * rowHeight;
+    fireEvent.scroll(virtualScroller, { target: { scrollTop: tenRows } });
+    expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
 
-      const tenColumns = 10 * columnWidth;
-      fireEvent.scroll(virtualScroller, { target: { scrollLeft: tenColumns } });
+    const tenColumns = 10 * columnWidth;
+    fireEvent.scroll(virtualScroller, { target: { scrollLeft: tenColumns } });
 
-      expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
-    },
-  );
+    expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
+  });
 
   // See https://github.com/mui/mui-x/issues/6378
-  // Needs layout
-  it.skipIf(isJSDOM)(
-    'should not cause scroll jump when focused cell mounts in the render zone',
-    async () => {
-      const rowHeight = 50;
-      const columns = [{ field: 'id' }];
-      const rows = [];
-      for (let i = 0; i < 20; i += 1) {
-        rows.push({ id: i });
-      }
+  it('should not cause scroll jump when focused cell mounts in the render zone', async () => {
+    const rowHeight = 50;
+    const columns = [{ field: 'id' }];
+    const rows = [];
+    for (let i = 0; i < 20; i += 1) {
+      rows.push({ id: i });
+    }
 
-      const { user } = render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid columns={columns} rows={rows} rowHeight={rowHeight} />
-        </div>,
-      );
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid columns={columns} rows={rows} rowHeight={rowHeight} />
+      </div>,
+    );
 
-      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
 
-      const thirdRowCell = getCell(2, 0);
-      await user.click(thirdRowCell);
+    const thirdRowCell = getCell(2, 0);
+    await user.click(thirdRowCell);
 
-      const sixRows = 6 * rowHeight;
-      fireEvent.scroll(virtualScroller, { target: { scrollTop: sixRows } });
-      await waitFor(() => {
-        expect(virtualScroller.scrollTop).to.equal(300);
-      });
+    const sixRows = 6 * rowHeight;
+    fireEvent.scroll(virtualScroller, { target: { scrollTop: sixRows } });
+    await waitFor(() => {
+      expect(virtualScroller.scrollTop).to.equal(300);
+    });
 
-      const twoRows = 2 * rowHeight;
-      fireEvent.scroll(virtualScroller, { target: { scrollTop: twoRows } });
-      await waitFor(() => {
-        expect(virtualScroller.scrollTop).to.equal(twoRows);
-      });
-    },
-  );
+    const twoRows = 2 * rowHeight;
+    fireEvent.scroll(virtualScroller, { target: { scrollTop: twoRows } });
+    await waitFor(() => {
+      expect(virtualScroller.scrollTop).to.equal(twoRows);
+    });
+  });
 
   describe('column type: longText', () => {
     const longTextBaselineProps = {

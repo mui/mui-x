@@ -1,5 +1,11 @@
 import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
+import {
+  getGridLocalization,
+  type Localization,
+  buildLocaleFormat,
+} from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('zh-TW');
 
 const zhTWGrid: Partial<GridLocaleText> = {
   // Root
@@ -67,7 +73,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   filterPanelOperator: '運算子',
   filterPanelOperatorAnd: '且',
   filterPanelOperatorOr: '或',
-  filterPanelColumns: '欄位',
+  filterPanelColumn: '欄位',
   filterPanelInputLabel: '值',
   filterPanelInputPlaceholder: '篩選值',
 
@@ -193,10 +199,11 @@ const zhTWGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: '每頁數量:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} 共 ${count !== -1 ? count : `超過 ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} 共 ${count !== -1 ? formatNumber(count) : `超過 ${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `約 ${estimated}` : `超過 ${to}`;
-    return `${from}–${to} 共 ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to ? `約 ${formatNumber(estimated)}` : `超過 ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} 共 ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

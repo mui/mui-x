@@ -3,7 +3,7 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
@@ -18,7 +18,7 @@ export default function ColorScale() {
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
-      <Stack direction="row" spacing={1} flexWrap="wrap">
+      <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
         <TextField
           select
           sx={{ minWidth: 150 }}
@@ -54,7 +54,6 @@ export default function ColorScale() {
           labelPlacement="end"
         />
       </Stack>
-
       <LineChart
         height={300}
         grid={{ horizontal: true }}
@@ -62,6 +61,7 @@ export default function ColorScale() {
           {
             data: [-2, -9, 12, 11, 6, -4],
             area: colorArea,
+            showMark: true,
           },
         ]}
         yAxis={[

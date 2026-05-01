@@ -1,0 +1,10 @@
+<EventTimelinePremium
+  events={events}
+  resources={resources}
+  defaultVisibleDate={defaultVisibleDate}
+  onEventsChange={setEvents}
+  localeText={{
+    timelineResourceTitleHeader: 'Team member',
+  }}
+  defaultPreset="monthAndYear"
+/>

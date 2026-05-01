@@ -1,4 +1,4 @@
-import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
+import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import { LineChart } from '@mui/x-charts/LineChart';
 import {
   piecewiseColorDefaultLabelFormatter,
@@ -45,7 +45,6 @@ export default function PiecewiseInteractiveDemo() {
             {
               label: 'Global temperature anomaly relative to 1961-1990',
               dataKey: 'anomaly',
-              showMark: false,
               valueFormatter: (value) => `${value?.toFixed(2)}°`,
             },
           ]}

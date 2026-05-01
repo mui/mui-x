@@ -1,4 +1,4 @@
-import { act, fireEvent, screen } from '@mui/internal-test-utils';
+import { act, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 
@@ -21,12 +21,10 @@ describe('<DateCalendar /> keyboard interactions', () => {
       { key: 'ArrowDown', expectFocusedDay: '20' },
     ].forEach(({ key, expectFocusedDay }) => {
       it(`${key}`, async () => {
-        render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
+        const { user } = render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
 
         await act(async () => screen.getByText('13').focus());
-        // Don't care about what's focused.
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key });
+        await user.keyboard(`{${key}}`);
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
@@ -35,7 +33,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
     });
 
     it('should manage a sequence of keyboard interactions', async () => {
-      render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
+      const { user } = render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
 
       await act(async () => screen.getByText('13').focus());
       const interactions = [
@@ -45,15 +43,14 @@ describe('<DateCalendar /> keyboard interactions', () => {
         { key: 'Home', expectFocusedDay: '2' },
         { key: 'ArrowDown', expectFocusedDay: '9' },
       ];
-      interactions.forEach(({ key, expectFocusedDay }) => {
-        // Don't care about what's focused.
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key });
+      for (const { key, expectFocusedDay } of interactions) {
+        // eslint-disable-next-line no-await-in-loop
+        await user.keyboard(`{${key}}`);
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
         expect(document.activeElement).toHaveAccessibleName(expectFocusedDay);
-      });
+      }
     });
 
     [
@@ -67,12 +64,12 @@ describe('<DateCalendar /> keyboard interactions', () => {
       { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '10' },
     ].forEach(({ initialDay, key, expectFocusedDay }) => {
       it(`${key}`, async () => {
-        render(<DateCalendar defaultValue={adapterToUse.date(`2020-08-${initialDay}`)} />);
+        const { user } = render(
+          <DateCalendar defaultValue={adapterToUse.date(`2020-08-${initialDay}`)} />,
+        );
 
         await act(async () => screen.getByText(`${Number(initialDay)}`).focus());
-        // Don't care about what's focused.
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key });
+        await user.keyboard(`{${key}}`);
 
         // Based on column header, screen reader should pronounce <Day Number> <Week Day>
         // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
@@ -98,7 +95,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
         { initialDay: '30', key: 'ArrowRight', expectFocusedDay: '2' },
       ].forEach(({ initialDay, key, expectFocusedDay }) => {
         it(`${key}`, async () => {
-          render(
+          const { user } = render(
             <DateCalendar
               defaultValue={adapterToUse.date(`2020-01-${initialDay}`)}
               shouldDisableDate={(date) =>
@@ -108,9 +105,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
           );
 
           await act(async () => screen.getByText(`${Number(initialDay)}`).focus());
-          // Don't care about what's focused.
-          // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-          fireEvent.keyDown(document.activeElement!, { key });
+          await user.keyboard(`{${key}}`);
 
           // Based on column header, screen reader should pronounce <Day Number> <Week Day>
           // But `toHaveAccessibleName` does not do the link between column header and cell value, so we only get <day number> in test
@@ -121,13 +116,11 @@ describe('<DateCalendar /> keyboard interactions', () => {
 
     describe('navigate months', () => {
       it('should keep focus on arrow when switching month', async () => {
-        render(<DateCalendar />);
+        const { user } = render(<DateCalendar />);
 
         const nextMonthButton = screen.getByRole('button', { name: 'Next month' });
         await act(async () => nextMonthButton.focus());
-        // Don't care about what's focused.
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+        await user.keyboard('{Enter}');
 
         expect(document.activeElement).toHaveAccessibleName('Next month');
       });

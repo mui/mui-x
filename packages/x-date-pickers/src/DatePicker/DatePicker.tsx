@@ -9,8 +9,8 @@ import { MobileDatePicker } from '../MobileDatePicker';
 import { DatePickerProps } from './DatePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
-type DatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DatePickerProps<TEnableAccessibleFieldDOMStructure> & React.RefAttributes<HTMLDivElement>,
+type DatePickerComponent = ((
+  props: DatePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -23,9 +23,10 @@ type DatePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean 
  *
  * - [DatePicker API](https://mui.com/x/api/date-pickers/date-picker/)
  */
-const DatePicker = React.forwardRef(function DatePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(inProps: DatePickerProps<TEnableAccessibleFieldDOMStructure>, ref: React.Ref<HTMLDivElement>) {
+const DatePicker = React.forwardRef(function DatePicker(
+  inProps: DatePickerProps,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiDatePicker' });
 
   const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
@@ -88,7 +89,7 @@ DatePicker.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -107,10 +108,6 @@ DatePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -131,6 +128,13 @@ DatePicker.propTypes = {
    * Pass a ref to the `input` element.
    */
   inputRef: refType,
+  /**
+   * If `true`, keep the picker open when the value is edited from the field.
+   * Useful to prevent the popper/dialog from closing while typing in the input.
+   * This only affects changes with `source = "field"` and does not alter view interactions.
+   * @default false
+   */
+  keepOpenDuringFieldFocus: PropTypes.bool,
   /**
    * The label content.
    */

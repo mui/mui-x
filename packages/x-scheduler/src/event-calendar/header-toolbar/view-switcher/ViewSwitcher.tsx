@@ -8,8 +8,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { CalendarView } from '@mui/x-scheduler-headless/models';
-import { useTranslations } from '../../../internals/utils/TranslationsContext';
-import { useEventCalendarClasses } from '../../EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../EventCalendarStyledContext';
 
 const ViewSwitcherRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -38,8 +37,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
 
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
-  const translations = useTranslations();
-  const classes = useEventCalendarClasses();
+  const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -60,26 +58,27 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   return (
     <ViewSwitcherRoot ref={handleRef} {...other} className={clsx(className, classes.viewSwitcher)}>
       <Button
+        className={classes.viewSwitcherButton}
         size="medium"
-        variant="outlined"
-        id="view-switcher-button"
-        aria-controls={open ? 'view-switcher-menu' : undefined}
+        id={`${schedulerId}-view-switcher-button`}
+        aria-controls={open ? `${schedulerId}-view-switcher-menu` : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         aria-label="Switch View"
         onClick={handleMenuOpen}
         endIcon={<ExpandMoreOutlined />}
       >
-        {translations[view]}
+        {localeText[view]}
       </Button>
       <Menu
-        id="view-switcher-menu"
+        className={classes.viewSwitcherMenu}
+        id={`${schedulerId}-view-switcher-menu`}
         anchorEl={anchorEl}
         open={open}
         onClose={handleMenuClose}
         slotProps={{
           list: {
-            'aria-labelledby': 'view-switcher-button',
+            'aria-labelledby': `${schedulerId}-view-switcher-button`,
             role: 'listbox',
           },
         }}
@@ -91,7 +90,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
             aria-selected={view === viewItem}
             onClick={(event) => handleMenuItemClick(event, viewItem)}
           >
-            {translations[viewItem]}
+            {localeText[viewItem]}
           </MenuItem>
         ))}
       </Menu>

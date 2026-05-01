@@ -2,7 +2,9 @@
   "interfaceDescription": "",
   "propertiesDescriptions": {
     "type": { "description": "" },
-    "data": { "description": "Data associated to each bar." },
+    "data": {
+      "description": "Data associated to each cell in the heatmap.<br />Each entry is a tuple [xIndex, yIndex, value]."
+    },
     "dataKey": { "description": "The key used to retrieve data from the dataset." },
     "highlightScope": { "description": "The scope to apply when the series is highlighted." },
     "id": { "description": "The id of this series." },
@@ -13,7 +15,10 @@
       "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type."
     },
     "valueFormatter": {
-      "description": "Formatter used to render values in tooltip or other data display."
+      "description": "Function that formats values to be displayed in a tooltip."
+    },
+    "valueGetter": {
+      "description": "A function to extract and transform the value from the <code>dataset</code> item.<br />It receives the full dataset item and should return a heatmap value.<br />Can be used as an alternative to <code>dataKey</code>."
     },
     "xAxisId": { "description": "The id of the x-axis used to render the series." },
     "yAxisId": { "description": "The id of the y-axis used to render the series." }

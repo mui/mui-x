@@ -87,7 +87,7 @@ const getMatchingRootImport = (
   parameters: RenameImportsParameters,
 ) => {
   return parameters.imports.find((importConfig) => {
-    return importConfig.importsMapping.hasOwnProperty(path.node.imported.name);
+    return importConfig.importsMapping.hasOwnProperty(path.node.imported.name.toString());
   });
 };
 
@@ -122,22 +122,25 @@ export function renameImports(parameters: RenameImportsParameters) {
     // Filter out the specifiers that don't need to be updated
     .filter((path) => {
       return getMatchingNestedImport(path, parameters)!.importsMapping.hasOwnProperty(
-        path.node.imported.name,
+        path.node.imported.name as string,
       );
     })
     // Rename the import specifiers
     .replaceWith((path) => {
       const newName = getMatchingNestedImport(path, parameters)!.importsMapping[
-        path.node.imported.name
+        path.node.imported.name as string
       ];
 
       // If the import is alias, we keep the alias and don't rename the variable usage
       const hasAlias = path.node.local?.name !== path.node.imported.name;
       if (hasAlias) {
-        return j.importSpecifier(j.identifier(newName), j.identifier(path.node.local!.name));
+        return j.importSpecifier(
+          j.identifier(newName),
+          j.identifier(path.node.local!.name as string),
+        );
       }
 
-      renamedIdentifiersMap[path.node.imported.name] = newName;
+      renamedIdentifiersMap[path.node.imported.name as string] = newName;
       return j.importSpecifier(j.identifier(newName));
     });
 
@@ -158,16 +161,19 @@ export function renameImports(parameters: RenameImportsParameters) {
     // Rename the import specifiers
     .replaceWith((path) => {
       const newName = getMatchingRootImport(path, parameters)!.importsMapping[
-        path.node.imported.name
+        path.node.imported.name as string
       ];
 
       // If the import is alias, we keep the alias and don't rename the variable usage
       const hasAlias = path.node.local?.name !== path.node.imported.name;
       if (hasAlias) {
-        return j.importSpecifier(j.identifier(newName), j.identifier(path.node.local!.name));
+        return j.importSpecifier(
+          j.identifier(newName),
+          j.identifier(path.node.local!.name as string),
+        );
       }
 
-      renamedIdentifiersMap[path.node.imported.name] = newName;
+      renamedIdentifiersMap[path.node.imported.name as string] = newName;
       return j.importSpecifier(j.identifier(newName));
     });
 
@@ -200,7 +206,7 @@ export function renameImports(parameters: RenameImportsParameters) {
         for (const specifier of specifiers) {
           if (
             specifier.type === 'ImportSpecifier' &&
-            importConfig.importsMapping.hasOwnProperty(specifier.imported.name)
+            importConfig.importsMapping.hasOwnProperty(specifier.imported.name as string)
           ) {
             specifiersToMove.push(specifier);
           } else {

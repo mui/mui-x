@@ -1,11 +1,11 @@
-import { screen, fireEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   adapterToUse,
   createPickerRenderer,
   openPicker,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   getFieldSectionsContainer,
   getFieldInputRoot,
@@ -37,15 +37,15 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       const expectedStartValueStr = expectedValues[0]
         ? adapterToUse.format(expectedValues[0], 'keyboardDate')
         : 'MM/DD/YYYY';
-      expectFieldValueV7(startSectionsContainer, expectedStartValueStr);
+      expectFieldValue(startSectionsContainer, expectedStartValueStr);
 
       const endFieldRoot = getFieldSectionsContainer(1);
       const expectedEndValueStr = expectedValues[1]
         ? adapterToUse.format(expectedValues[1], 'keyboardDate')
         : 'MM/DD/YYYY';
-      expectFieldValueV7(endFieldRoot, expectedEndValueStr);
+      expectFieldValue(endFieldRoot, expectedEndValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false, user }) => {
       let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
         newValue = value;
@@ -56,10 +56,14 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       }
 
       if (!isOpened) {
-        openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'multi-input' });
+        await openPicker(user, {
+          type: 'date-range',
+          initialFocus: 'start',
+          fieldType: 'multi-input',
+        });
       }
 
-      fireEvent.click(
+      await user.click(
         screen.getByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         }),
@@ -67,8 +71,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        await user.keyboard('{Escape}');
       }
 
       return newValue;
@@ -103,11 +106,11 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       const expectedValueStr = `${expectedStartValueStr} – ${expectedEndValueStr}`;
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: (
+    setNewValue: async (
       value,
-      { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
+      { isOpened, applySameValue, setEndDate = false, selectSection, pressKey, user },
     ) => {
       let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
@@ -119,14 +122,14 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       }
 
       if (isOpened) {
-        fireEvent.click(
+        await user.click(
           screen.getAllByRole('gridcell', {
             name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           })[0],
         );
       } else {
-        selectSection('day');
-        pressKey(undefined, 'ArrowUp');
+        await selectSection('day');
+        await pressKey('ArrowUp');
       }
 
       return newValue;

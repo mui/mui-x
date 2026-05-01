@@ -8,6 +8,7 @@ import { EventTimelinePremiumStore } from '@mui/x-scheduler-headless-premium/use
  */
 export const storeClasses = [
   { name: 'EventCalendarStore', Value: EventCalendarStore },
+  { name: 'EventCalendarPremiumStore', Value: EventCalendarPremiumStore },
   { name: 'EventTimelinePremiumStore', Value: EventTimelinePremiumStore },
 ];
 

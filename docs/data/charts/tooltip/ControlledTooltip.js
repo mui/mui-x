@@ -16,8 +16,9 @@ export default function ControlledTooltip() {
     seriesId: 'A',
     dataIndex: 0,
   });
+  const [position, setPosition] = React.useState('top');
 
-  const handleTooltipSeries = (event, newTooltipSeries) => {
+  const handleTooltipSeries = (_event, newTooltipSeries) => {
     if (newTooltipSeries !== null) {
       setTooltipItem((prev) => ({
         type: 'bar',
@@ -37,6 +38,10 @@ export default function ControlledTooltip() {
     }));
   };
 
+  const handlePosition = (event) => {
+    setPosition(event.target.value);
+  };
+
   return (
     <Stack
       direction={{ xs: 'column', xl: 'row' }}
@@ -44,7 +49,7 @@ export default function ControlledTooltip() {
       sx={{ width: '100%' }}
     >
       <Box sx={{ flexGrow: 1 }}>
-        <Stack spacing={2} alignItems={'center'}>
+        <Stack spacing={2} sx={{ alignItems: 'center' }}>
           <ToggleButtonGroup
             value={tooltipItem?.seriesId ?? null}
             exclusive
@@ -74,10 +79,24 @@ export default function ControlledTooltip() {
               <FormControlLabel value="4" control={<Radio />} label="4" />
             </RadioGroup>
           </FormControl>
+          <FormControl>
+            <FormLabel id="position-radio-group">Position</FormLabel>
+            <RadioGroup
+              aria-labelledby="position-radio-group"
+              name="position-radio-group"
+              value={position}
+              onChange={handlePosition}
+              row
+            >
+              {['top', 'bottom', 'left', 'right'].map((p) => (
+                <FormControlLabel key={p} value={p} control={<Radio />} label={p} />
+              ))}
+            </RadioGroup>
+          </FormControl>
         </Stack>
         <BarChart
           {...barChartsProps}
-          slotProps={{ tooltip: { trigger: 'item' } }}
+          slotProps={{ tooltip: { trigger: 'item', position } }}
           tooltipItem={tooltipItem}
           onTooltipItemChange={setTooltipItem}
         />
@@ -101,5 +120,5 @@ const barChartsProps = {
       highlightScope: { highlight: 'item', fade: 'global' },
     },
   ],
-  height: 400,
+  height: 250,
 };

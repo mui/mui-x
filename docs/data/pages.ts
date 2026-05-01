@@ -1,8 +1,109 @@
-import type { MuiPage } from 'docs/src/MuiPage';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 import chartsComponentApi from './chartsApiPages';
+import chatComponentApi from './chatApiPages';
 import dataGridComponentApi from './dataGridApiPages';
 import pickersComponentApi from './datePickersApiPages';
+import schedulerComponentApi from './schedulerApiPages';
 import treeViewComponentApi from './treeViewApiPages';
+
+const schedulerPages: MuiPage[] = [
+  {
+    pathname: '/x/react-scheduler-group',
+    title: 'Scheduler',
+    unstable: true,
+    children: [
+      { pathname: '/x/react-scheduler', title: 'Overview' },
+      { pathname: '/x/react-scheduler/quickstart' },
+      {
+        pathname: 'https://forms.gle/Ksbc91D3PcMiiK5x9',
+        title: 'Share your feedback',
+        icon: CampaignIcon,
+        linkProps: {
+          target: '_blank',
+          rel: 'noopener noreferrer',
+          sx: {
+            paddingLeft: 'calc(10px + (var(--_depth) + 1) * 13px - (var(--_expandable) * 21px))',
+            '& > span:first-of-type': {
+              order: 1,
+            },
+          },
+        },
+      },
+      {
+        pathname: '/x/react-scheduler/main-features',
+        subheader: 'Main features',
+        children: [
+          { pathname: '/x/react-scheduler/timezone', title: 'Timezones' },
+          { pathname: '/x/react-scheduler/recurring-events', plan: 'premium' },
+        ],
+      },
+      {
+        pathname: '/x/react-scheduler/event-calendar-group',
+        subheader: 'Event Calendar',
+        children: [
+          { pathname: '/x/react-scheduler/event-calendar/events' },
+          { pathname: '/x/react-scheduler/event-calendar/resources' },
+          { pathname: '/x/react-scheduler/event-calendar/navigation' },
+          { pathname: '/x/react-scheduler/event-calendar/drag-interactions' },
+          { pathname: '/x/react-scheduler/event-calendar/editing' },
+          { pathname: '/x/react-scheduler/event-calendar/views' },
+          { pathname: '/x/react-scheduler/event-calendar/lazy-loading', plan: 'premium' },
+          {
+            pathname: '/x/react-scheduler/event-calendar/filtering',
+            plan: 'premium',
+            planned: true,
+          },
+          {
+            pathname: '/x/react-scheduler/event-calendar/import-export',
+            title: 'Import & Export',
+            plan: 'premium',
+            planned: true,
+          },
+          { pathname: '/x/react-scheduler/event-calendar/preferences' },
+          { pathname: '/x/react-scheduler/event-calendar/localization' },
+        ],
+      },
+      {
+        pathname: '/x/react-scheduler/event-timeline-group',
+        subheader: 'Event Timeline',
+        plan: 'premium',
+        children: [
+          { pathname: '/x/react-scheduler/event-timeline/events' },
+          { pathname: '/x/react-scheduler/event-timeline/resources' },
+          { pathname: '/x/react-scheduler/event-timeline/navigation' },
+          { pathname: '/x/react-scheduler/event-timeline/drag-interactions' },
+          { pathname: '/x/react-scheduler/event-timeline/editing' },
+          { pathname: '/x/react-scheduler/event-timeline/presets' },
+          {
+            pathname: '/x/react-scheduler/event-timeline/lazy-loading',
+            planned: true,
+          },
+          {
+            pathname: '/x/react-scheduler/event-timeline/virtualization',
+            planned: true,
+          },
+          {
+            pathname: '/x/react-scheduler/event-timeline/filtering',
+            planned: true,
+          },
+          {
+            pathname: '/x/react-scheduler/event-timeline/import-export',
+            title: 'Import & Export',
+            planned: true,
+          },
+          { pathname: '/x/react-scheduler/event-timeline/preferences' },
+          { pathname: '/x/react-scheduler/event-timeline/localization' },
+        ],
+      },
+      {
+        pathname: '/x/api/scheduler-group',
+        title: 'API reference',
+        children: [...schedulerComponentApi],
+      },
+    ],
+  },
+];
 
 const pages: MuiPage[] = [
   {
@@ -43,8 +144,8 @@ const pages: MuiPage[] = [
         title: 'Demos',
         children: [
           { pathname: '/x/react-data-grid/demos/real-time-data', title: 'Real-time data' },
-          { pathname: '/x/react-data-grid/demos/time-off-calendar', title: 'Time off calendar' },
-          { pathname: '/x/react-data-grid/demos/inventory', title: 'Inventory' },
+          { pathname: '/x/react-data-grid/demos/time-off-calendar' },
+          { pathname: '/x/react-data-grid/demos/inventory' },
         ],
       },
       {
@@ -180,7 +281,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/scrolling' },
           {
             pathname: '/x/react-data-grid/list-view',
-            title: 'List view',
             plan: 'pro',
           },
           {
@@ -220,7 +320,7 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-data-grid/charts-integration',
             plan: 'premium',
-            unstable: true,
+            newFeature: true,
             title: 'Charts integration',
           },
           {
@@ -236,9 +336,9 @@ const pages: MuiPage[] = [
         subheader: 'Components',
         newFeature: true,
         children: [
-          { pathname: '/x/react-data-grid/components/usage', title: 'Usage' },
-          { pathname: '/x/react-data-grid/components/toolbar', title: 'Toolbar' },
-          { pathname: '/x/react-data-grid/components/export', title: 'Export' },
+          { pathname: '/x/react-data-grid/components/usage' },
+          { pathname: '/x/react-data-grid/components/toolbar' },
+          { pathname: '/x/react-data-grid/components/export' },
           { pathname: '/x/react-data-grid/components/quick-filter', title: 'Quick Filter' },
           {
             pathname: '/x/react-data-grid/components/columns-panel',
@@ -281,7 +381,7 @@ const pages: MuiPage[] = [
         children: [
           { pathname: '/x/react-data-grid/style', title: 'Styling basics' },
           { pathname: '/x/react-data-grid/style-recipes', title: 'Styling recipes' },
-          { pathname: '/x/react-data-grid/overlays', title: 'Overlays' },
+          { pathname: '/x/react-data-grid/overlays' },
           { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
         ],
       },
@@ -369,6 +469,11 @@ const pages: MuiPage[] = [
         subheader: 'Tutorials',
         children: [
           { pathname: '/x/react-data-grid/tutorials/server-side-data', title: 'Server-side data' },
+          {
+            pathname: '/x/react-data-grid/tutorials/aggregation-row-grouping',
+            title: 'Aggregation and row grouping',
+            plan: 'premium',
+          },
         ],
       },
     ],
@@ -447,7 +552,6 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-date-pickers/time-range-picker',
                 title: 'Time Range Picker',
-                newFeature: true,
               },
               {
                 pathname: '/x/react-date-pickers/time-range-field',
@@ -582,13 +686,11 @@ const pages: MuiPage[] = [
           },
           {
             pathname: '/x/react-charts/sparkline',
-            title: 'Sparkline',
           },
           { pathname: '/x/react-charts/gauge' },
           { pathname: '/x/react-charts/radar' },
           {
             pathname: '/x/react-charts/heatmap',
-            title: 'Heatmap',
             plan: 'pro',
           },
           {
@@ -600,7 +702,12 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/pyramid', title: 'Pyramid demo' },
             ],
           },
-          { pathname: '/x/react-charts/sankey', plan: 'pro', unstable: true },
+          { pathname: '/x/react-charts/sankey', plan: 'pro' },
+          {
+            pathname: '/x/react-charts/candlestick',
+            plan: 'premium',
+            unstable: true,
+          },
           {
             pathname: '/x/react-charts/#planned-charts',
             title: 'Future Components',
@@ -610,20 +717,29 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts/main-features',
             subheader: 'Main features',
             children: [
+              { pathname: '/x/react-charts/accessibility' },
               { pathname: '/x/react-charts/animation' },
-              { pathname: '/x/react-charts/axis' },
+              {
+                pathname: '/x/react-charts/axis-root',
+                title: 'Axes',
+                children: [
+                  { pathname: '/x/react-charts/axis', title: 'Overview' },
+                  { pathname: '/x/react-charts/axis-ticks', title: 'Ticks and grid' },
+                  { pathname: '/x/react-charts/axis-customization', title: 'Customization' },
+                ],
+              },
               { pathname: '/x/react-charts/brush' },
               { pathname: '/x/react-charts/components', title: 'Custom components' },
               { pathname: '/x/react-charts/composition' },
+              { pathname: '/x/react-charts/dataset' },
               {
                 pathname: '/x/react-charts/data-grid-integration',
                 title: 'Data Grid integration',
                 plan: 'premium',
-                unstable: true,
+                newFeature: true,
               },
               {
                 pathname: '/x/react-charts/export',
-                title: 'Export',
                 plan: 'pro',
               },
               { pathname: '/x/react-charts/highlighting' },
@@ -632,7 +748,8 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/localization' },
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
-              { pathname: '/x/react-charts/toolbar', title: 'Toolbar' },
+              { pathname: '/x/react-charts/references' },
+              { pathname: '/x/react-charts/toolbar' },
               { pathname: '/x/react-charts/tooltip' },
               {
                 pathname: '/x/react-charts/zoom-and-pan',
@@ -687,11 +804,11 @@ const pages: MuiPage[] = [
                 title: 'Hooks',
                 children: [
                   { pathname: '/x/react-charts/hooks', title: 'Overview' },
-                  { pathname: '/x/react-charts/hooks/use-series', title: 'useSeries' },
+                  { pathname: '/x/react-charts/hooks/use-series', title: 'Series' },
                   { pathname: '/x/react-charts/hooks/use-legend', title: 'useLegend' },
                   { pathname: '/x/react-charts/hooks/use-drawing-area', title: 'useDrawingArea' },
-                  { pathname: '/x/react-charts/hooks/use-scale', title: 'useScale' },
-                  { pathname: '/x/react-charts/hooks/use-axes', title: 'useAxes' },
+                  { pathname: '/x/react-charts/hooks/use-scale', title: 'Scale' },
+                  { pathname: '/x/react-charts/hooks/use-axes', title: 'Axis' },
                   { pathname: '/x/react-charts/hooks/use-dataset', title: 'useDataset' },
                 ],
               },
@@ -731,7 +848,6 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-tree-view/rich-tree-view/editing',
             title: 'Label editing',
-            newFeature: true,
           },
           {
             pathname: '/x/react-tree-view/rich-tree-view/virtualization',
@@ -741,9 +857,8 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-tree-view/rich-tree-view/lazy-loading',
             plan: 'pro',
-            newFeature: true,
           },
-          { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro', newFeature: true },
+          { pathname: '/x/react-tree-view/rich-tree-view/ordering', plan: 'pro' },
         ],
       },
       {
@@ -767,6 +882,220 @@ const pages: MuiPage[] = [
       },
     ],
   },
+  ...schedulerPages,
+  {
+    pathname: '/x/react-chat-group',
+    title: 'Chat',
+    unstable: true,
+    children: [
+      { pathname: '/x/react-chat', title: 'Overview' },
+      { pathname: '/x/react-chat/quickstart', title: 'Quickstart' },
+      {
+        pathname: '/x/react-chat/demos',
+        subheader: 'Demos',
+        children: [
+          { pathname: '/x/react-chat/demos/ai-assistant', title: 'AI Assistant' },
+          { pathname: '/x/react-chat/demos/team-messaging', title: 'Team Messaging' },
+          {
+            pathname: '/x/react-chat/demos/customer-support',
+            title: 'Customer Support',
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/basics',
+        subheader: 'Basics',
+        children: [
+          { pathname: '/x/react-chat/basics/chatbox', title: 'ChatBox' },
+          { pathname: '/x/react-chat/basics/messages', title: 'Messages' },
+          { pathname: '/x/react-chat/basics/composer', title: 'Composer' },
+          { pathname: '/x/react-chat/basics/layout', title: 'Layout' },
+          {
+            pathname: '/x/react-chat/basics/variants-and-density',
+            title: 'Variants & Density',
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/display',
+        subheader: 'Display',
+        children: [
+          {
+            pathname: '/x/react-chat/display/message-parts-group',
+            title: 'Message Parts',
+            children: [
+              {
+                pathname: '/x/react-chat/display/message-parts/text-and-markdown',
+                title: 'Text & Markdown',
+              },
+              {
+                pathname: '/x/react-chat/display/message-parts/code-blocks',
+                title: 'Code Blocks',
+              },
+              {
+                pathname: '/x/react-chat/display/message-parts/files-and-images',
+                title: 'Files & Images',
+              },
+              {
+                pathname: '/x/react-chat/display/message-parts/sources-and-citations',
+                title: 'Sources & Citations',
+              },
+              {
+                pathname: '/x/react-chat/display/message-parts/custom-parts',
+                title: 'Custom Parts',
+              },
+            ],
+          },
+          {
+            pathname: '/x/react-chat/display/message-appearance',
+            title: 'Message Appearance',
+          },
+          {
+            pathname: '/x/react-chat/display/message-actions',
+            title: 'Message Actions',
+          },
+          {
+            pathname: '/x/react-chat/display/loading-and-empty-states',
+            title: 'Loading & Empty States',
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/behavior',
+        subheader: 'Behavior',
+        children: [
+          { pathname: '/x/react-chat/behavior/streaming', title: 'Streaming' },
+          { pathname: '/x/react-chat/behavior/attachments', title: 'Attachments' },
+          { pathname: '/x/react-chat/behavior/suggestions', title: 'Suggestions' },
+          { pathname: '/x/react-chat/behavior/scrolling', title: 'Scrolling' },
+          {
+            pathname: '/x/react-chat/behavior/error-handling',
+            title: 'Error Handling',
+          },
+          {
+            pathname: '/x/react-chat/behavior/typing-indicators',
+            title: 'Typing Indicators',
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/multi-conversation',
+        subheader: 'Multi-Conversation',
+        children: [
+          {
+            pathname: '/x/react-chat/multi-conversation/conversation-list',
+            title: 'Conversation List',
+          },
+          {
+            pathname: '/x/react-chat/multi-conversation/conversation-header',
+            title: 'Conversation Header',
+          },
+          {
+            pathname: '/x/react-chat/multi-conversation/history-and-pagination',
+            title: 'History & Pagination',
+          },
+          {
+            pathname: '/x/react-chat/multi-conversation/read-receipts',
+            title: 'Read Receipts',
+          },
+          {
+            pathname: '/x/react-chat/multi-conversation/real-time-sync',
+            title: 'Real-Time Sync',
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/ai-and-agents',
+        subheader: 'AI & Agents',
+        children: [
+          {
+            pathname: '/x/react-chat/ai-and-agents/tool-calling',
+            title: 'Tool Calling',
+          },
+          {
+            pathname: '/x/react-chat/ai-and-agents/tool-approval',
+            title: 'Tool Approval',
+          },
+          {
+            pathname: '/x/react-chat/ai-and-agents/reasoning',
+            title: 'Reasoning',
+          },
+          {
+            pathname: '/x/react-chat/ai-and-agents/step-tracking',
+            title: 'Step Tracking',
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/backend',
+        subheader: 'Backend Integration',
+        children: [
+          { pathname: '/x/react-chat/backend/adapters', title: 'Adapters' },
+          {
+            pathname: '/x/react-chat/backend/building-an-adapter',
+            title: 'Building an Adapter',
+          },
+          {
+            pathname: '/x/react-chat/backend/real-time-adapters',
+            title: 'Real-Time Adapters',
+          },
+          {
+            pathname: '/x/react-chat/backend/controlled-state',
+            title: 'Controlled State',
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/customization',
+        subheader: 'Customization',
+        children: [
+          {
+            pathname: '/x/react-chat/customization/slots-and-composition',
+            title: 'Slots & Composition',
+          },
+          { pathname: '/x/react-chat/customization/styling', title: 'Styling' },
+          { pathname: '/x/react-chat/customization/tailwind', title: 'Tailwind CSS' },
+          {
+            pathname: '/x/react-chat/customization/localization',
+            title: 'Localization',
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-chat/resources',
+        subheader: 'Resources',
+        children: [
+          {
+            pathname: '/x/react-chat/resources/hooks',
+            title: 'Hooks Reference',
+          },
+          {
+            pathname: '/x/react-chat/resources/selectors',
+            title: 'Selectors Reference',
+          },
+          {
+            pathname: '/x/react-chat/resources/events-and-callbacks',
+            title: 'Events & Callbacks',
+          },
+          {
+            pathname: '/x/react-chat/resources/performance',
+            title: 'Performance',
+          },
+        ],
+      },
+      {
+        pathname: '/x/api/chat-resources',
+        subheader: 'API Reference',
+        children: [
+          {
+            pathname: '/x/api/chat-group',
+            title: 'API reference',
+            children: [...chatComponentApi],
+          },
+        ],
+      },
+    ],
+  },
   {
     pathname: '/x/migration-group',
     title: 'Migration',
@@ -775,19 +1104,19 @@ const pages: MuiPage[] = [
         pathname: '/x/migration-v9',
         subheader: 'Upgrade to v9',
         children: [
-          // { pathname: '/x/migration/migration-data-grid-v8', title: 'Breaking changes: Data Grid' },
-          // {
-          //   pathname: '/x/migration/migration-pickers-v8',
-          //   title: 'Breaking changes: Date and Time Pickers',
-          // },
+          { pathname: '/x/migration/migration-data-grid-v8', title: 'Breaking changes: Data Grid' },
+          {
+            pathname: '/x/migration/migration-pickers-v8',
+            title: 'Breaking changes: Date and Time Pickers',
+          },
           {
             pathname: '/x/migration/migration-charts-v8',
             title: 'Breaking changes: Charts',
           },
-          // {
-          //   pathname: '/x/migration/migration-tree-view-v8',
-          //   title: 'Breaking changes: Tree View',
-          // },
+          {
+            pathname: '/x/migration/migration-tree-view-v8',
+            title: 'Breaking changes: Tree View',
+          },
         ],
       },
       {

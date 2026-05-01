@@ -1271,9 +1271,9 @@ describeTreeView<TreeViewAnyStore>(
         expect(view.getFocusedItemId()).to.equal('4');
 
         view.setItems([{ id: '1' }, { id: '2' }, { id: '3' }]);
-        expect(view.getFocusedItemId()).to.equal('1');
+        expect(view.getFocusedItemId()).to.equal('3');
 
-        fireEvent.keyDown(view.getItemRoot('1'), { key: '2' });
+        fireEvent.keyDown(view.getItemRoot('3'), { key: '2' });
         expect(view.getFocusedItemId()).to.equal('2');
 
         view.setItems([{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }]);

@@ -23,7 +23,7 @@ const REPO = 'mui-x';
  * @type {string[]}
  * Labels to exclude from the changelog
  */
-const excludeLabels = ['dependencies', 'scope: scheduler'];
+const excludeLabels = ['dependencies'];
 
 /**
  * @type {string[]}
@@ -143,9 +143,21 @@ function getContributors(commits = []) {
     contributors: new Set(),
     team: new Set(),
   };
-  for (const { author } of commits) {
-    if (!author || author.login.endsWith('[bot]')) {
-      break;
+  const warnUsers = new Map();
+  for (const commitItem of commits) {
+    const { author, commit } = commitItem;
+    if (!author || author.login === 'renovate[bot]') {
+      continue;
+    }
+    if (author.login === 'github-actions[bot]') {
+      // extract author name from commit message if the commit is made by github-actions bot
+      const authorNameMatch = commit.message.match(/@([a-zA-Z0-9-]+)/);
+      if (authorNameMatch) {
+        const username = `@${authorNameMatch[1]}`;
+        community.team.add(username);
+        warnUsers.set(commit.message.split('\n')[0].trim(), username);
+      }
+      continue;
     }
     const username = `@${author.login}`;
     if (author.association === 'team') {
@@ -155,6 +167,17 @@ function getContributors(commits = []) {
     } else {
       community.contributors.add(username);
     }
+  }
+  if (warnUsers.size > 0) {
+    console.warn(
+      `The following commits were made by github-actions[bot] and attributed to users based on the commit message:\n${Array.from(
+        warnUsers.entries(),
+      )
+        .map(([commitMessage, username]) => `- ${commitMessage}: ${username}`)
+        .join('\n')}
+Please verify that these attributions are correct. They have been added to the team members group.
+`,
+    );
   }
   return community;
 }
@@ -194,7 +217,7 @@ async function generateChangelog({
       release,
     })
   )
-    .filter((commit) => !commit.author?.login.endsWith('[bot]'))
+    .filter((commit) => commit.author?.login !== 'renovate[bot]')
     .map((commit) => ({
       ...commit,
       commit: {
@@ -218,7 +241,7 @@ async function generateChangelog({
   const treeViewCommits = [];
   const treeViewProCommits = [];
   const schedulerCommits = [];
-  const schedulerProCommits = [];
+  const schedulerPremiumCommits = [];
   const internalCommits = [];
   const docsCommits = [];
   const otherCommits = [];
@@ -276,8 +299,8 @@ async function generateChangelog({
         case 'scheduler':
           schedulerCommits.push(commitItem);
           break;
-        case 'scheduler-pro':
-          schedulerProCommits.push(commitItem);
+        case 'scheduler-premium':
+          schedulerPremiumCommits.push(commitItem);
           break;
         case 'docs':
           docsCommits.push(commitItem);
@@ -399,11 +422,15 @@ async function generateChangelog({
     if (hasPremiumVersion) {
       lines.push(`#### \`@mui/${packageName}-premium@${packageVersion}\` ${premiumIcon}`);
 
+      // Reference the Pro tier if it exists, otherwise fall back to the base
+      // package. Products like Scheduler ship Premium without a Pro tier.
+      const previousTierPackage = hasProVersion ? `@mui/${packageName}-pro` : `@mui/${packageName}`;
+
       if (premiumCommits?.length > 0) {
-        lines.push(`Same changes as in \`@mui/${packageName}-pro@${packageVersion}\`, plus:`);
+        lines.push(`Same changes as in \`${previousTierPackage}@${packageVersion}\`, plus:`);
         lines.push(logCommitEntries(premiumCommits));
       } else {
-        lines.push(`Same changes as in \`@mui/${packageName}-pro@${packageVersion}\`.`);
+        lines.push(`Same changes as in \`${previousTierPackage}@${packageVersion}\`.`);
       }
     }
 
@@ -517,6 +544,14 @@ ${logProductSection({
   baseCommits: treeViewCommits,
   proCommits: treeViewProCommits,
   changelogKey: 'TreeView',
+})}
+
+${logProductSection({
+  productName: 'Scheduler',
+  packageName: 'x-scheduler',
+  baseCommits: schedulerCommits,
+  premiumCommits: schedulerPremiumCommits,
+  changelogKey: 'scheduler',
 })}
 
 ${logProductSection({

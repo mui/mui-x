@@ -1,7 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import {
   RecurringEventPresetKey,
-  RecurringEventRecurrenceRule,
+  SchedulerProcessedEventRecurrenceRule,
   RecurringEventWeekDayCode,
   SchedulerProcessedDate,
   TemporalSupportedObject,
@@ -23,7 +23,7 @@ export const schedulerRecurringEventSelectors = {
     (
       adapter,
       date: SchedulerProcessedDate,
-    ): Record<RecurringEventPresetKey, RecurringEventRecurrenceRule> => {
+    ): Record<RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule> => {
       return {
         DAILY: {
           freq: 'DAILY',
@@ -53,12 +53,14 @@ export const schedulerRecurringEventSelectors = {
    */
   defaultPresetKey: createSelectorMemoized(
     (state: State) => state.adapter,
+    (state: State) => state.plan,
     (
       adapter,
-      rule: RecurringEventRecurrenceRule | undefined,
+      plan,
+      rule: SchedulerProcessedEventRecurrenceRule | undefined,
       occurrenceStart: SchedulerProcessedDate,
     ): RecurringEventPresetKey | 'custom' | null => {
-      if (!rule) {
+      if (plan !== 'premium' || !rule) {
         return null;
       }
 
@@ -124,8 +126,8 @@ export const schedulerRecurringEventSelectors = {
     (state: State) => state.adapter,
     (
       adapter,
-      rruleA: RecurringEventRecurrenceRule | undefined,
-      rruleB: RecurringEventRecurrenceRule | undefined,
+      rruleA: SchedulerProcessedEventRecurrenceRule | undefined,
+      rruleB: SchedulerProcessedEventRecurrenceRule | undefined,
     ): boolean => {
       if (!rruleA && !rruleB) {
         return true;

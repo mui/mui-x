@@ -137,6 +137,10 @@ DataGridRaw.propTypes = {
    */
   checkboxSelection: PropTypes.bool,
   /**
+   * Definition of the column rendered when the `checkboxSelection` prop is enabled.
+   */
+  checkboxColDef: PropTypes.object,
+  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
@@ -191,6 +195,13 @@ DataGridRaw.propTypes = {
     get: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
+  /**
+   * If positive, the Data Grid will periodically revalidate data source rows by
+   * re-fetching them from the server when the cache entry has expired.
+   * Set to `0` to disable polling.
+   * @default 0
+   */
+  dataSourceRevalidateMs: PropTypes.number,
   /**
    * Set the density of the Data Grid.
    * @default "standard"
@@ -273,6 +284,7 @@ DataGridRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    virtualizerLayoutMode: PropTypes.oneOf(['controlled', 'uncontrolled']),
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**

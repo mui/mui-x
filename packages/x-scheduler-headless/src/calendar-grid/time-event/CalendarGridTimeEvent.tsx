@@ -11,7 +11,7 @@ import { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { CalendarGridTimeEventContext } from './CalendarGridTimeEventContext';
-import { useAdapter } from '../../use-adapter/useAdapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
@@ -26,6 +26,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     // Rendering props
     className,
     render,
+    style,
     // Internal props
     start,
     end,
@@ -44,13 +45,14 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const isInteractive = true;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { id: rootId } = useCalendarGridRootContext();
   const {
     start: columnStart,
     end: columnEnd,
     index: columnIndex,
+    hasFocus: columnHasFocus,
     getCursorPositionInElementMs,
   } = useCalendarGridTimeColumnContext();
 
@@ -111,6 +113,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const { getButtonProps, buttonRef } = useButton({
     disabled: !isInteractive,
     native: nativeButton,
+    tabIndex: columnHasFocus ? 0 : -1,
   });
 
   const { position, duration } = useElementPositionInCollection({
@@ -120,19 +123,7 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
     collectionEnd: columnEnd,
   });
 
-  // Rendering hooks
-  const style = React.useMemo(
-    () =>
-      ({
-        [CalendarGridTimeEventCssVars.yPosition]: `${position * 100}%`,
-        [CalendarGridTimeEventCssVars.height]: `${duration * 100}%`,
-      }) as React.CSSProperties,
-    [position, duration],
-  );
-
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);
-
-  const props = { id, style, 'aria-labelledby': `${columnHeaderId} ${id}` };
 
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
     () => ({ ...draggableEventContextValue, getSharedDragData }),
@@ -142,7 +133,18 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const element = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, buttonRef, ref],
-    props: [props, elementProps, getButtonProps],
+    props: [
+      elementProps,
+      {
+        id,
+        'aria-labelledby': `${columnHeaderId} ${id}`,
+        style: {
+          [CalendarGridTimeEventCssVars.yPosition]: `${position * 100}%`,
+          [CalendarGridTimeEventCssVars.height]: `${duration * 100}%`,
+        } as React.CSSProperties,
+      },
+      getButtonProps,
+    ],
   });
 
   return (

@@ -27,12 +27,21 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
           d3Dataset[index][id] = value;
         }
       });
+    } else if (series[id].valueGetter && dataset) {
+      // When valueGetter is used without dataKey, populate d3Dataset with the series id as key
+      dataset.forEach((entry, index) => {
+        const value = series[id].valueGetter!(entry);
+        if (d3Dataset.length <= index) {
+          d3Dataset.push({ [id]: value });
+        } else {
+          d3Dataset[index][id] = value;
+        }
+      });
     } else if (dataset === undefined) {
       throw new Error(
-        [
-          `MUI X Charts: bar series with id='${id}' has no data.`,
-          'Either provide a data property to the series or use the dataset prop.',
-        ].join('\n'),
+        `MUI X Charts: Bar series with id="${id}" has no data. ` +
+          'The chart cannot render this series without data. ' +
+          'Provide a data property to the series or use the dataset prop.',
       );
     }
 
@@ -40,26 +49,25 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
       if (!data && dataset) {
         const dataKey = series[id].dataKey;
 
-        if (!dataKey) {
+        if (!dataKey && !series[id].valueGetter) {
           throw new Error(
-            [
-              `MUI X Charts: bar series with id='${id}' has no data and no dataKey.`,
-              'You must provide a dataKey when using the dataset prop.',
-            ].join('\n'),
+            `MUI X Charts: Bar series with id="${id}" has no data, no dataKey, and no valueGetter. ` +
+              'When using the dataset prop, each series must have a dataKey or valueGetter to identify which dataset values to use. ' +
+              'Add a dataKey or valueGetter property to the series configuration.',
           );
         }
 
-        dataset.forEach((entry, index) => {
-          const value = entry[dataKey];
-          if (value != null && typeof value !== 'number') {
-            warnOnce(
-              [
-                `MUI X Charts: your dataset key "${dataKey}" is used for plotting bars, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.`,
-                'Bar plots only support numeric and null values.',
-              ].join('\n'),
-            );
-          }
-        });
+        if (dataKey) {
+          dataset.forEach((entry, index) => {
+            const value = entry[dataKey];
+            if (value != null && typeof value !== 'number') {
+              warnOnce(
+                `MUI X Charts: your dataset key "${dataKey}" is used for plotting bars, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
+Bar plots only support numeric and null values.`,
+              );
+            }
+          });
+        }
       }
     }
   });
@@ -105,13 +113,19 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
       .offset(stackingOffset)(d3Dataset);
 
     ids.forEach((id, index) => {
-      const dataKey = series[id].dataKey;
-      const data = dataKey
-        ? dataset!.map((d) => {
-            const value = d[dataKey];
-            return typeof value === 'number' ? value : null;
-          })
-        : series[id].data!;
+      const { dataKey, valueGetter } = series[id];
+
+      let data: readonly (number | null)[];
+      if (valueGetter) {
+        data = dataset!.map((d) => valueGetter(d));
+      } else if (dataKey) {
+        data = dataset!.map((d) => {
+          const value = d[dataKey];
+          return typeof value === 'number' ? value : null;
+        });
+      } else {
+        data = series[id].data!;
+      }
       const hidden = !isItemVisible?.({ type: 'bar', seriesId: id });
       completedSeries[id] = {
         layout: 'vertical',

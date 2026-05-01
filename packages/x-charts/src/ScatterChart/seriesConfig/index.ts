@@ -9,6 +9,11 @@ import tooltipItemPositionGetter from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
 import { identifierCleanerSeriesIdDataIndex } from '../../internals/identifierCleaner';
+import {
+  createIsHighlighted,
+  createIsFaded,
+} from '../../internals/plugins/featurePlugins/useChartHighlight';
+import descriptionGetter from './descriptionGetter';
 
 export const scatterSeriesConfig: ChartSeriesTypeConfig<'scatter'> = {
   seriesProcessor,
@@ -22,4 +27,7 @@ export const scatterSeriesConfig: ChartSeriesTypeConfig<'scatter'> = {
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
+  descriptionGetter,
+  isHighlightedCreator: createIsHighlighted,
+  isFadedCreator: createIsFaded,
 };

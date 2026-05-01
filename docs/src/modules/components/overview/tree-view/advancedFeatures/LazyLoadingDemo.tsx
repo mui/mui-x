@@ -1,17 +1,17 @@
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import { randomInt, randomName, randomId, randomBoolean } from '@mui/x-data-grid-generator';
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import DemoWrapper from '../../DemoWrapper';
 
-type ItemType = TreeViewBaseItem<{
+type ItemType = {
   id: string;
   label: string;
   childrenCount?: number;
-}>;
+  children?: ItemType[];
+};
 
 export const initialItems: ItemType[] = [
   { id: '1', label: 'Amy Harris', childrenCount: randomInt(1, 5) },
@@ -43,19 +43,9 @@ export default function LazyLoadingDemo() {
     <DemoWrapper link="/x/react-tree-view/rich-tree-view/editing/">
       <Stack
         spacing={1}
-        sx={{ width: '100%', padding: 2, minHeight: '600px' }}
-        justifyContent="space-between"
+        sx={{ justifyContent: 'space-between', width: '100%', padding: 2, minHeight: '600px' }}
       >
-        <Box
-          sx={{
-            height: 352,
-            overflow: 'auto',
-            minWidth: 260,
-            padding: 2,
-            width: 'fit-content',
-            alignSelf: 'center',
-          }}
-        >
+        <Box sx={{ height: 352, width: 320, alignSelf: 'center' }}>
           <ThemeProvider theme={theme}>
             <RichTreeViewPro
               items={initialItems}

@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { ChartProApi } from '@mui/x-charts-pro/ChartContainerPro';
+import { ChartProApi } from '@mui/x-charts-pro/ChartsContainerPro';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import dataset from '../data/Goolge-Meta-stoks.json';
 import ChartDemoWrapper from '../ChartDemoWrapper';
@@ -31,8 +31,8 @@ function Export() {
   const apiRef = React.useRef<ChartProApi<'line'>>(undefined);
 
   return (
-    <Stack height="100%" spacing={3} alignItems="center">
-      <div style={{ flexGrow: 1, minHeight: 0 }}>
+    <Stack spacing={3} sx={{ height: '100%', alignItems: 'center' }}>
+      <div style={{ flexGrow: 1, minHeight: 0, width: '100%' }}>
         <Typography align="center">Google vs Meta stock price</Typography>
         <LineChartPro
           apiRef={apiRef}
@@ -41,14 +41,12 @@ function Export() {
             {
               label: 'Google',
               dataKey: 'google',
-              showMark: false,
               valueFormatter: (value: number | null) =>
                 value === null ? '' : currencyFormatter(value),
             },
             {
               label: 'Meta',
               dataKey: 'meta',
-              showMark: false,
               valueFormatter: (value: number | null) =>
                 value === null ? '' : currencyFormatter(value),
             },

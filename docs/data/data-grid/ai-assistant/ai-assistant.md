@@ -6,10 +6,11 @@ title: Ask Your Table - AI Assistant
 
 <p class="description">Translate natural language into Data Grid views.</p>
 
-:::warning
-To use this feature you must have a prompt processing backend.
-MUI [offers this service](/x/react-data-grid/ai-assistant/#with-muis-service) as a part of a premium package add-on.
-Email us at [sales@mui.com](mailto:sales@mui.com) for more information.
+:::info
+The AI Assistant requires a prompt processing backend to interpret natural language queries.
+You can [build your own service](#with-a-custom-service) using any AI provider—no additional add-on is required beyond the Premium license.
+Alternatively, MUI offers a [hosted processing service](#with-muis-service) as a paid add-on.
+Visit the [MUI Console](https://console.mui.com) to grab a free API key or manage your plan.
 :::
 
 The AI Assistant feature lets users interact with the Data Grid component using natural language.
@@ -40,7 +41,7 @@ AI Assistant demos use a limited version of [MUI's processing service](/x/react-
 {{"demo": "AssistantWithExamples.js", "bg": "inline"}}
 
 :::success
-Provide examples for the [derived columns](/x/react-data-grid/pivoting/#derived-columns-in-pivot-mode) using the `getPivotDerivedColumns()` prop.
+Provide examples for the [derived columns](/x/react-data-grid/pivoting/#derived-columns-in-pivot-mode) using the `getPivotDerivedColumns` prop.
 :::
 
 ### Use row data for examples
@@ -75,10 +76,31 @@ You can use MUI's processing service or build your own.
 
 The Data Grid provides all the necessary elements for integration with MUI's service.
 
-1. Contact [sales@mui.com](mailto:sales@mui.com) to get an API key for our processing service.
+1. Get an API key from the [MUI Console](https://console.mui.com)—a free tier is available, and you can manage your plan there as well.
 
    :::warning
-   Do not expose the API key to the public. Instead, keep it private, use a proxy server that receives prompt processing requests, adds the `x-api-key` header, and passes the request on to MUI's service.
+   Do not expose the API key to the public.
+   Instead, keep it private and use a proxy server that receives prompt processing requests, adds the `x-api-key` header, and forwards the request to MUI's service.
+
+   This is an example of a Next.js App Router route handler (`app/api/prompt/route.ts`) for the prompt requests.
+
+   ```ts
+   import { type NextRequest, NextResponse } from 'next/server';
+
+   export async function POST(request: NextRequest) {
+     const body = await request.text();
+     const response = await fetch('https://backend.mui.com/api/v1/datagrid/prompt', {
+       method: 'POST',
+       headers: {
+         'content-type': 'application/json',
+         'x-api-key': process.env.MUI_DATAGRID_API_KEY!,
+       },
+       body,
+     });
+     const data = await response.json();
+     return NextResponse.json(data, { status: response.status });
+   }
+   ```
 
    This is an example of a [Fastify proxy](https://www.npmjs.com/package/@fastify/http-proxy) for the prompt requests.
 
@@ -108,6 +130,7 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    :::success
    You can implement `onPrompt()` with `unstable_gridDefaultPromptResolver()`.
    This adds the necessary headers and stringifies the body in the correct format for you.
+   The `unstable_` prefix means this API may change in a minor release as it matures—it is suitable for production use.
 
    It also makes it possible to provide additional context for better processing results, as shown below:
 
@@ -130,8 +153,9 @@ The Data Grid provides all the necessary elements for integration with MUI's ser
    }
    ```
 
-   By default, MUI's prompt resolver service stores the queries made to the service to analyze potential errors and improve the service (data is never stored).
-   Enable `privateMode` to make the service only keep track of the data needed for billing, without any query related data.
+   By default, MUI's prompt resolver service logs query text to analyze errors and improve the service—your grid's row data is never stored.
+   Pass `privateMode: true` to limit logging to billing data only, with no query text stored.
+   This is recommended for production deployments handling sensitive data:
 
    ```ts
    function processPrompt(query: string, context: string, conversationId?: string) {
@@ -199,6 +223,37 @@ type Result<T> = { ok: false; message: string } | { ok: true; data: T };
 ```
 
 Your resolver should return `Promise<PromptResponse>`.
+
+## Error handling
+
+When `onPrompt` rejects, the Data Grid automatically displays the error message in the assistant panel.
+`unstable_gridDefaultPromptResolver()` converts `{ ok: false, message }` service responses into a rejected promise, so this happens without any extra handling in your code.
+
+If you want to log errors to an external service before the Data Grid handles them, wrap your implementation in a try/catch and re-throw:
+
+```ts
+async function processPrompt(
+  query: string,
+  context: string,
+  conversationId?: string,
+) {
+  try {
+    return await unstable_gridDefaultPromptResolver(
+      `${PROMPT_RESOLVER_PROXY_BASE_URL}/api/my-custom-path`,
+      query,
+      context,
+      conversationId,
+    );
+  } catch (error) {
+    // Report to your error tracking service (Sentry, Datadog, etc.)
+    console.error('[AI Assistant] Prompt processing failed:', error);
+    throw error;
+  }
+}
+```
+
+If users receive unexpected or incorrect grid updates, provide more specific column `examples` or add an `additionalContext` string describing what the rows represent.
+This gives the model enough context to interpret ambiguous queries correctly.
 
 ## API
 

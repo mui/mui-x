@@ -9,7 +9,7 @@ import {
   SchedulerEventSide,
   SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-headless/models';
-import { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
+import type { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
@@ -18,58 +18,115 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-even
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
-import { useTranslations } from '../../../utils/TranslationsContext';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
-import { schedulerPaletteStyles } from '../../../utils/tokens';
-import { useEventCalendarClasses } from '../../../../event-calendar/EventCalendarClassesContext';
+import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
+import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
+import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
+
+const ARROW_DEPTH = 8; // px - depth of the chevron point
+const LEFT_ARROW_CLIP = `polygon(${ARROW_DEPTH}px 0, 100% 0, 100% 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
+const RIGHT_ARROW_CLIP = `polygon(0 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, 0 100%)`;
+const BOTH_ARROWS_CLIP = `polygon(${ARROW_DEPTH}px 0, calc(100% - ${ARROW_DEPTH}px) 0, 100% 50%, calc(100% - ${ARROW_DEPTH}px) 100%, ${ARROW_DEPTH}px 100%, 0 50%)`;
 
 const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
   borderRadius: theme.shape.borderRadius * 0.75,
-  backgroundColor: 'var(--event-color-3)',
   minWidth: 18,
-  height: 'auto',
+  height: 18,
   cursor: 'pointer',
   position: 'relative',
   zIndex: 1,
   gridRow: 'var(--grid-row)',
   gridColumn: 1,
   padding: `0 ${theme.spacing(0.5)}`,
-  width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * 2 * ${theme.spacing(0.5)} + (var(--grid-column-span) - 1) * 1px)`,
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+  width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * (2 * ${theme.spacing(0.5)} + 1px))`,
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
-  ...schedulerPaletteStyles,
+  variants: getPaletteVariants(theme),
 });
 
 const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
   name: 'MuiEventCalendar',
   slot: 'DayGridEvent',
-})<{ 'data-variant'?: 'filled' | 'invisible' | 'compact' | 'placeholder' }>(({ theme }) => ({
-  ...(DayGridEventBaseStyles(theme) as any),
-  '&[data-variant="invisible"]': {
-    width: '100%',
-    visibility: 'hidden',
-    height: 18,
-  },
-  '&[data-variant="compact"]': {
-    height: 'fit-content',
-    '&:active': {
-      backgroundColor: 'var(--interactive-active-bg)',
+})<{ 'data-variant'?: 'filled' | 'invisible' | 'compact' | 'placeholder'; palette?: PaletteName }>(
+  ({ theme }) => ({
+    ...(DayGridEventBaseStyles(theme) as any),
+    '&:focus-visible': {
+      outline: '2px solid var(--event-surface-accent)',
+      outlineOffset: 1,
     },
-    '&:hover': {
-      backgroundColor: 'var(--interactive-hover-bg)',
+    '&[data-variant="filled"]': {
+      backgroundColor: 'var(--event-surface-bold)',
+      '&:active': {},
+      '&:hover': {
+        backgroundColor: 'var(--event-surface-bold-hover)',
+      },
+      '&[data-editing]': {
+        backgroundColor: 'var(--event-surface-selected)',
+        '&:hover': {
+          backgroundColor: 'var(--event-surface-selected-hover)',
+        },
+      },
+      [`& .${eventCalendarClasses.dayGridEventRecurringIcon}`]: {
+        color: 'var(--event-on-surface-bold)',
+      },
+      '&[data-starting-before-edge]': {
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0,
+        clipPath: LEFT_ARROW_CLIP,
+        paddingLeft: ARROW_DEPTH + 8,
+      },
+      '&[data-ending-after-edge]': {
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0,
+        clipPath: RIGHT_ARROW_CLIP,
+        paddingRight: ARROW_DEPTH + 8,
+      },
+      '&[data-starting-before-edge][data-ending-after-edge]': {
+        clipPath: BOTH_ARROWS_CLIP,
+      },
+      '&[data-starting-before-edge]:focus-visible, &[data-ending-after-edge]:focus-visible': {
+        clipPath: 'none',
+        borderRadius: (theme.shape.borderRadius as number) * 0.75,
+      },
     },
-  },
-}));
+    '&[data-variant="invisible"]': {
+      width: '100%',
+      visibility: 'hidden',
+      height: 18,
+    },
+    '&[data-variant="compact"]': {
+      height: 'fit-content',
+
+      '&:active': {},
+      '&:hover': {
+        backgroundColor: (theme.vars || theme).palette.action.hover,
+      },
+      '&[data-editing]': {
+        backgroundColor: 'var(--event-surface-subtle)',
+        '&:hover': {
+          backgroundColor: 'var(--event-surface-subtle-hover)',
+        },
+      },
+    },
+  }),
+);
 
 const DayGridEventPlaceholder = styled(CalendarGrid.DayEventPlaceholder, {
   name: 'MuiEventCalendar',
   slot: 'DayGridEventPlaceholder',
-})(({ theme }) => ({
+})<{ palette?: PaletteName }>(({ theme }) => ({
   ...(DayGridEventBaseStyles(theme) as any),
+  minHeight: 18,
   zIndex: 2,
+  backgroundColor: 'var(--event-surface-subtle-hover)',
+  color: 'var(--event-on-surface-subtle-primary)',
+  border: `1px dashed var(--event-on-surface-subtle-secondary)`,
 }));
 
 const DayGridEventTitle = styled('p', {
@@ -77,10 +134,22 @@ const DayGridEventTitle = styled('p', {
   slot: 'DayGridEventTitle',
 })(({ theme }) => ({
   margin: 0,
-  color: 'var(--event-color-12)',
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
+  flexGrow: 1,
+  '[data-variant="filled"] &': {
+    color: 'var(--event-on-surface-bold)',
+  },
+  '[data-variant="compact"] &': {
+    color: (theme.vars || theme).palette.text.primary,
+  },
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
+  '[data-variant="compact"][data-editing] &': {
+    color: 'var(--event-on-surface-subtle-primary)',
+  },
 }));
 
 const DayGridEventTime = styled('time', {
@@ -88,29 +157,44 @@ const DayGridEventTime = styled('time', {
   slot: 'DayGridEventTime',
 })(({ theme }) => ({
   display: 'inline-block',
-  color: 'var(--event-color-11)',
+  color: 'var(--event-on-surface-subtle-secondary)',
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
   whiteSpace: 'nowrap',
-  width: 150,
+  paddingInlineEnd: theme.spacing(0.5),
   '@container (width < 300px)': {
+    paddingInlineEnd: 0,
     display: 'inline',
     '& > span:last-of-type': {
       display: 'none',
     },
+  },
+  '[data-variant="compact"] &': {
+    color: (theme.vars || theme).palette.text.secondary,
+  },
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
+  '[data-variant="compact"][data-editing] &': {
+    color: 'var(--event-on-surface-subtle-secondary)',
   },
 }));
 
 const DayGridEventRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'DayGridEventRecurringIcon',
-})({
-  position: 'absolute',
-  bottom: 1,
-  right: 3,
-  color: 'var(--event-color-11)',
-});
+})(({ theme }) => ({
+  color: (theme.vars || theme).palette.text.primary,
+  fontSize: '1rem',
+  justifySelf: 'flex-end',
+  '[data-editing] &': {
+    color: 'var(--event-on-surface-selected)',
+  },
+  '[data-variant="compact"][data-editing] &': {
+    color: 'var(--event-on-surface-bold)',
+  },
+}));
 
 const DayGridEventResizeHandler = styled(CalendarGrid.DayEventResizeHandler, {
   name: 'MuiEventCalendar',
@@ -141,11 +225,10 @@ const DayGridEventCardWrapper = styled('div', {
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
-  paddingInline: theme.spacing(1),
+  flexGrow: 1,
   '@container (width < 300px)': {
-    padding: `0 0 0 ${theme.spacing(0.5)}`,
     gap: theme.spacing(0.5),
-    [`& ${DayGridEventTitle}`]: {
+    [`& .${eventCalendarClasses.dayGridEventTitle}`]: {
       marginInlineStart: theme.spacing(0.5),
       paddingInlineEnd: theme.spacing(1.5),
     },
@@ -169,7 +252,7 @@ const EventColorIndicator = styled('span', {
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-color-9)',
+  backgroundColor: 'var(--event-main)',
   marginTop: 2,
 });
 
@@ -184,6 +267,7 @@ const DayGridEventLinesClamp = styled('span', {
   textOverflow: 'ellipsis',
   wordBreak: 'break-word',
   overflowWrap: 'break-word',
+  flexGrow: 1,
 });
 
 const isResizableSelector = createSelector(
@@ -219,10 +303,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const { occurrence, variant, style: styleProp, className, ...other } = props;
 
   // Context hooks
-  const translations = useTranslations();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
-
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(store, isResizableSelector, 'start', occurrence);
@@ -274,15 +356,16 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               role="img"
               aria-label={
                 resource?.title
-                  ? translations.resourceAriaLabel(resource.title)
-                  : translations.noResourceAriaLabel
+                  ? localeText.resourceAriaLabel(resource.title)
+                  : localeText.noResourceAriaLabel
               }
             />
-            <DayGridEventLinesClamp
-              className={classes.dayGridEventLinesClamp}
-              style={{ '--number-of-lines': 1 } as React.CSSProperties}
-            >
-              <DayGridEventCardContent className={classes.dayGridEventCardContent}>
+
+            <DayGridEventCardContent className={classes.dayGridEventCardContent}>
+              <DayGridEventLinesClamp
+                className={classes.dayGridEventLinesClamp}
+                style={{ '--number-of-lines': 1 } as React.CSSProperties}
+              >
                 <DayGridEventTime className={classes.dayGridEventTime}>
                   <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
                   <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
@@ -290,8 +373,9 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 <DayGridEventTitle className={classes.dayGridEventTitle} as="span">
                   {occurrence.title}
                 </DayGridEventTitle>
-              </DayGridEventCardContent>
-            </DayGridEventLinesClamp>
+              </DayGridEventLinesClamp>
+            </DayGridEventCardContent>
+
             {isRecurring && (
               <DayGridEventRecurringIcon
                 className={classes.dayGridEventRecurringIcon}
@@ -302,7 +386,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
           </DayGridEventCardWrapper>
         );
       default:
-        throw new Error('MUI: Unsupported variant provided to EventItem component.');
+        throw new Error(
+          'MUI X Scheduler: Unsupported variant provided to DayGridEvent component. ' +
+            'The DayGridEvent component only supports specific variant values. ' +
+            'Check the component documentation for supported variants.',
+        );
     }
   }, [
     variant,
@@ -311,7 +399,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     occurrence.displayTimezone.end.value,
     isRecurring,
     resource?.title,
-    translations,
+    localeText,
     formatTime,
     classes,
   ]);

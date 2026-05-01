@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
-import { lineElementClasses } from '@mui/x-charts/LineChart';
+import { lineClasses } from '@mui/x-charts/LineChart';
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -69,7 +69,7 @@ export default function DownloadDemo() {
 
   return (
     <Stack spacing={1} direction="column" sx={{ height: '100%', minHeight: 0 }}>
-      <Stack direction="row" justifyContent="space-between" width="100%">
+      <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%' }}>
         <Select
           size="small"
           sx={{ width: 200 }}
@@ -93,7 +93,6 @@ export default function DownloadDemo() {
           <MenuItem value="relative">Relative</MenuItem>
         </Select>
       </Stack>
-
       <div style={{ flex: 1, minHeight: 300 }}>
         <LineChartPro
           skipAnimation
@@ -103,7 +102,6 @@ export default function DownloadDemo() {
             dataKey: `${v}${selectedFormat === 'relative' ? '_percent' : ''}`,
             stack: 'v',
             area: true,
-            showMark: false,
             curve: 'linear',
             label: `v${v}`,
             valueFormatter: selectedFormat === 'relative' ? percentValueFormatter : valueFormatter,
@@ -130,7 +128,7 @@ export default function DownloadDemo() {
           ]}
           margin={{ left: 0, bottom: 0 }}
           sx={{
-            [`& .${lineElementClasses.root}`]: {
+            [`& .${lineClasses.line}`]: {
               strokeWidth: 1.5,
             },
             '& .MuiAreaElement-series-5': {

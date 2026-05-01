@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
+import capitalize from '@mui/utils/capitalize';
 import useId from '@mui/utils/useId';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { useRtl } from '@mui/system/RtlProvider';
@@ -10,9 +11,11 @@ import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import type { GridStateColDef } from '../../models/colDef/gridColDef';
 import type { GridSortDirection } from '../../models/gridSortModel';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
+import { getColumnMenuItemKeys } from '../../hooks/features/columnMenu/getColumnMenuItemKeys';
 import type { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
+import type { GridColumnMenuComponent } from '../menu/columnMenu/GridColumnMenuProps';
 import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -21,6 +24,7 @@ import type { GridColumnHeaderEventLookup } from '../../models/events';
 import { isEventTargetInPortal } from '../../utils/domUtils';
 import { PinnedColumnPosition } from '../../internals/constants';
 import { attachPinnedStyle } from '../../internals/utils';
+import { usePinnedScrollOffset } from '../../hooks/utils/usePinnedScrollOffset';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -74,9 +78,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: [
       'columnHeader',
-      colDef.headerAlign === 'left' && 'columnHeader--alignLeft',
-      colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
-      colDef.headerAlign === 'right' && 'columnHeader--alignRight',
+      colDef.headerAlign && `columnHeader--align${capitalize(colDef.headerAlign)}`,
       isColumnSortable && 'columnHeader--sortable',
       isDragging && 'columnHeader--moving',
       isColumnSorted && 'columnHeader--sorted',
@@ -127,6 +129,40 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnMenuButtonId = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
   const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
+
+  const columnMenuSlotProps = rootProps.slotProps?.columnMenu;
+  const columnMenuComponent = rootProps.slots.columnMenu as GridColumnMenuComponent;
+  const defaultSlots = columnMenuComponent?.defaultSlots;
+  const defaultSlotProps = columnMenuComponent?.defaultSlotProps;
+  const hasKnownDefaultColumnMenu = defaultSlots != null && defaultSlotProps != null;
+
+  const columnMenuItemKeys = React.useMemo(() => {
+    if (!hasKnownDefaultColumnMenu) {
+      return [];
+    }
+    return getColumnMenuItemKeys({
+      apiRef,
+      colDef,
+      defaultSlots,
+      defaultSlotProps,
+      slots: columnMenuSlotProps?.slots,
+      slotProps: columnMenuSlotProps?.slotProps,
+    });
+  }, [
+    apiRef,
+    colDef,
+    defaultSlotProps,
+    defaultSlots,
+    hasKnownDefaultColumnMenu,
+    columnMenuSlotProps?.slotProps,
+    columnMenuSlotProps?.slots,
+  ]);
+
+  // If we don't have a "known" default column menu (i.e. a custom menu component
+  // without `defaultSlots` / `defaultSlotProps` statics), we treat it as opaque
+  // and assume it has items, so we always show the column menu icon.
+  // Only the built-in/default menu path can hide the icon when there are no items.
+  const hasColumnMenuItems = !hasKnownDefaultColumnMenu || columnMenuItemKeys.length > 0;
 
   const isDraggable = !rootProps.disableColumnReorder && !disableReorder && !colDef.disableReorder;
 
@@ -203,19 +239,27 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     }
   }, [showColumnMenuIcon, columnMenuOpen]);
 
+  React.useEffect(() => {
+    if (hasKnownDefaultColumnMenu && columnMenuOpen && !hasColumnMenuItems) {
+      apiRef.current.hideColumnMenu();
+    }
+  }, [apiRef, columnMenuOpen, hasColumnMenuItems, hasKnownDefaultColumnMenu]);
+
   const handleExited = React.useCallback(() => {
     setShowColumnMenuIcon(false);
   }, []);
 
-  const columnMenuIconButton = !rootProps.disableColumnMenu && !colDef.disableColumnMenu && (
-    <ColumnHeaderMenuIcon
-      colDef={colDef}
-      columnMenuId={columnMenuId!}
-      columnMenuButtonId={columnMenuButtonId!}
-      open={showColumnMenuIcon}
-      iconButtonRef={iconButtonRef}
-    />
-  );
+  const columnMenuIconButton = !rootProps.disableColumnMenu &&
+    !colDef.disableColumnMenu &&
+    hasColumnMenuItems && (
+      <ColumnHeaderMenuIcon
+        colDef={colDef}
+        columnMenuId={columnMenuId!}
+        columnMenuButtonId={columnMenuButtonId!}
+        open={showColumnMenuIcon}
+        iconButtonRef={iconButtonRef}
+      />
+    );
 
   const columnMenu = (
     <GridColumnHeaderMenu
@@ -284,9 +328,16 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const label = colDef.headerName ?? colDef.field;
 
+  const pinnedScrollOffset = usePinnedScrollOffset(apiRef, pinnedPosition);
   const style = React.useMemo(
-    () => attachPinnedStyle({ ...props.style }, isRtl, pinnedPosition, pinnedOffset),
-    [pinnedPosition, pinnedOffset, props.style, isRtl],
+    () =>
+      attachPinnedStyle(
+        { ...props.style },
+        isRtl,
+        pinnedPosition,
+        pinnedOffset !== undefined ? pinnedOffset + pinnedScrollOffset : undefined,
+      ),
+    [pinnedPosition, pinnedOffset, pinnedScrollOffset, props.style, isRtl],
   );
 
   return (

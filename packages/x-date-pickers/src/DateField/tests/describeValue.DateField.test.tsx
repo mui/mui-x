@@ -2,7 +2,7 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 import { PickerValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
-  expectFieldValueV7,
+  expectFieldValue,
   adapterToUse,
   describeValue,
   getFieldInputRoot,
@@ -23,12 +23,12 @@ describe('<DateField /> - Describe Value', () => {
         ? adapterToUse.format(expectedValue, 'keyboardDate')
         : 'MM/DD/YYYY';
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { selectSection, pressKey }) => {
+    setNewValue: async (value, { selectSection, pressKey }) => {
       const newValue = adapterToUse.addDays(value!, 1);
-      selectSection('day');
-      pressKey(undefined, 'ArrowUp');
+      await selectSection('day');
+      await pressKey('ArrowUp');
 
       return newValue;
     },

@@ -7,8 +7,8 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 
 import { ChartsLegend, PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';
 
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 
 const pieSeries = [
   {
@@ -70,22 +70,22 @@ export default function LegendClick() {
         }}
       >
         <Typography>Chart Legend</Typography>
-        <ChartDataProvider series={barSeries} width={400} height={60}>
+        <ChartsDataProvider series={barSeries} width={400} height={60}>
           <ChartsLegend
             direction="horizontal"
             // @ts-ignore
             onItemClick={(event, context, index) => setItemData([context, index])}
           />
-        </ChartDataProvider>
+        </ChartsDataProvider>
         <Typography>Pie Chart Legend</Typography>
-        <ChartDataProvider series={pieSeries} width={400} height={60}>
+        <ChartsDataProvider series={pieSeries} width={400} height={60}>
           <ChartsLegend
             direction="horizontal"
             onItemClick={(event, context, index) => setItemData([context, index])}
           />
-        </ChartDataProvider>
+        </ChartsDataProvider>
         <Typography>Piecewise Color Legend</Typography>
-        <ChartDataProvider
+        <ChartsDataProvider
           // @ts-ignore
           series={lineSeries}
           width={400}
@@ -109,7 +109,7 @@ export default function LegendClick() {
             // @ts-ignore
             onItemClick={(event, context, index) => setItemData([context, index])}
           />
-        </ChartDataProvider>
+        </ChartsDataProvider>
       </Box>
 
       <Stack direction="column" sx={{ width: { xs: '100%', md: '40%' } }}>

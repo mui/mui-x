@@ -1,0 +1,26 @@
+{
+  "props": {},
+  "name": "MessageGroup",
+  "imports": [
+    "import { MessageGroup } from '@mui/x-chat/headless';",
+    "import { MessageGroup } from '@mui/x-chat/headless';"
+  ],
+  "slots": [
+    { "name": "group", "description": "", "class": null },
+    { "name": "authorName", "description": "", "class": null },
+    {
+      "name": "groupTimestamp",
+      "description": "The timestamp element rendered next to the author name in compact mode.\nOnly rendered when `variant === 'compact'` and the message has a `createdAt` value.",
+      "default": "'span'",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiMessageGroup",
+  "filename": "/packages/x-chat-headless/src/message-group/MessageGroup.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/messages/\">Chat - Headless messages</a></li></ul>",
+  "cssComponent": false
+}

@@ -1,6 +1,7 @@
 export * from './base';
 export * from './AppendKeys';
 export * from './DefaultizedProps';
+export * from './DistributiveOmit';
 export * from './GridChartsIntegration';
 export * from './HasProperty';
 export * from './MakeOptional';

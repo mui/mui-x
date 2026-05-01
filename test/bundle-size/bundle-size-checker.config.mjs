@@ -6,8 +6,7 @@
 import path from 'path';
 import { globby } from 'globby';
 import { defineConfig } from '@mui/internal-bundle-size-checker';
-// eslint-disable-next-line import/no-relative-packages
-import generateReleaseInfo from '../../packages/x-license/generateReleaseInfo.js';
+import generateReleaseInfo from '../../scripts/generateReleaseInfo.mjs';
 
 const rootDir = path.resolve(import.meta.dirname, '../..');
 
@@ -78,6 +77,6 @@ export default defineConfig(async () => {
       // Stabilize release info string
       [JSON.stringify(generateReleaseInfo())]: JSON.stringify('__RELEASE_INFO__'),
     },
-    comment: false,
+    comment: true,
   };
 });

@@ -2,14 +2,15 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import composeClasses from '@mui/utils/composeClasses';
+import capitalize from '@mui/utils/capitalize';
 import { useRtl } from '@mui/system/RtlProvider';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import type { GridAlignment } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridColumnGroupsLookupSelector } from '../../hooks/features/columnGrouping/gridColumnGroupsSelector';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { GridGenericColumnHeaderItem } from './GridGenericColumnHeaderItem';
 import type { GridColumnGroup } from '../../models/gridColumnGrouping';
@@ -18,6 +19,7 @@ import type { GridColumnGroupHeaderParams } from '../../models/params';
 import { isEventTargetInPortal } from '../../utils/domUtils';
 import { PinnedColumnPosition } from '../../internals/constants';
 import { attachPinnedStyle } from '../../internals/utils';
+import { usePinnedScrollOffset } from '../../hooks/utils/usePinnedScrollOffset';
 
 interface GridColumnGroupHeaderProps {
   groupId: string | null;
@@ -63,9 +65,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: [
       'columnHeader',
-      headerAlign === 'left' && 'columnHeader--alignLeft',
-      headerAlign === 'center' && 'columnHeader--alignCenter',
-      headerAlign === 'right' && 'columnHeader--alignRight',
+      headerAlign && `columnHeader--align${capitalize(headerAlign)}`,
       isDragging && 'columnHeader--moving',
       showRightBorder && 'columnHeader--withRightBorder',
       showLeftBorder && 'columnHeader--withLeftBorder',
@@ -99,11 +99,11 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     pinnedOffset,
   } = props;
 
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const isRtl = useRtl();
 
   const headerCellRef = React.useRef<HTMLDivElement>(null);
-  const apiRef = useGridApiContext();
   const columnGroupsLookup = useGridSelector(apiRef, gridColumnGroupsLookupSelector);
 
   const group: Partial<GridColumnGroup> = groupId ? columnGroupsLookup[groupId] : {};
@@ -189,9 +189,16 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       ? group.headerClassName(renderParams)
       : group.headerClassName;
 
+  const pinnedScrollOffset = usePinnedScrollOffset(apiRef, pinnedPosition);
   const style = React.useMemo(
-    () => attachPinnedStyle({ ...props.style }, isRtl, pinnedPosition, pinnedOffset),
-    [pinnedPosition, pinnedOffset, props.style, isRtl],
+    () =>
+      attachPinnedStyle(
+        { ...props.style },
+        isRtl,
+        pinnedPosition,
+        pinnedOffset !== undefined ? pinnedOffset + pinnedScrollOffset : undefined,
+      ),
+    [pinnedPosition, pinnedOffset, pinnedScrollOffset, props.style, isRtl],
   );
 
   return (

@@ -29,7 +29,7 @@ There are two ways to maintain a stable reference:
    }
    ```
 
-2. If the columns require something within the component scope, such as a state value or a prop, you can use the `useMemo` hook to keep a stable reference between renders:
+2. If the columns require something within the component scope, such as a state value or a prop, you can use the `useMemo()` hook to keep a stable reference between renders:
 
    ```tsx
    function App(props) {

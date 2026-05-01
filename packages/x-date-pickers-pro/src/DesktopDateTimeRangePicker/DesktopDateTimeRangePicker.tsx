@@ -98,9 +98,8 @@ const rendererInterceptor = function RendererInterceptor(
   );
 };
 
-type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DesktopDateRangePickerComponent = ((
+  props: DesktopDateTimeRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -113,17 +112,16 @@ type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure exte
  *
  * - [DesktopDateTimeRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-range-picker/)
  */
-const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRangePicker(
+  inProps: DesktopDateTimeRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
   // Props with the default values common to all date time range pickers
-  const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
-    DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiDesktopDateTimeRangePicker');
+  const defaultizedProps = useDateTimeRangePickerDefaultizedProps<DesktopDateTimeRangePickerProps>(
+    inProps,
+    'MuiDesktopDateTimeRangePicker',
+  );
 
   const renderTimeView = defaultizedProps.shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -179,11 +177,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<
-    DateTimeRangePickerView,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useDesktopRangePicker<DateTimeRangePickerView, typeof props>({
     ref,
     props,
     valueManager: rangeValueManager,
@@ -269,7 +263,7 @@ DesktopDateTimeRangePicker.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -294,10 +288,6 @@ DesktopDateTimeRangePicker.propTypes = {
    */
   displayWeekNumber: PropTypes.bool,
   /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
-  /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
    */
@@ -317,6 +307,13 @@ DesktopDateTimeRangePicker.propTypes = {
    * Pass a ref to the `input` element.
    */
   inputRef: refType,
+  /**
+   * If `true`, keep the picker open when the value is edited from the field.
+   * Useful to prevent the popper/dialog from closing while typing in the input.
+   * This only affects changes with `source = "field"` and does not alter view interactions.
+   * @default false
+   */
+  keepOpenDuringFieldFocus: PropTypes.bool,
   /**
    * The label content.
    */

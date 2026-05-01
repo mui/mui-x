@@ -8,7 +8,10 @@
     "type": { "type": { "description": "'heatmap'" }, "required": true, "isProPlan": true },
     "data": { "type": { "description": "readonly HeatmapValueType[]" }, "isProPlan": true },
     "dataKey": { "type": { "description": "string" }, "isProPlan": true },
-    "highlightScope": { "type": { "description": "HighlightScope" }, "isProPlan": true },
+    "highlightScope": {
+      "type": { "description": "HighlightScope&lt;SeriesType&gt;" },
+      "isProPlan": true
+    },
     "id": { "type": { "description": "SeriesId" }, "isProPlan": true },
     "label": {
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" },
@@ -16,7 +19,13 @@
     },
     "labelMarkType": { "type": { "description": "ChartsLabelMarkType" }, "isProPlan": true },
     "valueFormatter": {
-      "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" },
+      "type": {
+        "description": "(value: number | null, context: { xIndex: number; yIndex: number }) =&gt; string | null"
+      },
+      "isProPlan": true
+    },
+    "valueGetter": {
+      "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; HeatmapValueType" },
       "isProPlan": true
     },
     "xAxisId": { "type": { "description": "AxisId" }, "isProPlan": true },

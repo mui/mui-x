@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { getDataGridUtilityClass, useGridSelector } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';

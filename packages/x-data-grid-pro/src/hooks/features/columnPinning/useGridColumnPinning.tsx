@@ -175,7 +175,16 @@ export const useGridColumnPinning = (
     (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePro>) => {
       const newPinnedColumns = context.stateToRestore.pinnedColumns;
       if (newPinnedColumns != null) {
+        apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns = null;
         setState(apiRef, newPinnedColumns);
+
+        return {
+          ...params,
+          callbacks: [
+            ...params.callbacks,
+            () => apiRef.current.requestPipeProcessorsApplication('hydrateColumns'),
+          ],
+        };
       }
 
       return params;

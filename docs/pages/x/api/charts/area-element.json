@@ -23,32 +23,7 @@
       "class": null
     }
   ],
-  "classes": [
-    {
-      "key": "faded",
-      "className": "MuiAreaElement-faded",
-      "description": "Styles applied to the root element when faded.",
-      "isGlobal": false
-    },
-    {
-      "key": "highlighted",
-      "className": "MuiAreaElement-highlighted",
-      "description": "Styles applied to the root element when highlighted.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiAreaElement-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "series",
-      "className": "MuiAreaElement-series",
-      "description": "Styles applied to the root element for a specified series.\nNeeds to be suffixed with the series ID: `.${areaElementClasses.series}-${seriesId}`.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "muiName": "MuiAreaElement",
   "filename": "/packages/x-charts/src/LineChart/AreaElement.tsx",
   "inheritance": null,

@@ -11,7 +11,7 @@ import {
 import { SchedulerEventId, TemporalSupportedObject } from '../../models';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
-import { useAdapter } from '../../use-adapter';
+import { useAdapterContext } from '../../use-adapter-context';
 
 export function useDraggableEvent(
   parameters: useDraggableEvent.Parameters,
@@ -30,7 +30,7 @@ export function useDraggableEvent(
   } = parameters;
 
   // Context hooks
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -42,7 +42,7 @@ export function useDraggableEvent(
   const event = useStore(store, schedulerEventSelectors.processedEvent, eventId)!;
 
   // Feature hooks
-  const { state: eventState } = useEvent({ start, end });
+  const { state: eventState } = useEvent({ start, end, eventId });
 
   const preview = useDragPreview({
     type: 'internal-event',
@@ -51,14 +51,11 @@ export function useDraggableEvent(
     showPreviewOnDragStart: false,
   });
 
-  const state = React.useMemo(
-    () => ({
-      ...eventState,
-      dragging: placeholderAction === 'internal-drag',
-      resizing: placeholderAction === 'internal-resize',
-    }),
-    [eventState, placeholderAction],
-  );
+  const state = {
+    ...eventState,
+    dragging: placeholderAction === 'internal-drag',
+    resizing: placeholderAction === 'internal-resize',
+  };
 
   React.useEffect(() => {
     if (!isDraggable || !ref.current) {

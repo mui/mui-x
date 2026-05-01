@@ -3,26 +3,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:performance": "vitest bench",
-    "test:performance:trace": "TRACE=true vitest bench --run",
-    "build": "pnpm --filter=\"@mui/x-charts-premium...\" build",
-    "test:performance:browser": "vitest bench --browser"
+    "test:performance": "vitest run",
+    "build": "pnpm --filter=\"@mui/x-charts-premium...\" build"
   },
   "devDependencies": {
-    "@codspeed/vitest-plugin": "5.0.1",
     "@emotion/react": "catalog:",
-    "@mui/x-charts": "workspace:*",
-    "@mui/x-charts-pro": "workspace:*",
-    "@mui/x-charts-premium": "workspace:*",
-    "@testing-library/react": "16.3.2",
-    "@testing-library/user-event": "14.6.1",
-    "@vitejs/plugin-react": "catalog:",
-    "@vitejs/plugin-react-swc": "catalog:",
+    "@mui/internal-benchmark": "0.0.3-canary.2",
+    "@mui/x-charts": "workspace:^",
+    "@mui/x-charts-pro": "workspace:^",
+    "@mui/x-charts-premium": "workspace:^",
+    "@vitejs/plugin-react": "^6.0.1",
     "@vitest/browser-playwright": "catalog:",
-    "@vitest/ui": "catalog:",
-    "jsdom": "26.1.0",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "vite": "^8.0.9",
     "vitest": "catalog:"
   }
 }

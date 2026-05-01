@@ -1,6 +1,6 @@
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
 import { ContinuousColorLegend, continuousColorLegendClasses } from '@mui/x-charts/ChartsLegend';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -13,7 +13,7 @@ describe('<ContinuousColorLegend />', () => {
     render: (node) =>
       render(node, {
         wrapper: ({ children }) => (
-          <ChartDataProvider
+          <ChartsDataProvider
             height={50}
             width={50}
             series={[
@@ -38,7 +38,7 @@ describe('<ContinuousColorLegend />', () => {
             {/* https://github.com/mui/material-ui/blob/c0620e333641deda56f3cd68c7c3736098ee818c/packages-internal/test-utils/src/describeConformance.tsx#L257 */}
             {children}
             <ChartsSurface />
-          </ChartDataProvider>
+          </ChartsDataProvider>
         ),
       }),
     muiName: 'MuiContinuousColorLegend',
@@ -47,6 +47,6 @@ describe('<ContinuousColorLegend />', () => {
     ThemeProvider,
     createTheme,
     // SKIP
-    skip: ['themeVariants', 'componentProp', 'componentsProp'],
+    skip: ['themeVariants', 'componentProp'],
   }));
 });

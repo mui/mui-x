@@ -3,7 +3,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import type { RefObject } from '@mui/x-internals/types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -48,13 +48,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridScrollAreaRawRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ScrollArea',
-  overridesResolver: (props, styles) => [
-    { [`&.${gridClasses['scrollArea--left']}`]: styles['scrollArea--left'] },
-    { [`&.${gridClasses['scrollArea--right']}`]: styles['scrollArea--right'] },
-    { [`&.${gridClasses['scrollArea--up']}`]: styles['scrollArea--up'] },
-    { [`&.${gridClasses['scrollArea--down']}`]: styles['scrollArea--down'] },
-    styles.scrollArea,
-  ],
+  overridesResolver: (props, styles) => {
+    const { ownerState } = props;
+    return [styles.scrollArea, styles[`scrollArea--${ownerState.scrollDirection}`]];
+  },
 })<{ ownerState: OwnerState }>(() => ({
   position: 'absolute',
   zIndex: 101,

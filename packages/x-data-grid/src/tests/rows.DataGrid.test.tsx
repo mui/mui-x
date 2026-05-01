@@ -284,7 +284,7 @@ describe('<DataGrid /> - Rows', () => {
         );
       }
 
-      it.skipIf(!isJSDOM)('should throw an error if getActions is missing', () => {
+      it('should throw an error if getActions is missing', () => {
         expect(() => {
           render(
             <ErrorBoundary>
@@ -1065,16 +1065,12 @@ describe('<DataGrid /> - Rows', () => {
         const border = 1;
         const contentHeight = 100;
         render(<TestCase getBioContentHeight={() => contentHeight} getRowHeight={() => 'auto'} />);
-        const virtualScrollerContent = document.querySelector(
-          '.MuiDataGrid-virtualScrollerContent',
-        );
+        const element = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone');
         const expectedHeight = baselineProps.rows.length * (contentHeight + border);
 
         await waitFor(() => {
-          expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
+          expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
         });
-
-        expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
       it('should use the default row height to calculate the content size when the row has not been measured yet', async () => {
@@ -1091,19 +1087,15 @@ describe('<DataGrid /> - Rows', () => {
             rowBufferPx={0}
           />,
         );
-        const virtualScrollerContent = document.querySelector(
-          '.MuiDataGrid-virtualScrollerContent',
-        );
+        const element = document.querySelector('.MuiDataGrid-contentFiller');
         const expectedHeight =
           measuredRowHeight +
           border + // Measured rows also include the border
           (baselineProps.rows.length - 1) * defaultRowHeight;
 
         await waitFor(() => {
-          expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
+          expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
         });
-
-        expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
       it('should use the value from getEstimatedRowHeight to estimate the content size', async () => {
@@ -1121,18 +1113,14 @@ describe('<DataGrid /> - Rows', () => {
             rowBufferPx={0}
           />,
         );
-        const virtualScrollerContent = document.querySelector(
-          '.MuiDataGrid-virtualScrollerContent',
-        );
+        const element = document.querySelector('.MuiDataGrid-contentFiller');
         const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
         const expectedHeight =
           firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
 
         await waitFor(() => {
-          expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
+          expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
         });
-
-        expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
       it('should recalculate the content size when the rows prop changes', async () => {
@@ -1144,21 +1132,16 @@ describe('<DataGrid /> - Rows', () => {
             rowBufferPx={0}
           />,
         );
-        const virtualScrollerContent = document.querySelector(
-          '.MuiDataGrid-virtualScrollerContent',
-        );
+        const element = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone');
 
         await waitFor(() => {
-          expect(virtualScrollerContent).toHaveComputedStyle({ height: '101px' });
+          expect(element).toHaveComputedStyle({ height: '101px' });
         });
-        expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
         setProps({ rows: [{ clientId: 'c1', expanded: true }] });
 
         await waitFor(() => {
-          expect(virtualScrollerContent).toHaveComputedStyle({ height: '201px' });
+          expect(element).toHaveComputedStyle({ height: '201px' });
         });
-
-        expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
       it('should set minHeight to "auto" in all rows with dynamic row height', () => {
@@ -1234,16 +1217,13 @@ describe('<DataGrid /> - Rows', () => {
             columnHeaderHeight={columnHeaderHeight}
           />,
         );
-        const virtualScrollerContent = document.querySelector(
-          '.MuiDataGrid-virtualScrollerContent',
-        )!;
+        const element = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone')!;
 
         await waitFor(() => {
-          expect(virtualScrollerContent).toHaveComputedStyle({
+          expect(element).toHaveComputedStyle({
             height: `${Math.floor(expectedHeight)}px`,
           });
         });
-        expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
       });
 
       const { userAgent } = window.navigator;
@@ -1273,7 +1253,7 @@ describe('<DataGrid /> - Rows', () => {
           await user.click(screen.getByRole('button', { name: /next page/i }));
 
           await waitFor(() => {
-            expect(gridOffsetTop()).to.equal(0);
+            expect(gridOffsetTop()).to.equal(columnHeaderHeight);
           });
         },
       );
@@ -1299,9 +1279,9 @@ describe('<DataGrid /> - Rows', () => {
             {...data}
           />,
         );
-        expect(gridOffsetTop()).to.equal(0);
+        expect(gridOffsetTop()).to.equal(columnHeaderHeight);
         await act(async () => apiRefPage.current?.setPageSize(5));
-        expect(gridOffsetTop()).to.equal(0);
+        expect(gridOffsetTop()).to.equal(columnHeaderHeight);
       });
 
       // In Chrome non-headless and Edge this test is flaky
@@ -1333,7 +1313,7 @@ describe('<DataGrid /> - Rows', () => {
             />,
           );
 
-          expect(gridOffsetTop()).to.equal(0);
+          expect(gridOffsetTop()).to.equal(columnHeaderHeight);
 
           const virtualScroller = grid('virtualScroller')!;
           // Scroll to measure all cells
@@ -1349,7 +1329,7 @@ describe('<DataGrid /> - Rows', () => {
           await user.click(screen.getByRole('button', { name: /next page/i }));
 
           await waitFor(() => {
-            expect(gridOffsetTop()).to.equal(0);
+            expect(gridOffsetTop()).to.equal(columnHeaderHeight);
           });
         },
       );
@@ -1422,10 +1402,9 @@ describe('<DataGrid /> - Rows', () => {
           disableVirtualization
         />,
       );
-      const virtualScrollerContent = document.querySelector('.MuiDataGrid-virtualScrollerContent');
+      const element = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone');
       const expectedHeight = rows.length * (rowHeight + spacingTop + spacingBottom);
-      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
-      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
+      expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
     });
 
     // Needs layout
@@ -1440,15 +1419,13 @@ describe('<DataGrid /> - Rows', () => {
           disableVirtualization
         />,
       );
-      const virtualScrollerContent = document.querySelector('.MuiDataGrid-virtualScrollerContent');
+      const element = document.querySelector('.MuiDataGrid-virtualScrollerRenderZone');
       const expectedHeight = rows.length * (rowHeight + spacingTop + spacingBottom);
-      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${expectedHeight}px` });
-      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
+      expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
       setProps({ getRowSpacing: null });
-      expect(virtualScrollerContent).toHaveComputedStyle({
+      expect(element).toHaveComputedStyle({
         height: `${rows.length * rowHeight}px`,
       });
-      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
     });
 
     it('should set the row margin to the value returned by getRowSpacing if rowSpacingType is not defined', () => {

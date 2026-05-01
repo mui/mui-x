@@ -1,7 +1,6 @@
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
-import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<StaticDatePicker />', () => {
   const { render } = createPickerRenderer();
@@ -13,19 +12,21 @@ describe('<StaticDatePicker />', () => {
     expect(screen.getAllByTestId('day')).to.have.length(31);
   });
 
-  it('switches between months', () => {
-    render(<StaticDatePicker reduceAnimations defaultValue={adapterToUse.date('2019-01-01')} />);
+  it('switches between months', async () => {
+    const { user } = render(
+      <StaticDatePicker reduceAnimations defaultValue={adapterToUse.date('2019-01-01')} />,
+    );
 
     expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('January 2019');
 
     const nextMonth = screen.getByLabelText('Next month');
     const previousMonth = screen.getByLabelText('Previous month');
-    fireEvent.click(nextMonth);
-    fireEvent.click(nextMonth);
+    await user.click(nextMonth);
+    await user.click(nextMonth);
 
-    fireEvent.click(previousMonth);
-    fireEvent.click(previousMonth);
-    fireEvent.click(previousMonth);
+    await user.click(previousMonth);
+    await user.click(previousMonth);
+    await user.click(previousMonth);
 
     expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('December 2018');
   });
@@ -39,14 +40,14 @@ describe('<StaticDatePicker />', () => {
       );
     }
 
-    it.skipIf(isJSDOM)('should take focus when `autoFocus=true`', () => {
+    it('should take focus when `autoFocus=true`', () => {
       render(<Test autoFocus />);
 
       const isInside = document.getElementById('pickerWrapper')?.contains(document.activeElement);
       expect(isInside).to.equal(true);
     });
 
-    it.skipIf(isJSDOM)('should not take focus when `autoFocus=false`', () => {
+    it('should not take focus when `autoFocus=false`', () => {
       render(<Test />);
 
       const isInside = document.getElementById('pickerWrapper')?.contains(document.activeElement);

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  getSVGPoint,
+  getChartPoint,
   selectorChartDrawingArea,
   type ZoomData,
   selectorChartZoomOptionsLookup,
@@ -19,7 +19,7 @@ export const usePanOnWheel = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const { svgRef } = instance;
+  const { chartsLayerContainerRef } = instance;
   const drawingArea = store.use(selectorChartDrawingArea);
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const startedOutsideRef = React.useRef(false);
@@ -40,7 +40,7 @@ export const usePanOnWheel = (
 
   // Add event for chart pan on wheel
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
     const accumulatedChange = { x: 0, y: 0 };
     if (element === null || !isPanOnWheelEnabled) {
       return () => {};
@@ -49,13 +49,13 @@ export const usePanOnWheel = (
     const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
 
     const wheelHandler = instance.addInteractionListener('panTurnWheel', (event) => {
-      const point = getSVGPoint(element, {
+      const point = getChartPoint(element, {
         clientX: event.detail.centroid.x,
         clientY: event.detail.centroid.y,
       });
 
       // This prevents a pan event from being triggered when the mouse is outside the chart area.
-      // The timeout is used to prevent an weird behavior where if the mouse is outside but enters due to
+      // The timeout is used to prevent a weird behavior where if the mouse is outside but enters due to
       // scrolling, then the pan event is triggered.
       if (startedOutsideRef.current || !instance.isPointInside(point.x, point.y)) {
         startedOutsideRef.current = true;
@@ -121,7 +121,7 @@ export const usePanOnWheel = (
       rafThrottledSetZoomData.clear();
     };
   }, [
-    svgRef,
+    chartsLayerContainerRef,
     drawingArea,
     isPanOnWheelEnabled,
     optionsLookup,

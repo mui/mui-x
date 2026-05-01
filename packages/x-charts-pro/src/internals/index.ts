@@ -1,11 +1,13 @@
-export { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
+export { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
+export type { UseChartsContainerProPropsReturnValue } from '../ChartsContainerPro/useChartsContainerProProps';
 export type { ChartsSlotsPro, ChartsSlotPropsPro } from './material';
-export { seriesPreviewPlotMap } from '../ChartZoomSlider/internals/seriesPreviewPlotMap';
-export type { PreviewPlotProps } from '../ChartZoomSlider/internals/previews/PreviewPlot.types';
-export { defaultSeriesConfigPro } from '../ChartDataProviderPro/ChartDataProviderPro';
+export { seriesPreviewPlotMap } from '../ChartsZoomSlider/internals/seriesPreviewPlotMap';
+export type { PreviewPlotProps } from '../ChartsZoomSlider/internals/previews/PreviewPlot.types';
+export { defaultSeriesConfigPro } from '../ChartsDataProviderPro/ChartsDataProviderPro';
 export type { ProPluginsPerSeriesType } from '../context/ChartProApi';
 export { useHeatmapProps } from '../Heatmap/useHeatmapProps';
 export { defaultSlotsMaterial } from './material';
 export * from '../Heatmap/HeatmapSVGPlot';
 export type * from '../Heatmap/Heatmap.types';
 export { selectorHeatmapItemAtPosition } from '../plugins/selectors/useChartHeatmapPosition.selectors';
+export * from './ChartsWatermark';

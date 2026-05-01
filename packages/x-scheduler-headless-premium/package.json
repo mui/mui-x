@@ -1,9 +1,8 @@
 {
   "name": "@mui/x-scheduler-headless-premium",
-  "version": "0.0.1-alpha.0",
-  "private": true,
-  "description": "The Premium plan edition of the headless version of the Scheduler component (MUI X).",
+  "version": "9.0.0-alpha.4",
   "author": "MUI Team",
+  "description": "The Premium plan edition of the headless version of the scheduler components (MUI X).",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
@@ -13,11 +12,13 @@
     "./models": "./src/models/index.ts",
     "./use-event-calendar-premium": "./src/use-event-calendar-premium/index.ts",
     "./use-event-calendar-premium-store-context": "./src/use-event-calendar-premium-store-context/index.ts",
-    "./event-timeline-premium": "./src/event-timeline-premium/index.ts",
+    "./timeline-grid": "./src/timeline-grid/index.ts",
     "./event-timeline-premium-provider": "./src/event-timeline-premium-provider/index.ts",
     "./event-timeline-premium-selectors": "./src/event-timeline-premium-selectors/index.ts",
     "./use-event-timeline-premium": "./src/use-event-timeline-premium/index.ts",
-    "./use-event-timeline-premium-store-context": "./src/use-event-timeline-premium-store-context/index.ts"
+    "./use-event-timeline-premium-store-context": "./src/use-event-timeline-premium-store-context/index.ts",
+    "./use-event-calendar-premium-api-ref": "./src/use-event-calendar-premium-api-ref/index.ts",
+    "./use-event-timeline-premium-api-ref": "./src/use-event-timeline-premium-api-ref/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
@@ -37,7 +38,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
+    "build": "code-infra build --flat --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -47,10 +48,10 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@base-ui/react": "^1.0.0",
-    "@base-ui/utils": "^0.2.3",
-    "@mui/x-scheduler-headless": "workspace:*",
-    "@mui/x-internals": "workspace:*",
+    "@base-ui/react": "catalog:",
+    "@base-ui/utils": "catalog:",
+    "@mui/x-internals": "workspace:^",
+    "@mui/x-scheduler-headless": "workspace:^",
     "prop-types": "catalog:"
   },
   "peerDependencies": {
@@ -69,5 +70,8 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "imports": {
+    "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"
   }
 }

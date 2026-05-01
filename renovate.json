@@ -15,11 +15,6 @@
       "matchPackageNames": ["@react-spring/**"]
     },
     {
-      "groupName": "react-docgen",
-      "matchPackageNames": ["react-docgen"],
-      "allowedVersions": "< 6.0.0"
-    },
-    {
       "groupName": "bundling fixtures",
       "matchFileNames": ["test/bundling/fixtures/**/package.json"],
       "schedule": "* * 1 1,7 *"
@@ -41,11 +36,6 @@
       "groupName": "fingerprintjs",
       "matchPackageNames": ["@fingerprintjs/fingerprintjs"],
       "allowedVersions": "< 4.0.0"
-    },
-    {
-      "groupName": "conf",
-      "matchPackageNames": ["conf"],
-      "allowedVersions": "< 12.0.0"
     }
   ]
 }

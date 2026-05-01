@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import {
   ChartsLegend,
   ContinuousColorLegend,
@@ -11,7 +11,7 @@ import { sxColors } from '../colors';
 export default function Legends() {
   return (
     <Box sx={{ ...sxColors, p: 1 }}>
-      <ChartDataProvider
+      <ChartsDataProvider
         colors={['var(--palette-color-0)', 'var(--palette-color-3)']}
         series={[
           { type: 'bar', label: 'Bar', data: [] },
@@ -51,9 +51,8 @@ export default function Legends() {
             />
           </div>
         </Stack>
-      </ChartDataProvider>
-
-      <ChartDataProvider
+      </ChartsDataProvider>
+      <ChartsDataProvider
         colors={['var(--palette-color-0)', 'var(--palette-color-3)']}
         series={[
           { type: 'pie', data: [{ value: 0, label: 'Pie' }] },
@@ -90,7 +89,7 @@ export default function Legends() {
         width={400}
         height={60}
       >
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           <ChartsLegend direction="horizontal" />
           <div style={{ flexGrow: 1 }}>
             <ContinuousColorLegend
@@ -117,7 +116,7 @@ export default function Legends() {
             </svg>
           </div>
         </Stack>
-      </ChartDataProvider>
+      </ChartsDataProvider>
     </Box>
   );
 }

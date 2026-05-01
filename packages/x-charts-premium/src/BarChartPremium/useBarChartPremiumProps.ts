@@ -1,6 +1,6 @@
 import { type BarChartPluginSignatures } from '@mui/x-charts/BarChart';
 import { useBarChartProps } from '@mui/x-charts/internals';
-import { type ChartContainerProps } from '@mui/x-charts/ChartContainer';
+import { type ChartsContainerProps } from '@mui/x-charts/ChartsContainer';
 import { type BarChartPremiumProps } from './BarChartPremium';
 import { type RangeBarPlotProps } from './RangeBar/RangeBarPlot';
 
@@ -14,7 +14,7 @@ import type {} from '../typeOverloads';
  * @returns An object with props for the children components of BarChartPremium
  */
 export function useBarChartPremiumProps(props: BarChartPremiumProps) {
-  const { chartContainerProps, ...barChartProps } = useBarChartProps(props);
+  const { chartsContainerProps, ...barChartProps } = useBarChartProps(props);
 
   const rangeBarPlotProps: RangeBarPlotProps = {
     onItemClick: props.onItemClick as RangeBarPlotProps['onItemClick'],
@@ -25,7 +25,7 @@ export function useBarChartPremiumProps(props: BarChartPremiumProps) {
 
   return {
     ...barChartProps,
-    chartContainerProps: chartContainerProps as ChartContainerProps<
+    chartsContainerProps: chartsContainerProps as ChartsContainerProps<
       'bar' | 'rangeBar',
       BarChartPluginSignatures
     >,

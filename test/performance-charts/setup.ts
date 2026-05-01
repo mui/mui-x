@@ -1,14 +1,7 @@
 import { beforeAll } from 'vitest';
-import { generateLicense, LicenseInfo } from '@mui/x-license';
+import { LicenseInfo } from '@mui/x-license';
+import { TEST_LICENSE_KEY_PRO } from '@mui/x-license/internals';
 
 beforeAll(() => {
-  const licenseKey = generateLicense({
-    expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
-    orderNumber: '123',
-    planScope: 'pro',
-    licenseModel: 'subscription',
-    planVersion: 'Q3-2024',
-  });
-
-  LicenseInfo.setLicenseKey(licenseKey);
+  LicenseInfo.setLicenseKey(TEST_LICENSE_KEY_PRO);
 });

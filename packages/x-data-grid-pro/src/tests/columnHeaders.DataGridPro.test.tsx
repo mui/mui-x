@@ -201,7 +201,7 @@ describe('<DataGridPro /> - Column headers', () => {
       fireEvent.click(menuIconButton);
       await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
+      /* eslint-disable mui/disallow-active-element-as-key-event-target */
       fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       await act(async () => vi.runAllTimersAsync());
       expect(screen.queryByRole('menu')).to.equal(null);

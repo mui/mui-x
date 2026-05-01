@@ -1,4 +1,4 @@
-import type { MuiPage } from 'docs/src/MuiPage';
+import type { MuiPage } from '@mui/internal-core-docs/MuiPage';
 
 const chartsApiPages: MuiPage[] = [
   {
@@ -44,32 +44,14 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarPlot',
   },
   {
-    pathname: '/x/api/charts/chart-container',
-    title: 'ChartContainer',
-  },
-  {
-    pathname: '/x/api/charts/chart-container-premium',
-    title: 'ChartContainerPremium',
+    pathname: '/x/api/charts/candlestick-chart',
+    title: 'CandlestickChart',
     plan: 'premium',
   },
   {
-    pathname: '/x/api/charts/chart-container-pro',
-    title: 'ChartContainerPro',
-    plan: 'pro',
-  },
-  {
-    pathname: '/x/api/charts/chart-data-provider',
-    title: 'ChartDataProvider',
-  },
-  {
-    pathname: '/x/api/charts/chart-data-provider-premium',
-    title: 'ChartDataProviderPremium',
+    pathname: '/x/api/charts/candlestick-plot',
+    title: 'CandlestickPlot',
     plan: 'premium',
-  },
-  {
-    pathname: '/x/api/charts/chart-data-provider-pro',
-    title: 'ChartDataProviderPro',
-    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/charts-axis',
@@ -92,6 +74,34 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsClipPath',
   },
   {
+    pathname: '/x/api/charts/charts-container',
+    title: 'ChartsContainer',
+  },
+  {
+    pathname: '/x/api/charts/charts-container-premium',
+    title: 'ChartsContainerPremium',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/charts-container-pro',
+    title: 'ChartsContainerPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-data-provider',
+    title: 'ChartsDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/charts-data-provider-premium',
+    title: 'ChartsDataProviderPremium',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/charts-data-provider-pro',
+    title: 'ChartsDataProviderPro',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/charts-grid',
     title: 'ChartsGrid',
   },
@@ -108,8 +118,33 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsLocalizationProvider',
   },
   {
+    pathname: '/x/api/charts/charts-radial-axis-highlight',
+    title: 'ChartsRadialAxisHighlight',
+  },
+  {
+    pathname: '/x/api/charts/charts-radial-data-provider',
+    title: 'ChartsRadialDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/charts-radial-data-provider-premium',
+    title: 'ChartsRadialDataProviderPremium',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/charts-radial-grid',
+    title: 'ChartsRadialGrid',
+  },
+  {
+    pathname: '/x/api/charts/charts-radius-axis',
+    title: 'ChartsRadiusAxis',
+  },
+  {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
+  },
+  {
+    pathname: '/x/api/charts/charts-rotation-axis',
+    title: 'ChartsRotationAxis',
   },
   {
     pathname: '/x/api/charts/charts-surface',
@@ -132,6 +167,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-toolbar-pro',
     title: 'ChartsToolbarPro',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-toolbar-range-button-trigger',
+    title: 'ChartsToolbarRangeButtonTrigger',
     plan: 'pro',
   },
   {
@@ -165,8 +205,8 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsYAxis',
   },
   {
-    pathname: '/x/api/charts/chart-zoom-slider',
-    title: 'ChartZoomSlider',
+    pathname: '/x/api/charts/charts-zoom-slider',
+    title: 'ChartsZoomSlider',
     plan: 'pro',
   },
   {
@@ -186,6 +226,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/focused-radar-mark',
     title: 'FocusedRadarMark',
+  },
+  {
+    pathname: '/x/api/charts/focused-range-bar',
+    title: 'FocusedRangeBar',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/focused-sankey-link',
@@ -218,6 +263,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/heatmap',
     title: 'Heatmap',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-cell',
+    title: 'HeatmapCell',
     plan: 'pro',
   },
   {
@@ -342,6 +392,31 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/radar-series-plot',
     title: 'RadarSeriesPlot',
+  },
+  {
+    pathname: '/x/api/charts/radial-area-plot',
+    title: 'RadialAreaPlot',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-line-chart',
+    title: 'RadialLineChart',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-line-highlight-plot',
+    title: 'RadialLineHighlightPlot',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-line-plot',
+    title: 'RadialLinePlot',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-mark-plot',
+    title: 'RadialMarkPlot',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/range-bar-plot',

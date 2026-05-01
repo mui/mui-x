@@ -2,9 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import clsx from 'clsx';
 import {
   AreaElement,
-  areaElementClasses,
   type AreaElementProps,
   type AreaElementSlotProps,
   type AreaElementSlots,
@@ -15,6 +15,7 @@ import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useAreaPlotData } from './useAreaPlotData';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
+import { lineClasses, useUtilityClasses } from './lineClasses';
 
 export interface AreaPlotSlots extends AreaElementSlots {}
 
@@ -39,7 +40,7 @@ const AreaPlotRoot = styled('g', {
   name: 'MuiAreaPlot',
   slot: 'Root',
 })({
-  [`& .${areaElementClasses.root}`]: {
+  [`& .${lineClasses.area}`]: {
     transitionProperty: 'opacity, fill',
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
@@ -65,14 +66,22 @@ const useAggregatedData = () => {
  * - [AreaPlot API](https://mui.com/x/api/charts/area-plot/)
  */
 function AreaPlot(props: AreaPlotProps) {
-  const { slots, slotProps, onItemClick, skipAnimation: inSkipAnimation, ...other } = props;
+  const {
+    slots,
+    slotProps,
+    onItemClick,
+    skipAnimation: inSkipAnimation,
+    className,
+    ...other
+  } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
   const completedData = useAggregatedData();
+  const classes = useUtilityClasses();
 
   return (
-    <AreaPlotRoot {...other}>
+    <AreaPlotRoot className={clsx(classes.areaPlot, className)} {...other}>
       {completedData.map(
         ({ d, seriesId, color, area, gradientId }) =>
           !!area && (

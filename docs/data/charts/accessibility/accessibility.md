@@ -27,9 +27,9 @@ Common conformance guidelines for accessibility include:
 - US:
   - [ADA](https://www.ada.gov/) - US Department of Justice
   - [Section 508](https://www.section508.gov/) - US federal agencies
-- Europe: [EAA](https://employment-social-affairs.ec.europa.eu/policies-and-activities/social-protection-social-inclusion/persons-disabilities/union-equality-strategy-rights-persons-disabilities-2021-2030/european-accessibility-act_en) (European Accessibility Act)
+- Europe: [EAA](https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/disability/european-accessibility-act-eaa_en) (European Accessibility Act)
 
-WCAG 2.1 has three levels of conformance: A, AA, and AAA.
+[WCAG 2.2](https://www.w3.org/TR/WCAG22/) has three levels of conformance: A, AA, and AAA.
 Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what this library aims to support.
 
 The WAI-ARIA Authoring Practices includes examples on [Tooltip](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/).
@@ -39,12 +39,6 @@ The WAI-ARIA Authoring Practices includes examples on [Tooltip](https://www.w3.o
 Some charts have animations when rendering or when data updates.
 For users with vestibular motion disorders those animations can be problematic.
 By default animations are toggled based on the [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion) media feature.
-
-<!--
-## Screen reader compatibility
-
-Date and Time Pickers use ARIA roles and robust focus management across the interactive elements to convey the necessary information to users, being optimized for use with assistive technologies.
--->
 
 ## Keyboard support
 
@@ -56,14 +50,15 @@ For example the element highlight, or tooltip will be impacted by the feature.
 Those modifications will not be considered as breaking changes and so be added during minor or patch versions.
 :::
 
-Set `enableKeyboardNavigation` to `true` to enable the keyboard navigation on your charts.
-You can also enable it globally using [theme default props](/material-ui/customization/theme-components/#theme-default-props)
+The keyboard navigation is enabled by default on all charts.
+You can disable it by setting `disableKeyboardNavigation` to `true`.
+You can also disable it globally using [theme default props](/material-ui/customization/theme-components/#theme-default-props)
 
 ```js
 components: {
   MuiChartDataProvider: {
     defaultProps: {
-      enableKeyboardNavigation: true
+      disableKeyboardNavigation: true
     },
   },
 }
@@ -71,7 +66,7 @@ components: {
 
 {{"demo": "KeyboardNavigation.js"}}
 
-This feature is currently supported by the following charts: line, bar, pie, scatter, sparkline, funnel, radar, heatmap, and sankey.
+This feature is currently supported by the following charts: line, bar, pie, scatter, sparkline, funnel, radar, heatmap, sankey, and range bar.
 
 This makes the SVG component focusable thanks to [`tabIndex`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex).
 When focused, the chart highlights a value item that can be modified with arrow navigation.
@@ -80,6 +75,15 @@ When focused, the chart highlights a value item that can be modified with arrow 
 | --------------------------------------------------------------------: | :---------------------------- |
 | <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus inside the series |
 |    <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd> | Move focus between series     |
+
+## Screen reader compatibility
+
+Charts use a proxy strategy to support screen reader when user navigate with keyboard navigation.
+
+The description of the focused element is localized.
+You can customize it by using [localization key](/x/react-charts/localization/#localize-text).
+The `[type]Description` localization keys are functions for a given series type, for example, `pieDescription` for pie charts.
+These functions receives values related to the focused item, and should return the description to display.
 
 ### Composition
 

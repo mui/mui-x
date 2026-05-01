@@ -82,7 +82,7 @@ export const serializeRowUnsafe = (
   const row = apiRef.current.getRow(id);
   const rowNode = apiRef.current.getRowNode(id);
   if (!row || !rowNode) {
-    throw new Error(`No row with id #${id} found`);
+    throw new Error(`MUI X: No row with id #${id} found`);
   }
   const outlineLevel = rowNode.depth;
   const hasColSpan = gridHasColSpanSelector(apiRef);

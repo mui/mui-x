@@ -3,7 +3,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
-  useChartContext,
+  useChartsContext,
   type ChartsSlotProps,
   useChartsSlots,
   type UseChartCartesianAxisSignature,
@@ -31,8 +31,8 @@ const ChartsToolbarZoomInTrigger = React.forwardRef<
 >(function ChartsToolbarZoomInTrigger({ render, ...other }, ref) {
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } =
-    useChartContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
-  const disabled = store.use(selectorChartCanZoomIn);
+    useChartsContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
+  const disabled = !store.use(selectorChartCanZoomIn);
 
   const element = useComponentRenderer(slots.baseButton, render, {
     ...slotProps.baseButton,

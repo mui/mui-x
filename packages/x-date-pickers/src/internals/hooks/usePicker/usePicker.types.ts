@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import {
@@ -99,12 +100,22 @@ export interface UsePickerBaseProps<
 /**
  * Props used to handle the value of non-static Pickers.
  */
-export interface UsePickerNonStaticProps extends Omit<PickerFieldPrivateContextValue, 'fieldRef'> {
+export interface UsePickerNonStaticProps extends Omit<
+  PickerFieldPrivateContextValue,
+  'internalFieldRef' | 'fieldRef'
+> {
   /**
    * If `true`, the Picker will close after submitting the full date.
    * @default false
    */
   closeOnSelect?: boolean;
+  /**
+   * If `true`, keep the picker open when the value is edited from the field.
+   * Useful to prevent the popper/dialog from closing while typing in the input.
+   * This only affects changes with `source = "field"` and does not alter view interactions.
+   * @default false
+   */
+  keepOpenDuringFieldFocus?: boolean;
   /**
    * Control the popup or dialog open state.
    * @default false

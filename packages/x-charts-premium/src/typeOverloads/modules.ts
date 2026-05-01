@@ -1,6 +1,28 @@
 import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import type { SeriesColor } from '@mui/x-charts/internals';
-import type { RangeBarValueType, RangeBarSeriesType } from '../models';
+import type {
+  CommonHighlightScope,
+  SeriesColor,
+  SeriesId,
+  ComputedXAxis,
+  ComputedYAxis,
+  PolarAxisDefaultized,
+  ChartsRadiusAxisProps,
+  ChartsRotationAxisProps,
+} from '@mui/x-charts/internals';
+import type {
+  RangeBarValueType,
+  RangeBarSeriesType,
+  DefaultizedOHLCSeriesType,
+  OHLCItemIdentifier,
+  OHLCSeriesType,
+  OHLCValueType,
+  RadialLineSeriesType,
+  DefaultizedRadialLineSeriesType,
+  RadialLineItemIdentifier,
+  RadialBarSeriesType,
+  DefaultizedRadialBarSeriesType,
+  RadialBarItemIdentifier,
+} from '../models';
 import type {
   DefaultizedRangeBarSeriesType,
   RangeBarItemIdentifier,
@@ -23,6 +45,90 @@ declare module '@mui/x-charts/internals' {
       itemIdentifierWithData: RangeBarItemIdentifier;
       valueType: RangeBarValueType | null;
       axisType: 'cartesian';
+      highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: RangeBarItemIdentifier;
+        xAxis: ComputedXAxis;
+        yAxis: ComputedYAxis;
+        series: DefaultizedRangeBarSeriesType;
+      };
+      highlightIdentifier: {
+        type: 'rangeBar';
+        seriesId: SeriesId;
+        dataIndex?: number;
+      };
+    };
+    ohlc: {
+      seriesInput: DefaultizedProps<OHLCSeriesType, 'id'> &
+        MakeRequired<SeriesColor<OHLCValueType | null>, 'color'> &
+        Pick<DefaultizedOHLCSeriesType, 'upColor' | 'downColor'>;
+      series: DefaultizedOHLCSeriesType;
+      seriesLayout: {};
+      seriesProp: OHLCSeriesType;
+      itemIdentifier: OHLCItemIdentifier;
+      itemIdentifierWithData: OHLCItemIdentifier;
+      valueType: OHLCValueType | null;
+      axisType: 'cartesian';
+      highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: OHLCItemIdentifier;
+        xAxis: ComputedXAxis;
+        yAxis: ComputedYAxis;
+        series: DefaultizedOHLCSeriesType;
+      };
+      highlightIdentifier: {
+        type: 'ohlc';
+        seriesId: SeriesId;
+        dataIndex?: number;
+      };
+    };
+    radialLine: {
+      seriesInput: DefaultizedProps<RadialLineSeriesType, 'id'> &
+        MakeRequired<SeriesColor<number | null>, 'color'>;
+      series: DefaultizedRadialLineSeriesType;
+      seriesLayout: {};
+      seriesProp: RadialLineSeriesType;
+      itemIdentifier: RadialLineItemIdentifier;
+      itemIdentifierWithData: RadialLineItemIdentifier;
+      valueType: number | null;
+      canBeStacked: true;
+      axisType: 'polar';
+      highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: RadialLineItemIdentifier;
+        rotationAxis: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
+        radiusAxis: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
+        series: DefaultizedRadialLineSeriesType;
+      };
+      highlightIdentifier: {
+        type: 'radialLine';
+        seriesId: SeriesId;
+        dataIndex?: number;
+      };
+    };
+    radialBar: {
+      seriesInput: DefaultizedProps<RadialBarSeriesType, 'id'> &
+        MakeRequired<SeriesColor<number | null>, 'color'>;
+      series: DefaultizedRadialBarSeriesType;
+      seriesLayout: {};
+      seriesProp: RadialBarSeriesType;
+      itemIdentifier: RadialBarItemIdentifier;
+      itemIdentifierWithData: RadialBarItemIdentifier;
+      valueType: number | null;
+      canBeStacked: true;
+      axisType: 'polar';
+      highlightScope: CommonHighlightScope;
+      descriptionGetterParams: {
+        identifier: RadialBarItemIdentifier;
+        rotationAxis: PolarAxisDefaultized<any, any, ChartsRotationAxisProps>;
+        radiusAxis: PolarAxisDefaultized<any, any, ChartsRadiusAxisProps>;
+        series: DefaultizedRadialBarSeriesType;
+      };
+      highlightIdentifier: {
+        type: 'radialBar';
+        seriesId: SeriesId;
+        dataIndex: number;
+      };
     };
   }
 }

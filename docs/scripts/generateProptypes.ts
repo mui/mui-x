@@ -75,14 +75,17 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         'pinnedColumns',
         'localeText',
         'columnGroupingModel',
-        'unstableFieldRef',
-        'unstableStartFieldRef',
-        'unstableEndFieldRef',
+        'fieldRef',
+        'startFieldRef',
+        'endFieldRef',
         'series',
         'axis',
         'plugins',
         'seriesConfig',
         'manager',
+        'eventModelStructure',
+        'resourceModelStructure',
+        'dateLocale',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;

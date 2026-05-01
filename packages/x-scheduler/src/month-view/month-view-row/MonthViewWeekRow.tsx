@@ -2,15 +2,14 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { MonthViewCell } from './MonthViewCell';
-import { useEventCalendarClasses } from '../../event-calendar/EventCalendarClassesContext';
+import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 
 const FIXED_CELL_WIDTH = 28;
 
@@ -24,7 +23,7 @@ const MonthViewRow = styled(CalendarGrid.DayRow, {
     gridTemplateColumns: `${FIXED_CELL_WIDTH}px repeat(auto-fit, minmax(0, 1fr))`,
   },
   '&:not(:last-child)': {
-    borderBlockEnd: `1px solid ${theme.palette.divider}`,
+    borderBlockEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -36,17 +35,16 @@ const MonthViewWeekNumberCell = styled('div', {
   textAlign: 'center',
   fontSize: theme.typography.caption.fontSize,
   lineHeight: '18px',
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
 }));
 
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
-  const { maxEvents, days, occurrencesMap, firstDayRef } = props;
+  const { rowIndex, maxEvents, days, occurrencesMap, firstDayRef } = props;
 
-  const adapter = useAdapter();
+  const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
-  const translations = useTranslations();
-  const classes = useEventCalendarClasses();
+  const { classes, localeText } = useEventCalendarStyledContext();
   const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
   const weekNumber = adapter.getWeekNumber(days[0].value);
 
@@ -64,13 +62,14 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
       key={weekNumber}
       start={start}
       end={end}
+      rowIndex={rowIndex}
       data-show-week-number={showWeekNumber || undefined}
     >
       {showWeekNumber && (
         <MonthViewWeekNumberCell
           className={classes.monthViewWeekNumberCell}
           role="rowheader"
-          aria-label={translations.weekNumberAriaLabel(weekNumber)}
+          aria-label={localeText.weekNumberAriaLabel(weekNumber)}
         >
           {weekNumber}
         </MonthViewWeekNumberCell>

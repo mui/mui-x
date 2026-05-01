@@ -33,6 +33,7 @@ import {
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
   attachPinnedStyle,
+  usePinnedScrollOffset,
   vars,
 } from '@mui/x-data-grid/internals';
 import { useRtl } from '@mui/system/RtlProvider';
@@ -80,7 +81,7 @@ const StyledInputComponent = styled(GridFilterInputValue, {
   flex: 1,
   marginRight: vars.spacing(0.5),
   marginBottom: vars.spacing(-0.25),
-  '& input[type="number"], & input[type="date"], & input[type="datetime-local"]': {
+  '& input[type="date"], & input[type="datetime-local"]': {
     '&[value=""]:not(:focus)': {
       color: 'transparent',
     },
@@ -114,9 +115,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     root: [
       'columnHeader',
       'columnHeader--filter',
-      colDef.headerAlign === 'left' && 'columnHeader--alignLeft',
-      colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
-      colDef.headerAlign === 'right' && 'columnHeader--alignRight',
+      colDef.headerAlign && `columnHeader--align${capitalize(colDef.headerAlign)}`,
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
       showLeftBorder && 'columnHeader--withLeftBorder',
@@ -364,6 +363,8 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
       <GridHeaderFilterClearButton onClick={clearFilterItem} disabled={isFilterReadOnly} />
     ) : null;
 
+  const pinnedScrollOffset = usePinnedScrollOffset(apiRef, pinnedPosition);
+
   return (
     <div
       className={clsx(classes.root, headerClassName)}
@@ -375,7 +376,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
         },
         isRtl,
         pinnedPosition,
-        pinnedOffset,
+        pinnedOffset !== undefined ? pinnedOffset + pinnedScrollOffset : undefined,
       )}
       role="columnheader"
       aria-colindex={colIndex + 1}

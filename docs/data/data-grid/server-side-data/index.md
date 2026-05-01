@@ -265,6 +265,15 @@ apiRef.current.dataSource.fetchRows(GRID_ROOT_GROUP_ID, { skipCache: true });
 The response will be used to refresh the cache.
 :::
 
+### Handle dynamic data updates
+
+To keep retrieving new values for the dynamic server-side data, use the `dataSourceRevalidateMs` prop.
+This starts a polling timer that revalidates the current server-side query in the background and updates the Data Grid with the latest data.
+
+The demo below uses `dataSourceRevalidateMs="2_000"` and disables the cache to make the periodic updates visible.
+
+{{"demo": "ServerSideDataGridRevalidation.js", "bg": "inline"}}
+
 ## Updating server-side data
 
 The Data Source supports an optional `updateRow()` method for updating data on the server.

@@ -110,6 +110,7 @@ export const useGridDataSourcePremium = (
     flatTreeStrategyProcessor,
     groupedDataStrategyProcessor,
     events,
+    stopPolling,
   } = useGridDataSourceBasePro<GridPrivateApiPremium>(apiRef, props, {
     ...(!props.disableAggregation && Object.keys(aggregationModel).length > 0
       ? { handleEditRow: handleEditRowWithAggregation }
@@ -147,9 +148,11 @@ export const useGridDataSourcePremium = (
         const pivotingColDef = props.pivotingColDef;
         if (!pivotingColDef || typeof pivotingColDef !== 'function') {
           throw new Error(
-            'MUI X: No `pivotingColDef()` prop provided with to the Data Grid, but response contains `pivotColumns`.\n\n\
-            You need a callback to return at least a field column prop for each generated pivot column.\n\n\
-            See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pivoting/) documentation for more details.',
+            `MUI X: No \`pivotingColDef()\` prop provided with to the Data Grid, but response contains \`pivotColumns\`.
+
+You need a callback to return at least a field column prop for each generated pivot column.
+
+See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pivoting/) documentation for more details.`,
           );
         }
 
@@ -197,6 +200,12 @@ export const useGridDataSourcePremium = (
     [apiRef, props.dataSource],
   );
 
+  const handleRowGroupingModelChange = React.useCallback(() => {
+    apiRef.current.setRows([]);
+    stopPolling();
+    debouncedFetchRows();
+  }, [apiRef, debouncedFetchRows, stopPolling]);
+
   const privateApi: GridDataSourcePremiumPrivateApi = {
     ...api.private,
     resolveGroupAggregation,
@@ -227,7 +236,7 @@ export const useGridDataSourcePremium = (
   useGridEvent(
     apiRef,
     'rowGroupingModelChange',
-    runIf(!pivotActive, () => debouncedFetchRows()),
+    runIf(!pivotActive && !!props.dataSource, handleRowGroupingModelChange),
   );
   useGridEvent(
     apiRef,

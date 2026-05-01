@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ScaleLinear } from '@mui/x-charts-vendor/d3-scale';
 import { styled } from '@mui/material/styles';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { useDrawingArea, useYScale } from '@mui/x-charts/hooks';
@@ -21,8 +21,10 @@ const StyledText = styled('text')(({ theme }) => ({
   shapeRendering: 'crispEdges',
 }));
 
-function ValueHighlight(props: { svgRef: React.RefObject<SVGSVGElement | null> }) {
-  const { svgRef } = props;
+function ValueHighlight(props: {
+  chartRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const { chartRef } = props;
 
   // Get the drawing area bounding box
   const { left, top, width, height } = useDrawingArea();
@@ -34,7 +36,7 @@ function ValueHighlight(props: { svgRef: React.RefObject<SVGSVGElement | null> }
   const [mouseY, setMouseY] = React.useState<null | number>(null);
 
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartRef.current;
     if (element === null) {
       return () => {};
     }
@@ -64,7 +66,7 @@ function ValueHighlight(props: { svgRef: React.RefObject<SVGSVGElement | null> }
       element.removeEventListener('mouseout', handleMouseOut);
       element.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [height, left, top, width, svgRef]);
+  }, [height, left, top, width, chartRef]);
 
   if (mouseY === null) {
     return null;
@@ -93,10 +95,10 @@ function ValueHighlight(props: { svgRef: React.RefObject<SVGSVGElement | null> }
   );
 }
 export default function ScaleDemo() {
-  const svgRef = React.useRef<SVGSVGElement>(null);
+  const chartRef = React.useRef<HTMLDivElement>(null);
   return (
-    <ChartContainer
-      ref={svgRef}
+    <ChartsContainer
+      ref={chartRef}
       height={300}
       series={[
         {
@@ -127,7 +129,7 @@ export default function ScaleDemo() {
       <LinePlot />
       <ChartsYAxis axisId="left_axis_id" />
       <ChartsYAxis axisId="right_axis_id" />
-      <ValueHighlight svgRef={svgRef} />
-    </ChartContainer>
+      <ValueHighlight chartRef={chartRef} />
+    </ChartsContainer>
   );
 }

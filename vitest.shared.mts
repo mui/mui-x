@@ -11,6 +11,7 @@ export const alias = [
   // Generates resolver aliases for all packages and their plans.
   ...[
     { lib: 'x-charts', plans: ['pro', 'premium'] },
+    { lib: 'x-chat', plans: ['headless', 'unstyled'] },
     { lib: 'x-date-pickers', plans: ['pro'] },
     { lib: 'x-tree-view', plans: ['pro'] },
     { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
@@ -33,6 +34,11 @@ export const alias = [
       })),
     ];
   }),
+  // x-charts-vendor uses a build directory structure
+  {
+    find: /^@mui\/x-charts-vendor\/(.+)$/,
+    replacement: resolve(WORKSPACE_ROOT, './packages/x-charts-vendor/build/$1'),
+  },
   {
     find: 'test/utils',
     replacement: fileURLToPath(new URL('./test/utils', import.meta.url)),
@@ -46,7 +52,7 @@ export default defineConfig({
   // We seem to need both this and the `env` property below to make it work.
   define: {
     'process.env.NODE_ENV': '"test"',
-    LICENSE_DISABLE_CHECK: 'false',
+    __ALLOW_TEST_LICENSES__: 'true',
   },
   esbuild: {
     minifyIdentifiers: false,
@@ -62,25 +68,36 @@ export default defineConfig({
     passWithNoTests: true,
     env: {
       NODE_ENV: 'test',
-      VITEST: 'true',
     },
     browser: {
       provider: playwright({
-        launchOptions: {
-          // Required for tests which use scrollbars.
-          ignoreDefaultArgs: ['--hide-scrollbars'],
-        },
         ...(process.env.PLAYWRIGHT_SERVER_WS
           ? {
               connectOptions: {
                 wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
               },
             }
-          : {}),
+          : {
+              launchOptions: {
+                args: [
+                  // Enable GPU so WebGL2 is enabled in browser tests
+                  '--enable-gpu',
+                ],
+                // Required for tests which use scrollbars.
+                ignoreDefaultArgs: ['--hide-scrollbars'],
+              },
+            }),
       }),
       viewport: { width: 1280, height: 800 },
       headless: true,
       screenshotFailures: false,
+      commands: {
+        async setupCrashHandler(ctx) {
+          ctx.page.on('crash', (page) => {
+            console.error(`Browser page crashed! URL: ${page.url()}`);
+          });
+        },
+      },
       orchestratorScripts: [
         {
           id: 'vitest-reload-on-error',
@@ -97,7 +114,10 @@ export default defineConfig({
       // Important to avoid timeouts on CI.
       fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.
-      testTimeout: 30000,
+      // Tests run ~3x slower under React 19 stable than React 18 (CPU-bound,
+      // mostly @testing-library/user-event async timing); the slowest legitimate
+      // tests touch ~17s in CI, so 30s leaves no headroom for noise.
+      testTimeout: 60000,
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
       // Reduce the number of workers to avoid CI timeouts.

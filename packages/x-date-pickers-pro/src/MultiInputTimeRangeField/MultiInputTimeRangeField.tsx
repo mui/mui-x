@@ -12,11 +12,7 @@ import {
   MultiInputTimeRangeFieldClasses,
 } from './multiInputTimeRangeFieldClasses';
 
-export interface MultiInputTimeRangeFieldProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MultiInputRangeFieldProps<
-  UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-> {
+export interface MultiInputTimeRangeFieldProps extends MultiInputRangeFieldProps<UseTimeRangeManagerReturnValue> {
   // We need to redefine the classes here, otherwise we don't have the doc generation.
   /**
    * Override or extend the styles applied to the component.
@@ -24,11 +20,8 @@ export interface MultiInputTimeRangeFieldProps<
   classes?: Partial<MultiInputTimeRangeFieldClasses>;
 }
 
-type MultiInputTimeRangeFieldComponent = (<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  props: MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MultiInputTimeRangeFieldComponent = ((
+  props: MultiInputTimeRangeFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -59,7 +52,7 @@ MultiInputTimeRangeField.propTypes = {
    */
   ampm: PropTypes.bool,
   /**
-   * If `true`, the `input` element is focused during the first mount.
+   * If `true`, the field is focused during the first mount.
    * @default false
    */
   autoFocus: PropTypes.bool,
@@ -114,9 +107,9 @@ MultiInputTimeRangeField.propTypes = {
    */
   divider: PropTypes.node,
   /**
-   * @default true
+   * The ref object used to interact with the end field imperatively.
    */
-  enableAccessibleFieldDOMStructure: PropTypes.bool,
+  endFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -243,6 +236,10 @@ MultiInputTimeRangeField.propTypes = {
     PropTypes.object,
     PropTypes.string,
   ]),
+  /**
+   * The ref object used to interact with the start field imperatively.
+   */
+  startFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   style: PropTypes.object,
   /**
    * The system prop, which allows defining system overrides as well as additional CSS styles.
@@ -260,8 +257,6 @@ MultiInputTimeRangeField.propTypes = {
    * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,
-  unstableEndFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  unstableStartFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * If `true`, the CSS flexbox `gap` is used instead of applying `margin` to children.
    *

@@ -64,7 +64,7 @@ export default function ZoomHeatmap() {
   const theme = useTheme();
 
   return (
-    <Stack width="100%">
+    <Stack sx={{ width: '100%' }}>
       <Typography variant="h6" align="center">
         Daily Commit Count to MUI X Repo (2024)
       </Typography>
@@ -125,9 +125,9 @@ function TooltipContent() {
     return null;
   }
 
-  const { value } = tooltipData;
+  const { identifier, value } = tooltipData;
 
-  const date = new Date(2023, 11, 31 + value[0] * 7 + value[1]);
+  const date = new Date(2023, 11, 31 + identifier.xIndex * 7 + identifier.yIndex);
 
   return (
     <Stack
@@ -139,7 +139,7 @@ function TooltipContent() {
       })}
     >
       <Typography>
-        {value[2]} contribution{value[2] === 1 ? '' : 's'} on{' '}
+        {value} contribution{value === 1 ? '' : 's'} on{' '}
         {date.toLocaleString('en-US', { month: 'long', day: 'numeric' })}
       </Typography>
     </Stack>

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass, gridClasses } from '@mui/x-data-grid-pro';
@@ -30,15 +30,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const ResizablePanelHandleRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ResizablePanelHandle',
-  overridesResolver: (props, styles) => [
+  overridesResolver: ({ ownerState }: { ownerState: OwnerState }, styles) => [
     {
-      [`&.${gridClasses['resizablePanelHandle--horizontal']}`]:
-        styles['resizablePanelHandle--horizontal'],
+      [`&.${gridClasses[`resizablePanelHandle--${ownerState.direction}`]}`]:
+        styles[`resizablePanelHandle--${ownerState.direction}`],
     },
-    {
-      [`&.${gridClasses['resizablePanelHandle--vertical']}`]:
-        styles['resizablePanelHandle--vertical'],
-    },
+
     styles.resizablePanelHandle,
   ],
 })<{ ownerState: OwnerState; direction: 'horizontal' | 'vertical' }>({

@@ -9,7 +9,6 @@ const data: LineChartProps = {
     {
       label: 'Global temperature anomaly relative to 1961-1990',
       dataKey: 'anomaly',
-      showMark: false,
       valueFormatter: (value) => `${value?.toFixed(2)}°`,
     },
   ],
@@ -40,7 +39,7 @@ const data: LineChartProps = {
 
 export default function VeryBasicColorLegend() {
   return (
-    <Stack width={'100%'}>
+    <Stack sx={{ width: '100%' }}>
       <LineChart
         {...data}
         xAxis={[

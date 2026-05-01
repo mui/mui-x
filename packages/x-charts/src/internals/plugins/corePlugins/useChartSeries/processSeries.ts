@@ -6,6 +6,7 @@ import { type ChartSeriesConfig, type SeriesProcessorParams } from '../useChartS
 import {
   type DefaultizedSeriesGroups,
   type ProcessedSeries,
+  type SeriesIdToType,
   type SeriesLayout,
 } from './useChartSeries.types';
 import type { IsItemVisibleFunction } from '../../featurePlugins/useChartVisibilityManager';
@@ -17,23 +18,30 @@ import type { IsItemVisibleFunction } from '../../featurePlugins/useChartVisibil
  * @param colors The color palette used to defaultize series colors
  * @returns An object structuring all the series by type with default values.
  */
-export const defaultizeSeries = <TSeriesType extends ChartSeriesType>({
+export const defaultizeSeries = <SeriesType extends ChartSeriesType>({
   series,
   colors,
+  theme,
   seriesConfig,
 }: {
-  series: Readonly<AllSeriesType<TSeriesType>[]>;
+  series: Readonly<AllSeriesType<SeriesType>[]>;
   colors: readonly string[];
-  seriesConfig: ChartSeriesConfig<TSeriesType>;
-}): DefaultizedSeriesGroups<TSeriesType> => {
+  theme: 'light' | 'dark';
+  seriesConfig: ChartSeriesConfig<SeriesType>;
+}): {
+  defaultizedSeries: DefaultizedSeriesGroups<SeriesType>;
+  idToType: SeriesIdToType;
+} => {
   // Group series by type
   const seriesGroups: { [type in ChartSeriesType]?: SeriesProcessorParams<type> | undefined } = {};
+  const idToType = new Map<SeriesId, ChartSeriesType>();
 
-  series.forEach(<T extends TSeriesType>(seriesData: AllSeriesType<T>, seriesIndex: number) => {
+  series.forEach(<T extends SeriesType>(seriesData: AllSeriesType<T>, seriesIndex: number) => {
     const seriesWithDefaultValues = seriesConfig[seriesData.type as T].getSeriesWithDefaultValues(
       seriesData,
       seriesIndex,
       colors,
+      theme,
     );
 
     const id: SeriesId = seriesWithDefaultValues.id;
@@ -43,14 +51,26 @@ export const defaultizeSeries = <TSeriesType extends ChartSeriesType>({
     }
 
     if (seriesGroups[seriesData.type]?.series[id] !== undefined) {
-      throw new Error(`MUI X Charts: series' id "${id}" is not unique.`);
+      throw new Error(
+        `MUI X Charts: Series id "${id}" is not unique. ` +
+          'Each series must have a unique id to be properly identified and rendered. ' +
+          'Provide a unique id for each series in your chart configuration.',
+      );
     }
 
     seriesGroups[seriesData.type]!.series[id] = seriesWithDefaultValues;
     seriesGroups[seriesData.type]!.seriesOrder.push(id);
+    if (idToType.has(id)) {
+      throw new Error(
+        `MUI X Charts: Series id "${id}" is not unique across series types. ` +
+          'Each series must have a unique id even across different series types. ' +
+          'Provide a unique id for each series in your chart configuration.',
+      );
+    }
+    idToType.set(id, seriesData.type);
   });
 
-  return seriesGroups;
+  return { defaultizedSeries: seriesGroups, idToType };
 };
 
 /**
@@ -61,16 +81,16 @@ export const defaultizeSeries = <TSeriesType extends ChartSeriesType>({
  * @param dataset The optional dataset
  * @returns Processed series with all transformations applied
  */
-export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
-  defaultizedSeries: DefaultizedSeriesGroups<TSeriesType>,
-  seriesConfig: ChartSeriesConfig<TSeriesType>,
+export const applySeriesProcessors = <SeriesType extends ChartSeriesType>(
+  defaultizedSeries: DefaultizedSeriesGroups<SeriesType>,
+  seriesConfig: ChartSeriesConfig<SeriesType>,
   dataset?: Readonly<DatasetType>,
   isItemVisible?: IsItemVisibleFunction,
-): ProcessedSeries<TSeriesType> => {
-  const processedSeries: ProcessedSeries<TSeriesType> = {};
+): ProcessedSeries<SeriesType> => {
+  const processedSeries: ProcessedSeries<SeriesType> = {};
 
   // Apply formatter on a type group
-  (Object.keys(seriesConfig) as TSeriesType[]).forEach((type) => {
+  (Object.keys(seriesConfig) as SeriesType[]).forEach((type) => {
     const group = defaultizedSeries[type];
     if (group !== undefined) {
       processedSeries[type] =
@@ -88,16 +108,16 @@ export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
  * @param drawingArea The drawing area
  * @returns Processed series with all transformations applied
  */
-export const applySeriesLayout = <TSeriesType extends ChartSeriesType>(
-  processedSeries: ProcessedSeries<TSeriesType>,
-  seriesConfig: ChartSeriesConfig<TSeriesType>,
+export const applySeriesLayout = <SeriesType extends ChartSeriesType>(
+  processedSeries: ProcessedSeries<SeriesType>,
+  seriesConfig: ChartSeriesConfig<SeriesType>,
   drawingArea: ChartDrawingArea,
-): SeriesLayout<TSeriesType> => {
+): SeriesLayout<SeriesType> => {
   let processingDetected = false;
-  const seriesLayout: SeriesLayout<TSeriesType> = {};
+  const seriesLayout: SeriesLayout<SeriesType> = {};
 
   // Apply processors on series type per group
-  (Object.keys(processedSeries) as TSeriesType[]).forEach((type) => {
+  (Object.keys(processedSeries) as SeriesType[]).forEach((type) => {
     const processor = seriesConfig[type]?.seriesLayout;
     const thisSeries = processedSeries[type];
     if (processor !== undefined && thisSeries !== undefined) {

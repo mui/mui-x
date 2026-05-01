@@ -36,19 +36,16 @@ const series = [
     label: 'Germany',
     data: inflationData.map((p) => p.rateDE),
     valueFormatter: seriesValueFormatter,
-    showMark: false,
   },
   {
     label: 'United Kingdom',
     data: inflationData.map((p) => p.rateUK),
     valueFormatter: seriesValueFormatter,
-    showMark: false,
   },
   {
     label: 'France',
     data: inflationData.map((p) => p.rateFR),
     valueFormatter: seriesValueFormatter,
-    showMark: false,
   },
 ];
 
@@ -110,7 +107,7 @@ export default function ExportChartOnBeforeExport() {
   );
 
   return (
-    <Stack width="100%">
+    <Stack sx={{ width: '100%' }}>
       <Typography ref={titleRef} sx={{ alignSelf: 'center', my: 1 }}>
         Inflation rate in France, Germany and the UK, 1960-2024
       </Typography>

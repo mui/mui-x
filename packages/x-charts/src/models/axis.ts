@@ -14,6 +14,7 @@ import type {
 } from '@mui/x-charts-vendor/d3-scale';
 import { type SxProps } from '@mui/system/styleFunctionSx';
 import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
+import { type DatasetElementType } from './seriesType/config';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
@@ -95,6 +96,10 @@ export interface ChartsAxisSlotProps {
 }
 
 export interface ChartsAxisProps extends TickParams {
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className?: string;
   /**
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
@@ -184,9 +189,10 @@ type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends Chart
       position?: 'top' | 'bottom' | 'none';
       /**
        * The height of the axis.
+       * Set to `'auto'` to automatically calculate the height based on tick label measurements.
        * @default 45 if an axis label is provided, 25 otherwise.
        */
-      height?: number;
+      height?: number | 'auto';
     }
   : AxisProps extends ChartsYAxisProps
     ? {
@@ -202,14 +208,15 @@ type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends Chart
         position?: 'left' | 'right' | 'none';
         /**
          * The width of the axis.
+         * Set to `'auto'` to automatically calculate the width based on tick label measurements.
          * @default 65 if an axis label is provided, 45 otherwise.
          */
-        width?: number;
+        width?: number | 'auto';
       }
     : {
         position?: 'top' | 'bottom' | 'left' | 'right' | 'none';
-        height?: number;
-        width?: number;
+        height?: number | 'auto';
+        width?: number | 'auto';
       };
 
 export interface ChartsRotationAxisProps extends ChartsAxisProps {
@@ -507,6 +514,14 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    */
   dataKey?: string;
   /**
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return the axis value.
+   * Can be used as an alternative to `dataKey`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
+   * @returns {V} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => V;
+  /**
    * Formats the axis value.
    * @param {V} value The value to format.
    * @param {AxisValueFormatterContext} context The rendering context of the value.
@@ -530,7 +545,10 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * - 'strict': Set the domain to the min/max value provided. No extra space is added.
    * - function: Receives the calculated extremums as parameters, and should return the axis domain.
    */
-  domainLimit?: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
+  domainLimit?:
+    | 'nice'
+    | 'strict'
+    | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
   /**
    * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
    */
@@ -608,16 +626,20 @@ export type ComputedAxis<
      * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
      */
     triggerTooltip?: boolean;
+    /** @ignore - internal. True when a rotation axis covers a full circle. */
+    isFullCircle?: boolean;
   } & (AxisProps extends ChartsXAxisProps
-    ? MakeRequired<AxisSideConfig<AxisProps>, 'height'>
+    ? AxisSideConfig<AxisProps> & { height: number }
     : AxisProps extends ChartsYAxisProps
-      ? MakeRequired<AxisSideConfig<AxisProps>, 'width'>
+      ? AxisSideConfig<AxisProps> & { width: number }
       : AxisSideConfig<AxisProps>);
+
 export type ComputedXAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
   S,
   V,
   ChartsXAxisProps
 >;
+
 export type ComputedYAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
   S,
   V,
@@ -696,10 +718,10 @@ export type YAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleNam
   ? MakeOptional<AxisConfig<S, V, ChartsYAxisProps>, 'id'>
   : never;
 export type RotationAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
-  ? AxisConfig<S, V, ChartsRotationAxisProps>
+  ? MakeOptional<AxisConfig<S, V, ChartsRotationAxisProps>, 'id'>
   : never;
 export type RadiusAxis<S extends 'linear' = 'linear', V = any> = S extends 'linear'
-  ? AxisConfig<S, V, ChartsRadiusAxisProps>
+  ? MakeOptional<AxisConfig<S, V, ChartsRadiusAxisProps>, 'id'>
   : never;
 
 /**

@@ -25,21 +25,23 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 
 export default function ZoomAndPan() {
   return (
-    <Stack spacing={1} sx={sxColors} direction={{ xs: 'column-reverse', xl: 'column' }}>
-      <Box
-        sx={{
-          flexGrow: 1,
-          mb: 2,
-          width: '100%',
+    <Stack
+      spacing={1}
+      direction={{ xs: 'column-reverse', xl: 'column' }}
+      sx={[
+        {
           height: '100%',
-        }}
-      >
+        },
+        ...(Array.isArray(sxColors) ? sxColors : [sxColors]),
+      ]}
+    >
+      <Box sx={{ flexGrow: 1, mb: 2, width: '100%', height: '100%' }}>
         <LineChartPro
           colors={['var(--palette-color-0)', 'var(--palette-color-4)']}
           dataset={formattedDataset}
           series={[
-            { label: 'Google', dataKey: 'google', showMark: false },
-            { label: 'Meta', dataKey: 'meta', showMark: false },
+            { label: 'Google', dataKey: 'google' },
+            { label: 'Meta', dataKey: 'meta' },
           ]}
           margin={{ left: 0, right: 0, bottom: 0, top: 20 }}
           xAxis={[
@@ -82,7 +84,7 @@ export default function ZoomAndPan() {
         <Typography variant="subtitle2" sx={{ pt: 2 }}>
           Zoom and pan
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           Explore data with greater detail by zooming in and panning across the chart.
         </Typography>
       </div>

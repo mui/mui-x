@@ -59,12 +59,10 @@ export function checkGridRowIdIsValid(
 ) {
   if (id == null) {
     throw new Error(
-      [
-        'MUI X: The Data Grid component requires all rows to have a unique `id` property.',
-        'Alternatively, you can use the `getRowId` prop to specify a custom id for each row.',
-        detailErrorMessage,
-        JSON.stringify(row),
-      ].join('\n'),
+      `MUI X: The Data Grid component requires all rows to have a unique \`id\` property.
+Alternatively, you can use the \`getRowId\` prop to specify a custom id for each row.
+${detailErrorMessage}
+${JSON.stringify(row)}`,
     );
   }
 }
@@ -457,10 +455,5 @@ export const getValidRowHeight = (
 
 export const rowHeightWarning = [
   `MUI X: The \`rowHeight\` prop should be a number greater than 0.`,
-  `The default value will be used instead.`,
-].join('\n');
-
-export const getRowHeightWarning = [
-  `MUI X: The \`getRowHeight\` prop should return a number greater than 0 or 'auto'.`,
   `The default value will be used instead.`,
 ].join('\n');

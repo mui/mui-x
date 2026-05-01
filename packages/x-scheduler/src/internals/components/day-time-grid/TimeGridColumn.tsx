@@ -3,36 +3,39 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
-import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-headless/constants';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
-import { useEventCreationProps } from '../../hooks/useEventCreationProps';
-import {
-  EventDraggableDialogTrigger,
-  useEventDraggableDialogContext,
-} from '../event-draggable-dialog/EventDraggableDialog';
-import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
+import { EventSkeleton } from '../event-skeleton';
+import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
+import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
+import { getCellFocusBackground } from '../../utils/tokens';
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridColumn',
 })(({ theme }) => ({
-  borderRight: `1px solid ${theme.palette.divider}`,
+  borderInlineStart: `1px solid ${(theme.vars || theme).palette.divider}`,
   flexGrow: 1,
   flexShrink: 0,
   flexBasis: 0,
   minWidth: 0,
   position: 'relative',
-  '&:first-of-type': {
-    borderLeft: `1px solid ${theme.palette.divider}`,
-  },
   '&[data-weekend]': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: (theme.vars || theme).palette.action.hover,
+  },
+  ':last-of-type': {
+    borderInlineEnd: `1px solid ${(theme.vars || theme).palette.divider}`,
+  },
+  '&:focus-visible': {
+    outline: 'none',
+    backgroundColor: getCellFocusBackground(theme),
   },
 }));
 
@@ -57,7 +60,7 @@ const DayTimeGridCurrentTimeIndicator = styled(CalendarGrid.CurrentTimeIndicator
   left: 0,
   right: -1,
   height: 0,
-  borderTop: `2px solid ${theme.palette.primary.main}`,
+  borderTop: `2px solid ${(theme.vars || theme).palette.primary.main}`,
 }));
 
 const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
@@ -71,14 +74,14 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
   width: 8,
   height: 8,
   borderRadius: '50%',
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: (theme.vars || theme).palette.primary.main,
 }));
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index } = props;
 
-  const adapter = useAdapter();
-  const classes = useEventCalendarClasses();
+  const adapter = useAdapterContext();
+  const { classes } = useEventCalendarStyledContext();
   const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
   const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);
   const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
@@ -123,10 +126,9 @@ function ColumnInteractiveLayer({
   maxIndex: number;
 }) {
   // Context hooks
-  const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const { onOpen: startEditing } = useEventDraggableDialogContext();
-  const classes = useEventCalendarClasses();
+  const { onOpen: startEditing } = useEventDialogContext();
+  const { classes } = useEventCalendarStyledContext();
 
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);
@@ -139,28 +141,7 @@ function ColumnInteractiveLayer({
     end,
   );
   const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
-
-  // Feature hooks
-  const getDateFromPosition = CalendarGrid.useGetDateFromPositionInColumn({
-    elementRef: columnRef,
-    snapMinutes: EVENT_CREATION_PRECISION_MINUTE,
-  });
-
-  const eventCreationProps = useEventCreationProps(({ event, creationConfig }) => {
-    const startDateFromPosition = getDateFromPosition(event.clientY);
-    const draftRange = {
-      start: startDateFromPosition,
-      end: adapter.addMinutes(startDateFromPosition, creationConfig.duration),
-    };
-
-    store.setOccurrencePlaceholder({
-      type: 'creation',
-      surfaceType: 'time-grid',
-      start: draftRange.start,
-      end: draftRange.end,
-      resourceId: null,
-    });
-  });
+  const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !columnRef.current) {
@@ -173,13 +154,14 @@ function ColumnInteractiveLayer({
     <DayTimeGridColumnInteractiveLayer
       className={classes.dayTimeGridColumnInteractiveLayer}
       ref={columnRef}
-      {...eventCreationProps}
     >
-      {occurrences.map((occurrence) => (
-        <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
-          <TimeGridEvent occurrence={occurrence} variant="regular" />
-        </EventDraggableDialogTrigger>
-      ))}
+      {isLoading && <EventSkeleton data-variant="time-column" />}
+      {!isLoading &&
+        occurrences.map((occurrence) => (
+          <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+            <TimeGridEvent occurrence={occurrence} variant="regular" />
+          </EventDialogTrigger>
+        ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
         <DayTimeGridCurrentTimeIndicator
@@ -204,7 +186,7 @@ interface TimeGridColumnProps {
 }
 
 /**
- * Makes sure any event dropped in the time grid column is turned into an non all-day event.
+ * Makes sure any event dropped in the time grid column is turned into a non all-day event.
  */
 function addPropertiesToDroppedEvent() {
   return {

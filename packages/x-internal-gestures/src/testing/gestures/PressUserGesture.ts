@@ -17,7 +17,7 @@ export const press = async <P extends PointerType>(
   const { target, duration = 500 } = options;
 
   if (!target) {
-    throw new Error('Target element is required for press gesture');
+    throw new Error('MUI X: Target element is required for press gesture');
   }
 
   // Parse pointer(s) based on pointer type

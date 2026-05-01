@@ -3,6 +3,7 @@ import { processDate } from '../process-date';
 import { Adapter } from '../use-adapter';
 import { parseRRule, projectRRuleToTimezone } from '../internals/utils/recurring-events';
 import { TemporalTimezone } from '../base-ui-copy/types';
+import { resolveEventDate } from './resolveEventDate';
 
 export function processEvent(
   model: SchedulerEvent,
@@ -11,20 +12,22 @@ export function processEvent(
 ): SchedulerProcessedEvent {
   const dataTimezone = model.timezone ?? 'default';
 
-  // TODO: Support wall-time events by reinterpreting instants in `dataTimezone`.
-  const startInstant = model.start;
-  const endInstant = model.end;
+  const startInstant = resolveEventDate(model.start, dataTimezone, adapter);
+  const endInstant = resolveEventDate(model.end, dataTimezone, adapter);
+  const resolvedExDates = model.exDates
+    ? model.exDates.map((exDate) => resolveEventDate(exDate, dataTimezone, adapter))
+    : undefined;
 
   const startInDisplayTz = adapter.setTimezone(startInstant, displayTimezone);
   const endInDisplayTz = adapter.setTimezone(endInstant, displayTimezone);
-  const exDatesInDisplayTz = model.exDates
-    ? model.exDates.map((exDate) => adapter.setTimezone(exDate, displayTimezone))
+  const exDatesInDisplayTz = resolvedExDates
+    ? resolvedExDates.map((exDate) => adapter.setTimezone(exDate, displayTimezone))
     : undefined;
 
   const parsedDataRRule = model.rrule ? parseRRule(adapter, model.rrule, dataTimezone) : undefined;
 
   const displayTimezoneRRule = parsedDataRRule
-    ? projectRRuleToTimezone(adapter, parsedDataRRule, displayTimezone, model.start)
+    ? projectRRuleToTimezone(adapter, parsedDataRRule, displayTimezone, startInstant)
     : undefined;
 
   return {
@@ -36,11 +39,15 @@ export function processEvent(
       end: processDate(endInstant, adapter),
       timezone: dataTimezone,
       rrule: parsedDataRRule,
-      exDates: model.exDates,
+      exDates: resolvedExDates,
     },
     displayTimezone: {
-      start: processDate(startInDisplayTz, adapter),
-      end: processDate(endInDisplayTz, adapter),
+      start: model.allDay
+        ? processDate(adapter.startOfDay(startInDisplayTz), adapter)
+        : processDate(startInDisplayTz, adapter),
+      end: model.allDay
+        ? processDate(adapter.endOfDay(endInDisplayTz), adapter)
+        : processDate(endInDisplayTz, adapter),
       timezone: displayTimezone,
       rrule: displayTimezoneRRule,
       exDates: exDatesInDisplayTz,

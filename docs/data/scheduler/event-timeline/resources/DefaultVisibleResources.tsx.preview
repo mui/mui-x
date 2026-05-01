@@ -1,0 +1,11 @@
+<EventTimelinePremium
+  events={events}
+  onEventsChange={setEvents}
+  defaultVisibleDate={defaultVisibleDate}
+  resources={resources}
+  defaultPreset="monthAndYear"
+  defaultVisibleResources={{
+    product: false,
+    design: false,
+  }}
+/>

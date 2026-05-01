@@ -4,12 +4,11 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 
 export default function SankeyControlledHighlight() {
   const [highlightedItem, setHighlightedItem] = React.useState({
-    type: 'sankey',
-    seriesId: 'auto-generated-id',
+    seriesId: 'series-id',
     subType: 'node',
     nodeId: 'A',
   });
@@ -27,16 +26,14 @@ export default function SankeyControlledHighlight() {
     if (newValue.startsWith('node-')) {
       const nodeId = newValue.replace('node-', '');
       setHighlightedItem({
-        type: 'sankey',
-        seriesId: 'auto-generated-id',
+        seriesId: 'series-id',
         subType: 'node',
         nodeId,
       });
     } else if (newValue.startsWith('link-')) {
       const [source, target] = newValue.replace('link-', '').split('-');
       setHighlightedItem({
-        type: 'sankey',
-        seriesId: 'auto-generated-id',
+        seriesId: 'series-id',
         subType: 'link',
         sourceId: source,
         targetId: target,
@@ -85,6 +82,7 @@ export default function SankeyControlledHighlight() {
 
       <SankeyChart
         series={{
+          id: 'series-id',
           data: {
             nodes: [
               { id: 'A', label: 'Node A', color: '#3b82f6' },

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { vars } from '../../constants/cssVariables';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -65,6 +65,7 @@ function GridVirtualScrollerFiller({ rowsLength }: Props) {
 
   const height = hasScrollX ? scrollbarSize : 0;
   const needsLastRowBorder = viewportOuterSize.height - minimumSize.height > 0;
+
   if (height === 0 && !needsLastRowBorder) {
     return null;
   }

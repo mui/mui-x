@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
@@ -53,9 +53,7 @@ const GridRowDragAndDropOverlayRoot = styled('div', {
   }),
 
   ...(action === 'inside' && {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.1)`
-      : alpha(theme.palette.primary.main, 0.1),
+    backgroundColor: theme.alpha((theme.vars || theme).palette.primary.main, 0.1),
   }),
 }));
 

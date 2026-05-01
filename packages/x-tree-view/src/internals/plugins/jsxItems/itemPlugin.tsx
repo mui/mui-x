@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { TreeItemWrapper, TreeViewItemPlugin } from '../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import {
@@ -21,11 +22,9 @@ export const useJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, cont
   const parentContext = React.useContext(TreeViewChildrenItemContext);
   if (parentContext == null) {
     throw new Error(
-      [
-        'MUI X: Could not find the Tree View Children Item context.',
-        'It looks like you rendered your component outside of a SimpleTreeView parent component.',
-        'This can also happen if you are bundling multiple versions of the Tree View.',
-      ].join('\n'),
+      `MUI X: Could not find the Tree View Children Item context.
+It looks like you rendered your component outside of a SimpleTreeView parent component.
+This can also happen if you are bundling multiple versions of the Tree View.`,
     );
   }
   const { registerChild, unregisterChild, parentId } = parentContext;
@@ -34,6 +33,8 @@ export const useJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, cont
   const pluginContentRef = React.useRef<HTMLDivElement>(null);
   const handleContentRef = useMergedRefs(pluginContentRef, contentRef);
   const idAttribute = useStore(store, idSelectors.treeItemIdAttribute, itemId, id);
+  const isMountedRef = React.useRef(true);
+  const ownerTokenRef = useRefWithInit(Symbol);
 
   // Prevent any flashing
   useIsoLayoutEffect(() => {
@@ -46,15 +47,32 @@ export const useJSXItemsItemPlugin: TreeViewItemPlugin = ({ props, rootRef, cont
   }, [store, registerChild, unregisterChild, idAttribute, itemId]);
 
   useIsoLayoutEffect(() => {
-    return store.jsxItems.insertJSXItem({
-      id: itemId,
-      idAttribute: id,
-      parentId,
-      expandable,
-      disabled,
-      selectable: !disableSelection,
-    });
-  }, [store, parentId, itemId, expandable, disabled, disableSelection, id]);
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  useIsoLayoutEffect(() => {
+    const remove = store.jsxItems.upsertJSXItem(
+      {
+        id: itemId,
+        idAttribute: id,
+        parentId,
+        expandable,
+        disabled,
+        selectable: !disableSelection,
+      },
+      ownerTokenRef.current,
+    );
+
+    return () => {
+      // Only remove the item if the component is unmounting, not if the dependencies are changing.
+      if (!isMountedRef.current) {
+        remove();
+      }
+    };
+  }, [store, parentId, itemId, expandable, disabled, disableSelection, id, ownerTokenRef]);
 
   React.useEffect(() => {
     if (label) {

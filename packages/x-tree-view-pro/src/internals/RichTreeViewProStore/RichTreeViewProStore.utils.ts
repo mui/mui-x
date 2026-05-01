@@ -7,19 +7,16 @@ import { TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE } from '../plugins/lazyLoadin
 
 const DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED = () => true;
 const DEFAULT_IS_ITEM_REORDERABLE_WHEN_DISABLED = () => false;
-const DEFAULT_ITEM_HEIGHT_WITH_VIRTUALIZATION = 32;
+const DEFAULT_ITEM_HEIGHT = 32;
 
 const deriveStateFromParameters = (parameters: RichTreeViewProStoreParameters<any, any>) => ({
-  lazyLoadedItems: parameters.dataSource ? TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE : null,
   currentReorder: null,
   isItemReorderable: parameters.itemsReordering
     ? (parameters.isItemReorderable ?? DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED)
     : DEFAULT_IS_ITEM_REORDERABLE_WHEN_DISABLED,
-  domStructure: parameters.domStructure ?? (parameters.virtualization ? 'flat' : 'nested'),
-  virtualization: parameters.virtualization ?? false,
-  itemHeight:
-    parameters.itemHeight ??
-    (parameters.virtualization ? DEFAULT_ITEM_HEIGHT_WITH_VIRTUALIZATION : null),
+  domStructure: parameters.domStructure ?? 'flat',
+  virtualization: !(parameters.disableVirtualization ?? false),
+  itemHeight: parameters.itemHeight === undefined ? DEFAULT_ITEM_HEIGHT : parameters.itemHeight,
 });
 
 export const parametersToStateMapper: TreeViewParametersToStateMapper<
@@ -30,6 +27,7 @@ export const parametersToStateMapper: TreeViewParametersToStateMapper<
 > = {
   getInitialState: (minimalInitialState, parameters) => ({
     ...ExtendableRichTreeViewStore.rawMapper.getInitialState(minimalInitialState, parameters),
+    lazyLoadedItems: parameters.dataSource ? TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE : null,
     ...deriveStateFromParameters(parameters),
   }),
   updateStateFromParameters: (newMinimalState, parameters, updateModel) => {

@@ -10,7 +10,9 @@ function InputNumberInterval(props) {
   const { item, applyValue, focusElementRef = null } = props;
 
   const filterTimeout = React.useRef(undefined);
-  const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
+  const [filterValueState, setFilterValueState] = React.useState(
+    item.value ?? ['', ''],
+  );
   const [applying, setIsApplying] = React.useState(false);
 
   React.useEffect(() => {
@@ -73,7 +75,9 @@ function InputNumberInterval(props) {
         value={Number(filterValueState[1])}
         onChange={handleUpperFilterChange}
         type="number"
-        InputProps={applying ? { endAdornment: <SyncIcon /> } : {}}
+        slotProps={{
+          input: applying ? { endAdornment: <SyncIcon /> } : {},
+        }}
       />
     </Box>
   );

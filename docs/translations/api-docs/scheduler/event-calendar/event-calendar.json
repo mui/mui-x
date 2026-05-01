@@ -1,0 +1,781 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "apiRef": {
+      "description": "The ref object that allows Event Calendar manipulation. Can be instantiated with <code>useEventCalendarApiRef()</code>."
+    },
+    "areEventsDraggable": {
+      "description": "Whether the event can be dragged to change its start and end dates without changing the duration."
+    },
+    "areEventsResizable": {
+      "description": "Whether the event start or end can be dragged to change its duration without changing its other date. If <code>true</code>, both start and end can be resized. If <code>false</code>, the events are not resizable. If <code>&quot;start&quot;</code>, only the start can be resized. If <code>&quot;end&quot;</code>, only the end can be resized."
+    },
+    "canDragEventsFromTheOutside": {
+      "description": "Whether events can be dragged from outside of the calendar and dropped into it."
+    },
+    "canDropEventsToTheOutside": {
+      "description": "Whether events can be dragged from inside of the calendar and dropped outside of it. If true, when the mouse leaves the calendar, the event won&#39;t be rendered inside the calendar anymore. If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar."
+    },
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "dataSource": {
+      "description": "Data source for fetching events asynchronously. When provided, events are fetched through the data source instead of the <code>events</code> prop."
+    },
+    "dateLocale": {
+      "description": "The locale object from <code>date-fns</code> used to format dates. This affects day names, month names, week start day, and other locale-dependent formatting. Import a locale from <code>date-fns/locale</code> and pass it to this prop."
+    },
+    "defaultPreferences": {
+      "description": "The default preferences for the calendar. To use controlled preferences, use the <code>preferences</code> prop."
+    },
+    "defaultView": {
+      "description": "The view initially displayed in the calendar. To render a controlled calendar, use the <code>view</code> prop."
+    },
+    "defaultVisibleDate": {
+      "description": "The date initially used to determine the visible date range. To render a controlled component, use the <code>visibleDate</code> prop."
+    },
+    "defaultVisibleResources": {
+      "description": "The IDs of the resources initially visible. To render a controlled scheduler, use the <code>visibleResources</code> prop."
+    },
+    "displayTimezone": {
+      "description": "The timezone used to display events in the scheduler.<br>Accepts any valid IANA timezone name (for example &quot;America/New_York&quot;, &quot;Europe/Paris&quot;, &quot;Asia/Tokyo&quot;), or keywords understood by the adapter, such as &quot;default&quot; (use the adapter&#39;s default timezone), &quot;locale&quot; (use the user&#39;s current locale timezone), or &quot;UTC&quot;.<br>This timezone only affects rendering, events keep their original data timezone."
+    },
+    "eventColor": {
+      "description": "The color palette used for all events. Can be overridden per resource using the <code>eventColor</code> property on the resource model. Can be overridden per event using the <code>color</code> property on the event model."
+    },
+    "eventModelStructure": {
+      "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
+    },
+    "events": { "description": "The events currently available in the calendar." },
+    "localeText": {
+      "description": "Set the locale text of the Event Calendar. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/models/translations.ts\">the source</a> in the GitHub repository."
+    },
+    "onEventsChange": { "description": "Callback fired when some event of the calendar change." },
+    "onPreferencesChange": { "description": "Event handler called when the preferences change." },
+    "onViewChange": { "description": "Event handler called when the view changes." },
+    "onVisibleDateChange": { "description": "Event handler called when the visible date changes." },
+    "onVisibleResourcesChange": {
+      "description": "Event handler called when the visible resources change."
+    },
+    "preferences": { "description": "Preferences currently displayed in the calendar." },
+    "preferencesMenuConfig": {
+      "description": "Config of the preferences menu. Defines which options are visible in the menu. If <code>false</code>, the menu will be entirely hidden."
+    },
+    "readOnly": { "description": "Whether the calendar is in read-only mode." },
+    "resourceModelStructure": {
+      "description": "The structure of the resource model. It defines how to read and write the properties of the resource model. If not provided, the resource model is assumed to match the <code>CalendarResource</code> interface."
+    },
+    "resources": { "description": "The resources the events can be assigned to." },
+    "showCurrentTimeIndicator": {
+      "description": "Whether the component should display the current time indicator."
+    },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "view": { "description": "The view currently displayed in the calendar." },
+    "views": { "description": "The views available in the calendar." },
+    "visibleDate": {
+      "description": "The date currently used to determine the visible date range."
+    },
+    "visibleResources": {
+      "description": "The IDs of the resources currently visible. A resource is visible if it is not included in this object or if it is included with <code>true</code> value."
+    }
+  },
+  "classDescriptions": {
+    "agendaView": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the agenda view element"
+    },
+    "agendaViewDayHeaderCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "agenda view day header cell elements"
+    },
+    "agendaViewDayNumberCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "agenda view day number cell elements"
+    },
+    "agendaViewEventListItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the agenda view event list item elements"
+    },
+    "agendaViewEventsList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the agenda view events list element"
+    },
+    "agendaViewRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "agenda view row elements"
+    },
+    "agendaViewWeekDayCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "agenda view week day cell elements"
+    },
+    "agendaViewWeekDayNameLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "agenda view week day name label elements"
+    },
+    "agendaViewYearAndMonthLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "agenda view year and month label elements"
+    },
+    "content": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the content section element"
+    },
+    "dayGridEvent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day grid event elements"
+    },
+    "dayGridEventCardContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day grid event card content elements"
+    },
+    "dayGridEventCardWrapper": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day grid event card wrapper elements"
+    },
+    "dayGridEventLinesClamp": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day grid event lines clamp elements"
+    },
+    "dayGridEventPlaceholder": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day grid event placeholder elements"
+    },
+    "dayGridEventRecurringIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day grid event recurring icon elements"
+    },
+    "dayGridEventResizeHandler": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day grid event resize handler elements"
+    },
+    "dayGridEventTime": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day grid event time elements"
+    },
+    "dayGridEventTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day grid event title elements"
+    },
+    "dayTimeGrid": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid element"
+    },
+    "dayTimeGridAllDayEventContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day time grid all day event container elements"
+    },
+    "dayTimeGridAllDayEventsCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day time grid all day events cell elements"
+    },
+    "dayTimeGridAllDayEventsCellEvents": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day time grid all day events cell events container elements"
+    },
+    "dayTimeGridAllDayEventsGrid": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid all day events grid element"
+    },
+    "dayTimeGridAllDayEventsHeaderCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid all day events header cell element"
+    },
+    "dayTimeGridAllDayEventsRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid all day events row element"
+    },
+    "dayTimeGridBody": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid body element"
+    },
+    "dayTimeGridColumn": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day time grid column elements"
+    },
+    "dayTimeGridColumnInteractiveLayer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day time grid column interactive layer elements"
+    },
+    "dayTimeGridContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid container element"
+    },
+    "dayTimeGridCurrentTimeIndicator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid current time indicator element"
+    },
+    "dayTimeGridCurrentTimeIndicatorCircle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid current time indicator circle element"
+    },
+    "dayTimeGridCurrentTimeLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid current time label element"
+    },
+    "dayTimeGridGrid": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid grid element"
+    },
+    "dayTimeGridHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid header element"
+    },
+    "dayTimeGridHeaderButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day time grid header button elements"
+    },
+    "dayTimeGridHeaderCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day time grid header cell elements"
+    },
+    "dayTimeGridHeaderContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day time grid header content elements"
+    },
+    "dayTimeGridHeaderDayName": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day time grid header day name elements"
+    },
+    "dayTimeGridHeaderDayNumber": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day time grid header day number elements"
+    },
+    "dayTimeGridScrollableContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid scrollable content element"
+    },
+    "dayTimeGridScrollablePlaceholder": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid scrollable placeholder element"
+    },
+    "dayTimeGridTimeAxis": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid time axis element"
+    },
+    "dayTimeGridTimeAxisCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day time grid time axis cell elements"
+    },
+    "dayTimeGridTimeAxisText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "day time grid time axis text elements"
+    },
+    "errorAlert": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the error alert element"
+    },
+    "errorContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the error container element"
+    },
+    "errorMessage": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the error message element"
+    },
+    "eventColorIndicator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event color indicator elements"
+    },
+    "eventDialog": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog root element"
+    },
+    "eventDialogActions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog actions element"
+    },
+    "eventDialogCloseAction": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog close action button element"
+    },
+    "eventDialogCloseButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog close button element"
+    },
+    "eventDialogContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog content element"
+    },
+    "eventDialogDateTimeContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog date time container element"
+    },
+    "eventDialogDateTimeFieldsContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog date time fields container element"
+    },
+    "eventDialogDateTimeFieldsRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog date time fields row element"
+    },
+    "eventDialogDateTimeIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog date time icon element"
+    },
+    "eventDialogDateTimeLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog date time label element"
+    },
+    "eventDialogDeleteButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog delete button element"
+    },
+    "eventDialogDescriptionLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog description label element"
+    },
+    "eventDialogEndsRadioGroup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog ends radio group element"
+    },
+    "eventDialogForm": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog form element"
+    },
+    "eventDialogFormActions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog form actions element"
+    },
+    "eventDialogFormDivider": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog form divider element"
+    },
+    "eventDialogFrequencySelect": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog frequency select element"
+    },
+    "eventDialogHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog header element"
+    },
+    "eventDialogInlineRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog inline row element"
+    },
+    "eventDialogPaper": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog paper element"
+    },
+    "eventDialogRadioButtonLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog radio button label element"
+    },
+    "eventDialogReadonlyContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog readonly content element"
+    },
+    "eventDialogRecurrenceIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog recurrence icon element"
+    },
+    "eventDialogRecurrenceLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog recurrence label element"
+    },
+    "eventDialogRecurrenceLabelContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog recurrence label container element in the readonly content"
+    },
+    "eventDialogRecurrenceSelectorContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog recurrence selector container element"
+    },
+    "eventDialogRecurrenceSelectorToggleGroup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog recurrence selector toggle group element"
+    },
+    "eventDialogRepeatSectionContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog repeat section content element"
+    },
+    "eventDialogRepeatSectionFieldset": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog repeat section fieldset element"
+    },
+    "eventDialogRepeatSectionLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog repeat section label element"
+    },
+    "eventDialogResourceContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog resource container element"
+    },
+    "eventDialogResourceLegendColor": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog resource legend color element"
+    },
+    "eventDialogResourceLegendContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog resource legend container element"
+    },
+    "eventDialogResourceMenuColorDot": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog resource menu color dot element"
+    },
+    "eventDialogResourceMenuColorRadioButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog resource menu color radio button element"
+    },
+    "eventDialogResourceMenuItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog resource menu item element"
+    },
+    "eventDialogResourceMenuListSubheader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog resource menu list subheader element"
+    },
+    "eventDialogResourceTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog resource title element"
+    },
+    "eventDialogSaveButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog save button element"
+    },
+    "eventDialogSectionFieldset": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog section fieldset element"
+    },
+    "eventDialogSectionHeaderTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog section header title element"
+    },
+    "eventDialogSmallNumberField": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog small number field element"
+    },
+    "eventDialogTab": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog tab elements"
+    },
+    "eventDialogTabContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog tab content element"
+    },
+    "eventDialogTabPanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog tab panel element"
+    },
+    "eventDialogTabsContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog tabs container element"
+    },
+    "eventDialogTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog title element"
+    },
+    "eventDialogWeekDaySelectorCheckbox": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog week day selector form group element"
+    },
+    "eventDragPreview": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event drag preview element"
+    },
+    "eventItemCard": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event item card elements"
+    },
+    "eventItemCardContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event item card content elements"
+    },
+    "eventItemCardWrapper": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event item card wrapper elements"
+    },
+    "eventItemLinesClamp": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event item lines clamp elements"
+    },
+    "eventItemRecurringIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event item recurring icon elements"
+    },
+    "eventItemTime": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event item time elements"
+    },
+    "eventItemTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event item title elements"
+    },
+    "eventSkeleton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event skeleton elements"
+    },
+    "headerToolbar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar element"
+    },
+    "headerToolbarActions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar actions element"
+    },
+    "headerToolbarDateNavigator": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar date navigator buttons container element"
+    },
+    "headerToolbarLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar label element"
+    },
+    "headerToolbarLeftElement": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar left side element"
+    },
+    "headerToolbarNextButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar next button element"
+    },
+    "headerToolbarPreviousButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar previous button element"
+    },
+    "headerToolbarSidePanelToggle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar side panel toggle button element"
+    },
+    "headerToolbarTodayButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar today button element"
+    },
+    "mainPanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the main panel element"
+    },
+    "miniCalendar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the mini calendar root element"
+    },
+    "miniCalendarDayButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "mini calendar day buttons"
+    },
+    "miniCalendarDayCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "mini calendar day cells"
+    },
+    "miniCalendarGrid": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the mini calendar grid (body)"
+    },
+    "miniCalendarHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the mini calendar header element"
+    },
+    "miniCalendarMonthLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the mini calendar month label"
+    },
+    "miniCalendarNavigation": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the mini calendar header navigation container"
+    },
+    "miniCalendarNextButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the mini calendar next button element"
+    },
+    "miniCalendarPreviousButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the mini calendar previous button element"
+    },
+    "miniCalendarWeekdayCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "individual mini calendar weekday header cells"
+    },
+    "miniCalendarWeekdayHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the mini calendar weekday header row"
+    },
+    "miniCalendarWeekRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "mini calendar week rows"
+    },
+    "monthView": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the month view root element"
+    },
+    "monthViewBody": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the month view body element"
+    },
+    "monthViewCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "month view cell elements"
+    },
+    "monthViewCellEvents": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "month view cell events container elements"
+    },
+    "monthViewCellNumber": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "month view cell number elements"
+    },
+    "monthViewCellNumberButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "month view cell number button elements"
+    },
+    "monthViewGrid": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the month view grid element"
+    },
+    "monthViewHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the month view header element"
+    },
+    "monthViewHeaderCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "month view header cell elements"
+    },
+    "monthViewMoreEvents": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "month view more events button elements"
+    },
+    "monthViewPlaceholderContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "month view placeholder event container elements"
+    },
+    "monthViewRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "month view row elements"
+    },
+    "monthViewWeekHeaderCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the month view week header cell element"
+    },
+    "monthViewWeekNumberCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "month view week number cell elements"
+    },
+    "moreEventsPopover": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the more events popover element"
+    },
+    "moreEventsPopoverBody": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the more events popover body element"
+    },
+    "moreEventsPopoverHeader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the more events popover header element"
+    },
+    "moreEventsPopoverTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the more events popover title element"
+    },
+    "preferencesMenu": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the preferences menu element"
+    },
+    "preferencesMenuButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the preferences menu button element"
+    },
+    "preferencesMenuDivider": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the preferences menu divider elements"
+    },
+    "preferencesMenuItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the preferences menu item elements"
+    },
+    "preferencesMenuList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the preferences menu list element"
+    },
+    "preferencesMenuListItemIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the preferences menu list item icon elements"
+    },
+    "preferencesMenuListItemText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the preferences menu list item text elements"
+    },
+    "preferencesMenuListSubheader": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the preferences menu list subheader elements"
+    },
+    "resourceLegendColor": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event item resource legend color elements"
+    },
+    "resourcesLegend": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the resources legend root element"
+    },
+    "resourcesLegendItem": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "resources legend item elements"
+    },
+    "resourcesLegendItemCheckbox": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "resources legend item checkbox elements"
+    },
+    "resourcesLegendItemName": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "resources legend item name elements"
+    },
+    "resourcesLegendLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the resources legend label element"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "sidePanel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel element"
+    },
+    "sidePanelCollapse": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel collapse element"
+    },
+    "sidePanelDivider": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the side panel divider element"
+    },
+    "standaloneEvent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the standalone event element"
+    },
+    "timeGridEvent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "time grid event elements"
+    },
+    "timeGridEventPlaceholder": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "time grid event placeholder elements"
+    },
+    "timeGridEventRecurringIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "time grid event recurring icon elements"
+    },
+    "timeGridEventResizeHandler": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "time grid event resize handler elements"
+    },
+    "timeGridEventSkeleton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "time grid event skeleton elements"
+    },
+    "timeGridEventTime": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "time grid event time elements"
+    },
+    "timeGridEventTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "time grid event title elements"
+    },
+    "viewSwitcher": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the view switcher element"
+    },
+    "viewSwitcherButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the view switcher button element"
+    },
+    "viewSwitcherMenu": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the view switcher menu element"
+    }
+  }
+}

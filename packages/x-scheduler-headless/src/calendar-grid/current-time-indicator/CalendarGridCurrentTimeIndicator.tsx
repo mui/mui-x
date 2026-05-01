@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-import { useAdapter } from '../../use-adapter/useAdapter';
+import { useAdapterContext } from '../../use-adapter-context';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTimeIndicatorCssVars';
@@ -17,12 +17,13 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
     componentProps: CalendarGridCurrentTimeIndicator.Props,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
-    const adapter = useAdapter();
+    const adapter = useAdapterContext();
 
     const {
       // Rendering props
       className,
       render,
+      style,
       // Props forwarded to the DOM element
       ...elementProps
     } = componentProps;
@@ -48,23 +49,20 @@ export const CalendarGridCurrentTimeIndicator = React.forwardRef(
       collectionEnd: columnEnd,
     });
 
-    const style = React.useMemo(
-      () =>
-        ({
-          [CalendarGridCurrentTimeIndicatorCssVars.yPosition]: `${position * 100}%`,
-        }) as React.CSSProperties,
-      [position],
-    );
-
-    const props = { style };
-
     const isOutOfRange =
       adapter.isBefore(nowForColumn.value, columnStart) ||
       adapter.isAfter(nowForColumn.value, columnEnd);
 
     return useRenderElement('div', componentProps, {
       ref: [forwardedRef],
-      props: [props, elementProps],
+      props: [
+        elementProps,
+        {
+          style: {
+            [CalendarGridCurrentTimeIndicatorCssVars.yPosition]: `${position * 100}%`,
+          } as React.CSSProperties,
+        },
+      ],
       enabled: !isOutOfRange,
     });
   },

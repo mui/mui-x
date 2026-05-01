@@ -3,7 +3,7 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -22,9 +22,8 @@ export default function BasicComposition() {
         label="Use responsive container"
         labelPlacement="end"
       />
-
       <Paper sx={{ margin: 1, height: 300 }} elevation={3}>
-        <ChartContainer
+        <ChartsContainer
           series={[
             {
               type: 'bar',
@@ -33,6 +32,7 @@ export default function BasicComposition() {
             {
               type: 'line',
               data: [4, 3, 1, 3, 4],
+              showMark: true,
             },
           ]}
           xAxis={[
@@ -49,7 +49,7 @@ export default function BasicComposition() {
           <LinePlot />
           <MarkPlot />
           <ChartsXAxis label="X axis" axisId="x-axis-id" />
-        </ChartContainer>
+        </ChartsContainer>
       </Paper>
     </Box>
   );

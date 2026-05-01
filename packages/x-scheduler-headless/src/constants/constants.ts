@@ -3,17 +3,17 @@ import { SchedulerEventColor, SchedulerEventCreationConfig } from '../models';
 export const EVENT_CREATION_PRECISION_MINUTE = 30;
 
 export const EVENT_COLORS: SchedulerEventColor[] = [
-  'primary',
-  'mauve',
-  'cyan',
-  'jade',
   'red',
-  'lime',
-  'orange',
-  'yellow',
   'pink',
+  'purple',
   'indigo',
   'blue',
+  'teal',
+  'green',
+  'lime',
+  'amber',
+  'orange',
+  'grey',
 ];
 
 export const EVENT_DRAG_PRECISION_MINUTE = 15;
@@ -31,6 +31,6 @@ export const AGENDA_MAX_HORIZON_DAYS = 180;
 export const AGENDA_VIEW_DAYS_AMOUNT = 12;
 
 export const DEFAULT_EVENT_CREATION_CONFIG: SchedulerEventCreationConfig = {
-  interaction: 'double-click',
+  interaction: 'click',
   duration: 30,
 };

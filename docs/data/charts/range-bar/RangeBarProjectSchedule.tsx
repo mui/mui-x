@@ -18,7 +18,7 @@ import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
 import { ScatterPlot, ScatterSeries } from '@mui/x-charts/ScatterChart';
-import { ChartDataProviderPremium } from '@mui/x-charts-premium/ChartDataProviderPremium';
+import { ChartsDataProviderPremium } from '@mui/x-charts-premium/ChartsDataProviderPremium';
 
 const importantHappeningsLabels = [
   'Exploratory archaeology digs begin.',
@@ -213,7 +213,7 @@ export default function RangeBarProjectSchedule() {
   ];
 
   return (
-    <ChartDataProviderPremium
+    <ChartsDataProviderPremium
       dataset={bigDigDataset}
       xAxis={xAxis}
       yAxis={yAxis}
@@ -251,7 +251,7 @@ export default function RangeBarProjectSchedule() {
           ]}
         />
       </ChartsWrapper>
-    </ChartDataProviderPremium>
+    </ChartsDataProviderPremium>
   );
 }
 
@@ -309,7 +309,7 @@ function HappeningTooltip() {
 
   return (
     <TooltipContainer>
-      <Typography fontWeight="bold">{happening.x}</Typography>
+      <Typography sx={{ fontWeight: 'bold' }}>{happening.x}</Typography>
       <Typography>
         {importantHappeningsLabels[dataIndex].split('\n').map((line, index) => (
           <React.Fragment key={index}>
@@ -324,9 +324,16 @@ function HappeningTooltip() {
 
 function Legend({ series }: { series: { label: string; color: string }[] }) {
   return (
-    <Stack direction="row" flexWrap="wrap" columnGap={2} justifyContent="center">
+    <Stack
+      direction="row"
+      sx={{ flexWrap: 'wrap', columnGap: 2, justifyContent: 'center' }}
+    >
       {series.map((aSeries, index) => (
-        <Stack key={index} alignItems="center" direction="row" marginBottom={0.5}>
+        <Stack
+          key={index}
+          direction="row"
+          sx={{ alignItems: 'center', marginBottom: 0.5 }}
+        >
           <div
             style={{
               width: 16,

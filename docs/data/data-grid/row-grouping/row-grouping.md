@@ -133,10 +133,10 @@ Use the `hideDescendantCount` property of the `groupingColDef` to hide this numb
 
 By default, [grouped columns](#grouping-columns) remain visible when grouping is applied.
 This means that when there's only one grouping criterion, the grouping column and the grouped column both display the same values, which may be redundant or unnecessary.
-You can use the `useKeepGroupedColumnsHidden` utility hook to hide grouped columns.
+You can use the `useKeepGroupedColumnsHidden()` utility hook to hide grouped columns.
 This automatically hides grouped columns when added to the model, and displays them when removed.
 
-The two examples below show how to use `columnVisibilityModel` and `initialState` with the `useKeepGroupedColumnsHidden` hook.
+The two examples below show how to use `columnVisibilityModel` and `initialState` with the `useKeepGroupedColumnsHidden()` hook.
 You can mix the two examples to support both at the same time.
 
 ```tsx
@@ -209,7 +209,7 @@ To apply row grouping programmatically on non-groupable columns (columns with `g
 
 1. Pass `rowGrouping.model` to the `initialState` prop. This [initializes grouping](/x/react-data-grid/row-grouping/#initializing-row-grouping) with the provided model.
 2. Provide the `rowGroupingModel` prop. This [controls grouping](/x/react-data-grid/row-grouping/#controlled-row-grouping) with the provided model.
-3. Call the API method `setRowGroupingModel`. This sets the aggregation with the provided model.
+3. Call the API method `setRowGroupingModel()`. This sets the aggregation with the provided model.
 
 In the following example, the **Company** column is not groupable through the interface, but the `rowGroupingModel` prop is passed to generate a read-only row group.
 

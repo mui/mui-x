@@ -1,4 +1,4 @@
-import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { ChartsContainer } from '@mui/x-charts/ChartsContainer';
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -71,7 +71,7 @@ export default function BellCurveOverlay() {
 
   return (
     <div style={{ width: '100%' }}>
-      <ChartContainer
+      <ChartsContainer
         series={[
           {
             type: 'scatter',
@@ -87,7 +87,6 @@ export default function BellCurveOverlay() {
             id: 'bell-curve',
             color: '#f97316',
             curve: 'natural',
-            showMark: false,
           },
         ]}
         xAxis={[
@@ -132,7 +131,7 @@ export default function BellCurveOverlay() {
         />
         <ChartsXAxis />
         <ChartsYAxis />
-      </ChartContainer>
+      </ChartsContainer>
     </div>
   );
 }

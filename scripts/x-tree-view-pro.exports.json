@@ -45,7 +45,6 @@
   { "name": "TreeItemRoot", "kind": "Variable" },
   { "name": "TreeItemSlotProps", "kind": "Interface" },
   { "name": "TreeItemSlots", "kind": "Interface" },
-  { "name": "TreeViewBaseItem", "kind": "TypeAlias" },
   { "name": "TreeViewCancellableEvent", "kind": "TypeAlias" },
   { "name": "TreeViewCancellableEventHandler", "kind": "TypeAlias" },
   { "name": "TreeViewCollapseIcon", "kind": "Variable" },
@@ -57,9 +56,7 @@
   { "name": "TreeViewSelectionPropagation", "kind": "Interface" },
   { "name": "TreeViewValidItem", "kind": "TypeAlias" },
   { "name": "useApplyPropagationToSelectedItemsOnMount", "kind": "Function" },
-  { "name": "useRichTreeViewApiRef", "kind": "Function" },
   { "name": "useRichTreeViewProApiRef", "kind": "Function" },
-  { "name": "useSimpleTreeViewApiRef", "kind": "Function" },
   { "name": "useTreeItem", "kind": "Variable" },
   { "name": "UseTreeItemCheckboxSlotOwnProps", "kind": "Interface" },
   { "name": "UseTreeItemContentSlotOwnProps", "kind": "Interface" },
@@ -73,6 +70,5 @@
   { "name": "UseTreeItemReturnValue", "kind": "Interface" },
   { "name": "UseTreeItemRootSlotOwnProps", "kind": "Interface" },
   { "name": "UseTreeItemStatus", "kind": "Interface" },
-  { "name": "useTreeItemUtils", "kind": "Variable" },
-  { "name": "useTreeViewApiRef", "kind": "Variable" }
+  { "name": "useTreeItemUtils", "kind": "Variable" }
 ]

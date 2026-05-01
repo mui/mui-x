@@ -1,4 +1,4 @@
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
 import { processDate } from '../process-date';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
 import { SchedulerProcessedDate, SchedulerProcessedEvent } from '../models';
@@ -13,12 +13,13 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     processDate(adapter.date(day2Str, 'default'), adapter),
   ];
 
-  const visible: Record<string, boolean> = {
-    'Resource A': true,
-    'Resource B': true,
-  };
+  const resourceA = ResourceBuilder.new().build();
+  const resourceB = ResourceBuilder.new().build();
 
-  const noParents = new Map<string, string | null>();
+  const visible: Record<string, boolean> = {
+    [resourceA.id]: true,
+    [resourceB.id]: true,
+  };
 
   function run(events: SchedulerProcessedEvent[]) {
     return innerGetEventOccurrencesGroupedByDay({
@@ -27,7 +28,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       events,
       visibleResources: visible,
       displayTimezone: 'default',
-      resourceParentIds: noParents,
+      plan: 'premium',
     });
   }
 
@@ -62,15 +63,19 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should exclude events whose resource is not visible', () => {
-    const visibilityWithHidden: Record<string, boolean> = { ...visible, 'Resource X': false };
+    const hiddenResource = ResourceBuilder.new().build();
+    const visibilityWithHidden: Record<string, boolean> = {
+      ...visible,
+      [hiddenResource.id]: false,
+    };
 
     const visibleEvent = EventBuilder.new(adapter)
-      .resource('Resource A')
+      .resource(resourceA)
       .singleDay(day1Str)
       .toProcessed();
 
     const invisibleEvent = EventBuilder.new(adapter)
-      .resource('Resource X')
+      .resource(hiddenResource)
       .singleDay(day1Str)
       .toProcessed();
 
@@ -80,7 +85,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       events: [visibleEvent, invisibleEvent],
       visibleResources: visibilityWithHidden,
       displayTimezone: 'default',
-      resourceParentIds: noParents,
+      plan: 'premium',
     });
 
     const list = result.get(days[1].key)!;
@@ -130,8 +135,8 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       days,
       events: [event],
       visibleResources: visible,
-      resourceParentIds: noParents,
       displayTimezone: 'Europe/Paris',
+      plan: 'premium',
     });
 
     // Should NOT appear on Jan 10 in Paris

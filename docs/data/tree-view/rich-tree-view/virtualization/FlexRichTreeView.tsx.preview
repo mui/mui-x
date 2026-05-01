@@ -1,0 +1,11 @@
+<Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+  <Button size="small" onClick={removeItem}>
+    Remove an item
+  </Button>
+  <Button size="small" onClick={addItem}>
+    Add an item
+  </Button>
+</Stack>
+<div style={{ display: 'flex', flexDirection: 'column' }}>
+  <RichTreeViewPro items={INITIAL_ITEMS.slice(0, nbItems)} />
+</div>

@@ -23,7 +23,6 @@ import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
 import { useTreeItemModel } from '@mui/x-tree-view/hooks';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 
 type FileType = 'image' | 'pdf' | 'doc' | 'video' | 'folder' | 'pinned' | 'trash';
 
@@ -31,9 +30,10 @@ type ExtendedTreeItemProps = {
   fileType?: FileType;
   id: string;
   label: string;
+  children?: ExtendedTreeItemProps[];
 };
 
-const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
+const ITEMS: ExtendedTreeItemProps[] = [
   {
     id: '1',
     label: 'Documents',
@@ -201,11 +201,9 @@ function CustomLabel({
         <Box
           component={Icon}
           className="labelIcon"
-          color="inherit"
-          sx={{ mr: 1, fontSize: '1.2rem' }}
+          sx={{ color: 'inherit', mr: 1, fontSize: '1.2rem' }}
         />
       )}
-
       <TreeItemLabelText variant="body2">{children}</TreeItemLabelText>
       {expandable && <DotIcon />}
     </TreeItemLabel>

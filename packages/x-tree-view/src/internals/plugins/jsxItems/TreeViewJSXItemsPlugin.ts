@@ -1,11 +1,18 @@
 import { TreeViewItemId } from '../../../models';
 import { TreeViewItemMeta } from '../../models';
 import type { SimpleTreeViewStore } from '../../SimpleTreeViewStore';
-import { buildSiblingIndexes, TREE_VIEW_ROOT_PARENT_ID } from '../items';
+import { buildSiblingIndexes, itemsSelectors, TREE_VIEW_ROOT_PARENT_ID } from '../items';
+import { selectionSelectors } from '../selection/selectors';
 import { jsxItemsitemWrapper, useJSXItemsItemPlugin } from './itemPlugin';
 
 export class TreeViewJSXItemsPlugin {
   private store: SimpleTreeViewStore<any>;
+
+  /**
+   * Tracks which component instance owns each item id,
+   * so that duplicate ids from different components can be detected.
+   */
+  private itemOwners = new Map<string, symbol>();
 
   public constructor(store: SimpleTreeViewStore<any>) {
     this.store = store;
@@ -13,31 +20,56 @@ export class TreeViewJSXItemsPlugin {
   }
 
   /**
-   * Insert a new item in the state from a Tree Item component.
-   * @param {TreeViewItemMeta} item The meta-information of the item to insert.
-   * @returns {() => void} A function to remove the item from the state.
+   * Insert or update an item in the state from a Tree Item component.
+   * If the item already exists and belongs to the same owner (e.g. after a deps-change re-run of the layout effect),
+   * its meta is updated in place instead of removing and re-inserting.
    */
-  public insertJSXItem = (item: TreeViewItemMeta) => {
-    if (this.store.state.itemMetaLookup[item.id] != null) {
+  public upsertJSXItem = (item: TreeViewItemMeta, ownerToken: symbol) => {
+    const currentOwner = this.itemOwners.get(item.id);
+
+    if (currentOwner != null && currentOwner !== ownerToken) {
       throw new Error(
-        [
-          'MUI X: The Tree View component requires all items to have a unique `id` property.',
-          'Alternatively, you can use the `getItemId` prop to specify a custom id for each item.',
-          `Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
-        ].join('\n'),
+        `MUI X: The Tree View component requires all items to have a unique \`id\` property.
+Alternatively, you can use the \`getItemId\` prop to specify a custom id for each item.
+Two items were provided with the same id in the \`items\` prop: "${item.id}"`,
       );
     }
 
-    this.store.update({
-      itemMetaLookup: { ...this.store.state.itemMetaLookup, [item.id]: item },
-      // For Simple Tree View, we don't have a proper `item` object, so we create a very basic one.
-      itemModelLookup: {
-        ...this.store.state.itemModelLookup,
-        [item.id]: { id: item.id, label: item.label ?? '' },
-      },
-    });
+    this.itemOwners.set(item.id, ownerToken);
+    const existingMeta = itemsSelectors.itemMeta(this.store.state, item.id);
+
+    if (existingMeta != null) {
+      // Update the existing item in place.
+      let hasChanges = false;
+      for (const key of Object.keys(item) as (keyof TreeViewItemMeta)[]) {
+        if (existingMeta[key] !== item[key]) {
+          hasChanges = true;
+          break;
+        }
+      }
+
+      if (hasChanges) {
+        this.store.update({
+          itemMetaLookup: {
+            ...this.store.state.itemMetaLookup,
+            [item.id]: { ...existingMeta, ...item },
+          },
+        });
+      }
+    } else {
+      this.store.update({
+        itemMetaLookup: { ...this.store.state.itemMetaLookup, [item.id]: item },
+        // For Simple Tree View, we don't have a proper `item` object, so we create a very basic one.
+        itemModelLookup: {
+          ...this.store.state.itemModelLookup,
+          [item.id]: { id: item.id, label: item.label ?? '' },
+        },
+      });
+    }
 
     return () => {
+      this.itemOwners.delete(item.id);
+
       const newItemMetaLookup = { ...this.store.state.itemMetaLookup };
       const newItemModelLookup = { ...this.store.state.itemModelLookup };
       delete newItemMetaLookup[item.id];
@@ -94,5 +126,15 @@ export class TreeViewJSXItemsPlugin {
         [parentIdWithDefault]: buildSiblingIndexes(orderedChildrenIds),
       },
     });
+
+    // If a parent was selected while its children were unmounted (collapsed with unmountOnExit),
+    // re-run selection propagation now that the children are registered.
+    if (parentId !== null && selectionSelectors.isItemSelected(this.store.state, parentId)) {
+      this.store.selection.setItemSelection({
+        itemId: parentId,
+        shouldBeSelected: true,
+        keepExistingSelection: true,
+      });
+    }
   };
 }

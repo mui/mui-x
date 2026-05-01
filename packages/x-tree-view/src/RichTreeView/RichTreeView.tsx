@@ -273,7 +273,8 @@ RichTreeView.propTypes = {
   itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * Sets the height in pixel of an item.
-   * If not provided, no height restriction is applied to the tree item content element.
+   * Set to `null` to explicitly remove any item height restriction when items have different heights.
+   * @default null
    */
   itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,

@@ -13,11 +13,26 @@
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
     },
+    "desc": {
+      "description": "The description of the chart. Used to provide an accessible description for the chart."
+    },
     "disableAxisListener": {
       "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
     },
+    "disableClosestPoint": {
+      "description": "If true, the closest point interaction is disabled and falls back to hover events."
+    },
+    "disableHitArea": {
+      "description": "If true, the hit area interaction is disabled and falls back to hover events."
+    },
+    "disableKeyboardNavigation": {
+      "description": "If <code>true</code>, disables keyboard navigation for the chart."
+    },
     "disableVoronoi": {
       "description": "If true, the interaction will not use the Voronoi cell and fall back to hover events."
+    },
+    "experimentalFeatures": {
+      "description": "Options to enable features planned for the next major."
     },
     "grid": { "description": "Option to display a cartesian grid in the background." },
     "height": {
@@ -29,6 +44,9 @@
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
+    },
+    "hitAreaRadius": {
+      "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
@@ -77,12 +95,18 @@
       "typeDescriptions": {
         "event": {
           "name": "event",
-          "description": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element if using Voronoi cells. Or the Mouse event from the scatter element, when <code>disableVoronoi=true</code>."
+          "description": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element if using hit area interaction. Or the Mouse event from the scatter element, when <code>disableHitArea=true</code>."
         },
         "scatterItemIdentifier": {
           "name": "scatterItemIdentifier",
           "description": "The scatter item identifier."
         }
+      }
+    },
+    "onTooltipAxisChange": {
+      "description": "The function called when the pointer position corresponds to a new axis data item. This update can either be caused by a pointer movement, or an axis update. In case of multiple axes, the function is called if at least one axis is updated. The argument contains the identifier for all axes with a <code>data</code> property.",
+      "typeDescriptions": {
+        "axisItems": { "name": "axisItems", "description": "The array of axes item identifiers." }
       }
     },
     "onTooltipItemChange": {
@@ -103,10 +127,13 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
-    "voronoiMaxRadius": {
-      "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
+    "title": {
+      "description": "The title of the chart. Used to provide an accessible label for the chart."
     },
+    "tooltipAxis": {
+      "description": "The controlled axis tooltip. Identified by the axis id, and data index."
+    },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
@@ -126,6 +153,8 @@
     "axisTickLabel": "Custom component for tick label.",
     "baseButton": "",
     "baseIconButton": "",
+    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps&gt;</code>.",
+    "baseToggleButtonGroup": "",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "marker": "The component that renders the marker for a scatter point.",

@@ -11,7 +11,7 @@ import {
 import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
 import { type AxisId } from '../models/axis';
 import getColor from './seriesConfig/getColor';
-import { useChartContext } from '../context/ChartProvider';
+import { useChartsContext } from '../context/ChartsProvider';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 export interface MarkPlotDataPoint {
@@ -38,7 +38,7 @@ export function useMarkPlotData(
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
   const chartId = useChartId();
-  const { instance } = useChartContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
+  const { instance } = useChartsContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
 
   const allData = React.useMemo(() => {
     if (seriesData === undefined) {
@@ -58,12 +58,12 @@ export function useMarkPlotData(
           yAxisId = defaultYAxisId,
           visibleStackedData,
           data,
-          showMark = true,
+          showMark,
           shape = 'circle',
           hidden,
         } = series[seriesId];
 
-        if (showMark === false) {
+        if (!showMark) {
           continue;
         }
 
@@ -82,7 +82,9 @@ export function useMarkPlotData(
                 xAxisId === DEFAULT_X_AXIS_KEY
                   ? 'The first `xAxis`'
                   : `The x-axis with id "${xAxisId}"`
-              } should have data property to be able to display a line plot.`,
+              } should have a data property to be able to display a line plot. ` +
+                'The x-axis data defines the positions for each point in the line. ' +
+                'Provide a data array to the x-axis configuration.',
             );
           }
         }
@@ -101,9 +103,9 @@ export function useMarkPlotData(
               continue;
             }
 
-            // The line fade animation move all the values to the min.
+            // The line fade animation move all the values to the series baseline.
             // So we need to do the same with mark in order for it to look nice.
-            const y = yScale(hidden ? (yScale.domain()[0] as number) : value)!;
+            const y = yScale(hidden ? visibleStackedData[index][0] : value)!;
             const xPos = xScale(x);
 
             if (!instance.isPointInside(xPos, y)) {

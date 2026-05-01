@@ -2,7 +2,7 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { alpha, useTheme } from '@mui/material/styles';
-import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
+import { ChartsDataProviderPro } from '@mui/x-charts-pro/ChartsDataProviderPro';
 import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
 import { LinePlot } from '@mui/x-charts-pro/LineChart';
 import { ChartsXAxis } from '@mui/x-charts-pro/ChartsXAxis';
@@ -89,13 +89,11 @@ export default function LineOverview() {
   const clipPathId = React.useId();
   return (
     <Box sx={{ width: '100%' }}>
-      <Typography textAlign="center">
+      <Typography sx={{ textAlign: 'center' }}>
         US unemployment rate comparison with GDP per capita
       </Typography>
-
-      <ChartDataProviderPro
+      <ChartsDataProviderPro
         height={300}
-        experimentalFeatures={{ preferStrictDomainInLineCharts: true }}
         dataset={usaUnemploymentAndGdp}
         series={[
           {
@@ -104,7 +102,6 @@ export default function LineOverview() {
             dataKey: 'unemploymentRate',
             label: 'Unemployment rate',
             color: '#af3838',
-            showMark: false,
             yAxisId: 'unemployment-axis',
             valueFormatter: (value) => (value == null ? '' : `${value.toFixed(1)}%`),
           },
@@ -113,7 +110,6 @@ export default function LineOverview() {
             dataKey: 'gdpPerCapita',
             label: 'GDP per capita',
             color: '#4caf50',
-            showMark: false,
             yAxisId: 'gdp-axis',
             connectNulls: true,
             valueFormatter: (value) =>
@@ -179,14 +175,11 @@ export default function LineOverview() {
           <ChartZoomSlider />
         </ChartsSurface>
         <ChartsTooltip />
-      </ChartDataProviderPro>
-
+      </ChartsDataProviderPro>
       <Typography
         variant="caption"
         component="p"
-        color="text.secondary"
-        textAlign="left"
-        sx={{ pt: 1 }}
+        sx={{ color: 'text.secondary', textAlign: 'left', pt: 1 }}
       >
         Source: FRED
       </Typography>

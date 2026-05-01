@@ -9,7 +9,7 @@ import type { integer } from '@mui/x-internals/types';
 import * as platform from '@mui/x-internals/platform';
 import { useRunOnce } from '@mui/x-internals/useRunOnce';
 import { createSelector, useStore, useStoreEffect, Store } from '@mui/x-internals/store';
-import reactMajor from '@mui/x-internals/reactMajor';
+import useRefCallback from '../../utils/useRefCallback';
 import { PinnedRows, PinnedColumns, Size } from '../../models/core';
 import type { CellColSpanInfo } from '../../models/colspan';
 import { Dimensions, observeRootNode } from '../dimensions';
@@ -41,6 +41,13 @@ export type VirtualizationParams = {
   /** The column buffer in pixels to render before and after the viewport.
    * @default 150 */
   columnBufferPx?: number;
+  /**
+   * Controls how the container and render zones are positioned:
+   * - 'uncontrolled': uses CSS sticky positioning (default)
+   * - 'controlled': uses CSS absolute positioning with JS-computed offsets
+   * @default 'uncontrolled'
+   */
+  layoutMode?: 'controlled' | 'uncontrolled';
 };
 
 export type VirtualizationState<K extends string = string> = {
@@ -51,6 +58,7 @@ export type VirtualizationState<K extends string = string> = {
   props: Record<K, Record<string, any>>;
   context: Record<string, any>;
   scrollPosition: { current: ScrollPosition };
+  layoutMode: 'controlled' | 'uncontrolled';
 };
 
 const EMPTY_SCROLL_POSITION = { top: 0, left: 0 };
@@ -68,18 +76,49 @@ const selectors = (() => {
   const firstRowIndexSelector = createSelector(
     (state: BaseState) => state.virtualization.renderContext.firstRowIndex,
   );
+  const scrollPositionSelector = createSelector(
+    (state: BaseState) => state.virtualization.scrollPosition,
+  );
+  const layoutModeSelector = createSelector((state: BaseState) => state.virtualization.layoutMode);
+
   return {
     store: createSelector((state: BaseState) => state.virtualization),
     renderContext: createSelector((state: BaseState) => state.virtualization.renderContext),
     enabledForRows: createSelector((state: BaseState) => state.virtualization.enabledForRows),
     enabledForColumns: createSelector((state: BaseState) => state.virtualization.enabledForColumns),
     offsetTop: createSelector(
+      layoutModeSelector,
+      Dimensions.selectors.dimensions,
       Dimensions.selectors.rowPositions,
       firstRowIndexSelector,
-      (rowPositions, firstRowIndex) => rowPositions[firstRowIndex] ?? 0,
+      (layoutMode, dimensions, rowPositions, firstRowIndex) => {
+        return (
+          (layoutMode === 'uncontrolled' ? dimensions.topContainerHeight : 0) +
+          (rowPositions[firstRowIndex] ?? 0)
+        );
+      },
     ),
     context: createSelector((state: BaseState) => state.virtualization.context),
-    scrollPosition: createSelector((state: BaseState) => state.virtualization.scrollPosition),
+    layoutMode: layoutModeSelector,
+    scrollPosition: scrollPositionSelector,
+    pinnedLeftOffsetSelector: createSelector(
+      scrollPositionSelector,
+      (scrollPosition) => scrollPosition.current.left,
+    ),
+    pinnedRightOffsetSelector: createSelector(
+      scrollPositionSelector,
+      Dimensions.selectors.dimensions,
+      Dimensions.selectors.columnsTotalWidth,
+      Dimensions.selectors.needsVerticalScrollbar,
+      (scrollPosition, dimensions, columnsTotalWidth, needsVerticalScrollbar) => {
+        return (
+          Math.max(columnsTotalWidth, dimensions.viewportOuterSize.width) -
+          dimensions.viewportOuterSize.width -
+          scrollPosition.current.left +
+          (needsVerticalScrollbar ? dimensions.scrollbarSize : 0)
+        );
+      },
+    ),
   };
 })();
 
@@ -97,18 +136,36 @@ export namespace Virtualization {
 }
 
 function initializeState(params: ParamsWithDefaults) {
+  const { enabled, enabledForRows, enabledForColumns } = params.initialState?.virtualization ?? {};
+
+  // When virtualization is fully disabled, pre-compute the render context to
+  // cover all rows/columns. This matches what `computeRenderContext` returns
+  // for the disabled case, so the first `forceUpdateRenderContext` after mount
+  // detects no change and skips the store notification, which avoids a nested
+  // re-render.
+  const renderContext =
+    enabled === false && enabledForRows === false && enabledForColumns === false
+      ? {
+          firstRowIndex: 0,
+          lastRowIndex: params.rows.length,
+          firstColumnIndex: 0,
+          lastColumnIndex: params.columns?.length ?? 0,
+        }
+      : EMPTY_RENDER_CONTEXT;
+
   const state: Virtualization.State<typeof params.layout> = {
     virtualization: {
       enabled: !platform.isJSDOM,
       enabledForRows: !platform.isJSDOM,
       enabledForColumns: !platform.isJSDOM,
-      renderContext: EMPTY_RENDER_CONTEXT,
+      renderContext,
       props: (params.layout.constructor as typeof Layout).elements.reduce(
         (acc, key) => (acc[key as string], acc),
         {} as Record<string, Record<string, any>>,
       ),
       context: {},
       scrollPosition: { current: ScrollPosition.EMPTY },
+      layoutMode: params.virtualization.layoutMode ?? 'uncontrolled',
       ...params.initialState?.virtualization,
     },
     // FIXME: refactor once the state shape is settled
@@ -520,6 +577,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
         columnPositions,
         currentRenderContext,
         pinnedColumns.left.length,
+        store.state.virtualization.layoutMode,
       );
       const showBottomBorder = isLastVisibleInSection && rowParams.position === 'top';
 
@@ -701,25 +759,6 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     scheduleUpdateRenderContext,
     ...createSpanningAPI(),
   };
-}
-
-function useRefCallback(fn: (node: HTMLDivElement) => (() => void) | undefined) {
-  const refCleanup = React.useRef<() => void | undefined>(undefined);
-  const refCallback = useEventCallback((node: HTMLDivElement | null) => {
-    if (!node) {
-      // Cleanup for R18
-      refCleanup.current?.();
-      return;
-    }
-
-    refCleanup.current = fn(node);
-
-    if (reactMajor >= 19) {
-      /* eslint-disable-next-line consistent-return */
-      return refCleanup.current;
-    }
-  });
-  return refCallback;
 }
 
 type RenderContextInputs = ReturnType<typeof inputsSelector>;
@@ -1058,11 +1097,15 @@ export function computeOffsetLeft(
   columnPositions: number[],
   renderContext: ColumnsRenderContext,
   pinnedLeftLength: number,
+  layoutMode: VirtualizationState['layoutMode'] = 'uncontrolled',
 ) {
-  const left =
-    (columnPositions[renderContext.firstColumnIndex] ?? 0) -
-    (columnPositions[pinnedLeftLength] ?? 0);
-  return Math.abs(left);
+  let offset = columnPositions[renderContext.firstColumnIndex] ?? 0;
+  /* CSS sticky leaves elements in the normal flow of the DOM, so we
+   * don't need to add the offset of the pinned columns. */
+  if (layoutMode === 'uncontrolled') {
+    offset -= columnPositions[pinnedLeftLength] ?? 0;
+  }
+  return Math.abs(offset);
 }
 
 function bufferForDirection(
@@ -1123,7 +1166,7 @@ function bufferForDirection(
       };
     default:
       // eslint unable to figure out enum exhaustiveness
-      throw new Error('unreachable');
+      throw /* minify-error-disabled */ new Error('unreachable');
   }
 }
 
@@ -1197,15 +1240,15 @@ function getFirstNonSpannedColumnToRender({
 /** Placeholder API functions for colspan & rowspan to re-implement */
 function createSpanningAPI(): AbstractAPI {
   const getCellColSpanInfo: AbstractAPI['getCellColSpanInfo'] = () => {
-    throw new Error('Unimplemented: colspan feature is required');
+    throw new Error('MUI X: Unimplemented: colspan feature is required');
   };
 
   const calculateColSpan: AbstractAPI['calculateColSpan'] = () => {
-    throw new Error('Unimplemented: colspan feature is required');
+    throw new Error('MUI X: Unimplemented: colspan feature is required');
   };
 
   const getHiddenCellsOrigin: AbstractAPI['getHiddenCellsOrigin'] = () => {
-    throw new Error('Unimplemented: rowspan feature is required');
+    throw new Error('MUI X: Unimplemented: rowspan feature is required');
   };
 
   return { getCellColSpanInfo, calculateColSpan, getHiddenCellsOrigin };

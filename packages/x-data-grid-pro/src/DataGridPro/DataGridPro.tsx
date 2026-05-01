@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useLicenseVerifier, Watermark } from '@mui/x-license';
+import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import { GridRoot, GridContextProvider, type GridValidRowModel } from '@mui/x-data-grid';
 import {
   type GridConfiguration,
@@ -14,7 +14,7 @@ import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import type { DataGridProProps } from '../models/dataGridProProps';
+import type { DataGridProProcessedProps, DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
 import { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
@@ -23,7 +23,7 @@ import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration<GridPrivateApiPro> = {
+const configuration: GridConfiguration<GridPrivateApiPro, DataGridProProcessedProps> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPro,
@@ -35,8 +35,12 @@ const configuration: GridConfiguration<GridPrivateApiPro> = {
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
   },
 };
-const releaseInfo = '__RELEASE_INFO__';
-const watermark = <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />;
+const packageInfo = {
+  releaseDate: '__RELEASE_INFO__',
+  version: process.env.MUI_VERSION!,
+  name: 'x-data-grid-pro' as const,
+};
+const watermark = <Watermark packageInfo={packageInfo} />;
 
 const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowModel>(
   inProps: DataGridProProps<R>,
@@ -48,7 +52,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
     props,
   );
   useDataGridProComponent(privateApiRef, props, configuration as GridConfiguration);
-  useLicenseVerifier('x-data-grid-pro', releaseInfo);
+  useLicenseVerifier(packageInfo);
 
   if (process.env.NODE_ENV !== 'production') {
     validateProps(props, propValidatorsDataGridPro);
@@ -143,6 +147,66 @@ DataGridProRaw.propTypes = {
    */
   cellModesModel: PropTypes.object,
   /**
+   * Definition of the column rendered when the `checkboxSelection` prop is enabled.
+   *
+   * @warning
+   * Be careful when overriding `renderHeader` or `renderCell` in the `checkboxColDef` prop.
+   * The default implementation of these properties includes the logic for selecting all rows and selecting a single row, respectively.
+   * Overriding them without providing the same functionality will break the row selection.
+   */
+  checkboxColDef: PropTypes.shape({
+    align: PropTypes.oneOf(['center', 'left', 'right']),
+    cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    colSpan: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+    description: PropTypes.string,
+    disableColumnMenu: PropTypes.bool,
+    disableExport: PropTypes.bool,
+    disableReorder: PropTypes.bool,
+    display: PropTypes.oneOf(['flex', 'text']),
+    editable: PropTypes.bool,
+    examples: PropTypes.array,
+    filterable: PropTypes.bool,
+    filterOperators: PropTypes.arrayOf(
+      PropTypes.shape({
+        getApplyFilterFn: PropTypes.func.isRequired,
+        getValueAsString: PropTypes.func,
+        headerLabel: PropTypes.string,
+        InputComponent: PropTypes.elementType,
+        InputComponentProps: PropTypes.object,
+        label: PropTypes.string,
+        requiresFilterValue: PropTypes.bool,
+        value: PropTypes.string.isRequired,
+      }),
+    ),
+    flex: PropTypes.number,
+    getApplyQuickFilterFn: PropTypes.func,
+    getSortComparator: PropTypes.func,
+    groupable: PropTypes.bool,
+    headerAlign: PropTypes.oneOf(['center', 'left', 'right']),
+    headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    headerName: PropTypes.string,
+    hideable: PropTypes.bool,
+    hideSortIcons: PropTypes.bool,
+    maxWidth: PropTypes.number,
+    minWidth: PropTypes.number,
+    pinnable: PropTypes.bool,
+    preProcessEditCellProps: PropTypes.func,
+    renderCell: PropTypes.func,
+    renderEditCell: PropTypes.func,
+    renderHeader: PropTypes.func,
+    renderHeaderFilter: PropTypes.func,
+    resizable: PropTypes.bool,
+    rowSpanValueGetter: PropTypes.func,
+    sortable: PropTypes.bool,
+    sortComparator: PropTypes.func,
+    sortingOrder: PropTypes.arrayOf(PropTypes.oneOf(['asc', 'desc'])),
+    valueFormatter: PropTypes.func,
+    valueGetter: PropTypes.func,
+    valueParser: PropTypes.func,
+    valueSetter: PropTypes.func,
+    width: PropTypes.number,
+  }),
+  /**
    * If `true`, the Data Grid will display an extra column with checkboxes for selecting rows.
    * @default false
    */
@@ -210,6 +274,13 @@ DataGridProRaw.propTypes = {
     get: PropTypes.func.isRequired,
     set: PropTypes.func.isRequired,
   }),
+  /**
+   * If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired.
+   * If the refetched rows are different from the current rows, the grid will update the rows.
+   * Set to `0` to disable polling.
+   * @default 0
+   */
+  dataSourceRevalidateMs: PropTypes.number,
   /**
    * If above 0, the row children will be expanded up to this depth.
    * If equal to -1, all the row children will be expanded.
@@ -332,6 +403,7 @@ DataGridProRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    virtualizerLayoutMode: PropTypes.oneOf(['controlled', 'uncontrolled']),
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -860,7 +932,7 @@ DataGridProRaw.propTypes = {
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use the {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} instead.
+   * Prefer to use {@link https://mui.com/x/react-data-grid/server-side-data/lazy-loading/#infinite-loading Server-side data-Infinite loading} unless it doesn't fulfill your needs.
    */
   onRowsScrollEnd: PropTypes.func,
   /**

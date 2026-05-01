@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
 
@@ -20,6 +20,9 @@ const Element = styled('div', {
   position: 'sticky',
   zIndex: 40,
   bottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',
+  [`.${gridClasses['virtualizer--layoutControlled']} &`]: {
+    position: 'absolute',
+  },
 });
 
 export function GridBottomContainer(props: GridBottomContainerProps) {

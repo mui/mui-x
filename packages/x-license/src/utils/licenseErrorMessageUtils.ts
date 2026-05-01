@@ -59,6 +59,25 @@ export function showNotAvailableInInitialProPlanError() {
   ]);
 }
 
+export function showLicenseKeyVersionMismatchError({
+  packageMajorVersion,
+}: {
+  packageMajorVersion: number;
+}) {
+  const previousMajorVersion = packageMajorVersion - 1;
+  showError([
+    'MUI X: License key version mismatch.',
+    '',
+    `The license key you are using was issued for an older major version of MUI X (e.g. a v${previousMajorVersion} license with v${packageMajorVersion} packages installed).`,
+    'Each major version uses a different license key format, so the key needs to be regenerated — your existing license is not lost.',
+    '',
+    'To resolve this, you can either:',
+    `- Generate a new key compatible with v${packageMajorVersion} from your account at https://mui.com/r/x-license-account/ (free for existing customers, the new key inherits your current expiration date).`,
+    `- Or downgrade the MUI X packages to v${previousMajorVersion} to match your current license key.`,
+    `${packageMajorVersion === 9 ? 'More details at https://mui.com/r/x-license-key-v9-upgrade/.' : ''}`,
+  ]);
+}
+
 export function showMissingLicenseKeyError({
   plan,
   packageName,
@@ -123,21 +142,18 @@ export function showExpiredAnnualLicenseKeyError({
   expiryTimestamp: number;
 }) {
   throw new Error(
-    [
-      'MUI X: Expired license key.',
-      '',
-      `Your annual license key to use MUI X ${plan} in non-production environments has expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).`,
-      '',
-      'To solve the problem you can either:',
-      '',
-      '- Renew your license https://mui.com/r/x-get-license and use the new key',
-      `- Stop making changes to code depending directly or indirectly on MUI X ${plan}'s APIs`,
-      '',
-      'Note that your license is perpetual in production environments with any version released before your license term ends.',
-      '',
-      `- License key expiry timestamp: ${new Date(expiryTimestamp)}`,
-      `- Installed license key: ${licenseKey}`,
-      '',
-    ].join('\n'),
+    `MUI X: Expired license key.
+
+Your annual license key to use MUI X ${plan} in non-production environments has expired. If you are seeing this development console message, you might be close to breach the license terms by making direct or indirect changes to the frontend of an app that render a MUI X ${plan} component (more details in https://mui.com/r/x-license-annual).
+
+To solve the problem you can either:
+
+- Renew your license https://mui.com/r/x-get-license and use the new key
+- Stop making changes to code depending directly or indirectly on MUI X ${plan}'s APIs
+
+Note that your license is perpetual in production environments with any version released before your license term ends.
+
+- License key expiry timestamp: ${new Date(expiryTimestamp)}
+- Installed license key: ${licenseKey}`,
   );
 }

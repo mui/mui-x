@@ -5,7 +5,7 @@ import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { useChartRootRef } from '@mui/x-charts/hooks';
 import Button from '@mui/material/Button';
 import { Stack } from '@mui/system';
-import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
+import { ChartsDataProviderPro } from '@mui/x-charts-pro/ChartsDataProviderPro';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
@@ -29,7 +29,7 @@ export default function ExportCompositionNoSnap() {
   const apiRef = useChartProApiRef<'composition'>();
 
   return (
-    <Stack width="100%" sx={{ display: 'block' }}>
+    <Stack sx={{ width: '100%', display: 'block' }}>
       <Button
         onClick={() => apiRef.current!.exportAsPrint()}
         variant="contained"
@@ -37,7 +37,7 @@ export default function ExportCompositionNoSnap() {
       >
         Print
       </Button>
-      <ChartDataProviderPro
+      <ChartsDataProviderPro
         apiRef={apiRef}
         height={300}
         series={[
@@ -50,6 +50,7 @@ export default function ExportCompositionNoSnap() {
             type: 'line',
             data: [4, 3, 1, 3, 4],
             label: 'Line',
+            showMark: true,
           },
         ]}
         xAxis={[
@@ -74,7 +75,7 @@ export default function ExportCompositionNoSnap() {
           </ChartsSurface>
           <ChartsLegend direction="horizontal" />
         </CustomChartWrapper>
-      </ChartDataProviderPro>
+      </ChartsDataProviderPro>
     </Stack>
   );
 }

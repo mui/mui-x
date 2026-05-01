@@ -2,10 +2,12 @@ import { getPreviousNonEmptySeries } from './plugins/featurePlugins/useChartKeyb
 import { getMaxSeriesLength } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getMaxSeriesLength';
 import type { UseChartKeyboardNavigationSignature } from './plugins/featurePlugins/useChartKeyboardNavigation';
 import { getNextNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getNextNonEmptySeries';
+import { findVisibleDataIndex } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/findVisibleDataIndex';
 import type { ChartState } from './plugins/models/chart';
 import { seriesHasData } from './seriesHasData';
 import type { ChartSeriesType } from '../models/seriesType/config';
-import type { FocusedItemIdentifier, SeriesId, SeriesItemIdentifier } from '../models/seriesType';
+import type { SeriesId, FocusedItemIdentifier } from '../models/seriesType';
+import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 
 type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
@@ -14,13 +16,23 @@ type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
   dataIndex: number;
 } | null;
 
-type StateParameters<TSeriesType extends ChartSeriesType> = Pick<
-  ChartState<[UseChartKeyboardNavigationSignature], [], TSeriesType>,
+type StateParameters<SeriesType extends ChartSeriesType> = Pick<
+  ChartState<[UseChartKeyboardNavigationSignature], [], SeriesType>,
   'series'
 >;
+
+function isSeriesHidden(
+  processedSeries: ProcessedSeries<ChartSeriesType>,
+  type: ChartSeriesType,
+  seriesId: SeriesId,
+): boolean {
+  const seriesItem = processedSeries[type]?.series[seriesId];
+  return Boolean(seriesItem && 'hidden' in seriesItem && seriesItem.hidden);
+}
+
 export function createGetNextIndexFocusedItem<
-  InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
 >(
   /**
    * The set of series types compatible with this navigation action.
@@ -39,8 +51,13 @@ export function createGetNextIndexFocusedItem<
       state as ChartState<[UseChartKeyboardNavigationSignature], []>,
     );
     let seriesId = currentItem?.seriesId;
-    let type = currentItem?.type as OutSeriesType | undefined;
-    if (!type || seriesId == null || !seriesHasData(processedSeries, type, seriesId)) {
+    let type = currentItem?.type;
+    if (
+      !type ||
+      seriesId == null ||
+      !seriesHasData(processedSeries, type, seriesId) ||
+      isSeriesHidden(processedSeries, type, seriesId)
+    ) {
       const nextSeries = getNextNonEmptySeries<OutSeriesType>(
         processedSeries,
         compatibleSeriesTypes,
@@ -63,17 +80,31 @@ export function createGetNextIndexFocusedItem<
       dataIndex = Math.min(maxLength - 1, dataIndex);
     }
 
-    return {
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
       type,
       seriesId,
-      dataIndex,
+      startIndex: dataIndex,
+      dataLength: maxLength,
+      direction: 1,
+      allowCycles,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
+    return {
+      type: type as OutSeriesType,
+      seriesId,
+      dataIndex: visibleDataIndex,
     };
   };
 }
 
 export function createGetPreviousIndexFocusedItem<
-  InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
 >(
   /**
    * The set of series types compatible with this navigation action.
@@ -85,15 +116,20 @@ export function createGetPreviousIndexFocusedItem<
   allowCycles: boolean = false,
 ) {
   return function getPreviousIndexFocusedItem(
-    currentItem: SeriesItemIdentifier<InSeriesType> | null,
+    currentItem: FocusedItemIdentifier<InSeriesType> | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
       state as ChartState<[UseChartKeyboardNavigationSignature], []>,
     );
     let seriesId = currentItem?.seriesId;
-    let type = currentItem?.type as OutSeriesType | undefined;
-    if (!type || seriesId == null || !seriesHasData(processedSeries, type, seriesId)) {
+    let type = currentItem?.type;
+    if (
+      !type ||
+      seriesId == null ||
+      !seriesHasData(processedSeries, type, seriesId) ||
+      isSeriesHidden(processedSeries, type, seriesId)
+    ) {
       const previousSeries = getPreviousNonEmptySeries<OutSeriesType>(
         processedSeries,
         compatibleSeriesTypes,
@@ -116,17 +152,31 @@ export function createGetPreviousIndexFocusedItem<
       dataIndex = Math.max(0, dataIndex);
     }
 
-    return {
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
       type,
       seriesId,
-      dataIndex,
+      startIndex: dataIndex,
+      dataLength: maxLength,
+      direction: -1,
+      allowCycles,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
+    return {
+      type: type as OutSeriesType,
+      seriesId,
+      dataIndex: visibleDataIndex,
     };
   };
 }
 
 export function createGetNextSeriesFocusedItem<
-  InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
 >(
   /**
    * The set of series types compatible with this navigation action.
@@ -134,14 +184,14 @@ export function createGetNextSeriesFocusedItem<
   compatibleSeriesTypes: Set<OutSeriesType>,
 ) {
   return function getNextSeriesFocusedItem(
-    currentItem: SeriesItemIdentifier<InSeriesType> | null,
+    currentItem: FocusedItemIdentifier<InSeriesType> | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
       state as ChartState<[UseChartKeyboardNavigationSignature], []>,
     );
     let seriesId = currentItem?.seriesId;
-    let type = currentItem?.type as OutSeriesType;
+    let type = currentItem?.type;
 
     const nextSeries = getNextNonEmptySeries<OutSeriesType>(
       processedSeries,
@@ -156,19 +206,34 @@ export function createGetNextSeriesFocusedItem<
     type = nextSeries.type;
     seriesId = nextSeries.seriesId;
 
-    const dataIndex = currentItem?.dataIndex == null ? 0 : currentItem.dataIndex;
-
-    return {
+    const data = processedSeries[type as OutSeriesType]!.series[seriesId].data;
+    const startIndex =
+      currentItem?.dataIndex == null ? 0 : Math.min(currentItem.dataIndex, data.length - 1);
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
       type,
       seriesId,
-      dataIndex,
+      startIndex,
+      dataLength: data.length,
+      direction: 1,
+      allowCycles: true,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
+    return {
+      type: type as OutSeriesType,
+      seriesId,
+      dataIndex: visibleDataIndex,
     };
   };
 }
 
 export function createGetPreviousSeriesFocusedItem<
-  InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
-  OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
+  InSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'>,
+  OutSeriesType extends Exclude<ChartSeriesType, 'sankey' | 'heatmap'> = InSeriesType,
 >(
   /**
    * The set of series types compatible with this navigation action.
@@ -176,14 +241,14 @@ export function createGetPreviousSeriesFocusedItem<
   compatibleSeriesTypes: Set<OutSeriesType>,
 ) {
   return function getPreviousSeriesFocusedItem(
-    currentItem: SeriesItemIdentifier<InSeriesType> | null,
+    currentItem: FocusedItemIdentifier<InSeriesType> | null,
     state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
       state as ChartState<[UseChartKeyboardNavigationSignature], []>,
     );
     let seriesId = currentItem?.seriesId;
-    let type = currentItem?.type as OutSeriesType;
+    let type = currentItem?.type;
 
     const previousSeries = getPreviousNonEmptySeries<OutSeriesType>(
       processedSeries,
@@ -197,13 +262,29 @@ export function createGetPreviousSeriesFocusedItem<
     type = previousSeries.type;
     seriesId = previousSeries.seriesId;
 
-    const data = processedSeries[type]!.series[seriesId].data;
-    const dataIndex = currentItem?.dataIndex == null ? data.length - 1 : currentItem.dataIndex;
-
-    return {
+    const data = processedSeries[type as OutSeriesType]!.series[seriesId].data;
+    const startIndex =
+      currentItem?.dataIndex == null
+        ? data.length - 1
+        : Math.min(currentItem.dataIndex, data.length - 1);
+    const visibleDataIndex = findVisibleDataIndex({
+      processedSeries,
       type,
       seriesId,
-      dataIndex,
+      startIndex,
+      dataLength: data.length,
+      direction: -1,
+      allowCycles: true,
+    });
+
+    if (visibleDataIndex === null) {
+      return null;
+    }
+
+    return {
+      type: type as OutSeriesType,
+      seriesId,
+      dataIndex: visibleDataIndex,
     };
   };
 }

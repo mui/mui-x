@@ -49,12 +49,12 @@ const valueFormatter = (population) =>
 
 export default function PopulationPyramidBarChart() {
   return (
-    <Stack width="100%" height={550} sx={{ mx: [0, 4] }}>
+    <Stack sx={{ width: '100%', height: 550, mx: [0, 4] }}>
       <Typography
         variant="h6"
         component="span"
-        textAlign="center"
         data-hide-overview
+        sx={{ textAlign: 'center' }}
       >
         South Korea Population Pyramid - 2022
       </Typography>
@@ -93,7 +93,7 @@ export default function PopulationPyramidBarChart() {
             disableLine: true,
             disableTicks: true,
             domainLimit(min, max) {
-              const extremum = Math.max(-min, max);
+              const extremum = Math.max(-min.valueOf(), max.valueOf());
               const roundedExtremum = Math.ceil(extremum / 100_000) * 100_000;
               return { min: -roundedExtremum, max: roundedExtremum };
             },

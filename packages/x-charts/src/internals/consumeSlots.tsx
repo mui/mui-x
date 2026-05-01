@@ -48,7 +48,7 @@ import * as React from 'react';
 export const consumeSlots = <
   Props extends {},
   Ref extends {},
-  RenderFunction = (props: Props, ref: React.Ref<Ref>) => React.ElementType,
+  RenderFunction = React.ForwardRefExoticComponent<Props & React.RefAttributes<Ref>>,
 >(
   name: string,
   slotPropName: string,
@@ -65,7 +65,7 @@ export const consumeSlots = <
   function ConsumeSlotsInternal(props: React.PropsWithoutRef<Props>, ref: React.ForwardedRef<Ref>) {
     const themedProps = useThemeProps({
       props,
-      // eslint-disable-next-line material-ui/mui-name-matches-component-name
+      // eslint-disable-next-line mui/material-ui-name-matches-component-name
       name,
     });
 

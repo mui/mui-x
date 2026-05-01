@@ -1,1 +1,1 @@
-import '@types/react-docgen';
+import '@mui/internal-core-docs/webpack';

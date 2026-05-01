@@ -15,9 +15,8 @@ import { SingleInputDateRangeField } from '../SingleInputDateRangeField';
 import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
 import { validateDateRange } from '../validation';
 
-type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type DesktopDateRangePickerComponent = ((
+  props: DesktopDateRangePickerProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -30,18 +29,17 @@ type DesktopDateRangePickerComponent = (<TEnableAccessibleFieldDOMStructure exte
  *
  * - [DesktopDateRangePicker API](https://mui.com/x/api/date-pickers/desktop-date-range-picker/)
  */
-const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker(
+  inProps: DesktopDateRangePickerProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all date time pickers
-  const defaultizedProps = useDateRangePickerDefaultizedProps<
-    DesktopDateRangePickerProps<TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiDesktopDateRangePicker');
+  const defaultizedProps = useDateRangePickerDefaultizedProps<DesktopDateRangePickerProps>(
+    inProps,
+    'MuiDesktopDateRangePicker',
+  );
 
   const viewRenderers: PickerViewRendererLookup<PickerRangeValue, any, any> = {
     day: renderDateRangeViewCalendar,
@@ -74,11 +72,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<
-    'day',
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useDesktopRangePicker<'day', typeof props>({
     ref,
     props,
     valueManager: rangeValueManager,
@@ -158,7 +152,7 @@ DesktopDateRangePicker.propTypes = {
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true`, today's date is rendering without highlighting with circle.
+   * If `true`, today's day is not highlighted.
    * @default false
    */
   disableHighlightToday: PropTypes.bool,
@@ -177,10 +171,6 @@ DesktopDateRangePicker.propTypes = {
    * If `true`, the week number will be display in the calendar.
    */
   displayWeekNumber: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * The day view will show as many weeks as needed after the end of the current month to match this value.
    * Put it to 6 to have a fixed number of weeks in Gregorian calendars
@@ -201,6 +191,13 @@ DesktopDateRangePicker.propTypes = {
    * Pass a ref to the `input` element.
    */
   inputRef: refType,
+  /**
+   * If `true`, keep the picker open when the value is edited from the field.
+   * Useful to prevent the popper/dialog from closing while typing in the input.
+   * This only affects changes with `source = "field"` and does not alter view interactions.
+   * @default false
+   */
+  keepOpenDuringFieldFocus: PropTypes.bool,
   /**
    * The label content.
    */

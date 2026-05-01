@@ -103,7 +103,10 @@ const columns: GridColDef[] = [
     hideable: false,
     renderCell: (params) => {
       return (
-        <Stack direction="row" gap={1.5} alignItems="center" sx={{ height: '100%' }}>
+        <Stack
+          direction="row"
+          sx={{ gap: 1.5, alignItems: 'center', height: '100%' }}
+        >
           <FileIcon type={params.row.type} />
           {params.value}
         </Stack>
@@ -117,7 +120,7 @@ const columns: GridColDef[] = [
     renderCell: (params) => {
       const avatarProps = stringAvatar(params.value);
       return (
-        <Stack direction="row" gap={1.5} alignItems="center">
+        <Stack direction="row" sx={{ gap: 1.5, alignItems: 'center' }}>
           <Avatar
             {...avatarProps}
             sx={{ width: 24, height: 24, fontSize: 12, ...avatarProps.sx }}
@@ -242,6 +245,7 @@ export default function ListViewAdvanced({ window }: Props) {
       apiRef.current?.updateRows([row]);
 
       // Simulate server response time
+      // eslint-disable-next-line no-restricted-properties -- not visible in UI
       const timeout = Math.floor(Math.random() * 3000) + 2000;
       setTimeout(() => {
         const uploadedRow: RowModel = { ...row, state: 'uploaded' };

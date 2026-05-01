@@ -26,11 +26,7 @@ const defaultExpandedItems = items.flatMap((el) => [
 export default function BasicVirtualizedRichTreeViewPro() {
   return (
     <Box sx={{ height: 352, minWidth: 250 }}>
-      <RichTreeViewPro
-        items={items}
-        defaultExpandedItems={defaultExpandedItems}
-        virtualization
-      />
+      <RichTreeViewPro items={items} defaultExpandedItems={defaultExpandedItems} />
     </Box>
   );
 }

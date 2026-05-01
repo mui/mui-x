@@ -4,4 +4,11 @@ export type MuiCommercialPackageName =
   | 'x-date-pickers-pro'
   | 'x-tree-view-pro'
   | 'x-charts-pro'
-  | 'x-charts-premium';
+  | 'x-charts-premium'
+  | 'x-scheduler-premium';
+
+export interface CommercialPackageInfo {
+  releaseDate: string;
+  version: string;
+  name: MuiCommercialPackageName;
+}

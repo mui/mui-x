@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  getSVGPoint,
+  getChartPoint,
   selectorChartDrawingArea,
   type ZoomData,
   selectorChartZoomOptionsLookup,
@@ -25,7 +25,7 @@ export const useZoomOnWheel = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const { svgRef } = instance;
+  const { chartsLayerContainerRef } = instance;
   const drawingArea = store.use(selectorChartDrawingArea);
   const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const startedOutsideRef = React.useRef(false);
@@ -46,7 +46,7 @@ export const useZoomOnWheel = (
 
   // Add event for chart zoom in/out
   React.useEffect(() => {
-    const element = svgRef.current;
+    const element = chartsLayerContainerRef.current;
     if (element === null || !isZoomOnWheelEnabled) {
       return () => {};
     }
@@ -54,13 +54,13 @@ export const useZoomOnWheel = (
     const rafThrottledSetZoomData = rafThrottle(setZoomDataCallback);
 
     const zoomOnWheelHandler = instance.addInteractionListener('zoomTurnWheel', (event) => {
-      const point = getSVGPoint(element, {
+      const point = getChartPoint(element, {
         clientX: event.detail.centroid.x,
         clientY: event.detail.centroid.y,
       });
 
       // This prevents a zoom event from being triggered when the mouse is outside the chart area.
-      // The timeout is used to prevent an weird behavior where if the mouse is outside but enters due to
+      // The timeout is used to prevent a weird behavior where if the mouse is outside but enters due to
       // scrolling, then the zoom event is triggered.
       if (startedOutsideRef.current || !instance.isPointInside(point.x, point.y)) {
         startedOutsideRef.current = true;
@@ -109,7 +109,7 @@ export const useZoomOnWheel = (
       rafThrottledSetZoomData.clear();
     };
   }, [
-    svgRef,
+    chartsLayerContainerRef,
     drawingArea,
     isZoomOnWheelEnabled,
     optionsLookup,

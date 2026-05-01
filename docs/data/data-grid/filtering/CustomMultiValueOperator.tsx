@@ -17,7 +17,7 @@ function InputNumberInterval(props: GridFilterInputValueProps) {
 
   const filterTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const [filterValueState, setFilterValueState] = React.useState<[string, string]>(
-    item.value ?? '',
+    item.value ?? ['', ''],
   );
   const [applying, setIsApplying] = React.useState(false);
 
@@ -81,7 +81,9 @@ function InputNumberInterval(props: GridFilterInputValueProps) {
         value={Number(filterValueState[1])}
         onChange={handleUpperFilterChange}
         type="number"
-        InputProps={applying ? { endAdornment: <SyncIcon /> } : {}}
+        slotProps={{
+          input: applying ? { endAdornment: <SyncIcon /> } : {},
+        }}
       />
     </Box>
   );

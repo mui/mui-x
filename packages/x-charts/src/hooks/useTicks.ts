@@ -6,7 +6,8 @@ import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 import { tickFrequencies } from '../utils/timeTicks';
 import { isDateData } from '../internals/dateHelpers';
-import { useChartContext } from '../context/ChartProvider/useChartContext';
+import { useChartsContext } from '../context/ChartsProvider/useChartsContext';
+import { EPSILON } from '../utils/epsilon';
 
 export interface TickParams {
   /**
@@ -384,8 +385,37 @@ function getDefaultTicks(scale: D3ContinuousScale, tickNumber: number) {
   return scale.ticks(tickNumber);
 }
 
+const alwaysTrue = () => true;
+
+// Avoid ticks on more than 360° for rotation axis.
+const isInsideRotation = (scale: D3Scale) => (rotation: number) =>
+  Math.abs(scale.range()[0] - rotation) < Math.PI * 2 - EPSILON;
+
+function getIsInside(
+  scale: D3Scale,
+  direction: 'x' | 'y' | 'rotation' | 'radius',
+  instance: ReturnType<typeof useChartsContext>['instance'],
+) {
+  switch (direction) {
+    case 'rotation':
+      return isInsideRotation(scale);
+
+    case 'radius':
+      return (radiusOffset: number) => radiusOffset >= 1;
+
+    case 'x':
+      return instance.isXInside;
+
+    case 'y':
+      return instance.isYInside;
+
+    default:
+      return alwaysTrue;
+  }
+}
+
 export function useTicks(
-  options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' },
+  options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' | 'rotation' | 'radius' },
 ): TickItem[] {
   const {
     scale,
@@ -398,8 +428,7 @@ export function useTicks(
     direction,
     ordinalTimeTicks,
   } = options;
-  const { instance } = useChartContext();
-  const isInside = direction === 'x' ? instance.isXInside : instance.isYInside;
+  const { instance } = useChartsContext();
 
   return React.useMemo(
     () =>
@@ -411,7 +440,7 @@ export function useTicks(
         tickLabelPlacement,
         tickSpacing,
         valueFormatter,
-        isInside,
+        isInside: getIsInside(scale, direction, instance),
         ordinalTimeTicks,
       }),
     [
@@ -422,7 +451,8 @@ export function useTicks(
       tickLabelPlacement,
       tickSpacing,
       valueFormatter,
-      isInside,
+      direction,
+      instance,
       ordinalTimeTicks,
     ],
   );

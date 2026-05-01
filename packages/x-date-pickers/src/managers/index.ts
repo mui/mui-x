@@ -1,9 +1,5 @@
 export { useDateManager } from './useDateManager';
-export type {
-  UseDateManagerReturnValue,
-  UseDateManagerParameters,
-  DateManagerFieldInternalProps,
-} from './useDateManager';
+export type { UseDateManagerReturnValue, DateManagerFieldInternalProps } from './useDateManager';
 
 export { useTimeManager } from './useTimeManager';
 export type {
@@ -15,6 +11,5 @@ export type {
 export { useDateTimeManager } from './useDateTimeManager';
 export type {
   UseDateTimeManagerReturnValue,
-  UseDateTimeManagerParameters,
   DateTimeManagerFieldInternalProps,
 } from './useDateTimeManager';

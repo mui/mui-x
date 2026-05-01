@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/31e9b5c389e73187957d615b2fdea9e75a0de7f0/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/12844f2b6b11babab17bd3d1f799359ea25d1db7/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -47,9 +47,14 @@ default-job: &default-job
   parameters:
     <<: *default-parameters
   environment:
-    # expose it globally otherwise we have to thread it from each job to the install command
+    &default-environment # expose it globally otherwise we have to thread it from each job to the install command
     BROWSERSTACK_FORCE: << pipeline.parameters.browserstack-force >>
     COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
+    # Used by the code-infra orb to diff against the correct base branch for dedupe and prettier checks
+    # #target-branch-reference
+    # Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch
+    # For example, when creating v9 from v8, `master -> v8.x`
+    BASE_BRANCH: master
   working_directory: /tmp/mui
   executor: code-infra/mui-node
 # CircleCI has disabled the cache across forks for security reasons.
@@ -76,17 +81,9 @@ commands:
           package-overrides: react@<< parameters.react-version >> @mui/material@<< pipeline.parameters.material-ui-version >>
 
 jobs:
-  checkout:
-    <<: *default-job
-    steps:
-      - checkout
-      - install-deps
-      - run:
-          name: Should not have any git not staged
-          command: git add -A && git diff --exit-code --staged
-
   test_unit:
     <<: *default-job
+    resource_class: large
     steps:
       - checkout
       - install-deps:
@@ -95,7 +92,12 @@ jobs:
           name: Test JSDOM
           command: |
             # Fully saturate all the available CPUs by splitting the tests in 1 shard per CPU
-            pnpm exec concurrently "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=1/2" "pnpm test:unit:jsdom --reporter=blob  --reporter=dot --shard=2/2" || TEST_EXIT_CODE=$?
+            pnpm exec concurrently \
+              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=1/4" \
+              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=2/4" \
+              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=3/4" \
+              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=4/4" \
+              || TEST_EXIT_CODE=$?
             pnpm exec vitest run --merge-reports
             # Reports merged, we can now exit with the stored code
             exit ${TEST_EXIT_CODE:-0}
@@ -105,7 +107,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.57.0-noble
+      playwright-img-version: v1.58.2-noble
     resource_class: large
     steps:
       - checkout
@@ -122,28 +124,32 @@ jobs:
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 name: Test Browser
                 command: |
-                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser
+                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
       - when:
           condition:
             equal: ['stable', << parameters.react-version >>]
           steps:
             - run:
-                name: Test Browser + Coverage
+                name: Test Browser
                 environment:
                   TZ: UTC
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
-                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
-            - code-infra/upload-coverage:
-                key: << parameters.react-version >>-browser
+                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
       - store_test_results:
           path: test-results
   test_lint:
     <<: *default-job
+    environment:
+      <<: *default-environment
+      NODE_OPTIONS: --max-old-space-size=4096
     steps:
       - checkout
       - install-deps
-      - code-infra/run-linters
+      - code-infra/eslint
+      - code-infra/stylelint
+      - code-infra/markdownlint
+      - code-infra/valelint
   test_static:
     <<: *default-job
     steps:
@@ -167,29 +173,21 @@ jobs:
           name: '`pnpm docs:api` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
+          name: '`pnpm extract-error-codes` changes committed?'
+          command: |
+            pnpm extract-error-codes
+            git add -A && git diff --exit-code --staged
+      - run:
           name: Sync locale files
           command: pnpm l10n
       - run:
           name: '`pnpm l10n` changes committed?'
           command: git add -A && git diff --exit-code --staged
       - run:
-          name: '`pnpm @mui/x-charts-vendor build` was run?'
-          command: |
-            # #target-branch-reference
-            # Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch
-            # For example, when creating v9 from v8, `master -> v8.x`
-            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
-            then
-              echo "No changes to dependencies detected. Skipping..."
-            else
-              pnpm --filter @mui/x-charts-vendor build
-              git add -A && git diff --exit-code --staged
-            fi
-      - run:
           name: 'No dynamic date library import in the Pickers built types?'
           command: |
             pnpm lerna run --include-dependencies --scope "@mui/x-date-pickers*" build
-            if grep -nr 'import("luxon")\|import("dayjs")\|import("moment")' --exclude Adapter*.d.ts packages/{x-date-pickers,x-date-pickers-pro}/build
+            if grep -nr 'import("luxon")\|import("dayjs")\|import("moment")' --exclude Adapter*.d.ts --exclude Adapter*.d.mts --exclude Adapter*.d.cts packages/{x-date-pickers,x-date-pickers-pro}/build
             then
                 exit 1
             else
@@ -202,6 +200,7 @@ jobs:
             git add -A && git diff --exit-code --staged
   test_types:
     <<: *default-job
+    resource_class: medium+
     steps:
       - checkout
       - install-deps
@@ -215,19 +214,19 @@ jobs:
           name: Tests TypeScript definitions
           command: pnpm typescript:ci
           environment:
-            NODE_OPTIONS: --max-old-space-size=3584
+            NODE_OPTIONS: --max-old-space-size=5120
   test_e2e:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.57.0-noble
+      playwright-img-version: v1.58.2-noble
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
           name: Build packages
-          command: pnpm release:build
+          command: pnpm release:build --concurrency 5
       - run:
           name: Run e2e tests
           command: pnpm test:e2e
@@ -235,7 +234,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.57.0-noble
+      playwright-img-version: v1.58.2-noble
     steps:
       - checkout
       - install-deps
@@ -251,24 +250,14 @@ jobs:
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
-          name: prepare danger on PRs
-          command: pnpm danger ci
-          environment:
-            DANGER_COMMAND: prepareBundleSizeReport
-      - run:
           name: Build packages
           command: pnpm release:build
       - code-infra/upload-size-snapshot
-      - run:
-          name: Run danger on PRs
-          command: pnpm danger ci --fail-on-errors
-          environment:
-            DANGER_COMMAND: reportBundleSize
   test_regressions:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.57.0-noble
+      playwright-img-version: v1.58.2-noble
     steps:
       - checkout
       - install-deps:
@@ -285,14 +274,49 @@ jobs:
       - run:
           name: Upload screenshots to Argos CI
           command: pnpm test:argos
+  test_charts_benchmark:
+    <<: *default-job
+    executor:
+      name: code-infra/mui-node-browser
+      playwright-img-version: v1.58.2-noble
+    resource_class: medium
+    steps:
+      - checkout
+      - run:
+          name: Skip when no charts changes
+          command: |
+            if [ "$CIRCLE_BRANCH" = "master" ] || [ "$CIRCLE_BRANCH" = "next" ]; then
+              echo "On $CIRCLE_BRANCH; running benchmarks."
+              exit 0
+            fi
+            BASE="${BASE_BRANCH:-master}"
+            git fetch --no-tags --depth=50 origin "$BASE"
+            CHANGED=$(git diff --name-only "origin/$BASE...HEAD" -- \
+              'packages/x-charts*' \
+              'test/performance-charts' \
+              '.circleci/config.yml')
+            if [ -n "$CHANGED" ]; then
+              echo "Relevant changes detected; running benchmarks:"
+              echo "$CHANGED"
+              exit 0
+            fi
+            echo "No changes to packages/x-charts*, test/performance-charts, or CircleCI config; halting job."
+            circleci-agent step halt
+      - install-deps
+      - run:
+          name: Build charts packages
+          command: pnpm --filter "@mui/x-charts-premium..." build
+      - run:
+          name: Run charts benchmarks
+          environment:
+            BENCHMARK_UPLOAD: 'true'
+          command: pnpm test:charts-benchmark
 
 workflows:
   pipeline:
     when:
       equal: [pipeline, << pipeline.parameters.workflow >>]
     jobs:
-      - checkout:
-          <<: *default-context
       - test_unit:
           <<: *default-context
       - test_browser:
@@ -309,12 +333,12 @@ workflows:
           <<: *default-context
       - test_package:
           <<: *default-context
+      - test_charts_benchmark:
+          <<: *default-context
   e2e-website:
     when:
       equal: [e2e-website, << pipeline.parameters.workflow >>]
     jobs:
-      - checkout:
-          <<: *default-context
       - test_e2e_website
   additional-tests:
     when:

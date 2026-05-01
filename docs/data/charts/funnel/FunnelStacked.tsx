@@ -5,7 +5,7 @@ export default function FunnelStacked() {
   return (
     <Box sx={{ width: '100%', maxWidth: 500 }}>
       <FunnelChart
-        sx={{ '.MuiFunnelSection-series-big': { filter: 'brightness(0.7)' } }}
+        sx={{ '& [data-series="big"]': { filter: 'brightness(0.7)' } }}
         series={[
           {
             id: 'big',

@@ -1,6 +1,6 @@
 import useSlotProps from '@mui/utils/useSlotProps';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { useLicenseVerifier } from '@mui/x-license';
+import { useLicenseVerifier } from '@mui/x-license/internals';
 import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
@@ -8,6 +8,7 @@ import {
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerRangeValue,
+  extractRootForwardedProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerParams,
@@ -20,25 +21,26 @@ import { createRangePickerStepNavigation } from '../../utils/createRangePickerSt
 
 export const useDesktopRangePicker = <
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TExternalProps extends UseDesktopRangePickerProps<
-    TView,
-    TEnableAccessibleFieldDOMStructure,
-    any,
-    TExternalProps
-  >,
+  TExternalProps extends UseDesktopRangePickerProps<TView, any, TExternalProps>,
 >({
   props,
   steps,
   ...pickerParams
-}: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
-  useLicenseVerifier('x-date-pickers-pro', '__RELEASE_INFO__');
+}: UseDesktopRangePickerParams<TView, TExternalProps>) => {
+  useLicenseVerifier({
+    releaseDate: '__RELEASE_INFO__',
+    version: process.env.MUI_VERSION!,
+    name: 'x-date-pickers-pro',
+  });
 
   const { slots, slotProps, inputRef, localeText } = props;
 
   const fieldType = getRangeFieldType(slots.field);
   const isSingleInput = fieldType === 'single-input';
-  const viewContainerRole = isSingleInput ? 'dialog' : 'tooltip';
+  // When keepOpenDuringFieldFocus is enabled, we want the popper to behave like a tooltip
+  // so focus is not trapped inside the views and the user can click back into the field.
+  // Dialog only when focus trapping is desired (single input without the keep-open behavior).
+  const viewContainerRole = props.keepOpenDuringFieldFocus || !isSingleInput ? 'tooltip' : 'dialog';
   const rangePositionResponse = useRangePosition(props);
 
   const getStepNavigation = createRangePickerStepNavigation({
@@ -68,6 +70,7 @@ export const useDesktopRangePicker = <
   const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: slotProps?.field,
+    externalForwardedProps: extractRootForwardedProps(props),
     ownerState,
     additionalProps: {
       'data-active-range-position': providerProps.contextValue.open

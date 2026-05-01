@@ -4,6 +4,8 @@
 .vscode
 .cursor
 .claude/settings.local.json
+.claude/worktrees
+.junie
 
 __diff_output__
 .DS_STORE
@@ -17,8 +19,9 @@ __diff_output__
 /docs/.env.local
 /docs/export
 /docs/public/x/
+/docs/public/chat/
 /test/regressions/screenshots
-/test/performance-charts/traces
+/test/performance-charts/benchmarks
 build
 dist
 node_modules
@@ -27,6 +30,9 @@ performance-snapshot.json
 # vale downloaded config
 .github/styles/
 test-results
+
+# Claude Code / Codex - ignore local/personal files, commit shared ones
+CLAUDE.local.md
 AGENTS.local.md
 
 # typescript
