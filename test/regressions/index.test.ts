@@ -100,16 +100,6 @@ async function main() {
             return;
           }
 
-          // Overview composites are authored for the docs landing pages and rely on
-          // desktop-breakpoint media queries; render them at a wider viewport so
-          // responsive layouts (Stack/Grid columns, hidden helper panes, ...) match
-          // what users see on the live docs.
-          await page.setViewportSize(
-            route.url.startsWith('/test-regressions-overviews-')
-              ? { width: 1440, height: 900 }
-              : { width: 1000, height: 700 },
-          );
-
           await navigateToTest(route.url);
 
           // Move cursor offscreen to not trigger unwanted hover effects.
