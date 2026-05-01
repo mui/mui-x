@@ -115,6 +115,41 @@ describe('<AdapterDayjs />', () => {
       expect(summer.toDate().toISOString()).to.equal('2026-07-15T12:00:00.000Z');
     });
 
+    it('should mutate `$offset` on `.tz()`-touched values that lack `$x.$timezone` (regression #21669)', () => {
+      // The picker's `useNow()` calls `adapter.date(undefined, 'default')`,
+      // which goes through `createTZDate` -> `dayjs(undefined).tz(undefined,
+      // false)`. In a non-UTC system zone the result has `$offset` set to the
+      // system offset at construction time but `$x.$timezone` is `undefined`
+      // (because the `t` arg passed to `.tz()` was `undefined`). After
+      // `setHours(now, 1)` to a PST hour on March 8 in LA, `$d.setHours`
+      // moves `$d` to the new local time but `$offset` would stay at the
+      // PDT construction value, so the `$offset + $d.getTimezoneOffset()`
+      // term in `valueOf()` no longer cancels - the instant emitted to
+      // `onChange` would drift an hour from the picked time. CI runs in
+      // TZ=UTC where `dayjs(...).tz(undefined, false)` returns a UTC value
+      // (no `$offset`), so we manually shape the value to mirror the
+      // non-UTC `now` shape and stub `dayjs.tz.guess()` so the `'system'`
+      // path resolves to LA.
+      stub(dayjs.tz, 'guess').returns('America/Los_Angeles');
+
+      const now = dayjs('2026-03-08T12:58:00') as Dayjs;
+      // @ts-ignore - mirror the construction-time PDT offset that LA env
+      // would have given.
+      now.$offset = -420;
+      // @ts-ignore - dayjs.utc plugin reads `$u` to decide which Date getter
+      // family to use; `false` matches the non-UTC `.tz()` result.
+      now.$u = false;
+
+      const adapter = new AdapterDayjs();
+      const oneAM = adapter.setHours(now, 1) as Dayjs;
+
+      expect(adapter.getHours(oneAM)).to.equal(1);
+      // @ts-ignore - dayjs internals; the mutation must update `$offset` to
+      // the recomputed PST offset for the new local hour. Without it the
+      // value would still report `-420` and `valueOf()` would drift an hour.
+      expect(oneAM.$offset).to.equal(-480);
+    });
+
     it('should not shift `$d` or drop `$x.$localOffset` on tz-aware values across `setHours` (regression #21669)', () => {
       // The picker validates each hour option by calling
       // `getHours(setHours(value, X)) === X`, where `getHours()` reads

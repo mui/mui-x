@@ -255,34 +255,39 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   /**
    * After operations like `set('hour', X)` or `add(1, 'month')`, the value's
    * `$offset` may be stale if the new local time falls on the other side of a
-   * DST transition. dayjs does not automatically re-evaluate the offset for us
-   * (moment does), so we have to do it ourselves.
+   * DST transition. dayjs does not automatically re-evaluate the offset for
+   * us (moment does), so we have to do it ourselves by mutating `$offset` in
+   * place against the value computed by `value.tz(timezone, true)`.
    *
-   * Only relevant for timezone-aware values (created via `dayjs.tz(...)`):
-   * - Plain `dayjs()` values rely on JS Date semantics, which already handle
-   *   DST correctly via the system timezone. Touching them would attach
-   *   unwanted timezone metadata to a "plain" value (see #13290) or - worse -
-   *   corrupt `valueOf()` because the formula combines `$offset` and
-   *   `$d.getTimezoneOffset()` and only one of them tracks the new local hour
-   *   (see #21669).
-   * - UTC values have no DST.
+   * Mutation - rather than returning the `value.tz(timezone, true)` result
+   * directly - matters because that round-trip drops `$x.$localOffset` and
+   * shifts `$d` via its internal "keep local time" adjustment, both of which
+   * break `valueOf()` and `getHours()` once the system timezone is non-UTC
+   * (see https://github.com/mui/mui-x/issues/21669).
    *
-   * For timezone-aware values we mutate `$offset` directly (rather than
-   * returning the `value.tz(timezone, true)` result) because that round-trip
-   * drops `$x.$localOffset` and shifts `$d` via its internal "keep local time"
-   * adjustment, both of which break `valueOf()` and `getHours()` once the
-   * system timezone is non-UTC.
+   * Pure plain `dayjs()` values (no `$offset`, e.g. `dayjs(value)` without
+   * any timezone-related call) are skipped: they rely on JS Date semantics
+   * which already handle DST via the system timezone, and mutating `$offset`
+   * on them would attach timezone metadata that breaks comparisons against
+   * other plain values (see https://github.com/mui/mui-x/issues/13290).
+   * Values that came through `dayjs.tz(...)` or `.tz(...)` already carry an
+   * `$offset` and need the adjustment, even when `$x.$timezone` is unset
+   * (e.g. the picker's `now` from `createTZDate(undefined, 'default')`,
+   * which calls `.tz(undefined, false)`).
    */
   protected adjustOffset = (value: Dayjs) => {
     if (!this.hasTimezonePlugin()) {
       return value;
     }
     // @ts-ignore
-    const timezone = value.$x?.$timezone;
-    if (!timezone) {
+    if (value.$offset === undefined) {
       return value;
     }
-    const fixedValue = value.tz(timezone, true);
+    const timezone = this.getTimezone(value);
+    if (timezone === 'UTC') {
+      return value;
+    }
+    const fixedValue = value.tz(this.cleanTimezone(timezone), true);
     // @ts-ignore
     if (fixedValue.$offset === value.$offset) {
       return value;
@@ -498,39 +503,36 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
     return value >= start && value <= end;
   };
 
-  // The `dayjs` timezone plugin overrides `startOf` (and `endOf`, which dayjs
-  // implements via `startOf`) to handle DST correctly for timezone-aware
-  // values, so we don't need to call `adjustOffset` on these results.
   public startOfYear = (value: Dayjs) => {
-    return value.startOf('year');
+    return this.adjustOffset(value.startOf('year'));
   };
 
   public startOfMonth = (value: Dayjs) => {
-    return value.startOf('month');
+    return this.adjustOffset(value.startOf('month'));
   };
 
   public startOfWeek = (value: Dayjs) => {
-    return this.setLocaleToValue(value).startOf('week');
+    return this.adjustOffset(this.setLocaleToValue(value).startOf('week'));
   };
 
   public startOfDay = (value: Dayjs) => {
-    return value.startOf('day');
+    return this.adjustOffset(value.startOf('day'));
   };
 
   public endOfYear = (value: Dayjs) => {
-    return value.endOf('year');
+    return this.adjustOffset(value.endOf('year'));
   };
 
   public endOfMonth = (value: Dayjs) => {
-    return value.endOf('month');
+    return this.adjustOffset(value.endOf('month'));
   };
 
   public endOfWeek = (value: Dayjs) => {
-    return this.setLocaleToValue(value).endOf('week');
+    return this.adjustOffset(this.setLocaleToValue(value).endOf('week'));
   };
 
   public endOfDay = (value: Dayjs) => {
-    return value.endOf('day');
+    return this.adjustOffset(value.endOf('day'));
   };
 
   public addYears = (value: Dayjs, amount: number) => {
