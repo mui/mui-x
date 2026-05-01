@@ -8,8 +8,7 @@ import { createRandomNumberGenerator } from '../../utils/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import type { GridColType } from '../../models';
-import type { GridSlotProps } from '../../models';
+import type { GridColType, GridSlotProps } from '../../models';
 
 const CIRCULAR_CONTENT_SIZE = '1.3em';
 

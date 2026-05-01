@@ -511,7 +511,7 @@ export const useGridDataSourceNestedLazyLoader = (
         const childrenCount = getChildrenCount(rowModel);
         if (childrenCount === -1) {
           throw new Error(
-            'MUI X: Nested lazy loading does not support unknown children count for now.\nIf this is a use-case that you are interested in, please open an issue: https://github.com/mui/mui-x/issues/new?template=2.feature.yml',
+            'MUI X Data Grid: Nested lazy loading does not support unknown children count for now.\nIf this is a use-case that you are interested in, please open an issue: https://github.com/mui/mui-x/issues/new?template=2.feature.yml',
           );
         }
         const rowId = gridRowIdSelector(privateApiRef, rowModel);
@@ -824,7 +824,7 @@ export const useGridDataSourceNestedLazyLoader = (
       // Show error if unknown row-count
       if (newRowCount <= 0) {
         throw new Error(
-          'MUI X: Row count is unknown. Please provide a valid row count for lazy loading to work.',
+          'MUI X Data Grid: Row count is unknown. Please provide a valid row count for lazy loading to work.',
         );
       }
 
