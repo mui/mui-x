@@ -30,15 +30,29 @@ vi.mock('@mui/internal-test-utils', async (importActual) => {
 (globalThis as any).MUI_TEST_ENV = true;
 
 // Diagnostics for the intermittent silent worker exits we have been seeing in CI:
-// when a Promise rejects or an exception escapes a teardown step, Node bails the
-// worker without printing a useful trace. Surface what actually killed the
+// when a Promise rejects or an exception escapes a teardown step, the worker
+// bails without printing a useful trace. Surface what actually killed the
 // process so the next failing run carries a stack we can act on.
-process.on('unhandledRejection', (reason) => {
-  console.error('[setupVitest] unhandledRejection:', reason);
-});
-process.on('uncaughtException', (err) => {
-  console.error('[setupVitest] uncaughtException:', err);
-});
+//
+// jsdom mode runs in Node (process events), browser mode runs in the page
+// (window events) — only one side fires depending on environment, so register
+// both with appropriate guards.
+if (typeof process !== 'undefined' && typeof process.on === 'function') {
+  process.on('unhandledRejection', (reason) => {
+    console.error('[setupVitest] (node) unhandledRejection:', reason);
+  });
+  process.on('uncaughtException', (err) => {
+    console.error('[setupVitest] (node) uncaughtException:', err);
+  });
+}
+if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+  window.addEventListener('unhandledrejection', (event) => {
+    console.error('[setupVitest] (browser) unhandledrejection:', event.reason);
+  });
+  window.addEventListener('error', (event) => {
+    console.error('[setupVitest] (browser) error:', event.error || event.message);
+  });
+}
 
 setupVitest({ emotion: true });
 
