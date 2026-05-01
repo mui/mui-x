@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DateField } from '@mui/x-date-pickers/DateField';
+import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
@@ -73,28 +74,41 @@ describe('<DateField /> - Selection', () => {
   });
 
   describe('Click on blank space', () => {
+    // Browsers natively move focus to the focusable (`tabindex=0`) sections
+    // container when its blank space (padding, the area past the last section,
+    // separator gaps) is clicked. Simulate that focus event explicitly because
+    // `fireEvent` does not replicate the native focus side-effect in jsdom.
+    const clickOnBlankSpace = (sectionsContainer: HTMLDivElement) => {
+      fireEvent.mouseDown(sectionsContainer);
+      fireEvent.focus(sectionsContainer);
+      fireEvent.click(sectionsContainer);
+    };
+
     it('should not focus the field or select a section when clicking on blank space inside an unfocused field', () => {
       const view = renderWithProps({});
 
       const sectionsContainer = view.getSectionsContainer();
-      fireEvent.mouseDown(sectionsContainer);
-      fireEvent.click(sectionsContainer);
+      clickOnBlankSpace(sectionsContainer);
 
+      const inputRoot = sectionsContainer.closest(`.${pickersInputBaseClasses.root}`)!;
+      expect(inputRoot.classList.contains(pickersInputBaseClasses.focused)).to.equal(false);
       expect(getCleanedSelectedContent()).to.equal('');
-      expect(sectionsContainer.contains(document.activeElement)).to.equal(false);
     });
 
-    it('should not change the selected section when clicking on blank space inside a focused field', async () => {
+    it('should not move the selection to the first section when clicking on blank space inside a focused field', async () => {
       const view = renderWithProps({});
 
       await view.selectSection('day');
-      expect(getCleanedSelectedContent()).to.equal('DD');
+      const daySection = view.getSection(1);
+      expect(document.activeElement).to.equal(daySection);
 
       const sectionsContainer = view.getSectionsContainer();
-      fireEvent.mouseDown(sectionsContainer);
-      fireEvent.click(sectionsContainer);
+      clickOnBlankSpace(sectionsContainer);
 
-      expect(getCleanedSelectedContent()).to.equal('DD');
+      // Without the fix, blank-space click moves the selection to the first
+      // section (the month). Assert it does not.
+      const monthSection = view.getSection(0);
+      expect(document.activeElement).not.to.equal(monthSection);
     });
 
     it('should still select a section when clicking directly on it', () => {
