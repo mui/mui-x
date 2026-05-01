@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { screen, fireEvent, createEvent, within, waitFor } from '@mui/internal-test-utils';
+import { screen, fireEvent, within, waitFor } from '@mui/internal-test-utils';
 import {
   adapterToUse,
-  buildPickerDragInteractions,
+  executeDateDrag,
+  executeDateDragWithoutDrop,
   createPickerRenderer,
 } from 'test/utils/pickers';
-import { MockedDataTransfer } from 'test/utils/dragAndDrop';
 import {
   DateRangeCalendar,
   dateRangeCalendarClasses as classes,
@@ -120,20 +120,6 @@ describe('<DateRangeCalendar />', () => {
     });
 
     describe('dragging behavior', () => {
-      let dataTransfer: DataTransfer | null;
-
-      const { executeDateDragWithoutDrop, executeDateDrag } = buildPickerDragInteractions(
-        () => dataTransfer,
-      );
-
-      beforeEach(() => {
-        dataTransfer = new MockedDataTransfer();
-      });
-
-      afterEach(() => {
-        dataTransfer = null;
-      });
-
       it('should not emit "onChange" when dragging is ended where it was started', () => {
         const onChange = spy();
         render(
@@ -258,10 +244,10 @@ describe('<DateRangeCalendar />', () => {
         ).to.have.lengthOf(10);
       });
 
-      it('should handle drag events targeting child elements inside the day button', () => {
-        // This test validates the fix for when drag events target child elements (e.g., text spans)
-        // inside the day button, rather than the button itself. The fix uses .closest() to find
-        // the ancestor with the data-timestamp attribute.
+      it('should handle pointer events targeting child elements inside the day button', () => {
+        // Real browsers can route pointer events to child nodes (text span, ripple)
+        // when the user touches inside the day button. The handler must walk up to
+        // the button to read its data attributes — exercise that path explicitly.
         const onChange = spy();
         const initialValue: [PickerValidDate, PickerValidDate] = [
           adapterToUse.date('2018-01-10'),
@@ -272,31 +258,14 @@ describe('<DateRangeCalendar />', () => {
         const startDayButton = screen.getByRole('gridcell', { name: '31', selected: true });
         const endDayButton = screen.getByRole('gridcell', { name: '29' });
 
-        // Create synthetic child elements inside the buttons to simulate the real browser scenario
-        // where drag events can target child elements (e.g., text spans, TouchRipple).
-        // This ensures the `.closest()` fallback path is exercised.
         const startDayChild = document.createElement('span');
         startDayButton.appendChild(startDayChild);
         const endDayChild = document.createElement('span');
         endDayButton.appendChild(endDayChild);
 
-        // Execute drag using child elements as targets
-        // This simulates a user clicking on the day number text or ripple effect
-        const createDragEventOnChild = (
-          type: 'dragStart' | 'dragEnter' | 'dragOver' | 'drop' | 'dragEnd' | 'dragLeave',
-          target: Element,
-        ) => {
-          const createdEvent = createEvent[type](target);
-          Object.defineProperty(createdEvent, 'dataTransfer', { value: dataTransfer });
-          return createdEvent;
-        };
-
-        fireEvent(startDayChild, createDragEventOnChild('dragStart', startDayChild));
-        fireEvent(startDayChild, createDragEventOnChild('dragLeave', startDayChild));
-        fireEvent(endDayChild, createDragEventOnChild('dragEnter', endDayChild));
-        fireEvent(endDayChild, createDragEventOnChild('dragOver', endDayChild));
-        fireEvent(endDayChild, createDragEventOnChild('drop', endDayChild));
-        fireEvent(endDayChild, createDragEventOnChild('dragEnd', endDayChild));
+        fireEvent.pointerDown(startDayChild, { pointerId: 1, button: 0 });
+        fireEvent.pointerOver(endDayChild, { pointerId: 1 });
+        fireEvent.pointerUp(document, { pointerId: 1 });
 
         expect(onChange.callCount).to.equal(1);
         expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
