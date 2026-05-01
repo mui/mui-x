@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { isJSDOM } from 'test/utils/skipIf';
 import { spy } from 'sinon';
 import {
   screen,
@@ -615,42 +616,48 @@ describe('<DateRangeCalendar />', () => {
   });
 
   describe('Performance', () => {
-    it('should only render the new start day when selecting a start day without a previously selected start day', () => {
-      const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
+    it.skipIf(!isJSDOM)(
+      'should only render the new start day when selecting a start day without a previously selected start day',
+      () => {
+        const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
-      render(
-        <DateRangeCalendar
-          referenceDate={adapterToUse.date('2018-01-01')}
-          slots={{
-            day: React.memo(RenderCount),
-          }}
-        />,
-      );
+        render(
+          <DateRangeCalendar
+            referenceDate={adapterToUse.date('2018-01-01')}
+            slots={{
+              day: React.memo(RenderCount),
+            }}
+          />,
+        );
 
-      const renderCountBeforeChange = RenderCount.callCount;
-      // sticking with `fireEvent` for simplified performance test
-      fireEvent.click(getPickerDay('2'));
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
-    });
+        const renderCountBeforeChange = RenderCount.callCount;
+        // sticking with `fireEvent` for simplified performance test
+        fireEvent.click(getPickerDay('2'));
+        expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
+      },
+    );
 
-    it('should only render the day inside range when selecting the end day', () => {
-      const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
+    it.skipIf(!isJSDOM)(
+      'should only render the day inside range when selecting the end day',
+      () => {
+        const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
-      render(
-        <DateRangeCalendar
-          referenceDate={adapterToUse.date('2018-01-01')}
-          slots={{
-            day: React.memo(RenderCount),
-          }}
-        />,
-      );
+        render(
+          <DateRangeCalendar
+            referenceDate={adapterToUse.date('2018-01-01')}
+            slots={{
+              day: React.memo(RenderCount),
+            }}
+          />,
+        );
 
-      fireEvent.click(getPickerDay('2'));
+        fireEvent.click(getPickerDay('2'));
 
-      const renderCountBeforeChange = RenderCount.callCount;
-      // sticking with `fireEvent` for simplified performance test
-      fireEvent.click(getPickerDay('4'));
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
-    });
+        const renderCountBeforeChange = RenderCount.callCount;
+        // sticking with `fireEvent` for simplified performance test
+        fireEvent.click(getPickerDay('4'));
+        expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
+      },
+    );
   });
 });

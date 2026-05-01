@@ -508,35 +508,39 @@ describe('<DataGridPremium /> - Row grouping', () => {
   });
 
   describe('prop: isGroupExpandedByDefault', () => {
-    it('should expand groups according to isGroupExpandedByDefault when defined', () => {
-      const isGroupExpandedByDefault = spy(
-        (node: GridGroupNode) => node.groupingKey === 'Cat A' && node.groupingField === 'category1',
-      );
+    it.skipIf(!isJSDOM)(
+      'should expand groups according to isGroupExpandedByDefault when defined',
+      () => {
+        const isGroupExpandedByDefault = spy(
+          (node: GridGroupNode) =>
+            node.groupingKey === 'Cat A' && node.groupingField === 'category1',
+        );
 
-      render(
-        <Test
-          initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-          isGroupExpandedByDefault={isGroupExpandedByDefault}
-        />,
-      );
-      expect(isGroupExpandedByDefault.callCount).to.equal(reactMajor >= 19 ? 6 : 12); // Should not be called on leaves
-      const { childrenExpanded, ...node } = apiRef.current?.state.rows.tree[
-        'auto-generated-row-category1/Cat A'
-      ] as GridGroupNode;
-      const callForNodeA = isGroupExpandedByDefault
-        .getCalls()
-        .find(
-          (call) =>
-            call.firstArg.groupingKey === 'Cat A' && call.firstArg.groupingField === 'category1',
-        )!;
-      expect(callForNodeA.firstArg).to.deep.includes(node);
-      expect(getColumnValues(0)).to.deep.equal([
-        'Cat A (3)',
-        'Cat 1 (1)',
-        'Cat 2 (2)',
-        'Cat B (2)',
-      ]);
-    });
+        render(
+          <Test
+            initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
+            isGroupExpandedByDefault={isGroupExpandedByDefault}
+          />,
+        );
+        expect(isGroupExpandedByDefault.callCount).to.equal(reactMajor >= 19 ? 6 : 12); // Should not be called on leaves
+        const { childrenExpanded, ...node } = apiRef.current?.state.rows.tree[
+          'auto-generated-row-category1/Cat A'
+        ] as GridGroupNode;
+        const callForNodeA = isGroupExpandedByDefault
+          .getCalls()
+          .find(
+            (call) =>
+              call.firstArg.groupingKey === 'Cat A' && call.firstArg.groupingField === 'category1',
+          )!;
+        expect(callForNodeA.firstArg).to.deep.includes(node);
+        expect(getColumnValues(0)).to.deep.equal([
+          'Cat A (3)',
+          'Cat 1 (1)',
+          'Cat 2 (2)',
+          'Cat B (2)',
+        ]);
+      },
+    );
 
     it('should have priority over defaultGroupingExpansionDepth when both defined', () => {
       const isGroupExpandedByDefault = (node: GridGroupNode) =>

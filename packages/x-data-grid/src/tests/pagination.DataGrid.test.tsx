@@ -310,22 +310,25 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['0']);
     });
 
-    it('should display a warning if the prop pageSize is not in the prop pageSizeOptions', () => {
-      const pageSize = 12;
+    it.skipIf(!isJSDOM)(
+      'should display a warning if the prop pageSize is not in the prop pageSizeOptions',
+      () => {
+        const pageSize = 12;
 
-      expect(() => {
-        render(
-          <BaselineTestCase
-            paginationModel={{ pageSize, page: 0 }}
-            pageSizeOptions={[25, 50, 100]}
-          />,
-        );
-      }).toWarnDev([
-        `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
-        reactMajor < 19 &&
+        expect(() => {
+          render(
+            <BaselineTestCase
+              paginationModel={{ pageSize, page: 0 }}
+              pageSizeOptions={[25, 50, 100]}
+            />,
+          );
+        }).toWarnDev([
           `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
-      ]);
-    });
+          reactMajor < 19 &&
+            `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
+        ]);
+      },
+    );
 
     it('should not display a warning if the prop pageSize is in the prop pageSizeOptions when it is an array of objects.', () => {
       const pageSize = 10;
@@ -344,26 +347,33 @@ describe('<DataGrid /> - Pagination', () => {
       }).not.toWarnDev();
     });
 
-    it('should display a warning if the prop pageSize is not in the default pageSizeOptions', () => {
-      const pageSize = 12;
+    it.skipIf(!isJSDOM)(
+      'should display a warning if the prop pageSize is not in the default pageSizeOptions',
+      () => {
+        const pageSize = 12;
 
-      expect(() => {
-        render(<BaselineTestCase paginationModel={{ pageSize, page: 0 }} />);
-      }).toWarnDev([
-        `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
-        reactMajor < 19 &&
+        expect(() => {
+          render(<BaselineTestCase paginationModel={{ pageSize, page: 0 }} />);
+        }).toWarnDev([
           `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
-      ]);
-    });
+          reactMajor < 19 &&
+            `MUI X: The page size \`${pageSize}\` is not present in the \`pageSizeOptions\``,
+        ]);
+      },
+    );
 
-    it('should display a warning if the default pageSize given as props is not in the prop pageSizeOptions', () => {
-      expect(() => {
-        render(<BaselineTestCase pageSizeOptions={[25, 50]} />);
-      }).toWarnDev([
-        `MUI X: The page size \`100\` is not present in the \`pageSizeOptions\``,
-        reactMajor < 19 && `MUI X: The page size \`100\` is not present in the \`pageSizeOptions\``,
-      ]);
-    });
+    it.skipIf(!isJSDOM)(
+      'should display a warning if the default pageSize given as props is not in the prop pageSizeOptions',
+      () => {
+        expect(() => {
+          render(<BaselineTestCase pageSizeOptions={[25, 50]} />);
+        }).toWarnDev([
+          `MUI X: The page size \`100\` is not present in the \`pageSizeOptions\``,
+          reactMajor < 19 &&
+            `MUI X: The page size \`100\` is not present in the \`pageSizeOptions\``,
+        ]);
+      },
+    );
 
     it('should update the pageCount state when updating the paginationModel prop with a lower pageSize value', () => {
       function TestCase(props: Partial<DataGridProps>) {

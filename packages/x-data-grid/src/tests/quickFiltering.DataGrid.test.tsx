@@ -386,43 +386,46 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
-    it('should apply filters on column visibility change when quickFilterExcludeHiddenColumns=true', () => {
-      const getApplyQuickFilterFnSpy = spy(getGridStringQuickFilterFn);
-      const { setProps } = render(
-        <TestCase
-          columns={[
-            {
-              field: 'id',
-              getApplyQuickFilterFn: getApplyQuickFilterFnSpy,
-            },
-            { field: 'brand' },
-          ]}
-          initialState={{
-            filter: {
-              filterModel: {
-                items: [],
-                quickFilterValues: ['adid'],
-                quickFilterExcludeHiddenColumns: true,
+    it.skipIf(!isJSDOM)(
+      'should apply filters on column visibility change when quickFilterExcludeHiddenColumns=true',
+      () => {
+        const getApplyQuickFilterFnSpy = spy(getGridStringQuickFilterFn);
+        const { setProps } = render(
+          <TestCase
+            columns={[
+              {
+                field: 'id',
+                getApplyQuickFilterFn: getApplyQuickFilterFnSpy,
               },
-            },
-          }}
-        />,
-      );
+              { field: 'brand' },
+            ]}
+            initialState={{
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: ['adid'],
+                  quickFilterExcludeHiddenColumns: true,
+                },
+              },
+            }}
+          />,
+        );
 
-      // Because of https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
-      const initialCallCount = reactMajor >= 19 ? 1 : 2;
+        // Because of https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
+        const initialCallCount = reactMajor >= 19 ? 1 : 2;
 
-      expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
+        expect(getColumnValues(0)).to.deep.equal(['1']);
+        expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
 
-      setProps({ columnVisibilityModel: { brand: false } });
-      expect(getColumnValues(0)).to.deep.equal([]);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount + 1);
+        setProps({ columnVisibilityModel: { brand: false } });
+        expect(getColumnValues(0)).to.deep.equal([]);
+        expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount + 1);
 
-      setProps({ columnVisibilityModel: { brand: true } });
-      expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount + 2);
-    });
+        setProps({ columnVisibilityModel: { brand: true } });
+        expect(getColumnValues(0)).to.deep.equal(['1']);
+        expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount + 2);
+      },
+    );
 
     it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=true but no quick filter values', () => {
       const getApplyQuickFilterFnSpy = spy(getGridStringQuickFilterFn);
@@ -455,40 +458,43 @@ describe('<DataGrid /> - Quick filter', () => {
       expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
     });
 
-    it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=false', () => {
-      const getApplyQuickFilterFnSpy = spy(getGridStringQuickFilterFn);
-      const { setProps } = render(
-        <TestCase
-          columns={[
-            { field: 'id', getApplyQuickFilterFn: getApplyQuickFilterFnSpy },
-            { field: 'brand' },
-          ]}
-          initialState={{
-            filter: {
-              filterModel: {
-                items: [],
-                quickFilterValues: ['adid'],
-                quickFilterExcludeHiddenColumns: false,
+    it.skipIf(!isJSDOM)(
+      'should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=false',
+      () => {
+        const getApplyQuickFilterFnSpy = spy(getGridStringQuickFilterFn);
+        const { setProps } = render(
+          <TestCase
+            columns={[
+              { field: 'id', getApplyQuickFilterFn: getApplyQuickFilterFnSpy },
+              { field: 'brand' },
+            ]}
+            initialState={{
+              filter: {
+                filterModel: {
+                  items: [],
+                  quickFilterValues: ['adid'],
+                  quickFilterExcludeHiddenColumns: false,
+                },
               },
-            },
-          }}
-        />,
-      );
+            }}
+          />,
+        );
 
-      // Because of https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
-      const initialCallCount = reactMajor >= 19 ? 1 : 2;
+        // Because of https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
+        const initialCallCount = reactMajor >= 19 ? 1 : 2;
 
-      expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
+        expect(getColumnValues(0)).to.deep.equal(['1']);
+        expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
 
-      setProps({ columnVisibilityModel: { brand: false } });
-      expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
+        setProps({ columnVisibilityModel: { brand: false } });
+        expect(getColumnValues(0)).to.deep.equal(['1']);
+        expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
 
-      setProps({ columnVisibilityModel: { brand: true } });
-      expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
-    });
+        setProps({ columnVisibilityModel: { brand: true } });
+        expect(getColumnValues(0)).to.deep.equal(['1']);
+        expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
+      },
+    );
   });
 
   describe('column type: string', () => {

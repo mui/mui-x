@@ -283,19 +283,22 @@ describe('<DataGridPro /> - Tree data', () => {
   });
 
   describe('prop: isGroupExpandedByDefault', () => {
-    it('should expand groups according to isGroupExpandedByDefault when defined', () => {
-      const isGroupExpandedByDefault = spy((node: GridGroupNode) => node.id === 'A');
+    it.skipIf(!isJSDOM)(
+      'should expand groups according to isGroupExpandedByDefault when defined',
+      () => {
+        const isGroupExpandedByDefault = spy((node: GridGroupNode) => node.id === 'A');
 
-      render(<Test isGroupExpandedByDefault={isGroupExpandedByDefault} />);
-      expect(isGroupExpandedByDefault.callCount).to.equal(reactMajor >= 19 ? 4 : 8); // Should not be called on leaves
-      const { childrenExpanded, children, childrenFromPath, ...node } = apiRef.current?.state.rows
-        .tree.A as GridGroupNode;
-      const callForNodeA = isGroupExpandedByDefault
-        .getCalls()
-        .find((call) => call.firstArg.id === node.id)!;
-      expect(callForNodeA.firstArg).to.deep.includes(node);
-      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
-    });
+        render(<Test isGroupExpandedByDefault={isGroupExpandedByDefault} />);
+        expect(isGroupExpandedByDefault.callCount).to.equal(reactMajor >= 19 ? 4 : 8); // Should not be called on leaves
+        const { childrenExpanded, children, childrenFromPath, ...node } = apiRef.current?.state.rows
+          .tree.A as GridGroupNode;
+        const callForNodeA = isGroupExpandedByDefault
+          .getCalls()
+          .find((call) => call.firstArg.id === node.id)!;
+        expect(callForNodeA.firstArg).to.deep.includes(node);
+        expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
+      },
+    );
 
     it('should have priority over defaultGroupingExpansionDepth when both defined', () => {
       const isGroupExpandedByDefault = (node: GridGroupNode) => node.id === 'A';
