@@ -12,7 +12,6 @@ interface UseDragRangeParams {
   adapter: MuiPickersAdapter;
   setRangeDragDay: (value: PickerValidDate | null) => void;
   setIsDragging: (value: boolean) => void;
-  isDragging: boolean;
   onDatePositionChange: (position: RangePosition) => void;
   onDrop: (newDate: PickerValidDate) => void;
   dateRange: PickerRangeValue;
@@ -88,7 +87,6 @@ const useDragRangeEvents = ({
   adapter,
   setRangeDragDay,
   setIsDragging,
-  isDragging,
   onDatePositionChange,
   onDrop,
   disableDragEditing,
@@ -96,6 +94,12 @@ const useDragRangeEvents = ({
   timezone,
 }: UseDragRangeParams): UseDragRangeEvents => {
   const emptyDragImgRef = React.useRef<HTMLImageElement | null>(null);
+  // Synchronous mirror of `isDragging` so dragenter/dragover/drop can gate on it
+  // immediately. The React state update for `isDragging` is deferred to the next
+  // animation frame in `handleDragStart` (iOS aborts drag if the source DOM
+  // mutates during `dragstart`), but later drag events fire synchronously and
+  // can't wait for that state to land.
+  const isDraggingRef = React.useRef(false);
   React.useEffect(() => {
     // Preload the image - required for Safari support: https://stackoverflow.com/a/40923520/3303436
     emptyDragImgRef.current = document.createElement('img');
@@ -137,15 +141,22 @@ const useDragRangeEvents = ({
       event.dataTransfer.setDragImage(emptyDragImgRef.current, 0, 0);
     }
     event.dataTransfer.effectAllowed = 'move';
-    setRangeDragDay(newDate);
-    setIsDragging(true);
-    if (position) {
-      onDatePositionChange(position as RangePosition);
-    }
+    isDraggingRef.current = true;
+    // Defer the React state update that re-renders the dragged button. iOS
+    // Safari aborts the in-flight drag if the source element's DOM mutates
+    // during `dragstart`; React Aria's `useDrag` waits a frame for the same
+    // reason.
+    requestAnimationFrame(() => {
+      setRangeDragDay(newDate);
+      setIsDragging(true);
+      if (position) {
+        onDatePositionChange(position as RangePosition);
+      }
+    });
   });
 
   const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    if (!isDragging) {
+    if (!isDraggingRef.current) {
       return;
     }
 
@@ -156,7 +167,7 @@ const useDragRangeEvents = ({
   });
 
   const handleDragLeave = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    if (!isDragging) {
+    if (!isDraggingRef.current) {
       return;
     }
 
@@ -165,7 +176,7 @@ const useDragRangeEvents = ({
   });
 
   const handleDragOver = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    if (!isDragging) {
+    if (!isDraggingRef.current) {
       return;
     }
 
@@ -175,23 +186,25 @@ const useDragRangeEvents = ({
   });
 
   const handleDragEnd = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    if (!isDragging) {
+    if (!isDraggingRef.current) {
       return;
     }
 
     event.preventDefault();
     event.stopPropagation();
+    isDraggingRef.current = false;
     setIsDragging(false);
     setRangeDragDay(null);
   });
 
   const handleDrop = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    if (!isDragging) {
+    if (!isDraggingRef.current) {
       return;
     }
 
     event.preventDefault();
     event.stopPropagation();
+    isDraggingRef.current = false;
     setIsDragging(false);
     setRangeDragDay(null);
     // make sure the focused element is the element where drop ended
@@ -222,10 +235,7 @@ export const useDragRange = ({
   onDrop,
   dateRange,
   timezone,
-}: Omit<
-  UseDragRangeParams,
-  'setRangeDragDay' | 'setIsDragging' | 'isDragging'
->): UseDragRangeResponse => {
+}: Omit<UseDragRangeParams, 'setRangeDragDay' | 'setIsDragging'>): UseDragRangeResponse => {
   const [isDragging, setIsDragging] = React.useState(false);
   const [rangeDragDay, setRangeDragDay] = React.useState<PickerValidDate | null>(null);
 
@@ -253,7 +263,6 @@ export const useDragRange = ({
     onDatePositionChange,
     onDrop,
     setIsDragging,
-    isDragging,
     setRangeDragDay: handleRangeDragDayChange,
     disableDragEditing,
     dateRange,
