@@ -85,6 +85,7 @@ export default function ErrorHandling() {
           apiRef={apiRef}
           dataSource={{ getEvents: fetchData, updateEvents }}
           resources={resources}
+          resourceColumnLabel="Theater"
           presets={presets}
           preset={preset}
           onPresetChange={setPreset}

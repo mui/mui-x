@@ -57,6 +57,7 @@ export default function BasicDataSource() {
           apiRef={apiRef}
           dataSource={{ getEvents, updateEvents }}
           resources={resources}
+          resourceColumnLabel="Theater"
           presets={presets}
           preset={preset}
           onPresetChange={setPreset}

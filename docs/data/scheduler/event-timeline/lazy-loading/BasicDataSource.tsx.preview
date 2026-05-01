@@ -1,0 +1,11 @@
+<EventTimelinePremium
+  apiRef={apiRef}
+  dataSource={{ getEvents, updateEvents }}
+  resources={resources}
+  resourceColumnLabel="Theater"
+  presets={presets}
+  preset={preset}
+  onPresetChange={setPreset}
+  visibleDate={visibleDate}
+  onVisibleDateChange={setVisibleDate}
+/>
