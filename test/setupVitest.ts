@@ -29,6 +29,17 @@ vi.mock('@mui/internal-test-utils', async (importActual) => {
 
 (globalThis as any).MUI_TEST_ENV = true;
 
+// Diagnostics for the intermittent silent worker exits we have been seeing in CI:
+// when a Promise rejects or an exception escapes a teardown step, Node bails the
+// worker without printing a useful trace. Surface what actually killed the
+// process so the next failing run carries a stack we can act on.
+process.on('unhandledRejection', (reason) => {
+  console.error('[setupVitest] unhandledRejection:', reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('[setupVitest] uncaughtException:', err);
+});
+
 setupVitest({ emotion: true });
 
 configure({
