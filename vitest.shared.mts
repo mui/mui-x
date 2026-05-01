@@ -106,8 +106,12 @@ export default defineConfig({
         },
       ],
     },
-    // Disable isolation to speed up the tests.
-    isolate: false,
+    // Disable isolation in jsdom to speed up the tests; keep it ON in browser
+    // mode because all test files in a project share the same Chromium page,
+    // and accumulated DOM/JS state across hundreds of files crashes the page
+    // (see #22271 CI investigation). The per-file shell cost in browser is
+    // still smaller than the cost of a mid-run page crash + retry storm.
+    isolate: !!process.env.BROWSER,
     // Performance improvements for the tests.
     // https://vitest.dev/guide/improving-performance.html#improving-performance
     ...(process.env.CI && {
