@@ -145,11 +145,7 @@ const overviewsImports = import.meta.glob<React.ComponentType>(
     'docs/src/modules/components/overview/pickers/MainDemo.tsx',
     'docs/src/modules/components/overview/pickers/PickersFeatureHighlight.tsx',
     'docs/src/modules/components/overview/pickers/PickersCommunityOrPro.tsx',
-    // PickersCustomization is excluded — its `StaticDateRangePicker` with a
-    // custom `PickersLayout` doesn't size its grid columns predictably outside
-    // the docs page wrapper, so the second-month calendar overflows past the
-    // shortcuts column. Restore once the composite renders cleanly in the
-    // isolated fixture, or add a per-fixture wrapper that constrains its width.
+    'docs/src/modules/components/overview/pickers/PickersCustomization.tsx',
     'docs/src/modules/components/overview/pickers/PickersKeyboard.tsx',
     'docs/src/modules/components/overview/pickers/Internationalization.tsx',
     'docs/src/modules/components/overview/pickers/DateLibraries.tsx',
