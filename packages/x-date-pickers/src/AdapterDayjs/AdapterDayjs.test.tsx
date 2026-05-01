@@ -174,7 +174,8 @@ describe('<AdapterDayjs />', () => {
 
       const adapter = new AdapterDayjs();
       for (const hour of [0, 1, 3, 4, 5, 11]) {
-        const dWithoutAdjust = (value.set('hour', hour) as Dayjs).$d.getTime();
+        // @ts-ignore - dayjs internals
+        const dWithoutAdjust = value.set('hour', hour).$d.getTime();
         const result = adapter.setHours(value, hour) as Dayjs;
 
         // @ts-ignore - dayjs internals
