@@ -72,6 +72,42 @@ describe('<DateField /> - Selection', () => {
     });
   });
 
+  describe('Click on blank space', () => {
+    it('should not focus the field or select a section when clicking on blank space inside an unfocused field', () => {
+      const view = renderWithProps({});
+
+      const sectionsContainer = view.getSectionsContainer();
+      fireEvent.mouseDown(sectionsContainer);
+      fireEvent.click(sectionsContainer);
+
+      expect(getCleanedSelectedContent()).to.equal('');
+      expect(sectionsContainer.contains(document.activeElement)).to.equal(false);
+    });
+
+    it('should not change the selected section when clicking on blank space inside a focused field', async () => {
+      const view = renderWithProps({});
+
+      await view.selectSection('day');
+      expect(getCleanedSelectedContent()).to.equal('DD');
+
+      const sectionsContainer = view.getSectionsContainer();
+      fireEvent.mouseDown(sectionsContainer);
+      fireEvent.click(sectionsContainer);
+
+      expect(getCleanedSelectedContent()).to.equal('DD');
+    });
+
+    it('should still select a section when clicking directly on it', () => {
+      const view = renderWithProps({});
+
+      const yearSection = view.getSection(2);
+      fireEvent.mouseDown(yearSection);
+      fireEvent.click(yearSection);
+
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
+    });
+  });
+
   describe('key: Ctrl + A', () => {
     it('should select all sections', async () => {
       const view = renderWithProps({});
