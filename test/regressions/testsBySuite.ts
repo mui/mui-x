@@ -27,6 +27,8 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docs/data/data-grid/filtering/CustomRatingOperator', // Needs interaction
     '!docs/data/data-grid/filtering/CustomInputComponent', // Needs interaction
     '!docs/data/data-grid/server-side-data/ServerSideLazyLoadingRevalidation', // Flashes cause flaky argos screenshots
+    '!docs/data/data-grid/server-side-data/ServerSideLazyLoadingTreeDataRevalidation', // Flashes cause flaky argos screenshots
+    '!docs/data/data-grid/server-side-data/ServerSideLazyLoadingGroupingRevalidation', // Flashes cause flaky argos screenshots
     '!docs/data/data-grid/server-side-data/ServerSideLazyLoadingFullyReplaced', // Flashes cause flaky argos screenshots
     '!docs/data/data-grid/server-side-data/ServerSideDataGridRevalidation', // Flashes cause flaky argos screenshots
     '!docs/data/data-grid/server-side-data/ServerSideTreeDataRevalidation', // Flashes cause flaky argos screenshots
