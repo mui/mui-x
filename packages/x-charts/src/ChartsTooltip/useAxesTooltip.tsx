@@ -3,6 +3,7 @@ import { useSeries } from '../hooks/useSeries';
 import { useColorProcessor } from '../internals/plugins/corePlugins/useChartSeries/useColorProcessor';
 import { type SeriesId } from '../models/seriesType/common';
 import {
+  type ChartSeriesDefaultized,
   type CartesianChartSeriesType,
   type ChartsSeriesConfig,
   type PolarChartSeriesType,
@@ -35,6 +36,7 @@ import {
   type ComposableCartesianChartSeriesType,
   composableCartesianSeriesTypes,
 } from '../models/seriesType/composition';
+import type { MarkShape } from '../models/seriesType';
 
 export interface UseAxesTooltipReturnValue<
   SeriesType extends CartesianChartSeriesType | PolarChartSeriesType =
@@ -101,6 +103,17 @@ function defaultAxisTooltipConfig(
   };
 }
 
+function getSeriesMark<SeriesType extends CartesianChartSeriesType | PolarChartSeriesType>(
+  series: ChartSeriesDefaultized<SeriesType>,
+): MarkShape | undefined {
+  if (!('showMark' in series) || !series.showMark) {
+    return undefined;
+  }
+  if ('shape' in series && series.shape) {
+    return series.shape;
+  }
+  return 'circle';
+}
 /**
  * Returns the axes to display in the tooltip and the series item related to them.
  */
@@ -227,10 +240,7 @@ export function useAxesTooltip<
             formattedValue,
             formattedLabel,
             markType: seriesToAdd.labelMarkType,
-            markShape:
-              'showMark' in seriesToAdd && seriesToAdd.showMark
-                ? (seriesToAdd.shape ?? 'circle')
-                : undefined,
+            markShape: getSeriesMark(seriesToAdd),
           });
         }
       });
@@ -288,7 +298,7 @@ export function useAxesTooltip<
             formattedValue,
             formattedLabel,
             markType: seriesToAdd.labelMarkType,
-            markShape: 'showMark' in seriesToAdd && seriesToAdd.showMark ? 'circle' : undefined,
+            markShape: getSeriesMark(seriesToAdd),
           });
         }
       });

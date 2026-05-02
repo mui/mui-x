@@ -13,14 +13,12 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Extract Vale version from pnpm-lock.yaml
+      - name: Extract Vale version
         id: vale-version
         run: |
-          # Extract version from lock file
-          VERSION=$(awk -F"@|'" '/@vvago\/vale@/ {print $4}' pnpm-lock.yaml | head -n1)
-          echo "Extracted Vale version: $VERSION"
+          VERSION=$(node -p "(require('./package.json').config && require('./package.json').config.valeVersion) || ''")
           echo "vale_version=$VERSION" >> $GITHUB_OUTPUT
-      - uses: errata-ai/vale-action@d89dee975228ae261d22c15adcd03578634d429c # v2.1.1
+      - uses: vale-cli/vale-action@d89dee975228ae261d22c15adcd03578634d429c # v2.1.1
         continue-on-error: true # GitHub Action flag needed until https://github.com/errata-ai/vale-action/issues/89 is fixed
         with:
           version: ${{ steps.vale-version.outputs.vale_version }}

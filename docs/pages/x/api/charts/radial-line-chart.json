@@ -4,6 +4,17 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "axisHighlight": {
+      "type": {
+        "name": "shape",
+        "description": "{ radius?: 'line'<br>&#124;&nbsp;'none', rotation?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
+      },
+      "default": "{ rotation: 'line' }",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-charts/highlighting",
+        "text": "highlighting docs"
+      }
+    },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
@@ -137,6 +148,7 @@
       "default": "ChartsNoDataOverlay",
       "class": null
     },
+    { "name": "radialLineHighlight", "description": "", "class": null },
     {
       "name": "toolbar",
       "description": "Custom component for the toolbar.",

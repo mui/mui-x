@@ -118,8 +118,17 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsLocalizationProvider',
   },
   {
+    pathname: '/x/api/charts/charts-radial-axis-highlight',
+    title: 'ChartsRadialAxisHighlight',
+  },
+  {
     pathname: '/x/api/charts/charts-radial-data-provider',
     title: 'ChartsRadialDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/charts-radial-data-provider-premium',
+    title: 'ChartsRadialDataProviderPremium',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/charts-radial-grid',
@@ -132,6 +141,10 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
+  },
+  {
+    pathname: '/x/api/charts/charts-rotation-axis',
+    title: 'ChartsRotationAxis',
   },
   {
     pathname: '/x/api/charts/charts-surface',
@@ -388,6 +401,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/radial-line-chart',
     title: 'RadialLineChart',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-line-highlight-plot',
+    title: 'RadialLineHighlightPlot',
     plan: 'premium',
   },
   {

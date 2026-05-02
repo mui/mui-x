@@ -20,6 +20,7 @@ export { processBarDataForPlot } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartsContainer/useChartsContainerProps';
 export * from '../ChartsDataProvider/useChartsDataProviderProps';
+export * from '../ChartsRadialDataProvider/useChartsRadialDataProviderProps';
 export * from './seriesSelectorOfType';
 export { useSkipAnimation } from '../hooks/useSkipAnimation';
 export { useRegisterPointerInteractions } from './plugins/featurePlugins/shared/useRegisterPointerInteractions';
@@ -44,6 +45,7 @@ export * from './plugins/featurePlugins/useChartItemClick';
 export * from './plugins/utils/selectors';
 export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
 export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
+export { getAxisIndex as getPolarAxisIndex } from './plugins/featurePlugins/useChartPolarAxis/getAxisIndex';
 
 export * from './store/useCharts';
 export * from './store/useStore';
@@ -57,13 +59,16 @@ export * from '../PieChart/PieChart.plugins';
 
 // utils
 export * from './configInit';
+export * from './clampAngle';
 export * from './getLabel';
 export * from './legendUtils';
 export * from './getChartPoint';
 export * from './isDefined';
 export * from './getScale';
+export * from './getAsNumber';
 export * from './stacking';
 export * from './getCurve';
+export * from './getSymbol';
 export * from './consumeSlots';
 export * from './consumeThemeProps';
 export * from './defaultizeMargin';
@@ -79,6 +84,7 @@ export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
 export * from './plugins/utils/defaultSeriesConfig';
+export { EPSILON } from '../utils/epsilon';
 export {
   useUtilityClasses as useChartsTooltipUtilityClasses,
   getChartsTooltipUtilityClass,
@@ -93,6 +99,7 @@ export * from '../context/ChartsSlotsContext';
 export * from '../models/seriesType/config';
 export * from '../models/seriesType/common';
 export * from '../models/seriesType/line';
+export * from '../models/seriesType/bar';
 
 export * from '../models/z-axis';
 export * from '../models/axis';
@@ -107,4 +114,5 @@ export * from './scales';
 export * from './identifierSerializer';
 export * from './identifierCleaner';
 
+export { evaluateCurveAtAngle } from '../LineChart/seriesConfig/curveEvaluation';
 export { default as getLineItemAtPosition } from '../LineChart/seriesConfig/getItemAtPosition';
