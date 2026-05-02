@@ -11,7 +11,9 @@ import {
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
 import { spy, stub } from 'sinon';
+import { iconButtonClasses } from '@mui/material/IconButton';
 import Portal from '@mui/material/Portal';
+import SvgIcon, { svgIconClasses } from '@mui/material/SvgIcon';
 import {
   DataGrid,
   type DataGridProps,
@@ -317,18 +319,25 @@ describe('<DataGrid /> - Rows', () => {
         expect(screen.queryByText('print')).to.equal(null);
       });
 
-      it('should pass fontSize="inherit" to the icon so it scales with the IconButton size', () => {
-        function ProbeIcon(props: { fontSize?: string }) {
-          return <span data-testid="probe-icon" data-font-size={props.fontSize} />;
-        }
+      it('should let the icon inherit the action button size', () => {
         render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem key={1} icon={<ProbeIcon />} label="delete" size="large" />,
+              <GridActionsCellItem
+                key={1}
+                icon={<SvgIcon data-testid="delete-icon" />}
+                label="delete"
+                size="large"
+              />,
             ]}
           />,
         );
-        expect(screen.getByTestId('probe-icon')).to.have.attribute('data-font-size', 'inherit');
+
+        const actionButton = screen.getByRole('menuitem', { name: 'delete' });
+        const icon = screen.getByTestId('delete-icon');
+
+        expect(actionButton).to.have.class(iconButtonClasses.sizeLarge);
+        expect(icon).to.have.class(svgIconClasses.fontSizeInherit);
       });
 
       it('should show in a menu the actions marked as showInMenu', async () => {
