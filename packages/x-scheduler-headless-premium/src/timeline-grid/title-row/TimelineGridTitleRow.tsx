@@ -1,9 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui/utils/store';
 import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
-import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { useTimelineGridRowKeyboard } from '../../internals/utils/useTimelineGridRowKeyboard';
 
 export const TimelineGridTitleRow = React.forwardRef(function TimelineGridTitleRow(
@@ -19,9 +16,6 @@ export const TimelineGridTitleRow = React.forwardRef(function TimelineGridTitleR
     ...elementProps
   } = componentProps;
 
-  const store = useEventTimelinePremiumStoreContext();
-  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
-
   const { rowRef, listItemRef, index, handleKeyDown, handleFocus } = useTimelineGridRowKeyboard({
     columnType: 'title',
   });
@@ -32,7 +26,8 @@ export const TimelineGridTitleRow = React.forwardRef(function TimelineGridTitleR
       elementProps,
       {
         role: 'row',
-        'aria-rowindex': index + presetConfig.headers.length + 1,
+        // Reserve aria-rowindex=1 for the grid header row.
+        'aria-rowindex': index + 2,
         tabIndex: 0,
         onKeyDown: handleKeyDown,
         onFocus: handleFocus,

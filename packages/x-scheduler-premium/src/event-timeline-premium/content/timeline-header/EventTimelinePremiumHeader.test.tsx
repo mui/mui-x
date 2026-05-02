@@ -234,14 +234,13 @@ describe('<EventTimelinePremiumHeader />', () => {
   });
 
   describe('aria semantics', () => {
-    it('should set role="row" and aria-rowindex on each inner level row', () => {
+    it('should set role="row" on each inner level row', () => {
       renderHeader({ preset: 'dayAndHour' });
 
       const levelRows = document.querySelectorAll<HTMLElement>(`.${classes.headerLevelRow}`);
       expect(levelRows.length).to.equal(2);
-      levelRows.forEach((row, i) => {
+      levelRows.forEach((row) => {
         expect(row.getAttribute('role')).to.equal('row');
-        expect(row.getAttribute('aria-rowindex')).to.equal(String(i + 1));
       });
     });
 
@@ -294,8 +293,35 @@ describe('<EventTimelinePremiumHeader />', () => {
       const grid = screen.getByRole('grid');
       // tickCount (4*24) + 1 title column = 97
       expect(grid.getAttribute('aria-colcount')).to.equal(String(4 * 24 + 1));
-      // 2 header levels + 1 resource = 3
-      expect(grid.getAttribute('aria-rowcount')).to.equal('3');
+      // 1 header + 1 resource = 2
+      expect(grid.getAttribute('aria-rowcount')).to.equal('2');
+    });
+
+    it('should set aria-colindex from the cell start tick column on grouping cells', () => {
+      // Day cells in `dayAndHour` span 24 hour ticks. Start columns: 2, 26, 50, 74.
+      renderHeader({ preset: 'dayAndHour' });
+
+      const dayCells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="day"]`),
+      );
+      expect(dayCells.length).to.equal(4);
+      const expected = ['2', '26', '50', '74'];
+      dayCells.forEach((cell, i) => {
+        expect(cell.getAttribute('aria-colindex')).to.equal(expected[i]);
+      });
+    });
+
+    it('should set aria-colindex from the cell start tick column on clamped grouping cells', () => {
+      // Month cells in `dayAndMonth` are clamped: July (29 days) then August (27 days).
+      // Start columns: 2, 31.
+      renderHeader({ preset: 'dayAndMonth' });
+
+      const monthCells = Array.from(
+        document.querySelectorAll<HTMLElement>(`.${classes.headerCell}[data-unit="month"]`),
+      );
+      expect(monthCells.length).to.equal(2);
+      expect(monthCells[0].getAttribute('aria-colindex')).to.equal('2');
+      expect(monthCells[1].getAttribute('aria-colindex')).to.equal('31');
     });
   });
 });
