@@ -138,11 +138,14 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
   return (
     <ResourcesLegendRoot
       ref={forwardedRef}
-      aria-label={localeText.resourcesLegendSectionLabel}
+      aria-labelledby="event-calendar-resources-legend-label"
       {...props}
       className={clsx(props.className, classes.resourcesLegend)}
     >
-      <ResourcesLegendLabel className={classes.resourcesLegendLabel}>
+      <ResourcesLegendLabel
+        id="event-calendar-resources-legend-label"
+        className={classes.resourcesLegendLabel}
+      >
         {localeText.resourcesLabel}
       </ResourcesLegendLabel>
       {resources.map((resource) => (

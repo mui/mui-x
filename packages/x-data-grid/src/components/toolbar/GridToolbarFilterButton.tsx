@@ -90,11 +90,36 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
           .toString();
 
       const getFilterItemValue = (item: GridFilterItem): string => {
-        const { getValueAsString } = lookup[item.field!].filterOperators!.find(
+        const column = lookup[item.field!];
+        const { getValueAsString } = column.filterOperators!.find(
           (operator) => operator.value === item.operator,
         )!;
 
-        return getValueAsString ? getValueAsString(item.value) : item.value;
+        if (getValueAsString) {
+          return getValueAsString(item.value);
+        }
+
+        const { type, getOptionLabel, getOptionValue } = column;
+
+        if (type === 'singleSelect' && getOptionLabel && getOptionValue) {
+          const valueOptions = getValueOptions(column as GridSingleSelectColDef);
+          if (valueOptions) {
+            if (Array.isArray(item.value)) {
+              return item.value
+                .map((value) => {
+                  const option = valueOptions.find((opt) => getOptionValue(opt) === value);
+                  return option ? getOptionLabel(option) : value;
+                })
+                .join(', ');
+            }
+            const option = valueOptions.find((opt) => getOptionValue(opt) === item.value);
+            if (option) {
+              return getOptionLabel(option);
+            }
+          }
+        }
+
+        return item.value;
       };
 
       return (
