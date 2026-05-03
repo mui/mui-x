@@ -56,6 +56,7 @@ const itITDialog: Partial<EventDialogLocaleText> = {
   startDateAfterEndDateError: 'La data/ora di inizio deve essere precedente alla data/ora di fine.',
   startDateLabel: 'Data di inizio',
   startTimeLabel: 'Ora di inizio',
+
   // ScopeDialog
   all: 'Tutti gli eventi',
   cancel: 'Annulla',
@@ -72,6 +73,7 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   resourcesLabel: 'Risorse',
   resourcesLegendSectionLabel: 'Legenda risorse',
   showEventsLabel: (resourceName) => `Mostra eventi per ${resourceName}`,
+
   // ViewSwitcher
   agenda: 'Agenda',
   day: 'Giorno',
@@ -84,9 +86,11 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   months: 'Mesi',
   weeks: 'Settimane',
   years: 'Anni',
+
   // DateNavigator
   closeSidePanel: 'Chiudi pannello laterale',
   openSidePanel: 'Apri pannello laterale',
+
   // Preferences menu
   amPm12h: '12 ore (1:00 PM)',
   hour24h: '24 ore (13:00)',
@@ -96,8 +100,10 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Mostra numero della settimana',
   timeFormat: 'Formato ora',
   viewSpecificOptions: (view) => `Opzioni vista ${view}`,
+
   // WeekView
   allDay: 'Tutto il giorno',
+
   // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} altri..`,
   nextTimeSpan: (timeSpan) => `${timeSpan} successivo`,
@@ -105,12 +111,15 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   resourceAriaLabel: (resourceName) => `Risorsa: ${resourceName}`,
   weekAbbreviation: 'S',
   weekNumberAriaLabel: (weekNumber) => `Settimana ${weekNumber}`,
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Termina il ${endDate}`,
+
   // MiniCalendar
   miniCalendarLabel: 'Calendario',
   miniCalendarGoToPreviousMonth: 'Mostra il mese precedente nel calendario',
   miniCalendarGoToNextMonth: 'Mostra il mese successivo nel calendario',
+
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Titolo risorsa',
 };
