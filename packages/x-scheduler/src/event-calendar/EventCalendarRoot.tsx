@@ -144,7 +144,11 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
             orientation="horizontal"
             className={classes.sidePanelCollapse}
           >
-            <EventCalendarSidePanel className={classes.sidePanel}>
+            <EventCalendarSidePanel
+              id="event-calendar-side-panel"
+              className={classes.sidePanel}
+              aria-hidden={!isSidePanelOpen}
+            >
               <MiniCalendar />
               <Divider className={classes.sidePanelDivider} />
               <ResourcesLegend />
