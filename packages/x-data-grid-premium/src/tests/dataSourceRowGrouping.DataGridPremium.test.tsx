@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, waitFor, within } from '@mui/internal-test-utils';
+import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
 import { type RefObject } from '@mui/x-internals/types';
 import {
   DataGridPremium,
@@ -296,6 +296,54 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       expect(financeNode.childrenExpanded).to.equal(true);
       expect(apiRef.current!.getRow('industry-software')).to.equal(null);
       expect(isGroupExpandedByDefault.called).to.equal(true);
+    });
+
+    [
+      {
+        label: 'sorting',
+        updateModel: () => apiRef.current!.setSortModel([{ field: 'sector', sort: 'desc' }]),
+        isMatchingRequest: (params: GridGetRowsParams) =>
+          params.sortModel[0]?.field === 'sector' && params.sortModel[0]?.sort === 'desc',
+      },
+      {
+        label: 'filtering',
+        updateModel: () =>
+          apiRef.current!.setFilterModel({
+            items: [{ field: 'sector', operator: 'contains', value: 'Tech' }],
+          }),
+        isMatchingRequest: (params: GridGetRowsParams) =>
+          params.filterModel.items[0]?.field === 'sector' &&
+          params.filterModel.items[0]?.value === 'Tech',
+      },
+    ].forEach(({ label, updateModel, isMatchingRequest }) => {
+      it(`should preserve expanded row grouping groups and fetch children after ${label}`, async () => {
+        const getRowsSpy = spy();
+        const { user } = render(<TestNestedLazyRowGrouping onFetchRows={getRowsSpy} />);
+
+        await waitFor(() => expect(apiRef.current!.getRow('sector-tech')).not.to.equal(null));
+        await user.click(within(getCell(0, 0)).getByRole('button'));
+        await waitFor(() => expect(apiRef.current!.getRow('industry-software')).not.to.equal(null));
+
+        getRowsSpy.resetHistory();
+
+        act(() => updateModel());
+
+        await waitFor(() => {
+          const nestedRequest = getRowsSpy.getCalls().find((call) => {
+            const params = call.firstArg as GridGetRowsParams;
+            return (
+              JSON.stringify(params.groupKeys) === JSON.stringify(['Technology']) &&
+              isMatchingRequest(params)
+            );
+          })?.firstArg as GridGetRowsParams | undefined;
+
+          expect(nestedRequest?.groupFields).to.deep.equal(['sector', 'industry']);
+        });
+
+        expect(apiRef.current!.getRow('industry-software')).not.to.equal(null);
+        const sectorNode = apiRef.current!.getRowNode<GridGroupNode>('sector-tech')!;
+        expect(sectorNode.childrenExpanded).to.equal(true);
+      });
     });
 
     it('should lazy load leaves under the final row grouping level', async () => {

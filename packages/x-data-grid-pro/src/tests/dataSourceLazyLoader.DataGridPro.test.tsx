@@ -566,6 +566,62 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(isGroupExpandedByDefault.called).to.equal(true);
     });
 
+    [
+      {
+        label: 'sorting',
+        updateModel: () => apiRef.current!.setSortModel([{ field: 'name', sort: 'desc' }]),
+        isMatchingRequest: (params: GridGetRowsParams) =>
+          params.sortModel[0]?.field === 'name' && params.sortModel[0]?.sort === 'desc',
+      },
+      {
+        label: 'filtering',
+        updateModel: () =>
+          apiRef.current!.setFilterModel({
+            items: [{ field: 'name', operator: 'contains', value: 'A' }],
+          }),
+        isMatchingRequest: (params: GridGetRowsParams) =>
+          params.filterModel.items[0]?.field === 'name' &&
+          params.filterModel.items[0]?.value === 'A',
+      },
+    ].forEach(({ label, updateModel, isMatchingRequest }) => {
+      it(`should preserve expanded tree data groups and fetch children after ${label}`, async () => {
+        const localFetchRowsSpy = spy();
+        const { user } = render(
+          <TestNestedDataSourceLazyLoader dataSourceCache={null} onFetchRows={localFetchRowsSpy} />,
+        );
+
+        await waitFor(() => expect(getRow(0)).not.to.be.undefined);
+        await user.click(within(getCell(0, 0)).getByRole('button'));
+        await waitFor(() => expect(apiRef.current!.getRow('A-0')).not.to.equal(null));
+
+        const initialChildValue = apiRef.current!.getRow<TreeRow>('A-0')!.value;
+        localFetchRowsSpy.resetHistory();
+
+        act(() => updateModel());
+
+        await waitFor(() => {
+          const nestedRequest = localFetchRowsSpy.getCalls().find((call) => {
+            const params = call.firstArg as GridGetRowsParams;
+            return (
+              JSON.stringify(params.groupKeys) === JSON.stringify(['A']) &&
+              isMatchingRequest(params)
+            );
+          });
+
+          expect(nestedRequest).not.to.equal(undefined);
+        });
+
+        await waitFor(() => {
+          const childRow = apiRef.current!.getRow<TreeRow>('A-0');
+          expect(childRow).not.to.equal(null);
+          expect(childRow!.value).to.be.greaterThan(initialChildValue);
+        });
+
+        const parentNode = apiRef.current!.getRowNode<GridGroupNode>('A')!;
+        expect(parentNode.childrenExpanded).to.equal(true);
+      });
+    });
+
     it('should periodically revalidate expanded nested rows without setting children loading', async () => {
       const localFetchRowsSpy = spy();
       const { user } = render(
