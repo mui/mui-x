@@ -271,7 +271,7 @@ importers:
         version: 0.0.4-canary.29(@next/eslint-plugin-next@16.2.4)(@types/node@22.19.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.59.0(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)(typescript@5.9.3))(@typescript-eslint/parser@8.59.0(eslint@9.39.4)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.59.0(eslint@9.39.4)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.4))(eslint@9.39.4)(jest-diff@30.2.0)(postcss@8.5.12)(prettier@3.8.3)(stylelint@17.1.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.1.5)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 9.0.1-canary.2(a88d7c3593ebaa0d367a89d278b2db55)
+        version: 9.0.1-canary.2(a5a1b00de7e7efba1b01eaf71c2d33d7)
       '@mui/internal-markdown':
         specifier: 3.0.8-canary.3
         version: 3.0.8-canary.3
@@ -502,7 +502,7 @@ importers:
         version: 9.0.0(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 9.0.1-canary.2(a88d7c3593ebaa0d367a89d278b2db55)
+        version: 9.0.1-canary.2(a5a1b00de7e7efba1b01eaf71c2d33d7)
       '@mui/internal-docs-infra':
         specifier: ^0.10.1-canary.5
         version: 0.10.1-canary.5(@types/react@19.2.14)(next@16.2.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(prettier@3.8.3)(react@19.2.5)(typescript@5.9.3)
@@ -699,8 +699,8 @@ importers:
         specifier: 7.7.4
         version: 7.7.4
       styled-components:
-        specifier: ^6.3.12
-        version: 6.3.12(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: ^6.4.1
+        version: 6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       stylis:
         specifier: ^4.3.6
         version: 4.3.6
@@ -9843,10 +9843,6 @@ packages:
     resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
     engines: {node: ^10 || ^12 || >=14}
 
-  postcss@8.4.49:
-    resolution: {integrity: sha512-OCVPnIObs4N29kxTjzLfUryOkvZEq+pf8jTF0lg8E7uETuWHA+v7j3c/xJmiqpX450191LlmZfUKkXxkTry7nA==}
-    engines: {node: ^10 || ^12 || >=14}
-
   postcss@8.5.12:
     resolution: {integrity: sha512-W62t/Se6rA0Az3DfCL0AqJwXuKwBeYg6nOaIgzP+xZ7N5BFCI7DYi1qs6ygUYT6rvfi6t9k65UMLJC+PHZpDAA==}
     engines: {node: ^10 || ^12 || >=14}
@@ -10382,9 +10378,6 @@ packages:
     resolution: {integrity: sha512-/6KqX+GVUdqPuPPd2LxDDxzX6CAbjJehAAOKlNpqqUpAqPM6HeL8f+o3a+JsyGjn2lv0WY8UsTgUJjU9Ok55NA==}
     engines: {node: '>=8'}
 
-  shallowequal@1.1.0:
-    resolution: {integrity: sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==}
-
   sharp@0.34.5:
     resolution: {integrity: sha512-Ou9I5Ft9WNcCbXrU9cMgPBcCK8LiwLqcbywW3t4oDV37n1pzpuNLsYiAV8eODnjbtQlSDwZ2cUEeQz4E54Hltg==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
@@ -10662,14 +10655,20 @@ packages:
   style-to-object@1.0.12:
     resolution: {integrity: sha512-ddJqYnoT4t97QvN2C95bCgt+m7AAgXjVnkk/jxAfmp7EAB8nnqqZYEbMd3em7/vEomDb2LAQKAy1RFfv41mdNw==}
 
-  styled-components@6.3.12:
-    resolution: {integrity: sha512-hFR6xsVkVYbsdcUlzPYFvFfoc6o2KlV0VvgRIQwSYMtdThM7SCxnjX9efh/cWce2kTq16I/Kl3xM98xiLptsXA==}
+  styled-components@6.4.1:
+    resolution: {integrity: sha512-ADu2dF53esUzzM4I0ewxhxFtsDd6v4V6dNkg3vG0iFKhnt06sJneTZnRvujAosZwW0XD58IKgGMQoqri4wHRqg==}
     engines: {node: '>= 16'}
     peerDependencies:
+      css-to-react-native: '>= 3.2.0'
       react: '>= 16.8.0'
       react-dom: '>= 16.8.0'
+      react-native: '>= 0.68.0'
     peerDependenciesMeta:
+      css-to-react-native:
+        optional: true
       react-dom:
+        optional: true
+      react-native:
         optional: true
 
   styled-jsx@5.1.6:
@@ -13636,7 +13635,7 @@ snapshots:
       - supports-color
       - vitest
 
-  '@mui/internal-core-docs@9.0.1-canary.2(a88d7c3593ebaa0d367a89d278b2db55)':
+  '@mui/internal-core-docs@9.0.1-canary.2(a5a1b00de7e7efba1b01eaf71c2d33d7)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@base-ui/react': 1.4.1(@date-fns/tz@1.4.1)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -13668,7 +13667,7 @@ snapshots:
       react-simple-code-editor: 0.14.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       stylis: 4.3.6
     optionalDependencies:
-      styled-components: 6.3.12(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      styled-components: 6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
 
   '@mui/internal-docs-infra@0.10.1-canary.5(@types/react@19.2.14)(next@16.2.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(prettier@3.8.3)(react@19.2.5)(typescript@5.9.3)':
     dependencies:
@@ -16107,7 +16106,8 @@ snapshots:
 
   camelcase@7.0.1: {}
 
-  camelize@1.0.1: {}
+  camelize@1.0.1:
+    optional: true
 
   caniuse-lite@1.0.30001784: {}
 
@@ -16441,7 +16441,8 @@ snapshots:
     dependencies:
       type-fest: 1.4.0
 
-  css-color-keywords@1.0.0: {}
+  css-color-keywords@1.0.0:
+    optional: true
 
   css-font-face-src@1.0.0:
     optional: true
@@ -16461,6 +16462,7 @@ snapshots:
       camelize: 1.0.1
       css-color-keywords: 1.0.0
       postcss-value-parser: 4.2.0
+    optional: true
 
   css-tree@3.2.1:
     dependencies:
@@ -20040,12 +20042,6 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postcss@8.4.49:
-    dependencies:
-      nanoid: 3.3.11
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
-
   postcss@8.5.12:
     dependencies:
       nanoid: 3.3.11
@@ -20709,8 +20705,6 @@ snapshots:
     dependencies:
       kind-of: 6.0.3
 
-  shallowequal@1.1.0: {}
-
   sharp@0.34.5:
     dependencies:
       '@img/colour': 1.0.0
@@ -21044,19 +21038,14 @@ snapshots:
     dependencies:
       inline-style-parser: 0.2.6
 
-  styled-components@6.3.12(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+  styled-components@6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       '@emotion/is-prop-valid': 1.4.0
-      '@emotion/unitless': 0.10.0
-      '@types/stylis': 4.2.7
-      css-to-react-native: 3.2.0
       csstype: 3.2.3
-      postcss: 8.4.49
       react: 19.2.5
-      shallowequal: 1.1.0
       stylis: 4.3.6
-      tslib: 2.8.1
     optionalDependencies:
+      css-to-react-native: 3.2.0
       react-dom: 19.2.5(react@19.2.5)
 
   styled-jsx@5.1.6(@babel/core@7.29.0)(babel-plugin-macros@3.1.0)(react@19.2.5):
