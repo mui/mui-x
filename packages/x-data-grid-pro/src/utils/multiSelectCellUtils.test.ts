@@ -107,6 +107,20 @@ describe('multiSelectCellUtils', () => {
       expect(calculateVisibleCount(2, 128, chipWidths, [50, 60, 70], 8)).to.equal(2);
     });
 
+    it('should fit all chips when sub-pixel sum equals container width exactly', () => {
+      // Captured from a real autosize commit: chips sum + 3 gaps = 254.734375,
+      // container = 254.734375. With strict (no-tolerance) `<=`, all 4 chips fit and
+      // no overflow chip is needed.
+      const chipWidths = new Map<number, number>([
+        [0, 49.0390625],
+        [1, 56.4609375],
+        [2, 77.0703125],
+        [3, 60.1640625],
+      ]);
+      const overflowWidths = [30.6875, 37.9921875, 45.296875];
+      expect(calculateVisibleCount(4, 254.734375, chipWidths, overflowWidths, 4)).to.equal(4);
+    });
+
     it('should fall back to DEFAULT_GAP when gap is omitted', () => {
       const chipWidths = new Map<number, number>([
         [0, 50],
