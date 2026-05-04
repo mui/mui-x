@@ -16,15 +16,15 @@ import {
   RecurringEventFrequency,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
-} from '@mui/x-scheduler-headless/models';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
+} from '@mui/x-scheduler-internals/models';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
 import EventDialogHeader from './EventDialogHeader';

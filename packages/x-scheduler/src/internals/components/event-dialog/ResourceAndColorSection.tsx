@@ -14,13 +14,13 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { Toggle } from '@base-ui/react/toggle';
 import { ToggleGroup } from '@base-ui/react/toggle-group';
-import { EVENT_COLORS } from '@mui/x-scheduler-headless/constants';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { EVENT_COLORS } from '@mui/x-scheduler-internals/constants';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerOtherSelectors,
   schedulerResourceSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
-import { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-headless/models';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { useStore } from '@base-ui/utils/store';
 import { getPaletteVariants, PaletteName } from '../../utils/tokens';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';

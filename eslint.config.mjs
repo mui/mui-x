@@ -27,9 +27,9 @@ const PICKERS_PACKAGES = ['x-date-pickers', 'x-date-pickers-pro'];
 const TREE_VIEW_PACKAGES = ['x-tree-view', 'x-tree-view-pro'];
 const SCHEDULER_PACKAGES = [
   'x-scheduler',
-  'x-scheduler-headless',
+  'x-scheduler-internals',
   'x-scheduler-premium',
-  'x-scheduler-headless-premium',
+  'x-scheduler-internals-premium',
 ];
 
 // Enable React Compiler Plugin rules globally
@@ -80,8 +80,8 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-tree-view-pro',
   '@mui/x-scheduler',
   '@mui/x-scheduler-premium',
-  '@mui/x-scheduler-headless',
-  '@mui/x-scheduler-headless-premium',
+  '@mui/x-scheduler-internals',
+  '@mui/x-scheduler-internals-premium',
 ];
 
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
@@ -425,9 +425,9 @@ export default defineConfig(
   {
     files: [
       'packages/x-scheduler/**/*{.tsx,.ts,.js}',
-      'packages/x-scheduler-headless/**/*{.tsx,.ts,.js}',
+      'packages/x-scheduler-internals/**/*{.tsx,.ts,.js}',
       'packages/x-scheduler-premium/**/*{.tsx,.ts,.js}',
-      'packages/x-scheduler-headless-premium/**/*{.tsx,.ts,.js}',
+      'packages/x-scheduler-internals-premium/**/*{.tsx,.ts,.js}',
     ],
     rules: {
       // Base UI lint rules
@@ -451,8 +451,8 @@ export default defineConfig(
     'x-date-pickers-pro',
     'x-scheduler',
     'x-scheduler-premium',
-    'x-scheduler-headless',
-    'x-scheduler-headless-premium',
+    'x-scheduler-internals',
+    'x-scheduler-internals-premium',
     'x-tree-view',
     'x-tree-view-pro',
     'x-license',
@@ -503,7 +503,7 @@ export default defineConfig(
 
   // We can't use the react-compiler plugin in the base-ui-utils folder because the Base UI team doesn't use it yet.
   {
-    files: ['packages/x-scheduler-headless/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
+    files: ['packages/x-scheduler-internals/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
     rules: {
       'react-compiler/react-compiler': 'off',
     },
@@ -514,8 +514,8 @@ export default defineConfig(
     files: [
       `packages/x-scheduler/src/**/*${EXTENSION_TS}`,
       `packages/x-scheduler-premium/src/**/*${EXTENSION_TS}`,
-      `packages/x-scheduler-headless/src/**/*${EXTENSION_TS}`,
-      `packages/x-scheduler-headless-premium/src/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler-internals/src/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler-internals-premium/src/**/*${EXTENSION_TS}`,
       `packages/x-virtualizer/src/**/*${EXTENSION_TS}`,
     ],
     rules: {

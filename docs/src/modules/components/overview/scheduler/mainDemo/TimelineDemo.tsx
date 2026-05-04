@@ -4,7 +4,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
-import { EventTimelinePremiumPreset } from '@mui/x-scheduler-headless-premium/models';
+import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { timelineEvents, timelineResources, timelineDefaultVisibleDate } from './data';
 

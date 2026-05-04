@@ -14,9 +14,9 @@ import { screen, within } from '@mui/internal-test-utils';
 import {
   SchedulerResource,
   SchedulerOccurrencePlaceholderCreation,
-} from '@mui/x-scheduler-headless/models';
-import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { ExtendableEventCalendarStore } from '@mui/x-scheduler-headless/use-event-calendar';
+} from '@mui/x-scheduler-internals/models';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { ExtendableEventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventDialogContent } from './EventDialog';

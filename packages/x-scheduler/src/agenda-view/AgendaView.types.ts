@@ -1,6 +1,6 @@
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { Theme } from '@mui/material/styles';
-import { EventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
+import { EventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
 
 export interface AgendaViewProps extends React.HTMLAttributes<HTMLDivElement> {}
 

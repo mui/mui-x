@@ -566,12 +566,12 @@ importers:
       '@mui/x-scheduler':
         specifier: workspace:^
         version: link:../packages/x-scheduler/build
-      '@mui/x-scheduler-headless':
+      '@mui/x-scheduler-internals':
         specifier: workspace:^
-        version: link:../packages/x-scheduler-headless/build
-      '@mui/x-scheduler-headless-premium':
+        version: link:../packages/x-scheduler-internals/build
+      '@mui/x-scheduler-internals-premium':
         specifier: workspace:^
-        version: link:../packages/x-scheduler-headless-premium/build
+        version: link:../packages/x-scheduler-internals-premium/build
       '@mui/x-scheduler-premium':
         specifier: workspace:^
         version: link:../packages/x-scheduler-premium/build
@@ -1678,9 +1678,9 @@ importers:
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../x-internals/build
-      '@mui/x-scheduler-headless':
+      '@mui/x-scheduler-internals':
         specifier: workspace:^
-        version: link:../x-scheduler-headless/build
+        version: link:../x-scheduler-internals/build
       '@mui/x-tree-view':
         specifier: workspace:^
         version: link:../x-tree-view/build
@@ -1720,7 +1720,7 @@ importers:
         version: 6.1.3
     publishDirectory: build
 
-  packages/x-scheduler-headless:
+  packages/x-scheduler-internals:
     dependencies:
       '@atlaskit/pragmatic-drag-and-drop':
         specifier: 'catalog:'
@@ -1782,7 +1782,7 @@ importers:
         version: 6.1.3
     publishDirectory: build
 
-  packages/x-scheduler-headless-premium:
+  packages/x-scheduler-internals-premium:
     dependencies:
       '@babel/runtime':
         specifier: 'catalog:'
@@ -1796,9 +1796,9 @@ importers:
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../x-internals/build
-      '@mui/x-scheduler-headless':
+      '@mui/x-scheduler-internals':
         specifier: workspace:^
-        version: link:../x-scheduler-headless/build
+        version: link:../x-scheduler-internals/build
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
@@ -1858,12 +1858,12 @@ importers:
       '@mui/x-scheduler':
         specifier: workspace:^
         version: link:../x-scheduler/build
-      '@mui/x-scheduler-headless':
+      '@mui/x-scheduler-internals':
         specifier: workspace:^
-        version: link:../x-scheduler-headless/build
-      '@mui/x-scheduler-headless-premium':
+        version: link:../x-scheduler-internals/build
+      '@mui/x-scheduler-internals-premium':
         specifier: workspace:^
-        version: link:../x-scheduler-headless-premium/build
+        version: link:../x-scheduler-internals-premium/build
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
@@ -2138,12 +2138,12 @@ importers:
       '@mui/x-scheduler':
         specifier: workspace:^
         version: link:../packages/x-scheduler/build
-      '@mui/x-scheduler-headless':
+      '@mui/x-scheduler-internals':
         specifier: workspace:^
-        version: link:../packages/x-scheduler-headless/build
-      '@mui/x-scheduler-headless-premium':
+        version: link:../packages/x-scheduler-internals/build
+      '@mui/x-scheduler-internals-premium':
         specifier: workspace:^
-        version: link:../packages/x-scheduler-headless-premium/build
+        version: link:../packages/x-scheduler-internals-premium/build
       '@mui/x-scheduler-premium':
         specifier: workspace:^
         version: link:../packages/x-scheduler-premium/build
@@ -2393,12 +2393,12 @@ importers:
       '@mui/x-scheduler':
         specifier: workspace:^
         version: link:../../packages/x-scheduler/build
-      '@mui/x-scheduler-headless':
+      '@mui/x-scheduler-internals':
         specifier: workspace:^
-        version: link:../../packages/x-scheduler-headless/build
-      '@mui/x-scheduler-headless-premium':
+        version: link:../../packages/x-scheduler-internals/build
+      '@mui/x-scheduler-internals-premium':
         specifier: workspace:^
-        version: link:../../packages/x-scheduler-headless-premium/build
+        version: link:../../packages/x-scheduler-internals-premium/build
       '@mui/x-scheduler-premium':
         specifier: workspace:^
         version: link:../../packages/x-scheduler-premium/build

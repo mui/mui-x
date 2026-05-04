@@ -15,8 +15,8 @@ import {
   SchedulerEvent,
   SchedulerResource,
   TemporalSupportedObject,
-} from '@mui/x-scheduler-headless/models';
-import { EventTimelinePremiumPreset } from '@mui/x-scheduler-headless-premium/models';
+} from '@mui/x-scheduler-internals/models';
+import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 
 const engineering = ResourceBuilder.new().build();
