@@ -147,6 +147,9 @@ export function useValueAndOpenStates<
       ...prevState,
       // We reset the shallow value whenever we fire onChange.
       clockShallowValue: shouldFireOnChange ? undefined : prevState.clockShallowValue,
+      // Track the value we're emitting so the external-change detector below doesn't
+      // re-fire when the controlled parent reflects our own onChange back.
+      lastExternalValue: shouldFireOnChange ? newValue : prevState.lastExternalValue,
       lastCommittedValue: shouldFireOnAccept ? newValue : prevState.lastCommittedValue,
       hasBeenModifiedSinceMount: true,
     }));
@@ -190,11 +193,14 @@ export function useValueAndOpenStates<
     }
   });
 
-  // If `prop.value` changes, we update the state to reflect the new value
+  // If `prop.value` changes externally (not as a result of our own onChange), sync both
+  // lastExternalValue and lastCommittedValue so that onAccept fires correctly when the user
+  // subsequently accepts/clears the externally-set value.
   if (value !== state.lastExternalValue) {
     setState((prevState) => ({
       ...prevState,
       lastExternalValue: value,
+      lastCommittedValue: value,
       clockShallowValue: undefined,
       hasBeenModifiedSinceMount: true,
     }));

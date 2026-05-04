@@ -148,6 +148,29 @@ describe('<MobileDatePicker />', () => {
       expect(onAccept.callCount).to.equal(1);
     });
 
+    // Ensures the case in https://github.com/mui/mui-x/issues/21962 works correctly
+    it('should call `onAccept` when clearing an externally-set controlled value', () => {
+      const onAccept = spy();
+
+      const view = renderWithProps({
+        value: null,
+        onAccept,
+        slotProps: {
+          actionBar: { actions: ['clear'] },
+        },
+      });
+
+      // Simulate external value update (e.g., from Redux)
+      view.setProps({ value: adapterToUse.date('2018-01-01') });
+
+      openPicker({ type: 'date' });
+
+      fireEvent.click(screen.getByText('Clear'));
+
+      expect(onAccept.callCount).to.equal(1);
+      expect(onAccept.lastCall.args[0]).to.equal(null);
+    });
+
     it('should update internal state when controlled value is updated', async () => {
       const view = renderWithProps({
         value: adapterToUse.date('2019-01-01'),
