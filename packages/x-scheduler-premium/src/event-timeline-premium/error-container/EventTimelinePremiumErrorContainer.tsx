@@ -6,8 +6,8 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
-import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 
 export interface EventTimelinePremiumErrorContainerProps {

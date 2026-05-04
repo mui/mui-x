@@ -6,8 +6,8 @@ import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 import { SchedulerOccurrencePlaceholderExternalDragData } from '@mui/x-scheduler/models';
-// TODO: Estimate if we can avoid all imports from the headless package.
-import { buildIsValidDropTarget } from '@mui/x-scheduler-headless/build-is-valid-drop-target';
+// TODO: Estimate if we can avoid all imports from the internals package.
+import { buildIsValidDropTarget } from '@mui/x-scheduler-internals/build-is-valid-drop-target';
 import {
   initialEvents,
   defaultVisibleDate,

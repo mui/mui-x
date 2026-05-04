@@ -68,11 +68,8 @@ const esESDialog: Partial<EventDialogLocaleText> = {
 };
 
 const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Ocultar eventos de ${resourceName}`,
+  // ResourcesTree
   resourcesLabel: 'Recursos',
-  resourcesLegendSectionLabel: 'Leyenda de recursos',
-  showEventsLabel: (resourceName) => `Mostrar eventos de ${resourceName}`,
 
   // ViewSwitcher
   agenda: 'Agenda',

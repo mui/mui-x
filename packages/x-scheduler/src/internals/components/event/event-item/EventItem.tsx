@@ -9,11 +9,11 @@ import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
   schedulerResourceSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { Button } from '@base-ui/react/button';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { EventItemProps } from './EventItem.types';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';

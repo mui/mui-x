@@ -6,8 +6,8 @@ import {
   eventTimelinePremiumClasses,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
-import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { EventTimelinePremiumStore } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumErrorContainer } from './error-container';
 import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
@@ -23,8 +23,8 @@ import {
   SchedulerEvent,
   SchedulerResource,
   TemporalSupportedObject,
-} from '@mui/x-scheduler-headless/models';
-import { EventTimelinePremiumPreset } from '@mui/x-scheduler-headless-premium/models';
+} from '@mui/x-scheduler-internals/models';
+import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 
 const engineering = ResourceBuilder.new().build();

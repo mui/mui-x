@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import { useId } from '@base-ui/utils/useId';
-import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
-import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
-import { useEventCalendarPremium } from '@mui/x-scheduler-headless-premium/use-event-calendar-premium';
+import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
+import { useEventCalendarPremium } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import {
   useEventCalendarUtilityClasses,
   EventCalendarStyledContext,

@@ -1,5 +1,5 @@
-import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
-import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
+import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
+import { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 
 export interface MonthViewWeekRowProps {
   rowIndex: number;
