@@ -41,11 +41,6 @@ export const selectorChartCanZoomOut = createSelector(
   },
 );
 
-export const selectorChartActiveRangeButtonKey = createSelector(
-  selectorChartZoomState,
-  (zoom) => zoom.activeRangeButtonKey,
-);
-
 export const selectorChartCanZoomIn = createSelector(
   selectorChartZoomState,
   selectorChartZoomOptionsLookup,

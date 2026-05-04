@@ -15,7 +15,7 @@ import {
 import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import {
   type UseChartProZoomSignature,
-  selectorChartActiveRangeButtonKey,
+  selectorChartAxisZoomData,
   selectorChartCanZoomOut,
 } from '../internals/plugins/useChartProZoom';
 import { type RangeButtonValue, rangeButtonValueToZoom } from './rangeButtonValueToZoom';
@@ -64,7 +64,6 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } =
     useChartsContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
-  const activeRangeButtonKey = store.use(selectorChartActiveRangeButtonKey);
   const canZoomOut = store.use(selectorChartCanZoomOut);
   const zoomOptionsLookup = store.use(selectorChartZoomOptionsLookup);
   const rawXAxes = store.use(selectorChartRawXAxis);
@@ -80,6 +79,8 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     }
     return rawXAxes.find((axis) => zoomOptionsLookup[axis.id] !== undefined)?.id;
   }, [axisIdProp, rawXAxes, zoomOptionsLookup]);
+
+  const currentAxisZoom = store.use(selectorChartAxisZoomData, resolvedAxisId as AxisId);
 
   // Determine if the resolved axis is ordinal (band/point) to use index-based domain.
   const resolvedAxis = React.useMemo(
@@ -120,15 +121,23 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
       start: zoom.start,
       end: zoom.end,
     });
-    instance.setActiveRangeButtonKey(label);
-  }, [resolvedAxisId, resolvedAxis, axisDomain, value, instance, label]);
+  }, [resolvedAxisId, resolvedAxis, axisDomain, value, instance]);
 
-  // Determine if this button is selected.
-  // When explicitly clicked, activeRangeButtonKey matches the label.
-  // When no button has been clicked and zoom is at full range, the null-value button is active.
-  const isActive =
-    activeRangeButtonKey === label ||
-    (activeRangeButtonKey === null && value === null && !canZoomOut);
+  // A button is selected when the current zoom range matches its computed range.
+  const isActive = React.useMemo(() => {
+    if (axisDomain === undefined) {
+      return value === null && !canZoomOut;
+    }
+    const target = rangeButtonValueToZoom(value, {
+      scaleType: resolvedAxis?.scaleType ?? 'linear',
+      data: resolvedAxis?.data,
+      domain: axisDomain,
+    });
+    const start = currentAxisZoom?.start ?? 0;
+    const end = currentAxisZoom?.end ?? 100;
+    const epsilon = 0.01;
+    return Math.abs(start - target.start) < epsilon && Math.abs(end - target.end) < epsilon;
+  }, [axisDomain, value, resolvedAxis, currentAxisZoom, canZoomOut]);
 
   const element = useComponentRenderer(slots.baseToggleButton, render, {
     ...slotProps.baseToggleButton,

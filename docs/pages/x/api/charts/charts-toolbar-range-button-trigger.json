@@ -24,6 +24,8 @@
     "import { ChartsToolbarRangeButtonTrigger } from '@mui/x-charts-pro';"
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiChartsToolbarRangeButtonTrigger",
   "filename": "/packages/x-charts-pro/src/ChartsToolbarPro/ChartsToolbarRangeButtonTrigger.tsx",
   "inheritance": null,
