@@ -127,6 +127,18 @@ const useDragRangeEvents = ({
       return;
     }
 
+    // Ignore re-entrant pointerdowns. A second pointer arriving while a
+    // gesture is already in flight (multi-touch, pen joining a touch, etc.)
+    // would otherwise overwrite `pointerIdRef` and `cleanupListenersRef`,
+    // leaking the first gesture's document listeners and silencing its
+    // `pointerup` (the id mismatch would skip the cleanup branch). The
+    // explicit `isPrimary === false` check filters secondary multi-touch
+    // pointers up front; the `pointerIdRef.current != null` check also
+    // covers the case where the original gesture's `pointerup` was lost.
+    if (pointerIdRef.current != null || event.isPrimary === false) {
+      return;
+    }
+
     const newDate = resolveDateFromTarget(event.currentTarget, adapter, timezone);
     if (!isElementDraggable(newDate)) {
       return;
