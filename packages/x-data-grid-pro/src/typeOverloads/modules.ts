@@ -1,4 +1,4 @@
-import type { GridRowId, GridPinnedColumnFields } from '@mui/x-data-grid';
+import type { GridRowId, GridPinnedColumnFields, GridColTypeDef } from '@mui/x-data-grid';
 import type {
   GridRowScrollEndParams,
   GridRowOrderChangeParams,
@@ -67,6 +67,10 @@ declare module '@mui/x-data-grid' {
   interface GridControlledStateEventLookup extends GridControlledStateEventLookupPro {}
 
   interface GridPipeProcessingLookup extends GridPipeProcessingLookupPro {}
+
+  interface GridColumnTypesRecord {
+    multiSelect?: GridColTypeDef;
+  }
 }
 
 declare module '@mui/x-data-grid/internals' {

@@ -15,7 +15,12 @@ import {
 } from '../../../colDef';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import type {
+  GridColDef,
+  GridColTypeDef,
+  GridStateColDef,
+} from '../../../models/colDef/gridColDef';
+import type { GridColType } from '../../../models/colDef/gridColType';
 import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
@@ -298,9 +303,10 @@ const applyInitialState = (
 };
 
 export function getDefaultColTypeDef(type: GridColDef['type']) {
-  let colDef = COLUMN_TYPES[DEFAULT_GRID_COL_TYPE_KEY];
-  if (type && COLUMN_TYPES[type]) {
-    colDef = COLUMN_TYPES[type];
+  const lookup = COLUMN_TYPES as Partial<Record<GridColType, GridColTypeDef>>;
+  let colDef = lookup[DEFAULT_GRID_COL_TYPE_KEY]!;
+  if (type && lookup[type]) {
+    colDef = lookup[type]!;
   }
   return colDef;
 }

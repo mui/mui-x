@@ -282,7 +282,7 @@
   { "name": "gridColumnsStateSelector", "kind": "Variable" },
   { "name": "gridColumnsTotalWidthSelector", "kind": "Variable" },
   { "name": "GridColumnTypes", "kind": "Interface" },
-  { "name": "GridColumnTypesRecord", "kind": "TypeAlias" },
+  { "name": "GridColumnTypesRecord", "kind": "Interface" },
   { "name": "GridColumnUnsortedIcon", "kind": "Function" },
   { "name": "GridColumnUnsortedIconProps", "kind": "Interface" },
   { "name": "GridColumnVisibilityModel", "kind": "TypeAlias" },
