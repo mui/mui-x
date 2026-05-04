@@ -82,6 +82,24 @@ async function main() {
       return undefined;
     };
 
+    // Overview composites embed desktop-breakpoint media queries that don't match
+    // at the default 1000x700 viewport, leaving panes hidden in screenshots. Bump
+    // the viewport per product so each captures its live-docs desktop layout.
+    const overviewViewports: Record<string, { width: number; height: number }> = {
+      pickers: { width: 1280, height: 800 },
+      scheduler: { width: 1440, height: 900 },
+    };
+
+    const defaultViewport = { width: 1000, height: 700 };
+
+    const getViewport = (routeUrl: string) => {
+      const overviewMatch = routeUrl.match(/^\/test-regressions-overviews-([^/]+)\//);
+      if (overviewMatch && overviewViewports[overviewMatch[1]]) {
+        return overviewViewports[overviewMatch[1]];
+      }
+      return defaultViewport;
+    };
+
     routes.forEach((route) => {
       it(
         `creates screenshots of ${route.url}`,
@@ -99,6 +117,8 @@ async function main() {
             // Ignore pointer interaction screenshot — dedicated tests handle mouse positioning.
             return;
           }
+
+          await page.setViewportSize(getViewport(route.url));
 
           await navigateToTest(route.url);
 
