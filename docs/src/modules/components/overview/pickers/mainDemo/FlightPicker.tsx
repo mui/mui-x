@@ -18,12 +18,14 @@ export default function FlightPicker() {
         slotProps={{
           textField: ({ position }: FieldOwnerState & { position?: 'start' | 'end' }) => ({
             label: position === 'start' ? 'Outbound' : 'Inbound',
-            InputProps: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  {position === 'start' ? <FlightTakeoffIcon /> : <FlightLandIcon />}
-                </InputAdornment>
-              ),
+            slotProps: {
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    {position === 'start' ? <FlightTakeoffIcon /> : <FlightLandIcon />}
+                  </InputAdornment>
+                ),
+              },
             },
           }),
         }}

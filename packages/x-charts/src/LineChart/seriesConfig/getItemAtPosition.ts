@@ -9,6 +9,7 @@ import type { ProcessedSeries } from '../../internals/plugins/corePlugins/useCha
 import { getAxisIndex } from '../../internals/plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
 import type { SeriesItemIdentifierWithType } from '../../models/seriesType';
 import { isOrdinalScale } from '../../internals/scaleGuards';
+import { getAsNumber } from '../../internals/getAsNumber';
 import { getValueToPositionMapper } from '../../hooks/getValueToPositionMapper';
 import type { ComputedAxis } from '../../models/axis';
 import { evaluateCurveY } from './curveEvaluation';
@@ -44,9 +45,7 @@ function getBracketIndices(
 
   // For continuous axes, find the two adjacent data points surrounding pointX.
   const xValue = scale.invert(pointX);
-  const xAsNumber = xValue instanceof Date ? xValue.getTime() : xValue;
-
-  const getAsNumber = (v: any) => (v instanceof Date ? v.getTime() : v);
+  const xAsNumber = getAsNumber(xValue);
 
   // Find the rightmost index where data[i] <= xValue.
   let leftIndex = -1;
@@ -93,6 +92,7 @@ function getBaselinePixelY(
   if (baseline === 'min') {
     return yScale.range()[0] as number;
   }
+
   // Default: use the stacked baseline value.
   const value = yScale(stackedY0) as number;
   if (Number.isNaN(value)) {
@@ -198,6 +198,9 @@ export default function getItemAtPosition(
     const { left, right } = bracket;
     const { visibleStackedData, data, connectNulls, curve } = seriesItem;
 
+    if (!connectNulls && (data[left] == null || data[right] == null)) {
+      continue;
+    }
     const dataIndex = getAxisIndex(xAxis, point.x);
     if (dataIndex === -1) {
       continue;
@@ -259,7 +262,11 @@ export default function getItemAtPosition(
   }
 
   // Step 2: If the closest line is within the proximity threshold, pick it.
-  if (closestItem && closestDistance <= LINE_PROXIMITY_THRESHOLD) {
+  if (
+    closestItem &&
+    closestDistance <= LINE_PROXIMITY_THRESHOLD &&
+    !series.series[closestItem.seriesId].area
+  ) {
     return closestItem;
   }
 
@@ -270,8 +277,8 @@ export default function getItemAtPosition(
   for (let g = stackingGroups.length - 1; g >= 0; g -= 1) {
     const groupIds = stackingGroups[g].ids;
 
-    // Iterate in reverse so the topmost stacked area is checked first.
-    for (let i = groupIds.length - 1; i >= 0; i -= 1) {
+    // Iterate in direct order cause the `useAreaPlotData` is already doing a reverse order.
+    for (let i = 0; i < groupIds.length; i += 1) {
       const seriesId = groupIds[i];
       const seriesItem = series.series[seriesId];
 
@@ -298,14 +305,7 @@ export default function getItemAtPosition(
       const { visibleStackedData, data, connectNulls, baseline, curve } = seriesItem;
 
       // Check for null gaps at bracket points.
-      const leftIsNull = data[left] == null;
-      const rightIsNull = data[right] == null;
-
-      if (leftIsNull && rightIsNull) {
-        continue;
-      }
-
-      if ((leftIsNull || rightIsNull) && !connectNulls) {
+      if ((data[left] == null || data[right] == null) && !connectNulls) {
         continue;
       }
 
@@ -319,25 +319,6 @@ export default function getItemAtPosition(
       }
 
       const getPixelX = (idx: number) => xPosition(xData[idx]);
-
-      if (left === right) {
-        // Ordinal axis or pointer exactly on a data point.
-        const stacked = visibleStackedData[left];
-        if (!stacked) {
-          continue;
-        }
-        const yBottom = getBaselinePixelY(baseline, yScale, stacked[0]);
-        const yTop = yScale(stacked[1]) as number;
-        if ([yBottom, yTop].some((v) => v == null || Number.isNaN(v))) {
-          continue;
-        }
-        const yMin = Math.min(yBottom, yTop);
-        const yMax = Math.max(yBottom, yTop);
-        if (point.y >= yMin && point.y <= yMax) {
-          return { type: 'line', seriesId, dataIndex: left };
-        }
-        continue;
-      }
 
       // Build pixel-coordinate points for the top and bottom curves,
       // then evaluate them at the pointer's x using the actual d3 curve.
