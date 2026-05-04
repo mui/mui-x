@@ -17,13 +17,14 @@ import { formatMeridiem } from '../internals/utils/date-utils';
 import { Meridiem } from '../internals/utils/time-utils';
 import { FormProps } from '../internals/models/formProps';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 export interface ClockProps extends ReturnType<typeof useMeridiemMode>, FormProps {
   ampm: boolean;
   ampmInClock: boolean;
   autoFocus?: boolean;
   children: readonly React.ReactNode[];
-  isTimeDisabled: (timeValue: number, type: TimeView) => boolean;
+  isTimeDisabled: (timeValue: number, type: TimeViewWithMeridiem) => boolean;
   minutesStep?: number;
   onChange: (value: number, isFinish?: PickerSelectionState) => void;
   /**
@@ -406,7 +407,7 @@ export function Clock(inProps: ClockProps) {
           <ClockAmButton
             data-testid="in-clock-am-btn"
             onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
-            disabled={disabled || meridiemMode === null}
+            disabled={disabled || meridiemMode === null || isTimeDisabled(0, 'meridiem')}
             ownerState={ownerState}
             className={classes.amButton}
             title={formatMeridiem(adapter, 'am')}
@@ -416,7 +417,7 @@ export function Clock(inProps: ClockProps) {
             </ClockMeridiemText>
           </ClockAmButton>
           <ClockPmButton
-            disabled={disabled || meridiemMode === null}
+            disabled={disabled || meridiemMode === null || isTimeDisabled(12, 'meridiem')}
             data-testid="in-clock-pm-btn"
             onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
             ownerState={ownerState}

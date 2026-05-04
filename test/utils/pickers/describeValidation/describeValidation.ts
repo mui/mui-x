@@ -6,6 +6,7 @@ import { testTextFieldValidation } from './testTextFieldValidation';
 import { testYearViewValidation } from './testYearViewValidation';
 import { DescribeValidationInputOptions } from './describeValidation.types';
 import { testMinutesViewValidation } from './testMinutesViewValidation';
+import { testMeridiemViewValidation } from './testMeridiemViewValidation';
 
 const TEST_SUITES = [
   testYearViewValidation,
@@ -13,6 +14,7 @@ const TEST_SUITES = [
   testDayViewValidation,
   testMinutesViewValidation,
   testTextFieldValidation,
+  testMeridiemViewValidation,
 ];
 
 function innerDescribeValidation(
