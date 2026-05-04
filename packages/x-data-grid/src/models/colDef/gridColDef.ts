@@ -354,10 +354,10 @@ export interface GridSingleSelectColDef<
   /**
    * Used to determine the value used for a value option.
    * @param {ValueOptions} value The current value option.
-   * @returns {string | number} The value to be used.
+   * @returns {string} The value to be used.
    * @default {defaultGetOptionValue}
    */
-  getOptionValue: (value: ValueOptions) => string | number;
+  getOptionValue: (value: ValueOptions) => any;
 }
 
 /**

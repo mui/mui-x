@@ -14,7 +14,7 @@
       "required": true
     },
     "getOptionValue": {
-      "type": { "description": "(value: ValueOptions) =&gt; string | number" },
+      "type": { "description": "(value: ValueOptions) =&gt; any" },
       "default": "{defaultGetOptionValue}",
       "required": true
     },
