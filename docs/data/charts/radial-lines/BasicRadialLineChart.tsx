@@ -28,7 +28,8 @@ export default function BasicRadialLineChart() {
           showMark: true,
         },
       ]}
-      rotationAxis={[{ scaleType: 'point', data: months }]}
+      rotationAxis={[{ scaleType: 'point', data: months, disableLine: true }]}
+      radiusAxis={[{ disableLine: true }]}
       grid={{ rotation: true, radius: true }}
     />
   );
