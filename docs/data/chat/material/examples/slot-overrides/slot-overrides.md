@@ -1,13 +1,13 @@
 ---
-title: Chat - Slot overrides
+title: Chat - Slot Overrides
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Slot overrides
+# Chat - Slot Overrides
 
-<p class="description">Replace individual subcomponents inside <code>ChatBox</code> using the <code>slots</code> prop.</p>
+<p class="description">Replace individual subcomponents inside ChatBox using the slots prop.</p>
 
 The `slots` prop lets you swap any internal component in `ChatBox` with your own implementation.
 This demo replaces the message bubble with a `Paper`-based component that uses MUI elevation and border styles.
@@ -41,9 +41,9 @@ const CustomMessageContent = React.forwardRef(
 <ChatBox slots={{ messageContent: CustomMessageContent }} />;
 ```
 
-This keeps the default rendering behavior — part iteration, reasoning blocks, source citations, tool invocations — and only changes the visual container.
+This keeps the default rendering behavior—part iteration, reasoning blocks, source citations, tool invocations—and only changes the visual container.
 
-## ownerState
+## Reading owner state in custom slots
 
 Slot components receive an `ownerState` prop from the MUI styled system.
 For message-related slots, `ownerState.role` is `'user'` or `'assistant'`:

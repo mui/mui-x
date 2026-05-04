@@ -58,7 +58,7 @@ In thread-only mode `ChatBox` does not render the conversation list sidebar, and
 
 ## Full recomposition
 
-When `ChatBox` slots are not enough — for example when you want to add a pinned banner between the header and the message list, or position the typing indicator inside the header — you can assemble the thread from individual Material UI components directly.
+When `ChatBox` slots are not enough—for example when you want to add a pinned banner between the header and the message list, or position the typing indicator inside the header—you can assemble the thread from individual Material UI components directly.
 
 The following example shows a fully assembled thread pane without relying on `ChatBox` layout defaults:
 
@@ -124,7 +124,7 @@ The layout supports split configurations where the conversation list and thread 
 
 ## Responsive layout
 
-`ChatBox` uses a CSS container query to adapt its layout based on its own width — not the viewport.
+`ChatBox` uses a CSS container query to adapt its layout based on its own width—not the viewport.
 When the container is narrower than `600px`, the conversation list collapses automatically and a menu button appears in the conversation header.
 Tapping the menu button opens the conversation list in a drawer overlay.
 
@@ -132,7 +132,7 @@ Drag the slider below to resize the container and see the transition in action:
 
 {{"demo": "../../material/examples/responsive-drawer/ResponsiveDrawer.js", "bg": "inline", "defaultCodeOpen": false}}
 
-This behavior is built in — no extra configuration is needed.
+This behavior is built in—no extra configuration is needed.
 It works identically whether the `ChatBox` fills the full viewport on a mobile device or is embedded in a narrow sidebar on desktop.
 
 Set explicit dimensions on the parent element or use the `sx` prop:

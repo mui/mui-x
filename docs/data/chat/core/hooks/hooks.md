@@ -1,11 +1,11 @@
 ---
 productId: x-chat
-title: Chat - Core hooks
+title: Chat - Core Hooks
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Core hooks
+# Chat - Core Hooks
 
 <p class="description">Read chat state and trigger runtime actions through hooks scoped to exactly the data your component needs.</p>
 
@@ -26,13 +26,13 @@ import {
 } from '@mui/x-chat/headless';
 ```
 
-All hooks must be called inside a `<ChatProvider>`.
+All hooks must be called inside a `ChatProvider`.
 
 The following demo shows hooks in action inside a minimal custom chat:
 
 {{"demo": "../examples/minimal-chat/MinimalHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
-## `useChat()`
+## Orchestrating state and actions
 
 The all-in-one orchestration hook.
 It returns both the public state fields and every runtime action in a single object.
@@ -60,7 +60,7 @@ It returns both the public state fields and every runtime action in a single obj
 | `setError`                | `(error: ChatError \| null) => void`                        | Update the error state      |
 | `addToolApprovalResponse` | `(input: ChatAddToolApproveResponseInput) => Promise<void>` | Approve or deny a tool call |
 
-### `UseChatSendMessageInput`
+### Send message input shape
 
 When calling `sendMessage`, the input object has the following shape:
 
@@ -107,7 +107,7 @@ function Thread() {
 `useChat()` is the fastest way to get started, but it subscribes to multiple store slices at once.
 For large threads or performance-sensitive trees, prefer the narrower hooks below.
 
-## `useChatComposer()`
+## Managing composer state
 
 Manages draft text, file attachments, and submission behavior.
 
@@ -158,7 +158,7 @@ function DraftArea() {
 }
 ```
 
-## `useChatStatus()`
+## Reading status and error state
 
 A lightweight hook for status indicators, loading spinners, and error banners.
 
@@ -185,16 +185,16 @@ function StatusBar() {
 }
 ```
 
-## `useMessageIds()` and `useMessage(id)`
+## Subscribing to individual messages
 
 Row-level subscriptions for efficient thread rendering.
 
-- `useMessageIds()` returns `string[]` — the ordered list of message IDs.
-- `useMessage(id)` returns `ChatMessage | null` — a single message by ID.
+- `useMessageIds()` returns `string[]`: the ordered list of message IDs.
+- `useMessage(id)` returns `ChatMessage | null`: a single message by ID.
 
 The pattern works like this: the parent component calls `useMessageIds()` and renders a list of row components.
 Each row calls `useMessage(id)` to subscribe to its own message.
-When a single message updates during streaming, only that row re-renders — the parent and sibling rows stay untouched.
+When a single message updates during streaming, only that row re-renders—the parent and sibling rows stay untouched.
 
 ```tsx
 function Thread() {
@@ -221,12 +221,12 @@ function MessageRow({ id }: { id: string }) {
 
 This is the recommended pattern for threads with more than a handful of messages.
 
-## `useConversations()` and `useConversation(id)`
+## Subscribing to conversations
 
 Conversation-level subscriptions following the same pattern as messages.
 
-- `useConversations()` returns `ChatConversation[]` — all conversations.
-- `useConversation(id)` returns `ChatConversation | null` — a single conversation by ID.
+- `useConversations()` returns `ChatConversation[]`: all conversations.
+- `useConversation(id)` returns `ChatConversation | null`: a single conversation by ID.
 
 ```tsx
 function Sidebar() {
@@ -242,11 +242,11 @@ function Sidebar() {
 }
 ```
 
-## `useChatStore()`
+## Accessing the store directly
 
 Returns the underlying `ChatStore<Cursor>` instance.
 
-This is the escape hatch for advanced use cases that need direct store access — custom selectors, store subscriptions outside React render, or integration with external state management.
+This is the escape hatch for advanced use cases that need direct store access—custom selectors, store subscriptions outside React render, or integration with external state management.
 
 ```tsx
 import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
@@ -261,10 +261,10 @@ function MessageCounter() {
 ```
 
 :::warning
-`useChatStore()` gives you access to all selectors and the full store mutation API. Use it sparingly — the dedicated hooks above are simpler, better typed, and remain stable across minor versions. Direct store access is considered advanced API and is more likely to require changes during upgrades.
+`useChatStore()` gives you access to all selectors and the full store mutation API. Use it sparingly—the dedicated hooks above are simpler, better typed, and remain stable across minor versions. Direct store access is considered advanced API and is more likely to require changes during upgrades.
 :::
 
-## `useChatPartRenderer(partType)`
+## Looking up part renderers
 
 Looks up a registered renderer for a specific message part type.
 

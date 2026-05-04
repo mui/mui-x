@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Chat - Headless composition
+title: Chat - Headless Composition
 packageName: '@mui/x-chat/headless'
 components: ChatRoot, ChatLayout
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless composition
+# Chat - Headless Composition
 
 <p class="description">Compose a complete chat UI from the headless namespaces while keeping styling decisions in your own code.</p>
 
@@ -71,7 +71,7 @@ It shows how the primitive groups fit together before you drill into individual 
 - grouped message composition without custom row bookkeeping
 - a form-based conversation input with submission and attachment plumbing
 
-## `Chat.Root` versus `ChatProvider`
+## Choosing between Chat.Root and ChatProvider
 
 `Chat.Root` is the headless entry point for pages that want both provider setup and UI structure in one place.
 It accepts the same runtime props as the headless provider, then renders your structural surface through a root slot.

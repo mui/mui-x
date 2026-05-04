@@ -107,7 +107,7 @@ function TaskStatusIcon({ status }: { status: TaskStatus }) {
   return (
     <span
       style={{ display: 'inline-flex', flexShrink: 0, color: 'inherit' }}
-      // Pass MUI color token via sx if needed — here we inline via style
+      // Pass MUI color token via sx if needed—here we inline via style
       data-status={status}
     >
       <span
@@ -131,7 +131,7 @@ function TaskStatusIcon({ status }: { status: TaskStatus }) {
 }
 
 // --- TaskList ----------------------------------------------------------------
-// Custom collapsible task list — rendered in place of the run_tasks tool call.
+// Custom collapsible task list—rendered in place of the run_tasks tool call.
 
 interface TaskListProps {
   tasks: Task[];

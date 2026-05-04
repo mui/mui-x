@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Chat - Headless message list
+title: Chat - Headless Message List
 packageName: '@mui/x-chat/headless'
 components: MessageListRoot
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless message list
+# Chat - Headless Message List
 
 <p class="description">Render ordered thread rows with date boundaries, history loading, scroll anchoring, and unseen-message tracking.</p>
 
@@ -19,7 +19,7 @@ The message list surface is built from:
 - `MessageList.Root`
 - `MessageList.DateDivider`
 
-## `MessageList.Root`
+## Building the thread log
 
 `MessageList.Root` is the structural thread log.
 By default it sources row ids from `useMessageIds()`, but you can also pass a custom `items` array when the rendered order needs to differ from the store order.
@@ -68,7 +68,7 @@ Without that anchoring, loading more history would make the thread jump unexpect
 `MessageList.Root` exposes a `scrollToBottom()` handle through `ref`.
 Use that when the surrounding app needs an explicit "jump to latest" action outside the list surface itself.
 
-## `MessageList.DateDivider`
+## Adding date dividers
 
 `MessageList.DateDivider` inserts a separator when the current message starts a new calendar day compared to the previous message.
 

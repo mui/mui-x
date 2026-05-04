@@ -8,17 +8,21 @@ components: ChatMessageGroup, ChatMessageAvatar, ChatMessageAuthorLabel, ChatMes
 
 # Chat - Message Appearance
 
-<p class="description">Control the visual presentation of messages — grouping, date dividers, avatars, timestamps, and layout variants.</p>
+<p class="description">Control the visual presentation of messages—grouping, date dividers, avatars, timestamps, and layout variants.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-This page covers the visual aspects of how messages are displayed in the message list. For message content rendering (text, files, code blocks), see the [Message Parts](/x/react-chat/display/message-parts/text-and-markdown/) section.
+This page covers the visual aspects of how messages are displayed in the message list.
+For message content rendering (text, files, code blocks), see the [Message parts](/x/react-chat/display/message-parts/text-and-markdown/) section.
 
 ## Message groups
 
-Consecutive messages from the same author are grouped together into a `ChatMessageGroup`. Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
+Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
+Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
 
-The grouping window defaults to 5 minutes (300,000 ms). Messages from the same author that arrive within this window are placed in the same group. Customize it through `slotProps`:
+The grouping window defaults to 5 minutes (300,000 ms).
+Messages from the same author that arrive within this window are placed in the same group.
+Customize it through `slotProps`:
 
 {{"demo": "../../material/message-list/MessageGrouping.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -30,7 +34,8 @@ Grouping is based on:
 
 ## Date dividers
 
-When consecutive messages span different calendar dates, a date divider is rendered automatically between them. The divider shows a localized date string and is styled as a centered label with horizontal rules.
+When consecutive messages span different calendar dates, a date divider is rendered automatically between them.
+The divider shows a localized date string and is styled as a centered label with horizontal rules.
 
 Customize the date format through `slotProps`:
 
@@ -38,9 +43,11 @@ Customize the date format through `slotProps`:
 
 ## Avatars
 
-The `ChatMessageAvatar` component renders the author's avatar for the first message in each group. Avatars are sourced from the `ChatUser.avatarUrl` field on the message's author.
+The `ChatMessageAvatar` component renders the author's avatar for the first message in each group.
+Avatars are sourced from the `ChatUser.avatarUrl` field on the message's author.
 
-Within a group, subsequent messages omit the avatar entirely — the component returns `null` rather than rendering a placeholder. If no `avatarUrl` is set on the author and no custom `avatar` slot is provided, the avatar is also omitted for the first message in the group.
+Within a group, subsequent messages omit the avatar entirely—the component returns `null` rather than rendering a placeholder.
+If no `avatarUrl` is set on the author and no custom `avatar` slot is provided, the avatar is also omitted for the first message in the group.
 
 ## Timestamps and metadata
 
@@ -67,13 +74,14 @@ ChatMessageList                     ← scrollable container
 
 Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layout with no bubbles, left-aligned messages, and group header timestamps.
 
-See [Variants & Density](/x/react-chat/basics/variants-and-density/) for full details, a comparison table, and interactive demos.
+See [Variants and density](/x/react-chat/basics/variants-and-density/) for full details, a comparison table, and interactive demos.
 
 ## Density
 
-The `density` prop controls the vertical spacing between messages independently of the variant. Three values are available: `compact`, `standard` (default), and `comfortable`.
+The `density` prop controls the vertical spacing between messages independently of the variant.
+Three values are available: `compact`, `standard` (default), and `comfortable`.
 
-See [Variants & Density](/x/react-chat/basics/variants-and-density/) for interactive density demos and guidance on combining variant and density.
+See [Variants and density](/x/react-chat/basics/variants-and-density/) for interactive density demos and guidance on combining variant and density.
 
 ## Slots
 
@@ -93,5 +101,5 @@ The following slots are available for customization through `ChatBox`:
 ## See also
 
 - [Message list](/x/react-chat/basics/messages/) for scrolling behavior, auto-scroll configuration, and history loading
-- [Message Actions](/x/react-chat/display/message-actions/) for the hover action menu on messages
-- [Loading & Empty States](/x/react-chat/display/loading-and-empty-states/) for skeleton and empty state display
+- [Message actions](/x/react-chat/display/message-actions/) for the hover action menu on messages
+- [Loading and empty states](/x/react-chat/display/loading-and-empty-states/) for skeleton and empty state display

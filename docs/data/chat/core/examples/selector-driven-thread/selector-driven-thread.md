@@ -1,11 +1,11 @@
 ---
-title: Chat - Selector-driven thread
+title: Chat - Selector-Driven Thread
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Selector-driven thread
+# Chat - Selector-Driven Thread
 
 <p class="description">Render large custom threads efficiently with IDs at the list level and row-level message subscriptions.</p>
 
@@ -52,7 +52,7 @@ When a single message updates during streaming:
 - `useMessage(id)` on the updated row triggers a re-render
 - All other rows stay untouched
 
-This means that for a thread with 100 messages where one is streaming, only one component re-renders per delta — not 100.
+This means that for a thread with 100 messages where one is streaming, only one component re-renders per delta—not 100.
 
 ### Conversation-level selectors
 
@@ -68,7 +68,7 @@ const conversation = useConversation('selectors');
 ## Key takeaways
 
 - `useMessageIds()` + `useMessage(id)` is the recommended pattern for threads with more than a handful of messages
-- The normalized store ensures stable references — only changed data triggers re-renders
+- The normalized store ensures stable references—only changed data triggers re-renders
 - Wrap row components in `React.memo()` for maximum efficiency
 - `useConversations()` and `useConversation(id)` follow the same pattern for conversation lists
 

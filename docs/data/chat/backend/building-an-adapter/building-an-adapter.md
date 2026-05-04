@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Building an Adapter
 
-<p class="description">A step-by-step tutorial for implementing a custom <code>ChatAdapter</code> that connects your chat UI to any backend.</p>
+<p class="description">A step-by-step tutorial for connecting your chat UI to any backend.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -47,7 +47,7 @@ Your adapter only needs to know how to talk to your backend.
 If your backend does not return a `ReadableStream` natively (for example, you are using a WebSocket or a custom protocol), you can construct the stream manually.
 
 The stream must begin with a `start` chunk and end with `finish` or `abort`.
-Text arrives in `text-start` / `text-delta` / `text-end` triplets:
+Text arrives in `text-start`, `text-delta`, and `text-end` triplets:
 
 ```tsx
 const adapter: ChatAdapter = {
@@ -194,7 +194,7 @@ async listConversations({ cursor }) {
 
 ## Step 6: Handle stream reconnection
 
-Implement `reconnectToStream` to resume an interrupted stream — for example, when an SSE connection drops mid-response.
+Implement `reconnectToStream` to resume an interrupted stream—for example, when an SSE connection drops mid-response.
 The runtime calls it automatically after detecting a disconnected stream.
 
 ```tsx
@@ -261,7 +261,7 @@ const adapter: ChatAdapter = {
 ## Error handling
 
 :::info
-You do not need to catch errors inside adapter methods — the runtime handles them for you.
+You do not need to catch errors inside adapter methods—the runtime handles them for you.
 :::
 
 When an adapter method throws, the runtime records a `ChatError`, surfaces it through the built-in error UI and the `onError` callback, and marks the error `recoverable` or `retryable` when applicable.
@@ -281,6 +281,6 @@ To handle errors at the application level:
 
 - [Adapters](/x/react-chat/backend/adapters/) for the full interface reference.
 - [Streaming](/x/react-chat/behavior/streaming/) for the full stream chunk protocol reference.
-- [Real-Time Adapters](/x/react-chat/backend/real-time-adapters/) for adding `subscribe()`, `setTyping()`, and `markRead()`.
+- [Real-time adapters](/x/react-chat/backend/real-time-adapters/) for adding `subscribe()`, `setTyping()`, and `markRead()`.
 
 ## API

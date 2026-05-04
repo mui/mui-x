@@ -1,18 +1,19 @@
 ---
 productId: x-chat
-title: Chat - Conversation list
+title: Chat - Conversation List
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
 ---
 
-# Chat - Conversation list
+# Chat - Conversation List
 
-<p class="description">Customize the conversation sidebar — from simple slot overrides to fully custom item renderers — using the Material UI conversation list components.</p>
+<p class="description">Customize the conversation sidebar—from simple slot overrides to fully custom item renderers—using the Material UI conversation list components.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
+The conversation list is the sidebar that shows all available conversations and lets users switch between them.
+`@mui/x-chat` ships `ChatConversationList`, a single component with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
 
 The following demo shows a multi-conversation layout with the conversation list in action:
 
@@ -34,7 +35,7 @@ ChatConversationList              ← scrolling listbox (role="listbox")
     unreadBadge                   ← count badge (primary.main background)
 ```
 
-All visual slots are owned by a single `ChatConversationList` instance. You do not need to compose subcomponents manually — instead you replace any slot through the `slots` prop directly on `ChatConversationList`.
+All visual slots are owned by a single `ChatConversationList` instance. You do not need to compose subcomponents manually—instead you replace any slot through the `slots` prop directly on `ChatConversationList`.
 
 ## Slot reference
 
@@ -55,11 +56,11 @@ All visual slots are owned by a single `ChatConversationList` instance. You do n
 
 Because the Material UI layer fills all slot defaults at instantiation, overriding a single slot only affects that region without disturbing the others.
 
-## ownerState and how state flows
+## Owner state and how it flows
 
 The item and all its sub-slots receive an `ownerState` prop that carries the current row's interaction state alongside the full conversation object.
 
-### Item ownerState
+### Item owner state
 
 | Field          | Type               | Description                            |
 | :------------- | :----------------- | :------------------------------------- |
@@ -68,11 +69,13 @@ The item and all its sub-slots receive an `ownerState` prop that carries the cur
 | `focused`      | `boolean`          | This row currently has keyboard focus  |
 | `conversation` | `ChatConversation` | The full conversation data object      |
 
-The `selected` flag drives the row background (`palette.action.selected`). The `unread` flag drives bold title typography. The `focused` flag drives the `focus-visible` outline for keyboard accessibility.
+The `selected` flag drives the row background (`palette.action.selected`).
+The `unread` flag drives bold title typography.
+The `focused` flag drives the `focus-visible` outline for keyboard accessibility.
 
 Because the full `conversation` object is included, custom slot components can directly read fields such as `conversation.title`, `conversation.metadata`, `conversation.unreadCount`, and `conversation.lastMessageAt` without additional selectors.
 
-### Root ownerState
+### Root owner state
 
 | Field                  | Type                  | Description                        |
 | :--------------------- | :-------------------- | :--------------------------------- |
@@ -89,11 +92,12 @@ The `ownerState` prop arrives directly on the component because the Material UI
 
 ## Overriding the item content layout
 
-Replace `itemContent` when you want to change the structural layout of the title and preview region — for example to add a participant count or an icon:
+Replace `itemContent` when you want to change the structural layout of the title and preview region—for example to add a participant count or an icon:
 
 {{"demo": "RichItemContent.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-When you replace `itemContent`, the `title` and `preview` slots are no longer rendered (they are children of the default `itemContent`). Render any equivalent content directly inside your custom component.
+When you replace `itemContent`, the `title` and `preview` slots are no longer rendered (they are children of the default `itemContent`).
+Render any equivalent content directly inside your custom component.
 
 ## Overriding the full item row
 
@@ -101,7 +105,8 @@ Replace the `item` slot to take full control of a row's layout while still benef
 
 {{"demo": "CompactRow.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-The `role="option"` and `aria-selected` attributes are set automatically before the slot renders, so they are present on the element even without the default styled item. Spread `...props` to pass them through.
+The `role="option"` and `aria-selected` attributes are set automatically before the slot renders, so they are present on the element even without the default styled item.
+Spread `...props` to pass them through.
 
 ## Styling without slot replacement
 
@@ -162,9 +167,11 @@ The `conversation` object in `ownerState` lets you derive everything you need to
 
 ## Accessibility notes
 
-The default list uses `role="listbox"` on the root and `role="option"` with `aria-selected` on each row. Roving focus is managed automatically: only one row is in the tab order at a time, and `ArrowUp`, `ArrowDown`, `Home`, `End`, and `Enter` are handled automatically.
+The default list uses `role="listbox"` on the root and `role="option"` with `aria-selected` on each row.
+Roving focus is managed automatically: only one row is in the tab order at a time, and `ArrowUp`, `ArrowDown`, `Home`, `End`, and `Enter` are handled automatically.
 
-Custom `item` slot components must forward all `...props` to the DOM element they render so the `role`, `aria-selected`, and keyboard handler props are preserved. Failing to spread `...props` breaks both keyboard navigation and screen-reader semantics.
+Custom `item` slot components must forward all `...props` to the DOM element they render so the `role`, `aria-selected`, and keyboard handler props are preserved.
+Failing to spread `...props` breaks both keyboard navigation and screen-reader semantics.
 
 Pass `aria-label` to the root through `slotProps`:
 

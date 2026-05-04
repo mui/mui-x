@@ -31,7 +31,7 @@ const tealTheme = createTheme({
 
 const adapter = createEchoAdapter({
   respond: (text) =>
-    `Received: "${text}". Notice how the bubble colors, border radius, and typography all come from the custom teal theme — no extra CSS required.`,
+    `Received: "${text}". Notice how the bubble colors, border radius, and typography all come from the custom teal theme—no extra CSS required.`,
 });
 
 export default function CustomTheme() {

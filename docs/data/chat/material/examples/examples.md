@@ -1,5 +1,5 @@
 ---
-title: Chat - Material UI examples
+title: Chat - Material UI xamples
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Material UI examples
 
-<p class="description">Demo-first examples for building chat interfaces with <code>@mui/x-chat</code>.</p>
+<p class="description">Demo-first examples for building chat interfaces with @mui/x-chat.</p>
 
 These demos show common product patterns using the `ChatBox` component.
 Each demo is self-contained and demonstrates one aspect of the `@mui/x-chat` API.
@@ -24,14 +24,14 @@ Replace it with your real adapter to connect to a backend.
 
 ## Composable parts
 
-- [Message feed](/x/react-chat/material/examples/message-feed/) for a display-only embed with no input — trigger messages via `useChat().sendMessage()`
+- [Message feed](/x/react-chat/material/examples/message-feed/) for a display-only embed with no input: trigger messages via `useChat().sendMessage()`
 - [Split layout](/x/react-chat/material/examples/split-layout/) for placing `ChatMessageList` and `ChatComposer` in separate DOM zones, connected only by `ChatRoot`
 
 ## Agentic
 
-- [Agentic code assistant](/x/react-chat/material/examples/agentic-code/) — streaming tool calls (Bash, Read, Edit, Write, Glob), reasoning parts, step boundaries, and an interactive tool-approval flow — all via the adapter API
-- [Plan & task](/x/react-chat/material/examples/plan-task/) for displaying a structured agent execution plan with live step status via `ChatTaskList` and `ChatTask`
-- [Code Block](/x/react-chat/material/examples/code-block/) for displaying code with language label and copy-to-clipboard via `ChatCodeBlock`
+- [Agentic code assistant](/x/react-chat/material/examples/agentic-code/): streaming tool calls (Bash, Read, Edit, Write, Glob), reasoning parts, step boundaries, and an interactive tool-approval flow—all via the adapter API
+- [Plan and task](/x/react-chat/material/examples/plan-task/) for displaying a structured agent execution plan with live step status via `ChatTaskList` and `ChatTask`
+- [Code block](/x/react-chat/material/examples/code-block/) for displaying code with language label and copy-to-clipboard via `ChatCodeBlock`
 - [Confirmation](/x/react-chat/material/examples/confirmation/) for human-in-the-loop checkpoints before irreversible actions via `ChatConfirmation`
 
 ## Theming and customization

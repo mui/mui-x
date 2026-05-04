@@ -12,7 +12,8 @@ components: ChatConversation, ChatConversationHeader, ChatConversationTitle, Cha
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-`ChatConversationHeader` is a `<header>` element with divider styling. It reads the active conversation through context so every child has access to the same conversation state without additional wiring.
+`ChatConversationHeader` is a `<header>` element with divider styling.
+It reads the active conversation through context so every child has access to the same conversation state without additional wiring.
 
 ```tsx
 import {
@@ -36,11 +37,11 @@ ChatConversation                    <- thread shell, derives the active conversa
 
 The header sits at the top of the thread pane and provides the visual identity of the active conversation.
 
-## ownerState and how state flows
+## Owner state and how it flows
 
-`ChatConversation` owns the conversation-level `ownerState`, and the header subcomponents inherit that same state through the slot system.
+`ChatConversation` owns the conversation-level owner state, and the header subcomponents inherit that same state through the slot system.
 
-### Conversation ownerState
+### Conversation owner state
 
 | Field             | Type                       | Description                                  |
 | :---------------- | :------------------------- | :------------------------------------------- |
@@ -48,11 +49,13 @@ The header sits at the top of the thread pane and provides the visual identity o
 | `conversation`    | `ChatConversation \| null` | Full active conversation object, when loaded |
 | `hasConversation` | `boolean`                  | Whether the thread currently has a selection |
 
-The `hasConversation` flag is particularly useful for hiding action buttons or showing a placeholder when no conversation is active. `ChatConversationHeader`, `ChatConversationTitle`, `ChatConversationSubtitle`, and `ChatConversationHeaderActions` all receive this same conversation-level state.
+The `hasConversation` flag is particularly useful for hiding action buttons or showing a placeholder when no conversation is active.
+`ChatConversationHeader`, `ChatConversationTitle`, `ChatConversationSubtitle`, and `ChatConversationHeaderActions` all receive this same conversation-level state.
 
 ## Title and subtitle
 
-`ChatConversationTitle` renders the conversation name from `conversation.title`. `ChatConversationSubtitle` renders the secondary line from `conversation.subtitle`, which can include participant names, a presence indicator, or any descriptive text.
+`ChatConversationTitle` renders the conversation name from `conversation.title`.
+`ChatConversationSubtitle` renders the secondary line from `conversation.subtitle`, which can include participant names, a presence indicator, or any descriptive text.
 
 The `ChatConversation` type provides these fields:
 
@@ -72,7 +75,8 @@ interface ChatConversation {
 
 ## Participants
 
-The `participants` array on `ChatConversation` carries `ChatUser` objects with `displayName`, `avatarUrl`, and `isOnline` fields. Use these in a custom subtitle slot to show a participant list or online status:
+The `participants` array on `ChatConversation` carries `ChatUser` objects with `displayName`, `avatarUrl`, and `isOnline` fields.
+Use these in a custom subtitle slot to show a participant list or online status:
 
 ```tsx
 const ParticipantSubtitle = React.forwardRef(function ParticipantSubtitle(
@@ -92,7 +96,8 @@ const ParticipantSubtitle = React.forwardRef(function ParticipantSubtitle(
 
 ## Action buttons
 
-`ChatConversationHeaderActions` renders an action area on the right side of the header. Replace it to add archive, mute, or context menu buttons:
+`ChatConversationHeaderActions` renders an action area on the right side of the header.
+Replace it to add archive, mute, or context menu buttons:
 
 ```tsx
 import IconButton from '@mui/material/IconButton';
@@ -143,9 +148,10 @@ Pass `CustomHeader` through `ChatBox`'s `slots.conversationHeader` prop:
 <ChatBox slots={{ conversationHeader: CustomHeader }} />
 ```
 
-## Using ownerState in a custom title
+## Using owner state in a custom title
 
-The `ownerState` prop received by slot components carries the full conversation context. This makes it straightforward to render dynamic content derived from the active conversation:
+The `ownerState` prop received by slot components carries the full conversation context.
+This makes it straightforward to render dynamic content derived from the active conversation:
 
 ```tsx
 import { ChatConversationTitle } from '@mui/x-chat';
@@ -172,7 +178,7 @@ function CustomConversationTitle(props) {
 
 ## Full recomposition
 
-When you need to insert additional content inside the header — for example a typing indicator or a custom divider — assemble the header from individual Material UI components directly:
+When you need to insert additional content inside the header—for example a typing indicator or a custom divider—assemble the header from individual Material UI components directly:
 
 ```tsx
 import {
@@ -201,6 +207,6 @@ function CustomThread() {
 
 ## See also
 
-- [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that lists conversations.
-- [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for live updates to conversation metadata displayed in the header.
+- [Conversation list](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that lists conversations.
+- [Real-time sync](/x/react-chat/multi-conversation/real-time-sync/) for live updates to conversation metadata displayed in the header.
 - [Layout](/x/react-chat/basics/layout/) for the full thread anatomy including message list and composer.

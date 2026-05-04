@@ -1,11 +1,11 @@
 ---
-title: Chat - Custom message part rendering
+title: Chat - Custom Message Part Rendering
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Custom message part rendering
+# Chat - Custom Message Part Rendering
 
 <p class="description">Customize selected message parts while preserving the default headless message structure.</p>
 

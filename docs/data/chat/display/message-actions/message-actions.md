@@ -12,7 +12,8 @@ components: ChatMessageActions
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-`ChatMessageActions` renders an action bar that appears when the user hovers over a message or focuses within it. The actions area is positioned in the message grid and transitions from hidden to visible using an opacity animation.
+`ChatMessageActions` renders an action bar that appears when the user hovers over a message or focuses within it.
+The actions area is positioned in the message grid and transitions from hidden to visible using an opacity animation.
 
 ## Import
 
@@ -32,7 +33,8 @@ The action bar is hidden by default (`opacity: 0`) and becomes visible when:
 - The user hovers over the parent `ChatMessage` row
 - Focus moves to an element inside the `ChatMessage` row (keyboard navigation)
 
-The transition uses a short opacity animation. When the user prefers reduced motion, the transition is disabled.
+The transition uses a short opacity animation.
+When the user prefers reduced motion, the transition is disabled.
 
 ```css
 /* Visibility is controlled by the parent message's hover/focus state */
@@ -56,7 +58,8 @@ ChatMessage (grid)
 
 ## Adding custom actions
 
-The `MessageActions` primitive renders a `<div>` (or custom slot element) that you populate with your own action buttons. Override the actions slot through `ChatBox`:
+The `MessageActions` primitive renders a `<div>` (or custom slot element) that you populate with your own action buttons.
+Override the actions slot through `ChatBox`:
 
 {{"demo": "BasicMessageActions.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -86,4 +89,4 @@ The `MessageActions` component receives the message context as owner state, whic
 
 ## See also
 
-- [Message Appearance](/x/react-chat/display/message-appearance/) for the overall message layout and visual presentation
+- [Message appearance](/x/react-chat/display/message-appearance/) for the overall message layout and visual presentation

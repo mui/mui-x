@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Chat - Headless thread
+title: Chat - Headless Thread
 packageName: '@mui/x-chat/headless'
 components: ConversationRoot, ConversationHeader, ConversationTitle, ConversationSubtitle, ConversationHeaderActions
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless thread
+# Chat - Headless Thread
 
 <p class="description">Build the active conversation surface from thread primitives that derive their state from the selected conversation.</p>
 
@@ -48,7 +48,7 @@ The thread surface is built from:
 - `Conversation.Subtitle`
 - `Conversation.HeaderActions`
 
-## `Conversation.Root`
+## Wrapping the active conversation
 
 `Conversation.Root` derives the active conversation from chat state and exposes it through thread owner state and context.
 
@@ -104,16 +104,16 @@ Typical owner-state-driven patterns include:
 
 ## Conversation subparts
 
-### `Conversation.Title`
+### Displaying the title
 
 `Conversation.Title` is the structural slot for the conversation title.
 Use it when the active conversation already carries a title and the thread header should stay minimal.
 
-### `Conversation.Subtitle`
+### Displaying the subtitle
 
 `Conversation.Subtitle` is the structural slot for secondary thread text such as participant names, preview metadata, or presence-driven summaries.
 
-### `Conversation.HeaderActions`
+### Defining header actions
 
 `Conversation.HeaderActions` is the structural action region for controls such as archive, mute, or context-specific thread actions.
 It is intentionally light on policy so the app can decide which actions belong there.

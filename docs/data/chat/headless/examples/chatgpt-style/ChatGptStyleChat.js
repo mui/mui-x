@@ -118,7 +118,7 @@ const allThreads = {
       parts: [
         {
           type: 'reasoning',
-          text: "The user wants someone truly remarkable yet underrecognized.\n\nRamanujan immediately stands out — a self-taught prodigy from rural India who independently discovered thousands of theorems with no formal training. His partnership with Hardy, the taxicab number story, and results still being verified today make him a perfect answer.\n\nI'll highlight the most striking facts: the sheer volume of his work, the Hardy letter, and the 1729 number.",
+          text: "The user wants someone truly remarkable yet underrecognized.\n\nRamanujan immediately stands out—a self-taught prodigy from rural India who independently discovered thousands of theorems with no formal training. His partnership with Hardy, the taxicab number story, and results still being verified today make him a perfect answer.\n\nI'll highlight the most striking facts: the sheer volume of his work, the Hardy letter, and the 1729 number.",
           state: 'done',
         },
         {
@@ -187,7 +187,7 @@ const allThreads = {
             output: {
               results: [
                 'Hook names must start with "use" followed by a capital letter',
-                'Only call hooks at the top level — not inside loops or conditions',
+                'Only call hooks at the top level—not inside loops or conditions',
                 'Only call hooks from React function components or other custom hooks',
               ],
             },
@@ -298,7 +298,7 @@ function ConversationMenu({ anchorEl, onClose }) {
 }
 
 // ---------------------------------------------------------------------------
-// Slot components — Sidebar
+// Slot components—Sidebar
 // ---------------------------------------------------------------------------
 const GptConversationItem = React.forwardRef(
   function GptConversationItem(props, ref) {
@@ -460,7 +460,7 @@ const GptConversationUnreadBadge = React.forwardRef(
 );
 
 // ---------------------------------------------------------------------------
-// Slot components — Messages
+// Slot components—Messages
 // ---------------------------------------------------------------------------
 const GptMessageGroup = React.forwardRef(function GptMessageGroup(props, ref) {
   const { children, ownerState, style, ...other } = props;
@@ -558,7 +558,7 @@ const GptMeta = React.forwardRef(function GptMeta(props, ref) {
 });
 
 // ---------------------------------------------------------------------------
-// Slot components — Reasoning (thinking block)
+// Slot components—Reasoning (thinking block)
 // ---------------------------------------------------------------------------
 const GptReasoningRoot = React.forwardRef(function GptReasoningRoot(props, ref) {
   const { ownerState, style, ...other } = props;
@@ -630,7 +630,7 @@ const GptReasoningContent = React.forwardRef(
 );
 
 // ---------------------------------------------------------------------------
-// Slot components — Tool call block
+// Slot components—Tool call block
 // ---------------------------------------------------------------------------
 const GptToolRoot = React.forwardRef(function GptToolRoot(props, ref) {
   const { ownerState, style, ...other } = props;
@@ -753,7 +753,7 @@ const GptToolSectionContent = React.forwardRef(
 );
 
 // ---------------------------------------------------------------------------
-// Slot components — Composer
+// Slot components—Composer
 // ---------------------------------------------------------------------------
 const GptComposerRoot = React.forwardRef(function GptComposerRoot(props, ref) {
   const { children, ownerState, style, ...other } = props;

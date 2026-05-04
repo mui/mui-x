@@ -1,11 +1,11 @@
 ---
-title: Chat - Compact variant
+title: Chat - Compact Variant
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Compact variant
+# Chat - Compact Variant
 
 <p class="description">A messenger-style layout with no bubbles, left-aligned messages, and author names as group headers.</p>
 

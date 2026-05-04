@@ -1,11 +1,11 @@
 ---
-title: Chat - Composer with attachments
+title: Chat - Composer with Attachments
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Composer with attachments
+# Chat - Composer with Attachments
 
 <p class="description">Build the full headless draft surface with a textarea, hidden file input, helper text, and send action.</p>
 

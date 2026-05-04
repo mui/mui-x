@@ -1,16 +1,16 @@
 ---
-title: Chat - Model selector
+title: Chat - Model Selector
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Model selector
+# Chat - Model Selector
 
-<p class="description">Add a model picker to the conversation header using the <code>conversationHeaderActions</code> slot.</p>
+<p class="description">Add a model picker to the conversation header using the conversationHeaderActions slot.</p>
 
 This demo shows how to place a MUI `Select` inside the conversation header so users can switch between AI models.
-No new component is needed — drop any MUI control into `slots.conversationHeaderActions`.
+No new component is needed—drop any MUI control into `slots.conversationHeaderActions`.
 
 - `slots.conversationHeaderActions` accepting a custom component that renders a `Select`
 - Controlled model state owned by the selector component
@@ -57,7 +57,7 @@ export default function App() {
     [model],
   );
 
-  // Stable reference — defined outside or memoized to avoid remounts
+  // Stable reference—defined outside or memoized to avoid remounts
   const HeaderActions = React.useMemo(
     () =>
       function ModelSelector() {

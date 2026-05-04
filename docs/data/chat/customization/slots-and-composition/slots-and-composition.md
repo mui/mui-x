@@ -1,18 +1,18 @@
 ---
 productId: x-chat
-title: Slots & Composition
+title: Slots and Composition
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - Slots & Composition
+# Chat - Slots and Composition
 
-<p class="description">Replace individual subcomponents inside ChatBox with your own implementations using the <code>slots</code> and <code>slotProps</code> API.</p>
+<p class="description">Replace individual subcomponents inside ChatBox with your own implementations using the slots and slotProps API.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-`ChatBox` composes many themed subcomponents internally — message bubbles, the composer, the conversation list, date dividers, and more.
+`ChatBox` composes many themed subcomponents internally—message bubbles, the composer, the conversation list, date dividers, and more.
 The `slots` prop lets you swap any of them with your own component, while `slotProps` passes extra props to those components without replacing them.
 
 ## Basic replacement
@@ -110,13 +110,13 @@ The `typingIndicator`, `unreadMarker`, and `messageActions` slots are defined in
 
 ## Hiding a slot
 
-Return `null` from a slot to remove it entirely, or use the `features` prop for common show/hide needs:
+Return `null` from a slot to remove it entirely, or use the `features` prop for common visibility needs:
 
 {{"demo": "FeatureFlags.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Feature flags and slot rendering
 
-When a feature flag is set to `false`, the corresponding slot is **not rendered at all** — even if you provide a custom component via `slots`. The feature flag takes precedence:
+When a feature flag is set to `false`, the corresponding slot is **not rendered at all**—even if you provide a custom component via `slots`. The feature flag takes precedence:
 
 ```tsx
 {/* The custom button does not render because the feature is disabled */}
@@ -141,7 +141,7 @@ The `autoScroll` feature flag controls scroll behavior rather than slot visibili
 
 To conditionally show a custom component, keep the feature flag enabled and handle visibility in your slot component instead.
 
-## `slotProps` reference
+## Slot props reference
 
 | Key                    | Type                                         | Description             |
 | :--------------------- | :------------------------------------------- | :---------------------- |
@@ -204,7 +204,7 @@ const mySlotProps: ChatBoxSlotProps = {
 ## Combining slots with theme overrides
 
 Slots replace the component entirely, while theme `styleOverrides` adjust the default component's styles.
-You can use both together — for example, swap the message content component via a slot while applying global border-radius tweaks through the theme.
+You can use both together—for example, swap the message content component via a slot while applying global border-radius tweaks through the theme.
 
 ## See also
 

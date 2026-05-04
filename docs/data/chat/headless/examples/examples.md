@@ -1,13 +1,13 @@
 ---
-title: Chat - Headless examples
+title: Chat - Headless Examples
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless examples
+# Chat - Headless Examples
 
-<p class="description">Demo-first patterns for building chat interfaces with <code>@mui/x-chat/headless</code> structural primitives.</p>
+<p class="description">Demo-first patterns for building chat interfaces with @mui/x-chat/headless structural primitives.</p>
 
 These demos focus on end-to-end composition patterns rather than isolated component references.
 Each demo stays inside the headless layer: the runtime comes from `@mui/x-chat/headless`, but the learning surface is the structural component model exposed by `@mui/x-chat/headless`.

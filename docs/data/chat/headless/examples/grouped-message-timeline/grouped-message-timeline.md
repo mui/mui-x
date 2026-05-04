@@ -1,13 +1,13 @@
 ---
-title: Chat - Grouped message timeline
+title: Chat - Grouped Message Timeline
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Grouped message timeline
+# Chat - Grouped Message Timeline
 
-<p class="description">Use <code>MessageGroup</code> to build an author-grouped message timeline with custom row presentation.</p>
+<p class="description">Build an author-grouped message timeline with custom row presentation.</p>
 
 This demo focuses on message presentation rather than the overall application shell.
 It shows how to render a thread that visually groups messages by author and time window without manual grouping logic in the page layer.

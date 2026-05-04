@@ -1,23 +1,23 @@
 ---
-title: Chat - Streaming lifecycle
+title: Chat - Streaming Lifecycle
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Streaming lifecycle
+# Chat - Streaming Lifecycle
 
 <p class="description">Observe the full runtime lifecycle for send, stream, stop, error, retry, and callbacks.</p>
 
 This demo brings the runtime lifecycle together in one place.
 It intentionally exposes success, failure, and long-running stream modes so you can observe every lifecycle phase:
 
-- `sendMessage()` — send a user turn and start streaming
-- `stopStreaming()` — cancel an active stream
-- `retry()` — retry a failed or cancelled message
-- `onData` — fires when a `data-*` chunk arrives
-- `onFinish` — fires when the stream ends (success, abort, or error)
-- `onError` — fires on any runtime error
+- `sendMessage()`: send a user turn and start streaming
+- `stopStreaming()`: cancel an active stream
+- `retry()`: retry a failed or cancelled message
+- `onData`: fires when a `data-*` chunk arrives
+- `onFinish`: fires when the stream ends (success, abort, or error)
+- `onError`: fires on any runtime error
 
 ## Key concepts
 
@@ -28,7 +28,7 @@ When `sendMessage()` is called:
 1. The user message is added optimistically with `status: 'sending'`
 2. The adapter's `sendMessage()` returns a `ReadableStream`
 3. Chunks update the assistant message in real time
-4. A `finish` chunk completes the turn — user message moves to `status: 'sent'`
+4. A `finish` chunk completes the turn—user message moves to `status: 'sent'`
 
 ### Stopping a stream
 

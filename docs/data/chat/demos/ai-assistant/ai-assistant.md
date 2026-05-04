@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: AI Assistant demo
+title: AI Assistant Demo
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - AI Assistant demo
+# Chat - AI Assistant Demo
 
 <p class="description">A full ChatGPT-style AI assistant with streaming responses, tool calling, and rich content rendering.</p>
 
@@ -22,6 +22,7 @@ Send a message in any conversation to watch the scripted agentic stream play out
 
 ## Basic AI chat
 
-The simplest working `ChatBox` setup: a single adapter, one conversation, and an initial message. This demo shows the minimum required props to render a styled, interactive chat surface with streaming responses.
+The simplest working `ChatBox` setup: a single adapter, one conversation, and an initial message.
+This demo shows the minimum required props to render a styled, interactive chat surface with streaming responses.
 
 {{"demo": "../../material/examples/basic-ai-chat/BasicAiChat.js", "defaultCodeOpen": false, "bg": "inline"}}

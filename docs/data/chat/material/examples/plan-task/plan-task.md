@@ -1,13 +1,13 @@
 ---
-title: Chat - Plan & task
+title: Chat - Plan and Task
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Plan & task
+# Chat - Plan and Task
 
-<p class="description">Show a live task list inside a tool call by providing a custom component through <code>partRenderers</code>.</p>
+<p class="description">Show a live task list inside a tool call by providing a custom component through partRenderers.</p>
 
 Send any message and watch the agent plan animate through each step inside the conversation.
 
@@ -15,16 +15,15 @@ Send any message and watch the agent plan animate through each step inside the c
 
 ## How it works
 
-When a tool call named `run_tasks` arrives, the default JSON accordion is replaced by a
-collapsible task list. Each step animates through `pending → running → done` and the
-list collapses automatically when all steps finish.
+When a tool call named `run_tasks` arrives, the default JSON accordion is replaced by a collapsible task list.
+Each step animates through `pending → running → done` and the list collapses automatically when all steps finish.
 
-The whole UI is a plain React component — no dedicated package export required.
+The whole UI is a plain React component—no dedicated package export required.
 
 ## Providing a custom tool renderer
 
-Supply a `partRenderers` map to `ChatBox`. Each key is a message part type; the
-`dynamic-tool` key lets you intercept any tool call and render whatever you want:
+Supply a `partRenderers` map to `ChatBox`.
+Each key is a message part type; the `dynamic-tool` key lets you intercept any tool call and render whatever you want:
 
 ```tsx
 const partRenderers: ChatPartRendererMap = {
@@ -42,12 +41,12 @@ const partRenderers: ChatPartRendererMap = {
 ## Animating steps from outside the renderer
 
 The renderer is a plain function closed over component state, so you can drive it
-from any external source — a WebSocket, server-sent events, or a timer:
+from any external source—a WebSocket, server-sent events, or a timer:
 
 ```tsx
 const [tasks, setTasks] = React.useState(initialTasks);
 
-// partRenderers rebuilds when tasks change — ChatBox picks up the new renderer
+// partRenderers rebuilds when tasks change—ChatBox picks up the new renderer
 const partRenderers = React.useMemo(
   () => ({
     'dynamic-tool': ({ part }) =>

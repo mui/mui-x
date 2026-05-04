@@ -29,7 +29,7 @@ const INITIAL_MESSAGES = [
     id: 'confirm-msg-2',
     conversationId: CONVERSATION_ID,
     role: 'assistant',
-    text: 'I found 47 temporary files totalling 2.3 GB. Please confirm before I proceed — this action cannot be undone.',
+    text: 'I found 47 temporary files totalling 2.3 GB. Please confirm before I proceed—this action cannot be undone.',
     createdAt: '2026-03-22T10:01:00.000Z',
     author: demoUsers.agent,
   }),
@@ -47,7 +47,7 @@ const RESULT_DISPLAY: Record<
     borderColor: 'success.main',
   },
   cancelled: {
-    text: 'Action cancelled — files kept.',
+    text: 'Action cancelled—files kept.',
     color: 'text.secondary',
     borderColor: 'divider',
   },
@@ -61,13 +61,9 @@ export default function Confirmation() {
       async sendMessage() {
         const messageId = randomId();
         return createChunkStream(
-          createTextResponseChunks(
-            messageId,
-            'Got it — what else can I help with?',
-            {
-              author: demoUsers.agent,
-            },
-          ),
+          createTextResponseChunks(messageId, 'Got it—what else can I help with?', {
+            author: demoUsers.agent,
+          }),
           { delayMs: 60 },
         );
       },

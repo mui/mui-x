@@ -1,13 +1,13 @@
 ---
-title: Chat - Basic AI chat
+title: Chat - Basic AI Chat
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Basic AI chat
+# Chat - Basic AI Chat
 
-<p class="description">The smallest working <code>ChatBox</code> setup: an adapter, a conversation, and an initial message.</p>
+<p class="description">The smallest working ChatBox setup: an adapter, a conversation, and an initial message.</p>
 
 This demo shows the minimum required props to render a styled, interactive chat surface using `@mui/x-chat`.
 

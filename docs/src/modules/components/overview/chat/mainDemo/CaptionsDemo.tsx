@@ -453,7 +453,7 @@ export default function CaptionsDemo() {
         color: 'text.primary',
       }}
     >
-      {/* Top bar — meeting title + participants */}
+      {/* Top bar—meeting title + participants */}
       <Stack
         direction="row"
         sx={{ alignItems: 'center', justifyContent: 'space-between', px: 2, py: 1, minHeight: 44 }}
@@ -475,7 +475,7 @@ export default function CaptionsDemo() {
         </Stack>
       </Stack>
 
-      {/* Video area — 3 participants in a row */}
+      {/* Video area—3 participants in a row */}
       <Box sx={{ flex: 1, minHeight: 0, px: 0.5, display: 'flex', gap: 0.5 }}>
         {meetParticipants.map((p) => (
           <Box key={p.id} sx={{ flex: 1, minWidth: 0 }}>
@@ -484,7 +484,7 @@ export default function CaptionsDemo() {
         ))}
       </Box>
 
-      {/* Caption area — below videos */}
+      {/* Caption area—below videos */}
       <Box sx={{ height: 300, display: 'flex', flexDirection: 'column' }}>
         {/* Language bar */}
         <Stack

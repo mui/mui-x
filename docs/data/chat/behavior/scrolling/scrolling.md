@@ -22,7 +22,7 @@ The message list automatically scrolls to the bottom when:
 - New messages arrive from the assistant while the user is near the bottom.
 - Streaming content grows (token-by-token updates).
 
-The auto-scroll behavior is gated by a **buffer** — if the user has scrolled more than `buffer` pixels away from the bottom, automatic scrolling pauses so the user can read earlier messages without interruption.
+The auto-scroll behavior is gated by a **buffer**—if the user has scrolled more than `buffer` pixels away from the bottom, automatic scrolling pauses so the user can read earlier messages without interruption.
 
 ### Configuration
 
@@ -79,7 +79,7 @@ listRef.current?.scrollToBottom({ behavior: 'smooth' });
 <ChatMessageList ref={listRef} />;
 ```
 
-## `MessageListContext`
+## Accessing scroll state from child components
 
 Child components inside the message list can access scroll state via context:
 

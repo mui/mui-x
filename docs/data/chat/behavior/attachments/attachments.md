@@ -48,7 +48,7 @@ Pass a configuration object to the `attachments` feature flag to control which f
 />
 ```
 
-### `ChatAttachmentsConfig`
+### Attachment configuration options
 
 | Property             | Type                                              | Default     | Description                                                                                                                                                                |
 | :------------------- | :------------------------------------------------ | :---------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -66,7 +66,7 @@ When a file is rejected, the `ChatAttachmentRejection` object contains:
 | `file`   | `File`                                       | The browser File object   |
 | `reason` | `'mime-type' \| 'file-size' \| 'file-count'` | Why the file was rejected |
 
-## The `ChatDraftAttachment` lifecycle
+## Draft attachment lifecycle
 
 Each file goes through a status lifecycle as it moves from selection to submission:
 
@@ -83,7 +83,7 @@ queued  -->  uploading  -->  uploaded  -->  (sent with message)
 | `uploaded`  | Upload completed. The file is ready to be sent with the message.     |
 | `error`     | Upload failed. The attachment can be removed or retried by the user. |
 
-### `ChatDraftAttachment` type
+### Draft attachment fields
 
 | Property     | Type                                               | Description                                  |
 | :----------- | :------------------------------------------------- | :------------------------------------------- |

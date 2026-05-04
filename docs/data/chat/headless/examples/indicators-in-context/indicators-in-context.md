@@ -1,11 +1,11 @@
 ---
-title: Chat - Indicators in context
+title: Chat - Indicators in Context
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Indicators in context
+# Chat - Indicators in Context
 
 <p class="description">Place typing, unread, and scroll indicators into a real thread layout instead of documenting them in isolation.</p>
 

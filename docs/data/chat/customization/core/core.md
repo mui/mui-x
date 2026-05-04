@@ -1,6 +1,6 @@
 ---
 productId: x-chat
-title: Core
+title: Chat - Core
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
@@ -70,14 +70,14 @@ import {
 - visual slots or compound components
 - Material UI theming or styling
 
-Those concerns belong to [Headless Components](/x/react-chat/customization/headless/).
+Those concerns belong to [Headless components](/x/react-chat/customization/headless/).
 
 ## State and store
 
 `ChatProvider` supports both controlled and uncontrolled state for messages, conversations, active conversation ID, and composer value.
 Internally the store normalizes data into ID arrays and record maps, making streaming updates efficient and selector subscriptions granular.
 
-See [Controlled State](/x/react-chat/backend/controlled-state/) for the full `ChatProvider` props reference, the controlled/uncontrolled model, and store internals.
+See [Controlled state](/x/react-chat/backend/controlled-state/) for the full `ChatProvider` props reference, the controlled/uncontrolled model, and store internals.
 
 ## Hooks
 
@@ -85,19 +85,19 @@ Nine public hooks cover the full spectrum from all-in-one orchestration (`useCha
 
 Narrower hooks like `useChatComposer()`, `useChatStatus()`, and `useChatPartRenderer()` handle specific concerns without subscribing to unrelated state.
 
-See [Hooks Reference](/x/react-chat/resources/hooks/) for signatures, return types, and when-to-use guidance for every hook.
+See [Hooks reference](/x/react-chat/resources/hooks/) for signatures, return types, and when-to-use guidance for every hook.
 
 ## Selectors
 
 `chatSelectors` provides memoized selectors for the normalized store.
 Use them directly with `useChatStore()` for custom derived values and advanced subscriptions.
 
-See [Selectors Reference](/x/react-chat/resources/selectors/) for the full selector table and usage patterns.
+See [Selectors reference](/x/react-chat/resources/selectors/) for the full selector table and usage patterns.
 
 ## Adapter contract
 
 `ChatAdapter` is the transport boundary between the runtime and your backend.
-Only `sendMessage()` is required — everything else is optional and incrementally adopted.
+Only `sendMessage()` is required—everything else is optional and incrementally adopted.
 The adapter works with HTTP, SSE, WebSocket, or AI SDK-style streaming backends.
 
 See [Adapters](/x/react-chat/backend/adapters/) for the full interface reference, a step-by-step writing guide, and backend pattern guidance.
@@ -115,18 +115,18 @@ See [Streaming](/x/react-chat/behavior/streaming/) for the chunk protocol refere
 The adapter's `subscribe()` method enables push-based updates for messages, conversations, typing indicators, presence, and read state.
 The runtime manages the subscription lifecycle on mount and unmount.
 
-See [Real-Time Adapters](/x/react-chat/backend/real-time-adapters/) for event types, store effects, and consumption patterns.
+See [Real-time adapters](/x/react-chat/backend/real-time-adapters/) for event types, store effects, and consumption patterns.
 
 ## Scope boundary
 
 - Stay on core when you want runtime primitives and complete control over UI.
-- Move to [Headless Components](/x/react-chat/customization/headless/) when you want structure and composition primitives.
+- Move to [Headless components](/x/react-chat/customization/headless/) when you want structure and composition primitives.
 
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the full adapter interface.
-- [Hooks Reference](/x/react-chat/resources/hooks/) for the hook API reference.
-- [Selectors Reference](/x/react-chat/resources/selectors/) for the selector API reference.
-- [Controlled State](/x/react-chat/backend/controlled-state/) for state management patterns.
+- [Hooks reference](/x/react-chat/resources/hooks/) for the hook API reference.
+- [Selectors reference](/x/react-chat/resources/selectors/) for the selector API reference.
+- [Controlled state](/x/react-chat/backend/controlled-state/) for state management patterns.
 
 ## API

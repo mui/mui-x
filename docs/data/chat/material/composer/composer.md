@@ -13,7 +13,7 @@ components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachBu
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The composer is the input region at the bottom of the chat surface.
-`ChatComposer` provides Material UI styling — border, padding, and theme tokens are applied automatically.
+`ChatComposer` provides Material UI styling—border, padding, and theme tokens are applied automatically.
 
 ## Import
 
@@ -74,7 +74,8 @@ The send button is automatically disabled when:
 - The composer is explicitly disabled.
 
 :::info
-The send button's visual disabled state checks only text content, not attachments. However, the underlying `submit()` function sends if either text or attachments are present.
+The send button's visual disabled state checks only text content, not attachments.
+However, the underlying `submit()` function sends if either text or attachments are present.
 :::
 
 ## Attach button
@@ -100,12 +101,12 @@ Use it for legal disclaimers, character counts, or contextual hints.
 
 ## Controlled composer value
 
-The composer value can be controlled externally through `ChatProvider` (or the `ChatBox` props that forward to it).
+You can control the composer value externally through `ChatProvider` (or the `ChatBox` props that forward to it).
 The demo below mirrors the current composer value above the chat surface:
 
 {{"demo": "ComposerControlled.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-## `useChatComposer()` hook
+## Accessing composer state directly
 
 For deeper control, the `useChatComposer()` hook provides direct access to the composer state:
 
@@ -138,7 +139,7 @@ The hook returns:
 | `submit`           | `() => Promise<void>`       | Submit the current draft      |
 | `isSubmitting`     | `boolean`                   | Whether a send is in progress |
 
-### ChatDraftAttachment
+### Draft attachment type
 
 The attachment type used by the composer:
 
@@ -152,7 +153,7 @@ The attachment type used by the composer:
 
 ## Compact composer ideas
 
-Five design ideas for the compact variant composer — click into the textarea to see the focus state.
+Five design ideas for the compact variant composer—click into the textarea to see the focus state.
 
 {{"demo": "CompactComposerIdeas.js", "defaultCodeOpen": false, "bg": "inline"}}
 

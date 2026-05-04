@@ -68,7 +68,7 @@ const CustomMessageContent = React.forwardRef<
 
 const adapter = createEchoAdapter({
   respond: (text) =>
-    `Received: "${text}". This reply uses a Paper component as the message bubble — swapped in via slots.messageContent.`,
+    `Received: "${text}". This reply uses a Paper component as the message bubble—swapped in via slots.messageContent.`,
 });
 
 export default function SlotOverrides() {
