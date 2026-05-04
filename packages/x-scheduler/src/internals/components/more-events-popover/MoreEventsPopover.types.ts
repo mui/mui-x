@@ -1,5 +1,5 @@
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
+import { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 
 export interface MoreEventsPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;

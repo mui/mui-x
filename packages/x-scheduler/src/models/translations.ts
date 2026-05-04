@@ -1,4 +1,4 @@
-import { CalendarView } from '@mui/x-scheduler-headless/models';
+import { CalendarView } from '@mui/x-scheduler-internals/models';
 
 export interface EventDialogLocaleText {
   // EventDialog
@@ -60,11 +60,8 @@ export interface EventDialogLocaleText {
 }
 
 export interface EventCalendarLocaleText extends EventDialogLocaleText {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName: string) => string;
+  // ResourcesTree
   resourcesLabel: string;
-  resourcesLegendSectionLabel: string;
-  showEventsLabel: (resourceName: string) => string;
 
   // ViewSwitcher
   agenda: string;

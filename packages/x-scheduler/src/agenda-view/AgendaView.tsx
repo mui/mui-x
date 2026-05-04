@@ -3,18 +3,18 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
-import { sortEventOccurrences } from '@mui/x-scheduler-headless/sort-event-occurrences';
-import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-headless/constants';
+import { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
+import { sortEventOccurrences } from '@mui/x-scheduler-internals/sort-event-occurrences';
+import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-internals/constants';
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import clsx from 'clsx';
 import { AgendaViewProps } from './AgendaView.types';
 import { EventItem } from '../internals/components/event/event-item/EventItem';

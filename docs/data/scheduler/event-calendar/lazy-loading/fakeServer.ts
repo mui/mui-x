@@ -15,7 +15,7 @@ import {
   SchedulerEvent,
   SchedulerEventId,
   SchedulerResource,
-} from '@mui/x-scheduler-headless/models';
+} from '@mui/x-scheduler-internals/models';
 import { resources as agendaResources, defaultVisibleDate } from '../../datasets/personal-agenda';
 
 export { defaultVisibleDate };

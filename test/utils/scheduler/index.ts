@@ -1,4 +1,4 @@
-import type { EventCalendarStore } from '@mui/x-scheduler-headless/use-event-calendar';
+import type { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 
 export * from './createSchedulerRenderer';
 export * from './describeConformance';

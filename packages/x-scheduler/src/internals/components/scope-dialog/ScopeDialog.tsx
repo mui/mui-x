@@ -10,9 +10,9 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import { RecurringEventUpdateScope } from '@mui/x-scheduler-headless/models';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { RecurringEventUpdateScope } from '@mui/x-scheduler-internals/models';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { ScopePopoverProps } from './ScopeDialog.types';
 import { useEventDialogStyledContext } from '../event-dialog/EventDialogStyledContext';
 
