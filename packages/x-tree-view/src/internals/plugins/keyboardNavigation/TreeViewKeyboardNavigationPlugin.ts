@@ -356,7 +356,7 @@ function createLabelMapFromItemMetaLookup(itemMetaLookup: {
   const labelMap: { [itemId: string]: string } = {};
 
   const processItem = (item: TreeViewItemMeta) => {
-    labelMap[item.id] = item.label!.toLowerCase();
+    labelMap[item.id] = typeof item.label === 'string' ? item.label.toLowerCase() : '';
   };
 
   Object.values(itemMetaLookup).forEach(processItem);

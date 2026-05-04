@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
 import Alert from '@mui/material/Alert';
-import Typography from '@mui/material/Typography';
+import Skeleton from '@mui/material/Skeleton';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
@@ -56,6 +56,29 @@ export const RichTreeViewRoot = styled('ul', {
   position: 'relative',
 });
 
+const RichTreeViewSkeletonItem = styled('li', {
+  name: 'MuiRichTreeView',
+  slot: 'SkeletonItem',
+})({
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+});
+
+const RichTreeViewSkeletonContent = styled('div', {
+  name: 'MuiRichTreeView',
+  slot: 'SkeletonContent',
+})(({ theme }) => ({
+  padding: theme.spacing(0.5, 1),
+  width: '100%',
+  boxSizing: 'border-box',
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+}));
+
+const SKELETON_LABEL_WIDTHS = ['40%', '70%', '55%', '50%', '65%'];
+
 type RichTreeViewComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
   props: RichTreeViewProps<R, Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
@@ -91,6 +114,8 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     apiRef,
     parameters,
     forwardedProps,
+    loading,
+    loadingItemsCount,
   } = useExtractRichTreeViewParameters(props);
 
   // Context hooks
@@ -101,15 +126,29 @@ const RichTreeView = React.forwardRef(function RichTreeView<
   const handleRef = useMergedRefs(forwardedRef, ref);
 
   // Selector hooks
-  const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
+  const lazyLoadingRootIsLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
   const error = useStore(store, lazyLoadingSelectors.itemError, null);
 
   // Feature hooks
   const classes = useUtilityClasses(props);
   const slots = React.useMemo(() => ({ root: RichTreeViewRoot, ...inSlots }), [inSlots]);
 
+  const isLoading = loading || lazyLoadingRootIsLoading;
+
   if (isLoading) {
-    return <Typography>Loading...</Typography>;
+    const skeletonCount = loadingItemsCount ?? 5;
+    return (
+      <RichTreeViewRoot ref={handleRef} {...forwardedProps}>
+        {Array.from({ length: skeletonCount }, (_, index) => (
+          <RichTreeViewSkeletonItem key={index} role="treeitem" aria-disabled>
+            <RichTreeViewSkeletonContent>
+              <div style={{ width: 16, flexShrink: 0 }} />
+              <Skeleton width={SKELETON_LABEL_WIDTHS[index % SKELETON_LABEL_WIDTHS.length]} />
+            </RichTreeViewSkeletonContent>
+          </RichTreeViewSkeletonItem>
+        ))}
+      </RichTreeViewRoot>
+    );
   }
 
   if (error) {
@@ -278,6 +317,16 @@ RichTreeView.propTypes = {
    */
   itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
+  /**
+   * If `true`, a skeleton loading UI is displayed instead of the tree items.
+   * @default false
+   */
+  loading: PropTypes.bool,
+  /**
+   * The number of skeleton items to display when `loading` is `true`.
+   * @default 5
+   */
+  loadingItemsCount: PropTypes.number,
   /**
    * Whether multiple items can be selected.
    * @default false
