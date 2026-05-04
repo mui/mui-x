@@ -10,7 +10,7 @@ import {
   getGridStringOperators,
   getGridSingleSelectOperators,
 } from '@mui/x-data-grid';
-import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { getColumnHeaderCell, getColumnValues, getSelectByName } from 'test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {
@@ -530,6 +530,229 @@ describe('<DataGrid /> - Filter panel', () => {
         />,
       );
       expect(screen.getByTestId('custom-autocomplete')).to.not.equal(null);
+    });
+  });
+
+  describe('loading icon', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    function LoadIcon() {
+      return <span data-testid="loadIcon" />;
+    }
+
+    // These tests use fireEvent.change instead of user.type because
+    // user.type hangs with vi.useFakeTimers() (the user instance from
+    // createRenderer is not configured with advanceTimers).
+
+    it('should not show the loading icon with default filterDebounceMs', async () => {
+      render(
+        <TestCase
+          slots={{ loadIcon: LoadIcon }}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'brand', operator: 'contains' }],
+              },
+            },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+
+      const input = screen.getByRole('textbox', { name: 'Value' });
+      fireEvent.change(input, { target: { value: 'N' } });
+      await act(async () => vi.advanceTimersByTimeAsync(150));
+      expect(screen.queryByTestId('loadIcon')).to.equal(null);
+    });
+
+    it('should show the loading icon when filterDebounceMs exceeds the threshold', async () => {
+      render(
+        <TestCase
+          slots={{ loadIcon: LoadIcon }}
+          filterDebounceMs={1000}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'brand', operator: 'contains' }],
+              },
+            },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+
+      const input = screen.getByRole('textbox', { name: 'Value' });
+      fireEvent.change(input, { target: { value: 'N' } });
+
+      // Icon should not be visible before the 500ms threshold
+      await act(async () => vi.advanceTimersByTimeAsync(499));
+      expect(screen.queryByTestId('loadIcon')).to.equal(null);
+
+      // Icon should appear after the 500ms threshold
+      await act(async () => vi.advanceTimersByTimeAsync(1));
+      expect(screen.queryByTestId('loadIcon')).not.to.equal(null);
+
+      // Icon should disappear after the filter debounce completes
+      await act(async () => vi.advanceTimersByTimeAsync(500));
+      expect(screen.queryByTestId('loadIcon')).to.equal(null);
+    });
+
+    it('should hide the loading icon when typing again after it became visible', async () => {
+      render(
+        <TestCase
+          slots={{ loadIcon: LoadIcon }}
+          filterDebounceMs={1000}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'brand', operator: 'contains' }],
+              },
+            },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+
+      const input = screen.getByRole('textbox', { name: 'Value' });
+      fireEvent.change(input, { target: { value: 'N' } });
+
+      // Wait for the icon to appear
+      await act(async () => vi.advanceTimersByTimeAsync(500));
+      expect(screen.queryByTestId('loadIcon')).not.to.equal(null);
+
+      // Type again — icon should reset immediately
+      fireEvent.change(input, { target: { value: 'Ni' } });
+      expect(screen.queryByTestId('loadIcon')).to.equal(null);
+
+      // Icon should reappear after the threshold from the new keystroke
+      await act(async () => vi.advanceTimersByTimeAsync(500));
+      expect(screen.queryByTestId('loadIcon')).not.to.equal(null);
+
+      // And disappear when debounce completes
+      await act(async () => vi.advanceTimersByTimeAsync(500));
+      expect(screen.queryByTestId('loadIcon')).to.equal(null);
+    });
+
+    it('should not show the loading icon during rapid typing with default debounce', async () => {
+      render(
+        <TestCase
+          slots={{ loadIcon: LoadIcon }}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'brand', operator: 'contains' }],
+              },
+            },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+
+      const input = screen.getByRole('textbox', { name: 'Value' });
+
+      // Simulate rapid typing — each keystroke resets timers
+      fireEvent.change(input, { target: { value: 'N' } });
+      await act(async () => vi.advanceTimersByTimeAsync(50));
+      expect(screen.queryByTestId('loadIcon')).to.equal(null);
+
+      fireEvent.change(input, { target: { value: 'Ni' } });
+      await act(async () => vi.advanceTimersByTimeAsync(50));
+      expect(screen.queryByTestId('loadIcon')).to.equal(null);
+
+      fireEvent.change(input, { target: { value: 'Nik' } });
+      await act(async () => vi.advanceTimersByTimeAsync(150));
+      expect(screen.queryByTestId('loadIcon')).to.equal(null);
+    });
+
+    it('should not show the loading icon when filterDebounceMs is 0', async () => {
+      render(
+        <TestCase
+          slots={{ loadIcon: LoadIcon }}
+          filterDebounceMs={0}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'brand', operator: 'contains' }],
+              },
+            },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+
+      const input = screen.getByRole('textbox', { name: 'Value' });
+      fireEvent.change(input, { target: { value: 'N' } });
+      await act(async () => vi.advanceTimersByTimeAsync(500));
+      expect(screen.queryByTestId('loadIcon')).to.equal(null);
+    });
+
+    it('should delay the loading icon for date filter inputs', async () => {
+      render(
+        <TestCase
+          slots={{ loadIcon: LoadIcon }}
+          rows={[
+            { id: 0, brand: 'Nike', createdAt: new Date(2024, 0, 1) },
+            { id: 1, brand: 'Adidas', createdAt: new Date(2024, 5, 15) },
+          ]}
+          columns={[{ field: 'brand' }, { field: 'createdAt', type: 'date' }]}
+          filterDebounceMs={1000}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'createdAt', operator: 'is' }],
+              },
+            },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+
+      const input = screen.getByLabelText('Value');
+      fireEvent.change(input, { target: { value: '2024-01-01' } });
+
+      // Icon should not appear before threshold
+      await act(async () => vi.advanceTimersByTimeAsync(499));
+      expect(screen.queryByTestId('loadIcon')).to.equal(null);
+
+      // Icon should appear after threshold
+      await act(async () => vi.advanceTimersByTimeAsync(1));
+      expect(screen.queryByTestId('loadIcon')).not.to.equal(null);
+
+      // Type again — icon should reset immediately
+      fireEvent.change(input, { target: { value: '2024-06-15' } });
+      expect(screen.queryByTestId('loadIcon')).to.equal(null);
+
+      // Icon reappears after threshold from new keystroke
+      await act(async () => vi.advanceTimersByTimeAsync(500));
+      expect(screen.queryByTestId('loadIcon')).not.to.equal(null);
+
+      // Disappears when debounce completes
+      await act(async () => vi.advanceTimersByTimeAsync(500));
+      expect(screen.queryByTestId('loadIcon')).to.equal(null);
     });
   });
 
