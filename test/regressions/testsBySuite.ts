@@ -129,6 +129,60 @@ Object.keys(pickersImports).forEach((path: string) => {
   });
 });
 
+// Bespoke composites used to assemble the product overview pages
+// (`/x/react-<product>`). They are not picked up by the `docs/data/**` glob
+// above and otherwise have no Argos coverage.
+const overviewsImports = import.meta.glob<React.ComponentType>(
+  [
+    // Charts
+    'docs/src/modules/components/overview/charts/mainDemo/MainDemo.tsx',
+    'docs/src/modules/components/overview/charts/featuresHighlight/FeaturesHighlight.tsx',
+    'docs/src/modules/components/overview/charts/ChartsCommunityOrPro.tsx',
+    'docs/src/modules/components/overview/charts/essentialCharts/EssentialCharts.tsx',
+    'docs/src/modules/components/overview/charts/advancedCharts/AdvancedChartDemo.tsx',
+    'docs/src/modules/components/overview/charts/advancedFeatures/AdvancedFeatures.tsx',
+    // Date Pickers
+    'docs/src/modules/components/overview/pickers/MainDemo.tsx',
+    'docs/src/modules/components/overview/pickers/PickersFeatureHighlight.tsx',
+    'docs/src/modules/components/overview/pickers/PickersCommunityOrPro.tsx',
+    'docs/src/modules/components/overview/pickers/PickersCustomization.tsx',
+    'docs/src/modules/components/overview/pickers/PickersKeyboard.tsx',
+    'docs/src/modules/components/overview/pickers/Internationalization.tsx',
+    'docs/src/modules/components/overview/pickers/DateLibraries.tsx',
+    // Tree View
+    'docs/src/modules/components/overview/tree-view/mainDemo/MainDemo.tsx',
+    'docs/src/modules/components/overview/tree-view/TreeViewFeaturesHighlight.tsx',
+    'docs/src/modules/components/overview/tree-view/TreeViewCommunityOrPro.tsx',
+    'docs/src/modules/components/overview/tree-view/playground/Playground.tsx',
+    'docs/src/modules/components/overview/tree-view/advancedFeatures/AdvancedFeatures.tsx',
+    'docs/src/modules/components/overview/tree-view/TreeViewKeyboard.tsx',
+    // Scheduler
+    'docs/src/modules/components/overview/scheduler/mainDemo/MainDemo.tsx',
+    'docs/src/modules/components/overview/scheduler/SchedulerFeaturesHighlight.tsx',
+    'docs/src/modules/components/overview/scheduler/SchedulerCommunityOrPremium.tsx',
+    // Chat
+    'docs/src/modules/components/overview/chat/mainDemo/MainDemo.tsx',
+    'docs/src/modules/components/overview/chat/ChatFeaturesHighlight.tsx',
+    'docs/src/modules/components/overview/chat/ChatCommunityOrPro.tsx',
+  ],
+  { eager: true, import: 'default' },
+);
+Object.keys(overviewsImports).forEach((path: string) => {
+  if (overviewsImports[path] === undefined) {
+    return;
+  }
+  const product = path.split('/overview/')[1].split('/')[0];
+  const name = removeExtension(path.split('/').pop()!);
+  const suite = `test-regressions-overviews-${product}`;
+
+  tests.push({
+    path,
+    suite,
+    name,
+    case: overviewsImports[path],
+  });
+});
+
 export const testsBySuite = tests.reduce(
   (acc, test) => {
     if (!acc[test.suite]) {

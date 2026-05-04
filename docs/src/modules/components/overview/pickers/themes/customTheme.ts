@@ -327,6 +327,16 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
           }),
           root: ({ theme }) => ({
             width: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
+            // `DateRangeCalendar` hard-codes `minWidth: 312` / `minHeight: 240`
+            // on the day-grid wrapper for the default 36px cells; when this
+            // composite shrinks them via `theme.mixins.density`, that hard-coded
+            // floor leaks past the cells and shifts the day grid one column
+            // right of the weekday header. Track the density values to avoid
+            // that mismatch.
+            '& .MuiDayCalendar-slideTransition': {
+              minWidth: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
+              minHeight: theme.mixins.density.height * 6 + 4 * 6,
+            },
           }),
           weekContainer: ({ theme }) => ({
             height: theme.mixins.density.height,

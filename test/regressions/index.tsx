@@ -7,6 +7,7 @@ import '../utils/setupFakeClock';
 import { LicenseInfo } from '@mui/x-license';
 import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/internals';
 import TestViewer from './TestViewer';
+import OverviewWrapper from './overviews/OverviewWrapper';
 import { type Test, testsBySuite } from './testsBySuite';
 
 (globalThis as any).MUI_TEST_ENV = true;
@@ -99,6 +100,7 @@ function App() {
         const isDataGridTest =
           suite.startsWith('docs-data-grid') || suite === 'test-regressions-data-grid';
         const isDataGridPivotTest = isDataGridTest && suite.startsWith('docs-data-grid-pivoting');
+        const isOverviewTest = suite.startsWith('test-regressions-overviews-');
 
         const chartTestNeedsToAdvanceTime = (test: Test) =>
           test.path.includes('Interaction') ||
@@ -116,7 +118,13 @@ function App() {
                 shouldAdvanceTime={isDataGridTest || chartTestNeedsToAdvanceTime(test)}
                 path={computePath(test)}
               >
-                <test.case />
+                {isOverviewTest ? (
+                  <OverviewWrapper>
+                    <test.case />
+                  </OverviewWrapper>
+                ) : (
+                  <test.case />
+                )}
               </TestViewer>
             ),
           })),
