@@ -6,8 +6,6 @@ import {
   isContinuousScaleConfig,
   type ChartsRotationAxisProps,
   type ChartsRadiusAxisProps,
-  type PolarAxisDefaultized,
-  type AxisId,
   type PolarAxisConfig,
   type ComputedAxis,
 } from '../../../../models/axis';
@@ -28,12 +26,6 @@ import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { scaleBand, scalePoint } from '../../../scales';
 import { type ComputedAxisConfig } from '../useChartCartesianAxis';
 import { EPSILON } from '../../../../utils/epsilon';
-
-export type DefaultizedAxisConfig<
-  AxisProps extends ChartsRotationAxisProps | ChartsRadiusAxisProps,
-> = {
-  [axisId: AxisId]: PolarAxisDefaultized<ScaleName, any, AxisProps>;
-};
 
 type RotationConfig = PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>;
 type RadiusConfig = PolarAxisConfig<ScaleName, any, ChartsRadiusAxisProps>;
@@ -225,6 +217,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
       scale: finalScale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
+      isFullCircle,
     } as ComputedAxis<ContinuousScaleName, any, ChartsAxisProps>;
   });
   return {

@@ -6,7 +6,7 @@ import type {
   SeriesId,
   CommonDefaultizedProps,
 } from '@mui/x-charts/internals';
-import type { StackOffsetType } from '@mui/x-charts/models';
+import type { CurveType, StackOffsetType } from '@mui/x-charts/models';
 import type { DefaultizedProps } from '@mui/x-internals/types';
 
 export interface RadialLineSeriesType
@@ -21,6 +21,12 @@ export interface RadialLineSeriesType
    * @default 'none'
    */
   stackOffset?: StackOffsetType;
+  /**
+   * The type of curve to use for the line.
+   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
+   * @default 'linear'
+   */
+  curve?: CurveType;
 }
 /**
  * An object that allows to identify a single line.

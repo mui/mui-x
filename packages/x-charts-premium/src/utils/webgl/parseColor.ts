@@ -1,7 +1,8 @@
 const colorCache = new Map<string, [number, number, number, number]>();
 
 /**
- * Parse color string to RGBA object. Each channel is normalized to [0, 1].
+ * Parse color string to RGBA tuple. Each channel is in [0, 255], matching the byte
+ * representation we upload to GPU color buffers.
  * This function does not work in SSR.
  */
 export function parseColor(color: string) {
@@ -44,11 +45,11 @@ function parseColorUsingRegex(color: string): [number, number, number, number] |
       .join('');
   }
 
-  const r = parseInt(color.slice(0, 2), 16) / 255;
-  const g = parseInt(color.slice(2, 4), 16) / 255;
-  const b = parseInt(color.slice(4, 6), 16) / 255;
+  const r = parseInt(color.slice(0, 2), 16);
+  const g = parseInt(color.slice(2, 4), 16);
+  const b = parseInt(color.slice(4, 6), 16);
 
-  const a = color.length === 8 ? parseInt(color.substring(6, 8), 16) / 255 : 1;
+  const a = color.length === 8 ? parseInt(color.substring(6, 8), 16) : 255;
 
   return [r, g, b, a];
 }
@@ -75,7 +76,7 @@ function parseRgbaColor(color: string): [number, number, number, number] | null 
     return null;
   }
 
-  return [r / 255, g / 255, b / 255, a];
+  return [r, g, b, a * 255];
 }
 
 let canvas: HTMLCanvasElement | OffscreenCanvas;
@@ -99,7 +100,7 @@ function parseColorUsingCanvas(color: string): [number, number, number, number] 
 
   const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data;
 
-  const result: [number, number, number, number] = [r / 255, g / 255, b / 255, a / 255];
+  const result: [number, number, number, number] = [r, g, b, a];
 
   return result;
 }

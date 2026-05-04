@@ -59,6 +59,7 @@ export * from './plugins';
 // Premium components
 export * from './ChartsRenderer';
 export * from './ChartsDataProviderPremium';
+export * from './ChartsRadialDataProviderPremium';
 export * from './ChartsContainerPremium';
 export * from './BarChartPremium';
 export * from './HeatmapPremium';

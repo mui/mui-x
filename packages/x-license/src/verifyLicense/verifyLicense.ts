@@ -259,7 +259,7 @@ export function verifyLicense({
         license.licenseModel === 'perpetual' &&
         isPlanVersionOlderOrEqual(license.planVersion as string, MAX_V8_PLAN_VERSION)
       ) {
-        return { status: LICENSE_STATUS.NotValidForPackage };
+        return { status: LICENSE_STATUS.NotValidForPackage, meta: { packageMajorVersion } };
       }
       return { status: LICENSE_STATUS.ExpiredVersion };
     }
@@ -308,7 +308,7 @@ export function verifyLicense({
     license.licenseModel !== 'perpetual' &&
     isPlanVersionOlderOrEqual(license.planVersion as string, MAX_V8_PLAN_VERSION)
   ) {
-    return { status: LICENSE_STATUS.NotValidForPackage };
+    return { status: LICENSE_STATUS.NotValidForPackage, meta: { packageMajorVersion } };
   }
 
   return { status: LICENSE_STATUS.Valid };
