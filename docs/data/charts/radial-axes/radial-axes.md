@@ -16,23 +16,71 @@ This feature is in preview. It is ready for production use, but its API, visuals
 
 Similarly to the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordinates.
 
+This component accept two boolean props `rotation` and `radius` to display grid lines corresponding to the rotation/radius axis ticks.
+
+Use the `chartsRadialGridClasses` to modify the style of this component.
+
 {{"demo": "RadialGridPlayground.js", "hideToolbar": true, "bg": "playground"}}
 
-## Radius axis
+## Axes
+
+The radial charts have two axis components.
+The `ChartsRadiusAxis` and `ChartsRotationAxis`.
+
+They both uses the classes from `chartsRadialAxisClasses`.
+To distinguish radius axis from the rotation axis, use the `chartsRadialAxisClasses.rotation` or `chartsRadialAxisClasses.radius` classes. They are applied at the root of the component.
+
+```ts
+[`.${chartsRadialAxisClasses.tick} `]: { /* Modify all ticks */ },
+[`.${chartsRadialAxisClasses.radius} .${chartsRadialAxisClasses.tick} `]: { /* Modify only ticks from the radius axis */ },
+```
+
+### Radius axis
 
 The `ChartsRadiusAxis` component renders tick labels along a radius direction.
 
-You can style each tick label by targeting the `chartsRadialAxisClasses.tickLabel` class.
+The axis `position` prop defines the angle at which the axis get display.
+It can be set to
+
+- `'start'`: Place the axis at the `startAngle` of the rotation axis.
+- `'end'`: Place the axis at the `endAngle` of the rotation axis.
+- `number`: The angle in degree where to plot the axis.
 
 {{"demo": "RadiusAxisPlayground.js", "hideToolbar": true, "bg": "playground"}}
 
-## Rotation axis
+### Rotation axis
 
 The `ChartsRotationAxis` component renders an arc along the rotation axis with tick marks and labels.
-The arc radius is taken from the radius axis outer radius, and you can style each tick label via the `chartsRadialAxisClasses.tickLabel` class.
+
+The axis `position` prop defines the angle at which the axis get display.
+It can be set to
+
+- `'outside'`: Place the axis at the `maxRadius` of the radius axis. Will place labels and ticks outside by default.
+- `'inside'`: Place the axis at the `minRadius` of the radius axis. Will place labels and ticks inside by default.
 
 {{"demo": "RotationAxisPlayground.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Axis highlight
+
+Highlight data based on mouse position.
+It can be diplayed either as a dashed line, or as a band.
+
+To customize this behavior, use the `axisHighlight` prop:
+
+```jsx
+axisHighlight={{
+  rotation: 'line', // Or 'none', or 'band'
+  radius: 'line', // Or 'none', or 'band'
+}}
+```
+
+Or the component when using composition:
+
+```jsx
+<ChartsRadialAxisHighlight
+  rotation='line' // Or 'none', or 'band'
+  radius='line' // Or 'none', or 'band'
+/>
+```
 
 {{"demo": "BandHighlight.js", "bg": "outline"}}
