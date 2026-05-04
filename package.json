@@ -134,7 +134,7 @@
     "serve": "catalog:",
     "sinon": "21.1.2",
     "string-replace-loader": "3.3.0",
-    "stylelint": "17.1.1",
+    "stylelint": "17.9.1",
     "tsx": "catalog:",
     "typescript": "5.9.3",
     "unist-util-visit": "5.1.0",
