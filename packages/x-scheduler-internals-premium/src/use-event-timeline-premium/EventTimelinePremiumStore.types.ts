@@ -19,6 +19,11 @@ export interface EventTimelinePremiumState extends SchedulerState {
    * Preferences for the timeline.
    */
   preferences: Partial<EventTimelinePremiumPreferences>;
+  /**
+   * Set to `true` on the first `updateStateFromParameters` call.
+   * @internal
+   */
+  hasMounted: boolean;
 }
 
 export interface EventTimelinePremiumParameters<

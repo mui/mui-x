@@ -19,6 +19,7 @@ import {
 } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
+import { EventTimelinePremiumErrorContainer } from './error-container';
 import {
   EventTimelinePremiumClasses,
   getEventTimelinePremiumUtilityClass,
@@ -59,6 +60,10 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     eventResizeHandler: ['eventResizeHandler'],
     eventLinesClamp: ['eventLinesClamp'],
     eventRecurringIcon: ['eventRecurringIcon'],
+    eventSkeleton: ['eventSkeleton'],
+    errorContainer: ['errorContainer'],
+    errorAlert: ['errorAlert'],
+    errorMessage: ['errorMessage'],
     ...eventDialogSlots,
   };
 
@@ -132,6 +137,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
             {...other}
           >
             <EventTimelinePremiumContent />
+            <EventTimelinePremiumErrorContainer />
             {watermark}
           </EventTimelinePremiumRoot>
         </EventDialogStyledContext.Provider>

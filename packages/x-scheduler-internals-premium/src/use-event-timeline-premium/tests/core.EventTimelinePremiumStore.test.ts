@@ -45,6 +45,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         visibleResources: {},
         isLoading: false,
         errors: [],
+        hasMounted: false,
       };
 
       expect(store.state).to.deep.equal(expectedState);
