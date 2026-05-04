@@ -273,11 +273,15 @@ function extractColumnWidths(
       }
     }
 
-    const hasColumnMin = column.minWidth !== -Infinity && column.minWidth !== undefined;
-    const hasColumnMax = column.maxWidth !== Infinity && column.maxWidth !== undefined;
+    let min = column.minWidth ?? 0;
+    if (column.autoSizingMinWidth !== undefined) {
+      min = Math.max(min, column.autoSizingMinWidth);
+    }
 
-    const min = hasColumnMin ? column.minWidth! : 0;
-    const max = hasColumnMax ? column.maxWidth! : Infinity;
+    let max = column.maxWidth ?? Infinity;
+    if (column.autoSizingMaxWidth !== undefined) {
+      max = Math.min(max, column.autoSizingMaxWidth);
+    }
     const maxContent = filteredWidths.length === 0 ? 0 : Math.max(...filteredWidths);
 
     widthByField[column.field] = clamp(maxContent, min, max);
@@ -790,12 +794,22 @@ export const useGridColumnResize = (
 
         const widthByField = extractColumnWidths(apiRef, options, columns);
 
-        const newColumns = columns.map((column) => ({
-          ...column,
-          width: widthByField[column.field],
-          computedWidth: widthByField[column.field],
-          flex: 0,
-        }));
+        const newColumns = columns.map((column) => {
+          const width = widthByField[column.field];
+          const newColumn = {
+            ...column,
+            width,
+            computedWidth: width,
+            flex: 0,
+          };
+          if (column.autoSizingMinWidth !== undefined) {
+            newColumn.minWidth = Math.max(column.minWidth ?? 0, column.autoSizingMinWidth);
+          }
+          if (column.autoSizingMaxWidth !== undefined) {
+            newColumn.maxWidth = Math.min(column.maxWidth ?? Infinity, column.autoSizingMaxWidth);
+          }
+          return newColumn;
+        });
 
         if (options.expand) {
           const visibleColumns = state.orderedFields
