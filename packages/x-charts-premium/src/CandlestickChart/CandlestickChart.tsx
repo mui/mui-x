@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   ChartsAxis,
-  type ChartsAxisProps,
   type ChartsAxisSlotProps,
   type ChartsAxisSlots,
 } from '@mui/x-charts/ChartsAxis';
@@ -74,7 +73,6 @@ export interface CandlestickChartProps
       ChartsContainerPremiumProps<'ohlc', CandlestickChartPluginSignatures>,
       'series' | 'plugins' | 'experimentalFeatures'
     >,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<CandlestickPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
