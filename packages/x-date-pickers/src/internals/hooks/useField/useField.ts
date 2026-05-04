@@ -96,34 +96,6 @@ export const useField = <
     [sectionListRef],
   );
 
-  // Tracks the most recent `mousedown` target across the page. Used to detect
-  // Chromium's quirk where clicking outside the field's `contenteditable`
-  // section spans (e.g. on a parent that visually surrounds the field) still
-  // delegates focus to the nearest section. The section's `onFocus` consults
-  // this ref to identify and undo such delegated focus.
-  // See https://stackoverflow.com/questions/34354085/clicking-outside-a-contenteditable-div-stills-give-focus-to-it
-  const lastMouseDownTargetRef = React.useRef<EventTarget | null>(null);
-  React.useEffect(() => {
-    const handler = (event: MouseEvent) => {
-      lastMouseDownTargetRef.current = event.target;
-      // Clear in the next macrotask so any synchronous `focus` event arriving
-      // from the same `mousedown` (the Chromium delegation case) still sees
-      // the target, but subsequent keyboard / programmatic focus events do
-      // not get gated on stale state.
-      setTimeout(() => {
-        if (lastMouseDownTargetRef.current === event.target) {
-          lastMouseDownTargetRef.current = null;
-        }
-      }, 0);
-    };
-    // Capture phase so we record the target before any other handler can stop
-    // propagation.
-    document.addEventListener('mousedown', handler, true);
-    return () => {
-      document.removeEventListener('mousedown', handler, true);
-    };
-  }, []);
-
   const stateResponse = useFieldState({ manager, internalPropsWithDefaults, forwardedProps });
   const {
     // States and derived states
@@ -183,7 +155,6 @@ export const useField = <
     internalPropsWithDefaults,
     domGetters,
     focused,
-    lastMouseDownTargetRef,
   });
 
   const handleRootKeyDown = useEventCallback((event: React.KeyboardEvent<HTMLDivElement>) => {

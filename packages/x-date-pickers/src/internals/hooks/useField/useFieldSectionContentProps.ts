@@ -41,7 +41,6 @@ export function useFieldSectionContentProps(
       updateValueFromValueStr,
     },
     internalPropsWithDefaults: { disabled = false, readOnly = false },
-    lastMouseDownTargetRef,
   } = parameters;
 
   const isContainerEditable = parsedSelectedSections === 'all';
@@ -147,28 +146,13 @@ export function useFieldSectionContentProps(
   });
 
   const createFocusHandler = React.useCallback(
-    (sectionIndex: number) => (event: React.FocusEvent<HTMLSpanElement>) => {
+    (sectionIndex: number) => () => {
       if (disabled) {
         return;
       }
-
-      // Chromium quirk: clicking on an element that visually surrounds the
-      // field (e.g. a parent flex container) can still delegate focus to the
-      // nearest section's `contenteditable`. Detect that by checking whether
-      // the most recent `mousedown` target is outside the field root entirely
-      // -- if so, the focus arrived via Chromium's delegation rather than a
-      // direct interaction with the field, so we undo it.
-      // See https://stackoverflow.com/questions/34354085/clicking-outside-a-contenteditable-div-stills-give-focus-to-it
-      const lastMouseDownTarget = lastMouseDownTargetRef?.current;
-      const root = domGetters.isReady() ? domGetters.getRoot() : null;
-      if (root && lastMouseDownTarget instanceof Node && !root.contains(lastMouseDownTarget)) {
-        event.target.blur();
-        return;
-      }
-
       setSelectedSections(sectionIndex);
     },
-    [disabled, setSelectedSections, lastMouseDownTargetRef, domGetters],
+    [disabled, setSelectedSections],
   );
 
   return React.useCallback(
@@ -200,7 +184,13 @@ export function useFieldSectionContentProps(
 
         // Other
         tabIndex: !isEditable || isContainerEditable || sectionIndex > 0 ? -1 : 0,
-        contentEditable: !isContainerEditable && !disabled && !readOnly,
+        // Only the currently selected section is `contenteditable`. Marking
+        // every section editable opens up Chromium's quirk of delegating focus
+        // from a click on a non-editable ancestor to the nearest
+        // `contenteditable` descendant -- e.g. clicking outside the field but
+        // inside a wrapping flex container would focus the closest section.
+        // See https://stackoverflow.com/questions/34354085/clicking-outside-a-contenteditable-div-stills-give-focus-to-it
+        contentEditable: isEditable && parsedSelectedSections === sectionIndex,
         role: 'spinbutton',
         'data-range-position': (section as FieldRangeSection).dateName || undefined,
         spellCheck: isEditable ? false : undefined,
@@ -218,6 +208,7 @@ export function useFieldSectionContentProps(
       disabled,
       readOnly,
       isEditable,
+      parsedSelectedSections,
       translations,
       adapter,
       handleInput,
@@ -238,12 +229,6 @@ interface UseFieldSectionContentPropsParameters {
   internalPropsWithDefaults: UseFieldInternalProps<any, any>;
   domGetters: UseFieldDOMGetters;
   focused: boolean;
-  /**
-   * Ref tracking the most recent `mousedown` target across the page. Used to
-   * detect Chromium's focus delegation from non-section elements onto a
-   * section's `contenteditable` span.
-   */
-  lastMouseDownTargetRef: React.RefObject<EventTarget | null>;
 }
 
 type UseFieldSectionContentPropsReturnValue = (
