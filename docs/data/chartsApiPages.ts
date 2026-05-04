@@ -403,6 +403,16 @@ const chartsApiPages: MuiPage[] = [
     plan: 'premium',
   },
   {
+    pathname: '/x/api/charts/radial-bar-chart',
+    title: 'RadialBarChart',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-bar-plot',
+    title: 'RadialBarPlot',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/radial-line-chart',
     title: 'RadialLineChart',
     plan: 'premium',

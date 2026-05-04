@@ -1,6 +1,9 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import useId from '@mui/utils/useId';
 import { useThemeProps } from '@mui/material/styles';
+import { type MakeOptional } from '@mui/x-internals/types';
 import {
   useChartsContainerProps,
   type ChartsSlots,
@@ -11,101 +14,87 @@ import {
   type ChartsRadialGridProps,
 } from '@mui/x-charts/ChartsRadialGrid';
 import {
-  Unstable_ChartsRadialAxisHighlight as ChartsRadialAxisHighlight,
-  type ChartsRadialAxisHighlightProps,
-} from '@mui/x-charts/ChartsRadialAxisHighlight';
-import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
+  ChartsLegend,
+  type ChartsLegendSlots,
+  type ChartsLegendSlotProps,
+  type ChartsLegendSlotExtension,
+} from '../ChartsLegend';
 import { ChartsSurface } from '../ChartsSurface';
 import {
   ChartsTooltip,
   type ChartsTooltipSlots,
   type ChartsTooltipSlotProps,
 } from '../ChartsTooltip';
-import { ChartsWrapper } from '../ChartsWrapper';
-import { type RadialLineChartPluginSignatures } from './RadialLineChart.plugins';
-import { RadialLinePlot } from './RadialLinePlot';
-import { RadialMarkPlot } from './RadialMarkPlot';
-import { RadialAreaPlot } from './RadialAreaPlot';
-import { ChartsClipPath } from '../ChartsClipPath';
+import { ChartsWrapper, type ChartsWrapperProps } from '../ChartsWrapper';
+import { ChartsClipPath, type ChartsClipPathProps } from '../ChartsClipPath';
 import {
   ChartsOverlay,
   type ChartsOverlayProps,
   type ChartsOverlaySlots,
   type ChartsOverlaySlotProps,
 } from '../ChartsOverlay';
-import type { LinePlotSlots, LinePlotSlotProps, LineSeries } from '../LineChart';
 import { type ChartsToolbarSlots, type ChartsToolbarSlotProps } from '../Toolbar';
-import { useRadialLineChartProps } from './useRadialLineChartProps';
-import { radialLineSeriesConfig } from './seriesConfig';
-import {
-  RadialLineHighlightPlot,
-  type RadialLineHighlightPlotSlots,
-  type RadialLineHighlightPlotSlotProps,
-} from './RadialLineHighlightPlot';
+import { radialBarSeriesConfig } from './seriesConfig';
 import {
   ChartsRadialDataProviderPremium,
   type ChartsRadialDataProviderPremiumProps,
 } from '../ChartsRadialDataProviderPremium';
+import { type ChartsRadialDataProviderProps } from '../ChartsRadialDataProvider';
+import type { RadialBarSeriesType } from '../models/seriesType/radialBar';
+import { DEFAULT_ROTATION_AXIS_KEY } from '../constants';
+import {
+  RADIAL_BAR_CHART_PLUGINS,
+  type RadialBarChartPluginSignatures,
+} from './RadialBarChart.plugins';
+import { RadialBarPlot } from './RadialBarPlot';
 
-export interface RadialLineChartSlots
+export type RadialBarSeries = MakeOptional<RadialBarSeriesType, 'type'>;
+
+export interface RadialBarChartSlots
   extends
-    LinePlotSlots,
-    RadialLineHighlightPlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
     ChartsTooltipSlots,
     ChartsToolbarSlots,
     Partial<ChartsSlots> {}
-export interface RadialLineChartSlotProps
+export interface RadialBarChartSlotProps
   extends
-    LinePlotSlotProps,
-    RadialLineHighlightPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 
-export interface RadialLineChartProps
+export interface RadialBarChartProps
   extends
     Omit<
-      ChartsRadialDataProviderPremiumProps<'radialLine', RadialLineChartPluginSignatures>,
+      ChartsRadialDataProviderPremiumProps<'radialBar', RadialBarChartPluginSignatures>,
       'series' | 'plugins' | 'zAxis' | 'slots' | 'slotProps'
     >,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
-   * The series to display in the line chart.
-   * An array of [[LineSeries]] objects.
+   * The series to display in the radial bar chart.
+   * An array of [[RadialBarSeries]] objects.
    */
-  series: Readonly<LineSeries[]>;
+  series: Readonly<RadialBarSeries[]>;
   /**
    * Option to display a radial grid in the background.
    */
   grid?: Pick<ChartsRadialGridProps, 'radius' | 'rotation'>;
   /**
-   * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
-   * @default { rotation: 'line' }
-   */
-  axisHighlight?: ChartsRadialAxisHighlightProps;
-  /**
    * If `true`, the legend is not rendered.
    */
   hideLegend?: boolean;
   /**
-   * If `true`, render the line highlight item.
-   */
-  disableLineItemHighlight?: boolean;
-  /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: RadialLineChartSlots;
+  slots?: RadialBarChartSlots;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: RadialLineChartSlotProps;
+  slotProps?: RadialBarChartSlotProps;
   /**
    * If `true`, animations are skipped.
    * @default false
@@ -118,43 +107,117 @@ export interface RadialLineChartProps
   showToolbar?: boolean;
 }
 
-const seriesConfig = { radialLine: radialLineSeriesConfig };
+const seriesConfig = { radialBar: radialBarSeriesConfig };
 
 /**
  * Demos:
  *
- * - [Line demonstration](https://mui.com/x/react-charts/radial-line/)
+ * - [Radial bar demonstration](https://mui.com/x/react-charts/radial-bar/)
  *
  * API:
  *
- * - [RadialLineChart API](https://mui.com/x/api/charts/radial-line-chart/)
+ * - [RadialBarChart API](https://mui.com/x/api/charts/radial-bar-chart/)
  */
-const RadialLineChart = React.forwardRef(function RadialLineChart(
-  inProps: RadialLineChartProps,
+const RadialBarChart = React.forwardRef(function RadialBarChart(
+  inProps: RadialBarChartProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiRadialLineChart' });
+  const props = useThemeProps({ props: inProps, name: 'MuiRadialBarChart' });
   const {
-    chartsWrapperProps,
-    chartsContainerProps,
-    gridProps,
-    axisHighlightProps,
-    clipPathProps,
-    clipPathGroupProps,
-    overlayProps,
-    legendProps,
+    rotationAxis,
+    radiusAxis,
+    series,
+    width,
+    height,
+    margin,
+    colors,
+    dataset,
+    hideLegend,
+    grid,
     children,
-  } = useRadialLineChartProps(props);
+    slots,
+    slotProps,
+    skipAnimation,
+    loading,
+    showToolbar,
+    ...other
+  } = props;
+
+  const id = useId();
+  const clipPathId = `${id}-clip-path`;
+
+  const seriesWithDefault = React.useMemo(
+    () =>
+      series.map((s) => ({
+        type: 'radialBar' as const,
+        ...s,
+      })),
+    [series],
+  );
+
+  const chartsContainerProps: ChartsRadialDataProviderProps<
+    'radialBar',
+    RadialBarChartPluginSignatures
+  > = {
+    ...other,
+    series: seriesWithDefault,
+    width,
+    height,
+    margin,
+    colors,
+    dataset,
+    rotationAxis: rotationAxis ?? [
+      {
+        id: DEFAULT_ROTATION_AXIS_KEY,
+        scaleType: 'band',
+        data: Array.from(
+          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
+          (_, index) => index,
+        ),
+      },
+    ],
+    radiusAxis,
+    skipAnimation,
+    plugins: RADIAL_BAR_CHART_PLUGINS,
+  };
+
+  const gridProps: ChartsRadialGridProps | undefined = grid;
+
+  const clipPathGroupProps = {
+    clipPath: `url(#${clipPathId})`,
+  };
+
+  const clipPathProps: ChartsClipPathProps = {
+    id: clipPathId,
+  };
+
+  const overlayProps: ChartsOverlayProps = {
+    slots,
+    slotProps,
+    loading,
+  };
+
+  const legendProps: ChartsLegendSlotExtension = {
+    slots,
+    slotProps,
+  };
+
+  const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
+    legendPosition: props.slotProps?.legend?.position,
+    legendDirection: props.slotProps?.legend?.direction,
+    hideLegend: props.hideLegend ?? false,
+  };
+
   const { chartsDataProviderProps, chartsSurfaceProps } = useChartsContainerProps<
-    'radialLine',
-    RadialLineChartPluginSignatures
+    'radialBar',
+    RadialBarChartPluginSignatures
   >(chartsContainerProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartsRadialDataProviderPremium<'radialLine', RadialLineChartPluginSignatures>
+    <ChartsRadialDataProviderPremium<'radialBar', RadialBarChartPluginSignatures>
       {...chartsDataProviderProps}
       seriesConfig={seriesConfig}
     >
@@ -164,13 +227,9 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsRadialGrid {...gridProps} />
           <g {...clipPathGroupProps}>
-            <RadialAreaPlot />
-            <RadialLinePlot />
+            <RadialBarPlot />
             <ChartsOverlay {...overlayProps} />
           </g>
-          <ChartsRadialAxisHighlight {...axisHighlightProps} />
-          <RadialMarkPlot />
-          <RadialLineHighlightPlot slots={props.slots} slotProps={props.slotProps} />
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
@@ -180,7 +239,7 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
   );
 });
 
-RadialLineChart.propTypes = {
+RadialBarChart.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -190,15 +249,6 @@ RadialLineChart.propTypes = {
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
     }),
-  }),
-  /**
-   * The configuration of axes highlight.
-   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
-   * @default { rotation: 'line' }
-   */
-  axisHighlight: PropTypes.shape({
-    radius: PropTypes.oneOf(['line', 'none']),
-    rotation: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
    * Color palette used to colorize multiple series.
@@ -219,10 +269,6 @@ RadialLineChart.propTypes = {
    * If `true`, disables keyboard navigation for the chart.
    */
   disableKeyboardNavigation: PropTypes.bool,
-  /**
-   * If `true`, render the line highlight item.
-   */
-  disableLineItemHighlight: PropTypes.bool,
   /**
    * Options to enable features planned for the next major.
    */
@@ -263,12 +309,12 @@ RadialLineChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialLine']),
+        type: PropTypes.oneOf(['radialBar']),
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialLine']).isRequired,
+        type: PropTypes.oneOf(['radialBar']).isRequired,
       }),
     ]).isRequired,
   ),
@@ -282,12 +328,12 @@ RadialLineChart.propTypes = {
    */
   highlightedItem: PropTypes.oneOfType([
     PropTypes.shape({
-      dataIndex: PropTypes.number,
+      dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radialLine']).isRequired,
+      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
     PropTypes.shape({
-      dataIndex: PropTypes.number,
+      dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
     }),
   ]),
@@ -322,12 +368,12 @@ RadialLineChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialLine']),
+        type: PropTypes.oneOf(['radialBar']),
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialLine']).isRequired,
+        type: PropTypes.oneOf(['radialBar']).isRequired,
       }),
     ]).isRequired,
   ),
@@ -2061,8 +2107,8 @@ RadialLineChart.propTypes = {
     ]).isRequired,
   ),
   /**
-   * The series to display in the line chart.
-   * An array of [[LineSeries]] objects.
+   * The series to display in the radial bar chart.
+   * An array of [[RadialBarSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -2092,12 +2138,12 @@ RadialLineChart.propTypes = {
    */
   tooltipItem: PropTypes.oneOfType([
     PropTypes.shape({
-      dataIndex: PropTypes.number,
+      dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radialLine']).isRequired,
+      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
     PropTypes.shape({
-      dataIndex: PropTypes.number,
+      dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
     }),
   ]),
@@ -2107,4 +2153,4 @@ RadialLineChart.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { RadialLineChart as Unstable_RadialLineChart };
+export { RadialBarChart as Unstable_RadialBarChart };
