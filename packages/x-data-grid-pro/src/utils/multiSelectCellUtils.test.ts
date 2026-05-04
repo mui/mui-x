@@ -1,4 +1,9 @@
-import { getOverflowChipWidth, calculateVisibleCount } from './multiSelectCellUtils';
+import {
+  getOverflowChipWidth,
+  calculateVisibleCount,
+  DEFAULT_OVERFLOW_CHIP_WIDTHS,
+  DEFAULT_GAP,
+} from './multiSelectCellUtils';
 
 describe('multiSelectCellUtils', () => {
   describe('getOverflowChipWidth', () => {
@@ -7,19 +12,36 @@ describe('multiSelectCellUtils', () => {
       expect(getOverflowChipWidth(-1)).to.equal(0);
     });
 
-    it('should return 32 for 1-9 hidden items', () => {
-      expect(getOverflowChipWidth(1)).to.equal(32);
-      expect(getOverflowChipWidth(9)).to.equal(32);
+    it('should return the 1-digit width for 1-9 hidden items', () => {
+      expect(getOverflowChipWidth(1)).to.equal(DEFAULT_OVERFLOW_CHIP_WIDTHS[0]);
+      expect(getOverflowChipWidth(9)).to.equal(DEFAULT_OVERFLOW_CHIP_WIDTHS[0]);
     });
 
-    it('should return 38 for 10-99 hidden items', () => {
-      expect(getOverflowChipWidth(10)).to.equal(38);
-      expect(getOverflowChipWidth(99)).to.equal(38);
+    it('should return the 2-digit width for 10-99 hidden items', () => {
+      expect(getOverflowChipWidth(10)).to.equal(DEFAULT_OVERFLOW_CHIP_WIDTHS[1]);
+      expect(getOverflowChipWidth(99)).to.equal(DEFAULT_OVERFLOW_CHIP_WIDTHS[1]);
     });
 
-    it('should return 44 for 100+ hidden items', () => {
-      expect(getOverflowChipWidth(100)).to.equal(44);
-      expect(getOverflowChipWidth(999)).to.equal(44);
+    it('should return the 3-digit width for 100+ hidden items', () => {
+      expect(getOverflowChipWidth(100)).to.equal(DEFAULT_OVERFLOW_CHIP_WIDTHS[2]);
+      expect(getOverflowChipWidth(999)).to.equal(DEFAULT_OVERFLOW_CHIP_WIDTHS[2]);
+    });
+
+    it('should reuse the last entry for digit counts beyond the table', () => {
+      expect(getOverflowChipWidth(1000)).to.equal(DEFAULT_OVERFLOW_CHIP_WIDTHS[2]);
+      expect(getOverflowChipWidth(99999)).to.equal(DEFAULT_OVERFLOW_CHIP_WIDTHS[2]);
+    });
+
+    it('should accept custom measured widths', () => {
+      const widths = [40, 50, 60];
+      expect(getOverflowChipWidth(5, widths)).to.equal(40);
+      expect(getOverflowChipWidth(50, widths)).to.equal(50);
+      expect(getOverflowChipWidth(500, widths)).to.equal(60);
+      expect(getOverflowChipWidth(5000, widths)).to.equal(60);
+    });
+
+    it('should return 0 when widths table is empty', () => {
+      expect(getOverflowChipWidth(5, [])).to.equal(0);
     });
   });
 
@@ -71,6 +93,28 @@ describe('multiSelectCellUtils', () => {
       // Container can fit first chip + overflow chip (50 + 4 + 32 = 86)
       // but not both chips (104)
       expect(calculateVisibleCount(2, 90, chipWidths)).to.equal(1);
+    });
+
+    it('should use custom overflow widths and gap when supplied', () => {
+      // Custom: overflow "+1" = 50, gap = 8
+      // 1 chip + gap + overflow = 60 + 8 + 50 = 118
+      const chipWidths = new Map<number, number>([
+        [0, 60],
+        [1, 60],
+      ]);
+      expect(calculateVisibleCount(2, 120, chipWidths, [50, 60, 70], 8)).to.equal(1);
+      // Both chips: 60 + 8 + 60 = 128 — does not fit in 120
+      expect(calculateVisibleCount(2, 128, chipWidths, [50, 60, 70], 8)).to.equal(2);
+    });
+
+    it('should fall back to DEFAULT_GAP when gap is omitted', () => {
+      const chipWidths = new Map<number, number>([
+        [0, 50],
+        [1, 50],
+      ]);
+      // Default gap is 4, default overflow is 32; 50 + 4 + 32 = 86 fits in 90
+      expect(calculateVisibleCount(2, 90, chipWidths)).to.equal(1);
+      expect(DEFAULT_GAP).to.equal(4);
     });
   });
 });

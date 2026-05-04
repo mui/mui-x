@@ -7,15 +7,20 @@ import { gridClasses, useGridRootProps } from '@mui/x-data-grid';
 import type { GridSlotProps, ValueOptions } from '@mui/x-data-grid';
 import { NotRendered } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
-import { calculateVisibleCount } from '../../utils/multiSelectCellUtils';
+import {
+  DEFAULT_GAP,
+  DEFAULT_OVERFLOW_CHIP_WIDTHS,
+  calculateVisibleCount,
+} from '../../utils/multiSelectCellUtils';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 
 type OwnerState = DataGridProProcessedProps;
 
-const Root = styled('div', {
+export const MultiSelectChipsRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'MultiSelectChips',
-})({
+  shouldForwardProp: (prop) => prop !== 'ownerState',
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   alignItems: 'center',
   width: '100%',
@@ -97,10 +102,12 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
 
   const [measuredCount, setMeasuredCount] = React.useState(0);
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
+  const [overflowMetrics, setOverflowMetrics] = React.useState(
+    () => privateApiRef.current.caches.multiSelect?.getOverflowMetrics(field) ?? null,
+  );
 
   const arrayKey = React.useMemo(() => values.join('\0'), [values]);
 
-  // Reset measurement cache when values change (skip on initial mount).
   React.useEffect(() => {
     if (autoWrap) {
       return;
@@ -139,6 +146,14 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
     });
   }, [field, autoWrap, privateApiRef]);
 
+  React.useEffect(() => {
+    const cache = privateApiRef.current.caches.multiSelect;
+    if (!cache) {
+      return undefined;
+    }
+    return cache.subscribeOverflowMetrics(field, setOverflowMetrics);
+  }, [privateApiRef, field]);
+
   // Measure chip and container widths after render. `getBoundingClientRect` is sub-pixel,
   // which keeps the chip-fit math aligned with the browser's actual layout.
   React.useLayoutEffect(() => {
@@ -160,6 +175,9 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
     }
   }, [containerWidth, autoWrap]);
 
+  const overflowWidths = overflowMetrics?.overflowChipWidths ?? DEFAULT_OVERFLOW_CHIP_WIDTHS;
+  const gap = overflowMetrics?.gap ?? DEFAULT_GAP;
+
   // Asymmetric hysteresis: pointer drag produces ±1-3 px jitter that flips visibleCount
   // between N and N+1 at the chip-fit boundary. Upward transitions need HYSTERESIS_PX of
   // headroom; downward transitions apply immediately so chips never overflow the cell.
@@ -170,20 +188,28 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
     if (containerWidth === null || containerWidth === 0 || measuredCount < values.length) {
       return values.length;
     }
-    const calculated = calculateVisibleCount(values.length, containerWidth, chipWidthsRef.current);
+    const calculated = calculateVisibleCount(
+      values.length,
+      containerWidth,
+      chipWidthsRef.current,
+      overflowWidths,
+      gap,
+    );
     const prev = prevVisibleCountRef.current;
     if (calculated > prev) {
       const conservative = calculateVisibleCount(
         values.length,
         containerWidth - HYSTERESIS_PX,
         chipWidthsRef.current,
+        overflowWidths,
+        gap,
       );
       if (conservative < calculated) {
         return prev;
       }
     }
     return calculated;
-  }, [values.length, measuredCount, containerWidth, autoWrap]);
+  }, [values.length, measuredCount, containerWidth, autoWrap, overflowWidths, gap]);
 
   React.useLayoutEffect(() => {
     prevVisibleCountRef.current = visibleCount;
@@ -192,8 +218,9 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
   const hiddenCount = values.length - visibleCount;
 
   return (
-    <Root
+    <MultiSelectChipsRoot
       ref={handleRef}
+      ownerState={ownerState}
       {...other}
       {...slotProps?.root}
       className={clsx(classes?.root, other?.className, slotProps?.root?.className)}
@@ -240,7 +267,7 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
           className={clsx(classes?.overflow, slotProps?.overflow?.className)}
         />
       )}
-    </Root>
+    </MultiSelectChipsRoot>
   );
 }
 

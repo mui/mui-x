@@ -13,6 +13,8 @@ import {
   GridMultiSelectCell,
   GridEditMultiSelectCell,
 } from '@mui/x-data-grid-pro';
+import { unwrapPrivateAPI } from '@mui/x-data-grid-pro/internals';
+import { isJSDOM } from 'test/utils/skipIf';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { getCell, spyApi, sleep } from 'test/utils/helperFn';
 import { spy, type SinonSpy } from 'sinon';
@@ -1007,6 +1009,34 @@ describe('<DataGridPro /> - Edit components', () => {
         expect(editRoot.querySelector('.chip-One')).not.to.equal(null);
         expect(editRoot.querySelector('.chip-Two')).not.to.equal(null);
       });
+    });
+
+    describe('GridMultiSelectMeasurer', () => {
+      it.skipIf(isJSDOM)(
+        'should publish positive overflow chip widths and gap to the cache for the multiSelect column',
+        async () => {
+          render(<TestCase />);
+          await waitFor(() => {
+            const privateApi = unwrapPrivateAPI(apiRef.current!);
+            const cache = privateApi.caches.multiSelect;
+            expect(cache).not.to.equal(undefined);
+            const metrics = cache.getOverflowMetrics('tags');
+            expect(metrics).not.to.equal(null);
+            expect(metrics!.overflowChipWidths).to.have.length(3);
+            metrics!.overflowChipWidths.forEach((w: number) => {
+              expect(w).to.be.greaterThan(0);
+            });
+            // 1-digit ≤ 2-digit ≤ 3-digit (more digits ⇒ wider chip).
+            expect(metrics!.overflowChipWidths[0]).to.be.lessThanOrEqual(
+              metrics!.overflowChipWidths[1],
+            );
+            expect(metrics!.overflowChipWidths[1]).to.be.lessThanOrEqual(
+              metrics!.overflowChipWidths[2],
+            );
+            expect(metrics!.gap).to.be.greaterThanOrEqual(0);
+          });
+        },
+      );
     });
   });
 });
