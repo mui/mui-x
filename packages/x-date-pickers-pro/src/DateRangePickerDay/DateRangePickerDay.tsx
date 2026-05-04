@@ -530,7 +530,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
       onMouseEnter={(event) => onMouseEnter(event, day)}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
-      draggable={draggable}
       {...other}
       ownerState={ownerState}
       className={clsx(classes.root, className)}

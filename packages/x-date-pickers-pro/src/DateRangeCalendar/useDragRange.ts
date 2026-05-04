@@ -21,7 +21,6 @@ interface UseDragRangeParams {
 interface UseDragRangeEvents {
   onPointerDown?: React.PointerEventHandler<HTMLButtonElement>;
   onPointerOver?: React.PointerEventHandler<HTMLButtonElement>;
-  onDragStart?: React.DragEventHandler<HTMLButtonElement>;
 }
 
 interface UseDragRangeResponse extends UseDragRangeEvents {
@@ -282,18 +281,9 @@ const useDragRangeEvents = ({
     [],
   );
 
-  // The day cells still set `draggable="true"` (used to drive the
-  // `cursor: grab` styling). Without an `onDragStart` handler that cancels
-  // the default, browsers would start their own native HTML5 drag and show
-  // a ghost element on top of our pointer-driven drag.
-  const handleDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  });
-
   return {
     onPointerDown: handlePointerDown,
     onPointerOver: handlePointerOver,
-    onDragStart: handleDragStart,
   };
 };
 
