@@ -1,5 +1,4 @@
 export {
-  type ChartsRotationAxisProps,
   ChartsRotationAxis as Unstable_ChartsRotationAxis,
 } from './ChartsRotationAxis';
 export {
@@ -7,3 +6,6 @@ export {
   type ChartsRadialAxisClassKey,
   chartsRadialAxisClasses,
 } from './chartsRotationAxisClasses';
+
+// Re-export types
+export { type ChartsRotationAxisProps } from '../models/axis';

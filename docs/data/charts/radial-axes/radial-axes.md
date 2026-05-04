@@ -1,7 +1,7 @@
 ---
 title: React Radial axes
 productId: x-charts
-components: ChartsRadialDataProvider, ChartsRadialGrid, ChartsRadiusAxis, ChartsRotationAxis
+components: ChartsRadialDataProvider, ChartsRadialGrid, ChartsRadiusAxis, ChartsRotationAxis, ChartsRadialAxisHighlight
 ---
 
 # Charts - Radial axes
