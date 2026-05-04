@@ -1,11 +1,19 @@
 import * as React from 'react';
-import type { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 
 export interface DayGridEventProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event occurrence to render.
    */
-  occurrence: useEventOccurrencesWithDayGridPosition.EventRenderableOccurrenceWithPosition;
+  occurrence: SchedulerRenderableEventOccurrence;
+  /**
+   * The 1-based lane index (CSS grid row inside the day cell) the event should render in.
+   */
+  firstLane: number;
+  /**
+   * Number of horizontal cells (days) the event spans.
+   */
+  cellSpan: number;
   /**
    * The variant of the event, which determines its styling.
    * 'filled': displays the event title only on a solid background.

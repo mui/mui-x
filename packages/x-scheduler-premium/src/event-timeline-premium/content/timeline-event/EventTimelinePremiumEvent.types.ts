@@ -1,11 +1,15 @@
 import * as React from 'react';
-import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 
 export interface EventTimelinePremiumEventProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event occurrence to render.
    */
-  occurrence: useEventOccurrencesWithTimelinePosition.EventRenderableOccurrenceWithPosition;
+  occurrence: SchedulerRenderableEventOccurrence;
+  /**
+   * 1-based first lane (CSS row inside the resource row) the event occupies.
+   */
+  firstLane: number;
   /**
    * The variant of the event, which determines its styling.
    */

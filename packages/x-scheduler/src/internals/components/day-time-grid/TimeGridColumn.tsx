@@ -2,14 +2,16 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
+import { warnOnce } from '@mui/x-internals/warning';
+import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
-import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
-import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import {
+  eventCalendarOccurrencePlaceholderSelectors,
+  eventCalendarOccurrencePositionSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventSkeleton } from '../event-skeleton';
@@ -77,17 +79,54 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
   backgroundColor: (theme.vars || theme).palette.primary.main,
 }));
 
+interface TimeGridColumnEventProps {
+  occurrenceKey: string;
+  firstLane: number;
+  lastLane: number;
+}
+
+const TimeGridColumnEvent = React.memo(function TimeGridColumnEvent(
+  props: TimeGridColumnEventProps,
+) {
+  const { occurrenceKey, firstLane, lastLane } = props;
+  const store = useEventCalendarStoreContext();
+  const occurrence = useStore(
+    store,
+    eventCalendarOccurrencePositionSelectors.occurrenceByKey,
+    occurrenceKey,
+  );
+
+  if (!occurrence) {
+    return null;
+  }
+
+  return (
+    <EventDialogTrigger occurrence={occurrence}>
+      <TimeGridEvent
+        occurrence={occurrence}
+        variant="regular"
+        firstLane={firstLane}
+        lastLane={lastLane}
+      />
+    </EventDialogTrigger>
+  );
+});
+
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index } = props;
 
   const adapter = useAdapterContext();
+  const store = useEventCalendarStoreContext();
   const { classes } = useEventCalendarStyledContext();
   const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
   const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);
-  const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
-    occurrences: day.withoutPosition,
-    maxSpan: Infinity,
-  });
+
+  const dayLayout = useStore(
+    store,
+    eventCalendarOccurrencePositionSelectors.timeGridLayoutForDay,
+    day.key,
+  );
+  const maxLane = dayLayout?.maxLane ?? 1;
 
   return (
     <DayTimeGridColumn
@@ -96,34 +135,31 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       end={end}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       data-weekend={isWeekend(adapter, day.value) || undefined}
-      style={{ '--columns-count': maxIndex } as React.CSSProperties}
+      style={{ '--columns-count': maxLane } as React.CSSProperties}
     >
       <ColumnInteractiveLayer
+        day={day}
         start={start}
         end={end}
         showCurrentTimeIndicator={showCurrentTimeIndicator}
         index={index}
-        occurrences={occurrences}
-        maxIndex={maxIndex}
       />
     </DayTimeGridColumn>
   );
 }
 
 function ColumnInteractiveLayer({
+  day,
   start,
   end,
   showCurrentTimeIndicator,
   index,
-  occurrences,
-  maxIndex,
 }: {
+  day: SchedulerProcessedDate;
   start: TemporalSupportedObject;
   end: TemporalSupportedObject;
   showCurrentTimeIndicator: boolean;
   index: number;
-  occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
-  maxIndex: number;
 }) {
   // Context hooks
   const store = useEventCalendarStoreContext();
@@ -140,14 +176,19 @@ function ColumnInteractiveLayer({
     start,
     end,
   );
-  const placeholder = CalendarGrid.usePlaceholderInRange({ start, end, occurrences, maxIndex });
+  const dayLayout = useStore(
+    store,
+    eventCalendarOccurrencePositionSelectors.timeGridLayoutForDay,
+    day.key,
+  );
+  const placeholder = CalendarGrid.usePlaceholderInRange({ day, start, end });
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !columnRef.current) {
       return;
     }
-    startEditing(columnRef, placeholder);
+    startEditing(columnRef, placeholder.occurrence);
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
@@ -157,12 +198,34 @@ function ColumnInteractiveLayer({
     >
       {isLoading && <EventSkeleton data-variant="time-column" />}
       {!isLoading &&
-        occurrences.map((occurrence) => (
-          <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
-            <TimeGridEvent occurrence={occurrence} variant="regular" />
-          </EventDialogTrigger>
-        ))}
-      {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
+        dayLayout?.orderedKeys.map((occurrenceKey) => {
+          const position = dayLayout.positionByKey.get(occurrenceKey);
+          if (!position) {
+            if (process.env.NODE_ENV !== 'production') {
+              warnOnce(
+                `MUI X Scheduler: occurrence "${occurrenceKey}" is in \`orderedKeys\` for day "${day.key}" ` +
+                  'but missing from `positionByKey`. The event will not render. This is an internal bug — please file an issue.',
+              );
+            }
+            return null;
+          }
+          return (
+            <TimeGridColumnEvent
+              key={occurrenceKey}
+              occurrenceKey={occurrenceKey}
+              firstLane={position.firstLane}
+              lastLane={position.lastLane}
+            />
+          );
+        })}
+      {placeholder != null && (
+        <TimeGridEvent
+          occurrence={placeholder.occurrence}
+          variant="placeholder"
+          firstLane={placeholder.firstLane}
+          lastLane={placeholder.lastLane}
+        />
+      )}
       {showCurrentTimeIndicator ? (
         <DayTimeGridCurrentTimeIndicator
           className={classes.dayTimeGridCurrentTimeIndicator}
@@ -180,7 +243,7 @@ function ColumnInteractiveLayer({
 }
 
 interface TimeGridColumnProps {
-  day: useEventOccurrencesWithDayGridPosition.DayData;
+  day: SchedulerProcessedDate;
   index: number;
   showCurrentTimeIndicator: boolean;
 }

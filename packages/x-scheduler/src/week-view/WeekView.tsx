@@ -9,6 +9,20 @@ import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calend
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import { WeekViewProps } from './WeekView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
+import { isOccurrenceAllDayOrMultipleDay } from '../internals/utils/event-utils';
+
+const weekVisibleDaysSelector = createSelectorMemoized(
+  (state: State) => state.adapter,
+  schedulerOtherSelectors.visibleDate,
+  eventCalendarPreferenceSelectors.showWeekends,
+  (adapter, visibleDate, showWeekends) =>
+    getDayList({
+      adapter,
+      start: adapter.startOfWeek(visibleDate),
+      end: adapter.endOfWeek(visibleDate),
+      excludeWeekends: !showWeekends,
+    }),
+);
 
 const WEEK_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
@@ -16,18 +30,16 @@ const WEEK_VIEW_CONFIG: EventCalendarViewConfig = {
       state.adapter.startOfWeek(schedulerOtherSelectors.visibleDate(state)),
       delta,
     ),
-  visibleDaysSelector: createSelectorMemoized(
-    (state: State) => state.adapter,
-    schedulerOtherSelectors.visibleDate,
-    eventCalendarPreferenceSelectors.showWeekends,
-    (adapter, visibleDate, showWeekends) =>
-      getDayList({
-        adapter,
-        start: adapter.startOfWeek(visibleDate),
-        end: adapter.endOfWeek(visibleDate),
-        excludeWeekends: !showWeekends,
-      }),
-  ),
+  visibleDaysSelector: weekVisibleDaysSelector,
+  dayGrid: {
+    shouldAddPosition: (occurrence, adapter) =>
+      isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
+  },
+  timeGrid: {
+    shouldAddPosition: (occurrence, adapter) =>
+      !isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
+    maxSpan: Number.POSITIVE_INFINITY,
+  },
 };
 
 /**

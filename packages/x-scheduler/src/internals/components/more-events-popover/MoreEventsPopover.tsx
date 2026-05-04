@@ -1,11 +1,14 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import { useStore } from '@base-ui/utils/store';
+import { warnOnce } from '@mui/x-internals/warning';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventOccurrence, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { eventCalendarOccurrencePositionSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
 import { EventItem } from '../event/event-item/EventItem';
 import { createModal } from '../create-modal';
@@ -49,9 +52,7 @@ const MoreEventsPopoverBody = styled('div', {
 }));
 
 interface MoreEventsData {
-  occurrences: SchedulerEventOccurrence[];
-  count: number;
-  day: useEventOccurrencesWithDayGridPosition.DayData;
+  day: SchedulerProcessedDate;
 }
 
 const MoreEventsPopover = createModal<MoreEventsData>({
@@ -62,12 +63,43 @@ export const MoreEventsPopoverContext = MoreEventsPopover.Context;
 export const useMoreEventsPopoverContext = MoreEventsPopover.useContext;
 
 export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) {
-  const { open, anchor, occurrences, day, onClose } = props;
+  const { open, anchor, day, onClose } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
+  const store = useEventCalendarStoreContext();
   const { schedulerId, classes } = useEventCalendarStyledContext();
   const { subscribeCloseHandler } = useEventDialogContext();
+
+  // The popover content only mounts when the user clicks the trigger, so the
+  // occurrences list is materialized lazily on open instead of eagerly per cell.
+  const dayOccurrenceKeys = useStore(
+    store,
+    eventCalendarOccurrencePositionSelectors.occurrenceKeysForDay,
+    day.key,
+  );
+  const visibleOccurrences = useStore(
+    store,
+    eventCalendarOccurrencePositionSelectors.visibleOccurrences,
+  );
+  const occurrences = React.useMemo(() => {
+    const result: SchedulerEventOccurrence[] = [];
+    for (const key of dayOccurrenceKeys) {
+      const occurrence = visibleOccurrences.byKey.get(key);
+      if (!occurrence) {
+        if (process.env.NODE_ENV !== 'production') {
+          warnOnce(
+            `MUI X Scheduler: occurrence "${key}" is referenced by day "${day.key}" but missing ` +
+              "from the occurrence index. It won't appear in the popover. " +
+              'This is an internal bug — please file an issue.',
+          );
+        }
+        continue;
+      }
+      result.push(occurrence);
+    }
+    return result;
+  }, [dayOccurrenceKeys, visibleOccurrences, day.key]);
 
   React.useEffect(() => {
     subscribeCloseHandler(() => {
@@ -111,8 +143,6 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
         <MoreEventsPopoverContent
           open={isOpen}
           anchor={anchorRef.current!}
-          occurrences={data.occurrences}
-          count={data.count}
           day={data.day}
           onClose={onClose}
         />
@@ -124,20 +154,13 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
 }
 
 interface MoreEventsPopoverTriggerProps extends React.HTMLAttributes<HTMLElement> {
-  occurrences: SchedulerEventOccurrence[];
-  day: useEventOccurrencesWithDayGridPosition.DayData;
+  day: SchedulerProcessedDate;
   children: React.ReactNode;
 }
 
 export function MoreEventsPopoverTrigger(props: MoreEventsPopoverTriggerProps) {
-  const { occurrences, day, ...other } = props;
+  const { day, ...other } = props;
   const ref = React.useRef<HTMLElement | null>(null);
 
-  return (
-    <MoreEventsPopover.Trigger
-      ref={ref}
-      data={{ occurrences, count: occurrences.length, day }}
-      {...other}
-    />
-  );
+  return <MoreEventsPopover.Trigger ref={ref} data={{ day }} {...other} />;
 }

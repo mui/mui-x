@@ -64,6 +64,35 @@ describe('eventCalendarEventSelectors', () => {
       ]);
     });
 
+    it('should terminate (not infinite-loop) when events only fall on weekends and weekends are excluded', () => {
+      // Without the chunk-progress guards (no-op chunk break + horizon limit), the
+      // selector would spin forever: every weekday chunk returns no daysWithEvents,
+      // and the loop has no way to grow `accumulatedDays` toward the horizon.
+      const events = [
+        EventBuilder.new().fullDay('2025-10-04Z').build(), // Sat
+        EventBuilder.new().fullDay('2025-10-05Z').build(), // Sun
+        EventBuilder.new().fullDay('2025-10-11Z').build(), // Sat
+        EventBuilder.new().fullDay('2025-10-12Z').build(), // Sun
+      ];
+
+      const state = getEventCalendarStateFromParameters({
+        events,
+        visibleDate: adapter.date('2025-10-03', 'default'), // Friday
+        defaultPreferences: {
+          showWeekends: false,
+          showEmptyDaysInAgenda: false,
+        },
+      });
+
+      const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
+
+      // The selector returns within the horizon — no event is ever surfaced because
+      // every visible weekday is event-less. The exact count may be 0 (no weekday
+      // has events) or fewer than `AGENDA_VIEW_DAYS_AMOUNT`, but the key assertion
+      // is that the call completes.
+      expect(visibleDays.length).to.be.lessThan(AGENDA_VIEW_DAYS_AMOUNT);
+    });
+
     it('should respect showWeekends preference when building the day list', () => {
       const events = [
         EventBuilder.new().fullDay('2025-10-03Z').build(), // Fri

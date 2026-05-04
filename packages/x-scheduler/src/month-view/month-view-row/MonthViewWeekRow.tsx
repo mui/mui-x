@@ -5,7 +5,6 @@ import { useStore } from '@base-ui/utils/store';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { MonthViewCell } from './MonthViewCell';
@@ -39,13 +38,12 @@ const MonthViewWeekNumberCell = styled('div', {
 }));
 
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
-  const { rowIndex, maxEvents, days, occurrencesMap, firstDayRef } = props;
+  const { rowIndex, maxEvents, days, firstDayRef } = props;
 
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
   const { classes, localeText } = useEventCalendarStyledContext();
-  const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
   const weekNumber = adapter.getWeekNumber(days[0].value);
 
   const { start, end } = React.useMemo(
@@ -74,13 +72,12 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           {weekNumber}
         </MonthViewWeekNumberCell>
       )}
-      {occurrences.days.map((day, dayIdx) => (
+      {days.map((day, dayIdx) => (
         <MonthViewCell
           ref={dayIdx === 0 ? firstDayRef : undefined}
           key={day.key}
           day={day}
           maxEvents={maxEvents}
-          row={occurrences}
         />
       ))}
     </MonthViewRow>
