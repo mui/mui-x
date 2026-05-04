@@ -30,13 +30,9 @@ interface UseDragRangeResponse extends UseDragRangeEvents {
 }
 
 /**
- * Finds the closest ancestor element (or the element itself) that has the specified data attribute.
- * Pointer events can target child elements (e.g. text spans, ripples) inside the day button,
- * which don't carry the data attributes directly.
- *
- * @param dataAttribute Must be a single lowercase word (e.g. 'timestamp', 'position') because
- *   `dataset[attr]` uses camelCase while `.closest()` uses kebab-case, and these only align
- *   for single-word names.
+ * Returns the element (or its closest ancestor) carrying `data-{attr}`.
+ * Single-word `attr` only — `dataset[attr]` (camelCase) and `.closest()`
+ * (kebab-case) only agree for single-word names.
  */
 const getClosestElementWithDataAttribute = (
   element: HTMLElement | null,
@@ -107,9 +103,7 @@ const useDragRangeEvents = ({
     sourcePositionRef.current = null;
     didMoveRef.current = false;
     pendingDropRef.current = null;
-    // Only flush React state we actually set. A press that never moved
-    // (i.e. a tap) never activated drag UI, so there's nothing to reset
-    // and we avoid forcing a re-render on every tap.
+    // A press without movement never activated drag UI, so skip the re-render.
     if (wasActive) {
       setIsDragging(false);
       setRangeDragDay(null);
@@ -119,22 +113,16 @@ const useDragRangeEvents = ({
   });
 
   const handlePointerDown = useEventCallback((event: React.PointerEvent<HTMLButtonElement>) => {
-    // Ignore secondary mouse buttons (middle, right). Touch and pen always
-    // report `button === 0`. Some test environments (jsdom) leave the
-    // property undefined, treat that as primary.
+    // Ignore secondary mouse buttons. `> 0` (not `!== 0`) so an undefined
+    // `button` (jsdom) is treated as primary.
     if (event.button > 0) {
       return;
     }
 
-    // Ignore re-entrant pointerdowns. A second pointer arriving while a
-    // gesture is already in flight (multi-touch, pen joining a touch, etc.)
-    // would otherwise overwrite `pointerIdRef` and `cleanupListenersRef`,
-    // leaking the first gesture's document listeners and silencing its
-    // `pointerup` (the id mismatch would skip the cleanup branch). The
-    // `isPrimary === false` check filters secondary multi-touch pointers
-    // up front, matching what real browsers produce; the `pointerIdRef`
-    // check also covers pen+touch (where each pointer type has its own
-    // primary) and recovery from a lost `pointerup`.
+    // Drop re-entrant pointerdowns: a second pointer (multi-touch, pen+touch)
+    // arriving mid-gesture would overwrite our state and leak listeners. The
+    // `pointerIdRef` check also covers pen+touch (each pointer type has its
+    // own primary) and recovery from a lost `pointerup`.
     if (pointerIdRef.current != null || event.isPrimary === false) {
       return;
     }
@@ -144,11 +132,9 @@ const useDragRangeEvents = ({
       return;
     }
 
-    // Touch devices implicitly capture the pointer on `pointerdown`, which keeps
-    // every subsequent `pointermove`/`pointerover` firing on the source element.
-    // Releasing the capture lets sibling cells receive their own pointer events
-    // as the finger moves across the grid — same trick `usePress` uses.
-    // jsdom doesn't implement the pointer-capture API, so guard the call.
+    // Touch implicitly captures the pointer on `pointerdown`, pinning all
+    // subsequent events to the source. Release so sibling cells receive their
+    // own `pointerover` (jsdom lacks the capture API — guard the call).
     if (
       typeof event.currentTarget.hasPointerCapture === 'function' &&
       event.currentTarget.hasPointerCapture(event.pointerId)
@@ -167,11 +153,9 @@ const useDragRangeEvents = ({
     const { position } = event.currentTarget.dataset;
     sourcePositionRef.current = (position as RangePosition | undefined) ?? null;
 
-    // Don't activate drag UI (`setIsDragging`, `setRangeDragDay`,
-    // `onDatePositionChange`) yet — a press on a range endpoint is also how
-    // the user re-selects that endpoint. Defer to `handlePointerOver` once
-    // we see real movement to a different cell, so a pure tap doesn't
-    // mutate `rangePosition` and undo the click handler's selection logic.
+    // Drag UI activation is deferred to `handlePointerOver`'s first real
+    // move — a pure tap on an endpoint must leave `rangePosition` alone
+    // so the click handler can advance it normally.
 
     const onPointerUp = (pointerEvent: PointerEvent) => {
       if (pointerEvent.pointerId !== pointerIdRef.current) {
@@ -185,12 +169,10 @@ const useDragRangeEvents = ({
       cleanup();
 
       if (wasMoved) {
-        // Pointer release would normally be followed by a synthesized click on
-        // whatever element we landed on. After a drag, that click would re-enter
-        // the day's regular selection logic and undo the drop, so swallow it.
-        // If no click ever fires (e.g. pointerdown and pointerup were on different
-        // elements, so the browser doesn't synthesize one), remove the listener
-        // on the next macrotask so it doesn't leak into the next interaction.
+        // Swallow the click that follows pointerup — it would re-enter the
+        // day's selection logic and undo the drop. If no click fires (drop on
+        // a different cell), tear the listener down on the next macrotask so
+        // it doesn't leak into the next interaction.
         const suppressClick = (clickEvent: Event) => {
           clickEvent.preventDefault();
           clickEvent.stopPropagation();
@@ -216,9 +198,8 @@ const useDragRangeEvents = ({
     };
 
     const onTouchMove = (touchEvent: TouchEvent) => {
-      // While dragging, suppress the browser default touch action so the page
-      // doesn't scroll out from under the gesture. `touch-action: none` on the
-      // source cell isn't enough once the finger leaves the cell.
+      // Suppress page scroll while dragging — `touch-action: none` on the
+      // source cell isn't enough once the finger leaves it.
       if (isDraggingRef.current) {
         touchEvent.preventDefault();
       }
@@ -235,10 +216,9 @@ const useDragRangeEvents = ({
     };
   });
 
-  // `pointerover` (which bubbles) is preferred over `pointerenter` (which doesn't):
-  // React's synthetic enter/leave is implemented on top of over/out, and only
-  // bubbling events round-trip cleanly through testing-library's `fireEvent`.
-  // We dedupe by checking whether the would-drop target already matches.
+  // Use `pointerover` (bubbles) rather than `pointerenter`: React's
+  // `onPointerEnter` is built on top of over/out, and only bubbling events
+  // round-trip through testing-library's `fireEvent`.
   const handlePointerOver = useEventCallback((event: React.PointerEvent<HTMLButtonElement>) => {
     if (!isDraggingRef.current || event.pointerId !== pointerIdRef.current) {
       return;
@@ -259,10 +239,8 @@ const useDragRangeEvents = ({
       sourceDateRef.current && !adapter.isEqual(newDate, sourceDateRef.current);
 
     if (!didMoveRef.current && isDifferentFromSource) {
-      // First real movement: activate drag UI and notify the parent of the
-      // source endpoint so the dragging-range preview computes against the
-      // correct side. This is deferred from `pointerdown` so that pure taps
-      // on a range endpoint don't mutate `rangePosition` mid-click.
+      // First real move: activate drag UI and tell the parent which endpoint
+      // is being dragged so the preview computes against the correct side.
       didMoveRef.current = true;
       if (sourcePositionRef.current) {
         onDatePositionChange(sourcePositionRef.current);
