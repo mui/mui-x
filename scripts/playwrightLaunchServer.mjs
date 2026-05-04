@@ -14,6 +14,13 @@ import { chromium } from '@playwright/test';
     wsPath: process.env.WS_PATH || 'mui-browser',
     // Some grid layout tests require scrollbars to be visible
     ignoreDefaultArgs: ['--hide-scrollbars'],
+    args: [
+      // Use /tmp instead of /dev/shm (often tiny in CI containers).
+      '--disable-dev-shm-usage',
+      // Bump V8 heap so the renderer doesn't crash mid-run after many test
+      // files accumulate state under `isolate: false`.
+      '--js-flags=--max-old-space-size=4096',
+    ],
   });
 
   // browserServer.process().stderr.pipe(process.stderr);

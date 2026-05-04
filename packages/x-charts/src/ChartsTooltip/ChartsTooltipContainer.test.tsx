@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { clearWarningsCache } from '@mui/x-internals/warning';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('ChartsTooltipContainer', () => {
   const { render } = createRenderer();
@@ -32,7 +33,7 @@ describe('ChartsTooltipContainer', () => {
     ).toErrorDev(expectedError);
   });
 
-  it('should warn when tooltipAxis is controlled but trigger is item', () => {
+  it.skipIf(!isJSDOM)('should warn when tooltipAxis is controlled but trigger is item', () => {
     const expectedError = [
       "MUI X Charts: The `tooltipAxis` prop is provided, but the tooltip trigger is set to 'item'.",
       "The `tooltipAxis` prop only has an effect when the tooltip trigger is 'axis'.",

@@ -82,6 +82,11 @@ export default defineConfig({
                 args: [
                   // Enable GPU so WebGL2 is enabled in browser tests
                   '--enable-gpu',
+                  // Use /tmp instead of /dev/shm (often tiny in CI containers).
+                  '--disable-dev-shm-usage',
+                  // Bump V8 heap so the renderer doesn't crash mid-run after
+                  // many test files accumulate state under `isolate: false`.
+                  '--js-flags=--max-old-space-size=4096',
                 ],
                 // Required for tests which use scrollbars.
                 ignoreDefaultArgs: ['--hide-scrollbars'],
@@ -118,6 +123,10 @@ export default defineConfig({
       // mostly @testing-library/user-event async timing); the slowest legitimate
       // tests touch ~17s in CI, so 30s leaves no headroom for noise.
       testTimeout: 60000,
+      // Browser context teardown + Playwright reconnect can race past the 10s
+      // default; bump to absorb the worst-case slow CI machine.
+      hookTimeout: 30000,
+      teardownTimeout: 30000,
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
       // Reduce the number of workers to avoid CI timeouts.

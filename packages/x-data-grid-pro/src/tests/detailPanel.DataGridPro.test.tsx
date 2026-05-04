@@ -298,7 +298,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(getCell(0, 1).firstChild).to.equal(screen.queryByRole('button', { name: 'Toggle' }));
   });
 
-  it('should cache the content of getDetailPanelContent', async () => {
+  it.skipIf(!isJSDOM)('should cache the content of getDetailPanelContent', async () => {
     const getDetailPanelContent = spy(() => <div>Detail</div>);
     const { setProps, user } = render(
       <TestCase
@@ -339,7 +339,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(getDetailPanelContent2.callCount).to.equal(2);
   });
 
-  it('should cache the content of getDetailPanelHeight', async () => {
+  it.skipIf(!isJSDOM)('should cache the content of getDetailPanelHeight', async () => {
     const getDetailPanelHeight = spy(() => 100);
     const { setProps, user } = render(
       <TestCase
@@ -416,32 +416,35 @@ describe('<DataGridPro /> - Detail panel', () => {
     },
   );
 
-  it('should only call getDetailPanelHeight on the rows that have detail content', () => {
-    const getDetailPanelHeight = spy(({ row }) => row.id + 100); // Use `row` to allow to assert its args below
-    render(
-      <TestCase
-        columns={[{ field: 'brand' }]}
-        rows={[
-          { id: 0, brand: 'Nike' },
-          { id: 1, brand: 'Adidas' },
-        ]}
-        getDetailPanelContent={({ row }) => (row.id === 0 ? <div>Detail</div> : null)}
-        getDetailPanelHeight={getDetailPanelHeight}
-      />,
-    );
-    //   1x during state initialization
-    // + 1x during state initialization (StrictMode)
-    // + 1x when sortedRowsSet is fired
-    // + 1x when sortedRowsSet is fired (StrictMode) = 4x
-    // Because of https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
-    // from React 19 it is:
-    //   1x during state initialization
-    // + 1x when sortedRowsSet is fired
-    const expectedCallCount = reactMajor >= 19 ? 3 : 5;
+  it.skipIf(!isJSDOM)(
+    'should only call getDetailPanelHeight on the rows that have detail content',
+    () => {
+      const getDetailPanelHeight = spy(({ row }) => row.id + 100); // Use `row` to allow to assert its args below
+      render(
+        <TestCase
+          columns={[{ field: 'brand' }]}
+          rows={[
+            { id: 0, brand: 'Nike' },
+            { id: 1, brand: 'Adidas' },
+          ]}
+          getDetailPanelContent={({ row }) => (row.id === 0 ? <div>Detail</div> : null)}
+          getDetailPanelHeight={getDetailPanelHeight}
+        />,
+      );
+      //   1x during state initialization
+      // + 1x during state initialization (StrictMode)
+      // + 1x when sortedRowsSet is fired
+      // + 1x when sortedRowsSet is fired (StrictMode) = 4x
+      // Because of https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
+      // from React 19 it is:
+      //   1x during state initialization
+      // + 1x when sortedRowsSet is fired
+      const expectedCallCount = reactMajor >= 19 ? 3 : 5;
 
-    expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
-    expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
-  });
+      expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
+      expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
+    },
+  );
 
   it('should not select the row when opening the detail panel', async () => {
     const handleRowSelectionModelChange = spy();

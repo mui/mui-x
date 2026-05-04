@@ -612,40 +612,46 @@ describe('<DateCalendar />', () => {
   });
 
   describe('Performance', () => {
-    it('should only render newly selected day when selecting a day without a previously selected day', async () => {
-      const RenderCount = spy((props) => <PickerDay {...props} />);
+    it.skipIf(!isJSDOM)(
+      'should only render newly selected day when selecting a day without a previously selected day',
+      async () => {
+        const RenderCount = spy((props) => <PickerDay {...props} />);
 
-      const { user } = render(
-        <DateCalendar
-          referenceDate={adapterToUse.date('2019-01-02')}
-          slots={{
-            day: React.memo(RenderCount),
-          }}
-        />,
-      );
+        const { user } = render(
+          <DateCalendar
+            referenceDate={adapterToUse.date('2019-01-02')}
+            slots={{
+              day: React.memo(RenderCount),
+            }}
+          />,
+        );
 
-      const renderCountBeforeChange = RenderCount.callCount;
-      await user.click(screen.getByRole('gridcell', { name: '2' }));
-      // 2 render (one to update tabIndex + autoFocus, one to update selection) * 2 (because dev mode)
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(4);
-    });
+        const renderCountBeforeChange = RenderCount.callCount;
+        await user.click(screen.getByRole('gridcell', { name: '2' }));
+        // 2 render (one to update tabIndex + autoFocus, one to update selection) * 2 (because dev mode)
+        expect(RenderCount.callCount - renderCountBeforeChange).to.equal(4);
+      },
+    );
 
-    it('should only re-render previously selected day and newly selected day when selecting a day', async () => {
-      const RenderCount = spy((props) => <PickerDay {...props} />);
+    it.skipIf(!isJSDOM)(
+      'should only re-render previously selected day and newly selected day when selecting a day',
+      async () => {
+        const RenderCount = spy((props) => <PickerDay {...props} />);
 
-      const { user } = render(
-        <DateCalendar
-          defaultValue={adapterToUse.date('2019-04-29')}
-          slots={{
-            day: React.memo(RenderCount),
-          }}
-        />,
-      );
+        const { user } = render(
+          <DateCalendar
+            defaultValue={adapterToUse.date('2019-04-29')}
+            slots={{
+              day: React.memo(RenderCount),
+            }}
+          />,
+        );
 
-      const renderCountBeforeChange = RenderCount.callCount;
-      await user.click(screen.getByRole('gridcell', { name: '2' }));
-      // 2 render (one to update tabIndex + autoFocus, one to update selection) * 2 days * 2 (because dev mode)
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(8);
-    });
+        const renderCountBeforeChange = RenderCount.callCount;
+        await user.click(screen.getByRole('gridcell', { name: '2' }));
+        // 2 render (one to update tabIndex + autoFocus, one to update selection) * 2 days * 2 (because dev mode)
+        expect(RenderCount.callCount - renderCountBeforeChange).to.equal(8);
+      },
+    );
   });
 });
