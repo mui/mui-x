@@ -27,13 +27,11 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
   const { ref: listItemRef, index } = useCompositeListItem();
   const { elementsRef } = useCompositeListContext();
 
-  if (process.env.NODE_ENV !== 'production') {
-    if (columnTypes.indexOf(columnType) === -1) {
-      throw new Error(
-        `MUI X Scheduler: The column type "${columnType}" is not listed in the \`columnTypes\` prop of <TimelineGrid.Root />. ` +
-          `Add "${columnType}" to \`columnTypes\` so the row can participate in arrow-key navigation.`,
-      );
-    }
+  if (columnTypes.indexOf(columnType) === -1) {
+    throw new Error(
+      `MUI X Scheduler: The column type "${columnType}" is not listed in the \`columnTypes\` prop of <TimelineGrid.Root />. ` +
+        `Add "${columnType}" to \`columnTypes\` so the row can participate in arrow-key navigation.`,
+    );
   }
 
   const rowRef = React.useRef<HTMLDivElement>(null);

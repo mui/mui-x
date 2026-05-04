@@ -156,20 +156,16 @@ function evaluateRenderProp<T extends React.ElementType, S>(
 
     // There is a high number of indirections, the error message thrown by React.cloneElement() is
     // hard to use for developers, this logic provides a better context.
-    //
-    // Our general guideline is to never change the control flow depending on the environment.
-    // However, React.cloneElement() throws if React.isValidElement() is false,
+    // React.cloneElement() throws if React.isValidElement() is false,
     // so we can throw before with custom message.
-    if (process.env.NODE_ENV !== 'production') {
-      if (!React.isValidElement(newElement)) {
-        throw new Error(
-          [
-            'Base UI: The `render` prop was provided an invalid React element as `React.isValidElement(render)` is `false`.',
-            'A valid React element must be provided to the `render` prop because it is cloned with props to replace the default element.',
-            'https://base-ui.com/r/invalid-render-prop',
-          ].join('\n'),
-        );
-      }
+    if (!React.isValidElement(newElement)) {
+      throw new Error(
+        [
+          'Base UI: The `render` prop was provided an invalid React element as `React.isValidElement(render)` is `false`.',
+          'A valid React element must be provided to the `render` prop because it is cloned with props to replace the default element.',
+          'https://base-ui.com/r/invalid-render-prop',
+        ].join('\n'),
+      );
     }
 
     return React.cloneElement(newElement, mergedProps);

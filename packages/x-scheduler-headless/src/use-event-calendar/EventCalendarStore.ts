@@ -38,7 +38,7 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
   parameters: EventCalendarParameters<TEvent, TResource>,
 ) => {
   const views = parameters.views ?? DEFAULT_VIEWS;
-  if (process.env.NODE_ENV !== 'production' && views.length === 0) {
+  if (views.length === 0) {
     throw new Error(
       `MUI X Scheduler: EventCalendar received an empty \`views\` prop. ` +
         `This leaves the calendar without any view to render. ` +

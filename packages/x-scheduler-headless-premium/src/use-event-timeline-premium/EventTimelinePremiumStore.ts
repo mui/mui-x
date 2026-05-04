@@ -32,24 +32,22 @@ export const DEFAULT_PRESET: EventTimelinePremiumPreset = PRESET_ZOOM_ORDER[0];
 function sortPresetsByZoomOrder(
   presets: EventTimelinePremiumPreset[],
 ): EventTimelinePremiumPreset[] {
-  if (process.env.NODE_ENV !== 'production') {
-    if (presets.length === 0) {
-      throw new Error(
-        `MUI X Scheduler: EventTimelinePremium received an empty \`presets\` prop. ` +
-          `This leaves the timeline without any preset to render. ` +
-          `Pass at least one preset, or omit the prop to use the default set (${PRESET_ZOOM_ORDER.join(', ')}). ` +
-          `See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.`,
-      );
-    }
-    const unknown = presets.filter((preset) => !PRESET_ZOOM_ORDER.includes(preset));
-    if (unknown.length > 0) {
-      throw new Error(
-        `MUI X Scheduler: EventTimelinePremium received unknown preset(s) in the \`presets\` prop: ${unknown.join(', ')}. ` +
-          `These entries have no associated configuration, so the timeline cannot render them. ` +
-          `Remove the unknown preset(s), or use one of the built-in values (${PRESET_ZOOM_ORDER.join(', ')}). ` +
-          `See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.`,
-      );
-    }
+  if (presets.length === 0) {
+    throw new Error(
+      `MUI X Scheduler: EventTimelinePremium received an empty \`presets\` prop. ` +
+        `This leaves the timeline without any preset to render. ` +
+        `Pass at least one preset, or omit the prop to use the default set (${PRESET_ZOOM_ORDER.join(', ')}). ` +
+        `See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.`,
+    );
+  }
+  const unknown = presets.filter((preset) => !PRESET_ZOOM_ORDER.includes(preset));
+  if (unknown.length > 0) {
+    throw new Error(
+      `MUI X Scheduler: EventTimelinePremium received unknown preset(s) in the \`presets\` prop: ${unknown.join(', ')}. ` +
+        `These entries have no associated configuration, so the timeline cannot render them. ` +
+        `Remove the unknown preset(s), or use one of the built-in values (${PRESET_ZOOM_ORDER.join(', ')}). ` +
+        `See https://mui.com/x/react-scheduler/event-timeline/presets/ for more details.`,
+    );
   }
   // Iterating over `PRESET_ZOOM_ORDER` (instead of the input) yields a canonical,
   // duplicate-free output even when runtime inputs (storage, URL params, dynamic

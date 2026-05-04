@@ -9,12 +9,10 @@ export function getDayList(parameters: GetDaytListParameters): GetDaytListReturn
   const start = adapter.startOfDay(rawStart);
   const end = adapter.endOfDay(rawEnd);
 
-  if (process.env.NODE_ENV !== 'production') {
-    if (adapter.isBefore(adapter.startOfDay(end), adapter.startOfDay(start))) {
-      throw new Error(
-        `MUI: getDayList: The 'end' parameter must be a day after the 'start' parameter.`,
-      );
-    }
+  if (adapter.isBefore(adapter.startOfDay(end), adapter.startOfDay(start))) {
+    throw new Error(
+      `MUI: getDayList: The 'end' parameter must be a day after the 'start' parameter.`,
+    );
   }
 
   let current = start;
