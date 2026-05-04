@@ -7,7 +7,8 @@ const svSEGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Inga resultat funna.',
   noColumnsOverlayLabel: 'Inga kolumner',
   noColumnsOverlayManageColumns: 'Hantera kolumner',
-  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  emptyPivotOverlayLabel:
+    'Lägg till fält i rader, kolumner och värden för att skapa en pivottabell',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densitet',
@@ -45,20 +46,20 @@ const svSEGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Ladda ner som Excel',
 
   // Toolbar pivot button
-  // toolbarPivot: 'Pivot',
+  toolbarPivot: 'Pivot',
 
   // Toolbar charts button
-  // toolbarCharts: 'Charts',
+  toolbarCharts: 'Diagram',
 
   // Toolbar AI Assistant button
-  // toolbarAssistant: 'AI Assistant',
+  toolbarAssistant: 'AI assistent',
 
   // Columns management text
   columnsManagementSearchTitle: 'Sök',
   columnsManagementNoColumns: 'Inga kolumner',
   columnsManagementShowHideAllText: 'Visa/Dölj alla',
   columnsManagementReset: 'Återställ',
-  // columnsManagementDeleteIconLabel: 'Clear',
+  columnsManagementDeleteIconLabel: 'Rensa',
 
   // Filter panel text
   filterPanelAddFilter: 'Lägg till filter',
@@ -117,7 +118,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Större eller lika med',
   'headerFilterOperator<': 'Mindre än',
   'headerFilterOperator<=': 'Mindre eller lika med',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Rensa filter',
 
   // Filter values text
   filterValueAny: 'något',
@@ -126,7 +127,7 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Meny',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `${columnName} kolumnmeny`,
   columnMenuShowColumns: 'Visa kolumner',
   columnMenuManageColumns: 'Hantera kolumner',
   columnMenuFilter: 'Filtrera',
@@ -134,8 +135,8 @@ const svSEGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Ta bort sortering',
   columnMenuSortAsc: 'Sortera stigande',
   columnMenuSortDesc: 'Sortera fallande',
-  // columnMenuManagePivot: 'Manage pivot',
-  // columnMenuManageCharts: 'Manage charts',
+  columnMenuManagePivot: 'Hantera pivot',
+  columnMenuManageCharts: 'Hantera diagram',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -196,19 +197,14 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Rader per sida:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   const unknownRowCount = count == null || count === -1;
-  //   if (!estimated) {
-  //     return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : `more than ${formatNumber(to)}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${formatNumber(estimated)}` : `more than ${formatNumber(to)}`;
-  //   return `${formatNumber(from)}–${formatNumber(to)} of ${!unknownRowCount ? formatNumber(count) : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    const unknownRowCount = count == null || count === -1;
+    if (!estimated) {
+      return `${from}–${to} av ${!unknownRowCount ? count : `fler än ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `ungefär ${estimated}` : `fler än ${to}`;
+    return `${from}–${to} av ${!unknownRowCount ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Gå till första sidan';
@@ -228,7 +224,7 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Aggregering',
-  // aggregationFunctionLabelNone: 'none',
+  aggregationFunctionLabelNone: 'ingen',
   aggregationFunctionLabelSum: 'summa',
   aggregationFunctionLabelAvg: 'medel',
   aggregationFunctionLabelMin: 'min',
@@ -236,108 +232,116 @@ const svSEGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'antal',
 
   // Pivot panel
-  // pivotToggleLabel: 'Pivot',
-  // pivotRows: 'Rows',
-  // pivotColumns: 'Columns',
-  // pivotValues: 'Values',
-  // pivotCloseButton: 'Close pivot settings',
-  // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search fields',
-  // pivotSearchControlLabel: 'Search fields',
-  // pivotSearchControlClear: 'Clear search',
-  // pivotNoFields: 'No fields',
-  // pivotMenuMoveUp: 'Move up',
-  // pivotMenuMoveDown: 'Move down',
-  // pivotMenuMoveToTop: 'Move to top',
-  // pivotMenuMoveToBottom: 'Move to bottom',
-  // pivotMenuRows: 'Rows',
-  // pivotMenuColumns: 'Columns',
-  // pivotMenuValues: 'Values',
-  // pivotMenuOptions: 'Field options',
-  // pivotMenuAddToRows: 'Add to Rows',
-  // pivotMenuAddToColumns: 'Add to Columns',
-  // pivotMenuAddToValues: 'Add to Values',
-  // pivotMenuRemove: 'Remove',
-  // pivotDragToRows: 'Drag here to create rows',
-  // pivotDragToColumns: 'Drag here to create columns',
-  // pivotDragToValues: 'Drag here to create values',
-  // pivotYearColumnHeaderName: '(Year)',
-  // pivotQuarterColumnHeaderName: '(Quarter)',
+  pivotToggleLabel: 'Pivot',
+  pivotRows: 'Rader',
+  pivotColumns: 'Kolumner',
+  pivotValues: 'Värden',
+  pivotCloseButton: 'Stäng pivotinställningar',
+  pivotSearchButton: 'Sökfält',
+  pivotSearchControlPlaceholder: 'Sökfält',
+  pivotSearchControlLabel: 'Sökfält',
+  pivotSearchControlClear: 'Rensa sökfält',
+  pivotNoFields: 'Inga fält',
+  pivotMenuMoveUp: 'Flytta upp',
+  pivotMenuMoveDown: 'Flytta ned',
+  pivotMenuMoveToTop: 'Flytta till toppen',
+  pivotMenuMoveToBottom: 'Flytta till botten',
+  pivotMenuRows: 'Rader',
+  pivotMenuColumns: 'Kolumner',
+  pivotMenuValues: 'Värden',
+  pivotMenuOptions: 'Fältalternativ',
+  pivotMenuAddToRows: 'Lägg till i rader',
+  pivotMenuAddToColumns: 'Lägg till i kolumner',
+  pivotMenuAddToValues: 'Lägg till i värden',
+  pivotMenuRemove: 'Ta bort',
+  pivotDragToRows: 'Dra hit för att skapa rader',
+  pivotDragToColumns: 'Dra hit för att skapa kolumner',
+  pivotDragToValues: 'Dra hit för att skapa värden',
+  pivotYearColumnHeaderName: '(År)',
+  pivotQuarterColumnHeaderName: '(Kvartal)',
 
   // Charts configuration panel
-  // chartsNoCharts: 'There are no charts available',
-  // chartsChartNotSelected: 'Select a chart type to configure its options',
-  // chartsTabChart: 'Chart',
-  // chartsTabFields: 'Fields',
-  // chartsTabCustomize: 'Customize',
-  // chartsCloseButton: 'Close charts configuration',
-  // chartsSyncButtonLabel: 'Sync chart',
-  // chartsSearchPlaceholder: 'Search fields',
-  // chartsSearchLabel: 'Search fields',
-  // chartsSearchClear: 'Clear search',
-  // chartsNoFields: 'No fields',
-  // chartsFieldBlocked: 'This field cannot be added to any section',
-  // chartsCategories: 'Categories',
-  // chartsSeries: 'Series',
-  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
-  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
-  // chartsMenuMoveUp: 'Move up',
-  // chartsMenuMoveDown: 'Move down',
-  // chartsMenuMoveToTop: 'Move to top',
-  // chartsMenuMoveToBottom: 'Move to bottom',
-  // chartsMenuOptions: 'Field options',
-  // chartsMenuRemove: 'Remove',
-  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
-  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
+  chartsNoCharts: 'Det finns inga diagram tillgängliga',
+  chartsChartNotSelected: 'Välj en diagramtyp för att konfigurera alternativ',
+  chartsTabChart: 'Diagram',
+  chartsTabFields: 'Fält',
+  chartsTabCustomize: 'Anpassa',
+  chartsCloseButton: 'Stäng diagramkonfiguration',
+  chartsSyncButtonLabel: 'Synkronisera diagram',
+  chartsSearchPlaceholder: 'Sök fält',
+  chartsSearchLabel: 'Sök fält',
+  chartsSearchClear: 'Rensa sökning',
+  chartsNoFields: 'Inga fält',
+  chartsFieldBlocked: 'Det här fältet kan inte läggas till i någon sektion',
+  chartsCategories: 'Kategorier',
+  chartsSeries: 'Serie',
+  chartsMenuAddToDimensions: (dimensionLabel: string) => `Lägg till ${dimensionLabel}`,
+  chartsMenuAddToValues: (valuesLabel: string) => `Lägg till ${valuesLabel}`,
+  chartsMenuMoveUp: 'Flytta upp',
+  chartsMenuMoveDown: 'Flytta ned',
+  chartsMenuMoveToTop: 'Flytta till toppen',
+  chartsMenuMoveToBottom: 'Flytta till botten',
+  chartsMenuOptions: 'Fältalternativ',
+  chartsMenuRemove: 'Ta bort',
+  chartsDragToDimensions: (dimensionLabel: string) =>
+    `Dra hit för att använda kolumnen som ${dimensionLabel}`,
+  chartsDragToValues: (valuesLabel: string) =>
+    `Dra hit för att använda kolumnen som ${valuesLabel}`,
 
   // AI Assistant panel
-  // aiAssistantPanelTitle: 'AI Assistant',
-  // aiAssistantPanelClose: 'Close AI Assistant',
-  // aiAssistantPanelNewConversation: 'New conversation',
-  // aiAssistantPanelConversationHistory: 'Conversation history',
-  // aiAssistantPanelEmptyConversation: 'No prompt history',
-  // aiAssistantSuggestions: 'Suggestions',
+  aiAssistantPanelTitle: 'AI assistent',
+  aiAssistantPanelClose: 'Stäng AI assistent',
+  aiAssistantPanelNewConversation: 'Ny konversation',
+  aiAssistantPanelConversationHistory: 'Konversationshistorik',
+  aiAssistantPanelEmptyConversation: 'Ingen prompthistorik',
+  aiAssistantSuggestions: 'Förslag',
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
-  // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
-  // promptFieldPlaceholderListening: 'Listening for prompt…',
-  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldLabel: 'Prompt',
+  promptFieldPlaceholder: 'Skriv en prompt…',
+  promptFieldPlaceholderWithRecording: 'Skriv eller spela in en prompt…',
+  promptFieldPlaceholderListening: 'Lyssnar efter prompt…',
+  promptFieldSpeechRecognitionNotSupported: 'Taligenkänning stöds inte av webbläsaren',
+  promptFieldSend: 'Skicka',
+  promptFieldRecord: 'Spela in',
+  promptFieldStopRecording: 'Stoppa inspelning',
 
   // Prompt
-  // promptRerun: 'Run again',
-  // promptProcessing: 'Processing…',
-  // promptAppliedChanges: 'Applied changes',
+  promptRerun: 'Kör igen',
+  promptProcessing: 'Bearbetar…',
+  promptAppliedChanges: 'Tillämpade ändringar',
 
   // Prompt changes
-  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
-  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
-  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
-  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `${column} is any of: ${value}`;
-  //   }
-  //   return `${column} ${operator} ${value}`;
-  // },
-  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `Filter where ${column} is any of: ${value}`;
-  //   }
-  //   return `Filter where ${column} ${operator} ${value}`;
-  // },
-  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
-  // promptChangePivotEnableLabel: 'Pivot',
-  // promptChangePivotEnableDescription: 'Enable pivot',
-  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
-  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
-  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
-  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
-  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
-  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
+  promptChangeGroupDescription: (column: string) => `Gruppera efter ${column}`,
+  promptChangeAggregationLabel: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
+  promptChangeAggregationDescription: (column: string, aggregation: string) =>
+    `Aggregering ${column} (${aggregation})`,
+  promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+    if (operator === 'is any of') {
+      return `${column} är någon av: ${value}`;
+    }
+    return `${column} ${operator} ${value}`;
+  },
+  promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+    if (operator === 'is any of') {
+      return `Filtrera där ${column} är någon av: ${value}`;
+    }
+    return `Filtrera där ${column} ${operator} ${value}`;
+  },
+  promptChangeSortDescription: (column: string, direction: string) =>
+    `Sortera på ${column} (${direction})`,
+  promptChangePivotEnableLabel: 'Pivot',
+  promptChangePivotEnableDescription: 'Aktivera pivot',
+  promptChangePivotColumnsLabel: (count: number) => `Kolumner (${count})`,
+  promptChangePivotColumnsDescription: (column: string, direction: string) =>
+    `${column}${direction ? ` (${direction})` : ''}`,
+  promptChangePivotRowsLabel: (count: number) => `Rader (${count})`,
+  promptChangePivotValuesLabel: (count: number) => `Värden (${count})`,
+  promptChangePivotValuesDescription: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
+  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) =>
+    `Dimensioner (${dimensionsCount}), Värden (${valuesCount})`,
 };
 
 export const svSE: Localization = getGridLocalization(svSEGrid);
