@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - No conversation history
 
-<p class="description">Compose a single-thread surface directly from <code>ChatRoot</code>, <code>ChatConversation</code>, <code>ChatMessageList</code>, and <code>ChatComposer</code> when you do not need conversation history.</p>
+<p class="description">Compose a single-thread surface directly from ChatRoot, ChatConversation, ChatMessageList, and ChatComposer when you do not need conversation history.</p>
 
 {{"demo": "NoConversationHistory.js", "bg": "inline"}}
 

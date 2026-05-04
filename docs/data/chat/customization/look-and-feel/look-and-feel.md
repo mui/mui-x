@@ -12,9 +12,15 @@ components: ChatBox
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
+## Try it live
+
+The same `ChatBox` re-themes itself instantly when you swap the layout variant, density, primary color, or border-radius — every change comes from a single Material UI theme + two top-level props.
+
+{{"demo": "LookAndFeelPlayground.js", "bg": "inline"}}
+
 ## Pick a layout style
 
-The `variant` prop controls how messages are arranged:
+The `variant` prop controls how messages and the composer are arranged:
 
 ```tsx
 // Bubbles — colored message bubbles, right-aligned for user (WhatsApp, Telegram)
@@ -24,6 +30,10 @@ The `variant` prop controls how messages are arranged:
 <ChatBox adapter={adapter} variant="compact" />
 ```
 
+The same prop drives the composer's two stock layouts:
+
+{{"demo": "ComposerVariantsDemo.js", "bg": "inline"}}
+
 ## Pick a density
 
 The `density` prop controls vertical spacing between messages:
@@ -32,6 +42,12 @@ The `density` prop controls vertical spacing between messages:
 <ChatBox adapter={adapter} density="compact" />     // Tight spacing
 <ChatBox adapter={adapter} density="comfortable" />  // Spacious
 ```
+
+## Message states
+
+`ChatMessage` adapts automatically to the role and status it reads from the store — no extra props required:
+
+{{"demo": "MessageStatesDemo.js", "bg": "inline"}}
 
 ## The `sx` prop
 
