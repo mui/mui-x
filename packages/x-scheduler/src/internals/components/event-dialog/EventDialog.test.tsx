@@ -987,7 +987,7 @@ describe('<EventDialogContent open />', () => {
           expect(freqCombobox).to.have.attribute('aria-disabled', 'true');
         });
 
-        it('should keep recurrence fields disabled when a preset is selected', async () => {
+        it('should enable recurrence fields when a preset is selected', async () => {
           const { user } = render(
             <EventCalendarProvider
               events={[DEFAULT_EVENT]}
@@ -1002,12 +1002,12 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
           await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
 
-          // MUI FormControl with disabled disables the child inputs
+          // Selecting a preset enables the fields (only null/no-repeat disables them)
           const repeatFieldset = screen.getByRole('group', { name: /repeat/i });
           const intervalInput = within(repeatFieldset).getByRole('spinbutton');
-          expect(intervalInput).to.have.attribute('disabled');
+          expect(intervalInput).not.to.have.attribute('disabled');
           const freqCombobox = within(repeatFieldset).getByRole('combobox');
-          expect(freqCombobox).to.have.attribute('aria-disabled', 'true');
+          expect(freqCombobox).not.to.have.attribute('aria-disabled');
         });
 
         it('should enable recurrence fields when selecting the custom repeat rule option', async () => {
