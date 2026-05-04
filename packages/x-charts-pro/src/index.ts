@@ -24,6 +24,14 @@ export * from '@mui/x-charts/ChartsDataProvider';
 export * from '@mui/x-charts/ChartsLabel';
 export * from '@mui/x-charts/ChartsOverlay';
 export * from '@mui/x-charts/ChartsWrapper';
+export * from '@mui/x-charts/ChartsBrushOverlay';
+export * from '@mui/x-charts/ChartsRadialDataProvider';
+export * from '@mui/x-charts/ChartsRadialGrid';
+export * from '@mui/x-charts/ChartsRadiusAxis';
+export {
+  type ChartsRotationAxisProps,
+  Unstable_ChartsRotationAxis,
+} from '@mui/x-charts/ChartsRotationAxis';
 
 // Pro utilities
 export * from './constants';

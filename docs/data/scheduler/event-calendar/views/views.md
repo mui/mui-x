@@ -3,13 +3,14 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
+components: EventCalendar, EventCalendarPremium, StandaloneAgendaView, StandaloneDayView, StandaloneWeekView, StandaloneMonthView
 ---
 
 # Event Calendar - Views
 
 <p class="description">Choose which views are available in the Event Calendar.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## All views
 
@@ -40,7 +41,7 @@ The `agenda` view lets users manage events in a list layout.
 ### Year view 🚧
 
 :::warning
-This feature isn't available yet, but it is planned — you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21539) to help us prioritize it.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21539) to help us prioritize it.
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
@@ -49,7 +50,7 @@ With this feature, users would be able to view and manage events across an entir
 ### Resource views [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🚧
 
 :::warning
-This feature isn't available yet, but it is planned — you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21599) to help us prioritize it.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21599) to help us prioritize it.
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 

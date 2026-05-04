@@ -3,6 +3,7 @@ import {
   type CommonDefaultizedProps,
   type CommonSeriesType,
   type CartesianSeriesType,
+  type DatasetElementType,
 } from '@mui/x-charts/internals';
 
 export type HeatmapValueType = readonly [number, number, number];
@@ -21,6 +22,14 @@ export interface HeatmapSeriesType
    * The key used to retrieve data from the dataset.
    */
   dataKey?: string;
+  /**
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return a heatmap value.
+   * Can be used as an alternative to `dataKey`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
+   * @returns {HeatmapValueType} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => HeatmapValueType;
   /**
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */

@@ -1,9 +1,9 @@
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectFieldValueV7,
+  expectFieldValue,
   describeValue,
   getFieldSectionsContainer,
   openPicker,
@@ -42,7 +42,7 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
             hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
           )
         : expectedPlaceholder;
-      expectFieldValueV7(startSectionsContainer, expectedStartValueStr);
+      expectFieldValue(startSectionsContainer, expectedStartValueStr);
 
       const endSectionsContainer = getFieldSectionsContainer(1);
       const expectedEndValueStr = expectedValues[1]
@@ -51,11 +51,11 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
             hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
           )
         : expectedPlaceholder;
-      expectFieldValueV7(endSectionsContainer, expectedEndValueStr);
+      expectFieldValue(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
+    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false, user }) => {
       if (!isOpened) {
-        openPicker({
+        await openPicker(user, {
           type: 'date-time-range',
           initialFocus: setEndDate ? 'end' : 'start',
           fieldType: 'multi-input',
@@ -77,19 +77,19 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
       }
 
       // Go to the start date or the end date
-      fireEvent.click(
+      await user.click(
         screen.getByRole('button', {
           name: adapterToUse.format(value[setEndDate ? 1 : 0], 'shortDate'),
         }),
       );
 
-      fireEvent.click(
+      await user.click(
         screen.getByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         }),
       );
 
-      fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+      await user.click(screen.getByRole('button', { name: 'Next' }));
 
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hours = adapterToUse.format(
@@ -97,22 +97,21 @@ describe('<MobileDateTimeRangePicker /> - Describe Value Multi Input', () => {
         hasMeridiem ? 'hours12h' : 'hours24h',
       );
       const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-      fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
-      fireEvent.click(
+      await user.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+      await user.click(
         screen.getByRole('option', {
           name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
         }),
       );
       if (hasMeridiem) {
-        fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+        await user.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
       }
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        await user.keyboard('{Escape}');
       } else {
         // return to the start date view in case we'd like to repeat the selection process
-        fireEvent.click(
+        await user.click(
           screen.getByRole('button', { name: adapterToUse.format(newValue[0], 'shortDate') }),
         );
       }

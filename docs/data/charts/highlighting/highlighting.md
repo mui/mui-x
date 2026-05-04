@@ -56,11 +56,11 @@ You can also configure highlighting and fading independently of the tooltip.
 
 This interaction is controlled by the `highlightScope` property on `series`, which contains two options:
 
-- `highlighted`: Indicates which item to highlight. Its value can be:
+- `highlight`: Indicates which item to highlight. Its value can be:
   - `'none'`: Do nothing (default)
   - `'item'`: Only highlight the item itself
   - `'series'`: Highlight all items in the series
-- `faded`: Indicates which item to fade (if they're not already highlighted). Its value can be:
+- `fade`: Indicates which item to fade (if they're not already highlighted). Its value can be:
   - `'none'`: Do nothing (default)
   - `'series'`: Fade all items in the series
   - `'global'`: Fade all items in the chart

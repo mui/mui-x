@@ -1,9 +1,10 @@
 import dayjs, { Dayjs } from 'dayjs';
+import { stub } from 'sinon';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterFormats, PickerValidDate } from '@mui/x-date-pickers/models';
 import {
-  expectFieldValueV7,
+  expectFieldValue,
   createPickerRenderer,
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
@@ -46,6 +47,26 @@ describe('<AdapterDayjs />', () => {
 
       const date = modifiedAdapter.date(TEST_DATE_ISO_STRING) as Dayjs;
       expect(() => modifiedAdapter.setTimezone(date, 'Europe/London')).to.throw();
+    });
+
+    it('should keep system-timezone dates compatible with plain `dayjs()` dates when `dayjs.tz.guess()` is non-UTC', () => {
+      // Regression: before the fix, `createSystemDate` called
+      // `dayjs.tz(value, dayjs.tz.guess())` when the guessed zone was not UTC,
+      // which set `$x.$timezone` on the result. That made `getTimezone()` return
+      // the guessed zone name (e.g. `America/New_York`) instead of `'system'`, so
+      // comparisons against plain `dayjs()` dates (for which `getTimezone()`
+      // returns `'system'`) went through an unnecessary `setTimezone` conversion
+      // that could shift the day across midnight. CI runs in UTC, so the non-UTC
+      // branch is only reachable by stubbing `dayjs.tz.guess()`. The Sinon
+      // default sandbox is restored by the global `afterEach` in
+      // `test/setupVitest.ts`, so no manual cleanup is needed.
+      stub(dayjs.tz, 'guess').returns('America/New_York');
+
+      const adapter = new AdapterDayjs();
+      const resolvedDate = adapter.date(TEST_DATE_ISO_STRING, 'system') as Dayjs;
+
+      expect(adapter.getTimezone(resolvedDate)).to.equal('system');
+      expect(adapter.isSameDay(resolvedDate, dayjs(TEST_DATE_ISO_STRING))).to.equal(true);
     });
   });
 
@@ -144,18 +165,17 @@ describe('<AdapterDayjs />', () => {
         });
 
         it('should have correct placeholder', () => {
-          const view = renderWithProps({ enableAccessibleFieldDOMStructure: true });
+          const view = renderWithProps({});
 
-          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
+          expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].placeholder);
         });
 
         it('should have well formatted value', () => {
           const view = renderWithProps({
-            enableAccessibleFieldDOMStructure: true,
             value: adapter.date(testDate),
           });
 
-          expectFieldValueV7(view.getSectionsContainer(), localizedTexts[localeKey].value);
+          expectFieldValue(view.getSectionsContainer(), localizedTexts[localeKey].value);
         });
       });
     });

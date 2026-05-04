@@ -3,13 +3,14 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
+components: EventCalendar, EventCalendarPremium
 ---
 
 # Event Calendar - Preferences
 
 <p class="description">Let your user customize the component to their needs.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Initialize the preferences
 
@@ -52,7 +53,7 @@ return (
 
 ## Preferences menu
 
-The preferences menu lets the users change their preferences to customize the component to their needs.
+The preferences menu lets users customize the component to their needs.
 
 You can customize which preferences are available in the preferences menu using the `preferencesMenuConfig` prop:
 

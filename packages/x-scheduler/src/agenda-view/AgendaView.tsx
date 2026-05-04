@@ -7,7 +7,6 @@ import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { sortEventOccurrences } from '@mui/x-scheduler-headless/sort-event-occurrences';
-import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
@@ -17,12 +16,11 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import clsx from 'clsx';
-import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
-import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
+import { AgendaViewProps } from './AgendaView.types';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import { EventSkeleton } from '../internals/components/event-skeleton';
 import { useEventCalendarStyledContext } from '../event-calendar/EventCalendarStyledContext';
-import { EventDialogProvider, EventDialogTrigger } from '../internals/components/event-dialog';
+import { EventDialogTrigger } from '../internals/components/event-dialog';
 
 const AgendaViewRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -151,7 +149,7 @@ export const AgendaView = React.memo(
   ) {
     // Context hooks
     const adapter = useAdapterContext();
-    const { classes } = useEventCalendarStyledContext();
+    const { schedulerId, classes } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
 
     // Ref hooks
@@ -187,12 +185,12 @@ export const AgendaView = React.memo(
           <AgendaViewRow
             className={classes.agendaViewRow}
             key={date.key}
-            id={`AgendaViewRow-${date.key}`}
-            aria-labelledby={`DayHeaderCell-${date.key}`}
+            id={`${schedulerId}-AgendaViewRow-${date.key}`}
+            aria-labelledby={`${schedulerId}-DayHeaderCell-${date.key}`}
           >
             <DayHeaderCell
               className={classes.agendaViewDayHeaderCell}
-              id={`DayHeaderCell-${date.key}`}
+              id={`${schedulerId}-DayHeaderCell-${date.key}`}
               aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
               data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
             >
@@ -244,34 +242,3 @@ export const AgendaView = React.memo(
     );
   }),
 );
-
-/**
- * An Agenda View that can be used outside of the Event Calendar.
- */
-export const StandaloneAgendaView = React.forwardRef(function StandaloneAgendaView<
-  TEvent extends object,
-  TResource extends object,
->(
-  props: StandaloneAgendaViewProps<TEvent, TResource>,
-  forwardedRef: React.ForwardedRef<HTMLDivElement>,
-) {
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
-    TEvent,
-    TResource,
-    typeof props
-  >(props);
-
-  return (
-    <EventCalendarProvider {...parameters}>
-      <EventDialogProvider>
-        <AgendaView ref={forwardedRef} {...forwardedProps} />
-      </EventDialogProvider>
-    </EventCalendarProvider>
-  );
-}) as StandaloneAgendaViewComponent;
-
-type StandaloneAgendaViewComponent = <TEvent extends object, TResource extends object>(
-  props: StandaloneAgendaViewProps<TEvent, TResource> & {
-    ref?: React.ForwardedRef<HTMLDivElement>;
-  },
-) => React.JSX.Element;

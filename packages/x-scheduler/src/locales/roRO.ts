@@ -68,11 +68,8 @@ const roRODialog: Partial<EventDialogLocaleText> = {
 };
 
 const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Ascunde evenimentele pentru ${resourceName}`,
+  // ResourcesTree
   resourcesLabel: 'Resurse',
-  resourcesLegendSectionLabel: 'Legendă resurse',
-  showEventsLabel: (resourceName) => `Afișează evenimentele pentru ${resourceName}`,
 
   // ViewSwitcher
   agenda: 'Agendă',

@@ -3,13 +3,14 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
+components: EventTimelinePremium
 ---
 
 # Event Timeline - Localization
 
-<p class="description">The Event Timeline's localization features provide the appropriate translations for users around the world.</p>
+<p class="description">Translate and localize the Event Timeline for users around the world.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 The default locale of MUI X is English (United States).
 To use other locales, follow the instructions below.
@@ -52,7 +53,7 @@ const theme = createTheme(
 </ThemeProvider>;
 ```
 
-Note that `createTheme()` accepts any number of arguments.
+The `createTheme()` function accepts any number of arguments.
 If you are already using the [translations of the core components](/material-ui/guides/localization/#locale-text), you can add `frFR` as a new argument.
 
 ```jsx
@@ -137,4 +138,4 @@ You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-sche
 {{"demo": "SchedulerLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
-Note that these translations of the Scheduler component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
+These translations of the Scheduler component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.

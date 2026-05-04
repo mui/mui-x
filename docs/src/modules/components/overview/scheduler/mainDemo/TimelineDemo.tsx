@@ -4,19 +4,25 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
-import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
+import { EventTimelinePremiumPreset } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { timelineEvents, timelineResources, timelineDefaultVisibleDate } from './data';
 
-const viewOptions: EventTimelinePremiumView[] = ['time', 'days', 'weeks', 'months', 'years'];
+const presetOptions: { value: EventTimelinePremiumPreset; label: string }[] = [
+  { value: 'dayAndHour', label: 'Time' },
+  { value: 'dayAndMonth', label: 'Days' },
+  { value: 'dayAndWeek', label: 'Weeks' },
+  { value: 'monthAndYear', label: 'Months' },
+  { value: 'year', label: 'Years' },
+];
 
 export default function TimelineDemo() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(timelineEvents);
-  const [view, setView] = React.useState<EventTimelinePremiumView>('months');
+  const [preset, setPreset] = React.useState<EventTimelinePremiumPreset>('monthAndYear');
   const apiRef = useEventTimelinePremiumApiRef();
 
-  const handleViewChange = (event: SelectChangeEvent) => {
-    setView(event.target.value as EventTimelinePremiumView);
+  const handlePresetChange = (event: SelectChangeEvent) => {
+    setPreset(event.target.value as EventTimelinePremiumPreset);
   };
 
   return (
@@ -25,10 +31,10 @@ export default function TimelineDemo() {
       elevation={0}
       sx={{ height: 600, width: '100%', p: 1, display: 'flex', flexDirection: 'column', gap: 1 }}
     >
-      <Select value={view} onChange={handleViewChange} size="small" sx={{ width: 140 }}>
-        {viewOptions.map((value) => (
+      <Select value={preset} onChange={handlePresetChange} size="small" sx={{ width: 140 }}>
+        {presetOptions.map(({ value, label }) => (
           <MenuItem key={value} value={value}>
-            {value.charAt(0).toUpperCase() + value.slice(1)}
+            {label}
           </MenuItem>
         ))}
       </Select>
@@ -39,8 +45,8 @@ export default function TimelineDemo() {
         onEventsChange={setEvents}
         resources={timelineResources}
         defaultVisibleDate={timelineDefaultVisibleDate}
-        view={view}
-        onViewChange={setView}
+        preset={preset}
+        onPresetChange={setPreset}
         areEventsResizable
         areEventsDraggable
       />

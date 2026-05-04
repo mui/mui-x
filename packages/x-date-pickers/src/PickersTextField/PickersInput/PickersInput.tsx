@@ -66,7 +66,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
             background: 'red',
             left: 0,
             bottom: 0,
-            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            // Doing the other way around crash on IE 11 "''" https://github.com/cssinjs/jss/issues/242
             content: '""',
             position: 'absolute',
             right: 0,
@@ -91,7 +91,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
             borderBottom: `1px solid ${bottomLineColor}`,
             left: 0,
             bottom: 0,
-            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            // Doing the other way around crash on IE 11 "''" https://github.com/cssinjs/jss/issues/242
             content: '"\\00a0"',
             position: 'absolute',
             right: 0,
@@ -153,6 +153,8 @@ const PickersInput = React.forwardRef(function PickersInput(
     disableUnderline = false,
     ownerState: ownerStateProp,
     classes: classesProp,
+    slots: inSlots,
+    slotProps: inSlotProps,
     ...other
   } = props;
 
@@ -165,9 +167,12 @@ const PickersInput = React.forwardRef(function PickersInput(
 
   return (
     <PickersInputBase
-      slots={{ root: PickersInputRoot }}
-      slotProps={{ root: { disableUnderline } }}
       {...other}
+      slots={{ root: PickersInputRoot, ...inSlots }}
+      slotProps={{
+        ...inSlotProps,
+        root: { disableUnderline, ...inSlotProps?.root },
+      }}
       ownerState={ownerState}
       label={label}
       classes={classes}
@@ -187,8 +192,8 @@ PickersInput.propTypes = {
    * For a range value, it means that `value === [null, null]`
    */
   areAllSectionsEmpty: PropTypes.bool.isRequired,
+  classes: PropTypes.object,
   className: PropTypes.string,
-  component: PropTypes.elementType,
   /**
    * If true, the whole element is editable.
    * Useful when all the sections are selected.
@@ -208,13 +213,31 @@ PickersInput.propTypes = {
       content: PropTypes.object.isRequired,
     }),
   ).isRequired,
+  /**
+   * End `InputAdornment` for this component.
+   */
   endAdornment: PropTypes.node,
+  /**
+   * If `true`, the input will take up the full width of its container.
+   * @default false
+   */
   fullWidth: PropTypes.bool,
+  /**
+   * The id of the `input` element.
+   */
   id: PropTypes.string,
-  inputProps: PropTypes.object,
+  /**
+   * Pass a ref to the `input` element.
+   */
   inputRef: refType,
+  /**
+   * The label content.
+   */
   label: PropTypes.node,
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
+  /**
+   * Name attribute of the `input` element.
+   */
   name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
@@ -246,8 +269,10 @@ PickersInput.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
+  /**
+   * Start `InputAdornment` for this component.
+   */
   startAdornment: PropTypes.node,
-  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

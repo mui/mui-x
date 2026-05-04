@@ -10,7 +10,7 @@ interface GetCreationPlaceholderParams {
   creationConfig: SchedulerEventCreationConfig;
 }
 
-type CreationPlaceholderFields = Omit<SchedulerOccurrencePlaceholderCreation, 'type'>;
+export type CreationPlaceholderFields = Omit<SchedulerOccurrencePlaceholderCreation, 'type'>;
 
 export function useEventCreation(
   getCreationPlaceholder: (params: GetCreationPlaceholderParams) => CreationPlaceholderFields,

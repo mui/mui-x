@@ -100,7 +100,7 @@ export function FormContent(props: FormContentProps) {
 
   // Context hooks
   const adapter = useAdapterContext();
-  const { classes, localeText } = useEventDialogStyledContext();
+  const { schedulerId, classes, localeText } = useEventDialogStyledContext();
   const store = useSchedulerStoreContext();
 
   // Selector hooks
@@ -123,6 +123,8 @@ export function FormContent(props: FormContentProps) {
   );
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
+
+  const titleInputRef = React.useCallback((input: HTMLInputElement | null) => input?.focus(), []);
 
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
@@ -237,7 +239,7 @@ export function FormContent(props: FormContentProps) {
       <EventDialogForm onSubmit={handleSubmit} className={classes.eventDialogForm}>
         <EventDialogHeader onClose={onClose} dragHandlerRef={dragHandlerRef}>
           <span
-            id="event-dialog-title"
+            id={`${schedulerId}-event-dialog-title`}
             style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}
           >
             {occurrence.title}
@@ -246,6 +248,7 @@ export function FormContent(props: FormContentProps) {
             name="title"
             defaultValue={occurrence.title}
             required
+            inputRef={titleInputRef}
             slotProps={{
               input: {
                 readOnly: isPropertyReadOnly('title'),
@@ -262,13 +265,13 @@ export function FormContent(props: FormContentProps) {
           <EventDialogTabsContainer className={classes.eventDialogTabsContainer}>
             <EventDialogTabs value={tabValue} onChange={handleTabChange}>
               <Tab
-                id="general-tab"
+                id={`${schedulerId}-general-tab`}
                 className={classes.eventDialogTab}
                 label={localeText.generalTabLabel}
                 value="general"
               />
               <Tab
-                id="recurrence-tab"
+                id={`${schedulerId}-recurrence-tab`}
                 className={classes.eventDialogTab}
                 label={localeText.recurrenceTabLabel}
                 value="recurrence"

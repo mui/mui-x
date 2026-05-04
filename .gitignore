@@ -4,6 +4,7 @@
 .vscode
 .cursor
 .claude/settings.local.json
+.claude/worktrees/
 .junie
 
 __diff_output__
@@ -11,23 +12,24 @@ __diff_output__
 *.log
 /.eslintcache
 /.nyc_output
-/coverage
-/docs/.next
-/docs/pages/playground/*
+/coverage/
+/docs/.next/
+/docs/pages/playground/
 !/docs/pages/playground/tsconfig.json
 /docs/.env.local
-/docs/export
+/docs/export/
 /docs/public/x/
-/test/regressions/screenshots
-/test/performance-charts/traces
-build
-dist
-node_modules
+/docs/public/chat/
+/test/regressions/screenshots/
+/test/performance-charts/benchmarks/
+build/
+dist/
+node_modules/
 size-snapshot.json
 performance-snapshot.json
 # vale downloaded config
 .github/styles/
-test-results
+test-results/
 
 # Claude Code / Codex - ignore local/personal files, commit shared ones
 CLAUDE.local.md

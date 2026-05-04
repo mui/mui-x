@@ -179,6 +179,9 @@ function useClickAwayListener(
   // Only special HTML elements have these default behaviors.
   const handleClickAway = useEventCallback((event: MouseEvent | TouchEvent) => {
     if (!activatedRef.current) {
+      // Reset syntheticEventRef to avoid stale state when a programmatic click
+      // (e.g., ButtonBase Enter key handler) sets it without a preceding mousedown.
+      syntheticEventRef.current = false;
       return;
     }
 
@@ -189,7 +192,7 @@ function useClickAwayListener(
 
     const doc = ownerDocument(nodeRef.current);
 
-    // 1. IE11 support, which trigger the handleClickAway even after the unbind
+    // 1. IE 11 support, which trigger the handleClickAway even after the unbind
     // 2. The child might render null.
     // 3. Behave like a blur listener.
     if (

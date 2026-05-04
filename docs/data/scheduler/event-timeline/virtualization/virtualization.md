@@ -9,10 +9,10 @@ githubLabel: 'scope: scheduler'
 
 <p class="description">Virtualize the Event Timeline for better performance with large datasets.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 :::warning
-This feature isn't available yet, but it is planned — you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21458) to help us prioritize it.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21458) to help us prioritize it.
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 

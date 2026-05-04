@@ -38,3 +38,11 @@ The following example shows how to accomplish this:
 The [Grid API](/x/react-data-grid/api-object/#how-to-use-the-api-object) provides the [`getFilterState`](/x/api/data-grid/grid-api/#grid-api-prop-getFilterState) method, which lets you display the row count for predefined filters upfront without applying filters to the Data Grid:
 
 {{"demo": "FilteredRowCount.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Pasting values into `is any of`
+
+If you need to paste a bulk list of values into the filter panel, you can wrap the built-in `isAnyOf` operator and keep the default input component.
+
+The demo below accepts pasted array literals such as `["Sugar", "Soybeans", "Wheat"]` and `['Cocoa', 'Rough']`.
+
+{{"demo": "PasteListIntoIsAnyOf.js", "bg": "inline", "defaultCodeOpen": false}}

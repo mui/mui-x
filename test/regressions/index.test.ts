@@ -1,10 +1,7 @@
 import * as path from 'path';
 import * as childProcess from 'child_process';
 import { type Browser, chromium, Page } from '@playwright/test';
-import { major } from '@mui/material/version';
 import fs from 'node:fs/promises';
-
-const isMaterialUIv6 = major === 6;
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
@@ -184,6 +181,57 @@ async function main() {
         virtualScroller.dispatchEvent(new Event('scroll'));
       });
       await sleep(100);
+
+      await testcase.screenshot({ path: screenshotPath, type: 'png' });
+    });
+
+    it('should clamp the horizontal scroll position in the fluid width column dimensions scenario', async () => {
+      const route = '/test-regressions-data-grid/ColumnFluidWidthScrollClamp';
+      const screenshotPath = path.resolve(screenshotDir, `.${route}AfterResize.png`);
+
+      await navigateToTest(route);
+
+      const testcase = await page.waitForSelector(
+        `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+      );
+
+      await page.getByRole('button', { name: 'Scroll to max' }).click();
+      await page.getByRole('button', { name: 'Shrink username' }).click();
+
+      await page.waitForFunction(() => {
+        const root = document.querySelector<HTMLElement>('.MuiDataGrid-root');
+        const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
+
+        if (!root || !virtualScroller) {
+          return false;
+        }
+
+        const rowWidth = Number.parseFloat(root.style.getPropertyValue('--DataGrid-rowWidth'));
+        const maxScrollLeft = Math.max(0, rowWidth - virtualScroller.clientWidth);
+
+        return maxScrollLeft === 0 && Math.abs(virtualScroller.scrollLeft) === 0;
+      });
+
+      const scrollState = await page.evaluate(() => {
+        const root = document.querySelector<HTMLElement>('.MuiDataGrid-root');
+        const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
+
+        if (!root || !virtualScroller) {
+          throw new Error('missing grid elements');
+        }
+
+        const rowWidth = Number.parseFloat(root.style.getPropertyValue('--DataGrid-rowWidth'));
+
+        return {
+          hasScrollX: root.style.getPropertyValue('--DataGrid-hasScrollX'),
+          maxScrollLeft: Math.max(0, rowWidth - virtualScroller.clientWidth),
+          scrollLeft: Math.abs(virtualScroller.scrollLeft),
+        };
+      });
+
+      expect(scrollState.maxScrollLeft).to.equal(0);
+      expect(scrollState.scrollLeft).to.equal(0);
+      expect(scrollState.hasScrollX).to.equal('0');
 
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
@@ -407,12 +455,6 @@ async function main() {
 }
 
 function isConsoleWarningIgnored(msg?: string) {
-  const isMuiV6Error =
-    isMaterialUIv6 &&
-    msg?.startsWith(
-      'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
-    );
-
   const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
 
   const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
@@ -422,7 +464,7 @@ function isConsoleWarningIgnored(msg?: string) {
     'The browser build of Tailwind CSS should not be used in production.',
   );
 
-  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute || isTailwindCdnWarning) {
+  if (isReactRouterFlagsError || isNoDevRoute || isTailwindCdnWarning) {
     return true;
   }
   return false;
