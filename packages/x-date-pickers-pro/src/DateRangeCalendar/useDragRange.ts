@@ -83,6 +83,7 @@ const useDragRangeEvents = ({
   const isDraggingRef = React.useRef(false);
   const pointerIdRef = React.useRef<number | null>(null);
   const sourceDateRef = React.useRef<PickerValidDate | null>(null);
+  const sourcePositionRef = React.useRef<RangePosition | null>(null);
   const didMoveRef = React.useRef(false);
   const pendingDropRef = React.useRef<{ date: PickerValidDate; target: HTMLElement } | null>(null);
   const cleanupListenersRef = React.useRef<(() => void) | null>(null);
@@ -100,13 +101,20 @@ const useDragRangeEvents = ({
   };
 
   const cleanup = useEventCallback(() => {
+    const wasActive = didMoveRef.current;
     isDraggingRef.current = false;
     pointerIdRef.current = null;
     sourceDateRef.current = null;
+    sourcePositionRef.current = null;
     didMoveRef.current = false;
     pendingDropRef.current = null;
-    setIsDragging(false);
-    setRangeDragDay(null);
+    // Only flush React state we actually set. A press that never moved
+    // (i.e. a tap) never activated drag UI, so there's nothing to reset
+    // and we avoid forcing a re-render on every tap.
+    if (wasActive) {
+      setIsDragging(false);
+      setRangeDragDay(null);
+    }
     cleanupListenersRef.current?.();
     cleanupListenersRef.current = null;
   });
@@ -144,13 +152,14 @@ const useDragRangeEvents = ({
     didMoveRef.current = false;
     pendingDropRef.current = { date: newDate, target: event.currentTarget };
 
-    setRangeDragDay(newDate);
-    setIsDragging(true);
-
     const { position } = event.currentTarget.dataset;
-    if (position) {
-      onDatePositionChange(position as RangePosition);
-    }
+    sourcePositionRef.current = (position as RangePosition | undefined) ?? null;
+
+    // Don't activate drag UI (`setIsDragging`, `setRangeDragDay`,
+    // `onDatePositionChange`) yet — a press on a range endpoint is also how
+    // the user re-selects that endpoint. Defer to `handlePointerOver` once
+    // we see real movement to a different cell, so a pure tap doesn't
+    // mutate `rangePosition` and undo the click handler's selection logic.
 
     const onPointerUp = (pointerEvent: PointerEvent) => {
       if (pointerEvent.pointerId !== pointerIdRef.current) {
@@ -233,10 +242,25 @@ const useDragRangeEvents = ({
     }
 
     pendingDropRef.current = { date: newDate, target: event.currentTarget };
-    if (sourceDateRef.current && !adapter.isEqual(newDate, sourceDateRef.current)) {
+
+    const isDifferentFromSource =
+      sourceDateRef.current && !adapter.isEqual(newDate, sourceDateRef.current);
+
+    if (!didMoveRef.current && isDifferentFromSource) {
+      // First real movement: activate drag UI and notify the parent of the
+      // source endpoint so the dragging-range preview computes against the
+      // correct side. This is deferred from `pointerdown` so that pure taps
+      // on a range endpoint don't mutate `rangePosition` mid-click.
       didMoveRef.current = true;
+      if (sourcePositionRef.current) {
+        onDatePositionChange(sourcePositionRef.current);
+      }
+      setIsDragging(true);
     }
-    setRangeDragDay(newDate);
+
+    if (didMoveRef.current) {
+      setRangeDragDay(newDate);
+    }
   });
 
   React.useEffect(
