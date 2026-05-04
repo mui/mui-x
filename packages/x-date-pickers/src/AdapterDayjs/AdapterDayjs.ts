@@ -253,32 +253,47 @@ export class AdapterDayjs implements MuiPickersAdapter<string> {
   };
 
   /**
-   * If the new day does not have the same offset as the old one (when switching to summer day time for example),
-   * Then dayjs will not automatically adjust the offset (moment does).
-   * We have to parse again the value to make sure the `fixOffset` method is applied.
-   * See https://github.com/iamkun/dayjs/blob/b3624de619d6e734cd0ffdbbd3502185041c1b60/src/plugin/timezone/index.js#L72
+   * After operations like `set('hour', X)` or `add(1, 'month')`, the value's
+   * `$offset` may be stale if the new local time falls on the other side of a
+   * DST transition. dayjs does not automatically re-evaluate the offset for
+   * us (moment does), so we have to do it ourselves by mutating `$offset` in
+   * place against the value computed by `value.tz(timezone, true)`.
+   *
+   * Mutation - rather than returning the `value.tz(timezone, true)` result
+   * directly - matters because that round-trip drops `$x.$localOffset` and
+   * shifts `$d` via its internal "keep local time" adjustment, both of which
+   * break `valueOf()` and `getHours()` once the system timezone is non-UTC
+   * (see https://github.com/mui/mui-x/issues/21669).
+   *
+   * Pure plain `dayjs()` values (no `$offset`, e.g. `dayjs(value)` without
+   * any timezone-related call) are skipped: they rely on JS Date semantics
+   * which already handle DST via the system timezone, and mutating `$offset`
+   * on them would attach timezone metadata that breaks comparisons against
+   * other plain values (see https://github.com/mui/mui-x/issues/13290).
+   * Values that came through `dayjs.tz(...)` or `.tz(...)` already carry an
+   * `$offset` and need the adjustment, even when `$x.$timezone` is unset
+   * (e.g. the picker's `now` from `createTZDate(undefined, 'default')`,
+   * which calls `.tz(undefined, false)`).
    */
   protected adjustOffset = (value: Dayjs) => {
     if (!this.hasTimezonePlugin()) {
       return value;
     }
-
-    const timezone = this.getTimezone(value);
-    if (timezone !== 'UTC') {
-      const fixedValue = value.tz(this.cleanTimezone(timezone), true);
-      // TODO: Simplify the case when we raise the `dayjs` peer dep to 1.11.12 (https://github.com/iamkun/dayjs/releases/tag/v1.11.12)
-      /* v8 ignore next 3 */
-      // @ts-ignore
-      if (fixedValue.$offset === (value.$offset ?? 0)) {
-        return value;
-      }
-      // Change only what is needed to avoid creating a new object with unwanted data
-      // Especially important when used in an environment where utc or timezone dates are used only in some places
-      // Reference: https://github.com/mui/mui-x/issues/13290
-      // @ts-ignore
-      value.$offset = fixedValue.$offset;
+    // @ts-ignore
+    if (value.$offset === undefined) {
+      return value;
     }
-
+    const timezone = this.getTimezone(value);
+    if (timezone === 'UTC') {
+      return value;
+    }
+    const fixedValue = value.tz(this.cleanTimezone(timezone), true);
+    // @ts-ignore
+    if (fixedValue.$offset === value.$offset) {
+      return value;
+    }
+    // @ts-ignore
+    value.$offset = fixedValue.$offset;
     return value;
   };
 
