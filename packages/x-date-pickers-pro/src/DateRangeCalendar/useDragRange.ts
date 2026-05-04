@@ -130,12 +130,12 @@ const useDragRangeEvents = ({
     // gesture is already in flight (multi-touch, pen joining a touch, etc.)
     // would otherwise overwrite `pointerIdRef` and `cleanupListenersRef`,
     // leaking the first gesture's document listeners and silencing its
-    // `pointerup` (the id mismatch would skip the cleanup branch). Since
-    // events are dispatched serially, the JS-thread guarantees that by the
-    // time the second pointerdown reaches us, the first has already set
-    // the ref — so this check covers both the normal case and the
-    // recovery case where the original gesture's `pointerup` was lost.
-    if (pointerIdRef.current != null) {
+    // `pointerup` (the id mismatch would skip the cleanup branch). The
+    // `isPrimary === false` check filters secondary multi-touch pointers
+    // up front, matching what real browsers produce; the `pointerIdRef`
+    // check also covers pen+touch (where each pointer type has its own
+    // primary) and recovery from a lost `pointerup`.
+    if (pointerIdRef.current != null || event.isPrimary === false) {
       return;
     }
 

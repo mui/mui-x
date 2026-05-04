@@ -263,7 +263,7 @@ describe('<DateRangeCalendar />', () => {
         const endDayChild = document.createElement('span');
         endDayButton.appendChild(endDayChild);
 
-        fireEvent.pointerDown(startDayChild, { pointerId: 1, button: 0 });
+        fireEvent.pointerDown(startDayChild, { pointerId: 1, button: 0, isPrimary: true });
         fireEvent.pointerOver(endDayChild, { pointerId: 1 });
         fireEvent.pointerUp(document, { pointerId: 1 });
 

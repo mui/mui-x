@@ -10,7 +10,10 @@ const POINTER_ID = 1;
  * listener picks the events up.
  */
 export const executeDateDragWithoutDrop = (startDate: Element, ...otherDates: Element[]) => {
-  fireEvent.pointerDown(startDate, { pointerId: POINTER_ID, button: 0 });
+  // `isPrimary: true` matches what real browsers produce for a first-finger
+  // touch / mouse press; the production handler short-circuits secondary
+  // multi-touch pointers via `event.isPrimary === false`.
+  fireEvent.pointerDown(startDate, { pointerId: POINTER_ID, button: 0, isPrimary: true });
   otherDates.forEach((date) => {
     fireEvent.pointerOver(date, { pointerId: POINTER_ID });
   });
