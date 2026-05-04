@@ -18,17 +18,19 @@ The `RadialLineChart` component accepts `series`, `rotationAxis`, and `radiusAxi
 
 {{"demo": "BasicRadialLineChart.js", "bg": "outline"}}
 
+## Rotation axis
+
+Like for line series, the rotation axis can have any scale type.
+
+{{"demo": "ContinuousRadialLineChart.js", "bg": "outline"}}
+
+
 ## Highlight
 
 Like other series, the radial line series has a `highlightScope` property that accepts an object with `highlight` and `fade` properties.
 
 {{"demo": "ElementHighlights.js", "bg": "outline"}}
 
-### Rotation axis
-
-Like for line series, the rotation axis can have any scale type.
-
-{{"demo": "ContinuousRadialLineChart.js", "bg": "outline"}}
 
 ## Composition
 
