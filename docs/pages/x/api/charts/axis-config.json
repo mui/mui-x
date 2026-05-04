@@ -8,6 +8,7 @@
   "properties": {
     "id": { "type": { "description": "AxisId" }, "required": true },
     "scaleType": { "type": { "description": "'linear'" }, "required": true },
+    "axis": { "type": { "description": "'x'" } },
     "classes": { "type": { "description": "Partial&lt;ChartsAxisClasses&gt;" } },
     "className": { "type": { "description": "string" } },
     "colorMap": { "type": { "description": "ContinuousColorConfig | PiecewiseColorConfig" } },
@@ -19,10 +20,6 @@
       "type": {
         "description": "'nice' | 'strict' | ((min: NumberValue, max: NumberValue) =&gt; { min: NumberValue; max: NumberValue })"
       }
-    },
-    "height": {
-      "type": { "description": "number | 'auto'" },
-      "default": "45 if an axis label is provided, 25 otherwise."
     },
     "hideTooltip": { "type": { "description": "boolean" } },
     "ignoreTooltip": { "type": { "description": "boolean" } },

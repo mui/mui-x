@@ -1,10 +1,11 @@
 {
-  "interfaceDescription": "Use this type for advanced typing. For basic usage, use <code>XAxis</code>, <code>YAxis</code>, <code>RotationAxis</code> or <code>RadiusAxis</code>.",
+  "interfaceDescription": "Use this type for advanced typing. For basic usage, use <code>XAxis</code> or <code>YAxis</code>.",
   "propertiesDescriptions": {
     "id": {
       "description": "ID used to identify the axis.<br /><br />The ID must be unique across all axes in this chart."
     },
     "scaleType": { "description": "" },
+    "axis": { "description": "" },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "className": { "description": "A CSS class name applied to the root element." },
     "colorMap": { "description": "" },
@@ -18,9 +19,6 @@
     "disableTicks": { "description": "If true, the ticks are disabled." },
     "domainLimit": {
       "description": "Defines the axis scale domain based on the min/max values of series linked to it.<br />- &#39;nice&#39;: Rounds the domain at human friendly values.<br />- &#39;strict&#39;: Set the domain to the min/max value provided. No extra space is added.<br />- function: Receives the calculated extremums as parameters, and should return the axis domain."
-    },
-    "height": {
-      "description": "The height of the axis.<br />Set to <code>&#39;auto&#39;</code> to automatically calculate the height based on tick label measurements."
     },
     "hideTooltip": { "description": "If <code>true</code>, hide this value in the tooltip" },
     "ignoreTooltip": {
