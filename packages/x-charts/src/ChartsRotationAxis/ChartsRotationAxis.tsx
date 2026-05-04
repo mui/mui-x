@@ -49,7 +49,7 @@ export function ChartsRotationAxis(props: ChartsRotationAxisProps) {
     direction: 'rotation',
   });
 
-  if (!rotationAxis || !radiusAxis) {
+  if (!rotationAxis || !radiusAxis || settings.position === 'none') {
     return null;
   }
 

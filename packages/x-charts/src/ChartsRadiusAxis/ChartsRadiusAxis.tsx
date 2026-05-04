@@ -76,7 +76,7 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
     direction: 'radius',
   });
 
-  if (!radiusAxis) {
+  if (!radiusAxis || settings.position === 'none') {
     return null;
   }
 
