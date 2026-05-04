@@ -29,3 +29,32 @@ Like other series, the radial line series has a `highlightScope` property that a
 Like for line series, the rotation axis can have any scale type.
 
 {{"demo": "ContinuousRadialLineChart.js", "bg": "outline"}}
+
+## Composition
+
+Use `ChartsRadialDataProviderPremium` to provide `series`, `rotationAxis`, and `radiusAxis` props for composition.
+
+In addition to the shared chart components available for [composition](/x/react-charts/composition/), you can use `RadialLinePlot`, `RadialAreaPlot`, `RadialMarkPlot`, and `RadialLineHighlightPlot` to draw the lines, areas, marks, and highlight indicator.
+
+Here's how the radial line chart is composed:
+
+```jsx
+<ChartsRadialDataProviderPremium>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsRadialGrid />
+      <g clipPath={`url(#${clipPathId})`}>
+        <RadialAreaPlot />
+        <RadialLinePlot />
+        <ChartsOverlay />
+      </g>
+      <ChartsRadialAxisHighlight />
+      <RadialMarkPlot />
+      <RadialLineHighlightPlot />
+      <ChartsClipPath id={clipPathId} />
+    </ChartsSurface>
+    <ChartsTooltip />
+  </ChartsWrapper>
+</ChartsRadialDataProviderPremium>
+```
