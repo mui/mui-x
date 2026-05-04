@@ -295,6 +295,10 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/highlighted-scatter-mark',
+    title: 'HighlightedScatterMark',
+  },
+  {
     pathname: '/x/api/charts/line-chart',
     title: 'LineChart',
   },
@@ -461,6 +465,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'ScatterChart',
   },
   {
+    pathname: '/x/api/charts/scatter-chart-premium',
+    title: 'ScatterChartPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/scatter-chart-pro',
     title: 'ScatterChartPro',
     plan: 'pro',
@@ -468,6 +477,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/scatter-plot',
     title: 'ScatterPlot',
+  },
+  {
+    pathname: '/x/api/charts/scatter-plot-premium',
+    title: 'ScatterPlotPremium',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/spark-line-chart',
