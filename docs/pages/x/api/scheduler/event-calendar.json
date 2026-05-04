@@ -640,6 +640,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventDialogSectionFieldset",
+      "className": "MuiEventCalendar-eventDialogSectionFieldset",
+      "description": "Styles applied to the event dialog section fieldset element.",
+      "isGlobal": false
+    },
+    {
       "key": "eventDialogSectionHeaderTitle",
       "className": "MuiEventCalendar-eventDialogSectionHeaderTitle",
       "description": "Styles applied to the event dialog section header title element.",

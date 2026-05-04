@@ -51,7 +51,7 @@ return <EventTimelinePremium apiRef={apiRef} events={EVENTS} />;
 ```
 
 When your component first renders, `apiRef.current` is `undefined`.
-After the initial render, `apiRef` holds methods to interact imperatively with the Event Calendar.
+After the initial render, `apiRef` holds methods to interact imperatively with the Event Timeline.
 
 ### Set the visible date
 
@@ -59,7 +59,7 @@ Use the `setVisibleDate()` API method to navigate to a given date:
 
 ```ts
 apiRef.current.setVisibleDate({
-  // The DOM event that triggered the change (we be passed to onVisibleDateChange if provided).
+  // The DOM event that triggered the change (will be passed to onVisibleDateChange if provided).
   event,
   // The date to navigate to.
   visibleDate,

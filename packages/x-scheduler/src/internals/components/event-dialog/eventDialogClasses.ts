@@ -55,6 +55,8 @@ export interface EventDialogClasses {
   eventDialogInlineRow: string;
   /** Styles applied to the event dialog section header title element. */
   eventDialogSectionHeaderTitle: string;
+  /** Styles applied to the event dialog section fieldset element. */
+  eventDialogSectionFieldset: string;
   /** Styles applied to the event dialog radio button label element. */
   eventDialogRadioButtonLabel: string;
   /** Styles applied to the event dialog repeat section label element. */
@@ -128,6 +130,7 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialogRecurrenceSelectorContainer',
   'eventDialogInlineRow',
   'eventDialogSectionHeaderTitle',
+  'eventDialogSectionFieldset',
   'eventDialogRadioButtonLabel',
   'eventDialogRepeatSectionLabel',
   'eventDialogEndsRadioGroup',
@@ -180,6 +183,7 @@ export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]
   eventDialogRecurrenceSelectorContainer: ['eventDialogRecurrenceSelectorContainer'],
   eventDialogInlineRow: ['eventDialogInlineRow'],
   eventDialogSectionHeaderTitle: ['eventDialogSectionHeaderTitle'],
+  eventDialogSectionFieldset: ['eventDialogSectionFieldset'],
   eventDialogRadioButtonLabel: ['eventDialogRadioButtonLabel'],
   eventDialogRepeatSectionLabel: ['eventDialogRepeatSectionLabel'],
   eventDialogEndsRadioGroup: ['eventDialogEndsRadioGroup'],
