@@ -78,8 +78,8 @@ Or the component when using composition:
 
 ```jsx
 <ChartsRadialAxisHighlight
-  rotation='line' // Or 'none', or 'band'
-  radius='line' // Or 'none', or 'band'
+  rotation="line" // Or 'none', or 'band'
+  radius="line" // Or 'none', or 'band'
 />
 ```
 
