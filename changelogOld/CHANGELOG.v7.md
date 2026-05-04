@@ -4,7 +4,7 @@
 
 _Sep 25, 2025_
 
-We'd like to extend a big thank you to the 1 contributor who made this release possible. Here are some highlights ✨:
+A big thanks to the 1 contributor who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 
@@ -27,7 +27,7 @@ Same changes as in `@mui/x-tree-view@7.29.10`.
 
 _Aug 7, 2025_
 
-We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 
@@ -68,7 +68,7 @@ Same changes as in `@mui/x-data-grid-pro@7.29.9`.
 
 _Jul 4, 2025_
 
-We'd like to extend a big thank you to the 3 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 
@@ -104,7 +104,7 @@ Same changes as in `@mui/x-data-grid-pro@7.29.8`.
 
 _Jun 26, 2025_
 
-We'd like to extend a big thank you to the 4 contributors who made this release possible.
+A big thanks to the 4 contributors who made this release possible.
 
 Special thanks go out to the community members for their valuable contributions:
 @alisasanib
@@ -323,7 +323,7 @@ Same changes as in `@mui/x-date-pickers@7.29.2`.
 - [docs] Fix MUI X v7 install instructions (#17537) @oliviertassinari
 - [docs] Improve data grid export docs (#17553) @MBilalShafi
 
-### Core
+### Internal
 
 - [core] Fix root package 7.29.1 (#17523) @JCQuintas
 
@@ -400,7 +400,7 @@ Same changes as in `@mui/x-tree-view@7.29.1`, plus:
 
 - [docs] Use MUI X v7 packages in CodeSandbox and StackBlitz (#17516) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Bump monorepo (#17437) @LukasTy
 
@@ -472,7 +472,7 @@ Internal changes.
 
 Same changes as in `@mui/x-tree-view@7.29.0`.
 
-### Core
+### Internal
 
 - [core] Cleanup `@mui` dependency versions (#17390) @LukasTy
 
@@ -563,7 +563,7 @@ Same changes as in `@mui/x-data-grid-pro@7.28.2`.
 
 Same changes as in `@mui/x-date-pickers@7.28.2`.
 
-### Core
+### Internal
 
 - [code-infra] Remove `test_regressions` step from React 18 pipeline (#17109) @LukasTy
 
@@ -699,7 +699,7 @@ Same changes as in `@mui/x-tree-view@7.28.0`.
 
 - [docs] Fix link to the lazy loading demo for the DataGrid (#16912) @nusr
 
-### Core
+### Internal
 
 - [core] Allow `@mui/material` v7 in dependencies (#16951) @LukasTy
 - [infra] Make tests on React 18 part of pipeline (#16958) @LukasTy
@@ -742,7 +742,7 @@ Same changes as in `@mui/x-data-grid-pro@7.27.3`.
 
 Same changes as in `@mui/x-date-pickers@7.27.3`.
 
-### Core
+### Internal
 
 - [infra] Update contributor acknowledgment wording (#16753) @michelengelen
 
@@ -893,7 +893,7 @@ Internal changes.
 
 - [charts-pro] Fix automatic type overloads (#16579) @JCQuintas
 
-### Core
+### Internal
 
 - [test] Fix Data Grid data source error test on React 18 (#16565) @arminmeh
 
@@ -964,7 +964,7 @@ Internal changes.
 
 Same changes as in `@mui/x-tree-view@7.26.0`.
 
-### Core
+### Internal
 
 - [core] Fix corepack and pnpm installation in CircleCI (#16452) @flaviendelangle
 
@@ -1041,7 +1041,7 @@ Same changes as in `@mui/x-tree-view@7.25.0`.
 
 - [docs] Improve release documentation (#16322) @MBilalShafi
 
-### Core
+### Internal
 
 - [test] Fix flaky data source tests in DataGrid (#16382) @lauri865
 
@@ -1110,7 +1110,7 @@ Same changes as in `@mui/x-tree-view@7.24.1`.
 
 - [docs] Fix `domainLimit` definition (#16271) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Make `@mui/x-internals` a dependency of `@mui/x-license` (#16265) @alexfauquette
 - [test] Fix flaky column pinning tests (#16228) @cherniavskii
@@ -1188,7 +1188,7 @@ Same changes as in `@mui/x-tree-view@7.24.0`.
 - [docs] Copyedit the Data Grid cell selection page (#16213) @samuelsycamore
 - [docs] Fix demo rendering issue on Codesandbox (#16129) @arminmeh
 
-### Core
+### Internal
 
 - [core] Type all references as `RefObject` (#16125) @arminmeh
 - [code-infra] Refactor `react` and `react-dom` definitions to simplify dep resolving (#16214) @LukasTy
@@ -1270,7 +1270,7 @@ Same changes as in `@mui/x-tree-view@7.23.6`.
 - [docs] Fix doc warning for automatic children selection on tree view (#16037) @flaviendelangle
 - [docs] Fix non-existing "adapter" property of `LocalizationProvider` (#16088) @tomashauser
 
-### Core
+### Internal
 
 - [core] Clarify the release strategy (#16012) @MBilalShafi
 - [core] Update the `release:version` docs (#16040) @cherniavskii
@@ -1461,7 +1461,7 @@ Releasing to benefit from license package fix (#15818).
 - [docs] Use `updateRows` method for list view demos (#15824) @KenanYusuf
 - [docs] Use date library version from package dev dependencies for sandboxes (#15767) @LukasTy
 
-### Core
+### Internal
 
 - [core] Add `@mui/x-tree-view-pro` to `releaseChangelog` (#15747) @flaviendelangle
 - [license] Use `console.log` for the error message on CodeSandbox to avoid rendering error (#15818) @arminmeh
@@ -1528,7 +1528,7 @@ Same changes as in `@mui/x-charts@7.23.1`.
 - [docs-infra] Bump `@mui/internal-markdown` to support nested demo imports (#15738) @alexfauquette
 - [docs] Improve SEO titles for the Data Grid (#15695) @MBilalShafi
 
-### Core
+### Internal
 
 - [core] Add `@mui/x-tree-view-pro` to `releaseChangelog` (#15747) @flaviendelangle
 
@@ -1622,7 +1622,7 @@ Same changes as in `@mui/x-tree-view@7.23.0`.
 - [docs] Remove selectors section from list view docs (#15639) @KenanYusuf
 - [docs] Add documentation for the list view feature (#15344) @KenanYusuf
 
-### Core
+### Internal
 
 - [core] Update @mui/monorepo (#15574) @oliviertassinari
 
@@ -1900,7 +1900,7 @@ Same changes as in `@mui/x-charts@7.22.0`.
 
 - [docs] Fix typo in Tree View docs (#15047) @yash49
 
-### Core
+### Internal
 
 - [core] Adjust cherry-pick GH actions (#15101) @LukasTy
 - [core] Update prettier target branch (#15100) @MBilalShafi
@@ -1988,7 +1988,7 @@ Same changes as in `@mui/x-charts@7.21.0`.
 - [docs] Update v5 migration CodeSandbox @oliviertassinari
 - [docs] Enforce component style rules for the Tree View (#14963) @samuelsycamore
 
-### Core
+### Internal
 
 - [core] Fix shortcut with localization keyboard (#14220) @rotembarsela
 - [core] Fix docs deploy command (#14920) @arminmeh
@@ -2078,7 +2078,7 @@ Same changes as in `@mui/x-charts@7.20.0`.
 - [docs] New recipe of a read-only field (#14606) @flaviendelangle
 - [docs] Change demo name example (#14822) @alelthomas
 
-### Core
+### Internal
 
 - [core] Support `@mui/utils` v6 (#14867) @siriwatknp
 - [code-infra] Remove deprecated `data-mui-test` in favour of `data-testid` (#14882) @JCQuintas
@@ -2186,7 +2186,7 @@ Same changes as in `@mui/x-charts@7.19.0`.
 - [docs] Fix typo in usage of Moment guide for UTC and timezones (#14780) @AWAIS97
 - [docs] Fix what's new link to use absolute URL (#14543) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Fix class name composition order (#14775) @oliviertassinari
 - [core] Replace minWidth, maxWidth with width (#14776) @oliviertassinari
@@ -2280,7 +2280,7 @@ Same changes as in `@mui/x-charts@7.18.0`.
 - [docs] Polish code formatting (#14603) @oliviertassinari
 - [test] Spy on `observe` method to avoid flaky wait for a callback (#14640) @arminmeh
 
-### Core
+### Internal
 
 - [core] Fix 301 link to Next.js and git diff @oliviertassinari
 - [core] Fix failing CI on `master` (#14644) @cherniavskii
@@ -2366,7 +2366,7 @@ Same changes as in `@mui/x-charts@7.17.0`.
 - [docs] Fixed typo in Row Grouping recipes (#14549) @Miodini
 - [docs] Match title with blog posts @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Move warning methods to `@mui/x-internals` (#14528) @k-rajat19
 - [core] Sync with core release flow @oliviertassinari
@@ -2461,7 +2461,7 @@ Same changes as in `@mui/x-charts@7.16.0`, plus:
 - [docs] Remove notion of seats (#14351) @oliviertassinari
 - [docs] Use real world data for `PieChart` examples (#14297) @JCQuintas
 
-### Core
+### Internal
 
 - [core] Fix changelog spelling @oliviertassinari
 - [core] Fix failing tests on the pickers (#14457) @flaviendelangle
@@ -2531,7 +2531,7 @@ Same changes as in `@mui/x-charts@7.15.0`, plus:
 - [docs] Fix use of Material UI @oliviertassinari
 - [docs] Update deprecated props in docs (#14295) @JCQuintas
 
-### Core
+### Internal
 
 - [core] Allow only v5.x for `MUI Core` renovate group (#14382) @LukasTy
 - [core] Avoid visual regression when using `@mui/material@6` (#14357) @cherniavskii
@@ -2615,7 +2615,7 @@ Same changes as in `@mui/x-charts@7.14.0`, plus:
 - [docs] Fix missing leading slashes in URLs (#14249) @oliviertassinari
 - [docs] Dash usage revision on pickers pages (#14260) @arthurbalduini
 
-### Core
+### Internal
 
 - [core] Follow JSDocs convention @oliviertassinari
 - [core] Prepare for material v6 (#14143) @LukasTy
@@ -2695,7 +2695,7 @@ Same changes as in `@mui/x-charts@7.13.0`.
 - [docs] Use Netflix financial results to document bar charts (#13991) @alexfauquette
 - [docs] Remove relience of abbreviations (#14226) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Bump monorepo (#14141) @Janpot
 - [core] Fix ESLint issue (#14207) @LukasTy
@@ -2868,7 +2868,7 @@ Same changes as in `@mui/x-date-pickers@7.12.0`.
 - [docs] Fix Vale errors (#14025) @oliviertassinari
 - [docs] Update on `renderCell` & autogenerated rows (#13879) @romgrk
 
-### Core
+### Internal
 
 - [core] Fix event naming convention @oliviertassinari
 - [core] Replace @mui/base with @mui/utils + @mui/material (#13823) @mnajdova
@@ -2952,7 +2952,7 @@ Same changes as in `@mui/x-date-pickers@7.11.1`.
 - [docs] Update `SparkLineChart` reference not being correctly capitalised (#13960) @duckboy81
 - [docs] Fix scroll demos disorientation (#13909) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add `@mui/material-nextjs` to `MUI Core` renovate group (#13966) @LukasTy
 - [core] Remove warning message in production (#13911) @oliviertassinari
@@ -3037,7 +3037,7 @@ Same changes as in `@mui/x-date-pickers@7.11.0`, plus:
 - [docs] Replace company name with project name @oliviertassinari
 - [docs] Sort Pickers & Charts API slots alphabetically (#13843) @LukasTy
 
-### Core
+### Internal
 
 - [core] Add MUI Internal `renovate` group (#13846) @LukasTy
 - [core] Link GitHub issue for `import/prefer-default-export` rule @oliviertassinari
@@ -3116,7 +3116,7 @@ Same changes as in `@mui/x-date-pickers@7.10.0`, plus:
 - [docs] Fix Pickers customization playground overflow (#13742) @LukasTy
 - [docs] Move Pickers dialog guidelines to accessibility page (#13778) @arthurbalduini
 
-### Core
+### Internal
 
 - [core] Sort `DATA_GRID_PROPS_DEFAULT_VALUES` alphabetically (#13783) @oliviertassinari
 - [test] Fix split infinitive use in tests @oliviertassinari
@@ -3179,7 +3179,7 @@ Same changes as in `@mui/x-date-pickers@7.9.0`.
 
 - [docs] Fix custom "no results overlay" demo in dark mode (#13715) @KenanYusuf
 
-### Core
+### Internal
 
 - [core] Add `react_next` workflow in CircleCI (#13360) @cherniavskii
 - [core] Create a new package to share utils across X packages (#13528) @flaviendelangle
@@ -3280,7 +3280,7 @@ Same changes as in `@mui/x-date-pickers@7.8.0`.
 - [docs] Add callout for `Luxon` `throwOnInvalid` support (#13621) @LukasTy
 - [docs] Add "Overlays" section to the Data Grid documentation (#13624) @KenanYusuf
 
-### Core
+### Internal
 
 - [core] Add ESLint rule to restrict import from `../internals` root (#13633) @JCQuintas
 - [docs-infra] Sync `\_app` folder with monorepo (#13582) @Janpot
@@ -3363,7 +3363,7 @@ Same changes as in `@mui/x-date-pickers@7.7.1`, plus:
 - [docs] Use dedicated tab for weather dataset (#13513) @alexfauquette
 - [x-license] license update proposal (#13459) @michelengelen
 
-### Core
+### Internal
 
 - [core] Fix failing CI test (#13574) @alexfauquette
 - [infra] Remove explicit `@testing-library/react` dependency (#13478) @LukasTy
@@ -3442,7 +3442,7 @@ Same changes as in `@mui/x-date-pickers@7.7.0`.
 - [docs] Update a11y pages description (#13417) @danilo-leal
 - [docs] improve the writing on the "Quick filter outside of the grid" example (#13155) @michelengelen
 
-### Core
+### Internal
 
 - [core] Add `eslint-plugin-react-compiler` experimental version and rules (#13415) @JCQuintas
 - [core] Minor setup cleanup (#13467) @LukasTy
@@ -3506,7 +3506,7 @@ Same changes as in `@mui/x-date-pickers@7.6.2`.
 - [docs] Adjust the code example for `quickFilterValues` (#12919) @michelengelen
 - [docs] Create Pickers accessibility page (#13274) @arthurbalduini
 
-### Core
+### Internal
 
 - [core] Comment on `CSS.escape` for the future @oliviertassinari
 - [core] Fix `l10n` action setup (#13382) @LukasTy
@@ -3615,7 +3615,7 @@ Same changes as in `@mui/x-date-pickers@7.6.0`.
 - [docs] Small improvements on accessibility Data Grid doc (#13233) @arthurbalduini
 - [docs] Update Pickers demo configurations (#13303) @LukasTy
 
-### Core
+### Internal
 
 - [core] Add comment on why logic to sync column header (#13248) @oliviertassinari
 - [core] Fix `l10n` script execution with arguments (#13297) @LukasTy
@@ -3672,7 +3672,7 @@ Same changes as in `@mui/x-date-pickers@7.5.1`.
 - [docs] Improve Tree View selection doc (#13105) @flaviendelangle
 - [docs] Unify Tree View `apiRef` methods doc examples (#13193) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Remove `raw-loader` package (#13160) @LukasTy
 - [core] Remove outdated prop-types (#13181) @flaviendelangle
@@ -3749,7 +3749,7 @@ Same changes as in `@mui/x-date-pickers@7.5.0`.
 
 - [docs] Document missing Charts API's (#12875) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Avoid root level `@mui/x-date-pickers` imports (#13120) @LukasTy
 - [core] Refactor ESLint config to disallow root level imports (#13130) @LukasTy
@@ -3817,7 +3817,7 @@ Same changes as in `@mui/x-date-pickers@7.4.0`.
 - [docs] Fix legal link to EULA free trial (#13013) @oliviertassinari
 - [docs] Update interface name in pinned columns docs (#13070) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Improve release process docs (#12977) @JCQuintas
 - [core] Prepare React 19 (#12991) @oliviertassinari
@@ -3884,7 +3884,7 @@ Same changes as in `@mui/x-date-pickers@7.3.2`.
 - [docs] Improve Data Grid migration guide (#12969) @MBilalShafi
 - [docs] Polish references to the plans (#12922) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Fix dependencies (#12951) @LukasTy
 - [core] Remove inconsistent blank lines (#12966) @oliviertassinari
@@ -3959,7 +3959,7 @@ Same changes as in `@mui/x-date-pickers@7.3.1`.
 - [docs] Improve Data Grid migration guide (#12879) @MBilalShafi
 - [docs] Update Column features availability (#12865) @DanailH
 
-### Core
+### Internal
 
 - [core] Fix `l10n` GH workflow (#12895) @LukasTy
 - [core] Match Base UI and Toolpad @oliviertassinari
@@ -4041,7 +4041,7 @@ A typo fix:
 - [docs] Fix layout shift on demos (#12816) @zanivan
 - [test] Increase timeout for test that sometimes fail on `DateTimeRangePicker` (#12786) @LukasTy
 
-### Core
+### Internal
 
 - [docs-infra] Prepare infra to document charts interfaces (#12653) @alexfauquette
 
@@ -4124,7 +4124,7 @@ Same changes as in `@mui/x-date-pickers@7.2.0`, plus:
 - [docs] Fix typo in Data Grid v7 migration page (#12720) @bfaulk96
 - [docs] Fix typo in Pickers v7 migration page (#12721) @bfaulk96
 
-### Core
+### Internal
 
 - [core] Support multiple resolved `l10n` PR packages (#12735) @LukasTy
 - [core] Update Netlify release references in release README (#12687) @LukasTy
@@ -4216,7 +4216,7 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 - [docs] Remove `day` from the default `dayOfWeekFormatter` function params (#12644) @LukasTy
 - [docs] Use `<TreeItem2 />` for icon expansion example on `<RichTreeView />` (#12563) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Add cherry-pick `master` to `v6` action (#12648) @LukasTy
 - [core] Fix typo in `@mui/x-tree-view-pro/themeAugmentation` (#12674) @flaviendelangle
@@ -4297,7 +4297,7 @@ Same changes as in `@mui/x-date-pickers@7.1.0`, plus:
 - [docs] Reduce noise in migration docs side navigation (#12552) @cherniavskii
 - [docs] Sync static images from core repository (#12525) @LukasTy
 
-### Core
+### Internal
 
 - [core] Fix `l10n` script on Windows (#12550) @LukasTy
 - [core] Include `DateTimeRangePicker` tag in `releaseChangelog` (#12526) @LukasTy
@@ -4474,7 +4474,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0`, plus:
 - [docs] Update supported versions (#12508) @joserodolfofreitas
 - [docs] Update "What's new in MUI X" page #12527 @cherniavskii
 
-### Core
+### Internal
 
 - [core] Bump `@mui/material` peer dependency for all packages (#12516) @LukasTy
 - [core] Fix `no-restricted-imports` ESLint rule not working for Data Grid packages (#12477) @cherniavskii
@@ -4576,7 +4576,7 @@ The `onNodeFocus` callback has been renamed to `onItemFocus` for consistency:
 - [docs] Replace `rel="noreferrer"` by `rel="noopener"` @oliviertassinari
 - [docs] Update `date-fns` `weekStarsOn` overriding example (#12416) @LukasTy
 
-### Core
+### Internal
 
 - [core] Fix CI (#12414) @flaviendelangle
 - [core] Fix PR deploy link for Tree View doc pages (#12411) @flaviendelangle
@@ -4663,7 +4663,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.6`.
 - [docs] Add a note about `z-index` usage in SVG (#12337) @alexfauquette
 - [docs] Rich Tree View customization docs (#12231) @noraleonte
 
-### Core
+### Internal
 
 - [test] Add `Charts` test (#11551) @alexfauquette
 
@@ -4739,7 +4739,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.5`.
 - [docs] Polish the Date Picker playground (#11869) @zanivan
 - [docs] Standardize WAI-ARIA references @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Allow local docs next.js settings (#12227) @romgrk
 - [core] Remove grid folder from `getComponentInfo` RegExp (#12241) @flaviendelangle
@@ -4885,7 +4885,7 @@ These components are no longer exported from `@mui/x-charts`:
 - [docs] Reduce number of Vale errors @oliviertassinari
 - [docs] Remove default value set to `undefined` (#12128) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Fix docs link check (#12135) @LukasTy
 - [core] Fix missing context display names (#12124) @oliviertassinari
@@ -4957,7 +4957,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.3`.
 - [docs] Fix typo for `AdapterDateFnsV3` (#12036) @flaviendelangle
 - [docs] Removed `focused` prop from demo (#12092) @michelengelen
 
-### Core
+### Internal
 
 - [core] Fix CodeSandbox CI template @oliviertassinari
 - [core] Sort prop asc (#12033) @oliviertassinari
@@ -5049,7 +5049,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.2`.
 - [docs] Follow blank line convention with use client @oliviertassinari
 - [docs] Stable layout between light and dark mode @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Add `docs:serve` script (#11935) @cherniavskii
 - [core] Bump monorepo (#12001) @cherniavskii
@@ -5222,7 +5222,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.1`.
 - [docs] Sync support page with core @oliviertassinari
 - [docs] Update whats new page with "v7 Beta blogpost" content (#11879) @joserodolfofreitas
 
-### Core
+### Internal
 
 - [core] Rely on immutable ref when possible (#11847) @oliviertassinari
 - [core] Bump monorepo (#11897) @alexfauquette
@@ -5321,7 +5321,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-beta.0`, plus:
 - [docs] Include `DateTimeRangePicker` in relevant demos (#11815) @LukasTy
 - [docs] Add recipe for sorting row groups by the number of child rows (#11164) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Cleanup script and alias setup (#11749) @LukasTy
 - [core] Polish issue templates @oliviertassinari
@@ -5654,7 +5654,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.9`.
 - [docs] Uplift Simple Tree View customization examples (#11424) @noraleonte
 - [docs] Uplift the Date Pickers playground (#11555) @danilo-leal
 
-### Core
+### Internal
 
 - [core] Bump `@mui/material` peer dependency for all packages (#11692) @LukasTy
 - [core] Make `karma` run in parallel (#11571) @romgrk
@@ -5740,7 +5740,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.8`.
 - [docs] Improve Server-side Data Grid docs (#11589) @oliviertassinari
 - [docs] Improve charts landing page (#11570) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Lock `jsdom` version (#11652) @cherniavskii
 - [core] Remove PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD (#11608) @oliviertassinari
@@ -5878,7 +5878,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.7`.
 - [docs] Fix over page fetching @oliviertassinari
 - [docs] Lint `next.config.js` (#11514) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Fix release changelog (#11496) @romgrk
 - [core] Fix use of ::before & ::after (#11515) @oliviertassinari
@@ -5970,7 +5970,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.6`.
 - [docs] Improve Pickers `name` prop examples (#11422) @LukasTy
 - [docs] Limit `date-fns` package to v2 in CodeSandbox (#11463) @LukasTy
 
-### Core
+### Internal
 
 - [core] Add missing breaking changes to changelog (#11420) @MBilalShafi
 - [core] Cherry pick follow up (#11469) @LukasTy
@@ -6133,7 +6133,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.5`, plus:
 
 - [docs] Respect GoT books (@janoma) (#11387) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Automate cherry-pick of PRs from `next` -> `master` (#11382) @MBilalShafi
 - [infra] Update `no-response` workflow (#11369) @MBilalShafi
@@ -6396,7 +6396,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.3`.
 - [docs] Standardize the usage of callouts in the MUI X docs (#7127) @samuelsycamore
 - [docs] Adjust the Data Grid demo page design (#11231) @danilo-leal
 
-### Core
+### Internal
 
 - [core] Make `@mui/system` a direct dependency (#11128) @LukasTy
 - [core] Remove blank lines, coding style @oliviertassinari
@@ -6518,7 +6518,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.2`.
 - [docs] Fix version links (#11001) @LukasTy
 - [docs] Point to the source of `@mui/x-data-grid-generator` (#11134) @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Bump monorepo (#11160) @LukasTy
 - [core] Fix comment in doc generation (#11098) @flaviendelangle
@@ -6939,7 +6939,7 @@ And if you need the exact same output you can apply the following transformation
 - [docs] Fix incorrect component name in the "Custom slots and subcomponents" page (#11024) @flaviendelangle
 - [docs] Fix typos in pickers migration guide (#11057) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Clean the component slots doc generation (#11021) @flaviendelangle
 - [core] Fix script to release with `next` tag (#10996) @LukasTy
@@ -7083,7 +7083,7 @@ Here is an example of the renaming for the `<ChartsTooltip />` component.
 - [docs] Document how to hide the legend (#10951) @alexfauquette
 - [docs] Fix typo in the migration guide (#10972) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Adds migration docs for Charts, Pickers, and Tree View (#10926) @michelengelen
 - [core] Bump monorepo (#10959) @LukasTy

@@ -4,12 +4,11 @@
 
 _Apr 28, 2026_
 
-We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
 - Fix Pickers previous (v9.0.3) release ensuring the latest `@mui/x-internals` version usage
 
-The following team members contributed to this release:
-@alexfauquette, @JCQuintas, @LukasTy, @mj12albert
+The following team members contributed to this release: @alexfauquette, @JCQuintas, @LukasTy, @mj12albert
 
 ### Data Grid
 
@@ -83,7 +82,7 @@ Internal changes.
 
 - [docs] Update WCAG links (#22234) @mj12albert
 
-### Core
+### Internal
 
 - [code-infra] Avoid overriding `renovate` `ignoredPaths` (#22228) @LukasTy
 
@@ -91,15 +90,14 @@ Internal changes.
 
 _Apr 27, 2026_
 
-We'd like to extend a big thank you to the 16 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 16 contributors who made this release possible. Here are some highlights ✨:
 
 - ⌨️ Keyboard support for creating events in the Scheduler
 
 Special thanks go out to these community members for their valuable contributions:
 @supunsathsara, @ZAKIURREHMAN
 
-The following team members contributed to this release:
-@aemartos, @alexfauquette, @arminmeh, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @rita-codes, @romgrk, @sai6855, @siriwatknp
+The following team members contributed to this release: @aemartos, @alexfauquette, @arminmeh, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @oliviertassinari, @rita-codes, @romgrk, @sai6855, @siriwatknp
 
 ### Data Grid
 
@@ -206,7 +204,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-alpha.3`.
 - [docs] Document picker behavior inside MUI `Dialog` and provide recommended solutions (#22144) @michelengelen
 - [docs] Improve v9 license key version mismatch error guidance (#22180) @aemartos
 
-### Core
+### Internal
 
 - [code-infra] Reduce concurrency for package build to 5 (#22115) @Janpot
 - [code-infra] Rename `docsx` alias to `docs` (#22155) @brijeshb42
@@ -229,7 +227,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-alpha.3`.
 
 _Apr 15, 2026_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Added `valueGetter` to axes and series configurations, which allow for dynamically getting data out of a `dataset`.
 - 🐞 Bugfixes
@@ -238,8 +236,7 @@ We'd like to extend a big thank you to the 12 contributors who made this release
 Special thanks go out to these community members for their valuable contributions:
 @Anexus5919, @nk10nikhil
 
-The following team members contributed to this release:
-@aemartos, @alexfauquette, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @rita-codes, @sai6855
+The following team members contributed to this release: @aemartos, @alexfauquette, @brijeshb42, @Janpot, @JCQuintas, @LukasTy, @MBilalShafi, @michelengelen, @rita-codes, @sai6855
 
 ### Data Grid
 
@@ -332,7 +329,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-alpha.2`.
 - [docs] Split charts axis page (#22069) @alexfauquette
 - [docs] Update `ChartsRadialDataProvider` API page imports (#22072) @JCQuintas
 
-### Core
+### Internal
 
 - [code-infra] Fix lock file (#22053) @JCQuintas
 - [code-infra] Limit `release:build` lerna concurrency to 6 (#22077) @Janpot
@@ -350,15 +347,14 @@ Same changes as in `@mui/x-scheduler@9.0.0-alpha.2`.
 
 _Apr 8, 2026_
 
-We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - Docs updates 📚
 - Chat release 🥳
 
 Special thanks go out to community member @mixelburg for their valuable contribution.
 
-The following team members contributed to this release:
-@alexfauquette, @cherniavskii, @hasdfa, @Janpot, @LukasTy, @MBilalShafi, @rita-codes
+The following team members contributed to this release: @alexfauquette, @cherniavskii, @hasdfa, @Janpot, @LukasTy, @MBilalShafi, @rita-codes
 
 ### Data Grid
 
@@ -425,7 +421,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-alpha.1`.
 - [docs] Signal BC severity in v8 to v9 pickers migration guide (#22026) @LukasTy
 - [docs] Use the same heading level data grid packages (#22024) @cherniavskii
 
-### Core
+### Internal
 
 - [code-infra] Fix changelog generator for Premium-without-Pro products (#22029) @LukasTy
 - [code-infra] Remove `@mui/x-charts-vendor` check in ci (#22030) @alexfauquette
@@ -458,9 +454,8 @@ This major release includes many new features and improvements. Here are some hi
 - Tree View – [Virtualization](https://mui.com/x/react-tree-view/rich-tree-view/virtualization/) [Pro]
 - New [Scheduler](https://mui.com/x/react-scheduler/) packages [Alpha]
 
-We'd like to extend a big thank you to the 5 contributors who made this release possible.
-The following team members contributed to this release:
-@DanailH, @LukasTy, @MBilalShafi, @oliviertassinari, @siriwatknp
+A big thanks to the 5 contributors who made this release possible.
+The following team members contributed to this release: @DanailH, @LukasTy, @MBilalShafi, @oliviertassinari, @siriwatknp
 
 ### Data Grid
 
@@ -543,7 +538,7 @@ Internal changes.
 
 - [docs] Add explanation for v8 -> v9 license migration (#22004) @DanailH
 
-### Core
+### Internal
 
 - [code-infra] Optimize dependency definition (#22006) @LukasTy
 - [internal] Prepare v9 stable (#22018) @siriwatknp
@@ -555,13 +550,12 @@ Internal changes.
 
 _Apr 7, 2026_
 
-We'd like to extend a big thank you to the 18 contributors who made this release possible.
+A big thanks to the 18 contributors who made this release possible.
 
 Special thanks go out to these community members for their valuable contributions:
 @mixelburg, @sibananda485, @youjin-hong
 
-The following team members contributed to this release:
-@aemartos, @alexfauquette, @arminmeh, @brijeshb42, @flaviendelangle, @JCQuintas, @LukasTy, @mapache-salvaje, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @romgrk, @siriwatknp, @ZeeshanTamboli
+The following team members contributed to this release: @aemartos, @alexfauquette, @arminmeh, @brijeshb42, @flaviendelangle, @JCQuintas, @LukasTy, @mapache-salvaje, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @romgrk, @siriwatknp, @ZeeshanTamboli
 
 ### Data Grid
 
@@ -686,7 +680,7 @@ Internal changes.
 - [docs] Revise the Sankey doc (#21678) @mapache-salvaje
 - [docs] Revise the Scatter chart docs (#21564) @mapache-salvaje
 
-### Core
+### Internal
 
 - [docs-infra] Update to the latest monorepo (#21971) @brijeshb42
 - [internal] Remove checks for `materialVersion >= 6` (#21975) @LukasTy
@@ -709,7 +703,7 @@ Internal changes.
 
 _Mar 27, 2026_
 
-We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔊 New Charts voiceover component for improved screen reader support
 - ⌨️ Charts keyboard navigation improvements: axis tooltip now shows when navigating with the keyboard
@@ -718,8 +712,7 @@ We'd like to extend a big thank you to the 10 contributors who made this release
 - ⚡️ `fetchRows()` API in Data Grid Pro now defaults `start` and `end` based on scroll position with lazy loading
 - 🐞 Bugfixes and internal improvements
 
-The following team members contributed to this release:
-@aemartos, @alexfauquette, @arminmeh, @cherniavskii, @Janpot, @JCQuintas, @mapache-salvaje, @michelengelen, @noraleonte, @rita-codes
+The following team members contributed to this release: @aemartos, @alexfauquette, @arminmeh, @cherniavskii, @Janpot, @JCQuintas, @mapache-salvaje, @michelengelen, @noraleonte, @rita-codes
 
 ### Data Grid
 
@@ -797,7 +790,7 @@ Internal changes.
 - [docs] Revise the Gauge doc (#21673) @mapache-salvaje
 - [docs] Revise the Heatmap doc (#21676) @mapache-salvaje
 
-### Core
+### Internal
 
 - [code-infra] Remove unused deps and unify es-toolkit via catalog (#21840) @Janpot
 - [code-infra] Update @mui/internal-bundle-size-checker to canary.68 (#21836) @Janpot
@@ -813,12 +806,11 @@ Internal changes.
 
 _Mar 19, 2026_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes and internal improvements
 
-The following team members contributed to this release:
-@aemartos, @alexfauquette, @bernardobelchior, @Janpot, @JCQuintas, @LukasTy, @mapache-salvaje, @michelengelen, @noraleonte, @rita-codes, @sai6855, @siriwatknp
+The following team members contributed to this release: @aemartos, @alexfauquette, @bernardobelchior, @Janpot, @JCQuintas, @LukasTy, @mapache-salvaje, @michelengelen, @noraleonte, @rita-codes, @sai6855, @siriwatknp
 
 ### Data Grid
 
@@ -920,7 +912,7 @@ Internal changes.
 - [docs] Revise the Bar Chart docs (#21482) @mapache-salvaje
 - [docs] Removed a `console.log` from an aggregation demo (#21698) @michelengelen
 
-### Core
+### Internal
 
 - [code-infra] Add pkg-pr-new as dev dependency (#21754) @Janpot
 - [code-infra] Prevent `combiner` to have default parameters (#21707) @JCQuintas
@@ -936,12 +928,11 @@ Internal changes.
 
 _Mar 12, 2026_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes and internal improvements
 
-The following team members contributed to this release:
-@aemartos, @alexfauquette, @bernardobelchior, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @MBilalShafi, @michelengelen, @rita-codes, @sai6855, @siriwatknp
+The following team members contributed to this release: @aemartos, @alexfauquette, @bernardobelchior, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @MBilalShafi, @michelengelen, @rita-codes, @sai6855, @siriwatknp
 
 ### Data Grid
 
@@ -1042,7 +1033,7 @@ Internal changes.
 - [docs] Migrate internal Material UI deprecated APIs (#21680) @siriwatknp
 - [docs] Remove `New` flag on Tree View and Date and Time Pickers features released before v9 alpha (#21585) @flaviendelangle
 
-### Core
+### Internal
 
 - [code-infra] Remove checkout step (#21688) @Janpot
 - [code-infra] Fix contributor generation in changelog (#21718) @brijeshb42
@@ -1058,13 +1049,12 @@ Internal changes.
 
 _Mar 5, 2026_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - ✅ Stabilize Sankey chart
 - 🐞 Bugfixes and internal improvements
 
-The following team members contributed to this release:
-@aemartos, @alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @Janpot, @JCQuintas, @mapache-salvaje, @michelengelen, @mj12albert, @sai6855, @siriwatknp
+The following team members contributed to this release: @aemartos, @alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @Janpot, @JCQuintas, @mapache-salvaje, @michelengelen, @mj12albert, @sai6855, @siriwatknp
 
 ### Data Grid
 
@@ -1150,7 +1140,7 @@ Internal changes.
 - [docs] Add tutorial and example app for aggregation with row grouping (DX-162) (#21102) @mapache-salvaje
 - [docs] Fix missing codemod docs (#21604) @JCQuintas
 
-### Core
+### Internal
 
 - [code-infra] Add eslint rule to prevent `Math.random` in docs (#21505) @JCQuintas
 - [code-infra] Avoid static props for pageContent (#21038) @Janpot
@@ -1176,7 +1166,7 @@ Internal changes.
 
 _Feb 26, 2026_
 
-We'd like to extend a big thank you to the 18 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 18 contributors who made this release possible. Here are some highlights ✨:
 
 - ⚡️ Improved dynamic data support and cache invalidation in lazy loading for Data Grid Pro
 - ⌨️ Keyboard support for selecting day, month, and year in Date Pickers
@@ -1186,8 +1176,7 @@ We'd like to extend a big thank you to the 18 contributors who made this release
 Special thanks go out to these community members for their valuable contributions:
 @EllGree, @lion1963
 
-The following team members contributed to this release:
-@alexfauquette, @arminmeh, @brijeshb42, @cherniavskii, @dav-is, @flaviendelangle, @Janpot, @JCQuintas, @mapache-salvaje, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @sai6855, @siriwatknp, @ZeeshanTamboli
+The following team members contributed to this release: @alexfauquette, @arminmeh, @brijeshb42, @cherniavskii, @dav-is, @flaviendelangle, @Janpot, @JCQuintas, @mapache-salvaje, @MBilalShafi, @michelengelen, @noraleonte, @rita-codes, @sai6855, @siriwatknp, @ZeeshanTamboli
 
 ### Data Grid
 
@@ -1270,7 +1259,7 @@ Internal changes.
 - [docs][charts] Revise the useDataset doc (#21336) @mapache-salvaje
 - [docs][charts] Revise the useDrawingArea doc (#21333) @mapache-salvaje
 
-### Core
+### Internal
 
 - [core] Update docs deploy script to the `docs-next` branch (#21341) @siriwatknp
 - [code-infra] Cleanup unused babel plugins (#21453) @brijeshb42
@@ -1294,7 +1283,7 @@ Internal changes.
 
 _Feb 16, 2026_
 
-We'd like to extend a big thank you to the 21 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 21 contributors who made this release possible. Here are some highlights ✨:
 
 - Add support for virtualized items on `<RichTreeViewPro />`:
 
@@ -1310,8 +1299,7 @@ We'd like to extend a big thank you to the 21 contributors who made this release
 Special thanks go out to these community members for their valuable contributions:
 @jhe-iqbis
 
-The following team members contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @cherniavskii, @dav-is, @flaviendelangle, @Janpot, @JCQuintas, @mapache-salvaje, @MBilalShafi, @michelengelen, @mj12albert, @noraleonte, @oliviertassinari, @rita-codes, @romgrk, @sai6855, @siriwatknp
+The following team members contributed to this release: @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @cherniavskii, @dav-is, @flaviendelangle, @Janpot, @JCQuintas, @mapache-salvaje, @MBilalShafi, @michelengelen, @mj12albert, @noraleonte, @oliviertassinari, @rita-codes, @romgrk, @sai6855, @siriwatknp
 
 ### Data Grid
 
@@ -1464,7 +1452,7 @@ Same changes as in `@mui/x-tree-view@9.0.0-alpha.0`, plus:
 - [DataGrid][docs] Add high-level competitor comparison to Overview doc (DX-117) (#20870) @mapache-salvaje
 - [DataGrid][docs] Remove Bundling section from quickstart (#21177) @MBilalShafi
 
-### Core
+### Internal
 
 - [code-infra] Add `MUI_TEST_ENV` global (#21187) @Janpot
 - [code-infra] Fix `material-ui/disallow-react-api-in-server-components` (#20909) @JCQuintas

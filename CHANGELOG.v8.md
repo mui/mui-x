@@ -4,7 +4,7 @@
 
 _Feb 13, 2026_
 
-We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 📝 CSS bundler support is no longer needed for the Data Grid
 - 🐞 Bugfixes
@@ -12,8 +12,7 @@ We'd like to extend a big thank you to the 6 contributors who made this release 
 Special thanks go out to these community members for their valuable contributions:
 @sai6855
 
-The following team members contributed to this release:
-@arminmeh, @cherniavskii, @flaviendelangle, @mj12albert, @MBilalShafi
+The following team members contributed to this release: @arminmeh, @cherniavskii, @flaviendelangle, @mj12albert, @MBilalShafi
 
 ### Data Grid
 
@@ -47,7 +46,7 @@ Same changes as in `@mui/x-data-grid-pro@8.27.1`, plus:
 
 Same changes as in `@mui/x-tree-view@8.27.1`.
 
-### Core
+### Internal
 
 - [internal] Add CLI for translation using LLM (#21299) @cherniavskii
 
@@ -55,12 +54,11 @@ Same changes as in `@mui/x-tree-view@8.27.1`.
 
 _Feb 2, 2026_
 
-We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 📝 Data Grid supports new `longText` [column type](https://mui.com/x/react-data-grid/column-definition/#column-types)
 
-The following team members contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @MBilalShafi, @siriwatknp
+The following team members contributed to this release: @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @MBilalShafi, @siriwatknp
 
 ### Data Grid
 
@@ -130,7 +128,7 @@ Internal changes.
 
 - [docs] Fix DataGrid's cell edit renderers (@arminmeh) (#21041) @github-actions[bot]
 
-### Core
+### Internal
 
 - [code-infra] Add `consistent-type-imports` rule to the grid packages (#21119) @arminmeh
 - [code-infra] Allow user to select target branch if it exists for current major (#21005) @JCQuintas
@@ -155,7 +153,7 @@ Release highlight ✨:
 
 _Jan 22, 2026_
 
-We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔄 Data Grid now supports undo and redo actions. See the [Undo and redo](https://mui.com/x/react-data-grid/undo-redo/) page for details about out-of-the-box support and customization options.
 - 🐞 Bugfixes
@@ -163,8 +161,7 @@ We'd like to extend a big thank you to the 6 contributors who made this release 
 Special thanks go out to these community members for their valuable contributions:
 @jhe-iqbis
 
-The following team members contributed to this release:
-@arminmeh, @cherniavskii, @flaviendelangle, @JCQuintas, @romgrk
+The following team members contributed to this release: @arminmeh, @cherniavskii, @flaviendelangle, @JCQuintas, @romgrk
 
 ### Data Grid
 
@@ -227,7 +224,7 @@ Internal changes.
 
 - [docs] Recipe for lazy loading DataGrid's detail panels with auto height (#20995) @arminmeh
 
-### Core
+### Internal
 
 - [code-infra] Update `master` to `v8` references (#20864) @JCQuintas
 - [code-infra] Update v8 branch tags (#20926) @JCQuintas
@@ -241,7 +238,7 @@ Internal changes.
 
 _Jan 14, 2026_
 
-We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 The Chart legend now has an option that enables [click to toggle visibility](https://mui.com/x/react-charts/legend/#toggle-visibility) of series.
 
@@ -250,8 +247,7 @@ We'd like to extend a big thank you to the 8 contributors who made this release 
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-The following team members contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @JCQuintas, @mapache-salvaje, @rita-codes, @Janpot
+The following team members contributed to this release: @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @JCQuintas, @mapache-salvaje, @rita-codes, @Janpot
 
 ### Data Grid
 
@@ -337,7 +333,7 @@ Internal changes.
 - [docs] Revise the Charts Stacking doc (#20830) @mapache-salvaje
 - [docs] Fix broken links (#20914) @Janpot
 
-### Core
+### Internal
 
 - [code-infra] Fix `material-ui/disallow-react-api-in-server-components` (#20909) @JCQuintas
 - [code-infra] Prepare for v9 (#20860) @JCQuintas
@@ -348,7 +344,7 @@ Internal changes.
 
 _Jan 8, 2026_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - ⚡️Add bar [batch renderer](https://mui.com/x/react-charts/bars/#performance), result in a significant performance improvement when rendering thousands of bars
 - 📊 Add [range bar chart](https://mui.com/x/react-charts/range-bar/) to render
@@ -358,8 +354,7 @@ We'd like to extend a big thank you to the 12 contributors who made this release
 Special thanks go out to these community members for their valuable contributions:
 @anders-noerrelykke, @auloin, @sai6855, @yuito-it
 
-The following team members contributed to this release:
-@alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @JCQuintas, @mapache-salvaje, @siriwatknp
+The following team members contributed to this release: @alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @JCQuintas, @mapache-salvaje, @siriwatknp
 
 ### Data Grid
 
@@ -443,7 +438,7 @@ Internal changes.
 - [docs] Revise the Charts Label doc (#20794) @mapache-salvaje
 - [docs] Revise the Charts Export doc (#20779) @mapache-salvaje
 
-### Core
+### Internal
 
 - [code-infra] Fix v8.23.0 release date (#20767) @bernardobelchior
 - [code-infra] Remove `glob-gitignore` (#20801) @bernardobelchior
@@ -458,7 +453,7 @@ Internal changes.
 
 _Dec 24, 2025_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🧮 Support Data Grid `size`, `size(true)`, and `size(false)` [aggregations for `'boolean'` column type](https://mui.com/x/react-data-grid/aggregation/#usage-with-row-grouping)
 - 🔎 Allow zooming a heatmap
@@ -466,8 +461,7 @@ We'd like to extend a big thank you to the 12 contributors who made this release
 Special thanks go out to these community members for their valuable contributions:
 @henkerik, @sai6855
 
-The following team members contributed to this release:
-@alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @flaviendelangle, @JCQuintas, @mapache-salvaje, @MBilalShafi, @siriwatknp
+The following team members contributed to this release: @alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @flaviendelangle, @JCQuintas, @mapache-salvaje, @MBilalShafi, @siriwatknp
 
 ### Data Grid
 
@@ -550,7 +544,7 @@ Internal changes.
 - [docs] Clean up Charts docs sidebar (DX-97) (#20700) @alelthomas
 - [docs] Fix tick labels not being shown on a demo (#20718) @sai6855
 
-### Core
+### Internal
 
 - [code-infra] Bump prettier to 3.7.4 (#20709) @JCQuintas
 - [code-infra] Fix contributor generation logic in changelog script (#20705) @brijeshb42
@@ -559,7 +553,7 @@ Internal changes.
 
 _Dec 17, 2025_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌎 Improve Swedish (sv-SE) locale on the Data Grid
 - 🐞 Bugfixes
@@ -567,8 +561,7 @@ We'd like to extend a big thank you to the 13 contributors who made this release
 Special thanks go out to the community members for their valuable contributions:
 @KyeongJooni, @VismaAndreasIvarsson
 
-The following team members contributed to this release:
-@alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @Janpot, @JCQuintas, @mapache-salvaje, @michelengelen, @mj12albert, @prakhargupta1, @romgrk, @siriwatknp
+The following team members contributed to this release: @alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @Janpot, @JCQuintas, @mapache-salvaje, @michelengelen, @mj12albert, @prakhargupta1, @romgrk, @siriwatknp
 
 ### Data Grid
 
@@ -650,7 +643,7 @@ Internal changes.
 - [docs] Revise the Data Grid's API object doc for clarity and style (#20649) @mapache-salvaje
 - [docs] Update list of charts (#20479) @prakhargupta1
 
-### Core
+### Internal
 
 - [code-infra] Regression tests improvements (#20441) @Janpot
 - [code-infra] Test utils upgrade (#20592) @Janpot
@@ -660,7 +653,7 @@ Internal changes.
 
 _Dec 11, 2025_
 
-We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - Each Tree View component now exposes its own hook to initialize the `apiRef` object with accurate typing:
 
@@ -687,8 +680,7 @@ We'd like to extend a big thank you to the 11 contributors who made this release
 Special thanks go out to this community member for their valuable contributions:
 @kzhgit
 
-The following team members contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @mapache-salvaje, @michelengelen, @noraleonte, @oliviertassinari
+The following team members contributed to this release: @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @mapache-salvaje, @michelengelen, @noraleonte, @oliviertassinari
 
 ### Data Grid
 
@@ -770,7 +762,7 @@ Internal changes.
 - [docs] Revise the Charts Custom Components doc (#19793) @mapache-salvaje
 - [docs] Remove copy-pasted `aria-label` (#20620) @alexfauquette
 
-### Core
+### Internal
 
 - [internal] Remove unsafe dependency version from range (#20574) @oliviertassinari
 
@@ -796,12 +788,11 @@ Internal changes.
 
 _Dec 3, 2025_
 
-We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - ✨ Add [tick spacing property](https://mui.com/x/react-charts/axis/#tick-spacing) to charts axis to control the distance between ticks.
 
-The following team members contributed to this release:
-@alexfauquette, @bernardobelchior, @ElliottMiller, @Janpot, @JCQuintas, @romgrk, @sai6855, @siriwatknp
+The following team members contributed to this release: @alexfauquette, @bernardobelchior, @ElliottMiller, @Janpot, @JCQuintas, @romgrk, @sai6855, @siriwatknp
 
 ### Data Grid
 
@@ -878,7 +869,7 @@ Internal changes.
 
 - [docs] Migrate to `next/font` for fonts loading (#20407) @Copilot
 
-### Core
+### Internal
 
 - [code-infra] Enable vitest eslint plugin (#20530) @Janpot
 - [code-infra] Fix missing font loading for local fonts (#20480) @Janpot
@@ -908,13 +899,12 @@ Internal changes.
 
 _Nov 26, 2025_
 
-We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔃 Data Grid tree data now supports row reordering. See the [Drag-and-drop tree data reordering](https://mui.com/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering) section for more details.
 - 🐞 Bugfixes
 
-The following team members contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @siriwatknp, @JCQuintas, @MBilalShafi, @prakhargupta1
+The following team members contributed to this release: @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @siriwatknp, @JCQuintas, @MBilalShafi, @prakhargupta1
 
 ### Data Grid
 
@@ -970,7 +960,7 @@ Same changes as in `@mui/x-charts-pro@8.20.0`, plus:
 
 _Nov 20, 2025_
 
-We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔎 Add pan on `wheel` to the charts zoom
 - ⌨️ Allow opt-in to [tab navigation](https://mui.com/x/react-data-grid/accessibility/#tab-navigation) inside the Data Grid.
@@ -981,8 +971,7 @@ We'd like to extend a big thank you to the 15 contributors who made this release
 Special thanks go out to these community members for their valuable contributions:
 @lauri865, @noobyogi0010, @sai6855
 
-The following team members contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @mj12albert, @noraleonte, @rita-codes, @siriwatknp, @ZeeshanTamboli
+The following team members contributed to this release: @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @mj12albert, @noraleonte, @rita-codes, @siriwatknp, @ZeeshanTamboli
 
 ### Data Grid
 
@@ -1066,7 +1055,7 @@ Internal changes.
 - [docs] Fix separator opacity in demo (#20293) @sai6855
 - [docs] Replace deprecated `LoadingButton` with `Button` component (#20208) @Janpot
 
-### Core
+### Internal
 
 - [code-infra] Add new broken links checker (#20120) @Janpot
 - [code-infra] Disable Codspeed pipeline (#20370) @JCQuintas
@@ -1085,7 +1074,7 @@ Internal changes.
 
 _Nov 13, 2025_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - Add `barLabelPlacement` property to customize the bar label position in bar charts, enabling labels to be placed above bars.
 
@@ -1098,8 +1087,7 @@ We'd like to extend a big thank you to the 14 contributors who made this release
 Special thanks go out to these community members for their valuable contributions:
 @htollefsen, @sai6855, @Sigdriv
 
-The following team members contributed to this release:
-@arminmeh, @bernardobelchior, @brijeshb42, @cherniavskii, @flaviendelangle, @JCQuintas, @michelengelen, @noraleonte, @prakhargupta1, @rita-codes, @siriwatknp
+The following team members contributed to this release: @arminmeh, @bernardobelchior, @brijeshb42, @cherniavskii, @flaviendelangle, @JCQuintas, @michelengelen, @noraleonte, @prakhargupta1, @rita-codes, @siriwatknp
 
 ### Data Grid
 
@@ -1175,7 +1163,7 @@ Internal changes.
 - [Data Grid] Add recipe for cursor pagination with data source (#19700) @siriwatknp
 - [Data Grid] Add a demo for pinned rows aggregation (#20198) @cherniavskii
 
-### Core
+### Internal
 
 - [docs-infra] Use deployment config from docs-infra package (#20243) @brijeshb42
 
@@ -1183,7 +1171,7 @@ Internal changes.
 
 _Nov 5, 2025_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - Add `colorGetter` prop to cartesian charts series
 
@@ -1197,8 +1185,7 @@ We'd like to extend a big thank you to the 13 contributors who made this release
 Special thanks go out to these community members for their valuable contributions:
 @frncesc, @Methuselah96, @samuelwalk, @htollefsen
 
-The following team members contributed to this release:
-@alexfauquette, @bernardobelchior, @flaviendelangle, @Janpot, @JCQuintas, @mnajdova, @rita-codes, @arminmeh, @brijeshb42
+The following team members contributed to this release: @alexfauquette, @bernardobelchior, @flaviendelangle, @Janpot, @JCQuintas, @mnajdova, @rita-codes, @arminmeh, @brijeshb42
 
 ### Data Grid
 
@@ -1276,7 +1263,7 @@ Internal changes.
 - [docs] Remove hidden Tree View headless page (#20119) @flaviendelangle
 - [docs] Fix some external redirects (#20211) @Janpot
 
-### Core
+### Internal
 
 - [code-infra] Fix cci job timeout due to buffered test output (#20193) @Janpot
 - [code-infra] Fix publish workflow (#20140) @bernardobelchior
@@ -1290,7 +1277,7 @@ Internal changes.
 
 _Oct 29, 2025_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 🖌️ Add `brush` zoom interaction to charts
 - 🔁 [Server-side update](https://mui.com/x/react-data-grid/server-side-data/#updating-server-side-data) in a grid with tree data/row grouping and aggregation will trigger re-fetch for all parent levels of that row to update aggregated values. See the [demo](https://mui.com/x/react-data-grid/server-side-data/aggregation/#usage-with-tree-data).
@@ -1375,7 +1362,7 @@ Same changes as in `@mui/x-tree-view@8.16.0`.
 
 Internal changes.
 
-### Core
+### Internal
 
 - [code-infra] Setup eslint compat plugin (#20105) @brijeshb42
 - [code-infra] Improve store types (#20129) @JCQuintas
@@ -1390,7 +1377,7 @@ Internal changes.
 
 _Oct 23, 2025_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 🖌️ Add new [`brush` charts interaction](https://mui.com/x/react-charts/brush/) for building custom behavior.
   ![brush visualization example](https://github.com/user-attachments/assets/60c382a1-e418-4736-8dcb-1567c4e361e3)
@@ -1485,7 +1472,7 @@ Internal changes.
 - [docs] Add grouped multiple fields for Data Grid row grouping recipe (#19964) @siriwatknp
 - [docs] Add Data Grid loading state recipe (#19958) @siriwatknp
 
-### Core
+### Internal
 
 - [code-infra] Remove @mui/monorepo usage for react versioning (#19894) @Janpot
 - [code-infra] Remove invalid `environment: 'browser'` from vitest browser config (#19993) @bernardobelchior
@@ -1497,7 +1484,7 @@ Internal changes.
 
 _Oct 16, 2025_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Charts have optimized data structures for closest point calculations — initial render times reduced by ~25% for 1,000+ data points, with greater gains at larger scales (#19790) @bernardobelchior
 - 🐞 Bugfixes
@@ -1582,7 +1569,7 @@ Internal changes.
 - [docs] Correctly describe Data Grid's row selection behavior (#19968) @arminmeh
 - [docs] Fix `isExpanded` type in tree view docs (#19092) @mellis481
 
-### Core
+### Internal
 
 - [code-infra] Disable Netlify cache plugin (#19950) @Janpot
 - [code-infra] Lint json through eslint (#19890) @Janpot
@@ -1592,7 +1579,7 @@ Internal changes.
 
 _Oct 9, 2025_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 The [Chart zoom now supports the `pressAndDrag` gesture](https://mui.com/x/react-charts/zoom-and-pan/#zoom-interactions-configuration). Pan by pressing and dragging.
 - 🔄 [Server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pivoting/) support for the Data Grid
@@ -1677,7 +1664,7 @@ Internal changes.
 - [docs] Fix demo title knob keys (#19843) @JCQuintas
 - [docs] Hide UI elements of unsupported features in the data source demos (#19849) @arminmeh
 
-### Core
+### Internal
 
 - [code-infra] Cleanup unused dependencies (#19788) @brijeshb42
 - [code-infra] Fix pnpm-lock issue (#19861) @JCQuintas
@@ -1762,7 +1749,7 @@ Internal changes.
 
 _Oct 1, 2025_
 
-We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 The chart zoom now supports the `tapAndDrag` gesture. Zoom in/out by tapping twice and dragging vertically.
 - 🔎 Charts now allow [fine-grained control for zoom interactions](https://mui.com/x/react-charts/zoom-and-pan/#zoom-interactions-configuration).
@@ -1871,7 +1858,7 @@ Internal changes.
 - [docs] Revise the Axis doc (#19052) @mapache-salvaje
 - [docs] Remove reference to nonexistent `FocusedMark` API page (#19773) @bernardobelchior
 
-### Core
+### Internal
 
 - [code-infra] Change charts codspeed integration to use walltime (#19729) @JCQuintas
 - [code-infra] Port stylelint from core repo (#19633) @Janpot
@@ -1907,7 +1894,7 @@ Same changes as in `@mui/x-data-grid-pro@8.12.1`, plus:
 
 _Sep 25, 2025_
 
-We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 🤝 Grid-Charts integration
 
@@ -2029,7 +2016,7 @@ Same changes as in `@mui/x-tree-view@8.12.0`.
 - [docs] Show how to customize drawing area background (#19682) @alexfauquette
 - [docs] Add hook documentation pages (#19334) @Copilot
 
-### Core
+### Internal
 
 - [code-infra] Add copilot instructions specific to x repo (#19623) @JCQuintas
 - [code-infra] Load `tsx` files in visual regression (#19595) @JCQuintas
@@ -2052,7 +2039,7 @@ Same changes as in `@mui/x-tree-view@8.12.0`.
 
 _Sep 16, 2025_
 
-We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -2128,7 +2115,7 @@ Internal changes.
 - [docs] Group demos data into the dataset folder (#19549) @alexfauquette
 - [docs] Add `shiny` bar chart example at the top (#19416) @JCQuintas
 
-### Core
+### Internal
 
 - [code-infra] Axios update (#19577) @Janpot
 - [code-infra] Remove usage of copy-files command from code-infra (#19518) @brijeshb42
@@ -2138,7 +2125,7 @@ Internal changes.
 
 _Sep 10, 2025_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -2219,7 +2206,7 @@ Internal changes.
 
 - [docs] Add recipe for save and manage filters from the panel (#19361) @siriwatknp
 
-### Core
+### Internal
 
 - [code-infra] Remove log when restarting dev server (#19490) @bernardobelchior
 - [code-infra] Store test results in CI (#19507) @Janpot
@@ -2233,7 +2220,7 @@ Internal changes.
 
 _Sep 4, 2025_
 
-We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 Special thanks go out to the community members for their valuable contributions:
 @sai6855
@@ -2297,7 +2284,7 @@ Internal changes.
 - [docs] Fix grammar and spelling mistakes on the Date and Time Pickers pages (#19300) @mapache-salvaje
 - [docs] Remove wrong legend info (#19383) @JCQuintas
 
-### Core
+### Internal
 
 - [internal] Fix action alert (#19388) @oliviertassinari
 - [internal] Fix pnpm valelint to have 0 errors @oliviertassinari
@@ -2307,7 +2294,7 @@ Internal changes.
 
 _Aug 29, 2025_
 
-We'd like to extend a big thank you to the 19 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 19 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add new `SankeyChart`
 
@@ -2404,7 +2391,7 @@ Internal changes.
 - [docs][DataGrid] Correct grammar mistakes (#19298) @mapache-salvaje
 - [docs][DataGrid] Make it clear that the API key for AI Assistant must be private (#19244) @oliviertassinari
 
-### Core
+### Internal
 
 - [code-infra] Remove unnecessary triggers from publish workflow (#19348) @Janpot
 - [code-infra] Set up publishing from GitHub actions (#19264) @Janpot
@@ -2428,7 +2415,7 @@ Internal changes.
 
 _Aug 20, 2025_
 
-We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌎 Improve Finnish (fi-FI) locale on the Data Grid
 
@@ -2496,7 +2483,7 @@ Internal changes.
 
 - [docs] Fix links to the pyramid chart (#19250) @alexfauquette
 
-### Core
+### Internal
 
 - [internal] Avoid script for CI only @oliviertassinari
 - [internal] Fix `renovate.json` @oliviertassinari
@@ -2514,7 +2501,7 @@ Internal changes.
 
 _Aug 15, 2025_
 
-We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Y-axes can now be grouped by category when using `band` and `point` scales.
 - 📚 Documentation improvements
@@ -2594,7 +2581,7 @@ Internal changes.
 - [docs] Remove preview from Toolbar & Funnel (#19131) @mnajdova
 - [docs] Reproduce npm sparkline (#19089) @alexfauquette
 
-### Core
+### Internal
 
 - [core] Fix licensing model name (#19025) @oliviertassinari
 - [core] Fix usage of `:catalog` for `@babel/runtime` (#19028) @oliviertassinari
@@ -2616,7 +2603,7 @@ Internal changes.
 
 _Aug 8, 2025_
 
-We'd like to extend a big thank you to the 17 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 17 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 [`FunnelChart`](https://mui.com/x/react-charts/funnel/) marked as stable
 - 📈 [Zoom slider](https://mui.com/x/react-charts/zoom-and-pan/#zoom-slider) and [Preview](https://mui.com/x/react-charts/zoom-and-pan/#preview) marked as stable
@@ -2715,7 +2702,7 @@ Internal changes.
 - [docs] Improve bundling instructions for the Data Grid (#19065) @romgrk
 - [docs] Reduce image size in the inventory grid demo (#19004) @arminmeh
 
-### Core
+### Internal
 
 - [core] Fix ESLint reference name @oliviertassinari
 
@@ -2731,7 +2718,7 @@ Internal changes.
 
 _Jul 31, 2025_
 
-We'd like to extend a big thank you to the 23 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 23 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌎 Improve French (fr-FR), Hebrew (he-IL) and Polish (pl-PL) locales on the Data Grid
 - 🌎 Improve Korean (ko-KR) locale on the Date and Time Pickers
@@ -2825,7 +2812,7 @@ Internal changes.
 
 _Jul 21, 2025_
 
-We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
 
 🐞 Fix package publish issue
 
@@ -2847,7 +2834,7 @@ Same changes as in `@mui/x-data-grid@8.9.1`.
 
 Same changes as in `@mui/x-data-grid-pro@8.9.1`.
 
-### Core
+### Internal
 
 - [core] Follow yml syntax convention @oliviertassinari
 
@@ -2855,7 +2842,7 @@ Same changes as in `@mui/x-data-grid-pro@8.9.1`.
 
 _Jul 17, 2025_
 
-We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - ✨ Improve the drag and drop interaction for Data Grid [row reordering](https://mui.com/x/react-data-grid/row-ordering/) feature. It uses a drop indicator to point to the position the row would be moving to.
 
@@ -2950,7 +2937,7 @@ Internal changes.
 
 _Jul 11, 2025_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Chart zoom preview can be enabled
 
@@ -3048,7 +3035,7 @@ Internal changes.
 
 _Jul 4, 2025_
 
-We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add `useChartProApiRef` for easier access to the API
 - 📆 Support different start and end `referenceDate` props on range components
@@ -3132,7 +3119,7 @@ Same changes as in `@mui/x-tree-view@8.7.0`, plus:
 - [docs][data grid] Audit and revise the Pro row docs (#17926) @mapache-salvaje
 - [docs][pickers] Add mention of theme augmentation in relevant migration section (#18608) @LukasTy
 
-### Core
+### Internal
 
 - [core] Avoid stringifying `document` object (#18657) @vadimkuragkovskiy
 
@@ -3151,7 +3138,7 @@ Same changes as in `@mui/x-tree-view@8.7.0`, plus:
 
 _Jun 27, 2025_
 
-We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Add export menu to charts toolbar
 - 📅 Add `usePickerAdapter` hook to access the date adapter.
@@ -3245,7 +3232,7 @@ Internal changes.
 - [docs] Update indeterminate checkbox section in migration guide (#18229) @michelengelen
 - [docs] Data source nested pagination recipe (#14777) @MBilalShafi
 
-### Core
+### Internal
 
 - [core] Avoid json stringify whole window object (#18512) @vadimka123
 
@@ -3259,7 +3246,7 @@ Internal changes.
 
 _Jun 19, 2025_
 
-We'd like to extend a big thank you to the 10 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 📚 Documentation improvements
 - 🐞 Bugfixes
@@ -3337,7 +3324,7 @@ Internal changes.
 - [docs] Fix 404 in charts docs (#18440) @alexfauquette
 - [docs][pickers] Fix adapter version resolving when opening demo to edit (#18363) @LukasTy
 
-### Core
+### Internal
 
 - [core] Fix pnpm valelint error (#18420) @oliviertassinari
 
@@ -3354,7 +3341,7 @@ Internal changes.
 
 _Jun 12, 2025_
 
-We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Improve Data Grid selectors performance
 - 🐞 Fix `useSyncExternalStore` import error in React 17
@@ -3448,7 +3435,7 @@ Same changes as in `@mui/x-tree-view@8.5.2`.
 
 _Jun 5, 2025_
 
-We'd like to extend a big thank you to the 9 contributors who made this release possible. Here are some highlights ✨:
+A big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 📊 Allow exporting pie charts
 - 📚 Documentation improvements
@@ -3532,7 +3519,7 @@ Same changes as in `@mui/x-tree-view@8.5.1`.
 
 - [docs] Update `valueFormatter` signature in migration guide (#18226) @michelengelen
 
-### Core
+### Internal
 
 - [code-infra] Different approach to console testing for `processRowUpdate` (#18213) @JCQuintas
 - [code-infra] Fix act warnings in DataGrid/toolbar (#18207) @JCQuintas
@@ -3640,7 +3627,7 @@ Same changes as in `@mui/x-tree-view@8.5.0`.
 - [docs] Fix light/dark mode blink on pickers overview (#18002) @alexfauquette
 - [docs] Fix scatter shape demo causing horizontal overflow (#17974) @bernardobelchior
 
-### Core
+### Internal
 
 - [code-infra] Add bundle size monitor (#17754) @Janpot
 - [code-infra] Enable `babel-plugin-display-name` in vitest (#17903) @JCQuintas
@@ -3750,7 +3737,7 @@ Same changes as in `@mui/x-tree-view@8.4.0`.
 - [docs][pickers] Fix migration guide references to range fields (#17861) @LukasTy
 - [docs][charts] Reorganize the Tooltip documentation (#17917) @alexfauquette
 
-### Core
+### Internal
 
 - [core] refactor: remove manual `displayName` (#17845) @romgrk
 - [code-infra] Document how to use `vitest` cli (#17847) @JCQuintas
@@ -3841,7 +3828,7 @@ Same changes as in `@mui/x-tree-view@8.3.1`.
 - [docs] Fix translation keys documentation (#17811) @JanPretzel
 - [docs] Improve CHANGELOG format @oliviertassinari
 
-### Core
+### Internal
 
 - [core] Apply YAML convention, blank line only at top level @oliviertassinari
 - [code-infra] Fix dynamic import missing extensions (#17767) @Janpot
@@ -3945,7 +3932,7 @@ Same changes as in `@mui/x-tree-view@8.3.0`.
 - [charts] Fix randomised argos test (#17658) @JCQuintas
 - [docs] Make preview messaging consistent in charts @bernardobelchior
 
-### Core
+### Internal
 
 - [code-infra] Avoid `node` types in the built packages (#17533) @LukasTy
 - [code-infra] Add `pkg.pr.new` publishing (#17402) @Janpot
@@ -4047,7 +4034,7 @@ Same changes as in `@mui/x-tree-view@8.2.0`.
 - [docs] Improve data grid export docs (#17551) @MBilalShafi
 - [docs] Remove leftover `@next` usages (#17542) @LukasTy
 
-### Core
+### Internal
 
 - [core] Add security label to dependabot PRs @oliviertassinari
 - [core] Allow post-install vale @oliviertassinari
@@ -4165,7 +4152,7 @@ Same changes as in `@mui/x-tree-view@8.1.0`.
 - [docs] Refine charts demos (#17417) @alexfauquette
 - [tree view][docs] Copyedit the Tree View Overview page (#17498) @mapache-salvaje
 
-### Core
+### Internal
 
 - [core] Bump `@types/node` (#17444) @LukasTy
 - [core] Remove `react-is` dependency (#17470) @LukasTy
@@ -4338,7 +4325,7 @@ Same changes as in `@mui/x-tree-view@8.0.0`.
 - [docs] Fix some 301 redirections @oliviertassinari
 - [docs] Update supported versions table (#17287) @joserodolfofreitas
 
-### Core
+### Internal
 
 - [core] Always use the correct babel runtime (#17241) @alexfauquette
 - [core] Document `TelemetryContextType` (#17282) @oliviertassinari
@@ -4488,7 +4475,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-beta.3`.
 - [docs] Sync Stack Overflow docs with reality (#17198) @oliviertassinari
 - [docs] Update Localization Provider JSDoc link (#17207) @LukasTy
 
-### Core
+### Internal
 
 - [core] Cleanup `@mui` dependency versions (#17160) @LukasTy
 - [core] Sync scorecards.yml across codebase @oliviertassinari
@@ -4579,7 +4566,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-beta.2`.
 
 - [docs] Fix example import for `ExportExcel` component (#17110) @KenanYusuf
 
-### Core
+### Internal
 
 - [code-infra] Remove `@mui/styles` dependency & patches (#17071) @mnajdova
 - [code-infra] Add more tests to slow screenshot tests (#17075) @JCQuintas
@@ -4838,7 +4825,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-beta.0`.
 - [docs] Improve sparkline demo (#16911) @alexfauquette
 - [docs] Remove `showQuickFilter: true` toolbar prop from demos (#17003) @KenanYusuf
 
-### Core
+### Internal
 
 - [core] Fix proptypes and API docs after merge (#16934) @LukasTy
 - [core] Update `@mui/utils` dependency to only v7 (#16928) @Janpot
@@ -4975,7 +4962,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.14`.
 - [docs] Fix padding package install on mobile (#16794) @oliviertassinari
 - [docs] Typo fixes (#16835) @alexfauquette
 
-### Core
+### Internal
 
 - [code-infra] Fix console warning in telemetry package (#16816) @JCQuintas
 - [code-infra] Split date-picker test files (#16825) @JCQuintas
@@ -5429,7 +5416,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.12`.
 - [docs] Improve license installation page (#16403) @michelengelen
 - [docs] Standardize getting started docs across all packages (#16302) @mapache-salvaje
 
-### Core
+### Internal
 
 - [core] Update charts folder structure (#16471) @alexfauquette
 - [code-infra] Bump @mui/monorepo (#16422) @LukasTy
@@ -5536,7 +5523,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.11`.
 
 - [docs] Update charts colors default value (#16484) @bernardobelchior
 
-### Core
+### Internal
 
 - [core] Fix corepack and pnpm installation in CircleCI (#16434) @flaviendelangle
 - [code-infra] Update monorepo (#16112) @Janpot
@@ -5678,7 +5665,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.10`.
 
 - [docs] Improve release documentation (#16321) @MBilalShafi
 
-### Core
+### Internal
 
 - [core] Reduce chart perf benchmark weight (#16374) @alexfauquette
 - [test] Fix console warnings while executing tests with React 18 (#16386) @arminmeh
@@ -5882,7 +5869,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.8`.
 - [docs] Split the Data Grid editing page (#14931) @MBilalShafi
 - [docs] Fix wrong props warnings (#16119) @JCQuintas
 
-### Core
+### Internal
 
 - [core] Type all references as `RefObject` (#16124) @arminmeh
 - [code-infra] Refactor `react` and `react-dom` definitions to simplify dep resolving (#16160) @LukasTy
@@ -6008,7 +5995,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.7`.
 - [docs] Refactor Data Grid with Date Pickers example (#15992) @LukasTy
 - [docs] Unify the wording of the pickers slots breaking changes (#16036) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Clarify the release strategy (#16014) @MBilalShafi
 - [core] Small fixes on docs @oliviertassinari
@@ -6193,7 +6180,7 @@ No changes since `@mui/x-tree-view-pro@v8.0.0-alpha.4`.
 
 Same changes as in `@mui/x-tree-view@8.0.0-alpha.5`.
 
-### Core
+### Internal
 
 - [code-infra] Remove `@mui/material-nextjs` dependency (#15925) @LukasTy
 
@@ -6319,7 +6306,7 @@ Releasing to benefit from license package fix (#15814).
 - [docs] Use `updateRows` method for list view demos (#15732) @KenanYusuf
 - [docs] Use date library version from package dev dependencies for sandboxes (#15762) @LukasTy
 
-### Core
+### Internal
 
 - [code-infra] Add Charts sandbox generation (#15830) @JCQuintas
 - [code-infra] Remove redundant `@type/react-test-renderer` dep (#15766) @LukasTy
@@ -6418,7 +6405,7 @@ Same changes as in `@mui/x-tree-view@8.0.0-alpha.3`.
 - [docs] Fix typo in charts axis documentation (#15743) @JCQuintas
 - [docs] Improve SEO titles for the Data Grid (#15695) @MBilalShafi
 
-### Core
+### Internal
 
 - [core] Add `@mui/x-tree-view-pro` to `releaseChangelog` (#15316) @flaviendelangle
 - [code-infra] Lock file maintenance (#11894)
@@ -6552,7 +6539,7 @@ Same changes as in `@mui/x-tree-view@v8.0.0-alpha.2`.
 
 <!-- vale MUI.CorrectRererenceCased = YES -->
 
-### Core
+### Internal
 
 - [core] Follow `()` function convention for docs @oliviertassinari
 - [core] Remove dead translation key (#15566) @oliviertassinari
@@ -6687,7 +6674,7 @@ Same changes as in `@mui/x-charts@v8.0.0-alpha.1`.
 - [docs] Polish Server-side data section (#15330) @oliviertassinari
 - [docs] Use loading state in the demos (#15512) @cherniavskii
 
-### Core
+### Internal
 
 - [core] Keep OpenSSF badge up-to-date @oliviertassinari
 - [code-infra] Add `'DensitySelectorGrid'` to time-sensitive argos tests (#15425) @JCQuintas
@@ -6869,7 +6856,7 @@ Same changes as in `@mui/x-charts@8.0.0-alpha.0`.
 - [docs] Use `PickersTextField` in the customization playground (#15288) @LukasTy
 - [docs] Use `next` instead of `^8.0.0` in the migration guides (#15091) @flaviendelangle
 
-### Core
+### Internal
 
 - [core] Adjust the `cherry-pick` GitHub actions (#15099) @LukasTy
 - [core] Add `()` at the name of function name in the doc (#15075) @oliviertassinari
