@@ -82,6 +82,11 @@ export default defineConfig({
                 args: [
                   // Enable GPU so WebGL2 is enabled in browser tests
                   '--enable-gpu',
+                  // Use /tmp instead of /dev/shm (often tiny in CI containers).
+                  '--disable-dev-shm-usage',
+                  // Bump V8 heap so the renderer doesn't crash mid-run after
+                  // many test files accumulate state under `isolate: false`.
+                  '--js-flags=--max-old-space-size=4096',
                 ],
                 // Required for tests which use scrollbars.
                 ignoreDefaultArgs: ['--hide-scrollbars'],
