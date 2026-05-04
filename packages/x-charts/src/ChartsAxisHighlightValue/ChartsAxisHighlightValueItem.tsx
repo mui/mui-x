@@ -19,25 +19,25 @@ const ChartsAxisHighlightValueText = styled('div', {
     {
       props: { position: 'top' },
       style: {
-        transform: `translate(var(--clamped-offset), -100%)`,
+        translate: 'var(--clamped-offset) -100%',
       },
     },
     {
       props: { position: 'bottom' },
       style: {
-        transform: 'translate(var(--clamped-offset), 0)',
+        translate: 'var(--clamped-offset) 0',
       },
     },
     {
       props: { position: 'left' },
       style: {
-        transform: 'translate(-100%, var(--clamped-offset))',
+        translate: '-100% var(--clamped-offset)',
       },
     },
     {
       props: { position: 'right' },
       style: {
-        transform: 'translate(0,var(--clamped-offset))',
+        translate: '0 var(--clamped-offset)',
       },
     },
   ],

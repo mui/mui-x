@@ -42,10 +42,17 @@ This component accept the following props:
 
 {{"demo": "AxisValueHighlight.js" }}
 
+### Customize highlighted axis value
+
 The component defines two CSS variables:
 
 - `--clamped-offset`: the offset to center the item (`50%`) clamped to avoid overflowing the axis.
 - `--space`: available size between the drawing area and the charts container.
+
+The following demo shows:
+
+- Green labels: By default labels are limited to the axis range (right label). The left one shows you how to let label overflow by setting the `translate` property.
+- Red labels: Demonstrate how to use the `--space` to limit label size.
 
 {{"demo": "AxisValueHighlightCustomization.js" }}
 

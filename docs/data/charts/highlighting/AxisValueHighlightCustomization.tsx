@@ -22,16 +22,16 @@ export default function AxisValueHighlightCustomization() {
         axisHighlight={{ x: 'line', y: 'line' }}
       >
         <ChartsReferenceLine
-          y={500}
+          y={580}
           lineStyle={{ stroke: 'green', strokeWidth: 1 }}
         />
         <ChartsAxisHighlightValue
           axisDirection="y"
           labelPosition="start"
-          value={500}
+          value={580}
           valueFormatter={() => 'without overflow'}
           sx={{
-            transform: 'translate(-100%, -50%)',
+            translate: '-100% -50%',
             borderRadius: '8px 0 0 8px',
             bgcolor: '#044412',
           }}
@@ -39,7 +39,7 @@ export default function AxisValueHighlightCustomization() {
         <ChartsAxisHighlightValue
           axisDirection="y"
           labelPosition="end"
-          value={500}
+          value={580}
           valueFormatter={() => 'with overflow'}
           sx={{ borderRadius: '0 8px 8px 0', bgcolor: '#044412' }}
         />
@@ -55,9 +55,9 @@ export default function AxisValueHighlightCustomization() {
             maxWidth: 70,
             maxHeight: 'var(--space)',
             overflow: 'auto',
+            pointerEvents: 'auto',
           }}
         />
-
         <ChartsAxisHighlightValue
           axisDirection="x"
           labelPosition="end"
@@ -67,6 +67,16 @@ export default function AxisValueHighlightCustomization() {
             p: 0.5,
             bgcolor: '#610909',
             maxWidth: 50,
+          }}
+        />
+        <ChartsAxisHighlightValue
+          axisDirection="x"
+          labelPosition="start"
+          valueFormatter={(v) => `${Math.round(v as number)}`}
+          sx={{
+            translate: '-50% -100%',
+            borderRadius: '8px 8px 0 0',
+            bgcolor: 'grey',
           }}
         />
       </ScatterChart>
