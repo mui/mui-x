@@ -110,6 +110,20 @@ describeTreeView<TreeViewAnyStore>(
         expect(onSelectedItemsChange.lastCall.args[1]).to.deep.equal(['1']);
       });
 
+      it('should call the onSelectedItemsChange callback only once when selecting a collapsed parent item', () => {
+        const onSelectedItemsChange = spy();
+
+        const view = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          onSelectedItemsChange,
+        });
+
+        fireEvent.click(view.getItemContent('1'));
+
+        expect(onSelectedItemsChange.callCount).to.equal(1);
+        expect(onSelectedItemsChange.lastCall.args[1]).to.equal('1');
+      });
+
       it('should call the onSelectedItemsChange callback when the model is updated (multi selection and add selected item to non-empty list)', () => {
         const onSelectedItemsChange = spy();
 
