@@ -353,7 +353,10 @@ export const updateCacheWithNewRows = ({
       }
 
       // Update the data row lookups.
-      dataRowIdToModelLookup[id] = { ...oldRow, ...partialRow };
+      // Preserve prototype of partialRow to support class-based row models
+      const merged = Object.create(Object.getPrototypeOf(partialRow));
+      Object.assign(merged, oldRow, partialRow);
+      dataRowIdToModelLookup[id] = merged;
       return;
     }
 
