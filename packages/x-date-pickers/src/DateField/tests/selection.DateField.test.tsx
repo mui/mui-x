@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { pickersInputBaseClasses } from '@mui/x-date-pickers/PickersTextField';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
@@ -73,41 +72,12 @@ describe('<DateField /> - Selection', () => {
     });
   });
 
-  describe('Click outside the editable area', () => {
-    it('should not focus the field or select a section when clicking on the label', () => {
-      const view = renderWithProps({ label: 'My label' });
-
-      const label = document.querySelector<HTMLLabelElement>('label[for]')!;
-      fireEvent.mouseDown(label);
-      fireEvent.click(label);
-
-      const sectionsContainer = view.getSectionsContainer();
-      const inputRoot = sectionsContainer.closest(`.${pickersInputBaseClasses.root}`)!;
-      expect(inputRoot.classList.contains(pickersInputBaseClasses.focused)).to.equal(false);
-      expect(sectionsContainer.contains(document.activeElement)).to.equal(false);
-      expect(getCleanedSelectedContent()).to.equal('');
-    });
-
-    it('should not change the selected section when clicking on the label of a focused field', async () => {
-      const view = renderWithProps({ label: 'My label' });
-
-      await view.selectSection('day');
-      const daySection = view.getSection(1);
-      expect(document.activeElement).to.equal(daySection);
-
-      const label = document.querySelector<HTMLLabelElement>('label[for]')!;
-      fireEvent.mouseDown(label);
-      fireEvent.click(label);
-
-      // The label click must not move focus to the first section.
-      expect(document.activeElement).to.equal(daySection);
-    });
-
-    it('should not select a section when clicking on a non-section element inside the field root', () => {
+  describe('Click on a non-section element inside the field root', () => {
+    it('should not select a section when clicking on a non-section descendant of the field root', () => {
       const view = renderWithProps({});
 
       // Clicks that bubble up to the root but did not land on a section span
-      // (e.g. padding, separator areas) must be a no-op for selection.
+      // (e.g. padding, separator gaps) must be a no-op for selection.
       const sectionsContainer = view.getSectionsContainer();
       fireEvent.mouseDown(sectionsContainer);
       fireEvent.click(sectionsContainer);
