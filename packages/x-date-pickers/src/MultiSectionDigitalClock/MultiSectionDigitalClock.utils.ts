@@ -47,9 +47,18 @@ export const getHourSectionOptions = ({
     return isSelected(hour, adapter.getHours(valueOrReferenceDate));
   };
 
+  // Use a fixed reference day (month=0, day=15) when formatting hours to avoid
+  // spring-forward transition gaps. On a DST transition day, setting a
+  // non-existent hour can roll forward and produce duplicate labels — see
+  // https://github.com/mui/mui-x/issues/22084.
+  const labelReferenceDate = adapter.setDate(adapter.setMonth(adapter.startOfDay(now), 0), 15);
+
   const endHour = ampm ? 11 : 23;
   for (let hour = 0; hour <= endHour; hour += timeStep) {
-    let label = adapter.format(adapter.setHours(now, hour), ampm ? 'hours12h' : 'hours24h');
+    let label = adapter.format(
+      adapter.setHours(labelReferenceDate, hour),
+      ampm ? 'hours12h' : 'hours24h',
+    );
     const ariaLabel = resolveAriaLabel(parseInt(label, 10).toString());
 
     label = adapter.formatNumber(label);
