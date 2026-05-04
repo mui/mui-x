@@ -1,9 +1,9 @@
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { Theme } from '@mui/material/styles';
-import { StandaloneEvent as HeadlessStandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
+import { StandaloneEvent as UnstyledStandaloneEvent } from '@mui/x-scheduler-internals/standalone-event';
 
 export interface StandaloneEventProps extends Omit<
-  HeadlessStandaloneEvent.Props,
+  UnstyledStandaloneEvent.Props,
   'renderDragPreview'
 > {
   /**
