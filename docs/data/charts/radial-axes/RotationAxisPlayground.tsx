@@ -46,18 +46,17 @@ export default function RotationAxisPlayground() {
             step: 10,
           },
           minRadius: { knob: 'number', defaultValue: 30, min: 0, step: 10 },
-          maxRadius: { knob: 'number', defaultValue: 150, min: 50, step: 10 },
+          maxRadius: { knob: 'number', defaultValue: 130, min: 50, step: 10 },
         } as const
       }
       renderDemo={(props) => (
         <Box
           sx={{
             width: '100%',
-            height: 400,
+            height: 300,
           }}
         >
           <Unstable_ChartsRadialDataProvider
-            width={400}
             height={400}
             rotationAxis={[
               {
