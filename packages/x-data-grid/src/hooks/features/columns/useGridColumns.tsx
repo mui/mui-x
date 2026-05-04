@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { GridEventListener } from '../../../models/events';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridColumnApi, GridColumnReorderApi } from '../../../models/api/gridColumnApi';
@@ -513,6 +514,22 @@ export function useGridColumns(
       apiRef.current.setColumnVisibilityModel(props.columnVisibilityModel);
     }
   }, [apiRef, logger, props.columnVisibilityModel]);
+
+  React.useEffect(() => {
+    if (process.env.NODE_ENV === 'production') {
+      return;
+    }
+    if (props.signature !== GridSignature.DataGrid) {
+      return;
+    }
+    if (props.columns.some((col) => col.type === 'multiSelect')) {
+      warnOnce([
+        'MUI X: The `multiSelect` column type is available in Pro and Premium versions',
+        'Use `<DataGridPro />` or `<DataGridPremium />` to render it correctly.',
+        'For more details, see https://mui.com/x/react-data-grid/column-definition/#multi-select',
+      ]);
+    }
+  }, [props.columns, props.signature]);
 }
 
 function mergeColumnsState(columnsState: GridColumnsState) {

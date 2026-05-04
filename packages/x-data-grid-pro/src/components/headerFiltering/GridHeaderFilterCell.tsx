@@ -39,6 +39,7 @@ import {
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { inputBaseClasses } from '@mui/material/InputBase';
+import { GridFilterInputMultipleMultiSelect } from '../panel/filterPanel/GridFilterInputMultipleMultiSelect';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
@@ -138,6 +139,7 @@ const DEFAULT_INPUT_COMPONENTS: {
   dateTime: GridFilterInputDate,
   boolean: GridFilterInputBoolean,
   singleSelect: GridFilterInputSingleSelect,
+  multiSelect: GridFilterInputMultipleMultiSelect,
   actions: null,
   custom: null,
   longText: GridFilterInputValue,

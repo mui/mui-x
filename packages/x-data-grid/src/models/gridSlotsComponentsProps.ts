@@ -32,6 +32,7 @@ import type {
   LinearProgressProps,
   MenuListProps,
   MenuItemProps,
+  ModalProps,
   PaginationProps,
   PopperProps,
   SelectProps,
@@ -59,6 +60,7 @@ export interface BaseDividerPropsOverrides {}
 export interface BaseLinearProgressPropsOverrides {}
 export interface BaseMenuListPropsOverrides {}
 export interface BaseMenuItemPropsOverrides {}
+export interface BaseModalPropsOverrides {}
 export interface BaseTabsPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
 export interface BaseSelectPropsOverrides {}
@@ -109,6 +111,7 @@ interface BaseSlotProps {
   baseLinearProgress: LinearProgressProps & BaseLinearProgressPropsOverrides;
   baseMenuList: MenuListProps & BaseMenuListPropsOverrides;
   baseMenuItem: MenuItemProps & BaseMenuItemPropsOverrides;
+  baseModal: ModalProps & BaseModalPropsOverrides;
   baseTabs: TabsProps & BaseTabsPropsOverrides;
   baseTextField: TextFieldProps & BaseTextFieldPropsOverrides;
   baseSwitch: SwitchProps & BaseSwitchPropsOverrides;

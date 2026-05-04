@@ -20,6 +20,7 @@ import {
   getGridStringOperators,
   type GridFilterItem,
 } from '@mui/x-data-grid-pro';
+import { unwrapPrivateAPI } from '@mui/x-data-grid-pro/internals';
 import {
   getColumnHeaderCell,
   getColumnValues,
@@ -1392,6 +1393,339 @@ describe('<DataGridPro /> - Filter', () => {
       expect(screen.queryByRole('button', { name: /Remove all/i })).not.to.equal(null);
       setProps({ filterModel: newModel });
       expect(screen.queryByRole('button', { name: /Remove all/i })).to.equal(null);
+    });
+  });
+
+  describe('column type: multiSelect', () => {
+    function TestCaseMultiSelect(props: Partial<DataGridProProps>) {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            rows={[
+              { id: 1, tags: ['React', 'TypeScript'] },
+              { id: 2, tags: ['Vue', 'JavaScript'] },
+              { id: 3, tags: ['React', 'JavaScript'] },
+              { id: 4, tags: [] },
+              { id: 5, tags: null },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                width: 200,
+                valueOptions: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript'],
+              },
+            ]}
+            autoHeight={isJSDOM}
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    it('should render multiSelect column without errors', () => {
+      render(<TestCaseMultiSelect />);
+      // Chips render without separator in text content
+      expect(getColumnValues(0)).to.deep.equal([
+        'ReactTypeScript',
+        'VueJavaScript',
+        'ReactJavaScript',
+        '',
+        '',
+      ]);
+    });
+
+    it('should format values with object valueOptions', () => {
+      render(
+        <TestCaseMultiSelect
+          rows={[
+            { id: 1, tags: ['fe', 'be'] },
+            { id: 2, tags: ['be'] },
+          ]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              width: 250,
+              valueOptions: [
+                { value: 'fe', label: 'Frontend' },
+                { value: 'be', label: 'Backend' },
+              ],
+            },
+          ]}
+        />,
+      );
+      // Chips render without separator in text content
+      expect(getColumnValues(0)).to.deep.equal(['FrontendBackend', 'Backend']);
+    });
+
+    it('should support function valueOptions', () => {
+      const valueOptions = spy(() => ['A', 'B', 'C']);
+      render(
+        <TestCaseMultiSelect
+          rows={[{ id: 1, tags: ['A', 'B'] }]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions,
+            },
+          ]}
+        />,
+      );
+      // Chips render without separator in text content
+      expect(getColumnValues(0)).to.deep.equal(['AB']);
+    });
+
+    describe('filtering operators', () => {
+      it('should filter with operator "contains"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'contains', value: ['React'] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript', 'ReactJavaScript']);
+      });
+
+      it('should filter with operator "contains" with multiple values (OR semantics)', () => {
+        // contains [A, B] matches rows whose array contains A OR B (not AND).
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'contains', value: ['React', 'Vue'] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal([
+          'ReactTypeScript',
+          'VueJavaScript',
+          'ReactJavaScript',
+        ]);
+      });
+
+      it('should filter with operator "contains" with empty array', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'contains', value: [] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal([
+          'ReactTypeScript',
+          'VueJavaScript',
+          'ReactJavaScript',
+          '',
+          '',
+        ]);
+      });
+
+      it('should filter with operator "contains" and object valueOptions', () => {
+        render(
+          <TestCaseMultiSelect
+            rows={[
+              { id: 1, tags: ['fe', 'be'] },
+              { id: 2, tags: ['be'] },
+              { id: 3, tags: [] },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                width: 250,
+                valueOptions: [
+                  { value: 'fe', label: 'Frontend' },
+                  { value: 'be', label: 'Backend' },
+                ],
+              },
+            ]}
+            filterModel={{
+              items: [{ field: 'tags', operator: 'contains', value: ['fe'] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['FrontendBackend']);
+      });
+
+      it('should filter with operator "doesNotContain"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'doesNotContain', value: ['React'] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['VueJavaScript', '', '']);
+      });
+
+      it('should filter with operator "doesNotContain" with multiple values', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'doesNotContain', value: ['React', 'Vue'] }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['', '']);
+      });
+
+      it('should filter with operator "isEmpty"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'isEmpty' }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['', '']);
+      });
+
+      it('should filter with operator "isNotEmpty"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'isNotEmpty' }],
+            }}
+          />,
+        );
+        // Chips render without separator in text content
+        expect(getColumnValues(0)).to.deep.equal([
+          'ReactTypeScript',
+          'VueJavaScript',
+          'ReactJavaScript',
+        ]);
+      });
+    });
+
+    it('should format values with custom separator in CSV export', () => {
+      render(
+        <TestCaseMultiSelect
+          rows={[{ id: 1, tags: ['React', 'TypeScript'] }]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'TypeScript'],
+              separator: ' | ',
+            },
+          ]}
+        />,
+      );
+      const csv = apiRef.current!.getDataAsCsv({ includeHeaders: false });
+      expect(csv).to.equal('React | TypeScript');
+    });
+
+    it('should quick filter by formatted value', () => {
+      render(
+        <TestCaseMultiSelect
+          filterModel={{
+            items: [],
+            quickFilterValues: ['React'],
+          }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript', 'ReactJavaScript']);
+    });
+
+    it('should reorder chips so the matched filter value comes first', () => {
+      render(
+        <TestCaseMultiSelect
+          rows={[{ id: 1, tags: ['React', 'TypeScript', 'JavaScript'] }]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              width: 400,
+              valueOptions: ['React', 'TypeScript', 'JavaScript'],
+            },
+          ]}
+          getRowHeight={() => 'auto'}
+          filterModel={{
+            items: [{ field: 'tags', operator: 'contains', value: ['JavaScript'] }],
+          }}
+        />,
+      );
+      const chips = document.querySelectorAll(`.${gridClasses.multiSelectCellChip}`);
+      expect(chips[0]).to.have.text('JavaScript');
+    });
+
+    it('should render all chips without overflow when row has auto height', () => {
+      render(
+        <TestCaseMultiSelect
+          rows={[{ id: 1, tags: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript'] }]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              width: 100,
+              valueOptions: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript'],
+            },
+          ]}
+          getRowHeight={() => 'auto'}
+        />,
+      );
+      expect(document.querySelectorAll(`.${gridClasses.multiSelectCellChip}`)).to.have.length(5);
+      expect(
+        document.querySelectorAll(`.${gridClasses['multiSelectCellChip--hidden']}`),
+      ).to.have.length(0);
+      expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).to.equal(null);
+    });
+
+    describe('shared drag-resize subscription', () => {
+      it('should expose subscribeDrag on the multiSelect cache', () => {
+        render(<TestCaseMultiSelect />);
+        const privateApi = unwrapPrivateAPI(apiRef.current!);
+        const cache = privateApi.caches.multiSelect;
+        expect(cache).not.to.equal(undefined);
+        expect(typeof cache.subscribeDrag).to.equal('function');
+      });
+
+      it('should broadcast throttled drag width to subscribers', async () => {
+        render(<TestCaseMultiSelect />);
+        const privateApi = unwrapPrivateAPI(apiRef.current!);
+        const cache = privateApi.caches.multiSelect;
+        const received: number[] = [];
+        const unsubscribe = cache.subscribeDrag('tags', (width: number) => {
+          received.push(width);
+        });
+
+        const colDef = apiRef.current!.getColumn('tags');
+        await act(async () => {
+          apiRef.current!.publishEvent(
+            'columnResize',
+            { colDef, width: 250, element: null } as any,
+            {} as any,
+          );
+          // Trailing-edge throttle (32 ms); wait for it to flush.
+          await sleep(60);
+        });
+        expect(received).to.deep.equal([250]);
+        unsubscribe();
+      });
+
+      it('should stop receiving updates after unsubscribe', async () => {
+        render(<TestCaseMultiSelect />);
+        const privateApi = unwrapPrivateAPI(apiRef.current!);
+        const cache = privateApi.caches.multiSelect;
+        const received: number[] = [];
+        const unsubscribe = cache.subscribeDrag('tags', (w: number) => received.push(w));
+        unsubscribe();
+
+        const colDef = apiRef.current!.getColumn('tags');
+        await act(async () => {
+          apiRef.current!.publishEvent(
+            'columnResize',
+            { colDef, width: 300, element: null } as any,
+            {} as any,
+          );
+          await sleep(60);
+        });
+        expect(received).to.have.length(0);
+      });
     });
   });
 });

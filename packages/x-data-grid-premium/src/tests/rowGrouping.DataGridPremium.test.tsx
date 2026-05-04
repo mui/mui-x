@@ -375,6 +375,69 @@ describe('<DataGridPremium /> - Row grouping', () => {
     });
   });
 
+  describe('colDef: multiSelect', () => {
+    const multiSelectRows: GridRowsProp = [
+      { id: 0, tags: ['React', 'TypeScript'] },
+      { id: 1, tags: ['TypeScript', 'React'] },
+      { id: 2, tags: ['React', 'Node.js'] },
+    ];
+
+    it('groups rows sharing the same set of values (order-insensitive by default)', () => {
+      render(
+        <Test
+          rows={multiSelectRows}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'TypeScript', 'Node.js'],
+            },
+          ]}
+          initialState={{ rowGrouping: { model: ['tags'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      // ['React', 'TypeScript'] and ['TypeScript', 'React'] share the same sorted key → one group.
+      expect(getColumnValues(0)).to.deep.equal([
+        'React,TypeScript (2)',
+        '',
+        '',
+        'Node.js,React (1)',
+        '',
+      ]);
+    });
+
+    it('uses user-provided groupingValueGetter to override the default order-insensitive behavior', () => {
+      render(
+        <Test
+          rows={multiSelectRows}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'TypeScript', 'Node.js'],
+              groupingValueGetter: (value: (string | number)[]) =>
+                !Array.isArray(value) || value.length === 0 ? null : value.join('|'),
+            },
+          ]}
+          initialState={{ rowGrouping: { model: ['tags'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      // Order-sensitive custom getter → ['React','TypeScript'] and ['TypeScript','React'] split.
+      expect(getColumnValues(0)).to.deep.equal([
+        'React|TypeScript (1)',
+        '',
+        'TypeScript|React (1)',
+        '',
+        'React|Node.js (1)',
+        '',
+      ]);
+    });
+  });
+
   describe('column menu', () => {
     it('should add a "Group by {field}" menu item on ungrouped columns when coLDef.groupable is not defined', () => {
       render(

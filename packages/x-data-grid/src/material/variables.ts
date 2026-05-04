@@ -97,6 +97,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
 
     [k.zIndex.panel]: (t.vars || t).zIndex.modal,
     [k.zIndex.menu]: (t.vars || t).zIndex.modal,
+    [k.zIndex.modal]: (t.vars || t).zIndex.modal,
   };
 }
 

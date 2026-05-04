@@ -26,6 +26,7 @@ export default function AssistantWithCharts() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10000,
+    multiSelect: true,
   });
 
   const apiRef = useGridApiRef();

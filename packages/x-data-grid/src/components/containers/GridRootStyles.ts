@@ -231,6 +231,16 @@ export const GridRootStyles = styled('div', {
         flex: 'none !important',
         width: 'unset !important',
       },
+      [`& .${c.multiSelectCell}`]: {
+        width: 'max-content',
+        overflow: 'visible',
+      },
+      [`& .${c['multiSelectCellChip--hidden']}`]: {
+        display: 'inline-flex',
+      },
+      [`& .${c.multiSelectCellOverflow}`]: {
+        display: 'none',
+      },
     },
     [`&.${c.withSidePanel}`]: {
       flexDirection: 'row',
@@ -587,6 +597,25 @@ export const GridRootStyles = styled('div', {
     [`& .${c['row--dynamicHeight']} > .${c.cell}`]: {
       whiteSpace: 'initial',
       lineHeight: 'inherit',
+    },
+    [`& .${c['row--dynamicHeight']}`]: {
+      [`& .${c.multiSelectCell}, .${c.editMultiSelectCell}`]: {
+        flexWrap: 'wrap',
+      },
+    },
+    [`& .${c.cell}[aria-rowspan]:not([aria-rowspan="1"])`]: {
+      [`& .${c.multiSelectCell}`]: {
+        alignItems: 'flex-start',
+        alignContent: 'flex-start',
+        flexWrap: 'wrap',
+        paddingTop: 8,
+      },
+      [`& .${c['multiSelectCellChip--hidden']}`]: {
+        display: 'inline-flex',
+      },
+      [`& .${c.multiSelectCellOverflow}`]: {
+        display: 'none',
+      },
     },
     [`& .${c.cellEmpty}`]: {
       flex: 1,
