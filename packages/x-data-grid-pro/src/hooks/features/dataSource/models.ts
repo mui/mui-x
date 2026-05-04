@@ -88,8 +88,9 @@ export interface GridDataSourcePrivateApiPro {
   /**
    * Initiates the fetch of the children of a row.
    * @param {string} id The id of the group to be fetched.
+   * @param {GridGetRowsParamsPro} fetchParams The fetch parameters for the children.
    */
-  fetchRowChildren: (id: GridRowId) => void;
+  fetchRowChildren: (id: GridRowId, fetchParams?: GridGetRowsParamsPro) => void;
   /**
    * Resets the data source state.
    */

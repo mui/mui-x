@@ -57,12 +57,18 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!rowNode.childrenExpanded) {
-      // always fetch/get from cache the children when the node is expanded
-      apiRef.current.dataSource.fetchRows(id);
+      if (!rootProps.lazyLoading) {
+        // always fetch/get from cache the children when the node is expanded
+        apiRef.current.dataSource.fetchRows(id);
+      } else {
+        apiRef.current.setRowChildrenExpansion(id, true);
+      }
     } else {
       // Collapse the node and remove child rows from the grid
       apiRef.current.setRowChildrenExpansion(id, false);
-      apiRef.current.removeChildrenRows(id);
+      if (!rootProps.lazyLoading) {
+        apiRef.current.removeChildrenRows(id);
+      }
     }
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();
@@ -72,7 +78,7 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
     ? rootProps.slots.groupingCriteriaCollapseIcon
     : rootProps.slots.groupingCriteriaExpandIcon;
 
-  if (isDataLoading) {
+  if (isDataLoading && !rootProps.lazyLoading) {
     return (
       <div className={classes.loadingContainer}>
         <rootProps.slots.baseCircularProgress size="1rem" color="inherit" />
