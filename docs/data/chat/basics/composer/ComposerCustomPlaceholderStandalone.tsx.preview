@@ -1,0 +1,4 @@
+<ComposerDemoShell
+  inputProps={{ placeholder: 'Ask me anything...' }}
+  helperText="This standalone example customizes the textarea placeholder directly."
+/>

@@ -120,7 +120,8 @@ None are required — the runtime detects which methods exist and activates the 
 
 ### `listConversations(input?)`
 
-Implement this to populate the conversation sidebar when `ChatBox` mounts.
+Implement this to load conversation state when `ChatBox` mounts.
+If `features={{ conversationList: true }}` is enabled, the same data also powers the built-in conversation sidebar.
 The runtime calls it once on startup, before any user interaction.
 
 ```ts
@@ -160,7 +161,7 @@ When `hasMore` is `true`, `ChatBox` shows a "Load earlier messages" control that
 ### `reconnectToStream(input)`
 
 Implement this to resume an interrupted stream — for example, when an SSE connection drops mid-response.
-The runtime calls it automatically after detecting a disconnected stream.
+The runtime calls it automatically after detecting a disconnected stream, with one reconnect attempt for the interrupted assistant message.
 
 ```ts
 interface ChatReconnectToStreamInput {

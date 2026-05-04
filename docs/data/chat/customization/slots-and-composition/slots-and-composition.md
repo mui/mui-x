@@ -133,6 +133,7 @@ The `autoScroll` feature flag controls scroll behavior rather than slot visibili
 <ChatBox
   adapter={adapter}
   features={{
+    conversationList: true, // opt into the built-in sidebar / drawer
     autoScroll: { buffer: 300 }, // Custom threshold (default: 150px)
     // autoScroll: false,        // Disable auto-scrolling entirely
   }}

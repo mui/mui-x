@@ -91,6 +91,7 @@ export function useMessageListBehavior(parameters: {
   const topReachedRef = React.useRef(false);
   const topLoadInFlightRef = React.useRef(false);
   const resizeFrameRef = React.useRef(0);
+  const isMountedRef = React.useRef(true);
   const isStreamingRef = React.useRef(isStreaming);
   isStreamingRef.current = isStreaming;
   const [isAtBottom, setIsAtBottom] = React.useState(true);
@@ -209,8 +210,17 @@ export function useMessageListBehavior(parameters: {
   }, []);
 
   const scheduleResizeRestore = React.useCallback(() => {
+    if (typeof requestAnimationFrame !== 'function') {
+      // SSR / non-browser environments don't have rAF — bail rather than throw.
+      return;
+    }
     cancelAnimationFrame(resizeFrameRef.current);
     resizeFrameRef.current = requestAnimationFrame(() => {
+      // Guard against the frame firing after unmount: once the cleanup runs
+      // we shouldn't touch DOM refs or call state setters (#10).
+      if (!isMountedRef.current) {
+        return;
+      }
       if (isAtBottomRef.current && autoScrollEnabled && isStreamingRef.current) {
         // Follow streaming content: the row grew (new tokens), scroll to stay at bottom.
         // Only auto-scroll during streaming so that user-initiated resizes (e.g.
@@ -328,7 +338,10 @@ export function useMessageListBehavior(parameters: {
 
   React.useEffect(() => {
     return () => {
-      cancelAnimationFrame(resizeFrameRef.current);
+      isMountedRef.current = false;
+      if (typeof cancelAnimationFrame === 'function') {
+        cancelAnimationFrame(resizeFrameRef.current);
+      }
     };
   }, []);
 

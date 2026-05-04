@@ -38,7 +38,12 @@ Customize the date format through `slotProps`:
 
 ## Avatars
 
-The `ChatMessageAvatar` component renders the author's avatar for the first message in each group. Avatars are sourced from the `ChatUser.avatarUrl` field on the message's author.
+The `ChatMessageAvatar` component renders the author's avatar for the first message in each group.
+Avatar resolution follows the same rules as the built-in message primitives:
+
+- `getMessageAuthorAvatarUrl(message)` when provided
+- otherwise `message.author?.avatarUrl`
+- otherwise a matching `currentUser`, `members`, or active-conversation participant entry resolved by author id
 
 Within a group, subsequent messages omit the avatar entirely — the component returns `null` rather than rendering a placeholder. If no `avatarUrl` is set on the author and no custom `avatar` slot is provided, the avatar is also omitted for the first message in the group.
 

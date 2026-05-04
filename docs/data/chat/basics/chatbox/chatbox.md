@@ -15,12 +15,14 @@ components: ChatBox
 ## Overview
 
 `ChatBox` is the fastest way to add a chat interface to your application.
-It creates a `ChatProvider` internally and composes every themed subcomponent — conversation list, thread header, message list, and composer — into a ready-to-use surface:
+It creates a `ChatProvider` internally and composes the themed thread surface — header, message list, and composer — into a ready-to-use surface.
+Enable the built-in conversation list explicitly when you want inbox-style navigation:
 
 ```tsx
 import { ChatBox } from '@mui/x-chat';
 
 <ChatBox adapter={adapter} sx={{ height: 500 }} />;
+<ChatBox adapter={adapter} features={{ conversationList: true }} sx={{ height: 500 }} />;
 ```
 
 All visual styles are derived from your active Material UI theme.
@@ -55,6 +57,7 @@ When you need full control over the layout — for example, placing the conversa
 <ChatBox
   adapter={adapter}
   features={{
+    conversationList: true, // show the conversation sidebar / drawer
     attachments: false, // hide the attach button
     helperText: false, // hide the helper text
     scrollToBottom: false, // disable scroll-to-bottom affordance
@@ -94,6 +97,7 @@ These props are forwarded to the internal `ChatProvider`.
   adapter={adapter}
   initialConversations={conversations}
   initialActiveConversationId="conv-1"
+  features={{ conversationList: true }}
 />;
 
 {
@@ -105,6 +109,7 @@ These props are forwarded to the internal `ChatProvider`.
   onConversationsChange={setConversations}
   activeConversationId={activeId}
   onActiveConversationChange={setActiveId}
+  features={{ conversationList: true }}
 />;
 ```
 

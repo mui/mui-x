@@ -53,8 +53,44 @@ export interface ChatMessage {
   createdAt?: ChatDateTimeString;
   updatedAt?: ChatDateTimeString;
   status?: ChatMessageStatus;
+  /**
+   * Optional inline author data for the message.
+   * `author.id` is the canonical identity key for message rendering; missing display name
+   * and avatar fields can be enriched from `currentUser`, `members`, or active conversation
+   * participants, or via `getMessageAuthor*` getters on the surrounding provider.
+   */
   author?: ChatUser;
   editedAt?: ChatDateTimeString;
+}
+
+export type ChatMessageAuthorIdGetter = (message: ChatMessage) => string | undefined;
+
+export type ChatMessageAuthorDisplayNameGetter = (
+  message: ChatMessage,
+) => string | undefined;
+
+export type ChatMessageAuthorAvatarUrlGetter = (message: ChatMessage) => string | undefined;
+
+export interface ChatMessageAuthorGetterProps {
+  /**
+   * Used to determine the author id for a given message.
+   * The resolved id is used to match message authors against `currentUser`,
+   * `members`, and active conversation participants.
+   * @default (message) => message.author?.id
+   */
+  getMessageAuthorId?: ChatMessageAuthorIdGetter;
+  /**
+   * Used to determine the display name for a given message author.
+   * Falls back to `message.author?.displayName`, then to the matched member's `displayName`.
+   * @default (message) => message.author?.displayName
+   */
+  getMessageAuthorDisplayName?: ChatMessageAuthorDisplayNameGetter;
+  /**
+   * Used to determine the avatar URL for a given message author.
+   * Falls back to `message.author?.avatarUrl`, then to the matched member's `avatarUrl`.
+   * @default (message) => message.author?.avatarUrl
+   */
+  getMessageAuthorAvatarUrl?: ChatMessageAuthorAvatarUrlGetter;
 }
 
 export type ChatDraftAttachmentStatus = 'queued' | 'uploading' | 'uploaded' | 'error';

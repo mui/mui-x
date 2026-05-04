@@ -106,6 +106,7 @@ function msgWithFile(
 const aliceConvId = randomId();
 const marcoConvId = randomId();
 const groupConvId = randomId();
+const MESSENGER_SIDEBAR_WIDTH = 320;
 
 // --- Conversations -----------------------------------------------------------
 
@@ -430,7 +431,8 @@ function MessengerConversationSidebar(
   return (
     <Box
       sx={{
-        width: 320,
+        width: '100%',
+        minWidth: 0,
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -575,6 +577,13 @@ function MessengerConversationSidebar(
 }
 
 export default function MessengerDemo() {
+  const chatBoxStyle = React.useMemo(
+    () =>
+      ({
+        '--ChatBox-conversationListWidth': `${MESSENGER_SIDEBAR_WIDTH}px`,
+      }) as React.CSSProperties,
+    [],
+  );
   const [activeFilter, setActiveFilter] = React.useState<MessengerFilter>('all');
   const [searchValue, setSearchValue] = React.useState('');
   const [activeConversationId, setActiveConversationId] = React.useState(
@@ -634,6 +643,8 @@ export default function MessengerDemo() {
       activeConversationId={activeConversationId}
       conversations={filteredConversations}
       messages={messages}
+      features={{ conversationList: true }}
+      style={chatBoxStyle}
       slots={{
         conversationList: MessengerConversationSidebar,
       }}

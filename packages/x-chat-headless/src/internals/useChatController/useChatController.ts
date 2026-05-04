@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStoreEffect } from '@mui/x-internals/store';
 import type { ChatAdapter } from '../../adapters';
-import type { ChatStore } from '../../store';
+import { asCursorAgnosticChatStore, type ChatStore } from '../../store';
 import type {
   ChatAddToolApproveResponseInput,
   ChatMessage,
@@ -12,7 +12,12 @@ import type {
 } from '../../types';
 import type { ChatError } from '../../types/chat-error';
 import type { UseChatSendMessageInput } from '../../types/chat-callbacks';
-import { getMessages, createRuntimeError, getErrorMessage } from './useChatControllerHelpers';
+import {
+  getMessages,
+  createRuntimeError,
+  getErrorMessage,
+  getMessageIdFromError,
+} from './useChatControllerHelpers';
 import { createRealtimeActions } from './realtimeActions';
 import { createConversationActions } from './conversationActions';
 import { createSendMessageActions } from './sendMessageActions';
@@ -60,8 +65,7 @@ export function useChatController<Cursor = string>({
   const assistantMessageIdByUserMessageIdRef = React.useRef(new Map<string, string>());
   const conversationNavigationRequestIdRef = React.useRef(0);
   const conversationLoadRequestIdRef = React.useRef(0);
-  // Cursor type is irrelevant for the cursor-agnostic helper functions below.
-  const storeUnknown = store as unknown as ChatStore<unknown>;
+  const storeUnknown = asCursorAgnosticChatStore(store);
 
   runtimeRef.current = {
     adapter,
@@ -75,6 +79,11 @@ export function useChatController<Cursor = string>({
   const setRuntimeError = React.useCallback(
     (error: ChatError | null) => {
       store.setError(error);
+
+      const messageId = getMessageIdFromError(error);
+      if (messageId) {
+        store.setMessageError(messageId, error);
+      }
 
       if (error) {
         runtimeRef.current.onError?.(error);
@@ -142,6 +151,13 @@ export function useChatController<Cursor = string>({
           ),
       );
 
+      // Snapshot the previous parts so we can roll back if the adapter call
+      // rejects (#6). Without this, the optimistic mutation that flipped the
+      // tool invocation to `approval-responded` would persist even though the
+      // adapter never confirmed the response, leaving the UI permanently out
+      // of sync with the server.
+      const previousParts = assistantMessage?.parts;
+
       if (assistantMessage) {
         store.updateMessage(assistantMessage.id, {
           parts: assistantMessage.parts.map((part) => {
@@ -174,6 +190,10 @@ export function useChatController<Cursor = string>({
           reason,
         });
       } catch (error) {
+        if (assistantMessage && previousParts) {
+          store.updateMessage(assistantMessage.id, { parts: previousParts });
+        }
+
         setRuntimeError(
           createRuntimeError(
             'SEND_ERROR',

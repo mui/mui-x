@@ -95,7 +95,7 @@ This pattern is the main bridge between the headless package and a product-speci
 ## Replace slots or rebuild from core
 
 :::info
-If you need a ready-made visual design, use the [Material layer](/x/react-chat/material/). If you want full control over the DOM, use the [Core layer](/x/react-chat/core/). The headless layer sits between the two: it gives you structural primitives with built-in semantics and interaction behavior while leaving visual decisions to your code.
+If you need a ready-made visual design, use the [Material layer](/x/react-chat/). If you want full control over the DOM, use the [Core layer](/x/react-chat/core/). The headless layer sits between the two: it gives you structural primitives with built-in semantics and interaction behavior while leaving visual decisions to your code.
 :::
 
 Use slot replacement when:

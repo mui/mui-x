@@ -18,10 +18,13 @@ export interface ComposerRootSlotProps {
   root?: SlotComponentProps<'form', {}, ComposerRootOwnerState>;
 }
 
-export interface ComposerRootProps extends Omit<
-  React.FormHTMLAttributes<HTMLFormElement>,
-  'onSubmit'
-> {
+export interface ComposerRootProps
+  extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
+  /**
+   * Handler invoked when the form is submitted. The composer's submit logic still
+   * runs after this handler unless the handler calls `event.preventDefault()`.
+   */
+  onSubmit?: React.FormEventHandler<HTMLFormElement>;
   disabled?: boolean;
   /**
    * Configuration for attachment validation constraints.
@@ -101,23 +104,31 @@ export const ComposerRoot = React.forwardRef(function ComposerRoot(
         disabled: ownerState.disabled,
       }),
     },
-  }) as React.FormHTMLAttributes<HTMLFormElement> & React.RefAttributes<HTMLFormElement>;
-  const externalOnSubmit = rootProps.onSubmit as
-    | React.FormEventHandler<HTMLFormElement>
-    | undefined;
+  }) as Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> &
+    React.RefAttributes<HTMLFormElement> & {
+      onSubmit?: React.FormEventHandler<HTMLFormElement>;
+    };
+  const externalOnSubmit = rootProps.onSubmit;
 
   return (
     <ComposerContextProvider value={contextValue}>
       <Root
         {...rootProps}
         onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+          event.preventDefault();
+          const originalPreventDefault = event.preventDefault.bind(event);
+          let submitPreventedByExternal = false;
+
+          event.preventDefault = () => {
+            submitPreventedByExternal = true;
+            originalPreventDefault();
+          };
+
           externalOnSubmit?.(event);
 
-          if (event.defaultPrevented) {
+          if (submitPreventedByExternal) {
             return;
           }
-
-          event.preventDefault();
 
           if (disabled) {
             return;

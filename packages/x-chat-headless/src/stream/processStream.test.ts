@@ -363,6 +363,34 @@ describe('processStream', () => {
     expect(onToolCall.mock.calls.at(-1)?.[0].toolCall.state).toBe('output-denied');
   });
 
+  it('keeps two interleaved parallel text streams isolated by streamId (#10)', async () => {
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'm1' },
+        { type: 'text-start', id: 'A' },
+        { type: 'text-start', id: 'B' },
+        { type: 'text-delta', id: 'A', delta: 'A1' },
+        { type: 'text-delta', id: 'B', delta: 'B1' },
+        { type: 'text-delta', id: 'A', delta: 'A2' },
+        { type: 'text-end', id: 'A' },
+        { type: 'text-delta', id: 'B', delta: 'B2' },
+        { type: 'text-end', id: 'B' },
+        { type: 'finish', messageId: 'm1', finishReason: 'stop' },
+      ]),
+      { flushInterval: 0 },
+    );
+
+    const parts = store.state.messagesById.m1.parts;
+    // Each parallel stream gets its own part — neither stream adopts the other's
+    // buffer, even though their deltas are interleaved.
+    expect(parts).toHaveLength(2);
+    expect(parts[0]).toEqual({ type: 'text', text: 'A1A2', state: 'done' });
+    expect(parts[1]).toEqual({ type: 'text', text: 'B1B2', state: 'done' });
+  });
+
   it('keeps multiple parts in a single assistant response', async () => {
     const store = new ChatStore();
 

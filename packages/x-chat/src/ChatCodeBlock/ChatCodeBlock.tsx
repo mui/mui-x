@@ -152,6 +152,17 @@ const ChatCodeBlock = React.forwardRef<HTMLDivElement, ChatCodeBlockProps>(
     }, []);
 
     const handleCopy = () => {
+      // Guard against environments where the async Clipboard API is missing
+      // (older browsers, insecure contexts, some test runners). Without this
+      // check the click handler throws a TypeError on `undefined.writeText`
+      // and bubbles up as an unhandled error (#10).
+      if (
+        typeof navigator === 'undefined' ||
+        typeof navigator.clipboard?.writeText !== 'function'
+      ) {
+        return;
+      }
+
       navigator.clipboard.writeText(children).then(
         () => {
           setCopyState('copied');

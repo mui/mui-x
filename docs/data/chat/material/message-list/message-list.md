@@ -89,6 +89,7 @@ Customize the date format through `slotProps`. The demo below uses a short month
 
 Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
 Within a group only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
+If no avatar resolves for that author, the avatar slot is omitted entirely.
 
 The grouping window defaults to 5 minutes (300,000 ms). Customize it through `slotProps`.
 The demo below sets the window to 1 minute (60,000 ms) — notice how messages more than 1 minute apart start a new group with a fresh avatar:
@@ -103,7 +104,7 @@ Compact mode applies the following changes to the message list:
 - **No bubbles** — messages render as plain text without background colors or padding.
 - **Left-aligned** — all messages are left-aligned regardless of role (no right-aligned user messages).
 - **Group header timestamps** — the timestamp moves from below each message to the group header, displayed next to the author name.
-- **Avatars preserved** — avatars remain visible for the first message in each group.
+- **Avatars preserved when available** — the first message in each group still shows its resolved avatar.
 
 When set on `ChatBox`, the variant automatically applies to the conversation list as well.
 

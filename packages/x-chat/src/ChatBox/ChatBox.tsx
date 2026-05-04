@@ -16,12 +16,16 @@ const ChatBoxStyled = styled('div', {
   overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   boxSizing: 'border-box',
+  position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
   height: '100%',
   minHeight: 0,
   containerType: 'inline-size',
+  containerName: 'chatbox',
+  isolation: 'isolate',
+  overflow: 'hidden',
   fontFamily: theme.typography.fontFamily,
   fontSize: theme.typography.body2.fontSize,
   color: (theme.vars || theme).palette.text.primary,
@@ -40,12 +44,19 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiChatBox' });
+  const isActiveConversationIdControlled = Object.prototype.hasOwnProperty.call(
+    props,
+    'activeConversationId',
+  );
 
   const {
     // ChatRoot / provider props
     adapter,
     members,
     currentUser,
+    getMessageAuthorId,
+    getMessageAuthorDisplayName,
+    getMessageAuthorAvatarUrl,
     messages,
     initialMessages,
     onMessagesChange,
@@ -78,6 +89,8 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
     slots,
     slotProps,
     features,
+    layoutMode,
+    layoutModeBreakpoints,
     ...other
   } = props;
 
@@ -99,13 +112,16 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
       adapter={adapter}
       members={members}
       currentUser={currentUser}
+      getMessageAuthorId={getMessageAuthorId}
+      getMessageAuthorDisplayName={getMessageAuthorDisplayName}
+      getMessageAuthorAvatarUrl={getMessageAuthorAvatarUrl}
       messages={messages}
       initialMessages={initialMessages}
       onMessagesChange={onMessagesChange}
       conversations={conversations}
       initialConversations={initialConversations}
       onConversationsChange={onConversationsChange}
-      activeConversationId={activeConversationId}
+      {...(isActiveConversationIdControlled ? { activeConversationId } : {})}
       initialActiveConversationId={initialActiveConversationId}
       onActiveConversationChange={onActiveConversationChange}
       composerValue={composerValue}
@@ -134,6 +150,8 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
               slots={slots}
               slotProps={slotProps}
               features={features}
+              layoutMode={layoutMode}
+              layoutModeBreakpoints={layoutModeBreakpoints}
               rootRef={innerRef}
               suggestions={suggestions}
               suggestionsAutoSubmit={suggestionsAutoSubmit}
@@ -196,7 +214,9 @@ ChatBox.propTypes = {
     }),
   ),
   /**
-   * The local user sending messages. If omitted, derived from `members` by finding the entry with `role === 'user'`.
+   * The local user sending messages.
+   * If omitted, derived from `members` by finding the entry with `role === 'user'`.
+   * Also used to enrich message authors when a rendered message resolves to `currentUser.id`.
    */
   currentUser: PropTypes.shape({
     avatarUrl: PropTypes.string,
@@ -234,10 +254,30 @@ ChatBox.propTypes = {
       PropTypes.bool,
     ]),
     conversationHeader: PropTypes.bool,
+    conversationList: PropTypes.bool,
     helperText: PropTypes.bool,
     scrollToBottom: PropTypes.bool,
     suggestions: PropTypes.bool,
   }),
+  /**
+   * Used to determine the avatar URL for a given message author.
+   * Falls back to `message.author?.avatarUrl`, then to the matched member's `avatarUrl`.
+   * @default (message) => message.author?.avatarUrl
+   */
+  getMessageAuthorAvatarUrl: PropTypes.func,
+  /**
+   * Used to determine the display name for a given message author.
+   * Falls back to `message.author?.displayName`, then to the matched member's `displayName`.
+   * @default (message) => message.author?.displayName
+   */
+  getMessageAuthorDisplayName: PropTypes.func,
+  /**
+   * Used to determine the author id for a given message.
+   * The resolved id is used to match message authors against `currentUser`,
+   * `members`, and active conversation participants.
+   * @default (message) => message.author?.id
+   */
+  getMessageAuthorId: PropTypes.func,
   /**
    * The initial active conversation ID when uncontrolled. Ignored after initialization and when `activeConversationId` is provided.
    */
@@ -391,9 +431,23 @@ ChatBox.propTypes = {
       updatedAt: PropTypes.string,
     }),
   ),
+  /**
+   * Forces the responsive layout mode instead of deriving it from the container width.
+   * When omitted, ChatBox chooses the mode automatically using `layoutModeBreakpoints`.
+   */
+  layoutMode: PropTypes.oneOf(['overlay', 'split', 'standard']),
+  /**
+   * Container-width breakpoints used when `layoutMode` is not provided.
+   */
+  layoutModeBreakpoints: PropTypes.shape({
+    overlay: PropTypes.number,
+    split: PropTypes.number,
+  }),
   localeText: PropTypes.object,
   /**
-   * All participants in the chat. The current (local) user is derived as the first member with `role === 'user'`, unless `currentUser` is provided explicitly.
+   * Known chat participants.
+   * Used to derive the local user / assistant user when explicit props are omitted,
+   * and to enrich message authors by resolved author id at render time.
    */
   members: PropTypes.arrayOf(
     PropTypes.shape({

@@ -5,6 +5,8 @@ export type {
   ChatBoxSlots,
   ChatBoxSlotProps,
   ChatBoxFeatures,
+  ChatBoxLayoutMode,
+  ChatBoxLayoutModeBreakpoints,
 } from './ChatBox/ChatBox.types';
 export type { ChatVariant, ChatDensity } from '@mui/x-chat-headless';
 export type {
@@ -115,6 +117,18 @@ export { ChatDateDivider } from './ChatMessage/ChatDateDivider';
 export type { ChatDateDividerProps } from './ChatMessage/ChatDateDivider';
 export { chatMessageClasses, getChatMessageUtilityClass } from './ChatMessage/chatMessageClasses';
 export type { ChatMessageClasses, ChatMessageClassKey } from './ChatMessage/chatMessageClasses';
+
+// ─── ChatMessageError ─────────────────────────────────────────────────────────
+export { ChatMessageError } from './ChatMessageError/ChatMessageError';
+export type { ChatMessageErrorProps } from './ChatMessageError/ChatMessageError';
+export {
+  chatMessageErrorClasses,
+  getChatMessageErrorUtilityClass,
+} from './ChatMessageError/chatMessageErrorClasses';
+export type {
+  ChatMessageErrorClasses,
+  ChatMessageErrorClassKey,
+} from './ChatMessageError/chatMessageErrorClasses';
 
 // ─── ChatMessageList ──────────────────────────────────────────────────────────
 export { ChatMessageList } from './ChatMessageList/ChatMessageList';

@@ -140,6 +140,8 @@ Use `slotProps` when you only need to pass additional styling without swapping t
 
 `ChatMessageGroup` decides whether consecutive messages from the same author form a visual group, exposing `isFirst` and `isLast` grouping flags. `ChatMessage` then uses those flags to adjust spacing and avatar visibility.
 
+Author identity for message rows is resolved from the message first, then enriched from `members`, `currentUser`, and active conversation participants using the author id. If your backend stores author fields elsewhere, use `getMessageAuthorId`, `getMessageAuthorDisplayName`, and `getMessageAuthorAvatarUrl` on the surrounding provider or `ChatBox`.
+
 ```tsx
 import {
   ChatMessageGroup,
@@ -170,6 +172,8 @@ import {
 | `error`      | `boolean`               | Whether the message ended in an error state   |
 | `isGrouped`  | `boolean`               | Whether this row is part of a group           |
 | `showAvatar` | `boolean`               | Controls the phantom-column width calculation |
+
+If no display name or avatar resolves for a message author, the built-in thread components skip those affordances instead of rendering role-based placeholders.
 
 ### Overriding the message bubble
 

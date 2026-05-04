@@ -7,9 +7,9 @@ githubLabel: 'scope: chat'
 
 # Chat - Basic AI chat
 
-<p class="description">The smallest working <code>ChatBox</code> setup: an adapter, a conversation, and an initial message.</p>
+<p class="description">A minimal seeded <code>ChatBox</code> setup: an adapter, one conversation, and an initial message.</p>
 
-This demo shows the minimum required props to render a styled, interactive chat surface using `@mui/x-chat`.
+This demo shows a small but fully seeded `ChatBox` surface using `@mui/x-chat`.
 
 - `ChatBox` rendering a single conversation without a conversation list
 - `initialConversations` and `initialMessages` for initial state
@@ -22,13 +22,14 @@ This demo shows the minimum required props to render a styled, interactive chat 
 
 This demo answers: "What is the smallest working `@mui/x-chat` surface?"
 
-The answer is three things:
+This demo uses three pieces of initial state:
 
 1. An `adapter` that implements `sendMessage`
-2. A `initialConversations` array with at least one conversation
-3. A `initialActiveConversationId` that matches one of those conversations
+2. An `initialConversations` array with at least one conversation
+3. An `initialActiveConversationId` that matches one of those conversations
 
-Every other prop is optional.
+Only `adapter` is strictly required by the component API.
+The conversation props in this example are there so the thread opens with seeded title and message history.
 
 ## The adapter
 
@@ -51,8 +52,9 @@ const adapter: ChatAdapter = {
 ## Implementation notes
 
 - Keep the container height explicit so the message list and composer render correctly.
-- Omitting `initialConversations` renders an empty surface without a thread.
-- Omitting `initialActiveConversationId` shows the conversation list pane without an active thread.
+- Omitting `initialConversations` renders a blank thread surface until messages are loaded or sent.
+- Omitting `initialActiveConversationId` keeps the built-in thread surface mounted, but there is no active conversation selected.
+- The conversation list UI stays off by default; enable it explicitly with `features={{ conversationList: true }}`.
 
 ## See also
 

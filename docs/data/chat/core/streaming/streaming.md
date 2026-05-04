@@ -165,8 +165,9 @@ If the stream closes without a terminal chunk (`finish` or `abort`), the runtime
 
 1. Records a recoverable stream error.
 2. Sets the message status to `'error'`.
-3. Calls `onError` and `onFinish` with `isDisconnect: true`.
-4. If `reconnectToStream()` is implemented, attempts to resume.
+3. Calls `onFinish` with `isDisconnect: true`.
+4. If `reconnectToStream()` is implemented, makes one attempt to resume.
+5. Calls `onError` only when the disconnect remains unrecovered.
 
 If the adapter's `sendMessage()` throws, the runtime records a send error and surfaces it through the error model.
 

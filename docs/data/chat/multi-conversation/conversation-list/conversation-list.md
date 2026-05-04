@@ -55,7 +55,7 @@ Because the Material UI layer fills all slot defaults at instantiation, overrid
 
 ## Switching conversations
 
-The conversation list is rendered automatically when `ChatBox` is provided with more than one conversation. Clicking a row calls `onActiveConversationChange` with the conversation ID. Use controlled state to manage the active conversation:
+The conversation list is rendered when `ChatBox` is given `features={{ conversationList: true }}`. Clicking a row calls `onActiveConversationChange` with the conversation ID. Use controlled state to manage the active conversation:
 
 ```tsx
 const [activeConversationId, setActiveConversationId] = React.useState('thread-a');
@@ -64,10 +64,11 @@ const [activeConversationId, setActiveConversationId] = React.useState('thread-a
   activeConversationId={activeConversationId}
   onActiveConversationChange={(nextId) => setActiveConversationId(nextId)}
   conversations={conversations}
+  features={{ conversationList: true }}
 />;
 ```
 
-If only one conversation is provided, `ChatBox` renders the thread pane directly without a sidebar.
+If you omit that feature flag, `ChatBox` renders the thread pane directly without a sidebar.
 
 ## ownerState and how state flows
 
@@ -435,5 +436,5 @@ Pass `aria-label` to the root through `slotProps`:
 ## See also
 
 - [Conversation Header](/x/react-chat/multi-conversation/conversation-header/) for the header bar that accompanies the active thread.
-- [Multi-conversation demo](/x/react-chat/demos/team-messaging/) for a two-pane inbox layout using controlled state.
+- [Multi-conversation example](/x/react-chat/material/examples/multi-conversation/) for a two-pane inbox layout using controlled state.
 - [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for pushing conversation updates through subscriptions.

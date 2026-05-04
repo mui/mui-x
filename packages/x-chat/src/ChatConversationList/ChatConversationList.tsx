@@ -13,6 +13,17 @@ import {
   ConversationListUnreadBadge,
   ConversationListItemActions,
   type ConversationListRootProps,
+  type ConversationListRootSlots,
+  type ConversationListRootSlotProps,
+  type ConversationListItemProps,
+  type ConversationListItemAvatarProps,
+  type ConversationListItemContentProps,
+  type ConversationListTitleProps,
+  type ConversationListPreviewProps,
+  type ConversationListTimestampProps,
+  type ConversationListUnreadBadgeProps,
+  type ConversationListItemActionsProps,
+  type ConversationListItemOwnerState,
   type ConversationListVariant,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -61,11 +72,11 @@ const ChatConversationListScrollerStyled = styled('div', {
   borderRight: '1px solid',
   borderRightColor: (theme.vars || theme).palette.divider,
   backgroundColor: (theme.vars || theme).palette.background.paper,
-  width: 'var(--ChatBox-conversationListWidth, 260px)',
+  width: '100%',
   height: '100%',
   overflow: 'hidden',
   flexShrink: 0,
-  '@container (max-width: 599.95px)': {
+  '@container chatbox (max-width: 599.95px)': {
     display: 'none',
   },
 }));
@@ -305,79 +316,320 @@ const ChatConversationListItemActionsRoot = styled('div', {
 // styled root so MUI theming is applied.
 // ---------------------------------------------------------------------------
 
-const ChatConversationListItemAvatarStyled = React.forwardRef<HTMLDivElement>(
-  function ChatConversationListItemAvatarStyled(props: any, ref) {
-    return (
-      <ConversationListItemAvatar
-        ref={ref}
-        {...props}
-        slots={{ root: ChatConversationListItemAvatarRoot, ...props.slots }}
-      />
-    );
+// Wrapper around the styled item root that satisfies
+// `React.JSXElementConstructor<ConversationListItemProps>`. The styled root
+// uses `shouldForwardProp` to filter out the conversation-related props at
+// runtime, so we just spread them through.
+const ChatConversationListItemSlot = React.forwardRef<HTMLDivElement, ConversationListItemProps>(
+  function ChatConversationListItemSlot(props, ref) {
+    return <ChatConversationListItemStyled ref={ref} {...props} />;
   },
 );
 
-const ChatConversationListItemContentStyled = React.forwardRef<HTMLDivElement>(
-  function ChatConversationListItemContentStyled(props: any, ref) {
-    return (
-      <ConversationListItemContent
-        ref={ref}
-        {...props}
-        slots={{ root: ChatConversationListItemContentRoot, ...props.slots }}
-      />
-    );
-  },
-);
+ChatConversationListItemSlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
 
-const ChatConversationListTitleStyled = React.forwardRef<HTMLDivElement>(
-  function ChatConversationListTitleStyled(props: any, ref) {
-    return (
-      <ConversationListTitle
-        ref={ref}
-        {...props}
-        slots={{ root: ChatConversationListTitleRoot, ...props.slots }}
-      />
-    );
-  },
-);
+const ChatConversationListItemAvatarStyled = React.forwardRef<
+  HTMLDivElement,
+  ConversationListItemAvatarProps
+>(function ChatConversationListItemAvatarStyled(props, ref) {
+  return (
+    <ConversationListItemAvatar
+      ref={ref}
+      {...props}
+      slots={{ root: ChatConversationListItemAvatarRoot, ...props.slots }}
+    />
+  );
+});
 
-const ChatConversationListPreviewStyled = React.forwardRef<HTMLDivElement>(
-  function ChatConversationListPreviewStyled(props: any, ref) {
-    return (
-      <ConversationListPreview
-        ref={ref}
-        {...props}
-        slots={{ root: ChatConversationListPreviewRoot, ...props.slots }}
-      />
-    );
-  },
-);
+ChatConversationListItemAvatarStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
 
-const ChatConversationListTimestampStyled = React.forwardRef<HTMLDivElement>(
-  function ChatConversationListTimestampStyled(props: any, ref) {
-    return (
-      <ConversationListTimestamp
-        ref={ref}
-        {...props}
-        slots={{ root: ChatConversationListTimestampRoot, ...props.slots }}
-      />
-    );
-  },
-);
+const ChatConversationListItemContentStyled = React.forwardRef<
+  HTMLDivElement,
+  ConversationListItemContentProps
+>(function ChatConversationListItemContentStyled(props, ref) {
+  return (
+    <ConversationListItemContent
+      ref={ref}
+      {...props}
+      slots={{ root: ChatConversationListItemContentRoot, ...props.slots }}
+    />
+  );
+});
 
-const ChatConversationListUnreadBadgeStyled = React.forwardRef<HTMLDivElement>(
-  function ChatConversationListUnreadBadgeStyled(props: any, ref) {
-    return (
-      <ConversationListUnreadBadge
-        ref={ref}
-        {...props}
-        slots={{ root: ChatConversationListUnreadBadgeRoot, ...props.slots }}
-      />
-    );
-  },
-);
+ChatConversationListItemContentStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
+
+const ChatConversationListTitleStyled = React.forwardRef<
+  HTMLDivElement,
+  ConversationListTitleProps
+>(function ChatConversationListTitleStyled(props, ref) {
+  return (
+    <ConversationListTitle
+      ref={ref}
+      {...props}
+      slots={{ root: ChatConversationListTitleRoot, ...props.slots }}
+    />
+  );
+});
+
+ChatConversationListTitleStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
+
+const ChatConversationListPreviewStyled = React.forwardRef<
+  HTMLDivElement,
+  ConversationListPreviewProps
+>(function ChatConversationListPreviewStyled(props, ref) {
+  return (
+    <ConversationListPreview
+      ref={ref}
+      {...props}
+      slots={{ root: ChatConversationListPreviewRoot, ...props.slots }}
+    />
+  );
+});
+
+ChatConversationListPreviewStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
+
+const ChatConversationListTimestampStyled = React.forwardRef<
+  HTMLDivElement,
+  ConversationListTimestampProps
+>(function ChatConversationListTimestampStyled(props, ref) {
+  return (
+    <ConversationListTimestamp
+      ref={ref}
+      {...props}
+      slots={{ root: ChatConversationListTimestampRoot, ...props.slots }}
+    />
+  );
+});
+
+ChatConversationListTimestampStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
+
+const ChatConversationListUnreadBadgeStyled = React.forwardRef<
+  HTMLDivElement,
+  ConversationListUnreadBadgeProps
+>(function ChatConversationListUnreadBadgeStyled(props, ref) {
+  return (
+    <ConversationListUnreadBadge
+      ref={ref}
+      {...props}
+      slots={{ root: ChatConversationListUnreadBadgeRoot, ...props.slots }}
+    />
+  );
+});
 
 // Default inline SVG for the 3-dot "more" icon (MoreHoriz style).
+
+ChatConversationListUnreadBadgeStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
 
 function DefaultMoreIcon() {
   return (
@@ -389,19 +641,52 @@ function DefaultMoreIcon() {
   );
 }
 
-const ChatConversationListItemActionsStyled = React.forwardRef<HTMLDivElement>(
-  function ChatConversationListItemActionsStyled(props: any, ref) {
-    return (
-      <ConversationListItemActions
-        ref={ref}
-        {...props}
-        slots={{ root: ChatConversationListItemActionsRoot, ...props.slots }}
-      >
-        {props.children ?? <DefaultMoreIcon />}
-      </ConversationListItemActions>
-    );
-  },
-);
+const ChatConversationListItemActionsStyled = React.forwardRef<
+  HTMLDivElement,
+  ConversationListItemActionsProps
+>(function ChatConversationListItemActionsStyled(props, ref) {
+  return (
+    <ConversationListItemActions
+      ref={ref}
+      {...props}
+      slots={{ root: ChatConversationListItemActionsRoot, ...props.slots }}
+    >
+      {props.children ?? <DefaultMoreIcon />}
+    </ConversationListItemActions>
+  );
+});
+
+ChatConversationListItemActionsStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
 
 const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationListProps>(
   function ChatConversationList(inProps, ref) {
@@ -418,78 +703,91 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
     const classes = useChatConversationListUtilityClasses(classesProp);
     const isCompact = variant === 'compact';
 
+    const resolvedSlots: Partial<ConversationListRootSlots> = {
+      root: slots?.root ?? ChatConversationListStyled,
+      scroller: slots?.scroller ?? ChatConversationListScrollerStyled,
+      viewport: slots?.viewport ?? ChatConversationListViewportStyled,
+      scrollbar: slots?.scrollbar ?? NoopScrollbar,
+      scrollbarThumb: slots?.scrollbarThumb ?? NoopScrollbar,
+      item: slots?.item ?? ChatConversationListItemSlot,
+      itemAvatar: slots?.itemAvatar ?? ChatConversationListItemAvatarStyled,
+      itemContent: slots?.itemContent ?? ChatConversationListItemContentStyled,
+      title: slots?.title ?? ChatConversationListTitleStyled,
+      preview: slots?.preview ?? ChatConversationListPreviewStyled,
+      timestamp: slots?.timestamp ?? ChatConversationListTimestampStyled,
+      unreadBadge: slots?.unreadBadge ?? ChatConversationListUnreadBadgeStyled,
+      itemActions: slots?.itemActions ?? ChatConversationListItemActionsStyled,
+      ...slots,
+    };
+
+    // The headless `root` slot is typed as `SlotComponentProps<'div', ...>`,
+    // which intentionally does NOT include `sx`. We funnel `sx` to the styled
+    // root via a localized assertion — strictly typing the rest of the slot
+    // wiring still catches signature drift.
+    const rootSlotProps = {
+      className: clsx(classes.root, isCompact && classes.compact, className),
+      sx,
+      ...slotProps?.root,
+    } as unknown as ConversationListRootSlotProps['root'];
+
+    const resolvedSlotProps: ConversationListRootSlotProps = {
+      ...slotProps,
+      root: rootSlotProps,
+      scroller: {
+        className: classes.scroller,
+        ...slotProps?.scroller,
+      },
+      item: (ownerState: ConversationListItemOwnerState) => {
+        const externalItemProps =
+          typeof slotProps?.item === 'function' ? slotProps.item(ownerState) : slotProps?.item;
+
+        return {
+          className: clsx(
+            classes.item,
+            ownerState.selected && classes.itemSelected,
+            ownerState.unread && classes.itemUnread,
+            ownerState.focused && classes.itemFocused,
+          ),
+          ...externalItemProps,
+        };
+      },
+      itemAvatar: {
+        className: classes.itemAvatar,
+        ...slotProps?.itemAvatar,
+      },
+      itemContent: {
+        className: classes.itemContent,
+        ...slotProps?.itemContent,
+      },
+      title: {
+        className: classes.itemTitle,
+        ...slotProps?.title,
+      },
+      preview: {
+        className: classes.itemPreview,
+        ...slotProps?.preview,
+      },
+      timestamp: {
+        className: classes.itemTimestamp,
+        ...slotProps?.timestamp,
+      },
+      unreadBadge: {
+        className: classes.itemUnreadBadge,
+        ...slotProps?.unreadBadge,
+      },
+      itemActions: {
+        className: classes.itemActions,
+        ...slotProps?.itemActions,
+      },
+    };
+
     return (
       <ConversationListRoot
         ref={ref}
         variant={variant}
         {...other}
-        slots={{
-          root: slots?.root ?? ChatConversationListStyled,
-          scroller: slots?.scroller ?? ChatConversationListScrollerStyled,
-          viewport: slots?.viewport ?? (ChatConversationListViewportStyled as any),
-          scrollbar: slots?.scrollbar ?? (NoopScrollbar as any),
-          scrollbarThumb: slots?.scrollbarThumb ?? (NoopScrollbar as any),
-          item: slots?.item ?? (ChatConversationListItemStyled as any),
-          itemAvatar: slots?.itemAvatar ?? (ChatConversationListItemAvatarStyled as any),
-          itemContent: slots?.itemContent ?? (ChatConversationListItemContentStyled as any),
-          title: slots?.title ?? (ChatConversationListTitleStyled as any),
-          preview: slots?.preview ?? (ChatConversationListPreviewStyled as any),
-          timestamp: slots?.timestamp ?? (ChatConversationListTimestampStyled as any),
-          unreadBadge: slots?.unreadBadge ?? (ChatConversationListUnreadBadgeStyled as any),
-          itemActions: slots?.itemActions ?? (ChatConversationListItemActionsStyled as any),
-          ...slots,
-        }}
-        slotProps={{
-          ...slotProps,
-          root: {
-            className: clsx(classes.root, isCompact && classes.compact, className),
-            sx,
-            ...slotProps?.root,
-          } as any,
-          scroller: {
-            className: classes.scroller,
-            ...slotProps?.scroller,
-          } as any,
-          item: ((ownerState: any) => ({
-            className: clsx(
-              classes.item,
-              ownerState?.selected && classes.itemSelected,
-              ownerState?.unread && classes.itemUnread,
-              ownerState?.focused && classes.itemFocused,
-            ),
-            ...(typeof slotProps?.item === 'function'
-              ? (slotProps.item as (s: any) => any)(ownerState)
-              : slotProps?.item),
-          })) as any,
-          itemAvatar: {
-            className: classes.itemAvatar,
-            ...slotProps?.itemAvatar,
-          } as any,
-          itemContent: {
-            className: classes.itemContent,
-            ...slotProps?.itemContent,
-          } as any,
-          title: {
-            className: classes.itemTitle,
-            ...slotProps?.title,
-          } as any,
-          preview: {
-            className: classes.itemPreview,
-            ...slotProps?.preview,
-          } as any,
-          timestamp: {
-            className: classes.itemTimestamp,
-            ...slotProps?.timestamp,
-          } as any,
-          unreadBadge: {
-            className: classes.itemUnreadBadge,
-            ...slotProps?.unreadBadge,
-          } as any,
-          itemActions: {
-            className: classes.itemActions,
-            ...slotProps?.itemActions,
-          } as any,
-        }}
+        slots={resolvedSlots}
+        slotProps={resolvedSlotProps}
       />
     );
   },

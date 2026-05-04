@@ -78,6 +78,42 @@ describe('chatSelectors', () => {
     expect(chatSelectors.composerAttachments(store.state)).toEqual([]);
   });
 
+  it('returns message-scoped errors independently from the global runtime error', () => {
+    const store = new ChatStore({
+      initialMessages: [
+        { ...userMessage, status: 'error' },
+        { ...assistantMessage, id: 'm3', status: 'error' },
+      ],
+    });
+
+    store.setError({
+      code: 'HISTORY_ERROR',
+      message: 'History failed',
+      source: 'history',
+      recoverable: true,
+    });
+    store.setMessageError('m1', {
+      code: 'SEND_ERROR',
+      message: 'User message failed',
+      source: 'send',
+      recoverable: true,
+      details: { messageId: 'm1' },
+    });
+    store.setMessageError('m3', {
+      code: 'STREAM_ERROR',
+      message: 'Assistant message failed',
+      source: 'stream',
+      recoverable: true,
+      details: { messageId: 'm3' },
+    });
+
+    expect(chatSelectors.error(store.state)?.message).toBe('History failed');
+    expect(chatSelectors.messageError(store.state, 'm1')?.message).toBe('User message failed');
+    expect(chatSelectors.messageError(store.state, 'm3')?.message).toBe(
+      'Assistant message failed',
+    );
+  });
+
   it('memoizes message and conversation arrays when their inputs have not changed', () => {
     const store = new ChatStore({
       initialMessages: [userMessage],

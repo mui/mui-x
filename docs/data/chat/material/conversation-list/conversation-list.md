@@ -14,7 +14,7 @@ components: ConversationListRoot, ConversationListItem, ConversationListItemAvat
 
 The conversation list is the sidebar that shows all available conversations and lets users switch between them. `@mui/x-chat` ships `ChatConversationList`, a single component with fully themed styled slots for every visual sub-region: the scroller, each item row, the avatar, the title, the preview line, the timestamp, and the unread badge.
 
-The following demo shows a multi-conversation layout with the conversation list in action:
+The following demo shows a multi-conversation layout with `features={{ conversationList: true }}` enabled:
 
 {{"demo": "../examples/multi-conversation/MultiConversation.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 

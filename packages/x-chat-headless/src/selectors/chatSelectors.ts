@@ -1,6 +1,9 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { resolveMessageAuthor } from '../internals/messageAuthor';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
+import type { ChatError } from '../types/chat-error';
 import type { ChatInternalState } from '../types/chat-state';
+import type { ChatStoreParameters } from '../store';
 
 type State<Cursor = string> = ChatInternalState<Cursor>;
 
@@ -21,6 +24,44 @@ export const chatSelectors = {
   message: createSelector(
     (state: State) => state.messagesById,
     (messagesById, id: string): ChatMessage | undefined => messagesById[id],
+  ),
+  messageAuthor: createSelectorMemoized(
+    (state: State) => state.messagesById,
+    (state: State) => state.conversationsById,
+    (state: State) => state.activeConversationId,
+    (
+      messagesById,
+      conversationsById,
+      activeConversationId,
+      id: string,
+      parameters: ChatStoreParameters<any>,
+    ) => {
+      const activeConversation =
+        activeConversationId == null ? undefined : conversationsById[activeConversationId];
+
+      return resolveMessageAuthor(messagesById[id] ?? null, {
+        currentUser: parameters.currentUser,
+        members: parameters.members,
+        activeConversation,
+        getMessageAuthorId: parameters.getMessageAuthorId,
+        getMessageAuthorDisplayName: parameters.getMessageAuthorDisplayName,
+        getMessageAuthorAvatarUrl: parameters.getMessageAuthorAvatarUrl,
+      });
+    },
+  ),
+  messageError: createSelector(
+    (state: State) => state.messageErrorsById,
+    (state: State) => state.messagesById,
+    (messageErrorsById, messagesById, id: string): ChatError | null => {
+      const message = messagesById[id];
+      const error = messageErrorsById[id];
+
+      if (!error || message?.status !== 'error') {
+        return null;
+      }
+
+      return error;
+    },
   ),
   conversations: createSelectorMemoized(
     (state: State) => state.conversationIds,
@@ -98,6 +139,7 @@ export const selectHasMoreHistory = chatSelectors.hasMoreHistory;
 export const selectError = chatSelectors.error;
 export const selectMessages = chatSelectors.messages;
 export const selectMessage = chatSelectors.message;
+export const selectMessageError = chatSelectors.messageError;
 export const selectConversations = chatSelectors.conversations;
 export const selectConversation = chatSelectors.conversation;
 export const selectActiveConversation = chatSelectors.activeConversation;

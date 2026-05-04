@@ -1,13 +1,19 @@
 import * as React from 'react';
+import HighlightedCodeWithTabs from '@mui/internal-core-docs/HighlightedCodeWithTabs';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 import { getSoftEdgesTheme } from '../theme/softEdgesTheme';
 import { getNeutralVibesTheme } from '../theme/neutralVibesTheme';
 import { darkGrey } from '../theme/colors';
 import ViewToggleGroup, { ChatView } from './ViewToggleGroup';
+import { chatOverviewDemos, getChatOverviewDemoSourceUrl } from './demoConfigs';
 import MessengerDemo from './MessengerDemo';
 import AgentDemo from './AgentDemo';
 import CaptionsDemo from './CaptionsDemo';
@@ -33,6 +39,8 @@ export default function MainDemo() {
   const brandingTheme = useTheme();
   const [selectedView, setSelectedView] = React.useState<ChatView>('messenger');
   const [selectedTheme, setSelectedTheme] = React.useState<CustomThemeName>('default');
+  const selectedDemo = chatOverviewDemos[selectedView];
+  const selectedDemoSourceUrl = getChatOverviewDemoSourceUrl(selectedView);
 
   const handleThemeChange = (event: SelectChangeEvent) => {
     setSelectedTheme(event.target.value as CustomThemeName);
@@ -74,6 +82,44 @@ export default function MainDemo() {
     }
   };
 
+  let demoContent: React.ReactNode;
+
+  if (selectedView === 'messenger') {
+    demoContent = (
+      <Paper variant="outlined" elevation={0} sx={{ height: 600, width: '100%' }}>
+        <MessengerDemo />
+      </Paper>
+    );
+  } else if (selectedView === 'agent') {
+    demoContent = (
+      <Paper variant="outlined" elevation={0} sx={{ height: 600, width: '100%' }}>
+        <AgentDemo />
+      </Paper>
+    );
+  } else if (selectedView === 'widget') {
+    demoContent = (
+      <Paper
+        variant="outlined"
+        elevation={0}
+        sx={{ height: 760, width: '100%', position: 'relative', overflow: 'hidden' }}
+      >
+        <WidgetDemo />
+      </Paper>
+    );
+  } else {
+    demoContent = (
+      <ThemeProvider theme={getDarkThemeByName(selectedTheme)}>
+        <Paper
+          variant="outlined"
+          elevation={0}
+          sx={{ height: 600, width: '100%', overflow: 'hidden' }}
+        >
+          <CaptionsDemo />
+        </Paper>
+      </ThemeProvider>
+    );
+  }
+
   return (
     <Stack spacing={1} sx={{ p: 1, width: '100%', mb: 6 }}>
       {/* Toolbar: view toggle + theme selector */}
@@ -96,41 +142,54 @@ export default function MainDemo() {
           ))}
         </Select>
       </Stack>
-      <ThemeProvider theme={getThemeByName(selectedTheme)}>
-        {selectedView === 'messenger' && (
-          <Paper variant="outlined" elevation={0} sx={{ height: 600, width: '100%' }}>
-            <MessengerDemo />
-          </Paper>
-        )}
-
-        {selectedView === 'agent' && (
-          <Paper variant="outlined" elevation={0} sx={{ height: 600, width: '100%' }}>
-            <AgentDemo />
-          </Paper>
-        )}
-
-        {selectedView === 'widget' && (
-          <Paper
-            variant="outlined"
-            elevation={0}
-            sx={{ height: 760, width: '100%', position: 'relative', overflow: 'hidden' }}
+      <ThemeProvider theme={getThemeByName(selectedTheme)}>{demoContent}</ThemeProvider>
+      <Paper variant="outlined" elevation={0} sx={{ width: '100%', overflow: 'hidden' }}>
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          sx={{
+            px: 2,
+            py: 1.5,
+            alignItems: { sm: 'center' },
+            justifyContent: 'space-between',
+            gap: 1.5,
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+          }}
+        >
+          <div>
+            <Typography variant="overline" color="text.secondary">
+              Example code
+            </Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+              {selectedDemo.title}
+            </Typography>
+          </div>
+          <Button
+            size="small"
+            href={selectedDemoSourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            endIcon={<ArrowForwardIcon />}
           >
-            <WidgetDemo />
-          </Paper>
-        )}
-
-        {selectedView === 'captions' && (
-          <ThemeProvider theme={getDarkThemeByName(selectedTheme)}>
-            <Paper
-              variant="outlined"
-              elevation={0}
-              sx={{ height: 600, width: '100%', overflow: 'hidden' }}
-            >
-              <CaptionsDemo />
-            </Paper>
-          </ThemeProvider>
-        )}
-      </ThemeProvider>
+            More info
+          </Button>
+        </Stack>
+        <Box
+          sx={{
+            '& pre': {
+              margin: 0,
+              borderRadius: 0,
+              maxWidth: 'none',
+            },
+            '& .MuiCode-root': {
+              maxHeight: 360,
+              overflow: 'auto',
+            },
+          }}
+        >
+          <HighlightedCodeWithTabs tabs={selectedDemo.tabs} />
+        </Box>
+      </Paper>
     </Stack>
   );
 }

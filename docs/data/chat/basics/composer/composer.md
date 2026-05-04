@@ -16,6 +16,7 @@ components: ChatComposerTextArea, ChatComposerSendButton, ChatComposerAttachment
 
 The composer is the input region at the bottom of the chat surface.
 `ChatComposer` provides Material UI styling — border, padding, and theme tokens are applied automatically.
+The demos on this page render only the composer plus the provider context it depends on.
 
 ## Import
 
@@ -46,7 +47,7 @@ ChatComposer                  ← <form> element, border-top divider
   ChatComposerTextArea        ← auto-resizing textarea
   ChatComposerToolbar         ← button row
     ChatComposerAttachButton  ← file attach trigger
-    ChatComposerSendButton    ← submit button (disabled when empty/streaming)
+    ChatComposerSendButton    ← submit button (disabled when empty with no attachments/streaming)
   ChatComposerHelperText      ← disclaimer or character count
 ```
 
@@ -57,9 +58,9 @@ It submits on <kbd class="key">Enter</kbd> and inserts a newline on <kbd><kbd cl
 
 ### Placeholder text
 
-Customize the placeholder through `slotProps`:
+Customize the placeholder directly on `ChatComposerTextArea`:
 
-{{"demo": "../../material/composer/ComposerCustomPlaceholder.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "ComposerCustomPlaceholderStandalone.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ### IME composition
 
@@ -71,22 +72,18 @@ Submission is blocked until composition ends.
 
 `ChatComposerSendButton` disables automatically when:
 
-- The text area is empty (no text content).
+- The text area is empty and there are no queued attachments.
 - A response is currently streaming.
 - The composer is explicitly disabled.
-
-:::info
-The send button's visual disabled state checks only text content, not attachments. However, the underlying `submit()` function sends if either text or attachments are present.
-:::
 
 ## Attach button
 
 The attach button opens the browser file picker.
 Selected files are queued as draft attachments and previewed in the composer area.
 
-Set `features={{ attachments: false }}` to hide the attach button:
+Omit `ChatComposerAttachButton` from the toolbar when attachments are not part of the surface:
 
-{{"demo": "../../material/composer/ComposerHiddenAttachButton.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "ComposerHiddenAttachButtonStandalone.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 For full details on attachment configuration — accepted MIME types, file size limits, and upload lifecycle — see [Attachments](/x/react-chat/behavior/attachments/).
 
@@ -96,18 +93,21 @@ A helper text line appears below the composer.
 Use it for legal disclaimers, character counts, or contextual hints.
 
 ```tsx
-{
-  /* Hide the helper text */
-}
-<ChatBox adapter={adapter} features={{ helperText: false }} />;
+<ChatComposer>
+  <ChatComposerTextArea placeholder="Type a message" />
+  <ChatComposerToolbar>
+    <ChatComposerSendButton />
+  </ChatComposerToolbar>
+  <ChatComposerHelperText>Files are uploaded after you send.</ChatComposerHelperText>
+</ChatComposer>
 ```
 
 ## Controlled composer value
 
-The composer value can be controlled externally through `ChatBox` props (which forward to the internal `ChatProvider`).
-The demo below mirrors the current composer value above the chat surface:
+The composer value can be controlled externally through `ChatProvider` state.
+The demo below mirrors the current composer value above the standalone composer:
 
-{{"demo": "../../material/composer/ComposerControlled.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "ComposerControlledStandalone.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## `useChatComposer()` hook
 
@@ -144,10 +144,10 @@ The hook returns:
 
 ## Disabling the composer
 
-Pass `disabled` to prevent all interaction.
+Pass `disabled` to `ChatComposer` to prevent all interaction.
 When disabled, the text area is read-only and the send button is inert.
 
-{{"demo": "../../material/composer/ComposerDisabled.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "ComposerDisabledStandalone.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Localization
 

@@ -10,7 +10,7 @@ githubLabel: 'scope: chat'
 <p class="description">A two-pane inbox layout with a conversation sidebar and an active thread pane.</p>
 
 This demo shows how to use `ChatBox` as a full inbox surface with multiple conversations.
-The conversation sidebar is rendered automatically when more than one conversation is provided.
+The conversation sidebar is enabled explicitly with `features={{ conversationList: true }}`.
 
 - A two-pane layout with a conversation list on the left and the active thread on the right
 - Controlled `activeConversationId` with `onActiveConversationChange` for conversation switching
@@ -30,6 +30,7 @@ const [threads, setThreads] = React.useState({ 'thread-a': [], 'thread-b': [] })
 <ChatBox
   activeConversationId={activeConversationId}
   messages={threads[activeConversationId] ?? []}
+  features={{ conversationList: true }}
   onActiveConversationChange={(nextId) => setActiveConversationId(nextId)}
   onMessagesChange={(nextMessages) => {
     setThreads((prev) => ({ ...prev, [activeConversationId]: nextMessages }));
@@ -41,8 +42,8 @@ For simpler use cases with a single conversation, use `initialActiveConversation
 
 ## Conversation list behavior
 
-The conversation list renders automatically when `conversations` contains more than one item.
-If only one conversation is provided, `ChatBox` renders the thread pane directly without a sidebar.
+The conversation list renders only when `features.conversationList` is `true`.
+If you omit that flag, `ChatBox` renders only the active thread pane even when multiple conversations are available.
 
 ## Implementation notes
 

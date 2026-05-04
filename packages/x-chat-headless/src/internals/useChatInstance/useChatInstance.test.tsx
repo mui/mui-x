@@ -70,6 +70,7 @@ describe('useChatInstance', () => {
           messages,
           conversations,
           activeConversationId,
+          activeConversationIdControlled: true,
           composerValue,
         }),
       {
@@ -154,6 +155,7 @@ describe('useChatInstance', () => {
           messages,
           conversations,
           activeConversationId,
+          activeConversationIdControlled: true,
           composerValue,
           onMessagesChange,
           onConversationsChange,
@@ -181,6 +183,35 @@ describe('useChatInstance', () => {
     expect(onConversationsChange.callCount).toBe(0);
     expect(onActiveConversationChange.callCount).toBe(0);
     expect(onComposerValueChange.callCount).toBe(0);
+  });
+
+  it('keeps activeConversationId controlled when rerendered with undefined', () => {
+    const { result, rerender } = renderHook(
+      ({
+        activeConversationId,
+        activeConversationIdControlled,
+      }: {
+        activeConversationId: string | undefined;
+        activeConversationIdControlled: boolean;
+      }) =>
+        useChatInstance({
+          activeConversationId,
+          activeConversationIdControlled,
+        }),
+      {
+        initialProps: {
+          activeConversationId: 'c1' as string | undefined,
+          activeConversationIdControlled: true,
+        },
+      },
+    );
+
+    rerender({
+      activeConversationId: undefined,
+      activeConversationIdControlled: true,
+    });
+
+    expect(result.current.state.activeConversationId).toBeUndefined();
   });
 
   it('warns when switching from controlled to uncontrolled', () => {

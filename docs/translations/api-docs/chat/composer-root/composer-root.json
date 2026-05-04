@@ -3,6 +3,9 @@
   "propDescriptions": {
     "attachmentConfig": {
       "description": "Configuration for attachment validation constraints. When provided, file attachments are validated against these rules."
+    },
+    "onSubmit": {
+      "description": "Handler invoked when the form is submitted. The composer&#39;s submit logic still runs after this handler unless the handler calls <code>event.preventDefault()</code>."
     }
   },
   "classDescriptions": {},
