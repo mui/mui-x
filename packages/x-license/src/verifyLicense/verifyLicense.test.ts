@@ -36,21 +36,14 @@ const RELEASE_INFO = generateReleaseInfo(releaseDate);
 
 // Can't change the process.env.NODE_ENV in Browser
 describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
-  let env: any;
-
-  beforeEach(() => {
-    env = process.env.NODE_ENV;
-    process.env.NODE_ENV = 'test';
-  });
-
   afterEach(() => {
-    process.env.NODE_ENV = env;
+    vi.unstubAllEnvs();
   });
 
   describe('verifyLicense', () => {
     describe('key version: 1', () => {
       it('should log an error when ReleaseInfo is not valid', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           () =>
             verifyLicense({
@@ -67,7 +60,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should verify License properly', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
@@ -77,7 +70,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should check expired license properly', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
@@ -87,7 +80,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should return Invalid for invalid license', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
@@ -99,7 +92,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
     describe('key version: 2', () => {
       it('should log an error when ReleaseInfo is not valid', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           () =>
             verifyLicense({
@@ -117,7 +110,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
       describe('scope', () => {
         it('should accept pro license for pro features', () => {
-          process.env.NODE_ENV = 'production';
+          vi.stubEnv('NODE_ENV', 'production');
           expect(
             verifyLicense({
               packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
@@ -127,7 +120,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
         });
 
         it('should accept premium license for premium features', () => {
-          process.env.NODE_ENV = 'production';
+          vi.stubEnv('NODE_ENV', 'production');
           expect(
             verifyLicense({
               packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-premium' },
@@ -137,7 +130,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
         });
 
         it('should not accept pro license for premium feature', () => {
-          process.env.NODE_ENV = 'production';
+          vi.stubEnv('NODE_ENV', 'production');
           expect(
             verifyLicense({
               packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-premium' },
@@ -149,7 +142,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
       describe('expiry date', () => {
         it('should validate subscription license in prod if current date is after expiry date but release date is before expiry date', () => {
-          process.env.NODE_ENV = 'production';
+          vi.stubEnv('NODE_ENV', 'production');
           expect(
             verifyLicense({
               packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
@@ -175,7 +168,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
         });
 
         it('should throw if the license is expired by more than a 30 days', () => {
-          process.env.NODE_ENV = 'development';
+          vi.stubGlobal('MUI_TEST_ENV', undefined);
 
           vi.useFakeTimers();
           vi.setSystemTime(new Date('2024-06-15T00:00:00.000Z'));
@@ -203,7 +196,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should return Invalid for invalid license', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
@@ -215,7 +208,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
     describe('key version: 2.1', () => {
       it('should accept licenseModel="annual"', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
@@ -227,7 +220,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
     describe('key version: 2.2', () => {
       it('PlanVersion "initial" should not accept x-charts-pro', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-charts-pro' },
@@ -237,7 +230,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('PlanVersion "initial" should not accept x-tree-view-pro', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-tree-view-pro' },
@@ -247,7 +240,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('PlanVersion "Q3-2024" should accept x-charts-pro', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-charts-pro' },
@@ -257,7 +250,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('PlanVersion "Q3-2024" should accept x-tree-view-pro', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-tree-view-pro' },
@@ -267,7 +260,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('Premium with planVersion "initial" should accept x-tree-view-pro', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-tree-view-pro' },
@@ -277,7 +270,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('Premium with planVersion "initial" should accept x-charts-pro', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-charts-pro' },
@@ -290,7 +283,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
   describe('key version: 3', () => {
     it('should verify a v3 pro license for pro features', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
@@ -300,7 +293,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should not accept a v3 pro license for premium features', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-premium' },
@@ -312,7 +305,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
   describe('key version: 3 (Q1-2026)', () => {
     it('should verify a v3 pro Q1-2026 license for pro features', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
@@ -322,7 +315,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should verify a v3 pro Q1-2026 license for x-charts-pro', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-charts-pro' },
@@ -332,7 +325,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should verify a v3 pro Q1-2026 license for x-tree-view-pro', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-tree-view-pro' },
@@ -342,7 +335,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should not accept a v3 pro Q1-2026 license for premium features', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-premium' },
@@ -352,7 +345,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should verify a v3 premium Q1-2026 license for premium features', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-premium' },
@@ -362,7 +355,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
 
     it('should verify a v3 premium Q1-2026 license for pro features', () => {
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
       expect(
         verifyLicense({
           packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
@@ -401,7 +394,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
   describe('NotValidForPackage (v9 plan version check)', () => {
     describe('annual/subscription licenses', () => {
       it('should reject annual license with planVersion "initial"', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '9.0.0', name: 'x-data-grid-pro' },
@@ -411,7 +404,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should reject subscription license with planVersion "initial"', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '9.0.0', name: 'x-data-grid-pro' },
@@ -421,7 +414,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should reject annual license with planVersion "Q3-2024"', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '9.0.0', name: 'x-data-grid-pro' },
@@ -431,7 +424,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should accept annual license with planVersion "Q1-2026"', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '9.0.0', name: 'x-data-grid-pro' },
@@ -443,7 +436,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
     describe('perpetual licenses', () => {
       it('should accept perpetual v8 license when package release is before expiry', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '9.0.0', name: 'x-data-grid-pro' },
@@ -453,7 +446,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should accept perpetual v8 license (initial) when package release is before expiry', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '9.0.0', name: 'x-data-grid-pro' },
@@ -463,7 +456,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should reject perpetual Q1-2026 license when package release is after expiry (ExpiredVersion, not v8 check)', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '9.0.0', name: 'x-data-grid-pro' },
@@ -473,7 +466,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should reject perpetual v8 license (initial) when package release is after expiry', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '9.0.0', name: 'x-data-grid-pro' },
@@ -483,7 +476,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       });
 
       it('should accept v1 perpetual license when package release is before expiry', () => {
-        process.env.NODE_ENV = 'production';
+        vi.stubEnv('NODE_ENV', 'production');
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '9.0.0', name: 'x-data-grid-pro' },

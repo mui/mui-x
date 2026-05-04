@@ -132,8 +132,13 @@ function getIsDebugModeEnabled(): boolean {
   return false;
 }
 
+/**
+ * !IMPORTANT: Don't use the result for tree-shaking.
+ * @returns Current Node.js environment or `<unknown>` if it cannot be determined.
+ */
 function getNodeEnv(): string {
   try {
+    // eslint-disable-next-line mui/consistent-production-guard
     return process.env.NODE_ENV ?? '<unknown>';
   } catch (_) {
     return '<unknown>';
