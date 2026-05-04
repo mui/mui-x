@@ -32,3 +32,7 @@ The `ChartsRotationAxis` component renders an arc along the rotation axis with t
 The arc radius is taken from the radius axis outer radius, and you can style each tick label via the `chartsRadialAxisClasses.tickLabel` class.
 
 {{"demo": "RotationAxisPlayground.js", "hideToolbar": true, "bg": "playground"}}
+
+## Axis highlight
+
+{{"demo": "BandHighlight.js", "bg": "outline"}}

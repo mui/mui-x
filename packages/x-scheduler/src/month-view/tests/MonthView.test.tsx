@@ -6,7 +6,7 @@ import {
   EventBuilder,
   withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
-import { screen, within } from '@mui/internal-test-utils';
+import { screen, within, waitFor } from '@mui/internal-test-utils';
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { EventCalendar, eventCalendarClasses } from '../../event-calendar';
@@ -24,6 +24,15 @@ describe('<MonthView />', () => {
     events,
     resources: [],
   };
+
+  const manyEvents = [
+    EventBuilder.new().singleDay('2025-05-01T08:00:00Z').title('Event 1').build(),
+    EventBuilder.new().singleDay('2025-05-01T09:00:00Z').title('Event 2').build(),
+    EventBuilder.new().singleDay('2025-05-01T10:00:00Z').title('Event 3').build(),
+    EventBuilder.new().singleDay('2025-05-01T11:00:00Z').title('Event 4').build(),
+    EventBuilder.new().singleDay('2025-05-01T12:00:00Z').title('Event 5').build(),
+    EventBuilder.new().singleDay('2025-05-01T13:00:00Z').title('Event 6').build(),
+  ];
 
   it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
     render(
@@ -96,14 +105,6 @@ describe('<MonthView />', () => {
   });
 
   it('should show "+N more..." when there are more events than fit in a cell', () => {
-    const manyEvents = [
-      EventBuilder.new().singleDay('2025-05-01T08:00:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T14:09:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T14:11:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T13:09:00Z').build(),
-      EventBuilder.new().singleDay('2025-05-01T15:09:00Z').build(),
-    ];
-
     render(
       <EventCalendarProvider events={manyEvents} resources={[]}>
         <EventDialogProvider>
@@ -112,6 +113,62 @@ describe('<MonthView />', () => {
       </EventCalendarProvider>,
     );
     expect(screen.getByText(/more/i)).not.to.equal(null);
+  });
+
+  describe('Event keyboard accessibility in "more events" popover', () => {
+    async function renderAndOpenPopover() {
+      const { user } = render(
+        <EventCalendarProvider events={manyEvents} resources={[]}>
+          <EventDialogProvider>
+            <MonthView />
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+      const moreButton = await screen.findByRole('button', { name: /more/i });
+      await user.click(moreButton);
+      const popover = await screen.findByRole('presentation');
+      return { user, popover };
+    }
+
+    it('should have tabindex and role="button" on events in the popover', async () => {
+      const { popover } = await renderAndOpenPopover();
+
+      const eventButtons = within(popover).getAllByRole('button');
+      expect(eventButtons.length).to.be.greaterThan(0);
+
+      eventButtons.forEach((button) => {
+        expect(button).to.have.attribute('tabindex', '0');
+        expect(button).to.have.attribute('role', 'button');
+      });
+    });
+
+    it('should allow Enter key to activate events in the popover', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      firstEventButton.focus();
+      expect(firstEventButton).to.equal(document.activeElement);
+
+      await user.keyboard('{Enter}');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+    });
+
+    it('should allow Space key to activate events in the popover', async () => {
+      const { user, popover } = await renderAndOpenPopover();
+
+      const firstEventButton = within(popover).getAllByRole('button')[0];
+      firstEventButton.focus();
+      expect(firstEventButton).to.equal(document.activeElement);
+
+      await user.keyboard(' ');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.to.equal(null);
+      });
+    });
   });
 
   describe('All day events', () => {

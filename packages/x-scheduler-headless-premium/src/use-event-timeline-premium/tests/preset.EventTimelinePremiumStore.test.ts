@@ -11,11 +11,11 @@ describe('Preset - EventTimelinePremiumStore', () => {
       const onPresetChange = spy();
       const store = new EventTimelinePremiumStore({ ...DEFAULT_PARAMS, onPresetChange }, adapter);
 
-      store.setPreset('day', {} as any);
+      store.setPreset('dayAndMonth', {} as any);
 
-      expect(store.state.preset).to.equal('day');
+      expect(store.state.preset).to.equal('dayAndMonth');
       expect(onPresetChange.calledOnce).to.equal(true);
-      expect(onPresetChange.lastCall.firstArg).to.equal('day');
+      expect(onPresetChange.lastCall.firstArg).to.equal('dayAndMonth');
     });
 
     it('should NOT mutate store but call onPresetChange when is controlled', () => {
@@ -25,11 +25,11 @@ describe('Preset - EventTimelinePremiumStore', () => {
         adapter,
       );
 
-      store.setPreset('day', {} as any);
+      store.setPreset('dayAndMonth', {} as any);
 
       expect(store.state.preset).to.equal('dayAndWeek');
       expect(onPresetChange.calledOnce).to.equal(true);
-      expect(onPresetChange.lastCall.firstArg).to.equal('day');
+      expect(onPresetChange.lastCall.firstArg).to.equal('dayAndMonth');
     });
 
     it('should do nothing if setting the same preset: no state change, no callback', () => {
@@ -55,7 +55,7 @@ describe('Preset - EventTimelinePremiumStore', () => {
         adapter,
       );
 
-      store.setPreset('day', {} as any);
+      store.setPreset('dayAndMonth', {} as any);
       expect(store.state.preset).to.equal('dayAndWeek');
     });
 
@@ -65,7 +65,7 @@ describe('Preset - EventTimelinePremiumStore', () => {
         adapter,
       );
 
-      expect(() => store.setPreset('day', {} as any)).toWarnDev(
+      expect(() => store.setPreset('dayAndMonth', {} as any)).toWarnDev(
         'MUI X Scheduler: EventTimelinePremium is controlled (received a `preset` prop) but `onPresetChange` is not provided',
       );
     });
@@ -78,7 +78,7 @@ describe('Preset - EventTimelinePremiumStore', () => {
       previous: string;
     }[] = [
       { preset: 'dayAndHour', next: '2025-07-07T00:00:00Z', previous: '2025-06-29T00:00:00Z' },
-      { preset: 'day', next: '2025-08-28T00:00:00Z', previous: '2025-05-08T00:00:00Z' },
+      { preset: 'dayAndMonth', next: '2025-08-28T00:00:00Z', previous: '2025-05-08T00:00:00Z' },
       { preset: 'dayAndWeek', next: '2025-10-23T00:00:00Z', previous: '2025-03-13T00:00:00Z' },
       { preset: 'monthAndYear', next: '2028-07-03T00:00:00Z', previous: '2022-07-03T00:00:00Z' },
       { preset: 'year', next: '2055-07-03T00:00:00Z', previous: '1995-07-03T00:00:00Z' },

@@ -10,7 +10,7 @@ import { timelineEvents, timelineResources, timelineDefaultVisibleDate } from '.
 
 const presetOptions: { value: EventTimelinePremiumPreset; label: string }[] = [
   { value: 'dayAndHour', label: 'Time' },
-  { value: 'day', label: 'Days' },
+  { value: 'dayAndMonth', label: 'Days' },
   { value: 'dayAndWeek', label: 'Weeks' },
   { value: 'monthAndYear', label: 'Months' },
   { value: 'year', label: 'Years' },

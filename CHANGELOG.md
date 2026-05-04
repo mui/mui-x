@@ -1,5 +1,92 @@
 # Changelog
 
+## 9.0.4
+
+_Apr 28, 2026_
+
+We'd like to extend a big thank you to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- Fix Pickers previous (v9.0.3) release ensuring the latest `@mui/x-internals` version usage
+
+The following team members contributed to this release:
+@alexfauquette, @JCQuintas, @LukasTy, @mj12albert
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.0.4`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@9.0.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.0.4`.
+
+#### `@mui/x-data-grid-premium@9.0.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.0.4`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.0.4`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@9.0.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.0.4`.
+
+### Charts
+
+#### `@mui/x-charts@9.0.4`
+
+- [charts] Exclude hidden series and items from keyboard navigation (alt approach) (#22221) @JCQuintas
+- [charts] Fix line interaction with `area` and `conectNulls` (#22227) @alexfauquette
+- [charts] Implement the continuous case of `getAxisIndex` for rotation axis (#22230) @alexfauquette
+
+#### `@mui/x-charts-pro@9.0.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.0.4`.
+
+#### `@mui/x-charts-premium@9.0.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.0.4` plus:
+
+- [charts-premium] Add `showMark` and `shape` properties to radial line (#22226) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@9.0.4`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.0.4` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.0.4`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.4`
+
+Internal changes.
+
+#### `@mui/x-scheduler-premium@9.0.4` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.4`.
+
+### Codemod
+
+#### `@mui/x-codemod@9.0.4`
+
+Internal changes.
+
+### Docs
+
+- [docs] Update WCAG links (#22234) @mj12albert
+
+### Core
+
+- [code-infra] Avoid overriding `renovate` `ignoredPaths` (#22228) @LukasTy
+
 ## 9.0.3
 
 _Apr 27, 2026_

@@ -14,23 +14,20 @@ import {
   EventTimelinePremiumParameters,
 } from './EventTimelinePremiumStore.types';
 import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePremiumLazyLoadingPlugin';
-import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS } from '../event-timeline-premium-selectors/eventTimelinePremiumPresetSelectors';
+import {
+  EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS,
+  getPresetPxPerDay,
+} from '../internals/utils/preset-utils';
 
-// Canonical zoom order for the built-in presets, from most-zoomed-in to most-zoomed-out.
-// The `presets` array in state is always sorted against this order so a future zoom API
-// (`zoomIn()` moves toward index 0, `zoomOut()` toward the end) behaves consistently
-// regardless of the order the user provides.
-// TODO(#21827): replace with a data-driven sort once the extended `PresetConfig` lands.
-const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = [
-  'dayAndHour',
-  'day',
-  'dayAndWeek',
-  'monthAndYear',
-  'year',
-];
+// Sorted by descending px/day (most zoomed-in first). Each preset's `(timeResolution,
+// tickWidth)` must produce a unique px/day — otherwise the order is decided by
+// `Object.keys` insertion order, which is not a stable contract.
+const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = (
+  Object.keys(EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS) as EventTimelinePremiumPreset[]
+).sort((a, b) => getPresetPxPerDay(b) - getPresetPxPerDay(a));
 
 export const DEFAULT_PRESETS: EventTimelinePremiumPreset[] = PRESET_ZOOM_ORDER;
-export const DEFAULT_PRESET: EventTimelinePremiumPreset = 'dayAndHour';
+export const DEFAULT_PRESET: EventTimelinePremiumPreset = PRESET_ZOOM_ORDER[0];
 
 function sortPresetsByZoomOrder(
   presets: EventTimelinePremiumPreset[],
@@ -54,8 +51,7 @@ function sortPresetsByZoomOrder(
       );
     }
   }
-  // Dedupe and restrict to known presets, preserving the canonical order.
-  // Iterating over `PRESET_ZOOM_ORDER` (instead of the input) guarantees a canonical,
+  // Iterating over `PRESET_ZOOM_ORDER` (instead of the input) yields a canonical,
   // duplicate-free output even when runtime inputs (storage, URL params, dynamic
   // registries) bypass the compile-time `EventTimelinePremiumPreset` union.
   return PRESET_ZOOM_ORDER.filter((preset) => presets.includes(preset));

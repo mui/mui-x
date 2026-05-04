@@ -595,15 +595,13 @@ export class SchedulerStore<
    */
   public setVisibleResources = (
     visibleResources: Record<SchedulerResourceId, boolean>,
-    event: Event,
+    event: Event | undefined,
   ) => {
     const { visibleResources: visibleResourcesProp, onVisibleResourcesChange } = this.parameters;
     const hasChange = this.state.visibleResources !== visibleResources;
-
     if (hasChange) {
       const eventDetails = createChangeEventDetails('none', event);
       onVisibleResourcesChange?.(visibleResources, eventDetails);
-
       if (!eventDetails.isCanceled && visibleResourcesProp === undefined) {
         this.set('visibleResources', visibleResources);
       }

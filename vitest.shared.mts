@@ -114,7 +114,10 @@ export default defineConfig({
       // Important to avoid timeouts on CI.
       fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.
-      testTimeout: 30000,
+      // Tests run ~3x slower under React 19 stable than React 18 (CPU-bound,
+      // mostly @testing-library/user-event async timing); the slowest legitimate
+      // tests touch ~17s in CI, so 30s leaves no headroom for noise.
+      testTimeout: 60000,
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
       // Reduce the number of workers to avoid CI timeouts.

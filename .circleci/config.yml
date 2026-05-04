@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/99fb0c874daeabc34c61c849cfea313a45a2466a/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/12844f2b6b11babab17bd3d1f799359ea25d1db7/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -274,6 +274,43 @@ jobs:
       - run:
           name: Upload screenshots to Argos CI
           command: pnpm test:argos
+  test_charts_benchmark:
+    <<: *default-job
+    executor:
+      name: code-infra/mui-node-browser
+      playwright-img-version: v1.58.2-noble
+    resource_class: medium
+    steps:
+      - checkout
+      - run:
+          name: Skip when no charts changes
+          command: |
+            if [ "$CIRCLE_BRANCH" = "master" ] || [ "$CIRCLE_BRANCH" = "next" ]; then
+              echo "On $CIRCLE_BRANCH; running benchmarks."
+              exit 0
+            fi
+            BASE="${BASE_BRANCH:-master}"
+            git fetch --no-tags --depth=50 origin "$BASE"
+            CHANGED=$(git diff --name-only "origin/$BASE...HEAD" -- \
+              'packages/x-charts*' \
+              'test/performance-charts' \
+              '.circleci/config.yml')
+            if [ -n "$CHANGED" ]; then
+              echo "Relevant changes detected; running benchmarks:"
+              echo "$CHANGED"
+              exit 0
+            fi
+            echo "No changes to packages/x-charts*, test/performance-charts, or CircleCI config; halting job."
+            circleci-agent step halt
+      - install-deps
+      - run:
+          name: Build charts packages
+          command: pnpm --filter "@mui/x-charts-premium..." build
+      - run:
+          name: Run charts benchmarks
+          environment:
+            BENCHMARK_UPLOAD: 'true'
+          command: pnpm test:charts-benchmark
 
 workflows:
   pipeline:
@@ -295,6 +332,8 @@ workflows:
       - test_regressions:
           <<: *default-context
       - test_package:
+          <<: *default-context
+      - test_charts_benchmark:
           <<: *default-context
   e2e-website:
     when:
