@@ -1,3 +1,4 @@
+import type { WithDataAttributes } from '@mui/x-internals/types';
 import {
   type ChartsTooltipContainerProps,
   type ChartsTooltipClasses,
@@ -16,7 +17,7 @@ export interface HeatmapTooltipSlotProps {
    * Custom component for the tooltip popper.
    * @default ChartsTooltipRoot
    */
-  tooltip?: Partial<HeatmapTooltipProps>;
+  tooltip?: WithDataAttributes<Partial<HeatmapTooltipProps>>;
 }
 
 export interface HeatmapTooltipClasses extends ChartsTooltipClasses {}

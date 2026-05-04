@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useChatPartRenderer } from '../hooks/useChatPartRenderer';
 import type { ChatMessagePart, ChatStepStartMessagePart } from '../types/chat-message-parts';
 import type { ChatPartRenderer } from '../renderers/chatPartRenderer';
@@ -25,8 +25,8 @@ export interface MessageContentSlots {
 }
 
 export interface MessageContentSlotProps {
-  content?: SlotComponentProps<'div', {}, MessageContentOwnerState>;
-  bubble?: SlotComponentProps<'div', {}, MessageContentOwnerState>;
+  content?: SlotComponentPropsFromProps<'div', {}, MessageContentOwnerState>;
+  bubble?: SlotComponentPropsFromProps<'div', {}, MessageContentOwnerState>;
 }
 
 export interface TextPartExternalProps {

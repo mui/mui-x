@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import MenuItem from '@mui/material/MenuItem';
 import { DigitalClockClasses } from './digitalClockClasses';
 import {
@@ -20,7 +20,7 @@ export interface DigitalClockSlots {
 }
 
 export interface DigitalClockSlotProps {
-  digitalClockItem?: SlotComponentProps<typeof MenuItem, {}, DigitalClockOwnerState>;
+  digitalClockItem?: SlotComponentPropsFromProps<typeof MenuItem, {}, DigitalClockOwnerState>;
 }
 
 export interface DigitalClockProps

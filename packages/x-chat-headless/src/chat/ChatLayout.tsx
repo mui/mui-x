@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { getChatLayoutPaneKind, type ChatLayoutPaneKind } from './internals/chatLayoutPaneKind';
 
 export interface ChatLayoutSlots {
@@ -20,9 +20,9 @@ export interface ChatLayoutPaneOwnerState {
 }
 
 export interface ChatLayoutSlotProps {
-  root?: SlotComponentProps<'div', {}, ChatLayoutOwnerState>;
-  conversationsPane?: SlotComponentProps<'div', {}, ChatLayoutPaneOwnerState>;
-  threadPane?: SlotComponentProps<'div', {}, ChatLayoutPaneOwnerState>;
+  root?: SlotComponentPropsFromProps<'div', {}, ChatLayoutOwnerState>;
+  conversationsPane?: SlotComponentPropsFromProps<'div', {}, ChatLayoutPaneOwnerState>;
+  threadPane?: SlotComponentPropsFromProps<'div', {}, ChatLayoutPaneOwnerState>;
 }
 
 export interface ChatLayoutProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {

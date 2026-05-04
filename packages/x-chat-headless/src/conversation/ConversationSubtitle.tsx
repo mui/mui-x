@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useConversationContext } from './internals/ConversationContext';
 import { type ConversationSubtitleOwnerState } from './conversation.types';
 
@@ -10,7 +10,7 @@ export interface ConversationSubtitleSlots {
 }
 
 export interface ConversationSubtitleSlotProps {
-  subtitle?: SlotComponentProps<'div', {}, ConversationSubtitleOwnerState>;
+  subtitle?: SlotComponentPropsFromProps<'div', {}, ConversationSubtitleOwnerState>;
 }
 
 export interface ConversationSubtitleProps extends React.HTMLAttributes<HTMLDivElement> {

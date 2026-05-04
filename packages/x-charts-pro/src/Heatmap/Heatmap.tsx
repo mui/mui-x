@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { type MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional, type WithDataAttributes } from '@mui/x-internals/types';
 import { ChartsAxis, type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import {
@@ -69,7 +69,7 @@ export interface HeatmapSlotProps
     ChartsLegendSlotProps,
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {
-  tooltip?: Partial<HeatmapTooltipProps>;
+  tooltip?: WithDataAttributes<Partial<HeatmapTooltipProps>>;
 }
 
 export type HeatmapSeries = MakeOptional<HeatmapSeriesType, 'type'>;

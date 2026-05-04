@@ -1,4 +1,4 @@
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { PickerRangeValue, UseFieldInternalProps } from '@mui/x-date-pickers/internals';
 import { FieldOwnerState } from '@mui/x-date-pickers/models';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
@@ -22,8 +22,12 @@ export interface BaseMultiInputFieldProps
     textField?: React.ElementType;
   };
   slotProps?: {
-    root?: SlotComponentProps<React.ElementType<MultiInputFieldSlotRootProps>, {}, FieldOwnerState>;
-    textField?: SlotComponentProps<
+    root?: SlotComponentPropsFromProps<
+      React.ElementType<MultiInputFieldSlotRootProps>,
+      {},
+      FieldOwnerState
+    >;
+    textField?: SlotComponentPropsFromProps<
       typeof PickersTextField,
       {},
       FieldOwnerState & { position?: RangePosition }

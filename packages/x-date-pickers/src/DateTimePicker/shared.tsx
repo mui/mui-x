@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { DefaultizedProps, WithDataAttributes } from '@mui/x-internals/types';
 import { DateOrTimeView, DateTimeValidationError } from '../models';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import {
@@ -53,11 +53,11 @@ export interface BaseDateTimePickerSlotProps
   /**
    * Props passed down to the tabs component.
    */
-  tabs?: DateTimePickerTabsProps;
+  tabs?: WithDataAttributes<DateTimePickerTabsProps>;
   /**
    * Props passed down to the toolbar component.
    */
-  toolbar?: ExportedDateTimePickerToolbarProps;
+  toolbar?: WithDataAttributes<ExportedDateTimePickerToolbarProps>;
 }
 
 export type DateTimePickerViewRenderers<TView extends DateOrTimeViewWithMeridiem> =
