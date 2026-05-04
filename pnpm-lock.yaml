@@ -115,13 +115,13 @@ catalogs:
       specifier: ^8.59.0
       version: 8.59.0
     '@vitejs/plugin-react':
-      specifier: ^5.1.4
+      specifier: ^5.2.0
       version: 5.2.0
     '@vitest/browser-playwright':
-      specifier: ^4.1.4
+      specifier: ^4.1.5
       version: 4.1.5
     '@vitest/coverage-v8':
-      specifier: ^4.1.4
+      specifier: ^4.1.5
       version: 4.1.5
     babel-plugin-react-remove-properties:
       specifier: ^0.3.1
@@ -214,10 +214,10 @@ catalogs:
       specifier: ^1.6.0
       version: 1.6.0
     vite:
-      specifier: ^7.3.1
+      specifier: ^7.3.2
       version: 7.3.2
     vitest:
-      specifier: ^4.1.4
+      specifier: ^4.1.5
       version: 4.1.5
     yargs:
       specifier: ^18.0.0
@@ -365,9 +365,6 @@ importers:
       es-toolkit:
         specifier: 'catalog:'
         version: 1.46.1
-      esbuild:
-        specifier: 0.27.3
-        version: 0.27.3
       eslint:
         specifier: 9.39.4
         version: 9.39.4
@@ -2331,7 +2328,7 @@ importers:
         specifier: workspace:^
         version: link:../../packages/x-charts-pro/build
       '@vitejs/plugin-react':
-        specifier: ^6.0.1
+        specifier: 6.0.1
         version: 6.0.1(babel-plugin-react-compiler@1.0.0)(vite@8.0.10(@types/node@24.5.2)(esbuild@0.27.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))
       '@vitest/browser-playwright':
         specifier: 'catalog:'
@@ -2343,7 +2340,7 @@ importers:
         specifier: 'catalog:'
         version: 19.2.5(react@19.2.5)
       vite:
-        specifier: ^8.0.9
+        specifier: 8.0.10
         version: 8.0.10(@types/node@24.5.2)(esbuild@0.27.3)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
       vitest:
         specifier: 'catalog:'
