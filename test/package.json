@@ -6,6 +6,7 @@
   },
   "devDependencies": {
     "@babel/runtime": "catalog:",
+    "@testing-library/user-event": "14.6.1",
     "@base-ui/utils": "catalog:",
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",

@@ -372,12 +372,17 @@ describe('<DataGridPro /> - Columns', () => {
       expect(getCell(0, 0).getBoundingClientRect().width).to.equal(150);
       expect(getCell(1, 0).getBoundingClientRect().width).to.equal(150);
 
-      // Resize column back
-      await user.pointer([{ target: separator, coords: { x: 120 } }]);
+      // Resize column back. Drive the rest of the gesture with fireEvent
+      // because user.pointer's gesture state (MouseLeft pressed) does not
+      // reliably carry through an interleaved act() update under delay:null.
+      fireEvent.mouseMove(separator, { clientX: 120, buttons: 1 });
+      fireEvent.mouseUp(separator, { clientX: 120 });
 
       // Verify all cells (old and new) have the new width
-      expect(getCell(0, 0).getBoundingClientRect().width).to.equal(120);
-      expect(getCell(1, 0).getBoundingClientRect().width).to.equal(120);
+      await waitFor(() => {
+        expect(getCell(0, 0).getBoundingClientRect().width).to.equal(120);
+        expect(getCell(1, 0).getBoundingClientRect().width).to.equal(120);
+      });
     });
 
     // https://github.com/mui/mui-x/issues/13548

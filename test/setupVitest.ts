@@ -10,8 +10,16 @@ import setupVitest from '@mui/internal-test-utils/setupVitest';
 import { configure, isJsdom } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/internals';
+import { userEvent } from '@testing-library/user-event';
 
 (globalThis as any).MUI_TEST_ENV = true;
+
+// Speed up @testing-library/user-event by removing the setTimeout(0) yield
+// between events and the per-call CSS pointer-events check. Tests that
+// genuinely need the slower defaults can still pass them explicitly.
+const originalUserEventSetup = userEvent.setup;
+userEvent.setup = (options = {}) =>
+  originalUserEventSetup({ delay: null, pointerEventsCheck: 0, ...options });
 
 setupVitest({ emotion: true });
 
