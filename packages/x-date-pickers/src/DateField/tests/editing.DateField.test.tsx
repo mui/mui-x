@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
@@ -61,6 +62,78 @@ describe('<DateField /> - Editing', () => {
         await waitFor(() => {
           expectFieldValue(view.getSectionsContainer(), 'DD MMMM');
         });
+      });
+
+      it('should keep the entered sections when the controlled value ignores a validator-invalid date', async () => {
+        const view = renderWithProps(
+          {
+            minDate: adapter.date('2022-01-01'),
+            maxDate: adapter.date('2022-12-31'),
+          },
+          {
+            hook: function useControlledInvalidValueProps() {
+              const [value, setValue] = React.useState(null);
+
+              return {
+                value,
+                onChange: (newValue, context) => {
+                  if (context.validationError == null) {
+                    setValue(newValue);
+                  }
+                },
+              };
+            },
+          },
+        );
+
+        await view.selectSectionAsync('month');
+        await view.user.keyboard('04');
+        await view.selectSectionAsync('day');
+        await view.user.keyboard('17');
+        expectFieldValue(view.getSectionsContainer(), '04/17/YYYY');
+
+        await view.selectSectionAsync('year');
+        await view.user.keyboard('2023');
+
+        await act(async () => {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+          });
+        });
+
+        expectFieldValue(view.getSectionsContainer(), '04/17/2023');
+
+        await view.selectSectionAsync('year');
+        await view.user.keyboard('2022');
+        expectFieldValue(view.getSectionsContainer(), '04/17/2022');
+      });
+
+      it('should keep displaying the controlled value when a validator-invalid edit starts from a non-null value', async () => {
+        const view = renderWithProps(
+          {
+            minDate: adapter.date('2022-01-01'),
+            maxDate: adapter.date('2022-12-31'),
+          },
+          {
+            hook: function useControlledInvalidValueProps() {
+              const [value, setValue] = React.useState(adapter.date('2022-06-04'));
+
+              return {
+                value,
+                onChange: (newValue, context) => {
+                  if (context.validationError == null) {
+                    setValue(newValue);
+                  }
+                },
+              };
+            },
+          },
+        );
+
+        await view.selectSectionAsync('year');
+        view.pressKey(2, 'ArrowUp');
+
+        expectFieldValue(view.getSectionsContainer(), '06/04/2022');
       });
     },
   );
