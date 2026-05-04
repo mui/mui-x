@@ -102,22 +102,21 @@ export default function RadiusAxisPlayground() {
     minRadius: ${props.minRadius},
     maxRadius: ${props.maxRadius},
     tickNumber: ${props.radiusTickNumber},
-  }]}
->
-  <Unstable_ChartsRadialGrid rotation radius />
-  <ChartsRadiusAxis
 ${[
-  `position={${props.position}}`,
-  `tickSize={${props.tickSize}}`,
-  props.disableLine && 'disableLine',
-  props.disableTicks && 'disableTicks',
-  props.tickPosition && `tickPosition="${props.tickPosition}"`,
-  props.tickLabelPosition && `tickLabelPosition="${props.tickLabelPosition}"`,
+  `position: ${props.position}`,
+  `tickSize: ${props.tickSize}`,
+  props.disableLine && 'disableLine: true,',
+  props.disableTicks && 'disableTicks: true,',
+  props.tickPosition && `tickPosition: "${props.tickPosition}",`,
+  props.tickLabelPosition && `tickLabelPosition: "${props.tickLabelPosition}",`,
 ]
   .filter(Boolean)
   .map((line) => `    ${line}`)
   .join('\n')}
-  />
+  }]}
+>
+  <Unstable_ChartsRadialGrid rotation radius />
+  <ChartsRadiusAxis />
 </Unstable_ChartsRadialDataProvider>`}
     />
   );

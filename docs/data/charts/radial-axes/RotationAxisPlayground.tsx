@@ -97,6 +97,17 @@ export default function RotationAxisPlayground() {
     startAngle: ${props.startAngle},
     endAngle: ${props.endAngle},
     tickNumber: ${props.rotationTickNumber},
+${[
+  `tickSize: ${props.tickSize},`,
+  props.disableLine && 'disableLine: true,',
+  props.disableTicks && 'disableTicks: true,',
+  props.position && `position: "${props.position}",`,
+  props.tickPosition && `tickPosition: "${props.tickPosition}",`,
+  props.tickLabelPosition && `tickLabelPosition: "${props.tickLabelPosition}",`,
+]
+  .filter(Boolean)
+  .map((line) => `    ${line}`)
+  .join('\n')}
   }]}
   radiusAxis={[{
     minRadius: ${props.minRadius},
@@ -104,19 +115,7 @@ export default function RotationAxisPlayground() {
   }]}
 >
   <Unstable_ChartsRadialGrid rotation radius />
-  <ChartsRotationAxis
-${[
-  `tickSize={${props.tickSize}}`,
-  props.disableLine && 'disableLine',
-  props.disableTicks && 'disableTicks',
-  props.position && `position="${props.position}"`,
-  props.tickPosition && `tickPosition="${props.tickPosition}"`,
-  props.tickLabelPosition && `tickLabelPosition="${props.tickLabelPosition}"`,
-]
-  .filter(Boolean)
-  .map((line) => `    ${line}`)
-  .join('\n')}
-  />
+  <ChartsRotationAxis />
 </Unstable_ChartsRadialDataProvider>`}
     />
   );
