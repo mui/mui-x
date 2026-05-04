@@ -11,7 +11,9 @@ import {
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
 import { spy, stub } from 'sinon';
+import { iconButtonClasses } from '@mui/material/IconButton';
 import Portal from '@mui/material/Portal';
+import SvgIcon, { svgIconClasses } from '@mui/material/SvgIcon';
 import {
   DataGrid,
   type DataGridProps,
@@ -315,6 +317,27 @@ describe('<DataGrid /> - Rows', () => {
         );
         expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
         expect(screen.queryByText('print')).to.equal(null);
+      });
+
+      it('should let the icon inherit the action button size', () => {
+        render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem
+                key={1}
+                icon={<SvgIcon data-testid="delete-icon" />}
+                label="delete"
+                size="large"
+              />,
+            ]}
+          />,
+        );
+
+        const actionButton = screen.getByRole('menuitem', { name: 'delete' });
+        const icon = screen.getByTestId('delete-icon');
+
+        expect(actionButton).to.have.class(iconButtonClasses.sizeLarge);
+        expect(icon).to.have.class(svgIconClasses.fontSizeInherit);
       });
 
       it('should show in a menu the actions marked as showInMenu', async () => {

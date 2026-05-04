@@ -48,7 +48,7 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
         {...rootProps.slotProps?.baseIconButton}
         ref={ref as React.RefObject<HTMLButtonElement>}
       >
-        {React.cloneElement(icon!, { fontSize: 'small' })}
+        {React.cloneElement(icon!, { fontSize: 'inherit' })}
       </rootProps.slots.baseIconButton>
     );
   }
