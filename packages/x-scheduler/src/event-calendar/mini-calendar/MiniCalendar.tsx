@@ -205,6 +205,8 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
         ref={forwardedRef}
         role="grid"
         aria-label={localeText.miniCalendarLabel}
+        aria-rowcount={1 + weeks.length}
+        aria-colcount={7}
         className={clsx(classes.miniCalendar, className)}
         {...other}
       >
@@ -232,12 +234,17 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
           </MiniCalendarNavigation>
         </MiniCalendarHeader>
 
-        <MiniCalendarWeekdayHeader role="row" className={classes.miniCalendarWeekdayHeader}>
-          {weekdays.map((day) => (
+        <MiniCalendarWeekdayHeader
+          role="row"
+          aria-rowindex={1}
+          className={classes.miniCalendarWeekdayHeader}
+        >
+          {weekdays.map((day, dayIndex) => (
             <MiniCalendarWeekdayCell
               key={day.key}
               role="columnheader"
               aria-label={adapter.formatByString(day.value, adapter.formats.weekday)}
+              aria-colindex={dayIndex + 1}
               className={classes.miniCalendarWeekdayCell}
               data-weekend={isWeekend(adapter, day.value) || undefined}
             >
@@ -248,13 +255,17 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
 
         <MiniCalendarGrid role="rowgroup" className={classes.miniCalendarGrid}>
           {weeks.map((week, weekIndex) => (
-            <MiniCalendarWeekRow key={weekIndex} role="row" className={classes.miniCalendarWeekRow}>
-              {week.map((day) => {
+            <MiniCalendarWeekRow
+              key={weekIndex}
+              role="row"
+              aria-rowindex={weekIndex + 2}
+              className={classes.miniCalendarWeekRow}
+            >
+              {week.map((day, dayIndex) => {
                 const isToday = adapter.isSameDay(day.value, now);
                 const isActive = adapter.isSameDay(day.value, visibleDate);
                 const isOtherMonth = !adapter.isSameMonth(day.value, displayedMonth);
 
-                // Create a full date label for accessibility
                 const fullDateLabel = adapter.formatByString(
                   day.value,
                   adapter.formats.localizedDateWithFullMonthAndWeekDay,
@@ -264,6 +275,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
                   <MiniCalendarDayCell
                     key={day.key}
                     role="gridcell"
+                    aria-colindex={dayIndex + 1}
                     className={classes.miniCalendarDayCell}
                   >
                     <MiniCalendarDayButton

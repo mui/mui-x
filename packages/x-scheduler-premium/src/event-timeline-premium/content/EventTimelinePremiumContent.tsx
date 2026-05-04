@@ -11,7 +11,10 @@ import {
   timelineOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
-import { schedulerNowSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerNowSelectors,
+  schedulerOccurrenceSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   EventDialogProvider,
@@ -355,6 +358,12 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     schedulerNowSelectors.showCurrentTimeIndicator,
   );
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const resources = useStore(
+    store,
+    schedulerOccurrenceSelectors.groupedByResourceList,
+    presetConfig.start,
+    presetConfig.end,
+  );
   const isNowInView = React.useMemo(
     () => adapter.isWithinRange(now, [presetConfig.start, presetConfig.end]),
     [adapter, now, presetConfig.start, presetConfig.end],
@@ -414,18 +423,23 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
       <EventDialogProvider>
         <EventTimelinePremiumGrid
           className={classes.grid}
+          aria-rowcount={1 + resources.length}
+          aria-colcount={presetConfig.tickCount + 1}
           style={{ '--unit-width': `${presetConfig.tickWidth}px` } as React.CSSProperties}
         >
           <EventTimelinePremiumHeaderRow className={classes.headerRow} aria-rowindex={1}>
             <EventTimelinePremiumTitleHeaderCell
               ref={titleHeaderRef}
               className={classes.titleHeaderCell}
+              role="columnheader"
+              aria-colindex={1}
             >
               {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
             </EventTimelinePremiumTitleHeaderCell>
             <EventTimelinePremiumEventsHeaderCell
               ref={eventsHeaderCellRef}
               className={classes.eventsHeaderCell}
+              role="presentation"
             >
               <EventTimelinePremiumEventsHeaderCellContent
                 ref={eventsHeaderRef}

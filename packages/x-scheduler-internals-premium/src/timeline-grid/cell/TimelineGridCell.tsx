@@ -6,19 +6,13 @@ export const TimelineGridCell = React.forwardRef(function TimelineGridCell(
   componentProps: TimelineGridCell.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const {
-    // Rendering props
-    className,
-    render,
-    style,
-    // Props forwarded to the DOM element
-    ...elementProps
-  } = componentProps;
+  const { className, render, style, ...elementProps } = componentProps;
 
-  // TODO: Add aria-colindex using Composite.
+  const role = (elementProps as { role?: React.AriaRole }).role ?? 'gridcell';
+
   return useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [elementProps, { role: 'cell' }],
+    props: [elementProps, { role }],
   });
 });
 

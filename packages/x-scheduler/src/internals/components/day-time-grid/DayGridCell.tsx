@@ -56,7 +56,7 @@ const DayTimeGridAllDayEventContainer = styled('div', {
 });
 
 export function DayGridCell(props: DayGridCellProps) {
-  const { day, row } = props;
+  const { day, row, colIndex } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -97,6 +97,7 @@ export function DayGridCell(props: DayGridCellProps) {
         } as React.CSSProperties
       }
       aria-labelledby={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
+      aria-colindex={colIndex}
       role="gridcell"
       data-weekend={isWeekend(adapter, day.value) || undefined}
     >
@@ -128,6 +129,7 @@ export function DayGridCell(props: DayGridCellProps) {
 interface DayGridCellProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
   row: useEventOccurrencesWithDayGridPosition.ReturnValue;
+  colIndex: number;
 }
 
 /**

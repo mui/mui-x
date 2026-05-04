@@ -78,7 +78,7 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
 }));
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
-  const { day, showCurrentTimeIndicator, index } = props;
+  const { day, showCurrentTimeIndicator, index, colIndex } = props;
 
   const adapter = useAdapterContext();
   const { classes } = useEventCalendarStyledContext();
@@ -95,6 +95,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       start={start}
       end={end}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
+      aria-colindex={colIndex}
       data-weekend={isWeekend(adapter, day.value) || undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
@@ -182,6 +183,7 @@ function ColumnInteractiveLayer({
 interface TimeGridColumnProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
   index: number;
+  colIndex: number;
   showCurrentTimeIndicator: boolean;
 }
 

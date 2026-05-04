@@ -217,6 +217,51 @@ describe('<WeekView />', () => {
     });
   });
 
+  describe('aria semantics', () => {
+    it('should set aria-rowcount and aria-colcount on the grid root and aria indexes on cells', () => {
+      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
+      render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
+
+      const grids = screen.getAllByRole('grid');
+      const dayTimeGrid = grids.find(
+        (grid) => grid.getAttribute('aria-rowcount') === '3',
+      ) as HTMLElement;
+      expect(dayTimeGrid).not.to.equal(undefined);
+      expect(dayTimeGrid.getAttribute('aria-colcount')).to.equal('8');
+
+      const headerCells = within(dayTimeGrid).getAllByRole('columnheader');
+      const dayHeaders = headerCells.filter((cell) => cell.getAttribute('aria-label'));
+      expect(dayHeaders.length).to.equal(7);
+      dayHeaders.forEach((cell, i) => {
+        expect(cell.getAttribute('aria-colindex')).to.equal(String(i + 2));
+      });
+
+      const allDayHeader = headerCells.find((cell) => cell.textContent === 'All day');
+      expect(allDayHeader).not.to.equal(undefined);
+      expect(allDayHeader!.getAttribute('aria-colindex')).to.equal('1');
+
+      const rows = within(dayTimeGrid).getAllByRole('row');
+      const headerRow = rows.find((row) => row.getAttribute('aria-rowindex') === '1');
+      const allDayRow = rows.find((row) => row.getAttribute('aria-rowindex') === '2');
+      const timeRow = rows.find((row) => row.getAttribute('aria-rowindex') === '3');
+      expect(headerRow).not.to.equal(undefined);
+      expect(allDayRow).not.to.equal(undefined);
+      expect(timeRow).not.to.equal(undefined);
+
+      const allDayCells = within(allDayRow!).getAllByRole('gridcell');
+      expect(allDayCells.length).to.equal(7);
+      allDayCells.forEach((cell, i) => {
+        expect(cell.getAttribute('aria-colindex')).to.equal(String(i + 2));
+      });
+
+      const timeCells = within(timeRow!).getAllByRole('gridcell');
+      expect(timeCells.length).to.equal(7);
+      timeCells.forEach((cell, i) => {
+        expect(cell.getAttribute('aria-colindex')).to.equal(String(i + 2));
+      });
+    });
+  });
+
   describe('current time indicator', () => {
     it('renders one indicator per day when today is in view', () => {
       const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
