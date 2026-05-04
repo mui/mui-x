@@ -53,9 +53,6 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
       [`& .${pickersOutlinedInputClasses.notchedOutline}`]: {
         borderColor: (theme.vars || theme).palette.action.disabled,
       },
-      '*': {
-        color: (theme.vars || theme).palette.action.disabled,
-      },
     },
     variants: Object.keys((theme.vars ?? theme).palette)
       // @ts-ignore
