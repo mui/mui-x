@@ -119,6 +119,12 @@
     "itemsReordering": {
       "description": "If <code>true</code>, the reordering of items is enabled."
     },
+    "loading": {
+      "description": "If <code>true</code>, a skeleton loading UI is displayed instead of the tree items."
+    },
+    "loadingItemsCount": {
+      "description": "The number of skeleton items to display when <code>loading</code> is <code>true</code>."
+    },
     "multiSelect": { "description": "Whether multiple items can be selected." },
     "onExpandedItemsChange": {
       "description": "Callback fired when Tree Items are expanded/collapsed.",
