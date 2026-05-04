@@ -1,57 +1,25 @@
-import { fireEvent, createEvent } from '@mui/internal-test-utils';
-import { DragEventTypes } from '../dragAndDrop';
+import { fireEvent } from '@mui/internal-test-utils';
 
-export const rangeCalendarDayTouches = {
-  '2018-01-01': {
-    clientX: 85,
-    clientY: 125,
-  },
-  '2018-01-02': {
-    clientX: 125,
-    clientY: 125,
-  },
-  '2018-01-09': {
-    clientX: 125,
-    clientY: 165,
-  },
-  '2018-01-10': {
-    clientX: 165,
-    clientY: 165,
-  },
-  '2018-01-11': {
-    clientX: 205,
-    clientY: 165,
-  },
-} as const;
+const POINTER_ID = 1;
 
-export const buildPickerDragInteractions = (getDataTransfer: () => DataTransfer | null) => {
-  const createDragEvent = (type: DragEventTypes, target: ChildNode) => {
-    const createdEvent = createEvent[type](target);
-    Object.defineProperty(createdEvent, 'dataTransfer', {
-      value: getDataTransfer(),
-    });
-    return createdEvent;
-  };
+/**
+ * Replays a pointer drag across day cells: pointerdown on the source, then
+ * pointerover on each subsequent cell, then pointerup. Used to test the
+ * DateRangeCalendar drag-to-edit interaction in jsdom. We fire `pointerover`
+ * (bubbles) rather than `pointerenter` (doesn't bubble) so React's delegated
+ * listener picks the events up.
+ */
+export const executeDateDragWithoutDrop = (startDate: Element, ...otherDates: Element[]) => {
+  // `isPrimary: true` matches what real browsers produce for a first-finger
+  // touch / mouse press; the production handler short-circuits secondary
+  // multi-touch pointers via `event.isPrimary === false`.
+  fireEvent.pointerDown(startDate, { pointerId: POINTER_ID, button: 0, isPrimary: true });
+  otherDates.forEach((date) => {
+    fireEvent.pointerOver(date, { pointerId: POINTER_ID });
+  });
+};
 
-  const executeDateDragWithoutDrop = (startDate: ChildNode, ...otherDates: ChildNode[]) => {
-    const endDate = otherDates[otherDates.length - 1];
-    fireEvent(startDate, createDragEvent('dragStart', startDate));
-    fireEvent(startDate, createDragEvent('dragLeave', startDate));
-    otherDates.slice(0, otherDates.length - 1).forEach((date) => {
-      fireEvent(date, createDragEvent('dragEnter', date));
-      fireEvent(date, createDragEvent('dragOver', date));
-      fireEvent(date, createDragEvent('dragLeave', date));
-    });
-    fireEvent(endDate, createDragEvent('dragEnter', endDate));
-    fireEvent(endDate, createDragEvent('dragOver', endDate));
-  };
-
-  const executeDateDrag = (startDate: ChildNode, ...otherDates: ChildNode[]) => {
-    executeDateDragWithoutDrop(startDate, ...otherDates);
-    const endDate = otherDates[otherDates.length - 1];
-    fireEvent(endDate, createDragEvent('drop', endDate));
-    fireEvent(endDate, createDragEvent('dragEnd', endDate));
-  };
-
-  return { executeDateDragWithoutDrop, executeDateDrag };
+export const executeDateDrag = (startDate: Element, ...otherDates: Element[]) => {
+  executeDateDragWithoutDrop(startDate, ...otherDates);
+  fireEvent.pointerUp(document, { pointerId: POINTER_ID });
 };
