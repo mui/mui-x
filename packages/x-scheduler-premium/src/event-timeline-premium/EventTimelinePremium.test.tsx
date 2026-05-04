@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { screen, waitFor } from '@mui/internal-test-utils';
+import { act, screen, waitFor } from '@mui/internal-test-utils';
 import {
   EventTimelinePremium,
   eventTimelinePremiumClasses,
@@ -549,6 +549,72 @@ describe('<EventTimelinePremium />', () => {
 
       await waitFor(() => {
         expect(screen.queryByText('Transient error')).to.equal(null);
+      });
+    });
+
+    it('should render a non-Error rejection by stringifying it', async () => {
+      // dataSource that rejects with a non-Error value (e.g. a `fetch` Response).
+      const nonError = { status: 500, toString: () => '500 Internal Server Error' };
+      const dataSource = {
+        // eslint-disable-next-line prefer-promise-reject-errors
+        getEvents: () => Promise.reject(nonError),
+        updateEvents: async () => ({ success: true }),
+      };
+
+      render(
+        <EventTimelinePremium
+          resources={baseResources}
+          dataSource={dataSource}
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          defaultPreset="dayAndMonth"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('500 Internal Server Error')).not.to.equal(null);
+      });
+    });
+
+    it('should drop dismissed errors that are no longer in state.errors', async () => {
+      const sharedError = new Error('Shared error');
+      const store = new EventTimelinePremiumStore({ events: [] }, adapter);
+      // Set initial errors before mounting so the first render already has them.
+      (store as any).set('errors', [sharedError]);
+
+      function Test() {
+        return (
+          <SchedulerStoreContext.Provider value={store as any}>
+            <EventTimelinePremiumStyledContext.Provider
+              value={{
+                schedulerId: 'test',
+                classes: eventTimelinePremiumClasses,
+                localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+              }}
+            >
+              <EventTimelinePremiumErrorContainer />
+            </EventTimelinePremiumStyledContext.Provider>
+          </SchedulerStoreContext.Provider>
+        );
+      }
+
+      const { user } = render(<Test />);
+
+      await user.click(screen.getByRole('button', { name: /close/i }));
+      await waitFor(() => {
+        expect(screen.queryByText('Shared error')).to.equal(null);
+      });
+
+      // Plugin base clears errors on a successful refetch (line 119 of SchedulerLazyLoadingPlugin).
+      await act(async () => {
+        store.set('errors', []);
+      });
+      // Same Error instance gets re-thrown later — should re-display since the dismiss state was purged.
+      await act(async () => {
+        store.set('errors', [sharedError]);
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Shared error')).not.to.equal(null);
       });
     });
   });

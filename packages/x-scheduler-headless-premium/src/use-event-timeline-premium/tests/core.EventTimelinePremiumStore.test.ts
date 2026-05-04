@@ -48,12 +48,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         hasMounted: false,
       };
 
-      // Ignore internal cache keys added by store effects
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { __cacheKey__: _cacheKey, ...actualState } = store.state as typeof store.state & {
-        __cacheKey__?: unknown;
-      };
-      expect(actualState).to.deep.equal(expectedState);
+      expect(store.state).to.deep.equal(expectedState);
     });
 
     it('should sort the presets array into the canonical zoom order regardless of input order', () => {

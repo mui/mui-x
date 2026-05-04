@@ -14,7 +14,7 @@ export class SchedulerLazyLoadingPlugin<
   State extends SchedulerState,
   Parameters extends SchedulerParameters<TEvent, any>,
 > {
-  private store: SchedulerStore<TEvent, any, State, Parameters>;
+  protected store: SchedulerStore<TEvent, any, State, Parameters>;
 
   private dataManager: SchedulerDataManager | null = null;
   private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;

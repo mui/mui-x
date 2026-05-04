@@ -58,6 +58,20 @@ export function EventTimelinePremiumErrorContainer(
 
   const [dismissedErrors, setDismissedErrors] = React.useState<Set<Error>>(new Set());
 
+  // Drop dismissed entries whose Error is no longer in `state.errors`, so the Set doesn't
+  // grow forever and a re-thrown identical Error can re-display once cleared from state.
+  React.useEffect(() => {
+    setDismissedErrors((previous) => {
+      const next = new Set<Error>();
+      for (const error of previous) {
+        if (errors.includes(error)) {
+          next.add(error);
+        }
+      }
+      return next.size === previous.size ? previous : next;
+    });
+  }, [errors]);
+
   const handleDismiss = (error: Error) => {
     setDismissedErrors(new Set(dismissedErrors).add(error));
   };
@@ -79,7 +93,7 @@ export function EventTimelinePremiumErrorContainer(
               className={classes.errorMessage}
               variant="body2"
             >
-              {error.message}
+              {error instanceof Error ? error.message : String(error)}
             </EventTimelinePremiumErrorMessage>
           </EventTimelinePremiumErrorAlert>
         ))}
