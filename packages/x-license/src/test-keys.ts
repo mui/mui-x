@@ -105,32 +105,21 @@ export const TEST_KEY_PRO_SUBSCRIPTION_FUTURE =
 export const TEST_KEY_PREMIUM_SUBSCRIPTION_FUTURE =
   '1c6ea00fadedfcb3f2ef393f1de32f29Tz0xMjMsRT0zMjUzNTEyNjAwMDAwMCxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLFBWPWluaXRpYWwsVD10cnVlLEtWPTI=';
 
-// --- Key format v3 ---
+// --- Keys for v9 plan version check tests ---
 
 /**
- * Pro annual, Q3-2024, quantity: 5, appType: single.
- * orderId: #123, keyVersion: 3, expiryDate: 2099-12-30T23:00:00.000Z
+ * Pro annual, Q1-2026, expiry = 3001-01-01.
+ * orderId: #123, keyVersion: 2
  */
-export const TEST_KEY_PRO_ANNUAL_V3 =
-  '521a75b4cf0d0c5e8990ce070886e167Tz0xMjMsRT00MTAyMzU0ODAwMDAwLFM9cHJvLExNPWFubnVhbCxQVj1RMy0yMDI0LFE9NSxBVD1zaW5nbGUsVD10cnVlLEtWPTM=';
-
-// --- Key format v3 Q1-2026 ---
+export const TEST_KEY_PRO_ANNUAL_Q1_2026 =
+  '10c66120eda205131bf0a2074a3fddc8Tz0xMjMsRT0zMjUzNTEyNjAwMDAwMCxTPXBybyxMTT1hbm51YWwsUFY9UTEtMjAyNixUPXRydWUsS1Y9Mg==';
 
 /**
- * Pro annual, Q1-2026, quantity: 5, appType: single.
- * orderId: #123, keyVersion: 3, expiryDate: 3001-01-01
+ * Premium annual, Q1-2026, expiry = 3001-01-01.
+ * orderId: #123, keyVersion: 2
  */
-export const TEST_KEY_PRO_ANNUAL_Q1_2026_V3 =
-  '5f52871b5845f28ebdd0fabbe0b89695Tz0xMjMsRT0zMjUzNTEyNjAwMDAwMCxTPXBybyxMTT1hbm51YWwsUFY9UTEtMjAyNixRPTUsQVQ9c2luZ2xlLFQ9dHJ1ZSxLVj0z';
-
-/**
- * Premium annual, Q1-2026, quantity: 10, appType: single.
- * orderId: #123, keyVersion: 3, expiryDate: 3001-01-01
- */
-export const TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3 =
-  '450d9fc1b28e709fcb73969bd10e1c30Tz0xMjMsRT0zMjUzNTEyNjAwMDAwMCxTPXByZW1pdW0sTE09YW5udWFsLFBWPVExLTIwMjYsUT0xMCxBVD1zaW5nbGUsVD10cnVlLEtWPTM=';
-
-// --- Keys for v9 plan version check tests (perpetual + Q1-2026) ---
+export const TEST_KEY_PREMIUM_ANNUAL_Q1_2026 =
+  '854d69abfa6ccd7625577af2618eaa27Tz0xMjMsRT0zMjUzNTEyNjAwMDAwMCxTPXByZW1pdW0sTE09YW5udWFsLFBWPVExLTIwMjYsVD10cnVlLEtWPTI=';
 
 /**
  * Pro perpetual, Q1-2026, expiry = releaseDate + 1 day (not expired).
@@ -161,3 +150,10 @@ export const TEST_KEY_INVALID =
  */
 export const TEST_KEY_UNKNOWN_VERSION =
   '64152474c774ae343484f08bbbc1a231Tz0xMjMsRT0xNTE0NzYxMjAwMDAwLFM9cHJvLExNPWFubnVhbCxQVj1pbml0aWFsLFQ9dHJ1ZSxLVj05OQ==';
+
+/**
+ * Valid hash with KV=3 payload (legacy, no longer dispatched).
+ * Used to test that decodeLicense returns null for KV=3 keys.
+ */
+export const TEST_KEY_LEGACY_V3 =
+  '9aa0ce487d4a49a4fa0dc17aa343f3bcTz0xMjMsRT0xNTE0NzYxMjAwMDAwLFM9cHJvLExNPWFubnVhbCxQVj1RMy0yMDI0LFE9NSxBVD1zaW5nbGUsVD10cnVlLEtWPTM=';

@@ -72,7 +72,6 @@ function decodeLicenseVersion1(license: string): NullableLicenseDetails {
 
 /**
  * Parse a comma-separated key=value license string into a NullableLicenseDetails object.
- * Shared by v2 and v3 decoders.
  */
 export function parseLicenseTokens(license: string, licenseInfo: NullableLicenseDetails): void {
   license
@@ -143,27 +142,6 @@ export function decodeLicenseVersion2(license: string): NullableLicenseDetails {
 }
 
 /**
- * Format: O=${orderNumber},E=${expiryTimestamp},S=${planScope},LM=${licenseModel},PV=${planVersion},Q=${quantity},AT=${appType},KV=3
- */
-export function decodeLicenseVersion3(license: string): NullableLicenseDetails {
-  const licenseInfo: NullableLicenseDetails = {
-    keyVersion: 3,
-    licenseModel: null,
-    planScope: null,
-    planVersion: 'initial',
-    expiryTimestamp: null,
-    expiryDate: null,
-    orderId: null,
-    appType: null,
-    quantity: null,
-    isTestKey: false,
-  };
-
-  parseLicenseTokens(license, licenseInfo);
-  return licenseInfo;
-}
-
-/**
  * Decode the license based on its key version and return a version-agnostic `NullableLicenseDetails` object.
  */
 export function decodeLicense(encodedLicense: string): NullableLicenseDetails | null {
@@ -175,10 +153,6 @@ export function decodeLicense(encodedLicense: string): NullableLicenseDetails | 
 
   if (license.includes('KV=2')) {
     return decodeLicenseVersion2(license);
-  }
-
-  if (license.includes('KV=3')) {
-    return decodeLicenseVersion3(license);
   }
 
   return null;

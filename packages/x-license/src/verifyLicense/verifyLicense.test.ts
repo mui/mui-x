@@ -7,12 +7,12 @@ import {
   parseLicenseTokens,
   decodeLicense,
   decodeLicenseVersion2,
-  decodeLicenseVersion3,
 } from './verifyLicense';
 import { LICENSE_STATUS } from '../utils/licenseStatus';
 import { NullableLicenseDetails } from '../utils/licenseDetails';
 import {
   TEST_LICENSE_KEY_PRO,
+  TEST_LICENSE_KEY_PREMIUM,
   TEST_KEY_V1,
   TEST_KEY_PRO_SUBSCRIPTION,
   TEST_KEY_PREMIUM_SUBSCRIPTION,
@@ -22,13 +22,12 @@ import {
   TEST_KEY_PREMIUM_ANNUAL_INITIAL,
   TEST_KEY_EXPIRED_GRACE,
   TEST_KEY_EXPIRED_30DAYS,
-  TEST_KEY_PRO_ANNUAL_V3,
-  TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
-  TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3,
+  TEST_KEY_PRO_ANNUAL_Q1_2026,
   TEST_KEY_PRO_PERPETUAL_Q1_2026,
   TEST_KEY_PRO_PERPETUAL_Q1_2026_EXPIRED,
   TEST_KEY_INVALID,
   TEST_KEY_UNKNOWN_VERSION,
+  TEST_KEY_LEGACY_V3,
 } from '../test-keys';
 
 const releaseDate = new Date(2018, 0, 0, 0, 0, 0, 0);
@@ -48,6 +47,18 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
   });
 
   describe('verifyLicense', () => {
+    describe('missing license key', () => {
+      it('should return NotFound when no licenseKey is provided', () => {
+        process.env.NODE_ENV = 'production';
+        expect(
+          verifyLicense({
+            packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
+            licenseKey: undefined,
+          }).status,
+        ).to.equal(LICENSE_STATUS.NotFound);
+      });
+    });
+
     describe('key version: 1', () => {
       it('should log an error when ReleaseInfo is not valid', () => {
         process.env.NODE_ENV = 'production';
@@ -288,116 +299,6 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
   });
 
-  describe('key version: 3', () => {
-    it('should verify a v3 pro license for pro features', () => {
-      process.env.NODE_ENV = 'production';
-      expect(
-        verifyLicense({
-          packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
-          licenseKey: TEST_KEY_PRO_ANNUAL_V3,
-        }).status,
-      ).to.equal(LICENSE_STATUS.Valid);
-    });
-
-    it('should not accept a v3 pro license for premium features', () => {
-      process.env.NODE_ENV = 'production';
-      expect(
-        verifyLicense({
-          packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-premium' },
-          licenseKey: TEST_KEY_PRO_ANNUAL_V3,
-        }).status,
-      ).to.equal(LICENSE_STATUS.OutOfScope);
-    });
-  });
-
-  describe('key version: 3 (Q1-2026)', () => {
-    it('should verify a v3 pro Q1-2026 license for pro features', () => {
-      process.env.NODE_ENV = 'production';
-      expect(
-        verifyLicense({
-          packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
-          licenseKey: TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
-        }).status,
-      ).to.equal(LICENSE_STATUS.Valid);
-    });
-
-    it('should verify a v3 pro Q1-2026 license for x-charts-pro', () => {
-      process.env.NODE_ENV = 'production';
-      expect(
-        verifyLicense({
-          packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-charts-pro' },
-          licenseKey: TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
-        }).status,
-      ).to.equal(LICENSE_STATUS.Valid);
-    });
-
-    it('should verify a v3 pro Q1-2026 license for x-tree-view-pro', () => {
-      process.env.NODE_ENV = 'production';
-      expect(
-        verifyLicense({
-          packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-tree-view-pro' },
-          licenseKey: TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
-        }).status,
-      ).to.equal(LICENSE_STATUS.Valid);
-    });
-
-    it('should not accept a v3 pro Q1-2026 license for premium features', () => {
-      process.env.NODE_ENV = 'production';
-      expect(
-        verifyLicense({
-          packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-premium' },
-          licenseKey: TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
-        }).status,
-      ).to.equal(LICENSE_STATUS.OutOfScope);
-    });
-
-    it('should verify a v3 premium Q1-2026 license for premium features', () => {
-      process.env.NODE_ENV = 'production';
-      expect(
-        verifyLicense({
-          packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-premium' },
-          licenseKey: TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3,
-        }).status,
-      ).to.equal(LICENSE_STATUS.Valid);
-    });
-
-    it('should verify a v3 premium Q1-2026 license for pro features', () => {
-      process.env.NODE_ENV = 'production';
-      expect(
-        verifyLicense({
-          packageInfo: { releaseDate: RELEASE_INFO, version: '', name: 'x-data-grid-pro' },
-          licenseKey: TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3,
-        }).status,
-      ).to.equal(LICENSE_STATUS.Valid);
-    });
-
-    it('should decode quantity and appType from a Q1-2026 v3 pro key', () => {
-      const encoded = TEST_KEY_PRO_ANNUAL_Q1_2026_V3.slice(32);
-      const result = decodeLicense(encoded);
-
-      expect(result).to.not.equal(null);
-      expect(result!.keyVersion).to.equal(3);
-      expect(result!.planScope).to.equal('pro');
-      expect(result!.licenseModel).to.equal('annual');
-      expect(result!.planVersion).to.equal('Q1-2026');
-      expect(result!.quantity).to.equal(5);
-      expect(result!.appType).to.equal('single');
-    });
-
-    it('should decode quantity and appType from a Q1-2026 v3 premium key', () => {
-      const encoded = TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3.slice(32);
-      const result = decodeLicense(encoded);
-
-      expect(result).to.not.equal(null);
-      expect(result!.keyVersion).to.equal(3);
-      expect(result!.planScope).to.equal('premium');
-      expect(result!.licenseModel).to.equal('annual');
-      expect(result!.planVersion).to.equal('Q1-2026');
-      expect(result!.quantity).to.equal(10);
-      expect(result!.appType).to.equal('single');
-    });
-  });
-
   describe('NotValidForPackage (v9 plan version check)', () => {
     describe('annual/subscription licenses', () => {
       it('should reject annual license with planVersion "initial"', () => {
@@ -425,7 +326,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '9.0.0', name: 'x-data-grid-pro' },
-            licenseKey: TEST_KEY_PRO_ANNUAL_V3,
+            licenseKey: TEST_LICENSE_KEY_PRO,
           }).status,
         ).to.equal(LICENSE_STATUS.NotValidForPackage);
       });
@@ -435,9 +336,23 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
         expect(
           verifyLicense({
             packageInfo: { releaseDate: RELEASE_INFO, version: '9.0.0', name: 'x-data-grid-pro' },
-            licenseKey: TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
+            licenseKey: TEST_KEY_PRO_ANNUAL_Q1_2026,
           }).status,
         ).to.equal(LICENSE_STATUS.Valid);
+      });
+
+      it('should reject premium annual license with planVersion "Q3-2024"', () => {
+        process.env.NODE_ENV = 'production';
+        expect(
+          verifyLicense({
+            packageInfo: {
+              releaseDate: RELEASE_INFO,
+              version: '9.0.0',
+              name: 'x-data-grid-premium',
+            },
+            licenseKey: TEST_LICENSE_KEY_PREMIUM,
+          }).status,
+        ).to.equal(LICENSE_STATUS.NotValidForPackage);
       });
     });
 
@@ -523,60 +438,9 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       expect(licenseInfo.isTestKey).to.equal(true);
     });
 
-    it('should parse quantity and appType tokens (v3)', () => {
-      const licenseInfo: NullableLicenseDetails = {
-        keyVersion: 3,
-        licenseModel: null,
-        planScope: null,
-        planVersion: 'initial',
-        expiryTimestamp: null,
-        expiryDate: null,
-        orderId: null,
-        appType: null,
-        quantity: null,
-        isTestKey: false,
-      };
-
-      parseLicenseTokens(
-        'O=456,E=1514761200000,S=premium,LM=annual,PV=Q3-2024,Q=5,AT=single,KV=3',
-        licenseInfo,
-      );
-
-      expect(licenseInfo.quantity).to.equal(5);
-      expect(licenseInfo.appType).to.equal('single');
-      expect(licenseInfo.orderId).to.equal('456');
-      expect(licenseInfo.planScope).to.equal('premium');
-    });
-
-    it('should parse Q1-2026 planVersion with quantity and appType (v3)', () => {
-      const licenseInfo: NullableLicenseDetails = {
-        keyVersion: 3,
-        licenseModel: null,
-        planScope: null,
-        planVersion: 'initial',
-        expiryTimestamp: null,
-        expiryDate: null,
-        orderId: null,
-        appType: null,
-        quantity: null,
-        isTestKey: false,
-      };
-
-      parseLicenseTokens(
-        'O=789,E=1514761200000,S=pro,LM=annual,PV=Q1-2026,Q=5,AT=single,KV=3',
-        licenseInfo,
-      );
-
-      expect(licenseInfo.planVersion).to.equal('Q1-2026');
-      expect(licenseInfo.quantity).to.equal(5);
-      expect(licenseInfo.appType).to.equal('single');
-      expect(licenseInfo.orderId).to.equal('789');
-      expect(licenseInfo.planScope).to.equal('pro');
-    });
-
     it('should ignore invalid numeric values', () => {
       const licenseInfo: NullableLicenseDetails = {
-        keyVersion: 3,
+        keyVersion: 2,
         licenseModel: null,
         planScope: null,
         planVersion: 'initial',
@@ -588,11 +452,35 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
         isTestKey: false,
       };
 
-      parseLicenseTokens('O=abc,E=xyz,Q=notanumber,KV=3', licenseInfo);
+      parseLicenseTokens('O=abc,E=xyz,Q=notanumber,KV=2', licenseInfo);
 
       expect(licenseInfo.orderId).to.equal('abc');
       expect(licenseInfo.expiryTimestamp).to.equal(null);
       expect(licenseInfo.quantity).to.equal(null);
+    });
+
+    it('should parse Q (quantity) and AT (appType) tokens', () => {
+      const licenseInfo: NullableLicenseDetails = {
+        keyVersion: 2,
+        licenseModel: null,
+        planScope: null,
+        planVersion: 'initial',
+        expiryTimestamp: null,
+        expiryDate: null,
+        orderId: null,
+        appType: null,
+        quantity: null,
+        isTestKey: false,
+      };
+
+      parseLicenseTokens(
+        'O=456,E=1514761200000,S=premium,LM=annual,PV=Q1-2026,Q=10,AT=single,KV=2',
+        licenseInfo,
+      );
+
+      expect(licenseInfo.quantity).to.equal(10);
+      expect(licenseInfo.appType).to.equal('single');
+      expect(licenseInfo.planVersion).to.equal('Q1-2026');
     });
   });
 
@@ -620,56 +508,6 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
     });
   });
 
-  describe('decodeLicenseVersion3', () => {
-    it('should decode a v3 license string with quantity and appType', () => {
-      const result = decodeLicenseVersion3(
-        'O=789,E=1514761200000,S=premium,LM=annual,PV=Q3-2024,Q=10,AT=single,KV=3',
-      );
-
-      expect(result.keyVersion).to.equal(3);
-      expect(result.orderId).to.equal('789');
-      expect(result.planScope).to.equal('premium');
-      expect(result.licenseModel).to.equal('annual');
-      expect(result.planVersion).to.equal('Q3-2024');
-      expect(result.expiryTimestamp).to.equal(1514761200000);
-      expect(result.quantity).to.equal(10);
-      expect(result.appType).to.equal('single');
-      expect(result.isTestKey).to.equal(false);
-    });
-
-    it('should default appType to null for v3', () => {
-      const result = decodeLicenseVersion3('O=123,E=1514761200000,S=pro,LM=annual,PV=Q3-2024,KV=3');
-
-      expect(result.appType).to.equal(null);
-      expect(result.quantity).to.equal(null);
-    });
-
-    it('should decode a v3 license string with Q1-2026 planVersion', () => {
-      const result = decodeLicenseVersion3(
-        'O=123,E=4102354800000,S=pro,LM=annual,PV=Q1-2026,Q=5,AT=single,T=true,KV=3',
-      );
-
-      expect(result.keyVersion).to.equal(3);
-      expect(result.orderId).to.equal('123');
-      expect(result.planScope).to.equal('pro');
-      expect(result.licenseModel).to.equal('annual');
-      expect(result.planVersion).to.equal('Q1-2026');
-      expect(result.expiryTimestamp).to.equal(4102354800000);
-      expect(result.quantity).to.equal(5);
-      expect(result.appType).to.equal('single');
-      expect(result.isTestKey).to.equal(true);
-    });
-
-    it('should decode multi appType', () => {
-      const result = decodeLicenseVersion3(
-        'O=123,E=1514761200000,S=pro,LM=annual,PV=Q3-2024,Q=3,AT=multi,KV=3',
-      );
-
-      expect(result.appType).to.equal('multi');
-      expect(result.quantity).to.equal(3);
-    });
-  });
-
   describe('decodeLicense', () => {
     it('should decode a v1 license key', () => {
       const encoded = TEST_KEY_V1.slice(32);
@@ -694,21 +532,15 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       expect(result!.appType).to.equal('multi');
     });
 
-    it('should decode a v3 license key', () => {
-      const encoded = TEST_KEY_PRO_ANNUAL_V3.slice(32);
-      const result = decodeLicense(encoded);
-
-      expect(result).to.not.equal(null);
-      expect(result!.keyVersion).to.equal(3);
-      expect(result!.planScope).to.equal('pro');
-      expect(result!.licenseModel).to.equal('annual');
-      expect(result!.planVersion).to.equal('Q3-2024');
-      expect(result!.quantity).to.equal(5);
-      expect(result!.appType).to.equal('single');
-    });
-
     it('should return null for an unknown key version', () => {
       const encoded = TEST_KEY_UNKNOWN_VERSION.slice(32);
+      const result = decodeLicense(encoded);
+
+      expect(result).to.equal(null);
+    });
+
+    it('should return null for a legacy KV=3 license key', () => {
+      const encoded = TEST_KEY_LEGACY_V3.slice(32);
       const result = decodeLicense(encoded);
 
       expect(result).to.equal(null);
