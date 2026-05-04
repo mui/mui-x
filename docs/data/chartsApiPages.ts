@@ -62,6 +62,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsAxisHighlight',
   },
   {
+    pathname: '/x/api/charts/charts-axis-highlight-value',
+    title: 'ChartsAxisHighlightValue',
+  },
+  {
     pathname: '/x/api/charts/charts-axis-tooltip-content',
     title: 'ChartsAxisTooltipContent',
   },
@@ -116,6 +120,10 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-localization-provider',
     title: 'ChartsLocalizationProvider',
+  },
+  {
+    pathname: '/x/api/charts/charts-radial-axis-highlight',
+    title: 'ChartsRadialAxisHighlight',
   },
   {
     pathname: '/x/api/charts/charts-radial-data-provider',

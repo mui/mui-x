@@ -62,7 +62,7 @@ Use the `setVisibleDate()` API method to navigate to a given date:
 
 ```ts
 apiRef.current.setVisibleDate({
-  // The DOM event that triggered the change (we be passed to onVisibleDateChange if provided).
+  // The DOM event that triggered the change (will be passed to onVisibleDateChange if provided).
   event,
   // The date to navigate to.
   visibleDate,

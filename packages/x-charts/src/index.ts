@@ -7,6 +7,7 @@ export * from './models';
 export * from './ChartsClipPath';
 export * from './ChartsReferenceLine';
 export * from './ChartsAxis';
+export * from './ChartsAxisHighlightValue';
 export * from './ChartsXAxis';
 export * from './ChartsYAxis';
 export * from './ChartsGrid';
@@ -33,6 +34,7 @@ export type {
 export * from './ChartsDataProvider';
 export * from './ChartsRadialDataProvider';
 export * from './ChartsRadialGrid';
+export * from './ChartsRadialAxisHighlight';
 export * from './ChartsRadiusAxis';
 export { type ChartsRotationAxisProps, Unstable_ChartsRotationAxis } from './ChartsRotationAxis';
 export * from './Toolbar';
