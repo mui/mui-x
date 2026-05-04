@@ -604,9 +604,15 @@
       "isGlobal": false
     },
     {
-      "key": "eventDialogResourceMenuColorRadioButton",
-      "className": "MuiEventCalendar-eventDialogResourceMenuColorRadioButton",
-      "description": "Styles applied to the event dialog resource menu color radio button element.",
+      "key": "eventDialogResourceMenuColorToggle",
+      "className": "MuiEventCalendar-eventDialogResourceMenuColorToggle",
+      "description": "Styles applied to the event dialog resource menu color toggle element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventDialogResourceMenuColorToggleGroup",
+      "className": "MuiEventCalendar-eventDialogResourceMenuColorToggleGroup",
+      "description": "Styles applied to the event dialog resource menu color toggle group element.",
       "isGlobal": false
     },
     {
