@@ -800,8 +800,8 @@ importers:
         specifier: workspace:^
         version: link:../x-internals/build
       bezier-easing:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^3.0.0
+        version: 3.0.0
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
@@ -6428,8 +6428,8 @@ packages:
   before-after-hook@4.0.0:
     resolution: {integrity: sha512-q6tR3RPqIB1pMiTRMFcZwuG5T8vwp+vUvEG0vuI6B+Rikh5BfPp2fQ82c925FOs+b0lcFQ8CFrL+KbilfZFhOQ==}
 
-  bezier-easing@2.1.0:
-    resolution: {integrity: sha512-gbIqZ/eslnUFC1tjEvtz0sgx+xTK20wDnYMIA27VA04R7w6xxXQPZDbibjA9DTWZRA2CXtwHykkVzlCaAJAZig==}
+  bezier-easing@3.0.0:
+    resolution: {integrity: sha512-lE85voPXiK99T8NHOfhaUqCZpJdP1gBbbTEvdBDdPB+phyvPZPNWalBe42eb6lKOYchP0qZrtBiRCARtT4edRQ==}
 
   bidi-js@1.0.3:
     resolution: {integrity: sha512-RKshQI1R3YQ+n9YJz2QQ147P66ELpa1FQEg20Dk8oW9t2KgLbpDLLp9aGZ7y8WHSshDknG0bknqGw5/tyCs5tw==}
@@ -15960,7 +15960,7 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  bezier-easing@2.1.0: {}
+  bezier-easing@3.0.0: {}
 
   bidi-js@1.0.3:
     dependencies:
