@@ -12,7 +12,7 @@ import {
   type ScatterPlotSlots,
 } from './ScatterPlot';
 import { type ChartsContainerProps } from '../ChartsContainer';
-import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis';
+import { ChartsAxis } from '../ChartsAxis';
 import { type ScatterSeriesType } from '../models/seriesType/scatter';
 import { ChartsTooltip, type ChartsTooltipProps } from '../ChartsTooltip';
 import {
@@ -70,7 +70,6 @@ export interface ScatterChartProps
       ChartsContainerProps<'scatter', ScatterChartPluginSignatures>,
       'series' | 'plugins' | 'onItemClick' | 'highlightedAxis' | 'onHighlightedAxisChange'
     >,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<ScatterPlotProps, 'renderer'> {
   /**
