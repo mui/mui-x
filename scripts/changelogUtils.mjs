@@ -599,10 +599,11 @@ ${logOtherSection({
  * Fetches and returns the latest tagged version for a given major version.
  * @param {string | undefined} majorVersion
  */
-async function findLatestTaggedVersionForMajor(majorVersion) {
+async function findLatestTaggedVersionForMajor(majorVersion, upstreamRemote = 'origin') {
   // Fetch all tags from all remotes to ensure we have the latest tags.
   await $`git fetch --tags --all`;
-  const { stdout } = await $`git describe --tags --abbrev=0 --match ${`v${majorVersion || ''}*`}`; // only include "version-tags"
+  const { stdout } =
+    await $`git describe --tags --abbrev=0 --match ${`v${majorVersion || ''}*`} ${upstreamRemote}/v${majorVersion}.x`; // only include "version-tags"
   return stdout.trim();
 }
 
