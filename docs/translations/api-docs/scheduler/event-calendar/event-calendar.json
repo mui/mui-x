@@ -704,25 +704,25 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "event item resource legend color elements"
     },
-    "resourcesLegend": {
+    "resourcesTree": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the resources legend root element"
+      "nodeName": "the resources tree root element"
     },
-    "resourcesLegendItem": {
+    "resourcesTreeItem": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "resources legend item elements"
+      "nodeName": "resources tree item elements"
     },
-    "resourcesLegendItemCheckbox": {
+    "resourcesTreeItemCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "resources legend item checkbox elements"
+      "nodeName": "resources tree item checkbox elements"
     },
-    "resourcesLegendItemName": {
+    "resourcesTreeItemLabel": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "resources legend item name elements"
+      "nodeName": "resources tree item label elements"
     },
-    "resourcesLegendLabel": {
+    "resourcesTreeLabel": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the resources legend label element"
+      "nodeName": "the resources tree section label element"
     },
     "root": { "description": "Styles applied to the root element." },
     "sidePanel": {
