@@ -58,6 +58,8 @@ Here's how the radial line chart is composed:
         <ChartsOverlay />
       </g>
       <ChartsRadialAxisHighlight />
+      <ChartsRotationAxis />
+      <ChartsRadiusAxis />
       <RadialMarkPlot />
       <RadialLineHighlightPlot />
       <ChartsClipPath id={clipPathId} />
