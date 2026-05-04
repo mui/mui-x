@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
+import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { eventTimelinePremiumClasses as classes } from '../../eventTimelinePremiumClasses';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 

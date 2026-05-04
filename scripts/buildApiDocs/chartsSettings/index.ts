@@ -102,6 +102,7 @@ export default chartsApiPages;
       'x-charts/src/ScatterChart/BatchScatter.tsx',
       'x-charts/src/BarChart/BatchBarPlot.tsx',
       'x-charts/src/BarChart/IndividualBarPlot.tsx',
+      'x-charts/src/ChartsAxisHighlightValue/ChartsAxisHighlightValueItem.tsx',
       'x-charts-pro/src/Heatmap/HeatmapSVGPlot.tsx',
       'x-charts-pro/src/SankeyChart/SankeyLinkPlot.tsx',
       'x-charts-pro/src/SankeyChart/SankeyNodePlot.tsx',
@@ -126,6 +127,7 @@ export default chartsApiPages;
       'x-charts-premium/src/CandlestickChart/seriesConfig/OHLCTooltipContent.tsx',
       'x-charts-premium/src/RadialLineChart/RadialLine.tsx',
       'x-charts-premium/src/RadialLineChart/RadialArea.tsx',
+      'x-charts-premium/src/RadialLineChart/RadialLineHighlightElement.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,

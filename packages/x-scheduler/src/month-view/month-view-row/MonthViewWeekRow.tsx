@@ -2,11 +2,11 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
-import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
+import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { MonthViewCell } from './MonthViewCell';
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';

@@ -1,7 +1,7 @@
 import {
   RecurringEventPresetKey,
   SchedulerEventRecurrenceRule,
-} from '@mui/x-scheduler-headless/models';
+} from '@mui/x-scheduler-internals/models';
 import {
   SchedulerEvent,
   SchedulerEventColor,
@@ -9,12 +9,12 @@ import {
   SchedulerEventId,
   SchedulerEventOccurrence,
   SchedulerEventSide,
-} from '@mui/x-scheduler-headless/models/event';
-import { processEvent, resolveEventDate } from '@mui/x-scheduler-headless/process-event';
-import { getWeekDayCode } from '@mui/x-scheduler-headless/internals/utils/recurring-events';
-import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
-import { TemporalTimezone } from '@mui/x-scheduler-headless/base-ui-copy/types';
-import type { SchedulerResource } from '@mui/x-scheduler-headless/models';
+} from '@mui/x-scheduler-internals/models/event';
+import { processEvent, resolveEventDate } from '@mui/x-scheduler-internals/process-event';
+import { getWeekDayCode } from '@mui/x-scheduler-internals/internals/utils/recurring-events';
+import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy/types';
+import type { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { adapter as defaultAdapter } from './adapters';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';

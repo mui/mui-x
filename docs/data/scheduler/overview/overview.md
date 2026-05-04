@@ -5,6 +5,8 @@ packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
 ---
 
+{{"component": "modules/components/overview/scheduler/SchedulerFeedbackBanner.tsx"}}
+
 {{"component": "modules/components/overview/XLogo.tsx"}}
 
 # MUI X Scheduler

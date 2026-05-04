@@ -42,12 +42,12 @@ catalog:
   '@types/semver': ^7.7.1
   '@types/use-sync-external-store': ^1.5.0
   '@typescript-eslint/parser': ^8.59.0
-  '@vitejs/plugin-react': ^5.1.4
-  '@vitejs/plugin-react-swc': ^4.2.3
-  '@vitest/browser': ^4.0.18
-  '@vitest/browser-playwright': ^4.0.18
-  '@vitest/coverage-v8': ^4.0.18
-  '@vitest/ui': ^4.0.18
+  '@vitejs/plugin-react': ^5.2.0
+  '@vitejs/plugin-react-swc': ^4.3.0
+  '@vitest/browser': ^4.1.5
+  '@vitest/browser-playwright': ^4.1.5
+  '@vitest/coverage-v8': ^4.1.5
+  '@vitest/ui': ^4.1.5
   babel-plugin-react-remove-properties: ^0.3.1
   chance: ^1.1.13
   clsx: ^2.1.1
@@ -56,7 +56,7 @@ catalog:
   date-fns: ^4.1.0
   date-fns-jalali: ^4.1.0-0
   dayjs: ^1.11.20
-  es-toolkit: ^1.46.0
+  es-toolkit: ^1.46.1
   execa: 9.6.1
   jscodeshift: 17.3.0
   jsdom: 26.1.0
@@ -64,24 +64,23 @@ catalog:
   moment: ^2.30.1
   moment-hijri: ^3.0.0
   moment-jalaali: ^0.10.4
-  moment-timezone: ^0.6.1
+  moment-timezone: ^0.6.2
   motion: ^12.38.0
   playwright: 1.58.2
   prop-types: ^15.8.1
   rasterizehtml: ^1.4.1
   react: 19.2.5
   react-dom: 19.2.5
-  react-router: ^7.13.0
+  react-router: ^7.14.2
   react-transition-group: ^4.4.5
   reselect: ^5.1.1
   rimraf: ^6.1.3
   serve: ^14.2.6
-  stylis: ^4.3.6
+  stylis: ^4.4.0
   tsx: ^4.21.0
-  type-fest: ^5.4.4
   use-sync-external-store: ^1.6.0
-  vite: ^7.3.1
-  vitest: ^4.0.18
+  vite: ^7.3.2
+  vitest: ^4.1.5
   yargs: ^18.0.0
 
 engineStrict: true
@@ -101,4 +100,4 @@ onlyBuiltDependencies:
 overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
-  stylis: ^4.3.6
+  stylis: ^4.4.0

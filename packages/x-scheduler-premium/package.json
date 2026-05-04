@@ -54,8 +54,8 @@
     "@mui/x-internals": "workspace:^",
     "@mui/x-license": "workspace:^",
     "@mui/x-scheduler": "workspace:^",
-    "@mui/x-scheduler-headless": "workspace:^",
-    "@mui/x-scheduler-headless-premium": "workspace:^",
+    "@mui/x-scheduler-internals": "workspace:^",
+    "@mui/x-scheduler-internals-premium": "workspace:^",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },
