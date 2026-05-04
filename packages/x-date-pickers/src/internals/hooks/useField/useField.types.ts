@@ -119,7 +119,6 @@ export interface UseFieldForwardedProps {
   focused?: boolean;
   sectionListRef?: React.Ref<PickersSectionListRef>;
   onClick?: React.MouseEventHandler;
-  onMouseDown?: React.MouseEventHandler;
   onKeyDown?: React.KeyboardEventHandler;
   onFocus?: React.FocusEventHandler;
   onBlur?: React.FocusEventHandler;

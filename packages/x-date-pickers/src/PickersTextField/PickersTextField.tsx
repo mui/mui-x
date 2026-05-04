@@ -104,7 +104,6 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     elements,
     areAllSectionsEmpty,
     onClick,
-    onMouseDown,
     onKeyDown,
     onKeyUp,
     onPaste,
@@ -215,7 +214,24 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     <PickerTextFieldOwnerStateContext.Provider value={ownerState}>
       <RootComponent {...rootSlotProps}>
         {label != null && label !== '' && (
-          <InputLabelComponent htmlFor={id} id={inputLabelId} {...inputLabelSlotProps}>
+          <InputLabelComponent
+            htmlFor={id}
+            id={inputLabelId}
+            {...inputLabelSlotProps}
+            onMouseDown={(event) => {
+              // Prevent the native label-click-focuses-input behavior.
+              // The hidden input only exists for accessibility / form semantics
+              // (`htmlFor`, `aria-labelledby`); clicking the label should not
+              // focus the field or auto-select the first section.
+              // Section spans handle their own focus when clicked directly.
+              event.preventDefault();
+              inputLabelSlotProps?.onMouseDown?.(event);
+            }}
+            onClick={(event) => {
+              event.preventDefault();
+              inputLabelSlotProps?.onClick?.(event);
+            }}
+          >
             {label}
           </InputLabelComponent>
         )}
@@ -223,7 +239,6 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           elements={elements}
           areAllSectionsEmpty={areAllSectionsEmpty}
           onClick={onClick}
-          onMouseDown={onMouseDown}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
           onInput={onInput}

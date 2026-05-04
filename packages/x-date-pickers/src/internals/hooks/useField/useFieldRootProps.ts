@@ -1,5 +1,3 @@
-'use client';
-import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
 import {
@@ -215,30 +213,6 @@ export function useFieldRootProps(
     }
   });
 
-  // Tracks whether the most recent `mousedown` landed on blank space inside the
-  // sections container (i.e. not on a section span/content). When this is true,
-  // a subsequent `focus` event arriving on the container itself was caused by
-  // the browser auto-focusing the focusable (`tabindex=0`) container, and must
-  // not promote the field to a "focused" state nor select the first section.
-  // Reset to `false` once consumed (or on any non-blank-space mousedown).
-  const lastMouseDownWasOnBlankSpace = React.useRef(false);
-
-  const handleMouseDown = useEventCallback((event: React.MouseEvent) => {
-    if (disabled || !domGetters.isReady() || parsedSelectedSections === 'all') {
-      lastMouseDownWasOnBlankSpace.current = false;
-      return;
-    }
-
-    const target = event.target as Element;
-    if (!domGetters.getRoot().contains(target)) {
-      lastMouseDownWasOnBlankSpace.current = false;
-      return;
-    }
-
-    const clickedSectionIndex = domGetters.getSectionIndexFromDOMElement(target);
-    lastMouseDownWasOnBlankSpace.current = clickedSectionIndex == null;
-  });
-
   const handleInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {
     if (!domGetters.isReady() || parsedSelectedSections !== 'all') {
       return;
@@ -284,24 +258,15 @@ export function useFieldRootProps(
   });
 
   const handleFocus = useEventCallback(() => {
-    const wasBlankSpaceMouseDown = lastMouseDownWasOnBlankSpace.current;
-    lastMouseDownWasOnBlankSpace.current = false;
-
     if (focused || disabled || !domGetters.isReady()) {
       return;
     }
 
     const activeElement = getActiveElement(domGetters.getRoot());
-    const isFocusInsideASection = domGetters.getSectionIndexFromDOMElement(activeElement) != null;
-
-    // The browser auto-focused the `tabindex=0` sections container after a
-    // blank-space click. Treat it as a no-op so the field is not promoted to
-    // a focused state and no section is selected.
-    if (wasBlankSpaceMouseDown && !isFocusInsideASection) {
-      return;
-    }
 
     setFocused(true);
+
+    const isFocusInsideASection = domGetters.getSectionIndexFromDOMElement(activeElement) != null;
     if (!isFocusInsideASection) {
       setSelectedSections(sectionOrder.startIndex);
     }
@@ -328,7 +293,6 @@ export function useFieldRootProps(
     onBlur: handleBlur,
     onFocus: handleFocus,
     onClick: handleClick,
-    onMouseDown: handleMouseDown,
     onPaste: handlePaste,
     onInput: handleInput,
 
@@ -475,7 +439,6 @@ interface UseFieldRootPropsReturnValue {
   onBlur: React.FocusEventHandler<HTMLDivElement>;
   onFocus: React.FocusEventHandler<HTMLDivElement>;
   onClick: React.MouseEventHandler<HTMLDivElement>;
-  onMouseDown: React.MouseEventHandler<HTMLDivElement>;
   onPaste: React.ClipboardEventHandler<HTMLDivElement>;
   onInput: React.FormEventHandler<HTMLDivElement>;
   contentEditable: boolean;
