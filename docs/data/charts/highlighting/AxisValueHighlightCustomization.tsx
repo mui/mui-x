@@ -1,9 +1,16 @@
+import { useTheme } from '@mui/material/styles';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 import { ChartsAxisHighlightValue } from '@mui/x-charts/ChartsAxisHighlightValue';
 import data from '../dataset/random/scatterParallel.json';
 
 export default function AxisValueHighlightCustomization() {
+  const theme = useTheme();
+
+  const green = theme.palette.mode === 'dark' ? '#044412' : '#e5fedb';
+  const red = theme.palette.mode === 'dark' ? '#610909' : '#fad7d2';
+  const grey = theme.palette.mode === 'dark' ? '#333333' : '#cccccc';
+
   return (
     <div style={{ width: 400, height: 300, margin: 'auto' }}>
       <ScatterChart
@@ -33,7 +40,7 @@ export default function AxisValueHighlightCustomization() {
           sx={{
             translate: '-100% -50%',
             borderRadius: '8px 0 0 8px',
-            bgcolor: '#044412',
+            bgcolor: green,
           }}
         />
         <ChartsAxisHighlightValue
@@ -41,7 +48,7 @@ export default function AxisValueHighlightCustomization() {
           labelPosition="end"
           value={580}
           valueFormatter={() => 'with overflow'}
-          sx={{ borderRadius: '0 8px 8px 0', bgcolor: '#044412' }}
+          sx={{ borderRadius: '0 8px 8px 0', bgcolor: green }}
         />
 
         <ChartsAxisHighlightValue
@@ -51,7 +58,7 @@ export default function AxisValueHighlightCustomization() {
           valueFormatter={() => 'this uses the max height'}
           sx={{
             p: 0.5,
-            bgcolor: '#610909',
+            bgcolor: red,
             maxWidth: 70,
             maxHeight: 'var(--space)',
             overflow: 'auto',
@@ -65,7 +72,7 @@ export default function AxisValueHighlightCustomization() {
           valueFormatter={() => 'this one does not'}
           sx={{
             p: 0.5,
-            bgcolor: '#610909',
+            bgcolor: red,
             maxWidth: 50,
           }}
         />
@@ -76,7 +83,7 @@ export default function AxisValueHighlightCustomization() {
           sx={{
             translate: '-50% -100%',
             borderRadius: '8px 8px 0 0',
-            bgcolor: 'grey',
+            bgcolor: grey,
           }}
         />
       </ScatterChart>
