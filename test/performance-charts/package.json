@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@emotion/react": "catalog:",
-    "@mui/internal-benchmark": "0.0.3-canary.2",
+    "@mui/internal-benchmark": "0.0.3-canary.3",
     "@mui/x-charts": "workspace:^",
     "@mui/x-charts-pro": "workspace:^",
     "@mui/x-charts-premium": "workspace:^",
