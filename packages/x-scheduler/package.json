@@ -62,6 +62,7 @@
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:^",
     "@mui/x-scheduler-internals": "workspace:^",
+    "@mui/x-tree-view": "workspace:^",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },

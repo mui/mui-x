@@ -62,6 +62,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsAxisHighlight',
   },
   {
+    pathname: '/x/api/charts/charts-axis-highlight-value',
+    title: 'ChartsAxisHighlightValue',
+  },
+  {
     pathname: '/x/api/charts/charts-axis-tooltip-content',
     title: 'ChartsAxisTooltipContent',
   },

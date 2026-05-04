@@ -12,6 +12,8 @@ import FormControl from '@mui/material/FormControl';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
+import { Toggle } from '@base-ui/react/toggle';
+import { ToggleGroup } from '@base-ui/react/toggle-group';
 import { EVENT_COLORS } from '@mui/x-scheduler-internals/constants';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
@@ -53,9 +55,9 @@ const ResourceMenuColorDot = styled('span', {
   },
 }));
 
-const ColorSelectionContainer = styled('div', {
+const ResourceMenuColorToggleGroup = styled(ToggleGroup, {
   name: 'MuiEventDialog',
-  slot: 'ColorSelectionContainer',
+  slot: 'ResourceMenuColorToggleGroup',
 })(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
@@ -63,9 +65,9 @@ const ColorSelectionContainer = styled('div', {
   borderRadius: theme.shape.borderRadius,
 }));
 
-const ResourceMenuColorRadioButton = styled('button', {
+const ResourceMenuColorToggle = styled(Toggle, {
   name: 'MuiEventDialog',
-  slot: 'ResourceMenuColorRadioButton',
+  slot: 'ResourceMenuColorToggle',
 })<{ palette?: PaletteName }>(({ theme }) => ({
   width: 24,
   height: 24,
@@ -88,7 +90,7 @@ interface ResourceSelectProps {
   readOnly?: boolean;
   resourceId: string | null;
   onResourceChange: (value: SchedulerResourceId) => void;
-  onColorChange: (value: SchedulerEventColor) => void;
+  onColorChange: (value: SchedulerEventColor | null) => void;
   color: SchedulerEventColor | null;
 }
 
@@ -247,23 +249,28 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           })}
         </Select>
       </FormControl>
-      <ColorSelectionContainer role="radiogroup" aria-label={localeText.colorPickerLabel}>
+      <ResourceMenuColorToggleGroup
+        value={color ? [color] : []}
+        onValueChange={(values) => {
+          const next = values[values.length - 1] as SchedulerEventColor | undefined;
+          onColorChange(next ?? null);
+        }}
+        aria-label={localeText.colorPickerLabel}
+        disabled={readOnly}
+        className={classes.eventDialogResourceMenuColorToggleGroup}
+      >
         {EVENT_COLORS.map((colorOption) => (
-          <ResourceMenuColorRadioButton
+          <ResourceMenuColorToggle
             key={colorOption}
-            type="button"
-            role="radio"
-            aria-checked={color === colorOption}
-            disabled={readOnly}
-            onClick={() => onColorChange(colorOption)}
+            value={colorOption}
             aria-label={`Select ${colorOption} as event color`}
             data-palette={colorOption}
-            className={classes.eventDialogResourceMenuColorRadioButton}
+            className={classes.eventDialogResourceMenuColorToggle}
           >
             {color === colorOption && <CheckIcon fontSize="small" />}
-          </ResourceMenuColorRadioButton>
+          </ResourceMenuColorToggle>
         ))}
-      </ColorSelectionContainer>
+      </ResourceMenuColorToggleGroup>
     </React.Fragment>
   );
 }

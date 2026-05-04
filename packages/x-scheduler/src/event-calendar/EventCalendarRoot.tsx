@@ -18,7 +18,7 @@ import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from './header-toolbar';
-import { ResourcesLegend } from './resources-legend';
+import { ResourcesTree } from './resources-tree';
 import { MiniCalendar } from './mini-calendar';
 import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 
@@ -147,7 +147,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
             <EventCalendarSidePanel className={classes.sidePanel}>
               <MiniCalendar />
               <Divider className={classes.sidePanelDivider} />
-              <ResourcesLegend />
+              <ResourcesTree />
             </EventCalendarSidePanel>
           </Collapse>
 

@@ -111,7 +111,7 @@ describe('<EventDialogContent open />', () => {
     await user.click(screen.getByRole('tab', { name: /general/i }));
     await user.click(screen.getByRole('combobox', { name: /resource/i }));
     await user.click(await screen.findByRole('option', { name: /work/i }));
-    await user.click(screen.getByRole('radio', { name: /pink/i }));
+    await user.click(screen.getByRole('button', { name: /pink/i }));
     await user.click(screen.getByRole('button', { name: /save/i }));
 
     expect(onEventsChange.calledOnce).to.equal(true);
@@ -131,6 +131,29 @@ describe('<EventDialogContent open />', () => {
 
     expect(updated).to.deep.equal(expectedUpdatedEvent);
   }, 10_000);
+
+  it('should clear the color when clicking the active color toggle', async () => {
+    const onEventsChange = spy();
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
+        <EventDialogContent open {...defaultProps} />
+      </EventCalendarProvider>,
+    );
+    const pinkToggle = screen.getByRole('button', { name: /pink/i });
+    await user.click(pinkToggle);
+    expect(pinkToggle).to.have.attribute('aria-pressed', 'true');
+    await user.click(pinkToggle);
+    expect(pinkToggle).to.have.attribute('aria-pressed', 'false');
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    expect(onEventsChange.calledOnce).to.equal(true);
+    expect(onEventsChange.firstCall.firstArg[0].color).to.not.equal('pink');
+  });
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
