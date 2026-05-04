@@ -1,6 +1,4 @@
-export {
-  ChartsRotationAxis as Unstable_ChartsRotationAxis,
-} from './ChartsRotationAxis';
+export { ChartsRotationAxis as Unstable_ChartsRotationAxis } from './ChartsRotationAxis';
 export {
   type ChartsRadialAxisClasses,
   type ChartsRadialAxisClassKey,
