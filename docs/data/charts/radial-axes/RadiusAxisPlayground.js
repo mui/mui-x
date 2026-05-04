@@ -31,7 +31,7 @@ export default function RadiusAxisPlayground() {
           max: 180,
           step: 10,
         },
-        radiusTickNumber: { knob: 'number', defaultValue: 5, min: 0, max: 20 },
+        radiusTickNumber: { knob: 'number', defaultValue: 3, min: 0, max: 20 },
         startAngle: {
           knob: 'number',
           defaultValue: -90,
@@ -47,17 +47,15 @@ export default function RadiusAxisPlayground() {
           step: 10,
         },
         minRadius: { knob: 'number', defaultValue: 30, min: 0, step: 10 },
-        maxRadius: { knob: 'number', defaultValue: 150, min: 50, step: 10 },
+        maxRadius: { knob: 'number', defaultValue: 130, min: 50, step: 10 },
       }}
       renderDemo={(props) => (
         <Box
           sx={{
             width: '100%',
-            height: 400,
           }}
         >
           <Unstable_ChartsRadialDataProvider
-            width={400}
             height={400}
             rotationAxis={[
               {
@@ -102,22 +100,21 @@ export default function RadiusAxisPlayground() {
     minRadius: ${props.minRadius},
     maxRadius: ${props.maxRadius},
     tickNumber: ${props.radiusTickNumber},
-  }]}
->
-  <Unstable_ChartsRadialGrid rotation radius />
-  <ChartsRadiusAxis
 ${[
-  `position={${props.position}}`,
-  `tickSize={${props.tickSize}}`,
-  props.disableLine && 'disableLine',
-  props.disableTicks && 'disableTicks',
-  props.tickPosition && `tickPosition="${props.tickPosition}"`,
-  props.tickLabelPosition && `tickLabelPosition="${props.tickLabelPosition}"`,
+  `position: ${props.position}`,
+  `tickSize: ${props.tickSize}`,
+  props.disableLine && 'disableLine: true,',
+  props.disableTicks && 'disableTicks: true,',
+  props.tickPosition && `tickPosition: "${props.tickPosition}",`,
+  props.tickLabelPosition && `tickLabelPosition: "${props.tickLabelPosition}",`,
 ]
   .filter(Boolean)
   .map((line) => `    ${line}`)
   .join('\n')}
-  />
+  }]}
+>
+  <Unstable_ChartsRadialGrid rotation radius />
+  <ChartsRadiusAxis />
 </Unstable_ChartsRadialDataProvider>`}
     />
   );

@@ -1,5 +1,5 @@
 <RadialLineChart
-  height={400}
+  height={300}
   series={[
     {
       data: [3, 5, 7, 9, 12, 15, 18, 16, 13, 9, 6, 4],
@@ -8,5 +8,6 @@
     },
   ]}
   rotationAxis={[{ data: hours, domainLimit: 'strict' }]}
+  radiusAxis={[{ position: 'none' }]}
   grid={{ rotation: true, radius: true }}
 />

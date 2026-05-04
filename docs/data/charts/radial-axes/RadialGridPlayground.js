@@ -13,7 +13,7 @@ export default function RadialGridPlayground() {
         rotation: { knob: 'switch', defaultValue: true },
         radius: { knob: 'switch', defaultValue: true },
         rotationTickNumber: { knob: 'number', defaultValue: 10, min: 0, max: 20 },
-        radiusTickNumber: { knob: 'number', defaultValue: 10, min: 0, max: 20 },
+        radiusTickNumber: { knob: 'number', defaultValue: 3, min: 0, max: 20 },
         startAngle: {
           knob: 'number',
           defaultValue: -90,
@@ -29,12 +29,11 @@ export default function RadialGridPlayground() {
           step: 10,
         },
         minRadius: { knob: 'number', defaultValue: 30, min: 0, step: 10 },
-        maxRadius: { knob: 'number', defaultValue: 150, min: 50, step: 10 },
+        maxRadius: { knob: 'number', defaultValue: 130, min: 50, step: 10 },
       }}
       renderDemo={(props) => (
         <Box sx={{ width: '100%', maxWidth: 400 }}>
           <Unstable_ChartsRadialDataProvider
-            width={400}
             height={300}
             rotationAxis={[
               {
