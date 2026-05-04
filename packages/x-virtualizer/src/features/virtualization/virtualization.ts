@@ -164,7 +164,7 @@ function initializeState(params: ParamsWithDefaults) {
         {} as Record<string, Record<string, any>>,
       ),
       context: {},
-      scrollPosition: { current: ScrollPosition.EMPTY },
+      scrollPosition: { current: { ...ScrollPosition.EMPTY } },
       layoutMode: params.virtualization.layoutMode ?? 'uncontrolled',
       ...params.initialState?.virtualization,
     },
@@ -258,10 +258,11 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   const updateRenderContext = React.useCallback(
     (nextRenderContext: RenderContext) => {
       if (!areRenderContextsEqual(nextRenderContext, store.state.virtualization.renderContext)) {
+        const scrollUpdate = updateScrollPosition(store, scrollPosition.current, true);
         store.set('virtualization', {
           ...store.state.virtualization,
+          ...scrollUpdate,
           renderContext: nextRenderContext,
-          scrollPosition: { current: { ...scrollPosition.current } },
         });
       }
 
@@ -312,6 +313,14 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
     scrollPosition.current = newScroll;
 
+    // When virtualization is fully disabled, the precomputed render context
+    // covers all rows/columns and never changes — skip the threshold/direction
+    // math and `computeRenderContext` entirely.
+    if (!enabledForRows && !enabledForColumns) {
+      updateScrollPosition(store, newScroll);
+      return renderContext;
+    }
+
     const direction = isScrolling ? ScrollDirection.forDelta(dx, dy) : ScrollDirection.NONE;
 
     // Since previous render, we have scrolled...
@@ -328,10 +337,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     const shouldUpdate = didCrossThreshold || didChangeDirection;
 
     if (!shouldUpdate) {
-      store.set('virtualization', {
-        ...store.state.virtualization,
-        scrollPosition: { current: { ...scrollPosition.current } },
-      });
+      updateScrollPosition(store, scrollPosition.current);
       return renderContext;
     }
 
@@ -371,10 +377,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
 
       scrollTimeout.start(1000, triggerUpdateRenderContext);
     } else {
-      store.set('virtualization', {
-        ...store.state.virtualization,
-        scrollPosition: { current: { ...scrollPosition.current } },
-      });
+      updateScrollPosition(store, scrollPosition.current);
     }
 
     return nextRenderContext;
@@ -759,6 +762,57 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     scheduleUpdateRenderContext,
     ...createSpanningAPI(),
   };
+}
+
+/**
+ * Updates the values in the scroll position ref and updates the store if needed.
+ * Optionally, can return the update that would be applied to the store.
+ *
+ * `state.virtualization.scrollPosition.current.{top,left}` is always mutated in
+ * place so imperative consumers (scroll area drag handlers, etc.) read the
+ * fresh values without paying a re-render. In `'uncontrolled'` layout mode
+ * (the default), the wrapper reference at `state.virtualization.scrollPosition`
+ * is preserved for the store's lifetime, allowing reselect's `Object.is` input
+ * check to short-circuit the memoized layout selectors that take it as input
+ * (`positionerProps`, `containerVerticalProps`, `scrollbar*Props`,
+ * `scrollAreaProps`, `pinnedLeft/RightOffsetSelector`) — none of which actually
+ * read the value reactively in uncontrolled mode.
+ *
+ * In `'controlled'` mode, the same selectors compute `translate3d(...)`
+ * transforms that must update on every scroll pixel, so we replace the wrapper
+ * to force them to execute again.
+ *
+ * An optional flag `returnStoreUpdate` can be supplied to return the update that would be applied to the store.
+ * Use if additional store updates are needed in the same commit.
+ */
+function updateScrollPosition(
+  store: Store<BaseState>,
+  position: ScrollPosition,
+  returnStoreUpdate: boolean = false,
+): Partial<VirtualizationState> | null {
+  const currentState = store.state.virtualization;
+  currentState.scrollPosition.current.top = position.top;
+  currentState.scrollPosition.current.left = position.left;
+
+  const isControlled = currentState.layoutMode === 'controlled';
+  if (!isControlled && !returnStoreUpdate) {
+    return null;
+  }
+
+  const update: Partial<VirtualizationState> = isControlled
+    ? { scrollPosition: { current: { ...currentState.scrollPosition.current } } }
+    : {};
+
+  if (returnStoreUpdate) {
+    return update;
+  }
+
+  store.set('virtualization', {
+    ...currentState,
+    ...update,
+  });
+
+  return null;
 }
 
 type RenderContextInputs = ReturnType<typeof inputsSelector>;
