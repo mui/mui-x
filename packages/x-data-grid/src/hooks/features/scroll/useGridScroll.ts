@@ -1,9 +1,11 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
+import { warnOnce } from '@mui/x-internals/warning';
 import { useRtl } from '@mui/system/RtlProvider';
 import type { GridCellIndexCoordinates } from '../../../models/gridCell';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger } from '../../utils/useGridLogger';
+import { warnOnce } from '@mui/x-internals/warning';
 import {
   gridColumnPositionsSelector,
   gridVisibleColumnDefinitionsSelector,
@@ -66,7 +68,53 @@ export const useGridScroll = (
       const totalRowCount = gridRowCountSelector(apiRef);
       const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
       const scrollToHeader = params.rowIndex == null;
+
+      if (params.rowIndex !== undefined && (params.rowIndex < 0 || params.rowIndex >= totalRowCount)) {
+        warnOnce(
+          `MUI X: \`scrollToIndexes\` was called with a \`rowIndex\` (${params.rowIndex}) that is out of range [0, ${totalRowCount - 1}].`,
+          'warn',
+        );
+        return false;
+      }
+
+      if (
+        params.colIndex !== undefined &&
+        (params.colIndex < 0 || params.colIndex >= visibleColumns.length)
+      ) {
+        warnOnce(
+          `MUI X: \`scrollToIndexes\` was called with a \`colIndex\` (${
+            params.colIndex
+          }) that is out of range [0, ${visibleColumns.length - 1}].`,
+          'warn',
+        );
+        return false;
+      }
+
       if ((!scrollToHeader && totalRowCount === 0) || visibleColumns.length === 0) {
+        return false;
+      }
+
+      if (params.colIndex !== undefined && (params.colIndex < 0 || params.colIndex > visibleColumns.length - 1)) {
+        warnOnce(
+          [
+            `MUI X Data Grid: The \`colIndex\` provided to \`scrollToIndexes\` is out of range.`,
+            `Index ${params.colIndex} is not within the visible columns range (0 to ${visibleColumns.length - 1}).`,
+            'Make sure the provided index is within the grid visible columns.',
+          ],
+          'warning',
+        );
+        return false;
+      }
+
+      if (params.rowIndex !== undefined && (params.rowIndex < 0 || params.rowIndex > totalRowCount - 1)) {
+        warnOnce(
+          [
+            `MUI X Data Grid: The \`rowIndex\` provided to \`scrollToIndexes\` is out of range.`,
+            `Index ${params.rowIndex} is not within the row count range (0 to ${totalRowCount - 1}).`,
+            'Make sure the provided index is within the grid rows.',
+          ],
+          'warning',
+        );
         return false;
       }
 

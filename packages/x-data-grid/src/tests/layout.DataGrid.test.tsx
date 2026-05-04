@@ -1019,6 +1019,40 @@ describe('<DataGrid /> - Layout & warnings', () => {
         'The Data Grid component requires all rows to have a unique `id` property',
       );
     });
+
+    it('should warn when scrollToIndexes is called with out of range rowIndex', () => {
+      const apiRef = { current: null as any };
+      function Test() {
+        apiRef.current = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} apiRef={apiRef.current} />
+          </div>
+        );
+      }
+      render(<Test />);
+
+      expect(() => {
+        apiRef.current.scrollToIndexes({ rowIndex: 100 });
+      }).toErrorDev('MUI X: `scrollToIndexes` was called with a `rowIndex` (100) that is out of range [0, 2].');
+    });
+
+    it('should warn when scrollToIndexes is called with out of range colIndex', () => {
+      const apiRef = { current: null as any };
+      function Test() {
+        apiRef.current = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} apiRef={apiRef.current} />
+          </div>
+        );
+      }
+      render(<Test />);
+
+      expect(() => {
+        apiRef.current.scrollToIndexes({ colIndex: 10 });
+      }).toErrorDev('MUI X: `scrollToIndexes` was called with a `colIndex` (10) that is out of range [0, 0].');
+    });
   });
 
   describe('localeText', () => {
@@ -1047,6 +1081,50 @@ describe('<DataGrid /> - Layout & warnings', () => {
       expect(screen.getByPlaceholderText('Recherche')).not.to.equal(null);
       setProps({ localeText: { toolbarQuickFilterPlaceholder: 'Buscar' } });
       expect(screen.getByPlaceholderText('Buscar')).not.to.equal(null);
+    });
+
+    describe('scrollToIndexes', () => {
+      it('should warn and return false when colIndex is out of range', () => {
+        let apiRef!: RefObject<GridApi | null>;
+        function TestCase() {
+          apiRef = useGridApiRef();
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid {...baselineProps} apiRef={apiRef} />
+            </div>
+          );
+        }
+        render(<TestCase />);
+
+        let result: boolean | undefined;
+        expect(() => {
+          result = apiRef.current!.scrollToIndexes({ colIndex: 999 });
+        }).toErrorDev(
+          'MUI X Data Grid: The `colIndex` provided to `scrollToIndexes` is out of range.',
+        );
+        expect(result).to.equal(false);
+      });
+
+      it('should warn and return false when rowIndex is out of range', () => {
+        let apiRef!: RefObject<GridApi | null>;
+        function TestCase() {
+          apiRef = useGridApiRef();
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid {...baselineProps} apiRef={apiRef} />
+            </div>
+          );
+        }
+        render(<TestCase />);
+
+        let result: boolean | undefined;
+        expect(() => {
+          result = apiRef.current!.scrollToIndexes({ rowIndex: 999 });
+        }).toErrorDev(
+          'MUI X Data Grid: The `rowIndex` provided to `scrollToIndexes` is out of range.',
+        );
+        expect(result).to.equal(false);
+      });
     });
   });
 
