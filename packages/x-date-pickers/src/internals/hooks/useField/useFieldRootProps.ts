@@ -174,9 +174,8 @@ export function useFieldRootProps(
       return;
     }
 
-    setFocused(true);
-
     if (parsedSelectedSections === 'all') {
+      setFocused(true);
       containerClickTimeout.start(0, () => {
         const cursorPosition = document.getSelection()!.getRangeAt(0).startOffset;
 
@@ -198,15 +197,19 @@ export function useFieldRootProps(
 
         setSelectedSections(sectionIndex - 1);
       });
-    } else if (!focused) {
-      setFocused(true);
-      setSelectedSections(sectionOrder.startIndex);
-    } else {
-      const hasClickedOnASection = domGetters.getRoot().contains(event.target as Node);
+      return;
+    }
 
-      if (!hasClickedOnASection) {
-        setSelectedSections(sectionOrder.startIndex);
-      }
+    // Ignore clicks that did not land on a section. Section spans and contents
+    // already handle their own selection via onClick/onFocus, so the root
+    // handler only needs to ensure the field is marked as focused.
+    const clickedSectionIndex = domGetters.getSectionIndexFromDOMElement(event.target as Element);
+    if (clickedSectionIndex == null) {
+      return;
+    }
+
+    if (!focused) {
+      setFocused(true);
     }
   });
 

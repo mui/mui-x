@@ -184,7 +184,13 @@ export function useFieldSectionContentProps(
 
         // Other
         tabIndex: !isEditable || isContainerEditable || sectionIndex > 0 ? -1 : 0,
-        contentEditable: !isContainerEditable && !disabled && !readOnly,
+        // Only the currently selected section is `contenteditable`. Marking
+        // every section editable opens up Chromium's quirk of delegating focus
+        // from a click on a non-editable ancestor to the nearest
+        // `contenteditable` descendant -- e.g. clicking outside the field but
+        // inside a wrapping flex container would focus the closest section.
+        // See https://stackoverflow.com/questions/34354085/clicking-outside-a-contenteditable-div-stills-give-focus-to-it
+        contentEditable: isEditable && parsedSelectedSections === sectionIndex,
         role: 'spinbutton',
         'data-range-position': (section as FieldRangeSection).dateName || undefined,
         spellCheck: isEditable ? false : undefined,
@@ -202,6 +208,7 @@ export function useFieldSectionContentProps(
       disabled,
       readOnly,
       isEditable,
+      parsedSelectedSections,
       translations,
       adapter,
       handleInput,

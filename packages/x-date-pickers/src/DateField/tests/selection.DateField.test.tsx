@@ -72,6 +72,30 @@ describe('<DateField /> - Selection', () => {
     });
   });
 
+  describe('Click on a non-section element inside the field root', () => {
+    it('should not select a section when clicking on a non-section descendant of the field root', () => {
+      const view = renderWithProps({});
+
+      // Clicks that bubble up to the root but did not land on a section span
+      // (e.g. padding, separator gaps) must be a no-op for selection.
+      const sectionsContainer = view.getSectionsContainer();
+      fireEvent.mouseDown(sectionsContainer);
+      fireEvent.click(sectionsContainer);
+
+      expect(getCleanedSelectedContent()).to.equal('');
+    });
+
+    it('should still select a section when clicking directly on it', () => {
+      const view = renderWithProps({});
+
+      const yearSection = view.getSection(2);
+      fireEvent.mouseDown(yearSection);
+      fireEvent.click(yearSection);
+
+      expect(getCleanedSelectedContent()).to.equal('YYYY');
+    });
+  });
+
   describe('key: Ctrl + A', () => {
     it('should select all sections', async () => {
       const view = renderWithProps({});
