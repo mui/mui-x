@@ -224,7 +224,7 @@ catalogs:
       version: 18.0.0
 
 overrides:
-  stylis: ^4.3.6
+  stylis: ^4.4.0
 
 importers:
 
@@ -271,7 +271,7 @@ importers:
         version: 0.0.4-canary.29(@next/eslint-plugin-next@16.2.4)(@types/node@22.19.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.59.0(eslint@9.39.4)(typescript@5.9.3))(eslint@9.39.4)(typescript@5.9.3))(@typescript-eslint/parser@8.59.0(eslint@9.39.4)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.59.0(eslint@9.39.4)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.4))(eslint@9.39.4)(jest-diff@30.2.0)(postcss@8.5.13)(prettier@3.8.3)(stylelint@17.1.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.1.5)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 9.0.1-canary.2(a88d7c3593ebaa0d367a89d278b2db55)
+        version: 9.0.1-canary.2(248f0b86af9a10b22cba1df1195b96a6)
       '@mui/internal-markdown':
         specifier: 3.0.8-canary.3
         version: 3.0.8-canary.3
@@ -499,7 +499,7 @@ importers:
         version: 9.0.0(@mui/material@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 9.0.1-canary.2(a88d7c3593ebaa0d367a89d278b2db55)
+        version: 9.0.1-canary.2(248f0b86af9a10b22cba1df1195b96a6)
       '@mui/internal-docs-infra':
         specifier: ^0.10.1-canary.5
         version: 0.10.1-canary.5(@types/react@19.2.14)(next@16.2.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(prettier@3.8.3)(react@19.2.5)(typescript@5.9.3)
@@ -514,7 +514,7 @@ importers:
         version: 9.0.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/server@11.11.0)(@types/react@19.2.14)(next@16.2.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)
       '@mui/stylis-plugin-rtl':
         specifier: 'catalog:'
-        version: 9.0.0(stylis@4.3.6)
+        version: 9.0.0(stylis@4.4.0)
       '@mui/system':
         specifier: 'catalog:'
         version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
@@ -699,8 +699,8 @@ importers:
         specifier: ^6.3.12
         version: 6.3.12(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       stylis:
-        specifier: ^4.3.6
-        version: 4.3.6
+        specifier: ^4.4.0
+        version: 4.4.0
       webpack-bundle-analyzer:
         specifier: ^5.2.0
         version: 5.2.0
@@ -2107,7 +2107,7 @@ importers:
         version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@mui/stylis-plugin-rtl':
         specifier: 'catalog:'
-        version: 9.0.0(stylis@4.3.6)
+        version: 9.0.0(stylis@4.4.0)
       '@mui/x-charts':
         specifier: workspace:^
         version: link:../packages/x-charts/build
@@ -2202,8 +2202,8 @@ importers:
         specifier: 7.7.4
         version: 7.7.4
       stylis:
-        specifier: ^4.3.6
-        version: 4.3.6
+        specifier: ^4.4.0
+        version: 4.4.0
 
   test/bundle-size:
     dependencies:
@@ -4428,7 +4428,7 @@ packages:
     resolution: {integrity: sha512-KmjpUWBQJuTQAn9YD8exORkH01378no2KI6GjR3wtriCqApOaYeWU6VQ/T+DQbpD1XkJ8XjGFSraamtzpO63KQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
-      stylis: ^4.3.6
+      stylis: ^4.4.0
 
   '@mui/system@9.0.0':
     resolution: {integrity: sha512-YnC5Zg6j04IxiLc/boAKs0464jfZlLFVa7mf5E8lF0XOtZVUvG6R6gJK50lgUYdaaLdyLfxF6xR7LaPuEpeT/g==}
@@ -10702,8 +10702,8 @@ packages:
     engines: {node: '>=20.19.0'}
     hasBin: true
 
-  stylis@4.3.6:
-    resolution: {integrity: sha512-yQ3rwFWRfwNUY7H5vpU0wfdkNSnvnJinhF9830Swlaxl03zsOjCfmX0ugac+3LtK0lYSgwL/KXc8oYL3mG4YFQ==}
+  stylis@4.4.0:
+    resolution: {integrity: sha512-5Z9ZpRzfuH6l/UAvCPAPUo3665Nk2wLaZU3x+TLHKVzIz33+sbJqbtrYoC3KD4/uVOr2Zp+L0LySezP9OHV9yA==}
 
   subsume@4.0.0:
     resolution: {integrity: sha512-BWnYJElmHbYZ/zKevy+TG+SsyoFCmRPDHJbR1MzLxkPOv1Jp/4hGhVUtP98s+wZBsBsHwCXvPTP0x287/WMjGg==}
@@ -12718,7 +12718,7 @@ snapshots:
       escape-string-regexp: 4.0.0
       find-root: 1.1.0
       source-map: 0.5.7
-      stylis: 4.3.6
+      stylis: 4.4.0
     transitivePeerDependencies:
       - supports-color
 
@@ -12728,7 +12728,7 @@ snapshots:
       '@emotion/sheet': 1.4.0
       '@emotion/utils': 1.4.2
       '@emotion/weak-memoize': 0.4.0
-      stylis: 4.3.6
+      stylis: 4.4.0
 
   '@emotion/hash@0.9.2': {}
 
@@ -13636,7 +13636,7 @@ snapshots:
       - supports-color
       - vitest
 
-  '@mui/internal-core-docs@9.0.1-canary.2(a88d7c3593ebaa0d367a89d278b2db55)':
+  '@mui/internal-core-docs@9.0.1-canary.2(248f0b86af9a10b22cba1df1195b96a6)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@base-ui/react': 1.4.1(@date-fns/tz@1.4.1)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -13648,7 +13648,7 @@ snapshots:
       '@mui/internal-markdown': 3.0.8-canary.3
       '@mui/material': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@mui/material-nextjs': 9.0.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/server@11.11.0)(@types/react@19.2.14)(next@16.2.4(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react@19.2.5)
-      '@mui/stylis-plugin-rtl': 9.0.0(stylis@4.3.6)
+      '@mui/stylis-plugin-rtl': 9.0.0(stylis@4.4.0)
       '@mui/system': 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
       '@mui/utils': 9.0.0(@types/react@19.2.14)(react@19.2.5)
       '@types/react': 19.2.14
@@ -13666,7 +13666,7 @@ snapshots:
       react-dom: 19.2.5(react@19.2.5)
       react-runner: 1.0.5(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       react-simple-code-editor: 0.14.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
-      stylis: 4.3.6
+      stylis: 4.4.0
     optionalDependencies:
       styled-components: 6.3.12(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
 
@@ -13865,11 +13865,11 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.5)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)
 
-  '@mui/stylis-plugin-rtl@9.0.0(stylis@4.3.6)':
+  '@mui/stylis-plugin-rtl@9.0.0(stylis@4.4.0)':
     dependencies:
       '@babel/runtime': 7.29.2
       cssjanus: 2.3.0
-      stylis: 4.3.6
+      stylis: 4.4.0
 
   '@mui/system@9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5)':
     dependencies:
@@ -21054,7 +21054,7 @@ snapshots:
       postcss: 8.4.49
       react: 19.2.5
       shallowequal: 1.1.0
-      stylis: 4.3.6
+      stylis: 4.4.0
       tslib: 2.8.1
     optionalDependencies:
       react-dom: 19.2.5(react@19.2.5)
@@ -21120,7 +21120,7 @@ snapshots:
       - supports-color
       - typescript
 
-  stylis@4.3.6: {}
+  stylis@4.4.0: {}
 
   subsume@4.0.0:
     dependencies:
