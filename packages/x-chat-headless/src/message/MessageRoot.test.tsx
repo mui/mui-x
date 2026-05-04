@@ -838,7 +838,64 @@ describe('MessageAuthorLabel', () => {
     expect(screen.getByTestId('author-label')).to.have.text('Assistant');
   });
 
-  it('falls back to author id when no displayName', () => {
+  it('resolves the displayName from members when the message only provides an author id', () => {
+    const messageWithId: ChatMessage = {
+      id: 'm-id',
+      role: 'assistant',
+      parts: [{ type: 'text', text: 'Hi' }],
+      author: { id: 'bot-123' },
+    };
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[messageWithId]}
+        members={[
+          {
+            id: 'bot-123',
+            displayName: 'Member Bot',
+          },
+        ]}
+      >
+        <ChatVariantProvider variant="compact">
+          <MessageRoot messageId="m-id">
+            <MessageAuthorLabel data-testid="author-label" />
+          </MessageRoot>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('author-label')).to.have.text('Member Bot');
+  });
+
+  it('uses getMessageAuthorDisplayName when provided', () => {
+    const messageWithMetadata: ChatMessage = {
+      id: 'm-meta',
+      role: 'assistant',
+      metadata: {
+        actorName: 'Getter Bot',
+      } as any,
+      parts: [{ type: 'text', text: 'Hi' }],
+    };
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[messageWithMetadata]}
+        getMessageAuthorDisplayName={(message) => (message.metadata as any)?.actorName}
+      >
+        <ChatVariantProvider variant="compact">
+          <MessageRoot messageId="m-meta">
+            <MessageAuthorLabel data-testid="author-label" />
+          </MessageRoot>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('author-label')).to.have.text('Getter Bot');
+  });
+
+  it('returns null when only the author id is available', () => {
     const messageWithId: ChatMessage = {
       id: 'm-id',
       role: 'assistant',
@@ -856,10 +913,10 @@ describe('MessageAuthorLabel', () => {
       </ChatRoot>,
     );
 
-    expect(screen.getByTestId('author-label')).to.have.text('bot-123');
+    expect(screen.queryByTestId('author-label')).to.equal(null);
   });
 
-  it('falls back to role when no author info', () => {
+  it('returns null when no author info exists', () => {
     render(
       <ChatRoot adapter={createAdapter()} initialMessages={[minimalMessage]}>
         <ChatVariantProvider variant="compact">
@@ -870,7 +927,7 @@ describe('MessageAuthorLabel', () => {
       </ChatRoot>,
     );
 
-    expect(screen.getByTestId('author-label')).to.have.text('user');
+    expect(screen.queryByTestId('author-label')).to.equal(null);
   });
 
   it('returns null when variant is default', () => {
@@ -897,6 +954,81 @@ describe('MessageAuthorLabel', () => {
     );
 
     expect(screen.queryByTestId('author-label')).to.equal(null);
+  });
+});
+
+describe('Resolved author data', () => {
+  it('resolves avatar and aria-label from members when the message only provides an author id', () => {
+    const memberMessage: ChatMessage = {
+      id: 'm-member',
+      role: 'assistant',
+      parts: [{ type: 'text', text: 'Hello from member' }],
+      author: { id: 'bot-456' },
+    };
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[memberMessage]}
+        members={[
+          {
+            id: 'bot-456',
+            displayName: 'Support Bot',
+            avatarUrl: 'https://example.com/member-bot.png',
+          },
+        ]}
+      >
+        <MessageRoot messageId="m-member">
+          <MessageAvatar />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByAltText('Support Bot')).to.have.attribute(
+      'src',
+      'https://example.com/member-bot.png',
+    );
+    expect(screen.getByRole('article', { name: 'Message from Support Bot' })).not.to.equal(null);
+  });
+
+  it('uses getter-derived author id and avatar url', () => {
+    const metadataMessage: ChatMessage = {
+      id: 'm-getters',
+      role: 'assistant',
+      metadata: {
+        actorId: 'bot-getter',
+        actorAvatarUrl: 'https://example.com/getter-bot.png',
+      } as any,
+      parts: [{ type: 'text', text: 'Hi from metadata' }],
+    };
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[metadataMessage]}
+        members={[
+          {
+            id: 'bot-getter',
+            displayName: 'Getter Bot',
+          },
+        ]}
+        getMessageAuthorId={(message) => (message.metadata as any)?.actorId}
+        getMessageAuthorAvatarUrl={(message) => (message.metadata as any)?.actorAvatarUrl}
+      >
+        <ChatVariantProvider variant="compact">
+          <MessageRoot messageId="m-getters">
+            <MessageAvatar />
+            <MessageAuthorLabel data-testid="author-label" />
+          </MessageRoot>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByAltText('Getter Bot')).to.have.attribute(
+      'src',
+      'https://example.com/getter-bot.png',
+    );
+    expect(screen.getByTestId('author-label')).to.have.text('Getter Bot');
   });
 });
 

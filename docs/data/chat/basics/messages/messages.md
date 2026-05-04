@@ -28,12 +28,16 @@ A `ChatMessage` has the following shape:
 | `role`           | `ChatRole`            | `'user'`, `'assistant'`, or `'system'`                                                             |
 | `parts`          | `ChatMessagePart[]`   | Content parts that make up the message body (text, files, tools, etc.)                             |
 | `status`         | `ChatMessageStatus`   | Delivery lifecycle: `'pending'`, `'sending'`, `'streaming'`, `'sent'`, `'error'`, or `'cancelled'` |
-| `author`         | `ChatUser`            | The user who sent the message (display name, avatar, role)                                         |
+| `author`         | `ChatUser`            | The author payload used for inline identity data and member matching                               |
 | `createdAt`      | `string`              | ISO 8601 timestamp when the message was created                                                    |
 | `updatedAt`      | `string`              | ISO 8601 timestamp when the message was last updated                                               |
 | `editedAt`       | `string`              | ISO 8601 timestamp if the message was edited                                                       |
 | `conversationId` | `string`              | The conversation this message belongs to                                                           |
 | `metadata`       | `ChatMessageMetadata` | Extensible metadata object for custom data                                                         |
+
+`author.id` is the canonical identity key for message rendering. If you pass `members`, `currentUser`, or active conversation `participants`, chat components use that id to enrich missing display names and avatars at render time.
+
+If your message model stores author identity somewhere else, provide `getMessageAuthorId`, `getMessageAuthorDisplayName`, and `getMessageAuthorAvatarUrl` on `ChatProvider`, `ChatRoot`, or `ChatBox` to map that data into the built-in message primitives.
 
 ### Message parts
 
@@ -104,6 +108,7 @@ Scroll behavior, overflow, padding, and thin scrollbar are handled out of the bo
 
 Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
 Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
+If no display name or avatar resolves for a message author, the UI omits those affordances instead of falling back to the role name.
 
 See [Message Appearance](/x/react-chat/display/message-appearance/) for grouping configuration and demos.
 
@@ -121,7 +126,7 @@ See [Scrolling](/x/react-chat/behavior/scrolling/) for buffer configuration and 
 
 ## Standalone usage
 
-When building a custom layout outside of `ChatBox`, use `ChatMessageList` directly inside a `ChatRoot` provider.
-The demo below renders only the message list with a placeholder for a custom composer:
+When building a custom layout outside of `ChatBox`, render `ChatMessageList` directly inside `ChatProvider`.
+The demo below isolates the message surface with only the provider, a bounded frame, and the message list composition:
 
-{{"demo": "../../material/message-list/StandaloneMessageList.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "StandaloneMessages.js", "defaultCodeOpen": false, "bg": "inline"}}

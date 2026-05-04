@@ -88,6 +88,7 @@ export default function CompactRow() {
       activeConversationId={activeConversationId}
       conversations={conversations}
       messages={messages}
+      features={{ conversationList: true }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {
           setActiveConversationId(nextId);

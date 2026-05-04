@@ -3,7 +3,7 @@ productId: x-chat
 title: Layout
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatBox, ChatLayout
+components: ChatLayout
 ---
 
 # Chat - Layout
@@ -14,17 +14,17 @@ components: ChatBox, ChatLayout
 
 ## Overview
 
-`ChatBox` renders a two-pane layout by default: a **conversation list** on the left and a **thread pane** on the right.
-The thread pane contains the conversation header, scrollable message list, and composer.
+`ChatLayout` is the low-level pane manager behind the chat surface.
+It arranges a **conversation pane** and a **thread pane**, while leaving the surrounding runtime setup to `ChatProvider` and the pane contents to you.
 
-{{"demo": "../../material/examples/basic-ai-chat/BasicAiChat.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "LayoutTwoPaneStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Component anatomy
 
-The full `ChatBox` layout is composed of the following themed components:
+The most common `ChatLayout` composition looks like this:
 
 ```text
-ChatBox
+ChatLayout
   ChatConversationList              ← sidebar with conversation entries
   ChatConversation                  ← thread shell, derives the active conversation
     ChatConversationHeader          ← header bar with divider styling
@@ -45,22 +45,23 @@ ChatBox
         ChatComposerSendButton
 ```
 
-All components are exported from `@mui/x-chat`.
+All of these components are exported from `@mui/x-chat`.
 
 ## Thread-only mode
 
-When your application manages conversations externally (or only needs a single conversation), you can hide the conversation list and render the thread pane alone.
-Pass a single conversation and set it as the active one:
+When your application manages conversations externally, render only the thread pane inside `ChatLayout`.
+The demo below keeps the provider setup, message list, and composer, but omits the conversation pane entirely:
 
-{{"demo": "../../material/examples/thread-only/ThreadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "LayoutThreadOnlyStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
 
-In thread-only mode `ChatBox` does not render the conversation list sidebar, and the thread pane fills the entire width of the `ChatBox` container.
+In thread-only mode the active conversation fills the entire `ChatLayout` container.
 
 ## Full recomposition
 
-When `ChatBox` slots are not enough — for example when you want to add a pinned banner between the header and the message list, or position the typing indicator inside the header — you can assemble the thread from individual Material UI components directly.
+Because `ChatLayout` only decides where panes go, you can assemble the thread from individual Material UI components directly.
+This is useful when you want to insert additional UI between the header and the message list, or move controls around inside the thread pane.
 
-The following example shows a fully assembled thread pane without relying on `ChatBox` layout defaults:
+The following example shows a fully assembled thread pane without relying on any `ChatBox` layout defaults:
 
 ```tsx
 import {
@@ -120,23 +121,28 @@ function CustomThread() {
 
 Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire runtime state to your adapter.
 
-The layout supports split configurations where the conversation list and thread are rendered side by side.
+`ChatLayout` also supports split configurations where the conversation list and thread are rendered side by side.
 
 ## Responsive layout
 
-`ChatBox` uses a CSS container query to adapt its layout based on its own width — not the viewport.
-When the container is narrower than `600px`, the conversation list collapses automatically and a menu button appears in the conversation header.
-Tapping the menu button opens the conversation list in a drawer overlay.
+`ChatLayout` does not impose breakpoint behavior.
+You decide when to show both panes, when to show only the conversation list, and when to show only the active thread.
 
-Drag the slider below to resize the container and see the transition in action:
+Drag the slider below to switch the same composition between:
 
-{{"demo": "../../material/examples/responsive-drawer/ResponsiveDrawer.js", "bg": "inline", "defaultCodeOpen": false}}
+- a two-pane layout above `600px`
+- a single-pane conversation list or thread below `600px`
 
-This behavior is built in — no extra configuration is needed.
-It works identically whether the `ChatBox` fills the full viewport on a mobile device or is embedded in a narrow sidebar on desktop.
+This example keeps the logic explicit so you can replace it with route-based navigation, a drawer, or any other responsive pattern your product needs:
 
-Set explicit dimensions on the parent element or use the `sx` prop:
+{{"demo": "LayoutResponsiveStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
+
+Because the behavior is explicit, narrow-mode transitions stay easy to reason about and customize.
+
+Set explicit dimensions on the parent element that wraps `ChatLayout`:
 
 ```tsx
-<ChatBox adapter={adapter} sx={{ height: 500 }} />
+<Box sx={{ height: 500 }}>
+  <ChatLayout>{/* conversation pane + thread pane */}</ChatLayout>
+</Box>
 ```

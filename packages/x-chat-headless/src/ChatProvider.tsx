@@ -14,8 +14,10 @@ import type { ChatOnData, ChatOnFinish, ChatOnToolCall } from './types';
 import type { ChatError } from './types/chat-error';
 import { ChatStoreContext } from './internals/useChatStoreContext';
 
-export interface ChatProviderProps<Cursor = string>
-  extends Omit<ChatStoreParameters<Cursor>, 'activeConversationIdControlled'> {
+export interface ChatProviderProps<Cursor = string> extends Omit<
+  ChatStoreParameters<Cursor>,
+  'activeConversationIdControlled'
+> {
   children?: React.ReactNode;
   adapter: ChatAdapter<Cursor>;
   onToolCall?: ChatOnToolCall;
@@ -52,6 +54,9 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     storeClass,
     members,
     currentUser,
+    getMessageAuthorId,
+    getMessageAuthorDisplayName,
+    getMessageAuthorAvatarUrl,
     messages,
     initialMessages,
     conversations,
@@ -70,6 +75,9 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     () => ({
       members,
       currentUser,
+      getMessageAuthorId,
+      getMessageAuthorDisplayName,
+      getMessageAuthorAvatarUrl,
       messages,
       initialMessages,
       conversations,
@@ -87,6 +95,9 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     [
       members,
       currentUser,
+      getMessageAuthorId,
+      getMessageAuthorDisplayName,
+      getMessageAuthorAvatarUrl,
       messages,
       initialMessages,
       conversations,

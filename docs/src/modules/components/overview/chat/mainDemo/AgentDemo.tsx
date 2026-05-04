@@ -144,8 +144,8 @@ function AgentTaskTree(_props: Record<string, unknown>) {
   return (
     <Box
       sx={{
-        width: SIDEBAR_WIDTH,
-        minWidth: SIDEBAR_WIDTH,
+        width: '100%',
+        minWidth: 0,
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -1192,6 +1192,13 @@ const chunkBuilders: Record<string, (messageId: string) => ChatMessageChunk[]> =
 // --- Main component ----------------------------------------------------------
 
 export default function AgentDemo() {
+  const chatBoxStyle = React.useMemo(
+    () =>
+      ({
+        '--ChatBox-conversationListWidth': `${SIDEBAR_WIDTH}px`,
+      }) as React.CSSProperties,
+    [],
+  );
   const [activeId, setActiveId] = React.useState(() => initialConversations[0].id);
   const [conversations, setConversations] = React.useState<ChatConversation[]>(() =>
     initialConversations.map((c) => ({ ...c })),
@@ -1223,6 +1230,8 @@ export default function AgentDemo() {
       activeConversationId={activeId}
       conversations={conversations}
       messages={messages}
+      features={{ conversationList: true }}
+      style={chatBoxStyle}
       variant="compact"
       density="compact"
       slots={{

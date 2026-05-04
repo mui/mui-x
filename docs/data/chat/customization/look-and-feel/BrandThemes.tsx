@@ -6,11 +6,11 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 type BrandPreset = {
   id: string;
@@ -79,7 +79,13 @@ const v0Theme = createTheme({
 });
 
 const PRESETS: BrandPreset[] = [
-  { id: 'slack', label: 'Slack', theme: slackTheme, variant: 'compact', density: 'comfortable' },
+  {
+    id: 'slack',
+    label: 'Slack',
+    theme: slackTheme,
+    variant: 'compact',
+    density: 'comfortable',
+  },
   {
     id: 'whatsapp',
     label: 'WhatsApp',
@@ -96,9 +102,27 @@ const PRESETS: BrandPreset[] = [
     density: 'comfortable',
     sx: { background: 'linear-gradient(135deg, #c8d6e5 0%, #8e9eab 100%)' },
   },
-  { id: 'chatgpt', label: 'ChatGPT', theme: chatGptTheme, variant: 'compact', density: 'comfortable' },
-  { id: 'claude', label: 'Claude', theme: anthropicTheme, variant: 'compact', density: 'comfortable' },
-  { id: 'v0', label: 'v0.dev', theme: v0Theme, variant: 'compact', density: 'comfortable' },
+  {
+    id: 'chatgpt',
+    label: 'ChatGPT',
+    theme: chatGptTheme,
+    variant: 'compact',
+    density: 'comfortable',
+  },
+  {
+    id: 'claude',
+    label: 'Claude',
+    theme: anthropicTheme,
+    variant: 'compact',
+    density: 'comfortable',
+  },
+  {
+    id: 'v0',
+    label: 'v0.dev',
+    theme: v0Theme,
+    variant: 'compact',
+    density: 'comfortable',
+  },
 ];
 
 const adapter = createEchoAdapter({

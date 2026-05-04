@@ -3,6 +3,7 @@ import type { ChatMessage, ChatMessageStatus, ChatRole } from '../types/chat-ent
 import type { ChatError } from '../types/chat-error';
 import type { ChatVariant } from '../chat/internals/ChatVariantContext';
 import type { ChatDensity } from '../chat/internals/ChatDensityContext';
+import type { ResolvedMessageAuthor } from '../internals/messageAuthor';
 
 export interface MessageOwnerState {
   messageId: string;
@@ -14,6 +15,7 @@ export interface MessageOwnerState {
   isGrouped: boolean;
   variant: ChatVariant;
   density: ChatDensity;
+  resolvedAuthor: ResolvedMessageAuthor | null;
   /**
    * Whether the message has an avatar to display.
    * Drives the `--MuiChatMessage-avatarSize` CSS variable so the opposite-side

@@ -28,9 +28,9 @@ import {
 
 const CONVERSATION_ID = 'no-history-conv';
 
-// Adapter has only `sendMessage` — no `listConversations` or `listMessages`.
-// ChatBox cannot fetch conversation history, and no `conversations` prop is passed,
-// so the conversation list panel is never rendered.
+// Adapter has only `sendMessage` — no conversation or history loading methods.
+// This demo composes a thread directly from ChatRoot + thread primitives instead of ChatBox,
+// so no built-in conversation list UI is involved.
 const adapter = {
   async sendMessage({ message }) {
     const text = message.parts

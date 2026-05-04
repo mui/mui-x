@@ -3,6 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useMessage } from '../hooks/useMessage';
+import { useMessageAuthor } from '../hooks/useMessageAuthor';
 import { useChatVariant } from '../chat/internals/ChatVariantContext';
 import { useChatDensity } from '../chat/internals/ChatDensityContext';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
@@ -35,6 +36,7 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
 ) {
   const { messageId, isGrouped = false, slots, slotProps, children, ...other } = props;
   const message = useMessage(messageId);
+  const resolvedAuthor = useMessageAuthor(messageId);
   const variant = useChatVariant();
   const density = useChatDensity();
   const localeText = useChatLocaleText();
@@ -49,9 +51,10 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
       isGrouped,
       variant,
       density,
-      showAvatar: message?.author?.avatarUrl != null,
+      resolvedAuthor,
+      showAvatar: resolvedAuthor?.avatarUrl != null,
     }),
-    [density, isGrouped, message, messageId, variant],
+    [density, isGrouped, message, messageId, resolvedAuthor, variant],
   );
   const Root = slots?.root ?? 'div';
   const rootProps = useSlotProps({
@@ -66,8 +69,8 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
       // Screen readers announce "article" when entering, which helps users
       // understand the structural boundary between messages.
       role: 'article',
-      'aria-label': message?.author?.displayName
-        ? `Message from ${message.author.displayName}`
+      'aria-label': resolvedAuthor?.displayName
+        ? `Message from ${resolvedAuthor.displayName}`
         : localeText.messageLabel,
       ...getDataAttributes({
         role: ownerState.role,

@@ -326,6 +326,39 @@ const ChatConversationListItemSlot = React.forwardRef<HTMLDivElement, Conversati
   },
 );
 
+ChatConversationListItemSlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
+
 const ChatConversationListItemAvatarStyled = React.forwardRef<
   HTMLDivElement,
   ConversationListItemAvatarProps
@@ -338,6 +371,38 @@ const ChatConversationListItemAvatarStyled = React.forwardRef<
     />
   );
 });
+
+ChatConversationListItemAvatarStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
 
 const ChatConversationListItemContentStyled = React.forwardRef<
   HTMLDivElement,
@@ -352,6 +417,38 @@ const ChatConversationListItemContentStyled = React.forwardRef<
   );
 });
 
+ChatConversationListItemContentStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
+
 const ChatConversationListTitleStyled = React.forwardRef<
   HTMLDivElement,
   ConversationListTitleProps
@@ -364,6 +461,38 @@ const ChatConversationListTitleStyled = React.forwardRef<
     />
   );
 });
+
+ChatConversationListTitleStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
 
 const ChatConversationListPreviewStyled = React.forwardRef<
   HTMLDivElement,
@@ -378,6 +507,38 @@ const ChatConversationListPreviewStyled = React.forwardRef<
   );
 });
 
+ChatConversationListPreviewStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
+
 const ChatConversationListTimestampStyled = React.forwardRef<
   HTMLDivElement,
   ConversationListTimestampProps
@@ -390,6 +551,38 @@ const ChatConversationListTimestampStyled = React.forwardRef<
     />
   );
 });
+
+ChatConversationListTimestampStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
 
 const ChatConversationListUnreadBadgeStyled = React.forwardRef<
   HTMLDivElement,
@@ -405,6 +598,38 @@ const ChatConversationListUnreadBadgeStyled = React.forwardRef<
 });
 
 // Default inline SVG for the 3-dot "more" icon (MoreHoriz style).
+
+ChatConversationListUnreadBadgeStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
 
 function DefaultMoreIcon() {
   return (
@@ -430,6 +655,38 @@ const ChatConversationListItemActionsStyled = React.forwardRef<
     </ConversationListItemActions>
   );
 });
+
+ChatConversationListItemActionsStyled.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  conversation: PropTypes.shape({
+    avatarUrl: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    lastMessageAt: PropTypes.string,
+    metadata: PropTypes.object,
+    participants: PropTypes.arrayOf(
+      PropTypes.shape({
+        avatarUrl: PropTypes.string,
+        displayName: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        isOnline: PropTypes.bool,
+        metadata: PropTypes.object,
+        role: PropTypes.oneOf(['assistant', 'system', 'user']),
+      }),
+    ),
+    readState: PropTypes.oneOf(['read', 'unread']),
+    subtitle: PropTypes.string,
+    title: PropTypes.string,
+    unreadCount: PropTypes.number,
+  }).isRequired,
+  focused: PropTypes.bool,
+  selected: PropTypes.bool,
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+  unread: PropTypes.bool,
+} as any;
 
 const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationListProps>(
   function ChatConversationList(inProps, ref) {
@@ -482,9 +739,7 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
       },
       item: (ownerState: ConversationListItemOwnerState) => {
         const externalItemProps =
-          typeof slotProps?.item === 'function'
-            ? slotProps.item(ownerState)
-            : slotProps?.item;
+          typeof slotProps?.item === 'function' ? slotProps.item(ownerState) : slotProps?.item;
 
         return {
           className: clsx(

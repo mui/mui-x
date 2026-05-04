@@ -33,26 +33,6 @@ The `density` prop controls vertical spacing between messages:
 <ChatBox adapter={adapter} density="comfortable" />  // Spacious
 ```
 
-## Apply your brand theme
-
-Wrap `ChatBox` in a `ThemeProvider` with your brand colors. That's it — every internal component reads from the theme automatically.
-
-Switch tabs to see the same conversation restyled for each brand. The source for every preset is in the demo — copy, paste, tweak the colors.
-
-{{"demo": "BrandThemes.js", "bg": "inline"}}
-
-## Dark mode
-
-Toggle `palette.mode` in your theme — everything adapts automatically:
-
-```tsx
-const darkTheme = createTheme({ palette: { mode: 'dark' } });
-
-<ThemeProvider theme={darkTheme}>
-  <ChatBox adapter={adapter} />
-</ThemeProvider>
-```
-
 ## The `sx` prop
 
 Apply one-off styles directly on `ChatBox`:
@@ -60,7 +40,13 @@ Apply one-off styles directly on `ChatBox`:
 ```tsx
 <ChatBox
   adapter={adapter}
-  sx={{ height: 500, width: '100%', borderRadius: 2, border: '1px solid', borderColor: 'divider' }}
+  sx={{
+    height: 500,
+    width: '100%',
+    borderRadius: 2,
+    border: '1px solid',
+    borderColor: 'divider',
+  }}
 />
 ```
 
@@ -116,7 +102,7 @@ import { chatBoxClasses } from '@mui/x-chat';
 // Class constants: chatBoxClasses.root, chatBoxClasses.layout,
 //                  chatBoxClasses.conversationsPane, chatBoxClasses.threadPane
 
-<ChatBox classes={{ root: 'my-chat-root', layout: 'my-chat-layout' }} />
+<ChatBox classes={{ root: 'my-chat-root', layout: 'my-chat-layout' }} />;
 ```
 
 ## Tailwind CSS
@@ -148,17 +134,21 @@ import { Chat, Composer, Message, MessageList } from '@mui/x-chat/headless';
 Use `data-*` attributes for state-based styling without JavaScript:
 
 ```tsx
-{/* data-role="user" or data-role="assistant" */}
-<Message.Root className="flex gap-3 data-[role=user]:flex-row-reverse" />
+{
+  /* data-role="user" or data-role="assistant" */
+}
+<Message.Root className="flex gap-3 data-[role=user]:flex-row-reverse" />;
 
-{/* data-disabled is present when input is empty */}
-<Composer.SendButton className="bg-blue-600 data-[disabled]:opacity-40" />
+{
+  /* data-disabled is present when input is empty */
+}
+<Composer.SendButton className="bg-blue-600 data-[disabled]:opacity-40" />;
 ```
 
-| Component | Attribute | Values |
-| :--- | :--- | :--- |
-| `Message.Root` | `data-role` | `"user"`, `"assistant"` |
-| `Message.Root` | `data-status` | `"pending"`, `"sending"`, `"streaming"`, `"sent"`, `"error"`, `"cancelled"` |
-| `Composer.SendButton` | `data-disabled` | present / absent |
-| `Composer.Root` | `data-is-streaming` | present / absent |
-| `ConversationList.Item` | `data-selected` | present / absent |
+| Component               | Attribute           | Values                                                                      |
+| :---------------------- | :------------------ | :-------------------------------------------------------------------------- |
+| `Message.Root`          | `data-role`         | `"user"`, `"assistant"`                                                     |
+| `Message.Root`          | `data-status`       | `"pending"`, `"sending"`, `"streaming"`, `"sent"`, `"error"`, `"cancelled"` |
+| `Composer.SendButton`   | `data-disabled`     | present / absent                                                            |
+| `Composer.Root`         | `data-is-streaming` | present / absent                                                            |
+| `ConversationList.Item` | `data-selected`     | present / absent                                                            |

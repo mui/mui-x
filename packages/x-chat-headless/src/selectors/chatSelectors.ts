@@ -1,7 +1,9 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { resolveMessageAuthor } from '../internals/messageAuthor';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
 import type { ChatInternalState } from '../types/chat-state';
+import type { ChatStoreParameters } from '../store';
 
 type State<Cursor = string> = ChatInternalState<Cursor>;
 
@@ -22,6 +24,30 @@ export const chatSelectors = {
   message: createSelector(
     (state: State) => state.messagesById,
     (messagesById, id: string): ChatMessage | undefined => messagesById[id],
+  ),
+  messageAuthor: createSelectorMemoized(
+    (state: State) => state.messagesById,
+    (state: State) => state.conversationsById,
+    (state: State) => state.activeConversationId,
+    (
+      messagesById,
+      conversationsById,
+      activeConversationId,
+      id: string,
+      parameters: ChatStoreParameters<any>,
+    ) => {
+      const activeConversation =
+        activeConversationId == null ? undefined : conversationsById[activeConversationId];
+
+      return resolveMessageAuthor(messagesById[id] ?? null, {
+        currentUser: parameters.currentUser,
+        members: parameters.members,
+        activeConversation,
+        getMessageAuthorId: parameters.getMessageAuthorId,
+        getMessageAuthorDisplayName: parameters.getMessageAuthorDisplayName,
+        getMessageAuthorAvatarUrl: parameters.getMessageAuthorAvatarUrl,
+      });
+    },
   ),
   messageError: createSelector(
     (state: State) => state.messageErrorsById,

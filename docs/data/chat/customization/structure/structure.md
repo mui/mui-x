@@ -22,6 +22,12 @@ Jump to a task. Each recipe is the shortest path that works — copy, adapt, shi
 <ChatBox adapter={adapter} features={{ attachments: false }} />
 ```
 
+### …show the built-in conversation list?
+
+```tsx
+<ChatBox adapter={adapter} features={{ conversationList: true }} />
+```
+
 ### …change the composer placeholder?
 
 ```tsx
@@ -74,7 +80,15 @@ function MySendButton(props) {
   slotProps={{
     messageActions: ({ message }) =>
       message.role === 'assistant'
-        ? { extraActions: [{ id: 'regenerate', label: 'Regenerate', onClick: () => adapter.regenerate(message.id) }] }
+        ? {
+            extraActions: [
+              {
+                id: 'regenerate',
+                label: 'Regenerate',
+                onClick: () => adapter.regenerate(message.id),
+              },
+            ],
+          }
         : {},
   }}
 />
@@ -138,10 +152,7 @@ function HighlightedMessage(props) {
 `ChatBox` is composed of named subcomponents (slots). Replace any of them with your own:
 
 ```tsx
-<ChatBox
-  adapter={adapter}
-  slots={{ messageContent: MyCustomMessageContent }}
-/>
+<ChatBox adapter={adapter} slots={{ messageContent: MyCustomMessageContent }} />
 ```
 
 Your component receives the same props as the default. This lets you wrap, extend, or fully replace any piece of the UI.
@@ -164,55 +175,55 @@ Pass additional props to any slot without replacing the component:
 
 ### Layout
 
-| Slot | Default | Description |
-| :--- | :--- | :--- |
-| `root` | `div` | Outermost container |
-| `layout` | `div` | Arranges conversation + thread panes |
-| `conversationsPane` | `div` | Conversations sidebar container |
-| `threadPane` | `div` | Thread (message list + composer) container |
+| Slot                | Default | Description                                |
+| :------------------ | :------ | :----------------------------------------- |
+| `root`              | `div`   | Outermost container                        |
+| `layout`            | `div`   | Arranges conversation + thread panes       |
+| `conversationsPane` | `div`   | Conversations sidebar container            |
+| `threadPane`        | `div`   | Thread (message list + composer) container |
 
 ### Conversation
 
-| Slot | Default | Description |
-| :--- | :--- | :--- |
-| `conversationList` | `ChatConversationList` | Conversation list |
-| `conversationHeader` | `ChatConversationHeader` | Header bar above message list |
-| `conversationTitle` | `ChatConversationTitle` | Conversation name |
-| `conversationSubtitle` | `ChatConversationSubtitle` | Secondary line |
-| `conversationHeaderActions` | `ChatConversationHeaderActions` | Action buttons in header |
+| Slot                        | Default                         | Description                   |
+| :-------------------------- | :------------------------------ | :---------------------------- |
+| `conversationList`          | `ChatConversationList`          | Conversation list             |
+| `conversationHeader`        | `ChatConversationHeader`        | Header bar above message list |
+| `conversationTitle`         | `ChatConversationTitle`         | Conversation name             |
+| `conversationSubtitle`      | `ChatConversationSubtitle`      | Secondary line                |
+| `conversationHeaderActions` | `ChatConversationHeaderActions` | Action buttons in header      |
 
 ### Messages
 
-| Slot | Default | Description |
-| :--- | :--- | :--- |
-| `messageList` | `ChatMessageList` | Scrollable message container |
-| `messageRoot` | `ChatMessage` | Individual message row |
-| `messageAvatar` | `ChatMessageAvatar` | Author avatar |
-| `messageContent` | `ChatMessageContent` | Message bubble |
-| `messageMeta` | `ChatMessageMeta` | Timestamp and delivery status |
-| `messageActions` | `ChatMessageActions` | Hover action menu |
-| `messageGroup` | `ChatMessageGroup` | Same-author message group |
-| `dateDivider` | `ChatDateDivider` | Date separator between groups |
+| Slot             | Default              | Description                   |
+| :--------------- | :------------------- | :---------------------------- |
+| `messageList`    | `ChatMessageList`    | Scrollable message container  |
+| `messageRoot`    | `ChatMessage`        | Individual message row        |
+| `messageAvatar`  | `ChatMessageAvatar`  | Author avatar                 |
+| `messageContent` | `ChatMessageContent` | Message bubble                |
+| `messageMeta`    | `ChatMessageMeta`    | Timestamp and delivery status |
+| `messageActions` | `ChatMessageActions` | Hover action menu             |
+| `messageGroup`   | `ChatMessageGroup`   | Same-author message group     |
+| `dateDivider`    | `ChatDateDivider`    | Date separator between groups |
 
 ### Composer
 
-| Slot | Default | Description |
-| :--- | :--- | :--- |
-| `composerRoot` | `ChatComposer` | Composer container |
-| `composerInput` | `ChatComposerTextArea` | Auto-resizing text area |
-| `composerSendButton` | `ChatComposerSendButton` | Submit button |
-| `composerAttachButton` | `ChatComposerAttachButton` | File attach trigger |
-| `composerToolbar` | `ChatComposerToolbar` | Button row |
-| `composerHelperText` | `ChatComposerHelperText` | Disclaimer or hint |
+| Slot                   | Default                    | Description             |
+| :--------------------- | :------------------------- | :---------------------- |
+| `composerRoot`         | `ChatComposer`             | Composer container      |
+| `composerInput`        | `ChatComposerTextArea`     | Auto-resizing text area |
+| `composerSendButton`   | `ChatComposerSendButton`   | Submit button           |
+| `composerAttachButton` | `ChatComposerAttachButton` | File attach trigger     |
+| `composerToolbar`      | `ChatComposerToolbar`      | Button row              |
+| `composerHelperText`   | `ChatComposerHelperText`   | Disclaimer or hint      |
 
 ### Indicators
 
-| Slot | Default | Description |
-| :--- | :--- | :--- |
-| `typingIndicator` | `ChatTypingIndicator` | Typing dots |
-| `unreadMarker` | `ChatUnreadMarker` | "New messages" marker |
-| `scrollToBottom` | `ChatScrollToBottomAffordance` | Floating scroll button |
-| `suggestions` | `ChatSuggestions` | Prompt suggestion chips |
+| Slot              | Default                        | Description             |
+| :---------------- | :----------------------------- | :---------------------- |
+| `typingIndicator` | `ChatTypingIndicator`          | Typing dots             |
+| `unreadMarker`    | `ChatUnreadMarker`             | "New messages" marker   |
+| `scrollToBottom`  | `ChatScrollToBottomAffordance` | Floating scroll button  |
+| `suggestions`     | `ChatSuggestions`              | Prompt suggestion chips |
 
 ## Feature flags
 
@@ -222,11 +233,12 @@ Toggle built-in features on or off. When disabled, the corresponding slot is **n
 <ChatBox
   adapter={adapter}
   features={{
-    attachments: false,     // hide attach button
-    helperText: false,      // hide helper text
-    scrollToBottom: false,  // hide scroll-to-bottom button
-    suggestions: false,     // hide suggestion chips
-    autoScroll: { buffer: 300 },  // custom auto-scroll threshold
+    conversationList: true, // show the conversation sidebar
+    attachments: false, // hide attach button
+    helperText: false, // hide helper text
+    scrollToBottom: false, // hide scroll-to-bottom button
+    suggestions: false, // hide suggestion chips
+    autoScroll: { buffer: 300 }, // custom auto-scroll threshold
   }}
 />
 ```
@@ -293,33 +305,33 @@ Every user-facing string is customizable via the `localeText` prop:
 
 ### All locale keys
 
-| Key | Default | Description |
-| :--- | :--- | :--- |
-| `composerInputPlaceholder` | `"Type a message"` | Composer placeholder |
-| `composerSendButtonLabel` | `"Send message"` | Send button aria-label |
-| `composerAttachButtonLabel` | `"Add attachment"` | Attach button aria-label |
-| `messageCopyButtonLabel` | `"Copy"` | Copy message button |
-| `messageCopyCodeButtonLabel` | `"Copy code"` | Copy code block button |
-| `messageCopiedCodeButtonLabel` | `"Copied"` | Copied confirmation |
-| `messageReasoningLabel` | `"Reasoning"` | Reasoning part label |
-| `messageReasoningStreamingLabel` | `"Thinking..."` | Reasoning streaming label |
-| `messageToolApproveButtonLabel` | `"Approve"` | Tool approval button |
-| `messageToolDenyButtonLabel` | `"Deny"` | Tool denial button |
-| `conversationListNoConversationsLabel` | `"No conversations"` | Empty conversation list |
-| `unreadMarkerLabel` | `"New messages"` | Unread marker |
-| `retryButtonLabel` | `"Retry"` | Retry button |
-| `scrollToBottomLabel` | `"Scroll to bottom"` | Scroll affordance |
-| `threadNoMessagesLabel` | `"No messages yet"` | Empty thread |
-| `genericErrorLabel` | `"Something went wrong"` | Generic error |
-| `loadingLabel` | `"Loading..."` | Loading state |
-| `suggestionsLabel` | `"Suggested prompts"` | Suggestions section |
+| Key                                    | Default                  | Description               |
+| :------------------------------------- | :----------------------- | :------------------------ |
+| `composerInputPlaceholder`             | `"Type a message"`       | Composer placeholder      |
+| `composerSendButtonLabel`              | `"Send message"`         | Send button aria-label    |
+| `composerAttachButtonLabel`            | `"Add attachment"`       | Attach button aria-label  |
+| `messageCopyButtonLabel`               | `"Copy"`                 | Copy message button       |
+| `messageCopyCodeButtonLabel`           | `"Copy code"`            | Copy code block button    |
+| `messageCopiedCodeButtonLabel`         | `"Copied"`               | Copied confirmation       |
+| `messageReasoningLabel`                | `"Reasoning"`            | Reasoning part label      |
+| `messageReasoningStreamingLabel`       | `"Thinking..."`          | Reasoning streaming label |
+| `messageToolApproveButtonLabel`        | `"Approve"`              | Tool approval button      |
+| `messageToolDenyButtonLabel`           | `"Deny"`                 | Tool denial button        |
+| `conversationListNoConversationsLabel` | `"No conversations"`     | Empty conversation list   |
+| `unreadMarkerLabel`                    | `"New messages"`         | Unread marker             |
+| `retryButtonLabel`                     | `"Retry"`                | Retry button              |
+| `scrollToBottomLabel`                  | `"Scroll to bottom"`     | Scroll affordance         |
+| `threadNoMessagesLabel`                | `"No messages yet"`      | Empty thread              |
+| `genericErrorLabel`                    | `"Something went wrong"` | Generic error             |
+| `loadingLabel`                         | `"Loading..."`           | Loading state             |
+| `suggestionsLabel`                     | `"Suggested prompts"`    | Suggestions section       |
 
 Function keys accept parameters:
 
-| Key | Signature | Default |
-| :--- | :--- | :--- |
-| `messageStatusLabel` | `(status) => string` | Maps status to label |
-| `toolStateLabel` | `(state) => string` | Maps tool state to label |
-| `messageTimestampLabel` | `(dateTime) => string` | Formats to `HH:MM` |
-| `typingIndicatorLabel` | `(users) => string` | `"Alice is typing"` |
-| `scrollToBottomWithCountLabel` | `(count) => string` | `"N new messages"` |
+| Key                            | Signature              | Default                  |
+| :----------------------------- | :--------------------- | :----------------------- |
+| `messageStatusLabel`           | `(status) => string`   | Maps status to label     |
+| `toolStateLabel`               | `(state) => string`    | Maps tool state to label |
+| `messageTimestampLabel`        | `(dateTime) => string` | Formats to `HH:MM`       |
+| `typingIndicatorLabel`         | `(users) => string`    | `"Alice is typing"`      |
+| `scrollToBottomWithCountLabel` | `(count) => string`    | `"N new messages"`       |

@@ -3,13 +3,22 @@
   "propDescriptions": {
     "classes": { "description": "Override or extend the styles applied to the component." },
     "currentUser": {
-      "description": "The local user sending messages. If omitted, derived from <code>members</code> by finding the entry with <code>role === &#39;user&#39;</code>."
+      "description": "The local user sending messages. If omitted, derived from <code>members</code> by finding the entry with <code>role === &#39;user&#39;</code>. Also used to enrich message authors when a rendered message resolves to <code>currentUser.id</code>."
     },
     "density": {
       "description": "The vertical spacing density of chat messages. - <code>&#39;compact&#39;</code> – Reduced vertical spacing between messages. - <code>&#39;standard&#39;</code> – Default spacing. - <code>&#39;comfortable&#39;</code> – Increased vertical spacing between messages."
     },
     "features": {
       "description": "Feature flags to enable or disable built-in ChatBox behaviours."
+    },
+    "getMessageAuthorAvatarUrl": {
+      "description": "Used to determine the avatar URL for a given message author. Falls back to <code>message.author?.avatarUrl</code>, then to the matched member&#39;s <code>avatarUrl</code>."
+    },
+    "getMessageAuthorDisplayName": {
+      "description": "Used to determine the display name for a given message author. Falls back to <code>message.author?.displayName</code>, then to the matched member&#39;s <code>displayName</code>."
+    },
+    "getMessageAuthorId": {
+      "description": "Used to determine the author id for a given message. The resolved id is used to match message authors against <code>currentUser</code>, <code>members</code>, and active conversation participants."
     },
     "initialActiveConversationId": {
       "description": "The initial active conversation ID when uncontrolled. Ignored after initialization and when <code>activeConversationId</code> is provided."
@@ -30,7 +39,7 @@
       "description": "Container-width breakpoints used when <code>layoutMode</code> is not provided."
     },
     "members": {
-      "description": "All participants in the chat. The current (local) user is derived as the first member with <code>role === &#39;user&#39;</code>, unless <code>currentUser</code> is provided explicitly."
+      "description": "Known chat participants. Used to derive the local user / assistant user when explicit props are omitted, and to enrich message authors by resolved author id at render time."
     },
     "slotProps": { "description": "The extra props for the slot components." },
     "slots": { "description": "The components used for each slot inside the ChatBox." },

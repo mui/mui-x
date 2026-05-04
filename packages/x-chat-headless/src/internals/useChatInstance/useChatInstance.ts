@@ -56,7 +56,7 @@ export function useChatInstance<Cursor = string>(
     componentName: 'ChatProvider',
     propName: 'activeConversationId',
     controlled: parameters.activeConversationIdControlled
-      ? parameters.activeConversationId ?? null
+      ? (parameters.activeConversationId ?? null)
       : undefined,
     defaultValue: parameters.initialActiveConversationId,
   });

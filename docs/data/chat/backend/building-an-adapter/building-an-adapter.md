@@ -159,7 +159,8 @@ When `hasMore` is `true`, `ChatBox` shows a "Load earlier messages" control that
 
 ## Step 5: Add conversation listing with `listConversations`
 
-Implement `listConversations` to populate the conversation sidebar when `ChatBox` mounts.
+Implement `listConversations` to load conversation state when `ChatBox` mounts.
+If `features={{ conversationList: true }}` is enabled, the same data also powers the built-in conversation sidebar.
 The runtime calls it once on startup, before any user interaction.
 
 ```tsx

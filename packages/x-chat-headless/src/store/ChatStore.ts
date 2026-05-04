@@ -3,16 +3,25 @@ import type {
   ChatConversation,
   ChatDraftAttachment,
   ChatMessage,
+  ChatMessageAuthorGetterProps,
   ChatUser,
 } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
 import type { ChatInternalState } from '../types/chat-state';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export interface ChatStoreParameters<Cursor = string> {
-  /** All participants in the chat. The current (local) user is derived as the first member with `role === 'user'`, unless `currentUser` is provided explicitly. */
+export interface ChatStoreParameters<Cursor = string> extends ChatMessageAuthorGetterProps {
+  /**
+   * Known chat participants.
+   * Used to derive the local user / assistant user when explicit props are omitted,
+   * and to enrich message authors by resolved author id at render time.
+   */
   members?: ChatUser[];
-  /** The local user sending messages. If omitted, derived from `members` by finding the entry with `role === 'user'`. */
+  /**
+   * The local user sending messages.
+   * If omitted, derived from `members` by finding the entry with `role === 'user'`.
+   * Also used to enrich message authors when a rendered message resolves to `currentUser.id`.
+   */
   currentUser?: ChatUser;
   messages?: ChatMessage[];
   /** The initial messages when uncontrolled. Ignored after initialization and when `messages` is provided. */

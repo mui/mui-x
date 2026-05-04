@@ -875,18 +875,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-chat', title: 'Overview' },
       { pathname: '/x/react-chat/quickstart', title: 'Quickstart' },
       {
-        pathname: '/x/react-chat/demos',
-        subheader: 'Demos',
-        children: [
-          { pathname: '/x/react-chat/demos/ai-assistant', title: 'AI Assistant' },
-          { pathname: '/x/react-chat/demos/team-messaging', title: 'Team Messaging' },
-          {
-            pathname: '/x/react-chat/demos/customer-support',
-            title: 'Customer Support',
-          },
-        ],
-      },
-      {
         pathname: '/x/react-chat/main-features',
         subheader: 'Main features',
         children: [
@@ -950,6 +938,10 @@ const pages: MuiPage[] = [
             title: 'Display',
             children: [
               {
+                pathname: '/x/react-chat/display/message-appearance',
+                title: 'Message Appearance',
+              },
+              {
                 pathname: '/x/react-chat/display/message-parts-group',
                 title: 'Message Parts',
                 children: [
@@ -974,10 +966,6 @@ const pages: MuiPage[] = [
                     title: 'Custom Parts',
                   },
                 ],
-              },
-              {
-                pathname: '/x/react-chat/display/message-appearance',
-                title: 'Message Appearance',
               },
               {
                 pathname: '/x/react-chat/display/message-actions',

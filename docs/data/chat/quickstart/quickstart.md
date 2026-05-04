@@ -73,37 +73,18 @@ yarn add @mui/material @emotion/react @emotion/styled
 Import `ChatBox` and wire it to an adapter.
 The adapter implements `sendMessage` and returns a streaming response:
 
-```tsx
-import { ChatBox } from '@mui/x-chat';
+The example below uses a small in-memory adapter so it works directly in the docs.
+In your app, replace the adapter implementation with your API call.
 
-const adapter = {
-  async sendMessage({ message, signal }) {
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      body: JSON.stringify({ message }),
-      signal,
-    });
-    return res.body; // ReadableStream<ChatMessageChunk>
-  },
-};
+{{"demo": "RenderChatBox.js", "defaultCodeOpen": true, "bg": "inline"}}
 
-export default function App() {
-  return (
-    <ChatBox
-      adapter={adapter}
-      initialConversations={[{ id: 'main', title: 'Assistant' }]}
-      initialActiveConversationId="main"
-      sx={{ height: 500 }}
-    />
-  );
-}
-```
-
-`ChatBox` renders a full chat surface — conversation list, thread header, message log, and composer — in a single component.
+`ChatBox` renders a full chat surface — thread header, message log, and composer — in a single component.
+Enable the built-in conversation list explicitly with `features={{ conversationList: true }}` when you want an inbox-style layout.
 All visual styles are derived from your active Material UI theme.
 
 Only `adapter` is required — it must implement `sendMessage`.
-`initialConversations` and `initialActiveConversationId` are optional conveniences that pre-populate the conversation list on first render.
+`initialConversations` and `initialActiveConversationId` are optional conveniences that pre-populate chat state on first render.
+If `features={{ conversationList: true }}` is enabled, the same data also feeds the built-in conversation list.
 Every other prop is optional.
 
 ## Theme integration
@@ -158,5 +139,5 @@ All documentation for Community components and features also applies to their Pr
 
 - [ChatBox](/x/react-chat/basics/chatbox/) — learn about the ChatBox component, its props, and architecture
 - [Customization](/x/react-chat/customization/styling/) — theme overrides, sx, slots, and CSS class names
-- [Demos](/x/react-chat/demos/ai-assistant/) — end-to-end patterns
+- [Overview demos](/x/react-chat/) — live example patterns with starter code
 - [Slots & Composition](/x/react-chat/customization/slots-and-composition/) — structural composition primitives and slot overrides

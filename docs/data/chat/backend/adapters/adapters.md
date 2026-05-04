@@ -120,7 +120,8 @@ None are required — the runtime detects which methods exist and activates the 
 
 ### `listConversations(input?)`
 
-Implement this to populate the conversation sidebar when `ChatBox` mounts.
+Implement this to load conversation state when `ChatBox` mounts.
+If `features={{ conversationList: true }}` is enabled, the same data also powers the built-in conversation sidebar.
 The runtime calls it once on startup, before any user interaction.
 
 ```ts

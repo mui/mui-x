@@ -10,7 +10,7 @@ githubLabel: 'scope: chat'
 <p class="description">A messenger-style layout with no bubbles, left-aligned messages, and author names as group headers.</p>
 
 Set `variant="compact"` on `ChatBox` to switch the entire chat to a compact layout.
-Both the conversation list and the message list adapt automatically.
+When `features={{ conversationList: true }}` is enabled, both the conversation list and the message list adapt automatically.
 
 {{"demo": "CompactVariant.js", "bg": "inline"}}
 

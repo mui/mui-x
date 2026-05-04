@@ -132,6 +132,14 @@ export interface ChatBoxSlotProps {
 
 export interface ChatBoxFeatures {
   /**
+   * Whether to render the built-in conversation list sidebar / drawer.
+   * When disabled, `ChatBox` renders only the active thread surface even if
+   * conversations are present or loaded through `adapter.listConversations()`.
+   * This flag controls only the built-in sidebar / drawer UI.
+   * @default false
+   */
+  conversationList?: boolean;
+  /**
    * Whether to show the scroll-to-bottom affordance button when the user has scrolled up.
    * @default true
    */

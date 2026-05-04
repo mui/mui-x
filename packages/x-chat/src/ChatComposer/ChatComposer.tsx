@@ -70,7 +70,6 @@ const ChatComposerStyled = styled('form', {
   display: 'flex',
   flexDirection: 'column',
   position: 'relative',
-  zIndex: 1,
   gap: theme.spacing(0.5),
   padding: theme.spacing(1, 1.5),
   border: '1px solid',
@@ -315,6 +314,11 @@ ChatComposer.propTypes = {
       PropTypes.bool,
     ]),
   }),
+  /**
+   * Handler invoked when the form is submitted. The composer's submit logic still
+   * runs after this handler unless the handler calls `event.preventDefault()`.
+   */
+  onSubmit: PropTypes.func,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
   sx: PropTypes.oneOfType([

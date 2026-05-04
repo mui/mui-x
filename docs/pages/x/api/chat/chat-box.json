@@ -17,8 +17,20 @@
     "features": {
       "type": {
         "name": "shape",
-        "description": "{ attachments?: { acceptedMimeTypes?: Array&lt;string&gt;, maxFileCount?: number, maxFileSize?: number, onAttachmentReject?: func }<br>&#124;&nbsp;bool, autoScroll?: { buffer?: number }<br>&#124;&nbsp;bool, conversationHeader?: bool, helperText?: bool, scrollToBottom?: bool, suggestions?: bool }"
+        "description": "{ attachments?: { acceptedMimeTypes?: Array&lt;string&gt;, maxFileCount?: number, maxFileSize?: number, onAttachmentReject?: func }<br>&#124;&nbsp;bool, autoScroll?: { buffer?: number }<br>&#124;&nbsp;bool, conversationHeader?: bool, conversationList?: bool, helperText?: bool, scrollToBottom?: bool, suggestions?: bool }"
       }
+    },
+    "getMessageAuthorAvatarUrl": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.avatarUrl"
+    },
+    "getMessageAuthorDisplayName": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.displayName"
+    },
+    "getMessageAuthorId": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.id"
     },
     "initialActiveConversationId": { "type": { "name": "string" } },
     "initialComposerValue": { "type": { "name": "string" } },
@@ -207,6 +219,6 @@
   "muiName": "MuiChatBox",
   "filename": "/packages/x-chat/src/ChatBox/ChatBox.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/backend/controlled-state/\">Chat - Controlled State</a></li>\n<li><a href=\"/x/react-chat/basics/chatbox/\">Chat - ChatBox</a></li>\n<li><a href=\"/x/react-chat/basics/layout/\">Chat - Layout</a></li>\n<li><a href=\"/x/react-chat/basics/variants-and-density/\">Chat - Variants &amp; Density</a></li>\n<li><a href=\"/x/react-chat/behavior/error-handling/\">Chat - Error Handling</a></li>\n<li><a href=\"/x/react-chat/behavior/streaming/\">Chat - Streaming</a></li>\n<li><a href=\"/x/react-chat/customization/look-and-feel/\">Chat - Look &amp; Feel</a></li>\n<li><a href=\"/x/react-chat/customization/\">Chat - Customization</a></li>\n<li><a href=\"/x/react-chat/customization/slots-and-composition/\">Chat - Slots &amp; Composition</a></li>\n<li><a href=\"/x/react-chat/customization/structure/\">Chat - Structure</a></li>\n<li><a href=\"/x/react-chat/customization/styling/\">Chat - Styling</a></li>\n<li><a href=\"/x/react-chat/demos/ai-assistant/\">Chat - AI Assistant demo</a></li>\n<li><a href=\"/x/react-chat/demos/customer-support/\">Chat - Customer Support demo</a></li>\n<li><a href=\"/x/react-chat/demos/team-messaging/\">Chat - Team Messaging demo</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/real-time-sync/\">Chat - Real-Time Sync</a></li>\n<li><a href=\"/x/react-chat/quickstart/\">Chat - Quickstart</a></li>\n<li><a href=\"/x/react-chat/resources/events-and-callbacks/\">Chat - Events &amp; Callbacks</a></li>\n<li><a href=\"/x/react-chat/resources/performance/\">Chat - Performance</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/backend/controlled-state/\">Chat - Controlled State</a></li>\n<li><a href=\"/x/react-chat/basics/chatbox/\">Chat - ChatBox</a></li>\n<li><a href=\"/x/react-chat/basics/variants-and-density/\">Chat - Variants &amp; Density</a></li>\n<li><a href=\"/x/react-chat/behavior/error-handling/\">Chat - Error Handling</a></li>\n<li><a href=\"/x/react-chat/behavior/streaming/\">Chat - Streaming</a></li>\n<li><a href=\"/x/react-chat/customization/look-and-feel/\">Chat - Look &amp; Feel</a></li>\n<li><a href=\"/x/react-chat/customization/\">Chat - Customization</a></li>\n<li><a href=\"/x/react-chat/customization/slots-and-composition/\">Chat - Slots &amp; Composition</a></li>\n<li><a href=\"/x/react-chat/customization/structure/\">Chat - Structure</a></li>\n<li><a href=\"/x/react-chat/customization/styling/\">Chat - Styling</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/real-time-sync/\">Chat - Real-Time Sync</a></li>\n<li><a href=\"/x/react-chat/quickstart/\">Chat - Quickstart</a></li>\n<li><a href=\"/x/react-chat/resources/events-and-callbacks/\">Chat - Events &amp; Callbacks</a></li>\n<li><a href=\"/x/react-chat/resources/performance/\">Chat - Performance</a></li></ul>",
   "cssComponent": false
 }

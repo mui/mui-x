@@ -165,12 +165,12 @@ const ChatBoxDrawerHeader = styled('div', {
 const ChatBoxConversationOverlay = styled('div', {
   name: 'MuiChatBox',
   slot: 'ConversationOverlay',
-})({
+})(({ theme }) => ({
   position: 'absolute',
   inset: 0,
-  zIndex: 1,
+  zIndex: theme.zIndex.modal,
   pointerEvents: 'none',
-});
+}));
 
 const ChatBoxConversationOverlayBackdrop = styled('div', {
   name: 'MuiChatBox',
@@ -198,7 +198,6 @@ const ChatBoxConversationOverlayPanel = styled('div', {
 const DefaultBackIcon = React.memo(function DefaultBackIcon() {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden="true"
@@ -564,7 +563,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const messageIds = useMessageIds();
   const conversations = useConversations();
   const localeText = useChatLocaleText();
-  const hasConversationList = conversations.length > 0;
+  const hasConversationList = features?.conversationList === true && conversations.length > 0;
 
   const restoreDrawerFocus = React.useCallback(() => {
     const drawerOpener = drawerOpenerRef.current;
@@ -721,11 +720,8 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
       )}
 
       {hasConversationList && isNarrow && !isMobileSplitView && drawerOpen && (
-          <ChatBoxConversationOverlay>
-          <ChatBoxConversationOverlayBackdrop
-            aria-hidden="true"
-            onClick={handleDrawerClose}
-          />
+        <ChatBoxConversationOverlay>
+          <ChatBoxConversationOverlayBackdrop aria-hidden="true" onClick={handleDrawerClose} />
           <MUIFocusTrap open={drawerOpen} disableRestoreFocus>
             <ChatBoxConversationOverlayPanel
               aria-label={localeText.conversationHeaderMenuLabel}

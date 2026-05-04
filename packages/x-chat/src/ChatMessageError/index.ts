@@ -5,7 +5,4 @@ export {
   getChatMessageErrorUtilityClass,
   useChatMessageErrorUtilityClasses,
 } from './chatMessageErrorClasses';
-export type {
-  ChatMessageErrorClasses,
-  ChatMessageErrorClassKey,
-} from './chatMessageErrorClasses';
+export type { ChatMessageErrorClasses, ChatMessageErrorClassKey } from './chatMessageErrorClasses';

@@ -36,7 +36,7 @@ Compact mode applies the following changes to the message list:
 - **No bubbles** — messages render as plain text without background colors or padding.
 - **Left-aligned** — all messages are left-aligned regardless of role (no right-aligned user messages).
 - **Group header timestamps** — the timestamp moves from below each message to the group header, displayed next to the author name.
-- **Avatars preserved** — avatars remain visible for the first message in each group.
+- **Avatars preserved when available** — the first message in each group still shows its resolved avatar.
 
 When set on `ChatBox`, the variant automatically applies to the conversation list as well.
 

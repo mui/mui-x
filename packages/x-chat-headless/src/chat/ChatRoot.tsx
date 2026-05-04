@@ -65,6 +65,9 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
     density,
     members,
     currentUser,
+    getMessageAuthorId,
+    getMessageAuthorDisplayName,
+    getMessageAuthorAvatarUrl,
     messages,
     initialMessages,
     onMessagesChange,
@@ -103,6 +106,9 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
       adapter={adapter}
       members={members}
       currentUser={currentUser}
+      getMessageAuthorId={getMessageAuthorId}
+      getMessageAuthorDisplayName={getMessageAuthorDisplayName}
+      getMessageAuthorAvatarUrl={getMessageAuthorAvatarUrl}
       messages={messages}
       initialMessages={initialMessages}
       onMessagesChange={onMessagesChange}

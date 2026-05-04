@@ -19,6 +19,13 @@ function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   };
 }
 
+function readNumericZIndex(element: HTMLElement) {
+  const zIndex = window.getComputedStyle(element).zIndex;
+  const parsed = Number(zIndex);
+
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
 function ResizeObserverMock(
   callback: (
     entries: Array<{ borderBoxSize: [{ inlineSize: number }]; contentRect: { width: number } }>,
@@ -46,6 +53,8 @@ function ResizeObserverMock(
     },
   };
 }
+
+const conversationListFeatures = { conversationList: true } as const;
 
 describe('ChatBox', () => {
   const originalResizeObserver = window.ResizeObserver;
@@ -79,6 +88,37 @@ describe('ChatBox', () => {
       render(<ChatBox adapter={createAdapter()}>{null}</ChatBox>);
       expect(screen.getByText('No messages yet')).not.toBe(null);
     });
+
+    it('resolves message avatars from getter-based author ids', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialMessages={[
+            {
+              id: 'm1',
+              role: 'assistant',
+              metadata: { actorId: 'bot-1' } as any,
+              parts: [{ type: 'text', text: 'Hello' }],
+            },
+          ]}
+          members={[
+            {
+              id: 'bot-1',
+              displayName: 'Support Bot',
+              avatarUrl: 'https://example.com/support-bot.png',
+            },
+          ]}
+          getMessageAuthorId={(message) => (message.metadata as any)?.actorId}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      expect(screen.getByAltText('Support Bot')).to.have.attribute(
+        'src',
+        'https://example.com/support-bot.png',
+      );
+    });
   });
 
   describe('feature: conversationHeader', () => {
@@ -89,6 +129,46 @@ describe('ChatBox', () => {
         </ChatBox>,
       );
       expect(document.querySelector('.MuiChatConversationHeader-root')).toBe(null);
+    });
+  });
+
+  describe('feature: conversationList', () => {
+    it('does not render the conversation list by default', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialConversations={[
+            { id: 'c1', title: 'General' },
+            { id: 'c2', title: 'Support' },
+          ]}
+          initialActiveConversationId="c1"
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      expect(screen.queryByRole('listbox')).toBe(null);
+      expect(screen.queryByRole('button', { name: 'Open conversations' })).toBe(null);
+    });
+
+    it('renders the conversation list when features.conversationList=true', async () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialConversations={[
+            { id: 'c1', title: 'General' },
+            { id: 'c2', title: 'Support' },
+          ]}
+          initialActiveConversationId="c1"
+          features={conversationListFeatures}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).not.toBe(null);
+      });
     });
   });
 
@@ -208,6 +288,7 @@ describe('ChatBox', () => {
         <ChatBox
           adapter={createAdapter()}
           initialConversations={conversations}
+          features={conversationListFeatures}
           data-resize-width="720"
           sx={{ height: 480 }}
         >
@@ -224,6 +305,7 @@ describe('ChatBox', () => {
           key="narrow"
           adapter={createAdapter()}
           initialConversations={conversations}
+          features={conversationListFeatures}
           data-resize-width="480"
           sx={{ height: 480 }}
         >
@@ -241,6 +323,7 @@ describe('ChatBox', () => {
         <ChatBox
           adapter={createAdapter()}
           initialConversations={conversations}
+          features={conversationListFeatures}
           layoutModeBreakpoints={{ overlay: 700, split: 500 }}
           data-resize-width="650"
           sx={{ height: 480 }}
@@ -261,6 +344,7 @@ describe('ChatBox', () => {
         <ChatBox
           adapter={createAdapter()}
           initialConversations={conversations}
+          features={conversationListFeatures}
           layoutMode="split"
           data-resize-width="720"
           sx={{ height: 480 }}
@@ -281,6 +365,7 @@ describe('ChatBox', () => {
         <ChatBox
           adapter={createAdapter()}
           initialConversations={conversations}
+          features={conversationListFeatures}
           data-resize-width="480"
           sx={{ height: 480 }}
         >
@@ -308,6 +393,7 @@ describe('ChatBox', () => {
         <ChatBox
           adapter={createAdapter()}
           initialConversations={conversations}
+          features={conversationListFeatures}
           data-resize-width="480"
           sx={{ height: 480 }}
         >
@@ -331,11 +417,43 @@ describe('ChatBox', () => {
       expect(threadPane!.style.width).toBe('100%');
     });
 
+    it('renders the narrow conversation overlay above the composer', async () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialConversations={conversations}
+          features={conversationListFeatures}
+          data-resize-width="480"
+          sx={{ height: 480 }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      const chatBox = document.querySelector('.MuiChatBox-root') as HTMLElement;
+
+      fireEvent.click(await screen.findByRole('button', { name: 'Open conversations' }));
+
+      await waitFor(() => {
+        expect(chatBox.querySelector('[class*="MuiChatBox-conversationOverlay"]')).not.toBe(null);
+      });
+
+      const overlay = chatBox.querySelector(
+        '[class*="MuiChatBox-conversationOverlay"]',
+      ) as HTMLElement;
+      const composer = chatBox.querySelector('.MuiChatComposer-root') as HTMLElement;
+
+      expect(overlay).not.toBe(null);
+      expect(composer).not.toBe(null);
+      expect(readNumericZIndex(overlay)).toBeGreaterThan(readNumericZIndex(composer));
+    });
+
     it('shows a close button in the narrow overlay and closes it when pressed', async () => {
       render(
         <ChatBox
           adapter={createAdapter()}
           initialConversations={conversations}
+          features={conversationListFeatures}
           data-resize-width="480"
           sx={{ height: 480 }}
         >
@@ -358,6 +476,7 @@ describe('ChatBox', () => {
         <ChatBox
           adapter={createAdapter()}
           initialConversations={conversations}
+          features={conversationListFeatures}
           data-resize-width="480"
           sx={{ height: 480 }}
         >
@@ -375,6 +494,7 @@ describe('ChatBox', () => {
         <ChatBox
           adapter={createAdapter()}
           initialConversations={conversations}
+          features={conversationListFeatures}
           data-resize-width="480"
           sx={{ height: 480 }}
         >
@@ -413,6 +533,7 @@ describe('ChatBox', () => {
         <ChatBox
           adapter={createAdapter()}
           initialConversations={conversations}
+          features={conversationListFeatures}
           data-resize-width="360"
           sx={{ height: 480 }}
         >
@@ -478,6 +599,7 @@ describe('ChatBox', () => {
             adapter={createAdapter({ listMessages })}
             conversations={conversations}
             initialActiveConversationId="c1"
+            features={conversationListFeatures}
             data-resize-width="360"
             sx={{ height: 480 }}
           >
