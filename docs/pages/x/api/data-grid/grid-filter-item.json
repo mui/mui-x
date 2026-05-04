@@ -15,6 +15,6 @@
       "required": true
     },
     "id": { "type": { "description": "number | string" } },
-    "value": { "type": { "description": "any" } }
+    "value": { "type": { "description": "V" } }
   }
 }

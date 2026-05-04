@@ -131,7 +131,7 @@
   },
   {
     "name": "gridFilterModelSelector",
-    "returnType": "GridFilterModel",
+    "returnType": "GridFilterModel<any>",
     "category": "Filtering",
     "description": "Get the current filter model."
   },

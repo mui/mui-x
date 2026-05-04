@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { DataGrid, useGridApiRef, type GridCellParams, type GridRowParams } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  useGridApiRef,
+  type GridCellParams,
+  type GridRowParams,
+  type GridFilterModel,
+} from '@mui/x-data-grid';
 
 function PropTest() {
   const apiRef = useGridApiRef();
@@ -266,4 +272,29 @@ function ImmutableProps() {
   const columns = [] as const;
   const initialState = { sorting: { sortModel: [{ field: 'id', sort: 'asc' }] } } as const;
   return <DataGrid rows={rows} columns={columns} initialState={initialState} />;
+}
+
+function FilterModelValueGenericTest() {
+  const model: GridFilterModel<number> = {
+    items: [{ field: 'id', operator: '>', value: 42 }],
+  };
+
+  model.items[0].value?.toFixed(2);
+
+  // @ts-expect-error number does not have trim
+  model.items[0].value?.trim();
+
+  return null;
+}
+
+function FilterModelGenericTest() {
+  const model: GridFilterModel<number> = {
+    items: [{ field: 'id', operator: '>', value: 10 }],
+  };
+
+  model.items[0].value?.toFixed(2);
+  // @ts-expect-error number has no trim
+  model.items[0].value?.trim();
+
+  return null;
 }
