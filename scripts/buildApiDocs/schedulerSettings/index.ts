@@ -97,9 +97,11 @@ export default schedulerApiPages;
       'x-scheduler/src/month-view/month-view-row/MonthViewWeekRow.tsx',
       // Internal sub-components of EventTimelinePremium
       'x-scheduler-premium/src/event-timeline-premium/content/EventTimelinePremiumContent.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/event-skeleton/EventTimelinePremiumSkeleton.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-event/EventTimelinePremiumEvent.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-title-cell/EventTimelinePremiumTitleCell.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-header/EventTimelinePremiumHeader.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/error-container/EventTimelinePremiumErrorContainer.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
