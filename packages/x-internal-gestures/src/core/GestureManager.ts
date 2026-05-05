@@ -206,8 +206,11 @@ export class GestureManager<
   >(gestureName: GN, element: T, options: GestureNameToOptionsMap[GN]): void {
     const elementGestures = this.elementGestureMap.get(element);
     if (!elementGestures || !elementGestures.has(gestureName)) {
-      console.error(`Gesture "${gestureName}" not found on the provided element.`);
-      return;
+      throw new Error(
+        `MUI X: Gesture "${gestureName}" is not registered on the provided element.\n` +
+          `This prevents the new options from being applied.\n` +
+          `Call \`registerElement\` for this gesture before \`setGestureOptions\`.`,
+      );
     }
 
     const event = new CustomEvent<GestureNameToOptionsMap[GN]>(`${gestureName}ChangeOptions`, {
@@ -243,8 +246,11 @@ export class GestureManager<
   >(gestureName: GN, element: T, state: GestureNameToStateMap[GN]): void {
     const elementGestures = this.elementGestureMap.get(element);
     if (!elementGestures || !elementGestures.has(gestureName)) {
-      console.error(`Gesture "${gestureName}" not found on the provided element.`);
-      return;
+      throw new Error(
+        `MUI X: Gesture "${gestureName}" is not registered on the provided element.\n` +
+          `This prevents the new state from being applied.\n` +
+          `Call \`registerElement\` for this gesture before \`setGestureState\`.`,
+      );
     }
 
     const event = new CustomEvent<GestureNameToStateMap[GN]>(`${gestureName}ChangeState`, {
@@ -326,8 +332,12 @@ export class GestureManager<
     // Find the gesture template
     const gestureTemplate = this.gestureTemplates.get(gestureName);
     if (!gestureTemplate) {
-      console.error(`Gesture template "${gestureName}" not found.`);
-      return false;
+      throw new Error(
+        `MUI X: No gesture template named "${gestureName}" is registered on this GestureManager.\n` +
+          `This prevents the gesture from being attached to the element.\n` +
+          `Pass the gesture in the \`gestures\` array when constructing GestureManager, ` +
+          `and ensure the name passed to \`registerElement\` matches the template's \`name\` option.`,
+      );
     }
 
     // Create element's gesture map if it doesn't exist
