@@ -1675,6 +1675,71 @@ describe('<DataGridPro /> - Filter', () => {
       expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).to.equal(null);
     });
 
+    describe('header filter', () => {
+      it('should render the multi-Select header filter input for the contains operator', () => {
+        render(<TestCaseMultiSelect headerFilters />);
+        const filterCell = getColumnHeaderCell(0, 1);
+        // baseSelect renders a `combobox` role; the labelled label is filterPanelInputLabel.
+        const select = within(filterCell).getByRole('combobox');
+        expect(select).not.to.equal(null);
+      });
+
+      it('should apply OR-semantics multi-value contains filter when selecting two options', async () => {
+        const { user } = render(<TestCaseMultiSelect headerFilters />);
+        const filterCell = getColumnHeaderCell(0, 1);
+        const select = within(filterCell).getByRole('combobox');
+        await user.click(select);
+
+        const listbox = await screen.findByRole('listbox');
+        await user.click(within(listbox).getByRole('option', { name: 'React' }));
+        await user.click(within(listbox).getByRole('option', { name: 'Vue' }));
+        // Close the dropdown so it doesn't intercept subsequent assertions.
+        await user.keyboard('{Escape}');
+
+        await waitFor(() => {
+          // contains [React, Vue] matches rows containing React OR Vue.
+          expect(getColumnValues(0)).to.deep.equal([
+            'ReactTypeScript',
+            'VueJavaScript',
+            'ReactJavaScript',
+          ]);
+        });
+      });
+
+      it('should join object option labels in renderValue', async () => {
+        const { user } = render(
+          <TestCaseMultiSelect
+            rows={[{ id: 1, tags: ['fe', 'be'] }]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                width: 250,
+                valueOptions: [
+                  { value: 'fe', label: 'Frontend' },
+                  { value: 'be', label: 'Backend' },
+                ],
+              },
+            ]}
+            headerFilters
+          />,
+        );
+        const filterCell = getColumnHeaderCell(0, 1);
+        const select = within(filterCell).getByRole('combobox');
+        await user.click(select);
+
+        const listbox = await screen.findByRole('listbox');
+        await user.click(within(listbox).getByRole('option', { name: 'Frontend' }));
+        await user.click(within(listbox).getByRole('option', { name: 'Backend' }));
+        await user.keyboard('{Escape}');
+
+        await waitFor(() => {
+          // renderValue joins selected labels (not raw values) with ", ".
+          expect(select.textContent).to.equal('Frontend, Backend');
+        });
+      });
+    });
+
     describe('shared drag-resize subscription', () => {
       it('should expose subscribeDrag on the multiSelect cache', () => {
         render(<TestCaseMultiSelect />);
