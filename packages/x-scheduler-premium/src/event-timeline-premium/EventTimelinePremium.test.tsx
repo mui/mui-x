@@ -489,10 +489,7 @@ describe('<EventTimelinePremium />', () => {
     });
 
     it('should remove only the dismissed alert and keep the others', async () => {
-      const { user } = renderErrorContainer([
-        new Error('First error'),
-        new Error('Second error'),
-      ]);
+      const { user } = renderErrorContainer([new Error('First error'), new Error('Second error')]);
 
       const closeButtons = screen.getAllByRole('button', { name: /close/i });
       expect(closeButtons.length).to.equal(2);
@@ -556,7 +553,6 @@ describe('<EventTimelinePremium />', () => {
       // dataSource that rejects with a non-Error value (e.g. a `fetch` Response).
       const nonError = { status: 500, toString: () => '500 Internal Server Error' };
       const dataSource = {
-         
         getEvents: () => Promise.reject(nonError),
         updateEvents: async () => ({ success: true }),
       };

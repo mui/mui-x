@@ -68,7 +68,9 @@ export default function ErrorHandling() {
           >
             <ChevronLeftIcon />
           </IconButton>
-          <IconButton onClick={(event) => apiRef.current?.goToNextVisibleDate(event)}>
+          <IconButton
+            onClick={(event) => apiRef.current?.goToNextVisibleDate(event)}
+          >
             <ChevronRightIcon />
           </IconButton>
           <Select value={preset} onChange={handlePresetChange} size="small">

@@ -48,9 +48,7 @@ const EventTimelinePremiumErrorMessage = styled(Typography, {
   overflowWrap: 'break-word',
 });
 
-export function EventTimelinePremiumErrorContainer(
-  props: EventTimelinePremiumErrorContainerProps,
-) {
+export function EventTimelinePremiumErrorContainer(props: EventTimelinePremiumErrorContainerProps) {
   const { className } = props;
   const store = useEventTimelinePremiumStoreContext();
   const { classes } = useEventTimelinePremiumStyledContext();
@@ -77,9 +75,7 @@ export function EventTimelinePremiumErrorContainer(
   };
 
   return (
-    <EventTimelinePremiumErrorContainerRoot
-      className={clsx(classes.errorContainer, className)}
-    >
+    <EventTimelinePremiumErrorContainerRoot className={clsx(classes.errorContainer, className)}>
       {errors
         .filter((error) => !dismissedErrors.has(error))
         .map((error, index) => (
@@ -89,10 +85,7 @@ export function EventTimelinePremiumErrorContainer(
             key={index}
             onClose={() => handleDismiss(error)}
           >
-            <EventTimelinePremiumErrorMessage
-              className={classes.errorMessage}
-              variant="body2"
-            >
+            <EventTimelinePremiumErrorMessage className={classes.errorMessage} variant="body2">
               {error instanceof Error ? error.message : String(error)}
             </EventTimelinePremiumErrorMessage>
           </EventTimelinePremiumErrorAlert>
