@@ -5,7 +5,6 @@ import {
   EventTimelinePremium,
   eventTimelinePremiumClasses,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
-import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-event-timeline-premium-api-ref';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
@@ -375,17 +374,16 @@ describe('<EventTimelinePremium />', () => {
       };
 
       function Test() {
-        const apiRef = useEventTimelinePremiumApiRef();
+        const [visibleDate, setVisibleDate] = React.useState(DEFAULT_TESTING_VISIBLE_DATE);
         return (
           <React.Fragment>
             <EventTimelinePremium
               resources={baseResources}
               dataSource={dataSource}
-              defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+              visibleDate={visibleDate}
               defaultPreset="dayAndMonth"
-              apiRef={apiRef}
             />
-            <button type="button" onClick={(event) => apiRef.current?.goToNextVisibleDate(event)}>
+            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
               Next
             </button>
           </React.Fragment>
@@ -403,9 +401,7 @@ describe('<EventTimelinePremium />', () => {
       const initialCount = dataSource.getEvents.callCount;
       await user.click(screen.getByRole('button', { name: 'Next' }));
 
-      await waitFor(() => expect(dataSource.getEvents.callCount).to.be.greaterThan(initialCount), {
-        timeout: 5000,
-      });
+      await waitFor(() => expect(dataSource.getEvents.callCount).to.be.greaterThan(initialCount));
     });
 
     it('should render the skeleton while events are loading and remove it once they resolve', async () => {
@@ -526,17 +522,16 @@ describe('<EventTimelinePremium />', () => {
       };
 
       function Test() {
-        const apiRef = useEventTimelinePremiumApiRef();
+        const [visibleDate, setVisibleDate] = React.useState(DEFAULT_TESTING_VISIBLE_DATE);
         return (
           <React.Fragment>
             <EventTimelinePremium
               resources={baseResources}
               dataSource={dataSource}
-              defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+              visibleDate={visibleDate}
               defaultPreset="dayAndMonth"
-              apiRef={apiRef}
             />
-            <button type="button" onClick={(event) => apiRef.current?.goToNextVisibleDate(event)}>
+            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
               Next
             </button>
           </React.Fragment>
@@ -554,12 +549,9 @@ describe('<EventTimelinePremium />', () => {
 
       await user.click(screen.getByRole('button', { name: 'Next' }));
 
-      await waitFor(
-        () => {
-          expect(screen.queryByText('Transient error')).to.equal(null);
-        },
-        { timeout: 5000 },
-      );
+      await waitFor(() => {
+        expect(screen.queryByText('Transient error')).to.equal(null);
+      });
     });
 
     it('should render a non-Error rejection by stringifying it', async () => {
