@@ -111,6 +111,61 @@ function BatchScatterPaths(props: BatchScatterPathsProps) {
 
 const MemoBatchScatterPaths = React.memo(BatchScatterPaths);
 
+function ProgressiveBatchScatterPaths(props: BatchScatterPathsProps) {
+  const { series } = props;
+  const progressiveCfg =
+    typeof series.progressive === 'object' && series.progressive !== null ? series.progressive : {};
+  const batchSize = progressiveCfg.batchSize ?? 5_000;
+  const totalLen = series.data.length;
+  const totalChunks = Math.max(1, Math.ceil(totalLen / batchSize));
+
+  const [chunksRendered, setChunksRendered] = React.useState(1);
+  const isComplete = chunksRendered >= totalChunks;
+
+  React.useEffect(() => {
+    if (isComplete) {
+      return undefined;
+    }
+    // Double rAF: first frame paints the current chunk, second frame triggers the next.
+    // A single rAF can fire before the current frame's paint, batching the next chunk
+    // into the same paint cycle.
+    let id1 = 0;
+    let id2 = 0;
+    id1 = requestAnimationFrame(() => {
+      id2 = requestAnimationFrame(() => {
+        setChunksRendered((c) => Math.min(c + 1, totalChunks));
+      });
+    });
+    return () => {
+      cancelAnimationFrame(id1);
+      cancelAnimationFrame(id2);
+    };
+  }, [chunksRendered, totalChunks, isComplete]);
+
+  // Reset progress when underlying data identity changes.
+  const dataRef = React.useRef(series.data);
+  React.useEffect(() => {
+    if (dataRef.current !== series.data) {
+      dataRef.current = series.data;
+      setChunksRendered(1);
+    }
+  }, [series.data]);
+
+  const slicedSeries = React.useMemo(() => {
+    if (chunksRendered * batchSize >= totalLen) {
+      return series;
+    }
+    return {
+      ...series,
+      data: series.data.slice(0, chunksRendered * batchSize),
+    };
+  }, [series, chunksRendered, batchSize, totalLen]);
+
+  return <BatchScatterPaths {...props} series={slicedSeries} />;
+}
+
+const MemoProgressiveBatchScatterPaths = React.memo(ProgressiveBatchScatterPaths);
+
 const Group = styled('g', {
   slot: 'internal',
   shouldForwardProp: undefined,
@@ -193,14 +248,28 @@ export function BatchScatter(props: BatchScatterProps) {
         data-faded={isSeriesFaded || undefined}
         data-highlighted={isSeriesHighlighted || undefined}
       >
-        <MemoBatchScatterPaths
-          series={series}
-          xScale={xScale}
-          yScale={yScale}
-          color={color}
-          colorGetter={colorGetter}
-          markerSize={markerSize}
-        />
+        {(() => {
+          const progressiveCfg =
+            typeof series.progressive === 'object' && series.progressive !== null
+              ? series.progressive
+              : null;
+          const batchSize = progressiveCfg?.batchSize ?? 5_000;
+          const threshold = progressiveCfg?.threshold ?? batchSize;
+          const useProgressive = !!series.progressive && series.data.length > threshold;
+          const PathsComponent = useProgressive
+            ? MemoProgressiveBatchScatterPaths
+            : MemoBatchScatterPaths;
+          return (
+            <PathsComponent
+              series={series}
+              xScale={xScale}
+              yScale={yScale}
+              color={color}
+              colorGetter={colorGetter}
+              markerSize={markerSize}
+            />
+          );
+        })()}
       </Group>
       {siblings}
     </React.Fragment>

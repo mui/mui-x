@@ -73,6 +73,29 @@ export interface ScatterSeriesType
      */
     markerSize?: number;
   };
+  /**
+   * Render the series in batches across animation frames so the main thread
+   * is not blocked while a large dataset paints.
+   *
+   * - `true` enables progressive rendering with a default `batchSize` of 5000 points.
+   * - Object form lets you tune the batch size and the threshold above which progressive kicks in.
+   *
+   * @default undefined
+   */
+  progressive?:
+    | boolean
+    | {
+        /**
+         * Number of points painted per animation frame.
+         * @default 5000
+         */
+        batchSize?: number;
+        /**
+         * Progressive rendering kicks in only when the series has more points than this threshold.
+         * @default `batchSize`
+         */
+        threshold?: number;
+      };
 }
 
 /**
