@@ -89,15 +89,13 @@ export class AdapterDateFns
 {
   constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
     /* v8 ignore start */
-    if (process.env.NODE_ENV !== 'production') {
-      if (typeof addDays !== 'function') {
-        throw new Error(
-          [
-            'MUI: This adapter is only compatible with `date-fns` v2.x package versions.',
-            'Please, install v2.x of the package or use the `AdapterDateFns` instead.',
-          ].join('\n'),
-        );
-      }
+    if (typeof addDays !== 'function') {
+      throw new Error(
+        [
+          'MUI: This adapter is only compatible with `date-fns` v2.x package versions.',
+          'Please, install v2.x of the package or use the `AdapterDateFns` instead.',
+        ].join('\n'),
+      );
     }
     /* v8 ignore stop */
     super({ locale: locale ?? defaultLocale, formats, longFormatters });

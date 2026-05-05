@@ -177,15 +177,13 @@ export const cleanDigitSectionValue = (
     | 'maxLength'
   >,
 ) => {
-  if (process.env.NODE_ENV !== 'production') {
-    if (section.type !== 'day' && section.contentType === 'digit-with-letter') {
-      throw new Error(
-        [
-          `MUI X: The token "${section.format}" is a digit format with letter in it.'
+  if (section.type !== 'day' && section.contentType === 'digit-with-letter') {
+    throw new Error(
+      [
+        `MUI X: The token "${section.format}" is a digit format with letter in it.'
              This type of format is only supported for 'day' sections`,
-        ].join('\n'),
-      );
-    }
+      ].join('\n'),
+    );
   }
 
   if (section.type === 'day' && section.contentType === 'digit-with-letter') {
@@ -252,10 +250,8 @@ export const changeSectionValueFormat = (
   currentFormat: string,
   newFormat: string,
 ) => {
-  if (process.env.NODE_ENV !== 'production') {
-    if (getDateSectionConfigFromFormatToken(adapter, currentFormat).type === 'weekDay') {
-      throw new Error("changeSectionValueFormat doesn't support week day formats");
-    }
+  if (getDateSectionConfigFromFormatToken(adapter, currentFormat).type === 'weekDay') {
+    throw new Error("changeSectionValueFormat doesn't support week day formats");
   }
 
   return adapter.formatByString(adapter.parse(valueStr, currentFormat)!, newFormat);
