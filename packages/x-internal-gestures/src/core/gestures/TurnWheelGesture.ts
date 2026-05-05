@@ -210,13 +210,19 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
   ): void {
     super.init(element, pointerManager, gestureRegistry, keyboardManager);
 
-    // Add event listener directly to the element
+    // Wheel listeners must be explicitly non-passive when the gesture needs
+    // to call preventDefault(); otherwise the browser ignores the call and
+    // logs a warning. When preventDefault is disabled, mark the listener as
+    // passive so the browser can optimise scroll responsiveness.
     // @ts-expect-error, WheelEvent is correct.
-    this.element.addEventListener('wheel', this.handleWheelEvent);
+    this.element.addEventListener('wheel', this.handleWheelEvent, {
+      passive: !this.preventDefault,
+    });
   }
 
   public destroy(): void {
-    // Remove the element-specific event listener
+    // Remove the element-specific event listener. Only `capture` is
+    // significant for matching; the `passive` flag is ignored on remove.
     // @ts-expect-error, WheelEvent is correct.
     this.element.removeEventListener('wheel', this.handleWheelEvent);
     this.resetState();
