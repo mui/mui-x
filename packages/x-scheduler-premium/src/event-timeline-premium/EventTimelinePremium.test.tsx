@@ -403,10 +403,9 @@ describe('<EventTimelinePremium />', () => {
       const initialCount = dataSource.getEvents.callCount;
       await user.click(screen.getByRole('button', { name: 'Next' }));
 
-      await waitFor(
-        () => expect(dataSource.getEvents.callCount).to.be.greaterThan(initialCount),
-        { timeout: 5000 },
-      );
+      await waitFor(() => expect(dataSource.getEvents.callCount).to.be.greaterThan(initialCount), {
+        timeout: 5000,
+      });
     });
 
     it('should render the skeleton while events are loading and remove it once they resolve', async () => {
