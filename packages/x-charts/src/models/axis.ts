@@ -189,26 +189,20 @@ type AxisSideConfig<AxisProps extends ChartsXAxisProps | ChartsYAxisProps> = {
     | (AxisProps extends ChartsXAxisProps ? 'top' | 'bottom' : 'none')
     | (AxisProps extends ChartsYAxisProps ? 'left' | 'right' : 'none')
     | 'none';
-} & (AxisProps extends ChartsXAxisProps
-  ? {
-      /**
-       * The height of the axis.
-       * Set to `'auto'` to automatically calculate the height based on tick label measurements.
-       * @default 45 if an axis label is provided, 25 otherwise.
-       */
-      height?: number | 'auto';
-    }
-  : {}) &
-  (AxisProps extends ChartsYAxisProps
-    ? {
-        /**
-         * The width of the axis.
-         * Set to `'auto'` to automatically calculate the width based on tick label measurements.
-         * @default 65 if an axis label is provided, 45 otherwise.
-         */
-        width?: number | 'auto';
-      }
-    : {});
+
+  /**
+   * The height of the axis.
+   * Set to `'auto'` to automatically calculate the height based on tick label measurements.
+   * @default 45 if an axis label is provided, 25 otherwise.
+   */
+  height?: AxisProps extends ChartsXAxisProps ? number | 'auto' : never;
+  /**
+   * The width of the axis.
+   * Set to `'auto'` to automatically calculate the width based on tick label measurements.
+   * @default 65 if an axis label is provided, 45 otherwise.
+   */
+  width?: AxisProps extends ChartsYAxisProps ? number | 'auto' : never;
+};
 
 export interface ChartsRotationAxisProps extends ChartsAxisProps {
   axis?: 'rotation';
