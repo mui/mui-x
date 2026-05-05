@@ -220,6 +220,7 @@ type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends Chart
       };
 
 export interface ChartsRotationAxisProps extends ChartsAxisProps {
+  axis?: 'rotation';
   /**
    * The start angle (in deg).
    */
@@ -235,6 +236,7 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
 }
 
 export interface ChartsRadiusAxisProps extends ChartsAxisProps {
+  axis?: 'radius';
   /**
    * The minimal radius.
    */
@@ -555,10 +557,15 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
   ignoreTooltip?: boolean;
 };
 
+/**
+ * Use this type for advanced typing. For basic usage, use `RotationAxis` or `RadiusAxis`.
+ */
 export type PolarAxisConfig<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps,
+  AxisProps extends ChartsRotationAxisProps | ChartsRadiusAxisProps =
+    | ChartsRotationAxisProps
+    | ChartsRadiusAxisProps,
 > = {
   /**
    * The offset of the axis in pixels. It can be used to move the axis from its default position.
@@ -571,15 +578,16 @@ export type PolarAxisConfig<
   MinMaxConfig<S> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
+  TickParams &
   AxisConfigExtension;
 
 /**
- * Use this type for advanced typing. For basic usage, use `XAxis`, `YAxis`, `RotationAxis` or `RadiusAxis`.
+ * Use this type for advanced typing. For basic usage, use `XAxis` or `YAxis`.
  */
 export type AxisConfig<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+  AxisProps extends ChartsXAxisProps | ChartsYAxisProps = ChartsXAxisProps | ChartsYAxisProps,
 > = {
   /**
    * The offset of the axis in pixels. It can be used to move the axis from its default position.
@@ -592,9 +600,9 @@ export type AxisConfig<
   MinMaxConfig<S> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
-  AxisSideConfig<AxisProps> &
   TickParams &
-  AxisConfigExtension;
+  AxisConfigExtension &
+  AxisSideConfig<AxisProps>;
 
 export interface AxisConfigExtension {}
 
@@ -647,26 +655,49 @@ export type ComputedYAxis<S extends ScaleName = ScaleName, V = any> = ComputedAx
 >;
 
 export function isBandScaleConfig(
+  scaleConfig: PolarAxisConfig<ScaleName>,
+): scaleConfig is PolarAxisConfig<'band'> & { scaleType: 'band' };
+
+export function isBandScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
-): scaleConfig is AxisConfig<'band'> & { scaleType: 'band' } {
+): scaleConfig is AxisConfig<'band'> & { scaleType: 'band' };
+export function isBandScaleConfig(scaleConfig: AxisConfig<ScaleName> | PolarAxisConfig<ScaleName>) {
   return scaleConfig.scaleType === 'band';
 }
+export function isPointScaleConfig(
+  scaleConfig: PolarAxisConfig<ScaleName>,
+): scaleConfig is PolarAxisConfig<'point'> & { scaleType: 'point' };
 
 export function isPointScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
-): scaleConfig is AxisConfig<'point'> & { scaleType: 'point' } {
+): scaleConfig is AxisConfig<'point'> & { scaleType: 'point' };
+export function isPointScaleConfig(
+  scaleConfig: AxisConfig<ScaleName> | PolarAxisConfig<ScaleName>,
+) {
   return scaleConfig.scaleType === 'point';
 }
 
 export function isContinuousScaleConfig(
+  scaleConfig: PolarAxisConfig<ScaleName>,
+): scaleConfig is PolarAxisConfig<ContinuousScaleName>;
+export function isContinuousScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
-): scaleConfig is AxisConfig<ContinuousScaleName> {
+): scaleConfig is AxisConfig<ContinuousScaleName>;
+export function isContinuousScaleConfig(
+  scaleConfig: AxisConfig<ScaleName> | PolarAxisConfig<ScaleName>,
+) {
   return scaleConfig.scaleType !== 'point' && scaleConfig.scaleType !== 'band';
 }
 
 export function isSymlogScaleConfig(
+  scaleConfig: PolarAxisConfig<ScaleName>,
+): scaleConfig is PolarAxisConfig<'symlog'> & { scaleType: 'symlog' };
+export function isSymlogScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
-): scaleConfig is AxisConfig<'symlog'> & { scaleType: 'symlog' } {
+): scaleConfig is AxisConfig<'symlog'> & { scaleType: 'symlog' };
+export function isSymlogScaleConfig(
+  scaleConfig: AxisConfig<ScaleName> | PolarAxisConfig<ScaleName>,
+) {
   return scaleConfig.scaleType === 'symlog';
 }
 
@@ -718,10 +749,10 @@ export type YAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleNam
   ? MakeOptional<AxisConfig<S, V, ChartsYAxisProps>, 'id'>
   : never;
 export type RotationAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
-  ? MakeOptional<AxisConfig<S, V, ChartsRotationAxisProps>, 'id'>
+  ? MakeOptional<PolarAxisConfig<S, V, ChartsRotationAxisProps>, 'id'>
   : never;
 export type RadiusAxis<S extends 'linear' = 'linear', V = any> = S extends 'linear'
-  ? MakeOptional<AxisConfig<S, V, ChartsRadiusAxisProps>, 'id'>
+  ? MakeOptional<PolarAxisConfig<S, V, ChartsRadiusAxisProps>, 'id'>
   : never;
 
 /**
