@@ -30,6 +30,8 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     const seen = new Set<TimelineGridColumnType>();
     for (const type of columnTypes) {
       if (seen.has(type)) {
+        // TODO: fix mui/no-guarded-throw
+        // eslint-disable-next-line mui/no-guarded-throw
         throw new Error(
           `MUI X Scheduler: The \`columnTypes\` prop of <TimelineGrid.Root /> contains a duplicate entry "${type}". ` +
             'Arrow-key navigation relies on each column type appearing exactly once. ' +
