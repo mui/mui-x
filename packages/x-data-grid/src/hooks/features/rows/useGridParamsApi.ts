@@ -14,9 +14,8 @@ import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFo
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { gridRowNodeSelector } from './gridRowsSelector';
+import { throwMissingRowError } from './gridRowsUtils';
 import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
-
-class MissingRowIdError extends Error {}
 
 /**
  * @requires useGridColumns (method)
@@ -44,7 +43,7 @@ export function useGridParamsApi(
       const row = apiRef.current.getRow(id);
 
       if (!row) {
-        throw new MissingRowIdError(`MUI X: No row with id #${id} found`);
+        throwMissingRowError(id);
       }
 
       const params: GridRowParams = {
@@ -106,7 +105,7 @@ export function useGridParamsApi(
       const rowNode = gridRowNodeSelector(apiRef, id);
 
       if (!row || !rowNode) {
-        throw new MissingRowIdError(`MUI X: No row with id #${id} found`);
+        throwMissingRowError(id);
       }
 
       const cellFocus = gridFocusCellSelector(apiRef);

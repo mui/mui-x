@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { getRowValue as getRowValueFn } from './gridRowsUtils';
+import { getRowValue as getRowValueFn, throwMissingRowError } from './gridRowsUtils';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridParamsApi } from '../../../models/api/gridParamsApi';
 
@@ -11,7 +11,7 @@ export const useGridParamsOverridableMethods = (apiRef: RefObject<GridPrivateApi
 
       const row = apiRef.current.getRow(id);
       if (!row) {
-        throw new Error(`MUI X: No row with id #${id} found`);
+        throwMissingRowError(id);
       }
 
       if (!colDef || !colDef.valueGetter) {

@@ -15,6 +15,7 @@ import {
   isObject,
   isSingleSelectColDef,
   gridHasColSpanSelector,
+  throwMissingRowError,
 } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { ColumnsStylesInterface, GridExcelExportOptions } from '../gridExcelExportInterface';
@@ -82,7 +83,7 @@ export const serializeRowUnsafe = (
   const row = apiRef.current.getRow(id);
   const rowNode = apiRef.current.getRowNode(id);
   if (!row || !rowNode) {
-    throw new Error(`MUI X: No row with id #${id} found`);
+    throwMissingRowError(id);
   }
   const outlineLevel = rowNode.depth;
   const hasColSpan = gridHasColSpanSelector(apiRef);

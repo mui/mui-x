@@ -11,6 +11,7 @@ import {
   useGridRowsOverridableMethodsCommunity,
   useGridRowsOverridableMethodsPro,
   useGridSelector,
+  throwMissingRowError,
   type ReorderExecutionContext,
 } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
@@ -43,11 +44,11 @@ export const useGridRowsOverridableMethods = (
       const targetNode = gridRowNodeSelector(apiRef, targetRowId);
 
       if (!sourceNode) {
-        throw new Error(`MUI X: No row with id #${sourceRowId} found.`);
+        throwMissingRowError(sourceRowId);
       }
 
       if (!targetNode) {
-        throw new Error(`MUI X: No row with id #${targetRowId} found.`);
+        throwMissingRowError(targetRowId);
       }
 
       if (sourceNode.type === 'footer') {
@@ -104,7 +105,7 @@ export const useGridRowsOverridableMethods = (
       const sourceNode = gridRowNodeSelector(apiRef, sourceRowId);
 
       if (!sourceNode) {
-        throw new Error(`MUI X: No row with id #${sourceRowId} found.`);
+        throwMissingRowError(sourceRowId);
       }
 
       if (sourceNode.type === 'footer') {

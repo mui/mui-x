@@ -3,7 +3,7 @@ import type { RefObject } from '@mui/x-internals/types';
 import type { GridRowId, GridGroupNode } from '../../../models/gridRows';
 import { gridRowTreeSelector, gridRowNodeSelector } from './gridRowsSelector';
 import { gridExpandedSortedRowIndexLookupSelector } from '../filter/gridFilterSelector';
-import { GRID_ROOT_GROUP_ID } from './gridRowsUtils';
+import { GRID_ROOT_GROUP_ID, throwMissingRowError } from './gridRowsUtils';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridRowProApi } from '../../../models/api/gridRowApi';
 
@@ -14,11 +14,11 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
       const targetNode = gridRowNodeSelector(apiRef, targetRowId);
 
       if (!sourceNode) {
-        throw new Error(`MUI X: No row with id #${sourceRowId} found.`);
+        throwMissingRowError(sourceRowId);
       }
 
       if (!targetNode) {
-        throw new Error(`MUI X: No row with id #${targetRowId} found.`);
+        throwMissingRowError(targetRowId);
       }
 
       if (sourceNode.type !== 'leaf') {
