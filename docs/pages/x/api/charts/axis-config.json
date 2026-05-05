@@ -26,7 +26,11 @@
     "label": { "type": { "description": "string" } },
     "labelStyle": { "type": { "description": "ChartsTextProps['style']" } },
     "offset": { "type": { "description": "number" }, "default": "0" },
-    "position": { "type": { "description": "'top' | 'bottom' | 'none'" } },
+    "position": {
+      "type": {
+        "description": "(AxisProps extends ChartsXAxisProps ? 'top' | 'bottom' : 'none') | (AxisProps extends ChartsYAxisProps ? 'left' | 'right' : 'none') | 'none'"
+      }
+    },
     "reverse": { "type": { "description": "boolean" } },
     "slotProps": {
       "type": { "description": "Partial&lt;ChartsAxisSlotProps&gt;" },

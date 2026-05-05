@@ -175,18 +175,22 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
   tickLabelMinGap?: number;
 }
 
-type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends ChartsXAxisProps
+type AxisSideConfig<AxisProps extends ChartsXAxisProps | ChartsYAxisProps> = {
+  /**
+   * Position of the axis.
+   *
+   * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
+   *
+   * Set to 'none' to hide the axis.
+   *
+   * The first axis in the list will always have a default position.
+   */
+  position?:
+    | (AxisProps extends ChartsXAxisProps ? 'top' | 'bottom' : 'none')
+    | (AxisProps extends ChartsYAxisProps ? 'left' | 'right' : 'none')
+    | 'none';
+} & (AxisProps extends ChartsXAxisProps
   ? {
-      /**
-       * Position of the axis.
-       *
-       * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
-       *
-       * Set to 'none' to hide the axis.
-       *
-       * The first axis in the list will always have a default position.
-       */
-      position?: 'top' | 'bottom' | 'none';
       /**
        * The height of the axis.
        * Set to `'auto'` to automatically calculate the height based on tick label measurements.
@@ -194,18 +198,9 @@ type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends Chart
        */
       height?: number | 'auto';
     }
-  : AxisProps extends ChartsYAxisProps
+  : {}) &
+  (AxisProps extends ChartsYAxisProps
     ? {
-        /**
-         * Position of the axis.
-         *
-         * When set, the space for the axis is reserved, even if the axis is not displayed due to missing data.
-         *
-         * Set to 'none' to hide the axis.
-         *
-         * The first axis in the list will always have a default position.
-         */
-        position?: 'left' | 'right' | 'none';
         /**
          * The width of the axis.
          * Set to `'auto'` to automatically calculate the width based on tick label measurements.
@@ -213,11 +208,7 @@ type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends Chart
          */
         width?: number | 'auto';
       }
-    : {
-        position?: 'top' | 'bottom' | 'left' | 'right' | 'none';
-        height?: number | 'auto';
-        width?: number | 'auto';
-      };
+    : {});
 
 export interface ChartsRotationAxisProps extends ChartsAxisProps {
   axis?: 'rotation';
@@ -600,9 +591,9 @@ export type AxisConfig<
   MinMaxConfig<S> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
+  AxisSideConfig<AxisProps> &
   TickParams &
-  AxisConfigExtension &
-  AxisSideConfig<AxisProps>;
+  AxisConfigExtension;
 
 export interface AxisConfigExtension {}
 
@@ -636,11 +627,9 @@ export type ComputedAxis<
     triggerTooltip?: boolean;
     /** @ignore - internal. True when a rotation axis covers a full circle. */
     isFullCircle?: boolean;
-  } & (AxisProps extends ChartsXAxisProps
-    ? AxisSideConfig<AxisProps> & { height: number }
-    : AxisProps extends ChartsYAxisProps
-      ? AxisSideConfig<AxisProps> & { width: number }
-      : AxisSideConfig<AxisProps>);
+  } & AxisProps &
+  (AxisProps extends ChartsXAxisProps ? AxisSideConfig<AxisProps> & { height: number } : {}) &
+  (AxisProps extends ChartsYAxisProps ? AxisSideConfig<AxisProps> & { width: number } : {});
 
 export type ComputedXAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
   S,
