@@ -12,10 +12,7 @@ export default mergeConfig(sharedConfig, {
       // single guard expression in v9's compiled verifyLicense.js to flip `!false` → `!true`,
       // letting test keys through.
       transform(code: string, id: string) {
-        if (
-          /verifyLicense\.m?js$/.test(id) &&
-          code.includes('license.isTestKey && !false')
-        ) {
+        if (/verifyLicense\.m?js$/.test(id) && code.includes('license.isTestKey && !false')) {
           return {
             code: code.replace('license.isTestKey && !false', 'license.isTestKey && !true'),
             map: null,
