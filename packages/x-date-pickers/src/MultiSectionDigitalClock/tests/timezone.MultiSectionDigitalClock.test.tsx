@@ -11,35 +11,22 @@ const getHourLabels = () =>
     .filter((option) => option.getAttribute('aria-label')?.endsWith('hours'))
     .map((option) => option.textContent);
 
+const HOURS_12H = ['12', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11'];
+
+const HOURS_24H = Array.from({ length: 24 }, (_, h) => h.toString().padStart(2, '0'));
+
 describe('<MultiSectionDigitalClock /> - Timezone', () => {
   describeAdapters(
     'DST spring-forward handling',
     MultiSectionDigitalClock,
     ({ adapter, render }) => {
       describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
-        // Smoke check across adapters with a DST-day `value`. `describeAdapters`
-        // pins the system clock to June 15 so this does not actually reproduce
-        // https://github.com/mui/mui-x/issues/22084 — the per-adapter blocks
-        // below mock the system clock onto the transition day for that.
         it('should render each 12-hour hour with a unique label on a spring-forward day', () => {
           const value = adapter.date('2026-03-08T04:00:00', 'America/Chicago');
 
           render(<MultiSectionDigitalClock defaultValue={value} timezone="America/Chicago" ampm />);
 
-          expect(getHourLabels()).to.deep.equal([
-            '12',
-            '01',
-            '02',
-            '03',
-            '04',
-            '05',
-            '06',
-            '07',
-            '08',
-            '09',
-            '10',
-            '11',
-          ]);
+          expect(getHourLabels()).to.deep.equal(HOURS_12H);
         });
 
         it('should render each 24-hour hour with a unique label on a spring-forward day', () => {
@@ -53,21 +40,16 @@ describe('<MultiSectionDigitalClock /> - Timezone', () => {
             />,
           );
 
-          expect(getHourLabels()).to.deep.equal(
-            Array.from({ length: 24 }, (_, h) => h.toString().padStart(2, '0')),
-          );
+          expect(getHourLabels()).to.deep.equal(HOURS_24H);
         });
       });
     },
   );
 
-  // `describeAdapters` hardcodes a `clockConfig` on a non-transition day
-  // (June 15), so its tests never put `now` on a transition day. Mock the
-  // system clock to the spring-forward day per adapter to actually reproduce
-  // the regression. `date-fns` is included even though it is currently
-  // timezone-incompatible (so the `timezone` prop is a no-op and the bug
-  // can only be triggered through the system TZ) — locks the behavior in
-  // before TZ support lands.
+  // Mock the system clock onto the transition day per adapter — that is where
+  // the regression actually surfaces (`describeAdapters` pins `now` to a
+  // non-transition day). `date-fns` is included even though its `timezone`
+  // prop is currently a no-op; the bug still surfaces through the system TZ.
   (['dayjs', 'luxon', 'moment', 'date-fns'] as const).forEach((adapterName) => {
     describe(`DST spring-forward — ${adapterName} adapter, system clock on DST day`, () => {
       const { render, adapter } = createPickerRenderer({
@@ -80,20 +62,7 @@ describe('<MultiSectionDigitalClock /> - Timezone', () => {
 
         render(<MultiSectionDigitalClock defaultValue={value} timezone="America/Chicago" ampm />);
 
-        expect(getHourLabels()).to.deep.equal([
-          '12',
-          '01',
-          '02',
-          '03',
-          '04',
-          '05',
-          '06',
-          '07',
-          '08',
-          '09',
-          '10',
-          '11',
-        ]);
+        expect(getHourLabels()).to.deep.equal(HOURS_12H);
       });
 
       it('should render every 24-hour hour exactly once', () => {
@@ -103,9 +72,7 @@ describe('<MultiSectionDigitalClock /> - Timezone', () => {
           <MultiSectionDigitalClock defaultValue={value} timezone="America/Chicago" ampm={false} />,
         );
 
-        expect(getHourLabels()).to.deep.equal(
-          Array.from({ length: 24 }, (_, h) => h.toString().padStart(2, '0')),
-        );
+        expect(getHourLabels()).to.deep.equal(HOURS_24H);
       });
 
       it('should select 4 AM when the user clicks "4 hours"', async () => {
@@ -129,38 +96,64 @@ describe('<MultiSectionDigitalClock /> - Timezone', () => {
     });
   });
 
-  describe('DST fall-back — dayjs adapter, system clock on DST day', () => {
-    // Smoke check the symmetric (fall-back) transition where 1 AM occurs twice.
+  (['dayjs', 'luxon', 'moment', 'date-fns'] as const).forEach((adapterName) => {
+    describe(`DST fall-back — ${adapterName} adapter, system clock on DST day`, () => {
+      const { render, adapter } = createPickerRenderer({
+        adapterName,
+        clockConfig: new Date('2026-11-01T15:00:00.000Z'),
+      });
+
+      it('should still render every hour exactly once on the fall-back day', () => {
+        const value = adapter.date('2026-11-01T04:00:00', 'America/Chicago');
+
+        render(<MultiSectionDigitalClock defaultValue={value} timezone="America/Chicago" ampm />);
+
+        expect(getHourLabels()).to.deep.equal(HOURS_12H);
+      });
+    });
+  });
+
+  describe('Midnight DST transition — dayjs adapter, system clock on DST day', () => {
+    // Brazil's spring-forward used to happen at midnight (00:00 → 01:00) — last
+    // observed on 2018-11-04 in `America/Sao_Paulo`. Covers the "hour 0 does
+    // not exist" variant of the same root cause.
     const { render, adapter } = createPickerRenderer({
       adapterName: 'dayjs',
-      clockConfig: new Date('2026-11-01T15:00:00.000Z'),
+      clockConfig: new Date('2018-11-04T15:00:00.000Z'),
     });
 
-    it('should still render every hour exactly once on the fall-back day', () => {
-      const value = adapter.date('2026-11-01T04:00:00', 'America/Chicago');
+    it('should not duplicate the midnight label', () => {
+      const value = adapter.date('2018-11-04T04:00:00', 'America/Sao_Paulo');
 
-      render(<MultiSectionDigitalClock defaultValue={value} timezone="America/Chicago" ampm />);
+      render(<MultiSectionDigitalClock defaultValue={value} timezone="America/Sao_Paulo" ampm />);
 
-      expect(getHourLabels()).to.deep.equal([
-        '12',
-        '01',
-        '02',
-        '03',
-        '04',
-        '05',
-        '06',
-        '07',
-        '08',
-        '09',
-        '10',
-        '11',
-      ]);
+      expect(getHourLabels()).to.deep.equal(HOURS_12H);
+    });
+  });
+
+  describe('`timeSteps.hours` on a DST day — dayjs adapter, system clock on DST day', () => {
+    const { render, adapter } = createPickerRenderer({
+      adapterName: 'dayjs',
+      clockConfig: new Date('2026-03-08T15:00:00.000Z'),
+    });
+
+    it('should respect a non-default `timeSteps.hours`', () => {
+      const value = adapter.date('2026-03-08T04:00:00', 'America/Chicago');
+
+      render(
+        <MultiSectionDigitalClock
+          defaultValue={value}
+          timezone="America/Chicago"
+          ampm
+          timeSteps={{ hours: 3 }}
+        />,
+      );
+
+      expect(getHourLabels()).to.deep.equal(['12', '03', '06', '09']);
     });
   });
 
   describe('Custom hour format on a DST day', () => {
-    // Guards against regressing to hard-coded label formatting: a custom
-    // `hours12h` token from `LocalizationProvider` must reach the rendered labels.
     const { render, adapter } = createPickerRenderer({
       adapterName: 'dayjs',
       clockConfig: new Date('2026-03-08T15:00:00.000Z'),
