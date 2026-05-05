@@ -41,7 +41,8 @@ export class EventTimelinePremiumLazyLoadingPlugin<
   }
 
   private handleFetchError = (error: unknown) => {
-    const wrapped = error instanceof Error ? error : new Error(String(error));
+    const wrapped =
+      error instanceof Error ? error : /* minify-error-disabled */ new Error(String(error));
     const previousErrors = this.store.state.errors;
     this.store.update({
       ...this.store.state,
