@@ -221,8 +221,7 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
   }
 
   public destroy(): void {
-    // Remove the element-specific event listener. Only `capture` is
-    // significant for matching; the `passive` flag is ignored on remove.
+    // Remove the element-specific event listener.
     // @ts-expect-error, WheelEvent is correct.
     this.element.removeEventListener('wheel', this.handleWheelEvent);
     this.resetState();
