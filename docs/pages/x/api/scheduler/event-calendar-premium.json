@@ -604,9 +604,15 @@
       "isGlobal": false
     },
     {
-      "key": "eventDialogResourceMenuColorRadioButton",
-      "className": "MuiEventCalendarPremium-eventDialogResourceMenuColorRadioButton",
-      "description": "Styles applied to the event dialog resource menu color radio button element.",
+      "key": "eventDialogResourceMenuColorToggle",
+      "className": "MuiEventCalendarPremium-eventDialogResourceMenuColorToggle",
+      "description": "Styles applied to the event dialog resource menu color toggle element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventDialogResourceMenuColorToggleGroup",
+      "className": "MuiEventCalendarPremium-eventDialogResourceMenuColorToggleGroup",
+      "description": "Styles applied to the event dialog resource menu color toggle group element.",
       "isGlobal": false
     },
     {
@@ -1036,33 +1042,33 @@
       "isGlobal": false
     },
     {
-      "key": "resourcesLegend",
-      "className": "MuiEventCalendarPremium-resourcesLegend",
-      "description": "Styles applied to the resources legend root element.",
+      "key": "resourcesTree",
+      "className": "MuiEventCalendarPremium-resourcesTree",
+      "description": "Styles applied to the resources tree root element.",
       "isGlobal": false
     },
     {
-      "key": "resourcesLegendItem",
-      "className": "MuiEventCalendarPremium-resourcesLegendItem",
-      "description": "Styles applied to resources legend item elements.",
+      "key": "resourcesTreeItem",
+      "className": "MuiEventCalendarPremium-resourcesTreeItem",
+      "description": "Styles applied to resources tree item elements.",
       "isGlobal": false
     },
     {
-      "key": "resourcesLegendItemCheckbox",
-      "className": "MuiEventCalendarPremium-resourcesLegendItemCheckbox",
-      "description": "Styles applied to resources legend item checkbox elements.",
+      "key": "resourcesTreeItemCheckbox",
+      "className": "MuiEventCalendarPremium-resourcesTreeItemCheckbox",
+      "description": "Styles applied to resources tree item checkbox elements.",
       "isGlobal": false
     },
     {
-      "key": "resourcesLegendItemName",
-      "className": "MuiEventCalendarPremium-resourcesLegendItemName",
-      "description": "Styles applied to resources legend item name elements.",
+      "key": "resourcesTreeItemLabel",
+      "className": "MuiEventCalendarPremium-resourcesTreeItemLabel",
+      "description": "Styles applied to resources tree item label elements.",
       "isGlobal": false
     },
     {
-      "key": "resourcesLegendLabel",
-      "className": "MuiEventCalendarPremium-resourcesLegendLabel",
-      "description": "Styles applied to the resources legend label element.",
+      "key": "resourcesTreeLabel",
+      "className": "MuiEventCalendarPremium-resourcesTreeLabel",
+      "description": "Styles applied to the resources tree section label element.",
       "isGlobal": false
     },
     {

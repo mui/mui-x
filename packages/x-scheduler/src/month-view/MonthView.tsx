@@ -8,16 +8,16 @@ import {
   EventCalendarViewConfig,
   GridRowType,
   SchedulerProcessedDate,
-} from '@mui/x-scheduler-headless/models';
-import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import type { EventCalendarState as State } from '@mui/x-scheduler-headless/use-event-calendar';
-import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+} from '@mui/x-scheduler-internals/models';
+import { getDayList } from '@mui/x-scheduler-internals/get-day-list';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
+import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
+import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import clsx from 'clsx';
 import { MonthViewProps } from './MonthView.types';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';

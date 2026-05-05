@@ -91,7 +91,7 @@ export default schedulerApiPages;
       'x-scheduler/src/event-calendar/header-toolbar/preferences-menu/PreferencesMenu.tsx',
       'x-scheduler/src/event-calendar/header-toolbar/view-switcher/ViewSwitcher.tsx',
       'x-scheduler/src/event-calendar/mini-calendar/MiniCalendar.tsx',
-      'x-scheduler/src/event-calendar/resources-legend/ResourcesLegend.tsx',
+      'x-scheduler/src/event-calendar/resources-tree/ResourcesTree.tsx',
       // Internal sub-components of MonthView
       'x-scheduler/src/month-view/month-view-row/MonthViewCell.tsx',
       'x-scheduler/src/month-view/month-view-row/MonthViewWeekRow.tsx',

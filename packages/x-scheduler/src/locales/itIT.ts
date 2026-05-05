@@ -68,12 +68,8 @@ const itITDialog: Partial<EventDialogLocaleText> = {
 };
 
 const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Nascondi eventi per ${resourceName}`,
+  // ResourcesTree
   resourcesLabel: 'Risorse',
-  resourcesLegendSectionLabel: 'Legenda risorse',
-  showEventsLabel: (resourceName) => `Mostra eventi per ${resourceName}`,
-
   // ViewSwitcher
   agenda: 'Agenda',
   day: 'Giorno',
