@@ -8,9 +8,13 @@ import {
 import type { TimelineGridColumnType } from '../../models/timelineGrid';
 import { useTimelineGridRootContext } from '../../timeline-grid/root/TimelineGridRootContext';
 import { useTimelineGridSubGridContext } from '../../timeline-grid/sub-grid/TimelineGridSubGridContext';
+import { useTimelineGridBodyRowContext } from '../../timeline-grid/body-row/TimelineGridBodyRowContext';
 
 /**
- * Handles arrow-key navigation and focus syncing for a timeline grid row.
+ * Handles arrow-key navigation and focus syncing for a timeline grid row cell.
+ *
+ * Must be used inside a `<TimelineGrid.BodyRow />`. The component inherits its
+ * index from the parent row and acts as a focusable cell within it.
  */
 export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridColumnType }): {
   rowRef: React.RefObject<HTMLDivElement | null>;
@@ -24,7 +28,12 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
   useTimelineGridSubGridContext();
   const { focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes } =
     useTimelineGridRootContext();
-  const { ref: listItemRef, index } = useCompositeListItem();
+
+  const bodyRowContext = useTimelineGridBodyRowContext();
+
+  const { ref: listItemRef, index } = useCompositeListItem({
+    index: bodyRowContext.index,
+  });
   const { elementsRef } = useCompositeListContext();
 
   if (process.env.NODE_ENV !== 'production') {

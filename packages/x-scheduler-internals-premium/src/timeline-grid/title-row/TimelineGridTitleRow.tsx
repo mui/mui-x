@@ -16,7 +16,7 @@ export const TimelineGridTitleRow = React.forwardRef(function TimelineGridTitleR
     ...elementProps
   } = componentProps;
 
-  const { rowRef, listItemRef, index, handleKeyDown, handleFocus } = useTimelineGridRowKeyboard({
+  const { rowRef, listItemRef, handleKeyDown, handleFocus } = useTimelineGridRowKeyboard({
     columnType: 'title',
   });
 
@@ -25,9 +25,6 @@ export const TimelineGridTitleRow = React.forwardRef(function TimelineGridTitleR
     props: [
       elementProps,
       {
-        role: 'row',
-        // Reserve aria-rowindex=1 for the grid header row.
-        'aria-rowindex': index + 2,
         tabIndex: 0,
         onKeyDown: handleKeyDown,
         onFocus: handleFocus,

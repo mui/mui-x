@@ -15,9 +15,6 @@ const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.TitleRow, {
   padding: theme.spacing(2),
   paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth) * ${theme.spacing(2)})`,
   alignContent: 'start',
-  '&:not(:last-of-type)': {
-    borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-  },
   '&:focus-visible': {
     outline: 'none',
     boxShadow: `inset 0 0 0 2px ${(theme.vars || theme).palette.primary.main}`,
