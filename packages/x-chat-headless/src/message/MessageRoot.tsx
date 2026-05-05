@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useMessage } from '../hooks/useMessage';
 import { useChatVariant } from '../chat/internals/ChatVariantContext';
 import { useChatDensity } from '../chat/internals/ChatDensityContext';
@@ -15,7 +15,7 @@ export interface MessageRootSlots {
 }
 
 export interface MessageRootSlotProps {
-  root?: SlotComponentProps<'div', {}, MessageRootOwnerState>;
+  root?: SlotComponentPropsFromProps<'div', {}, MessageRootOwnerState>;
 }
 
 export interface MessageRootProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'id'> {

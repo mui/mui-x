@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import type { ChatConversation } from '../types/chat-entities';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { type ConversationListTimestampOwnerState } from './conversationList.types';
@@ -11,7 +11,7 @@ export interface ConversationListTimestampSlots {
 }
 
 export interface ConversationListTimestampSlotProps {
-  root?: SlotComponentProps<'div', {}, ConversationListTimestampOwnerState>;
+  root?: SlotComponentPropsFromProps<'div', {}, ConversationListTimestampOwnerState>;
 }
 
 export interface ConversationListTimestampProps extends React.HTMLAttributes<HTMLDivElement> {

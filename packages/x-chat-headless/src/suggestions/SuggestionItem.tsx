@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { getDataAttributes } from '../internals/getDataAttributes';
 import { useSuggestionsContext } from './internals/SuggestionsContext';
 import { type SuggestionItemOwnerState } from './suggestions.types';
@@ -11,7 +11,7 @@ export interface SuggestionItemSlots {
 }
 
 export interface SuggestionItemSlotProps {
-  root?: SlotComponentProps<'button', {}, SuggestionItemOwnerState>;
+  root?: SlotComponentPropsFromProps<'button', {}, SuggestionItemOwnerState>;
 }
 
 export interface SuggestionItemProps extends Omit<

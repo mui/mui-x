@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import type { ChatAttachmentRejection } from '../types/chat-entities';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { useComposerContext } from './internals/ComposerContext';
@@ -14,8 +14,8 @@ export interface ComposerAttachButtonSlots {
 }
 
 export interface ComposerAttachButtonSlotProps {
-  attachButton?: SlotComponentProps<'button', {}, ComposerAttachButtonOwnerState>;
-  attachInput?: SlotComponentProps<'input', {}, ComposerAttachButtonOwnerState>;
+  attachButton?: SlotComponentPropsFromProps<'button', {}, ComposerAttachButtonOwnerState>;
+  attachInput?: SlotComponentPropsFromProps<'input', {}, ComposerAttachButtonOwnerState>;
 }
 
 export interface ComposerAttachButtonProps extends Omit<

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import type { ChatPartRenderer, ChatPartRendererProps } from '../../renderers/chatPartRenderer';
 import type { ChatRole } from '../../types/chat-entities';
 import type { ChatSourceDocumentMessagePart } from '../../types/chat-message-parts';
@@ -18,9 +18,9 @@ export interface SourceDocumentPartSlots {
 }
 
 export interface SourceDocumentPartSlotProps {
-  root?: SlotComponentProps<'div', {}, SourceDocumentPartOwnerState>;
-  title?: SlotComponentProps<'div', {}, SourceDocumentPartOwnerState>;
-  excerpt?: SlotComponentProps<'div', {}, SourceDocumentPartOwnerState>;
+  root?: SlotComponentPropsFromProps<'div', {}, SourceDocumentPartOwnerState>;
+  title?: SlotComponentPropsFromProps<'div', {}, SourceDocumentPartOwnerState>;
+  excerpt?: SlotComponentPropsFromProps<'div', {}, SourceDocumentPartOwnerState>;
 }
 
 export interface SourceDocumentPartProps extends ChatPartRendererProps<ChatSourceDocumentMessagePart> {

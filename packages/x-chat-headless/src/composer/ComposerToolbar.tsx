@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useComposerContext } from './internals/ComposerContext';
 import { type ComposerToolbarOwnerState } from './composer.types';
 
@@ -10,7 +10,7 @@ export interface ComposerToolbarSlots {
 }
 
 export interface ComposerToolbarSlotProps {
-  toolbar?: SlotComponentProps<'div', {}, ComposerToolbarOwnerState>;
+  toolbar?: SlotComponentPropsFromProps<'div', {}, ComposerToolbarOwnerState>;
 }
 
 export interface ComposerToolbarProps extends React.HTMLAttributes<HTMLDivElement> {

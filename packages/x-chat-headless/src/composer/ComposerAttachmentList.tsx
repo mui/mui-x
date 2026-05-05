@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useComposerContext } from './internals/ComposerContext';
 import { type ComposerAttachmentListOwnerState } from './composer.types';
 
@@ -10,7 +10,7 @@ export interface ComposerAttachmentListSlots {
 }
 
 export interface ComposerAttachmentListSlotProps {
-  attachmentList?: SlotComponentProps<'div', {}, ComposerAttachmentListOwnerState>;
+  attachmentList?: SlotComponentPropsFromProps<'div', {}, ComposerAttachmentListOwnerState>;
 }
 
 export interface ComposerAttachmentListProps extends React.HTMLAttributes<HTMLDivElement> {

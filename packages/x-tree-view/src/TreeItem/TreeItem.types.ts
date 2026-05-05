@@ -3,7 +3,6 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { TransitionProps } from '@mui/material/transitions';
-import { SlotComponentProps } from '@mui/utils/types';
 import { UseTreeItemParameters, UseTreeItemStatus } from '../useTreeItem';
 import { TreeItemClasses } from './treeItemClasses';
 import { TreeItemIconSlotProps, TreeItemIconSlots } from '../TreeItemIcon';
@@ -67,20 +66,20 @@ export interface TreeItemSlots extends TreeItemIconSlots {
 }
 
 export interface TreeItemSlotProps extends TreeItemIconSlotProps {
-  root?: SlotComponentProps<'li', {}, {}>;
-  content?: SlotComponentProps<'div', {}, {}>;
+  root?: SlotComponentPropsFromProps<'li', {}, {}>;
+  content?: SlotComponentPropsFromProps<'div', {}, {}>;
   groupTransition?: SlotComponentPropsFromProps<TransitionProps, {}, {}>;
-  iconContainer?: SlotComponentProps<'div', {}, {}>;
-  checkbox?: SlotComponentProps<
+  iconContainer?: SlotComponentPropsFromProps<'div', {}, {}>;
+  checkbox?: SlotComponentPropsFromProps<
     React.ElementType<React.HTMLAttributes<HTMLButtonElement> & { visible?: boolean }>,
     {},
     {}
   >;
-  label?: SlotComponentProps<'div', {}, {}>;
-  labelInput?: SlotComponentProps<'input', {}, {}>;
-  dragAndDropOverlay?: SlotComponentProps<'div', {}, {}>;
-  errorIcon?: SlotComponentProps<'div', {}, {}>;
-  loadingIcon?: SlotComponentProps<'div', {}, {}>;
+  label?: SlotComponentPropsFromProps<'div', {}, {}>;
+  labelInput?: SlotComponentPropsFromProps<'input', {}, {}>;
+  dragAndDropOverlay?: SlotComponentPropsFromProps<'div', {}, {}>;
+  errorIcon?: SlotComponentPropsFromProps<'div', {}, {}>;
+  loadingIcon?: SlotComponentPropsFromProps<'div', {}, {}>;
 }
 
 export interface TreeItemProps

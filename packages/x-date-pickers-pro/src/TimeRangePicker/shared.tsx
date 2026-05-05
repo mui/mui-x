@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { DefaultizedProps, WithDataAttributes } from '@mui/x-internals/types';
 import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import { TimeStepOptions, TimeView } from '@mui/x-date-pickers/models';
 import {
@@ -56,11 +56,11 @@ export interface BaseTimeRangePickerSlotProps
   /**
    * Props passed down to the tabs component.
    */
-  tabs?: ExportedTimeRangePickerTabsProps;
+  tabs?: WithDataAttributes<ExportedTimeRangePickerTabsProps>;
   /**
    * Props passed down to the toolbar component.
    */
-  toolbar?: ExportedTimeRangePickerToolbarProps;
+  toolbar?: WithDataAttributes<ExportedTimeRangePickerToolbarProps>;
 }
 
 export type TimeRangePickerRenderers = PickerViewRendererLookup<

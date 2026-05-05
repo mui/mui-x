@@ -8,6 +8,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { type PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
+import type { WithDataAttributes } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import { type TriggerOptions, useIsFineMainPointer } from './utils';
 import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
@@ -78,7 +79,9 @@ type PopperSlotProps = NonNullable<PopperProps['slotProps']>;
 
 export interface ChartsTooltipContainerSlots extends PopperSlots {}
 
-export interface ChartsTooltipContainerSlotProps extends PopperSlotProps {}
+export interface ChartsTooltipContainerSlotProps extends Omit<PopperSlotProps, 'root'> {
+  root?: WithDataAttributes<NonNullable<PopperSlotProps['root']>>;
+}
 
 export interface ChartsTooltipContainerClasses extends ChartsTooltipClasses {}
 

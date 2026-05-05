@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
+import type { WithDataAttributes } from '@mui/x-internals/types';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { type LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
@@ -24,7 +25,7 @@ export interface MarkPlotSlots {
 }
 
 export interface MarkPlotSlotProps {
-  mark?: Partial<MarkElementProps>;
+  mark?: WithDataAttributes<Partial<MarkElementProps>>;
 }
 
 export interface MarkPlotProps

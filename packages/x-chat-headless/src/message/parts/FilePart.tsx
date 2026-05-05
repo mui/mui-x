@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import type { ChatFileMessagePart } from '../../types/chat-message-parts';
 import type { ChatPartRenderer, ChatPartRendererProps } from '../../renderers/chatPartRenderer';
 import type { ChatRole } from '../../types/chat-entities';
@@ -21,10 +21,10 @@ export interface FilePartSlots {
 }
 
 export interface FilePartSlotProps {
-  root?: SlotComponentProps<'div', {}, FilePartOwnerState>;
-  preview?: SlotComponentProps<'img', {}, FilePartOwnerState>;
-  link?: SlotComponentProps<'a', {}, FilePartOwnerState>;
-  filename?: SlotComponentProps<'span', {}, FilePartOwnerState>;
+  root?: SlotComponentPropsFromProps<'div', {}, FilePartOwnerState>;
+  preview?: SlotComponentPropsFromProps<'img', {}, FilePartOwnerState>;
+  link?: SlotComponentPropsFromProps<'a', {}, FilePartOwnerState>;
+  filename?: SlotComponentPropsFromProps<'span', {}, FilePartOwnerState>;
 }
 
 export interface FilePartProps extends ChatPartRendererProps<ChatFileMessagePart> {

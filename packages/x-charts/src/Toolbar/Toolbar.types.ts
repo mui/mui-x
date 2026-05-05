@@ -1,4 +1,5 @@
 import type * as React from 'react';
+import type { WithDataAttributes } from '@mui/x-internals/types';
 
 export interface ChartsToolbarProps {}
 
@@ -13,5 +14,5 @@ export interface ChartsToolbarSlotProps {
   /**
    * Props for the toolbar component.
    */
-  toolbar?: Partial<ChartsToolbarProps>;
+  toolbar?: WithDataAttributes<Partial<ChartsToolbarProps>>;
 }

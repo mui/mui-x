@@ -13,7 +13,12 @@ import type {
   NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
 import { type SxProps } from '@mui/system/styleFunctionSx';
-import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
+import {
+  type HasProperty,
+  type MakeOptional,
+  type WithDataAttributes,
+  type MakeRequired,
+} from '@mui/x-internals/types';
 import { type DatasetElementType } from './seriesType/config';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
@@ -87,12 +92,12 @@ export interface ChartsAxisSlots {
 }
 
 export interface ChartsAxisSlotProps {
-  axisLine?: Partial<React.SVGAttributes<SVGPathElement>>;
-  axisTick?: Partial<React.SVGAttributes<SVGPathElement>>;
-  axisTickLabel?: Partial<ChartsTextProps>;
-  axisLabel?: Partial<ChartsTextProps>;
-  xAxis?: Partial<ChartsXAxisProps>;
-  yAxis?: Partial<ChartsYAxisProps>;
+  axisLine?: WithDataAttributes<Partial<React.SVGAttributes<SVGPathElement>>>;
+  axisTick?: WithDataAttributes<Partial<React.SVGAttributes<SVGPathElement>>>;
+  axisTickLabel?: WithDataAttributes<Partial<ChartsTextProps>>;
+  axisLabel?: WithDataAttributes<Partial<ChartsTextProps>>;
+  xAxis?: WithDataAttributes<Partial<ChartsXAxisProps>>;
+  yAxis?: WithDataAttributes<Partial<ChartsYAxisProps>>;
 }
 
 export interface ChartsAxisProps extends TickParams {

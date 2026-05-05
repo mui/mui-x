@@ -3,7 +3,7 @@ import * as React from 'react';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { useStore } from '@mui/x-internals/store';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { TreeItem, TreeItemProps } from '../../TreeItem';
 import { TreeViewItemId } from '../../models';
@@ -120,8 +120,8 @@ export interface RichTreeViewItemsSlots {
 }
 
 export interface RichTreeViewItemsSlotProps<TProps extends object> {
-  item?: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState>;
-  root?: SlotComponentProps<'ul', {}, TProps>;
+  item?: SlotComponentPropsFromProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState>;
+  root?: SlotComponentPropsFromProps<'ul', {}, TProps>;
 }
 
 export interface RichTreeViewItemsProps<TProps extends object> {
@@ -151,6 +151,8 @@ export interface RichTreeViewItemsProps<TProps extends object> {
 
 interface RichTreeViewItemProps extends Pick<TreeItemProps, 'id' | 'itemId' | 'children'> {
   itemSlot: React.JSXElementConstructor<TreeItemProps> | undefined;
-  itemSlotProps: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState> | undefined;
+  itemSlotProps:
+    | SlotComponentPropsFromProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState>
+    | undefined;
   skipChildren: boolean;
 }

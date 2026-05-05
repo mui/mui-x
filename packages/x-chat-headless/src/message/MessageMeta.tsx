@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { useIsHydrated } from '../chat/internals/useIsHydrated';
 import { ProgressIndicator, ProgressRoot, ProgressTrack } from '../internals/ProgressSlots';
@@ -27,13 +27,13 @@ export interface MessageMetaSlots {
 }
 
 export interface MessageMetaSlotProps {
-  meta?: SlotComponentProps<'div', {}, MessageMetaOwnerState>;
-  timestamp?: SlotComponentProps<'span', {}, MessageMetaOwnerState>;
-  status?: SlotComponentProps<'span', {}, MessageMetaOwnerState>;
-  edited?: SlotComponentProps<'span', {}, MessageMetaOwnerState>;
-  streamingProgress?: SlotComponentProps<'div', {}, MessageMetaOwnerState>;
-  streamingProgressTrack?: SlotComponentProps<'div', {}, MessageMetaOwnerState>;
-  streamingProgressIndicator?: SlotComponentProps<'div', {}, MessageMetaOwnerState>;
+  meta?: SlotComponentPropsFromProps<'div', {}, MessageMetaOwnerState>;
+  timestamp?: SlotComponentPropsFromProps<'span', {}, MessageMetaOwnerState>;
+  status?: SlotComponentPropsFromProps<'span', {}, MessageMetaOwnerState>;
+  edited?: SlotComponentPropsFromProps<'span', {}, MessageMetaOwnerState>;
+  streamingProgress?: SlotComponentPropsFromProps<'div', {}, MessageMetaOwnerState>;
+  streamingProgressTrack?: SlotComponentPropsFromProps<'div', {}, MessageMetaOwnerState>;
+  streamingProgressIndicator?: SlotComponentPropsFromProps<'div', {}, MessageMetaOwnerState>;
 }
 
 export interface MessageMetaProps extends React.HTMLAttributes<HTMLDivElement> {

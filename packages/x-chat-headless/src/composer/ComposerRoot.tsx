@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useChatComposer } from '../hooks/useChatComposer';
 import { useChatStatus } from '../hooks/useChatStatus';
 import { useChatStore } from '../hooks/useChatStore';
@@ -15,7 +15,7 @@ export interface ComposerRootSlots {
 }
 
 export interface ComposerRootSlotProps {
-  root?: SlotComponentProps<'form', {}, ComposerRootOwnerState>;
+  root?: SlotComponentPropsFromProps<'form', {}, ComposerRootOwnerState>;
 }
 
 export interface ComposerRootProps extends Omit<

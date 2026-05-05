@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
-import type { SlotComponentProps } from '@mui/utils/types';
+import type { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
   useChatMessageSourceUtilityClasses,
@@ -63,9 +63,9 @@ export interface ChatMessageSourceSlots {
 }
 
 export interface ChatMessageSourceSlotProps {
-  root?: SlotComponentProps<'li', {}, {}>;
-  index?: SlotComponentProps<'span', {}, {}>;
-  link?: SlotComponentProps<'a', {}, {}>;
+  root?: SlotComponentPropsFromProps<'li', {}, {}>;
+  index?: SlotComponentPropsFromProps<'span', {}, {}>;
+  link?: SlotComponentPropsFromProps<'a', {}, {}>;
 }
 
 export interface ChatMessageSourceProps {

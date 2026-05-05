@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { PickersSectionListClasses } from './pickersSectionListClasses';
 import { PickerOwnerState } from '../models';
 import type { UseFieldDOMGetters } from '../internals/hooks/useField/useField.types';
@@ -21,10 +21,10 @@ export interface PickerSectionSeparatorOwnerState extends PickerOwnerState {
 }
 
 export interface PickersSectionListSlotProps {
-  root?: SlotComponentProps<'div', {}, PickerOwnerState>;
-  section?: SlotComponentProps<'span', {}, PickerOwnerState>;
-  sectionSeparator?: SlotComponentProps<'span', {}, PickerSectionSeparatorOwnerState>;
-  sectionContent?: SlotComponentProps<'span', {}, PickerOwnerState>;
+  root?: SlotComponentPropsFromProps<'div', {}, PickerOwnerState>;
+  section?: SlotComponentPropsFromProps<'span', {}, PickerOwnerState>;
+  sectionSeparator?: SlotComponentPropsFromProps<'span', {}, PickerSectionSeparatorOwnerState>;
+  sectionContent?: SlotComponentPropsFromProps<'span', {}, PickerOwnerState>;
 }
 
 export interface PickersSectionElement {

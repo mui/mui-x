@@ -1,5 +1,5 @@
 import { ButtonBaseProps } from '@mui/material/ButtonBase';
-import { MuiEvent } from '@mui/x-internals/types';
+import { DataAttributes, MuiEvent } from '@mui/x-internals/types';
 import { PickerValidDate } from '../models';
 import { PickerDayClasses } from './pickerDayClasses';
 import { PickerDayOwnerState as PickerDayOwnerStateBase } from '../internals/hooks/PickerDay.types';
@@ -26,6 +26,7 @@ export interface ExportedPickerDayProps {
 export interface PickerDayProps
   extends
     ExportedPickerDayProps,
+    DataAttributes,
     Omit<
       ButtonBaseProps,
       | 'classes'

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/utils/types';
+import { DefaultizedProps, SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { Theme } from '@mui/material/styles';
-import { DefaultizedProps } from '@mui/x-internals/types';
 import { PickerOwnerState, PickerValidDate, TimezoneProps } from '@mui/x-date-pickers/models';
 import {
   PickersCalendarHeader,
@@ -49,12 +48,12 @@ export interface DateRangeCalendarSlotProps
     PickersArrowSwitcherSlotProps,
     Omit<DayCalendarSlotProps, 'day'>,
     PickersCalendarHeaderSlotProps {
-  calendarHeader?: SlotComponentProps<
+  calendarHeader?: SlotComponentPropsFromProps<
     typeof PickersCalendarHeader,
     {},
     DateRangeCalendarOwnerState
   >;
-  day?: SlotComponentProps<typeof DateRangePickerDay, {}, PickerDayOwnerState>;
+  day?: SlotComponentPropsFromProps<typeof DateRangePickerDay, {}, PickerDayOwnerState>;
 }
 
 export interface ExportedDateRangeCalendarProps

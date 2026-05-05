@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
+import type { WithDataAttributes } from '@mui/x-internals/types';
 import { Scatter, type ScatterProps, type ScatterSlotProps, type ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
 import { useXAxes, useYAxes } from '../hooks';
@@ -16,7 +17,7 @@ export interface ScatterPlotSlots extends ScatterSlots {
 }
 
 export interface ScatterPlotSlotProps extends ScatterSlotProps {
-  scatter?: Partial<ScatterProps>;
+  scatter?: WithDataAttributes<Partial<ScatterProps>>;
 }
 
 export type RendererType = 'svg-single' | 'svg-batch';

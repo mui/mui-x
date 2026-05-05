@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import type { WithDataAttributes } from '@mui/x-internals/types';
 import { PieArc, type PieArcProps } from './PieArc';
 import {
   type ComputedPieRadius,
@@ -16,7 +17,7 @@ export interface PieArcPlotSlots {
 }
 
 export interface PieArcPlotSlotProps {
-  pieArc?: Partial<PieArcProps>;
+  pieArc?: WithDataAttributes<Partial<PieArcProps>>;
 }
 
 export interface PieArcPlotProps
