@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { type MakeOptional } from '@mui/x-internals/types';
-import { ChartsAxis, type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
+import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import {
   type ChartsAxisSlots,
@@ -91,7 +91,6 @@ export interface HeatmapProps
       | 'seriesConfig'
       | 'onAxisClick'
     >,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The configuration of the x-axes.

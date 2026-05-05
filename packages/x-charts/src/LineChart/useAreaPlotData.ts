@@ -69,6 +69,8 @@ export function useAreaPlotData(
 
         if (process.env.NODE_ENV !== 'production') {
           if (xData === undefined) {
+            // TODO: fix mui/no-guarded-throw
+            // eslint-disable-next-line mui/no-guarded-throw
             throw new Error(
               `MUI X Charts: ${
                 xAxisId === DEFAULT_X_AXIS_KEY
@@ -80,6 +82,8 @@ export function useAreaPlotData(
             );
           }
           if (xData.length < stackedData.length) {
+            // TODO: fix mui/no-guarded-throw
+            // eslint-disable-next-line mui/no-guarded-throw
             throw new Error(
               `MUI X Charts: The data length of the x-axis (${xData.length} items) is less than the length of series data (${stackedData.length} items). ` +
                 'Some data points will not be displayed because they have no corresponding x-axis value. ' +
