@@ -66,24 +66,22 @@ export function useLinePlotData(
           (xAxes[xAxisId].colorScale && getGradientId(xAxisId)) ||
           undefined;
 
-        if (process.env.NODE_ENV !== 'production') {
-          if (xData === undefined) {
-            throw new Error(
-              `MUI X Charts: ${
-                xAxisId === DEFAULT_X_AXIS_KEY
-                  ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisId}"`
-              } should have a data property to be able to display a line plot. ` +
-                'The x-axis data defines the positions for each point in the line. ' +
-                'Provide a data array to the x-axis configuration.',
-            );
-          }
-          if (xData.length < stackedData.length) {
-            warnOnce(
-              `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
-              'error',
-            );
-          }
+        if (xData === undefined) {
+          throw new Error(
+            `MUI X Charts: ${
+              xAxisId === DEFAULT_X_AXIS_KEY
+                ? 'The first `xAxis`'
+                : `The x-axis with id "${xAxisId}"`
+            } should have a data property to be able to display a line plot. ` +
+              'The x-axis data defines the positions for each point in the line. ' +
+              'Provide a data array to the x-axis configuration.',
+          );
+        }
+        if (process.env.NODE_ENV !== 'production' && xData.length < stackedData.length) {
+          warnOnce(
+            `MUI X Charts: The data length of the x axis (${xData.length} items) is lower than the length of series (${stackedData.length} items).`,
+            'error',
+          );
         }
 
         const shouldExpand = curve?.includes('step') && !strictStepCurve && isOrdinalScale(xScale);

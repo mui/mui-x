@@ -15,11 +15,7 @@ const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset, isItemVis
     const seriesData = series[id];
     const datasetKeys = seriesData?.datasetKeys;
 
-    if (
-      seriesData.data === undefined &&
-      dataset === undefined &&
-      process.env.NODE_ENV !== 'production'
-    ) {
+    if (seriesData.data === undefined && dataset === undefined) {
       throw new Error(
         `MUI X Charts: range bar series with id='${id}' has no data.
 Either provide a data property to the series or use the dataset prop.`,
