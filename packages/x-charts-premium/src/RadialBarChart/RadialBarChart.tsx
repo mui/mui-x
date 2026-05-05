@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useId from '@mui/utils/useId';
 import { useThemeProps } from '@mui/material/styles';
 import { type MakeOptional } from '@mui/x-internals/types';
 import {
@@ -13,20 +12,15 @@ import {
   Unstable_ChartsRadialGrid as ChartsRadialGrid,
   type ChartsRadialGridProps,
 } from '@mui/x-charts/ChartsRadialGrid';
-import {
-  ChartsLegend,
-  type ChartsLegendSlots,
-  type ChartsLegendSlotProps,
-  type ChartsLegendSlotExtension,
-} from '../ChartsLegend';
+import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsSurface } from '../ChartsSurface';
 import {
   ChartsTooltip,
   type ChartsTooltipSlots,
   type ChartsTooltipSlotProps,
 } from '../ChartsTooltip';
-import { ChartsWrapper, type ChartsWrapperProps } from '../ChartsWrapper';
-import { ChartsClipPath, type ChartsClipPathProps } from '../ChartsClipPath';
+import { ChartsWrapper } from '../ChartsWrapper';
+import { ChartsClipPath } from '../ChartsClipPath';
 import {
   ChartsOverlay,
   type ChartsOverlayProps,
@@ -39,14 +33,10 @@ import {
   ChartsRadialDataProviderPremium,
   type ChartsRadialDataProviderPremiumProps,
 } from '../ChartsRadialDataProviderPremium';
-import { type ChartsRadialDataProviderProps } from '../ChartsRadialDataProvider';
 import type { RadialBarSeriesType } from '../models/seriesType/radialBar';
-import { DEFAULT_ROTATION_AXIS_KEY } from '../constants';
-import {
-  RADIAL_BAR_CHART_PLUGINS,
-  type RadialBarChartPluginSignatures,
-} from './RadialBarChart.plugins';
+import { type RadialBarChartPluginSignatures } from './RadialBarChart.plugins';
 import { RadialBarPlot } from './RadialBarPlot';
+import { useRadialBarChartProps } from './useRadialBarChartProps';
 
 export type RadialBarSeries = MakeOptional<RadialBarSeriesType, 'type'>;
 
@@ -123,90 +113,17 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiRadialBarChart' });
+
   const {
-    rotationAxis,
-    radiusAxis,
-    series,
-    width,
-    height,
-    margin,
-    colors,
-    dataset,
-    hideLegend,
-    grid,
+    chartsWrapperProps,
+    chartsContainerProps,
+    gridProps,
+    clipPathProps,
+    clipPathGroupProps,
+    overlayProps,
+    legendProps,
     children,
-    slots,
-    slotProps,
-    skipAnimation,
-    loading,
-    showToolbar,
-    ...other
-  } = props;
-
-  const id = useId();
-  const clipPathId = `${id}-clip-path`;
-
-  const seriesWithDefault = React.useMemo(
-    () =>
-      series.map((s) => ({
-        type: 'radialBar' as const,
-        ...s,
-      })),
-    [series],
-  );
-
-  const chartsContainerProps: ChartsRadialDataProviderProps<
-    'radialBar',
-    RadialBarChartPluginSignatures
-  > = {
-    ...other,
-    series: seriesWithDefault,
-    width,
-    height,
-    margin,
-    colors,
-    dataset,
-    rotationAxis: rotationAxis ?? [
-      {
-        id: DEFAULT_ROTATION_AXIS_KEY,
-        scaleType: 'band',
-        data: Array.from(
-          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
-          (_, index) => index,
-        ),
-      },
-    ],
-    radiusAxis,
-    skipAnimation,
-    plugins: RADIAL_BAR_CHART_PLUGINS,
-  };
-
-  const gridProps: ChartsRadialGridProps | undefined = grid;
-
-  const clipPathGroupProps = {
-    clipPath: `url(#${clipPathId})`,
-  };
-
-  const clipPathProps: ChartsClipPathProps = {
-    id: clipPathId,
-  };
-
-  const overlayProps: ChartsOverlayProps = {
-    slots,
-    slotProps,
-    loading,
-  };
-
-  const legendProps: ChartsLegendSlotExtension = {
-    slots,
-    slotProps,
-  };
-
-  const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
-    legendPosition: props.slotProps?.legend?.position,
-    legendDirection: props.slotProps?.legend?.direction,
-    hideLegend: props.hideLegend ?? false,
-  };
+  } = useRadialBarChartProps(props);
 
   const { chartsDataProviderProps, chartsSurfaceProps } = useChartsContainerProps<
     'radialBar',
