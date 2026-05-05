@@ -7,7 +7,7 @@ import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
 import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
 import { BarPlot, type BarPlotProps, type BarPlotSlotProps, type BarPlotSlots } from './BarPlot';
 import { type ChartsContainerProps } from '../ChartsContainer';
-import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis';
+import { ChartsAxis } from '../ChartsAxis';
 import { type BarSeriesType } from '../models/seriesType/bar';
 import { ChartsTooltip } from '../ChartsTooltip';
 import {
@@ -57,7 +57,6 @@ export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
 export interface BarChartProps
   extends
     Omit<ChartsContainerProps<'bar', BarChartPluginSignatures>, 'series' | 'plugins' | 'zAxis'>,
-    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<BarPlotProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
