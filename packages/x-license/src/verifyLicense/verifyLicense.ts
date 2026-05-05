@@ -240,16 +240,16 @@ export function verifyLicense({
     return { status: LICENSE_STATUS.Invalid };
   }
 
-  if (license.licenseModel === 'perpetual' || process.env.NODE_ENV === 'production') {
-    const pkgTimestamp = parseInt(base64Decode(releaseDate), 10);
-    if (Number.isNaN(pkgTimestamp)) {
-      throw new Error(
-        'MUI X: The release information is invalid and license validation cannot proceed. ' +
-          'The package release timestamp could not be parsed. ' +
-          'This may indicate a corrupted package. Try reinstalling the MUI X packages.',
-      );
-    }
+  const pkgTimestamp = parseInt(base64Decode(releaseDate), 10);
+  if (Number.isNaN(pkgTimestamp)) {
+    throw new Error(
+      'MUI X: The release information is invalid and license validation cannot proceed. ' +
+        'The package release timestamp could not be parsed. ' +
+        'This may indicate a corrupted package. Try reinstalling the MUI X packages.',
+    );
+  }
 
+  if (license.licenseModel === 'perpetual' || process.env.NODE_ENV === 'production') {
     if (license.expiryTimestamp < pkgTimestamp) {
       // Perpetual v8 (or older) licenses whose expiry predates this package release
       // are not valid for v9 packages.

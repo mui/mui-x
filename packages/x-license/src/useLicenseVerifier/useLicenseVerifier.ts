@@ -91,7 +91,7 @@ export function useLicenseVerifier(packageInfo: CommercialPackageInfo): {
       showExpiredPackageVersionError({ packageName: fullPackageName });
     } else if (licenseStatus.status === LICENSE_STATUS.NotValidForPackage) {
       showLicenseKeyVersionMismatchError(licenseStatus.meta);
-    } else if (process.env.NODE_ENV !== 'production') {
+    } else {
       throw new Error('missing status handler');
     }
 
