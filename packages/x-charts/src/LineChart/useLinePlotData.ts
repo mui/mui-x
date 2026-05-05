@@ -9,6 +9,8 @@ import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
 import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { type SeriesId } from '../models/seriesType/common';
+import { useDrawingArea } from '../hooks/useDrawingArea';
+import { lttbIndices } from './sampling/lttb';
 
 interface LinePlotDataPoint {
   d: string;
@@ -26,6 +28,7 @@ export function useLinePlotData(
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
   const getGradientId = useChartGradientIdBuilder();
+  const drawingArea = useDrawingArea();
 
   // This memo prevents odd line chart behavior when hydrating.
   const allData = React.useMemo(() => {
@@ -121,8 +124,36 @@ export function useLinePlotData(
             return { x, y: visibleStackedData[index], nullData };
           }) ?? [];
 
-        const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;
+        const d3DataFull = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;
         const hidden = series[seriesId].hidden;
+
+        const sampling = series[seriesId].sampling;
+        let d3Data = d3DataFull;
+        if (sampling && d3DataFull.length > 2) {
+          const samplingConfig = typeof sampling === 'string' ? { type: sampling } : sampling;
+          if (samplingConfig.type === 'lttb') {
+            const target = samplingConfig.target ?? Math.max(2, Math.floor(drawingArea.width));
+            const threshold = samplingConfig.threshold ?? target;
+            if (d3DataFull.length > threshold) {
+              const hasNulls = d3DataFull.some((d) => d.nullData && !d.isExtension);
+              if (!hasNulls) {
+                const len = d3DataFull.length;
+                const xs = new Float64Array(len);
+                const ys = new Float64Array(len);
+                for (let i = 0; i < len; i += 1) {
+                  const point = d3DataFull[i];
+                  xs[i] = point.isExtension ? point.x : (xPosition(point.x) ?? 0);
+                  ys[i] = yScale(hidden ? point.y[0] : point.y[1]) ?? 0;
+                }
+                const indices = lttbIndices(xs, ys, target);
+                d3Data = new Array(indices.length);
+                for (let i = 0; i < indices.length; i += 1) {
+                  d3Data[i] = d3DataFull[indices[i]];
+                }
+              }
+            }
+          }
+        }
 
         const linePath = d3Line<{
           x: any;
@@ -152,7 +183,7 @@ export function useLinePlotData(
     }
 
     return linePlotData;
-  }, [seriesData, defaultXAxisId, defaultYAxisId, xAxes, yAxes, getGradientId]);
+  }, [seriesData, defaultXAxisId, defaultYAxisId, xAxes, yAxes, getGradientId, drawingArea]);
 
   return allData;
 }
