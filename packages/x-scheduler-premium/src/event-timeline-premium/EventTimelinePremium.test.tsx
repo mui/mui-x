@@ -9,8 +9,6 @@ import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-even
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
-import { EventTimelinePremiumErrorContainer } from './error-container';
-import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
 import {
   adapter,
   createSchedulerRenderer,
@@ -26,6 +24,8 @@ import {
 } from '@mui/x-scheduler-internals/models';
 import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
+import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
+import { EventTimelinePremiumErrorContainer } from './error-container';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();
@@ -556,7 +556,7 @@ describe('<EventTimelinePremium />', () => {
       // dataSource that rejects with a non-Error value (e.g. a `fetch` Response).
       const nonError = { status: 500, toString: () => '500 Internal Server Error' };
       const dataSource = {
-        // eslint-disable-next-line prefer-promise-reject-errors
+         
         getEvents: () => Promise.reject(nonError),
         updateEvents: async () => ({ success: true }),
       };
@@ -582,15 +582,18 @@ describe('<EventTimelinePremium />', () => {
       (store as any).set('errors', [sharedError]);
 
       function Test() {
+        const styledContextValue = React.useMemo(
+          () => ({
+            schedulerId: 'test',
+            classes: eventTimelinePremiumClasses,
+            localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+          }),
+          [],
+        );
+
         return (
           <SchedulerStoreContext.Provider value={store as any}>
-            <EventTimelinePremiumStyledContext.Provider
-              value={{
-                schedulerId: 'test',
-                classes: eventTimelinePremiumClasses,
-                localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-              }}
-            >
+            <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
               <EventTimelinePremiumErrorContainer />
             </EventTimelinePremiumStyledContext.Provider>
           </SchedulerStoreContext.Provider>
