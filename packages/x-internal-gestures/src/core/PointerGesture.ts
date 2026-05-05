@@ -169,18 +169,21 @@ export abstract class PointerGesture<GestureName extends string> extends Gesture
     pointers: PointerData[],
     calculatedTarget: TargetElement,
   ): PointerData[] {
-    return pointers.filter(
-      (pointer) =>
-        (this.isPointerTypeAllowed(pointer.pointerType) &&
-          (calculatedTarget === pointer.target ||
-            pointer.target === this.originalTarget ||
-            calculatedTarget === this.originalTarget ||
-            ('contains' in calculatedTarget &&
-              calculatedTarget.contains(pointer.target as Node)))) ||
-        ('getRootNode' in calculatedTarget &&
-          calculatedTarget.getRootNode() instanceof ShadowRoot &&
-          pointer.srcEvent.composedPath().includes(calculatedTarget)),
-    );
+    return pointers.filter((pointer) => {
+      if (!this.isPointerTypeAllowed(pointer.pointerType)) {
+        return false;
+      }
+      const targetMatches =
+        calculatedTarget === pointer.target ||
+        pointer.target === this.originalTarget ||
+        calculatedTarget === this.originalTarget ||
+        ('contains' in calculatedTarget && calculatedTarget.contains(pointer.target as Node));
+      const shadowRootMatches =
+        'getRootNode' in calculatedTarget &&
+        calculatedTarget.getRootNode() instanceof ShadowRoot &&
+        pointer.srcEvent.composedPath().includes(calculatedTarget);
+      return targetMatches || shadowRootMatches;
+    });
   }
 
   public destroy(): void {
