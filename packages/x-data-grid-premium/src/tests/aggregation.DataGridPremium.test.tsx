@@ -1187,12 +1187,8 @@ describe('<DataGridPremium /> - Aggregation', () => {
       const optionTexts = within(listbox)
         .getAllByRole('option')
         .map((o) => o.textContent);
-      // The empty "..." option is always present plus any allowed function.
-      expect(optionTexts).to.include('size');
-      expect(optionTexts).not.to.include('sum');
-      expect(optionTexts).not.to.include('avg');
-      expect(optionTexts).not.to.include('min');
-      expect(optionTexts).not.to.include('max');
+      // Listbox always renders an empty placeholder ("...") before the allowed functions.
+      expect(optionTexts).to.deep.equal(['...', 'size']);
     });
 
     it('should aggregate with `size` and render the count in the footer', async () => {
@@ -1216,7 +1212,6 @@ describe('<DataGridPremium /> - Aggregation', () => {
       );
 
       const tagsValues = getColumnValues(1);
-      // Footer renders the size of tag arrays for visible rows (3).
       expect(tagsValues[tagsValues.length - 1]).to.equal('3');
     });
   });

@@ -821,7 +821,6 @@ describe('<DataGridPro /> - Columns', () => {
       expect(gridColumnLookupSelector(apiRef).tags.computedWidth).to.equal(350);
       // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
-      // multiSelect preprocessor must respect hasBeenResized and keep the user's resize.
       expect(gridColumnLookupSelector(apiRef).tags.computedWidth).to.equal(350);
     });
   });

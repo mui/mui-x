@@ -44,7 +44,6 @@ describe('getGridMultiSelectOperators', () => {
     });
 
     it('matches with object-shaped filter values via parseObjectValue', () => {
-      // Filter UIs that pass `{ value, label }` objects must still work.
       expect(apply(containsOperator, [{ value: 'A' }, { value: 'B' }], ['A', 'C'])).to.equal(true);
       expect(apply(containsOperator, [{ value: 'A' }, { value: 'B' }], ['C', 'D'])).to.equal(false);
     });

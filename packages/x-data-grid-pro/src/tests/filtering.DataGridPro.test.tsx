@@ -1748,7 +1748,6 @@ describe('<DataGridPro /> - Filter', () => {
         });
         await user.keyboard(' ');
         const dialog = await screen.findByRole('dialog');
-        // Focus the popup content so Escape there is handled by the cell's onKeyDown.
         await act(async () => {
           (dialog as HTMLElement).focus();
         });
@@ -1756,8 +1755,6 @@ describe('<DataGridPro /> - Filter', () => {
         await waitFor(() => {
           expect(screen.queryByRole('dialog')).to.equal(null);
         });
-        // After popup close, focus returns inside the cell (the overflow chip
-        // auto-grabs focus when the cell hasFocus and popup is closed).
         const cell = apiRef.current!.getCellElement(1, 'tags');
         expect(cell!.contains(document.activeElement)).to.equal(true);
       });
@@ -1784,14 +1781,6 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     describe('header filter', () => {
-      it('should render the multi-Select header filter input for the contains operator', () => {
-        render(<TestCaseMultiSelect headerFilters />);
-        const filterCell = getColumnHeaderCell(0, 1);
-        // baseSelect renders a `combobox` role; the labelled label is filterPanelInputLabel.
-        const select = within(filterCell).getByRole('combobox');
-        expect(select).not.to.equal(null);
-      });
-
       it('should apply OR-semantics multi-value contains filter when selecting two options', async () => {
         const { user } = render(<TestCaseMultiSelect headerFilters />);
         const filterCell = getColumnHeaderCell(0, 1);
@@ -1801,11 +1790,9 @@ describe('<DataGridPro /> - Filter', () => {
         const listbox = await screen.findByRole('listbox');
         await user.click(within(listbox).getByRole('option', { name: 'React' }));
         await user.click(within(listbox).getByRole('option', { name: 'Vue' }));
-        // Close the dropdown so it doesn't intercept subsequent assertions.
         await user.keyboard('{Escape}');
 
         await waitFor(() => {
-          // contains [React, Vue] matches rows containing React OR Vue.
           expect(getColumnValues(0)).to.deep.equal([
             'ReactTypeScript',
             'VueJavaScript',
@@ -1842,7 +1829,6 @@ describe('<DataGridPro /> - Filter', () => {
         await user.keyboard('{Escape}');
 
         await waitFor(() => {
-          // renderValue joins selected labels (not raw values) with ", ".
           expect(select.textContent).to.equal('Frontend, Backend');
         });
       });

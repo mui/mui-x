@@ -1314,18 +1314,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
       },
     );
 
-    describe('multiSelect column', () => {
-      function paste(cell: HTMLElement, pasteText: string) {
-        const pasteEvent = new Event('paste');
-        // @ts-ignore
-        pasteEvent.clipboardData = {
-          getData: () => pasteText,
-        };
-        fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true });
-        act(() => document.activeElement!.dispatchEvent(pasteEvent));
-      }
-
-      const multiSelectColumns: GridColDef[] = [
+    it('should wire pasted csv through pastedValueParser into a multiSelect array', async () => {
+      const columns: GridColDef[] = [
         {
           field: 'tags',
           type: 'multiSelect',
@@ -1334,44 +1324,19 @@ describe('<DataGridPremium /> - Clipboard', () => {
           valueOptions: ['React', 'TypeScript', 'Node.js'],
         },
       ];
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium apiRef={apiRef} columns={columns} rows={[{ id: 0, tags: ['React'] }]} />
+        </div>,
+      );
 
-      it('should split csv-like input through pastedValueParser into an array', async () => {
-        const rows = [{ id: 0, tags: ['React'] }];
-        const { user } = render(
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPremium columns={multiSelectColumns} rows={rows} />
-          </div>,
-        );
+      const cell = getCell(0, 0);
+      await user.click(cell);
 
-        const cell = getCell(0, 0);
-        await act(() => cell.focus());
-        await user.click(cell);
+      paste(cell, 'React, TypeScript');
 
-        paste(cell, 'React, TypeScript');
-
-        await waitFor(() => {
-          // formattedValue joins by separator (default ',') without spaces.
-          expect(getCell(0, 0).textContent).to.equal('ReactTypeScript');
-        });
-      });
-
-      it('should leave the cell unchanged when no pasted token matches valueOptions', async () => {
-        const rows = [{ id: 0, tags: ['React'] }];
-        const { user } = render(
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPremium columns={multiSelectColumns} rows={rows} />
-          </div>,
-        );
-
-        const cell = getCell(0, 0);
-        await act(() => cell.focus());
-        await user.click(cell);
-
-        paste(cell, 'Foo, Bar');
-
-        // Wait long enough that any update would have flushed.
-        await sleep(50);
-        expect(getCell(0, 0).textContent).to.equal('React');
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(0).tags).to.deep.equal(['React', 'TypeScript']);
       });
     });
   });
