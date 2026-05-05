@@ -212,11 +212,15 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
 
     // Add event listener directly to the element
     // @ts-expect-error, WheelEvent is correct.
-    this.element.addEventListener('wheel', this.handleWheelEvent);
+    this.element.addEventListener('wheel', this.handleWheelEvent, {
+      // Provide the `passive` value to prevent inconsistencies between chrome and safari
+      // See https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#passive
+      passive: !this.preventDefault,
+    });
   }
 
   public destroy(): void {
-    // Remove the element-specific event listener
+    // Remove the element-specific event listener.
     // @ts-expect-error, WheelEvent is correct.
     this.element.removeEventListener('wheel', this.handleWheelEvent);
     this.resetState();
