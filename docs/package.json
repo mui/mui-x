@@ -52,8 +52,8 @@
     "@mui/x-internals": "workspace:^",
     "@mui/x-license": "workspace:^",
     "@mui/x-scheduler": "workspace:^",
-    "@mui/x-scheduler-headless": "workspace:^",
-    "@mui/x-scheduler-headless-premium": "workspace:^",
+    "@mui/x-scheduler-internals": "workspace:^",
+    "@mui/x-scheduler-internals-premium": "workspace:^",
     "@mui/x-scheduler-premium": "workspace:^",
     "@mui/x-tree-view": "workspace:^",
     "@mui/x-tree-view-pro": "workspace:^",
@@ -95,9 +95,9 @@
     "rimraf": "catalog:",
     "rxjs": "^7.8.2",
     "semver": "7.7.4",
-    "styled-components": "^6.3.12",
+    "styled-components": "^6.4.1",
     "stylis": "catalog:",
-    "webpack-bundle-analyzer": "^5.2.0"
+    "webpack-bundle-analyzer": "^5.3.0"
   },
   "devDependencies": {
     "@babel/preset-typescript": "catalog:",
