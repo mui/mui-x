@@ -18,7 +18,6 @@ import {
   ChartsLegend,
   type ChartsLegendSlots,
   type ChartsLegendSlotProps,
-  type ChartsLegendSlotExtension,
 } from '../ChartsLegend';
 import { ChartsSurface } from '../ChartsSurface';
 import {
@@ -44,6 +43,10 @@ import type { RadialBarSeriesType } from '../models/seriesType/radialBar';
 import { type RadialBarChartPluginSignatures } from './RadialBarChart.plugins';
 import { RadialBarPlot } from './RadialBarPlot';
 import { useRadialBarChartProps } from './useRadialBarChartProps';
+import {
+  Unstable_ChartsRadialAxisHighlight as ChartsRadialAxisHighlight,
+  type ChartsRadialAxisHighlightProps,
+} from '../ChartsRadialAxisHighlight';
 
 export type RadialBarSeries = MakeOptional<RadialBarSeriesType, 'type'>;
 
@@ -74,6 +77,12 @@ export interface RadialBarChartProps
    * An array of [[RadialBarSeries]] objects.
    */
   series: Readonly<RadialBarSeries[]>;
+  /**
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @default { rotation: 'band' } or { radius: 'band' } according to the layout.
+   */
+  axisHighlight?: ChartsRadialAxisHighlightProps;
   /**
    * Option to display a radial grid in the background.
    */
@@ -129,8 +138,10 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
     clipPathGroupProps,
     overlayProps,
     legendProps,
+    axisHighlightProps,
     children,
   } = useRadialBarChartProps(props);
+
 
   const { chartsDataProviderProps, chartsSurfaceProps } = useChartsContainerProps<
     'radialBar',
@@ -150,6 +161,7 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsRadialGrid {...gridProps} />
+          <ChartsRadialAxisHighlight {...axisHighlightProps} />
           <g {...clipPathGroupProps}>
             <RadialBarPlot />
             <ChartsOverlay {...overlayProps} />
