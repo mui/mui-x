@@ -1675,6 +1675,114 @@ describe('<DataGridPro /> - Filter', () => {
       expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).to.equal(null);
     });
 
+    describe.skipIf(isJSDOM)('overflow popup', () => {
+      function TestCaseOverflow(props: Partial<DataGridProProps>) {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 200, height: 200 }}>
+            <DataGridPro
+              apiRef={apiRef}
+              rows={[
+                { id: 1, tags: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript'] },
+              ]}
+              columns={[
+                {
+                  field: 'tags',
+                  type: 'multiSelect',
+                  width: 100,
+                  valueOptions: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript'],
+                },
+              ]}
+              {...props}
+            />
+          </div>
+        );
+      }
+
+      it('should auto-focus the overflow chip when the cell receives focus', async () => {
+        render(<TestCaseOverflow />);
+        await waitFor(() => {
+          const overflow = document.querySelector(`.${gridClasses.multiSelectCellOverflow}`);
+          expect(overflow).not.to.equal(null);
+        });
+        await act(async () => {
+          apiRef.current!.setCellFocus(1, 'tags');
+        });
+        await waitFor(() => {
+          const overflow = document.querySelector(
+            `.${gridClasses.multiSelectCellOverflow}`,
+          ) as HTMLElement;
+          expect(document.activeElement).to.equal(overflow);
+        });
+      });
+
+      it('should toggle the popup with Space', async () => {
+        const { user } = render(<TestCaseOverflow />);
+        await waitFor(() => {
+          expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).not.to.equal(
+            null,
+          );
+        });
+        await act(async () => {
+          apiRef.current!.setCellFocus(1, 'tags');
+        });
+        await user.keyboard(' ');
+        await waitFor(() => {
+          expect(screen.queryByRole('dialog')).not.to.equal(null);
+        });
+        await user.keyboard(' ');
+        await waitFor(() => {
+          expect(screen.queryByRole('dialog')).to.equal(null);
+        });
+      });
+
+      it('should close the popup on Escape and refocus the cell', async () => {
+        const { user } = render(<TestCaseOverflow />);
+        await waitFor(() => {
+          expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).not.to.equal(
+            null,
+          );
+        });
+        await act(async () => {
+          apiRef.current!.setCellFocus(1, 'tags');
+        });
+        await user.keyboard(' ');
+        const dialog = await screen.findByRole('dialog');
+        // Focus the popup content so Escape there is handled by the cell's onKeyDown.
+        await act(async () => {
+          (dialog as HTMLElement).focus();
+        });
+        await user.keyboard('{Escape}');
+        await waitFor(() => {
+          expect(screen.queryByRole('dialog')).to.equal(null);
+        });
+        // After popup close, focus returns inside the cell (the overflow chip
+        // auto-grabs focus when the cell hasFocus and popup is closed).
+        const cell = apiRef.current!.getCellElement(1, 'tags');
+        expect(cell!.contains(document.activeElement)).to.equal(true);
+      });
+
+      it('should close the popup on click-away', async () => {
+        const { user } = render(<TestCaseOverflow />);
+        await waitFor(() => {
+          expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).not.to.equal(
+            null,
+          );
+        });
+        const overflow = document.querySelector(
+          `.${gridClasses.multiSelectCellOverflow}`,
+        ) as HTMLElement;
+        await user.click(overflow);
+        await waitFor(() => {
+          expect(screen.queryByRole('dialog')).not.to.equal(null);
+        });
+        await user.click(document.body);
+        await waitFor(() => {
+          expect(screen.queryByRole('dialog')).to.equal(null);
+        });
+      });
+    });
+
     describe('header filter', () => {
       it('should render the multi-Select header filter input for the contains operator', () => {
         render(<TestCaseMultiSelect headerFilters />);
