@@ -53,6 +53,7 @@ describe('<PreferencesMenu />', () => {
           toggleWeekendVisibility: false,
           toggleWeekNumberVisibility: false,
           toggleAmpm: false,
+          toggleWeekStartsOn: false,
         }}
       >
         <PreferencesMenu />
