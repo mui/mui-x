@@ -393,7 +393,7 @@ describe('<EventTimelinePremium />', () => {
       }
 
       const { user } = render(<Test />);
-      await waitFor(() => expect(dataSource.getEvents.callCount).to.be.greaterThanOrEqual(1));
+      await waitFor(() => expect(screen.getByText(event1.title)).not.to.equal(null));
 
       const initialCount = dataSource.getEvents.callCount;
       await user.click(screen.getByRole('button', { name: 'Next' }));
@@ -540,6 +540,9 @@ describe('<EventTimelinePremium />', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Transient error')).not.to.equal(null);
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.equal(0);
       });
 
       await user.click(screen.getByRole('button', { name: 'Next' }));
