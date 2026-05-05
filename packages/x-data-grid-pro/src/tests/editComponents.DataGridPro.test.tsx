@@ -16,7 +16,7 @@ import {
 import { unwrapPrivateAPI } from '@mui/x-data-grid-pro/internals';
 import { isJSDOM } from 'test/utils/skipIf';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
-import { getCell, spyApi, sleep } from 'test/utils/helperFn';
+import { getCell, getRow, spyApi, sleep } from 'test/utils/helperFn';
 import { spy, type SinonSpy } from 'sinon';
 
 /**
@@ -1008,6 +1008,31 @@ describe('<DataGridPro /> - Edit components', () => {
         const editRoot = cell.querySelector('.MuiDataGrid-editMultiSelectCell')!;
         expect(editRoot.querySelector('.chip-One')).not.to.equal(null);
         expect(editRoot.querySelector('.chip-Two')).not.to.equal(null);
+      });
+    });
+
+    describe('row edit mode', () => {
+      it('should keep row in edit mode after first Escape (popup-only) and exit on second Escape', async () => {
+        defaultData.rows = [{ id: 0, tags: ['Option 1'] }];
+        const { user } = render(<TestCase editMode="row" />);
+
+        const cell = getCell(0, 0);
+        await user.dblClick(cell);
+        await screen.findByRole('listbox');
+
+        // First Escape closes only the popup; the autocomplete swallows the bubble,
+        // and the capture-phase handler routes through closePopup → setOpen(false).
+        await user.keyboard('{Escape}');
+        await waitFor(() => {
+          expect(screen.queryByRole('listbox')).to.equal(null);
+        });
+        expect(getRow(0)).to.have.class('MuiDataGrid-row--editing');
+
+        // Second Escape on the focused chips row bubbles to the grid and exits the row.
+        await user.keyboard('{Escape}');
+        await waitFor(() => {
+          expect(getRow(0)).not.to.have.class('MuiDataGrid-row--editing');
+        });
       });
     });
 
