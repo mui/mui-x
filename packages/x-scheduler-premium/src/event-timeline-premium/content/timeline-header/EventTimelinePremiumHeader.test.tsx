@@ -10,7 +10,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   ResourceBuilder,
 } from 'test/utils/scheduler';
-import { EventTimelinePremiumPreset } from '@mui/x-scheduler-headless-premium/models';
+import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 
 type PresetExpectations = {
   preset: EventTimelinePremiumPreset;
