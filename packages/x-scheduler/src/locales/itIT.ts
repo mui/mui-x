@@ -70,6 +70,7 @@ const itITDialog: Partial<EventDialogLocaleText> = {
 const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Risorse',
+
   // ViewSwitcher
   agenda: 'Agenda',
   day: 'Giorno',
