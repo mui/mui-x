@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import {
   createPickerRenderer,
@@ -13,9 +13,9 @@ describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer();
 
   describe('picker state', () => {
-    it('should fire a change event when meridiem changes', async () => {
+    it('should fire a change event when meridiem changes', () => {
       const handleChange = spy();
-      const { user } = render(
+      render(
         <MobileTimePicker
           ampm
           onChange={handleChange}
@@ -26,7 +26,7 @@ describe('<MobileTimePicker />', () => {
       );
       const buttonPM = screen.getByRole('button', { name: 'PM' });
 
-      await user.click(buttonPM);
+      fireEvent.click(buttonPM);
 
       expect(handleChange.callCount).to.equal(1);
       expect(handleChange.firstCall.args[0]).toEqualDateTime(new Date(2019, 0, 1, 16, 20));
@@ -47,7 +47,7 @@ describe('<MobileTimePicker />', () => {
         />,
       );
 
-      await openPicker(user, { type: 'time' });
+      openPicker({ type: 'time' });
 
       // Change the hours
       const hourClockEvent = getClockTouchEvent(11, '12hours');

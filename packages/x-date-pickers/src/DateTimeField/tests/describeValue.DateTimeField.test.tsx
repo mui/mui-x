@@ -32,10 +32,10 @@ describe('<DateTimeField /> - Describe Value', () => {
 
       expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (value, { selectSection, pressKey }) => {
+    setNewValue: (value, { selectSection, pressKey }) => {
       const newValue = adapterToUse.addDays(value!, 1);
-      await selectSection('day');
-      await pressKey('ArrowUp');
+      selectSection('day');
+      pressKey(undefined, 'ArrowUp');
 
       return newValue;
     },

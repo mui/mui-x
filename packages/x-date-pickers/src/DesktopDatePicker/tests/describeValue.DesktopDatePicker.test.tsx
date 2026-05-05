@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -28,16 +28,16 @@ describe('<DesktopDatePicker /> - Describe Value', () => {
 
       expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (value, { isOpened, applySameValue, selectSection, pressKey, user }) => {
+    setNewValue: (value, { isOpened, applySameValue, selectSection, pressKey }) => {
       const newValue = applySameValue ? value! : adapterToUse.addDays(value!, 1);
 
       if (isOpened) {
-        await user.click(
+        fireEvent.click(
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {
-        await selectSection('day');
-        await pressKey('ArrowUp');
+        selectSection('day');
+        pressKey(undefined, 'ArrowUp');
       }
 
       return newValue;

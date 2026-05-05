@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   adapterToUse,
@@ -33,12 +33,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
   describe('Picker action bar', () => {
     describe('clear action', () => {
-      it('should call onClose, onChange with empty value and onAccept with empty value', async () => {
+      it('should call onClose, onChange with empty value and onAccept with empty value', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        const { user } = render(
+        render(
           <ElementToTest
             onChange={onChange}
             onAccept={onAccept}
@@ -50,20 +50,20 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Clear the date
-        await user.click(screen.getByText(/clear/i));
+        fireEvent.click(screen.getByText(/clear/i));
         expect(onChange.callCount).to.equal(1);
-        expectPickerChangeHandlerValue(pickerParams.type, onChange.lastCall.firstArg, emptyValue);
+        expectPickerChangeHandlerValue(pickerParams.type, onChange, emptyValue);
         expect(onAccept.callCount).to.equal(1);
-        expectPickerChangeHandlerValue(pickerParams.type, onAccept.lastCall.firstArg, emptyValue);
+        expectPickerChangeHandlerValue(pickerParams.type, onAccept, emptyValue);
         expect(onClose.callCount).to.equal(1);
       });
 
-      it('should not call onChange or onAccept if the value is already empty value', async () => {
+      it('should not call onChange or onAccept if the value is already empty value', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        const { user } = render(
+        render(
           <ElementToTest
             onChange={onChange}
             onAccept={onAccept}
@@ -75,7 +75,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Clear the date
-        await user.click(screen.getByText(/clear/i));
+        fireEvent.click(screen.getByText(/clear/i));
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
@@ -83,12 +83,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('cancel action', () => {
-      it('should call onClose and onChange with the initial value', async () => {
+      it('should call onClose and onChange with the initial value', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection, pressKey, user } = renderWithProps({
+        const { selectSection, pressKey } = renderWithProps({
           onChange,
           onAccept,
           onClose,
@@ -99,15 +99,10 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        await setNewValue(values[0], {
-          user,
-          isOpened: true,
-          selectSection,
-          pressKey,
-        });
+        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Cancel the modifications
-        await user.click(screen.getByText(/cancel/i));
+        fireEvent.click(screen.getByText(/cancel/i));
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams) + 1,
         );
@@ -122,12 +117,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onClose.callCount).to.equal(1);
       });
 
-      it('should not call onChange if no prior value modification', async () => {
+      it('should not call onChange if no prior value modification', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        const { user } = render(
+        render(
           <ElementToTest
             onChange={onChange}
             onAccept={onAccept}
@@ -140,7 +135,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Cancel the modifications
-        await user.click(screen.getByText(/cancel/i));
+        fireEvent.click(screen.getByText(/cancel/i));
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
@@ -148,12 +143,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
     });
 
     describe('confirm action', () => {
-      it('should call onClose and onAccept with the live value', async () => {
+      it('should call onClose and onAccept with the live value', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection, pressKey, user } = renderWithProps({
+        const { selectSection, pressKey } = renderWithProps({
           onChange,
           onAccept,
           onClose,
@@ -164,15 +159,10 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         });
 
         // Change the value (already tested)
-        await setNewValue(values[0], {
-          user,
-          isOpened: true,
-          selectSection,
-          pressKey,
-        });
+        setNewValue(values[0], { isOpened: true, selectSection, pressKey });
 
         // Accept the modifications
-        await user.click(screen.getAllByRole('button', { name: 'OK' })[0]);
+        fireEvent.click(screen.getAllByRole('button', { name: 'OK' })[0]);
         expect(onChange.callCount).to.equal(
           getExpectedOnChangeCount(componentFamily, pickerParams),
         ); // The accepted value as already been committed, don't call onChange again
@@ -180,12 +170,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onClose.callCount).to.equal(1);
       });
 
-      it('should call onChange, onClose and onAccept when validating the default value', async () => {
+      it('should call onChange, onClose and onAccept when validating the default value', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        const { user } = render(
+        render(
           <ElementToTest
             onChange={onChange}
             onAccept={onAccept}
@@ -198,18 +188,18 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Accept the modifications
-        await user.click(screen.getByText(/ok/i));
+        fireEvent.click(screen.getByText(/ok/i));
         expect(onChange.callCount).to.equal(1);
         expect(onAccept.callCount).to.equal(1);
         expect(onClose.callCount).to.equal(1);
       });
 
-      it('should call onClose but not onAccept when validating an already validated value', async () => {
+      it('should call onClose but not onAccept when validating an already validated value', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        const { user } = render(
+        render(
           <ElementToTest
             onChange={onChange}
             onAccept={onAccept}
@@ -222,7 +212,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         );
 
         // Accept the modifications
-        await user.click(screen.getByText(/ok/i));
+        fireEvent.click(screen.getByText(/ok/i));
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
@@ -238,12 +228,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         vi.useRealTimers();
       });
 
-      it("should call onClose, onChange with today's value and onAccept with today's value", async () => {
+      it("should call onClose, onChange with today's value and onAccept with today's value", () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
 
-        const { user } = render(
+        render(
           <ElementToTest
             onChange={onChange}
             onAccept={onAccept}
@@ -254,7 +244,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           />,
         );
 
-        await user.click(screen.getByText(/today/i));
+        fireEvent.click(screen.getByText(/today/i));
 
         let startOfToday: any;
         if (pickerParams.type === 'date') {
@@ -266,9 +256,9 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         }
 
         expect(onChange.callCount).to.equal(1);
-        expectPickerChangeHandlerValue(pickerParams.type, onChange.lastCall.firstArg, startOfToday);
+        expectPickerChangeHandlerValue(pickerParams.type, onChange, startOfToday);
         expect(onAccept.callCount).to.equal(1);
-        expectPickerChangeHandlerValue(pickerParams.type, onAccept.lastCall.firstArg, startOfToday);
+        expectPickerChangeHandlerValue(pickerParams.type, onAccept, startOfToday);
         expect(onClose.callCount).to.equal(1);
       });
     });

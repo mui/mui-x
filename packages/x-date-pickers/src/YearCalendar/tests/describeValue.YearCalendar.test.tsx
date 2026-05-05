@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse, describeValue } from 'test/utils/pickers';
 import { PickerValue } from '@mui/x-date-pickers/internals';
@@ -23,9 +23,9 @@ describe('<YearCalendar /> - Describe Value', () => {
         expect(activeYear).to.have.text(adapterToUse.getYear(expectedValue).toString());
       }
     },
-    setNewValue: async (value, { user }) => {
+    setNewValue: (value) => {
       const newValue = adapterToUse.addYears(value!, 1);
-      await user.click(
+      fireEvent.click(
         screen.getByRole('radio', { name: adapterToUse.getYear(newValue).toString() }),
       );
 

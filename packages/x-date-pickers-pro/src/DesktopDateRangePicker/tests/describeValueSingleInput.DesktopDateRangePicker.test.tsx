@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   createPickerRenderer,
@@ -42,9 +42,9 @@ describe('<DesktopDateRangePicker /> - Describe Value', () => {
 
       expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (
+    setNewValue: (
       value,
-      { isOpened, applySameValue, setEndDate = false, selectSection, pressKey, user },
+      { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
       let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
@@ -56,14 +56,14 @@ describe('<DesktopDateRangePicker /> - Describe Value', () => {
       }
 
       if (isOpened) {
-        await user.click(
+        fireEvent.click(
           screen.getAllByRole('gridcell', {
             name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           })[0],
         );
       } else {
-        await selectSection('day');
-        await pressKey('ArrowUp');
+        selectSection('day');
+        pressKey(undefined, 'ArrowUp');
       }
 
       return newValue;

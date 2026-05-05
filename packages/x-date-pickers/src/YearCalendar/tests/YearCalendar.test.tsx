@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { act, screen } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { vi } from 'vitest';
@@ -7,11 +7,9 @@ import { vi } from 'vitest';
 describe('<YearCalendar />', () => {
   const { render } = createPickerRenderer();
 
-  it('allows to pick year standalone by click, `Enter` and `Space`', async () => {
+  it('allows to pick year standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();
-    const { user } = render(
-      <YearCalendar value={adapterToUse.date('2019-02-02')} onChange={onChange} />,
-    );
+    render(<YearCalendar value={adapterToUse.date('2019-02-02')} onChange={onChange} />);
     const targetYear = screen.getByRole('radio', { name: '2025' });
 
     // A native button implies Enter and Space keydown behavior
@@ -21,31 +19,31 @@ describe('<YearCalendar />', () => {
     // - fireEvent.keyUp(targetDay, { key: 'Space' })
     expect(targetYear.tagName).to.equal('BUTTON');
 
-    await user.click(targetYear);
+    fireEvent.click(targetYear);
 
     expect(onChange.callCount).to.equal(1);
     expect(onChange.args[0][0]).toEqualDateTime(new Date(2025, 1, 2));
   });
 
-  it('should select start of year without time when no initial value is present', async () => {
+  it('should select start of year without time when no initial value is present', () => {
     const onChange = spy();
-    const { user } = render(<YearCalendar onChange={onChange} />);
+    render(<YearCalendar onChange={onChange} />);
 
-    await user.click(screen.getByRole('radio', { name: '2025' }));
+    fireEvent.click(screen.getByRole('radio', { name: '2025' }));
 
     expect(onChange.callCount).to.equal(1);
     expect(onChange.args[0][0]).toEqualDateTime(new Date(2025, 0, 1, 0, 0, 0, 0));
   });
 
-  it('does not allow to pick year if readOnly prop is passed', async () => {
+  it('does not allow to pick year if readOnly prop is passed', () => {
     const onChangeMock = spy();
-    const { user } = render(
+    render(
       <YearCalendar value={adapterToUse.date('2019-02-02')} onChange={onChangeMock} readOnly />,
     );
     const targetYear = screen.getByRole('radio', { name: '2025' });
     expect(targetYear.tagName).to.equal('BUTTON');
 
-    await user.click(targetYear);
+    fireEvent.click(targetYear);
 
     expect(onChangeMock.callCount).to.equal(0);
   });
@@ -76,28 +74,20 @@ describe('<YearCalendar />', () => {
   });
 
   describe('Disabled', () => {
-    it('should disable all years if props.disabled = true', async () => {
+    it('should disable all years if props.disabled = true', () => {
       const onChange = spy();
-      const { user } = render(
-        <YearCalendar value={adapterToUse.date('2017-02-15')} onChange={onChange} disabled />,
-      );
+      render(<YearCalendar value={adapterToUse.date('2017-02-15')} onChange={onChange} disabled />);
 
-      // Hoist the user-event instance so we don't recreate it on every
-      // iteration; all we need is to bypass the pointer-events check on
-      // disabled buttons.
-      const userWithoutPointerEventsCheck = user.setup({ pointerEventsCheck: 0 });
-      const yearButtons = screen.getAllByRole('radio');
-      for (const yearButton of yearButtons) {
+      screen.getAllByRole('radio').forEach((yearButton) => {
         expect(yearButton).to.have.attribute('disabled');
-        // eslint-disable-next-line no-await-in-loop
-        await userWithoutPointerEventsCheck.click(yearButton);
+        fireEvent.click(yearButton);
         expect(onChange.callCount).to.equal(0);
-      }
+      });
     });
 
-    it('should not render years before props.minDate but should render and not disable the year in which props.minDate is', async () => {
+    it('should not render years before props.minDate but should render and not disable the year in which props.minDate is', () => {
       const onChange = spy();
-      const { user } = render(
+      render(
         <YearCalendar
           value={adapterToUse.date('2017-02-15')}
           onChange={onChange}
@@ -111,13 +101,13 @@ describe('<YearCalendar />', () => {
       expect(year2017).to.equal(null);
       expect(year2018).not.to.have.attribute('disabled');
 
-      await user.click(year2018);
+      fireEvent.click(year2018);
       expect(onChange.callCount).to.equal(1);
     });
 
-    it('should not render years after props.maxDate but should render and not disable the year in which props.maxDate is', async () => {
+    it('should not render years after props.maxDate but should render and not disable the year in which props.maxDate is', () => {
       const onChange = spy();
-      const { user } = render(
+      render(
         <YearCalendar
           value={adapterToUse.date('2019-02-15')}
           onChange={onChange}
@@ -131,13 +121,13 @@ describe('<YearCalendar />', () => {
       expect(year2026).to.equal(null);
       expect(year2025).not.to.have.attribute('disabled');
 
-      await user.click(year2025);
+      fireEvent.click(year2025);
       expect(onChange.callCount).to.equal(1);
     });
 
-    it('should disable years if props.shouldDisableYear returns true', async () => {
+    it('should disable years if props.shouldDisableYear returns true', () => {
       const onChange = spy();
-      const { user } = render(
+      render(
         <YearCalendar
           value={adapterToUse.date('2019-01-02')}
           onChange={onChange}
@@ -151,16 +141,16 @@ describe('<YearCalendar />', () => {
       expect(year2024).to.have.attribute('disabled');
       expect(year2025).not.to.have.attribute('disabled');
 
-      await user.setup({ pointerEventsCheck: 0 }).click(year2024);
+      fireEvent.click(year2024);
       expect(onChange.callCount).to.equal(0);
 
-      await user.click(year2025);
+      fireEvent.click(year2025);
       expect(onChange.callCount).to.equal(1);
     });
   });
 
-  it('should allow to focus years when it contains valid date', async () => {
-    const { user } = render(
+  it('should allow to focus years when it contains valid date', () => {
+    render(
       <YearCalendar
         // date is chose such as replacing year by 2018 or 2020 makes it out of valid range
         defaultValue={adapterToUse.date('2019-08-01')}
@@ -171,11 +161,11 @@ describe('<YearCalendar />', () => {
     const button2019 = screen.getByRole('radio', { name: '2019' });
 
     act(() => button2019.focus());
-    await user.keyboard('{ArrowLeft}');
+    fireEvent.keyDown(button2019, { key: 'ArrowLeft' });
     expect(document.activeElement).to.have.text('2018');
 
     act(() => button2019.focus());
-    await user.keyboard('{ArrowRight}');
+    fireEvent.keyDown(button2019, { key: 'ArrowRight' });
     expect(document.activeElement).to.have.text('2020');
   });
 

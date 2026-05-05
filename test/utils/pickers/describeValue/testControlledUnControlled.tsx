@@ -9,6 +9,7 @@ import {
   isPickerSingleInput,
 } from 'test/utils/pickers';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
+import { fireUserEvent } from '../../fireUserEvent';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
   ElementToTest,
@@ -107,15 +108,14 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         assertRenderedValue(values[0]);
       });
 
-      it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', async () => {
+      it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
         const onChange = spy();
 
         const response = renderWithProps({
           defaultValue: values[0],
           onChange,
         });
-        const newValue = await setNewValue(values[0], {
-          user: response.user,
+        const newValue = setNewValue(values[0], {
           selectSection: response.selectSection,
           pressKey: response.pressKey,
           closeMobilePicker: true,
@@ -133,7 +133,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         // }
       });
 
-      it('should call onChange when updating a value defined with `props.value`', async () => {
+      it('should call onChange when updating a value defined with `props.value`', () => {
         const onChange = spy();
 
         const useControlledElement = (props: any) => {
@@ -152,8 +152,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           { value: values[0], onChange },
           { hook: useControlledElement },
         );
-        const newValue = await setNewValue(values[0], {
-          user: response.user,
+        const newValue = setNewValue(values[0], {
           selectSection: response.selectSection,
           pressKey: response.pressKey,
           closeMobilePicker: true,
@@ -203,7 +202,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     describe('Accessibility and field editing', () => {
-      it('should allow editing in field on single input mobile pickers', async () => {
+      it('should allow editing in field on single input mobile pickers', () => {
         if (componentFamily !== 'picker' || params.variant !== 'mobile') {
           return;
         }
@@ -214,8 +213,8 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           onChange: handleChange,
           defaultValue: values[0],
         });
-        await response.selectSection(undefined);
-        await response.pressKey('ArrowUp');
+        response.selectSection(undefined);
+        fireUserEvent.keyPress(response.getActiveSection(0), { key: 'ArrowUp' });
         expect(handleChange.callCount).to.equal(isPickerSingleInput(params) ? 1 : 0);
       });
 

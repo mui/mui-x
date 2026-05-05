@@ -16,7 +16,7 @@ describeAdapters(
       const view = renderWithProps({}); // default format is numeric, e.g. MM/DD/YYYY
 
       // Make month invalid by typing "00"
-      await view.selectSection('month');
+      await view.selectSectionAsync('month');
       await view.user.keyboard('00');
       await view.user.tab();
 
@@ -25,13 +25,13 @@ describeAdapters(
       // Should be invalid now
       expect(inputRoot).to.have.attribute('aria-invalid', 'true');
 
-      await view.selectSection('day');
+      await view.selectSectionAsync('day');
 
       // Returns to valid after refocusing (incomplete date)
       expect(inputRoot).to.have.attribute('aria-invalid', 'false');
       await view.user.keyboard('05');
 
-      await view.selectSection('year');
+      await view.selectSectionAsync('year');
       await view.user.keyboard('2025');
 
       // Should now be invalid

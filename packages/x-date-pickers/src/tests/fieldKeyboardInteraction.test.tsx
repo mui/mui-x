@@ -1,5 +1,6 @@
 import moment from 'moment';
 import jMoment from 'moment-jalaali';
+import { fireEvent } from '@mui/internal-test-utils';
 import {
   buildFieldInteractions,
   getCleanedSelectedContent,
@@ -68,35 +69,33 @@ describe(`RTL - test arrows navigation`, () => {
 
   const { renderWithProps } = buildFieldInteractions({ render, Component: DateTimeField });
 
-  it('should move selected section to the next section respecting RTL order in empty field', async () => {
+  it('should move selected section to the next section respecting RTL order in empty field', () => {
     const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
 
     const view = renderWithProps({}, { direction: 'rtl' });
 
-    await view.selectSection('hours');
+    view.selectSection('hours');
 
-    for (const expectedValue of expectedValues) {
+    expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      // eslint-disable-next-line no-await-in-loop
-      await view.user.keyboard('{ArrowRight}');
-    }
+      fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowRight' });
+    });
   });
 
-  it('should move selected section to the previous section respecting RTL order in empty field', async () => {
+  it('should move selected section to the previous section respecting RTL order in empty field', () => {
     const expectedValues = ['DD', 'MM', 'YYYY', 'mm', 'hh', 'hh'];
 
     const view = renderWithProps({}, { direction: 'rtl' });
 
-    await view.selectSection('day');
+    view.selectSection('day');
 
-    for (const expectedValue of expectedValues) {
+    expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      // eslint-disable-next-line no-await-in-loop
-      await view.user.keyboard('{ArrowLeft}');
-    }
+      fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowLeft' });
+    });
   });
 
-  it('should move selected section to the next section respecting RTL order in non-empty field', async () => {
+  it('should move selected section to the next section respecting RTL order in non-empty field', () => {
     // 25/04/2018 => 1397/02/05
     const expectedValues = ['11', '54', '1397', '02', '05', '05'];
 
@@ -107,16 +106,15 @@ describe(`RTL - test arrows navigation`, () => {
       { direction: 'rtl' },
     );
 
-    await view.selectSection('hours');
+    view.selectSection('hours');
 
-    for (const expectedValue of expectedValues) {
+    expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      // eslint-disable-next-line no-await-in-loop
-      await view.user.keyboard('{ArrowRight}');
-    }
+      fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowRight' });
+    });
   });
 
-  it('should move selected section to the previous section respecting RTL order in non-empty field', async () => {
+  it('should move selected section to the previous section respecting RTL order in non-empty field', () => {
     // 25/04/2018 => 1397/02/05
     const expectedValues = ['05', '02', '1397', '54', '11', '11'];
 
@@ -127,13 +125,12 @@ describe(`RTL - test arrows navigation`, () => {
       { direction: 'rtl' },
     );
 
-    await view.selectSection('day');
+    view.selectSection('day');
 
-    for (const expectedValue of expectedValues) {
+    expectedValues.forEach((expectedValue) => {
       expect(getCleanedSelectedContent()).to.equal(expectedValue);
-      // eslint-disable-next-line no-await-in-loop
-      await view.user.keyboard('{ArrowLeft}');
-    }
+      fireEvent.keyDown(view.getActiveSection(undefined), { key: 'ArrowLeft' });
+    });
   });
 });
 
@@ -170,7 +167,7 @@ adapterToTest.forEach((adapterName) => {
       return valueStr;
     };
 
-    const testKeyPress = async ({
+    const testKeyPress = ({
       key,
       format,
       initialValue,
@@ -187,8 +184,8 @@ adapterToTest.forEach((adapterName) => {
         defaultValue: initialValue,
         format,
       });
-      await view.selectSection(sectionConfig.type);
-      await view.user.keyboard(`{${key}}`);
+      view.selectSection(sectionConfig.type);
+      fireEvent.keyDown(view.getActiveSection(0), { key });
 
       expectFieldValue(
         view.getSectionsContainer(),
@@ -199,11 +196,11 @@ adapterToTest.forEach((adapterName) => {
     const testKeyboardInteraction = (formatToken) => {
       const sectionConfig = getDateSectionConfigFromFormatToken(adapter, formatToken);
 
-      it(`should increase "${sectionConfig.type}" when pressing ArrowUp on "${formatToken}" token`, async () => {
+      it(`should increase "${sectionConfig.type}" when pressing ArrowUp on "${formatToken}" token`, () => {
         const initialValue = adapter.date(testDate);
         const expectedValue = updateDate(initialValue, adapter, sectionConfig.type, 1);
 
-        await testKeyPress({
+        testKeyPress({
           key: 'ArrowUp',
           initialValue,
           expectedValue,
@@ -212,11 +209,11 @@ adapterToTest.forEach((adapterName) => {
         });
       });
 
-      it(`should decrease "${sectionConfig.type}" when pressing ArrowDown on "${formatToken}" token`, async () => {
+      it(`should decrease "${sectionConfig.type}" when pressing ArrowDown on "${formatToken}" token`, () => {
         const initialValue = adapter.date(testDate);
         const expectedValue = updateDate(initialValue, adapter, sectionConfig.type, -1);
 
-        await testKeyPress({
+        testKeyPress({
           key: 'ArrowDown',
           initialValue,
           expectedValue,

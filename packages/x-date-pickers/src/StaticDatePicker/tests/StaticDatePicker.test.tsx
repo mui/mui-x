@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 
@@ -12,21 +12,19 @@ describe('<StaticDatePicker />', () => {
     expect(screen.getAllByTestId('day')).to.have.length(31);
   });
 
-  it('switches between months', async () => {
-    const { user } = render(
-      <StaticDatePicker reduceAnimations defaultValue={adapterToUse.date('2019-01-01')} />,
-    );
+  it('switches between months', () => {
+    render(<StaticDatePicker reduceAnimations defaultValue={adapterToUse.date('2019-01-01')} />);
 
     expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('January 2019');
 
     const nextMonth = screen.getByLabelText('Next month');
     const previousMonth = screen.getByLabelText('Previous month');
-    await user.click(nextMonth);
-    await user.click(nextMonth);
+    fireEvent.click(nextMonth);
+    fireEvent.click(nextMonth);
 
-    await user.click(previousMonth);
-    await user.click(previousMonth);
-    await user.click(previousMonth);
+    fireEvent.click(previousMonth);
+    fireEvent.click(previousMonth);
+    fireEvent.click(previousMonth);
 
     expect(screen.getByTestId('calendar-month-and-year-text')).to.have.text('December 2018');
   });

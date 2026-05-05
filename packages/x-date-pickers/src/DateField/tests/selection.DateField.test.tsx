@@ -45,20 +45,20 @@ describe('<DateField /> - Selection', () => {
     it('should select the clicked selection when the input is already focused', async () => {
       const view = renderWithProps({});
 
-      await view.selectSection('day');
+      await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      await view.selectSection('month');
+      await view.selectSectionAsync('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
     });
 
     it('should not change the selection when clicking on the only already selected section', async () => {
       const view = renderWithProps({});
 
-      await view.selectSection('day');
+      await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      await view.selectSection('day');
+      await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
     });
 
@@ -67,7 +67,7 @@ describe('<DateField /> - Selection', () => {
         disabled: true,
       });
 
-      await view.selectSection('day');
+      await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('');
     });
   });
@@ -75,8 +75,12 @@ describe('<DateField /> - Selection', () => {
   describe('key: Ctrl + A', () => {
     it('should select all sections', async () => {
       const view = renderWithProps({});
-      await view.selectSection('month');
-      await view.user.keyboard('{Control>}a{/Control}');
+      await view.selectSectionAsync('month');
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
     });
 
@@ -84,8 +88,12 @@ describe('<DateField /> - Selection', () => {
       const view = renderWithProps({
         format: `- ${adapterToUse.formats.year}`,
       });
-      await view.selectSection('year');
-      await view.user.keyboard('{Control>}a{/Control}');
+      await view.selectSectionAsync('year');
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
       expect(getCleanedSelectedContent()).to.equal('- YYYY');
     });
   });
@@ -93,44 +101,52 @@ describe('<DateField /> - Selection', () => {
   describe('key: ArrowRight', () => {
     it('should move selection to the next section when one section is selected', async () => {
       const view = renderWithProps({});
-      await view.selectSection('day');
+      await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
-      await view.user.keyboard('{ArrowRight}');
+      fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
 
     it('should stay on the current section when the last section is selected', async () => {
       const view = renderWithProps({});
-      await view.selectSection('year');
+      await view.selectSectionAsync('year');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
-      await view.user.keyboard('{ArrowRight}');
+      fireEvent.keyDown(view.getActiveSection(2), { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
 
     it('should select the last section when all the sections are selected', async () => {
       const view = renderWithProps({});
-      await view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Select all sections
-      await view.user.keyboard('{Control>}a{/Control}');
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
 
-      await view.user.keyboard('{ArrowRight}');
+      fireEvent.keyDown(view.getSectionsContainer(), { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
 
     it('should select the next section when editing after all the sections were selected', async () => {
       const view = renderWithProps({});
-      await view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Select all sections
-      await view.user.keyboard('{Control>}a{/Control}');
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
 
-      await view.user.keyboard('{ArrowDown}');
+      fireEvent.keyDown(view.getSectionsContainer(), { key: 'ArrowDown' });
       expect(getCleanedSelectedContent()).to.equal('12');
 
-      await view.user.keyboard('{ArrowRight}');
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
       expect(getCleanedSelectedContent()).to.equal('DD');
     });
   });
@@ -138,29 +154,33 @@ describe('<DateField /> - Selection', () => {
   describe('key: ArrowLeft', () => {
     it('should move selection to the previous section when one section is selected', async () => {
       const view = renderWithProps({});
-      await view.selectSection('day');
+      await view.selectSectionAsync('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
-      await view.user.keyboard('{ArrowLeft}');
+      fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent()).to.equal('MM');
     });
 
     it('should stay on the current section when the first section is selected', async () => {
       const view = renderWithProps({});
-      await view.selectSection('month');
+      await view.selectSectionAsync('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
-      await view.user.keyboard('{ArrowLeft}');
+      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent()).to.equal('MM');
     });
 
     it('should select the first section when all the sections are selected', async () => {
       const view = renderWithProps({});
-      await view.selectSection('month');
+      await view.selectSectionAsync('month');
 
       // Select all sections
-      await view.user.keyboard('{Control>}a{/Control}');
+      fireEvent.keyDown(view.getActiveSection(0), {
+        key: 'a',
+        keyCode: 65,
+        ctrlKey: true,
+      });
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
 
-      await view.user.keyboard('{ArrowLeft}');
+      fireEvent.keyDown(view.getSectionsContainer(), { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent()).to.equal('MM');
     });
 

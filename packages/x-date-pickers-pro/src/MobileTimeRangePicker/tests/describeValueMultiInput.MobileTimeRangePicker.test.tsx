@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
   createPickerRenderer,
@@ -47,9 +47,9 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
         : expectedPlaceholder;
       expectFieldValue(endSectionsContainer, expectedEndValueStr);
     },
-    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false, user }) => {
+    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
       if (!isOpened) {
-        await openPicker(user, {
+        openPicker({
           type: 'time-range',
           initialFocus: setEndDate ? 'end' : 'start',
           fieldType: 'multi-input',
@@ -65,7 +65,7 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
       }
 
       // Go to the start date or the end date
-      await user.click(screen.getByRole('tab', { name: setEndDate ? 'End' : 'Start' }));
+      fireEvent.click(screen.getByRole('tab', { name: setEndDate ? 'End' : 'Start' }));
 
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hours = adapterToUse.format(
@@ -73,24 +73,25 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
         hasMeridiem ? 'hours12h' : 'hours24h',
       );
       const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-      await user.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
-      await user.click(
+      fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+      fireEvent.click(
         screen.getByRole('option', {
           name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
         }),
       );
       if (hasMeridiem) {
-        await user.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+        fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
       }
       // Close the picker
       if (!isOpened) {
-        await user.keyboard('{Escape}');
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
+        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       } else {
         const toolbarHourButtons = screen.getAllByRole('button', {
           name: adapterToUse.format(newValue[0], hasMeridiem ? 'hours12h' : 'hours24h'),
         });
         // return to the start time view in case we'd like to repeat the selection process
-        await user.click(toolbarHourButtons[0]);
+        fireEvent.click(toolbarHourButtons[0]);
       }
 
       return newValue;

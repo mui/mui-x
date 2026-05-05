@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import ButtonBase from '@mui/material/ButtonBase';
 import { PickerDay, pickerDayClasses as classes } from '@mui/x-date-pickers/PickerDay';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
@@ -28,10 +28,10 @@ describe('<PickerDay />', () => {
     }),
   );
 
-  it('selects the date on click, Enter and Space', async () => {
+  it('selects the date on click, Enter and Space', () => {
     const handleDaySelect = spy();
     const day = adapterToUse.date();
-    const { user } = render(
+    render(
       <PickerDay
         day={day}
         outsideCurrentMonth={false}
@@ -49,7 +49,7 @@ describe('<PickerDay />', () => {
     // - fireEvent.keyUp(targetDay, { key: 'Space' })
     expect(targetDay.tagName).to.equal('BUTTON');
 
-    await user.click(targetDay);
+    fireEvent.click(targetDay);
 
     expect(handleDaySelect.callCount).to.equal(1);
     expect(handleDaySelect.args[0][0]).toEqualDateTime(day);

@@ -25,7 +25,7 @@ describe('<DesktopDatePicker /> - Field', () => {
         { componentFamily: 'picker' },
       );
 
-      await view.selectSection('month');
+      view.selectSection('month');
       expectFieldValue(view.getSectionsContainer(), 'MMMM DD');
 
       await view.user.keyboard('N');
@@ -56,7 +56,7 @@ describe('<DesktopDatePicker /> - Field', () => {
   });
 
   describeAdapters('Timezone', DesktopDatePicker, ({ adapter, renderWithProps }) => {
-    it('should clear the selected section when all sections are completed when using timezones', async () => {
+    it('should clear the selected section when all sections are completed when using timezones', () => {
       const view = renderWithProps(
         {
           defaultValue: adapter.date()!,
@@ -67,9 +67,9 @@ describe('<DesktopDatePicker /> - Field', () => {
       );
 
       expectFieldValue(view.getSectionsContainer(), 'June 2022');
-      await view.selectSection('month');
+      view.selectSection('month');
 
-      await view.pressKey('');
+      view.pressKey(0, '');
       expectFieldValue(view.getSectionsContainer(), 'MMMM 2022');
     });
   });

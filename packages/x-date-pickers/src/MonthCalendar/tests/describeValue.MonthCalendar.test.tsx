@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, adapterToUse, describeValue } from 'test/utils/pickers';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import { PickerValue } from '@mui/x-date-pickers/internals';
@@ -25,10 +25,10 @@ describe('<MonthCalendar /> - Describe Value', () => {
         expect(activeMonth).to.have.attribute('aria-checked', 'true');
       }
     },
-    setNewValue: async (value, { user }) => {
+    setNewValue: (value) => {
       const newValue = adapterToUse.addMonths(value!, 1);
 
-      await user.click(screen.getByRole('radio', { name: adapterToUse.format(newValue, 'month') }));
+      fireEvent.click(screen.getByRole('radio', { name: adapterToUse.format(newValue, 'month') }));
 
       return newValue;
     },

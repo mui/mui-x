@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { screen, fireEvent } from '@mui/internal-test-utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { PickerNonNullableRangeValue, PickerRangeValue } from '@mui/x-date-pickers/internals';
 import {
@@ -45,7 +45,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         : 'MM/DD/YYYY';
       expectFieldValue(endFieldRoot, expectedEndValueStr);
     },
-    setNewValue: async (value, { isOpened, applySameValue, setEndDate = false, user }) => {
+    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
       let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
         newValue = value;
@@ -56,14 +56,10 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       }
 
       if (!isOpened) {
-        await openPicker(user, {
-          type: 'date-range',
-          initialFocus: 'start',
-          fieldType: 'multi-input',
-        });
+        openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'multi-input' });
       }
 
-      await user.click(
+      fireEvent.click(
         screen.getByRole('gridcell', {
           name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         }),
@@ -71,7 +67,8 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       // Close the picker
       if (!isOpened) {
-        await user.keyboard('{Escape}');
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
+        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       }
 
       return newValue;
@@ -108,9 +105,9 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (
+    setNewValue: (
       value,
-      { isOpened, applySameValue, setEndDate = false, selectSection, pressKey, user },
+      { isOpened, applySameValue, setEndDate = false, selectSection, pressKey },
     ) => {
       let newValue: PickerNonNullableRangeValue;
       if (applySameValue) {
@@ -122,14 +119,14 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       }
 
       if (isOpened) {
-        await user.click(
+        fireEvent.click(
           screen.getAllByRole('gridcell', {
             name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           })[0],
         );
       } else {
-        await selectSection('day');
-        await pressKey('ArrowUp');
+        selectSection('day');
+        pressKey(undefined, 'ArrowUp');
       }
 
       return newValue;

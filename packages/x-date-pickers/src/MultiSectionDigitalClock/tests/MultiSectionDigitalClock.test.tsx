@@ -1,3 +1,4 @@
+/* eslint-disable mui/disallow-active-element-as-key-event-target */
 import * as React from 'react';
 import { spy } from 'sinon';
 import {
@@ -9,17 +10,17 @@ import {
   adapterToUse,
   multiSectionDigitalClockHandler,
 } from 'test/utils/pickers';
-import { screen, within } from '@mui/internal-test-utils';
+import { fireEvent, screen, within } from '@mui/internal-test-utils';
 
 describe('<MultiSectionDigitalClock />', () => {
   const { render } = createPickerRenderer();
 
   describe('Reference date', () => {
-    it('should use `referenceDate` when no value defined', async () => {
+    it('should use `referenceDate` when no value defined', () => {
       const onChange = spy();
       const referenceDate = '2018-01-01T13:30:00';
 
-      const { user } = render(
+      render(
         <MultiSectionDigitalClock
           onChange={onChange}
           referenceDate={adapterToUse.date(referenceDate)}
@@ -35,8 +36,7 @@ describe('<MultiSectionDigitalClock />', () => {
       expect(screen.getByRole('option', { name: '30 minutes' })).to.have.attribute('tabindex', '0');
       expect(screen.getByRole('option', { name: 'PM' })).to.have.attribute('tabindex', '0');
 
-      await multiSectionDigitalClockHandler.setViewValue(
-        user,
+      multiSectionDigitalClockHandler.setViewValue(
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
@@ -52,7 +52,7 @@ describe('<MultiSectionDigitalClock />', () => {
       expect(screen.getByRole('option', { name: '0 minutes' })).to.have.attribute('tabindex', '0');
     });
 
-    it('should not use `referenceDate` when a value is defined', async () => {
+    it('should not use `referenceDate` when a value is defined', () => {
       const onChange = spy();
 
       function ControlledMultiSectionDigitalClock(props: MultiSectionDigitalClockProps) {
@@ -70,7 +70,7 @@ describe('<MultiSectionDigitalClock />', () => {
         );
       }
 
-      const { user } = render(
+      render(
         <ControlledMultiSectionDigitalClock
           onChange={onChange}
           value={adapterToUse.date('2019-01-01T12:30:00')}
@@ -78,8 +78,7 @@ describe('<MultiSectionDigitalClock />', () => {
         />,
       );
 
-      await multiSectionDigitalClockHandler.setViewValue(
-        user,
+      multiSectionDigitalClockHandler.setViewValue(
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
@@ -87,10 +86,10 @@ describe('<MultiSectionDigitalClock />', () => {
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 30));
     });
 
-    it('should not use `referenceDate` when a defaultValue is defined', async () => {
+    it('should not use `referenceDate` when a defaultValue is defined', () => {
       const onChange = spy();
 
-      const { user } = render(
+      render(
         <MultiSectionDigitalClock
           onChange={onChange}
           defaultValue={adapterToUse.date('2019-01-01T12:30:00')}
@@ -98,8 +97,7 @@ describe('<MultiSectionDigitalClock />', () => {
         />,
       );
 
-      await multiSectionDigitalClockHandler.setViewValue(
-        user,
+      multiSectionDigitalClockHandler.setViewValue(
         adapterToUse,
         adapterToUse.setMinutes(adapterToUse.setHours(adapterToUse.date(), 15), 30),
       );
@@ -109,70 +107,74 @@ describe('<MultiSectionDigitalClock />', () => {
   });
 
   describe('Keyboard support', () => {
-    it('should move item focus up by 5 on PageUp press', async () => {
+    it('should move item focus up by 5 on PageUp press', () => {
       const handleChange = spy();
-      const { user } = render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
+      render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
       const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
       const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
       const lastOptionIndex = hoursOptions.length - 1;
 
-      await user.keyboard('{End}'); // moves focus to last element
-      await user.keyboard('{PageUp}');
+      fireEvent.keyDown(document.activeElement!, { key: 'End' }); // moves focus to last element
+      fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
 
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(hoursOptions[lastOptionIndex - 5]);
 
-      await user.keyboard('{PageUp}');
+      fireEvent.keyDown(hoursOptions[lastOptionIndex - 5], { key: 'PageUp' });
 
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(hoursOptions[lastOptionIndex - 10]);
     });
 
-    it('should move focus to first item on PageUp press when current focused item index is among the first 5 items', async () => {
+    it('should move focus to first item on PageUp press when current focused item index is among the first 5 items', () => {
       const handleChange = spy();
-      const { user } = render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
+      render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
       const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
       const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
 
       // moves focus to 4th element using arrow down
-      await user.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}');
+      [0, 1, 2].forEach((index) => {
+        fireEvent.keyDown(hoursOptions[index], { key: 'ArrowDown' });
+      });
 
-      await user.keyboard('{PageUp}');
+      fireEvent.keyDown(hoursOptions[3], { key: 'PageUp' });
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(hoursOptions[0]);
     });
 
-    it('should move item focus down by 5 on PageDown press', async () => {
+    it('should move item focus down by 5 on PageDown press', () => {
       const handleChange = spy();
-      const { user } = render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
+      render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
       const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
       const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
 
-      await user.keyboard('{PageDown}');
+      fireEvent.keyDown(hoursOptions[0], { key: 'PageDown' });
 
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(hoursOptions[5]);
 
-      await user.keyboard('{PageDown}');
+      fireEvent.keyDown(hoursOptions[5], { key: 'PageDown' });
 
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(hoursOptions[10]);
     });
 
-    it('should move focus to last item on PageDown press when current focused item index is among the last 5 items', async () => {
+    it('should move focus to last item on PageDown press when current focused item index is among the last 5 items', () => {
       const handleChange = spy();
-      const { user } = render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
+      render(<MultiSectionDigitalClock autoFocus onChange={handleChange} />);
       const hoursSectionListbox = screen.getAllByRole('listbox')[0]; // get only hour section
       const hoursOptions = within(hoursSectionListbox).getAllByRole('option');
       const lastOptionIndex = hoursOptions.length - 1;
 
       const lastElement = hoursOptions[lastOptionIndex];
 
-      await user.keyboard('{End}'); // moves focus to last element
+      fireEvent.keyDown(document.activeElement!, { key: 'End' }); // moves focus to last element
       // moves focus 4 steps above last item using arrow up
-      await user.keyboard('{ArrowUp}{ArrowUp}{ArrowUp}');
+      [0, 1, 2].forEach((index) => {
+        fireEvent.keyDown(hoursOptions[lastOptionIndex - index], { key: 'ArrowUp' });
+      });
 
-      await user.keyboard('{PageDown}');
+      fireEvent.keyDown(hoursOptions[lastOptionIndex - 3], { key: 'PageDown' });
       expect(handleChange.callCount).to.equal(0);
       expect(document.activeElement).to.equal(lastElement);
     });

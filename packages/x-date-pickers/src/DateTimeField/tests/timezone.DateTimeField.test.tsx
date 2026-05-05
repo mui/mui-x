@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
 import { DateTime } from 'luxon';
+import { fireEvent } from '@mui/internal-test-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   createPickerRenderer,
@@ -15,27 +16,24 @@ describe('<DateTimeField /> - Timezone', () => {
     describe.skipIf(!adapter.isTimezoneCompatible)('timezoneCompatible', () => {
       const format = `${adapter.formats.keyboardDate} ${adapter.formats.hours24h}`;
 
-      const fillEmptyValue = async (
-        response: ReturnType<typeof renderWithProps>,
-        timezone: string,
-      ) => {
-        await response.selectSection('month');
+      const fillEmptyValue = (response: ReturnType<typeof renderWithProps>, timezone: string) => {
+        response.selectSection('month');
 
         // Set month
-        await response.user.keyboard('{ArrowDown}');
-        await response.user.keyboard('{ArrowRight}');
+        fireEvent.keyDown(response.getActiveSection(0), { key: 'ArrowDown' });
+        fireEvent.keyDown(response.getActiveSection(0), { key: 'ArrowRight' });
 
         // Set day
-        await response.user.keyboard('{ArrowDown}');
-        await response.user.keyboard('{ArrowRight}');
+        fireEvent.keyDown(response.getActiveSection(1), { key: 'ArrowDown' });
+        fireEvent.keyDown(response.getActiveSection(1), { key: 'ArrowRight' });
 
         // Set year
-        await response.user.keyboard('{ArrowDown}');
-        await response.user.keyboard('{ArrowRight}');
+        fireEvent.keyDown(response.getActiveSection(2), { key: 'ArrowDown' });
+        fireEvent.keyDown(response.getActiveSection(2), { key: 'ArrowRight' });
 
         // Set hours
-        await response.user.keyboard('{ArrowDown}');
-        await response.user.keyboard('{ArrowRight}');
+        fireEvent.keyDown(response.getActiveSection(3), { key: 'ArrowDown' });
+        fireEvent.keyDown(response.getActiveSection(3), { key: 'ArrowRight' });
 
         return adapter.setHours(
           adapter.setDate(adapter.setMonth(adapter.date(undefined, timezone), 11), 31),
@@ -43,14 +41,14 @@ describe('<DateTimeField /> - Timezone', () => {
         );
       };
 
-      it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', async () => {
+      it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
         const onChange = spy();
         const view = renderWithProps({
           onChange,
           format,
         });
 
-        const expectedDate = await fillEmptyValue(view, 'default');
+        const expectedDate = fillEmptyValue(view, 'default');
 
         // Check the rendered value (uses default timezone, for example: UTC, see TZ env variable)
         expectFieldValue(view.getSectionsContainer(), '12/31/2022 23');
@@ -68,14 +66,14 @@ describe('<DateTimeField /> - Timezone', () => {
 
       TIMEZONE_TO_TEST.forEach((timezone) => {
         describe(`Timezone: ${timezone}`, () => {
-          it('should use timezone prop for onChange and rendering when no value is provided', async () => {
+          it('should use timezone prop for onChange and rendering when no value is provided', () => {
             const onChange = spy();
             const view = renderWithProps({
               onChange,
               format,
               timezone,
             });
-            const expectedDate = await fillEmptyValue(view, timezone);
+            const expectedDate = fillEmptyValue(view, timezone);
 
             // Check the rendered value (uses timezone prop)
             expectFieldValue(view.getSectionsContainer(), '12/31/2022 23');
@@ -86,7 +84,7 @@ describe('<DateTimeField /> - Timezone', () => {
             expect(actualDate).toEqualDateTime(expectedDate);
           });
 
-          it('should use timezone prop for rendering and value timezone for onChange when a value is provided', async () => {
+          it('should use timezone prop for rendering and value timezone for onChange when a value is provided', () => {
             const onChange = spy();
             const view = renderWithProps({
               defaultValue: adapter.date(undefined, timezone),
@@ -95,8 +93,8 @@ describe('<DateTimeField /> - Timezone', () => {
               timezone: 'America/Chicago',
             });
 
-            await view.selectSection('month');
-            await view.user.keyboard('{ArrowDown}');
+            view.selectSection('month');
+            fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
 
             // Check the rendered value (uses America/Chicago timezone)
             expectFieldValue(view.getSectionsContainer(), '05/14/2022 19');

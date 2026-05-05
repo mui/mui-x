@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { screen, fireEvent } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
@@ -29,19 +29,20 @@ describe('<MobileDatePicker /> - Describe Value', () => {
 
       expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: async (value, { isOpened, applySameValue, user }) => {
+    setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
-        await openPicker(user, { type: 'date' });
+        openPicker({ type: 'date' });
       }
 
       const newValue = applySameValue ? value! : adapterToUse.addDays(value!, 1);
-      await user.click(
+      fireEvent.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
 
       // Close the Picker to return to the initial state
       if (!isOpened) {
-        await user.keyboard('{Escape}');
+        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
+        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
       }
 
       return newValue;
