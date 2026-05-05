@@ -169,7 +169,7 @@ export function useFieldRootProps(
   });
 
   const containerClickTimeout = useTimeout();
-  const handleClick = useEventCallback((event: React.MouseEvent) => {
+  const handleClick = useEventCallback(() => {
     if (disabled || !domGetters.isReady()) {
       return;
     }
@@ -200,17 +200,42 @@ export function useFieldRootProps(
       return;
     }
 
-    // Ignore clicks that did not land on a section. Section spans and contents
-    // already handle their own selection via onClick/onFocus, so the root
-    // handler only needs to ensure the field is marked as focused.
-    const clickedSectionIndex = domGetters.getSectionIndexFromDOMElement(event.target as Element);
-    if (clickedSectionIndex == null) {
-      return;
-    }
-
+    // Section clicks were already handled in `handleMouseDown` (see below) /
+    // by the section's own `onFocus`. Just make sure the field is marked as
+    // focused.
     if (!focused) {
       setFocused(true);
     }
+  });
+
+  // Suppress the browser's focus delegation onto the closest `contenteditable`
+  // descendant (a Chromium quirk that, combined with our flex layout, causes
+  // clicks on a non-section ancestor to focus the nearest section). Section
+  // spans `stopPropagation` on their own pointer events, so this handler only
+  // fires for clicks within the sections container that did NOT land on a
+  // section. We then mimic the native "click anywhere on the input focuses
+  // its closest editable bit" behavior by manually focusing the section
+  // whose horizontal center is nearest the click point. Adornments
+  // (open/clear buttons) live outside the sections container; we leave them
+  // alone so their own focus and click behavior is unchanged.
+  const handleMouseDown = useEventCallback((event: React.MouseEvent) => {
+    if (disabled || !domGetters.isReady() || parsedSelectedSections === 'all') {
+      return;
+    }
+    if (event.button !== 0) {
+      return;
+    }
+    const root = domGetters.getRoot();
+    if (!root.contains(event.target as Node)) {
+      return;
+    }
+    event.preventDefault();
+    const closestSectionIndex = findClosestSectionIndexToPoint(root, event.clientX);
+    if (closestSectionIndex == null) {
+      return;
+    }
+    setFocused(true);
+    setSelectedSections(closestSectionIndex);
   });
 
   const handleInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {
@@ -293,6 +318,7 @@ export function useFieldRootProps(
     onBlur: handleBlur,
     onFocus: handleFocus,
     onClick: handleClick,
+    onMouseDown: handleMouseDown,
     onPaste: handlePaste,
     onInput: handleInput,
 
@@ -300,6 +326,30 @@ export function useFieldRootProps(
     contentEditable: parsedSelectedSections === 'all',
     tabIndex: internalPropsWithDefaults.disabled || parsedSelectedSections === 0 ? -1 : 0, // TODO: Try to set to undefined when there is a section selected.
   };
+}
+
+/**
+ * Returns the index of the section whose horizontal center is closest to the
+ * given page-relative `x` coordinate. Falls back to the first or last section
+ * when the click is to the left of, or to the right of, all sections.
+ */
+function findClosestSectionIndexToPoint(root: HTMLElement, clientX: number): number | null {
+  const sections = root.querySelectorAll<HTMLElement>('[role="spinbutton"]');
+  if (sections.length === 0) {
+    return null;
+  }
+  let closestIndex = 0;
+  let closestDistance = Infinity;
+  for (let i = 0; i < sections.length; i += 1) {
+    const rect = sections[i].getBoundingClientRect();
+    const center = (rect.left + rect.right) / 2;
+    const distance = Math.abs(clientX - center);
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestIndex = i;
+    }
+  }
+  return closestIndex;
 }
 
 function getDeltaFromKeyCode(keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End'>) {
@@ -439,6 +489,7 @@ interface UseFieldRootPropsReturnValue {
   onBlur: React.FocusEventHandler<HTMLDivElement>;
   onFocus: React.FocusEventHandler<HTMLDivElement>;
   onClick: React.MouseEventHandler<HTMLDivElement>;
+  onMouseDown: React.MouseEventHandler<HTMLDivElement>;
   onPaste: React.ClipboardEventHandler<HTMLDivElement>;
   onInput: React.FormEventHandler<HTMLDivElement>;
   contentEditable: boolean;

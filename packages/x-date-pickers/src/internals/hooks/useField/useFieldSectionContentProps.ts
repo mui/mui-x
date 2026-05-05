@@ -145,6 +145,15 @@ export function useFieldSectionContentProps(
     event.dataTransfer.dropEffect = 'none';
   });
 
+  // Stop pointer events from bubbling to the field root. The root has its own
+  // mousedown handler that suppresses the browser's focus delegation onto the
+  // closest `contenteditable` and manually focuses the section nearest the
+  // click point. For clicks that already land directly on a section, native
+  // focus is the correct behavior, so we keep the parent handler from firing.
+  const handlePointerEventStopPropagation = useEventCallback((event: React.SyntheticEvent) => {
+    event.stopPropagation();
+  });
+
   const createFocusHandler = React.useCallback(
     (sectionIndex: number) => () => {
       if (disabled) {
@@ -167,7 +176,9 @@ export function useFieldSectionContentProps(
         // Event handlers
         onInput: handleInput,
         onPaste: handlePaste,
+        onMouseDown: handlePointerEventStopPropagation,
         onMouseUp: handleMouseUp,
+        onPointerDown: handlePointerEventStopPropagation,
         onDragOver: handleDragOver,
         onFocus: createFocusHandler(sectionIndex),
 
@@ -184,13 +195,7 @@ export function useFieldSectionContentProps(
 
         // Other
         tabIndex: !isEditable || isContainerEditable || sectionIndex > 0 ? -1 : 0,
-        // Only the currently selected section is `contenteditable`. Marking
-        // every section editable opens up Chromium's quirk of delegating focus
-        // from a click on a non-editable ancestor to the nearest
-        // `contenteditable` descendant -- e.g. clicking outside the field but
-        // inside a wrapping flex container would focus the closest section.
-        // See https://stackoverflow.com/questions/34354085/clicking-outside-a-contenteditable-div-stills-give-focus-to-it
-        contentEditable: isEditable && parsedSelectedSections === sectionIndex,
+        contentEditable: !isContainerEditable && !disabled && !readOnly,
         role: 'spinbutton',
         'data-range-position': (section as FieldRangeSection).dateName || undefined,
         spellCheck: isEditable ? false : undefined,
@@ -208,13 +213,13 @@ export function useFieldSectionContentProps(
       disabled,
       readOnly,
       isEditable,
-      parsedSelectedSections,
       translations,
       adapter,
       handleInput,
       handlePaste,
       handleMouseUp,
       handleDragOver,
+      handlePointerEventStopPropagation,
       createFocusHandler,
       fieldValueManager,
       value,

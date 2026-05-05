@@ -73,16 +73,18 @@ describe('<DateField /> - Selection', () => {
   });
 
   describe('Click on a non-section element inside the field root', () => {
-    it('should not select a section when clicking on a non-section descendant of the field root', () => {
+    it('should select the section closest to the click point when clicking on a non-section descendant of the field root', () => {
       const view = renderWithProps({});
 
-      // Clicks that bubble up to the root but did not land on a section span
-      // (e.g. padding, separator gaps) must be a no-op for selection.
+      // Clicks that did not land on a section span (e.g. padding, separator
+      // gaps, the area to the right of the last section) should focus the
+      // section closest to the click point so the field behaves like a native
+      // input.
       const sectionsContainer = view.getSectionsContainer();
       fireEvent.mouseDown(sectionsContainer);
       fireEvent.click(sectionsContainer);
 
-      expect(getCleanedSelectedContent()).to.equal('');
+      expect(getCleanedSelectedContent()).not.to.equal('');
     });
 
     it('should still select a section when clicking directly on it', () => {
