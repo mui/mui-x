@@ -3,6 +3,7 @@ import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { type ChartsClipPathProps } from '../ChartsClipPath';
 import { type ChartsRadialGridProps } from '../ChartsRadialGrid';
+import { type ChartsRadialAxisHighlightProps } from '../ChartsRadialAxisHighlight';
 import { type ChartsLegendSlotExtension } from '../ChartsLegend';
 import { type ChartsOverlayProps } from '../ChartsOverlay';
 
@@ -35,6 +36,7 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
     disableLineItemHighlight,
     hideLegend,
     grid,
+    axisHighlight,
     children,
     slots,
     slotProps,
@@ -85,6 +87,11 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
 
   const gridProps: ChartsRadialGridProps | undefined = grid;
 
+  const axisHighlightProps: ChartsRadialAxisHighlightProps = {
+    rotation: 'line' as const,
+    ...axisHighlight,
+  };
+
   const clipPathGroupProps = {
     clipPath: `url(#${clipPathId})`,
   };
@@ -114,6 +121,7 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
     chartsWrapperProps,
     chartsContainerProps,
     gridProps,
+    axisHighlightProps,
     clipPathProps,
     clipPathGroupProps,
     overlayProps,

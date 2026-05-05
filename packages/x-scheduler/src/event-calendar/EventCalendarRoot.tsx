@@ -10,15 +10,15 @@ import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
   eventCalendarPreferenceSelectors,
   eventCalendarViewSelectors,
-} from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+} from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { ErrorContainer } from '../internals/components/error-container';
 import { WeekView } from '../week-view/WeekView';
 import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from './header-toolbar';
-import { ResourcesLegend } from './resources-legend';
+import { ResourcesTree } from './resources-tree';
 import { MiniCalendar } from './mini-calendar';
 import { useEventCalendarStyledContext } from './EventCalendarStyledContext';
 
@@ -147,7 +147,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
             <EventCalendarSidePanel className={classes.sidePanel}>
               <MiniCalendar />
               <Divider className={classes.sidePanelDivider} />
-              <ResourcesLegend />
+              <ResourcesTree />
             </EventCalendarSidePanel>
           </Collapse>
 
