@@ -89,6 +89,7 @@ StandaloneAgendaView.propTypes = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * The view initially displayed in the calendar.
@@ -188,6 +189,7 @@ StandaloneAgendaView.propTypes = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * Config of the preferences menu.
@@ -202,6 +204,7 @@ StandaloneAgendaView.propTypes = {
       toggleEmptyDaysInAgenda: PropTypes.bool,
       toggleWeekendVisibility: PropTypes.bool,
       toggleWeekNumberVisibility: PropTypes.bool,
+      toggleWeekStartsOn: PropTypes.bool,
     }),
   ]),
   /**

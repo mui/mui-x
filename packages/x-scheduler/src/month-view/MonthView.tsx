@@ -125,11 +125,12 @@ const MONTH_VIEW_CONFIG: EventCalendarViewConfig = {
     (state: State) => state.adapter,
     schedulerOtherSelectors.visibleDate,
     eventCalendarPreferenceSelectors.showWeekends,
-    (adapter, visibleDate, showWeekends) =>
+    eventCalendarPreferenceSelectors.weekStartsOn,
+    (adapter, visibleDate, showWeekends, weekStartsOn) =>
       getDayList({
         adapter,
-        start: adapter.startOfWeek(adapter.startOfMonth(visibleDate)),
-        end: adapter.endOfWeek(adapter.endOfMonth(visibleDate)),
+        start: adapter.startOfWeek(adapter.startOfMonth(visibleDate), weekStartsOn),
+        end: adapter.endOfWeek(adapter.endOfMonth(visibleDate), weekStartsOn),
         excludeWeekends: !showWeekends,
       }),
   ),

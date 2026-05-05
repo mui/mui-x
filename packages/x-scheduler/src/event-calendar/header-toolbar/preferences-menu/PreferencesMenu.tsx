@@ -80,6 +80,10 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
     store.setPreferences({ ampm: value === '12' }, event);
   };
 
+  const handleWeekStartsOnChange = (value: 0 | 1 | 6, event: Event) => {
+    store.setPreferences({ weekStartsOn: value }, event);
+  };
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -134,9 +138,15 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
 
   const showSpecificOptions = visibleViewSpecificOptions.length > 0;
   const showTimeFormatSubmenu = preferencesMenuConfig?.toggleAmpm !== false;
+  const showWeekStartsOnSubmenu = preferencesMenuConfig?.toggleWeekStartsOn !== false;
 
   // Early return if no menu items to show
-  if (!showTimeFormatSubmenu && visibleOptions.length === 0 && !showSpecificOptions) {
+  if (
+    !showTimeFormatSubmenu &&
+    !showWeekStartsOnSubmenu &&
+    visibleOptions.length === 0 &&
+    !showSpecificOptions
+  ) {
     return null;
   }
 
@@ -243,9 +253,44 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
             </PreferencesMenuListItemIcon>
           </MenuItem>
         )}
-        {showSpecificOptions && (visibleOptions.length > 0 || showTimeFormatSubmenu) && (
+        {showWeekStartsOnSubmenu && (visibleOptions.length > 0 || showTimeFormatSubmenu) && (
           <Divider className={classes.preferencesMenuDivider} />
         )}
+        {showWeekStartsOnSubmenu && (
+          <PreferencesMenuListSubheader className={classes.preferencesMenuListSubheader}>
+            {localeText.startWeekOn}
+          </PreferencesMenuListSubheader>
+        )}
+        {showWeekStartsOnSubmenu &&
+          (
+            [
+              { value: 0, label: localeText.weekdaySunday },
+              { value: 1, label: localeText.weekdayMonday },
+              { value: 6, label: localeText.weekdaySaturday },
+            ] as const
+          ).map(({ value, label }) => (
+            <MenuItem
+              className={classes.preferencesMenuItem}
+              key={value}
+              role="menuitemradio"
+              aria-checked={preferences.weekStartsOn === value}
+              onClick={(event) => {
+                handleWeekStartsOnChange(value, event.nativeEvent);
+              }}
+            >
+              <ListItemText className={classes.preferencesMenuListItemText}>{label}</ListItemText>
+              <PreferencesMenuListItemIcon
+                className={classes.preferencesMenuListItemIcon}
+                data-checked={preferences.weekStartsOn === value}
+              >
+                <CheckIcon fontSize="small" />
+              </PreferencesMenuListItemIcon>
+            </MenuItem>
+          ))}
+        {showSpecificOptions &&
+          (visibleOptions.length > 0 || showTimeFormatSubmenu || showWeekStartsOnSubmenu) && (
+            <Divider className={classes.preferencesMenuDivider} />
+          )}
         {showSpecificOptions && (
           <PreferencesMenuListSubheader className={classes.preferencesMenuListSubheader}>
             {localeText.viewSpecificOptions(currentView)}

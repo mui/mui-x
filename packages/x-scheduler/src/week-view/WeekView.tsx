@@ -13,18 +13,22 @@ import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 const WEEK_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addWeeks(
-      state.adapter.startOfWeek(schedulerOtherSelectors.visibleDate(state)),
+      state.adapter.startOfWeek(
+        schedulerOtherSelectors.visibleDate(state),
+        eventCalendarPreferenceSelectors.weekStartsOn(state),
+      ),
       delta,
     ),
   visibleDaysSelector: createSelectorMemoized(
     (state: State) => state.adapter,
     schedulerOtherSelectors.visibleDate,
     eventCalendarPreferenceSelectors.showWeekends,
-    (adapter, visibleDate, showWeekends) =>
+    eventCalendarPreferenceSelectors.weekStartsOn,
+    (adapter, visibleDate, showWeekends, weekStartsOn) =>
       getDayList({
         adapter,
-        start: adapter.startOfWeek(visibleDate),
-        end: adapter.endOfWeek(visibleDate),
+        start: adapter.startOfWeek(visibleDate, weekStartsOn),
+        end: adapter.endOfWeek(visibleDate, weekStartsOn),
         excludeWeekends: !showWeekends,
       }),
   ),

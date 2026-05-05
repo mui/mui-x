@@ -27,6 +27,13 @@ export interface EventCalendarPreferences extends SchedulerPreferences {
    * @default true
    */
   showEmptyDaysInAgenda: boolean;
+  /**
+   * The day the week starts on.
+   * 0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday.
+   * When not set, the locale default is used.
+   * @default undefined
+   */
+  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
 }
 
 export interface EventCalendarPreferencesMenuConfig {
@@ -50,4 +57,9 @@ export interface EventCalendarPreferencesMenuConfig {
    * @default true
    */
   toggleEmptyDaysInAgenda: boolean;
+  /**
+   * Whether the menu item to change the first day of the week is visible.
+   * @default true
+   */
+  toggleWeekStartsOn: boolean;
 }
