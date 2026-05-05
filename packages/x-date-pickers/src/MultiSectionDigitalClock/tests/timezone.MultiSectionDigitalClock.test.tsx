@@ -64,8 +64,11 @@ describe('<MultiSectionDigitalClock /> - Timezone', () => {
   // `describeAdapters` hardcodes a `clockConfig` on a non-transition day
   // (June 15), so its tests never put `now` on a transition day. Mock the
   // system clock to the spring-forward day per adapter to actually reproduce
-  // the regression.
-  (['dayjs', 'luxon', 'moment'] as const).forEach((adapterName) => {
+  // the regression. `date-fns` is included even though it is currently
+  // timezone-incompatible (so the `timezone` prop is a no-op and the bug
+  // can only be triggered through the system TZ) — locks the behavior in
+  // before TZ support lands.
+  (['dayjs', 'luxon', 'moment', 'date-fns'] as const).forEach((adapterName) => {
     describe(`DST spring-forward — ${adapterName} adapter, system clock on DST day`, () => {
       const { render, adapter } = createPickerRenderer({
         adapterName,
