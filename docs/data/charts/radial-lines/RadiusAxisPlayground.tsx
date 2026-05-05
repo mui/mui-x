@@ -25,7 +25,7 @@ export default function RadiusAxisPlayground() {
             defaultValue: 'center',
           },
           tickSize: { knob: 'number', defaultValue: 6, min: -20, max: 20 },
-          angle: {
+          position: {
             knob: 'number',
             defaultValue: -90,
             min: -180,
@@ -83,7 +83,7 @@ export default function RadiusAxisPlayground() {
               <ChartsSvgLayer>
                 <Unstable_ChartsRadialGrid rotation radius />
                 <ChartsRadiusAxis
-                  angle={props.angle}
+                  position={props.position}
                   disableLine={props.disableLine}
                   disableTicks={props.disableTicks}
                   tickSize={props.tickSize}
@@ -109,7 +109,7 @@ export default function RadiusAxisPlayground() {
   <Unstable_ChartsRadialGrid rotation radius />
   <ChartsRadiusAxis
 ${[
-  `angle={${props.angle}}`,
+  `position={${props.position}}`,
   `tickSize={${props.tickSize}}`,
   props.disableLine && 'disableLine',
   props.disableTicks && 'disableTicks',

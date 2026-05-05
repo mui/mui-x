@@ -1,6 +1,10 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "axisHighlight": {
+      "description": "The configuration of axes highlight.",
+      "seeMoreText": "See {{link}} for more details."
+    },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -17,7 +21,7 @@
     "experimentalFeatures": {
       "description": "Options to enable features planned for the next major."
     },
-    "grid": { "description": "Option to display a cartesian grid in the background." },
+    "grid": { "description": "Option to display a radial grid in the background." },
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
@@ -104,6 +108,7 @@
     "line": "The component that renders the line.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "radialLineHighlight": "",
     "toolbar": "Custom component for the toolbar.",
     "tooltip": "Custom component for the tooltip popper."
   }

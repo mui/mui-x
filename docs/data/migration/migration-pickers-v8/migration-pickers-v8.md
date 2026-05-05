@@ -59,6 +59,10 @@ Make sure to double-check them to avoid unexpected changes in your flow.
 If you have suggestions for how we could improve behaviors in the future, feel free to open a [GitHub issue](https://github.com/mui/mui-x/issues/new/choose) to discuss it.
 :::
 
+## Update your license key (Pro and Premium)
+
+{{"component": "modules/components/V9LicenseUpgradeWarning.js"}}
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v9. You can run `v9.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v9.0.0/preset-safe` to target the other packages as well.

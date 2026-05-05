@@ -12,9 +12,10 @@ import { type BarItem, type BarLabelContext } from '../../BarChart';
 
 export type BarValueType = number;
 
-export interface BarSeriesType
-  extends CommonSeriesType<BarValueType | null, 'bar'>, CartesianSeriesType, StackableSeriesType {
-  type: 'bar';
+/**
+ * @internal The series type shared by the bar and radialBar charts
+ */
+export interface CommonBarSeriesType {
   /**
    * Data associated to each bar.
    */
@@ -41,11 +42,6 @@ export interface BarSeriesType
    */
   layout?: 'horizontal' | 'vertical';
   /**
-   * Defines how stacked series handle negative values.
-   * @default 'diverging'
-   */
-  stackOffset?: StackOffsetType;
-  /**
    * If provided, the value will be used as the minimum size of the bar in pixels.
    * This is useful to avoid bars with a size of 0.
    *
@@ -63,6 +59,15 @@ export interface BarSeriesType
    * @returns {string} The formatted label.
    */
   barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
+}
+
+export interface BarSeriesType
+  extends
+    CommonSeriesType<BarValueType | null, 'bar'>,
+    CartesianSeriesType,
+    StackableSeriesType,
+    CommonBarSeriesType {
+  type: 'bar';
   /**
    * The placement of the bar label. It accepts the following values:
    * - 'center': the label is centered on the bar
@@ -70,6 +75,11 @@ export interface BarSeriesType
    * @default 'center'
    */
   barLabelPlacement?: 'center' | 'outside';
+  /**
+   * Defines how stacked series handle negative values.
+   * @default 'diverging'
+   */
+  stackOffset?: StackOffsetType;
 }
 
 /**
