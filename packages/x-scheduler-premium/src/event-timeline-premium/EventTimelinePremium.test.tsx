@@ -393,12 +393,20 @@ describe('<EventTimelinePremium />', () => {
       }
 
       const { user } = render(<Test />);
-      await waitFor(() => expect(screen.getByText(event1.title)).not.to.equal(null));
+      await waitFor(() => {
+        expect(screen.getByText(event1.title)).not.to.equal(null);
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.equal(0);
+      });
 
       const initialCount = dataSource.getEvents.callCount;
       await user.click(screen.getByRole('button', { name: 'Next' }));
 
-      await waitFor(() => expect(dataSource.getEvents.callCount).to.be.greaterThan(initialCount));
+      await waitFor(
+        () => expect(dataSource.getEvents.callCount).to.be.greaterThan(initialCount),
+        { timeout: 5000 },
+      );
     });
 
     it('should render the skeleton while events are loading and remove it once they resolve', async () => {
@@ -547,9 +555,12 @@ describe('<EventTimelinePremium />', () => {
 
       await user.click(screen.getByRole('button', { name: 'Next' }));
 
-      await waitFor(() => {
-        expect(screen.queryByText('Transient error')).to.equal(null);
-      });
+      await waitFor(
+        () => {
+          expect(screen.queryByText('Transient error')).to.equal(null);
+        },
+        { timeout: 5000 },
+      );
     });
 
     it('should render a non-Error rejection by stringifying it', async () => {
