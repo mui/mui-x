@@ -25,6 +25,7 @@ The following team members contributed to this release:
 - [DataGrid] Fix active filter detection for array values (#22340) @MBilalShafi
 - [DataGrid] Fix crash when grouping/tree-data values match `Object.prototype` property names (#22312) @LukasTy
 - [DataGrid] Position overlays below top pinned rows (#22341) @MBilalShafi
+- [l10n] Improve Italian (it-IT) locale (#22290) @gaetanodanelli
 
 #### `@mui/x-data-grid-pro@9.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -43,6 +44,7 @@ Same changes as in `@mui/x-data-grid-pro@9.1.0`, plus:
 #### `@mui/x-date-pickers@9.1.0`
 
 - [pickers] Fix duplicate hour label in `MultiSectionDigitalClock` on DST day (#22110) @LukasTy
+- [l10n] Improve Italian (it-IT) locale (#22290) @gaetanodanelli
 
 #### `@mui/x-date-pickers-pro@9.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -90,6 +92,7 @@ Same changes as in `@mui/x-tree-view@9.1.0`.
 - [scheduler] Use TreeView for the resource sidebar (#22261) @flaviendelangle
 - [scheduler] Use fieldset/legend instead of headings for form sections in the event dialog (#22095) @Anexus5919
 - [scheduler] Added `position: relative` for consistent layout (#22284) @mustafajw07
+- [l10n] Improve Italian (it-IT) locale (#22290) @gaetanodanelli
 
 #### `@mui/x-scheduler-premium@9.0.0-alpha.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -127,7 +130,6 @@ Internal changes.
 - [internal-gestures] Inline wheel-delta clamp per axis (#22331) @JCQuintas
 - [internal-gestures] Return read-only pointer map without copy (#22330) @JCQuintas
 - [internal-gestures] Track multi-tap reset timeout to prevent leak (#22326) @JCQuintas
-- [l10n] Improve Italian (it-IT) locale (#22290) @gaetanodanelli
 
 ## 9.0.4
 
