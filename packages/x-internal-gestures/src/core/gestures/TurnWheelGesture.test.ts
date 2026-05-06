@@ -190,9 +190,9 @@ describe('TurnWheel Gesture', () => {
       return { manager, passive: getWheelPassive(spy) };
     }
 
-    it('should default passive to false when preventDefault is false', () => {
+    it('should default passive to true when preventDefault is false', () => {
       const { manager, passive } = setupWithOptions({ preventDefault: false });
-      expect(passive).toBe(false);
+      expect(passive).toBe(true);
       manager.destroy();
     });
 

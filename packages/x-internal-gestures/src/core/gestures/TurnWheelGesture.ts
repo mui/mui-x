@@ -64,7 +64,8 @@ export type TurnWheelGestureOptions<GestureName extends string> = GestureOptions
    * `event.preventDefault()` on the source wheel event.
    * Set to `false` if you need to call `preventDefault()` on the
    * `srcEvent` from the emitted gesture event yourself.
-   * @default !preventDefault
+   * Forced to `false` when `preventDefault` is `true`.
+   * @default true
    */
   passive?: boolean;
 
@@ -184,8 +185,7 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
 
   /**
    * Whether the underlying wheel listener is registered as passive.
-   * Defaults to the opposite of `preventDefault` so consumers calling
-   * `preventDefault()` on the source event keep working.
+   * Defaults to `true`; forced to `false` when `preventDefault` is `true`.
    */
   private passive: boolean;
 
@@ -197,8 +197,8 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     this.initialDelta = options.initialDelta ?? 0;
     this.invert = options.invert ?? false;
     // If `preventDefault` is true, we must set `passive` to false to allow calling `preventDefault()` on the source event.
-    // If `preventDefault` is false, we can set `passive` to whatever the user specified
-    this.passive = !this.preventDefault && options.passive !== undefined ? options.passive : false;
+    // Otherwise, default to `true` (passive) and let consumers opt out to call `preventDefault()` themselves.
+    this.passive = this.preventDefault ? false : (options.passive ?? true);
 
     this.state.totalDeltaX = this.initialDelta;
     this.state.totalDeltaY = this.initialDelta;
