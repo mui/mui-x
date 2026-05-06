@@ -3,13 +3,15 @@ import { useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
 import {
   findMinMax,
   getBandSize,
+  useAllSeriesOfType,
   type AxisId,
   type ChartSeriesDefaultized,
   type ComputedAxis,
   type ScaleName,
   type SeriesProcessorResult,
   type StackingGroupsType,
-  useAllSeriesOfType,
+  type ChartsRotationAxisProps,
+  type ChartsRadiusAxisProps,
 } from '@mui/x-charts/internals';
 import { type SeriesId } from '@mui/x-charts/models';
 
@@ -70,8 +72,8 @@ export function useRadialBarPlotData(): {
 function processRadialBarDataForPlot(
   stackingGroups: StackingGroupsType,
   series: SeriesProcessorResult<'radialBar'>['series'],
-  rotationAxes: Record<AxisId, ComputedAxis<ScaleName, any>>,
-  radiusAxes: Record<AxisId, ComputedAxis<ScaleName, any>>,
+  rotationAxes: Record<AxisId, ComputedAxis<ScaleName, any, ChartsRotationAxisProps>>,
+  radiusAxes: Record<AxisId, ComputedAxis<ScaleName, any, ChartsRadiusAxisProps>>,
   defaultRotationAxisId: AxisId,
   defaultRadiusAxisId: AxisId,
 ) {

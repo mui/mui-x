@@ -34,6 +34,8 @@ function sortPresetsByZoomOrder(
 ): EventTimelinePremiumPreset[] {
   if (process.env.NODE_ENV !== 'production') {
     if (presets.length === 0) {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         `MUI X Scheduler: EventTimelinePremium received an empty \`presets\` prop. ` +
           `This leaves the timeline without any preset to render. ` +
@@ -43,6 +45,8 @@ function sortPresetsByZoomOrder(
     }
     const unknown = presets.filter((preset) => !PRESET_ZOOM_ORDER.includes(preset));
     if (unknown.length > 0) {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         `MUI X Scheduler: EventTimelinePremium received unknown preset(s) in the \`presets\` prop: ${unknown.join(', ')}. ` +
           `These entries have no associated configuration, so the timeline cannot render them. ` +

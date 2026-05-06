@@ -23,7 +23,7 @@ const RadialBarPlotRoot = styled('g', {
 /**
  * Demos:
  *
- * - [Radial bar demonstration](https://mui.com/x/react-charts/radial-bar/)
+ * - [Radial bar demonstration](https://mui.com/x/react-charts/radial-bars/)
  *
  * API:
  *

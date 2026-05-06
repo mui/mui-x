@@ -7,14 +7,8 @@ export interface RadialBarClasses {
   root: string;
   /** Styles applied to the group surrounding a series' bar elements. */
   series: string;
-  /** Styles applied to the group surrounding a series' labels. */
-  seriesLabels: string;
   /** Styles applied to an individual bar element. */
   element: string;
-  /** Styles applied to an individual bar label. */
-  label: string;
-  /** Styles applied to a bar label when it is animated. */
-  labelAnimate: string;
 }
 
 export type RadialBarClassKey = keyof RadialBarClasses;
@@ -26,25 +20,19 @@ function getRadialBarUtilityClass(slot: string) {
 export const radialBarClasses: RadialBarClasses = generateUtilityClasses('MuiRadialBarChart', [
   'root',
   'series',
-  'seriesLabels',
   'element',
-  'label',
-  'labelAnimate',
 ]);
 
 interface UseUtilityClassesOptions {
-  skipAnimation?: boolean;
   classes?: Partial<RadialBarClasses>;
 }
 
 export const useUtilityClasses = (options?: UseUtilityClassesOptions) => {
-  const { skipAnimation, classes } = options ?? {};
+  const { classes } = options ?? {};
   const slots = {
     root: ['root'],
     series: ['series'],
-    seriesLabels: ['seriesLabels'],
     element: ['element'],
-    label: ['label', !skipAnimation && 'labelAnimate'],
   };
 
   return composeClasses(slots, getRadialBarUtilityClass, classes);

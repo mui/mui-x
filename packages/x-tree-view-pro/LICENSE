@@ -1,8 +1,10 @@
+# License
+
 Commercial License
 
 Copyright (c) 2020 Material-UI SAS
 
-MUI X Pro (https://mui.com/pricing/) is commercial software. You MUST agree to the
+MUI X Pro (https://mui.com/pricing/) is commercial software. You MUST agree to the
 End User License Agreement (EULA: https://mui.com/r/x-license-eula) to be able to
 use the software.
 
