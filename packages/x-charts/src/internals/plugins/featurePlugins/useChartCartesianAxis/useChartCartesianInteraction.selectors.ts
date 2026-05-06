@@ -1,10 +1,5 @@
 import { createSelector } from '@mui/x-internals/store';
-import type {
-  ChartsXAxisProps,
-  ChartsYAxisProps,
-  AxisId,
-  ChartsAxisProps,
-} from '../../../../models/axis';
+import type { ChartsCartesianAxisProps, AxisId, ChartsAxisProps } from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
@@ -19,17 +14,17 @@ import { type ComputeResult } from './computeAxisValue';
 
 function indexGetter(
   value: number,
-  axes: ComputeResult<ChartsXAxisProps | ChartsYAxisProps>,
+  axes: ComputeResult<ChartsCartesianAxisProps>,
   ids?: AxisId,
 ): number;
 function indexGetter(
   value: number,
-  axes: ComputeResult<ChartsXAxisProps | ChartsYAxisProps>,
+  axes: ComputeResult<ChartsCartesianAxisProps>,
   ids: AxisId[],
 ): number[];
 function indexGetter(
   value: number,
-  axes: ComputeResult<ChartsXAxisProps | ChartsYAxisProps>,
+  axes: ComputeResult<ChartsCartesianAxisProps>,
   ids: AxisId | AxisId[] = axes.axisIds[0],
 ): number | number[] {
   return Array.isArray(ids)
@@ -38,7 +33,7 @@ function indexGetter(
 }
 export const selectChartsInteractionAxisIndex = (
   value: number | null,
-  axes: ComputeResult<ChartsXAxisProps | ChartsYAxisProps>,
+  axes: ComputeResult<ChartsCartesianAxisProps>,
   id: AxisId | undefined,
 ) => {
   if (value === null) {

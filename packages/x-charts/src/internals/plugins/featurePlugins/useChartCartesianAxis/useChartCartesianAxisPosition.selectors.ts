@@ -5,30 +5,14 @@ import { getBandSize } from '../../../../internals/getBandSize';
 import { isBandScale } from '../../../../internals/scaleGuards';
 import { getDataIndexForOrdinalScaleValue } from '../../../../internals/invertScale';
 import type {
-  ChartsRadiusAxisProps,
-  ChartsRotationAxisProps,
-  ChartsXAxisProps,
-  ChartsYAxisProps,
+  ChartsRadialAxisProps,
+  ChartsCartesianAxisProps,
   ComputedAxis,
 } from '../../../../models/axis';
 import type { ScaleName, BarItemIdentifier, SeriesId } from '../../../../models';
 
 export function getBandIndex(
-  bandAxis: ComputedAxis<ScaleName, any, ChartsXAxisProps | ChartsYAxisProps>,
-  stackConfig: { groupNumber: number; groupIndex: number },
-  coordinate: number,
-): number;
-export function getBandIndex(
-  bandAxis: ComputedAxis<ScaleName, any, ChartsRotationAxisProps | ChartsRadiusAxisProps>,
-  stackConfig: { groupNumber: number; groupIndex: number },
-  coordinate: number,
-): number;
-export function getBandIndex(
-  bandAxis: ComputedAxis<
-    ScaleName,
-    any,
-    ChartsXAxisProps | ChartsYAxisProps | ChartsRotationAxisProps | ChartsRadiusAxisProps
-  >,
+  bandAxis: ComputedAxis<ScaleName, any, ChartsCartesianAxisProps | ChartsRadialAxisProps>,
   stackConfig: { groupNumber: number; groupIndex: number },
   coordinate: number,
 ): number {
@@ -40,13 +24,8 @@ export function getBandIndex(
   const { barWidth, offset } = getBandSize(
     bandAxis.scale.bandwidth(),
     stackConfig.groupNumber,
-    (
-      bandAxis as ComputedAxis<
-        'band',
-        any,
-        ChartsXAxisProps | ChartsYAxisProps | ChartsRotationAxisProps | ChartsRadiusAxisProps
-      >
-    ).barGapRatio,
+    (bandAxis as ComputedAxis<'band', any, ChartsCartesianAxisProps | ChartsRadialAxisProps>)
+      .barGapRatio,
   );
 
   const barOffset = stackConfig.groupIndex * (barWidth + offset);
