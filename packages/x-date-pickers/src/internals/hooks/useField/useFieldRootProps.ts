@@ -210,14 +210,15 @@ export function useFieldRootProps(
 
   // Suppress the browser's focus delegation onto the closest `contenteditable`
   // descendant (a Chromium quirk that, combined with our flex layout, causes
-  // clicks on a non-section ancestor to focus the nearest section). Section
-  // spans `stopPropagation` on their own pointer events, so this handler only
-  // fires for clicks within the sections container that did NOT land on a
-  // section. We then mimic the native "click anywhere on the input focuses
-  // its closest editable bit" behavior by manually focusing the section
-  // whose horizontal center is nearest the click point. Adornments
-  // (open/clear buttons) live outside the sections container; we leave them
-  // alone so their own focus and click behavior is unchanged.
+  // clicks on a non-section ancestor to focus the nearest section). For
+  // clicks that land directly on a section, native focus is the right
+  // behavior, so we leave them alone. For clicks on the sections container's
+  // padding, separator gaps, or empty space to the right of the last section,
+  // we suppress the native delegation and manually focus the section whose
+  // horizontal center is nearest the click point -- mimicking the native
+  // "click anywhere on the input focuses its closest editable bit" behavior.
+  // Adornments (open/clear buttons) live outside the sections container; the
+  // `root.contains(event.target)` check below leaves them untouched.
   const handleMouseDown = useEventCallback((event: React.MouseEvent) => {
     if (disabled || !domGetters.isReady() || parsedSelectedSections === 'all') {
       return;
@@ -225,8 +226,14 @@ export function useFieldRootProps(
     if (event.button !== 0) {
       return;
     }
+    const target = event.target as Element;
     const root = domGetters.getRoot();
-    if (!root.contains(event.target as Node)) {
+    if (!root.contains(target)) {
+      return;
+    }
+    // Click landed on a section span (or descendant) -- let native focus
+    // handle it.
+    if (target.closest('[data-sectionindex]')) {
       return;
     }
     event.preventDefault();

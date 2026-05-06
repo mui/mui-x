@@ -145,15 +145,6 @@ export function useFieldSectionContentProps(
     event.dataTransfer.dropEffect = 'none';
   });
 
-  // Stop pointer events from bubbling to the field root. The root has its own
-  // mousedown handler that suppresses the browser's focus delegation onto the
-  // closest `contenteditable` and manually focuses the section nearest the
-  // click point. For clicks that already land directly on a section, native
-  // focus is the correct behavior, so we keep the parent handler from firing.
-  const handlePointerEventStopPropagation = useEventCallback((event: React.SyntheticEvent) => {
-    event.stopPropagation();
-  });
-
   const createFocusHandler = React.useCallback(
     (sectionIndex: number) => () => {
       if (disabled) {
@@ -176,9 +167,7 @@ export function useFieldSectionContentProps(
         // Event handlers
         onInput: handleInput,
         onPaste: handlePaste,
-        onMouseDown: handlePointerEventStopPropagation,
         onMouseUp: handleMouseUp,
-        onPointerDown: handlePointerEventStopPropagation,
         onDragOver: handleDragOver,
         onFocus: createFocusHandler(sectionIndex),
 
@@ -219,7 +208,6 @@ export function useFieldSectionContentProps(
       handlePaste,
       handleMouseUp,
       handleDragOver,
-      handlePointerEventStopPropagation,
       createFocusHandler,
       fieldValueManager,
       value,
