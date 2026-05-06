@@ -47,16 +47,11 @@ export const getHourSectionOptions = ({
     return isSelected(hour, adapter.getHours(valueOrReferenceDate));
   };
 
-  // Anchor label generation to a fixed non-transition reference day
-  // (month=0, day=15) so `adapter.setHours(reference, N)` always yields a
-  // date whose local hour is `N`. On a DST transition day, setting a
-  // non-existent hour rolls forward and produces duplicate labels — see
-  // https://github.com/mui/mui-x/issues/22084.
-  // Order matters: `setMonth` runs first so any day-overflow on the wrap
-  // (e.g. May 31 → Feb 31) is harmless because `setDate(_, 15)` lands inside
-  // every month. Non-Gregorian adapters (Hijri/Jalali) compute different
-  // calendar fields here, but they are all `isTimezoneCompatible === false`
-  // so the labels they produce are unaffected by DST in any case.
+  // Anchor label generation to a fixed non-transition day (month=0, day=15) —
+  // `adapter.setHours(now, N)` on a transition day can roll forward and emit
+  // duplicate labels (see https://github.com/mui/mui-x/issues/22084). Order:
+  // `setMonth` first so day-overflow is harmless; non-Gregorian adapters land
+  // on a different month-15 here but are all TZ-incompatible.
   const labelReferenceDate = adapter.setDate(adapter.setMonth(adapter.startOfDay(now), 0), 15);
 
   const endHour = ampm ? 11 : 23;

@@ -17,9 +17,8 @@ const HOURS_24H = Array.from({ length: 24 }, (_, h) => h.toString().padStart(2, 
 
 describe('<MultiSectionDigitalClock /> - Timezone', () => {
   describeAdapters('DST handling', MultiSectionDigitalClock, ({ adapter, render }) => {
-    // `describeAdapters` pins `now` to June 15. Each scenario below overrides
-    // it via `vi.setSystemTime` so `now` lands on the relevant transition day —
-    // that is where https://github.com/mui/mui-x/issues/22084 actually surfaces.
+    // `describeAdapters` pins `now` to June 15; each scenario below overrides
+    // it via `vi.setSystemTime` to land on the relevant transition day.
 
     describe('spring-forward day', () => {
       beforeEach(() => {
@@ -43,9 +42,8 @@ describe('<MultiSectionDigitalClock /> - Timezone', () => {
       });
 
       it('should render exactly one non-disabled "3 hours" entry', () => {
-        // Issue #22084 specifically reported a duplicate "3 hours" entry
-        // rendered as disabled (because hour=2 had its label rolled forward
-        // to "03"). Without the fix, `getAllByRole` returns 2 matches.
+        // Issue #22084: duplicate disabled "3 hours" entry. Without the fix
+        // `getAllByRole` returns 2 matches.
         const value = adapter.date('2026-03-08T03:00:00', 'America/Chicago');
         render(<MultiSectionDigitalClock defaultValue={value} timezone="America/Chicago" ampm />);
 
@@ -101,9 +99,8 @@ describe('<MultiSectionDigitalClock /> - Timezone', () => {
     });
 
     describe.skipIf(!adapter.isTimezoneCompatible)('midnight DST transition', () => {
-      // Brazil's spring-forward used to happen at midnight (00:00 → 01:00) —
-      // last observed on 2018-11-04 in `America/Sao_Paulo`. Skipped on TZ-
-      // incompatible adapters since the picker `timezone` prop is a no-op there.
+      // Brazil's spring-forward used to happen at midnight — last observed
+      // 2018-11-04 in `America/Sao_Paulo`.
       beforeEach(() => {
         vi.setSystemTime(new Date('2018-11-04T15:00:00.000Z'));
       });
@@ -118,9 +115,7 @@ describe('<MultiSectionDigitalClock /> - Timezone', () => {
   });
 
   describe('Custom hour format on a DST day', () => {
-    // Tests `LocalizationProvider`-level locale plumbing, which is shared
-    // infrastructure; running it on dayjs alone is enough to lock in the
-    // format-token path.
+    // `LocalizationProvider`-level plumbing; one adapter is enough.
     const { render, adapter } = createPickerRenderer({
       adapterName: 'dayjs',
       clockConfig: new Date('2026-03-08T15:00:00.000Z'),
