@@ -16,7 +16,10 @@ const apply = (
   filterValue: GridFilterItem['value'],
   cellValue: any,
 ) => {
-  const fn = operator.getApplyFilterFn({ field: 'tags', operator: operator.value, value: filterValue }, column);
+  const fn = operator.getApplyFilterFn(
+    { field: 'tags', operator: operator.value, value: filterValue },
+    column,
+  );
   if (fn === null) {
     return null;
   }

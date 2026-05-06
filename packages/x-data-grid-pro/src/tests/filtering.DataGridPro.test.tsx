@@ -1682,9 +1682,7 @@ describe('<DataGridPro /> - Filter', () => {
           <div style={{ width: 200, height: 200 }}>
             <DataGridPro
               apiRef={apiRef}
-              rows={[
-                { id: 1, tags: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript'] },
-              ]}
+              rows={[{ id: 1, tags: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript'] }]}
               columns={[
                 {
                   field: 'tags',
