@@ -110,7 +110,7 @@ export const insertDataRowInTree = ({
             groupingKey: key,
             groupingField: field,
             children: [],
-            childrenFromPath: {},
+            childrenFromPath: Object.create(null),
             childrenExpanded: false,
             serverChildrenCount,
           };
@@ -181,7 +181,7 @@ export const insertDataRowInTree = ({
         groupingKey: key,
         groupingField: field,
         children: [],
-        childrenFromPath: {},
+        childrenFromPath: Object.create(null),
         childrenExpanded: false,
       };
 
@@ -216,7 +216,7 @@ export const insertDataRowInTree = ({
           groupingKey: key,
           groupingField: field,
           children: [],
-          childrenFromPath: {},
+          childrenFromPath: Object.create(null),
           childrenExpanded: false,
         };
         tree[existingNodeIdWithPartialPath] = updateGroupDefaultExpansion(
