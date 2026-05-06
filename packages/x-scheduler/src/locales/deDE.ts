@@ -68,11 +68,8 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
 };
 
 const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Ereignisse für ${resourceName} ausblenden`,
+  // ResourcesTree
   resourcesLabel: 'Ressourcen',
-  resourcesLegendSectionLabel: 'Ressourcenlegende',
-  showEventsLabel: (resourceName) => `Ereignisse für ${resourceName} anzeigen`,
 
   // ViewSwitcher
   agenda: 'Agenda',

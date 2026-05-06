@@ -3,16 +3,16 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
-import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
-import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
-import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
+import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
+import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelinePremiumPresetSelectors,
   timelineOccurrencePlaceholderSelectors,
-} from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
-import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
-import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
+} from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
+import { schedulerNowSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   EventDialogProvider,
   EventDialogTrigger,
