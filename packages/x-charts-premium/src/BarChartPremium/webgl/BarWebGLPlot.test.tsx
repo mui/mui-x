@@ -22,11 +22,7 @@ describe('<BarWebGLPlot />', () => {
 
   it('should not render a WebGL canvas with the default renderer', () => {
     const { container } = render(
-      <BarChartPremium
-        width={400}
-        height={300}
-        series={[{ data: [1, 2, 3, 4, 5] }]}
-      />,
+      <BarChartPremium width={400} height={300} series={[{ data: [1, 2, 3, 4, 5] }]} />,
     );
 
     const canvas = container.querySelector('canvas');

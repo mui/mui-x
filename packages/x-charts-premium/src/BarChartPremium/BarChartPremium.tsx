@@ -25,7 +25,7 @@ import { useChartsContainerProProps } from '@mui/x-charts-pro/internals';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
-import { BarPlotPremium, type BarPlotPremiumRenderer } from './BarPlotPremium';
+import { BarPlotPremium, type BarPlotPremiumProps } from './BarPlotPremium';
 import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import {
@@ -37,6 +37,7 @@ import { RangeBarPlot } from './RangeBar/RangeBarPlot';
 import { FocusedRangeBar } from './RangeBar/FocusedRangeBar';
 
 import type {} from '../typeOverloads/modules';
+import type { ChartsContainerPremiumProps } from '../ChartsContainerPremium';
 
 export type RangeBarSeries = RangeBarSeriesType;
 
@@ -44,10 +45,17 @@ export interface BarChartPremiumSlots extends BarChartProSlots {}
 
 export interface BarChartPremiumSlotProps extends BarChartProSlotProps {}
 
-export interface BarChartPremiumProps extends Omit<
-  BarChartProProps,
-  'series' | 'onItemClick' | 'slots' | 'slotProps' | 'renderer'
-> {
+export interface BarChartPremiumProps
+  extends
+    Omit<
+      BarChartProProps,
+      'apiRef' | 'slots' | 'slotProps' | 'seriesConfig' | 'plugins' | 'series' | 'renderer'
+    >,
+    Omit<
+      ChartsContainerPremiumProps<'bar', BarChartPremiumPluginSignatures>,
+      'series' | 'slots' | 'slotProps'
+    >,
+    Pick<BarPlotPremiumProps, 'renderer'> {
   /**
    * Overridable component slots.
    * @default {}
@@ -70,18 +78,6 @@ export interface BarChartPremiumProps extends Omit<
    * An array of [[BarSeries]] or [[RangeBarSeries]] objects.
    */
   series: ReadonlyArray<BarSeries | RangeBarSeries>;
-  /**
-   * The type of renderer to use for the bar plot.
-   * - `svg-single`: Renders every bar in a `<rect />` element.
-   * - `svg-batch`: Batch renders bars in `<path />` elements for better performance with large datasets, at the cost of some limitations.
-   * - `webgl`: Renders bars using WebGL for better performance with very large datasets, at the cost of some limitations.
-   *                Read more: https://mui.com/x/react-charts/bars/#performance
-   *
-   * Range bar series always render as SVG regardless of this setting.
-   *
-   * @default 'svg-single'
-   */
-  renderer?: BarPlotPremiumRenderer;
 }
 
 /**
@@ -449,11 +445,12 @@ BarChartPremium.propTypes = {
    * The type of renderer to use for the bar plot.
    * - `svg-single`: Renders every bar in a `<rect />` element.
    * - `svg-batch`: Batch renders bars in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   * - `webgl`: Renders bars using WebGL for better performance with very large datasets, at the cost of some limitations.
    *                Read more: https://mui.com/x/react-charts/bars/#performance
    *
    * @default 'svg-single'
    */
-  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single', 'webgl']),
   /**
    * The series to display in the bar chart.
    * An array of [[BarSeries]] or [[RangeBarSeries]] objects.

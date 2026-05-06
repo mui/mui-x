@@ -10,6 +10,9 @@ export interface BarWebGLPlotProps {
   borderRadius?: number;
 }
 
+/**
+ * @ignore - Internal component used for rendering the bar plot using WebGL. Not exported from the package.
+ */
 export function BarWebGLPlot({ borderRadius = 0 }: BarWebGLPlotProps): React.JSX.Element | null {
   const layer = useWebGLLayer();
   const drawingArea = useDrawingArea();
