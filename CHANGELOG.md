@@ -8,7 +8,7 @@ _May 6, 2026_
 
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
-- 📊 New [RadialBarChart](https://mui.com/x/react-charts/radial-bar/) [Premium]
+- 📊 New [RadialBarChart](https://mui.com/x/react-charts/radial-bars/) [Premium]
 - ⚡️ Add a WebGL renderer to the [Scatter chart](https://mui.com/x/react-charts/scatter/#webgl-renderer), and apply the same WebGL performance patterns
   to the candlestick and heatmap [Premium]
 - 🐞 Bugfixes
