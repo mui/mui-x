@@ -108,10 +108,10 @@ Internal changes.
 ### Docs
 
 - [docs] Migrate `FlightPicker` overview demo to v9 `slotProps` shape (#22272) @LukasTy
-- [docs][scheduler] Standardize Scheduler docs style and formatting (#22161) @mapache-salvaje
-- [docs][scheduler] Add feedback form to the docs (#22237) @rita-codes
-- [docs][DataGrid] Fix `GridToolbarCustom` crash (#21950) @MBilalShafi
-- [docs][charts] Do not resolve axes (#22307) @alexfauquette
+- [docs] Standardize Scheduler docs style and formatting (#22161) @mapache-salvaje
+- [docs] Add feedback form to the scheduler docs (#22237) @rita-codes
+- [docs] Fix `GridToolbarCustom` demo crash in DataGrid (#21950) @MBilalShafi
+- [docs] Do not resolve axes in charts (#22307) @alexfauquette
 
 ### Core
 
