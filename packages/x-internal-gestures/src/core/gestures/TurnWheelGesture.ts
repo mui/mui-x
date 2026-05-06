@@ -59,6 +59,16 @@ export type TurnWheelGestureOptions<GestureName extends string> = GestureOptions
   invert?: boolean;
 
   /**
+   * Whether the underlying `wheel` event listener is registered as passive.
+   * When `true`, neither the gesture nor any consumer can call
+   * `event.preventDefault()` on the source wheel event.
+   * Set to `false` if you need to call `preventDefault()` on the
+   * `srcEvent` from the emitted gesture event yourself.
+   * @default !preventDefault
+   */
+  passive?: boolean;
+
+  /**
    * Wheel events happen on mouse mode only.
    */
   pointerMode?: never;
@@ -137,7 +147,7 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
 
   protected readonly mutableOptionsType!: Omit<
     typeof this.optionsType,
-    'name' | 'pointerMode' | 'pointerOptions'
+    'name' | 'pointerMode' | 'pointerOptions' | 'passive'
   >;
 
   protected readonly mutableStateType!: Partial<typeof this.state>;
@@ -172,6 +182,13 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
    */
   private invert: boolean;
 
+  /**
+   * Whether the underlying wheel listener is registered as passive.
+   * Defaults to the opposite of `preventDefault` so consumers calling
+   * `preventDefault()` on the source event keep working.
+   */
+  private passive: boolean;
+
   constructor(options: TurnWheelGestureOptions<GestureName>) {
     super(options);
     this.sensitivity = options.sensitivity ?? 1;
@@ -179,6 +196,9 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     this.min = options.min ?? Number.MIN_SAFE_INTEGER;
     this.initialDelta = options.initialDelta ?? 0;
     this.invert = options.invert ?? false;
+    // If `preventDefault` is true, we must set `passive` to false to allow calling `preventDefault()` on the source event.
+    // If `preventDefault` is false, we can set `passive` to whatever the user specified
+    this.passive = !this.preventDefault && options.passive !== undefined ? options.passive : false;
 
     this.state.totalDeltaX = this.initialDelta;
     this.state.totalDeltaY = this.initialDelta;
@@ -195,6 +215,7 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
       min: this.min,
       initialDelta: this.initialDelta,
       invert: this.invert,
+      passive: this.passive,
       requiredKeys: [...this.requiredKeys],
       preventIf: [...this.preventIf],
       // Apply any overrides passed to the method
@@ -215,7 +236,7 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     this.element.addEventListener('wheel', this.handleWheelEvent, {
       // Provide the `passive` value to prevent inconsistencies between chrome and safari
       // See https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#passive
-      passive: !this.preventDefault,
+      passive: this.passive,
     });
   }
 
