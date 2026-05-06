@@ -65,7 +65,7 @@ export const useRadialBarChartProps = (props: RadialBarChartProps) => {
           (_, index) => index,
         ),
       },
-    ]
+    ];
   }, [series, dataset]);
 
   const chartsContainerProps: ChartsRadialDataProviderProps<

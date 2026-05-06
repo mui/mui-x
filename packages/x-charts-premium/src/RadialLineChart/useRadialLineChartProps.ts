@@ -59,7 +59,6 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
     [disableLineItemHighlight, series],
   );
 
-
   const defaultRotationAxis = React.useMemo(() => {
     return [
       {
@@ -70,7 +69,7 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
           (_, index) => index,
         ),
       },
-    ]
+    ];
   }, [series, dataset]);
 
   const chartsContainerProps: ChartsRadialDataProviderProps<
