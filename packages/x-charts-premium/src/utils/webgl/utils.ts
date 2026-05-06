@@ -47,6 +47,42 @@ export function attachShader(
   return shader;
 }
 
+export type GrowableBuffer = {
+  buffer: WebGLBuffer;
+  /* Highest byte length ever uploaded; lets us reuse the GPU allocation via bufferSubData. */
+  capacity: number;
+  /* Identity of the last uploaded view — uploads short-circuit when the same ref comes back. */
+  lastUploaded: ArrayBufferView | null;
+};
+
+export function createGrowableBuffer(gl: WebGL2RenderingContext): GrowableBuffer {
+  return { buffer: gl.createBuffer(), capacity: 0, lastUploaded: null };
+}
+
+/**
+ * Uploads `data` into `target.buffer`. Reuses the existing GPU allocation via
+ * `bufferSubData` while the size fits, only re-allocating with `bufferData` when
+ * the data grows past the previous high-water mark. Skips the upload entirely
+ * when the same typed-array reference is passed twice in a row.
+ */
+export function uploadGrowableBuffer(
+  gl: WebGL2RenderingContext,
+  target: GrowableBuffer,
+  data: ArrayBufferView,
+) {
+  if (target.lastUploaded === data) {
+    return;
+  }
+  gl.bindBuffer(gl.ARRAY_BUFFER, target.buffer);
+  if (data.byteLength <= target.capacity) {
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, data);
+  } else {
+    gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
+    target.capacity = data.byteLength;
+  }
+  target.lastUploaded = data;
+}
+
 /**
  * Logs WebGL errors to the console in development mode.
  */
