@@ -714,10 +714,6 @@ const pages: MuiPage[] = [
             unstable: true,
           },
           {
-            pathname: '/x/react-charts/radial-axes',
-            unstable: true,
-          },
-          {
             pathname: '/x/react-charts/#planned-charts',
             title: 'Future Components',
             planned: true,
@@ -757,6 +753,10 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/localization' },
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
+              {
+                pathname: '/x/react-charts/radial-axes',
+                unstable: true,
+              },
               { pathname: '/x/react-charts/references' },
               { pathname: '/x/react-charts/toolbar' },
               { pathname: '/x/react-charts/tooltip' },
