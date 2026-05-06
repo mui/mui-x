@@ -4,9 +4,13 @@ productId: x-charts
 components: ChartsRadialDataProvider, ChartsRadialDataProviderPremium, ChartsRadialGrid, RadialBarChart, RadialBarPlot, ChartsRadiusAxis, ChartsRotationAxis
 ---
 
-# Charts - Radial Bars
+# Charts - Radial Bars [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
 
 <p class="description">Use radial bar charts to compare values along periodic categories.</p>
+
+:::info
+This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
+:::
 
 ## Basics
 

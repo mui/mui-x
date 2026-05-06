@@ -55,6 +55,19 @@ export const useRadialBarChartProps = (props: RadialBarChartProps) => {
     [series],
   );
 
+  const defaultRotationAxis = React.useMemo(() => {
+    return [
+      {
+        id: DEFAULT_ROTATION_AXIS_KEY,
+        scaleType: 'band' as const,
+        data: Array.from(
+          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
+          (_, index) => index,
+        ),
+      },
+    ]
+  }, [series, dataset]);
+
   const chartsContainerProps: ChartsRadialDataProviderProps<
     'radialBar',
     RadialBarChartPluginSignatures
@@ -66,16 +79,7 @@ export const useRadialBarChartProps = (props: RadialBarChartProps) => {
     margin,
     colors,
     dataset,
-    rotationAxis: rotationAxis ?? [
-      {
-        id: DEFAULT_ROTATION_AXIS_KEY,
-        scaleType: 'band',
-        data: Array.from(
-          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
-          (_, index) => index,
-        ),
-      },
-    ],
+    rotationAxis: rotationAxis ?? defaultRotationAxis,
     radiusAxis,
     skipAnimation,
     plugins: RADIAL_BAR_CHART_PLUGINS,
