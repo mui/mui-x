@@ -261,24 +261,23 @@ export class TurnWheelGesture<GestureName extends string> extends Gesture<Gestur
     const pointers = this.pointerManager.getPointers() || new Map();
     const pointersArray = Array.from(pointers.values());
 
-    // Update total deltas with scaled values
-    this.state.totalDeltaX += event.deltaX * this.sensitivity * (this.invert ? -1 : 1);
-    this.state.totalDeltaY += event.deltaY * this.sensitivity * (this.invert ? -1 : 1);
-    this.state.totalDeltaZ += event.deltaZ * this.sensitivity * (this.invert ? -1 : 1);
-
-    // Apply proper min/max clamping for each axis
-    // Ensure values stay between min and max bounds
-    (['totalDeltaX', 'totalDeltaY', 'totalDeltaZ'] as const).forEach((axis) => {
-      // First clamp at the minimum bound
-      if (this.state[axis] < this.min) {
-        this.state[axis] = this.min;
-      }
-
-      // Then clamp at the maximum bound
-      if (this.state[axis] > this.max) {
-        this.state[axis] = this.max;
-      }
-    });
+    // Update total deltas with scaled values, clamped to [min, max].
+    // Inlined per axis to avoid allocating an array and a closure on every
+    // wheel event, which is a high-frequency event.
+    const scale = this.sensitivity * (this.invert ? -1 : 1);
+    const { min, max } = this;
+    this.state.totalDeltaX = Math.min(
+      max,
+      Math.max(min, this.state.totalDeltaX + event.deltaX * scale),
+    );
+    this.state.totalDeltaY = Math.min(
+      max,
+      Math.max(min, this.state.totalDeltaY + event.deltaY * scale),
+    );
+    this.state.totalDeltaZ = Math.min(
+      max,
+      Math.max(min, this.state.totalDeltaZ + event.deltaZ * scale),
+    );
 
     // Emit the wheel event
     this.emitWheelEvent(pointersArray, event);
