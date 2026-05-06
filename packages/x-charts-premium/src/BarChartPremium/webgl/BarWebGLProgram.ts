@@ -4,10 +4,14 @@ import { type BarWebGLPlotData } from './useBarWebGLPlotData';
 
 interface InstancedBuffer {
   buffer: WebGLBuffer;
-  capacity: number;
-  lastUploaded: Float32Array | null;
+  // Tracked in bytes so attributes with different element types (Float32 vs
+  // Uint8) reuse the grow-only logic without comparing apples to oranges.
+  capacityBytes: number;
+  lastUploaded: ArrayBufferView | null;
   location: number;
   size: number;
+  glType: GLenum;
+  normalized: boolean;
 }
 
 export class BarWebGLProgram {
@@ -54,11 +58,40 @@ export class BarWebGLProgram {
     this.quadBuffer = uploadQuadBuffer(gl);
     this.vao = gl.createVertexArray();
 
-    this.centersBuffer = createInstancedBuffer(gl, this.program, 'a_center', 2);
-    this.halfSizesBuffer = createInstancedBuffer(gl, this.program, 'a_halfSize', 2);
-    this.colorsBuffer = createInstancedBuffer(gl, this.program, 'a_color', 4);
-    this.saturationsBuffer = createInstancedBuffer(gl, this.program, 'a_saturation', 1);
-    this.cornerRadiiBuffer = createInstancedBuffer(gl, this.program, 'a_cornerRadii', 4);
+    this.centersBuffer = createInstancedBuffer(gl, this.program, 'a_center', 2, gl.FLOAT, false);
+    this.halfSizesBuffer = createInstancedBuffer(
+      gl,
+      this.program,
+      'a_halfSize',
+      2,
+      gl.FLOAT,
+      false,
+    );
+    // Colors come in as Uint8 [0, 255]; normalized=true makes the GPU read them back as vec4 in [0, 1].
+    this.colorsBuffer = createInstancedBuffer(
+      gl,
+      this.program,
+      'a_color',
+      4,
+      gl.UNSIGNED_BYTE,
+      true,
+    );
+    this.saturationsBuffer = createInstancedBuffer(
+      gl,
+      this.program,
+      'a_saturation',
+      1,
+      gl.FLOAT,
+      false,
+    );
+    this.cornerRadiiBuffer = createInstancedBuffer(
+      gl,
+      this.program,
+      'a_cornerRadii',
+      4,
+      gl.FLOAT,
+      false,
+    );
   }
 
   setResolution(width: number, height: number) {
@@ -116,34 +149,38 @@ function createInstancedBuffer(
   program: WebGLProgram,
   name: string,
   size: number,
+  glType: GLenum,
+  normalized: boolean,
 ): InstancedBuffer {
   return {
     buffer: gl.createBuffer(),
-    capacity: 0,
+    capacityBytes: 0,
     lastUploaded: null,
     location: gl.getAttribLocation(program, name),
     size,
+    glType,
+    normalized,
   };
 }
 
 function uploadAndBindInstanced(
   gl: WebGL2RenderingContext,
   target: InstancedBuffer,
-  data: Float32Array,
+  data: ArrayBufferView,
 ) {
   gl.bindBuffer(gl.ARRAY_BUFFER, target.buffer);
 
   if (target.lastUploaded !== data) {
-    if (data.byteLength <= target.capacity) {
+    if (data.byteLength <= target.capacityBytes) {
       gl.bufferSubData(gl.ARRAY_BUFFER, 0, data);
     } else {
       gl.bufferData(gl.ARRAY_BUFFER, data, gl.DYNAMIC_DRAW);
-      target.capacity = data.byteLength;
+      target.capacityBytes = data.byteLength;
     }
     target.lastUploaded = data;
   }
 
   gl.enableVertexAttribArray(target.location);
-  gl.vertexAttribPointer(target.location, target.size, gl.FLOAT, false, 0, 0);
+  gl.vertexAttribPointer(target.location, target.size, target.glType, target.normalized, 0, 0);
   gl.vertexAttribDivisor(target.location, 1);
 }

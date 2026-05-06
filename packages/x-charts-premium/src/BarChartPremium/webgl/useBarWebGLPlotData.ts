@@ -12,17 +12,21 @@ import { parseColor } from '../../utils/webgl/parseColor';
 export interface BarWebGLPlotData {
   centers: Float32Array;
   halfSizes: Float32Array;
-  colors: Float32Array;
+  // Uint8 [0, 255]; uploaded as UNSIGNED_BYTE with normalized=true so the
+  // shader reads back vec4 in [0, 1]. Matches the convention adopted by the
+  // scatter / candlestick / heatmap WebGL programs.
+  colors: Uint8Array;
   saturations: Float32Array;
   cornerRadii: Float32Array;
   count: number;
 }
 
 const EMPTY_FLOAT32 = new Float32Array(0);
+const EMPTY_UINT8 = new Uint8Array(0);
 const EMPTY_DATA: BarWebGLPlotData = {
   centers: EMPTY_FLOAT32,
   halfSizes: EMPTY_FLOAT32,
-  colors: EMPTY_FLOAT32,
+  colors: EMPTY_UINT8,
   saturations: EMPTY_FLOAT32,
   cornerRadii: EMPTY_FLOAT32,
   count: 0,
@@ -31,7 +35,7 @@ const EMPTY_DATA: BarWebGLPlotData = {
 interface ArrayPool {
   centers: Float32Array;
   halfSizes: Float32Array;
-  colors: Float32Array;
+  colors: Uint8Array;
   saturations: Float32Array;
   cornerRadii: Float32Array;
 }
@@ -43,7 +47,7 @@ function ensureCapacity(pool: ArrayPool | null, maxCount: number): ArrayPool {
   return {
     centers: new Float32Array(maxCount * 2),
     halfSizes: new Float32Array(maxCount * 2),
-    colors: new Float32Array(maxCount * 4),
+    colors: new Uint8Array(maxCount * 4),
     saturations: new Float32Array(maxCount),
     cornerRadii: new Float32Array(maxCount * 4),
   };
@@ -183,7 +187,7 @@ export function useBarWebGLPlotData(
     return {
       centers: new Float32Array(centers.buffer, centers.byteOffset, cursor * 2),
       halfSizes: new Float32Array(halfSizes.buffer, halfSizes.byteOffset, cursor * 2),
-      colors: new Float32Array(colors.buffer, colors.byteOffset, cursor * 4),
+      colors: new Uint8Array(colors.buffer, colors.byteOffset, cursor * 4),
       saturations: new Float32Array(saturations.buffer, saturations.byteOffset, cursor),
       cornerRadii: new Float32Array(cornerRadii.buffer, cornerRadii.byteOffset, cursor * 4),
       count: cursor,
