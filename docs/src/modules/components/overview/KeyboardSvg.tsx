@@ -284,7 +284,7 @@ export default function KeyboardSvg({
   additionalSelected,
 }: KeyboardSvgProps) {
   return (
-    <svg viewBox="0 0 432 188" fill="none" xmlns="http://www.w3.org/2000/svg" tabIndex={-1}>
+    <svg viewBox="0 0 432 188" fill="none" tabIndex={-1}>
       <g className="root">
         <RootRectangle x="0.5" y="0.5" width="431" height="187" rx="7.5" />
       </g>
