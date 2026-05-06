@@ -262,13 +262,13 @@ export interface ChartsRadiusAxisProps extends ChartsAxisProps {
   /**
    * Set the position of the tick labels relative to the axis line.
    * The before/after is defined based on clockwise direction.
-   * @default 'before'
+   * @default position === 'start' ? 'before' : 'after'
    */
   tickLabelPosition?: 'center' | 'after' | 'before';
   /**
    * Set the position of the tick relative to the axis line.
    * The before/after is defined based on clockwise direction.
-   * @default 'before'
+   * @default position === 'start' ? 'before' : 'after'
    */
   tickPosition?: 'after' | 'before';
   /**
@@ -630,9 +630,9 @@ export type AxisConfig<
   MinMaxConfig<S> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
+  AxisSideConfig<AxisProps> &
   TickParams &
-  AxisConfigExtension &
-  AxisSideConfig<AxisProps>;
+  AxisConfigExtension;
 
 export interface AxisConfigExtension {}
 
