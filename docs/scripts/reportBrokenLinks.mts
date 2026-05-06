@@ -12,6 +12,13 @@ async function main() {
       // /^\/(base-ui|joy-ui|store|toolpad)(\/|$)/,
     ],
     knownTargetsDownloadUrl: ['https://v7.mui.com/material-ui/link-structure.json'],
+    // The `slots` prop description on API pages auto-renders a "See [Slots
+    // API](#slots) below for more details." link. On v8.x, components whose
+    // slots are inherited from a parent (and therefore not redeclared as a
+    // typed `XxxSlots` interface) are not picked up by the API builder, so
+    // those pages have no `#slots` section even though the prop description
+    // points to one. Ignore the resulting in-page anchor on `/x/api/*`.
+    ignores: [{ path: /^\/x\/api\//, href: '#slots' }],
   });
 
   process.exit(issues.length);
