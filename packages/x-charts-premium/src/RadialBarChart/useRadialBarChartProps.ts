@@ -3,27 +3,26 @@ import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { type ChartsClipPathProps } from '../ChartsClipPath';
 import { type ChartsRadialGridProps } from '../ChartsRadialGrid';
-import { type ChartsRadialAxisHighlightProps } from '../ChartsRadialAxisHighlight';
 import { type ChartsLegendSlotExtension } from '../ChartsLegend';
 import { type ChartsOverlayProps } from '../ChartsOverlay';
 
 import { type ChartsRadialDataProviderProps } from '../ChartsRadialDataProvider';
-import type { RadialLineChartProps } from './RadialLineChart';
+import type { RadialBarChartProps } from './RadialBarChart';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
 import {
-  RADIAL_LINE_CHART_PLUGINS,
-  type RadialLineChartPluginSignatures,
-} from './RadialLineChart.plugins';
+  RADIAL_BAR_CHART_PLUGINS,
+  type RadialBarChartPluginSignatures,
+} from './RadialBarChart.plugins';
 import { DEFAULT_ROTATION_AXIS_KEY } from '../constants';
 
 /**
- * A helper function that extracts RadialLineChartProps from the input props
- * and returns an object with props for the children components of RadialLineChart.
+ * A helper function that extracts RadialBarChartProps from the input props
+ * and returns an object with props for the children components of RadialBarChart.
  *
- * @param props The input props for RadialLineChart
- * @returns An object with props for the children components of RadialLineChart
+ * @param props The input props for RadialBarChart
+ * @returns An object with props for the children components of RadialBarChart
  */
-export const useRadialLineChartProps = (props: RadialLineChartProps) => {
+export const useRadialBarChartProps = (props: RadialBarChartProps) => {
   const {
     rotationAxis,
     radiusAxis,
@@ -33,10 +32,8 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
     margin,
     colors,
     dataset,
-    disableLineItemHighlight,
     hideLegend,
     grid,
-    axisHighlight,
     children,
     slots,
     slotProps,
@@ -52,18 +49,17 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
   const seriesWithDefault = React.useMemo(
     () =>
       series.map((s) => ({
-        disableHighlight: !!disableLineItemHighlight,
-        type: 'radialLine' as const,
+        type: 'radialBar' as const,
         ...s,
       })),
-    [disableLineItemHighlight, series],
+    [series],
   );
 
   const defaultRotationAxis = React.useMemo(() => {
     return [
       {
         id: DEFAULT_ROTATION_AXIS_KEY,
-        scaleType: 'point' as const,
+        scaleType: 'band' as const,
         data: Array.from(
           { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
           (_, index) => index,
@@ -73,8 +69,8 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
   }, [series, dataset]);
 
   const chartsContainerProps: ChartsRadialDataProviderProps<
-    'radialLine',
-    RadialLineChartPluginSignatures
+    'radialBar',
+    RadialBarChartPluginSignatures
   > = {
     ...other,
     series: seriesWithDefault,
@@ -86,15 +82,10 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
     rotationAxis: rotationAxis ?? defaultRotationAxis,
     radiusAxis,
     skipAnimation,
-    plugins: RADIAL_LINE_CHART_PLUGINS,
+    plugins: RADIAL_BAR_CHART_PLUGINS,
   };
 
   const gridProps: ChartsRadialGridProps | undefined = grid;
-
-  const axisHighlightProps: ChartsRadialAxisHighlightProps = {
-    rotation: 'line' as const,
-    ...axisHighlight,
-  };
 
   const clipPathGroupProps = {
     clipPath: `url(#${clipPathId})`,
@@ -125,7 +116,6 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
     chartsWrapperProps,
     chartsContainerProps,
     gridProps,
-    axisHighlightProps,
     clipPathProps,
     clipPathGroupProps,
     overlayProps,
