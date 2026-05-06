@@ -27,9 +27,13 @@ const params = {
     },
   ],
   rotationAxis: [
-    { scaleType: 'point' as const, data: [1, 2, 3, 4, 5], position: 'none' },
+    {
+      scaleType: 'point' as const,
+      data: [1, 2, 3, 4, 5],
+      position: 'none' as const,
+    },
   ],
-  radiusAxis: [{ position: 'none' }],
+  radiusAxis: [{ position: 'none' as const }],
   height: 400,
   grid: { rotation: true, radius: true },
 };
