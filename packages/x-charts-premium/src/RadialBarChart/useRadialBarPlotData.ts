@@ -91,7 +91,7 @@ function processRadialBarDataForPlot(
 
         const baseAxisConfig = (
           verticalLayout ? rotationAxisConfig : radiusAxisConfig
-        ) as ComputedAxis<'band'>;
+        ) as ComputedAxis<'band', any, ChartsRotationAxisProps | ChartsRadiusAxisProps>;
         const valueAxisConfig = verticalLayout ? radiusAxisConfig : rotationAxisConfig;
 
         const reverse = valueAxisConfig.reverse ?? false;

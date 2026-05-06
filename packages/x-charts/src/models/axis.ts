@@ -608,22 +608,24 @@ export type ComputedAxis<
   S extends ScaleName = ScaleName,
   V = any,
   AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
-> = MakeRequired<Omit<DefaultedAxis<S, V, AxisProps>, 'scaleType'>, 'offset'> &
-  AxisScaleConfig[S] &
-  AxisScaleComputedConfig[S] & {
-    /**
-     * An indication of the expected number of ticks.
-     */
-    tickNumber: number;
-    /**
-     * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
-     */
-    triggerTooltip?: boolean;
-    /** @ignore - internal. True when a rotation axis covers a full circle. */
-    isFullCircle?: boolean;
-  } & AxisProps &
-  (AxisProps extends ChartsXAxisProps ? AxisSideConfig<AxisProps> & { height: number } : {}) &
-  (AxisProps extends ChartsYAxisProps ? AxisSideConfig<AxisProps> & { width: number } : {});
+> = AxisProps extends any
+  ? MakeRequired<Omit<DefaultedAxis<S, V, AxisProps>, 'scaleType'>, 'offset'> &
+      AxisScaleConfig[S] &
+      AxisScaleComputedConfig[S] & {
+        /**
+         * An indication of the expected number of ticks.
+         */
+        tickNumber: number;
+        /**
+         * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
+         */
+        triggerTooltip?: boolean;
+        /** @ignore - internal. True when a rotation axis covers a full circle. */
+        isFullCircle?: boolean;
+      } & AxisProps &
+      (AxisProps extends ChartsXAxisProps ? AxisSideConfig<AxisProps> & { height: number } : {}) &
+      (AxisProps extends ChartsYAxisProps ? AxisSideConfig<AxisProps> & { width: number } : {})
+  : never;
 
 export type ComputedXAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
   S,

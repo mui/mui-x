@@ -1,17 +1,37 @@
 import { createSelector } from '@mui/x-internals/store';
-import { type ComputedAxis } from '../../../../models/axis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { getBandSize } from '../../../../internals/getBandSize';
 import { isBandScale } from '../../../../internals/scaleGuards';
 import { getDataIndexForOrdinalScaleValue } from '../../../../internals/invertScale';
-import { type BarItemIdentifier, type SeriesId } from '../../../../models';
+import type {
+  ChartsRadiusAxisProps,
+  ChartsRotationAxisProps,
+  ChartsXAxisProps,
+  ChartsYAxisProps,
+  ComputedAxis,
+} from '../../../../models/axis';
+import type { ScaleName, BarItemIdentifier, SeriesId } from '../../../../models';
 
 export function getBandIndex(
-  bandAxis: ComputedAxis,
+  bandAxis: ComputedAxis<ScaleName, any, ChartsXAxisProps | ChartsYAxisProps>,
   stackConfig: { groupNumber: number; groupIndex: number },
   coordinate: number,
-) {
+): number;
+export function getBandIndex(
+  bandAxis: ComputedAxis<ScaleName, any, ChartsRotationAxisProps | ChartsRadiusAxisProps>,
+  stackConfig: { groupNumber: number; groupIndex: number },
+  coordinate: number,
+): number;
+export function getBandIndex(
+  bandAxis: ComputedAxis<
+    ScaleName,
+    any,
+    ChartsXAxisProps | ChartsYAxisProps | ChartsRotationAxisProps | ChartsRadiusAxisProps
+  >,
+  stackConfig: { groupNumber: number; groupIndex: number },
+  coordinate: number,
+): number {
   if (!isBandScale(bandAxis.scale)) {
     return -1;
   }
@@ -20,7 +40,13 @@ export function getBandIndex(
   const { barWidth, offset } = getBandSize(
     bandAxis.scale.bandwidth(),
     stackConfig.groupNumber,
-    (bandAxis as ComputedAxis<'band'>).barGapRatio,
+    (
+      bandAxis as ComputedAxis<
+        'band',
+        any,
+        ChartsXAxisProps | ChartsYAxisProps | ChartsRotationAxisProps | ChartsRadiusAxisProps
+      >
+    ).barGapRatio,
   );
 
   const barOffset = stackConfig.groupIndex * (barWidth + offset);
