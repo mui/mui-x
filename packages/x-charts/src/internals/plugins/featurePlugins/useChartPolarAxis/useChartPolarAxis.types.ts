@@ -2,7 +2,7 @@ import { type ChartPluginSignature } from '../../models';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
 import {
   type ScaleName,
-  type AxisConfig,
+  type PolarAxisConfig,
   type ChartsRotationAxisProps,
   type ChartsRadiusAxisProps,
   type RadiusAxis,
@@ -72,8 +72,8 @@ export type UseChartPolarAxisDefaultizedParameters = UseChartPolarAxisParameters
 
 export interface UseChartPolarAxisState {
   polarAxis: {
-    rotation: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
-    radius: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
+    rotation: PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
+    radius: PolarAxisConfig<'linear', any, ChartsRadiusAxisProps>[];
   };
 }
 

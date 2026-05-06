@@ -62,6 +62,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsAxisHighlight',
   },
   {
+    pathname: '/x/api/charts/charts-axis-highlight-value',
+    title: 'ChartsAxisHighlightValue',
+  },
+  {
     pathname: '/x/api/charts/charts-axis-tooltip-content',
     title: 'ChartsAxisTooltipContent',
   },
@@ -116,6 +120,10 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-localization-provider',
     title: 'ChartsLocalizationProvider',
+  },
+  {
+    pathname: '/x/api/charts/charts-radial-axis-highlight',
+    title: 'ChartsRadialAxisHighlight',
   },
   {
     pathname: '/x/api/charts/charts-radial-data-provider',
@@ -287,6 +295,10 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/highlighted-scatter-mark',
+    title: 'HighlightedScatterMark',
+  },
+  {
     pathname: '/x/api/charts/line-chart',
     title: 'LineChart',
   },
@@ -400,6 +412,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'premium',
   },
   {
+    pathname: '/x/api/charts/radial-line-highlight-plot',
+    title: 'RadialLineHighlightPlot',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/radial-line-plot',
     title: 'RadialLinePlot',
     plan: 'premium',
@@ -448,6 +465,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'ScatterChart',
   },
   {
+    pathname: '/x/api/charts/scatter-chart-premium',
+    title: 'ScatterChartPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/scatter-chart-pro',
     title: 'ScatterChartPro',
     plan: 'pro',
@@ -455,6 +477,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/scatter-plot',
     title: 'ScatterPlot',
+  },
+  {
+    pathname: '/x/api/charts/scatter-plot-premium',
+    title: 'ScatterPlotPremium',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/spark-line-chart',

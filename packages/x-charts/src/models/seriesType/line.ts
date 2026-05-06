@@ -64,12 +64,6 @@ export interface CommonLineSeriesType {
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
   /**
-   * The type of curve to use for the line.
-   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
-   * @default 'monotoneX'
-   */
-  curve?: CurveType;
-  /**
    * If `true`, step curve starts and end at the first and last point.
    * By default the line is extended to fill the space before and after.
    */
@@ -121,6 +115,12 @@ export interface LineSeriesType
    * @default 'none'
    */
   stackOffset?: StackOffsetType;
+  /**
+   * The type of curve to use for the line.
+   * Read more about curves at [line interpolation](https://mui.com/x/react-charts/lines/#interpolation).
+   * @default 'monotoneX'
+   */
+  curve?: CurveType;
 }
 
 /**
