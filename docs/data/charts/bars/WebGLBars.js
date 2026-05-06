@@ -7,7 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 
-const POINTS = 2000;
+const POINTS = 10000;
 
 function generateData(seed) {
   const data = new Array(POINTS);
@@ -51,7 +51,7 @@ export default function WebGLBars() {
         </RadioGroup>
       </FormControl>
       <BarChartPremium
-        xAxis={[{ data: xData, scaleType: 'band' }]}
+        xAxis={[{ data: xData, scaleType: 'band', zoom: { minSpan: 0.05 } }]}
         series={[
           { data: seriesA, label: 'Series A', stack: 'stack' },
           { data: seriesB, label: 'Series B', stack: 'stack' },

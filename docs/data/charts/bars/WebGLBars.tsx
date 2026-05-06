@@ -9,7 +9,7 @@ import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 
 type Renderer = 'svg-single' | 'svg-batch' | 'webgl';
 
-const POINTS = 20000;
+const POINTS = 10000;
 
 function generateData(seed: number) {
   const data = new Array<number>(POINTS);
@@ -53,7 +53,7 @@ export default function WebGLBars() {
         </RadioGroup>
       </FormControl>
       <BarChartPremium
-        xAxis={[{ data: xData, scaleType: 'band', zoom: true }]}
+        xAxis={[{ data: xData, scaleType: 'band', zoom: { minSpan: 0.05 } }]}
         series={[
           { data: seriesA, label: 'Series A', stack: 'stack' },
           { data: seriesB, label: 'Series B', stack: 'stack' },
