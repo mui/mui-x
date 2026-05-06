@@ -67,10 +67,7 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
   const ticks = useTicks({
     scale: radiusAxis!.scale satisfies D3Scale,
     tickNumber: radiusAxis?.tickNumber ?? 5,
-    tickInterval:
-      radiusAxis?.tickInterval ??
-      ((value) =>
-        value !== radiusAxis!.scale.domain()[0] && value !== radiusAxis!.scale.domain()[1]),
+    tickInterval: radiusAxis?.tickInterval,
     tickSpacing: radiusAxis?.tickSpacing,
     valueFormatter: radiusAxis?.valueFormatter,
     direction: 'radius',
