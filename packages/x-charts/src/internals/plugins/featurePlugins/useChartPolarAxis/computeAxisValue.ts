@@ -1,4 +1,4 @@
-import type { ContinuousScaleName, AxisConfig, ScaleName } from '../../../../models';
+import type { ContinuousScaleName, ScaleName } from '../../../../models';
 import {
   type ChartsAxisProps,
   isBandScaleConfig,
@@ -74,13 +74,13 @@ type ComputeCommonParams<SeriesType extends ChartSeriesType = ChartSeriesType> =
 
 export function computeAxisValue<SeriesType extends ChartSeriesType>(
   options: ComputeCommonParams<SeriesType> & {
-    axis?: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
+    axis?: PolarAxisConfig<'linear', any, ChartsRadiusAxisProps>[];
     axisDirection: 'radius';
   },
 ): ComputeResult<ChartsRadiusAxisProps>;
 export function computeAxisValue<SeriesType extends ChartSeriesType>(
   options: ComputeCommonParams<SeriesType> & {
-    axis?: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
+    axis?: PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
     axisDirection: 'rotation';
   },
 ): ComputeResult<ChartsRotationAxisProps>;
@@ -91,7 +91,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
   seriesConfig,
   axisDirection,
 }: ComputeCommonParams<SeriesType> & {
-  axis?: AxisConfig<ScaleName, any, ChartsAxisProps>[];
+  axis?: PolarAxisConfig[];
   axisDirection: 'radius' | 'rotation';
 }) {
   if (allAxis === undefined) {
@@ -110,7 +110,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
 
   const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
-    const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
+    const axis = eachAxis as Readonly<PolarAxisConfig>;
     const { range, isFullCircle } = getRange(drawingArea, axisDirection, axis);
 
     const [minData, maxData] = getAxisExtremum(
