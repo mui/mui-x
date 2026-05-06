@@ -1338,6 +1338,135 @@ describe('<EventDialogContent open />', () => {
             byDay: ['-1MO'],
           });
         });
+
+        it('should flip the recurrence Select to "Custom" when a detail field is edited', async () => {
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
+              <EventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
+
+          // Editing the interval should flip the Select from "Repeats daily" to "Custom repeat rule"
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const intervalInput = within(repeatGroup).getByRole('spinbutton');
+          await user.click(intervalInput);
+          await user.keyboard('{Control>}a{/Control}2');
+
+          expect(screen.getByRole('combobox', { name: /recurrence/i }).textContent).to.match(
+            /custom repeat rule/i,
+          );
+        });
+
+        it('should pre-fill WEEKLY preset with the event weekday code', async () => {
+          const onEventsChange = spy();
+
+          // DEFAULT_EVENT falls on Monday 2025-05-26
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <EventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          // WEEKLY preset must pre-fill byDay with the event's weekday (Monday → 'MO')
+          expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['MO'] });
+        });
+
+        it('should pre-fill MONTHLY preset with the event day-of-month', async () => {
+          const onEventsChange = spy();
+
+          // DEFAULT_EVENT is on the 26th → byMonthDay should be [26]
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <EventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /repeats monthly/i }));
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          // MONTHLY preset must never produce an empty byMonthDay array
+          expect(updated.rrule).to.deep.equal({
+            freq: 'MONTHLY',
+            interval: 1,
+            byMonthDay: [26],
+          });
+        });
+
+        it('should disable recurrence detail fields when the rrule property is read-only', async () => {
+          // Supply a getter-only rrule in eventModelStructure so that isPropertyReadOnly('rrule')
+          // returns true even though the event itself is not fully read-only.
+          const rruleReadOnlyModelStructure = {
+            rrule: { getter: (event: typeof DEFAULT_EVENT) => event.rrule },
+          };
+
+          const recurringEvent = EventBuilder.new()
+            .id(DEFAULT_EVENT.id)
+            .title(DEFAULT_EVENT.title)
+            .singleDay('2025-05-26T07:30:00Z', 45)
+            .resource(personalResource)
+            .recurrent('DAILY')
+            .build();
+
+          const recurringOccurrence = EventBuilder.new(adapter)
+            .id(recurringEvent.id)
+            .title(recurringEvent.title)
+            .span(recurringEvent.start, recurringEvent.end)
+            .recurrent('DAILY')
+            .toOccurrence();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[recurringEvent]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+              eventModelStructure={rruleReadOnlyModelStructure}
+            >
+              <EventDialogContent open {...defaultProps} occurrence={recurringOccurrence} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+
+          // Even though a recurrence is active, the detail fields must be disabled because rrule
+          // is read-only (regression: old dontRepeatDisabled only checked recurrenceSelection === null)
+          const repeatFieldset = screen.getByRole('group', { name: /repeat/i });
+          expect(within(repeatFieldset).getByRole('spinbutton')).to.have.attribute('disabled');
+          expect(within(repeatFieldset).getByRole('combobox')).to.have.attribute(
+            'aria-disabled',
+            'true',
+          );
+        });
       });
     });
 
