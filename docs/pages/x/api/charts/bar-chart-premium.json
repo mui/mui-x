@@ -136,7 +136,10 @@
       }
     },
     "renderer": {
-      "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
+      "type": {
+        "name": "enum",
+        "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'<br>&#124;&nbsp;'webgl'"
+      },
       "default": "'svg-single'"
     },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
