@@ -24,17 +24,17 @@ const optionalGetAxisIds = (_: unknown, ids: AxisId[]) => ids;
 
 function indexGetter(
   value: number,
-  axes: ComputeResult<ChartsRotationAxisProps | ChartsRadiusAxisProps>,
+  axes: ComputeResult<ChartsRotationAxisProps> | ComputeResult<ChartsRadiusAxisProps>,
   ids: AxisId,
 ): number;
 function indexGetter(
   value: number,
-  axes: ComputeResult<ChartsRotationAxisProps | ChartsRadiusAxisProps>,
+  axes: ComputeResult<ChartsRotationAxisProps> | ComputeResult<ChartsRadiusAxisProps>,
   ids: AxisId[],
 ): number[];
 function indexGetter(
   value: number,
-  axes: ComputeResult<ChartsRotationAxisProps | ChartsRadiusAxisProps>,
+  axes: ComputeResult<ChartsRotationAxisProps> | ComputeResult<ChartsRadiusAxisProps>,
   ids: AxisId | AxisId[],
 ): number | number[] {
   return Array.isArray(ids)
