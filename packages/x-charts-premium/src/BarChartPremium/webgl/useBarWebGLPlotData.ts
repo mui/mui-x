@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { type ChartDrawingArea } from '@mui/x-charts/hooks';
 import {
@@ -17,7 +18,38 @@ export interface BarWebGLPlotData {
   count: number;
 }
 
-function getCornerRadii(
+const EMPTY_FLOAT32 = new Float32Array(0);
+const EMPTY_DATA: BarWebGLPlotData = {
+  centers: EMPTY_FLOAT32,
+  halfSizes: EMPTY_FLOAT32,
+  colors: EMPTY_FLOAT32,
+  saturations: EMPTY_FLOAT32,
+  cornerRadii: EMPTY_FLOAT32,
+  count: 0,
+};
+
+interface ArrayPool {
+  centers: Float32Array;
+  halfSizes: Float32Array;
+  colors: Float32Array;
+  saturations: Float32Array;
+  cornerRadii: Float32Array;
+}
+
+function ensureCapacity(pool: ArrayPool | null, maxCount: number): ArrayPool {
+  if (pool !== null && pool.saturations.length >= maxCount) {
+    return pool;
+  }
+  return {
+    centers: new Float32Array(maxCount * 2),
+    halfSizes: new Float32Array(maxCount * 2),
+    colors: new Float32Array(maxCount * 4),
+    saturations: new Float32Array(maxCount),
+    cornerRadii: new Float32Array(maxCount * 4),
+  };
+}
+
+function setCornerRadii(
   radius: number,
   side: BorderRadiusSide | undefined,
   target: Float32Array,
@@ -30,25 +62,18 @@ function getCornerRadii(
   let bl = 0;
 
   if (radius > 0) {
-    switch (side) {
-      case 'top':
-        tl = radius;
-        tr = radius;
-        break;
-      case 'bottom':
-        br = radius;
-        bl = radius;
-        break;
-      case 'left':
-        tl = radius;
-        bl = radius;
-        break;
-      case 'right':
-        tr = radius;
-        br = radius;
-        break;
-      default:
-        break;
+    if (side === 'top') {
+      tl = radius;
+      tr = radius;
+    } else if (side === 'bottom') {
+      br = radius;
+      bl = radius;
+    } else if (side === 'left') {
+      tl = radius;
+      bl = radius;
+    } else if (side === 'right') {
+      tr = radius;
+      br = radius;
     }
   }
 
@@ -65,64 +90,103 @@ export function useBarWebGLPlotData(
 ): BarWebGLPlotData {
   const store = useStore();
   const getHighlightState = store.use(selectorChartsHighlightStateCallback);
+  const poolRef = React.useRef<ArrayPool | null>(null);
 
   return React.useMemo(() => {
     let maxCount = 0;
-    for (const processed of completedData) {
-      maxCount += processed.data.length;
+    for (let s = 0; s < completedData.length; s += 1) {
+      maxCount += completedData[s].data.length;
     }
 
-    const centers = new Float32Array(maxCount * 2);
-    const halfSizes = new Float32Array(maxCount * 2);
-    const colors = new Float32Array(maxCount * 4);
-    const saturations = new Float32Array(maxCount);
-    const cornerRadii = new Float32Array(maxCount * 4);
+    if (maxCount === 0) {
+      return EMPTY_DATA;
+    }
+
+    const pool = ensureCapacity(poolRef.current, maxCount);
+    poolRef.current = pool;
+
+    // Hoist invariants out of the hot loop.
+    const { centers, halfSizes, colors, saturations, cornerRadii } = pool;
+    const drawingAreaLeft = drawingArea.left;
+    const drawingAreaTop = drawingArea.top;
 
     let cursor = 0;
 
-    for (const processed of completedData) {
-      const { seriesId, data } = processed;
+    for (let s = 0; s < completedData.length; s += 1) {
+      const processed = completedData[s];
+      const seriesId = processed.seriesId;
+      const data = processed.data;
+      const dataLength = data.length;
 
-      for (let i = 0; i < data.length; i += 1) {
+      for (let i = 0; i < dataLength; i += 1) {
         const bar = data[i];
 
-        if (bar.hidden || bar.value == null || bar.width <= 0 || bar.height <= 0) {
+        if (bar.hidden) {
+          continue;
+        }
+        const value = bar.value;
+        if (value == null) {
+          continue;
+        }
+        const w = bar.width;
+        const h = bar.height;
+        if (w <= 0 || h <= 0) {
           continue;
         }
 
-        const halfW = bar.width / 2;
-        const halfH = bar.height / 2;
+        const halfW = w * 0.5;
+        const halfH = h * 0.5;
 
-        centers[cursor * 2] = bar.x + halfW - drawingArea.left;
-        centers[cursor * 2 + 1] = bar.y + halfH - drawingArea.top;
-
-        halfSizes[cursor * 2] = halfW;
-        halfSizes[cursor * 2 + 1] = halfH;
+        const c2 = cursor * 2;
+        centers[c2] = bar.x + halfW - drawingAreaLeft;
+        centers[c2 + 1] = bar.y + halfH - drawingAreaTop;
+        halfSizes[c2] = halfW;
+        halfSizes[c2 + 1] = halfH;
 
         const rgba = parseColor(bar.color);
-        colors[cursor * 4] = rgba[0];
-        colors[cursor * 4 + 1] = rgba[1];
-        colors[cursor * 4 + 2] = rgba[2];
-        colors[cursor * 4 + 3] = rgba[3];
+        const c4 = cursor * 4;
+        colors[c4] = rgba[0];
+        colors[c4 + 1] = rgba[1];
+        colors[c4 + 2] = rgba[2];
+        colors[c4 + 3] = rgba[3];
 
         const highlightState = getHighlightState({
           type: 'bar',
           seriesId,
           dataIndex: bar.dataIndex,
         });
+        let saturation = 0;
         if (highlightState === 'highlighted') {
-          saturations[cursor] = 0.2;
+          saturation = 0.2;
         } else if (highlightState === 'faded') {
-          saturations[cursor] = -0.2;
+          saturation = -0.2;
         }
+        saturations[cursor] = saturation;
 
         const effectiveRadius = Math.min(borderRadius, halfW, halfH);
-        getCornerRadii(effectiveRadius, bar.borderRadiusSide, cornerRadii, cursor * 4);
+        setCornerRadii(effectiveRadius, bar.borderRadiusSide, cornerRadii, c4);
 
         cursor += 1;
       }
     }
 
-    return { centers, halfSizes, colors, saturations, cornerRadii, count: cursor };
+    if (cursor === 0) {
+      return EMPTY_DATA;
+    }
+
+    // Return fresh subarray views over the pooled buffers. New view refs each call
+    // (so React memoisation is correct and consumers can detect a change), but no
+    // new bytes allocated on the JS heap. The GPU upload short-circuits via the
+    // `lastUploaded === data` ref check on the program side when we hand the
+    // exact same view back across renders -- it won't fire here since each call
+    // produces a new view, but the contents have changed anyway in that case.
+    return {
+      centers: new Float32Array(centers.buffer, centers.byteOffset, cursor * 2),
+      halfSizes: new Float32Array(halfSizes.buffer, halfSizes.byteOffset, cursor * 2),
+      colors: new Float32Array(colors.buffer, colors.byteOffset, cursor * 4),
+      saturations: new Float32Array(saturations.buffer, saturations.byteOffset, cursor),
+      cornerRadii: new Float32Array(cornerRadii.buffer, cornerRadii.byteOffset, cursor * 4),
+      count: cursor,
+    };
   }, [borderRadius, completedData, drawingArea.left, drawingArea.top, getHighlightState]);
 }
