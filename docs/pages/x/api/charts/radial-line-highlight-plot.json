@@ -1,0 +1,15 @@
+{
+  "props": {},
+  "name": "RadialLineHighlightPlot",
+  "imports": [
+    "import { RadialLineHighlightPlot } from '@mui/x-charts-premium/RadialLineChart';",
+    "import { RadialLineHighlightPlot } from '@mui/x-charts-premium';"
+  ],
+  "slots": [{ "name": "radialLineHighlight", "description": "", "class": null }],
+  "classes": [],
+  "muiName": "MuiRadialLineHighlightPlot",
+  "filename": "/packages/x-charts-premium/src/RadialLineChart/RadialLineHighlightPlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines</a></li></ul>",
+  "cssComponent": false
+}
