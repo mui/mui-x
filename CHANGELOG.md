@@ -88,7 +88,7 @@ Same changes as in `@mui/x-tree-view@9.1.0`.
 #### `@mui/x-scheduler@9.0.0-alpha.5`
 
 - [scheduler] Make `EventItem` interactive by integrating button props for keyboard accessibility (#22160) @mustafajw07
-- [scheduler] Migrate color switch to Base UI `ToggleGroup` (#22254) @flaviendelangle
+- [scheduler] Migrate color switch to Base UI `ToggleGroup` (#22254) @flaviendelangle
 - [scheduler] Rename Scheduler headless packages (#22273) @rita-codes
 - [scheduler] Use TreeView for the resource sidebar (#22261) @flaviendelangle
 - [scheduler] Use fieldset/legend instead of headings for form sections in the event dialog (#22095) @Anexus5919
