@@ -215,37 +215,39 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     [monthlyRef.code, monthlyRef.dayOfMonth],
   );
 
-  const handleRecurrenceSelectionChange = (newSelection: RecurringEventPresetKey | null | 'custom') => {
-      if (newSelection === 'custom') {
-        const base = occurrence.displayTimezone.rrule;
-        setControlled((prev) => ({
-          ...prev,
-          recurrenceSelection: 'custom',
-          rruleDraft: {
-            freq: base?.freq ?? prev.rruleDraft.freq ?? 'WEEKLY',
-            interval: base?.interval ?? prev.rruleDraft.interval ?? 1,
-            byDay: base?.byDay ?? prev.rruleDraft.byDay ?? [],
-            byMonthDay: base?.byMonthDay ?? prev.rruleDraft.byMonthDay ?? [],
-            ...(base?.count ? { count: base.count } : {}),
-            ...(base?.until ? { until: base.until } : {}),
-          },
-        }));
-        return;
-      }
-      const rruleDraft = newSelection
-        ? presetDraftMap[newSelection]
-        : { freq: 'WEEKLY' as const, interval: 1, byDay: [], byMonthDay: [] };
-      setControlled((prev) => ({ ...prev, recurrenceSelection: newSelection, rruleDraft }));
-    }
-
-  const handleChangeInterval = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const intervalValue = Number(event.currentTarget.value || 1);
+  const handleRecurrenceSelectionChange = (
+    newSelection: RecurringEventPresetKey | null | 'custom',
+  ) => {
+    if (newSelection === 'custom') {
+      const base = occurrence.displayTimezone.rrule;
       setControlled((prev) => ({
         ...prev,
         recurrenceSelection: 'custom',
-        rruleDraft: { ...prev.rruleDraft, interval: intervalValue },
+        rruleDraft: {
+          freq: base?.freq ?? prev.rruleDraft.freq ?? 'WEEKLY',
+          interval: base?.interval ?? prev.rruleDraft.interval ?? 1,
+          byDay: base?.byDay ?? prev.rruleDraft.byDay ?? [],
+          byMonthDay: base?.byMonthDay ?? prev.rruleDraft.byMonthDay ?? [],
+          ...(base?.count ? { count: base.count } : {}),
+          ...(base?.until ? { until: base.until } : {}),
+        },
       }));
-    };
+      return;
+    }
+    const rruleDraft = newSelection
+      ? presetDraftMap[newSelection]
+      : { freq: 'WEEKLY' as const, interval: 1, byDay: [], byMonthDay: [] };
+    setControlled((prev) => ({ ...prev, recurrenceSelection: newSelection, rruleDraft }));
+  };
+
+  const handleChangeInterval = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const intervalValue = Number(event.currentTarget.value || 1);
+    setControlled((prev) => ({
+      ...prev,
+      recurrenceSelection: 'custom',
+      rruleDraft: { ...prev.rruleDraft, interval: intervalValue },
+    }));
+  };
 
   const handleChangeFrequency = (newFrequency: RecurringEventFrequency | null) => {
     if (newFrequency == null) {
