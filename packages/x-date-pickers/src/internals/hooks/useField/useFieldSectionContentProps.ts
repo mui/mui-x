@@ -184,7 +184,16 @@ export function useFieldSectionContentProps(
 
         // Other
         tabIndex: !isEditable || isContainerEditable || sectionIndex > 0 ? -1 : 0,
-        contentEditable: !isContainerEditable && !disabled && !readOnly,
+        // Mark sections as `contenteditable` only while the field is focused
+        // (or this specific section is selected). When the field is idle, no
+        // descendant is `contenteditable`, so Chromium's focus-delegation
+        // quirk -- where clicking on a non-section ancestor focuses the
+        // nearest `contenteditable` descendant -- has no target to delegate
+        // to. Once the field is focused (Tab, click on a section, or click
+        // on padding handled by the root mousedown), every section becomes
+        // editable so keyboard editing and tools like Playwright's `fill()`
+        // work uniformly across sections.
+        contentEditable: isEditable && (focused || parsedSelectedSections === sectionIndex),
         role: 'spinbutton',
         'data-range-position': (section as FieldRangeSection).dateName || undefined,
         spellCheck: isEditable ? false : undefined,
@@ -202,6 +211,8 @@ export function useFieldSectionContentProps(
       disabled,
       readOnly,
       isEditable,
+      focused,
+      parsedSelectedSections,
       translations,
       adapter,
       handleInput,
