@@ -33,7 +33,7 @@ Here is an example of a rotation axis with a continuous scale type.
 Like other series, the radial line series has a `highlightScope` property that accepts an object with `highlight` and `fade` properties.
 
 :::info
-The radial line interaction uses the [pointer based interaction](/x/react-charts/lines/#pointer-interaction) that is for now experimental in the LineChart.
+The radial line interaction uses the [pointer based interaction](/x/react-charts/lines/#pointer-interaction).
 :::
 
 {{"demo": "ElementHighlights.js", "bg": "outline"}}
