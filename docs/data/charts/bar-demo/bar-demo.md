@@ -49,7 +49,7 @@ The following demo shows a waterfall chart built with a [range bar chart](/x/rea
 ## Histogram
 
 A histogram displays the distribution of a numeric variable.
-The Bar Chart doesn't bin values for you, so split your dataset into equal-width bins first, then plot the counts.
+The Bar Chart has no built-in histogram, so split your dataset into equal-width bins first, then plot the counts.
 Use a `band` x-axis with `categoryGapRatio` and `barGapRatio` set to `0` so adjacent bars touch — what makes a histogram readable.
 
 {{"demo": "HistogramBarChart.js"}}
