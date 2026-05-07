@@ -70,7 +70,8 @@ describe('<EventTimelinePremiumHeader />', () => {
         renderHeader({ preset });
 
         const grid = screen.getByRole('grid');
-        expect(grid.style.getPropertyValue('--unit-width')).to.equal(`${tickWidth}px`);
+        const container = grid.closest('section')!;
+        expect(container.style.getPropertyValue('--unit-width')).to.equal(`${tickWidth}px`);
         // The grid root sets `--unit-count` from `presetConfig.tickCount`; assert it matches
         // the sum of header cell spans so a regression in either path is caught independently.
         expect(grid.style.getPropertyValue('--unit-count')).to.equal(String(totalTicks));

@@ -19,6 +19,11 @@ export interface EventTimelinePremiumState extends SchedulerState {
    * Preferences for the timeline.
    */
   preferences: Partial<EventTimelinePremiumPreferences>;
+  /**
+   * The measured width of the title column in pixels.
+   * Set via ResizeObserver on the title header cell.
+   */
+  titleColumnWidth: number;
 }
 
 export interface EventTimelinePremiumParameters<

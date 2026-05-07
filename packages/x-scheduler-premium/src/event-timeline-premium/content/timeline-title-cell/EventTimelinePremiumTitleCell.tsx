@@ -8,29 +8,27 @@ import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
-const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.TitleRow, {
-  name: 'MuiEventTimeline',
-  slot: 'TitleCellRow',
-})(({ theme }) => ({
-  padding: theme.spacing(2),
-  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth) * ${theme.spacing(2)})`,
-  alignContent: 'start',
-  '&:focus-visible': {
-    outline: 'none',
-    boxShadow: `inset 0 0 0 2px ${(theme.vars || theme).palette.primary.main}`,
-    borderRadius: theme.shape.borderRadius,
-  },
-}));
-
-const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.Cell, {
+const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   name: 'MuiEventTimeline',
   slot: 'TitleCell',
 })(({ theme }) => ({
+  flex: '0 0 auto',
+  width: 'var(--title-column-width)',
+  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  overflow: 'hidden',
+  padding: theme.spacing(2),
+  paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth) * ${theme.spacing(2)})`,
+  alignContent: 'start',
   fontSize: theme.typography.body2.fontSize,
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
   variants: getPaletteVariants(theme),
+  '&:focus-visible': {
+    outline: 'none',
+    boxShadow: `inset 0 0 0 2px ${(theme.vars || theme).palette.primary.main}`,
+    borderRadius: theme.shape.borderRadius,
+  },
 }));
 
 const ResourceLegendColor = styled('span', {
@@ -57,18 +55,14 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   const depth = useStore(store, schedulerResourceSelectors.resourceDepth, resourceId);
 
   return (
-    <EventTimelinePremiumTitleCellRow
-      className={classes.titleCellRow}
+    <EventTimelinePremiumTitleCellRoot
+      id={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
+      className={classes.titleCell}
       style={{ '--resource-depth': depth } as React.CSSProperties}
+      data-palette={eventColor}
     >
-      <EventTimelinePremiumTitleCellRoot
-        id={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
-        className={classes.titleCell}
-        data-palette={eventColor}
-      >
-        <ResourceLegendColor className={classes.titleCellLegendColor} />
-        {resource!.title}
-      </EventTimelinePremiumTitleCellRoot>
-    </EventTimelinePremiumTitleCellRow>
+      <ResourceLegendColor className={classes.titleCellLegendColor} />
+      {resource!.title}
+    </EventTimelinePremiumTitleCellRoot>
   );
 }
