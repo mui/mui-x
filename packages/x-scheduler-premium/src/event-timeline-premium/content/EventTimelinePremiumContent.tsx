@@ -152,7 +152,7 @@ const EventTimelinePremiumEventsSubGridRow = styled(TimelineGrid.EventRow, {
   width: 'calc(var(--unit-count) * var(--unit-width))',
   minWidth: '100%',
   display: 'grid',
-  gridTemplateRows: `repeat(var(--lane-count, 1), minmax(calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1)}), auto))`,
+  gridTemplateRows: `repeat(var(--lane-count, 1), minmax(calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1.125)}), auto))`,
   rowGap: theme.spacing(0.5),
   position: 'relative',
   padding: theme.spacing(2, 0),

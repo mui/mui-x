@@ -15,7 +15,7 @@ const EventTimelinePremiumSkeletonRoot = styled(Skeleton, {
   slot: 'EventSkeleton',
 })(({ theme }) => ({
   opacity: 0.5,
-  height: `calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1)})`,
+  height: `calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1.125)})`,
   width: '100%',
 }));
 

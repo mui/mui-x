@@ -135,10 +135,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
       // Populate cache with a successful fetch.
-      await store.lazyLoading?.queueDataFetchForRange(
-        { start: startCached, end: endCached },
-        true,
-      );
+      await store.lazyLoading?.queueDataFetchForRange({ start: startCached, end: endCached }, true);
       expect(store.state.errors).toHaveLength(0);
 
       // Fetch a different range that fails -> state.errors populated.
@@ -149,10 +146,7 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.errors).toHaveLength(1);
 
       // Navigating back to the cached range should clear stale errors.
-      await store.lazyLoading?.queueDataFetchForRange(
-        { start: startCached, end: endCached },
-        true,
-      );
+      await store.lazyLoading?.queueDataFetchForRange({ start: startCached, end: endCached }, true);
       expect(store.state.errors).toHaveLength(0);
     });
 
