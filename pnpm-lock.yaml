@@ -2231,6 +2231,9 @@ importers:
       '@mui/x-date-pickers-pro':
         specifier: workspace:^
         version: link:../../packages/x-date-pickers-pro/build
+      '@mui/x-license':
+        specifier: workspace:^
+        version: link:../../packages/x-license/build
       '@mui/x-tree-view':
         specifier: workspace:^
         version: link:../../packages/x-tree-view/build
