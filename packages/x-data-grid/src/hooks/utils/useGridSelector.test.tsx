@@ -54,18 +54,15 @@ describe('useGridSelector', () => {
     function SelectorProbe() {
       const value = useGridSelector(apiRef as any, selectorValue);
 
-      const handleRef = React.useCallback(
-        (node: HTMLDivElement | null) => {
-          if (node && !didUpdate) {
-            didUpdate = true;
-            setApiRefState(apiRef, {
-              ...apiRef.current.state,
-              selectorTestState: { value: 1 },
-            });
-          }
-        },
-        [],
-      );
+      const handleRef = React.useCallback((node: HTMLDivElement | null) => {
+        if (node && !didUpdate) {
+          didUpdate = true;
+          setApiRefState(apiRef, {
+            ...apiRef.current.state,
+            selectorTestState: { value: 1 },
+          });
+        }
+      }, []);
 
       return (
         <div ref={handleRef} data-testid="selector-probe">
