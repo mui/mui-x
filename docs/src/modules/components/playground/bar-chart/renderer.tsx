@@ -34,17 +34,16 @@ export default function BarChartPlaygroundRendered(props: {
 }) {
   const { config, state } = props;
 
-  const parametters = config
+  const parameters = config
     .flatMap((section) => section.properties)
     .reduce((acc, property) => {
-      const resolvedKey = typeof property.key === 'function' ? property.key(state) : property.key;
+      const currentValue = state[property.key] ?? property.default;
 
-      const resolvedValue =
-        typeof property.value === 'function' ? property.value(state) : property.value;
-      const currentValue = state[resolvedKey] ?? resolvedValue.default;
-
-      return property.setProperty ? property.setProperty(acc, currentValue, state) : acc;
+      const setProperty = property.setProperty as
+        | ((props: BarChartProProps, value: unknown, state: Record<string, unknown>) => BarChartProProps)
+        | undefined;
+      return setProperty ? setProperty(acc, currentValue, state) : acc;
     }, initialState);
 
-  return <BarChartPro {...parametters} />;
+  return <BarChartPro {...parameters} />;
 }

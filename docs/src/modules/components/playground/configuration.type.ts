@@ -1,13 +1,38 @@
-// ======= input options =======
+import { DistributiveOmit } from '@mui/x-internals/types';
 
-interface RadioConfig {
-  type: 'radio';
-  input?: 'select' | 'buttonGroup';
-  values: string[];
-  default: string;
+interface CommonProperty<Props, Values, State> {
+  /**
+   * Displayed title
+   */
+  title: string;
+  /**
+   * A unique key to store the value
+   */
+  key: string;
+  /**
+   * A function to update the props based on the value and state
+   * @param {Props} props  The props before applying this value
+   * @param {any} value The value from the form
+   * @param {any} state The form state, useful to compute the new props based on other values
+   * @returns {Props} The updated props
+   */
+  setProperty?: (props: Props, value: Values, state: State) => Props;
+  disabled?: (state: State) => boolean;
 }
 
-interface NumberConfig {
+// ======= input options =======
+
+interface RadioConfig<Props, Values extends string = string> extends CommonProperty<Props, Values, any> {
+  type: 'radio';
+  input?: 'select' | 'buttonGroup';
+  values: readonly Values[];
+  default: Values;
+  extraFields?: {
+    [key in Values]?: DistributiveOmit<ConfigProperty<Props, Values>, 'setProperty'>;
+  };
+}
+
+interface NumberConfig<Props> extends CommonProperty<Props, number, any> {
   type: 'number';
   min: number;
   max: number;
@@ -16,37 +41,36 @@ interface NumberConfig {
   input?: 'text' | 'slider';
 }
 
-interface BooleanConfig {
+interface BooleanConfig<Props> extends CommonProperty<Props, boolean, any> {
   type: 'boolean';
   default: boolean;
 }
 
 // ======= structure organization =======
 
-type ConfigValue = RadioConfig | NumberConfig | BooleanConfig;
+export type ConfigProperty<Props, Values extends string = string> =
+  | RadioConfig<Props, Values>
+  | NumberConfig<Props>
+  | BooleanConfig<Props>;
 
-interface ConfigProperty<Props extends Record<string, unknown>> {
-  /**
-   * Displayed title
-   */
+export interface ConfigSection<Props> {
   title: string;
-  /**
-   * A unique key to store the value
-   */
-  key: string | ((state: Record<string, unknown>) => string);
-  /**
-   * A function to update the props based on the value and state
-   * @param {Props} props  The props before applying this value
-   * @param {unknown} value The value from the form
-   * @param {Record<string, unknown>} state The form state, useful to compute the new props based on other values
-   * @returns {Props} The updated props
-   */
-  setProperty?: (props: Props, value: unknown, state: Record<string, unknown>) => Props;
-  value: ConfigValue | ((state: Record<string, unknown>) => ConfigValue);
-  disabled?: (state: Record<string, unknown>) => boolean;
+  properties: ConfigProperty<Props, any>[];
 }
 
-export interface ConfigSection<Props extends Record<string, unknown>> {
-  title: string;
-  properties: ConfigProperty<Props>[];
+export function defineProperty<Props>() {
+  return {
+    radio: <const V extends string>(property: Omit<RadioConfig<Props, V>, 'type'>): RadioConfig<Props, V> => ({
+      ...property,
+      type: 'radio',
+    }),
+    number: (property: Omit<NumberConfig<Props>, 'type'>): NumberConfig<Props> => ({
+      ...property,
+      type: 'number',
+    }),
+    boolean: (property: Omit<BooleanConfig<Props>, 'type'>): BooleanConfig<Props> => ({
+      ...property,
+      type: 'boolean',
+    }),
+  };
 }
