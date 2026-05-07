@@ -85,11 +85,10 @@ function LayoutWithKeyboardView(props) {
                 setValue(newValue, { changeImportance: 'set' })
               }
               slots={{
-                // openPickerButton is a runtime slot supplied by the picker
-                // context's PickerFieldUI; suppressing it keeps this field as
-                // a plain text field rather than rendering it like a Picker.
-                // @ts-expect-error
-                openPickerButton: () => null,
+                // Date Field rendered in within a Picker context gets injected an open Picker button.
+                // Passing empty adornment to the slot to prevent it from being rendered.
+                // eslint-disable-next-line react/jsx-no-useless-fragment
+                inputAdornment: () => <React.Fragment />,
               }}
               sx={{ width: '100%' }}
             />
