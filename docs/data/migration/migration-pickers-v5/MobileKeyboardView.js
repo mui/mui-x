@@ -84,6 +84,13 @@ function LayoutWithKeyboardView(props) {
               onChange={(newValue) =>
                 setValue(newValue, { changeImportance: 'set' })
               }
+              slots={{
+                // openPickerButton is a runtime slot supplied by the picker
+                // context's PickerFieldUI; suppressing it keeps this field as
+                // a plain text field rather than rendering it like a Picker.
+                // @ts-expect-error
+                openPickerButton: () => null,
+              }}
               sx={{ width: '100%' }}
             />
           </Box>
