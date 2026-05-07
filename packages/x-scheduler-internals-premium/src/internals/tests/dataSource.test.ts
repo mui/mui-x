@@ -109,6 +109,53 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.eventIdList).toHaveLength(1);
     });
 
+    it('should clear state.errors when fetching a range that is already covered', async () => {
+      const startCached = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const endCached = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const startFailing = adapter.date('2025-08-01T00:00:00Z', 'default');
+      const endFailing = adapter.date('2025-08-07T00:00:00Z', 'default');
+
+      const dataSource = {
+        getEvents: spy(async (start: Date) => {
+          if (adapter.isEqual(start, startFailing)) {
+            throw new Error('Range failed');
+          }
+          return [
+            {
+              id: '1',
+              start: '2025-07-01T00:00:00.000Z',
+              end: '2025-07-01T11:00:00.000Z',
+              title: 'Event 1',
+            },
+          ];
+        }),
+        updateEvents: async () => ({ success: true }),
+      };
+
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      // Populate cache with a successful fetch.
+      await store.lazyLoading?.queueDataFetchForRange(
+        { start: startCached, end: endCached },
+        true,
+      );
+      expect(store.state.errors).toHaveLength(0);
+
+      // Fetch a different range that fails -> state.errors populated.
+      await store.lazyLoading?.queueDataFetchForRange(
+        { start: startFailing, end: endFailing },
+        true,
+      );
+      expect(store.state.errors).toHaveLength(1);
+
+      // Navigating back to the cached range should clear stale errors.
+      await store.lazyLoading?.queueDataFetchForRange(
+        { start: startCached, end: endCached },
+        true,
+      );
+      expect(store.state.errors).toHaveLength(0);
+    });
+
     it('should handle loading state correctly', async () => {
       let resolveFetch: (value: TestEvent[]) => void;
       const fetchPromise = new Promise<TestEvent[]>((resolve) => {
