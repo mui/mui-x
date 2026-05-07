@@ -1441,6 +1441,34 @@ describe('<DataGrid /> - Filter', () => {
       expect(getFilterCount({ field: 'year', operator: '=', value: '' })).to.equal(0);
     });
 
+    it('should include custom operators with an array containing an empty string value', () => {
+      const filterOperators: GridFilterOperator[] = [
+        {
+          value: 'isAnyOf',
+          getApplyFilterFn: (filterItem) => {
+            if (!filterItem.value?.length) {
+              return null;
+            }
+
+            return (value) => filterItem.value.includes(value ?? '');
+          },
+          InputComponent: () => null,
+        },
+      ];
+
+      render(
+        <TestCase
+          rows={[]}
+          columns={[{ field: 'brand', type: 'string', filterOperators }]}
+          filterModel={{
+            items: [{ field: 'brand', operator: 'isAnyOf', value: [''] }],
+          }}
+        />,
+      );
+
+      expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
+    });
+
     it('should include value-less operators', () => {
       render(
         <TestCase
