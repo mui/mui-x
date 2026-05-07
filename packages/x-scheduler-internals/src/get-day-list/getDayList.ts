@@ -11,6 +11,8 @@ export function getDayList(parameters: GetDaytListParameters): GetDaytListReturn
 
   if (process.env.NODE_ENV !== 'production') {
     if (adapter.isBefore(adapter.startOfDay(end), adapter.startOfDay(start))) {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         `MUI: getDayList: The 'end' parameter must be a day after the 'start' parameter.`,
       );
