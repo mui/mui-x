@@ -1,5 +1,5 @@
 'use client';
-// TODO: unify with EventTimelinePremiumSkeleton — both render the same MUI Skeleton with different styled contexts.
+// TODO: unify with EventTimelinePremiumSkeleton — diverges in props (`data-variant` required here), sizing (variant-based absolute positioning vs theme-derived height), and styled context.
 import Skeleton from '@mui/material/Skeleton';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';

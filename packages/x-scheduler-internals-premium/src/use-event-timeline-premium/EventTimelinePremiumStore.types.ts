@@ -20,7 +20,8 @@ export interface EventTimelinePremiumState extends SchedulerState {
    */
   preferences: Partial<EventTimelinePremiumPreferences>;
   /**
-   * Set to `true` on the first `updateStateFromParameters` call.
+   * Mount sentinel: `false` until the first `updateStateFromParameters` call,
+   * then `true`. Gates the lazy-loading plugin's first fetch.
    * @internal
    */
   hasMounted: boolean;

@@ -1,5 +1,5 @@
 'use client';
-// TODO: unify with EventTimelinePremiumErrorContainer — both render the same Alert list off `state.errors` with different styled and store contexts.
+// TODO: unify with EventTimelinePremiumErrorContainer. The premium version adds a non-`Error` rejection guard and a `dismissedErrors` GC effect that should be preserved on unification.
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';

@@ -1,5 +1,5 @@
 'use client';
-// TODO: unify with ErrorContainer from `@mui/x-scheduler/internals` — the two only diverge by which styled and store contexts they read.
+// TODO: unify with ErrorContainer from `@mui/x-scheduler/internals`. This version also adds a non-`Error` rejection guard and a `dismissedErrors` GC effect that should be preserved on unification.
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';

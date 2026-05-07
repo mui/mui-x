@@ -1,5 +1,5 @@
 'use client';
-// TODO: unify with EventSkeleton from `@mui/x-scheduler/internals` — the two only diverge by which styled context they read.
+// TODO: unify with EventSkeleton from `@mui/x-scheduler/internals` — diverges in props (no `data-variant`), sizing (theme-derived height vs variant-based absolute positioning), and styled context.
 import * as React from 'react';
 import Skeleton from '@mui/material/Skeleton';
 import { styled } from '@mui/material/styles';
