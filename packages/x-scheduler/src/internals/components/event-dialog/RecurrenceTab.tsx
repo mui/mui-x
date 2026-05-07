@@ -219,19 +219,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     newSelection: RecurringEventPresetKey | null | 'custom',
   ) => {
     if (newSelection === 'custom') {
-      const base = occurrence.displayTimezone.rrule;
-      setControlled((prev) => ({
-        ...prev,
-        recurrenceSelection: 'custom',
-        rruleDraft: {
-          freq: base?.freq ?? prev.rruleDraft.freq ?? 'WEEKLY',
-          interval: base?.interval ?? prev.rruleDraft.interval ?? 1,
-          byDay: base?.byDay ?? prev.rruleDraft.byDay ?? [],
-          byMonthDay: base?.byMonthDay ?? prev.rruleDraft.byMonthDay ?? [],
-          ...(base?.count ? { count: base.count } : {}),
-          ...(base?.until ? { until: base.until } : {}),
-        },
-      }));
+      setControlled((prev) => ({ ...prev, recurrenceSelection: 'custom' }));
       return;
     }
     const rruleDraft = newSelection
@@ -310,6 +298,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const countValue = Number(event.currentTarget.value || 1);
     setControlled((prev) => ({
       ...prev,
+      recurrenceSelection: 'custom',
       rruleDraft: { ...prev.rruleDraft, count: countValue },
     }));
   };
@@ -318,17 +307,23 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     const untilValue = event.currentTarget.value;
     setControlled((prev) => ({
       ...prev,
+      recurrenceSelection: 'custom',
       rruleDraft: { ...prev.rruleDraft, until: adapter.date(untilValue, 'default') },
     }));
   };
 
   const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {
-    const byDay = controlled.rruleDraft.byDay ?? [];
-    const next = byDay.includes(dayCode) ? byDay.filter((d) => d !== dayCode) : [...byDay, dayCode];
-    setControlled((prev) => ({
-      ...prev,
-      rruleDraft: { ...prev.rruleDraft, byDay: next },
-    }));
+    setControlled((prev) => {
+      const byDay = prev.rruleDraft.byDay ?? [];
+      const next = byDay.includes(dayCode)
+        ? byDay.filter((d) => d !== dayCode)
+        : [...byDay, dayCode];
+      return {
+        ...prev,
+        recurrenceSelection: 'custom',
+        rruleDraft: { ...prev.rruleDraft, byDay: next },
+      };
+    });
   };
 
   const handleChangeMonthlyGroup = (next: string[]) => {
