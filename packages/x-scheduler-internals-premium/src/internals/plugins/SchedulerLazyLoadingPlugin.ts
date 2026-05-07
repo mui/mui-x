@@ -122,7 +122,11 @@ export class SchedulerLazyLoadingPlugin<
       // Mark request as settled
       await this.dataManager.setRequestSettled(range);
     } catch (error) {
-      this.store.set('errors', [error]);
+      const wrapped =
+        error instanceof Error
+          ? error
+          : /* minify-error-disabled */ new Error(String(error), { cause: error });
+      this.store.set('errors', [wrapped]);
       await this.dataManager.setRequestSettled(range);
     } finally {
       // Unset loading state
@@ -178,7 +182,11 @@ export class SchedulerLazyLoadingPlugin<
         ...eventsState,
       });
     } catch (error) {
-      this.store.set('errors', [error]);
+      const wrapped =
+        error instanceof Error
+          ? error
+          : /* minify-error-disabled */ new Error(String(error), { cause: error });
+      this.store.set('errors', [wrapped]);
     }
   };
 }

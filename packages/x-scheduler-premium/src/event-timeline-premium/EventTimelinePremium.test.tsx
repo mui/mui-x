@@ -580,7 +580,7 @@ describe('<EventTimelinePremium />', () => {
       const sharedError = new Error('Shared error');
       const store = new EventTimelinePremiumStore({ events: [] }, adapter);
       // Set initial errors before mounting so the first render already has them.
-      (store as any).set('errors', [sharedError]);
+      store.set('errors', [sharedError]);
 
       function Test() {
         const styledContextValue = React.useMemo(

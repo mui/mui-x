@@ -214,6 +214,25 @@ premiumStoreClasses.forEach((storeClass) => {
       }
     });
 
+    it('should wrap non-Error rejections from dataSource.getEvents into Error instances', async () => {
+      const dataSource = {
+        getEvents: spy(() =>
+          Promise.reject({ status: 500, toString: () => '500 Internal Server Error' }),
+        ),
+        updateEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+
+      expect(store.state.errors).toHaveLength(1);
+      expect(store.state.errors[0]).to.be.instanceOf(Error);
+      expect(store.state.errors[0].message).to.equal('500 Internal Server Error');
+    });
+
     it('should push an error to state.errors when dataSource.updateEvents rejects', async () => {
       const dataSource = {
         getEvents: spy(mockFetchData),

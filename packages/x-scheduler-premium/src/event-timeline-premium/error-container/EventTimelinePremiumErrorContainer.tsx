@@ -1,5 +1,5 @@
 'use client';
-// TODO: unify with ErrorContainer from `@mui/x-scheduler/internals`. This version also adds a non-`Error` rejection guard and a `dismissedErrors` GC effect that should be preserved on unification.
+// TODO: unify with ErrorContainer from `@mui/x-scheduler/internals`. This version also adds a `dismissedErrors` GC effect and a stable key that should be preserved on unification.
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
@@ -71,22 +71,22 @@ export function EventTimelinePremiumErrorContainer(props: EventTimelinePremiumEr
   }, [errors]);
 
   const handleDismiss = (error: Error) => {
-    setDismissedErrors(new Set(dismissedErrors).add(error));
+    setDismissedErrors((previous) => new Set(previous).add(error));
   };
 
   return (
     <EventTimelinePremiumErrorContainerRoot className={clsx(classes.errorContainer, className)}>
       {errors
         .filter((error) => !dismissedErrors.has(error))
-        .map((error, index) => (
+        .map((error) => (
           <EventTimelinePremiumErrorAlert
             className={classes.errorAlert}
             severity="error"
-            key={index}
+            key={errors.indexOf(error)}
             onClose={() => handleDismiss(error)}
           >
             <EventTimelinePremiumErrorMessage className={classes.errorMessage} variant="body2">
-              {error instanceof Error ? error.message : String(error)}
+              {error.message}
             </EventTimelinePremiumErrorMessage>
           </EventTimelinePremiumErrorAlert>
         ))}
