@@ -29,30 +29,34 @@ interface KeyboardViewToolbarProps extends DatePickerToolbarProps {
 }
 
 function ToolbarWithKeyboardViewSwitch(props: KeyboardViewToolbarProps) {
-  const { showKeyboardViewSwitch, showKeyboardView, setShowKeyboardView, ...other } =
-    props;
+  const {
+    showKeyboardViewSwitch,
+    showKeyboardView,
+    setShowKeyboardView,
+    className,
+    ...other
+  } = props;
   const { orientation } = usePickerContext();
 
   if (!showKeyboardViewSwitch) {
-    return <DatePickerToolbar {...other} />;
+    return <DatePickerToolbar className={className} {...other} />;
   }
 
   const isLandscape = orientation === 'landscape';
 
   return (
     <Stack
+      className={className}
       spacing={2}
       direction={isLandscape ? 'column' : 'row'}
-      sx={{
-        alignItems: 'center',
-        ...(isLandscape
-          ? { gridColumn: 1, gridRow: '1 / 3' }
-          : { gridColumn: '1 / 4', gridRow: 1, mr: 1 }),
-      }}
+      sx={{ alignItems: 'center' }}
     >
       <DatePickerToolbar {...other} sx={{ flex: '1 1 100%' }} />
       <IconButton
         color="inherit"
+        aria-label={
+          showKeyboardView ? 'Switch to calendar view' : 'Switch to keyboard view'
+        }
         onClick={() => setShowKeyboardView!((prev) => !prev)}
       >
         {showKeyboardView ? <CalendarMonthIcon /> : <ModeEditIcon />}
@@ -95,7 +99,7 @@ function LayoutWithKeyboardView(props: PickersLayoutProps<Dayjs | null>) {
                 setValue(newValue, { changeImportance: 'set' })
               }
               slots={{
-                // Date Field rendered in within a Picker context gets injected an open Picker button.
+                // Date Field rendered within a Picker context gets injected an open Picker button.
                 // Passing empty adornment to the slot to prevent it from being rendered.
                 // eslint-disable-next-line react/jsx-no-useless-fragment
                 inputAdornment: () => <React.Fragment />,
