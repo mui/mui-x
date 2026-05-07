@@ -15,7 +15,7 @@ export default function SchedulerCommunityOrPremium() {
             'Start with the free-forever Community version, then upgrade to Premium when you are ready for additional features and components.'
           }
           communityDescription={
-            'Free forever under MIT license. Includes core features such as resource management, multiple views, or drag and drop.'
+            'Free forever under MIT license. Includes core features such as resource management, multiple views, and drag-and-drop interactions.'
           }
           premiumDescription={
             'Requires a commercial license. Includes additional features such as recurring events, lazy loading, and virtualization, as well as premium components such as the Event Timeline.'
