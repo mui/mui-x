@@ -41,6 +41,7 @@ const EventTimelinePremiumContentRoot = styled('section', {
   flexGrow: 1,
   width: '100%',
   overflow: 'hidden',
+  position: 'relative',
   display: 'flex',
   flexDirection: 'column',
 }));
@@ -205,16 +206,55 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
   zIndex: 1,
 }));
 
-const EventTimelinePremiumEventsScrollbar = styled('div', {
+// In macOS Safari and Gnome Web, scrollbars are overlaid and report size 0.
+// The virtual scrollbar container needs a real size, so we clamp to at least 14px.
+const SCROLLBAR_SIZE_CSS = 'calc(max(var(--scrollbar-size, 10px), 14px))';
+
+const VirtualScrollbar = styled('div', {
   name: 'MuiEventTimeline',
-  slot: 'EventsScrollbar',
-})(({ theme }) => ({
-  flexShrink: 0,
-  overflowX: 'auto',
+  slot: 'VirtualScrollbar',
+})({
+  position: 'absolute',
+  display: 'inline-block',
+  zIndex: 6,
+  '&:hover': {
+    zIndex: 7,
+  },
+  '--size': SCROLLBAR_SIZE_CSS,
+});
+
+const VirtualScrollbarVertical = styled(VirtualScrollbar, {
+  name: 'MuiEventTimeline',
+  slot: 'VirtualScrollbarVertical',
+})({
+  width: 'var(--size)',
+  height:
+    'calc(100% - var(--header-height, 0px) - var(--has-scroll-x, 0) * var(--scrollbar-size, 10px))',
+  overflowY: 'auto',
+  overflowX: 'hidden',
+  outline: 0,
+  '& > div': {
+    width: 'var(--size)',
+  },
+  top: 'var(--header-height, 0px)',
+  right: 0,
+});
+
+const VirtualScrollbarHorizontal = styled(VirtualScrollbar, {
+  name: 'MuiEventTimeline',
+  slot: 'VirtualScrollbarHorizontal',
+})({
+  width: 'calc(100% - var(--has-scroll-y, 0) * var(--scrollbar-size, 10px))',
+  height: 'var(--size)',
   overflowY: 'hidden',
-  scrollbarWidth: 'thin',
-  borderTop: `1px solid ${(theme.vars || theme).palette.divider}`,
-}));
+  overflowX: 'auto',
+  outline: 0,
+  '& > div': {
+    height: 'var(--size)',
+  },
+  bottom: 0,
+  left: 0,
+});
 
 /**
  * Render zone that wraps the visible virtualized rows.
@@ -322,7 +362,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const containerRef = React.useRef<HTMLElement | null>(null);
   const gridRef = React.useRef<HTMLDivElement | null>(null);
   const headerRowRef = React.useRef<HTMLDivElement | null>(null);
-  const eventsScrollbarRef = React.useRef<HTMLDivElement | null>(null);
 
   // Selector hooks
   const adapter = useAdapterContext();
@@ -353,12 +392,12 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const columnsTotalWidth = useStore(store, eventTimelinePremiumPresetSelectors.columnsTotalWidth);
 
   // Virtualizer setup
-  const scrollbarVerticalRef = React.useRef<HTMLElement | null>(null);
-  const scrollbarHorizontalRef = React.useRef<HTMLElement | null>(null);
+  const scrollbarVerticalRef = React.useRef<HTMLDivElement | null>(null);
+  const scrollbarHorizontalRef = React.useRef<HTMLDivElement | null>(null);
 
   const virtualizerRefs = useLazyRef(() => ({
-    container: React.createRef<HTMLDivElement>(),
-    scroller: React.createRef<HTMLDivElement>(),
+    container: containerRef,
+    scroller: gridRef,
     scrollbarVertical: scrollbarVerticalRef,
     scrollbarHorizontal: scrollbarHorizontalRef,
   })).current;
@@ -369,6 +408,12 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     () => resources.map(({ resource }) => ({ id: resource.id, model: resource })),
     [resources],
   );
+
+  if (!rows)
+    throw new Error(
+      'MUI X Scheduler: The timeline encountered an error while retrieving resources. ' +
+        'This is likely a bug in MUI X. Please contact MUI support with details about your configuration and data.',
+    );
 
   const range = React.useMemo(
     () => ({ firstRowIndex: 0, lastRowIndex: rows.length }),
@@ -408,26 +453,23 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const scrollerContentProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollerContentProps);
   const viewportProps = virtualizer.store.use(LayoutDataGrid.selectors.viewportProps);
   const positionerProps = virtualizer.store.use(LayoutDataGrid.selectors.positionerProps);
-  const rowWidth = virtualizer.store.use(Dimensions.selectors.dimensions).rowWidth;
+  const scrollbarVerticalProps = virtualizer.store.use(
+    LayoutDataGrid.selectors.scrollbarVerticalProps,
+  );
+  const scrollbarHorizontalProps = virtualizer.store.use(
+    LayoutDataGrid.selectors.scrollbarHorizontalProps,
+  );
+  const dimensions = virtualizer.store.use(Dimensions.selectors.dimensions);
 
   const containerMergedRef = useMergedRefs(
     forwardedRef,
-    containerRef,
     containerProps.ref as React.Ref<HTMLDivElement>,
   );
   const gridMergedRef = useMergedRefs(scrollerProps.ref as React.Ref<HTMLDivElement>, gridRef);
 
-  // Reset horizontal scroll position when navigating to a new time period
-  React.useEffect(() => {
-    const scrollbar = eventsScrollbarRef.current;
-    const grid = gridRef.current;
-    if (scrollbar) {
-      scrollbar.scrollLeft = 0;
-    }
-    if (grid) {
-      grid.style.setProperty('--events-scroll-left', '0');
-    }
-  }, [presetConfig.start]);
+  const eventsWidth = presetConfig.tickCount * presetConfig.tickWidth;
+  const hasScrollX = dimensions.hasScrollX;
+  const hasScrollY = dimensions.hasScrollY;
 
   return (
     <EventTimelinePremiumContentRoot
@@ -437,9 +479,13 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
       ref={containerMergedRef}
       style={
         {
-          '--row-width': `${rowWidth}px`,
+          '--row-width': `${dimensions.rowWidth}px`,
           '--title-column-width': `${titleColumnWidth}px`,
           '--unit-width': `${presetConfig.tickWidth}px`,
+          '--scrollbar-size': `${dimensions.scrollbarSize}px`,
+          '--header-height': `${headerHeight}px`,
+          '--has-scroll-x': Number(hasScrollX),
+          '--has-scroll-y': Number(hasScrollY),
         } as React.CSSProperties
       }
     >
@@ -481,14 +527,26 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             )}
           </EventTimelinePremiumScrollerContent>
         </EventTimelinePremiumGrid>
-        <EventTimelinePremiumEventsScrollbar ref={eventsScrollbarRef} aria-hidden>
-          <div
-            style={{
-              width: 'calc(var(--unit-count) * var(--unit-width))',
-              height: 1,
-            }}
-          />
-        </EventTimelinePremiumEventsScrollbar>
+        {hasScrollY && (
+          <VirtualScrollbarVertical
+            ref={scrollbarVerticalProps.ref}
+            tabIndex={-1}
+            aria-hidden="true"
+            onFocus={(event: React.FocusEvent<HTMLDivElement>) => event.target.blur()}
+          >
+            <div style={{ height: dimensions.minimumSize.height - headerHeight }} />
+          </VirtualScrollbarVertical>
+        )}
+        {hasScrollX && (
+          <VirtualScrollbarHorizontal
+            ref={scrollbarHorizontalProps.ref}
+            tabIndex={-1}
+            aria-hidden="true"
+            onFocus={(event: React.FocusEvent<HTMLDivElement>) => event.target.blur()}
+          >
+            <div style={{ width: eventsWidth }} />
+          </VirtualScrollbarHorizontal>
+        )}
       </EventDialogProvider>
     </EventTimelinePremiumContentRoot>
   );
