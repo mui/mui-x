@@ -81,7 +81,9 @@ function LayoutWithKeyboardView(props) {
           <Box sx={{ mx: 3, my: 2, width: 272 }}>
             <DateField
               value={value}
-              onChange={(newValue) => setValue(newValue)}
+              onChange={(newValue) =>
+                setValue(newValue, { changeImportance: 'set' })
+              }
               sx={{ width: '100%' }}
             />
           </Box>
