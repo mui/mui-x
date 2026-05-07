@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
@@ -26,11 +26,7 @@ const flushEffect = async () => {
   await Promise.resolve();
 };
 
-const flushDebounce = async () => {
-  await new Promise((resolve) => {
-    setTimeout(resolve, 200);
-  });
-};
+const flushDebounce = () => vi.advanceTimersByTimeAsync(150);
 
 const DEFAULT_PARAMS = {
   events: [] as TestEvent[],
@@ -38,6 +34,14 @@ const DEFAULT_PARAMS = {
 };
 
 describe('Lazy loading - EventTimelinePremiumStore', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('should fetch the visible range on the first mount notification', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
@@ -172,11 +176,9 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     const store = new EventTimelinePremiumStore(params, adapter);
     store.updateStateFromParameters(params, adapter);
 
-    // Only flush microtasks + a short wait that's well below the 150ms debounce.
+    // Only flush microtasks + a short advance that's well below the 150ms debounce.
     await flushEffect();
-    await new Promise((resolve) => {
-      setTimeout(resolve, 50);
-    });
+    await vi.advanceTimersByTimeAsync(50);
 
     expect(dataSource.getEvents.calledOnce).to.equal(true);
   });
