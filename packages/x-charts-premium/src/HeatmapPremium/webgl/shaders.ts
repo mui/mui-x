@@ -15,7 +15,7 @@ export const heatmapVertexShaderSource = /* glsl */ `
     
     // https://tsev.dev/posts/2020-06-19-colour-correction-with-webgl/
     vec3 adjust_saturation(vec3 color, float value) {
-      // https://www.w3.org/TR/WCAG21/#dfn-relative-luminance
+      // https://www.w3.org/TR/WCAG22/#dfn-relative-luminance
       const vec3 luminosityFactor = vec3(0.2126, 0.7152, 0.0722);
       vec3 grayscale = vec3(dot(color, luminosityFactor));
     

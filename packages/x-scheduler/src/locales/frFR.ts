@@ -68,11 +68,8 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
 };
 
 const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Masquer les événements de ${resourceName}`,
+  // ResourcesTree
   resourcesLabel: 'Ressources',
-  resourcesLegendSectionLabel: 'Légende des ressources',
-  showEventsLabel: (resourceName) => `Afficher les événements de ${resourceName}`,
 
   // ViewSwitcher
   agenda: 'Agenda',

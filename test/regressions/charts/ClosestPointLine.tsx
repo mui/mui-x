@@ -31,28 +31,31 @@ export default function ClosestPointLine() {
               series={[
                 {
                   type: 'line',
-                  data: [2, 5, 6.5, 3, 8, 10, 9.5, 0, 6, 10, 8],
+                  data: [2, 5, 6.5, 3, 8, 10, 10, 9.5, 2.5, 6, 10, 8],
                 },
                 {
                   type: 'line',
-                  data: [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2],
+                  data: [1, 2, 3, 1, 2, 3, 1, 1, 2, 3, 1, 2],
                   area: true,
                   stack: 'stack1',
+                  id: 'yellow',
                 },
-
                 {
                   type: 'line',
-                  data: [null, null, 5.5, 2, null, null, 8.5, 4.5, 5],
+                  data: [null, null, 5.5, 2, null, null, null, 8.5, 1.5, 5],
                   connectNulls: true,
                   area: true,
                   stack: 'stack1',
+                  id: 'red',
                 },
-                // {
-                //   type: 'line',
-                //   data: [null, null, 5.5, 2, null, null, 8.5, 1.5, 5],
-                //   connectNulls: false,
-                //   stack: 'stack1',
-                // },
+                {
+                  type: 'line',
+                  data: [null, 13, 5.5, 7, null, 10, 8.5, 5],
+                  connectNulls: false,
+                  stack: 'stack1',
+                  highlightScope: { highlight: 'series', fade: 'global' },
+                  id: 'lightblue',
+                },
               ]}
               height={HEIGHT}
               width={WIDTH}

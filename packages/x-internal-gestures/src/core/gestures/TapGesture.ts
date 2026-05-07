@@ -63,6 +63,8 @@ export type TapGestureState = GestureState & {
   lastTapTime: number;
   /** The most recent centroid position during the gesture */
   lastPosition: { x: number; y: number } | null;
+  /** Pending timeout id used to reset multi-tap counters when the next tap doesn't arrive in time */
+  multiTapResetTimeoutId: ReturnType<typeof setTimeout> | null;
 };
 
 /**
@@ -77,6 +79,7 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
     currentTapCount: 0,
     lastTapTime: 0,
     lastPosition: null,
+    multiTapResetTimeoutId: null,
   };
 
   protected readonly isSinglePhase!: true;
@@ -137,11 +140,15 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
 
   protected resetState(): void {
     this.isActive = false;
+    if (this.state.multiTapResetTimeoutId !== null) {
+      clearTimeout(this.state.multiTapResetTimeoutId);
+    }
     this.state = {
       startCentroid: null,
       currentTapCount: 0,
       lastTapTime: 0,
       lastPosition: null,
+      multiTapResetTimeoutId: null,
     };
   }
 
@@ -235,13 +242,14 @@ export class TapGesture<GestureName extends string> extends PointerGesture<Gestu
             // but clear the start centroid to prepare for next tap
             this.state.startCentroid = null;
 
-            // Start a timeout to reset the tap count if the next tap doesn't come soon enough
-            setTimeout(() => {
-              if (
-                this.state &&
-                this.state.currentTapCount > 0 &&
-                this.state.currentTapCount < this.taps
-              ) {
+            // Start a timeout to reset the tap count if the next tap doesn't come soon enough.
+            // Track the id so it can be cleared on destroy/reset to avoid leaks and stale firings.
+            if (this.state.multiTapResetTimeoutId !== null) {
+              clearTimeout(this.state.multiTapResetTimeoutId);
+            }
+            this.state.multiTapResetTimeoutId = setTimeout(() => {
+              this.state.multiTapResetTimeoutId = null;
+              if (this.state.currentTapCount > 0 && this.state.currentTapCount < this.taps) {
                 this.state.currentTapCount = 0;
               }
             }, 300); // 300ms is a typical double-tap detection window

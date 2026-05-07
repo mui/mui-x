@@ -68,11 +68,8 @@ const enUSDialog: EventDialogLocaleText = {
 };
 
 const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Hide events for ${resourceName}`,
+  // ResourcesTree
   resourcesLabel: 'Resources',
-  resourcesLegendSectionLabel: 'Resource legend',
-  showEventsLabel: (resourceName) => `Show events for ${resourceName}`,
 
   // ViewSwitcher
   agenda: 'Agenda',

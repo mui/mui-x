@@ -1,8 +1,12 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["tests/**/*", "utils/**/*"],
+  "include": ["tests/**/*", "setup.ts", "vitest.config.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
     "types": ["vite/client"]
   }
 }

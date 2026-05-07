@@ -6,28 +6,43 @@ import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
 import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
 import {
   SchedulerEventColor,
   SchedulerResourceId,
   SchedulerRenderableEventOccurrence,
-} from '@mui/x-scheduler-headless/models';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
+} from '@mui/x-scheduler-internals/models';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { computeRange, ControlledValue, hasProp } from './utils';
 import ResourceAndColorSection from './ResourceAndColorSection';
 import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
 
-const SectionHeaderTitle = styled(Typography, {
+const SectionFieldset = styled('fieldset', {
+  name: 'MuiEventDialog',
+  slot: 'SectionFieldset',
+})(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+  border: 0,
+  margin: 0,
+  padding: 0,
+  minInlineSize: 'min-content',
+}));
+
+const SectionHeaderTitle = styled('legend', {
   name: 'MuiEventDialog',
   slot: 'SectionHeaderTitle',
 })(({ theme }) => ({
+  ...theme.typography.subtitle2,
+  padding: 0,
+  marginBlockEnd: theme.spacing(2),
   textTransform: 'uppercase',
   color: (theme.vars || theme).palette.text.secondary,
 }));
@@ -133,12 +148,8 @@ export function GeneralTab(props: GeneralTabProps) {
     setControlled(newState);
   };
 
-  const handleColorChange = (newColor: SchedulerEventColor) => {
-    if (!newColor) {
-      return;
-    }
-
-    const newState = { ...controlled, color: newColor === controlled.color ? null : newColor };
+  const handleColorChange = (newColor: SchedulerEventColor | null) => {
+    const newState = { ...controlled, color: newColor };
     pushPlaceholder(newState);
     setControlled(newState);
   };
@@ -152,63 +163,50 @@ export function GeneralTab(props: GeneralTabProps) {
       hidden={value !== 'general'}
     >
       <EventDialogTabContent className={classes.eventDialogTabContent}>
-        <SectionHeaderTitle variant="subtitle2">
-          {localeText.dateTimeSectionLabel}
-        </SectionHeaderTitle>
-        <DateTimeFieldsContainer className={classes.eventDialogDateTimeFieldsContainer}>
-          <DateTimeFieldsRow className={classes.eventDialogDateTimeFieldsRow}>
-            <TextField
-              name="startDate"
-              label={localeText.startDateLabel}
-              type="date"
-              value={controlled.startDate}
-              onChange={createHandleChangeDateOrTimeField('startDate')}
-              required
-              slotProps={{
-                inputLabel: { shrink: true },
-                input: { readOnly: isPropertyReadOnly('start') },
-              }}
-              error={!!errors.startDate}
-              helperText={errors.startDate}
-              size="small"
-            />
-            {!controlled.allDay && (
+        <SectionFieldset className={classes.eventDialogSectionFieldset}>
+          <SectionHeaderTitle className={classes.eventDialogSectionHeaderTitle}>
+            {localeText.dateTimeSectionLabel}
+          </SectionHeaderTitle>
+          <DateTimeFieldsContainer className={classes.eventDialogDateTimeFieldsContainer}>
+            <DateTimeFieldsRow className={classes.eventDialogDateTimeFieldsRow}>
               <TextField
-                name="startTime"
-                label={localeText.startTimeLabel}
-                type="time"
-                value={controlled.startTime}
-                onChange={createHandleChangeDateOrTimeField('startTime')}
+                name="startDate"
+                label={localeText.startDateLabel}
+                type="date"
+                value={controlled.startDate}
+                onChange={createHandleChangeDateOrTimeField('startDate')}
                 required
                 slotProps={{
                   inputLabel: { shrink: true },
                   input: { readOnly: isPropertyReadOnly('start') },
                 }}
+                error={!!errors.startDate}
+                helperText={errors.startDate}
                 size="small"
               />
-            )}
-          </DateTimeFieldsRow>
-          <DateTimeFieldsRow className={classes.eventDialogDateTimeFieldsRow}>
-            <TextField
-              name="endDate"
-              label={localeText.endDateLabel}
-              type="date"
-              value={controlled.endDate}
-              onChange={createHandleChangeDateOrTimeField('endDate')}
-              required
-              slotProps={{
-                inputLabel: { shrink: true },
-                input: { readOnly: isPropertyReadOnly('end') },
-              }}
-              size="small"
-            />
-            {!controlled.allDay && (
+              {!controlled.allDay && (
+                <TextField
+                  name="startTime"
+                  label={localeText.startTimeLabel}
+                  type="time"
+                  value={controlled.startTime}
+                  onChange={createHandleChangeDateOrTimeField('startTime')}
+                  required
+                  slotProps={{
+                    inputLabel: { shrink: true },
+                    input: { readOnly: isPropertyReadOnly('start') },
+                  }}
+                  size="small"
+                />
+              )}
+            </DateTimeFieldsRow>
+            <DateTimeFieldsRow className={classes.eventDialogDateTimeFieldsRow}>
               <TextField
-                name="endTime"
-                label={localeText.endTimeLabel}
-                type="time"
-                value={controlled.endTime}
-                onChange={createHandleChangeDateOrTimeField('endTime')}
+                name="endDate"
+                label={localeText.endDateLabel}
+                type="date"
+                value={controlled.endDate}
+                onChange={createHandleChangeDateOrTimeField('endDate')}
                 required
                 slotProps={{
                   inputLabel: { shrink: true },
@@ -216,32 +214,49 @@ export function GeneralTab(props: GeneralTabProps) {
                 }}
                 size="small"
               />
-            )}
-          </DateTimeFieldsRow>
-          <AllDayFormControlLabel
-            control={
-              <Switch
-                id={`${schedulerId}-enable-all-day-switch`}
-                checked={controlled.allDay}
-                onChange={(event) => handleToggleAllDay(event.target.checked)}
-                disabled={isPropertyReadOnly('allDay')}
-              />
-            }
-            label={localeText.allDayLabel}
-            labelPlacement="start"
-          />
-        </DateTimeFieldsContainer>
+              {!controlled.allDay && (
+                <TextField
+                  name="endTime"
+                  label={localeText.endTimeLabel}
+                  type="time"
+                  value={controlled.endTime}
+                  onChange={createHandleChangeDateOrTimeField('endTime')}
+                  required
+                  slotProps={{
+                    inputLabel: { shrink: true },
+                    input: { readOnly: isPropertyReadOnly('end') },
+                  }}
+                  size="small"
+                />
+              )}
+            </DateTimeFieldsRow>
+            <AllDayFormControlLabel
+              control={
+                <Switch
+                  id={`${schedulerId}-enable-all-day-switch`}
+                  checked={controlled.allDay}
+                  onChange={(event) => handleToggleAllDay(event.target.checked)}
+                  disabled={isPropertyReadOnly('allDay')}
+                />
+              }
+              label={localeText.allDayLabel}
+              labelPlacement="start"
+            />
+          </DateTimeFieldsContainer>
+        </SectionFieldset>
         <Divider />
-        <SectionHeaderTitle variant="subtitle2">
-          {localeText.resourceColorSectionLabel}
-        </SectionHeaderTitle>
-        <ResourceAndColorSection
-          readOnly={isPropertyReadOnly('resource')}
-          resourceId={controlled.resourceId}
-          onResourceChange={handleResourceChange}
-          onColorChange={handleColorChange}
-          color={controlled.color}
-        />
+        <SectionFieldset className={classes.eventDialogSectionFieldset}>
+          <SectionHeaderTitle className={classes.eventDialogSectionHeaderTitle}>
+            {localeText.resourceColorSectionLabel}
+          </SectionHeaderTitle>
+          <ResourceAndColorSection
+            readOnly={isPropertyReadOnly('resource')}
+            resourceId={controlled.resourceId}
+            onResourceChange={handleResourceChange}
+            onColorChange={handleColorChange}
+            color={controlled.color}
+          />
+        </SectionFieldset>
         <Divider />
         <TextField
           name="description"
