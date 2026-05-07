@@ -13,8 +13,8 @@
   },
   "references": [
     { "path": "../x-scheduler/tsconfig.build.json" },
-    { "path": "../x-scheduler-headless/tsconfig.build.json" },
-    { "path": "../x-scheduler-headless-premium/tsconfig.build.json" },
+    { "path": "../x-scheduler-internals/tsconfig.build.json" },
+    { "path": "../x-scheduler-internals-premium/tsconfig.build.json" },
     { "path": "../x-license/tsconfig.build.json" },
     { "path": "../x-internals/tsconfig.build.json" }
   ],

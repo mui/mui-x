@@ -1,0 +1,23 @@
+{
+  "props": {},
+  "name": "ChartsRadialAxisHighlight",
+  "imports": [
+    "import { ChartsRadialAxisHighlight } from '@mui/x-charts/ChartsRadialAxisHighlight';",
+    "import { ChartsRadialAxisHighlight } from '@mui/x-charts';",
+    "import { ChartsRadialAxisHighlight } from '@mui/x-charts-pro';",
+    "import { ChartsRadialAxisHighlight } from '@mui/x-charts-premium';"
+  ],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiChartsRadialAxisHighlight-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiChartsRadialAxisHighlight",
+  "filename": "/packages/x-charts/src/ChartsRadialAxisHighlight/ChartsRadialAxisHighlight.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines</a></li></ul>",
+  "cssComponent": false
+}
