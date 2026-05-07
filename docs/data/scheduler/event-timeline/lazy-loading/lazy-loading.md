@@ -6,7 +6,7 @@ githubLabel: 'scope: scheduler'
 components: EventTimelinePremium
 ---
 
-# Event Timeline - Lazy loading events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+# Event Timeline - Lazy loading events
 
 <p class="description">Fetch events on demand as users navigate dates and presets.</p>
 
