@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import yargs from 'yargs';
+import yargs, { type ArgumentsCamelCase } from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import path from 'path';
 import fs from 'fs';
@@ -61,13 +61,18 @@ export default async function linkifyTranslation(
   );
 }
 
-async function run() {
+async function run(argv: ArgumentsCamelCase<{ project?: string | undefined }>) {
   const projects = createXTypeScriptProjects();
+  const projectFilter = argv.project;
 
   // Create documentation folder if it does not exist
   const apiPagesFolder = path.resolve('./docs/pages/x/api');
 
-  for (const { folder, packages, documentedInterfaces } of interfacesToDocument) {
+  const filteredInterfaces = projectFilter
+    ? interfacesToDocument.filter(({ folder }) => folder === projectFilter)
+    : interfacesToDocument;
+
+  for (const { folder, packages, documentedInterfaces } of filteredInterfaces) {
     const subProjects: XTypeScriptProjects = new Map();
 
     packages.forEach((pck) => {
@@ -111,8 +116,18 @@ async function run() {
     }
   }
 
+  let exportsProjects = projects;
+  if (projectFilter) {
+    exportsProjects = new Map();
+    projects.forEach((project, name) => {
+      if (project.documentationFolderName === projectFilter) {
+        exportsProjects.set(name, project);
+      }
+    });
+  }
+
   buildExportsDocumentation({
-    projects,
+    projects: exportsProjects,
   });
 }
 
@@ -120,6 +135,13 @@ yargs(hideBin(process.argv))
   .command({
     command: '$0',
     describe: 'generates API docs',
+    builder: (command) => {
+      return command.option('project', {
+        description:
+          'Only generate API docs for the given project (e.g. "charts", "data-grid", "date-pickers", "tree-view", "scheduler", "chat").',
+        type: 'string',
+      });
+    },
     handler: run,
   })
   .help()

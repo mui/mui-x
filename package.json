@@ -7,7 +7,7 @@
     "docs:dev": "pnpm --filter docs dev",
     "docs:serve": "pnpm --filter docs serve",
     "docs:create-playground": "pnpm --filter docs create-playground",
-    "docs:api": "NODE_OPTIONS=--max-old-space-size=4096 pnpm docs:api:build && pnpm docs:api:buildX",
+    "docs:api": "NODE_OPTIONS=--max-old-space-size=4096 sh -c 'pnpm docs:api:build \"$@\" && pnpm docs:api:buildX \"$@\"' sh",
     "docs:api:build": "tsx ./scripts/buildApiDocs/index.ts",
     "docs:api:buildX": "tsx ./docs/scripts/api/buildApi.ts",
     "docs:llms:build": "rimraf --glob ./docs/public/x/ && tsx ./scripts/buildLlmsDocs/index.ts --projectSettings scripts/buildApiDocs/projectSettings.ts",
