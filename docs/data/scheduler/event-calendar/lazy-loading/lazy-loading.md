@@ -8,7 +8,7 @@ components: EventCalendarPremium
 
 # Event Calendar - Lazy loading events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">The `dataSource` prop accepts a `getEvents()` method to lazily load events.</p>
+<p class="description">Fetch events on demand as users navigate dates and views.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 

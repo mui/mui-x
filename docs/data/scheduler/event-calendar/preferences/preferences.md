@@ -53,7 +53,7 @@ return (
 
 ## Preferences menu
 
-The preferences menu lets the users change their preferences to customize the component to their needs.
+The preferences menu lets users customize the component to their needs.
 
 You can customize which preferences are available in the preferences menu using the `preferencesMenuConfig` prop:
 
