@@ -112,11 +112,13 @@ Internal changes.
 - [docs] Add feedback form to the scheduler docs (#22237) @rita-codes
 - [docs] Fix `GridToolbarCustom` demo crash in DataGrid (#21950) @MBilalShafi
 - [docs] Do not resolve axes in charts (#22307) @alexfauquette
+- [docs] Fix no longer valid link (#22371) @LukasTy
 
 ### Core
 
 - [code-infra] Bump browser `testTimeout` to absorb React 19 slowness (#22236) @LukasTy
 - [code-infra] Use vale rules from code-infra package (#22256) @brijeshb42
+- [code-infra] Fix broken valelint and docs build (#22362) @LukasTy
 - [internal] Prepare renaming LICENSE file to LICENSE.md (#22055) @imazizbohra
 - [internal] Remove outdated .woff files (#22286) @oliviertassinari
 - [internal] Replace Codspeed with `@mui/internal-benchmark` for charts (#22243) @JCQuintas
