@@ -441,7 +441,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               )}
             </EventTimelinePremiumEventsHeaderCell>
           </EventTimelinePremiumHeaderRow>
-          <EventTimelinePremiumBodyScroller role="presentation">
+          <EventTimelinePremiumBodyScroller role="none">
             <EventTimelinePremiumTitleSubGrid
               ref={titleSubGridRef}
               className={classes.titleSubGrid}
@@ -452,7 +452,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             </EventTimelinePremiumTitleSubGrid>
             <EventTimelinePremiumEventsSubGridWrapper
               ref={eventsScrollerRef}
-              role="presentation"
+              role="none"
               className={classes.eventsSubGridWrapper}
             >
               <EventTimelinePremiumEventsSubGrid className={classes.eventsSubGrid}>
