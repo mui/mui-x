@@ -6,6 +6,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
+import Switch from '@mui/material/Switch';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -13,6 +14,8 @@ import FormLabel from '@mui/material/FormLabel';
 import Input, { inputClasses } from '@mui/material/Input';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 
 import { ConfigSection } from './configuration.type';
@@ -65,6 +68,30 @@ export default function PlaygroundForm<Props extends Record<string, unknown>>({
               const currentValue = state[resolvedKey] ?? resolvedValueConfig.default;
 
               if (resolvedValueConfig.type === 'radio') {
+                if (resolvedValueConfig.input === 'buttonGroup') {
+                  return (
+                    <FormControl key={property.title} size="small">
+                      <FormLabel>{property.title}</FormLabel>
+                      <ToggleButtonGroup
+                        size="small"
+                        exclusive
+                        value={currentValue}
+                        onChange={(event, value) => {
+                          if (value === null) {
+                            return;
+                          }
+                          onStateChange((prev) => ({ ...prev, [resolvedKey]: value }));
+                        }}
+                      >
+                        {resolvedValueConfig.values.map((option) => (
+                          <ToggleButton key={option} value={option}>
+                            {option}
+                          </ToggleButton>
+                        ))}
+                      </ToggleButtonGroup>
+                    </FormControl>
+                  );
+                }
                 return (
                   <FormControl key={property.title} size="small">
                     <FormLabel>{property.title}</FormLabel>
@@ -90,6 +117,22 @@ export default function PlaygroundForm<Props extends Record<string, unknown>>({
                 );
               }
 
+              if (resolvedValueConfig.type === 'boolean') {
+                return (
+                  <FormControl key={property.title} disabled={property.disabled?.(state)}>
+                    <FormLabel>{property.title}</FormLabel>
+                    <Switch
+                      size="small"
+                      disabled={property.disabled?.(state)}
+                      checked={Boolean(currentValue)}
+                      onChange={(event) => {
+                        const value = event.target.checked;
+                        onStateChange((prev) => ({ ...prev, [resolvedKey]: value }));
+                      }}
+                    />
+                  </FormControl>
+                );
+              }
               if (resolvedValueConfig.type === 'number') {
                 if (resolvedValueConfig.input === 'slider') {
                   return (

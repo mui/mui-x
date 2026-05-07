@@ -2,6 +2,7 @@
 
 interface RadioConfig {
   type: 'radio';
+  input?: 'select' | 'buttonGroup';
   values: string[];
   default: string;
 }
@@ -15,9 +16,14 @@ interface NumberConfig {
   input?: 'text' | 'slider';
 }
 
+interface BooleanConfig {
+  type: 'boolean';
+  default: boolean;
+}
+
 // ======= structure organization =======
 
-type ConfigValue = RadioConfig | NumberConfig;
+type ConfigValue = RadioConfig | NumberConfig | BooleanConfig;
 
 interface ConfigProperty<Props extends Record<string, unknown>> {
   /**
