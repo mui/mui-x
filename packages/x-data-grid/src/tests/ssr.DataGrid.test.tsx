@@ -80,7 +80,9 @@ describe('<DataGrid /> - SSR', () => {
         await act(async () => {
           root = ReactDOMClient.hydrateRoot(container, tree);
         });
-        root?.unmount();
+        await act(async () => {
+          root?.unmount();
+        });
       } finally {
         console.error = originalConsoleError;
         document.body.removeChild(container);
