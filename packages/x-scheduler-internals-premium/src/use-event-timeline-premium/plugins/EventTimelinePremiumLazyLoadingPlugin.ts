@@ -34,20 +34,9 @@ export class EventTimelinePremiumLazyLoadingPlugin<
         const range = { start: viewConfig.start, end: viewConfig.end };
         const isInstantLoad = previousKey === null;
         queueMicrotask(() => {
-          this.queueDataFetchForRange(range, isInstantLoad).catch(this.handleFetchError);
+          this.queueDataFetchForRange(range, isInstantLoad);
         });
       },
     );
   }
-
-  private handleFetchError = (error: unknown) => {
-    const wrapped =
-      error instanceof Error ? error : /* minify-error-disabled */ new Error(String(error));
-    const previousErrors = this.store.state.errors;
-    this.store.update({
-      ...this.store.state,
-      errors: [...previousErrors, wrapped],
-      isLoading: false,
-    });
-  };
 }

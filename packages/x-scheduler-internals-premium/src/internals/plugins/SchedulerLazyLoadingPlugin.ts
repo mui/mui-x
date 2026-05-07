@@ -94,6 +94,7 @@ export class SchedulerLazyLoadingPlugin<
         ...this.store.state,
         ...eventsState,
         isLoading: false,
+        errors: [],
       });
 
       await this.dataManager.setRequestSettled(range);
