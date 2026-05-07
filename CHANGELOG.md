@@ -5,6 +5,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.28.5
+
+_May 8, 2026_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+The following team members contributed to this release:
+@LukasTy, @MBilalShafi
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.28.5`
+
+- [DataGrid] Fix active filter detection for array values (#22357) @MBilalShafi
+- [DataGrid] Fix crash when grouping/tree-data values match `Object.prototype` property names (#22343) @LukasTy
+
+#### `@mui/x-data-grid-pro@8.28.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.28.5`.
+
+#### `@mui/x-data-grid-premium@8.28.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.28.5`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.28.5`
+
+- [pickers] Fix duplicate hour label in `MultiSectionDigitalClock` on DST day (#22350) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.28.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.28.5`.
+
+#### `@mui/x-charts-premium@8.28.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.28.2`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.28.5`
+
+- [tree view] Fix stale Tree View `apiRef` after keyed remount (#22355) @MBilalShafi
+
+#### `@mui/x-tree-view-pro@8.28.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.28.5`.
+
+### Core
+
+- [code-infra] Fix broken `valelint` and docs build (#22362) @LukasTy
+
 ## 8.28.4
 
 _Apr 27, 2026_
