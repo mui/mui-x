@@ -16,6 +16,11 @@ import {
   type UseChartInteractionListenerSignature,
   useChartInteractionListener,
 } from './useChartInteractionListener';
+import {
+  type UseChartAsyncSeriesProcessorSignature,
+  type UseChartAsyncSeriesProcessorParameters,
+  useChartAsyncSeriesProcessor,
+} from './useChartAsyncSeriesProcessor';
 import type { ChartSeriesType } from '../../../models/seriesType/config';
 
 /**
@@ -29,6 +34,7 @@ export const CHART_CORE_PLUGINS = [
   useChartExperimentalFeatures,
   useChartDimensions,
   useChartSeries,
+  useChartAsyncSeriesProcessor,
   useChartInteractionListener,
   useChartAnimation,
 ] as const;
@@ -40,9 +46,13 @@ export type ChartCorePluginSignatures<SeriesType extends ChartSeriesType = Chart
   UseChartExperimentalFeaturesSignature<SeriesType>,
   UseChartDimensionsSignature,
   UseChartSeriesSignature<SeriesType>,
+  UseChartAsyncSeriesProcessorSignature<SeriesType>,
   UseChartAnimationSignature,
   UseChartInteractionListenerSignature,
 ];
 
 export interface ChartCorePluginParameters
-  extends UseChartIdParameters, UseChartSeriesConfigParameters {}
+  extends
+    UseChartIdParameters,
+    UseChartSeriesConfigParameters,
+    UseChartAsyncSeriesProcessorParameters {}
