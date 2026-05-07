@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
 
 const DEFAULT_PARAMS = { events: [] };
@@ -186,6 +186,58 @@ premiumStoreClasses.forEach((storeClass) => {
       await actionPromise;
 
       expect(store.state.isLoading).toBe(false);
+    });
+
+    it('should deduplicate rapid debounced fetches for the same range', async () => {
+      vi.useFakeTimers();
+      try {
+        const dataSource = {
+          getEvents: spy(mockFetchData),
+          updateEvents: async () => ({ success: true }),
+        };
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+        const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+        const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+
+        // Three rapid calls within the same debounce window for the same range.
+        store.lazyLoading?.queueDataFetchForRange({ start, end });
+        store.lazyLoading?.queueDataFetchForRange({ start, end });
+        store.lazyLoading?.queueDataFetchForRange({ start, end });
+
+        // Advance past the 150ms debounce + the mockFetchData setTimeout(0).
+        await vi.advanceTimersByTimeAsync(200);
+
+        expect(dataSource.getEvents.callCount).to.equal(1);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('should push an error to state.errors when dataSource.updateEvents rejects', async () => {
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: spy(async () => {
+          throw new Error('Update failed');
+        }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      store.publishEvent('eventsUpdated', {
+        deleted: [],
+        updated: new Map([['1', { id: '1' }]]),
+        created: [],
+        newEvents: [],
+      });
+
+      // Flush microtasks so the async handler reaches its catch block.
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(dataSource.updateEvents.calledOnce).to.equal(true);
+      expect(store.state.errors).toHaveLength(1);
+      expect(store.state.errors[0].message).to.equal('Update failed');
     });
   });
 });
