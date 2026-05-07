@@ -86,10 +86,12 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
             name: 'zoomTurnWheel',
             sensitivity: 0.01,
             initialDelta: 1,
+            passive: false,
           }),
           new TurnWheelGesture({
             name: 'panTurnWheel',
             sensitivity: 0.5,
+            passive: false,
           }),
           new TapAndDragGesture({
             name: 'zoomTapAndDrag',
