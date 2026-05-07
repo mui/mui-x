@@ -15,9 +15,10 @@ export const TimelineGridCell = React.forwardRef(function TimelineGridCell(
     ...elementProps
   } = componentProps;
 
+  // TODO: Add aria-colindex using Composite.
   return useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [{ role: 'gridcell' }, elementProps],
+    props: [elementProps, { role: 'cell' }],
   });
 });
 
