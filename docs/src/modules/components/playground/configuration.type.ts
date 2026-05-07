@@ -22,7 +22,11 @@ interface CommonProperty<Props, Values, State> {
 
 // ======= input options =======
 
-interface RadioConfig<Props, Values extends string = string> extends CommonProperty<Props, Values, any> {
+interface RadioConfig<Props, Values extends string = string> extends CommonProperty<
+  Props,
+  Values,
+  any
+> {
   type: 'radio';
   input?: 'select' | 'buttonGroup';
   values: readonly Values[];
@@ -60,7 +64,9 @@ export interface ConfigSection<Props> {
 
 export function defineProperty<Props>() {
   return {
-    radio: <const V extends string>(property: Omit<RadioConfig<Props, V>, 'type'>): RadioConfig<Props, V> => ({
+    radio: <const V extends string>(
+      property: Omit<RadioConfig<Props, V>, 'type'>,
+    ): RadioConfig<Props, V> => ({
       ...property,
       type: 'radio',
     }),

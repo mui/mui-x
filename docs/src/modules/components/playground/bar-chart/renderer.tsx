@@ -40,7 +40,11 @@ export default function BarChartPlaygroundRendered(props: {
       const currentValue = state[property.key] ?? property.default;
 
       const setProperty = property.setProperty as
-        | ((props: BarChartProProps, value: unknown, state: Record<string, unknown>) => BarChartProProps)
+        | ((
+            props: BarChartProProps,
+            value: unknown,
+            state: Record<string, unknown>,
+          ) => BarChartProProps)
         | undefined;
       return setProperty ? setProperty(acc, currentValue, state) : acc;
     }, initialState);
