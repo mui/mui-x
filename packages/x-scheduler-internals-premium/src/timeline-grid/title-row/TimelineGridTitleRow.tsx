@@ -16,12 +16,12 @@ export const TimelineGridTitleRow = React.forwardRef(function TimelineGridTitleR
     ...elementProps
   } = componentProps;
 
-  const { rowRef, listItemRef, handleKeyDown, handleFocus } = useTimelineGridRowKeyboard({
+  const { rowRef, handleKeyDown, handleFocus } = useTimelineGridRowKeyboard({
     columnType: 'title',
   });
 
   return useRenderElement('div', componentProps, {
-    ref: [forwardedRef, listItemRef, rowRef],
+    ref: [forwardedRef, rowRef],
     props: [
       elementProps,
       {

@@ -1,5 +1,4 @@
 export { TimelineGridRoot as Root } from './root/TimelineGridRoot';
-export { TimelineGridSubGrid as SubGrid } from './sub-grid/TimelineGridSubGrid';
 export { TimelineGridBodyRow as BodyRow } from './body-row/TimelineGridBodyRow';
 export { TimelineGridEventRow as EventRow } from './event-row/TimelineGridEventRow';
 export { TimelineGridEvent as Event } from './event/TimelineGridEvent';

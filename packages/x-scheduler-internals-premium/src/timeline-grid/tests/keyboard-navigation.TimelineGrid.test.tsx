@@ -55,9 +55,13 @@ describe('TimelineGrid keyboard navigation', () => {
             <TimelineGrid.Cell>title header</TimelineGrid.Cell>
             <TimelineGrid.Cell>events header</TimelineGrid.Cell>
           </TimelineGrid.Row>
-          <TimelineGrid.SubGrid>
-            {(resourceId) => (
-              <TimelineGrid.BodyRow key={resourceId} data-testid={`row-${resourceId}`}>
+          <div role="rowgroup">
+            {resourcesProp.map(({ id: resourceId }, index) => (
+              <TimelineGrid.BodyRow
+                key={resourceId}
+                index={index}
+                data-testid={`row-${resourceId}`}
+              >
                 <TimelineGrid.TitleRow data-testid={`title-${resourceId}`}>
                   <TimelineGrid.Cell>{resourceId}</TimelineGrid.Cell>
                 </TimelineGrid.TitleRow>
@@ -77,8 +81,8 @@ describe('TimelineGrid keyboard navigation', () => {
                   )}
                 </TimelineGrid.EventRow>
               </TimelineGrid.BodyRow>
-            )}
-          </TimelineGrid.SubGrid>
+            ))}
+          </div>
           {children}
         </TimelineGrid.Root>
         {onStoreMount && (
@@ -484,11 +488,10 @@ describe('TimelineGrid keyboard navigation', () => {
   });
 
   describe('dev-mode errors', () => {
-    it('should throw when a row is rendered outside <TimelineGrid.SubGrid />', () => {
+    it('should throw when a row is rendered outside <TimelineGrid.BodyRow />', () => {
       const errorRef = React.createRef<any>();
       const errorMessage =
-        'MUI X Scheduler: TimelineGridSubGridContext is missing. ' +
-        '<TimelineGrid.TitleRow /> and <TimelineGrid.EventRow /> must be placed within <TimelineGrid.SubGrid />.';
+        'MUI X Scheduler: <TimelineGrid.TitleRow /> and <TimelineGrid.EventRow /> must be rendered inside a <TimelineGrid.BodyRow />.';
       const expectedError = reactMajor < 19 ? ['The above error occurred in the'] : [errorMessage];
 
       expect(() =>
@@ -544,11 +547,9 @@ describe('TimelineGrid keyboard navigation', () => {
               visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
             >
               <TimelineGrid.Root columnTypes={['events']}>
-                <TimelineGrid.SubGrid>
-                  <TimelineGrid.BodyRow>
-                    <TimelineGrid.TitleRow />
-                  </TimelineGrid.BodyRow>
-                </TimelineGrid.SubGrid>
+                <TimelineGrid.BodyRow index={0}>
+                  <TimelineGrid.TitleRow />
+                </TimelineGrid.BodyRow>
               </TimelineGrid.Root>
             </EventTimelinePremiumProvider>
           </ErrorBoundary>,
@@ -574,9 +575,9 @@ describe('TimelineGrid keyboard navigation', () => {
               resources={resources}
               visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
             >
-              <TimelineGrid.SubGrid>
+              <TimelineGrid.BodyRow index={0}>
                 <TimelineGrid.TitleRow />
-              </TimelineGrid.SubGrid>
+              </TimelineGrid.BodyRow>
             </EventTimelinePremiumProvider>
           </ErrorBoundary>,
         ),

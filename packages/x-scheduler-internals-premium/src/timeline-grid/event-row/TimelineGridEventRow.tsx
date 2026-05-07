@@ -45,7 +45,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  const { rowRef, listItemRef, hasFocus, handleKeyDown, handleFocus } =
+  const { rowRef, hasFocus, handleKeyDown, handleFocus } =
     useTimelineGridRowKeyboard({ columnType: 'events' });
 
   // Selector hooks
@@ -134,7 +134,7 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   };
 
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, dropTargetRef, listItemRef, rowRef],
+    ref: [forwardedRef, dropTargetRef, rowRef],
     state,
     stateAttributesMapping,
     props: [

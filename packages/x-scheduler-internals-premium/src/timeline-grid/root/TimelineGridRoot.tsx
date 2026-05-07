@@ -95,9 +95,11 @@ export const TimelineGridRoot = React.forwardRef(function TimelineGridRoot(
     });
   }, []);
 
+  const totalRowCount = resources.length;
+
   const contextValue: TimelineGridRootContext = React.useMemo(
-    () => ({ focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes }),
-    [focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes],
+    () => ({ focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes, totalRowCount }),
+    [focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes, totalRowCount],
   );
 
   const element = useRenderElement('div', componentProps, {

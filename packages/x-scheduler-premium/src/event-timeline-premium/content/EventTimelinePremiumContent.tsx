@@ -3,7 +3,9 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
+import useLazyRef from '@mui/utils/useLazyRef';
 import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import { useVirtualizer, LayoutDataGrid } from '@mui/x-virtualizer';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
@@ -11,7 +13,10 @@ import {
   timelineOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
-import { schedulerNowSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerNowSelectors,
+  schedulerOccurrenceSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   EventDialogProvider,
@@ -25,6 +30,8 @@ import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePr
 import { EventTimelinePremiumEvent } from './timeline-event';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 
+const ROW_HEIGHT = 56;
+
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimeline',
   slot: 'Content',
@@ -34,17 +41,24 @@ const EventTimelinePremiumContentRoot = styled('section', {
   flexGrow: 1,
   width: '100%',
   overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 const EventTimelinePremiumGrid = styled(TimelineGrid.Root, {
   name: 'MuiEventTimeline',
   slot: 'Grid',
 })({
-  height: '100%',
-  display: 'grid',
-  gridTemplateColumns: 'fit-content(30%) minmax(0, 1fr)',
-  gridTemplateRows: 'auto 1fr auto',
-  alignItems: 'stretch',
+  flex: 1,
+  minHeight: 0,
+  position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
+  overflowY: 'auto',
+  overflowX: 'hidden',
+  scrollbarWidth: 'thin',
+  // Creates a stacking context so z-indexed children (header, render zone) don't bleed outside.
+  zIndex: 0,
 });
 
 const EventTimelinePremiumHeaderRow = styled(TimelineGrid.Row, {
@@ -52,10 +66,11 @@ const EventTimelinePremiumHeaderRow = styled(TimelineGrid.Row, {
   slot: 'HeaderRow',
 })(({ theme }) => ({
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-  gridRow: 1,
-  gridColumn: '1 / -1',
   display: 'grid',
-  gridTemplateColumns: 'subgrid',
+  gridTemplateColumns: 'fit-content(30%) minmax(0, 1fr)',
+  position: 'relative',
+  zIndex: 1,
+  backgroundColor: (theme.vars || theme).palette.background.default,
 }));
 
 const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
@@ -90,39 +105,33 @@ const EventTimelinePremiumEventsHeaderCellContent = styled('div', {
   transform: 'translateX(calc(-1 * var(--events-scroll-left, 0) * 1px))',
 });
 
-const EventTimelinePremiumBodyScroller = styled('div', {
+const EventTimelinePremiumScrollerContent = styled('div', {
   name: 'MuiEventTimeline',
-  slot: 'BodyScroller',
+  slot: 'ScrollerContent',
 })({
-  gridColumn: '1 / -1',
-  gridRow: 2,
-  display: 'grid',
-  gridTemplateColumns: 'subgrid',
-  gridTemplateRows: 'repeat(var(--row-count, 0), auto) minmax(auto, 1fr)',
-  overflowY: 'auto',
-  overflowX: 'hidden',
-  scrollbarWidth: 'thin',
+  flex: '1 0 auto',
+  display: 'flex',
+  flexDirection: 'column',
+  position: 'relative',
 });
 
-/**
- * SubGrid with display: contents so its children (BodyRows) participate
- * directly in the body scroller's grid, while still providing CompositeList
- * and SubGridContext for keyboard navigation.
- */
-const EventTimelinePremiumBodyRowSubGrid = styled(TimelineGrid.SubGrid, {
+const EventTimelinePremiumViewport = styled('div', {
   name: 'MuiEventTimeline',
-  slot: 'BodyRowSubGrid',
+  slot: 'Viewport',
 })({
-  display: 'contents',
+  display: 'inline-block',
+  position: 'sticky',
+  top: 0,
+  left: 0,
+  overflow: 'hidden',
 });
 
 const EventTimelinePremiumBodyRowRoot = styled(TimelineGrid.BodyRow, {
   name: 'MuiEventTimeline',
   slot: 'BodyRow',
 })(({ theme }) => ({
-  gridColumn: '1 / -1',
   display: 'grid',
-  gridTemplateColumns: 'subgrid',
+  gridTemplateColumns: 'var(--title-column-width) minmax(0, 1fr)',
   '&:not(:last-of-type)': {
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
@@ -132,7 +141,6 @@ const EventTimelinePremiumTitleSubGrid = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'TitleSubGrid',
 })(({ theme }) => ({
-  gridColumn: 1,
   borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   overflow: 'hidden',
 }));
@@ -141,7 +149,6 @@ const EventTimelinePremiumEventsSubGridRow = styled(TimelineGrid.EventRow, {
   name: 'MuiEventTimeline',
   slot: 'EventsSubGridRow',
 })(({ theme }) => ({
-  gridColumn: 2,
   overflow: 'clip',
   width: 'calc(var(--unit-count) * var(--unit-width))',
   minWidth: '100%',
@@ -162,7 +169,9 @@ const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTime
   name: 'MuiEventTimeline',
   slot: 'CurrentTimeIndicator',
 })(({ theme }) => ({
-  gridRow: '1 / -1',
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
   gridColumn: 2,
   marginLeft:
     'calc(var(--unit-count) * var(--unit-width) * var(--x-position) - var(--events-scroll-left, 0) * 1px)',
@@ -190,12 +199,25 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
 const EventTimelinePremiumEventsScrollbar = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'EventsScrollbar',
-})({
-  gridRow: 3,
-  gridColumn: '1 / -1',
+})(({ theme }) => ({
+  flexShrink: 0,
   overflowX: 'auto',
   overflowY: 'hidden',
   scrollbarWidth: 'thin',
+  borderTop: `1px solid ${(theme.vars || theme).palette.divider}`,
+}));
+
+/**
+ * Render zone that wraps the visible virtualized rows.
+ * Uses `transform: translate3d()` from the virtualizer to offset to the correct scroll position.
+ */
+const VirtualizerRenderZone = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'RenderZone',
+})({
+  position: 'absolute',
+  display: 'flex',
+  flexDirection: 'column',
 });
 
 function EventRowContent({
@@ -249,12 +271,44 @@ function EventRowContent({
 }
 
 /**
+ * Syncs the title column width from the header cell to the grid root as a CSS variable,
+ * so virtualized body rows can match the header column layout.
+ */
+function useTitleColumnWidthSync(
+  gridRef: React.RefObject<HTMLElement | null>,
+  titleHeaderCellRef: React.RefObject<HTMLElement | null>,
+) {
+  React.useEffect(() => {
+    const grid = gridRef.current;
+    const cell = titleHeaderCellRef.current;
+    if (!grid || !cell) {
+      return undefined;
+    }
+
+    if (typeof ResizeObserver === 'undefined') {
+      grid.style.setProperty('--title-column-width', `${cell.offsetWidth}px`);
+      return undefined;
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        grid.style.setProperty('--title-column-width', `${entry.contentBoxSize[0].inlineSize}px`);
+      }
+    });
+
+    grid.style.setProperty('--title-column-width', `${cell.offsetWidth}px`);
+    observer.observe(cell);
+
+    return () => observer.disconnect();
+  }, [gridRef, titleHeaderCellRef]);
+}
+
+/**
  * Syncs the events scrollbar with the `--events-scroll-left` CSS variable on the grid root,
- * and handles horizontal wheel events on the body scroller.
+ * and handles horizontal wheel events on the grid (scroller).
  */
 function useEventsHorizontalScroll(
   gridRef: React.RefObject<HTMLElement | null>,
-  bodyScrollerRef: React.RefObject<HTMLElement | null>,
   eventsScrollbarRef: React.RefObject<HTMLElement | null>,
 ) {
   // Sync scrollbar → CSS variable
@@ -273,11 +327,11 @@ function useEventsHorizontalScroll(
     return () => scrollbar.removeEventListener('scroll', handleScroll);
   }, [gridRef, eventsScrollbarRef]);
 
-  // Handle horizontal wheel events on body scroller → forward to scrollbar
+  // Handle horizontal wheel events on grid → forward to scrollbar
   React.useEffect(() => {
-    const scroller = bodyScrollerRef.current;
+    const grid = gridRef.current;
     const scrollbar = eventsScrollbarRef.current;
-    if (!scroller || !scrollbar) {
+    if (!grid || !scrollbar) {
       return undefined;
     }
 
@@ -290,9 +344,40 @@ function useEventsHorizontalScroll(
       scrollbar.scrollLeft += event.deltaX;
     };
 
-    scroller.addEventListener('wheel', handleWheel, { passive: false });
-    return () => scroller.removeEventListener('wheel', handleWheel);
-  }, [bodyScrollerRef, eventsScrollbarRef]);
+    grid.addEventListener('wheel', handleWheel, { passive: false });
+    return () => grid.removeEventListener('wheel', handleWheel);
+  }, [gridRef, eventsScrollbarRef]);
+}
+
+/**
+ * Measures the height of an element via ResizeObserver and returns it as state.
+ */
+function useElementHeight(ref: React.RefObject<HTMLElement | null>): number {
+  const [height, setHeight] = React.useState(0);
+
+  React.useEffect(() => {
+    const element = ref.current;
+    if (!element) {
+      return undefined;
+    }
+
+    if (typeof ResizeObserver === 'undefined') {
+      setHeight(element.offsetHeight);
+      return undefined;
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setHeight(entry.borderBoxSize[0].blockSize);
+      }
+    });
+
+    setHeight(element.offsetHeight);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref]);
+
+  return height;
 }
 
 export const EventTimelinePremiumContent = React.forwardRef(function EventTimelinePremiumContent(
@@ -306,8 +391,8 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   // Ref hooks
   const containerRef = React.useRef<HTMLElement | null>(null);
   const gridRef = React.useRef<HTMLDivElement | null>(null);
-  const eventsHeaderCellRef = React.useRef<HTMLDivElement | null>(null);
-  const bodyScrollerRef = React.useRef<HTMLDivElement | null>(null);
+  const headerRowRef = React.useRef<HTMLDivElement | null>(null);
+  const titleHeaderCellRef = React.useRef<HTMLDivElement | null>(null);
   const eventsScrollbarRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
@@ -325,6 +410,85 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   );
   const showCurrentTimeIndicator = showCurrentTimeIndicatorSetting && isNowInView;
 
+  const resources = useStore(
+    store,
+    schedulerOccurrenceSelectors.groupedByResourceList,
+    presetConfig.start,
+    presetConfig.end,
+  );
+
+  // Measure header height for the virtualizer's topPinnedHeight
+  const headerHeight = useElementHeight(headerRowRef);
+
+  // Virtualizer setup
+  const scrollbarVerticalRef = React.useRef<HTMLElement | null>(null);
+  const scrollbarHorizontalRef = React.useRef<HTMLElement | null>(null);
+
+  const virtualizerRefs = useLazyRef(() => ({
+    container: React.createRef<HTMLDivElement>(),
+    scroller: React.createRef<HTMLDivElement>(),
+    scrollbarVertical: scrollbarVerticalRef,
+    scrollbarHorizontal: scrollbarHorizontalRef,
+  })).current;
+
+  const layout = useLazyRef(() => new LayoutDataGrid(virtualizerRefs)).current;
+
+  const rows = React.useMemo(
+    () => resources.map(({ resource }) => ({ id: resource.id, model: resource })),
+    [resources],
+  );
+
+  const range = React.useMemo(
+    () => ({ firstRowIndex: 0, lastRowIndex: rows.length }),
+    [rows.length],
+  );
+
+  const renderRow = React.useCallback(
+    ({ id, rowIndex }: { id: any; rowIndex: number }) => (
+      <EventTimelinePremiumBodyRowRoot key={id} index={rowIndex}>
+        <EventTimelinePremiumTitleSubGrid className={classes.titleSubGrid}>
+          <EventTimelinePremiumTitleCell resourceId={id} />
+        </EventTimelinePremiumTitleSubGrid>
+        <EventTimelinePremiumEventsSubGridRow
+          resourceId={id}
+          className={classes.eventsSubGridRow}
+        >
+          {({ occurrences, placeholder }) => (
+            <EventRowContent
+              resourceId={id}
+              occurrences={occurrences}
+              placeholder={placeholder}
+            />
+          )}
+        </EventTimelinePremiumEventsSubGridRow>
+      </EventTimelinePremiumBodyRowRoot>
+    ),
+    [classes.titleSubGrid, classes.eventsSubGridRow],
+  );
+
+  const virtualizer = useVirtualizer({
+    layout,
+    dimensions: { rowHeight: ROW_HEIGHT, topPinnedHeight: headerHeight },
+    virtualization: { layoutMode: 'controlled' },
+    rows,
+    range,
+    rowCount: rows.length,
+    renderRow,
+  });
+
+  const containerProps = virtualizer.store.use(LayoutDataGrid.selectors.containerProps);
+  const scrollerProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollerProps);
+  const scrollerContentProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollerContentProps);
+  const viewportProps = virtualizer.store.use(LayoutDataGrid.selectors.viewportProps);
+  const positionerProps = virtualizer.store.use(LayoutDataGrid.selectors.positionerProps);
+
+  // The Grid is both the scroller and container for the virtualizer
+  const gridMergedRef = useMergedRefs(
+    scrollerProps.ref as React.Ref<HTMLDivElement>,
+    containerProps.ref as React.Ref<HTMLDivElement>,
+    gridRef,
+  );
+
   // Reset horizontal scroll position when navigating to a new time period
   React.useEffect(() => {
     const scrollbar = eventsScrollbarRef.current;
@@ -337,76 +501,67 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     }
   }, [presetConfig.start]);
 
+  // Sync title column width from header to body rows via CSS variable
+  useTitleColumnWidthSync(gridRef, titleHeaderCellRef);
+
   // Sync events horizontal scroll: scrollbar ↔ CSS variable + wheel events
-  useEventsHorizontalScroll(gridRef, bodyScrollerRef, eventsScrollbarRef);
+  useEventsHorizontalScroll(gridRef, eventsScrollbarRef);
 
   return (
     <EventTimelinePremiumContentRoot ref={handleRef} className={classes.content} {...props}>
       <EventDialogProvider>
         <EventTimelinePremiumGrid
-          ref={gridRef}
+          ref={gridMergedRef}
           className={classes.grid}
           style={{ '--unit-width': `${presetConfig.tickWidth}px` } as React.CSSProperties}
         >
-          <EventTimelinePremiumHeaderRow className={classes.headerRow} aria-rowindex={1}>
-            <EventTimelinePremiumTitleHeaderCell className={classes.titleHeaderCell}>
-              {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
-            </EventTimelinePremiumTitleHeaderCell>
-            <EventTimelinePremiumEventsHeaderCell
-              ref={eventsHeaderCellRef}
-              className={classes.eventsHeaderCell}
-            >
-              <EventTimelinePremiumEventsHeaderCellContent
-                className={classes.eventsHeaderCellContent}
+          <EventTimelinePremiumScrollerContent {...scrollerContentProps}>
+            <EventTimelinePremiumViewport {...viewportProps}>
+              <EventTimelinePremiumHeaderRow
+                ref={headerRowRef}
+                className={classes.headerRow}
+                aria-rowindex={1}
               >
-                <EventTimelinePremiumHeader />
-              </EventTimelinePremiumEventsHeaderCellContent>
-              {showCurrentTimeIndicator && (
-                <EventTimelinePremiumCurrentTimeIndicatorCircle
-                  className={classes.currentTimeIndicatorCircle}
-                  aria-hidden
-                />
-              )}
-            </EventTimelinePremiumEventsHeaderCell>
-          </EventTimelinePremiumHeaderRow>
-          <EventTimelinePremiumBodyScroller ref={bodyScrollerRef} role="presentation">
-            <EventTimelinePremiumBodyRowSubGrid>
-              {(resourceId) => (
-                <EventTimelinePremiumBodyRowRoot key={resourceId}>
-                  <EventTimelinePremiumTitleSubGrid className={classes.titleSubGrid}>
-                    <EventTimelinePremiumTitleCell resourceId={resourceId} />
-                  </EventTimelinePremiumTitleSubGrid>
-                  <EventTimelinePremiumEventsSubGridRow
-                    resourceId={resourceId}
-                    className={classes.eventsSubGridRow}
+                <EventTimelinePremiumTitleHeaderCell
+                  ref={titleHeaderCellRef}
+                  className={classes.titleHeaderCell}
+                >
+                  {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
+                </EventTimelinePremiumTitleHeaderCell>
+                <EventTimelinePremiumEventsHeaderCell className={classes.eventsHeaderCell}>
+                  <EventTimelinePremiumEventsHeaderCellContent
+                    className={classes.eventsHeaderCellContent}
                   >
-                    {({ occurrences, placeholder }) => (
-                      <EventRowContent
-                        resourceId={resourceId}
-                        occurrences={occurrences}
-                        placeholder={placeholder}
-                      />
-                    )}
-                  </EventTimelinePremiumEventsSubGridRow>
-                </EventTimelinePremiumBodyRowRoot>
-              )}
-            </EventTimelinePremiumBodyRowSubGrid>
+                    <EventTimelinePremiumHeader />
+                  </EventTimelinePremiumEventsHeaderCellContent>
+                  {showCurrentTimeIndicator && (
+                    <EventTimelinePremiumCurrentTimeIndicatorCircle
+                      className={classes.currentTimeIndicatorCircle}
+                      aria-hidden
+                    />
+                  )}
+                </EventTimelinePremiumEventsHeaderCell>
+              </EventTimelinePremiumHeaderRow>
+              <VirtualizerRenderZone role="rowgroup" {...positionerProps}>
+                {virtualizer.api.getters.getRows()}
+              </VirtualizerRenderZone>
+            </EventTimelinePremiumViewport>
             {showCurrentTimeIndicator && (
               <EventTimelinePremiumCurrentTimeIndicator
                 className={classes.currentTimeIndicator}
                 aria-hidden
               />
             )}
-          </EventTimelinePremiumBodyScroller>
-          <EventTimelinePremiumEventsScrollbar ref={eventsScrollbarRef} aria-hidden>
-            <div
-              style={{
-                width: 'calc(var(--unit-count) * var(--unit-width))',
-                height: 1,
-              }}
-            />
-          </EventTimelinePremiumEventsScrollbar>
+          </EventTimelinePremiumScrollerContent>
         </EventTimelinePremiumGrid>
+        <EventTimelinePremiumEventsScrollbar ref={eventsScrollbarRef} aria-hidden>
+          <div
+            style={{
+              width: 'calc(var(--unit-count) * var(--unit-width))',
+              height: 1,
+            }}
+          />
+        </EventTimelinePremiumEventsScrollbar>
       </EventDialogProvider>
     </EventTimelinePremiumContentRoot>
   );

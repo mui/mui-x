@@ -1,16 +1,12 @@
 'use client';
 import * as React from 'react';
-import {
-  useRenderElement,
-  BaseUIComponentProps,
-  useCompositeListItem,
-} from '@mui/x-scheduler-internals/base-ui-copy';
+import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
 import { TimelineGridBodyRowContext } from './TimelineGridBodyRowContext';
 
 /**
- * A unified row container that registers in the CompositeList
- * and provides its index to child cells (TitleRow, EventRow).
- * This allows each resource row to be a single DOM element.
+ * A unified row container that provides its index to child cells
+ * (TitleRow, EventRow) for keyboard navigation.
+ * The `index` is passed as a prop (e.g. from the virtualizer's renderRow).
  */
 export const TimelineGridBodyRow = React.forwardRef(function TimelineGridBodyRow(
   componentProps: TimelineGridBodyRow.Props,
@@ -21,16 +17,16 @@ export const TimelineGridBodyRow = React.forwardRef(function TimelineGridBodyRow
     className,
     render,
     style,
+    // Internal props
+    index,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  const { ref: listItemRef, index } = useCompositeListItem();
-
   const contextValue: TimelineGridBodyRowContext = React.useMemo(() => ({ index }), [index]);
 
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, listItemRef],
+    ref: [forwardedRef],
     props: [
       elementProps,
       {
@@ -51,5 +47,11 @@ export const TimelineGridBodyRow = React.forwardRef(function TimelineGridBodyRow
 export namespace TimelineGridBodyRow {
   export interface State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State> {}
+  export interface Props extends BaseUIComponentProps<'div', State> {
+    /**
+     * The logical row index within the grid.
+     * Provided by the virtualizer's `renderRow` callback.
+     */
+    index: number;
+  }
 }
