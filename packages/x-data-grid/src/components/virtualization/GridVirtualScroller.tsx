@@ -81,7 +81,7 @@ const Scroller = styled('div', {
 
   // Prevent overscroll bounce from revealing content behind pinned column shadows on macOS.
   ...(ownerState.hasPinnedColumns && {
-    overscrollBehavior: 'none',
+    overscrollBehaviorX: 'none',
   }),
 }));
 
@@ -108,9 +108,8 @@ const Viewport = styled('div', {
 const hasPinnedRightSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.dimensions.rightPinnedWidth > 0;
 
-const hasPinnedColumnsSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.dimensions.leftPinnedWidth > 0 ||
-  apiRef.current.state.dimensions.rightPinnedWidth > 0;
+const hasPinnedLeftSelector = (apiRef: RefObject<GridApiCommunity>) =>
+  apiRef.current.state.dimensions.leftPinnedWidth > 0;
 
 export interface GridVirtualScrollerProps {
   children?: React.ReactNode;
@@ -122,10 +121,11 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const hasScrollY = useGridSelector(apiRef, gridHasScrollYSelector);
   const hasScrollX = useGridSelector(apiRef, gridHasScrollXSelector);
   const hasPinnedRight = useGridSelector(apiRef, hasPinnedRightSelector);
-  const hasPinnedColumns = useGridSelector(apiRef, hasPinnedColumnsSelector);
+  const hasPinnedLeft = useGridSelector(apiRef, hasPinnedLeftSelector);
   const hasBottomFiller = useGridSelector(apiRef, gridHasBottomFillerSelector);
   const { overlayType, loadingOverlayVariant } = useGridOverlays(apiRef, rootProps);
   const Overlay = rootProps.slots?.[overlayType];
+  const hasPinnedColumns = hasPinnedRight || hasPinnedLeft;
   const ownerState = {
     classes: rootProps.classes,
     hasScrollX,
