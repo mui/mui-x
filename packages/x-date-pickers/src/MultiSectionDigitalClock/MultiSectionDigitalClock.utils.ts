@@ -48,16 +48,16 @@ export const getHourSectionOptions = <TDate extends PickerValidDate>({
   };
 
   // Anchor label generation to a fixed non-transition day (month=0, day=15) —
-  // `adapter.setHours(now, N)` on a transition day can roll forward and emit
+  // `utils.setHours(now, N)` on a transition day can roll forward and emit
   // duplicate labels (see https://github.com/mui/mui-x/issues/22084). Order:
   // `setMonth` first so day-overflow is harmless; non-Gregorian adapters land
   // on a different month-15 here but are all TZ-incompatible.
-  const labelReferenceDate = adapter.setDate(adapter.setMonth(adapter.startOfDay(now), 0), 15);
+  const labelReferenceDate = utils.setDate(utils.setMonth(utils.startOfDay(now), 0), 15);
 
   const endHour = ampm ? 11 : 23;
   for (let hour = 0; hour <= endHour; hour += timeStep) {
-    let label = adapter.format(
-      adapter.setHours(labelReferenceDate, hour),
+    let label = utils.format(
+      utils.setHours(labelReferenceDate, hour),
       ampm ? 'hours12h' : 'hours24h',
     );
     const ariaLabel = resolveAriaLabel(parseInt(label, 10).toString());
