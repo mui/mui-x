@@ -34,12 +34,13 @@ function ToolbarWithKeyboardViewSwitch(props: KeyboardViewToolbarProps) {
     showKeyboardView,
     setShowKeyboardView,
     className,
+    sx,
     ...other
   } = props;
   const { orientation } = usePickerContext();
 
   if (!showKeyboardViewSwitch) {
-    return <DatePickerToolbar className={className} {...other} />;
+    return <DatePickerToolbar className={className} sx={sx} {...other} />;
   }
 
   const isLandscape = orientation === 'landscape';
@@ -51,13 +52,16 @@ function ToolbarWithKeyboardViewSwitch(props: KeyboardViewToolbarProps) {
       direction={isLandscape ? 'column' : 'row'}
       sx={{ alignItems: 'center' }}
     >
-      <DatePickerToolbar {...other} sx={{ flex: '1 1 100%' }} />
+      <DatePickerToolbar
+        {...other}
+        sx={[{ flex: '1 1 100%' }, ...(Array.isArray(sx) ? sx : [sx])]}
+      />
       <IconButton
         color="inherit"
         aria-label={
           showKeyboardView ? 'Switch to calendar view' : 'Switch to keyboard view'
         }
-        onClick={() => setShowKeyboardView!((prev) => !prev)}
+        onClick={() => setShowKeyboardView?.((prev) => !prev)}
       >
         {showKeyboardView ? <CalendarMonthIcon /> : <ModeEditIcon />}
       </IconButton>
@@ -85,7 +89,7 @@ function LayoutWithKeyboardView(props: PickersLayoutProps<Dayjs | null>) {
   return (
     <PickersLayoutRoot ownerState={ownerState}>
       {toolbar}
-      {actionBar}
+
       <PickersLayoutContentWrapper
         className={pickersLayoutClasses.contentWrapper}
         ownerState={ownerState}
@@ -101,8 +105,7 @@ function LayoutWithKeyboardView(props: PickersLayoutProps<Dayjs | null>) {
               slots={{
                 // Date Field rendered within a Picker context gets injected an open Picker button.
                 // Passing empty adornment to the slot to prevent it from being rendered.
-                // eslint-disable-next-line react/jsx-no-useless-fragment
-                inputAdornment: () => <React.Fragment />,
+                inputAdornment: EmptyElement,
               }}
               sx={{ width: '100%' }}
             />
@@ -111,6 +114,7 @@ function LayoutWithKeyboardView(props: PickersLayoutProps<Dayjs | null>) {
           content
         )}
       </PickersLayoutContentWrapper>
+      {actionBar}
     </PickersLayoutRoot>
   );
 }
@@ -126,4 +130,8 @@ export default function MobileKeyboardView() {
       />
     </LocalizationProvider>
   );
+}
+
+function EmptyElement() {
+  return null;
 }
