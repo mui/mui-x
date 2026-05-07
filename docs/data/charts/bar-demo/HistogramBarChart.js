@@ -34,7 +34,6 @@ function computeBins(values, binCount) {
 // The demo synthesizes 1,000 samples from a normal distribution (μ=50, σ=12)
 // with a seeded random generator so the chart is deterministic across SSR
 // and client hydration.
-// ---------------------------------------------------------------------------
 function createSeededRandom(seed) {
   let state = seed;
   return () => {
@@ -49,6 +48,7 @@ const data = Array.from({ length: 1000 }, () => {
   const v = random();
   return 50 + 12 * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 });
+// ---------------------------------------------------------------------------
 
 export default function HistogramBarChart() {
   const [binCount, setBinCount] = React.useState(20);
