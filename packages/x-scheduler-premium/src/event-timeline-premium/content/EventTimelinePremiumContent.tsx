@@ -50,14 +50,25 @@ const EventTimelinePremiumGrid = styled(TimelineGrid.Root, {
   slot: 'Grid',
 })({
   flex: 1,
+  flexGrow: 1,
   minHeight: 0,
+  height: '100%',
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
-  overflowY: 'auto',
-  overflowX: 'hidden',
-  scrollbarWidth: 'thin',
+  overflow: 'scroll',
+
+  scrollbarWidth: 'none' /* Firefox */,
+  '&::-webkit-scrollbar': {
+    display: 'none' /* Safari and Chrome */,
+  },
+
+  '@media print': {
+    overflow: 'hidden',
+  },
+
   // Creates a stacking context so z-indexed children (header, render zone) don't bleed outside.
+  // Also https://github.com/mui/mui-x/issues/10547
   zIndex: 0,
 });
 
@@ -269,52 +280,6 @@ function EventRowContent({
 }
 
 /**
- * Syncs the events scrollbar with the `--events-scroll-left` CSS variable on the grid root,
- * and handles horizontal wheel events on the grid (scroller).
- */
-function useEventsHorizontalScroll(
-  gridRef: React.RefObject<HTMLElement | null>,
-  eventsScrollbarRef: React.RefObject<HTMLElement | null>,
-) {
-  // Sync scrollbar → CSS variable
-  React.useEffect(() => {
-    const scrollbar = eventsScrollbarRef.current;
-    const grid = gridRef.current;
-    if (!scrollbar || !grid) {
-      return undefined;
-    }
-
-    const handleScroll = () => {
-      grid.style.setProperty('--events-scroll-left', String(scrollbar.scrollLeft));
-    };
-
-    scrollbar.addEventListener('scroll', handleScroll, { passive: true });
-    return () => scrollbar.removeEventListener('scroll', handleScroll);
-  }, [gridRef, eventsScrollbarRef]);
-
-  // Handle horizontal wheel events on grid → forward to scrollbar
-  React.useEffect(() => {
-    const grid = gridRef.current;
-    const scrollbar = eventsScrollbarRef.current;
-    if (!grid || !scrollbar) {
-      return undefined;
-    }
-
-    const handleWheel = (event: WheelEvent) => {
-      // Only intercept primarily-horizontal scroll gestures
-      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) {
-        return;
-      }
-      event.preventDefault();
-      scrollbar.scrollLeft += event.deltaX;
-    };
-
-    grid.addEventListener('wheel', handleWheel, { passive: false });
-    return () => grid.removeEventListener('wheel', handleWheel);
-  }, [gridRef, eventsScrollbarRef]);
-}
-
-/**
  * Measures the height of an element via ResizeObserver and returns it as state.
  */
 function useElementHeight(ref: React.RefObject<HTMLElement | null>): number {
@@ -463,9 +428,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
       grid.style.setProperty('--events-scroll-left', '0');
     }
   }, [presetConfig.start]);
-
-  // Sync events horizontal scroll: scrollbar ↔ CSS variable + wheel events
-  useEventsHorizontalScroll(gridRef, eventsScrollbarRef);
 
   return (
     <EventTimelinePremiumContentRoot
