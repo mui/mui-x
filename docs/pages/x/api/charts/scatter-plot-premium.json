@@ -1,0 +1,14 @@
+{
+  "props": {},
+  "name": "ScatterPlotPremium",
+  "imports": [
+    "import { ScatterPlotPremium } from '@mui/x-charts-premium/ScatterChartPremium';",
+    "import { ScatterPlotPremium } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiScatterPlotPremium",
+  "filename": "/packages/x-charts-premium/src/ScatterChartPremium/ScatterPlotPremium.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li></ul>",
+  "cssComponent": false
+}

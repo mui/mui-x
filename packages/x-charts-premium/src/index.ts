@@ -63,6 +63,8 @@ export * from './ChartsRadialDataProviderPremium';
 export * from './ChartsContainerPremium';
 export * from './BarChartPremium';
 export * from './HeatmapPremium';
+export * from './ScatterChartPremium';
 export * from './ChartsWebGLLayer';
 export * from './CandlestickChart';
 export * from './RadialLineChart';
+export * from './RadialBarChart';
