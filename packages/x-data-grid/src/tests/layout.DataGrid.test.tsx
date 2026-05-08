@@ -130,12 +130,16 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
       it('mounts the root element during the first SPA commit', () => {
         let rootElementInLayoutEffect: HTMLDivElement | null | undefined;
+        let renderCount = 0;
 
         function TestCase() {
           const apiRef = useGridApiRef();
 
           React.useLayoutEffect(() => {
-            rootElementInLayoutEffect = apiRef.current!.rootElementRef.current;
+            renderCount += 1;
+            if (renderCount === 1) {
+              rootElementInLayoutEffect = apiRef.current!.rootElementRef.current;
+            }
           }, [apiRef]);
 
           return (
