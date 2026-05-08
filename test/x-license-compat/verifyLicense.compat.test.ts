@@ -7,8 +7,13 @@
 // remain readable by every older verifyLicense we still support.
 //
 // The matrix below covers three axes:
-//   - x-license major (v5 / v6 / v7 / v8 / v9) — the verifyLicense baked into customer installs
-//   - currently-issued license format (KV=1 perpetual, KV=2 subscription/annual, KV=3 annual)
+//   - x-license major (v5 / v6 / v7 / v8 / v9): the verifyLicense baked into customer installs
+//   - license-key format that may be in the wild: every key version the dispatcher
+//     needs to handle:
+//       - KEYVERSION=1: legacy perpetual format (no longer issued, but old customers
+//         still have them)
+//       - KV=2: added `S=` / `LM=` / `PV=` tokens; used through v6/v7/v8
+//       - KV=3: added `Q=` / `AT=` tokens; the format issued today
 //   - commercial package the license is presented to (data-grid-pro, charts-pro, tree-view-pro)
 //
 // All five majors are pinned to specific published versions (see this workspace's
@@ -157,7 +162,7 @@ const KV3_BREAKS_ON: ReadonlySet<Major> = new Set(['v5', 'v6', 'v7', 'v8']);
 
 const licenseKeys: LicenseCase[] = [
   {
-    label: 'KV=1 perpetual',
+    label: 'KEYVERSION=1 perpetual',
     key: TEST_KEY_V1,
     notAvailableForPackages: INITIAL_PLAN_GATED,
   },
@@ -191,7 +196,7 @@ const licenseKeys: LicenseCase[] = [
   },
 ];
 
-describe('Cross-major license compatibility — every license must be accepted by every supported major', () => {
+describe('Cross-major license compatibility: every license must be accepted by every supported major', () => {
   // Older verifyLicense implementations log "Key version not found" via console.error
   // when they encounter a KV they don't understand. Silence it so vitest-fail-on-console
   // doesn't mask the real assertion failure.
