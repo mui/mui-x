@@ -1,0 +1,6 @@
+<MobileDatePicker
+  slots={{
+    layout: LayoutWithKeyboardView,
+    toolbar: ToolbarWithKeyboardViewSwitch,
+  }}
+/>
