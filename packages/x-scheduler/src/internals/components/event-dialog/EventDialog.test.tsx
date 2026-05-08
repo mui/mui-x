@@ -1466,6 +1466,78 @@ describe('<EventDialogContent open />', () => {
             'true',
           );
         });
+
+        it('should not allow unchecking the last selected weekday in WEEKLY mode', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <EventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          // WEEKLY preset pre-fills byDay with ['MO'] (DEFAULT_EVENT is on Monday 2025-05-26)
+          await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+
+          const mondayCheckbox = screen.getByRole('checkbox', {
+            name: /monday/i,
+          }) as HTMLInputElement;
+          expect(mondayCheckbox.checked).to.equal(true);
+
+          // Attempting to uncheck the only selected day should be blocked
+          await user.click(mondayCheckbox);
+          expect(mondayCheckbox.checked).to.equal(true);
+
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+          expect(updated.rrule.byDay).to.deep.equal(['MO']);
+        });
+
+        it('should pre-fill byDay with the event weekday when switching frequency to WEEKLY', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <EventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          // Start with DAILY preset so byDay is cleared
+          await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
+
+          // Switch to custom so the inner frequency select becomes editable
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom repeat rule/i }));
+
+          // Switch frequency to WEEKLY via the inner combobox
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /weeks/i }));
+
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+          // byDay must be pre-filled with the event's weekday (Monday → 'MO'), not left empty
+          expect(updated.rrule.byDay).to.deep.equal(['MO']);
+        });
       });
     });
 

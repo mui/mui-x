@@ -250,7 +250,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
         rruleDraft: {
           ...prev.rruleDraft,
           freq: newFrequency,
-          byDay: [],
+          byDay: newFrequency === 'WEEKLY' ? [monthlyRef.code] : [],
           byMonthDay: newFrequency === 'MONTHLY' ? [monthlyRef.dayOfMonth] : [],
         },
       };
@@ -315,9 +315,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const handleChangeWeeklyDays = (dayCode: RecurringEventWeekDayCode) => {
     setControlled((prev) => {
       const byDay = prev.rruleDraft.byDay ?? [];
-      const next = byDay.includes(dayCode)
-        ? byDay.filter((d) => d !== dayCode)
-        : [...byDay, dayCode];
+      const isRemoving = byDay.includes(dayCode);
+      if (isRemoving && byDay.length === 1) {
+        return prev;
+      }
+      const next = isRemoving ? byDay.filter((d) => d !== dayCode) : [...byDay, dayCode];
       return {
         ...prev,
         recurrenceSelection: 'custom',
