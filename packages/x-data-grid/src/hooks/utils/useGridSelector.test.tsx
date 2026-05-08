@@ -76,19 +76,28 @@ describe('useGridSelector', () => {
     expect(screen.getByTestId('selector-probe').textContent).to.equal('1');
   });
 
-  it('should update multiple selectors from the same store change', async () => {
+  it('should batch updates of multiple selectors from the same store change into a single commit', async () => {
     const apiRef = createApiRef({
       selectorTestState: { a: 0, b: 0 },
     });
+
+    let commits: string[] = [];
 
     const SelectorProbe = React.memo(function SelectorProbe() {
       const valueA = useGridSelector(apiRef as any, selectorValueA);
       const valueB = useGridSelector(apiRef as any, selectorValueB);
 
+      React.useEffect(() => {
+        commits.push(`${valueA}:${valueB}`);
+      });
+
       return <div data-testid="selector-probe">{`${valueA}:${valueB}`}</div>;
     });
 
     render(<SelectorProbe />);
+
+    // reset before the update
+    commits = [];
 
     await act(async () => {
       setApiRefState(apiRef, {
@@ -98,5 +107,6 @@ describe('useGridSelector', () => {
     });
 
     expect(screen.getByTestId('selector-probe').textContent).to.equal('1:1');
+    expect(commits).to.deep.equal(['1:1']);
   });
 });
