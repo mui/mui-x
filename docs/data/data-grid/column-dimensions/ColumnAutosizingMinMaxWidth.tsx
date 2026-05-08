@@ -4,10 +4,20 @@ import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 
 const rows = [
   { id: 1, name: 'Alice', role: 'Engineer', note: 'Short' },
-  { id: 2, name: 'Bob', role: 'Product Manager', note: 'A much longer note that exceeds typical width' },
+  {
+    id: 2,
+    name: 'Bob',
+    role: 'Product Manager',
+    note: 'A much longer note that exceeds typical width',
+  },
   { id: 3, name: 'Charlie', role: 'Designer', note: 'Medium length content here' },
   { id: 4, name: 'Diana', role: 'Engineering Manager', note: 'Tiny' },
-  { id: 5, name: 'Eve', role: 'QA', note: 'Another long note to demonstrate the maximum width cap' },
+  {
+    id: 5,
+    name: 'Eve',
+    role: 'QA',
+    note: 'Another long note to demonstrate the maximum width cap',
+  },
 ];
 
 const columns = [
@@ -16,14 +26,16 @@ const columns = [
     headerName: 'Name',
     // autosizeMinWidth only: autosize floors at 180px; manual resize is unrestricted
     autosizeMinWidth: 180,
-    description: 'autosizeMinWidth: 180 — autosize floors at 180px, manual resize unrestricted',
+    description:
+      'autosizeMinWidth: 180 — autosize floors at 180px, manual resize unrestricted',
   },
   {
     field: 'role',
     headerName: 'Role',
     // autosizeMaxWidth only: autosize caps at 120px; manual resize is unrestricted
     autosizeMaxWidth: 120,
-    description: 'autosizeMaxWidth: 120 — autosize caps at 120px, manual resize unrestricted',
+    description:
+      'autosizeMaxWidth: 120 — autosize caps at 120px, manual resize unrestricted',
   },
   {
     field: 'note',

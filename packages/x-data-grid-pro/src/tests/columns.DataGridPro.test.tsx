@@ -739,10 +739,7 @@ describe('<DataGridPro /> - Columns', () => {
     describe('autosizeMinWidth and autosizeMaxWidth column properties', () => {
       it('autosizeMinWidth constrains the minimum width during autosizing', async () => {
         render(
-          <Test
-            rows={rows}
-            columns={[{ field: 'id', headerName: 'ID', autosizeMinWidth: 200 }]}
-          />,
+          <Test rows={rows} columns={[{ field: 'id', headerName: 'ID', autosizeMinWidth: 200 }]} />,
         );
         await act(async () => apiRef.current?.autosizeColumns({ includeHeaders: false }));
         await waitFor(() => {
@@ -821,10 +818,7 @@ describe('<DataGridPro /> - Columns', () => {
 
       it('autosizeMinWidth does not affect manual resizing', async () => {
         render(
-          <Test
-            rows={rows}
-            columns={[{ field: 'id', headerName: 'ID', autosizeMinWidth: 200 }]}
-          />,
+          <Test rows={rows} columns={[{ field: 'id', headerName: 'ID', autosizeMinWidth: 200 }]} />,
         );
         const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
         fireEvent.mouseDown(separator, { clientX: 100 });
@@ -836,10 +830,7 @@ describe('<DataGridPro /> - Columns', () => {
 
       it('autosizeMaxWidth does not affect manual resizing', async () => {
         render(
-          <Test
-            rows={rows}
-            columns={[{ field: 'id', headerName: 'ID', autosizeMaxWidth: 60 }]}
-          />,
+          <Test rows={rows} columns={[{ field: 'id', headerName: 'ID', autosizeMaxWidth: 60 }]} />,
         );
         const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
         fireEvent.mouseDown(separator, { clientX: 100 });
