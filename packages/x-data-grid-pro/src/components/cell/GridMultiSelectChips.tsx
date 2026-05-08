@@ -214,7 +214,7 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
         gap,
       );
       if (conservative < calculated) {
-        return prev;
+        return Math.min(prev, values.length);
       }
     }
     return calculated;
