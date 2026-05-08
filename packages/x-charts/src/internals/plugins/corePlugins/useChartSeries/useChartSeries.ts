@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { type ChartPlugin } from '../../models';
 import type { UseChartSeriesState, UseChartSeriesSignature } from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
@@ -44,12 +43,12 @@ export function createIdentifierWithType(state: UseChartSeriesState) {
 export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, store }) => {
   const { series, dataset, theme, colors } = params;
 
-  // The series defaultize step (post-prop-change) runs in a microtask so the
-  // commit is decoupled from the render. The first render is handled by
-  // `getInitialState` — this effect only fires on subsequent updates. Stale
-  // resolves are dropped via `requestRef`.
+  // The series defaultize step runs on the next task tick so the commit is
+  // decoupled from the render — the browser can paint the `pending` state
+  // first. This also fires on initial mount (the store starts in `pending`
+  // from `getInitialState`). Stale resolves are dropped via `requestRef`.
   const requestRef = React.useRef(0);
-  useEffectAfterFirstRender(() => {
+  React.useEffect(() => {
     requestRef.current += 1;
     const reqId = requestRef.current;
 
@@ -119,20 +118,16 @@ useChartSeries.getDefaultizedParams = ({ params }) => ({
   theme: params.theme ?? 'light',
 });
 
-useChartSeries.getInitialState = ({ series = [], colors, theme, dataset }, currentState) => {
-  const seriesConfig = currentState.seriesConfig.config;
-  const { defaultizedSeries, idToType } = defaultizeSeries({
-    series,
-    colors: typeof colors === 'function' ? colors(theme) : colors,
-    theme,
-    seriesConfig,
-  });
+useChartSeries.getInitialState = ({ dataset }) => {
+  // Initial state is empty + `pending`; the runtime effect runs the defaultize
+  // step on the next macrotask and commits the real data. This keeps the
+  // first-mount path consistent with subsequent prop updates.
   return {
     series: {
-      defaultizedSeries,
-      idToType,
+      defaultizedSeries: {},
+      idToType: new Map(),
       dataset,
-      status: 'success' as const,
+      status: 'pending' as const,
     },
   };
 };

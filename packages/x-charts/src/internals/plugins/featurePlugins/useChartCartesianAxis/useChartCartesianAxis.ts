@@ -2,7 +2,6 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { warnOnce } from '@mui/x-internals/warning';
 import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
@@ -83,12 +82,12 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
   }, [store, params.tooltipAxis]);
 
-  // The axis defaultize step runs in a microtask so the commit is decoupled
-  // from the render. The first render is handled by `getInitialState`; this
-  // effect only fires on subsequent updates. Stale resolves are dropped via
-  // `axisRequestRef`.
+  // The axis defaultize step runs on the next task tick so the commit is
+  // decoupled from the render — the browser can paint the `pending` state
+  // first. This also fires on initial mount (the store starts in `pending`
+  // from `getInitialState`). Stale resolves are dropped via `axisRequestRef`.
   const axisRequestRef = React.useRef(0);
-  useEffectAfterFirstRender(() => {
+  React.useEffect(() => {
     axisRequestRef.current += 1;
     const reqId = axisRequestRef.current;
 
@@ -330,12 +329,14 @@ useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
 };
 
 useChartCartesianAxis.getInitialState = (params) => {
+  // Initial state starts empty + `pending`; the runtime effect runs the
+  // defaultize step on the next task tick and commits the real axes.
   return {
     cartesianAxis: {
       axesGap: params.axesGap,
-      x: params.defaultizedXAxis,
-      y: params.defaultizedYAxis,
-      status: 'success' as const,
+      x: [],
+      y: [],
+      status: 'pending' as const,
     },
     ...(params.highlightedAxis === undefined
       ? {}
