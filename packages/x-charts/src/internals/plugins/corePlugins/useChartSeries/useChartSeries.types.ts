@@ -21,6 +21,33 @@ import {
 } from '../../featurePlugins/useChartVisibilityManager/useChartVisibilityManager.types';
 import { type AsyncStatus } from '../../utils/asyncResource';
 
+// Pluggable processor that runs the `defaultizeSeries` step. When provided,
+// the plugin's async pipeline awaits this function instead of running
+// `defaultizeSeries` locally — allowing premium packages to redirect the work
+// to a Web Worker (see `@mui/x-charts-premium`'s `useChartsWorkerSeriesProcessor`).
+//
+// The processor receives only serializable inputs so it can cross a worker
+// boundary; the implementation is responsible for resolving its own
+// `seriesConfig`.
+export type ChartSeriesProcessor<SeriesType extends ChartSeriesType = ChartSeriesType> = (
+  input: ChartSeriesProcessorInput<SeriesType>,
+) => Promise<ChartSeriesProcessorOutput<SeriesType>>;
+
+export interface ChartSeriesProcessorInput<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+> {
+  series: Readonly<AllSeriesType<SeriesType>[]>;
+  colors: readonly string[];
+  theme: 'light' | 'dark';
+}
+
+export interface ChartSeriesProcessorOutput<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+> {
+  defaultizedSeries: DefaultizedSeriesGroups<SeriesType>;
+  idToType: SeriesIdToType;
+}
+
 export interface UseChartSeriesParameters<SeriesType extends ChartSeriesType = ChartSeriesType> {
   /**
    * An array of objects that can be used to populate series and axes data using their `dataKey` property.
