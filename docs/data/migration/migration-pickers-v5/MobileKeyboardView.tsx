@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { Dayjs } from 'dayjs';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
@@ -10,15 +10,25 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import {
+  PickersLayoutProps,
   PickersLayoutRoot,
   PickersLayoutContentWrapper,
   pickersLayoutClasses,
   usePickerLayout,
 } from '@mui/x-date-pickers/PickersLayout';
-import { DatePickerToolbar } from '@mui/x-date-pickers/DatePicker';
+import {
+  DatePickerToolbar,
+  DatePickerToolbarProps,
+} from '@mui/x-date-pickers/DatePicker';
 import { usePickerContext } from '@mui/x-date-pickers/hooks';
 
-function ToolbarWithKeyboardViewSwitch(props) {
+interface KeyboardViewToolbarProps extends DatePickerToolbarProps {
+  showKeyboardViewSwitch?: boolean;
+  showKeyboardView?: boolean;
+  setShowKeyboardView?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function ToolbarWithKeyboardViewSwitch(props: KeyboardViewToolbarProps) {
   const {
     showKeyboardViewSwitch,
     showKeyboardView,
@@ -59,9 +69,9 @@ function ToolbarWithKeyboardViewSwitch(props) {
   );
 }
 
-function LayoutWithKeyboardView(props) {
+function LayoutWithKeyboardView(props: PickersLayoutProps<Dayjs | null>) {
   const [showKeyboardView, setShowKeyboardView] = React.useState(false);
-  const { value, setValue, variant } = usePickerContext();
+  const { value, setValue, variant } = usePickerContext<Dayjs | null>();
 
   const { toolbar, tabs, content, actionBar, ownerState } = usePickerLayout({
     ...props,
@@ -72,7 +82,7 @@ function LayoutWithKeyboardView(props) {
         showKeyboardViewSwitch: variant === 'mobile',
         showKeyboardView,
         setShowKeyboardView,
-      },
+      } as KeyboardViewToolbarProps,
     },
   });
 
