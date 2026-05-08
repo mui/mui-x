@@ -39,7 +39,6 @@ function LayoutWithKeyboardView(props) {
   return (
     <PickersLayoutRoot ownerState={props}>
       {toolbar}
-      {actionBar}
       <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
         {tabs}
         {showKeyboardView ? (
@@ -50,13 +49,19 @@ function LayoutWithKeyboardView(props) {
           content
         )}
       </PickersLayoutContentWrapper>
+      {actionBar}
     </PickersLayoutRoot>
   );
 }
 
 function ToolbarWithKeyboardViewSwitch(props) {
-  const { showKeyboardViewSwitch, showKeyboardView, setShowKeyboardView, ...other } =
-    props;
+  const {
+    showKeyboardViewSwitch,
+    showKeyboardView,
+    setShowKeyboardView,
+    sx,
+    ...other
+  } = props;
 
   if (showKeyboardViewSwitch) {
     return (
@@ -73,10 +78,16 @@ function ToolbarWithKeyboardViewSwitch(props) {
             : { gridColumn: '1 / 4', gridRow: 1, mr: 1 }
         }
       >
-        <DatePickerToolbar {...other} sx={{ flex: '1 1 100%' }} />
+        <DatePickerToolbar
+          {...other}
+          sx={[{ flex: '1 1 100%' }, ...(Array.isArray(sx) ? sx : [sx])]}
+        />
         <IconButton
           color="inherit"
-          onClick={() => setShowKeyboardView((prev) => !prev)}
+          aria-label={
+            showKeyboardView ? 'Switch to calendar view' : 'Switch to keyboard view'
+          }
+          onClick={() => setShowKeyboardView?.((prev) => !prev)}
         >
           {showKeyboardView ? <CalendarMonthIcon /> : <ModeEditIcon />}
         </IconButton>
@@ -84,7 +95,7 @@ function ToolbarWithKeyboardViewSwitch(props) {
     );
   }
 
-  return <DatePickerToolbar {...other} />;
+  return <DatePickerToolbar sx={sx} {...other} />;
 }
 export default function MobileKeyboardView() {
   return (
