@@ -74,7 +74,7 @@ type ComputeCommonParams<SeriesType extends ChartSeriesType = ChartSeriesType> =
 
 export function computeAxisValue<SeriesType extends ChartSeriesType>(
   options: ComputeCommonParams<SeriesType> & {
-    axis?: PolarAxisConfig<'linear', any, ChartsRadiusAxisProps>[];
+    axis?: PolarAxisConfig<ScaleName, any, ChartsRadiusAxisProps>[];
     axisDirection: 'radius';
   },
 ): ComputeResult<ChartsRadiusAxisProps>;
