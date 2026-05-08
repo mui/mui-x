@@ -68,6 +68,17 @@ const seriesVariants = [
 const xAxis = [{ min: 0, max: 100, label: 'x' }];
 const yAxis = [{ min: 0, max: 100, label: 'y', width: 50 }];
 
+// Eagerly instantiate the Web Worker once per page. The worker's
+// `setupChartsAsyncWorker()` opens a BroadcastChannel listener, which the
+// chart auto-discovers on its first defaultize. Module-level instantiation
+// (guarded against SSR and Next.js HMR re-runs) gives the worker plenty of
+// head-start before the user can click _Reshuffle_, so the chart's 10 ms
+// probe reliably finds it.
+const WORKER_FLAG = '__muiXChartsScatterAsyncProcessingWorker';
+if (typeof window !== 'undefined' && !window[WORKER_FLAG]) {
+  window[WORKER_FLAG] = new Worker(new URL('./chartsWorker.ts', import.meta.url));
+}
+
 function StatusObserver({ onStatus }) {
   const store = useStore();
   const status = store.use(selectorChartSeriesStatus);
