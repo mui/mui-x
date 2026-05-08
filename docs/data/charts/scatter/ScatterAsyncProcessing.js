@@ -4,13 +4,10 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import { Chance } from 'chance';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { ScatterChartPremium } from '@mui/x-charts-premium/ScatterChartPremium';
 import { useStore, selectorChartSeriesStatus } from '@mui/x-charts/internals';
-import { ChartsWorkerSeriesProcessorProvider } from '@mui/x-charts-premium/hooks';
 
 const CLUSTER_SIZE = 33_334;
 const POINT_COUNT = CLUSTER_SIZE * 3;
@@ -93,7 +90,7 @@ function StatusObserver({ onStatus }) {
   );
 }
 
-function ScatterAsyncProcessingInner({ useWorker, setUseWorker }) {
+export default function ScatterAsyncProcessing() {
   const [variant, setVariant] = React.useState(0);
   const [log, setLog] = React.useState([]);
   const series = seriesVariants[variant];
@@ -131,22 +128,12 @@ function ScatterAsyncProcessingInner({ useWorker, setUseWorker }) {
         >
           Rapid reshuffle (3×)
         </Button>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={useWorker}
-              onChange={(event) => setUseWorker(event.target.checked)}
-              size="small"
-            />
-          }
-          label="Wrap in <ChartsWorkerSeriesProcessorProvider> (premium)"
-        />
         <Button variant="text" size="small" onClick={() => setLog([])}>
           Clear log
         </Button>
       </Stack>
       <Box sx={{ width: '100%', height: 420, position: 'relative' }}>
-        <ScatterChart
+        <ScatterChartPremium
           series={series}
           xAxis={xAxis}
           yAxis={yAxis}
@@ -161,7 +148,7 @@ function ScatterAsyncProcessingInner({ useWorker, setUseWorker }) {
           <foreignObject x={8} y={8} width={260} height={32}>
             <StatusObserver onStatus={appendLog} />
           </foreignObject>
-        </ScatterChart>
+        </ScatterChartPremium>
       </Box>
       <Paper variant="outlined" sx={{ p: 1.5 }}>
         <Typography variant="caption" color="text.secondary">
@@ -183,23 +170,5 @@ function ScatterAsyncProcessingInner({ useWorker, setUseWorker }) {
         </Box>
       </Paper>
     </Stack>
-  );
-}
-
-export default function ScatterAsyncProcessing() {
-  // The Web Worker-backed processor is automatically picked up by any chart
-  // rendered inside the provider — no chart-level prop needed. Toggle the
-  // provider on/off to compare in-process vs. off-thread defaultize.
-  const [useWorker, setUseWorker] = React.useState(false);
-  const inner = (
-    <ScatterAsyncProcessingInner useWorker={useWorker} setUseWorker={setUseWorker} />
-  );
-
-  return useWorker ? (
-    <ChartsWorkerSeriesProcessorProvider>
-      {inner}
-    </ChartsWorkerSeriesProcessorProvider>
-  ) : (
-    inner
   );
 }

@@ -6,21 +6,15 @@ import {
   type ChartAnyPluginSignature,
   type ChartsProviderProps,
   ChartsSlotsProvider,
-  type ChartSeriesConfig,
 } from '@mui/x-charts/internals';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { ChartsWatermark, defaultSlotsMaterial } from '@mui/x-charts-pro/internals';
 import { useLicenseVerifier } from '@mui/x-license/internals';
-import {
-  type ChartsSlotPropsPro,
-  type ChartsSlotsPro,
-  defaultSeriesConfigPro,
-} from '@mui/x-charts-pro/internals';
+import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '@mui/x-charts-pro/internals';
 import { type ChartsDataProviderProProps } from '@mui/x-charts-pro/ChartsDataProviderPro';
-import { rangeBarSeriesConfig } from '../BarChartPremium/RangeBar/seriesConfig';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartsDataProviderPremiumProps } from './useChartsDataProviderPremiumProps';
-import { ohlcSeriesConfig } from '../CandlestickChart/seriesConfig';
+import { defaultSeriesConfigPremium as defaultSeriesConfigPremiumConst } from '../internals/defaultSeriesConfigPremium';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
@@ -47,13 +41,7 @@ export type ChartsDataProviderPremiumProps<
     slotProps?: Partial<ChartsDataProviderPremiumSlotProps>;
   };
 
-export const defaultSeriesConfigPremium: ChartSeriesConfig<
-  'bar' | 'rangeBar' | 'scatter' | 'line' | 'pie' | 'ohlc'
-> = {
-  ...defaultSeriesConfigPro,
-  rangeBar: rangeBarSeriesConfig,
-  ohlc: ohlcSeriesConfig,
-};
+export { defaultSeriesConfigPremiumConst as defaultSeriesConfigPremium };
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
@@ -89,7 +77,7 @@ function ChartsDataProviderPremium<
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartsDataProviderPremiumProps({
       ...props,
-      seriesConfig: props.seriesConfig ?? defaultSeriesConfigPremium,
+      seriesConfig: props.seriesConfig ?? defaultSeriesConfigPremiumConst,
       plugins: props.plugins ?? DEFAULT_PLUGINS,
     });
 

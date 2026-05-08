@@ -12,6 +12,7 @@ import type {
   SeriesId,
 } from '../../../../models/seriesType';
 import { runAsyncPipeline } from '../../utils/asyncResource';
+import { getChartsAsyncRunner } from '../../utils/asyncWorkerRunner';
 
 type RetrunedType<SeriesType extends ChartSeriesType, Item> =
   Item extends SeriesItemIdentifier<SeriesType>
@@ -44,53 +45,94 @@ export function createIdentifierWithType(state: UseChartSeriesState) {
 export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, store }) => {
   const { series, dataset, theme, colors } = params;
 
-  // The series defaultize step runs on the next task tick so the commit is
-  // decoupled from the render. The first render is handled by `getInitialState`
-  // (sync defaultize, status starts at `pending`); this effect only fires on
-  // subsequent prop updates. Stale resolves are dropped via `requestRef`.
+  // The series defaultize step runs asynchronously so the commit is decoupled
+  // from the render. The first render is handled by `getInitialState` (sync
+  // defaultize); this effect only fires on subsequent prop updates. If a
+  // `BroadcastChannel`-attached worker is discovered (premium consumers can
+  // wire one up via `setupChartsAsyncWorker`), the work is offloaded to it;
+  // otherwise it falls back to the main-thread `runAsyncPipeline` path.
+  // Stale resolves are dropped via `requestRef`.
   const requestRef = React.useRef(0);
   useEffectAfterFirstRender(() => {
     requestRef.current += 1;
     const reqId = requestRef.current;
+    const resolvedColors = typeof colors === 'function' ? colors(theme) : colors;
 
-    runAsyncPipeline(
-      () =>
-        defaultizeSeries({
-          series,
-          colors: typeof colors === 'function' ? colors(theme) : colors,
-          theme,
-          seriesConfig: store.state.seriesConfig.config,
-        }),
-      (result) => {
-        if (result.status === 'pending') {
-          store.set('series', {
-            ...store.state.series,
-            status: 'pending',
-            error: undefined,
-          });
-          return;
-        }
-        if (result.status === 'error') {
-          store.set('series', {
-            ...store.state.series,
-            status: 'error',
-            error: result.error,
-          });
-          return;
-        }
-        const { defaultizedSeries, idToType } = result.data!;
-        store.set('series', {
-          ...store.state.series,
-          defaultizedSeries,
-          idToType,
-          dataset,
-          status: 'success',
-          error: undefined,
-        });
-      },
-      requestRef,
-      reqId,
-    );
+    const commitPending = () => {
+      store.set('series', { ...store.state.series, status: 'pending', error: undefined });
+    };
+    const commitSuccess = (defaultizedSeries: any, idToType: any) => {
+      store.set('series', {
+        ...store.state.series,
+        defaultizedSeries,
+        idToType,
+        dataset,
+        status: 'success',
+        error: undefined,
+      });
+    };
+    const commitError = (error: Error) => {
+      store.set('series', { ...store.state.series, status: 'error', error });
+    };
+
+    commitPending();
+
+    getChartsAsyncRunner().then((runner) => {
+      // The probe + worker round-trip is async; bail if a newer request
+      // superseded us between scheduling and resolution.
+      if (reqId !== requestRef.current) {
+        return;
+      }
+
+      if (runner) {
+        runner
+          .runSeriesDefaultize(
+            { series, colors: resolvedColors, theme, dataset },
+            reqId,
+          )
+          .then(
+            (result) => {
+              if (reqId !== requestRef.current) {
+        return;
+      }
+              commitSuccess(result.defaultizedSeries, result.idToType);
+            },
+            (err: Error) => {
+              if (reqId !== requestRef.current) {
+        return;
+      }
+              commitError(err);
+            },
+          );
+        return;
+      }
+
+      // Main-thread fallback. Re-emits `pending` (no-op since already pending)
+      // and commits success/error from the same pipeline used pre-worker.
+      runAsyncPipeline(
+        () =>
+          defaultizeSeries({
+            series,
+            colors: resolvedColors,
+            theme,
+            seriesConfig: store.state.seriesConfig.config,
+          }),
+        (result) => {
+          if (result.status === 'pending') {
+            commitPending();
+            return;
+          }
+          if (result.status === 'error') {
+            commitError(result.error!);
+            return;
+          }
+          const { defaultizedSeries, idToType } = result.data!;
+          commitSuccess(defaultizedSeries, idToType);
+        },
+        requestRef,
+        reqId,
+      );
+    });
   }, [series, dataset, colors, theme, store]);
 
   // Re-throw an error captured by the async pipeline. Read directly from

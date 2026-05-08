@@ -1,4 +1,5 @@
 export { useChartSeries } from './useChartSeries';
+export { defaultizeSeries } from './processSeries';
 export type {
   UseChartSeriesSignature,
   UseChartSeriesParameters,

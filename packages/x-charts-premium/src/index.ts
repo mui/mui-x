@@ -56,6 +56,9 @@ export * from './plugins';
 // Locales should be imported from `@mui/x-charts-premium/locales`
 // export * from './locales';
 
+// Premium worker setup
+export * from './setupChartsAsyncWorker';
+
 // Premium components
 export * from './ChartsRenderer';
 export * from './ChartsDataProviderPremium';

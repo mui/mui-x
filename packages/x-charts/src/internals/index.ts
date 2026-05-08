@@ -43,6 +43,7 @@ export * from './plugins/featurePlugins/useChartClosestPoint';
 export * from './plugins/featurePlugins/useChartBrush';
 export * from './plugins/featurePlugins/useChartItemClick';
 export * from './plugins/utils/selectors';
+export * from './plugins/utils/asyncWorkerRunner';
 export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
 export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
 export { getAxisIndex as getPolarAxisIndex } from './plugins/featurePlugins/useChartPolarAxis/getAxisIndex';

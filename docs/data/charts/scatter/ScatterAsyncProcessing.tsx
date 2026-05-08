@@ -6,7 +6,7 @@ import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { Chance } from 'chance';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { ScatterChartPremium } from '@mui/x-charts-premium/ScatterChartPremium';
 import {
   useStore,
   selectorChartSeriesStatus,
@@ -138,7 +138,7 @@ export default function ScatterAsyncProcessing() {
         </Button>
       </Stack>
       <Box sx={{ width: '100%', height: 420, position: 'relative' }}>
-        <ScatterChart
+        <ScatterChartPremium
           series={series}
           xAxis={xAxis}
           yAxis={yAxis}
@@ -150,7 +150,7 @@ export default function ScatterAsyncProcessing() {
           <foreignObject x={8} y={8} width={260} height={32}>
             <StatusObserver onStatus={appendLog} />
           </foreignObject>
-        </ScatterChart>
+        </ScatterChartPremium>
       </Box>
       <Paper variant="outlined" sx={{ p: 1.5 }}>
         <Typography variant="caption" color="text.secondary">
