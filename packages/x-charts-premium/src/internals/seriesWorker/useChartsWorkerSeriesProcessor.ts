@@ -5,6 +5,10 @@ import type { SeriesProcessorRequest, SeriesProcessorResponse } from './protocol
 
 let nextRequestId = 0;
 
+function isWorkerSupported(): boolean {
+  return typeof window !== 'undefined' && typeof Worker !== 'undefined';
+}
+
 /**
  * Returns a `ChartSeriesProcessor` that runs the series defaultize step on a
  * dedicated Web Worker, off the main thread.
@@ -20,26 +24,28 @@ let nextRequestId = 0;
  * @returns {ChartSeriesProcessor | undefined} The worker-backed processor, or `undefined` when unsupported.
  */
 export function useChartsWorkerSeriesProcessor(): ChartSeriesProcessor | undefined {
-  const workerRef = React.useRef<Worker | null>(null);
-  const pendingRef = React.useRef<
-    Map<number, { resolve: (data: SeriesProcessorResponse) => void }>
-  >(new Map());
-
-  const supported = typeof window !== 'undefined' && typeof Worker !== 'undefined';
-
-  React.useEffect(() => {
-    if (!supported) {
-      return undefined;
+  // Lazy-init via `useState` so the worker exists synchronously on the very
+  // first render — using `useEffect` would mean the first call to the
+  // processor races the effect (and used to throw "worker is not ready
+  // yet"). React calls the initializer once per mount.
+  const [worker] = React.useState<Worker | null>(() => {
+    if (!isWorkerSupported()) {
+      return null;
     }
-    const worker = new Worker(new URL('./seriesProcessor.worker.ts', import.meta.url), {
+    return new Worker(new URL('./seriesProcessor.worker.ts', import.meta.url), {
       type: 'module',
     });
-    workerRef.current = worker;
-    // Capture the map ref locally so cleanup uses the same instance even if
-    // `pendingRef.current` is later swapped (it isn't, but lint requires
-    // proof via a local).
-    const pending = pendingRef.current;
+  });
 
+  const pendingRef = React.useRef<
+    Map<number, { resolve: (response: SeriesProcessorResponse) => void }>
+  >(new Map());
+
+  React.useEffect(() => {
+    if (!worker) {
+      return undefined;
+    }
+    const pending = pendingRef.current;
     const onMessage = (event: MessageEvent<SeriesProcessorResponse>) => {
       const message = event.data;
       const entry = pending.get(message.id);
@@ -54,24 +60,16 @@ export function useChartsWorkerSeriesProcessor(): ChartSeriesProcessor | undefin
     return () => {
       worker.removeEventListener('message', onMessage);
       worker.terminate();
-      workerRef.current = null;
       pending.clear();
     };
-  }, [supported]);
+  }, [worker]);
 
   return React.useMemo<ChartSeriesProcessor | undefined>(() => {
-    if (!supported) {
+    if (!worker) {
       return undefined;
     }
     return (input) =>
       new Promise((resolve, reject) => {
-        const worker = workerRef.current;
-        if (!worker) {
-          // Worker not yet mounted (first render before effect fires) — reject
-          // so the plugin surfaces an error and the consumer can retry.
-          reject(new Error('MUI X Charts: series-processing worker is not ready yet.'));
-          return;
-        }
         const id = nextRequestId;
         nextRequestId += 1;
         pendingRef.current.set(id, {
@@ -86,5 +84,5 @@ export function useChartsWorkerSeriesProcessor(): ChartSeriesProcessor | undefin
         const request: SeriesProcessorRequest = { type: 'process', id, payload: input };
         worker.postMessage(request);
       });
-  }, [supported]);
+  }, [worker]);
 }
