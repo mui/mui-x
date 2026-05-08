@@ -41,10 +41,6 @@ Same changes as in `@mui/x-data-grid-pro@8.28.5`.
 
 Same changes as in `@mui/x-date-pickers@8.28.5`.
 
-#### `@mui/x-charts-premium@8.28.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
-
-Same changes as in `@mui/x-charts-pro@8.28.2`.
-
 ### Tree View
 
 #### `@mui/x-tree-view@8.28.5`
