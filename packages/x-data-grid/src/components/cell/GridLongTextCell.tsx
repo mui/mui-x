@@ -234,6 +234,7 @@ function GridLongTextCell(props: GridLongTextCellProps) {
         className={clsx(classes.expandButton, slotProps?.expandButton?.className)}
         onClick={handleExpandClick}
         onKeyDown={handleExpandKeyDown}
+        type="button"
       >
         <rootProps.slots.longTextCellExpandIcon fontSize="inherit" />
       </GridLongTextCellCornerButton>
@@ -287,6 +288,7 @@ function GridLongTextCell(props: GridLongTextCellProps) {
             {...slotProps?.collapseButton}
             className={clsx(classes.collapseButton, slotProps?.collapseButton?.className)}
             onClick={handleCollapseClick}
+            type="button"
           >
             <rootProps.slots.longTextCellCollapseIcon fontSize="inherit" />
           </GridLongTextCellCornerButton>
