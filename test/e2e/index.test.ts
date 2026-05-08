@@ -660,7 +660,7 @@ async function initializeEnvironment(
           await page.getByRole('button', { name: 'Choose date' }).click();
           await page.waitForSelector('[role="dialog"]', { state: 'detached' });
 
-          await page.getByRole(`spinbutton`, { name: 'Month' }).click();
+          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
           await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
           await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
@@ -674,7 +674,7 @@ async function initializeEnvironment(
 
           const input = page.getByRole('textbox', { includeHidden: true });
 
-          await page.getByRole(`spinbutton`, { name: 'Month' }).click();
+          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
           await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
           await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
@@ -695,7 +695,7 @@ async function initializeEnvironment(
 
           const input = page.getByRole('textbox', { includeHidden: true });
 
-          await page.getByRole(`spinbutton`, { name: 'Month' }).click();
+          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await input.fill('02/12/2020');
 
           expect(
@@ -723,7 +723,7 @@ async function initializeEnvironment(
           const daySection = page.getByRole(`spinbutton`, { name: 'Day' });
           const yearSection = page.getByRole(`spinbutton`, { name: 'Year' });
 
-          await monthSection.click();
+          await page.locator(`.${pickersSectionListClasses.root}`).click();
           await monthSection.fill('04');
           await daySection.fill('11');
           await yearSection.fill('2022');
@@ -914,12 +914,7 @@ async function initializeEnvironment(
         await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
         // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
-        await page
-          .locator(`.${pickersSectionListClasses.root}`)
-          .first()
-          .locator('[role="spinbutton"]')
-          .first()
-          .click();
+        await page.locator(`.${pickersSectionListClasses.root}`).first().click();
 
         await page.getByRole('gridcell', { name: '11' }).first().click();
         await page.getByRole('gridcell', { name: '17' }).last().click();
@@ -943,23 +938,13 @@ async function initializeEnvironment(
         await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
         // Old selector: await page.getByRole('textbox', { name: 'Start' }).click();
-        await page
-          .locator(`.${pickersSectionListClasses.root}`)
-          .first()
-          .locator('[role="spinbutton"]')
-          .first()
-          .click();
+        await page.locator(`.${pickersSectionListClasses.root}`).first().click();
 
         // assert that the tooltip has been opened
         await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
 
         // Old selector: await page.getByRole('textbox', { name: 'End' }).click();
-        await page
-          .locator(`.${pickersSectionListClasses.root}`)
-          .last()
-          .locator('[role="spinbutton"]')
-          .first()
-          .click();
+        await page.locator(`.${pickersSectionListClasses.root}`).last().click();
 
         // assert that the tooltip has not been closed after changing the active input
         await page.waitForSelector('[role="tooltip"]', { state: 'visible' });
@@ -1063,12 +1048,7 @@ describe('e2e: chromium on Android', () => {
     await renderFixture('DatePicker/MultiInputDesktopDateRangePicker');
 
     // Old selector: await page.getByRole('textbox', { name: 'Start' }).tap();
-    await page
-      .locator(`.${pickersSectionListClasses.root}`)
-      .first()
-      .locator('[role="spinbutton"]')
-      .first()
-      .tap();
+    await page.locator(`.${pickersSectionListClasses.root}`).first().tap();
 
     await page.getByRole('gridcell', { name: '11' }).first().tap();
     await page.getByRole('gridcell', { name: '17' }).first().tap();
