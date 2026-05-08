@@ -51,6 +51,13 @@ describe('getGridMultiSelectOperators', () => {
       expect(apply(containsOperator, [{ value: 'A' }, { value: 'B' }], ['C', 'D'])).to.equal(false);
     });
 
+    it('matches null cell values when filtering by an option with value null', () => {
+      expect(apply(containsOperator, [null], [null, 'A'])).to.equal(true);
+      expect(apply(containsOperator, [{ value: null, label: 'None' }], [null, 'A'])).to.equal(true);
+      expect(apply(containsOperator, [null], ['A', 'B'])).to.equal(false);
+      expect(apply(containsOperator, [{ value: null, label: 'None' }], ['A', 'B'])).to.equal(false);
+    });
+
     it('returns false when cell value is null', () => {
       expect(apply(containsOperator, ['A'], null)).to.equal(false);
     });
@@ -91,6 +98,17 @@ describe('getGridMultiSelectOperators', () => {
     it('matches with object-shaped filter values via parseObjectValue', () => {
       expect(apply(doesNotContainOperator, [{ value: 'A' }], ['B', 'C'])).to.equal(true);
       expect(apply(doesNotContainOperator, [{ value: 'A' }], ['A', 'B'])).to.equal(false);
+    });
+
+    it('excludes null cell values when filtering by an option with value null', () => {
+      expect(apply(doesNotContainOperator, [null], [null, 'A'])).to.equal(false);
+      expect(apply(doesNotContainOperator, [{ value: null, label: 'None' }], [null, 'A'])).to.equal(
+        false,
+      );
+      expect(apply(doesNotContainOperator, [null], ['A', 'B'])).to.equal(true);
+      expect(apply(doesNotContainOperator, [{ value: null, label: 'None' }], ['A', 'B'])).to.equal(
+        true,
+      );
     });
 
     it('returns true when cell value is null (row included)', () => {
