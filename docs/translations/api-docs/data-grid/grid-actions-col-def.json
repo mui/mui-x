@@ -10,6 +10,12 @@
       "description": "If <code>true</code>, the cells of the column can be aggregated based."
     },
     "align": { "description": "Align cell content." },
+    "autosizeMaxWidth": {
+      "description": "The maximum width of the column in pixels when using the autosizing feature.<br />Applied during autosizing only; does not affect manual resizing.<br />If <code>maxWidth</code> is also set, <code>maxWidth</code> takes precedence (the smaller value wins)."
+    },
+    "autosizeMinWidth": {
+      "description": "The minimum width of the column in pixels when using the autosizing feature.<br />Applied during autosizing only; does not affect manual resizing.<br />If <code>minWidth</code> is also set, <code>minWidth</code> takes precedence (the larger value wins)."
+    },
     "availableAggregationFunctions": {
       "description": "Limit the aggregation function usable on this column.<br />By default, the column will have all the aggregation functions that are compatible with its type."
     },

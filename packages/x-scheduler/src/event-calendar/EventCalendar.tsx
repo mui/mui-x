@@ -124,7 +124,7 @@ EventCalendar.propTypes = {
    * Import a locale from `date-fns/locale` and pass it to this prop.
    * @default enUS (English)
    */
-  dateLocale: PropTypes.object,
+  dateLocale: PropTypes.any,
   /**
    * The default preferences for the calendar.
    * To use controlled preferences, use the `preferences` prop.
