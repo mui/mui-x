@@ -80,9 +80,7 @@ const Scroller = styled('div', {
   zIndex: 0,
 
   // Prevent overscroll bounce from revealing content behind pinned column shadows on macOS.
-  ...(ownerState.hasPinnedColumns && {
-    overscrollBehaviorX: 'none',
-  }),
+  overscrollBehaviorX: ownerState.hasPinnedColumns ? 'none' : undefined,
 }));
 
 const Viewport = styled('div', {
