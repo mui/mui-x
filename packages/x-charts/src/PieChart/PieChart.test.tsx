@@ -1,4 +1,4 @@
-import { createRenderer, screen } from '@mui/internal-test-utils';
+import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { pieClasses, PieChart } from '@mui/x-charts/PieChart';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -48,7 +48,11 @@ describe('<PieChart />', () => {
 
     rerender(<PieChart height={100} width={100} series={[{ data: [] }]} hideLegend />);
 
-    expect(screen.queryByRole('tooltip')).to.equal(null);
+    // Series defaultize commits via the async pipeline (next task tick) — wait
+    // for the tooltip to disappear once the new series state lands.
+    await waitFor(() => {
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+    });
   });
 
   it('should hide tooltip if the series of the item the tooltip was showing is removed', async () => {
@@ -63,7 +67,9 @@ describe('<PieChart />', () => {
 
     rerender(<PieChart height={100} width={100} series={[]} hideLegend />);
 
-    expect(screen.queryByRole('tooltip')).to.equal(null);
+    await waitFor(() => {
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+    });
   });
 
   describe('classes', () => {

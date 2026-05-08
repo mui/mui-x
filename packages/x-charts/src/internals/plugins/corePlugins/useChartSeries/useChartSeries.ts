@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { type ChartPlugin } from '../../models';
 import type { UseChartSeriesState, UseChartSeriesSignature } from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
@@ -44,11 +45,11 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, s
   const { series, dataset, theme, colors } = params;
 
   // The series defaultize step runs on the next task tick so the commit is
-  // decoupled from the render — the browser can paint the `pending` state
-  // first. This also fires on initial mount (the store starts in `pending`
-  // from `getInitialState`). Stale resolves are dropped via `requestRef`.
+  // decoupled from the render. The first render is handled by `getInitialState`
+  // (sync defaultize, status starts at `pending`); this effect only fires on
+  // subsequent prop updates. Stale resolves are dropped via `requestRef`.
   const requestRef = React.useRef(0);
-  React.useEffect(() => {
+  useEffectAfterFirstRender(() => {
     requestRef.current += 1;
     const reqId = requestRef.current;
 
@@ -92,9 +93,12 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, s
     );
   }, [series, dataset, colors, theme, store]);
 
-  const seriesState = store.use((state) => state.series);
-  if (seriesState.status === 'error' && seriesState.error) {
-    throw seriesState.error;
+  // Re-throw an error captured by the async pipeline. Read directly from
+  // `store.state` rather than via `store.use` to avoid an extra subscription
+  // that would perturb effect ordering during the first render.
+  const seriesError = store.state.series?.error;
+  if (store.state.series?.status === 'error' && seriesError) {
+    throw seriesError;
   }
 
   const identifierWithType = createIdentifierWithType(store.state);
@@ -118,16 +122,25 @@ useChartSeries.getDefaultizedParams = ({ params }) => ({
   theme: params.theme ?? 'light',
 });
 
-useChartSeries.getInitialState = ({ dataset }) => {
-  // Initial state is empty + `pending`; the runtime effect runs the defaultize
-  // step on the next macrotask and commits the real data. This keeps the
-  // first-mount path consistent with subsequent prop updates.
+useChartSeries.getInitialState = ({ series = [], colors, theme, dataset }, currentState) => {
+  // Defaultize synchronously so the first paint already has data — every
+  // downstream selector/hook (useXScale, useSeries, etc.) expects series and
+  // axes to be present. The runtime effect (skipping the first render) takes
+  // over from here and flips status to `pending` then `success` on prop
+  // updates.
+  const seriesConfig = currentState.seriesConfig.config;
+  const { defaultizedSeries, idToType } = defaultizeSeries({
+    series,
+    colors: typeof colors === 'function' ? colors(theme) : colors,
+    theme,
+    seriesConfig,
+  });
   return {
     series: {
-      defaultizedSeries: {},
-      idToType: new Map(),
+      defaultizedSeries,
+      idToType,
       dataset,
-      status: 'pending' as const,
+      status: 'success' as const,
     },
   };
 };
