@@ -83,7 +83,13 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
       return '';
     }
 
-    if (!Array.isArray(value) || value.length === 0) {
+    if (!Array.isArray(value)) {
+      // Non-array values can come from aggregation (e.g. size count). Pass through so
+      // the aggregation cell renders the number; arrays go through the formatter below.
+      return value == null ? '' : (value as any);
+    }
+
+    if (value.length === 0) {
       return '';
     }
 

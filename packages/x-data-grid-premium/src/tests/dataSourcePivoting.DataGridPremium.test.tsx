@@ -511,7 +511,11 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     expect(apiRef.current?.state.rows.tree[GRID_AGGREGATION_ROOT_FOOTER_ROW_ID]).not.to.equal(null);
     await waitFor(() => {
       const footerRow = apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID];
-      expect(footerRow?.quantity).to.deep.equal({ position: 'footer', value: 100 });
+      expect(footerRow?.quantity).to.deep.equal({
+        position: 'footer',
+        value: 100,
+        formattedValue: undefined,
+      });
     });
   });
 

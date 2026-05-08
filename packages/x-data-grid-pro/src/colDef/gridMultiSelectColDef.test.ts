@@ -106,4 +106,31 @@ describe('GRID_MULTI_SELECT_COL_DEF', () => {
       expect(parse('')).to.equal(undefined);
     });
   });
+
+  describe('valueFormatter', () => {
+    const valueFormatter = GRID_MULTI_SELECT_COL_DEF.valueFormatter as (
+      value: unknown,
+      row: any,
+      colDef: any,
+      apiRef: any,
+    ) => unknown;
+    const colDef = {
+      ...GRID_MULTI_SELECT_COL_DEF,
+      field: 'tags',
+      valueOptions: ['React', 'TypeScript'],
+    } as unknown as GridMultiSelectColDef;
+    const apiRef = { current: { state: { props: {} } } };
+
+    it('passes non-array values through (e.g. aggregation count)', () => {
+      // Aggregation overlays a non-array value (e.g. size count) onto the cell. The
+      // formatter must not blank it out, otherwise the aggregation cell renders empty.
+      expect(valueFormatter(3, {}, colDef, apiRef)).to.equal(3);
+      expect(valueFormatter(0, {}, colDef, apiRef)).to.equal(0);
+    });
+
+    it('returns empty string for null or undefined', () => {
+      expect(valueFormatter(null, {}, colDef, apiRef)).to.equal('');
+      expect(valueFormatter(undefined, {}, colDef, apiRef)).to.equal('');
+    });
+  });
 });
