@@ -1458,8 +1458,7 @@ describe('<EventDialogContent open />', () => {
 
           await user.click(screen.getByRole('tab', { name: /recurrence/i }));
 
-          // Even though a recurrence is active, the detail fields must be disabled because rrule
-          // is read-only (regression: old dontRepeatDisabled only checked recurrenceSelection === null)
+          // Even though a recurrence is active, the detail fields must be disabled because rrule is read-only
           const repeatFieldset = screen.getByRole('group', { name: /repeat/i });
           expect(within(repeatFieldset).getByRole('spinbutton')).to.have.attribute('disabled');
           expect(within(repeatFieldset).getByRole('combobox')).to.have.attribute(
