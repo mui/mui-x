@@ -256,9 +256,11 @@ export const gridFilterActiveItemsSelector = createSelectorMemoized(
       if (!filterOperator) {
         return false;
       }
-      return (
-        !filterOperator.InputComponent || (item.value != null && item.value?.toString() !== '')
-      );
+      const hasFilterValue = Array.isArray(item.value)
+        ? item.value.length > 0
+        : item.value != null && item.value?.toString() !== '';
+
+      return !filterOperator.InputComponent || hasFilterValue;
     }),
 );
 
