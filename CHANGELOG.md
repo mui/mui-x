@@ -113,6 +113,7 @@ Internal changes.
 - [docs] Fix `GridToolbarCustom` demo crash in DataGrid (#21950) @MBilalShafi
 - [docs] Do not resolve axes in charts (#22307) @alexfauquette
 - [docs] Fix no longer valid link (#22371) @LukasTy
+- [docs] Replace broken CodeSandbox iframes in migration guides (#22352) @LukasTy
 
 ### Core
 
