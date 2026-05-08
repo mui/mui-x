@@ -2,6 +2,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useStoreEffect } from '@mui/x-internals/store';
+import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { warnOnce } from '@mui/x-internals/warning';
 import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
@@ -18,7 +19,6 @@ import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
 import { type ChartsAxisData, type SeriesId } from '../../../../models';
-import { runAsyncPipeline } from '../../utils/asyncResource';
 
 const AXIS_CLICK_SERIES_TYPES = new Set(['bar', 'rangeBar', 'line'] as const);
 type AxisClickSeriesType = typeof AXIS_CLICK_SERIES_TYPES extends Set<infer U> ? U : never;
@@ -82,48 +82,17 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
   }, [store, params.tooltipAxis]);
 
-  // The axis defaultize step runs on the next task tick so the commit is
-  // decoupled from the render — the browser can paint the `pending` state
-  // first. This also fires on initial mount (the store starts in `pending`
-  // from `getInitialState`). Stale resolves are dropped via `axisRequestRef`.
-  const axisRequestRef = React.useRef(0);
-  React.useEffect(() => {
-    axisRequestRef.current += 1;
-    const reqId = axisRequestRef.current;
-
-    runAsyncPipeline(
-      () => ({
-        x: defaultizeXAxis(xAxis, dataset, axesGap),
-        y: defaultizeYAxis(yAxis, dataset, axesGap),
-      }),
-      (result) => {
-        const current = store.state.cartesianAxis;
-        if (result.status === 'pending') {
-          store.set('cartesianAxis', { ...current, status: 'pending', error: undefined });
-          return;
-        }
-        if (result.status === 'error') {
-          store.set('cartesianAxis', { ...current, status: 'error', error: result.error });
-          return;
-        }
-        store.set('cartesianAxis', {
-          ...current,
-          axesGap,
-          x: result.data!.x,
-          y: result.data!.y,
-          status: 'success',
-          error: undefined,
-        });
-      },
-      axisRequestRef,
-      reqId,
-    );
+  // The axis defaultize step commits synchronously — axis processing is
+  // cheap (a handful of axes at most) and tooltip / interaction warnings
+  // depend on synchronous commits during the initial render.
+  useEffectAfterFirstRender(() => {
+    store.set('cartesianAxis', {
+      axesGap,
+      x: defaultizeXAxis(xAxis, dataset, axesGap),
+      y: defaultizeYAxis(yAxis, dataset, axesGap),
+      status: 'success',
+    });
   }, [drawingArea, xAxis, yAxis, dataset, axesGap, store]);
-
-  const cartesianAxisState = store.use((state) => state.cartesianAxis);
-  if (cartesianAxisState.status === 'error' && cartesianAxisState.error) {
-    throw cartesianAxisState.error;
-  }
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
@@ -329,14 +298,17 @@ useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
 };
 
 useChartCartesianAxis.getInitialState = (params) => {
-  // Initial state starts empty + `pending`; the runtime effect runs the
-  // defaultize step on the next task tick and commits the real axes.
+  // Defaultize axes synchronously so the first paint already has scales —
+  // every axis selector / `useXScale` etc. expects them. Status starts at
+  // `pending` so observers see the full lifecycle: the runtime effect fires
+  // on mount, re-runs the (idempotent) defaultize step on the next task
+  // tick, and flips status to `success`.
   return {
     cartesianAxis: {
       axesGap: params.axesGap,
-      x: [],
-      y: [],
-      status: 'pending' as const,
+      x: params.defaultizedXAxis,
+      y: params.defaultizedYAxis,
+      status: 'success' as const,
     },
     ...(params.highlightedAxis === undefined
       ? {}
