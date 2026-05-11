@@ -2463,8 +2463,8 @@ importers:
         specifier: npm:@mui/x-license@8.26.0
         version: '@mui/x-license@8.26.0(@types/react@19.2.14)(react@19.2.6)'
       x-license-v9:
-        specifier: npm:@mui/x-license@9.0.0
-        version: '@mui/x-license@9.0.0(@types/react@19.2.14)(react@19.2.6)'
+        specifier: npm:@mui/x-license@9.1.0
+        version: '@mui/x-license@9.1.0(@types/react@19.2.14)(react@19.2.6)'
     devDependencies:
       vitest:
         specifier: 'catalog:'
@@ -4627,8 +4627,8 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@mui/x-license@9.0.0':
-    resolution: {integrity: sha512-C4ivah9CJDBTJir6m6RX88nbvohK6XUvg7pucqfxM1NkejVHES9YEFKLm3GfTnHpfqsFyI3EEfkGmWciIQ53/Q==}
+  '@mui/x-license@9.1.0':
+    resolution: {integrity: sha512-7dPBfDtd4Ml1w5XJ3PPbomvbMF2AlpHpD/fQJhNk5VWpqaGKjSatwuNPhHwbigyxk4xDwQGs6IJ2n9rA0ygP6Q==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -14490,7 +14490,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-license@9.0.0(@types/react@19.2.14)(react@19.2.6)':
+  '@mui/x-license@9.1.0(@types/react@19.2.14)(react@19.2.6)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@mui/utils': 9.0.0(@types/react@19.2.14)(react@19.2.6)
