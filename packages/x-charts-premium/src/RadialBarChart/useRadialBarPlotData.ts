@@ -12,6 +12,7 @@ import {
   type StackingGroupsType,
   type ChartsRotationAxisProps,
   type ChartsRadiusAxisProps,
+  type ChartsRadialAxisProps,
 } from '@mui/x-charts/internals';
 import { type SeriesId } from '@mui/x-charts/models';
 
@@ -91,7 +92,7 @@ function processRadialBarDataForPlot(
 
         const baseAxisConfig = (
           verticalLayout ? rotationAxisConfig : radiusAxisConfig
-        ) as ComputedAxis<'band'>;
+        ) as ComputedAxis<'band', any, ChartsRadialAxisProps>;
         const valueAxisConfig = verticalLayout ? radiusAxisConfig : rotationAxisConfig;
 
         const reverse = valueAxisConfig.reverse ?? false;
