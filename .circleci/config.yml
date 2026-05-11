@@ -157,6 +157,9 @@ jobs:
           name: Merge browser test reports
           environment:
             BROWSER: 'true'
+            # Vitest emits a benign esbuild EPIPE during dep-optimizer cleanup
+            # after merge-reports finishes; downgrade to warning to keep exit 0.
+            NODE_OPTIONS: --unhandled-rejections=warn
           command: |
             pnpm exec vitest run --merge-reports \
               --reporter=default \
