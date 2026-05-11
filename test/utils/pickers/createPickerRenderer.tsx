@@ -1,8 +1,24 @@
 import * as React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import { AdapterClassToUse, AdapterName, adapterToUse, availableAdapters } from './adapters';
+
+// Created once at module level — stable reference, not recreated per test.
+// Sets reduceAnimations:true for DateCalendar and DateRangeCalendar so that
+// PickersFadeTransitionGroup and PickersSlideTransition skip their
+// TransitionGroup/CSSTransition/Fade wrappers and emit minimal DOM.
+// This meaningfully reduces the React node count per open picker in browser
+// tests, lowering peak RAM on CI without affecting what the tests actually
+// verify. Tests that need to assert on animation behaviour can override this
+// by passing reduceAnimations={false} explicitly on the component.
+const pickerTestTheme = createTheme({
+  components: {
+    MuiDateCalendar: { defaultProps: { reduceAnimations: true } },
+    MuiDateRangeCalendar: { defaultProps: { reduceAnimations: true } },
+  },
+});
 
 interface CreatePickerRendererOptions extends Omit<
   CreateRendererOptions,
@@ -53,12 +69,14 @@ export function createPickerRenderer({
 
   function Wrapper({ children }: { children?: React.ReactNode }) {
     return (
-      <LocalizationProvider
-        adapterLocale={adapterLocale}
-        dateAdapter={adapterName ? availableAdapters[adapterName] : AdapterClassToUse}
-      >
-        {children}
-      </LocalizationProvider>
+      <ThemeProvider theme={pickerTestTheme}>
+        <LocalizationProvider
+          adapterLocale={adapterLocale}
+          dateAdapter={adapterName ? availableAdapters[adapterName] : AdapterClassToUse}
+        >
+          {children}
+        </LocalizationProvider>
+      </ThemeProvider>
     );
   }
 
