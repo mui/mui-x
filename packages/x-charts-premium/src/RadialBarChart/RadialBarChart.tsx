@@ -14,11 +14,7 @@ import {
 } from '@mui/x-charts/ChartsRadialGrid';
 import { Unstable_ChartsRotationAxis as ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
 import { Unstable_ChartsRadiusAxis as ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
-import {
-  ChartsLegend,
-  type ChartsLegendSlots,
-  type ChartsLegendSlotProps,
-} from '../ChartsLegend';
+import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsSurface } from '../ChartsSurface';
 import {
   ChartsTooltip,
@@ -141,7 +137,6 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
     axisHighlightProps,
     children,
   } = useRadialBarChartProps(props);
-
 
   const { chartsDataProviderProps, chartsSurfaceProps } = useChartsContainerProps<
     'radialBar',

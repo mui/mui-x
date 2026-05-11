@@ -26,8 +26,8 @@ export function useRadarRotationIndex() {
         // Should never append
         throw new Error(
           `MUI X Charts: The ${!element ? 'SVG element' : 'rotation axis'} was not found. ` +
-          'This is required to compute the radar chart dataIndex. ' +
-          'Ensure the radar chart is properly initialized with all required axes.',
+            'This is required to compute the radar chart dataIndex. ' +
+            'Ensure the radar chart is properly initialized with all required axes.',
         );
       }
 

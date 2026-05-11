@@ -222,7 +222,10 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       const svgPoint = getChartPoint(element, event.detail.srcEvent);
 
       const rotation = generateSvg2rotation(center)(svgPoint.x, svgPoint.y);
-      const rotationIndex = getRotationAxisIndex(rotationAxisWithScale[usedRotationAxisId], rotation);
+      const rotationIndex = getRotationAxisIndex(
+        rotationAxisWithScale[usedRotationAxisId],
+        rotation,
+      );
       isRotationAxis = rotationIndex !== -1;
 
       dataIndex = isRotationAxis ? rotationIndex : null; // radius index is not yet implemented.
