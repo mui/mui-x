@@ -14,6 +14,8 @@ import {
   Unstable_ChartsRadialAxisHighlight as ChartsRadialAxisHighlight,
   type ChartsRadialAxisHighlightProps,
 } from '@mui/x-charts/ChartsRadialAxisHighlight';
+import { Unstable_ChartsRadiusAxis as ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
+import { Unstable_ChartsRotationAxis as ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
 import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsSurface } from '../ChartsSurface';
 import {
@@ -169,6 +171,8 @@ const RadialLineChart = React.forwardRef(function RadialLineChart(
             <ChartsOverlay {...overlayProps} />
           </g>
           <ChartsRadialAxisHighlight {...axisHighlightProps} />
+          <ChartsRotationAxis />
+          <ChartsRadiusAxis />
           <RadialMarkPlot />
           <RadialLineHighlightPlot slots={props.slots} slotProps={props.slotProps} />
           <ChartsClipPath {...clipPathProps} />

@@ -26,6 +26,7 @@ import type {
 } from './colorMapping';
 import type { OrdinalTimeTicks } from './timeTicks';
 import { type ChartsTypeFeatureFlags } from './featureFlags';
+import { type ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
 
 export type AxisId = string | number;
 
@@ -221,6 +222,28 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
    * The gap between the axis and the label.
    */
   labelGap?: number;
+  /**
+   * The position of the rotation axis.
+   * It can be 'inside' or 'outside'.
+   * @default 'outside'
+   */
+  position?: 'inside' | 'outside' | 'none';
+  /**
+   * Set the position of the tick labels relative to the axis line.
+   * `'after'` places them outside the arc, `'before'` inside.
+   * @default position === 'outside' ? 'after' : 'before'
+   */
+  tickLabelPosition?: 'after' | 'before';
+  /**
+   * Set the position of the tick relative to the axis line.
+   * `'after'` places them outside the arc, `'before'` inside.
+   * @default position === 'outside' ? 'after' : 'before'
+   */
+  tickPosition?: 'after' | 'before';
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsRadialAxisClasses>;
 }
 
 export interface ChartsRadiusAxisProps extends ChartsAxisProps {
@@ -233,6 +256,28 @@ export interface ChartsRadiusAxisProps extends ChartsAxisProps {
    * The maximal radius.
    */
   maxRadius?: number;
+  /**
+   * The position of the axis in polar coordinates.
+   * It can be 'start', 'end', or a specific angle in degrees.
+   * @default 'start'
+   */
+  position?: 'start' | 'end' | number | 'none';
+  /**
+   * Set the position of the tick labels relative to the axis line.
+   * The before/after is defined based on clockwise direction.
+   * @default position === 'start' ? 'before' : 'after'
+   */
+  tickLabelPosition?: 'center' | 'after' | 'before';
+  /**
+   * Set the position of the tick relative to the axis line.
+   * The before/after is defined based on clockwise direction.
+   * @default position === 'start' ? 'before' : 'after'
+   */
+  tickPosition?: 'after' | 'before';
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsRadialAxisClasses>;
 }
 
 export type ScaleName = keyof AxisScaleConfig;

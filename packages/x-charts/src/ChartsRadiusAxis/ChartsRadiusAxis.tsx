@@ -8,56 +8,10 @@ import {
   selectorChartPolarCenter,
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
-import type { AxisId, D3Scale } from '../models/axis';
-import { type ChartsRadialAxisClasses, useUtilityClasses } from './chartsRadiusAxisClasses';
+import type { ChartsRadiusAxisProps, D3Scale } from '../models/axis';
+import { useUtilityClasses } from './chartsRadiusAxisClasses';
 import { createGetLabelTextAnchors } from './createGetLabelTextAnchors';
 import { getLabelTransform } from './getLabelTransform';
-
-export interface ChartsRadiusAxisProps {
-  /**
-   * Id of the radius axis to render.
-   * If not provided, it will use the first defined radius axis.
-   */
-  axisId?: AxisId;
-  /**
-   * The position of the axis in polar coordinates.
-   * It can be 'start', 'end', or a specific angle in degrees.
-   * @default 'start'
-   */
-  position?: 'start' | 'end' | number;
-  /**
-   * If `true`, the axis line is not rendered.
-   * @default false
-   */
-  disableLine?: boolean;
-  /**
-   * If `true`, the ticks are not rendered.
-   * @default false
-   */
-  disableTicks?: boolean;
-  /**
-   * The size (in pixels) of the tick marks.
-   * @default 6
-   */
-  tickSize?: number;
-  /**
-   * Set the position of the tick labels relative to the axis line.
-   * The before/after is defined based on clockwise direction.
-   * @default 'after'
-   */
-  tickLabelPosition?: 'center' | 'after' | 'before';
-  /**
-   * Set the position of the tick relative to the axis line.
-   * The before/after is defined based on clockwise direction.
-   * @default 'after'
-   */
-  tickPosition?: 'after' | 'before';
-  /**
-   * A CSS class name applied to the root element.
-   */
-  className?: string;
-  classes?: Partial<ChartsRadialAxisClasses>;
-}
 
 /* Gap between a tick and its label. */
 const TICK_LABEL_GAP = 3;
@@ -87,17 +41,20 @@ function getAxisAngleInRadians(
 }
 
 export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
+  const radiusAxis = useRadiusAxis(props.axisId);
+
+  const settings = { ...radiusAxis, ...props };
+
   const {
-    axisId,
     position = 'start',
     disableLine,
     disableTicks,
-    tickLabelPosition = 'after',
-    tickPosition = 'after',
+    tickLabelPosition = position === 'start' ? 'before' : 'after',
+    tickPosition = position === 'start' ? 'before' : 'after',
     tickSize = 6,
     className,
     classes: classesProp,
-  } = props;
+  } = settings;
 
   const isCentered = tickLabelPosition === 'center';
   const classes = useUtilityClasses({ classes: classesProp, isCentered });
@@ -105,7 +62,6 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
   const { store } = useChartsContext<[UseChartPolarAxisSignature]>();
   const { cx, cy } = store.use(selectorChartPolarCenter);
 
-  const radiusAxis = useRadiusAxis(axisId);
   const rotationAxis = useRotationAxis();
 
   const ticks = useTicks({
@@ -117,7 +73,7 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
     direction: 'radius',
   });
 
-  if (!radiusAxis) {
+  if (!radiusAxis || settings.position === 'none') {
     return null;
   }
 
