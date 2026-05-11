@@ -9,7 +9,7 @@
     "x-license-v6": "npm:@mui/x-license-pro@6.10.2",
     "x-license-v7": "npm:@mui/x-license@7.29.1",
     "x-license-v8": "npm:@mui/x-license@8.26.0",
-    "x-license-v9": "npm:@mui/x-license@9.0.0"
+    "x-license-v9": "npm:@mui/x-license@9.1.0"
   },
   "devDependencies": {
     "vitest": "catalog:"
