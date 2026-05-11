@@ -15,7 +15,7 @@ import {
   type UseChartVisibilityManagerSignature,
   type ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
-import { useChartProExport, type UseChartProExportSignature } from '../plugins';
+import { useChartProExport, type UseChartProExportSignature } from '@mui/x-charts-pro/plugins';
 
 export type RadialLineChartPluginSignatures = [
   UseChartZAxisSignature,

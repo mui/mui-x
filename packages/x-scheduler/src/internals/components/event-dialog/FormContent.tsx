@@ -133,8 +133,7 @@ export function FormContent(props: FormContentProps) {
     const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
     const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
 
-    const base =
-      defaultRecurrencePresetKey === 'custom' ? occurrence.displayTimezone.rrule : undefined;
+    const base = occurrence.displayTimezone.rrule;
 
     return {
       startDate: fmtDate(occurrence.displayTimezone.start),
