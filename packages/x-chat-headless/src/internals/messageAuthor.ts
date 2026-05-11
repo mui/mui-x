@@ -9,6 +9,7 @@ export interface ResolvedMessageAuthor {
   id?: string;
   displayName?: string;
   avatarUrl?: string;
+  isOwnMessage?: boolean;
 }
 
 interface ResolveMessageAuthorParameters extends ChatMessageAuthorGetterProps {
@@ -47,7 +48,9 @@ function resolveMatchedMember(
     return member;
   }
 
-  return parameters.activeConversation?.participants?.find((candidate) => candidate.id === authorId);
+  return parameters.activeConversation?.participants?.find(
+    (candidate) => candidate.id === authorId,
+  );
 }
 
 export function resolveMessageAuthor(
@@ -75,10 +78,19 @@ export function resolveMessageAuthor(
     return null;
   }
 
+  // When `currentUser` is configured, the author's id determines ownership.
+  // Otherwise fall back to the role so single-user-vs-assistant chats — where
+  // messages typically carry no author info — keep the legacy alignment.
+  const isOwnMessage =
+    parameters.currentUser?.id != null
+      ? id != null && parameters.currentUser.id === id
+      : message.role === 'user';
+
   return {
     id,
     displayName,
     avatarUrl,
+    isOwnMessage,
   };
 }
 

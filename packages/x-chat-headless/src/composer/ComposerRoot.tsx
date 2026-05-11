@@ -18,8 +18,10 @@ export interface ComposerRootSlotProps {
   root?: SlotComponentProps<'form', {}, ComposerRootOwnerState>;
 }
 
-export interface ComposerRootProps
-  extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
+export interface ComposerRootProps extends Omit<
+  React.FormHTMLAttributes<HTMLFormElement>,
+  'onSubmit'
+> {
   /**
    * Handler invoked when the form is submitted. The composer's submit logic still
    * runs after this handler unless the handler calls `event.preventDefault()`.

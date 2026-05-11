@@ -14,6 +14,7 @@ const MessageContext = React.createContext<MessageOwnerState>({
   density: 'standard',
   resolvedAuthor: null,
   showAvatar: false,
+  isOwnMessage: false,
 });
 
 export function MessageContextProvider(props: {

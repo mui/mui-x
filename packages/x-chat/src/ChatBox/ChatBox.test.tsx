@@ -283,6 +283,69 @@ describe('ChatBox', () => {
       { id: 'c2', title: 'Support' },
     ];
 
+    it('renders custom layout and pane slots without dropping layout styles', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialConversations={conversations}
+          features={conversationListFeatures}
+          data-resize-width="720"
+          sx={{ height: 480 }}
+          slots={{
+            layout: 'section',
+            conversationsPane: 'aside',
+            threadPane: 'main',
+          }}
+          slotProps={{
+            layout: {
+              id: 'custom-layout',
+              className: 'custom-layout',
+              style: { backgroundColor: 'rgb(1, 2, 3)' },
+            },
+            conversationsPane: {
+              id: 'custom-conversations-pane',
+              className: 'custom-conversations-pane',
+              style: { backgroundColor: 'rgb(4, 5, 6)' },
+            },
+            threadPane: {
+              id: 'custom-thread-pane',
+              className: 'custom-thread-pane',
+              style: { backgroundColor: 'rgb(7, 8, 9)' },
+            },
+          }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      const layout = document.getElementById('custom-layout') as HTMLElement;
+      const conversationsPane = document.getElementById('custom-conversations-pane') as HTMLElement;
+      const threadPane = document.getElementById('custom-thread-pane') as HTMLElement;
+
+      expect(layout).not.toBe(null);
+      expect(conversationsPane).not.toBe(null);
+      expect(threadPane).not.toBe(null);
+      expect(layout.tagName).toBe('SECTION');
+      expect(conversationsPane.tagName).toBe('ASIDE');
+      expect(threadPane.tagName).toBe('MAIN');
+      expect(layout.className).to.include('MuiChatBox-layout');
+      expect(layout.className).to.include('custom-layout');
+      expect(conversationsPane.className).to.include('MuiChatBox-conversationsPane');
+      expect(conversationsPane.className).to.include('custom-conversations-pane');
+      expect(threadPane.className).to.include('MuiChatBox-threadPane');
+      expect(threadPane.className).to.include('custom-thread-pane');
+      expect(conversationsPane.contains(screen.getByRole('listbox'))).toBe(true);
+      expect(threadPane.querySelector('.MuiChatConversation-root')).not.toBe(null);
+      expect(layout.style.display).toBe('flex');
+      expect(['0', '0px']).to.include(layout.style.minHeight);
+      expect(layout.style.backgroundColor).toBe('rgb(1, 2, 3)');
+      expect(['0', '0px']).to.include(conversationsPane.style.minHeight);
+      expect(conversationsPane.style.backgroundColor).toBe('rgb(4, 5, 6)');
+      expect(threadPane.style.display).toBe('flex');
+      expect(threadPane.style.overflow).toBe('hidden');
+      expect(threadPane.style.backgroundColor).toBe('rgb(7, 8, 9)');
+    });
+
     it('shows the conversation menu button only when the chat box container is narrow', async () => {
       const { rerender } = render(
         <ChatBox

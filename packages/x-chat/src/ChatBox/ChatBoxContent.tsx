@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useChat, useMessage, useMessageIds, useConversations } from '@mui/x-chat-headless';
+import { useChat, useMessageIds, useConversations } from '@mui/x-chat-headless';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
@@ -27,13 +27,7 @@ import { ChatComposerAttachmentList } from '../ChatComposer/ChatComposerAttachme
 import { ChatComposerToolbar } from '../ChatComposer/ChatComposerToolbar';
 import { ChatComposerHelperText } from '../ChatComposer/ChatComposerHelperText';
 import { ChatMessageList } from '../ChatMessageList/ChatMessageList';
-import { ChatMessageGroup } from '../ChatMessage/ChatMessageGroup';
-import { ChatMessageContent } from '../ChatMessage/ChatMessageContent';
-import { ChatMessageMeta } from '../ChatMessage/ChatMessageMeta';
-import { ChatMessageAvatar } from '../ChatMessage/ChatMessageAvatar';
-import { ChatMessage } from '../ChatMessage/ChatMessage';
-import { ChatMessageActions } from '../ChatMessage/ChatMessageActions';
-import { ChatMessageInlineMeta } from '../ChatMessage/ChatMessageInlineMeta';
+import { DefaultMessageItem } from '../ChatMessageList/DefaultMessageItem';
 import { ChatScrollToBottomAffordance } from '../ChatIndicators/ChatScrollToBottomAffordance';
 import { ChatSuggestions } from '../ChatSuggestions/ChatSuggestions';
 import type {
@@ -232,57 +226,6 @@ function normalizeLayoutModeBreakpoints(
   return { overlay, split };
 }
 
-function DefaultMessageItem({
-  id,
-  slots,
-  slotProps,
-}: {
-  id: string;
-  slots?: Partial<ChatBoxSlots>;
-  slotProps?: ChatBoxSlotProps;
-  features?: ChatBoxFeatures;
-}) {
-  const variant = useChatVariant();
-  const message = useMessage(id);
-  const MessageGroupComponent = (slots?.messageGroup ??
-    ChatMessageGroup) as typeof ChatMessageGroup;
-  const MessageAvatarComponent = (slots?.messageAvatar ??
-    ChatMessageAvatar) as typeof ChatMessageAvatar;
-  const MessageContentComponent = (slots?.messageContent ??
-    ChatMessageContent) as typeof ChatMessageContent;
-  const MessageMetaComponent = (slots?.messageMeta ?? ChatMessageMeta) as typeof ChatMessageMeta;
-  const MessageRootComponent = (slots?.messageRoot ?? ChatMessage) as typeof ChatMessage;
-  const MessageActionsSlot = slots?.messageActions;
-
-  const isDefault = variant !== 'compact';
-  const isStreaming = message?.status === 'streaming';
-
-  // Default variant: inline meta inside the bubble (Telegram-style).
-  // Skip during streaming — there is no timestamp yet, and the streaming state
-  // is already communicated via the MuiChatMessage-streaming CSS class.
-  // Also skip when the message carries no displayable meta at all (no timestamp,
-  // no edited label, no delivery status) so the spacer does not add dead space.
-  const hasMeta =
-    Boolean(message?.createdAt) || Boolean(message?.editedAt) || Boolean(message?.status);
-  const inlineMeta = isDefault && !isStreaming && hasMeta ? <ChatMessageInlineMeta /> : undefined;
-
-  return (
-    <MessageGroupComponent messageId={id} {...(slotProps?.messageGroup ?? {})}>
-      <MessageRootComponent messageId={id} {...(slotProps?.messageRoot ?? {})}>
-        <MessageAvatarComponent {...(slotProps?.messageAvatar ?? {})} />
-        <MessageContentComponent {...(slotProps?.messageContent ?? {})} afterContent={inlineMeta} />
-        {/* External meta is only used in the compact variant */}
-        {!isDefault && <MessageMetaComponent {...(slotProps?.messageMeta ?? {})} />}
-        {MessageActionsSlot && (
-          <ChatMessageActions {...(slotProps?.messageActions ?? {})}>
-            <MessageActionsSlot messageId={id} />
-          </ChatMessageActions>
-        )}
-      </MessageRootComponent>
-    </MessageGroupComponent>
-  );
-}
-
 function DefaultConversationHeader({
   slots,
   slotProps,
@@ -374,6 +317,25 @@ function mergeConversationListLayoutSlotProps(slotProp: any, extraStyle: React.C
       ...externalProps,
       style: {
         ...extraStyle,
+        ...(externalProps?.style ?? {}),
+      },
+    };
+  };
+}
+
+function mergeLayoutSlotProps(
+  slotProp: any,
+  internalProps: { className?: string; style?: React.CSSProperties },
+) {
+  return (ownerState: any) => {
+    const externalProps = typeof slotProp === 'function' ? slotProp(ownerState) : (slotProp ?? {});
+    const className = [internalProps.className, externalProps?.className].filter(Boolean).join(' ');
+
+    return {
+      ...externalProps,
+      ...(className ? { className } : {}),
+      style: {
+        ...(internalProps.style ?? {}),
         ...(externalProps?.style ?? {}),
       },
     };
@@ -629,10 +591,8 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   // to re-render every time a new object reference is passed for slots/slotProps.
   const slotsRef = React.useRef(slots);
   const slotPropsRef = React.useRef(slotProps);
-  const featuresRef = React.useRef(features);
   slotsRef.current = slots;
   slotPropsRef.current = slotProps;
-  featuresRef.current = features;
 
   const renderItem = React.useCallback(
     ({ id }: { id: string; index: number }) => (
@@ -641,7 +601,6 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
         id={id}
         slots={slotsRef.current}
         slotProps={slotPropsRef.current}
-        features={featuresRef.current}
       />
     ),
     [],
@@ -695,15 +654,22 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
 
   return (
     <ChatLayout
-      className={layoutClassName}
-      style={{ flex: 1, minHeight: 0 }}
+      slots={{
+        root: slots?.layout,
+        conversationsPane: slots?.conversationsPane,
+        threadPane: slots?.threadPane,
+      }}
       slotProps={{
-        conversationsPane: {
-          ...(conversationsPaneClassName ? { className: conversationsPaneClassName } : {}),
+        root: mergeLayoutSlotProps(slotProps?.layout, {
+          className: layoutClassName,
+          style: { flex: 1, minHeight: 0 },
+        }),
+        conversationsPane: mergeLayoutSlotProps(slotProps?.conversationsPane, {
+          className: conversationsPaneClassName,
           style: conversationsPaneStyle,
-        },
-        threadPane: {
-          ...(threadPaneClassName ? { className: threadPaneClassName } : {}),
+        }),
+        threadPane: mergeLayoutSlotProps(slotProps?.threadPane, {
+          className: threadPaneClassName,
           style: {
             flex: 1,
             width: isNarrow ? '100%' : undefined,
@@ -712,7 +678,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
             flexDirection: 'column',
             overflow: 'hidden',
           },
-        },
+        }),
       }}
     >
       {hasConversationList && !isNarrow && (

@@ -60,7 +60,7 @@ const ChatMessageGroupStyled = styled('div', {
 const ChatMessageGroupAuthorNameStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'GroupAuthorName',
-})<{ ownerState?: { authorRole?: string; variant?: string } }>(({ theme, ownerState }) => ({
+})<{ ownerState?: { isOwnMessage?: boolean; variant?: string } }>(({ theme, ownerState }) => ({
   fontSize: theme.typography.caption.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
   color: (theme.vars || theme).palette.text.secondary,
@@ -78,8 +78,8 @@ const ChatMessageGroupAuthorNameStyled = styled('div', {
         color: (theme.vars || theme).palette.primary.main,
       }
     : {
-        // Default: offset by avatar width, user right-aligned
-        ...(ownerState?.authorRole === 'user'
+        // Default: offset by avatar width; align to the same side as the bubble.
+        ...(ownerState?.isOwnMessage
           ? {
               textAlign: 'right' as const,
               paddingInlineEnd: `calc(var(--MuiChatMessage-avatarSize) + ${theme.spacing(2)} + ${theme.spacing(0.5)})`,

@@ -109,9 +109,7 @@ describe('chatSelectors', () => {
 
     expect(chatSelectors.error(store.state)?.message).toBe('History failed');
     expect(chatSelectors.messageError(store.state, 'm1')?.message).toBe('User message failed');
-    expect(chatSelectors.messageError(store.state, 'm3')?.message).toBe(
-      'Assistant message failed',
-    );
+    expect(chatSelectors.messageError(store.state, 'm3')?.message).toBe('Assistant message failed');
   });
 
   it('memoizes message and conversation arrays when their inputs have not changed', () => {

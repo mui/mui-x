@@ -65,9 +65,7 @@ export interface ChatMessage {
 
 export type ChatMessageAuthorIdGetter = (message: ChatMessage) => string | undefined;
 
-export type ChatMessageAuthorDisplayNameGetter = (
-  message: ChatMessage,
-) => string | undefined;
+export type ChatMessageAuthorDisplayNameGetter = (message: ChatMessage) => string | undefined;
 
 export type ChatMessageAuthorAvatarUrlGetter = (message: ChatMessage) => string | undefined;
 

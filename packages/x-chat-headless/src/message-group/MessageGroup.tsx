@@ -149,6 +149,7 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   const isFirstInList = messageIndex === 0;
   const isLast = nextKey === null || nextKey !== currentKey;
 
+  const isOwnMessage = resolvedAuthor?.isOwnMessage ?? message?.role === 'user';
   const ownerState = React.useMemo<MessageGroupOwnerState>(
     () => ({
       isFirst,
@@ -156,10 +157,20 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
       isLast,
       authorRole: message?.role,
       authorId: resolvedAuthor?.id,
+      isOwnMessage,
       variant,
       density,
     }),
-    [density, isFirst, isFirstInList, isLast, message?.role, resolvedAuthor?.id, variant],
+    [
+      density,
+      isFirst,
+      isFirstInList,
+      isLast,
+      isOwnMessage,
+      message?.role,
+      resolvedAuthor?.id,
+      variant,
+    ],
   );
   const Group = slots?.group ?? 'div';
   const AuthorName = slots?.authorName ?? 'div';

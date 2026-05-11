@@ -53,6 +53,7 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
       density,
       resolvedAuthor,
       showAvatar: resolvedAuthor?.avatarUrl != null,
+      isOwnMessage: resolvedAuthor?.isOwnMessage ?? message?.role === 'user',
     }),
     [density, isGrouped, message, messageId, resolvedAuthor, variant],
   );
@@ -78,6 +79,7 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
         streaming: ownerState.streaming,
         error: ownerState.error,
         isGrouped: ownerState.isGrouped,
+        isOwnMessage: ownerState.isOwnMessage,
       }),
     },
   });

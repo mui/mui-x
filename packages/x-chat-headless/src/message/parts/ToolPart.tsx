@@ -25,6 +25,10 @@ export interface ToolPartOwnerState {
 
 export interface ToolPartSectionOwnerState extends ToolPartOwnerState {
   section: 'input' | 'output';
+  /** The localized label for the section ("Tool called", "Tool result"). */
+  summaryLabel: string;
+  /** A short, single-line preview of the section content (truncated to ~60 chars). */
+  previewValue: string;
 }
 
 export interface ToolPartSlots {
@@ -34,6 +38,7 @@ export interface ToolPartSlots {
   state: React.ElementType;
   icon?: React.ElementType;
   section: React.ElementType;
+  sectionSummary: React.ElementType;
   sectionContent: React.ElementType;
   error: React.ElementType;
   actions: React.ElementType;
@@ -48,6 +53,7 @@ export interface ToolPartSlotProps {
   state?: SlotComponentProps<'span', {}, ToolPartOwnerState>;
   icon?: SlotComponentProps<'span', {}, ToolPartOwnerState>;
   section?: SlotComponentProps<'div', {}, ToolPartSectionOwnerState>;
+  sectionSummary?: SlotComponentProps<'strong', {}, ToolPartSectionOwnerState>;
   sectionContent?: SlotComponentProps<'pre', {}, ToolPartSectionOwnerState>;
   error?: SlotComponentProps<'div', {}, ToolPartOwnerState>;
   actions?: SlotComponentProps<'div', {}, ToolPartOwnerState>;
@@ -82,6 +88,15 @@ type ToolPartComponent = ((
   props: ToolPartProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
+function buildPreviewValue(formatted: string): string {
+  const firstLine = formatted.split('\n').find((line) => line.trim().length > 0) ?? '';
+  const trimmed = firstLine.trim();
+  if (trimmed.length <= 60) {
+    return trimmed;
+  }
+  return `${trimmed.slice(0, 60)}…`;
+}
+
 function ToolPayloadSection(props: {
   label: string;
   ownerState: ToolPartOwnerState;
@@ -92,18 +107,27 @@ function ToolPayloadSection(props: {
 }) {
   const { label, ownerState, section, slotProps, slots, value } = props;
   const formatted = React.useMemo(() => formatStructuredValue(value), [value]);
+  const previewValue = React.useMemo(() => buildPreviewValue(formatted), [formatted]);
   const sectionOwnerState = React.useMemo<ToolPartSectionOwnerState>(
     () => ({
       ...ownerState,
       section,
+      summaryLabel: label,
+      previewValue,
     }),
-    [ownerState, section],
+    [ownerState, section, label, previewValue],
   );
   const Section = slots?.section ?? 'div';
+  const SectionSummary = slots?.sectionSummary ?? 'strong';
   const SectionContent = slots?.sectionContent ?? 'pre';
   const sectionProps = useSlotProps({
     elementType: Section,
     externalSlotProps: slotProps?.section,
+    ownerState: sectionOwnerState,
+  });
+  const sectionSummaryProps = useSlotProps({
+    elementType: SectionSummary,
+    externalSlotProps: slotProps?.sectionSummary,
     ownerState: sectionOwnerState,
   });
   const sectionContentProps = useSlotProps({
@@ -114,7 +138,7 @@ function ToolPayloadSection(props: {
 
   return (
     <Section {...sectionProps}>
-      <strong>{label}</strong>
+      <SectionSummary {...sectionSummaryProps}>{label}</SectionSummary>
       <SectionContent {...sectionContentProps}>{formatted}</SectionContent>
     </Section>
   );
@@ -253,7 +277,9 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
     (toolInvocation.state === 'input-streaming' ||
       toolInvocation.state === 'input-available' ||
       toolInvocation.state === 'approval-requested' ||
-      toolInvocation.state === 'approval-responded') &&
+      toolInvocation.state === 'approval-responded' ||
+      toolInvocation.state === 'output-available' ||
+      toolInvocation.state === 'output-error') &&
     toolInvocation.input !== undefined;
 
   const showOutput =

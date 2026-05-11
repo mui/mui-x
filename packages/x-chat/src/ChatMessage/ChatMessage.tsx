@@ -31,10 +31,11 @@ const ChatMessageStyled = styled('div', {
     isGrouped?: boolean;
     variant?: string;
     density?: string;
+    isOwnMessage?: boolean;
   };
 }>(({ theme, ownerState }) => {
   const isCompact = ownerState?.variant === 'compact';
-  const isUser = ownerState?.role === 'user';
+  const isOwnMessage = ownerState?.isOwnMessage ?? false;
   const densityPaddingBlock: Record<string, string> = {
     compact: theme.spacing(0.25),
     standard: theme.spacing(1),
@@ -101,7 +102,7 @@ const ChatMessageStyled = styled('div', {
       paddingBlockEnd: theme.spacing(0.25),
     },
     fontFamily: theme.typography.fontFamily,
-    ...(isUser && {
+    ...(isOwnMessage && {
       gridTemplateColumns: isGrouped ? '1fr var(--MuiChatMessage-avatarSize)' : '1fr auto',
       gridTemplateAreas: isGrouped
         ? '"content ." "error ." "actions ."'

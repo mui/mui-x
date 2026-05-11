@@ -76,6 +76,7 @@ describe('processStream', () => {
       role: 'assistant',
       status: 'sent',
       parts: [{ type: 'text', text: 'Hello world', state: 'done' }],
+      createdAt: expect.any(String),
     });
   });
 

@@ -124,6 +124,7 @@ describe('useChat', () => {
         role: 'assistant',
         status: 'sent',
         parts: [{ type: 'text', text: 'Hello back', state: 'done' }],
+        createdAt: expect.any(String),
       },
     ]);
   });
@@ -450,6 +451,7 @@ describe('useChat', () => {
           },
           { type: 'step-start' },
         ],
+        createdAt: expect.any(String),
       },
     ]);
   });
@@ -798,6 +800,7 @@ describe('useChat', () => {
       role: 'assistant',
       status: 'sent',
       parts: [{ type: 'text', text: 'Second answer', state: 'done' }],
+      createdAt: expect.any(String),
     });
   });
 
@@ -1009,6 +1012,7 @@ describe('useChat', () => {
             },
           },
         ],
+        createdAt: expect.any(String),
       },
     ]);
   });
@@ -1144,6 +1148,7 @@ describe('useChat', () => {
             },
           },
         ],
+        createdAt: expect.any(String),
       },
     ]);
   });

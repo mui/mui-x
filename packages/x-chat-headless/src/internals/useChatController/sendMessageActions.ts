@@ -206,15 +206,15 @@ export function createSendMessageActions<Cursor = string>(params: {
       setRuntimeError(
         (() => {
           const runtimeError = createRuntimeError(
-          'SEND_ERROR',
-          getErrorMessage('Unable to send the message.', error),
-          'send',
-          true,
-          true,
-          {
-            messageId: nextMessage.id,
-            conversationId,
-          },
+            'SEND_ERROR',
+            getErrorMessage('Unable to send the message.', error),
+            'send',
+            true,
+            true,
+            {
+              messageId: nextMessage.id,
+              conversationId,
+            },
           );
 
           store.setMessageError(nextMessage.id, runtimeError);

@@ -177,9 +177,7 @@ function MessageRenderedPart(props: {
       return <SourceDocumentPart {...partProps?.['source-document']} {...baseProps} part={part} />;
     case 'step-start':
       return (
-        <React.Fragment>
-          {renderDefaultStepStartMessagePart({ ...baseProps, part })}
-        </React.Fragment>
+        <React.Fragment>{renderDefaultStepStartMessagePart({ ...baseProps, part })}</React.Fragment>
       );
     default:
       if (part.type.startsWith('data-')) {

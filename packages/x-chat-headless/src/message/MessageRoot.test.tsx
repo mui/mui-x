@@ -330,7 +330,7 @@ describe('MessageRoot', () => {
       'https://example.com/avatar.png',
     );
     expect(screen.getByText('Hello world')).not.to.equal(null);
-    expect(screen.getByText('Reasoning')).not.to.equal(null);
+    expect(screen.getByText('Thoughts')).not.to.equal(null);
     expect(screen.getByText('search')).not.to.equal(null);
     expect(screen.getByText('dynamic-search')).not.to.equal(null);
     expect(screen.getByText('spec.pdf')).not.to.equal(null);
@@ -617,8 +617,8 @@ describe('ToolPart', () => {
       </ChatRoot>,
     );
 
-    // Default locale: messageToolInputLabel → 'Input'
-    expect(screen.getByText('Input')).not.to.equal(null);
+    // Default locale: messageToolInputLabel → 'Tool called'
+    expect(screen.getByText('Tool called')).not.to.equal(null);
   });
 
   it('shows output section when output-available with output defined', () => {
@@ -630,8 +630,8 @@ describe('ToolPart', () => {
       </ChatRoot>,
     );
 
-    // Default locale: messageToolOutputLabel → 'Output'
-    expect(screen.getByText('Output')).not.to.equal(null);
+    // Default locale: messageToolOutputLabel → 'Tool result'
+    expect(screen.getByText('Tool result')).not.to.equal(null);
   });
 
   it('shows inline content for long payloads', () => {
@@ -663,7 +663,7 @@ describe('ToolPart', () => {
     const strong = screen.getByTestId('content').querySelector('strong');
 
     expect(strong).not.to.equal(null);
-    expect(strong!.textContent).to.equal('Input');
+    expect(strong!.textContent).to.equal('Tool called');
   });
 
   it('shows inline content for short payloads', () => {
@@ -695,7 +695,7 @@ describe('ToolPart', () => {
     const strong = screen.getByTestId('content').querySelector('strong');
 
     expect(strong).not.to.equal(null);
-    expect(strong!.textContent).to.equal('Input');
+    expect(strong!.textContent).to.equal('Tool called');
   });
 
   it('shows error text when output-error with errorText', () => {
@@ -1154,5 +1154,121 @@ describe('MessageMeta', () => {
 
     // fullMessage has editedAt set
     expect(screen.getByText('Edited')).not.to.equal(null);
+  });
+});
+
+describe('isOwnMessage derivation', () => {
+  // Stamps ownerState.isOwnMessage onto a data attribute so we can assert
+  // the resolved value across the matrix of currentUser / author / role inputs.
+  function OwnershipProbe(props: MessageRootProps & { ownerState?: { isOwnMessage?: boolean } }) {
+    const { children, messageId, isGrouped, ownerState, slotProps, slots, ...other } = props;
+    void messageId;
+    void isGrouped;
+    void slotProps;
+    void slots;
+
+    return (
+      <div
+        data-testid="ownership-probe"
+        data-is-own={String(Boolean(ownerState?.isOwnMessage))}
+        {...other}
+      >
+        {children}
+      </div>
+    );
+  }
+
+  function renderProbe(args: {
+    message: ChatMessage;
+    currentUser?: { id: string };
+    members?: Array<{ id: string; displayName?: string }>;
+    getMessageAuthorId?: (message: ChatMessage) => string | undefined;
+  }) {
+    return render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[args.message]}
+        {...(args.currentUser ? { currentUser: args.currentUser } : {})}
+        {...(args.members ? { members: args.members } : {})}
+        {...(args.getMessageAuthorId ? { getMessageAuthorId: args.getMessageAuthorId } : {})}
+      >
+        <MessageRoot messageId={args.message.id} slots={{ root: OwnershipProbe }} />
+      </ChatRoot>,
+    );
+  }
+
+  it('marks the message as own when currentUser.id matches the author id', () => {
+    renderProbe({
+      message: {
+        id: 'm-own',
+        role: 'user',
+        author: { id: 'me' },
+        parts: [{ type: 'text', text: 'Hi' }],
+      },
+      currentUser: { id: 'me' },
+      members: [
+        { id: 'me', displayName: 'Me' },
+        { id: 'alice', displayName: 'Alice' },
+      ],
+    });
+
+    expect(screen.getByTestId('ownership-probe')).to.have.attribute('data-is-own', 'true');
+  });
+
+  it("does not mark role:'user' messages from other users as own (Alice case)", () => {
+    renderProbe({
+      message: {
+        id: 'm-alice',
+        role: 'user',
+        author: { id: 'alice' },
+        parts: [{ type: 'text', text: 'Hi from Alice' }],
+      },
+      currentUser: { id: 'me' },
+      members: [
+        { id: 'me', displayName: 'Me' },
+        { id: 'alice', displayName: 'Alice' },
+      ],
+    });
+
+    expect(screen.getByTestId('ownership-probe')).to.have.attribute('data-is-own', 'false');
+  });
+
+  it("falls back to role==='user' as own when no currentUser is configured", () => {
+    renderProbe({
+      message: {
+        id: 'm-fallback-user',
+        role: 'user',
+        parts: [{ type: 'text', text: 'Plain user message' }],
+      },
+    });
+
+    expect(screen.getByTestId('ownership-probe')).to.have.attribute('data-is-own', 'true');
+  });
+
+  it("treats role==='assistant' as not own when no currentUser is configured", () => {
+    renderProbe({
+      message: {
+        id: 'm-fallback-assistant',
+        role: 'assistant',
+        parts: [{ type: 'text', text: 'Plain assistant message' }],
+      },
+    });
+
+    expect(screen.getByTestId('ownership-probe')).to.have.attribute('data-is-own', 'false');
+  });
+
+  it('uses getMessageAuthorId to identify the current user', () => {
+    renderProbe({
+      message: {
+        id: 'm-getter',
+        role: 'user',
+        metadata: { actorId: 'me' } as any,
+        parts: [{ type: 'text', text: 'From metadata' }],
+      },
+      currentUser: { id: 'me' },
+      getMessageAuthorId: (message) => (message.metadata as any)?.actorId,
+    });
+
+    expect(screen.getByTestId('ownership-probe')).to.have.attribute('data-is-own', 'true');
   });
 });

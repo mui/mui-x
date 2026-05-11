@@ -57,7 +57,7 @@ const ChatMessageErrorRoot = styled('div', {
   backgroundColor: getErrorCardBackground(theme),
   fontSize: theme.typography.body2.fontSize,
   lineHeight: theme.typography.body2.lineHeight,
-  ...(ownerState?.role === 'user' && {
+  ...(ownerState?.isOwnMessage && {
     justifySelf: 'end',
   }),
 }));

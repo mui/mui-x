@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { useCopyToClipboard } from '../internals/useCopyToClipboard';
 import { useChatCodeBlockUtilityClasses, type ChatCodeBlockClasses } from './chatCodeBlockClasses';
 
 export interface ChatCodeBlockProps {
@@ -140,42 +141,9 @@ const ChatCodeBlock = React.forwardRef<HTMLDivElement, ChatCodeBlockProps>(
 
     const classes = useChatCodeBlockUtilityClasses(classesProp);
 
-    const [copyState, setCopyState] = React.useState<'idle' | 'copied'>('idle');
-    const resetTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+    const { copyState, copy } = useCopyToClipboard();
 
-    React.useEffect(() => {
-      return () => {
-        if (resetTimerRef.current !== null) {
-          clearTimeout(resetTimerRef.current);
-        }
-      };
-    }, []);
-
-    const handleCopy = () => {
-      // Guard against environments where the async Clipboard API is missing
-      // (older browsers, insecure contexts, some test runners). Without this
-      // check the click handler throws a TypeError on `undefined.writeText`
-      // and bubbles up as an unhandled error (#10).
-      if (
-        typeof navigator === 'undefined' ||
-        typeof navigator.clipboard?.writeText !== 'function'
-      ) {
-        return;
-      }
-
-      navigator.clipboard.writeText(children).then(
-        () => {
-          setCopyState('copied');
-          if (resetTimerRef.current !== null) {
-            clearTimeout(resetTimerRef.current);
-          }
-          resetTimerRef.current = setTimeout(() => setCopyState('idle'), 2000);
-        },
-        () => {
-          // Clipboard write failed (e.g. permissions denied) — no-op
-        },
-      );
-    };
+    const handleCopy = () => copy(children);
 
     return (
       <ChatCodeBlockRoot ref={ref} className={clsx(classes.root, className)} {...other}>

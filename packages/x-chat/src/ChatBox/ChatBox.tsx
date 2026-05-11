@@ -2,7 +2,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { ChatRoot, ChatVariantProvider, ChatDensityProvider } from '@mui/x-chat-headless';
+import {
+  ChatRoot,
+  ChatVariantProvider,
+  ChatDensityProvider,
+  type ChatVariant,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatBoxUtilityClasses } from './chatBoxClasses';
 import { ChatBoxContent } from './ChatBoxContent';
@@ -14,7 +19,8 @@ const ChatBoxStyled = styled('div', {
   name: 'MuiChatBox',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})(({ theme }) => ({
+})<{ ownerState: { variant: ChatVariant } }>(({ theme, ownerState }) => ({
+  '--ChatBox-conversationListWidth': '260px',
   boxSizing: 'border-box',
   position: 'relative',
   display: 'flex',
@@ -33,6 +39,9 @@ const ChatBoxStyled = styled('div', {
   '*, *::before, *::after': {
     boxSizing: 'inherit',
   },
+  ...(ownerState.variant === 'compact' && {
+    '--ChatBox-conversationListWidth': '220px',
+  }),
 }));
 
 type ChatBoxComponent = (<Cursor = string>(
@@ -141,6 +150,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
         <ChatDensityProvider density={density}>
           <ChatBoxStyled
             ref={handleRef}
+            ownerState={{ variant }}
             className={clsx(classes.root, className)}
             sx={sx}
             {...other}

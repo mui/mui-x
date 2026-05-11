@@ -52,7 +52,6 @@ const ChatConversationListStyled = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
-  '--ChatBox-conversationListWidth': '260px',
   display: 'flex',
   flexDirection: 'column',
   padding: theme.spacing(0.5, 0),

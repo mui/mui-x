@@ -22,6 +22,11 @@ export interface MessageOwnerState {
    * phantom column collapses when no avatar is present.
    */
   showAvatar: boolean;
+  /**
+   * Whether this message is from the current user.
+   * Used to determine message alignment (own messages on the right, others on the left).
+   */
+  isOwnMessage: boolean;
 }
 
 export interface MessageRootOwnerState extends MessageOwnerState {}
