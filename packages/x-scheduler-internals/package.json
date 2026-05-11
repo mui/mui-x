@@ -21,6 +21,7 @@
     "./event-calendar-provider": "./src/event-calendar-provider/index.ts",
     "./event-calendar-selectors": "./src/event-calendar-selectors/index.ts",
     "./get-day-list": "./src/get-day-list/index.ts",
+    "./get-week-boundaries": "./src/get-week-boundaries/index.ts",
     "./models": "./src/models/index.ts",
     "./process-date": "./src/process-date/index.ts",
     "./process-event": "./src/process-event/index.ts",

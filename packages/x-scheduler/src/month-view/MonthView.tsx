@@ -10,6 +10,7 @@ import {
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-internals/models';
 import { getDayList } from '@mui/x-scheduler-internals/get-day-list';
+import { getStartOfWeek, getEndOfWeek } from '@mui/x-scheduler-internals/get-week-boundaries';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
@@ -129,8 +130,8 @@ const MONTH_VIEW_CONFIG: EventCalendarViewConfig = {
     (adapter, visibleDate, showWeekends, weekStartsOn) =>
       getDayList({
         adapter,
-        start: adapter.startOfWeek(adapter.startOfMonth(visibleDate), weekStartsOn),
-        end: adapter.endOfWeek(adapter.endOfMonth(visibleDate), weekStartsOn),
+        start: getStartOfWeek(adapter, adapter.startOfMonth(visibleDate), weekStartsOn),
+        end: getEndOfWeek(adapter, adapter.endOfMonth(visibleDate), weekStartsOn),
         excludeWeekends: !showWeekends,
       }),
   ),

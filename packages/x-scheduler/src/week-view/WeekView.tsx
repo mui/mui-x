@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import { getDayList } from '@mui/x-scheduler-internals/get-day-list';
+import { getStartOfWeek, getEndOfWeek } from '@mui/x-scheduler-internals/get-week-boundaries';
 import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
@@ -13,7 +14,8 @@ import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 const WEEK_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addWeeks(
-      state.adapter.startOfWeek(
+      getStartOfWeek(
+        state.adapter,
         schedulerOtherSelectors.visibleDate(state),
         eventCalendarPreferenceSelectors.weekStartsOn(state),
       ),
@@ -27,8 +29,8 @@ const WEEK_VIEW_CONFIG: EventCalendarViewConfig = {
     (adapter, visibleDate, showWeekends, weekStartsOn) =>
       getDayList({
         adapter,
-        start: adapter.startOfWeek(visibleDate, weekStartsOn),
-        end: adapter.endOfWeek(visibleDate, weekStartsOn),
+        start: getStartOfWeek(adapter, visibleDate, weekStartsOn),
+        end: getEndOfWeek(adapter, visibleDate, weekStartsOn),
         excludeWeekends: !showWeekends,
       }),
   ),

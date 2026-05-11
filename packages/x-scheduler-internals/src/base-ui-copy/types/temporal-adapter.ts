@@ -198,10 +198,7 @@ export interface TemporalAdapter {
   /**
    * Returns the start of the week for the given date.
    */
-  startOfWeek(
-    value: TemporalSupportedObject,
-    weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6,
-  ): TemporalSupportedObject;
+  startOfWeek(value: TemporalSupportedObject): TemporalSupportedObject;
   /**
    * Returns the start of the day for the given date.
    */
@@ -229,10 +226,7 @@ export interface TemporalAdapter {
   /**
    * Returns the end of the week for the given date.
    */
-  endOfWeek(
-    value: TemporalSupportedObject,
-    weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6,
-  ): TemporalSupportedObject;
+  endOfWeek(value: TemporalSupportedObject): TemporalSupportedObject;
   /**
    * Returns the end of the day for the given date.
    */

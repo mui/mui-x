@@ -285,11 +285,8 @@ export class TemporalAdapterDateFns implements TemporalAdapter {
     return startOfMonth(value);
   };
 
-  public startOfWeek = (value: Date, weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6) => {
-    return startOfWeek(value, {
-      locale: this.locale,
-      ...(weekStartsOn !== undefined && { weekStartsOn }),
-    });
+  public startOfWeek = (value: Date) => {
+    return startOfWeek(value, { locale: this.locale });
   };
 
   public startOfDay = (value: Date) => {
@@ -316,11 +313,8 @@ export class TemporalAdapterDateFns implements TemporalAdapter {
     return endOfMonth(value);
   };
 
-  public endOfWeek = (value: Date, weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6): Date => {
-    return endOfWeek(value, {
-      locale: this.locale,
-      ...(weekStartsOn !== undefined && { weekStartsOn }),
-    });
+  public endOfWeek = (value: Date): Date => {
+    return endOfWeek(value, { locale: this.locale });
   };
 
   public endOfDay = (value: Date): Date => {
