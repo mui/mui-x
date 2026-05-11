@@ -28,7 +28,7 @@ See the [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/
 ## Setting up a CSP
 
 MUI X Charts depends on Material UI.
-Follow Material UI's [CSP implementation guide](/material-ui/guides/content-security-policy/#how-does-one-implement-csp) to set up a CSP.
+Follow Material UI's [CSP implementation guide](/material-ui/guides/content-security-policy/) to set up a CSP.
 
 ### CSP for exporting charts
 
