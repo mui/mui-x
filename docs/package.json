@@ -30,7 +30,7 @@
     "@mui/icons-material": "catalog:",
     "@mui/base": "^5.0.0-beta.70",
     "@mui/internal-core-docs": "catalog:",
-    "@mui/internal-docs-infra": "^0.11.1-canary.1",
+    "@mui/internal-docs-infra": "^0.11.1-canary.3",
     "@mui/lab": "^9.0.0-beta.3",
     "@mui/material": "catalog:",
     "@mui/material-nextjs": "^9.0.1",
