@@ -80,11 +80,9 @@ export default function RadialBarClick() {
           </IconButton>
         </Box>
         <HighlightedCode
-          code={
-            `// Data from axis click
+          code={`// Data from axis click
 ${axisData ? JSON.stringify(axisData, null, 2) : '// The data will appear here'}
-`
-          }
+`}
           language="json"
           copyButtonHidden
         />
