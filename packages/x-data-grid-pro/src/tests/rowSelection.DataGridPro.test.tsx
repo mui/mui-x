@@ -1053,6 +1053,52 @@ describe('<DataGridPro /> - Row selection', () => {
         expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([0, 1, 2, 3, 4, 5, 6, 7]);
       });
 
+      it('should preserve selected tree data parents when rows are paged out and back', async () => {
+        // Mixed selectability: Thomas (id: 1) and some children (Robert: 2, Karen: 3) are
+        // selectable, while others (Nancy: 4, Daniel: 5, Christopher: 6, Donald: 7) are not.
+        const selectableIds = new Set([1, 2, 3, 8]);
+        function TreeDataServerPaginationSelection() {
+          apiRef = useGridApiRef();
+          const [page, setPage] = React.useState(0);
+          const pageRoots = React.useMemo(() => (page === 0 ? ['Thomas'] : ['Mary']), [page]);
+          const pageRows = React.useMemo(
+            () => rows.filter((row) => pageRoots.includes(row.hierarchy[0])),
+            [pageRoots],
+          );
+
+          return (
+            <div style={{ height: 800, width: '100%' }}>
+              <button type="button" onClick={() => setPage((prev) => 1 - prev)}>
+                Toggle page
+              </button>
+              <DataGridPro
+                apiRef={apiRef}
+                treeData
+                rows={pageRows}
+                columns={columns}
+                getTreeDataPath={getTreeDataPath}
+                checkboxSelection
+                keepNonExistentRowsSelected
+                isRowSelectable={(params) => selectableIds.has(params.id as number)}
+                disableVirtualization
+              />
+            </div>
+          );
+        }
+
+        const { user } = render(<TreeDataServerPaginationSelection />);
+        // With descendants propagation, selecting Thomas auto-selects selectable children
+        await user.click(getCell(0, 0).querySelector('input')!);
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([1, 2, 3]);
+
+        await user.click(screen.getByRole('button', { name: /toggle page/i }));
+        await user.click(screen.getByRole('button', { name: /toggle page/i }));
+
+        // Thomas and its selectable children should still be selected
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([1, 2, 3]);
+        expect((getCell(0, 0).querySelector('input') as HTMLInputElement).checked).to.equal(true);
+      });
+
       it('should not apply row selection propagation on filtered rows', async () => {
         const { user } = render(
           <SelectionPropagationGrid
