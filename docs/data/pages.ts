@@ -890,6 +890,7 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-chat', title: 'Overview' },
       { pathname: '/x/react-chat/quickstart', title: 'Quickstart' },
+      { pathname: '/x/react-chat/all-components', title: 'Components' },
       {
         pathname: '/x/react-chat/main-features',
         subheader: 'Main features',
@@ -946,6 +947,7 @@ const pages: MuiPage[] = [
             children: [
               { pathname: '/x/react-chat/basics/messages', title: 'Messages' },
               { pathname: '/x/react-chat/basics/composer', title: 'Composer' },
+              { pathname: '/x/react-chat/basics/conversation', title: 'Conversation' },
               { pathname: '/x/react-chat/basics/layout', title: 'Layout' },
             ],
           },
@@ -990,6 +992,14 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-chat/display/loading-and-empty-states',
                 title: 'Loading & Empty States',
+              },
+              {
+                pathname: '/x/react-chat/display/unread-marker',
+                title: 'Unread Marker',
+              },
+              {
+                pathname: '/x/react-chat/display/date-divider',
+                title: 'Date Divider',
               },
             ],
           },
