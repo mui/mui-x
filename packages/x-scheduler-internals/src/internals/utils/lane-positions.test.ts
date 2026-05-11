@@ -1,4 +1,3 @@
-import { clearWarningsCache } from '@mui/x-internals/warning';
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { computeDayGridLanes, computeTimedLanes } from './lane-positions';
 import { getDaysTheOccurrenceIsVisibleOn, getOccurrencesFromEvents } from './event-utils';
@@ -208,18 +207,15 @@ describe('lane-positions', () => {
       expect(day0.positionByKey.has('B')).to.equal(false);
     });
 
-    it('should warn and skip the occurrence when its key is missing from `byKey`', () => {
-      clearWarningsCache();
+    it('should throw when an occurrence key is missing from `byKey`', () => {
       const occurrencesByDay: SchedulerOccurrencesByDay = {
         byKey: new Map(),
         keysByDay: new Map([[days[0].key, ['ghost']]]),
         dayKeys: [days[0].key],
       };
-      let result: ReturnType<typeof computeDayGridLanes> | undefined;
-      expect(() => {
-        result = computeDayGridLanes({ adapter, rows: [[days[0]]], occurrencesByDay });
-      }).toWarnDev('MUI X Scheduler: occurrence "ghost"');
-      expect(result!.byContainer.get(days[0].key)!.orderedKeys).to.have.length(0);
+      expect(() =>
+        computeDayGridLanes({ adapter, rows: [[days[0]]], occurrencesByDay }),
+      ).to.throw(/MUI X Scheduler: occurrence "ghost"/);
     });
   });
 
@@ -412,43 +408,47 @@ describe('lane-positions', () => {
       expect(result.positionByKey.has('B')).to.equal(false);
     });
 
-    it('should warn and skip the occurrence when its key is missing from `occurrencesByKey`', () => {
-      clearWarningsCache();
-      let result: ReturnType<typeof computeTimedLanes> | undefined;
-      expect(() => {
-        result = computeTimedLanes({
+    it('should throw when an occurrence key is missing from `occurrencesByKey`', () => {
+      expect(() =>
+        computeTimedLanes({
           adapter,
           occurrencesByKey: new Map(),
           containers: [[day.key, ['ghost']]],
           maxSpan: 1,
-        });
-      }).toWarnDev('MUI X Scheduler: occurrence "ghost"');
-      expect(result!.byContainer.get(day.key)!.orderedKeys).to.have.length(0);
+        }),
+      ).to.throw(/MUI X Scheduler: occurrence "ghost"/);
     });
 
-    it('should warn and clamp to 1 when maxSpan is less than 1', () => {
-      clearWarningsCache();
+    it('should throw when maxSpan is less than 1', () => {
       const occurrencesByDay = buildOccurrencesByDay(
-        [
-          EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z').toProcessed(),
-          EventBuilder.new().id('B').singleDay('2024-01-15T10:00:00Z').toProcessed(),
-        ],
+        [EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z').toProcessed()],
         [day],
       );
 
-      let result: ReturnType<typeof computeTimedLanes> | undefined;
-      expect(() => {
-        result = computeTimedLanes({
+      expect(() =>
+        computeTimedLanes({
           adapter,
           occurrencesByKey: occurrencesByDay.byKey,
           containers: [[day.key, occurrencesByDay.keysByDay.get(day.key) ?? []]],
           maxSpan: 0,
-        });
-      }).toWarnDev('MUI X Scheduler: `maxSpan` must be >= 1');
+        }),
+      ).to.throw(/MUI X Scheduler: `maxSpan` must be >= 1 \(received 0\)/);
+    });
 
-      // Falls back to maxSpan=1: the two overlapping events stay on their own lanes.
-      expect(result!.positionByKey.get('A')).to.deep.equal({ firstLane: 1, lastLane: 1 });
-      expect(result!.positionByKey.get('B')).to.deep.equal({ firstLane: 2, lastLane: 2 });
+    it('should throw when maxSpan is NaN', () => {
+      const occurrencesByDay = buildOccurrencesByDay(
+        [EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z').toProcessed()],
+        [day],
+      );
+
+      expect(() =>
+        computeTimedLanes({
+          adapter,
+          occurrencesByKey: occurrencesByDay.byKey,
+          containers: [[day.key, occurrencesByDay.keysByDay.get(day.key) ?? []]],
+          maxSpan: Number.NaN,
+        }),
+      ).to.throw(/MUI X Scheduler: `maxSpan` must be >= 1 \(received NaN\)/);
     });
   });
 

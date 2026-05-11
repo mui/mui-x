@@ -1,5 +1,3 @@
-// TODO: Use the Base UI warning utility once it supports cleanup in tests.
-import { warnOnce } from '@mui/x-internals/warning';
 import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
@@ -111,12 +109,11 @@ export function computeDayGridLanes(parameters: {
       for (const key of keys) {
         const occurrence = occurrencesByDay.byKey.get(key);
         if (!occurrence) {
-          warnOnce([
-            `MUI X Scheduler: occurrence "${key}" referenced by day "${day.key}" is missing from \`occurrencesByDay.byKey\`.`,
-            'The occurrence index was built inconsistently; the occurrence is omitted from the layout. ' +
+          throw new Error(
+            `MUI X Scheduler: occurrence "${key}" referenced by day "${day.key}" is missing from \`occurrencesByDay.byKey\`. ` +
+              'The occurrence index was built inconsistently, so the layout cannot be computed. ' +
               'Make sure every key listed in `keysByDay` resolves in `byKey`.',
-          ]);
-          continue;
+          );
         }
         const eligibleForLane = shouldAddPosition ? shouldAddPosition(occurrence, adapter) : true;
         if (eligibleForLane) {
@@ -241,13 +238,11 @@ export function computeTimedLanes(parameters: {
     previous,
   } = parameters;
 
-  let effectiveMaxSpan = maxSpan;
-  if (maxSpan < 1) {
-    warnOnce([
-      `MUI X Scheduler: \`maxSpan\` must be >= 1 (received ${maxSpan}).`,
-      "Falling back to maxSpan=1. Set the view config's `timeGrid.maxSpan` to a positive integer (or omit it to default to 1).",
-    ]);
-    effectiveMaxSpan = 1;
+  if (Number.isNaN(maxSpan) || maxSpan < 1) {
+    throw new Error(
+      `MUI X Scheduler: \`maxSpan\` must be >= 1 (received ${maxSpan}). ` +
+        "Set the view config's `timeGrid.maxSpan` to a positive integer (or omit it to default to 1).",
+    );
   }
 
   const positionByKey = new Map<string, OccurrenceLanePosition>();
@@ -271,12 +266,11 @@ export function computeTimedLanes(parameters: {
     for (const key of keys) {
       const occurrence = occurrencesByKey.get(key);
       if (!occurrence) {
-        warnOnce([
-          `MUI X Scheduler: occurrence "${key}" referenced by container "${containerKey}" is missing from \`occurrencesByKey\`.`,
-          'The occurrence index was built inconsistently; the occurrence is omitted from the layout. ' +
+        throw new Error(
+          `MUI X Scheduler: occurrence "${key}" referenced by container "${containerKey}" is missing from \`occurrencesByKey\`. ` +
+            'The occurrence index was built inconsistently, so the layout cannot be computed. ' +
             'Make sure every key listed for a container resolves in `occurrencesByKey`.',
-        ]);
-        continue;
+        );
       }
       const eligibleForLane = shouldAddPosition ? shouldAddPosition(occurrence, adapter) : true;
       if (eligibleForLane) {
@@ -287,12 +281,7 @@ export function computeTimedLanes(parameters: {
     const sorted = sortEventOccurrences(eligible);
     const conflicts = buildOccurrenceConflicts(sorted);
     const { firstLaneByKey, maxLane: containerMaxLane } = buildFirstLaneByKey(conflicts);
-    const lastLaneByKey = buildLastLaneByKey(
-      conflicts,
-      firstLaneByKey,
-      containerMaxLane,
-      effectiveMaxSpan,
-    );
+    const lastLaneByKey = buildLastLaneByKey(conflicts, firstLaneByKey, containerMaxLane, maxSpan);
 
     const layout: {
       orderedKeys: string[];
@@ -309,16 +298,12 @@ export function computeTimedLanes(parameters: {
     for (const occurrence of sorted) {
       const firstLane = firstLaneByKey[occurrence.key];
       const lastLane = lastLaneByKey[occurrence.key];
-      // Invariant: lane assignment must satisfy `1 <= firstLane <= lastLane`.
-      // Warns loudly in dev and skips the occurrence if a future change to
-      // `buildFirstLaneByKey` / `buildLastLaneByKey` violates that contract.
       if (firstLane < 1 || lastLane < firstLane) {
-        warnOnce([
+        throw new Error(
           `MUI X Scheduler: invalid lane assignment for occurrence "${occurrence.key}" in container "${containerKey}": ` +
-            `firstLane=${firstLane}, lastLane=${lastLane}. Expected 1 <= firstLane <= lastLane.`,
-          'This is a bug in `buildFirstLaneByKey`/`buildLastLaneByKey`; the occurrence is omitted from the layout.',
-        ]);
-        continue;
+            `firstLane=${firstLane}, lastLane=${lastLane}. Expected 1 <= firstLane <= lastLane. ` +
+            'This is a bug in `buildFirstLaneByKey`/`buildLastLaneByKey`.',
+        );
       }
       const position = internPosition(
         previous?.result.positionByKey,

@@ -83,6 +83,7 @@ const agendaCombinedSelector = createSelectorMemoized(
     });
 
     if (showEmptyDaysInAgenda) {
+      sortKeysByDayInPlace(keysByDay, byKey);
       return {
         days: accumulatedDays,
         occurrences: { byKey, keysByDay, dayKeys },
@@ -139,11 +140,38 @@ const agendaCombinedSelector = createSelectorMemoized(
     }
 
     // The agenda only renders the days that survived filtering, so trim the
-    // occurrences index to those days too.
+    // occurrences index to those days too. Sort before trimming so the sliced
+    // per-day arrays inherit the chronological order.
+    sortKeysByDayInPlace(keysByDay, byKey);
     const trimmed = trimOccurrencesToDays({ byKey, keysByDay, dayKeys }, daysWithEvents);
     return { days: daysWithEvents, occurrences: trimmed };
   },
 );
+
+// Order each day's occurrence keys by their start timestamp so the agenda renders them
+// chronologically without re-sorting on every render. `appendChunk` produces keys in
+// event-iteration order, which has no relation to occurrence start.
+function sortKeysByDayInPlace(
+  keysByDay: Map<string, string[]>,
+  byKey: ReadonlyMap<string, SchedulerEventOccurrence>,
+): void {
+  for (const keys of keysByDay.values()) {
+    if (keys.length < 2) {
+      continue;
+    }
+    keys.sort((a, b) => {
+      const occA = byKey.get(a);
+      const occB = byKey.get(b);
+      if (!occA || !occB) {
+        return 0;
+      }
+      return (
+        occA.displayTimezone.start.timestamp - occB.displayTimezone.start.timestamp ||
+        occB.displayTimezone.end.timestamp - occA.displayTimezone.end.timestamp
+      );
+    });
+  }
+}
 
 const visibleDaysSelector = createSelectorMemoized(
   agendaCombinedSelector,

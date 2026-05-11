@@ -1,5 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
+import { warnOnce } from '@mui/x-internals/warning';
 import type {
   SchedulerEventOccurrence,
   SchedulerOccurrencesByDay,
@@ -64,7 +65,41 @@ function arraysShallowEqual<T>(a: readonly T[], b: readonly T[]): boolean {
 
 // `state.viewConfig` is null during the very first render of a view (the view registers
 // its config in `useOnMount`, which runs after render). The wrapper selectors below
-// guard for that window and return frozen empty values.
+// guard for that window and return frozen empty values. The dev-only tracker fires a
+// warning if no view ever registers a config — distinguishing the expected first-render
+// race from a missing view mount.
+let viewConfigNullSeen = false;
+let viewConfigNonNullSeen = false;
+let viewConfigWarnCheckScheduled = false;
+
+function trackViewConfigPresence(viewConfig: State['viewConfig']): void {
+  if (process.env.NODE_ENV === 'production') {
+    return;
+  }
+  if (viewConfig !== null) {
+    viewConfigNonNullSeen = true;
+    return;
+  }
+  viewConfigNullSeen = true;
+  if (viewConfigWarnCheckScheduled) {
+    return;
+  }
+  viewConfigWarnCheckScheduled = true;
+  // `useOnMount` in the view registers the config in `useEffect`, which flushes after
+  // the current render task. By the time a macrotask resolves, a properly mounted view
+  // will have set `viewConfig`. If we still haven't seen a non-null read, no view is
+  // wired up.
+  setTimeout(() => {
+    if (viewConfigNullSeen && !viewConfigNonNullSeen) {
+      warnOnce([
+        'MUI X Scheduler: `state.viewConfig` is null and no view registered a config.',
+        'Occurrence position selectors are returning empty fallbacks, so events will not render.',
+        'Make sure a view component (DayView/WeekView/MonthView/AgendaView) is mounted inside the EventCalendar store provider.',
+      ]);
+    }
+  }, 0);
+}
+
 const visibleDaysFromConfig = (state: State): SchedulerProcessedDate[] =>
   state.viewConfig?.visibleDaysSelector(state) ?? EMPTY_DAYS;
 
@@ -164,6 +199,7 @@ const defaultVisibleOccurrencesSelector = createSelectorMemoized(
 
 const visibleOccurrencesSelector = (state: State): SchedulerOccurrencesByDay => {
   const config = state.viewConfig;
+  trackViewConfigPresence(config);
   if (!config) {
     return EMPTY_OCCURRENCES;
   }
