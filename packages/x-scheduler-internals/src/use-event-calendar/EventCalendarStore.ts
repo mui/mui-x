@@ -39,6 +39,8 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
 ) => {
   const views = parameters.views ?? DEFAULT_VIEWS;
   if (process.env.NODE_ENV !== 'production' && views.length === 0) {
+    // TODO: fix mui/no-guarded-throw
+    // eslint-disable-next-line mui/no-guarded-throw
     throw new Error(
       `MUI X Scheduler: EventCalendar received an empty \`views\` prop. ` +
         `This leaves the calendar without any view to render. ` +
