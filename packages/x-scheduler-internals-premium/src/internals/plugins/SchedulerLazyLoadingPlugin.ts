@@ -19,6 +19,10 @@ export class SchedulerLazyLoadingPlugin<
   private dataManager: SchedulerDataManager | null = null;
   private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
 
+  // TODO: add a dispose lifecycle. The `dataManager` keeps timers (debounce), the
+  // `eventsUpdated` subscription below is never unsubscribed, and consumer plugins
+  // (timeline) attach `registerStoreEffect` callbacks. After unmount, in-flight fetches
+  // and pending debounce callbacks can still write to a torn-down store.
   constructor(store: SchedulerStore<TEvent, any, State, Parameters>) {
     this.store = store;
 
@@ -29,7 +33,6 @@ export class SchedulerLazyLoadingPlugin<
         this.loadEventsFromDataSource,
       );
 
-      // Subscribe to events updated event to sync cache
       this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated);
     }
   }
@@ -45,8 +48,8 @@ export class SchedulerLazyLoadingPlugin<
       if (this.dataManager) {
         const { adapter } = this.store.state;
 
-        // Set loading state immediately (before the debounce delay)
-
+        // Flip `isLoading` before the debounce window so the skeleton shows immediately,
+        // not after the 150 ms wait.
         if (
           this.cache &&
           !this.cache.hasCoverage(
@@ -127,7 +130,6 @@ export class SchedulerLazyLoadingPlugin<
         ...eventsState,
         errors: [],
       });
-      // Mark request as settled
       await this.dataManager.setRequestSettled(range);
     } catch (error) {
       const wrapped =
@@ -137,7 +139,6 @@ export class SchedulerLazyLoadingPlugin<
       this.store.set('errors', [...this.store.state.errors, wrapped]);
       await this.dataManager.setRequestSettled(range);
     } finally {
-      // Unset loading state
       this.store.set('isLoading', false);
       await this.dataManager.setRequestSettled(range);
     }
@@ -171,7 +172,6 @@ export class SchedulerLazyLoadingPlugin<
         return;
       }
 
-      // Update cache
       for (const id of deleted) {
         this.cache.remove(String(id));
       }
@@ -179,10 +179,24 @@ export class SchedulerLazyLoadingPlugin<
       const modifiedIds = new Set([...created, ...updated.keys()]);
 
       if (modifiedIds.size > 0) {
+        const seenIds = new Set<unknown>();
         for (const event of newEvents) {
           // @ts-ignore
           if (modifiedIds.has(event.id)) {
             this.cache.upsert(event);
+            // @ts-ignore
+            seenIds.add(event.id);
+          }
+        }
+        if (process.env.NODE_ENV !== 'production') {
+          for (const id of modifiedIds) {
+            if (!seenIds.has(id)) {
+              console.warn(
+                `MUI X Scheduler: eventsUpdated reported id "${String(id)}" as created or updated, ` +
+                  `but it is missing from \`newEvents\`. The cache was not updated for this id. ` +
+                  `Make sure the publisher includes the new version of every modified event in \`newEvents\`.`,
+              );
+            }
           }
         }
       }

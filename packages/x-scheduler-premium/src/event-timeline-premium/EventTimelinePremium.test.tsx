@@ -364,7 +364,7 @@ describe('<EventTimelinePremium />', () => {
         />,
       );
 
-      await waitFor(() => expect(dataSource.getEvents.callCount).to.be.greaterThanOrEqual(1));
+      await waitFor(() => expect(dataSource.getEvents.callCount).to.equal(1));
     });
 
     it('should call dataSource.getEvents again when navigating to a different range', async () => {
@@ -551,6 +551,66 @@ describe('<EventTimelinePremium />', () => {
 
       await waitFor(() => {
         expect(screen.queryByText('Transient error')).to.equal(null);
+      });
+    });
+
+    it('should clear the error alert when navigating back to a cached range', async () => {
+      let callCount = 0;
+      const dataSource = {
+        getEvents: async (start: Date) => {
+          callCount += 1;
+          // The second call (the navigation that follows the initial mount fetch) fails.
+          // The third call would normally re-fetch range A — but it's cached, so the
+          // plugin's cache-hit branch must clear `state.errors` without going to the
+          // network.
+          if (callCount === 2) {
+            throw new Error('Network failure');
+          }
+          return baseEvents;
+        },
+        updateEvents: async () => ({ success: true }),
+      };
+
+      function Test() {
+        const [visibleDate, setVisibleDate] = React.useState(DEFAULT_TESTING_VISIBLE_DATE);
+        return (
+          <React.Fragment>
+            <EventTimelinePremium
+              resources={baseResources}
+              dataSource={dataSource}
+              visibleDate={visibleDate}
+              defaultPreset="dayAndMonth"
+            />
+            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
+              Next
+            </button>
+            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, -56))}>
+              Prev
+            </button>
+          </React.Fragment>
+        );
+      }
+
+      const { user } = render(<Test />);
+
+      // Wait for the initial fetch to settle range A in the cache.
+      await waitFor(() => {
+        expect(screen.getByText(event1.title)).not.to.equal(null);
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.equal(0);
+      });
+
+      // Navigate forward → fetch fails → error renders.
+      await user.click(screen.getByRole('button', { name: 'Next' }));
+      await waitFor(() => {
+        expect(screen.getByText('Network failure')).not.to.equal(null);
+      });
+
+      // Navigate back → cache hit on range A → error must clear without a network call.
+      await user.click(screen.getByRole('button', { name: 'Prev' }));
+      await waitFor(() => {
+        expect(screen.queryByText('Network failure')).to.equal(null);
       });
     });
 

@@ -132,6 +132,9 @@ export class SchedulerDataManager {
     await Promise.all(fetchPromises);
   };
 
+  // TODO: deduplicate staged ranges within the debounce window. Rapid navigations to
+  // distinct ranges currently produce N fetches once the debounce flushes, instead of
+  // coalescing to the final range only.
   public queue = async (ranges: DateRange[]) => {
     if (this.pendingDebounceResolve) {
       this.pendingDebounceResolve();

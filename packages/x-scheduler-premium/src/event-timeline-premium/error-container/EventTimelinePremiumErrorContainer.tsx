@@ -1,5 +1,5 @@
 'use client';
-// TODO: unify with ErrorContainer from `@mui/x-scheduler/internals`. This version also adds a `dismissedErrors` GC effect and WeakMap-backed stable keys that should be preserved on unification.
+// TODO: unify with ErrorContainer from `@mui/x-scheduler/internals`. On unification, prefer this version: it adds a `dismissedErrors` GC effect and WeakMap-backed stable keys that the calendar variant lacks.
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';

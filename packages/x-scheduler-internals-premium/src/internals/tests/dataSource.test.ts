@@ -110,6 +110,24 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.eventIdList).toHaveLength(1);
     });
 
+    it('should handle an empty events array from dataSource.getEvents', async () => {
+      const dataSource = {
+        getEvents: spy(async () => [] as TestEvent[]),
+        updateEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+
+      expect(dataSource.getEvents.calledOnce).to.equal(true);
+      expect(store.state.eventIdList).toHaveLength(0);
+      expect(store.state.errors).toHaveLength(0);
+      expect(store.state.isLoading).toEqual(false);
+    });
+
     it('should clear state.errors when fetching a range that is already covered', async () => {
       const startCached = adapter.date('2025-07-01T00:00:00Z', 'default');
       const endCached = adapter.date('2025-07-07T00:00:00Z', 'default');
@@ -317,11 +335,17 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.errors).toHaveLength(1);
 
       // Successful eventsUpdated should clear the stale error.
+      const updatedEvent = {
+        id: '1',
+        start: '2025-07-01T00:00:00.000Z',
+        end: '2025-07-01T11:00:00.000Z',
+        title: 'Event 1',
+      };
       store.publishEvent('eventsUpdated', {
         deleted: [],
         updated: new Map([['1', { id: '1' }]]),
         created: [],
-        newEvents: [],
+        newEvents: [updatedEvent],
       });
 
       await Promise.resolve();

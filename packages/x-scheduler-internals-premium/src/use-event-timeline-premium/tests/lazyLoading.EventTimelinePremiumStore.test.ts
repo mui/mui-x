@@ -13,6 +13,11 @@ interface TestEvent {
 
 const noopUpdateEvents = async () => ({ success: true });
 
+// Navigation APIs (`goToNextVisibleDate` takes `React.UIEvent`, `setPreset` takes a
+// DOM `Event`) require an event object, but the store doesn't read anything load-bearing
+// off it. This stub lets tests drive both signatures without building a synthetic event.
+const noopUIEvent: any = {};
+
 const buildEvents = (): TestEvent[] => [
   {
     id: '1',
@@ -60,6 +65,28 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     expect(store.state.eventIdList).to.have.length(1);
   });
 
+  it('should NOT fetch before updateStateFromParameters is called', async () => {
+    const dataSource = {
+      getEvents: spy(async () => buildEvents()),
+      updateEvents: noopUpdateEvents,
+    };
+    const params = { ...DEFAULT_PARAMS, dataSource };
+    // Construct the store but skip the mount notification — `hasMounted` stays false
+    // so the lazy-loading effect must keep its selector at `null` and never fire.
+    const store = new EventTimelinePremiumStore(params, adapter);
+
+    // Mutate the visible date so the range key would change if the selector were live.
+    // With `hasMounted=false`, the selector must keep returning `null` and the effect
+    // must not run. Regression test: if a future change toggles `hasMounted` early,
+    // this navigation would trigger an extra fetch.
+    store.goToNextVisibleDate(noopUIEvent);
+
+    await flushEffect();
+    await flushDebounce();
+
+    expect(dataSource.getEvents.called).to.equal(false);
+  });
+
   it('should fetch a new range when visibleDate moves outside of the cached range', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
@@ -74,7 +101,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushDebounce();
     expect(dataSource.getEvents.calledOnce).to.equal(true);
 
-    store.goToNextVisibleDate({} as any);
+    store.goToNextVisibleDate(noopUIEvent);
     await flushEffect();
     await flushDebounce();
 
@@ -118,7 +145,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushDebounce();
     expect(dataSource.getEvents.calledOnce).to.equal(true);
 
-    store.setPreset('monthAndYear', {} as any);
+    store.setPreset('monthAndYear', noopUIEvent);
 
     await flushEffect();
     await flushDebounce();
@@ -135,7 +162,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     expect(store.state.eventIdList).to.have.length(0);
     expect(store.state.isLoading).to.equal(false);
 
-    store.goToNextVisibleDate({} as any);
+    store.goToNextVisibleDate(noopUIEvent);
     await flushEffect();
     await flushDebounce();
 
@@ -156,12 +183,12 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushDebounce();
     expect(dataSource.getEvents.calledOnce).to.equal(true);
 
-    store.goToNextVisibleDate({} as any);
+    store.goToNextVisibleDate(noopUIEvent);
     await flushEffect();
     await flushDebounce();
     expect(dataSource.getEvents.calledTwice).to.equal(true);
 
-    store.goToPreviousVisibleDate({} as any);
+    store.goToPreviousVisibleDate(noopUIEvent);
     await flushEffect();
     await flushDebounce();
 
@@ -205,7 +232,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     expect(store.state.errors).to.have.length(1);
 
     // Navigate to a different range so the next fetch goes through (and succeeds).
-    store.goToNextVisibleDate({} as any);
+    store.goToNextVisibleDate(noopUIEvent);
     await flushEffect();
     await flushDebounce();
 
