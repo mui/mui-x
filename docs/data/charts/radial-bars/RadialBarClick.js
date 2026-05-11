@@ -44,7 +44,6 @@ const radialChartParams = {
 
 export default function RadialBarClick() {
   const [axisData, setAxisData] = React.useState();
-  // const [itemData, setItemData] = React.useState<any | null>();
 
   return (
     <Stack
@@ -56,7 +55,6 @@ export default function RadialBarClick() {
         <RadialBarChart
           {...radialChartParams}
           onAxisClick={(event, d) => setAxisData(d)}
-          // onItemClick={(event, d) => setItemData(d)}
         />
       </Box>
 
@@ -78,14 +76,9 @@ export default function RadialBarClick() {
           </IconButton>
         </Box>
         <HighlightedCode
-          code={
-            // `// Data from item click
-            // ${itemData ? JSON.stringify(itemData, null, 2) : '// The data will appear here'}
-
-            `// Data from axis click
+          code={`// Data from axis click
 ${axisData ? JSON.stringify(axisData, null, 2) : '// The data will appear here'}
-`
-          }
+`}
           language="json"
           copyButtonHidden
         />
