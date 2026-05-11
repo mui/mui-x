@@ -29,6 +29,16 @@ Use the `groupTransition` slot on `TreeItem` to pass a component that handles yo
 
 The demo below is animated using Material UI's [`Collapse`](/material-ui/transitions/#collapse) component together with the [react-spring](https://www.react-spring.dev/) library.
 
+:::info
+`RichTreeViewPro` uses a flat DOM structure by default, so the `groupTransition` slot does not contain child items.
+To use expansion animations with `RichTreeViewPro`, disable virtualization and set `domStructure="nested"`:
+
+```tsx
+<RichTreeViewPro items={ITEMS} disableVirtualization domStructure="nested" />
+```
+
+:::
+
 {{"demo": "CustomAnimation.js", "defaultCodeOpen": false}}
 
 ### Custom styling
