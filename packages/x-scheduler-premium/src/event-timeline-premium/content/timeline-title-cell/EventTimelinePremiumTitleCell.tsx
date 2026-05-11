@@ -6,7 +6,9 @@ import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
+import { Virtualization } from '@mui/x-virtualizer';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
+import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
 
 const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   name: 'MuiEventTimeline',
@@ -23,6 +25,9 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
+  position: 'absolute',
+  zIndex: 3,
+  backgroundColor: (theme.vars || theme).palette.background.default,
   variants: getPaletteVariants(theme),
   '&:focus-visible': {
     outline: 'none',
@@ -47,18 +52,22 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
+  const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
   const { schedulerId, classes } = useEventTimelinePremiumStyledContext();
 
   // Selector hooks
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
   const resource = useStore(store, schedulerResourceSelectors.processedResource, resourceId);
   const depth = useStore(store, schedulerResourceSelectors.resourceDepth, resourceId);
+  const pinnedLeftOffset = virtualizerStore.use(
+    Virtualization.selectors.pinnedLeftOffsetSelector,
+  );
 
   return (
     <EventTimelinePremiumTitleCellRoot
       id={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
       className={classes.titleCell}
-      style={{ '--resource-depth': depth } as React.CSSProperties}
+      style={{ '--resource-depth': depth, left: pinnedLeftOffset } as React.CSSProperties}
       data-palette={eventColor}
     >
       <ResourceLegendColor className={classes.titleCellLegendColor} />

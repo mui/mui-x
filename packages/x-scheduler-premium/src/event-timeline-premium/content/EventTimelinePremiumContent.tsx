@@ -5,7 +5,14 @@ import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
-import { useVirtualizer, LayoutDataGrid, Dimensions } from '@mui/x-virtualizer';
+import {
+  useVirtualizer,
+  LayoutDataGrid,
+  Dimensions,
+  Virtualization,
+  ColumnWithWidth,
+  PinnedColumns,
+} from '@mui/x-virtualizer';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
@@ -29,6 +36,7 @@ import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
+import { EventTimelinePremiumVirtualizerContext } from './EventTimelinePremiumVirtualizerContext';
 
 const ROW_HEIGHT = 74;
 
@@ -99,6 +107,9 @@ const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
   height: '100%',
   borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   overflowX: 'hidden',
+  position: 'absolute',
+  zIndex: 4,
+  backgroundColor: (theme.vars || theme).palette.background.default,
 }));
 
 const EventTimelinePremiumEventsHeaderCell = styled(TimelineGrid.Cell, {
@@ -148,6 +159,7 @@ const EventTimelinePremiumBodyRow = styled(TimelineGrid.BodyRow, {
 })(({ theme }) => ({
   display: 'flex',
   width: 'var(--row-width)',
+  position: 'static',
   breakInside: 'avoid',
   '&:not(:last-of-type)': {
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
@@ -264,7 +276,8 @@ const VirtualizerRenderZone = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'RenderZone',
 })({
-  position: 'absolute',
+  position: 'static',
+  width: 'fit-content',
   display: 'flex',
   flexDirection: 'column',
 });
@@ -421,9 +434,10 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   );
 
   const renderRow = React.useCallback(
-    ({ id, rowIndex }: { id: any; rowIndex: number }) => (
+    ({ id, rowIndex, offsetLeft }: { id: any; rowIndex: number; offsetLeft: number }) => (
       <EventTimelinePremiumBodyRow key={id} index={rowIndex}>
         <EventTimelinePremiumTitleCell resourceId={id} />
+        <div role="presentation" style={{ width: offsetLeft }} />
         <EventTimelinePremiumEventsCell resourceId={id} className={classes.eventsSubGridRow}>
           {({ occurrences, placeholder }) => (
             <EventRowContent resourceId={id} occurrences={occurrences} placeholder={placeholder} />
@@ -434,17 +448,55 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     [classes.eventsSubGridRow],
   );
 
+  // Build virtualizer column model: one pinned title column + one column per tick.
+  // The first tick column spans all tick columns (colspan) so events render in a
+  // single continuous cell rather than being sliced per-tick.
+  const { tickCount, tickWidth } = presetConfig;
+
+  const titleColumn = React.useMemo<ColumnWithWidth>(
+    () => ({ key: 'title', computedWidth: titleColumnWidth }),
+    [titleColumnWidth],
+  );
+
+  const columns = React.useMemo<ColumnWithWidth[]>(() => {
+    const cols: ColumnWithWidth[] = [titleColumn];
+    for (let i = 0; i < tickCount; i += 1) {
+      cols.push({ key: i, computedWidth: tickWidth });
+    }
+    return cols;
+  }, [titleColumn, tickCount, tickWidth]);
+
+  const pinnedColumns = React.useMemo<PinnedColumns>(
+    () => ({ left: [titleColumn], right: [] }),
+    [titleColumn],
+  );
+
+  const colspan = React.useMemo(
+    () => ({
+      enabled: true,
+      getColspan: (_rowId: any, _column: ColumnWithWidth, columnIndex: number) =>
+        // The first tick column (index 1, right after the pinned title column)
+        // spans all tick columns; every other tick column is consumed by that span.
+        columnIndex === 1 ? tickCount : 1,
+    }),
+    [tickCount],
+  );
+
   const virtualizer = useVirtualizer({
     layout,
     dimensions: {
       rowHeight: ROW_HEIGHT,
       topPinnedHeight: headerHeight,
       columnsTotalWidth,
+      leftPinnedWidth: titleColumnWidth,
     },
     virtualization: { layoutMode: 'controlled' },
+    colspan,
     rows,
     range,
     rowCount: rows.length,
+    columns,
+    pinnedColumns,
     renderRow,
   });
 
@@ -460,6 +512,9 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     LayoutDataGrid.selectors.scrollbarHorizontalProps,
   );
   const dimensions = virtualizer.store.use(Dimensions.selectors.dimensions);
+  const pinnedLeftOffset = virtualizer.store.use(
+    Virtualization.selectors.pinnedLeftOffsetSelector,
+  );
 
   const containerMergedRef = useMergedRefs(
     forwardedRef,
@@ -489,6 +544,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
         } as React.CSSProperties
       }
     >
+      <EventTimelinePremiumVirtualizerContext.Provider value={virtualizer.store}>
       <EventDialogProvider>
         <EventTimelinePremiumGrid className={classes.grid} {...scrollerProps} ref={gridMergedRef}>
           <EventTimelinePremiumScrollerContent {...scrollerContentProps}>
@@ -498,7 +554,10 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                 className={classes.headerRow}
                 aria-rowindex={1}
               >
-                <EventTimelinePremiumTitleHeaderCell className={classes.titleHeaderCell}>
+                <EventTimelinePremiumTitleHeaderCell
+                  className={classes.titleHeaderCell}
+                  style={{ left: pinnedLeftOffset }}
+                >
                   {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
                 </EventTimelinePremiumTitleHeaderCell>
                 <EventTimelinePremiumEventsHeaderCell className={classes.eventsHeaderCell}>
@@ -548,6 +607,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
           </VirtualScrollbarHorizontal>
         )}
       </EventDialogProvider>
+      </EventTimelinePremiumVirtualizerContext.Provider>
     </EventTimelinePremiumContentRoot>
   );
 });
