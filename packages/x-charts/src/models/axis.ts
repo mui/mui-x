@@ -26,6 +26,7 @@ import type {
 } from './colorMapping';
 import type { OrdinalTimeTicks } from './timeTicks';
 import { type ChartsTypeFeatureFlags } from './featureFlags';
+import { type ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
 
 export type AxisId = string | number;
 
@@ -175,7 +176,10 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
   tickLabelMinGap?: number;
 }
 
-type AxisSideConfig<AxisProps extends ChartsXAxisProps | ChartsYAxisProps> = {
+export type ChartsCartesianAxisProps = ChartsXAxisProps | ChartsYAxisProps;
+export type ChartsRadialAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps;
+
+type AxisSideConfig<AxisProps extends ChartsCartesianAxisProps> = {
   /**
    * Position of the axis.
    *
@@ -218,6 +222,28 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
    * The gap between the axis and the label.
    */
   labelGap?: number;
+  /**
+   * The position of the rotation axis.
+   * It can be 'inside' or 'outside'.
+   * @default 'outside'
+   */
+  position?: 'inside' | 'outside' | 'none';
+  /**
+   * Set the position of the tick labels relative to the axis line.
+   * `'after'` places them outside the arc, `'before'` inside.
+   * @default position === 'outside' ? 'after' : 'before'
+   */
+  tickLabelPosition?: 'after' | 'before';
+  /**
+   * Set the position of the tick relative to the axis line.
+   * `'after'` places them outside the arc, `'before'` inside.
+   * @default position === 'outside' ? 'after' : 'before'
+   */
+  tickPosition?: 'after' | 'before';
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsRadialAxisClasses>;
 }
 
 export interface ChartsRadiusAxisProps extends ChartsAxisProps {
@@ -230,6 +256,28 @@ export interface ChartsRadiusAxisProps extends ChartsAxisProps {
    * The maximal radius.
    */
   maxRadius?: number;
+  /**
+   * The position of the axis in polar coordinates.
+   * It can be 'start', 'end', or a specific angle in degrees.
+   * @default 'start'
+   */
+  position?: 'start' | 'end' | number | 'none';
+  /**
+   * Set the position of the tick labels relative to the axis line.
+   * The before/after is defined based on clockwise direction.
+   * @default position === 'start' ? 'before' : 'after'
+   */
+  tickLabelPosition?: 'center' | 'after' | 'before';
+  /**
+   * Set the position of the tick relative to the axis line.
+   * The before/after is defined based on clockwise direction.
+   * @default position === 'start' ? 'before' : 'after'
+   */
+  tickPosition?: 'after' | 'before';
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsRadialAxisClasses>;
 }
 
 export type ScaleName = keyof AxisScaleConfig;
@@ -548,9 +596,7 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
 export type PolarAxisConfig<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsRotationAxisProps | ChartsRadiusAxisProps =
-    | ChartsRotationAxisProps
-    | ChartsRadiusAxisProps,
+  AxisProps extends ChartsRadialAxisProps = ChartsRadialAxisProps,
 > = {
   /**
    * The offset of the axis in pixels. It can be used to move the axis from its default position.
@@ -572,7 +618,7 @@ export type PolarAxisConfig<
 export type AxisConfig<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsXAxisProps | ChartsYAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+  AxisProps extends ChartsCartesianAxisProps = ChartsCartesianAxisProps,
 > = {
   /**
    * The offset of the axis in pixels. It can be used to move the axis from its default position.
@@ -594,7 +640,7 @@ export interface AxisConfigExtension {}
 export type PolarAxisDefaultized<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps,
+  AxisProps extends ChartsAxisProps = ChartsRadialAxisProps,
 > = Omit<PolarAxisConfig<S, V, AxisProps>, 'scaleType'> &
   AxisScaleConfig[S] &
   AxisScaleComputedConfig[S] & {
@@ -607,23 +653,25 @@ export type PolarAxisDefaultized<
 export type ComputedAxis<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
-> = MakeRequired<Omit<DefaultedAxis<S, V, AxisProps>, 'scaleType'>, 'offset'> &
-  AxisScaleConfig[S] &
-  AxisScaleComputedConfig[S] & {
-    /**
-     * An indication of the expected number of ticks.
-     */
-    tickNumber: number;
-    /**
-     * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
-     */
-    triggerTooltip?: boolean;
-    /** @ignore - internal. True when a rotation axis covers a full circle. */
-    isFullCircle?: boolean;
-  } & AxisProps &
-  (AxisProps extends ChartsXAxisProps ? AxisSideConfig<AxisProps> & { height: number } : {}) &
-  (AxisProps extends ChartsYAxisProps ? AxisSideConfig<AxisProps> & { width: number } : {});
+  AxisProps extends ChartsAxisProps = ChartsCartesianAxisProps,
+> = AxisProps extends any
+  ? MakeRequired<Omit<DefaultedAxis<S, V, AxisProps>, 'scaleType'>, 'offset'> &
+      AxisScaleConfig[S] &
+      AxisScaleComputedConfig[S] & {
+        /**
+         * An indication of the expected number of ticks.
+         */
+        tickNumber: number;
+        /**
+         * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
+         */
+        triggerTooltip?: boolean;
+        /** @ignore - internal. True when a rotation axis covers a full circle. */
+        isFullCircle?: boolean;
+      } & AxisProps &
+      (AxisProps extends ChartsXAxisProps ? AxisSideConfig<AxisProps> & { height: number } : {}) &
+      (AxisProps extends ChartsYAxisProps ? AxisSideConfig<AxisProps> & { width: number } : {})
+  : never;
 
 export type ComputedXAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
   S,
@@ -734,7 +782,7 @@ export type YAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleNam
 export type RotationAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
   ? MakeOptional<PolarAxisConfig<S, V, ChartsRotationAxisProps>, 'id'>
   : never;
-export type RadiusAxis<S extends 'linear' = 'linear', V = any> = S extends 'linear'
+export type RadiusAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
   ? MakeOptional<PolarAxisConfig<S, V, ChartsRadiusAxisProps>, 'id'>
   : never;
 
@@ -744,7 +792,7 @@ export type RadiusAxis<S extends 'linear' = 'linear', V = any> = S extends 'line
 export type DefaultedAxis<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+  AxisProps extends ChartsAxisProps = ChartsCartesianAxisProps,
 > = AxisConfig<S, V, AxisProps> & {
   zoom: DefaultizedZoomOptions | undefined;
 };

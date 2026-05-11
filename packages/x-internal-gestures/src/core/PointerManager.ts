@@ -171,15 +171,17 @@ export class PointerManager {
   }
 
   /**
-   * Get a copy of the current active pointers map.
+   * Get a read-only view of the current active pointers map.
    *
-   * Returns a new Map containing all currently active pointers.
-   * Modifying the returned map will not affect the internal pointers state.
+   * Returns a reference to the internal pointer map. Callers must not
+   * mutate the result; the type is narrowed to `ReadonlyMap` to enforce
+   * this at compile time. Avoiding a per-call copy matters because this
+   * is invoked on every pointer event by every active gesture handler.
    *
-   * @returns A new Map containing all active pointers
+   * @returns The active pointers as a read-only map
    */
-  public getPointers(): Map<number, PointerData> {
-    return new Map(this.pointers);
+  public getPointers(): ReadonlyMap<number, PointerData> {
+    return this.pointers;
   }
 
   /**
