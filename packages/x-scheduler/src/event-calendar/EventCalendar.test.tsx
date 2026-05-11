@@ -7,7 +7,7 @@ import {
   withinMonthView,
   dateLocaleFr,
 } from 'test/utils/scheduler';
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import {
   changeTo24HoursFormat,
   changeTo12HoursFormat,
@@ -252,9 +252,11 @@ describe('EventCalendar', () => {
     it('should allow to show / hide the week number using the UI in the month view', async () => {
       const { user } = render(<EventCalendar events={[]} defaultView="month" />);
 
-      // Week number should not be visible by default
-      const findWeekHeaders = () => screen.queryAllByRole('rowheader', { name: /week/i });
-      expect(await findWeekHeaders()).to.have.lengthOf(0);
+      // Week number should not be visible by default. Week-number labels are aria-hidden,
+      // so query by class instead of role.
+      const findWeekHeaders = () =>
+        document.querySelectorAll(`.${eventCalendarClasses.monthViewWeekNumberCell}`);
+      expect(findWeekHeaders()).to.have.lengthOf(0);
 
       // Show the week number
       await openPreferencesMenu(user);
@@ -262,7 +264,7 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
-      expect(await findWeekHeaders()).to.have.lengthOf.above(0);
+      await waitFor(() => expect(findWeekHeaders().length).to.be.above(0));
 
       // Hide the week number again
       await openPreferencesMenu(user);
@@ -270,7 +272,7 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
-      expect(await findWeekHeaders()).to.have.lengthOf(0);
+      await waitFor(() => expect(findWeekHeaders()).to.have.lengthOf(0));
     });
 
     it('should allow to change the time format using the UI in the week view', async () => {

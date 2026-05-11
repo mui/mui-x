@@ -72,15 +72,13 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
-      // Get the parent container that has the role="row" as a direct child
-      const allDayGridContainer = allDayHeader.parentElement;
-      const allDayRow = within(allDayGridContainer!).getByRole('row');
+      const allDayGridContainer = document.querySelector(
+        `.${eventCalendarClasses.dayTimeGridAllDayEventsGrid}`,
+      ) as HTMLElement;
+      const allDayRow = within(allDayGridContainer).getByRole('row');
       const gridCells = within(allDayRow).getAllByRole('gridcell');
-      // Find the first cell of the first week in May 2025
       const firstCell = gridCells[0];
 
-      // Event should render in the first cell of the week since it started before
       expect(within(firstCell!).getByText(longEvent.title)).not.to.equal(null);
     });
 
@@ -163,10 +161,10 @@ describe('<WeekView />', () => {
         </EventCalendarProvider>,
       );
 
-      const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
-      // Get the parent container that has the role="row" as a direct child
-      const allDayGridContainer = allDayHeader.parentElement;
-      const allDayRow = within(allDayGridContainer!).getByRole('row');
+      const allDayGridContainer = document.querySelector(
+        `.${eventCalendarClasses.dayTimeGridAllDayEventsGrid}`,
+      ) as HTMLElement;
+      const allDayRow = within(allDayGridContainer).getByRole('row');
 
       const mainEvent = within(allDayRow)
         .getAllByLabelText(fourDayEvent.title)
@@ -214,6 +212,71 @@ describe('<WeekView />', () => {
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
         adapter.addWeeks(adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );
+    });
+  });
+
+  describe('aria semantics', () => {
+    it('should declare 7 navigable columns and index every cell from 1 to 7', () => {
+      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
+      render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
+
+      const grids = screen.getAllByRole('grid');
+      const dayTimeGrid = grids.find(
+        (grid) => grid.getAttribute('aria-rowcount') === '3',
+      ) as HTMLElement;
+      expect(dayTimeGrid).not.to.equal(undefined);
+      expect(dayTimeGrid.getAttribute('aria-colcount')).to.equal('7');
+
+      const headerCells = within(dayTimeGrid).getAllByRole('columnheader');
+      expect(headerCells.length).to.equal(7);
+      headerCells.forEach((cell, i) => {
+        expect(cell.getAttribute('aria-colindex')).to.equal(String(i + 1));
+      });
+
+      const rows = within(dayTimeGrid).getAllByRole('row');
+      const headerRow = rows.find((row) => row.getAttribute('aria-rowindex') === '1');
+      const allDayRow = rows.find((row) => row.getAttribute('aria-rowindex') === '2');
+      const timeRow = rows.find((row) => row.getAttribute('aria-rowindex') === '3');
+      expect(headerRow).not.to.equal(undefined);
+      expect(allDayRow).not.to.equal(undefined);
+      expect(timeRow).not.to.equal(undefined);
+
+      const allDayCells = within(allDayRow!).getAllByRole('gridcell');
+      expect(allDayCells.length).to.equal(7);
+      allDayCells.forEach((cell, i) => {
+        expect(cell.getAttribute('aria-colindex')).to.equal(String(i + 1));
+      });
+
+      const timeCells = within(timeRow!).getAllByRole('gridcell');
+      expect(timeCells.length).to.equal(7);
+      timeCells.forEach((cell, i) => {
+        expect(cell.getAttribute('aria-colindex')).to.equal(String(i + 1));
+      });
+    });
+
+    it('should hide the All day label from AT and reference it via aria-labelledby on each cell', () => {
+      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
+      render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
+
+      const allDayLabel = document.querySelector<HTMLElement>(
+        `.${eventCalendarClasses.dayTimeGridAllDayEventsHeaderCell}`,
+      );
+      expect(allDayLabel).not.to.equal(null);
+      expect(allDayLabel!.getAttribute('aria-hidden')).to.equal('true');
+      expect(allDayLabel!.getAttribute('role')).to.equal(null);
+
+      const labelId = allDayLabel!.id;
+      expect(labelId.length).to.be.greaterThan(0);
+
+      const allDayGridContainer = document.querySelector(
+        `.${eventCalendarClasses.dayTimeGridAllDayEventsGrid}`,
+      ) as HTMLElement;
+      const allDayRow = within(allDayGridContainer).getByRole('row');
+      const allDayCells = within(allDayRow).getAllByRole('gridcell');
+      allDayCells.forEach((cell) => {
+        const labelledBy = cell.getAttribute('aria-labelledby') ?? '';
+        expect(labelledBy.split(' ')).to.include(labelId);
+      });
     });
   });
 
