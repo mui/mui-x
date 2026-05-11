@@ -208,7 +208,7 @@ export const MonthView = React.memo(
             rowTypes={MONTH_VIEW_ROW_TYPES}
             rowsPerType={monthViewRowsPerType}
             aria-rowcount={1 + weeks.length}
-            aria-colcount={weeks[0]?.length ?? 0}
+            aria-colcount={weeks[0].length}
           >
             <MonthViewHeader
               className={classes.monthViewHeader}

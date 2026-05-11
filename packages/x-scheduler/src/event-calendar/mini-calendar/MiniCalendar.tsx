@@ -266,6 +266,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
                 const isActive = adapter.isSameDay(day.value, visibleDate);
                 const isOtherMonth = !adapter.isSameMonth(day.value, displayedMonth);
 
+                // Create a full date label for accessibility
                 const fullDateLabel = adapter.formatByString(
                   day.value,
                   adapter.formats.localizedDateWithFullMonthAndWeekDay,
