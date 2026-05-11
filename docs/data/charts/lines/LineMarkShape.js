@@ -32,7 +32,7 @@ export default function LineMarkShape() {
       </TextField>
       <Box sx={{ flexGrow: 1 }}>
         <LineChart
-          height={400}
+          height={250}
           dataset={dataset}
           series={[
             {
@@ -43,7 +43,7 @@ export default function LineMarkShape() {
               shape,
             },
           ]}
-          xAxis={[{ scaleType: 'point', dataKey: 'month', disableLine: true }]}
+          xAxis={[{ scaleType: 'point', dataKey: 'month' }]}
           grid={{ vertical: true, horizontal: true }}
         />
       </Box>
