@@ -3,8 +3,8 @@ import { Theme } from '@mui/material/styles';
 import {
   EventCalendarPremiumParameters,
   EventCalendarPremiumStore,
-} from '@mui/x-scheduler-headless-premium/use-event-calendar-premium';
-import type { SchedulerPublicAPI } from '@mui/x-scheduler-headless/internals';
+} from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
+import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
 import { EventCalendarLocaleText } from '@mui/x-scheduler/models';
 import type { EventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 

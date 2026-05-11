@@ -32,6 +32,12 @@
       "isGlobal": false
     },
     {
+      "key": "highlightedMark",
+      "className": "MuiScatter-highlightedMark",
+      "description": "Styles applied to the highlighted scatter mark element.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
       "className": "MuiScatter-root",
       "description": "Styles applied to the scatter plot element.",
