@@ -173,6 +173,28 @@ function evaluateSegmentY(segment: CurveSegment, t: number): number {
   return cubicBezier(t, segment.y0, segment.cpy1, segment.cpy2, segment.y1);
 }
 
+/**
+ * Returns the y value on the segment at the given targetX, or null if the
+ * segment doesn't contain targetX.
+ */
+function evaluateSegmentYAtX(segment: CurveSegment, targetX: number): number | null {
+  if (targetX < segment.x0 + 0.5 && targetX > segment.x0 - 0.5) {
+    return segment.y0;
+  }
+  if (targetX < segment.x1 + 0.5 && targetX > segment.x1 - 0.5) {
+    return segment.y1;
+  }
+
+  const xMin = Math.min(segment.x0, segment.x1);
+  const xMax = Math.max(segment.x0, segment.x1);
+
+  if (targetX >= xMin && targetX <= xMax) {
+    const t = findTForX(segment, targetX);
+    return evaluateSegmentY(segment, t);
+  }
+  return null;
+}
+
 /** Evaluate the segment's x at parameter t. */
 function evaluateSegmentX(segment: CurveSegment, t: number): number {
   if (!isBezierSegment(segment)) {
@@ -203,35 +225,41 @@ export function evaluateCurveY(
   const factory = getCurveFactory(curveType);
   const curveInstance = factory(capture as any);
 
+  // Detect the segment index near the moment the curve crosses targetX by
+  // tracking sign changes between consecutive input points. This works for
+  // both increasing and decreasing pixel-x directions.
   let searchStartIndex = 0;
   let crossingDetected = false;
+  let prevX: number | null = null;
 
   curveInstance.lineStart();
   for (const p of points) {
-    if (!crossingDetected && p.x > targetX) {
-      searchStartIndex = Math.max(0, capture.segments.length - 1);
-      crossingDetected = true;
+    if (!crossingDetected && prevX !== null) {
+      const crosses = (prevX - targetX) * (p.x - targetX) <= 0;
+      if (crosses) {
+        searchStartIndex = Math.max(0, capture.segments.length - 1);
+        crossingDetected = true;
+      }
     }
     curveInstance.point(p.x, p.y);
+    prevX = p.x;
   }
   curveInstance.lineEnd();
 
-  // Find the segment containing targetX.
-  for (let i = searchStartIndex; i < capture.segments.length; i += 1) {
-    const segment = capture.segments[i];
-    if (targetX < segment.x0 + 0.5 && targetX > segment.x0 - 0.5) {
-      return segment.y0;
+  // Search outward from the recorded index: backward first (eager curves
+  // emit the target segment at or just before searchStartIndex), then
+  // forward (delayed curves emit it after, and non-monotone curves may
+  // place it anywhere). Falls back to a full scan if not found.
+  for (let i = searchStartIndex; i >= 0; i -= 1) {
+    const y = evaluateSegmentYAtX(capture.segments[i], targetX);
+    if (y !== null) {
+      return y;
     }
-    if (targetX < segment.x1 + 0.5 && targetX > segment.x1 - 0.5) {
-      return segment.y1;
-    }
-
-    const xMin = Math.min(segment.x0, segment.x1);
-    const xMax = Math.max(segment.x0, segment.x1);
-
-    if (targetX >= xMin && targetX <= xMax) {
-      const t = findTForX(segment, targetX);
-      return evaluateSegmentY(segment, t);
+  }
+  for (let i = searchStartIndex + 1; i < capture.segments.length; i += 1) {
+    const y = evaluateSegmentYAtX(capture.segments[i], targetX);
+    if (y !== null) {
+      return y;
     }
   }
 
