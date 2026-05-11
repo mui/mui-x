@@ -1,20 +1,25 @@
 import {
   defaultizeSeries,
+  defaultSeriesConfig,
   MUI_X_CHARTS_ASYNC_CHANNEL,
   type ChartsAsyncWorkerMessage,
   type ChartSeriesConfig,
   type ChartSeriesType,
 } from '@mui/x-charts/internals';
-import { defaultSeriesConfigPremium } from '../internals/defaultSeriesConfigPremium';
 
 export interface SetupChartsAsyncWorkerOptions<
   SeriesType extends ChartSeriesType = ChartSeriesType,
 > {
   /**
    * The seriesConfig the worker should use to defaultize series. Defaults to
-   * `defaultSeriesConfigPremium`. Pass a customized config (e.g. spread the
-   * default and add user-defined series types) so the worker matches whatever
-   * is wired into the chart on the main thread.
+   * the core `defaultSeriesConfig` (bar/scatter/line/pie) — the worker bundle
+   * stays light by avoiding premium series types and their React preview
+   * components.
+   *
+   * Pass a customized config (e.g. spread `defaultSeriesConfigPremium` and add
+   * user-defined series types) to handle premium types off-thread. Note that
+   * importing the premium default brings its preview components into the
+   * worker bundle.
    */
   seriesConfig?: ChartSeriesConfig<SeriesType>;
 }
@@ -42,7 +47,7 @@ export function setupChartsAsyncWorker<SeriesType extends ChartSeriesType = Char
     return;
   }
   const seriesConfig = (options.seriesConfig ??
-    defaultSeriesConfigPremium) as ChartSeriesConfig<SeriesType>;
+    defaultSeriesConfig) as ChartSeriesConfig<SeriesType>;
   const channel = new BroadcastChannel(MUI_X_CHARTS_ASYNC_CHANNEL);
 
   channel.addEventListener('message', (event: MessageEvent<ChartsAsyncWorkerMessage>) => {
@@ -52,6 +57,8 @@ export function setupChartsAsyncWorker<SeriesType extends ChartSeriesType = Char
     }
 
     if (msg.kind === 'ping') {
+      // eslint-disable-next-line no-console
+      console.log('[chartsWorker] ping received, replying pong', { sessionId: msg.sessionId });
       channel.postMessage({
         kind: 'pong',
         sessionId: msg.sessionId,
@@ -60,6 +67,8 @@ export function setupChartsAsyncWorker<SeriesType extends ChartSeriesType = Char
     }
 
     if (msg.kind === 'series-defaultize') {
+      // eslint-disable-next-line no-console
+      console.log('[chartsWorker] processing series-defaultize', { requestId: msg.requestId });
       try {
         const { defaultizedSeries, idToType } = defaultizeSeries({
           series: msg.payload.series as any,

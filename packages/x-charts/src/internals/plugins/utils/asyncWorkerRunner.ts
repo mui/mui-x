@@ -68,69 +68,78 @@ export interface ChartsAsyncRunner {
   }>;
 }
 
-let cachedRunnerPromise: Promise<ChartsAsyncRunner | null> | null = null;
+let installedRunner: ChartsAsyncRunner | null = null;
+let persistentChannel: BroadcastChannel | null = null;
+let persistentSessionId: string | null = null;
 
 /**
  * Lazily probes the BroadcastChannel for a worker that called
- * `setupChartsAsyncWorker()`. Memoized for the page lifetime: the probe runs
- * at most once.
+ * `setupChartsAsyncWorker()` and returns the resolved runner (or `null` if
+ * none is reachable within the probe window).
  *
  * - Returns `null` synchronously when `BroadcastChannel` isn't available
  *   (SSR, very old browsers).
- * - Otherwise opens the channel, posts a `ping`, and resolves with a runner
- *   on the first matching `pong`. If no pong arrives within
- *   `MUI_X_CHARTS_ASYNC_PROBE_TIMEOUT_MS`, closes the channel and resolves
- *   with `null`.
+ * - Otherwise opens the channel on the first call, posts a `ping`, and keeps
+ *   listening for `pong` indefinitely. The first call's returned promise
+ *   resolves on pong or after `MUI_X_CHARTS_ASYNC_PROBE_TIMEOUT_MS`,
+ *   whichever comes first. If the timeout wins but the worker pongs later
+ *   (cold-start race), the runner is still installed — and subsequent calls
+ *   to `getChartsAsyncRunner()` synchronously return the installed runner.
  *
- * The runner correlates `series-defaultize:done` / `:error` responses by
- * `sessionId` (matching this page) and `requestId` (matching this request).
- * Responses from workers in other tabs (cross-tab `BroadcastChannel`) are
- * dropped via the `sessionId` filter.
+ * Each call without an installed runner re-pings; if the worker is slow to
+ * boot, a later defaultize will trigger discovery as soon as the worker is
+ * alive.
  * @returns {Promise<ChartsAsyncRunner | null>} The runner if a worker pongs, otherwise `null`.
  */
 export function getChartsAsyncRunner(): Promise<ChartsAsyncRunner | null> {
-  if (cachedRunnerPromise !== null) {
-    return cachedRunnerPromise;
+  if (installedRunner !== null) {
+    return Promise.resolve(installedRunner);
   }
   if (typeof BroadcastChannel === 'undefined') {
-    cachedRunnerPromise = Promise.resolve(null);
-    return cachedRunnerPromise;
+    return Promise.resolve(null);
   }
 
-  cachedRunnerPromise = new Promise<ChartsAsyncRunner | null>((resolve) => {
-    const sessionId = generateSessionId();
-    const channel = new BroadcastChannel(MUI_X_CHARTS_ASYNC_CHANNEL);
-    let settled = false;
-    let timeoutHandle: ReturnType<typeof setTimeout>;
-
-    const probeListener = (event: MessageEvent<ChartsAsyncWorkerMessage>) => {
-      if (settled) {
-        return;
-      }
+  if (persistentChannel === null) {
+    persistentSessionId = generateSessionId();
+    persistentChannel = new BroadcastChannel(MUI_X_CHARTS_ASYNC_CHANNEL);
+    persistentChannel.addEventListener('message', (event: MessageEvent<ChartsAsyncWorkerMessage>) => {
       const msg = event.data;
-      if (msg?.kind === 'pong' && msg.sessionId === sessionId) {
-        settled = true;
-        clearTimeout(timeoutHandle);
-        channel.removeEventListener('message', probeListener);
-        resolve(buildRunner(channel, sessionId));
+      if (
+        msg?.kind === 'pong' &&
+        msg.sessionId === persistentSessionId &&
+        installedRunner === null &&
+        persistentChannel !== null &&
+        persistentSessionId !== null
+      ) {
+        // eslint-disable-next-line no-console
+        console.log('[mui-x-charts] worker discovered via BroadcastChannel pong');
+        installedRunner = buildRunner(persistentChannel, persistentSessionId);
       }
-    };
+    });
+  }
 
-    timeoutHandle = setTimeout(() => {
-      if (settled) {
-        return;
+  // Re-ping every time we get called without an installed runner. Cheap
+  // fire-and-forget; lets a late-booting worker still answer.
+  persistentChannel.postMessage({
+    kind: 'ping',
+    sessionId: persistentSessionId!,
+  } satisfies ChartsAsyncWorkerMessage);
+
+  return new Promise<ChartsAsyncRunner | null>((resolve) => {
+    setTimeout(() => {
+      if (installedRunner !== null) {
+        resolve(installedRunner);
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(
+          '[mui-x-charts] no worker pong within',
+          MUI_X_CHARTS_ASYNC_PROBE_TIMEOUT_MS,
+          'ms — falling back to main thread (will retry on next request)',
+        );
+        resolve(null);
       }
-      settled = true;
-      channel.removeEventListener('message', probeListener);
-      channel.close();
-      resolve(null);
     }, MUI_X_CHARTS_ASYNC_PROBE_TIMEOUT_MS);
-
-    channel.addEventListener('message', probeListener);
-    channel.postMessage({ kind: 'ping', sessionId } satisfies ChartsAsyncWorkerMessage);
   });
-
-  return cachedRunnerPromise;
 }
 
 function buildRunner(channel: BroadcastChannel, sessionId: string): ChartsAsyncRunner {
@@ -176,6 +185,8 @@ function buildRunner(channel: BroadcastChannel, sessionId: string): ChartsAsyncR
     runSeriesDefaultize(payload, requestId) {
       return new Promise((resolve, reject) => {
         pending.set(requestId, { resolve, reject });
+        // eslint-disable-next-line no-console
+        console.log('[mui-x-charts] dispatching series-defaultize to worker', { requestId });
         channel.postMessage({
           kind: 'series-defaultize',
           sessionId,
@@ -195,9 +206,14 @@ function generateSessionId(): string {
 }
 
 /**
- * Test helper — clears the memoized probe promise so a fresh probe runs on
+ * Test helper — clears the persistent channel state so a fresh probe runs on
  * the next call to `getChartsAsyncRunner()`. Not for production use.
  */
 export function resetChartsAsyncRunnerForTests(): void {
-  cachedRunnerPromise = null;
+  if (persistentChannel !== null) {
+    persistentChannel.close();
+  }
+  persistentChannel = null;
+  persistentSessionId = null;
+  installedRunner = null;
 }

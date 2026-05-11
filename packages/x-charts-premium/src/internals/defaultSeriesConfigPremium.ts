@@ -1,5 +1,4 @@
-import { type ChartSeriesConfig } from '@mui/x-charts/internals';
-import { defaultSeriesConfigPro } from '@mui/x-charts-pro/internals';
+import { type ChartSeriesConfig, defaultSeriesConfig } from '@mui/x-charts/internals';
 import { rangeBarSeriesConfig } from '../BarChartPremium/RangeBar/seriesConfig';
 import { ohlcSeriesConfig } from '../CandlestickChart/seriesConfig';
 
@@ -12,7 +11,7 @@ import { ohlcSeriesConfig } from '../CandlestickChart/seriesConfig';
 export const defaultSeriesConfigPremium: ChartSeriesConfig<
   'bar' | 'rangeBar' | 'scatter' | 'line' | 'pie' | 'ohlc'
 > = {
-  ...defaultSeriesConfigPro,
+  ...defaultSeriesConfig,
   rangeBar: rangeBarSeriesConfig,
   ohlc: ohlcSeriesConfig,
 };

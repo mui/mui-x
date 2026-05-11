@@ -75,15 +75,23 @@ const yAxis = [{ min: 0, max: 100, label: 'y', width: 50 }];
 
 // Eagerly instantiate the Web Worker once per page. The worker's
 // `setupChartsAsyncWorker()` opens a BroadcastChannel listener, which the
-// chart auto-discovers on its first defaultize. Module-level instantiation
-// (guarded against SSR and Next.js HMR re-runs) gives the worker plenty of
-// head-start before the user can click _Reshuffle_, so the chart's 10 ms
-// probe reliably finds it.
+// chart auto-discovers on its first defaultize. We instantiate inside a
+// component-scoped effect (instead of at module load) so Next.js' bundler
+// reliably picks up the worker chunk, mirroring the data-grid excel-export
+// demo. The `window` flag dedupes across HMR / Strict-Mode double-mount.
 const WORKER_FLAG = '__muiXChartsScatterAsyncProcessingWorker';
-if (typeof window !== 'undefined' && !(window as any)[WORKER_FLAG]) {
-  (window as any)[WORKER_FLAG] = new Worker(
-    new URL('./chartsWorker.ts', import.meta.url),
-  );
+function useChartsAsyncWorker() {
+  React.useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    if ((window as any)[WORKER_FLAG]) {
+      return;
+    }
+    (window as any)[WORKER_FLAG] = new Worker(
+      new URL('./chartsWorker.ts', import.meta.url),
+    );
+  }, []);
 }
 
 function StatusObserver({
@@ -113,6 +121,7 @@ function StatusObserver({
 }
 
 export default function ScatterAsyncProcessing() {
+  useChartsAsyncWorker();
   const [variant, setVariant] = React.useState(0);
   const [log, setLog] = React.useState<string[]>([]);
   const series = seriesVariants[variant];
