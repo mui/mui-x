@@ -59,7 +59,7 @@ catalog:
   es-toolkit: ^1.46.1
   execa: 9.6.1
   jscodeshift: 17.3.0
-  jsdom: 26.1.0
+  jsdom: 29.1.1
   luxon: ^3.7.2
   moment: ^2.30.1
   moment-hijri: ^3.0.0
