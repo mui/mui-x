@@ -103,8 +103,14 @@ jobs:
             exit ${TEST_EXIT_CODE:-0}
       - store_test_results:
           path: test-results
-  test_browser:
+  test_browser_family:
     <<: *default-job
+    parameters:
+      <<: *default-parameters
+      family:
+        description: Package family to run browser tests for
+        type: enum
+        enum: [charts, pickers, datagrid, treeview, scheduler, shared]
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.59.1-noble
@@ -113,29 +119,49 @@ jobs:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
-      - when:
-          condition:
-            not:
-              equal: ['stable', << parameters.react-version >>]
-          steps:
-            - run:
-                environment:
-                  TZ: UTC
-                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
-                name: Test Browser
-                command: |
-                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
-      - when:
-          condition:
-            equal: ['stable', << parameters.react-version >>]
-          steps:
-            - run:
-                name: Test Browser
-                environment:
-                  TZ: UTC
-                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
-                command: |
-                  pnpm exec concurrently --kill-others --success command-1 "node ./scripts/playwrightLaunchServer.mjs" "pnpm test:unit:browser"
+      - run:
+          name: Test Browser (<< parameters.family >>)
+          environment:
+            TZ: UTC
+          command: |
+            case "<< parameters.family >>" in
+              charts) FILTER=(--project 'x-charts*') ;;
+              pickers) FILTER=(--project 'x-date-pickers*') ;;
+              datagrid) FILTER=(--project 'x-data-grid*') ;;
+              treeview) FILTER=(--project 'x-tree-view*') ;;
+              scheduler) FILTER=(--project 'x-scheduler*') ;;
+              shared) FILTER=(--project '!x-charts*' --project '!x-date-pickers*' --project '!x-data-grid*' --project '!x-tree-view*' --project '!x-scheduler*') ;;
+            esac
+            pnpm test:unit:browser ${FILTER[*]} \
+              --reporter=default \
+              --reporter=junit \
+              --reporter=blob \
+              --outputFile.junit=test-results/junit.xml \
+              --outputFile.blob=.vitest-reports/blob-<< parameters.family >>.json
+      - store_test_results:
+          path: test-results
+      - persist_to_workspace:
+          root: /tmp/mui
+          paths:
+            - .vitest-reports
+  test_browser:
+    <<: *default-job
+    resource_class: small
+    steps:
+      - checkout
+      - install-deps:
+          react-version: << parameters.react-version >>
+      - attach_workspace:
+          at: /tmp/mui
+      - run:
+          name: Merge browser test reports
+          environment:
+            BROWSER: 'true'
+          command: |
+            pnpm exec vitest run --merge-reports \
+              --reporter=default \
+              --reporter=junit \
+              --outputFile.junit=test-results/junit.xml
       - store_test_results:
           path: test-results
   test_lint:
@@ -319,8 +345,15 @@ workflows:
     jobs:
       - test_unit:
           <<: *default-context
-      - test_browser:
+      - test_browser_family:
           <<: *default-context
+          matrix:
+            alias: test_browser_families
+            parameters:
+              family: [charts, pickers, datagrid, treeview, scheduler, shared]
+      - test_browser:
+          requires:
+            - test_browser_families
       - test_lint:
           <<: *default-context
       - test_static:
@@ -354,10 +387,17 @@ workflows:
           <<: *default-context
           name: test_unit_additional
           react-version: << pipeline.parameters.with-react-version >>
-      - test_browser:
+      - test_browser_family:
           <<: *default-context
-          name: test_browser_additional
+          matrix:
+            alias: test_browser_additional_families
+            parameters:
+              family: [charts, pickers, datagrid, treeview, scheduler, shared]
           react-version: << pipeline.parameters.with-react-version >>
+      - test_browser:
+          name: test_browser_additional
+          requires:
+            - test_browser_additional_families
       - test_regressions:
           <<: *default-context
           name: test_regressions_additional
@@ -384,10 +424,17 @@ workflows:
           <<: *default-context
           name: test_unit_react_18
           react-version: ^18
-      - test_browser:
+      - test_browser_family:
           <<: *default-context
-          name: test_browser_react_18
+          matrix:
+            alias: test_browser_react_18_families
+            parameters:
+              family: [charts, pickers, datagrid, treeview, scheduler, shared]
           react-version: ^18
+      - test_browser:
+          name: test_browser_react_18
+          requires:
+            - test_browser_react_18_families
       - test_e2e:
           <<: *default-context
           name: test_e2e_react_18
