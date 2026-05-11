@@ -347,6 +347,7 @@ workflows:
           <<: *default-context
       - test_browser_family:
           <<: *default-context
+          name: test_browser_<<matrix.family>>
           matrix:
             alias: test_browser_families
             parameters:
@@ -389,6 +390,7 @@ workflows:
           react-version: << pipeline.parameters.with-react-version >>
       - test_browser_family:
           <<: *default-context
+          name: test_browser_additional_<<matrix.family>>
           matrix:
             alias: test_browser_additional_families
             parameters:
@@ -426,6 +428,7 @@ workflows:
           react-version: ^18
       - test_browser_family:
           <<: *default-context
+          name: test_browser_react_18_<<matrix.family>>
           matrix:
             alias: test_browser_react_18_families
             parameters:
