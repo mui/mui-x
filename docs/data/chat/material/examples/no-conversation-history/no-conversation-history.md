@@ -30,7 +30,11 @@ const adapter: ChatAdapter = {
   },
 };
 
-<ChatRoot adapter={adapter} initialActiveConversationId="main" initialMessages={messages}>
+<ChatRoot
+  adapter={adapter}
+  initialActiveConversationId="main"
+  initialMessages={messages}
+>
   <ChatConversation>
     <ChatMessageList />
     <ChatComposer />

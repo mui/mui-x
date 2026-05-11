@@ -14,7 +14,7 @@ components: ChatBox
 
 ## Try it live
 
-The same `ChatBox` re-themes itself instantly when you swap the layout variant, density, primary color, or border-radius — every change comes from a single Material UI theme + two top-level props.
+The same `ChatBox` re-themes itself instantly when you swap the layout variant, density, primary color, or border-radius — every change comes from a single Material UI theme + two top-level props.
 
 {{"demo": "LookAndFeelPlayground.js", "bg": "inline"}}
 
@@ -121,7 +121,7 @@ import { chatBoxClasses } from '@mui/x-chat';
 <ChatBox classes={{ root: 'my-chat-root', layout: 'my-chat-layout' }} />;
 ```
 
-## Tailwind CSS
+## Tailwind CSS
 
 The headless primitives from `@mui/x-chat/headless` render semantic HTML with zero built-in styles and `data-*` attributes for state — a natural fit for Tailwind:
 

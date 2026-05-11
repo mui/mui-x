@@ -78,17 +78,20 @@ const adapter: ChatAdapter = {
       start(controller) {
         const chunks = createResponseChunks(`reply-${message.id}`, responseText);
         const timeouts = chunks.map((chunk, index) =>
-          setTimeout(() => {
-            if (signal.aborted) {
-              return;
-            }
+          setTimeout(
+            () => {
+              if (signal.aborted) {
+                return;
+              }
 
-            controller.enqueue(chunk);
+              controller.enqueue(chunk);
 
-            if (index === chunks.length - 1) {
-              controller.close();
-            }
-          }, 120 * (index + 1)),
+              if (index === chunks.length - 1) {
+                controller.close();
+              }
+            },
+            120 * (index + 1),
+          ),
         );
 
         signal.addEventListener(

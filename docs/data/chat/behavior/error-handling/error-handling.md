@@ -12,6 +12,12 @@ components: ChatBox, ChatMessageError, MessageError
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
+## Interactive playground
+
+Toggle a recoverable message error and observe the `ChatMessageError` slot:
+
+{{"demo": "ChatMessageErrorPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 The chat runtime captures errors from adapters, streams, and history loading, and surfaces them through a unified error model.
 You do not need to catch errors inside adapter methods — the runtime handles them for you.
 

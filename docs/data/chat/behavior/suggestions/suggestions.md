@@ -12,6 +12,12 @@ components: ChatSuggestions
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
+## Interactive playground
+
+Edit the suggestion list and toggle layout options:
+
+{{"demo": "ChatSuggestionsPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 Suggestions are clickable prompts that appear when the message list is empty.
 Clicking a suggestion pre-fills the composer with the suggestion text, giving users a starting point for the conversation.
 

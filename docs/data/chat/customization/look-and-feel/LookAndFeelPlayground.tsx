@@ -162,7 +162,8 @@ export default function LookAndFeelPlayground() {
                   height: 28,
                   borderRadius: '50%',
                   border: '2px solid',
-                  borderColor: primary === preset.value ? 'text.primary' : 'transparent',
+                  borderColor:
+                    primary === preset.value ? 'text.primary' : 'transparent',
                   backgroundColor: preset.value,
                   cursor: 'pointer',
                   padding: 0,
@@ -176,7 +177,13 @@ export default function LookAndFeelPlayground() {
         </Stack>
 
         <Stack spacing={0.5}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'baseline',
+            }}
+          >
             <Typography variant="caption" color="text.secondary">
               shape.borderRadius
             </Typography>
@@ -194,7 +201,9 @@ export default function LookAndFeelPlayground() {
             min={0}
             max={28}
             step={1}
-            onChange={(_, next) => setRadius(typeof next === 'number' ? next : next[0])}
+            onChange={(_, next) =>
+              setRadius(typeof next === 'number' ? next : next[0])
+            }
           />
         </Stack>
       </Stack>

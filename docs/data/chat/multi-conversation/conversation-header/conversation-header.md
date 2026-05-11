@@ -14,6 +14,12 @@ components: ChatConversation, ChatConversationHeader, ChatConversationTitle, Cha
 
 `ChatConversationHeader` is a `<header>` element with divider styling. It reads the active conversation through context so every child has access to the same conversation state without additional wiring.
 
+## Interactive playground
+
+Configure the title, subtitle, and trailing actions of `ChatConversationHeader` — every slot (`ChatConversationHeaderInfo`, `ChatConversationTitle`, `ChatConversationSubtitle`, `ChatConversationHeaderActions`) is exercised in this single demo.
+
+{{"demo": "ChatConversationHeaderPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ```tsx
 import {
   ChatConversation,

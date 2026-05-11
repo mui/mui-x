@@ -19,7 +19,8 @@ components: ChatBox
 ### Default variant
 
 The default variant renders messages as colored bubbles.
-The default variant right-aligns user messages with a primary-colored background and left-aligns assistant messages with a neutral background.
+The default variant right-aligns the current user's messages with a primary-colored background and left-aligns everyone else's (assistants and other participants) with a neutral background.
+Set `currentUser` on `ChatBox` so the chat can identify which messages to treat as your own.
 Timestamps appear below each message.
 This is the standard layout used by most AI chat interfaces.
 

@@ -3,16 +3,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import {
-  ChatConversation,
-  ChatMessage,
-  ChatMessageAvatar,
-  ChatMessageContent,
-  ChatMessageGroup,
-  ChatMessageInlineMeta,
-  ChatMessageList,
-} from '@mui/x-chat';
-import { useChat, useMessageIds, ChatRoot } from '@mui/x-chat/headless';
+import { ChatConversation, ChatMessageList } from '@mui/x-chat';
+import { useChat, ChatRoot } from '@mui/x-chat/headless';
 
 import {
   createChunkStream,
@@ -68,19 +60,6 @@ const initialMessages = [
 // Must be a child of ChatRoot to access the chat context via hooks.
 function Feed() {
   const { sendMessage, isStreaming } = useChat();
-  const messageIds = useMessageIds();
-
-  const renderItem = React.useCallback(
-    (params) => (
-      <ChatMessageGroup key={params.id} messageId={params.id}>
-        <ChatMessage messageId={params.id}>
-          <ChatMessageAvatar />
-          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
-        </ChatMessage>
-      </ChatMessageGroup>
-    ),
-    [],
-  );
 
   const handleTrigger = () => {
     sendMessage({
@@ -93,7 +72,7 @@ function Feed() {
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* Only the message list — no ChatComposer */}
       <ChatConversation sx={{ flex: 1, minHeight: 0 }}>
-        <ChatMessageList renderItem={renderItem} items={messageIds} />
+        <ChatMessageList />
       </ChatConversation>
       <Divider />
       <Box sx={{ p: 1, display: 'flex', justifyContent: 'center' }}>

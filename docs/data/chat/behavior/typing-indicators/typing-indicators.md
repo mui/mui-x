@@ -12,6 +12,12 @@ components: ChatTypingIndicator
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
+## Interactive playground
+
+Toggle which users appear as typing in the current conversation:
+
+{{"demo": "ChatTypingIndicatorPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 Typing indicators show labels like "Alice is typing" or "Alice, Bob are typing" in the chat UI.
 The feature connects the adapter's `setTyping()` method (outbound) with realtime `typing` events (inbound) to provide a complete typing awareness loop.
 

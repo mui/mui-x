@@ -44,9 +44,6 @@ export default function LayoutThreadOnlyStandalone() {
       <Box
         sx={{
           height: 460,
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
           overflow: 'hidden',
         }}
       >

@@ -16,6 +16,12 @@ components: ChatMessageSkeleton
 
 `ChatMessageSkeleton` renders animated shimmer lines that serve as a placeholder while message content is loading. Use it during initial data fetching or when loading older messages via history pagination.
 
+### Interactive playground
+
+Adjust the number of shimmer lines:
+
+{{"demo": "ChatMessageSkeletonPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Import
 
 ```tsx

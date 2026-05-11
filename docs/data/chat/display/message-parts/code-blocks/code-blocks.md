@@ -14,6 +14,12 @@ components: ChatCodeBlock
 
 `ChatCodeBlock` renders fenced code blocks with a header bar showing the language label and a one-click copy button.
 
+## Interactive playground
+
+Swap languages and content live:
+
+{{"demo": "ChatCodeBlockPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Import
 
 ```tsx

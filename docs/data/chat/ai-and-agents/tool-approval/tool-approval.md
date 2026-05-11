@@ -14,6 +14,12 @@ components: ChatConfirmation
 
 Tool approval lets you pause the agent when it requests a potentially dangerous action, present the user with an approve/deny interface, and resume or cancel the tool execution based on the user's decision.
 
+## Interactive playground
+
+Preview the `ChatConfirmation` UI in different states:
+
+{{"demo": "ChatConfirmationPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Approval workflow
 
 The approval lifecycle extends the standard tool invocation states with two additional phases:

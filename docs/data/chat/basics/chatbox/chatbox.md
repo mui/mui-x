@@ -18,11 +18,21 @@ components: ChatBox
 It creates a `ChatProvider` internally and composes the themed thread surface — header, message list, and composer — into a ready-to-use surface.
 Enable the built-in conversation list explicitly when you want inbox-style navigation:
 
+## Interactive playground
+
+Try the `ChatBox` props live — toggle variant, density, layout mode, and the built-in features:
+
+{{"demo": "ChatBoxPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ```tsx
 import { ChatBox } from '@mui/x-chat';
 
 <ChatBox adapter={adapter} sx={{ height: 500 }} />;
-<ChatBox adapter={adapter} features={{ conversationList: true }} sx={{ height: 500 }} />;
+<ChatBox
+  adapter={adapter}
+  features={{ conversationList: true }}
+  sx={{ height: 500 }}
+/>;
 ```
 
 All visual styles are derived from your active Material UI theme.

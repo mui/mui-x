@@ -84,9 +84,6 @@ export default function LayoutTwoPaneStandalone() {
       <Box
         sx={{
           height: 500,
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
           overflow: 'hidden',
         }}
       >

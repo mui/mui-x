@@ -18,6 +18,12 @@ The composer is the input region at the bottom of the chat surface.
 `ChatComposer` provides Material UI styling — border, padding, and theme tokens are applied automatically.
 The demos on this page render only the composer plus the provider context it depends on.
 
+## Interactive playground
+
+Try the `ChatComposer` props live — toggle variant, attachments, helper text, and placeholder:
+
+{{"demo": "ChatComposerPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Import
 
 ```tsx

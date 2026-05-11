@@ -12,6 +12,24 @@ components: ChatMessageList, ChatMessageGroup
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
+## Interactive playground
+
+Toggle role, status, density, and grouping on a single `ChatMessage` bubble:
+
+{{"demo": "ChatMessagePlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Message groups
+
+`ChatMessageGroup` collapses consecutive messages from the same author into a single visual cluster:
+
+{{"demo": "ChatMessageGroupPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Message list
+
+`ChatMessageList` virtualises rendering, manages auto-scroll, and slots dividers between days:
+
+{{"demo": "ChatMessageListPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## The ChatMessage data model
 
 Every message in the chat system is represented by the `ChatMessage` interface:
@@ -130,3 +148,37 @@ When building a custom layout outside of `ChatBox`, render `ChatMessageList` dir
 The demo below isolates the message surface with only the provider, a bounded frame, and the message list composition:
 
 {{"demo": "StandaloneMessages.js", "defaultCodeOpen": false, "bg": "inline"}}
+
+### Message slots
+
+Each slot inside the `ChatMessage` row has its own playground so you can iterate on a single surface at a time.
+
+#### Avatar
+
+The author avatar slot — falls back to initials when no `avatarUrl` is set.
+
+{{"demo": "ChatMessageAvatarPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Author label
+
+Displays the author name above grouped messages.
+
+{{"demo": "ChatMessageAuthorLabelPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Content
+
+The bubble interior — renders markdown, code fences, and tool or source parts.
+
+{{"demo": "ChatMessageContentPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Meta
+
+External timestamp and delivery status, used by compact bubbles.
+
+{{"demo": "ChatMessageMetaPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Inline meta
+
+Telegram-style timestamp and status flowing inside the bubble.
+
+{{"demo": "ChatMessageInlineMetaPlayground.js", "bg": "inline", "defaultCodeOpen": false}}

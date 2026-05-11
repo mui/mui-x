@@ -38,7 +38,6 @@ const adapter = createEchoAdapter({
 function BackIcon() {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden="true"
@@ -128,9 +127,6 @@ export default function LayoutResponsiveStandalone() {
           <Box
             sx={{
               height: 500,
-              border: '1px solid',
-              borderColor: 'divider',
-              borderRadius: 1,
               overflow: 'hidden',
             }}
           >

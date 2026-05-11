@@ -15,6 +15,14 @@ components: ChatComposerAttachButton
 The attach button opens the browser file picker.
 Selected files are queued as draft attachments and previewed in the composer area before the message is sent.
 
+## Interactive playgrounds
+
+Tune the attach button and the pending-attachment list directly:
+
+{{"demo": "ChatComposerAttachButtonPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+{{"demo": "ChatComposerAttachmentListPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Enabling attachments
 
 Attachments are enabled by default.

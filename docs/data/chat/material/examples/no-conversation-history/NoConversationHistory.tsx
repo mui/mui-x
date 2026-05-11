@@ -7,14 +7,9 @@ import {
   ChatComposerSendButton,
   ChatComposerTextArea,
   ChatComposerToolbar,
-  ChatMessage,
-  ChatMessageAvatar,
-  ChatMessageContent,
-  ChatMessageGroup,
-  ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { useMessageIds, ChatRoot } from '@mui/x-chat/headless';
+import { ChatRoot } from '@mui/x-chat/headless';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 import {
   createChunkStream,
@@ -83,25 +78,10 @@ function SendIcon() {
   );
 }
 
-// Must be a child of ChatRoot so it can access the chat context.
 function ThreadContent() {
-  const messageIds = useMessageIds();
-
-  const renderItem = React.useCallback(
-    (params: { id: string }) => (
-      <ChatMessageGroup key={params.id} messageId={params.id}>
-        <ChatMessage messageId={params.id}>
-          <ChatMessageAvatar />
-          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
-        </ChatMessage>
-      </ChatMessageGroup>
-    ),
-    [],
-  );
-
   return (
     <ChatConversation>
-      <ChatMessageList renderItem={renderItem} items={messageIds} />
+      <ChatMessageList />
       <ChatComposer>
         <ChatComposerTextArea placeholder="Type a message…" />
         <ChatComposerToolbar>

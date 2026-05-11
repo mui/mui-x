@@ -14,6 +14,12 @@ components: ChatMessageActions
 
 `ChatMessageActions` renders an action bar that appears when the user hovers over a message or focuses within it. The actions area is positioned in the message grid and transitions from hidden to visible using an opacity animation.
 
+## Interactive playground
+
+Toggle action buttons, variant, and density to preview the hover-revealed toolbar:
+
+{{"demo": "ChatMessageActionsPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Import
 
 ```tsx

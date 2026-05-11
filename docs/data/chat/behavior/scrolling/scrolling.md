@@ -12,6 +12,12 @@ components: ChatMessageList, ChatScrollToBottomAffordance
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
+## Interactive playground
+
+Try the scroll-to-bottom affordance live — long thread with toggleable indicator:
+
+{{"demo": "ChatScrollToBottomAffordancePlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 The message list automatically manages scroll position so that new messages and streaming content stay visible without user intervention, while still allowing the user to read earlier messages undisturbed.
 
 ## Auto-scrolling

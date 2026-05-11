@@ -14,6 +14,12 @@ components: ChatMessageContent, ChatMessageSource, ChatMessageSources
 
 Source parts allow AI assistants to cite their sources. Two part types cover the common citation patterns: URL references and document excerpts.
 
+## Interactive playground
+
+See the `ChatMessageSources` slot rendering URL and document parts:
+
+{{"demo": "ChatMessageSourcesPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Source URL parts
 
 `ChatSourceUrlMessagePart` represents a link to an external resource:

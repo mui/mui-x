@@ -1,15 +1,7 @@
 'use client';
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {
-  ChatConversation,
-  ChatMessage,
-  ChatMessageAvatar,
-  ChatMessageContent,
-  ChatMessageGroup,
-  ChatMessageInlineMeta,
-  ChatMessageList,
-} from '@mui/x-chat';
+import { ChatConversation, ChatMessageList } from '@mui/x-chat';
 import { ChatProvider } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
@@ -20,18 +12,6 @@ import {
 const adapter = createEchoAdapter();
 
 export default function StandaloneMessages() {
-  const renderItem = React.useCallback(
-    (params: { id: string }) => (
-      <ChatMessageGroup key={params.id} messageId={params.id}>
-        <ChatMessage messageId={params.id}>
-          <ChatMessageAvatar />
-          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
-        </ChatMessage>
-      </ChatMessageGroup>
-    ),
-    [],
-  );
-
   return (
     <ChatProvider
       adapter={adapter}
@@ -42,14 +22,11 @@ export default function StandaloneMessages() {
       <Box
         sx={{
           height: 400,
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 1,
           overflow: 'hidden',
         }}
       >
         <ChatConversation>
-          <ChatMessageList renderItem={renderItem} />
+          <ChatMessageList />
         </ChatConversation>
       </Box>
     </ChatProvider>

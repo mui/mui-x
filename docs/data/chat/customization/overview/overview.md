@@ -19,7 +19,7 @@ components: ChatBox
 | Change colors, fonts, spacing                           | `ThemeProvider`             | [Look & Feel](/x/react-chat/customization/look-and-feel/) |
 | Apply one-off styles to this instance                   | `sx` prop                   | [Look & Feel](/x/react-chat/customization/look-and-feel/) |
 | Switch between bubble and flat layout                   | `variant` / `density` props | [Look & Feel](/x/react-chat/customization/look-and-feel/) |
-| Use Tailwind CSS                                        | Headless primitives         | [Look & Feel](/x/react-chat/customization/look-and-feel/) |
+| Use Tailwind CSS                                        | Headless primitives         | [Look & Feel](/x/react-chat/customization/look-and-feel/) |
 | Pass extra props to a subcomponent                      | `slotProps`                 | [Structure](/x/react-chat/customization/structure/)       |
 | Replace a subcomponent entirely                         | `slots`                     | [Structure](/x/react-chat/customization/structure/)       |
 | Render custom message types (tickets, charts, ...)      | `partRenderers`             | [Structure](/x/react-chat/customization/structure/)       |
