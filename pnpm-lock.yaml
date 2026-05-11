@@ -79,8 +79,8 @@ catalogs:
       specifier: ^10.0.3
       version: 10.0.3
     '@types/chance':
-      specifier: ^1.1.7
-      version: 1.1.7
+      specifier: ^1.1.8
+      version: 1.1.8
     '@types/luxon':
       specifier: ^3.7.1
       version: 3.7.1
@@ -713,7 +713,7 @@ importers:
         version: 3.0.4-canary.3
       '@types/chance':
         specifier: 'catalog:'
-        version: 1.1.7
+        version: 1.1.8
       '@types/d3-scale-chromatic':
         specifier: 3.1.0
         version: 3.1.0
@@ -1282,7 +1282,7 @@ importers:
         version: 9.0.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@types/chance':
         specifier: 'catalog:'
-        version: 1.1.7
+        version: 1.1.8
       react:
         specifier: 'catalog:'
         version: 19.2.6
@@ -5741,8 +5741,8 @@ packages:
   '@types/chai@5.2.2':
     resolution: {integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg==}
 
-  '@types/chance@1.1.7':
-    resolution: {integrity: sha512-40you9610GTQPJyvjMBgmj9wiDO6qXhbfjizNYod/fmvLSfUUxURAJMTD8tjmbcZSsyYE5iEUox61AAcCjW/wQ==}
+  '@types/chance@1.1.8':
+    resolution: {integrity: sha512-isycXjm4a88/zl3n9lfgMcEClR9wUi+m72lkE9MvEbkgZDQrKzolWbonBiUqDNAJFIwO9GKjzmJFq79qtKVTAQ==}
 
   '@types/concat-stream@2.0.3':
     resolution: {integrity: sha512-3qe4oQAPNwVNwK4C9c8u+VJqv9kez+2MR4qJpoPFfXtgxxif1QbFusvXzK0/Wra2VX07smostI2VMmJNSpZjuQ==}
@@ -15509,7 +15509,7 @@ snapshots:
     dependencies:
       '@types/deep-eql': 4.0.2
 
-  '@types/chance@1.1.7': {}
+  '@types/chance@1.1.8': {}
 
   '@types/concat-stream@2.0.3':
     dependencies:
