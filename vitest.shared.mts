@@ -82,6 +82,11 @@ export default defineConfig({
                 args: [
                   // Enable GPU so WebGL2 is enabled in browser tests
                   '--enable-gpu',
+                  // Linux CI runners cap /dev/shm at 64 MB (Docker default).
+                  // Chromium uses it for shared memory and is killed by the OS
+                  // when it fills up, which manifests as an unexplained OOM crash.
+                  // This flag redirects shared memory writes to /tmp instead.
+                  '--disable-dev-shm-usage',
                 ],
                 // Required for tests which use scrollbars.
                 ignoreDefaultArgs: ['--hide-scrollbars'],
