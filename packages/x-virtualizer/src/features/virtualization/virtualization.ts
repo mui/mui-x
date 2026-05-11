@@ -1105,7 +1105,7 @@ function getIndexesToRender({
     lastPosition: positions[positions.length - 1] + lastSize,
   });
 
-  const lastIndexPadded = binarySearch(lastPosition, positions);
+  const lastIndexPadded = binarySearch(lastPosition, positions) + 1;
 
   return [
     clamp(firstIndexPadded, minFirstIndex, maxLastIndex),
