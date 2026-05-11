@@ -29,27 +29,43 @@ const optionalGetAxisIds = (_: unknown, ids: AxisId[]) => ids;
 function indexGetter(
   value: number,
   axes: ComputeResult<ChartsRotationAxisProps>,
-  ids: AxisId | AxisId[],
+  ids: AxisId,
   type: 'rotation',
-): number | number[];
+): number;
+function indexGetter(
+  value: number,
+  axes: ComputeResult<ChartsRotationAxisProps>,
+  ids: AxisId[],
+  type: 'rotation',
+): number[];
 function indexGetter(
   value: number,
   axes: ComputeResult<ChartsRadiusAxisProps>,
-  ids: AxisId | AxisId[],
+  ids: AxisId,
   type: 'radius',
-): number | number[];
+): number;
+function indexGetter(
+  value: number,
+  axes: ComputeResult<ChartsRadiusAxisProps>,
+  ids: AxisId[],
+  type: 'radius',
+): number[];
 function indexGetter(
   value: number,
   axes: ComputeResult<ChartsRotationAxisProps> | ComputeResult<ChartsRadiusAxisProps>,
   ids: AxisId | AxisId[],
   type: 'rotation' | 'radius',
 ): number | number[] {
-
-  const getter = type === 'rotation' ? getRotationAxisIndex : getRadiusAxisIndex;
-
+  if (type === 'rotation') {
+    const rotationAxes = axes as ComputeResult<ChartsRotationAxisProps>;
+    return Array.isArray(ids)
+      ? ids.map((id) => getRotationAxisIndex(rotationAxes.axis[id], value))
+      : getRotationAxisIndex(rotationAxes.axis[ids], value);
+  }
+  const radiusAxes = axes as ComputeResult<ChartsRadiusAxisProps>;
   return Array.isArray(ids)
-    ? ids.map((id) => getter(axes.axis[id], value))
-    : getter(axes.axis[ids], value);
+    ? ids.map((id) => getRadiusAxisIndex(radiusAxes.axis[id], value))
+    : getRadiusAxisIndex(radiusAxes.axis[ids], value);
 }
 
 // ============================= Rotation axis =============================
