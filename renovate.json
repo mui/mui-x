@@ -1,6 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>mui/mui-public//renovate/default"],
+  "extends": [
+    "github>mui/mui-public//renovate/default"
+  ],
   "schedule": "* 0-4 * * 1",
   "lockFileMaintenance": {
     "schedule": "* 0-4 2 * *"
@@ -8,34 +10,63 @@
   "packageRules": [
     {
       "groupName": "D3",
-      "matchPackageNames": ["d3-*", "@types/d3-*"]
+      "matchPackageNames": [
+        "d3-*",
+        "@types/d3-*"
+      ]
     },
     {
       "groupName": "react-spring",
-      "matchPackageNames": ["@react-spring/**"]
+      "matchPackageNames": [
+        "@react-spring/**"
+      ]
     },
     {
       "groupName": "bundling fixtures",
-      "matchFileNames": ["test/bundling/fixtures/**/package.json"],
+      "matchFileNames": [
+        "test/bundling/fixtures/**/package.json"
+      ],
       "schedule": "* * 1 1,7 *"
     },
     {
-      "matchDepNames": ["date-fns-v2"],
+      "matchDepNames": [
+        "date-fns-v2"
+      ],
       "allowedVersions": "< 3.0.0"
     },
     {
       "groupName": "recast",
-      "matchPackageNames": ["recast"],
+      "matchPackageNames": [
+        "recast"
+      ],
       "allowedVersions": "< 0.23.10"
     },
     {
       "groupName": "Tanstack query",
-      "matchPackageNames": ["@tanstack/*query*"]
+      "matchPackageNames": [
+        "@tanstack/*query*"
+      ]
     },
     {
       "groupName": "fingerprintjs",
-      "matchPackageNames": ["@fingerprintjs/fingerprintjs"],
+      "matchPackageNames": [
+        "@fingerprintjs/fingerprintjs"
+      ],
       "allowedVersions": "< 4.0.0"
+    },
+    {
+      "description": "Prevent major version updates of pinned older @mui/x-license versions in the cross-major compat tests.",
+      "matchFileNames": [
+        "test/x-license-compat/package.json"
+      ],
+      "matchPackageNames": [
+        "@mui/x-license",
+        "@mui/x-license-pro"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
     }
   ]
 }
