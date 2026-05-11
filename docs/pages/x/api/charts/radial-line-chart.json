@@ -7,7 +7,7 @@
     "axisHighlight": {
       "type": {
         "name": "shape",
-        "description": "{ radius?: 'line'<br>&#124;&nbsp;'none', rotation?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
+        "description": "{ radius?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', rotation?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
       },
       "default": "{ rotation: 'line' }",
       "seeMoreLink": {
