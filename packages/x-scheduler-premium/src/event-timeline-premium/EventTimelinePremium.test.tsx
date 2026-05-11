@@ -608,7 +608,7 @@ describe('<EventTimelinePremium />', () => {
         expect(screen.queryByText('Shared error')).to.equal(null);
       });
 
-      // Plugin base clears errors on a successful refetch (line 119 of SchedulerLazyLoadingPlugin).
+      // Simulate the base plugin clearing errors on a successful refetch.
       await act(async () => {
         store.set('errors', []);
       });

@@ -41,26 +41,34 @@ export class SchedulerLazyLoadingPlugin<
     },
     immediate = false,
   ) => {
-    if (this.dataManager) {
-      const { adapter } = this.store.state;
+    try {
+      if (this.dataManager) {
+        const { adapter } = this.store.state;
 
-      // Set loading state immediately (before the debounce delay)
+        // Set loading state immediately (before the debounce delay)
 
-      if (
-        this.cache &&
-        !this.cache.hasCoverage(
-          adapter.getTime(range.start),
-          adapter.getTime(adapter.endOfDay(range.end)),
-        )
-      ) {
-        this.store.set('isLoading', true);
+        if (
+          this.cache &&
+          !this.cache.hasCoverage(
+            adapter.getTime(range.start),
+            adapter.getTime(adapter.endOfDay(range.end)),
+          )
+        ) {
+          this.store.set('isLoading', true);
+        }
+
+        if (immediate) {
+          await this.dataManager.queueImmediate([range]);
+        } else {
+          await this.dataManager.queue([range]);
+        }
       }
-
-      if (immediate) {
-        await this.dataManager.queueImmediate([range]);
-      } else {
-        await this.dataManager.queue([range]);
-      }
+    } catch (error) {
+      const wrapped =
+        error instanceof Error
+          ? error
+          : /* minify-error-disabled */ new Error(String(error), { cause: error });
+      this.store.set('errors', [wrapped]);
     }
   };
 
