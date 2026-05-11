@@ -152,6 +152,13 @@ export class SchedulerLazyLoadingPlugin<
       });
 
       if (!shouldUpdateEvents.success) {
+        this.store.set('errors', [
+          new Error(
+            'MUI X Scheduler: dataSource.updateEvents returned { success: false }. ' +
+              'The optimistic event mutation was not persisted to the cache. ' +
+              'Throw from updateEvents to signal failure explicitly, or return { success: true } after handling the error.',
+          ),
+        ]);
         return;
       }
 
@@ -180,6 +187,7 @@ export class SchedulerLazyLoadingPlugin<
       this.store.update({
         ...this.store.state,
         ...eventsState,
+        errors: [],
       });
     } catch (error) {
       const wrapped =

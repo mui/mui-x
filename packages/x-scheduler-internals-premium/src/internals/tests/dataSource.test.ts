@@ -253,5 +253,61 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.errors).toHaveLength(1);
       expect(store.state.errors[0].message).to.equal('Update failed');
     });
+
+    it('should push an error to state.errors when dataSource.updateEvents returns { success: false }', async () => {
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: spy(async () => ({ success: false })),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      store.publishEvent('eventsUpdated', {
+        deleted: [],
+        updated: new Map([['1', { id: '1' }]]),
+        created: [],
+        newEvents: [],
+      });
+
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(dataSource.updateEvents.calledOnce).to.equal(true);
+      expect(store.state.errors).toHaveLength(1);
+      expect(store.state.errors[0].message).to.include('{ success: false }');
+    });
+
+    it('should clear state.errors after a successful eventsUpdated', async () => {
+      const startFailing = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const endFailing = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const dataSource = {
+        getEvents: spy(async () => {
+          throw new Error('Fetch failed');
+        }),
+        updateEvents: spy(async () => ({ success: true })),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      // Populate state.errors via a failing fetch.
+      await store.lazyLoading?.queueDataFetchForRange(
+        { start: startFailing, end: endFailing },
+        true,
+      );
+      expect(store.state.errors).toHaveLength(1);
+
+      // Successful eventsUpdated should clear the stale error.
+      store.publishEvent('eventsUpdated', {
+        deleted: [],
+        updated: new Map([['1', { id: '1' }]]),
+        created: [],
+        newEvents: [],
+      });
+
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(store.state.errors).toHaveLength(0);
+    });
   });
 });
