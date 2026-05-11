@@ -1,6 +1,7 @@
 import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
+import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 interface TestEvent {
@@ -26,7 +27,7 @@ const flushEffect = async () => {
   await Promise.resolve();
 };
 
-const flushDebounce = () => vi.advanceTimersByTimeAsync(150);
+const flushDebounce = () => vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
 
 const DEFAULT_PARAMS = {
   events: [] as TestEvent[],
@@ -176,7 +177,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     const store = new EventTimelinePremiumStore(params, adapter);
     store.updateStateFromParameters(params, adapter);
 
-    // Only flush microtasks + a short advance that's well below the 150ms debounce.
+    // Only flush microtasks + a short advance that's well below the debounce window.
     await flushEffect();
     await vi.advanceTimersByTimeAsync(50);
 

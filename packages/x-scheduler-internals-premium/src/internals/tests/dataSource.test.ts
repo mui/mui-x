@@ -1,6 +1,7 @@
 import { spy } from 'sinon';
 import { describe, expect, it, vi } from 'vitest';
 import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
+import { DEBOUNCE_MS } from '../utils/queue';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -199,8 +200,8 @@ premiumStoreClasses.forEach((storeClass) => {
         store.lazyLoading?.queueDataFetchForRange({ start, end });
         store.lazyLoading?.queueDataFetchForRange({ start, end });
 
-        // Advance past the 150ms debounce + the mockFetchData setTimeout(0).
-        await vi.advanceTimersByTimeAsync(200);
+        // Advance past the debounce window + the mockFetchData setTimeout(0).
+        await vi.advanceTimersByTimeAsync(DEBOUNCE_MS + 50);
 
         expect(dataSource.getEvents.callCount).to.equal(1);
       } finally {

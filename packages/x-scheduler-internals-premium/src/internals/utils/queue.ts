@@ -4,7 +4,7 @@ import { getDateKey, TimeoutManager } from '@mui/x-scheduler-internals/internals
 
 const MAX_CONCURRENT_REQUESTS = 3;
 const MAX_QUEUED_REQUESTS = 3;
-const DEBOUNCE_MS = 150;
+export const DEBOUNCE_MS = 150;
 
 export enum RequestStatus {
   QUEUED,
