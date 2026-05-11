@@ -184,6 +184,15 @@ RadialBarChart.propTypes = {
     }),
   }),
   /**
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @default { rotation: 'band' } or { radius: 'band' } according to the layout.
+   */
+  axisHighlight: PropTypes.shape({
+    radius: PropTypes.oneOf(['band', 'line', 'none']),
+    rotation: PropTypes.oneOf(['band', 'line', 'none']),
+  }),
+  /**
    * Color palette used to colorize multiple series.
    * @default rainbowSurgePalette
    */
