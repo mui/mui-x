@@ -654,7 +654,7 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
       postcss:
-        specifier: ^8.5.13
+        specifier: ^8.5.14
         version: 8.5.14
       prop-types:
         specifier: 'catalog:'
@@ -669,7 +669,7 @@ importers:
         specifier: 'catalog:'
         version: 19.2.6(react@19.2.6)
       react-hook-form:
-        specifier: ^7.74.0
+        specifier: ^7.75.0
         version: 7.75.0(react@19.2.6)
       react-router:
         specifier: 'catalog:'
@@ -1271,8 +1271,8 @@ importers:
         specifier: 'catalog:'
         version: 2.1.1
       lru-cache:
-        specifier: ^11.3.5
-        version: 11.3.5
+        specifier: ^11.3.6
+        version: 11.3.6
     devDependencies:
       '@mui/icons-material':
         specifier: 'catalog:'
@@ -8944,8 +8944,8 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
-  lru-cache@11.3.5:
-    resolution: {integrity: sha512-NxVFwLAnrd9i7KUBxC4DrUhmgjzOs+1Qm50D3oF1/oL+r1NpZ4gA7xvG0/zJ8evR7zIKn4vLf7qTNduWFtCrRw==}
+  lru-cache@11.3.6:
+    resolution: {integrity: sha512-Gf/KoL3C/MlI7Bt0PGI9I+TeTC/I6r/csU58N4BSNc4lppLBeKsOdFYkK+dX0ABDUMJNfCHTyPpzwwO21Awd3A==}
     engines: {node: 20 || >=22}
 
   lru-cache@5.1.1:
@@ -14422,7 +14422,7 @@ snapshots:
       agent-base: 7.1.4
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
-      lru-cache: 11.3.5
+      lru-cache: 11.3.6
       socks-proxy-agent: 8.0.5
     transitivePeerDependencies:
       - supports-color
@@ -14445,7 +14445,7 @@ snapshots:
       common-ancestor-path: 1.0.1
       hosted-git-info: 9.0.0
       json-stringify-nice: 1.1.4
-      lru-cache: 11.3.5
+      lru-cache: 11.3.6
       minimatch: 10.2.5
       nopt: 8.1.0
       npm-install-checks: 7.1.2
@@ -14511,7 +14511,7 @@ snapshots:
     dependencies:
       '@npmcli/promise-spawn': 9.0.1
       ini: 6.0.0
-      lru-cache: 11.3.5
+      lru-cache: 11.3.6
       npm-pick-manifest: 11.0.3
       proc-log: 6.1.0
       promise-retry: 2.0.1
@@ -16417,7 +16417,7 @@ snapshots:
       '@npmcli/fs': 4.0.0
       fs-minipass: 3.0.3
       glob: 11.0.3
-      lru-cache: 11.3.5
+      lru-cache: 11.3.6
       minipass: 7.1.3
       minipass-collect: 2.0.1
       minipass-flush: 1.0.5
@@ -18195,7 +18195,7 @@ snapshots:
 
   hosted-git-info@9.0.0:
     dependencies:
-      lru-cache: 11.3.5
+      lru-cache: 11.3.6
 
   html-encoding-sniffer@6.0.0:
     dependencies:
@@ -18683,7 +18683,7 @@ snapshots:
       decimal.js: 10.6.0
       html-encoding-sniffer: 6.0.0
       is-potential-custom-element-name: 1.0.1
-      lru-cache: 11.3.5
+      lru-cache: 11.3.6
       parse5: 8.0.1
       saxes: 6.0.0
       symbol-tree: 3.2.4
@@ -19037,7 +19037,7 @@ snapshots:
 
   lru-cache@10.4.3: {}
 
-  lru-cache@11.3.5: {}
+  lru-cache@11.3.6: {}
 
   lru-cache@5.1.1:
     dependencies:
@@ -20383,7 +20383,7 @@ snapshots:
 
   path-scurry@2.0.2:
     dependencies:
-      lru-cache: 11.3.5
+      lru-cache: 11.3.6
       minipass: 7.1.3
 
   path-to-regexp@3.3.0: {}
