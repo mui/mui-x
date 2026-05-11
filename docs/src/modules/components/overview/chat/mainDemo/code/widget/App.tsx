@@ -1,4 +1,5 @@
-import { Chat, Composer, Conversation, MessageGroup, MessageList } from '@mui/x-chat/headless';
+import * as React from 'react';
+import { ChatBox } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 
 const adapter = {
@@ -26,28 +27,21 @@ const initialMessages: ChatMessage[] = [
 ];
 
 export default function App() {
+  const [activeConversationId, setActiveConversationId] = React.useState<string | undefined>(
+    undefined,
+  );
+  const [messages, setMessages] = React.useState(initialMessages);
+
   return (
-    <Chat.Root
+    <ChatBox
       adapter={adapter}
-      initialConversations={conversations}
-      initialActiveConversationId={conversations[0].id}
-      initialMessages={initialMessages}
-    >
-      <Conversation.Root style={{ display: 'grid', gridTemplateRows: 'auto minmax(0, 1fr) auto' }}>
-        <Conversation.Header>
-          <div>
-            <Conversation.Title />
-            <Conversation.Subtitle />
-          </div>
-        </Conversation.Header>
-        <MessageList.Root
-          renderItem={({ id, index }) => <MessageGroup key={id} index={index} messageId={id} />}
-        />
-        <Composer.Root>
-          <Composer.TextArea aria-label="Message" placeholder="Ask a question" />
-          <Composer.SendButton>Send</Composer.SendButton>
-        </Composer.Root>
-      </Conversation.Root>
-    </Chat.Root>
+      conversations={conversations}
+      activeConversationId={activeConversationId}
+      messages={activeConversationId ? messages : []}
+      onActiveConversationChange={(nextId) => setActiveConversationId(nextId ?? undefined)}
+      onMessagesChange={setMessages}
+      layoutMode="split"
+      features={{ conversationList: true }}
+    />
   );
 }

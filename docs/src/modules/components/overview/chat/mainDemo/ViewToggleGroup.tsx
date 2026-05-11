@@ -2,6 +2,7 @@ import { styled } from '@mui/material/styles';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup, { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
 import Paper from '@mui/material/Paper';
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import ClosedCaptionOutlinedIcon from '@mui/icons-material/ClosedCaptionOutlined';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
@@ -16,7 +17,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   },
 }));
 
-export type ChatView = 'messenger' | 'agent' | 'widget' | 'captions';
+export type ChatView = 'copilot' | 'messenger' | 'agent' | 'widget' | 'captions';
 
 export type ViewToggleGroupProps = {
   selected: ChatView;
@@ -45,6 +46,10 @@ export default function ViewToggleGroup({ selected, onToggleChange }: ViewToggle
           }
         }}
       >
+        <ToggleButton value="copilot" title="Copilot" sx={{ gap: 1 }}>
+          <AutoAwesomeOutlinedIcon fontSize="small" />
+          Copilot
+        </ToggleButton>
         <ToggleButton value="messenger" title="Messenger" sx={{ gap: 1 }}>
           <ForumOutlinedIcon fontSize="small" />
           Messenger

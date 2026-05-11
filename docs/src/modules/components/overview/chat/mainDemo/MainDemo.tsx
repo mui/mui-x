@@ -17,6 +17,7 @@ import { chatOverviewDemos, getChatOverviewDemoSourceUrl } from './demoConfigs';
 import MessengerDemo from './MessengerDemo';
 import AgentDemo from './AgentDemo';
 import CaptionsDemo from './CaptionsDemo';
+import CopilotDemo from './CopilotDemo';
 import WidgetDemo from './WidgetDemo';
 
 type CustomThemeName = 'default' | 'softEdges' | 'neutralVibes';
@@ -37,7 +38,7 @@ const themeOptions: { value: CustomThemeName; label: string }[] = [
 
 export default function MainDemo() {
   const brandingTheme = useTheme();
-  const [selectedView, setSelectedView] = React.useState<ChatView>('messenger');
+  const [selectedView, setSelectedView] = React.useState<ChatView>('copilot');
   const [selectedTheme, setSelectedTheme] = React.useState<CustomThemeName>('default');
   const selectedDemo = chatOverviewDemos[selectedView];
   const selectedDemoSourceUrl = getChatOverviewDemoSourceUrl(selectedView);
@@ -104,6 +105,16 @@ export default function MainDemo() {
         sx={{ height: 760, width: '100%', position: 'relative', overflow: 'hidden' }}
       >
         <WidgetDemo />
+      </Paper>
+    );
+  } else if (selectedView === 'copilot') {
+    demoContent = (
+      <Paper
+        variant="outlined"
+        elevation={0}
+        sx={{ height: 600, width: '100%', overflow: 'hidden' }}
+      >
+        <CopilotDemo />
       </Paper>
     );
   } else {

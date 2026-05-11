@@ -11,6 +11,7 @@ const sourceFiles = {
   agentSource: path.join(mainDemoRoot, 'code/agent/App.tsx'),
   widgetSource: path.join(mainDemoRoot, 'code/widget/App.tsx'),
   captionsSource: path.join(mainDemoRoot, 'code/captions/App.tsx'),
+  copilotSource: path.join(mainDemoRoot, 'code/copilot/App.tsx'),
 };
 
 const outputPath = path.join(mainDemoRoot, 'generatedCodeSources.ts');
