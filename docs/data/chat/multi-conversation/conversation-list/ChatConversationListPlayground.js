@@ -1,0 +1,99 @@
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import { ChatConversationList } from '@mui/x-chat';
+
+import { PlaygroundCard } from '../../_playground/PlaygroundCard';
+import { ScopedChat } from '../../_playground/sharedProviders';
+import { directoryConversations } from '../../_playground/sharedFixtures';
+import {
+  ChoiceControl,
+  NumberControl,
+  SwitchControl,
+} from '../../_playground/controls';
+
+const DEFAULTS = {
+  variant: 'default',
+  count: directoryConversations.length,
+  allUnread: false,
+  activeIndex: 0,
+};
+
+export default function ChatConversationListPlayground() {
+  const [variant, setVariant] = React.useState(DEFAULTS.variant);
+  const [count, setCount] = React.useState(DEFAULTS.count);
+  const [allUnread, setAllUnread] = React.useState(DEFAULTS.allUnread);
+  const [activeIndex, setActiveIndex] = React.useState(DEFAULTS.activeIndex);
+
+  const handleReset = React.useCallback(() => {
+    setVariant(DEFAULTS.variant);
+    setCount(DEFAULTS.count);
+    setAllUnread(DEFAULTS.allUnread);
+    setActiveIndex(DEFAULTS.activeIndex);
+  }, []);
+
+  const conversations = React.useMemo(() => {
+    return directoryConversations
+      .slice(0, count)
+      .map((c) =>
+        allUnread
+          ? { ...c, readState: 'unread', unreadCount: c.unreadCount || 2 }
+          : c,
+      );
+  }, [count, allUnread]);
+
+  const safeActiveIndex = Math.min(
+    activeIndex,
+    Math.max(0, conversations.length - 1),
+  );
+  const activeId = conversations[safeActiveIndex]?.id;
+  return (
+    <PlaygroundCard
+      title="ChatConversationList"
+      description="Inbox sidebar — avatar, title, preview, timestamp and unread badge."
+      previewMinHeight={340}
+      onReset={handleReset}
+      controls={
+        <React.Fragment>
+          <ChoiceControl
+            label="variant"
+            value={variant}
+            options={['default', 'compact']}
+            onChange={setVariant}
+          />
+          <NumberControl
+            label="conversation count"
+            value={count}
+            min={1}
+            max={directoryConversations.length}
+            onChange={setCount}
+          />
+          <NumberControl
+            label="active index"
+            value={safeActiveIndex}
+            min={0}
+            max={Math.max(0, conversations.length - 1)}
+            onChange={setActiveIndex}
+          />
+          <SwitchControl
+            label="mark every conversation unread"
+            checked={allUnread}
+            onChange={setAllUnread}
+          />
+        </React.Fragment>
+      }
+      preview={
+        <ScopedChat conversations={conversations} activeConversationId={activeId}>
+          <Box
+            sx={{
+              width: '100%',
+              height: 340,
+              overflow: 'hidden',
+            }}
+          >
+            <ChatConversationList variant={variant} />
+          </Box>
+        </ScopedChat>
+      }
+    />
+  );
+}

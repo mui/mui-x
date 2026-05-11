@@ -1,0 +1,92 @@
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import {
+  ChatMessage as ChatMessageComponent,
+  ChatMessageAvatar,
+  ChatMessageContent,
+  ChatMessageGroup,
+  ChatMessageMeta,
+} from '@mui/x-chat';
+
+import { PlaygroundCard } from '../../_playground/PlaygroundCard';
+import { ChatChrome, ScopedChat } from '../../_playground/sharedProviders';
+import { ChoiceControl } from '../../_playground/controls';
+import { users } from '../../_playground/data';
+
+const conversation = {
+  id: 'meta-playground',
+  title: 'Parts',
+  participants: [users.me, users.assistant],
+};
+
+function makeMessage(role, status, text) {
+  const author = role === 'user' ? users.me : users.assistant;
+  return {
+    id: `meta-${role}-${status}`,
+    conversationId: conversation.id,
+    role,
+    author,
+    createdAt: '2026-05-03T09:30:00.000Z',
+    status,
+    parts: [{ type: 'text', text }],
+  };
+}
+
+export default function ChatMessageMetaPlayground() {
+  const [role, setRole] = React.useState('user');
+  const [status, setStatus] = React.useState('read');
+  const [variant, setVariant] = React.useState('compact');
+  const message = React.useMemo(
+    () => makeMessage(role, status, 'Meta preview message.'),
+    [role, status],
+  );
+
+  return (
+    <PlaygroundCard
+      title="ChatMessageMeta"
+      description="External meta (timestamp + delivery status) used by compact bubbles."
+      previewMinHeight={200}
+      controls={
+        <React.Fragment>
+          <ChoiceControl
+            label="role"
+            value={role}
+            options={['assistant', 'user']}
+            onChange={setRole}
+          />
+          <ChoiceControl
+            label="status"
+            value={status}
+            options={['sent', 'read', 'streaming']}
+            onChange={setStatus}
+          />
+          <ChoiceControl
+            label="variant"
+            value={variant}
+            options={['default', 'compact']}
+            onChange={setVariant}
+          />
+        </React.Fragment>
+      }
+      preview={
+        <ScopedChat
+          conversations={[conversation]}
+          messages={[message]}
+          activeConversationId={conversation.id}
+        >
+          <ChatChrome variant={variant} density="standard">
+            <Box sx={{ width: '100%' }}>
+              <ChatMessageGroup messageId={message.id}>
+                <ChatMessageComponent messageId={message.id}>
+                  <ChatMessageAvatar />
+                  <ChatMessageContent />
+                  <ChatMessageMeta />
+                </ChatMessageComponent>
+              </ChatMessageGroup>
+            </Box>
+          </ChatChrome>
+        </ScopedChat>
+      }
+    />
+  );
+}
