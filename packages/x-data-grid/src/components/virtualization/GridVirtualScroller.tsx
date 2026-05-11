@@ -36,6 +36,7 @@ import { useGridVirtualizer } from '../../hooks/core/useGridVirtualizer';
 type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
   hasScrollX: boolean;
   hasPinnedRight: boolean;
+  hasPinnedColumns: boolean;
   loadingOverlayVariant: GridLoadingOverlayVariant | null;
   overlayType: GridOverlayType;
 };
@@ -58,7 +59,7 @@ const Scroller = styled('div', {
     const { ownerState } = props;
     return [styles.virtualScroller, ownerState.hasScrollX && styles['virtualScroller--hasScrollX']];
   },
-})<{ ownerState: OwnerState }>({
+})<{ ownerState: OwnerState }>(({ ownerState }) => ({
   position: 'relative',
   height: '100%',
   flexGrow: 1,
@@ -77,7 +78,10 @@ const Scroller = styled('div', {
 
   // See https://github.com/mui/mui-x/issues/10547
   zIndex: 0,
-});
+
+  // Prevent overscroll bounce from revealing content behind pinned column shadows on macOS.
+  overscrollBehaviorX: ownerState.hasPinnedColumns ? 'none' : undefined,
+}));
 
 const Viewport = styled('div', {
   slot: 'internal',
@@ -102,6 +106,9 @@ const Viewport = styled('div', {
 const hasPinnedRightSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.dimensions.rightPinnedWidth > 0;
 
+const hasPinnedLeftSelector = (apiRef: RefObject<GridApiCommunity>) =>
+  apiRef.current.state.dimensions.leftPinnedWidth > 0;
+
 export interface GridVirtualScrollerProps {
   children?: React.ReactNode;
 }
@@ -112,13 +119,16 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const hasScrollY = useGridSelector(apiRef, gridHasScrollYSelector);
   const hasScrollX = useGridSelector(apiRef, gridHasScrollXSelector);
   const hasPinnedRight = useGridSelector(apiRef, hasPinnedRightSelector);
+  const hasPinnedLeft = useGridSelector(apiRef, hasPinnedLeftSelector);
   const hasBottomFiller = useGridSelector(apiRef, gridHasBottomFillerSelector);
   const { overlayType, loadingOverlayVariant } = useGridOverlays(apiRef, rootProps);
   const Overlay = rootProps.slots?.[overlayType];
+  const hasPinnedColumns = hasPinnedRight || hasPinnedLeft;
   const ownerState = {
     classes: rootProps.classes,
     hasScrollX,
     hasPinnedRight,
+    hasPinnedColumns,
     overlayType,
     loadingOverlayVariant,
   };
