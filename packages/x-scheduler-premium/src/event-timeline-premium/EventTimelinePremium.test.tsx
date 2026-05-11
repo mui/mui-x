@@ -557,7 +557,7 @@ describe('<EventTimelinePremium />', () => {
     it('should clear the error alert when navigating back to a cached range', async () => {
       let callCount = 0;
       const dataSource = {
-        getEvents: async (start: Date) => {
+        getEvents: async () => {
           callCount += 1;
           // The second call (the navigation that follows the initial mount fetch) fails.
           // The third call would normally re-fetch range A — but it's cached, so the
