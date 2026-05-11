@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ApiPage } from '@mui/internal-core-docs/ApiPage';
 import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
+import layoutConfig from 'docs/src/modules/utils/dataGridLayoutConfig';
 import jsonPageContent from './prompt-field-send.json';
 
 export default function Page(props) {
@@ -11,7 +11,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/data-grid/prompt-field-send',
+    'docs/translations/api-docs/data-grid/prompt-field-send',
     false,
     /\.\/prompt-field-send.*\.json$/,
   );

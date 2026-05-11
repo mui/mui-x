@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import { useId } from '@base-ui/utils/useId';
-import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
-import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
-import { useEventCalendarPremium } from '@mui/x-scheduler-headless-premium/use-event-calendar-premium';
+import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
+import { useEventCalendarPremium } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import {
   useEventCalendarUtilityClasses,
   EventCalendarStyledContext,
@@ -165,8 +165,8 @@ EventCalendarPremium.propTypes = {
    */
   defaultView: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
   /**
-   * The date initially used to determine the visible date range in each view.
-   * To render a controlled calendar, use the `visibleDate` prop.
+   * The date initially used to determine the visible date range.
+   * To render a controlled component, use the `visibleDate` prop.
    * @default today
    */
   defaultVisibleDate: PropTypes.instanceOf(Date),
@@ -316,7 +316,7 @@ EventCalendarPremium.propTypes = {
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['agenda', 'day', 'month', 'week']).isRequired),
   /**
-   * The date currently used to determine the visible date range in each view.
+   * The date currently used to determine the visible date range.
    */
   visibleDate: PropTypes.instanceOf(Date),
   /**

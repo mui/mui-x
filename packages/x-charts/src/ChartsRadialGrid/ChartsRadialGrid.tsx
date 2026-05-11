@@ -67,6 +67,7 @@ function ChartsRadialGrid(inProps: ChartsRadialGridProps) {
 
   const startAngle = rotationAxisConfig?.scale.range()[0] ?? 0;
   const endAngle = rotationAxisConfig?.scale.range()[1] ?? 0;
+  const isFullCircle = rotationAxisConfig?.isFullCircle ?? false;
 
   return (
     <GridRoot {...other} className={clsx(classes.root, className)}>
@@ -84,6 +85,7 @@ function ChartsRadialGrid(inProps: ChartsRadialGridProps) {
           axis={radiusAxisConfig}
           startAngle={startAngle}
           endAngle={endAngle}
+          isFullCircle={isFullCircle}
           classes={classes}
         />
       )}

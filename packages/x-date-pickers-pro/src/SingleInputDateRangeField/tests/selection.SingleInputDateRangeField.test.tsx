@@ -1,5 +1,4 @@
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { fireEvent } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   buildFieldInteractions,
@@ -32,17 +31,17 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       });
 
       // Start date
-      await view.selectSectionAsync('day');
+      await view.selectSection('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
 
       // End date
-      await view.selectSectionAsync('month', 'last');
+      await view.selectSection('month', 'last');
       expect(getCleanedSelectedContent()).to.equal('02');
 
-      await view.selectSectionAsync('day', 'last');
+      await view.selectSection('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
     });
 
@@ -52,17 +51,17 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       });
 
       // Start date
-      await view.selectSectionAsync('day');
+      await view.selectSection('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      await view.selectSectionAsync('day');
+      await view.selectSection('day');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
       // End date
-      await view.selectSectionAsync('day', 'last');
+      await view.selectSection('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
 
-      await view.selectSectionAsync('day', 'last');
+      await view.selectSection('day', 'last');
       expect(getCleanedSelectedContent()).to.equal('24');
     });
   });
@@ -71,31 +70,31 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
     it('should allow to move from left to right with ArrowRight', async () => {
       const view = renderWithProps({});
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
 
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowRight' });
+      await view.user.keyboard('{ArrowRight}');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowRight' });
+      await view.user.keyboard('{ArrowRight}');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
 
-      fireEvent.keyDown(view.getActiveSection(2), { key: 'ArrowRight' });
+      await view.user.keyboard('{ArrowRight}');
       expect(getCleanedSelectedContent()).to.equal('MM');
 
-      fireEvent.keyDown(view.getActiveSection(3), { key: 'ArrowRight' });
+      await view.user.keyboard('{ArrowRight}');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      fireEvent.keyDown(view.getActiveSection(4), { key: 'ArrowRight' });
+      await view.user.keyboard('{ArrowRight}');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
 
     it('should stay on the current section when the last section is selected', async () => {
       const view = renderWithProps({});
 
-      await view.selectSectionAsync('year', 'last');
+      await view.selectSection('year', 'last');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
-      fireEvent.keyDown(view.getActiveSection(5), { key: 'ArrowRight' });
+      await view.user.keyboard('{ArrowRight}');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
   });
@@ -104,30 +103,30 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
     it('should allow to move from right to left with ArrowLeft', async () => {
       const view = renderWithProps({});
 
-      await view.selectSectionAsync('year', 'last');
+      await view.selectSection('year', 'last');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
-      fireEvent.keyDown(view.getActiveSection(5), { key: 'ArrowLeft' });
+      await view.user.keyboard('{ArrowLeft}');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      fireEvent.keyDown(view.getActiveSection(4), { key: 'ArrowLeft' });
+      await view.user.keyboard('{ArrowLeft}');
       expect(getCleanedSelectedContent()).to.equal('MM');
 
-      fireEvent.keyDown(view.getActiveSection(3), { key: 'ArrowLeft' });
+      await view.user.keyboard('{ArrowLeft}');
       expect(getCleanedSelectedContent()).to.equal('YYYY');
 
-      fireEvent.keyDown(view.getActiveSection(2), { key: 'ArrowLeft' });
+      await view.user.keyboard('{ArrowLeft}');
       expect(getCleanedSelectedContent()).to.equal('DD');
 
-      fireEvent.keyDown(view.getActiveSection(1), { key: 'ArrowLeft' });
+      await view.user.keyboard('{ArrowLeft}');
       expect(getCleanedSelectedContent()).to.equal('MM');
     });
 
     it('should stay on the current section when the first section is selected', async () => {
       const view = renderWithProps({});
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       expect(getCleanedSelectedContent()).to.equal('MM');
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowLeft' });
+      await view.user.keyboard('{ArrowLeft}');
       expect(getCleanedSelectedContent()).to.equal('MM');
     });
   });

@@ -8,6 +8,7 @@ import {
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerRangeValue,
+  extractRootForwardedProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerParams,
@@ -69,6 +70,7 @@ export const useDesktopRangePicker = <
   const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: slotProps?.field,
+    externalForwardedProps: extractRootForwardedProps(props),
     ownerState,
     additionalProps: {
       'data-active-range-position': providerProps.contextValue.open

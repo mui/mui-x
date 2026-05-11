@@ -1,0 +1,16 @@
+{
+  "props": {},
+  "name": "ChartsRadiusAxis",
+  "imports": [
+    "import { ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';",
+    "import { ChartsRadiusAxis } from '@mui/x-charts';",
+    "import { ChartsRadiusAxis } from '@mui/x-charts-pro';",
+    "import { ChartsRadiusAxis } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsRadiusAxis",
+  "filename": "/packages/x-charts/src/ChartsRadiusAxis/ChartsRadiusAxis.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-axes/\">Charts - Radial axes</a></li>\n<li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🧪</a></li></ul>",
+  "cssComponent": false
+}

@@ -4,5 +4,5 @@
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
   areEventsResizable={false}
-  defaultView="months"
+  defaultPreset="monthAndYear"
 />

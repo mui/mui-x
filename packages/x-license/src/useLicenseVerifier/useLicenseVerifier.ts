@@ -90,8 +90,10 @@ export function useLicenseVerifier(packageInfo: CommercialPackageInfo): {
     } else if (licenseStatus.status === LICENSE_STATUS.ExpiredVersion) {
       showExpiredPackageVersionError({ packageName: fullPackageName });
     } else if (licenseStatus.status === LICENSE_STATUS.NotValidForPackage) {
-      showLicenseKeyVersionMismatchError();
+      showLicenseKeyVersionMismatchError(licenseStatus.meta);
     } else if (process.env.NODE_ENV !== 'production') {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error('missing status handler');
     }
 

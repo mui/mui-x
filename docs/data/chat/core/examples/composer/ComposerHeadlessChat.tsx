@@ -18,7 +18,7 @@ import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import {
   createChunkStream,
   createTextResponseChunks,
-} from 'docsx/data/chat/core/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message }) {

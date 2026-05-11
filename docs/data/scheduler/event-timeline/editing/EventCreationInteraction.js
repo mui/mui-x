@@ -17,7 +17,7 @@ export default function EventCreationInteraction() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="months"
+        defaultPreset="monthAndYear"
         eventCreation={{ interaction: 'double-click' }}
       />
     </div>

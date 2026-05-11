@@ -37,7 +37,7 @@ export default function WorldMapSvg({ onClickContinent, selectedTimezone }: Worl
   };
   // TODO: simplify SVG
   return (
-    <svg viewBox="0 0 512 269" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 512 269" fill="none">
       <Continent
         className={clsx('northAmerica', selectedTimezone === timezones.northAmerica && 'selected')}
         fill={getMapBaseColor(56)}

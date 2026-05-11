@@ -46,6 +46,9 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
       borderStyle: 'solid',
       borderWidth: 2,
     },
+    [`&.${pickersOutlinedInputClasses.error} .${pickersOutlinedInputClasses.notchedOutline}`]: {
+      borderColor: (theme.vars || theme).palette.error.main,
+    },
     [`&.${pickersOutlinedInputClasses.disabled}`]: {
       [`& .${pickersOutlinedInputClasses.notchedOutline}`]: {
         borderColor: (theme.vars || theme).palette.action.disabled,
@@ -53,9 +56,6 @@ const PickersOutlinedInputRoot = styled(PickersInputBaseRoot, {
       '*': {
         color: (theme.vars || theme).palette.action.disabled,
       },
-    },
-    [`&.${pickersOutlinedInputClasses.error} .${pickersOutlinedInputClasses.notchedOutline}`]: {
-      borderColor: (theme.vars || theme).palette.error.main,
     },
     variants: Object.keys((theme.vars ?? theme).palette)
       // @ts-ignore

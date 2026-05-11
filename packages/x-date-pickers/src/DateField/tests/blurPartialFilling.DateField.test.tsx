@@ -11,7 +11,7 @@ describeAdapters(
     it('marks field invalid on blur when only some sections are filled', async () => {
       const view = renderWithProps({});
 
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       await view.user.keyboard('0');
       await view.user.keyboard('1');
 
@@ -30,7 +30,7 @@ describeAdapters(
       const view = renderWithProps({});
 
       // Focus a section then blur without typing
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       await view.user.tab();
 
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');
@@ -42,7 +42,7 @@ describeAdapters(
       });
 
       // Focus and blur
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       await view.user.tab();
 
       expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'false');

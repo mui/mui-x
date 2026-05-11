@@ -16,15 +16,15 @@ import {
   RecurringEventFrequency,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerRenderableEventOccurrence,
-} from '@mui/x-scheduler-headless/models';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
+} from '@mui/x-scheduler-internals/models';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
 import EventDialogHeader from './EventDialogHeader';
@@ -133,8 +133,7 @@ export function FormContent(props: FormContentProps) {
     const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
     const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
 
-    const base =
-      defaultRecurrencePresetKey === 'custom' ? occurrence.displayTimezone.rrule : undefined;
+    const base = occurrence.displayTimezone.rrule;
 
     return {
       startDate: fmtDate(occurrence.displayTimezone.start),

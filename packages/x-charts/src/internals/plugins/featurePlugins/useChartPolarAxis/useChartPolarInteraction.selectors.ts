@@ -1,9 +1,10 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { createSelector, createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
-import {
-  type AxisId,
-  type ChartsAxisProps,
-  type AxisItemIdentifier,
+import type {
+  AxisId,
+  AxisItemIdentifier,
+  ChartsRotationAxisProps,
+  ChartsRadiusAxisProps,
 } from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
@@ -21,11 +22,19 @@ const optionalGetAxisIds = (_: unknown, ids: AxisId[]) => ids;
  * Get interaction indexes
  */
 
-function indexGetter(value: number, axes: ComputeResult<ChartsAxisProps>, ids: AxisId): number;
-function indexGetter(value: number, axes: ComputeResult<ChartsAxisProps>, ids: AxisId[]): number[];
 function indexGetter(
   value: number,
-  axes: ComputeResult<ChartsAxisProps>,
+  axes: ComputeResult<ChartsRotationAxisProps> | ComputeResult<ChartsRadiusAxisProps>,
+  ids: AxisId,
+): number;
+function indexGetter(
+  value: number,
+  axes: ComputeResult<ChartsRotationAxisProps> | ComputeResult<ChartsRadiusAxisProps>,
+  ids: AxisId[],
+): number[];
+function indexGetter(
+  value: number,
+  axes: ComputeResult<ChartsRotationAxisProps> | ComputeResult<ChartsRadiusAxisProps>,
   ids: AxisId | AxisId[],
 ): number | number[] {
   return Array.isArray(ids)

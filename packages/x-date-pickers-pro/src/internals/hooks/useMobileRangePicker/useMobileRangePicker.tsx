@@ -10,6 +10,7 @@ import {
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerRangeValue,
+  extractRootForwardedProps,
 } from '@mui/x-date-pickers/internals';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { FieldOwnerState } from '@mui/x-date-pickers/models';
@@ -72,6 +73,7 @@ export const useMobileRangePicker = <
   const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
+    externalForwardedProps: extractRootForwardedProps(props),
     additionalProps: {
       ...(isSingleInput &&
         isToolbarHidden && {

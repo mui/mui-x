@@ -22,7 +22,6 @@ describe('<DesktopDateTimeRangePicker /> - Describe Conformance', () => {
       'themeStyleOverrides',
       'themeVariants',
       'mergeClassName',
-      'propsSpread',
     ],
   }));
 });

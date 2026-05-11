@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';
 import { createPickerRenderer } from 'test/utils/pickers';
 import { PickerContext } from '../hooks/usePickerContext';
@@ -22,9 +22,11 @@ describe('<PickersActionBar />', () => {
       hasNextStep: false,
     } as any;
 
-    render(<PickerContext.Provider value={spys}>{element}</PickerContext.Provider>);
+    const { user } = render(
+      <PickerContext.Provider value={spys}>{element}</PickerContext.Provider>,
+    );
 
-    return spys;
+    return { ...spys, user };
   };
 
   it('should not render buttons if actions array is empty', () => {
@@ -33,31 +35,35 @@ describe('<PickersActionBar />', () => {
     expect(screen.queryByRole('button')).to.equal(null);
   });
 
-  it('should render button for "clear" action calling the associated callback', () => {
-    const { clearValue } = renderWithContext(<PickersActionBar actions={['clear']} />);
+  it('should render button for "clear" action calling the associated callback', async () => {
+    const { clearValue, user } = renderWithContext(<PickersActionBar actions={['clear']} />);
 
-    fireEvent.click(screen.getByText(/clear/i));
+    await user.click(screen.getByText(/clear/i));
     expect(clearValue.callCount).to.equal(1);
   });
 
-  it('should render button for "cancel" action calling the associated callback', () => {
-    const { cancelValueChanges } = renderWithContext(<PickersActionBar actions={['cancel']} />);
+  it('should render button for "cancel" action calling the associated callback', async () => {
+    const { cancelValueChanges, user } = renderWithContext(
+      <PickersActionBar actions={['cancel']} />,
+    );
 
-    fireEvent.click(screen.getByText(/cancel/i));
+    await user.click(screen.getByText(/cancel/i));
     expect(cancelValueChanges.callCount).to.equal(1);
   });
 
-  it('should render button for "accept" action calling the associated callback', () => {
-    const { acceptValueChanges } = renderWithContext(<PickersActionBar actions={['accept']} />);
+  it('should render button for "accept" action calling the associated callback', async () => {
+    const { acceptValueChanges, user } = renderWithContext(
+      <PickersActionBar actions={['accept']} />,
+    );
 
-    fireEvent.click(screen.getByText(/ok/i));
+    await user.click(screen.getByText(/ok/i));
     expect(acceptValueChanges.callCount).to.equal(1);
   });
 
-  it('should render button for "today" action calling the associated callback', () => {
-    const { setValueToToday } = renderWithContext(<PickersActionBar actions={['today']} />);
+  it('should render button for "today" action calling the associated callback', async () => {
+    const { setValueToToday, user } = renderWithContext(<PickersActionBar actions={['today']} />);
 
-    fireEvent.click(screen.getByText(/today/i));
+    await user.click(screen.getByText(/today/i));
     expect(setValueToToday.callCount).to.equal(1);
   });
 

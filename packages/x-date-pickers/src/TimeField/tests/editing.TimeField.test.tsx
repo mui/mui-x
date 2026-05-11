@@ -1,6 +1,5 @@
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { fireEvent } from '@mui/internal-test-utils';
 import {
   expectFieldValue,
   getCleanedSelectedContent,
@@ -12,16 +11,16 @@ import {
 describe('<TimeField /> - Editing', () => {
   describeAdapters('key: ArrowDown', TimeField, ({ adapter, testFieldKeyPress }) => {
     describe('24 hours format (ArrowDown)', () => {
-      it('should set the hour to 23 when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set the hour to 23 when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.hours24h,
           key: 'ArrowDown',
           expectedValue: '23',
         });
       });
 
-      it('should decrement the hour when a value is provided', () => {
-        testFieldKeyPress({
+      it('should decrement the hour when a value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.hours24h,
           defaultValue: adapter.date('2022-06-15T14:12:25'),
           key: 'ArrowDown',
@@ -29,8 +28,8 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should go to the last hour of the previous day when a value in the first hour is provided', () => {
-        testFieldKeyPress({
+      it('should go to the last hour of the previous day when a value in the first hour is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.fullTime24h,
           defaultValue: adapter.date('2022-06-15T00:12:25'),
           key: 'ArrowDown',
@@ -38,16 +37,16 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should set the minutes to 59 when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set the minutes to 59 when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.minutes,
           key: 'ArrowDown',
           expectedValue: '59',
         });
       });
 
-      it('should decrement the minutes when a value is provided', () => {
-        testFieldKeyPress({
+      it('should decrement the minutes when a value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.minutes,
           defaultValue: adapter.date('2022-06-15T14:12:25'),
           key: 'ArrowDown',
@@ -55,8 +54,8 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should go to the last minute of the current hour when a value with 0 minutes is provided', () => {
-        testFieldKeyPress({
+      it('should go to the last minute of the current hour when a value with 0 minutes is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.fullTime24h,
           defaultValue: adapter.date('2022-06-15T14:00:25'),
           key: 'ArrowDown',
@@ -67,16 +66,16 @@ describe('<TimeField /> - Editing', () => {
     });
 
     describe('12 hours format (ArrowDown)', () => {
-      it('should set the hour to 11 when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set the hour to 11 when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.hours12h,
           key: 'ArrowDown',
           expectedValue: '12',
         });
       });
 
-      it('should go to the last hour of the current morning when a value in the first hour is provided', () => {
-        testFieldKeyPress({
+      it('should go to the last hour of the current morning when a value in the first hour is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date('2022-06-15T00:12:25'),
           key: 'ArrowDown',
@@ -84,8 +83,8 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should set the meridiem to PM when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set the meridiem to PM when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.fullTime12h,
           key: 'ArrowDown',
           expectedValue: 'hh:mm PM',
@@ -93,8 +92,8 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should set the meridiem to PM when a value in AM is provided', () => {
-        testFieldKeyPress({
+      it('should set the meridiem to PM when a value in AM is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date('2022-06-15T02:12:25'),
           key: 'ArrowDown',
@@ -103,8 +102,8 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should set the meridiem to AM when a value in PM is provided', () => {
-        testFieldKeyPress({
+      it('should set the meridiem to AM when a value in PM is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date('2022-06-15T14:12:25'),
           key: 'ArrowDown',
@@ -117,16 +116,16 @@ describe('<TimeField /> - Editing', () => {
 
   describeAdapters('key: ArrowUp', TimeField, ({ adapter, testFieldKeyPress }) => {
     describe('24 hours format (ArrowUp)', () => {
-      it('should set the hour to 0 when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set the hour to 0 when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.hours24h,
           key: 'ArrowUp',
           expectedValue: '00',
         });
       });
 
-      it('should increment the hour when a value is provided', () => {
-        testFieldKeyPress({
+      it('should increment the hour when a value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.hours24h,
           defaultValue: adapter.date('2022-06-15T14:12:25'),
           key: 'ArrowUp',
@@ -134,8 +133,8 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should go to the first hour of the current day when a value in the last hour is provided', () => {
-        testFieldKeyPress({
+      it('should go to the first hour of the current day when a value in the last hour is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.fullTime24h,
           defaultValue: adapter.date('2022-06-15T23:12:25'),
           key: 'ArrowUp',
@@ -143,16 +142,16 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should set the minutes to 00 when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set the minutes to 00 when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.minutes,
           key: 'ArrowUp',
           expectedValue: '00',
         });
       });
 
-      it('should increment the minutes when a value is provided', () => {
-        testFieldKeyPress({
+      it('should increment the minutes when a value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.minutes,
           defaultValue: adapter.date('2022-06-15T14:12:25'),
           key: 'ArrowUp',
@@ -160,8 +159,8 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should go to the first minute of the current hour when a value with 59 minutes is provided', () => {
-        testFieldKeyPress({
+      it('should go to the first minute of the current hour when a value with 59 minutes is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.fullTime24h,
           defaultValue: adapter.date('2022-06-15T14:59:25'),
           key: 'ArrowUp',
@@ -172,8 +171,8 @@ describe('<TimeField /> - Editing', () => {
     });
 
     describe('12 hours format (ArrowUp)', () => {
-      it('should set the meridiem to AM when no value is provided', () => {
-        testFieldKeyPress({
+      it('should set the meridiem to AM when no value is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.fullTime12h,
           key: 'ArrowUp',
           expectedValue: 'hh:mm AM',
@@ -181,8 +180,8 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should set the meridiem to PM when a value in AM is provided', () => {
-        testFieldKeyPress({
+      it('should set the meridiem to PM when a value in AM is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date('2022-06-15T02:12:25'),
           key: 'ArrowUp',
@@ -191,8 +190,8 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should set the meridiem to AM when a value in PM is provided', () => {
-        testFieldKeyPress({
+      it('should set the meridiem to AM when a value in PM is provided', async () => {
+        await testFieldKeyPress({
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date('2022-06-15T14:12:25'),
           key: 'ArrowUp',
@@ -206,8 +205,8 @@ describe('<TimeField /> - Editing', () => {
   describeAdapters('key: PageDown', TimeField, ({ adapter, testFieldKeyPress }) => {
     describe('24 hours format (PageDown)', () => {
       describe('Hours field', () => {
-        it('should set hours field to maximal when no default value is provided', () => {
-          testFieldKeyPress({
+        it('should set hours field to maximal when no default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.hours24h,
             key: 'PageDown',
             expectedValue: '23',
@@ -215,8 +214,8 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should decrement hours field by 5 when default value is provided', () => {
-          testFieldKeyPress({
+        it('should decrement hours field by 5 when default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.hours24h,
             key: 'PageDown',
             defaultValue: adapter.date('2024-06-04T10:25:00'),
@@ -225,8 +224,8 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should flip hours field when default value is lower than 5', () => {
-          testFieldKeyPress({
+        it('should flip hours field when default value is lower than 5', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.hours24h,
             key: 'PageDown',
             defaultValue: adapter.date('2024-06-04T02:25:00'),
@@ -237,16 +236,16 @@ describe('<TimeField /> - Editing', () => {
       });
 
       describe('Minutes field', () => {
-        it('should set minutes field to maximal when no default value is provided', () => {
-          testFieldKeyPress({
+        it('should set minutes field to maximal when no default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.minutes,
             key: 'PageDown',
             expectedValue: '59',
           });
         });
 
-        it('should decrement minutes field by 5 when default value is provided', () => {
-          testFieldKeyPress({
+        it('should decrement minutes field by 5 when default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.minutes,
             key: 'PageDown',
             defaultValue: adapter.date('2024-06-04T10:59:00'),
@@ -254,8 +253,8 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should flip minutes field when default value is lower than 5', () => {
-          testFieldKeyPress({
+        it('should flip minutes field when default value is lower than 5', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.minutes,
             key: 'PageDown',
             defaultValue: adapter.date('2024-06-04T02:02:00'),
@@ -267,16 +266,16 @@ describe('<TimeField /> - Editing', () => {
 
     describe('12 hours format (PageDown)', () => {
       describe('Hours field', () => {
-        it('should set hours field to maximal when no default value is provided', () => {
-          testFieldKeyPress({
+        it('should set hours field to maximal when no default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.hours12h,
             key: 'PageDown',
             expectedValue: '12',
           });
         });
 
-        it('should decrement hours field by 5 when default value is provided', () => {
-          testFieldKeyPress({
+        it('should decrement hours field by 5 when default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.hours12h,
             key: 'PageDown',
             defaultValue: adapter.date('2024-06-04T10:25:00'),
@@ -284,8 +283,8 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should flip hours field when default value is lower than 5', () => {
-          testFieldKeyPress({
+        it('should flip hours field when default value is lower than 5', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.hours12h,
             key: 'PageDown',
             defaultValue: adapter.date('2024-06-04T02:25:00'),
@@ -295,8 +294,8 @@ describe('<TimeField /> - Editing', () => {
       });
 
       describe('Meridiem field', () => {
-        it('should set meridiem to PM when no default value is provided', () => {
-          testFieldKeyPress({
+        it('should set meridiem to PM when no default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.meridiem,
             key: 'PageDown',
             expectedValue: 'PM',
@@ -304,15 +303,15 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should switch between AM and PM when meridiem value is not empty', () => {
-          testFieldKeyPress({
+        it('should switch between AM and PM when meridiem value is not empty', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.meridiem,
             defaultValue: adapter.date('2024-05-30T02:12:25'),
             key: 'PageDown',
             expectedValue: 'PM',
             selectedSection: 'meridiem',
           });
-          testFieldKeyPress({
+          await testFieldKeyPress({
             format: adapter.formats.meridiem,
             defaultValue: adapter.date('2024-05-30T20:12:25'),
             key: 'PageDown',
@@ -327,8 +326,8 @@ describe('<TimeField /> - Editing', () => {
   describeAdapters('key: PageUp', TimeField, ({ adapter, testFieldKeyPress }) => {
     describe('24 hours format (PageUp)', () => {
       describe('Hours field', () => {
-        it('should set hours field to minimal when no default value is provided', () => {
-          testFieldKeyPress({
+        it('should set hours field to minimal when no default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.hours24h,
             key: 'PageUp',
             expectedValue: '00',
@@ -336,8 +335,8 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should increment hours field by 5 when default value is provided', () => {
-          testFieldKeyPress({
+        it('should increment hours field by 5 when default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.hours24h,
             key: 'PageUp',
             defaultValue: adapter.date('2024-06-04T10:25:00'),
@@ -346,8 +345,8 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should flip hours field when default value is higher than 19', () => {
-          testFieldKeyPress({
+        it('should flip hours field when default value is higher than 19', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.hours24h,
             key: 'PageUp',
             defaultValue: adapter.date('2024-06-04T21:25:00'),
@@ -358,16 +357,16 @@ describe('<TimeField /> - Editing', () => {
       });
 
       describe('Minutes field', () => {
-        it('should set minutes field to minimal when no default value is provided', () => {
-          testFieldKeyPress({
+        it('should set minutes field to minimal when no default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.hours24h,
             key: 'PageUp',
             expectedValue: '00',
           });
         });
 
-        it('should increment minutes field by 5 when default value is provided', () => {
-          testFieldKeyPress({
+        it('should increment minutes field by 5 when default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.minutes,
             key: 'PageUp',
             defaultValue: adapter.date('2024-06-04T10:25:00'),
@@ -375,8 +374,8 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should flip minutes field when default value is higher than 55', () => {
-          testFieldKeyPress({
+        it('should flip minutes field when default value is higher than 55', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.minutes,
             key: 'PageUp',
             defaultValue: adapter.date('2024-06-04T21:56:00'),
@@ -387,8 +386,8 @@ describe('<TimeField /> - Editing', () => {
     });
     describe('12 hours format (PageUp)', () => {
       describe('Hours field', () => {
-        it('should set hours field to minimal when no default value is provided', () => {
-          testFieldKeyPress({
+        it('should set hours field to minimal when no default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.hours12h,
             key: 'PageUp',
             expectedValue: '01',
@@ -396,8 +395,8 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should increment hours field by 5 when default value is provided', () => {
-          testFieldKeyPress({
+        it('should increment hours field by 5 when default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.hours12h,
             key: 'PageUp',
             defaultValue: adapter.date('2024-06-04T05:25:00'),
@@ -406,8 +405,8 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should flip hours field when default value is higher than 07', () => {
-          testFieldKeyPress({
+        it('should flip hours field when default value is higher than 07', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.hours12h,
             key: 'PageUp',
             defaultValue: adapter.date('2024-06-04T08:25:00'),
@@ -418,8 +417,8 @@ describe('<TimeField /> - Editing', () => {
       });
 
       describe('Meridiem field', () => {
-        it('should set meridiem to AM when no default value is provided', () => {
-          testFieldKeyPress({
+        it('should set meridiem to AM when no default value is provided', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.meridiem,
             key: 'PageUp',
             expectedValue: 'AM',
@@ -427,15 +426,15 @@ describe('<TimeField /> - Editing', () => {
           });
         });
 
-        it('should switch between AM and PM when meridiem value is not empty', () => {
-          testFieldKeyPress({
+        it('should switch between AM and PM when meridiem value is not empty', async () => {
+          await testFieldKeyPress({
             format: adapter.formats.meridiem,
             defaultValue: adapter.date('2024-05-30T02:12:25'),
             key: 'PageUp',
             expectedValue: 'PM',
             selectedSection: 'meridiem',
           });
-          testFieldKeyPress({
+          await testFieldKeyPress({
             format: adapter.formats.meridiem,
             defaultValue: adapter.date('2024-05-30T20:12:25'),
             key: 'PageUp',
@@ -448,15 +447,15 @@ describe('<TimeField /> - Editing', () => {
   });
 
   describeAdapters('Digit editing', TimeField, ({ adapter, renderWithProps, testFieldChange }) => {
-    it('should set the minute to the digit pressed when no digit no value is provided', () => {
-      testFieldChange({
+    it('should set the minute to the digit pressed when no digit no value is provided', async () => {
+      await testFieldChange({
         format: adapter.formats.minutes,
         keyStrokes: [{ value: '1', expected: '01' }],
       });
     });
 
-    it('should concatenate the digit pressed to the current section value if the output is valid', () => {
-      testFieldChange({
+    it('should concatenate the digit pressed to the current section value if the output is valid', async () => {
+      await testFieldChange({
         format: adapter.formats.minutes,
         defaultValue: adapter.date('2022-06-15T14:12:25'),
         keyStrokes: [
@@ -466,8 +465,8 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should set the minute to the digit pressed if the concatenate exceeds the maximum value for the section', () => {
-      testFieldChange({
+    it('should set the minute to the digit pressed if the concatenate exceeds the maximum value for the section', async () => {
+      await testFieldChange({
         format: adapter.formats.minutes,
         defaultValue: adapter.date('2022-06-15T14:12:25'),
         keyStrokes: [
@@ -477,16 +476,16 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should not edit when props.readOnly = true and no value is provided (digit)', () => {
-      testFieldChange({
+    it('should not edit when props.readOnly = true and no value is provided (digit)', async () => {
+      await testFieldChange({
         format: adapter.formats.minutes,
         readOnly: true,
         keyStrokes: [{ value: '1', expected: 'mm' }],
       });
     });
 
-    it('should not edit value when props.readOnly = true and a value is provided (digit)', () => {
-      testFieldChange({
+    it('should not edit value when props.readOnly = true and a value is provided (digit)', async () => {
+      await testFieldChange({
         format: adapter.formats.minutes,
         defaultValue: adapter.date('2022-06-15T14:12:25'),
         readOnly: true,
@@ -499,9 +498,9 @@ describe('<TimeField /> - Editing', () => {
         format: adapter.formats.fullTime12h,
       });
 
-      await view.selectSectionAsync('hours');
+      await view.selectSection('hours');
 
-      view.pressKey(0, '2');
+      await view.pressKey('2');
       expectFieldValue(view.getSectionsContainer(), '02:mm aa');
       expect(getCleanedSelectedContent()).to.equal('mm');
     });
@@ -511,30 +510,30 @@ describe('<TimeField /> - Editing', () => {
         format: adapter.formats.fullTime12h,
       });
 
-      await view.selectSectionAsync('hours');
+      await view.selectSection('hours');
 
-      view.pressKey(0, '1');
+      await view.pressKey('1');
       expectFieldValue(view.getSectionsContainer(), '01:mm aa');
       expect(getCleanedSelectedContent()).to.equal('01');
 
       // Press "3"
-      view.pressKey(0, '3');
+      await view.pressKey('3');
       expectFieldValue(view.getSectionsContainer(), '03:mm aa');
       expect(getCleanedSelectedContent()).to.equal('mm');
     });
   });
 
   describeAdapters('Letter editing', TimeField, ({ adapter, testFieldChange }) => {
-    it('should not edit when props.readOnly = true and no value is provided (letter)', () => {
-      testFieldChange({
+    it('should not edit when props.readOnly = true and no value is provided (letter)', async () => {
+      await testFieldChange({
         format: adapter.formats.meridiem,
         readOnly: true,
         keyStrokes: [{ value: 'a', expected: 'aa' }],
       });
     });
 
-    it('should not edit value when props.readOnly = true and a value is provided (letter)', () => {
-      testFieldChange({
+    it('should not edit value when props.readOnly = true and a value is provided (letter)', async () => {
+      await testFieldChange({
         format: adapter.formats.meridiem,
         defaultValue: adapter.date('2022-06-15T14:12:25'),
         readOnly: true,
@@ -542,8 +541,8 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should set meridiem to AM when pressing "a" and no value is provided', () => {
-      testFieldChange({
+    it('should set meridiem to AM when pressing "a" and no value is provided', async () => {
+      await testFieldChange({
         format: adapter.formats.meridiem,
         selectedSection: 'meridiem',
         // Press "a"
@@ -551,8 +550,8 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should set meridiem to PM when pressing "p" and no value is provided', () => {
-      testFieldChange({
+    it('should set meridiem to PM when pressing "p" and no value is provided', async () => {
+      await testFieldChange({
         format: adapter.formats.meridiem,
         selectedSection: 'meridiem',
         // Press "p"
@@ -560,8 +559,8 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should set meridiem to AM when pressing "a" and a value is provided', () => {
-      testFieldChange({
+    it('should set meridiem to AM when pressing "a" and a value is provided', async () => {
+      await testFieldChange({
         format: adapter.formats.meridiem,
         defaultValue: adapter.date('2022-06-15T14:12:25'),
         selectedSection: 'meridiem',
@@ -570,8 +569,8 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should set meridiem to PM when pressing "p" and a value is provided', () => {
-      testFieldChange({
+    it('should set meridiem to PM when pressing "p" and a value is provided', async () => {
+      await testFieldChange({
         format: adapter.formats.meridiem,
         defaultValue: adapter.date('2022-06-15T14:12:25'),
         selectedSection: 'meridiem',
@@ -580,8 +579,8 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should not edit when pressing the Space key', () => {
-      testFieldChange({
+    it('should not edit when pressing the Space key', async () => {
+      await testFieldChange({
         format: adapter.formats.hours24h,
         keyStrokes: [{ value: ' ', expected: 'hh' }],
       });
@@ -600,8 +599,8 @@ describe('<TimeField /> - Editing', () => {
           onChange,
         });
 
-        await view.selectSectionAsync('hours');
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
+        await view.selectSection('hours');
+        await view.user.keyboard('{ArrowDown}');
 
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
       });
@@ -615,19 +614,15 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime24h,
         });
 
-        await view.selectSectionAsync('hours');
-        fireEvent.keyDown(view.getActiveSection(0), {
-          key: 'a',
-          keyCode: 65,
-          ctrlKey: true,
-        });
-        view.pressKey(null, '');
-        fireEvent.keyDown(view.getSectionsContainer(), { key: 'ArrowLeft' });
+        await view.selectSection('hours');
+        await view.user.keyboard('{Control>}a{/Control}');
+        await view.user.keyboard('{Backspace}');
+        await view.user.keyboard('{ArrowLeft}');
 
-        view.pressKey(0, '3');
+        await view.pressKey('3');
         expectFieldValue(view.getSectionsContainer(), '03:mm');
 
-        view.pressKey(1, '4');
+        await view.pressKey('4');
         expectFieldValue(view.getSectionsContainer(), '03:04');
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
       });
@@ -641,8 +636,8 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.hours24h,
         });
 
-        await view.selectSectionAsync('hours');
-        fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowDown' });
+        await view.selectSection('hours');
+        await view.user.keyboard('{ArrowDown}');
 
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
       });
@@ -650,8 +645,8 @@ describe('<TimeField /> - Editing', () => {
   );
 
   describeAdapters('props: minutesStep', TimeField, ({ adapter, testFieldKeyPress }) => {
-    it('should use `minutesStep` to set initial minutes with ArrowUp', () => {
-      testFieldKeyPress({
+    it('should use `minutesStep` to set initial minutes with ArrowUp', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.minutes,
         key: 'ArrowUp',
         minutesStep: 5,
@@ -659,8 +654,8 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should use `minutesStep` to set initial minutes with ArrowDown', () => {
-      testFieldKeyPress({
+    it('should use `minutesStep` to set initial minutes with ArrowDown', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.minutes,
         key: 'ArrowDown',
         minutesStep: 5,
@@ -668,8 +663,8 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should use `minutesStep` to increase minutes', () => {
-      testFieldKeyPress({
+    it('should use `minutesStep` to increase minutes', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.minutes,
         defaultValue: adapter.date('2022-06-15T14:00:25'),
         key: 'ArrowUp',
@@ -678,8 +673,8 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should use `minutesStep` to decrease minutes', () => {
-      testFieldKeyPress({
+    it('should use `minutesStep` to decrease minutes', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.minutes,
         defaultValue: adapter.date('2022-06-15T14:00:25'),
         key: 'ArrowDown',
@@ -688,8 +683,8 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should go to the closest valid values according to `minutesStep` when pressing ArrowDown', () => {
-      testFieldKeyPress({
+    it('should go to the closest valid values according to `minutesStep` when pressing ArrowDown', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.minutes,
         defaultValue: adapter.date('2022-06-15T14:02:25'),
         key: 'ArrowDown',
@@ -698,8 +693,8 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should go to the closest valid values according to `minutesStep` when pressing ArrowUp', () => {
-      testFieldKeyPress({
+    it('should go to the closest valid values according to `minutesStep` when pressing ArrowUp', async () => {
+      await testFieldKeyPress({
         format: adapter.formats.minutes,
         defaultValue: adapter.date('2022-06-15T14:02:25'),
         key: 'ArrowUp',
@@ -733,8 +728,8 @@ describe('<TimeField /> - Editing', () => {
       expectFieldValue(view.getSectionsContainer(), '02:12 PM');
     });
 
-    it('should wrap from 11 to 0 when pressing ArrowUp at the maximum', () => {
-      testFieldKeyPress({
+    it('should wrap from 11 to 0 when pressing ArrowUp at the maximum', async () => {
+      await testFieldKeyPress({
         format: 'K:mm aa',
         defaultValue: adapter.date('2022-06-15T23:12:00'),
         key: 'ArrowUp',
@@ -751,15 +746,15 @@ describe('<TimeField /> - Editing', () => {
         onChange,
       });
 
-      await view.selectSectionAsync('hours');
-      fireEvent.keyDown(view.getActiveSection(0), { key: 'ArrowUp' });
+      await view.selectSection('hours');
+      await view.user.keyboard('{ArrowUp}');
 
       // K=0 + PM = noon (12:xx), not midnight (00:xx)
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 5, 15, 12, 12, 0));
     });
 
-    it('should wrap from 0 to 11 when pressing ArrowDown at the minimum', () => {
-      testFieldKeyPress({
+    it('should wrap from 0 to 11 when pressing ArrowDown at the minimum', async () => {
+      await testFieldKeyPress({
         format: 'K:mm aa',
         defaultValue: adapter.date('2022-06-15T12:12:00'),
         key: 'ArrowDown',
@@ -767,8 +762,8 @@ describe('<TimeField /> - Editing', () => {
       });
     });
 
-    it('should accept typed digit input for K format', () => {
-      testFieldChange({
+    it('should accept typed digit input for K format', async () => {
+      await testFieldChange({
         format: 'K:mm aa',
         keyStrokes: [
           // "1" stays in the section because "10" and "11" are still valid
@@ -804,8 +799,8 @@ describe('<TimeField /> - Editing', () => {
         expectFieldValue(view.getSectionsContainer(), '14:12');
       });
 
-      it('should wrap from 24 to 1 when pressing ArrowUp at the maximum', () => {
-        testFieldKeyPress({
+      it('should wrap from 24 to 1 when pressing ArrowUp at the maximum', async () => {
+        await testFieldKeyPress({
           format: 'k:mm',
           defaultValue: adapter.date('2022-06-15T00:12:00'),
           key: 'ArrowUp',
@@ -813,8 +808,8 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should wrap from 1 to 24 when pressing ArrowDown at the minimum', () => {
-        testFieldKeyPress({
+      it('should wrap from 1 to 24 when pressing ArrowDown at the minimum', async () => {
+        await testFieldKeyPress({
           format: 'k:mm',
           defaultValue: adapter.date('2022-06-15T01:12:00'),
           key: 'ArrowDown',
@@ -822,8 +817,8 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should accept two-digit input for kk format', () => {
-        testFieldChange({
+      it('should accept two-digit input for kk format', async () => {
+        await testFieldChange({
           format: 'kk:mm',
           keyStrokes: [
             { value: '1', expected: '01:mm' },

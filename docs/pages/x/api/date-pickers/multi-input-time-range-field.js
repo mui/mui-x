@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/date-pickers/multi-input-time-range-field',
+    'docs/translations/api-docs/date-pickers/multi-input-time-range-field',
     false,
     /\.\/multi-input-time-range-field.*\.json$/,
   );

@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/tree-view/tree-item',
+    'docs/translations/api-docs/tree-view/tree-item',
     false,
     /\.\/tree-item.*\.json$/,
   );

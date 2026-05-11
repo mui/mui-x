@@ -21,12 +21,12 @@ import {
   demoConversations,
   demoThreads,
   demoUsers,
-} from 'docsx/data/chat/core/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 import {
   createChunkStream,
   createTextResponseChunks,
   getMessageText,
-} from 'docsx/data/chat/core/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 
 function ControlledStateChat({
   activeConversationId,

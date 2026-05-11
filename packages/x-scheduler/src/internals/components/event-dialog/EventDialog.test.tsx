@@ -14,9 +14,9 @@ import { screen, within } from '@mui/internal-test-utils';
 import {
   SchedulerResource,
   SchedulerOccurrencePlaceholderCreation,
-} from '@mui/x-scheduler-headless/models';
-import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { ExtendableEventCalendarStore } from '@mui/x-scheduler-headless/use-event-calendar';
+} from '@mui/x-scheduler-internals/models';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { ExtendableEventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventDialogContent } from './EventDialog';
@@ -84,6 +84,8 @@ describe('<EventDialogContent open />', () => {
       false,
     );
     expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/personal/i);
+    expect(screen.getByRole('group', { name: /date & time/i })).to.not.equal(null);
+    expect(screen.getByRole('group', { name: /resource & color/i })).to.not.equal(null);
     // Verify recurrence tab is clickable (recurrence value tested in other tests)
     await user.click(screen.getByRole('tab', { name: /recurrence/i }));
     expect(screen.getByRole('combobox', { name: /recurrence/i })).to.not.equal(null);
@@ -109,7 +111,7 @@ describe('<EventDialogContent open />', () => {
     await user.click(screen.getByRole('tab', { name: /general/i }));
     await user.click(screen.getByRole('combobox', { name: /resource/i }));
     await user.click(await screen.findByRole('option', { name: /work/i }));
-    await user.click(screen.getByRole('radio', { name: /pink/i }));
+    await user.click(screen.getByRole('button', { name: /pink/i }));
     await user.click(screen.getByRole('button', { name: /save/i }));
 
     expect(onEventsChange.calledOnce).to.equal(true);
@@ -129,6 +131,29 @@ describe('<EventDialogContent open />', () => {
 
     expect(updated).to.deep.equal(expectedUpdatedEvent);
   }, 10_000);
+
+  it('should clear the color when clicking the active color toggle', async () => {
+    const onEventsChange = spy();
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        onEventsChange={onEventsChange}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
+        <EventDialogContent open {...defaultProps} />
+      </EventCalendarProvider>,
+    );
+    const pinkToggle = screen.getByRole('button', { name: /pink/i });
+    await user.click(pinkToggle);
+    expect(pinkToggle).to.have.attribute('aria-pressed', 'true');
+    await user.click(pinkToggle);
+    expect(pinkToggle).to.have.attribute('aria-pressed', 'false');
+    await user.click(screen.getByRole('button', { name: /save/i }));
+
+    expect(onEventsChange.calledOnce).to.equal(true);
+    expect(onEventsChange.firstCall.firstArg[0].color).to.not.equal('pink');
+  });
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
@@ -962,7 +987,7 @@ describe('<EventDialogContent open />', () => {
           expect(freqCombobox).to.have.attribute('aria-disabled', 'true');
         });
 
-        it('should keep recurrence fields disabled when a preset is selected', async () => {
+        it('should enable recurrence fields when a preset is selected', async () => {
           const { user } = render(
             <EventCalendarProvider
               events={[DEFAULT_EVENT]}
@@ -977,12 +1002,12 @@ describe('<EventDialogContent open />', () => {
           await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
           await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
 
-          // MUI FormControl with disabled disables the child inputs
+          // Selecting a preset enables the fields (only null/no-repeat disables them)
           const repeatFieldset = screen.getByRole('group', { name: /repeat/i });
           const intervalInput = within(repeatFieldset).getByRole('spinbutton');
-          expect(intervalInput).to.have.attribute('disabled');
+          expect(intervalInput).not.to.have.attribute('disabled');
           const freqCombobox = within(repeatFieldset).getByRole('combobox');
-          expect(freqCombobox).to.have.attribute('aria-disabled', 'true');
+          expect(freqCombobox).not.to.have.attribute('aria-disabled');
         });
 
         it('should enable recurrence fields when selecting the custom repeat rule option', async () => {
@@ -1006,6 +1031,41 @@ describe('<EventDialogContent open />', () => {
           expect(intervalInput).not.to.have.attribute('disabled');
           const freqCombobox = within(repeatFieldset).getByRole('combobox');
           expect(freqCombobox).not.to.have.attribute('aria-disabled');
+        });
+
+        it('should give the "After" count input and "Until" date input accessible names', async () => {
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
+              <EventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom repeat rule/i }));
+
+          const endsFieldset = screen.getByRole('group', { name: /ends/i });
+          const countInput = within(endsFieldset).getByRole('spinbutton', { name: /after/i });
+          expect(countInput).to.not.equal(null);
+          const describedById = countInput.getAttribute('aria-describedby');
+          expect(describedById).to.not.equal(null);
+          expect(endsFieldset.querySelector(`[id="${describedById}"]`)?.textContent).to.equal(
+            'times',
+          );
+
+          const untilDate = endsFieldset.querySelector(
+            'input[type="date"]',
+          ) as HTMLInputElement | null;
+          expect(untilDate).to.not.equal(null);
+          const untilLabelledBy = untilDate!.getAttribute('aria-labelledby');
+          expect(untilLabelledBy).to.not.equal(null);
+          expect(endsFieldset.querySelector(`[id="${untilLabelledBy}"]`)?.textContent).to.equal(
+            'Until',
+          );
         });
 
         it('should submit custom recurrence with Ends: after', async () => {
@@ -1277,6 +1337,206 @@ describe('<EventDialogContent open />', () => {
             interval: 1,
             byDay: ['-1MO'],
           });
+        });
+
+        it('should flip the recurrence Select to "Custom" when a detail field is edited', async () => {
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
+              <EventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
+
+          // Editing the interval should flip the Select from "Repeats daily" to "Custom repeat rule"
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const intervalInput = within(repeatGroup).getByRole('spinbutton');
+          await user.click(intervalInput);
+          await user.keyboard('{Control>}a{/Control}2');
+
+          expect(screen.getByRole('combobox', { name: /recurrence/i }).textContent).to.match(
+            /custom repeat rule/i,
+          );
+        });
+
+        it('should pre-fill WEEKLY preset with the event weekday code', async () => {
+          const onEventsChange = spy();
+
+          // DEFAULT_EVENT falls on Monday 2025-05-26
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <EventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          // WEEKLY preset must pre-fill byDay with the event's weekday (Monday → 'MO')
+          expect(updated.rrule).to.deep.equal({ freq: 'WEEKLY', interval: 1, byDay: ['MO'] });
+        });
+
+        it('should pre-fill MONTHLY preset with the event day-of-month', async () => {
+          const onEventsChange = spy();
+
+          // DEFAULT_EVENT is on the 26th → byMonthDay should be [26]
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <EventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /repeats monthly/i }));
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          // MONTHLY preset must never produce an empty byMonthDay array
+          expect(updated.rrule).to.deep.equal({
+            freq: 'MONTHLY',
+            interval: 1,
+            byMonthDay: [26],
+          });
+        });
+
+        it('should disable recurrence detail fields when the rrule property is read-only', async () => {
+          // Supply a getter-only rrule in eventModelStructure so that isPropertyReadOnly('rrule')
+          // returns true even though the event itself is not fully read-only.
+          const rruleReadOnlyModelStructure = {
+            rrule: { getter: (event: typeof DEFAULT_EVENT) => event.rrule },
+          };
+
+          const recurringEvent = EventBuilder.new()
+            .id(DEFAULT_EVENT.id)
+            .title(DEFAULT_EVENT.title)
+            .singleDay('2025-05-26T07:30:00Z', 45)
+            .resource(personalResource)
+            .recurrent('DAILY')
+            .build();
+
+          const recurringOccurrence = EventBuilder.new(adapter)
+            .id(recurringEvent.id)
+            .title(recurringEvent.title)
+            .span(recurringEvent.start, recurringEvent.end)
+            .recurrent('DAILY')
+            .toOccurrence();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[recurringEvent]}
+              resources={resources}
+              storeClass={PremiumTestStore}
+              eventModelStructure={rruleReadOnlyModelStructure}
+            >
+              <EventDialogContent open {...defaultProps} occurrence={recurringOccurrence} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+
+          // Even though a recurrence is active, the detail fields must be disabled because rrule is read-only
+          const repeatFieldset = screen.getByRole('group', { name: /repeat/i });
+          expect(within(repeatFieldset).getByRole('spinbutton')).to.have.attribute('disabled');
+          expect(within(repeatFieldset).getByRole('combobox')).to.have.attribute(
+            'aria-disabled',
+            'true',
+          );
+        });
+
+        it('should not allow unchecking the last selected weekday in WEEKLY mode', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <EventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          // WEEKLY preset pre-fills byDay with ['MO'] (DEFAULT_EVENT is on Monday 2025-05-26)
+          await user.click(await screen.findByRole('option', { name: /repeats weekly/i }));
+
+          const mondayCheckbox = screen.getByRole('checkbox', {
+            name: /monday/i,
+          }) as HTMLInputElement;
+          expect(mondayCheckbox.checked).to.equal(true);
+
+          // Attempting to uncheck the only selected day should be blocked
+          await user.click(mondayCheckbox);
+          expect(mondayCheckbox.checked).to.equal(true);
+
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+          expect(updated.rrule.byDay).to.deep.equal(['MO']);
+        });
+
+        it('should pre-fill byDay with the event weekday when switching frequency to WEEKLY', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+              storeClass={PremiumTestStore}
+            >
+              <EventDialogContent open {...defaultProps} />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          // Start with DAILY preset so byDay is cleared
+          await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
+
+          // Switch to custom so the inner frequency select becomes editable
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom repeat rule/i }));
+
+          // Switch frequency to WEEKLY via the inner combobox
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /weeks/i }));
+
+          await user.click(screen.getByRole('button', { name: /save/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+          // byDay must be pre-filled with the event's weekday (Monday → 'MO'), not left empty
+          expect(updated.rrule.byDay).to.deep.equal(['MO']);
         });
       });
     });

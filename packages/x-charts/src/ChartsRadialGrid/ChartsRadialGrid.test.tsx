@@ -52,6 +52,31 @@ describe('<ChartsRadialGrid />', () => {
 
     expect(getRadiusLinesCount()).to.equal(10);
   });
+
+  it('should render full circles with rotation scaleType set to point', () => {
+    const { getRadiusLinesCount } = testRadialGrid(render, {
+      radialGrid: { radius: true },
+      rotationAxis: { scaleType: 'point', data: ['A', 'B', 'C', 'D', 'E'] },
+    });
+
+    expect(getRadiusLinesCount('circle')).to.equal(2);
+    expect(getRadiusLinesCount('path')).to.equal(0);
+  });
+
+  it('should render paths when rotation scaleType is set to point, but have different start/end angles', () => {
+    const { getRadiusLinesCount } = testRadialGrid(render, {
+      radialGrid: { radius: true },
+      rotationAxis: {
+        scaleType: 'point',
+        data: ['A', 'B', 'C', 'D', 'E'],
+        startAngle: 0,
+        endAngle: Math.PI,
+      },
+    });
+
+    expect(getRadiusLinesCount('circle')).to.equal(0);
+    expect(getRadiusLinesCount('path')).to.equal(2);
+  });
 });
 
 /**
@@ -78,8 +103,8 @@ function testRadialGrid(
     </Unstable_ChartsRadialDataProvider>,
   );
 
-  const getRadiusLinesCount = () =>
-    container.querySelectorAll(`.${chartsRadialGridClasses.radiusLine}`).length;
+  const getRadiusLinesCount = (elementType?: 'path' | 'circle') =>
+    container.querySelectorAll(`${elementType ?? ''}.${chartsRadialGridClasses.radiusLine}`).length;
   const getRotationLinesCount = () =>
     container.querySelectorAll(`.${chartsRadialGridClasses.rotationLine}`).length;
 
