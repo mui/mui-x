@@ -423,8 +423,8 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(screen.queryByRole('button', { name: 'Add filter' })).to.equal(null);
-    expect(screen.queryByRole('button', { name: 'Remove all' })).not.to.equal(null);
+    expect(screen.queryByRole('button', { name: /Add filter/i })).to.equal(null);
+    expect(screen.queryByRole('button', { name: /Remove all/i })).not.to.equal(null);
   });
 
   it('should hide `Remove all` in filter panel when `disableRemoveAllButton` is `true`', () => {
@@ -443,8 +443,8 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(screen.queryByRole('button', { name: 'Add filter' })).not.to.equal(null);
-    expect(screen.queryByRole('button', { name: 'Remove all' })).to.equal(null);
+    expect(screen.queryByRole('button', { name: /Add filter/i })).not.to.equal(null);
+    expect(screen.queryByRole('button', { name: /Remove all/i })).to.equal(null);
   });
 
   it('should allow multiple filter and changing the logicOperator', () => {
@@ -586,7 +586,7 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     expect(onFilterModelChange.callCount).to.equal(0);
-    fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
+    fireEvent.click(screen.getByRole('button', { name: /Add filter/i }));
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItems');
   });
@@ -602,7 +602,7 @@ describe('<DataGridPro /> - Filter', () => {
     );
     apiRef.current?.subscribeEvent('filterModelChange', listener);
     expect(listener.callCount).to.equal(0);
-    fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
+    fireEvent.click(screen.getByRole('button', { name: /Add filter/i }));
     expect(listener.callCount).to.equal(1);
     expect(listener.lastCall.args[1].reason).to.equal('upsertFilterItems');
   });
