@@ -10,52 +10,53 @@ export default function RotationAxisPlayground() {
   return (
     <ChartsUsageDemo
       componentName="RotationAxis"
-      data={{
-        disableLine: { knob: 'switch', defaultValue: false },
-        disableTicks: { knob: 'switch', defaultValue: false },
-        tickPosition: {
-          knob: 'select',
-          options: ['after', 'before'],
-          defaultValue: 'after',
-        },
-        tickLabelPosition: {
-          knob: 'select',
-          options: ['after', 'before'],
-          defaultValue: 'after',
-        },
-        position: {
-          knob: 'select',
-          options: ['inside', 'outside'],
-          defaultValue: 'outside',
-        },
-        tickSize: { knob: 'number', defaultValue: 6, min: -20, max: 20 },
-        rotationTickNumber: { knob: 'number', defaultValue: 8, min: 0, max: 20 },
-        startAngle: {
-          knob: 'number',
-          defaultValue: -90,
-          min: -360,
-          max: 400,
-          step: 10,
-        },
-        endAngle: {
-          knob: 'number',
-          defaultValue: 180,
-          min: -360,
-          max: 400,
-          step: 10,
-        },
-        minRadius: { knob: 'number', defaultValue: 30, min: 0, step: 10 },
-        maxRadius: { knob: 'number', defaultValue: 150, min: 50, step: 10 },
-      }}
+      data={
+        {
+          disableLine: { knob: 'switch', defaultValue: false },
+          disableTicks: { knob: 'switch', defaultValue: false },
+          tickPosition: {
+            knob: 'select',
+            options: ['after', 'before'],
+            defaultValue: 'after',
+          },
+          tickLabelPosition: {
+            knob: 'select',
+            options: ['after', 'before'],
+            defaultValue: 'after',
+          },
+          position: {
+            knob: 'select',
+            options: ['inside', 'outside'],
+            defaultValue: 'outside',
+          },
+          tickSize: { knob: 'number', defaultValue: 6, min: -20, max: 20 },
+          rotationTickNumber: { knob: 'number', defaultValue: 8, min: 0, max: 20 },
+          startAngle: {
+            knob: 'number',
+            defaultValue: -90,
+            min: -360,
+            max: 400,
+            step: 10,
+          },
+          endAngle: {
+            knob: 'number',
+            defaultValue: 180,
+            min: -360,
+            max: 400,
+            step: 10,
+          },
+          minRadius: { knob: 'number', defaultValue: 30, min: 0, step: 10 },
+          maxRadius: { knob: 'number', defaultValue: 130, min: 50, step: 10 },
+        } as const
+      }
       renderDemo={(props) => (
         <Box
           sx={{
             width: '100%',
-            height: 400,
+            height: 300,
           }}
         >
           <Unstable_ChartsRadialDataProvider
-            width={400}
             height={400}
             rotationAxis={[
               {
@@ -96,6 +97,17 @@ export default function RotationAxisPlayground() {
     startAngle: ${props.startAngle},
     endAngle: ${props.endAngle},
     tickNumber: ${props.rotationTickNumber},
+${[
+  `tickSize: ${props.tickSize},`,
+  props.disableLine && 'disableLine: true,',
+  props.disableTicks && 'disableTicks: true,',
+  props.position && `position: "${props.position}",`,
+  props.tickPosition && `tickPosition: "${props.tickPosition}",`,
+  props.tickLabelPosition && `tickLabelPosition: "${props.tickLabelPosition}",`,
+]
+  .filter(Boolean)
+  .map((line) => `    ${line}`)
+  .join('\n')}
   }]}
   radiusAxis={[{
     minRadius: ${props.minRadius},
@@ -103,19 +115,7 @@ export default function RotationAxisPlayground() {
   }]}
 >
   <Unstable_ChartsRadialGrid rotation radius />
-  <ChartsRotationAxis
-${[
-  `tickSize={${props.tickSize}}`,
-  props.disableLine && 'disableLine',
-  props.disableTicks && 'disableTicks',
-  props.position && `position="${props.position}"`,
-  props.tickPosition && `tickPosition="${props.tickPosition}"`,
-  props.tickLabelPosition && `tickLabelPosition="${props.tickLabelPosition}"`,
-]
-  .filter(Boolean)
-  .map((line) => `    ${line}`)
-  .join('\n')}
-  />
+  <ChartsRotationAxis />
 </Unstable_ChartsRadialDataProvider>`}
     />
   );
