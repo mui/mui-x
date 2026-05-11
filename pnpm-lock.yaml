@@ -585,10 +585,10 @@ importers:
         specifier: 'catalog:'
         version: 10.0.3(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/query-core':
-        specifier: ^5.100.6
+        specifier: ^5.100.9
         version: 5.100.9
       '@tanstack/react-query':
-        specifier: ^5.100.6
+        specifier: ^5.100.9
         version: 5.100.9(react@19.2.5)
       chance:
         specifier: 'catalog:'
