@@ -175,7 +175,10 @@ export interface ChartsXAxisProps extends ChartsAxisProps {
   tickLabelMinGap?: number;
 }
 
-type AxisSideConfig<AxisProps extends ChartsXAxisProps | ChartsYAxisProps> = {
+export type ChartsCartesianAxisProps = ChartsXAxisProps | ChartsYAxisProps;
+export type ChartsRadialAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps;
+
+type AxisSideConfig<AxisProps extends ChartsCartesianAxisProps> = {
   /**
    * Position of the axis.
    *
@@ -548,9 +551,7 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
 export type PolarAxisConfig<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsRotationAxisProps | ChartsRadiusAxisProps =
-    | ChartsRotationAxisProps
-    | ChartsRadiusAxisProps,
+  AxisProps extends ChartsRadialAxisProps = ChartsRadialAxisProps,
 > = {
   /**
    * The offset of the axis in pixels. It can be used to move the axis from its default position.
@@ -572,7 +573,7 @@ export type PolarAxisConfig<
 export type AxisConfig<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsXAxisProps | ChartsYAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+  AxisProps extends ChartsCartesianAxisProps = ChartsCartesianAxisProps,
 > = {
   /**
    * The offset of the axis in pixels. It can be used to move the axis from its default position.
@@ -594,7 +595,7 @@ export interface AxisConfigExtension {}
 export type PolarAxisDefaultized<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsAxisProps = ChartsRotationAxisProps | ChartsRadiusAxisProps,
+  AxisProps extends ChartsAxisProps = ChartsRadialAxisProps,
 > = Omit<PolarAxisConfig<S, V, AxisProps>, 'scaleType'> &
   AxisScaleConfig[S] &
   AxisScaleComputedConfig[S] & {
@@ -607,23 +608,25 @@ export type PolarAxisDefaultized<
 export type ComputedAxis<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
-> = MakeRequired<Omit<DefaultedAxis<S, V, AxisProps>, 'scaleType'>, 'offset'> &
-  AxisScaleConfig[S] &
-  AxisScaleComputedConfig[S] & {
-    /**
-     * An indication of the expected number of ticks.
-     */
-    tickNumber: number;
-    /**
-     * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
-     */
-    triggerTooltip?: boolean;
-    /** @ignore - internal. True when a rotation axis covers a full circle. */
-    isFullCircle?: boolean;
-  } & AxisProps &
-  (AxisProps extends ChartsXAxisProps ? AxisSideConfig<AxisProps> & { height: number } : {}) &
-  (AxisProps extends ChartsYAxisProps ? AxisSideConfig<AxisProps> & { width: number } : {});
+  AxisProps extends ChartsAxisProps = ChartsCartesianAxisProps,
+> = AxisProps extends any
+  ? MakeRequired<Omit<DefaultedAxis<S, V, AxisProps>, 'scaleType'>, 'offset'> &
+      AxisScaleConfig[S] &
+      AxisScaleComputedConfig[S] & {
+        /**
+         * An indication of the expected number of ticks.
+         */
+        tickNumber: number;
+        /**
+         * Indicate if the axis should be consider by a tooltip with `trigger='axis'`.
+         */
+        triggerTooltip?: boolean;
+        /** @ignore - internal. True when a rotation axis covers a full circle. */
+        isFullCircle?: boolean;
+      } & AxisProps &
+      (AxisProps extends ChartsXAxisProps ? AxisSideConfig<AxisProps> & { height: number } : {}) &
+      (AxisProps extends ChartsYAxisProps ? AxisSideConfig<AxisProps> & { width: number } : {})
+  : never;
 
 export type ComputedXAxis<S extends ScaleName = ScaleName, V = any> = ComputedAxis<
   S,
@@ -744,7 +747,7 @@ export type RadiusAxis<S extends ScaleName = ScaleName, V = any> = S extends Sca
 export type DefaultedAxis<
   S extends ScaleName = ScaleName,
   V = any,
-  AxisProps extends ChartsAxisProps = ChartsXAxisProps | ChartsYAxisProps,
+  AxisProps extends ChartsAxisProps = ChartsCartesianAxisProps,
 > = AxisConfig<S, V, AxisProps> & {
   zoom: DefaultizedZoomOptions | undefined;
 };
