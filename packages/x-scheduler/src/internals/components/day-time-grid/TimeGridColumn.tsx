@@ -3,16 +3,16 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { warnOnce } from '@mui/x-internals/warning';
-import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
-import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
+import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   eventCalendarOccurrencePlaceholderSelectors,
   eventCalendarOccurrencePositionSelectors,
-} from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+} from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventSkeleton } from '../event-skeleton';
 import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';

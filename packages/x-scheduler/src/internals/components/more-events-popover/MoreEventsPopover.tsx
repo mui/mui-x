@@ -5,10 +5,13 @@ import { useStore } from '@base-ui/utils/store';
 import { warnOnce } from '@mui/x-internals/warning';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { SchedulerEventOccurrence, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { eventCalendarOccurrencePositionSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import {
+  SchedulerEventOccurrence,
+  SchedulerProcessedDate,
+} from '@mui/x-scheduler-internals/models';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { eventCalendarOccurrencePositionSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
 import { EventItem } from '../event/event-item/EventItem';
 import { createModal } from '../create-modal';

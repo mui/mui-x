@@ -7,13 +7,13 @@ import { useStore } from '@base-ui/utils/store';
 import {
   eventCalendarOccurrencePositionSelectors,
   eventCalendarViewSelectors,
-} from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
-import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+} from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
+import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { schedulerNowSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import clsx from 'clsx';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';

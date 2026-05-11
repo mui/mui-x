@@ -4,19 +4,19 @@ import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
 import { warnOnce } from '@mui/x-internals/warning';
-import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
+import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import {
   TimelineGrid,
   useTimelineGridEventRowContext,
-} from '@mui/x-scheduler-headless-premium/timeline-grid';
-import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
+} from '@mui/x-scheduler-internals-premium/timeline-grid';
+import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
   eventTimelineOccurrencePositionSelectors,
   eventTimelinePremiumPresetSelectors,
   timelineOccurrencePlaceholderSelectors,
-} from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
-import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
+} from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import { schedulerNowSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   EventDialogProvider,
   EventDialogTrigger,

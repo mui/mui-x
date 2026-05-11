@@ -323,9 +323,15 @@
       "isGlobal": false
     },
     {
-      "key": "eventDialogResourceMenuColorRadioButton",
-      "className": "MuiEventTimelinePremium-eventDialogResourceMenuColorRadioButton",
-      "description": "Styles applied to the event dialog resource menu color radio button element.",
+      "key": "eventDialogResourceMenuColorToggle",
+      "className": "MuiEventTimelinePremium-eventDialogResourceMenuColorToggle",
+      "description": "Styles applied to the event dialog resource menu color toggle element.",
+      "isGlobal": false
+    },
+    {
+      "key": "eventDialogResourceMenuColorToggleGroup",
+      "className": "MuiEventTimelinePremium-eventDialogResourceMenuColorToggleGroup",
+      "description": "Styles applied to the event dialog resource menu color toggle group element.",
       "isGlobal": false
     },
     {

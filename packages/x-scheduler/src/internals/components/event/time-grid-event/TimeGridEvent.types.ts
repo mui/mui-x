@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
+import type { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 
 export interface TimeGridEventProps extends React.HTMLAttributes<HTMLDivElement> {
   /**

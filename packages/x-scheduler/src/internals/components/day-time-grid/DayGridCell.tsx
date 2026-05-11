@@ -4,16 +4,16 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
-import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
+import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import {
   eventCalendarOccurrencePlaceholderSelectors,
   eventCalendarOccurrencePositionSelectors,
-} from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+} from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { DayGridEvent } from '../event';
 import { EventDialogTrigger } from '../event-dialog';
 import { useEventDialogContext } from '../event-dialog/EventDialog';

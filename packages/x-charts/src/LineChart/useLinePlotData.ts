@@ -68,6 +68,8 @@ export function useLinePlotData(
 
         if (process.env.NODE_ENV !== 'production') {
           if (xData === undefined) {
+            // TODO: fix mui/no-guarded-throw
+            // eslint-disable-next-line mui/no-guarded-throw
             throw new Error(
               `MUI X Charts: ${
                 xAxisId === DEFAULT_X_AXIS_KEY
