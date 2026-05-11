@@ -1,5 +1,138 @@
 # Changelog
 
+## 9.1.0
+
+_May 8, 2026_
+
+We'd like to extend a big thank you to the 14 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡️ Add a WebGL renderer to the [Scatter chart](https://mui.com/x/react-charts/scatter/#webgl-renderer), and apply the same WebGL performance patterns to the candlestick and heatmap [Premium]
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+Special thanks go out to these community members for their valuable contributions:
+@Anexus5919, @gaetanodanelli, @imazizbohra, @mustafajw07
+
+The following team members contributed to this release:
+@alexfauquette, @brijeshb42, @flaviendelangle, @JCQuintas, @LukasTy, @mapache-salvaje, @MBilalShafi, @michelengelen, @oliviertassinari, @rita-codes
+
+### Data Grid
+
+#### `@mui/x-data-grid@9.1.0`
+
+- [DataGrid] Fix accessibility violation in detail panel toggle column header (#22178) @michelengelen
+- [DataGrid] Fix active filter detection for array values (#22340) @MBilalShafi
+- [DataGrid] Fix crash when grouping/tree-data values match `Object.prototype` property names (#22312) @LukasTy
+- [DataGrid] Position overlays below top pinned rows (#22341) @MBilalShafi
+- [l10n] Improve Italian (it-IT) locale (#22290) @gaetanodanelli
+
+#### `@mui/x-data-grid-pro@9.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@9.1.0`, plus:
+
+- [DataGridPro] Fix column unpin restoring stale position after reorder (#22250) @michelengelen
+
+#### `@mui/x-data-grid-premium@9.1.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@9.1.0`, plus:
+
+- [DataGridPremium] Fix aggregation column header title truncation without ellipsis (#22248) @michelengelen
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@9.1.0`
+
+- [pickers] Fix duplicate hour label in `MultiSectionDigitalClock` on DST day (#22110) @LukasTy
+- [l10n] Improve Italian (it-IT) locale (#22290) @gaetanodanelli
+
+#### `@mui/x-date-pickers-pro@9.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@9.1.0`.
+
+### Charts
+
+#### `@mui/x-charts@9.1.0`
+
+- [charts] Add `ChartsAxisHighlightValue` component (#21803) @Copilot
+- [charts] Create `ChartsRadialAxisHighlight` (#22241) @alexfauquette
+- [charts] Remove useless extends (#22313) @alexfauquette
+- [charts] Use `PolarAxisConfig` in polar plugin internals (#22315) @alexfauquette
+
+#### `@mui/x-charts-pro@9.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@9.1.0`.
+
+#### `@mui/x-charts-premium@9.1.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@9.1.0`, plus:
+
+- [charts-premium] Add WebGL renderer to `ScatterChartPremium` (#22157) @JCQuintas
+- [charts-premium] Add highlight to the `RadialLineChart` (#22156) @alexfauquette
+- [charts-premium] Apply WebGL perf patterns to candlestick + heatmap (#22223) @JCQuintas
+- [charts-premium] Introduce the `RadialBarChart` (#22268) @alexfauquette
+
+### Tree View
+
+#### `@mui/x-tree-view@9.1.0`
+
+- [tree view] Fix stale Tree View `apiRef` after keyed remount (#22342) @MBilalShafi
+
+#### `@mui/x-tree-view-pro@9.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.1.0`.
+
+### Scheduler
+
+#### `@mui/x-scheduler@9.0.0-alpha.5`
+
+- [scheduler] Make `EventItem` interactive by integrating button props for keyboard accessibility (#22160) @mustafajw07
+- [scheduler] Migrate color switch to Base UI `ToggleGroup` (#22254) @flaviendelangle
+- [scheduler] Rename Scheduler headless packages (#22273) @rita-codes
+- [scheduler] Use TreeView for the resource sidebar (#22261) @flaviendelangle
+- [scheduler] Use fieldset/legend instead of headings for form sections in the event dialog (#22095) @Anexus5919
+- [scheduler] Added `position: relative` for consistent layout (#22284) @mustafajw07
+- [l10n] Improve Italian (it-IT) locale (#22290) @gaetanodanelli
+
+#### `@mui/x-scheduler-premium@9.0.0-alpha.5` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-alpha.5`, plus:
+
+- [scheduler] Replace per-view headers with a generic `EventTimelinePremiumHeader` in the `EventTimeline` (#22222) @rita-codes
+
+### Codemod
+
+#### `@mui/x-codemod@9.1.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Migrate `FlightPicker` overview demo to v9 `slotProps` shape (#22272) @LukasTy
+- [docs] Standardize Scheduler docs style and formatting (#22161) @mapache-salvaje
+- [docs] Add feedback form to the scheduler docs (#22237) @rita-codes
+- [docs] Fix `GridToolbarCustom` demo crash in DataGrid (#21950) @MBilalShafi
+- [docs] Do not resolve axes in charts (#22307) @alexfauquette
+- [docs] Fix no longer valid link (#22371) @LukasTy
+- [docs] Replace broken CodeSandbox iframes in migration guides (#22352) @LukasTy
+
+### Core
+
+- [code-infra] Bump browser `testTimeout` to absorb React 19 slowness (#22236) @LukasTy
+- [code-infra] Use vale rules from code-infra package (#22256) @brijeshb42
+- [code-infra] Fix broken valelint and docs build (#22362) @LukasTy
+- [internal] Prepare renaming LICENSE file to LICENSE.md (#22055) @imazizbohra
+- [internal] Remove outdated .woff files (#22286) @oliviertassinari
+- [internal] Replace Codspeed with `@mui/internal-benchmark` for charts (#22243) @JCQuintas
+
+### Miscellaneous
+
+- [internal-gestures] Add passive option to `TurnWheelGesture` (#22349) @JCQuintas
+- [internal-gestures] Enforce pointer-type filter in `ShadowRoot` branch (#22327) @JCQuintas
+- [internal-gestures] Improve passive event listener handling (#22329) @JCQuintas
+- [internal-gestures] Inline wheel-delta clamp per axis (#22331) @JCQuintas
+- [internal-gestures] Return read-only pointer map without copy (#22330) @JCQuintas
+- [internal-gestures] Track multi-tap reset timeout to prevent leak (#22326) @JCQuintas
+
 ## 9.0.4
 
 _Apr 28, 2026_
