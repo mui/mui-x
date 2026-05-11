@@ -20,6 +20,7 @@ const EventTimelinePremiumSkeletonRoot = styled(Skeleton, {
 }));
 
 export function EventTimelinePremiumSkeleton(props: EventTimelinePremiumSkeletonProps) {
+  const { className } = props;
   const { classes } = useEventTimelinePremiumStyledContext();
 
   return (
@@ -27,8 +28,7 @@ export function EventTimelinePremiumSkeleton(props: EventTimelinePremiumSkeleton
       variant="rounded"
       animation="wave"
       aria-hidden
-      {...props}
-      className={clsx(classes.eventSkeleton, props.className)}
+      className={clsx(classes.eventSkeleton, className)}
     />
   );
 }
