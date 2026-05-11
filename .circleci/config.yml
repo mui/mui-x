@@ -157,14 +157,27 @@ jobs:
           name: Merge browser test reports
           environment:
             BROWSER: 'true'
-            # Vitest emits a benign esbuild EPIPE during dep-optimizer cleanup
-            # after merge-reports finishes; downgrade to warning to keep exit 0.
-            NODE_OPTIONS: --unhandled-rejections=warn
           command: |
+            # Vitest occasionally emits a post-merge esbuild EPIPE during
+            # dep-optimizer cleanup that exits 1 even though the junit report
+            # was already written. Trust the junit content over the exit code.
+            VITEST_EXIT=0
             pnpm exec vitest run --merge-reports \
               --reporter=default \
               --reporter=junit \
-              --outputFile.junit=test-results/junit.xml
+              --outputFile.junit=test-results/junit.xml || VITEST_EXIT=$?
+            if [ ! -s test-results/junit.xml ]; then
+              echo "JUnit report missing; failing."
+              exit "${VITEST_EXIT:-1}"
+            fi
+            if grep -qE '<testsuites?[^>]*\b(failures|errors)="[1-9]' test-results/junit.xml; then
+              echo "JUnit reports failures or errors; failing."
+              exit "${VITEST_EXIT:-1}"
+            fi
+            if [ "$VITEST_EXIT" -ne 0 ]; then
+              echo "Vitest exited $VITEST_EXIT but junit is clean; treating as success."
+            fi
+            exit 0
       - store_test_results:
           path: test-results
   test_lint:
