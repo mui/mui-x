@@ -54,7 +54,7 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   // @ts-ignore premium-only
   pivotable: false,
   // @ts-ignore premium-only
-  chartable: false,
+  chartable: true,
   // @ts-ignore premium-only
   groupingValueGetter: ((value: (string | number)[]) => multiSelectKey(value)) as any,
   getOptionLabel: defaultGetOptionLabel,
