@@ -17,8 +17,7 @@ import { Unstable_ChartsRadiusAxis as ChartsRadiusAxis } from '@mui/x-charts/Cha
 import {
   ChartsLegend,
   type ChartsLegendSlots,
-  type ChartsLegendSlotProps,
-  type ChartsLegendSlotExtension,
+  type ChartsLegendSlotProps
 } from '../ChartsLegend';
 import { ChartsSurface } from '../ChartsSurface';
 import {
