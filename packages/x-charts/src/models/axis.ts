@@ -265,7 +265,7 @@ export interface ChartsRadiusAxisProps extends ChartsAxisProps {
   /**
    * Set the position of the tick labels relative to the axis line.
    * The before/after is defined based on clockwise direction.
-   * The `auto` set it to 'before' is position is 'start' and 'after' otherwise.
+   * Using `'auto'` sets it to `'before'` if position is `'start'` and `'after'` otherwise.
    * @default 'auto'
    */
   tickLabelPosition?: 'center' | 'after' | 'before' | 'auto';

@@ -15,7 +15,7 @@ This feature is in preview. It is ready for production use, but its API, visuals
 ## Basics
 
 The `RadialBarChart` is similar to the [`BarChart`](/x/react-charts/bars/) but uses polar coordinates.
-The `xAxis` and `yAxis` being replaced by the`rotationAxis` and `radiusAxis`.
+The `xAxis` and `yAxis` being replaced by the `rotationAxis` and `radiusAxis`.
 
 {{"demo": "BasicRadialBarChart.js", "bg": "outline"}}
 
@@ -23,9 +23,9 @@ The `xAxis` and `yAxis` being replaced by the`rotationAxis` and `radiusAxis`.
 
 The radial bar chart accepts the same display options as the [bar chart](/x/react-charts/bars/):
 
-- `stack`: Series with same `stack` property get stacked on top of each other..
+- `stack`: Series with same `stack` property get stacked on top of each other.
 - `layout`: Swap the axis used to represent values. By default (`'vertical'`) the radius represents the values. With `layout='horizontal'` the rotation represents the values.
-- `categoryGapRatio` and `barGapRatio` on the band axis to control the gap between categories and between bars within a category.
+- `categoryGapRatio` and `barGapRatio` can be used on the band axis to control the gap between categories and between bars within a category.
 
 The demo below demonstrate those options.
 

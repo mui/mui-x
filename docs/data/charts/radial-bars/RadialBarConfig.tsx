@@ -35,8 +35,8 @@ export default function RadialBarConfig() {
           knob: 'number',
           defaultValue: 0.1,
           step: 0.1,
-          min: -2,
-          max: 5,
+          min: 0,
+          max: 1,
         },
       }}
       renderDemo={(props) => {
