@@ -68,7 +68,7 @@ export class SchedulerLazyLoadingPlugin<
         error instanceof Error
           ? error
           : /* minify-error-disabled */ new Error(String(error), { cause: error });
-      this.store.set('errors', [wrapped]);
+      this.store.set('errors', [...this.store.state.errors, wrapped]);
     }
   };
 
@@ -134,7 +134,7 @@ export class SchedulerLazyLoadingPlugin<
         error instanceof Error
           ? error
           : /* minify-error-disabled */ new Error(String(error), { cause: error });
-      this.store.set('errors', [wrapped]);
+      this.store.set('errors', [...this.store.state.errors, wrapped]);
       await this.dataManager.setRequestSettled(range);
     } finally {
       // Unset loading state
@@ -161,6 +161,7 @@ export class SchedulerLazyLoadingPlugin<
 
       if (!shouldUpdateEvents.success) {
         this.store.set('errors', [
+          ...this.store.state.errors,
           new Error(
             'MUI X Scheduler: dataSource.updateEvents returned { success: false }. ' +
               'The optimistic event mutation was not persisted to the cache. ' +
@@ -202,7 +203,7 @@ export class SchedulerLazyLoadingPlugin<
         error instanceof Error
           ? error
           : /* minify-error-disabled */ new Error(String(error), { cause: error });
-      this.store.set('errors', [wrapped]);
+      this.store.set('errors', [...this.store.state.errors, wrapped]);
     }
   };
 }

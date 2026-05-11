@@ -277,6 +277,27 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.errors[0].message).to.include('{ success: false }');
     });
 
+    it('should accumulate errors when consecutive fetches fail', async () => {
+      const dataSource = {
+        getEvents: spy(async () => {
+          throw new Error('Fetch failed');
+        }),
+        updateEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      const start1 = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end1 = adapter.date('2025-07-07T00:00:00Z', 'default');
+      const start2 = adapter.date('2025-08-01T00:00:00Z', 'default');
+      const end2 = adapter.date('2025-08-07T00:00:00Z', 'default');
+
+      await store.lazyLoading?.queueDataFetchForRange({ start: start1, end: end1 }, true);
+      expect(store.state.errors).toHaveLength(1);
+
+      await store.lazyLoading?.queueDataFetchForRange({ start: start2, end: end2 }, true);
+      expect(store.state.errors).toHaveLength(2);
+    });
+
     it('should clear state.errors after a successful eventsUpdated', async () => {
       const startFailing = adapter.date('2025-07-01T00:00:00Z', 'default');
       const endFailing = adapter.date('2025-07-07T00:00:00Z', 'default');

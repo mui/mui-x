@@ -1,5 +1,5 @@
 'use client';
-// TODO: unify with ErrorContainer from `@mui/x-scheduler/internals`. This version also adds a `dismissedErrors` GC effect and a stable key that should be preserved on unification.
+// TODO: unify with ErrorContainer from `@mui/x-scheduler/internals`. This version also adds a `dismissedErrors` GC effect and WeakMap-backed stable keys that should be preserved on unification.
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
@@ -56,6 +56,18 @@ export function EventTimelinePremiumErrorContainer(props: EventTimelinePremiumEr
 
   const [dismissedErrors, setDismissedErrors] = React.useState<Set<Error>>(new Set());
 
+  const errorKeysRef = React.useRef(new WeakMap<Error, number>());
+  const nextErrorKeyRef = React.useRef(0);
+  const getErrorKey = (error: Error) => {
+    let id = errorKeysRef.current.get(error);
+    if (id === undefined) {
+      id = nextErrorKeyRef.current;
+      nextErrorKeyRef.current += 1;
+      errorKeysRef.current.set(error, id);
+    }
+    return id;
+  };
+
   // Drop dismissed entries whose Error is no longer in `state.errors`, so the Set doesn't
   // grow forever and a re-thrown identical Error can re-display once cleared from state.
   React.useEffect(() => {
@@ -82,7 +94,7 @@ export function EventTimelinePremiumErrorContainer(props: EventTimelinePremiumEr
           <EventTimelinePremiumErrorAlert
             className={classes.errorAlert}
             severity="error"
-            key={errors.indexOf(error)}
+            key={getErrorKey(error)}
             onClose={() => handleDismiss(error)}
           >
             <EventTimelinePremiumErrorMessage className={classes.errorMessage} variant="body2">
