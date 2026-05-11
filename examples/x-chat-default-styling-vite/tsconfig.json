@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@mui/x-chat": ["../../packages/x-chat/src/index.ts"],
+      "@mui/x-chat/*": ["../../packages/x-chat/src/*"],
+      "@mui/x-chat/headless": ["../../packages/x-chat-headless/src/index.ts"],
+      "@mui/x-chat-headless": ["../../packages/x-chat-headless/src/index.ts"],
+      "@mui/x-chat-headless/internals": ["../../packages/x-chat-headless/src/internals/index.ts"],
+      "@mui/x-chat-headless/*": ["../../packages/x-chat-headless/src/*"],
+      "@mui/x-internals": ["../../packages/x-internals/src/index.ts"],
+      "@mui/x-internals/*": ["../../packages/x-internals/src/*"]
+    }
+  },
+  "include": ["src"]
+}
