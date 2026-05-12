@@ -51,11 +51,14 @@ export function setupChartsAsyncWorker<SeriesType extends ChartSeriesType = Char
   const channel = new BroadcastChannel(MUI_X_CHARTS_ASYNC_CHANNEL);
 
   // eslint-disable-next-line no-console
-  console.log('[chartsWorker] setup; crossOriginIsolated =', (self as any).crossOriginIsolated);
+  console.log(
+    `[chartsWorker][${Date.now()}] setup complete; crossOriginIsolated =`,
+    (self as any).crossOriginIsolated,
+  );
   channel.addEventListener('message', (event: MessageEvent<ChartsAsyncWorkerMessage>) => {
     const msg = event.data;
     // eslint-disable-next-line no-console
-    console.log('[chartsWorker] message received', {
+    console.log(`[chartsWorker][${Date.now()}] message received`, {
       dataType: typeof msg,
       isNull: msg === null,
       keys: msg && typeof msg === 'object' ? Object.keys(msg as any) : undefined,
@@ -67,7 +70,9 @@ export function setupChartsAsyncWorker<SeriesType extends ChartSeriesType = Char
 
     if (msg.kind === 'ping') {
       // eslint-disable-next-line no-console
-      console.log('[chartsWorker] ping received, replying pong', { sessionId: msg.sessionId });
+      console.log(`[chartsWorker][${Date.now()}] ping received, replying pong`, {
+        sessionId: msg.sessionId,
+      });
       channel.postMessage({
         kind: 'pong',
         sessionId: msg.sessionId,

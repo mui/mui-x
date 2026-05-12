@@ -13,7 +13,7 @@ import {
   type UseChartSeriesSignature,
 } from '@mui/x-charts/internals';
 
-const CLUSTER_SIZE = 33_334;
+const CLUSTER_SIZE = 333_334;
 const POINT_COUNT = CLUSTER_SIZE * 3;
 
 // We use a regular `ArrayBuffer` rather than `SharedArrayBuffer`. Chrome's
@@ -21,7 +21,7 @@ const POINT_COUNT = CLUSTER_SIZE * 3;
 // when `crossOriginIsolated` is true — likely a security restriction
 // independent from the COOP/COEP gate. Columnar `Float64Array`s still win
 // big over arrays of `{x, y, id}` objects: structured-clone reduces to a
-// memcpy of three 800 KB buffers instead of cloning 100k JS objects.
+// memcpy of three 8 MB buffers instead of cloning 1M JS objects.
 function allocateBuffer(byteLength: number): ArrayBufferLike {
   return new ArrayBuffer(byteLength);
 }
@@ -120,25 +120,17 @@ const seriesVariants = [
 const xAxis = [{ min: 0, max: 100, label: 'x', zoom: true }];
 const yAxis = [{ min: 0, max: 100, label: 'y', width: 50, zoom: true }];
 
-// Eagerly instantiate the Web Worker once per page. The worker's
-// `setupChartsAsyncWorker()` opens a BroadcastChannel listener, which the
-// chart auto-discovers on its first defaultize. We instantiate inside a
-// component-scoped effect (instead of at module load) so Next.js' bundler
-// reliably picks up the worker chunk, mirroring the data-grid excel-export
-// demo. The `window` flag dedupes across HMR / Strict-Mode double-mount.
+// Instantiate the worker at module-load time (not in a `useEffect`) so the
+// worker chunk's network fetch + parse + module eval can overlap with the
+// React render that follows. Deferring to an effect made the worker
+// available only ~1.3s after the first defaultize, well past the chart's
+// 10ms probe window — so every initial defaultize fell back to main thread.
+// The `window` flag dedupes across HMR / Strict-Mode double-mount.
 const WORKER_FLAG = '__muiXChartsScatterAsyncProcessingWorker';
-function useChartsAsyncWorker() {
-  React.useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    if ((window as any)[WORKER_FLAG]) {
-      return;
-    }
-    (window as any)[WORKER_FLAG] = new Worker(
-      new URL('./chartsWorker.ts', import.meta.url),
-    );
-  }, []);
+if (typeof window !== 'undefined' && !(window as any)[WORKER_FLAG]) {
+  (window as any)[WORKER_FLAG] = new Worker(
+    new URL('./chartsWorker.ts', import.meta.url),
+  );
 }
 
 function StatusObserver({
@@ -168,7 +160,6 @@ function StatusObserver({
 }
 
 export default function ScatterAsyncProcessing() {
-  useChartsAsyncWorker();
   const [variant, setVariant] = React.useState(0);
   const [log, setLog] = React.useState<string[]>([]);
   const series = seriesVariants[variant];

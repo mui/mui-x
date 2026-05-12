@@ -12,7 +12,10 @@ import type {
   SeriesId,
 } from '../../../../models/seriesType';
 import { runAsyncPipeline } from '../../utils/asyncResource';
-import { getChartsAsyncRunner } from '../../utils/asyncWorkerRunner';
+import {
+  getChartsAsyncRunner,
+  reattachNonCloneableSeriesFields,
+} from '../../utils/asyncWorkerRunner';
 
 type RetrunedType<SeriesType extends ChartSeriesType, Item> =
   Item extends SeriesItemIdentifier<SeriesType>
@@ -56,6 +59,10 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, s
   useEffectAfterFirstRender(() => {
     requestRef.current += 1;
     const reqId = requestRef.current;
+    // Compose with the chart's id so multiple charts on the same page
+    // sharing the singleton worker runner don't collide on `requestRef = 1`
+    // (which would resolve the wrong chart's promise).
+    const compositeRequestId = `${store.state.id.chartId}:${reqId}`;
     const resolvedColors = typeof colors === 'function' ? colors(theme) : colors;
 
     const commitPending = () => {
@@ -85,20 +92,32 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, s
       }
 
       if (runner) {
-        runner.runSeriesDefaultize({ series, colors: resolvedColors, theme, dataset }, reqId).then(
-          (result) => {
-            if (reqId !== requestRef.current) {
-              return;
-            }
-            commitSuccess(result.defaultizedSeries, result.idToType);
-          },
-          (err: Error) => {
-            if (reqId !== requestRef.current) {
-              return;
-            }
-            commitError(err);
-          },
-        );
+        runner
+          .runSeriesDefaultize(
+            { series, colors: resolvedColors, theme, dataset },
+            compositeRequestId,
+          )
+          .then(
+            (result) => {
+              if (reqId !== requestRef.current) {
+                return;
+              }
+              // Re-attach functions (valueFormatter, etc.) + slot components
+              // that were stripped from the postMessage payload because
+              // structured-clone can't serialize them.
+              const enriched = reattachNonCloneableSeriesFields(
+                result.defaultizedSeries as any,
+                series as any,
+              );
+              commitSuccess(enriched, result.idToType);
+            },
+            (err: Error) => {
+              if (reqId !== requestRef.current) {
+                return;
+              }
+              commitError(err);
+            },
+          );
         return;
       }
 

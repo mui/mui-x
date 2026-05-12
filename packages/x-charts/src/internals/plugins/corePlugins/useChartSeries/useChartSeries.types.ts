@@ -15,6 +15,7 @@ import {
   type SeriesProcessorResult,
   type UseChartSeriesConfigSignature,
 } from '../useChartSeriesConfig';
+import { type UseChartIdSignature } from '../useChartId';
 import {
   type VisibilityIdentifier,
   type VisibilityIdentifierWithType,
@@ -136,5 +137,5 @@ export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSe
     defaultizedParams: UseChartSeriesDefaultizedParameters<SeriesType>;
     state: UseChartSeriesState<SeriesType>;
     instance: UseChartSeriesInstance;
-    dependencies: [UseChartSeriesConfigSignature<SeriesType>];
+    dependencies: [UseChartSeriesConfigSignature<SeriesType>, UseChartIdSignature];
   }>;

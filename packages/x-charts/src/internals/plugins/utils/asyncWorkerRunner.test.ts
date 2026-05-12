@@ -117,7 +117,7 @@ describe('getChartsAsyncRunner', () => {
     const runner = await getChartsAsyncRunner();
     const result = await runner!.runSeriesDefaultize(
       { series: [], colors: [], theme: 'light' } as any,
-      1,
+      'test:1',
     );
     expect(result.idToType.get('s1')).to.equal('bar');
   });
@@ -156,7 +156,7 @@ describe('getChartsAsyncRunner', () => {
     const runner = await getChartsAsyncRunner();
     const result = await runner!.runSeriesDefaultize(
       { series: [], colors: [], theme: 'light' } as any,
-      42,
+      'test:42',
     );
     expect(result.idToType.has('stranger')).to.equal(false);
     expect(result.idToType.has('legit')).to.equal(true);
@@ -186,7 +186,10 @@ describe('getChartsAsyncRunner', () => {
     const runner = await getChartsAsyncRunner();
     let caught: Error | null = null;
     try {
-      await runner!.runSeriesDefaultize({ series: [], colors: [], theme: 'light' } as any, 99);
+      await runner!.runSeriesDefaultize(
+        { series: [], colors: [], theme: 'light' } as any,
+        'test:99',
+      );
     } catch (err) {
       caught = err as Error;
     }

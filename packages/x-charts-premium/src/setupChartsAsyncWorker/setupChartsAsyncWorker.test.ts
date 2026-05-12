@@ -85,7 +85,7 @@ describe('setupChartsAsyncWorker', () => {
     peer.postMessage({
       kind: 'series-defaultize',
       sessionId: 'sess-2',
-      requestId: 7,
+      requestId: 'test:7',
       payload: {
         series: [
           { type: 'bar', id: 'b1', data: [1, 2, 3] },
@@ -102,7 +102,7 @@ describe('setupChartsAsyncWorker', () => {
     >;
     expect(response.kind).to.equal('series-defaultize:done');
     expect(response.sessionId).to.equal('sess-2');
-    expect(response.requestId).to.equal(7);
+    expect(response.requestId).to.equal('test:7');
     const idMap = new Map(response.idToTypeEntries);
     expect(idMap.get('b1')).to.equal('bar');
     expect(idMap.get('l1')).to.equal('line');
@@ -126,7 +126,7 @@ describe('setupChartsAsyncWorker', () => {
     peer.postMessage({
       kind: 'series-defaultize',
       sessionId: 'sess-3',
-      requestId: 1,
+      requestId: 'test:1',
       payload: {
         series: [{ type: 'bar', id: 'b1', data: [1] }] as any,
         colors: ['#000'],
@@ -159,7 +159,7 @@ describe('setupChartsAsyncWorker', () => {
     peer.postMessage({
       kind: 'series-defaultize',
       sessionId: 'sess-4',
-      requestId: 2,
+      requestId: 'test:2',
       payload: {
         series: [{ type: 'bar', id: 'b1', data: [1] }] as any,
         colors: ['#000'],
