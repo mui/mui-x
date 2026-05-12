@@ -27,6 +27,7 @@ const EventTimelinePremiumEventRoot = styled('div', {
   padding: theme.spacing(0.5, 1),
   position: 'relative',
   width: 'var(--width)',
+  height: `calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1)})`,
   marginLeft: 'var(--x-position)',
   gridRow: 'var(--row-index, 1)',
   gridColumn: 1,
