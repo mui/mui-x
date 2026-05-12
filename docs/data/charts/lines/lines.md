@@ -49,6 +49,15 @@ Set the series `area` property to `true` to fill the area under the line.
 
 {{"demo": "BasicArea.js"}}
 
+### Marks
+
+Add `showMark: true` to display marks.
+
+To modify the mark, use the property `shape`.
+It accepts 7 shapes: `'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, and `'wye'`.
+
+{{"demo": "LineMarkShape.js", "bg": "outline"}}
+
 ### Log scale
 
 A y-axis with a log scale cannot plot a line that crosses zero, and it cannot plot an area chart, because the logarithm of zero is undefined.
