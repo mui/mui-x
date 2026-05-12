@@ -138,12 +138,20 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsLayerContainer>
           {renderer === 'webgl' && (
-            <ChartsWebGLLayer>
-              <BarPlotPremium {...barPlotPremiumProps} />
-            </ChartsWebGLLayer>
+            <React.Fragment>
+              {/* Grid sits in its own SVG layer below the WebGL canvas so the
+                  bars draw on top of the grid lines, matching the layering of
+                  the SVG renderer. */}
+              <ChartsSvgLayer>
+                <ChartsGrid {...gridProps} />
+              </ChartsSvgLayer>
+              <ChartsWebGLLayer>
+                <BarPlotPremium {...barPlotPremiumProps} />
+              </ChartsWebGLLayer>
+            </React.Fragment>
           )}
           <ChartsSvgLayer {...chartsSurfaceProps}>
-            <ChartsGrid {...gridProps} />
+            {renderer !== 'webgl' && <ChartsGrid {...gridProps} />}
             <g {...clipPathGroupProps}>
               {renderer !== 'webgl' && <BarPlotPremium {...barPlotPremiumProps} />}
               <RangeBarPlot {...rangeBarPlotProps} />
