@@ -66,7 +66,7 @@ export function createPickerRenderer({
     if (!constructor) {
       throw new Error(
         `MUI X: Adapter "${adapterName}" is not registered in availableAdapters. ` +
-        `Import the Adapter class directly and pass it via the \`Adapter\` option.`,
+          `Import the Adapter class directly and pass it via the \`Adapter\` option.`,
       );
     }
     AdapterClass = constructor;
