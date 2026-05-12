@@ -280,6 +280,23 @@ const RowContainer = styled('div', {
   flexDirection: 'column',
 });
 
+const EventTimelinePremiumFillerRow = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'FillerRow',
+})(({ theme }) => ({
+  display: 'flex',
+  width: 'var(--row-width)',
+  position: 'relative',
+  '& > div': {
+    width: 'var(--title-column-width)',
+    borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+    position: 'absolute',
+    height: '100%',
+    zIndex: 3,
+    backgroundColor: (theme.vars || theme).palette.background.default,
+  },
+}));
+
 const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndicator: boolean }>(
   function HeaderRowContent(props, ref) {
     const { showCurrentTimeIndicator } = props;
@@ -335,6 +352,30 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
     );
   },
 );
+
+function FillerRow() {
+  const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
+  const pinnedLeftOffset = virtualizerStore.use(Virtualization.selectors.pinnedLeftOffsetSelector);
+  const containerVerticalProps = virtualizerStore.use(
+    LayoutDataGrid.selectors.containerVerticalProps,
+  );
+  const dimensions = virtualizerStore.use(Dimensions.selectors.dimensions);
+
+  const fillerHeight = dimensions.viewportOuterSize.height - dimensions.minimumSize.height;
+  if (fillerHeight <= 0) {
+    return null;
+  }
+
+  return (
+    <EventTimelinePremiumFillerRow
+      role="presentation"
+      {...containerVerticalProps}
+      style={{ height: fillerHeight, ...containerVerticalProps?.style }}
+    >
+      <div style={{ left: pinnedLeftOffset }} />
+    </EventTimelinePremiumFillerRow>
+  );
+}
 
 // Fixed 24h grid (must match useElementPositionInCollection)
 const FIXED_24H_GRID_MINUTES = 24 * 60;
@@ -670,6 +711,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                 <RowContainer role="rowgroup" {...positionerProps}>
                   {virtualizer.api.getters.getRows()}
                 </RowContainer>
+                <FillerRow />
               </EventTimelinePremiumViewport>
               {showCurrentTimeIndicator && (
                 <EventTimelinePremiumCurrentTimeIndicator
