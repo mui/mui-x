@@ -19,7 +19,7 @@ function AreaGradient({ color, id }: { color: string; id: string }) {
     <defs>
       <linearGradient id={id} x1="50%" y1="0%" x2="50%" y2="100%">
         <stop offset="0%" stopColor={color} stopOpacity={0.5} />
-        <stop offset="100%" stopColor={color} stopOpacity={0} />
+        <stop offset="100%" stopColor={color} stopOpacity={0.14} />
       </linearGradient>
     </defs>
   );
@@ -68,7 +68,7 @@ export default function DownloadDemo() {
     React.useState<keyof typeof packages>('@mui/x-charts');
 
   const [selectedFormat, setSelectedFormat] = React.useState<'absolute' | 'relative'>('absolute');
-  const chartColors = overviewChartPalette(theme.palette.mode);
+  const chartColors = overviewChartPalette(theme.palette.mode).slice(1);
 
   return (
     <Stack spacing={1} direction="column" sx={{ height: '100%', minHeight: 0 }}>
@@ -99,7 +99,7 @@ export default function DownloadDemo() {
       <div style={{ flex: 1, minHeight: 300 }}>
         <LineChartPro
           skipAnimation
-          colors={overviewChartPalette}
+          colors={chartColors}
           dataset={packages[selectedPackage]}
           series={versions[selectedPackage].map((v) => ({
             id: v,
