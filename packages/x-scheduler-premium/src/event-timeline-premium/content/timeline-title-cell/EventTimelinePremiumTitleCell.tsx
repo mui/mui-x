@@ -60,9 +60,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
   const resource = useStore(store, schedulerResourceSelectors.processedResource, resourceId);
   const depth = useStore(store, schedulerResourceSelectors.resourceDepth, resourceId);
-  const pinnedLeftOffset = virtualizerStore.use(
-    Virtualization.selectors.pinnedLeftOffsetSelector,
-  );
+  const pinnedLeftOffset = virtualizerStore.use(Virtualization.selectors.pinnedLeftOffsetSelector);
 
   return (
     <EventTimelinePremiumTitleCellRoot

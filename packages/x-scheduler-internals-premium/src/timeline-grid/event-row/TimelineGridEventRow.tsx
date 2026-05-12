@@ -45,8 +45,9 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  const { rowRef, hasFocus, handleKeyDown, handleFocus } =
-    useTimelineGridRowKeyboard({ columnType: 'events' });
+  const { rowRef, hasFocus, handleKeyDown, handleFocus } = useTimelineGridRowKeyboard({
+    columnType: 'events',
+  });
 
   // Selector hooks
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);

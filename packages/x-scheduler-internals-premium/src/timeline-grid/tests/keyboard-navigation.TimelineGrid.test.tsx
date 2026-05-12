@@ -65,10 +65,7 @@ describe('TimelineGrid keyboard navigation', () => {
                 <TimelineGrid.TitleRow data-testid={`title-${resourceId}`}>
                   <TimelineGrid.Cell>{resourceId}</TimelineGrid.Cell>
                 </TimelineGrid.TitleRow>
-                <TimelineGrid.EventRow
-                  resourceId={resourceId}
-                  data-testid={`events-${resourceId}`}
-                >
+                <TimelineGrid.EventRow resourceId={resourceId} data-testid={`events-${resourceId}`}>
                   {() => (
                     <TimelineGrid.Event
                       eventId={`event-${resourceId}`}
@@ -96,7 +93,9 @@ describe('TimelineGrid keyboard navigation', () => {
   }
 
   function getBodyRows() {
-    return screen.getByRole('rowgroup') ? within(screen.getByRole('rowgroup')).getAllByRole('row') : [];
+    return screen.getByRole('rowgroup')
+      ? within(screen.getByRole('rowgroup')).getAllByRole('row')
+      : [];
   }
 
   function getTitleCells() {
@@ -104,9 +103,7 @@ describe('TimelineGrid keyboard navigation', () => {
   }
 
   function getEventsCells() {
-    return getBodyRows().map(
-      (row) => row.querySelector('[data-testid^="events-"]') as HTMLElement,
-    );
+    return getBodyRows().map((row) => row.querySelector('[data-testid^="events-"]') as HTMLElement);
   }
 
   describe('vertical navigation (ArrowUp / ArrowDown)', () => {

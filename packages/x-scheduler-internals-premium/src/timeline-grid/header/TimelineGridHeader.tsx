@@ -81,7 +81,11 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
     let offsetInTicks = 0;
 
     if (tickRange) {
-      const filtered = filterCellsByTickRange(allCells, tickRange.firstTickIndex, tickRange.lastTickIndex);
+      const filtered = filterCellsByTickRange(
+        allCells,
+        tickRange.firstTickIndex,
+        tickRange.lastTickIndex,
+      );
       cells = filtered.visibleCells;
       offsetInTicks = filtered.offsetInTicks;
     } else {
