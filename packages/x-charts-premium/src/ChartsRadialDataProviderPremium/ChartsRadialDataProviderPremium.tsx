@@ -7,6 +7,7 @@ import {
   type ChartsProviderProps,
   type ChartAnyPluginSignature,
   type PolarChartSeriesType,
+  type ChartSeriesConfig,
 } from '@mui/x-charts/internals';
 import { type ChartsRadialDataProviderProps } from '@mui/x-charts/ChartsRadialDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
@@ -18,6 +19,7 @@ import {
   RADIAL_PREMIUM_PLUGINS,
   type RadialPremiumPluginSignatures,
 } from './ChartsRadialDataProviderPremium.plugins';
+import { radialLineSeriesConfig } from '../RadialLineChart/seriesConfig';
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
@@ -45,6 +47,10 @@ export type ChartsRadialDataProviderPremiumProps<
     slotProps?: Partial<ChartsRadialDataProviderPremiumSlotProps>;
   };
 
+const defaultRadialPremiumSeriesConfig: ChartSeriesConfig<'radialLine'> = {
+  radialLine: radialLineSeriesConfig,
+};
+
 /**
  * Orchestrates the data providers for radial chart components and hooks.
  *
@@ -68,6 +74,7 @@ function ChartsRadialDataProviderPremium<
     useChartsRadialDataProviderPremiumProps({
       ...props,
       plugins: props.plugins ?? RADIAL_PREMIUM_PLUGINS,
+      seriesConfig: props.seriesConfig ?? defaultRadialPremiumSeriesConfig,
     });
 
   useLicenseVerifier(packageInfo);

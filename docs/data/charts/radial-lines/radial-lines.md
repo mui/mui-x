@@ -1,12 +1,16 @@
 ---
 title: React Radial Line chart
 productId: x-charts
-components: ChartsRadialDataProvider, ChartsRadialDataProviderPremium, ChartsRadialGrid,ChartsRadialAxisHighlight, RadialLineChart, RadialMarkPlot, RadialLinePlot, RadialAreaPlot, ChartsRadiusAxis, ChartsRotationAxis, RadialLineHighlightPlot
+components: ChartsRadialDataProvider, ChartsRadialDataProviderPremium, RadialLineChart, RadialMarkPlot, RadialLinePlot, RadialAreaPlot, RadialLineHighlightPlot
 ---
 
-# Charts - Radial Lines
+# Charts - Radial Lines [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
 
 <p class="description">Use radial line charts to show trends along periodic values.</p>
+
+:::info
+This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
+:::
 
 ## Basics
 
@@ -14,43 +18,53 @@ The `RadialLineChart` component accepts `series`, `rotationAxis`, and `radiusAxi
 
 {{"demo": "BasicRadialLineChart.js", "bg": "outline"}}
 
+## Axes
+
+Like for line series, the rotation axis can have any scale type, and the radius axis can use any continuous scale type.
+
+For more information about radial axes configuration, visit the [dedicated page](/x/react-charts/radial-axes/).
+
+Here is an example of a rotation axis with a continuous scale type.
+
+{{"demo": "ContinuousRadialLineChart.js", "bg": "outline"}}
+
 ## Highlight
 
 Like other series, the radial line series has a `highlightScope` property that accepts an object with `highlight` and `fade` properties.
 
+:::info
+The radial line interaction uses the [pointer based interaction](/x/react-charts/lines/#pointer-interaction).
+:::
+
 {{"demo": "ElementHighlights.js", "bg": "outline"}}
 
-### Rotation axis
+## Composition
 
-Like for line series, the rotation axis can have any scale type.
+Use `ChartsRadialDataProviderPremium` to provide `series`, `rotationAxis`, and `radiusAxis` props for composition.
 
-{{"demo": "ContinuousRadialLineChart.js", "bg": "outline"}}
+In addition to the shared chart components available for [composition](/x/react-charts/composition/), you can use `RadialLinePlot`, `RadialAreaPlot`, `RadialMarkPlot`, and `RadialLineHighlightPlot` to draw the lines, areas, marks, and highlight indicator.
 
-## Radial coordinates
+Here's how the radial line chart is composed:
 
-## Radial grid
-
-Similarly to the `ChartsGrid` we provide a `ChartsRadialGrid` for radial coordinates
-
-{{"demo": "RadialGridPlayground.js", "hideToolbar": true, "bg": "playground"}}
-
-### Radius axis
-
-The `ChartsRadiusAxis` component renders tick labels along a radius direction.
-
-You can style each tick label by targeting the `chartsRadialAxisClasses.tickLabel` class.
-
-{{"demo": "RadiusAxisPlayground.js", "hideToolbar": true, "bg": "playground"}}
-
-## Rotation axis
-
-The `ChartsRotationAxis` component renders an arc along the rotation axis with tick marks and labels.
-The arc radius is taken from the radius axis outer radius, and you can style each tick label via the `chartsRadialAxisClasses.tickLabel` class.
-
-{{"demo": "RotationAxisPlayground.js", "hideToolbar": true, "bg": "playground"}}
-
-## Radial axes
-
-### Axis highlight
-
-{{"demo": "BandHighlight.js", "bg": "outline"}}
+```jsx
+<ChartsRadialDataProviderPremium>
+  <ChartsWrapper>
+    <ChartsLegend />
+    <ChartsSurface>
+      <ChartsRadialGrid />
+      <g clipPath={`url(#${clipPathId})`}>
+        <RadialAreaPlot />
+        <RadialLinePlot />
+        <ChartsOverlay />
+      </g>
+      <ChartsRadialAxisHighlight />
+      <ChartsRotationAxis />
+      <ChartsRadiusAxis />
+      <RadialMarkPlot />
+      <RadialLineHighlightPlot />
+      <ChartsClipPath id={clipPathId} />
+    </ChartsSurface>
+    <ChartsTooltip />
+  </ChartsWrapper>
+</ChartsRadialDataProviderPremium>
+```

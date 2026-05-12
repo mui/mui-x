@@ -18,6 +18,6 @@
   "muiName": "MuiChartsRadialAxisHighlight",
   "filename": "/packages/x-charts/src/ChartsRadialAxisHighlight/ChartsRadialAxisHighlight.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radial-lines/\">Charts - Radial Lines</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-axes/\">Charts - Radial axes</a></li></ul>",
   "cssComponent": false
 }
