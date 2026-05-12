@@ -139,7 +139,12 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     stateAttributesMapping,
     props: [
       elementProps,
-      { children },
+      {
+        children,
+        style: {
+          '--lane-count': occurrencesWithPosition.maxIndex,
+        } as React.CSSProperties,
+      },
       keyboardProps,
       eventCreationProps,
     ],

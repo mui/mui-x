@@ -162,7 +162,7 @@ const EventTimelinePremiumBodyRow = styled(TimelineGrid.BodyRow, {
 })(({ theme }) => ({
   display: 'flex',
   width: 'var(--row-width)',
-  position: 'static',
+  position: 'relative',
   breakInside: 'avoid',
   '&:not(:last-of-type)': {
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
@@ -299,6 +299,17 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
     const containerVerticalProps = virtualizerStore.use(
       LayoutDataGrid.selectors.containerVerticalProps,
     );
+    const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
+
+    // Convert virtualizer column indices to tick indices.
+    // Column 0 is the pinned title column; tick columns start at index 1.
+    const tickRange = React.useMemo(
+      () => ({
+        firstTickIndex: Math.max(0, renderContext.firstColumnIndex - 1),
+        lastTickIndex: Math.max(0, renderContext.lastColumnIndex - 1),
+      }),
+      [renderContext.firstColumnIndex, renderContext.lastColumnIndex],
+    );
 
     return (
       <EventTimelinePremiumHeaderRow
@@ -316,7 +327,7 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
         <div role="presentation" style={{ width: titleColumnWidth }} />
         <EventTimelinePremiumEventsHeaderCell className={classes.eventsHeaderCell}>
           <EventTimelinePremiumEventsHeaderCellContent className={classes.eventsHeaderCellContent}>
-            <EventTimelinePremiumHeader />
+            <EventTimelinePremiumHeader tickRange={tickRange} />
           </EventTimelinePremiumEventsHeaderCellContent>
           {showCurrentTimeIndicator && (
             <EventTimelinePremiumCurrentTimeIndicatorCircle
@@ -329,6 +340,91 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
     );
   },
 );
+
+// Fixed 24h grid (must match useElementPositionInCollection)
+const FIXED_24H_GRID_MINUTES = 24 * 60;
+
+/**
+ * Renders only the events that intersect the virtualizer's visible column range.
+ * Isolated into its own component so that scrolling (which updates `renderContext`)
+ * only re-renders this subtree, not the surrounding row logic.
+ */
+function EventList({
+  occurrences,
+}: {
+  occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
+}) {
+  const adapter = useAdapterContext();
+  const store = useEventTimelinePremiumStoreContext();
+  const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
+  const { schedulerId } = useEventTimelinePremiumStyledContext();
+
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
+  const renderContext = virtualizerStore.use(Virtualization.selectors.renderContext);
+
+  // Precompute position fractions for all occurrences (recomputed only when occurrences or preset changes)
+  const occurrencesWithFraction = React.useMemo(() => {
+    const collectionStart = presetConfig.start;
+    const collectionEnd = presetConfig.end;
+
+    const totalDays =
+      adapter.differenceInDays(
+        adapter.startOfDay(collectionEnd),
+        adapter.startOfDay(collectionStart),
+      ) + 1;
+    const totalMinutes = Math.max(1, totalDays * FIXED_24H_GRID_MINUTES);
+    const clamp = (v: number) => Math.min(Math.max(v, 0), totalMinutes);
+
+    return occurrences.map((occurrence) => {
+      const start = occurrence.displayTimezone.start;
+      const end = occurrence.displayTimezone.end;
+
+      const startDayIndex = adapter.differenceInDays(
+        adapter.startOfDay(start.value),
+        adapter.startOfDay(collectionStart),
+      );
+      const endDayIndex = adapter.differenceInDays(
+        adapter.startOfDay(end.value),
+        adapter.startOfDay(collectionStart),
+      );
+
+      const startMinutes = startDayIndex * FIXED_24H_GRID_MINUTES + start.minutesInDay;
+      let endMinutes = endDayIndex * FIXED_24H_GRID_MINUTES + end.minutesInDay;
+      if (endMinutes < startMinutes) {
+        endMinutes += FIXED_24H_GRID_MINUTES;
+      }
+
+      return {
+        occurrence,
+        fractionStart: clamp(startMinutes) / totalMinutes,
+        fractionEnd: clamp(endMinutes) / totalMinutes,
+      };
+    });
+  }, [adapter, occurrences, presetConfig.start, presetConfig.end]);
+
+  // Convert virtualizer column range to fraction range
+  const { tickCount } = presetConfig;
+  const visibleStart = Math.max(0, renderContext.firstColumnIndex - 1) / tickCount;
+  const visibleEnd = Math.max(0, renderContext.lastColumnIndex - 1) / tickCount;
+
+  return (
+    <React.Fragment>
+      {occurrencesWithFraction.map(
+        ({ occurrence, fractionStart, fractionEnd }) =>
+          fractionEnd > visibleStart &&
+          fractionStart < visibleEnd && (
+            <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
+              <EventTimelinePremiumEvent
+                occurrence={occurrence}
+                ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${occurrence.resource}`}
+                variant="regular"
+              />
+            </EventDialogTrigger>
+          ),
+      )}
+    </React.Fragment>
+  );
+}
 
 function EventRowContent({
   resourceId,
@@ -359,15 +455,7 @@ function EventRowContent({
 
   return (
     <React.Fragment>
-      {occurrences.map((occurrence) => (
-        <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
-          <EventTimelinePremiumEvent
-            occurrence={occurrence}
-            ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${occurrence.resource}`}
-            variant="regular"
-          />
-        </EventDialogTrigger>
-      ))}
+      <EventList occurrences={occurrences} />
       {placeholder != null && (
         <EventTimelinePremiumEvent
           ref={placeholderRef}
@@ -485,7 +573,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     ({ id, rowIndex, offsetLeft }: { id: any; rowIndex: number; offsetLeft: number }) => (
       <EventTimelinePremiumBodyRow key={id} index={rowIndex}>
         <EventTimelinePremiumTitleCell resourceId={id} />
-        <div role="presentation" style={{ width: offsetLeft }} />
+        <div role="presentation" style={{ width: titleColumnWidth }} />
         <EventTimelinePremiumEventsCell resourceId={id} className={classes.eventsSubGridRow}>
           {({ occurrences, placeholder }) => (
             <EventRowContent resourceId={id} occurrences={occurrences} placeholder={placeholder} />
@@ -497,8 +585,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   );
 
   // Build virtualizer column model: one pinned title column + one column per tick.
-  // The first tick column spans all tick columns (colspan) so events render in a
-  // single continuous cell rather than being sliced per-tick.
   const { tickCount, tickWidth } = presetConfig;
 
   const titleColumn = React.useMemo<ColumnWithWidth>(
@@ -519,17 +605,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     [titleColumn],
   );
 
-  const colspan = React.useMemo(
-    () => ({
-      enabled: true,
-      getColspan: (_rowId: any, _column: ColumnWithWidth, columnIndex: number) =>
-        // The first tick column (index 1, right after the pinned title column)
-        // spans all tick columns; every other tick column is consumed by that span.
-        columnIndex === 1 ? tickCount : 1,
-    }),
-    [tickCount],
-  );
-
   const virtualizer = useVirtualizer({
     layout,
     dimensions: {
@@ -539,7 +614,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
       leftPinnedWidth: titleColumnWidth,
     },
     virtualization: { layoutMode: 'controlled' },
-    colspan,
     rows,
     range,
     rowCount: rows.length,

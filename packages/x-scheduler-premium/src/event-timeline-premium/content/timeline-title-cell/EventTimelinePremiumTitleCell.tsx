@@ -26,6 +26,7 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   alignItems: 'center',
   gap: theme.spacing(1),
   position: 'absolute',
+  height: '100%',
   zIndex: 3,
   backgroundColor: (theme.vars || theme).palette.background.default,
   variants: getPaletteVariants(theme),

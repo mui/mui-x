@@ -92,5 +92,7 @@ export const EventTimelinePremiumHeader = React.forwardRef(function EventTimelin
 
 export namespace EventTimelinePremiumHeader {
   // classNames is wired internally to the styled wrapper's slot classes, not user-facing.
-  export interface Props extends Omit<TimelineGrid.Header.Props, 'classNames'> {}
+  export interface Props extends Omit<TimelineGrid.Header.Props, 'classNames'> {
+    tickRange?: TimelineGrid.Header.Props['tickRange'];
+  }
 }
