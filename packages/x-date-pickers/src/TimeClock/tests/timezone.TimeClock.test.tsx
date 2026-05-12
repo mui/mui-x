@@ -5,8 +5,8 @@ import {
   getClockTouchEvent,
   getTimeClockValue,
   getDateOffset,
-  describeAdapters,
 } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
