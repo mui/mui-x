@@ -82,6 +82,11 @@ export default defineConfig({
                 args: [
                   // Enable GPU so WebGL2 is enabled in browser tests
                   '--enable-gpu',
+                  // Linux CI runners cap /dev/shm at 64 MB (Docker default).
+                  // Chromium uses it for shared memory and is killed by the OS
+                  // when it fills up, which manifests as an unexplained OOM crash.
+                  // This flag redirects shared memory writes to /tmp instead.
+                  '--disable-dev-shm-usage',
                 ],
                 // Required for tests which use scrollbars.
                 ignoreDefaultArgs: ['--hide-scrollbars'],
@@ -100,24 +105,30 @@ export default defineConfig({
       },
       orchestratorScripts: [
         {
-          id: 'vitest-reload-on-error',
-          content: `window.addEventListener('vite:preloadError', (event) => { window.location.reload(); });`,
+          id: 'vitest-preload-error-logger',
+          // Do NOT call window.location.reload() here. A reload tears down the
+          // WebSocket/birpc connection that Vitest uses to drive tests across
+          // files (with isolate:false), producing a spurious "Browser connection
+          // was closed / cannot call createTesters" error on the next test file.
+          // Logging is enough — Vitest's own retry logic handles the failure.
+          content: `window.addEventListener('vite:preloadError', (event) => { console.error('[vitest] vite:preloadError', event); });`,
           async: true,
         },
       ],
     },
     // Disable isolation to speed up the tests.
     isolate: false,
+    // React 19 runs ~3x slower than React 18 (CPU-bound, mostly
+    // @testing-library/user-event async timing). The default 5s Vitest timeout
+    // is too low even for local runs on the heaviest picker tests; a timed-out
+    // test can leave the browser in a bad state that cascades into connection
+    // errors across subsequent test files (with isolate:false).
+    testTimeout: process.env.CI ? 60000 : 20000,
     // Performance improvements for the tests.
     // https://vitest.dev/guide/improving-performance.html#improving-performance
     ...(process.env.CI && {
       // Important to avoid timeouts on CI.
       fileParallelism: false,
-      // Increase the timeout for the tests due to slow CI machines.
-      // Tests run ~3x slower under React 19 stable than React 18 (CPU-bound,
-      // mostly @testing-library/user-event async timing); the slowest legitimate
-      // tests touch ~17s in CI, so 30s leaves no headroom for noise.
-      testTimeout: 60000,
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
       // Reduce the number of workers to avoid CI timeouts.

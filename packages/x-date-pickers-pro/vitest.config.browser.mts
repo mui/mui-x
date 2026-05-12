@@ -12,6 +12,12 @@ export default mergeConfig(
       exclude: ['**/materialVersion.test.tsx'],
       browser: {
         enabled: true,
+        // Re-enable per-file page isolation (overrides the shared isolate:false).
+        // pickers-pro has 55 test files; without isolation they all share one
+        // browser page, accumulating DOM/JS heap across the entire run and
+        // causing OOM on CI. The speed cost (~100ms per file) is acceptable
+        // compared to a crashed runner.
+        isolate: true,
         instances: [{ browser: 'chromium' }],
       },
       sequence: { groupOrder: 1 },
