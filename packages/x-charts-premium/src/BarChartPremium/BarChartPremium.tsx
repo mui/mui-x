@@ -139,9 +139,6 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
         <ChartsLayerContainer>
           {renderer === 'webgl' && (
             <React.Fragment>
-              {/* Grid sits in its own SVG layer below the WebGL canvas so the
-               bars draw on top of the grid lines, matching the layering of
-               the SVG renderer. */}
               <ChartsSvgLayer>
                 <ChartsGrid {...gridProps} />
               </ChartsSvgLayer>
