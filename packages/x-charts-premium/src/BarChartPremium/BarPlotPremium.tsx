@@ -1,13 +1,35 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { BarPlot, type BarPlotProps } from '@mui/x-charts/BarChart';
+import {
+  BarPlot,
+  type BarPlotProps,
+  type BarPlotSlotProps,
+  type BarPlotSlots,
+} from '@mui/x-charts/BarChart';
 import type { RendererType } from '@mui/x-charts/ScatterChart';
 import { BarWebGLPlot } from './webgl/BarWebGLPlot';
 
 export type BarPlotPremiumRenderer = RendererType | 'webgl';
 
-export interface BarPlotPremiumProps extends Omit<BarPlotProps, 'renderer'> {
+export interface BarPlotPremiumSlots extends BarPlotSlots {}
+
+export interface BarPlotPremiumSlotProps extends BarPlotSlotProps {}
+
+export interface BarPlotPremiumProps extends Omit<
+  BarPlotProps,
+  'renderer' | 'slots' | 'slotProps'
+> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: BarPlotPremiumSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: BarPlotPremiumSlotProps;
   /**
    * The type of renderer to use for the bar plot.
    * - `svg-single`: Renders every bar in a `<rect />` element.

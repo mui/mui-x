@@ -29,6 +29,20 @@
     "import { BarPlotPremium } from '@mui/x-charts-premium/BarChartPremium';",
     "import { BarPlotPremium } from '@mui/x-charts-premium';"
   ],
+  "slots": [
+    {
+      "name": "bar",
+      "description": "The component that renders the bar.",
+      "default": "BarElementPath",
+      "class": null
+    },
+    {
+      "name": "barLabel",
+      "description": "The component that renders the bar label.",
+      "default": "BarLabel",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiBarPlotPremium",
   "filename": "/packages/x-charts-premium/src/BarChartPremium/BarPlotPremium.tsx",
