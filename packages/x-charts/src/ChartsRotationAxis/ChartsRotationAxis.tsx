@@ -82,7 +82,7 @@ export function ChartsRotationAxis(props: ChartsRotationAxisProps) {
         ) : (
           <path d={arcPath} stroke={stroke} fill="none" className={classes.line} />
         ))}
-      {ticks.map(({ offset: angle, formattedValue }, index) => {
+      {ticks.map(({ offset: angle, labelOffset, formattedValue }, index) => {
         if (!formattedValue) {
           return null;
         }
@@ -91,26 +91,25 @@ export function ChartsRotationAxis(props: ChartsRotationAxisProps) {
         const dx = Math.sin(angle);
         const dy = -Math.cos(angle);
 
+        const labelDx = labelOffset === 0 ? dx : Math.sin(angle + labelOffset);
+        const labelDy = labelOffset === 0 ? dy : -Math.cos(angle + labelOffset);
+
         const tx = cx + dx * radius;
         const ty = cy + dy * radius;
 
         const tickDx = (tickPosition === 'after' ? 1 : -1) * dx * tickSize;
         const tickDy = (tickPosition === 'after' ? 1 : -1) * dy * tickSize;
 
-        const tickLabelGapDx = (tickLabelPosition === 'after' ? 1 : -1) * dx * TICK_LABEL_GAP;
-        const tickLabelGapDy = (tickLabelPosition === 'after' ? 1 : -1) * dy * TICK_LABEL_GAP;
+        let tickLabelRadius = radius + (tickLabelPosition === 'after' ? 1 : -1) * TICK_LABEL_GAP;
 
-        // Compute the label position.
-        let labelX = tx;
-        let labelY = ty;
-
-        labelX += tickLabelGapDx;
-        labelY += tickLabelGapDy;
         if (tickLabelPosition === tickPosition && !disableTicks) {
           // Add the size of the tick if they are in the same direction.
-          labelX += tickDx;
-          labelY += tickDy;
+          tickLabelRadius += tickSize;
         }
+
+        // Compute the label position.
+        const labelX = cx + labelDx * tickLabelRadius;
+        const labelY = cy + labelDy * tickLabelRadius;
 
         return (
           <g key={index} className={classes.tickContainer}>
@@ -131,7 +130,7 @@ export function ChartsRotationAxis(props: ChartsRotationAxisProps) {
               fontSize={12}
               className={classes.tickLabel}
               pointerEvents="none"
-              {...getLabelTextAnchors(dx, dy, tickLabelPosition)}
+              {...getLabelTextAnchors(labelDx, labelDy, tickLabelPosition)}
             >
               {formattedValue}
             </text>
