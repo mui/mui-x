@@ -16,7 +16,7 @@
     "@vitest/browser-playwright": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "vite": "8.0.10",
+    "vite": "8.0.11",
     "vitest": "catalog:"
   }
 }

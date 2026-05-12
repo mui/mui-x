@@ -105,6 +105,15 @@ export const TEST_KEY_PRO_SUBSCRIPTION_FUTURE =
 export const TEST_KEY_PREMIUM_SUBSCRIPTION_FUTURE =
   '1c6ea00fadedfcb3f2ef393f1de32f29Tz0xMjMsRT0zMjUzNTEyNjAwMDAwMCxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLFBWPWluaXRpYWwsVD10cnVlLEtWPTI=';
 
+// --- KV=2 Q1-2026 (used by cross-major compat tests) ---
+
+/**
+ * Pro annual, Q1-2026, expiry = 3001-01-01.
+ * orderId: #123, keyVersion: 2
+ */
+export const TEST_KEY_PRO_ANNUAL_Q1_2026 =
+  '10c66120eda205131bf0a2074a3fddc8Tz0xMjMsRT0zMjUzNTEyNjAwMDAwMCxTPXBybyxMTT1hbm51YWwsUFY9UTEtMjAyNixUPXRydWUsS1Y9Mg==';
+
 // --- Key format v3 ---
 
 /**
