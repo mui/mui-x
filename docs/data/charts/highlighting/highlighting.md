@@ -21,7 +21,7 @@ To customize this behavior, use the `axisHighlight` prop:
 ```jsx
 axisHighlight={{
   x: 'line', // Or 'none', or 'band'
-  y: 'line', // Or 'none'
+  y: 'line', // Or 'none', or 'band'
 }}
 ```
 
