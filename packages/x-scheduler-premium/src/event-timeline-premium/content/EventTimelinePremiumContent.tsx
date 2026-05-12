@@ -271,15 +271,10 @@ const VirtualScrollbarHorizontal = styled(VirtualScrollbar, {
   left: 0,
 });
 
-/**
- * Render zone that wraps the visible virtualized rows.
- * Uses `transform: translate3d()` from the virtualizer to offset to the correct scroll position.
- */
-const VirtualizerRenderZone = styled('div', {
+const RowContainer = styled('div', {
   name: 'MuiEventTimeline',
-  slot: 'RenderZone',
+  slot: 'RowContainer',
 })({
-  position: 'static',
   width: 'fit-content',
   display: 'flex',
   flexDirection: 'column',
@@ -672,9 +667,9 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                   ref={headerRowRef}
                   showCurrentTimeIndicator={showCurrentTimeIndicator}
                 />
-                <VirtualizerRenderZone role="rowgroup" {...positionerProps}>
+                <RowContainer role="rowgroup" {...positionerProps}>
                   {virtualizer.api.getters.getRows()}
-                </VirtualizerRenderZone>
+                </RowContainer>
               </EventTimelinePremiumViewport>
               {showCurrentTimeIndicator && (
                 <EventTimelinePremiumCurrentTimeIndicator
