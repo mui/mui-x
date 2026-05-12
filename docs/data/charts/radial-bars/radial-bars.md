@@ -27,7 +27,7 @@ The radial bar chart accepts the same display options as the [bar chart](/x/reac
 - `layout`: Swap the axis used to represent values. By default (`'vertical'`) the radius represents the values. With `layout='horizontal'` the rotation represents the values.
 - `categoryGapRatio` and `barGapRatio` can be used on the band axis to control the gap between categories and between bars within a category.
 
-The demo below demonstrate those options.
+The demo below demonstrates those options.
 
 {{"demo": "RadialBarConfig.js", "hideToolbar": true, "bg": "playground"}}
 
