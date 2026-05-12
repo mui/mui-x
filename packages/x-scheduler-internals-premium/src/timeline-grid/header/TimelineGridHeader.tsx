@@ -9,47 +9,6 @@ import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-pr
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 import { iterate } from './iterate';
 
-/**
- * Filters a level's cells to those overlapping a tick range and computes
- * the tick offset of the first visible cell within that level.
- */
-function filterCellsByTickRange(
-  cells: ReturnType<typeof iterate>,
-  firstTickIndex: number,
-  lastTickIndex: number,
-): { visibleCells: ReturnType<typeof iterate>; offsetInTicks: number } {
-  let tickCursor = 0;
-  let firstVisibleIdx = -1;
-  let lastVisibleIdx = -1;
-
-  for (let i = 0; i < cells.length; i += 1) {
-    const cellEnd = tickCursor + cells[i].spanInTicks;
-    // Cell overlaps [firstTickIndex, lastTickIndex) if cellEnd > first && tickCursor < last
-    if (cellEnd > firstTickIndex && tickCursor < lastTickIndex) {
-      if (firstVisibleIdx === -1) {
-        firstVisibleIdx = i;
-      }
-      lastVisibleIdx = i;
-    }
-    tickCursor = cellEnd;
-  }
-
-  if (firstVisibleIdx === -1) {
-    return { visibleCells: [], offsetInTicks: 0 };
-  }
-
-  // Offset = tick position of the first visible cell
-  let offsetInTicks = 0;
-  for (let i = 0; i < firstVisibleIdx; i += 1) {
-    offsetInTicks += cells[i].spanInTicks;
-  }
-
-  return {
-    visibleCells: cells.slice(firstVisibleIdx, lastVisibleIdx + 1),
-    offsetInTicks,
-  };
-}
-
 export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   componentProps: TimelineGridHeader.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -165,4 +124,45 @@ export namespace TimelineGridHeader {
       lastTickIndex: number;
     };
   }
+}
+
+/**
+ * Filters a level's cells to those overlapping a tick range and computes
+ * the tick offset of the first visible cell within that level.
+ */
+function filterCellsByTickRange(
+  cells: ReturnType<typeof iterate>,
+  firstTickIndex: number,
+  lastTickIndex: number,
+): { visibleCells: ReturnType<typeof iterate>; offsetInTicks: number } {
+  let tickCursor = 0;
+  let firstVisibleIdx = -1;
+  let lastVisibleIdx = -1;
+
+  for (let i = 0; i < cells.length; i += 1) {
+    const cellEnd = tickCursor + cells[i].spanInTicks;
+    // Cell overlaps [firstTickIndex, lastTickIndex) if cellEnd > first && tickCursor < last
+    if (cellEnd > firstTickIndex && tickCursor < lastTickIndex) {
+      if (firstVisibleIdx === -1) {
+        firstVisibleIdx = i;
+      }
+      lastVisibleIdx = i;
+    }
+    tickCursor = cellEnd;
+  }
+
+  if (firstVisibleIdx === -1) {
+    return { visibleCells: [], offsetInTicks: 0 };
+  }
+
+  // Offset = tick position of the first visible cell
+  let offsetInTicks = 0;
+  for (let i = 0; i < firstVisibleIdx; i += 1) {
+    offsetInTicks += cells[i].spanInTicks;
+  }
+
+  return {
+    visibleCells: cells.slice(firstVisibleIdx, lastVisibleIdx + 1),
+    offsetInTicks,
+  };
 }
