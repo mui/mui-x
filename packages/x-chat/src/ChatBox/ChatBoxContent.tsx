@@ -11,6 +11,7 @@ import {
   type ChatSuggestion,
   type ChatVariant,
 } from '@mui/x-chat-headless';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { styled } from '../internals/zero-styled';
 import { ChatConversation } from '../ChatConversation/ChatConversation';
 import { ChatConversationHeader } from '../ChatConversation/ChatConversationHeader';
@@ -52,7 +53,7 @@ const NARROW_BREAKPOINT = 600;
 function useContainerNarrow(ref: React.RefObject<HTMLElement | null>): boolean {
   const [narrow, setNarrow] = React.useState(false);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     const el = ref.current;
     if (!el || typeof globalThis.ResizeObserver === 'undefined') {
       return undefined;

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
 import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
@@ -387,7 +388,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   useSyncedHorizontalScroll(titleSubGridRef, titleScrollbarRef, titleHeaderRef);
 
   // Keep title scrollbar spacer width in sync with title content width
-  React.useEffect(() => {
+  useIsoLayoutEffect(() => {
     const subgrid = titleSubGridRef.current;
     const spacer = titleScrollbarSpacerRef.current;
     if (!subgrid || !spacer) {
