@@ -131,7 +131,7 @@
     "remark": "15.0.1",
     "rimraf": "catalog:",
     "serve": "catalog:",
-    "sinon": "21.1.2",
+    "sinon": "22.0.0",
     "string-replace-loader": "3.3.0",
     "stylelint": "17.9.1",
     "tsx": "catalog:",
