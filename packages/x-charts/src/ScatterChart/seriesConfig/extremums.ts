@@ -34,10 +34,19 @@ export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
       const length = seriesData.length;
       if (!filter) {
         // Fast path: tight typed-array loop, no per-point allocations.
+        // Guard against non-finite values — they would pull the axis
+        // domain to ±Infinity and blank the chart out.
         for (let i = 0; i < length; i += 1) {
           const x = xs[i];
-          if (x < min) min = x;
-          if (x > max) max = x;
+          if (!Number.isFinite(x)) {
+            continue;
+          }
+          if (x < min) {
+            min = x;
+          }
+          if (x > max) {
+            max = x;
+          }
         }
       } else {
         for (let i = 0; i < length; i += 1) {
@@ -45,8 +54,15 @@ export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
             continue;
           }
           const x = xs[i];
-          if (x < min) min = x;
-          if (x > max) max = x;
+          if (!Number.isFinite(x)) {
+            continue;
+          }
+          if (x < min) {
+            min = x;
+          }
+          if (x > max) {
+            max = x;
+          }
         }
       }
       continue;
@@ -107,8 +123,15 @@ export const getExtremumY: CartesianExtremumGetter<'scatter'> = (params) => {
       if (!filter) {
         for (let i = 0; i < length; i += 1) {
           const y = ys[i];
-          if (y < min) min = y;
-          if (y > max) max = y;
+          if (!Number.isFinite(y)) {
+            continue;
+          }
+          if (y < min) {
+            min = y;
+          }
+          if (y > max) {
+            max = y;
+          }
         }
       } else {
         for (let i = 0; i < length; i += 1) {
@@ -116,8 +139,15 @@ export const getExtremumY: CartesianExtremumGetter<'scatter'> = (params) => {
             continue;
           }
           const y = ys[i];
-          if (y < min) min = y;
-          if (y > max) max = y;
+          if (!Number.isFinite(y)) {
+            continue;
+          }
+          if (y < min) {
+            min = y;
+          }
+          if (y > max) {
+            max = y;
+          }
         }
       }
       continue;

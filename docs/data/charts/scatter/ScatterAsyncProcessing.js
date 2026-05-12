@@ -24,8 +24,10 @@ function allocateBuffer(byteLength) {
 
 function buildCluster(rng, centerX, centerY, spread, count, xs, ys, offset) {
   for (let i = 0; i < count; i += 1) {
-    // Box–Muller for a roughly gaussian cloud.
-    const u1 = rng.floating({ min: 1e-9, max: 1 });
+    // Box–Muller for a roughly gaussian cloud. `Math.max` guards against
+    // `chance`'s rare boundary draws where `u1 = 0` would yield
+    // `log(0) = -Infinity` and produce `±Infinity` point positions.
+    const u1 = Math.max(rng.floating({ min: 1e-9, max: 1 }), 1e-12);
     const u2 = rng.floating({ min: 0, max: 1 });
     const r = Math.sqrt(-2 * Math.log(u1));
     const theta = 2 * Math.PI * u2;
@@ -102,8 +104,8 @@ const seriesVariants = [
   buildSeries(3),
 ];
 
-const xAxis = [{ min: 0, max: 100, label: 'x', zoom: true }];
-const yAxis = [{ min: 0, max: 100, label: 'y', width: 50, zoom: true }];
+const xAxis = [{ label: 'x', zoom: true }];
+const yAxis = [{ label: 'y', width: 50, zoom: true }];
 
 // Instantiate the worker at module-load time (not in a `useEffect`) so the
 // worker chunk's network fetch + parse + module eval can overlap with the
