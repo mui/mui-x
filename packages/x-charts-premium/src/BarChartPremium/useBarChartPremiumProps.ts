@@ -27,7 +27,7 @@ export function useBarChartPremiumProps(props: BarChartPremiumProps) {
     rest as Parameters<typeof useBarChartProps>[0],
   );
 
-  const finalContainerProps =
+  const premiumContainerProps =
     renderer === 'webgl'
       ? {
           ...chartsContainerProps,
@@ -50,7 +50,7 @@ export function useBarChartPremiumProps(props: BarChartPremiumProps) {
 
   return {
     ...barChartProps,
-    chartsContainerProps: finalContainerProps as ChartsContainerProps<
+    chartsContainerProps: premiumContainerProps as ChartsContainerProps<
       'bar' | 'rangeBar',
       BarChartPluginSignatures
     >,
