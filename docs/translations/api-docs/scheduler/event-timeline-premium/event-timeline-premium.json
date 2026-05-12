@@ -307,6 +307,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "event resize handler elements"
     },
+    "eventsCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the events cell element in a body row"
+    },
     "eventsHeaderCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the events header cell element"
@@ -314,18 +318,6 @@
     "eventsHeaderCellContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the events header cell content element"
-    },
-    "eventsSubGrid": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the events sub-grid element"
-    },
-    "eventsSubGridRow": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the events sub-grid row element"
-    },
-    "eventsSubGridWrapper": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the events sub-grid wrapper element"
     },
     "grid": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the grid element" },
     "header": {
@@ -364,10 +356,6 @@
     "titleHeaderCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title header cell element"
-    },
-    "titleSubGrid": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the title sub-grid element"
     }
   }
 }

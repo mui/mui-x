@@ -610,14 +610,14 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
       <EventTimelinePremiumBodyRow key={id} index={rowIndex}>
         <EventTimelinePremiumTitleCell resourceId={id} />
         <div role="presentation" style={{ width: titleColumnWidth }} />
-        <EventTimelinePremiumEventsCell resourceId={id} className={classes.eventsSubGridRow}>
+        <EventTimelinePremiumEventsCell resourceId={id} className={classes.eventsCell}>
           {({ occurrences, placeholder }) => (
             <EventRowContent resourceId={id} occurrences={occurrences} placeholder={placeholder} />
           )}
         </EventTimelinePremiumEventsCell>
       </EventTimelinePremiumBodyRow>
     ),
-    [classes.eventsSubGridRow],
+    [classes.eventsCell],
   );
 
   // Build virtualizer column model: one pinned title column + one column per tick.
