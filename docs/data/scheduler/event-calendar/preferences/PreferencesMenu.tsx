@@ -17,8 +17,11 @@ export default function PreferencesMenu() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        preferencesMenuConfig={{ toggleWeekendVisibility: false }}
-        defaultPreferences={{ isSidePanelOpen: false }}
+        preferencesMenuConfig={{
+          toggleWeekendVisibility: false,
+          toggleWeekStartsOn: true,
+        }}
+        defaultPreferences={{ isSidePanelOpen: false, weekStartsOn: 1 }}
       />
     </div>
   );
