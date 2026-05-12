@@ -207,18 +207,28 @@ export const MonthView = React.memo(
             className={classes.monthViewGrid}
             rowTypes={MONTH_VIEW_ROW_TYPES}
             rowsPerType={monthViewRowsPerType}
+            aria-rowcount={1 + weeks.length}
+            aria-colcount={weeks[0].length}
           >
-            <MonthViewHeader className={classes.monthViewHeader} ownerState={{ showWeekNumber }}>
+            <MonthViewHeader
+              className={classes.monthViewHeader}
+              ownerState={{ showWeekNumber }}
+              aria-rowindex={1}
+            >
               {showWeekNumber && (
-                <MonthViewWeekHeaderCell className={classes.monthViewWeekHeaderCell}>
+                <MonthViewWeekHeaderCell
+                  className={classes.monthViewWeekHeaderCell}
+                  aria-hidden="true"
+                >
                   {localeText.weekAbbreviation}
                 </MonthViewWeekHeaderCell>
               )}
-              {weeks[0].map((weekDay) => (
+              {weeks[0].map((weekDay, dayIdx) => (
                 <MonthViewHeaderCell
                   className={classes.monthViewHeaderCell}
                   key={weekDay.key}
                   date={weekDay}
+                  aria-colindex={dayIdx + 1}
                   skipDataCurrent
                 >
                   {adapter.formatByString(weekDay.value, 'ccc')}
