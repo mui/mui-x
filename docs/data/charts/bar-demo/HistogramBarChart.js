@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 
 /**
  * Split `values` into `binCount` equal-width bins.
@@ -78,6 +78,7 @@ export default function HistogramBarChart() {
         yAxis={[{ label: 'count', width: 50 }]}
         series={[{ dataKey: 'count', label: 'Frequency' }]}
         height={300}
+        sx={{ [`& .${barClasses.root}`]: { shapeRendering: 'crispEdges' } }}
       />
       <Typography id="histogram-bin-count" gutterBottom>
         Bin count
