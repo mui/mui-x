@@ -16,7 +16,13 @@ export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useAreaPlotData } from '../LineChart/useAreaPlotData';
 export { useLinePlotData } from '../LineChart/useLinePlotData';
 export * from '../BarChart/useBarChartProps';
-export { processBarDataForPlot } from '../BarChart/useBarPlotData';
+export { processBarDataForPlot, useBarPlotData } from '../BarChart/useBarPlotData';
+export type {
+  BorderRadiusSide,
+  MaskData,
+  ProcessedBarData,
+  ProcessedBarSeriesData,
+} from '../BarChart/types';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartsContainer/useChartsContainerProps';
 export * from '../ChartsDataProvider/useChartsDataProviderProps';
@@ -63,6 +69,7 @@ export * from './clampAngle';
 export * from './getLabel';
 export * from './legendUtils';
 export * from './getChartPoint';
+export * from './plugins/featurePlugins/useChartPolarAxis/coordinateTransformation';
 export * from './isDefined';
 export * from './getScale';
 export * from './getAsNumber';

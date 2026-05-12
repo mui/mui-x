@@ -1,12 +1,8 @@
 import { spy } from 'sinon';
 import { screen, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
-import {
-  getClockTouchEvent,
-  getTimeClockValue,
-  getDateOffset,
-  describeAdapters,
-} from 'test/utils/pickers';
+import { getClockTouchEvent, getTimeClockValue, getDateOffset } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
