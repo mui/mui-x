@@ -73,9 +73,7 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
         hasMeridiem ? 'hours12h' : 'hours24h',
       );
       const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-      await user.click(
-        await screen.findByRole('option', { name: `${parseInt(hours, 10)} hours` }),
-      );
+      await user.click(await screen.findByRole('option', { name: `${parseInt(hours, 10)} hours` }));
       await user.click(
         await screen.findByRole('option', {
           name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
