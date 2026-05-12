@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { lineClasses } from '@mui/x-charts/LineChart';
-import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material/styles';
 // Import data
 import dataMaterial from '../data/material.json';
 import dataCharts from '../data/x-charts.json';
@@ -12,6 +12,7 @@ import dataGrid from '../data/x-data-grid.json';
 import dataPickers from '../data/x-date-pickers.json';
 import { shortMonthYearFormatter } from '../shortMonthYearFormatter';
 import { generateDataset, Versions } from './generateDataset';
+import { overviewChartPalette } from '../theme/colors';
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
   return (
@@ -62,10 +63,12 @@ const percentValueFormatter = (value: number | null) => {
 };
 
 export default function DownloadDemo() {
+  const theme = useTheme();
   const [selectedPackage, setSelectedPackage] =
     React.useState<keyof typeof packages>('@mui/x-charts');
 
   const [selectedFormat, setSelectedFormat] = React.useState<'absolute' | 'relative'>('absolute');
+  const chartColors = overviewChartPalette(theme.palette.mode);
 
   return (
     <Stack spacing={1} direction="column" sx={{ height: '100%', minHeight: 0 }}>
@@ -96,6 +99,7 @@ export default function DownloadDemo() {
       <div style={{ flex: 1, minHeight: 300 }}>
         <LineChartPro
           skipAnimation
+          colors={overviewChartPalette}
           dataset={packages[selectedPackage]}
           series={versions[selectedPackage].map((v) => ({
             id: v,
@@ -146,7 +150,7 @@ export default function DownloadDemo() {
           }}
         >
           {versions[selectedPackage].map((v, i) => (
-            <AreaGradient color={rainbowSurgePalette('light')[i]} id={v} key={v} />
+            <AreaGradient color={chartColors[i]} id={v} key={v} />
           ))}
         </LineChartPro>
       </div>

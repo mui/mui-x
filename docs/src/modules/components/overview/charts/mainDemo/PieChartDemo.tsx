@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import Typography from '@mui/material/Typography';
+import { overviewChartPalette } from '../theme/colors';
 import muiMaterialData from '../data/material.json';
 import { DataFileContent } from './generateDataset';
 
@@ -51,6 +52,7 @@ export default function PieChartDemo() {
         })}
       </Typography>
       <PieChart
+        colors={overviewChartPalette}
         series={[
           {
             startAngle: -90,

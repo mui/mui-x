@@ -3,8 +3,10 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import { lineClasses } from '@mui/x-charts/LineChart';
+import { overviewChartPalette } from '../theme/colors';
 
 export type StatCardProps = {
   title: string;
@@ -12,18 +14,21 @@ export type StatCardProps = {
   data: number[];
 };
 
-function AreaGradient({ id }: { id: string }) {
+function AreaGradient({ color, id }: { color: string; id: string }) {
   return (
     <defs>
       <linearGradient id={id} x1="50%" y1="0%" x2="50%" y2="100%">
-        <stop offset="0%" stopColor="#4254FB" stopOpacity={0.3} />
-        <stop offset="100%" stopColor="#4254FB" stopOpacity={0} />
+        <stop offset="0%" stopColor={color} stopOpacity={0.3} />
+        <stop offset="100%" stopColor={color} stopOpacity={0} />
       </linearGradient>
     </defs>
   );
 }
 
 export default function StatCard({ title, value, data }: StatCardProps) {
+  const theme = useTheme();
+  const chartColor = overviewChartPalette(theme.palette.mode)[4];
+
   return (
     <Card variant="outlined" sx={{ height: 'fit-content', flexBasis: '33.3%' }}>
       <CardContent
@@ -42,6 +47,7 @@ export default function StatCard({ title, value, data }: StatCardProps) {
             <SparkLineChart
               data={data}
               area
+              color={chartColor}
               showHighlight
               showTooltip
               sx={{
@@ -50,7 +56,7 @@ export default function StatCard({ title, value, data }: StatCardProps) {
                 },
               }}
             >
-              <AreaGradient id={`area-gradient-${value}`} />
+              <AreaGradient color={chartColor} id={`area-gradient-${value}`} />
             </SparkLineChart>
           </Box>
         </Stack>

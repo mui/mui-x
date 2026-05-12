@@ -2,12 +2,13 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { RadarChart, RadarSeries, radarClasses } from '@mui/x-charts/RadarChart';
 import ChartDemoWrapper from '../ChartDemoWrapper';
+import { overviewChartPalette } from '../theme/colors';
 
 // Taken from https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_base_stats_in_Generation_I
 const series = [
-  { label: 'Bulbasaur', data: [45, 49, 49, 45, 65], color: '#7DAB53', hideMark: true },
-  { label: 'Charmander', data: [39, 52, 43, 65, 50], color: '#FF8D16', hideMark: true },
-  { label: 'Squirtle', data: [44, 48, 65, 43, 50], color: '#4CB0EE', hideMark: true },
+  { label: 'Bulbasaur', data: [45, 49, 49, 45, 65], hideMark: true },
+  { label: 'Charmander', data: [39, 52, 43, 65, 50], hideMark: true },
+  { label: 'Squirtle', data: [44, 48, 65, 43, 50], hideMark: true },
 ] satisfies RadarSeries[];
 
 function Radar() {
@@ -15,6 +16,7 @@ function Radar() {
     <Stack sx={{ height: '100%' }}>
       <Typography align="center">Pokémon base stats</Typography>
       <RadarChart
+        colors={overviewChartPalette}
         series={series}
         radar={{
           metrics: ['HP', 'Attack', 'Defense', 'Speed', 'Special'],

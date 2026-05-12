@@ -2,6 +2,9 @@ import * as React from 'react';
 import HeatmapDemo from './HeatmapDemo';
 import RadarDemo from './RadarDemo';
 import FunnelDemo from './FunnelDemo';
+import PyramidDemo from './PyramidDemo';
+import SankeyDemo from './SankeyDemo';
+import RangeBarDemo from './RangeBarDemo';
 import ChartDemoNavigator from '../ChartDemoNavigator';
 
 const advancedCharts = [
@@ -19,6 +22,21 @@ const advancedCharts = [
     description: 'Display the sequential stages of a process.',
     iconLink: '/static/x/pro.svg',
   },
+  {
+    title: 'Pyramid',
+    description: 'Compare staged values in a pyramid layout.',
+    iconLink: '/static/x/pro.svg',
+  },
+  {
+    title: 'Sankey',
+    description: 'Map proportional flow between categories.',
+    iconLink: '/static/x/pro.svg',
+  },
+  {
+    title: 'Range Bar',
+    description: 'Compare intervals, durations, and value ranges.',
+    iconLink: '/static/x/premium.svg',
+  },
 ];
 
 export default function AdvancedCharts() {
@@ -34,6 +52,9 @@ export default function AdvancedCharts() {
       {activeItem === 0 && <RadarDemo />}
       {activeItem === 1 && <HeatmapDemo />}
       {activeItem === 2 && <FunnelDemo />}
+      {activeItem === 3 && <PyramidDemo />}
+      {activeItem === 4 && <SankeyDemo />}
+      {activeItem === 5 && <RangeBarDemo />}
     </ChartDemoNavigator>
   );
 }
