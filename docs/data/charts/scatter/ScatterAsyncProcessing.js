@@ -101,8 +101,8 @@ const seriesVariants = [
   buildSeries(2),
   buildSeries(3),
 ];
-const xAxis = [{ min: 0, max: 100, label: 'x' }];
-const yAxis = [{ min: 0, max: 100, label: 'y', width: 50 }];
+const xAxis = [{ min: 0, max: 100, label: 'x', zoom: true }];
+const yAxis = [{ min: 0, max: 100, label: 'y', width: 50, zoom: true }];
 
 // Eagerly instantiate the Web Worker once per page. The worker's
 // `setupChartsAsyncWorker()` opens a BroadcastChannel listener, which the
@@ -193,7 +193,7 @@ export default function ScatterAsyncProcessing() {
           series={series}
           xAxis={xAxis}
           yAxis={yAxis}
-          renderer="svg-batch"
+          renderer="webgl"
           slotProps={{
             legend: {
               position: { vertical: 'bottom' },

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { type SeriesId } from '../models/seriesType/common';
 import { type D3Scale } from '../models/axis';
@@ -5,67 +6,128 @@ import { getValueToPositionMapper } from '../hooks';
 import { type DefaultizedScatterSeriesType, type ScatterValueType } from '../models';
 import { isColumnarScatterData } from './scatterDataAccess';
 
+type ScatterPlotPoint = ScatterValueType & {
+  dataIndex: number;
+  seriesId: SeriesId;
+  type: 'scatter';
+};
+
+/**
+ * Above this many points, position computation is sliced across multiple
+ * macrotasks so the main thread can paint and respond to input between
+ * chunks. Below the threshold the sync path is faster (no scheduler
+ * overhead, no state churn).
+ */
+const ASYNC_CHUNK_THRESHOLD = 5_000;
+const CHUNK_SIZE = 5_000;
+
 export function useScatterPlotData(
   series: DefaultizedScatterSeriesType,
   xScale: D3Scale,
   yScale: D3Scale,
   isPointInside: (x: number, y: number) => boolean,
 ) {
-  return React.useMemo(() => {
-    const getXPosition = getValueToPositionMapper(xScale);
-    const getYPosition = getValueToPositionMapper(yScale);
+  const data = series.data;
+  const length = data.length;
+  const seriesId = series.id;
 
-    const temp: (ScatterValueType & {
-      dataIndex: number;
-      seriesId: SeriesId;
-      type: 'scatter';
-    })[] = [];
+  const sync = React.useMemo(() => {
+    if (length > ASYNC_CHUNK_THRESHOLD) {
+      // Heavy work — defer to the chunked effect path below.
+      return null;
+    }
+    return buildScatterPlotPoints(data, xScale, yScale, isPointInside, seriesId, 0, length);
+  }, [xScale, yScale, data, length, seriesId, isPointInside]);
 
-    const data = series.data;
+  const [asyncResult, setAsyncResult] = React.useState<ScatterPlotPoint[]>([]);
 
-    if (isColumnarScatterData(data)) {
-      const xs = data.x;
-      const ys = data.y;
-      const ids = data.ids;
-      const length = data.length;
-      for (let i = 0; i < length; i += 1) {
-        const x = getXPosition(xs[i]);
-        const y = getYPosition(ys[i]);
-
-        if (isPointInside(x, y)) {
-          temp.push({
-            x,
-            y,
-            id: ids === undefined ? undefined : ids[i],
-            seriesId: series.id,
-            type: 'scatter',
-            dataIndex: i,
-          });
-        }
-      }
-      return temp;
+  React.useEffect(() => {
+    if (length <= ASYNC_CHUNK_THRESHOLD) {
+      // Sync path already produced the result.
+      return undefined;
     }
 
-    for (let i = 0; i < data.length; i += 1) {
-      const scatterPoint = data[i];
+    let cancelled = false;
+    let i = 0;
+    const acc: ScatterPlotPoint[] = [];
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-      const x = getXPosition(scatterPoint.x);
-      const y = getYPosition(scatterPoint.y);
+    const processChunk = () => {
+      if (cancelled) {
+        return;
+      }
+      const until = Math.min(i + CHUNK_SIZE, length);
+      buildScatterPlotPoints(data, xScale, yScale, isPointInside, seriesId, i, until, acc);
+      i = until;
+      if (i < length) {
+        // Yield via macrotask so the browser can paint and process input
+        // before the next chunk runs.
+        timeoutId = setTimeout(processChunk, 0);
+      } else {
+        setAsyncResult(acc);
+      }
+    };
+    processChunk();
 
-      const isInRange = isPointInside(x, y);
+    return () => {
+      cancelled = true;
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [xScale, yScale, data, length, seriesId, isPointInside]);
 
-      if (isInRange) {
-        temp.push({
+  return sync ?? asyncResult;
+}
+
+function buildScatterPlotPoints(
+  data: DefaultizedScatterSeriesType['data'],
+  xScale: D3Scale,
+  yScale: D3Scale,
+  isPointInside: (x: number, y: number) => boolean,
+  seriesId: SeriesId,
+  start: number,
+  end: number,
+  out: ScatterPlotPoint[] = [],
+): ScatterPlotPoint[] {
+  const getXPosition = getValueToPositionMapper(xScale);
+  const getYPosition = getValueToPositionMapper(yScale);
+
+  if (isColumnarScatterData(data)) {
+    const xs = data.x;
+    const ys = data.y;
+    const ids = data.ids;
+    for (let i = start; i < end; i += 1) {
+      const x = getXPosition(xs[i]);
+      const y = getYPosition(ys[i]);
+      if (isPointInside(x, y)) {
+        out.push({
           x,
           y,
-          id: scatterPoint.id,
-          seriesId: series.id,
+          id: ids === undefined ? undefined : ids[i],
+          seriesId,
           type: 'scatter',
           dataIndex: i,
         });
       }
     }
+    return out;
+  }
 
-    return temp;
-  }, [xScale, yScale, series.data, series.id, isPointInside]);
+  for (let i = start; i < end; i += 1) {
+    const scatterPoint = data[i];
+    const x = getXPosition(scatterPoint.x);
+    const y = getYPosition(scatterPoint.y);
+    if (isPointInside(x, y)) {
+      out.push({
+        x,
+        y,
+        id: scatterPoint.id,
+        seriesId,
+        type: 'scatter',
+        dataIndex: i,
+      });
+    }
+  }
+  return out;
 }
