@@ -200,25 +200,15 @@ export function useFieldRootProps(
       return;
     }
 
-    // Section clicks were already handled in `handleMouseDown` (see below) /
-    // by the section's own `onFocus`. Just make sure the field is marked as
-    // focused.
+    // Section clicks are handled by `handleMouseDown` / the section's own `onFocus`.
     if (!focused) {
       setFocused(true);
     }
   });
 
-  // Suppress the browser's focus delegation onto the closest `contenteditable`
-  // descendant (a Chromium quirk that, combined with our flex layout, causes
-  // clicks on a non-section ancestor to focus the nearest section). For
-  // clicks that land directly on a section, native focus is the right
-  // behavior, so we leave them alone. For clicks on the sections container's
-  // padding, separator gaps, or empty space to the right of the last section,
-  // we suppress the native delegation and manually focus the section whose
-  // horizontal center is nearest the click point -- mimicking the native
-  // "click anywhere on the input focuses its closest editable bit" behavior.
-  // Adornments (open/clear buttons) live outside the sections container; the
-  // `root.contains(event.target)` check below leaves them untouched.
+  // Replaces Chromium's focus delegation on non-section clicks (padding,
+  // separator gaps, area past the last section) with an explicit focus on the
+  // nearest section. Direct section clicks fall through to native focus.
   const handleMouseDown = useEventCallback((event: React.MouseEvent) => {
     if (disabled || !domGetters.isReady() || parsedSelectedSections === 'all') {
       return;
@@ -231,8 +221,6 @@ export function useFieldRootProps(
     if (!root.contains(target)) {
       return;
     }
-    // Click landed on a section span (or descendant) -- let native focus
-    // handle it.
     if (target.closest('[data-sectionindex]')) {
       return;
     }
@@ -336,9 +324,7 @@ export function useFieldRootProps(
 }
 
 /**
- * Returns the index of the section whose horizontal center is closest to the
- * given page-relative `x` coordinate. Falls back to the first or last section
- * when the click is to the left of, or to the right of, all sections.
+ * Returns the index of the section whose horizontal center is closest to `clientX`.
  */
 function findClosestSectionIndexToPoint(root: HTMLElement, clientX: number): number | null {
   const sections = root.querySelectorAll<HTMLElement>('[role="spinbutton"]');

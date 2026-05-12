@@ -76,10 +76,7 @@ describe('<DateField /> - Selection', () => {
     it('should select the section closest to the click point when clicking on a non-section descendant of the field root', () => {
       const view = renderWithProps({});
 
-      // Clicks that did not land on a section span (e.g. padding, separator
-      // gaps, the area to the right of the last section) should focus the
-      // section closest to the click point so the field behaves like a native
-      // input.
+      // Clicks on padding/separator gaps should focus the closest section.
       const sectionsContainer = view.getSectionsContainer();
       fireEvent.mouseDown(sectionsContainer);
       fireEvent.click(sectionsContainer);

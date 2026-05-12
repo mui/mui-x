@@ -143,17 +143,8 @@ const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, 
   letterSpacing: 'inherit',
   width: 'fit-content',
   outline: 'none',
-  // While the field is idle, mark the section content as `read-only` so
-  // Chromium's focus-delegation quirk -- where clicking on a non-section
-  // ancestor of a `contenteditable` descendant focuses the nearest editable
-  // bit -- has no `read-write` target to delegate to. The input root toggles
-  // its `:focus-within` state as soon as any section is focused (Tab, direct
-  // click, or click on padding handled by the root mousedown), at which
-  // point this rule turns off and the spans behave like normal
-  // `contenteditable` elements. This avoids flipping the `contenteditable`
-  // attribute itself, which would shift Chromium's click-target heuristic
-  // onto the common ancestor mid-click.
-  // See https://stackoverflow.com/questions/34354085/clicking-outside-a-contenteditable-div-stills-give-focus-to-it
+  // Disables Chromium's focus-delegation onto contenteditable descendants
+  // while the field is idle. See https://stackoverflow.com/q/34354085.
   [`.${pickersInputBaseClasses.root}:not(:focus-within) &`]: {
     WebkitUserModify: 'read-only',
     userSelect: 'none',
