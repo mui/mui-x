@@ -6,7 +6,6 @@ export const barVertexShaderSource = /* glsl */ `
     attribute vec2 a_center;
     attribute vec2 a_halfSize;
     attribute vec4 a_color;
-    attribute float a_saturation;
     attribute vec4 a_cornerRadii;
 
     varying vec4 v_color;
@@ -16,21 +15,12 @@ export const barVertexShaderSource = /* glsl */ `
 
     uniform vec2 u_resolution;
 
-    // https://tsev.dev/posts/2020-06-19-colour-correction-with-webgl/
-    vec3 adjust_saturation(vec3 color, float value) {
-      // https://www.w3.org/TR/WCAG21/#dfn-relative-luminance
-      const vec3 luminosityFactor = vec3(0.2126, 0.7152, 0.0722);
-      vec3 grayscale = vec3(dot(color, luminosityFactor));
-
-      return mix(grayscale, color, 1.0 + value);
-    }
-
     void main() {
       vec2 position = a_center + a_position * a_halfSize;
       vec2 clipSpace = (position / u_resolution) * 2.0 - 1.0;
       gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
 
-      v_color = vec4(adjust_saturation(a_color.rgb, a_saturation), a_color.a);
+      v_color = a_color;
       v_pos = a_position * a_halfSize;
       v_halfSize = a_halfSize;
       v_cornerRadii = a_cornerRadii;
@@ -64,7 +54,9 @@ export const barFragmentShaderSource = /* glsl */ `
 
     void main() {
       float dist = roundedBoxSDF(v_pos, v_halfSize, v_cornerRadii);
-      float alpha = 1.0 - smoothstep(-0.5, 0.5, dist);
+      // Anti-alias only outside the SDF (dist >= 0). Starting smoothstep at 0
+      // keeps interior pixels at full color instead of fading them.
+      float alpha = 1.0 - smoothstep(0.0, 0.5, dist);
 
       gl_FragColor = vec4(v_color.rgb, v_color.a * alpha);
     }

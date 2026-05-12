@@ -25,7 +25,6 @@ export class BarWebGLProgram {
   private readonly centersBuffer: InstancedBuffer;
   private readonly halfSizesBuffer: InstancedBuffer;
   private readonly colorsBuffer: InstancedBuffer;
-  private readonly saturationsBuffer: InstancedBuffer;
   private readonly cornerRadiiBuffer: InstancedBuffer;
 
   private readonly uResolution: WebGLUniformLocation | null;
@@ -76,14 +75,6 @@ export class BarWebGLProgram {
       gl.UNSIGNED_BYTE,
       true,
     );
-    this.saturationsBuffer = createInstancedBuffer(
-      gl,
-      this.program,
-      'a_saturation',
-      1,
-      gl.FLOAT,
-      false,
-    );
     this.cornerRadiiBuffer = createInstancedBuffer(
       gl,
       this.program,
@@ -112,7 +103,6 @@ export class BarWebGLProgram {
     uploadAndBindInstanced(gl, this.centersBuffer, plotData.centers);
     uploadAndBindInstanced(gl, this.halfSizesBuffer, plotData.halfSizes);
     uploadAndBindInstanced(gl, this.colorsBuffer, plotData.colors);
-    uploadAndBindInstanced(gl, this.saturationsBuffer, plotData.saturations);
     uploadAndBindInstanced(gl, this.cornerRadiiBuffer, plotData.cornerRadii);
 
     gl.bindVertexArray(null);
@@ -138,7 +128,6 @@ export class BarWebGLProgram {
     gl.deleteBuffer(this.centersBuffer.buffer);
     gl.deleteBuffer(this.halfSizesBuffer.buffer);
     gl.deleteBuffer(this.colorsBuffer.buffer);
-    gl.deleteBuffer(this.saturationsBuffer.buffer);
     gl.deleteBuffer(this.cornerRadiiBuffer.buffer);
     this.shaders.forEach((shader) => gl.deleteShader(shader));
   }

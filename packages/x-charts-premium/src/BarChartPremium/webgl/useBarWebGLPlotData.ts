@@ -16,7 +16,6 @@ export interface BarWebGLPlotData {
   // shader reads back vec4 in [0, 1]. Matches the convention adopted by the
   // scatter / candlestick / heatmap WebGL programs.
   colors: Uint8Array;
-  saturations: Float32Array;
   cornerRadii: Float32Array;
   count: number;
 }
@@ -27,7 +26,6 @@ const EMPTY_DATA: BarWebGLPlotData = {
   centers: EMPTY_FLOAT32,
   halfSizes: EMPTY_FLOAT32,
   colors: EMPTY_UINT8,
-  saturations: EMPTY_FLOAT32,
   cornerRadii: EMPTY_FLOAT32,
   count: 0,
 };
@@ -36,22 +34,26 @@ interface ArrayPool {
   centers: Float32Array;
   halfSizes: Float32Array;
   colors: Uint8Array;
-  saturations: Float32Array;
   cornerRadii: Float32Array;
 }
 
 function ensureCapacity(pool: ArrayPool | null, maxCount: number): ArrayPool {
-  if (pool !== null && pool.saturations.length >= maxCount) {
+  if (pool !== null && pool.colors.length >= maxCount * 4) {
     return pool;
   }
   return {
     centers: new Float32Array(maxCount * 2),
     halfSizes: new Float32Array(maxCount * 2),
     colors: new Uint8Array(maxCount * 4),
-    saturations: new Float32Array(maxCount),
     cornerRadii: new Float32Array(maxCount * 4),
   };
 }
+
+// Mirrors SVG highlight styling: highlighted -> CSS `brightness(120%)`,
+// faded -> opacity 0.3. Baking these into the per-bar color array means we
+// don't need a separate per-instance attribute on the GPU side.
+const HIGHLIGHTED_BRIGHTNESS = 1.2;
+const FADED_OPACITY = 0.3;
 
 function setCornerRadii(
   radius: number,
@@ -110,7 +112,7 @@ export function useBarWebGLPlotData(
     poolRef.current = pool;
 
     // Hoist invariants out of the hot loop.
-    const { centers, halfSizes, colors, saturations, cornerRadii } = pool;
+    const { centers, halfSizes, colors, cornerRadii } = pool;
     const drawingAreaLeft = drawingArea.left;
     const drawingAreaTop = drawingArea.top;
 
@@ -149,23 +151,27 @@ export function useBarWebGLPlotData(
 
         const rgba = parseColor(bar.color);
         const c4 = cursor * 4;
-        colors[c4] = rgba[0];
-        colors[c4 + 1] = rgba[1];
-        colors[c4 + 2] = rgba[2];
-        colors[c4 + 3] = rgba[3];
+        let r = rgba[0];
+        let g = rgba[1];
+        let b = rgba[2];
+        let a = rgba[3];
 
         const highlightState = getHighlightState({
           type: 'bar',
           seriesId,
           dataIndex: bar.dataIndex,
         });
-        let saturation = 0;
         if (highlightState === 'highlighted') {
-          saturation = 0.2;
+          r = Math.min(255, r * HIGHLIGHTED_BRIGHTNESS);
+          g = Math.min(255, g * HIGHLIGHTED_BRIGHTNESS);
+          b = Math.min(255, b * HIGHLIGHTED_BRIGHTNESS);
         } else if (highlightState === 'faded') {
-          saturation = -0.2;
+          a *= FADED_OPACITY;
         }
-        saturations[cursor] = saturation;
+        colors[c4] = r;
+        colors[c4 + 1] = g;
+        colors[c4 + 2] = b;
+        colors[c4 + 3] = a;
 
         const effectiveRadius = Math.min(borderRadius, halfW, halfH);
         setCornerRadii(effectiveRadius, bar.borderRadiusSide, cornerRadii, c4);
@@ -188,7 +194,6 @@ export function useBarWebGLPlotData(
       centers: new Float32Array(centers.buffer, centers.byteOffset, cursor * 2),
       halfSizes: new Float32Array(halfSizes.buffer, halfSizes.byteOffset, cursor * 2),
       colors: new Uint8Array(colors.buffer, colors.byteOffset, cursor * 4),
-      saturations: new Float32Array(saturations.buffer, saturations.byteOffset, cursor),
       cornerRadii: new Float32Array(cornerRadii.buffer, cornerRadii.byteOffset, cursor * 4),
       count: cursor,
     };
