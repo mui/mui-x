@@ -63,6 +63,7 @@ export * from './clampAngle';
 export * from './getLabel';
 export * from './legendUtils';
 export * from './getChartPoint';
+export * from './plugins/featurePlugins/useChartPolarAxis/coordinateTransformation';
 export * from './isDefined';
 export * from './getScale';
 export * from './getAsNumber';
