@@ -17,6 +17,7 @@ import {
   type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { appendAtKey } from '../internals/appendAtKey';
+import { getScatterPoint, isColumnarScatterData } from './scatterDataAccess';
 
 export interface BatchScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -53,24 +54,48 @@ function useCreatePaths(
   const paths = new Map<string, string[]>();
   const temporaryPaths = new Map<string, string[]>();
 
-  for (let i = 0; i < seriesData.length; i += 1) {
-    const scatterPoint = seriesData[i];
+  if (isColumnarScatterData(seriesData)) {
+    const xs = seriesData.x;
+    const ys = seriesData.y;
+    const length = seriesData.length;
+    for (let i = 0; i < length; i += 1) {
+      const x = getXPosition(xs[i]);
+      const y = getYPosition(ys[i]);
 
-    const x = getXPosition(scatterPoint.x);
-    const y = getYPosition(scatterPoint.y);
+      if (!instance.isPointInside(x, y)) {
+        continue;
+      }
 
-    if (!instance.isPointInside(x, y)) {
-      continue;
+      const path = createPath(x, y, markerSize);
+      const fill = colorGetter ? colorGetter(i) : color;
+
+      const tempPath = appendAtKey(temporaryPaths, fill, path);
+
+      if (tempPath.length >= MAX_POINTS_PER_PATH) {
+        appendAtKey(paths, fill, tempPath.join(''));
+        temporaryPaths.delete(fill);
+      }
     }
+  } else {
+    for (let i = 0; i < seriesData.length; i += 1) {
+      const scatterPoint = seriesData[i];
 
-    const path = createPath(x, y, markerSize);
-    const fill = colorGetter ? colorGetter(i) : color;
+      const x = getXPosition(scatterPoint.x);
+      const y = getYPosition(scatterPoint.y);
 
-    const tempPath = appendAtKey(temporaryPaths, fill, path);
+      if (!instance.isPointInside(x, y)) {
+        continue;
+      }
 
-    if (tempPath.length >= MAX_POINTS_PER_PATH) {
-      appendAtKey(paths, fill, tempPath.join(''));
-      temporaryPaths.delete(fill);
+      const path = createPath(x, y, markerSize);
+      const fill = colorGetter ? colorGetter(i) : color;
+
+      const tempPath = appendAtKey(temporaryPaths, fill, path);
+
+      if (tempPath.length >= MAX_POINTS_PER_PATH) {
+        appendAtKey(paths, fill, tempPath.join(''));
+        temporaryPaths.delete(fill);
+      }
     }
   }
 
@@ -153,36 +178,40 @@ export function BatchScatter(props: BatchScatterProps) {
 
   const siblings: React.ReactNode[] = [];
   if (seriesHighlightedItem != null) {
-    const datum = series.data[seriesHighlightedItem];
-    const getXPosition = getValueToPositionMapper(xScale);
-    const getYPosition = getValueToPositionMapper(yScale);
+    const datum = getScatterPoint(series.data, seriesHighlightedItem);
+    if (datum != null) {
+      const getXPosition = getValueToPositionMapper(xScale);
+      const getYPosition = getValueToPositionMapper(yScale);
 
-    siblings.push(
-      <path
-        key={`highlighted-${series.id}`}
-        fill={colorGetter ? colorGetter(seriesHighlightedItem) : color}
-        data-highlighted
-        d={createPath(
-          getXPosition(datum.x),
-          getYPosition(datum.y),
-          markerSize * highlightedModifier,
-        )}
-      />,
-    );
+      siblings.push(
+        <path
+          key={`highlighted-${series.id}`}
+          fill={colorGetter ? colorGetter(seriesHighlightedItem) : color}
+          data-highlighted
+          d={createPath(
+            getXPosition(datum.x),
+            getYPosition(datum.y),
+            markerSize * highlightedModifier,
+          )}
+        />,
+      );
+    }
   }
 
   if (seriesUnfadedItem != null) {
-    const datum = series.data[seriesUnfadedItem];
-    const getXPosition = getValueToPositionMapper(xScale);
-    const getYPosition = getValueToPositionMapper(yScale);
+    const datum = getScatterPoint(series.data, seriesUnfadedItem);
+    if (datum != null) {
+      const getXPosition = getValueToPositionMapper(xScale);
+      const getYPosition = getValueToPositionMapper(yScale);
 
-    siblings.push(
-      <path
-        key={`unfaded-${series.id}`}
-        fill={colorGetter ? colorGetter(seriesUnfadedItem) : color}
-        d={createPath(getXPosition(datum.x), getYPosition(datum.y), markerSize)}
-      />,
-    );
+      siblings.push(
+        <path
+          key={`unfaded-${series.id}`}
+          fill={colorGetter ? colorGetter(seriesUnfadedItem) : color}
+          d={createPath(getXPosition(datum.x), getYPosition(datum.y), markerSize)}
+        />,
+      );
+    }
   }
 
   return (

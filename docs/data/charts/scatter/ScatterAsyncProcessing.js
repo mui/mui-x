@@ -12,46 +12,82 @@ import { useStore, selectorChartSeriesStatus } from '@mui/x-charts/internals';
 const CLUSTER_SIZE = 33_334;
 const POINT_COUNT = CLUSTER_SIZE * 3;
 
-function buildCluster(rng, centerX, centerY, spread, count) {
-  const data = new Array(count);
+// We use a regular `ArrayBuffer` rather than `SharedArrayBuffer`. Chrome's
+// BroadcastChannel silently drops messages containing SAB-backed views even
+// when `crossOriginIsolated` is true — likely a security restriction
+// independent from the COOP/COEP gate. Columnar `Float64Array`s still win
+// big over arrays of `{x, y, id}` objects: structured-clone reduces to a
+// memcpy of three 800 KB buffers instead of cloning 100k JS objects.
+function allocateBuffer(byteLength) {
+  return new ArrayBuffer(byteLength);
+}
+
+function buildCluster(rng, centerX, centerY, spread, count, xs, ys, offset) {
   for (let i = 0; i < count; i += 1) {
     // Box–Muller for a roughly gaussian cloud.
     const u1 = rng.floating({ min: 1e-9, max: 1 });
     const u2 = rng.floating({ min: 0, max: 1 });
     const r = Math.sqrt(-2 * Math.log(u1));
     const theta = 2 * Math.PI * u2;
-    data[i] = {
-      id: i,
-      x: centerX + r * Math.cos(theta) * spread,
-      y: centerY + r * Math.sin(theta) * spread,
-    };
+    xs[offset + i] = centerX + r * Math.cos(theta) * spread;
+    ys[offset + i] = centerY + r * Math.sin(theta) * spread;
   }
-  return data;
+}
+
+function buildColumnar(seed, center) {
+  // One SharedArrayBuffer per cluster (8 bytes per Float64). Allocating a
+  // fresh buffer set per series keeps each cluster mutable independently if
+  // we want to tweak it later, and keeps the per-buffer transfer overhead
+  // low.
+  const byteLength = CLUSTER_SIZE * Float64Array.BYTES_PER_ELEMENT;
+  const xBuffer = allocateBuffer(byteLength);
+  const yBuffer = allocateBuffer(byteLength);
+  const xs = new Float64Array(xBuffer);
+  const ys = new Float64Array(yBuffer);
+  const rng = new Chance(seed);
+  buildCluster(rng, center.x, center.y, center.spread, CLUSTER_SIZE, xs, ys, 0);
+  return {
+    __columnar: true,
+    x: xs,
+    y: ys,
+    length: CLUSTER_SIZE,
+  };
 }
 
 function buildSeries(seed) {
   // Three clusters whose centers shift each time `seed` changes — produces a
   // clearly different shape on every reshuffle. Seeded RNG keeps demos
   // deterministic across reloads.
-  const rng = new Chance(seed);
   return [
     {
       id: 'cluster-a',
       label: 'Cluster A',
       markerSize: 1,
-      data: buildCluster(rng, 20 + seed * 5, 30 + seed * 3, 4, CLUSTER_SIZE),
+      data: buildColumnar(seed * 3, {
+        x: 20 + seed * 5,
+        y: 30 + seed * 3,
+        spread: 4,
+      }),
     },
     {
       id: 'cluster-b',
       label: 'Cluster B',
       markerSize: 1,
-      data: buildCluster(rng, 60 - seed * 4, 70 - seed * 2, 5, CLUSTER_SIZE),
+      data: buildColumnar(seed * 3 + 1, {
+        x: 60 - seed * 4,
+        y: 70 - seed * 2,
+        spread: 5,
+      }),
     },
     {
       id: 'cluster-c',
       label: 'Cluster C',
       markerSize: 1,
-      data: buildCluster(rng, 40 + seed * 2, 20 + seed * 4, 6, CLUSTER_SIZE),
+      data: buildColumnar(seed * 3 + 2, {
+        x: 40 + seed * 2,
+        y: 20 + seed * 4,
+        spread: 6,
+      }),
     },
   ];
 }

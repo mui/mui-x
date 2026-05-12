@@ -102,6 +102,13 @@ export function getChartsAsyncRunner(): Promise<ChartsAsyncRunner | null> {
   if (persistentChannel === null) {
     persistentSessionId = generateSessionId();
     persistentChannel = new BroadcastChannel(MUI_X_CHARTS_ASYNC_CHANNEL);
+    // eslint-disable-next-line no-console
+    console.log(
+      '[mui-x-charts] opening persistent channel; crossOriginIsolated =',
+      (globalThis as any).crossOriginIsolated,
+      '; SAB available =',
+      typeof SharedArrayBuffer !== 'undefined',
+    );
     persistentChannel.addEventListener('message', (event: MessageEvent<ChartsAsyncWorkerMessage>) => {
       const msg = event.data;
       if (
@@ -165,6 +172,11 @@ function buildRunner(channel: BroadcastChannel, sessionId: string): ChartsAsyncR
         return;
       }
       pending.delete(msg.requestId);
+      // eslint-disable-next-line no-console
+      console.log('[mui-x-charts] worker response received', {
+        requestId: msg.requestId,
+        defaultizedSeriesKeys: Object.keys(msg.defaultizedSeries ?? {}),
+      });
       entry.resolve({
         defaultizedSeries: msg.defaultizedSeries,
         idToType: new Map(msg.idToTypeEntries),
@@ -187,12 +199,19 @@ function buildRunner(channel: BroadcastChannel, sessionId: string): ChartsAsyncR
         pending.set(requestId, { resolve, reject });
         // eslint-disable-next-line no-console
         console.log('[mui-x-charts] dispatching series-defaultize to worker', { requestId });
-        channel.postMessage({
-          kind: 'series-defaultize',
-          sessionId,
-          requestId,
-          payload,
-        } satisfies ChartsAsyncWorkerMessage);
+        try {
+          channel.postMessage({
+            kind: 'series-defaultize',
+            sessionId,
+            requestId,
+            payload,
+          } satisfies ChartsAsyncWorkerMessage);
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.error('[mui-x-charts] postMessage threw', err);
+          pending.delete(requestId);
+          reject(err as Error);
+        }
       });
     },
   };

@@ -50,8 +50,17 @@ export function setupChartsAsyncWorker<SeriesType extends ChartSeriesType = Char
     defaultSeriesConfig) as ChartSeriesConfig<SeriesType>;
   const channel = new BroadcastChannel(MUI_X_CHARTS_ASYNC_CHANNEL);
 
+  // eslint-disable-next-line no-console
+  console.log('[chartsWorker] setup; crossOriginIsolated =', (self as any).crossOriginIsolated);
   channel.addEventListener('message', (event: MessageEvent<ChartsAsyncWorkerMessage>) => {
     const msg = event.data;
+    // eslint-disable-next-line no-console
+    console.log('[chartsWorker] message received', {
+      dataType: typeof msg,
+      isNull: msg === null,
+      keys: msg && typeof msg === 'object' ? Object.keys(msg as any) : undefined,
+      kind: (msg as any)?.kind,
+    });
     if (!msg) {
       return;
     }
@@ -76,20 +85,35 @@ export function setupChartsAsyncWorker<SeriesType extends ChartSeriesType = Char
           theme: msg.payload.theme,
           seriesConfig,
         });
-        channel.postMessage({
-          kind: 'series-defaultize:done',
-          sessionId: msg.sessionId,
-          requestId: msg.requestId,
-          defaultizedSeries,
-          idToTypeEntries: Array.from(idToType.entries()),
-        } satisfies ChartsAsyncWorkerMessage);
+        try {
+          channel.postMessage({
+            kind: 'series-defaultize:done',
+            sessionId: msg.sessionId,
+            requestId: msg.requestId,
+            defaultizedSeries,
+            idToTypeEntries: Array.from(idToType.entries()),
+          } satisfies ChartsAsyncWorkerMessage);
+          // eslint-disable-next-line no-console
+          console.log('[chartsWorker] sent series-defaultize:done', { requestId: msg.requestId });
+        } catch (postErr) {
+          // eslint-disable-next-line no-console
+          console.error('[chartsWorker] postMessage of done reply threw', postErr);
+          throw postErr;
+        }
       } catch (err) {
-        channel.postMessage({
-          kind: 'series-defaultize:error',
-          sessionId: msg.sessionId,
-          requestId: msg.requestId,
-          errorMessage: (err as Error).message,
-        } satisfies ChartsAsyncWorkerMessage);
+        // eslint-disable-next-line no-console
+        console.error('[chartsWorker] defaultize threw', err);
+        try {
+          channel.postMessage({
+            kind: 'series-defaultize:error',
+            sessionId: msg.sessionId,
+            requestId: msg.requestId,
+            errorMessage: (err as Error).message,
+          } satisfies ChartsAsyncWorkerMessage);
+        } catch (postErr) {
+          // eslint-disable-next-line no-console
+          console.error('[chartsWorker] postMessage of error reply threw', postErr);
+        }
       }
     }
   });

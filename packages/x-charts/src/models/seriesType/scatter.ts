@@ -17,10 +17,33 @@ export type ScatterValueType = {
   id?: string | number;
 };
 
+/**
+ * Columnar representation of scatter point data, backed by typed arrays.
+ *
+ * Useful for very large datasets: avoids allocating one JS object per point,
+ * enables zero-copy transfer to workers when the underlying buffers are
+ * `SharedArrayBuffer`s, and lets the chart's hot paths iterate without
+ * dereferencing objects.
+ *
+ * Detected at runtime via the `__columnar` discriminator.
+ */
+export type ColumnarScatterData = {
+  readonly __columnar: true;
+  readonly x: Float64Array;
+  readonly y: Float64Array;
+  /** Optional Z values (numeric only in columnar form). */
+  readonly z?: Float64Array;
+  /** Optional per-point ids (numeric only in columnar form). */
+  readonly ids?: Int32Array | Float64Array;
+  readonly length: number;
+};
+
+export type ScatterData = readonly ScatterValueType[] | ColumnarScatterData;
+
 export interface ScatterSeriesType
   extends CommonSeriesType<ScatterValueType | null, 'scatter'>, CartesianSeriesType {
   type: 'scatter';
-  data?: readonly ScatterValueType[];
+  data?: ScatterData;
   /**
    * Size of the markers in the scatter plot, in pixels.
    */

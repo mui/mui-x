@@ -1,5 +1,6 @@
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { useScatterSeries, useXScale, useYScale } from '@mui/x-charts/hooks';
+import type { ScatterValueType } from '@mui/x-charts/models';
 
 const data1 = [
   { x: 95, y: 200, id: 1 },
@@ -40,9 +41,9 @@ function LinkPoints({ seriesId, close }: { seriesId: string; close?: boolean }) 
       fill="none"
       stroke={color}
       strokeWidth={2}
-      d={`M ${data.map(({ x, y }) => `${xScale(x)}, ${yScale(y)}`).join(' L')}${
-        close ? 'Z' : ''
-      }`}
+      d={`M ${(data as readonly ScatterValueType[])
+        .map(({ x, y }) => `${xScale(x)}, ${yScale(y)}`)
+        .join(' L')}${close ? 'Z' : ''}`}
     />
   );
 }

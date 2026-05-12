@@ -237,6 +237,20 @@ export default withDeploymentConfig({
             permanent: false,
           },
         ],
+        // Cross-Origin Isolation: required for `SharedArrayBuffer`, which the
+        // scatter-async-processing demo uses to share point data with its
+        // Web Worker zero-copy. Dev-only — production export doesn't honor
+        // `headers` (static `output: 'export'` mode), so the demo on the
+        // deployed docs falls back to the structured-clone path.
+        headers: async () => [
+          {
+            source: '/:path*',
+            headers: [
+              { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
+              { key: 'Cross-Origin-Embedder-Policy', value: 'require-corp' },
+            ],
+          },
+        ],
       }),
   ...localSettings,
 });

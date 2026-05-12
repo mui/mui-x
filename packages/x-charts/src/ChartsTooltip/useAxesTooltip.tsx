@@ -210,7 +210,29 @@ export function useAxesTooltip<
               zAxisId ? zAxis[zAxisId] : undefined,
             )(dataIndex) ?? '';
 
-          const rawValue = seriesToAdd.data[dataIndex] ?? null;
+          const dataField = seriesToAdd.data as unknown;
+          let rawValue: any;
+          if (
+            dataField != null &&
+            typeof dataField === 'object' &&
+            // eslint-disable-next-line no-underscore-dangle
+            (dataField as { __columnar?: true }).__columnar === true
+          ) {
+            const columnar = dataField as {
+              x: Float64Array;
+              y: Float64Array;
+              z?: Float64Array;
+              ids?: Int32Array | Float64Array;
+            };
+            rawValue = {
+              x: columnar.x[dataIndex],
+              y: columnar.y[dataIndex],
+              z: columnar.z?.[dataIndex],
+              id: columnar.ids?.[dataIndex],
+            };
+          } else {
+            rawValue = (dataField as readonly unknown[])?.[dataIndex] ?? null;
+          }
           const formattedLabel = getLabel(seriesToAdd.label, 'tooltip') ?? null;
 
           let value: any;

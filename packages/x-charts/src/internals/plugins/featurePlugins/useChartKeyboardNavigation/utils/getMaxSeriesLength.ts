@@ -16,9 +16,19 @@ export function getMaxSeriesLength<OutSeriesType extends Exclude<ChartSeriesType
           if ('hidden' in seriesItem && seriesItem.hidden) {
             return false;
           }
+          const data = seriesItem.data as unknown;
+          // Columnar scatter data: typed-array-backed, no per-point hidden flag.
+          if (
+            data != null &&
+            typeof data === 'object' &&
+            (data as { __columnar?: true }).__columnar === true
+          ) {
+            return (data as { length: number }).length > 0;
+          }
+          const arrayData = data as readonly unknown[];
           return (
-            seriesItem.data.length > 0 &&
-            seriesItem.data.some(
+            arrayData.length > 0 &&
+            arrayData.some(
               (value: unknown) =>
                 value != null && !(typeof value === 'object' && 'hidden' in value && value.hidden),
             )

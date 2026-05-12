@@ -42,9 +42,9 @@ function LinkPoints({ seriesId, close }) {
       fill="none"
       stroke={color}
       strokeWidth={2}
-      d={`M ${data.map(({ x, y }) => `${xScale(x)}, ${yScale(y)}`).join(' L')}${
-        close ? 'Z' : ''
-      }`}
+      d={`M ${data
+        .map(({ x, y }) => `${xScale(x)}, ${yScale(y)}`)
+        .join(' L')}${close ? 'Z' : ''}`}
     />
   );
 }

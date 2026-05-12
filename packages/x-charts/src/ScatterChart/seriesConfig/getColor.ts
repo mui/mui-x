@@ -1,5 +1,6 @@
 import { type ColorProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
+import { getScatterPoint } from '../scatterDataAccess';
 
 const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
   const zColorScale = zAxis?.colorScale;
@@ -19,7 +20,7 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
           return color;
         }
       }
-      const value = series.data[dataIndex];
+      const value = getScatterPoint(series.data, dataIndex);
       const color = value === null ? getSeriesColor({ value, dataIndex }) : zColorScale(value.z);
       if (color === null) {
         return getSeriesColor({ value, dataIndex });
@@ -33,7 +34,7 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
       if (dataIndex === undefined) {
         return series.color;
       }
-      const value = series.data[dataIndex];
+      const value = getScatterPoint(series.data, dataIndex);
       const color = value === null ? getSeriesColor({ value, dataIndex }) : yColorScale(value.y);
       if (color === null) {
         return getSeriesColor({ value, dataIndex });
@@ -47,7 +48,7 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
       if (dataIndex === undefined) {
         return series.color;
       }
-      const value = series.data[dataIndex];
+      const value = getScatterPoint(series.data, dataIndex);
       const color = value === null ? getSeriesColor({ value, dataIndex }) : xColorScale(value.x);
       if (color === null) {
         return getSeriesColor({ value, dataIndex });
@@ -61,7 +62,7 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
       return series.color;
     }
 
-    const value = series.data[dataIndex];
+    const value = getScatterPoint(series.data, dataIndex);
 
     return getSeriesColor({ value, dataIndex });
   };
