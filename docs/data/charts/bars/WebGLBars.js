@@ -13,8 +13,8 @@ function generateData(seed) {
   const data = new Array(POINTS);
   let value = 50;
   for (let i = 0; i < POINTS; i += 1) {
-    // Deterministic pseudo-random walk.
-    value += Math.sin(i * seed * 0.013) * 4;
+    // Deterministic pseudo-random walk. value-in-sin breaks linear predictability.
+    value += Math.sin(value * i * seed * 0.13) * 4;
     data[i] = Math.max(0, Math.round(value));
   }
   return data;
