@@ -133,7 +133,7 @@
     "serve": "catalog:",
     "sinon": "22.0.0",
     "string-replace-loader": "3.3.0",
-    "stylelint": "17.9.1",
+    "stylelint": "17.11.0",
     "tsx": "catalog:",
     "typescript": "5.9.3",
     "unist-util-visit": "5.1.0",
