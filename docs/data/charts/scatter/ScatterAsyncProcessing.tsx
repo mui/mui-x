@@ -79,19 +79,31 @@ function buildSeries(seed: number) {
       id: 'cluster-a',
       label: 'Cluster A',
       markerSize: 1,
-      data: buildColumnar(seed * 3, { x: 20 + seed * 5, y: 30 + seed * 3, spread: 4 }),
+      data: buildColumnar(seed * 3, {
+        x: 20 + seed * 5,
+        y: 30 + seed * 3,
+        spread: 4,
+      }),
     },
     {
       id: 'cluster-b',
       label: 'Cluster B',
       markerSize: 1,
-      data: buildColumnar(seed * 3 + 1, { x: 60 - seed * 4, y: 70 - seed * 2, spread: 5 }),
+      data: buildColumnar(seed * 3 + 1, {
+        x: 60 - seed * 4,
+        y: 70 - seed * 2,
+        spread: 5,
+      }),
     },
     {
       id: 'cluster-c',
       label: 'Cluster C',
       markerSize: 1,
-      data: buildColumnar(seed * 3 + 2, { x: 40 + seed * 2, y: 20 + seed * 4, spread: 6 }),
+      data: buildColumnar(seed * 3 + 2, {
+        x: 40 + seed * 2,
+        y: 20 + seed * 4,
+        spread: 6,
+      }),
     },
   ];
 }
@@ -99,7 +111,12 @@ function buildSeries(seed: number) {
 // Pre-build a few datasets at module scope so the references stay stable
 // across renders — the async pipeline only fires when the input identity
 // actually changes.
-const seriesVariants = [buildSeries(0), buildSeries(1), buildSeries(2), buildSeries(3)];
+const seriesVariants = [
+  buildSeries(0),
+  buildSeries(1),
+  buildSeries(2),
+  buildSeries(3),
+];
 const xAxis = [{ min: 0, max: 100, label: 'x', zoom: true }];
 const yAxis = [{ min: 0, max: 100, label: 'y', width: 50, zoom: true }];
 
@@ -164,7 +181,11 @@ export default function ScatterAsyncProcessing() {
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ alignItems: 'center', flexWrap: 'wrap' }}
+      >
         <Button
           variant="outlined"
           size="small"
@@ -196,7 +217,10 @@ export default function ScatterAsyncProcessing() {
           yAxis={yAxis}
           renderer="webgl"
           slotProps={{
-            legend: { position: { vertical: 'bottom' }, sx: { justifyContent: 'center' } },
+            legend: {
+              position: { vertical: 'bottom' },
+              sx: { justifyContent: 'center' },
+            },
           }}
         >
           <foreignObject x={8} y={8} width={260} height={32}>
@@ -210,9 +234,17 @@ export default function ScatterAsyncProcessing() {
         </Typography>
         <Box
           component="pre"
-          sx={{ m: 0, mt: 1, fontFamily: 'monospace', fontSize: 12, lineHeight: 1.4 }}
+          sx={{
+            m: 0,
+            mt: 1,
+            fontFamily: 'monospace',
+            fontSize: 12,
+            lineHeight: 1.4,
+          }}
         >
-          {log.length === 0 ? '(no transitions yet — click "Reshuffle")' : log.join('\n')}
+          {log.length === 0
+            ? '(no transitions yet — click "Reshuffle")'
+            : log.join('\n')}
         </Box>
       </Paper>
     </Stack>

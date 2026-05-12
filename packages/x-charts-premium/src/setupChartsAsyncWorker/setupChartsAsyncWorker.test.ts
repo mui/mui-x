@@ -1,8 +1,5 @@
 import { beforeEach, afterEach } from 'vitest';
-import {
-  MUI_X_CHARTS_ASYNC_CHANNEL,
-  type ChartsAsyncWorkerMessage,
-} from '@mui/x-charts/internals';
+import { MUI_X_CHARTS_ASYNC_CHANNEL, type ChartsAsyncWorkerMessage } from '@mui/x-charts/internals';
 import { setupChartsAsyncWorker } from './setupChartsAsyncWorker';
 
 class FakeBroadcastChannel extends EventTarget {

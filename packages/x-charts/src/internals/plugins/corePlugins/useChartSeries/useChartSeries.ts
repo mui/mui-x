@@ -85,25 +85,20 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, s
       }
 
       if (runner) {
-        runner
-          .runSeriesDefaultize(
-            { series, colors: resolvedColors, theme, dataset },
-            reqId,
-          )
-          .then(
-            (result) => {
-              if (reqId !== requestRef.current) {
-        return;
-      }
-              commitSuccess(result.defaultizedSeries, result.idToType);
-            },
-            (err: Error) => {
-              if (reqId !== requestRef.current) {
-        return;
-      }
-              commitError(err);
-            },
-          );
+        runner.runSeriesDefaultize({ series, colors: resolvedColors, theme, dataset }, reqId).then(
+          (result) => {
+            if (reqId !== requestRef.current) {
+              return;
+            }
+            commitSuccess(result.defaultizedSeries, result.idToType);
+          },
+          (err: Error) => {
+            if (reqId !== requestRef.current) {
+              return;
+            }
+            commitError(err);
+          },
+        );
         return;
       }
 

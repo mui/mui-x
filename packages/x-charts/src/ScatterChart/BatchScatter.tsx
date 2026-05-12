@@ -58,9 +58,7 @@ function useCreatePaths(
 ) {
   const { instance } = useChartsContext();
   const length = isColumnarScatterData(seriesData) ? seriesData.length : seriesData.length;
-  const [pathsState, setPathsState] = React.useState<Map<string, string[]>>(
-    () => new Map(),
-  );
+  const [pathsState, setPathsState] = React.useState<Map<string, string[]>>(() => new Map());
 
   React.useEffect(() => {
     const getXPosition = getValueToPositionMapper(xScale);
@@ -74,7 +72,10 @@ function useCreatePaths(
     const ys = isColumnar ? seriesData.y : null;
     const arrayData = isColumnar
       ? null
-      : (seriesData as Exclude<typeof seriesData, ReturnType<typeof isColumnarScatterData> extends true ? never : never>);
+      : (seriesData as Exclude<
+          typeof seriesData,
+          ReturnType<typeof isColumnarScatterData> extends true ? never : never
+        >);
 
     let i = 0;
     let cancelled = false;

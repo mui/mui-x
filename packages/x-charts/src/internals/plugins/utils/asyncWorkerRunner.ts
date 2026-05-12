@@ -1,6 +1,9 @@
 import type { ChartSeriesType, DatasetType } from '../../../models/seriesType/config';
 import type { AllSeriesType, SeriesId } from '../../../models/seriesType';
-import type { DefaultizedSeriesGroups, SeriesIdToType } from '../corePlugins/useChartSeries/useChartSeries.types';
+import type {
+  DefaultizedSeriesGroups,
+  SeriesIdToType,
+} from '../corePlugins/useChartSeries/useChartSeries.types';
 
 /**
  * BroadcastChannel name used for ambient discovery + message passing between
@@ -109,20 +112,23 @@ export function getChartsAsyncRunner(): Promise<ChartsAsyncRunner | null> {
       '; SAB available =',
       typeof SharedArrayBuffer !== 'undefined',
     );
-    persistentChannel.addEventListener('message', (event: MessageEvent<ChartsAsyncWorkerMessage>) => {
-      const msg = event.data;
-      if (
-        msg?.kind === 'pong' &&
-        msg.sessionId === persistentSessionId &&
-        installedRunner === null &&
-        persistentChannel !== null &&
-        persistentSessionId !== null
-      ) {
-        // eslint-disable-next-line no-console
-        console.log('[mui-x-charts] worker discovered via BroadcastChannel pong');
-        installedRunner = buildRunner(persistentChannel, persistentSessionId);
-      }
-    });
+    persistentChannel.addEventListener(
+      'message',
+      (event: MessageEvent<ChartsAsyncWorkerMessage>) => {
+        const msg = event.data;
+        if (
+          msg?.kind === 'pong' &&
+          msg.sessionId === persistentSessionId &&
+          installedRunner === null &&
+          persistentChannel !== null &&
+          persistentSessionId !== null
+        ) {
+          // eslint-disable-next-line no-console
+          console.log('[mui-x-charts] worker discovered via BroadcastChannel pong');
+          installedRunner = buildRunner(persistentChannel, persistentSessionId);
+        }
+      },
+    );
   }
 
   // Re-ping every time we get called without an installed runner. Cheap

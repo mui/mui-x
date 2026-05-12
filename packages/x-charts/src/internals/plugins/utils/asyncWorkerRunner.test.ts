@@ -186,10 +186,7 @@ describe('getChartsAsyncRunner', () => {
     const runner = await getChartsAsyncRunner();
     let caught: Error | null = null;
     try {
-      await runner!.runSeriesDefaultize(
-        { series: [], colors: [], theme: 'light' } as any,
-        99,
-      );
+      await runner!.runSeriesDefaultize({ series: [], colors: [], theme: 'light' } as any, 99);
     } catch (err) {
       caught = err as Error;
     }

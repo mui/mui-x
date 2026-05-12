@@ -559,8 +559,7 @@ export const selectorChartSeriesFlatbushMap = createSelectorMemoized(
         yAxisId = defaultYAxisId,
       } = validSeries.series[seriesId];
 
-      const isColumnar =
-        data != null && (data as { __columnar?: true }).__columnar === true;
+      const isColumnar = data != null && (data as { __columnar?: true }).__columnar === true;
       const length = isColumnar ? (data as { length: number }).length : data.length;
 
       const flatbush = new Flatbush(length);
