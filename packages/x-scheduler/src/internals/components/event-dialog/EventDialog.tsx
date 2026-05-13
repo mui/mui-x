@@ -113,6 +113,8 @@ const EventDialog = createModal<SchedulerRenderableEventOccurrence>({
   contextName: 'EventDialogContext',
 });
 
+const EMPTY_SLOTS: EventDialogSlots = {};
+
 export const EventDialogContext = EventDialog.Context;
 export const useEventDialogContext = EventDialog.useContext;
 
@@ -168,10 +170,8 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
 
   const RecurringScopeDialogSlot = slots?.recurringScopeDialog;
 
-  const slotsContextValue = React.useMemo<EventDialogSlots>(() => slots ?? {}, [slots]);
-
   return (
-    <EventDialogSlotsContext.Provider value={slotsContextValue}>
+    <EventDialogSlotsContext.Provider value={slots ?? EMPTY_SLOTS}>
       <EventDialog.Provider
         render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
           <EventDialogContent
