@@ -56,6 +56,31 @@ export const selectorChartRawProjection = createSelector(
 );
 
 /**
+ * Map a feature's `properties.name` to its index in `geoData.features`,
+ * for fast lookup by name when joining series rows to features.
+ *
+ * Features without a string `properties.name` are skipped; on duplicates,
+ * the first occurrence wins.
+ */
+export const selectorChartGeoFeatureIndexByName = createSelectorMemoized(
+  selectorChartRawGeoData,
+  (geoData): ReadonlyMap<string, number> => {
+    const map = new Map<string, number>();
+    if (!geoData) {
+      return map;
+    }
+    geoData.features.forEach((feature, index) => {
+      const name = feature.properties?.name;
+      if (typeof name !== 'string' || map.has(name)) {
+        return;
+      }
+      map.set(name, index);
+    });
+    return map;
+  },
+);
+
+/**
  * Resolves the raw `projection` input into a ready-to-use `GeoProjection` instance
  * fitted to the chart's drawing area.
  *
