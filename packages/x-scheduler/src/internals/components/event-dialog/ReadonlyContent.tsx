@@ -134,16 +134,16 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
     schedulerResourceSelectors.processedResource,
     occurrence.resource,
   );
-  const recurringEvents = useStore(store, schedulerOtherSelectors.recurringEvents);
+  const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const defaultRecurrenceKey = React.useMemo(
     () =>
-      recurringEvents?.getDefaultPresetKey(
+      recurringEventsPlugin?.getDefaultPresetKey(
         adapter,
         occurrence.displayTimezone.rrule,
         occurrence.displayTimezone.start,
       ) ?? null,
     [
-      recurringEvents,
+      recurringEventsPlugin,
       adapter,
       occurrence.displayTimezone.rrule,
       occurrence.displayTimezone.start,

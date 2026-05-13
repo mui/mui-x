@@ -4,7 +4,7 @@ import { EventBuilder } from 'test/utils/scheduler/event-builder';
 import { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import { SchedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 
-const recurringEvents = new SchedulerRecurringEventsPlugin();
+const recurringEventsPlugin = new SchedulerRecurringEventsPlugin();
 
 describe('processEvent', () => {
   it('should keep event timezone in modelInBuiltInFormat', () => {
@@ -60,7 +60,7 @@ describe('processEvent', () => {
         })
         .build();
 
-      const processed = processEvent(event, 'Asia/Tokyo', adapter, recurringEvents);
+      const processed = processEvent(event, 'Asia/Tokyo', adapter, recurringEventsPlugin);
 
       expect(adapter.getTimezone(processed.displayTimezone.rrule!.until!)).to.equal('Asia/Tokyo');
     });
@@ -75,7 +75,7 @@ describe('processEvent', () => {
         },
         'Pacific/Kiritimati',
         adapter,
-        recurringEvents,
+        recurringEventsPlugin,
       );
 
       expect(adapter.getTimezone(processed.displayTimezone.rrule!.until!)).to.equal(

@@ -89,7 +89,7 @@ export function getProcessedEventFromModel<TEvent extends object>(
   adapter: Adapter,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
   displayTimezone: TemporalTimezone,
-  recurringEvents: SchedulerRecurringEventsPluginInterface | null = null,
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
 ): SchedulerProcessedEvent {
   // 1. Convert the model to a default event model
   const modelInDefaultFormat = {} as SchedulerEvent;
@@ -103,7 +103,7 @@ export function getProcessedEventFromModel<TEvent extends object>(
   }
 
   // 2. Convert the default event model to a processed event
-  return processEvent(modelInDefaultFormat, displayTimezone, adapter, recurringEvents);
+  return processEvent(modelInDefaultFormat, displayTimezone, adapter, recurringEventsPlugin);
 }
 
 /**
@@ -289,7 +289,7 @@ export function buildEventsState<TEvent extends object, TResource extends object
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'events' | 'eventModelStructure'>,
   adapter: Adapter,
   displayTimezone: TemporalTimezone,
-  recurringEvents: SchedulerRecurringEventsPluginInterface | null = null,
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
 ): Pick<
   SchedulerState<TEvent>,
   | 'eventIdList'
@@ -310,7 +310,7 @@ export function buildEventsState<TEvent extends object, TResource extends object
       adapter,
       eventModelStructure,
       displayTimezone,
-      recurringEvents,
+      recurringEventsPlugin,
     );
     eventIdList.push(processedEvent.id);
     eventModelLookup.set(processedEvent.id, event);

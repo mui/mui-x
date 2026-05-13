@@ -34,7 +34,7 @@ import { getWeekDayCode } from '../utils/recurring-events/internal-utils';
  *
  * Conceptually mirrors {@link SchedulerLazyLoadingPlugin}: a premium class
  * that the premium store instantiates. The plugin is stateless and gets
- * attached to `state.recurringEvents` by the base scheduler store, so
+ * attached to `state.recurringEventsPlugin` by the base scheduler store, so
  * community code can delegate through that slot without holding a hard
  * dependency on this class. Methods are thin wrappers around the private
  * implementations co-located in this package.

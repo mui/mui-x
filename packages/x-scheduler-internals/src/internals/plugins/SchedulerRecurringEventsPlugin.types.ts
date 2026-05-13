@@ -18,7 +18,7 @@ import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerSt
  * Public surface of the premium recurring-events plugin.
  *
  * The community Scheduler holds an optional reference on
- * `SchedulerState.recurringEvents`. The implementation lives in
+ * `SchedulerState.recurringEventsPlugin`. The implementation lives in
  * `@mui/x-scheduler-internals-premium` and is attached by the premium stores at
  * construction time — keeping RRULE parsing, occurrence expansion and
  * scope-aware updates out of the MIT bundle.

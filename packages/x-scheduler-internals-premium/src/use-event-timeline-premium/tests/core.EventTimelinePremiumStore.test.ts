@@ -34,7 +34,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         processedEventLookup: new Map(),
         processedResourceLookup: new Map(),
         readOnly: false,
-        recurringEvents: store.recurringEventsPlugin,
+        recurringEventsPlugin: store.recurringEventsPlugin,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [],
         resourceModelStructure: undefined,

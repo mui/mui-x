@@ -88,7 +88,7 @@ export class SchedulerLazyLoadingPlugin<
         { ...this.store.parameters, events: allCachedEvents } as Parameters,
         adapter,
         displayTimezone,
-        this.store.state.recurringEvents,
+        this.store.state.recurringEventsPlugin,
       );
 
       this.store.update({
@@ -113,7 +113,7 @@ export class SchedulerLazyLoadingPlugin<
         { ...this.store.parameters, events } as Parameters,
         adapter,
         displayTimezone,
-        this.store.state.recurringEvents,
+        this.store.state.recurringEventsPlugin,
       );
       this.store.update({
         ...this.store.state,
@@ -172,7 +172,7 @@ export class SchedulerLazyLoadingPlugin<
         { ...this.store.parameters, events: newEvents },
         adapter,
         displayTimezone,
-        this.store.state.recurringEvents,
+        this.store.state.recurringEventsPlugin,
       );
 
       this.store.update({

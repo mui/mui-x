@@ -29,7 +29,7 @@ export function useEventOccurrencesGroupedByDay(
   const events = useStore(store, schedulerEventSelectors.processedEventList);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
-  const recurringEvents = useStore(store, schedulerOtherSelectors.recurringEvents);
+  const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
 
   return React.useMemo(
     () =>
@@ -39,9 +39,9 @@ export function useEventOccurrencesGroupedByDay(
         events,
         visibleResources,
         displayTimezone,
-        recurringEvents,
+        recurringEventsPlugin,
       }),
-    [adapter, days, events, visibleResources, displayTimezone, recurringEvents],
+    [adapter, days, events, visibleResources, displayTimezone, recurringEventsPlugin],
   );
 }
 
@@ -63,10 +63,10 @@ export namespace useEventOccurrencesGroupedByDay {
 export function innerGetEventOccurrencesGroupedByDay(
   parameters: Pick<
     GetOccurrencesFromEventsParameters,
-    'adapter' | 'visibleResources' | 'events' | 'displayTimezone' | 'recurringEvents'
+    'adapter' | 'visibleResources' | 'events' | 'displayTimezone' | 'recurringEventsPlugin'
   > & { days: SchedulerProcessedDate[] },
 ): Map<string, SchedulerEventOccurrence[]> {
-  const { adapter, days, events, visibleResources, displayTimezone, recurringEvents } = parameters;
+  const { adapter, days, events, visibleResources, displayTimezone, recurringEventsPlugin } = parameters;
 
   const occurrenceMap = new Map<string, SchedulerEventOccurrence[]>(
     days.map((day) => [day.key, []]),
@@ -81,7 +81,7 @@ export function innerGetEventOccurrencesGroupedByDay(
     events,
     visibleResources,
     displayTimezone,
-    recurringEvents,
+    recurringEventsPlugin,
   });
 
   for (const occurrence of occurrences) {

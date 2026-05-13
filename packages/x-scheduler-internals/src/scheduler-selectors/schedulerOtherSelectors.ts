@@ -25,8 +25,8 @@ export const schedulerOtherSelectors = {
    */
   defaultEventColor: createSelector((state: State) => state.eventColor),
   displayTimezone: createSelector((state: State) => state.displayTimezone),
-  recurringEvents: createSelector((state: State) => state.recurringEvents),
-  areRecurringEventsAvailable: createSelector((state: State) => state.recurringEvents != null),
+  recurringEventsPlugin: createSelector((state: State) => state.recurringEventsPlugin),
+  areRecurringEventsAvailable: createSelector((state: State) => state.recurringEventsPlugin != null),
   isLoading: createSelector((state: State) => state.isLoading),
   errors: createSelector((state: State) => state.errors),
 };

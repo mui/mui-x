@@ -9,7 +9,7 @@ export function processEvent(
   model: SchedulerEvent,
   displayTimezone: TemporalTimezone,
   adapter: Adapter,
-  recurringEvents: SchedulerRecurringEventsPluginInterface | null = null,
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
 ): SchedulerProcessedEvent {
   const dataTimezone = model.timezone ?? 'default';
 
@@ -26,13 +26,13 @@ export function processEvent(
     : undefined;
 
   const parsedDataRRule =
-    recurringEvents && model.rrule
-      ? recurringEvents.parseRRule(adapter, model.rrule, dataTimezone)
+    recurringEventsPlugin && model.rrule
+      ? recurringEventsPlugin.parseRRule(adapter, model.rrule, dataTimezone)
       : undefined;
 
   const displayTimezoneRRule =
-    recurringEvents && parsedDataRRule
-      ? recurringEvents.projectRRuleToTimezone(adapter, parsedDataRRule, displayTimezone, startInstant)
+    recurringEventsPlugin && parsedDataRRule
+      ? recurringEventsPlugin.projectRRuleToTimezone(adapter, parsedDataRRule, displayTimezone, startInstant)
       : undefined;
 
   return {

@@ -17,7 +17,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         events,
         displayTimezone: 'default',
         visibleResources: {},
-        recurringEvents: null,
+        recurringEventsPlugin: null,
       });
       return useEventOccurrencesWithTimelinePosition({ occurrences, maxSpan });
     });

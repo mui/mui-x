@@ -99,9 +99,9 @@ export class ExtendableEventCalendarStore<
     parameters: EventCalendarParameters<TEvent, TResource>,
     adapter: Adapter,
     instanceName: SchedulerInstanceName,
-    recurringEvents: SchedulerRecurringEventsPluginInterface | null = null,
+    recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
   ) {
-    super(parameters, adapter, instanceName, mapper, recurringEvents);
+    super(parameters, adapter, instanceName, mapper, recurringEventsPlugin);
 
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.

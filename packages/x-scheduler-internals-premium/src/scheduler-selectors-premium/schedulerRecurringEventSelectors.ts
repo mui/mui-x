@@ -18,31 +18,31 @@ import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-se
 export const schedulerRecurringEventSelectors = {
   presets: createSelectorMemoized(
     (state: State) => state.adapter,
-    (state: State) => state.recurringEvents,
+    (state: State) => state.recurringEventsPlugin,
     (
       adapter,
-      recurringEvents,
+      recurringEventsPlugin,
       date: SchedulerProcessedDate,
     ): Record<RecurringEventPresetKey, SchedulerProcessedEventRecurrenceRule> | null =>
-      recurringEvents?.computePresets(adapter, date) ?? null,
+      recurringEventsPlugin?.computePresets(adapter, date) ?? null,
   ),
   defaultPresetKey: createSelectorMemoized(
     (state: State) => state.adapter,
-    (state: State) => state.recurringEvents,
+    (state: State) => state.recurringEventsPlugin,
     (
       adapter,
-      recurringEvents,
+      recurringEventsPlugin,
       rule: SchedulerProcessedEventRecurrenceRule | undefined,
       occurrenceStart: SchedulerProcessedDate,
     ): RecurringEventPresetKey | 'custom' | null =>
-      recurringEvents?.getDefaultPresetKey(adapter, rule, occurrenceStart) ?? null,
+      recurringEventsPlugin?.getDefaultPresetKey(adapter, rule, occurrenceStart) ?? null,
   ),
   isSameRRule: createSelector(
     (state: State) => state.adapter,
-    (state: State) => state.recurringEvents,
+    (state: State) => state.recurringEventsPlugin,
     (
       adapter,
-      recurringEvents,
+      recurringEventsPlugin,
       rruleA: SchedulerProcessedEventRecurrenceRule | undefined,
       rruleB: SchedulerProcessedEventRecurrenceRule | undefined,
     ): boolean => {
@@ -52,32 +52,32 @@ export const schedulerRecurringEventSelectors = {
       if (!rruleA || !rruleB) {
         return false;
       }
-      return recurringEvents?.isSameRRule(adapter, rruleA, rruleB) ?? false;
+      return recurringEventsPlugin?.isSameRRule(adapter, rruleA, rruleB) ?? false;
     },
   ),
   weeklyDays: createSelectorMemoized(
     (state: State) => state.adapter,
-    (state: State) => state.recurringEvents,
+    (state: State) => state.recurringEventsPlugin,
     schedulerOtherSelectors.visibleDate,
     (
       adapter,
-      recurringEvents,
+      recurringEventsPlugin,
       visibleDate,
     ): { code: RecurringEventWeekDayCode; date: TemporalSupportedObject }[] =>
-      recurringEvents?.getWeeklyDays(adapter, visibleDate) ?? [],
+      recurringEventsPlugin?.getWeeklyDays(adapter, visibleDate) ?? [],
   ),
   monthlyReference: createSelectorMemoized(
     (state: State) => state.adapter,
-    (state: State) => state.recurringEvents,
+    (state: State) => state.recurringEventsPlugin,
     (
       adapter,
-      recurringEvents,
+      recurringEventsPlugin,
       date: SchedulerProcessedDate,
     ): {
       dayOfMonth: number;
       code: RecurringEventWeekDayCode;
       ord: number;
       date: TemporalSupportedObject;
-    } | null => recurringEvents?.getMonthlyReference(adapter, date) ?? null,
+    } | null => recurringEventsPlugin?.getMonthlyReference(adapter, date) ?? null,
   ),
 };

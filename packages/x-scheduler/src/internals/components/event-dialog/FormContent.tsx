@@ -109,7 +109,7 @@ export function FormContent(props: FormContentProps) {
     occurrence.id,
   );
   const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
-  const recurringEvents = useStore(store, schedulerOtherSelectors.recurringEvents);
+  const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
@@ -118,18 +118,18 @@ export function FormContent(props: FormContentProps) {
 
   // Recurrence helpers (delegated to the premium plugin when present)
   const recurrencePresets = React.useMemo(
-    () => recurringEvents?.computePresets(adapter, occurrence.displayTimezone.start) ?? null,
-    [recurringEvents, adapter, occurrence.displayTimezone.start],
+    () => recurringEventsPlugin?.computePresets(adapter, occurrence.displayTimezone.start) ?? null,
+    [recurringEventsPlugin, adapter, occurrence.displayTimezone.start],
   );
   const defaultRecurrencePresetKey = React.useMemo(
     () =>
-      recurringEvents?.getDefaultPresetKey(
+      recurringEventsPlugin?.getDefaultPresetKey(
         adapter,
         occurrence.displayTimezone.rrule,
         occurrence.displayTimezone.start,
       ) ?? null,
     [
-      recurringEvents,
+      recurringEventsPlugin,
       adapter,
       occurrence.displayTimezone.rrule,
       occurrence.displayTimezone.start,
@@ -206,8 +206,8 @@ export function FormContent(props: FormContentProps) {
         end,
         rrule: rruleToSubmit,
       });
-    } else if (showRecurrence && recurringEvents && occurrence.displayTimezone.rrule) {
-      const recurrenceModified = !recurringEvents.isSameRRule(
+    } else if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
+      const recurrenceModified = !recurringEventsPlugin.isSameRRule(
         adapter,
         occurrence.displayTimezone.rrule,
         rruleToSubmit,

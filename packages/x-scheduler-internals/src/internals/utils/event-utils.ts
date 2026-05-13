@@ -70,7 +70,7 @@ export function getDaysTheOccurrenceIsVisibleOn(
  * Returns the occurrences to render in the given date range, expanding recurring events.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
-  const { adapter, start, end, events, visibleResources, displayTimezone, recurringEvents } =
+  const { adapter, start, end, events, visibleResources, displayTimezone, recurringEventsPlugin } =
     parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
 
@@ -84,7 +84,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     if (event.displayTimezone.rrule) {
       // Without the premium recurring-events plugin attached, recurring events
       // are not expanded into occurrences — they are treated as single non-recurring events.
-      if (recurringEvents == null) {
+      if (recurringEventsPlugin == null) {
         if (
           adapter.isAfter(event.displayTimezone.start.value, end) ||
           adapter.isBefore(event.displayTimezone.end.value, start)
@@ -97,7 +97,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 
       // TODO: Check how this behave when the occurrence is between start and end but not in the visible days (e.g: hidden week end).
       occurrences.push(
-        ...recurringEvents.getOccurrencesForVisibleDays(event, start, end, adapter, displayTimezone),
+        ...recurringEventsPlugin.getOccurrencesForVisibleDays(event, start, end, adapter, displayTimezone),
       );
       continue;
     }
@@ -123,5 +123,5 @@ export interface GetOccurrencesFromEventsParameters {
   events: SchedulerProcessedEvent[];
   visibleResources: Record<string, boolean>;
   displayTimezone: TemporalTimezone;
-  recurringEvents: SchedulerRecurringEventsPluginInterface | null;
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
 }

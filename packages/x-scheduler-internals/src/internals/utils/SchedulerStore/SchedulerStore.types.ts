@@ -167,7 +167,7 @@ export interface SchedulerState<TEvent extends object = any> {
    * `null` in the community Scheduler. When set, the premium plugin provides
    * RRULE parsing, occurrence expansion, and scope-aware updates.
    */
-  recurringEvents: SchedulerRecurringEventsPluginInterface | null;
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
 }
 
 export interface SchedulerDataSource<TEvent extends object> {

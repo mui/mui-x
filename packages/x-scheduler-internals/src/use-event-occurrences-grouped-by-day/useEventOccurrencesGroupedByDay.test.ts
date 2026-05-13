@@ -29,7 +29,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       events,
       visibleResources: visible,
       displayTimezone: 'default',
-      recurringEvents: null,
+      recurringEventsPlugin: null,
     });
   }
 
@@ -86,7 +86,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       events: [visibleEvent, invisibleEvent],
       visibleResources: visibilityWithHidden,
       displayTimezone: 'default',
-      recurringEvents: null,
+      recurringEventsPlugin: null,
     });
 
     const list = result.get(days[1].key)!;
@@ -137,7 +137,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       events: [event],
       visibleResources: visible,
       displayTimezone: 'Europe/Paris',
-      recurringEvents: new SchedulerRecurringEventsPlugin(),
+      recurringEventsPlugin: new SchedulerRecurringEventsPlugin(),
     });
 
     // Should NOT appear on Jan 10 in Paris
