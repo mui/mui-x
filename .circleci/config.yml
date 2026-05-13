@@ -105,16 +105,10 @@ jobs:
           path: test-results
   test_browser:
     <<: *default-job
-    parameters:
-      <<: *default-parameters
-      resource-class:
-        type: enum
-        enum: [large, xlarge]
-        default: xlarge
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.59.1-noble
-    resource_class: << parameters.resource-class >>
+    resource_class: xlarge
     steps:
       - checkout
       - install-deps:
@@ -394,7 +388,6 @@ workflows:
           <<: *default-context
           name: test_browser_react_18
           react-version: ^18
-          resource-class: large
       - test_e2e:
           <<: *default-context
           name: test_e2e_react_18
