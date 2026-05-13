@@ -118,6 +118,7 @@ export default defineConfig({
       testTimeout: 60000,
       // Retry failed tests up to 1 time. This is useful for flaky tests.
       retry: 3,
+      maxWorkers: 2,
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },
