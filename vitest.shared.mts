@@ -108,7 +108,6 @@ export default defineConfig({
     },
     // Disable isolation to speed up the tests.
     isolate: false,
-    sequence: { groupOrder: 0 },
     // Performance improvements for the tests.
     // https://vitest.dev/guide/improving-performance.html#improving-performance
     ...(process.env.CI && {
@@ -122,7 +121,7 @@ export default defineConfig({
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
       // Reduce the number of workers to avoid CI timeouts.
-      maxWorkers: 1,
+      maxWorkers: 2,
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },
