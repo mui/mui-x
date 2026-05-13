@@ -515,18 +515,22 @@ export function useGridColumns(
     }
   }, [apiRef, logger, props.columnVisibilityModel]);
 
-  React.useEffect(() => {
+  const checkMultiSelectColumns = React.useCallback(() => {
     if (props.signature !== GridSignature.DataGrid) {
       return;
     }
-    if (props.columns.some((col) => col.type === 'multiSelect')) {
+    if (gridColumnDefinitionsSelector(apiRef).some((col) => col.type === 'multiSelect')) {
       warnOnce([
         'MUI X: The `multiSelect` column type is available in Pro and Premium versions',
         'Use `<DataGridPro />` or `<DataGridPremium />` to render it correctly.',
         'For more details, see https://mui.com/x/react-data-grid/column-definition/#multi-select',
       ]);
     }
-  }, [props.columns, props.signature]);
+  }, [apiRef, props.signature]);
+
+  useGridEvent(apiRef, 'columnsChange', checkMultiSelectColumns);
+
+  React.useEffect(checkMultiSelectColumns, [checkMultiSelectColumns]);
 }
 
 function mergeColumnsState(columnsState: GridColumnsState) {
