@@ -95,25 +95,27 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
 
-    // Verifies the CSS gate that blocks Chromium's focus delegation onto
-    // contenteditable section spans when the field is idle. The delegation
-    // itself only fires on trusted pointer events (so it can't be exercised
-    // by synthetic events here), but the CSS rule that prevents it is
-    // checkable via computed styles. Needs real layout, so skip in JSDOM.
+    // Chromium delegates focus from a non-contenteditable ancestor click onto
+    // the nearest contenteditable descendant — but only for trusted pointer
+    // events. We use vitest's CDP-backed `userEvent` here; synthetic events
+    // skip default actions and would let the test pass regardless.
     it.skipIf(isJSDOM)(
-      'should mark section content as read-only while the field is idle, preventing Chromium focus delegation',
+      'should not focus any section when clicking on an ancestor outside the field root',
       async () => {
-        const view = renderWithProps({});
-        const sectionContent = view
-          .getSectionsContainer()
-          .querySelector<HTMLElement>('[role="spinbutton"]')!;
+        // `display: flex; width: 100%` lets the field keep its natural width
+        // and leaves blank space to its right inside the wrapper. The center
+        // of the wrapper (where userEvent clicks) lands in that blank space.
+        render(
+          <div data-testid="flex-wrapper" style={{ display: 'flex', width: '100%' }}>
+            <DateField />
+          </div>,
+        );
 
-        // Idle: read-only blocks delegation from non-section ancestors.
-        expect(getComputedStyle(sectionContent).webkitUserModify).to.equal('read-only');
+        const { userEvent } = await import('@vitest/browser/context');
+        await userEvent.click(screen.getByTestId('flex-wrapper'));
 
-        // Focused: rule relaxes so editing works as expected.
-        await view.selectSection('month');
-        expect(getComputedStyle(sectionContent).webkitUserModify).to.equal('read-write');
+        expect(getCleanedSelectedContent()).to.equal('');
+        expect(document.activeElement?.getAttribute('role')).not.to.equal('spinbutton');
       },
     );
   });
