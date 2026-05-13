@@ -709,6 +709,11 @@ const pages: MuiPage[] = [
             unstable: true,
           },
           {
+            pathname: '/x/react-charts/radial-bars',
+            plan: 'premium',
+            unstable: true,
+          },
+          {
             pathname: '/x/react-charts/radial-lines',
             plan: 'premium',
             unstable: true,
