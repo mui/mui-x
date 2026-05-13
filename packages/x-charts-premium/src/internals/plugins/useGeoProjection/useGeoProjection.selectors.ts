@@ -1,8 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import {
-  type ChartState,
-  selectorChartDrawingArea,
-} from '@mui/x-charts/internals';
+import { type ChartState, selectorChartDrawingArea } from '@mui/x-charts/internals';
 import {
   geoAlbers,
   geoAlbersUsa,

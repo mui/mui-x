@@ -1,8 +1,5 @@
 import { type ChartPluginSignature } from '@mui/x-charts/internals';
-import {
-  type GeoProjection,
-  type ExtendedFeatureCollection,
-} from '@mui/x-charts-vendor/d3-geo';
+import { type GeoProjection, type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 
 /**
  * A d3-geo projection accepted by `useGeoProjection`.

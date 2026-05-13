@@ -5,7 +5,7 @@ const getColor: ColorProcessor<'mapShape'> = (series) => {
     if (dataIndex == null) {
       return series.color;
     }
-    return series.data[dataIndex].color ?? series.color
+    return series.data[dataIndex].color ?? series.color;
   };
 };
 
