@@ -196,8 +196,6 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     occurrence.id,
   );
   const inputsDisabled = controlled.recurrenceSelection === null || isPropertyReadOnly('rrule');
-  // Non-null assertion: this component is only rendered when the premium
-  // recurring-events plugin is attached, so both selectors return a value.
   const monthlyRef = useStore(
     store,
     schedulerRecurringEventSelectors.monthlyReference,
