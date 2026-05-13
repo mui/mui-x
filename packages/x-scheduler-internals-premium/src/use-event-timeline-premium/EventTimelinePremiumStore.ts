@@ -14,6 +14,7 @@ import {
   EventTimelinePremiumParameters,
 } from './EventTimelinePremiumStore.types';
 import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePremiumLazyLoadingPlugin';
+import { SchedulerRecurringEventsPlugin } from '../internals/plugins/SchedulerRecurringEventsPlugin';
 import {
   EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS,
   getPresetPxPerDay,
@@ -103,11 +104,16 @@ export class EventTimelinePremiumStore<
 > {
   public lazyLoading: EventTimelinePremiumLazyLoadingPlugin<TEvent>;
 
+  public recurringEventsPlugin: SchedulerRecurringEventsPlugin;
+
   public constructor(
     parameters: EventTimelinePremiumParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
-    super(parameters, adapter, 'EventTimelinePremiumStore', mapper);
+    const recurringEventsPlugin = new SchedulerRecurringEventsPlugin();
+    super(parameters, adapter, 'EventTimelinePremiumStore', mapper, recurringEventsPlugin);
+
+    this.recurringEventsPlugin = recurringEventsPlugin;
 
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.

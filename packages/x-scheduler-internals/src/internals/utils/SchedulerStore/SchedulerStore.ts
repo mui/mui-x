@@ -4,6 +4,7 @@ import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
 import {
+  SchedulerEvent,
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
@@ -23,26 +24,24 @@ import {
   UpdateEventsParameters,
   SchedulerInstanceName,
 } from './SchedulerStore.types';
+import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import {
   SchedulerEvents,
   SchedulerEventListener,
   SchedulerEventParameters,
 } from '../../models/events';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
-import { createEventFromRecurringEvent, updateRecurringEvent } from '../recurring-events';
-import { schedulerEventSelectors, schedulerOtherSelectors } from '../../../scheduler-selectors';
+import { schedulerEventSelectors } from '../../../scheduler-selectors';
 import {
   buildEventsState,
   buildResourcesState,
   createEventModel,
-  getSchedulerPlan,
   getUpdatedEventModelFromChanges,
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { dateToEventString } from '../date-utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { createChangeEventDetails } from '../../../base-ui-copy/utils/createBaseUIEventDetails';
-import { applyDataTimezoneToEventUpdate } from '../recurring-events/applyDataTimezoneToEventUpdate';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -84,6 +83,7 @@ export class SchedulerStore<
     adapter: Adapter,
     instanceName: SchedulerInstanceName,
     mapper: SchedulerParametersToStateMapper<State, Parameters>,
+    recurringEvents: SchedulerRecurringEventsPluginInterface | null = null,
   ) {
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
 
@@ -91,9 +91,13 @@ export class SchedulerStore<
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       ...(parameters.dataSource
         ? MOCK_EVENT_STATE
-        : buildEventsState(parameters, adapter, stateFromParameters.displayTimezone)),
+        : buildEventsState(
+            parameters,
+            adapter,
+            stateFromParameters.displayTimezone,
+            recurringEvents,
+          )),
       ...buildResourcesState(parameters),
-      plan: getSchedulerPlan(instanceName),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
@@ -109,6 +113,7 @@ export class SchedulerStore<
         adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
       errors: [],
       isLoading: !!parameters.dataSource,
+      recurringEvents,
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -208,7 +213,12 @@ export class SchedulerStore<
     ) {
       Object.assign(
         newSchedulerState,
-        buildEventsState(parameters, adapter, newSchedulerState.displayTimezone!),
+        buildEventsState(
+          parameters,
+          adapter,
+          newSchedulerState.displayTimezone!,
+          this.state.recurringEvents,
+        ),
       );
     }
     newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
@@ -388,7 +398,7 @@ export class SchedulerStore<
    */
   public createEvent = (calendarEvent: SchedulerEventCreationProperties) => {
     const eventToCreate =
-      !schedulerOtherSelectors.areRecurringEventsAvailable(this.state) && calendarEvent.rrule
+      this.state.recurringEvents == null && calendarEvent.rrule
         ? { ...calendarEvent, rrule: undefined }
         : calendarEvent;
     return this.updateEvents({ created: [eventToCreate] }).created[0];
@@ -399,10 +409,7 @@ export class SchedulerStore<
    */
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
-    if (
-      schedulerOtherSelectors.areRecurringEventsAvailable(this.state) &&
-      original.dataTimezone.rrule
-    ) {
+    if (this.state.recurringEvents != null && original.dataTimezone.rrule) {
       throw new Error(
         'MUI X Scheduler: This event is recurring and cannot be updated with updateEvent(). ' +
           'Recurring events require special handling to manage series and exceptions. ' +
@@ -419,7 +426,7 @@ export class SchedulerStore<
    * Updates a recurring event in the calendar.
    */
   public updateRecurringEvent = (params: UpdateRecurringEventParameters) => {
-    if (!schedulerOtherSelectors.areRecurringEventsAvailable(this.state)) {
+    if (this.state.recurringEvents == null) {
       if (process.env.NODE_ENV !== 'production') {
         warnOnce([
           'MUI X: Recurring event updates are a premium feature.',
@@ -436,11 +443,8 @@ export class SchedulerStore<
    * @param scope The selected update scope, or null if canceled.
    */
   public selectRecurringEventUpdateScope = (scope: RecurringEventUpdateScope | null) => {
-    if (!schedulerOtherSelectors.areRecurringEventsAvailable(this.state)) {
-      return;
-    }
-    const { pendingUpdateRecurringEventParameters, adapter } = this.state;
-    if (pendingUpdateRecurringEventParameters == null) {
+    const { recurringEvents, pendingUpdateRecurringEventParameters, adapter } = this.state;
+    if (recurringEvents == null || pendingUpdateRecurringEventParameters == null) {
       return;
     }
 
@@ -465,7 +469,7 @@ export class SchedulerStore<
     // depending on the user's display timezone. We therefore convert the
     // occurrence to the event's dataTimezone before applying the update.
 
-    const changesInDataTimezone = applyDataTimezoneToEventUpdate({
+    const changesInDataTimezone = recurringEvents.applyDataTimezoneToEventUpdate({
       adapter,
       originalEvent: original,
       changes,
@@ -476,7 +480,7 @@ export class SchedulerStore<
       original.dataTimezone.timezone,
     );
 
-    const updatedEvents = updateRecurringEvent(
+    const updatedEvents = recurringEvents.updateRecurringEvent(
       adapter,
       original,
       occurrenceStartInDataTimezone,
@@ -509,14 +513,25 @@ export class SchedulerStore<
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) => {
-    const { adapter } = this.state;
+    const { adapter, recurringEvents } = this.state;
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     const originalModel = original.modelInBuiltInFormat;
     const dataTimezone = originalModel.timezone ?? 'default';
-    const duplicatedEvent = createEventFromRecurringEvent(original, {
+    const changes = {
       start: dateToEventString(adapter, start, originalModel.start, dataTimezone),
       end: dateToEventString(adapter, end, originalModel.end, dataTimezone),
-    });
+    };
+    let duplicatedEvent: SchedulerEventCreationProperties;
+    if (recurringEvents) {
+      duplicatedEvent = recurringEvents.createEventFromRecurringEvent(original, changes);
+    } else {
+      duplicatedEvent = { ...originalModel, ...changes, extractedFromId: original.id };
+      // The replacement event must not inherit the original's id or recurrence metadata —
+      // it will be assigned a fresh id and stand on its own.
+      delete (duplicatedEvent as Partial<SchedulerEvent>).id;
+      delete duplicatedEvent.rrule;
+      delete duplicatedEvent.exDates;
+    }
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
 

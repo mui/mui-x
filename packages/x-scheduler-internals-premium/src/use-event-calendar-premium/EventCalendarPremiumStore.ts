@@ -1,6 +1,7 @@
 import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { ExtendableEventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { EventCalendarPremiumLazyLoadingPlugin } from './plugins/EventCalendarPremiumLazyLoadingPlugin';
+import { SchedulerRecurringEventsPlugin } from '../internals/plugins/SchedulerRecurringEventsPlugin';
 import { EventCalendarPremiumParameters } from './EventCalendarPremiumStore.types';
 
 /**
@@ -12,12 +13,16 @@ export class EventCalendarPremiumStore<
 > extends ExtendableEventCalendarStore<TEvent, TResource> {
   public lazyLoading: EventCalendarPremiumLazyLoadingPlugin<TEvent>;
 
+  public recurringEventsPlugin: SchedulerRecurringEventsPlugin;
+
   public constructor(
     parameters: EventCalendarPremiumParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
-    super(parameters, adapter, 'EventCalendarPremiumStore');
+    const recurringEventsPlugin = new SchedulerRecurringEventsPlugin();
+    super(parameters, adapter, 'EventCalendarPremiumStore', recurringEventsPlugin);
 
+    this.recurringEventsPlugin = recurringEventsPlugin;
     this.lazyLoading = new EventCalendarPremiumLazyLoadingPlugin<TEvent>(this);
   }
 

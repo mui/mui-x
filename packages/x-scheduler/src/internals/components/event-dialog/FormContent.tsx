@@ -23,13 +23,12 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
-  schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
+import { useEventDialogSlots } from './EventDialogSlotsContext';
 import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
 import EventDialogHeader from './EventDialogHeader';
 import { GeneralTab } from './GeneralTab';
-import { RecurrenceTab } from './RecurrenceTab';
 
 const FormActions = styled(DialogActions, {
   name: 'MuiEventDialog',
@@ -110,19 +109,32 @@ export function FormContent(props: FormContentProps) {
     occurrence.id,
   );
   const rawPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.value);
-  const recurrencePresets = useStore(
-    store,
-    schedulerRecurringEventSelectors.presets,
-    occurrence.displayTimezone.start,
-  );
-  const defaultRecurrencePresetKey = useStore(
-    store,
-    schedulerRecurringEventSelectors.defaultPresetKey,
-    occurrence.displayTimezone.rrule,
-    occurrence.displayTimezone.start,
-  );
+  const recurringEvents = useStore(store, schedulerOtherSelectors.recurringEvents);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
+
+  // Slot hooks
+  const { recurrenceTab: RecurrenceTabSlot } = useEventDialogSlots();
+
+  // Recurrence helpers (delegated to the premium plugin when present)
+  const recurrencePresets = React.useMemo(
+    () => recurringEvents?.computePresets(adapter, occurrence.displayTimezone.start) ?? null,
+    [recurringEvents, adapter, occurrence.displayTimezone.start],
+  );
+  const defaultRecurrencePresetKey = React.useMemo(
+    () =>
+      recurringEvents?.getDefaultPresetKey(
+        adapter,
+        occurrence.displayTimezone.rrule,
+        occurrence.displayTimezone.start,
+      ) ?? null,
+    [
+      recurringEvents,
+      adapter,
+      occurrence.displayTimezone.rrule,
+      occurrence.displayTimezone.start,
+    ],
+  );
 
   const titleInputRef = React.useCallback((input: HTMLInputElement | null) => input?.focus(), []);
 
@@ -177,7 +189,7 @@ export function FormContent(props: FormContentProps) {
     };
 
     let rruleToSubmit: SchedulerProcessedEventRecurrenceRule | undefined;
-    if (!showRecurrence) {
+    if (!showRecurrence || !recurrencePresets) {
       rruleToSubmit = undefined;
     } else if (controlled.recurrenceSelection === null) {
       rruleToSubmit = undefined;
@@ -194,9 +206,9 @@ export function FormContent(props: FormContentProps) {
         end,
         rrule: rruleToSubmit,
       });
-    } else if (showRecurrence && occurrence.displayTimezone.rrule) {
-      const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
-        store.state,
+    } else if (showRecurrence && recurringEvents && occurrence.displayTimezone.rrule) {
+      const recurrenceModified = !recurringEvents.isSameRRule(
+        adapter,
         occurrence.displayTimezone.rrule,
         rruleToSubmit,
       );
@@ -260,7 +272,7 @@ export function FormContent(props: FormContentProps) {
             size="small"
           />
         </EventDialogHeader>
-        {showRecurrence && (
+        {showRecurrence && RecurrenceTabSlot && (
           <EventDialogTabsContainer className={classes.eventDialogTabsContainer}>
             <EventDialogTabs value={tabValue} onChange={handleTabChange}>
               <Tab
@@ -284,10 +296,10 @@ export function FormContent(props: FormContentProps) {
           setErrors={setErrors}
           controlled={controlled}
           setControlled={setControlled}
-          value={showRecurrence ? tabValue : 'general'}
+          value={showRecurrence && RecurrenceTabSlot ? tabValue : 'general'}
         />
-        {showRecurrence && (
-          <RecurrenceTab
+        {showRecurrence && RecurrenceTabSlot && (
+          <RecurrenceTabSlot
             occurrence={occurrence}
             controlled={controlled}
             setControlled={setControlled}

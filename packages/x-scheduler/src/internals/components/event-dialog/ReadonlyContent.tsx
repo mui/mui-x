@@ -10,7 +10,6 @@ import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-schedul
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
-  schedulerRecurringEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
@@ -135,11 +134,20 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
     schedulerResourceSelectors.processedResource,
     occurrence.resource,
   );
-  const defaultRecurrenceKey = useStore(
-    store,
-    schedulerRecurringEventSelectors.defaultPresetKey,
-    occurrence.displayTimezone.rrule,
-    occurrence.displayTimezone.start,
+  const recurringEvents = useStore(store, schedulerOtherSelectors.recurringEvents);
+  const defaultRecurrenceKey = React.useMemo(
+    () =>
+      recurringEvents?.getDefaultPresetKey(
+        adapter,
+        occurrence.displayTimezone.rrule,
+        occurrence.displayTimezone.start,
+      ) ?? null,
+    [
+      recurringEvents,
+      adapter,
+      occurrence.displayTimezone.rrule,
+      occurrence.displayTimezone.start,
+    ],
   );
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 

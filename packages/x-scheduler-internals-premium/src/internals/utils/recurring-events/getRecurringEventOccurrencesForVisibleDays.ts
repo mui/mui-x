@@ -1,14 +1,14 @@
-import { TemporalTimezone } from '../../../base-ui-copy/types';
-import { processDate } from '../../../process-date';
+import { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
+import { processDate } from '@mui/x-scheduler-internals/process-date';
 import {
   SchedulerProcessedEventRecurrenceRule,
   RecurringEventWeekDayCode,
   SchedulerEventOccurrence,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
-} from '../../../models';
-import { Adapter } from '../../../use-adapter';
-import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
+} from '@mui/x-scheduler-internals/models';
+import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '@mui/x-scheduler-internals/internals';
 import {
   dayInWeek,
   getRemainingOccurrences,

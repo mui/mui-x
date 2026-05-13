@@ -14,6 +14,7 @@ import {
   SchedulerStore,
   SchedulerInstanceName,
 } from '../internals/utils/SchedulerStore';
+import { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import type { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
@@ -98,8 +99,9 @@ export class ExtendableEventCalendarStore<
     parameters: EventCalendarParameters<TEvent, TResource>,
     adapter: Adapter,
     instanceName: SchedulerInstanceName,
+    recurringEvents: SchedulerRecurringEventsPluginInterface | null = null,
   ) {
-    super(parameters, adapter, instanceName, mapper);
+    super(parameters, adapter, instanceName, mapper, recurringEvents);
 
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.

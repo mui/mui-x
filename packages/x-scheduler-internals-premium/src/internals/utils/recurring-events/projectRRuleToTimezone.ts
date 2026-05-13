@@ -1,10 +1,10 @@
-import { TemporalSupportedObject, TemporalTimezone } from '../../../base-ui-copy/types';
-import { Adapter } from '../../../use-adapter/useAdapter.types';
+import { TemporalSupportedObject, TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
+import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
   RecurringEventWeekDayCode,
-} from '../../../models';
+} from '@mui/x-scheduler-internals/models';
 import { getWeekDayCode, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
 
 /**

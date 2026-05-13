@@ -23,14 +23,17 @@ import {
 } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { schedulerRecurringEventSelectors } from '@mui/x-scheduler-internals-premium/scheduler-selectors-premium';
 import {
-  schedulerEventSelectors,
-  schedulerRecurringEventSelectors,
-} from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './utils';
-import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
-import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
+  useEventDialogStyledContext,
+  ControlledValue,
+  EndsSelection,
+  getEndsSelectionFromRRule,
+  formatDayOfMonthAndMonthFullLetter,
+  EventDialogTabPanel,
+  EventDialogTabContent,
+} from '@mui/x-scheduler/internals';
 
 const SectionHeaderTitle = styled('legend', {
   name: 'MuiEventDialog',
@@ -193,11 +196,13 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     occurrence.id,
   );
   const inputsDisabled = controlled.recurrenceSelection === null || isPropertyReadOnly('rrule');
+  // Non-null assertion: this component is only rendered when the premium
+  // recurring-events plugin is attached, so both selectors return a value.
   const monthlyRef = useStore(
     store,
     schedulerRecurringEventSelectors.monthlyReference,
     occurrence.displayTimezone.start,
-  );
+  )!;
   const weeklyDays = useStore(store, schedulerRecurringEventSelectors.weeklyDays);
 
   const presetDraftMap = React.useMemo(

@@ -19,10 +19,10 @@ import {
 } from './EventDialog.types';
 import { createModal } from '../create-modal';
 import { FormContent } from './FormContent';
-import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 import { calculatePosition } from '../../utils/dialog-utils';
 import ReadonlyContent from './ReadonlyContent';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
+import { EventDialogSlots, EventDialogSlotsContext } from './EventDialogSlotsContext';
 
 const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',
@@ -161,33 +161,39 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 });
 
 export function EventDialogProvider(props: EventDialogProviderProps) {
-  const { children, ...other } = props;
+  const { children, slots, ...other } = props;
   const store = useSchedulerStoreContext();
   const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
+  const ScopeDialogSlot = slots?.recurringScopeDialog;
+
+  const slotsContextValue = React.useMemo<EventDialogSlots>(() => slots ?? {}, [slots]);
+
   return (
-    <EventDialog.Provider
-      render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
-        <EventDialogContent
-          open={isOpen}
-          anchorRef={anchorRef}
-          occurrence={occurrence}
-          onClose={onClose}
-          {...other}
-        />
-      )}
-      onOpen={(occurrence) => {
-        store.setEditedEventId(occurrence.id);
-      }}
-      onClose={() => {
-        store.setEditedEventId(null);
-        store.setOccurrencePlaceholder(null);
-      }}
-    >
-      {children}
-      {showRecurrence && isScopeDialogOpen && <RecurringScopeDialog />}
-    </EventDialog.Provider>
+    <EventDialogSlotsContext.Provider value={slotsContextValue}>
+      <EventDialog.Provider
+        render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
+          <EventDialogContent
+            open={isOpen}
+            anchorRef={anchorRef}
+            occurrence={occurrence}
+            onClose={onClose}
+            {...other}
+          />
+        )}
+        onOpen={(occurrence) => {
+          store.setEditedEventId(occurrence.id);
+        }}
+        onClose={() => {
+          store.setEditedEventId(null);
+          store.setOccurrencePlaceholder(null);
+        }}
+      >
+        {children}
+        {showRecurrence && isScopeDialogOpen && ScopeDialogSlot && <ScopeDialogSlot />}
+      </EventDialog.Provider>
+    </EventDialogSlotsContext.Provider>
   );
 }
 

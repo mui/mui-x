@@ -17,18 +17,40 @@ import {
 } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { ExtendableEventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
+import { SchedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { RecurringScopeDialog, RecurrenceTab } from '@mui/x-scheduler-premium/internals';
 import { EventDialogContent } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
-import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
+import { EventDialogSlotsContext } from './EventDialogSlotsContext';
+
+const premiumDialogSlots = {
+  recurrenceTab: RecurrenceTab,
+  recurringScopeDialog: RecurringScopeDialog,
+};
+
+/**
+ * Wraps EventDialogContent with the slot context the premium scheduler supplies
+ * at runtime. Tests render EventDialogContent in isolation (without
+ * EventCalendarPremium), so we provide the slots manually here.
+ */
+function TestEventDialogContent(
+  props: React.ComponentProps<typeof EventDialogContent>,
+) {
+  return (
+    <EventDialogSlotsContext.Provider value={premiumDialogSlots}>
+      <EventDialogContent {...props} />
+    </EventDialogSlotsContext.Provider>
+  );
+}
 
 /**
  * A test store that behaves like a premium store, enabling recurring event features.
  */
 class PremiumTestStore extends ExtendableEventCalendarStore<any, any> {
   public constructor(parameters: any, adapterParam: any) {
-    super(parameters, adapterParam, 'EventCalendarPremiumStore');
+    super(parameters, adapterParam, 'EventCalendarPremiumStore', new SchedulerRecurringEventsPlugin());
   }
 }
 
@@ -71,7 +93,7 @@ describe('<EventDialogContent open />', () => {
         resources={resources}
         storeClass={PremiumTestStore}
       >
-        <EventDialogContent open {...defaultProps} />
+        <TestEventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     expect(screen.getByDisplayValue(DEFAULT_EVENT.title)).not.to.equal(null);
@@ -100,7 +122,7 @@ describe('<EventDialogContent open />', () => {
         resources={resources}
         storeClass={PremiumTestStore}
       >
-        <EventDialogContent open {...defaultProps} />
+        <TestEventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     await user.type(screen.getByLabelText(/event title/i), ' test');
@@ -141,7 +163,7 @@ describe('<EventDialogContent open />', () => {
         resources={resources}
         storeClass={PremiumTestStore}
       >
-        <EventDialogContent open {...defaultProps} />
+        <TestEventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     const pinkToggle = screen.getByRole('button', { name: /pink/i });
@@ -162,7 +184,7 @@ describe('<EventDialogContent open />', () => {
         resources={resources}
         storeClass={PremiumTestStore}
       >
-        <EventDialogContent open {...defaultProps} />
+        <TestEventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     await user.clear(screen.getByLabelText(/start date/i));
@@ -185,7 +207,7 @@ describe('<EventDialogContent open />', () => {
         resources={resources}
         storeClass={PremiumTestStore}
       >
-        <EventDialogContent open {...defaultProps} />
+        <TestEventDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     await user.click(screen.getByRole('button', { name: /delete event/i }));
@@ -211,7 +233,7 @@ describe('<EventDialogContent open />', () => {
           resources={resources}
           storeClass={PremiumTestStore}
         >
-          <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+          <TestEventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
         </EventCalendarProvider>,
       );
 
@@ -255,7 +277,7 @@ describe('<EventDialogContent open />', () => {
           resources={resources}
           storeClass={PremiumTestStore}
         >
-          <EventDialogContent open {...defaultProps} occurrence={recurringOccurrence} />
+          <TestEventDialogContent open {...defaultProps} occurrence={recurringOccurrence} />
         </EventCalendarProvider>,
       );
 
@@ -282,7 +304,7 @@ describe('<EventDialogContent open />', () => {
           resources={resources}
           storeClass={PremiumTestStore}
         >
-          <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+          <TestEventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
         </EventCalendarProvider>,
       );
 
@@ -313,7 +335,7 @@ describe('<EventDialogContent open />', () => {
           readOnly
           storeClass={PremiumTestStore}
         >
-          <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+          <TestEventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
         </EventCalendarProvider>,
       );
 
@@ -369,7 +391,7 @@ describe('<EventDialogContent open />', () => {
         resources={resourcesNoColor}
         storeClass={PremiumTestStore}
       >
-        <EventDialogContent
+        <TestEventDialogContent
           open
           {...defaultProps}
           occurrence={eventWithNoResourceColorOccurrence}
@@ -410,7 +432,7 @@ describe('<EventDialogContent open />', () => {
         resources={resources}
         storeClass={PremiumTestStore}
       >
-        <EventDialogContent open {...defaultProps} occurrence={eventWithoutResourceOccurrence} />
+        <TestEventDialogContent open {...defaultProps} occurrence={eventWithoutResourceOccurrence} />
       </EventCalendarProvider>,
     );
 
@@ -459,7 +481,7 @@ describe('<EventDialogContent open />', () => {
             }
           />
 
-          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
 
           <StateWatcher
             Context={SchedulerStoreContext}
@@ -503,7 +525,7 @@ describe('<EventDialogContent open />', () => {
             }
           />
 
-          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
 
           <StateWatcher
             Context={SchedulerStoreContext}
@@ -546,7 +568,7 @@ describe('<EventDialogContent open />', () => {
             }
           />
 
-          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence as any} />
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence as any} />
 
           <StateWatcher
             Context={SchedulerStoreContext}
@@ -603,7 +625,7 @@ describe('<EventDialogContent open />', () => {
             }}
           />
 
-          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
         </EventCalendarProvider>,
       );
 
@@ -671,7 +693,7 @@ describe('<EventDialogContent open />', () => {
               createEventSpy = sp;
             }}
           />
-          <EventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
         </EventCalendarProvider>,
       );
 
@@ -745,7 +767,7 @@ describe('<EventDialogContent open />', () => {
                 }}
               />
 
-              <EventDialogContent
+              <TestEventDialogContent
                 open
                 {...defaultProps}
                 occurrence={originalRecurringEventOccurrence}
@@ -799,7 +821,7 @@ describe('<EventDialogContent open />', () => {
                 }}
               />
 
-              <EventDialogContent
+              <TestEventDialogContent
                 open
                 {...defaultProps}
                 occurrence={originalRecurringEventOccurrence}
@@ -866,7 +888,7 @@ describe('<EventDialogContent open />', () => {
                 }}
               />
 
-              <EventDialogContent
+              <TestEventDialogContent
                 open
                 {...defaultProps}
                 occurrence={originalRecurringEventOccurrence}
@@ -931,7 +953,7 @@ describe('<EventDialogContent open />', () => {
                 }}
               />
 
-              <EventDialogContent
+              <TestEventDialogContent
                 open
                 {...defaultProps}
                 occurrence={originalRecurringEventOccurrence}
@@ -971,7 +993,7 @@ describe('<EventDialogContent open />', () => {
               resources={resources}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -994,7 +1016,7 @@ describe('<EventDialogContent open />', () => {
               resources={resources}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1017,7 +1039,7 @@ describe('<EventDialogContent open />', () => {
               resources={resources}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1040,7 +1062,7 @@ describe('<EventDialogContent open />', () => {
               resources={resources}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1078,7 +1100,7 @@ describe('<EventDialogContent open />', () => {
               onEventsChange={onEventsChange}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1132,7 +1154,7 @@ describe('<EventDialogContent open />', () => {
               onEventsChange={onEventsChange}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1182,7 +1204,7 @@ describe('<EventDialogContent open />', () => {
               onEventsChange={onEventsChange}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1230,7 +1252,7 @@ describe('<EventDialogContent open />', () => {
               onEventsChange={onEventsChange}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1270,7 +1292,7 @@ describe('<EventDialogContent open />', () => {
               onEventsChange={onEventsChange}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1311,7 +1333,7 @@ describe('<EventDialogContent open />', () => {
               onEventsChange={onEventsChange}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1346,7 +1368,7 @@ describe('<EventDialogContent open />', () => {
               resources={resources}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1376,7 +1398,7 @@ describe('<EventDialogContent open />', () => {
               onEventsChange={onEventsChange}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1403,7 +1425,7 @@ describe('<EventDialogContent open />', () => {
               onEventsChange={onEventsChange}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1452,7 +1474,7 @@ describe('<EventDialogContent open />', () => {
               storeClass={PremiumTestStore}
               eventModelStructure={rruleReadOnlyModelStructure}
             >
-              <EventDialogContent open {...defaultProps} occurrence={recurringOccurrence} />
+              <TestEventDialogContent open {...defaultProps} occurrence={recurringOccurrence} />
             </EventCalendarProvider>,
           );
 
@@ -1477,7 +1499,7 @@ describe('<EventDialogContent open />', () => {
               onEventsChange={onEventsChange}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1512,7 +1534,7 @@ describe('<EventDialogContent open />', () => {
               onEventsChange={onEventsChange}
               storeClass={PremiumTestStore}
             >
-              <EventDialogContent open {...defaultProps} />
+              <TestEventDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1572,7 +1594,7 @@ describe('<EventDialogContent open />', () => {
               }}
             />
 
-            <EventDialogContent open {...defaultProps} occurrence={nonRecurringEventOccurrence} />
+            <TestEventDialogContent open {...defaultProps} occurrence={nonRecurringEventOccurrence} />
           </EventCalendarProvider>,
         );
         await user.type(screen.getByLabelText(/event title/i), ' updated ');
@@ -1612,7 +1634,7 @@ describe('<EventDialogContent open />', () => {
               }}
             />
 
-            <EventDialogContent open {...defaultProps} occurrence={nonRecurringEventOccurrence} />
+            <TestEventDialogContent open {...defaultProps} occurrence={nonRecurringEventOccurrence} />
           </EventCalendarProvider>,
         );
         await user.click(screen.getByRole('tab', { name: /recurrence/i }));
@@ -1640,7 +1662,7 @@ describe('<EventDialogContent open />', () => {
           resources={resources}
           storeClass={PremiumTestStore}
         >
-          <EventDialogContent open {...defaultProps} />
+          <TestEventDialogContent open {...defaultProps} />
         </EventCalendarProvider>,
       );
 
@@ -1675,7 +1697,7 @@ describe('<EventDialogContent open />', () => {
           resources={resources}
           storeClass={PremiumTestStore}
         >
-          <EventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
+          <TestEventDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
         </EventCalendarProvider>,
       );
 
@@ -1703,7 +1725,7 @@ describe('<EventDialogContent open />', () => {
             selector={(s) => s.editedEventId}
             onValueChange={handleActiveEventIdChange}
           />
-          <EventDialogContent open {...defaultProps} />
+          <TestEventDialogContent open {...defaultProps} />
         </EventCalendarProvider>,
       );
 
@@ -1727,7 +1749,7 @@ describe('<EventDialogContent open />', () => {
             selector={(s) => s.editedEventId}
             onValueChange={handleActiveEventIdChange}
           />
-          <EventDialogContent open {...defaultProps} onClose={() => {}} />
+          <TestEventDialogContent open {...defaultProps} onClose={() => {}} />
         </EventCalendarProvider>,
       );
 
@@ -1747,7 +1769,7 @@ describe('<EventDialogContent open />', () => {
               setEditedEventIdSpy = sp;
             }}
           />
-          <EventDialogContent open {...defaultProps} />
+          <TestEventDialogContent open {...defaultProps} />
         </EventCalendarProvider>,
       );
 

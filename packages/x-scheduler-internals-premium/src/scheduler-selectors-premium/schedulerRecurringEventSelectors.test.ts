@@ -2,7 +2,7 @@ import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
 import { SchedulerProcessedEventRecurrenceRule } from '@mui/x-scheduler-internals/models';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { schedulerRecurringEventSelectors } from './schedulerRecurringEventSelectors';
-import { getWeekDayCode } from '../internals/utils/recurring-events';
+import { getWeekDayCode } from '../internals/utils/recurring-events/internal-utils';
 
 describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClass] as const))(
   `Recurring event - %s`,
@@ -14,21 +14,21 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
         const start = processDate(adapter.date('2025-08-05T09:00:00Z', 'default'), adapter); // Tuesday
         const presets = schedulerRecurringEventSelectors.presets(state, start);
 
-        expect(presets.DAILY).to.deep.equal({
+        expect(presets!.DAILY).to.deep.equal({
           freq: 'DAILY',
           interval: 1,
         });
-        expect(presets.WEEKLY).to.deep.equal({
+        expect(presets!.WEEKLY).to.deep.equal({
           freq: 'WEEKLY',
           interval: 1,
           byDay: [getWeekDayCode(adapter, start.value)],
         });
-        expect(presets.MONTHLY).to.deep.equal({
+        expect(presets!.MONTHLY).to.deep.equal({
           freq: 'MONTHLY',
           interval: 1,
           byMonthDay: [5],
         });
-        expect(presets.YEARLY).to.deep.equal({
+        expect(presets!.YEARLY).to.deep.equal({
           freq: 'YEARLY',
           interval: 1,
         });
@@ -48,22 +48,22 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
 
       it('detects daily, weekly, monthly and yearly presets', () => {
         expect(
-          schedulerRecurringEventSelectors.defaultPresetKey(state, presets.DAILY, start),
+          schedulerRecurringEventSelectors.defaultPresetKey(state, presets!.DAILY, start),
         ).to.equal('DAILY');
         expect(
-          schedulerRecurringEventSelectors.defaultPresetKey(state, presets.WEEKLY, start),
+          schedulerRecurringEventSelectors.defaultPresetKey(state, presets!.WEEKLY, start),
         ).to.equal('WEEKLY');
         expect(
-          schedulerRecurringEventSelectors.defaultPresetKey(state, presets.MONTHLY, start),
+          schedulerRecurringEventSelectors.defaultPresetKey(state, presets!.MONTHLY, start),
         ).to.equal('MONTHLY');
         expect(
-          schedulerRecurringEventSelectors.defaultPresetKey(state, presets.YEARLY, start),
+          schedulerRecurringEventSelectors.defaultPresetKey(state, presets!.YEARLY, start),
         ).to.equal('YEARLY');
       });
 
       it('classifies daily interval>1 or with finite end (count) as custom', () => {
         const ruleInterval2: SchedulerProcessedEventRecurrenceRule = {
-          ...presets.DAILY,
+          ...presets!.DAILY,
           interval: 2,
         };
         expect(
@@ -71,7 +71,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
         ).to.equal('custom');
 
         const ruleFiniteCount: SchedulerProcessedEventRecurrenceRule = {
-          ...presets.DAILY,
+          ...presets!.DAILY,
           count: 5,
         };
         expect(
@@ -81,7 +81,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
 
       it('classifies weekly with extra day as custom', () => {
         const rule: SchedulerProcessedEventRecurrenceRule = {
-          ...presets.WEEKLY,
+          ...presets!.WEEKLY,
           byDay: ['TU', 'WE'],
         };
         expect(schedulerRecurringEventSelectors.defaultPresetKey(state, rule, start)).to.equal(
@@ -91,7 +91,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
 
       it('classifies monthly with different day or with interval>1 as custom', () => {
         const ruleDifferentDay: SchedulerProcessedEventRecurrenceRule = {
-          ...presets.MONTHLY,
+          ...presets!.MONTHLY,
           byMonthDay: [26],
         };
         expect(
@@ -99,7 +99,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
         ).to.equal('custom');
 
         const ruleInterval2: SchedulerProcessedEventRecurrenceRule = {
-          ...presets.MONTHLY,
+          ...presets!.MONTHLY,
           interval: 2,
         };
         expect(
@@ -108,7 +108,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
       });
 
       it('classifies yearly interval>1 as custom', () => {
-        const rule: SchedulerProcessedEventRecurrenceRule = { ...presets.YEARLY, interval: 2 };
+        const rule: SchedulerProcessedEventRecurrenceRule = { ...presets!.YEARLY, interval: 2 };
         expect(schedulerRecurringEventSelectors.defaultPresetKey(state, rule, start)).to.equal(
           'custom',
         );

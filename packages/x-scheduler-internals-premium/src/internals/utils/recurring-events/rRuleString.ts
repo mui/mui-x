@@ -1,11 +1,11 @@
-import { TemporalTimezone } from '../../../base-ui-copy/types';
-import { Adapter } from '../../../use-adapter/useAdapter.types';
+import { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
+import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
-} from '../../../models';
-import { resolveEventDate } from '../../../process-event/resolveEventDate';
+} from '@mui/x-scheduler-internals/models';
+import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
 import { getAdapterCache, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
 
 const SUPPORTED_RRULE_KEYS = new Set([
