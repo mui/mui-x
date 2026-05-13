@@ -397,11 +397,16 @@ export class SchedulerStore<
    * Creates a new event in the calendar.
    */
   public createEvent = (calendarEvent: SchedulerEventCreationProperties) => {
-    const eventToCreate =
-      this.state.recurringEventsPlugin == null && calendarEvent.rrule
-        ? { ...calendarEvent, rrule: undefined }
-        : calendarEvent;
-    return this.updateEvents({ created: [eventToCreate] }).created[0];
+    if (this.state.recurringEventsPlugin == null && calendarEvent.rrule) {
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ]);
+      }
+      return this.updateEvents({ created: [{ ...calendarEvent, rrule: undefined }] }).created[0];
+    }
+    return this.updateEvents({ created: [calendarEvent] }).created[0];
   };
 
   /**

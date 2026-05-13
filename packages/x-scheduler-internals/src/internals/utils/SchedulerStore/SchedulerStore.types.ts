@@ -163,9 +163,7 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   errors: Error[];
   /**
-   * Handle to the premium recurring-events plugin attached to this store, if any.
-   * `null` in the community Scheduler. When set, the premium plugin provides
-   * RRULE parsing, occurrence expansion, and scope-aware updates.
+   * Plugin that provides recurring-events support. `null` when not attached.
    */
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
 }

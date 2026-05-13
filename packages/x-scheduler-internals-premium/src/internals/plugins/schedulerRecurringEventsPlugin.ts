@@ -11,10 +11,6 @@ import {
   getMonthlyReference,
 } from '../utils/recurring-events/presets';
 
-/**
- * Premium recurring-events plugin. Attached to `state.recurringEventsPlugin`
- * by the premium stores.
- */
 export const schedulerRecurringEventsPlugin: SchedulerRecurringEventsPluginInterface = {
   parseRRule,
   serializeRRule,

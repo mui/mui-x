@@ -209,4 +209,15 @@ describe('processEvent', () => {
       expect(processed.modelInBuiltInFormat.end).to.equal('2025-01-01T10:00:00');
     });
   });
+
+  describe('without recurring events plugin', () => {
+    it('should leave rrule undefined on both timezones when no plugin is provided', () => {
+      const event = EventBuilder.new(adapter).rrule({ freq: 'DAILY' }).build();
+
+      const processed = processEvent(event, 'Europe/Paris', adapter);
+
+      expect(processed.dataTimezone.rrule).to.equal(undefined);
+      expect(processed.displayTimezone.rrule).to.equal(undefined);
+    });
+  });
 });

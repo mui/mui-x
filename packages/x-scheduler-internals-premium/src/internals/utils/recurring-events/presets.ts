@@ -9,12 +9,6 @@ import type {
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 import { getWeekDayCode } from './internal-utils';
 
-/**
- * Builds the four recurrence presets (DAILY / WEEKLY / MONTHLY / YEARLY) the
- * user can choose from when editing an event. The WEEKLY and MONTHLY presets
- * are anchored to the event's occurrence date (weekday for WEEKLY, day of the
- * month for MONTHLY).
- */
 export function computePresets(
   adapter: Adapter,
   date: SchedulerProcessedDate,
@@ -27,11 +21,6 @@ export function computePresets(
   };
 }
 
-/**
- * Maps a rule back to the preset key it was generated from, or returns
- * `'custom'` when the rule does not match any preset. `null` is returned for
- * missing rules.
- */
 export function getDefaultPresetKey(
   adapter: Adapter,
   rule: SchedulerProcessedEventRecurrenceRule | undefined,
@@ -81,11 +70,6 @@ export function getDefaultPresetKey(
   }
 }
 
-/**
- * Returns the seven weekdays of the week containing `visibleDate`, each with
- * its weekday code and date. Used by the recurrence tab to render the weekday
- * selectors for WEEKLY rrules.
- */
 export function getWeeklyDays(
   adapter: Adapter,
   visibleDate: TemporalSupportedObject,
@@ -97,11 +81,6 @@ export function getWeeklyDays(
   });
 }
 
-/**
- * Returns the monthly reference data (day of month, weekday code, ordinal
- * within the month) for a given date. Used by the recurrence tab to render
- * the "12th of the month" vs "2nd Tuesday of the month" options.
- */
 export function getMonthlyReference(
   adapter: Adapter,
   date: SchedulerProcessedDate,

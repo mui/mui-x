@@ -195,11 +195,6 @@ export function serializeRRule(
   return parts.join(';');
 }
 
-/**
- * Returns `true` when both recurrence rules serialize to the same RRULE string.
- * Handles the null/undefined cases up front to avoid invoking the serializer
- * with missing input.
- */
 export function isSameRRule(
   adapter: Adapter,
   rruleA: SchedulerProcessedEventRecurrenceRule | undefined,
