@@ -14,8 +14,6 @@ export * from './categorical/autumnSpice';
 export * from './categorical/sunsetCoral';
 export * from './categorical/candyPop';
 
-
-
 // SEQUENTIAL PALETTES
 export * from './sequential/strawberrySky';
 
