@@ -541,7 +541,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 ) {
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
-  const { classes, localeText, resourceColumnLabel } = useEventTimelinePremiumStyledContext();
+  const { classes } = useEventTimelinePremiumStyledContext();
 
   // Ref hooks
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -594,11 +594,12 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     [resources],
   );
 
-  if (!rows)
+  if (!rows) {
     throw new Error(
       'MUI X Scheduler: The timeline encountered an error while retrieving resources. ' +
         'This is likely a bug in MUI X. Please contact MUI support with details about your configuration and data.',
     );
+  }
 
   const range = React.useMemo(
     () => ({ firstRowIndex: 0, lastRowIndex: rows.length }),
@@ -606,7 +607,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   );
 
   const renderRow = React.useCallback(
-    ({ id, rowIndex, offsetLeft }: { id: any; rowIndex: number; offsetLeft: number }) => (
+    ({ id, rowIndex }: { id: any; rowIndex: number }) => (
       <EventTimelinePremiumBodyRow key={id} index={rowIndex}>
         <EventTimelinePremiumTitleCell resourceId={id} />
         <div role="presentation" style={{ width: titleColumnWidth }} />
@@ -617,7 +618,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
         </EventTimelinePremiumEventsCell>
       </EventTimelinePremiumBodyRow>
     ),
-    [classes.eventsCell],
+    [classes.eventsCell, titleColumnWidth],
   );
 
   // Build virtualizer column model: one pinned title column + one column per tick.
