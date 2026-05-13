@@ -1,4 +1,9 @@
-export { EventDialogProvider, EventDialogTrigger, useEventDialogContext } from './EventDialog';
+export {
+  EventDialogContent,
+  EventDialogProvider,
+  EventDialogTrigger,
+  useEventDialogContext,
+} from './EventDialog';
 export * from './eventDialogClasses';
 export * from './EventDialogStyledContext';
 export type { ControlledValue, EndsSelection } from './utils';

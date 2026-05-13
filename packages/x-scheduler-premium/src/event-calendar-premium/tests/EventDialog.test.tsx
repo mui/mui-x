@@ -20,26 +20,22 @@ import { ExtendableEventCalendarStore } from '@mui/x-scheduler-internals/use-eve
 import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
-import { RecurringScopeDialog, RecurrenceTab } from '@mui/x-scheduler-premium/internals';
-import { EventDialogContent } from './EventDialog';
-import { EventCalendarProvider } from '../EventCalendarProvider';
-import { EventDialogSlotsContext } from './EventDialogSlotsContext';
-
-const premiumDialogSlots = {
-  recurrenceTab: RecurrenceTab,
-  recurringScopeDialog: RecurringScopeDialog,
-};
+import {
+  EventCalendarProvider,
+  EventDialogContent,
+  EventDialogSlotsContext,
+} from '@mui/x-scheduler/internals';
+import { PREMIUM_EVENT_DIALOG_SLOTS } from '../../internals/eventDialogSlots';
+import { RecurringScopeDialog } from '../../internals/components/scope-dialog/ScopeDialog';
 
 /**
  * Wraps EventDialogContent with the slot context the premium scheduler supplies
  * at runtime. Tests render EventDialogContent in isolation (without
  * EventCalendarPremium), so we provide the slots manually here.
  */
-function TestEventDialogContent(
-  props: React.ComponentProps<typeof EventDialogContent>,
-) {
+function TestEventDialogContent(props: React.ComponentProps<typeof EventDialogContent>) {
   return (
-    <EventDialogSlotsContext.Provider value={premiumDialogSlots}>
+    <EventDialogSlotsContext.Provider value={PREMIUM_EVENT_DIALOG_SLOTS}>
       <EventDialogContent {...props} />
     </EventDialogSlotsContext.Provider>
   );

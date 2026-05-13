@@ -19,7 +19,7 @@ import {
   useEventDialogContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
-import { PREMIUM_EVENT_DIALOG_SLOTS } from '../../internals';
+import { PREMIUM_EVENT_DIALOG_SLOTS } from '../../internals/eventDialogSlots';
 import { EventTimelinePremiumHeader } from './timeline-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';

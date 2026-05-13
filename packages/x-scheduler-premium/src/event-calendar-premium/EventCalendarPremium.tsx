@@ -18,7 +18,7 @@ import {
   EventCalendarRoot,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
-import { PREMIUM_EVENT_DIALOG_SLOTS } from '../internals';
+import { PREMIUM_EVENT_DIALOG_SLOTS } from '../internals/eventDialogSlots';
 import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
 const packageInfo = {
