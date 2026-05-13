@@ -9,12 +9,7 @@ import {
 import { SchedulerState as State } from '@mui/x-scheduler-internals/internals';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 
-/**
- * Selectors that wrap the premium recurring-events plugin. The implementations
- * live on the plugin so the secret-sauce code never ships in the MIT bundle;
- * these selectors are just memoized adapters for consumers that prefer the
- * selector API over calling plugin methods directly.
- */
+/** Memoized selectors that wrap the premium recurring-events plugin. */
 export const schedulerRecurringEventSelectors = {
   presets: createSelectorMemoized(
     (state: State) => state.adapter,
