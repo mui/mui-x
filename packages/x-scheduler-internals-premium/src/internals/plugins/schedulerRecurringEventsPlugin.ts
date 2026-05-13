@@ -13,16 +13,8 @@ import {
 } from '../utils/recurring-events/presets';
 
 /**
- * Premium implementation of the recurring-events plugin.
- *
- * Stateless singleton that gathers the RRULE / occurrence / scope-update
- * helpers under a single object so the community scheduler can delegate
- * through `state.recurringEventsPlugin` without depending on the premium
- * implementation directly.
- *
- * The companion `SchedulerLazyLoadingPlugin` is a class because it owns a
- * cache, a data manager, and store subscriptions per instance. This plugin
- * has no per-instance state — a plain object literal makes that explicit.
+ * Premium recurring-events plugin. Attached to `state.recurringEventsPlugin`
+ * by the premium stores.
  */
 export const schedulerRecurringEventsPlugin: SchedulerRecurringEventsPluginInterface = {
   parseRRule,
