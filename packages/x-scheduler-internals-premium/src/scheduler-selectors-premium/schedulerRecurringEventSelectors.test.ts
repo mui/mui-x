@@ -38,7 +38,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
     describe('Selector: defaultRecurrencePresetKey', () => {
       const state = new storeClass.Value({ events: [] }, adapter).state;
       const start = processDate(adapter.date('2025-08-05T09:00:00', 'default'), adapter); // Tuesday
-      const presets = schedulerRecurringEventSelectors.presets(state, start);
+      const presets = schedulerRecurringEventSelectors.presets(state, start)!;
 
       it('returns null when rule undefined', () => {
         expect(schedulerRecurringEventSelectors.defaultPresetKey(state, undefined, start)).to.equal(
@@ -48,7 +48,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
 
       it('detects daily, weekly, monthly and yearly presets', () => {
         expect(
-          schedulerRecurringEventSelectors.defaultPresetKey(state, presets!.DAILY, start),
+          schedulerRecurringEventSelectors.defaultPresetKey(state, presets.DAILY, start),
         ).to.equal('DAILY');
         expect(
           schedulerRecurringEventSelectors.defaultPresetKey(state, presets.WEEKLY, start),
@@ -63,7 +63,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
 
       it('classifies daily interval>1 or with finite end (count) as custom', () => {
         const ruleInterval2: SchedulerProcessedEventRecurrenceRule = {
-          ...presets!.DAILY,
+          ...presets.DAILY,
           interval: 2,
         };
         expect(
@@ -71,7 +71,7 @@ describe.for(premiumStoreClasses.map((storeClass) => [storeClass.name, storeClas
         ).to.equal('custom');
 
         const ruleFiniteCount: SchedulerProcessedEventRecurrenceRule = {
-          ...presets!.DAILY,
+          ...presets.DAILY,
           count: 5,
         };
         expect(
