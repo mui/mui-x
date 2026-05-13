@@ -1,2 +1,2 @@
 export * from './SchedulerLazyLoadingPlugin';
-export * from './SchedulerRecurringEventsPlugin';
+export * from './recurringEventsPlugin';

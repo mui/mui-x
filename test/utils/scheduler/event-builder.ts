@@ -12,7 +12,7 @@ import {
 } from '@mui/x-scheduler-internals/models/event';
 import { processEvent, resolveEventDate } from '@mui/x-scheduler-internals/process-event';
 import {
-  SchedulerRecurringEventsPlugin,
+  recurringEventsPlugin,
   getWeekDayCode,
 } from '@mui/x-scheduler-internals-premium/internals';
 import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
@@ -25,12 +25,6 @@ export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   'default',
 );
-
-// Shared premium recurring-events plugin instance used to parse RRULE strings and
-// resolve weekday codes from EventBuilder. The plugin lives in the proprietary
-// package; tests import it because the recurring-events implementation is not
-// available in the MIT bundle by design.
-const testRecurringEventsPlugin = new SchedulerRecurringEventsPlugin();
 
 /**
  * Minimal event builder for tests.
@@ -262,7 +256,7 @@ export class EventBuilder {
       ? this.adapter.date(occurrenceStartDate, 'default')
       : resolveEventDate(this.event.start, dataTimezone, this.adapter);
 
-    const baseProcessed = processEvent(this.event, this.displayTimezone, this.adapter, testRecurringEventsPlugin);
+    const baseProcessed = processEvent(this.event, this.displayTimezone, this.adapter, recurringEventsPlugin);
     const originalDurationMs =
       baseProcessed.dataTimezone.end.timestamp - baseProcessed.dataTimezone.start.timestamp;
     const rawEnd = this.adapter.addMilliseconds(rawStart, originalDurationMs);
@@ -273,7 +267,7 @@ export class EventBuilder {
       end: rawEnd.toISOString(),
     };
 
-    const processed = processEvent(occurrenceModel, this.displayTimezone, this.adapter, testRecurringEventsPlugin);
+    const processed = processEvent(occurrenceModel, this.displayTimezone, this.adapter, recurringEventsPlugin);
 
     return {
       ...processed,
@@ -285,7 +279,7 @@ export class EventBuilder {
    * Derives a processed event from the built event.
    */
   toProcessed() {
-    return processEvent(this.event, this.displayTimezone, this.adapter, testRecurringEventsPlugin);
+    return processEvent(this.event, this.displayTimezone, this.adapter, recurringEventsPlugin);
   }
 
   /**

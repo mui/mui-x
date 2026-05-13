@@ -196,6 +196,25 @@ export function serializeRRule(
 }
 
 /**
+ * Returns `true` when both recurrence rules serialize to the same RRULE string.
+ * Handles the null/undefined cases up front to avoid invoking the serializer
+ * with missing input.
+ */
+export function isSameRRule(
+  adapter: Adapter,
+  rruleA: SchedulerProcessedEventRecurrenceRule | undefined,
+  rruleB: SchedulerProcessedEventRecurrenceRule | undefined,
+): boolean {
+  if (!rruleA && !rruleB) {
+    return true;
+  }
+  if (!rruleA || !rruleB) {
+    return false;
+  }
+  return serializeRRule(adapter, rruleA) === serializeRRule(adapter, rruleB);
+}
+
+/**
  * Sort the values provided to the BYDAY property of an RRULE by their order in the week.
  */
 function sortByDayValues(temp: RecurringEventByDayValue[]): RecurringEventByDayValue[] {

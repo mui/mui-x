@@ -1,5 +1,5 @@
 import { adapter, EventBuilder, ResourceBuilder } from 'test/utils/scheduler';
-import { SchedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { recurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { processDate } from '../process-date';
 import { innerGetEventOccurrencesGroupedByDay } from './useEventOccurrencesGroupedByDay';
 import { SchedulerProcessedDate, SchedulerProcessedEvent } from '../models';
@@ -137,7 +137,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       events: [event],
       visibleResources: visible,
       displayTimezone: 'Europe/Paris',
-      recurringEventsPlugin: new SchedulerRecurringEventsPlugin(),
+      recurringEventsPlugin,
     });
 
     // Should NOT appear on Jan 10 in Paris

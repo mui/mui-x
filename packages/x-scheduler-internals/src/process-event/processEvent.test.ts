@@ -2,9 +2,7 @@ import { adapter } from 'test/utils/scheduler/adapters';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { EventBuilder } from 'test/utils/scheduler/event-builder';
 import { SchedulerEvent } from '@mui/x-scheduler-internals/models';
-import { SchedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
-
-const recurringEventsPlugin = new SchedulerRecurringEventsPlugin();
+import { recurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 
 describe('processEvent', () => {
   it('should keep event timezone in modelInBuiltInFormat', () => {

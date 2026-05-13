@@ -1,6 +1,7 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { recurringEventsPlugin } from '../../internals/plugins/recurringEventsPlugin';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const DEFAULT_PARAMS = { events: [] };
@@ -34,7 +35,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         processedEventLookup: new Map(),
         processedResourceLookup: new Map(),
         readOnly: false,
-        recurringEventsPlugin: store.recurringEventsPlugin,
+        recurringEventsPlugin,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [],
         resourceModelStructure: undefined,

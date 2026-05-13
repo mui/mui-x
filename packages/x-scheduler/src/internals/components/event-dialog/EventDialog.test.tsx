@@ -17,7 +17,7 @@ import {
 } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { ExtendableEventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
-import { SchedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
+import { recurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { RecurringScopeDialog, RecurrenceTab } from '@mui/x-scheduler-premium/internals';
@@ -50,7 +50,7 @@ function TestEventDialogContent(
  */
 class PremiumTestStore extends ExtendableEventCalendarStore<any, any> {
   public constructor(parameters: any, adapterParam: any) {
-    super(parameters, adapterParam, 'EventCalendarPremiumStore', new SchedulerRecurringEventsPlugin());
+    super(parameters, adapterParam, 'EventCalendarPremiumStore', recurringEventsPlugin);
   }
 }
 
