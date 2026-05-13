@@ -673,14 +673,7 @@ async function initializeEnvironment(
 
           const input = page.getByRole('textbox', { includeHidden: true });
 
-          const monthSection = page.getByRole(`spinbutton`, { name: 'Month' });
-
-          // Click first so the field becomes `:focus-within` and the
-          // `-webkit-user-modify: read-only` gate (which blocks Chromium focus
-          // delegation when idle) relaxes — WebKit otherwise treats the
-          // spinbutton as non-editable and Playwright's `fill()` bails out.
-          await monthSection.click();
-          await monthSection.fill('04');
+          await page.getByRole(`spinbutton`, { name: 'Month' }).fill('04');
           await page.getByRole(`spinbutton`, { name: 'Day' }).fill('11');
           await page.getByRole(`spinbutton`, { name: 'Year' }).fill('2022');
 
