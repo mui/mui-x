@@ -1,19 +1,19 @@
 'use client';
+import { type GeoProjection } from '@mui/x-charts-vendor/d3-geo';
 import { useStore } from '@mui/x-charts/internals';
 import {
-  selectorChartRawProjection,
-  type GeoProjectionInput,
+  selectorChartProjection,
   type UseGeoProjectionSignature,
 } from '../internals/plugins/useGeoProjection';
 
 /**
- * Get the projection currently registered with the geo chart.
+ * Get the projection registered with the geo chart, resolved against d3-geo and
+ * fitted to the chart's drawing area.
  *
- * The returned value is whatever was passed to the `projection` prop — either a d3-geo
- * projection name (e.g. `'mercator'`) or a `GeoProjection` instance. Returns `null` when
- * no projection has been configured.
+ * Returns `null` when no projection has been configured or when the configured
+ * name is not a known d3-geo projection.
  */
-export function useProjection(): GeoProjectionInput | null {
+export function useProjection(): GeoProjection | null {
   const store = useStore<[UseGeoProjectionSignature]>();
-  return store.use(selectorChartRawProjection);
+  return store.use(selectorChartProjection);
 }
