@@ -61,7 +61,14 @@ const resolveDateFromTarget = (
     return null;
   }
 
+  // Guard against malformed `data-timestamp` — `Number('abc')` is `NaN` and
+  // `new Date(NaN).toISOString()` throws, which would otherwise wedge the
+  // gesture mid-`pointerover`.
   const timestamp = Number(timestampString);
+  if (!Number.isFinite(timestamp)) {
+    return null;
+  }
+
   return adapter.date(new Date(timestamp).toISOString(), timezone);
 };
 
@@ -81,7 +88,16 @@ const useDragRangeEvents = ({
   const sourcePositionRef = React.useRef<RangePosition | null>(null);
   const didMoveRef = React.useRef(false);
   const pendingDropRef = React.useRef<{ date: PickerValidDate; target: HTMLElement } | null>(null);
-  const cleanupListenersRef = React.useRef<(() => void) | null>(null);
+  // Stored so `handlePointerOver` and unmount can reach the document the gesture
+  // started on (matters for iframe-hosted pickers).
+  const ownerDocumentRef = React.useRef<Document | null>(null);
+  // Each entry removes one document listener the gesture installed. Listeners
+  // are added at different times (pointerdown vs. first move), so a single
+  // cleanup closure isn't expressive enough — accumulate teardown thunks here.
+  const listenerCleanupsRef = React.useRef<Array<() => void>>([]);
+  // Outstanding capture-phase click suppressor, if any. Tracked so back-to-back
+  // drags can tear the prior one down before installing a new one.
+  const clickSuppressorRef = React.useRef<(() => void) | null>(null);
 
   const isElementDraggable = (day: PickerValidDate | null): day is PickerValidDate => {
     if (day == null) {
@@ -95,35 +111,86 @@ const useDragRangeEvents = ({
     return shouldInitDragging && (isSelectedStartDate || isSelectedEndDate);
   };
 
-  const cleanup = useEventCallback(() => {
-    const wasActive = didMoveRef.current;
+  // Resets every ref the gesture mutated and removes any listeners installed
+  // during the gesture. Safe to call from event handlers and from unmount.
+  const clearGestureState = () => {
     isDraggingRef.current = false;
     pointerIdRef.current = null;
     sourceDateRef.current = null;
     sourcePositionRef.current = null;
     didMoveRef.current = false;
     pendingDropRef.current = null;
+    ownerDocumentRef.current = null;
+    listenerCleanupsRef.current.forEach((teardown) => teardown());
+    listenerCleanupsRef.current = [];
+  };
+
+  const cleanup = useEventCallback(() => {
+    const wasActive = didMoveRef.current;
+    clearGestureState();
     // A press without movement never activated drag UI, so skip the re-render.
     if (wasActive) {
       setIsDragging(false);
       setRangeDragDay(null);
     }
-    cleanupListenersRef.current?.();
-    cleanupListenersRef.current = null;
   });
 
+  const installClickSuppressor = (doc: Document) => {
+    // Tear down a prior outstanding suppressor first; back-to-back drags
+    // would otherwise race two listeners on the document.
+    clickSuppressorRef.current?.();
+
+    // suppress and teardown reference each other, so forward-declare suppress.
+    let suppress: (event: Event) => void;
+    const teardown = () => {
+      doc.removeEventListener('click', suppress, { capture: true });
+      if (clickSuppressorRef.current === teardown) {
+        clickSuppressorRef.current = null;
+      }
+    };
+    suppress = (clickEvent: Event) => {
+      clickEvent.preventDefault();
+      clickEvent.stopPropagation();
+      teardown();
+    };
+    doc.addEventListener('click', suppress, { capture: true });
+    clickSuppressorRef.current = teardown;
+    // If no click ever fires (drop on a different cell, browser doesn't
+    // synthesize), tear the listener down so it doesn't leak.
+    setTimeout(teardown, 0);
+  };
+
+  const finalizeGesture = (ownerDoc: Document, installSuppressor: boolean) => {
+    const wasMoved = didMoveRef.current;
+    const dropInfo = pendingDropRef.current;
+    const sourceDate = sourceDateRef.current;
+
+    cleanup();
+
+    if (wasMoved && installSuppressor) {
+      // The click that follows pointerup would re-enter the day's selection
+      // logic and undo the drop; swallow it. (Not needed on pointercancel —
+      // no click follows a canceled gesture.)
+      installClickSuppressor(ownerDoc);
+    }
+
+    if (wasMoved && dropInfo && sourceDate && !adapter.isEqual(dropInfo.date, sourceDate)) {
+      dropInfo.target.focus();
+      onDrop(dropInfo.date);
+    }
+  };
+
   const handlePointerDown = useEventCallback((event: React.PointerEvent<HTMLButtonElement>) => {
-    // Ignore secondary mouse buttons. `> 0` (not `!== 0`) so an undefined
-    // `button` (jsdom) is treated as primary.
+    // Ignore secondary mouse buttons. `> 0` (not `!== 0`) is intentional:
+    // real browsers report `button: -1` on events where no button changed
+    // state, and we want to treat those as primary.
     if (event.button > 0) {
       return;
     }
 
-    // Drop re-entrant pointerdowns: a second pointer (multi-touch, pen+touch)
-    // arriving mid-gesture would overwrite our state and leak listeners. The
-    // `pointerIdRef` check also covers pen+touch (each pointer type has its
-    // own primary) and recovery from a lost `pointerup`.
-    if (pointerIdRef.current != null || event.isPrimary === false) {
+    // Secondary multi-touch pointers (second finger, etc.) are explicitly
+    // not-primary; let them pass through without disturbing the active gesture.
+    if (event.isPrimary === false) {
       return;
     }
 
@@ -132,17 +199,34 @@ const useDragRangeEvents = ({
       return;
     }
 
+    // A fresh primary pointerdown definitionally ends any previous gesture
+    // (covers pen+touch, where each pointer type has its own primary, and
+    // the recovery case where the original gesture's `pointerup` was lost).
+    if (pointerIdRef.current != null) {
+      cleanup();
+    }
+
     // Touch implicitly captures the pointer on `pointerdown`, pinning all
     // subsequent events to the source. Release so sibling cells receive their
-    // own `pointerover` (jsdom lacks the capture API — guard the call).
-    if (
-      typeof event.currentTarget.hasPointerCapture === 'function' &&
-      event.currentTarget.hasPointerCapture(event.pointerId)
-    ) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
+    // own `pointerover`. jsdom lacks the API; Safari 15 / some Android WebViews
+    // race between the `hasPointerCapture` check and the release call and throw
+    // `InvalidPointerId` — benign, swallow it.
+    try {
+      if (
+        typeof event.currentTarget.hasPointerCapture === 'function' &&
+        event.currentTarget.hasPointerCapture(event.pointerId)
+      ) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+    } catch {
+      // already released, nothing to do
     }
 
     event.stopPropagation();
+    // Note: deliberately not calling `event.preventDefault()` here. Doing so
+    // would suppress the synthesized click that follows pointerup, which is
+    // load-bearing for tap-to-advance on an endpoint cell. The iOS magnifier
+    // is held off by `touch-action: none` + `user-select: none` on the cell.
 
     pointerIdRef.current = event.pointerId;
     isDraggingRef.current = true;
@@ -153,72 +237,63 @@ const useDragRangeEvents = ({
     const { position } = event.currentTarget.dataset;
     sourcePositionRef.current = (position as RangePosition | undefined) ?? null;
 
-    // Drag UI activation is deferred to `handlePointerOver`'s first real
-    // move — a pure tap on an endpoint must leave `rangePosition` alone
-    // so the click handler can advance it normally.
+    // Use the owner document (matters for iframe-hosted pickers) for all
+    // document-level listeners.
+    const ownerDoc = event.currentTarget.ownerDocument ?? document;
+    ownerDocumentRef.current = ownerDoc;
+
+    // Drag UI activation is deferred until the first real move — a pure
+    // press on an endpoint must leave selection state alone so the click
+    // handler can advance it normally.
 
     const onPointerUp = (pointerEvent: PointerEvent) => {
       if (pointerEvent.pointerId !== pointerIdRef.current) {
         return;
       }
-
-      const wasMoved = didMoveRef.current;
-      const dropInfo = pendingDropRef.current;
-      const sourceDate = sourceDateRef.current;
-
-      cleanup();
-
-      if (wasMoved) {
-        // Swallow the click that follows pointerup — it would re-enter the
-        // day's selection logic and undo the drop. If no click fires (drop on
-        // a different cell), tear the listener down on the next macrotask so
-        // it doesn't leak into the next interaction.
-        const suppressClick = (clickEvent: Event) => {
-          clickEvent.preventDefault();
-          clickEvent.stopPropagation();
-          document.removeEventListener('click', suppressClick, { capture: true });
-        };
-        document.addEventListener('click', suppressClick, { capture: true });
-        setTimeout(() => {
-          document.removeEventListener('click', suppressClick, { capture: true });
-        }, 0);
-      }
-
-      if (wasMoved && dropInfo && sourceDate && !adapter.isEqual(dropInfo.date, sourceDate)) {
-        dropInfo.target.focus();
-        onDrop(dropInfo.date);
-      }
+      finalizeGesture(ownerDoc, true);
     };
 
     const onPointerCancel = (pointerEvent: PointerEvent) => {
       if (pointerEvent.pointerId !== pointerIdRef.current) {
         return;
       }
-      cleanup();
+      // Spec intent of `pointercancel` is "UA interrupted, not the user".
+      // After real movement, commit the drop the user worked for; the snap-back
+      // would otherwise be silent and inexplicable.
+      finalizeGesture(ownerDoc, false);
     };
 
-    const onTouchMove = (touchEvent: TouchEvent) => {
-      // Suppress page scroll while dragging — `touch-action: none` on the
-      // source cell isn't enough once the finger leaves it.
-      if (isDraggingRef.current) {
-        touchEvent.preventDefault();
+    const onKeyDown = (keyEvent: KeyboardEvent) => {
+      if (keyEvent.key === 'Escape') {
+        keyEvent.preventDefault();
+        cleanup();
       }
     };
 
-    document.addEventListener('pointerup', onPointerUp);
-    document.addEventListener('pointercancel', onPointerCancel);
-    document.addEventListener('touchmove', onTouchMove, { passive: false });
+    ownerDoc.addEventListener('pointerup', onPointerUp);
+    ownerDoc.addEventListener('pointercancel', onPointerCancel);
+    ownerDoc.addEventListener('keydown', onKeyDown);
+    listenerCleanupsRef.current.push(
+      () => ownerDoc.removeEventListener('pointerup', onPointerUp),
+      () => ownerDoc.removeEventListener('pointercancel', onPointerCancel),
+      () => ownerDoc.removeEventListener('keydown', onKeyDown),
+    );
+  });
 
-    cleanupListenersRef.current = () => {
-      document.removeEventListener('pointerup', onPointerUp);
-      document.removeEventListener('pointercancel', onPointerCancel);
-      document.removeEventListener('touchmove', onTouchMove);
-    };
+  // `touchmove`-blocks-scroll listener. Lives outside `handlePointerDown` so
+  // it can be installed lazily (on first real move) rather than on every
+  // press — registering it on the document up front would disable
+  // compositor-thread scrolling for the duration of every endpoint tap.
+  const onTouchMove = useEventCallback((touchEvent: TouchEvent) => {
+    if (isDraggingRef.current) {
+      // `touch-action: none` on the source cell isn't enough once the finger
+      // crosses cell boundaries.
+      touchEvent.preventDefault();
+    }
   });
 
   // Use `pointerover` (bubbles) rather than `pointerenter`: React's
-  // `onPointerEnter` is built on top of over/out, and only bubbling events
-  // round-trip through testing-library's `fireEvent`.
+  // `onPointerEnter` is implemented on top of over/out.
   const handlePointerOver = useEventCallback((event: React.PointerEvent<HTMLButtonElement>) => {
     if (!isDraggingRef.current || event.pointerId !== pointerIdRef.current) {
       return;
@@ -239,13 +314,34 @@ const useDragRangeEvents = ({
       sourceDateRef.current && !adapter.isEqual(newDate, sourceDateRef.current);
 
     if (!didMoveRef.current && isDifferentFromSource) {
+      // A custom day slot could strip `data-position`; without it the preview
+      // would compute against the wrong endpoint, so abort the drag rather
+      // than rendering something misleading.
+      if (!sourcePositionRef.current) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn(
+            'MUI X: A drag was initiated on a day cell missing `data-position`. ' +
+              'Drag editing requires the cell to advertise which range endpoint it represents.',
+          );
+        }
+        return;
+      }
+
       // First real move: activate drag UI and tell the parent which endpoint
       // is being dragged so the preview computes against the correct side.
+      // Touch-scroll suppression is installed here (not on pointerdown) so a
+      // pure tap doesn't disable compositor scrolling.
       didMoveRef.current = true;
-      if (sourcePositionRef.current) {
-        onDatePositionChange(sourcePositionRef.current);
-      }
+      onDatePositionChange(sourcePositionRef.current);
       setIsDragging(true);
+
+      const ownerDoc = ownerDocumentRef.current;
+      if (ownerDoc) {
+        ownerDoc.addEventListener('touchmove', onTouchMove, { passive: false });
+        listenerCleanupsRef.current.push(() =>
+          ownerDoc.removeEventListener('touchmove', onTouchMove),
+        );
+      }
     }
 
     if (didMoveRef.current) {
@@ -253,12 +349,9 @@ const useDragRangeEvents = ({
     }
   });
 
-  React.useEffect(
-    () => () => {
-      cleanupListenersRef.current?.();
-    },
-    [],
-  );
+  // On unmount, clear gesture state so a remount can start fresh and detached
+  // DOM nodes referenced via `pendingDropRef` can be garbage-collected.
+  React.useEffect(() => () => clearGestureState(), []);
 
   return {
     onPointerDown: handlePointerDown,

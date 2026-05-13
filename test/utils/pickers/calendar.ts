@@ -3,11 +3,9 @@ import { fireEvent } from '@mui/internal-test-utils';
 const POINTER_ID = 1;
 
 /**
- * Replays a pointer drag across day cells: pointerdown on the source, then
- * pointerover on each subsequent cell, then pointerup. Used to test the
- * DateRangeCalendar drag-to-edit interaction in jsdom. We fire `pointerover`
- * (bubbles) rather than `pointerenter` (doesn't bubble) so React's delegated
- * listener picks the events up.
+ * Replays the pointer half of a drag-to-edit gesture across day cells:
+ * pointerdown on the source, pointerover on each subsequent cell. Use
+ * `executeDateDrag` to also commit the drop.
  */
 export const executeDateDragWithoutDrop = (startDate: Element, ...otherDates: Element[]) => {
   // `isPrimary: true` matches what real browsers produce for a first-finger

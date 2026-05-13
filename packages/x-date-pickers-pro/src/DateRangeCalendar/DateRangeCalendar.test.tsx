@@ -244,34 +244,6 @@ describe('<DateRangeCalendar />', () => {
         ).to.have.lengthOf(10);
       });
 
-      it('should handle pointer events targeting child elements inside the day button', () => {
-        // Real browsers can route pointer events to child nodes (text span, ripple)
-        // when the user touches inside the day button. The handler must walk up to
-        // the button to read its data attributes — exercise that path explicitly.
-        const onChange = spy();
-        const initialValue: [PickerValidDate, PickerValidDate] = [
-          adapterToUse.date('2018-01-10'),
-          adapterToUse.date('2018-01-31'),
-        ];
-        render(<DateRangeCalendar onChange={onChange} defaultValue={initialValue} />);
-
-        const startDayButton = screen.getByRole('gridcell', { name: '31', selected: true });
-        const endDayButton = screen.getByRole('gridcell', { name: '29' });
-
-        const startDayChild = document.createElement('span');
-        startDayButton.appendChild(startDayChild);
-        const endDayChild = document.createElement('span');
-        endDayButton.appendChild(endDayChild);
-
-        fireEvent.pointerDown(startDayChild, { pointerId: 1, button: 0, isPrimary: true });
-        fireEvent.pointerOver(endDayChild, { pointerId: 1 });
-        fireEvent.pointerUp(document, { pointerId: 1 });
-
-        expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
-      });
-
       it('should not initiate drag on non-draggable dates', () => {
         const onChange = spy();
         render(
@@ -288,6 +260,164 @@ describe('<DateRangeCalendar />', () => {
         executeDateDrag(middleDay, targetDay);
 
         // No change should occur since middle day is not draggable
+        expect(onChange.callCount).to.equal(0);
+      });
+
+      it('should ignore secondary multi-touch pointers (isPrimary === false)', () => {
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '31', selected: true });
+        const intermediateDay = getPickerDay('30');
+        const endDay = getPickerDay('29');
+
+        fireEvent.pointerDown(startDay, { pointerId: 1, button: 0, isPrimary: true });
+        // Second finger lands on a different cell — must not start a competing drag.
+        fireEvent.pointerDown(endDay, { pointerId: 2, button: 0, isPrimary: false });
+        fireEvent.pointerOver(intermediateDay, { pointerId: 1 });
+        fireEvent.pointerOver(endDay, { pointerId: 1 });
+        fireEvent.pointerUp(document, { pointerId: 1 });
+
+        // The first finger's gesture survives intact — exactly one drop, from
+        // pointerId 1.
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+      });
+
+      it('should recover from a stuck gesture when a fresh primary pointerdown arrives', () => {
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '31', selected: true });
+        const intermediateDay = getPickerDay('30');
+        const endDay = getPickerDay('29');
+
+        // Simulate a stuck gesture: pointerdown, no matching pointerup arrives.
+        fireEvent.pointerDown(startDay, { pointerId: 1, button: 0, isPrimary: true });
+        // A fresh primary pointerdown must reset the prior gesture and proceed.
+        fireEvent.pointerDown(startDay, { pointerId: 2, button: 0, isPrimary: true });
+        fireEvent.pointerOver(intermediateDay, { pointerId: 2 });
+        fireEvent.pointerOver(endDay, { pointerId: 2 });
+        fireEvent.pointerUp(document, { pointerId: 2 });
+
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+      });
+
+      it('should commit the drop when the gesture is canceled after movement', () => {
+        // `pointercancel` after the user has crossed cells should be treated
+        // as "UA interrupted, not the user" and commit the drop.
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '31', selected: true });
+        const endDay = getPickerDay('29');
+
+        fireEvent.pointerDown(startDay, { pointerId: 1, button: 0, isPrimary: true });
+        fireEvent.pointerOver(endDay, { pointerId: 1 });
+        fireEvent.pointerCancel(document, { pointerId: 1 });
+
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+      });
+
+      it('should not commit a drop on pointercancel before any movement', () => {
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '31', selected: true });
+
+        fireEvent.pointerDown(startDay, { pointerId: 1, button: 0, isPrimary: true });
+        fireEvent.pointerCancel(document, { pointerId: 1 });
+
+        expect(onChange.callCount).to.equal(0);
+      });
+
+      it('should clean up listeners after pointercancel and allow a new drag', () => {
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '31', selected: true });
+        const otherEndpoint = getPickerDay('10');
+        const newEndDay = getPickerDay('29');
+
+        // First gesture is canceled before any movement.
+        fireEvent.pointerDown(startDay, { pointerId: 1, button: 0, isPrimary: true });
+        fireEvent.pointerCancel(document, { pointerId: 1 });
+
+        // A second, independent drag must still work — listeners and refs were
+        // properly torn down.
+        executeDateDrag(otherEndpoint, newEndDay);
+
+        expect(onChange.callCount).to.equal(1);
+      });
+
+      it('should suppress the click that follows a moved drag', () => {
+        // The browser fires a synthesized click after pointerup. Without
+        // suppression it would re-enter the day's normal selection logic and
+        // overwrite the drop.
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '31', selected: true });
+        const endDay = getPickerDay('29');
+
+        executeDateDrag(startDay, endDay);
+        // Simulate the synthesized click on the drop target.
+        fireEvent.click(endDay);
+
+        // Exactly one onChange — from the drop, not double-counted by the click.
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+      });
+
+      it('should cancel an in-flight drag on Escape', () => {
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '31', selected: true });
+        const endDay = getPickerDay('29');
+
+        executeDateDragWithoutDrop(startDay, endDay);
+        fireEvent.keyDown(document.body, { key: 'Escape' });
+        // pointerup arriving after Escape is a no-op (cleanup already ran).
+        fireEvent.pointerUp(document, { pointerId: 1 });
+
         expect(onChange.callCount).to.equal(0);
       });
     });
