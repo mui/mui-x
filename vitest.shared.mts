@@ -116,7 +116,7 @@ export default defineConfig({
       // mostly @testing-library/user-event async timing); the slowest legitimate
       // tests touch ~17s in CI, so 30s leaves no headroom for noise.
       testTimeout: 60000,
-      // Retry failed tests up to 3 time. This is useful for flaky tests.
+      // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
       maxWorkers: 2,
     }),
