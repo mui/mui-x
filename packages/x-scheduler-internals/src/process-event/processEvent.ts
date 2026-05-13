@@ -32,7 +32,12 @@ export function processEvent(
 
   const displayTimezoneRRule =
     recurringEventsPlugin && parsedDataRRule
-      ? recurringEventsPlugin.projectRRuleToTimezone(adapter, parsedDataRRule, displayTimezone, startInstant)
+      ? recurringEventsPlugin.projectRRuleToTimezone(
+          adapter,
+          parsedDataRRule,
+          displayTimezone,
+          startInstant,
+        )
       : undefined;
 
   return {

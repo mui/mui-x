@@ -256,7 +256,12 @@ export class EventBuilder {
       ? this.adapter.date(occurrenceStartDate, 'default')
       : resolveEventDate(this.event.start, dataTimezone, this.adapter);
 
-    const baseProcessed = processEvent(this.event, this.displayTimezone, this.adapter, schedulerRecurringEventsPlugin);
+    const baseProcessed = processEvent(
+      this.event,
+      this.displayTimezone,
+      this.adapter,
+      schedulerRecurringEventsPlugin,
+    );
     const originalDurationMs =
       baseProcessed.dataTimezone.end.timestamp - baseProcessed.dataTimezone.start.timestamp;
     const rawEnd = this.adapter.addMilliseconds(rawStart, originalDurationMs);
@@ -267,7 +272,12 @@ export class EventBuilder {
       end: rawEnd.toISOString(),
     };
 
-    const processed = processEvent(occurrenceModel, this.displayTimezone, this.adapter, schedulerRecurringEventsPlugin);
+    const processed = processEvent(
+      occurrenceModel,
+      this.displayTimezone,
+      this.adapter,
+      schedulerRecurringEventsPlugin,
+    );
 
     return {
       ...processed,
@@ -279,7 +289,12 @@ export class EventBuilder {
    * Derives a processed event from the built event.
    */
   toProcessed() {
-    return processEvent(this.event, this.displayTimezone, this.adapter, schedulerRecurringEventsPlugin);
+    return processEvent(
+      this.event,
+      this.displayTimezone,
+      this.adapter,
+      schedulerRecurringEventsPlugin,
+    );
   }
 
   /**

@@ -191,7 +191,9 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
         }}
       >
         {children}
-        {showRecurrence && isScopeDialogOpen && RecurringScopeDialogSlot && <RecurringScopeDialogSlot />}
+        {showRecurrence && isScopeDialogOpen && RecurringScopeDialogSlot && (
+          <RecurringScopeDialogSlot />
+        )}
       </EventDialog.Provider>
     </EventDialogSlotsContext.Provider>
   );

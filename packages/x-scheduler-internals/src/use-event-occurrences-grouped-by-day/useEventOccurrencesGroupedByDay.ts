@@ -66,7 +66,8 @@ export function innerGetEventOccurrencesGroupedByDay(
     'adapter' | 'visibleResources' | 'events' | 'displayTimezone' | 'recurringEventsPlugin'
   > & { days: SchedulerProcessedDate[] },
 ): Map<string, SchedulerEventOccurrence[]> {
-  const { adapter, days, events, visibleResources, displayTimezone, recurringEventsPlugin } = parameters;
+  const { adapter, days, events, visibleResources, displayTimezone, recurringEventsPlugin } =
+    parameters;
 
   const occurrenceMap = new Map<string, SchedulerEventOccurrence[]>(
     days.map((day) => [day.key, []]),

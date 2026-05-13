@@ -428,7 +428,11 @@ describe('<EventDialogContent open />', () => {
         resources={resources}
         storeClass={PremiumTestStore}
       >
-        <TestEventDialogContent open {...defaultProps} occurrence={eventWithoutResourceOccurrence} />
+        <TestEventDialogContent
+          open
+          {...defaultProps}
+          occurrence={eventWithoutResourceOccurrence}
+        />
       </EventCalendarProvider>,
     );
 
@@ -1590,7 +1594,11 @@ describe('<EventDialogContent open />', () => {
               }}
             />
 
-            <TestEventDialogContent open {...defaultProps} occurrence={nonRecurringEventOccurrence} />
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={nonRecurringEventOccurrence}
+            />
           </EventCalendarProvider>,
         );
         await user.type(screen.getByLabelText(/event title/i), ' updated ');
@@ -1630,7 +1638,11 @@ describe('<EventDialogContent open />', () => {
               }}
             />
 
-            <TestEventDialogContent open {...defaultProps} occurrence={nonRecurringEventOccurrence} />
+            <TestEventDialogContent
+              open
+              {...defaultProps}
+              occurrence={nonRecurringEventOccurrence}
+            />
           </EventCalendarProvider>,
         );
         await user.click(screen.getByRole('tab', { name: /recurrence/i }));

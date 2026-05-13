@@ -8,7 +8,11 @@ import {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '@mui/x-scheduler-internals/internals';
+import {
+  getDateKey,
+  getOccurrenceEnd,
+  mergeDateAndTime,
+} from '@mui/x-scheduler-internals/internals';
 import {
   dayInWeek,
   getRemainingOccurrences,

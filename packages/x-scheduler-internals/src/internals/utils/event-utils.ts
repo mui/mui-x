@@ -97,7 +97,13 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 
       // TODO: Check how this behave when the occurrence is between start and end but not in the visible days (e.g: hidden week end).
       occurrences.push(
-        ...recurringEventsPlugin.getOccurrencesForVisibleDays(event, start, end, adapter, displayTimezone),
+        ...recurringEventsPlugin.getOccurrencesForVisibleDays(
+          event,
+          start,
+          end,
+          adapter,
+          displayTimezone,
+        ),
       );
       continue;
     }
