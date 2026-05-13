@@ -71,10 +71,10 @@ yarn add @mui/material @emotion/react @emotion/styled
 ## Rendering a ChatBox
 
 Import `ChatBox` and wire it to an adapter.
-The adapter implements `sendMessage` and returns a streaming response:
+The adapter implements `sendMessage` and returns the assistant's reply.
 
-The example below uses a small in-memory adapter so it works directly in the docs.
-In your app, replace the adapter implementation with your API call.
+The example below uses the built-in `createEchoAdapter` so it works directly in the docs.
+In your app, replace it with an adapter that calls your API.
 
 {{"demo": "RenderChatBox.js", "defaultCodeOpen": true, "bg": "inline"}}
 

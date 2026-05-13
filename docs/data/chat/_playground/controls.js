@@ -157,37 +157,14 @@ export function SwitchControl({
         >
           {label}
         </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0.75,
-            flexShrink: 0,
-          }}
-        >
-          <Typography
-            component="span"
-            variant="caption"
-            sx={(theme) => ({
-              fontFamily: theme.typography.fontFamilyCode ?? 'Menlo, monospace',
-              fontSize: '0.72rem',
-              fontWeight: 500,
-              color: checked ? 'success.main' : 'text.secondary',
-              fontVariantNumeric: 'tabular-nums',
-              transition: 'color 0.15s ease',
-            })}
-          >
-            {checked ? 'true' : 'false'}
-          </Typography>
-          <Switch
-            size="small"
-            checked={checked}
-            disabled={disabled}
-            onChange={(_, next) => onChange(next)}
-            slotProps={{ input: { 'aria-label': label } }}
-            sx={{ mr: -0.5 }}
-          />
-        </Box>
+        <Switch
+          size="small"
+          checked={checked}
+          disabled={disabled}
+          onChange={(_, next) => onChange(next)}
+          slotProps={{ input: { 'aria-label': label } }}
+          sx={{ mr: -0.5, flexShrink: 0 }}
+        />
       </Box>
       {helperText ? (
         <Typography

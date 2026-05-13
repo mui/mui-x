@@ -71,28 +71,45 @@ export function createChunkStream(
   options: { delayMs?: number } = {},
 ) {
   const { delayMs = 170 } = options;
+  let cancelled = false;
+  const timers: ReturnType<typeof setTimeout>[] = [];
 
   return new ReadableStream<ChatMessageChunk | ChatStreamEnvelope>({
     start(controller) {
       let didFinish = false;
 
       chunks.forEach((chunk, index) => {
-        setTimeout(
+        const timerId = setTimeout(
           () => {
-            if (didFinish) {
+            if (didFinish || cancelled) {
               return;
             }
 
-            controller.enqueue(chunk);
+            try {
+              controller.enqueue(chunk);
+            } catch {
+              // Stream was closed/cancelled between scheduling and firing — bail out.
+              cancelled = true;
+              return;
+            }
 
             if (index === chunks.length - 1) {
               didFinish = true;
-              controller.close();
+              try {
+                controller.close();
+              } catch {
+                // Already closed by the consumer; ignore.
+              }
             }
           },
           delayMs * (index + 1),
         );
+        timers.push(timerId);
       });
+    },
+    cancel() {
+      cancelled = true;
+      timers.forEach(clearTimeout);
     },
   });
 }
@@ -123,10 +140,7 @@ export function createEchoAdapter(
   const { agent } = options;
   const agentName = agent?.displayName ?? 'Assistant';
   const delayMs = options.delayMs ?? 170;
-  const respond =
-    options.respond ??
-    ((text: string) =>
-      `${agentName} received "${text}". Material UI styles applied automatically from the active theme.`);
+  const respond = options.respond ?? ((text: string) => `${agentName} received "${text}".`);
 
   return {
     async sendMessage({ message }) {

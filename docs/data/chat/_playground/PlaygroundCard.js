@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
@@ -295,7 +294,7 @@ function getPreviewSizing(previewSize, minHeight) {
       },
       maxHeight: previewSize.maxHeight,
       maxWidth: previewSize.maxWidth ?? '100%',
-      controlsWidth: previewSize.controlsWidth ?? 276,
+      controlsWidth: previewSize.controlsWidth ?? 272,
       aspectRatio: previewSize.aspectRatio,
     };
   }
@@ -323,8 +322,21 @@ function getPreviewSizing(previewSize, minHeight) {
     },
     maxHeight: undefined,
     maxWidth: presetMaxWidth,
-    controlsWidth: preset === 'full' ? 300 : 276,
+    controlsWidth: preset === 'full' ? 288 : 272,
     aspectRatio: undefined,
+  };
+}
+
+function getGridTemplateColumns(hasControls, collapsed, controlsWidth) {
+  if (!hasControls) {
+    return '1fr';
+  }
+  if (collapsed) {
+    return { xs: '1fr', md: 'minmax(0, 1fr) 32px' };
+  }
+  return {
+    xs: '1fr',
+    md: `minmax(0, 1fr) minmax(240px, ${controlsWidth})`,
   };
 }
 
@@ -377,7 +389,7 @@ function CheckIcon() {
   );
 }
 
-function TabButton({ label, count, active, onClick }) {
+function TabButton({ label, hasIndicator, active, onClick }) {
   return (
     <Box
       component="button"
@@ -385,9 +397,10 @@ function TabButton({ label, count, active, onClick }) {
       onClick={onClick}
       aria-selected={active}
       sx={(theme) => ({
+        position: 'relative',
         display: 'inline-flex',
         alignItems: 'center',
-        gap: 0.5,
+        gap: 0.375,
         border: 'none',
         background: 'none',
         cursor: 'pointer',
@@ -396,17 +409,25 @@ function TabButton({ label, count, active, onClick }) {
         fontFamily: 'inherit',
         textTransform: 'uppercase',
         fontSize: '0.65rem',
-        letterSpacing: 1.2,
+        letterSpacing: 1.1,
         fontWeight: 700,
-        lineHeight: 1,
+        lineHeight: 1.2,
         color: active ? 'text.primary' : 'text.secondary',
-        borderBottom: '2px solid',
-        borderColor: active ? 'primary.main' : 'transparent',
-        pb: 0.75,
-        mb: -0.25,
-        transition: 'color 0.15s ease, border-color 0.15s ease',
+        flexShrink: 0,
+        transition: 'color 0.15s ease',
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: -6,
+          height: 2,
+          borderRadius: 1,
+          backgroundColor: active ? theme.palette.primary.main : 'transparent',
+          transition: 'background-color 0.15s ease',
+        },
         '&:hover': {
-          color: active ? 'text.primary' : 'text.primary',
+          color: 'text.primary',
         },
         '&:focus-visible': {
           outline: `2px solid ${theme.palette.primary.main}`,
@@ -415,26 +436,19 @@ function TabButton({ label, count, active, onClick }) {
       })}
     >
       {label}
-      {typeof count === 'number' && count > 0 ? (
+      {hasIndicator ? (
         <Box
           component="span"
-          sx={(theme) => ({
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minWidth: 16,
-            height: 16,
-            px: 0.5,
-            borderRadius: 8,
+          aria-hidden
+          sx={{
+            display: 'inline-block',
+            width: 5,
+            height: 5,
+            borderRadius: '50%',
             bgcolor: 'primary.main',
-            color: theme.palette.primary.contrastText,
-            fontSize: '0.6rem',
-            fontWeight: 700,
-            letterSpacing: 0,
-          })}
-        >
-          {count}
-        </Box>
+            flexShrink: 0,
+          }}
+        />
       ) : null}
     </Box>
   );
@@ -597,26 +611,35 @@ function CustomizationRow({ item, defaultOpen }) {
 
 function ResetButton({ onClick, label = 'Reset' }) {
   return (
-    <Box
-      component="button"
-      type="button"
-      onClick={onClick}
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 0.5,
-        border: 'none',
-        background: 'none',
-        cursor: 'pointer',
-        color: 'text.secondary',
-        fontSize: '0.7rem',
-        p: 0,
-        '&:hover': { color: 'primary.main' },
-      }}
-    >
-      <RefreshIcon />
-      {label}
-    </Box>
+    <Tooltip title="Reset to defaults" placement="top" arrow>
+      <Box
+        component="button"
+        type="button"
+        onClick={onClick}
+        aria-label={label}
+        sx={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: 'none',
+          background: 'none',
+          cursor: 'pointer',
+          color: 'text.secondary',
+          width: 22,
+          height: 22,
+          p: 0,
+          borderRadius: 1,
+          flexShrink: 0,
+          transition: 'color 0.15s ease, background-color 0.15s ease',
+          '&:hover': {
+            color: 'primary.main',
+            bgcolor: 'action.hover',
+          },
+        }}
+      >
+        <RefreshIcon />
+      </Box>
+    </Tooltip>
   );
 }
 
@@ -710,47 +733,148 @@ function CopyCodeBar({ getCode }) {
   );
 }
 
-function MetadataRow({ label, values }) {
-  if (!values || values.length === 0) {
-    return null;
-  }
-
-  const visibleValues = values.slice(0, 4);
-  const hiddenCount = values.length - visibleValues.length;
-
+function CollapseChevronIcon({ direction }) {
   return (
-    <Stack
-      direction="row"
-      spacing={0.75}
-      sx={{ alignItems: 'center', minWidth: 0, flexWrap: 'wrap' }}
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
-      <Typography
-        variant="caption"
-        color="text.secondary"
-        sx={{ fontWeight: 600, minWidth: 48 }}
-      >
-        {label}
-      </Typography>
-      {visibleValues.map((value) => (
-        <Chip
-          key={value}
-          size="small"
-          variant="outlined"
-          label={value}
-          sx={{ height: 22, fontSize: '0.7rem', maxWidth: 168 }}
+      {direction === 'right' ? (
+        <path d="M9 5l7 7-7 7" />
+      ) : (
+        <path d="M15 5l-7 7 7 7" />
+      )}
+    </svg>
+  );
+}
+
+function CollapseFooter({ onCollapse }) {
+  return (
+    <Box
+      sx={(theme) => ({
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        px: 1,
+        py: 0.5,
+        borderTop: '1px solid',
+        borderColor: 'divider',
+        bgcolor:
+          theme.palette.mode === 'dark'
+            ? 'rgba(255, 255, 255, 0.03)'
+            : 'rgba(0, 0, 0, 0.02)',
+      })}
+    >
+      <Tooltip title="Collapse panel" placement="top" arrow>
+        <Box
+          component="button"
+          type="button"
+          onClick={onCollapse}
+          aria-label="Collapse props panel"
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 0.5,
+            border: 'none',
+            background: 'none',
+            cursor: 'pointer',
+            color: 'text.secondary',
+            fontSize: '0.7rem',
+            fontFamily: 'inherit',
+            px: 0.75,
+            py: 0.25,
+            borderRadius: 1,
+            '&:hover': {
+              color: 'primary.main',
+              bgcolor: 'action.hover',
+            },
+          }}
+        >
+          Collapse
+          <CollapseChevronIcon direction="right" />
+        </Box>
+      </Tooltip>
+    </Box>
+  );
+}
+
+function CollapsedStrip({ onExpand, hasOverrides }) {
+  return (
+    <Box
+      component="button"
+      type="button"
+      onClick={onExpand}
+      aria-label="Expand props panel"
+      sx={(theme) => ({
+        width: '100%',
+        alignSelf: 'stretch',
+        minHeight: 120,
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 2,
+        bgcolor: theme.palette.mode === 'dark' ? 'grey.900' : 'grey.50',
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 1,
+        p: 0,
+        py: 1.25,
+        color: 'text.secondary',
+        transition:
+          'background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease',
+        position: 'relative',
+        '&:hover, &:focus-visible': {
+          color: 'text.primary',
+          borderColor: 'text.secondary',
+        },
+        '&:focus-visible': {
+          outline: `2px solid ${theme.palette.primary.main}`,
+          outlineOffset: 2,
+        },
+      })}
+    >
+      {hasOverrides ? (
+        <Box
+          aria-hidden
+          sx={{
+            position: 'absolute',
+            top: 8,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            bgcolor: 'primary.main',
+          }}
         />
-      ))}
-      {hiddenCount > 0 ? (
-        <Tooltip title={values.join(', ')}>
-          <Chip
-            size="small"
-            variant="outlined"
-            label={`+${hiddenCount}`}
-            sx={{ height: 22, fontSize: '0.7rem' }}
-          />
-        </Tooltip>
       ) : null}
-    </Stack>
+      <Box
+        component="span"
+        sx={(theme) => ({
+          writingMode: 'vertical-rl',
+          transform: 'rotate(180deg)',
+          fontFamily: theme.typography.fontFamilyCode ?? 'Menlo, monospace',
+          fontSize: '0.65rem',
+          fontWeight: 600,
+          textTransform: 'uppercase',
+          letterSpacing: 1.2,
+          lineHeight: 1,
+        })}
+      >
+        Click to expand
+      </Box>
+      <Box aria-hidden sx={{ transform: 'rotate(90deg)', display: 'inline-flex' }}>
+        <CollapseChevronIcon direction="right" />
+      </Box>
+    </Box>
   );
 }
 
@@ -798,6 +922,8 @@ export function PlaygroundCard({
   const hasClassesTab = (classCustomizations?.length ?? 0) > 0;
   const showTabs = hasSlotsTab || hasClassesTab;
   const [activeTab, setActiveTab] = React.useState('props');
+  const [controlsCollapsed, setControlsCollapsed] = React.useState(false);
+  const overridesCount = slotsOverrideCount + classesOverrideCount;
   const componentId = title.replace(/[^a-zA-Z0-9]/g, '');
   const inferredComponentName =
     componentNameProp ?? registry?.componentName ?? getComponentName(title);
@@ -848,54 +974,34 @@ export function PlaygroundCard({
       data-class-keys={joinDataAttribute(resolvedMetadata.classKeys)}
       variant="outlined"
       sx={{
-        p: { xs: 1.5, sm: 2 },
         borderRadius: 2,
         width: '100%',
-        height: '100%',
+        height: previewFill ? '80vh' : '100%',
+        minHeight: previewFill ? '80vh' : undefined,
+        maxHeight: previewFill ? '80vh' : undefined,
         display: 'flex',
         flexDirection: 'column',
-        gap: { xs: 1.25, sm: 1.5 },
         gridColumn: { xs: 'span 1', lg: `span ${span}` },
         scrollMarginTop: '100px',
+        overflow: 'hidden',
       }}
     >
-      <Stack data-playground-header="" spacing={0.75}>
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{ alignItems: 'center', flexWrap: 'wrap' }}
-        >
-          <Typography variant="subtitle1" sx={{ fontWeight: 700, minWidth: 0 }}>
-            {title}
-          </Typography>
-          {statusBadge ? (
-            <Chip
-              size="small"
-              color={statusBadge.color}
-              variant="outlined"
-              label={statusBadge.label}
-              sx={{ height: 22, fontSize: '0.7rem', fontWeight: 600 }}
-            />
-          ) : null}
-          {resolvedMetadata.parent ? (
-            <Chip
-              size="small"
-              variant="outlined"
-              label={`in ${resolvedMetadata.parent}`}
-              sx={{ height: 22, fontSize: '0.7rem' }}
-            />
-          ) : null}
-        </Stack>
+      <Stack
+        data-playground-header=""
+        spacing={0.25}
+        sx={{
+          px: { xs: 1.5, sm: 2 },
+          pt: { xs: 1.25, sm: 1.5 },
+          pb: { xs: 1, sm: 1.25 },
+        }}
+      >
+        <Typography variant="subtitle1" sx={{ fontWeight: 700, minWidth: 0 }}>
+          {title}
+        </Typography>
         {description ? (
           <Typography variant="caption" color="text.secondary">
             {description}
           </Typography>
-        ) : null}
-        {resolvedMetadata.slots?.length || resolvedMetadata.classKeys?.length ? (
-          <Stack spacing={0.5} sx={{ pt: 0.25 }}>
-            <MetadataRow label="slots" values={resolvedMetadata.slots} />
-            <MetadataRow label="classes" values={resolvedMetadata.classKeys} />
-          </Stack>
         ) : null}
       </Stack>
       <Divider data-playground-divider="" flexItem />
@@ -903,21 +1009,22 @@ export function PlaygroundCard({
         sx={{
           flex: 1,
           display: 'grid',
-          gap: { xs: 1.5, md: 2 },
-          gridTemplateColumns: controls
-            ? { xs: '1fr', md: `minmax(0, 1fr) minmax(232px, ${controlsWidth})` }
-            : '1fr',
+          gap: { xs: 0.75, md: 1 },
+          gridTemplateColumns: getGridTemplateColumns(
+            controls,
+            controlsCollapsed,
+            controlsWidth,
+          ),
           minHeight: 0,
+          p: { xs: 1, sm: 1.25 },
         }}
       >
         <Box
           data-playground-preview=""
           sx={{
-            minHeight: previewSizing.minHeight,
-            maxHeight:
-              previewSizing.maxHeight ??
-              (previewFill ? previewSizing.minHeight : undefined),
-            height: previewFill ? previewSizing.minHeight : undefined,
+            minHeight: previewFill ? 0 : previewSizing.minHeight,
+            maxHeight: previewFill ? '100%' : (previewSizing.maxHeight ?? undefined),
+            height: previewFill ? '100%' : undefined,
             display: 'flex',
             alignItems: previewFill ? 'stretch' : 'center',
             justifyContent: 'center',
@@ -941,7 +1048,13 @@ export function PlaygroundCard({
             {preview}
           </Box>
         </Box>
-        {controls || showTabs ? (
+        {(controls || showTabs) && controlsCollapsed ? (
+          <CollapsedStrip
+            onExpand={() => setControlsCollapsed(false)}
+            hasOverrides={overridesCount > 0}
+          />
+        ) : null}
+        {(controls || showTabs) && !controlsCollapsed ? (
           <Stack
             data-playground-controls=""
             spacing={0}
@@ -951,9 +1064,10 @@ export function PlaygroundCard({
               borderColor: 'divider',
               bgcolor: (theme) =>
                 theme.palette.mode === 'dark' ? 'grey.900' : 'grey.50',
-              alignSelf: 'flex-start',
+              alignSelf: 'stretch',
               width: '100%',
               minWidth: 0,
+              maxHeight: '100%',
               overflow: 'hidden',
             }}
           >
@@ -964,8 +1078,8 @@ export function PlaygroundCard({
                 alignItems: 'center',
                 gap: 1.5,
                 px: 1.5,
-                pt: showTabs ? 1 : 1,
-                pb: showTabs ? 0 : 1,
+                pt: 0.5,
+                flexShrink: 0,
                 borderBottom: '1px solid',
                 borderColor: 'divider',
                 bgcolor: (theme) =>
@@ -979,10 +1093,11 @@ export function PlaygroundCard({
                   role="tablist"
                   sx={{
                     display: 'flex',
-                    alignItems: 'flex-end',
-                    gap: 1.25,
+                    alignItems: 'center',
+                    gap: 0.875,
                     minWidth: 0,
-                    flexWrap: 'wrap',
+                    flex: 1,
+                    flexWrap: 'nowrap',
                   }}
                 >
                   <TabButton
@@ -993,7 +1108,7 @@ export function PlaygroundCard({
                   {hasSlotsTab ? (
                     <TabButton
                       label="Slots"
-                      count={slotsOverrideCount}
+                      hasIndicator={slotsOverrideCount > 0}
                       active={activeTab === 'slots'}
                       onClick={() => setActiveTab('slots')}
                     />
@@ -1001,7 +1116,7 @@ export function PlaygroundCard({
                   {hasClassesTab ? (
                     <TabButton
                       label="Classes"
-                      count={classesOverrideCount}
+                      hasIndicator={classesOverrideCount > 0}
                       active={activeTab === 'classes'}
                       onClick={() => setActiveTab('classes')}
                     />
@@ -1021,70 +1136,82 @@ export function PlaygroundCard({
                   Props
                 </Typography>
               )}
-              {activeTab === 'props' && onReset ? (
-                <ResetButton onClick={onReset} />
-              ) : null}
-              {activeTab === 'slots' && onSlotsReset ? (
-                <ResetButton onClick={onSlotsReset} />
-              ) : null}
-              {activeTab === 'classes' && onClassesReset ? (
-                <ResetButton onClick={onClassesReset} />
+              {onReset || onSlotsReset || onClassesReset ? (
+                <ResetButton
+                  onClick={() => {
+                    onReset?.();
+                    onSlotsReset?.();
+                    onClassesReset?.();
+                  }}
+                />
               ) : null}
             </Box>
-            {activeTab === 'props' && controls ? (
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 0.75,
-                  px: 1.25,
-                  py: 1,
-                }}
-              >
-                {controls}
-              </Box>
-            ) : null}
-            {activeTab === 'slots' && slotCustomizations ? (
-              <Box
-                sx={{
-                  px: 1.5,
-                  py: 0.5,
-                  '& > *': {
+            <Box
+              sx={{
+                flex: 1,
+                minHeight: 0,
+                overflowY: 'auto',
+                overflowX: 'hidden',
+              }}
+            >
+              {activeTab === 'props' && controls ? (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 0.75,
+                    px: 1.25,
+                    py: 1,
+                  }}
+                >
+                  {controls}
+                </Box>
+              ) : null}
+              {activeTab === 'slots' && slotCustomizations ? (
+                <Box
+                  sx={{
+                    px: 1.5,
                     py: 0.5,
-                    borderBottom: '1px solid',
-                    borderColor: 'divider',
-                  },
-                  '& > *:last-child': {
-                    borderBottom: 'none',
-                  },
-                }}
-              >
-                {slotCustomizations.map((entry) => (
-                  <CustomizationRow key={entry.name} item={entry} />
-                ))}
-              </Box>
-            ) : null}
-            {activeTab === 'classes' && classCustomizations ? (
-              <Box
-                sx={{
-                  px: 1.5,
-                  py: 0.5,
-                  '& > *': {
+                    '& > *': {
+                      py: 0.5,
+                      borderBottom: '1px solid',
+                      borderColor: 'divider',
+                    },
+                    '& > *:last-child': {
+                      borderBottom: 'none',
+                    },
+                  }}
+                >
+                  {slotCustomizations.map((entry) => (
+                    <CustomizationRow key={entry.name} item={entry} />
+                  ))}
+                </Box>
+              ) : null}
+              {activeTab === 'classes' && classCustomizations ? (
+                <Box
+                  sx={{
+                    px: 1.5,
                     py: 0.5,
-                    borderBottom: '1px solid',
-                    borderColor: 'divider',
-                  },
-                  '& > *:last-child': {
-                    borderBottom: 'none',
-                  },
-                }}
-              >
-                {classCustomizations.map((entry) => (
-                  <CustomizationRow key={entry.name} item={entry} />
-                ))}
-              </Box>
-            ) : null}
-            {copyCode ? <CopyCodeBar getCode={copyCode} /> : null}
+                    '& > *': {
+                      py: 0.5,
+                      borderBottom: '1px solid',
+                      borderColor: 'divider',
+                    },
+                    '& > *:last-child': {
+                      borderBottom: 'none',
+                    },
+                  }}
+                >
+                  {classCustomizations.map((entry) => (
+                    <CustomizationRow key={entry.name} item={entry} />
+                  ))}
+                </Box>
+              ) : null}
+            </Box>
+            <Box sx={{ flexShrink: 0 }}>
+              <CollapseFooter onCollapse={() => setControlsCollapsed(true)} />
+              {copyCode ? <CopyCodeBar getCode={copyCode} /> : null}
+            </Box>
           </Stack>
         ) : null}
       </Box>
