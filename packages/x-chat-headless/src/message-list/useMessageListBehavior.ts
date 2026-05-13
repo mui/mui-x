@@ -337,6 +337,10 @@ export function useMessageListBehavior(parameters: {
   ]);
 
   React.useEffect(() => {
+    // Restore on (re)mount so the resize-driven auto-scroll keeps working after
+    // a StrictMode mount → cleanup → mount cycle, which would otherwise leave
+    // `isMountedRef.current` stuck at `false` from the dev-only first cleanup.
+    isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
       if (typeof cancelAnimationFrame === 'function') {
