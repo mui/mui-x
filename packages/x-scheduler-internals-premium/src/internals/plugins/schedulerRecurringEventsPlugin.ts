@@ -24,7 +24,7 @@ import {
  * cache, a data manager, and store subscriptions per instance. This plugin
  * has no per-instance state — a plain object literal makes that explicit.
  */
-export const recurringEventsPlugin: SchedulerRecurringEventsPluginInterface = {
+export const schedulerRecurringEventsPlugin: SchedulerRecurringEventsPluginInterface = {
   parseRRule,
   serializeRRule,
   projectRRuleToTimezone,
