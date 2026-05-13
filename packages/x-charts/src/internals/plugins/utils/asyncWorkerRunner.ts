@@ -113,13 +113,6 @@ export function getChartsAsyncRunner(): Promise<ChartsAsyncRunner | null> {
   if (persistentChannel === null) {
     persistentSessionId = generateSessionId();
     persistentChannel = new BroadcastChannel(MUI_X_CHARTS_ASYNC_CHANNEL);
-    // eslint-disable-next-line no-console
-    console.log(
-      `[mui-x-charts][${Date.now()}] opening persistent channel; crossOriginIsolated =`,
-      (globalThis as any).crossOriginIsolated,
-      '; SAB available =',
-      typeof SharedArrayBuffer !== 'undefined',
-    );
     persistentChannel.addEventListener(
       'message',
       (event: MessageEvent<ChartsAsyncWorkerMessage>) => {
@@ -131,8 +124,6 @@ export function getChartsAsyncRunner(): Promise<ChartsAsyncRunner | null> {
           persistentChannel !== null &&
           persistentSessionId !== null
         ) {
-          // eslint-disable-next-line no-console
-          console.log(`[mui-x-charts][${Date.now()}] worker discovered via BroadcastChannel pong`);
           installedRunner = buildRunner(persistentChannel, persistentSessionId);
         }
       },
@@ -141,9 +132,6 @@ export function getChartsAsyncRunner(): Promise<ChartsAsyncRunner | null> {
 
   // Re-ping every time we get called without an installed runner. Cheap
   // fire-and-forget; lets a late-booting worker still answer.
-  const pingAt = Date.now();
-  // eslint-disable-next-line no-console
-  console.log(`[mui-x-charts][${pingAt}] sending ping`);
   persistentChannel.postMessage({
     kind: 'ping',
     sessionId: persistentSessionId!,
@@ -151,19 +139,7 @@ export function getChartsAsyncRunner(): Promise<ChartsAsyncRunner | null> {
 
   return new Promise<ChartsAsyncRunner | null>((resolve) => {
     setTimeout(() => {
-      if (installedRunner !== null) {
-        resolve(installedRunner);
-      } else {
-        // eslint-disable-next-line no-console
-        console.log(
-          `[mui-x-charts][${Date.now()}] no worker pong within`,
-          MUI_X_CHARTS_ASYNC_PROBE_TIMEOUT_MS,
-          'ms (ping was at',
-          pingAt,
-          ') — falling back to main thread (will retry on next request)',
-        );
-        resolve(null);
-      }
+      resolve(installedRunner);
     }, MUI_X_CHARTS_ASYNC_PROBE_TIMEOUT_MS);
   });
 }
@@ -191,11 +167,6 @@ function buildRunner(channel: BroadcastChannel, sessionId: string): ChartsAsyncR
         return;
       }
       pending.delete(msg.requestId);
-      // eslint-disable-next-line no-console
-      console.log('[mui-x-charts] worker response received', {
-        requestId: msg.requestId,
-        defaultizedSeriesKeys: Object.keys(msg.defaultizedSeries ?? {}),
-      });
       entry.resolve({
         defaultizedSeries: msg.defaultizedSeries,
         idToType: new Map(msg.idToTypeEntries),
@@ -216,8 +187,6 @@ function buildRunner(channel: BroadcastChannel, sessionId: string): ChartsAsyncR
     runSeriesDefaultize(payload, requestId) {
       return new Promise((resolve, reject) => {
         pending.set(requestId, { resolve, reject });
-        // eslint-disable-next-line no-console
-        console.log('[mui-x-charts] dispatching series-defaultize to worker', { requestId });
         try {
           // Strip non-cloneable fields (functions, React elements/components,
           // class instances) from each series — `postMessage` over
@@ -235,7 +204,6 @@ function buildRunner(channel: BroadcastChannel, sessionId: string): ChartsAsyncR
             },
           } satisfies ChartsAsyncWorkerMessage);
         } catch (err) {
-          console.error('[mui-x-charts] postMessage threw', err);
           pending.delete(requestId);
           reject(err as Error);
         }

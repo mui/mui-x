@@ -50,29 +50,13 @@ export function setupChartsAsyncWorker<SeriesType extends ChartSeriesType = Char
     defaultSeriesConfig) as ChartSeriesConfig<SeriesType>;
   const channel = new BroadcastChannel(MUI_X_CHARTS_ASYNC_CHANNEL);
 
-  // eslint-disable-next-line no-console
-  console.log(
-    `[chartsWorker][${Date.now()}] setup complete; crossOriginIsolated =`,
-    (self as any).crossOriginIsolated,
-  );
   channel.addEventListener('message', (event: MessageEvent<ChartsAsyncWorkerMessage>) => {
     const msg = event.data;
-    // eslint-disable-next-line no-console
-    console.log(`[chartsWorker][${Date.now()}] message received`, {
-      dataType: typeof msg,
-      isNull: msg === null,
-      keys: msg && typeof msg === 'object' ? Object.keys(msg as any) : undefined,
-      kind: (msg as any)?.kind,
-    });
     if (!msg) {
       return;
     }
 
     if (msg.kind === 'ping') {
-      // eslint-disable-next-line no-console
-      console.log(`[chartsWorker][${Date.now()}] ping received, replying pong`, {
-        sessionId: msg.sessionId,
-      });
       channel.postMessage({
         kind: 'pong',
         sessionId: msg.sessionId,
@@ -81,8 +65,6 @@ export function setupChartsAsyncWorker<SeriesType extends ChartSeriesType = Char
     }
 
     if (msg.kind === 'series-defaultize') {
-      // eslint-disable-next-line no-console
-      console.log('[chartsWorker] processing series-defaultize', { requestId: msg.requestId });
       try {
         const { defaultizedSeries, idToType } = defaultizeSeries({
           series: msg.payload.series as any,
@@ -90,35 +72,20 @@ export function setupChartsAsyncWorker<SeriesType extends ChartSeriesType = Char
           theme: msg.payload.theme,
           seriesConfig,
         });
-        try {
-          channel.postMessage({
-            kind: 'series-defaultize:done',
-            sessionId: msg.sessionId,
-            requestId: msg.requestId,
-            defaultizedSeries,
-            idToTypeEntries: Array.from(idToType.entries()),
-          } satisfies ChartsAsyncWorkerMessage);
-          // eslint-disable-next-line no-console
-          console.log('[chartsWorker] sent series-defaultize:done', { requestId: msg.requestId });
-        } catch (postErr) {
-          // eslint-disable-next-line no-console
-          console.error('[chartsWorker] postMessage of done reply threw', postErr);
-          throw postErr;
-        }
+        channel.postMessage({
+          kind: 'series-defaultize:done',
+          sessionId: msg.sessionId,
+          requestId: msg.requestId,
+          defaultizedSeries,
+          idToTypeEntries: Array.from(idToType.entries()),
+        } satisfies ChartsAsyncWorkerMessage);
       } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error('[chartsWorker] defaultize threw', err);
-        try {
-          channel.postMessage({
-            kind: 'series-defaultize:error',
-            sessionId: msg.sessionId,
-            requestId: msg.requestId,
-            errorMessage: (err as Error).message,
-          } satisfies ChartsAsyncWorkerMessage);
-        } catch (postErr) {
-          // eslint-disable-next-line no-console
-          console.error('[chartsWorker] postMessage of error reply threw', postErr);
-        }
+        channel.postMessage({
+          kind: 'series-defaultize:error',
+          sessionId: msg.sessionId,
+          requestId: msg.requestId,
+          errorMessage: (err as Error).message,
+        } satisfies ChartsAsyncWorkerMessage);
       }
     }
   });
