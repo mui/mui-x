@@ -39,7 +39,7 @@ export default function ChartsRadiusAxisHighlight(props: {
   const radiusValue = store.use(selectorChartsInteractionRadiusAxisValue);
   const radiusAxisId = radiusAxisIds[0];
 
-  if (radiusAxisId === undefined || pointerRadius === null) {
+  if (type === 'none' || radiusAxisId === undefined || pointerRadius === null) {
     return null;
   }
 

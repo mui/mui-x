@@ -86,10 +86,11 @@ export function getRadiusAxisIndex(
   }
 
   let dataIndex: number;
+  const distFromStart = pointerValue - Math.min(...scale.range());
   if (scale.bandwidth() === 0) {
-    dataIndex = Math.floor((pointerValue + scale.step() / 2) / scale.step());
+    dataIndex = Math.floor((distFromStart + scale.step() / 2) / scale.step());
   } else {
-    dataIndex = Math.floor(pointerValue / scale.step());
+    dataIndex = Math.floor(distFromStart / scale.step());
   }
   if (dataIndex < 0 || dataIndex >= axisData.length) {
     return -1;

@@ -87,9 +87,9 @@ export const useRadialBarChartProps = (props: RadialBarChartProps) => {
     plugins: RADIAL_BAR_CHART_PLUGINS,
   };
 
-  const isHorinzontal = series.some((s) => s.layout === 'horizontal');
+  const isHorizontal = series.some((s) => s.layout === 'horizontal');
   const axisHighlightProps: ChartsRadialAxisHighlightProps = {
-    ...(isHorinzontal ? { radius: 'band' as const } : { rotation: 'band' as const }),
+    ...(isHorizontal ? { radius: 'band' as const } : { rotation: 'band' as const }),
     ...axisHighlight,
   };
 
