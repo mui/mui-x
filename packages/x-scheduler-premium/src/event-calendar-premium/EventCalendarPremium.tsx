@@ -18,14 +18,8 @@ import {
   EventCalendarRoot,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
-import { RecurrenceTab } from '../internals/components/event-dialog/RecurrenceTab';
-import { RecurringScopeDialog } from '../internals/components/scope-dialog/ScopeDialog';
+import { PREMIUM_EVENT_DIALOG_SLOTS } from '../internals';
 import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
-
-const eventDialogSlots = {
-  recurrenceTab: RecurrenceTab,
-  recurringScopeDialog: RecurringScopeDialog,
-};
 
 const packageInfo = {
   releaseDate: '__RELEASE_INFO__',
@@ -83,7 +77,7 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
     <SchedulerStoreContext.Provider value={store as any}>
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
         <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
-          <EventDialogProvider slots={eventDialogSlots}>
+          <EventDialogProvider slots={PREMIUM_EVENT_DIALOG_SLOTS}>
             <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
               {watermark}
             </EventCalendarRoot>

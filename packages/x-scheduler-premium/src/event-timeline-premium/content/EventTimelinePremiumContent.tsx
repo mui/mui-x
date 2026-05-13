@@ -19,18 +19,12 @@ import {
   useEventDialogContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
-import { RecurrenceTab } from '../../internals/components/event-dialog/RecurrenceTab';
-import { RecurringScopeDialog } from '../../internals/components/scope-dialog/ScopeDialog';
+import { PREMIUM_EVENT_DIALOG_SLOTS } from '../../internals';
 import { EventTimelinePremiumHeader } from './timeline-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
-
-const eventDialogSlots = {
-  recurrenceTab: RecurrenceTab,
-  recurringScopeDialog: RecurringScopeDialog,
-};
 
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimeline',
@@ -418,7 +412,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   return (
     <EventTimelinePremiumContentRoot ref={handleRef} className={classes.content} {...props}>
-      <EventDialogProvider slots={eventDialogSlots}>
+      <EventDialogProvider slots={PREMIUM_EVENT_DIALOG_SLOTS}>
         <EventTimelinePremiumGrid
           className={classes.grid}
           style={{ '--unit-width': `${presetConfig.tickWidth}px` } as React.CSSProperties}
