@@ -251,6 +251,35 @@ describe('<DataGridPremium /> - Row grouping', () => {
         '',
       ]);
     });
+
+    // Regression test for https://github.com/mui/mui-x/issues/22310
+    it('should not crash when grouping values match Object.prototype property names', () => {
+      render(
+        <Test
+          rows={[
+            { id: 0, category1: 'constructor', category2: 'Cat 1' },
+            { id: 1, category1: 'constructor', category2: 'Cat 2' },
+            { id: 2, category1: '__proto__', category2: 'Cat 1' },
+            { id: 3, category1: 'toString', category2: 'Cat 2' },
+            { id: 4, category1: 'hasOwnProperty', category2: 'Cat 1' },
+          ]}
+          initialState={{ rowGrouping: { model: ['category1'] } }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal([
+        'constructor (2)',
+        '',
+        '',
+        '__proto__ (1)',
+        '',
+        'toString (1)',
+        '',
+        'hasOwnProperty (1)',
+        '',
+      ]);
+    });
   });
 
   describe('colDef: groupingValueGetter & valueGetter', () => {

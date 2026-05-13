@@ -123,6 +123,8 @@ export class AdapterDateFnsJalali
     /* v8 ignore start */
     if (process.env.NODE_ENV !== 'production') {
       if (typeof addDays !== 'function') {
+        // TODO: fix mui/no-guarded-throw
+        // eslint-disable-next-line mui/no-guarded-throw
         throw new Error(
           [
             'MUI: The `date-fns-jalali` package v2.x is not compatible with this adapter.',
@@ -131,6 +133,8 @@ export class AdapterDateFnsJalali
         );
       }
       if (!longFormatters) {
+        // TODO: fix mui/no-guarded-throw
+        // eslint-disable-next-line mui/no-guarded-throw
         throw new Error(
           'MUI: The minimum supported `date-fns-jalali` package version compatible with this adapter is `3.2.x`.',
         );

@@ -1,1 +1,1 @@
-export { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-api-ref';
+export { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-api-ref';

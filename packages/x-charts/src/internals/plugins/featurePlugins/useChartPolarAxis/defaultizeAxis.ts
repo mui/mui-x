@@ -1,14 +1,29 @@
 import { type MakeOptional } from '@mui/x-internals/types';
 import { DEFAULT_RADIUS_AXIS_KEY, DEFAULT_ROTATION_AXIS_KEY } from '../../../../constants';
 import { type ScaleName } from '../../../../models';
-import { type AxisId, type PolarAxisConfig } from '../../../../models/axis';
+import type {
+  ChartsRotationAxisProps,
+  AxisId,
+  PolarAxisConfig,
+  ChartsRadiusAxisProps,
+} from '../../../../models/axis';
 import { type DatasetType } from '../../../../models/seriesType/config';
 
 export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
   inAxis: MakeOptional<PolarAxisConfig<TScale, any>, 'id'>[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
+  axisName: 'rotation',
+): PolarAxisConfig<TScale, any, ChartsRotationAxisProps>[];
+export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
+  inAxis: MakeOptional<PolarAxisConfig<TScale, any>, 'id'>[] | undefined,
+  dataset: Readonly<DatasetType> | undefined,
+  axisName: 'radius',
+): PolarAxisConfig<TScale, any, ChartsRadiusAxisProps>[];
+export function defaultizeAxis<TScale extends ScaleName = ScaleName>(
+  inAxis: MakeOptional<PolarAxisConfig<TScale, any>, 'id'>[] | undefined,
+  dataset: Readonly<DatasetType> | undefined,
   axisName: 'rotation' | 'radius',
-): PolarAxisConfig<TScale, any>[] {
+) {
   const DEFAULT_AXIS_KEY: AxisId =
     axisName === 'rotation' ? DEFAULT_ROTATION_AXIS_KEY : DEFAULT_RADIUS_AXIS_KEY;
 

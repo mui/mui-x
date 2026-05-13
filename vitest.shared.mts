@@ -16,7 +16,7 @@ export const alias = [
     { lib: 'x-tree-view', plans: ['pro'] },
     { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
     { lib: 'x-scheduler', plans: ['premium'] },
-    { lib: 'x-scheduler-headless', plans: ['premium'] },
+    { lib: 'x-scheduler-internals', plans: ['premium'] },
     { lib: 'x-internals' },
     { lib: 'x-internal-gestures' },
     { lib: 'x-license' },
