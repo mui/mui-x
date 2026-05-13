@@ -516,9 +516,6 @@ export function useGridColumns(
   }, [apiRef, logger, props.columnVisibilityModel]);
 
   React.useEffect(() => {
-    if (process.env.NODE_ENV === 'production') {
-      return;
-    }
     if (props.signature !== GridSignature.DataGrid) {
       return;
     }

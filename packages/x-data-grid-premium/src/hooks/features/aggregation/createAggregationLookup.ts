@@ -14,6 +14,7 @@ import type { GridApiPremium, GridPrivateApiPremium } from '../../../models/grid
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type {
   GridAggregationFunction,
+  GridAggregationFunctionDataSource,
   GridAggregationLookup,
   GridAggregationRules,
 } from './gridAggregationInterfaces';
@@ -161,7 +162,7 @@ const getGroupAggregatedValueDataSource = (
     const aggregatedField = aggregatedFields[j];
     const value = apiRef.current.resolveGroupAggregation?.(groupId, aggregatedField) ?? '';
     const aggregationFunction = aggregationRules[aggregatedField]
-      ?.aggregationFunction as GridAggregationFunction;
+      ?.aggregationFunction as GridAggregationFunctionDataSource;
     const rowForFormatter = rowLookup[groupId] || { id: groupId, [aggregatedField]: value };
     const formattedValue = aggregationFunction?.valueFormatter
       ? aggregationFunction.valueFormatter(
