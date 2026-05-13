@@ -21,7 +21,7 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@9.2.0`
 
-- [data grid] Add support for pinned columns in GridVirtualScroller (#22347) @sai6855
+- [data grid] Add support for pinned columns in `GridVirtualScroller` (#22347) @sai6855
 - [data grid] Remove unused CSS (#22390) @oliviertassinari
 
 #### `@mui/x-data-grid-pro@9.2.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -46,8 +46,7 @@ Same changes as in `@mui/x-date-pickers@9.2.0`.
 
 #### `@mui/x-charts@9.2.0`
 
-- [charts][docs] Add histogram demo to bar-demo page (#22373) @siriwatknp
-- [charts][docs] Split radial grid and radial line pages (#22238) @alexfauquette
+Internal changes.
 
 #### `@mui/x-charts-pro@9.2.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -57,10 +56,10 @@ Same changes as in `@mui/x-charts@9.2.0`.
 
 Same changes as in `@mui/x-charts-pro@9.2.0`, plus:
 
-- [charts-premium] Add Highlight support to RadialBarChart (#22322) @alexfauquette
-- [charts-premium] Add WebGL renderer to BarChartPremium (#22354) @JCQuintas
+- [charts-premium] Add `Highlight` support to `RadialBarChart` (#22322) @alexfauquette
+- [charts-premium] Add `WebGL` renderer to `BarChartPremium` (#22354) @JCQuintas
 - [charts-premium] Add mark shape support to the radial line (#22242) @alexfauquette
-- [charts-premium] RadialBarCharts Support axis interaction with layout horizontal (#22319) @alexfauquette
+- [charts-premium] `RadialBarChart` support axis interaction with layout horizontal (#22319) @alexfauquette
 
 ### Tree View
 
@@ -91,16 +90,18 @@ Internal changes.
 
 ### Docs
 
-- [docs] Document the RadialBarChart (#22320) @alexfauquette
+- [docs] Document the `RadialBarChart` (#22320) @alexfauquette
+- [docs] Add histogram demo to bar-demo page (#22373) @siriwatknp
 - [docs] Add radial bar to the nav bar (#22429) @alexfauquette
+- [docs] Split radial grid and radial line pages (#22238) @alexfauquette
 
 ### Miscellaneous
 
 - [test] Disable animations in chart benchmarks (#22433) @bernardobelchior
-- [test] Move x-internal-gestures vitest isolate flag to test block (#22427) @JCQuintas
-- [test] Reduce flakiness in MobileTimeRangePicker multi-input describeValue tests (#22422) @JCQuintas
+- [test] Move `x-internal-gestures` vitest isolate flag to test block (#22427) @JCQuintas
+- [test] Reduce flakiness in `MobileTimeRangePicker` multi-input `describeValue` tests (#22422) @JCQuintas
 - [x-license] Exclude compat test pins from Renovate major bumps (#22414) @aemartos
-- [x-license] add cross-major license format compatibility tests (#22335) @aemartos
+- [x-license] Add cross-major license format compatibility tests (#22335) @aemartos
 
 ## 9.1.0
 
