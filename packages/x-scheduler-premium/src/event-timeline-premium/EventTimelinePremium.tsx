@@ -201,7 +201,7 @@ EventTimelinePremium.propTypes = {
    * Import a locale from `date-fns/locale` and pass it to this prop.
    * @default enUS (English)
    */
-  dateLocale: PropTypes.any,
+  dateLocale: PropTypes.object,
   /**
    * The default preferences for the timeline.
    * To use controlled preferences, use the `preferences` prop.
