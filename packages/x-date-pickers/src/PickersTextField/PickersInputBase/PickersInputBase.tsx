@@ -146,9 +146,10 @@ const PickersInputBaseSectionContent = styled(PickersSectionListSectionContent, 
   // Disables Chromium's focus-delegation onto contenteditable descendants
   // while the field is idle. The bug is Chromium-only, and applying
   // `WebkitUserModify` on WebKit breaks Playwright's `fill()` editability
-  // check, so we gate on the CSS Painting API (Chromium-only) via
-  // `@supports`. See https://stackoverflow.com/q/34354085.
-  '@supports (background: paint(test))': {
+  // check, so we gate on a Chromium-only CSS property (`-webkit-app-region`,
+  // a Blink/Electron extension WebKit never adopted) via `@supports`.
+  // See https://stackoverflow.com/q/34354085.
+  '@supports (-webkit-app-region: drag)': {
     [`.${pickersInputBaseClasses.root}:not(:focus-within) &`]: {
       WebkitUserModify: 'read-only',
       userSelect: 'none',
