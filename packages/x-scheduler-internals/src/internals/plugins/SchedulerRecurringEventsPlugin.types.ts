@@ -14,18 +14,7 @@ import type {
 import type { Adapter } from '../../use-adapter/useAdapter.types';
 import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerStore.types';
 
-/**
- * Public surface of the premium recurring-events plugin.
- *
- * The community Scheduler holds an optional reference on
- * `SchedulerState.recurringEventsPlugin`. The implementation lives in
- * `@mui/x-scheduler-internals-premium` and is attached by the premium stores at
- * construction time — keeping RRULE parsing, occurrence expansion and
- * scope-aware updates out of the MIT bundle.
- *
- * Mirrors the `SchedulerLazyLoadingPlugin` pattern: community state has a slot,
- * premium fills it. When `null`, recurring-events features are off.
- */
+/** Contract implemented by the premium recurring-events plugin. */
 export interface SchedulerRecurringEventsPluginInterface {
   parseRRule(
     adapter: Adapter,
