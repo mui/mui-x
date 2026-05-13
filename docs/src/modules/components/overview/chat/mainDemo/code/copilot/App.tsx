@@ -2,12 +2,12 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { ChatComposer, ChatConversation, ChatMessageList, ChatSuggestions } from '@mui/x-chat';
-import { ChatProvider } from '@mui/x-chat/headless';
+import { ChatBox } from '@mui/x-chat';
 import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const adapter: ChatAdapter = {
@@ -28,6 +28,29 @@ const SUGGESTIONS = [
   'Which country has the highest average rating?',
   'Filter to admins only',
 ];
+
+function CopilotEmptyState() {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        textAlign: 'center',
+        gap: 0.5,
+        px: 3,
+        pt: 4,
+        pb: 1,
+      }}
+    >
+      <AutoAwesomeOutlinedIcon color="primary" sx={{ fontSize: 32, mb: 1 }} />
+      <Typography sx={{ fontSize: 16, fontWeight: 600 }}>How can I help?</Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 280 }}>
+        Ask anything about your data, or pick a suggestion to get started.
+      </Typography>
+    </Box>
+  );
+}
 
 export default function App() {
   const [open, setOpen] = React.useState(true);
@@ -75,17 +98,16 @@ export default function App() {
             </IconButton>
           </Box>
           <Box sx={{ flex: 1, minHeight: 0 }}>
-            <ChatProvider
+            <ChatBox
               adapter={adapter}
               initialConversations={[conversation]}
               initialActiveConversationId={conversation.id}
-            >
-              <ChatConversation>
-                <ChatMessageList />
-                <ChatSuggestions suggestions={SUGGESTIONS} autoSubmit />
-                <ChatComposer variant="compact" />
-              </ChatConversation>
-            </ChatProvider>
+              variant="compact"
+              suggestions={SUGGESTIONS}
+              suggestionsAutoSubmit
+              slots={{ emptyState: CopilotEmptyState }}
+              features={{ conversationHeader: false }}
+            />
           </Box>
         </Box>
       )}

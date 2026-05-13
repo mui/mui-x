@@ -9,11 +9,10 @@ import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
 import CloseIcon from '@mui/icons-material/Close';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { DataGrid } from '@mui/x-data-grid';
-import { useDemoData } from '@mui/x-data-grid-generator';
-import { ChatComposer, ChatConversation, ChatMessageList, ChatSuggestions } from '@mui/x-chat';
-import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
+import { getEmployeeColumns } from '@mui/x-data-grid-generator';
+import { ChatBox } from '@mui/x-chat';
 import type {
   ChatAdapter,
   ChatConversation as ChatConversationModel,
@@ -62,8 +61,6 @@ const SUGGESTIONS = [
   'Which country has the highest average rating?',
   'Filter to admins only',
 ];
-
-const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 function buildResponseText(userText: string, rowCount: number, columnCount: number) {
   return (
@@ -139,49 +136,30 @@ function CopilotEmptyState() {
   );
 }
 
-function CopilotThread() {
-  const messageIds = useMessageIds();
-  const isEmpty = messageIds.length === 0;
-
-  return (
-    <ChatConversation sx={{ height: '100%', bgcolor: 'background.paper' }}>
-      {isEmpty ? (
-        <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-          <CopilotEmptyState />
-          <ChatSuggestions
-            suggestions={SUGGESTIONS}
-            autoSubmit
-            slotProps={{
-              root: { sx: { px: 2, py: 1.5, justifyContent: 'flex-start' } } as any,
-            }}
-          />
-        </Box>
-      ) : (
-        <ChatMessageList />
-      )}
-      <ChatComposer variant="compact" sx={{ mx: 1.5, mb: 1.5 }} />
-    </ChatConversation>
-  );
-}
+const columns = getEmployeeColumns();
+const estimatedRowCount = 100;
 
 export default function CopilotDemo() {
   const [open, setOpen] = React.useState(true);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
-  const { data, loading } = useDemoData({
-    dataSet: 'Employee',
-    visibleFields: VISIBLE_FIELDS,
-    rowLength: 60,
-  });
-
-  const contextRef = React.useRef({ rowCount: 0, columnCount: VISIBLE_FIELDS.length });
+  const contextRef = React.useRef({ rowCount: estimatedRowCount, columnCount: columns.length });
   contextRef.current = {
-    rowCount: data.rows.length,
-    columnCount: VISIBLE_FIELDS.length,
+    rowCount: estimatedRowCount,
+    columnCount: columns.length,
   };
 
   const adapter = React.useMemo(() => createCopilotAdapter(() => contextRef.current), []);
   const [messages, setMessages] = React.useState<ChatMessageModel[]>([]);
+  // Bumping this key remounts ChatBox so any in-flight stream subscription is
+  // torn down on cleanup — otherwise a stream that resolves after reset would
+  // re-push its message back into the cleared thread.
+  const [chatInstanceKey, setChatInstanceKey] = React.useState(0);
+
+  const handleReset = React.useCallback(() => {
+    setMessages([]);
+    setChatInstanceKey((k) => k + 1);
+  }, []);
 
   return (
     <Box
@@ -212,7 +190,7 @@ export default function CopilotDemo() {
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <Typography sx={{ fontSize: 14, fontWeight: 600 }}>Employees</Typography>
             <Typography variant="caption" color="text.secondary">
-              {data.rows.length} rows
+              100 rows
             </Typography>
           </Stack>
           {!open && (
@@ -235,8 +213,9 @@ export default function CopilotDemo() {
         </Stack>
         <Box sx={{ flex: 1, minHeight: 0 }}>
           <DataGrid
-            {...data}
-            loading={loading}
+            columns={columns}
+            estimatedRowCount={estimatedRowCount}
+            loading
             density="compact"
             disableRowSelectionOnClick
             sx={{
@@ -244,6 +223,10 @@ export default function CopilotDemo() {
               borderRadius: 0,
               '& .MuiDataGrid-columnHeaders': {
                 bgcolor: 'background.paper',
+              },
+              '& .MuiSkeleton-root': {
+                // prevent from flickering
+                animation: 'none',
               },
             }}
           />
@@ -329,10 +312,12 @@ export default function CopilotDemo() {
             <Stack direction="row" spacing={0.25} sx={{ alignItems: 'center' }}>
               <IconButton
                 size="small"
-                aria-label="Copilot options"
+                aria-label="Reset Copilot conversation"
+                onClick={handleReset}
+                disabled={messages.length === 0}
                 sx={{ width: 32, height: 32, color: 'text.secondary' }}
               >
-                <MoreVertIcon sx={{ fontSize: 18 }} />
+                <RefreshIcon sx={{ fontSize: 18 }} />
               </IconButton>
               <IconButton
                 size="small"
@@ -346,16 +331,29 @@ export default function CopilotDemo() {
           </Stack>
 
           <Box sx={{ flex: 1, minHeight: 0 }}>
-            <ChatProvider
+            <ChatBox
+              key={chatInstanceKey}
               adapter={adapter}
               activeConversationId={CONVERSATION_ID}
               conversations={[copilotConversation]}
               messages={messages}
               onMessagesChange={setMessages}
               currentUser={you}
-            >
-              <CopilotThread />
-            </ChatProvider>
+              variant="compact"
+              suggestions={SUGGESTIONS}
+              suggestionsAutoSubmit
+              slots={{ emptyState: CopilotEmptyState }}
+              slotProps={{
+                composerRoot: { variant: 'compact', sx: { mx: 1.5, mb: 1.5 } },
+              }}
+              features={{
+                conversationHeader: false,
+                attachments: false,
+                scrollToBottom: true,
+                autoScroll: true,
+              }}
+              sx={{ height: '100%', bgcolor: 'background.paper' }}
+            />
           </Box>
         </Box>
       </Slide>
