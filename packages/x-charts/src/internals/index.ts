@@ -88,7 +88,7 @@ export * from './findMinMax';
 export * from './commonNextFocusItem';
 export { createCommonKeyboardFocusHandler } from './createCommonKeyboardFocusHandler';
 export { getSeriesColorFn } from './getSeriesColorFn';
-export { createLineStyleColorProcessor } from './createLineStyleColorProcessor';
+export { lineBarStyleColorProcessor } from './lineBarStyleColorProcessor';
 export { createTooltipGetter } from './createTooltipGetter';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';

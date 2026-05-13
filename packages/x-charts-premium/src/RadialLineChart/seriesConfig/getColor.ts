@@ -1,5 +1,5 @@
-import { createLineStyleColorProcessor } from '@mui/x-charts/internals';
+import { lineBarStyleColorProcessor } from '@mui/x-charts/internals';
 
-const getColor = createLineStyleColorProcessor<'radialLine'>();
+const getColor = lineBarStyleColorProcessor<'radialLine'>;
 
 export default getColor;

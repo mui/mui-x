@@ -1,5 +1,5 @@
-import { createLineStyleColorProcessor } from '../../internals/createLineStyleColorProcessor';
+import { lineBarStyleColorProcessor } from '../../internals/lineBarStyleColorProcessor';
 
-const getColor = createLineStyleColorProcessor<'line'>();
+const getColor = lineBarStyleColorProcessor<'line'>;
 
 export default getColor;
