@@ -82,6 +82,12 @@ export default defineConfig({
                 args: [
                   // Enable GPU so WebGL2 is enabled in browser tests
                   '--enable-gpu',
+                  // CI containers (Docker / CircleCI) ship with a small
+                  // /dev/shm (default 64MB). Chromium uses /dev/shm for
+                  // shared memory and starts crashing or freezing pages
+                  // when it fills up. Falling back to /tmp removes that
+                  // bottleneck. No effect locally (where /dev/shm is plenty).
+                  '--disable-dev-shm-usage',
                 ],
                 // Required for tests which use scrollbars.
                 ignoreDefaultArgs: ['--hide-scrollbars'],
