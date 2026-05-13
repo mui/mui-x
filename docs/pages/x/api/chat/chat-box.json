@@ -211,6 +211,11 @@
       "name": "suggestions",
       "description": "Override the prompt suggestions container component.",
       "class": null
+    },
+    {
+      "name": "emptyState",
+      "description": "Override the UI rendered in the center of the thread when the active conversation has no messages.\nWhen provided, `suggestions` (if any) move from the center position to a row above the composer.",
+      "class": null
     }
   ],
   "classes": [],

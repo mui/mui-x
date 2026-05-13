@@ -74,6 +74,7 @@
     "conversationSubtitle": "Override the conversation subtitle component.",
     "conversationTitle": "Override the conversation title component.",
     "dateDivider": "Override the date divider component.",
+    "emptyState": "Override the UI rendered in the center of the thread when the active conversation has no messages. When provided, <code>suggestions</code> (if any) move from the center position to a row above the composer.",
     "layout": "The layout element that arranges conversations + thread panes. Defaults to <code>div</code>.",
     "messageActions": "Override the message actions component.",
     "messageAvatar": "Override the message avatar component.",
