@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import useEventCallback from '@mui/utils/useEventCallback';
 import type {
   GridRenderEditCellParams,
   GridMultiSelectColDef,
@@ -366,30 +367,27 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
     }
   }, [hasFocus]);
 
-  const handleClose = React.useCallback(
-    (_event: React.SyntheticEvent, reason: string) => {
-      if (rootProps.editMode === 'row') {
-        onDismiss();
-        return;
-      }
-      const params = apiRef.current.getCellParams(id, field);
-      apiRef.current.publishEvent('cellEditStop', {
-        ...params,
-        reason:
-          reason === 'escape'
-            ? GridCellEditStopReasons.escapeKeyDown
-            : GridCellEditStopReasons.cellFocusOut,
-      });
-    },
-    [apiRef, field, id, onDismiss, rootProps.editMode],
-  );
+  const handleClose = useEventCallback((_event: React.SyntheticEvent, reason: string) => {
+    if (rootProps.editMode === 'row') {
+      onDismiss();
+      return;
+    }
+    const params = apiRef.current.getCellParams(id, field);
+    apiRef.current.publishEvent('cellEditStop', {
+      ...params,
+      reason:
+        reason === 'escape'
+          ? GridCellEditStopReasons.escapeKeyDown
+          : GridCellEditStopReasons.cellFocusOut,
+    });
+  });
 
   const isOptionEqualToValue = React.useCallback(
     (option: ValueOptions, val: ValueOptions) => getOptionValue(option) === getOptionValue(val),
     [getOptionValue],
   );
 
-  const handleChange = React.useCallback(
+  const handleChange = useEventCallback(
     async (event: React.SyntheticEvent, newValue: ValueOptions[]) => {
       if (event.type === 'keydown') {
         const keyboardEvent = event.nativeEvent as KeyboardEvent;
@@ -420,7 +418,6 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
 
       await apiRef.current.setEditCellValue({ id, field, value: newValues }, event);
     },
-    [apiRef, field, getOptionValue, id, onDismiss, onValueChange, rootProps.editMode],
   );
 
   return (
