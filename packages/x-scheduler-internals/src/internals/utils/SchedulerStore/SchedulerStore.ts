@@ -4,7 +4,6 @@ import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EventManager } from '@mui/x-internals/EventManager';
 import {
-  SchedulerEvent,
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
   SchedulerResourceId,
@@ -40,6 +39,7 @@ import {
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { dateToEventString } from '../date-utils';
+import { createEventFromRecurringEvent } from '../createEventFromRecurringEvent';
 import { TimeoutManager } from '../TimeoutManager';
 import { createChangeEventDetails } from '../../../base-ui-copy/utils/createBaseUIEventDetails';
 
@@ -513,25 +513,14 @@ export class SchedulerStore<
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) => {
-    const { adapter, recurringEventsPlugin } = this.state;
+    const { adapter } = this.state;
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     const originalModel = original.modelInBuiltInFormat;
     const dataTimezone = originalModel.timezone ?? 'default';
-    const changes = {
+    const duplicatedEvent = createEventFromRecurringEvent(original, {
       start: dateToEventString(adapter, start, originalModel.start, dataTimezone),
       end: dateToEventString(adapter, end, originalModel.end, dataTimezone),
-    };
-    let duplicatedEvent: SchedulerEventCreationProperties;
-    if (recurringEventsPlugin) {
-      duplicatedEvent = recurringEventsPlugin.createEventFromRecurringEvent(original, changes);
-    } else {
-      duplicatedEvent = { ...originalModel, ...changes, extractedFromId: original.id };
-      // The replacement event must not inherit the original's id or recurrence metadata —
-      // it will be assigned a fresh id and stand on its own.
-      delete (duplicatedEvent as Partial<SchedulerEvent>).id;
-      delete duplicatedEvent.rrule;
-      delete duplicatedEvent.exDates;
-    }
+    });
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
 

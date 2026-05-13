@@ -12,14 +12,19 @@ import {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
-import { dateToEventString, getDateKey, getOccurrenceEnd, mergeDateAndTime } from '@mui/x-scheduler-internals/internals';
+import {
+  createEventFromRecurringEvent,
+  dateToEventString,
+  getDateKey,
+  getOccurrenceEnd,
+  mergeDateAndTime,
+} from '@mui/x-scheduler-internals/internals';
 import {
   getRemainingOccurrences,
   getWeekDayCode,
   NOT_LOCALIZED_WEEK_DAYS,
   parsesByDayForWeeklyFrequency,
 } from './internal-utils';
-import { createEventFromRecurringEvent } from './createEventFromRecurringEvent';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 
 /**

@@ -3,7 +3,6 @@ import type {
   RecurringEventPresetKey,
   RecurringEventUpdateScope,
   RecurringEventWeekDayCode,
-  SchedulerEventCreationProperties,
   SchedulerEventOccurrence,
   SchedulerEventRecurrenceRule,
   SchedulerEventUpdatedProperties,
@@ -46,11 +45,6 @@ export interface SchedulerRecurringEventsPluginInterface {
     changes: SchedulerEventUpdatedProperties,
     scope: RecurringEventUpdateScope,
   ): UpdateEventsParameters;
-
-  createEventFromRecurringEvent(
-    originalEvent: SchedulerProcessedEvent,
-    changes: Partial<SchedulerEventCreationProperties>,
-  ): SchedulerEventCreationProperties;
 
   applyDataTimezoneToEventUpdate(params: {
     adapter: Adapter;
