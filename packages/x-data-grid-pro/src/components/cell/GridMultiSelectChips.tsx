@@ -3,6 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   gridClasses,
   gridResizingColumnFieldSelector,
@@ -127,7 +128,7 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
 
   // Re-measure on committed column width changes; active drag flows through the
   // shared subscription below.
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (autoWrap || !containerRef.current) {
       return;
     }
