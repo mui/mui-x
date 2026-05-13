@@ -166,7 +166,7 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
   const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
-  const ScopeDialogSlot = slots?.recurringScopeDialog;
+  const RecurringScopeDialogSlot = slots?.recurringScopeDialog;
 
   const slotsContextValue = React.useMemo<EventDialogSlots>(() => slots ?? {}, [slots]);
 
@@ -191,7 +191,7 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
         }}
       >
         {children}
-        {showRecurrence && isScopeDialogOpen && ScopeDialogSlot && <ScopeDialogSlot />}
+        {showRecurrence && isScopeDialogOpen && RecurringScopeDialogSlot && <RecurringScopeDialogSlot />}
       </EventDialog.Provider>
     </EventDialogSlotsContext.Provider>
   );
