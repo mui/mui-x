@@ -16,14 +16,20 @@ declare global {
   }
 }
 
+const getIsBrowser = () => {
+  const isBrowser = process.env.BROWSER === 'true';
+  // We delete the env to prevent it from being used in the tests
+  delete process.env.BROWSER;
+  return isBrowser;
+};
+
+const isBrowser = getIsBrowser();
+
 // Checking the environment variables simplifies the scripts in the package.json
 // We use `cross-env BROWSER=true vitest` instead of `vitest --project "browser/*"`
 // Which allows us to run `pnpm test:browser --project "x-charts"` for example.
 const getProjects = () => {
   const getFill = () => {
-    const isBrowser = process.env.BROWSER === 'true';
-    // We delete the env to prevent it from being used in the tests
-    delete process.env.BROWSER;
     if (isBrowser) {
       return 'browser';
     }
@@ -51,6 +57,7 @@ export default defineConfig({
     reporters: process.env.CI
       ? ['default', ['junit', { outputFile: './test-results/junit.xml' }]]
       : ['default'],
+    isolate: isBrowser,
     coverage: {
       provider: 'v8',
       reporter: process.env.CI ? ['lcovonly'] : ['text'],
