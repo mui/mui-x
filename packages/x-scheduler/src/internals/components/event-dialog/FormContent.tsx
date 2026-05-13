@@ -117,24 +117,14 @@ export function FormContent(props: FormContentProps) {
   const { recurrenceTab: RecurrenceTabSlot } = useEventDialogSlots();
 
   // Recurrence helpers (delegated to the premium plugin when present)
-  const recurrencePresets = React.useMemo(
-    () => recurringEventsPlugin?.computePresets(adapter, occurrence.displayTimezone.start) ?? null,
-    [recurringEventsPlugin, adapter, occurrence.displayTimezone.start],
-  );
-  const defaultRecurrencePresetKey = React.useMemo(
-    () =>
-      recurringEventsPlugin?.getDefaultPresetKey(
-        adapter,
-        occurrence.displayTimezone.rrule,
-        occurrence.displayTimezone.start,
-      ) ?? null,
-    [
-      recurringEventsPlugin,
+  const recurrencePresets =
+    recurringEventsPlugin?.computePresets(adapter, occurrence.displayTimezone.start) ?? null;
+  const defaultRecurrencePresetKey =
+    recurringEventsPlugin?.getDefaultPresetKey(
       adapter,
       occurrence.displayTimezone.rrule,
       occurrence.displayTimezone.start,
-    ],
-  );
+    ) ?? null;
 
   const titleInputRef = React.useCallback((input: HTMLInputElement | null) => input?.focus(), []);
 

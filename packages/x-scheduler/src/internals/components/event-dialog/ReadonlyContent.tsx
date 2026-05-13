@@ -135,20 +135,12 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
     occurrence.resource,
   );
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
-  const defaultRecurrenceKey = React.useMemo(
-    () =>
-      recurringEventsPlugin?.getDefaultPresetKey(
-        adapter,
-        occurrence.displayTimezone.rrule,
-        occurrence.displayTimezone.start,
-      ) ?? null,
-    [
-      recurringEventsPlugin,
+  const defaultRecurrenceKey =
+    recurringEventsPlugin?.getDefaultPresetKey(
       adapter,
       occurrence.displayTimezone.rrule,
       occurrence.displayTimezone.start,
-    ],
-  );
+    ) ?? null;
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
   // Feature hook
