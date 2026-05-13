@@ -5,6 +5,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.28.6
+
+_May 13, 2026_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+The following team members contributed to this release:
+@LukasTy, @MBilalShafi
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.28.6`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@8.28.6` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.28.6`, plus:
+
+- [DataGridPro] Preserve parent selection for non-selectable children (@MBilalShafi) (#22013)
+
+#### `@mui/x-data-grid-premium@8.28.6` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.28.6`.
+
+### Docs
+
+- [docs] Replace broken CodeSandbox iframes in migration guides (#22380) @LukasTy
+
 ## 8.28.5
 
 _May 8, 2026_
