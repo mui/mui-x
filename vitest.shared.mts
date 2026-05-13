@@ -121,7 +121,7 @@ export default defineConfig({
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
       // Reduce the number of workers to avoid CI timeouts.
-      maxWorkers: 2,
+      maxWorkers: 4,
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },
