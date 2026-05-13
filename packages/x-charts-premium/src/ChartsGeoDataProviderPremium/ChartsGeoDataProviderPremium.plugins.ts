@@ -12,6 +12,10 @@ import {
   type ChartSeriesType,
 } from '@mui/x-charts/internals';
 import { useChartProExport, type UseChartProExportSignature } from '@mui/x-charts-pro/plugins';
+import {
+  useGeoProjection,
+  type UseGeoProjectionSignature,
+} from '../internals/plugins/useGeoProjection';
 
 export const GEO_PREMIUM_PLUGINS = [
   useChartTooltip,
@@ -20,6 +24,7 @@ export const GEO_PREMIUM_PLUGINS = [
   useChartKeyboardNavigation,
   useChartVisibilityManager,
   useChartProExport,
+  useGeoProjection,
 ] as const;
 
 export type GeoPremiumPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
@@ -29,4 +34,5 @@ export type GeoPremiumPluginSignatures<SeriesType extends ChartSeriesType = Char
   UseChartKeyboardNavigationSignature,
   UseChartVisibilityManagerSignature<SeriesType>,
   UseChartProExportSignature,
+  UseGeoProjectionSignature,
 ];

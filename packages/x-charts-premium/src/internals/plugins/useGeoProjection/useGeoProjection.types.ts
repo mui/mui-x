@@ -1,0 +1,41 @@
+import { type ChartPluginSignature } from '@mui/x-charts/internals';
+import {
+  type GeoProjection,
+  type ExtendedFeatureCollection,
+} from '@mui/x-charts-vendor/d3-geo';
+
+/**
+ * A d3-geo projection accepted by `useGeoProjection`.
+ *
+ * Either a built-in projection name (e.g. `'mercator'`, `'naturalEarth1'`)
+ * or a `GeoProjection` instance returned by a d3-geo factory.
+ */
+export type GeoProjectionInput = string | GeoProjection;
+
+export interface UseGeoProjectionParameters {
+  /**
+   * The GeoJSON `FeatureCollection` whose features will be rendered on the map.
+   */
+  geoData?: ExtendedFeatureCollection;
+  /**
+   * The d3-geo projection used to map geographic coordinates to SVG coordinates.
+   * Accepts a d3-geo projection name (e.g. `'mercator'`, `'naturalEarth1'`)
+   * or a custom `GeoProjection` instance.
+   */
+  projection?: GeoProjectionInput;
+}
+
+export type UseGeoProjectionDefaultizedParameters = UseGeoProjectionParameters;
+
+export interface UseGeoProjectionState {
+  geoProjection: {
+    geoData: ExtendedFeatureCollection | null;
+    projection: GeoProjectionInput | null;
+  };
+}
+
+export type UseGeoProjectionSignature = ChartPluginSignature<{
+  params: UseGeoProjectionParameters;
+  defaultizedParams: UseGeoProjectionDefaultizedParameters;
+  state: UseGeoProjectionState;
+}>;
