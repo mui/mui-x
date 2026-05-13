@@ -903,6 +903,20 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-chat/backend/adapters', title: 'Adapters' },
               { pathname: '/x/react-chat/behavior/streaming', title: 'Streaming' },
               {
+                pathname: '/x/react-chat/backend/built-in-adapters',
+                title: 'Built-in adapters',
+                children: [
+                  {
+                    pathname: '/x/react-chat/backend/built-in-adapters/echo-adapter',
+                    title: 'Echo',
+                  },
+                  {
+                    pathname: '/x/react-chat/backend/built-in-adapters/ai-sdk-adapter',
+                    title: 'Vercel AI SDK',
+                  },
+                ],
+              },
+              {
                 pathname: '/x/react-chat/backend/building-an-adapter',
                 title: 'Building an Adapter',
               },
