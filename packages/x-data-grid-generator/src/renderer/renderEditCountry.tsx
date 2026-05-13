@@ -80,10 +80,10 @@ function EditCountry(props: GridRenderEditCellParams<CountryIsoOption>) {
             inputRef={inputRef}
             onKeyDown={handleAutocompleteInputKeyDown}
             inputProps={{
-              ...params.inputProps,
+              ...params.slotProps.htmlInput,
               autoComplete: 'new-password', // disable autocomplete and autofill
             }}
-            {...params.InputProps}
+            {...params.slotProps.input}
           />
         )}
       />

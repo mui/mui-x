@@ -159,11 +159,9 @@ function CustomLabel({ icon: Icon, expandable, children, ...other }) {
         <Box
           component={Icon}
           className="labelIcon"
-          color="inherit"
-          sx={{ mr: 1, fontSize: '1.2rem' }}
+          sx={{ color: 'inherit', mr: 1, fontSize: '1.2rem' }}
         />
       )}
-
       <TreeItemLabelText variant="body2">{children}</TreeItemLabelText>
       {expandable && <DotIcon />}
     </TreeItemLabel>

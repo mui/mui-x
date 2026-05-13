@@ -27,10 +27,10 @@ export function GridDetailPanels(props: GridDetailPanelsProps) {
   return React.createElement(GridDetailPanelsImpl, props);
 }
 
-function GridDetailPanelsImpl({ virtualScroller }: GridDetailPanelsProps) {
+function GridDetailPanelsImpl(_props: GridDetailPanelsProps) {
   const apiRef = useGridPrivateApiContext();
   const classes = useUtilityClasses();
-  const { setPanels } = virtualScroller;
+  const { setPanels } = apiRef.current.virtualizer.api.getters;
 
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
   const detailPanelsContent = useGridSelector(

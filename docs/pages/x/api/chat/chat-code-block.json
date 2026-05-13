@@ -1,0 +1,64 @@
+{
+  "props": {
+    "children": { "type": { "name": "string" }, "required": true },
+    "highlighter": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(code: string, language: string) => React.ReactNode",
+        "describedArgs": ["code", "language"],
+        "returned": "React.ReactNode"
+      }
+    },
+    "language": { "type": { "name": "string" } }
+  },
+  "name": "ChatCodeBlock",
+  "imports": [
+    "import { ChatCodeBlock } from '@mui/x-chat/ChatCodeBlock';",
+    "import { ChatCodeBlock } from '@mui/x-chat';"
+  ],
+  "classes": [
+    {
+      "key": "code",
+      "className": "MuiChatCodeBlock-code",
+      "description": "Styles applied to the code element.",
+      "isGlobal": false
+    },
+    {
+      "key": "copyButton",
+      "className": "MuiChatCodeBlock-copyButton",
+      "description": "Styles applied to the copy button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "header",
+      "className": "MuiChatCodeBlock-header",
+      "description": "Styles applied to the header element.",
+      "isGlobal": false
+    },
+    {
+      "key": "languageLabel",
+      "className": "MuiChatCodeBlock-languageLabel",
+      "description": "Styles applied to the language label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "pre",
+      "className": "MuiChatCodeBlock-pre",
+      "description": "Styles applied to the pre element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChatCodeBlock-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatCodeBlock",
+  "filename": "/packages/x-chat/src/ChatCodeBlock/ChatCodeBlock.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/display/message-parts/code-blocks/\">Chat - Code Blocks</a></li></ul>",
+  "cssComponent": false
+}

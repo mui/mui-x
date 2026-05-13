@@ -20,13 +20,13 @@ const useUtilityClasses = () => {
   return composeClasses(slots, getDataGridUtilityClass, {});
 };
 
-export function GridPinnedRows({ position, virtualScroller }: GridPinnedRowsProps) {
+export function GridPinnedRows({ position }: GridPinnedRowsProps) {
   const classes = useUtilityClasses();
   const apiRef = useGridPrivateApiContext();
 
   const pinnedRowsData = useGridSelector(apiRef, gridPinnedRowsSelector);
   const rows = pinnedRowsData[position];
-  const { getRows } = virtualScroller;
+  const { getRows } = apiRef.current.virtualizer.api.getters;
 
   const pinnedRenderContext = React.useMemo(
     () => ({

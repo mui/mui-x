@@ -10,18 +10,16 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import { RecurringEventUpdateScope } from '@mui/x-scheduler-headless/models';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { RecurringEventUpdateScope } from '@mui/x-scheduler-internals/models';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { ScopePopoverProps } from './ScopeDialog.types';
 import { useEventDialogStyledContext } from '../event-dialog/EventDialogStyledContext';
 
 export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopoverProps>(
   function ScopeDialog(props, ref) {
-    const { container, ...other } = props;
-
     // Context hooks
-    const { localeText } = useEventDialogStyledContext();
+    const { schedulerId, localeText } = useEventDialogStyledContext();
     const store = useSchedulerStoreContext();
 
     // Selector hooks
@@ -49,12 +47,11 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopove
         open={open}
         ref={ref}
         onClose={() => handleOpenChange(false)}
-        container={container}
-        aria-labelledby="scope-dialog-title"
-        {...other}
+        aria-labelledby={`${schedulerId}-scope-dialog-title`}
+        {...props}
       >
         <form onSubmit={handleSubmit}>
-          <DialogTitle id="scope-dialog-title">{localeText.title}</DialogTitle>
+          <DialogTitle id={`${schedulerId}-scope-dialog-title`}>{localeText.title}</DialogTitle>
           <DialogContent>
             <FormControl>
               <RadioGroup

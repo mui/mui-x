@@ -2,18 +2,19 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { isWeekend } from '@mui/x-scheduler-headless/use-adapter';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
+import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { DayGridEvent } from '../event';
 import { EventDialogTrigger } from '../event-dialog';
 import { useEventDialogContext } from '../event-dialog/EventDialog';
 import { EventSkeleton } from '../event-skeleton';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
+import { getCellFocusBackground } from '../../utils/tokens';
 
 const EVENT_HEIGHT = 22;
 
@@ -36,6 +37,10 @@ const DayTimeGridAllDayEventsCell = styled(CalendarGrid.DayCell, {
   '&[data-weekend]': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
   },
+  '&:focus-visible': {
+    outline: 'none',
+    backgroundColor: getCellFocusBackground(theme),
+  },
 }));
 
 const DayTimeGridAllDayEventsCellEvents = styled('div', {
@@ -51,13 +56,13 @@ const DayTimeGridAllDayEventContainer = styled('div', {
 });
 
 export function DayGridCell(props: DayGridCellProps) {
-  const { day, row } = props;
+  const { day, row, colIndex } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const { onOpen: startEditing } = useEventDialogContext();
-  const { classes } = useEventCalendarStyledContext();
+  const { schedulerId, classes } = useEventCalendarStyledContext();
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
@@ -70,6 +75,8 @@ export function DayGridCell(props: DayGridCellProps) {
   );
   const placeholder = CalendarGrid.usePlaceholderInDay(day.value, row);
   const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
+
+  const rowCount = Math.max(row.maxIndex, placeholder?.position.index ?? 0);
 
   React.useEffect(() => {
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
@@ -86,10 +93,11 @@ export function DayGridCell(props: DayGridCellProps) {
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
       style={
         {
-          '--row-count': row.maxIndex,
+          '--row-count': rowCount,
         } as React.CSSProperties
       }
-      aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}
+      aria-labelledby={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
+      aria-colindex={colIndex}
       role="gridcell"
       data-weekend={isWeekend(adapter, day.value) || undefined}
     >
@@ -121,6 +129,7 @@ export function DayGridCell(props: DayGridCellProps) {
 interface DayGridCellProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
   row: useEventOccurrencesWithDayGridPosition.ReturnValue;
+  colIndex: number;
 }
 
 /**

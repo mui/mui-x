@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { fireEvent, fireTouchChangedEvent, screen, within } from '@mui/internal-test-utils';
+import { fireTouchChangedEvent, screen, within } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { createPickerRenderer, adapterToUse, timeClockHandler } from 'test/utils/pickers';
 import { hasTouchSupport } from 'test/utils/skipIf';
@@ -55,18 +55,17 @@ describe('<TimeClock />', () => {
     expect(selectedOption).toHaveAccessibleName('4 hours');
   });
 
-  it('selects the first hour on Home press', () => {
+  it('selects the first hour on Home press', async () => {
     const handleChange = spy();
-    render(
+    const { user } = render(
       <TimeClock
         autoFocus
         value={adapterToUse.date('2019-01-01T04:20:00')}
         onChange={handleChange}
       />,
     );
-    const listbox = screen.getByRole('listbox');
 
-    fireEvent.keyDown(listbox, { key: 'Home' });
+    await user.keyboard('{Home}');
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
@@ -78,18 +77,17 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
-  it('selects the last hour on End press', () => {
+  it('selects the last hour on End press', async () => {
     const handleChange = spy();
-    render(
+    const { user } = render(
       <TimeClock
         autoFocus
         value={adapterToUse.date('2019-01-01T04:20:00')}
         onChange={handleChange}
       />,
     );
-    const listbox = screen.getByRole('listbox');
 
-    fireEvent.keyDown(listbox, { key: 'End' });
+    await user.keyboard('{End}');
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
@@ -98,18 +96,17 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
-  it('selects the next hour on ArrowUp press', () => {
+  it('selects the next hour on ArrowUp press', async () => {
     const handleChange = spy();
-    render(
+    const { user } = render(
       <TimeClock
         autoFocus
         value={adapterToUse.date('2019-01-01T04:20:00')}
         onChange={handleChange}
       />,
     );
-    const listbox = screen.getByRole('listbox');
 
-    fireEvent.keyDown(listbox, { key: 'ArrowUp' });
+    await user.keyboard('{ArrowUp}');
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
@@ -118,18 +115,17 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
-  it('selects the previous hour on ArrowDown press', () => {
+  it('selects the previous hour on ArrowDown press', async () => {
     const handleChange = spy();
-    render(
+    const { user } = render(
       <TimeClock
         autoFocus
         value={adapterToUse.date('2019-01-01T04:20:00')}
         onChange={handleChange}
       />,
     );
-    const listbox = screen.getByRole('listbox');
 
-    fireEvent.keyDown(listbox, { key: 'ArrowDown' });
+    await user.keyboard('{ArrowDown}');
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
@@ -138,18 +134,17 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
-  it('should increase hour selection by 5 on PageUp press', () => {
+  it('should increase hour selection by 5 on PageUp press', async () => {
     const handleChange = spy();
-    render(
+    const { user } = render(
       <TimeClock
         autoFocus
         value={adapterToUse.date('2019-01-01T22:20:00')}
         onChange={handleChange}
       />,
     );
-    const listbox = screen.getByRole('listbox');
 
-    fireEvent.keyDown(listbox, { key: 'PageUp' });
+    await user.keyboard('{PageUp}');
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
@@ -158,18 +153,17 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
-  it('should decrease hour selection by 5 on PageDown press', () => {
+  it('should decrease hour selection by 5 on PageDown press', async () => {
     const handleChange = spy();
-    render(
+    const { user } = render(
       <TimeClock
         autoFocus
         value={adapterToUse.date('2019-01-01T02:20:00')}
         onChange={handleChange}
       />,
     );
-    const listbox = screen.getByRole('listbox');
 
-    fireEvent.keyDown(listbox, { key: 'PageDown' });
+    await user.keyboard('{PageDown}');
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
@@ -181,26 +175,25 @@ describe('<TimeClock />', () => {
   [
     {
       keyName: 'Enter',
-      keyValue: 'Enter',
+      keySequence: '{Enter}',
     },
     {
       keyName: 'Space',
-      keyValue: ' ',
+      keySequence: '[Space]',
     },
-  ].forEach(({ keyName, keyValue }) => {
-    it(`sets value on ${keyName} press`, () => {
+  ].forEach(({ keyName, keySequence }) => {
+    it(`sets value on ${keyName} press`, async () => {
       const handleChange = spy();
-      render(
+      const { user } = render(
         <TimeClock
           autoFocus
           defaultValue={adapterToUse.date('2019-01-01T04:20:00')}
           onChange={handleChange}
         />,
       );
-      const listbox = screen.getByRole('listbox');
 
-      fireEvent.keyDown(listbox, { key: 'ArrowDown' });
-      fireEvent.keyDown(listbox, { key: keyValue });
+      await user.keyboard('{ArrowDown}');
+      await user.keyboard(keySequence);
 
       expect(handleChange.callCount).to.equal(2);
       let [newDate, reason] = handleChange.lastCall.args;
@@ -208,8 +201,8 @@ describe('<TimeClock />', () => {
       expect(adapterToUse.getHours(newDate)).to.equal(3);
       expect(reason).to.equal('partial');
 
-      fireEvent.keyDown(listbox, { key: 'ArrowUp' });
-      fireEvent.keyDown(listbox, { key: keyValue });
+      await user.keyboard('{ArrowUp}');
+      await user.keyboard(keySequence);
 
       expect(handleChange.callCount).to.equal(4);
       [newDate, reason] = handleChange.lastCall.args;
@@ -553,18 +546,17 @@ describe('<TimeClock />', () => {
   });
 
   describe('default value', () => {
-    it('if value is provided, keeps minutes and seconds when changing hour', () => {
+    it('if value is provided, keeps minutes and seconds when changing hour', async () => {
       const handleChange = spy();
-      render(
+      const { user } = render(
         <TimeClock
           autoFocus
           value={adapterToUse.date('2019-01-01T04:19:47')}
           onChange={handleChange}
         />,
       );
-      const listbox = screen.getByRole('listbox');
 
-      fireEvent.keyDown(listbox, { key: 'ArrowUp' });
+      await user.keyboard('{ArrowUp}');
 
       expect(handleChange.callCount).to.equal(1);
       const [newDate] = handleChange.firstCall.args;
@@ -573,12 +565,11 @@ describe('<TimeClock />', () => {
       expect(adapterToUse.getSeconds(newDate)).to.equal(47);
     });
 
-    it('if value is not provided, uses zero as default for minutes and seconds when selecting hour', () => {
+    it('if value is not provided, uses zero as default for minutes and seconds when selecting hour', async () => {
       const handleChange = spy();
-      render(<TimeClock autoFocus value={null} onChange={handleChange} />);
-      const listbox = screen.getByRole('listbox');
+      const { user } = render(<TimeClock autoFocus value={null} onChange={handleChange} />);
 
-      fireEvent.keyDown(listbox, { key: 'ArrowUp' });
+      await user.keyboard('{ArrowUp}');
 
       expect(handleChange.callCount).to.equal(1);
       const [newDate] = handleChange.firstCall.args;
@@ -589,14 +580,15 @@ describe('<TimeClock />', () => {
   });
 
   describe('Reference date', () => {
-    it('should use `referenceDate` when no value defined', () => {
+    it('should use `referenceDate` when no value defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <TimeClock onChange={onChange} referenceDate={adapterToUse.date('2018-01-01T12:30:00')} />,
       );
 
-      timeClockHandler.setViewValue(
+      await timeClockHandler.setViewValue(
+        user,
         adapterToUse,
         adapterToUse.setHours(adapterToUse.date(), 3),
         'hours',
@@ -605,10 +597,10 @@ describe('<TimeClock />', () => {
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 0, 1, 15, 30));
     });
 
-    it('should not use `referenceDate` when a value is defined', () => {
+    it('should not use `referenceDate` when a value is defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <TimeClock
           onChange={onChange}
           value={adapterToUse.date('2019-01-01T12:20:00')}
@@ -616,7 +608,8 @@ describe('<TimeClock />', () => {
         />,
       );
 
-      timeClockHandler.setViewValue(
+      await timeClockHandler.setViewValue(
+        user,
         adapterToUse,
         adapterToUse.setHours(adapterToUse.date(), 3),
         'hours',
@@ -625,10 +618,10 @@ describe('<TimeClock />', () => {
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 20));
     });
 
-    it('should not use `referenceDate` when a defaultValue is defined', () => {
+    it('should not use `referenceDate` when a defaultValue is defined', async () => {
       const onChange = spy();
 
-      render(
+      const { user } = render(
         <TimeClock
           onChange={onChange}
           defaultValue={adapterToUse.date('2019-01-01T12:20:00')}
@@ -636,7 +629,8 @@ describe('<TimeClock />', () => {
         />,
       );
 
-      timeClockHandler.setViewValue(
+      await timeClockHandler.setViewValue(
+        user,
         adapterToUse,
         adapterToUse.setHours(adapterToUse.date(), 3),
         'hours',

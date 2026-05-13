@@ -179,6 +179,10 @@ Starting with version `v8.x`, the new DOM structure is the default for all field
 
 #### Fallback to the non-accessible DOM structure
 
+:::info
+The `enableAccessibleFieldDOMStructure` prop has been removed in v9. The accessible DOM structure is now the only supported option.
+:::
+
 ```tsx
 <DateField enableAccessibleFieldDOMStructure={false} />
 <DatePicker enableAccessibleFieldDOMStructure={false} />

@@ -39,7 +39,6 @@ export function ToolbarAddItem(props) {
       <ToolbarButton onClick={() => setOpen(true)}>
         <AddIcon fontSize="small" />
       </ToolbarButton>
-
       <Drawer
         anchor={listView ? 'bottom' : 'right'}
         open={open}
@@ -47,7 +46,7 @@ export function ToolbarAddItem(props) {
         onClose={() => setOpen(false)}
       >
         <DrawerHeader>
-          <Typography fontWeight={500}>Add new</Typography>
+          <Typography sx={{ fontWeight: 500 }}>Add new</Typography>
         </DrawerHeader>
 
         <List>

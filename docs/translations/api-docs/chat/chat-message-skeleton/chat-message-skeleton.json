@@ -1,0 +1,9 @@
+{
+  "componentDescription": "",
+  "propDescriptions": { "lines": { "description": "Number of shimmer lines to render." } },
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "line": "Each animated shimmer line element.",
+    "root": "The root container element."
+  }
+}

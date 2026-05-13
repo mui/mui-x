@@ -8,6 +8,7 @@ import {
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerRangeValue,
+  extractRootForwardedProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerParams,
@@ -20,18 +21,12 @@ import { createRangePickerStepNavigation } from '../../utils/createRangePickerSt
 
 export const useDesktopRangePicker = <
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TExternalProps extends UseDesktopRangePickerProps<
-    TView,
-    TEnableAccessibleFieldDOMStructure,
-    any,
-    TExternalProps
-  >,
+  TExternalProps extends UseDesktopRangePickerProps<TView, any, TExternalProps>,
 >({
   props,
   steps,
   ...pickerParams
-}: UseDesktopRangePickerParams<TView, TEnableAccessibleFieldDOMStructure, TExternalProps>) => {
+}: UseDesktopRangePickerParams<TView, TExternalProps>) => {
   useLicenseVerifier({
     releaseDate: '__RELEASE_INFO__',
     version: process.env.MUI_VERSION!,
@@ -75,6 +70,7 @@ export const useDesktopRangePicker = <
   const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: slotProps?.field,
+    externalForwardedProps: extractRootForwardedProps(props),
     ownerState,
     additionalProps: {
       'data-active-range-position': providerProps.contextValue.open

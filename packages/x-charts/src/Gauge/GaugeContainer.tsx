@@ -14,7 +14,7 @@ export interface GaugeContainerProps
     Omit<ChartsSurfaceProps, 'children'>,
     Omit<
       MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
-      'series' | 'dataset' | 'colors' | 'theme' | 'seriesConfig'
+      'series' | 'dataset' | 'colors' | 'theme' | 'seriesConfig' | 'experimentalFeatures'
     >,
     Omit<GaugeProviderProps, 'children'>,
     Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> {
@@ -128,10 +128,6 @@ GaugeContainer.propTypes = {
    * @default 360
    */
   endAngle: PropTypes.number,
-  /**
-   * Options to enable features planned for the next major.
-   */
-  experimentalFeatures: PropTypes.object,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */

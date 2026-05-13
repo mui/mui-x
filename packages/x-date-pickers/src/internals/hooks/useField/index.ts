@@ -8,8 +8,5 @@ export type {
   FieldChangeHandler,
   FieldChangeHandlerContext,
 } from './useField.types';
-export {
-  createDateStrForV7HiddenInputFromSections,
-  createDateStrForV6InputFromSections,
-} from './useField.utils';
+export { createDateStrForHiddenInputFromSections } from './useField.utils';
 export { useFieldInternalPropsWithDefaults } from './useFieldInternalPropsWithDefaults';

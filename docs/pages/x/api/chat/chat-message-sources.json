@@ -1,0 +1,36 @@
+{
+  "props": { "label": { "type": { "name": "string" }, "default": "'Sources'" } },
+  "name": "ChatMessageSources",
+  "imports": [
+    "import { ChatMessageSources } from '@mui/x-chat/ChatMessageSources';",
+    "import { ChatMessageSources } from '@mui/x-chat';"
+  ],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The root container element.",
+      "default": "'div'",
+      "class": "MuiChatMessageSources-root"
+    },
+    {
+      "name": "label",
+      "description": "The label element shown above the list.",
+      "default": "'p'",
+      "class": "MuiChatMessageSources-label"
+    },
+    {
+      "name": "list",
+      "description": "The ordered list wrapping source items.",
+      "default": "'ol'",
+      "class": "MuiChatMessageSources-list"
+    }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatMessageSources",
+  "filename": "/packages/x-chat/src/ChatMessageSources/ChatMessageSources.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/display/message-parts/sources-and-citations/\">Chat - Sources &amp; Citations</a></li></ul>",
+  "cssComponent": false
+}

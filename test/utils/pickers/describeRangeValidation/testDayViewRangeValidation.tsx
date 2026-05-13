@@ -45,9 +45,6 @@ export const testDayViewRangeValidation: DescribeRangeValidationTestSuite = (
       const defaultProps = {
         referenceDate: adapterToUse.date('2018-03-12'),
         open: true,
-        ...(componentFamily === 'field' || componentFamily === 'picker'
-          ? { enableAccessibleFieldDOMStructure: true }
-          : {}),
       };
 
       it('should apply shouldDisableDate', () => {

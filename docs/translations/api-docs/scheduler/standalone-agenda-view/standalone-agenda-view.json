@@ -1,0 +1,76 @@
+{
+  "componentDescription": "An Agenda View that can be used outside of the Event Calendar.",
+  "propDescriptions": {
+    "areEventsDraggable": {
+      "description": "Whether the event can be dragged to change its start and end dates without changing the duration."
+    },
+    "areEventsResizable": {
+      "description": "Whether the event start or end can be dragged to change its duration without changing its other date. If <code>true</code>, both start and end can be resized. If <code>false</code>, the events are not resizable. If <code>&quot;start&quot;</code>, only the start can be resized. If <code>&quot;end&quot;</code>, only the end can be resized."
+    },
+    "canDragEventsFromTheOutside": {
+      "description": "Whether events can be dragged from outside of the calendar and dropped into it."
+    },
+    "canDropEventsToTheOutside": {
+      "description": "Whether events can be dragged from inside of the calendar and dropped outside of it. If true, when the mouse leaves the calendar, the event won&#39;t be rendered inside the calendar anymore. If false, when the mouse leaves the calendar, the event will be rendered in its last valid position inside the calendar."
+    },
+    "dataSource": {
+      "description": "Data source for fetching events asynchronously. When provided, events are fetched through the data source instead of the <code>events</code> prop."
+    },
+    "dateLocale": {
+      "description": "The locale object from <code>date-fns</code> used to format dates. This affects day names, month names, week start day, and other locale-dependent formatting. Import a locale from <code>date-fns/locale</code> and pass it to this prop."
+    },
+    "defaultPreferences": {
+      "description": "The default preferences for the calendar. To use controlled preferences, use the <code>preferences</code> prop."
+    },
+    "defaultView": {
+      "description": "The view initially displayed in the calendar. To render a controlled calendar, use the <code>view</code> prop."
+    },
+    "defaultVisibleDate": {
+      "description": "The date initially used to determine the visible date range. To render a controlled component, use the <code>visibleDate</code> prop."
+    },
+    "defaultVisibleResources": {
+      "description": "The IDs of the resources initially visible. To render a controlled scheduler, use the <code>visibleResources</code> prop."
+    },
+    "displayTimezone": {
+      "description": "The timezone used to display events in the scheduler.<br>Accepts any valid IANA timezone name (for example &quot;America/New_York&quot;, &quot;Europe/Paris&quot;, &quot;Asia/Tokyo&quot;), or keywords understood by the adapter, such as &quot;default&quot; (use the adapter&#39;s default timezone), &quot;locale&quot; (use the user&#39;s current locale timezone), or &quot;UTC&quot;.<br>This timezone only affects rendering, events keep their original data timezone."
+    },
+    "eventColor": {
+      "description": "The color palette used for all events. Can be overridden per resource using the <code>eventColor</code> property on the resource model. Can be overridden per event using the <code>color</code> property on the event model."
+    },
+    "eventModelStructure": {
+      "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
+    },
+    "events": { "description": "The events currently available in the calendar." },
+    "onEventsChange": { "description": "Callback fired when some event of the calendar change." },
+    "onPreferencesChange": { "description": "Event handler called when the preferences change." },
+    "onViewChange": { "description": "Event handler called when the view changes." },
+    "onVisibleDateChange": { "description": "Event handler called when the visible date changes." },
+    "onVisibleResourcesChange": {
+      "description": "Event handler called when the visible resources change."
+    },
+    "preferences": { "description": "Preferences currently displayed in the calendar." },
+    "preferencesMenuConfig": {
+      "description": "Config of the preferences menu. Defines which options are visible in the menu. If <code>false</code>, the menu will be entirely hidden."
+    },
+    "readOnly": { "description": "Whether the calendar is in read-only mode." },
+    "resourceModelStructure": {
+      "description": "The structure of the resource model. It defines how to read and write the properties of the resource model. If not provided, the resource model is assumed to match the <code>CalendarResource</code> interface."
+    },
+    "resources": { "description": "The resources the events can be assigned to." },
+    "showCurrentTimeIndicator": {
+      "description": "Whether the component should display the current time indicator."
+    },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "view": { "description": "The view currently displayed in the calendar." },
+    "views": { "description": "The views available in the calendar." },
+    "visibleDate": {
+      "description": "The date currently used to determine the visible date range."
+    },
+    "visibleResources": {
+      "description": "The IDs of the resources currently visible. A resource is visible if it is not included in this object or if it is included with <code>true</code> value."
+    }
+  },
+  "classDescriptions": {}
+}

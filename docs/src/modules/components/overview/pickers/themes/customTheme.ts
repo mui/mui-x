@@ -314,7 +314,8 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
             minWidth: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
             '&.MuiDayCalendar-slideTransition': {
               minWidth: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
-              minHeight: theme.mixins.density.height * 7 + theme.mixins.density.spacing * 6,
+              // week container always has a 4px margin
+              minHeight: theme.mixins.density.height * 6 + 4 * 6,
             },
           }),
         },
@@ -322,7 +323,7 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
       MuiDayCalendar: {
         styleOverrides: {
           monthContainer: ({ theme }) => ({
-            height: theme.mixins.density.height * 6 + theme.mixins.density.spacing * 6,
+            height: theme.mixins.density.height * 6 + 4 * 6,
           }),
           root: ({ theme }) => ({
             width: theme.mixins.density.width * 7 + theme.mixins.density.spacing * 6,
@@ -344,33 +345,6 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
           }),
         },
       },
-      MuiPickersDay: {
-        styleOverrides: {
-          root: ({ theme }) => ({
-            borderRadius: theme.shape.borderRadius,
-            fontSize: '0.8rem',
-            fontWeight: 500,
-            border: 'none',
-            width: theme.mixins.density.width,
-            height: theme.mixins.density.height,
-
-            '&:hover': {
-              border: 'none',
-            },
-            '&.Mui-selected': {
-              transform: 'none',
-            },
-          }),
-          today: ({ theme }) => ({
-            '&:not(.Mui-selected)': {
-              borderColor: theme.palette.primary.main,
-              '&:hover': {
-                border: theme.palette.primary.main,
-              },
-            },
-          }),
-        },
-      },
       MuiMonthCalendar: {
         styleOverrides: {
           button: ({ theme }) => ({
@@ -388,46 +362,59 @@ export const getCustomTheme = (mode: PaletteMode, config: Config): ThemeOptions 
       MuiDateRangePickerDay: {
         styleOverrides: {
           root: ({ theme }) => ({
+            '--PickerDay-horizontalMargin': 0,
+            '--PickerDay-size': `${theme.mixins.density.width}px`,
             borderRadius: theme.shape.borderRadius,
-            ':first-of-type': {
-              [`& .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
-                borderRadius: theme.shape.borderRadius,
-                borderColor: 'transparent',
-              },
-              [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlight}`]: {
-                borderRadius: theme.shape.borderRadius,
-              },
-            },
-            ':last-of-type': {
-              [`& .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
-                borderRadius: theme.shape.borderRadius,
-                borderColor: 'transparent',
-              },
-              [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlight}`]: {
-                borderRadius: theme.shape.borderRadius,
-              },
-            },
-          }),
-          rangeIntervalPreview: {
+            fontSize: '0.8rem',
+            fontWeight: 500,
             border: 'none',
-          },
-          rangeIntervalDayPreview: ({ theme }) => ({
-            borderRadius: theme.shape.borderRadius,
-            borderColor: 'transparent',
-            backgroundColor: theme.palette.grey[100],
-            ...theme.applyStyles('dark', {
-              backgroundColor: theme.palette.grey[700],
-            }),
-          }),
 
-          rangeIntervalDayHighlight: ({ theme }) => ({
-            backgroundColor: alpha(theme.palette.primary.light, 0.4),
-            ...theme.applyStyles('dark', {
-              backgroundColor: alpha(theme.palette.primary.main, 0.3),
-            }),
+            '::before, ::after': {
+              borderRadius: theme.shape.borderRadius,
+              border: 'none',
+              left: 0,
+              right: 0,
+            },
+
+            [`&.${dateRangePickerDayClasses.previewed}:not(.${dateRangePickerDayClasses.selectionStart}):not(.${dateRangePickerDayClasses.selected})`]:
+              {
+                '::after': {
+                  border: 'none',
+                },
+                borderRadius: theme.shape.borderRadius,
+                borderColor: 'transparent',
+                backgroundColor: theme.palette.grey[100],
+                ...theme.applyStyles('dark', {
+                  backgroundColor: theme.palette.grey[700],
+                }),
+              },
+
+            [`&.${dateRangePickerDayClasses.previewStart}:hover, &.${dateRangePickerDayClasses.previewEnd}:hover`]:
+              {
+                outline: `1px solid ${(theme.vars || theme).palette.grey[500]}`,
+                outlineOffset: '-1px',
+              },
+
+            [`&.${dateRangePickerDayClasses.selectionStart}::before, &.${dateRangePickerDayClasses.selectionEnd}::before`]:
+              {
+                backgroundColor: 'transparent',
+              },
+
+            [`&.${dateRangePickerDayClasses.insideSelection}::before`]: {
+              backgroundColor: alpha(theme.palette.primary.light, 0.4),
+              ...theme.applyStyles('dark', {
+                backgroundColor: alpha(theme.palette.primary.main, 0.3),
+              }),
+            },
           }),
-          dayInsideRangeInterval: { transform: 'none' },
-          dayOutsideRangeInterval: { transform: 'none' },
+          today: ({ theme }) => ({
+            '&:not(.Mui-selected)': {
+              outline: `1px solid ${(theme.vars || theme).palette.primary.main}`,
+              '&:hover': {
+                outline: `1px solid ${(theme.vars || theme).palette.primary.main}`,
+              },
+            },
+          }),
         },
       },
     },

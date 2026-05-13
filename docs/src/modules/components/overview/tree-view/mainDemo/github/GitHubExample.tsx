@@ -13,8 +13,8 @@ export default function GitHubExample() {
   return (
     <Stack sx={{ width: '100%', height: '100%', overflowY: 'auto' }} direction="row" spacing={0}>
       <Stack
-        p={2}
         sx={(theme) => ({
+          p: 2,
           overflowY: 'auto',
           borderRight: { xs: 'none', md: `1px solid ${theme.palette.divider}` },
           height: '100%',

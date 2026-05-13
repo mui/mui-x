@@ -24,10 +24,10 @@ describe.runIf(isJSDOM)('hashString', () => {
     const postinstallResult = await nodeHash(packageName);
 
     // Simulate what runtime does: npm_package_name = "my-app",
-    // then getRuntimeProjectId() hashes it with crypto.subtle.digest('SHA-256')
+    // then getRuntimePackageHash() hashes it with crypto.subtle.digest('SHA-256')
     vi.stubEnv('npm_package_name', packageName);
-    const { getRuntimeProjectId } = await import('./get-context');
-    const runtimeResult = await getRuntimeProjectId();
+    const { getRuntimePackageHash } = await import('./get-context');
+    const runtimeResult = await getRuntimePackageHash();
     vi.unstubAllEnvs();
 
     expect(runtimeResult).toBe(postinstallResult);

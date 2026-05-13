@@ -79,7 +79,7 @@ export function getDefaultTheme(mode: PaletteMode, config: Config): ThemeOptions
           }),
         },
       },
-      MuiPickersDay: {
+      MuiPickerDay: {
         styleOverrides: {
           root: ({ theme }) => ({
             width: theme.mixins.density.width,

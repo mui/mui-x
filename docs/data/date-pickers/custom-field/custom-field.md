@@ -70,23 +70,12 @@ When used inside a picker, the `separator` slot is not available directly and mu
 
 You can import the `PickersTextField` component to create custom wrappers:
 
-{{"demo": "MaterialV7FieldWrapped.js"}}
+{{"demo": "MaterialFieldWrapped.js"}}
 
 :::success
 This approach is only recommended if you need complex customizations on your `PickersTextField`.
 
 If you just need to set some default props, you can use [the `slotProps` prop](/x/react-date-pickers/custom-field/#customize-the-textfield).
-:::
-
-### Using Material `TextField`
-
-Pass the `enableAccessibleFieldDOMStructure={false}` to any Field or Picker component to use an `<input />` for the editing instead of the new accessible DOM structure:
-
-{{"demo": "MaterialV6Field.js"}}
-
-:::warning
-The non-accessible DOM structure will be deprecated in a follow-up minor version and removed in `v9.x`.
-If you are unable to migrate for some reason, please open an issue to describe what is missing from the new DOM structure so that we can improve it before dropping the old one.
 :::
 
 ## With another Design System
@@ -100,26 +89,11 @@ You will have access to the `clearable` and `onClear` props using native HTML el
 but the **focus** and **hover** behavior depends on styles applied via the `sx` prop.
 :::
 
-{{"demo": "BrowserV7Field.js", "defaultCodeOpen": false}}
+{{"demo": "BrowserField.js", "defaultCodeOpen": false}}
 
-{{"demo": "BrowserV7SingleInputRangeField.js", "defaultCodeOpen": false}}
+{{"demo": "BrowserSingleInputRangeField.js", "defaultCodeOpen": false}}
 
-{{"demo": "BrowserV7MultiInputRangeField.js", "defaultCodeOpen": false}}
-
-### Using Joy UI
-
-You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
-
-{{"demo": "JoyV6Field.js", "defaultCodeOpen": false}}
-
-{{"demo": "JoyV6SingleInputRangeField.js", "defaultCodeOpen": false}}
-
-{{"demo": "JoyV6MultiInputRangeField.js", "defaultCodeOpen": false}}
-
-:::warning
-All the Joy UI examples use the non-accessible DOM structure.
-The new accessible DOM structure will become compatible with Joy UI in the future.
-:::
+{{"demo": "BrowserMultiInputRangeField.js", "defaultCodeOpen": false}}
 
 ## With a custom editing experience
 

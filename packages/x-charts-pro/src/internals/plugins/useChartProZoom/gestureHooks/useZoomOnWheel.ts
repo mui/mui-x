@@ -60,7 +60,7 @@ export const useZoomOnWheel = (
       });
 
       // This prevents a zoom event from being triggered when the mouse is outside the chart area.
-      // The timeout is used to prevent an weird behavior where if the mouse is outside but enters due to
+      // The timeout is used to prevent a weird behavior where if the mouse is outside but enters due to
       // scrolling, then the zoom event is triggered.
       if (startedOutsideRef.current || !instance.isPointInside(point.x, point.y)) {
         startedOutsideRef.current = true;

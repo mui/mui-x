@@ -1,0 +1,30 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {},
+  "classDescriptions": {
+    "header": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the conversation header element"
+    },
+    "headerActions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the conversation header actions element"
+    },
+    "headerInfo": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the conversation header info element"
+    },
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the conversation root element"
+    },
+    "subtitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the conversation subtitle element"
+    },
+    "title": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the conversation title element"
+    }
+  }
+}

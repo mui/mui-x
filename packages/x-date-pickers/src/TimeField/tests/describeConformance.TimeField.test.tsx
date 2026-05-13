@@ -12,6 +12,6 @@ describe('<TimeField /> - Describe Conformance', () => {
     render,
     muiName: 'MuiTimeField',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants', 'themeStyleOverrides'],
+    skip: ['componentProp', 'themeVariants', 'themeStyleOverrides'],
   }));
 });

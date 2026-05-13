@@ -48,6 +48,7 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, s
     const { defaultizedSeries, idToType } = defaultizeSeries({
       series,
       colors: typeof colors === 'function' ? colors(theme) : colors,
+      theme,
       seriesConfig: store.state.seriesConfig.config,
     });
     store.set('series', {
@@ -84,6 +85,7 @@ useChartSeries.getInitialState = ({ series = [], colors, theme, dataset }, curre
   const { defaultizedSeries, idToType } = defaultizeSeries({
     series,
     colors: typeof colors === 'function' ? colors(theme) : colors,
+    theme,
     seriesConfig,
   });
   return {

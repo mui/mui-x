@@ -6,7 +6,7 @@ import { ClockNumberOwnerState } from '../TimeClock/ClockNumber';
 import { ClockPointerOwnerState } from '../TimeClock/ClockPointer';
 import { PickerOwnerState } from '../models/pickers';
 import { PickerToolbarOwnerState } from '../internals/hooks/useToolbarOwnerState';
-import { PickerDayOwnerState } from '../PickersDay';
+import { PickerDayOwnerState } from '../PickerDay';
 import { DigitalClockOwnerState } from '../DigitalClock/DigitalClock.types';
 import { MultiSectionDigitalClockSectionOwnerState } from '../MultiSectionDigitalClock/MultiSectionDigitalClockSection';
 import { PickerPopperOwnerState } from '../internals/components/PickerPopper/PickerPopper';
@@ -91,13 +91,9 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiPickersCalendarHeader'];
     styleOverrides?: ComponentsOverrides<Theme, PickerOwnerState>['MuiPickersCalendarHeader'];
   };
-  MuiPickersDay?: {
-    defaultProps?: ComponentsProps['MuiPickersDay'];
-    styleOverrides?: ComponentsOverrides<Theme, PickerDayOwnerState>['MuiPickersDay'];
-  };
-  MuiPickerDay2?: {
-    defaultProps?: ComponentsProps['MuiPickerDay2'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiPickerDay2'];
+  MuiPickerDay?: {
+    defaultProps?: ComponentsProps['MuiPickerDay'];
+    styleOverrides?: ComponentsOverrides<Theme, PickerDayOwnerState>['MuiPickerDay'];
   };
   MuiPickersFadeTransitionGroup?: {
     defaultProps?: ComponentsProps['MuiPickersFadeTransitionGroup'];

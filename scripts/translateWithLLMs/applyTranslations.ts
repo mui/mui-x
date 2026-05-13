@@ -28,6 +28,41 @@ interface FileUpdateTarget {
   entries: Array<[string, string]>;
 }
 
+/**
+ * Build a mapping from translation key to the English variable name that contains it.
+ * For multi-object packages (e.g., Scheduler), this maps each key to its source variable
+ * (e.g., 'colorPickerLabel' → 'enUSDialog', 'agenda' → 'enUSCalendar').
+ */
+function buildKeyToVariableMap(sourceText: string, variableNames: string[]): Map<string, string> {
+  const sourceFile = ts.createSourceFile('temp.ts', sourceText, ts.ScriptTarget.Latest, true);
+  const keyMap = new Map<string, string>();
+
+  function visit(node: ts.Node) {
+    if (
+      ts.isVariableDeclaration(node) &&
+      ts.isIdentifier(node.name) &&
+      variableNames.includes(node.name.text) &&
+      node.initializer &&
+      ts.isObjectLiteralExpression(node.initializer)
+    ) {
+      for (const prop of node.initializer.properties) {
+        if (!ts.isPropertyAssignment(prop)) {
+          continue;
+        }
+        if (ts.isIdentifier(prop.name)) {
+          keyMap.set(prop.name.text, node.name.text);
+        } else if (ts.isStringLiteral(prop.name)) {
+          keyMap.set(prop.name.text, node.name.text);
+        }
+      }
+    }
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+  return keyMap;
+}
+
 const ROOT = path.resolve(__dirname, '..', '..');
 
 const translationPayloadSchema = z.record(
@@ -218,7 +253,21 @@ export function applyTranslations(
   const dryRun = options.dryRun ?? false;
   const missingData = getMissingTranslations();
 
-  const updatesByFile = new Map<string, FileUpdateTarget>();
+  // For multi-object packages, build a map from key → English variable name
+  const keyToVariableMaps = new Map<string, Map<string, string>>();
+  for (const [packageName, packageConfig] of Object.entries(PACKAGE_CONFIGS)) {
+    if (Array.isArray(packageConfig.englishVariableName)) {
+      const englishPath = path.join(ROOT, packageConfig.englishSource);
+      const englishSource = fs.readFileSync(englishPath, 'utf-8');
+      keyToVariableMaps.set(
+        packageName,
+        buildKeyToVariableMap(englishSource, packageConfig.englishVariableName),
+      );
+    }
+  }
+
+  // Group updates by file + variable name
+  const updatesByFileAndVar = new Map<string, FileUpdateTarget[]>();
   const warnings: string[] = [];
 
   for (const [packageName, packagePayload] of Object.entries(payload)) {
@@ -235,6 +284,8 @@ export function applyTranslations(
       );
       continue;
     }
+
+    const keyToVarMap = keyToVariableMaps.get(packageName);
 
     for (const [key, localePayload] of Object.entries(packagePayload)) {
       const keyMissing = packageMissing.missing[key];
@@ -259,10 +310,33 @@ export function applyTranslations(
           continue;
         }
 
-        const variableName = packageConfig.getLocaleVariableName(localeCode);
-        const target = updatesByFile.get(localePath) ?? { variableName, entries: [] };
+        let variableName: string;
+        if (keyToVarMap) {
+          // Multi-object: map key to the correct locale variable
+          // e.g., key 'colorPickerLabel' is in 'enUSDialog' → locale variable is 'frFRDialog'
+          const englishVarName = keyToVarMap.get(key);
+          if (!englishVarName) {
+            warnings.push(
+              `Skipping "${packageName}.${key}.${localeCode}" because key could not be mapped to a variable.`,
+            );
+            continue;
+          }
+          // Replace the English locale prefix with the target locale prefix
+          // e.g., 'enUSDialog' → 'frFRDialog'
+          const suffix = englishVarName.replace(/^[a-z]{2}[A-Z]{2}/, '');
+          variableName = `${localeCode}${suffix}`;
+        } else {
+          variableName = packageConfig.getLocaleVariableName(localeCode);
+        }
+
+        const targets = updatesByFileAndVar.get(localePath) ?? [];
+        let target = targets.find((t) => t.variableName === variableName);
+        if (!target) {
+          target = { variableName, entries: [] };
+          targets.push(target);
+        }
         target.entries.push([key, translatedText]);
-        updatesByFile.set(localePath, target);
+        updatesByFileAndVar.set(localePath, targets);
       }
     }
   }
@@ -272,32 +346,41 @@ export function applyTranslations(
   let alreadyPresentCount = 0;
   let uncommentedCount = 0;
 
-  for (const [localePath, target] of updatesByFile) {
-    const sourceText = fs.readFileSync(localePath, 'utf8');
-    const objectLiteral = findLocaleObjectLiteral(sourceText, target.variableName);
-    const { nextSource, inserted, skipped, uncommented } = insertMissingProperties(
-      sourceText,
-      objectLiteral,
-      target.entries,
-    );
+  for (const [localePath, targets] of updatesByFileAndVar) {
+    let sourceText = fs.readFileSync(localePath, 'utf8');
+    let fileModified = false;
 
-    insertedCount += inserted;
-    alreadyPresentCount += skipped;
-    uncommentedCount += uncommented;
+    for (const target of targets) {
+      const objectLiteral = findLocaleObjectLiteral(sourceText, target.variableName);
+      const { nextSource, inserted, skipped, uncommented } = insertMissingProperties(
+        sourceText,
+        objectLiteral,
+        target.entries,
+      );
 
-    if (inserted > 0 && !dryRun) {
-      fs.writeFileSync(localePath, nextSource);
+      sourceText = nextSource;
+      insertedCount += inserted;
+      alreadyPresentCount += skipped;
+      uncommentedCount += uncommented;
+
+      if (inserted > 0 || uncommented > 0) {
+        fileModified = true;
+      }
+    }
+
+    if (fileModified && !dryRun) {
+      fs.writeFileSync(localePath, sourceText);
       filesUpdated += 1;
     }
 
-    if (inserted > 0 && dryRun) {
+    if (fileModified && dryRun) {
       filesUpdated += 1;
     }
   }
 
   return {
     mode: dryRun ? 'dry-run' : 'write',
-    filesTargeted: updatesByFile.size,
+    filesTargeted: updatesByFileAndVar.size,
     filesUpdated,
     translationsInserted: insertedCount,
     commentedOutFieldsUncommentedInPlace: uncommentedCount,

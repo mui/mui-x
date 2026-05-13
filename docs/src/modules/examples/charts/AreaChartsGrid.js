@@ -1,7 +1,7 @@
-import SimpleAreaChart from 'docsx/data/charts/areas-demo/SimpleAreaChart';
-import StackedAreaChart from 'docsx/data/charts/areas-demo/StackedAreaChart';
-import PercentAreaChart from 'docsx/data/charts/areas-demo/PercentAreaChart';
-import AreaChartConnectNulls from 'docsx/data/charts/areas-demo/AreaChartConnectNulls';
+import SimpleAreaChart from 'docs/data/charts/areas-demo/SimpleAreaChart';
+import StackedAreaChart from 'docs/data/charts/areas-demo/StackedAreaChart';
+import PercentAreaChart from 'docs/data/charts/areas-demo/PercentAreaChart';
+import AreaChartConnectNulls from 'docs/data/charts/areas-demo/AreaChartConnectNulls';
 import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';
 
 const chartData = [

@@ -22,10 +22,9 @@ function CustomLabel({
   return (
     <Stack
       direction="row"
-      justifyContent="space-between"
       spacing={4}
-      flexGrow={1}
       className={className}
+      sx={{ justifyContent: 'space-between', flexGrow: 1 }}
     >
       <Typography>{children}</Typography>
       {!!selectFirstChildren && (

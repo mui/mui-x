@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { HeatmapValueType } from '@mui/x-charts-pro/models';
-import bikeData from 'docsx/data/charts/dataset/ParisBicycle.json';
+import bikeData from 'docs/data/charts/dataset/ParisBicycle.json';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 const days = [
@@ -53,7 +53,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 
 function HeatmapDemoContent() {
   return (
-    <Stack height="100%">
+    <Stack sx={{ height: '100%' }}>
       <Typography align="center" sx={{ width: '100%', mb: 1 }}>
         Bicycle count: Paris - Rivoli street (West-East)
       </Typography>
@@ -103,7 +103,7 @@ function HeatmapDemoContent() {
           }}
         />
       </div>
-      <Typography variant="caption" textAlign="end">
+      <Typography variant="caption" sx={{ textAlign: 'end' }}>
         Data from{' '}
         <a href="https://parisdata.opendatasoft.com/explore/dataset/comptage-velo-donnees-compteurs/">
           Paris Data

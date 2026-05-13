@@ -1,0 +1,30 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "cancelLabel": { "description": "Label for the cancel button." },
+    "confirmLabel": { "description": "Label for the confirm button." },
+    "message": { "description": "The question or warning message to display. Required." },
+    "onCancel": { "description": "Called when the user clicks the cancel button." },
+    "onConfirm": { "description": "Called when the user clicks the confirm button." }
+  },
+  "classDescriptions": {
+    "actions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the actions container element"
+    },
+    "cancelButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the cancel button element"
+    },
+    "confirmButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the confirm button element"
+    },
+    "icon": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the icon element" },
+    "message": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the message element"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  }
+}

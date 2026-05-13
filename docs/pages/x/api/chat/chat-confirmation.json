@@ -1,0 +1,59 @@
+{
+  "props": {
+    "message": { "type": { "name": "string" }, "required": true },
+    "cancelLabel": { "type": { "name": "string" }, "default": "'Cancel'" },
+    "confirmLabel": { "type": { "name": "string" }, "default": "'Confirm'" },
+    "onCancel": { "type": { "name": "func" } },
+    "onConfirm": { "type": { "name": "func" } }
+  },
+  "name": "ChatConfirmation",
+  "imports": [
+    "import { ChatConfirmation } from '@mui/x-chat/ChatConfirmation';",
+    "import { ChatConfirmation } from '@mui/x-chat';"
+  ],
+  "classes": [
+    {
+      "key": "actions",
+      "className": "MuiChatConfirmation-actions",
+      "description": "Styles applied to the actions container element.",
+      "isGlobal": false
+    },
+    {
+      "key": "cancelButton",
+      "className": "MuiChatConfirmation-cancelButton",
+      "description": "Styles applied to the cancel button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "confirmButton",
+      "className": "MuiChatConfirmation-confirmButton",
+      "description": "Styles applied to the confirm button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "icon",
+      "className": "MuiChatConfirmation-icon",
+      "description": "Styles applied to the icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "message",
+      "className": "MuiChatConfirmation-message",
+      "description": "Styles applied to the message element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChatConfirmation-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatConfirmation",
+  "filename": "/packages/x-chat/src/ChatConfirmation/ChatConfirmation.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/ai-and-agents/tool-approval/\">Chat - Tool Approval</a></li></ul>",
+  "cssComponent": false
+}

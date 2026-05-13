@@ -1,5 +1,3 @@
-import { TreeViewItemMeta } from '../internals/models';
-
 type DataSourceCacheDefaultConfig = {
   /**
    * Time To Live for each cache entry in milliseconds.
@@ -9,27 +7,27 @@ type DataSourceCacheDefaultConfig = {
   ttl?: number;
 };
 
-export interface DataSourceCache {
+export interface DataSourceCache<T = any> {
   /**
    * Set the cache entry for the given key.
    * @param {string} key The key of type `string`
-   * @param {TreeViewItemMeta[]} value The value to be stored in the cache
+   * @param {T[]} value The value to be stored in the cache
    */
-  set: (key: string, value: TreeViewItemMeta[]) => void;
+  set: (key: string, value: T[]) => void;
   /**
    * Get the cache entry for the given key.
    * @param {string} key The key of type `string`
-   * @returns {TreeViewItemMeta[]} The value stored in the cache
+   * @returns {T[] | undefined | -1} The value stored in the cache, `undefined` if not found, or `-1` if the cache entry is stale.
    */
-  get: (key: string) => TreeViewItemMeta[] | undefined | -1;
+  get: (key: string) => T[] | undefined | -1;
   /**
    * Clear the cache.
    */
   clear: () => void;
 }
 
-export class DataSourceCacheDefault {
-  private cache: Record<string, { value: TreeViewItemMeta[]; expiry: number }>;
+export class DataSourceCacheDefault<T = any> implements DataSourceCache<T> {
+  private cache: Record<string, { value: T[]; expiry: number }>;
 
   private ttl: number;
 
@@ -38,12 +36,12 @@ export class DataSourceCacheDefault {
     this.ttl = ttl;
   }
 
-  set(key: string, value: TreeViewItemMeta[]) {
+  set(key: string, value: T[]) {
     const expiry = Date.now() + this.ttl;
     this.cache[key] = { value, expiry };
   }
 
-  get(key: string): TreeViewItemMeta[] | undefined | -1 {
+  get(key: string): T[] | undefined | -1 {
     const entry = this.cache[key];
     if (!entry) {
       return undefined;

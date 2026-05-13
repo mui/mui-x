@@ -13,7 +13,7 @@ import { MultiInputFieldRefs } from '../../models';
 interface UseMultiInputRangeFieldSelectedSectionsParameters
   extends
     Pick<
-      UseFieldInternalProps<PickerRangeValue, any, any>,
+      UseFieldInternalProps<PickerRangeValue, any>,
       'selectedSections' | 'onSelectedSectionsChange'
     >,
     MultiInputFieldRefs {}

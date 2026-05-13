@@ -3,8 +3,8 @@ import { Theme } from '@mui/material/styles';
 import {
   EventTimelinePremiumParameters,
   EventTimelinePremiumStore,
-} from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
-import type { SchedulerPublicAPI } from '@mui/x-scheduler-headless/internals';
+} from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import type { SchedulerPublicAPI } from '@mui/x-scheduler-internals/internals';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
 import { EventTimelinePremiumClasses } from './eventTimelinePremiumClasses';
 

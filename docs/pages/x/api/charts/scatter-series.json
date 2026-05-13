@@ -30,6 +30,9 @@
       }
     },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "valueGetter": {
+      "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; ScatterValueType" }
+    },
     "xAxisId": { "type": { "description": "AxisId" } },
     "yAxisId": { "type": { "description": "AxisId" } },
     "zAxisId": { "type": { "description": "string" } }

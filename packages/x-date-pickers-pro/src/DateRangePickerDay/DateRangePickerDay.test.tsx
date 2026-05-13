@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   DateRangePickerDay,
   dateRangePickerDayClasses as classes,
@@ -30,15 +32,93 @@ describe('<DateRangePickerDay />', () => {
       render,
       refInstanceof: window.HTMLButtonElement,
       // cannot test reactTestRenderer because of required context
-      skip: [
-        'componentProp',
-        'rootClass', // forwards classes to DateRangePickerDayDay, but applies root class on DateRangePickerDayRoot
-        'mergeClassName', // forwards other props (i.e. data-test-id) to the DateRangePickerDayDay, but `className` is applied on the root
-        'componentsProp',
-        // TODO: Fix DateRangePickerDays is not spreading props on root
-        'themeDefaultProps',
-        'themeVariants',
-      ],
+      skip: ['componentProp', 'themeVariants'],
     }),
   );
+
+  describe('styleOverrides', () => {
+    it('should apply custom styleOverrides', () => {
+      const theme = createTheme({
+        components: {
+          MuiDateRangePickerDay: {
+            styleOverrides: {
+              startOfMonth: {
+                opacity: '0.1',
+              },
+              endOfMonth: {
+                opacity: '0.2',
+              },
+              previewed: {
+                opacity: '0.4',
+              },
+            },
+          },
+        },
+      });
+
+      const day = adapterToUse.date('2018-01-01');
+      const { container: container1 } = render(
+        <ThemeProvider theme={theme}>
+          <DateRangePickerDay
+            day={day}
+            onDaySelect={() => {}}
+            outsideCurrentMonth={false}
+            isHighlighting={false}
+            isPreviewing={false}
+            isStartOfPreviewing={false}
+            isEndOfPreviewing={false}
+            isStartOfHighlighting={false}
+            isEndOfHighlighting={false}
+            isFirstVisibleCell={false}
+            isLastVisibleCell={false}
+          />
+        </ThemeProvider>,
+      );
+
+      // 2018-01-01 is start of month
+      expect(container1.firstChild).to.have.style('opacity', '0.1');
+
+      const { container: container2 } = render(
+        <ThemeProvider theme={theme}>
+          <DateRangePickerDay
+            day={adapterToUse.date('2018-01-31')}
+            onDaySelect={() => {}}
+            outsideCurrentMonth={false}
+            isHighlighting={false}
+            isPreviewing={false}
+            isStartOfPreviewing={false}
+            isEndOfPreviewing={false}
+            isStartOfHighlighting={false}
+            isEndOfHighlighting={false}
+            isFirstVisibleCell={false}
+            isLastVisibleCell={false}
+          />
+        </ThemeProvider>,
+      );
+
+      // 2018-01-31 is end of month
+      expect(container2.firstChild).to.have.style('opacity', '0.2');
+
+      const { container: container4 } = render(
+        <ThemeProvider theme={theme}>
+          <DateRangePickerDay
+            day={adapterToUse.date('2018-01-15')}
+            onDaySelect={() => {}}
+            outsideCurrentMonth={false}
+            isHighlighting={false}
+            isPreviewing
+            isStartOfPreviewing={false}
+            isEndOfPreviewing={false}
+            isStartOfHighlighting={false}
+            isEndOfHighlighting={false}
+            isFirstVisibleCell={false}
+            isLastVisibleCell={false}
+          />
+        </ThemeProvider>,
+      );
+
+      // 2018-01-15 is NOT start/end of month, but is previewed
+      expect(container4.firstChild).to.have.style('opacity', '0.4');
+    });
+  });
 });

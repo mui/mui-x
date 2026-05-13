@@ -1,9 +1,9 @@
 import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
-  openPickerAsync,
+  openPicker,
   getFieldSectionsContainer,
-  expectFieldValueV7,
+  expectFieldValue,
 } from 'test/utils/pickers';
 import { MobileDateTimeRangePicker } from '@mui/x-date-pickers-pro/MobileDateTimeRangePicker';
 import { vi } from 'vitest';
@@ -23,7 +23,7 @@ describe('<MobileDateTimeRangePicker />', () => {
     it('should cycle focused views among the visible step after selection', async () => {
       const { user } = render(<MobileDateTimeRangePicker />);
 
-      await openPickerAsync(user, {
+      await openPicker(user, {
         type: 'date-time-range',
         initialFocus: 'start',
         fieldType: 'single-input',
@@ -44,7 +44,7 @@ describe('<MobileDateTimeRangePicker />', () => {
       const meridiem = screen.getByRole('option', { name: 'AM' });
       expect(meridiem).toHaveFocus();
       const sectionsContainer = getFieldSectionsContainer();
-      expectFieldValueV7(sectionsContainer, '01/10/2018 12:00 AM – MM/DD/YYYY hh:mm aa');
+      expectFieldValue(sectionsContainer, '01/10/2018 12:00 AM – MM/DD/YYYY hh:mm aa');
     });
   });
 });

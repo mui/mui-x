@@ -1,5 +1,6 @@
 import {
   type AxisId,
+  type SeriesId,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
   type SeriesProcessorResult,
@@ -33,7 +34,7 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
     bottom: props.y + props.height,
   };
 
-  const { completedData } = useBarPreviewData(props.axisId, drawingArea);
+  const { completedData } = useBarPreviewData(props.axisId, drawingArea, props.seriesIds);
 
   return (
     <g>
@@ -63,7 +64,7 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
   );
 }
 
-function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
+function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea, seriesIds?: SeriesId[]) {
   const store = useStore();
   const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
   const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
@@ -75,20 +76,23 @@ function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
 
   const chartId = useChartId();
 
-  const stackingGroups = seriesData.stackingGroups.filter((group) =>
-    group.ids.some((seriesId) => {
-      const series = seriesData.series[seriesId];
-      const xAxisId = series.xAxisId ?? defaultXAxisId;
-      const yAxisId = series.yAxisId ?? defaultYAxisId;
-      return xAxisId === axisId || yAxisId === axisId;
-    }),
-  );
+  const seriesIdsSet = seriesIds ? new Set(seriesIds) : undefined;
+
+  const isSeriesIncluded = (seriesId: SeriesId) => {
+    if (seriesIdsSet && !seriesIdsSet.has(seriesId)) {
+      return false;
+    }
+    const series = seriesData.series[seriesId];
+    const xAxisId = series.xAxisId ?? defaultXAxisId;
+    const yAxisId = series.yAxisId ?? defaultYAxisId;
+    return xAxisId === axisId || yAxisId === axisId;
+  };
+
+  const stackingGroups = seriesData.stackingGroups
+    .map((group) => ({ ...group, ids: group.ids.filter(isSeriesIncluded) }))
+    .filter((group) => group.ids.length > 0);
   const filteredSeries = Object.fromEntries(
-    Object.entries(seriesData.series).filter(([_, series]) => {
-      const xAxisId = series.xAxisId ?? defaultXAxisId;
-      const yAxisId = series.yAxisId ?? defaultYAxisId;
-      return xAxisId === axisId || yAxisId === axisId;
-    }),
+    Object.entries(seriesData.series).filter(([_, series]) => isSeriesIncluded(series.id)),
   );
 
   return processBarDataForPlot(

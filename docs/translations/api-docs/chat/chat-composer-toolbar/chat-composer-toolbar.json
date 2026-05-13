@@ -1,0 +1,48 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {},
+  "classDescriptions": {
+    "attachButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the attach button element"
+    },
+    "attachmentList": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the attachment list element"
+    },
+    "disabled": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "disabled"
+    },
+    "helperText": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the helper text element"
+    },
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the input label element"
+    },
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the input root element"
+    },
+    "sendButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the send button element"
+    },
+    "textArea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the textarea element"
+    },
+    "toolbar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the toolbar element"
+    },
+    "variantCompact": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "variant=&quot;compact&quot;"
+    }
+  }
+}

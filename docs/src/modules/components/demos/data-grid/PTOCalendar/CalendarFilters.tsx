@@ -22,8 +22,8 @@ export function CalendarFilters({
   onTogglePresentToday,
 }: CalendarFiltersProps) {
   return (
-    <Stack direction="row" alignItems="center" gap={2}>
-      <Stack direction="row" alignItems="center" gap={1}>
+    <Stack direction="row" sx={{ alignItems: 'center', gap: 2 }}>
+      <Stack direction="row" sx={{ alignItems: 'center', gap: 1 }}>
         {FILTER_OPTIONS.map((filter) => {
           const isActive = activeFilters.includes(filter);
           return (

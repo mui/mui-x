@@ -1,0 +1,75 @@
+{
+  "props": {},
+  "name": "ChatComposerAttachmentList",
+  "imports": [
+    "import { ChatComposerAttachmentList } from '@mui/x-chat/ChatComposer';",
+    "import { ChatComposerAttachmentList } from '@mui/x-chat';"
+  ],
+  "classes": [
+    {
+      "key": "attachButton",
+      "className": "MuiChatComposerAttachmentList-attachButton",
+      "description": "Styles applied to the attach button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "attachmentList",
+      "className": "MuiChatComposerAttachmentList-attachmentList",
+      "description": "Styles applied to the attachment list element.",
+      "isGlobal": false
+    },
+    {
+      "key": "disabled",
+      "className": "Mui-disabled",
+      "description": "Styles applied to the root element when disabled.",
+      "isGlobal": true
+    },
+    {
+      "key": "helperText",
+      "className": "MuiChatComposerAttachmentList-helperText",
+      "description": "Styles applied to the helper text element.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiChatComposerAttachmentList-label",
+      "description": "Styles applied to the input label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChatComposerAttachmentList-root",
+      "description": "Styles applied to the input root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "sendButton",
+      "className": "MuiChatComposerAttachmentList-sendButton",
+      "description": "Styles applied to the send button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "textArea",
+      "className": "MuiChatComposerAttachmentList-textArea",
+      "description": "Styles applied to the textarea element.",
+      "isGlobal": false
+    },
+    {
+      "key": "toolbar",
+      "className": "MuiChatComposerAttachmentList-toolbar",
+      "description": "Styles applied to the toolbar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "variantCompact",
+      "className": "MuiChatComposerAttachmentList-variantCompact",
+      "description": "Styles applied to the root element when variant=\"compact\".",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiChatComposerAttachmentList",
+  "filename": "/packages/x-chat/src/ChatComposer/ChatComposerAttachmentList.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/composer/\">Chat - Composer</a></li></ul>",
+  "cssComponent": false
+}

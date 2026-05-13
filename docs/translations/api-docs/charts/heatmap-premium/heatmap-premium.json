@@ -116,6 +116,8 @@
     "baseMenuItem": "",
     "baseMenuList": "",
     "basePopper": "",
+    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps&gt;</code>.",
+    "baseToggleButtonGroup": "",
     "baseTooltip": "",
     "cell": "The component that renders the heatmap cell.",
     "exportIcon": "Icon displayed on the toolbar&#39;s export button.",

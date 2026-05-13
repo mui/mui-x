@@ -67,7 +67,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operatör',
   filterPanelOperatorAnd: 'Ve',
   filterPanelOperatorOr: 'Veya',
-  filterPanelColumns: 'Sütunlar',
+  filterPanelColumn: 'Sütunlar',
   filterPanelInputLabel: 'Değer',
   filterPanelInputPlaceholder: 'Filtre değeri',
 

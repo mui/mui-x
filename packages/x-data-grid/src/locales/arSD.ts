@@ -74,7 +74,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'عامل',
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'أو',
-  filterPanelColumns: 'الأعمدة',
+  filterPanelColumn: 'الأعمدة',
   filterPanelInputLabel: 'القيمة',
   filterPanelInputPlaceholder: 'ترشِيح قيمة',
 

@@ -1,0 +1,23 @@
+{
+  "props": {},
+  "name": "ChatTypingIndicator",
+  "imports": [
+    "import { ChatTypingIndicator } from '@mui/x-chat/ChatIndicators';",
+    "import { ChatTypingIndicator } from '@mui/x-chat';"
+  ],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiChatTypingIndicator-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatTypingIndicator",
+  "filename": "/packages/x-chat/src/ChatIndicators/ChatTypingIndicator.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/behavior/typing-indicators/\">Chat - Typing Indicators</a></li></ul>",
+  "cssComponent": false
+}

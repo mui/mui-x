@@ -339,7 +339,6 @@ export default function PickersPlayground() {
     React.useState<boolean>(false);
   const [displayWeekNumber, setDisplayWeekNumber] = React.useState<boolean>(false);
   const [fixed6Weeks, setFixed6Weeks] = React.useState<boolean>(false);
-  const [disableDayMargin, setDisableDayMargin] = React.useState<boolean>(false);
   const [isLandscape, setIsLandscape] = React.useState<boolean>(false);
   const [isStaticDesktopMode, setIsStaticDesktopMode] = React.useState<boolean>(false);
   const [ampm, setAmpm] = React.useState<boolean | undefined>();
@@ -390,9 +389,6 @@ export default function PickersPlayground() {
             actions: ['clear', 'today', 'cancel', 'accept'],
           },
         }),
-        day: {
-          disableMargin: disableDayMargin,
-        },
       },
       displayWeekNumber,
       fixedWeekNumber: fixed6Weeks ? 6 : undefined,
@@ -405,7 +401,6 @@ export default function PickersPlayground() {
       ampm,
       ampmInClock,
       customActions,
-      disableDayMargin,
       displayWeekNumber,
       fixed6Weeks,
       isLandscape,
@@ -641,14 +636,17 @@ export default function PickersPlayground() {
             </DemoContainer>
           )}
         </ComponentSection>
-        <Divider orientation="vertical" light sx={{ display: { xs: 'none', md: 'flex' } }} />
-        <Divider light sx={{ display: { xs: 'auto', md: 'none' } }} />
+        <Divider
+          orientation="vertical"
+          sx={{ opacity: 0.6, display: { xs: 'none', md: 'flex' } }}
+        />
+        <Divider sx={{ opacity: 0.6, display: { xs: 'auto', md: 'none' } }} />
         <PropControlsSection>
           <Typography
             id="usage-props"
             component="h3"
-            fontWeight="600"
             sx={{
+              fontWeight: '600',
               scrollMarginTop: 160,
               fontFamily: 'General Sans',
               p: 3,
@@ -660,7 +658,7 @@ export default function PickersPlayground() {
           >
             Playground
           </Typography>
-          <Divider light />
+          <Divider sx={{ opacity: 0.6 }} />
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, p: 2, pl: { md: 3 } }}>
             <TriBooleanGroupControl
               label="Toolbar hidden"
@@ -710,13 +708,6 @@ export default function PickersPlayground() {
               value={displayWeekNumber}
               onChange={setDisplayWeekNumber}
             />
-            {selectedPickers !== 'date-range' && selectedPickers !== 'date-time-range' && (
-              <BooleanGroupControl
-                label="Disable day margin"
-                value={disableDayMargin}
-                onChange={setDisableDayMargin}
-              />
-            )}
             {(selectedPickers === 'time' || selectedPickers === 'date-time') && (
               <React.Fragment>
                 <TriBooleanGroupControl label="AM/PM" value={ampm} onChange={setAmpm} />

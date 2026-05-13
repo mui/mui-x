@@ -65,6 +65,7 @@ function GridVirtualScrollerFiller({ rowsLength }: Props) {
 
   const height = hasScrollX ? scrollbarSize : 0;
   const needsLastRowBorder = viewportOuterSize.height - minimumSize.height > 0;
+
   if (height === 0 && !needsLastRowBorder) {
     return null;
   }

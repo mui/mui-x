@@ -17,7 +17,6 @@ interface BuildSectionsFromFormatParameters {
   localeText: PickersLocaleText;
   localizedDigits: string[];
   date: PickerValidDate | null;
-  enableAccessibleFieldDOMStructure: boolean;
 }
 
 type FormatEscapedParts = { start: number; end: number }[];
@@ -302,7 +301,7 @@ const postProcessSections = ({
 
 export const buildSectionsFromFormat = (parameters: BuildSectionsFromFormatParameters) => {
   let expandedFormat = expandFormat(parameters);
-  if (parameters.isRtl && parameters.enableAccessibleFieldDOMStructure) {
+  if (parameters.isRtl) {
     expandedFormat = expandedFormat.split(' ').reverse().join(' ');
   }
 

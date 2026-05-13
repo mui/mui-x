@@ -9,7 +9,7 @@ import {
   PickersCalendarHeaderSlots,
   PickersCalendarHeaderSlotProps,
 } from '@mui/x-date-pickers/PickersCalendarHeader';
-import { PickerDayOwnerState } from '@mui/x-date-pickers/PickersDay';
+import { PickerDayOwnerState } from '@mui/x-date-pickers/PickerDay';
 import {
   BaseDateValidationProps,
   ExportedDayCalendarProps,
@@ -38,8 +38,8 @@ export interface DateRangeCalendarSlots
   calendarHeader?: React.ElementType<PickersRangeCalendarHeaderProps>;
   /**
    * Custom component for day in range pickers.
-   * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
-   * @default DateRangePickersDay
+   * Check the [DateRangePickerDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
+   * @default DateRangePickerDay
    */
   day?: React.ElementType<DateRangePickerDayProps>;
 }

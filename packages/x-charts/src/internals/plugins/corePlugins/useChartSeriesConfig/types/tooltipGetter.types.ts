@@ -24,11 +24,17 @@ export interface ItemTooltipValue<SeriesType extends ChartSeriesType> {
   /**
    * The value.
    */
-  value: SeriesType extends 'heatmap' ? number | null : ChartsSeriesConfig[SeriesType]['valueType'];
+  value: SeriesType extends 'heatmap'
+    ? number | null
+    : SeriesType extends 'ohlc'
+      ? { open: number; high: number; low: number; close: number } | null
+      : ChartsSeriesConfig[SeriesType]['valueType'];
   /**
    * The value formatted with context set to "tooltip".
    */
-  formattedValue: string | null;
+  formattedValue: SeriesType extends 'ohlc'
+    ? { open: string | null; high: string | null; low: string | null; close: string | null }
+    : string | null;
   /**
    * The series mark type.
    */

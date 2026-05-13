@@ -12,7 +12,7 @@ import {
   DataGridPro,
   GridSlots,
 } from '@mui/x-data-grid-pro';
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import StarOutlineIcon from '@mui/icons-material/StarOutlined';
 
 type PaletteColorKey = 'primary' | 'secondary';
 type OwnerState = {

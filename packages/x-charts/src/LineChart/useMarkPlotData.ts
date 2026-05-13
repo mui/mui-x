@@ -77,6 +77,8 @@ export function useMarkPlotData(
 
         if (process.env.NODE_ENV !== 'production') {
           if (xData === undefined) {
+            // TODO: fix mui/no-guarded-throw
+            // eslint-disable-next-line mui/no-guarded-throw
             throw new Error(
               `MUI X Charts: ${
                 xAxisId === DEFAULT_X_AXIS_KEY
@@ -103,9 +105,9 @@ export function useMarkPlotData(
               continue;
             }
 
-            // The line fade animation move all the values to the min.
+            // The line fade animation move all the values to the series baseline.
             // So we need to do the same with mark in order for it to look nice.
-            const y = yScale(hidden ? (yScale.domain()[0] as number) : value)!;
+            const y = yScale(hidden ? visibleStackedData[index][0] : value)!;
             const xPos = xScale(x);
 
             if (!instance.isPointInside(xPos, y)) {

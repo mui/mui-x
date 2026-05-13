@@ -204,11 +204,15 @@ export const ptBRLocaleText: Partial<ChartsLocaleText> = {
   //   high,
   //   low,
   //   close,
+  //   formattedOpen,
+  //   formattedHigh,
+  //   formattedLow,
+  //   formattedClose,
   //   formattedDate,
   //   seriesLabel
   // }) {
   //   const hasValues = open !== null && high !== null && low !== null && close !== null;
-  //   return [formattedDate, seriesLabel, hasValues ? `Open: ${open}, High: ${high}, Low: ${low}, Close: ${close}` : this.a11yNoValue].filter(Boolean).join(this.a11yConnector);
+  //   return [formattedDate, seriesLabel, hasValues ? `Open: ${formattedOpen ?? open}, High: ${formattedHigh ?? high}, Low: ${formattedLow ?? low}, Close: ${formattedClose ?? close}` : this.a11yNoValue].filter(Boolean).join(this.a11yConnector);
   // },
 };
 

@@ -84,9 +84,10 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
               data,
               disableHighlight,
               shape = 'circle',
+              hidden,
             } = series[seriesId];
 
-            if (disableHighlight || data[highlightedIndex] == null) {
+            if (hidden || disableHighlight || data[highlightedIndex] == null) {
               return null;
             }
             if (highlightedAxisId !== xAxisId) {

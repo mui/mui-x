@@ -19,13 +19,10 @@ import {
 } from '../validation/validateDateTimeRange';
 import { formatRange } from '../internals/utils/date-utils';
 
-export function useDateTimeRangeManager<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  parameters: UseDateTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure> = {},
-): UseDateTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure> {
-  const {
-    enableAccessibleFieldDOMStructure = true as TEnableAccessibleFieldDOMStructure,
-    dateSeparator,
-  } = parameters;
+export function useDateTimeRangeManager(
+  parameters: UseDateTimeRangeManagerParameters = {},
+): UseDateTimeRangeManagerReturnValue {
+  const { dateSeparator } = parameters;
 
   return React.useMemo(
     () => ({
@@ -33,12 +30,11 @@ export function useDateTimeRangeManager<TEnableAccessibleFieldDOMStructure exten
       validator: validateDateTimeRange,
       internal_valueManager: rangeValueManager,
       internal_fieldValueManager: getRangeFieldValueManager({ dateSeparator }),
-      internal_enableAccessibleFieldDOMStructure: enableAccessibleFieldDOMStructure,
       internal_useApplyDefaultValuesToFieldInternalProps:
         useApplyDefaultValuesToDateTimeRangeFieldInternalProps,
       internal_useOpenPickerButtonAriaLabel: useOpenPickerButtonAriaLabel,
     }),
-    [enableAccessibleFieldDOMStructure, dateSeparator],
+    [dateSeparator],
   );
 }
 
@@ -51,13 +47,9 @@ function useOpenPickerButtonAriaLabel(value: PickerRangeValue) {
   }, [value, translations, adapter]);
 }
 
-function useApplyDefaultValuesToDateTimeRangeFieldInternalProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->(
-  internalProps: DateTimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-): PickerManagerFieldInternalPropsWithDefaults<
-  UseDateTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-> {
+function useApplyDefaultValuesToDateTimeRangeFieldInternalProps(
+  internalProps: DateTimeRangeManagerFieldInternalProps,
+): PickerManagerFieldInternalPropsWithDefaults<UseDateTimeRangeManagerReturnValue> {
   const adapter = usePickerAdapter();
   const validationProps = useApplyDefaultValuesToDateTimeValidationProps(internalProps);
 
@@ -78,33 +70,18 @@ function useApplyDefaultValuesToDateTimeRangeFieldInternalProps<
   );
 }
 
-export interface UseDateTimeRangeManagerParameters<
-  TEnableAccessibleFieldDOMStructure extends boolean,
-> extends RangeFieldSeparatorProps {
-  enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
-}
+export interface UseDateTimeRangeManagerParameters extends RangeFieldSeparatorProps {}
 
-export type UseDateTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure extends boolean> =
-  PickerManager<
-    PickerRangeValue,
-    TEnableAccessibleFieldDOMStructure,
-    DateTimeRangeValidationError,
-    ValidateDateTimeRangeProps,
-    DateTimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>
-  >;
+export type UseDateTimeRangeManagerReturnValue = PickerManager<
+  PickerRangeValue,
+  DateTimeRangeValidationError,
+  ValidateDateTimeRangeProps,
+  DateTimeRangeManagerFieldInternalProps
+>;
 
-export interface DateTimeRangeManagerFieldInternalProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->
+export interface DateTimeRangeManagerFieldInternalProps
   extends
-    MakeOptional<
-      UseFieldInternalProps<
-        PickerRangeValue,
-        TEnableAccessibleFieldDOMStructure,
-        DateTimeRangeValidationError
-      >,
-      'format'
-    >,
+    MakeOptional<UseFieldInternalProps<PickerRangeValue, DateTimeRangeValidationError>, 'format'>,
     ExportedValidateDateTimeRangeProps,
     AmPmProps,
     RangeFieldSeparatorProps {}

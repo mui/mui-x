@@ -6,9 +6,9 @@ import InstallationInstructions from './InstallationInstructions';
 // For the version branches (e.g., v8.x, v7.x) we should use the version "@^8.0.0" for v8.x, "@^7.0.0" for v7.x, etc.
 
 const packages = {
-  Community: '@mui/x-charts@next',
-  Pro: '@mui/x-charts-pro@next',
-  Premium: '@mui/x-charts-premium@next',
+  Community: '@mui/x-charts',
+  Pro: '@mui/x-charts-pro',
+  Premium: '@mui/x-charts-premium',
 };
 
 export default function ChartsInstallationInstructions() {

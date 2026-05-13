@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { screen, waitFor } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
+import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { isJSDOM } from 'test/utils/skipIf';
 import { spy } from 'sinon';
@@ -612,10 +612,10 @@ describe('<DateCalendar />', () => {
   });
 
   describe('Performance', () => {
-    it('should only render newly selected day when selecting a day without a previously selected day', () => {
-      const RenderCount = spy((props) => <PickersDay {...props} />);
+    it('should only render newly selected day when selecting a day without a previously selected day', async () => {
+      const RenderCount = spy((props) => <PickerDay {...props} />);
 
-      render(
+      const { user } = render(
         <DateCalendar
           referenceDate={adapterToUse.date('2019-01-02')}
           slots={{
@@ -625,14 +625,15 @@ describe('<DateCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
-      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
+      await user.click(screen.getByRole('gridcell', { name: '2' }));
+      // 2 render (one to update tabIndex + autoFocus, one to update selection) * 2 (because dev mode)
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(4);
     });
 
-    it('should only re-render previously selected day and newly selected day when selecting a day', () => {
-      const RenderCount = spy((props) => <PickersDay {...props} />);
+    it('should only re-render previously selected day and newly selected day when selecting a day', async () => {
+      const RenderCount = spy((props) => <PickerDay {...props} />);
 
-      render(
+      const { user } = render(
         <DateCalendar
           defaultValue={adapterToUse.date('2019-04-29')}
           slots={{
@@ -642,9 +643,7 @@ describe('<DateCalendar />', () => {
       );
 
       const renderCountBeforeChange = RenderCount.callCount;
-      // TODO: Use userEvent.click instead.
-      fireEvent.focus(screen.getByRole('gridcell', { name: '2' }));
-      fireEvent.click(screen.getByRole('gridcell', { name: '2' }));
+      await user.click(screen.getByRole('gridcell', { name: '2' }));
       // 2 render (one to update tabIndex + autoFocus, one to update selection) * 2 days * 2 (because dev mode)
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(8);
     });

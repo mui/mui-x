@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { XAxis } from '@mui/x-charts/models';
 import { BarChartPro, BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
-import { shareOfRenewables } from 'docsx/data/charts/dataset/shareOfRenewables';
-import { countryData } from 'docsx/data/charts/dataset/countryData';
+import { shareOfRenewables } from 'docs/data/charts/dataset/shareOfRenewables';
+import { countryData } from 'docs/data/charts/dataset/countryData';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Stack } from '@mui/material';
 
@@ -36,7 +36,7 @@ const barSettings = {
 export default function ZoomSliderPreview() {
   return (
     <ThemeProvider theme={darkTheme}>
-      <Stack width="100%" sx={(theme) => ({ background: theme.palette.background.default })}>
+      <Stack sx={(theme) => ({ width: '100%', background: theme.palette.background.default })}>
         <BarChartPro
           {...barSettings}
           xAxis={[

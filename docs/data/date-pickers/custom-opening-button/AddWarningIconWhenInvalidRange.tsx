@@ -47,13 +47,15 @@ export default function AddWarningIconWhenInvalidRange() {
             textField: ({
               position,
             }: FieldOwnerState & { position?: 'start' | 'end' }) => ({
-              InputProps: {
-                endAdornment: (
-                  <CustomInputAdornment
-                    position="end"
-                    hasError={!!error[position === 'start' ? 0 : 1]}
-                  />
-                ),
+              slotProps: {
+                input: {
+                  endAdornment: (
+                    <CustomInputAdornment
+                      position="end"
+                      hasError={!!error[position === 'start' ? 0 : 1]}
+                    />
+                  ),
+                },
               },
             }),
           }}

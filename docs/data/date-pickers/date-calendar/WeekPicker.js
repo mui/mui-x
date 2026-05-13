@@ -5,13 +5,18 @@ import { styled } from '@mui/material/styles';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
+import { PickerDay } from '@mui/x-date-pickers/PickerDay';
 
 dayjs.extend(isBetweenPlugin);
 
-const CustomPickersDay = styled(PickersDay, {
+const CustomPickerDay = styled(PickerDay, {
   shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'isHovered',
 })(({ theme, isSelected, isHovered, day }) => ({
+  '--PickerDay-horizontalMargin': 0,
+  // Ensures the day increases width, accounting for the padding, matching the width of the week number cell
+  boxSizing: 'content-box',
+  paddingLeft: '2px',
+  paddingRight: '2px',
   borderRadius: 0,
   ...(isSelected && {
     backgroundColor: theme.palette.primary.main,
@@ -54,11 +59,9 @@ function Day(props) {
   const { day, selectedDay, hoveredDay, ...other } = props;
 
   return (
-    <CustomPickersDay
+    <CustomPickerDay
       {...other}
       day={day}
-      sx={{ px: 2.5 }}
-      disableMargin
       selected={false}
       isSelected={isInSameWeek(day, selectedDay)}
       isHovered={isInSameWeek(day, hoveredDay)}

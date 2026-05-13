@@ -26,3 +26,5 @@ export * from './export';
 export * from './filterPanel';
 export * from './toolbarV8';
 export * from './quickFilter';
+export { GridColumnUnsortedIcon } from './GridColumnUnsortedIcon';
+export type { GridColumnUnsortedIconProps } from './GridColumnUnsortedIcon';

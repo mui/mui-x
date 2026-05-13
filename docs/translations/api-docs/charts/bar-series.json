@@ -38,6 +38,9 @@
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
     },
+    "valueGetter": {
+      "description": "A function to extract and transform the value from the <code>dataset</code> item.<br />It receives the full dataset item and should return the series value.<br />Can be used as an alternative to <code>dataKey</code>."
+    },
     "xAxisId": { "description": "The id of the x-axis used to render the series." },
     "yAxisId": { "description": "The id of the y-axis used to render the series." }
   }

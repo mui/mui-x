@@ -8,7 +8,7 @@ import {
   BarChartPremium,
   RangeBarSeries,
 } from '@mui/x-charts-premium/BarChartPremium';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { BarItemIdentifier, ChartsAxisData } from '@mui/x-charts/models';
 import { RangeBarItemIdentifier } from '@mui/x-charts-premium/models';
 

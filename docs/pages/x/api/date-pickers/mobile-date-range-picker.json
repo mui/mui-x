@@ -182,8 +182,8 @@
     },
     {
       "name": "day",
-      "description": "Custom component for day in range pickers.\nCheck the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.",
-      "default": "DateRangePickersDay",
+      "description": "Custom component for day in range pickers.\nCheck the [DateRangePickerDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.",
+      "default": "DateRangePickerDay",
       "class": null
     },
     {
@@ -276,7 +276,7 @@
     {
       "name": "textField",
       "description": "Form control with an input to render the value.",
-      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "default": "<PickersTextField />",
       "class": null
     },
     {
@@ -287,7 +287,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiMobileDateRangePicker",
   "forwardsRefTo": "HTMLDivElement",

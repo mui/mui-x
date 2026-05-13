@@ -77,7 +77,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'Ili',
-  filterPanelColumns: 'Stupac',
+  filterPanelColumn: 'Stupac',
   filterPanelInputLabel: 'Vrijednost',
   filterPanelInputPlaceholder: 'Vrijednost filtera',
 

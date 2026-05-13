@@ -108,7 +108,7 @@ function DefaultContent<T extends CartesianChartSeriesType | PolarChartSeriesTyp
   const classes = useUtilityClasses(props.classes);
   const { item } = props;
 
-  if (item.formattedValue == null) {
+  if (item.formattedValue == null || typeof item.formattedValue !== 'string') {
     return null;
   }
 

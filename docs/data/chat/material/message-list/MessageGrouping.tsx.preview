@@ -1,0 +1,15 @@
+<ChatBox
+  adapter={adapter}
+  initialActiveConversationId={conversation.id}
+  initialConversations={[conversation]}
+  initialMessages={messages}
+  slotProps={{
+    messageGroup: { groupKey: createTimeWindowGroupKey(60_000) },
+  }}
+  sx={{
+    height: 400,
+    border: '1px solid',
+    borderColor: 'divider',
+    borderRadius: 1,
+  }}
+/>

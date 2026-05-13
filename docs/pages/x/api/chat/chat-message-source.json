@@ -1,0 +1,38 @@
+{
+  "props": {
+    "href": { "type": { "name": "string" }, "required": true },
+    "index": { "type": { "name": "number" } },
+    "title": { "type": { "name": "string" } }
+  },
+  "name": "ChatMessageSource",
+  "imports": [
+    "import { ChatMessageSource } from '@mui/x-chat/ChatMessageSources';",
+    "import { ChatMessageSource } from '@mui/x-chat';"
+  ],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The root list item element.",
+      "default": "'li'",
+      "class": "MuiChatMessageSource-root"
+    },
+    {
+      "name": "index",
+      "description": "The numeric index badge.",
+      "default": "'span'",
+      "class": "MuiChatMessageSource-index"
+    },
+    {
+      "name": "link",
+      "description": "The anchor link.",
+      "default": "'a'",
+      "class": "MuiChatMessageSource-link"
+    }
+  ],
+  "classes": [],
+  "muiName": "MuiChatMessageSource",
+  "filename": "/packages/x-chat/src/ChatMessageSources/ChatMessageSource.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/display/message-parts/sources-and-citations/\">Chat - Sources &amp; Citations</a></li></ul>",
+  "cssComponent": false
+}

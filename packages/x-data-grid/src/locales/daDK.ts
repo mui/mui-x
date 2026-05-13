@@ -68,7 +68,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
-  filterPanelColumns: 'Kolonner',
+  filterPanelColumn: 'Kolonner',
   filterPanelInputLabel: 'Værdi',
   filterPanelInputPlaceholder: 'Filterværdi',
 

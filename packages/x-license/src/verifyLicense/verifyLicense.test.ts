@@ -514,7 +514,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
         licenseInfo,
       );
 
-      expect(licenseInfo.orderId).to.equal(123);
+      expect(licenseInfo.orderId).to.equal('123');
       expect(licenseInfo.expiryTimestamp).to.equal(1514761200000);
       expect(licenseInfo.expiryDate).to.deep.equal(new Date(1514761200000));
       expect(licenseInfo.planScope).to.equal('pro');
@@ -544,7 +544,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
       expect(licenseInfo.quantity).to.equal(5);
       expect(licenseInfo.appType).to.equal('single');
-      expect(licenseInfo.orderId).to.equal(456);
+      expect(licenseInfo.orderId).to.equal('456');
       expect(licenseInfo.planScope).to.equal('premium');
     });
 
@@ -570,7 +570,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       expect(licenseInfo.planVersion).to.equal('Q1-2026');
       expect(licenseInfo.quantity).to.equal(5);
       expect(licenseInfo.appType).to.equal('single');
-      expect(licenseInfo.orderId).to.equal(789);
+      expect(licenseInfo.orderId).to.equal('789');
       expect(licenseInfo.planScope).to.equal('pro');
     });
 
@@ -590,7 +590,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
 
       parseLicenseTokens('O=abc,E=xyz,Q=notanumber,KV=3', licenseInfo);
 
-      expect(licenseInfo.orderId).to.equal(null);
+      expect(licenseInfo.orderId).to.equal('abc');
       expect(licenseInfo.expiryTimestamp).to.equal(null);
       expect(licenseInfo.quantity).to.equal(null);
     });
@@ -603,7 +603,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       );
 
       expect(result.keyVersion).to.equal(2);
-      expect(result.orderId).to.equal(123);
+      expect(result.orderId).to.equal('123');
       expect(result.planScope).to.equal('pro');
       expect(result.licenseModel).to.equal('subscription');
       expect(result.planVersion).to.equal('initial');
@@ -627,7 +627,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       );
 
       expect(result.keyVersion).to.equal(3);
-      expect(result.orderId).to.equal(789);
+      expect(result.orderId).to.equal('789');
       expect(result.planScope).to.equal('premium');
       expect(result.licenseModel).to.equal('annual');
       expect(result.planVersion).to.equal('Q3-2024');
@@ -650,7 +650,7 @@ describe.skipIf(!isJSDOM)('License: verifyLicense', () => {
       );
 
       expect(result.keyVersion).to.equal(3);
-      expect(result.orderId).to.equal(123);
+      expect(result.orderId).to.equal('123');
       expect(result.planScope).to.equal('pro');
       expect(result.licenseModel).to.equal('annual');
       expect(result.planVersion).to.equal('Q1-2026');

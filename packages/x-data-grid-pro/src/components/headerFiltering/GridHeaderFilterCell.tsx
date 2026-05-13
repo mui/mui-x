@@ -33,6 +33,7 @@ import {
   gridHeaderFilteringMenuSelector,
   isNavigationKey,
   attachPinnedStyle,
+  usePinnedScrollOffset,
   vars,
 } from '@mui/x-data-grid/internals';
 import { useRtl } from '@mui/system/RtlProvider';
@@ -362,6 +363,8 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
       <GridHeaderFilterClearButton onClick={clearFilterItem} disabled={isFilterReadOnly} />
     ) : null;
 
+  const pinnedScrollOffset = usePinnedScrollOffset(apiRef, pinnedPosition);
+
   return (
     <div
       className={clsx(classes.root, headerClassName)}
@@ -373,7 +376,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
         },
         isRtl,
         pinnedPosition,
-        pinnedOffset,
+        pinnedOffset !== undefined ? pinnedOffset + pinnedScrollOffset : undefined,
       )}
       role="columnheader"
       aria-colindex={colIndex + 1}

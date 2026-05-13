@@ -2,11 +2,11 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
-import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
-import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
+import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
+import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { MonthViewCell } from './MonthViewCell';
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
@@ -39,12 +39,12 @@ const MonthViewWeekNumberCell = styled('div', {
 }));
 
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
-  const { maxEvents, days, occurrencesMap, firstDayRef } = props;
+  const { rowIndex, maxEvents, days, occurrencesMap, firstDayRef } = props;
 
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
-  const { classes, localeText } = useEventCalendarStyledContext();
+  const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
   const weekNumber = adapter.getWeekNumber(days[0].value);
 
@@ -56,19 +56,25 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
     [adapter, days],
   );
 
+  const weekNumberId = showWeekNumber
+    ? `${schedulerId}-MonthViewWeekNumber-${weekNumber}`
+    : undefined;
+
   return (
     <MonthViewRow
       className={classes.monthViewRow}
       key={weekNumber}
       start={start}
       end={end}
+      rowIndex={rowIndex}
       data-show-week-number={showWeekNumber || undefined}
     >
       {showWeekNumber && (
         <MonthViewWeekNumberCell
           className={classes.monthViewWeekNumberCell}
-          role="rowheader"
+          id={weekNumberId}
           aria-label={localeText.weekNumberAriaLabel(weekNumber)}
+          aria-hidden="true"
         >
           {weekNumber}
         </MonthViewWeekNumberCell>
@@ -80,6 +86,8 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           day={day}
           maxEvents={maxEvents}
           row={occurrences}
+          colIndex={dayIdx + 1}
+          ariaLabelledBy={weekNumberId}
         />
       ))}
     </MonthViewRow>

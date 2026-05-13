@@ -4,7 +4,11 @@ import { randomBytes } from 'crypto';
 import { fileURLToPath } from 'url';
 import type { TelemetryContextType } from '../context';
 import getEnvironmentInfo from './get-environment-info';
-import getAnonymousProjectId from './get-project-id';
+import {
+  getAnonymousRepoHash,
+  getAnonymousPackageNameHash,
+  getAnonymousRootPathHash,
+} from './get-project-id';
 import getAnonymousMachineId from './get-machine-id';
 import { TelemetryStorage } from './storage';
 
@@ -28,11 +32,17 @@ const dirname =
     distDir: process.cwd(),
   });
 
-  const [environmentInfo, projectId, machineId] = await Promise.all([
-    getEnvironmentInfo(),
-    getAnonymousProjectId(),
-    getAnonymousMachineId(),
-  ]);
+  const [environmentInfo, repoHash, postinstallPackageNameHash, rootPathHash, machineId] =
+    await Promise.all([
+      getEnvironmentInfo(),
+      getAnonymousRepoHash(),
+      getAnonymousPackageNameHash(),
+      getAnonymousRootPathHash(),
+      getAnonymousMachineId(),
+    ]);
+
+  // Compute projectId from the resolved signals (no duplicate calls)
+  const projectId = repoHash || postinstallPackageNameHash || rootPathHash;
 
   const contextData: TelemetryContextType = {
     config: {
@@ -41,6 +51,9 @@ const dirname =
     traits: {
       ...environmentInfo,
       machineId,
+      repoHash,
+      postinstallPackageNameHash,
+      rootPathHash,
       projectId,
       sessionId: randomBytes(32).toString('hex'),
       anonymousId: storage.anonymousId,

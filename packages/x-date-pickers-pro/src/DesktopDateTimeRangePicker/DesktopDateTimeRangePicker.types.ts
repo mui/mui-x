@@ -13,16 +13,12 @@ import {
 export interface DesktopDateTimeRangePickerSlots
   extends BaseDateTimeRangePickerSlots, MakeOptional<UseDesktopRangePickerSlots, 'field'> {}
 
-export interface DesktopDateTimeRangePickerSlotProps<
-  TEnableAccessibleFieldDOMStructure extends boolean,
->
+export interface DesktopDateTimeRangePickerSlotProps
   extends
     BaseDateTimeRangePickerSlotProps,
-    Omit<UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>, 'tabs' | 'toolbar'> {}
+    Omit<UseDesktopRangePickerSlotProps, 'tabs' | 'toolbar'> {}
 
-export interface DesktopDateTimeRangePickerProps<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->
+export interface DesktopDateTimeRangePickerProps
   extends BaseDateTimeRangePickerProps, DesktopRangeOnlyPickerProps {
   /**
    * The number of calendars to render on **desktop**.
@@ -38,5 +34,5 @@ export interface DesktopDateTimeRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopDateTimeRangePickerSlotProps;
 }

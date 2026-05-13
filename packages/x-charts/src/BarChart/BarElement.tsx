@@ -74,16 +74,7 @@ function BarElement(props: BarElementProps) {
   const highlightState = useItemHighlightState(itemIdentifier);
   const isHighlighted = highlightState === 'highlighted';
   const isFaded = highlightState === 'faded';
-  const isFocused = useIsItemFocused(
-    React.useMemo(
-      () => ({
-        type: 'bar',
-        seriesId,
-        dataIndex,
-      }),
-      [seriesId, dataIndex],
-    ),
-  );
+  const isFocused = useIsItemFocused(itemIdentifier);
 
   const ownerState: BarElementOwnerState = {
     seriesId,

@@ -68,7 +68,7 @@ const bnBDGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'অপারেটর',
   filterPanelOperatorAnd: 'এবং',
   filterPanelOperatorOr: 'অথবা',
-  filterPanelColumns: 'কলাম',
+  filterPanelColumn: 'কলাম',
   filterPanelInputLabel: 'মান',
   filterPanelInputPlaceholder: 'ফিল্টার মান',
 

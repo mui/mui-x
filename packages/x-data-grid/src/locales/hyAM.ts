@@ -75,7 +75,7 @@ const hyAMGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Օպերատոր',
   filterPanelOperatorAnd: 'Եվ',
   filterPanelOperatorOr: 'Կամ',
-  filterPanelColumns: 'Սյունակներ',
+  filterPanelColumn: 'Սյունակներ',
   filterPanelInputLabel: 'Արժեք',
   filterPanelInputPlaceholder: 'Զտիչի արժեք',
 

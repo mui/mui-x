@@ -42,7 +42,7 @@ function innerDescribeValue<TValue extends PickerValidValue, C extends PickerCom
     renderWithProps = (props: any, config?: any) =>
       interactions.renderWithProps({ ...defaultProps, ...props }, { ...config, componentFamily });
   } else {
-    renderWithProps = ({ enableAccessibleFieldDOMStructure, ...props }: any, config?: any) => {
+    renderWithProps = (props: any, config?: any) => {
       const response = render(<WrappedElementToTest {...props} hook={config?.hook} />);
 
       return {
@@ -54,11 +54,6 @@ function innerDescribeValue<TValue extends PickerValidValue, C extends PickerCom
         },
         selectSection: () => {
           throw new Error('You can only use `selectSection` on components that render a field');
-        },
-        selectSectionAsync: () => {
-          throw new Error(
-            'You can only use `selectSectionAsync` on components that render a field',
-          );
         },
         getHiddenInput: () => {
           throw new Error('You can only use `getHiddenInput` on components that render a field');

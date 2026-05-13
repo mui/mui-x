@@ -44,13 +44,15 @@ export default function AddWarningIconWhenInvalidRange() {
           slots={{ field: MultiInputDateRangeField }}
           slotProps={{
             textField: ({ position }) => ({
-              InputProps: {
-                endAdornment: (
-                  <CustomInputAdornment
-                    position="end"
-                    hasError={!!error[position === 'start' ? 0 : 1]}
-                  />
-                ),
+              slotProps: {
+                input: {
+                  endAdornment: (
+                    <CustomInputAdornment
+                      position="end"
+                      hasError={!!error[position === 'start' ? 0 : 1]}
+                    />
+                  ),
+                },
               },
             }),
           }}

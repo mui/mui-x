@@ -21,12 +21,7 @@ describe('<PickersArrowSwitcher /> - Describe Conformance', () => {
       render,
       muiName: 'MuiPickersArrowSwitcher',
       refInstanceof: window.HTMLDivElement,
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'themeVariants',
-        'slotPropsCallbackWithPropsAsOwnerState',
-      ],
+      skip: ['componentProp', 'themeVariants', 'slotPropsCallbackWithPropsAsOwnerState'],
       slots: {
         previousIconButton: {
           expectedClassName: pickersArrowSwitcherClasses.previousIconButton,

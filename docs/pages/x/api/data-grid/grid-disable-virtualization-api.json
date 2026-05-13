@@ -1,5 +1,0 @@
-{
-  "name": "GridDisableVirtualizationApi",
-  "description": "The API to disable the virtualization that is available in the grid apiRef.",
-  "properties": []
-}

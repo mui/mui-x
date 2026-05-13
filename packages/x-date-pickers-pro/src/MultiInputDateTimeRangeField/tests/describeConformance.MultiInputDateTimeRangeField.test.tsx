@@ -11,6 +11,6 @@ describe('<MultiInputDateTimeRangeField /> - Describe Conformance', () => {
     render,
     muiName: 'MuiMultiInputDateTimeRangeField',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'themeVariants'],
   }));
 });

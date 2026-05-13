@@ -159,6 +159,13 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    */
   chartsIntegration: boolean;
   /**
+   * If `true`, a fill handle is shown at the bottom-right corner of the cell selection.
+   * Dragging the fill handle fills target cells with the values from selected cells.
+   * Requires `cellSelection` to be enabled.
+   * @default false
+   */
+  cellSelectionFillHandle: boolean;
+  /**
    * The maximum size of the history stack.
    * Set to 0 to disable the undo/redo feature.
    * @default 30

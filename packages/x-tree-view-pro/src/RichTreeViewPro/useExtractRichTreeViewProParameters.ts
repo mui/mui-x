@@ -49,6 +49,7 @@ export function useExtractRichTreeViewProParameters<
     // RichTreeViewProStore parameters
     dataSource,
     dataSourceCache,
+    onItemsLazyLoaded,
     itemsReordering,
     isItemReorderable,
     canMoveItemToNewPosition,
@@ -96,6 +97,7 @@ export function useExtractRichTreeViewProParameters<
       // RichTreeViewProStore parameters
       dataSource,
       dataSourceCache,
+      onItemsLazyLoaded,
       itemsReordering,
       isItemReorderable,
       canMoveItemToNewPosition,
@@ -138,6 +140,7 @@ export function useExtractRichTreeViewProParameters<
       // RichTreeViewProStore parameters
       dataSource,
       dataSourceCache,
+      onItemsLazyLoaded,
       itemsReordering,
       isItemReorderable,
       canMoveItemToNewPosition,

@@ -73,7 +73,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   filterPanelOperator: '操作器',
   filterPanelOperatorAnd: '与',
   filterPanelOperatorOr: '或',
-  filterPanelColumns: '列',
+  filterPanelColumn: '列',
   filterPanelInputLabel: '值',
   filterPanelInputPlaceholder: '筛选值',
 

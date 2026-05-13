@@ -462,7 +462,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
 
     await user.click(screen.getByRole('button', { name: 'Filters' }));
 
-    const columnSelector = screen.getByRole('combobox', { name: 'Columns' });
+    const columnSelector = screen.getByRole('combobox', { name: 'Column' });
     await user.click(columnSelector);
 
     const options = screen.getAllByRole('option').map((option) => option.textContent);

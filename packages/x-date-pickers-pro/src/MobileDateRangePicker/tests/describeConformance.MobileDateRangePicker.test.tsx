@@ -14,12 +14,10 @@ describe('<MobileDateRangePicker /> - Describe Conformance', () => {
     refInstanceof: window.HTMLDivElement,
     skip: [
       'componentProp',
-      'componentsProp',
       'themeDefaultProps',
       'themeStyleOverrides',
       'themeVariants',
       'mergeClassName',
-      'propsSpread',
     ],
   }));
 });

@@ -3,6 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, useTheme } from '@mui/material/styles';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
+import { useStore } from '../internals/store/useStore';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import {
   lineClasses,
@@ -79,6 +81,10 @@ function CircleMarkElement(props: CircleMarkElementProps) {
     ...other
   } = props;
 
+  const store = useStore();
+  const enablePositionBasedPointerInteraction = store.use(
+    selectorChartExperimentalFeaturesState,
+  )?.enablePositionBasedPointerInteraction;
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
   const theme = useTheme();
 
@@ -87,7 +93,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
   return (
     <Circle
       {...other}
-      {...interactionProps}
+      {...(enablePositionBasedPointerInteraction ? {} : interactionProps)}
       cx={x}
       cy={y}
       r={5}

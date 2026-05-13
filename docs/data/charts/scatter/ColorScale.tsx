@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { Chance } from 'chance';
 
 const POINTS_NUMBER = 50;
@@ -26,15 +26,16 @@ export default function ColorScale() {
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
       <Stack
         direction="row"
-        gap={1}
         sx={{
+          gap: 1,
+          flexWrap: 'wrap',
           width: '100%',
+
           '&>div': {
             display: 'flex',
             flexDirection: 'column',
           },
         }}
-        flexWrap="wrap"
       >
         <div>
           <Typography variant="caption">x-axis colorMap</Typography>
@@ -89,7 +90,6 @@ export default function ColorScale() {
           </ToggleButtonGroup>
         </div>
       </Stack>
-
       <ScatterChart
         height={300}
         grid={{ horizontal: true, vertical: true }}

@@ -1,0 +1,10 @@
+{
+  "componentDescription": "",
+  "propDescriptions": { "label": { "description": "Label displayed above the list of sources." } },
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "label": "The label element shown above the list.",
+    "list": "The ordered list wrapping source items.",
+    "root": "The root container element."
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "props": { "lines": { "type": { "name": "number" }, "default": "3" } },
+  "name": "ChatMessageSkeleton",
+  "imports": [
+    "import { ChatMessageSkeleton } from '@mui/x-chat/ChatMessageSkeleton';",
+    "import { ChatMessageSkeleton } from '@mui/x-chat';"
+  ],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The root container element.",
+      "default": "'div'",
+      "class": "MuiChatMessageSkeleton-root"
+    },
+    {
+      "name": "line",
+      "description": "Each animated shimmer line element.",
+      "default": "'div'",
+      "class": "MuiChatMessageSkeleton-line"
+    }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatMessageSkeleton",
+  "filename": "/packages/x-chat/src/ChatMessageSkeleton/ChatMessageSkeleton.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/display/loading-and-empty-states/\">Chat - Loading &amp; Empty States</a></li></ul>",
+  "cssComponent": false
+}

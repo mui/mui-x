@@ -19,7 +19,7 @@ export function CustomItemTooltip() {
         borderColor: 'divider',
       }}
     >
-      <Stack direction="row" alignItems="center">
+      <Stack direction="row" sx={{ alignItems: 'center' }}>
         <div
           style={{
             width: 11,
@@ -28,7 +28,7 @@ export function CustomItemTooltip() {
             backgroundColor: tooltipData.color,
           }}
         />
-        <Typography sx={{ ml: 2 }} fontWeight="light">
+        <Typography sx={{ fontWeight: 'light', ml: 2 }}>
           {tooltipData.label}
         </Typography>
         <Typography sx={{ ml: 2 }}>{tooltipData.formattedValue}</Typography>

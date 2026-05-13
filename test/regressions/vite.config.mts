@@ -14,14 +14,7 @@ export default defineConfig({
     alias: [
       ...alias,
       {
-        find: '@mui/docs',
-        replacement: path.resolve(
-          import.meta.dirname,
-          '../../node_modules/@mui/monorepo/packages/mui-docs/src',
-        ),
-      },
-      {
-        find: 'docsx',
+        find: 'docs',
         replacement: path.resolve(import.meta.dirname, '../../docs'),
       },
     ],

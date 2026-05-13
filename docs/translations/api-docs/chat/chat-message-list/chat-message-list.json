@@ -1,0 +1,22 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "autoScroll": {
+      "description": "<p>Controls automatic scrolling to the bottom when new messages arrive or\nstreaming content grows, as long as the user is within <code>buffer</code> pixels of\nthe bottom.</p>\n<ul>\n<li><code>true</code> – enable with the default buffer (150 px).</li>\n<li><code>{ buffer: number }</code> – enable with a custom threshold.</li>\n<li><code>false</code> – disable (the scroll-to-bottom affordance is still available).</li>\n</ul>\n<p>Scrolling when the <em>user</em> sends a message is always active.</p>\n"
+    }
+  },
+  "classDescriptions": {
+    "content": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the message list content element"
+    },
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the message list root element"
+    },
+    "scroller": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the message list scroller element"
+    }
+  }
+}

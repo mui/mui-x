@@ -3,7 +3,6 @@ export type {
   DateRangePickerDayProps,
   DateRangePickerDayOwnerState,
 } from './DateRangePickerDay.types';
-
 export {
   getDateRangePickerDayUtilityClass,
   dateRangePickerDayClasses,

@@ -30,7 +30,11 @@ const VirtualScrollerContentRoot = styled('div', {
       ownerState.overflowedContent && styles['virtualScrollerContent--overflowed'],
     ];
   },
-})<{ ownerState: OwnerState }>({});
+})<{ ownerState: OwnerState }>({
+  flex: '1 0 auto',
+  display: 'flex',
+  flexDirection: 'column',
+});
 
 const GridVirtualScrollerContent = forwardRef<
   HTMLDivElement,

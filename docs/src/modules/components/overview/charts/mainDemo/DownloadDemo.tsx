@@ -69,7 +69,7 @@ export default function DownloadDemo() {
 
   return (
     <Stack spacing={1} direction="column" sx={{ height: '100%', minHeight: 0 }}>
-      <Stack direction="row" justifyContent="space-between" width="100%">
+      <Stack direction="row" sx={{ justifyContent: 'space-between', width: '100%' }}>
         <Select
           size="small"
           sx={{ width: 200 }}

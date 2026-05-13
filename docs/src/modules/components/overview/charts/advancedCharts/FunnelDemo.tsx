@@ -14,7 +14,7 @@ const commonSeries = {
 
 function Funnel() {
   return (
-    <Stack height="100%">
+    <Stack sx={{ height: '100%' }}>
       <Typography align="center" sx={{ width: '100%', mb: 1 }}>
         World education enrollment in 2000 and 2020
       </Typography>
@@ -79,7 +79,7 @@ function Funnel() {
           slotProps={{ tooltip: { disablePortal: true } }}
         />
       </div>
-      <Typography variant="caption" textAlign="end">
+      <Typography variant="caption" sx={{ textAlign: 'end' }}>
         Data from{' '}
         <a href="https://ourworldindata.org/grapher/gender-gap-education-levels/">
           ourworldindata.org

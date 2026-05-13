@@ -68,7 +68,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operaattorit',
   filterPanelOperatorAnd: 'Ja',
   filterPanelOperatorOr: 'Tai',
-  filterPanelColumns: 'Sarakkeet',
+  filterPanelColumn: 'Sarakkeet',
   filterPanelInputLabel: 'Arvo',
   filterPanelInputPlaceholder: 'Suodattimen arvo',
 

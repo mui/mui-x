@@ -61,14 +61,15 @@ function getLanguageName(localeCode: string): string {
 
 function extractObjectProperties(
   sourceText: string,
-  variableName: string,
+  variableName: string | string[],
 ): Map<string, EnglishEntry> {
   const sourceFile = ts.createSourceFile('temp.ts', sourceText, ts.ScriptTarget.Latest, true);
   const result = new Map<string, EnglishEntry>();
+  const variableNames = Array.isArray(variableName) ? variableName : [variableName];
 
-  function findVariable(node: ts.Node): ts.ObjectLiteralExpression | undefined {
+  function findVariable(node: ts.Node, targetName: string): ts.ObjectLiteralExpression | undefined {
     if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name)) {
-      if (node.name.text === variableName && node.initializer) {
+      if (node.name.text === targetName && node.initializer) {
         if (ts.isObjectLiteralExpression(node.initializer)) {
           return node.initializer;
         }
@@ -77,39 +78,41 @@ function extractObjectProperties(
     let found: ts.ObjectLiteralExpression | undefined;
     ts.forEachChild(node, (child) => {
       if (!found) {
-        found = findVariable(child);
+        found = findVariable(child, targetName);
       }
     });
     return found;
   }
 
-  const objectLiteral = findVariable(sourceFile);
-  if (!objectLiteral) {
-    throw new Error(`Variable "${variableName}" not found in source`);
-  }
-
-  for (const prop of objectLiteral.properties) {
-    if (!ts.isPropertyAssignment(prop)) {
-      continue;
+  for (const name of variableNames) {
+    const objectLiteral = findVariable(sourceFile, name);
+    if (!objectLiteral) {
+      throw new Error(`Variable "${name}" not found in source`);
     }
 
-    let name: string;
-    if (ts.isIdentifier(prop.name)) {
-      name = prop.name.text;
-    } else if (ts.isStringLiteral(prop.name)) {
-      name = prop.name.text;
-    } else {
-      continue;
+    for (const prop of objectLiteral.properties) {
+      if (!ts.isPropertyAssignment(prop)) {
+        continue;
+      }
+
+      let propName: string;
+      if (ts.isIdentifier(prop.name)) {
+        propName = prop.name.text;
+      } else if (ts.isStringLiteral(prop.name)) {
+        propName = prop.name.text;
+      } else {
+        continue;
+      }
+
+      const initText = prop.initializer.getText(sourceFile);
+      const isFunction =
+        ts.isArrowFunction(prop.initializer) || ts.isFunctionExpression(prop.initializer);
+
+      result.set(propName, {
+        type: isFunction ? 'function' : 'string',
+        value: initText,
+      });
     }
-
-    const initText = prop.initializer.getText(sourceFile);
-    const isFunction =
-      ts.isArrowFunction(prop.initializer) || ts.isFunctionExpression(prop.initializer);
-
-    result.set(name, {
-      type: isFunction ? 'function' : 'string',
-      value: initText,
-    });
   }
 
   return result;

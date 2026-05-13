@@ -1,0 +1,24 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "variant": {
+      "description": "The visual variant of the conversation list. - <code>&#39;default&#39;</code> – shows avatar, title, preview, timestamp, and unread badge. - <code>&#39;compact&#39;</code> – shows only a small unread indicator, the title, and an actions button."
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "item": "",
+    "itemActions": "",
+    "itemAvatar": "",
+    "itemContent": "",
+    "preview": "",
+    "root": "",
+    "scrollbar": "",
+    "scrollbarThumb": "",
+    "scroller": "",
+    "timestamp": "",
+    "title": "",
+    "unreadBadge": "",
+    "viewport": ""
+  }
+}

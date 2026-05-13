@@ -1,0 +1,24 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "className": {
+      "description": "CSS class applied to the element, or a function that returns a class based on the component&#39;s state."
+    },
+    "nativeButton": {
+      "description": "Whether the component renders a native <code>&lt;button&gt;</code> element when replacing it via the <code>render</code> prop. Set to <code>true</code> if the rendered element is a native button."
+    },
+    "onEventDrop": {
+      "description": "Callback fired when the event is dropped into the Event Calendar."
+    },
+    "render": {
+      "description": "Allows you to replace the component&#39;s HTML element with a different tag, or compose it with another component.<br>Accepts a <code>ReactElement</code> or a function that returns the element to render."
+    },
+    "style": {
+      "description": "Style applied to the element, or a function that returns a style object based on the component&#39;s state."
+    },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
+  },
+  "classDescriptions": {}
+}

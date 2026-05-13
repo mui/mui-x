@@ -68,7 +68,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operatoren',
   filterPanelOperatorAnd: 'En',
   filterPanelOperatorOr: 'Of',
-  filterPanelColumns: 'Kolommen',
+  filterPanelColumn: 'Kolommen',
   filterPanelInputLabel: 'Waarde',
   filterPanelInputPlaceholder: 'Filter waarde',
 

@@ -21,10 +21,12 @@ import type { IsItemVisibleFunction } from '../../featurePlugins/useChartVisibil
 export const defaultizeSeries = <SeriesType extends ChartSeriesType>({
   series,
   colors,
+  theme,
   seriesConfig,
 }: {
   series: Readonly<AllSeriesType<SeriesType>[]>;
   colors: readonly string[];
+  theme: 'light' | 'dark';
   seriesConfig: ChartSeriesConfig<SeriesType>;
 }): {
   defaultizedSeries: DefaultizedSeriesGroups<SeriesType>;
@@ -39,6 +41,7 @@ export const defaultizeSeries = <SeriesType extends ChartSeriesType>({
       seriesData,
       seriesIndex,
       colors,
+      theme,
     );
 
     const id: SeriesId = seriesWithDefaultValues.id;

@@ -4,7 +4,7 @@
 
 There are multiple types of tests to assert different parts of the codebase:
 
-- **Unit tests**: These tests are run in the browser (`test_browser` CI step) and JSDOM (`test_unit` CI step) environments. They are used to test individual components and functions in isolation.
+- **Unit tests**: These tests are run in the browser (`test_browser` CI step) and jsdom (`test_unit` CI step) environments. They are used to test individual components and functions in isolation.
 - **Regression tests**: These tests (`test_regressions` CI step) are run in a Chromium browser using Playwright. They are used to ensure visual integrity of documentation demo examples.
 - **E2E tests**: This set of custom tests (`test_e2e` CI step) is run in Chromium, Firefox and WebKit browsers using Playwright. They are used to test certain component behaviors, which require a real browser environment.
 - **E2E website tests**: These tests (`test_e2e_website` CI step) are documentation smoke tests. They are used to test the MUI X website, ensuring that the website is functioning correctly and that the documentation examples are working as expected.

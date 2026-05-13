@@ -1,9 +1,9 @@
-import TwoLevelPieChart from 'docsx/data/charts/pie-demo/TwoLevelPieChart';
-import StraightAnglePieChart from 'docsx/data/charts/pie-demo/StraightAnglePieChart';
-import PieChartWithCustomizedLabel from 'docsx/data/charts/pie-demo/PieChartWithCustomizedLabel';
-import PieChartWithCenterLabel from 'docsx/data/charts/pie-demo/PieChartWithCenterLabel';
-import PieChartWithPaddingAngle from 'docsx/data/charts/pie-demo/PieChartWithPaddingAngle';
-import PieChartWithCustomLegendAndTooltip from 'docsx/data/charts/pie-demo/PieChartWithCustomLegendAndTooltip';
+import TwoLevelPieChart from 'docs/data/charts/pie-demo/TwoLevelPieChart';
+import StraightAnglePieChart from 'docs/data/charts/pie-demo/StraightAnglePieChart';
+import PieChartWithCustomizedLabel from 'docs/data/charts/pie-demo/PieChartWithCustomizedLabel';
+import PieChartWithCenterLabel from 'docs/data/charts/pie-demo/PieChartWithCenterLabel';
+import PieChartWithPaddingAngle from 'docs/data/charts/pie-demo/PieChartWithPaddingAngle';
+import PieChartWithCustomLegendAndTooltip from 'docs/data/charts/pie-demo/PieChartWithCustomLegendAndTooltip';
 import { ChartThumbnailCard, ChartThumbnailGridWrapper } from './ChartExampleThumbnailGrid';
 
 const chartData = [

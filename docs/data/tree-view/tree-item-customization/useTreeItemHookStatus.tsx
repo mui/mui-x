@@ -43,39 +43,39 @@ function StatusLegend() {
       <Stack spacing={1}>
         <Typography variant="subtitle2">Legend</Typography>
 
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {STATUS_ICONS.focused}
           <Typography variant="body2">focused</Typography>
         </Stack>
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {STATUS_ICONS.selected}
           <Typography variant="body2">selected</Typography>
         </Stack>
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {STATUS_ICONS.expandable}
           <Typography variant="body2">expandable</Typography>
         </Stack>
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {STATUS_ICONS.expanded}
           <Typography variant="body2">expanded</Typography>
         </Stack>
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {STATUS_ICONS.disabled}
           <Typography variant="body2">disabled</Typography>
         </Stack>
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {STATUS_ICONS.editable}
           <Typography variant="body2">editable</Typography>
         </Stack>
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {STATUS_ICONS.editing}
           <Typography variant="body2">editing</Typography>
         </Stack>
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {STATUS_ICONS.loading}
           <Typography variant="body2">loading</Typography>
         </Stack>
-        <Stack direction="row" spacing={1} alignItems="center">
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           {STATUS_ICONS.error}
           <Typography variant="body2">error</Typography>
         </Stack>

@@ -18,14 +18,10 @@ export interface DesktopDateTimePickerSlots
     BaseDateTimePickerSlots,
     MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'> {}
 
-export interface DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends
-    BaseDateTimePickerSlotProps,
-    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
+export interface DesktopDateTimePickerSlotProps
+  extends BaseDateTimePickerSlotProps, ExportedUseDesktopPickerSlotProps {}
 
-export interface DesktopDateTimePickerProps<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->
+export interface DesktopDateTimePickerProps
   extends
     BaseDateTimePickerProps,
     DesktopOnlyPickerProps,
@@ -40,7 +36,7 @@ export interface DesktopDateTimePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: DesktopDateTimePickerSlotProps;
   /**
    * Available views.
    */

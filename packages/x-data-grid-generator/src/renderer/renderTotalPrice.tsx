@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import type { GridRenderCellParams } from '@mui/x-data-grid-premium';
 
 const Value = styled('div')(({ theme }) => ({
@@ -13,24 +13,18 @@ const Value = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'flex-end',
   '&.good': {
-    color: theme.vars
-      ? `rgb(${theme.vars.palette.success.mainChannel})`
-      : theme.palette.success.main,
+    color: (theme.vars || theme).palette.success.main,
   },
   '&.bad': {
-    color: theme.vars ? `rgb(${theme.vars.palette.error.mainChannel})` : theme.palette.error.main,
+    color: (theme.vars || theme).palette.error.main,
   },
   '&.filled.good': {
     color: 'inherit',
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.success.mainChannel} /  0.3)`
-      : alpha(theme.palette.success.main, 0.3),
+    backgroundColor: theme.alpha((theme.vars || theme).palette.success.main, 0.3),
   },
   '&.filled.bad': {
     color: 'inherit',
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.error.mainChannel} /  0.3)`
-      : alpha(theme.palette.error.main, 0.3),
+    backgroundColor: theme.alpha((theme.vars || theme).palette.error.main, 0.3),
   },
 }));
 

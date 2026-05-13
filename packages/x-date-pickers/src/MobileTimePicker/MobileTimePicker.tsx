@@ -14,9 +14,8 @@ import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { resolveTimeFormat } from '../internals/utils/time-utils';
 
-type MobileTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
-  props: MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure> &
-    React.RefAttributes<HTMLDivElement>,
+type MobileTimePickerComponent = ((
+  props: MobileTimePickerProps<TimeView> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
 /**
@@ -29,19 +28,17 @@ type MobileTimePickerComponent = (<TEnableAccessibleFieldDOMStructure extends bo
  *
  * - [MobileTimePicker API](https://mui.com/x/api/date-pickers/mobile-time-picker/)
  */
-const MobileTimePicker = React.forwardRef(function MobileTimePicker<
-  TEnableAccessibleFieldDOMStructure extends boolean = true,
->(
-  inProps: MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>,
+const MobileTimePicker = React.forwardRef(function MobileTimePicker(
+  inProps: MobileTimePickerProps<TimeView>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const adapter = usePickerAdapter();
 
   // Props with the default values common to all time pickers
-  const defaultizedProps = useTimePickerDefaultizedProps<
-    TimeView,
-    MobileTimePickerProps<TimeView, TEnableAccessibleFieldDOMStructure>
-  >(inProps, 'MuiMobileTimePicker');
+  const defaultizedProps = useTimePickerDefaultizedProps<TimeView, MobileTimePickerProps<TimeView>>(
+    inProps,
+    'MuiMobileTimePicker',
+  );
 
   const viewRenderers: TimePickerViewRenderers<TimeView> = {
     hours: renderTimeViewClock,
@@ -75,11 +72,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<
     },
   };
 
-  const { renderPicker } = useMobilePicker<
-    TimeView,
-    TEnableAccessibleFieldDOMStructure,
-    typeof props
-  >({
+  const { renderPicker } = useMobilePicker<TimeView, typeof props>({
     ref,
     props,
     valueManager: singleItemValueManager,
@@ -151,10 +144,6 @@ MobileTimePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  /**
-   * @default true
-   */
-  enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.

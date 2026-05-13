@@ -156,6 +156,58 @@ describe('<BarChart />', () => {
     },
   );
 
+  it('should support axis valueGetter', async () => {
+    const dataset = [
+      { date: '2025-01-01', value: 100 },
+      { date: '2025-02-01', value: 200 },
+      { date: '2025-03-01', value: 300 },
+    ];
+
+    render(
+      <BarChart
+        dataset={dataset}
+        xAxis={[
+          {
+            scaleType: 'band',
+            valueGetter: (item) =>
+              new Date(item.date as string).toLocaleDateString('en-US', { month: 'short' }),
+          },
+        ]}
+        series={[{ dataKey: 'value' }]}
+        width={500}
+        height={300}
+      />,
+    );
+
+    const label = await screen.findByText('Jan');
+    expect(label).toBeVisible();
+  });
+
+  it('should support series valueGetter', async () => {
+    const dataset = [
+      { version: 'v1', count: '100' },
+      { version: 'v2', count: '200' },
+    ];
+
+    render(
+      <BarChart
+        dataset={dataset}
+        xAxis={[{ dataKey: 'version' }]}
+        series={[
+          {
+            valueGetter: (item) => parseFloat(item.count as string),
+            label: 'Count',
+          },
+        ]}
+        width={500}
+        height={300}
+      />,
+    );
+
+    const label = await screen.findByText('v1');
+    expect(label).toBeVisible();
+  });
+
   it('should support dataset with missing values', async () => {
     const dataset = [
       {

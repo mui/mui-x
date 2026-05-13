@@ -23,7 +23,11 @@ By keeping telemetry enabled, you directly contribute to shaping the future of M
 We track the following details pseudonymously during development mode:
 
 - **Machine ID:** A SHA-256 hash of the [machine identifier](https://www.npmjs.com/package/node-machine-id). Used to approximate the number of developers.
-- **Project ID:** A SHA-256 hash of the project's git remote URL or package name. Used to differentiate projects.
+- **Project ID:** A SHA-256 hash computed from the best available project identifier. Used to differentiate projects.
+- **Repo Hash:** A SHA-256 hash of the git remote URL. Used to identify the repository.
+- **Postinstall Package Name Hash:** A SHA-256 hash of the nearest `package.json` name, resolved at install time. In a monorepo this gives the root name.
+- **Runtime Package Name Hash:** A SHA-256 hash of the `package.json` name, resolved at runtime via `npm_package_name` or `fetch('/package.json')`. In a monorepo this gives the individual app name.
+- **Root Path Hash:** A SHA-256 hash of the git root path or working directory. Used as a last-resort project identifier.
 - **Anonymous ID:** A randomly generated identifier stored in `localStorage`. Used as a complementary signal to the machine ID in browser environments.
 - **Session ID:** A randomly generated identifier stored in `sessionStorage`. Scoped to a single browser session.
 - **Fingerprint:** A browser-level device identifier using hardware and software signals. Used as a complementary signal to the machine ID.

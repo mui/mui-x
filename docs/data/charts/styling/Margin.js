@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
+import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useDrawingArea, useXAxis, useYAxis } from '@mui/x-charts/hooks';
 

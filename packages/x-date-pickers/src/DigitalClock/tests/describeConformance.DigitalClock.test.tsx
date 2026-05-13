@@ -11,6 +11,6 @@ describe('<DigitalClock /> - Describe Conformance', () => {
     render,
     muiName: 'MuiDigitalClock',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'themeVariants'],
   }));
 });

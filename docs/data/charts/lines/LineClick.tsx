@@ -7,7 +7,7 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 
 import { LineChart } from '@mui/x-charts/LineChart';
 
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { ChartsAxisData, LineItemIdentifier } from '@mui/x-charts/models';
 
 const lineChartsParams = {

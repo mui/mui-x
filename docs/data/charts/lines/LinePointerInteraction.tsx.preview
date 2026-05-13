@@ -1,0 +1,4 @@
+<LineChart
+  {...data}
+  experimentalFeatures={{ enablePositionBasedPointerInteraction: true }}
+/>

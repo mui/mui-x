@@ -11,6 +11,6 @@ describe('<TimeClock /> - Describe Conformance', () => {
     render,
     refInstanceof: window.HTMLDivElement,
     muiName: 'MuiTimeClock',
-    skip: ['componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'themeVariants'],
   }));
 });

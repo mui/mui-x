@@ -95,6 +95,7 @@ export default function ControlledVisibility() {
       <PieChart
         series={[{ id: 'custom', data }]}
         height={300}
+        width={300}
         hiddenItems={hiddenItems}
         slotProps={{
           legend: {

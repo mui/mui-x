@@ -75,7 +75,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operador',
   filterPanelOperatorAnd: 'E',
   filterPanelOperatorOr: 'Ou',
-  filterPanelColumns: 'Colunas',
+  filterPanelColumn: 'Colunas',
   filterPanelInputLabel: 'Valor',
   filterPanelInputPlaceholder: 'Valor do filtro',
 

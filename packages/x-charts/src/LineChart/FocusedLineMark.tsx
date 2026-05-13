@@ -18,6 +18,10 @@ export function FocusedLineMark() {
 
   const series = lineSeries.series[focusedItem.seriesId];
 
+  if (!series || series.hidden) {
+    return null;
+  }
+
   if (series.data[focusedItem.dataIndex] == null) {
     // Handle missing data
     return null;

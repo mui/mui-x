@@ -22,6 +22,19 @@ const getColor: ColorProcessor<'ohlc'> = (series, xAxis) => {
     };
   }
 
+  if (series.colorGetter) {
+    return (dataIndex?: number) => {
+      if (dataIndex === undefined) {
+        return series.color;
+      }
+
+      const value = series.data[dataIndex];
+      return getSeriesColor({ value, dataIndex });
+    };
+  }
+
+  const { upColor, downColor } = series;
+
   return (dataIndex?: number) => {
     if (dataIndex === undefined) {
       return series.color;
@@ -29,7 +42,12 @@ const getColor: ColorProcessor<'ohlc'> = (series, xAxis) => {
 
     const value = series.data[dataIndex];
 
-    return getSeriesColor({ value, dataIndex });
+    if (value === null) {
+      return series.color;
+    }
+
+    const [open, , , close] = value;
+    return close >= open ? upColor : downColor;
   };
 };
 

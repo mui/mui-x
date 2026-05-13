@@ -70,7 +70,14 @@ export function renameClasses(parameters: RenameClassesParameters) {
       renamedIdentifiersMap[oldName] = config.newClassName;
 
       if (!hasAlias && alreadyAvailableIdentifiersMap.has(config.newClassName)) {
+        const importDeclarationCollection = j(path).closest(j.ImportDeclaration);
         path.prune();
+        if (importDeclarationCollection.length > 0) {
+          const importDeclaration = importDeclarationCollection.nodes()[0];
+          if (importDeclaration.specifiers?.length === 0) {
+            importDeclarationCollection.remove();
+          }
+        }
         return;
       }
 

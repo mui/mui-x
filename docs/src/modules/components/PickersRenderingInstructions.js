@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import Stack from '@mui/material/Stack';
 import ToggleOptions from './ToggleOptions';
 
@@ -42,7 +42,12 @@ export default function PickersRenderingInstructions() {
   ].join('\n');
 
   return (
-    <Stack sx={{ width: '100%' }} px={{ xs: 3, sm: 0 }}>
+    <Stack
+      sx={{
+        px: { xs: 3, sm: 0 },
+        width: '100%',
+      }}
+    >
       <Stack direction="row" spacing={2}>
         <ToggleOptions
           value={licenceType}

@@ -12,15 +12,11 @@ import {
 export interface TimeRangePickerSlots
   extends DesktopTimeRangePickerSlots, MobileTimeRangePickerSlots {}
 
-export interface TimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends
-    DesktopTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
-    MobileTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
+export interface TimeRangePickerSlotProps
+  extends DesktopTimeRangePickerSlotProps, MobileTimeRangePickerSlotProps {}
 
-export interface TimeRangePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
-  extends
-    DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
-    Omit<MobileTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>, 'views'> {
+export interface TimeRangePickerProps
+  extends DesktopTimeRangePickerProps, Omit<MobileTimeRangePickerProps, 'views'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -36,5 +32,5 @@ export interface TimeRangePickerProps<TEnableAccessibleFieldDOMStructure extends
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: TimeRangePickerSlotProps;
 }

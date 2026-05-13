@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid';
-import { InfoCard } from '@mui/docs/InfoCard';
+import { InfoCard } from '@mui/internal-core-docs/InfoCard';
 import AccountTreeRounded from '@mui/icons-material/AccountTreeRounded';
 import PivotTableChartRoundedIcon from '@mui/icons-material/PivotTableChartRounded';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';

@@ -38,8 +38,11 @@ export type XProjectNames =
   | 'x-charts'
   | 'x-charts-pro'
   | 'x-charts-premium'
+  | 'x-scheduler'
+  | 'x-scheduler-premium'
   | 'x-tree-view'
-  | 'x-tree-view-pro';
+  | 'x-tree-view-pro'
+  | 'x-chat';
 
 export type XTypeScriptProjects = Map<XProjectNames, XTypeScriptProject>;
 
@@ -368,6 +371,38 @@ export const createXTypeScriptProjects = () => {
   );
 
   projects.set(
+    'x-scheduler',
+    createXTypeScriptProject({
+      name: 'x-scheduler',
+      rootPath: path.join(workspaceRoot, 'packages/x-scheduler'),
+      entryPointPath: 'src/index.ts',
+      documentationFolderName: 'scheduler',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+      }),
+    }),
+  );
+
+  projects.set(
+    'x-scheduler-premium',
+    createXTypeScriptProject({
+      name: 'x-scheduler-premium',
+      rootPath: path.join(workspaceRoot, 'packages/x-scheduler-premium'),
+      entryPointPath: 'src/index.ts',
+      documentationFolderName: 'scheduler',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+      }),
+    }),
+  );
+
+  projects.set(
     'x-tree-view',
     createXTypeScriptProject({
       name: 'x-tree-view',
@@ -399,6 +434,22 @@ export const createXTypeScriptProjects = () => {
       getComponentsWithApiDoc: getComponentPaths({
         folders: ['src'],
         includeUnstableComponents: true,
+      }),
+    }),
+  );
+
+  projects.set(
+    'x-chat',
+    createXTypeScriptProject({
+      name: 'x-chat',
+      rootPath: path.join(workspaceRoot, 'packages/x-chat'),
+      entryPointPath: 'src/index.ts',
+      documentationFolderName: 'chat',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
       }),
     }),
   );

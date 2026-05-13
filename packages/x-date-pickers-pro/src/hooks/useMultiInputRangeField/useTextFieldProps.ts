@@ -8,7 +8,6 @@ import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
   PickerAnyManager,
-  PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerError,
   PickerRangeValue,
   PickerValue,
@@ -33,13 +32,8 @@ export function useTextFieldProps<
   TForwardedProps extends UseTextFieldBaseForwardedProps,
 >(
   parameters: UseTextFieldPropsParameters<TManager, TForwardedProps>,
-): UseMultiInputRangeFieldTextFieldProps<
-  PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
-  TForwardedProps
-> {
+): UseMultiInputRangeFieldTextFieldProps<TForwardedProps> {
   type TError = PickerManagerError<TManager>;
-  type TEnableAccessibleFieldDOMStructure =
-    PickerManagerEnableAccessibleFieldDOMStructure<TManager>;
 
   const pickerContext = useNullablePickerContext();
   const fieldPrivateContext = useNullableFieldPrivateContext();
@@ -62,11 +56,7 @@ export function useTextFieldProps<
     validation,
   } = parameters;
 
-  let useManager: ({
-    enableAccessibleFieldDOMStructure,
-  }: {
-    enableAccessibleFieldDOMStructure: boolean | undefined;
-  }) => PickerAnyManager;
+  let useManager: () => PickerAnyManager;
   switch (valueType) {
     case 'date': {
       useManager = useDateManager;
@@ -85,9 +75,7 @@ export function useTextFieldProps<
     }
   }
 
-  const manager = useManager({
-    enableAccessibleFieldDOMStructure: sharedInternalProps.enableAccessibleFieldDOMStructure,
-  });
+  const manager = useManager();
 
   const openPickerIfPossible = (event: React.UIEvent) => {
     if (!pickerContext) {
@@ -155,7 +143,7 @@ export function useTextFieldProps<
     manager,
     props: allProps,
     skipContextFieldRefAssignment: rangePosition !== position,
-  }) as unknown as UseFieldReturnValue<TEnableAccessibleFieldDOMStructure, typeof allProps>;
+  }) as unknown as UseFieldReturnValue<typeof allProps>;
 
   React.useEffect(() => {
     if (!pickerContext?.open || pickerContext?.variant === 'mobile') {
@@ -214,16 +202,6 @@ export interface UseTextFieldBaseForwardedProps {
 }
 
 interface UseTextFieldSharedInternalProps<TManager extends PickerAnyRangeManager> extends Pick<
-  UseFieldInternalProps<
-    PickerValue,
-    PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
-    PickerManagerError<TManager>
-  >,
-  | 'enableAccessibleFieldDOMStructure'
-  | 'disabled'
-  | 'readOnly'
-  | 'timezone'
-  | 'format'
-  | 'formatDensity'
-  | 'shouldRespectLeadingZeros'
+  UseFieldInternalProps<PickerValue, PickerManagerError<TManager>>,
+  'disabled' | 'readOnly' | 'timezone' | 'format' | 'formatDensity' | 'shouldRespectLeadingZeros'
 > {}

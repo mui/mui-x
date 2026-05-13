@@ -5,6 +5,7 @@ import {
   type CommonSeriesType,
   type SeriesId,
 } from './common';
+import { type DatasetElementType } from './config';
 
 export type ScatterValueType = {
   x: number;
@@ -33,6 +34,14 @@ export interface ScatterSeriesType
    */
   zAxisId?: string;
 
+  /**
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return a scatter value.
+   * Can be used as an alternative to `datasetKeys`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
+   * @returns {ScatterValueType} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => ScatterValueType;
   /**
    * The keys used to retrieve data from the dataset.
    *

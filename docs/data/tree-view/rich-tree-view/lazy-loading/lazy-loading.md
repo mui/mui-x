@@ -51,6 +51,17 @@ To customize it, pass the `ttl` option in milliseconds to the `DataSourceCacheDe
 
 {{"demo": "LowTTLCache.js"}}
 
+## Auto-expand lazy-loaded items
+
+Use the `onItemsLazyLoaded` callback to auto-expand items when their children are loaded.
+This callback is called both when new items are fetched from the server and when items are loaded from the cache.
+
+In the example below, the server returns some items with their sub-items already included in the response.
+The `onItemsLazyLoaded` callback expands any returned item that has inline children.
+Because those children are pre-cached by the tree view, expanding them requires no additional network request.
+
+{{"demo": "AutoExpandLazyLoadedItems.js"}}
+
 ## Error management
 
 {{"demo": "ErrorManagement.js"}}

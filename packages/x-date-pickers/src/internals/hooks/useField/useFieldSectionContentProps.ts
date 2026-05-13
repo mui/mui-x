@@ -1,20 +1,18 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { UseFieldStateReturnValue } from './useFieldState';
-import { FieldSection, MuiPickersAdapter, PickerManager } from '../../../models';
+import { FieldSection, MuiPickersAdapter } from '../../../models';
 import { UseFieldDOMGetters, UseFieldInternalProps } from './useField.types';
 import { usePickerAdapter, usePickerTranslations } from '../../../hooks';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
 import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
-import { FieldRangeSection } from '../../models';
+import { FieldRangeSection, PickerAnyManager } from '../../models';
 import { PickersSectionElement } from '../../../PickersSectionList';
 
 /**
  * Generate the props to pass to the content element of each section of the field.
- * It is not used by the non-accessible DOM structure (with an <input /> element for editing).
- * It should be used in the MUI accessible DOM structure and the Base UI implementation.
- * @param {UseFieldRootPropsParameters} parameters The parameters of the hook.
- * @returns {UseFieldRootPropsReturnValue} The props to forward to the content element of each section of the field.
+ * @param {UseFieldSectionContentPropsParameters} parameters The parameters of the hook.
+ * @returns {UseFieldSectionContentPropsReturnValue} The props to forward to the content element of each section of the field.
  */
 export function useFieldSectionContentProps(
   parameters: UseFieldSectionContentPropsParameters,
@@ -218,10 +216,10 @@ export function useFieldSectionContentProps(
 }
 
 interface UseFieldSectionContentPropsParameters {
-  manager: PickerManager<any, any, any, any, any>;
+  manager: PickerAnyManager;
   stateResponse: UseFieldStateReturnValue<any>;
   applyCharacterEditing: UseFieldCharacterEditingReturnValue;
-  internalPropsWithDefaults: UseFieldInternalProps<any, any, any>;
+  internalPropsWithDefaults: UseFieldInternalProps<any, any>;
   domGetters: UseFieldDOMGetters;
   focused: boolean;
 }

@@ -613,6 +613,10 @@ export interface ChartsLocaleText {
    * @param {number|null} params.high - The high value.
    * @param {number|null} params.low - The low value.
    * @param {number|null} params.close - The close value.
+   * @param {string|null} params.formattedOpen - The formatted open value.
+   * @param {string|null} params.formattedHigh - The formatted high value.
+   * @param {string|null} params.formattedLow - The formatted low value.
+   * @param {string|null} params.formattedClose - The formatted close value.
    * @param {Date|null} params.date - The date associated to the candle value.
    * @param {string} params.formattedDate - The formatted date value.
    * @param {string} [params.seriesLabel] - An optional label for the series.
@@ -623,6 +627,10 @@ export interface ChartsLocaleText {
     high: number | null;
     low: number | null;
     close: number | null;
+    formattedOpen: string | null;
+    formattedHigh: string | null;
+    formattedLow: string | null;
+    formattedClose: string | null;
     date: Date | null;
     formattedDate: string;
     seriesLabel?: string;

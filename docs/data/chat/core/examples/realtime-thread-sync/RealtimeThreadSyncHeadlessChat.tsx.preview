@@ -1,0 +1,11 @@
+<ChatProvider
+  adapter={adapter}
+  initialConversations={cloneConversations(demoConversations.slice(0, 2))}
+  initialMessages={[
+    ...cloneMessages(demoThreads.support),
+    ...cloneMessages(demoThreads.product),
+  ]}
+  initialActiveConversationId="support"
+>
+  <RealtimeThreadSyncInner emit={emit} />
+</ChatProvider>

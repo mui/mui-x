@@ -139,6 +139,10 @@ function DefaultSingleValueContent<T extends ChartSeriesType>({
 
   const classes = useUtilityClasses(propClasses);
 
+  if (formattedValue == null || typeof formattedValue !== 'string') {
+    return null;
+  }
+
   return (
     <ChartsTooltipRow
       className={classes.row}

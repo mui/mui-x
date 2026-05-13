@@ -11,25 +11,69 @@ function sha256(value: string): string {
   return createHash('sha256').update(value).digest('hex');
 }
 
-describe('getAnonymousProjectId (integration)', () => {
-  it('should hash the git remote URL', async () => {
-    const response = await asyncExec('git config --local --get remote.origin.url', {
-      timeout: 1000,
-    });
-    const remoteUrl = String(response.stdout).trim();
+/** Resolves local git remote URL the same order as get-project-id (upstream, then origin). */
+async function tryGitRemoteUrl(command: string): Promise<string | null> {
+  try {
+    const response = await asyncExec(command, { timeout: 1000 });
+    const url = String(response.stdout).trim();
+    return url || null;
+  } catch {
+    return null;
+  }
+}
 
-    const { default: getAnonymousProjectId } = await import('./get-project-id');
-    const result = await getAnonymousProjectId();
+async function getExpectedGitRemoteUrl(): Promise<string | null> {
+  return (
+    (await tryGitRemoteUrl('git config --local --get remote.upstream.url')) ||
+    (await tryGitRemoteUrl('git config --local --get remote.origin.url')) ||
+    null
+  );
+}
 
-    expect(result).toBe(sha256(remoteUrl));
+describe('getAnonymousRepoHash (integration)', () => {
+  it('should hash the git remote URL (upstream or origin)', async () => {
+    const remoteUrl = await getExpectedGitRemoteUrl();
+
+    const { getAnonymousRepoHash } = await import('./get-project-id');
+    const result = await getAnonymousRepoHash();
+
+    // Either matches the expected remote hash, or null if no remote is configured
+    const expectedHash = remoteUrl ? sha256(remoteUrl) : null;
+    expect(result).toBe(expectedHash);
   });
 
   it('should not hash "[object Object]" (execCLI bug regression)', async () => {
-    const { default: getAnonymousProjectId } = await import('./get-project-id');
-    const result = await getAnonymousProjectId();
+    const { getAnonymousRepoHash } = await import('./get-project-id');
+    const result = await getAnonymousRepoHash();
 
     // This was the old bug: String({stdout, stderr}) produced "[object Object]"
     expect(result).not.toBe(sha256('[object Object]'));
+  });
+});
+
+describe('getAnonymousPackageNameHash (integration)', () => {
+  it('should return a SHA-256 hex string or null', async () => {
+    const { getAnonymousPackageNameHash } = await import('./get-project-id');
+    const result = await getAnonymousPackageNameHash();
+
+    expect(result === null || /^[a-f0-9]{64}$/.test(result)).toBe(true);
+  });
+
+  it('should hash the same value as getPackageName', async () => {
+    const { getAnonymousPackageNameHash, getPackageName } = await import('./get-project-id');
+    const [hashed, raw] = await Promise.all([getAnonymousPackageNameHash(), getPackageName()]);
+
+    const expected = raw ? sha256(raw) : null;
+    expect(hashed).toBe(expected);
+  });
+});
+
+describe('getAnonymousRootPathHash (integration)', () => {
+  it('should return a valid SHA-256 hex string', async () => {
+    const { getAnonymousRootPathHash } = await import('./get-project-id');
+    const result = await getAnonymousRootPathHash();
+
+    expect(result).toMatch(/^[a-f0-9]{64}$/);
   });
 });
 

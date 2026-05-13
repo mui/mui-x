@@ -37,8 +37,10 @@ function EditStatus(props: GridRenderEditCellParams<any, string>) {
       inputRef={inputRef}
       MenuProps={{
         onClose: handleSelectMenuClose,
-        MenuListProps: {
-          onKeyDown: handleSelectMenuListKeyDown,
+        slotProps: {
+          list: {
+            onKeyDown: handleSelectMenuListKeyDown,
+          },
         },
       }}
       sx={{

@@ -158,6 +158,7 @@ export default function DynamicResourceProperty() {
           onEventsChange={setEvents}
           view="day"
           views={['day']}
+          defaultPreferences={{ isSidePanelOpen: false }}
         />
       </div>
     </Stack>

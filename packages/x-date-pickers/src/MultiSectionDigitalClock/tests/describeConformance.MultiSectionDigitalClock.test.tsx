@@ -14,6 +14,6 @@ describe('<MultiSectionDigitalClock /> - Describe Conformance', () => {
     render,
     muiName: 'MuiMultiSectionDigitalClock',
     refInstanceof: window.HTMLDivElement,
-    skip: ['componentProp', 'componentsProp', 'themeVariants'],
+    skip: ['componentProp', 'themeVariants'],
   }));
 });

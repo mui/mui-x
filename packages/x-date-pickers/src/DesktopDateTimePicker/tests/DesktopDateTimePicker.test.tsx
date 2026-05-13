@@ -5,9 +5,8 @@ import {
   adapterToUse,
   createPickerRenderer,
   openPicker,
-  openPickerAsync,
   getFieldSectionsContainer,
-  expectFieldValueV7,
+  expectFieldValue,
 } from 'test/utils/pickers';
 
 describe('<DesktopDateTimePicker />', () => {
@@ -40,7 +39,7 @@ describe('<DesktopDateTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-time' });
+      await openPicker(user, { type: 'date-time' });
 
       // Select year
       await user.click(screen.getByRole('radio', { name: '2025' }));
@@ -86,7 +85,7 @@ describe('<DesktopDateTimePicker />', () => {
       />,
     );
 
-    openPicker({ type: 'date-time' });
+    await openPicker(user, { type: 'date-time' });
 
     // Change the date multiple times to check that Picker doesn't close after cycling through all views internally
     await user.click(screen.getByRole('gridcell', { name: '2' }));
@@ -125,7 +124,7 @@ describe('<DesktopDateTimePicker />', () => {
       <DesktopDateTimePicker referenceDate={adapterToUse.date('2018-01-10')} />,
     );
 
-    await openPickerAsync(user, { type: 'date-time' });
+    await openPicker(user, { type: 'date-time' });
 
     const day = screen.getByRole('gridcell', { name: '10' });
     expect(day).toHaveFocus();
@@ -142,7 +141,7 @@ describe('<DesktopDateTimePicker />', () => {
     const meridiem = screen.getByRole('option', { name: 'AM' });
     expect(meridiem).toHaveFocus();
     const sectionsContainer = getFieldSectionsContainer();
-    expectFieldValueV7(sectionsContainer, '01/10/2018 12:00 AM');
+    expectFieldValue(sectionsContainer, '01/10/2018 12:00 AM');
   });
 
   describe('prop: timeSteps', () => {

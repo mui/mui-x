@@ -1,6 +1,6 @@
 import * as React from 'react';
-import ApiPage from 'docs/src/modules/components/ApiPage';
-import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
+import { ApiPage } from '@mui/internal-core-docs/ApiPage';
+import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
 import jsonPageContent from './desktop-date-time-range-picker.json';
 
 export default function Page(props) {
@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/date-pickers/desktop-date-time-range-picker',
+    'docs/translations/api-docs/date-pickers/desktop-date-time-range-picker',
     false,
     /\.\/desktop-date-time-range-picker.*\.json$/,
   );

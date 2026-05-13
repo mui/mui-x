@@ -5,13 +5,13 @@ import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps, dialogClasses } from '@mui/material/Dialog';
 import { backdropClasses } from '@mui/material/Backdrop';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useDraggableDialog } from '@mui/x-scheduler-headless/use-draggable-dialog';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { useDraggableDialog } from '@mui/x-scheduler-internals/use-draggable-dialog';
 import {
   EventDialogProps,
   EventDialogProviderProps,
@@ -125,7 +125,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   const { style, anchorRef, occurrence, onClose, open, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
-  const { classes } = useEventDialogStyledContext();
+  const { schedulerId, classes } = useEventDialogStyledContext();
 
   // Selector hooks
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
@@ -139,7 +139,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
       open={open}
       onClose={onClose}
       PaperComponent={PaperComponent}
-      aria-labelledby="event-dialog-title"
+      aria-labelledby={`${schedulerId}-event-dialog-title`}
       aria-modal="false"
       className={classes.eventDialog}
       slotProps={{

@@ -23,6 +23,10 @@ export function setupFakeClock(shouldAdvanceTime = true) {
     // We need to let time advance to use `useDemoData`, but on the pickers
     // test it makes the tests flaky
     shouldAdvanceTime,
+    // Allows cancelAnimationFrame to clear native (pre-fake-clock) animation frames
+    // without throwing a warning. Needed for streaming demos that schedule rAFs before
+    // fake timers are installed.
+    shouldClearNativeTimers: true,
   });
 
   return restoreFakeClock;

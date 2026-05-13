@@ -77,6 +77,12 @@
     { "name": "baseButton", "description": "", "class": null },
     { "name": "baseIconButton", "description": "", "class": null },
     {
+      "name": "baseToggleButton",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps>`.",
+      "class": null
+    },
+    { "name": "baseToggleButtonGroup", "description": "", "class": null },
+    {
       "name": "loadingOverlay",
       "description": "Overlay component rendered when the chart is in a loading state.",
       "default": "ChartsLoadingOverlay",

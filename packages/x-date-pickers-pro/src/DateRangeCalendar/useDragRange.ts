@@ -1,10 +1,16 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { getTarget, isHTMLElement } from '@mui/x-internals/domUtils';
 import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
 import { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import { RangePosition } from '../models';
 import { isEndOfRange, isStartOfRange } from '../internals/utils/date-utils';
+
+const isEnabledButtonElement = (element: Element | null): element is HTMLButtonElement =>
+  isHTMLElement(element) &&
+  element.tagName === 'BUTTON' &&
+  !(element as HTMLButtonElement).disabled;
 
 interface UseDragRangeParams {
   disableDragEditing?: boolean;
@@ -36,35 +42,96 @@ interface UseDragRangeResponse extends UseDragRangeEvents {
   draggingDatePosition: RangePosition | null;
 }
 
+/**
+ * Finds the closest ancestor element (or the element itself) that has the specified data attribute.
+ * This is needed because drag/touch events can target child elements (e.g., text spans)
+ * inside the button, which don't have the data attributes directly.
+ *
+ * @param element The element to start searching from.
+ * @param dataAttribute The data attribute name — must be a single lowercase word
+ *   (e.g., 'timestamp', 'position') because `dataset[attr]` uses camelCase
+ *   while `.closest()` uses kebab-case, and these only align for single-word names.
+ */
+const getClosestElementWithDataAttribute = (
+  element: HTMLElement | null,
+  dataAttribute: string,
+): HTMLElement | null => {
+  if (!element) {
+    return null;
+  }
+  return element.dataset[dataAttribute] != null
+    ? element
+    : element.closest<HTMLElement>(`[data-${dataAttribute}]`);
+};
+
 const resolveDateFromTarget = (
-  target: EventTarget,
+  target: EventTarget | null,
   adapter: MuiPickersAdapter,
   timezone: PickersTimezone,
 ) => {
-  const timestampString = (target as HTMLElement).dataset.timestamp;
+  if (!isHTMLElement(target)) {
+    return null;
+  }
+
+  const element = getClosestElementWithDataAttribute(target, 'timestamp');
+  const timestampString = element?.dataset.timestamp;
   if (!timestampString) {
     return null;
   }
-  const timestamp = +timestampString;
+
+  const timestamp = Number(timestampString);
   return adapter.date(new Date(timestamp).toISOString(), timezone);
 };
 
 const isSameAsDraggingDate = (event: React.DragEvent<HTMLButtonElement>) => {
-  const timestampString = (event.target as HTMLButtonElement).dataset.timestamp;
-  return timestampString === event.dataTransfer.getData('draggingDate');
+  const target = getTarget(event.nativeEvent);
+  if (!isHTMLElement(target)) {
+    return false;
+  }
+  const element = getClosestElementWithDataAttribute(target, 'timestamp');
+  return element?.dataset.timestamp === event.dataTransfer.getData('draggingDate');
 };
 
+/**
+ * Resolves a button element from a given element.
+ * Searches both upward (ancestors) and downward (children) since:
+ * - Touch events may target child elements inside the button (e.g., TouchRipple)
+ * - `elementFromPoint` may return wrapper divs containing the button
+ */
 const resolveButtonElement = (element: Element | null): HTMLButtonElement | null => {
-  if (element) {
-    if (element instanceof HTMLButtonElement && !element.disabled) {
-      return element;
-    }
-    if (element.children.length) {
-      return resolveButtonElement(element.children[0]);
-    }
+  if (!element) {
     return null;
   }
-  return element;
+
+  // Check if element itself is a valid button
+  if (isEnabledButtonElement(element)) {
+    return element;
+  }
+
+  // Search upward - element could be a child of the button (e.g., text span, TouchRipple)
+  const closestButton = element.closest('button');
+  if (isEnabledButtonElement(closestButton)) {
+    return closestButton;
+  }
+
+  // Search downward (breadth-first, max 3 levels) - element could be a wrapper containing the button.
+  // Day cells have shallow DOM, so a small depth limit keeps this efficient.
+  const queue: Array<{ el: Element; depth: number }> = Array.from(element.children).map((el) => ({
+    el,
+    depth: 1,
+  }));
+  const maxDepth = 3;
+  while (queue.length > 0) {
+    const { el: current, depth } = queue.shift()!;
+    if (isEnabledButtonElement(current)) {
+      return current;
+    }
+    if (depth < maxDepth) {
+      queue.push(...Array.from(current.children).map((el) => ({ el, depth: depth + 1 })));
+    }
+  }
+
+  return null;
 };
 
 const resolveElementFromTouch = (
@@ -120,7 +187,7 @@ const useDragRangeEvents = ({
   };
 
   const handleDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
-    const newDate = resolveDateFromTarget(event.target, adapter, timezone);
+    const newDate = resolveDateFromTarget(getTarget(event.nativeEvent), adapter, timezone);
     if (!isElementDraggable(newDate)) {
       return;
     }
@@ -132,11 +199,14 @@ const useDragRangeEvents = ({
     setRangeDragDay(newDate);
     event.dataTransfer.effectAllowed = 'move';
     setIsDragging(true);
-    const buttonDataset = (event.target as HTMLButtonElement).dataset;
-    if (buttonDataset.timestamp) {
+    // Use currentTarget (the element the handler is attached to) rather than target
+    // because we need the button's dataset, not a potential child element's dataset.
+    const element = getClosestElementWithDataAttribute(event.currentTarget, 'timestamp');
+    const buttonDataset = element?.dataset;
+    if (buttonDataset?.timestamp) {
       event.dataTransfer.setData('draggingDate', buttonDataset.timestamp);
     }
-    if (buttonDataset.position) {
+    if (buttonDataset?.position) {
       onDatePositionChange(buttonDataset.position as RangePosition);
     }
   });
@@ -163,7 +233,7 @@ const useDragRangeEvents = ({
     event.preventDefault();
     event.stopPropagation();
     event.dataTransfer.dropEffect = 'move';
-    setRangeDragDay(resolveDateFromTarget(event.target, adapter, timezone));
+    setRangeDragDay(resolveDateFromTarget(getTarget(event.nativeEvent), adapter, timezone));
   });
 
   const handleTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
@@ -186,9 +256,11 @@ const useDragRangeEvents = ({
     // on mobile we should only initialize dragging state after move is detected
     setIsDragging(true);
 
-    const button = event.target as HTMLButtonElement;
-    const buttonDataset = button.dataset;
-    if (buttonDataset.position) {
+    // Use currentTarget (the element the handler is attached to) rather than target
+    // because we need the button's dataset, not a potential child element's dataset.
+    const element = getClosestElementWithDataAttribute(event.currentTarget, 'position');
+    const buttonDataset = element?.dataset;
+    if (buttonDataset?.position) {
       onDatePositionChange(buttonDataset.position as RangePosition);
     }
   });
@@ -258,7 +330,7 @@ const useDragRangeEvents = ({
     if (isSameAsDraggingDate(event)) {
       return;
     }
-    const newDate = resolveDateFromTarget(event.target, adapter, timezone);
+    const newDate = resolveDateFromTarget(getTarget(event.nativeEvent), adapter, timezone);
     if (newDate) {
       onDrop(newDate);
     }

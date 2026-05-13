@@ -42,7 +42,7 @@ globalThis.__MUI_X_TELEMETRY_DISABLED__ = true; // disabled
 
 The postinstall script writes to two places:
 
-1. **`<pkg-root>/context.js` + `<pkg-root>/context.mjs`** — all traits (`machineId`, `projectId`, `anonymousId`, `sessionId`, `isDocker`, `isCI`). Lives inside `node_modules` and gets regenerated on each install.
+1. **`<pkg-root>/context.js` + `<pkg-root>/context.mjs`** — all traits (`machineId`, `repoHash`, `postinstallPackageNameHash`, `rootPathHash`, `projectId`, `anonymousId`, `sessionId`, `isDocker`, `isCI`). Lives inside `node_modules` and gets regenerated on each install.
 2. **Platform-specific config directory** — persists `anonymousId` and `notifiedAt` across reinstalls, so the `anonymousId` stays stable even if `node_modules` is wiped.
    - **macOS:** `~/Library/Preferences/mui-x/config.json`
    - **Windows:** `%APPDATA%\mui-x\Config\config.json`
@@ -87,10 +87,10 @@ rm -f packages/x-telemetry/build/context.js packages/x-telemetry/build/context.m
 # 4. Run postinstall from the temp directory
 cd /tmp/test-pkg && node /path/to/mui-x/packages/x-telemetry/build/postinstall/index.js
 
-# 5. Verify projectId matches sha256("my-test-app")
-grep projectId /path/to/mui-x/packages/x-telemetry/build/context.js
+# 5. Verify postinstallPackageNameHash and projectId match sha256("my-test-app")
+grep -E 'postinstallPackageNameHash|projectId' /path/to/mui-x/packages/x-telemetry/build/context.js
 echo -n "my-test-app" | shasum -a 256
-# Both should output the same hash
+# postinstallPackageNameHash and projectId should both match the hash
 
 # 6. Go back to the repo and clean up
 cd /path/to/mui-x
@@ -107,13 +107,16 @@ pnpm --filter @mui/x-telemetry run build
 node -e "
   process.env.npm_package_name = 'my-test-app';
   import('./packages/x-telemetry/build/runtime/get-context.mjs').then(m =>
-    m.default().then(ctx => console.log('projectId:', ctx.traits.projectId))
+    m.default().then(ctx => {
+      console.log('runtimePackageNameHash:', ctx.traits.runtimePackageNameHash);
+      console.log('projectId:', ctx.traits.projectId);
+    })
   );
 "
 
-# 3. Verify the hash matches sha256("my-test-app")
+# 3. Verify runtimePackageNameHash matches sha256("my-test-app")
 echo -n "my-test-app" | shasum -a 256
-# Both should output: 04a0c785...
+# runtimePackageNameHash should output: 04a0c785...
 ```
 
 ### Testing the runtime fallback (browser fetch)

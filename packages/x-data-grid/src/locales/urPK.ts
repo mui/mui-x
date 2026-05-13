@@ -68,7 +68,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'آپریٹر',
   filterPanelOperatorAnd: 'اور',
   filterPanelOperatorOr: 'یا',
-  filterPanelColumns: 'کالمز',
+  filterPanelColumn: 'کالمز',
   filterPanelInputLabel: 'ویلیو',
   filterPanelInputPlaceholder: 'ویلیو کو فلٹر کریں',
 

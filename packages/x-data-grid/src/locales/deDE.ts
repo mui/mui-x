@@ -75,7 +75,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Operatoren',
   filterPanelOperatorAnd: 'Und',
   filterPanelOperatorOr: 'Oder',
-  filterPanelColumns: 'Spalten',
+  filterPanelColumn: 'Spalten',
   filterPanelInputLabel: 'Wert',
   filterPanelInputPlaceholder: 'Wert filtern',
 

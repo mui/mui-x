@@ -1,0 +1,54 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "variant": {
+      "description": "The visual variant of the conversation list. - <code>&#39;default&#39;</code> – shows avatar, title, preview, timestamp, and unread badge. - <code>&#39;compact&#39;</code> – shows only a small unread indicator, the title, and an actions button."
+    }
+  },
+  "classDescriptions": {
+    "compact": { "description": "Applied when variant=&quot;compact&quot;" },
+    "item": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the list item element"
+    },
+    "itemActions": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item actions element"
+    },
+    "itemAvatar": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item avatar element"
+    },
+    "itemContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item content element"
+    },
+    "itemFocused": { "description": "Applied to a focused conversation item" },
+    "itemPreview": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item preview element"
+    },
+    "itemSelected": { "description": "Applied to a selected conversation item" },
+    "itemTimestamp": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item timestamp element"
+    },
+    "itemTitle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item title element"
+    },
+    "itemUnread": { "description": "Applied to an unread conversation item" },
+    "itemUnreadBadge": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the item unread badge element"
+    },
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the conversation list root element"
+    },
+    "scroller": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the scroller element"
+    }
+  }
+}

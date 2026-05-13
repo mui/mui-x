@@ -68,7 +68,7 @@ const isISGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Virkir',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eða',
-  filterPanelColumns: 'Dálkar',
+  filterPanelColumn: 'Dálkar',
   filterPanelInputLabel: 'Gildi',
   filterPanelInputPlaceholder: 'Síu gildi',
 

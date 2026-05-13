@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { EventCalendarProvider as HeadlessEventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { useId } from '@base-ui/utils/useId';
+import { EventCalendarProvider as UnstyledEventCalendarProvider } from '@mui/x-scheduler-internals/event-calendar-provider';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 import { EventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
 import { EventDialogStyledContext } from './event-dialog/EventDialogStyledContext';
@@ -23,27 +24,36 @@ const StandaloneViewRoot = styled('div', {
   },
 }));
 
-const calendarStyledValue = {
-  classes: eventCalendarClasses,
-  localeText: EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
-};
-const dialogStyledValue = {
-  classes: eventCalendarClasses,
-  localeText: EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
-};
-
 export function EventCalendarProvider<TEvent extends object, TResource extends object>(
-  props: HeadlessEventCalendarProvider.Props<TEvent, TResource>,
+  props: UnstyledEventCalendarProvider.Props<TEvent, TResource>,
 ) {
   const { children, ...other } = props;
+  const schedulerId = useId();
+
+  const calendarStyledValue = React.useMemo(
+    () => ({
+      schedulerId,
+      classes: eventCalendarClasses,
+      localeText: EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
+    }),
+    [schedulerId],
+  );
+  const dialogStyledValue = React.useMemo(
+    () => ({
+      schedulerId,
+      classes: eventCalendarClasses,
+      localeText: EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
+    }),
+    [schedulerId],
+  );
 
   return (
-    <HeadlessEventCalendarProvider {...other}>
+    <UnstyledEventCalendarProvider {...other}>
       <EventCalendarStyledContext.Provider value={calendarStyledValue}>
         <EventDialogStyledContext.Provider value={dialogStyledValue}>
           <StandaloneViewRoot>{children}</StandaloneViewRoot>
         </EventDialogStyledContext.Provider>
       </EventCalendarStyledContext.Provider>
-    </HeadlessEventCalendarProvider>
+    </UnstyledEventCalendarProvider>
   );
 }

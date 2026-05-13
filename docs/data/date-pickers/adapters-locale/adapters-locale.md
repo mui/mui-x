@@ -164,7 +164,7 @@ Here is the list of the currently supported formats:
 - The hours
   - ✅ 0-based 12-hours values (for example, `03`)
   - ✅ 0-based 24-hours values (for example, `15`)
-  - ❌ 1-based values (for example, `24` instead of `00`)
+  - ⚠️ 1-based values are currently only supported with the date-fns and Moment.js adapters (for example, `24` instead of `00`)
 
 - The minutes
 
@@ -241,10 +241,6 @@ This prop is available on all pickers.
 Use `dayOfWeekFormatter` to customize day names in the calendar header.
 This prop takes two parameters, `day` (a string with the name of the day) and `date` (the day in the format of your date library), and returns the formatted string to display.
 The default formatter only keeps the first letter of the name and capitalizes it.
-
-:::warning
-The first parameter `day` will be removed in v7 in favor of the second parameter `date` for more flexibility.
-:::
 
 :::info
 This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.

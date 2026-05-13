@@ -74,7 +74,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Opérateur',
   filterPanelOperatorAnd: 'Et',
   filterPanelOperatorOr: 'Ou',
-  filterPanelColumns: 'Colonne',
+  filterPanelColumn: 'Colonne',
   filterPanelInputLabel: 'Valeur',
   filterPanelInputPlaceholder: 'Filtrer la valeur',
 

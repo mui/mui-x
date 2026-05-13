@@ -34,13 +34,7 @@ describe('<PickersRangeCalendarHeader /> - Describe Conformance', () => {
         render,
         muiName: 'MuiPickersRangeCalendarHeader',
         refInstanceof: window.HTMLDivElement,
-        skip: [
-          'componentProp',
-          'componentsProp',
-          'themeVariants',
-          'themeDefaultProps',
-          'themeStyleOverrides',
-        ],
+        skip: ['componentProp', 'themeVariants', 'themeDefaultProps', 'themeStyleOverrides'],
       }),
     );
   });

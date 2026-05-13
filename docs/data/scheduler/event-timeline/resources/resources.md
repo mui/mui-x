@@ -3,13 +3,14 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
+components: EventTimelinePremium
 ---
 
 # Event Timeline - Resources
 
-<p class="description">Define the properties of your events.</p>
+<p class="description">Organize events by assigning them to resources in the Event Timeline.</p>
 
-{{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
+{{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
 ## Define resources
 
@@ -29,9 +30,7 @@ const resources = [
 <EventTimelinePremium events={events} resources={resources} />;
 ```
 
-:::success
 On the Event Timeline, events without resource are not rendered at all.
-:::
 
 ## Nested resources
 
@@ -65,7 +64,6 @@ A resource is visible if not in the object or if set to `true`.
 
 {{"demo": "DefaultVisibleResources.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
 You can also control the visible resources using `visibleResources` and `onVisibleResourcesChange` props:
 
 ```tsx
@@ -81,18 +79,16 @@ return (
 );
 ```
 
-:::
-
 ## Resource properties
 
 ### Color
 
 Use the `eventColor` property to define a resource's color.
-Here is the list of all the available color palettes:
+The available color palettes are shown below:
 
 {{"demo": "ColorPalettes.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
+:::info
 Event colors can also be defined on the event or at the component levels.
 The effective color resolves in the following order:
 
@@ -142,9 +138,7 @@ const resource = {
 };
 ```
 
-:::success
-Learn more about _drag interactions_ in the [dedicated doc page](/x/react-scheduler/event-timeline/drag-interactions/).
-:::
+See [Drag interactions](/x/react-scheduler/event-timeline/drag-interactions/) for details.
 
 ### Read-only
 
@@ -157,9 +151,7 @@ const resource = {
 };
 ```
 
-:::success
-Learn more about _editing_ in the [dedicated doc page](/x/react-scheduler/event-timeline/editing/#read-only).
-:::
+See [Editing—Read-only](/x/react-scheduler/event-timeline/editing/#read-only) for details.
 
 ## Resource column label
 
@@ -167,9 +159,7 @@ Use the `resourceColumnLabel` prop to customize the header of the resource colum
 
 {{"demo": "ResourceColumnLabel.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::success
 When both are provided, `resourceColumnLabel` takes priority over `localeText.timelineResourceTitleHeader`.
-:::
 
 ## Store data in custom properties
 

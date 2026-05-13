@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import { HighlightedCode } from '@mui/docs/HighlightedCode';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Slider from '@mui/material/Slider';
@@ -19,8 +19,12 @@ export default function RangeBarBorderRadius() {
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
-      <Stack direction="row" spacing={4} flexWrap="wrap" justifyContent="center">
-        <Stack direction="column" spacing={1} flex={1}>
+      <Stack
+        direction="row"
+        spacing={4}
+        sx={{ flexWrap: 'wrap', justifyContent: 'center' }}
+      >
+        <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
           <Typography gutterBottom>Border Radius</Typography>
           <Slider
             value={radius}

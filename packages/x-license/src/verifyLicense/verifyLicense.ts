@@ -63,7 +63,7 @@ function decodeLicenseVersion1(license: string): NullableLicenseDetails {
     planVersion: 'initial',
     expiryTimestamp,
     expiryDate: expiryTimestamp ? new Date(expiryTimestamp) : null,
-    orderId,
+    orderId: orderId != null ? String(orderId) : null,
     appType: 'multi',
     quantity: null,
     isTestKey: license.includes('T=true'),
@@ -101,10 +101,7 @@ export function parseLicenseTokens(license: string, licenseInfo: NullableLicense
       }
 
       if (key === 'O') {
-        const orderNum = parseInt(value, 10);
-        if (orderNum && !Number.isNaN(orderNum)) {
-          licenseInfo.orderId = orderNum;
-        }
+        licenseInfo.orderId = value;
       }
 
       if (key === 'Q') {
@@ -246,6 +243,8 @@ export function verifyLicense({
   if (license.licenseModel === 'perpetual' || process.env.NODE_ENV === 'production') {
     const pkgTimestamp = parseInt(base64Decode(releaseDate), 10);
     if (Number.isNaN(pkgTimestamp)) {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         'MUI X: The release information is invalid and license validation cannot proceed. ' +
           'The package release timestamp could not be parsed. ' +
@@ -262,7 +261,7 @@ export function verifyLicense({
         license.licenseModel === 'perpetual' &&
         isPlanVersionOlderOrEqual(license.planVersion as string, MAX_V8_PLAN_VERSION)
       ) {
-        return { status: LICENSE_STATUS.NotValidForPackage };
+        return { status: LICENSE_STATUS.NotValidForPackage, meta: { packageMajorVersion } };
       }
       return { status: LICENSE_STATUS.ExpiredVersion };
     }
@@ -311,7 +310,7 @@ export function verifyLicense({
     license.licenseModel !== 'perpetual' &&
     isPlanVersionOlderOrEqual(license.planVersion as string, MAX_V8_PLAN_VERSION)
   ) {
-    return { status: LICENSE_STATUS.NotValidForPackage };
+    return { status: LICENSE_STATUS.NotValidForPackage, meta: { packageMajorVersion } };
   }
 
   return { status: LICENSE_STATUS.Valid };

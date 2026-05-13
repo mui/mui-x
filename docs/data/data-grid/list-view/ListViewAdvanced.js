@@ -77,7 +77,10 @@ const columns = [
     hideable: false,
     renderCell: (params) => {
       return (
-        <Stack direction="row" gap={1.5} alignItems="center" sx={{ height: '100%' }}>
+        <Stack
+          direction="row"
+          sx={{ gap: 1.5, alignItems: 'center', height: '100%' }}
+        >
           <FileIcon type={params.row.type} />
           {params.value}
         </Stack>
@@ -91,7 +94,7 @@ const columns = [
     renderCell: (params) => {
       const avatarProps = stringAvatar(params.value);
       return (
-        <Stack direction="row" gap={1.5} alignItems="center">
+        <Stack direction="row" sx={{ gap: 1.5, alignItems: 'center' }}>
           <Avatar
             {...avatarProps}
             sx={{ width: 24, height: 24, fontSize: 12, ...avatarProps.sx }}
