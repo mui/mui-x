@@ -56,6 +56,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   startDateAfterEndDateError: 'Startdato/-tid må være før sluttdato/-tid.',
   startDateLabel: 'Startdato',
   startTimeLabel: 'Starttidspunkt',
+
   // ScopeDialog
   all: 'Alle hendelser',
   cancel: 'Avbryt',
@@ -69,6 +70,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
 const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
   // ResourcesTree
   resourcesLabel: 'Ressurser',
+
   // ViewSwitcher
   agenda: 'Agenda',
   day: 'Dag',
@@ -81,9 +83,11 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   months: 'Måneder',
   weeks: 'Uker',
   years: 'År',
+
   // DateNavigator
   closeSidePanel: 'Lukk sidepanel',
   openSidePanel: 'Åpne sidepanel',
+
   // Preferences menu
   amPm12h: '12-timer (1:00PM)',
   hour24h: '24-timer (13:00)',
@@ -93,8 +97,10 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Vis ukenummer',
   timeFormat: 'Tidsformat',
   viewSpecificOptions: (view) => `${view} visningsalternativer`,
+
   // WeekView
   allDay: 'Hele dagen',
+
   // MonthView
   hiddenEvents: (hiddenEventsCount) => `${hiddenEventsCount} til..`,
   nextTimeSpan: (timeSpan) => `Neste ${timeSpan}`,
@@ -102,12 +108,15 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   resourceAriaLabel: (resourceName) => `Ressurs: ${resourceName}`,
   weekAbbreviation: 'U',
   weekNumberAriaLabel: (weekNumber) => `Uke ${weekNumber}`,
+
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Slutter ${endDate}`,
+
   // MiniCalendar
   miniCalendarLabel: 'Kalender',
   miniCalendarGoToPreviousMonth: 'Vis forrige måned i kalender',
   miniCalendarGoToNextMonth: 'Vis neste måned i kalender',
+
   // Timeline title sub grid
   timelineResourceTitleHeader: 'Ressurstittel',
 };
