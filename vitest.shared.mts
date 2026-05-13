@@ -111,8 +111,6 @@ export default defineConfig({
     // Performance improvements for the tests.
     // https://vitest.dev/guide/improving-performance.html#improving-performance
     ...(process.env.CI && {
-      // Important to avoid timeouts on CI.
-      fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.
       // Tests run ~3x slower under React 19 stable than React 18 (CPU-bound,
       // mostly @testing-library/user-event async timing); the slowest legitimate
