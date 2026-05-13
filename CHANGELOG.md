@@ -92,6 +92,7 @@ Internal changes.
 ### Docs
 
 - [docs] Document the RadialBarChart (#22320) @alexfauquette
+- [docs] Add radial bar to the nav bar (#22429) @alexfauquette
 
 ### Miscellaneous
 
