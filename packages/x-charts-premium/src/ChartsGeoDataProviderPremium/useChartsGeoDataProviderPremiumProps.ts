@@ -12,8 +12,11 @@ import {
   GEO_PREMIUM_PLUGINS,
   type GeoPremiumPluginSignatures,
 } from './ChartsGeoDataProviderPremium.plugins';
+import { mapShapeSeriesConfig } from '../MapShapeSeries/seriesConfig';
 
-const GEO_PREMIUM_SERIES_CONFIG: ChartSeriesConfig<never> = {};
+const GEO_PREMIUM_SERIES_CONFIG: ChartSeriesConfig<'mapShape'> = {
+  mapShape: mapShapeSeriesConfig,
+};
 
 export const useChartsGeoDataProviderPremiumProps = <
   SeriesType extends ChartSeriesType = ChartSeriesType,
