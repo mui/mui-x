@@ -26,8 +26,5 @@ export default mergeConfig(sharedConfig, {
     name: getTestName(import.meta.url),
     environment: 'jsdom',
     setupFiles: [fileURLToPath(new URL('../../test/utils/setupPickers.js', import.meta.url))],
-    // `*.browser.*.test.tsx` files static-import `@vitest/browser/context`,
-    // which throws when loaded outside the browser pool.
-    exclude: ['**/*.browser.*.test.tsx'],
   },
 });

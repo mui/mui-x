@@ -8,6 +8,7 @@ import {
   buildFieldInteractions,
   adapterToUse,
 } from 'test/utils/pickers';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DateField /> - Selection', () => {
   const { render } = createPickerRenderer();
@@ -94,9 +95,29 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
 
-    // The "click on an ancestor outside the field root" test lives in
-    // `selection.browser.DateField.test.tsx` because it requires trusted
-    // pointer events that only `@vitest/browser/context` can dispatch.
+    // Chromium delegates focus from a non-contenteditable ancestor click onto
+    // the nearest contenteditable descendant — but only for trusted pointer
+    // events. We use vitest's CDP-backed `userEvent` here; synthetic events
+    // skip default actions and would let the test pass regardless.
+    it.skipIf(isJSDOM)(
+      'should not focus any section when clicking on an ancestor outside the field root',
+      async () => {
+        // `display: flex; width: 100%` lets the field keep its natural width
+        // and leaves blank space to its right inside the wrapper. The center
+        // of the wrapper (where userEvent clicks) lands in that blank space.
+        render(
+          <div data-testid="flex-wrapper" style={{ display: 'flex', width: '100%' }}>
+            <DateField />
+          </div>,
+        );
+
+        const { userEvent } = await import('@vitest/browser/context');
+        await userEvent.click(screen.getByTestId('flex-wrapper'));
+
+        expect(getCleanedSelectedContent()).to.equal('');
+        expect(document.activeElement?.getAttribute('role')).not.to.equal('spinbutton');
+      },
+    );
   });
 
   describe('key: Ctrl + A', () => {
