@@ -2,12 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 import { Chance } from 'chance';
 import { ScatterChartPremium } from '@mui/x-charts-premium/ScatterChartPremium';
-import { useStore, selectorChartSeriesStatus } from '@mui/x-charts/internals';
 
 const CLUSTER_SIZE = 333_334;
 const POINT_COUNT = CLUSTER_SIZE * 3;
@@ -37,10 +33,6 @@ function buildCluster(rng, centerX, centerY, spread, count, xs, ys, offset) {
 }
 
 function buildColumnar(seed, center) {
-  // One SharedArrayBuffer per cluster (8 bytes per Float64). Allocating a
-  // fresh buffer set per series keeps each cluster mutable independently if
-  // we want to tweak it later, and keeps the per-buffer transfer overhead
-  // low.
   const byteLength = CLUSTER_SIZE * Float64Array.BYTES_PER_ELEMENT;
   const xBuffer = allocateBuffer(byteLength);
   const yBuffer = allocateBuffer(byteLength);
@@ -118,38 +110,9 @@ if (typeof window !== 'undefined' && !window[WORKER_FLAG]) {
   window[WORKER_FLAG] = new Worker(new URL('./chartsWorker.ts', import.meta.url));
 }
 
-function StatusObserver({ onStatus }) {
-  const store = useStore();
-  const status = store.use(selectorChartSeriesStatus);
-  React.useEffect(() => {
-    onStatus(status);
-  }, [status, onStatus]);
-  const colorMap = {
-    idle: 'default',
-    pending: 'warning',
-    success: 'success',
-    error: 'error',
-  };
-  return (
-    <Chip
-      label={`series.status: ${status}`}
-      color={colorMap[status]}
-      size="small"
-      sx={{ fontFamily: 'monospace' }}
-    />
-  );
-}
-
 export default function ScatterAsyncProcessing() {
   const [variant, setVariant] = React.useState(0);
-  const [log, setLog] = React.useState([]);
   const series = seriesVariants[variant];
-
-  const appendLog = React.useCallback((status) => {
-    const ms = String(Date.now() % 1000).padStart(3, '0');
-    const timestamp = `${new Date().toLocaleTimeString('en-US', { hour12: false })}.${ms}`;
-    setLog((prev) => [...prev.slice(-19), `${timestamp}  ${status}`]);
-  }, []);
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
@@ -178,9 +141,6 @@ export default function ScatterAsyncProcessing() {
         >
           Rapid reshuffle (3×)
         </Button>
-        <Button variant="text" size="small" onClick={() => setLog([])}>
-          Clear log
-        </Button>
       </Stack>
       <Box sx={{ width: '100%', height: 420, position: 'relative' }}>
         <ScatterChartPremium
@@ -194,31 +154,8 @@ export default function ScatterAsyncProcessing() {
               sx: { justifyContent: 'center' },
             },
           }}
-        >
-          <foreignObject x={8} y={8} width={260} height={32}>
-            <StatusObserver onStatus={appendLog} />
-          </foreignObject>
-        </ScatterChartPremium>
+        />
       </Box>
-      <Paper variant="outlined" sx={{ p: 1.5 }}>
-        <Typography variant="caption" color="text.secondary">
-          status transitions (newest at bottom)
-        </Typography>
-        <Box
-          component="pre"
-          sx={{
-            m: 0,
-            mt: 1,
-            fontFamily: 'monospace',
-            fontSize: 12,
-            lineHeight: 1.4,
-          }}
-        >
-          {log.length === 0
-            ? '(no transitions yet — click "Reshuffle")'
-            : log.join('\n')}
-        </Box>
-      </Paper>
     </Stack>
   );
 }
