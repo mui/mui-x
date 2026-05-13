@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { feature } from 'topojson-client';
 import countriesTopology from 'world-atlas/countries-110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
-import { GeoDataPlot } from '@mui/x-charts-premium/GeoDataPlot';
+import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 
 const countries = feature(countriesTopology, 'countries');
@@ -15,9 +15,20 @@ export default function BasicGeoDataPlot() {
         geoData={countries}
         projection="naturalEarth1"
         height={420}
+        series={[
+          {
+            type: 'mapShape',
+            data: countries.features.map((feature) => ({
+              name: feature.properties?.name,
+              color: `hsl(${Math.random() * 360}, 50%, 70%)`,
+
+            })),
+          },
+        ]}
       >
         <ChartsSurface>
           <GeoDataPlot fill="#1976d2" stroke="#0d47a1" />
+          <MapShapePlot />
         </ChartsSurface>
       </ChartsGeoDataProviderPremium>
     </Box>

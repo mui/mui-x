@@ -19,7 +19,7 @@ export interface MapShapeValueType {
   /**
    * Numeric value associated with the feature.
    */
-  value: number;
+  value?: number;
   /**
    * Label used in legends and tooltips.
    */

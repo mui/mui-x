@@ -25,7 +25,6 @@ export interface GeoDataPlotProps {
 
 /**
  * Renders the registered `geoData` as SVG paths, using the registered `projection`
- * fitted to the chart's drawing area.
  */
 function GeoDataPlot(props: GeoDataPlotProps) {
   const { className, fill = 'currentColor', stroke = 'none', strokeWidth = 1 } = props;

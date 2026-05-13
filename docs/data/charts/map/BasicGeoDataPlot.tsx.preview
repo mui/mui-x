@@ -5,5 +5,6 @@
 >
   <ChartsSurface>
     <GeoDataPlot fill="#1976d2" stroke="#0d47a1" />
+    <MapShapePlot />
   </ChartsSurface>
 </ChartsGeoDataProviderPremium>

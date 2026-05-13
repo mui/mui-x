@@ -9,3 +9,4 @@ export * from './useRangeBarSeries';
 export * from './useOHLCSeries';
 export * from './useProjection';
 export * from './useGeoData';
+export * from './useGeoFeatureIndexByName';

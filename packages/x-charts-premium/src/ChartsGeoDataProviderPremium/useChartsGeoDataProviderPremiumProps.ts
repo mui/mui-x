@@ -12,7 +12,7 @@ import {
   GEO_PREMIUM_PLUGINS,
   type GeoPremiumPluginSignatures,
 } from './ChartsGeoDataProviderPremium.plugins';
-import { mapShapeSeriesConfig } from '../MapShapeSeries/seriesConfig';
+import { mapShapeSeriesConfig } from '../Map/seriesConfig';
 
 const GEO_PREMIUM_SERIES_CONFIG: ChartSeriesConfig<'mapShape'> = {
   mapShape: mapShapeSeriesConfig,
