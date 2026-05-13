@@ -8,6 +8,7 @@ import {
   buildFieldInteractions,
   adapterToUse,
 } from 'test/utils/pickers';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DateField /> - Selection', () => {
   const { render } = createPickerRenderer();
@@ -93,6 +94,28 @@ describe('<DateField /> - Selection', () => {
 
       expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
+
+    // Verifies the CSS gate that blocks Chromium's focus delegation onto
+    // contenteditable section spans when the field is idle. The delegation
+    // itself only fires on trusted pointer events (so it can't be exercised
+    // by synthetic events here), but the CSS rule that prevents it is
+    // checkable via computed styles. Needs real layout, so skip in JSDOM.
+    it.skipIf(isJSDOM)(
+      'should mark section content as read-only while the field is idle, preventing Chromium focus delegation',
+      async () => {
+        const view = renderWithProps({});
+        const sectionContent = view
+          .getSectionsContainer()
+          .querySelector<HTMLElement>('[role="spinbutton"]')!;
+
+        // Idle: read-only blocks delegation from non-section ancestors.
+        expect(getComputedStyle(sectionContent).webkitUserModify).to.equal('read-only');
+
+        // Focused: rule relaxes so editing works as expected.
+        await view.selectSection('month');
+        expect(getComputedStyle(sectionContent).webkitUserModify).to.equal('read-write');
+      },
+    );
   });
 
   describe('key: Ctrl + A', () => {
