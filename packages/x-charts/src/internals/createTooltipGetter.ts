@@ -1,8 +1,11 @@
 import { getLabel } from './getLabel';
-import type { ChartSeriesType } from '../models/seriesType/config';
-import type { TooltipGetter } from './plugins/corePlugins/useChartSeriesConfig';
+import type {
+  TooltipGetter,
+  TooltipGetterParams,
+  TooltipGetterResult,
+} from './plugins/corePlugins/useChartSeriesConfig';
 
-export interface CreateTooltipGetterOptions {
+interface CreateTooltipGetterOptions {
   /**
    * If `true`, returns `null` when the data value is `null` (used by bar/radialBar).
    * @default false
@@ -23,12 +26,12 @@ export interface CreateTooltipGetterOptions {
  * - `line` / `radialLine`: `{ includeMarkShape: true }`
  * - `bar` / `radialBar`: `{ skipNullValues: true }`
  */
-export function createTooltipGetter<T extends ChartSeriesType>(
-  options: CreateTooltipGetterOptions = {},
-): TooltipGetter<T> {
+export function createTooltipGetter<SeriesType extends 'line' | 'radialLine' | 'bar' | 'radialBar'>(
+  options: CreateTooltipGetterOptions,
+): TooltipGetter<SeriesType> {
   const { skipNullValues = false, includeMarkShape = false } = options;
 
-  return ((params: any) => {
+  return (params: TooltipGetterParams<SeriesType>): TooltipGetterResult<SeriesType> => {
     const { series, getColor, identifier } = params;
 
     if (!identifier || identifier.dataIndex === undefined) {
@@ -44,6 +47,7 @@ export function createTooltipGetter<T extends ChartSeriesType>(
 
     const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });
 
+    const canHaveMarkShape = series.type === 'line' || series.type === 'radialLine';
     return {
       identifier,
       color: getColor(identifier.dataIndex),
@@ -51,9 +55,10 @@ export function createTooltipGetter<T extends ChartSeriesType>(
       value,
       formattedValue,
       markType: series.labelMarkType,
-      ...(includeMarkShape && {
-        markShape: series.showMark ? series.shape : undefined,
-      }),
-    };
-  }) as TooltipGetter<T>;
+      ...(canHaveMarkShape &&
+        includeMarkShape && {
+          markShape: series.showMark ? series.shape : undefined,
+        }),
+    } as TooltipGetterResult<SeriesType>;
+  };
 }
