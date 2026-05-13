@@ -61,6 +61,7 @@ export * from './ChartsRenderer';
 export * from './ChartsDataProviderPremium';
 export * from './ChartsRadialDataProviderPremium';
 export * from './ChartsGeoDataProviderPremium';
+export * from './GeoDataPlot';
 export * from './ChartsContainerPremium';
 export * from './BarChartPremium';
 export * from './HeatmapPremium';
