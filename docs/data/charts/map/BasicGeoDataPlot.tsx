@@ -6,13 +6,13 @@ import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium }
 import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
+import { ChartsLegend } from '@mui/x-charts-premium/ChartsLegend';
 
 const countries = feature(
   countriesTopology as any,
   'countries',
 ) as unknown as ExtendedFeatureCollection;
 
-console.log([...countries.features.map((feature) => feature.properties?.name).sort()]);
 export default function BasicGeoDataPlot() {
   return (
     <Box sx={{ width: '100%', maxWidth: 800 }}>
@@ -23,6 +23,9 @@ export default function BasicGeoDataPlot() {
         series={[
           {
             type: 'mapShape',
+            label: 'World',
+            color: 'lightgray',
+            highlightScope: { highlight: 'item', fade: 'global' },
             data: countries.features.map((feature, index) => ({
               name: feature.properties?.name,
               color: `hsl(${(index / countries.features.length) * 360}, 50%, 70%)`,
@@ -30,8 +33,10 @@ export default function BasicGeoDataPlot() {
           },
           {
             type: 'mapShape',
+            label: 'European Union',
             id: 'EU',
             color: 'blue',
+            highlightScope: { highlight: 'item', fade: 'series' },
             data: [
               { name: 'Austria' },
               { name: 'Belgium' },
@@ -64,8 +69,9 @@ export default function BasicGeoDataPlot() {
           },
         ]}
       >
+        <ChartsLegend toggleVisibilityOnClick />
         <ChartsSurface>
-          <GeoDataPlot fill="#1976d2" stroke="#0d47a1" />
+          <GeoDataPlot fill="transparent" stroke="#0d47a1" />
           <MapShapePlot />
         </ChartsSurface>
       </ChartsGeoDataProviderPremium>

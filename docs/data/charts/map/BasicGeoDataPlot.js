@@ -6,8 +6,13 @@ import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium }
 import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 
+import { ChartsLegend } from '@mui/x-charts-premium/ChartsLegend';
+
 const countries = feature(countriesTopology, 'countries');
 
+console.log([
+  ...countries.features.map((feature) => feature.properties?.name).sort(),
+]);
 export default function BasicGeoDataPlot() {
   return (
     <Box sx={{ width: '100%', maxWidth: 800 }}>
@@ -18,14 +23,48 @@ export default function BasicGeoDataPlot() {
         series={[
           {
             type: 'mapShape',
-            data: countries.features.map((feature) => ({
+            data: countries.features.map((feature, index) => ({
               name: feature.properties?.name,
-              color: `hsl(${Math.random() * 360}, 50%, 70%)`,
-
+              color: `hsl(${(index / countries.features.length) * 360}, 50%, 70%)`,
             })),
+          },
+          {
+            type: 'mapShape',
+            id: 'EU',
+            color: 'blue',
+            data: [
+              { name: 'Austria' },
+              { name: 'Belgium' },
+              { name: 'Bulgaria' },
+              { name: 'Croatia' },
+              { name: 'Cyprus' },
+              { name: 'Czechia' },
+              { name: 'Denmark' },
+              { name: 'Estonia' },
+              { name: 'France' },
+              { name: 'Finland' },
+              { name: 'Germany' },
+              { name: 'Hungary' },
+              { name: 'Ireland' },
+              { name: 'Italy' },
+              { name: 'Latvia' },
+              { name: 'Lithuania' },
+              { name: 'Luxembourg' },
+              { name: 'Greece' },
+              { name: 'Malta' },
+              { name: 'Netherlands' },
+              { name: 'Poland' },
+              { name: 'Portugal' },
+              { name: 'Romania' },
+              { name: 'Slovakia' },
+              { name: 'Slovenia' },
+              { name: 'Spain' },
+              { name: 'Sweden' },
+            ],
           },
         ]}
       >
+        <ChartsLegend toggleVisibilityOnClick />
         <ChartsSurface>
           <GeoDataPlot fill="#1976d2" stroke="#0d47a1" />
           <MapShapePlot />

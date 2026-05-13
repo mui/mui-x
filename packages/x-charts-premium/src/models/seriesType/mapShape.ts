@@ -1,8 +1,4 @@
-import type {
-  CommonSeriesType,
-  CommonDefaultizedProps,
-  SeriesId,
-} from '@mui/x-charts/internals';
+import type { CommonSeriesType, CommonDefaultizedProps, SeriesId } from '@mui/x-charts/internals';
 import type { DefaultizedProps } from '@mui/x-internals/types';
 
 /**
@@ -30,8 +26,10 @@ export interface MapShapeValueType {
   color?: string;
 }
 
-export interface MapShapeSeriesType
-  extends Omit<CommonSeriesType<MapShapeValueType, 'mapShape'>, 'valueFormatter'> {
+export interface MapShapeSeriesType extends Omit<
+  CommonSeriesType<MapShapeValueType, 'mapShape'>,
+  'valueFormatter'
+> {
   type: 'mapShape';
   /**
    * The data points to render. Each entry is joined to a feature in `geoData`
@@ -49,10 +47,7 @@ export interface MapShapeSeriesType
    * @param {number} context.dataIndex The index of the data point in the series.
    * @returns {string | null} The string to display, or `null` if the value should not be shown.
    */
-  valueFormatter?: (
-    value: MapShapeValueType,
-    context: { dataIndex: number },
-  ) => string | null;
+  valueFormatter?: (value: MapShapeValueType, context: { dataIndex: number }) => string | null;
 }
 
 /**
@@ -64,7 +59,14 @@ export type MapShapeItemIdentifier = {
   dataIndex: number;
 };
 
-export interface DefaultizedMapShapeSeriesType
-  extends DefaultizedProps<MapShapeSeriesType, CommonDefaultizedProps | 'color'> {
+export type DefaultizedMapShapeValueType = MapShapeValueType & {
   hidden: boolean;
+};
+
+export interface DefaultizedMapShapeSeriesType extends Omit<
+  DefaultizedProps<MapShapeSeriesType, CommonDefaultizedProps | 'color'>,
+  'data'
+> {
+  hidden: boolean;
+  data: ReadonlyArray<DefaultizedMapShapeValueType>;
 }

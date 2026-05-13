@@ -4,12 +4,12 @@ import { useGeoData } from '../hooks/useGeoData';
 import { useProjection } from '../hooks/useProjection';
 import { useMapShapeSeries } from '../hooks/useMapShapeSeries';
 import { useGeoFeatureIndexByName } from '../hooks/useGeoFeatureIndexByName';
+import { MapShape } from './MapShape';
 
 export interface MapShapePlotProps {
   className?: string;
   /**
-   * Fill color applied to every feature path.
-   * @default 'currentColor'
+   * Fill color applied to every feature path. Overrides item and series colors.
    */
   fill?: string;
   /**
@@ -34,7 +34,6 @@ export function MapShapePlot(props: MapShapePlotProps) {
   const series = useMapShapeSeries();
   const featureIndexByName = useGeoFeatureIndexByName();
 
-  console.log({ geoData, projection, series });
   if (!geoData || !projection || series.length === 0) {
     return null;
   }
@@ -43,30 +42,40 @@ export function MapShapePlot(props: MapShapePlotProps) {
 
   return (
     <g className={className}>
-      {series.map(({ data, id, color: seriesColor }) => (
-        <g key={id} data-series={id}>
-          {data.map((item, dataIndex) => {
-            const featureIndex = featureIndexByName.get(item.name);
-            if (featureIndex === undefined) {
-              return null;
-            }
-            const feature = geoData.features[featureIndex];
-            const d = path(feature);
-            if (!d) {
-              return null;
-            }
-            return (
-              <path
-                key={item.name ?? dataIndex}
-                d={d}
-                fill={fill ?? item.color ?? seriesColor}
-                stroke={stroke}
-                strokeWidth={strokeWidth}
-              />
-            );
-          })}
-        </g>
-      ))}
+      {series.map(({ data, id, color: seriesColor, hidden }) => {
+        if (hidden) {
+          return null;
+        }
+        return (
+          <g key={id} data-series={id}>
+            {data.map((item, dataIndex) => {
+              if (item.hidden) {
+                return null;
+              }
+              const featureIndex = featureIndexByName.get(item.name);
+              if (featureIndex === undefined) {
+                return null;
+              }
+              const feature = geoData.features[featureIndex];
+              const d = path(feature);
+              if (!d) {
+                return null;
+              }
+              return (
+                <MapShape
+                  key={item.name ?? dataIndex}
+                  seriesId={id}
+                  dataIndex={dataIndex}
+                  d={d}
+                  color={fill ?? item.color ?? seriesColor}
+                  stroke={stroke}
+                  strokeWidth={strokeWidth}
+                />
+              );
+            })}
+          </g>
+        );
+      })}
     </g>
   );
 }
