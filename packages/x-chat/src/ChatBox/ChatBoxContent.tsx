@@ -29,7 +29,7 @@ import { ChatComposerHelperText } from '../ChatComposer/ChatComposerHelperText';
 import { ChatMessageList } from '../ChatMessageList/ChatMessageList';
 import { DefaultMessageItem } from '../ChatMessageList/DefaultMessageItem';
 import { ChatScrollToBottomAffordance } from '../ChatIndicators/ChatScrollToBottomAffordance';
-import { ChatSuggestions } from '../ChatSuggestions/ChatSuggestions';
+import { ChatSuggestions, type ChatSuggestionsProps } from '../ChatSuggestions/ChatSuggestions';
 import type {
   ChatBoxSlots,
   ChatBoxSlotProps,
@@ -135,6 +135,36 @@ const ChatBoxEmptyStateHelper = styled('p', {
   ...theme.typography.body2,
   color: (theme.vars || theme).palette.text.disabled,
 }));
+
+const ChatBoxMessageListWrapper = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'MessageListWrapper',
+})({
+  position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+  minHeight: 0,
+});
+
+const ChatBoxCustomEmptyStateOverlay = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'EmptyStateOverlay',
+})({
+  position: 'absolute',
+  inset: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  pointerEvents: 'none',
+});
+
+const ChatBoxCustomEmptyStateInner = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'EmptyStateOverlayInner',
+})({
+  pointerEvents: 'auto',
+});
 
 const ChatBoxDrawerContent = styled('div', {
   name: 'MuiChatBox',
@@ -468,6 +498,73 @@ function DefaultComposer({
   );
 }
 
+function AboveComposerSuggestions(props: {
+  SuggestionsComponent: typeof ChatSuggestions;
+  suggestions: Array<ChatSuggestion | string> | undefined;
+  autoSubmit: boolean | undefined;
+  consumerSlotProps: Partial<ChatSuggestionsProps> | undefined;
+}) {
+  const { SuggestionsComponent, suggestions, autoSubmit, consumerSlotProps } = props;
+  const consumerSuggestionsSlotProps = (consumerSlotProps?.slotProps as any) ?? {};
+  const consumerRootSlotProp = consumerSuggestionsSlotProps.root ?? {};
+  const consumerRootSx = consumerRootSlotProp.sx;
+  // Two visual modes keyed off the `data-empty` attribute that SuggestionsRoot
+  // sets when the thread has zero messages:
+  // - empty (data-empty present): vertical column of pills, centered. Reads as a
+  //   hero CTA alongside the custom empty-state slot.
+  // - active (data-empty absent): horizontal "next-prompt" row above the composer
+  //   with overflow-x scrolling for long suggestion sets.
+  const aboveComposerDefaultsSx = {
+    '&[data-empty]': {
+      flexDirection: 'column',
+      alignItems: 'center',
+      flexWrap: 'nowrap',
+      overflowX: 'visible',
+      gap: (theme: any) => theme.spacing(1),
+      padding: (theme: any) => theme.spacing(2),
+    },
+    '&:not([data-empty])': {
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      // `justify-content: center` from ChatSuggestionsRootStyled pushes the
+      // items into negative space when they overflow — the browser only lets
+      // you scroll into the right overflow, so the leftmost pill becomes
+      // unreachable. Pack items from the start so overflow is one-sided.
+      justifyContent: 'flex-start',
+      overflowX: 'auto',
+      gap: (theme: any) => theme.spacing(1),
+      paddingInline: (theme: any) => theme.spacing(1.5),
+      paddingBlock: (theme: any) => theme.spacing(1),
+      scrollbarWidth: 'thin',
+      // Keep pills from squishing once the row overflows.
+      '& .MuiChatSuggestions-item': { flex: '0 0 auto' },
+    },
+  };
+  let mergedRootSx: unknown = aboveComposerDefaultsSx;
+  if (Array.isArray(consumerRootSx)) {
+    mergedRootSx = [aboveComposerDefaultsSx, ...consumerRootSx];
+  } else if (consumerRootSx) {
+    mergedRootSx = [aboveComposerDefaultsSx, consumerRootSx];
+  }
+  return (
+    <SuggestionsComponent
+      suggestions={suggestions}
+      autoSubmit={autoSubmit}
+      alwaysVisible
+      {...(consumerSlotProps ?? {})}
+      slotProps={
+        {
+          ...consumerSuggestionsSlotProps,
+          root: {
+            ...consumerRootSlotProp,
+            sx: mergedRootSx,
+          },
+        } as any
+      }
+    />
+  );
+}
+
 export function ChatBoxContent(props: ChatBoxContentProps) {
   const {
     variant,
@@ -486,6 +583,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const showScrollToBottom = features?.scrollToBottom !== false;
   const showSuggestions =
     features?.suggestions !== false && !!suggestions && suggestions.length > 0;
+  const CustomEmptyStateComponent = slots?.emptyState as React.ElementType | undefined;
 
   const autoScrollProp = features?.autoScroll ?? true;
   const { activeConversationId, setActiveConversation } = useChat();
@@ -526,6 +624,12 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const conversations = useConversations();
   const localeText = useChatLocaleText();
   const hasConversationList = features?.conversationList === true && conversations.length > 0;
+
+  const isEmptyThread = messageIds.length === 0;
+  const showCustomEmptyState = isEmptyThread && Boolean(CustomEmptyStateComponent);
+  const showDefaultEmptyState = isEmptyThread && !CustomEmptyStateComponent && !showSuggestions;
+  const showCenterSuggestions = isEmptyThread && !CustomEmptyStateComponent && showSuggestions;
+  const showAboveComposerSuggestions = showSuggestions && !showCenterSuggestions;
 
   const restoreDrawerFocus = React.useCallback(() => {
     const drawerOpener = drawerOpenerRef.current;
@@ -744,47 +848,64 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
             onMenuClick={handleMenuClick}
             showMenuButton={showDrawerMenuButton}
           />
-          <MessageListComponent
-            renderItem={renderItem}
-            items={messageIds}
-            autoScroll={autoScrollProp}
-            overlay={
-              <React.Fragment>
-                {messageIds.length === 0 && !showSuggestions && (
-                  <ChatBoxEmptyState>
-                    <ChatBoxEmptyStateIcon
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                    </ChatBoxEmptyStateIcon>
-                    <ChatBoxEmptyStateTitle>
-                      {localeText.threadNoMessagesLabel}
-                    </ChatBoxEmptyStateTitle>
-                    <ChatBoxEmptyStateHelper>
-                      {localeText.threadNoMessagesHelperText}
-                    </ChatBoxEmptyStateHelper>
-                  </ChatBoxEmptyState>
-                )}
-                {showSuggestions && messageIds.length === 0 && (
-                  <SuggestionsComponent
-                    suggestions={suggestions}
-                    autoSubmit={suggestionsAutoSubmit}
-                    {...(slotProps?.suggestions ?? {})}
-                  />
-                )}
-                {showScrollToBottom && (
-                  <ScrollToBottomComponent {...(slotProps?.scrollToBottom ?? {})} />
-                )}
-              </React.Fragment>
-            }
-            {...(slotProps?.messageList ?? {})}
-          />
+          <ChatBoxMessageListWrapper>
+            <MessageListComponent
+              renderItem={renderItem}
+              items={messageIds}
+              autoScroll={autoScrollProp}
+              overlay={
+                <React.Fragment>
+                  {showDefaultEmptyState && (
+                    <ChatBoxEmptyState>
+                      <ChatBoxEmptyStateIcon
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                      </ChatBoxEmptyStateIcon>
+                      <ChatBoxEmptyStateTitle>
+                        {localeText.threadNoMessagesLabel}
+                      </ChatBoxEmptyStateTitle>
+                      <ChatBoxEmptyStateHelper>
+                        {localeText.threadNoMessagesHelperText}
+                      </ChatBoxEmptyStateHelper>
+                    </ChatBoxEmptyState>
+                  )}
+                  {showCenterSuggestions && (
+                    <SuggestionsComponent
+                      suggestions={suggestions}
+                      autoSubmit={suggestionsAutoSubmit}
+                      {...(slotProps?.suggestions ?? {})}
+                    />
+                  )}
+                  {showScrollToBottom && (
+                    <ScrollToBottomComponent {...(slotProps?.scrollToBottom ?? {})} />
+                  )}
+                </React.Fragment>
+              }
+              {...(slotProps?.messageList ?? {})}
+            />
+            {showCustomEmptyState && CustomEmptyStateComponent && (
+              <ChatBoxCustomEmptyStateOverlay>
+                <ChatBoxCustomEmptyStateInner>
+                  <CustomEmptyStateComponent {...(slotProps?.emptyState ?? {})} />
+                </ChatBoxCustomEmptyStateInner>
+              </ChatBoxCustomEmptyStateOverlay>
+            )}
+          </ChatBoxMessageListWrapper>
+          {showAboveComposerSuggestions && (
+            <AboveComposerSuggestions
+              SuggestionsComponent={SuggestionsComponent}
+              suggestions={suggestions}
+              autoSubmit={suggestionsAutoSubmit}
+              consumerSlotProps={slotProps?.suggestions}
+            />
+          )}
           <DefaultComposer slots={slots} slotProps={slotProps} features={features} />
         </ChatConversation>
       )}

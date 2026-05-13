@@ -237,7 +237,7 @@ describe('ChatBox', () => {
       expect(document.querySelector('.MuiChatSuggestions-root')).not.toBe(null);
     });
 
-    it('does not show suggestions when messages exist', () => {
+    it('moves suggestions above the composer when messages exist', () => {
       render(
         <ChatBox
           adapter={createAdapter()}
@@ -247,7 +247,11 @@ describe('ChatBox', () => {
           {null}
         </ChatBox>,
       );
-      expect(document.querySelector('.MuiChatSuggestions-root')).toBe(null);
+      // The empty-state-centered suggestions are gone, but a "next prompt" row
+      // is rendered above the composer instead (opted in via `alwaysVisible`).
+      const root = document.querySelector('.MuiChatSuggestions-root');
+      expect(root).not.toBe(null);
+      expect(root!.hasAttribute('data-empty')).toBe(false);
     });
   });
 

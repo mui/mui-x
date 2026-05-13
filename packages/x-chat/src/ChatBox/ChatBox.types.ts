@@ -96,6 +96,11 @@ export interface ChatBoxSlots {
   scrollToBottom: React.ElementType;
   /** Override the prompt suggestions container component. */
   suggestions: React.ElementType;
+  /**
+   * Override the UI rendered in the center of the thread when the active conversation has no messages.
+   * When provided, `suggestions` (if any) move from the center position to a row above the composer.
+   */
+  emptyState: React.ElementType;
 }
 
 export interface ChatBoxSlotProps {
@@ -128,6 +133,7 @@ export interface ChatBoxSlotProps {
   unreadMarker?: Partial<ChatUnreadMarkerProps>;
   scrollToBottom?: Partial<ChatScrollToBottomAffordanceProps>;
   suggestions?: Partial<ChatSuggestionsProps>;
+  emptyState?: SlotComponentProps<'div', { sx?: SxProps<Theme> }, {}>;
 }
 
 export interface ChatBoxFeatures {
