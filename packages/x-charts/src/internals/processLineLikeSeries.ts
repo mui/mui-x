@@ -3,6 +3,7 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { getStackingGroups } from './stacking';
 import {
   type ChartSeriesDefaultized,
+  type ChartSeriesType,
   type DatasetElementType,
   type DatasetType,
 } from '../models/seriesType/config';
@@ -28,7 +29,7 @@ const defaultShapes: MarkShape[] = [
 const lineValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedLineSeriesType['valueFormatter'];
 
-type LineLikeChartType = 'line' | 'radialLine';
+type LineLikeChartType = Extract<ChartSeriesType, 'line' | 'radialLine'>;
 
 export interface LineLikeProcessorOptions<T extends LineLikeChartType> {
   seriesType: T;

@@ -1,7 +1,11 @@
 import { getLabel } from './getLabel';
+import type { ChartSeriesType } from '../models/seriesType/config';
 import type { TooltipGetter } from './plugins/corePlugins/useChartSeriesConfig';
 
-type LineLikeTooltipChartType = 'line' | 'radialLine' | 'bar' | 'radialBar' | 'scatter';
+type LineLikeTooltipChartType = Extract<
+  ChartSeriesType,
+  'line' | 'radialLine' | 'bar' | 'radialBar' | 'scatter'
+>;
 
 export interface LineLikeTooltipOptions {
   skipNullValues?: boolean;
