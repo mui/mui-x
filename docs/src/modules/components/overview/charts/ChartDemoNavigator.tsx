@@ -10,7 +10,7 @@ import InfoCard from '../InfoCard';
 
 export interface DemoDescription {
   title: string;
-  description: string;
+  description?: string;
   iconLink?: string;
 }
 

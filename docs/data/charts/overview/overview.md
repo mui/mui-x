@@ -13,11 +13,11 @@ packageName: '@mui/x-charts'
 
 {{"component": "modules/components/overview/charts/mainDemo/MainDemo"}}
 {{"component": "modules/components/overview/charts/featuresHighlight/FeaturesHighlight"}}
+{{"component": "modules/components/overview/charts/financialCharts/FinancialCharts"}}
 {{"component": "modules/components/overview/charts/ChartsCommunityOrPro"}}
 
 {{"component": "modules/components/overview/charts/essentialCharts/EssentialCharts"}}
 {{"component": "modules/components/overview/charts/advancedCharts/AdvancedChartDemo"}}
-{{"component": "modules/components/overview/charts/financialCharts/FinancialCharts"}}
 {{"component": "modules/components/overview/charts/advancedFeatures/AdvancedFeatures"}}
 
 ## Supported features
