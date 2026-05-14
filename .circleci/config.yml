@@ -93,14 +93,13 @@ jobs:
           command: |
             # Fully saturate all the available CPUs by splitting the tests in 1 shard per CPU
             pnpm exec concurrently \
-              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=1/8" \
-              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=2/8" \
-              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=3/8" \
-              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=4/8" \
-              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=5/8" \
-              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=6/8" \
-              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=7/8" \
-              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=8/8" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=1/7" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=2/7" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=3/7" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=4/7" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=5/7" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=6/7" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=7/7" \
               || TEST_EXIT_CODE=$?
             pnpm exec vitest run --merge-reports
             # Reports merged, we can now exit with the stored code
