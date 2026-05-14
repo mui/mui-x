@@ -114,6 +114,9 @@ export default defineConfig(
     materialUi: true,
   }),
   {
+    ignores: ['docs/data/charts/dataset/**'],
+  },
+  {
     name: 'MUI X Overrides',
     files: [`**/*${EXTENSION_TS}`],
     plugins: {
