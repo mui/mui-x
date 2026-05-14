@@ -39,7 +39,7 @@ import {
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { dateToEventString } from '../date-utils';
-import { createEventFromRecurringEvent } from '../createEventFromRecurringEvent';
+import { extractStandaloneEvent } from '../extractStandaloneEvent';
 import { TimeoutManager } from '../TimeoutManager';
 import { createChangeEventDetails } from '../../../base-ui-copy/utils/createBaseUIEventDetails';
 
@@ -522,7 +522,7 @@ export class SchedulerStore<
     const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     const originalModel = original.modelInBuiltInFormat;
     const dataTimezone = originalModel.timezone ?? 'default';
-    const duplicatedEvent = createEventFromRecurringEvent(original, {
+    const duplicatedEvent = extractStandaloneEvent(original, {
       start: dateToEventString(adapter, start, originalModel.start, dataTimezone),
       end: dateToEventString(adapter, end, originalModel.end, dataTimezone),
     });

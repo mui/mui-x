@@ -1,16 +1,16 @@
 import { SchedulerEventCreationProperties, SchedulerProcessedEvent } from '../../models';
 
 /**
- * Generates the property to pass to `store.updateEvents()` to create an event extracted from a potentially recurring event.
+ * Builds the creation payload for a standalone event derived from `source`, linked via `extractedFromId`.
  */
-export function createEventFromRecurringEvent(
-  originalEvent: SchedulerProcessedEvent,
+export function extractStandaloneEvent(
+  source: SchedulerProcessedEvent,
   changes: Partial<SchedulerEventCreationProperties>,
 ): SchedulerEventCreationProperties {
   const createdEvent: SchedulerEventCreationProperties = {
-    ...originalEvent.modelInBuiltInFormat,
+    ...source.modelInBuiltInFormat,
     ...changes,
-    extractedFromId: originalEvent.id,
+    extractedFromId: source.id,
   };
 
   // @ts-ignore

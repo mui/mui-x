@@ -13,7 +13,7 @@ import {
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
 import {
-  createEventFromRecurringEvent,
+  extractStandaloneEvent,
   dateToEventString,
   getDateKey,
   getOccurrenceEnd,
@@ -279,7 +279,7 @@ export function applyRecurringUpdateOnlyThis(
   }
 
   return {
-    created: [createEventFromRecurringEvent(originalEvent, stringifiedChanges)],
+    created: [extractStandaloneEvent(originalEvent, stringifiedChanges)],
     updated: [
       {
         id: originalEvent.id,
