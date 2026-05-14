@@ -1,1 +1,5 @@
-export { overviewChartPaletteLight as colorFull, sxColors } from '../theme/colors';
+export {
+  overviewExpressivePaletteLight as colorFull,
+  sxColors,
+  sxExpressiveColors,
+} from '../theme/colors';

@@ -5,6 +5,7 @@ import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 import { temperatureBerlinPorto } from 'docs/data/charts/dataset/temperatureBerlinPorto';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 import { overviewChartPalette } from '../theme/colors';
+import SourceCaption from './SourceCaption';
 
 function RangeBar() {
   return (
@@ -42,9 +43,7 @@ function RangeBar() {
           slotProps={{ tooltip: { disablePortal: true } }}
         />
       </div>
-      <Typography variant="caption" sx={{ textAlign: 'end' }}>
-        Source: IPMA and climate-data.org
-      </Typography>
+      <SourceCaption>Data from IPMA and climate-data.org</SourceCaption>
     </Stack>
   );
 }

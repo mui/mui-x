@@ -9,8 +9,13 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
+import { type ZoomData } from '@mui/x-charts-premium/models';
 import sp500 from 'docs/data/charts/dataset/sp500-intraday.json';
-import { Candlestick } from '../advancedCharts/CandlestickDemo';
+import {
+  Candlestick,
+  CANDLESTICK_X_AXIS_ID,
+  getCandlestickZoomData,
+} from '../advancedCharts/CandlestickDemo';
 import { overviewSemanticColors } from '../theme/colors';
 
 const compactCurrencyFormatter = new Intl.NumberFormat('en-US', {
@@ -25,23 +30,22 @@ const percentFormatter = new Intl.NumberFormat('en-US', {
   style: 'percent',
 });
 
-const miniMapDateFormatter = new Intl.DateTimeFormat('en-US', {
-  month: 'short',
-  day: 'numeric',
-  year: 'numeric',
-}).format;
-
 const latestPrice = sp500[sp500.length - 1];
 const priceChange = latestPrice.close - latestPrice.open;
 const priceChangePercent = priceChange / latestPrice.open;
 const xData = sp500.map((entry) => new Date(Date.parse(entry.date)));
 const closeData = sp500.map((entry) => entry.close);
-const latestDataIndex = sp500.length - 1;
-const MS_PER_DAY = 24 * 60 * 60 * 1000;
-const miniMapWidth = 1000;
-const miniMapHeight = 56;
-const miniMapTopPadding = 8;
-const miniMapBottomPadding = 8;
+const previewWidth = 1000;
+const previewHeight = 56;
+const previewTopPadding = 8;
+const previewBottomPadding = 8;
+const minZoomSpan = 1;
+
+const previewDateFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+}).format;
 
 const timeframes = [
   { label: '1W', value: '1W', days: 7 },
@@ -53,8 +57,6 @@ const timeframes = [
 type Timeframe = (typeof timeframes)[number]['value'];
 
 const defaultTimeframe = timeframes[1];
-const minVisibleDays = timeframes[0].days;
-const maxVisibleDays = timeframes[timeframes.length - 1].days;
 
 const marketStats = [
   { label: 'Open', value: latestPrice.open },
@@ -63,52 +65,44 @@ const marketStats = [
   { label: 'Close', value: latestPrice.close },
 ];
 
-function getEarliestCompleteWindowEndIndex(visibleDays: number) {
-  const minEndTime = xData[0].getTime() + visibleDays * MS_PER_DAY;
-  const endIndex = xData.findIndex((date) => date.getTime() >= minEndTime);
-
-  return endIndex === -1 ? latestDataIndex : endIndex;
-}
-
-function clampVisibleEndIndex(endIndex: number, visibleDays: number) {
-  return Math.min(
-    latestDataIndex,
-    Math.max(getEarliestCompleteWindowEndIndex(visibleDays), endIndex),
-  );
-}
-
-function getVisibleStartIndex(visibleDays: number, endIndex: number) {
-  const safeEndIndex = clampVisibleEndIndex(endIndex, visibleDays);
-  const endDate = xData[safeEndIndex];
-  const startTime = endDate.getTime() - visibleDays * MS_PER_DAY;
-  const startIndex = xData.findIndex((date) => date.getTime() >= startTime);
-
-  return startIndex === -1 ? 0 : Math.max(startIndex, 0);
-}
-
-function getIndexPercent(index: number) {
-  return latestDataIndex === 0 ? 0 : (index / latestDataIndex) * 100;
-}
-
-function getMiniMapPath(values: number[]) {
+function getPreviewPath(values: number[]) {
   const min = Math.min(...values);
   const max = Math.max(...values);
   const range = max - min || 1;
-  const chartHeight = miniMapHeight - miniMapTopPadding - miniMapBottomPadding;
+  const chartHeight = previewHeight - previewTopPadding - previewBottomPadding;
   const points = values.map((value, index) => {
-    const x = latestDataIndex === 0 ? 0 : (index / latestDataIndex) * miniMapWidth;
-    const y = miniMapTopPadding + (1 - (value - min) / range) * chartHeight;
+    const x = values.length <= 1 ? 0 : (index / (values.length - 1)) * previewWidth;
+    const y = previewTopPadding + (1 - (value - min) / range) * chartHeight;
 
     return `${x.toFixed(2)},${y.toFixed(2)}`;
   });
 
   return {
+    area: `M ${points.join(' L ')} L ${previewWidth},${previewHeight} L 0,${previewHeight} Z`,
     line: `M ${points.join(' L ')}`,
-    area: `M ${points.join(' L ')} L ${miniMapWidth},${miniMapHeight} L 0,${miniMapHeight} Z`,
   };
 }
 
-const miniMapPath = getMiniMapPath(closeData);
+const previewPath = getPreviewPath(closeData);
+
+function clampZoomRange(start: number, end: number) {
+  const safeStart = Math.min(100 - minZoomSpan, Math.max(0, start));
+  const safeEnd = Math.max(safeStart + minZoomSpan, Math.min(100, end));
+
+  return {
+    start: Math.min(safeStart, safeEnd - minZoomSpan),
+    end: safeEnd,
+  };
+}
+
+function getZoomDate(percent: number) {
+  const index = Math.min(
+    xData.length - 1,
+    Math.max(0, Math.round((percent / 100) * (xData.length - 1))),
+  );
+
+  return xData[index];
+}
 
 function PremiumBadge() {
   return (
@@ -137,49 +131,53 @@ function PremiumBadge() {
   );
 }
 
-type ViewportMiniMapProps = {
-  onVisibleEndIndexChange: (endIndex: number) => void;
-  onVisibleRangeChange: (startIndex: number, endIndex: number) => void;
-  visibleEndIndex: number;
-  visibleStartIndex: number;
+type ZoomPanPreviewProps = {
+  onZoomChange: (zoomData: ZoomData[]) => void;
+  zoomData: ZoomData[];
 };
 
-function ViewportMiniMap({
-  onVisibleEndIndexChange,
-  onVisibleRangeChange,
-  visibleEndIndex,
-  visibleStartIndex,
-}: ViewportMiniMapProps) {
-  const miniMapRef = React.useRef<HTMLDivElement>(null);
+function ZoomPanPreview({ onZoomChange, zoomData }: ZoomPanPreviewProps) {
+  const previewRef = React.useRef<HTMLDivElement>(null);
   const dragStateRef = React.useRef<{
-    endIndex: number;
     mode: 'pan' | 'resize-end' | 'resize-start';
-    offsetIndex: number;
     pointerId: number | null;
-    startIndex: number;
-    visiblePointCount: number;
+    start: number;
+    end: number;
+    pointerOffset: number;
   }>({
-    endIndex: 0,
     mode: 'pan',
-    offsetIndex: 0,
     pointerId: null,
-    startIndex: 0,
-    visiblePointCount: 0,
+    start: 0,
+    end: 100,
+    pointerOffset: 0,
   });
-  const startPercent = getIndexPercent(visibleStartIndex);
-  const endPercent = getIndexPercent(visibleEndIndex);
+  const currentZoom = zoomData.find((item) => item.axisId === CANDLESTICK_X_AXIS_ID) ?? {
+    axisId: CANDLESTICK_X_AXIS_ID,
+    start: 0,
+    end: 100,
+  };
+  const normalizedZoom = clampZoomRange(currentZoom.start, currentZoom.end);
+  const zoomStart = normalizedZoom.start;
+  const zoomEnd = normalizedZoom.end;
+  const zoomWidth = zoomEnd - zoomStart;
 
-  const getPointerIndex = (event: React.PointerEvent<HTMLDivElement>) => {
-    const miniMapElement = miniMapRef.current ?? event.currentTarget;
-    const { left, width } = miniMapElement.getBoundingClientRect();
-    const pointerRatio = Math.min(1, Math.max(0, (event.clientX - left) / width));
-
-    return Math.round(pointerRatio * latestDataIndex);
+  const getPointerPercent = (event: React.PointerEvent<HTMLDivElement>) => {
+    const previewElement = previewRef.current ?? event.currentTarget;
+    const { left, width } = previewElement.getBoundingClientRect();
+    return Math.min(100, Math.max(0, ((event.clientX - left) / width) * 100));
   };
 
-  const moveViewport = (event: React.PointerEvent<HTMLDivElement>) => {
-    const { endIndex, mode, offsetIndex, pointerId, startIndex, visiblePointCount } =
-      dragStateRef.current;
+  const setZoomRange = React.useCallback(
+    (start: number, end: number) => {
+      const nextZoom = clampZoomRange(start, end);
+
+      onZoomChange([{ axisId: CANDLESTICK_X_AXIS_ID, ...nextZoom }]);
+    },
+    [onZoomChange],
+  );
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const { mode, pointerId, start, end, pointerOffset } = dragStateRef.current;
 
     if (pointerId !== event.pointerId) {
       return;
@@ -187,21 +185,22 @@ function ViewportMiniMap({
 
     event.preventDefault();
     event.stopPropagation();
-    const pointerIndex = getPointerIndex(event);
+    const pointerPercent = getPointerPercent(event);
 
     if (mode === 'resize-start') {
-      onVisibleRangeChange(pointerIndex, endIndex);
+      setZoomRange(pointerPercent, end);
       return;
     }
 
     if (mode === 'resize-end') {
-      onVisibleRangeChange(startIndex, pointerIndex);
+      setZoomRange(start, pointerPercent);
       return;
     }
 
-    const nextStartIndex = pointerIndex - offsetIndex;
+    const span = end - start;
+    const nextStart = Math.min(100 - span, Math.max(0, pointerPercent - pointerOffset));
 
-    onVisibleEndIndexChange(nextStartIndex + visiblePointCount - 1);
+    setZoomRange(nextStart, nextStart + span);
   };
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -211,23 +210,22 @@ function ViewportMiniMap({
 
     event.preventDefault();
     event.stopPropagation();
-    event.currentTarget.setPointerCapture(event.pointerId);
-    const pointerIndex = getPointerIndex(event);
-    const visiblePointCount = Math.max(1, visibleEndIndex - visibleStartIndex + 1);
-    const isPointerInsideVisibleRange =
-      pointerIndex >= visibleStartIndex && pointerIndex <= visibleEndIndex;
+    previewRef.current?.setPointerCapture(event.pointerId);
+    const pointerPercent = getPointerPercent(event);
+    const isInsideSelection = pointerPercent >= zoomStart && pointerPercent <= zoomEnd;
+    const pointerOffset = isInsideSelection ? pointerPercent - zoomStart : zoomWidth / 2;
+    const nextStart = isInsideSelection
+      ? zoomStart
+      : Math.min(100 - zoomWidth, Math.max(0, pointerPercent - pointerOffset));
 
     dragStateRef.current = {
-      endIndex: visibleEndIndex,
       mode: 'pan',
-      offsetIndex: isPointerInsideVisibleRange
-        ? pointerIndex - visibleStartIndex
-        : Math.floor(visiblePointCount / 2),
       pointerId: event.pointerId,
-      startIndex: visibleStartIndex,
-      visiblePointCount,
+      start: nextStart,
+      end: nextStart + zoomWidth,
+      pointerOffset,
     };
-    moveViewport(event);
+    setZoomRange(nextStart, nextStart + zoomWidth);
   };
 
   const handleResizePointerDown =
@@ -238,74 +236,77 @@ function ViewportMiniMap({
 
       event.preventDefault();
       event.stopPropagation();
-      event.currentTarget.setPointerCapture(event.pointerId);
+      previewRef.current?.setPointerCapture(event.pointerId);
       dragStateRef.current = {
-        endIndex: visibleEndIndex,
         mode,
-        offsetIndex: 0,
         pointerId: event.pointerId,
-        startIndex: visibleStartIndex,
-        visiblePointCount: Math.max(1, visibleEndIndex - visibleStartIndex + 1),
+        start: zoomStart,
+        end: zoomEnd,
+        pointerOffset: 0,
       };
     };
 
   const handlePointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (dragStateRef.current.pointerId === event.pointerId) {
-      event.preventDefault();
-      event.stopPropagation();
-      dragStateRef.current.pointerId = null;
-      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-        event.currentTarget.releasePointerCapture(event.pointerId);
-      }
+    if (dragStateRef.current.pointerId !== event.pointerId) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    dragStateRef.current.pointerId = null;
+
+    if (previewRef.current?.hasPointerCapture(event.pointerId)) {
+      previewRef.current.releasePointerCapture(event.pointerId);
     }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const visiblePointCount = Math.max(1, visibleEndIndex - visibleStartIndex + 1);
-    const keyEndIndexDelta: Record<string, number> = {
-      ArrowLeft: -1,
-      ArrowRight: 1,
-      PageDown: visiblePointCount,
-      PageUp: -visiblePointCount,
-    };
-    const endIndexDelta = keyEndIndexDelta[event.key];
+    const span = zoomEnd - zoomStart;
+    const step = event.shiftKey ? 5 : 1;
 
     if (event.key === 'Home') {
       event.preventDefault();
-      event.stopPropagation();
-      onVisibleEndIndexChange(visiblePointCount - 1);
+      setZoomRange(0, span);
       return;
     }
 
     if (event.key === 'End') {
       event.preventDefault();
-      event.stopPropagation();
-      onVisibleEndIndexChange(latestDataIndex);
+      setZoomRange(100 - span, 100);
       return;
     }
 
-    if (endIndexDelta !== undefined) {
+    if (event.key === 'PageDown' || event.key === 'PageUp') {
       event.preventDefault();
-      event.stopPropagation();
-      onVisibleEndIndexChange(visibleEndIndex + endIndexDelta);
+      const direction = event.key === 'PageUp' ? -1 : 1;
+      const nextStart = Math.min(100 - span, Math.max(0, zoomStart + direction * span));
+      setZoomRange(nextStart, nextStart + span);
+      return;
+    }
+
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      const direction = event.key === 'ArrowLeft' ? -1 : 1;
+      const nextStart = Math.min(100 - span, Math.max(0, zoomStart + direction * step));
+      setZoomRange(nextStart, nextStart + span);
     }
   };
 
   return (
     <Box
-      ref={miniMapRef}
+      ref={previewRef}
       aria-label="Visible market range"
       aria-orientation="horizontal"
-      aria-valuemax={latestDataIndex}
+      aria-valuemax={100}
       aria-valuemin={0}
-      aria-valuenow={visibleEndIndex}
-      aria-valuetext={`${miniMapDateFormatter(xData[visibleStartIndex])} to ${miniMapDateFormatter(
-        xData[visibleEndIndex],
+      aria-valuenow={Math.round(zoomEnd)}
+      aria-valuetext={`${previewDateFormatter(getZoomDate(zoomStart))} to ${previewDateFormatter(
+        getZoomDate(zoomEnd),
       )}`}
       onKeyDown={handleKeyDown}
       onPointerCancel={handlePointerUp}
       onPointerDown={handlePointerDown}
-      onPointerMove={moveViewport}
+      onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       role="slider"
       tabIndex={0}
@@ -332,7 +333,7 @@ function ViewportMiniMap({
       <Box
         component="svg"
         preserveAspectRatio="none"
-        viewBox={`0 0 ${miniMapWidth} ${miniMapHeight}`}
+        viewBox={`0 0 ${previewWidth} ${previewHeight}`}
         sx={{
           display: 'block',
           height: '100%',
@@ -341,7 +342,7 @@ function ViewportMiniMap({
       >
         <Box
           component="path"
-          d={miniMapPath.area}
+          d={previewPath.area}
           sx={(theme) => ({
             fill: alpha(theme.palette.primary.main, 0.1),
             ...theme.applyDarkStyles({
@@ -351,7 +352,7 @@ function ViewportMiniMap({
         />
         <Box
           component="path"
-          d={miniMapPath.line}
+          d={previewPath.line}
           fill="none"
           vectorEffect="non-scaling-stroke"
           sx={(theme) => ({
@@ -367,7 +368,7 @@ function ViewportMiniMap({
         sx={(theme) => ({
           position: 'absolute',
           inset: 0,
-          right: `${100 - startPercent}%`,
+          right: `${100 - zoomStart}%`,
           bgcolor: alpha(theme.palette.background.paper, 0.58),
           pointerEvents: 'none',
           ...theme.applyDarkStyles({
@@ -379,7 +380,7 @@ function ViewportMiniMap({
         sx={(theme) => ({
           position: 'absolute',
           inset: 0,
-          left: `${endPercent}%`,
+          left: `${zoomEnd}%`,
           bgcolor: alpha(theme.palette.background.paper, 0.58),
           pointerEvents: 'none',
           ...theme.applyDarkStyles({
@@ -392,8 +393,8 @@ function ViewportMiniMap({
           position: 'absolute',
           top: 4,
           bottom: 4,
-          left: `${startPercent}%`,
-          width: `${Math.max(0, endPercent - startPercent)}%`,
+          left: `${zoomStart}%`,
+          width: `${zoomWidth}%`,
           border: '1px solid',
           borderColor: alpha(theme.palette.primary.main, 0.72),
           borderRadius: 0.75,
@@ -416,13 +417,13 @@ function ViewportMiniMap({
             aria-hidden
             onPointerCancel={handlePointerUp}
             onPointerDown={handleResizePointerDown(mode)}
-            onPointerMove={moveViewport}
+            onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             sx={{
               position: 'absolute',
               top: 4,
               bottom: 4,
-              left: `calc(${isStartHandle ? startPercent : endPercent}% - 8px)`,
+              left: `calc(${isStartHandle ? zoomStart : zoomEnd}% - 8px)`,
               width: 16,
               display: 'flex',
               alignItems: 'center',
@@ -452,61 +453,12 @@ function ViewportMiniMap({
 }
 
 export default function FinancialCharts() {
-  const chartViewportRef = React.useRef<HTMLDivElement>(null);
   const [selectedTimeframe, setSelectedTimeframe] = React.useState<Timeframe | null>(
     defaultTimeframe.value,
   );
-  const [visibleDays, setVisibleDays] = React.useState<number>(defaultTimeframe.days);
-  const [visibleEndIndex, setVisibleEndIndex] = React.useState(latestDataIndex);
-  const panStateRef = React.useRef<{
-    pointerId: number | null;
-    startEndIndex: number;
-    startX: number;
-    visiblePointCount: number;
-    width: number;
-  }>({
-    pointerId: null,
-    startEndIndex: latestDataIndex,
-    startX: 0,
-    visiblePointCount: 0,
-    width: 1,
-  });
-  const clampedVisibleEndIndex = React.useMemo(
-    () => clampVisibleEndIndex(visibleEndIndex, visibleDays),
-    [visibleDays, visibleEndIndex],
+  const [zoomData, setZoomData] = React.useState<ZoomData[]>(() =>
+    getCandlestickZoomData(defaultTimeframe.days),
   );
-  const visibleStartIndex = React.useMemo(
-    () => getVisibleStartIndex(visibleDays, clampedVisibleEndIndex),
-    [visibleDays, clampedVisibleEndIndex],
-  );
-  const handleMiniMapVisibleEndIndexChange = React.useCallback(
-    (endIndex: number) => {
-      setSelectedTimeframe(null);
-      setVisibleEndIndex(clampVisibleEndIndex(endIndex, visibleDays));
-    },
-    [visibleDays],
-  );
-  const handleMiniMapVisibleRangeChange = React.useCallback(
-    (startIndex: number, endIndex: number) => {
-      const safeStartIndex = Math.min(latestDataIndex, Math.max(0, Math.min(startIndex, endIndex)));
-      const safeEndIndex = Math.min(latestDataIndex, Math.max(safeStartIndex, endIndex));
-      const rangeInDays =
-        (xData[safeEndIndex].getTime() - xData[safeStartIndex].getTime()) / MS_PER_DAY;
-      const nextVisibleDays = Math.min(
-        maxVisibleDays,
-        Math.max(minVisibleDays, Math.round(rangeInDays)),
-      );
-
-      setSelectedTimeframe(null);
-      setVisibleDays(nextVisibleDays);
-      setVisibleEndIndex(clampVisibleEndIndex(safeEndIndex, nextVisibleDays));
-    },
-    [],
-  );
-
-  React.useEffect(() => {
-    setVisibleEndIndex((currentEndIndex) => clampVisibleEndIndex(currentEndIndex, visibleDays));
-  }, [visibleDays]);
 
   const handleTimeframeChange = (
     _event: React.MouseEvent<HTMLElement>,
@@ -523,100 +475,13 @@ export default function FinancialCharts() {
     }
 
     setSelectedTimeframe(value);
-    setVisibleDays(timeframe.days);
-    setVisibleEndIndex(latestDataIndex);
+    setZoomData(getCandlestickZoomData(timeframe.days));
   };
 
-  const handleChartWheel = React.useCallback(
-    (event: WheelEvent) => {
-      event.preventDefault();
-      event.stopPropagation();
-      setSelectedTimeframe(null);
-
-      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
-        const dataDelta =
-          Math.sign(event.deltaX) * Math.max(1, Math.round(Math.abs(event.deltaX) / 24));
-
-        setVisibleEndIndex((currentEndIndex) =>
-          clampVisibleEndIndex(currentEndIndex + dataDelta, visibleDays),
-        );
-        return;
-      }
-
-      setVisibleDays((currentVisibleDays) => {
-        const zoomFactor = event.deltaY > 0 ? 1.2 : 1 / 1.2;
-        const nextVisibleDays = Math.round(currentVisibleDays * zoomFactor);
-
-        return Math.min(maxVisibleDays, Math.max(minVisibleDays, nextVisibleDays));
-      });
-    },
-    [visibleDays],
-  );
-
-  React.useEffect(() => {
-    const chartViewport = chartViewportRef.current;
-
-    if (chartViewport === null) {
-      return undefined;
-    }
-
-    chartViewport.addEventListener('wheel', handleChartWheel, {
-      capture: true,
-      passive: false,
-    });
-
-    return () => {
-      chartViewport.removeEventListener('wheel', handleChartWheel, { capture: true });
-    };
-  }, [handleChartWheel]);
-
-  const handleChartPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.button !== 0) {
-      return;
-    }
-
-    event.preventDefault();
-    event.stopPropagation();
-    event.currentTarget.setPointerCapture(event.pointerId);
-    panStateRef.current = {
-      pointerId: event.pointerId,
-      startEndIndex: clampedVisibleEndIndex,
-      startX: event.clientX,
-      visiblePointCount: Math.max(1, clampedVisibleEndIndex - visibleStartIndex + 1),
-      width: Math.max(1, event.currentTarget.clientWidth),
-    };
-  };
-
-  const handleChartPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    const panState = panStateRef.current;
-
-    if (panState.pointerId !== event.pointerId) {
-      return;
-    }
-
-    event.preventDefault();
-    event.stopPropagation();
-    const deltaX = event.clientX - panState.startX;
-    const dataDelta = Math.round((deltaX / panState.width) * panState.visiblePointCount);
-
-    if (dataDelta === 0) {
-      return;
-    }
-
+  const handleZoomChange = React.useCallback((nextZoomData: ZoomData[]) => {
     setSelectedTimeframe(null);
-    setVisibleEndIndex(clampVisibleEndIndex(panState.startEndIndex - dataDelta, visibleDays));
-  };
-
-  const handleChartPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (panStateRef.current.pointerId === event.pointerId) {
-      event.preventDefault();
-      event.stopPropagation();
-      panStateRef.current.pointerId = null;
-      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-        event.currentTarget.releasePointerCapture(event.pointerId);
-      }
-    }
-  };
+    setZoomData(nextZoomData);
+  }, []);
 
   return (
     <React.Fragment>
@@ -753,36 +618,19 @@ export default function FinancialCharts() {
 
             <Stack spacing={1}>
               <Box
-                ref={chartViewportRef}
-                onPointerCancel={handleChartPointerUp}
-                onPointerDown={handleChartPointerDown}
-                onPointerLeave={handleChartPointerUp}
-                onPointerMove={handleChartPointerMove}
-                onPointerUp={handleChartPointerUp}
                 sx={{
-                  cursor: 'grab',
                   height: { xs: 360, md: 520 },
                   minWidth: 0,
-                  touchAction: 'none',
-                  '&:active': {
-                    cursor: 'grabbing',
-                  },
                 }}
               >
                 <Candlestick
+                  onZoomChange={handleZoomChange}
                   showCaption={false}
                   showTitle={false}
-                  visibleDays={visibleDays}
-                  visibleEndIndex={clampedVisibleEndIndex}
+                  zoomData={zoomData}
                 />
               </Box>
-
-              <ViewportMiniMap
-                onVisibleEndIndexChange={handleMiniMapVisibleEndIndexChange}
-                onVisibleRangeChange={handleMiniMapVisibleRangeChange}
-                visibleEndIndex={clampedVisibleEndIndex}
-                visibleStartIndex={visibleStartIndex}
-              />
+              <ZoomPanPreview onZoomChange={handleZoomChange} zoomData={zoomData} />
             </Stack>
 
             <Stack

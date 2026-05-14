@@ -96,7 +96,14 @@ export default function FeaturesHighlight() {
                 </Typography>
                 <Legends />
               </Box>
-              <Box sx={{ p: 2, flexBasis: { xs: '65%', md: '50%', xl: '65%' } }}>
+              <Box
+                sx={{
+                  p: 2,
+                  flexBasis: { xs: '65%', md: '50%', xl: '65%' },
+                  minHeight: { xs: 380, md: 360, xl: 0 },
+                  minWidth: 0,
+                }}
+              >
                 <ZoomAndPan />
               </Box>
             </Stack>

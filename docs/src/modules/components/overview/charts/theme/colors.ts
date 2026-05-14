@@ -23,6 +23,35 @@ export const overviewChartPaletteDark = [
 export const overviewChartPalette = (mode: 'light' | 'dark') =>
   mode === 'dark' ? overviewChartPaletteDark : overviewChartPaletteLight;
 
+export const overviewExpressivePaletteLight = [
+  '#5367E6',
+  '#2F91D8',
+  '#4AAE82',
+  '#F2AA35',
+  '#E87534',
+  '#E24E60',
+  '#D66A9A',
+];
+
+export const overviewExpressivePaletteDark = [
+  '#8792FF',
+  '#66BDF5',
+  '#77D5AC',
+  '#FFD16A',
+  '#FFA069',
+  '#FF7F8E',
+  '#EE9AC2',
+];
+
+export const overviewExpressivePalette = (mode: 'light' | 'dark') =>
+  mode === 'dark' ? overviewExpressivePaletteDark : overviewExpressivePaletteLight;
+
+export const overviewPokemonPalette = (mode: 'light' | 'dark') =>
+  mode === 'dark' ? ['#81D0A2', '#FF9A72', '#78B7EF'] : ['#4FA778', '#D97345', '#4F93D2'];
+
+export const overviewEmissionsRadarPalette = (mode: 'light' | 'dark') =>
+  mode === 'dark' ? ['#69D5D2', '#78B7EF', '#8792FF'] : ['#2B9D9A', '#4F93D2', '#5367E6'];
+
 export const overviewHeatmapPaletteLight = [
   '#F5F7FB',
   '#E3EAF6',
@@ -97,3 +126,12 @@ export const sxColors = (theme: Theme) =>
     acc[`--palette-color-${index}`] = color;
     return acc;
   }, {});
+
+export const sxExpressiveColors = (theme: Theme) =>
+  overviewExpressivePalette(theme.palette.mode).reduce<Record<string, string>>(
+    (acc, color, index) => {
+      acc[`--palette-color-${index}`] = color;
+      return acc;
+    },
+    {},
+  );

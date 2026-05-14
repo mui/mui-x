@@ -7,6 +7,7 @@ import { HeatmapValueType } from '@mui/x-charts-pro/models';
 import bikeData from 'docs/data/charts/dataset/ParisBicycle.json';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 import { getOverviewHeatmapColor } from '../theme/colors';
+import SourceCaption from './SourceCaption';
 
 const days = [
   new Date(2025, 1, 24),
@@ -110,12 +111,12 @@ function HeatmapDemoContent() {
           }}
         />
       </div>
-      <Typography variant="caption" sx={{ textAlign: 'end' }}>
+      <SourceCaption>
         Data from{' '}
         <a href="https://parisdata.opendatasoft.com/explore/dataset/comptage-velo-donnees-compteurs/">
           Paris Data
         </a>
-      </Typography>
+      </SourceCaption>
     </Stack>
   );
 }
