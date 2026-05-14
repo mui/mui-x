@@ -281,7 +281,7 @@ describe('<DateRangeCalendar />', () => {
         fireEvent.pointerDown(endDay, { pointerId: 2, button: 0, isPrimary: false });
         fireEvent.pointerOver(intermediateDay, { pointerId: 1 });
         fireEvent.pointerOver(endDay, { pointerId: 1 });
-        fireEvent.pointerUp(document, { pointerId: 1 });
+        fireEvent.pointerUp(endDay, { pointerId: 1 });
 
         // The first finger's gesture survives intact — exactly one drop, from
         // pointerId 1.
@@ -308,7 +308,7 @@ describe('<DateRangeCalendar />', () => {
         fireEvent.pointerDown(startDay, { pointerId: 2, button: 0, isPrimary: true });
         fireEvent.pointerOver(intermediateDay, { pointerId: 2 });
         fireEvent.pointerOver(endDay, { pointerId: 2 });
-        fireEvent.pointerUp(document, { pointerId: 2 });
+        fireEvent.pointerUp(endDay, { pointerId: 2 });
 
         expect(onChange.callCount).to.equal(1);
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
@@ -417,10 +417,9 @@ describe('<DateRangeCalendar />', () => {
         const endDay = getPickerDay('29');
 
         executeDateDragWithoutDrop(startDay, endDay);
-        // Pointer leaves the cell into something that isn't another cell
-        // (relatedTarget=null mimics leaving the document entirely).
-        fireEvent.pointerOut(endDay, { pointerId: 1, relatedTarget: null });
-        fireEvent.pointerUp(document, { pointerId: 1 });
+        // Release on something that isn't a day cell (no `data-timestamp`).
+        // `event.target` doesn't resolve to a cell, so the drop is cancelled.
+        fireEvent.pointerUp(document.body, { pointerId: 1 });
 
         expect(onChange.callCount).to.equal(0);
       });

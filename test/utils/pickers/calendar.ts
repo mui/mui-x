@@ -19,5 +19,10 @@ export const executeDateDragWithoutDrop = (startDate: Element, ...otherDates: El
 
 export const executeDateDrag = (startDate: Element, ...otherDates: Element[]) => {
   executeDateDragWithoutDrop(startDate, ...otherDates);
-  fireEvent.pointerUp(document, { pointerId: POINTER_ID });
+  // Fire `pointerup` on the cell the user landed on (it bubbles to our
+  // document-level listener), not on `document` directly. The production
+  // handler reads `event.target` to determine the drop cell and cancels if
+  // it isn't inside a day.
+  const dropTarget = otherDates.at(-1) ?? startDate;
+  fireEvent.pointerUp(dropTarget, { pointerId: POINTER_ID });
 };

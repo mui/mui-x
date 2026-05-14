@@ -21,7 +21,6 @@ interface UseDragRangeParams {
 interface UseDragRangeEvents {
   onPointerDown?: React.PointerEventHandler<HTMLButtonElement>;
   onPointerOver?: React.PointerEventHandler<HTMLButtonElement>;
-  onPointerOut?: React.PointerEventHandler<HTMLButtonElement>;
 }
 
 interface UseDragRangeResponse extends UseDragRangeEvents {
@@ -88,7 +87,10 @@ const useDragRangeEvents = ({
   const sourceDateRef = React.useRef<PickerValidDate | null>(null);
   const sourcePositionRef = React.useRef<RangePosition | null>(null);
   const didMoveRef = React.useRef(false);
-  const pendingDropRef = React.useRef<{ date: PickerValidDate; target: HTMLElement } | null>(null);
+  // Last cell the pointer hovered. Used to dedupe `pointerover` (which fires
+  // repeatedly within the same cell), and as the drop fallback for
+  // `pointercancel` (whose `event.target` is unreliable across browsers).
+  const lastHoveredCellRef = React.useRef<HTMLElement | null>(null);
   // Stored so `handlePointerOver` and unmount can reach the document the gesture
   // started on (matters for iframe-hosted pickers).
   const ownerDocumentRef = React.useRef<Document | null>(null);
@@ -122,7 +124,7 @@ const useDragRangeEvents = ({
     sourceDateRef.current = null;
     sourcePositionRef.current = null;
     didMoveRef.current = false;
-    pendingDropRef.current = null;
+    lastHoveredCellRef.current = null;
     ownerDocumentRef.current = null;
     listenerCleanupsRef.current.forEach((teardown) => teardown());
     listenerCleanupsRef.current = [];
@@ -163,23 +165,42 @@ const useDragRangeEvents = ({
     setTimeout(teardown, 0);
   };
 
-  const finalizeGesture = (ownerDoc: Document, installSuppressor: boolean) => {
+  const finalizeGesture = (
+    event: PointerEvent,
+    ownerDoc: Document,
+    eventType: 'pointerup' | 'pointercancel',
+  ) => {
     const wasMoved = didMoveRef.current;
-    const dropInfo = pendingDropRef.current;
     const sourceDate = sourceDateRef.current;
+
+    // For `pointerup`, the drop target is whatever element the pointer was
+    // actually over at release time — releasing into a gap or off the calendar
+    // resolves to `null` and cancels, matching native HTML5 drag.
+    // For `pointercancel`, `event.target` can be unreliable (browsers vary on
+    // whether it's the current under-pointer element or the gesture's start
+    // element). Fall back to the last cell the user hovered, which is the
+    // closest expression of their intent.
+    const dropCell =
+      eventType === 'pointercancel'
+        ? lastHoveredCellRef.current
+        : (getClosestElementWithDataAttribute(
+            event.target instanceof HTMLElement ? event.target : null,
+            'timestamp',
+          ) as HTMLButtonElement | null);
+    const newDate = dropCell ? resolveDateFromTarget(dropCell, adapter, timezone) : null;
 
     cleanup();
 
-    if (wasMoved && installSuppressor) {
+    if (eventType === 'pointerup' && wasMoved) {
       // The click that follows pointerup would re-enter the day's selection
       // logic and undo the drop; swallow it. (Not needed on pointercancel —
       // no click follows a canceled gesture.)
       installClickSuppressor(ownerDoc);
     }
 
-    if (wasMoved && dropInfo && sourceDate && !adapter.isEqual(dropInfo.date, sourceDate)) {
-      dropInfo.target.focus();
-      onDrop(dropInfo.date);
+    if (wasMoved && newDate && sourceDate && !adapter.isEqual(newDate, sourceDate)) {
+      dropCell?.focus();
+      onDrop(newDate);
     }
   };
 
@@ -235,7 +256,7 @@ const useDragRangeEvents = ({
     isDraggingRef.current = true;
     sourceDateRef.current = newDate;
     didMoveRef.current = false;
-    pendingDropRef.current = { date: newDate, target: event.currentTarget };
+    lastHoveredCellRef.current = event.currentTarget;
 
     const { position } = event.currentTarget.dataset;
     sourcePositionRef.current = (position as RangePosition | undefined) ?? null;
@@ -253,7 +274,7 @@ const useDragRangeEvents = ({
       if (pointerEvent.pointerId !== pointerIdRef.current) {
         return;
       }
-      finalizeGesture(ownerDoc, true);
+      finalizeGesture(pointerEvent, ownerDoc, 'pointerup');
     };
 
     const onPointerCancel = (pointerEvent: PointerEvent) => {
@@ -263,7 +284,7 @@ const useDragRangeEvents = ({
       // Spec intent of `pointercancel` is "UA interrupted, not the user".
       // After real movement, commit the drop the user worked for; the snap-back
       // would otherwise be silent and inexplicable.
-      finalizeGesture(ownerDoc, false);
+      finalizeGesture(pointerEvent, ownerDoc, 'pointercancel');
     };
 
     const onKeyDown = (keyEvent: KeyboardEvent) => {
@@ -302,7 +323,7 @@ const useDragRangeEvents = ({
       return;
     }
 
-    if (pendingDropRef.current?.target === event.currentTarget) {
+    if (lastHoveredCellRef.current === event.currentTarget) {
       return;
     }
 
@@ -311,7 +332,7 @@ const useDragRangeEvents = ({
       return;
     }
 
-    pendingDropRef.current = { date: newDate, target: event.currentTarget };
+    lastHoveredCellRef.current = event.currentTarget;
 
     const isDifferentFromSource =
       sourceDateRef.current && !adapter.isEqual(newDate, sourceDateRef.current);
@@ -352,40 +373,14 @@ const useDragRangeEvents = ({
     }
   });
 
-  // Symmetric `pointerout` listener. When the pointer leaves a cell into
-  // somewhere that is *not* another cell (gap, header, outside the calendar
-  // entirely), forget the would-drop target so `pointerup` cancels rather
-  // than committing the last cell the user happened to hover. Matches the
-  // cancel-by-releasing-outside-any-target convention of native HTML5 drag.
-  const handlePointerOut = useEventCallback((event: React.PointerEvent<HTMLButtonElement>) => {
-    if (!isDraggingRef.current || event.pointerId !== pointerIdRef.current) {
-      return;
-    }
-
-    // `pointerout` also fires when the pointer moves to a descendant of the
-    // current cell (e.g. the day text span). That's still "inside" from the
-    // drop-target perspective — bail.
-    const relatedTarget = event.relatedTarget as Node | null;
-    if (relatedTarget && event.currentTarget.contains(relatedTarget)) {
-      return;
-    }
-
-    // If the pointer entered another cell next, that cell's `pointerover`
-    // will re-set the would-drop target. If it didn't, `pointerup` will see
-    // `null` and skip the drop.
-    if (pendingDropRef.current?.target === event.currentTarget) {
-      pendingDropRef.current = null;
-    }
-  });
-
-  // On unmount, clear gesture state so a remount can start fresh and detached
-  // DOM nodes referenced via `pendingDropRef` can be garbage-collected.
-  React.useEffect(() => () => clearGestureState(), []);
+  // On unmount, clear gesture state so a remount can start fresh and any
+  // detached DOM nodes still referenced by gesture refs can be GC'd.
+  // `clearGestureState` is `useEventCallback`-stable, so the effect runs once.
+  React.useEffect(() => () => clearGestureState(), [clearGestureState]);
 
   return {
     onPointerDown: handlePointerDown,
     onPointerOver: handlePointerOver,
-    onPointerOut: handlePointerOut,
   };
 };
 
