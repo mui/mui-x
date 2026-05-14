@@ -218,7 +218,7 @@ describe('processEvent', () => {
       expect(() => {
         processed = processEvent(event, 'Europe/Paris', adapter);
       }).toWarnDev([
-        'MUI X: Recurring events are a premium feature. The `rrule` property will be ignored.',
+        'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
       ]);
 
       expect(processed.dataTimezone.rrule).to.equal(undefined);

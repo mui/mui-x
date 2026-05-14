@@ -290,7 +290,7 @@ class RecurringEventExpander {
       }
       default:
         throw new Error(
-          `MUI: Unknown frequency ${this.rule.freq}. Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".`,
+          `MUI X Scheduler: Unknown frequency ${this.rule.freq}. Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".`,
         );
     }
   }
@@ -457,11 +457,6 @@ class RecurringEventExpander {
   }
 }
 
-/**
- * Expands a recurring event into concrete occurrences within the visible range.
- * Uses direct occurrence computation instead of day-by-day iteration.
- * Honors COUNT/UNTIL boundaries and EXDATE exclusions.
- */
 export function getRecurringEventOccurrencesForVisibleDays(
   event: SchedulerProcessedEvent,
   start: TemporalSupportedObject,

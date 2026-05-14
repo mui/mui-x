@@ -27,9 +27,6 @@ import {
 } from './internal-utils';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 
-/**
- * Generates the update to apply in order to update a recurring event according to the given `scope`.
- */
 export function updateRecurringEvent(
   adapter: Adapter,
   originalEvent: SchedulerProcessedEvent,

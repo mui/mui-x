@@ -7,10 +7,6 @@ import {
 } from '@mui/x-scheduler-internals/models';
 import { getWeekDayCode, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
 
-/**
- * Projects a recurrence rule to a different timezone.
- * This is a derived representation intended for UI purposes only
- */
 export function projectRRuleToTimezone(
   adapter: Adapter,
   rrule: SchedulerProcessedEventRecurrenceRule,

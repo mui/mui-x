@@ -183,7 +183,7 @@ export class SchedulerStore<
 
         if (initialIsControlled !== isControlled) {
           warnOnce([
-            `MUI: A component is changing the ${
+            `MUI X Scheduler: A component is changing the ${
               initialIsControlled ? '' : 'un'
             }controlled ${controlledProp} state of ${this.instanceName} to be ${initialIsControlled ? 'un' : ''}controlled.`,
             'Elements should not switch from uncontrolled to controlled (or vice versa).',
@@ -193,7 +193,7 @@ export class SchedulerStore<
           ]);
         } else if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
           warnOnce([
-            `MUI: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
+            `MUI X Scheduler: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
             `To suppress this warning opt to use a controlled ${this.instanceName}.`,
           ]);
         }
@@ -400,7 +400,7 @@ export class SchedulerStore<
     if (this.state.recurringEventsPlugin == null && calendarEvent.rrule) {
       if (process.env.NODE_ENV !== 'production') {
         warnOnce([
-          'MUI X: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
           'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
         ]);
       }
@@ -425,7 +425,7 @@ export class SchedulerStore<
     if (this.state.recurringEventsPlugin == null && calendarEvent.rrule != null) {
       if (process.env.NODE_ENV !== 'production') {
         warnOnce([
-          'MUI X: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
           'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
         ]);
       }
@@ -445,7 +445,7 @@ export class SchedulerStore<
     if (this.state.recurringEventsPlugin == null) {
       if (process.env.NODE_ENV !== 'production') {
         warnOnce([
-          'MUI X: Recurring event updates are a premium feature.',
+          'MUI X Scheduler: Recurring event updates are a premium feature.',
           'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
         ]);
       }

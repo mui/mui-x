@@ -72,7 +72,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       );
     }).toWarnDev([
-      'MUI X: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
     ]);
   });
 
@@ -89,7 +89,7 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
         </EventCalendarProvider>,
       );
     }).toWarnDev([
-      'MUI X: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
     ]);
   });
 
@@ -108,6 +108,6 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
           />
         </EventCalendarProvider>,
       );
-    }).toWarnDev(['MUI X: Recurring event updates are a premium feature.']);
+    }).toWarnDev(['MUI X Scheduler: Recurring event updates are a premium feature.']);
   });
 });

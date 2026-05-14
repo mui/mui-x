@@ -2,12 +2,9 @@ import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import {
   RecurringEventPresetKey,
   SchedulerProcessedEventRecurrenceRule,
-  RecurringEventWeekDayCode,
   SchedulerProcessedDate,
-  TemporalSupportedObject,
 } from '../models';
 import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
-import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const selectRecurringEventsPlugin = (state: State) => state.recurringEventsPlugin;
 
@@ -51,30 +48,5 @@ export const schedulerRecurringEventSelectors = {
       }
       return recurringEventsPlugin?.isSameRRule(adapter, rruleA, rruleB) ?? false;
     },
-  ),
-  weeklyDays: createSelectorMemoized(
-    (state: State) => state.adapter,
-    selectRecurringEventsPlugin,
-    schedulerOtherSelectors.visibleDate,
-    (
-      adapter,
-      recurringEventsPlugin,
-      visibleDate,
-    ): { code: RecurringEventWeekDayCode; date: TemporalSupportedObject }[] =>
-      recurringEventsPlugin?.getWeeklyDays(adapter, visibleDate) ?? [],
-  ),
-  monthlyReference: createSelectorMemoized(
-    (state: State) => state.adapter,
-    selectRecurringEventsPlugin,
-    (
-      adapter,
-      recurringEventsPlugin,
-      date: SchedulerProcessedDate,
-    ): {
-      dayOfMonth: number;
-      code: RecurringEventWeekDayCode;
-      ord: number;
-      date: TemporalSupportedObject;
-    } | null => recurringEventsPlugin?.getMonthlyReference(adapter, date) ?? null,
   ),
 };

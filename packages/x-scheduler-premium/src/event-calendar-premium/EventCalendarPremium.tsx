@@ -29,8 +29,7 @@ const packageInfo = {
 const watermark = <Watermark packageInfo={packageInfo} />;
 
 /**
- * Premium version of EventCalendar with lazy loading support.
- * Uses EventCalendarPremiumStore which extends EventCalendarStore with lazy loading plugin.
+ * Premium version of EventCalendar with support for lazy loading and recurring events.
  */
 const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
   TEvent extends object,

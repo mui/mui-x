@@ -25,8 +25,12 @@ import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-schedul
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   schedulerEventSelectors,
-  schedulerRecurringEventSelectors,
+  schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  getMonthlyReference,
+  getWeeklyDays,
+} from '@mui/x-scheduler-internals-premium/internals';
 import {
   useEventDialogStyledContext,
   ControlledValue,
@@ -198,12 +202,15 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     occurrence.id,
   );
   const inputsDisabled = controlled.recurrenceSelection === null || isPropertyReadOnly('rrule');
-  const monthlyRef = useStore(
-    store,
-    schedulerRecurringEventSelectors.monthlyReference,
-    occurrence.displayTimezone.start,
-  )!;
-  const weeklyDays = useStore(store, schedulerRecurringEventSelectors.weeklyDays);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const monthlyRef = React.useMemo(
+    () => getMonthlyReference(adapter, occurrence.displayTimezone.start),
+    [adapter, occurrence.displayTimezone.start],
+  );
+  const weeklyDays = React.useMemo(
+    () => getWeeklyDays(adapter, visibleDate),
+    [adapter, visibleDate],
+  );
 
   const presetDraftMap = React.useMemo(
     () => ({

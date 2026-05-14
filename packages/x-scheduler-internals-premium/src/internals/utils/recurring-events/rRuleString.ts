@@ -18,13 +18,6 @@ const SUPPORTED_RRULE_KEYS = new Set([
   'COUNT',
 ]);
 
-/**
- * Parses and validates a RRULE string (RFC5545) into a canonical
- * `SchedulerProcessedEventRecurrenceRule`.
- *
- * The resulting rule is expressed in the provided timezone
- * (typically the event data timezone).
- */
 export function parseRRule(
   adapter: Adapter,
   input: string | SchedulerEventRecurrenceRule,
@@ -152,10 +145,6 @@ export function parseRRule(
   return rrule;
 }
 
-/**
- * Serializes a SchedulerProcessedEventRecurrenceRule object
- * into a RRULE string (RFC5545).
- */
 export function serializeRRule(
   adapter: Adapter,
   rule: SchedulerProcessedEventRecurrenceRule,

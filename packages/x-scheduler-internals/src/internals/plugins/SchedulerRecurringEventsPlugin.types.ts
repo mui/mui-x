@@ -15,14 +15,26 @@ import type { UpdateEventsParameters } from '../utils/SchedulerStore/SchedulerSt
 
 /** Contract implemented by the premium recurring-events plugin. */
 export interface SchedulerRecurringEventsPluginInterface {
+  /**
+   * Parses a recurrence rule into a canonical `SchedulerProcessedEventRecurrenceRule`
+   * expressed in the given timezone. String inputs are validated against RFC5545; object
+   * inputs are trusted and normalized.
+   */
   parseRRule(
     adapter: Adapter,
     input: string | SchedulerEventRecurrenceRule,
     timezone: TemporalTimezone,
   ): SchedulerProcessedEventRecurrenceRule;
 
+  /**
+   * Serializes a recurrence rule into an RFC5545 RRULE string.
+   */
   serializeRRule(adapter: Adapter, rule: SchedulerProcessedEventRecurrenceRule): string;
 
+  /**
+   * Projects a recurrence rule from its data timezone to a different timezone.
+   * The returned rule is a derived representation intended for UI purposes only.
+   */
   projectRRuleToTimezone(
     adapter: Adapter,
     rrule: SchedulerProcessedEventRecurrenceRule,
@@ -30,6 +42,10 @@ export interface SchedulerRecurringEventsPluginInterface {
     seriesStartDataTimezone: TemporalSupportedObject,
   ): SchedulerProcessedEventRecurrenceRule;
 
+  /**
+   * Expands a recurring event into the occurrences that fall within the visible range,
+   * honoring COUNT/UNTIL boundaries and EXDATE exclusions.
+   */
   getOccurrencesForVisibleDays(
     event: SchedulerProcessedEvent,
     start: TemporalSupportedObject,
@@ -38,6 +54,10 @@ export interface SchedulerRecurringEventsPluginInterface {
     displayTimezone: TemporalTimezone,
   ): SchedulerEventOccurrence[];
 
+  /**
+   * Generates the update payload to apply when editing a recurring event, scoped to
+   * a single occurrence, the occurrence and the following ones, or the entire series.
+   */
   updateRecurringEvent(
     adapter: Adapter,
     originalEvent: SchedulerProcessedEvent,
@@ -46,6 +66,10 @@ export interface SchedulerRecurringEventsPluginInterface {
     scope: RecurringEventUpdateScope,
   ): UpdateEventsParameters;
 
+  /**
+   * Normalizes display-timezone changes (start/end/rrule) back to the event's data
+   * timezone before they are persisted.
+   */
   applyDataTimezoneToEventUpdate(params: {
     adapter: Adapter;
     originalEvent: SchedulerProcessedEvent;

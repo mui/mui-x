@@ -299,6 +299,24 @@ storeClasses.forEach((storeClass) => {
         expect(updated.start).to.equal(newStart.toISOString());
         expect(updated.end).to.equal(newEnd.toISOString());
       });
+
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should not throw when updating an event that had rrule on input',
+        () => {
+          const event = EventBuilder.new().recurrent('DAILY').build();
+
+          let store!: InstanceType<typeof storeClass.Value>;
+          expect(() => {
+            store = new storeClass.Value({ events: [event] }, adapter);
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          ]);
+
+          expect(() => {
+            store.updateEvent({ id: event.id, title: 'updated' });
+          }).not.to.throw();
+        },
+      );
     });
 
     describe('Method: deleteEvent', () => {
