@@ -1,0 +1,8 @@
+<EventTimelinePremium
+  events={events}
+  onEventsChange={setEvents}
+  resources={resources}
+  defaultVisibleDate={new Date('2025-07-01T00:00:00')}
+  defaultPreset="dayAndHour"
+  presets={['dayAndHour']}
+/>
