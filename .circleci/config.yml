@@ -267,8 +267,11 @@ jobs:
           name: Install ffmpeg
           command: apt update && apt upgrade -y && apt install ffmpeg -y
       - run:
-          name: Build packages
-          command: pnpm release:build
+          # All other X packages are consumed via src/ aliases from
+          # vitest.shared.mts; only x-charts-vendor is consumed from its
+          # build/ output.
+          name: Build x-charts-vendor
+          command: pnpm -F @mui/x-charts-vendor build
       - run:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
