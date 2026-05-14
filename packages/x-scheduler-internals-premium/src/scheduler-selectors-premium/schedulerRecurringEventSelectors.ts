@@ -9,11 +9,13 @@ import {
 import { SchedulerState as State } from '@mui/x-scheduler-internals/internals';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 
+const selectRecurringEventsPlugin = (state: State) => state.recurringEventsPlugin;
+
 /** Memoized selectors that wrap the premium recurring-events plugin. */
 export const schedulerRecurringEventSelectors = {
   presets: createSelectorMemoized(
     (state: State) => state.adapter,
-    (state: State) => state.recurringEventsPlugin,
+    selectRecurringEventsPlugin,
     (
       adapter,
       recurringEventsPlugin,
@@ -23,7 +25,7 @@ export const schedulerRecurringEventSelectors = {
   ),
   defaultPresetKey: createSelectorMemoized(
     (state: State) => state.adapter,
-    (state: State) => state.recurringEventsPlugin,
+    selectRecurringEventsPlugin,
     (
       adapter,
       recurringEventsPlugin,
@@ -34,7 +36,7 @@ export const schedulerRecurringEventSelectors = {
   ),
   isSameRRule: createSelector(
     (state: State) => state.adapter,
-    (state: State) => state.recurringEventsPlugin,
+    selectRecurringEventsPlugin,
     (
       adapter,
       recurringEventsPlugin,
@@ -52,7 +54,7 @@ export const schedulerRecurringEventSelectors = {
   ),
   weeklyDays: createSelectorMemoized(
     (state: State) => state.adapter,
-    (state: State) => state.recurringEventsPlugin,
+    selectRecurringEventsPlugin,
     schedulerOtherSelectors.visibleDate,
     (
       adapter,
@@ -63,7 +65,7 @@ export const schedulerRecurringEventSelectors = {
   ),
   monthlyReference: createSelectorMemoized(
     (state: State) => state.adapter,
-    (state: State) => state.recurringEventsPlugin,
+    selectRecurringEventsPlugin,
     (
       adapter,
       recurringEventsPlugin,
