@@ -124,6 +124,7 @@ export default function ZoomAndPan() {
               m: 0,
               minHeight: 30,
               p: 0,
+              transform: 'translateY(4px)',
             },
             [`& .${chartsToolbarClasses.root} .MuiButtonBase-root`]: {
               minHeight: 30,
