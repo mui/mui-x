@@ -362,6 +362,7 @@ PickersTextField.propTypes = {
   onFocus: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
   /**
