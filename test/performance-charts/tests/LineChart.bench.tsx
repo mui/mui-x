@@ -17,6 +17,7 @@ benchmark('LineChart with big data amount (with marks)', () => (
     series={[{ data: yData, showMark: true }]}
     width={500}
     height={300}
+    skipAnimation
   />
 ));
 
@@ -26,5 +27,6 @@ benchmark('Area chart with big data amount (no marks)', () => (
     series={[{ area: true, data: yData, showMark: false }]}
     width={500}
     height={300}
+    skipAnimation
   />
 ));
