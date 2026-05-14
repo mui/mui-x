@@ -179,11 +179,11 @@ function usePageData(pageProps: DocsAppProps['pageProps']) {
     )
       ? activePageParents
       : [
-        ...activePageParents,
-        ...ALWAYS_EXPANDED_SIDEBAR_ITEMS.filter(
-          (p) => !activePageParents.some((parent) => parent.pathname === p),
-        ).map((pathname) => ({ pathname })),
-      ];
+          ...activePageParents,
+          ...ALWAYS_EXPANDED_SIDEBAR_ITEMS.filter(
+            (p) => !activePageParents.some((parent) => parent.pathname === p),
+          ).map((pathname) => ({ pathname })),
+        ];
 
     return {
       activePage,
