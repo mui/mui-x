@@ -91,12 +91,7 @@ const useDragRangeEvents = ({
   // repeatedly within the same cell), and as the drop fallback for
   // `pointercancel` (whose `event.target` is unreliable across browsers).
   const lastHoveredCellRef = React.useRef<HTMLElement | null>(null);
-  // Stored so `handlePointerOver` and unmount can reach the document the gesture
-  // started on (matters for iframe-hosted pickers).
-  const ownerDocumentRef = React.useRef<Document | null>(null);
-  // Each entry removes one document listener the gesture installed. Listeners
-  // are added at different times (pointerdown vs. first move), so a single
-  // cleanup closure isn't expressive enough — accumulate teardown thunks here.
+  // Each entry removes one document listener the gesture installed.
   const listenerCleanupsRef = React.useRef<Array<() => void>>([]);
   // Outstanding capture-phase click suppressor, if any. Tracked so back-to-back
   // drags can tear the prior one down before installing a new one.
@@ -125,7 +120,6 @@ const useDragRangeEvents = ({
     sourcePositionRef.current = null;
     didMoveRef.current = false;
     lastHoveredCellRef.current = null;
-    ownerDocumentRef.current = null;
     listenerCleanupsRef.current.forEach((teardown) => teardown());
     listenerCleanupsRef.current = [];
   });
@@ -155,7 +149,11 @@ const useDragRangeEvents = ({
     };
     suppress = (clickEvent: Event) => {
       clickEvent.preventDefault();
-      clickEvent.stopPropagation();
+      // `stopImmediatePropagation` (rather than just `stopPropagation`) so
+      // other capture-phase click listeners on `document` — analytics, focus
+      // traps, third-party overlays — don't observe the synthesized
+      // post-drag click as if the user intentionally clicked the cell.
+      clickEvent.stopImmediatePropagation();
       teardown();
     };
     doc.addEventListener('click', suppress, { capture: true });
@@ -180,20 +178,27 @@ const useDragRangeEvents = ({
     // whether it's the current under-pointer element or the gesture's start
     // element). Fall back to the last cell the user hovered, which is the
     // closest expression of their intent.
-    const dropCell =
-      eventType === 'pointercancel'
-        ? lastHoveredCellRef.current
-        : getClosestElementWithDataAttribute(
-            event.target instanceof HTMLElement ? event.target : null,
-            'timestamp',
-          );
+    let dropOrigin: HTMLElement | null;
+    if (eventType === 'pointercancel') {
+      dropOrigin = lastHoveredCellRef.current;
+    } else {
+      dropOrigin = event.target instanceof HTMLElement ? event.target : null;
+    }
+    const dropCell = getClosestElementWithDataAttribute(dropOrigin, 'timestamp');
     const newDate = dropCell ? resolveDateFromTarget(dropCell, adapter, timezone) : null;
+    // Resolve the focusable `<button>` separately from `dropCell`. Today
+    // `data-timestamp` lives on the button itself, but a future custom slot
+    // could put it on a wrapper; in that case the cell isn't focusable and
+    // the disabled state lives on the inner button.
+    const dropButton = (dropOrigin?.closest('button') ??
+      dropCell?.querySelector('button') ??
+      null) as HTMLButtonElement | null;
 
     // `shouldDisableDate` / min-max / readOnly mark the day's button as
     // `disabled`. `pointerup` still lands on a disabled `<button>` in
     // Chromium/WebKit, so guard explicitly — `DateRangeCalendar.handleDrop`
     // doesn't re-validate the date.
-    const isDropCellDisabled = dropCell instanceof HTMLButtonElement && dropCell.disabled;
+    const isDropDisabled = dropButton?.disabled === true;
 
     cleanup();
 
@@ -208,13 +213,25 @@ const useDragRangeEvents = ({
       wasMoved &&
       newDate &&
       sourceDate &&
-      !isDropCellDisabled &&
+      !isDropDisabled &&
       !adapter.isEqual(newDate, sourceDate)
     ) {
-      (dropCell as HTMLButtonElement | null)?.focus();
+      dropButton?.focus();
       onDrop(newDate);
     }
   };
+
+  // `touchmove`-blocks-scroll listener. Attached eagerly in
+  // `handlePointerDown` for touch pointers only. Mouse/pen don't fire touch
+  // events. Stable at hook level so the listener identity is consistent
+  // across renders.
+  const onTouchMove = useEventCallback((touchEvent: TouchEvent) => {
+    if (isDraggingRef.current) {
+      // `touch-action: none` on the source cell isn't enough once the finger
+      // crosses cell boundaries.
+      touchEvent.preventDefault();
+    }
+  });
 
   const handlePointerDown = useEventCallback((event: React.PointerEvent<HTMLButtonElement>) => {
     // Ignore secondary mouse buttons (middle = 1, right = 2). `> 0` rather
@@ -258,7 +275,6 @@ const useDragRangeEvents = ({
       // already released, nothing to do
     }
 
-    event.stopPropagation();
     // Note: deliberately not calling `event.preventDefault()` here. Doing so
     // would suppress the synthesized click that follows pointerup, which is
     // load-bearing for tap-to-advance on an endpoint cell. The iOS magnifier
@@ -280,7 +296,6 @@ const useDragRangeEvents = ({
     // Use the owner document (matters for iframe-hosted pickers) for all
     // document-level listeners.
     const ownerDoc = event.currentTarget.ownerDocument ?? document;
-    ownerDocumentRef.current = ownerDoc;
 
     // Drag UI activation is deferred until the first real move — a pure
     // press on an endpoint must leave selection state alone so the click
@@ -304,10 +319,16 @@ const useDragRangeEvents = ({
     };
 
     const onKeyDown = (keyEvent: KeyboardEvent) => {
-      if (keyEvent.key === 'Escape') {
-        keyEvent.preventDefault();
-        cleanup();
+      if (keyEvent.key !== 'Escape') {
+        return;
       }
+      // Only consume Escape when there's a visible drag in flight. A press
+      // without movement is indistinguishable from a tap; let Escape
+      // propagate so a host modal/popover can still close on the same key.
+      if (didMoveRef.current) {
+        keyEvent.preventDefault();
+      }
+      cleanup();
     };
 
     ownerDoc.addEventListener('pointerup', onPointerUp);
@@ -318,17 +339,18 @@ const useDragRangeEvents = ({
       () => ownerDoc.removeEventListener('pointercancel', onPointerCancel),
       () => ownerDoc.removeEventListener('keydown', onKeyDown),
     );
-  });
 
-  // `touchmove`-blocks-scroll listener. Lives outside `handlePointerDown` so
-  // it can be installed lazily (on first real move) rather than on every
-  // press — registering it on the document up front would disable
-  // compositor-thread scrolling for the duration of every endpoint tap.
-  const onTouchMove = useEventCallback((touchEvent: TouchEvent) => {
-    if (isDraggingRef.current) {
-      // `touch-action: none` on the source cell isn't enough once the finger
-      // crosses cell boundaries.
-      touchEvent.preventDefault();
+    // For touch input, attach the scroll-suppression listener up front rather
+    // than lazily on first movement. The Pointer Events spec latches
+    // `touch-action: none` from the source cell over the rest of the gesture,
+    // but real-world WebKit/Chromium versions don't always honor that —
+    // attaching eagerly closes that window. Mouse and pen don't fire touch
+    // events so they don't need it.
+    if (event.pointerType === 'touch') {
+      ownerDoc.addEventListener('touchmove', onTouchMove, { passive: false });
+      listenerCleanupsRef.current.push(() =>
+        ownerDoc.removeEventListener('touchmove', onTouchMove),
+      );
     }
   });
 
@@ -369,19 +391,9 @@ const useDragRangeEvents = ({
 
       // First real move: activate drag UI and tell the parent which endpoint
       // is being dragged so the preview computes against the correct side.
-      // Touch-scroll suppression is installed here (not on pointerdown) so a
-      // pure tap doesn't disable compositor scrolling.
       didMoveRef.current = true;
       onDatePositionChange(sourcePositionRef.current);
       setIsDragging(true);
-
-      const ownerDoc = ownerDocumentRef.current;
-      if (ownerDoc) {
-        ownerDoc.addEventListener('touchmove', onTouchMove, { passive: false });
-        listenerCleanupsRef.current.push(() =>
-          ownerDoc.removeEventListener('touchmove', onTouchMove),
-        );
-      }
     }
 
     if (didMoveRef.current) {

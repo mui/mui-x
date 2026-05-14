@@ -446,6 +446,39 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(0);
       });
 
+      it('should notify the parent of the source endpoint on first cross-cell move', () => {
+        // `onRangePositionChange` fires when our hook calls
+        // `onDatePositionChange` on the first real move — that's what tells
+        // the calendar which side of the range the drag is editing. Range
+        // flip / preview correctness depends on it.
+        const onRangePositionChange = spy();
+        render(
+          <DateRangeCalendar
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
+            onRangePositionChange={onRangePositionChange}
+          />,
+        );
+
+        const endDay = screen.getByRole('gridcell', { name: '31', selected: true });
+        const targetDay = getPickerDay('29');
+
+        // No callback until real movement crosses into a different cell.
+        fireEvent.pointerDown(endDay, { pointerId: 1, button: 0, isPrimary: true });
+        expect(onRangePositionChange.callCount).to.equal(0);
+
+        // First cross-cell move announces the source endpoint.
+        fireEvent.pointerOver(targetDay, { pointerId: 1 });
+        expect(onRangePositionChange.callCount).to.equal(1);
+        expect(onRangePositionChange.lastCall.args[0]).to.equal('end');
+
+        // Subsequent moves don't re-announce — the source position is fixed
+        // for the gesture.
+        fireEvent.pointerOver(getPickerDay('28'), { pointerId: 1 });
+        expect(onRangePositionChange.callCount).to.equal(1);
+
+        fireEvent.pointerUp(getPickerDay('28'), { pointerId: 1 });
+      });
+
       it('should cancel an in-flight drag on Escape', () => {
         const onChange = spy();
         render(
