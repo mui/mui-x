@@ -28,6 +28,15 @@ Here is an example of a rotation axis with a continuous scale type.
 
 {{"demo": "ContinuousRadialLineChart.js", "bg": "outline"}}
 
+## Marks
+
+Add `showMark: true` to display marks.
+
+To modify the mark, use the property `shape`.
+It accepts 7 shapes: `'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, and `'wye'`.
+
+{{"demo": "RadialLineMarkShape.js", "bg": "outline"}}
+
 ## Highlight
 
 Like other series, the radial line series has a `highlightScope` property that accepts an object with `highlight` and `fade` properties.
