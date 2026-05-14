@@ -12,16 +12,7 @@ export default mergeConfig(
       isolate: true,
       browser: {
         enabled: true,
-        instances: [
-          { browser: 'chromium' },
-          // V8 Coverage in browser mode is not supported yet outside of chromium
-          // {
-          //   browser: 'webkit',
-          // },
-          // {
-          //   browser: 'firefox',
-          // },
-        ],
+        instances: [{ browser: 'chromium' }],
       },
     },
   }),
