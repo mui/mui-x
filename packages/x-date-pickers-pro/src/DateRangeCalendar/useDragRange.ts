@@ -183,11 +183,17 @@ const useDragRangeEvents = ({
     const dropCell =
       eventType === 'pointercancel'
         ? lastHoveredCellRef.current
-        : (getClosestElementWithDataAttribute(
+        : getClosestElementWithDataAttribute(
             event.target instanceof HTMLElement ? event.target : null,
             'timestamp',
-          ) as HTMLButtonElement | null);
+          );
     const newDate = dropCell ? resolveDateFromTarget(dropCell, adapter, timezone) : null;
+
+    // `shouldDisableDate` / min-max / readOnly mark the day's button as
+    // `disabled`. `pointerup` still lands on a disabled `<button>` in
+    // Chromium/WebKit, so guard explicitly — `DateRangeCalendar.handleDrop`
+    // doesn't re-validate the date.
+    const isDropCellDisabled = dropCell instanceof HTMLButtonElement && dropCell.disabled;
 
     cleanup();
 
@@ -198,16 +204,22 @@ const useDragRangeEvents = ({
       installClickSuppressor(ownerDoc);
     }
 
-    if (wasMoved && newDate && sourceDate && !adapter.isEqual(newDate, sourceDate)) {
-      dropCell?.focus();
+    if (
+      wasMoved &&
+      newDate &&
+      sourceDate &&
+      !isDropCellDisabled &&
+      !adapter.isEqual(newDate, sourceDate)
+    ) {
+      (dropCell as HTMLButtonElement | null)?.focus();
       onDrop(newDate);
     }
   };
 
   const handlePointerDown = useEventCallback((event: React.PointerEvent<HTMLButtonElement>) => {
-    // Ignore secondary mouse buttons. `> 0` (not `!== 0`) is intentional:
-    // real browsers report `button: -1` on events where no button changed
-    // state, and we want to treat those as primary.
+    // Ignore secondary mouse buttons (middle = 1, right = 2). `> 0` rather
+    // than `!== 0` keeps the gesture permissive when `event.button` is left
+    // unset by a synthetic event (some test environments).
     if (event.button > 0) {
       return;
     }
@@ -258,8 +270,12 @@ const useDragRangeEvents = ({
     didMoveRef.current = false;
     lastHoveredCellRef.current = event.currentTarget;
 
-    const { position } = event.currentTarget.dataset;
-    sourcePositionRef.current = (position as RangePosition | undefined) ?? null;
+    // Walk up rather than reading `currentTarget.dataset` directly so the
+    // hook keeps working if a future slot puts `data-position` on a wrapper
+    // around the cell (mirrors how we resolve `data-timestamp`).
+    const positionHost = getClosestElementWithDataAttribute(event.currentTarget, 'position');
+    sourcePositionRef.current =
+      (positionHost?.dataset.position as RangePosition | undefined) ?? null;
 
     // Use the owner document (matters for iframe-hosted pickers) for all
     // document-level listeners.

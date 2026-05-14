@@ -424,6 +424,28 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(0);
       });
 
+      it('should cancel the drop when the pointer is released on a disabled day', () => {
+        // `pointerup` lands on disabled `<button>` elements in real browsers,
+        // and `handleDrop` doesn't re-validate the date — without an explicit
+        // guard the gesture would route an invalid date through `onChange`.
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
+            shouldDisableDate={(date) => adapterToUse.getDate(date) === 15}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '10', selected: true });
+        const disabledDay = getPickerDay('15');
+        expect(disabledDay).to.have.attribute('disabled');
+
+        executeDateDrag(startDay, disabledDay);
+
+        expect(onChange.callCount).to.equal(0);
+      });
+
       it('should cancel an in-flight drag on Escape', () => {
         const onChange = spy();
         render(
