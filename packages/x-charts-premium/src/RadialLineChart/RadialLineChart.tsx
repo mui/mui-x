@@ -201,7 +201,7 @@ RadialLineChart.propTypes = {
    * @default { rotation: 'line' }
    */
   axisHighlight: PropTypes.shape({
-    radius: PropTypes.oneOf(['line', 'none']),
+    radius: PropTypes.oneOf(['band', 'line', 'none']),
     rotation: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
