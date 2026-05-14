@@ -100,6 +100,16 @@ async function main() {
     };
 
     describe.concurrent('routes', () => {
+      // Close pool pages once the concurrent batch finishes so the
+      // sequential print-preview tests below see only one browser window
+      // on the shared xvfb display (ffmpeg x11grab uses fixed coordinates
+      // and Chromium tiles windows differently when several are open).
+      // The pool lazily re-creates pages for the few sequential pool-using
+      // tests that follow.
+      afterAll(async () => {
+        await pool.closeAll();
+      });
+
       routes.forEach((route) => {
         test(
           `creates screenshots of ${route.url}`,
@@ -487,6 +497,7 @@ async function main() {
 }
 
 function createPagePool(size: number, factory: () => Promise<Page>) {
+  const all = new Set<Page>();
   const available: Page[] = [];
   const waiters: Array<(page: Page) => void> = [];
   let created = 0;
@@ -499,7 +510,9 @@ function createPagePool(size: number, factory: () => Promise<Page>) {
       }
       if (created < size) {
         created += 1;
-        return factory();
+        const page = await factory();
+        all.add(page);
+        return page;
       }
       const { promise, resolve } = Promise.withResolvers<Page>();
       waiters.push(resolve);
@@ -512,6 +525,13 @@ function createPagePool(size: number, factory: () => Promise<Page>) {
       } else {
         available.push(page);
       }
+    },
+    async closeAll() {
+      const pages = Array.from(all);
+      all.clear();
+      available.length = 0;
+      created = 0;
+      await Promise.all(pages.map((page) => page.close()));
     },
   };
 }
