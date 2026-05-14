@@ -113,7 +113,9 @@ const useDragRangeEvents = ({
 
   // Resets every ref the gesture mutated and removes any listeners installed
   // during the gesture. Safe to call from event handlers and from unmount.
-  const clearGestureState = () => {
+  // Only reads refs, so its closure never changes — memoized for stable
+  // identity (referenced by `cleanup` and the unmount effect).
+  const clearGestureState = useEventCallback(() => {
     isDraggingRef.current = false;
     pointerIdRef.current = null;
     sourceDateRef.current = null;
@@ -123,7 +125,7 @@ const useDragRangeEvents = ({
     ownerDocumentRef.current = null;
     listenerCleanupsRef.current.forEach((teardown) => teardown());
     listenerCleanupsRef.current = [];
-  };
+  });
 
   const cleanup = useEventCallback(() => {
     const wasActive = didMoveRef.current;
