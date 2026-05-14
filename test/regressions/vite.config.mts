@@ -17,10 +17,6 @@ declare module 'vitest' {
 export default defineConfig({
   build: {
     outDir: 'build',
-    // The bundle is only consumed by Playwright over localhost — no need to
-    // minify or report gzip sizes.
-    minify: false,
-    reportCompressedSize: false,
   },
   resolve: {
     alias: [
