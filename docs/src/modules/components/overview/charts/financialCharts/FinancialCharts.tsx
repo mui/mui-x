@@ -647,14 +647,15 @@ export default function FinancialCharts() {
               </Typography>
             </Stack>
             <Typography variant="h2" sx={{ fontSize: { xs: '1.75rem', md: '2rem' } }}>
-              High-performance candlestick and OHLC series
+              High-performance candlestick and OHLC
             </Typography>
           </Stack>
 
           <Button
+            size="small"
             href="/x/react-charts/candlestick/"
             endIcon={<ArrowForwardIcon />}
-            sx={{ alignSelf: 'flex-start' }}
+            sx={{ alignSelf: 'flex-start', whiteSpace: 'nowrap', width: 'fit-content' }}
           >
             Explore candlestick charts
           </Button>
