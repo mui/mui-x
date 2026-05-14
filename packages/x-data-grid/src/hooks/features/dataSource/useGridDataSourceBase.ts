@@ -371,7 +371,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
   const handleFetchRowsOnParamsChange = React.useCallback(() => {
-    apiRef.current.setRows([]);
     stopPolling();
     debouncedFetchRows();
   }, [stopPolling, debouncedFetchRows, apiRef]);
