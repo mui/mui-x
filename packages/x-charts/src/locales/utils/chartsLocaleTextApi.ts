@@ -80,6 +80,38 @@ export interface ChartsLocaleText {
    */
   chartPaletteNameStrawberrySky: string;
   /**
+   * Label for the signal duo palette.
+   */
+  chartPaletteNameSignalDuo: string;
+  /**
+   * Label for the desert dune palette.
+   */
+  chartPaletteNameDesertDune: string;
+  /**
+   * Label for the tropical punch palette.
+   */
+  chartPaletteNameTropicalPunch: string;
+  /**
+   * Label for the sage garden palette.
+   */
+  chartPaletteNameSageGarden: string;
+  /**
+   * Label for the neon cyber palette.
+   */
+  chartPaletteNameNeonCyber: string;
+  /**
+   * Label for the autumn spice palette.
+   */
+  chartPaletteNameAutumnSpice: string;
+  /**
+   * Label for the sunset coral palette.
+   */
+  chartPaletteNameSunsetCoral: string;
+  /**
+   * Label for the candy pop palette.
+   */
+  chartPaletteNameCandyPop: string;
+  /**
    * Label for the blue palette.
    */
   chartPaletteNameBlue: string;
