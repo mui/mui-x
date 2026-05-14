@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
@@ -9,6 +10,7 @@ import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { Virtualization } from '@mui/x-virtualizer';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 import { useEventTimelinePremiumVirtualizerStore } from '../EventTimelinePremiumVirtualizerContext';
+import { useReportTitleWidth } from '../useTitleColumnWidth';
 
 const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   name: 'MuiEventTimeline',
@@ -45,7 +47,12 @@ const EventTimelinePremiumTitleCellContent = styled('span', {
   flexDirection: 'row',
   alignItems: 'center',
   gap: theme.spacing(1),
-  minWidth: 0,
+  // Render at the natural content width so the parent ResizeObserver can
+  // measure the widest title; the cell root clips overflow until the
+  // column expands.
+  width: 'max-content',
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
 }));
 
 const ResourceLegendColor = styled('span', {
@@ -66,6 +73,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   const store = useEventTimelinePremiumStoreContext();
   const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
   const { schedulerId, classes } = useEventTimelinePremiumStyledContext();
+  const reportTitleWidth = useReportTitleWidth();
 
   // Selector hooks
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
@@ -73,8 +81,30 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   const depth = useStore(store, schedulerResourceSelectors.resourceDepth, resourceId);
   const pinnedLeftOffset = virtualizerStore.use(Virtualization.selectors.pinnedLeftOffsetSelector);
 
+  // Ref hooks
+  const rootRef = React.useRef<HTMLDivElement | null>(null);
+  const contentRef = React.useRef<HTMLSpanElement | null>(null);
+
+  React.useEffect(() => {
+    const root = rootRef.current;
+    const content = contentRef.current;
+    if (!root || !content || typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+
+    // Report the root's scrollWidth: it reflects the natural width of the
+    // inner content (rendered with `width: max-content`) plus the cell's
+    // depth-dependent horizontal padding, even when overflow is clipped.
+    const observer = new ResizeObserver(() => {
+      reportTitleWidth(resourceId, root.scrollWidth);
+    });
+    observer.observe(content);
+    return () => observer.disconnect();
+  }, [resourceId, reportTitleWidth]);
+
   return (
     <EventTimelinePremiumTitleCellRoot
+      ref={rootRef}
       id={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
       className={classes.titleCell}
       style={
@@ -85,7 +115,10 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       }
       data-palette={eventColor}
     >
-      <EventTimelinePremiumTitleCellContent className={classes.titleCellContent}>
+      <EventTimelinePremiumTitleCellContent
+        ref={contentRef}
+        className={classes.titleCellContent}
+      >
         <ResourceLegendColor className={classes.titleCellLegendColor} />
         {resource!.title}
       </EventTimelinePremiumTitleCellContent>

@@ -40,6 +40,7 @@ import {
   EventTimelinePremiumVirtualizerContext,
   useEventTimelinePremiumVirtualizerStore,
 } from './EventTimelinePremiumVirtualizerContext';
+import { TitleColumnWidthProvider, useTitleColumnWidth } from './useTitleColumnWidth';
 
 const ROW_HEIGHT = 74;
 
@@ -302,11 +303,9 @@ const EventTimelinePremiumFillerRow = styled('div', {
 const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndicator: boolean }>(
   function HeaderRowContent(props, ref) {
     const { showCurrentTimeIndicator } = props;
-    const store = useEventTimelinePremiumStoreContext();
     const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
     const { classes, localeText, resourceColumnLabel } = useEventTimelinePremiumStyledContext();
 
-    const titleColumnWidth = useStore(store, eventTimelinePremiumPresetSelectors.titleColumnWidth);
     const pinnedLeftOffset = virtualizerStore.use(
       Virtualization.selectors.pinnedLeftOffsetSelector,
     );
@@ -338,7 +337,7 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
         >
           {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
         </EventTimelinePremiumTitleHeaderCell>
-        <div role="none" style={{ width: titleColumnWidth }} />
+        <div role="none" style={{ width: 'var(--title-column-width)' }} />
         <EventTimelinePremiumEventsHeaderCell className={classes.eventsHeaderCell}>
           <EventTimelinePremiumEventsHeaderCellContent className={classes.eventsHeaderCellContent}>
             <EventTimelinePremiumHeader tickRange={tickRange} />
@@ -574,10 +573,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   // Measure header height for the virtualizer's topPinnedHeight
   const headerHeight = useElementHeight(headerRowRef);
 
-  // Selector hooks for virtualizer dimensions
-  const titleColumnWidth = useStore(store, eventTimelinePremiumPresetSelectors.titleColumnWidth);
-  const columnsTotalWidth = useStore(store, eventTimelinePremiumPresetSelectors.columnsTotalWidth);
-
   // Virtualizer setup
   const scrollbarVerticalRef = React.useRef<HTMLDivElement | null>(null);
   const scrollbarHorizontalRef = React.useRef<HTMLDivElement | null>(null);
@@ -595,6 +590,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     () => resources.map(({ resource }) => ({ id: resource.id, model: resource })),
     [resources],
   );
+
+  const { width: titleColumnWidth, report: reportTitleWidth } = useTitleColumnWidth({
+    minWidth: 50,
+    rows,
+  });
 
   if (!rows) {
     throw new Error(
@@ -625,6 +625,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   // Build virtualizer column model: one pinned title column + one column per tick.
   const { tickCount, tickWidth } = presetConfig;
+  const columnsTotalWidth = titleColumnWidth + tickCount * tickWidth;
 
   const titleColumn = React.useMemo<ColumnWithWidth>(
     () => ({ key: 'title', computedWidth: titleColumnWidth }),
@@ -703,48 +704,54 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
       }
     >
       <EventTimelinePremiumVirtualizerContext.Provider value={virtualizer.store}>
-        <EventDialogProvider>
-          <EventTimelinePremiumGrid className={classes.grid} {...scrollerProps} ref={gridMergedRef}>
-            <EventTimelinePremiumScrollerContent {...scrollerContentProps}>
-              <EventTimelinePremiumViewport {...viewportProps}>
-                <HeaderRowContent
-                  ref={headerRowRef}
-                  showCurrentTimeIndicator={showCurrentTimeIndicator}
-                />
-                <RowContainer role="rowgroup" {...positionerProps}>
-                  {virtualizer.api.getters.getRows()}
-                </RowContainer>
-                <FillerRow />
-              </EventTimelinePremiumViewport>
-              {showCurrentTimeIndicator && (
-                <EventTimelinePremiumCurrentTimeIndicator
-                  className={classes.currentTimeIndicator}
-                  aria-hidden
-                />
-              )}
-            </EventTimelinePremiumScrollerContent>
-          </EventTimelinePremiumGrid>
-          {hasScrollY && (
-            <VirtualScrollbarVertical
-              ref={scrollbarVerticalProps.ref}
-              tabIndex={-1}
-              aria-hidden="true"
-              onFocus={(event: React.FocusEvent<HTMLDivElement>) => event.target.blur()}
+        <TitleColumnWidthProvider value={reportTitleWidth}>
+          <EventDialogProvider>
+            <EventTimelinePremiumGrid
+              className={classes.grid}
+              {...scrollerProps}
+              ref={gridMergedRef}
             >
-              <div style={{ height: dimensions.minimumSize.height - headerHeight }} />
-            </VirtualScrollbarVertical>
-          )}
-          {hasScrollX && (
-            <VirtualScrollbarHorizontal
-              ref={scrollbarHorizontalProps.ref}
-              tabIndex={-1}
-              aria-hidden="true"
-              onFocus={(event: React.FocusEvent<HTMLDivElement>) => event.target.blur()}
-            >
-              <div style={{ width: eventsWidth }} />
-            </VirtualScrollbarHorizontal>
-          )}
-        </EventDialogProvider>
+              <EventTimelinePremiumScrollerContent {...scrollerContentProps}>
+                <EventTimelinePremiumViewport {...viewportProps}>
+                  <HeaderRowContent
+                    ref={headerRowRef}
+                    showCurrentTimeIndicator={showCurrentTimeIndicator}
+                  />
+                  <RowContainer role="rowgroup" {...positionerProps}>
+                    {virtualizer.api.getters.getRows()}
+                  </RowContainer>
+                  <FillerRow />
+                </EventTimelinePremiumViewport>
+                {showCurrentTimeIndicator && (
+                  <EventTimelinePremiumCurrentTimeIndicator
+                    className={classes.currentTimeIndicator}
+                    aria-hidden
+                  />
+                )}
+              </EventTimelinePremiumScrollerContent>
+            </EventTimelinePremiumGrid>
+            {hasScrollY && (
+              <VirtualScrollbarVertical
+                ref={scrollbarVerticalProps.ref}
+                tabIndex={-1}
+                aria-hidden="true"
+                onFocus={(event: React.FocusEvent<HTMLDivElement>) => event.target.blur()}
+              >
+                <div style={{ height: dimensions.minimumSize.height - headerHeight }} />
+              </VirtualScrollbarVertical>
+            )}
+            {hasScrollX && (
+              <VirtualScrollbarHorizontal
+                ref={scrollbarHorizontalProps.ref}
+                tabIndex={-1}
+                aria-hidden="true"
+                onFocus={(event: React.FocusEvent<HTMLDivElement>) => event.target.blur()}
+              >
+                <div style={{ width: eventsWidth }} />
+              </VirtualScrollbarHorizontal>
+            )}
+          </EventDialogProvider>
+        </TitleColumnWidthProvider>
       </EventTimelinePremiumVirtualizerContext.Provider>
     </EventTimelinePremiumContentRoot>
   );
