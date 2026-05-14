@@ -6,7 +6,7 @@ import * as fs from 'fs/promises';
 import generateReleaseInfo from '../../scripts/generateReleaseInfo.mjs';
 import { alias } from '../../vitest.shared.mts';
 
-const MAX_CONCURRENCY = 2;
+const MAX_CONCURRENCY = 4;
 
 declare module 'vitest' {
   interface ProvidedContext {
