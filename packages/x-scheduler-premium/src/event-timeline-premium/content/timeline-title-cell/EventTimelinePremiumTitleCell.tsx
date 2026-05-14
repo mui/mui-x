@@ -23,7 +23,7 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   alignContent: 'start',
   fontSize: theme.typography.body2.fontSize,
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'start',
   gap: theme.spacing(1),
   position: 'absolute',
   height: '100%',
@@ -35,6 +35,17 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
     boxShadow: `inset 0 0 0 2px ${(theme.vars || theme).palette.primary.main}`,
     borderRadius: theme.shape.borderRadius,
   },
+}));
+
+const EventTimelinePremiumTitleCellContent = styled('span', {
+  name: 'MuiEventTimeline',
+  slot: 'TitleCellContent',
+})(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+  minWidth: 0,
 }));
 
 const ResourceLegendColor = styled('span', {
@@ -69,8 +80,10 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       style={{ '--resource-depth': depth, left: pinnedLeftOffset } as React.CSSProperties}
       data-palette={eventColor}
     >
-      <ResourceLegendColor className={classes.titleCellLegendColor} />
-      {resource!.title}
+      <EventTimelinePremiumTitleCellContent className={classes.titleCellContent}>
+        <ResourceLegendColor className={classes.titleCellLegendColor} />
+        {resource!.title}
+      </EventTimelinePremiumTitleCellContent>
     </EventTimelinePremiumTitleCellRoot>
   );
 }

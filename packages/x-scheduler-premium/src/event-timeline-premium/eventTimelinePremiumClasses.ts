@@ -31,6 +31,8 @@ export interface EventTimelinePremiumClasses extends EventDialogClasses {
   titleCellRow: string;
   /** Styles applied to the title cell element. */
   titleCell: string;
+  /** Styles applied to the title cell content wrapper element. */
+  titleCellContent: string;
   /** Styles applied to the title cell legend color element. */
   titleCellLegendColor: string;
   /** Styles applied to the current time indicator element. */
@@ -72,6 +74,7 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'eventsCell',
     'titleCellRow',
     'titleCell',
+    'titleCellContent',
     'titleCellLegendColor',
     'currentTimeIndicator',
     'currentTimeIndicatorCircle',
