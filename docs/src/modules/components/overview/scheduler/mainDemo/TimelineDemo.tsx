@@ -1,5 +1,7 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
@@ -7,6 +9,11 @@ import { useEventTimelinePremiumApiRef } from '@mui/x-scheduler-premium/use-even
 import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { timelineEvents, timelineResources, timelineDefaultVisibleDate } from './data';
+import {
+  CustomThemeName,
+  DemoThemeSelector,
+  SchedulerDemoThemeProvider,
+} from './DemoThemeSelector';
 
 const presetOptions: { value: EventTimelinePremiumPreset; label: string }[] = [
   { value: 'dayAndHour', label: 'Time' },
@@ -19,6 +26,7 @@ const presetOptions: { value: EventTimelinePremiumPreset; label: string }[] = [
 export default function TimelineDemo() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(timelineEvents);
   const [preset, setPreset] = React.useState<EventTimelinePremiumPreset>('monthAndYear');
+  const [selectedTheme, setSelectedTheme] = React.useState<CustomThemeName>('default');
   const apiRef = useEventTimelinePremiumApiRef();
 
   const handlePresetChange = (event: SelectChangeEvent) => {
@@ -26,30 +34,64 @@ export default function TimelineDemo() {
   };
 
   return (
-    <Paper
-      variant="outlined"
-      elevation={0}
-      sx={{ height: 600, width: '100%', p: 1, display: 'flex', flexDirection: 'column', gap: 1 }}
-    >
-      <Select value={preset} onChange={handlePresetChange} size="small" sx={{ width: 140 }}>
-        {presetOptions.map(({ value, label }) => (
-          <MenuItem key={value} value={value}>
-            {label}
-          </MenuItem>
-        ))}
-      </Select>
+    <SchedulerDemoThemeProvider selectedTheme={selectedTheme}>
+      <Paper
+        elevation={0}
+        sx={{
+          height: 600,
+          width: '100%',
+          p: 1,
+          mb: 6,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+        }}
+      >
+        <Stack
+          direction="row"
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 1,
+          }}
+        >
+          <Select
+            aria-label="Timeline scale"
+            value={preset}
+            onChange={handlePresetChange}
+            size="small"
+            sx={{ width: 140 }}
+          >
+            {presetOptions.map(({ value, label }) => (
+              <MenuItem key={value} value={value}>
+                {label}
+              </MenuItem>
+            ))}
+          </Select>
+          <DemoThemeSelector
+            ariaLabel="Timeline demo theme"
+            selectedTheme={selectedTheme}
+            onThemeChange={(event) => {
+              setSelectedTheme(event.target.value as CustomThemeName);
+            }}
+          />
+        </Stack>
 
-      <EventTimelinePremium
-        apiRef={apiRef}
-        events={events}
-        onEventsChange={setEvents}
-        resources={timelineResources}
-        defaultVisibleDate={timelineDefaultVisibleDate}
-        preset={preset}
-        onPresetChange={setPreset}
-        areEventsResizable
-        areEventsDraggable
-      />
-    </Paper>
+        <Box sx={{ minHeight: 0, flexGrow: 1 }}>
+          <EventTimelinePremium
+            apiRef={apiRef}
+            events={events}
+            onEventsChange={setEvents}
+            resources={timelineResources}
+            defaultVisibleDate={timelineDefaultVisibleDate}
+            preset={preset}
+            onPresetChange={setPreset}
+            areEventsResizable
+            areEventsDraggable
+          />
+        </Box>
+      </Paper>
+    </SchedulerDemoThemeProvider>
   );
 }
