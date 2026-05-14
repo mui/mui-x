@@ -2,9 +2,7 @@ import * as path from 'path';
 import * as childProcess from 'child_process';
 import { type Browser, chromium, type ConsoleMessage, type Page } from '@playwright/test';
 import fs from 'node:fs/promises';
-import { inject, test as base } from 'vitest';
-
-const MAX_CONCURRENCY = inject('maxConcurrency');
+import { test as base } from 'vitest';
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
@@ -34,7 +32,7 @@ async function main() {
     headless: false,
   });
 
-  const pool = createPagePool(MAX_CONCURRENCY, () => newTestPage(browser));
+  const pool = createPagePool(() => newTestPage(browser));
 
   // prepare screenshots
   await emptyDir(screenshotDir);
@@ -496,11 +494,9 @@ async function main() {
   });
 }
 
-function createPagePool(size: number, factory: () => Promise<Page>) {
+function createPagePool(factory: () => Promise<Page>) {
   const all = new Set<Page>();
   const available: Page[] = [];
-  const waiters: Array<(page: Page) => void> = [];
-  let created = 0;
 
   return {
     async acquire(): Promise<Page> {
@@ -508,29 +504,17 @@ function createPagePool(size: number, factory: () => Promise<Page>) {
       if (existing) {
         return existing;
       }
-      if (created < size) {
-        created += 1;
-        const page = await factory();
-        all.add(page);
-        return page;
-      }
-      const { promise, resolve } = Promise.withResolvers<Page>();
-      waiters.push(resolve);
-      return promise;
+      const page = await factory();
+      all.add(page);
+      return page;
     },
     release(page: Page) {
-      const waiter = waiters.shift();
-      if (waiter) {
-        waiter(page);
-      } else {
-        available.push(page);
-      }
+      available.push(page);
     },
     async closeAll() {
       const pages = Array.from(all);
       all.clear();
       available.length = 0;
-      created = 0;
       await Promise.all(pages.map((page) => page.close()));
     },
   };
