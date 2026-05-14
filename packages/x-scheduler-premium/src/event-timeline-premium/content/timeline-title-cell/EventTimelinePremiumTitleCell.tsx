@@ -77,7 +77,12 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
     <EventTimelinePremiumTitleCellRoot
       id={`${schedulerId}-EventTimelinePremiumTitleCell-${resourceId}`}
       className={classes.titleCell}
-      style={{ '--resource-depth': depth, left: pinnedLeftOffset } as React.CSSProperties}
+      style={
+        {
+          '--resource-depth': depth,
+          transform: `translateX(${pinnedLeftOffset}px)`,
+        } as React.CSSProperties
+      }
       data-palette={eventColor}
     >
       <EventTimelinePremiumTitleCellContent className={classes.titleCellContent}>
