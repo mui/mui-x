@@ -1,3 +1,3 @@
 import { DialogProps } from '@mui/material/Dialog';
 
-export interface ScopePopoverProps extends Omit<DialogProps, 'open'> {}
+export interface RecurringScopeDialogProps extends Omit<DialogProps, 'open'> {}

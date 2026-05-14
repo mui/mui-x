@@ -36,9 +36,11 @@ export function getDefaultPresetKey(
 
   switch (rule.freq) {
     case 'DAILY': {
+      // Preset "Daily" => FREQ=DAILY;INTERVAL=1; no COUNT/UNTIL;
       return interval === 1 && neverEnds && !hasSelectors ? 'DAILY' : 'custom';
     }
     case 'WEEKLY': {
+      // Preset "Weekly" => FREQ=WEEKLY;INTERVAL=1;BYDAY=<weekday-of-start>; no COUNT/UNTIL;
       const occurrenceStartWeekDayCode = getWeekDayCode(adapter, occurrenceStart.value);
       const byDay = rule.byDay ?? [];
       const matchesDefaultByDay =
@@ -51,6 +53,7 @@ export function getDefaultPresetKey(
       return isPresetWeekly ? 'WEEKLY' : 'custom';
     }
     case 'MONTHLY': {
+      // Preset "Monthly" => FREQ=MONTHLY;INTERVAL=1;BYMONTHDAY=<start-day>; no COUNT/UNTIL;
       const day = adapter.getDate(occurrenceStart.value);
       const byMonthDay = rule.byMonthDay ?? [];
       const matchesDefaultByMonthDay =
@@ -63,6 +66,7 @@ export function getDefaultPresetKey(
       return isPresetMonthly ? 'MONTHLY' : 'custom';
     }
     case 'YEARLY': {
+      // Preset "Yearly" => FREQ=YEARLY;INTERVAL=1; no COUNT/UNTIL;
       return interval === 1 && neverEnds && !hasSelectors ? 'YEARLY' : 'custom';
     }
     default:

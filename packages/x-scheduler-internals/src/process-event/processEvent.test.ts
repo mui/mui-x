@@ -144,7 +144,12 @@ describe('processEvent', () => {
         .recurrent('DAILY')
         .build();
 
-      const processed = processEvent(event, 'Europe/Paris', adapter, schedulerRecurringEventsPlugin);
+      const processed = processEvent(
+        event,
+        'Europe/Paris',
+        adapter,
+        schedulerRecurringEventsPlugin,
+      );
 
       expect(processed.dataTimezone.exDates).to.have.length(1);
       // 09:00 NY (UTC-5) = 14:00 UTC

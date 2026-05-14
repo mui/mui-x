@@ -27,11 +27,6 @@ export interface SchedulerRecurringEventsPluginInterface {
   ): SchedulerProcessedEventRecurrenceRule;
 
   /**
-   * Serializes a recurrence rule into an RFC5545 RRULE string.
-   */
-  serializeRRule(adapter: Adapter, rule: SchedulerProcessedEventRecurrenceRule): string;
-
-  /**
    * Projects a recurrence rule from its data timezone to a different timezone.
    * The returned rule is a derived representation intended for UI purposes only.
    */

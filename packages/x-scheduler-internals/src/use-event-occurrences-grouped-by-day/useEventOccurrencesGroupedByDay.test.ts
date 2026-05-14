@@ -118,7 +118,10 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should render a recurring event as a single non-expanded occurrence when no plugin is provided', () => {
-    const event = EventBuilder.new(adapter).singleDay(day1Str).rrule({ freq: 'DAILY' }).toProcessed();
+    const event = EventBuilder.new(adapter)
+      .singleDay(day1Str)
+      .rrule({ freq: 'DAILY' })
+      .toProcessed();
 
     const result = run([event]);
 

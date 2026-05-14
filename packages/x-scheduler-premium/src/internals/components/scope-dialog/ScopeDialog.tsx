@@ -14,9 +14,9 @@ import { RecurringEventUpdateScope } from '@mui/x-scheduler-internals/models';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useEventDialogStyledContext } from '@mui/x-scheduler/internals';
-import { ScopePopoverProps } from './ScopeDialog.types';
+import { RecurringScopeDialogProps } from './ScopeDialog.types';
 
-export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopoverProps>(
+export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringScopeDialogProps>(
   function ScopeDialog(props, ref) {
     // Context hooks
     const { schedulerId, localeText } = useEventDialogStyledContext();

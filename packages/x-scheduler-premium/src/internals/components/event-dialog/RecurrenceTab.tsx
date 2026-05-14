@@ -27,10 +27,7 @@ import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import {
-  getMonthlyReference,
-  getWeeklyDays,
-} from '@mui/x-scheduler-internals-premium/internals';
+import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
 import {
   useEventDialogStyledContext,
   ControlledValue,
@@ -179,11 +176,11 @@ interface RecurrenceTabProps {
   occurrence: SchedulerRenderableEventOccurrence;
   controlled: ControlledValue;
   setControlled: React.Dispatch<React.SetStateAction<ControlledValue>>;
-  value: string;
+  tabValue: string;
 }
 
 export function RecurrenceTab(props: RecurrenceTabProps) {
-  const { occurrence, controlled, setControlled, value: tabValue } = props;
+  const { occurrence, controlled, setControlled, tabValue } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -212,6 +209,9 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     [adapter, visibleDate],
   );
 
+  // Form-state drafts: every preset carries both `byDay` and `byMonthDay` (empty when
+  // not used) so the controlled form keeps a consistent shape as the user switches presets.
+  // Differs from `computePresets`, which only includes the fields each preset actually serializes.
   const presetDraftMap = React.useMemo(
     () => ({
       DAILY: { freq: 'DAILY' as const, interval: 1, byDay: [], byMonthDay: [] },

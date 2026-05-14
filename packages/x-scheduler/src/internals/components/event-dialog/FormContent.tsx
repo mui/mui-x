@@ -296,7 +296,7 @@ export function FormContent(props: FormContentProps) {
             occurrence={occurrence}
             controlled={controlled}
             setControlled={setControlled}
-            value={tabValue}
+            tabValue={tabValue}
           />
         )}
         <Divider className={classes.eventDialogFormDivider} />

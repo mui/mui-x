@@ -54,6 +54,37 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     expect(screen.queryByRole('tab', { name: /general/i })).to.equal(null);
   });
 
+  it('should not render the recurrence label on a readonly event with rrule', () => {
+    const readonlyRecurringEvent: SchedulerEvent = EventBuilder.new()
+      .title('Weekly standup')
+      .singleDay('2025-05-26T07:30:00Z', 45)
+      .resource(personalResource)
+      .recurrent('DAILY')
+      .readOnly()
+      .build();
+
+    expect(() => {
+      render(
+        <EventCalendarProvider events={[readonlyRecurringEvent]} resources={resources}>
+          <EventDialogContent
+            open
+            {...defaultProps}
+            occurrence={EventBuilder.new()
+              .id(readonlyRecurringEvent.id)
+              .title(readonlyRecurringEvent.title)
+              .span(readonlyRecurringEvent.start, readonlyRecurringEvent.end)
+              .resource(personalResource)
+              .toOccurrence()}
+          />
+        </EventCalendarProvider>,
+      );
+    }).toWarnDev([
+      'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+    ]);
+
+    expect(screen.queryByText(/repeats/i)).to.equal(null);
+  });
+
   it('should warn and strip the rrule when createEvent is called with one', () => {
     expect(() => {
       render(

@@ -305,7 +305,7 @@ storeClasses.forEach((storeClass) => {
         () => {
           const event = EventBuilder.new().recurrent('DAILY').build();
 
-          let store!: InstanceType<typeof storeClass.Value>;
+          let store: any;
           expect(() => {
             store = new storeClass.Value({ events: [event] }, adapter);
           }).toWarnDev([
