@@ -14,11 +14,11 @@ export interface GetLineDescriptionParams {
   };
   localeText: {
     lineDescription: (params: {
-      x: unknown;
+      x: number | null;
       y: number | null;
       formattedXValue: string;
       formattedYValue: string;
-      seriesLabel: string;
+      seriesLabel?: string;
     }) => string;
   };
 }
@@ -33,7 +33,7 @@ export function getLineDescription(params: GetLineDescriptionParams): string {
   }
 
   const label = getLabel(series.label, 'tooltip');
-  const xValue = categoryAxis.data?.[dataIndex] ?? null;
+  const xValue = (categoryAxis.data?.[dataIndex] ?? null) as number | null;
   const yValue = series.data[dataIndex] ?? null;
 
   const formattedXValue = categoryAxis.valueFormatter?.(xValue as never, {

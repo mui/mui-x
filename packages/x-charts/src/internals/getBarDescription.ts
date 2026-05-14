@@ -16,9 +16,9 @@ export interface GetBarDescriptionParams {
     barDescription: (params: {
       value: number | null;
       formattedValue: string;
-      categoryValue: unknown;
+      categoryValue: string | number | null;
       formattedCategoryValue: string;
-      seriesLabel: string;
+      seriesLabel?: string;
     }) => string;
   };
 }
@@ -28,7 +28,10 @@ export function getBarDescription(params: GetBarDescriptionParams): string {
 
   const label = getLabel(series.label, 'tooltip');
   const value = series.data[identifier.dataIndex] ?? null;
-  const categoryValue = categoryAxis.data?.[identifier.dataIndex] ?? null;
+  const categoryValue = (categoryAxis.data?.[identifier.dataIndex] ?? null) as
+    | string
+    | number
+    | null;
 
   const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });
   const formattedCategory = categoryAxis.valueFormatter?.(categoryValue as never, {
