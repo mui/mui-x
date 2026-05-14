@@ -38,6 +38,17 @@ function createPath(x: number, y: number, markerSize: number) {
   return `M${x - markerSize} ${y} a${markerSize} ${markerSize} 0 1 1 0 ${ALMOST_ZERO}`;
 }
 
+/**
+ * Above this many points, path generation is sliced across multiple
+ * macrotasks so the main thread can paint and respond to input between
+ * chunks. Below the threshold the sync path is faster (no scheduler
+ * overhead, no state churn).
+ */
+const ASYNC_CHUNK_THRESHOLD = 5_000;
+const CHUNK_SIZE = 5_000;
+
+const EMPTY_PATHS: ReadonlyMap<string, readonly string[]> = new Map();
+
 function useCreatePaths(
   seriesData: DefaultizedScatterSeriesType['data'],
   markerSize: number,
@@ -47,39 +58,133 @@ function useCreatePaths(
   colorGetter?: ColorGetter<'scatter'>,
 ) {
   const { instance } = useChartsContext();
+  const length = seriesData.length;
+
+  const syncPaths = React.useMemo(() => {
+    if (length > ASYNC_CHUNK_THRESHOLD) {
+      // Heavy work — defer to the chunked effect path below.
+      return null;
+    }
+    return buildPaths(
+      seriesData,
+      0,
+      length,
+      markerSize,
+      xScale,
+      yScale,
+      color,
+      colorGetter,
+      instance.isPointInside,
+    );
+  }, [seriesData, length, markerSize, xScale, yScale, color, colorGetter, instance]);
+
+  const [asyncPaths, setAsyncPaths] = React.useState<ReadonlyMap<string, readonly string[]>>(
+    EMPTY_PATHS,
+  );
+
+  React.useEffect(() => {
+    if (length <= ASYNC_CHUNK_THRESHOLD) {
+      // Sync path already produced the result.
+      return undefined;
+    }
+
+    const getXPosition = getValueToPositionMapper(xScale);
+    const getYPosition = getValueToPositionMapper(yScale);
+    const paths = new Map<string, string[]>();
+    const temporaryPaths = new Map<string, string[]>();
+
+    let i = 0;
+    let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    const buildChunk = (until: number) => {
+      for (; i < until; i += 1) {
+        const scatterPoint = seriesData[i];
+        const x = getXPosition(scatterPoint.x);
+        const y = getYPosition(scatterPoint.y);
+        if (!instance.isPointInside(x, y)) {
+          continue;
+        }
+        const path = createPath(x, y, markerSize);
+        const fill = colorGetter ? colorGetter(i) : color;
+        const tempPath = appendAtKey(temporaryPaths, fill, path);
+        if (tempPath.length >= MAX_POINTS_PER_PATH) {
+          appendAtKey(paths, fill, tempPath.join(''));
+          temporaryPaths.delete(fill);
+        }
+      }
+    };
+
+    const processChunk = () => {
+      if (cancelled) {
+        return;
+      }
+      const until = Math.min(i + CHUNK_SIZE, length);
+      buildChunk(until);
+      if (i < length) {
+        // Yield via macrotask so the browser can paint + handle input
+        // between chunks. `setTimeout(0)` is more reliable than
+        // `requestIdleCallback` (which doesn't fire under sustained load).
+        timeoutId = setTimeout(processChunk, 0);
+        return;
+      }
+      for (const [fill, tempPath] of temporaryPaths.entries()) {
+        if (tempPath.length > 0) {
+          appendAtKey(paths, fill, tempPath.join(''));
+        }
+      }
+      setAsyncPaths(paths);
+    };
+    processChunk();
+
+    return () => {
+      cancelled = true;
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [seriesData, length, markerSize, xScale, yScale, color, colorGetter, instance]);
+
+  return syncPaths ?? asyncPaths;
+}
+
+function buildPaths(
+  seriesData: DefaultizedScatterSeriesType['data'],
+  start: number,
+  end: number,
+  markerSize: number,
+  xScale: D3Scale,
+  yScale: D3Scale,
+  color: string,
+  colorGetter: ColorGetter<'scatter'> | undefined,
+  isPointInside: (x: number, y: number) => boolean,
+): Map<string, string[]> {
   const getXPosition = getValueToPositionMapper(xScale);
   const getYPosition = getValueToPositionMapper(yScale);
 
   const paths = new Map<string, string[]>();
   const temporaryPaths = new Map<string, string[]>();
 
-  for (let i = 0; i < seriesData.length; i += 1) {
+  for (let i = start; i < end; i += 1) {
     const scatterPoint = seriesData[i];
-
     const x = getXPosition(scatterPoint.x);
     const y = getYPosition(scatterPoint.y);
-
-    if (!instance.isPointInside(x, y)) {
+    if (!isPointInside(x, y)) {
       continue;
     }
-
     const path = createPath(x, y, markerSize);
     const fill = colorGetter ? colorGetter(i) : color;
-
     const tempPath = appendAtKey(temporaryPaths, fill, path);
-
     if (tempPath.length >= MAX_POINTS_PER_PATH) {
       appendAtKey(paths, fill, tempPath.join(''));
       temporaryPaths.delete(fill);
     }
   }
-
   for (const [fill, tempPath] of temporaryPaths.entries()) {
     if (tempPath.length > 0) {
       appendAtKey(paths, fill, tempPath.join(''));
     }
   }
-
   return paths;
 }
 
