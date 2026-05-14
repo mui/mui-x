@@ -338,7 +338,7 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
         >
           {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
         </EventTimelinePremiumTitleHeaderCell>
-        <div role="presentation" style={{ width: titleColumnWidth }} />
+        <div role="none" style={{ width: titleColumnWidth }} />
         <EventTimelinePremiumEventsHeaderCell className={classes.eventsHeaderCell}>
           <EventTimelinePremiumEventsHeaderCellContent className={classes.eventsHeaderCellContent}>
             <EventTimelinePremiumHeader tickRange={tickRange} />
@@ -370,7 +370,7 @@ function FillerRow() {
 
   return (
     <EventTimelinePremiumFillerRow
-      role="presentation"
+      role="none"
       {...containerVerticalProps}
       style={{ height: fillerHeight, ...containerVerticalProps?.style }}
     >
@@ -612,7 +612,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     ({ id, rowIndex }: { id: any; rowIndex: number }) => (
       <EventTimelinePremiumBodyRow key={id} index={rowIndex}>
         <EventTimelinePremiumTitleCell resourceId={id} />
-        <div role="presentation" style={{ width: titleColumnWidth }} />
+        <div role="none" style={{ width: titleColumnWidth }} />
         <EventTimelinePremiumEventsCell resourceId={id} className={classes.eventsCell}>
           {({ occurrences, placeholder }) => (
             <EventRowContent resourceId={id} occurrences={occurrences} placeholder={placeholder} />
