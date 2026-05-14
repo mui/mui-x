@@ -1,3 +1,4 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
 import { Adapter } from '../use-adapter';
@@ -24,6 +25,15 @@ export function processEvent(
   const exDatesInDisplayTz = resolvedExDates
     ? resolvedExDates.map((exDate) => adapter.setTimezone(exDate, displayTimezone))
     : undefined;
+
+  if (recurringEventsPlugin == null && model.rrule != null) {
+    if (process.env.NODE_ENV !== 'production') {
+      warnOnce([
+        'MUI X: Recurring events are a premium feature. The `rrule` property will be ignored.',
+        'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+      ]);
+    }
+  }
 
   const parsedDataRRule =
     recurringEventsPlugin && model.rrule

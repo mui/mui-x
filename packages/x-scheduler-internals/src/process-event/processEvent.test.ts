@@ -144,7 +144,7 @@ describe('processEvent', () => {
         .recurrent('DAILY')
         .build();
 
-      const processed = processEvent(event, 'Europe/Paris', adapter);
+      const processed = processEvent(event, 'Europe/Paris', adapter, schedulerRecurringEventsPlugin);
 
       expect(processed.dataTimezone.exDates).to.have.length(1);
       // 09:00 NY (UTC-5) = 14:00 UTC
@@ -211,10 +211,15 @@ describe('processEvent', () => {
   });
 
   describe('without recurring events plugin', () => {
-    it('should leave rrule undefined on both timezones when no plugin is provided', () => {
+    it('should warn and leave rrule undefined on both timezones when no plugin is provided', () => {
       const event = EventBuilder.new(adapter).rrule({ freq: 'DAILY' }).build();
 
-      const processed = processEvent(event, 'Europe/Paris', adapter);
+      let processed!: ReturnType<typeof processEvent>;
+      expect(() => {
+        processed = processEvent(event, 'Europe/Paris', adapter);
+      }).toWarnDev([
+        'MUI X: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      ]);
 
       expect(processed.dataTimezone.rrule).to.equal(undefined);
       expect(processed.displayTimezone.rrule).to.equal(undefined);
