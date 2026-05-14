@@ -9,4 +9,4 @@ export * from './EventDialogStyledContext';
 export type { ControlledValue, EndsSelection } from './utils';
 export { getEndsSelectionFromRRule } from './utils';
 export { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
-export { EventDialogSlotsContext } from './EventDialogSlotsContext';
+export { EventDialogOptionalRenderersContext } from './EventDialogOptionalRenderersContext';

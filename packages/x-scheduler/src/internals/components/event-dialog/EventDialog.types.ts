@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import { DialogProps } from '@mui/material/Dialog';
-import type { EventDialogSlots } from './EventDialogSlotsContext';
+import type { EventDialogOptionalRenderers } from './EventDialogOptionalRenderersContext';
 
 export interface EventDialogProps extends DialogProps {
   /**
@@ -21,10 +21,9 @@ export interface EventDialogProps extends DialogProps {
 export interface EventDialogProviderProps {
   children: React.ReactNode;
   /**
-   * Optional slots for premium features (recurrence tab, recurring scope dialog).
-   * When omitted, the corresponding UI is not rendered.
+   * Optional components rendered inside the dialog (recurrence tab, recurring scope dialog).
    */
-  slots?: EventDialogSlots;
+  optionalRenderers?: EventDialogOptionalRenderers;
 }
 
 export interface EventDialogTriggerProps extends React.HTMLAttributes<HTMLElement> {

@@ -23,21 +23,21 @@ import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import {
   EventCalendarProvider,
   EventDialogContent,
-  EventDialogSlotsContext,
+  EventDialogOptionalRenderersContext,
 } from '@mui/x-scheduler/internals';
-import { PREMIUM_EVENT_DIALOG_SLOTS } from '../../internals/eventDialogSlots';
+import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { RecurringScopeDialog } from '../../internals/components/scope-dialog/ScopeDialog';
 
 /**
- * Wraps EventDialogContent with the slot context the premium scheduler supplies
+ * Wraps EventDialogContent with the premium renderers the production code supplies
  * at runtime. Tests render EventDialogContent in isolation (without
- * EventCalendarPremium), so we provide the slots manually here.
+ * EventCalendarPremium), so we provide the renderers manually here.
  */
 function TestEventDialogContent(props: React.ComponentProps<typeof EventDialogContent>) {
   return (
-    <EventDialogSlotsContext.Provider value={PREMIUM_EVENT_DIALOG_SLOTS}>
+    <EventDialogOptionalRenderersContext.Provider value={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
       <EventDialogContent {...props} />
-    </EventDialogSlotsContext.Provider>
+    </EventDialogOptionalRenderersContext.Provider>
   );
 }
 

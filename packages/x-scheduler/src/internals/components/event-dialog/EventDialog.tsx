@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps, dialogClasses } from '@mui/material/Dialog';
 import { backdropClasses } from '@mui/material/Backdrop';
@@ -22,7 +23,10 @@ import { FormContent } from './FormContent';
 import { calculatePosition } from '../../utils/dialog-utils';
 import ReadonlyContent from './ReadonlyContent';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import { EventDialogSlots, EventDialogSlotsContext } from './EventDialogSlotsContext';
+import {
+  EventDialogOptionalRenderers,
+  EventDialogOptionalRenderersContext,
+} from './EventDialogOptionalRenderersContext';
 
 const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',
@@ -113,8 +117,6 @@ const EventDialog = createModal<SchedulerRenderableEventOccurrence>({
   contextName: 'EventDialogContext',
 });
 
-const EMPTY_SLOTS: EventDialogSlots = {};
-
 export const EventDialogContext = EventDialog.Context;
 export const useEventDialogContext = EventDialog.useContext;
 
@@ -163,15 +165,17 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 });
 
 export function EventDialogProvider(props: EventDialogProviderProps) {
-  const { children, slots, ...other } = props;
+  const { children, optionalRenderers, ...other } = props;
   const store = useSchedulerStoreContext();
   const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
-  const RecurringScopeDialogSlot = slots?.recurringScopeDialog;
+  const RecurringScopeDialogRenderer = optionalRenderers?.recurringScopeDialog;
 
   return (
-    <EventDialogSlotsContext.Provider value={slots ?? EMPTY_SLOTS}>
+    <EventDialogOptionalRenderersContext.Provider
+      value={optionalRenderers ?? (EMPTY_OBJECT as EventDialogOptionalRenderers)}
+    >
       <EventDialog.Provider
         render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
           <EventDialogContent
@@ -191,11 +195,11 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
         }}
       >
         {children}
-        {showRecurrence && isScopeDialogOpen && RecurringScopeDialogSlot && (
-          <RecurringScopeDialogSlot />
+        {showRecurrence && isScopeDialogOpen && RecurringScopeDialogRenderer && (
+          <RecurringScopeDialogRenderer />
         )}
       </EventDialog.Provider>
-    </EventDialogSlotsContext.Provider>
+    </EventDialogOptionalRenderersContext.Provider>
   );
 }
 

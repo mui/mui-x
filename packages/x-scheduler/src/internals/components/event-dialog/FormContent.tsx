@@ -25,7 +25,7 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import { useEventDialogSlots } from './EventDialogSlotsContext';
+import { useEventDialogOptionalRenderers } from './EventDialogOptionalRenderersContext';
 import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
 import EventDialogHeader from './EventDialogHeader';
 import { GeneralTab } from './GeneralTab';
@@ -113,8 +113,8 @@ export function FormContent(props: FormContentProps) {
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
-  // Slot hooks
-  const { recurrenceTab: RecurrenceTabSlot } = useEventDialogSlots();
+  // Optional renderer hooks
+  const { recurrenceTab: RecurrenceTabRenderer } = useEventDialogOptionalRenderers();
 
   // Recurrence helpers (delegated to the premium plugin when present)
   const recurrencePresets =
@@ -262,7 +262,7 @@ export function FormContent(props: FormContentProps) {
             size="small"
           />
         </EventDialogHeader>
-        {showRecurrence && RecurrenceTabSlot && (
+        {showRecurrence && RecurrenceTabRenderer && (
           <EventDialogTabsContainer className={classes.eventDialogTabsContainer}>
             <EventDialogTabs value={tabValue} onChange={handleTabChange}>
               <Tab
@@ -286,10 +286,10 @@ export function FormContent(props: FormContentProps) {
           setErrors={setErrors}
           controlled={controlled}
           setControlled={setControlled}
-          value={showRecurrence && RecurrenceTabSlot ? tabValue : 'general'}
+          value={showRecurrence && RecurrenceTabRenderer ? tabValue : 'general'}
         />
-        {showRecurrence && RecurrenceTabSlot && (
-          <RecurrenceTabSlot
+        {showRecurrence && RecurrenceTabRenderer && (
+          <RecurrenceTabRenderer
             occurrence={occurrence}
             controlled={controlled}
             setControlled={setControlled}

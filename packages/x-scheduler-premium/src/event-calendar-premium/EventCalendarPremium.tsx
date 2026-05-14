@@ -18,7 +18,7 @@ import {
   EventCalendarRoot,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
-import { PREMIUM_EVENT_DIALOG_SLOTS } from '../internals/eventDialogSlots';
+import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
 import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
 const packageInfo = {
@@ -77,7 +77,7 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
     <SchedulerStoreContext.Provider value={store as any}>
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
         <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
-          <EventDialogProvider slots={PREMIUM_EVENT_DIALOG_SLOTS}>
+          <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
             <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
               {watermark}
             </EventCalendarRoot>
