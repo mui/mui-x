@@ -151,8 +151,8 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
   });
 
   React.useEffect(() => {
-    const treeDataKey = options.treeData
-      ? `${options.treeData.maxDepth ?? 1}-${options.treeData.averageChildren ?? 2}-${options.treeData.groupingField ?? ''}`
+    const treeDataKey = (options.treeData?.maxDepth ?? 1) > 1
+      ? `${options.treeData?.maxDepth}-${options.treeData?.averageChildren ?? 2}-${options.treeData?.groupingField ?? ''}`
       : 'false';
     const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}-treeData:${treeDataKey}`;
 
