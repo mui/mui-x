@@ -647,7 +647,7 @@ export default function FinancialCharts() {
               </Typography>
             </Stack>
             <Typography variant="h2" sx={{ fontSize: { xs: '1.75rem', md: '2rem' } }}>
-              High-performance candlestick and OHLC
+              High-performance candlestick and OHLC series
             </Typography>
           </Stack>
 

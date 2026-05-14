@@ -49,8 +49,8 @@ export const overviewHeatmapPalette = (mode: 'light' | 'dark') =>
   mode === 'dark' ? overviewHeatmapPaletteDark : overviewHeatmapPaletteLight;
 
 export const overviewSemanticColors = {
-  positive: (mode: 'light' | 'dark') => (mode === 'dark' ? '#5FCB9A' : '#1B7F5E'),
-  negative: (mode: 'light' | 'dark') => (mode === 'dark' ? '#FF8A8A' : '#C84652'),
+  positive: (mode: 'light' | 'dark') => (mode === 'dark' ? '#63C79A' : '#2F7D62'),
+  negative: (mode: 'light' | 'dark') => (mode === 'dark' ? '#F07F8F' : '#B84A5A'),
   accent: (mode: 'light' | 'dark') => (mode === 'dark' ? '#F2C46D' : '#AA6B00'),
 };
 
