@@ -21,6 +21,7 @@ interface UseDragRangeParams {
 interface UseDragRangeEvents {
   onPointerDown?: React.PointerEventHandler<HTMLButtonElement>;
   onPointerOver?: React.PointerEventHandler<HTMLButtonElement>;
+  onPointerOut?: React.PointerEventHandler<HTMLButtonElement>;
 }
 
 interface UseDragRangeResponse extends UseDragRangeEvents {
@@ -351,6 +352,32 @@ const useDragRangeEvents = ({
     }
   });
 
+  // Symmetric `pointerout` listener. When the pointer leaves a cell into
+  // somewhere that is *not* another cell (gap, header, outside the calendar
+  // entirely), forget the would-drop target so `pointerup` cancels rather
+  // than committing the last cell the user happened to hover. Matches the
+  // cancel-by-releasing-outside-any-target convention of native HTML5 drag.
+  const handlePointerOut = useEventCallback((event: React.PointerEvent<HTMLButtonElement>) => {
+    if (!isDraggingRef.current || event.pointerId !== pointerIdRef.current) {
+      return;
+    }
+
+    // `pointerout` also fires when the pointer moves to a descendant of the
+    // current cell (e.g. the day text span). That's still "inside" from the
+    // drop-target perspective — bail.
+    const relatedTarget = event.relatedTarget as Node | null;
+    if (relatedTarget && event.currentTarget.contains(relatedTarget)) {
+      return;
+    }
+
+    // If the pointer entered another cell next, that cell's `pointerover`
+    // will re-set the would-drop target. If it didn't, `pointerup` will see
+    // `null` and skip the drop.
+    if (pendingDropRef.current?.target === event.currentTarget) {
+      pendingDropRef.current = null;
+    }
+  });
+
   // On unmount, clear gesture state so a remount can start fresh and detached
   // DOM nodes referenced via `pendingDropRef` can be garbage-collected.
   React.useEffect(() => () => clearGestureState(), []);
@@ -358,6 +385,7 @@ const useDragRangeEvents = ({
   return {
     onPointerDown: handlePointerDown,
     onPointerOver: handlePointerOver,
+    onPointerOut: handlePointerOut,
   };
 };
 

@@ -401,6 +401,30 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
       });
 
+      it('should cancel the drop when the pointer is released outside any cell', () => {
+        // Native HTML5 drag cancels when the user releases outside any drop
+        // target. Match that — releasing into a gap or off the calendar
+        // entirely must not commit the last cell the user happened to hover.
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '31', selected: true });
+        const endDay = getPickerDay('29');
+
+        executeDateDragWithoutDrop(startDay, endDay);
+        // Pointer leaves the cell into something that isn't another cell
+        // (relatedTarget=null mimics leaving the document entirely).
+        fireEvent.pointerOut(endDay, { pointerId: 1, relatedTarget: null });
+        fireEvent.pointerUp(document, { pointerId: 1 });
+
+        expect(onChange.callCount).to.equal(0);
+      });
+
       it('should cancel an in-flight drag on Escape', () => {
         const onChange = spy();
         render(
