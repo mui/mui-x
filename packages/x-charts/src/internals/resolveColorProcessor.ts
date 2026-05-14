@@ -2,16 +2,14 @@ import type { CommonSeriesType, ColorCallbackValue } from '../models/seriesType/
 import type { ChartSeriesType } from '../models/seriesType/config';
 import { getSeriesColorFn } from './getSeriesColorFn';
 
-type ColorScale<V> = (value: V) => string | null;
-
 export interface ResolveColorProcessorParams<V> {
   series: {
     color: NonNullable<CommonSeriesType<number | null, ChartSeriesType>['color']>;
     data: readonly (number | null)[];
     colorGetter?: CommonSeriesType<number | null, ChartSeriesType>['colorGetter'];
   };
-  valueColorScale?: ColorScale<number | null>;
-  categoryColorScale?: ColorScale<V>;
+  valueColorScale?: (value: number) => string | null;
+  categoryColorScale?: (value: NonNullable<V>) => string | null;
   categoryValues?: readonly V[];
 }
 
