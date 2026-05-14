@@ -1,11 +1,6 @@
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import {
-  type Browser,
-  chromium,
-  type ConsoleMessage,
-  type Page,
-} from '@playwright/test';
+import { type Browser, chromium, type ConsoleMessage, type Page } from '@playwright/test';
 import fs from 'node:fs/promises';
 import { inject, test as base } from 'vitest';
 
