@@ -6,6 +6,14 @@ import * as fs from 'fs/promises';
 import generateReleaseInfo from '../../scripts/generateReleaseInfo.mjs';
 import { alias } from '../../vitest.shared.mts';
 
+const MAX_CONCURRENCY = 2;
+
+declare module 'vitest' {
+  interface ProvidedContext {
+    maxConcurrency: number;
+  }
+}
+
 export default defineConfig({
   build: {
     outDir: 'build',
@@ -76,5 +84,9 @@ export default defineConfig({
     globals: true,
     testTimeout: 20000,
     hookTimeout: 20000,
+    maxConcurrency: MAX_CONCURRENCY,
+    provide: {
+      maxConcurrency: MAX_CONCURRENCY,
+    },
   },
 });

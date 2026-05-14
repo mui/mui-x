@@ -1,7 +1,15 @@
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import { type Browser, chromium, Page } from '@playwright/test';
+import {
+  type Browser,
+  chromium,
+  type ConsoleMessage,
+  type Page,
+} from '@playwright/test';
 import fs from 'node:fs/promises';
+import { inject, test as base } from 'vitest';
+
+const MAX_CONCURRENCY = inject('maxConcurrency');
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
@@ -31,23 +39,46 @@ async function main() {
     headless: false,
   });
 
-  let page = await newTestPage(browser);
-
-  let errorConsole: string | undefined;
-
-  page.on('console', (msg) => {
-    // Filter out native user-agent errors e.g. "Failed to load resource: net::ERR_FAILED"
-    if (msg.args().length > 0 && (msg.type() === 'error' || msg.type() === 'warning')) {
-      errorConsole = msg.text();
-    }
-  });
+  const pool = createPagePool(MAX_CONCURRENCY, () => newTestPage(browser));
 
   // prepare screenshots
   await emptyDir(screenshotDir);
 
-  const routes = await page.evaluate(() => window.muiFixture.allTests);
+  const probePage = await pool.acquire();
+  const routes = await probePage.evaluate(() => window.muiFixture.allTests);
+  pool.release(probePage);
 
-  async function navigateToTest(route: string) {
+  interface PageFixture {
+    page: Page;
+    errors: string[];
+  }
+
+  const test = base.extend<{ pooled: PageFixture }>({
+    // eslint-disable-next-line no-empty-pattern
+    pooled: async ({}, use) => {
+      const page = await pool.acquire();
+      const errors: string[] = [];
+      const handler = (msg: ConsoleMessage) => {
+        if (msg.args().length > 0 && (msg.type() === 'error' || msg.type() === 'warning')) {
+          const text = msg.text();
+          if (!isConsoleWarningIgnored(text)) {
+            errors.push(text);
+          }
+        }
+      };
+      page.on('console', handler);
+      try {
+        // `use` here is the vitest fixture callback, not a React hook.
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        await use({ page, errors });
+      } finally {
+        pool.release(page);
+        page.off('console', handler);
+      }
+    },
+  });
+
+  async function navigateToTest(page: Page, route: string) {
     // Use client-side routing which is much faster than full page navigation via page.goto().
     return page.evaluate((_route) => {
       window.muiFixture.navigate(_route);
@@ -57,15 +88,6 @@ async function main() {
   describe('visual regressions', () => {
     afterAll(async () => {
       await browser.close();
-    });
-
-    it('should have no errors after the initial render', () => {
-      const msg = errorConsole;
-      errorConsole = undefined;
-      if (isConsoleWarningIgnored(msg)) {
-        return;
-      }
-      expect(msg).to.equal(undefined);
     });
 
     const getTimeout = (route: { url: string }) => {
@@ -82,88 +104,86 @@ async function main() {
       return undefined;
     };
 
-    routes.forEach((route) => {
-      it(
-        `creates screenshots of ${route.url}`,
-        {
-          timeout: getTimeout(route),
-        },
-        async () => {
-          if (/^\/docs-charts-tooltip\/Interaction/.test(route.url)) {
-            // Ignore tooltip interaction demo screenshot.
-            // There is a dedicated test for it in this file, and this is why we don't exclude it with the glob pattern in test/regressions/testsBySuite.ts
-            return;
-          }
+    describe.concurrent('routes', () => {
+      routes.forEach((route) => {
+        test(
+          `creates screenshots of ${route.url}`,
+          {
+            timeout: getTimeout(route),
+          },
+          async ({ pooled }) => {
+            const { page, errors } = pooled;
 
-          if (/LineChartPointerInteraction/.test(route.url)) {
-            // Ignore pointer interaction screenshot — dedicated tests handle mouse positioning.
-            return;
-          }
-
-          await navigateToTest(route.url);
-
-          // Move cursor offscreen to not trigger unwanted hover effects.
-          await page.mouse.move(0, 0);
-
-          const screenshotPath = path.resolve(screenshotDir, `.${route.url}.png`);
-
-          const testcase = await page.waitForSelector(
-            `[data-testid="testcase"][data-testpath="${route.url}"]:not([aria-busy="true"])`,
-          );
-
-          await page.evaluate(async () => {
-            const images = document.querySelectorAll('img');
-            if (images.length <= 0) {
+            if (/^\/docs-charts-tooltip\/Interaction/.test(route.url)) {
+              // Ignore tooltip interaction demo screenshot.
+              // There is a dedicated test for it in this file, and this is why we don't exclude it with the glob pattern in test/regressions/testsBySuite.ts
               return;
             }
-            const promises = [];
-            for (const img of images) {
-              if (img.complete) {
-                continue;
-              }
-              if (img.loading === 'lazy') {
-                // Force lazy-loaded images to load
-                img.setAttribute('loading', 'eager');
-              }
-              const { promise, resolve, reject } = Promise.withResolvers<void>();
-              img.onload = () => resolve();
-              img.onerror = reject;
-              promises.push(promise);
+
+            if (/LineChartPointerInteraction/.test(route.url)) {
+              // Ignore pointer interaction screenshot — dedicated tests handle mouse positioning.
+              return;
             }
-            await Promise.all(promises);
-          });
 
-          if (/^\/docs-charts-.*/.test(route.url)) {
-            // Run one tick of the clock to get the final animation state
-            await sleep(10);
-          }
+            await navigateToTest(page, route.url);
 
-          if (timeSensitiveSuites.some((suite) => route.url.includes(suite))) {
-            await sleep(100);
-          }
+            // Move cursor offscreen to not trigger unwanted hover effects.
+            await page.mouse.move(0, 0);
 
-          // Wait for the page to settle after taking the screenshot.
-          await page.waitForLoadState();
+            const screenshotPath = path.resolve(screenshotDir, `.${route.url}.png`);
 
-          await testcase.screenshot({ path: screenshotPath, type: 'png' });
-        },
-      );
+            const testcase = await page.waitForSelector(
+              `[data-testid="testcase"][data-testpath="${route.url}"]:not([aria-busy="true"])`,
+            );
 
-      it(`should have no errors rendering ${route.url}`, () => {
-        const msg = errorConsole;
-        errorConsole = undefined;
-        if (isConsoleWarningIgnored(msg)) {
-          return;
-        }
-        expect(msg).to.equal(undefined);
+            await page.evaluate(async () => {
+              const images = document.querySelectorAll('img');
+              if (images.length <= 0) {
+                return;
+              }
+              const promises = [];
+              for (const img of images) {
+                if (img.complete) {
+                  continue;
+                }
+                if (img.loading === 'lazy') {
+                  // Force lazy-loaded images to load
+                  img.setAttribute('loading', 'eager');
+                }
+                const { promise, resolve, reject } = Promise.withResolvers<void>();
+                img.onload = () => resolve();
+                img.onerror = reject;
+                promises.push(promise);
+              }
+              await Promise.all(promises);
+            });
+
+            if (/^\/docs-charts-.*/.test(route.url)) {
+              // Run one tick of the clock to get the final animation state
+              await sleep(10);
+            }
+
+            if (timeSensitiveSuites.some((suite) => route.url.includes(suite))) {
+              await sleep(100);
+            }
+
+            // Wait for the page to settle after taking the screenshot.
+            await page.waitForLoadState();
+
+            await testcase.screenshot({ path: screenshotPath, type: 'png' });
+
+            expect(errors, errors.join('\n')).to.have.lengthOf(0);
+          },
+        );
       });
     });
 
-    it('should position the headers matching the columns', async () => {
+    test('should position the headers matching the columns', async ({ pooled }) => {
+      const { page } = pooled;
       const route = '/docs-data-grid-virtualization/ColumnVirtualizationGrid';
       const screenshotPath = path.resolve(screenshotDir, `.${route}ScrollLeft400px.png`);
 
-      await navigateToTest(route);
+      await navigateToTest(page, route);
 
       const testcase = await page.waitForSelector(
         `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
@@ -185,11 +205,14 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
-    it('should clamp the horizontal scroll position in the fluid width column dimensions scenario', async () => {
+    test('should clamp the horizontal scroll position in the fluid width column dimensions scenario', async ({
+      pooled,
+    }) => {
+      const { page } = pooled;
       const route = '/test-regressions-data-grid/ColumnFluidWidthScrollClamp';
       const screenshotPath = path.resolve(screenshotDir, `.${route}AfterResize.png`);
 
-      await navigateToTest(route);
+      await navigateToTest(page, route);
 
       const testcase = await page.waitForSelector(
         `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
@@ -236,11 +259,12 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
-    it('should position charts axis tooltip 8px away from the pointer', async () => {
+    test('should position charts axis tooltip 8px away from the pointer', async ({ pooled }) => {
+      const { page } = pooled;
       const route = '/docs-charts-tooltip/Interaction';
       const axisScreenshotPath = path.resolve(screenshotDir, `.${route}AxisTooltip.png`);
 
-      await navigateToTest(route);
+      await navigateToTest(page, route);
 
       // Make sure demo got loaded
       await page.waitForSelector(
@@ -257,11 +281,14 @@ async function main() {
       await body.screenshot({ path: axisScreenshotPath, type: 'png' });
     });
 
-    it('should highlight line series when pointer is within the proximity threshold', async () => {
+    test('should highlight line series when pointer is within the proximity threshold', async ({
+      pooled,
+    }) => {
+      const { page } = pooled;
       const route = '/test-regressions-charts/LineChartPointerInteraction';
       const screenshotPath = path.resolve(screenshotDir, `.${route}LineHighlight.png`);
 
-      await navigateToTest(route);
+      await navigateToTest(page, route);
 
       const testcase = await page.waitForSelector(
         `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
@@ -286,12 +313,15 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
-    it('should highlight area series when pointer is inside fill but outside line threshold', async () => {
+    test('should highlight area series when pointer is inside fill but outside line threshold', async ({
+      pooled,
+    }) => {
+      const { page } = pooled;
       const route = '/test-regressions-charts/LineChartPointerInteraction';
       const screenshotPath = path.resolve(screenshotDir, `.${route}AreaHighlight.png`);
 
-      await navigateToTest(route);
-      await page.reload(); // Ensure a fresh state since we reuse the same page.
+      await navigateToTest(page, route);
+      await page.reload(); // Ensure a fresh state since we may reuse a pooled page.
 
       const testcase = await page.waitForSelector(
         `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
@@ -313,11 +343,12 @@ async function main() {
       await testcase.screenshot({ path: screenshotPath, type: 'png' });
     });
 
-    it('should export a chart as PNG', async () => {
+    test('should export a chart as PNG', async ({ pooled }) => {
+      const { page } = pooled;
       const route = '/docs-charts-export/ExportChartAsImage';
       const screenshotPath = path.resolve(screenshotDir, `.${route}PNG.png`);
 
-      await navigateToTest(route);
+      await navigateToTest(page, route);
 
       const downloadPromise = page.waitForEvent('download');
       await page.getByRole('button', { name: 'Export Image' }).click();
@@ -331,24 +362,26 @@ async function main() {
       /* These tests do not properly clean up after themselves, so moving them to their own describe block to close the
        * page after every test. */
 
+      let printPage: Page;
+
       beforeEach(async () => {
-        page = await newTestPage(browser);
+        printPage = await newTestPage(browser);
       });
 
       afterEach(async () => {
-        await page.close();
+        await printPage.close();
       });
 
       it('should take a screenshot of the data grid print preview', async () => {
         const route = '/docs-data-grid-export/ExportDefaultToolbar';
         const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
 
-        await navigateToTest(route);
+        await navigateToTest(printPage, route);
 
         // Click the export button in the toolbar.
-        await page.getByRole('button', { name: 'Export' }).click();
+        await printPage.getByRole('button', { name: 'Export' }).click();
 
-        const printButton = page.getByRole('menuitem', { name: 'Print' });
+        const printButton = printPage.getByRole('menuitem', { name: 'Print' });
         // Click the print export option from the export menu in the toolbar.
         // Trigger the action async because window.print() is blocking the main thread
         // like window.alert() is.
@@ -370,12 +403,12 @@ async function main() {
         const route = '/test-regressions-data-grid/PrintExportDynamicRowHeight';
         const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
 
-        await navigateToTest(route);
+        await navigateToTest(printPage, route);
 
         // Click the export button in the toolbar.
-        await page.getByRole('button', { name: 'Export' }).click();
+        await printPage.getByRole('button', { name: 'Export' }).click();
 
-        const printButton = page.getByRole('menuitem', { name: 'Print' });
+        const printButton = printPage.getByRole('menuitem', { name: 'Print' });
         // Click the print export option from the export menu in the toolbar.
         // Trigger the action async because window.print() is blocking the main thread
         // like window.alert() is.
@@ -397,9 +430,9 @@ async function main() {
         const route = '/docs-charts-export/PrintChart';
         const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
 
-        await navigateToTest(route);
+        await navigateToTest(printPage, route);
 
-        const printButton = page.getByRole('button', { name: 'Print' });
+        const printButton = printPage.getByRole('button', { name: 'Print' });
 
         // Trigger the action async because window.print() is blocking the main thread
         // like window.alert() is.
@@ -422,36 +455,70 @@ async function main() {
       const route = '/docs-charts-export/ExportChartAsImage';
       const screenshotPath = path.resolve(screenshotDir, `.${route}ZoomedOutPNG.png`);
 
-      page = await newTestPage(browser, { deviceScaleFactor: 0.8 });
-      await navigateToTest(route);
+      const page = await newTestPage(browser, { deviceScaleFactor: 0.8 });
+      try {
+        await navigateToTest(page, route);
 
-      const downloadPromise = page.waitForEvent('download');
-      await page.getByRole('button', { name: 'Export Image' }).click();
+        const downloadPromise = page.waitForEvent('download');
+        await page.getByRole('button', { name: 'Export Image' }).click();
 
-      const download = await downloadPromise;
+        const download = await downloadPromise;
 
-      await download.saveAs(screenshotPath);
-
-      await page.close();
+        await download.saveAs(screenshotPath);
+      } finally {
+        await page.close();
+      }
     });
 
     it('should export a chart as PNG when page is zoomed in', async () => {
       const route = '/docs-charts-export/ExportChartAsImage';
       const screenshotPath = path.resolve(screenshotDir, `.${route}ZoomedInPNG.png`);
 
-      page = await newTestPage(browser, { deviceScaleFactor: 1.25 });
-      await navigateToTest(route);
+      const page = await newTestPage(browser, { deviceScaleFactor: 1.25 });
+      try {
+        await navigateToTest(page, route);
 
-      const downloadPromise = page.waitForEvent('download');
-      await page.getByRole('button', { name: 'Export Image' }).click();
+        const downloadPromise = page.waitForEvent('download');
+        await page.getByRole('button', { name: 'Export Image' }).click();
 
-      const download = await downloadPromise;
+        const download = await downloadPromise;
 
-      await download.saveAs(screenshotPath);
-
-      await page.close();
+        await download.saveAs(screenshotPath);
+      } finally {
+        await page.close();
+      }
     });
   });
+}
+
+function createPagePool(size: number, factory: () => Promise<Page>) {
+  const available: Page[] = [];
+  const waiters: Array<(page: Page) => void> = [];
+  let created = 0;
+
+  return {
+    async acquire(): Promise<Page> {
+      const existing = available.shift();
+      if (existing) {
+        return existing;
+      }
+      if (created < size) {
+        created += 1;
+        return factory();
+      }
+      const { promise, resolve } = Promise.withResolvers<Page>();
+      waiters.push(resolve);
+      return promise;
+    },
+    release(page: Page) {
+      const waiter = waiters.shift();
+      if (waiter) {
+        waiter(page);
+      } else {
+        available.push(page);
+      }
+    },
+  };
 }
 
 function isConsoleWarningIgnored(msg?: string) {
