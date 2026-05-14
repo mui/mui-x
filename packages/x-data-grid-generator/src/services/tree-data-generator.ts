@@ -1,6 +1,5 @@
 import type { DataGridPremiumProps, GridRowModel } from '@mui/x-data-grid-premium';
 import type { GridDemoData } from './real-data-service';
-import { randomArrayItem } from './random-generator';
 
 export interface AddPathToDemoDataOptions {
   /**
@@ -73,6 +72,10 @@ export const addTreeDataOptionsToDemoData = (
     rowsByTreeDepth[currentDepth].rowIndexes.push(i);
   }
 
+  // Round-robin parent assignment per depth — guarantees every parent gets a
+  // child when there are enough rows, removing flakiness from random assignment.
+  const parentCursorByDepth: Record<number, number> = {};
+
   Object.entries(rowsByTreeDepth).forEach(([depthStr, { rows }]) => {
     const depth = Number(depthStr);
 
@@ -83,7 +86,10 @@ export const addTreeDataOptionsToDemoData = (
         let rowTemp: RowWithParentIndex;
         if (k === depth) {
           if (depth > 0) {
-            row.parentIndex = Number(randomArrayItem(rowsByTreeDepth[depth - 1].rowIndexes));
+            const parentIndexes = rowsByTreeDepth[depth - 1].rowIndexes;
+            const cursor = parentCursorByDepth[depth] ?? 0;
+            row.parentIndex = parentIndexes[cursor % parentIndexes.length];
+            parentCursorByDepth[depth] = cursor + 1;
           }
           rowTemp = row;
         } else {
