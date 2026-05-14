@@ -76,6 +76,23 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
     ]);
   });
 
+  it('should warn and strip the rrule when updateEvent is called with one', () => {
+    expect(() => {
+      render(
+        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) => {
+              store.updateEvent({ id: DEFAULT_EVENT.id, rrule: 'FREQ=DAILY' });
+            }}
+          />
+        </EventCalendarProvider>,
+      );
+    }).toWarnDev([
+      'MUI X: Recurring events are a premium feature. The `rrule` property will be ignored.',
+    ]);
+  });
+
   it('should warn when updateRecurringEvent is called without a plugin', () => {
     expect(() => {
       render(

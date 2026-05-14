@@ -23,6 +23,7 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
+  schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { useEventDialogOptionalRenderers } from './EventDialogOptionalRenderersContext';
@@ -116,15 +117,17 @@ export function FormContent(props: FormContentProps) {
   // Optional renderer hooks
   const { recurrenceTab: RecurrenceTabRenderer } = useEventDialogOptionalRenderers();
 
-  // Recurrence helpers (delegated to the premium plugin when present)
-  const recurrencePresets =
-    recurringEventsPlugin?.computePresets(adapter, occurrence.displayTimezone.start) ?? null;
-  const defaultRecurrencePresetKey =
-    recurringEventsPlugin?.getDefaultPresetKey(
-      adapter,
-      occurrence.displayTimezone.rrule,
-      occurrence.displayTimezone.start,
-    ) ?? null;
+  const recurrencePresets = useStore(
+    store,
+    schedulerRecurringEventSelectors.presets,
+    occurrence.displayTimezone.start,
+  );
+  const defaultRecurrencePresetKey = useStore(
+    store,
+    schedulerRecurringEventSelectors.defaultPresetKey,
+    occurrence.displayTimezone.rrule,
+    occurrence.displayTimezone.start,
+  );
 
   const titleInputRef = React.useCallback((input: HTMLInputElement | null) => input?.focus(), []);
 
@@ -197,8 +200,8 @@ export function FormContent(props: FormContentProps) {
         rrule: rruleToSubmit,
       });
     } else if (showRecurrence && recurringEventsPlugin && occurrence.displayTimezone.rrule) {
-      const recurrenceModified = !recurringEventsPlugin.isSameRRule(
-        adapter,
+      const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
+        store.state,
         occurrence.displayTimezone.rrule,
         rruleToSubmit,
       );

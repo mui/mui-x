@@ -117,6 +117,17 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     expect(result.get(days[2].key)!.map((o) => o.id)).to.deep.equal([e2.id, e3.id]);
   });
 
+  it('should render a recurring event as a single non-expanded occurrence when no plugin is provided', () => {
+    const event = EventBuilder.new(adapter).singleDay(day1Str).rrule({ freq: 'DAILY' }).toProcessed();
+
+    const result = run([event]);
+
+    expect(result.get(days[0].key)).to.have.length(0);
+    expect(result.get(days[1].key)).to.have.length(1);
+    expect(result.get(days[1].key)![0].id).to.equal(event.id);
+    expect(result.get(days[2].key)).to.have.length(0);
+  });
+
   it('should convert recurring event occurrences to the display timezone before grouping', () => {
     // Event at Jan 10, 23:00 local time in New York (UTC−5)
     // 2024-01-10 23:00 EST → 2024-01-11T04:00:00Z

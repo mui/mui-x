@@ -422,6 +422,17 @@ export class SchedulerStore<
       );
     }
 
+    if (this.state.recurringEventsPlugin == null && calendarEvent.rrule != null) {
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+        ]);
+      }
+      this.updateEvents({ updated: [{ ...calendarEvent, rrule: undefined }] });
+      return;
+    }
+
     this.updateEvents({
       updated: [calendarEvent],
     });

@@ -5,13 +5,13 @@ import {
   RecurringEventWeekDayCode,
   SchedulerProcessedDate,
   TemporalSupportedObject,
-} from '@mui/x-scheduler-internals/models';
-import { SchedulerState as State } from '@mui/x-scheduler-internals/internals';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+} from '../models';
+import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const selectRecurringEventsPlugin = (state: State) => state.recurringEventsPlugin;
 
-/** Memoized selectors that wrap the premium recurring-events plugin. */
+/** Memoized selectors that delegate to the recurring-events plugin. */
 export const schedulerRecurringEventSelectors = {
   presets: createSelectorMemoized(
     (state: State) => state.adapter,

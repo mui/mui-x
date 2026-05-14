@@ -5,3 +5,4 @@ export * from './schedulerResourceSelectors';
 export * from './schedulerOccurrencePlaceholderSelectors';
 export * from './schedulerNowSelectors';
 export * from './schedulerOtherSelectors';
+export * from './schedulerRecurringEventSelectors';

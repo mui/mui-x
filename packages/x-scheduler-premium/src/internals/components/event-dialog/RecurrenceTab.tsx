@@ -23,8 +23,10 @@ import {
 } from '@mui/x-scheduler-internals/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { schedulerRecurringEventSelectors } from '@mui/x-scheduler-internals-premium/scheduler-selectors-premium';
+import {
+  schedulerEventSelectors,
+  schedulerRecurringEventSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import {
   useEventDialogStyledContext,
   ControlledValue,
