@@ -157,17 +157,7 @@ The following demos use `dataSourceRevalidateMs="3_000"` (3 seconds) to revalida
 
 Note that the row IDs stay stable but the row values change over time.
 
-#### Plain data
-
-{{"demo": "ServerSideLazyLoadingRevalidation.js", "bg": "inline"}}
-
-#### Tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
-
-{{"demo": "ServerSideLazyLoadingTreeDataRevalidation.js", "bg": "inline"}}
-
-#### Row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
-
-{{"demo": "ServerSideLazyLoadingGroupingRevalidation.js", "bg": "inline"}}
+{{"demo": "ServerSideLazyLoadingRevalidationTabs.js", "bg": "inline"}}
 
 ### Dynamically replaced datasets
 
