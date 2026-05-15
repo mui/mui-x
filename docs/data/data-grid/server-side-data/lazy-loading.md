@@ -114,7 +114,7 @@ To use lazy loading for the nested data (tree data or row grouping), pass the `l
 
 The nested lazy loading doesn't support the [infinite loading](#infinite-loading) mode, and you must provide the row count upfront for all the parents including the root, this is to avoid the unnecessary flickers during the loading process.
 
-### With tree data
+### With tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 The demo below exhibits the behavior of the nested lazy loading with tree data.
 
