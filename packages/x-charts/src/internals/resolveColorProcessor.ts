@@ -44,7 +44,9 @@ export function resolveColorProcessor<V>(
         dataIndex,
       };
       const color =
-        value == null ? getSeriesColor(fallbackValue) : categoryColorScale(value as NonNullable<V>);
+        value === null
+          ? getSeriesColor(fallbackValue)
+          : categoryColorScale(value as NonNullable<V>);
       if (color === null) {
         return getSeriesColor(fallbackValue);
       }
