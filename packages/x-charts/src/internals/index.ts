@@ -89,8 +89,6 @@ export * from './commonNextFocusItem';
 export { createCommonKeyboardFocusHandler } from './createCommonKeyboardFocusHandler';
 export { getSeriesColorFn } from './getSeriesColorFn';
 export { resolveColorProcessor } from './resolveColorProcessor';
-export { getBarDescription } from './getBarDescription';
-export { getLineDescription } from './getLineDescription';
 export { processLineLikeSeries } from './processLineLikeSeries';
 export { getLineLikeTooltip } from './getLineLikeTooltip';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';

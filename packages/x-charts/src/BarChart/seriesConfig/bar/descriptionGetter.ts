@@ -1,10 +1,29 @@
-import { getBarDescription } from '../../../internals/getBarDescription';
+import { getLabel } from '../../../internals/getLabel';
 import type { DescriptionGetter } from '../../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const descriptionGetter: DescriptionGetter<'bar'> = (params) => {
-  const isHorizontal = params.series.layout === 'horizontal';
-  const categoryAxis = isHorizontal ? params.yAxis : params.xAxis;
-  return getBarDescription({ ...params, categoryAxis });
+  const { identifier, series, xAxis, yAxis, localeText } = params;
+
+  const label = getLabel(series.label, 'tooltip');
+  const value = series.data[identifier.dataIndex] ?? null;
+
+  const isHorizontal = series.layout === 'horizontal';
+  const categoryAxis = isHorizontal ? yAxis : xAxis;
+  const categoryValue = categoryAxis.data?.[identifier.dataIndex] ?? null;
+
+  const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });
+  const formattedCategory = categoryAxis.valueFormatter?.(categoryValue, {
+    location: 'tooltip',
+    scale: categoryAxis.scale,
+  });
+
+  return localeText.barDescription({
+    value,
+    formattedValue: formattedValue ?? '',
+    categoryValue,
+    formattedCategoryValue: formattedCategory ?? '',
+    seriesLabel: label,
+  });
 };
 
 export default descriptionGetter;
