@@ -139,22 +139,22 @@ export class SchedulerLazyLoadingPlugin<
       return;
     }
 
-    const createdIdSet = new Set(created);
-    const updatedIdSet = new Set(updated.keys());
-    const createdEvents: TEvent[] = [];
-    const updatedEvents: TEvent[] = [];
-
-    for (const event of newEvents) {
-      // @ts-ignore
-      const id = event.id;
-      if (createdIdSet.has(id)) {
-        createdEvents.push(event);
-      } else if (updatedIdSet.has(id)) {
-        updatedEvents.push(event);
-      }
-    }
-
     try {
+      const createdIdSet = new Set(created);
+      const updatedIdSet = new Set(updated.keys());
+      const createdEvents: TEvent[] = [];
+      const updatedEvents: TEvent[] = [];
+
+      for (const event of newEvents) {
+        // @ts-ignore
+        const id = event.id;
+        if (createdIdSet.has(id)) {
+          createdEvents.push(event);
+        } else if (updatedIdSet.has(id)) {
+          updatedEvents.push(event);
+        }
+      }
+
       const shouldUpdateEvents = await dataSource.updateEvents({
         deleted,
         updated: updatedEvents,

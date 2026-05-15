@@ -173,6 +173,11 @@ export interface SchedulerState<TEvent extends object = any> {
 
 export interface SchedulerDataSource<TEvent extends object> {
   getEvents: (start: TemporalSupportedObject, end: TemporalSupportedObject) => Promise<TEvent[]>;
+  /**
+   * Called when events are created, updated or deleted so the consumer can persist them.
+   * `deleted` carries IDs; `created` and `updated` carry full event objects.
+   * Returning `{ success: false }` aborts the scheduler's cache and state update.
+   */
   updateEvents: (parameters: {
     deleted: SchedulerEventId[];
     updated: TEvent[];

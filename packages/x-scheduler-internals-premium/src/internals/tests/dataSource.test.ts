@@ -139,9 +139,14 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(callArgs.created[0]).toMatchObject({
         id: createdId,
         title: 'Created Event',
+        start: '2025-07-02T09:00:00.000Z',
+        end: '2025-07-02T10:00:00.000Z',
       });
       expect(callArgs.updated).toHaveLength(0);
       expect(callArgs.deleted).toHaveLength(0);
+
+      // Cache and store state reflect the create
+      expect(store.state.eventIdList).toContain(createdId);
     });
 
     it('should pass full event objects to dataSource.updateEvents on update', async () => {
@@ -179,9 +184,44 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(callArgs.updated[0]).toMatchObject({
         id: '1',
         title: 'Event 1 Updated',
+        start: '2025-07-01T11:00:00.000Z',
+        end: '2025-07-01T12:00:00.000Z',
       });
       expect(callArgs.created).toHaveLength(0);
       expect(callArgs.deleted).toHaveLength(0);
+    });
+
+    it('should not update store state when dataSource.updateEvents returns success: false', async () => {
+      const mockUpdateEvents = async (_params: {
+        deleted: SchedulerEventId[];
+        updated: TestEvent[];
+        created: TestEvent[];
+      }) => ({ success: false });
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: spy(mockUpdateEvents),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      // Populate the store via lazy loading
+      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+
+      const initialIds = [...store.state.eventIdList];
+
+      const createdId = store.createEvent({
+        start: '2025-07-02T09:00:00.000Z',
+        end: '2025-07-02T10:00:00.000Z',
+        title: 'Rejected Event',
+      });
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+
+      expect(store.state.eventIdList).toEqual(initialIds);
+      expect(store.state.eventIdList).not.toContain(createdId);
     });
 
     it('should handle loading state correctly', async () => {
