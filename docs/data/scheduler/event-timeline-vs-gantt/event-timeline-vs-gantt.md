@@ -53,6 +53,6 @@ If a predecessor changes, related tasks can be recalculated to keep the project 
 ## Gantt support in MUI X
 
 :::warning
-The Gantt Chart component isn't available yet, but you can upvote [this GitHub issue](https://github.com/mui/mui-x/issues/8732) to help us prioritize it.
+The Gantt Chart component isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/8732) to help us prioritize it.
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
