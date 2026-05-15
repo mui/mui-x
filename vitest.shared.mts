@@ -54,10 +54,6 @@ export default defineConfig({
     'process.env.NODE_ENV': '"test"',
     __ALLOW_TEST_LICENSES__: 'true',
   },
-  esbuild: {
-    minifyIdentifiers: false,
-    keepNames: true,
-  },
   resolve: {
     alias,
   },

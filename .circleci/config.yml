@@ -200,7 +200,7 @@ jobs:
             git add -A && git diff --exit-code --staged
   test_types:
     <<: *default-job
-    resource_class: medium+
+    resource_class: large
     steps:
       - checkout
       - install-deps
@@ -265,7 +265,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Install ffmpeg
-          command: apt update && apt upgrade -y && apt install ffmpeg -y
+          command: apt-get update && apt-get install ffmpeg --no-install-recommends -y
       - run:
           # All other X packages are consumed via src/ aliases from
           # vitest.shared.mts; only x-charts-vendor is consumed from its
