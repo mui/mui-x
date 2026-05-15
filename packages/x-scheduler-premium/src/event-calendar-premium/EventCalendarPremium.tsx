@@ -285,7 +285,7 @@ EventCalendarPremium.propTypes = {
   readOnly: PropTypes.bool,
   /**
    * Whether each event must have at least one resource assigned.
-   * @default false
+   * @default false on EventCalendar / EventCalendarPremium, true on EventTimelinePremium
    */
   requireResources: PropTypes.bool,
   /**
