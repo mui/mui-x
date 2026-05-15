@@ -3,18 +3,14 @@ import { ROUNDED_BOX_SDF_GLSL } from '../../utils/webgl/glsl';
 // language=Glsl
 export const heatmapVertexShaderSource = /* glsl */ `
     precision mediump float;
-
     attribute vec2 a_position;
     attribute vec2 a_center;
     attribute vec4 a_color;
     attribute float a_saturation;
-
     varying vec4 v_color;
     varying vec2 v_pos;
-
     uniform vec2 u_dimensions;
     uniform vec2 u_resolution;
-
     // https://tsev.dev/posts/2020-06-19-colour-correction-with-webgl/
     vec3 adjust_saturation(vec3 color, float value) {
       // https://www.w3.org/TR/WCAG22/#dfn-relative-luminance
