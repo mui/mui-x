@@ -50,6 +50,13 @@ export const findSkeletonRowsSection = ({
 }) => {
   let { firstRowIndex, lastRowIndex } = range;
   const visibleRowsSection = visibleRows.slice(range.firstRowIndex, range.lastRowIndex);
+  if (visibleRowsSection.length === 0) {
+    return undefined;
+  }
+  // The slice may be shorter than `lastRowIndex - firstRowIndex` (e.g., after a
+  // collapse shrinks visible rows below the cached viewport range). Clamp so the
+  // external indices stay in lockstep with the slice's bounds.
+  lastRowIndex = firstRowIndex + visibleRowsSection.length;
   let startIndex = 0;
   let endIndex = visibleRowsSection.length - 1;
   let isSkeletonSectionFound = false;
