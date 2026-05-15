@@ -21,3 +21,23 @@ benchmark('Heatmap: 100x100 grid', () => (
     skipAnimation
   />
 ));
+
+const largeDataLength = 200;
+const largeXData = Array.from({ length: largeDataLength }, (_, i) => `${i + 1}`);
+const largeYData = Array.from({ length: largeDataLength }, (_, i) => `${i + 1}`);
+const largeData = largeXData.flatMap((_, i) =>
+  largeYData.map(
+    (__, j) => [i, j, Math.sin(((i + j) * Math.PI) / 16) * 100] satisfies HeatmapValueType,
+  ),
+);
+
+benchmark('Heatmap: 200x200 grid', () => (
+  <Heatmap
+    xAxis={[{ data: largeXData }]}
+    yAxis={[{ data: largeYData }]}
+    series={[{ data: largeData }]}
+    width={500}
+    height={300}
+    skipAnimation
+  />
+));
