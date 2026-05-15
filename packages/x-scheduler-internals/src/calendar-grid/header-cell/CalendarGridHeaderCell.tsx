@@ -111,13 +111,14 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
     state,
     ref: [forwardedRef, listItemRef, cellRef],
     props: [
-      elementProps,
       {
         role: 'columnheader',
         id,
         'aria-label': `${adapter.formatByString(date.value, ariaLabelFormat)}`,
+        'aria-colindex': index + 1,
       },
       keyboardProps,
+      elementProps,
     ],
   });
 });

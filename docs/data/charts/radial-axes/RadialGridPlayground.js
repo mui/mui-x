@@ -3,35 +3,17 @@ import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { Unstable_ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
-import { Unstable_ChartsRadiusAxis as ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
 import { Unstable_ChartsRadialDataProvider } from '@mui/x-charts/ChartsRadialDataProvider';
 
-export default function RadiusAxisPlayground() {
+export default function RadialGridPlayground() {
   return (
     <ChartsUsageDemo
-      componentName="RadiusAxis"
+      componentName="RadialGrid"
       data={{
-        disableLine: { knob: 'switch', defaultValue: true },
-        disableTicks: { knob: 'switch', defaultValue: true },
-        tickPosition: {
-          knob: 'select',
-          options: ['after', 'before'],
-          defaultValue: 'after',
-        },
-        tickLabelPosition: {
-          knob: 'select',
-          options: ['center', 'after', 'before'],
-          defaultValue: 'center',
-        },
-        tickSize: { knob: 'number', defaultValue: 6, min: -20, max: 20 },
-        position: {
-          knob: 'number',
-          defaultValue: -90,
-          min: -180,
-          max: 180,
-          step: 10,
-        },
-        radiusTickNumber: { knob: 'number', defaultValue: 5, min: 0, max: 20 },
+        rotation: { knob: 'switch', defaultValue: true },
+        radius: { knob: 'switch', defaultValue: true },
+        rotationTickNumber: { knob: 'number', defaultValue: 10, min: 0, max: 20 },
+        radiusTickNumber: { knob: 'number', defaultValue: 3, min: 0, max: 20 },
         startAngle: {
           knob: 'number',
           defaultValue: -90,
@@ -47,24 +29,19 @@ export default function RadiusAxisPlayground() {
           step: 10,
         },
         minRadius: { knob: 'number', defaultValue: 30, min: 0, step: 10 },
-        maxRadius: { knob: 'number', defaultValue: 150, min: 50, step: 10 },
+        maxRadius: { knob: 'number', defaultValue: 130, min: 50, step: 10 },
       }}
       renderDemo={(props) => (
-        <Box
-          sx={{
-            width: '100%',
-            height: 400,
-          }}
-        >
+        <Box sx={{ width: '100%', maxWidth: 400 }}>
           <Unstable_ChartsRadialDataProvider
-            width={400}
-            height={400}
+            height={300}
             rotationAxis={[
               {
                 min: 0,
                 max: 100,
                 startAngle: props.startAngle,
                 endAngle: props.endAngle,
+                tickNumber: props.rotationTickNumber,
               },
             ]}
             radiusAxis={[
@@ -79,14 +56,9 @@ export default function RadiusAxisPlayground() {
           >
             <ChartsLayerContainer>
               <ChartsSvgLayer>
-                <Unstable_ChartsRadialGrid rotation radius />
-                <ChartsRadiusAxis
-                  position={props.position}
-                  disableLine={props.disableLine}
-                  disableTicks={props.disableTicks}
-                  tickSize={props.tickSize}
-                  tickLabelPosition={props.tickLabelPosition}
-                  tickPosition={props.tickPosition}
+                <Unstable_ChartsRadialGrid
+                  rotation={props.rotation}
+                  radius={props.radius}
                 />
               </ChartsSvgLayer>
             </ChartsLayerContainer>
@@ -97,6 +69,7 @@ export default function RadiusAxisPlayground() {
   rotationAxis={[{
     startAngle: ${props.startAngle},
     endAngle: ${props.endAngle},
+    tickNumber: ${props.rotationTickNumber},
   }]}
   radiusAxis={[{
     minRadius: ${props.minRadius},
@@ -104,20 +77,7 @@ export default function RadiusAxisPlayground() {
     tickNumber: ${props.radiusTickNumber},
   }]}
 >
-  <Unstable_ChartsRadialGrid rotation radius />
-  <ChartsRadiusAxis
-${[
-  `position={${props.position}}`,
-  `tickSize={${props.tickSize}}`,
-  props.disableLine && 'disableLine',
-  props.disableTicks && 'disableTicks',
-  props.tickPosition && `tickPosition="${props.tickPosition}"`,
-  props.tickLabelPosition && `tickLabelPosition="${props.tickLabelPosition}"`,
-]
-  .filter(Boolean)
-  .map((line) => `    ${line}`)
-  .join('\n')}
-  />
+  <Unstable_ChartsRadialGrid ${[props.rotation && 'rotation', props.radius && 'radius'].filter(Boolean).join(' ')} />
 </Unstable_ChartsRadialDataProvider>`}
     />
   );

@@ -35,6 +35,20 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   let apiRef: RefObject<GridApi | null>;
   let mockServer: ReturnType<typeof useMockServer>;
 
+  // The mock server uses random data, so row 0 isn't guaranteed to be a
+  // parent — find the first one that is.
+  function findFirstParentRow() {
+    const tree = apiRef.current!.state.rows.tree;
+    const rootChildren = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
+    for (let i = 0; i < rootChildren.length; i += 1) {
+      const node = tree[rootChildren[i]];
+      if (node?.type === 'group') {
+        return { index: i, id: rootChildren[i] as string, cell: getCell(i, 0) };
+      }
+    }
+    throw new Error('No parent row found in root group');
+  }
+
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
     React.useLayoutEffect(() => {
@@ -193,7 +207,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
-    const cell11 = getCell(0, 0);
+    const { cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -229,9 +243,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
-    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      .children[0];
-    const cell11 = getCell(0, 0);
+    const { id: expandedRowId, cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -282,9 +294,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
-    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      .children[0];
-    const cell11 = getCell(0, 0);
+    const { id: expandedRowId, cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -347,9 +357,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
-    const expandedRowId = (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      .children[0];
-    const cell11 = getCell(0, 0);
+    const { id: expandedRowId, cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -379,7 +387,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
 
-    const cell11 = getCell(0, 0);
+    const { cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -421,8 +429,8 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     // the second row is part of the tree
     expect(apiRef.current!.state.rows.tree[testRowId]).not.to.equal(undefined);
 
-    // expand the first row
-    const cell11 = getCell(0, 0);
+    // expand the first parent row
+    const { cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -461,7 +469,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
 
-    const cell11 = getCell(0, 0);
+    const { cell: cell11 } = findFirstParentRow();
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
@@ -569,8 +577,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
 
-    const firstChildId = (apiRef.current.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode)
-      .children[0];
+    const { id: firstChildId, cell: cell11 } = findFirstParentRow();
 
     await act(async () => {
       apiRef.current?.dataSource.fetchRows(firstChildId);
@@ -580,7 +587,6 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
     });
 
-    const cell11 = getCell(0, 0);
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
     expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(
       10 + 1 + cell11ChildrenCount,
@@ -690,15 +696,15 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
-    // Expand the first row
-    const cell = getCell(0, 0);
+    // Expand the first parent row
+    const { cell } = findFirstParentRow();
     await user.click(within(cell).getByRole('button'));
 
     await waitFor(() => {
       expect(fetchRowsSpy.callCount).to.be.greaterThan(1);
     });
 
-    // Collapse the first row
+    // Collapse the first parent row
     await user.click(within(cell).getByRole('button'));
   });
 });
