@@ -43,7 +43,7 @@ export default function ZoomSliderComposition() {
       </g>
       <ChartsXAxis label="X axis" axisId="x-axis-id" />
       <ChartsZoomSlider />
-    s  <ChartsClipPath id={clipPathId} />
+      <ChartsClipPath id={clipPathId} />
     </ChartsContainerPro>
   );
 }
