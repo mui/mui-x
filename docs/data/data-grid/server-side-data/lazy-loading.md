@@ -112,7 +112,7 @@ The following demo showcases how the loading mode can change as described above,
 
 To use lazy loading for the nested data (tree data or row grouping), pass the `lazyLoading` flag to the Data Grid and the `dataSource` prop to the Data Grid.
 
-The nested lazy loading doesn't support the "infinite loading" mode, and you must provide the row count upfront for all the parents including the root, this is to avoid the unnecessary flickers during the loading process.
+The nested lazy loading doesn't support the [infinite loading](#infinite-loading) mode, and you must provide the row count upfront for all the parents including the root, this is to avoid the unnecessary flickers during the loading process.
 
 ### With tree data
 
@@ -130,7 +130,7 @@ The demo below exhibits the behavior of the nested lazy loading with row groupin
 
 Group expansion with nested lazy loading works similarly to how it's described in the [client-side row grouping documentation](/x/react-data-grid/row-grouping/#group-expansion).
 The Data Grid expands newly loaded groups based on the `defaultGroupingExpansionDepth` and `isGroupExpandedByDefault()` props, then fetches the visible child skeleton rows for those expanded groups.
-Groups that are loaded later while scrolling use the same behavior.
+Groups that are loaded later while scrolling behave the same.
 
 ### Tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
@@ -155,7 +155,7 @@ This is useful for dashboards such as stock tickers, where values can change eve
 
 The following demos use `dataSourceRevalidateMs="3_000"` (3 seconds) to revalidate the current viewport and get the latest stock prices for the loaded rows.
 
-In the following demos, note that the row IDs stay stable but the row values change over time.
+Note that the row IDs stay stable but the row values change over time.
 
 #### Plain data
 
