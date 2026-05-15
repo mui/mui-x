@@ -8,8 +8,9 @@ components: ChartsRadialDataProvider, ChartsRadialDataProviderPremium, RadialLin
 
 <p class="description">Use radial line charts to show trends along periodic values.</p>
 
-:::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
+:::warning
+This feature is in preview.
+It is ready for production use, and its API, visuals, and behavior may change in future minor or patch releases.
 :::
 
 ## Basics
