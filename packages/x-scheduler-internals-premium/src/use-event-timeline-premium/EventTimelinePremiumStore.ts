@@ -28,6 +28,7 @@ const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = (
 
 export const DEFAULT_PRESETS: EventTimelinePremiumPreset[] = PRESET_ZOOM_ORDER;
 export const DEFAULT_PRESET: EventTimelinePremiumPreset = PRESET_ZOOM_ORDER[0];
+export const DEFAULT_REQUIRE_RESOURCES = true;
 
 function sortPresetsByZoomOrder(
   presets: EventTimelinePremiumPreset[],
@@ -78,13 +79,13 @@ const mapper: SchedulerParametersToStateMapper<
     ...deriveStateFromParameters(parameters),
     preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
     preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
-    requireResources: parameters.requireResources ?? true,
+    requireResources: parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES,
   }),
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
     const newState: Partial<EventTimelinePremiumState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
-      requireResources: parameters.requireResources ?? true,
+      requireResources: parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES,
     };
 
     updateModel(newState, 'preset', 'defaultPreset');

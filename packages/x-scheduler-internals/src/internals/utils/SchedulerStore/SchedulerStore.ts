@@ -87,7 +87,7 @@ export class SchedulerStore<
   ) {
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
 
-    const schedulerInitialState: SchedulerState<TEvent> = {
+    const schedulerInitialState: Omit<SchedulerState<TEvent>, 'requireResources'> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       ...(parameters.dataSource
         ? MOCK_EVENT_STATE
@@ -151,9 +151,6 @@ export class SchedulerStore<
       eventColor: parameters.eventColor ?? 'teal',
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
-      // The per-component mapper applies the correct default (false on Calendar, true on Timeline);
-      // this fallback only keeps the base `SchedulerState` type complete.
-      requireResources: parameters.requireResources ?? false,
       eventCreation: parameters.eventCreation ?? true,
       displayTimezone: parameters.displayTimezone ?? 'default',
     };

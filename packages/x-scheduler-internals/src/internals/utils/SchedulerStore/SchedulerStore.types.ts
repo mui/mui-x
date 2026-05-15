@@ -359,9 +359,11 @@ export interface SchedulerParametersToStateMapper<
 > {
   /**
    * Gets the initial state of the store based on the initial parameters.
+   * `requireResources` is left for the mapper to set, because its default depends on the component
+   * (`false` on the Event Calendar, `true` on the Event Timeline).
    */
   getInitialState: (
-    schedulerInitialState: SchedulerState,
+    schedulerInitialState: Omit<SchedulerState, 'requireResources'>,
     parameters: Parameters,
     adapter: Adapter,
   ) => State;

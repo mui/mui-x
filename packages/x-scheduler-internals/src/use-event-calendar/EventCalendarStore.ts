@@ -19,6 +19,7 @@ import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEven
 
 export const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
+export const DEFAULT_REQUIRE_RESOURCES = false;
 
 export const DEFAULT_EVENT_CALENDAR_PREFERENCES: EventCalendarPreferences = {
   ...DEFAULT_SCHEDULER_PREFERENCES,
@@ -68,13 +69,13 @@ const mapper: SchedulerParametersToStateMapper<
           },
     viewConfig: null,
     view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
-    requireResources: parameters.requireResources ?? false,
+    requireResources: parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES,
   }),
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
     const newState: Partial<EventCalendarState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
-      requireResources: parameters.requireResources ?? false,
+      requireResources: parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES,
     };
 
     updateModel(newState, 'view', 'defaultView');
