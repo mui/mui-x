@@ -14,6 +14,7 @@ components: EventTimelinePremium
 
 The Event Timeline and Gantt charts both display scheduled items on a time axis.
 A Gantt chart is a project-management specialization of a scheduling timeline.
+The main difference is the project-management layer: task hierarchy, dependencies, milestones, baselines, progress, and critical path analysis.
 
 ## Event Timeline
 
@@ -30,17 +31,18 @@ For example, you can use it for appointments, shifts, reservations, dispatching,
 Use a Gantt chart to display tasks in a project plan.
 Task dates can be calculated from duration, calendars, constraints, and dependencies between tasks.
 
-A Gantt chart is useful when you need project-management concepts such as task hierarchy, milestones, baselines, or critical path analysis.
+A Gantt chart is useful when you need project-management concepts such as task hierarchy, dependencies, milestones, baselines, progress, or critical path analysis.
 For example, you can use it for implementation plans, manufacturing steps, milestones, baselines, or critical path analysis.
 
 ## Comparison
 
-| Concern           | Event Timeline                                                                     | Gantt chart                                                                                         |
-| :---------------- | :--------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
-| Main model        | Events assigned to resources                                                       | Tasks in a project plan                                                                             |
-| Date management   | Dates are stored on each event                                                     | Dates can be computed from scheduling rules                                                         |
-| Dependency model  | Advanced dependency behavior is not available yet                                  | Part of the project plan                                                                            |
-| Typical use cases | Appointments, reservations, shifts, dispatching, rooms, equipment, team allocation | Project plans, implementation sequences, manufacturing steps, milestones, baselines, critical paths |
+| Concern                  | Event Timeline                                                                     | Gantt chart                                                                                                           |
+| :----------------------- | :--------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------- |
+| Main model               | Events assigned to resources                                                       | Tasks in a project plan                                                                                               |
+| Project-management layer | Not included                                                                       | Task hierarchy, dependencies, milestones, baselines, progress, and critical path analysis                             |
+| Date source              | Dates are provided by the user, application, or backend                            | Dates can be calculated from project scheduling rules                                                                 |
+| Dependencies             | Advanced dependency behavior is not available yet                                  | Dependencies are part of the project model                                                                            |
+| Typical use cases        | Appointments, reservations, shifts, dispatching, rooms, equipment, team allocation | Project plans, implementation sequences, manufacturing steps, milestones, baselines, progress, and critical path work |
 
 ## Dependencies
 
@@ -51,7 +53,7 @@ A scheduling timeline can support this kind of dependency behavior without becom
 The difference is the project-management layer: a Gantt chart usually combines dependencies with task hierarchy, milestones, baselines, and other project-planning concepts.
 
 :::warning
-Advanced dependency behavior for the Event Timeline isn't available yet, but you can upvote [this GitHub issue](https://github.com/mui/mui-x/issues/22470) to help us prioritize it.
+Advanced dependency behavior for the Event Timeline isn't available yet, but you can upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21864) to help us prioritize it.
 Please don't hesitate to leave a comment there to describe your use case and the dependency types you need.
 :::
 
