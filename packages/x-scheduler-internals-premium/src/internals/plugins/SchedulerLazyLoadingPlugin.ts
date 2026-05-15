@@ -139,11 +139,26 @@ export class SchedulerLazyLoadingPlugin<
       return;
     }
 
+    const createdIdSet = new Set(created);
+    const updatedIdSet = new Set(updated.keys());
+    const createdEvents: TEvent[] = [];
+    const updatedEvents: TEvent[] = [];
+
+    for (const event of newEvents) {
+      // @ts-ignore
+      const id = event.id;
+      if (createdIdSet.has(id)) {
+        createdEvents.push(event);
+      } else if (updatedIdSet.has(id)) {
+        updatedEvents.push(event);
+      }
+    }
+
     try {
       const shouldUpdateEvents = await dataSource.updateEvents({
         deleted,
-        updated: Array.from(updated.keys()),
-        created,
+        updated: updatedEvents,
+        created: createdEvents,
       });
 
       if (!shouldUpdateEvents.success) {
@@ -155,15 +170,11 @@ export class SchedulerLazyLoadingPlugin<
         this.cache.remove(String(id));
       }
 
-      const modifiedIds = new Set([...created, ...updated.keys()]);
-
-      if (modifiedIds.size > 0) {
-        for (const event of newEvents) {
-          // @ts-ignore
-          if (modifiedIds.has(event.id)) {
-            this.cache.upsert(event);
-          }
-        }
+      for (const event of createdEvents) {
+        this.cache.upsert(event);
+      }
+      for (const event of updatedEvents) {
+        this.cache.upsert(event);
       }
 
       const eventsState = buildEventsState(

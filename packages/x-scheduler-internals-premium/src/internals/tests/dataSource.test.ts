@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
 import { describe, expect, it } from 'vitest';
+import { SchedulerEventId } from '@mui/x-scheduler-internals/models';
 import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
 
 const DEFAULT_PARAMS = { events: [] };
@@ -107,6 +108,80 @@ premiumStoreClasses.forEach((storeClass) => {
 
       // Ensure events are still present in state
       expect(store.state.eventIdList).toHaveLength(1);
+    });
+
+    it('should pass full event objects to dataSource.updateEvents on create', async () => {
+      const mockUpdateEvents = async (_params: {
+        deleted: SchedulerEventId[];
+        updated: TestEvent[];
+        created: TestEvent[];
+      }) => ({ success: true });
+      const updateEventsSpy = spy(mockUpdateEvents);
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: updateEventsSpy,
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      const createdId = store.createEvent({
+        start: '2025-07-02T09:00:00.000Z',
+        end: '2025-07-02T10:00:00.000Z',
+        title: 'Created Event',
+      });
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+
+      expect(updateEventsSpy.calledOnce).to.equal(true);
+      const callArgs = updateEventsSpy.firstCall.args[0];
+      expect(callArgs.created).toHaveLength(1);
+      expect(callArgs.created[0]).toMatchObject({
+        id: createdId,
+        title: 'Created Event',
+      });
+      expect(callArgs.updated).toHaveLength(0);
+      expect(callArgs.deleted).toHaveLength(0);
+    });
+
+    it('should pass full event objects to dataSource.updateEvents on update', async () => {
+      const mockUpdateEvents = async (_params: {
+        deleted: SchedulerEventId[];
+        updated: TestEvent[];
+        created: TestEvent[];
+      }) => ({ success: true });
+      const updateEventsSpy = spy(mockUpdateEvents);
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: updateEventsSpy,
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      // Populate the store via lazy loading (mockFetchData seeds an event with id '1')
+      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+
+      store.updateEvent({
+        id: '1',
+        title: 'Event 1 Updated',
+        start: adapter.date('2025-07-01T11:00:00Z', 'default'),
+        end: adapter.date('2025-07-01T12:00:00Z', 'default'),
+      });
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+
+      expect(updateEventsSpy.calledOnce).to.equal(true);
+      const callArgs = updateEventsSpy.firstCall.args[0];
+      expect(callArgs.updated).toHaveLength(1);
+      expect(callArgs.updated[0]).toMatchObject({
+        id: '1',
+        title: 'Event 1 Updated',
+      });
+      expect(callArgs.created).toHaveLength(0);
+      expect(callArgs.deleted).toHaveLength(0);
     });
 
     it('should handle loading state correctly', async () => {

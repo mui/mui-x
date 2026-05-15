@@ -175,8 +175,8 @@ export interface SchedulerDataSource<TEvent extends object> {
   getEvents: (start: TemporalSupportedObject, end: TemporalSupportedObject) => Promise<TEvent[]>;
   updateEvents: (parameters: {
     deleted: SchedulerEventId[];
-    updated: SchedulerEventId[];
-    created: SchedulerEventId[];
+    updated: TEvent[];
+    created: TEvent[];
   }) => Promise<{ success: boolean }>;
 }
 
