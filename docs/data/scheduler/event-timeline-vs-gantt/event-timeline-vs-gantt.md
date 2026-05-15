@@ -1,12 +1,12 @@
 ---
 productId: x-scheduler
-title: React Scheduler component - Event Timeline vs Gantt
+title: React Scheduler component - Event Timeline vs Gantt chart
 packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
 components: EventTimelinePremium
 ---
 
-# Event Timeline vs Gantt
+# Event Timeline vs Gantt chart
 
 <p class="description">Compare the Event Timeline with a Gantt chart to choose the right component for your scheduling use case.</p>
 
@@ -44,15 +44,15 @@ For example, you can use it for implementation plans, manufacturing steps, miles
 
 ## Dependencies
 
-A timeline can display links between events without applying Gantt scheduling behavior.
+A timeline can display links between events without applying Gantt chart scheduling behavior.
 In that case, the links describe a relationship between events, but they don't automatically constrain or reschedule them.
 
 A Gantt chart treats dependencies as part of the scheduling model.
 If a predecessor changes, related tasks can be recalculated to keep the project plan consistent.
 
-## Gantt support in MUI X
+## Gantt chart support in MUI X
 
 :::warning
-The Gantt Chart component isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/8732) to help us prioritize it.
+The Gantt chart component isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/8732) to help us prioritize it.
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
