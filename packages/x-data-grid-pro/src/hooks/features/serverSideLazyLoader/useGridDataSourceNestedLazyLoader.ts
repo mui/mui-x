@@ -760,6 +760,7 @@ export const useGridDataSourceNestedLazyLoader = (
 
       const { response, fetchParams } = params;
       let hasExpandedGroupToFetch = false;
+      const wasStale = rowsStale.current;
       const pageRowCount = privateApiRef.current.state.pagination.rowCount;
       if (
         (fetchParams as GridGetRowsParams).groupKeys?.length === 0 &&
@@ -805,7 +806,11 @@ export const useGridDataSourceNestedLazyLoader = (
         false,
       );
       privateApiRef.current.requestPipeProcessorsApplication('hydrateRows');
-      if (hasExpandedGroupToFetch) {
+      // After sort/filter the tree is reset and skeletons are re-added by
+      // `addRootSkeletonRows`, but the viewport's first/last indices may be unchanged
+      // (e.g. scrolled to top already) so `renderedRowsIntervalChange` does not fire.
+      // Trigger a scan so root-level skeletons sitting in the viewport get fetched.
+      if (hasExpandedGroupToFetch || wasStale) {
         fetchVisibleSkeletonRows({ skipFallbackRevalidation: true });
       }
       startPolling();
@@ -903,6 +908,10 @@ export const useGridDataSourceNestedLazyLoader = (
         return;
       }
       cleanUpParentNodeAndGenerateSkeletonRows(node.id);
+      // Collapsing shifts rows below the group up into the viewport without firing
+      // `renderedRowsIntervalChange` (same indices, different content), so scan again
+      // for skeletons now exposed in the cached viewport range.
+      fetchVisibleSkeletonRows();
     },
     [fetchVisibleSkeletonRows, cleanUpParentNodeAndGenerateSkeletonRows],
   );
