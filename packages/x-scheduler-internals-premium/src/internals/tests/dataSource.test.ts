@@ -191,6 +191,36 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(callArgs.deleted).toHaveLength(0);
     });
 
+    it('should pass IDs (not full event objects) to dataSource.updateEvents on delete', async () => {
+      const mockUpdateEvents = async (_params: {
+        deleted: SchedulerEventId[];
+        updated: TestEvent[];
+        created: TestEvent[];
+      }) => ({ success: true });
+      const updateEventsSpy = spy(mockUpdateEvents);
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: updateEventsSpy,
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+
+      store.deleteEvent('1');
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+
+      expect(updateEventsSpy.calledOnce).to.equal(true);
+      const callArgs = updateEventsSpy.firstCall.args[0];
+      expect(callArgs.deleted).toEqual(['1']);
+      expect(callArgs.updated).toHaveLength(0);
+      expect(callArgs.created).toHaveLength(0);
+    });
+
     it('should not update store state when dataSource.updateEvents returns success: false', async () => {
       const mockUpdateEvents = async (_params: {
         deleted: SchedulerEventId[];

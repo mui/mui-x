@@ -1,4 +1,4 @@
-import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import { SchedulerEventId, TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import {
   SchedulerState,
   SchedulerParameters,
@@ -141,16 +141,14 @@ export class SchedulerLazyLoadingPlugin<
 
     try {
       const createdIdSet = new Set(created);
-      const updatedIdSet = new Set(updated.keys());
       const createdEvents: TEvent[] = [];
       const updatedEvents: TEvent[] = [];
 
       for (const event of newEvents) {
-        // @ts-ignore
-        const id = event.id;
+        const id = (event as { id: SchedulerEventId }).id;
         if (createdIdSet.has(id)) {
           createdEvents.push(event);
-        } else if (updatedIdSet.has(id)) {
+        } else if (updated.has(id)) {
           updatedEvents.push(event);
         }
       }
