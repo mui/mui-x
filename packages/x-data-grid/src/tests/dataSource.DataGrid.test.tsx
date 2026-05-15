@@ -488,6 +488,62 @@ describe('<DataGrid /> - Data source', () => {
 
         expect(NoRowsOverlay.callCount).to.equal(0);
       });
+
+      it('should keep the previous rows visible when the refetch errors', async () => {
+        const initialResponse: GridGetRowsResponse = {
+          rows: [{ id: 1, value: 'first' }],
+          rowCount: 2,
+        };
+        let firstCall = true;
+        const getRows = spy(() => {
+          if (firstCall) {
+            firstCall = false;
+            return Promise.resolve(initialResponse);
+          }
+          return Promise.reject(new Error('Network error'));
+        });
+        const dataSource: GridDataSource = { getRows };
+        const onDataSourceError = spy();
+        let localApiRef: RefObject<GridApi | null> = { current: null };
+        function Test(props: Partial<DataGridProps>) {
+          localApiRef = useGridApiRef();
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid
+                apiRef={localApiRef}
+                columns={[{ field: 'value' }]}
+                dataSource={dataSource}
+                dataSourceCache={null}
+                dataSourceKeepPreviousData
+                onDataSourceError={onDataSourceError}
+                initialState={{
+                  pagination: { paginationModel: { page: 0, pageSize: 1 }, rowCount: 0 },
+                }}
+                pagination
+                pageSizeOptions={[1]}
+                disableVirtualization
+                {...props}
+              />
+            </div>
+          );
+        }
+
+        const { setProps } = render(<Test />);
+
+        await waitFor(() => {
+          expect(localApiRef.current?.getRowsCount()).to.equal(1);
+        });
+
+        act(() => {
+          setProps({ paginationModel: { page: 1, pageSize: 1 } });
+        });
+
+        await waitFor(() => {
+          expect(onDataSourceError.callCount).to.equal(1);
+        });
+        expect(localApiRef.current?.getRowsCount()).to.equal(1);
+        expect(localApiRef.current?.getRow(1)).to.deep.equal({ id: 1, value: 'first' });
+      });
     });
   });
 

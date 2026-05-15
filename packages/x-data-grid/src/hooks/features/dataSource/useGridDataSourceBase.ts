@@ -300,7 +300,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
-        apiRef.current.setRows([]);
+        if (!props.dataSourceKeepPreviousData) {
+          apiRef.current.setRows([]);
+        }
         return;
       }
 
@@ -316,7 +318,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       );
       startPolling();
     },
-    [apiRef, startPolling],
+    [apiRef, props.dataSourceKeepPreviousData, startPolling],
   );
 
   const dataSourceUpdateRow = props.dataSource?.updateRow;
