@@ -859,7 +859,7 @@ export const useGridDataSourceNestedLazyLoader = (
       }
 
       // Show error if unknown row-count
-      if (newRowCount <= 0) {
+      if (newRowCount < 0) {
         throw new Error(
           'MUI X Data Grid: Row count is unknown. Please provide a valid row count for lazy loading to work.',
         );
@@ -924,8 +924,6 @@ export const useGridDataSourceNestedLazyLoader = (
       stopPolling();
     }
   }, [isStrategyActive, props.dataSourceRevalidateMs, stopPolling]);
-
-  React.useEffect(() => stopPolling, [stopPolling]);
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
     (newSortModel) => {
