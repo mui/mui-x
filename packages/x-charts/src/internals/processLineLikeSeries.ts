@@ -31,18 +31,12 @@ const lineValueFormatter = ((v) =>
 
 type LineLikeChartType = Extract<ChartSeriesType, 'line' | 'radialLine'>;
 
-const errorLabels: Record<'line' | 'radialLine', { titleCase: string; lowerCase: string }> = {
-  line: { titleCase: 'Line', lowerCase: 'lines' },
-  radialLine: { titleCase: 'Radial line', lowerCase: 'radial lines' },
-};
-
 export function processLineLikeSeries<T extends LineLikeChartType>(
   params: SeriesProcessorParams<T>,
   dataset: Readonly<DatasetType> | undefined,
   isItemVisible: IsItemVisibleFunction | undefined,
   seriesType: T,
 ): SeriesProcessorResult<T> {
-  const errorLabel = errorLabels[seriesType as 'line' | 'radialLine'];
   // SAFETY: 'line' and 'radialLine' series are structurally identical for every field
   // accessed in this body. The fields that differ (xAxisId/yAxisId vs rotationAxisId/radiusAxisId)
   // are only spread through via `...series[id]` and never read here.
@@ -76,10 +70,11 @@ export function processLineLikeSeries<T extends LineLikeChartType>(
         }
       });
     } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
+      const titleCase = seriesType === 'line' ? 'Line' : 'Radial line';
       // TODO: fix mui/no-guarded-throw
       // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
-        `MUI X Charts: ${errorLabel.titleCase} series with id="${id}" has no data. ` +
+        `MUI X Charts: ${titleCase} series with id="${id}" has no data. ` +
           'The chart cannot render this series without data. ' +
           'Provide a data property to the series or use the dataset prop.',
       );
@@ -90,22 +85,25 @@ export function processLineLikeSeries<T extends LineLikeChartType>(
         const dataKey = series[id].dataKey;
 
         if (!dataKey && !series[id].valueGetter) {
+          const titleCase = seriesType === 'line' ? 'Line' : 'Radial line';
           // TODO: fix mui/no-guarded-throw
           // eslint-disable-next-line mui/no-guarded-throw
           throw new Error(
-            `MUI X Charts: ${errorLabel.titleCase} series with id="${id}" has no data, no dataKey, and no valueGetter. ` +
+            `MUI X Charts: ${titleCase} series with id="${id}" has no data, no dataKey, and no valueGetter. ` +
               'When using the dataset prop, each series must have a dataKey or valueGetter to identify which dataset values to use. ' +
               'Add a dataKey or valueGetter property to the series configuration.',
           );
         }
 
         if (dataKey) {
+          const titleCase = seriesType === 'line' ? 'Line' : 'Radial line';
+          const lowerCase = seriesType === 'line' ? 'lines' : 'radial lines';
           dataset.forEach((entry, index) => {
             const value = entry[dataKey];
             if (value != null && typeof value !== 'number') {
               warnOnce(
-                `MUI X Charts: your dataset key "${dataKey}" is used for plotting ${errorLabel.lowerCase}, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
-${errorLabel.titleCase} plots only support numeric and null values.`,
+                `MUI X Charts: your dataset key "${dataKey}" is used for plotting ${lowerCase}, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.
+${titleCase} plots only support numeric and null values.`,
               );
             }
           });
