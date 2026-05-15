@@ -277,6 +277,26 @@ export async function getEvents(start, end) {
   });
 }
 
-export async function updateEvents(_params) {
+export async function updateEvents(params) {
+  const { deleted, updated, created } = params;
+
+  for (const id of deleted) {
+    const index = ALL_EVENTS.findIndex((event) => event.id === id);
+    if (index !== -1) {
+      ALL_EVENTS.splice(index, 1);
+    }
+  }
+
+  for (const event of updated) {
+    const index = ALL_EVENTS.findIndex((existing) => existing.id === event.id);
+    if (index !== -1) {
+      ALL_EVENTS[index] = event;
+    }
+  }
+
+  for (const event of created) {
+    ALL_EVENTS.push(event);
+  }
+
   return { success: true };
 }
