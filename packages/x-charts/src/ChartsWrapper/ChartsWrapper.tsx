@@ -45,75 +45,74 @@ export interface ChartsWrapperOwnerState
 const Root = styled('div', {
   name: 'MuiChartsWrapper',
   slot: 'Root',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'extendVertically',
-})<{ extendVertically: boolean }>({
-  '--ChartsWrapper-chartCol': '1fr',
-  flex: 1,
-  display: 'grid',
-  justifyContent: 'safe center',
-  justifyItems: 'center',
-  alignItems: 'center',
-  gridTemplateRows: '1fr',
-  gridTemplateColumns: 'var(--ChartsWrapper-chartCol)',
-  '&[data-fixed-width]': { '--ChartsWrapper-chartCol': 'auto' },
-  '&[data-layout="legend-top"]': {
-    gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: '"legend" "chart"',
-  },
-  '&[data-layout="legend-bottom"]': {
-    gridTemplateRows: '1fr auto',
-    gridTemplateAreas: '"chart" "legend"',
-  },
-  '&[data-layout="chart-only"]': {
-    gridTemplateAreas: '"chart"',
-  },
-  '&[data-layout="legend-start"]': {
-    gridTemplateColumns: 'auto var(--ChartsWrapper-chartCol)',
-    gridTemplateAreas: '"legend chart"',
-  },
-  '&[data-layout="legend-end"]': {
-    gridTemplateColumns: 'var(--ChartsWrapper-chartCol) auto',
-    gridTemplateAreas: '"chart legend"',
-  },
-  '&[data-h="start"]': { justifyItems: 'start' },
-  '&[data-h="end"]': { justifyItems: 'end' },
-  '&[data-v="top"]': { alignItems: 'flex-start' },
-  '&[data-v="bottom"]': { alignItems: 'flex-end' },
-  [`&:has(.${chartsToolbarClasses.root})`]: {
-    '&[data-layout="chart-only"]': {
-      gridTemplateRows: 'auto 1fr',
-      gridTemplateAreas: '"toolbar" "chart"',
+  shouldForwardProp: (prop) =>
+    shouldForwardProp(prop) && prop !== 'extendVertically' && prop !== 'width',
+})<{ ownerState: ChartsWrapperOwnerState; extendVertically: boolean; width?: number }>(({
+  ownerState,
+  width,
+}) => {
+  const { hideLegend, legendDirection: dir, legendPosition: pos } = ownerState;
+  const drawingCol = width ? 'auto' : '1fr';
+  const vertical = dir === 'vertical';
+
+  let areas: string;
+  let rows: string;
+  let cols: string;
+  let twoCols = false;
+
+  if (hideLegend) {
+    areas = '"chart"';
+    rows = '1fr';
+    cols = drawingCol;
+  } else if (vertical) {
+    rows = '1fr';
+    twoCols = true;
+    if (pos?.horizontal === 'start') {
+      areas = '"legend chart"';
+      cols = `auto ${drawingCol}`;
+    } else {
+      areas = '"chart legend"';
+      cols = `${drawingCol} auto`;
+    }
+  } else if (pos?.vertical === 'bottom') {
+    areas = '"chart" "legend"';
+    rows = '1fr auto';
+    cols = drawingCol;
+  } else {
+    areas = '"legend" "chart"';
+    rows = 'auto 1fr';
+    cols = drawingCol;
+  }
+
+  return {
+    flex: 1,
+    display: 'grid',
+    gridTemplateAreas: areas,
+    gridTemplateRows: rows,
+    gridTemplateColumns: cols,
+    justifyContent: 'safe center',
+    justifyItems:
+      pos?.horizontal === 'start' ? 'start' : pos?.horizontal === 'end' ? 'end' : 'center',
+    alignItems:
+      pos?.vertical === 'top' ? 'flex-start' : pos?.vertical === 'bottom' ? 'flex-end' : 'center',
+    [`&:has(.${chartsToolbarClasses.root})`]: {
+      gridTemplateRows: `auto ${rows}`,
+      gridTemplateAreas: `${twoCols ? '"toolbar toolbar"' : '"toolbar"'} ${areas}`,
     },
-    '&[data-layout="legend-top"]': {
-      gridTemplateRows: 'auto auto 1fr',
-      gridTemplateAreas: '"toolbar" "legend" "chart"',
+    [`& .${chartsToolbarClasses.root}`]: {
+      gridArea: 'toolbar',
+      justifySelf: 'center',
     },
-    '&[data-layout="legend-bottom"]': {
-      gridTemplateRows: 'auto 1fr auto',
-      gridTemplateAreas: '"toolbar" "chart" "legend"',
-    },
-    '&[data-layout="legend-start"]': {
-      gridTemplateRows: 'auto 1fr',
-      gridTemplateAreas: '"toolbar toolbar" "legend chart"',
-    },
-    '&[data-layout="legend-end"]': {
-      gridTemplateRows: 'auto 1fr',
-      gridTemplateAreas: '"toolbar toolbar" "chart legend"',
-    },
-  },
-  [`& .${chartsToolbarClasses.root}`]: {
-    gridArea: 'toolbar',
-    justifySelf: 'center',
-  },
-  variants: [
-    {
-      props: { extendVertically: true },
-      style: {
-        height: '100%',
-        minHeight: 0,
+    variants: [
+      {
+        props: { extendVertically: true },
+        style: {
+          height: '100%',
+          minHeight: 0,
+        },
       },
-    },
-  ],
+    ],
+  };
 });
 
 /**
@@ -140,25 +139,23 @@ const ChartsWrapper = React.forwardRef<HTMLDivElement, ChartsWrapperProps>(
     const propsWidth = store.use(selectorChartPropsWidth);
     const propsHeight = store.use(selectorChartPropsHeight);
 
-    let dataLayout: 'chart-only' | 'legend-top' | 'legend-bottom' | 'legend-start' | 'legend-end';
-    if (hideLegend) {
-      dataLayout = 'chart-only';
-    } else if (legendDirection === 'vertical') {
-      dataLayout = legendPosition?.horizontal === 'start' ? 'legend-start' : 'legend-end';
-    } else {
-      dataLayout = legendPosition?.vertical === 'bottom' ? 'legend-bottom' : 'legend-top';
-    }
+    const ownerState = React.useMemo(
+      () => ({
+        hideLegend,
+        legendDirection,
+        legendPosition,
+      }),
+      [hideLegend, legendDirection, legendPosition],
+    );
 
     return (
       <Root
-        {...other}
         ref={handleRef}
+        ownerState={ownerState}
         sx={sx}
         extendVertically={extendVertically ?? propsHeight === undefined}
-        data-layout={dataLayout}
-        data-h={legendPosition?.horizontal}
-        data-v={legendPosition?.vertical}
-        data-fixed-width={propsWidth ? '' : undefined}
+        width={propsWidth}
+        {...other}
       >
         {children}
       </Root>
