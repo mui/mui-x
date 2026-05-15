@@ -46,12 +46,14 @@ export class RowReorderExecutor {
       }
     }
 
-    warnOnce(
-      [
-        'MUI X: The parameters provided to the API method resulted in a no-op.',
-        'Consider looking at the documentation at https://mui.com/x/react-data-grid/row-ordering/',
-      ],
-      'warning',
-    );
+    if (process.env.NODE_ENV !== 'production') {
+      warnOnce(
+        [
+          'MUI X: The parameters provided to the API method resulted in a no-op.',
+          'Consider looking at the documentation at https://mui.com/x/react-data-grid/row-ordering/',
+        ],
+        'warning',
+      );
+    }
   }
 }

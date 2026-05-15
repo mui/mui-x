@@ -32,11 +32,13 @@ export const buildTreeDataPath = (node: GridTreeNode, tree: GridRowTreeConfig): 
 };
 
 export function displaySetTreeDataPathWarning(operationName: string): void {
-  warnOnce(
-    `MUI X: ${operationName} requires \`setTreeDataPath()\` prop to update row data paths. ` +
-      'Please provide a `setTreeDataPath()` function to enable this feature.',
-    'warning',
-  );
+  if (process.env.NODE_ENV !== 'production') {
+    warnOnce(
+      `MUI X: ${operationName} requires \`setTreeDataPath()\` prop to update row data paths. ` +
+        'Please provide a `setTreeDataPath()` function to enable this feature.',
+      'warning',
+    );
+  }
 }
 
 export function removeNodeFromSourceParent(
