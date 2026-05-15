@@ -264,7 +264,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Install ffmpeg
-          command: apt update && apt upgrade -y && apt install ffmpeg -y
+          command: apt-get update && apt-get install ffmpeg --no-install-recommends -y
       - run:
           name: Build packages
           command: pnpm release:build
