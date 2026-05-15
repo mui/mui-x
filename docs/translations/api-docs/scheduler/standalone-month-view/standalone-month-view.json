@@ -53,7 +53,9 @@
       "description": "Config of the preferences menu. Defines which options are visible in the menu. If <code>false</code>, the menu will be entirely hidden."
     },
     "readOnly": { "description": "Whether the calendar is in read-only mode." },
-    "requireResources": { "description": "Whether each event must have a resource assigned." },
+    "requireResources": {
+      "description": "Whether each event must have at least one resource assigned."
+    },
     "resourceModelStructure": {
       "description": "The structure of the resource model. It defines how to read and write the properties of the resource model. If not provided, the resource model is assumed to match the <code>CalendarResource</code> interface."
     },

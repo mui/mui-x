@@ -26,7 +26,7 @@ export const schedulerOtherSelectors = {
   defaultEventColor: createSelector((state: State) => state.eventColor),
   displayTimezone: createSelector((state: State) => state.displayTimezone),
   /**
-   * Whether each event must have a resource assigned.
+   * Whether each event must have at least one resource assigned.
    */
   requireResources: createSelector((state: State) => state.requireResources),
   plan: createSelector((state: State) => state.plan),

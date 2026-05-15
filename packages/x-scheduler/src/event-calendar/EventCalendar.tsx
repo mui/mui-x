@@ -263,7 +263,7 @@ EventCalendar.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * Whether each event must have a resource assigned.
+   * Whether each event must have at least one resource assigned.
    * @default false
    */
   requireResources: PropTypes.bool,
