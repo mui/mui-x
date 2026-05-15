@@ -12,8 +12,8 @@ components: EventTimelinePremium
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
-The Event Timeline and Gantt charts both display items on a time axis.
-They differ in the data model they represent and in how dates are managed.
+The Event Timeline and Gantt charts both display scheduled items on a time axis.
+A Gantt chart is a project-management specialization of a scheduling timeline.
 
 ## Event Timeline
 
@@ -30,7 +30,7 @@ For example, you can use it for appointments, shifts, reservations, dispatching,
 Use a Gantt chart to display tasks in a project plan.
 Task dates can be calculated from duration, calendars, constraints, and dependencies between tasks.
 
-A Gantt chart is useful when moving one task should update the schedule of related tasks.
+A Gantt chart is useful when you need project-management concepts such as task hierarchy, milestones, baselines, or critical path analysis.
 For example, you can use it for implementation plans, manufacturing steps, milestones, baselines, or critical path analysis.
 
 ## Comparison
@@ -39,16 +39,21 @@ For example, you can use it for implementation plans, manufacturing steps, miles
 | :---------------- | :--------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------- |
 | Main model        | Events assigned to resources                                                       | Tasks in a project plan                                                                             |
 | Date management   | Dates are stored on each event                                                     | Dates can be computed from scheduling rules                                                         |
-| User interaction  | Moving an event updates that event                                                 | Moving a task can reschedule dependent tasks                                                        |
+| Dependency model  | Advanced dependency behavior is not available yet                                  | Part of the project plan                                                                            |
 | Typical use cases | Appointments, reservations, shifts, dispatching, rooms, equipment, team allocation | Project plans, implementation sequences, manufacturing steps, milestones, baselines, critical paths |
 
 ## Dependencies
 
-A timeline can display links between events without applying Gantt chart scheduling behavior.
-In that case, the links describe a relationship between events, but they don't automatically constrain or reschedule them.
+The Event Timeline doesn't currently support advanced dependency behavior between events.
+If you need dependency types such as finish-to-start, finish-to-finish, start-to-start, or start-to-finish without a full Gantt chart, upvote the GitHub issue below.
 
-A Gantt chart treats dependencies as part of the scheduling model.
-If a predecessor changes, related tasks can be recalculated to keep the project plan consistent.
+A scheduling timeline can support this kind of dependency behavior without becoming a Gantt chart.
+The difference is the project-management layer: a Gantt chart usually combines dependencies with task hierarchy, milestones, baselines, and other project-planning concepts.
+
+:::warning
+Advanced dependency behavior for the Event Timeline isn't available yet, but you can upvote [this GitHub issue](https://github.com/mui/mui-x/issues/22470) to help us prioritize it.
+Please don't hesitate to leave a comment there to describe your use case and the dependency types you need.
+:::
 
 ## Gantt chart support in MUI X
 
