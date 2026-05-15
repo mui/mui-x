@@ -10,7 +10,7 @@ import {
   selectorChartPolarCenter,
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
-  getPolarAxisIndex,
+  getRotationAxisIndex,
   isOrdinalScale,
 } from '@mui/x-charts/internals';
 import { evaluateCurveAtAngle, clampAngleRad, getAsNumber } from '@mui/x-charts/internals';
@@ -32,7 +32,7 @@ function getBracketIndices(
   }
 
   if (isOrdinalScale(scale)) {
-    const index = getPolarAxisIndex(rotationAxis, angle);
+    const index = getRotationAxisIndex(rotationAxis, angle);
     if (index === -1) {
       return null;
     }
@@ -219,7 +219,7 @@ export default function getItemAtPosition(
     const { left, right } = bracket;
     const { visibleStackedData, data, connectNulls, curve } = seriesItem;
 
-    const dataIndex = getPolarAxisIndex(rotationAxis, pointerAngle);
+    const dataIndex = getRotationAxisIndex(rotationAxis, pointerAngle);
     if (dataIndex === -1) {
       continue;
     }
@@ -372,7 +372,7 @@ export default function getItemAtPosition(
       const radiusMax = Math.max(innerRadius, outerRadius);
 
       if (pointerRadius >= radiusMin && pointerRadius <= radiusMax) {
-        const dataIndex = getPolarAxisIndex(rotationAxis, pointerAngle);
+        const dataIndex = getRotationAxisIndex(rotationAxis, pointerAngle);
         return {
           type: 'radialLine',
           seriesId,
