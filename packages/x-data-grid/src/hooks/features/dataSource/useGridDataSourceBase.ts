@@ -50,6 +50,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     DataGridProcessedProps,
     | 'dataSource'
     | 'dataSourceCache'
+    | 'dataSourceKeepPreviousData'
     | 'onDataSourceError'
     | 'pageSizeOptions'
     | 'pagination'
@@ -131,6 +132,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
           fetchParams,
           options: { skipCache, keepChildrenExpanded },
         });
+        if (standardRowsUpdateStrategyActive) {
+          apiRef.current.setLoading(false);
+        }
         return;
       }
 
@@ -371,10 +375,21 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
   const handleFetchRowsOnParamsChange = React.useCallback(() => {
-    apiRef.current.setRows([]);
+    if (standardRowsUpdateStrategyActive) {
+      if (!props.dataSourceKeepPreviousData) {
+        apiRef.current.setRows([]);
+      }
+      apiRef.current.setLoading(true);
+    }
     stopPolling();
     debouncedFetchRows();
-  }, [stopPolling, debouncedFetchRows, apiRef]);
+  }, [
+    apiRef,
+    standardRowsUpdateStrategyActive,
+    props.dataSourceKeepPreviousData,
+    stopPolling,
+    debouncedFetchRows,
+  ]);
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {

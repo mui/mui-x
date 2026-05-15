@@ -275,6 +275,12 @@ DataGridProRaw.propTypes = {
     set: PropTypes.func.isRequired,
   }),
   /**
+   * If `true`, the previously displayed rows are kept visible while new rows are being fetched after pagination, sorting, filtering, or row grouping changes.
+   * The loading overlay is rendered on top of the previous rows.
+   * @default false
+   */
+  dataSourceKeepPreviousData: PropTypes.bool,
+  /**
    * If positive, the Data Grid will periodically revalidate data source rows by re-fetching them from the server when the cache entry has expired.
    * If the refetched rows are different from the current rows, the grid will update the rows.
    * Set to `0` to disable polling.

@@ -201,10 +201,13 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
   );
 
   const handleRowGroupingModelChange = React.useCallback(() => {
-    apiRef.current.setRows([]);
+    if (!props.dataSourceKeepPreviousData) {
+      apiRef.current.setRows([]);
+    }
+    apiRef.current.setLoading(true);
     stopPolling();
     debouncedFetchRows();
-  }, [apiRef, debouncedFetchRows, stopPolling]);
+  }, [apiRef, props.dataSourceKeepPreviousData, debouncedFetchRows, stopPolling]);
 
   const privateApi: GridDataSourcePremiumPrivateApi = {
     ...api.private,
