@@ -56,37 +56,37 @@ const Root = styled('div', {
   ownerState,
   width,
 }) => {
-  const { hideLegend, legendDirection: dir, legendPosition: pos } = ownerState;
+  const { hideLegend, legendDirection: direction, legendPosition: position } = ownerState;
   const drawingCol = width ? 'auto' : '1fr';
-  const vertical = dir === 'vertical';
+  const vertical = direction === 'vertical';
 
   let areas: string;
   let rows: string;
-  let cols: string;
-  let twoCols = false;
+  let columns: string;
+  let twoColumns = false;
 
   if (hideLegend) {
     areas = '"chart"';
     rows = '1fr';
-    cols = drawingCol;
+    columns = drawingCol;
   } else if (vertical) {
     rows = '1fr';
-    twoCols = true;
-    if (pos?.horizontal === 'start') {
+    twoColumns = true;
+    if (position?.horizontal === 'start') {
       areas = '"legend chart"';
-      cols = `auto ${drawingCol}`;
+      columns = `auto ${drawingCol}`;
     } else {
       areas = '"chart legend"';
-      cols = `${drawingCol} auto`;
+      columns = `${drawingCol} auto`;
     }
-  } else if (pos?.vertical === 'bottom') {
+  } else if (position?.vertical === 'bottom') {
     areas = '"chart" "legend"';
     rows = '1fr auto';
-    cols = drawingCol;
+    columns = drawingCol;
   } else {
     areas = '"legend" "chart"';
     rows = 'auto 1fr';
-    cols = drawingCol;
+    columns = drawingCol;
   }
 
   return {
@@ -94,13 +94,13 @@ const Root = styled('div', {
     display: 'grid',
     gridTemplateAreas: areas,
     gridTemplateRows: rows,
-    gridTemplateColumns: cols,
+    gridTemplateColumns: columns,
     justifyContent: 'safe center',
-    justifyItems: JUSTIFY_ITEMS[pos?.horizontal ?? ''] ?? 'center',
-    alignItems: ALIGN_ITEMS[pos?.vertical ?? ''] ?? 'center',
+    justifyItems: JUSTIFY_ITEMS[position?.horizontal ?? ''] ?? 'center',
+    alignItems: ALIGN_ITEMS[position?.vertical ?? ''] ?? 'center',
     [`&:has(.${chartsToolbarClasses.root})`]: {
       gridTemplateRows: `auto ${rows}`,
-      gridTemplateAreas: `${twoCols ? '"toolbar toolbar"' : '"toolbar"'} ${areas}`,
+      gridTemplateAreas: `${twoColumns ? '"toolbar toolbar"' : '"toolbar"'} ${areas}`,
     },
     [`& .${chartsToolbarClasses.root}`]: {
       gridArea: 'toolbar',
