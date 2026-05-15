@@ -52,6 +52,7 @@ const viVNDialog: Partial<EventDialogLocaleText> = {
   // recurrenceYearlyPresetLabel: date => `Repeats annually on ${date}`,
   // noResourceAriaLabel: 'No specific resource',
   // resourceLabel: 'Resource',
+  // requiredResourceError: 'A resource is required.',
   // saveChanges: 'Save',
   // startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   // startDateLabel: 'Start date',

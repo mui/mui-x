@@ -86,6 +86,11 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   areEventsDraggable: boolean;
   /**
+   * Whether each event must have a resource assigned.
+   * When `true`, the resource of an event cannot be cleared from the edit dialog.
+   */
+  requireResources: boolean;
+  /**
    * Whether the event start or end can be dragged to change its duration without changing its other date.
    * If `true`, both start and end can be resized.
    * If `false`, the events are not resizable.
@@ -246,6 +251,12 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * @default true
    */
   areEventsDraggable?: boolean;
+  /**
+   * Whether each event must have a resource assigned.
+   * When `true`, the resource of an event cannot be cleared from the edit dialog.
+   * @default false on EventCalendar / EventCalendarPremium, true on EventTimelinePremium
+   */
+  requireResources?: boolean;
   /**
    * Whether the event start or end can be dragged to change its duration without changing its other date.
    * If `true`, both start and end can be resized.

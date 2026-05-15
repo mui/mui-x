@@ -52,6 +52,7 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyPresetLabel: (date) => `Wird jährlich am ${date} wiederholt`,
   noResourceAriaLabel: 'Keine Ressource',
   resourceLabel: 'Ressource',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Speichern',
   startDateAfterEndDateError: 'Startdatum/-zeit muss vor dem Enddatum/-zeit liegen.',
   startDateLabel: 'Startdatum',

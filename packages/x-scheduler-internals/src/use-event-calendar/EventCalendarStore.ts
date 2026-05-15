@@ -68,11 +68,13 @@ const mapper: SchedulerParametersToStateMapper<
           },
     viewConfig: null,
     view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
+    requireResources: parameters.requireResources ?? false,
   }),
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
     const newState: Partial<EventCalendarState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
+      requireResources: parameters.requireResources ?? false,
     };
 
     updateModel(newState, 'view', 'defaultView');

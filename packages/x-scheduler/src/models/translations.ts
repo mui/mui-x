@@ -44,6 +44,7 @@ export interface EventDialogLocaleText {
   recurrenceYearlyPresetLabel: (date: string) => string;
   noResourceAriaLabel: string;
   resourceLabel: string;
+  requiredResourceError: string;
   saveChanges: string;
   startDateAfterEndDateError: string;
   startDateLabel: string;

@@ -284,6 +284,12 @@ EventCalendarPremium.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
+   * Whether each event must have a resource assigned.
+   * When `true`, the resource of an event cannot be cleared from the edit dialog.
+   * @default false on EventCalendar / EventCalendarPremium, true on EventTimelinePremium
+   */
+  requireResources: PropTypes.bool,
+  /**
    * The structure of the resource model.
    * It defines how to read and write the properties of the resource model.
    * If not provided, the resource model is assumed to match the `CalendarResource` interface.

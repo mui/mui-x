@@ -61,6 +61,9 @@
       "description": "The presets available in the timeline. The order is canonical (from most-zoomed-in to most-zoomed-out) and enforced internally, so a future zoom API (<code>zoomIn()</code> / <code>zoomOut()</code>) behaves consistently regardless of the order in which the presets are provided."
     },
     "readOnly": { "description": "Whether the calendar is in read-only mode." },
+    "requireResources": {
+      "description": "Whether each event must have a resource assigned. When <code>true</code>, the resource of an event cannot be cleared from the edit dialog."
+    },
     "resourceColumnLabel": {
       "description": "The label displayed in the resource column header. When provided, this takes priority over <code>localeText.timelineResourceTitleHeader</code>."
     },

@@ -255,6 +255,7 @@ export function GeneralTab(props: GeneralTabProps) {
             onResourceChange={handleResourceChange}
             onColorChange={handleColorChange}
             color={controlled.color}
+            error={typeof errors.resource === 'string' ? errors.resource : undefined}
           />
         </SectionFieldset>
         <Divider />

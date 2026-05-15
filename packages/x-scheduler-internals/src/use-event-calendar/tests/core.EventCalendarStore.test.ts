@@ -42,6 +42,7 @@ describe('Core - EventCalendarStore', () => {
         processedEventLookup: new Map(),
         processedResourceLookup: new Map(),
         readOnly: false,
+        requireResources: false,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [],
         resourceModelStructure: undefined,
@@ -56,6 +57,16 @@ describe('Core - EventCalendarStore', () => {
       };
 
       expect(store.state).to.deep.equal(expectedState);
+    });
+
+    it('should default `requireResources` to `false`', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.requireResources).to.equal(false);
+    });
+
+    it('should respect an explicit `requireResources={true}`', () => {
+      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, requireResources: true }, adapter);
+      expect(store.state.requireResources).to.equal(true);
     });
   });
 

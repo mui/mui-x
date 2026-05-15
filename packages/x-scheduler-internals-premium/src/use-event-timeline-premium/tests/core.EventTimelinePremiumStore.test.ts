@@ -35,6 +35,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         processedEventLookup: new Map(),
         processedResourceLookup: new Map(),
         readOnly: false,
+        requireResources: true,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [],
         resourceModelStructure: undefined,
@@ -48,6 +49,19 @@ describe('Core - EventTimelinePremiumStore', () => {
       };
 
       expect(store.state).to.deep.equal(expectedState);
+    });
+
+    it('should default `requireResources` to `true`', () => {
+      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.requireResources).to.equal(true);
+    });
+
+    it('should respect an explicit `requireResources={false}`', () => {
+      const store = new EventTimelinePremiumStore(
+        { ...DEFAULT_PARAMS, requireResources: false },
+        adapter,
+      );
+      expect(store.state.requireResources).to.equal(false);
     });
 
     it('should sort the presets array into the canonical zoom order regardless of input order', () => {

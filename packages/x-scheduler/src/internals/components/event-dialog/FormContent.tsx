@@ -123,6 +123,7 @@ export function FormContent(props: FormContentProps) {
   );
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
+  const requireResources = useStore(store, schedulerOtherSelectors.requireResources);
 
   const titleInputRef = React.useCallback((input: HTMLInputElement | null) => input?.focus(), []);
 
@@ -165,6 +166,11 @@ export function FormContent(props: FormContentProps) {
     const err = validateRange(adapter, start, end, controlled.allDay);
     if (err) {
       setErrors({ [err.field]: localeText.startDateAfterEndDateError });
+      return;
+    }
+
+    if (requireResources && controlled.resourceId === null) {
+      setErrors({ resource: localeText.requiredResourceError });
       return;
     }
 

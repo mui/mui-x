@@ -9,6 +9,7 @@ import ListSubheader from '@mui/material/ListSubheader';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
@@ -92,6 +93,7 @@ interface ResourceSelectProps {
   onResourceChange: (value: SchedulerResourceId) => void;
   onColorChange: (value: SchedulerEventColor | null) => void;
   color: SchedulerEventColor | null;
+  error?: string;
 }
 
 interface ResourceSelectAdornmentProps {
@@ -128,7 +130,7 @@ function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
 }
 
 export default function ResourceAndColorSection(props: ResourceSelectProps) {
-  const { readOnly, resourceId, onResourceChange, onColorChange, color } = props;
+  const { readOnly, resourceId, onResourceChange, onColorChange, color, error } = props;
 
   // Context hooks
   const { schedulerId, classes, localeText } = useEventDialogStyledContext();
@@ -139,6 +141,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
   const resourceDepthLookup = useStore(store, schedulerResourceSelectors.resourceDepthLookup);
   const childrenIdLookup = useStore(store, schedulerResourceSelectors.childrenIdLookup);
   const eventDefaultColor = useStore(store, schedulerOtherSelectors.defaultEventColor);
+  const requireResources = useStore(store, schedulerOtherSelectors.requireResources);
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     const hasNesting = resources.some(
@@ -146,14 +149,18 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
     );
 
     return [
-      {
-        label: localeText.labelNoResource,
-        value: null,
-        eventColor: eventDefaultColor,
-        isGroupRoot: false,
-        indentLevel: 0,
-        showDivider: false,
-      },
+      ...(requireResources
+        ? []
+        : [
+            {
+              label: localeText.labelNoResource,
+              value: null,
+              eventColor: eventDefaultColor,
+              isGroupRoot: false,
+              indentLevel: 0,
+              showDivider: false,
+            },
+          ]),
       ...resources.map((resource) => {
         const depth = resourceDepthLookup.get(resource.id) ?? 0;
         const hasChildren = (childrenIdLookup.get(resource.id)?.length ?? 0) > 0;
@@ -173,6 +180,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
     childrenIdLookup,
     localeText.labelNoResource,
     eventDefaultColor,
+    requireResources,
   ]);
 
   const resource = React.useMemo(
@@ -190,7 +198,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
 
   return (
     <React.Fragment>
-      <FormControl size="small" fullWidth>
+      <FormControl size="small" fullWidth error={!!error}>
         <InputLabel id={`${schedulerId}-resource-select-label`}>
           {localeText.resourceLabel}
         </InputLabel>
@@ -248,6 +256,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
             return items;
           })}
         </Select>
+        {error && <FormHelperText>{error}</FormHelperText>}
       </FormControl>
       <ResourceMenuColorToggleGroup
         value={color ? [color] : []}

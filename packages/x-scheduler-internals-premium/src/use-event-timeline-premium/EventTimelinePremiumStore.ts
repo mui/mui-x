@@ -78,11 +78,13 @@ const mapper: SchedulerParametersToStateMapper<
     ...deriveStateFromParameters(parameters),
     preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
     preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
+    requireResources: parameters.requireResources ?? true,
   }),
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
     const newState: Partial<EventTimelinePremiumState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
+      requireResources: parameters.requireResources ?? true,
     };
 
     updateModel(newState, 'preset', 'defaultPreset');

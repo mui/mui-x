@@ -151,6 +151,9 @@ export class SchedulerStore<
       eventColor: parameters.eventColor ?? 'teal',
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
+      // The per-component mapper applies the correct default (false on Calendar, true on Timeline);
+      // this fallback only keeps the base `SchedulerState` type complete.
+      requireResources: parameters.requireResources ?? false,
       eventCreation: parameters.eventCreation ?? true,
       displayTimezone: parameters.displayTimezone ?? 'default',
     };
