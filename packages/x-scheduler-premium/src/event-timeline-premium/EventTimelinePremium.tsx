@@ -338,8 +338,7 @@ EventTimelinePremium.propTypes = {
   readOnly: PropTypes.bool,
   /**
    * Whether each event must have a resource assigned.
-   * When `true`, the resource of an event cannot be cleared from the edit dialog.
-   * @default false on EventCalendar / EventCalendarPremium, true on EventTimelinePremium
+   * @default true
    */
   requireResources: PropTypes.bool,
   /**

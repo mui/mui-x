@@ -87,7 +87,6 @@ export interface SchedulerState<TEvent extends object = any> {
   areEventsDraggable: boolean;
   /**
    * Whether each event must have a resource assigned.
-   * When `true`, the resource of an event cannot be cleared from the edit dialog.
    */
   requireResources: boolean;
   /**
@@ -253,7 +252,6 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   areEventsDraggable?: boolean;
   /**
    * Whether each event must have a resource assigned.
-   * When `true`, the resource of an event cannot be cleared from the edit dialog.
    * @default false on EventCalendar / EventCalendarPremium, true on EventTimelinePremium
    */
   requireResources?: boolean;
