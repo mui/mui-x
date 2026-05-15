@@ -85,17 +85,18 @@ catalog:
 
 engineStrict: true
 
-ignoredBuiltDependencies:
-  - core-js
-  - msw
+enablePrePostScripts: true
 
-onlyBuiltDependencies:
-  - '@swc/core'
-  - '@vvago/vale'
-  - esbuild
-  - nx
-  - sharp
-  - unrs-resolver
+allowBuilds:
+  '@swc/core': true
+  '@vvago/vale': true
+  esbuild: true
+  nx: true
+  sharp: true
+  unrs-resolver: true
+  '@mui/x-telemetry': false
+  core-js: false
+  msw: false
 
 overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error
