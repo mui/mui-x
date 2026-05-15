@@ -33,6 +33,10 @@ export function createInstancedAttribute(
  * VAOs (e.g. two shader-program variants over the same data).
  *
  * The caller MUST have the owning VAO bound when calling this.
+ *
+ * If the attribute is missing from the program (typo, or optimized out by the
+ * compiler), `getAttribLocation` returns -1. We skip the GL setup in that case to
+ * avoid `INVALID_VALUE` errors from `enableVertexAttribArray(-1)` and warn in dev.
  */
 export function bindInstancedAttribute(
   gl: WebGL2RenderingContext,
@@ -44,6 +48,14 @@ export function bindInstancedAttribute(
   normalized: boolean = false,
 ): InstancedAttribute {
   const location = gl.getAttribLocation(program, name);
+  if (location === -1) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(
+        `WebGL attribute "${name}" not found in shader program (misspelled or optimized out).`,
+      );
+    }
+    return { buffer, location, size, glType, normalized };
+  }
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer.buffer);
   gl.enableVertexAttribArray(location);
   gl.vertexAttribPointer(location, size, glType, normalized, 0, 0);
