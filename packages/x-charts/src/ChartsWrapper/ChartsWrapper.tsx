@@ -42,6 +42,9 @@ export interface ChartsWrapperProps extends React.HTMLAttributes<HTMLDivElement>
 export interface ChartsWrapperOwnerState
   extends Pick<ChartsWrapperProps, 'hideLegend' | 'legendDirection' | 'legendPosition'> {}
 
+const JUSTIFY_ITEMS: Record<string, string> = { start: 'start', end: 'end' };
+const ALIGN_ITEMS: Record<string, string> = { top: 'flex-start', bottom: 'flex-end' };
+
 const Root = styled('div', {
   name: 'MuiChartsWrapper',
   slot: 'Root',
@@ -91,10 +94,8 @@ const Root = styled('div', {
     gridTemplateRows: rows,
     gridTemplateColumns: cols,
     justifyContent: 'safe center',
-    justifyItems:
-      pos?.horizontal === 'start' ? 'start' : pos?.horizontal === 'end' ? 'end' : 'center',
-    alignItems:
-      pos?.vertical === 'top' ? 'flex-start' : pos?.vertical === 'bottom' ? 'flex-end' : 'center',
+    justifyItems: JUSTIFY_ITEMS[pos?.horizontal ?? ''] ?? 'center',
+    alignItems: ALIGN_ITEMS[pos?.vertical ?? ''] ?? 'center',
     [`&:has(.${chartsToolbarClasses.root})`]: {
       gridTemplateRows: `auto ${rows}`,
       gridTemplateAreas: `${twoCols ? '"toolbar toolbar"' : '"toolbar"'} ${areas}`,
