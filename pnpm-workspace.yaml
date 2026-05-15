@@ -87,6 +87,11 @@ engineStrict: true
 
 enablePrePostScripts: true
 
+# v11 defaults to true, which prompts interactively for unlisted build scripts;
+# in CI `pnpm dlx` hangs forever waiting for input. Keep v10 behaviour: silently
+# skip any package not in `allowBuilds`.
+strictDepBuilds: false
+
 allowBuilds:
   '@swc/core': true
   '@vvago/vale': true
