@@ -39,8 +39,10 @@ export interface ChartsWrapperProps extends React.HTMLAttributes<HTMLDivElement>
   sx?: SxProps<Theme>;
 }
 
-export interface ChartsWrapperOwnerState
-  extends Pick<ChartsWrapperProps, 'hideLegend' | 'legendDirection' | 'legendPosition'> {}
+export interface ChartsWrapperOwnerState extends Pick<
+  ChartsWrapperProps,
+  'hideLegend' | 'legendDirection' | 'legendPosition'
+> {}
 
 const JUSTIFY_ITEMS: Record<string, string> = { start: 'start', end: 'end' };
 const ALIGN_ITEMS: Record<string, string> = { top: 'flex-start', bottom: 'flex-end' };
