@@ -8,6 +8,7 @@ import {
   useStore,
 } from '@mui/x-charts/internals';
 import { parseColor } from '../../utils/webgl/parseColor';
+import { ensurePool } from '../../utils/webgl/utils';
 
 export interface BarWebGLPlotData {
   centers: Float32Array;
@@ -29,25 +30,6 @@ const EMPTY_DATA: BarWebGLPlotData = {
   cornerRadii: EMPTY_FLOAT32,
   count: 0,
 };
-
-interface ArrayPool {
-  centers: Float32Array;
-  halfSizes: Float32Array;
-  colors: Uint8Array;
-  cornerRadii: Float32Array;
-}
-
-function ensureCapacity(pool: ArrayPool | null, maxCount: number): ArrayPool {
-  if (pool !== null && pool.colors.length >= maxCount * 4) {
-    return pool;
-  }
-  return {
-    centers: new Float32Array(maxCount * 2),
-    halfSizes: new Float32Array(maxCount * 2),
-    colors: new Uint8Array(maxCount * 4),
-    cornerRadii: new Float32Array(maxCount * 4),
-  };
-}
 
 // Mirrors SVG highlight styling: highlighted -> CSS `brightness(120%)`,
 // faded -> opacity 0.3. Baking these into the per-bar color array means we
@@ -96,7 +78,10 @@ export function useBarWebGLPlotData(
 ): BarWebGLPlotData {
   const store = useStore();
   const getHighlightState = store.use(selectorChartsHighlightStateCallback);
-  const poolRef = React.useRef<ArrayPool | null>(null);
+  const centersPoolRef = React.useRef<Float32Array | null>(null);
+  const halfSizesPoolRef = React.useRef<Float32Array | null>(null);
+  const colorsPoolRef = React.useRef<Uint8Array | null>(null);
+  const cornerRadiiPoolRef = React.useRef<Float32Array | null>(null);
 
   return React.useMemo(() => {
     let maxCount = 0;
@@ -108,11 +93,16 @@ export function useBarWebGLPlotData(
       return EMPTY_DATA;
     }
 
-    const pool = ensureCapacity(poolRef.current, maxCount);
-    poolRef.current = pool;
+    const centers = ensurePool(centersPoolRef.current, maxCount * 2, Float32Array);
+    const halfSizes = ensurePool(halfSizesPoolRef.current, maxCount * 2, Float32Array);
+    const colors = ensurePool(colorsPoolRef.current, maxCount * 4, Uint8Array);
+    const cornerRadii = ensurePool(cornerRadiiPoolRef.current, maxCount * 4, Float32Array);
+    centersPoolRef.current = centers;
+    halfSizesPoolRef.current = halfSizes;
+    colorsPoolRef.current = colors;
+    cornerRadiiPoolRef.current = cornerRadii;
 
     // Hoist invariants out of the hot loop.
-    const { centers, halfSizes, colors, cornerRadii } = pool;
     const drawingAreaLeft = drawingArea.left;
     const drawingAreaTop = drawingArea.top;
 
