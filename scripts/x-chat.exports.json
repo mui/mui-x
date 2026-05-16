@@ -134,6 +134,8 @@
   { "name": "ChatUnreadMarkerClassKey", "kind": "TypeAlias" },
   { "name": "ChatUnreadMarkerProps", "kind": "Interface" },
   { "name": "ChatVariant", "kind": "TypeAlias" },
+  { "name": "createEchoAdapter", "kind": "Function" },
+  { "name": "CreateEchoAdapterOptions", "kind": "Interface" },
   { "name": "getChatBoxUtilityClass", "kind": "Function" },
   { "name": "getChatCodeBlockUtilityClass", "kind": "Function" },
   { "name": "getChatComposerUtilityClass", "kind": "Function" },
