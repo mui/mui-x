@@ -315,8 +315,12 @@ ChatComposer.propTypes = {
     ]),
   }),
   /**
-   * Handler invoked when the form is submitted. The composer's submit logic still
-   * runs after this handler unless the handler calls `event.preventDefault()`.
+   * Handler invoked when the form is submitted.
+   *
+   * Native form submission is always prevented before this handler runs.
+   * Call `event.preventDefault()` from inside the handler to also suppress the
+   * composer's own `submit()` action; otherwise the composer submits as usual
+   * after the handler returns.
    */
   onSubmit: PropTypes.func,
   slotProps: PropTypes.object,
