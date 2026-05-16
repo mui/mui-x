@@ -57,7 +57,10 @@ export const MessageError = React.forwardRef(function MessageError(
     () => ({
       ...messageContext,
       chatError,
-      retryable: chatError?.retryable ?? false,
+      // Retry only runs on user messages (stream failures attach errors to the
+      // assistant id, but the action no-ops there) — keep `retryable` honest so
+      // slots don't render a button that does nothing.
+      retryable: (chatError?.retryable ?? false) && messageContext.role === 'user',
       retry,
     }),
     [messageContext, chatError, retry],

@@ -26,74 +26,6 @@ Every stream must follow this lifecycle:
 
 If the stream closes without a terminal chunk, the runtime treats it as a disconnect (see [Error and disconnect handling](#error-and-disconnect-handling) below).
 
-## Chunk types
-
-### Lifecycle chunks
-
-| Chunk type | Fields                       | Description                    |
-| :--------- | :--------------------------- | :----------------------------- |
-| `start`    | `messageId`                  | Begin a new assistant message  |
-| `finish`   | `messageId`, `finishReason?` | Complete the assistant message |
-| `abort`    | `messageId`                  | Cancel the assistant message   |
-
-### Text chunks
-
-| Chunk type   | Fields        | Description            |
-| :----------- | :------------ | :--------------------- |
-| `text-start` | `id`          | Begin a new text part  |
-| `text-delta` | `id`, `delta` | Append text content    |
-| `text-end`   | `id`          | Finalize the text part |
-
-Text chunks create a `ChatTextMessagePart` in the message.
-Multiple `text-delta` chunks are batched according to `streamFlushInterval` before being applied to the store.
-
-### Reasoning chunks
-
-| Chunk type        | Fields        | Description                 |
-| :---------------- | :------------ | :-------------------------- |
-| `reasoning-start` | `id`          | Begin a reasoning part      |
-| `reasoning-delta` | `id`, `delta` | Append reasoning content    |
-| `reasoning-end`   | `id`          | Finalize the reasoning part |
-
-Reasoning chunks create a `ChatReasoningMessagePart`, useful for chain-of-thought or thinking trace displays.
-
-### Tool chunks
-
-| Chunk type              | Fields                                           | Description                   |
-| :---------------------- | :----------------------------------------------- | :---------------------------- |
-| `tool-input-start`      | `toolCallId`, `toolName`, `dynamic?`             | Begin a tool invocation       |
-| `tool-input-delta`      | `toolCallId`, `inputTextDelta`                   | Stream tool input JSON        |
-| `tool-input-available`  | `toolCallId`, `toolName`, `input`                | Tool input is fully available |
-| `tool-input-error`      | `toolCallId`, `errorText`                        | Tool input parsing failed     |
-| `tool-approval-request` | `toolCallId`, `toolName`, `input`, `approvalId?` | Request user approval         |
-| `tool-output-available` | `toolCallId`, `output`, `preliminary?`           | Tool output is available      |
-| `tool-output-error`     | `toolCallId`, `errorText`                        | Tool execution failed         |
-| `tool-output-denied`    | `toolCallId`, `reason?`                          | User denied the tool call     |
-
-The `toolInvocation.state` tracks the tool lifecycle: `'input-streaming'` -> `'input-available'` -> `'approval-requested'` -> `'output-available'` (or `'output-error'` / `'output-denied'`).
-
-### Source, file, and data chunks
-
-| Chunk type        | Fields                                 | Description           |
-| :---------------- | :------------------------------------- | :-------------------- |
-| `source-url`      | `sourceId`, `url`, `title?`            | URL-based source      |
-| `source-document` | `sourceId`, `title?`, `text?`          | Document-based source |
-| `file`            | `mediaType`, `url`, `filename?`, `id?` | Inline file           |
-| `data-*`          | `type`, `data`, `id?`, `transient?`    | Custom data payload   |
-
-Data chunks use a type that matches the `data-*` pattern (for example, `data-citations` or `data-summary`).
-They create `ChatDataMessagePart` entries and also fire the `onData` callback.
-If `transient` is `true`, the part is not persisted in the message.
-
-### Step boundary chunks
-
-| Chunk type    | Description                 |
-| :------------ | :-------------------------- |
-| `start-step`  | Begin a new processing step |
-| `finish-step` | End the current step        |
-
-Step chunks create `ChatStepStartMessagePart` entries, useful for showing multi-step agentic processing in the UI.
-
 ## Building a stream
 
 When writing an adapter, construct a `ReadableStream` from an array of chunks:
@@ -245,6 +177,76 @@ If the stream closes without a terminal chunk (`finish` or `abort`), the runtime
 
 If the adapter's `sendMessage()` throws, the runtime records a send error and surfaces it through the error model.
 See [Error handling](/x/react-chat/behavior/error-handling/) for more details.
+
+## Chunk types
+
+Full reference of every chunk type the runtime accepts.
+
+### Lifecycle chunks
+
+| Chunk type | Fields                       | Description                    |
+| :--------- | :--------------------------- | :----------------------------- |
+| `start`    | `messageId`                  | Begin a new assistant message  |
+| `finish`   | `messageId`, `finishReason?` | Complete the assistant message |
+| `abort`    | `messageId`                  | Cancel the assistant message   |
+
+### Text chunks
+
+| Chunk type   | Fields        | Description            |
+| :----------- | :------------ | :--------------------- |
+| `text-start` | `id`          | Begin a new text part  |
+| `text-delta` | `id`, `delta` | Append text content    |
+| `text-end`   | `id`          | Finalize the text part |
+
+Text chunks create a `ChatTextMessagePart` in the message.
+Multiple `text-delta` chunks are batched according to `streamFlushInterval` before being applied to the store.
+
+### Reasoning chunks
+
+| Chunk type        | Fields        | Description                 |
+| :---------------- | :------------ | :-------------------------- |
+| `reasoning-start` | `id`          | Begin a reasoning part      |
+| `reasoning-delta` | `id`, `delta` | Append reasoning content    |
+| `reasoning-end`   | `id`          | Finalize the reasoning part |
+
+Reasoning chunks create a `ChatReasoningMessagePart`, useful for chain-of-thought or thinking trace displays.
+
+### Tool chunks
+
+| Chunk type              | Fields                                           | Description                   |
+| :---------------------- | :----------------------------------------------- | :---------------------------- |
+| `tool-input-start`      | `toolCallId`, `toolName`, `dynamic?`             | Begin a tool invocation       |
+| `tool-input-delta`      | `toolCallId`, `inputTextDelta`                   | Stream tool input JSON        |
+| `tool-input-available`  | `toolCallId`, `toolName`, `input`                | Tool input is fully available |
+| `tool-input-error`      | `toolCallId`, `errorText`                        | Tool input parsing failed     |
+| `tool-approval-request` | `toolCallId`, `toolName`, `input`, `approvalId?` | Request user approval         |
+| `tool-output-available` | `toolCallId`, `output`, `preliminary?`           | Tool output is available      |
+| `tool-output-error`     | `toolCallId`, `errorText`                        | Tool execution failed         |
+| `tool-output-denied`    | `toolCallId`, `reason?`                          | User denied the tool call     |
+
+The `toolInvocation.state` tracks the tool lifecycle: `'input-streaming'` -> `'input-available'` -> `'approval-requested'` -> `'output-available'` (or `'output-error'` / `'output-denied'`).
+
+### Source, file, and data chunks
+
+| Chunk type        | Fields                                 | Description           |
+| :---------------- | :------------------------------------- | :-------------------- |
+| `source-url`      | `sourceId`, `url`, `title?`            | URL-based source      |
+| `source-document` | `sourceId`, `title?`, `text?`          | Document-based source |
+| `file`            | `mediaType`, `url`, `filename?`, `id?` | Inline file           |
+| `data-*`          | `type`, `data`, `id?`, `transient?`    | Custom data payload   |
+
+Data chunks use a type that matches the `data-*` pattern (for example, `data-citations` or `data-summary`).
+They create `ChatDataMessagePart` entries and also fire the `onData` callback.
+If `transient` is `true`, the part is not persisted in the message.
+
+### Step boundary chunks
+
+| Chunk type    | Description                 |
+| :------------ | :-------------------------- |
+| `start-step`  | Begin a new processing step |
+| `finish-step` | End the current step        |
+
+Step chunks create `ChatStepStartMessagePart` entries, useful for showing multi-step agentic processing in the UI.
 
 ## How chunks become message parts
 

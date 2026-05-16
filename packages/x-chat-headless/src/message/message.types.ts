@@ -48,7 +48,11 @@ export interface MessageErrorOwnerState extends MessageOwnerState {
    * rendering the slot can assume this is non-null.
    */
   chatError: ChatError | null;
-  /** Whether the chat error is retryable (convenience flag, mirrors `chatError.retryable`). */
+  /**
+   * Whether the consumer should render a retry affordance.
+   * True only when `chatError.retryable` is set AND the message is a user message —
+   * `retry(messageId)` is a no-op for assistant messages.
+   */
   retryable: boolean;
   /**
    * Invoke the `retry(messageId)` action bound to the current message.

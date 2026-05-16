@@ -164,4 +164,49 @@ describe('MessageError', () => {
       expect(sendMessage).toHaveBeenCalledTimes(1);
     });
   });
+
+  it('reports retryable=false in ownerState when the message is not a user message', () => {
+    storeRef = null;
+    const assistantMessage: ChatMessage = {
+      id: 'a1',
+      role: 'assistant',
+      status: 'error',
+      parts: [{ type: 'text', text: 'partial response' }],
+    };
+    const capturedOwnerStates: Array<{ retryable: boolean; role: string | undefined }> = [];
+
+    const CustomRoot = React.forwardRef<HTMLDivElement, any>(function CustomRoot(props, ref) {
+      const { ownerState, children, ...other } = props;
+      capturedOwnerStates.push({ retryable: ownerState.retryable, role: ownerState.role });
+      return (
+        <div ref={ref} data-testid="assistant-error-root" {...other}>
+          {children}
+        </div>
+      );
+    });
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[assistantMessage]}>
+        <StoreCapture />
+        <MessageRoot messageId="a1">
+          <MessageError slots={{ root: CustomRoot }} />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    act(() => {
+      storeRef!.setMessageError('a1', {
+        code: 'STREAM_ERROR',
+        message: 'Connection dropped',
+        source: 'stream',
+        recoverable: true,
+        retryable: true,
+        details: { messageId: 'a1' },
+      });
+    });
+
+    const lastOwnerState = capturedOwnerStates[capturedOwnerStates.length - 1];
+    expect(lastOwnerState.role).to.equal('assistant');
+    expect(lastOwnerState.retryable).to.equal(false);
+  });
 });

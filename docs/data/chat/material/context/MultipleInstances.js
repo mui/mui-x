@@ -18,8 +18,16 @@ const salesAdapter = createEchoAdapter({
 
 export default function MultipleInstances() {
   return (
-    <Box sx={{ display: 'flex', gap: 2 }}>
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+    <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
+      <Box
+        sx={{
+          flex: 1,
+          minWidth: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+        }}
+      >
         <Typography variant="subtitle2" color="text.secondary">
           Support
         </Typography>
@@ -34,7 +42,15 @@ export default function MultipleInstances() {
           }}
         />
       </Box>
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <Box
+        sx={{
+          flex: 1,
+          minWidth: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+        }}
+      >
         <Typography variant="subtitle2" color="text.secondary">
           Sales
         </Typography>

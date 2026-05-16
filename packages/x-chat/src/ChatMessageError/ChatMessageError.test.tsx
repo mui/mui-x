@@ -2,8 +2,9 @@ import * as React from 'react';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
-import { ChatRoot, useChatStore } from '@mui/x-chat-headless';
+import { ChatRoot, MessageRoot, useChatStore } from '@mui/x-chat-headless';
 import { ChatMessage as ChatMessageComponent } from '../ChatMessage/ChatMessage';
+import { ChatMessageError } from './ChatMessageError';
 
 const { render } = createRenderer();
 
@@ -136,5 +137,41 @@ describe('ChatMessageError', () => {
 
     const retryButton = screen.getByRole('button', { name: 'Retry' });
     expect(retryButton).to.have.property('disabled', true);
+  });
+
+  it('forwards consumer-supplied classes to the message and retryButton slots', () => {
+    storeRef = null;
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[errorMessage]}>
+        <StoreCapture />
+        <MessageRoot messageId="m1">
+          <ChatMessageError
+            classes={{
+              root: 'custom-root',
+              message: 'custom-message',
+              retryButton: 'custom-retry',
+            }}
+          />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    act(() => {
+      storeRef!.setMessageError('m1', {
+        code: 'SEND_ERROR',
+        message: 'Send failed',
+        source: 'send',
+        recoverable: true,
+        retryable: true,
+        details: { messageId: 'm1' },
+      });
+    });
+
+    const alert = screen.getByRole('alert');
+    expect(alert.classList.contains('custom-root')).to.equal(true);
+    const messageSpan = alert.querySelector('.custom-message');
+    expect(messageSpan).not.to.equal(null);
+    const retryButton = screen.getByRole('button', { name: 'Retry' });
+    expect(retryButton.classList.contains('custom-retry')).to.equal(true);
   });
 });

@@ -45,45 +45,6 @@ async subscribe({ onEvent }) {
 },
 ```
 
-## Event types
-
-The `onEvent` callback receives `ChatRealtimeEvent` objects.
-There are nine event variants organized into five categories.
-
-### Conversation events
-
-| Event type             | Payload              | Store effect                                                |
-| :--------------------- | :------------------- | :---------------------------------------------------------- |
-| `conversation-added`   | `{ conversation }`   | Adds the conversation to the store                          |
-| `conversation-updated` | `{ conversation }`   | Replaces the conversation record                            |
-| `conversation-removed` | `{ conversationId }` | Removes the conversation and resets active ID if it matched |
-
-### Message events
-
-| Event type        | Payload                          | Store effect                       |
-| :---------------- | :------------------------------- | :--------------------------------- |
-| `message-added`   | `{ message }`                    | Adds the message to the store      |
-| `message-updated` | `{ message }`                    | Replaces the message record        |
-| `message-removed` | `{ messageId, conversationId? }` | Removes the message from the store |
-
-### Typing events
-
-| Event type | Payload                                | Store effect                                |
-| :--------- | :------------------------------------- | :------------------------------------------ |
-| `typing`   | `{ conversationId, userId, isTyping }` | Updates the typing map for the conversation |
-
-### Presence events
-
-| Event type | Payload                | Store effect                                             |
-| :--------- | :--------------------- | :------------------------------------------------------- |
-| `presence` | `{ userId, isOnline }` | Updates `isOnline` on matching conversation participants |
-
-### Read events
-
-| Event type | Payload                                   | Store effect                          |
-| :--------- | :---------------------------------------- | :------------------------------------ |
-| `read`     | `{ conversationId, messageId?, userId? }` | Updates the conversation's read state |
-
 ## Dispatching events from the backend
 
 Each event is a plain object with a `type` field.
@@ -110,7 +71,7 @@ Here are the full shapes:
 { type: 'read', conversationId: string, messageId?: string, userId?: string }
 ```
 
-## The `setTyping()` method
+## Sending typing indicators
 
 Implement `setTyping()` to send a typing indicator to your backend when the user is composing a message.
 The runtime calls it when the composer value changes from empty to non-empty (and vice versa).
@@ -133,7 +94,7 @@ async setTyping({ conversationId, isTyping }) {
 
 To receive typing indicators from other users in the UI, implement `subscribe()` and emit `typing` events through the `onEvent` callback.
 
-## The `markRead()` method
+## Marking messages as read
 
 Implement `markRead()` to signal to your backend that the user has seen a conversation or a specific message.
 The runtime does not call this automatically — call `adapter.markRead()` directly from your own UI event handler.
@@ -242,6 +203,45 @@ const adapter: ChatAdapter = {
   },
 };
 ```
+
+## Event types
+
+Full reference of the events the `onEvent` callback can emit.
+There are nine event variants organized into five categories.
+
+### Conversation events
+
+| Event type             | Payload              | Store effect                                                |
+| :--------------------- | :------------------- | :---------------------------------------------------------- |
+| `conversation-added`   | `{ conversation }`   | Adds the conversation to the store                          |
+| `conversation-updated` | `{ conversation }`   | Replaces the conversation record                            |
+| `conversation-removed` | `{ conversationId }` | Removes the conversation and resets active ID if it matched |
+
+### Message events
+
+| Event type        | Payload                          | Store effect                       |
+| :---------------- | :------------------------------- | :--------------------------------- |
+| `message-added`   | `{ message }`                    | Adds the message to the store      |
+| `message-updated` | `{ message }`                    | Replaces the message record        |
+| `message-removed` | `{ messageId, conversationId? }` | Removes the message from the store |
+
+### Typing events
+
+| Event type | Payload                                | Store effect                                |
+| :--------- | :------------------------------------- | :------------------------------------------ |
+| `typing`   | `{ conversationId, userId, isTyping }` | Updates the typing map for the conversation |
+
+### Presence events
+
+| Event type | Payload                | Store effect                                             |
+| :--------- | :--------------------- | :------------------------------------------------------- |
+| `presence` | `{ userId, isOnline }` | Updates `isOnline` on matching conversation participants |
+
+### Read events
+
+| Event type | Payload                                   | Store effect                          |
+| :--------- | :---------------------------------------- | :------------------------------------ |
+| `read`     | `{ conversationId, messageId?, userId? }` | Updates the conversation's read state |
 
 ## See also
 

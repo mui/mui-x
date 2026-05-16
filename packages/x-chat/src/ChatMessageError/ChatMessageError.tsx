@@ -84,13 +84,15 @@ const ChatMessageErrorRetryButton = styled(Button, {
 
 const ChatMessageErrorSlot = React.forwardRef<HTMLDivElement, any>(
   function ChatMessageErrorSlot(props, ref) {
-    const { ownerState, className, children, ...other } = props as {
-      ownerState: MessageErrorOwnerState;
-      className?: string;
-      children?: React.ReactNode;
-    } & React.HTMLAttributes<HTMLDivElement>;
+    const { ownerState, className, children, messageClassName, retryButtonClassName, ...other } =
+      props as {
+        ownerState: MessageErrorOwnerState;
+        className?: string;
+        children?: React.ReactNode;
+        messageClassName?: string;
+        retryButtonClassName?: string;
+      } & React.HTMLAttributes<HTMLDivElement>;
     const localeText = useChatLocaleText();
-    const classes = useChatMessageErrorUtilityClasses(undefined);
     const message = useMessage(ownerState.messageId);
     const { isStreaming } = useChatStatus();
 
@@ -104,7 +106,7 @@ const ChatMessageErrorSlot = React.forwardRef<HTMLDivElement, any>(
 
     return (
       <ChatMessageErrorRoot ref={ref} ownerState={ownerState} className={className} {...other}>
-        <ChatMessageErrorMessage className={classes.message}>
+        <ChatMessageErrorMessage className={messageClassName}>
           {children ?? ownerState.chatError?.message}
         </ChatMessageErrorMessage>
         {ownerState.retryable ? (
@@ -113,7 +115,7 @@ const ChatMessageErrorSlot = React.forwardRef<HTMLDivElement, any>(
             size="small"
             variant="text"
             color="error"
-            className={classes.retryButton}
+            className={retryButtonClassName}
             disabled={disabled}
             onClick={() => {
               void ownerState.retry();
@@ -146,6 +148,8 @@ const ChatMessageError = React.forwardRef<HTMLDivElement, ChatMessageErrorProps>
           root: {
             className: clsx(classes.root, className),
             sx,
+            messageClassName: classes.message,
+            retryButtonClassName: classes.retryButton,
             ...(slotProps?.root as object),
           } as any,
         }}

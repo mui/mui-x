@@ -1,6 +1,5 @@
 'use client';
-import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from '@mui/x-chat/headless';
+import { ChatBox, createEchoAdapter } from '@mui/x-chat';
 
 const CONVERSATION_ID = 'quickstart';
 
