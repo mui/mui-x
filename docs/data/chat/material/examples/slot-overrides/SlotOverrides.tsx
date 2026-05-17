@@ -47,7 +47,7 @@ const PaperBubble = React.forwardRef<
 });
 
 /**
- * A custom messageContent slot that delegates to the default ChatMessageContent
+ * A custom content slot that delegates to the default ChatMessageContent
  * but swaps the inner bubble slot for PaperBubble.
  */
 const CustomMessageContent = React.forwardRef<
@@ -68,7 +68,7 @@ const CustomMessageContent = React.forwardRef<
 
 const adapter = createEchoAdapter({
   respond: (text) =>
-    `Received: "${text}". This reply uses a Paper component as the message bubble — swapped in via slots.messageContent.`,
+    `Received: "${text}". This reply uses a Paper component as the message bubble — swapped in via slots.content.`,
 });
 
 export default function SlotOverrides() {

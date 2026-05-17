@@ -8,16 +8,16 @@ components: ChatRoot
 
 # Chat - Tailwind CSS
 
-<p class="description">Style chat components using Tailwind CSS utility classes with the structural primitives from <code>@mui/x-chat</code>.</p>
+<p class="description">Style the Chat with Tailwind CSS utility classes on the headless primitives from <code>@mui/x-chat</code>.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The chat primitives ship structural components with zero built-in styles.
+The Chat primitives ship structural components with zero built-in styles.
 Each component renders semantic HTML elements with `data-*` attributes that reflect component state, making them a natural fit for Tailwind CSS utility classes.
 
 ## Installation
 
-Install the package alongside Tailwind:
+Install `@mui/x-chat` alongside Tailwind CSS:
 
 <codeblock storageKey="package-manager">
 
@@ -35,9 +35,9 @@ yarn add @mui/x-chat
 
 </codeblock>
 
-## Namespace API
+## Using namespace imports
 
-Structural primitives are available as namespace exports for clean dot-notation usage:
+Structural primitives are exported as namespaces so you can compose them with dot notation:
 
 ```tsx
 import {
@@ -117,7 +117,7 @@ Use Tailwind's attribute selectors to style state variations without JavaScript:
 | `Composer.Root`         | `data-is-streaming` | present / absent                                                                      | Response in progress             |
 | `ConversationList.Item` | `data-selected`     | present / absent                                                                      | Currently selected conversation  |
 
-## Slot props for custom elements
+## Replacing inner elements with slot props
 
 Use the `slots` and `slotProps` props to replace inner elements while keeping behavior intact:
 
@@ -137,5 +137,5 @@ Use the `slots` and `slotProps` props to replace inner elements while keeping be
 
 ## See also
 
-- [Styling](/x/react-chat/customization/styling/) for Material UI theme-based customization.
-- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing subcomponents entirely.
+- See [Styling](/x/react-chat/customization/styling/) for details on Material UI theme-based customization.
+- See [Slots and composition](/x/react-chat/customization/slots-and-composition/) for details on replacing subcomponents entirely.
