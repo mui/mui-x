@@ -1,18 +1,24 @@
 ---
 productId: x-chat
-title: Code Blocks
+title: Code blocks
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatCodeBlock
 ---
 
-# Chat - Code Blocks
+# Chat - Code blocks
 
 <p class="description">Display code with a language label and copy-to-clipboard button using the <code>ChatCodeBlock</code> component.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 `ChatCodeBlock` renders fenced code blocks with a header bar showing the language label and a one-click copy button.
+
+## Interactive playground
+
+The demo below lets you swap languages and content live:
+
+{{"demo": "ChatCodeBlockPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Import
 
@@ -22,7 +28,7 @@ import { ChatCodeBlock } from '@mui/x-chat';
 
 ## Automatic rendering in chat
 
-When using `ChatBox`, any code fence in a markdown assistant message is automatically rendered as a `ChatCodeBlock`. No extra configuration is needed — the built-in `renderMarkdown` function emits `ChatCodeBlock` for every code fence it encounters.
+When using `ChatBox`, any code fence in a markdown assistant message is automatically rendered as a `ChatCodeBlock`. No extra configuration is needed—the built-in `renderMarkdown` function emits `ChatCodeBlock` for every code fence it encounters.
 
 ````text
 ```python
@@ -31,7 +37,7 @@ def greet(name):
 ```
 ````
 
-The language specified after the opening backticks (for example, `python`) appears in the header bar.
+The language specified after the opening backticks (for example, `python`) appears in the header bar, as the demo below shows:
 
 {{"demo": "../../../material/examples/code-block/CodeBlock.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -47,11 +53,12 @@ Use `ChatCodeBlock` as a standalone component by passing `children` (the code st
 
 ## Copy button
 
-Clicking the copy button copies the raw code string to the clipboard and shows a check mark icon for 2 seconds. The copy behavior uses the Clipboard API (`navigator.clipboard.writeText`).
+Clicking the copy button copies the raw code string to the clipboard and shows a check mark icon for two seconds.
+The copy behavior uses the Clipboard API (`navigator.clipboard.writeText`).
 
 ## Language label
 
-Set `language` to any string — it is displayed as-is in the header:
+Set `language` to any string—it is displayed as-is in the header:
 
 ```tsx
 <ChatCodeBlock language="bash">{`pnpm add @mui/x-chat`}</ChatCodeBlock>
@@ -61,7 +68,8 @@ When no language is provided, the header still renders but the label area is emp
 
 ## Syntax highlighting
 
-`ChatCodeBlock` intentionally does not bundle a syntax-highlighting library. Pass a `highlighter` function to integrate your preferred library (Shiki, Prism, highlight.js, etc.):
+`ChatCodeBlock` intentionally does not bundle a syntax-highlighting library.
+Pass a `highlighter` function to integrate your preferred library (Shiki, Prism, highlight.js, and so on):
 
 ```tsx
 import { ChatCodeBlock } from '@mui/x-chat';
@@ -85,7 +93,8 @@ function ShikiBlock({ code, language }) {
 }
 ```
 
-The `highlighter` prop receives `(code, language)` and should return React nodes. When omitted, the raw code string is displayed with no highlighting.
+The `highlighter` prop receives `(code, language)` and should return React nodes.
+When omitted, the raw code string is displayed with no highlighting.
 
 ## Customizing rendering in ChatBox
 
@@ -95,7 +104,7 @@ To customize how code fences render inside `ChatBox`, override `partProps.text.r
 <ChatBox
   adapter={adapter}
   slotProps={{
-    messageContent: {
+    content: {
       partProps: {
         text: {
           renderText: (text) => <MyMarkdownWithCustomCodeBlocks content={text} />,
@@ -119,5 +128,5 @@ To customize how code fences render inside `ChatBox`, override `partProps.text.r
 
 ## See also
 
-- [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the text part data model and markdown rendering
-- [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom part renderers
+- [Text and markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the text part data model and markdown rendering
+- [Custom parts](/x/react-chat/display/message-parts/custom-parts/) for building custom part renderers

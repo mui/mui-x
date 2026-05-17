@@ -8,11 +8,29 @@ components: ChatMessageList, ChatMessageGroup
 
 # Chat - Messages
 
-<p class="description">Understand the ChatMessage data model and how messages render in a scrollable, grouped list.</p>
+<p class="description">Render conversation history as a virtualized, grouped, auto-scrolling message list.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-## The ChatMessage data model
+## Interactive playground
+
+Toggle role, status, density, and grouping on a single `ChatMessage` bubble:
+
+{{"demo": "ChatMessagePlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Message groups
+
+`ChatMessageGroup` collapses consecutive messages from the same author into a single visual cluster:
+
+{{"demo": "ChatMessageGroupPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Message list
+
+`ChatMessageList` virtualizes rendering, manages auto-scroll, and inserts dividers between days:
+
+{{"demo": "ChatMessageListPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## The `ChatMessage` data model
 
 Every message in the chat system is represented by the `ChatMessage` interface:
 
@@ -28,12 +46,17 @@ A `ChatMessage` has the following shape:
 | `role`           | `ChatRole`            | `'user'`, `'assistant'`, or `'system'`                                                             |
 | `parts`          | `ChatMessagePart[]`   | Content parts that make up the message body (text, files, tools, etc.)                             |
 | `status`         | `ChatMessageStatus`   | Delivery lifecycle: `'pending'`, `'sending'`, `'streaming'`, `'sent'`, `'error'`, or `'cancelled'` |
-| `author`         | `ChatUser`            | The user who sent the message (display name, avatar, role)                                         |
+| `author`         | `ChatUser`            | The author payload used for inline identity data and member matching                               |
 | `createdAt`      | `string`              | ISO 8601 timestamp when the message was created                                                    |
 | `updatedAt`      | `string`              | ISO 8601 timestamp when the message was last updated                                               |
 | `editedAt`       | `string`              | ISO 8601 timestamp if the message was edited                                                       |
 | `conversationId` | `string`              | The conversation this message belongs to                                                           |
 | `metadata`       | `ChatMessageMetadata` | Extensible metadata object for custom data                                                         |
+
+`author.id` is the canonical identity key for message rendering.
+If you pass `members`, `currentUser`, or active conversation `participants`, chat components use that id to enrich missing display names and avatars at render time.
+
+If your message model stores author identity somewhere else, provide `getMessageAuthorId`, `getMessageAuthorDisplayName`, and `getMessageAuthorAvatarUrl` on `ChatProvider`, `ChatRoot`, or `ChatBox` to map that data into the built-in message primitives.
 
 ### Message parts
 
@@ -50,7 +73,7 @@ Each part has a `type` discriminant that determines how it renders:
 | `tool`            | A tool call invocation and its result    |
 | `step-start`      | A visual separator between agentic steps |
 
-This part-based model means a single message can contain mixed content — for example, a text explanation followed by a code block and a source citation.
+This part-based model means a single message can contain mixed content—for example, a text explanation followed by a code block and a source citation.
 
 ### Message status lifecycle
 
@@ -62,12 +85,12 @@ pending → sending → streaming → sent
                  \→ cancelled
 ```
 
-- **pending** — the message is queued but not yet dispatched to the adapter.
-- **sending** — the message has been dispatched; waiting for the first response chunk.
-- **streaming** — the assistant is actively generating tokens.
-- **sent** — the response is complete.
-- **error** — the adapter encountered an error.
-- **cancelled** — the user or application cancelled the response.
+- **pending**—the message is queued but not yet dispatched to the adapter.
+- **sending**—the message has been dispatched; waiting for the first response chunk.
+- **streaming**—the assistant is actively generating tokens.
+- **sent**—the response is complete.
+- **error**—the adapter encountered an error.
+- **cancelled**—the user or application cancelled the response.
 
 ## Import
 
@@ -98,20 +121,21 @@ ChatMessageList                     ← scrollable container
 ## How messages render
 
 The `ChatMessageList` component is the scrollable region that renders conversation history.
-Scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
+It manages scroll behavior, overflow, padding, and a thin scrollbar by default.
 
 ### Message groups
 
 Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
 Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
+If no display name or avatar resolves for a message author, the UI omits those affordances instead of falling back to the role name.
 
-See [Message Appearance](/x/react-chat/display/message-appearance/) for grouping configuration and demos.
+See [Message appearance](/x/react-chat/display/message-appearance/) for grouping configuration and demos.
 
 ### Date dividers
 
 When consecutive messages span different calendar dates, the message list renders a date divider automatically between them.
 
-See [Message Appearance](/x/react-chat/display/message-appearance/) for date divider customization.
+See [Message appearance](/x/react-chat/display/message-appearance/) for date divider customization.
 
 ### Auto-scrolling
 
@@ -121,7 +145,41 @@ See [Scrolling](/x/react-chat/behavior/scrolling/) for buffer configuration and 
 
 ## Standalone usage
 
-When building a custom layout outside of `ChatBox`, use `ChatMessageList` directly inside a `ChatRoot` provider.
-The demo below renders only the message list with a placeholder for a custom composer:
+When building a custom layout outside of `ChatBox`, render `ChatMessageList` directly inside `ChatProvider`.
+The demo below isolates the message surface with only the provider, a bounded frame, and the message list composition:
 
-{{"demo": "../../material/message-list/StandaloneMessageList.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "StandaloneMessages.js", "defaultCodeOpen": false, "bg": "inline"}}
+
+### Message slots
+
+Each slot inside the `ChatMessage` row has its own playground — iterate on a single surface at a time.
+
+#### Avatar
+
+The author avatar slot—falls back to initials when no `avatarUrl` is set.
+
+{{"demo": "ChatMessageAvatarPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Author label
+
+Displays the author name above grouped messages.
+
+{{"demo": "ChatMessageAuthorLabelPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Content
+
+The bubble interior—renders markdown, code fences, and tool or source parts.
+
+{{"demo": "ChatMessageContentPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Meta
+
+External timestamp and delivery status, used by compact bubbles.
+
+{{"demo": "ChatMessageMetaPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Inline meta
+
+Telegram-style timestamp and status flowing inside the bubble.
+
+{{"demo": "ChatMessageInlineMetaPlayground.js", "bg": "inline", "defaultCodeOpen": false}}

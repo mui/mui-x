@@ -1,31 +1,37 @@
 ---
 productId: x-chat
-title: Typing Indicators
+title: Typing indicators
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatTypingIndicator
 ---
 
-# Chat - Typing Indicators
+# Chat - Typing indicators
 
-<p class="description">Display real-time typing feedback so users know when other participants are composing a message.</p>
+<p class="description">Show users when other participants are composing a message in real time.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
+## Interactive playground
+
+Toggle which users appear as typing in the current conversation:
+
+{{"demo": "ChatTypingIndicatorPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 Typing indicators show labels like "Alice is typing" or "Alice, Bob are typing" in the chat UI.
-The feature connects the adapter's `setTyping()` method (outbound) with realtime `typing` events (inbound) to provide a complete typing awareness loop.
+The feature connects the adapter's `setTyping()` method (outbound) with real-time `typing` events (inbound) to close the loop between the local composer and remote participants.
 
 ## How typing indicators work
 
 Typing indicators involve two directions of communication:
 
-1. **Outbound** — When the local user types in the composer, your code calls the adapter's `setTyping()` method to notify your backend.
-2. **Inbound** — When other users type, your backend pushes `typing` events through the adapter's `subscribe()` method, and the runtime updates the store.
+1. **Outbound**—when the local user types in the composer, and the adapter's `setTyping()` method notifies the backend.
+2. **Inbound**—when other users type, the backend pushes `typing` events through the adapter's `subscribe()` method, and the runtime updates the store.
 
 ### Sending typing state
 
-Implement `setTyping()` on your adapter to send typing indicators to your backend.
-The runtime does **not** call `setTyping()` automatically — you must wire it up yourself, for example by listening to `onChange` on the composer text area:
+Implement `setTyping()` on the adapter to send typing indicators to the backend.
+The runtime does **not** call `setTyping()` automatically—you must wire it up yourself, for example by listening to `onChange` on the composer text area:
 
 ```tsx
 async setTyping({ conversationId, isTyping }) {
@@ -56,7 +62,7 @@ subscribe({ onEvent }) {
 
 The runtime tracks typing state per conversation in the store: `typingByConversation[conversationId][userId]`.
 
-## The `TypingIndicator` component
+## Indicator component reference
 
 The `TypingIndicator` primitive reads typing state for the active conversation and resolves display names from:
 
@@ -84,8 +90,8 @@ When no users are typing, the component renders nothing.
 ## Typing timeout behavior
 
 The runtime does **not** include built-in timeout handling for stale typing state.
-When a `typing` event with `isTyping: true` is received, the store updates immediately.
-If no follow-up `isTyping: false` event arrives (for example, because a user closed the browser tab), the indicator will remain visible indefinitely.
+The store updates immediately on every `typing` event with `isTyping: true`.
+If no follow-up `isTyping: false` event arrives—for example, when a user closes the browser tab—the indicator stays visible indefinitely.
 
 To prevent stale indicators, implement timeout logic yourself.
 A common pattern is to reset the typing state after a short idle period on the sender side:
@@ -143,12 +149,12 @@ Custom slots receive:
 | `users`  | `string[]` | Display names of users currently typing |
 | `count`  | `number`   | Number of users currently typing        |
 
-## Using with `ChatBox`
+## Using with Chat Box
 
 When using `ChatBox`, the typing indicator is integrated into the conversation header area.
 No additional setup is required beyond implementing `setTyping()` and `subscribe()` on your adapter.
 
-## Standalone usage
+## Using the indicator standalone
 
 When building a custom layout with `ChatRoot`, place the `TypingIndicator` anywhere inside the provider tree:
 
@@ -165,4 +171,4 @@ import { Indicators } from '@mui/x-chat/headless';
 
 ## See also
 
-- [Adapter](/x/react-chat/backend/adapters/) for the `setTyping()` and `subscribe()` methods.
+- [Adapter](/x/react-chat/backend/adapters/) for details on the `setTyping()` and `subscribe()` methods.

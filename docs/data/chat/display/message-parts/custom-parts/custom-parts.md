@@ -1,18 +1,19 @@
 ---
 productId: x-chat
-title: Custom Parts
+title: Custom parts
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent
 ---
 
-# Chat - Custom Parts
+# Chat - Custom parts
 
-<p class="description">Extend the message part system with app-specific content types using <code>ChatDataMessagePart</code>, the type registry, and custom renderers.</p>
+<p class="description">Extend the message part system with app-specific content types, custom renderers, and a typed registry.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The built-in part types (text, file, source-url, source-document, tool) cover common chat patterns. When your application needs domain-specific content — ticket cards, approval forms, charts, or product previews — use the extensibility points described on this page.
+The built-in part types (text, file, source-url, source-document, tool) cover common chat patterns.
+When the application needs domain-specific content—ticket cards, approval forms, charts, or product previews—use the extensibility points described on this page.
 
 ## Data parts
 
@@ -27,11 +28,12 @@ interface ChatDataMessagePart {
 }
 ```
 
-The default renderer displays data parts as formatted JSON. Replace it with a custom renderer for richer UI.
+The default renderer displays data parts as formatted JSON.
+Replace it with a custom renderer to control the presentation.
 
 ## Type registry pattern
 
-Use TypeScript module augmentation to get compile-time safety for your custom parts. Two registry interfaces are available for this purpose:
+Use TypeScript module augmentation to get compile-time safety for custom parts. Two registry interfaces are available for this purpose:
 
 ### Typed data parts
 
@@ -50,7 +52,7 @@ declare module '@mui/x-chat/types' {
 
 Once registered, `data-ticket-status` parts carry typed `data` instead of `unknown`.
 
-### Entirely new part types
+### Adding new part types
 
 Add entries to `ChatCustomMessagePartMap` to create part types that are not prefixed with `data-`:
 
@@ -70,7 +72,7 @@ Custom parts are included in the `ChatMessagePart` union, so they appear in `mes
 
 ## Registering custom renderers
 
-### With ChatProvider
+### With `ChatProvider`
 
 Register renderers on `ChatProvider` using the `partRenderers` prop:
 
@@ -111,7 +113,7 @@ function MyMessagePart({ part }) {
 }
 ```
 
-## Selective override with getDefaultMessagePartRenderer
+## Overriding a single part type
 
 When you only need to customize one or two part types and keep defaults for the rest, use `getDefaultMessagePartRenderer()`:
 
@@ -130,7 +132,7 @@ function renderPart(part, message, index) {
 }
 ```
 
-This pattern keeps the override narrow — replace one part type without forking the whole message surface.
+This pattern keeps the override narrow—replace one part type without forking the whole message surface.
 
 ## How types flow through the stack
 
@@ -141,8 +143,10 @@ Once declared, the augmentation affects everything at compile time:
 3. **Hooks** — `useChat().messages` returns messages with augmented part types
 4. **Renderers** — `useChatPartRenderer('ticket-summary')` returns a typed renderer
 
-No runtime code changes are needed. The augmentation is purely compile-time.
+No runtime code changes are needed.
+The augmentation is purely compile-time.
 
 ## See also
 
-- [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom part renderers
+- [Message parts](/x/react-chat/display/message-parts/) for the built-in part types.
+- [Streaming](/x/react-chat/behavior/streaming/) for details on how parts arrive over the wire.

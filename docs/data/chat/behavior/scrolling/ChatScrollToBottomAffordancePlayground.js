@@ -1,0 +1,108 @@
+import * as React from 'react';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import { ChatMessageList, ChatScrollToBottomAffordance } from '@mui/x-chat';
+
+import { PlaygroundCard } from '../../_playground/PlaygroundCard';
+import { ScopedChat } from '../../_playground/sharedProviders';
+import { MessageBubble } from '../../_playground/MessageBubble';
+import {
+  ChoiceControl,
+  DividerLabel,
+  NumberControl,
+} from '../../_playground/controls';
+import { useCustomizations } from '../../_playground/useCustomizations';
+import { users } from '../../_playground/data';
+
+const conversation = {
+  id: 'scroll-playground',
+  title: 'Scroll preview',
+  participants: [users.me, users.assistant],
+};
+
+function buildMessages(count) {
+  return Array.from({ length: count }, (_, i) => ({
+    id: `scroll-msg-${i}`,
+    conversationId: conversation.id,
+    role: i % 2 === 0 ? 'assistant' : 'user',
+    author: i % 2 === 0 ? users.assistant : users.me,
+    createdAt: new Date(Date.UTC(2026, 4, 3, 9, 0, i)).toISOString(),
+    status: 'read',
+    parts: [{ type: 'text', text: `Message ${i + 1} of ${count}` }],
+  }));
+}
+
+const CLASS_DEFS = [
+  { name: 'root', description: 'The floating affordance button.' },
+];
+
+export default function ChatScrollToBottomAffordancePlayground() {
+  const [count, setCount] = React.useState(20);
+  const [scrollBehavior, setScrollBehavior] = React.useState('smooth');
+  const classesCustomizations = useCustomizations(CLASS_DEFS);
+  const messages = React.useMemo(() => buildMessages(count), [count]);
+
+  const buttonSx = classesCustomizations.toClassesSx();
+
+  return (
+    <PlaygroundCard
+      title="ChatScrollToBottomAffordance"
+      description="Floating jump-to-latest button — appears once the user scrolls away from the bottom."
+      previewMinHeight={360}
+      span={2}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
+      controls={
+        <React.Fragment>
+          <DividerLabel>props</DividerLabel>
+          <ChoiceControl
+            label="scrollBehavior"
+            value={scrollBehavior}
+            options={['smooth', 'auto', 'instant']}
+            onChange={setScrollBehavior}
+            helperText="ScrollIntoView behavior used when the button is clicked."
+          />
+          <DividerLabel>fixture data</DividerLabel>
+          <NumberControl
+            label="message count"
+            value={count}
+            min={5}
+            max={60}
+            onChange={setCount}
+          />
+          <Alert severity="info" sx={{ fontSize: '0.75rem', py: 0 }}>
+            Scroll up inside the preview to make the affordance appear.
+          </Alert>
+        </React.Fragment>
+      }
+      preview={
+        <ScopedChat
+          conversations={[conversation]}
+          messages={messages}
+          activeConversationId={conversation.id}
+        >
+          <Box
+            sx={{
+              width: '100%',
+              height: 360,
+              overflow: 'hidden',
+              display: 'flex',
+            }}
+          >
+            <ChatMessageList
+              items={messages.map((m) => m.id)}
+              autoScroll={false}
+              renderItem={({ id }) => <MessageBubble key={id} messageId={id} />}
+              overlay={
+                <ChatScrollToBottomAffordance
+                  scrollBehavior={scrollBehavior}
+                  sx={buttonSx}
+                />
+              }
+            />
+          </Box>
+        </ScopedChat>
+      }
+    />
+  );
+}

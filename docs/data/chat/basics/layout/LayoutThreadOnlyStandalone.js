@@ -1,0 +1,102 @@
+'use client';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import {
+  ChatComposer,
+  ChatComposerAttachButton,
+  ChatComposerSendButton,
+  ChatComposerTextArea,
+  ChatComposerToolbar,
+  ChatConversation,
+  ChatConversationHeader,
+  ChatConversationSubtitle,
+  ChatConversationTitle,
+  ChatMessageGroup,
+  ChatMessageList,
+} from '@mui/x-chat';
+import { ChatLayout, ChatProvider } from '@mui/x-chat/headless';
+import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
+import {
+  minimalConversation,
+  minimalMessages,
+} from 'docs/data/chat/material/examples/shared/demoData';
+
+const adapter = createEchoAdapter({
+  respond: (text) =>
+    `Received: "${text}". Only the thread pane is mounted in this ChatLayout example.`,
+});
+
+function AttachIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      style={{ width: '1em', height: '1em' }}
+    >
+      <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z" />
+    </svg>
+  );
+}
+
+function SendIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      style={{ width: '1em', height: '1em' }}
+    >
+      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+    </svg>
+  );
+}
+
+export default function LayoutThreadOnlyStandalone() {
+  const renderItem = React.useCallback(
+    (params) => <ChatMessageGroup key={params.id} messageId={params.id} />,
+    [],
+  );
+
+  return (
+    <ChatProvider
+      adapter={adapter}
+      initialActiveConversationId={minimalConversation.id}
+      initialConversations={[minimalConversation]}
+      initialMessages={minimalMessages}
+    >
+      <Box
+        sx={{
+          height: 460,
+          overflow: 'hidden',
+        }}
+      >
+        <ChatLayout style={{ height: '100%' }}>
+          <ChatConversation>
+            <ChatConversationHeader>
+              <Box sx={{ minWidth: 0 }}>
+                <ChatConversationTitle />
+                <ChatConversationSubtitle />
+              </Box>
+            </ChatConversationHeader>
+            <ChatMessageList renderItem={renderItem} />
+            <ChatComposer>
+              <ChatComposerTextArea
+                aria-label="Message"
+                placeholder="Ask the assistant a question..."
+              />
+              <ChatComposerToolbar>
+                <ChatComposerAttachButton>
+                  <AttachIcon />
+                </ChatComposerAttachButton>
+                <ChatComposerSendButton>
+                  <SendIcon />
+                </ChatComposerSendButton>
+              </ChatComposerToolbar>
+            </ChatComposer>
+          </ChatConversation>
+        </ChatLayout>
+      </Box>
+    </ChatProvider>
+  );
+}
