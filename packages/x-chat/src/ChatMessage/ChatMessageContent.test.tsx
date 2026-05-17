@@ -72,10 +72,10 @@ describe('ChatMessageContent', () => {
       // Reasoning renders a <details> with a <summary>
       const details = document.querySelector('details');
       expect(details).not.toBe(null);
-      // Summary should contain "Reasoning" (default locale)
+      // Summary should contain "Thoughts" (default locale)
       const summary = details!.querySelector('summary');
       expect(summary).not.toBe(null);
-      expect(summary!.textContent).toContain('Reasoning');
+      expect(summary!.textContent).toContain('Thoughts');
     });
 
     it('is open when streaming', () => {

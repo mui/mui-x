@@ -40,6 +40,10 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiChatBox' });
+  const isActiveConversationIdControlled = Object.prototype.hasOwnProperty.call(
+    props,
+    'activeConversationId',
+  );
 
   const {
     // ChatRoot / provider props
@@ -105,7 +109,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
       conversations={conversations}
       initialConversations={initialConversations}
       onConversationsChange={onConversationsChange}
-      activeConversationId={activeConversationId}
+      {...(isActiveConversationIdControlled ? { activeConversationId } : {})}
       initialActiveConversationId={initialActiveConversationId}
       onActiveConversationChange={onActiveConversationChange}
       composerValue={composerValue}

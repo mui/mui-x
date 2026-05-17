@@ -100,9 +100,7 @@ export function resolveMessageAuthor(
   //      sent without per-message author metadata)
   //   5. locale-driven role label (`messageAuthor{User,Assistant,System}Label`)
   const currentUserFallback =
-    message.role === 'user' && id == null
-      ? parameters.currentUser?.displayName
-      : undefined;
+    message.role === 'user' && id == null ? parameters.currentUser?.displayName : undefined;
   const displayName =
     normalizeOptionalString(
       parameters.getMessageAuthorDisplayName?.(message) ??
