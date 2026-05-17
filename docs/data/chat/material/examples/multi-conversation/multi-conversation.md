@@ -7,21 +7,23 @@ githubLabel: 'scope: chat'
 
 # Chat - Multi-conversation
 
-<p class="description">A two-pane inbox layout with a conversation sidebar and an active thread pane.</p>
+<p class="description">Render an inbox-style chat surface with a conversation sidebar alongside the active thread.</p>
 
-This demo shows how to use `ChatBox` as a full inbox surface with multiple conversations.
+Use `ChatBox` as a full inbox surface to coordinate multiple conversations from a single component.
 The conversation sidebar is enabled explicitly with `features={{ conversationList: true }}`.
 
-- A two-pane layout with a conversation list on the left and the active thread on the right
-- Controlled `activeConversationId` with `onActiveConversationChange` for conversation switching
-- Controlled `messages` and `onMessagesChange` for per-conversation message state
-- `conversations` with `unreadCount` and `readState` reflected in the sidebar
+- A two-pane layout with a conversation list on the left and the active thread on the right.
+- Controlled `activeConversationId` with `onActiveConversationChange` for conversation switching.
+- Controlled `messages` and `onMessagesChange` for per-conversation message state.
+- `conversations` with `unreadCount` and `readState` reflected in the sidebar.
+
+The demo below shows the inbox layout switching between two conversations while preserving each thread's history:
 
 {{"demo": "MultiConversation.js", "bg": "inline"}}
 
-## Controlled vs. uncontrolled conversations
+## Controlled and uncontrolled conversations
 
-This demo uses **controlled state** so each conversation keeps its own message history:
+Use **controlled state** to keep each conversation's message history independent, as shown below:
 
 ```tsx
 const [activeConversationId, setActiveConversationId] = React.useState('thread-a');
@@ -43,9 +45,9 @@ For simpler use cases with a single conversation, use `initialActiveConversation
 ## Conversation list behavior
 
 The conversation list renders only when `features.conversationList` is `true`.
-If you omit that flag, `ChatBox` renders only the active thread pane even when multiple conversations are available.
+Omit that flag to render only the active thread pane, even when multiple conversations are available.
 
-## Implementation notes
+## Implementing multi-conversation state
 
 - Store message threads in a `Record<string, ChatMessage[]>` keyed by `conversationId`.
 - Sync conversation previews after messages change using `onMessagesChange`.
@@ -53,8 +55,8 @@ If you omit that flag, `ChatBox` renders only the active thread pane even when m
 
 ## See also
 
-- [Custom theme](/x/react-chat/material/examples/custom-theme/) to apply brand colors across the entire surface
-- [Customization](/x/react-chat/material/customization/) for `slotProps` on the conversation list and thread header
+- See [Custom theme](/x/react-chat/material/examples/custom-theme/) for details on applying brand colors across the entire surface.
+- See [Customization](/x/react-chat/material/customization/) for details on `slotProps` for the conversation list and thread header.
 
 ## API
 

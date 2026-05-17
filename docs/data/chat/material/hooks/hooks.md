@@ -7,9 +7,9 @@ githubLabel: 'scope: chat'
 
 # Chat - Hooks
 
-<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat</code>.</p>
+<p class="description">Read chat state and trigger runtime actions from any component using the hooks exported from <code>@mui/x-chat</code>.</p>
 
-`ChatBox` covers most use cases out of the box, but sometimes you need to reach into chat state from components that live outside `ChatBox` — a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
+`ChatBox` covers most use cases, but you may need to reach into chat state from components that live outside `ChatBox`—a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
 
 Every hook subscribes to a precise slice of the normalized store, so components only re-render when their own data changes.
 
@@ -54,7 +54,7 @@ export default function App() {
 }
 ```
 
-If you are building a custom layout without `ChatBox`, wrap your tree in `<ChatProvider>` and use hooks freely anywhere inside.
+If you are building a custom layout without `ChatBox`, wrap the tree in `<ChatProvider>` and use hooks anywhere inside it.
 
 The following demo shows hooks reading chat state from within a `ChatBox` child:
 
@@ -69,7 +69,7 @@ Use them to display data without triggering adapter calls.
 
 The all-in-one hook.
 It returns both the complete current state and every runtime action in a single object.
-Use it when you want the fastest path to something working, or when a small component needs a mix of state and actions.
+Use it for the quickest setup or when a small component needs both state and actions.
 
 ```ts
 const {
@@ -118,7 +118,7 @@ function QuickChat() {
 ### `useChatStatus()`
 
 A lightweight hook for status indicators.
-It subscribes only to `isStreaming`, `hasMoreHistory`, `error`, and `typingUserIds` — making it ideal for status bars, loading spinners, and error banners that sit outside the message list.
+It subscribes only to `isStreaming`, `hasMoreHistory`, `error`, and `typingUserIds`—making it ideal for status bars, loading spinners, and error banners that sit outside the message list.
 
 ```ts
 const {
@@ -132,7 +132,7 @@ const {
 {{"demo": "StatusFooter.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 Prefer `useChatStatus()` over `useChat()` whenever you only need streaming or error state.
-The component does not re-render when a new message is sent — only when the status fields themselves change.
+The component does not re-render when a new message is sent—only when the status fields themselves change.
 
 ### `useConversations()`
 
@@ -145,10 +145,10 @@ const conversations: ChatConversation[] = useConversations();
 
 {{"demo": "ConversationSidebar.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-### `useConversation(id)`
+### `useConversation()`
 
 Returns a single conversation by ID, or `null` if it is not in the store.
-Use this inside a list item component so that each item only re-renders when its own conversation changes — not when an unrelated conversation is added or renamed.
+Use this inside a list item component so that each item only re-renders when its own conversation changes—not when an unrelated conversation is added or renamed.
 
 ```ts
 const conversation: ChatConversation | null = useConversation(id);
@@ -172,9 +172,9 @@ Pair it with `useMessage(id)` to implement efficient thread rendering where each
 const messageIds: string[] = useMessageIds();
 ```
 
-When a message is being streamed, only the row for that message re-renders — the parent thread component and sibling rows stay untouched.
+When a message is being streamed, only the row for that message re-renders—the parent thread component and sibling rows stay untouched.
 
-### `useMessage(id)`
+### `useMessage()`
 
 Returns a single message by ID, or `null` if it does not exist.
 This is the most granular subscription available: it re-renders only when the specific message changes.
@@ -183,11 +183,11 @@ This is the most granular subscription available: it re-renders only when the sp
 const message: ChatMessage | null = useMessage(id);
 ```
 
-The recommended pattern for efficient thread rendering:
+The demo below shows the recommended pattern for efficient thread rendering:
 
 {{"demo": "EfficientThread.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-This pattern scales to threads with hundreds of messages because no unnecessary re-renders propagate up the tree.
+This pattern scales to threads with hundreds of messages because no re-renders propagate up the tree.
 
 ## Input hook
 
@@ -220,12 +220,12 @@ The hook handles several details automatically:
 ## Config hooks
 
 Config hooks read configuration registered on the `ChatProvider` rather than runtime state.
-They are most useful inside custom message part renderers and custom message components.
+Use them inside custom message part renderers and custom message components.
 
 ### `useChatOnToolCall()`
 
 Returns the `onToolCall` callback registered on the provider, or `undefined` if none was registered.
-Use it inside a custom tool message part to invoke the same callback that `ChatBox` uses internally — keeping behavior consistent even when you replace message rendering entirely.
+Use it inside a custom tool message part to invoke the same callback that `ChatBox` uses internally—keeping behavior consistent even when you replace message rendering entirely.
 
 ```ts
 const onToolCall: ChatOnToolCall | undefined = useChatOnToolCall();
@@ -245,7 +245,7 @@ function ToolMessagePart({ invocation }: { invocation: ChatToolInvocation }) {
 }
 ```
 
-### `useChatPartRenderer(partType)`
+### `useChatPartRenderer()`
 
 Looks up a renderer registered in the `partRenderers` map on `ChatProvider`.
 Returns the renderer function, or `null` if none is registered for the given part type.
@@ -281,10 +281,10 @@ function UnknownPart({ part, message, index }) {
 }
 ```
 
-## Advanced: `useChatStore()`
+## Accessing the underlying store
 
 Returns the underlying `ChatStore<Cursor>` instance directly.
-This is the escape hatch for cases that none of the dedicated hooks cover — writing custom selectors, subscribing to store updates outside React render, or integrating with Redux or Zustand.
+`useChatStore()` is the escape hatch for cases that none of the dedicated hooks cover—writing custom selectors, subscribing to store updates outside React render, or integrating with Redux or Zustand.
 
 ```ts
 const store: ChatStore<Cursor> = useChatStore();
@@ -307,7 +307,7 @@ function MessageCounter() {
 `useChatStore()` gives you access to all selectors in `chatSelectors` and the full store mutation API.
 
 :::warning
-Use it sparingly — the dedicated hooks above are simpler, better typed, and remain stable across minor versions.
+Use it sparingly—the dedicated hooks above are simpler, better typed, and remain stable across minor versions.
 Direct store access is considered advanced API and is more likely to require changes during upgrades.
 :::
 
@@ -326,8 +326,8 @@ Direct store access is considered advanced API and is more likely to require cha
 
 ## See also
 
-- [Adapter](/x/react-chat/material/adapter/) for the interface that the actions in these hooks call into.
-- [Customization](/x/react-chat/material/customization/) for slot and `slotProps` overrides on `ChatBox`.
+- See [Adapter](/x/react-chat/material/adapter/) for details on the interface that these hooks' actions call into.
+- See [Customization](/x/react-chat/material/customization/) for details on slot and `slotProps` overrides for `ChatBox`.
 
 ## API
 

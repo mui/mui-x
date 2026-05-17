@@ -1,17 +1,18 @@
 ---
 productId: x-chat
-title: Hooks Reference
+title: Hooks reference
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Hooks Reference
+# Chat - Hooks reference
 
-<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat</code>.</p>
+<p class="description">Read chat state and trigger runtime actions from custom components built on top of <code>@mui/x-chat</code>.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-`ChatBox` covers most use cases out of the box, but sometimes you need to reach into chat state from components that live outside `ChatBox` — a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
+`ChatBox` covers most cases, but sometimes you need to reach into chat state from components that live outside `ChatBox`.
+Examples include a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
 
 The hook layer makes this possible.
 Every hook subscribes to a precise slice of the normalized store, so components only re-render when their own data changes.
@@ -44,7 +45,7 @@ Calling a hook outside a provider throws an error at development time.
 
 ```tsx
 function MyStatusBadge() {
-  const { isStreaming } = useChatStatus(); // works — inside ChatBox's provider
+  const { isStreaming } = useChatStatus(); // works—inside ChatBox's provider
   return isStreaming ? <Chip label="Responding..." /> : null;
 }
 
@@ -73,7 +74,7 @@ Use it when you want the fastest path to something working, or when a small comp
 ```ts
 const {
   // State
-  messages, // ChatMessage[] — all messages in the active conversation
+  messages, // ChatMessage[]—all messages in the active conversation
   conversations, // ChatConversation[]
   activeConversationId, // string | undefined
   isStreaming, // boolean
@@ -88,9 +89,9 @@ const {
   retry, // (messageId: string) => Promise<void>
   setError, // (error: ChatError | null) => void
   addToolApprovalResponse, // (input: ChatAddToolApproveResponseInput) => Promise<void>
-  reloadConversations, // () => Promise<void> — planned API stub, not yet implemented
-  reloadMessages, // (conversationId?: string) => Promise<void> — planned API stub, not yet implemented
-  reconnectRealtime, // () => Promise<void> — planned API stub, not yet implemented
+  reloadConversations, // () => Promise<void>—planned API stub, not yet implemented
+  reloadMessages, // (conversationId?: string) => Promise<void>—planned API stub, not yet implemented
+  reconnectRealtime, // () => Promise<void>—planned API stub, not yet implemented
 } = useChat();
 ```
 
@@ -120,14 +121,14 @@ function QuickChat() {
 ### `useChatStatus()`
 
 A lightweight hook for status indicators.
-It subscribes only to `isStreaming`, `hasMoreHistory`, `error`, and `typingUserIds` — making it ideal for status bars, loading spinners, and error banners that sit outside the message list.
+It subscribes only to `isStreaming`, `hasMoreHistory`, `error`, and `typingUserIds`—making it ideal for status bars, loading spinners, and error banners that sit outside the message list.
 
 ```ts
 const {
   isStreaming, // boolean
   hasMoreHistory, // boolean
   error, // ChatError | null
-  typingUserIds, // string[] — users currently typing in the active conversation
+  typingUserIds, // string[]—users currently typing in the active conversation
 } = useChatStatus();
 ```
 
@@ -145,7 +146,7 @@ function StatusFooter() {
 ```
 
 Prefer `useChatStatus()` over `useChat()` whenever you only need streaming or error state.
-The component does not re-render when a new message is sent — only when the status fields themselves change.
+The component does not re-render when a new message is sent—only when the status fields themselves change.
 
 ### `useConversations()`
 
@@ -173,10 +174,10 @@ function ConversationSidebar() {
 }
 ```
 
-### `useConversation(id)`
+### `useConversation()`
 
 Returns a single conversation by ID, or `null` if it is not in the store.
-Use this inside a list item component so that each item only re-renders when its own conversation changes — not when an unrelated conversation is added or renamed.
+Use this inside a list item component so that each item only re-renders when its own conversation changes—not when an unrelated conversation is added or renamed.
 
 ```ts
 const conversation: ChatConversation | null = useConversation(id);
@@ -200,9 +201,9 @@ Pair it with `useMessage(id)` to implement efficient thread rendering where each
 const messageIds: string[] = useMessageIds();
 ```
 
-When a message is being streamed, only the row for that message re-renders — the parent thread component and sibling rows stay untouched.
+When a message is being streamed, only the row for that message re-renders—the parent thread component and sibling rows stay untouched.
 
-### `useMessage(id)`
+### `useMessage()`
 
 Returns a single message by ID, or `null` if it does not exist.
 This is the most granular subscription available: it re-renders only when the specific message changes.
@@ -248,22 +249,22 @@ Use it when you want to build a custom composer instead of using the one built i
 
 ```ts
 const {
-  value, // string — current draft text
+  value, // string—current draft text
   setValue, // (value: string) => void
   attachments, // ChatDraftAttachment[]
   addAttachment, // (file: File) => void
   removeAttachment, // (localId: string) => void
-  clear, // () => void — clears text and attachments
-  submit, // () => Promise<void> — sends the composed message
-  isSubmitting, // boolean — true while a stream is active
+  clear, // () => void—clears text and attachments
+  submit, // () => Promise<void>—sends the composed message
+  isSubmitting, // boolean—true while a stream is active
 } = useChatComposer();
 ```
 
 The hook handles several details automatically:
 
-- **Object URL lifecycle** — preview URLs for image attachments are created on add and revoked on remove or unmount.
-- **IME safety** — `submit` is a no-op during an active IME composition session (relevant for East Asian input methods).
-- **Double-send prevention** — `submit` is blocked when `isSubmitting` is `true`.
+- **Object URL lifecycle**—preview URLs for image attachments are created on add and revoked on remove or unmount.
+- **IME safety**—`submit` is a no-op during an active IME composition session (relevant for East Asian input methods).
+- **Double-send prevention**—`submit` is blocked when `isSubmitting` is `true`.
 
 ```tsx
 function CustomComposer() {
@@ -310,7 +311,7 @@ They are most useful inside custom message part renderers and custom message com
 ### `useChatOnToolCall()`
 
 Returns the `onToolCall` callback registered on the provider, or `undefined` if none was registered.
-Use it inside a custom tool message part to invoke the same callback that `ChatBox` uses internally — keeping behavior consistent even when you replace message rendering entirely.
+Use it inside a custom tool message part to invoke the same callback that `ChatBox` uses internally—keeping behavior consistent even when you replace message rendering entirely.
 
 ```ts
 const onToolCall: ChatOnToolCall | undefined = useChatOnToolCall();
@@ -330,7 +331,7 @@ function ToolMessagePart({ invocation }: { invocation: ChatToolInvocation }) {
 }
 ```
 
-### `useChatPartRenderer(partType)`
+### `useChatPartRenderer()`
 
 Looks up a renderer registered in the `partRenderers` map on `ChatProvider`.
 Returns the renderer function, or `null` if none is registered for the given part type.
@@ -366,10 +367,10 @@ function UnknownPart({ part, message, index }) {
 }
 ```
 
-## Advanced: `useChatStore()`
+## Advanced store access
 
-Returns the underlying `ChatStore<Cursor>` instance directly.
-This is the escape hatch for cases that none of the dedicated hooks cover — writing custom selectors, subscribing to store updates outside React render, or integrating with Redux or Zustand.
+`useChatStore()` returns the underlying `ChatStore<Cursor>` instance directly.
+This is the escape hatch for cases that none of the dedicated hooks cover—writing custom selectors, subscribing to store updates outside React render, or integrating with Redux or Zustand.
 
 ```ts
 const store: ChatStore<Cursor> = useChatStore();
@@ -391,7 +392,7 @@ function MessageCounter() {
 `useChatStore()` gives you access to all selectors in `chatSelectors` and the full store mutation API.
 
 :::warning
-Use it sparingly — the dedicated hooks above are simpler, better typed, and remain stable across minor versions.
+Use it sparingly—the dedicated hooks above are simpler, better typed, and remain stable across minor versions.
 Direct store access is considered advanced API and is more likely to require changes during upgrades.
 :::
 
@@ -410,9 +411,9 @@ Direct store access is considered advanced API and is more likely to require cha
 
 ## See also
 
-- [Adapters](/x/react-chat/backend/adapters/) for the interface that the actions in these hooks call into.
-- [Selectors Reference](/x/react-chat/resources/selectors/) for the full `chatSelectors` map used with `useChatStore()`.
-- [Controlled State](/x/react-chat/backend/controlled-state/) for `ChatProvider` props and the controlled/uncontrolled model.
-- [Events & Callbacks](/x/react-chat/resources/events-and-callbacks/) for `onFinish`, `onToolCall`, `onData`, and `onError`.
+- See [Adapters](/x/react-chat/backend/adapters/) for details on the interface that the actions call into.
+- [Selectors reference](/x/react-chat/resources/selectors/) for the full `chatSelectors` map used with `useChatStore()`.
+- [Controlled state](/x/react-chat/backend/controlled-state/) for `ChatProvider` props and the controlled/uncontrolled model.
+- [Events and callbacks](/x/react-chat/resources/events-and-callbacks/) for `onFinish`, `onToolCall`, `onData`, and `onError`.
 
 ## API

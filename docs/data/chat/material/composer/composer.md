@@ -8,12 +8,12 @@ components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachBu
 
 # Chat - Composer
 
-<p class="description">The text input area where users draft and send messages, with support for attachments, toolbar actions, and helper text.</p>
+<p class="description">Compose and send chat messages with attachments, toolbar actions, and helper text.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The composer is the input region at the bottom of the chat surface.
-`ChatComposer` provides Material UI styling — border, padding, and theme tokens are applied automatically.
+`ChatComposer` provides Material UI styling—border, padding, and theme tokens are applied automatically.
 
 ## Import
 
@@ -53,7 +53,7 @@ ChatComposer                  ← <form> element, border-top divider
 `ChatComposerTextArea` is an auto-resizing `<textarea>` that grows with content.
 It submits on **Enter** and inserts a newline on **Shift+Enter**.
 
-### Placeholder text
+### Customizing the placeholder
 
 Customize the placeholder through `slotProps`:
 
@@ -61,7 +61,7 @@ Customize the placeholder through `slotProps`:
 
 ### IME composition
 
-The composer correctly handles IME (Input Method Editor) composition for CJK languages.
+The composer handles IME (Input Method Editor) composition for CJK languages.
 While the user is composing characters (for example, selecting Kanji), pressing Enter confirms the character selection instead of submitting the message.
 Submission is blocked until composition ends.
 
@@ -94,14 +94,14 @@ Use it for legal disclaimers, character counts, or contextual hints.
 <ChatBox adapter={adapter} features={{ helperText: false }} />;
 ```
 
-## Controlled composer value
+## Controlling the composer value
 
-The composer value can be controlled externally through `ChatProvider` (or the `ChatBox` props that forward to it).
+Control the composer value externally through `ChatProvider`, or through the equivalent `ChatBox` props that forward to it.
 The demo below mirrors the current composer value above the chat surface:
 
 {{"demo": "ComposerControlled.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-## `useChatComposer()` hook
+## Accessing composer state with a hook
 
 For deeper control, the `useChatComposer()` hook provides direct access to the composer state:
 
@@ -146,9 +146,9 @@ The attachment type used by the composer:
 | `status`     | `'queued' \| 'uploading' \| 'uploaded' \| 'error'` | Upload lifecycle status                      |
 | `progress`   | `number \| undefined`                              | Upload progress (0–100)                      |
 
-## Compact composer ideas
+## Compact composer variants
 
-Five design ideas for the compact variant composer — click into the textarea to see the focus state.
+The demo below shows five design ideas for the compact composer variant—click into the text area to see the focus state.
 
 {{"demo": "CompactComposerIdeas.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -186,9 +186,9 @@ The following slots are available for customization through `ChatBox`:
 
 ## API
 
-- [ComposerRoot](/x/api/chat/composer-root/)
-- [ComposerTextArea](/x/api/chat/composer-text-area/)
-- [ComposerSendButton](/x/api/chat/composer-send-button/)
-- [ComposerAttachButton](/x/api/chat/composer-attach-button/)
-- [ComposerToolbar](/x/api/chat/composer-toolbar/)
-- [ComposerHelperText](/x/api/chat/composer-helper-text/)
+- [`ComposerRoot`](/x/api/chat/composer-root/)
+- [`ComposerTextArea`](/x/api/chat/composer-text-area/)
+- [`ComposerSendButton`](/x/api/chat/composer-send-button/)
+- [`ComposerAttachButton`](/x/api/chat/composer-attach-button/)
+- [`ComposerToolbar`](/x/api/chat/composer-toolbar/)
+- [`ComposerHelperText`](/x/api/chat/composer-helper-text/)

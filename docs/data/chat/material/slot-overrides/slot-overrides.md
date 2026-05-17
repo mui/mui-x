@@ -8,26 +8,27 @@ components: ChatRoot
 
 # Chat - Slot overrides
 
-<p class="description">Replace individual subcomponents inside ChatBox with your own implementations using the <code>slots</code> and <code>slotProps</code> API.</p>
+<p class="description">Replace individual subcomponents inside <code>ChatBox</code> with custom implementations using the <code>slots</code> and <code>slotProps</code> APIs.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-`ChatBox` composes many themed subcomponents internally — message bubbles, the composer, the conversation list, date dividers, and more.
+`ChatBox` composes many themed subcomponents internally—message bubbles, the composer, the conversation list, date dividers, and more.
 The `slots` prop lets you swap any of them with your own component, while `slotProps` passes extra props to those components without replacing them.
 
-## Basic replacement
+## Replacing a slot with a custom component
 
-Pass a custom component to a named slot. Your component receives the same props that the default component would receive.
+Pass a custom component to a named slot.
+The custom component receives the same props as the default:
 
 {{"demo": "SlotBasicReplacement.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Passing extra props with `slotProps`
 
-Use `slotProps` to pass additional props to either the default or a custom slot component without replacing them.
+Use `slotProps` to pass additional props to either the default or a custom slot component without replacing them:
 
 {{"demo": "SlotPropsCustomization.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-## Complete slot reference
+## Slot reference
 
 ### Layout slots
 
@@ -82,7 +83,7 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 | `suggestions`     | `ChatSuggestions`              | `<div>`    | Prompt suggestion chips                |
 
 :::info
-The `typingIndicator`, `unreadMarker`, and `actions` slots are defined in the type interface but are not currently consumed by `ChatBox`'s internal composition. To customize these, use the standalone components directly in a custom layout with `ChatProvider`.
+The `typingIndicator`, `unreadMarker`, and `actions` slots are defined in the type interface but are not currently consumed by the `ChatBox` internal composition. To customize these, use the standalone components directly in a custom layout with `ChatProvider`.
 :::
 
 ## Hiding a slot
@@ -100,7 +101,7 @@ Return `null` from a slot to remove it entirely:
 />
 ```
 
-For common show/hide needs, prefer the `features` prop which handles the logic cleanly:
+For common show/hide needs, use the `features` prop instead:
 
 {{"demo": "FeatureFlags.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -118,7 +119,7 @@ The `autoScroll` feature flag controls scroll behavior rather than slot visibili
 
 ## Feature flags and slot rendering
 
-When a feature flag is set to `false`, the corresponding slot is **not rendered at all** — even if you provide a custom component via `slots`. The feature flag takes precedence:
+When a feature flag is set to `false`, the corresponding slot is **not rendered at all**—even if you provide a custom component via `slots`. The feature flag takes precedence:
 
 ```tsx
 {/* The custom button does not render because the feature is disabled */}
@@ -129,7 +130,7 @@ When a feature flag is set to `false`, the corresponding slot is **not rendered 
 />
 ```
 
-To conditionally show a custom component, keep the feature flag enabled and handle visibility in your slot component instead.
+To conditionally show a custom component, keep the feature flag enabled and handle visibility inside the slot component instead.
 
 ## CSS classes
 
@@ -164,10 +165,10 @@ const mySlotProps: ChatBoxSlotProps = {
 ## Combining slots with theme overrides
 
 Slots replace the component entirely, while theme `styleOverrides` adjust the default component's styles.
-You can use both together:
+Use both together:
 
 {{"demo": "ThemeAndSlotCombination.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## API
 
-- [ChatRoot](/x/api/chat/chat-root/)
+- [`ChatRoot`](/x/api/chat/chat-root/)

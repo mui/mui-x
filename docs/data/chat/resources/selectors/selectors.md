@@ -1,11 +1,11 @@
 ---
 productId: x-chat
-title: Selectors Reference
+title: Selectors reference
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Selectors Reference
+# Chat - Selectors reference
 
 <p class="description">Subscribe to exactly the store slices you need with memoized selectors for efficient, granular rendering.</p>
 
@@ -88,18 +88,18 @@ function ConversationTitle({ id }: { id: string }) {
 ## Why normalization matters
 
 The store keeps messages and conversations in a normalized shape (`ids` + `byId` maps) rather than flat arrays.
-This design has three benefits:
+The design has three benefits:
 
-1. **Point updates** — Updating a single message during streaming does not rebuild the message array. Only the `messagesById` record changes.
-2. **Stable references** — The `messageIds` array only changes when messages are added or removed, not when their content updates. `useMessageIds()` stays stable during streaming.
-3. **Memoized derivation** — The `messages` selector rebuilds the array only when either `messageIds` or `messagesById` changes, and the result is reference-equal when inputs are unchanged.
+- **Point updates**—updating a single message during streaming does not rebuild the message array.
+  Only the `messagesById` record changes.
+- **Stable references**—the `messageIds` array only changes when messages are added or removed, not when their content updates.
+  `useMessageIds()` stays stable during streaming.
+- **Memoized derivation**—the `messages` selector rebuilds the array only when either `messageIds` or `messagesById` changes, and the result is reference-equal when inputs are unchanged.
 
-This is why the `useMessageIds()` + `useMessage(id)` pattern performs well for large threads — the ID list stays stable while individual rows subscribe to their own message record.
-
-## API
+This is why the `useMessageIds()` + `useMessage(id)` pattern performs well for large threads—the ID list stays stable while individual rows subscribe to their own message record.
 
 ## See also
 
-- [Hooks Reference](/x/react-chat/resources/hooks/) for the hook API that wraps these selectors.
-- [Controlled State](/x/react-chat/backend/controlled-state/) for the internal state shape and controlled/uncontrolled models.
-- [Performance](/x/react-chat/resources/performance/) for rendering strategies with large message lists.
+- See [Hooks reference](/x/react-chat/resources/hooks/) for details.
+- See [Controlled state](/x/react-chat/backend/controlled-state/) for details.
+- See [Performance](/x/react-chat/resources/performance/) for details.

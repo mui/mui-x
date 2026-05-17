@@ -7,17 +7,17 @@ githubLabel: 'scope: chat'
 
 # Chat - Split layout
 
-<p class="description">Place <code>ChatMessageList</code> and <code>ChatComposer</code> in separate DOM zones. Only <code>ChatRoot</code> is needed to connect them.</p>
+<p class="description">Render the message list and composer in separate regions of the page while keeping them connected to a single chat store.</p>
 
 {{"demo": "SplitLayout.js", "bg": "inline"}}
 
-## How it works
+## Connecting components through `ChatRoot`
 
-`ChatRoot` sets up a `ChatProvider` context. Any descendant can read from that context
-via hooks — regardless of where it sits in the DOM tree.
+`ChatRoot` sets up a `ChatProvider` context.
+Any descendant can read from that context via hooks—regardless of where it sits in the DOM tree.
 
-This means `ChatMessageList` and `ChatComposer` don't need to be siblings
-or share a parent component. Place them wherever your layout requires:
+This means `ChatMessageList` and `ChatComposer` don't need to be siblings or share a parent component.
+Place them wherever the layout requires:
 
 ```tsx
 <ChatRoot adapter={adapter}>
@@ -30,19 +30,19 @@ or share a parent component. Place them wherever your layout requires:
 
 Both components stay in sync automatically because they share the same store.
 
-## When to use this pattern
+## Choosing the split layout
 
-Use split layout when `ChatBox`'s default two-pane structure doesn't fit your product:
+Use the split layout when `ChatBox`'s default two-pane structure doesn't fit the product layout:
 
-- Chat input lives in the app toolbar or page footer
-- Message history is displayed in one panel while the send area is in another
-- You are embedding chat into an existing layout that already manages its own structure
+- The chat input lives in the app toolbar or page footer.
+- Message history is displayed in one panel while the send area is in another.
+- Chat is embedded into a layout that already manages its own structure.
 
 ## See also
 
-- [No conversation history](/x/react-chat/material/examples/no-conversation-history/) — compose a thread without `ChatBox`
-- [Message feed](/x/react-chat/material/examples/message-feed/) — display-only embed with no input
+- [No conversation history](/x/react-chat/material/examples/no-conversation-history/)—compose a thread without `ChatBox`.
+- [Message feed](/x/react-chat/material/examples/message-feed/)—display-only embed with no input.
 
 ## API
 
-- [ChatRoot](/x/api/chat/chat-root/)
+- [`ChatRoot`](/x/api/chat/chat-root/)

@@ -12,11 +12,11 @@ components: ChatRoot
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The following demo shows a custom-themed chat surface:
+The demo below shows a custom-themed chat surface:
 
 {{"demo": "../examples/custom-theme/CustomTheme.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
-## sx prop
+## Styling the root element with the sx prop
 
 The `sx` prop on `ChatBox` applies styles to the outermost root element.
 Use it for layout constraints such as height and width:
@@ -36,7 +36,7 @@ Use it for layout constraints such as height and width:
 
 ## Theme component overrides
 
-Use `createTheme` to apply style overrides that apply globally across your application.
+Use `createTheme()` to apply style overrides globally across the application.
 Import `'@mui/x-chat/themeAugmentation'` for TypeScript autocomplete:
 
 ```tsx
@@ -80,7 +80,7 @@ const darkTheme = createTheme({ palette: { mode: 'dark' } });
 </ThemeProvider>;
 ```
 
-## classes prop
+## Injecting custom class names
 
 Inject custom class names onto the root and layout elements using the `classes` prop:
 
@@ -104,10 +104,9 @@ Inject custom class names onto the root and layout elements using the `classes` 
 | `conversationsPane` | `MuiChatBox-conversationsPane` | Conversations sidebar pane |
 | `threadPane`        | `MuiChatBox-threadPane`        | Thread pane                |
 
-## slotProps
+## Passing props to internal subcomponents
 
-Pass props directly to any internal subcomponent using `slotProps`.
-This is useful for setting `aria-label` attributes, `sx` overrides, or other component-specific props without replacing the component:
+Pass props directly to any internal subcomponent using `slotProps`—useful for setting `aria-label` attributes, applying `sx` overrides, or supplying other component-specific props without replacing the component:
 
 ```tsx
 <ChatBox
@@ -149,11 +148,11 @@ This is useful for setting `aria-label` attributes, `sx` overrides, or other com
 | `unreadMarker`         | `Partial<ChatUnreadMarkerProps>`             | Unread marker           |
 | `scrollToBottom`       | `Partial<ChatScrollToBottomAffordanceProps>` | Scroll to bottom button |
 
-## slots
+## Replacing subcomponents with slots
 
 Replace any subcomponent entirely using the `slots` prop.
 The replacement component must accept the same props as the default.
-See [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for a runnable demo using a `Paper`-based bubble.
+See [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for details.
 
 A common pattern is to wrap the default component and override one of its inner slots:
 
@@ -210,4 +209,4 @@ const CustomMessageContent = React.forwardRef(
 
 ## API
 
-- [ChatRoot](/x/api/chat/chat-root/)
+- [`ChatRoot`](/x/api/chat/chat-root/)

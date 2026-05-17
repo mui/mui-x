@@ -120,7 +120,7 @@ The headless layer stays design-system agnostic.
 Common styling approaches include:
 
 - Utility classes.
-- CSS Modules
+- CSS Modules.
 - CSS-in-JS wrappers.
 - Custom design-system components passed through slots.
 
@@ -132,10 +132,10 @@ The headless boundary is clear:
 
 ## See also
 
-- Continue with [Conversation list](/x/react-chat/headless/conversation-list/) to see owner state on row-level slots.
-- Continue with [Messages](/x/react-chat/headless/messages/) for selective message-part replacement.
-- Continue with [Slot customization](/x/react-chat/headless/examples/slot-customization/) for a full demo that replaces multiple slots in one surface.
+- See [Conversation list](/x/react-chat/headless/conversation-list/) for owner state on row-level slots.
+- See [Messages](/x/react-chat/headless/messages/) for selective message-part replacement.
+- See [Slot customization](/x/react-chat/headless/examples/slot-customization/) for a demo that replaces multiple slots in one surface.
 
 ## API
 
-- [ChatRoot](/x/api/chat/chat-root/)
+- [`ChatRoot`](/x/api/chat/chat-root/)
