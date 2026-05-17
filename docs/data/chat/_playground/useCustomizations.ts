@@ -51,9 +51,7 @@ export function useCustomizations<K extends string>(
   defs: ReadonlyArray<CustomizationDef<K>>,
 ): UseCustomizationsResult<K> {
   const keys = React.useMemo<readonly K[]>(() => defs.map((d) => d.name), [defs]);
-  const [values, setValues] = React.useState<Record<K, string>>(() =>
-    buildInitialValues(defs),
-  );
+  const [values, setValues] = React.useState<Record<K, string>>(() => buildInitialValues(defs));
 
   // Resync when the set of keys changes (rare but defensive).
   React.useEffect(() => {
@@ -78,8 +76,7 @@ export function useCustomizations<K extends string>(
           selector: def.selector,
           sx: values[def.name],
           parseError: parsed.error,
-          onSxChange: (next) =>
-            setValues((prev) => ({ ...prev, [def.name]: next })),
+          onSxChange: (next) => setValues((prev) => ({ ...prev, [def.name]: next })),
         };
       }),
     [defs, values],
@@ -110,3 +107,5 @@ export function useCustomizations<K extends string>(
 
   return { customizations, reset, values, toClassesSx };
 }
+
+export default useCustomizations;

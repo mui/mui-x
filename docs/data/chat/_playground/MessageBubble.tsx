@@ -28,3 +28,5 @@ export function MessageBubble({ messageId, withGroup = true }: MessageBubbleProp
   }
   return <ChatMessageGroup messageId={messageId}>{inner}</ChatMessageGroup>;
 }
+
+export default MessageBubble;

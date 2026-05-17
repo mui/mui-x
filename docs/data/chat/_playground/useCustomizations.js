@@ -77,3 +77,5 @@ export function useCustomizations(defs) {
 
   return { customizations, reset, values, toClassesSx };
 }
+
+export default useCustomizations;

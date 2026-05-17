@@ -1209,3 +1209,5 @@ export function PlaygroundCard({
     </Paper>
   );
 }
+
+export default PlaygroundCard;
