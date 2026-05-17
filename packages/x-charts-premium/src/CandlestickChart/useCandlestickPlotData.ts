@@ -71,8 +71,14 @@ export function useCandlestickPlotData(
      * array memcpy path instead of writing 8 bytes per candle by hand. */
     const [wickR, wickG, wickB, wickA] = wickColor;
     const wickPair = new Uint8ClampedArray([
-      wickR, wickG, wickB, wickA,
-      wickR, wickG, wickB, wickA,
+      wickR,
+      wickG,
+      wickB,
+      wickA,
+      wickR,
+      wickG,
+      wickB,
+      wickA,
     ]);
 
     for (let dataIndex = 0; dataIndex < n; dataIndex += 1) {

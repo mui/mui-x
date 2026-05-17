@@ -20,6 +20,9 @@ export const getExtremumY: CartesianExtremumGetter<'ohlc'> = (params) => {
   let max = -Infinity;
 
   for (const seriesId in series) {
+    if (!Object.hasOwn(series, seriesId)) {
+      continue;
+    }
     const s = series[seriesId];
     const axisId = s.yAxisId;
     if (axisId !== axis.id && !(isDefaultAxis && axisId === undefined)) {
