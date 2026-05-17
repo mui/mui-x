@@ -6,50 +6,42 @@ import {
   uploadGrowableBuffer,
 } from '../utils/webgl/utils';
 import { candleFragmentShader, candleVertexShader } from './candleShaders';
-import { wickFragmentShader, wickVertexShader } from './wickShaders';
 import { type CandlestickPlotData } from './useCandlestickPlotData';
 
 const QUAD_VERTICES = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
+/* The wick's a_position.x is 0, so the vertex shader's `a_position.x * u_candle_width`
+ * term vanishes for wicks — the candle shader produces correct wick geometry. */
 const WICK_VERTICES = new Float32Array([0, -1, 0, 1]);
 
-type CandleProgram = {
-  program: WebGLProgram;
+type InstanceBuffers = {
   vao: WebGLVertexArrayObject;
   centers: GrowableBuffer;
   heights: GrowableBuffer;
   colors: GrowableBuffer;
-  uResolution: WebGLUniformLocation | null;
-  uCandleWidth: WebGLUniformLocation | null;
-};
-
-type WickProgram = {
-  program: WebGLProgram;
-  vao: WebGLVertexArrayObject;
-  centers: GrowableBuffer;
-  heights: GrowableBuffer;
-  colors: GrowableBuffer;
-  uResolution: WebGLUniformLocation | null;
-  uCandleWidth: WebGLUniformLocation | null;
 };
 
 export class CandlestickWebGLProgram {
   private readonly shaders: WebGLShader[] = [];
 
+  private readonly program: WebGLProgram;
+
   private readonly quadBuffer: WebGLBuffer;
 
   private readonly wickGeometryBuffer: WebGLBuffer;
 
-  private readonly candle: CandleProgram;
+  private readonly candle: InstanceBuffers;
 
-  private readonly wick: WickProgram;
+  private readonly wick: InstanceBuffers;
+
+  private readonly uResolution: WebGLUniformLocation | null;
+
+  private readonly uCandleWidth: WebGLUniformLocation | null;
 
   constructor(private gl: WebGL2RenderingContext) {
-    /* Enable blending for transparency
-     * These are global to the WebGL context and need to be set only once */
+    /* Global to the WebGL context; set once. */
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-    /* Shared, write-once geometry buffers */
     this.quadBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.quadBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, QUAD_VERTICES, gl.STATIC_DRAW);
@@ -58,111 +50,55 @@ export class CandlestickWebGLProgram {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.wickGeometryBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, WICK_VERTICES, gl.STATIC_DRAW);
 
-    this.candle = this.initCandleProgram();
-    this.wick = this.initWickProgram();
+    this.program = initializeProgram(gl, candleVertexShader, candleFragmentShader, this.shaders);
+
+    this.uResolution = gl.getUniformLocation(this.program, 'u_resolution');
+    this.uCandleWidth = gl.getUniformLocation(this.program, 'u_candle_width');
+
+    this.candle = this.initInstanceBuffers(this.quadBuffer);
+    this.wick = this.initInstanceBuffers(this.wickGeometryBuffer);
   }
 
-  private initCandleProgram(): CandleProgram {
-    const gl = this.gl;
-    const { program, fragmentShader, vertexShader } = initializeProgram(
-      gl,
-      candleVertexShader,
-      candleFragmentShader,
-    );
-    this.shaders.push(fragmentShader, vertexShader);
-
+  private initInstanceBuffers(geometryBuffer: WebGLBuffer): InstanceBuffers {
+    const { gl, program } = this;
     const vao = gl.createVertexArray();
     const centers = createGrowableBuffer(gl);
     const heights = createGrowableBuffer(gl);
     const colors = createGrowableBuffer(gl);
 
     gl.bindVertexArray(vao);
-
-    /* Quad geometry — shared, instanced over per-candle attributes. */
-    bindAttribute(gl, program, 'a_position', this.quadBuffer, 2, 0);
-
+    bindAttribute(gl, program, 'a_position', geometryBuffer, 2, 0);
     bindAttribute(gl, program, 'a_center', centers.buffer, 2, 1);
     bindAttribute(gl, program, 'a_height', heights.buffer, 1, 1);
     /* Colors live in a Uint8(Clamped)Array — 1 byte per channel, normalized to [0, 1]
      * in the shader. 4x less GPU traffic than Float32 RGBA. */
     bindAttribute(gl, program, 'a_color', colors.buffer, 4, 1, gl.UNSIGNED_BYTE, true);
-
     gl.bindVertexArray(null);
 
-    return {
-      program,
-      vao,
-      centers,
-      heights,
-      colors,
-      uResolution: gl.getUniformLocation(program, 'u_resolution'),
-      uCandleWidth: gl.getUniformLocation(program, 'u_candle_width'),
-    };
-  }
-
-  private initWickProgram(): WickProgram {
-    const gl = this.gl;
-    const { program, fragmentShader, vertexShader } = initializeProgram(
-      gl,
-      wickVertexShader,
-      wickFragmentShader,
-    );
-    this.shaders.push(fragmentShader, vertexShader);
-
-    const vao = gl.createVertexArray();
-    const centers = createGrowableBuffer(gl);
-    const heights = createGrowableBuffer(gl);
-    const colors = createGrowableBuffer(gl);
-
-    gl.bindVertexArray(vao);
-
-    bindAttribute(gl, program, 'a_position', this.wickGeometryBuffer, 2, 0);
-
-    bindAttribute(gl, program, 'a_center', centers.buffer, 2, 1);
-    bindAttribute(gl, program, 'a_height', heights.buffer, 1, 1);
-    bindAttribute(gl, program, 'a_wick_color', colors.buffer, 4, 1, gl.UNSIGNED_BYTE, true);
-
-    gl.bindVertexArray(null);
-
-    return {
-      program,
-      vao,
-      centers,
-      heights,
-      colors,
-      uResolution: gl.getUniformLocation(program, 'u_resolution'),
-      uCandleWidth: gl.getUniformLocation(program, 'u_candle_width'),
-    };
+    return { vao, centers, heights, colors };
   }
 
   setResolution(width: number, height: number) {
-    this.gl.useProgram(this.candle.program);
-    this.gl.uniform2f(this.candle.uResolution, width, height);
-
-    this.gl.useProgram(this.wick.program);
-    this.gl.uniform2f(this.wick.uResolution, width, height);
+    this.gl.useProgram(this.program);
+    this.gl.uniform2f(this.uResolution, width, height);
   }
 
   setCandleWidth(candleWidth: number) {
-    this.gl.useProgram(this.candle.program);
-    this.gl.uniform1f(this.candle.uCandleWidth, candleWidth);
-
-    this.gl.useProgram(this.wick.program);
-    this.gl.uniform1f(this.wick.uCandleWidth, candleWidth);
+    this.gl.useProgram(this.program);
+    this.gl.uniform1f(this.uCandleWidth, candleWidth);
   }
 
   plot(plotData: CandlestickPlotData) {
+    if (plotData.candleCenters.length === 0) {
+      return;
+    }
     const { gl } = this;
-    const { candleCenters, candleHeights, wickCenters, wickHeights, candleColors, wickColors } =
-      plotData;
-
-    uploadGrowableBuffer(gl, this.candle.centers, candleCenters);
-    uploadGrowableBuffer(gl, this.candle.heights, candleHeights);
-    uploadGrowableBuffer(gl, this.candle.colors, candleColors);
-
-    uploadGrowableBuffer(gl, this.wick.centers, wickCenters);
-    uploadGrowableBuffer(gl, this.wick.heights, wickHeights);
-    uploadGrowableBuffer(gl, this.wick.colors, wickColors);
+    uploadGrowableBuffer(gl, this.candle.centers, plotData.candleCenters);
+    uploadGrowableBuffer(gl, this.candle.heights, plotData.candleHeights);
+    uploadGrowableBuffer(gl, this.candle.colors, plotData.candleColors);
+    uploadGrowableBuffer(gl, this.wick.centers, plotData.wickCenters);
+    uploadGrowableBuffer(gl, this.wick.heights, plotData.wickHeights);
+    uploadGrowableBuffer(gl, this.wick.colors, plotData.wickColors);
   }
 
   render(dataLength: number) {
@@ -171,14 +107,14 @@ export class CandlestickWebGLProgram {
     }
     const { gl } = this;
 
-    gl.useProgram(this.wick.program);
+    gl.useProgram(this.program);
+
     gl.bindVertexArray(this.wick.vao);
     gl.drawArraysInstanced(gl.LINES, 0, 2, dataLength * 2);
-    logWebGLErrors(gl);
 
-    gl.useProgram(this.candle.program);
     gl.bindVertexArray(this.candle.vao);
     gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, dataLength);
+
     logWebGLErrors(gl);
   }
 
@@ -186,18 +122,14 @@ export class CandlestickWebGLProgram {
     const { gl } = this;
     gl.deleteBuffer(this.quadBuffer);
     gl.deleteBuffer(this.wickGeometryBuffer);
+    gl.deleteProgram(this.program);
 
-    gl.deleteProgram(this.candle.program);
-    gl.deleteVertexArray(this.candle.vao);
-    gl.deleteBuffer(this.candle.centers.buffer);
-    gl.deleteBuffer(this.candle.heights.buffer);
-    gl.deleteBuffer(this.candle.colors.buffer);
-
-    gl.deleteProgram(this.wick.program);
-    gl.deleteVertexArray(this.wick.vao);
-    gl.deleteBuffer(this.wick.centers.buffer);
-    gl.deleteBuffer(this.wick.heights.buffer);
-    gl.deleteBuffer(this.wick.colors.buffer);
+    for (const buffers of [this.candle, this.wick]) {
+      gl.deleteVertexArray(buffers.vao);
+      gl.deleteBuffer(buffers.centers.buffer);
+      gl.deleteBuffer(buffers.heights.buffer);
+      gl.deleteBuffer(buffers.colors.buffer);
+    }
 
     this.shaders.forEach((shader) => gl.deleteShader(shader));
   }
@@ -226,13 +158,14 @@ function initializeProgram(
   gl: WebGL2RenderingContext,
   vertexShaderSource: string,
   fragmentShaderSource: string,
+  shaderSink: WebGLShader[],
 ) {
   const program = gl.createProgram();
   const vertexShader = compileShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
   const fragmentShader = compileShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
+  shaderSink.push(vertexShader, fragmentShader);
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
-
   gl.linkProgram(program);
 
   /* Only inspect link status when linking actually failed; the parameter call stalls the pipeline.
@@ -245,5 +178,5 @@ function initializeProgram(
     }
   }
 
-  return { program, vertexShader, fragmentShader };
+  return program;
 }
