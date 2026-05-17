@@ -97,6 +97,7 @@ export default function RichItemContent() {
       activeConversationId={activeConversationId}
       conversations={conversations}
       messages={messages}
+      features={{ conversationList: true }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {
           setActiveConversationId(nextId);
@@ -109,8 +110,10 @@ export default function RichItemContent() {
         );
       }}
       slotProps={{
-        conversationList: {
-          slots: { itemContent: RichItemContentSlot },
+        conversation: {
+          list: {
+            slots: { itemContent: RichItemContentSlot },
+          },
         },
       }}
       sx={{

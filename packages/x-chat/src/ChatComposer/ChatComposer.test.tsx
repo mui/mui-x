@@ -35,7 +35,7 @@ describe('ChatComposer', () => {
     render(
       <ChatBox
         adapter={createAdapter()}
-        slotProps={{ composerRoot: { className: 'custom-composer' } }}
+        slotProps={{ composer: { root: { className: 'custom-composer' } } }}
       >
         {null}
       </ChatBox>,

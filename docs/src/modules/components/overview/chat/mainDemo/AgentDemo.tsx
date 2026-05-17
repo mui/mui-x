@@ -1223,12 +1223,18 @@ export default function AgentDemo() {
       activeConversationId={activeId}
       conversations={conversations}
       messages={messages}
+      features={{ conversationList: true }}
       variant="compact"
       density="compact"
       slots={{
-        conversationList: AgentTaskTree,
-        conversationHeader: AgentHeaderBar,
-        composerRoot: AgentComposer,
+        conversation: {
+          list: AgentTaskTree,
+          header: AgentHeaderBar,
+        },
+
+        composer: {
+          root: AgentComposer,
+        },
       }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {

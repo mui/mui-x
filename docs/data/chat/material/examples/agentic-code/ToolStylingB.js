@@ -555,6 +555,7 @@ export default function ToolStylingB() {
       activeConversationId={activeId}
       conversations={conversations}
       messages={messages}
+      features={{ conversationList: true }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {
           setActiveId(nextId);
@@ -567,10 +568,12 @@ export default function ToolStylingB() {
         );
       }}
       slotProps={{
-        messageContent: {
-          partProps: {
-            'dynamic-tool': {
-              toolSlotProps: colorfulToolSlotProps,
+        message: {
+          content: {
+            partProps: {
+              'dynamic-tool': {
+                toolSlotProps: colorfulToolSlotProps,
+              },
             },
           },
         },

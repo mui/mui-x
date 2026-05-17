@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
-import { ChatRoot, type ChatAdapter } from '@mui/x-chat-headless';
+import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
-import { ChatMessageGroup } from './ChatMessageGroup';
 
 const { render } = createRenderer();
 
@@ -101,7 +100,7 @@ describe('ChatMessageGroup', () => {
     }
 
     render(
-      <ChatRoot
+      <ChatBox
         adapter={createAdapter()}
         members={[{ id: 'alice', displayName: 'Alice' }]}
         initialMessages={[
@@ -113,9 +112,10 @@ describe('ChatMessageGroup', () => {
             parts: [{ type: 'text', text: 'Hi' }],
           },
         ]}
+        slots={{ message: { authorName: CustomLabel } }}
       >
-        <ChatMessageGroup messageId="m1" slots={{ message: { authorName: CustomLabel } }} />
-      </ChatRoot>,
+        {null}
+      </ChatBox>,
     );
 
     expect(document.querySelector('[data-testid="custom-author-name"]')?.textContent).toBe(
@@ -125,7 +125,7 @@ describe('ChatMessageGroup', () => {
 
   it('hides the author label when slots.message.authorName is null', () => {
     render(
-      <ChatRoot
+      <ChatBox
         adapter={createAdapter()}
         members={[{ id: 'alice', displayName: 'Alice Hidden' }]}
         initialMessages={[
@@ -137,9 +137,10 @@ describe('ChatMessageGroup', () => {
             parts: [{ type: 'text', text: 'Hi' }],
           },
         ]}
+        slots={{ message: { authorName: null } }}
       >
-        <ChatMessageGroup messageId="m1" slots={{ message: { authorName: null } }} />
-      </ChatRoot>,
+        {null}
+      </ChatBox>,
     );
 
     expect(document.body.textContent).not.toContain('Alice Hidden');

@@ -147,6 +147,7 @@ export default function FullCustomRow() {
       activeConversationId={activeConversationId}
       conversations={conversations}
       messages={messages}
+      features={{ conversationList: true }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {
           setActiveConversationId(nextId);
@@ -159,8 +160,10 @@ export default function FullCustomRow() {
         );
       }}
       slotProps={{
-        conversationList: {
-          slots: { item: FullCustomRowSlot },
+        conversation: {
+          list: {
+            slots: { item: FullCustomRowSlot },
+          },
         },
       }}
       sx={{

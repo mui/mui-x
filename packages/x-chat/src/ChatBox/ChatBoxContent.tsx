@@ -503,9 +503,7 @@ function DefaultComposer({
         placeholder={localeText.composerInputPlaceholder}
         {...(composerSlotProps?.input ?? {})}
       />
-      {showHelperText && (
-        <ComposerHelperTextComponent {...(composerSlotProps?.helperText ?? {})} />
-      )}
+      {showHelperText && <ComposerHelperTextComponent {...(composerSlotProps?.helperText ?? {})} />}
       <ComposerToolbarComponent {...(composerSlotProps?.toolbar ?? {})}>
         {showAttachButton && (
           <ComposerAttachButtonComponent
