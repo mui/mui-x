@@ -144,9 +144,12 @@ export function useCandlestickPlotData(
     positionsPoolRef.current = { candleCenters, candleHeights, wickCenters, wickHeights };
 
     /* Hoist drawing-area offsets into scalars so the loop body doesn't re-read them. */
-    const left = drawingArea.left;
     const top = drawingArea.top;
-    const xDomain = xScale.domain();
+    /* Band scales are linear in domain index, so xScale(domain[i]) = x0 + step*i.
+     * Resolving the base position once (and folding in -left) avoids n hashmap
+     * lookups in the loop body. */
+    const xStep = xScale.step();
+    const x0 = n > 0 ? xScale(xScale.domain()[0])! - drawingArea.left : 0;
 
     for (let dataIndex = 0; dataIndex < n; dataIndex += 1) {
       const datum = series.data[dataIndex];
@@ -165,13 +168,12 @@ export function useCandlestickPlotData(
         continue;
       }
 
-      const scaledX = xScale(xDomain[dataIndex])!;
       const open = datum[0];
       const high = datum[1];
       const low = datum[2];
       const close = datum[3];
 
-      const x = scaledX - left;
+      const x = x0 + xStep * dataIndex;
       const scaledOpen = yScale(open);
       const scaledClose = yScale(close);
       const candleBottom = Math.min(scaledOpen, scaledClose) - top;
