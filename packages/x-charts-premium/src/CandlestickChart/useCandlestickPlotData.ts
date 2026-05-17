@@ -207,12 +207,8 @@ export function useCandlestickPlotData(
 
   return React.useMemo(
     () => ({
-      candleCenters: positions.candleCenters,
-      candleHeights: positions.candleHeights,
-      candleColors: colors.candleColors,
-      wickCenters: positions.wickCenters,
-      wickHeights: positions.wickHeights,
-      wickColors: colors.wickColors,
+      ...positions,
+      ...colors,
     }),
     [positions, colors],
   );
