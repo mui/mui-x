@@ -120,6 +120,6 @@
   "muiName": "MuiChatDateDivider",
   "filename": "/packages/x-chat/src/ChatMessage/ChatDateDivider.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message Appearance</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/display/date-divider/\">Chat - Date divider</a></li>\n<li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>",
   "cssComponent": false
 }

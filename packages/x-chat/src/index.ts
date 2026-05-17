@@ -5,6 +5,8 @@ export type {
   ChatBoxSlots,
   ChatBoxSlotProps,
   ChatBoxFeatures,
+  ChatBoxLayoutMode,
+  ChatBoxLayoutModeBreakpoints,
 } from './ChatBox/ChatBox.types';
 export type { ChatVariant, ChatDensity } from '@mui/x-chat-headless';
 export type {

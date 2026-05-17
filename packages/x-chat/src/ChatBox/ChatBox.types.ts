@@ -10,6 +10,7 @@ import {
   type ChatDensity,
   type ChatAttachmentsConfig,
 } from '@mui/x-chat-headless';
+import type { ChatConversationProps } from '../ChatConversation/ChatConversation';
 import type { ChatConversationListProps } from '../ChatConversationList/ChatConversationList';
 import type { ChatConversationHeaderProps } from '../ChatConversation/ChatConversationHeader';
 import type { ChatConversationTitleProps } from '../ChatConversation/ChatConversationTitle';
@@ -38,65 +39,156 @@ import type { ChatScrollToBottomAffordanceProps } from '../ChatIndicators/ChatSc
 import type { ChatSuggestionsProps } from '../ChatSuggestions/ChatSuggestions';
 import { type ChatBoxClasses } from './chatBoxClasses';
 
+/**
+ * Slot map for the `conversation` family.
+ *
+ * `root` swaps the styled element of `<ChatConversation>` (wrapper-only); the
+ * default child layout (header + message list + composer) continues to render
+ * inside it. The other keys override individual conversation sub-components.
+ */
+export interface ChatBoxConversationSlots {
+  root?: React.ElementType;
+  list?: React.ElementType;
+  header?: React.ElementType;
+  title?: React.ElementType;
+  subtitle?: React.ElementType;
+  headerInfo?: React.ElementType;
+  headerActions?: React.ElementType;
+}
+
+export interface ChatBoxConversationSlotProps {
+  root?: Partial<ChatConversationProps>;
+  list?: Partial<ChatConversationListProps>;
+  header?: Partial<ChatConversationHeaderProps>;
+  title?: Partial<ChatConversationTitleProps>;
+  subtitle?: Partial<ChatConversationSubtitleProps>;
+  headerInfo?: Partial<ChatConversationHeaderInfoProps>;
+  headerActions?: Partial<ChatConversationHeaderActionsProps>;
+}
+
+/**
+ * Slot map for the `messagesList` family — list-level chrome.
+ *
+ * `root` swaps the styled element of `<ChatMessageList>` (wrapper-only).
+ * `group` overrides the per-message group wrapper component.
+ */
+export interface ChatBoxMessagesListSlots {
+  root?: React.ElementType;
+  group?: React.ElementType;
+  dateDivider?: React.ElementType;
+  unreadMarker?: React.ElementType;
+}
+
+export interface ChatBoxMessagesListSlotProps {
+  root?: Partial<ChatMessageListProps>;
+  group?: Partial<ChatMessageGroupProps>;
+  dateDivider?: Partial<ChatDateDividerProps>;
+  unreadMarker?: Partial<ChatUnreadMarkerProps>;
+}
+
+/**
+ * Slot map for the `message` family — one row's parts.
+ *
+ * `root` swaps the styled element of `<ChatMessage>` (wrapper-only).
+ * Presentational sub-slots accept `null` to hide the piece and collapse the
+ * surrounding layout (avatar grid track, etc.).
+ */
+export interface ChatBoxMessageSlots {
+  root?: React.ElementType;
+  /**
+   * Avatar component. Pass `null` to hide the avatar entirely and drop the
+   * reserved avatar grid track.
+   */
+  avatar?: React.ElementType | null;
+  content?: React.ElementType;
+  /**
+   * External meta (compact variant). Pass `null` to hide.
+   */
+  meta?: React.ElementType | null;
+  /**
+   * Inline meta rendered inside the bubble (default variant). Pass `null` to
+   * hide.
+   */
+  inlineMeta?: React.ElementType | null;
+  /** Error card shown under the bubble when the message status is `error`. */
+  error?: React.ElementType;
+  /**
+   * Actions row component (receives `{ messageId }`). Pass `null` (or omit) to
+   * hide actions.
+   */
+  actions?: React.ElementType | null;
+  /**
+   * Author name label rendered by the group wrapper (default variant: above
+   * the bubble; compact variant: inside the message grid). Pass `null` to
+   * hide.
+   */
+  authorName?: React.ElementType | null;
+}
+
+export interface ChatBoxMessageSlotProps {
+  root?: Partial<ChatMessageProps>;
+  avatar?: Partial<ChatMessageAvatarProps>;
+  content?: Partial<ChatMessageContentProps>;
+  meta?: Partial<ChatMessageMetaProps>;
+  inlineMeta?: Record<string, unknown>;
+  error?: Partial<ChatMessageErrorProps>;
+  actions?: Partial<ChatMessageActionsProps>;
+  authorName?: Record<string, unknown>;
+}
+
+/**
+ * Slot map for the `composer` family.
+ *
+ * `root` swaps the styled element of `<ChatComposer>` (wrapper-only); attach,
+ * input, send, toolbar, attachmentList, and helperText continue to render
+ * inside it via the default composer layout.
+ */
+export interface ChatBoxComposerSlots {
+  root?: React.ElementType;
+  input?: React.ElementType;
+  /**
+   * Send button. Pass `null` to hide it; form still submits on Enter.
+   */
+  send?: React.ElementType | null;
+  /**
+   * Attach button. Pass `null` to hide just the button while keeping the rest
+   * of the attachment pipeline (drag/drop, paste). Use `features.attachments:
+   * false` to disable attachments entirely.
+   */
+  attach?: React.ElementType | null;
+  attachmentList?: React.ElementType;
+  toolbar?: React.ElementType;
+  helperText?: React.ElementType;
+}
+
+export interface ChatBoxComposerSlotProps {
+  root?: Partial<ChatComposerProps>;
+  input?: Partial<ChatComposerTextAreaProps>;
+  send?: Partial<ChatComposerSendButtonProps>;
+  attach?: Partial<ChatComposerAttachButtonProps>;
+  attachmentList?: Partial<ChatComposerAttachmentListProps>;
+  toolbar?: Partial<ChatComposerToolbarProps>;
+  helperText?: Partial<ChatComposerHelperTextProps>;
+}
+
 export interface ChatBoxSlots {
-  /** The outermost container element. Defaults to `div`. */
-  root: React.ElementType;
-  /** The layout element that arranges conversations + thread panes. Defaults to `div`. */
-  layout: React.ElementType;
-  /** The conversations pane container. Defaults to `div`. */
-  conversationsPane: React.ElementType;
-  /** The thread pane container. Defaults to `div`. */
-  threadPane: React.ElementType;
-  /** Override the conversation list component. */
-  conversationList: React.ElementType;
-  /** Override the conversation header component. */
-  conversationHeader: React.ElementType;
-  /** Override the conversation title component. */
-  conversationTitle: React.ElementType;
-  /** Override the conversation subtitle component. */
-  conversationSubtitle: React.ElementType;
-  /** Override the conversation header info wrapper (title + subtitle column). */
-  conversationHeaderInfo: React.ElementType;
-  /** Override the conversation header actions component. */
-  conversationHeaderActions: React.ElementType;
-  /** Override the message list component. */
-  messageList: React.ElementType;
-  /** Override the message root component for each message. */
-  messageRoot: React.ElementType;
-  /** Override the message avatar component. */
-  messageAvatar: React.ElementType;
-  /** Override the message content (bubble) component. */
-  messageContent: React.ElementType;
-  /** Override the message meta component. */
-  messageMeta: React.ElementType;
-  /** Override the message actions component. */
-  messageActions: React.ElementType;
-  /** Override the message group component. */
-  messageGroup: React.ElementType;
-  /** Override the date divider component. */
-  dateDivider: React.ElementType;
-  /** Override the composer (input) root component. */
-  composerRoot: React.ElementType;
-  /** Override the composer textarea component. */
-  composerInput: React.ElementType;
-  /** Override the composer send button. */
-  composerSendButton: React.ElementType;
-  /** Override the composer attach button. */
-  composerAttachButton: React.ElementType;
-  /** Override the composer attachment list. */
-  composerAttachmentList: React.ElementType;
-  /** Override the composer toolbar. */
-  composerToolbar: React.ElementType;
-  /** Override the composer helper text component. */
-  composerHelperText: React.ElementType;
-  /** Override the typing indicator component. */
-  typingIndicator: React.ElementType;
-  /** Override the unread marker component. */
-  unreadMarker: React.ElementType;
-  /** Override the scroll-to-bottom affordance component. */
-  scrollToBottom: React.ElementType;
-  /** Override the prompt suggestions container component. */
-  suggestions: React.ElementType;
+  // Outer layout (singletons, flat)
+  root?: React.ElementType;
+  layout?: React.ElementType;
+  conversationsPane?: React.ElementType;
+  threadPane?: React.ElementType;
+
+  // Nested families
+  conversation?: ChatBoxConversationSlots;
+  messagesList?: ChatBoxMessagesListSlots;
+  message?: ChatBoxMessageSlots;
+  composer?: ChatBoxComposerSlots;
+
+  // Standalone widgets
+  typingIndicator?: React.ElementType;
+  scrollToBottom?: React.ElementType;
+  suggestions?: React.ElementType;
+  emptyState?: React.ElementType;
 }
 
 export interface ChatBoxSlotProps {
@@ -104,31 +196,16 @@ export interface ChatBoxSlotProps {
   layout?: SlotComponentProps<'div', { sx?: SxProps<Theme> }, {}>;
   conversationsPane?: SlotComponentProps<'div', { sx?: SxProps<Theme> }, {}>;
   threadPane?: SlotComponentProps<'div', { sx?: SxProps<Theme> }, {}>;
-  conversationList?: Partial<ChatConversationListProps>;
-  conversationHeader?: Partial<ChatConversationHeaderProps>;
-  conversationTitle?: Partial<ChatConversationTitleProps>;
-  conversationSubtitle?: Partial<ChatConversationSubtitleProps>;
-  conversationHeaderInfo?: Partial<ChatConversationHeaderInfoProps>;
-  conversationHeaderActions?: Partial<ChatConversationHeaderActionsProps>;
-  messageList?: Partial<ChatMessageListProps>;
-  messageRoot?: Partial<ChatMessageProps>;
-  messageAvatar?: Partial<ChatMessageAvatarProps>;
-  messageContent?: Partial<ChatMessageContentProps>;
-  messageMeta?: Partial<ChatMessageMetaProps>;
-  messageActions?: Partial<ChatMessageActionsProps>;
-  messageGroup?: Partial<ChatMessageGroupProps>;
-  dateDivider?: Partial<ChatDateDividerProps>;
-  composerRoot?: Partial<ChatComposerProps>;
-  composerInput?: Partial<ChatComposerTextAreaProps>;
-  composerSendButton?: Partial<ChatComposerSendButtonProps>;
-  composerAttachButton?: Partial<ChatComposerAttachButtonProps>;
-  composerAttachmentList?: Partial<ChatComposerAttachmentListProps>;
-  composerToolbar?: Partial<ChatComposerToolbarProps>;
-  composerHelperText?: Partial<ChatComposerHelperTextProps>;
+
+  conversation?: ChatBoxConversationSlotProps;
+  messagesList?: ChatBoxMessagesListSlotProps;
+  message?: ChatBoxMessageSlotProps;
+  composer?: ChatBoxComposerSlotProps;
+
   typingIndicator?: Partial<ChatTypingIndicatorProps>;
-  unreadMarker?: Partial<ChatUnreadMarkerProps>;
   scrollToBottom?: Partial<ChatScrollToBottomAffordanceProps>;
   suggestions?: Partial<ChatSuggestionsProps>;
+  emptyState?: SlotComponentProps<'div', { sx?: SxProps<Theme> }, {}>;
 }
 
 /**
@@ -174,6 +251,14 @@ export interface ChatBoxMessageSlotProps {
 }
 
 export interface ChatBoxFeatures {
+  /**
+   * Whether to render the built-in conversation list sidebar / drawer.
+   * When disabled, `ChatBox` renders only the active thread surface even if
+   * conversations are present or loaded through `adapter.listConversations()`.
+   * This flag controls only the built-in sidebar / drawer UI.
+   * @default false
+   */
+  conversationList?: boolean;
   /**
    * Whether to show the scroll-to-bottom affordance button when the user has scrolled up.
    * @default true
@@ -221,6 +306,23 @@ export interface ChatBoxFeatures {
   suggestions?: boolean;
 }
 
+export type ChatBoxLayoutMode = 'standard' | 'overlay' | 'split';
+
+export interface ChatBoxLayoutModeBreakpoints {
+  /**
+   * Container width below which ChatBox switches from the standard side-by-side layout
+   * to the overlay conversations panel.
+   * @default 600
+   */
+  overlay: number;
+  /**
+   * Container width below which ChatBox switches from overlay mode to the split list/thread flow.
+   * This value is clamped so it never exceeds `overlay`.
+   * @default 450
+   */
+  split: number;
+}
+
 export interface ChatBoxProps<Cursor = string> extends Omit<
   ChatRootProps<Cursor>,
   'slots' | 'slotProps'
@@ -247,17 +349,34 @@ export interface ChatBoxProps<Cursor = string> extends Omit<
    */
   density?: ChatDensity;
   /**
-   * The components used for each slot inside the ChatBox.
+   * The components used for each slot inside the ChatBox, organised by family.
+   *
+   * - `conversation.*` — the conversation wrapper, list, header, title, subtitle, header info, header actions.
+   * - `messagesList.*` — the list scroller, group wrapper, date divider, unread marker.
+   * - `message.*` — per-row parts (root, avatar, content, meta, inlineMeta, error, actions, authorName).
+   *   Pass `null` to a presentational slot (`avatar`, `meta`, `inlineMeta`, `actions`, `authorName`) to hide it and collapse the surrounding layout.
+   * - `composer.*` — root, input, send, attach, attachmentList, toolbar, helperText.
+   *   Pass `null` to `send` / `attach` to hide the button.
+   * - Standalone slots (`typingIndicator`, `scrollToBottom`, `suggestions`, `emptyState`, layout pieces) stay flat at the top level.
    */
-  slots?: Partial<ChatBoxSlots>;
+  slots?: ChatBoxSlots;
   /**
-   * The extra props for the slot components.
+   * Props forwarded to each slot. Mirrors the structure of `slots`.
    */
   slotProps?: ChatBoxSlotProps;
   /**
    * Feature flags to enable or disable built-in ChatBox behaviours.
    */
   features?: ChatBoxFeatures;
+  /**
+   * Forces the responsive layout mode instead of deriving it from the container width.
+   * When omitted, ChatBox chooses the mode automatically using `layoutModeBreakpoints`.
+   */
+  layoutMode?: ChatBoxLayoutMode;
+  /**
+   * Container-width breakpoints used when `layoutMode` is not provided.
+   */
+  layoutModeBreakpoints?: Partial<ChatBoxLayoutModeBreakpoints>;
   /**
    * Prompt suggestions displayed in the empty state.
    * Clicking a suggestion pre-fills the composer.

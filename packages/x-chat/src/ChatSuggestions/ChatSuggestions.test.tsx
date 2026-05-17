@@ -39,7 +39,7 @@ describe('ChatSuggestions', () => {
     expect(document.querySelector('.MuiChatSuggestions-root')).not.toBe(null);
   });
 
-  it('does not render suggestions when there are existing messages', () => {
+  it('renders suggestions above the composer when there are existing messages', () => {
     render(
       <ChatBox
         adapter={createAdapter()}
@@ -49,8 +49,13 @@ describe('ChatSuggestions', () => {
         {null}
       </ChatBox>,
     );
-    // Suggestions are hidden when messages exist
-    expect(document.querySelector('.MuiChatSuggestions-root')).toBe(null);
+    // ChatBox surfaces suggestions as a next-prompt row above the composer when
+    // the thread already has messages (ChatSuggestions opts in via `alwaysVisible`).
+    const root = document.querySelector('.MuiChatSuggestions-root');
+    expect(root).not.toBe(null);
+    // `data-empty` is only set when empty (kebab-cased attributes skip `false`).
+    expect(root!.hasAttribute('data-empty')).toBe(false);
+    expect(document.querySelectorAll('.MuiChatSuggestions-item').length).toBe(1);
   });
 
   it('forwards custom className via slotProps.suggestions', () => {

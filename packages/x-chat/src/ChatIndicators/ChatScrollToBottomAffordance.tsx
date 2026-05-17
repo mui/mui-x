@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { SxProps, Theme } from '@mui/system';
 import IconButton from '@mui/material/IconButton';
 import { ScrollToBottomAffordance, type ScrollToBottomAffordanceProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -14,6 +15,7 @@ const useThemeProps = createUseThemeProps('MuiChatScrollToBottomAffordance');
 
 export interface ChatScrollToBottomAffordanceProps extends ScrollToBottomAffordanceProps {
   className?: string;
+  sx?: SxProps<Theme>;
   classes?: Partial<ChatScrollToBottomAffordanceClasses>;
 }
 
@@ -62,7 +64,7 @@ const ChatScrollToBottomAffordance = React.forwardRef<
   ChatScrollToBottomAffordanceProps
 >(function ChatScrollToBottomAffordance(inProps, ref) {
   const props = useThemeProps({ props: inProps, name: 'MuiChatScrollToBottomAffordance' });
-  const { slots, slotProps, className, classes: classesProp, ...other } = props;
+  const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
   const classes = useChatScrollToBottomAffordanceUtilityClasses(classesProp);
 
   return (
@@ -79,6 +81,7 @@ const ChatScrollToBottomAffordance = React.forwardRef<
         root: {
           size: 'small',
           className: clsx(classes.root, className),
+          sx,
           ...(slotProps?.root as object),
         } as any,
       }}
@@ -96,6 +99,11 @@ ChatScrollToBottomAffordance.propTypes = {
   scrollBehavior: PropTypes.oneOf(['auto', 'instant', 'smooth']),
   slotProps: PropTypes.object,
   slots: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ChatScrollToBottomAffordance };
