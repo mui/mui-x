@@ -34,7 +34,7 @@ describe('ChatComposerTextArea', () => {
     render(
       <ChatBox
         adapter={createAdapter()}
-        slotProps={{ composer: { input: { className: 'custom-textarea' } } }}
+        slotProps={{ composerInput: { className: 'custom-textarea' } }}
       >
         {null}
       </ChatBox>,

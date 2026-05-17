@@ -23,6 +23,7 @@ import type { ChatMessageContentProps } from '../ChatMessage/ChatMessageContent'
 import type { ChatMessageMetaProps } from '../ChatMessage/ChatMessageMeta';
 import type { ChatMessageActionsProps } from '../ChatMessage/ChatMessageActions';
 import type { ChatMessageGroupProps } from '../ChatMessage/ChatMessageGroup';
+import type { ChatMessageErrorProps } from '../ChatMessageError/ChatMessageError';
 import type { ChatDateDividerProps } from '../ChatMessage/ChatDateDivider';
 import type { ChatComposerProps } from '../ChatComposer/ChatComposer';
 import type { ChatComposerTextAreaProps } from '../ChatComposer/ChatComposerTextArea';
@@ -128,6 +129,48 @@ export interface ChatBoxSlotProps {
   unreadMarker?: Partial<ChatUnreadMarkerProps>;
   scrollToBottom?: Partial<ChatScrollToBottomAffordanceProps>;
   suggestions?: Partial<ChatSuggestionsProps>;
+}
+
+/**
+ * Slot map for the `messagesList` family — list-level chrome.
+ *
+ * `group` overrides the per-message group wrapper component.
+ */
+export interface ChatBoxMessagesListSlots {
+  group?: React.ElementType;
+  dateDivider?: React.ElementType;
+  unreadMarker?: React.ElementType;
+}
+
+export interface ChatBoxMessagesListSlotProps {
+  group?: Partial<ChatMessageGroupProps>;
+  dateDivider?: Partial<ChatDateDividerProps>;
+  unreadMarker?: Partial<ChatUnreadMarkerProps>;
+}
+
+/**
+ * Slot map for the `message` family — one row's parts.
+ */
+export interface ChatBoxMessageSlots {
+  root?: React.ElementType;
+  avatar?: React.ElementType | null;
+  content?: React.ElementType;
+  meta?: React.ElementType | null;
+  inlineMeta?: React.ElementType | null;
+  error?: React.ElementType;
+  actions?: React.ElementType | null;
+  authorName?: React.ElementType | null;
+}
+
+export interface ChatBoxMessageSlotProps {
+  root?: Partial<ChatMessageProps>;
+  avatar?: Partial<ChatMessageAvatarProps>;
+  content?: Partial<ChatMessageContentProps>;
+  meta?: Partial<ChatMessageMetaProps>;
+  inlineMeta?: Record<string, unknown>;
+  error?: Partial<ChatMessageErrorProps>;
+  actions?: Partial<ChatMessageActionsProps>;
+  authorName?: Record<string, unknown>;
 }
 
 export interface ChatBoxFeatures {
