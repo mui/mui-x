@@ -8,8 +8,17 @@ components: ChatDateDivider
 
 # Chat - Date divider
 
-<p class="description">Separate message groups by date.</p>
+<p class="description">Group messages by day with inline separators inside the chat thread.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-This page is a placeholder for date divider documentation.
+## Overview
+
+The date divider appears between messages whose `createdAt` values fall on different calendar days.
+`ChatMessageList` renders it by default, or you can embed it directly in custom layouts.
+
+## Interactive playground
+
+The demo below shows the date divider rendering between messages on different calendar days:
+
+{{"demo": "ChatDateDividerPlayground.js", "bg": "inline", "defaultCodeOpen": false}}

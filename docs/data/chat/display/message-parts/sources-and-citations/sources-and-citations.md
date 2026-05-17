@@ -1,18 +1,25 @@
 ---
 productId: x-chat
-title: Sources & Citations
+title: Sources and citations
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent, ChatMessageSource, ChatMessageSources
 ---
 
-# Chat - Sources & Citations
+# Chat - Sources and citations
 
 <p class="description">Display reference links and document excerpts for retrieval-augmented generation (RAG) applications using source parts.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Source parts allow AI assistants to cite their sources. Two part types cover the common citation patterns: URL references and document excerpts.
+Source parts let AI assistants cite their sources.
+Two part types cover the common citation patterns: URL references and document excerpts.
+
+## Interactive playground
+
+The demo below shows the `ChatMessageSources` slot rendering URL and document parts:
+
+{{"demo": "ChatMessageSourcesPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Source URL parts
 
@@ -69,7 +76,7 @@ The `SourceUrlPart` component exposes three slots:
 
 ## Source document parts
 
-`ChatSourceDocumentMessagePart` represents an inline document excerpt — useful when the AI assistant quotes from a retrieved document:
+`ChatSourceDocumentMessagePart` represents an inline document excerpt—useful when the AI assistant quotes from a retrieved document:
 
 ```ts
 interface ChatSourceDocumentMessagePart {
@@ -101,7 +108,7 @@ The `SourceDocumentPart` component exposes three slots:
 
 ## Streaming
 
-Source parts arrive as single chunks — they are not delivered incrementally:
+Source parts arrive as single chunks—they aren't delivered incrementally:
 
 ```ts
 // URL source chunk
@@ -113,13 +120,13 @@ Source parts arrive as single chunks — they are not delivered incrementally:
 
 ## Customizing source rendering
 
-Override source part rendering through `slotProps.messageContent.partProps` on `ChatBox`:
+Override source part rendering through `slotProps.content.partProps` on `ChatBox`:
 
 ```tsx
 <ChatBox
   adapter={adapter}
   slotProps={{
-    messageContent: {
+    content: {
       partProps: {
         'source-url': {
           slots: { root: MyCustomSourceUrlRoot },
@@ -133,7 +140,7 @@ Override source part rendering through `slotProps.messageContent.partProps` on `
 />
 ```
 
-For fully custom source rendering, register a custom renderer through `partRenderers` on `ChatProvider`:
+To fully customize source rendering, register a custom renderer through `partRenderers` on `ChatProvider`:
 
 ```tsx
 <ChatProvider
@@ -152,5 +159,5 @@ For fully custom source rendering, register a custom renderer through `partRende
 
 ## See also
 
-- [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the text content that references sources
-- [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building fully custom citation UI
+- [Text and Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for details on text content that references sources.
+- [Custom parts](/x/react-chat/display/message-parts/custom-parts/) for details on building fully custom citation UI.

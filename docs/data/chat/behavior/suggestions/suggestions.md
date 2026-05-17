@@ -12,10 +12,16 @@ components: ChatSuggestions
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
+## Interactive playground
+
 Suggestions are clickable prompts that appear when the message list is empty.
 Clicking a suggestion pre-fills the composer with the suggestion text, giving users a starting point for the conversation.
 
-## Basic usage
+Edit the suggestion list and toggle layout options:
+
+{{"demo": "ChatSuggestionsPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Implementing suggestions
 
 Pass an array of strings to the `suggestions` prop on `ChatBox`:
 
@@ -32,14 +38,14 @@ Pass an array of strings to the `suggestions` prop on `ChatBox`:
 
 Suggestions are hidden once the first message appears in the conversation.
 
-## `ChatSuggestion` objects
+## Customizing suggestion labels
 
 For more control, pass `ChatSuggestion` objects instead of plain strings.
 This lets you set a display label that differs from the value pre-filled into the composer:
 
 {{"demo": "SuggestionsWithLabels.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-### `ChatSuggestion` type
+### Suggestion object structure
 
 | Property | Type     | Description                                               |
 | :------- | :------- | :-------------------------------------------------------- |
@@ -49,16 +55,16 @@ This lets you set a display label that differs from the value pre-filled into th
 You can mix strings and objects in the same array.
 Strings are internally normalized to `{ value: string }`.
 
-## Auto-submit
+## Submitting suggestions automatically
 
-By default, clicking a suggestion only pre-fills the composer so the user can review or edit before sending.
+By default, clicking a suggestion pre-fills the composer so users can review or edit before sending.
 Set `suggestionsAutoSubmit` to automatically submit the message when a suggestion is clicked:
 
 {{"demo": "AutoSubmitSuggestions.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Disabling suggestions
 
-Even when the `suggestions` prop is provided, you can disable the feature through the `features` prop:
+Disable suggestions through the `features` prop even when the `suggestions` prop is provided:
 
 ```tsx
 <ChatBox
@@ -72,7 +78,7 @@ This is useful when you want to conditionally show suggestions based on applicat
 
 ## Dynamic suggestions
 
-Since `suggestions` is a standard React prop, you can compute it dynamically.
+Compute `suggestions` dynamically because it's a standard React prop.
 The example below loads user-specific suggestions after sign-in and updates them once available:
 
 ```tsx
@@ -94,7 +100,7 @@ function App() {
 
 Suggestions are only displayed in the empty state (when the message list has no messages), so dynamic updates only take effect before the first message is sent.
 
-## The `ChatSuggestions` component
+## Building a custom suggestions layout
 
 When building a custom layout, use `ChatSuggestions` directly inside a `ChatRoot` provider:
 
@@ -119,5 +125,5 @@ Each suggestion renders as a `<button>` element.
 
 ## See also
 
-- [Composer](/x/react-chat/basics/composer/) for how the pre-filled value flows into the text area.
-- [Adapter](/x/react-chat/backend/adapters/) for how submitted suggestions reach your backend.
+- See [Composer](/x/react-chat/basics/composer/) for details on how the pre-filled value flows into the text area.
+- See [Adapter](/x/react-chat/backend/adapters/) for details on how submitted suggestions reach your backend.
