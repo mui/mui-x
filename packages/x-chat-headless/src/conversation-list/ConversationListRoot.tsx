@@ -481,6 +481,34 @@ export const ConversationListRoot = markChatLayoutPane(
       [conversationIds, focusConversation, handleFocusedConversationChange],
     );
 
+    const typeAheadRef = React.useRef<{ buffer: string; resetTimer: number | null }>({
+      buffer: '',
+      resetTimer: null,
+    });
+
+    const moveFocusToTitlePrefix = React.useCallback(
+      (prefix: string, fromIndex: number) => {
+        if (prefix === '') {
+          return;
+        }
+
+        const lowercase = prefix.toLowerCase();
+        const total = conversations.length;
+
+        for (let offset = 1; offset <= total; offset += 1) {
+          const candidate = conversations[(fromIndex + offset) % total];
+          const title = candidate?.title?.toLowerCase() ?? '';
+
+          if (title.startsWith(lowercase)) {
+            handleFocusedConversationChange(candidate.id);
+            focusConversation(candidate.id);
+            return;
+          }
+        }
+      },
+      [conversations, focusConversation, handleFocusedConversationChange],
+    );
+
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLDivElement>, id: string) => {
         const currentIndex = conversationIds.indexOf(id);
@@ -489,32 +517,76 @@ export const ConversationListRoot = markChatLayoutPane(
           return;
         }
 
+        // Page-size moves a percentage of the list at a time, with a sane
+        // minimum so short lists still move by at least one item.
+        const pageSize = Math.max(1, Math.floor(conversationIds.length / 10));
+
         switch (event.key) {
           case 'ArrowDown':
             event.preventDefault();
             moveFocus(currentIndex + 1);
-            break;
+            return;
           case 'ArrowUp':
             event.preventDefault();
             moveFocus(currentIndex - 1);
-            break;
+            return;
           case 'Home':
             event.preventDefault();
             moveFocus(0);
-            break;
+            return;
           case 'End':
             event.preventDefault();
             moveFocus(conversationIds.length - 1);
-            break;
+            return;
+          case 'PageDown':
+            event.preventDefault();
+            moveFocus(currentIndex + pageSize);
+            return;
+          case 'PageUp':
+            event.preventDefault();
+            moveFocus(currentIndex - pageSize);
+            return;
           case 'Enter':
             event.preventDefault();
             void setActiveConversation(id);
-            break;
+            return;
           default:
             break;
         }
+
+        // Type-ahead: a single printable character (no modifier) appends to a
+        // small buffer and jumps focus to the first conversation whose title
+        // starts with that buffer (Bug #20).
+        const isPrintable =
+          event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey;
+
+        if (!isPrintable) {
+          return;
+        }
+
+        event.preventDefault();
+        typeAheadRef.current.buffer += event.key;
+
+        if (typeAheadRef.current.resetTimer != null) {
+          clearTimeout(typeAheadRef.current.resetTimer);
+        }
+        typeAheadRef.current.resetTimer = setTimeout(() => {
+          typeAheadRef.current.buffer = '';
+          typeAheadRef.current.resetTimer = null;
+        }, 800) as unknown as number;
+
+        moveFocusToTitlePrefix(typeAheadRef.current.buffer, currentIndex);
       },
-      [conversationIds, moveFocus, setActiveConversation],
+      [conversationIds, moveFocus, moveFocusToTitlePrefix, setActiveConversation],
+    );
+
+    React.useEffect(
+      () => () => {
+        if (typeAheadRef.current.resetTimer != null) {
+          clearTimeout(typeAheadRef.current.resetTimer);
+        }
+      },
+      [],
     );
 
     const handleSelect = React.useCallback(

@@ -1,4 +1,4 @@
-import type { ChatStore } from '../store/ChatStore';
+import { asCursorAgnosticChatStore, type ChatStore } from '../store/ChatStore';
 import type { ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
 import type {
@@ -35,6 +35,16 @@ export interface ProcessStreamOptions {
   onData?: ChatOnData;
   onToolCall?: ChatOnToolCall;
   onFinish?: ChatOnFinish;
+  /**
+   * Lower-bound sequence value to accept on a reconnected stream.
+   *
+   * When a reconnect adapter resumes a previously broken stream, the server
+   * may legitimately replay envelopes whose `sequence` is below the value
+   * we last processed. By default the in-flight `expectedSequence` would
+   * silently drop those — set this to the sequence you want to resume from
+   * so they apply (#5).
+   */
+  reconnectFromSequence?: number;
 }
 
 export interface ProcessStreamResult {
@@ -82,9 +92,7 @@ export async function processStream<Cursor = string>(
   stream: ReadableStream<ChatMessageChunk | ChatStreamEnvelope>,
   options: ProcessStreamOptions = {},
 ): Promise<ProcessStreamResult> {
-  // Cast to ChatStore<unknown> for cursor-agnostic helper functions.
-  // processStream never calls setHistoryState, so the cursor type is irrelevant here.
-  const storeUnknown = store as unknown as ChatStore<unknown>;
+  const storeUnknown = asCursorAgnosticChatStore(store);
   let targetMessageId = options.messageId;
   let finishReason: string | undefined;
   let didReceiveTerminalChunk = false;
@@ -92,7 +100,9 @@ export async function processStream<Cursor = string>(
   let finishCalled = false;
   let didStartMessage = false;
   let aborted = options.signal?.aborted ?? false;
-  let expectedSequence: number | undefined;
+  let abortCancelError: unknown = null;
+  let expectedSequence: number | undefined =
+    options.reconnectFromSequence != null ? options.reconnectFromSequence : undefined;
 
   const seenEventIds = new Set<string>();
   const bufferedChunksBySequence = new Map<number, ChatMessageChunk>();
@@ -153,6 +163,7 @@ export async function processStream<Cursor = string>(
 
     if (targetMessageId) {
       finalizeMessage('error');
+      store.setMessageError(targetMessageId, chatError);
     }
 
     store.setStreaming(false);
@@ -177,6 +188,10 @@ export async function processStream<Cursor = string>(
       didStartMessage = true;
       store.setStreaming(true);
       store.setError(null);
+
+      if (targetMessageId) {
+        store.clearMessageError(targetMessageId);
+      }
     }
 
     return message;
@@ -278,6 +293,9 @@ export async function processStream<Cursor = string>(
         finalizeMessage('sent');
         store.setStreaming(false);
         store.setError(null);
+        if (targetMessageId) {
+          store.clearMessageError(targetMessageId);
+        }
         return;
 
       case 'abort':
@@ -286,6 +304,9 @@ export async function processStream<Cursor = string>(
         didReceiveTerminalChunk = true;
         finalizeMessage('cancelled');
         store.setStreaming(false);
+        if (targetMessageId) {
+          store.clearMessageError(targetMessageId);
+        }
         return;
 
       case 'text-start':
@@ -293,12 +314,24 @@ export async function processStream<Cursor = string>(
         const partType = chunk.type === 'text-start' ? ('text' as const) : ('reasoning' as const);
         const indexMap =
           partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
-        const partIndex = resolveTextLikePartIndex(partType, chunk.id, indexMap);
+
+        // `resolveTextLikePartIndex` allocates a fresh streaming part when the
+        // mapping is missing or stale (the previous part for this streamId
+        // was finalized). The handler below therefore only needs to handle
+        // the no-op case — never the "revive a done part" case (#3).
+        const partIndex = resolveTextLikePartIndex(partType, chunk.id, indexMap, {
+          createIfMissing: true,
+        });
 
         updateMessageParts(storeUnknown, ensureAssistantMessage().id, (parts) => {
           const currentPart = parts[partIndex];
 
-          if (currentPart?.type !== partType || currentPart.state === 'streaming') {
+          // Never revive a `done` part back to streaming.
+          if (
+            currentPart?.type !== partType ||
+            currentPart.state === 'streaming' ||
+            currentPart.state === 'done'
+          ) {
             return parts;
           }
 
@@ -327,7 +360,15 @@ export async function processStream<Cursor = string>(
         const partType = chunk.type === 'text-end' ? ('text' as const) : ('reasoning' as const);
         const indexMap =
           partType === 'text' ? textPartIndexesByStreamId : reasoningPartIndexesByStreamId;
-        const partIndex = resolveTextLikePartIndex(partType, chunk.id, indexMap);
+        // `*-end` must never instantiate a fresh part — if no live part is
+        // bound to this `streamId`, the chunk is a no-op.
+        const partIndex = resolveTextLikePartIndex(partType, chunk.id, indexMap, {
+          createIfMissing: false,
+        });
+
+        if (partIndex === -1) {
+          return;
+        }
 
         updateMessageParts(storeUnknown, ensureAssistantMessage().id, (parts) => {
           const currentPart = parts[partIndex];
@@ -601,7 +642,9 @@ export async function processStream<Cursor = string>(
 
   const abortListener = () => {
     aborted = true;
-    void reader.cancel().catch(() => {});
+    void reader.cancel().catch((error) => {
+      abortCancelError = error;
+    });
   };
 
   options.signal?.addEventListener('abort', abortListener, { once: true });
@@ -674,6 +717,11 @@ export async function processStream<Cursor = string>(
   } catch (error) {
     if (aborted) {
       flushPendingTextLikeDelta();
+
+      if (abortCancelError != null) {
+        abortCancelError = null;
+      }
+
       return handleAbort();
     }
 
@@ -697,6 +745,14 @@ export async function processStream<Cursor = string>(
   } finally {
     options.signal?.removeEventListener('abort', abortListener);
     clearPendingTextLikeDeltaTimer();
-    reader.releaseLock();
+    // Defensive: `releaseLock()` is normally safe in this branch, but if a
+    // future code path leaves the reader in an unexpected state (e.g. an
+    // already-cancelled stream from the abort listener), we don't want it
+    // to mask the real failure or surface as an unhandled rejection (#1).
+    try {
+      reader.releaseLock();
+    } catch {
+      /* ignore — the lock is gone, nothing else to do */
+    }
   }
 }

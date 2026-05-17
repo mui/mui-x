@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStoreEffect } from '@mui/x-internals/store';
 import type { ChatAdapter } from '../../adapters';
-import type { ChatStore } from '../../store';
+import { asCursorAgnosticChatStore, type ChatStore } from '../../store';
 import type {
   ChatAddToolApproveResponseInput,
   ChatMessage,
@@ -12,7 +12,12 @@ import type {
 } from '../../types';
 import type { ChatError } from '../../types/chat-error';
 import type { UseChatSendMessageInput } from '../../types/chat-callbacks';
-import { getMessages, createRuntimeError, getErrorMessage } from './useChatControllerHelpers';
+import {
+  getMessages,
+  createRuntimeError,
+  getErrorMessage,
+  getMessageIdFromError,
+} from './useChatControllerHelpers';
 import { createRealtimeActions } from './realtimeActions';
 import { createConversationActions } from './conversationActions';
 import { createSendMessageActions } from './sendMessageActions';
@@ -60,8 +65,7 @@ export function useChatController<Cursor = string>({
   const assistantMessageIdByUserMessageIdRef = React.useRef(new Map<string, string>());
   const conversationNavigationRequestIdRef = React.useRef(0);
   const conversationLoadRequestIdRef = React.useRef(0);
-  // Cursor type is irrelevant for the cursor-agnostic helper functions below.
-  const storeUnknown = store as unknown as ChatStore<unknown>;
+  const storeUnknown = asCursorAgnosticChatStore(store);
 
   runtimeRef.current = {
     adapter,
@@ -75,6 +79,11 @@ export function useChatController<Cursor = string>({
   const setRuntimeError = React.useCallback(
     (error: ChatError | null) => {
       store.setError(error);
+
+      const messageId = getMessageIdFromError(error);
+      if (messageId) {
+        store.setMessageError(messageId, error);
+      }
 
       if (error) {
         runtimeRef.current.onError?.(error);
@@ -142,6 +151,13 @@ export function useChatController<Cursor = string>({
           ),
       );
 
+      // Snapshot the previous parts so we can roll back if the adapter call
+      // rejects (#6). Without this, the optimistic mutation that flipped the
+      // tool invocation to `approval-responded` would persist even though the
+      // adapter never confirmed the response, leaving the UI permanently out
+      // of sync with the server.
+      const previousParts = assistantMessage?.parts;
+
       if (assistantMessage) {
         store.updateMessage(assistantMessage.id, {
           parts: assistantMessage.parts.map((part) => {
@@ -174,6 +190,10 @@ export function useChatController<Cursor = string>({
           reason,
         });
       } catch (error) {
+        if (assistantMessage && previousParts) {
+          store.updateMessage(assistantMessage.id, { parts: previousParts });
+        }
+
         setRuntimeError(
           createRuntimeError(
             'SEND_ERROR',
@@ -197,6 +217,82 @@ export function useChatController<Cursor = string>({
       }),
     [storeUnknown, conversationNavigationRequestIdRef],
   );
+
+  // Some adapters build streams via setTimeout-based producers that call
+  // `controller.enqueue` after the consumer has cancelled. The synchronous
+  // throw from `enqueue` escapes as an unhandled error since it lives outside
+  // any awaited Promise. We monitor `error`/`unhandledrejection` for that
+  // pattern, route the first occurrence to the chat's error state, and dedupe
+  // the (often hundreds of) repeats from a single leaky stream.
+  React.useEffect(() => {
+    const win = (globalThis as unknown as { window?: Window }).window;
+    if (!win) {
+      return undefined;
+    }
+
+    const STREAM_PRODUCER_ERROR_PATTERN =
+      /enqueue.*(closed|cancelled)|(closed|cancelled).*enqueue|invalid state.*(closed|cancelled).*stream/i;
+    const DEDUPE_WINDOW_MS = 3000;
+    let alreadyReported = false;
+    let lastMatchAt = 0;
+
+    const reportIfStreamProducerError = (rawMessage: string): boolean => {
+      if (!STREAM_PRODUCER_ERROR_PATTERN.test(rawMessage)) {
+        return false;
+      }
+      const now = Date.now();
+      if (alreadyReported && now - lastMatchAt < DEDUPE_WINDOW_MS) {
+        lastMatchAt = now;
+        return true; // matched but deduped — caller still preventDefaults
+      }
+      alreadyReported = true;
+      lastMatchAt = now;
+      setRuntimeError(
+        createRuntimeError(
+          'STREAM_ERROR',
+          'The chat adapter produced data after the stream was cancelled. ' +
+            "This usually means the stream's `cancel()` callback isn't stopping its producer.",
+          'stream',
+          true,
+          false,
+        ),
+      );
+      return true;
+    };
+
+    const handleError = (event: ErrorEvent) => {
+      const errorObject = event.error;
+      const errorMessage =
+        errorObject && typeof errorObject === 'object' && 'message' in errorObject
+          ? String((errorObject as { message: unknown }).message)
+          : '';
+      const message = errorMessage || event.message || '';
+      if (reportIfStreamProducerError(message)) {
+        event.preventDefault();
+      }
+    };
+
+    const handleRejection = (event: PromiseRejectionEvent) => {
+      const reason: unknown = event.reason;
+      let message = '';
+      if (reason instanceof Error) {
+        message = reason.message;
+      } else if (typeof reason === 'string') {
+        message = reason;
+      }
+      if (reportIfStreamProducerError(message)) {
+        event.preventDefault();
+      }
+    };
+
+    win.addEventListener('error', handleError);
+    win.addEventListener('unhandledrejection', handleRejection);
+
+    return () => {
+      win.removeEventListener('error', handleError);
+      win.removeEventListener('unhandledrejection', handleRejection);
+    };
+  }, [setRuntimeError]);
 
   React.useEffect(() => {
     let isDisposed = false;

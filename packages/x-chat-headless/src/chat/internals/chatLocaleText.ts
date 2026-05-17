@@ -40,8 +40,19 @@ export interface ChatLocaleText {
   messageListLabel: string;
   messageLabel: string;
   conversationHeaderMenuLabel: string;
+  conversationHeaderBackLabel: string;
+  conversationHeaderCloseLabel: string;
   conversationHeaderNewChatLabel: string;
   conversationHeaderSettingsLabel: string;
+  /** Default author label used when a message's `role` is `'user'` and no
+   * displayName was resolved from `message.author`, members, or `currentUser`. */
+  messageAuthorUserLabel: string;
+  /** Default author label used when a message's `role` is `'assistant'`
+   * and no displayName was resolved from `message.author` or members. */
+  messageAuthorAssistantLabel: string;
+  /** Default author label used when a message's `role` is `'system'`
+   * and no displayName was resolved from `message.author` or members. */
+  messageAuthorSystemLabel: string;
 }
 
 function getUserLabel(user: ChatLocaleTypingUser) {
@@ -104,10 +115,10 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   messageCopiedCodeButtonLabel: 'Copied',
   messageEditedLabel: 'Edited',
   messageDeletedLabel: 'Deleted',
-  messageReasoningLabel: 'Reasoning',
+  messageReasoningLabel: 'Thoughts',
   messageReasoningStreamingLabel: 'Thinking...',
-  messageToolInputLabel: 'Input',
-  messageToolOutputLabel: 'Output',
+  messageToolInputLabel: 'Tool called',
+  messageToolOutputLabel: 'Tool result',
   messageToolApproveButtonLabel: 'Approve',
   messageToolDenyButtonLabel: 'Deny',
   conversationListNoConversationsLabel: 'No conversations',
@@ -138,6 +149,11 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   messageListLabel: 'Message log',
   messageLabel: 'Message',
   conversationHeaderMenuLabel: 'Open conversations',
+  conversationHeaderBackLabel: 'Back to conversations',
+  conversationHeaderCloseLabel: 'Close conversations',
   conversationHeaderNewChatLabel: 'New chat',
   conversationHeaderSettingsLabel: 'Settings',
+  messageAuthorUserLabel: 'User',
+  messageAuthorAssistantLabel: 'Assistant',
+  messageAuthorSystemLabel: 'System',
 };

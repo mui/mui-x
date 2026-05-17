@@ -19,11 +19,7 @@ export interface MessageAuthorLabelProps extends React.HTMLAttributes<HTMLSpanEl
 }
 
 function getAuthorLabel(ownerState: MessageAuthorLabelOwnerState): string | null {
-  const { message, role } = ownerState;
-  if (!message) {
-    return null;
-  }
-  return message.author?.displayName ?? message.author?.id ?? role ?? null;
+  return ownerState.resolvedAuthor?.displayName ?? null;
 }
 
 type MessageAuthorLabelComponent = ((

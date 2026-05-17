@@ -208,7 +208,79 @@ describe('MessageGroup', () => {
 
     expect(screen.getByTestId('group-root-m2')).to.have.attribute('data-first', 'false');
     expect(screen.getByTestId('group-root-m2')).to.have.attribute('data-author-role', 'assistant');
+    expect(screen.queryByText('assistant')).to.equal(null);
     expect(screen.getByTestId('custom-group-child')).to.have.text('Custom child');
+  });
+
+  it('resolves group author data from members', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          createMessage('m1', {
+            authorId: 'assistant-1',
+            createdAt: '2026-03-15T10:00:00.000Z',
+            text: 'First message',
+          }),
+          createMessage('m2', {
+            authorId: 'assistant-1',
+            createdAt: '2026-03-15T10:03:00.000Z',
+            text: 'Follow-up message',
+          }),
+        ]}
+        members={[
+          {
+            id: 'assistant-1',
+            displayName: 'Member Assistant',
+            avatarUrl: 'https://example.com/member-assistant.png',
+          },
+        ]}
+      >
+        <MessageGroup messageId="m1" />
+        <MessageGroup messageId="m2" />
+      </ChatRoot>,
+    );
+
+    expect(screen.getAllByText('Member Assistant')).to.have.length(1);
+    expect(screen.getAllByRole('img')).to.have.length(1);
+  });
+
+  it('uses getMessageAuthorId for grouping when the message has no inline author object', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            createdAt: '2026-03-15T10:00:00.000Z',
+            metadata: { actorId: 'assistant-1' } as any,
+            parts: [{ type: 'text', text: 'First message' }],
+          },
+          {
+            id: 'm2',
+            role: 'assistant',
+            createdAt: '2026-03-15T10:02:00.000Z',
+            metadata: { actorId: 'assistant-1' } as any,
+            parts: [{ type: 'text', text: 'Follow-up message' }],
+          },
+        ]}
+        members={[
+          {
+            id: 'assistant-1',
+            displayName: 'Getter Assistant',
+            avatarUrl: 'https://example.com/getter-assistant.png',
+          },
+        ]}
+        getMessageAuthorId={(message) => (message.metadata as any)?.actorId}
+      >
+        <MessageGroup messageId="m1" />
+        <MessageGroup messageId="m2" />
+      </ChatRoot>,
+    );
+
+    expect(screen.getAllByText('Getter Assistant')).to.have.length(1);
+    expect(screen.getAllByRole('img')).to.have.length(1);
   });
 
   it('respects custom item order, groupKey, and slot ownerState', () => {

@@ -35,8 +35,8 @@ export const MessageAvatar = React.forwardRef(function MessageAvatar(
     ...other
   } = props as MessageAvatarProps & { ownerState?: MessageAvatarOwnerState };
   const ownerState = useMessageContext();
-  const avatarUrl = ownerState.message?.author?.avatarUrl;
-  const displayName = ownerState.message?.author?.displayName;
+  const avatarUrl = ownerState.resolvedAuthor?.avatarUrl;
+  const displayName = ownerState.resolvedAuthor?.displayName;
   void ownerStateProp;
 
   const Avatar = slots?.avatar ?? 'div';

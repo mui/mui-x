@@ -52,5 +52,13 @@ export const ComposerHelperText = React.forwardRef(function ComposerHelperText(
     return null;
   }
 
-  return <HelperText {...rootProps}>{content}</HelperText>;
+  const resolvedRole =
+    (rootProps as React.HTMLAttributes<HTMLDivElement>).role ??
+    (composer.error ? 'alert' : undefined);
+
+  return (
+    <HelperText {...rootProps} role={resolvedRole}>
+      {content}
+    </HelperText>
+  );
 }) as ComposerHelperTextComponent;
