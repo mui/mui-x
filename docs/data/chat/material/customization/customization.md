@@ -111,42 +111,33 @@ Pass props directly to any internal subcomponent using `slotProps`—useful for 
 ```tsx
 <ChatBox
   slotProps={{
-    conversationList: { 'aria-label': 'Chat threads' },
-    input: { placeholder: 'Ask anything...' },
-    send: { sx: { borderRadius: 6 } },
+    conversation: {
+      list: { 'aria-label': 'Chat threads' },
+    },
+    composer: {
+      input: { placeholder: 'Ask anything...' },
+      send: { sx: { borderRadius: 6 } },
+    },
   }}
 />
 ```
 
 ### Available slotProps keys
 
-| Key                    | Type                                         | Description             |
-| :--------------------- | :------------------------------------------- | :---------------------- |
-| `root`                 | `SlotComponentProps<'div'>`                  | Outermost div           |
-| `layout`               | `SlotComponentProps<'div'>`                  | Layout div              |
-| `conversationsPane`    | `SlotComponentProps<'div'>`                  | Conversations pane div  |
-| `threadPane`           | `SlotComponentProps<'div'>`                  | Thread pane div         |
-| `conversationList`     | `Partial<ChatConversationListProps>`         | Conversation list       |
-| `conversationHeader`   | `Partial<ChatConversationHeaderProps>`       | Thread header           |
-| `conversationTitle`    | `Partial<ChatConversationTitleProps>`        | Thread title            |
-| `conversationSubtitle` | `Partial<ChatConversationSubtitleProps>`     | Thread subtitle         |
-| `messageList`          | `Partial<ChatMessageListProps>`              | Message list            |
-| `message`              | `Partial<ChatMessageProps>`                  | Each message container  |
-| `avatar`               | `Partial<ChatMessageAvatarProps>`            | Message avatar          |
-| `content`              | `Partial<ChatMessageContentProps>`           | Message content/bubble  |
-| `meta`                 | `Partial<ChatMessageMetaProps>`              | Message timestamp       |
-| `actions`              | `Partial<ChatMessageActionsProps>`           | Message action menu     |
-| `group`                | `Partial<ChatMessageGroupProps>`             | Message group container |
-| `dateDivider`          | `Partial<ChatDateDividerProps>`              | Date separator          |
-| `composer`             | `Partial<ChatComposerProps>`                 | Composer form root      |
-| `input`                | `Partial<ChatComposerTextAreaProps>`         | Composer textarea       |
-| `send`                 | `Partial<ChatComposerSendButtonProps>`       | Send button             |
-| `attach`               | `Partial<ChatComposerAttachButtonProps>`     | Attach button           |
-| `toolbar`              | `Partial<ChatComposerToolbarProps>`          | Toolbar container       |
-| `helperText`           | `Partial<ChatComposerHelperTextProps>`       | Helper text below input |
-| `typingIndicator`      | `Partial<ChatTypingIndicatorProps>`          | Typing indicator        |
-| `unreadMarker`         | `Partial<ChatUnreadMarkerProps>`             | Unread marker           |
-| `scrollToBottom`       | `Partial<ChatScrollToBottomAffordanceProps>` | Scroll to bottom button |
+| Key                 | Type                                         | Description                                                                              |
+| :------------------ | :------------------------------------------- | :--------------------------------------------------------------------------------------- |
+| `root`              | `SlotComponentProps<'div'>`                  | Outermost div                                                                            |
+| `layout`            | `SlotComponentProps<'div'>`                  | Layout div                                                                               |
+| `conversationsPane` | `SlotComponentProps<'div'>`                  | Conversations pane div                                                                   |
+| `threadPane`        | `SlotComponentProps<'div'>`                  | Thread pane div                                                                          |
+| `conversation`      | `ChatBoxConversationSlotProps`               | Conversation family (root, list, header, title, subtitle, headerInfo, headerActions)     |
+| `messagesList`      | `ChatBoxMessagesListSlotProps`               | List family (root, group, dateDivider, unreadMarker)                                     |
+| `message`           | `ChatBoxMessageSlotProps`                    | Per-message family (root, avatar, content, meta, inlineMeta, error, actions, authorName) |
+| `composer`          | `ChatBoxComposerSlotProps`                   | Composer family (root, input, send, attach, attachmentList, toolbar, helperText)         |
+| `typingIndicator`   | `Partial<ChatTypingIndicatorProps>`          | Typing indicator                                                                         |
+| `scrollToBottom`    | `Partial<ChatScrollToBottomAffordanceProps>` | Scroll to bottom button                                                                  |
+| `suggestions`       | `Partial<ChatSuggestionsProps>`              | Suggestions component                                                                    |
+| `emptyState`        | `SlotComponentProps<'div'>`                  | Custom empty-thread div                                                                  |
 
 ## Replacing subcomponents with slots
 
@@ -169,39 +160,46 @@ const CustomMessageContent = React.forwardRef(
   },
 );
 
-<ChatBox slots={{ content: CustomMessageContent }} />;
+<ChatBox slots={{ message: { content: CustomMessageContent } }} />;
 ```
 
 ### Available slots
 
-| Key                         | Default component               | Description                  |
-| :-------------------------- | :------------------------------ | :--------------------------- |
-| `root`                      | `div`                           | Outermost container          |
-| `layout`                    | `div`                           | Layout element               |
-| `conversationsPane`         | `div`                           | Conversations sidebar pane   |
-| `threadPane`                | `div`                           | Thread pane                  |
-| `conversationList`          | `ChatConversationList`          | Conversation list            |
-| `conversationHeader`        | `ChatConversationHeader`        | Thread header                |
-| `conversationTitle`         | `ChatConversationTitle`         | Thread title text            |
-| `conversationSubtitle`      | `ChatConversationSubtitle`      | Thread subtitle text         |
-| `conversationHeaderActions` | `ChatConversationHeaderActions` | Header action area           |
-| `messageList`               | `ChatMessageList`               | Virtualized message list     |
-| `message`                   | `ChatMessage`                   | Each message container       |
-| `avatar`                    | `ChatMessageAvatar`             | Message avatar               |
-| `content`                   | `ChatMessageContent`            | Message content/bubble       |
-| `meta`                      | `ChatMessageMeta`               | Message timestamp and status |
-| `actions`                   | `ChatMessageActions`            | Message action menu          |
-| `group`                     | `ChatMessageGroup`              | Groups consecutive messages  |
-| `dateDivider`               | `ChatDateDivider`               | Date boundary separator      |
-| `composer`                  | `ChatComposer`                  | Composer form                |
-| `input`                     | `ChatComposerTextArea`          | Textarea input               |
-| `send`                      | `ChatComposerSendButton`        | Send button                  |
-| `attach`                    | `ChatComposerAttachButton`      | Attach button                |
-| `toolbar`                   | `ChatComposerToolbar`           | Toolbar container            |
-| `helperText`                | `ChatComposerHelperText`        | Helper text                  |
-| `typingIndicator`           | `ChatTypingIndicator`           | Typing indicator             |
-| `unreadMarker`              | `ChatUnreadMarker`              | Unread message marker        |
-| `scrollToBottom`            | `ChatScrollToBottomAffordance`  | Scroll to bottom affordance  |
+| Key                          | Default component               | Description                  |
+| :--------------------------- | :------------------------------ | :--------------------------- |
+| `root`                       | `div`                           | Outermost container          |
+| `layout`                     | `div`                           | Layout element               |
+| `conversationsPane`          | `div`                           | Conversations sidebar pane   |
+| `threadPane`                 | `div`                           | Thread pane                  |
+| `conversation.root`          | `ChatConversation`              | Thread wrapper               |
+| `conversation.list`          | `ChatConversationList`          | Conversation sidebar list    |
+| `conversation.header`        | `ChatConversationHeader`        | Thread header                |
+| `conversation.title`         | `ChatConversationTitle`         | Thread title text            |
+| `conversation.subtitle`      | `ChatConversationSubtitle`      | Thread subtitle text         |
+| `conversation.headerActions` | `ChatConversationHeaderActions` | Header action area           |
+| `messagesList.root`          | `ChatMessageList`               | Virtualized message list     |
+| `messagesList.group`         | `ChatMessageGroup`              | Groups consecutive messages  |
+| `messagesList.dateDivider`   | `ChatDateDivider`               | Date boundary separator      |
+| `messagesList.unreadMarker`  | `ChatUnreadMarker`              | Unread marker                |
+| `message.root`               | `ChatMessage`                   | Each message container       |
+| `message.avatar`             | `ChatMessageAvatar`             | Message avatar (`null` hides)|
+| `message.content`            | `ChatMessageContent`            | Message content/bubble       |
+| `message.meta`               | `ChatMessageMeta`               | External timestamp (compact) |
+| `message.inlineMeta`         | `ChatMessageInlineMeta`         | Inline timestamp (default)   |
+| `message.error`              | `ChatMessageError`              | Error card                   |
+| `message.actions`            | `ChatMessageActions`            | Message action menu          |
+| `message.authorName`         | styled `div`                    | Author label (`null` hides)  |
+| `composer.root`              | `ChatComposer`                  | Composer form                |
+| `composer.input`             | `ChatComposerTextArea`          | Textarea input               |
+| `composer.send`              | `ChatComposerSendButton`        | Send button                  |
+| `composer.attach`            | `ChatComposerAttachButton`      | Attach button                |
+| `composer.attachmentList`    | `ChatComposerAttachmentList`    | Selected file pills          |
+| `composer.toolbar`           | `ChatComposerToolbar`           | Toolbar container            |
+| `composer.helperText`        | `ChatComposerHelperText`        | Helper text                  |
+| `typingIndicator`            | `ChatTypingIndicator`           | Typing indicator             |
+| `scrollToBottom`             | `ChatScrollToBottomAffordance`  | Scroll to bottom affordance  |
+| `suggestions`                | `ChatSuggestions`               | Prompt suggestion chips      |
+| `emptyState`                 | _none_                          | Custom empty-thread view     |
 
 ## See also
 

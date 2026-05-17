@@ -1,7 +1,7 @@
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
-import * as renameSlots from '../rename-slots';
+import * as migrateSlots from '../migrate-slots';
 
-const allModules = [renameSlots];
+const allModules = [migrateSlots];
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   allModules.forEach((module) => {

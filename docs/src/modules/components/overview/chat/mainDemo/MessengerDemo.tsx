@@ -579,9 +579,9 @@ function MessengerConversationSidebar(
 export default function MessengerDemo() {
   const chatBoxStyle = React.useMemo(
     () =>
-      ({
+      (({
         '--ChatBox-conversationListWidth': `${MESSENGER_SIDEBAR_WIDTH}px`,
-      }) as React.CSSProperties,
+      }) as React.CSSProperties),
     [],
   );
   const [activeFilter, setActiveFilter] = React.useState<MessengerFilter>('all');
@@ -646,17 +646,22 @@ export default function MessengerDemo() {
       features={{ conversationList: true }}
       style={chatBoxStyle}
       slots={{
-        conversationList: MessengerConversationSidebar,
+        conversation: {
+          list: MessengerConversationSidebar,
+        },
       }}
       slotProps={{
-        conversationList: {
-          activeFilter,
-          onFilterChange: setActiveFilter,
-          searchValue,
-          onSearchChange: setSearchValue,
-        } as React.ComponentProps<typeof MessengerConversationSidebar>,
+        conversation: {
+          list: {
+            activeFilter,
+            onFilterChange: setActiveFilter,
+            searchValue,
+            onSearchChange: setSearchValue,
+          } as React.ComponentProps<typeof MessengerConversationSidebar>,
+        },
+
         composer: {
-          variant: 'compact',
+          root: { variant: 'compact' },
         },
       }}
       onActiveConversationChange={(nextId) => {

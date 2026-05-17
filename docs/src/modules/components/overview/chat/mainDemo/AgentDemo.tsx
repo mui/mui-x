@@ -1194,9 +1194,9 @@ const chunkBuilders: Record<string, (messageId: string) => ChatMessageChunk[]> =
 export default function AgentDemo() {
   const chatBoxStyle = React.useMemo(
     () =>
-      ({
+      (({
         '--ChatBox-conversationListWidth': `${SIDEBAR_WIDTH}px`,
-      }) as React.CSSProperties,
+      }) as React.CSSProperties),
     [],
   );
   const [activeId, setActiveId] = React.useState(() => initialConversations[0].id);
@@ -1235,9 +1235,14 @@ export default function AgentDemo() {
       variant="compact"
       density="compact"
       slots={{
-        conversationList: AgentTaskTree,
-        conversationHeader: AgentHeaderBar,
-        composer: AgentComposer,
+        conversation: {
+          list: AgentTaskTree,
+          header: AgentHeaderBar,
+        },
+
+        composer: {
+          root: AgentComposer,
+        },
       }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {

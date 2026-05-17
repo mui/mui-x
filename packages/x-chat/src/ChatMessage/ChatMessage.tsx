@@ -47,6 +47,13 @@ export interface ChatMessageSlots {
    * Pass `null` (or omit) to hide actions entirely.
    */
   actions: React.ElementType | null;
+  /**
+   * The author-name label. Rendered by the surrounding `ChatMessageGroup`
+   * (default variant: above the bubble; compact variant: inside the message
+   * grid). Forwarded through `slots.message.authorName` from `ChatBox`. Pass
+   * `null` to hide.
+   */
+  authorName: React.ElementType | null;
 }
 
 export interface ChatMessageSlotProps {
@@ -57,6 +64,7 @@ export interface ChatMessageSlotProps {
   inlineMeta?: Record<string, unknown>;
   error?: Partial<ChatMessageErrorProps>;
   actions?: Partial<ChatMessageActionsProps>;
+  authorName?: Record<string, unknown>;
 }
 
 export interface ChatMessageProps extends Omit<MessageRootProps, 'slots' | 'slotProps'> {

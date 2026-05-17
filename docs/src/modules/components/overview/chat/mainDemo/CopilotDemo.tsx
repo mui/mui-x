@@ -232,7 +232,6 @@ export default function CopilotDemo() {
           />
         </Box>
       </Box>
-
       {/* Side panel */}
       <Slide
         direction="left"
@@ -344,7 +343,9 @@ export default function CopilotDemo() {
               suggestionsAutoSubmit
               slots={{ emptyState: CopilotEmptyState }}
               slotProps={{
-                composer: { variant: 'compact', sx: { mx: 1.5, mb: 1.5 } },
+                composer: {
+                  root: { variant: 'compact', sx: { mx: 1.5, mb: 1.5 } },
+                },
               }}
               features={{
                 conversationHeader: false,

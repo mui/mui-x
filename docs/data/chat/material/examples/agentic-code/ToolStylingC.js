@@ -603,9 +603,11 @@ export default function ToolStylingC() {
         );
       }}
       slotProps={{
-        content: {
-          partProps: {
-            'dynamic-tool': { toolSlots: traceToolSlots },
+        message: {
+          content: {
+            partProps: {
+              'dynamic-tool': { toolSlots: traceToolSlots },
+            },
           },
         },
       }}

@@ -1,54 +1,32 @@
 'use client';
 import * as React from 'react';
-import { type ChatMessageProps } from '../ChatMessage/ChatMessage';
-import { type ChatMessageActionsProps } from '../ChatMessage/ChatMessageActions';
-import { type ChatMessageAvatarProps } from '../ChatMessage/ChatMessageAvatar';
-import { type ChatMessageContentProps } from '../ChatMessage/ChatMessageContent';
-import { ChatMessageGroup, type ChatMessageGroupProps } from '../ChatMessage/ChatMessageGroup';
-import { type ChatMessageMetaProps } from '../ChatMessage/ChatMessageMeta';
+import { ChatMessageGroup } from '../ChatMessage/ChatMessageGroup';
+import type {
+  ChatBoxMessageSlots,
+  ChatBoxMessageSlotProps,
+  ChatBoxMessagesListSlots,
+  ChatBoxMessagesListSlotProps,
+} from '../ChatBox/ChatBox.types';
 
 /**
  * Per-row slot interface shared by `ChatBox` and `ChatMessageList`.
  *
- * These slots replace the components used by the default row builder.
- * They mirror the row-level subset of `ChatBoxSlots`.
+ * Reuses ChatBox's nested message-list / message families so the same
+ * slot path works at both levels.
  */
 export interface ChatMessageRowSlots {
-  /** Override the message group component. */
-  group: React.ElementType;
-  /** Override the message root component for each message. */
-  message: React.ElementType;
-  /**
-   * Override the message avatar component.
-   * Pass `null` to hide the avatar and drop the reserved avatar grid track.
-   */
-  avatar: React.ElementType | null;
-  /** Override the message content (bubble) component. */
-  content: React.ElementType;
-  /**
-   * Override the message meta component (external meta shown in compact variant).
-   * Pass `null` to hide it.
-   */
-  meta: React.ElementType | null;
-  /**
-   * Override the message actions component.
-   * Pass `null` to hide actions entirely.
-   */
-  actions: React.ElementType | null;
+  messagesList?: ChatBoxMessagesListSlots;
+  message?: ChatBoxMessageSlots;
 }
 
 export interface ChatMessageRowSlotProps {
-  group?: Partial<ChatMessageGroupProps>;
-  message?: Partial<ChatMessageProps>;
-  avatar?: Partial<ChatMessageAvatarProps>;
-  content?: Partial<ChatMessageContentProps>;
-  meta?: Partial<ChatMessageMetaProps>;
-  actions?: Partial<ChatMessageActionsProps>;
+  messagesList?: ChatBoxMessagesListSlotProps;
+  message?: ChatBoxMessageSlotProps;
 }
 
 export interface DefaultMessageItemProps {
   id: string;
-  slots?: Partial<ChatMessageRowSlots>;
+  slots?: ChatMessageRowSlots;
   slotProps?: ChatMessageRowSlotProps;
 }
 
@@ -56,39 +34,24 @@ export interface DefaultMessageItemProps {
  * Default message-row composition used by `ChatBox` and `ChatMessageList`
  * when no custom `renderItem` is provided.
  *
- * Composition is slot-driven: `ChatMessageGroup` (or the `group` slot override)
- * renders `ChatMessage` (or the `message` slot override), which in turn renders
- * its inner tree (avatar, content, meta, error, actions) from the forwarded slots.
- * Passing `null` for a presentational slot (`avatar`, `meta`, `actions`) hides it
- * and collapses the surrounding layout.
+ * `slots.messagesList.group` swaps the group component itself.
+ * `slots.message` forwards (as the nested map) into the chosen group so it
+ * can hand it down to the inner `ChatMessage`. Presentational `null` slots
+ * collapse layout as before.
  */
 export function DefaultMessageItem({ id, slots, slotProps }: DefaultMessageItemProps) {
-  const GroupSlot = (slots?.group ?? ChatMessageGroup) as typeof ChatMessageGroup;
-  const groupProps = slotProps?.group;
-
-  // Forward the message + inner slot map to ChatMessageGroup. It splits off
-  // its own `group` slot from the rest and hands the remainder to `ChatMessage`.
-  const innerSlots = {
-    message: slots?.message,
-    avatar: slots?.avatar,
-    content: slots?.content,
-    meta: slots?.meta,
-    actions: slots?.actions,
-  } as Partial<ChatMessageGroupProps['slots']>;
-  const innerSlotProps = {
-    message: slotProps?.message,
-    avatar: slotProps?.avatar,
-    content: slotProps?.content,
-    meta: slotProps?.meta,
-    actions: slotProps?.actions,
-  } as ChatMessageGroupProps['slotProps'];
+  const GroupSlot = (slots?.messagesList?.group ?? ChatMessageGroup) as typeof ChatMessageGroup;
 
   return (
     <GroupSlot
       messageId={id}
-      slots={innerSlots}
-      slotProps={innerSlotProps}
-      {...(groupProps ?? {})}
+      slots={{
+        message: slots?.message,
+      }}
+      slotProps={{
+        message: slotProps?.message,
+      }}
+      {...(slotProps?.messagesList?.group ?? {})}
     />
   );
 }

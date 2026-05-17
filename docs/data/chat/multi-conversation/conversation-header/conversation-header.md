@@ -143,10 +143,10 @@ function CustomHeader(props) {
 }
 ```
 
-Pass `CustomHeader` through `ChatBox`'s `slots.conversationHeader` prop:
+Pass `CustomHeader` through `ChatBox`'s `slots.conversation.header` prop:
 
 ```tsx
-<ChatBox slots={{ conversationHeader: CustomHeader }} />
+<ChatBox slots={{ conversation: { header: CustomHeader } }} />
 ```
 
 ## Customizing the title with conversation state

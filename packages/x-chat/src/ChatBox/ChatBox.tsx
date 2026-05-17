@@ -605,11 +605,19 @@ ChatBox.propTypes = {
     tool: PropTypes.func,
   }),
   /**
-   * The extra props for the slot components.
+   * Props forwarded to each slot. Mirrors the structure of `slots`.
    */
   slotProps: PropTypes.object,
   /**
-   * The components used for each slot inside the ChatBox.
+   * The components used for each slot inside the ChatBox, organised by family.
+   *
+   * - `conversation.*` — the conversation wrapper, list, header, title, subtitle, header info, header actions.
+   * - `messagesList.*` — the list scroller, group wrapper, date divider, unread marker.
+   * - `message.*` — per-row parts (root, avatar, content, meta, inlineMeta, error, actions, authorName).
+   *   Pass `null` to a presentational slot (`avatar`, `meta`, `inlineMeta`, `actions`, `authorName`) to hide it and collapse the surrounding layout.
+   * - `composer.*` — root, input, send, attach, attachmentList, toolbar, helperText.
+   *   Pass `null` to `send` / `attach` to hide the button.
+   * - Standalone slots (`typingIndicator`, `scrollToBottom`, `suggestions`, `emptyState`, layout pieces) stay flat at the top level.
    */
   slots: PropTypes.object,
   /**

@@ -118,7 +118,7 @@ describe('ChatMessage', () => {
         adapter={createAdapter()}
         initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] }]}
         slotProps={{
-          message: { className: 'my-custom-class' },
+          message: { root: { className: 'my-custom-class' } },
         }}
       >
         {null}

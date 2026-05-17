@@ -168,8 +168,10 @@ export default function FullCustomRow() {
         );
       }}
       slotProps={{
-        conversationList: {
-          slots: { item: FullCustomRowSlot },
+        conversation: {
+          list: {
+            slots: { item: FullCustomRowSlot },
+          },
         },
       }}
       sx={{

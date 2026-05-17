@@ -83,136 +83,18 @@
     "import { ChatBox } from '@mui/x-chat';"
   ],
   "slots": [
-    {
-      "name": "root",
-      "description": "The outermost container element. Defaults to `div`.",
-      "class": "MuiChatBox-root"
-    },
-    {
-      "name": "layout",
-      "description": "The layout element that arranges conversations + thread panes. Defaults to `div`.",
-      "class": "MuiChatBox-layout"
-    },
-    {
-      "name": "conversationsPane",
-      "description": "The conversations pane container. Defaults to `div`.",
-      "class": "MuiChatBox-conversationsPane"
-    },
-    {
-      "name": "threadPane",
-      "description": "The thread pane container. Defaults to `div`.",
-      "class": "MuiChatBox-threadPane"
-    },
-    {
-      "name": "conversationList",
-      "description": "Override the conversation list component.",
-      "class": null
-    },
-    {
-      "name": "conversationHeader",
-      "description": "Override the conversation header component.",
-      "class": null
-    },
-    {
-      "name": "conversationTitle",
-      "description": "Override the conversation title component.",
-      "class": null
-    },
-    {
-      "name": "conversationSubtitle",
-      "description": "Override the conversation subtitle component.",
-      "class": null
-    },
-    {
-      "name": "conversationHeaderInfo",
-      "description": "Override the conversation header info wrapper (title + subtitle column).",
-      "class": null
-    },
-    {
-      "name": "conversationHeaderActions",
-      "description": "Override the conversation header actions component.",
-      "class": null
-    },
-    { "name": "messageList", "description": "Override the message list component.", "class": null },
-    { "name": "group", "description": "Override the message group component.", "class": null },
-    {
-      "name": "message",
-      "description": "Override the message root component for each message.",
-      "class": null
-    },
-    {
-      "name": "avatar",
-      "description": "Override the message avatar component.\nPass `null` to hide the avatar entirely and drop the reserved avatar grid track.",
-      "class": null
-    },
-    {
-      "name": "content",
-      "description": "Override the message content (bubble) component.",
-      "class": null
-    },
-    {
-      "name": "meta",
-      "description": "Override the message meta component (compact variant external meta).\nPass `null` to hide it.",
-      "class": null
-    },
-    {
-      "name": "actions",
-      "description": "Override the message actions component.\nPass `null` to hide actions entirely.",
-      "class": null
-    },
-    { "name": "dateDivider", "description": "Override the date divider component.", "class": null },
-    {
-      "name": "composer",
-      "description": "Override the composer (input) root component.",
-      "class": null
-    },
-    { "name": "input", "description": "Override the composer textarea component.", "class": null },
-    {
-      "name": "send",
-      "description": "Override the composer send button.\nPass `null` to hide the send button (form still submits on Enter).",
-      "class": null
-    },
-    {
-      "name": "attach",
-      "description": "Override the composer attach button.\nPass `null` to hide just the attach button while keeping the rest of the attachment plumbing.\nUse `features.attachments: false` to disable attachments entirely.",
-      "class": null
-    },
-    {
-      "name": "attachmentList",
-      "description": "Override the composer attachment list.",
-      "class": null
-    },
-    { "name": "toolbar", "description": "Override the composer toolbar.", "class": null },
-    {
-      "name": "helperText",
-      "description": "Override the composer helper text component.",
-      "class": null
-    },
-    {
-      "name": "typingIndicator",
-      "description": "Override the typing indicator component.",
-      "class": null
-    },
-    {
-      "name": "unreadMarker",
-      "description": "Override the unread marker component.",
-      "class": null
-    },
-    {
-      "name": "scrollToBottom",
-      "description": "Override the scroll-to-bottom affordance component.",
-      "class": null
-    },
-    {
-      "name": "suggestions",
-      "description": "Override the prompt suggestions container component.",
-      "class": null
-    },
-    {
-      "name": "emptyState",
-      "description": "Override the UI rendered in the center of the thread when the active conversation has no messages.\nWhen provided, `suggestions` (if any) move from the center position to a row above the composer.",
-      "class": null
-    }
+    { "name": "root", "description": "", "class": "MuiChatBox-root" },
+    { "name": "layout", "description": "", "class": "MuiChatBox-layout" },
+    { "name": "conversationsPane", "description": "", "class": "MuiChatBox-conversationsPane" },
+    { "name": "threadPane", "description": "", "class": "MuiChatBox-threadPane" },
+    { "name": "conversation", "description": "", "class": null },
+    { "name": "messagesList", "description": "", "class": null },
+    { "name": "message", "description": "", "class": null },
+    { "name": "composer", "description": "", "class": null },
+    { "name": "typingIndicator", "description": "", "class": null },
+    { "name": "scrollToBottom", "description": "", "class": null },
+    { "name": "suggestions", "description": "", "class": null },
+    { "name": "emptyState", "description": "", "class": null }
   ],
   "classes": [],
   "spread": true,

@@ -71,4 +71,78 @@ describe('ChatMessageGroup', () => {
     // One group per author run
     expect(groups.length).toBeGreaterThanOrEqual(2);
   });
+
+  it('renders the author label via the default authorName slot', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        members={[{ id: 'alice', displayName: 'Alice Author' }]}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            status: 'sent',
+            author: { id: 'alice' },
+            parts: [{ type: 'text', text: 'Hi' }],
+          },
+        ]}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    expect(document.body.textContent).toContain('Alice Author');
+  });
+
+  it('overrides the author label via slots.message.authorName', () => {
+    function CustomLabel(props: { children?: React.ReactNode }) {
+      return <span data-testid="custom-author-name">[{props.children}]</span>;
+    }
+
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        members={[{ id: 'alice', displayName: 'Alice' }]}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            status: 'sent',
+            author: { id: 'alice' },
+            parts: [{ type: 'text', text: 'Hi' }],
+          },
+        ]}
+        slots={{ message: { authorName: CustomLabel } }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    expect(document.querySelector('[data-testid="custom-author-name"]')?.textContent).toBe(
+      '[Alice]',
+    );
+  });
+
+  it('hides the author label when slots.message.authorName is null', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        members={[{ id: 'alice', displayName: 'Alice Hidden' }]}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            status: 'sent',
+            author: { id: 'alice' },
+            parts: [{ type: 'text', text: 'Hi' }],
+          },
+        ]}
+        slots={{ message: { authorName: null } }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    expect(document.body.textContent).not.toContain('Alice Hidden');
+  });
 });

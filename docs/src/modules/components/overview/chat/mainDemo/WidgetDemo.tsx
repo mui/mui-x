@@ -467,7 +467,6 @@ export default function WidgetDemo() {
       >
         <DataGrid loading rows={[]} columns={BACKDROP_COLUMNS} />
       </Box>
-
       {/* ---------- Chat widget ---------- */}
       <Grow in={open} style={{ transformOrigin: 'bottom right' }} mountOnEnter unmountOnExit>
         <Paper
@@ -523,31 +522,40 @@ export default function WidgetDemo() {
                 layoutMode="split"
                 features={{ conversationList: true, helperText: false }}
                 slotProps={{
+                  conversation: {
+                    list: {
+                      slotProps: {
+                        viewport: {
+                          sx: { px: 1, pt: 0.5, pb: 1 },
+                        } as any,
+                        root: {
+                          'aria-label': 'Conversations',
+                          sx: { p: 0 },
+                        } as any,
+                      },
+                    },
+                  },
+
+                  messagesList: {
+                    root: {
+                      slotProps: {
+                        messageListContent: {
+                          sx: { py: 1.5 },
+                        } as any,
+                      },
+                    },
+
+                    group: {
+                      sx: {
+                        animation: `${messageSlideIn} 0.3s ease-out both`,
+                      },
+                    },
+                  },
+
                   composer: {
-                    variant: 'compact',
-                    sx: { mx: 1.5, mb: 1.5, mt: 0 },
-                  },
-                  messageList: {
-                    slotProps: {
-                      messageListContent: {
-                        sx: { py: 1.5 },
-                      } as any,
-                    },
-                  },
-                  group: {
-                    sx: {
-                      animation: `${messageSlideIn} 0.3s ease-out both`,
-                    },
-                  },
-                  conversationList: {
-                    slotProps: {
-                      viewport: {
-                        sx: { px: 1, pt: 0.5, pb: 1 },
-                      } as any,
-                      root: {
-                        'aria-label': 'Conversations',
-                        sx: { p: 0 },
-                      } as any,
+                    root: {
+                      variant: 'compact',
+                      sx: { mx: 1.5, mb: 1.5, mt: 0 },
                     },
                   },
                 }}
@@ -570,7 +578,6 @@ export default function WidgetDemo() {
           </Box>
         </Paper>
       </Grow>
-
       {/* ---------- FAB with pulse ring ---------- */}
       <Box
         sx={{

@@ -44,7 +44,11 @@ export default function RoleBasedMessageActions() {
       initialActiveConversationId={minimalConversation.id}
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
-      slots={{ actions: RoleBasedActions }}
+      slots={{
+        message: {
+          actions: RoleBasedActions,
+        },
+      }}
       sx={{
         height: 500,
         border: '1px solid',

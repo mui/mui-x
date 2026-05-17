@@ -108,8 +108,10 @@ export default function CompactRow() {
         );
       }}
       slotProps={{
-        conversationList: {
-          slots: { item: CompactRowSlot },
+        conversation: {
+          list: {
+            slots: { item: CompactRowSlot },
+          },
         },
       }}
       sx={{

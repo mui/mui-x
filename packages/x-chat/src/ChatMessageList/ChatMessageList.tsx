@@ -92,14 +92,9 @@ const ChatMessageListContentStyled = styled('div', {
   };
 });
 
-const ROW_SLOT_KEYS: ReadonlyArray<keyof ChatMessageRowSlots> = [
-  'group',
-  'message',
-  'avatar',
-  'content',
-  'meta',
-  'actions',
-];
+// The row renderer wants the nested `messagesList` and `message` families.
+// Everything else on `slots` belongs to `MessageListRoot` (list-level).
+const ROW_SLOT_KEYS: ReadonlyArray<keyof ChatMessageRowSlots> = ['messagesList', 'message'];
 
 const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListProps>(
   function ChatMessageList(inProps, ref) {

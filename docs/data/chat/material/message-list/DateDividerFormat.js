@@ -57,9 +57,11 @@ export default function DateDividerFormat() {
       initialConversations={[conversation]}
       initialMessages={messages}
       slotProps={{
-        dateDivider: {
-          formatDate: (date) =>
-            date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        messagesList: {
+          dateDivider: {
+            formatDate: (date) =>
+              date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          },
         },
       }}
       sx={{

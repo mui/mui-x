@@ -14,14 +14,14 @@ const defaultRegistryMetadata = {
   ChatBox: {
     status: 'core',
     slots: [
-      'conversationList',
-      'conversationHeader',
-      'messageList',
+      'conversation',
+      'messagesList',
       'message',
-      'content',
       'composer',
       'suggestions',
       'scrollToBottom',
+      'typingIndicator',
+      'emptyState',
     ],
     classKeys: ['root', 'layout', 'conversationsPane', 'threadPane'],
   },

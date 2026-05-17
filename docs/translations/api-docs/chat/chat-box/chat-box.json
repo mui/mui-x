@@ -41,8 +41,12 @@
     "members": {
       "description": "Known chat participants. Used to derive the local user / assistant user when explicit props are omitted, and to enrich message authors by resolved author id at render time."
     },
-    "slotProps": { "description": "The extra props for the slot components." },
-    "slots": { "description": "The components used for each slot inside the ChatBox." },
+    "slotProps": {
+      "description": "Props forwarded to each slot. Mirrors the structure of <code>slots</code>."
+    },
+    "slots": {
+      "description": "The components used for each slot inside the ChatBox, organised by family.<br>- <code>conversation.*</code> — the conversation wrapper, list, header, title, subtitle, header info, header actions. - <code>messagesList.*</code> — the list scroller, group wrapper, date divider, unread marker. - <code>message.*</code> — per-row parts (root, avatar, content, meta, inlineMeta, error, actions, authorName).   Pass <code>null</code> to a presentational slot (<code>avatar</code>, <code>meta</code>, <code>inlineMeta</code>, <code>actions</code>, <code>authorName</code>) to hide it and collapse the surrounding layout. - <code>composer.*</code> — root, input, send, attach, attachmentList, toolbar, helperText.   Pass <code>null</code> to <code>send</code> / <code>attach</code> to hide the button. - Standalone slots (<code>typingIndicator</code>, <code>scrollToBottom</code>, <code>suggestions</code>, <code>emptyState</code>, layout pieces) stay flat at the top level."
+    },
     "storeClass": { "description": "The store class to use for this provider." },
     "streamFlushInterval": {
       "description": "Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store."
@@ -59,35 +63,17 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "actions": "Override the message actions component. Pass <code>null</code> to hide actions entirely.",
-    "attach": "Override the composer attach button. Pass <code>null</code> to hide just the attach button while keeping the rest of the attachment plumbing. Use <code>features.attachments: false</code> to disable attachments entirely.",
-    "attachmentList": "Override the composer attachment list.",
-    "avatar": "Override the message avatar component. Pass <code>null</code> to hide the avatar entirely and drop the reserved avatar grid track.",
-    "composer": "Override the composer (input) root component.",
-    "content": "Override the message content (bubble) component.",
-    "conversationHeader": "Override the conversation header component.",
-    "conversationHeaderActions": "Override the conversation header actions component.",
-    "conversationHeaderInfo": "Override the conversation header info wrapper (title + subtitle column).",
-    "conversationList": "Override the conversation list component.",
-    "conversationsPane": "The conversations pane container. Defaults to <code>div</code>.",
-    "conversationSubtitle": "Override the conversation subtitle component.",
-    "conversationTitle": "Override the conversation title component.",
-    "dateDivider": "Override the date divider component.",
-    "emptyState": "Override the UI rendered in the center of the thread when the active conversation has no messages. When provided, <code>suggestions</code> (if any) move from the center position to a row above the composer.",
-    "group": "Override the message group component.",
-    "helperText": "Override the composer helper text component.",
-    "input": "Override the composer textarea component.",
-    "layout": "The layout element that arranges conversations + thread panes. Defaults to <code>div</code>.",
-    "message": "Override the message root component for each message.",
-    "messageList": "Override the message list component.",
-    "meta": "Override the message meta component (compact variant external meta). Pass <code>null</code> to hide it.",
-    "root": "The outermost container element. Defaults to <code>div</code>.",
-    "scrollToBottom": "Override the scroll-to-bottom affordance component.",
-    "send": "Override the composer send button. Pass <code>null</code> to hide the send button (form still submits on Enter).",
-    "suggestions": "Override the prompt suggestions container component.",
-    "threadPane": "The thread pane container. Defaults to <code>div</code>.",
-    "toolbar": "Override the composer toolbar.",
-    "typingIndicator": "Override the typing indicator component.",
-    "unreadMarker": "Override the unread marker component."
+    "composer": "",
+    "conversation": "",
+    "conversationsPane": "",
+    "emptyState": "",
+    "layout": "",
+    "message": "",
+    "messagesList": "",
+    "root": "",
+    "scrollToBottom": "",
+    "suggestions": "",
+    "threadPane": "",
+    "typingIndicator": ""
   }
 }

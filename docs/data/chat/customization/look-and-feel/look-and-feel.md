@@ -102,8 +102,10 @@ Style any internal subcomponent without replacing it:
 ```tsx
 <ChatBox
   slotProps={{
-    input: { placeholder: 'Ask anything...' },
-    send: { sx: { borderRadius: 6 } },
+    composer: {
+      input: { placeholder: 'Ask anything...' },
+      send: { sx: { borderRadius: 6 } },
+    },
   }}
 />
 ```

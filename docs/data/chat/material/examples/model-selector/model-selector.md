@@ -29,7 +29,7 @@ function MyModelSelector() {
   );
 }
 
-<ChatBox slots={{ conversationHeaderActions: MyModelSelector }} />;
+<ChatBox slots={{ conversation: { headerActions: MyModelSelector } }} />;
 ```
 
 ## Passing the model to the adapter
@@ -76,7 +76,7 @@ export default function App() {
   return (
     <ChatBox
       adapter={adapter}
-      slots={{ conversationHeaderActions: HeaderActions }}
+      slots={{ conversation: { headerActions: HeaderActions } }}
     />
   );
 }

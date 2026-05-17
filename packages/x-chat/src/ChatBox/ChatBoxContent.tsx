@@ -265,7 +265,7 @@ function DefaultConversationHeader({
   onMenuClick,
   showMenuButton,
 }: {
-  slots?: Partial<ChatBoxSlots>;
+  slots?: ChatBoxSlots;
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
   onBackClick?: () => void;
@@ -273,24 +273,26 @@ function DefaultConversationHeader({
   onMenuClick?: () => void;
   showMenuButton?: boolean;
 }) {
+  const conversationSlots = slots?.conversation;
+  const conversationSlotProps = slotProps?.conversation;
   const localeText = useChatLocaleText();
 
   if (features?.conversationHeader === false) {
     return null;
   }
-  const ConversationHeaderComponent = (slots?.conversationHeader ??
+  const ConversationHeaderComponent = (conversationSlots?.header ??
     ChatConversationHeader) as typeof ChatConversationHeader;
-  const ConversationHeaderInfoComponent = (slots?.conversationHeaderInfo ??
+  const ConversationHeaderInfoComponent = (conversationSlots?.headerInfo ??
     ChatConversationHeaderInfo) as typeof ChatConversationHeaderInfo;
-  const ConversationTitleComponent = (slots?.conversationTitle ??
+  const ConversationTitleComponent = (conversationSlots?.title ??
     ChatConversationTitle) as typeof ChatConversationTitle;
-  const ConversationSubtitleComponent = (slots?.conversationSubtitle ??
+  const ConversationSubtitleComponent = (conversationSlots?.subtitle ??
     ChatConversationSubtitle) as typeof ChatConversationSubtitle;
-  const ConversationHeaderActionsComponent = (slots?.conversationHeaderActions ??
+  const ConversationHeaderActionsComponent = (conversationSlots?.headerActions ??
     ChatConversationHeaderActions) as typeof ChatConversationHeaderActions;
 
   return (
-    <ConversationHeaderComponent {...(slotProps?.conversationHeader ?? {})}>
+    <ConversationHeaderComponent {...(conversationSlotProps?.header ?? {})}>
       {showBackButton && (
         <Tooltip title={localeText.conversationHeaderBackLabel}>
           <IconButton
@@ -315,11 +317,11 @@ function DefaultConversationHeader({
           </IconButton>
         </Tooltip>
       )}
-      <ConversationHeaderInfoComponent {...(slotProps?.conversationHeaderInfo ?? {})}>
-        <ConversationTitleComponent {...(slotProps?.conversationTitle ?? {})} />
-        <ConversationSubtitleComponent {...(slotProps?.conversationSubtitle ?? {})} />
+      <ConversationHeaderInfoComponent {...(conversationSlotProps?.headerInfo ?? {})}>
+        <ConversationTitleComponent {...(conversationSlotProps?.title ?? {})} />
+        <ConversationSubtitleComponent {...(conversationSlotProps?.subtitle ?? {})} />
       </ConversationHeaderInfoComponent>
-      <ConversationHeaderActionsComponent {...(slotProps?.conversationHeaderActions ?? {})} />
+      <ConversationHeaderActionsComponent {...(conversationSlotProps?.headerActions ?? {})} />
     </ConversationHeaderComponent>
   );
 }
@@ -410,49 +412,59 @@ function DefaultComposer({
   slotProps,
   features,
 }: {
-  slots?: Partial<ChatBoxSlots>;
+  slots?: ChatBoxSlots;
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
 }) {
+  const composerSlots = slots?.composer;
+  const composerSlotProps = slotProps?.composer;
   const contextVariant = useChatVariant();
-  const variant = slotProps?.composer?.variant ?? contextVariant;
+  const variant = composerSlotProps?.root?.variant ?? contextVariant;
   const showAttachments = features?.attachments !== false;
   const showHelperText = features?.helperText !== false;
   const attachmentConfig =
     typeof features?.attachments === 'object' ? features.attachments : undefined;
-  const ComposerRootComponent = (slots?.composer ?? ChatComposer) as typeof ChatComposer;
-  const ComposerInputComponent = (slots?.input ??
+  // `slots.composer.root` is wrapper-only: it swaps the styled root element of
+  // `<ChatComposer>` while the default attach/input/send/toolbar render inside
+  // via children. To go further (whole-composer replacement) consumers compose
+  // their own form using the public composer hooks.
+  const ComposerRootComponent = ChatComposer;
+  const composerRootSlotOverride = composerSlots?.root;
+  const ComposerInputComponent = (composerSlots?.input ??
     ChatComposerTextArea) as typeof ChatComposerTextArea;
-  const ComposerToolbarComponent = (slots?.toolbar ??
+  const ComposerToolbarComponent = (composerSlots?.toolbar ??
     ChatComposerToolbar) as typeof ChatComposerToolbar;
   // Presentational slots: `null` hides the piece and the surrounding layout
   // collapses. `undefined` falls back to the default component.
-  const showSendButton = slots?.send !== null;
-  const ComposerSendButtonComponent = (slots?.send ??
+  const showSendButton = composerSlots?.send !== null;
+  const ComposerSendButtonComponent = (composerSlots?.send ??
     ChatComposerSendButton) as typeof ChatComposerSendButton;
-  const showAttachButton = showAttachments && slots?.attach !== null;
-  const ComposerAttachButtonComponent = (slots?.attach ??
+  const showAttachButton = showAttachments && composerSlots?.attach !== null;
+  const ComposerAttachButtonComponent = (composerSlots?.attach ??
     ChatComposerAttachButton) as typeof ChatComposerAttachButton;
-  const ComposerAttachmentListComponent = (slots?.attachmentList ??
+  const ComposerAttachmentListComponent = (composerSlots?.attachmentList ??
     ChatComposerAttachmentList) as typeof ChatComposerAttachmentList;
-  const ComposerHelperTextComponent = (slots?.helperText ??
+  const ComposerHelperTextComponent = (composerSlots?.helperText ??
     ChatComposerHelperText) as typeof ChatComposerHelperText;
   const localeText = useChatLocaleText();
 
+  // Forward `slots.composer.root` as ChatComposer's own root slot override.
+  const composerRootProps = {
+    attachmentConfig,
+    ...(composerSlotProps?.root ?? {}),
+    slots: { root: composerRootSlotOverride, ...((composerSlotProps?.root as any)?.slots ?? {}) },
+  } as any;
+
   if (variant === 'compact') {
     return (
-      <ComposerRootComponent
-        variant="compact"
-        attachmentConfig={attachmentConfig}
-        {...(slotProps?.composer ?? {})}
-      >
+      <ComposerRootComponent variant="compact" {...composerRootProps}>
         {showAttachments && (
-          <ComposerAttachmentListComponent {...(slotProps?.attachmentList ?? {})} />
+          <ComposerAttachmentListComponent {...(composerSlotProps?.attachmentList ?? {})} />
         )}
         {showAttachButton && (
           <ComposerAttachButtonComponent
             aria-label={localeText.composerAttachButtonLabel}
-            {...(slotProps?.attach ?? {})}
+            {...(composerSlotProps?.attach ?? {})}
           >
             <DefaultAttachIcon />
           </ComposerAttachButtonComponent>
@@ -460,7 +472,7 @@ function DefaultComposer({
         <ComposerInputComponent
           maxRows={5}
           placeholder={localeText.composerInputPlaceholder}
-          {...(slotProps?.input ?? {})}
+          {...(composerSlotProps?.input ?? {})}
         />
         {/*
           Honor the `toolbar` slot in compact too: wrapping the trailing send
@@ -470,10 +482,10 @@ function DefaultComposer({
           ChatComposer's row-flex so the visual layout is unchanged.
         */}
         {showSendButton && (
-          <ComposerToolbarComponent {...(slotProps?.toolbar ?? {})}>
+          <ComposerToolbarComponent {...(composerSlotProps?.toolbar ?? {})}>
             <ComposerSendButtonComponent
               aria-label={localeText.composerSendButtonLabel}
-              {...(slotProps?.send ?? {})}
+              {...(composerSlotProps?.send ?? {})}
             >
               <DefaultSendIcon />
             </ComposerSendButtonComponent>
@@ -484,20 +496,22 @@ function DefaultComposer({
   }
 
   return (
-    <ComposerRootComponent attachmentConfig={attachmentConfig} {...(slotProps?.composer ?? {})}>
+    <ComposerRootComponent {...composerRootProps}>
       {showAttachments && (
-        <ComposerAttachmentListComponent {...(slotProps?.attachmentList ?? {})} />
+        <ComposerAttachmentListComponent {...(composerSlotProps?.attachmentList ?? {})} />
       )}
       <ComposerInputComponent
         placeholder={localeText.composerInputPlaceholder}
-        {...(slotProps?.input ?? {})}
+        {...(composerSlotProps?.input ?? {})}
       />
-      {showHelperText && <ComposerHelperTextComponent {...(slotProps?.helperText ?? {})} />}
-      <ComposerToolbarComponent {...(slotProps?.toolbar ?? {})}>
+      {showHelperText && (
+        <ComposerHelperTextComponent {...(composerSlotProps?.helperText ?? {})} />
+      )}
+      <ComposerToolbarComponent {...(composerSlotProps?.toolbar ?? {})}>
         {showAttachButton && (
           <ComposerAttachButtonComponent
             aria-label={localeText.composerAttachButtonLabel}
-            {...(slotProps?.attach ?? {})}
+            {...(composerSlotProps?.attach ?? {})}
           >
             <DefaultAttachIcon />
           </ComposerAttachButtonComponent>
@@ -505,7 +519,7 @@ function DefaultComposer({
         {showSendButton && (
           <ComposerSendButtonComponent
             aria-label={localeText.composerSendButtonLabel}
-            {...(slotProps?.send ?? {})}
+            {...(composerSlotProps?.send ?? {})}
           >
             <DefaultSendIcon />
           </ComposerSendButtonComponent>
@@ -703,9 +717,10 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
 
   const ScrollToBottomComponent = (slots?.scrollToBottom ??
     ChatScrollToBottomAffordance) as typeof ChatScrollToBottomAffordance;
-  const ConversationListComponent = (slots?.conversationList ??
+  const ConversationListComponent = (slots?.conversation?.list ??
     ChatConversationList) as typeof ChatConversationList;
-  const MessageListComponent = (slots?.messageList ?? ChatMessageList) as typeof ChatMessageList;
+  const MessageListComponent = (slots?.messagesList?.root ??
+    ChatMessageList) as typeof ChatMessageList;
   const SuggestionsComponent = (slots?.suggestions ?? ChatSuggestions) as typeof ChatSuggestions;
 
   // Use refs so renderItem is stable and doesn't cause the virtualized list
@@ -729,18 +744,18 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
 
   const drawerConversationListSlotProps = React.useMemo(
     () =>
-      createConversationListSlotProps(slotProps?.conversationList?.slotProps, {
+      createConversationListSlotProps(slotProps?.conversation?.list?.slotProps, {
         onItemClick: handleDrawerClose,
       }),
-    [handleDrawerClose, slotProps?.conversationList?.slotProps],
+    [handleDrawerClose, slotProps?.conversation?.list?.slotProps],
   );
 
   const splitConversationListSlotProps = React.useMemo(
     () =>
-      createConversationListSlotProps(slotProps?.conversationList?.slotProps, {
+      createConversationListSlotProps(slotProps?.conversation?.list?.slotProps, {
         fullWidth: true,
       }),
-    [slotProps?.conversationList?.slotProps],
+    [slotProps?.conversation?.list?.slotProps],
   );
 
   const showSplitConversationList =
@@ -803,7 +818,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
       }}
     >
       {hasConversationList && !isNarrow && (
-        <ConversationListComponent variant={variant} {...(slotProps?.conversationList ?? {})} />
+        <ConversationListComponent variant={variant} {...(slotProps?.conversation?.list ?? {})} />
       )}
 
       {hasConversationList && isNarrow && !isMobileSplitView && drawerOpen && (
@@ -837,7 +852,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
                 </ChatBoxDrawerHeader>
                 <ConversationListComponent
                   variant={variant}
-                  {...(slotProps?.conversationList ?? {})}
+                  {...(slotProps?.conversation?.list ?? {})}
                   slotProps={drawerConversationListSlotProps}
                 />
               </ChatBoxDrawerContent>
@@ -849,13 +864,19 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
       {showSplitConversationList && (
         <ConversationListComponent
           variant={variant}
-          {...(slotProps?.conversationList ?? {})}
+          {...(slotProps?.conversation?.list ?? {})}
           slotProps={splitConversationListSlotProps}
         />
       )}
 
       {showThreadView && (
-        <ChatConversation>
+        <ChatConversation
+          {...(slotProps?.conversation?.root ?? {})}
+          slots={{
+            root: slots?.conversation?.root,
+            ...((slotProps?.conversation?.root as any)?.slots ?? {}),
+          }}
+        >
           <DefaultConversationHeader
             slots={slots}
             slotProps={slotProps}
@@ -905,7 +926,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
                   )}
                 </React.Fragment>
               }
-              {...(slotProps?.messageList ?? {})}
+              {...(slotProps?.messagesList?.root ?? {})}
             />
             {showCustomEmptyState && CustomEmptyStateComponent && (
               <ChatBoxCustomEmptyStateOverlay>
