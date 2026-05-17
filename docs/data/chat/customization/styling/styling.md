@@ -8,8 +8,8 @@ components: ChatBox
 
 # Chat - Styling
 
-<p class="description">Override styles using the <code>sx</code> prop, Material UI theme component overrides, dark mode, and CSS class injection.</p>
-
+<p class="description">Customize the appearance of Chat components to match your application's design system.</p>
+ 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Applying styles with the sx prop

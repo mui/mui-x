@@ -16,9 +16,12 @@ This page covers the visual aspects of how messages are displayed in the message
 
 ## Message groups
 
-Consecutive messages from the same author are grouped together into a `ChatMessageGroup`. Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
+Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
+Within a group, only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
 
-The grouping window defaults to 5 minutes (300,000 ms). Messages from the same author that arrive within this window are placed in the same group. Customize it through `slotProps`:
+The grouping window defaults to 5 minutes (300,000 ms).
+Messages from the same author that arrive within this window are placed in the same group.
+The demo below shows how to customize the grouping window through `slotProps`:
 
 {{"demo": "../../material/message-list/MessageGrouping.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -30,9 +33,10 @@ Grouping is based on:
 
 ## Date dividers
 
-When consecutive messages span different calendar dates, a date divider is rendered automatically between them. The divider shows a localized date string and is styled as a centered label with horizontal rules.
+When consecutive messages span different calendar dates, a date divider is rendered automatically between them.
+The divider shows a localized date string and is styled as a centered label with horizontal rules.
 
-Customize the date format through `slotProps`:
+The demo below shows how to customize the date format through `slotProps`:
 
 {{"demo": "../../material/message-list/DateDividerFormat.js", "defaultCodeOpen": false, "bg": "inline"}}
 

@@ -80,7 +80,7 @@ The `FilePart` component exposes four slots for customization:
 | `link`     | `a`             | Clickable link wrapping the content      |
 | `filename` | `span`          | Filename text                            |
 
-### Customizing via ChatBox
+### Customizing via `ChatBox`
 
 Override file part rendering through `slotProps.content.partProps.file`:
 
@@ -103,7 +103,7 @@ Override file part rendering through `slotProps.content.partProps.file`:
 
 ## Streaming
 
-File parts arrive as a single `file` chunk in the stream — they are not delivered incrementally like text parts:
+File parts arrive as a single `file` chunk in the stream—they are not delivered incrementally like text parts:
 
 ```ts
 interface ChatFileChunk {
@@ -115,7 +115,7 @@ interface ChatFileChunk {
 }
 ```
 
-The file part is added to the message's `parts` array as soon as the chunk is received.
+The runtime appends the file part to the message's `parts` array when the chunk arrives.
 
 ## Owner state
 
@@ -130,6 +130,6 @@ The `FilePart` component computes an owner state that slot components can use fo
 
 ## See also
 
-- [Text & Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the most common part type
-- [Sources & Citations](/x/react-chat/display/message-parts/sources-and-citations/) for reference links in RAG applications
-- [Custom Parts](/x/react-chat/display/message-parts/custom-parts/) for building custom file viewers
+- [Text and Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for the most common part type
+- [Sources and citations](/x/react-chat/display/message-parts/sources-and-citations/) for reference links in RAG applications
+- [Custom parts](/x/react-chat/display/message-parts/custom-parts/) for building custom file viewers

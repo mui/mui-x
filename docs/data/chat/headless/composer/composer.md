@@ -116,7 +116,7 @@ The primitive exposes both `root` and `input` slots, which is useful when you wa
 />
 ```
 
-## `Composer.HelperText`
+## Surfacing helper text and errors
 
 `Composer.HelperText` is the default place for draft-level status and error messaging.
 
@@ -135,9 +135,9 @@ That makes it a good structural slot for validation copy, transport errors, and 
 
 If you omit children, the component falls back to the active runtime error text and returns `null` when there is nothing to show.
 
-## `Composer.SendButton`
+## Submitting the draft
 
-`Composer.SendButton` is a submit button that understands composer state.
+`Composer.SendButton` is a submit button wired to composer state.
 
 It disables itself when:
 
@@ -145,7 +145,7 @@ It disables itself when:
 - a stream is already active
 - the button is disabled externally
 
-The default button type is `submit`, so it works naturally inside `Composer.Root`.
+The default button type is `submit`, so it works inside `Composer.Root` without extra wiring.
 
 ## Slots and owner state
 
@@ -165,9 +165,9 @@ Use these values for styling patterns such as:
 
 ## See also
 
-- Continue with [Indicators](/x/react-chat/headless/indicators/) to add typing, unread, and scroll affordances around the composer.
-- Continue with [Customization](/x/react-chat/headless/customization/) for slot and owner-state patterns across the full headless surface.
-- Continue with [Composer with attachments](/x/react-chat/headless/examples/composer-with-attachments/) for the demo version of this page.
+- See [Indicators](/x/react-chat/headless/indicators/) for typing, unread, and scroll affordances around the composer.
+- See [Customization](/x/react-chat/headless/customization/) for slot and owner-state patterns across the headless surface.
+- See [Composer with attachments](/x/react-chat/headless/examples/composer-with-attachments/) for the runnable demo.
 
 ## API
 

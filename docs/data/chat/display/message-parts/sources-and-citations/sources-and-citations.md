@@ -17,7 +17,7 @@ Two part types cover the common citation patterns: URL references and document e
 
 ## Interactive playground
 
-See the `ChatMessageSources` slot rendering URL and document parts:
+The demo below shows the `ChatMessageSources` slot rendering URL and document parts:
 
 {{"demo": "ChatMessageSourcesPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -140,7 +140,7 @@ Override source part rendering through `slotProps.content.partProps` on `ChatBox
 />
 ```
 
-For fully custom source rendering, register a custom renderer through `partRenderers` on `ChatProvider`:
+To fully customize source rendering, register a custom renderer through `partRenderers` on `ChatProvider`:
 
 ```tsx
 <ChatProvider

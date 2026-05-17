@@ -40,7 +40,7 @@ It handles:
 - `Enter` to select the focused item
 - Focus restoration when the list remounts
 
-This makes it the main structural entry point for inbox, sidebar, and thread-switching UIs.
+The root is the main structural entry point for inbox, sidebar, and thread-switching UIs.
 
 The root is also the conversation-pane marker recognized by `Chat.Layout`, so it can be dropped directly into the canonical shell without extra wiring.
 
@@ -57,7 +57,7 @@ Each rendered row is composed from:
 
 Replace the row or any subpart through `slots` and `slotProps` when a product surface needs a different row layout.
 
-The default structure is useful for inbox-like sidebars, but the slot model makes it easy to adapt to denser support tools, mobile previews, or more visual conversation cards.
+The default structure fits inbox-like sidebars; the slot model adapts to denser support tools, mobile previews, or visual conversation cards.
 
 ```tsx
 <ConversationList.Root
@@ -89,7 +89,7 @@ These flags are the main styling hook for active rows, unread emphasis, and focu
 
 Because `conversation` is included in owner state, custom slots can also react to conversation-specific fields such as titles, subtitles, participants, and unread counts.
 
-## Accessibility semantics
+## Accessibility
 
 The root uses `role="listbox"`.
 Each row uses `role="option"` plus `aria-selected`.

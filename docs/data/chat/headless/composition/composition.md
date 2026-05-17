@@ -88,15 +88,15 @@ Choose `ChatProvider` directly when only part of the tree should use headless pr
 
 ## Namespace usage
 
-The namespaced exports are useful when you want the API to read like a component family:
+Use namespaced exports when the API should read like a component family:
 
-- `Chat.Root` and `Chat.Layout`
-- `ConversationList.Root`, `ConversationList.Item`, `ConversationList.ItemAvatar`, `ConversationList.Title`, `ConversationList.Preview`, `ConversationList.Timestamp`, and `ConversationList.UnreadBadge`
-- `Conversation.Root`, `Conversation.Header`, `Conversation.Title`, `Conversation.Subtitle`, and `Conversation.HeaderActions`
-- `MessageList.Root` and `MessageList.DateDivider`
-- `Message.Root`, `Message.Avatar`, `Message.Content`, `Message.Meta`, and `Message.Actions`
-- `Composer.Root`, `Composer.TextArea`, `Composer.Toolbar`, `Composer.AttachButton`, `Composer.HelperText`, and `Composer.SendButton`
-- `Indicators.TypingIndicator`, `Indicators.UnreadMarker`, and `Indicators.ScrollToBottomAffordance`
+- `Chat.Root` and `Chat.Layout`.
+- `ConversationList.Root`, `ConversationList.Item`, `ConversationList.ItemAvatar`, `ConversationList.Title`, `ConversationList.Preview`, `ConversationList.Timestamp`, and `ConversationList.UnreadBadge`.
+- `Conversation.Root`, `Conversation.Header`, `Conversation.Title`, `Conversation.Subtitle`, and `Conversation.HeaderActions`.
+- `MessageList.Root` and `MessageList.DateDivider`.
+- `Message.Root`, `Message.Avatar`, `Message.Content`, `Message.Meta`, and `Message.Actions`.
+- `Composer.Root`, `Composer.TextArea`, `Composer.Toolbar`, `Composer.AttachButton`, `Composer.HelperText`, and `Composer.SendButton`.
+- `Indicators.TypingIndicator`, `Indicators.UnreadMarker`, and `Indicators.ScrollToBottomAffordance`.
 
 Direct imports are useful when a codebase prefers explicit component names or tree-local imports.
 
@@ -144,22 +144,22 @@ When a thread needs unread markers, date dividers, indicators, or custom message
 />
 ```
 
-## What headless owns
+## Headless layer responsibilities
 
-- semantics and accessibility roles
-- structural composition defaults
-- focus and keyboard behavior
-- slot replacement and owner-state-driven customization
+- Semantics and accessibility roles.
+- Structural composition defaults.
+- Focus and keyboard behavior.
+- Slot replacement and owner-state-driven customization.
 
-## What headless does not own
+## Headless layer boundaries
 
-- transport and backend integration details
-- normalized store semantics and runtime contracts
-- a visual design system, theme, or polished default look
+- Transport and backend integration details.
+- Normalized store semantics and runtime contracts.
+- A visual design system, theme, or polished default look.
 
-For runtime behavior, continue with [Headless](/x/react-chat/core/).
-For styling and theming patterns, continue with [Customization](/x/react-chat/headless/customization/).
-For concrete patterns, continue with [Examples](/x/react-chat/headless/examples/).
+See [Headless](/x/react-chat/core/) for details on runtime behavior.
+See [Customization](/x/react-chat/headless/customization/) for details on styling and theming patterns.
+See [Examples](/x/react-chat/headless/examples/) for details on concrete patterns.
 
 ## API
 
