@@ -14,6 +14,8 @@ export { ChatMessageGroup } from './ChatMessageGroup';
 export type { ChatMessageGroupProps } from './ChatMessageGroup';
 export { ChatDateDivider } from './ChatDateDivider';
 export type { ChatDateDividerProps } from './ChatDateDivider';
+export { ChatMessageError } from '../ChatMessageError/ChatMessageError';
+export type { ChatMessageErrorProps } from '../ChatMessageError/ChatMessageError';
 export {
   chatMessageClasses,
   getChatMessageUtilityClass,

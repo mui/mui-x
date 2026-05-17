@@ -94,6 +94,10 @@ const chatApiPages: MuiPage[] = [
     title: 'ChatMessageContent',
   },
   {
+    pathname: '/x/api/chat/chat-message-error',
+    title: 'ChatMessageError',
+  },
+  {
     pathname: '/x/api/chat/chat-message-group',
     title: 'ChatMessageGroup',
   },

@@ -21,6 +21,11 @@ export interface ChatComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiChatMessage'];
     variants?: ComponentsVariants<Theme>['MuiChatMessage'];
   };
+  MuiChatMessageError?: {
+    defaultProps?: ComponentsProps['MuiChatMessageError'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChatMessageError'];
+    variants?: ComponentsVariants<Theme>['MuiChatMessageError'];
+  };
   MuiChatMessageList?: {
     defaultProps?: ComponentsProps['MuiChatMessageList'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChatMessageList'];

@@ -19,6 +19,8 @@ function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   };
 }
 
+const conversationListFeatures = { conversationList: true } as const;
+
 describe('ChatConversationList', () => {
   it('renders without crashing and applies MuiChatConversationList-root class', () => {
     render(
