@@ -1,20 +1,22 @@
 ---
 productId: x-chat
-title: Files & Images
+title: Files and images
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent
 ---
 
-# Chat - Files & Images
+# Chat - Files and images
 
-<p class="description">Display file attachments and inline image previews using the <code>ChatFileMessagePart</code> type.</p>
+<p class="description">Display file attachments and inline image previews in the chat thread.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-File parts represent file attachments within a message. When the file is an image, an inline preview is rendered. For other file types, a compact chip with a document icon and filename is displayed.
+File parts represent file attachments within a message.
+When the file is an image, an inline preview is rendered.
+For other file types, a compact chip with a document icon and filename is displayed.
 
-## The file part data model
+## File part structure
 
 A file part is represented by the `ChatFileMessagePart` interface:
 
@@ -62,12 +64,12 @@ const message: ChatMessage = {
 
 The built-in file part renderer automatically detects images by checking whether `mediaType` starts with `'image/'`:
 
-- **Images** — rendered as an `<img>` element with inline preview, wrapped in a link to the full-size resource.
-- **Other files** — rendered as a compact chip with a document icon and the filename (or URL as fallback), linking to the file.
+- **Images**—rendered as an `<img>` element with inline preview, wrapped in a link to the full-size resource.
+- **Other files**—rendered as a compact chip with a document icon and the filename (or URL as fallback), linking to the file.
 
 Both variants open the file in a new tab (`target="_blank"`) when clicked.
 
-## Slots
+## Slots reference
 
 The `FilePart` component exposes four slots for customization:
 
@@ -80,13 +82,13 @@ The `FilePart` component exposes four slots for customization:
 
 ### Customizing via ChatBox
 
-Override file part rendering through `slotProps.messageContent.partProps.file`:
+Override file part rendering through `slotProps.content.partProps.file`:
 
 ```tsx
 <ChatBox
   adapter={adapter}
   slotProps={{
-    messageContent: {
+    content: {
       partProps: {
         file: {
           slots: {

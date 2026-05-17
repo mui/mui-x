@@ -1,11 +1,19 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatComposerAttachmentList } from '@mui/x-chat';
-import { useChatStore } from '@mui/x-chat/headless';
+import { useChatStore, type ChatDraftAttachmentStatus } from '@mui/x-chat/headless';
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
 import { ScopedChat } from '../../_playground/sharedProviders';
 import { emptyConversation } from '../../_playground/sharedFixtures';
-import { NumberControl } from '../../_playground/controls';
+import {
+  ChoiceControl,
+  DividerLabel,
+  NumberControl,
+} from '../../_playground/controls';
+import {
+  useCustomizations,
+  type CustomizationDef,
+} from '../../_playground/useCustomizations';
 
 interface FileSpec {
   name: string;
@@ -21,7 +29,14 @@ const POOL: FileSpec[] = [
   { name: 'spec-v2.docx', type: 'application/vnd.openxmlformats', size: 76_891 },
 ];
 
-function makeDraftAttachments(files: FileSpec[]) {
+const PROGRESS_BY_STATUS: Record<ChatDraftAttachmentStatus, number> = {
+  queued: 0,
+  uploading: 0.45,
+  uploaded: 1,
+  error: 0,
+};
+
+function makeDraftAttachments(files: FileSpec[], status: ChatDraftAttachmentStatus) {
   return files.map((spec, index) => {
     const file = new File(['placeholder'], spec.name, { type: spec.type });
     try {
@@ -32,26 +47,46 @@ function makeDraftAttachments(files: FileSpec[]) {
     return {
       localId: `demo-attachment-${index}-${spec.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`,
       file,
-      status: 'uploaded' as const,
-      progress: 1,
+      status,
+      progress: PROGRESS_BY_STATUS[status],
     };
   });
 }
 
-function AttachmentsEffect({ files }: { files: FileSpec[] }) {
+function AttachmentsEffect({
+  files,
+  status,
+}: {
+  files: FileSpec[];
+  status: ChatDraftAttachmentStatus;
+}) {
   const store = useChatStore();
   React.useEffect(() => {
-    store.setComposerAttachments(makeDraftAttachments(files));
+    store.setComposerAttachments(makeDraftAttachments(files, status));
     return () => {
       store.setComposerAttachments([]);
     };
-  }, [store, files]);
+  }, [store, files, status]);
   return null;
 }
 
+type ClassKey = 'attachmentList';
+
+const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
+  {
+    name: 'attachmentList',
+    selector: '.MuiChatComposer-attachmentList',
+    description: 'The pending attachments row above the textarea.',
+  },
+];
+
 export default function ChatComposerAttachmentListPlayground() {
   const [count, setCount] = React.useState(2);
+  const [status, setStatus] = React.useState<ChatDraftAttachmentStatus>('uploaded');
+  const classesCustomizations = useCustomizations<ClassKey>(CLASS_DEFS);
   const files = React.useMemo(() => POOL.slice(0, count), [count]);
+
+  const wrapperSx = classesCustomizations.toClassesSx();
 
   return (
     <PlaygroundCard
@@ -59,22 +94,33 @@ export default function ChatComposerAttachmentListPlayground() {
       description="Pending-attachment chips rendered above the textarea."
       previewMinHeight={220}
       span={2}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
-        <NumberControl
-          label="attachment count"
-          value={count}
-          min={0}
-          max={POOL.length}
-          onChange={setCount}
-        />
+        <React.Fragment>
+          <DividerLabel>state (store)</DividerLabel>
+          <NumberControl
+            label="attachment count"
+            value={count}
+            min={0}
+            max={POOL.length}
+            onChange={setCount}
+          />
+          <ChoiceControl<ChatDraftAttachmentStatus>
+            label="status"
+            value={status}
+            options={['uploading', 'uploaded', 'error'] as const}
+            onChange={setStatus}
+          />
+        </React.Fragment>
       }
       preview={
         <ScopedChat
           conversations={[emptyConversation]}
           activeConversationId={emptyConversation.id}
         >
-          <AttachmentsEffect files={files} />
-          <Box sx={{ width: '100%' }}>
+          <AttachmentsEffect files={files} status={status} />
+          <Box sx={{ width: '100%', ...(wrapperSx as object) }}>
             <ChatComposerAttachmentList />
           </Box>
         </ScopedChat>

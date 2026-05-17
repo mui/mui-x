@@ -9,17 +9,15 @@ githubLabel: 'scope: chat'
 
 <p class="description">Build a custom draft area with attachments, preview URLs, and IME-safe submit behavior.</p>
 
-This demo uses `useChatComposer()` directly with plain DOM controls to demonstrate the full draft lifecycle:
+Call `useChatComposer()` directly with plain DOM controls to manage the full draft lifecycle:
 
-- draft value management
-- file attachment add and remove
-- image preview URLs with automatic cleanup
-- IME composition tracking
-- submit and clear behavior
+- Draft value management.
+- File attachment add and remove.
+- Image preview URLs with automatic cleanup.
+- IME composition tracking.
+- Submit and clear behavior.
 
-## Key concepts
-
-### The `useChatComposer()` hook
+## Accessing composer state with a hook
 
 `useChatComposer()` returns everything needed to build a custom draft area:
 
@@ -41,7 +39,7 @@ composer.clear(); // clear text and attachments
 composer.isSubmitting; // true while a stream is active
 ```
 
-### Attachment preview URLs
+## Tracking attachment previews
 
 When you add an image file, `useChatComposer()` automatically creates an object URL via `URL.createObjectURL()`.
 The URL is available on `attachment.previewUrl` for rendering inline previews:
@@ -64,11 +62,11 @@ The URL is available on `attachment.previewUrl` for rendering inline previews:
 
 Preview URLs are revoked automatically when:
 
-- the attachment is removed
-- the composer is cleared
-- the component unmounts
+- The attachment is removed.
+- The composer is cleared.
+- The component unmounts.
 
-### IME-safe submission
+## Handling IME-safe submission
 
 For East Asian input methods, the composer tracks IME composition state.
 `submit()` blocks while an IME session is active, preventing accidental sends during text composition.
@@ -88,21 +86,16 @@ Wire composition events on your input element:
 />
 ```
 
+The demo below shows the full composer wired up with attachments, image previews, and IME-safe submission:
+
 {{"demo": "ComposerHeadlessChat.js"}}
-
-## Key takeaways
-
-- `useChatComposer()` manages the full draft lifecycle without any UI opinions
-- Image preview URLs are created and cleaned up automatically
-- IME composition tracking prevents accidental submission during text input
-- `submit()` also blocks while a stream is already active, preventing double sends
 
 ## See also
 
-- [Hooks](/x/react-chat/core/hooks/) for the full `useChatComposer()` API reference
-- [Streaming lifecycle](/x/react-chat/core/examples/streaming-lifecycle/) for what happens after submission
-- [Minimal core chat](/x/react-chat/core/examples/minimal-chat/) for a simpler draft pattern without `useChatComposer()`
+- See [Hooks—`useChatComposer()`](/x/react-chat/core/hooks/#usechatcomposer) for the full API reference.
+- See [Streaming lifecycle](/x/react-chat/core/examples/streaming-lifecycle/) for details on what happens after submission.
+- See [Minimal core chat](/x/react-chat/core/examples/minimal-chat/) for a simpler draft pattern.
 
 ## API
 
-- [ChatRoot](/x/api/chat/chat-root/)
+- [`ChatRoot`](/x/api/chat/chat-root/)

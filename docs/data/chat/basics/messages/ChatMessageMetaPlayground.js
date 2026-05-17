@@ -10,7 +10,8 @@ import {
 
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
 import { ChatChrome, ScopedChat } from '../../_playground/sharedProviders';
-import { ChoiceControl } from '../../_playground/controls';
+import { ChoiceControl, DividerLabel } from '../../_playground/controls';
+import { useCustomizations } from '../../_playground/useCustomizations';
 import { users } from '../../_playground/data';
 
 const conversation = {
@@ -32,22 +33,36 @@ function makeMessage(role, status, text) {
   };
 }
 
+const CLASS_DEFS = [
+  {
+    name: 'meta',
+    selector: '.MuiChatMessage-meta',
+    description: 'External meta row containing timestamp + status.',
+  },
+];
+
 export default function ChatMessageMetaPlayground() {
   const [role, setRole] = React.useState('user');
   const [status, setStatus] = React.useState('read');
   const [variant, setVariant] = React.useState('compact');
+  const classesCustomizations = useCustomizations(CLASS_DEFS);
   const message = React.useMemo(
     () => makeMessage(role, status, 'Meta preview message.'),
     [role, status],
   );
+
+  const metaSx = classesCustomizations.toClassesSx();
 
   return (
     <PlaygroundCard
       title="ChatMessageMeta"
       description="External meta (timestamp + delivery status) used by compact bubbles."
       previewMinHeight={200}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
         <React.Fragment>
+          <DividerLabel>fixture (message data)</DividerLabel>
           <ChoiceControl
             label="role"
             value={role}
@@ -60,8 +75,9 @@ export default function ChatMessageMetaPlayground() {
             options={['sent', 'read', 'streaming']}
             onChange={setStatus}
           />
+          <DividerLabel>chrome provider</DividerLabel>
           <ChoiceControl
-            label="variant"
+            label="ChatChrome.variant"
             value={variant}
             options={['default', 'compact']}
             onChange={setVariant}
@@ -75,7 +91,7 @@ export default function ChatMessageMetaPlayground() {
           activeConversationId={conversation.id}
         >
           <ChatChrome variant={variant} density="standard">
-            <Box sx={{ width: '100%' }}>
+            <Box sx={{ width: '100%', ...metaSx }}>
               <ChatMessageGroup messageId={message.id}>
                 <ChatMessageComponent messageId={message.id}>
                   <ChatMessageAvatar />

@@ -17,7 +17,7 @@ export default function SlotPropsCustomization() {
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
       slotProps={{
-        composerInput: {
+        input: {
           placeholder: 'Ask me anything...',
         },
         messageList: {

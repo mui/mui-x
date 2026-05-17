@@ -1,21 +1,24 @@
 ---
 productId: x-chat
-title: Date Divider
+title: Date divider
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatDateDivider
 ---
 
-# Chat - Date Divider
+# Chat - Date divider
 
-<p class="description">Inline separators that group messages by day inside a scrolling list.</p>
+<p class="description">Group messages by day with inline separators inside the chat thread.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Overview
 
-`ChatDateDivider` renders between messages whose `createdAt` values fall on different calendar days. It's used by `ChatMessageList` by default but can be embedded standalone in custom layouts.
+The date divider appears between messages whose `createdAt` values fall on different calendar days.
+`ChatMessageList` renders it by default, or you can embed it directly in custom layouts.
 
 ## Interactive playground
+
+The demo below shows the date divider rendering between messages on different calendar days:
 
 {{"demo": "ChatDateDividerPlayground.js", "bg": "inline", "defaultCodeOpen": false}}

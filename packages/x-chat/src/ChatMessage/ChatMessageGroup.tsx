@@ -3,26 +3,33 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
-import {
-  MessageGroup,
-  type MessageGroupProps,
-  useChatVariant,
-  useMessage,
-} from '@mui/x-chat-headless';
+import { MessageGroup, type MessageGroupProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
-import { ChatMessage } from './ChatMessage';
-import { ChatMessageAvatar } from './ChatMessageAvatar';
-import { ChatMessageContent } from './ChatMessageContent';
-import { ChatMessageMeta } from './ChatMessageMeta';
-import { ChatMessageInlineMeta } from './ChatMessageInlineMeta';
+import {
+  ChatMessage,
+  type ChatMessageProps,
+  type ChatMessageSlots,
+  type ChatMessageSlotProps,
+} from './ChatMessage';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageGroup');
 
-export interface ChatMessageGroupProps extends MessageGroupProps {
+export interface ChatMessageGroupSlots extends Partial<ChatMessageSlots> {
+  /** Override the inner ChatMessage component used for the single message in this group. */
+  message: React.ElementType;
+}
+
+export interface ChatMessageGroupSlotProps extends ChatMessageSlotProps {
+  message?: Partial<ChatMessageProps>;
+}
+
+export interface ChatMessageGroupProps extends Omit<MessageGroupProps, 'slots' | 'slotProps'> {
   className?: string;
   sx?: SxProps<Theme>;
   classes?: Partial<ChatMessageClasses>;
+  slots?: Partial<ChatMessageGroupSlots>;
+  slotProps?: ChatMessageGroupSlotProps;
 }
 
 const ChatMessageGroupStyled = styled('div', {
@@ -54,6 +61,11 @@ const ChatMessageGroupStyled = styled('div', {
     gap: 0,
     width: '100%',
     marginBlockStart,
+    // When the avatar slot is hidden, drop the reserved avatar size so any
+    // descendant relying on the variable (padding, author-name offset) collapses too.
+    '&.MuiChatMessage-noAvatar': {
+      '--MuiChatMessage-avatarSize': '0px',
+    },
   };
 });
 
@@ -101,32 +113,6 @@ const ChatMessageGroupTimestampStyled = styled('span', {
   flexShrink: 0,
 }));
 
-/**
- * Default content rendered inside ChatMessageGroup when no children are provided.
- * Uses the variant-aware styled components (avatar, content bubble, meta).
- */
-function ChatMessageGroupDefaultContent({ messageId }: { messageId: string }) {
-  const variant = useChatVariant();
-  const isCompact = variant === 'compact';
-  const message = useMessage(messageId);
-  const isStreaming = message?.status === 'streaming';
-  const hasMeta =
-    Boolean(message?.createdAt) || Boolean(message?.editedAt) || Boolean(message?.status);
-  // In the default variant, meta is rendered inline inside the bubble.
-  // Skip it during streaming — there is no timestamp yet, and the streaming state
-  // is already communicated via the MuiChatMessage-streaming CSS class.
-  const afterContent =
-    !isCompact && !isStreaming && hasMeta ? <ChatMessageInlineMeta /> : undefined;
-
-  return (
-    <React.Fragment>
-      <ChatMessageAvatar />
-      <ChatMessageContent afterContent={afterContent} />
-      {isCompact && <ChatMessageMeta />}
-    </React.Fragment>
-  );
-}
-
 const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>(
   function ChatMessageGroup(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageGroup' });
@@ -142,15 +128,47 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
     } = props;
     const classes = useChatMessageUtilityClasses(classesProp);
 
-    // When no children are provided, render the default styled message layout.
-    // This ensures ChatMessageGroup works as a standalone component with proper
-    // styling for both default and compact variants.
+    // Slot-driven path: split the `message` slot from the inner-message slots.
+    // The inner-message slots flow into the ChatMessage instance so consumers can
+    // hide / replace avatar, content, meta, actions, etc. by passing them at the
+    // ChatMessageGroup level (or all the way from ChatBox).
+    const MessageSlot = (slots?.message ?? ChatMessage) as typeof ChatMessage;
+    const innerSlots: Partial<ChatMessageSlots> = {
+      avatar: slots?.avatar,
+      content: slots?.content,
+      meta: slots?.meta,
+      inlineMeta: slots?.inlineMeta,
+      error: slots?.error,
+      actions: slots?.actions,
+      root: slots?.root,
+    };
+    const innerSlotProps: ChatMessageSlotProps = {
+      avatar: slotProps?.avatar,
+      content: slotProps?.content,
+      meta: slotProps?.meta,
+      inlineMeta: slotProps?.inlineMeta,
+      error: slotProps?.error,
+      actions: slotProps?.actions,
+      root: slotProps?.root,
+    };
+
+    // Track whether the avatar slot is explicitly nulled — used to mirror the
+    // `noAvatar` class on the group wrapper so any descendant CSS that reads
+    // `var(--MuiChatMessage-avatarSize)` can collapse the reserved space.
+    const hasAvatar = slots?.avatar !== null;
+
+    // Render priority:
+    // 1. Explicit `children` (legacy: caller provided their own composition)
+    // 2. `slots.message` (or default ChatMessage) with the inner slot map
     const resolvedChildren =
       children ??
       (messageId ? (
-        <ChatMessage messageId={messageId}>
-          <ChatMessageGroupDefaultContent messageId={messageId} />
-        </ChatMessage>
+        <MessageSlot
+          messageId={messageId}
+          slots={innerSlots}
+          slotProps={innerSlotProps}
+          {...(slotProps?.message ?? {})}
+        />
       ) : null);
 
     return (
@@ -159,17 +177,14 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
         messageId={messageId}
         {...other}
         slots={{
-          group: slots?.group ?? ChatMessageGroupStyled,
-          authorName: slots?.authorName ?? ChatMessageGroupAuthorNameStyled,
-          groupTimestamp: slots?.groupTimestamp ?? ChatMessageGroupTimestampStyled,
-          ...slots,
+          group: ChatMessageGroupStyled,
+          authorName: ChatMessageGroupAuthorNameStyled,
+          groupTimestamp: ChatMessageGroupTimestampStyled,
         }}
         slotProps={{
-          ...slotProps,
           group: {
-            className: clsx(classes.group, className),
+            className: clsx(classes.group, !hasAvatar && classes.noAvatar, className),
             sx,
-            ...(slotProps?.group as object),
           } as any,
         }}
       >

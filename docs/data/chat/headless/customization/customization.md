@@ -9,6 +9,8 @@ githubLabel: 'scope: chat'
 
 <p class="description">Customize the headless primitives through slots, <code>slotProps</code>, and owner state while keeping the built-in structure and behavior.</p>
 
+The demo below replaces multiple headless slots in a single surface:
+
 {{"demo": "../examples/slot-customization/SlotCustomization.js", "hideToolbar": true}}
 
 ## Customization model

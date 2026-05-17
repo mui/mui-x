@@ -4,7 +4,48 @@ import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import { ChatConfirmation } from '@mui/x-chat';
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { TextControl } from '../../_playground/controls';
+import { DividerLabel, TextControl } from '../../_playground/controls';
+import {
+  useCustomizations,
+  type CustomizationDef,
+} from '../../_playground/useCustomizations';
+
+type ClassKey =
+  | 'root'
+  | 'icon'
+  | 'message'
+  | 'actions'
+  | 'confirmButton'
+  | 'cancelButton';
+
+const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
+  { name: 'root', description: 'The confirmation card.' },
+  {
+    name: 'icon',
+    selector: '.MuiChatConfirmation-icon',
+    description: 'The warning icon container.',
+  },
+  {
+    name: 'message',
+    selector: '.MuiChatConfirmation-message',
+    description: 'The message paragraph.',
+  },
+  {
+    name: 'actions',
+    selector: '.MuiChatConfirmation-actions',
+    description: 'The button row.',
+  },
+  {
+    name: 'confirmButton',
+    selector: '.MuiChatConfirmation-confirmButton',
+    description: 'The primary confirm button.',
+  },
+  {
+    name: 'cancelButton',
+    selector: '.MuiChatConfirmation-cancelButton',
+    description: 'The cancel button.',
+  },
+];
 
 export default function ChatConfirmationPlayground() {
   const [message, setMessage] = React.useState(
@@ -15,14 +56,20 @@ export default function ChatConfirmationPlayground() {
   const [resolution, setResolution] = React.useState<'confirm' | 'cancel' | null>(
     null,
   );
+  const classesCustomizations = useCustomizations<ClassKey>(CLASS_DEFS);
+
+  const cardSx = classesCustomizations.toClassesSx();
 
   return (
     <PlaygroundCard
       title="ChatConfirmation"
       description="Inline tool-call gating using palette.warning tokens."
-      previewMinHeight={200}
+      previewMinHeight={220}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
         <React.Fragment>
+          <DividerLabel>props</DividerLabel>
           <TextControl
             label="message"
             value={message}
@@ -50,6 +97,7 @@ export default function ChatConfirmationPlayground() {
             cancelLabel={cancelLabel}
             onConfirm={() => setResolution('confirm')}
             onCancel={() => setResolution('cancel')}
+            sx={cardSx as any}
           />
           <Snackbar
             open={resolution !== null}
@@ -62,7 +110,7 @@ export default function ChatConfirmationPlayground() {
               variant="filled"
               onClose={() => setResolution(null)}
             >
-              {resolution === 'confirm' ? 'Confirmed' : 'Cancelled'}
+              {resolution === 'confirm' ? 'onConfirm fired' : 'onCancel fired'}
             </Alert>
           </Snackbar>
         </Box>

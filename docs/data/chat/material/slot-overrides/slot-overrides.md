@@ -53,24 +53,24 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 | Slot name        | Default component    | Element | Description                   |
 | :--------------- | :------------------- | :------ | :---------------------------- |
 | `messageList`    | `ChatMessageList`    | `<div>` | Scrollable message container  |
-| `messageRoot`    | `ChatMessage`        | `<div>` | Individual message row        |
-| `messageAvatar`  | `ChatMessageAvatar`  | `<div>` | Author avatar                 |
-| `messageContent` | `ChatMessageContent` | `<div>` | Message bubble                |
-| `messageMeta`    | `ChatMessageMeta`    | `<div>` | Timestamp and delivery status |
-| `messageActions` | `ChatMessageActions` | `<div>` | Hover action menu             |
-| `messageGroup`   | `ChatMessageGroup`   | `<div>` | Same-author message group     |
+| `message`    | `ChatMessage`        | `<div>` | Individual message row        |
+| `avatar`  | `ChatMessageAvatar`  | `<div>` | Author avatar                 |
+| `content` | `ChatMessageContent` | `<div>` | Message bubble                |
+| `meta`    | `ChatMessageMeta`    | `<div>` | Timestamp and delivery status |
+| `actions` | `ChatMessageActions` | `<div>` | Hover action menu             |
+| `group`   | `ChatMessageGroup`   | `<div>` | Same-author message group     |
 | `dateDivider`    | `ChatDateDivider`    | `<div>` | Date separator between groups |
 
 ### Composer slots
 
 | Slot name              | Default component          | Element      | Description             |
 | :--------------------- | :------------------------- | :----------- | :---------------------- |
-| `composerRoot`         | `ChatComposer`             | `<form>`     | Composer container      |
-| `composerInput`        | `ChatComposerTextArea`     | `<textarea>` | Auto-resizing text area |
-| `composerSendButton`   | `ChatComposerSendButton`   | `<button>`   | Submit button           |
-| `composerAttachButton` | `ChatComposerAttachButton` | `<button>`   | File attach trigger     |
-| `composerToolbar`      | `ChatComposerToolbar`      | `<div>`      | Button row              |
-| `composerHelperText`   | `ChatComposerHelperText`   | `<div>`      | Disclaimer or hint      |
+| `composer`         | `ChatComposer`             | `<form>`     | Composer container      |
+| `input`        | `ChatComposerTextArea`     | `<textarea>` | Auto-resizing text area |
+| `send`   | `ChatComposerSendButton`   | `<button>`   | Submit button           |
+| `attach` | `ChatComposerAttachButton` | `<button>`   | File attach trigger     |
+| `toolbar`      | `ChatComposerToolbar`      | `<div>`      | Button row              |
+| `helperText`   | `ChatComposerHelperText`   | `<div>`      | Disclaimer or hint      |
 
 ### Indicator slots
 
@@ -82,7 +82,7 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 | `suggestions`     | `ChatSuggestions`              | `<div>`    | Prompt suggestion chips                |
 
 :::info
-The `typingIndicator`, `unreadMarker`, and `messageActions` slots are defined in the type interface but are not currently consumed by `ChatBox`'s internal composition. To customize these, use the standalone components directly in a custom layout with `ChatProvider`.
+The `typingIndicator`, `unreadMarker`, and `actions` slots are defined in the type interface but are not currently consumed by `ChatBox`'s internal composition. To customize these, use the standalone components directly in a custom layout with `ChatProvider`.
 :::
 
 ## Hiding a slot
@@ -94,7 +94,7 @@ Return `null` from a slot to remove it entirely:
   adapter={adapter}
   slots={{
     conversationHeader: () => null,
-    composerAttachButton: () => null,
+    attach: () => null,
     suggestions: () => null,
   }}
 />
@@ -125,7 +125,7 @@ When a feature flag is set to `false`, the corresponding slot is **not rendered 
 <ChatBox
   adapter={adapter}
   features={{ attachments: false }}
-  slots={{ composerAttachButton: MyCustomButton }}  {/* ignored */}
+  slots={{ attach: MyCustomButton }}  {/* ignored */}
 />
 ```
 
@@ -150,13 +150,13 @@ Import the slot types for type-safe custom components:
 import type { ChatBoxSlots, ChatBoxSlotProps } from '@mui/x-chat';
 
 // Your custom slot component receives the same props as the default
-const MyMessageContent: ChatBoxSlots['messageContent'] = (props) => {
+const MyMessageContent: ChatBoxSlots['content'] = (props) => {
   return <div className="custom-bubble" {...props} />;
 };
 
 // Type-safe slotProps
 const mySlotProps: ChatBoxSlotProps = {
-  composerInput: { placeholder: 'Type here...' },
+  input: { placeholder: 'Type here...' },
   messageList: { sx: { p: 2 } },
 };
 ```

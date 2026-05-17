@@ -113,8 +113,8 @@ This is useful for setting `aria-label` attributes, `sx` overrides, or other com
 <ChatBox
   slotProps={{
     conversationList: { 'aria-label': 'Chat threads' },
-    composerInput: { placeholder: 'Ask anything...' },
-    composerSendButton: { sx: { borderRadius: 6 } },
+    input: { placeholder: 'Ask anything...' },
+    send: { sx: { borderRadius: 6 } },
   }}
 />
 ```
@@ -132,19 +132,19 @@ This is useful for setting `aria-label` attributes, `sx` overrides, or other com
 | `conversationTitle`    | `Partial<ChatConversationTitleProps>`        | Thread title            |
 | `conversationSubtitle` | `Partial<ChatConversationSubtitleProps>`     | Thread subtitle         |
 | `messageList`          | `Partial<ChatMessageListProps>`              | Message list            |
-| `messageRoot`          | `Partial<ChatMessageProps>`                  | Each message container  |
-| `messageAvatar`        | `Partial<ChatMessageAvatarProps>`            | Message avatar          |
-| `messageContent`       | `Partial<ChatMessageContentProps>`           | Message content/bubble  |
-| `messageMeta`          | `Partial<ChatMessageMetaProps>`              | Message timestamp       |
-| `messageActions`       | `Partial<ChatMessageActionsProps>`           | Message action menu     |
-| `messageGroup`         | `Partial<ChatMessageGroupProps>`             | Message group container |
+| `message`          | `Partial<ChatMessageProps>`                  | Each message container  |
+| `avatar`        | `Partial<ChatMessageAvatarProps>`            | Message avatar          |
+| `content`       | `Partial<ChatMessageContentProps>`           | Message content/bubble  |
+| `meta`          | `Partial<ChatMessageMetaProps>`              | Message timestamp       |
+| `actions`       | `Partial<ChatMessageActionsProps>`           | Message action menu     |
+| `group`         | `Partial<ChatMessageGroupProps>`             | Message group container |
 | `dateDivider`          | `Partial<ChatDateDividerProps>`              | Date separator          |
-| `composerRoot`         | `Partial<ChatComposerProps>`                 | Composer form root      |
-| `composerInput`        | `Partial<ChatComposerTextAreaProps>`         | Composer textarea       |
-| `composerSendButton`   | `Partial<ChatComposerSendButtonProps>`       | Send button             |
-| `composerAttachButton` | `Partial<ChatComposerAttachButtonProps>`     | Attach button           |
-| `composerToolbar`      | `Partial<ChatComposerToolbarProps>`          | Toolbar container       |
-| `composerHelperText`   | `Partial<ChatComposerHelperTextProps>`       | Helper text below input |
+| `composer`         | `Partial<ChatComposerProps>`                 | Composer form root      |
+| `input`        | `Partial<ChatComposerTextAreaProps>`         | Composer textarea       |
+| `send`   | `Partial<ChatComposerSendButtonProps>`       | Send button             |
+| `attach` | `Partial<ChatComposerAttachButtonProps>`     | Attach button           |
+| `toolbar`      | `Partial<ChatComposerToolbarProps>`          | Toolbar container       |
+| `helperText`   | `Partial<ChatComposerHelperTextProps>`       | Helper text below input |
 | `typingIndicator`      | `Partial<ChatTypingIndicatorProps>`          | Typing indicator        |
 | `unreadMarker`         | `Partial<ChatUnreadMarkerProps>`             | Unread marker           |
 | `scrollToBottom`       | `Partial<ChatScrollToBottomAffordanceProps>` | Scroll to bottom button |
@@ -170,7 +170,7 @@ const CustomMessageContent = React.forwardRef(
   },
 );
 
-<ChatBox slots={{ messageContent: CustomMessageContent }} />;
+<ChatBox slots={{ content: CustomMessageContent }} />;
 ```
 
 ### Available slots
@@ -187,19 +187,19 @@ const CustomMessageContent = React.forwardRef(
 | `conversationSubtitle`      | `ChatConversationSubtitle`      | Thread subtitle text         |
 | `conversationHeaderActions` | `ChatConversationHeaderActions` | Header action area           |
 | `messageList`               | `ChatMessageList`               | Virtualized message list     |
-| `messageRoot`               | `ChatMessage`                   | Each message container       |
-| `messageAvatar`             | `ChatMessageAvatar`             | Message avatar               |
-| `messageContent`            | `ChatMessageContent`            | Message content/bubble       |
-| `messageMeta`               | `ChatMessageMeta`               | Message timestamp and status |
-| `messageActions`            | `ChatMessageActions`            | Message action menu          |
-| `messageGroup`              | `ChatMessageGroup`              | Groups consecutive messages  |
+| `message`               | `ChatMessage`                   | Each message container       |
+| `avatar`             | `ChatMessageAvatar`             | Message avatar               |
+| `content`            | `ChatMessageContent`            | Message content/bubble       |
+| `meta`               | `ChatMessageMeta`               | Message timestamp and status |
+| `actions`            | `ChatMessageActions`            | Message action menu          |
+| `group`              | `ChatMessageGroup`              | Groups consecutive messages  |
 | `dateDivider`               | `ChatDateDivider`               | Date boundary separator      |
-| `composerRoot`              | `ChatComposer`                  | Composer form                |
-| `composerInput`             | `ChatComposerTextArea`          | Textarea input               |
-| `composerSendButton`        | `ChatComposerSendButton`        | Send button                  |
-| `composerAttachButton`      | `ChatComposerAttachButton`      | Attach button                |
-| `composerToolbar`           | `ChatComposerToolbar`           | Toolbar container            |
-| `composerHelperText`        | `ChatComposerHelperText`        | Helper text                  |
+| `composer`              | `ChatComposer`                  | Composer form                |
+| `input`             | `ChatComposerTextArea`          | Textarea input               |
+| `send`        | `ChatComposerSendButton`        | Send button                  |
+| `attach`      | `ChatComposerAttachButton`      | Attach button                |
+| `toolbar`           | `ChatComposerToolbar`           | Toolbar container            |
+| `helperText`        | `ChatComposerHelperText`        | Helper text                  |
 | `typingIndicator`           | `ChatTypingIndicator`           | Typing indicator             |
 | `unreadMarker`              | `ChatUnreadMarker`              | Unread message marker        |
 | `scrollToBottom`            | `ChatScrollToBottomAffordance`  | Scroll to bottom affordance  |

@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Adapters
 
-<p class="description">The <code>ChatAdapter</code> interface is the single contract between your backend and the chat runtime. This page is the full interface reference.</p>
+<p class="description">Connect your backend to the chat runtime by implementing the adapter interface.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -15,7 +15,7 @@ githubLabel: 'scope: chat'
 The adapter is the single object that bridges them.
 It receives user messages, communicates with your server, and returns a streaming response that the runtime turns into live UI updates.
 
-## The `ChatAdapter` interface
+## Adapter interface reference
 
 The full interface is generic over your pagination cursor type.
 The default cursor type is `string`, which covers the majority of REST and cursor-based APIs:
@@ -50,9 +50,9 @@ interface ChatAdapter<Cursor = string> {
 ```
 
 Only `sendMessage` is required.
-Every other method is optional and incrementally adopted — start with just `sendMessage` and add methods as your product grows.
+Every other method is optional and incrementally adopted—start with just `sendMessage` and add methods as your product grows.
 
-## Required: `sendMessage`
+## Sending messages
 
 `sendMessage` is the heart of the adapter.
 It is called every time a user submits a message in the composer.
@@ -160,7 +160,7 @@ When `hasMore` is `true`, `ChatBox` shows a "Load earlier messages" control that
 
 ### Resuming an interrupted stream
 
-Implement `reconnectToStream(input)` to resume an interrupted stream — for example, when an SSE connection drops mid-response.
+Implement `reconnectToStream(input)` to resume an interrupted stream—for example, when an SSE connection drops mid-response.
 The runtime calls it automatically after detecting a disconnected stream, with one reconnect attempt for the interrupted assistant message.
 
 ```ts
@@ -201,7 +201,7 @@ interface ChatMarkReadInput {
 
 ### Receiving real-time events
 
-Implement `subscribe(input)` to receive real-time events pushed from your backend — new messages, typing indicators, read receipts, or conversation updates.
+Implement `subscribe(input)` to receive real-time events pushed from your backend—new messages, typing indicators, read receipts, or conversation updates.
 The runtime calls `subscribe()` on mount and invokes the returned cleanup function on unmount.
 
 ```ts
@@ -214,7 +214,7 @@ type ChatSubscriptionCleanup = () => void;
 
 The cleanup function can also be returned from a `Promise` for async subscription setups.
 
-For the full list of realtime event types, see [Real-Time Adapters](/x/react-chat/backend/real-time-adapters/).
+For the full list of realtime event types, see [Real-time adapters](/x/react-chat/backend/real-time-adapters/).
 
 ### Responding to tool approvals
 
@@ -304,7 +304,7 @@ To handle errors at the application level, use the `onError` callback prop:
 
 ## See also
 
-- [Building an Adapter](/x/react-chat/backend/building-an-adapter/) for a step-by-step tutorial.
-- [Real-Time Adapters](/x/react-chat/backend/real-time-adapters/) for the event types used by `subscribe()`.
+- [Building an adapter](/x/react-chat/backend/building-an-adapter/) for a step-by-step tutorial.
+- [Real-time adapters](/x/react-chat/backend/real-time-adapters/) for the event types used by `subscribe()`.
 - [Streaming](/x/react-chat/behavior/streaming/) for the full stream chunk protocol reference.
-- [Hooks Reference](/x/react-chat/resources/hooks/) to see which runtime actions trigger adapter methods.
+- [Hooks reference](/x/react-chat/resources/hooks/) to see which runtime actions trigger adapter methods.

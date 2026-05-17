@@ -1,40 +1,40 @@
 ---
 productId: x-chat
-title: Look & Feel
+title: Look and feel
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - Look & Feel
+# Chat - Look and feel
 
-<p class="description">Change colors, layout style, density, and typography — from quick props to full brand theming.</p>
+<p class="description">Change colors, layout style, density, and typography—from quick props to full brand theming.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-## Try it live
+## Live playground
 
-The same `ChatBox` re-themes itself instantly when you swap the layout variant, density, primary color, or border-radius — every change comes from a single Material UI theme + two top-level props.
+The same `ChatBox` re-themes itself when you swap the layout variant, density, primary color, or border radius—every change comes from a single Material UI theme and two top-level props:
 
 {{"demo": "LookAndFeelPlayground.js", "bg": "inline"}}
 
-## Pick a layout style
+## Choosing a layout style
 
 The `variant` prop controls how messages and the composer are arranged:
 
 ```tsx
-// Bubbles — colored message bubbles, right-aligned for user (WhatsApp, Telegram)
+// Bubbles—colored message bubbles, right-aligned for user (WhatsApp, Telegram)
 <ChatBox adapter={adapter} variant="default" />
 
-// Flat — no bubbles, stacked messages with inline sender info (Slack, ChatGPT, Claude)
+// Flat—no bubbles, stacked messages with inline sender info (Slack, ChatGPT, Claude)
 <ChatBox adapter={adapter} variant="compact" />
 ```
 
-The same prop drives the composer's two stock layouts:
+The demo below shows how the same `variant` prop drives the composer's two stock layouts:
 
 {{"demo": "ComposerVariantsDemo.js", "bg": "inline"}}
 
-## Pick a density
+## Choosing a density
 
 The `density` prop controls vertical spacing between messages:
 
@@ -45,11 +45,11 @@ The `density` prop controls vertical spacing between messages:
 
 ## Message states
 
-`ChatMessage` adapts automatically to the role and status it reads from the store — no extra props required:
+`ChatMessage` adapts to the role and status it reads from the store—no extra props required:
 
 {{"demo": "MessageStatesDemo.js", "bg": "inline"}}
 
-## The `sx` prop
+## Applying one-off styles with `sx`
 
 Apply one-off styles directly on `ChatBox`:
 
@@ -95,15 +95,15 @@ const theme = createTheme({
 });
 ```
 
-## Targeted styling with `slotProps`
+## Styling internal slots
 
 Style any internal subcomponent without replacing it:
 
 ```tsx
 <ChatBox
   slotProps={{
-    composerInput: { placeholder: 'Ask anything...' },
-    composerSendButton: { sx: { borderRadius: 6 } },
+    input: { placeholder: 'Ask anything...' },
+    send: { sx: { borderRadius: 6 } },
   }}
 />
 ```
@@ -123,7 +123,7 @@ import { chatBoxClasses } from '@mui/x-chat';
 
 ## Tailwind CSS
 
-The headless primitives from `@mui/x-chat/headless` render semantic HTML with zero built-in styles and `data-*` attributes for state — a natural fit for Tailwind:
+The headless primitives from `@mui/x-chat/headless` render semantic HTML with zero built-in styles and `data-*` attributes for state—a natural fit for Tailwind:
 
 ```tsx
 import { Chat, Composer, Message, MessageList } from '@mui/x-chat/headless';

@@ -415,23 +415,27 @@ function DefaultComposer({
   features?: ChatBoxFeatures;
 }) {
   const contextVariant = useChatVariant();
-  const variant = slotProps?.composerRoot?.variant ?? contextVariant;
+  const variant = slotProps?.composer?.variant ?? contextVariant;
   const showAttachments = features?.attachments !== false;
   const showHelperText = features?.helperText !== false;
   const attachmentConfig =
     typeof features?.attachments === 'object' ? features.attachments : undefined;
-  const ComposerRootComponent = (slots?.composerRoot ?? ChatComposer) as typeof ChatComposer;
-  const ComposerInputComponent = (slots?.composerInput ??
+  const ComposerRootComponent = (slots?.composer ?? ChatComposer) as typeof ChatComposer;
+  const ComposerInputComponent = (slots?.input ??
     ChatComposerTextArea) as typeof ChatComposerTextArea;
-  const ComposerToolbarComponent = (slots?.composerToolbar ??
+  const ComposerToolbarComponent = (slots?.toolbar ??
     ChatComposerToolbar) as typeof ChatComposerToolbar;
-  const ComposerSendButtonComponent = (slots?.composerSendButton ??
+  // Presentational slots: `null` hides the piece and the surrounding layout
+  // collapses. `undefined` falls back to the default component.
+  const showSendButton = slots?.send !== null;
+  const ComposerSendButtonComponent = (slots?.send ??
     ChatComposerSendButton) as typeof ChatComposerSendButton;
-  const ComposerAttachButtonComponent = (slots?.composerAttachButton ??
+  const showAttachButton = showAttachments && slots?.attach !== null;
+  const ComposerAttachButtonComponent = (slots?.attach ??
     ChatComposerAttachButton) as typeof ChatComposerAttachButton;
-  const ComposerAttachmentListComponent = (slots?.composerAttachmentList ??
+  const ComposerAttachmentListComponent = (slots?.attachmentList ??
     ChatComposerAttachmentList) as typeof ChatComposerAttachmentList;
-  const ComposerHelperTextComponent = (slots?.composerHelperText ??
+  const ComposerHelperTextComponent = (slots?.helperText ??
     ChatComposerHelperText) as typeof ChatComposerHelperText;
   const localeText = useChatLocaleText();
 
@@ -440,15 +444,15 @@ function DefaultComposer({
       <ComposerRootComponent
         variant="compact"
         attachmentConfig={attachmentConfig}
-        {...(slotProps?.composerRoot ?? {})}
+        {...(slotProps?.composer ?? {})}
       >
         {showAttachments && (
-          <ComposerAttachmentListComponent {...(slotProps?.composerAttachmentList ?? {})} />
+          <ComposerAttachmentListComponent {...(slotProps?.attachmentList ?? {})} />
         )}
-        {showAttachments && (
+        {showAttachButton && (
           <ComposerAttachButtonComponent
             aria-label={localeText.composerAttachButtonLabel}
-            {...(slotProps?.composerAttachButton ?? {})}
+            {...(slotProps?.attach ?? {})}
           >
             <DefaultAttachIcon />
           </ComposerAttachButtonComponent>
@@ -456,43 +460,56 @@ function DefaultComposer({
         <ComposerInputComponent
           maxRows={5}
           placeholder={localeText.composerInputPlaceholder}
-          {...(slotProps?.composerInput ?? {})}
+          {...(slotProps?.input ?? {})}
         />
-        <ComposerSendButtonComponent
-          aria-label={localeText.composerSendButtonLabel}
-          {...(slotProps?.composerSendButton ?? {})}
-        >
-          <DefaultSendIcon />
-        </ComposerSendButtonComponent>
+        {/*
+          Honor the `toolbar` slot in compact too: wrapping the trailing send
+          button gives consumers a single override point to inject extra
+          actions (mic, model picker, slash menu, etc.) without hijacking the
+          attach slot. The default toolbar in compact composes via the
+          ChatComposer's row-flex so the visual layout is unchanged.
+        */}
+        {showSendButton && (
+          <ComposerToolbarComponent {...(slotProps?.toolbar ?? {})}>
+            <ComposerSendButtonComponent
+              aria-label={localeText.composerSendButtonLabel}
+              {...(slotProps?.send ?? {})}
+            >
+              <DefaultSendIcon />
+            </ComposerSendButtonComponent>
+          </ComposerToolbarComponent>
+        )}
       </ComposerRootComponent>
     );
   }
 
   return (
-    <ComposerRootComponent attachmentConfig={attachmentConfig} {...(slotProps?.composerRoot ?? {})}>
+    <ComposerRootComponent attachmentConfig={attachmentConfig} {...(slotProps?.composer ?? {})}>
       {showAttachments && (
-        <ComposerAttachmentListComponent {...(slotProps?.composerAttachmentList ?? {})} />
+        <ComposerAttachmentListComponent {...(slotProps?.attachmentList ?? {})} />
       )}
       <ComposerInputComponent
         placeholder={localeText.composerInputPlaceholder}
-        {...(slotProps?.composerInput ?? {})}
+        {...(slotProps?.input ?? {})}
       />
-      {showHelperText && <ComposerHelperTextComponent {...(slotProps?.composerHelperText ?? {})} />}
-      <ComposerToolbarComponent {...(slotProps?.composerToolbar ?? {})}>
-        {showAttachments && (
+      {showHelperText && <ComposerHelperTextComponent {...(slotProps?.helperText ?? {})} />}
+      <ComposerToolbarComponent {...(slotProps?.toolbar ?? {})}>
+        {showAttachButton && (
           <ComposerAttachButtonComponent
             aria-label={localeText.composerAttachButtonLabel}
-            {...(slotProps?.composerAttachButton ?? {})}
+            {...(slotProps?.attach ?? {})}
           >
             <DefaultAttachIcon />
           </ComposerAttachButtonComponent>
         )}
-        <ComposerSendButtonComponent
-          aria-label={localeText.composerSendButtonLabel}
-          {...(slotProps?.composerSendButton ?? {})}
-        >
-          <DefaultSendIcon />
-        </ComposerSendButtonComponent>
+        {showSendButton && (
+          <ComposerSendButtonComponent
+            aria-label={localeText.composerSendButtonLabel}
+            {...(slotProps?.send ?? {})}
+          >
+            <DefaultSendIcon />
+          </ComposerSendButtonComponent>
+        )}
       </ComposerToolbarComponent>
     </ComposerRootComponent>
   );

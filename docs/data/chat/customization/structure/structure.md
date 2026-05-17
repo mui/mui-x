@@ -8,36 +8,36 @@ components: ChatBox
 
 # Chat - Structure
 
-<p class="description">Replace subcomponents, rearrange the layout, add custom renderers, and localize every string.</p>
+<p class="description">Customize every part of the Chat UI by swapping slots, rearranging the layout, and translating user-facing strings.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-## How do I…
+## Common customizations
 
-Jump to a task. Each recipe is the shortest path that works — copy, adapt, ship.
+The recipes below cover common customizations.
 
-### …hide the attach button?
+### Hiding the attach button
 
 ```tsx
 <ChatBox adapter={adapter} features={{ attachments: false }} />
 ```
 
-### …show the built-in conversation list?
+### Showing the conversation list
 
 ```tsx
 <ChatBox adapter={adapter} features={{ conversationList: true }} />
 ```
 
-### …change the composer placeholder?
+### Changing the composer placeholder
 
 ```tsx
 <ChatBox
   adapter={adapter}
-  localeText={{ composerInputPlaceholder: 'Ask anything…' }}
+  localeText={{ composerInputPlaceholder: 'Ask anything...' }}
 />
 ```
 
-### …replace the send button with my own icon?
+### Replacing the send button with a custom icon
 
 ```tsx
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
@@ -50,16 +50,16 @@ function MySendButton(props) {
   );
 }
 
-<ChatBox adapter={adapter} slots={{ composerSendButton: MySendButton }} />;
+<ChatBox adapter={adapter} slots={{ send: MySendButton }} />;
 ```
 
-### …hide avatars entirely?
+### Hiding avatars entirely
 
 ```tsx
-<ChatBox adapter={adapter} slots={{ messageAvatar: () => null }} />
+<ChatBox adapter={adapter} slots={{ avatar: () => null }} />
 ```
 
-### …render tool calls as cards instead of JSON?
+### Rendering tool calls as cards instead of JSON
 
 ```tsx
 <ChatBox
@@ -72,13 +72,13 @@ function MySendButton(props) {
 />
 ```
 
-### …add a "Regenerate" action on assistant messages?
+### Adding a "Regenerate" action on assistant messages
 
 ```tsx
 <ChatBox
   adapter={adapter}
   slotProps={{
-    messageActions: ({ message }) =>
+    actions: ({ message }) =>
       message.role === 'assistant'
         ? {
             extraActions: [
@@ -94,7 +94,7 @@ function MySendButton(props) {
 />
 ```
 
-### …show a custom empty state?
+### Showing a custom empty state
 
 ```tsx
 <ChatBox
@@ -110,13 +110,13 @@ function MySendButton(props) {
 />
 ```
 
-### …hide the scroll-to-bottom button?
+### Hiding the scroll-to-bottom button
 
 ```tsx
 <ChatBox adapter={adapter} features={{ scrollToBottom: false }} />
 ```
 
-### …translate the whole UI?
+### Translating the whole UI
 
 ```tsx
 import { chatEnUS } from '@mui/x-chat/locales';
@@ -127,11 +127,11 @@ import { chatEnUS } from '@mui/x-chat/locales';
 />;
 ```
 
-Full locale key reference is [below](#localization).
+See [Localization](#localization) for details.
 
-### …wrap an existing slot instead of replacing it?
+### Wrapping an existing slot instead of replacing it
 
-Your custom component receives the same props as the default — render the original inside it:
+The custom component receives the same props as the default—render the original inside it:
 
 ```tsx
 import { ChatMessageContent } from '@mui/x-chat';
@@ -144,20 +144,20 @@ function HighlightedMessage(props) {
   );
 }
 
-<ChatBox adapter={adapter} slots={{ messageContent: HighlightedMessage }} />;
+<ChatBox adapter={adapter} slots={{ content: HighlightedMessage }} />;
 ```
 
-## Slots — swap any part
+## Swapping slots
 
 `ChatBox` is composed of named subcomponents (slots). Replace any of them with your own:
 
 ```tsx
-<ChatBox adapter={adapter} slots={{ messageContent: MyCustomMessageContent }} />
+<ChatBox adapter={adapter} slots={{ content: MyCustomMessageContent }} />
 ```
 
-Your component receives the same props as the default. This lets you wrap, extend, or fully replace any piece of the UI.
+The component receives the same props as the default. This lets you wrap, extend, or fully replace any piece of the UI.
 
-## `slotProps` — pass extra props
+## Passing extra props to slots
 
 Pass additional props to any slot without replacing the component:
 
@@ -165,8 +165,8 @@ Pass additional props to any slot without replacing the component:
 <ChatBox
   slotProps={{
     conversationList: { 'aria-label': 'Chat threads' },
-    composerInput: { placeholder: 'Ask anything...' },
-    composerSendButton: { sx: { borderRadius: 6 } },
+    input: { placeholder: 'Ask anything...' },
+    send: { sx: { borderRadius: 6 } },
   }}
 />
 ```
@@ -197,24 +197,24 @@ Pass additional props to any slot without replacing the component:
 | Slot             | Default              | Description                   |
 | :--------------- | :------------------- | :---------------------------- |
 | `messageList`    | `ChatMessageList`    | Scrollable message container  |
-| `messageRoot`    | `ChatMessage`        | Individual message row        |
-| `messageAvatar`  | `ChatMessageAvatar`  | Author avatar                 |
-| `messageContent` | `ChatMessageContent` | Message bubble                |
-| `messageMeta`    | `ChatMessageMeta`    | Timestamp and delivery status |
-| `messageActions` | `ChatMessageActions` | Hover action menu             |
-| `messageGroup`   | `ChatMessageGroup`   | Same-author message group     |
+| `message`    | `ChatMessage`        | Individual message row        |
+| `avatar`  | `ChatMessageAvatar`  | Author avatar                 |
+| `content` | `ChatMessageContent` | Message bubble                |
+| `meta`    | `ChatMessageMeta`    | Timestamp and delivery status |
+| `actions` | `ChatMessageActions` | Hover action menu             |
+| `group`   | `ChatMessageGroup`   | Same-author message group     |
 | `dateDivider`    | `ChatDateDivider`    | Date separator between groups |
 
 ### Composer
 
 | Slot                   | Default                    | Description             |
 | :--------------------- | :------------------------- | :---------------------- |
-| `composerRoot`         | `ChatComposer`             | Composer container      |
-| `composerInput`        | `ChatComposerTextArea`     | Auto-resizing text area |
-| `composerSendButton`   | `ChatComposerSendButton`   | Submit button           |
-| `composerAttachButton` | `ChatComposerAttachButton` | File attach trigger     |
-| `composerToolbar`      | `ChatComposerToolbar`      | Button row              |
-| `composerHelperText`   | `ChatComposerHelperText`   | Disclaimer or hint      |
+| `composer`         | `ChatComposer`             | Composer container      |
+| `input`        | `ChatComposerTextArea`     | Auto-resizing text area |
+| `send`   | `ChatComposerSendButton`   | Submit button           |
+| `attach` | `ChatComposerAttachButton` | File attach trigger     |
+| `toolbar`      | `ChatComposerToolbar`      | Button row              |
+| `helperText`   | `ChatComposerHelperText`   | Disclaimer or hint      |
 
 ### Indicators
 
@@ -227,7 +227,7 @@ Pass additional props to any slot without replacing the component:
 
 ## Feature flags
 
-Toggle built-in features on or off. When disabled, the corresponding slot is **not rendered** — even if you provide a custom component:
+Toggle built-in features on or off. When disabled, the corresponding slot is **not rendered**—even if you provide a custom component:
 
 ```tsx
 <ChatBox
@@ -248,17 +248,17 @@ Toggle built-in features on or off. When disabled, the corresponding slot is **n
 Return `null` from a custom slot to remove it entirely:
 
 ```tsx
-<ChatBox slots={{ messageAvatar: () => null }} />
+<ChatBox slots={{ avatar: () => null }} />
 ```
 
-## TypeScript
+## TypeScript types
 
 Import the slot types for type-safe custom components:
 
 ```tsx
 import type { ChatBoxSlots, ChatBoxSlotProps } from '@mui/x-chat';
 
-const MyMessageContent: ChatBoxSlots['messageContent'] = (props) => {
+const MyMessageContent: ChatBoxSlots['content'] = (props) => {
   return <div className="custom-bubble" {...props} />;
 };
 ```

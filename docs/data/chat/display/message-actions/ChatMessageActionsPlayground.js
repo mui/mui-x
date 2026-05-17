@@ -12,7 +12,12 @@ import {
 
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
 import { ChatChrome, ScopedChat } from '../../_playground/sharedProviders';
-import { ChoiceControl, SwitchControl } from '../../_playground/controls';
+import {
+  ChoiceControl,
+  DividerLabel,
+  SwitchControl,
+} from '../../_playground/controls';
+import { useCustomizations } from '../../_playground/useCustomizations';
 import { users } from '../../_playground/data';
 
 const conversation = {
@@ -62,16 +67,27 @@ function ThumbsUpIcon() {
   );
 }
 
+const CLASS_DEFS = [
+  {
+    name: 'actions',
+    selector: '.MuiChatMessage-actions',
+    description: 'The hover-revealed action toolbar.',
+  },
+];
+
 export default function ChatMessageActionsPlayground() {
   const [showCopy, setShowCopy] = React.useState(true);
   const [showLike, setShowLike] = React.useState(true);
   const [variant, setVariant] = React.useState('default');
   const [density, setDensity] = React.useState('standard');
+  const classesCustomizations = useCustomizations(CLASS_DEFS);
   const message = React.useMemo(
     () =>
       makeMessage('assistant', 'read', 'Hover this bubble to reveal the actions.'),
     [],
   );
+
+  const wrapperSx = classesCustomizations.toClassesSx();
 
   return (
     <PlaygroundCard
@@ -79,8 +95,11 @@ export default function ChatMessageActionsPlayground() {
       description="Hover-revealed action toolbar (copy, regenerate, react…) anchored under the bubble."
       previewMinHeight={220}
       span={2}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
         <React.Fragment>
+          <DividerLabel>composition (children)</DividerLabel>
           <SwitchControl
             label="copy action"
             checked={showCopy}
@@ -91,14 +110,15 @@ export default function ChatMessageActionsPlayground() {
             checked={showLike}
             onChange={setShowLike}
           />
+          <DividerLabel>chrome provider</DividerLabel>
           <ChoiceControl
-            label="variant"
+            label="ChatChrome.variant"
             value={variant}
             options={['default', 'compact']}
             onChange={setVariant}
           />
           <ChoiceControl
-            label="density"
+            label="ChatChrome.density"
             value={density}
             options={['compact', 'standard', 'comfortable']}
             onChange={setDensity}
@@ -112,7 +132,7 @@ export default function ChatMessageActionsPlayground() {
           activeConversationId={conversation.id}
         >
           <ChatChrome variant={variant} density={density}>
-            <Box sx={{ width: '100%' }}>
+            <Box sx={{ width: '100%', ...wrapperSx }}>
               <ChatMessageGroup messageId={message.id}>
                 <ChatMessageComponent messageId={message.id}>
                   <ChatMessageAvatar />

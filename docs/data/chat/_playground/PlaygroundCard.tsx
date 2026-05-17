@@ -42,12 +42,12 @@ export interface PlaygroundCardRegistryMetadata {
   classKeys?: readonly string[];
 }
 
-export interface PlaygroundCustomization {
-  /** Identifier — slot name or class key. */
+export interface PlaygroundClassCustomization {
+  /** Class key. */
   name: string;
   /** Optional explanation for the editor row. */
   description?: string;
-  /** CSS selector this entry produces (classes only). */
+  /** CSS selector this entry produces (used to nest the sx under `& selector`). */
   selector?: string;
   /** Raw sx text the user is editing. */
   sx: string;
@@ -57,6 +57,9 @@ export interface PlaygroundCustomization {
   /** Parse error reported by the consumer. */
   parseError?: string;
 }
+
+// Backwards-compatible alias for older callers.
+export type PlaygroundCustomization = PlaygroundClassCustomization;
 
 export type PlaygroundPreviewSize =
   | 'compact'
@@ -111,12 +114,8 @@ export interface PlaygroundCardProps {
   classKeys?: readonly string[];
   /** Responsive sizing preset or explicit preview sizing. */
   previewSize?: PlaygroundPreviewSize;
-  /** Editable slot overrides — when present, surfaces a "Slots" tab. */
-  slotCustomizations?: readonly PlaygroundCustomization[];
   /** Editable class overrides — when present, surfaces a "Classes" tab. */
-  classCustomizations?: readonly PlaygroundCustomization[];
-  /** Reset handler for the Slots tab. */
-  onSlotsReset?: () => void;
+  classCustomizations?: readonly PlaygroundClassCustomization[];
   /** Reset handler for the Classes tab. */
   onClassesReset?: () => void;
   // eslint-disable-next-line jsdoc/require-returns
@@ -133,9 +132,9 @@ const defaultRegistryMetadata: Record<string, PlaygroundCardRegistryMetadata> = 
       'conversationList',
       'conversationHeader',
       'messageList',
-      'messageRoot',
-      'messageContent',
-      'composerRoot',
+      'message',
+      'content',
+      'composer',
       'suggestions',
       'scrollToBottom',
     ],
@@ -149,6 +148,9 @@ const defaultRegistryMetadata: Record<string, PlaygroundCardRegistryMetadata> = 
   ChatConversationList: {
     status: 'compound',
     slots: [
+      'root',
+      'scroller',
+      'viewport',
       'item',
       'itemAvatar',
       'itemContent',
@@ -156,10 +158,19 @@ const defaultRegistryMetadata: Record<string, PlaygroundCardRegistryMetadata> = 
       'preview',
       'timestamp',
       'unreadBadge',
+      'itemActions',
     ],
     classKeys: [
       'root',
+      'scroller',
       'item',
+      'itemAvatar',
+      'itemContent',
+      'itemTitle',
+      'itemPreview',
+      'itemTimestamp',
+      'itemUnreadBadge',
+      'itemActions',
       'itemSelected',
       'itemUnread',
       'itemFocused',
@@ -265,7 +276,18 @@ const defaultRegistryMetadata: Record<string, PlaygroundCardRegistryMetadata> = 
   ChatComposer: {
     status: 'compound',
     slots: ['root'],
-    classKeys: ['root', 'disabled', 'variantCompact'],
+    classKeys: [
+      'root',
+      'disabled',
+      'variantCompact',
+      'label',
+      'textArea',
+      'sendButton',
+      'attachButton',
+      'toolbar',
+      'attachmentList',
+      'helperText',
+    ],
   },
   ChatComposerTextArea: {
     status: 'slot',
@@ -478,7 +500,7 @@ function getCssSize(value: number | string) {
   return typeof value === 'number' ? `${value}px` : value;
 }
 
-type ControlsTab = 'props' | 'slots' | 'classes';
+type ControlsTab = 'props' | 'classes';
 
 function RefreshIcon() {
   return (
@@ -596,11 +618,13 @@ function TabButton({
   );
 }
 
-function CustomizationRow({
+const CLASS_PLACEHOLDER = '{\n  // css properties for this selector\n}';
+
+function ClassCustomizationRow({
   item,
   defaultOpen,
 }: {
-  item: PlaygroundCustomization;
+  item: PlaygroundClassCustomization;
   defaultOpen?: boolean;
 }) {
   const hasOverride = item.sx.trim().length > 0;
@@ -686,7 +710,7 @@ function CustomizationRow({
           <Box
             component="textarea"
             value={draft}
-            placeholder={'{\n  // sx object\n}'}
+            placeholder={CLASS_PLACEHOLDER}
             spellCheck={false}
             onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
               setDraft(event.target.value)
@@ -1069,26 +1093,19 @@ export function PlaygroundCard({
   slots,
   classKeys,
   previewSize,
-  slotCustomizations,
   classCustomizations,
-  onSlotsReset,
   onClassesReset,
   copyCode,
 }: PlaygroundCardProps) {
-  const slotsOverrideCount = React.useMemo(
-    () => slotCustomizations?.filter((entry) => entry.sx.trim()).length ?? 0,
-    [slotCustomizations],
-  );
   const classesOverrideCount = React.useMemo(
     () => classCustomizations?.filter((entry) => entry.sx.trim()).length ?? 0,
     [classCustomizations],
   );
-  const hasSlotsTab = (slotCustomizations?.length ?? 0) > 0;
   const hasClassesTab = (classCustomizations?.length ?? 0) > 0;
-  const showTabs = hasSlotsTab || hasClassesTab;
+  const showTabs = hasClassesTab;
   const [activeTab, setActiveTab] = React.useState<ControlsTab>('props');
   const [controlsCollapsed, setControlsCollapsed] = React.useState(false);
-  const overridesCount = slotsOverrideCount + classesOverrideCount;
+  const overridesCount = classesOverrideCount;
   const componentId = title.replace(/[^a-zA-Z0-9]/g, '');
   const inferredComponentName =
     componentNameProp ?? registry?.componentName ?? getComponentName(title);
@@ -1270,14 +1287,6 @@ export function PlaygroundCard({
                     active={activeTab === 'props'}
                     onClick={() => setActiveTab('props')}
                   />
-                  {hasSlotsTab ? (
-                    <TabButton
-                      label="Slots"
-                      hasIndicator={slotsOverrideCount > 0}
-                      active={activeTab === 'slots'}
-                      onClick={() => setActiveTab('slots')}
-                    />
-                  ) : null}
                   {hasClassesTab ? (
                     <TabButton
                       label="Classes"
@@ -1301,11 +1310,10 @@ export function PlaygroundCard({
                   Props
                 </Typography>
               )}
-              {onReset || onSlotsReset || onClassesReset ? (
+              {onReset || onClassesReset ? (
                 <ResetButton
                   onClick={() => {
                     onReset?.();
-                    onSlotsReset?.();
                     onClassesReset?.();
                   }}
                 />
@@ -1332,26 +1340,6 @@ export function PlaygroundCard({
                   {controls}
                 </Box>
               ) : null}
-              {activeTab === 'slots' && slotCustomizations ? (
-                <Box
-                  sx={{
-                    px: 1.5,
-                    py: 0.5,
-                    '& > *': {
-                      py: 0.5,
-                      borderBottom: '1px solid',
-                      borderColor: 'divider',
-                    },
-                    '& > *:last-child': {
-                      borderBottom: 'none',
-                    },
-                  }}
-                >
-                  {slotCustomizations.map((entry) => (
-                    <CustomizationRow key={entry.name} item={entry} />
-                  ))}
-                </Box>
-              ) : null}
               {activeTab === 'classes' && classCustomizations ? (
                 <Box
                   sx={{
@@ -1368,7 +1356,7 @@ export function PlaygroundCard({
                   }}
                 >
                   {classCustomizations.map((entry) => (
-                    <CustomizationRow key={entry.name} item={entry} />
+                    <ClassCustomizationRow key={entry.name} item={entry} />
                   ))}
                 </Box>
               ) : null}

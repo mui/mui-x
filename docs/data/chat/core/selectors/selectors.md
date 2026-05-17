@@ -7,16 +7,16 @@ githubLabel: 'scope: chat'
 
 # Chat - Core selectors
 
-<p class="description">Subscribe to exactly the store slices you need with memoized selectors for efficient, granular rendering.</p>
+<p class="description">Read from the chat store with memoized selectors that drive granular, efficient subscriptions.</p>
 
 `chatSelectors` is a collection of memoized selectors that read from the normalized chat store.
-They power the built-in hooks and can also be used directly with `useChatStore()` for advanced subscriptions.
+They power the built-in hooks and can be used directly with `useChatStore()` for custom subscriptions.
 
 ```tsx
 import { chatSelectors, useChatStore } from '@mui/x-chat/headless';
 ```
 
-The following demo uses selectors for efficient rendering:
+The demo below shows selectors driving row-level subscriptions in a chat thread:
 
 {{"demo": "../examples/selector-driven-thread/SelectorDrivenThread.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
@@ -76,7 +76,7 @@ function MessageCounter() {
 }
 ```
 
-### Parameterized selectors
+### Calling parameterized selectors
 
 For selectors that take an argument, pass a selector function:
 
@@ -94,11 +94,11 @@ function ConversationTitle({ id }: { id: string }) {
 The store keeps messages and conversations in a normalized shape (`ids` + `byId` maps) rather than flat arrays.
 This design has three benefits:
 
-1. **Point updates** — Updating a single message during streaming does not rebuild the message array. Only the `messagesById` record changes.
-2. **Stable references** — The `messageIds` array only changes when messages are added or removed, not when their content updates. `useMessageIds()` stays stable during streaming.
-3. **Memoized derivation** — The `messages` selector rebuilds the array only when either `messageIds` or `messagesById` changes, and the result is reference-equal when inputs are unchanged.
+1. **Point updates**—Updating a single message during streaming does not rebuild the message array. Only the `messagesById` record changes.
+2. **Stable references**—The `messageIds` array only changes when messages are added or removed, not when their content updates. `useMessageIds()` stays stable during streaming.
+3. **Memoized derivation**—The `messages` selector rebuilds the array only when either `messageIds` or `messagesById` changes, and the result is reference-equal when inputs are unchanged.
 
-This is why the `useMessageIds()` + `useMessage(id)` pattern performs well for large threads — the ID list stays stable while individual rows subscribe to their own message record.
+This is why the `useMessageIds()` + `useMessage(id)` pattern performs well for large threads—the ID list stays stable while individual rows subscribe to their own message record.
 
 ## See also
 

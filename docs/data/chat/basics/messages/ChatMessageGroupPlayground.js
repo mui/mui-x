@@ -1,11 +1,17 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import {
+  ChatMessage as ChatMessageComponent,
+  ChatMessageAvatar,
+  ChatMessageContent,
+  ChatMessageGroup,
+} from '@mui/x-chat';
 
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
 import { ChatChrome, ScopedChat } from '../../_playground/sharedProviders';
-import { MessageBubble } from '../../_playground/MessageBubble';
 import {
   ChoiceControl,
+  DividerLabel,
   NumberControl,
   SwitchControl,
 } from '../../_playground/controls';
@@ -74,6 +80,7 @@ export default function ChatMessageGroupPlayground() {
       onReset={handleReset}
       controls={
         <React.Fragment>
+          <DividerLabel>fixture data</DividerLabel>
           <NumberControl
             label="message count"
             value={count}
@@ -93,14 +100,15 @@ export default function ChatMessageGroupPlayground() {
             onChange={setInterleave}
             helperText="Alternate authors so groups break."
           />
+          <DividerLabel>chrome provider</DividerLabel>
           <ChoiceControl
-            label="variant"
+            label="ChatChrome.variant"
             value={variant}
             options={['default', 'compact']}
             onChange={setVariant}
           />
           <ChoiceControl
-            label="density"
+            label="ChatChrome.density"
             value={density}
             options={['compact', 'standard', 'comfortable']}
             onChange={setDensity}
@@ -116,7 +124,12 @@ export default function ChatMessageGroupPlayground() {
           <ChatChrome variant={variant} density={density}>
             <Box sx={{ width: '100%' }}>
               {messages.map((message) => (
-                <MessageBubble key={message.id} messageId={message.id} />
+                <ChatMessageGroup key={message.id} messageId={message.id}>
+                  <ChatMessageComponent messageId={message.id}>
+                    <ChatMessageAvatar />
+                    <ChatMessageContent />
+                  </ChatMessageComponent>
+                </ChatMessageGroup>
               ))}
             </Box>
           </ChatChrome>

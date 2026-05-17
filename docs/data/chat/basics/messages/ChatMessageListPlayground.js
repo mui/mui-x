@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { ChatMessageList } from '@mui/x-chat';
 
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
@@ -7,9 +8,11 @@ import { ChatChrome, ScopedChat } from '../../_playground/sharedProviders';
 import { MessageBubble } from '../../_playground/MessageBubble';
 import {
   ChoiceControl,
+  DividerLabel,
   NumberControl,
   SwitchControl,
 } from '../../_playground/controls';
+import { useCustomizations } from '../../_playground/useCustomizations';
 import { users } from '../../_playground/data';
 
 const conversation = {
@@ -50,21 +53,44 @@ const DEFAULTS = {
   count: 8,
   spanDays: true,
   autoScroll: true,
+  autoScrollBuffer: 150,
+  showOverlay: false,
   variant: 'default',
   density: 'standard',
 };
+
+const CLASS_DEFS = [
+  { name: 'root', description: 'The root list element.' },
+  {
+    name: 'scroller',
+    selector: '.MuiChatMessageList-scroller',
+    description: 'Scroller wrapper.',
+  },
+  {
+    name: 'content',
+    selector: '.MuiChatMessageList-content',
+    description: 'Inner content area.',
+  },
+];
 
 export default function ChatMessageListPlayground() {
   const [count, setCount] = React.useState(DEFAULTS.count);
   const [spanDays, setSpanDays] = React.useState(DEFAULTS.spanDays);
   const [autoScroll, setAutoScroll] = React.useState(DEFAULTS.autoScroll);
+  const [autoScrollBuffer, setAutoScrollBuffer] = React.useState(
+    DEFAULTS.autoScrollBuffer,
+  );
+  const [showOverlay, setShowOverlay] = React.useState(DEFAULTS.showOverlay);
   const [variant, setVariant] = React.useState(DEFAULTS.variant);
   const [density, setDensity] = React.useState(DEFAULTS.density);
+  const classesCustomizations = useCustomizations(CLASS_DEFS);
 
   const handleReset = React.useCallback(() => {
     setCount(DEFAULTS.count);
     setSpanDays(DEFAULTS.spanDays);
     setAutoScroll(DEFAULTS.autoScroll);
+    setAutoScrollBuffer(DEFAULTS.autoScrollBuffer);
+    setShowOverlay(DEFAULTS.showOverlay);
     setVariant(DEFAULTS.variant);
     setDensity(DEFAULTS.density);
   }, []);
@@ -73,6 +99,46 @@ export default function ChatMessageListPlayground() {
     () => buildMessages(count, spanDays),
     [count, spanDays],
   );
+
+  let autoScrollValue;
+  if (!autoScroll) {
+    autoScrollValue = false;
+  } else if (autoScrollBuffer === DEFAULTS.autoScrollBuffer) {
+    autoScrollValue = true;
+  } else {
+    autoScrollValue = { buffer: autoScrollBuffer };
+  }
+
+  const overlay = showOverlay ? (
+    <Box
+      sx={(theme) => ({
+        position: 'absolute',
+        inset: theme.spacing(1),
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-end',
+        pointerEvents: 'none',
+      })}
+    >
+      <Box
+        sx={(theme) => ({
+          pointerEvents: 'auto',
+          padding: theme.spacing(0.5, 1.25),
+          borderRadius: 16,
+          bgcolor: 'background.paper',
+          border: '1px solid',
+          borderColor: 'divider',
+          boxShadow: theme.shadows[1],
+        })}
+      >
+        <Typography variant="caption" color="text.secondary">
+          overlay slot
+        </Typography>
+      </Box>
+    </Box>
+  ) : null;
+
+  const listSx = classesCustomizations.toClassesSx();
   return (
     <PlaygroundCard
       title="ChatMessageList"
@@ -80,8 +146,35 @@ export default function ChatMessageListPlayground() {
       previewMinHeight={360}
       span={2}
       onReset={handleReset}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
         <React.Fragment>
+          <DividerLabel>props</DividerLabel>
+          <SwitchControl
+            label="autoScroll"
+            checked={autoScroll}
+            onChange={setAutoScroll}
+            helperText="Stick to the bottom on new messages."
+          />
+          <NumberControl
+            label="autoScroll buffer"
+            value={autoScrollBuffer}
+            min={0}
+            max={500}
+            step={10}
+            disabled={!autoScroll}
+            valueFormatter={(value) => `${value}px`}
+            helperText="Distance from bottom to still trigger auto-scroll."
+            onChange={setAutoScrollBuffer}
+          />
+          <SwitchControl
+            label="overlay"
+            checked={showOverlay}
+            onChange={setShowOverlay}
+            helperText="Demos the `overlay` slot for empty-state UI."
+          />
+          <DividerLabel>fixture data</DividerLabel>
           <NumberControl
             label="message count"
             value={count}
@@ -95,20 +188,15 @@ export default function ChatMessageListPlayground() {
             onChange={setSpanDays}
             helperText="Triggers ChatDateDivider rendering."
           />
-          <SwitchControl
-            label="autoScroll"
-            checked={autoScroll}
-            onChange={setAutoScroll}
-            helperText="Stick to the bottom on new messages."
-          />
+          <DividerLabel>chrome provider</DividerLabel>
           <ChoiceControl
-            label="variant"
+            label="ChatChrome.variant"
             value={variant}
             options={['default', 'compact']}
             onChange={setVariant}
           />
           <ChoiceControl
-            label="density"
+            label="ChatChrome.density"
             value={density}
             options={['compact', 'standard', 'comfortable']}
             onChange={setDensity}
@@ -128,11 +216,14 @@ export default function ChatMessageListPlayground() {
                 height: 360,
                 overflow: 'hidden',
                 display: 'flex',
+                position: 'relative',
               }}
             >
               <ChatMessageList
                 items={messages.map((m) => m.id)}
-                autoScroll={autoScroll}
+                autoScroll={autoScrollValue}
+                overlay={overlay}
+                sx={listSx}
                 renderItem={({ id }) => <MessageBubble key={id} messageId={id} />}
               />
             </Box>

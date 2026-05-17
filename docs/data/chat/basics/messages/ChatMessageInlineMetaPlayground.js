@@ -10,7 +10,8 @@ import {
 
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
 import { ChatChrome, ScopedChat } from '../../_playground/sharedProviders';
-import { ChoiceControl } from '../../_playground/controls';
+import { ChoiceControl, DividerLabel } from '../../_playground/controls';
+import { useCustomizations } from '../../_playground/useCustomizations';
 import { users } from '../../_playground/data';
 
 const conversation = {
@@ -32,9 +33,23 @@ function makeMessage(role, status, text) {
   };
 }
 
+const CLASS_DEFS = [
+  {
+    name: 'inlineMeta',
+    selector: '.MuiChatMessage-inlineMeta',
+    description: 'The container floating at the bottom-right of the bubble.',
+  },
+  {
+    name: 'inlineMetaSpacer',
+    selector: '.MuiChatMessage-inlineMetaSpacer',
+    description: 'Reserved whitespace so text wraps around the meta block.',
+  },
+];
+
 export default function ChatMessageInlineMetaPlayground() {
   const [role, setRole] = React.useState('user');
   const [status, setStatus] = React.useState('read');
+  const classesCustomizations = useCustomizations(CLASS_DEFS);
   const message = React.useMemo(
     () =>
       makeMessage(
@@ -45,14 +60,19 @@ export default function ChatMessageInlineMetaPlayground() {
     [role, status],
   );
 
+  const inlineSx = classesCustomizations.toClassesSx();
+
   return (
     <PlaygroundCard
       title="ChatMessageInlineMeta"
       description="Telegram-style timestamp + status that flows inside the bubble."
       previewMinHeight={200}
       span={2}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
         <React.Fragment>
+          <DividerLabel>fixture (message data)</DividerLabel>
           <ChoiceControl
             label="role"
             value={role}
@@ -74,7 +94,7 @@ export default function ChatMessageInlineMetaPlayground() {
           activeConversationId={conversation.id}
         >
           <ChatChrome variant="default" density="standard">
-            <Box sx={{ width: '100%' }}>
+            <Box sx={{ width: '100%', ...inlineSx }}>
               <ChatMessageGroup messageId={message.id}>
                 <ChatMessageComponent messageId={message.id}>
                   <ChatMessageAvatar />

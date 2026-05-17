@@ -1,32 +1,32 @@
 ---
 productId: x-chat
-title: Headless Components
+title: Headless components
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 components: ChatRoot
 ---
 
-# Chat - Headless Components
+# Chat - Headless components
 
-<p class="description">Build chat interfaces from structural React primitives that provide semantics, focus behavior, slots, and owner state without imposing a visual design.</p>
+<p class="description">Build chat interfaces from structural React primitives that handle semantics, focus, and slots without imposing a visual design.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-`@mui/x-chat/headless` builds on the core runtime.
-It combines core state with structural components such as lists, threads, messages, composers, and indicators.
+`@mui/x-chat/headless` builds on the Core runtime.
+It combines Core state with structural components such as lists, threads, messages, composers, and indicators.
 
 ## When to use the headless layer
 
-Use the headless layer when you want:
+Use the headless layer to:
 
 - a canonical chat component model
 - accessibility and interaction behavior already wired
 - slot-based customization instead of rebuilding every subtree
 - full control over visual design and styling
 
-Use the core layer when you want to own all DOM structure yourself.
+Use the Core layer when you want to own all DOM structure yourself.
 
-## Package surface
+## Exported namespaces
 
 The headless package is organized into structural namespaces:
 
@@ -39,9 +39,9 @@ The headless package is organized into structural namespaces:
 - `Composer`
 - `Indicators`
 
-It also exports helpers for default message-part rendering.
+The package also exports helpers for default message-part rendering.
 
-## What the headless layer owns
+## Headless layer responsibilities
 
 - structural React primitives such as `Chat.Root`, `ConversationList.Root`, `Conversation.Root`, and `Composer.Root`
 - semantics such as `listbox`, `option`, `log`, and `separator`
@@ -50,7 +50,7 @@ It also exports helpers for default message-part rendering.
 - message grouping, date boundaries, and default message-part renderers
 - slot and `slotProps` customization with owner state
 
-## What the headless layer does not own
+## Headless layer boundaries
 
 - Material UI theming or styling
 - Visual design or colors
@@ -78,9 +78,9 @@ You can also import individual components such as `ChatRoot`, `MessageListRoot`,
 Use namespaced imports when you want the API to read like a component family.
 Use direct imports when a codebase prefers local, explicit symbols or when only one or two primitives are needed in a file.
 
-## Typical composition shape
+## Composing the headless surface
 
-Most headless apps compose the surface like this:
+The example below composes a typical headless surface:
 
 ```tsx
 import {
@@ -121,12 +121,12 @@ function Inbox(props: ChatRootProps) {
 }
 ```
 
-This gives you a complete structural shell while keeping the visual treatment in your own CSS, slots, or design-system components.
+This gives you a complete structural shell while keeping the visual treatment in CSS, slots, or design-system components.
 
 ## See also
 
 - [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling headless primitives with Tailwind utility classes.
-- [Core](/x/react-chat/customization/core/) for the core runtime that the headless layer builds on.
+- [Core](/x/react-chat/customization/core/) for the Core runtime that the headless layer builds on.
 - [Styling](/x/react-chat/customization/styling/) for Material UI theme-based customization on the styled layer.
 
 ## API

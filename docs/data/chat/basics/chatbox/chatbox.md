@@ -8,19 +8,17 @@ components: ChatBox
 
 # Chat - ChatBox
 
-<p class="description">The all-in-one component that renders a complete chat surface with a single import.</p>
+<p class="description">Render a complete chat surface with a single import.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-## Overview
-
 `ChatBox` is the fastest way to add a chat interface to your application.
-It creates a `ChatProvider` internally and composes the themed thread surface — header, message list, and composer — into a ready-to-use surface.
-Enable the built-in conversation list explicitly when you want inbox-style navigation:
+It creates a `ChatProvider` internally and composes the themed thread surface—header, message list, and composer—into a ready-to-use surface.
+Enable the built-in conversation list explicitly when you want inbox-style navigation.
 
 ## Interactive playground
 
-Try the `ChatBox` props live — toggle variant, density, layout mode, and the built-in features:
+Try the `ChatBox` props live—toggle variant, density, layout mode, and the built-in features:
 
 {{"demo": "ChatBoxPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -35,28 +33,31 @@ import { ChatBox } from '@mui/x-chat';
 />;
 ```
 
-All visual styles are derived from your active Material UI theme.
-No additional configuration is needed — `ChatBox` reads `palette`, `typography`, `shape`, and `spacing` from the closest `ThemeProvider`.
+All visual styles derive from the active Material UI theme.
+No additional configuration is needed—`ChatBox` reads `palette`, `typography`, `shape`, and `spacing` from the closest `ThemeProvider`.
+
+The demo below shows `ChatBox` picking up the active Material UI theme:
 
 {{"demo": "../../material/examples/basic-ai-chat/BasicAiChat.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## ChatBox vs. ChatProvider
 
-### ChatBox (all-in-one)
+### Using ChatBox for an all-in-one surface
 
 `ChatBox` is the right choice when you want a complete chat surface with minimal setup.
 It creates a `ChatProvider` internally, so all hooks work inside any component rendered as a child or descendant of `ChatBox`:
 
 {{"demo": "../../material/context/ChatBoxWithHooks.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-### ChatProvider (custom layout)
+### Using ChatProvider for a custom layout
 
-When you need full control over the layout — for example, placing the conversation list in a sidebar and the thread in a main content area — use `ChatProvider` directly and compose the pieces yourself:
+When you need full control over the layout—for example, placing the conversation list in a sidebar and the thread in a main content area—use `ChatProvider` directly and compose the pieces yourself:
 
 {{"demo": "../../material/context/ChatProviderCustomLayout.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 :::warning
-`ChatBox` always creates its own internal `ChatProvider`. If you need to share state with external components, wrap them in a single `ChatProvider` and use the individual themed components (`ChatMessageList`, `ChatComposer`, etc.) instead of `ChatBox`.
+`ChatBox` always creates its own internal `ChatProvider`.
+If you need to share state with external components, wrap them in a single `ChatProvider` and use the individual themed components (`ChatMessageList`, `ChatComposer`, etc.) instead of `ChatBox`.
 :::
 
 ## Feature flags
@@ -141,8 +142,8 @@ These props are forwarded to the internal `ChatProvider`.
 />;
 ```
 
-You can mix controlled and uncontrolled state freely.
-For example, control the active conversation while letting messages be managed internally.
+Mix controlled and uncontrolled state freely.
+For example, control the active conversation while letting the internal store manage messages.
 
 ## Multiple independent instances
 

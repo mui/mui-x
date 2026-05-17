@@ -2,6 +2,7 @@ import type {
   ChatConversation,
   ChatMessage,
   ChatMessageAuthorGetterProps,
+  ChatRole,
   ChatUser,
 } from '../types/chat-entities';
 
@@ -12,10 +13,36 @@ export interface ResolvedMessageAuthor {
   isOwnMessage?: boolean;
 }
 
-interface ResolveMessageAuthorParameters extends ChatMessageAuthorGetterProps {
+// Final fallback when neither the locale-driven `roleDisplayNames` parameter
+// (provided by `useMessageAuthor`) nor any other author signal is available.
+// Used for non-React call sites (selectors, store helpers) that don't have a
+// `ChatLocaleText` in scope.
+const DEFAULT_ROLE_DISPLAY_NAMES: Record<ChatRole, string> = {
+  user: 'User',
+  assistant: 'Assistant',
+  system: 'System',
+};
+
+function getRoleDisplayName(
+  role: ChatRole | undefined,
+  roleDisplayNames: Partial<Record<ChatRole, string>> | undefined,
+): string | undefined {
+  if (!role) {
+    return undefined;
+  }
+  return roleDisplayNames?.[role] ?? DEFAULT_ROLE_DISPLAY_NAMES[role];
+}
+
+export interface ResolveMessageAuthorParameters extends ChatMessageAuthorGetterProps {
   currentUser?: ChatUser;
   members?: ChatUser[];
   activeConversation?: ChatConversation;
+  /**
+   * Optional locale-driven labels used as the last resort when no other author
+   * signal resolves a displayName. `useMessageAuthor` populates this from
+   * `localeText.messageAuthor{User,Assistant,System}Label`.
+   */
+  roleDisplayNames?: Partial<Record<ChatRole, string>>;
 }
 
 function normalizeOptionalString(value: string | null | undefined): string | undefined {
@@ -63,11 +90,26 @@ export function resolveMessageAuthor(
 
   const id = resolveMessageAuthorId(message, parameters);
   const matchedMember = resolveMatchedMember(id, parameters);
-  const displayName = normalizeOptionalString(
-    parameters.getMessageAuthorDisplayName?.(message) ??
-      message.author?.displayName ??
-      matchedMember?.displayName,
-  );
+  // Display-name fallback chain:
+  //   1. consumer getter (`getMessageAuthorDisplayName`)
+  //   2. per-message `author.displayName`
+  //   3. matched member's `displayName`
+  //   4. `currentUser.displayName` (only for `role: 'user'` messages that have
+  //      no explicit author identity — this lets a `currentUser` configured at
+  //      the ChatProvider level retroactively name outgoing messages that were
+  //      sent without per-message author metadata)
+  //   5. locale-driven role label (`messageAuthor{User,Assistant,System}Label`)
+  const currentUserFallback =
+    message.role === 'user' && id == null
+      ? parameters.currentUser?.displayName
+      : undefined;
+  const displayName =
+    normalizeOptionalString(
+      parameters.getMessageAuthorDisplayName?.(message) ??
+        message.author?.displayName ??
+        matchedMember?.displayName ??
+        currentUserFallback,
+    ) ?? getRoleDisplayName(message.role, parameters.roleDisplayNames);
   const avatarUrl = normalizeOptionalString(
     parameters.getMessageAuthorAvatarUrl?.(message) ??
       message.author?.avatarUrl ??

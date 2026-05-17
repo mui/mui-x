@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { SxProps, Theme } from '@mui/system';
 import { TypingIndicator, type TypingIndicatorProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import {
@@ -13,6 +14,7 @@ const useThemeProps = createUseThemeProps('MuiChatTypingIndicator');
 
 export interface ChatTypingIndicatorProps extends TypingIndicatorProps {
   className?: string;
+  sx?: SxProps<Theme>;
   classes?: Partial<ChatTypingIndicatorClasses>;
 }
 
@@ -33,7 +35,7 @@ const ChatTypingIndicatorStyled = styled('div', {
 const ChatTypingIndicator = React.forwardRef<HTMLDivElement, ChatTypingIndicatorProps>(
   function ChatTypingIndicator(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatTypingIndicator' });
-    const { slots, slotProps, className, classes: classesProp, ...other } = props;
+    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
     const classes = useChatTypingIndicatorUtilityClasses(classesProp);
 
     return (
@@ -48,6 +50,7 @@ const ChatTypingIndicator = React.forwardRef<HTMLDivElement, ChatTypingIndicator
           ...slotProps,
           root: {
             className: clsx(classes.root, className),
+            sx,
             ...(slotProps?.root as object),
           } as any,
         }}
@@ -65,6 +68,11 @@ ChatTypingIndicator.propTypes = {
   className: PropTypes.string,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ChatTypingIndicator };

@@ -84,7 +84,7 @@ clear where one planning cycle ends and the next begins.
 ## Tool slot overrides
 
 Both `slots` and `slotProps` on the built-in `ToolPart` renderer are fully
-customizable. Pass them through `slotProps.messageContent.partProps['dynamic-tool']`
+customizable. Pass them through `slotProps.content.partProps['dynamic-tool']`
 on `ChatBox`.
 
 ### Icon styles

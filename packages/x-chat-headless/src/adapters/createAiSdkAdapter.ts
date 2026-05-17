@@ -120,12 +120,55 @@ function parseStreamLine(rawLine: string): unknown | null {
   return JSON.parse(payload);
 }
 
+let syntheticIdCounter = 0;
+function nextSyntheticMessageId() {
+  syntheticIdCounter += 1;
+  return `ai-sdk-msg-${syntheticIdCounter.toString(36)}`;
+}
+
 function convertToChatStream(
   upstream: ReadableStream<AiSdkUIMessageChunk | Uint8Array>,
 ): ReadableStream<ChatMessageChunk> {
   const reader = upstream.getReader();
   const decoder = new TextDecoder();
   let buffer = '';
+  // Per-response synthetic ID used when the AI SDK doesn't supply one on
+  // `start`/`finish`. `processStream` in the headless package requires a
+  // `messageId` on the `start` chunk to bind subsequent text/reasoning
+  // deltas to the right assistant message.
+  let syntheticMessageId: string | null = null;
+
+  const emit = (
+    chunk: AiSdkUIMessageChunk,
+    controller: ReadableStreamDefaultController<ChatMessageChunk>,
+  ) => {
+    if (chunk.type === 'error') {
+      const text =
+        typeof (chunk as { errorText?: unknown }).errorText === 'string'
+          ? (chunk as { errorText: string }).errorText
+          : 'AI SDK stream emitted an error chunk.';
+      controller.error(new ChatStreamError(streamError(text)));
+      return;
+    }
+
+    if (chunk.type === 'start' || chunk.type === 'finish' || chunk.type === 'abort') {
+      const existing = (chunk as { messageId?: unknown }).messageId;
+      if (typeof existing === 'string' && existing.length > 0) {
+        syntheticMessageId = existing;
+      } else {
+        if (syntheticMessageId == null) {
+          syntheticMessageId = nextSyntheticMessageId();
+        }
+        controller.enqueue({
+          ...(chunk as Record<string, unknown>),
+          messageId: syntheticMessageId,
+        } as ChatMessageChunk);
+        return;
+      }
+    }
+
+    controller.enqueue(chunk as ChatMessageChunk);
+  };
 
   return new ReadableStream<ChatMessageChunk>({
     async pull(controller) {
@@ -189,21 +232,6 @@ function convertToChatStream(
       reader.cancel(reason).catch(() => {});
     },
   });
-}
-
-function emit(
-  chunk: AiSdkUIMessageChunk,
-  controller: ReadableStreamDefaultController<ChatMessageChunk>,
-) {
-  if (chunk.type === 'error') {
-    const text =
-      typeof (chunk as { errorText?: unknown }).errorText === 'string'
-        ? (chunk as { errorText: string }).errorText
-        : 'AI SDK stream emitted an error chunk.';
-    controller.error(new ChatStreamError(streamError(text)));
-    return;
-  }
-  controller.enqueue(chunk as ChatMessageChunk);
 }
 
 // Distinguishes an AI SDK object chunk from a raw byte chunk.

@@ -1,5 +1,14 @@
 export { PlaygroundCard } from './PlaygroundCard';
-export { ChoiceControl, NumberControl, SelectControl, SwitchControl } from './controls';
+export {
+  ChoiceControl,
+  DividerLabel,
+  NumberControl,
+  SelectControl,
+  SwitchControl,
+  TextControl,
+} from './controls';
+export { useCustomizations } from './useCustomizations';
+export type { CustomizationDef } from './useCustomizations';
 export {
   ChatChrome,
   MessageErrorEffect,

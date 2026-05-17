@@ -15,9 +15,12 @@ import { ScopedChat, ChatChrome } from '../../_playground/sharedProviders';
 import { emptyConversation } from '../../_playground/sharedFixtures';
 import {
   ChoiceControl,
+  DividerLabel,
+  NumberControl,
   SwitchControl,
   TextControl,
 } from '../../_playground/controls';
+import { useCustomizations } from '../../_playground/useCustomizations';
 
 function SendIcon() {
   return (
@@ -52,9 +55,55 @@ const DEFAULTS = {
   disabled: false,
   attachments: true,
   showHelperText: true,
-  maxFileCount: false,
+  maxFileCount: 0,
+  maxFileSizeMB: 0,
+  acceptedMimeTypes: 'image/*,application/pdf',
   placeholder: 'Ask anything…',
 };
+
+const CLASS_DEFS = [
+  { name: 'root', description: 'Outermost form element.' },
+  {
+    name: 'disabled',
+    selector: '.MuiChatComposer-disabled',
+    description: 'Applied to the root when disabled.',
+  },
+  {
+    name: 'variantCompact',
+    selector: '.MuiChatComposer-variantCompact',
+    description: 'Applied to the root when variant="compact".',
+  },
+  {
+    name: 'textArea',
+    selector: '.MuiChatComposer-textArea',
+    description: 'Applied to the text area input.',
+  },
+  {
+    name: 'sendButton',
+    selector: '.MuiChatComposer-sendButton',
+    description: 'Applied to the send button.',
+  },
+  {
+    name: 'attachButton',
+    selector: '.MuiChatComposer-attachButton',
+    description: 'Applied to the attach button.',
+  },
+  {
+    name: 'toolbar',
+    selector: '.MuiChatComposer-toolbar',
+    description: 'Applied to the toolbar row.',
+  },
+  {
+    name: 'attachmentList',
+    selector: '.MuiChatComposer-attachmentList',
+    description: 'Applied to the attachment list above the textarea.',
+  },
+  {
+    name: 'helperText',
+    selector: '.MuiChatComposer-helperText',
+    description: 'Applied to the helper text below the textarea.',
+  },
+];
 
 export default function ChatComposerPlayground() {
   const [variant, setVariant] = React.useState(DEFAULTS.variant);
@@ -64,7 +113,12 @@ export default function ChatComposerPlayground() {
     DEFAULTS.showHelperText,
   );
   const [maxFileCount, setMaxFileCount] = React.useState(DEFAULTS.maxFileCount);
+  const [maxFileSizeMB, setMaxFileSizeMB] = React.useState(DEFAULTS.maxFileSizeMB);
+  const [acceptedMimeTypes, setAcceptedMimeTypes] = React.useState(
+    DEFAULTS.acceptedMimeTypes,
+  );
   const [placeholder, setPlaceholder] = React.useState(DEFAULTS.placeholder);
+  const classesCustomizations = useCustomizations(CLASS_DEFS);
 
   const handleReset = React.useCallback(() => {
     setVariant(DEFAULTS.variant);
@@ -72,17 +126,33 @@ export default function ChatComposerPlayground() {
     setAttachments(DEFAULTS.attachments);
     setShowHelperText(DEFAULTS.showHelperText);
     setMaxFileCount(DEFAULTS.maxFileCount);
+    setMaxFileSizeMB(DEFAULTS.maxFileSizeMB);
+    setAcceptedMimeTypes(DEFAULTS.acceptedMimeTypes);
     setPlaceholder(DEFAULTS.placeholder);
   }, []);
 
-  let attachmentConfig;
-  if (!attachments) {
-    attachmentConfig = false;
-  } else if (maxFileCount) {
-    attachmentConfig = { maxFileCount: 1 };
-  } else {
-    attachmentConfig = true;
-  }
+  const attachmentConfig = React.useMemo(() => {
+    if (!attachments) {
+      return false;
+    }
+    const config = {};
+    const types = acceptedMimeTypes
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (types.length > 0) {
+      config.acceptedMimeTypes = types;
+    }
+    if (maxFileCount > 0) {
+      config.maxFileCount = maxFileCount;
+    }
+    if (maxFileSizeMB > 0) {
+      config.maxFileSize = maxFileSizeMB * 1024 * 1024;
+    }
+    return Object.keys(config).length === 0 ? true : config;
+  }, [attachments, acceptedMimeTypes, maxFileCount, maxFileSizeMB]);
+
+  const composerSx = classesCustomizations.toClassesSx();
   return (
     <PlaygroundCard
       title="ChatComposer"
@@ -90,8 +160,11 @@ export default function ChatComposerPlayground() {
       previewMinHeight={260}
       span={2}
       onReset={handleReset}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
         <React.Fragment>
+          <DividerLabel>props</DividerLabel>
           <ChoiceControl
             label="variant"
             value={variant}
@@ -104,28 +177,52 @@ export default function ChatComposerPlayground() {
             onChange={setDisabled}
             helperText="palette.action.disabledBackground."
           />
+          <DividerLabel>features.attachments</DividerLabel>
           <SwitchControl
             label="attachments"
             checked={attachments}
             onChange={setAttachments}
             helperText="Show the attach button + preview list."
           />
+          <TextControl
+            label="acceptedMimeTypes"
+            value={acceptedMimeTypes}
+            onChange={setAcceptedMimeTypes}
+            placeholder="image/*,application/pdf"
+            disabled={!attachments}
+            helperText="Comma-separated MIME list."
+          />
+          <NumberControl
+            label="maxFileCount"
+            value={maxFileCount}
+            min={0}
+            max={10}
+            disabled={!attachments}
+            valueFormatter={(value) => (value === 0 ? '∞' : value.toString())}
+            helperText="0 disables the limit."
+            onChange={setMaxFileCount}
+          />
+          <NumberControl
+            label="maxFileSize"
+            value={maxFileSizeMB}
+            min={0}
+            max={50}
+            disabled={!attachments}
+            valueFormatter={(value) => (value === 0 ? 'unlimited' : `${value}MB`)}
+            helperText="0 disables the limit."
+            onChange={setMaxFileSizeMB}
+          />
+          <DividerLabel>composition (children)</DividerLabel>
+          <TextControl
+            label="ChatComposerTextArea.placeholder"
+            value={placeholder}
+            onChange={setPlaceholder}
+          />
           <SwitchControl
-            label="helperText"
+            label="render ChatComposerHelperText"
             checked={showHelperText}
             onChange={setShowHelperText}
             helperText="default variant only."
-          />
-          <SwitchControl
-            label="maxFileCount: 1"
-            checked={maxFileCount}
-            onChange={setMaxFileCount}
-            helperText="Stricter attach validation."
-          />
-          <TextControl
-            label="placeholder"
-            value={placeholder}
-            onChange={setPlaceholder}
           />
         </React.Fragment>
       }
@@ -138,6 +235,7 @@ export default function ChatComposerPlayground() {
                   variant="default"
                   disabled={disabled}
                   features={{ attachments: attachmentConfig }}
+                  sx={composerSx}
                 >
                   {attachments ? <ChatComposerAttachmentList /> : null}
                   <ChatComposerTextArea placeholder={placeholder} />
@@ -162,6 +260,7 @@ export default function ChatComposerPlayground() {
                   variant="compact"
                   disabled={disabled}
                   features={{ attachments: attachmentConfig }}
+                  sx={composerSx}
                 >
                   {attachments ? <ChatComposerAttachmentList /> : null}
                   {attachments ? (

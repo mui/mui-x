@@ -14,10 +14,15 @@ import type { ChatConversation as ChatConversationType } from '@mui/x-chat/headl
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
 import { ScopedChat } from '../../_playground/sharedProviders';
 import {
+  DividerLabel,
   NumberControl,
   SwitchControl,
   TextControl,
 } from '../../_playground/controls';
+import {
+  useCustomizations,
+  type CustomizationDef,
+} from '../../_playground/useCustomizations';
 import { users } from '../../_playground/data';
 
 function MoreIcon() {
@@ -55,11 +60,42 @@ const DEFAULTS = {
   actionCount: 2,
 };
 
+type ClassKey = 'header' | 'headerInfo' | 'title' | 'subtitle' | 'headerActions';
+
+const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
+  {
+    name: 'header',
+    selector: '.MuiChatConversation-header',
+    description: 'The header bar.',
+  },
+  {
+    name: 'headerInfo',
+    selector: '.MuiChatConversation-headerInfo',
+    description: 'The title + subtitle column.',
+  },
+  {
+    name: 'title',
+    selector: '.MuiChatConversation-title',
+    description: 'The title text.',
+  },
+  {
+    name: 'subtitle',
+    selector: '.MuiChatConversation-subtitle',
+    description: 'The subtitle text.',
+  },
+  {
+    name: 'headerActions',
+    selector: '.MuiChatConversation-headerActions',
+    description: 'The trailing actions row.',
+  },
+];
+
 export default function ChatConversationHeaderPlayground() {
   const [title, setTitle] = React.useState(DEFAULTS.title);
   const [subtitle, setSubtitle] = React.useState(DEFAULTS.subtitle);
   const [showSubtitle, setShowSubtitle] = React.useState(DEFAULTS.showSubtitle);
   const [actionCount, setActionCount] = React.useState(DEFAULTS.actionCount);
+  const classesCustomizations = useCustomizations<ClassKey>(CLASS_DEFS);
 
   const handleReset = React.useCallback(() => {
     setTitle(DEFAULTS.title);
@@ -77,27 +113,38 @@ export default function ChatConversationHeaderPlayground() {
     }),
     [title, subtitle, showSubtitle],
   );
+
+  const wrapperSx = classesCustomizations.toClassesSx();
   return (
     <PlaygroundCard
       title="ChatConversationHeader"
       description="Top bar above the message list — title, subtitle, and action slot."
       previewMinHeight={140}
       onReset={handleReset}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
         <React.Fragment>
-          <TextControl label="title" value={title} onChange={setTitle} />
-          <SwitchControl
-            label="subtitle"
-            checked={showSubtitle}
-            onChange={setShowSubtitle}
+          <DividerLabel>fixture (conversation data)</DividerLabel>
+          <TextControl
+            label="conversation.title"
+            value={title}
+            onChange={setTitle}
+            helperText="Read by <ChatConversationTitle> from the active conversation."
           />
           <TextControl
-            label="subtitle text"
+            label="conversation.subtitle"
             value={subtitle}
             onChange={setSubtitle}
           />
+          <SwitchControl
+            label="render <ChatConversationSubtitle>"
+            checked={showSubtitle}
+            onChange={setShowSubtitle}
+          />
+          <DividerLabel>composition</DividerLabel>
           <NumberControl
-            label="actions"
+            label="header action count"
             value={actionCount}
             min={0}
             max={4}
@@ -116,6 +163,7 @@ export default function ChatConversationHeaderPlayground() {
               sx={{
                 width: '100%',
                 overflow: 'hidden',
+                ...(wrapperSx as object),
               }}
             >
               <ChatConversationHeader>

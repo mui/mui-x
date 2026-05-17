@@ -9,9 +9,9 @@ githubLabel: 'scope: chat'
 
 <p class="description">Render reasoning, sources, files, step markers, and data parts with your own plain React markup.</p>
 
-This demo demonstrates how to render the various message part types that the streaming protocol produces.
+Each message part type produced by the streaming protocol gets its own rendering branch.
 Every assistant message has a `parts` array where each entry is a typed object.
-Core does not render these parts for you — you branch on `part.type` and render whatever you want.
+Core does not render these parts for you—you branch on `part.type` and render whatever you want.
 
 ## Key concepts
 
@@ -77,20 +77,20 @@ Text and reasoning parts have an optional `state` field:
 - `'streaming'` — the part is still receiving deltas
 - `'done'` — the part is complete
 
-Use this to show a typing indicator or pulsing cursor while content is arriving.
+Use `part.state` to show a typing indicator or pulsing cursor while content is arriving.
 
 ## Key takeaways
 
-- Message parts are typed data — you own the rendering completely
-- Branch on `part.type` in a switch statement for straightforward rendering
+- Message parts are typed data—you own the rendering completely.
+- Branch on `part.type` in a switch statement to render each variant.
 - Use `part.state` on text and reasoning parts to show streaming indicators
 - For app-specific part types, register renderers via `partRenderers` or use `useChatPartRenderer()`
 
 ## See also
 
-- [Streaming](/x/react-chat/core/streaming/) for how chunks produce each part type
-- [Type augmentation](/x/react-chat/core/types/) for registering custom part types
-- [Tool approval and renderers](/x/react-chat/core/examples/tool-approval-and-renderers/) for custom renderer registration
+- See [Streaming](/x/react-chat/core/streaming/) for details on how chunks produce each part type.
+- See [Type augmentation](/x/react-chat/core/types/) for details on registering custom part types.
+- See [Tool approval and renderers](/x/react-chat/core/examples/tool-approval-and-renderers/) for details on custom renderer registration.
 
 ## API
 

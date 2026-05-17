@@ -895,7 +895,7 @@ describe('MessageAuthorLabel', () => {
     expect(screen.getByTestId('author-label')).to.have.text('Getter Bot');
   });
 
-  it('returns null when only the author id is available', () => {
+  it('falls back to a role-based default when only the author id is available', () => {
     const messageWithId: ChatMessage = {
       id: 'm-id',
       role: 'assistant',
@@ -913,10 +913,10 @@ describe('MessageAuthorLabel', () => {
       </ChatRoot>,
     );
 
-    expect(screen.queryByTestId('author-label')).to.equal(null);
+    expect(screen.getByTestId('author-label')).to.have.text('Assistant');
   });
 
-  it('returns null when no author info exists', () => {
+  it('falls back to a role-based default when no author info exists', () => {
     render(
       <ChatRoot adapter={createAdapter()} initialMessages={[minimalMessage]}>
         <ChatVariantProvider variant="compact">
@@ -927,7 +927,7 @@ describe('MessageAuthorLabel', () => {
       </ChatRoot>,
     );
 
-    expect(screen.queryByTestId('author-label')).to.equal(null);
+    expect(screen.getByTestId('author-label')).to.have.text('User');
   });
 
   it('returns null when variant is default', () => {

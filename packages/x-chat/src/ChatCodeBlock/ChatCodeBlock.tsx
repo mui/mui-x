@@ -2,6 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { SxProps, Theme } from '@mui/system';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useCopyToClipboard } from '../internals/useCopyToClipboard';
 import { useChatCodeBlockUtilityClasses, type ChatCodeBlockClasses } from './chatCodeBlockClasses';
@@ -24,6 +25,7 @@ export interface ChatCodeBlockProps {
    */
   highlighter?: (code: string, language: string) => React.ReactNode;
   className?: string;
+  sx?: SxProps<Theme>;
   classes?: Partial<ChatCodeBlockClasses>;
 }
 
@@ -137,7 +139,15 @@ const ChatCodeBlockCode = styled('code', {
 const ChatCodeBlock = React.forwardRef<HTMLDivElement, ChatCodeBlockProps>(
   function ChatCodeBlock(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatCodeBlock' });
-    const { children, language, highlighter, className, classes: classesProp, ...other } = props;
+    const {
+      children,
+      language,
+      highlighter,
+      className,
+      classes: classesProp,
+      sx,
+      ...other
+    } = props;
 
     const classes = useChatCodeBlockUtilityClasses(classesProp);
 
@@ -146,7 +156,7 @@ const ChatCodeBlock = React.forwardRef<HTMLDivElement, ChatCodeBlockProps>(
     const handleCopy = () => copy(children);
 
     return (
-      <ChatCodeBlockRoot ref={ref} className={clsx(classes.root, className)} {...other}>
+      <ChatCodeBlockRoot ref={ref} className={clsx(classes.root, className)} sx={sx} {...other}>
         <ChatCodeBlockHeader className={classes.header}>
           <ChatCodeBlockLanguageLabel className={classes.languageLabel}>
             {language ?? ''}
@@ -193,6 +203,11 @@ ChatCodeBlock.propTypes = {
    * Language identifier shown in the header (e.g. "typescript", "python").
    */
   language: PropTypes.string,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
 } as any;
 
 export { ChatCodeBlock };

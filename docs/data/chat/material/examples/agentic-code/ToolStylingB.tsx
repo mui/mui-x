@@ -609,7 +609,7 @@ export default function ToolStylingB() {
         );
       }}
       slotProps={{
-        messageContent: {
+        content: {
           partProps: {
             'dynamic-tool': {
               toolSlotProps: colorfulToolSlotProps,

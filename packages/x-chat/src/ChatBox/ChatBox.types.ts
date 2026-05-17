@@ -60,34 +60,50 @@ export interface ChatBoxSlots {
   conversationHeaderActions: React.ElementType;
   /** Override the message list component. */
   messageList: React.ElementType;
-  /** Override the message root component for each message. */
-  messageRoot: React.ElementType;
-  /** Override the message avatar component. */
-  messageAvatar: React.ElementType;
-  /** Override the message content (bubble) component. */
-  messageContent: React.ElementType;
-  /** Override the message meta component. */
-  messageMeta: React.ElementType;
-  /** Override the message actions component. */
-  messageActions: React.ElementType;
   /** Override the message group component. */
-  messageGroup: React.ElementType;
+  group: React.ElementType;
+  /** Override the message root component for each message. */
+  message: React.ElementType;
+  /**
+   * Override the message avatar component.
+   * Pass `null` to hide the avatar entirely and drop the reserved avatar grid track.
+   */
+  avatar: React.ElementType | null;
+  /** Override the message content (bubble) component. */
+  content: React.ElementType;
+  /**
+   * Override the message meta component (compact variant external meta).
+   * Pass `null` to hide it.
+   */
+  meta: React.ElementType | null;
+  /**
+   * Override the message actions component.
+   * Pass `null` to hide actions entirely.
+   */
+  actions: React.ElementType | null;
   /** Override the date divider component. */
   dateDivider: React.ElementType;
   /** Override the composer (input) root component. */
-  composerRoot: React.ElementType;
+  composer: React.ElementType;
   /** Override the composer textarea component. */
-  composerInput: React.ElementType;
-  /** Override the composer send button. */
-  composerSendButton: React.ElementType;
-  /** Override the composer attach button. */
-  composerAttachButton: React.ElementType;
+  input: React.ElementType;
+  /**
+   * Override the composer send button.
+   * Pass `null` to hide the send button (form still submits on Enter).
+   */
+  send: React.ElementType | null;
+  /**
+   * Override the composer attach button.
+   * Pass `null` to hide just the attach button while keeping the rest of the attachment plumbing.
+   * Use `features.attachments: false` to disable attachments entirely.
+   */
+  attach: React.ElementType | null;
   /** Override the composer attachment list. */
-  composerAttachmentList: React.ElementType;
+  attachmentList: React.ElementType;
   /** Override the composer toolbar. */
-  composerToolbar: React.ElementType;
+  toolbar: React.ElementType;
   /** Override the composer helper text component. */
-  composerHelperText: React.ElementType;
+  helperText: React.ElementType;
   /** Override the typing indicator component. */
   typingIndicator: React.ElementType;
   /** Override the unread marker component. */
@@ -115,20 +131,20 @@ export interface ChatBoxSlotProps {
   conversationHeaderInfo?: Partial<ChatConversationHeaderInfoProps>;
   conversationHeaderActions?: Partial<ChatConversationHeaderActionsProps>;
   messageList?: Partial<ChatMessageListProps>;
-  messageRoot?: Partial<ChatMessageProps>;
-  messageAvatar?: Partial<ChatMessageAvatarProps>;
-  messageContent?: Partial<ChatMessageContentProps>;
-  messageMeta?: Partial<ChatMessageMetaProps>;
-  messageActions?: Partial<ChatMessageActionsProps>;
-  messageGroup?: Partial<ChatMessageGroupProps>;
+  group?: Partial<ChatMessageGroupProps>;
+  message?: Partial<ChatMessageProps>;
+  avatar?: Partial<ChatMessageAvatarProps>;
+  content?: Partial<ChatMessageContentProps>;
+  meta?: Partial<ChatMessageMetaProps>;
+  actions?: Partial<ChatMessageActionsProps>;
   dateDivider?: Partial<ChatDateDividerProps>;
-  composerRoot?: Partial<ChatComposerProps>;
-  composerInput?: Partial<ChatComposerTextAreaProps>;
-  composerSendButton?: Partial<ChatComposerSendButtonProps>;
-  composerAttachButton?: Partial<ChatComposerAttachButtonProps>;
-  composerAttachmentList?: Partial<ChatComposerAttachmentListProps>;
-  composerToolbar?: Partial<ChatComposerToolbarProps>;
-  composerHelperText?: Partial<ChatComposerHelperTextProps>;
+  composer?: Partial<ChatComposerProps>;
+  input?: Partial<ChatComposerTextAreaProps>;
+  send?: Partial<ChatComposerSendButtonProps>;
+  attach?: Partial<ChatComposerAttachButtonProps>;
+  attachmentList?: Partial<ChatComposerAttachmentListProps>;
+  toolbar?: Partial<ChatComposerToolbarProps>;
+  helperText?: Partial<ChatComposerHelperTextProps>;
   typingIndicator?: Partial<ChatTypingIndicatorProps>;
   unreadMarker?: Partial<ChatUnreadMarkerProps>;
   scrollToBottom?: Partial<ChatScrollToBottomAffordanceProps>;

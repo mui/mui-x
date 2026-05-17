@@ -8,7 +8,7 @@ components: ChatBox
 
 # Chat - Streaming
 
-<p class="description">How the streaming protocol works end-to-end, from adapter response to live UI updates.</p>
+<p class="description">Stream assistant responses chunk-by-chunk from the adapter into the Chat UI for live, token-by-token updates.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -82,7 +82,7 @@ async function fromSSE(
 }
 ```
 
-## Stream envelopes
+## Deduplicating and ordering chunks
 
 For deduplication and ordering, wrap chunks in a `ChatStreamEnvelope`:
 
@@ -97,11 +97,13 @@ interface ChatStreamEnvelope {
 The runtime accepts both raw `ChatMessageChunk` objects and enveloped chunks in the same stream.
 Envelopes are useful for SSE-based transports where chunks might arrive out of order or be replayed.
 
-## Flush interval
+## Controlling the flush interval
 
-Rapid text and reasoning deltas are batched before being applied to the store.
+The runtime batches rapid text and reasoning deltas before applying them to the store.
 The `streamFlushInterval` prop on `ChatBox` (or `ChatProvider`) controls the batching window.
 The default is **16 ms** (approximately one frame at 60 fps).
+
+Override the default by passing a custom interval to the `streamFlushInterval` prop:
 
 ```tsx
 <ChatBox adapter={adapter} streamFlushInterval={32} />
@@ -115,7 +117,7 @@ Higher values reduce mutation frequency at the cost of perceived latency.
 ## Stopping and cancelling streams
 
 The `sendMessage` input includes an `AbortSignal` that fires when the user clicks the stop button.
-Pass it to your `fetch` call so the HTTP request is cancelled automatically:
+Pass it to the `fetch` call so the runtime cancels the HTTP request automatically:
 
 ```tsx
 async sendMessage({ message, signal }) {
@@ -147,7 +149,7 @@ stopStreaming();
 
 ## Reconnecting to streams
 
-Implement the adapter's `reconnectToStream()` method to resume an interrupted stream — for example, when an SSE connection drops mid-response:
+Implement the adapter's `reconnectToStream()` method to resume an interrupted stream—for example, when an SSE connection drops mid-response:
 
 ```tsx
 async reconnectToStream({ conversationId, messageId, signal }) {
@@ -165,7 +167,7 @@ Return `null` if the interrupted message cannot be resumed.
 The runtime calls `reconnectToStream()` automatically after detecting a disconnected stream.
 It makes one reconnect attempt for the interrupted assistant `messageId`; returning `null` leaves the recoverable stream error in place.
 
-## Error and disconnect handling
+## Handling errors and disconnects
 
 If the stream closes without a terminal chunk (`finish` or `abort`), the runtime:
 
@@ -178,7 +180,7 @@ If the stream closes without a terminal chunk (`finish` or `abort`), the runtime
 If the adapter's `sendMessage()` throws, the runtime records a send error and surfaces it through the error model.
 See [Error handling](/x/react-chat/behavior/error-handling/) for more details.
 
-## Chunk types
+## Chunk type reference
 
 Full reference of every chunk type the runtime accepts.
 
@@ -224,7 +226,7 @@ Reasoning chunks create a `ChatReasoningMessagePart`, useful for chain-of-though
 | `tool-output-error`     | `toolCallId`, `errorText`                        | Tool execution failed         |
 | `tool-output-denied`    | `toolCallId`, `reason?`                          | User denied the tool call     |
 
-The `toolInvocation.state` tracks the tool lifecycle: `'input-streaming'` -> `'input-available'` -> `'approval-requested'` -> `'output-available'` (or `'output-error'` / `'output-denied'`).
+The `toolInvocation.state` tracks the tool lifecycle: `'input-streaming'` → `'input-available'` → `'approval-requested'` → `'output-available'` (or `'output-error'` / `'output-denied'`).
 
 ### Source, file, and data chunks
 
@@ -248,7 +250,7 @@ If `transient` is `true`, the part is not persisted in the message.
 
 Step chunks create `ChatStepStartMessagePart` entries, useful for showing multi-step agentic processing in the UI.
 
-## How chunks become message parts
+## Mapping chunks to message parts
 
 The stream processor maps chunks to `ChatMessagePart` entries:
 
@@ -269,6 +271,6 @@ The message's `status` field also updates through the stream:
 
 ## See also
 
-- [Adapter](/x/react-chat/backend/adapters/) for the adapter interface that produces streams.
-- [Error handling](/x/react-chat/behavior/error-handling/) for error model and recovery.
-- [Scrolling](/x/react-chat/behavior/scrolling/) for how auto-scroll follows streaming content.
+- [Adapter](/x/react-chat/backend/adapters/) for details on the interface that produces streams.
+- [Error handling](/x/react-chat/behavior/error-handling/) for details on the error model and recovery.
+- [Scrolling](/x/react-chat/behavior/scrolling/) for details on how auto-scroll follows streaming content.

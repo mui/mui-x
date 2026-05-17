@@ -1,19 +1,11 @@
 'use client';
 import * as React from 'react';
-import { useChatVariant, useMessage } from '@mui/x-chat-headless';
-import { ChatMessage, type ChatMessageProps } from '../ChatMessage/ChatMessage';
-import {
-  ChatMessageActions,
-  type ChatMessageActionsProps,
-} from '../ChatMessage/ChatMessageActions';
-import { ChatMessageAvatar, type ChatMessageAvatarProps } from '../ChatMessage/ChatMessageAvatar';
-import {
-  ChatMessageContent,
-  type ChatMessageContentProps,
-} from '../ChatMessage/ChatMessageContent';
+import { type ChatMessageProps } from '../ChatMessage/ChatMessage';
+import { type ChatMessageActionsProps } from '../ChatMessage/ChatMessageActions';
+import { type ChatMessageAvatarProps } from '../ChatMessage/ChatMessageAvatar';
+import { type ChatMessageContentProps } from '../ChatMessage/ChatMessageContent';
 import { ChatMessageGroup, type ChatMessageGroupProps } from '../ChatMessage/ChatMessageGroup';
-import { ChatMessageInlineMeta } from '../ChatMessage/ChatMessageInlineMeta';
-import { ChatMessageMeta, type ChatMessageMetaProps } from '../ChatMessage/ChatMessageMeta';
+import { type ChatMessageMetaProps } from '../ChatMessage/ChatMessageMeta';
 
 /**
  * Per-row slot interface shared by `ChatBox` and `ChatMessageList`.
@@ -23,26 +15,35 @@ import { ChatMessageMeta, type ChatMessageMetaProps } from '../ChatMessage/ChatM
  */
 export interface ChatMessageRowSlots {
   /** Override the message group component. */
-  messageGroup: React.ElementType;
+  group: React.ElementType;
   /** Override the message root component for each message. */
-  messageRoot: React.ElementType;
-  /** Override the message avatar component. */
-  messageAvatar: React.ElementType;
+  message: React.ElementType;
+  /**
+   * Override the message avatar component.
+   * Pass `null` to hide the avatar and drop the reserved avatar grid track.
+   */
+  avatar: React.ElementType | null;
   /** Override the message content (bubble) component. */
-  messageContent: React.ElementType;
-  /** Override the message meta component. */
-  messageMeta: React.ElementType;
-  /** Override the message actions component. */
-  messageActions: React.ElementType;
+  content: React.ElementType;
+  /**
+   * Override the message meta component (external meta shown in compact variant).
+   * Pass `null` to hide it.
+   */
+  meta: React.ElementType | null;
+  /**
+   * Override the message actions component.
+   * Pass `null` to hide actions entirely.
+   */
+  actions: React.ElementType | null;
 }
 
 export interface ChatMessageRowSlotProps {
-  messageGroup?: Partial<ChatMessageGroupProps>;
-  messageRoot?: Partial<ChatMessageProps>;
-  messageAvatar?: Partial<ChatMessageAvatarProps>;
-  messageContent?: Partial<ChatMessageContentProps>;
-  messageMeta?: Partial<ChatMessageMetaProps>;
-  messageActions?: Partial<ChatMessageActionsProps>;
+  group?: Partial<ChatMessageGroupProps>;
+  message?: Partial<ChatMessageProps>;
+  avatar?: Partial<ChatMessageAvatarProps>;
+  content?: Partial<ChatMessageContentProps>;
+  meta?: Partial<ChatMessageMetaProps>;
+  actions?: Partial<ChatMessageActionsProps>;
 }
 
 export interface DefaultMessageItemProps {
@@ -55,48 +56,39 @@ export interface DefaultMessageItemProps {
  * Default message-row composition used by `ChatBox` and `ChatMessageList`
  * when no custom `renderItem` is provided.
  *
- * Renders a group → message → avatar → content tree, with the content's inline
- * meta shown in the default variant and external meta shown in the compact variant.
- * A custom `messageActions` slot is wrapped in `ChatMessageActions` when provided.
+ * Composition is slot-driven: `ChatMessageGroup` (or the `group` slot override)
+ * renders `ChatMessage` (or the `message` slot override), which in turn renders
+ * its inner tree (avatar, content, meta, error, actions) from the forwarded slots.
+ * Passing `null` for a presentational slot (`avatar`, `meta`, `actions`) hides it
+ * and collapses the surrounding layout.
  */
 export function DefaultMessageItem({ id, slots, slotProps }: DefaultMessageItemProps) {
-  const variant = useChatVariant();
-  const message = useMessage(id);
-  const MessageGroupComponent = (slots?.messageGroup ??
-    ChatMessageGroup) as typeof ChatMessageGroup;
-  const MessageAvatarComponent = (slots?.messageAvatar ??
-    ChatMessageAvatar) as typeof ChatMessageAvatar;
-  const MessageContentComponent = (slots?.messageContent ??
-    ChatMessageContent) as typeof ChatMessageContent;
-  const MessageMetaComponent = (slots?.messageMeta ?? ChatMessageMeta) as typeof ChatMessageMeta;
-  const MessageRootComponent = (slots?.messageRoot ?? ChatMessage) as typeof ChatMessage;
-  const MessageActionsSlot = slots?.messageActions;
+  const GroupSlot = (slots?.group ?? ChatMessageGroup) as typeof ChatMessageGroup;
+  const groupProps = slotProps?.group;
 
-  const isDefault = variant !== 'compact';
-  const isStreaming = message?.status === 'streaming';
-
-  // Default variant: inline meta inside the bubble (Telegram-style).
-  // Skip during streaming — there is no timestamp yet, and the streaming state
-  // is already communicated via the MuiChatMessage-streaming CSS class.
-  // Also skip when the message carries no displayable meta at all (no timestamp,
-  // no edited label, no delivery status) so the spacer does not add dead space.
-  const hasMeta =
-    Boolean(message?.createdAt) || Boolean(message?.editedAt) || Boolean(message?.status);
-  const inlineMeta = isDefault && !isStreaming && hasMeta ? <ChatMessageInlineMeta /> : undefined;
+  // Forward the message + inner slot map to ChatMessageGroup. It splits off
+  // its own `group` slot from the rest and hands the remainder to `ChatMessage`.
+  const innerSlots = {
+    message: slots?.message,
+    avatar: slots?.avatar,
+    content: slots?.content,
+    meta: slots?.meta,
+    actions: slots?.actions,
+  } as Partial<ChatMessageGroupProps['slots']>;
+  const innerSlotProps = {
+    message: slotProps?.message,
+    avatar: slotProps?.avatar,
+    content: slotProps?.content,
+    meta: slotProps?.meta,
+    actions: slotProps?.actions,
+  } as ChatMessageGroupProps['slotProps'];
 
   return (
-    <MessageGroupComponent messageId={id} {...(slotProps?.messageGroup ?? {})}>
-      <MessageRootComponent messageId={id} {...(slotProps?.messageRoot ?? {})}>
-        <MessageAvatarComponent {...(slotProps?.messageAvatar ?? {})} />
-        <MessageContentComponent {...(slotProps?.messageContent ?? {})} afterContent={inlineMeta} />
-        {/* External meta is only used in the compact variant */}
-        {!isDefault && <MessageMetaComponent {...(slotProps?.messageMeta ?? {})} />}
-        {MessageActionsSlot && (
-          <ChatMessageActions {...(slotProps?.messageActions ?? {})}>
-            <MessageActionsSlot messageId={id} />
-          </ChatMessageActions>
-        )}
-      </MessageRootComponent>
-    </MessageGroupComponent>
+    <GroupSlot
+      messageId={id}
+      slots={innerSlots}
+      slotProps={innerSlotProps}
+      {...(groupProps ?? {})}
+    />
   );
 }

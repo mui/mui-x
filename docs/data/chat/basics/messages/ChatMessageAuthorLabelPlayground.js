@@ -8,7 +8,8 @@ import {
 
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
 import { ScopedChat } from '../../_playground/sharedProviders';
-import { ChoiceControl } from '../../_playground/controls';
+import { ChoiceControl, DividerLabel } from '../../_playground/controls';
+import { useCustomizations } from '../../_playground/useCustomizations';
 import { users } from '../../_playground/data';
 
 const conversation = {
@@ -30,25 +31,42 @@ function makeMessage(role, status, text) {
   };
 }
 
+const CLASS_DEFS = [
+  {
+    name: 'authorLabel',
+    selector: '.MuiChatMessage-authorLabel',
+    description: 'Applied to the author label element above the bubble group.',
+  },
+];
+
 export default function ChatMessageAuthorLabelPlayground() {
   const [role, setRole] = React.useState('assistant');
+  const classesCustomizations = useCustomizations(CLASS_DEFS);
+
   const message = React.useMemo(
     () => makeMessage(role, 'read', 'Author label preview message.'),
     [role],
   );
+
+  const labelSx = classesCustomizations.toClassesSx();
 
   return (
     <PlaygroundCard
       title="ChatMessageAuthorLabel"
       description="Author display name rendered above grouped messages."
       previewMinHeight={140}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
-        <ChoiceControl
-          label="role"
-          value={role}
-          options={['assistant', 'user']}
-          onChange={setRole}
-        />
+        <React.Fragment>
+          <DividerLabel>fixture (message data)</DividerLabel>
+          <ChoiceControl
+            label="role"
+            value={role}
+            options={['assistant', 'user']}
+            onChange={setRole}
+          />
+        </React.Fragment>
       }
       preview={
         <ScopedChat
@@ -56,7 +74,7 @@ export default function ChatMessageAuthorLabelPlayground() {
           messages={[message]}
           activeConversationId={conversation.id}
         >
-          <Box sx={{ width: '100%' }}>
+          <Box sx={{ width: '100%', ...labelSx }}>
             <ChatMessageGroup messageId={message.id}>
               <ChatMessageComponent messageId={message.id}>
                 <ChatMessageAuthorLabel />

@@ -9,7 +9,12 @@ import {
 
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
 import { ChatChrome, ScopedChat } from '../../_playground/sharedProviders';
-import { ChoiceControl, SelectControl } from '../../_playground/controls';
+import {
+  ChoiceControl,
+  DividerLabel,
+  SelectControl,
+} from '../../_playground/controls';
+import { useCustomizations } from '../../_playground/useCustomizations';
 import { users } from '../../_playground/data';
 
 const conversation = {
@@ -31,10 +36,24 @@ function makeMessage(role, status, text) {
   };
 }
 
+const CLASS_DEFS = [
+  {
+    name: 'content',
+    selector: '.MuiChatMessage-content',
+    description: 'The content slot wrapping the bubble + inline meta.',
+  },
+  {
+    name: 'bubble',
+    selector: '.MuiChatMessage-bubble',
+    description: 'The actual rounded bubble element.',
+  },
+];
+
 export default function ChatMessageContentPlayground() {
   const [content, setContent] = React.useState('markdown');
   const [role, setRole] = React.useState('assistant');
   const [variant, setVariant] = React.useState('default');
+  const classesCustomizations = useCustomizations(CLASS_DEFS);
 
   const text =
     content === 'markdown'
@@ -43,31 +62,37 @@ export default function ChatMessageContentPlayground() {
 
   const message = React.useMemo(() => makeMessage(role, 'read', text), [role, text]);
 
+  const contentSx = classesCustomizations.toClassesSx();
+
   return (
     <PlaygroundCard
       title="ChatMessageContent"
       description="Bubble interior — handles markdown, code fences and tool/source parts."
       previewMinHeight={220}
       span={2}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
         <React.Fragment>
+          <DividerLabel>fixture (message data)</DividerLabel>
           <ChoiceControl
             label="role"
             value={role}
             options={['assistant', 'user']}
             onChange={setRole}
           />
-          <ChoiceControl
-            label="variant"
-            value={variant}
-            options={['default', 'compact']}
-            onChange={setVariant}
-          />
           <SelectControl
             label="content"
             value={content}
             options={[{ value: 'plain' }, { value: 'markdown' }]}
             onChange={setContent}
+          />
+          <DividerLabel>chrome provider</DividerLabel>
+          <ChoiceControl
+            label="ChatChrome.variant"
+            value={variant}
+            options={['default', 'compact']}
+            onChange={setVariant}
           />
         </React.Fragment>
       }
@@ -78,7 +103,7 @@ export default function ChatMessageContentPlayground() {
           activeConversationId={conversation.id}
         >
           <ChatChrome variant={variant} density="standard">
-            <Box sx={{ width: '100%' }}>
+            <Box sx={{ width: '100%', ...contentSx }}>
               <ChatMessageGroup messageId={message.id}>
                 <ChatMessageComponent messageId={message.id}>
                   <ChatMessageAvatar />

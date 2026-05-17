@@ -7,9 +7,9 @@ githubLabel: 'scope: chat'
 
 # Chat - Tool approval and renderers
 
-<p class="description">Combine AI-native runtime features by approving a tool call and rendering a custom message part through the registry.</p>
+<p class="description">Approve agent tool calls and render custom message parts through the part renderer registry.</p>
 
-This demo covers the main extension points for tool-assisted AI interactions:
+This page covers the main extension points for tool-assisted AI interactions:
 
 - the tool approval lifecycle from `approval-requested` to response
 - `addToolApprovalResponse()` for approving or denying tool calls
@@ -23,7 +23,7 @@ This demo covers the main extension points for tool-assisted AI interactions:
 ### Tool approval flow
 
 When the stream sends a `tool-approval-request` chunk, the tool invocation moves to `state: 'approval-requested'`.
-Your UI renders an approve/deny interface.
+The UI renders an approve/deny interface.
 When the user responds, call `addToolApprovalResponse()`:
 
 ```tsx
@@ -77,24 +77,26 @@ function MessagePart({ part, message, index }) {
 }
 ```
 
-For a dedicated walkthrough of TypeScript module augmentation, see [Type augmentation](/x/react-chat/core/examples/type-augmentation/).
+See [Type augmentation](/x/react-chat/core/examples/type-augmentation/) for details on TypeScript module augmentation.
+
+The demo below combines the approval flow and a custom part renderer:
 
 {{"demo": "ToolApprovalAndRenderersHeadlessChat.js"}}
 
 ## Key takeaways
 
-- Tool approval is a first-class runtime feature — the stream pauses at `approval-requested` until you respond
+- Tool approval is a first-class runtime feature—the stream pauses at `approval-requested` until you respond.
 - `addToolApprovalResponse()` drives the approval/denial decision
 - After tool resolution, the adapter can emit a `message-added` event to deliver the assistant's follow-up interpretation of the result
-- `partRenderers` decouples rendering from the message loop — register once, look up anywhere
-- Custom part types registered through module augmentation integrate seamlessly with the renderer registry
+- `partRenderers` decouples rendering from the message loop—register once, look up anywhere.
+- Custom part types registered through module augmentation work with the renderer registry the same as built-in types.
 
 ## See also
 
-- [Type augmentation](/x/react-chat/core/types/) for registering custom types
-- [Streaming](/x/react-chat/core/streaming/) for the tool chunk protocol
-- [Tool call events](/x/react-chat/core/examples/tool-call-events/) for the `onToolCall` callback pattern
-- [Hooks](/x/react-chat/core/hooks/) for the `useChatPartRenderer()` API reference
+- See [Type augmentation](/x/react-chat/core/types/) for details on registering custom types.
+- See [Streaming](/x/react-chat/core/streaming/) for details on the tool chunk protocol.
+- See [Tool call events](/x/react-chat/core/examples/tool-call-events/) for details on the `onToolCall()` callback pattern.
+- See [Hooks](/x/react-chat/core/hooks/) for the `useChatPartRenderer()` API reference.
 
 ## API
 

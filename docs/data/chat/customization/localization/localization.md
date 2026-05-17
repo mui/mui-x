@@ -8,12 +8,12 @@ components: ChatRoot
 
 # Chat - Localization
 
-<p class="description">Customize all user-facing strings in the chat UI using the <code>localeText</code> prop on <code>ChatRoot</code> or the <code>useChatLocaleText()</code> hook.</p>
+<p class="description">Translate and customize every user-facing string in the Chat for users around the world.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Every user-facing string in the chat UI — placeholders, button labels, status messages, timestamps — is defined in a locale text object.
-You can override any string by passing a partial `localeText` object to `ChatBox`.
+Every user-facing string in the Chat—placeholders, button labels, status messages, timestamps—is defined in a locale text object.
+Override any string by passing a partial `localeText` object to `ChatBox`.
 
 ## Default locale
 
@@ -24,11 +24,11 @@ It is exported as `chatEnUS` from `@mui/x-chat/locales`:
 import { chatEnUS } from '@mui/x-chat/locales';
 ```
 
-This object contains all the default string values used by the chat components.
+This object contains all the default string values used by the Chat components.
 
 ## Overriding locale strings
 
-Pass a partial `localeText` object to `ChatBox` or `Chat.Root` to override specific strings.
+Pass a partial `localeText` object to `<ChatBox />` or `<Chat.Root />` to override specific strings.
 Unspecified keys fall back to the defaults:
 
 ```tsx
@@ -44,7 +44,7 @@ Unspecified keys fall back to the defaults:
 />
 ```
 
-## The `useChatLocaleText()` hook
+## Reading locale text from a custom component
 
 Inside any descendant of `ChatBox`, use the `useChatLocaleText()` hook to read the current locale text:
 
@@ -58,7 +58,7 @@ function CustomSendButton() {
 }
 ```
 
-This is useful when building custom slot components that need to access localized strings.
+Use this hook when building custom slot components that need localized strings.
 
 ## Available locale keys
 
@@ -164,5 +164,5 @@ const frenchLocale = {
 
 ## See also
 
-- [Styling](/x/react-chat/customization/styling/) for visual customization.
-- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing components that render localized text.
+- See [Styling](/x/react-chat/customization/styling/) for details.
+- See [Slots and composition](/x/react-chat/customization/slots-and-composition/) for details.

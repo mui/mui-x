@@ -55,6 +55,7 @@ export default function MuiDocsAssistantDemo() {
       initialActiveConversationId={CONVERSATION_ID}
       initialConversations={initialConversations}
       initialMessages={initialMessages}
+      variant="compact"
       sx={{
         height: 600,
         border: '1px solid',

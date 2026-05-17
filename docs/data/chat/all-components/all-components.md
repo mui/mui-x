@@ -1,46 +1,46 @@
 ---
 productId: x-chat
-title: Chat - All Components
+title: Chat - All components
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# All Components
+# All components
 
-<p class="description">A visual index of every component shipped with the Chat package. Click any card to open its documentation.</p>
+<p class="description">Browse every component shipped with the Chat package.</p>
 
 ## Full surfaces
 
-Complete chat surfaces and high-level wrappers that compose the chat experience.
+Compose a complete Chat experience with high-level surface wrappers:
 
 {{"component": "modules/chat-gallery/ChatFullSurfacesComponents.tsx"}}
 
 ## Layout and navigation
 
-Conversation chrome, headers, and the inbox-style conversation list.
+Lay out the Chat shell with conversation chrome, headers, and the inbox-style conversation list:
 
 {{"component": "modules/chat-gallery/ChatLayoutComponents.tsx"}}
 
 ## Messages
 
-Message list, grouping, bubbles, metadata, actions, and errors.
+Render messages with grouping, bubbles, metadata, inline actions, and error states:
 
 {{"component": "modules/chat-gallery/ChatMessageComponents.tsx"}}
 
 ## Composer
 
-The prompt form, text area, attachment controls, toolbar, send button, and helper text.
+Build the prompt form from a text area, attachment controls, toolbar, send button, and helper text:
 
 {{"component": "modules/chat-gallery/ChatComposerComponents.tsx"}}
 
 ## States
 
-Suggestions, typing, unread markers, loading skeletons, and scroll affordances.
+Convey runtime state with suggestions, typing indicators, unread markers, loading skeletons, and scroll affordances:
 
 {{"component": "modules/chat-gallery/ChatStateComponents.tsx"}}
 
 ## AI and rich content
 
-Citations, code blocks, approval prompts, and presentational building blocks.
+Render AI output with citations, code blocks, approval prompts, and other presentational building blocks:
 
 {{"component": "modules/chat-gallery/ChatAiContentComponents.tsx"}}

@@ -2,9 +2,12 @@ import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-
-import { ChoiceControl, SwitchControl } from '../../_playground/controls';
-import { parseSx } from '../../_playground/parseSx';
+import {
+  ChoiceControl,
+  DividerLabel,
+  SwitchControl,
+} from '../../_playground/controls';
+import { useCustomizations } from '../../_playground/useCustomizations';
 import {
   conversations,
   initialThreads,
@@ -21,44 +24,30 @@ const DEFAULTS = {
   conversationHeader: true,
   attachments: true,
   suggestions: true,
+  scrollToBottom: true,
+  helperText: true,
+  autoScroll: true,
+  suggestionsAutoSubmit: false,
 };
 
-const SLOT_DESCRIPTIONS = {
-  messageList: 'The scroller wrapping every chat message.',
-  messageRoot: 'Each individual message row (assistant or user).',
-  messageContent: 'The bubble around each message body.',
-  composerRoot: 'The composer surface at the bottom.',
-  conversationHeader: 'The bar above the thread.',
-};
-
-const CLASS_DESCRIPTIONS = {
-  root: 'The outermost ChatBox element.',
-  threadPane: 'The active thread column.',
-  conversationsPane: 'The sidebar listing conversations.',
-};
-
-const CLASS_SELECTORS = {
-  root: '.MuiChatBox-root',
-  threadPane: '.MuiChatBox-threadPane',
-  conversationsPane: '.MuiChatBox-conversationsPane',
-};
-
-const SLOT_KEYS = [
-  'messageList',
-  'messageRoot',
-  'messageContent',
-  'composerRoot',
-  'conversationHeader',
+const CLASS_DEFS = [
+  { name: 'root', description: 'The outermost ChatBox element.' },
+  {
+    name: 'layout',
+    selector: '.MuiChatBox-layout',
+    description: 'The pane layout container.',
+  },
+  {
+    name: 'threadPane',
+    selector: '.MuiChatBox-threadPane',
+    description: 'The active thread column.',
+  },
+  {
+    name: 'conversationsPane',
+    selector: '.MuiChatBox-conversationsPane',
+    description: 'The sidebar listing conversations.',
+  },
 ];
-
-const CLASS_KEYS = ['root', 'threadPane', 'conversationsPane'];
-
-function emptyMap(keys) {
-  return keys.reduce((acc, key) => {
-    acc[key] = '';
-    return acc;
-  }, {});
-}
 
 function indent(input, prefix) {
   return input
@@ -79,8 +68,15 @@ export default function ChatBoxPlayground() {
   );
   const [attachments, setAttachments] = React.useState(DEFAULTS.attachments);
   const [suggestions, setSuggestions] = React.useState(DEFAULTS.suggestions);
-  const [slotSx, setSlotSx] = React.useState(() => emptyMap(SLOT_KEYS));
-  const [classSx, setClassSx] = React.useState(() => emptyMap(CLASS_KEYS));
+  const [scrollToBottom, setScrollToBottom] = React.useState(
+    DEFAULTS.scrollToBottom,
+  );
+  const [helperText, setHelperText] = React.useState(DEFAULTS.helperText);
+  const [autoScroll, setAutoScroll] = React.useState(DEFAULTS.autoScroll);
+  const [suggestionsAutoSubmit, setSuggestionsAutoSubmit] = React.useState(
+    DEFAULTS.suggestionsAutoSubmit,
+  );
+  const classesCustomizations = useCustomizations(CLASS_DEFS);
   const threadMapRef = React.useRef(initialThreads);
   const adapter = React.useMemo(() => makeAdapter(threadMapRef.current), []);
 
@@ -92,106 +88,40 @@ export default function ChatBoxPlayground() {
     setConversationHeader(DEFAULTS.conversationHeader);
     setAttachments(DEFAULTS.attachments);
     setSuggestions(DEFAULTS.suggestions);
+    setScrollToBottom(DEFAULTS.scrollToBottom);
+    setHelperText(DEFAULTS.helperText);
+    setAutoScroll(DEFAULTS.autoScroll);
+    setSuggestionsAutoSubmit(DEFAULTS.suggestionsAutoSubmit);
   }, []);
 
-  const handleSlotsReset = React.useCallback(() => {
-    setSlotSx(emptyMap(SLOT_KEYS));
-  }, []);
-
-  const handleClassesReset = React.useCallback(() => {
-    setClassSx(emptyMap(CLASS_KEYS));
-  }, []);
-
-  const slotProps = React.useMemo(() => {
-    const result = {};
-    SLOT_KEYS.forEach((key) => {
-      const parsed = parseSx(slotSx[key]);
-      if (parsed.value) {
-        result[key] = { sx: parsed.value };
-      }
-    });
-    return result;
-  }, [slotSx]);
-
-  const outerSx = React.useMemo(() => {
-    const base = { height: '100%' };
-    CLASS_KEYS.forEach((key) => {
-      if (key === 'root') {
-        const parsed = parseSx(classSx[key]);
-        if (parsed.value) {
-          Object.assign(base, parsed.value);
-        }
-        return;
-      }
-      const parsed = parseSx(classSx[key]);
-      if (parsed.value) {
-        base[`& ${CLASS_SELECTORS[key]}`] = parsed.value;
-      }
-    });
-    return base;
-  }, [classSx]);
-
-  const slotCustomizations = React.useMemo(
-    () =>
-      SLOT_KEYS.map((key) => {
-        const parsed = parseSx(slotSx[key]);
-        return {
-          name: key,
-          description: SLOT_DESCRIPTIONS[key],
-          sx: slotSx[key],
-          parseError: parsed.error,
-          onSxChange: (next) => setSlotSx((prev) => ({ ...prev, [key]: next })),
-        };
-      }),
-    [slotSx],
-  );
-
-  const classCustomizations = React.useMemo(
-    () =>
-      CLASS_KEYS.map((key) => {
-        const parsed = parseSx(classSx[key]);
-        return {
-          name: key,
-          selector: CLASS_SELECTORS[key],
-          description: CLASS_DESCRIPTIONS[key],
-          sx: classSx[key],
-          parseError: parsed.error,
-          onSxChange: (next) => setClassSx((prev) => ({ ...prev, [key]: next })),
-        };
-      }),
-    [classSx],
+  const outerSx = React.useMemo(
+    () => classesCustomizations.toClassesSx({ height: '100%' }),
+    [classesCustomizations],
   );
 
   const copyCode = React.useCallback(() => {
-    const slotPropsEntries = SLOT_KEYS.filter((key) => slotSx[key].trim()).map(
-      (key) => `  ${key}: { sx: ${indent(slotSx[key].trim(), '    ')} },`,
-    );
-    const classEntries = CLASS_KEYS.filter((key) => classSx[key].trim()).map(
-      (key) => {
+    const classEntries = Object.keys(classesCustomizations.values)
+      .filter((key) => classesCustomizations.values[key].trim())
+      .map((key) => {
+        const def = CLASS_DEFS.find((d) => d.name === key);
         if (key === 'root') {
-          return `  ...${indent(classSx[key].trim(), '  ')}`;
+          return `    ...${indent(classesCustomizations.values[key].trim(), '    ')}`;
         }
-        return `  '& ${CLASS_SELECTORS[key]}': ${indent(classSx[key].trim(), '  ')},`;
-      },
-    );
-
-    const slotPropsLines =
-      slotPropsEntries.length > 0
-        ? `\n  slotProps={{\n${slotPropsEntries.map((entry) => `  ${entry}`).join('\n')}\n  }}`
-        : '';
+        return `    '& ${def.selector}': ${indent(classesCustomizations.values[key].trim(), '    ')},`;
+      });
 
     const sxLines =
       classEntries.length > 0
-        ? `\n  sx={{\n    height: '100%',\n${classEntries.map((entry) => `  ${entry}`).join('\n')}\n  }}`
+        ? `\n  sx={{\n    height: '100%',\n${classEntries.join('\n')}\n  }}`
         : `\n  sx={{ height: '100%' }}`;
 
     const featuresLines = [
       conversationList ? '    conversationList: true,' : null,
       conversationHeader ? '    conversationHeader: true,' : null,
-      '    scrollToBottom: true,',
+      scrollToBottom ? '    scrollToBottom: true,' : '    scrollToBottom: false,',
       attachments ? '    attachments: true,' : null,
-      '    helperText: true,',
-      '    autoScroll: true,',
+      helperText ? '    helperText: true,' : '    helperText: false,',
+      autoScroll ? '    autoScroll: true,' : '    autoScroll: false,',
       suggestions ? '    suggestions: true,' : null,
     ]
       .filter(Boolean)
@@ -207,9 +137,10 @@ export default function ChatBoxPlayground() {
   density="${density}"
   layoutMode="${layoutMode}"
   suggestions={sampleSuggestions}
+  suggestionsAutoSubmit={${suggestionsAutoSubmit}}
   features={{
 ${featuresLines}
-  }}${slotPropsLines}${sxLines}
+  }}${sxLines}
 />`;
   }, [
     variant,
@@ -219,8 +150,11 @@ ${featuresLines}
     conversationHeader,
     attachments,
     suggestions,
-    slotSx,
-    classSx,
+    scrollToBottom,
+    helperText,
+    autoScroll,
+    suggestionsAutoSubmit,
+    classesCustomizations.values,
   ]);
 
   return (
@@ -231,13 +165,12 @@ ${featuresLines}
       previewMinHeight={520}
       span={3}
       onReset={handleReset}
-      slotCustomizations={slotCustomizations}
-      classCustomizations={classCustomizations}
-      onSlotsReset={handleSlotsReset}
-      onClassesReset={handleClassesReset}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       copyCode={copyCode}
       controls={
         <React.Fragment>
+          <DividerLabel>Appearance</DividerLabel>
           <ChoiceControl
             label="variant"
             value={variant}
@@ -256,6 +189,7 @@ ${featuresLines}
             options={['standard', 'split', 'overlay']}
             onChange={setLayoutMode}
           />
+          <DividerLabel>features</DividerLabel>
           <SwitchControl
             label="conversationList"
             checked={conversationList}
@@ -276,6 +210,31 @@ ${featuresLines}
             checked={suggestions}
             onChange={setSuggestions}
           />
+          <SwitchControl
+            label="scrollToBottom"
+            checked={scrollToBottom}
+            onChange={setScrollToBottom}
+            helperText="Floating jump-to-latest affordance."
+          />
+          <SwitchControl
+            label="helperText"
+            checked={helperText}
+            onChange={setHelperText}
+            helperText="Hint row below the composer."
+          />
+          <SwitchControl
+            label="autoScroll"
+            checked={autoScroll}
+            onChange={setAutoScroll}
+            helperText="Stick to the bottom on new messages."
+          />
+          <DividerLabel>Suggestions</DividerLabel>
+          <SwitchControl
+            label="suggestionsAutoSubmit"
+            checked={suggestionsAutoSubmit}
+            onChange={setSuggestionsAutoSubmit}
+            helperText="Submit on click instead of populating the input."
+          />
         </React.Fragment>
       }
       preview={
@@ -289,16 +248,16 @@ ${featuresLines}
           density={density}
           layoutMode={layoutMode}
           suggestions={sampleSuggestions}
+          suggestionsAutoSubmit={suggestionsAutoSubmit}
           features={{
             conversationList,
             conversationHeader,
-            scrollToBottom: true,
+            scrollToBottom,
             attachments,
-            helperText: true,
-            autoScroll: true,
+            helperText,
+            autoScroll,
             suggestions,
           }}
-          slotProps={slotProps}
           sx={outerSx}
         />
       }

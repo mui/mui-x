@@ -6,6 +6,8 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
+// Backwards-compatible alias for older callers.
+
 const DEFAULT_PACKAGE_NAME = '@mui/x-chat';
 
 const defaultRegistryMetadata = {
@@ -15,9 +17,9 @@ const defaultRegistryMetadata = {
       'conversationList',
       'conversationHeader',
       'messageList',
-      'messageRoot',
-      'messageContent',
-      'composerRoot',
+      'message',
+      'content',
+      'composer',
       'suggestions',
       'scrollToBottom',
     ],
@@ -31,6 +33,9 @@ const defaultRegistryMetadata = {
   ChatConversationList: {
     status: 'compound',
     slots: [
+      'root',
+      'scroller',
+      'viewport',
       'item',
       'itemAvatar',
       'itemContent',
@@ -38,10 +43,19 @@ const defaultRegistryMetadata = {
       'preview',
       'timestamp',
       'unreadBadge',
+      'itemActions',
     ],
     classKeys: [
       'root',
+      'scroller',
       'item',
+      'itemAvatar',
+      'itemContent',
+      'itemTitle',
+      'itemPreview',
+      'itemTimestamp',
+      'itemUnreadBadge',
+      'itemActions',
       'itemSelected',
       'itemUnread',
       'itemFocused',
@@ -147,7 +161,18 @@ const defaultRegistryMetadata = {
   ChatComposer: {
     status: 'compound',
     slots: ['root'],
-    classKeys: ['root', 'disabled', 'variantCompact'],
+    classKeys: [
+      'root',
+      'disabled',
+      'variantCompact',
+      'label',
+      'textArea',
+      'sendButton',
+      'attachButton',
+      'toolbar',
+      'attachmentList',
+      'helperText',
+    ],
   },
   ChatComposerTextArea: {
     status: 'slot',
@@ -454,7 +479,9 @@ function TabButton({ label, hasIndicator, active, onClick }) {
   );
 }
 
-function CustomizationRow({ item, defaultOpen }) {
+const CLASS_PLACEHOLDER = '{\n  // css properties for this selector\n}';
+
+function ClassCustomizationRow({ item, defaultOpen }) {
   const hasOverride = item.sx.trim().length > 0;
   const [open, setOpen] = React.useState(defaultOpen ?? hasOverride);
   const [draft, setDraft] = React.useState(item.sx);
@@ -538,7 +565,7 @@ function CustomizationRow({ item, defaultOpen }) {
           <Box
             component="textarea"
             value={draft}
-            placeholder={'{\n  // sx object\n}'}
+            placeholder={CLASS_PLACEHOLDER}
             spellCheck={false}
             onChange={(event) => setDraft(event.target.value)}
             onBlur={() => {
@@ -904,26 +931,19 @@ export function PlaygroundCard({
   slots,
   classKeys,
   previewSize,
-  slotCustomizations,
   classCustomizations,
-  onSlotsReset,
   onClassesReset,
   copyCode,
 }) {
-  const slotsOverrideCount = React.useMemo(
-    () => slotCustomizations?.filter((entry) => entry.sx.trim()).length ?? 0,
-    [slotCustomizations],
-  );
   const classesOverrideCount = React.useMemo(
     () => classCustomizations?.filter((entry) => entry.sx.trim()).length ?? 0,
     [classCustomizations],
   );
-  const hasSlotsTab = (slotCustomizations?.length ?? 0) > 0;
   const hasClassesTab = (classCustomizations?.length ?? 0) > 0;
-  const showTabs = hasSlotsTab || hasClassesTab;
+  const showTabs = hasClassesTab;
   const [activeTab, setActiveTab] = React.useState('props');
   const [controlsCollapsed, setControlsCollapsed] = React.useState(false);
-  const overridesCount = slotsOverrideCount + classesOverrideCount;
+  const overridesCount = classesOverrideCount;
   const componentId = title.replace(/[^a-zA-Z0-9]/g, '');
   const inferredComponentName =
     componentNameProp ?? registry?.componentName ?? getComponentName(title);
@@ -1105,14 +1125,6 @@ export function PlaygroundCard({
                     active={activeTab === 'props'}
                     onClick={() => setActiveTab('props')}
                   />
-                  {hasSlotsTab ? (
-                    <TabButton
-                      label="Slots"
-                      hasIndicator={slotsOverrideCount > 0}
-                      active={activeTab === 'slots'}
-                      onClick={() => setActiveTab('slots')}
-                    />
-                  ) : null}
                   {hasClassesTab ? (
                     <TabButton
                       label="Classes"
@@ -1136,11 +1148,10 @@ export function PlaygroundCard({
                   Props
                 </Typography>
               )}
-              {onReset || onSlotsReset || onClassesReset ? (
+              {onReset || onClassesReset ? (
                 <ResetButton
                   onClick={() => {
                     onReset?.();
-                    onSlotsReset?.();
                     onClassesReset?.();
                   }}
                 />
@@ -1167,26 +1178,6 @@ export function PlaygroundCard({
                   {controls}
                 </Box>
               ) : null}
-              {activeTab === 'slots' && slotCustomizations ? (
-                <Box
-                  sx={{
-                    px: 1.5,
-                    py: 0.5,
-                    '& > *': {
-                      py: 0.5,
-                      borderBottom: '1px solid',
-                      borderColor: 'divider',
-                    },
-                    '& > *:last-child': {
-                      borderBottom: 'none',
-                    },
-                  }}
-                >
-                  {slotCustomizations.map((entry) => (
-                    <CustomizationRow key={entry.name} item={entry} />
-                  ))}
-                </Box>
-              ) : null}
               {activeTab === 'classes' && classCustomizations ? (
                 <Box
                   sx={{
@@ -1203,7 +1194,7 @@ export function PlaygroundCard({
                   }}
                 >
                   {classCustomizations.map((entry) => (
-                    <CustomizationRow key={entry.name} item={entry} />
+                    <ClassCustomizationRow key={entry.name} item={entry} />
                   ))}
                 </Box>
               ) : null}

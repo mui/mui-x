@@ -564,7 +564,7 @@ export default function ToolStylingA() {
         );
       }}
       slotProps={{
-        messageContent: {
+        content: {
           partProps: {
             'dynamic-tool': { toolSlots: ringToolSlots },
           },

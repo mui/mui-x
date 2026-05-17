@@ -7,19 +7,19 @@ githubLabel: 'scope: chat'
 
 # Chat - Echo adapter
 
-<p class="description">An in-memory adapter that echoes the user's last message back after a small delay. Useful for prototyping UI and smoke tests with zero infrastructure.</p>
+<p class="description">Echo user messages back through the chat runtime to prototype UI without a backend.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-## Demo
+## Echoing user messages
 
-The adapter below echoes whatever you type after a 300 ms simulated network delay.
+The adapter below echoes whatever you type after a 400 ms simulated network delay.
 
 {{"demo": "EchoAdapterDemo.js", "defaultCodeOpen": true, "bg": "inline"}}
 
 ## Usage
 
-Pass a `respond` function to control what the assistant replies, and a `delayMs` to tune how long the reply takes to arrive:
+Use `respond` to set the reply text and `delayMs` to control the response delay:
 
 ```ts
 import { createEchoAdapter } from '@mui/x-chat/headless';
@@ -47,6 +47,6 @@ Swap to a real adapter (for example [`createAiSdkAdapter`](/x/react-chat/backend
 
 ## See also
 
-- [createAiSdkAdapter](/x/react-chat/backend/built-in-adapters/ai-sdk-adapter/) — bridge to Vercel's AI SDK
-- [Adapters](/x/react-chat/backend/adapters/) — the full `ChatAdapter` interface reference
-- [Building an Adapter](/x/react-chat/backend/building-an-adapter/) — write your own from scratch
+- [`createAiSdkAdapter()`](/x/react-chat/backend/built-in-adapters/ai-sdk-adapter/)—bridge to Vercel's AI SDK
+- [Adapters](/x/react-chat/backend/adapters/)—the full `ChatAdapter` interface reference
+- [Building an adapter](/x/react-chat/backend/building-an-adapter/)—write your own from scratch

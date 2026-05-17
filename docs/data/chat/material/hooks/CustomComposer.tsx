@@ -60,7 +60,7 @@ export default function CustomComposer() {
       initialActiveConversationId={minimalConversation.id}
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
-      slots={{ composerRoot: CustomComposerContent }}
+      slots={{ composer: CustomComposerContent }}
       sx={{
         height: 500,
         border: '1px solid',

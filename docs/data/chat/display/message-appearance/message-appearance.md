@@ -1,18 +1,18 @@
 ---
 productId: x-chat
-title: Message Appearance
+title: Message appearance
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageGroup, ChatMessageAvatar, ChatMessageAuthorLabel, ChatMessageMeta, ChatMessageInlineMeta, ChatDateDivider
 ---
 
-# Chat - Message Appearance
+# Chat - Message appearance
 
-<p class="description">Control the visual presentation of messages — grouping, date dividers, avatars, timestamps, and layout variants.</p>
+<p class="description">Control the visual presentation of messages—grouping, date dividers, avatars, timestamps, and layout variants.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-This page covers the visual aspects of how messages are displayed in the message list. For message content rendering (text, files, code blocks), see the [Message Parts](/x/react-chat/display/message-parts/text-and-markdown/) section.
+This page covers the visual aspects of how messages are displayed in the message list. See [Message parts](/x/react-chat/display/message-parts/text-and-markdown/) for details.
 
 ## Message groups
 
@@ -45,7 +45,8 @@ Avatar resolution follows the same rules as the built-in message primitives:
 - otherwise `message.author?.avatarUrl`
 - otherwise a matching `currentUser`, `members`, or active-conversation participant entry resolved by author id
 
-Within a group, subsequent messages omit the avatar entirely — the component returns `null` rather than rendering a placeholder. If no `avatarUrl` is set on the author and no custom `avatar` slot is provided, the avatar is also omitted for the first message in the group.
+Within a group, subsequent messages omit the avatar entirely—the component returns `null` rather than rendering a placeholder.
+If no `avatarUrl` is set on the author and no custom `avatar` slot is provided, the avatar is also omitted for the first message in the group.
 
 ## Timestamps and metadata
 
@@ -72,13 +73,13 @@ ChatMessageList                     ← scrollable container
 
 Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layout with no bubbles, left-aligned messages, and group header timestamps.
 
-See [Variants & Density](/x/react-chat/basics/variants-and-density/) for full details, a comparison table, and interactive demos.
+See [Variants and density](/x/react-chat/basics/variants-and-density/) for details.
 
 ## Density
 
 The `density` prop controls the vertical spacing between messages independently of the variant. Three values are available: `compact`, `standard` (default), and `comfortable`.
 
-See [Variants & Density](/x/react-chat/basics/variants-and-density/) for interactive density demos and guidance on combining variant and density.
+See [Variants and density](/x/react-chat/basics/variants-and-density/) for details.
 
 ## Slots
 
@@ -87,16 +88,16 @@ The following slots are available for customization through `ChatBox`:
 | Slot             | Component            | Description                                         |
 | :--------------- | :------------------- | :-------------------------------------------------- |
 | `messageList`    | `ChatMessageList`    | The scrollable container                            |
-| `messageRoot`    | `ChatMessage`        | Individual message row                              |
-| `messageAvatar`  | `ChatMessageAvatar`  | Author avatar                                       |
-| `messageContent` | `ChatMessageContent` | Message bubble                                      |
-| `messageMeta`    | `ChatMessageMeta`    | Timestamp, status, streaming progress, edited label |
-| `messageActions` | `ChatMessageActions` | Hover action menu                                   |
-| `messageGroup`   | `ChatMessageGroup`   | Same-author message group                           |
+| `message`    | `ChatMessage`        | Individual message row                              |
+| `avatar`  | `ChatMessageAvatar`  | Author avatar                                       |
+| `content` | `ChatMessageContent` | Message bubble                                      |
+| `meta`    | `ChatMessageMeta`    | Timestamp, status, streaming progress, edited label |
+| `actions` | `ChatMessageActions` | Hover action menu                                   |
+| `group`   | `ChatMessageGroup`   | Same-author message group                           |
 | `dateDivider`    | `ChatDateDivider`    | Date separator                                      |
 
 ## See also
 
 - [Message list](/x/react-chat/basics/messages/) for scrolling behavior, auto-scroll configuration, and history loading
-- [Message Actions](/x/react-chat/display/message-actions/) for the hover action menu on messages
-- [Loading & Empty States](/x/react-chat/display/loading-and-empty-states/) for skeleton and empty state display
+- [Message actions](/x/react-chat/display/message-actions/) for details on the hover action menu.
+- [Loading and empty states](/x/react-chat/display/loading-and-empty-states/) for details on skeleton and empty state display.

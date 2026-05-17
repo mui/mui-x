@@ -112,13 +112,13 @@ describe('ChatMessage', () => {
     expect(document.querySelector('.MuiChatMessage-root')).not.toBe(null);
   });
 
-  it('forwards custom className to the message root via slotProps.messageRoot', () => {
+  it('forwards custom className to the message root via slotProps.message', () => {
     render(
       <ChatBox
         adapter={createAdapter()}
         initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] }]}
         slotProps={{
-          messageRoot: { className: 'my-custom-class' },
+          message: { className: 'my-custom-class' },
         }}
       >
         {null}

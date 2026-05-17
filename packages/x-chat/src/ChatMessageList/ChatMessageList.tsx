@@ -93,12 +93,12 @@ const ChatMessageListContentStyled = styled('div', {
 });
 
 const ROW_SLOT_KEYS: ReadonlyArray<keyof ChatMessageRowSlots> = [
-  'messageGroup',
-  'messageRoot',
-  'messageAvatar',
-  'messageContent',
-  'messageMeta',
-  'messageActions',
+  'group',
+  'message',
+  'avatar',
+  'content',
+  'meta',
+  'actions',
 ];
 
 const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListProps>(

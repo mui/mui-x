@@ -12,7 +12,7 @@ githubLabel: 'scope: chat'
 The `slots` prop lets you swap any internal component in `ChatBox` with your own implementation.
 This demo replaces the message bubble with a `Paper`-based component that uses MUI elevation and border styles.
 
-- `slots.messageContent` accepting a custom component that wraps the default `ChatMessageContent`
+- `slots.content` accepting a custom component that wraps the default `ChatMessageContent`
 - The inner `bubble` slot of `ChatMessageContent` replaced with a MUI `Paper` component
 - `ownerState.role` used to differentiate user and assistant bubble styling
 - `sx` on `Paper` using theme tokens (`primary.main`, `background.paper`, `divider`) for consistent colors
@@ -38,7 +38,7 @@ const CustomMessageContent = React.forwardRef(
   },
 );
 
-<ChatBox slots={{ messageContent: CustomMessageContent }} />;
+<ChatBox slots={{ content: CustomMessageContent }} />;
 ```
 
 This keeps the default rendering behavior — part iteration, reasoning blocks, source citations, tool invocations — and only changes the visual container.

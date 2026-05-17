@@ -8,13 +8,15 @@ githubLabel: 'scope: chat'
 
 # Chat - Headless composition
 
-<p class="description">Compose a complete chat UI from the headless namespaces while keeping styling decisions in your own code.</p>
+<p class="description">Compose a complete chat UI from headless primitives while keeping styling decisions in code.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
+The demo below shows a minimal unstyled chat shell composed from the headless primitives:
+
 {{"demo": "../examples/minimal-shell/MinimalUnstyledShell.js", "hideToolbar": true}}
 
-The canonical headless shell combines a provider-backed root, a pane layout, a conversation rail, a thread view, a message list, and a composer.
+The canonical headless shell combines a provider-backed root, pane layout, conversation rail, thread view, message list, and composer:
 
 ```tsx
 import {
@@ -56,31 +58,31 @@ function ChatSurface(props: ChatRootProps) {
 }
 ```
 
-## Recommended reading order
+## Reading order
 
 Composition is the best entry point when you are starting from a blank screen.
 It shows how the primitive groups fit together before you drill into individual pages such as
 [Layout](/x/react-chat/headless/layout/), [Messages](/x/react-chat/headless/messages/), or
 [Composer](/x/react-chat/headless/composer/).
 
-## What composition gives you
+## Composition responsibilities
 
-- structural defaults for the main chat regions
-- active-conversation wiring between the conversation list and thread
-- message list semantics and list-management behavior
-- grouped message composition without custom row bookkeeping
-- a form-based conversation input with submission and attachment plumbing
+- Structural defaults for the main chat regions.
+- Active-conversation wiring between the conversation list and thread.
+- Message list semantics and list-management behavior.
+- Grouped message composition without custom row bookkeeping.
+- A form-based conversation input with submission and attachment plumbing.
 
-## `Chat.Root` versus `ChatProvider`
+## Choosing between the root and the provider
 
 `Chat.Root` is the headless entry point for pages that want both provider setup and UI structure in one place.
 It accepts the same runtime props as the headless provider, then renders your structural surface through a root slot.
 
-Choose `Chat.Root` when you want:
+Choose `Chat.Root` to:
 
-- a single component to own the runtime boundary
-- headless primitives everywhere below the root
-- slot replacement on the outer shell
+- Own the runtime boundary with a single component.
+- Use headless primitives everywhere below the root.
+- Replace slots on the outer shell.
 
 Choose `ChatProvider` directly when only part of the tree should use headless primitives or when a page mixes several rendering approaches.
 

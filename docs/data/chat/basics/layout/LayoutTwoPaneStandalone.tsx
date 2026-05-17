@@ -34,6 +34,32 @@ const adapter = createEchoAdapter({
     `Received: "${text}". This demo renders ChatLayout with an explicit conversation pane and thread pane.`,
 });
 
+function AttachIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      style={{ width: '1em', height: '1em' }}
+    >
+      <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z" />
+    </svg>
+  );
+}
+
+function SendIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      style={{ width: '1em', height: '1em' }}
+    >
+      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+    </svg>
+  );
+}
+
 export default function LayoutTwoPaneStandalone() {
   const [activeConversationId, setActiveConversationId] = React.useState(
     () => inboxConversations[0].id,
@@ -94,17 +120,6 @@ export default function LayoutTwoPaneStandalone() {
               style: {
                 width: '280px',
                 flex: '0 0 280px',
-                minWidth: 0,
-                overflow: 'hidden',
-              },
-            },
-            threadPane: {
-              style: {
-                flex: 1,
-                minWidth: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                overflow: 'hidden',
               },
             },
           }}
@@ -126,8 +141,12 @@ export default function LayoutTwoPaneStandalone() {
                 placeholder="Type a message..."
               />
               <ChatComposerToolbar>
-                <ChatComposerAttachButton>Attach</ChatComposerAttachButton>
-                <ChatComposerSendButton>Send</ChatComposerSendButton>
+                <ChatComposerAttachButton>
+                  <AttachIcon />
+                </ChatComposerAttachButton>
+                <ChatComposerSendButton>
+                  <SendIcon />
+                </ChatComposerSendButton>
               </ChatComposerToolbar>
             </ChatComposer>
           </ChatConversation>

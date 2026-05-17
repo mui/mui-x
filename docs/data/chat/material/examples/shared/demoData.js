@@ -148,7 +148,7 @@ export const inboxThreads = {
       role: 'assistant',
       author: demoUsers.agent,
       createdAt: '2026-03-15T10:08:00.000Z',
-      text: 'The composer is handled by the ChatBox automatically. You can override it with slots.composerRoot.',
+      text: 'The composer is handled by the ChatBox automatically. You can override it with slots.composer.',
     }),
     createTextMessage({
       id: 'cq-msg-3',
@@ -174,7 +174,7 @@ export const inboxThreads = {
       role: 'assistant',
       author: demoUsers.agent,
       createdAt: '2026-03-15T09:45:00.000Z',
-      text: 'Use createTheme with a custom palette.primary, or use slots.messageContent to replace the bubble entirely.',
+      text: 'Use createTheme with a custom palette.primary, or use slots.content to replace the bubble entirely.',
     }),
   ],
   [slotHelpConvId]: [
@@ -184,7 +184,7 @@ export const inboxThreads = {
       role: 'user',
       author: demoUsers.priya,
       createdAt: '2026-03-14T17:50:00.000Z',
-      text: 'Use slots.composerSendButton to replace the send button with any React component.',
+      text: 'Use slots.send to replace the send button with any React component.',
     }),
     createTextMessage({
       id: 'sh-msg-2',

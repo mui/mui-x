@@ -231,7 +231,7 @@ export function AttachmentPreviewList() {
 // ---------------------------------------------------------------------------
 
 export const demoSlotProps = {
-  messageRoot: ((ownerState: { role: string }) => ({
+  message: ((ownerState: { role: string }) => ({
     style: {
       display: 'grid',
       gridTemplateColumns:
@@ -241,7 +241,7 @@ export const demoSlotProps = {
       alignItems: 'start',
     },
   })) as any,
-  messageAvatar: ((ownerState: { role: string }) => ({
+  avatar: ((ownerState: { role: string }) => ({
     style: {
       width: 32,
       height: 32,
@@ -258,7 +258,7 @@ export const demoSlotProps = {
   messageAvatarImage: {
     style: { width: 20, height: 20, filter: 'grayscale(1) invert(1)' },
   },
-  messageContent: {
+  content: {
     style: { display: 'contents' },
   },
   messageBubble: ((ownerState: { role: string }) => ({
@@ -276,7 +276,7 @@ export const demoSlotProps = {
       maxWidth: '90%',
     },
   })) as any,
-  messageMeta: ((ownerState: { role: string }) => ({
+  meta: ((ownerState: { role: string }) => ({
     style: {
       display: 'flex',
       alignItems: 'center',
@@ -332,7 +332,7 @@ export const demoSlotProps = {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   } satisfies React.CSSProperties,
-  composerRoot: {
+  composer: {
     style: {
       display: 'grid',
       gap: 10,
@@ -357,7 +357,7 @@ export const demoSlotProps = {
       boxSizing: 'border-box' as const,
     },
   } as any,
-  composerSendButton: ((ownerState: { disabled: boolean }) => ({
+  send: ((ownerState: { disabled: boolean }) => ({
     style: {
       border: `1px solid ${palette.accent}`,
       background: palette.accent,

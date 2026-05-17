@@ -177,12 +177,12 @@ The following slots are available for customization through `ChatBox`:
 
 | Slot                   | Component                  | Description                   |
 | :--------------------- | :------------------------- | :---------------------------- |
-| `composerRoot`         | `ChatComposer`             | The `<form>` container        |
-| `composerInput`        | `ChatComposerTextArea`     | The auto-resizing textarea    |
-| `composerSendButton`   | `ChatComposerSendButton`   | Submit button                 |
-| `composerAttachButton` | `ChatComposerAttachButton` | File attach trigger           |
-| `composerToolbar`      | `ChatComposerToolbar`      | Button row below the textarea |
-| `composerHelperText`   | `ChatComposerHelperText`   | Disclaimer or hint text       |
+| `composer`         | `ChatComposer`             | The `<form>` container        |
+| `input`        | `ChatComposerTextArea`     | The auto-resizing textarea    |
+| `send`   | `ChatComposerSendButton`   | Submit button                 |
+| `attach` | `ChatComposerAttachButton` | File attach trigger           |
+| `toolbar`      | `ChatComposerToolbar`      | Button row below the textarea |
+| `helperText`   | `ChatComposerHelperText`   | Disclaimer or hint text       |
 
 ## API
 

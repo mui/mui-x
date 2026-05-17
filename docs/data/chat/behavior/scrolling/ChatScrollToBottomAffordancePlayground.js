@@ -6,7 +6,12 @@ import { ChatMessageList, ChatScrollToBottomAffordance } from '@mui/x-chat';
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
 import { ScopedChat } from '../../_playground/sharedProviders';
 import { MessageBubble } from '../../_playground/MessageBubble';
-import { NumberControl } from '../../_playground/controls';
+import {
+  ChoiceControl,
+  DividerLabel,
+  NumberControl,
+} from '../../_playground/controls';
+import { useCustomizations } from '../../_playground/useCustomizations';
 import { users } from '../../_playground/data';
 
 const conversation = {
@@ -27,9 +32,17 @@ function buildMessages(count) {
   }));
 }
 
+const CLASS_DEFS = [
+  { name: 'root', description: 'The floating affordance button.' },
+];
+
 export default function ChatScrollToBottomAffordancePlayground() {
   const [count, setCount] = React.useState(20);
+  const [scrollBehavior, setScrollBehavior] = React.useState('smooth');
+  const classesCustomizations = useCustomizations(CLASS_DEFS);
   const messages = React.useMemo(() => buildMessages(count), [count]);
+
+  const buttonSx = classesCustomizations.toClassesSx();
 
   return (
     <PlaygroundCard
@@ -37,8 +50,19 @@ export default function ChatScrollToBottomAffordancePlayground() {
       description="Floating jump-to-latest button — appears once the user scrolls away from the bottom."
       previewMinHeight={360}
       span={2}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
         <React.Fragment>
+          <DividerLabel>props</DividerLabel>
+          <ChoiceControl
+            label="scrollBehavior"
+            value={scrollBehavior}
+            options={['smooth', 'auto', 'instant']}
+            onChange={setScrollBehavior}
+            helperText="ScrollIntoView behavior used when the button is clicked."
+          />
+          <DividerLabel>fixture data</DividerLabel>
           <NumberControl
             label="message count"
             value={count}
@@ -69,7 +93,12 @@ export default function ChatScrollToBottomAffordancePlayground() {
               items={messages.map((m) => m.id)}
               autoScroll={false}
               renderItem={({ id }) => <MessageBubble key={id} messageId={id} />}
-              overlay={<ChatScrollToBottomAffordance />}
+              overlay={
+                <ChatScrollToBottomAffordance
+                  scrollBehavior={scrollBehavior}
+                  sx={buttonSx}
+                />
+              }
             />
           </Box>
         </ScopedChat>

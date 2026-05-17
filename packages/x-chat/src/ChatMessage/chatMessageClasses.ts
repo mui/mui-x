@@ -37,6 +37,8 @@ export interface ChatMessageClasses {
   streaming: string;
   /** Applied when the message has an error status */
   error: string;
+  /** Applied when the avatar slot is hidden (`slots.avatar: null`) so the grid drops the avatar track. */
+  noAvatar: string;
 }
 
 export type ChatMessageClassKey = keyof ChatMessageClasses;
@@ -63,6 +65,7 @@ export const chatMessageClasses: ChatMessageClasses = generateUtilityClasses('Mu
   'roleAssistant',
   'streaming',
   'error',
+  'noAvatar',
 ]);
 
 const slots: Record<ChatMessageClassKey, string[]> = {
@@ -83,6 +86,7 @@ const slots: Record<ChatMessageClassKey, string[]> = {
   roleAssistant: ['roleAssistant'],
   streaming: ['streaming'],
   error: ['error'],
+  noAvatar: ['noAvatar'],
 };
 
 export const useChatMessageUtilityClasses = (

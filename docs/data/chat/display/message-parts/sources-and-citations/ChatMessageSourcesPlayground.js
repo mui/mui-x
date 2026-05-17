@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { ChatMessageSource, ChatMessageSources } from '@mui/x-chat';
 import { PlaygroundCard } from '../../../_playground/PlaygroundCard';
-import { NumberControl, TextControl } from '../../../_playground/controls';
+import {
+  DividerLabel,
+  NumberControl,
+  TextControl,
+} from '../../../_playground/controls';
+import { useCustomizations } from '../../../_playground/useCustomizations';
 
 const POOL = [
   { href: 'https://mui.com/x/react-chat/', title: 'MUI X Chat overview' },
@@ -14,17 +19,39 @@ const POOL = [
   { href: 'https://mui.com/system/styled/', title: 'styled() utility' },
 ];
 
+const CLASS_DEFS = [
+  { name: 'root', description: 'The sources container.' },
+  {
+    name: 'label',
+    selector: '.MuiChatMessageSources-label',
+    description: 'The "Sources" label above the list.',
+  },
+  {
+    name: 'list',
+    selector: '.MuiChatMessageSources-list',
+    description: 'The ordered list element.',
+  },
+];
+
 export default function ChatMessageSourcesPlayground() {
   const [count, setCount] = React.useState(3);
   const [label, setLabel] = React.useState('Sources');
+  const classesCustomizations = useCustomizations(CLASS_DEFS);
+
+  const rootSx = classesCustomizations.toClassesSx();
 
   return (
     <PlaygroundCard
       title="ChatMessageSources"
       description="Citation list for an assistant answer (RAG)."
       previewMinHeight={200}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
         <React.Fragment>
+          <DividerLabel>props</DividerLabel>
+          <TextControl label="label" value={label} onChange={setLabel} />
+          <DividerLabel>fixture data</DividerLabel>
           <NumberControl
             label="source count"
             value={count}
@@ -32,11 +59,10 @@ export default function ChatMessageSourcesPlayground() {
             max={POOL.length}
             onChange={setCount}
           />
-          <TextControl label="label" value={label} onChange={setLabel} />
         </React.Fragment>
       }
       preview={
-        <ChatMessageSources label={label}>
+        <ChatMessageSources label={label} sx={rootSx}>
           {POOL.slice(0, count).map((source, i) => (
             <ChatMessageSource
               key={source.href}

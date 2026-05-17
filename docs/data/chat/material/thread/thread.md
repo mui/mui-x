@@ -234,11 +234,11 @@ Use `slotProps` on `ChatBox` for light prop-only overrides that do not require a
 ```tsx
 <ChatBox
   slotProps={{
-    composerInput: {
+    input: {
       placeholder: 'Ask a question…',
       'aria-label': 'Message input',
     },
-    composerAttachButton: {
+    attach: {
       sx: { display: 'none' },
     },
   }}

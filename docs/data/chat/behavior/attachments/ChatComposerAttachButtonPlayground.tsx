@@ -10,9 +10,14 @@ import { ScopedChat } from '../../_playground/sharedProviders';
 import { emptyConversation } from '../../_playground/sharedFixtures';
 import {
   ChoiceControl,
+  DividerLabel,
   SwitchControl,
   TextControl,
 } from '../../_playground/controls';
+import {
+  useCustomizations,
+  type CustomizationDef,
+} from '../../_playground/useCustomizations';
 
 function PaperclipIcon() {
   return (
@@ -49,10 +54,23 @@ const icons: Record<IconChoice, React.ReactNode> = {
   image: <ImageIcon />,
 };
 
+type ClassKey = 'attachButton';
+
+const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
+  {
+    name: 'attachButton',
+    selector: '.MuiChatComposer-attachButton',
+    description: 'The attach button element inside the composer.',
+  },
+];
+
 export default function ChatComposerAttachButtonPlayground() {
   const [icon, setIcon] = React.useState<IconChoice>('paperclip');
   const [accept, setAccept] = React.useState('image/*,application/pdf');
   const [disabled, setDisabled] = React.useState(false);
+  const classesCustomizations = useCustomizations<ClassKey>(CLASS_DEFS);
+
+  const wrapperSx = classesCustomizations.toClassesSx();
 
   return (
     <PlaygroundCard
@@ -60,24 +78,29 @@ export default function ChatComposerAttachButtonPlayground() {
       description="Hidden file input + button — opens the OS file picker and reports new attachments."
       previewMinHeight={200}
       span={2}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
         <React.Fragment>
-          <ChoiceControl<IconChoice>
-            label="icon"
-            value={icon}
-            options={['paperclip', 'image'] as const}
-            onChange={setIcon}
-          />
-          <TextControl
-            label="acceptedMimeTypes"
-            value={accept}
-            onChange={setAccept}
-            helperText="Comma-separated MIME types passed to features.attachments."
-          />
+          <DividerLabel>props</DividerLabel>
           <SwitchControl
             label="disabled"
             checked={disabled}
             onChange={setDisabled}
+          />
+          <DividerLabel>composition</DividerLabel>
+          <ChoiceControl<IconChoice>
+            label="children (icon)"
+            value={icon}
+            options={['paperclip', 'image'] as const}
+            onChange={setIcon}
+          />
+          <DividerLabel>features.attachments (parent)</DividerLabel>
+          <TextControl
+            label="acceptedMimeTypes"
+            value={accept}
+            onChange={setAccept}
+            helperText="Comma-separated MIME types passed to features.attachments on the parent composer."
           />
         </React.Fragment>
       }
@@ -86,7 +109,7 @@ export default function ChatComposerAttachButtonPlayground() {
           conversations={[emptyConversation]}
           activeConversationId={emptyConversation.id}
         >
-          <Box sx={{ width: '100%' }}>
+          <Box sx={{ width: '100%', ...(wrapperSx as object) }}>
             <ChatComposer
               features={{
                 attachments: {

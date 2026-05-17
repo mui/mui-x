@@ -21,9 +21,14 @@ import {
 import { sampleTexts } from '../../_playground/sharedFixtures';
 import {
   ChoiceControl,
+  DividerLabel,
   SelectControl,
   SwitchControl,
 } from '../../_playground/controls';
+import {
+  useCustomizations,
+  type CustomizationDef,
+} from '../../_playground/useCustomizations';
 import { users } from '../../_playground/data';
 
 const conversation: ChatConversation = {
@@ -45,6 +50,43 @@ const DEFAULTS = {
   grouped: false,
 };
 
+type ClassKey =
+  | 'root'
+  | 'bubble'
+  | 'roleUser'
+  | 'roleAssistant'
+  | 'streaming'
+  | 'error';
+
+const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
+  { name: 'root', description: 'The message row.' },
+  {
+    name: 'bubble',
+    selector: '.MuiChatMessage-bubble',
+    description: 'The actual rounded bubble inside the content slot.',
+  },
+  {
+    name: 'roleUser',
+    selector: '.MuiChatMessage-roleUser',
+    description: 'Applied to rows whose role is "user".',
+  },
+  {
+    name: 'roleAssistant',
+    selector: '.MuiChatMessage-roleAssistant',
+    description: 'Applied to rows whose role is "assistant".',
+  },
+  {
+    name: 'streaming',
+    selector: '.MuiChatMessage-streaming',
+    description: 'Applied while the message is streaming.',
+  },
+  {
+    name: 'error',
+    selector: '.MuiChatMessage-error',
+    description: 'Applied when the message has an error status.',
+  },
+];
+
 export default function ChatMessagePlayground() {
   const [role, setRole] = React.useState<Role>(DEFAULTS.role);
   const [status, setStatus] = React.useState<StatusOption>(DEFAULTS.status);
@@ -52,6 +94,7 @@ export default function ChatMessagePlayground() {
   const [variant, setVariant] = React.useState<ChatVariant>(DEFAULTS.variant);
   const [density, setDensity] = React.useState<ChatDensity>(DEFAULTS.density);
   const [grouped, setGrouped] = React.useState(DEFAULTS.grouped);
+  const classesCustomizations = useCustomizations<ClassKey>(CLASS_DEFS);
 
   const handleReset = React.useCallback(() => {
     setRole(DEFAULTS.role);
@@ -76,6 +119,9 @@ export default function ChatMessagePlayground() {
     }),
     [role, author, status, length],
   );
+
+  const messageSx = classesCustomizations.toClassesSx();
+
   return (
     <PlaygroundCard
       title="ChatMessage (bubble)"
@@ -83,13 +129,24 @@ export default function ChatMessagePlayground() {
       previewMinHeight={260}
       span={2}
       onReset={handleReset}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
         <React.Fragment>
+          <DividerLabel>props</DividerLabel>
+          <SwitchControl
+            label="isGrouped"
+            checked={grouped}
+            onChange={setGrouped}
+            helperText="Render as a continuation of the previous bubble."
+          />
+          <DividerLabel>fixture (message data)</DividerLabel>
           <ChoiceControl<Role>
             label="role"
             value={role}
             options={['assistant', 'user'] as const}
             onChange={setRole}
+            helperText="Stored on the message, read by useMessage()."
           />
           <SelectControl<StatusOption>
             label="status"
@@ -102,18 +159,6 @@ export default function ChatMessagePlayground() {
             ]}
             onChange={setStatus}
           />
-          <ChoiceControl<ChatVariant>
-            label="variant"
-            value={variant}
-            options={['default', 'compact'] as const}
-            onChange={setVariant}
-          />
-          <ChoiceControl<ChatDensity>
-            label="density"
-            value={density}
-            options={['compact', 'standard', 'comfortable'] as const}
-            onChange={setDensity}
-          />
           <SelectControl<LengthOption>
             label="content length"
             value={length}
@@ -125,11 +170,18 @@ export default function ChatMessagePlayground() {
             ]}
             onChange={setLength}
           />
-          <SwitchControl
-            label="isGrouped"
-            checked={grouped}
-            onChange={setGrouped}
-            helperText="Render as a continuation of the previous bubble."
+          <DividerLabel>chrome provider</DividerLabel>
+          <ChoiceControl<ChatVariant>
+            label="ChatChrome.variant"
+            value={variant}
+            options={['default', 'compact'] as const}
+            onChange={setVariant}
+          />
+          <ChoiceControl<ChatDensity>
+            label="ChatChrome.density"
+            value={density}
+            options={['compact', 'standard', 'comfortable'] as const}
+            onChange={setDensity}
           />
         </React.Fragment>
       }
@@ -146,7 +198,11 @@ export default function ChatMessagePlayground() {
             />
             <Box sx={{ width: '100%' }}>
               <ChatMessageGroup messageId={message.id}>
-                <ChatMessageComponent messageId={message.id} isGrouped={grouped}>
+                <ChatMessageComponent
+                  messageId={message.id}
+                  isGrouped={grouped}
+                  sx={messageSx as any}
+                >
                   <ChatMessageAvatar />
                   <ChatMessageContent />
                 </ChatMessageComponent>

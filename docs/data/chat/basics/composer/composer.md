@@ -8,19 +8,19 @@ components: ChatComposerTextArea, ChatComposerSendButton, ChatComposerAttachment
 
 # Chat - Composer
 
-<p class="description">The text input area where users draft and send messages, with auto-resize, keyboard shortcuts, and a send button.</p>
+<p class="description">Compose and send chat messages with an auto-resizing text area, keyboard shortcuts, and attachment support.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Overview
 
 The composer is the input region at the bottom of the chat surface.
-`ChatComposer` provides Material UI styling — border, padding, and theme tokens are applied automatically.
+`ChatComposer` provides Material UI styling—border, padding, and theme tokens are applied automatically.
 The demos on this page render only the composer plus the provider context it depends on.
 
 ## Interactive playground
 
-Try the `ChatComposer` props live — toggle variant, attachments, helper text, and placeholder:
+Try the `ChatComposer` props live—toggle variant, attachments, helper text, and placeholder:
 
 {{"demo": "ChatComposerPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -62,7 +62,7 @@ ChatComposer                  ← <form> element, border-top divider
 `ChatComposerTextArea` is an auto-resizing `<textarea>` that grows with content.
 It submits on <kbd class="key">Enter</kbd> and inserts a newline on <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Enter</kbd></kbd>.
 
-### Placeholder text
+### Customizing the placeholder
 
 Customize the placeholder directly on `ChatComposerTextArea`:
 
@@ -70,7 +70,7 @@ Customize the placeholder directly on `ChatComposerTextArea`:
 
 ### IME composition
 
-The composer correctly handles IME (Input Method Editor) composition for CJK languages.
+The composer handles IME (Input Method Editor) composition for CJK languages.
 While the user is composing characters (for example, selecting Kanji), pressing Enter confirms the character selection instead of submitting the message.
 Submission is blocked until composition ends.
 
@@ -91,7 +91,7 @@ Omit `ChatComposerAttachButton` from the toolbar when attachments are not part o
 
 {{"demo": "ComposerHiddenAttachButtonStandalone.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-For full details on attachment configuration — accepted MIME types, file size limits, and upload lifecycle — see [Attachments](/x/react-chat/behavior/attachments/).
+See [Attachments](/x/react-chat/behavior/attachments/) for details on accepted MIME types, file size limits, and the upload lifecycle.
 
 ## Helper text
 
@@ -110,12 +110,12 @@ Use it for legal disclaimers, character counts, or contextual hints.
 
 ## Controlled composer value
 
-The composer value can be controlled externally through `ChatProvider` state.
+Control the composer value externally through `ChatProvider` state.
 The demo below mirrors the current composer value above the standalone composer:
 
 {{"demo": "ComposerControlledStandalone.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-## `useChatComposer()` hook
+## Accessing composer state with a hook
 
 For deeper control, the `useChatComposer()` hook provides direct access to the composer state:
 

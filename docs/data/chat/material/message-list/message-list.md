@@ -198,12 +198,12 @@ The following slots are available for customization through `ChatBox`:
 | Slot             | Component            | Description               |
 | :--------------- | :------------------- | :------------------------ |
 | `messageList`    | `ChatMessageList`    | The scrollable container  |
-| `messageRoot`    | `ChatMessage`        | Individual message row    |
-| `messageAvatar`  | `ChatMessageAvatar`  | Author avatar             |
-| `messageContent` | `ChatMessageContent` | Message bubble            |
-| `messageMeta`    | `ChatMessageMeta`    | Timestamp and status      |
-| `messageActions` | `ChatMessageActions` | Hover action menu         |
-| `messageGroup`   | `ChatMessageGroup`   | Same-author message group |
+| `message`    | `ChatMessage`        | Individual message row    |
+| `avatar`  | `ChatMessageAvatar`  | Author avatar             |
+| `content` | `ChatMessageContent` | Message bubble            |
+| `meta`    | `ChatMessageMeta`    | Timestamp and status      |
+| `actions` | `ChatMessageActions` | Hover action menu         |
+| `group`   | `ChatMessageGroup`   | Same-author message group |
 | `dateDivider`    | `ChatDateDivider`    | Date separator            |
 
 ## API

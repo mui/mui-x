@@ -8,7 +8,11 @@ import {
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
 import { ScopedChat } from '../../_playground/sharedProviders';
-import { ChoiceControl } from '../../_playground/controls';
+import { ChoiceControl, DividerLabel } from '../../_playground/controls';
+import {
+  useCustomizations,
+  type CustomizationDef,
+} from '../../_playground/useCustomizations';
 import { users } from '../../_playground/data';
 
 const conversation: ChatConversation = {
@@ -33,25 +37,44 @@ function makeMessage(role: Role, status: Status, text: string): ChatMessage {
   };
 }
 
+type ClassKey = 'authorLabel';
+
+const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
+  {
+    name: 'authorLabel',
+    selector: '.MuiChatMessage-authorLabel',
+    description: 'Applied to the author label element above the bubble group.',
+  },
+];
+
 export default function ChatMessageAuthorLabelPlayground() {
   const [role, setRole] = React.useState<Role>('assistant');
+  const classesCustomizations = useCustomizations<ClassKey>(CLASS_DEFS);
+
   const message = React.useMemo(
     () => makeMessage(role, 'read', 'Author label preview message.'),
     [role],
   );
+
+  const labelSx = classesCustomizations.toClassesSx();
 
   return (
     <PlaygroundCard
       title="ChatMessageAuthorLabel"
       description="Author display name rendered above grouped messages."
       previewMinHeight={140}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
-        <ChoiceControl<Role>
-          label="role"
-          value={role}
-          options={['assistant', 'user'] as const}
-          onChange={setRole}
-        />
+        <React.Fragment>
+          <DividerLabel>fixture (message data)</DividerLabel>
+          <ChoiceControl<Role>
+            label="role"
+            value={role}
+            options={['assistant', 'user'] as const}
+            onChange={setRole}
+          />
+        </React.Fragment>
       }
       preview={
         <ScopedChat
@@ -59,7 +82,7 @@ export default function ChatMessageAuthorLabelPlayground() {
           messages={[message]}
           activeConversationId={conversation.id}
         >
-          <Box sx={{ width: '100%' }}>
+          <Box sx={{ width: '100%', ...(labelSx as object) }}>
             <ChatMessageGroup messageId={message.id}>
               <ChatMessageComponent messageId={message.id}>
                 <ChatMessageAuthorLabel />

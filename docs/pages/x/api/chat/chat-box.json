@@ -134,61 +134,57 @@
       "class": null
     },
     { "name": "messageList", "description": "Override the message list component.", "class": null },
+    { "name": "group", "description": "Override the message group component.", "class": null },
     {
-      "name": "messageRoot",
+      "name": "message",
       "description": "Override the message root component for each message.",
       "class": null
     },
     {
-      "name": "messageAvatar",
-      "description": "Override the message avatar component.",
+      "name": "avatar",
+      "description": "Override the message avatar component.\nPass `null` to hide the avatar entirely and drop the reserved avatar grid track.",
       "class": null
     },
     {
-      "name": "messageContent",
+      "name": "content",
       "description": "Override the message content (bubble) component.",
       "class": null
     },
-    { "name": "messageMeta", "description": "Override the message meta component.", "class": null },
     {
-      "name": "messageActions",
-      "description": "Override the message actions component.",
+      "name": "meta",
+      "description": "Override the message meta component (compact variant external meta).\nPass `null` to hide it.",
       "class": null
     },
     {
-      "name": "messageGroup",
-      "description": "Override the message group component.",
+      "name": "actions",
+      "description": "Override the message actions component.\nPass `null` to hide actions entirely.",
       "class": null
     },
     { "name": "dateDivider", "description": "Override the date divider component.", "class": null },
     {
-      "name": "composerRoot",
+      "name": "composer",
       "description": "Override the composer (input) root component.",
       "class": null
     },
+    { "name": "input", "description": "Override the composer textarea component.", "class": null },
     {
-      "name": "composerInput",
-      "description": "Override the composer textarea component.",
+      "name": "send",
+      "description": "Override the composer send button.\nPass `null` to hide the send button (form still submits on Enter).",
       "class": null
     },
     {
-      "name": "composerSendButton",
-      "description": "Override the composer send button.",
+      "name": "attach",
+      "description": "Override the composer attach button.\nPass `null` to hide just the attach button while keeping the rest of the attachment plumbing.\nUse `features.attachments: false` to disable attachments entirely.",
       "class": null
     },
     {
-      "name": "composerAttachButton",
-      "description": "Override the composer attach button.",
-      "class": null
-    },
-    {
-      "name": "composerAttachmentList",
+      "name": "attachmentList",
       "description": "Override the composer attachment list.",
       "class": null
     },
-    { "name": "composerToolbar", "description": "Override the composer toolbar.", "class": null },
+    { "name": "toolbar", "description": "Override the composer toolbar.", "class": null },
     {
-      "name": "composerHelperText",
+      "name": "helperText",
       "description": "Override the composer helper text component.",
       "class": null
     },

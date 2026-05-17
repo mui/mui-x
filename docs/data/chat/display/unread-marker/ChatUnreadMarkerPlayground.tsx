@@ -5,7 +5,11 @@ import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
 import { ScopedChat } from '../../_playground/sharedProviders';
 import { MessageBubble } from '../../_playground/MessageBubble';
-import { NumberControl } from '../../_playground/controls';
+import { DividerLabel, NumberControl } from '../../_playground/controls';
+import {
+  useCustomizations,
+  type CustomizationDef,
+} from '../../_playground/useCustomizations';
 import { users } from '../../_playground/data';
 
 const conversation: ChatConversation = {
@@ -29,19 +33,36 @@ function buildMessages(count: number): ChatMessage[] {
   }));
 }
 
+type ClassKey = 'root' | 'label';
+
+const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
+  { name: 'root', description: 'The unread marker row.' },
+  {
+    name: 'label',
+    selector: '.MuiChatUnreadMarker-label',
+    description: 'The "New" label inside the divider.',
+  },
+];
+
 export default function ChatUnreadMarkerPlayground() {
   const [count, setCount] = React.useState(4);
   const [boundary, setBoundary] = React.useState(2);
+  const classesCustomizations = useCustomizations<ClassKey>(CLASS_DEFS);
   const messages = React.useMemo(() => buildMessages(count), [count]);
   const safeBoundary = Math.min(boundary, count - 1);
+
+  const markerSx = classesCustomizations.toClassesSx();
 
   return (
     <PlaygroundCard
       title="ChatUnreadMarker"
       description="Divider rendered when a message sits at the unread boundary."
       previewMinHeight={260}
+      classCustomizations={classesCustomizations.customizations}
+      onClassesReset={classesCustomizations.reset}
       controls={
         <React.Fragment>
+          <DividerLabel>fixture (thread shape)</DividerLabel>
           <NumberControl
             label="message count"
             value={count}
@@ -55,6 +76,7 @@ export default function ChatUnreadMarkerPlayground() {
             min={0}
             max={Math.max(0, count - 1)}
             onChange={setBoundary}
+            helperText="Where the marker is rendered — drives messageId prop."
           />
         </React.Fragment>
       }
@@ -68,7 +90,10 @@ export default function ChatUnreadMarkerPlayground() {
             {messages.map((message, i) => (
               <React.Fragment key={message.id}>
                 {i === safeBoundary ? (
-                  <ChatUnreadMarker messageId={message.id} />
+                  <ChatUnreadMarker
+                    messageId={message.id}
+                    sx={markerSx as any}
+                  />
                 ) : null}
                 <MessageBubble messageId={message.id} />
               </React.Fragment>

@@ -8,18 +8,16 @@ components: ChatLayout
 
 # Chat - Layout
 
-<p class="description">Understand the two-pane layout structure, thread-only mode, and how to recompose the chat surface.</p>
+<p class="description">Compose conversation and thread panes in the chat surface, with full control over layout and responsive behavior.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Overview
 
-`ChatLayout` is the low-level pane manager behind the chat surface.
-It arranges a **conversation pane** and a **thread pane**, while leaving the surrounding runtime setup to `ChatProvider` and the pane contents to you.
+`ChatLayout` arranges a **conversation pane** and a **thread pane** in the chat surface.
+The surrounding runtime setup is delegated to `ChatProvider`, and the pane contents are yours to compose.
 
-{{"demo": "LayoutTwoPaneStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
-
-## Component anatomy
+## Composition structure
 
 The most common `ChatLayout` composition looks like this:
 
@@ -50,7 +48,7 @@ All of these components are exported from `@mui/x-chat`.
 ## Thread-only mode
 
 When your application manages conversations externally, render only the thread pane inside `ChatLayout`.
-The demo below keeps the provider setup, message list, and composer, but omits the conversation pane entirely:
+The demo below keeps the provider, message list, and composer but omits the conversation pane:
 
 {{"demo": "LayoutThreadOnlyStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -59,9 +57,9 @@ In thread-only mode the active conversation fills the entire `ChatLayout` contai
 ## Full recomposition
 
 Because `ChatLayout` only decides where panes go, you can assemble the thread from individual Material UI components directly.
-This is useful when you want to insert additional UI between the header and the message list, or move controls around inside the thread pane.
+Use this approach to insert additional UI between the header and the message list, or to move controls within the thread pane.
 
-The following example shows a fully assembled thread pane without relying on any `ChatBox` layout defaults:
+The example below shows a fully assembled thread pane that doesn't rely on `ChatBox` layout defaults:
 
 ```tsx
 import {
@@ -121,7 +119,7 @@ function CustomThread() {
 
 Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire runtime state to your adapter.
 
-`ChatLayout` also supports split configurations where the conversation list and thread are rendered side by side.
+`ChatLayout` also supports split configurations that render the conversation list and thread side by side.
 
 ## Responsive layout
 
@@ -133,11 +131,11 @@ Drag the slider below to switch the same composition between:
 - a two-pane layout above `600px`
 - a single-pane conversation list or thread below `600px`
 
-This example keeps the logic explicit so you can replace it with route-based navigation, a drawer, or any other responsive pattern your product needs:
+The demo below keeps the logic explicit so you can swap it for route-based navigation, a drawer, or any other responsive pattern:
 
 {{"demo": "LayoutResponsiveStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
 
-Because the behavior is explicit, narrow-mode transitions stay easy to reason about and customize.
+Explicit responsive logic keeps narrow-mode transitions straightforward to customize.
 
 Set explicit dimensions on the parent element that wraps `ChatLayout`:
 
