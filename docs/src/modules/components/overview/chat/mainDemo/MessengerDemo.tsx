@@ -655,7 +655,7 @@ export default function MessengerDemo() {
           searchValue,
           onSearchChange: setSearchValue,
         } as React.ComponentProps<typeof MessengerConversationSidebar>,
-        composerRoot: {
+        composer: {
           variant: 'compact',
         },
       }}

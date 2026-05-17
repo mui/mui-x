@@ -195,16 +195,16 @@ The message list includes built-in ARIA attributes:
 
 The following slots are available for customization through `ChatBox`:
 
-| Slot             | Component            | Description               |
-| :--------------- | :------------------- | :------------------------ |
-| `messageList`    | `ChatMessageList`    | The scrollable container  |
-| `message`    | `ChatMessage`        | Individual message row    |
-| `avatar`  | `ChatMessageAvatar`  | Author avatar             |
-| `content` | `ChatMessageContent` | Message bubble            |
-| `meta`    | `ChatMessageMeta`    | Timestamp and status      |
-| `actions` | `ChatMessageActions` | Hover action menu         |
-| `group`   | `ChatMessageGroup`   | Same-author message group |
-| `dateDivider`    | `ChatDateDivider`    | Date separator            |
+| Slot          | Component            | Description               |
+| :------------ | :------------------- | :------------------------ |
+| `messageList` | `ChatMessageList`    | The scrollable container  |
+| `message`     | `ChatMessage`        | Individual message row    |
+| `avatar`      | `ChatMessageAvatar`  | Author avatar             |
+| `content`     | `ChatMessageContent` | Message bubble            |
+| `meta`        | `ChatMessageMeta`    | Timestamp and status      |
+| `actions`     | `ChatMessageActions` | Hover action menu         |
+| `group`       | `ChatMessageGroup`   | Same-author message group |
+| `dateDivider` | `ChatDateDivider`    | Date separator            |
 
 ## API
 

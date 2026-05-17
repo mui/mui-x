@@ -42,7 +42,7 @@ Use this pattern when:
 
 This is especially useful in support timelines, collaboration surfaces, and assistant threads where one participant often sends several messages in a row.
 
-## Implementation notes
+## Design notes
 
 - `MessageGroup` keeps neighbor comparison logic out of the page layer.
 - `groupingWindowMs` is a presentation decision, so it belongs near the message row composition rather than in the data model.

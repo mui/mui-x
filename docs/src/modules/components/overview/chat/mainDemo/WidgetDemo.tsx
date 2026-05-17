@@ -523,7 +523,7 @@ export default function WidgetDemo() {
                 layoutMode="split"
                 features={{ conversationList: true, helperText: false }}
                 slotProps={{
-                  composerRoot: {
+                  composer: {
                     variant: 'compact',
                     sx: { mx: 1.5, mb: 1.5, mt: 0 },
                   },
@@ -534,7 +534,7 @@ export default function WidgetDemo() {
                       } as any,
                     },
                   },
-                  messageGroup: {
+                  group: {
                     sx: {
                       animation: `${messageSlideIn} 0.3s ease-out both`,
                     },

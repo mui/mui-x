@@ -194,27 +194,27 @@ Pass additional props to any slot without replacing the component:
 
 ### Messages
 
-| Slot             | Default              | Description                   |
-| :--------------- | :------------------- | :---------------------------- |
-| `messageList`    | `ChatMessageList`    | Scrollable message container  |
-| `message`    | `ChatMessage`        | Individual message row        |
-| `avatar`  | `ChatMessageAvatar`  | Author avatar                 |
-| `content` | `ChatMessageContent` | Message bubble                |
-| `meta`    | `ChatMessageMeta`    | Timestamp and delivery status |
-| `actions` | `ChatMessageActions` | Hover action menu             |
-| `group`   | `ChatMessageGroup`   | Same-author message group     |
-| `dateDivider`    | `ChatDateDivider`    | Date separator between groups |
+| Slot          | Default              | Description                   |
+| :------------ | :------------------- | :---------------------------- |
+| `messageList` | `ChatMessageList`    | Scrollable message container  |
+| `message`     | `ChatMessage`        | Individual message row        |
+| `avatar`      | `ChatMessageAvatar`  | Author avatar                 |
+| `content`     | `ChatMessageContent` | Message bubble                |
+| `meta`        | `ChatMessageMeta`    | Timestamp and delivery status |
+| `actions`     | `ChatMessageActions` | Hover action menu             |
+| `group`       | `ChatMessageGroup`   | Same-author message group     |
+| `dateDivider` | `ChatDateDivider`    | Date separator between groups |
 
 ### Composer
 
-| Slot                   | Default                    | Description             |
-| :--------------------- | :------------------------- | :---------------------- |
-| `composer`         | `ChatComposer`             | Composer container      |
-| `input`        | `ChatComposerTextArea`     | Auto-resizing text area |
-| `send`   | `ChatComposerSendButton`   | Submit button           |
-| `attach` | `ChatComposerAttachButton` | File attach trigger     |
-| `toolbar`      | `ChatComposerToolbar`      | Button row              |
-| `helperText`   | `ChatComposerHelperText`   | Disclaimer or hint      |
+| Slot         | Default                    | Description             |
+| :----------- | :------------------------- | :---------------------- |
+| `composer`   | `ChatComposer`             | Composer container      |
+| `input`      | `ChatComposerTextArea`     | Auto-resizing text area |
+| `send`       | `ChatComposerSendButton`   | Submit button           |
+| `attach`     | `ChatComposerAttachButton` | File attach trigger     |
+| `toolbar`    | `ChatComposerToolbar`      | Button row              |
+| `helperText` | `ChatComposerHelperText`   | Disclaimer or hint      |
 
 ### Indicators
 

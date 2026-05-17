@@ -14,17 +14,17 @@ components: ChatBox
 
 ## Choosing the right API
 
-| I want to...                                            | Use                         | Where                                                     |
-| :------------------------------------------------------ | :-------------------------- | :-------------------------------------------------------- |
-| Change colors, fonts, spacing                           | `ThemeProvider`             | [Look and feel](/x/react-chat/customization/look-and-feel/) |
-| Apply one-off styles to this instance                   | `sx` prop                   | [Look and feel](/x/react-chat/customization/look-and-feel/) |
-| Switch between bubble and flat layout                   | `variant` / `density` props | [Look and feel](/x/react-chat/customization/look-and-feel/) |
-| Use Tailwind CSS                                        | Headless primitives         | [Look and feel](/x/react-chat/customization/look-and-feel/) |
-| Pass extra props to a subcomponent                      | `slotProps`                 | [Structure](/x/react-chat/customization/structure/)       |
-| Replace a subcomponent entirely                         | `slots`                     | [Structure](/x/react-chat/customization/structure/)       |
-| Render custom message types (tickets, charts, and so on) | `partRenderers`             | [Structure](/x/react-chat/customization/structure/)       |
-| Hide a built-in feature (attach, scroll-to-bottom, and so on) | `features` prop             | [Structure](/x/react-chat/customization/structure/)       |
-| Translate the UI                                        | `localeText`                | [Structure](/x/react-chat/customization/structure/)       |
+| I want to...                                                  | Use                         | Where                                                       |
+| :------------------------------------------------------------ | :-------------------------- | :---------------------------------------------------------- |
+| Change colors, fonts, spacing                                 | `ThemeProvider`             | [Look and feel](/x/react-chat/customization/look-and-feel/) |
+| Apply one-off styles to this instance                         | `sx` prop                   | [Look and feel](/x/react-chat/customization/look-and-feel/) |
+| Switch between bubble and flat layout                         | `variant` / `density` props | [Look and feel](/x/react-chat/customization/look-and-feel/) |
+| Use Tailwind CSS                                              | Headless primitives         | [Look and feel](/x/react-chat/customization/look-and-feel/) |
+| Pass extra props to a subcomponent                            | `slotProps`                 | [Structure](/x/react-chat/customization/structure/)         |
+| Replace a subcomponent entirely                               | `slots`                     | [Structure](/x/react-chat/customization/structure/)         |
+| Render custom message types (tickets, charts, and so on)      | `partRenderers`             | [Structure](/x/react-chat/customization/structure/)         |
+| Hide a built-in feature (attach, scroll-to-bottom, and so on) | `features` prop             | [Structure](/x/react-chat/customization/structure/)         |
+| Translate the UI                                              | `localeText`                | [Structure](/x/react-chat/customization/structure/)         |
 
 ## Customization layers
 

@@ -10,10 +10,10 @@ githubLabel: 'scope: chat'
 <p class="description">Swap individual subcomponents of the Chat with your own implementations to customize rendering and layout.</p>
 
 The `slots` prop lets you swap any internal component in `ChatBox` with your own implementation.
-The demo below replaces the message bubble with a `Paper`-based component that uses Material UI elevation and border styles:
+The demo below replaces the message bubble with a `Paper`-based component that uses Material UI elevation and border styles:
 
 - A custom `slots.content` wraps the default `ChatMessageContent`.
-- The inner `bubble` slot of `ChatMessageContent` is replaced with a Material UI `Paper` component.
+- The inner `bubble` slot of `ChatMessageContent` is replaced with a Material UI `Paper` component.
 - `ownerState.role` differentiates user and assistant bubble styling.
 - `sx` on `Paper` uses theme tokens (`primary.main`, `background.paper`, `divider`) for consistent colors.
 
@@ -45,7 +45,7 @@ This keeps the default rendering behavior—part iteration, reasoning blocks, so
 
 ## Styling slots with `ownerState`
 
-Slot components receive an `ownerState` prop from the Material UI styled system.
+Slot components receive an `ownerState` prop from the Material UI styled system.
 For message-related slots, `ownerState.role` is `'user'` or `'assistant'`:
 
 ```tsx

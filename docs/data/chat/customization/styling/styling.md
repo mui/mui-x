@@ -9,7 +9,7 @@ components: ChatBox
 # Chat - Styling
 
 <p class="description">Customize the appearance of Chat components to match your application's design system.</p>
- 
+
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 ## Applying styles with the sx prop
@@ -128,5 +128,4 @@ Pass `sx` overrides to any internal subcomponent using `slotProps` without repla
 ## See also
 
 - See [Slots and composition](/x/react-chat/customization/slots-and-composition/) for details.
-- See [Tailwind CSS support](/x/react-chat/customization/tailwind/) for details.
- 
+- See [Tailwind CSS support](/x/react-chat/customization/tailwind/) for details.

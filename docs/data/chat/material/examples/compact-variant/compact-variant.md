@@ -16,9 +16,9 @@ When `features={{ conversationList: true }}` is enabled, both the conversation l
 
 ## Compact mode behavior
 
-| Default                                  | Compact                                         |
-| :--------------------------------------- | :---------------------------------------------- |
-| Colored message bubbles                  | Plain text, no background                       |
-| User messages right-aligned              | All messages left-aligned                       |
-| Timestamp below each message             | Timestamp in the group header, next to author   |
+| Default                                    | Compact                                           |
+| :----------------------------------------- | :------------------------------------------------ |
+| Colored message bubbles                    | Plain text, no background                         |
+| User messages right-aligned                | All messages left-aligned                         |
+| Timestamp below each message               | Timestamp in the group header, next to author     |
 | Conversation list shows avatar and preview | Conversation list shows compact title and actions |

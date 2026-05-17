@@ -131,19 +131,19 @@ Pass props directly to any internal subcomponent using `slotProps`—useful for 
 | `conversationTitle`    | `Partial<ChatConversationTitleProps>`        | Thread title            |
 | `conversationSubtitle` | `Partial<ChatConversationSubtitleProps>`     | Thread subtitle         |
 | `messageList`          | `Partial<ChatMessageListProps>`              | Message list            |
-| `message`          | `Partial<ChatMessageProps>`                  | Each message container  |
-| `avatar`        | `Partial<ChatMessageAvatarProps>`            | Message avatar          |
-| `content`       | `Partial<ChatMessageContentProps>`           | Message content/bubble  |
-| `meta`          | `Partial<ChatMessageMetaProps>`              | Message timestamp       |
-| `actions`       | `Partial<ChatMessageActionsProps>`           | Message action menu     |
-| `group`         | `Partial<ChatMessageGroupProps>`             | Message group container |
+| `message`              | `Partial<ChatMessageProps>`                  | Each message container  |
+| `avatar`               | `Partial<ChatMessageAvatarProps>`            | Message avatar          |
+| `content`              | `Partial<ChatMessageContentProps>`           | Message content/bubble  |
+| `meta`                 | `Partial<ChatMessageMetaProps>`              | Message timestamp       |
+| `actions`              | `Partial<ChatMessageActionsProps>`           | Message action menu     |
+| `group`                | `Partial<ChatMessageGroupProps>`             | Message group container |
 | `dateDivider`          | `Partial<ChatDateDividerProps>`              | Date separator          |
-| `composer`         | `Partial<ChatComposerProps>`                 | Composer form root      |
-| `input`        | `Partial<ChatComposerTextAreaProps>`         | Composer textarea       |
-| `send`   | `Partial<ChatComposerSendButtonProps>`       | Send button             |
-| `attach` | `Partial<ChatComposerAttachButtonProps>`     | Attach button           |
-| `toolbar`      | `Partial<ChatComposerToolbarProps>`          | Toolbar container       |
-| `helperText`   | `Partial<ChatComposerHelperTextProps>`       | Helper text below input |
+| `composer`             | `Partial<ChatComposerProps>`                 | Composer form root      |
+| `input`                | `Partial<ChatComposerTextAreaProps>`         | Composer textarea       |
+| `send`                 | `Partial<ChatComposerSendButtonProps>`       | Send button             |
+| `attach`               | `Partial<ChatComposerAttachButtonProps>`     | Attach button           |
+| `toolbar`              | `Partial<ChatComposerToolbarProps>`          | Toolbar container       |
+| `helperText`           | `Partial<ChatComposerHelperTextProps>`       | Helper text below input |
 | `typingIndicator`      | `Partial<ChatTypingIndicatorProps>`          | Typing indicator        |
 | `unreadMarker`         | `Partial<ChatUnreadMarkerProps>`             | Unread marker           |
 | `scrollToBottom`       | `Partial<ChatScrollToBottomAffordanceProps>` | Scroll to bottom button |
@@ -186,19 +186,19 @@ const CustomMessageContent = React.forwardRef(
 | `conversationSubtitle`      | `ChatConversationSubtitle`      | Thread subtitle text         |
 | `conversationHeaderActions` | `ChatConversationHeaderActions` | Header action area           |
 | `messageList`               | `ChatMessageList`               | Virtualized message list     |
-| `message`               | `ChatMessage`                   | Each message container       |
-| `avatar`             | `ChatMessageAvatar`             | Message avatar               |
-| `content`            | `ChatMessageContent`            | Message content/bubble       |
-| `meta`               | `ChatMessageMeta`               | Message timestamp and status |
-| `actions`            | `ChatMessageActions`            | Message action menu          |
-| `group`              | `ChatMessageGroup`              | Groups consecutive messages  |
+| `message`                   | `ChatMessage`                   | Each message container       |
+| `avatar`                    | `ChatMessageAvatar`             | Message avatar               |
+| `content`                   | `ChatMessageContent`            | Message content/bubble       |
+| `meta`                      | `ChatMessageMeta`               | Message timestamp and status |
+| `actions`                   | `ChatMessageActions`            | Message action menu          |
+| `group`                     | `ChatMessageGroup`              | Groups consecutive messages  |
 | `dateDivider`               | `ChatDateDivider`               | Date boundary separator      |
-| `composer`              | `ChatComposer`                  | Composer form                |
-| `input`             | `ChatComposerTextArea`          | Textarea input               |
-| `send`        | `ChatComposerSendButton`        | Send button                  |
-| `attach`      | `ChatComposerAttachButton`      | Attach button                |
-| `toolbar`           | `ChatComposerToolbar`           | Toolbar container            |
-| `helperText`        | `ChatComposerHelperText`        | Helper text                  |
+| `composer`                  | `ChatComposer`                  | Composer form                |
+| `input`                     | `ChatComposerTextArea`          | Textarea input               |
+| `send`                      | `ChatComposerSendButton`        | Send button                  |
+| `attach`                    | `ChatComposerAttachButton`      | Attach button                |
+| `toolbar`                   | `ChatComposerToolbar`           | Toolbar container            |
+| `helperText`                | `ChatComposerHelperText`        | Helper text                  |
 | `typingIndicator`           | `ChatTypingIndicator`           | Typing indicator             |
 | `unreadMarker`              | `ChatUnreadMarker`              | Unread message marker        |
 | `scrollToBottom`            | `ChatScrollToBottomAffordance`  | Scroll to bottom affordance  |

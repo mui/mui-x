@@ -545,7 +545,7 @@ function EffortSelector() {
   );
 }
 
-// --- AgentComposer (composerRoot slot) ----------------------------------------
+// --- AgentComposer (composer slot) ----------------------------------------
 
 function AgentComposer({ children: _children, ...other }: Record<string, unknown>) {
   return (
@@ -1237,7 +1237,7 @@ export default function AgentDemo() {
       slots={{
         conversationList: AgentTaskTree,
         conversationHeader: AgentHeaderBar,
-        composerRoot: AgentComposer,
+        composer: AgentComposer,
       }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {

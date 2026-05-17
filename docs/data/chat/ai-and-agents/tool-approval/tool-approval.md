@@ -24,14 +24,14 @@ Preview the `ChatConfirmation` UI in different states:
 
 The approval lifecycle extends the standard tool invocation states with two phases:
 
-| State                | Description                             |
-| :------------------- | :-------------------------------------- |
-| `input-streaming`    | Tool input JSON is being streamed       |
-| `input-available`    | Tool input is fully available           |
+| State                | Description                           |
+| :------------------- | :------------------------------------ |
+| `input-streaming`    | Tool input JSON is being streamed     |
+| `input-available`    | Tool input is fully available         |
 | `approval-requested` | Stream pauses—user approval is needed |
-| `approval-responded` | User has responded, stream continues    |
-| `output-available`   | Tool output is ready (if approved)      |
-| `output-denied`      | User denied the tool call               |
+| `approval-responded` | User has responded, stream continues  |
+| `output-available`   | Tool output is ready (if approved)    |
+| `output-denied`      | User denied the tool call             |
 
 The stream pauses at `approval-requested` until your UI calls `addToolApprovalResponse()`.
 
@@ -49,12 +49,12 @@ controller.enqueue({
 });
 ```
 
-| Field        | Type                  | Description                          |
-| :----------- | :-------------------- | :----------------------------------- |
-| `toolCallId` | `string`              | The tool invocation being gated      |
-| `toolName`   | `string`              | Name of the tool requesting approval |
-| `input`      | `object`              | The tool's input, shown to the user  |
-| `approvalId` | `string \| undefined` | Optional distinct approval ID        |
+| Field        | Type      | Description                          |                               |
+| :----------- | :-------- | :----------------------------------- | :---------------------------- |
+| `toolCallId` | `string`  | The tool invocation being gated      |                               |
+| `toolName`   | `string`  | Name of the tool requesting approval |                               |
+| `input`      | `object`  | The tool's input, shown to the user  |                               |
+| `approvalId` | `string \ | undefined`                           | Optional distinct approval ID |
 
 When this chunk arrives, the tool invocation moves to `state: 'approval-requested'`.
 

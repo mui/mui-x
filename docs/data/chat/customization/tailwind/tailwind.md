@@ -17,7 +17,7 @@ Each component renders semantic HTML elements with `data-*` attributes that refl
 
 ## Installation
 
-Install `@mui/x-chat` alongside Tailwind CSS:
+Install `@mui/x-chat` alongside Tailwind CSS:
 
 <codeblock storageKey="package-manager">
 

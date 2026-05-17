@@ -9,8 +9,8 @@ githubLabel: 'scope: chat'
 
 <p class="description">Let users switch between AI models from the conversation header.</p>
 
-The demo below shows how to place a Material UI `Select` inside the conversation header so users can switch between AI models.
-No new component is needed—drop any Material UI control into `slots.conversationHeaderActions`.
+The demo below shows how to place a Material UI `Select` inside the conversation header so users can switch between AI models.
+No new component is needed—drop any Material UI control into `slots.conversationHeaderActions`.
 
 The demo below shows a `Select` mounted in the `conversationHeaderActions` slot, with model state owned by the selector component:
 

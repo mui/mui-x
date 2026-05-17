@@ -89,16 +89,16 @@ See [Variants and density](/x/react-chat/basics/variants-and-density/) for detai
 
 The following slots are available for customization through `ChatBox`:
 
-| Slot             | Component            | Description                                         |
-| :--------------- | :------------------- | :-------------------------------------------------- |
-| `messageList`    | `ChatMessageList`    | The scrollable container                            |
-| `message`    | `ChatMessage`        | Individual message row                              |
-| `avatar`  | `ChatMessageAvatar`  | Author avatar                                       |
-| `content` | `ChatMessageContent` | Message bubble                                      |
-| `meta`    | `ChatMessageMeta`    | Timestamp, status, streaming progress, edited label |
-| `actions` | `ChatMessageActions` | Hover action menu                                   |
-| `group`   | `ChatMessageGroup`   | Same-author message group                           |
-| `dateDivider`    | `ChatDateDivider`    | Date separator                                      |
+| Slot          | Component            | Description                                         |
+| :------------ | :------------------- | :-------------------------------------------------- |
+| `messageList` | `ChatMessageList`    | The scrollable container                            |
+| `message`     | `ChatMessage`        | Individual message row                              |
+| `avatar`      | `ChatMessageAvatar`  | Author avatar                                       |
+| `content`     | `ChatMessageContent` | Message bubble                                      |
+| `meta`        | `ChatMessageMeta`    | Timestamp, status, streaming progress, edited label |
+| `actions`     | `ChatMessageActions` | Hover action menu                                   |
+| `group`       | `ChatMessageGroup`   | Same-author message group                           |
+| `dateDivider` | `ChatDateDivider`    | Date separator                                      |
 
 ## See also
 

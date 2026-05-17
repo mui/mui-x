@@ -73,27 +73,27 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 
 ### Message list slots
 
-| Slot name        | Default component    | Element | Description                   |
-| :--------------- | :------------------- | :------ | :---------------------------- |
-| `messageList`    | `ChatMessageList`    | `<div>` | Scrollable message container  |
-| `message`    | `ChatMessage`        | `<div>` | Individual message row        |
-| `avatar`  | `ChatMessageAvatar`  | `<div>` | Author avatar                 |
-| `content` | `ChatMessageContent` | `<div>` | Message bubble                |
-| `meta`    | `ChatMessageMeta`    | `<div>` | Timestamp and delivery status |
-| `actions` | `ChatMessageActions` | `<div>` | Hover action menu             |
-| `group`   | `ChatMessageGroup`   | `<div>` | Same-author message group     |
-| `dateDivider`    | `ChatDateDivider`    | `<div>` | Date separator between groups |
+| Slot name     | Default component    | Element | Description                   |
+| :------------ | :------------------- | :------ | :---------------------------- |
+| `messageList` | `ChatMessageList`    | `<div>` | Scrollable message container  |
+| `message`     | `ChatMessage`        | `<div>` | Individual message row        |
+| `avatar`      | `ChatMessageAvatar`  | `<div>` | Author avatar                 |
+| `content`     | `ChatMessageContent` | `<div>` | Message bubble                |
+| `meta`        | `ChatMessageMeta`    | `<div>` | Timestamp and delivery status |
+| `actions`     | `ChatMessageActions` | `<div>` | Hover action menu             |
+| `group`       | `ChatMessageGroup`   | `<div>` | Same-author message group     |
+| `dateDivider` | `ChatDateDivider`    | `<div>` | Date separator between groups |
 
 ### Composer slots
 
-| Slot name              | Default component          | Element      | Description             |
-| :--------------------- | :------------------------- | :----------- | :---------------------- |
-| `composer`         | `ChatComposer`             | `<form>`     | Composer container      |
-| `input`        | `ChatComposerTextArea`     | `<textarea>` | Auto-resizing text area |
-| `send`   | `ChatComposerSendButton`   | `<button>`   | Submit button           |
-| `attach` | `ChatComposerAttachButton` | `<button>`   | File attach trigger     |
-| `toolbar`      | `ChatComposerToolbar`      | `<div>`      | Button row              |
-| `helperText`   | `ChatComposerHelperText`   | `<div>`      | Disclaimer or hint      |
+| Slot name    | Default component          | Element      | Description             |
+| :----------- | :------------------------- | :----------- | :---------------------- |
+| `composer`   | `ChatComposer`             | `<form>`     | Composer container      |
+| `input`      | `ChatComposerTextArea`     | `<textarea>` | Auto-resizing text area |
+| `send`       | `ChatComposerSendButton`   | `<button>`   | Submit button           |
+| `attach`     | `ChatComposerAttachButton` | `<button>`   | File attach trigger     |
+| `toolbar`    | `ChatComposerToolbar`      | `<div>`      | Button row              |
+| `helperText` | `ChatComposerHelperText`   | `<div>`      | Disclaimer or hint      |
 
 ### Indicator slots
 
@@ -157,19 +157,19 @@ To conditionally show a custom component, keep the feature flag enabled and hand
 | `conversationTitle`    | `Partial<ChatConversationTitleProps>`        | Thread title            |
 | `conversationSubtitle` | `Partial<ChatConversationSubtitleProps>`     | Thread subtitle         |
 | `messageList`          | `Partial<ChatMessageListProps>`              | Message list            |
-| `message`          | `Partial<ChatMessageProps>`                  | Each message container  |
-| `avatar`        | `Partial<ChatMessageAvatarProps>`            | Message avatar          |
-| `content`       | `Partial<ChatMessageContentProps>`           | Message content/bubble  |
-| `meta`          | `Partial<ChatMessageMetaProps>`              | Message timestamp       |
-| `actions`       | `Partial<ChatMessageActionsProps>`           | Message action menu     |
-| `group`         | `Partial<ChatMessageGroupProps>`             | Message group container |
+| `message`              | `Partial<ChatMessageProps>`                  | Each message container  |
+| `avatar`               | `Partial<ChatMessageAvatarProps>`            | Message avatar          |
+| `content`              | `Partial<ChatMessageContentProps>`           | Message content/bubble  |
+| `meta`                 | `Partial<ChatMessageMetaProps>`              | Message timestamp       |
+| `actions`              | `Partial<ChatMessageActionsProps>`           | Message action menu     |
+| `group`                | `Partial<ChatMessageGroupProps>`             | Message group container |
 | `dateDivider`          | `Partial<ChatDateDividerProps>`              | Date separator          |
-| `composer`         | `Partial<ChatComposerProps>`                 | Composer form root      |
-| `input`        | `Partial<ChatComposerTextAreaProps>`         | Composer textarea       |
-| `send`   | `Partial<ChatComposerSendButtonProps>`       | Send button             |
-| `attach` | `Partial<ChatComposerAttachButtonProps>`     | Attach button           |
-| `toolbar`      | `Partial<ChatComposerToolbarProps>`          | Toolbar container       |
-| `helperText`   | `Partial<ChatComposerHelperTextProps>`       | Helper text below input |
+| `composer`             | `Partial<ChatComposerProps>`                 | Composer form root      |
+| `input`                | `Partial<ChatComposerTextAreaProps>`         | Composer textarea       |
+| `send`                 | `Partial<ChatComposerSendButtonProps>`       | Send button             |
+| `attach`               | `Partial<ChatComposerAttachButtonProps>`     | Attach button           |
+| `toolbar`              | `Partial<ChatComposerToolbarProps>`          | Toolbar container       |
+| `helperText`           | `Partial<ChatComposerHelperTextProps>`       | Helper text below input |
 | `typingIndicator`      | `Partial<ChatTypingIndicatorProps>`          | Typing indicator        |
 | `unreadMarker`         | `Partial<ChatUnreadMarkerProps>`             | Unread marker           |
 | `scrollToBottom`       | `Partial<ChatScrollToBottomAffordanceProps>` | Scroll to bottom button |

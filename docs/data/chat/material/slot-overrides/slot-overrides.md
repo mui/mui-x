@@ -51,27 +51,27 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 
 ### Message list slots
 
-| Slot name        | Default component    | Element | Description                   |
-| :--------------- | :------------------- | :------ | :---------------------------- |
-| `messageList`    | `ChatMessageList`    | `<div>` | Scrollable message container  |
-| `message`    | `ChatMessage`        | `<div>` | Individual message row        |
-| `avatar`  | `ChatMessageAvatar`  | `<div>` | Author avatar                 |
-| `content` | `ChatMessageContent` | `<div>` | Message bubble                |
-| `meta`    | `ChatMessageMeta`    | `<div>` | Timestamp and delivery status |
-| `actions` | `ChatMessageActions` | `<div>` | Hover action menu             |
-| `group`   | `ChatMessageGroup`   | `<div>` | Same-author message group     |
-| `dateDivider`    | `ChatDateDivider`    | `<div>` | Date separator between groups |
+| Slot name     | Default component    | Element | Description                   |
+| :------------ | :------------------- | :------ | :---------------------------- |
+| `messageList` | `ChatMessageList`    | `<div>` | Scrollable message container  |
+| `message`     | `ChatMessage`        | `<div>` | Individual message row        |
+| `avatar`      | `ChatMessageAvatar`  | `<div>` | Author avatar                 |
+| `content`     | `ChatMessageContent` | `<div>` | Message bubble                |
+| `meta`        | `ChatMessageMeta`    | `<div>` | Timestamp and delivery status |
+| `actions`     | `ChatMessageActions` | `<div>` | Hover action menu             |
+| `group`       | `ChatMessageGroup`   | `<div>` | Same-author message group     |
+| `dateDivider` | `ChatDateDivider`    | `<div>` | Date separator between groups |
 
 ### Composer slots
 
-| Slot name              | Default component          | Element      | Description             |
-| :--------------------- | :------------------------- | :----------- | :---------------------- |
-| `composer`         | `ChatComposer`             | `<form>`     | Composer container      |
-| `input`        | `ChatComposerTextArea`     | `<textarea>` | Auto-resizing text area |
-| `send`   | `ChatComposerSendButton`   | `<button>`   | Submit button           |
-| `attach` | `ChatComposerAttachButton` | `<button>`   | File attach trigger     |
-| `toolbar`      | `ChatComposerToolbar`      | `<div>`      | Button row              |
-| `helperText`   | `ChatComposerHelperText`   | `<div>`      | Disclaimer or hint      |
+| Slot name    | Default component          | Element      | Description             |
+| :----------- | :------------------------- | :----------- | :---------------------- |
+| `composer`   | `ChatComposer`             | `<form>`     | Composer container      |
+| `input`      | `ChatComposerTextArea`     | `<textarea>` | Auto-resizing text area |
+| `send`       | `ChatComposerSendButton`   | `<button>`   | Submit button           |
+| `attach`     | `ChatComposerAttachButton` | `<button>`   | File attach trigger     |
+| `toolbar`    | `ChatComposerToolbar`      | `<div>`      | Button row              |
+| `helperText` | `ChatComposerHelperText`   | `<div>`      | Disclaimer or hint      |
 
 ### Indicator slots
 

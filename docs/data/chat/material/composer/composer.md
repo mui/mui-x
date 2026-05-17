@@ -138,13 +138,13 @@ The hook returns:
 
 The attachment type used by the composer:
 
-| Property     | Type                                               | Description                                  |
-| :----------- | :------------------------------------------------- | :------------------------------------------- |
-| `localId`    | `string`                                           | Unique identifier for this draft attachment  |
-| `file`       | `File`                                             | The browser File object                      |
-| `previewUrl` | `string \| undefined`                              | Object URL for image previews (auto-created) |
-| `status`     | `'queued' \| 'uploading' \| 'uploaded' \| 'error'` | Upload lifecycle status                      |
-| `progress`   | `number \| undefined`                              | Upload progress (0–100)                      |
+| Property     | Type        | Description                                 |                                              |          |                         |
+| :----------- | :---------- | :------------------------------------------ | :------------------------------------------- | :------- | :---------------------- |
+| `localId`    | `string`    | Unique identifier for this draft attachment |                                              |          |                         |
+| `file`       | `File`      | The browser File object                     |                                              |          |                         |
+| `previewUrl` | `string \   | undefined`                                  | Object URL for image previews (auto-created) |          |                         |
+| `status`     | `'queued' \ | 'uploading' \                               | 'uploaded' \                                 | 'error'` | Upload lifecycle status |
+| `progress`   | `number \   | undefined`                                  | Upload progress (0–100)                      |          |                         |
 
 ## Compact composer variants
 
@@ -175,14 +175,14 @@ The composer uses these locale text keys (customizable via `localeText` on `Chat
 
 The following slots are available for customization through `ChatBox`:
 
-| Slot                   | Component                  | Description                   |
-| :--------------------- | :------------------------- | :---------------------------- |
-| `composer`         | `ChatComposer`             | The `<form>` container        |
-| `input`        | `ChatComposerTextArea`     | The auto-resizing textarea    |
-| `send`   | `ChatComposerSendButton`   | Submit button                 |
-| `attach` | `ChatComposerAttachButton` | File attach trigger           |
-| `toolbar`      | `ChatComposerToolbar`      | Button row below the textarea |
-| `helperText`   | `ChatComposerHelperText`   | Disclaimer or hint text       |
+| Slot         | Component                  | Description                   |
+| :----------- | :------------------------- | :---------------------------- |
+| `composer`   | `ChatComposer`             | The `<form>` container        |
+| `input`      | `ChatComposerTextArea`     | The auto-resizing textarea    |
+| `send`       | `ChatComposerSendButton`   | Submit button                 |
+| `attach`     | `ChatComposerAttachButton` | File attach trigger           |
+| `toolbar`    | `ChatComposerToolbar`      | Button row below the textarea |
+| `helperText` | `ChatComposerHelperText`   | Disclaimer or hint text       |
 
 ## API
 
