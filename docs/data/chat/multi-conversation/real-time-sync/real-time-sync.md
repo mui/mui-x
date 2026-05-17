@@ -1,20 +1,21 @@
 ---
 productId: x-chat
-title: Real-Time Sync
+title: Real-time sync
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - Real-Time Sync
+# Chat - Real-time sync
 
-<p class="description">Push typing, presence, and collection changes into the runtime via the adapter's <code>subscribe()</code> method for live synchronization.</p>
+<p class="description">Push typing indicators, presence updates, read receipts, and conversation changes from your backend into the chat runtime in real time.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The adapter's `subscribe()` method enables push-based updates from the backend. The runtime calls it on mount and cleans it up on unmount, keeping the subscription lifecycle fully managed.
+Implement `subscribe()` to push events from your backend into the chat runtime.
+The runtime calls it on mount and tears it down on unmount, so the subscription lifecycle is fully managed for you.
 
-## Subscription lifecycle
+## Managing the subscription lifecycle
 
 When `ChatProvider` mounts and the adapter implements `subscribe()`, the runtime:
 
@@ -47,7 +48,8 @@ async subscribe({ onEvent }) {
 
 ## Event types
 
-The `onEvent` callback receives `ChatRealtimeEvent` objects. There are nine event variants organized in five categories.
+The `onEvent` callback receives `ChatRealtimeEvent` objects.
+There are nine event variants organized in five categories.
 
 ### Conversation events
 
@@ -85,7 +87,8 @@ The `onEvent` callback receives `ChatRealtimeEvent` objects. There are nine even
 
 ## Dispatching events from the backend
 
-Each event is a plain object with a `type` field. Here are the full shapes:
+Each event is a plain object with a `type` field.
+The available event shapes are shown below:
 
 ```ts
 // Conversation events
@@ -164,6 +167,7 @@ onEvent({
 ## Collection synchronization
 
 Collection events drive structural changes to the message and conversation lists.
+The examples below show each variant in turn:
 
 ### Adding a message from another user
 
@@ -182,7 +186,8 @@ onEvent({
 
 ### Removing a conversation
 
-When a `conversation-removed` event arrives and the removed conversation is the active one, the runtime resets `activeConversationId` to `undefined`. Your UI can respond by showing a placeholder or selecting the next conversation.
+When a `conversation-removed` event arrives and the removed conversation is the active one, the runtime resets `activeConversationId` to `undefined`.
+Your UI can respond by showing a placeholder or selecting the next conversation.
 
 ```ts
 onEvent({
@@ -235,7 +240,7 @@ subscribe({ onEvent }) {
 
 ## Sending typing indicators
 
-Implement the `setTyping` adapter method to send typing indicators to your backend when the user is composing a message:
+Implement the `setTyping()` adapter method to send typing indicators to your backend when the user is composing a message:
 
 ```ts
 interface ChatSetTypingInput {
@@ -253,10 +258,11 @@ async setTyping({ conversationId, isTyping }) {
 },
 ```
 
-The runtime calls `setTyping` when the composer value changes from empty to non-empty (and vice versa). To receive typing indicators from other users, push `typing` events through the `onEvent` callback in `subscribe()`.
+The runtime calls `setTyping()` when the composer value changes from empty to non-empty (and vice versa).
+To receive typing indicators from other users, push `typing` events through the `onEvent` callback in `subscribe()`.
 
 ## See also
 
-- [Read Receipts](/x/react-chat/multi-conversation/read-receipts/) for the `markRead()` adapter method and unread badge display.
-- [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that reflects realtime conversation updates.
-- [Adapter](/x/react-chat/backend/adapters/) for the full `subscribe()` and `setTyping()` method reference.
+- See [Read receipts](/x/react-chat/multi-conversation/read-receipts/) for the `markRead()` adapter method and unread badge display.
+- See [Conversation list](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that reflects real-time conversation updates.
+- See [Adapters](/x/react-chat/backend/adapters/) for the full `subscribe()` and `setTyping()` method reference.

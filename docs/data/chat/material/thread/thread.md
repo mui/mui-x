@@ -8,11 +8,13 @@ components: ConversationRoot, ConversationHeader, ConversationTitle, Conversatio
 
 # Chat - Thread
 
-<p class="description">Compose the active conversation surface from themed thread components, override individual slots, and recompose the layout using context hooks.</p>
+<p class="description">Compose the active conversation pane with themed thread components and override individual slots.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The thread pane is the single-conversation view in a chat interface. It combines a header area, a scrollable message log, and a composer into one cohesive surface. `@mui/x-chat` ships each region as a themed component built with `styled()` and Material UI theme tokens.
+The thread pane is the single-conversation view in a chat interface.
+It combines a header area, a scrollable message log, and a composer into one cohesive surface.
+MUI X Chat ships each region as a themed component built with `styled()` and Material UI theme tokens.
 
 The following demo shows the thread in action:
 
@@ -44,7 +46,8 @@ All components are exported from `@mui/x-chat`.
 
 ## Header anatomy
 
-`ChatConversationHeader` is a `<header>` element with divider styling. It reads the active conversation through context so every child has access to the same conversation state without additional wiring.
+`ChatConversationHeader` is a `<header>` element with divider styling.
+It reads the active conversation through context so every child has access to the same conversation state without additional wiring.
 
 ```tsx
 import {
@@ -56,19 +59,20 @@ import {
 } from '@mui/x-chat';
 ```
 
-### ownerState and how state flows
+### `ownerState` and state flow
 
 `ChatConversation` owns the conversation-level `ownerState`, and the header subcomponents inherit that same state through the slot system.
 
 ### Conversation ownerState
 
-| Field             | Type                       | Description                                  |
-| :---------------- | :------------------------- | :------------------------------------------- |
-| `conversationId`  | `string \| undefined`      | Currently selected conversation ID           |
-| `conversation`    | `ChatConversation \| null` | Full active conversation object, when loaded |
-| `hasConversation` | `boolean`                  | Whether the thread currently has a selection |
+| Field             | Type                | Description                                  |                                              |
+| :---------------- | :------------------ | :------------------------------------------- | :------------------------------------------- |
+| `conversationId`  | `string \           | undefined`                                   | Currently selected conversation ID           |
+| `conversation`    | `ChatConversation \ | null`                                        | Full active conversation object, when loaded |
+| `hasConversation` | `boolean`           | Whether the thread currently has a selection |                                              |
 
-The `hasConversation` flag is particularly useful for hiding action buttons or showing a placeholder when no conversation is active. `ChatConversationHeader`, `ChatConversationTitle`, `ChatConversationSubtitle`, and `ChatConversationHeaderActions` all receive this same conversation-level state.
+Use `hasConversation` to hide action buttons or show a placeholder when no conversation is active.
+`ChatConversationHeader`, `ChatConversationTitle`, `ChatConversationSubtitle`, and `ChatConversationHeaderActions` all receive this same conversation-level state.
 
 ### Overriding a header slot
 
@@ -78,7 +82,8 @@ The most targeted customization is to replace the element type on one slot while
 
 ### Using ownerState in a custom title
 
-The `ownerState` prop received by slot components carries the full conversation context. This makes it straightforward to render dynamic content derived from the active conversation:
+The `ownerState` prop received by slot components carries the full conversation context.
+Use it to render dynamic content derived from the active conversation:
 
 ```tsx
 import { ChatConversationTitle } from '@mui/x-chat';
@@ -111,7 +116,7 @@ function CustomConversationTitle(props) {
 import { ChatMessageList, ChatMessageGroup } from '@mui/x-chat';
 ```
 
-### ownerState and how state flows
+### `ownerState` and state flow
 
 | Slot key              | Default element | ownerState fields            |
 | :-------------------- | :-------------- | :--------------------------- |
@@ -119,7 +124,7 @@ import { ChatMessageList, ChatMessageGroup } from '@mui/x-chat';
 | `messageListScroller` | `div`           | same                         |
 | `messageListContent`  | `div`           | same                         |
 
-The `isAtBottom` flag is useful for toggling a scroll-to-bottom affordance. `messageCount` lets you show an empty-state illustration when the list has no messages.
+Use `isAtBottom` to toggle a scroll-to-bottom affordance, and `messageCount` to show an empty-state illustration when the list has no messages.
 
 ### Overriding the content container
 
@@ -138,7 +143,11 @@ Use `slotProps` when you only need to pass additional styling without swapping t
 
 ## Message groups and individual messages
 
-`ChatMessageGroup` decides whether consecutive messages from the same author form a visual group, exposing `isFirst` and `isLast` grouping flags. `ChatMessage` then uses those flags to adjust spacing and avatar visibility.
+`ChatMessageGroup` decides whether consecutive messages from the same author form a visual group, exposing `isFirst` and `isLast` grouping flags.
+`ChatMessage` then uses those flags to adjust spacing and avatar visibility.
+
+Author identity for message rows is resolved from the message first, then enriched from `members`, `currentUser`, and active conversation participants using the author id.
+If your backend stores author fields elsewhere, use `getMessageAuthorId`, `getMessageAuthorDisplayName`, and `getMessageAuthorAvatarUrl` on the surrounding provider or `ChatBox`.
 
 ```tsx
 import {
@@ -151,29 +160,32 @@ import {
 } from '@mui/x-chat';
 ```
 
-### `ChatMessageGroup` ownerState
+### Message group ownerState
 
-| Field        | Type                    | Description                          |
-| :----------- | :---------------------- | :----------------------------------- |
-| `isFirst`    | `boolean`               | First message in a consecutive group |
-| `isLast`     | `boolean`               | Last message in a consecutive group  |
-| `authorRole` | `'user' \| 'assistant'` | Role of the group author             |
-| `authorId`   | `string \| undefined`   | Identity of the group author         |
+| Field        | Type      | Description                          |                              |
+| :----------- | :-------- | :----------------------------------- | :--------------------------- |
+| `isFirst`    | `boolean` | First message in a consecutive group |                              |
+| `isLast`     | `boolean` | Last message in a consecutive group  |                              |
+| `authorRole` | `'user' \ | 'assistant'`                         | Role of the group author     |
+| `authorId`   | `string \ | undefined`                           | Identity of the group author |
 
-### `ChatMessage` ownerState
+### Message ownerState
 
-| Field        | Type                    | Description                                   |
-| :----------- | :---------------------- | :-------------------------------------------- |
-| `role`       | `'user' \| 'assistant'` | Author role, drives bubble alignment          |
-| `status`     | `string`                | Delivery/streaming status                     |
-| `streaming`  | `boolean`               | Whether the message is still streaming        |
-| `error`      | `boolean`               | Whether the message ended in an error state   |
-| `isGrouped`  | `boolean`               | Whether this row is part of a group           |
-| `showAvatar` | `boolean`               | Controls the phantom-column width calculation |
+| Field        | Type      | Description                                   |                                      |
+| :----------- | :-------- | :-------------------------------------------- | :----------------------------------- |
+| `role`       | `'user' \ | 'assistant'`                                  | Author role, drives bubble alignment |
+| `status`     | `string`  | Delivery/streaming status                     |                                      |
+| `streaming`  | `boolean` | Whether the message is still streaming        |                                      |
+| `error`      | `boolean` | Whether the message ended in an error state   |                                      |
+| `isGrouped`  | `boolean` | Whether this row is part of a group           |                                      |
+| `showAvatar` | `boolean` | Controls the phantom-column width calculation |                                      |
+
+If no display name or avatar resolves for a message author, the built-in thread components skip those affordances instead of rendering role-based placeholders.
 
 ### Overriding the message bubble
 
-The recommended pattern for customizing the bubble is to wrap `ChatMessageContent` and replace only its inner `bubble` slot. This preserves part iteration, markdown rendering, tool-call renderers, and source citations:
+To customize the bubble, wrap `ChatMessageContent` and replace only its inner `bubble` slot.
+This preserves part iteration, markdown rendering, tool-call renderers, and source citations:
 
 {{"demo": "PaperBubble.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -181,7 +193,7 @@ Forward `ref` and spread `...props` before your overrides so the wrapping patter
 
 ### Adding custom children to a message row
 
-When you need to insert additional content inside a message row — for example a copy-to-clipboard button — provide custom children to `ChatMessage`:
+When you need to insert additional content inside a message row—for example a copy-to-clipboard button—provide custom children to `ChatMessage`:
 
 ```tsx
 <ChatMessage messageId={id}>
@@ -196,7 +208,8 @@ Children passed to `ChatMessage` are rendered inside the grid layout, so they in
 
 ## Composer anatomy
 
-`ChatComposer` is a `<form>` element that handles text input, attachment state, and submission. Its children own specific regions of the composer.
+`ChatComposer` is a `<form>` element that handles text input, attachment state, and submission.
+Its children own specific regions of the composer.
 
 ```tsx
 import {
@@ -209,7 +222,7 @@ import {
 } from '@mui/x-chat';
 ```
 
-### ownerState and how state flows
+### `ownerState` and state flow
 
 Every composer component shares the same ownerState shape:
 
@@ -230,11 +243,11 @@ Use `slotProps` on `ChatBox` for light prop-only overrides that do not require a
 ```tsx
 <ChatBox
   slotProps={{
-    composerInput: {
+    input: {
       placeholder: 'Ask a question…',
       'aria-label': 'Message input',
     },
-    composerAttachButton: {
+    attach: {
       sx: { display: 'none' },
     },
   }}
@@ -249,19 +262,22 @@ The `isStreaming` flag lets you replace the send icon with a stop icon while a r
 
 ## Accessing message state in custom children
 
-Custom children placed inside `ChatMessage` receive the message's `ownerState` through the slot system. When you need to read message state (role, streaming status, error) inside a deeply nested component, define a custom slot and accept `ownerState` as a prop:
+Custom children placed inside `ChatMessage` receive the message's `ownerState` through the slot system.
+When you need to read message state (role, streaming status, error) inside a deeply nested component, define a custom slot and accept `ownerState` as a prop:
 
 {{"demo": "BubbleWithStatus.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-The `ownerState` includes `role`, `status`, `streaming`, `error`, `isGrouped`, and `showAvatar` — the same fields listed in the `ChatMessage` ownerState table above.
+The `ownerState` includes `role`, `status`, `streaming`, `error`, `isGrouped`, and `showAvatar`—the same fields listed in the message ownerState table above.
 
-For conversation-level state (the active conversation title, participants, etc.), use the `ownerState` received by header slot components — see the [Header anatomy](#header-anatomy) section above.
+For conversation-level state such as the active conversation title and participants, use the `ownerState` received by header slot components.
+See [Header anatomy](#header-anatomy) for details.
 
 ## Full recomposition example
 
-When `ChatBox` slots are not enough — for example when you want to add a pinned banner between the header and the message list, or position the typing indicator inside the header instead of above the composer — you can assemble the thread from individual Material UI components directly.
+When `ChatBox` slots are not enough—for example when you want to add a pinned banner between the header and the message list, or position the typing indicator inside the header instead of above the composer—you can assemble the thread from individual Material UI components directly.
 
-The following example shows a fully assembled thread pane without relying on `ChatBox` layout defaults. It inserts a custom warning banner between the header and the message list:
+The following example shows a fully assembled thread pane without relying on `ChatBox` layout defaults.
+It inserts a custom warning banner between the header and the message list:
 
 {{"demo": "ThreadRecomposition.js", "defaultCodeOpen": false, "bg": "inline"}}
 

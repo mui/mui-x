@@ -7,14 +7,14 @@ githubLabel: 'scope: chat'
 
 # Chat - Selector-driven thread
 
-<p class="description">Render large custom threads efficiently with IDs at the list level and row-level message subscriptions.</p>
+<p class="description">Render large custom threads efficiently by subscribing rows to individual message IDs.</p>
 
-This demo demonstrates the performance-focused rendering pattern for threads with many messages.
+Use this pattern to render large custom threads efficiently when subscribing the entire list to every message change would be too costly.
 Instead of subscribing the entire list to every message change, each row subscribes only to its own message record.
 
 ## Key concepts
 
-### The ID list + row subscription pattern
+### ID list and row subscription pattern
 
 The parent component calls `useMessageIds()` to get the ordered list of message IDs.
 Each row component calls `useMessage(id)` to subscribe to its own message:
@@ -47,36 +47,38 @@ const MessageRow = React.memo(function MessageRow({ id }: { id: string }) {
 The store keeps messages in a normalized shape (`messageIds` + `messagesById`).
 When a single message updates during streaming:
 
-- `messageIds` stays reference-equal because the ID list did not change
-- Only the `messagesById` entry for the updated message changes
-- `useMessage(id)` on the updated row triggers a re-render
-- All other rows stay untouched
+- `messageIds` stays reference-equal because the ID list did not change.
+- Only the `messagesById` entry for the updated message changes.
+- `useMessage(id)` on the updated row triggers a re-render.
+- All other rows stay untouched.
 
-This means that for a thread with 100 messages where one is streaming, only one component re-renders per delta — not 100.
+For a thread with 100 messages where one is streaming, only one component re-renders per delta—not 100.
 
 ### Conversation-level selectors
 
-The same pattern applies to conversations:
+The same pattern applies to conversations, as shown below:
 
 ```tsx
 const conversations = useConversations();
 const conversation = useConversation('selectors');
 ```
 
+The demo below shows the selector-driven thread pattern end to end:
+
 {{"demo": "SelectorDrivenThread.js"}}
 
 ## Key takeaways
 
-- `useMessageIds()` + `useMessage(id)` is the recommended pattern for threads with more than a handful of messages
-- The normalized store ensures stable references — only changed data triggers re-renders
-- Wrap row components in `React.memo()` for maximum efficiency
-- `useConversations()` and `useConversation(id)` follow the same pattern for conversation lists
+- `useMessageIds()` + `useMessage(id)` is the recommended pattern for threads with more than a handful of messages.
+- The normalized store ensures stable references—only changed data triggers re-renders.
+- Wrap row components in `React.memo()` for maximum efficiency.
+- `useConversations()` and `useConversation(id)` follow the same pattern for conversation lists.
 
 ## See also
 
-- [Selectors](/x/react-chat/core/selectors/) for the full selector API and custom subscriptions
-- [Hooks](/x/react-chat/core/hooks/) for all available hooks
-- [Advanced store access](/x/react-chat/core/examples/advanced-store-access/) for custom selectors with `useChatStore()`
+- [Selectors](/x/react-chat/core/selectors/) for details on the full selector API and custom subscriptions.
+- [Hooks](/x/react-chat/core/hooks/) for details on all available hooks.
+- [Advanced store access](/x/react-chat/core/examples/advanced-store-access/) for details on custom selectors with `useChatStore()`.
 
 ## API
 
