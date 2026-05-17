@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Conversation
 
-<p class="description">Compose conversation surfaces from the MUI X Chat building blocks.</p>
+<p class="description">Compose conversation surfaces from the MUI X Chat building blocks.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 

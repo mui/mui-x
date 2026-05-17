@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Structure
 
-<p class="description">Understand the structure and slot families in MUI X Chat.</p>
+<p class="description">Understand the structure and slot families in MUI X Chat.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 

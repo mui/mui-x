@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Vercel AI SDK adapter
 
-<p class="description">Connect MUI X Chat to Vercel AI SDK streams.</p>
+<p class="description">Connect MUI X Chat to Vercel AI SDK streams.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 

@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Components
 
-<p class="description">Browse the available MUI X Chat components.</p>
+<p class="description">Browse the available MUI X Chat components.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 

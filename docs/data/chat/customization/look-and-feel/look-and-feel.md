@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Look & Feel
 
-<p class="description">Customize the visual presentation of MUI X Chat.</p>
+<p class="description">Customize the visual presentation of MUI X Chat.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
