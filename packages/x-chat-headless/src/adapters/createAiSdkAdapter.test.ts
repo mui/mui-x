@@ -203,9 +203,9 @@ describe('createAiSdkAdapter — { stream } branch', () => {
 
     const chunks = await readAll(result);
     expect((chunks[0] as ChatMessageChunk & { messageId: string }).messageId).toBe('upstream-id');
-    expect(
-      (chunks[chunks.length - 1] as ChatMessageChunk & { messageId: string }).messageId,
-    ).toBe('upstream-id');
+    expect((chunks[chunks.length - 1] as ChatMessageChunk & { messageId: string }).messageId).toBe(
+      'upstream-id',
+    );
   });
 
   it('passes unknown chunk types through for forward-compat', async () => {
