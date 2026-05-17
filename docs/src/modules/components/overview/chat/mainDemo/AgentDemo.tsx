@@ -639,7 +639,7 @@ const initialConversations: ChatConversation[] = [
   {
     id: taskBundlerId,
     title: 'Modernize the bundler configuration',
-    subtitle: 'Checking the current Webpack setup\u2026',
+    subtitle: 'Checking the current webpack setup\u2026',
     participants: [demoUsers.you, demoUsers.agent],
     readState: 'unread',
     unreadCount: 1,
@@ -794,14 +794,14 @@ const initialThreads: Record<string, ChatMessage[]> = {
   [taskBundlerId]: [
     makeUserMessage(
       taskBundlerId,
-      'Our Webpack config is getting unwieldy. Can you modernize it?',
+      'Our webpack config is getting unwieldy. Can you modernize it?',
       '2026-03-31T07:20:00.000Z',
     ),
     makeAssistantMessage(taskBundlerId, '2026-03-31T07:22:00.000Z', [
       { type: 'step-start' },
       {
         type: 'reasoning',
-        text: 'The user wants to modernize the bundler. Let me check what version of Webpack they use and assess whether a migration to Vite or Rspack makes sense.',
+        text: 'The user wants to modernize the bundler. Let me check what version of webpack they use and assess whether a migration to Vite or Rspack makes sense.',
         state: 'done',
       },
       {
@@ -836,7 +836,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       },
       {
         type: 'text',
-        text: 'Checking the dependency tree for any Webpack 4-only plugins that might block migration.',
+        text: 'Checking the dependency tree for any webpack 4-only plugins that might block migration.',
         state: 'done',
       },
       {
@@ -1068,7 +1068,7 @@ function createBundlerChunks(messageId: string): ChatMessageChunk[] {
   pushReasoning(
     chunks,
     `${messageId}-r`,
-    'The user confirmed migration. Let me create the Vite config and remove the old Webpack files.',
+    'The user confirmed migration. Let me create the Vite config and remove the old webpack files.',
   );
 
   chunks.push({ type: 'start-step' });
@@ -1115,7 +1115,7 @@ function createBundlerChunks(messageId: string): ChatMessageChunk[] {
   pushText(
     chunks,
     `${messageId}-t2`,
-    'Migration complete. Replaced three Webpack config files with a single `vite.config.ts`. Dev server cold-start should drop from ~8s to under 500ms.',
+    'Migration complete. Replaced three webpack config files with a single `vite.config.ts`. Dev server cold-start should drop from ~8s to under 500ms.',
   );
 
   chunks.push({ type: 'finish', messageId, finishReason: 'stop' });

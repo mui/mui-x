@@ -7,6 +7,7 @@ export * from './models';
 export * from './ChartsClipPath';
 export * from './ChartsReferenceLine';
 export * from './ChartsAxis';
+export * from './ChartsAxisHighlightValue';
 export * from './ChartsXAxis';
 export * from './ChartsYAxis';
 export * from './ChartsGrid';
