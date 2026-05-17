@@ -428,7 +428,6 @@ function DefaultComposer({
   // `<ChatComposer>` while the default attach/input/send/toolbar render inside
   // via children. To go further (whole-composer replacement) consumers compose
   // their own form using the public composer hooks.
-  const ComposerRootComponent = ChatComposer;
   const composerRootSlotOverride = composerSlots?.root;
   const ComposerInputComponent = (composerSlots?.input ??
     ChatComposerTextArea) as typeof ChatComposerTextArea;
@@ -457,7 +456,7 @@ function DefaultComposer({
 
   if (variant === 'compact') {
     return (
-      <ComposerRootComponent variant="compact" {...composerRootProps}>
+      <ChatComposer variant="compact" {...composerRootProps}>
         {showAttachments && (
           <ComposerAttachmentListComponent {...(composerSlotProps?.attachmentList ?? {})} />
         )}
@@ -491,12 +490,12 @@ function DefaultComposer({
             </ComposerSendButtonComponent>
           </ComposerToolbarComponent>
         )}
-      </ComposerRootComponent>
+      </ChatComposer>
     );
   }
 
   return (
-    <ComposerRootComponent {...composerRootProps}>
+    <ChatComposer {...composerRootProps}>
       {showAttachments && (
         <ComposerAttachmentListComponent {...(composerSlotProps?.attachmentList ?? {})} />
       )}
@@ -525,7 +524,7 @@ function DefaultComposer({
           </ComposerSendButtonComponent>
         )}
       </ComposerToolbarComponent>
-    </ComposerRootComponent>
+    </ChatComposer>
   );
 }
 
@@ -614,7 +613,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const showScrollToBottom = features?.scrollToBottom !== false;
   const showSuggestions =
     features?.suggestions !== false && !!suggestions && suggestions.length > 0;
-  const CustomEmptyStateComponent = slots?.emptyState as React.ElementType | undefined;
+  const CustomEmptyStateComponent = slots?.emptyState;
 
   const autoScrollProp = features?.autoScroll ?? true;
   const { activeConversationId, setActiveConversation } = useChat();

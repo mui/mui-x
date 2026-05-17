@@ -38,8 +38,16 @@ export interface DefaultMessageItemProps {
  * `slots.message` forwards (as the nested map) into the chosen group so it
  * can hand it down to the inner `ChatMessage`. Presentational `null` slots
  * collapse layout as before.
+ *
+ * Memoized because this is the per-row component inside the virtualized list:
+ * when scroll-driven re-renders pass the same id/slots/slotProps references
+ * (the parent reads them from refs), the shallow compare short-circuits.
  */
-export function DefaultMessageItem({ id, slots, slotProps }: DefaultMessageItemProps) {
+export const DefaultMessageItem = React.memo(function DefaultMessageItem({
+  id,
+  slots,
+  slotProps,
+}: DefaultMessageItemProps) {
   const GroupSlot = (slots?.messagesList?.group ?? ChatMessageGroup) as typeof ChatMessageGroup;
 
   return (
@@ -54,4 +62,4 @@ export function DefaultMessageItem({ id, slots, slotProps }: DefaultMessageItemP
       {...(slotProps?.messagesList?.group ?? {})}
     />
   );
-}
+});

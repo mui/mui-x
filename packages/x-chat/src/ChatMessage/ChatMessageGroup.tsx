@@ -97,9 +97,9 @@ const ChatMessageGroupAuthorNameStyled = styled('div', {
       }),
 }));
 
-const HiddenAuthorName = React.memo(function HiddenAuthorName() {
+function HiddenAuthorName() {
   return null;
-});
+}
 
 const ChatMessageGroupTimestampStyled = styled('span', {
   name: 'MuiChatMessage',
@@ -175,7 +175,7 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
           group: {
             className: clsx(classes.group, !hasAvatar && classes.noAvatar, className),
             sx,
-            ...((slotProps?.root as object) ?? {}),
+            ...(slotProps?.root ?? {}),
           } as any,
           authorName: innerMessageSlotProps?.authorName as any,
         }}

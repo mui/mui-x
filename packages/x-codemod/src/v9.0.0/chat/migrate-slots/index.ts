@@ -2,6 +2,10 @@ import path from 'path';
 import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import readFile from '../../../util/readFile';
 
+type Family = 'conversation' | 'messagesList' | 'message' | 'composer';
+
+const FAMILIES = ['conversation', 'messagesList', 'message', 'composer'] as const;
+
 // Top-level keys that stay flat in the new nested vocabulary.
 const FLAT_KEYS = new Set([
   'root',
@@ -16,7 +20,7 @@ const FLAT_KEYS = new Set([
 
 // Maps any legacy slot key (pre-rename `messageAvatar`, post-rename `avatar`,
 // or pre-rename family-root `composerRoot`) onto its nested destination.
-const NESTED_MAP: Record<string, { family: string; newKey: string }> = {
+const NESTED_MAP: Record<string, { family: Family; newKey: string }> = {
   // ---- conversation family ----
   conversationList: { family: 'conversation', newKey: 'list' },
   conversationHeader: { family: 'conversation', newKey: 'header' },
@@ -66,16 +70,10 @@ const NESTED_MAP: Record<string, { family: string; newKey: string }> = {
   helperText: { family: 'composer', newKey: 'helperText' },
 };
 
-// Family-name keys whose values may already be the nested object shape (idempotent).
-// When the property's value is an ObjectExpression, keep it as-is and merge with any
-// additional sub-keys lifted in this pass. When it's anything else (component, function,
-// JSX), treat it as the wrapper-only `family.root` override.
-const FAMILY_ROOT_MAP: Record<string, string> = {
-  conversation: 'conversation',
-  messagesList: 'messagesList',
-  message: 'message',
-  composer: 'composer',
-};
+// Family-name keys whose value may already be the nested object shape — idempotency:
+// preserve the existing object and merge any sub-keys lifted in this pass into it.
+// A non-object value (component / JSX) is treated as the wrapper-only `family.root` override.
+const FAMILY_KEYS = new Set<string>(FAMILIES);
 
 // Slot attributes we transform. Renaming everywhere would clash with locale-text keys.
 const SLOT_ATTRIBUTE_NAMES = new Set(['slots', 'slotProps']);
@@ -167,13 +165,12 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     type FamilyBucket = {
       existingObject: any | null;
       additions: any[];
-      existingProp: any | null;
     };
-    const buckets: Record<string, FamilyBucket> = {
-      conversation: { existingObject: null, additions: [], existingProp: null },
-      messagesList: { existingObject: null, additions: [], existingProp: null },
-      message: { existingObject: null, additions: [], existingProp: null },
-      composer: { existingObject: null, additions: [], existingProp: null },
+    const buckets: Record<Family, FamilyBucket> = {
+      conversation: { existingObject: null, additions: [] },
+      messagesList: { existingObject: null, additions: [] },
+      message: { existingObject: null, additions: [] },
+      composer: { existingObject: null, additions: [] },
     };
 
     expr.properties.forEach((prop: any) => {
@@ -183,20 +180,17 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         return;
       }
 
-      // Idempotency / wrapper-only lift: a family-name key whose value is an
-      // ObjectExpression is already in the new nested shape — preserve it and
-      // merge with any sub-keys we lift in this pass.
-      const familyForKey = FAMILY_ROOT_MAP[keyName];
-      if (familyForKey) {
+      // Family-name key with an ObjectExpression value is the already-nested
+      // shape (idempotency). A non-object value is treated as wrapper-only
+      // `family.root` so consumers don't lose the override.
+      if (FAMILY_KEYS.has(keyName)) {
+        const family = keyName as Family;
         if (prop.value && prop.value.type === 'ObjectExpression') {
-          buckets[familyForKey].existingObject = prop.value;
-          buckets[familyForKey].existingProp = prop;
+          buckets[family].existingObject = prop.value;
         } else {
-          // Non-object value (component / function / JSX) — wrapper-only override
-          // for that family. Lift to `family: { root: <value> }`.
           const newProp = j.property('init', j.identifier('root'), prop.value);
           newProp.shorthand = false;
-          buckets[familyForKey].additions.push(newProp);
+          buckets[family].additions.push(newProp);
         }
         return;
       }
@@ -214,42 +208,30 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         return;
       }
 
-      // Unknown key — leave it alone so the codemod is a no-op for unrelated props.
+      // Unknown key — pass through so the codemod is a no-op for unrelated props.
       outerProps.push(prop);
     });
 
-    // Reassemble: outer props in source order, then each family bucket (if any).
-    const familyOrder: ReadonlyArray<keyof typeof buckets> = [
-      'conversation',
-      'messagesList',
-      'message',
-      'composer',
-    ];
-
     const familyProps: any[] = [];
-    familyOrder.forEach((family) => {
+    FAMILIES.forEach((family) => {
       const bucket = buckets[family];
       if (!bucket.existingObject && bucket.additions.length === 0) {
         return;
       }
       let familyObject: any;
       if (bucket.existingObject) {
-        familyObject = bucket.existingObject;
-        // Merge new additions into the existing object; skip keys already present
-        // so idempotency holds when running on already-migrated code.
-        bucket.additions.forEach((addProp) => {
-          const addedKeyName = getPropertyKeyName(addProp);
-          if (!addedKeyName) {
-            familyObject.properties.push(addProp);
-            return;
-          }
-          const exists = familyObject.properties.some(
-            (existing: any) => getPropertyKeyName(existing) === addedKeyName,
-          );
-          if (!exists) {
-            familyObject.properties.push(addProp);
-          }
-        });
+        // Build a fresh ObjectExpression to avoid mutating the consumer's AST.
+        // Skip additions whose key already exists so idempotency holds.
+        const existingProps = bucket.existingObject.properties as any[];
+        const existingKeys = new Set(existingProps.map(getPropertyKeyName).filter(Boolean));
+        const merged = [
+          ...existingProps,
+          ...bucket.additions.filter((addProp) => {
+            const name = getPropertyKeyName(addProp);
+            return !name || !existingKeys.has(name);
+          }),
+        ];
+        familyObject = j.objectExpression(merged);
       } else {
         familyObject = j.objectExpression(bucket.additions);
       }
