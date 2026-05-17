@@ -153,6 +153,61 @@ describe('createAiSdkAdapter — { stream } branch', () => {
     });
   });
 
+  it('injects a synthetic messageId on start/finish when the AI SDK omits it', async () => {
+    // The real Vercel AI SDK ships `{ type: 'start' }` without a messageId
+    // (the client assigns one). MUI X Chat's processStream requires a
+    // messageId on `start`, so the adapter has to fill it in.
+    const adapter = createAiSdkAdapter({
+      stream: () =>
+        makeReadableStream<AiSdkUIMessageChunk>([
+          { type: 'start' },
+          { type: 'text-start', id: 't' },
+          { type: 'text-delta', id: 't', delta: 'ok' },
+          { type: 'text-end', id: 't' },
+          { type: 'finish' },
+        ]),
+    });
+
+    const result = await adapter.sendMessage({
+      message: makeUserMessage('hi'),
+      messages: [],
+      signal: new AbortController().signal,
+    });
+
+    const chunks = await readAll(result);
+    const start = chunks[0] as ChatMessageChunk & { messageId: string };
+    const finish = chunks[chunks.length - 1] as ChatMessageChunk & { messageId: string };
+    expect(start.type).toBe('start');
+    expect(typeof start.messageId).toBe('string');
+    expect(start.messageId.length).toBeGreaterThan(0);
+    expect(finish.type).toBe('finish');
+    // Same synthetic id flows through start and finish so processStream can
+    // bind text-delta chunks to the assistant message and finalize it.
+    expect(finish.messageId).toBe(start.messageId);
+  });
+
+  it('preserves a messageId when the AI SDK does provide one', async () => {
+    const adapter = createAiSdkAdapter({
+      stream: () =>
+        makeReadableStream<AiSdkUIMessageChunk>([
+          { type: 'start', messageId: 'upstream-id' },
+          { type: 'finish', messageId: 'upstream-id' },
+        ]),
+    });
+
+    const result = await adapter.sendMessage({
+      message: makeUserMessage('hi'),
+      messages: [],
+      signal: new AbortController().signal,
+    });
+
+    const chunks = await readAll(result);
+    expect((chunks[0] as ChatMessageChunk & { messageId: string }).messageId).toBe('upstream-id');
+    expect(
+      (chunks[chunks.length - 1] as ChatMessageChunk & { messageId: string }).messageId,
+    ).toBe('upstream-id');
+  });
+
   it('passes unknown chunk types through for forward-compat', async () => {
     const adapter = createAiSdkAdapter({
       stream: () =>

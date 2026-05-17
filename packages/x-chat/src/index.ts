@@ -217,3 +217,7 @@ export type {
   ChatUnreadMarkerClasses,
   ChatUnreadMarkerClassKey,
 } from './ChatIndicators/chatUnreadMarkerClasses';
+
+// ─── Built-in adapters (re-exported for quickstart convenience) ───────────────
+export { createEchoAdapter } from '@mui/x-chat-headless';
+export type { CreateEchoAdapterOptions } from '@mui/x-chat-headless';
