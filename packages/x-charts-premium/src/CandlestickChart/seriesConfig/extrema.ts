@@ -46,12 +46,17 @@ export const getExtremumY: CartesianExtremumGetter<'ohlc'> = (params) => {
       if (values == null) {
         continue;
       }
-      /* OHLC invariant: high (index 1) is the max and low (index 2) is the min of
-       * the tuple. Checking those two against the filter is enough — open and close
-       * are between them, so they pass whenever low and high do. */
+      const open = values[0];
       const high = values[1];
       const low = values[2];
-      if (filter && (!filter({ x: null, y: low }, i) || !filter({ x: null, y: high }, i))) {
+      const close = values[3];
+      if (
+        filter &&
+        (!filter({ x: null, y: open }, i) ||
+          !filter({ x: null, y: high }, i) ||
+          !filter({ x: null, y: low }, i) ||
+          !filter({ x: null, y: close }, i))
+      ) {
         continue;
       }
       if (low < min) {
