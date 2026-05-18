@@ -9,7 +9,10 @@ import type {
   ChatVariant,
 } from '@mui/x-chat/headless';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
-import { ChatChrome, ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
+import {
+  ChatChrome,
+  ScopedChat,
+} from 'docs/src/modules/components/chat-playground/sharedProviders';
 import { MessageBubble } from 'docs/src/modules/components/chat-playground/MessageBubble';
 import {
   ChoiceControl,

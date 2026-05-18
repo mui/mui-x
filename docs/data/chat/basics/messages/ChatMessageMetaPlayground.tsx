@@ -13,8 +13,14 @@ import type {
   ChatVariant,
 } from '@mui/x-chat/headless';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
-import { ChatChrome, ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
-import { ChoiceControl, DividerLabel } from 'docs/src/modules/components/chat-playground/controls';
+import {
+  ChatChrome,
+  ScopedChat,
+} from 'docs/src/modules/components/chat-playground/sharedProviders';
+import {
+  ChoiceControl,
+  DividerLabel,
+} from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
   type CustomizationDef,

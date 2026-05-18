@@ -12,7 +12,10 @@ import {
 } from '@mui/x-chat';
 import type { ChatDensity, ChatVariant } from '@mui/x-chat/headless';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
-import { ChatChrome, ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
+import {
+  ChatChrome,
+  ScopedChat,
+} from 'docs/src/modules/components/chat-playground/sharedProviders';
 import {
   directoryConversations,
   longThreadMessages,
