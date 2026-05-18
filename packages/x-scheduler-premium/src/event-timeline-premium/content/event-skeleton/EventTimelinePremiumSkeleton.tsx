@@ -1,5 +1,5 @@
 'use client';
-// TODO: unify with EventSkeleton from `@mui/x-scheduler/internals` — diverges in props (no `data-variant`), sizing (theme-derived height vs variant-based absolute positioning), and styled context. On unification, prefer the timeline's theme-derived sizing.
+// TODO #22309: unify with EventSkeleton from `@mui/x-scheduler/internals` — diverges in props (no `data-variant`), sizing (theme-derived height vs variant-based absolute positioning), and styled context. On unification, prefer the timeline's theme-derived sizing.
 import * as React from 'react';
 import Skeleton from '@mui/material/Skeleton';
 import { styled } from '@mui/material/styles';

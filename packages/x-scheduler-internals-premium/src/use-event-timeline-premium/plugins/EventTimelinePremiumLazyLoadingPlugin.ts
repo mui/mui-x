@@ -7,11 +7,8 @@ import type { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 
 /**
- * Lazy-loading plugin for `EventTimelinePremium`. Watches the visible range derived
- * from the current preset (`{ start, end }`) and triggers a data-source fetch through
- * the shared `SchedulerLazyLoadingPlugin` whenever the range changes. The first fetch
- * is gated on `state.hasInitialized` so it doesn't run against the constructor-only
- * initial state.
+ * The first fetch is gated on `state.hasInitialized` so it doesn't run against
+ * the constructor-only initial state (the visible range is derivable from defaults).
  */
 export class EventTimelinePremiumLazyLoadingPlugin<
   TEvent extends object,

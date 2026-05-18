@@ -596,7 +596,6 @@ describe('<EventTimelinePremium />', () => {
 
       const { user } = render(<Test />);
 
-      // Wait for the initial fetch to settle range A in the cache.
       await waitFor(() => {
         expect(screen.getByText(event1.title)).not.to.equal(null);
         expect(
@@ -604,13 +603,11 @@ describe('<EventTimelinePremium />', () => {
         ).to.equal(0);
       });
 
-      // Navigate forward → fetch fails → error renders.
       await user.click(screen.getByRole('button', { name: 'Next' }));
       await waitFor(() => {
         expect(screen.getByText('Network failure')).not.to.equal(null);
       });
 
-      // Navigate back → cache hit on range A → error must clear without a network call.
       await user.click(screen.getByRole('button', { name: 'Prev' }));
       await waitFor(() => {
         expect(screen.queryByText('Network failure')).to.equal(null);

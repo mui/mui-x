@@ -153,18 +153,15 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
-      // Populate cache with a successful fetch.
       await store.lazyLoading?.queueDataFetchForRange({ start: startCached, end: endCached }, true);
       expect(store.state.errors).toHaveLength(0);
 
-      // Fetch a different range that fails -> state.errors populated.
       await store.lazyLoading?.queueDataFetchForRange(
         { start: startFailing, end: endFailing },
         true,
       );
       expect(store.state.errors).toHaveLength(1);
 
-      // Navigating back to the cached range should clear stale errors.
       await store.lazyLoading?.queueDataFetchForRange({ start: startCached, end: endCached }, true);
       expect(store.state.errors).toHaveLength(0);
     });
@@ -213,7 +210,6 @@ premiumStoreClasses.forEach((storeClass) => {
         const start = adapter.date('2025-07-01T00:00:00Z', 'default');
         const end = adapter.date('2025-07-07T00:00:00Z', 'default');
 
-        // Three rapid calls within the same debounce window for the same range.
         store.lazyLoading?.queueDataFetchForRange({ start, end });
         store.lazyLoading?.queueDataFetchForRange({ start, end });
         store.lazyLoading?.queueDataFetchForRange({ start, end });
@@ -389,14 +385,12 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
-      // Populate state.errors via a failing fetch.
       await store.lazyLoading?.queueDataFetchForRange(
         { start: startFailing, end: endFailing },
         true,
       );
       expect(store.state.errors).toHaveLength(1);
 
-      // Successful eventsUpdated should clear the stale error.
       const updatedEvent = {
         id: '1',
         start: '2025-07-01T00:00:00.000Z',

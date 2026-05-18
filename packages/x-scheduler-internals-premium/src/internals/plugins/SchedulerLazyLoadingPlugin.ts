@@ -29,7 +29,7 @@ export class SchedulerLazyLoadingPlugin<
     return [...this.store.state.errors, { error: wrapped, key: String(this.nextErrorKey) }];
   };
 
-  // TODO: add a dispose lifecycle. The `dataManager` keeps timers (debounce), the
+  // TODO #22418: add a dispose lifecycle. The `dataManager` keeps timers (debounce), the
   // `eventsUpdated` subscription below is never unsubscribed, and consumer plugins
   // (timeline) attach `registerStoreEffect` callbacks. After unmount, in-flight fetches
   // and pending debounce callbacks can still write to a torn-down store.
@@ -191,11 +191,10 @@ export class SchedulerLazyLoadingPlugin<
       if (modifiedIds.size > 0) {
         const seenIds = new Set<unknown>();
         for (const event of newEvents) {
-          // @ts-ignore
-          if (modifiedIds.has(event.id)) {
+          const id = (event as any).id;
+          if (modifiedIds.has(id)) {
             this.cache.upsert(event);
-            // @ts-ignore
-            seenIds.add(event.id);
+            seenIds.add(id);
           }
         }
         if (process.env.NODE_ENV !== 'production') {

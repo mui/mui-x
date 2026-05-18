@@ -1,5 +1,5 @@
 'use client';
-// TODO: unify with ErrorContainer from `@mui/x-scheduler/internals`. Both variants are
+// TODO #22309: unify with ErrorContainer from `@mui/x-scheduler/internals`. Both variants are
 // structurally identical now; the only differences left are the styled-component names
 // and the styled-context hook.
 import * as React from 'react';

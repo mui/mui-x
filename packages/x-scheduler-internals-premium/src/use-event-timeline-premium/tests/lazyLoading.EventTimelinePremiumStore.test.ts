@@ -55,7 +55,6 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
-    // Simulate the React mount: triggers the first subscribe notification the plugin listens to.
     store.updateStateFromParameters(params, adapter);
 
     await flushEffect();
@@ -94,7 +93,6 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
-    // Simulate the React mount: triggers the first subscribe notification the plugin listens to.
     store.updateStateFromParameters(params, adapter);
 
     await flushEffect();
@@ -144,18 +142,16 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
-    // Mount: starts fetch A.
     store.updateStateFromParameters(params, adapter);
     await flushEffect();
     await flushDebounce();
 
-    // Navigate to B before A resolves: starts fetch B.
+    // Navigate to B before A resolves.
     (store as any).set('visibleDate', adapter.date('2025-09-15T00:00:00Z', 'default'));
     await flushEffect();
     await flushDebounce();
     expect(dataSource.getEvents.calledTwice).to.equal(true);
 
-    // B resolves first → state reflects B.
     resolveB(eventsB);
     await flushEffect();
     expect(store.state.eventIdList).to.include('b');
@@ -173,7 +169,6 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
-    // Simulate the React mount: triggers the first subscribe notification the plugin listens to.
     store.updateStateFromParameters(params, adapter);
 
     await flushEffect();
@@ -259,7 +254,6 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
     const store = new EventTimelinePremiumStore(params, adapter);
-    // Simulate the React mount: triggers the first subscribe notification the plugin listens to.
     store.updateStateFromParameters(params, adapter);
 
     await flushEffect();
@@ -314,7 +308,6 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushDebounce();
     expect(store.state.errors).to.have.length(1);
 
-    // Navigate to a different range so the next fetch goes through (and succeeds).
     store.goToNextVisibleDate(noopUIEvent);
     await flushEffect();
     await flushDebounce();
