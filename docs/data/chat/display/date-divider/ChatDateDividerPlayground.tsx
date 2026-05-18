@@ -69,7 +69,10 @@ function relativeFormat(date: Date): React.ReactNode {
   return `${Math.floor(days / 365)} year(s) ago`;
 }
 
-const FORMATTERS: Record<FormatChoice, ((date: Date) => React.ReactNode) | undefined> = {
+const FORMATTERS: Record<
+  FormatChoice,
+  ((date: Date) => React.ReactNode) | undefined
+> = {
   default: undefined,
   iso: (date: Date) => date.toISOString().slice(0, 10),
   relative: relativeFormat,

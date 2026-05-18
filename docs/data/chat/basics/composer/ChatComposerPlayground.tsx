@@ -127,9 +127,7 @@ export default function ChatComposerPlayground() {
     DEFAULTS.showHelperText,
   );
   const [maxFileCount, setMaxFileCount] = React.useState(DEFAULTS.maxFileCount);
-  const [maxFileSizeMB, setMaxFileSizeMB] = React.useState(
-    DEFAULTS.maxFileSizeMB,
-  );
+  const [maxFileSizeMB, setMaxFileSizeMB] = React.useState(DEFAULTS.maxFileSizeMB);
   const [acceptedMimeTypes, setAcceptedMimeTypes] = React.useState(
     DEFAULTS.acceptedMimeTypes,
   );

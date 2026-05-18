@@ -71,8 +71,16 @@ type ClassKey = 'root' | 'scroller' | 'content';
 
 const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
   { name: 'root', description: 'The root list element.' },
-  { name: 'scroller', selector: '.MuiChatMessageList-scroller', description: 'Scroller wrapper.' },
-  { name: 'content', selector: '.MuiChatMessageList-content', description: 'Inner content area.' },
+  {
+    name: 'scroller',
+    selector: '.MuiChatMessageList-scroller',
+    description: 'Scroller wrapper.',
+  },
+  {
+    name: 'content',
+    selector: '.MuiChatMessageList-content',
+    description: 'Inner content area.',
+  },
 ];
 
 export default function ChatMessageListPlayground() {

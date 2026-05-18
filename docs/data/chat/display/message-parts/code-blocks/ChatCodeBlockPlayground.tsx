@@ -41,7 +41,11 @@ function tokensHighlighter(code: string): React.ReactNode {
     if (/^\s+$/.test(part)) {
       return part;
     }
-    if (/^(import|export|function|return|const|let|var|from|class|interface)$/.test(part)) {
+    if (
+      /^(import|export|function|return|const|let|var|from|class|interface)$/.test(
+        part,
+      )
+    ) {
       return (
         <span key={i} style={{ color: '#c084fc' }}>
           {part}
@@ -66,7 +70,14 @@ function tokensHighlighter(code: string): React.ReactNode {
   });
 }
 
-const RAINBOW_PALETTE = ['#f87171', '#fb923c', '#fbbf24', '#34d399', '#60a5fa', '#a78bfa'];
+const RAINBOW_PALETTE = [
+  '#f87171',
+  '#fb923c',
+  '#fbbf24',
+  '#34d399',
+  '#60a5fa',
+  '#a78bfa',
+];
 
 function rainbowHighlighter(code: string): React.ReactNode {
   return code.split('').map((char, i) => (
