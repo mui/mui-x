@@ -275,10 +275,7 @@ export class SchedulerStore<
         ? error
         : /* minify-error-disabled */ new Error(String(error), { cause: error });
     this.nextErrorKey += 1;
-    this.set('errors', [
-      ...this.state.errors,
-      { error: wrapped, key: String(this.nextErrorKey) },
-    ]);
+    this.set('errors', [...this.state.errors, { error: wrapped, key: String(this.nextErrorKey) }]);
   };
 
   /**
