@@ -1,19 +1,19 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatSuggestions } from '@mui/x-chat';
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { ScopedChat } from '../../_playground/sharedProviders';
-import { emptyConversation } from '../../_playground/sharedFixtures';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
+import { emptyConversation } from 'docs/src/modules/components/chat-playground/sharedFixtures';
 import {
   DividerLabel,
   NumberControl,
   SwitchControl,
   TextControl,
-} from '../../_playground/controls';
+} from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
   type CustomizationDef,
-} from '../../_playground/useCustomizations';
+} from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 const POOL = [
   'Show me the default ChatComposer',

@@ -1,16 +1,16 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatCodeBlock } from '@mui/x-chat';
-import { PlaygroundCard } from '../../../_playground/PlaygroundCard';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import {
   DividerLabel,
   SelectControl,
   TextControl,
-} from '../../../_playground/controls';
+} from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
   type CustomizationDef,
-} from '../../../_playground/useCustomizations';
+} from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 const SAMPLES: Record<string, string> = {
   tsx: `import { ChatBox } from '@mui/x-chat';

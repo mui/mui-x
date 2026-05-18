@@ -1,15 +1,15 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatTypingIndicator } from '@mui/x-chat';
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { ScopedChat, TypingEffect } from '../../_playground/sharedProviders';
-import { emptyConversation } from '../../_playground/sharedFixtures';
-import { DividerLabel, NumberControl } from '../../_playground/controls';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import { ScopedChat, TypingEffect } from 'docs/src/modules/components/chat-playground/sharedProviders';
+import { emptyConversation } from 'docs/src/modules/components/chat-playground/sharedFixtures';
+import { DividerLabel, NumberControl } from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
   type CustomizationDef,
-} from '../../_playground/useCustomizations';
-import { users } from '../../_playground/data';
+} from 'docs/src/modules/components/chat-playground/useCustomizations';
+import { users } from 'docs/src/modules/components/chat-playground/data';
 
 const candidates = [users.assistant, users.alice];
 

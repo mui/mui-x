@@ -11,19 +11,22 @@ import {
   ChatMessageList,
 } from '@mui/x-chat';
 
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { ChatChrome, ScopedChat } from '../../_playground/sharedProviders';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import {
+  ChatChrome,
+  ScopedChat,
+} from 'docs/src/modules/components/chat-playground/sharedProviders';
 import {
   directoryConversations,
   longThreadMessages,
-} from '../../_playground/sharedFixtures';
-import { MessageBubble } from '../../_playground/MessageBubble';
+} from 'docs/src/modules/components/chat-playground/sharedFixtures';
+import { MessageBubble } from 'docs/src/modules/components/chat-playground/MessageBubble';
 import {
   ChoiceControl,
   DividerLabel,
   SwitchControl,
-} from '../../_playground/controls';
-import { useCustomizations } from '../../_playground/useCustomizations';
+} from 'docs/src/modules/components/chat-playground/controls';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 const DEFAULTS = {
   variant: 'default',

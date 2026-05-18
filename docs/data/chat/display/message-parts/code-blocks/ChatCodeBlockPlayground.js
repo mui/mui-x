@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatCodeBlock } from '@mui/x-chat';
-import { PlaygroundCard } from '../../../_playground/PlaygroundCard';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import {
   DividerLabel,
   SelectControl,
   TextControl,
-} from '../../../_playground/controls';
-import { useCustomizations } from '../../../_playground/useCustomizations';
+} from 'docs/src/modules/components/chat-playground/controls';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 const SAMPLES = {
   tsx: `import { ChatBox } from '@mui/x-chat';

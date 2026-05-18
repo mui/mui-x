@@ -8,11 +8,17 @@ import {
   ChatMessageInlineMeta,
 } from '@mui/x-chat';
 
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { ChatChrome, ScopedChat } from '../../_playground/sharedProviders';
-import { ChoiceControl, DividerLabel } from '../../_playground/controls';
-import { useCustomizations } from '../../_playground/useCustomizations';
-import { users } from '../../_playground/data';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import {
+  ChatChrome,
+  ScopedChat,
+} from 'docs/src/modules/components/chat-playground/sharedProviders';
+import {
+  ChoiceControl,
+  DividerLabel,
+} from 'docs/src/modules/components/chat-playground/controls';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
+import { users } from 'docs/src/modules/components/chat-playground/data';
 
 const conversation = {
   id: 'inline-meta-playground',

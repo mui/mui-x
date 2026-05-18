@@ -12,24 +12,24 @@ import type {
   ChatMessage,
   ChatVariant,
 } from '@mui/x-chat/headless';
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import {
   ChatChrome,
   MessageErrorEffect,
   ScopedChat,
-} from '../../_playground/sharedProviders';
-import { sampleTexts } from '../../_playground/sharedFixtures';
+} from 'docs/src/modules/components/chat-playground/sharedProviders';
+import { sampleTexts } from 'docs/src/modules/components/chat-playground/sharedFixtures';
 import {
   ChoiceControl,
   DividerLabel,
   SelectControl,
   SwitchControl,
-} from '../../_playground/controls';
+} from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
   type CustomizationDef,
-} from '../../_playground/useCustomizations';
-import { users } from '../../_playground/data';
+} from 'docs/src/modules/components/chat-playground/useCustomizations';
+import { users } from 'docs/src/modules/components/chat-playground/data';
 
 const conversation: ChatConversation = {
   id: 'msg-playground',

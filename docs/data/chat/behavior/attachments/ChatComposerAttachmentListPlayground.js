@@ -2,15 +2,15 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatComposerAttachmentList } from '@mui/x-chat';
 import { useChatStore } from '@mui/x-chat/headless';
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { ScopedChat } from '../../_playground/sharedProviders';
-import { emptyConversation } from '../../_playground/sharedFixtures';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
+import { emptyConversation } from 'docs/src/modules/components/chat-playground/sharedFixtures';
 import {
   ChoiceControl,
   DividerLabel,
   NumberControl,
-} from '../../_playground/controls';
-import { useCustomizations } from '../../_playground/useCustomizations';
+} from 'docs/src/modules/components/chat-playground/controls';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 const POOL = [
   { name: 'design-spec.pdf', type: 'application/pdf', size: 134_512 },

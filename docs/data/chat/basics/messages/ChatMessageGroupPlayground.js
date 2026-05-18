@@ -7,15 +7,15 @@ import {
   ChatMessageGroup,
 } from '@mui/x-chat';
 
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { ChatChrome, ScopedChat } from '../../_playground/sharedProviders';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import { ChatChrome, ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
 import {
   ChoiceControl,
   DividerLabel,
   NumberControl,
   SwitchControl,
-} from '../../_playground/controls';
-import { users } from '../../_playground/data';
+} from 'docs/src/modules/components/chat-playground/controls';
+import { users } from 'docs/src/modules/components/chat-playground/data';
 
 const conversation = {
   id: 'group-playground',

@@ -10,17 +10,20 @@ import {
   ChatComposerToolbar,
 } from '@mui/x-chat';
 
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { ScopedChat, ChatChrome } from '../../_playground/sharedProviders';
-import { emptyConversation } from '../../_playground/sharedFixtures';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import {
+  ScopedChat,
+  ChatChrome,
+} from 'docs/src/modules/components/chat-playground/sharedProviders';
+import { emptyConversation } from 'docs/src/modules/components/chat-playground/sharedFixtures';
 import {
   ChoiceControl,
   DividerLabel,
   NumberControl,
   SwitchControl,
   TextControl,
-} from '../../_playground/controls';
-import { useCustomizations } from '../../_playground/useCustomizations';
+} from 'docs/src/modules/components/chat-playground/controls';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 function SendIcon() {
   return (

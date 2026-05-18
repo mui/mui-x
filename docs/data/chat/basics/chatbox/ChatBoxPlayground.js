@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import {
   ChoiceControl,
   DividerLabel,
   SwitchControl,
-} from '../../_playground/controls';
-import { useCustomizations } from '../../_playground/useCustomizations';
+} from 'docs/src/modules/components/chat-playground/controls';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
 import {
   conversations,
   initialThreads,
   makeAdapter,
   sampleSuggestions,
   users,
-} from '../../_playground/data';
+} from 'docs/src/modules/components/chat-playground/data';
 
 const DEFAULTS = {
   variant: 'default',
