@@ -444,7 +444,10 @@ describe('<EventTimelinePremium />', () => {
   describe('error handling', () => {
     function renderErrorContainer(initialErrors: Error[]) {
       const store = new EventTimelinePremiumStore({ events: [] }, adapter);
-      store.set('errors', initialErrors);
+      store.set(
+        'errors',
+        initialErrors.map((error, index) => ({ error, key: String(index) })),
+      );
 
       return render(
         <SchedulerStoreContext.Provider value={store as any}>
@@ -636,11 +639,10 @@ describe('<EventTimelinePremium />', () => {
       });
     });
 
-    it('should drop dismissed errors that are no longer in state.errors', async () => {
+    it('should re-display the same Error instance after dismiss when pushed again with a new key', async () => {
       const sharedError = new Error('Shared error');
       const store = new EventTimelinePremiumStore({ events: [] }, adapter);
-      // Set initial errors before mounting so the first render already has them.
-      store.set('errors', [sharedError]);
+      store.set('errors', [{ error: sharedError, key: '1' }]);
 
       function Test() {
         const styledContextValue = React.useMemo(
@@ -668,13 +670,9 @@ describe('<EventTimelinePremium />', () => {
         expect(screen.queryByText('Shared error')).to.equal(null);
       });
 
-      // Simulate the base plugin clearing errors on a successful refetch.
+      // Plugin re-encounters the same failure and pushes a new entry with a fresh key.
       await act(async () => {
-        store.set('errors', []);
-      });
-      // Same Error instance gets re-thrown later — should re-display since the dismiss state was purged.
-      await act(async () => {
-        store.set('errors', [sharedError]);
+        store.set('errors', [{ error: sharedError, key: '2' }]);
       });
 
       await waitFor(() => {

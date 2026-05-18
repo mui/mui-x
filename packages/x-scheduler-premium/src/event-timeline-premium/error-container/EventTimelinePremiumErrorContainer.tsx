@@ -1,5 +1,7 @@
 'use client';
-// TODO: unify with ErrorContainer from `@mui/x-scheduler/internals`. On unification, prefer this version: it adds a `dismissedErrors` GC effect and WeakMap-backed stable keys that the calendar variant lacks.
+// TODO: unify with ErrorContainer from `@mui/x-scheduler/internals`. Both variants are
+// structurally identical now; the only differences left are the styled-component names
+// and the styled-context hook.
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
@@ -54,54 +56,20 @@ export function EventTimelinePremiumErrorContainer(props: EventTimelinePremiumEr
   const { classes } = useEventTimelinePremiumStyledContext();
   const errors = useStore(store, schedulerOtherSelectors.errors);
 
-  const [dismissedErrors, setDismissedErrors] = React.useState<Set<Error>>(new Set());
-
-  const errorKeysRef = React.useRef(new WeakMap<Error, number>());
-  const nextErrorKeyRef = React.useRef(0);
-  const getErrorKey = (error: Error) => {
-    let id = errorKeysRef.current.get(error);
-    if (id === undefined) {
-      id = nextErrorKeyRef.current;
-      nextErrorKeyRef.current += 1;
-      errorKeysRef.current.set(error, id);
-    }
-    return id;
-  };
-
-  // Drop dismissed entries whose Error is no longer in `state.errors`, so the Set doesn't
-  // grow forever and a re-thrown identical Error can re-display once cleared from state.
-  React.useEffect(() => {
-    setDismissedErrors((previous) => {
-      const next = new Set<Error>();
-      for (const error of previous) {
-        if (errors.includes(error)) {
-          next.add(error);
-        }
-      }
-      return next.size === previous.size ? previous : next;
-    });
-  }, [errors]);
-
-  const handleDismiss = (error: Error) => {
-    setDismissedErrors((previous) => new Set(previous).add(error));
-  };
-
   return (
     <EventTimelinePremiumErrorContainerRoot className={clsx(classes.errorContainer, className)}>
-      {errors
-        .filter((error) => !dismissedErrors.has(error))
-        .map((error) => (
-          <EventTimelinePremiumErrorAlert
-            className={classes.errorAlert}
-            severity="error"
-            key={getErrorKey(error)}
-            onClose={() => handleDismiss(error)}
-          >
-            <EventTimelinePremiumErrorMessage className={classes.errorMessage} variant="body2">
-              {error.message}
-            </EventTimelinePremiumErrorMessage>
-          </EventTimelinePremiumErrorAlert>
-        ))}
+      {errors.map(({ error, key }) => (
+        <EventTimelinePremiumErrorAlert
+          className={classes.errorAlert}
+          severity="error"
+          key={key}
+          onClose={() => store.dismissError(key)}
+        >
+          <EventTimelinePremiumErrorMessage className={classes.errorMessage} variant="body2">
+            {error.message}
+          </EventTimelinePremiumErrorMessage>
+        </EventTimelinePremiumErrorAlert>
+      ))}
     </EventTimelinePremiumErrorContainerRoot>
   );
 }

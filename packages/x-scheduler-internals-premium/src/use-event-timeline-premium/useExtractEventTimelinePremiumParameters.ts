@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler -- intentional `react-hooks/exhaustive-deps` disable below */
 import * as React from 'react';
 import { EventTimelinePremiumParameters } from './EventTimelinePremiumStore.types';
 
@@ -71,12 +72,16 @@ export function useExtractEventTimelinePremiumParameters<
       visibleDate,
       visibleResources,
     }),
+    // `dataSource` is intentionally excluded: it's read once at plugin init
+    // (cache + dataManager are not re-created on identity changes), so adding it
+    // here would only invalidate the memo on every render for consumers passing
+    // an inline `{ getEvents, updateEvents }` object.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       areEventsDraggable,
       areEventsResizable,
       canDragEventsFromTheOutside,
       canDropEventsToTheOutside,
-      dataSource,
       dateLocale,
       defaultPreferences,
       defaultPreset,

@@ -18,6 +18,16 @@ export class SchedulerLazyLoadingPlugin<
 
   private dataManager: SchedulerDataManager | null = null;
   private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
+  private nextErrorKey = 0;
+
+  private pushError = (error: unknown) => {
+    const wrapped =
+      error instanceof Error
+        ? error
+        : /* minify-error-disabled */ new Error(String(error), { cause: error });
+    this.nextErrorKey += 1;
+    return [...this.store.state.errors, { error: wrapped, key: String(this.nextErrorKey) }];
+  };
 
   // TODO: add a dispose lifecycle. The `dataManager` keeps timers (debounce), the
   // `eventsUpdated` subscription below is never unsubscribed, and consumer plugins
@@ -67,11 +77,11 @@ export class SchedulerLazyLoadingPlugin<
         }
       }
     } catch (error) {
-      const wrapped =
-        error instanceof Error
-          ? error
-          : /* minify-error-disabled */ new Error(String(error), { cause: error });
-      this.store.set('errors', [...this.store.state.errors, wrapped]);
+      this.store.update({
+        ...this.store.state,
+        errors: this.pushError(error),
+        isLoading: false,
+      });
     }
   };
 
@@ -132,14 +142,8 @@ export class SchedulerLazyLoadingPlugin<
         ...eventsState,
         errors: [],
       });
-      await this.dataManager.setRequestSettled(range);
     } catch (error) {
-      const wrapped =
-        error instanceof Error
-          ? error
-          : /* minify-error-disabled */ new Error(String(error), { cause: error });
-      this.store.set('errors', [...this.store.state.errors, wrapped]);
-      await this.dataManager.setRequestSettled(range);
+      this.store.set('errors', this.pushError(error));
     } finally {
       this.store.set('isLoading', false);
       await this.dataManager.setRequestSettled(range);
@@ -163,14 +167,16 @@ export class SchedulerLazyLoadingPlugin<
       });
 
       if (!shouldUpdateEvents.success) {
-        this.store.set('errors', [
-          ...this.store.state.errors,
-          new Error(
-            'MUI X Scheduler: dataSource.updateEvents returned { success: false }. ' +
-              'The optimistic event mutation was not persisted to the cache. ' +
-              'Throw from updateEvents to signal failure explicitly, or return { success: true } after handling the error.',
+        this.store.set(
+          'errors',
+          this.pushError(
+            new Error(
+              'MUI X Scheduler: dataSource.updateEvents returned { success: false }. ' +
+                'The optimistic event mutation was not persisted to the cache. ' +
+                'Throw from updateEvents to signal failure explicitly, or return { success: true } after handling the error.',
+            ),
           ),
-        ]);
+        );
         return;
       }
 
@@ -216,11 +222,7 @@ export class SchedulerLazyLoadingPlugin<
         errors: [],
       });
     } catch (error) {
-      const wrapped =
-        error instanceof Error
-          ? error
-          : /* minify-error-disabled */ new Error(String(error), { cause: error });
-      this.store.set('errors', [...this.store.state.errors, wrapped]);
+      this.store.set('errors', this.pushError(error));
     }
   };
 }

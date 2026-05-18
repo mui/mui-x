@@ -242,8 +242,8 @@ premiumStoreClasses.forEach((storeClass) => {
       await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
 
       expect(store.state.errors).toHaveLength(1);
-      expect(store.state.errors[0]).to.be.instanceOf(Error);
-      expect(store.state.errors[0].message).to.equal('500 Internal Server Error');
+      expect(store.state.errors[0].error).to.be.instanceOf(Error);
+      expect(store.state.errors[0].error.message).to.equal('500 Internal Server Error');
     });
 
     it('should push an error to state.errors when dataSource.updateEvents rejects', async () => {
@@ -269,7 +269,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       expect(dataSource.updateEvents.calledOnce).to.equal(true);
       expect(store.state.errors).toHaveLength(1);
-      expect(store.state.errors[0].message).to.equal('Update failed');
+      expect(store.state.errors[0].error.message).to.equal('Update failed');
     });
 
     it('should push an error to state.errors when dataSource.updateEvents returns { success: false }', async () => {
@@ -292,7 +292,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       expect(dataSource.updateEvents.calledOnce).to.equal(true);
       expect(store.state.errors).toHaveLength(1);
-      expect(store.state.errors[0].message).to.include('{ success: false }');
+      expect(store.state.errors[0].error.message).to.include('{ success: false }');
     });
 
     it('should accumulate errors when consecutive fetches fail', async () => {
@@ -314,6 +314,41 @@ premiumStoreClasses.forEach((storeClass) => {
 
       await store.lazyLoading?.queueDataFetchForRange({ start: start2, end: end2 }, true);
       expect(store.state.errors).toHaveLength(2);
+    });
+
+    it('should reject the debounced queue() promise when fetchFunction throws from the cache-hit branch', async () => {
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+
+      // Populate the cache so the next fetch hits the branch outside
+      // loadEventsFromDataSource's inner try/catch.
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+
+      vi.useFakeTimers();
+      try {
+        const failure = new Error('boom');
+        (store.lazyLoading as any).dataManager.setRequestSettled = async () => {
+          throw failure;
+        };
+
+        // Debounced path (queue()) — queueImmediate already propagates rejections.
+        const promise = store.lazyLoading?.queueDataFetchForRange({ start, end });
+
+        await vi.advanceTimersByTimeAsync(DEBOUNCE_MS + 50);
+        await promise;
+
+        expect(store.state.errors).toHaveLength(1);
+        expect(store.state.errors[0].error).to.equal(failure);
+        expect(store.state.isLoading).to.equal(false);
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it('should clear state.errors after a successful eventsUpdated', async () => {

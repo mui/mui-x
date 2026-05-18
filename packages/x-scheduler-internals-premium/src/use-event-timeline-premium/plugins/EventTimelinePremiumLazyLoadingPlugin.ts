@@ -10,7 +10,8 @@ import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premiu
  * Lazy-loading plugin for `EventTimelinePremium`. Watches the visible range derived
  * from the current preset (`{ start, end }`) and triggers a data-source fetch through
  * the shared `SchedulerLazyLoadingPlugin` whenever the range changes. The first fetch
- * is gated on `state.hasMounted` so it doesn't run before React mounts the component.
+ * is gated on `state.hasInitialized` so it doesn't run against the constructor-only
+ * initial state.
  */
 export class EventTimelinePremiumLazyLoadingPlugin<
   TEvent extends object,
@@ -19,12 +20,16 @@ export class EventTimelinePremiumLazyLoadingPlugin<
   EventTimelinePremiumState,
   EventTimelinePremiumParameters<TEvent, any>
 > {
+  private isMicrotaskScheduled = false;
+
+  private pendingIsInstantLoad = false;
+
   constructor(store: EventTimelinePremiumStore<TEvent, any>) {
     super(store);
 
     store.registerStoreEffect(
       (state) => {
-        if (!state.hasMounted) {
+        if (!state.hasInitialized) {
           return null;
         }
         const viewConfig = eventTimelinePremiumPresetSelectors.config(state);
@@ -36,15 +41,31 @@ export class EventTimelinePremiumLazyLoadingPlugin<
           return;
         }
 
-        const viewConfig = eventTimelinePremiumPresetSelectors.config(store.state);
-        const range = { start: viewConfig.start, end: viewConfig.end };
-        const isInstantLoad = previousKey === null;
-        // Defer the fetch out of the subscriber callback so the state update that
-        // triggered this effect commits before the data manager starts mutating state
-        // again (otherwise the fetch's `set('isLoading', true)` re-enters the same
-        // notification cycle and can interleave with the current update's listeners).
+        if (previousKey === null) {
+          this.pendingIsInstantLoad = true;
+        }
+        if (this.isMicrotaskScheduled) {
+          return;
+        }
+        this.isMicrotaskScheduled = true;
+
+        // Defer + coalesce: avoids re-entering the current notification cycle and
+        // collapses multiple range-changing updates in the same commit into one fetch.
         queueMicrotask(() => {
-          this.queueDataFetchForRange(range, isInstantLoad);
+          this.isMicrotaskScheduled = false;
+          const isInstantLoad = this.pendingIsInstantLoad;
+          this.pendingIsInstantLoad = false;
+
+          const viewConfig = eventTimelinePremiumPresetSelectors.config(store.state);
+          const range = { start: viewConfig.start, end: viewConfig.end };
+          this.queueDataFetchForRange(range, isInstantLoad).catch((error) => {
+            if (process.env.NODE_ENV !== 'production') {
+              console.error(
+                'MUI X Scheduler: unexpected rejection from queueDataFetchForRange',
+                error,
+              );
+            }
+          });
         });
       },
     );

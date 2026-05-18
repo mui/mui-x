@@ -145,7 +145,7 @@ export class SchedulerDataManager {
     // Stage the new ranges (Overwriting previous rapid inputs)
     this.stagedRanges = [...(this.stagedRanges ?? []), ...ranges];
 
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve, reject) => {
       this.pendingDebounceResolve = resolve;
       this.timeoutManager.startTimeout('debounce', this.debounceMs, async () => {
         this.pendingDebounceResolve = null;
@@ -155,8 +155,12 @@ export class SchedulerDataManager {
           this.stagedRanges = null;
         }
 
-        await this.processQueue();
-        resolve();
+        try {
+          await this.processQueue();
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
       });
     });
   };

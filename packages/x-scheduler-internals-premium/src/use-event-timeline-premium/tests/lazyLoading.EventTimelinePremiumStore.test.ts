@@ -71,13 +71,13 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       updateEvents: noopUpdateEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    // Construct the store but skip the mount notification — `hasMounted` stays false
+    // Construct the store but skip the parameters update — `hasInitialized` stays false
     // so the lazy-loading effect must keep its selector at `null` and never fire.
     const store = new EventTimelinePremiumStore(params, adapter);
 
     // Mutate the visible date so the range key would change if the selector were live.
-    // With `hasMounted=false`, the selector must keep returning `null` and the effect
-    // must not run. Regression test: if a future change toggles `hasMounted` early,
+    // With `hasInitialized=false`, the selector must keep returning `null` and the effect
+    // must not run. Regression test: if a future change toggles `hasInitialized` early,
     // this navigation would trigger an extra fetch.
     store.goToNextVisibleDate(noopUIEvent);
 
@@ -146,6 +146,31 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     expect(dataSource.getEvents.calledOnce).to.equal(true);
 
     store.setPreset('monthAndYear', noopUIEvent);
+
+    await flushEffect();
+    await flushDebounce();
+
+    expect(dataSource.getEvents.calledTwice).to.equal(true);
+  });
+
+  it('should coalesce multiple range-changing updates within the same tick into a single fetch', async () => {
+    const dataSource = {
+      getEvents: spy(async () => buildEvents()),
+      updateEvents: noopUpdateEvents,
+    };
+    const params = { ...DEFAULT_PARAMS, dataSource };
+    const store = new EventTimelinePremiumStore(params, adapter);
+    store.updateStateFromParameters(params, adapter);
+
+    await flushEffect();
+    await flushDebounce();
+    expect(dataSource.getEvents.calledOnce).to.equal(true);
+
+    // Two synchronous navigations within the same tick. Without coalescing, the
+    // effect captures a different range on each fire and schedules two microtasks,
+    // producing a wasted fetch for the intermediate range.
+    store.goToNextVisibleDate(noopUIEvent);
+    store.goToNextVisibleDate(noopUIEvent);
 
     await flushEffect();
     await flushDebounce();

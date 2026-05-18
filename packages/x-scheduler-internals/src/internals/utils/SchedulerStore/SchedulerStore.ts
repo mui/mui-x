@@ -251,6 +251,18 @@ export class SchedulerStore<
   };
 
   /**
+   * Removes the error with the given key from `state.errors`.
+   * The key is the one assigned by the producer (e.g. the lazy-loading plugin)
+   * at push time and surfaced through the `StoredError` entries.
+   */
+  public dismissError = (key: string) => {
+    this.set(
+      'errors',
+      this.state.errors.filter((entry) => entry.key !== key),
+    );
+  };
+
+  /**
    * Registers an effect to be run when the value returned by the selector changes.
    */
   public registerStoreEffect = <Value>(
