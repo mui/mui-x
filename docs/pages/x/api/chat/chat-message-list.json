@@ -3,7 +3,8 @@
     "autoScroll": {
       "type": { "name": "union", "description": "{ buffer?: number }<br>&#124;&nbsp;bool" },
       "default": "true"
-    }
+    },
+    "renderItem": { "type": { "name": "func" } }
   },
   "name": "ChatMessageList",
   "imports": [

@@ -54,6 +54,9 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the message meta element"
     },
+    "noAvatar": {
+      "description": "Applied when the avatar slot is hidden (<code>slots.avatar: null</code>) so the grid drops the avatar track."
+    },
     "roleAssistant": { "description": "Applied when the message role is &#39;assistant&#39;" },
     "roleUser": { "description": "Applied when the message role is &#39;user&#39;" },
     "root": {
