@@ -213,9 +213,9 @@ describe('lane-positions', () => {
         keysByDay: new Map([[days[0].key, ['ghost']]]),
         dayKeys: [days[0].key],
       };
-      expect(() =>
-        computeDayGridLanes({ adapter, rows: [[days[0]]], occurrencesByDay }),
-      ).to.throw(/MUI X Scheduler: occurrence "ghost"/);
+      expect(() => computeDayGridLanes({ adapter, rows: [[days[0]]], occurrencesByDay })).to.throw(
+        /MUI X Scheduler: occurrence "ghost"/,
+      );
     });
   });
 
