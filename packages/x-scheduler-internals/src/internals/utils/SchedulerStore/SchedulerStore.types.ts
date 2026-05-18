@@ -17,16 +17,9 @@ import {
   SchedulerEventSide,
 } from '../../../models';
 import { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
-
-export type SchedulerPlan = 'community' | 'premium';
+import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
 export interface SchedulerState<TEvent extends object = any> {
-  /**
-   * The plan of the scheduler instance.
-   * Derived from the `instanceName` of the store.
-   * Used to gate premium features like recurring events.
-   */
-  plan: SchedulerPlan;
   /**
    * The adapter of the date library.
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
@@ -169,6 +162,10 @@ export interface SchedulerState<TEvent extends object = any> {
    * The errors that occurred during data fetching.
    */
   errors: Error[];
+  /**
+   * Plugin that provides recurring-events support. `null` when not attached.
+   */
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
 }
 
 export interface SchedulerDataSource<TEvent extends object> {
