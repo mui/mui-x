@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store/useStore';
 import {
+  OCCURRENCE_PLACEHOLDER_KEY,
   OccurrenceLanePosition,
   SchedulerEventOccurrencePlaceholder,
   SchedulerResourceId,
@@ -37,11 +38,9 @@ export interface TimelineRowPlaceholder {
 export function usePlaceholderInRow(
   resourceId: SchedulerResourceId | null,
 ): TimelineRowPlaceholder | null {
-  // Context hooks
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  // Selector hooks
   const rawPlaceholder = useStore(
     store,
     timelineOccurrencePlaceholderSelectors.placeholderInResource,
@@ -71,8 +70,8 @@ export function usePlaceholderInRow(
     const endProcessed = processDate(rawPlaceholder.end, adapter);
     const timezone = adapter.getTimezone(rawPlaceholder.start);
     const sharedOccurrence: SchedulerEventOccurrencePlaceholder = {
-      id: originalEventId ?? 'occurrence-placeholder',
-      key: 'occurrence-placeholder',
+      id: originalEventId ?? OCCURRENCE_PLACEHOLDER_KEY,
+      key: OCCURRENCE_PLACEHOLDER_KEY,
       title: originalEvent ? originalEvent.title : '',
       resource: rawPlaceholder.resourceId ?? originalEvent?.resource,
       displayTimezone: {

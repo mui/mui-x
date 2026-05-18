@@ -1,3 +1,4 @@
+import { fastArrayCompare } from '@mui/x-internals/fastArrayCompare';
 import type {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
@@ -103,8 +104,6 @@ export function computeDayGridLanes(parameters: {
 
       const keys = occurrencesByDay.keysByDay.get(day.key) ?? [];
 
-      // 1. Filter occurrences that need a lane. Resolve to occurrence objects via byKey
-      //    so the algorithm can rely on `displayTimezone.end` for cellSpan computation.
       const eligible: SchedulerEventOccurrence[] = [];
       for (const key of keys) {
         const occurrence = occurrencesByDay.byKey.get(key);
@@ -121,7 +120,6 @@ export function computeDayGridLanes(parameters: {
         }
       }
 
-      // 2. Sort and assign lanes.
       const sorted = sortEventOccurrences(eligible);
       for (const occurrence of sorted) {
         // Look at the previous day in THE SAME ROW. The first day of a row never
@@ -180,7 +178,7 @@ export function computeDayGridLanes(parameters: {
         }
       }
 
-      // 3. Sort by lane so events stack visually top-to-bottom (lane 1 first).
+      // Sort by lane so events stack visually top-to-bottom (lane 1 first).
       const positionByKeyForSort = dayWorkBucket.positionByKey;
       dayWorkBucket.orderedKeys.sort(
         (a, b) =>
@@ -375,21 +373,6 @@ function internDayGridSlot(
   return { firstLane: position.firstLane, lastLane: position.lastLane, cellSpan, isInvisible };
 }
 
-function arraysShallowEqual<T>(a: readonly T[], b: readonly T[]): boolean {
-  if (a === b) {
-    return true;
-  }
-  if (a.length !== b.length) {
-    return false;
-  }
-  for (let i = 0; i < a.length; i += 1) {
-    if (a[i] !== b[i]) {
-      return false;
-    }
-  }
-  return true;
-}
-
 /**
  * A row's day-grid layouts can be reused when every day in the row has the same
  * occurrence keys (in the same order) AND every referenced occurrence object is
@@ -413,7 +396,7 @@ function canReuseDayGridRow(
     if (newKeys === undefined || oldKeys === undefined) {
       return false;
     }
-    if (!arraysShallowEqual(newKeys, oldKeys)) {
+    if (!fastArrayCompare(newKeys, oldKeys)) {
       return false;
     }
     for (const key of newKeys) {
@@ -468,7 +451,7 @@ function canReuseTimedContainer(
   if (oldKeys === undefined) {
     return false;
   }
-  if (!arraysShallowEqual(newKeys, oldKeys)) {
+  if (!fastArrayCompare(newKeys, oldKeys)) {
     return false;
   }
   for (const key of newKeys) {

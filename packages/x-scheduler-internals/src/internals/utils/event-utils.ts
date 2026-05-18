@@ -106,12 +106,10 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
   };
 
   for (const event of events) {
-    // STEP 1: Skip events from resources that are not visible
     if (event.resource && visibleResources[event.resource] === false) {
       continue;
     }
 
-    // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
     if (event.displayTimezone.rrule) {
       // Without the premium recurring-events plugin attached, recurring events
       // are not expanded into occurrences — they are treated as single non-recurring events.
@@ -128,7 +126,6 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
         continue;
       }
 
-      // TODO: Check how this behave when the occurrence is between start and end but not in the visible days (e.g: hidden week end).
       const recurringOccurrences = recurringEventsPlugin.getOccurrencesForVisibleDays(
         event,
         start,
@@ -144,7 +141,6 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
       continue;
     }
 
-    // STEP 2-B: Non-recurring event processing, skip events that are not within the visible days
     if (
       adapter.isAfter(event.displayTimezone.start.value, end) ||
       adapter.isBefore(event.displayTimezone.end.value, start)

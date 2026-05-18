@@ -1,5 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
+import { fastArrayCompare } from '@mui/x-internals/fastArrayCompare';
 import { warnOnce } from '@mui/x-internals/warning';
 import type {
   SchedulerEventOccurrence,
@@ -47,21 +48,6 @@ const EMPTY_TIME_GRID_POSITIONS: SchedulerOccurrencePositions<OccurrenceContaine
   byContainer: new Map(),
   maxLane: 1,
 };
-
-function arraysShallowEqual<T>(a: readonly T[], b: readonly T[]): boolean {
-  if (a === b) {
-    return true;
-  }
-  if (a.length !== b.length) {
-    return false;
-  }
-  for (let i = 0; i < a.length; i += 1) {
-    if (a[i] !== b[i]) {
-      return false;
-    }
-  }
-  return true;
-}
 
 // `state.viewConfig` is null during the very first render of a view (the view registers
 // its config in `useOnMount`, which runs after render). The wrapper selectors below
@@ -177,14 +163,13 @@ const defaultVisibleOccurrencesSelector = createSelectorMemoized(
       }
     }
 
-    // Layer 3 reuse: when a day's keys array content matches the previous run's,
-    // swap in the previous reference so downstream `arraysShallowEqual` checks
-    // short-circuit on identity.
+    // Reuse the previous keys[] reference per day when content is unchanged, so
+    // downstream selectors keyed on `keysByDay.get(dayKey)` short-circuit on identity.
     if (previousVisibleOccurrences !== null) {
       for (const dayKey of dayKeys) {
         const newKeys = keysByDay.get(dayKey)!;
         const oldKeys = previousVisibleOccurrences.keysByDay.get(dayKey);
-        if (oldKeys !== undefined && arraysShallowEqual(newKeys, oldKeys)) {
+        if (oldKeys !== undefined && fastArrayCompare(newKeys, oldKeys)) {
           keysByDay.set(dayKey, oldKeys as string[]);
         }
       }

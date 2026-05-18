@@ -56,14 +56,13 @@ const agendaCombinedSelector = createSelectorMemoized(
   ): AgendaCombined => {
     const amount = AGENDA_VIEW_DAYS_AMOUNT;
 
-    // Mutable working set: each chunk extension appends to these maps in place,
-    // avoiding a full re-expansion of events for the entire `accumulatedDays` window.
+    // Each chunk extension appends to these maps in place, avoiding a full re-expansion
+    // of events for the entire `accumulatedDays` window.
     const accumulatedDays: SchedulerProcessedDate[] = [];
     const byKey = new Map<string, SchedulerEventOccurrence>();
     const keysByDay = new Map<string, string[]>();
     const dayKeys: string[] = [];
 
-    // 1. First chunk of days.
     appendChunk({
       adapter,
       chunk: getDayList({
@@ -90,8 +89,8 @@ const agendaCombinedSelector = createSelectorMemoized(
       };
     }
 
-    // 2. Drop empty days, extending forward in chunks until we collect `amount` days
-    //    that contain occurrences (or until the horizon limit is reached).
+    // Drop empty days, extending forward in chunks until we collect `amount` days that
+    // contain occurrences (or until the horizon limit is reached).
     let daysWithEvents = accumulatedDays
       .filter((day) => (keysByDay.get(day.key)?.length ?? 0) > 0)
       .slice(0, amount);

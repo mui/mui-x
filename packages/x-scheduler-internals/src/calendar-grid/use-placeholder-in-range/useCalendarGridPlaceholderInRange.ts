@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store/useStore';
 import {
+  OCCURRENCE_PLACEHOLDER_KEY,
   SchedulerEventOccurrencePlaceholder,
   SchedulerProcessedDate,
   TemporalSupportedObject,
@@ -68,8 +69,8 @@ export function useCalendarGridPlaceholderInRange(
     const endProcessed = processDate(rawPlaceholder.end, adapter);
     const timezone = adapter.getTimezone(rawPlaceholder.start);
     const sharedOccurrence: SchedulerEventOccurrencePlaceholder = {
-      key: 'occurrence-placeholder',
-      id: originalEventId ?? 'occurrence-placeholder',
+      key: OCCURRENCE_PLACEHOLDER_KEY,
+      id: originalEventId ?? OCCURRENCE_PLACEHOLDER_KEY,
       title: originalEvent ? originalEvent.title : '',
       displayTimezone: {
         start: startProcessed,

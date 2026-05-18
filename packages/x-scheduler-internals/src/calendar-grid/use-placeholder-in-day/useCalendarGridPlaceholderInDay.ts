@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store/useStore';
-import { SchedulerEventOccurrencePlaceholder, SchedulerProcessedDate } from '../../models';
+import {
+  OCCURRENCE_PLACEHOLDER_KEY,
+  SchedulerEventOccurrencePlaceholder,
+  SchedulerProcessedDate,
+} from '../../models';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
@@ -62,8 +66,8 @@ export function useCalendarGridPlaceholderInDay(
     }
 
     const sharedProperties = {
-      key: 'occurrence-placeholder',
-      id: originalEventId ?? 'occurrence-placeholder',
+      key: OCCURRENCE_PLACEHOLDER_KEY,
+      id: originalEventId ?? OCCURRENCE_PLACEHOLDER_KEY,
       title: originalEvent ? originalEvent.title : '',
     };
 

@@ -30,26 +30,21 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
-    // Rendering props
     className,
     render,
     style,
-    // Internal props
     resourceId,
     addPropertiesToDroppedEvent,
     children,
-    // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  // Context hooks
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
   const { rowRef, listItemRef, index, hasFocus, handleKeyDown, handleFocus } =
     useTimelineGridRowKeyboard({ columnType: 'events' });
 
-  // Selector hooks
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const maxLane = useStore(
     store,
@@ -57,7 +52,6 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
     resourceId,
   );
 
-  // Feature hooks
   const { getCursorPositionInElementMs, ref: dropTargetRef } = useEventRowDropTarget({
     resourceId,
     addPropertiesToDroppedEvent,

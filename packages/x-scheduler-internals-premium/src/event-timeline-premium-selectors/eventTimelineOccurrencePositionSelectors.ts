@@ -1,5 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
+import { fastArrayCompare } from '@mui/x-internals/fastArrayCompare';
 import {
   OccurrenceContainerLayout,
   OccurrenceLanePosition,
@@ -35,21 +36,6 @@ const EMPTY_POSITIONS: SchedulerOccurrencePositions<OccurrenceContainerLayout> =
   byContainer: new Map(),
   maxLane: 1,
 };
-
-function arraysShallowEqual<T>(a: readonly T[], b: readonly T[]): boolean {
-  if (a === b) {
-    return true;
-  }
-  if (a.length !== b.length) {
-    return false;
-  }
-  for (let i = 0; i < a.length; i += 1) {
-    if (a[i] !== b[i]) {
-      return false;
-    }
-  }
-  return true;
-}
 
 /**
  * Visible time window for the timeline. Split out of `eventTimelinePremiumPresetSelectors.config`
@@ -89,7 +75,7 @@ const visibleOccurrencesSelector = createSelectorMemoized(
       // Reuse the previous array reference when content is unchanged so per-resource
       // subscribers (`occurrenceKeysForResource`) don't see spurious changes.
       const previousKeys = previousVisibleOccurrences?.keysByResource.get(resource.id);
-      if (previousKeys !== undefined && arraysShallowEqual(keys, previousKeys)) {
+      if (previousKeys !== undefined && fastArrayCompare(keys, previousKeys)) {
         keysByResource.set(resource.id, previousKeys);
       } else {
         keysByResource.set(resource.id, keys);
