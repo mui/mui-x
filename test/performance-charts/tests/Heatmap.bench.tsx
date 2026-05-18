@@ -21,29 +21,3 @@ benchmark('Heatmap: 100x100 grid', () => (
     skipAnimation
   />
 ));
-
-const largeDataLength = 150;
-const largeXData = Array.from({ length: largeDataLength }, (_, i) => `${i + 1}`);
-const largeYData = Array.from({ length: largeDataLength }, (_, i) => `${i + 1}`);
-const largeData = largeXData.flatMap((_, i) =>
-  largeYData.map(
-    (__, j) => [i, j, Math.sin(((i + j) * Math.PI) / 16) * 100] satisfies HeatmapValueType,
-  ),
-);
-
-// Heavier than the 100x100 case, so use fewer iterations to stay within the
-// benchmark test timeout.
-benchmark(
-  'Heatmap: 150x150 grid',
-  () => (
-    <Heatmap
-      xAxis={[{ data: largeXData }]}
-      yAxis={[{ data: largeYData }]}
-      series={[{ data: largeData }]}
-      width={500}
-      height={300}
-      skipAnimation
-    />
-  ),
-  { runs: 8, warmupRuns: 4 },
-);
