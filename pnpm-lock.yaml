@@ -2462,9 +2462,6 @@ importers:
       x-license-v8:
         specifier: npm:@mui/x-license@8.26.0
         version: '@mui/x-license@8.26.0(@types/react@19.2.14)(react@19.2.6)'
-      x-license-v9:
-        specifier: npm:@mui/x-license@9.1.0
-        version: '@mui/x-license@9.1.0(@types/react@19.2.14)(react@19.2.6)'
     devDependencies:
       vitest:
         specifier: 'catalog:'
@@ -4534,16 +4531,6 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/utils@9.0.0':
-    resolution: {integrity: sha512-bQcqyg/gjULUqTuyUjSAFr6LQGLvtkNtDbJerAtoUn9kGZ0hg5QJiN1PLHMLbeFpe3te1831uq7GFl2ITokGdg==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
   '@mui/utils@9.0.1':
     resolution: {integrity: sha512-f3UO3jNN1pYg5zxqXC81Bvv8hx5ACcYc0387382ZI7M5ono1heIwHYLrKsz85myguWdeVKPRZGmDdynWUBjK2g==}
     engines: {node: '>=14.0.0'}
@@ -4566,12 +4553,6 @@ packages:
 
   '@mui/x-internals@8.26.0':
     resolution: {integrity: sha512-B9OZau5IQUvIxwpJZhoFJKqRpmWf5r0yMmSXjQuqb5WuqM755EuzWJOenY48denGoENzMLT8hQpA0hRTeU2IPA==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  '@mui/x-internals@9.1.0':
-    resolution: {integrity: sha512-fVezTa1lU+Hb3y9UMI8D/iWXADhs0I8PaZqoh2LOUXjGEUJmKqwsRD19ZXInZsH2yu+YS0dqYMPDvzjYTTyo+Q==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -4602,18 +4583,8 @@ packages:
     peerDependencies:
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@mui/x-license@9.1.0':
-    resolution: {integrity: sha512-7dPBfDtd4Ml1w5XJ3PPbomvbMF2AlpHpD/fQJhNk5VWpqaGKjSatwuNPhHwbigyxk4xDwQGs6IJ2n9rA0ygP6Q==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-
   '@mui/x-telemetry@8.20.0':
     resolution: {integrity: sha512-lmtcx620eryHY4uvVSV8F1IC0h2O6VY4Zifkbtq1LFHz75hUvE3JrERhABlo5qfQhZJEZuMTTxC2NDVCcAUI7Q==}
-    engines: {node: '>=14.0.0'}
-
-  '@mui/x-telemetry@9.1.0':
-    resolution: {integrity: sha512-PSmsRmum+gzwSJ2C6VoZYsUeZAm6WUJWNGhcmYqCC+JvIUw9JXElPQFkmP7DDyzcfjdOp/TlY2eQF7Y3h6xsQQ==}
     engines: {node: '>=14.0.0'}
 
   '@napi-rs/keyring-darwin-arm64@1.3.0':
@@ -14201,18 +14172,6 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.14
 
-  '@mui/utils@9.0.0(@types/react@19.2.14)(react@19.2.6)':
-    dependencies:
-      '@babel/runtime': 7.29.2
-      '@mui/types': 9.0.0(@types/react@19.2.14)
-      '@types/prop-types': 15.7.15
-      clsx: 2.1.1
-      prop-types: 15.8.1
-      react: 19.2.6
-      react-is: 19.2.4
-    optionalDependencies:
-      '@types/react': 19.2.14
-
   '@mui/utils@9.0.1(@types/react@19.2.14)(react@19.2.6)':
     dependencies:
       '@babel/runtime': 7.29.2
@@ -14256,16 +14215,6 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-internals@9.1.0(@types/react@19.2.14)(react@19.2.6)':
-    dependencies:
-      '@babel/runtime': 7.29.2
-      '@mui/utils': 9.0.0(@types/react@19.2.14)(react@19.2.6)
-      react: 19.2.6
-      reselect: 5.1.1
-      use-sync-external-store: 1.6.0(react@19.2.6)
-    transitivePeerDependencies:
-      - '@types/react'
-
   '@mui/x-license-pro@5.17.12(@types/react@19.2.14)(react@19.2.6)':
     dependencies:
       '@babel/runtime': 7.29.2
@@ -14301,30 +14250,12 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@mui/x-license@9.1.0(@types/react@19.2.14)(react@19.2.6)':
-    dependencies:
-      '@babel/runtime': 7.29.2
-      '@mui/utils': 9.0.0(@types/react@19.2.14)(react@19.2.6)
-      '@mui/x-internals': 9.1.0(@types/react@19.2.14)(react@19.2.6)
-      '@mui/x-telemetry': 9.1.0
-      react: 19.2.6
-    transitivePeerDependencies:
-      - '@types/react'
-
   '@mui/x-telemetry@8.20.0':
     dependencies:
       '@babel/runtime': 7.29.2
       '@fingerprintjs/fingerprintjs': 3.4.2
       ci-info: 4.4.0
       conf: 11.0.2
-      is-docker: 4.0.0
-      node-machine-id: 1.1.12
-
-  '@mui/x-telemetry@9.1.0':
-    dependencies:
-      '@babel/runtime': 7.29.2
-      '@fingerprintjs/fingerprintjs': 3.4.2
-      ci-info: 4.4.0
       is-docker: 4.0.0
       node-machine-id: 1.1.12
 
