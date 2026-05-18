@@ -103,7 +103,7 @@ No additional configuration is needed.
 - `palette.divider` is used for borders and separators
 
 Wrapping `ChatBox` in a `ThemeProvider` with custom values is enough to retheme the entire surface.
-See [Styling—Custom theme](/x/react-chat/customization/styling/#custom-theme) for details.
+See [Styling—Theme component overrides](/x/react-chat/customization/styling/#theme-component-overrides) for details.
 
 ## TypeScript theme augmentation
 
@@ -141,4 +141,4 @@ All documentation for Community components and features also applies to their Pr
 
 ## API
 
-- [`ChatBox`](/x/api/react-chat/chat-box/)
+- [`ChatBox`](/x/api/chat/chat-box/)
