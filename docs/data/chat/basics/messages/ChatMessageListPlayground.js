@@ -4,7 +4,10 @@ import Typography from '@mui/material/Typography';
 import { ChatMessageList } from '@mui/x-chat';
 
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
-import { ChatChrome, ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
+import {
+  ChatChrome,
+  ScopedChat,
+} from 'docs/src/modules/components/chat-playground/sharedProviders';
 import { MessageBubble } from 'docs/src/modules/components/chat-playground/MessageBubble';
 import {
   ChoiceControl,

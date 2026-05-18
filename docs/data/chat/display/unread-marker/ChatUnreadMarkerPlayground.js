@@ -5,7 +5,10 @@ import { ChatUnreadMarker } from '@mui/x-chat';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
 import { MessageBubble } from 'docs/src/modules/components/chat-playground/MessageBubble';
-import { DividerLabel, NumberControl } from 'docs/src/modules/components/chat-playground/controls';
+import {
+  DividerLabel,
+  NumberControl,
+} from 'docs/src/modules/components/chat-playground/controls';
 import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
 import { users } from 'docs/src/modules/components/chat-playground/data';
 
