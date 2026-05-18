@@ -266,7 +266,9 @@ export class SchedulerStore<
   /**
    * Appends an error to `state.errors`, wrapping non-Error rejections to preserve
    * the original payload via `cause`. The store owns the key counter so uniqueness
-   * is enforced in one place.
+   * is enforced in one place. Does not dedupe — pushing the same `Error` instance
+   * twice produces two entries (intentional; e.g. a retried failure that should
+   * re-display after the previous one was dismissed).
    * @internal
    */
   public pushError = (error: unknown) => {

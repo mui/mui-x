@@ -160,6 +160,68 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     expect(store.state.eventIdList).to.include('b');
   });
 
+  it('should drop a late-arriving stale fetch whose range overlaps the latest one', async () => {
+    // A=July (stale, returns deleted events), B=July+August (latest, server says July is empty).
+    // A must not resurrect July events into B's authoritative answer.
+    let resolveA: (events: TestEvent[]) => void = () => {};
+    let resolveB: (events: TestEvent[]) => void = () => {};
+    const staleJuly: TestEvent[] = [
+      {
+        id: 'j1',
+        start: '2025-07-01T00:00:00.000Z',
+        end: '2025-07-01T11:00:00.000Z',
+        title: 'Stale July',
+      },
+    ];
+    const augustOnly: TestEvent[] = [
+      {
+        id: 'a1',
+        start: '2025-08-01T00:00:00.000Z',
+        end: '2025-08-01T11:00:00.000Z',
+        title: 'Authoritative August',
+      },
+    ];
+    let callIndex = 0;
+    const dataSource = {
+      getEvents: spy(
+        () =>
+          new Promise<TestEvent[]>((resolve) => {
+            callIndex += 1;
+            if (callIndex === 1) {
+              resolveA = resolve;
+            } else {
+              resolveB = resolve;
+            }
+          }),
+      ),
+      updateEvents: noopUpdateEvents,
+    };
+    const params = {
+      ...DEFAULT_PARAMS,
+      defaultPreset: 'dayAndWeek' as const,
+    };
+    const store = new EventTimelinePremiumStore({ ...params, dataSource }, adapter);
+    store.updateStateFromParameters({ ...params, dataSource }, adapter);
+    await flushEffect();
+    await flushDebounce();
+
+    // Expand the range so B's request covers A's plus more (overlap).
+    store.setPreset('monthAndYear', noopUIEvent);
+    await flushEffect();
+    await flushDebounce();
+    expect(dataSource.getEvents.calledTwice).to.equal(true);
+
+    resolveB(augustOnly);
+    await flushEffect();
+    expect(store.state.eventIdList).to.deep.equal(['a1']);
+
+    // A's late arrival carries July events that B's authoritative response excluded.
+    // The plugin must drop A entirely — no resurrection into state nor cache.
+    resolveA(staleJuly);
+    await flushEffect();
+    expect(store.state.eventIdList).to.deep.equal(['a1']);
+  });
+
   it('should NOT fetch again when visibleDate changes but the range stays the same', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
@@ -227,6 +289,14 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushDebounce();
 
     expect(dataSource.getEvents.calledTwice).to.equal(true);
+
+    // Third navigation AFTER the microtask drained. Catches regressions where
+    // `isFetchScheduled` isn't reset and the lazy loader freezes after the first batch.
+    store.goToNextVisibleDate(noopUIEvent);
+    await flushEffect();
+    await flushDebounce();
+
+    expect(dataSource.getEvents.callCount).to.equal(3);
   });
 
   it('should not crash and not fetch anything when no dataSource is provided', async () => {

@@ -118,6 +118,38 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
     expect(dataSource.getEvents.calledTwice).to.equal(true);
   });
 
+  it('should coalesce multiple range-changing updates within the same tick into a single fetch', async () => {
+    const dataSource = {
+      getEvents: spy(async () => buildEvents()),
+      updateEvents: noopUpdateEvents,
+    };
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    store.setViewConfig(buildViewConfig());
+
+    await flushEffect();
+    await flushDebounce();
+    expect(dataSource.getEvents.calledOnce).to.equal(true);
+
+    // Two synchronous navigations within the same tick. Without coalescing, the
+    // effect schedules two microtasks producing a wasted fetch for the
+    // intermediate range.
+    store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
+    store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 60), noopUIEvent);
+
+    await flushEffect();
+    await flushDebounce();
+
+    expect(dataSource.getEvents.calledTwice).to.equal(true);
+
+    // Third navigation AFTER the microtask drained. Catches regressions where
+    // `isFetchScheduled` isn't reset and the lazy loader freezes after the first batch.
+    store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 90), noopUIEvent);
+    await flushEffect();
+    await flushDebounce();
+
+    expect(dataSource.getEvents.callCount).to.equal(3);
+  });
+
   it('should not overwrite the visible range with a late-arriving fetch from a stale range', async () => {
     let resolveA: (events: TestEvent[]) => void = () => {};
     let resolveB: (events: TestEvent[]) => void = () => {};

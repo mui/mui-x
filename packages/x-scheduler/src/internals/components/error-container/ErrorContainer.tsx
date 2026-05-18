@@ -1,4 +1,7 @@
 'use client';
+// TODO #22309: unify with EventTimelinePremiumErrorContainer. Both variants are
+// structurally identical now; the only differences left are the styled-component names
+// and the styled-context hook.
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';

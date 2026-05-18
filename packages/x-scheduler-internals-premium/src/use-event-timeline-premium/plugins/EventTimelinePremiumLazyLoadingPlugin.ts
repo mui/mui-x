@@ -7,8 +7,10 @@ import type { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 import { eventTimelinePremiumPresetSelectors } from '../../event-timeline-premium-selectors';
 
 /**
- * The first fetch is gated on `state.hasInitialized` so it doesn't run against
- * the constructor-only initial state (the visible range is derivable from defaults).
+ * The first fetch is gated on `state.hasInitialized`: without it, the selector
+ * would return the same key at construction and at mount (defaults are enough
+ * to compute it), so `registerStoreEffect` would never fire its first transition
+ * and the initial fetch would never trigger.
  */
 export class EventTimelinePremiumLazyLoadingPlugin<
   TEvent extends object,
@@ -17,10 +19,6 @@ export class EventTimelinePremiumLazyLoadingPlugin<
   EventTimelinePremiumState,
   EventTimelinePremiumParameters<TEvent, any>
 > {
-  private isMicrotaskScheduled = false;
-
-  private pendingIsInstantLoad = false;
-
   constructor(store: EventTimelinePremiumStore<TEvent, any>) {
     super(store);
 
@@ -38,32 +36,10 @@ export class EventTimelinePremiumLazyLoadingPlugin<
           return;
         }
 
-        if (previousKey === null) {
-          this.pendingIsInstantLoad = true;
-        }
-        if (this.isMicrotaskScheduled) {
-          return;
-        }
-        this.isMicrotaskScheduled = true;
-
-        // Defer + coalesce: avoids re-entering the current notification cycle and
-        // collapses multiple range-changing updates in the same commit into one fetch.
-        queueMicrotask(() => {
-          this.isMicrotaskScheduled = false;
-          const isInstantLoad = this.pendingIsInstantLoad;
-          this.pendingIsInstantLoad = false;
-
+        this.scheduleFetch(() => {
           const viewConfig = eventTimelinePremiumPresetSelectors.config(store.state);
-          const range = { start: viewConfig.start, end: viewConfig.end };
-          this.queueDataFetchForRange(range, isInstantLoad).catch((error) => {
-            if (process.env.NODE_ENV !== 'production') {
-              console.error(
-                'MUI X Scheduler: unexpected rejection from queueDataFetchForRange',
-                error,
-              );
-            }
-          });
-        });
+          return { start: viewConfig.start, end: viewConfig.end };
+        }, previousKey === null);
       },
     );
   }

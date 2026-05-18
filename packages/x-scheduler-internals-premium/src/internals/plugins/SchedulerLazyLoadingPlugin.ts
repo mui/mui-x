@@ -19,6 +19,61 @@ export class SchedulerLazyLoadingPlugin<
   private dataManager: SchedulerDataManager | null = null;
   private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
 
+  private isFetchScheduled = false;
+  private pendingIsInstantLoad = false;
+  private pendingComputeRange:
+    | (() => { start: TemporalSupportedObject; end: TemporalSupportedObject })
+    | null = null;
+
+  /**
+   * Range key of the most recently requested fetch. Used to skip stale fetches:
+   * if a request resolves while a different range has been requested since, its
+   * cache write + state update are dropped so the latest range's data isn't
+   * polluted by stale, possibly-deleted events.
+   */
+  private latestRequestedRangeKey: string | null = null;
+
+  /**
+   * Coalesces multiple calls within the same tick into one microtask. The latest
+   * `computeRange` wins; `isInstantLoad=true` is sticky across coalesced calls.
+   */
+  protected scheduleFetch = (
+    computeRange: () => { start: TemporalSupportedObject; end: TemporalSupportedObject },
+    isInstantLoad: boolean,
+  ) => {
+    if (isInstantLoad) {
+      this.pendingIsInstantLoad = true;
+    }
+    this.pendingComputeRange = computeRange;
+
+    if (this.isFetchScheduled) {
+      return;
+    }
+    this.isFetchScheduled = true;
+
+    queueMicrotask(async () => {
+      try {
+        this.isFetchScheduled = false;
+        const instantLoad = this.pendingIsInstantLoad;
+        const compute = this.pendingComputeRange;
+        this.pendingIsInstantLoad = false;
+        this.pendingComputeRange = null;
+        if (!compute) {
+          return;
+        }
+        const range = compute();
+        await this.queueDataFetchForRange(range, instantLoad);
+      } catch (error) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(
+            'MUI X Scheduler: unexpected error in lazy-loading microtask',
+            error,
+          );
+        }
+      }
+    });
+  };
+
   // TODO #22418: add a dispose lifecycle. The `dataManager` keeps timers (debounce), the
   // `eventsUpdated` subscription below is never unsubscribed, and consumer plugins
   // attach `registerStoreEffect` callbacks. After unmount, in-flight fetches
@@ -47,6 +102,7 @@ export class SchedulerLazyLoadingPlugin<
     try {
       if (this.dataManager) {
         const { adapter } = this.store.state;
+        this.latestRequestedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
 
         // Flip `isLoading` synchronously so the skeleton shows immediately,
         // before any debounce delay on the queued path.
@@ -92,7 +148,7 @@ export class SchedulerLazyLoadingPlugin<
       )
     ) {
       try {
-        const allCachedEvents = this.cache?.getAll() || [];
+        const allCachedEvents = this.cache.getAll();
         const eventsState = buildEventsState(
           { ...this.store.parameters, events: allCachedEvents } as Parameters,
           adapter,
@@ -114,14 +170,24 @@ export class SchedulerLazyLoadingPlugin<
     }
 
     try {
+      const fetchedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
       const events = await dataSource.getEvents(range.start, range.end);
+
+      // Drop the result if a more recent range has been requested since this
+      // fetch started — its events are now stale relative to the latest range
+      // (e.g. a server-side delete could be hidden by re-introducing them).
+      if (this.latestRequestedRangeKey !== fetchedRangeKey) {
+        return;
+      }
+
       this.cache!.setRange(
         adapter.getTime(range.start),
         adapter.getTime(adapter.endOfDay(range.end)),
         events ?? [],
       );
-      // Build from the full cache so a late-arriving stale fetch can't drop the visible range's events.
-      const allCachedEvents = this.cache!.getAll();
+      // Build from the full cache so disjoint already-cached ranges stay visible
+      // when the visible range expands to cover them.
+      const allCachedEvents = this.cache.getAll();
       const eventsState = buildEventsState(
         { ...this.store.parameters, events: allCachedEvents } as Parameters,
         adapter,

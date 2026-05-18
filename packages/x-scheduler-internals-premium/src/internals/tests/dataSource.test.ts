@@ -1,6 +1,7 @@
 import { spy } from 'sinon';
 import { describe, expect, it, vi } from 'vitest';
 import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
+import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { DEBOUNCE_MS } from '../utils/queue';
 
 const DEFAULT_PARAMS = { events: [] };
@@ -258,15 +259,34 @@ premiumStoreClasses.forEach((storeClass) => {
         newEvents: [],
       });
 
-      await Promise.resolve();
-      await Promise.resolve();
-      await Promise.resolve();
+      await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
 
       expect(dataSource.updateEvents.calledOnce).to.equal(true);
-      expect(store.state.errors).toHaveLength(1);
       expect(store.state.errors[0].error).to.be.instanceOf(Error);
       expect(store.state.errors[0].error.message).to.equal('500 Update Failed');
       expect(store.state.errors[0].error.cause).to.equal(rejection);
+    });
+
+    it('should warn in dev when eventsUpdated reports an id missing from newEvents', async () => {
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: async () => ({ success: true }),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      await expect(async () => {
+        store.publishEvent('eventsUpdated', {
+          deleted: [],
+          updated: new Map([['ghost', { id: 'ghost' }]]),
+          created: [],
+          newEvents: [],
+        });
+        await Promise.resolve();
+        await Promise.resolve();
+        await Promise.resolve();
+      }).toWarnDev(
+        'MUI X Scheduler: eventsUpdated reported id "ghost" as created or updated, but it is missing from `newEvents`.',
+      );
     });
 
     it('should push an error to state.errors when dataSource.updateEvents rejects', async () => {
@@ -285,13 +305,9 @@ premiumStoreClasses.forEach((storeClass) => {
         newEvents: [],
       });
 
-      // Flush microtasks so the async handler reaches its catch block.
-      await Promise.resolve();
-      await Promise.resolve();
-      await Promise.resolve();
+      await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
 
       expect(dataSource.updateEvents.calledOnce).to.equal(true);
-      expect(store.state.errors).toHaveLength(1);
       expect(store.state.errors[0].error.message).to.equal('Update failed');
     });
 
@@ -309,12 +325,9 @@ premiumStoreClasses.forEach((storeClass) => {
         newEvents: [],
       });
 
-      await Promise.resolve();
-      await Promise.resolve();
-      await Promise.resolve();
+      await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
 
       expect(dataSource.updateEvents.calledOnce).to.equal(true);
-      expect(store.state.errors).toHaveLength(1);
       expect(store.state.errors[0].error.message).to.include('{ success: false }');
     });
 
@@ -411,6 +424,16 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.errors).toHaveLength(0);
     });
 
+    describe('pushError', () => {
+      it('should assign a unique key to every pushed error', () => {
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
+        store.pushError(new Error('a'));
+        store.pushError(new Error('b'));
+        expect(store.state.errors).toHaveLength(2);
+        expect(store.state.errors[0].key).not.to.equal(store.state.errors[1].key);
+      });
+    });
+
     describe('dismissError', () => {
       it('should remove only the entry whose key matches and preserve order', () => {
         const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
@@ -462,5 +485,25 @@ premiumStoreClasses.forEach((storeClass) => {
         expect(store.state.errors[1]).to.equal(entries[1]);
       });
     });
+  });
+});
+
+describe('SchedulerDataSourceCacheDefault', () => {
+  it('setRange should evict events missing from a refetch of the same range (server-side delete)', () => {
+    const cache = new SchedulerDataSourceCacheDefault<TestEvent>({ ttl: 300_000 });
+    const buildEvent = (id: string): TestEvent => ({
+      id,
+      start: '2025-07-01T00:00:00.000Z',
+      end: '2025-07-01T11:00:00.000Z',
+      title: `Event ${id}`,
+    });
+
+    cache.setRange(0, 1000, [buildEvent('1'), buildEvent('2'), buildEvent('3')]);
+    expect(cache.getAll().map((e) => e.id).sort()).to.deep.equal(['1', '2', '3']);
+
+    // Server deletes event 2 between fetches. Refetch returns only 1 and 3.
+    cache.setRange(0, 1000, [buildEvent('1'), buildEvent('3')]);
+
+    expect(cache.getAll().map((e) => e.id).sort()).to.deep.equal(['1', '3']);
   });
 });

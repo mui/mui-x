@@ -72,10 +72,10 @@ export function useExtractEventTimelinePremiumParameters<
       visibleDate,
       visibleResources,
     }),
-    // `dataSource` is intentionally excluded: it's read once at plugin init
-    // (cache + dataManager are not re-created on identity changes), so adding it
-    // here would only invalidate the memo on every render for consumers passing
-    // an inline `{ getEvents, updateEvents }` object.
+    // `dataSource` is intentionally excluded. It's re-read on every fetch, but the
+    // cache + dataManager are pinned to the original instance, so runtime swaps are
+    // only partially reactive — consumers should remount to swap. Including it in
+    // deps would invalidate the memo every render for inline `{ getEvents, updateEvents }`.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       areEventsDraggable,
