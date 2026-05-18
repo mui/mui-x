@@ -11,16 +11,16 @@ import {
   ChatConversationTitle,
 } from '@mui/x-chat';
 
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { ScopedChat } from '../../_playground/sharedProviders';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
 import {
   DividerLabel,
   NumberControl,
   SwitchControl,
   TextControl,
-} from '../../_playground/controls';
-import { useCustomizations } from '../../_playground/useCustomizations';
-import { users } from '../../_playground/data';
+} from 'docs/src/modules/components/chat-playground/controls';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
+import { users } from 'docs/src/modules/components/chat-playground/data';
 
 function MoreIcon() {
   return (

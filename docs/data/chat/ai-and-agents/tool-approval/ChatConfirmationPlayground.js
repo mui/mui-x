@@ -3,9 +3,12 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import { ChatConfirmation } from '@mui/x-chat';
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { DividerLabel, TextControl } from '../../_playground/controls';
-import { useCustomizations } from '../../_playground/useCustomizations';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import {
+  DividerLabel,
+  TextControl,
+} from 'docs/src/modules/components/chat-playground/controls';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 const CLASS_DEFS = [
   { name: 'root', description: 'The confirmation card.' },
