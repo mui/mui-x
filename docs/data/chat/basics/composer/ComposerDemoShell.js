@@ -75,3 +75,5 @@ export function ComposerDemoShell(props) {
     </ChatProvider>
   );
 }
+
+export default ComposerDemoShell;

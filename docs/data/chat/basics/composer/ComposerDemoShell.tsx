@@ -85,3 +85,5 @@ export function ComposerDemoShell(props: ComposerDemoShellProps) {
     </ChatProvider>
   );
 }
+
+export default ComposerDemoShell;
