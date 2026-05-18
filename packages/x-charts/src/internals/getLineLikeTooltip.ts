@@ -1,6 +1,9 @@
 import { getLabel } from './getLabel';
 import type { ChartSeriesType } from '../models/seriesType/config';
-import type { TooltipGetter } from './plugins/corePlugins/useChartSeriesConfig';
+import type {
+  TooltipGetterParams,
+  TooltipGetterResult,
+} from './plugins/corePlugins/useChartSeriesConfig';
 
 type LineLikeTooltipChartType = Extract<
   ChartSeriesType,
@@ -13,24 +16,24 @@ export interface LineLikeTooltipOptions {
 }
 
 export function getLineLikeTooltip<T extends LineLikeTooltipChartType>(
-  params: Parameters<TooltipGetter<T>>[0],
+  params: TooltipGetterParams<T>,
   options: LineLikeTooltipOptions = {},
-): ReturnType<TooltipGetter<T>> {
+): TooltipGetterResult<T> {
   // SAFETY: bar/radialBar/line/radialLine/scatter series share every field accessed here
   // (label, data, valueFormatter, labelMarkType). showMark/shape are only read when
   // includeMarkShape=true (line/radialLine only).
-  const typed = params as Parameters<TooltipGetter<'line'>>[0];
+  const typed = params as TooltipGetterParams<'line'>;
   const { series, getColor, identifier } = typed;
 
   if (!identifier || identifier.dataIndex === undefined) {
-    return null as ReturnType<TooltipGetter<T>>;
+    return null as TooltipGetterResult<T>;
   }
 
   const label = getLabel(series.label, 'tooltip');
   const value = series.data[identifier.dataIndex];
 
   if (options.skipNullValues && value == null) {
-    return null as ReturnType<TooltipGetter<T>>;
+    return null as TooltipGetterResult<T>;
   }
 
   const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });
@@ -47,5 +50,5 @@ export function getLineLikeTooltip<T extends LineLikeTooltipChartType>(
     }),
   };
 
-  return result as ReturnType<TooltipGetter<T>>;
+  return result as TooltipGetterResult<T>;
 }
