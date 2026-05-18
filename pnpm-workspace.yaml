@@ -28,7 +28,7 @@ catalog:
   '@mui/types': 9.0.0
   '@mui/utils': 9.0.1
   '@mui/x-internal-exceljs-fork': 4.4.5
-  '@playwright/test': 1.59.1
+  '@playwright/test': 1.60.0
   '@react-spring/web': ^10.0.3
   '@types/chance': ^1.1.8
   '@types/luxon': ^3.7.1
@@ -41,13 +41,13 @@ catalog:
   '@types/react-transition-group': ^4.4.12
   '@types/semver': ^7.7.1
   '@types/use-sync-external-store': ^1.5.0
-  '@typescript-eslint/parser': ^8.59.2
-  '@vitejs/plugin-react': ^6.0.1
-  '@vitejs/plugin-react-swc': ^4.3.0
-  '@vitest/browser': ^4.1.5
-  '@vitest/browser-playwright': ^4.1.5
-  '@vitest/coverage-v8': ^4.1.5
-  '@vitest/ui': ^4.1.5
+  '@typescript-eslint/parser': ^8.59.3
+  '@vitejs/plugin-react': ^6.0.2
+  '@vitejs/plugin-react-swc': ^4.3.1
+  '@vitest/browser': ^4.1.6
+  '@vitest/browser-playwright': ^4.1.6
+  '@vitest/coverage-v8': ^4.1.6
+  '@vitest/ui': ^4.1.6
   babel-plugin-react-remove-properties: ^0.3.1
   chance: ^1.1.13
   clsx: ^2.1.1
@@ -66,31 +66,26 @@ catalog:
   moment-jalaali: ^0.10.4
   moment-timezone: ^0.6.2
   motion: ^12.38.0
-  playwright: 1.59.1
+  playwright: 1.60.0
   prop-types: ^15.8.1
   rasterizehtml: ^1.4.1
   react: 19.2.6
   react-dom: 19.2.6
-  react-router: ^7.15.0
+  react-router: ^7.15.1
   react-transition-group: ^4.4.5
   reselect: ^5.1.1
   rimraf: ^6.1.3
   serve: ^14.2.6
   stylis: ^4.4.0
-  tsx: ^4.21.0
+  tsx: ^4.22.0
   use-sync-external-store: ^1.6.0
-  vite: ^8.0.12
-  vitest: ^4.1.5
+  vite: ^8.0.13
+  vitest: ^4.1.6
   yargs: ^18.0.0
 
 engineStrict: true
 
 enablePrePostScripts: true
-
-# v11 defaults to true, which prompts interactively for unlisted build scripts;
-# in CI `pnpm dlx` hangs forever waiting for input. Keep v10 behaviour: silently
-# skip any package not in `allowBuilds`.
-strictDepBuilds: false
 
 allowBuilds:
   '@swc/core': true

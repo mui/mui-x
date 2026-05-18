@@ -20,7 +20,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         events,
         visibleResources: {},
         displayTimezone: 'default',
-        plan: 'premium',
+        recurringEventsPlugin: null,
       });
       return useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
     });

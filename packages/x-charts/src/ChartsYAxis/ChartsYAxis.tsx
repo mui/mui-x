@@ -27,7 +27,9 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const axis = yAxis[inProps.axisId ?? yAxisIds[0]];
   if (!axis) {
-    warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
+    if (process.env.NODE_ENV !== 'production') {
+      warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
+    }
     return null;
   }
 

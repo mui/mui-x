@@ -10,6 +10,7 @@
   "homepage": "https://mui.com/x/react-scheduler/",
   "exports": {
     "./models": "./src/models/index.ts",
+    "./internals": "./src/internals/index.ts",
     "./use-event-calendar-premium": "./src/use-event-calendar-premium/index.ts",
     "./use-event-calendar-premium-store-context": "./src/use-event-calendar-premium-store-context/index.ts",
     "./timeline-grid": "./src/timeline-grid/index.ts",
