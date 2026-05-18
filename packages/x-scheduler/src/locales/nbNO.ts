@@ -10,7 +10,7 @@ import {
 
 const nbNODialog: Partial<EventDialogLocaleText> = {
   // EventDialog
-  colorPickerLabel: 'Hendelsefarge',
+  colorPickerLabel: 'Hendelsesfarge',
   dateTimeSectionLabel: 'Dato og tid',
   resourceColorSectionLabel: 'Ressurs og farge',
   allDayLabel: 'Hele dagen',
