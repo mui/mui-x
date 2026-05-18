@@ -21,7 +21,7 @@ catalog:
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.0.1
   '@mui/internal-test-utils': 2.0.18-canary.23
-  '@mui/internal-core-docs': 9.0.1-canary.2
+  '@mui/internal-core-docs': 9.0.2-canary.0
   '@mui/material': 9.0.1
   '@mui/stylis-plugin-rtl': 9.0.1
   '@mui/system': 9.0.1
@@ -42,7 +42,7 @@ catalog:
   '@types/semver': ^7.7.1
   '@types/use-sync-external-store': ^1.5.0
   '@typescript-eslint/parser': ^8.59.2
-  '@vitejs/plugin-react': ^5.2.0
+  '@vitejs/plugin-react': ^6.0.1
   '@vitejs/plugin-react-swc': ^4.3.0
   '@vitest/browser': ^4.1.5
   '@vitest/browser-playwright': ^4.1.5
@@ -79,7 +79,7 @@ catalog:
   stylis: ^4.4.0
   tsx: ^4.21.0
   use-sync-external-store: ^1.6.0
-  vite: ^7.3.3
+  vite: ^8.0.12
   vitest: ^4.1.5
   yargs: ^18.0.0
 

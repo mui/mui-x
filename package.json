@@ -48,7 +48,7 @@
     "test:argos": "code-infra argos-push --folder test/regressions/screenshots/chrome",
     "test:charts-benchmark": "pnpm -F ./test/performance-charts test:performance",
     "typescript": "lerna run --no-bail --parallel typescript",
-    "typescript:ci": "lerna run --concurrency 1 --no-bail --no-sort typescript",
+    "typescript:ci": "lerna run --concurrency 3 --no-bail --no-sort typescript",
     "use-react-18": "code-infra set-version-overrides --pkg react@18",
     "use-material-ui-v6": "code-infra set-version-overrides --pkg @mui/material@6",
     "use-material-ui-next": "code-infra set-version-overrides --pkg @mui/material@next",
