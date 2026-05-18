@@ -32,7 +32,13 @@ export function getLineLikeTooltip<SeriesType extends LineLikeTooltipChartType>(
     return null as TooltipGetterResult<SeriesType>;
   }
 
-  const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });
+  // `series.valueFormatter` is a union of formatter signatures with incompatible value
+  // parameters across chart types. We just pass through whatever value `series.data[i]`
+  // returned, so cast the formatter to one of the matching shapes.
+  const formattedValue = (series as TooltipGetterParams<'line'>['series']).valueFormatter(
+    value as number | null,
+    { dataIndex: identifier.dataIndex },
+  );
 
   const result = {
     identifier,
