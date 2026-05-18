@@ -10,3 +10,4 @@ export {
   GEO_PREMIUM_PLUGINS,
   type GeoPremiumPluginSignatures,
 } from './ChartsGeoDataProviderPremium.plugins';
+export { type D3NamedProjection } from '../internals/plugins/useGeoProjection/useGeoProjection.types';

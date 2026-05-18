@@ -5,7 +5,10 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { feature as topojsonFeature } from 'topojson-client';
 import countriesTopology from 'world-atlas/countries-110m.json';
-import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
+import {
+  Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium,
+  type D3NamedProjection,
+} from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import { GeoDataPlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
@@ -15,7 +18,7 @@ const countries = topojsonFeature(
   'countries',
 ) as unknown as ExtendedFeatureCollection;
 
-const projections = [
+const projections: D3NamedProjection[] = [
   // Azimuthal projections (https://d3js.org/d3-geo/azimuthal)
   'azimuthalEqualArea',
   'azimuthalEquidistant',
@@ -40,7 +43,8 @@ const projections = [
 
 export default function ProjectionMapShape() {
   // const [projection, setProjection] = React.useState('naturalEarth1');
-  const [projection, setProjection] = React.useState('conicConformal');
+  const [projection, setProjection] =
+    React.useState<D3NamedProjection>('conicConformal');
 
   return (
     <Stack
@@ -64,7 +68,9 @@ export default function ProjectionMapShape() {
           select
           label="projection"
           value={projection}
-          onChange={(event) => setProjection(event.target.value)}
+          onChange={(event) =>
+            setProjection(event.target.value as D3NamedProjection)
+          }
         >
           {projections.map((name) => (
             <MenuItem key={name} value={name}>
