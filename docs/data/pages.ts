@@ -326,6 +326,12 @@ const pages: MuiPage[] = [
             newFeature: true,
             title: 'AI Assistant',
           },
+          {
+            pathname: '/x/react-data-grid/copilot',
+            plan: 'premium',
+            newFeature: true,
+            title: 'Copilot',
+          },
         ],
       },
       {
