@@ -268,7 +268,7 @@ importers:
         version: 1.0.9-canary.79(@types/node@22.19.3)(esbuild@0.28.0)(jiti@2.7.0)(rolldown@1.0.1)(rollup@4.52.5)(terser@5.43.1)(tsx@4.22.1)(yaml@2.8.1)
       '@mui/internal-code-infra':
         specifier: 0.0.4-canary.47
-        version: 0.0.4-canary.47(@next/eslint-plugin-next@16.2.6)(@types/node@22.19.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@typescript-eslint/parser@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.4(jiti@2.7.0)))(eslint@9.39.4(jiti@2.7.0))(jest-diff@30.2.0)(postcss@8.5.14)(prettier@3.8.3)(stylelint@17.11.0(typescript@5.9.3))(typescript@5.9.3)(vitest@4.1.6)
+        version: 0.0.4-canary.47(@next/eslint-plugin-next@16.2.6)(@types/node@22.19.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@typescript-eslint/parser@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.4(jiti@2.7.0)))(eslint@9.39.4(jiti@2.7.0))(jest-diff@30.2.0)(postcss@8.5.14)(prettier@3.8.3)(stylelint@17.11.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.1.6)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
         version: 9.0.2-canary.0(2c08a118f6ba9fb7b7497a16316fbb1f)
@@ -435,8 +435,8 @@ importers:
         specifier: 3.3.0
         version: 3.3.0(webpack@5.101.3(@swc/core@1.15.13)(esbuild@0.28.0))
       stylelint:
-        specifier: 17.11.0
-        version: 17.11.0(typescript@5.9.3)
+        specifier: 17.11.1
+        version: 17.11.1(typescript@5.9.3)
       tsx:
         specifier: 'catalog:'
         version: 4.22.1
@@ -8543,10 +8543,6 @@ packages:
     resolution: {integrity: sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og==}
     engines: {node: '>=0.10.0'}
 
-  is-plain-object@5.0.0:
-    resolution: {integrity: sha512-VRSzKkbMm5jMDoKLbltAkFQ5Qr7VDiTFGXxYFXXowVj387GeGNOCsOH6Msy00SGZ3Fp84b1Naa1psqgcCIEP5Q==}
-    engines: {node: '>=0.10.0'}
-
   is-port-reachable@4.0.0:
     resolution: {integrity: sha512-9UoipoxYmSk6Xy7QFgRv2HDyaysmgSG75TFQs6S+3pDM7ZhKTF/bskZV+0UlABHzKjNVhPjYCLfeZUEg1wXxig==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -10986,8 +10982,8 @@ packages:
     peerDependencies:
       stylelint: ^17.0.0
 
-  stylelint@17.11.0:
-    resolution: {integrity: sha512-/3czzmbF9XdGWvReDF3Ex4R23Ajolo7j8RB2bFNEqk6Ht356nlpVV+G5bG2Qt8AW1ofJzXztBRDnAtd7cgowWA==}
+  stylelint@17.11.1:
+    resolution: {integrity: sha512-+smN/HqVTggUx3iuAzOi9fPh8SrH+cJWlZrYVldXoJ06orWBhZ4Ue/QEp64oei6pVrAh4w3tG+Y12Vw7MbCFRQ==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -13791,7 +13787,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.4-canary.47(@next/eslint-plugin-next@16.2.6)(@types/node@22.19.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@typescript-eslint/parser@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.4(jiti@2.7.0)))(eslint@9.39.4(jiti@2.7.0))(jest-diff@30.2.0)(postcss@8.5.14)(prettier@3.8.3)(stylelint@17.11.0(typescript@5.9.3))(typescript@5.9.3)(vitest@4.1.6)':
+  '@mui/internal-code-infra@0.0.4-canary.47(@next/eslint-plugin-next@16.2.6)(@types/node@22.19.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@typescript-eslint/parser@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.4(jiti@2.7.0)))(eslint@9.39.4(jiti@2.7.0))(jest-diff@30.2.0)(postcss@8.5.14)(prettier@3.8.3)(stylelint@17.11.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.1.6)':
     dependencies:
       '@argos-ci/core': 5.3.1
       '@babel/cli': 7.28.6(@babel/core@7.29.0)
@@ -13875,7 +13871,7 @@ snapshots:
       remark-rehype: 11.1.2
       resolve-pkg-maps: 1.0.0
       semver: 7.8.0
-      stylelint-config-standard: 40.0.0(stylelint@17.11.0(typescript@5.9.3))
+      stylelint-config-standard: 40.0.0(stylelint@17.11.1(typescript@5.9.3))
       typescript-eslint: 8.58.0(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
       unified: 11.0.5
       unified-lint-rule: 3.0.1
@@ -18618,8 +18614,6 @@ snapshots:
     dependencies:
       isobject: 3.0.1
 
-  is-plain-object@5.0.0: {}
-
   is-port-reachable@4.0.0: {}
 
   is-potential-custom-element-name@1.0.1: {}
@@ -21747,16 +21741,16 @@ snapshots:
       '@babel/core': 7.29.0
       babel-plugin-macros: 3.1.0
 
-  stylelint-config-recommended@18.0.0(stylelint@17.11.0(typescript@5.9.3)):
+  stylelint-config-recommended@18.0.0(stylelint@17.11.1(typescript@5.9.3)):
     dependencies:
-      stylelint: 17.11.0(typescript@5.9.3)
+      stylelint: 17.11.1(typescript@5.9.3)
 
-  stylelint-config-standard@40.0.0(stylelint@17.11.0(typescript@5.9.3)):
+  stylelint-config-standard@40.0.0(stylelint@17.11.1(typescript@5.9.3)):
     dependencies:
-      stylelint: 17.11.0(typescript@5.9.3)
-      stylelint-config-recommended: 18.0.0(stylelint@17.11.0(typescript@5.9.3))
+      stylelint: 17.11.1(typescript@5.9.3)
+      stylelint-config-recommended: 18.0.0(stylelint@17.11.1(typescript@5.9.3))
 
-  stylelint@17.11.0(typescript@5.9.3):
+  stylelint@17.11.1(typescript@5.9.3):
     dependencies:
       '@csstools/css-calc': 3.2.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)
       '@csstools/css-parser-algorithms': 4.0.0(@csstools/css-tokenizer@4.0.0)
@@ -21779,7 +21773,6 @@ snapshots:
       html-tags: 5.1.0
       ignore: 7.0.5
       import-meta-resolve: 4.2.0
-      is-plain-object: 5.0.0
       mathml-tag-names: 4.0.0
       meow: 14.1.0
       micromatch: 4.0.8
