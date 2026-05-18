@@ -200,7 +200,9 @@ ChatBox.propTypes = {
     }),
   ),
   /**
-   * The local user sending messages. If omitted, derived from `members` by finding the entry with `role === 'user'`.
+   * The local user sending messages.
+   * If omitted, derived from `members` by finding the entry with `role === 'user'`.
+   * Also used to enrich message authors when a rendered message resolves to `currentUser.id`.
    */
   currentUser: PropTypes.shape({
     avatarUrl: PropTypes.string,
@@ -242,6 +244,25 @@ ChatBox.propTypes = {
     scrollToBottom: PropTypes.bool,
     suggestions: PropTypes.bool,
   }),
+  /**
+   * Used to determine the avatar URL for a given message author.
+   * Falls back to `message.author?.avatarUrl`, then to the matched member's `avatarUrl`.
+   * @default (message) => message.author?.avatarUrl
+   */
+  getMessageAuthorAvatarUrl: PropTypes.func,
+  /**
+   * Used to determine the display name for a given message author.
+   * Falls back to `message.author?.displayName`, then to the matched member's `displayName`.
+   * @default (message) => message.author?.displayName
+   */
+  getMessageAuthorDisplayName: PropTypes.func,
+  /**
+   * Used to determine the author id for a given message.
+   * The resolved id is used to match message authors against `currentUser`,
+   * `members`, and active conversation participants.
+   * @default (message) => message.author?.id
+   */
+  getMessageAuthorId: PropTypes.func,
   /**
    * The initial active conversation ID when uncontrolled. Ignored after initialization and when `activeConversationId` is provided.
    */
@@ -397,7 +418,9 @@ ChatBox.propTypes = {
   ),
   localeText: PropTypes.object,
   /**
-   * All participants in the chat. The current (local) user is derived as the first member with `role === 'user'`, unless `currentUser` is provided explicitly.
+   * Known chat participants.
+   * Used to derive the local user / assistant user when explicit props are omitted,
+   * and to enrich message authors by resolved author id at render time.
    */
   members: PropTypes.arrayOf(
     PropTypes.shape({
