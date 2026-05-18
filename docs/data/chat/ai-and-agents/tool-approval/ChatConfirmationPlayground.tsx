@@ -4,7 +4,10 @@ import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import { ChatConfirmation } from '@mui/x-chat';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
-import { DividerLabel, TextControl } from 'docs/src/modules/components/chat-playground/controls';
+import {
+  DividerLabel,
+  TextControl,
+} from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
   type CustomizationDef,
