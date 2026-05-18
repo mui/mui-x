@@ -13,17 +13,17 @@ import FormControl from '@mui/material/FormControl';
 import { RecurringEventUpdateScope } from '@mui/x-scheduler-internals/models';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
-import { ScopePopoverProps } from './ScopeDialog.types';
-import { useEventDialogStyledContext } from '../event-dialog/EventDialogStyledContext';
+import { useEventDialogStyledContext } from '@mui/x-scheduler/internals';
+import { RecurringScopeDialogProps } from './RecurringScopeDialog.types';
 
-export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopoverProps>(
-  function ScopeDialog(props, ref) {
+export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringScopeDialogProps>(
+  function RecurringScopeDialog(props, ref) {
     // Context hooks
     const { schedulerId, localeText } = useEventDialogStyledContext();
     const store = useSchedulerStoreContext();
 
     // Selector hooks
-    const open = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
+    const open = useStore(store, schedulerOtherSelectors.isRecurringScopeDialogOpen);
 
     // Feature hooks
     const handleOpenChange = React.useCallback(

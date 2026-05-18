@@ -1,14 +1,18 @@
-import { TemporalTimezone } from '../../../base-ui-copy/types';
-import { processDate } from '../../../process-date';
+import { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
+import { processDate } from '@mui/x-scheduler-internals/process-date';
 import {
   SchedulerProcessedEventRecurrenceRule,
   RecurringEventWeekDayCode,
   SchedulerEventOccurrence,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
-} from '../../../models';
-import { Adapter } from '../../../use-adapter';
-import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
+} from '@mui/x-scheduler-internals/models';
+import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import {
+  getDateKey,
+  getOccurrenceEnd,
+  mergeDateAndTime,
+} from '@mui/x-scheduler-internals/internals';
 import {
   dayInWeek,
   getRemainingOccurrences,
@@ -286,7 +290,7 @@ class RecurringEventExpander {
       }
       default:
         throw new Error(
-          `MUI: Unknown frequency ${this.rule.freq}. Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".`,
+          `MUI X Scheduler: Unknown frequency ${this.rule.freq}. Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".`,
         );
     }
   }
@@ -453,11 +457,6 @@ class RecurringEventExpander {
   }
 }
 
-/**
- * Expands a recurring event into concrete occurrences within the visible range.
- * Uses direct occurrence computation instead of day-by-day iteration.
- * Honors COUNT/UNTIL boundaries and EXDATE exclusions.
- */
 export function getRecurringEventOccurrencesForVisibleDays(
   event: SchedulerProcessedEvent,
   start: TemporalSupportedObject,

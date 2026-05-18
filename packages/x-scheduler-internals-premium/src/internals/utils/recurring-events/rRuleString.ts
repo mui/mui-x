@@ -1,11 +1,11 @@
-import { TemporalTimezone } from '../../../base-ui-copy/types';
-import { Adapter } from '../../../use-adapter/useAdapter.types';
+import { TemporalTimezone } from '@mui/x-scheduler-internals/base-ui-copy';
+import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
   SchedulerEventRecurrenceRule,
-} from '../../../models';
-import { resolveEventDate } from '../../../process-event/resolveEventDate';
+} from '@mui/x-scheduler-internals/models';
+import { resolveEventDate } from '@mui/x-scheduler-internals/process-event';
 import { getAdapterCache, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
 
 const SUPPORTED_RRULE_KEYS = new Set([
@@ -18,13 +18,6 @@ const SUPPORTED_RRULE_KEYS = new Set([
   'COUNT',
 ]);
 
-/**
- * Parses and validates a RRULE string (RFC5545) into a canonical
- * `SchedulerProcessedEventRecurrenceRule`.
- *
- * The resulting rule is expressed in the provided timezone
- * (typically the event data timezone).
- */
 export function parseRRule(
   adapter: Adapter,
   input: string | SchedulerEventRecurrenceRule,
@@ -152,10 +145,6 @@ export function parseRRule(
   return rrule;
 }
 
-/**
- * Serializes a SchedulerProcessedEventRecurrenceRule object
- * into a RRULE string (RFC5545).
- */
 export function serializeRRule(
   adapter: Adapter,
   rule: SchedulerProcessedEventRecurrenceRule,
@@ -193,6 +182,20 @@ export function serializeRRule(
   }
 
   return parts.join(';');
+}
+
+export function isSameRRule(
+  adapter: Adapter,
+  rruleA: SchedulerProcessedEventRecurrenceRule | undefined,
+  rruleB: SchedulerProcessedEventRecurrenceRule | undefined,
+): boolean {
+  if (!rruleA && !rruleB) {
+    return true;
+  }
+  if (!rruleA || !rruleB) {
+    return false;
+  }
+  return serializeRRule(adapter, rruleA) === serializeRRule(adapter, rruleB);
 }
 
 /**
