@@ -3,12 +3,12 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import { ChatConfirmation } from '@mui/x-chat';
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { DividerLabel, TextControl } from '../../_playground/controls';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import { DividerLabel, TextControl } from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
   type CustomizationDef,
-} from '../../_playground/useCustomizations';
+} from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 type ClassKey =
   | 'root'

@@ -2,16 +2,16 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatConversationList } from '@mui/x-chat';
 
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { ScopedChat } from '../../_playground/sharedProviders';
-import { directoryConversations } from '../../_playground/sharedFixtures';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
+import { directoryConversations } from 'docs/src/modules/components/chat-playground/sharedFixtures';
 import {
   ChoiceControl,
   DividerLabel,
   NumberControl,
   SwitchControl,
-} from '../../_playground/controls';
-import { useCustomizations } from '../../_playground/useCustomizations';
+} from 'docs/src/modules/components/chat-playground/controls';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 const DEFAULTS = {
   variant: 'default',
