@@ -107,7 +107,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     resource_class: xlarge
     steps:
       - checkout
@@ -200,7 +200,7 @@ jobs:
             git add -A && git diff --exit-code --staged
   test_types:
     <<: *default-job
-    resource_class: medium+
+    resource_class: large
     steps:
       - checkout
       - install-deps
@@ -219,7 +219,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     steps:
       - checkout
       - install-deps:
@@ -234,7 +234,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     steps:
       - checkout
       - install-deps
@@ -257,14 +257,14 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
           name: Install ffmpeg
-          command: apt update && apt upgrade -y && apt install ffmpeg -y
+          command: apt-get update && apt-get install ffmpeg --no-install-recommends -y
       - run:
           name: Build packages
           command: pnpm release:build
@@ -278,7 +278,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     resource_class: medium
     steps:
       - checkout

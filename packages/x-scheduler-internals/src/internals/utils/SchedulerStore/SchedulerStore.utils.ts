@@ -14,12 +14,8 @@ import {
 } from '../../../models';
 import { processEvent } from '../../../process-event';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
-import {
-  SchedulerInstanceName,
-  SchedulerParameters,
-  SchedulerPlan,
-  SchedulerState,
-} from './SchedulerStore.types';
+import { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
+import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import { dateToEventString } from '../date-utils';
 
 /**
@@ -93,6 +89,7 @@ export function getProcessedEventFromModel<TEvent extends object>(
   adapter: Adapter,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
   displayTimezone: TemporalTimezone,
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
 ): SchedulerProcessedEvent {
   // 1. Convert the model to a default event model
   const modelInDefaultFormat = {} as SchedulerEvent;
@@ -106,7 +103,7 @@ export function getProcessedEventFromModel<TEvent extends object>(
   }
 
   // 2. Convert the default event model to a processed event
-  return processEvent(modelInDefaultFormat, displayTimezone, adapter);
+  return processEvent(modelInDefaultFormat, displayTimezone, adapter, recurringEventsPlugin);
 }
 
 /**
@@ -288,22 +285,11 @@ type AnyEventSetter<TEvent extends object> = (
   value: any,
 ) => TEvent;
 
-const PREMIUM_INSTANCE_NAMES: Set<SchedulerInstanceName> = new Set([
-  'EventCalendarPremiumStore',
-  'EventTimelinePremiumStore',
-]);
-
-/**
- * Returns the plan of the scheduler instance based on its instance name.
- */
-export function getSchedulerPlan(instanceName: SchedulerInstanceName): SchedulerPlan {
-  return PREMIUM_INSTANCE_NAMES.has(instanceName) ? 'premium' : 'community';
-}
-
 export function buildEventsState<TEvent extends object, TResource extends object>(
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'events' | 'eventModelStructure'>,
   adapter: Adapter,
   displayTimezone: TemporalTimezone,
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
 ): Pick<
   SchedulerState<TEvent>,
   | 'eventIdList'
@@ -324,6 +310,7 @@ export function buildEventsState<TEvent extends object, TResource extends object
       adapter,
       eventModelStructure,
       displayTimezone,
+      recurringEventsPlugin,
     );
     eventIdList.push(processedEvent.id);
     eventModelLookup.set(processedEvent.id, event);
