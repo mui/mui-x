@@ -24,7 +24,7 @@ Every stream must follow this lifecycle:
 2. **Content chunks** — Text, reasoning, tool, source, file, or data chunks populate the message parts.
 3. **`finish`** or **`abort`** — Terminal chunk. `finish` marks the message as `'sent'`; `abort` marks it as `'cancelled'`.
 
-If the stream closes without a terminal chunk, the runtime treats it as a disconnect (see [Error and disconnect handling](#error-and-disconnect-handling) below).
+If the stream closes without a terminal chunk, the runtime treats it as a disconnect (see [Handling errors and disconnects](#handling-errors-and-disconnects) below).
 
 ## Building a stream
 
