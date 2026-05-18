@@ -55,6 +55,9 @@ export interface GridLocaleText {
   // Toolbar AI Assistant button
   toolbarAssistant: React.ReactNode;
 
+  // Toolbar Copilot button
+  toolbarCopilot: React.ReactNode;
+
   // Columns management text
   columnsManagementSearchTitle: string;
   columnsManagementNoColumns: string;
@@ -275,6 +278,14 @@ export interface GridLocaleText {
   aiAssistantPanelNewConversation: string;
   aiAssistantPanelEmptyConversation: string;
   aiAssistantSuggestions: string;
+
+  // Copilot panel
+  copilotPanelTitle: string;
+  copilotPanelClose: string;
+  copilotPanelBeta: string;
+  copilotPanelReload: string;
+  copilotPanelEmptyStateTitle: string;
+  copilotPanelEmptyStateHelper: string;
 
   // Prompt
   promptRerun: string;
