@@ -154,7 +154,10 @@ function HighlightedMessage(props) {
 `ChatBox` is composed of named subcomponents (slots). Replace any of them with your own:
 
 ```tsx
-<ChatBox adapter={adapter} slots={{ message: { content: MyCustomMessageContent } }} />
+<ChatBox
+  adapter={adapter}
+  slots={{ message: { content: MyCustomMessageContent } }}
+/>
 ```
 
 The component receives the same props as the default. This lets you wrap, extend, or fully replace any piece of the UI.

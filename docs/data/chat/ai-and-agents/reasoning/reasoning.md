@@ -27,11 +27,11 @@ interface ChatReasoningMessagePart {
 }
 ```
 
-| Field   | Type           | Description                         |                                               |
-| :------ | :------------- | :---------------------------------- | :-------------------------------------------- |
-| `type`  | `'reasoning'`  | Identifies this as a reasoning part |                                               |
-| `text`  | `string`       | The accumulated reasoning text      |                                               |
-| `state` | `'streaming' \ | 'done'`                             | Whether the reasoning is still being streamed |
+| Field   | Type            | Description                         |                                               |
+| :------ | :-------------- | :---------------------------------- | :-------------------------------------------- |
+| `type`  | `'reasoning'`   | Identifies this as a reasoning part |                                               |
+| `text`  | `string`        | The accumulated reasoning text      |                                               |
+| `state` | `'streaming' \  | 'done'`                             | Whether the reasoning is still being streamed |
 
 The `state` field transitions from `'streaming'` while deltas are arriving to `'done'` once the reasoning section is complete.
 

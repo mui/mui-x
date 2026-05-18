@@ -162,12 +162,12 @@ function DraftArea() {
 
 A lightweight hook for status indicators, loading spinners, and error banners.
 
-| Field            | Type         | Description                                              |                     |
-| :--------------- | :----------- | :------------------------------------------------------- | :------------------ |
-| `isStreaming`    | `boolean`    | Whether a response is being streamed                     |                     |
-| `hasMoreHistory` | `boolean`    | Whether older messages can be loaded                     |                     |
-| `error`          | `ChatError \ | null`                                                    | Current error state |
-| `typingUserIds`  | `string[]`   | IDs of users currently typing in the active conversation |                     |
+| Field            | Type          | Description                                              |                     |
+| :--------------- | :------------ | :------------------------------------------------------- | :------------------ |
+| `isStreaming`    | `boolean`     | Whether a response is being streamed                     |                     |
+| `hasMoreHistory` | `boolean`     | Whether older messages can be loaded                     |                     |
+| `error`          | `ChatError \  | null`                                                    | Current error state |
+| `typingUserIds`  | `string[]`    | IDs of users currently typing in the active conversation |                     |
 
 Use this hook when you need to show a status chip, typing indicator, or error banner without subscribing to the full message list.
 

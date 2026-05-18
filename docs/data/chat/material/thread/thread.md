@@ -65,11 +65,11 @@ import {
 
 ### Conversation ownerState
 
-| Field             | Type                | Description                                  |                                              |
-| :---------------- | :------------------ | :------------------------------------------- | :------------------------------------------- |
-| `conversationId`  | `string \           | undefined`                                   | Currently selected conversation ID           |
-| `conversation`    | `ChatConversation \ | null`                                        | Full active conversation object, when loaded |
-| `hasConversation` | `boolean`           | Whether the thread currently has a selection |                                              |
+| Field             | Type                 | Description                                  |                                              |
+| :---------------- | :------------------- | :------------------------------------------- | :------------------------------------------- |
+| `conversationId`  | `string \            | undefined`                                   | Currently selected conversation ID           |
+| `conversation`    | `ChatConversation \  | null`                                        | Full active conversation object, when loaded |
+| `hasConversation` | `boolean`            | Whether the thread currently has a selection |                                              |
 
 Use `hasConversation` to hide action buttons or show a placeholder when no conversation is active.
 `ChatConversationHeader`, `ChatConversationTitle`, `ChatConversationSubtitle`, and `ChatConversationHeaderActions` all receive this same conversation-level state.
@@ -162,23 +162,23 @@ import {
 
 ### Message group ownerState
 
-| Field        | Type      | Description                          |                              |
-| :----------- | :-------- | :----------------------------------- | :--------------------------- |
-| `isFirst`    | `boolean` | First message in a consecutive group |                              |
-| `isLast`     | `boolean` | Last message in a consecutive group  |                              |
-| `authorRole` | `'user' \ | 'assistant'`                         | Role of the group author     |
-| `authorId`   | `string \ | undefined`                           | Identity of the group author |
+| Field        | Type       | Description                          |                              |
+| :----------- | :--------- | :----------------------------------- | :--------------------------- |
+| `isFirst`    | `boolean`  | First message in a consecutive group |                              |
+| `isLast`     | `boolean`  | Last message in a consecutive group  |                              |
+| `authorRole` | `'user' \  | 'assistant'`                         | Role of the group author     |
+| `authorId`   | `string \  | undefined`                           | Identity of the group author |
 
 ### Message ownerState
 
-| Field        | Type      | Description                                   |                                      |
-| :----------- | :-------- | :-------------------------------------------- | :----------------------------------- |
-| `role`       | `'user' \ | 'assistant'`                                  | Author role, drives bubble alignment |
-| `status`     | `string`  | Delivery/streaming status                     |                                      |
-| `streaming`  | `boolean` | Whether the message is still streaming        |                                      |
-| `error`      | `boolean` | Whether the message ended in an error state   |                                      |
-| `isGrouped`  | `boolean` | Whether this row is part of a group           |                                      |
-| `showAvatar` | `boolean` | Controls the phantom-column width calculation |                                      |
+| Field        | Type       | Description                                   |                                      |
+| :----------- | :--------- | :-------------------------------------------- | :----------------------------------- |
+| `role`       | `'user' \  | 'assistant'`                                  | Author role, drives bubble alignment |
+| `status`     | `string`   | Delivery/streaming status                     |                                      |
+| `streaming`  | `boolean`  | Whether the message is still streaming        |                                      |
+| `error`      | `boolean`  | Whether the message ended in an error state   |                                      |
+| `isGrouped`  | `boolean`  | Whether this row is part of a group           |                                      |
+| `showAvatar` | `boolean`  | Controls the phantom-column width calculation |                                      |
 
 If no display name or avatar resolves for a message author, the built-in thread components skip those affordances instead of rendering role-based placeholders.
 
