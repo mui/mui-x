@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
-import type {
-  ChatBoxLayoutMode,
-  ChatDensity,
-  ChatVariant,
-} from '@mui/x-chat';
+import type { ChatBoxLayoutMode, ChatDensity, ChatVariant } from '@mui/x-chat';
 import type { SxProps, Theme } from '@mui/material/styles';
 import { PlaygroundCard } from '../../_playground/PlaygroundCard';
 import {
@@ -42,7 +38,11 @@ type ClassKey = 'root' | 'layout' | 'threadPane' | 'conversationsPane';
 
 const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
   { name: 'root', description: 'The outermost ChatBox element.' },
-  { name: 'layout', selector: '.MuiChatBox-layout', description: 'The pane layout container.' },
+  {
+    name: 'layout',
+    selector: '.MuiChatBox-layout',
+    description: 'The pane layout container.',
+  },
   {
     name: 'threadPane',
     selector: '.MuiChatBox-threadPane',

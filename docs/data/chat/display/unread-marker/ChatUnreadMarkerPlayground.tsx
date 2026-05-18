@@ -90,10 +90,7 @@ export default function ChatUnreadMarkerPlayground() {
             {messages.map((message, i) => (
               <React.Fragment key={message.id}>
                 {i === safeBoundary ? (
-                  <ChatUnreadMarker
-                    messageId={message.id}
-                    sx={markerSx as any}
-                  />
+                  <ChatUnreadMarker messageId={message.id} sx={markerSx as any} />
                 ) : null}
                 <MessageBubble messageId={message.id} />
               </React.Fragment>

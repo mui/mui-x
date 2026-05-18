@@ -30,6 +30,6 @@
   "muiName": "MuiChatMessageError",
   "filename": "/packages/x-chat/src/ChatMessageError/ChatMessageError.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/behavior/error-handling/\">Chat - Error Handling</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/behavior/error-handling/\">Chat - Error handling</a></li></ul>",
   "cssComponent": false
 }

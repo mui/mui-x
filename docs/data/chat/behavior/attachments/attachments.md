@@ -69,10 +69,10 @@ Pass a configuration object to the `attachments` feature flag to control which f
 
 When a file is rejected, the `ChatAttachmentRejection` object contains:
 
-| Property | Type           | Description             |               |                           |
-| :------- | :------------- | :---------------------- | :------------ | :------------------------ |
-| `file`   | `File`         | The browser File object |               |                           |
-| `reason` | `'mime-type' \ | 'file-size' \           | 'file-count'` | Why the file was rejected |
+| Property | Type            | Description             |               |                           |
+| :------- | :-------------- | :---------------------- | :------------ | :------------------------ |
+| `file`   | `File`          | The browser File object |               |                           |
+| `reason` | `'mime-type' \  | 'file-size' \           | 'file-count'` | Why the file was rejected |
 
 ## Draft attachment lifecycle
 
@@ -93,13 +93,13 @@ queued  -->  uploading  -->  uploaded  -->  (sent with message)
 
 ### Draft attachment type reference
 
-| Property     | Type        | Description                                 |                                              |          |                         |
-| :----------- | :---------- | :------------------------------------------ | :------------------------------------------- | :------- | :---------------------- |
-| `localId`    | `string`    | Unique identifier for this draft attachment |                                              |          |                         |
-| `file`       | `File`      | The browser File object                     |                                              |          |                         |
-| `previewUrl` | `string \   | undefined`                                  | Object URL for image previews (auto-created) |          |                         |
-| `status`     | `'queued' \ | 'uploading' \                               | 'uploaded' \                                 | 'error'` | Upload lifecycle status |
-| `progress`   | `number \   | undefined`                                  | Upload progress (0--100)                     |          |                         |
+| Property     | Type         | Description                                 |                                              |          |                         |
+| :----------- | :----------- | :------------------------------------------ | :------------------------------------------- | :------- | :---------------------- |
+| `localId`    | `string`     | Unique identifier for this draft attachment |                                              |          |                         |
+| `file`       | `File`       | The browser File object                     |                                              |          |                         |
+| `previewUrl` | `string \    | undefined`                                  | Object URL for image previews (auto-created) |          |                         |
+| `status`     | `'queued' \  | 'uploading' \                               | 'uploaded' \                                 | 'error'` | Upload lifecycle status |
+| `progress`   | `number \    | undefined`                                  | Upload progress (0--100)                     |          |                         |
 
 ## Managing attachments programmatically
 
