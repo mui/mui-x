@@ -203,12 +203,15 @@ export function evaluateCurveY(
   const factory = getCurveFactory(curveType);
   const curveInstance = factory(capture as any);
 
+  // Track which side of targetX the first point is on, so we detect the
+  // crossing regardless of whether x is increasing or decreasing.
+  const initialSide = points[0].x > targetX;
   let searchStartIndex = 0;
   let crossingDetected = false;
 
   curveInstance.lineStart();
   for (const p of points) {
-    if (!crossingDetected && p.x > targetX) {
+    if (!crossingDetected && (p.x > targetX) !== initialSide) {
       searchStartIndex = Math.max(0, capture.segments.length - 1);
       crossingDetected = true;
     }
