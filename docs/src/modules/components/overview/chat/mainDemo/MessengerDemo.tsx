@@ -579,9 +579,9 @@ function MessengerConversationSidebar(
 export default function MessengerDemo() {
   const chatBoxStyle = React.useMemo(
     () =>
-      (({
+      ({
         '--ChatBox-conversationListWidth': `${MESSENGER_SIDEBAR_WIDTH}px`,
-      }) as React.CSSProperties),
+      }) as React.CSSProperties,
     [],
   );
   const [activeFilter, setActiveFilter] = React.useState<MessengerFilter>('all');

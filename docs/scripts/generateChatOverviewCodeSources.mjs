@@ -35,7 +35,9 @@ async function main() {
       `export const ${entry.exportName} = ${JSON.stringify(entry.content)};`,
       '',
     ]),
-  ].join('\n');
+  ]
+    .join('\n')
+    .trimEnd();
 
   await fs.writeFile(outputPath, `${body}\n`, 'utf8');
 }

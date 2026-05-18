@@ -1194,9 +1194,9 @@ const chunkBuilders: Record<string, (messageId: string) => ChatMessageChunk[]> =
 export default function AgentDemo() {
   const chatBoxStyle = React.useMemo(
     () =>
-      (({
+      ({
         '--ChatBox-conversationListWidth': `${SIDEBAR_WIDTH}px`,
-      }) as React.CSSProperties),
+      }) as React.CSSProperties,
     [],
   );
   const [activeId, setActiveId] = React.useState(() => initialConversations[0].id);
