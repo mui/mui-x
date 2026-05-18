@@ -18,13 +18,17 @@ let chanceGuid: Chance.Chance;
 // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle
 declare const __DISABLE_CHANCE_RANDOM__: any;
 
-if (typeof __DISABLE_CHANCE_RANDOM__ !== 'undefined' && __DISABLE_CHANCE_RANDOM__) {
-  chance = new Chance(() => 0.5);
-  chanceGuid = new Chance(42);
-} else {
-  chance = new Chance();
-  chanceGuid = chance;
+export function resetRandomGenerators() {
+  if (typeof __DISABLE_CHANCE_RANDOM__ !== 'undefined' && __DISABLE_CHANCE_RANDOM__) {
+    chance = new Chance(() => 0.5);
+    chanceGuid = new Chance(42);
+  } else {
+    chance = new Chance();
+    chanceGuid = chance;
+  }
 }
+
+resetRandomGenerators();
 
 type ColumnDataGenerator<Value> = (data: any, context: GridDataGeneratorContext) => Value;
 

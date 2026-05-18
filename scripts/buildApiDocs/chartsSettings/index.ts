@@ -109,6 +109,7 @@ export default chartsApiPages;
       'x-charts-pro/src/SankeyChart/SankeyLinkLabelPlot.tsx',
       'x-charts-pro/src/SankeyChart/SankeyNodeLabelPlot.tsx',
       'x-charts-premium/src/ScatterChartPremium/webgl/ScatterWebGLPlot.tsx',
+      'x-charts-premium/src/BarChartPremium/webgl/BarWebGLPlot.tsx',
       'x-charts-premium/src/BarChartPremium/RangeBar/AnimatedRangeBarElement.tsx',
       'x-charts-premium/src/ChartsRenderer/ChartsRenderer.tsx',
       'x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx',
@@ -129,6 +130,7 @@ export default chartsApiPages;
       'x-charts-premium/src/RadialLineChart/RadialLine.tsx',
       'x-charts-premium/src/RadialLineChart/RadialArea.tsx',
       'x-charts-premium/src/RadialLineChart/RadialLineHighlightElement.tsx',
+      'x-charts-premium/src/RadialBarChart/RadialBarElement.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,

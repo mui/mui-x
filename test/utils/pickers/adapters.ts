@@ -3,12 +3,11 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-// import { AdapterJsJoda } from '@mui/x-date-pickers/AdapterJsJoda';
-import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
-import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
-import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-import { AdapterDayjsBuddhist } from '@mui/x-date-pickers/AdapterDayjsBuddhist';
 
+// Regional adapters (moment-hijri, moment-jalaali, date-fns-jalali, dayjs-buddhist)
+// drag in large date libraries and are needed only by a handful of tests. They are
+// not registered here; tests that use them pass the Adapter class directly via
+// `createPickerRenderer({ Adapter })`.
 export type AdapterName =
   | 'date-fns'
   | 'dayjs'
@@ -17,24 +16,18 @@ export type AdapterName =
   | 'moment'
   | 'moment-hijri'
   | 'moment-jalaali'
-  // | 'js-joda'
   | 'date-fns-jalali';
 
-export const availableAdapters: {
-  [key in AdapterName]: new (...args: any) => MuiPickersAdapter;
-} = {
+type AdapterConstructor = new (...args: any) => MuiPickersAdapter;
+
+export const availableAdapters: Partial<Record<AdapterName, AdapterConstructor>> = {
   'date-fns': AdapterDateFns,
   dayjs: AdapterDayjs,
-  'dayjs-buddhist': AdapterDayjsBuddhist,
   luxon: AdapterLuxon,
   moment: AdapterMoment,
-  'moment-hijri': AdapterMomentHijri,
-  'moment-jalaali': AdapterMomentJalaali,
-  'date-fns-jalali': AdapterDateFnsJalali,
-  // 'js-joda': AdapterJsJoda,
 };
 
-let AdapterClassToExtend = availableAdapters['date-fns'];
+let AdapterClassToExtend: AdapterConstructor = AdapterDateFns;
 
 // Check if we are in unit tests
 if (/jsdom/.test(window.navigator.userAgent)) {
@@ -45,8 +38,9 @@ if (/jsdom/.test(window.navigator.userAgent)) {
   if (flagIndex !== -1 && flagIndex + 1 < args.length) {
     const potentialAdapter = args[flagIndex + 1];
     if (potentialAdapter) {
-      if (availableAdapters[potentialAdapter as AdapterName]) {
-        AdapterClassToExtend = availableAdapters[potentialAdapter as AdapterName];
+      const constructor = availableAdapters[potentialAdapter as AdapterName];
+      if (constructor) {
+        AdapterClassToExtend = constructor;
       } else {
         const supportedAdapters = Object.keys(availableAdapters);
         const message = `Error: Invalid --date-adapter value "${potentialAdapter}". Supported date adapters: ${supportedAdapters

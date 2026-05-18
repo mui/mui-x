@@ -37,6 +37,7 @@ const getProjects = () => {
     ...(fill === 'jsdom'
       ? [
           `docs/vitest.config.${fill}.mts`,
+          `test/x-license-compat/vitest.config.${fill}.mts`,
           // We also run node tests when running in jsdom mode
           `packages/*/vitest.config.node.mts`,
         ]

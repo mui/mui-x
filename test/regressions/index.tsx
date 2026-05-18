@@ -5,7 +5,8 @@ import { Globals } from '@react-spring/web';
 // eslint-disable-next-line import/no-relative-packages
 import '../utils/setupFakeClock';
 import { LicenseInfo } from '@mui/x-license';
-import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/internals';
+import { TEST_LICENSE_KEY_PREMIUM } from '@mui/x-license/test-keys';
+import { resetRandomGenerators } from '@mui/x-data-grid-generator';
 import TestViewer from './TestViewer';
 import { type Test, testsBySuite } from './testsBySuite';
 
@@ -51,7 +52,12 @@ function Root() {
 
   const navigate = useNavigate();
   React.useEffect(() => {
-    window.muiFixture.navigate = navigate;
+    window.muiFixture.navigate = (path) => {
+      // Each demo should observe the same seeded random sequence regardless
+      // of what was rendered before on this page.
+      resetRandomGenerators();
+      navigate(path);
+    };
     window.muiFixture.isReady = true;
   }, [navigate]);
 
