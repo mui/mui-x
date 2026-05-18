@@ -122,6 +122,11 @@ const useDragRangeEvents = ({
     lastHoveredCellRef.current = null;
     listenerCleanupsRef.current.forEach((teardown) => teardown());
     listenerCleanupsRef.current = [];
+    // Also tear down any in-flight click suppressor — without this, an
+    // unmount in the brief window between `pointerup` and the
+    // `setTimeout(0)` teardown leaves a capture-phase listener attached
+    // to `document` that swallows the next click on unrelated UI.
+    clickSuppressorRef.current?.();
   });
 
   const cleanup = useEventCallback(() => {
@@ -202,10 +207,12 @@ const useDragRangeEvents = ({
 
     cleanup();
 
-    if (eventType === 'pointerup' && wasMoved) {
-      // The click that follows pointerup would re-enter the day's selection
-      // logic and undo the drop; swallow it. (Not needed on pointercancel —
-      // no click follows a canceled gesture.)
+    if (eventType === 'pointerup' && wasMoved && dropCell) {
+      // The click that follows pointerup on a day cell would re-enter the
+      // day's selection logic and undo the drop (or, when the drag returned
+      // to the source, replace the range with a single-day selection).
+      // Swallow it. Gated on `dropCell` so a release outside the calendar
+      // doesn't swallow an unrelated click on the host UI.
       installClickSuppressor(ownerDoc);
     }
 
@@ -319,15 +326,15 @@ const useDragRangeEvents = ({
     };
 
     const onKeyDown = (keyEvent: KeyboardEvent) => {
-      if (keyEvent.key !== 'Escape') {
+      if (keyEvent.key !== 'Escape' || !didMoveRef.current) {
+        // No visible drag to cancel. Leave the gesture intact and let
+        // Escape propagate (host modal/popover can still close on it).
+        // A press without movement behaves identically to a tap on
+        // release — letting cleanup run here would only half-collapse
+        // the gesture without suppressing the eventual tap-to-advance.
         return;
       }
-      // Only consume Escape when there's a visible drag in flight. A press
-      // without movement is indistinguishable from a tap; let Escape
-      // propagate so a host modal/popover can still close on the same key.
-      if (didMoveRef.current) {
-        keyEvent.preventDefault();
-      }
+      keyEvent.preventDefault();
       cleanup();
     };
 
