@@ -160,6 +160,19 @@ See [Custom components](/x/react-charts/components/) for more ways to customize 
 Scatter charts can have many points, which can slow down rendering.
 By default, points are drawn with SVG `circle` elements, which may be slow for large datasets.
 
+### Default renderer
+
+The default `renderer="svg-single"` keeps one `circle` element per point, so CSS styling, the `marker` slot, and per-item interactions all keep working.
+
+For large datasets it automatically switches to an asynchronous, batched implementation: the series and axes are processed off the render path, and the points are split into batches whose groups mount immediately and paint progressively as the data settles.
+This keeps the chart responsive while a large dataset is being prepared, without changing the public API.
+
+The example below renders 20,000 points with the default renderer, painted progressively batch by batch.
+
+{{"demo": "ScatterAsyncRenderer.js"}}
+
+### Batch renderer
+
 Set the `renderer` prop to `"svg-batch"` to draw circles in a more efficient way.
 This has some trade-offs:
 

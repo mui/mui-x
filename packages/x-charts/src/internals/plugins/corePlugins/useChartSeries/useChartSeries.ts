@@ -1,15 +1,29 @@
 'use client';
+import * as React from 'react';
+import { useStoreEffect } from '@mui/x-internals/store';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { type ChartPlugin } from '../../models';
 import type { UseChartSeriesState, UseChartSeriesSignature } from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
-import { defaultizeSeries } from './processSeries';
+import {
+  defaultizeSeries,
+  runSeriesProcessors,
+  hasAsyncProcessedSeries,
+  pickSettledProcessedSeries,
+  resolveProcessedSeries,
+} from './processSeries';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import type {
   SeriesItemIdentifier,
   SeriesItemIdentifierWithType,
   SeriesId,
 } from '../../../../models/seriesType';
+import {
+  selectorChartDefaultizedSeries,
+  selectorChartsDataset,
+  selectorChartSeriesProcessingInputs,
+} from './useChartSeries.selectors';
+import { selectorIsItemVisibleGetter } from '../../featurePlugins/useChartVisibilityManager/useChartVisibilityManager.selectors';
 
 type RetrunedType<SeriesType extends ChartSeriesType, Item> =
   Item extends SeriesItemIdentifier<SeriesType>
@@ -59,6 +73,63 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, s
     });
   }, [colors, dataset, series, theme, store]);
 
+  // Series processors may be synchronous or asynchronous. They are run here (a
+  // side effect) and their result is written back to the store, keeping every
+  // selector synchronous. The `processingVersionRef` discards stale async
+  // results when a newer run supersedes an in-flight one.
+  const processingVersionRef = React.useRef(0);
+
+  const runProcessing = React.useCallback(() => {
+    const seriesConfig = store.state.seriesConfig.config;
+    const defaultizedSeries = selectorChartDefaultizedSeries(store.state);
+    const datasetValue = selectorChartsDataset(store.state);
+    const isItemVisible = selectorIsItemVisibleGetter(store.state);
+
+    const raw = runSeriesProcessors(defaultizedSeries, seriesConfig, datasetValue, isItemVisible);
+    processingVersionRef.current += 1;
+    const version = processingVersionRef.current;
+
+    if (!hasAsyncProcessedSeries(raw)) {
+      store.set('series', {
+        ...store.state.series,
+        processed: pickSettledProcessedSeries(raw),
+        processedStatus: 'settled',
+      });
+      return;
+    }
+
+    // Keep the last settled value visible while the async processors resolve.
+    store.set('series', {
+      ...store.state.series,
+      processed: pickSettledProcessedSeries(raw, store.state.series.processed),
+      processedStatus: 'pending',
+    });
+
+    resolveProcessedSeries(raw).then((resolved) => {
+      if (version !== processingVersionRef.current) {
+        // A newer processing run superseded this one.
+        return;
+      }
+      store.set('series', {
+        ...store.state.series,
+        processed: resolved,
+        processedStatus: 'settled',
+      });
+    });
+  }, [store]);
+
+  // Bootstrap on mount: `useEffectAfterFirstRender` skips the first commit, and
+  // `getInitialState` cannot await async processors, so without this the
+  // processed series would stay at its seeded (possibly empty/pending) value.
+  React.useEffect(() => {
+    runProcessing();
+  }, [runProcessing]);
+
+  // Re-run processing whenever its inputs change afterwards: the defaultized
+  // series, the dataset, the series config, or the visibility map (legend
+  // toggles).
+  useStoreEffect(store, selectorChartSeriesProcessingInputs, runProcessing);
+
   const identifierWithType = createIdentifierWithType(store.state);
 
   return { instance: { identifierWithType } };
@@ -88,11 +159,27 @@ useChartSeries.getInitialState = ({ series = [], colors, theme, dataset }, curre
     theme,
     seriesConfig,
   });
+
+  // Seed the processed series synchronously so that the first render of charts
+  // using synchronous processors is unchanged. Async processors stay pending
+  // until the plugin effect settles them.
+  const raw = runSeriesProcessors(
+    defaultizedSeries,
+    seriesConfig,
+    dataset,
+    // `currentState` here is the partial state accumulated by the core plugins
+    // (no `cacheKey` yet); the visibility manager is a feature plugin so this
+    // resolves to "everything visible", matching the previous initial behavior.
+    selectorIsItemVisibleGetter(currentState as Parameters<typeof selectorIsItemVisibleGetter>[0]),
+  );
+
   return {
     series: {
       defaultizedSeries,
       idToType,
       dataset,
+      processed: pickSettledProcessedSeries(raw),
+      processedStatus: hasAsyncProcessedSeries(raw) ? 'pending' : 'settled',
     },
   };
 };

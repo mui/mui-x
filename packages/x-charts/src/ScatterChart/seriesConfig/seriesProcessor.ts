@@ -1,7 +1,7 @@
 import { type ScatterValueType } from '../../models';
 import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
-const seriesProcessor: SeriesProcessor<'scatter'> = (
+const seriesProcessor: SeriesProcessor<'scatter'> = async (
   { series, seriesOrder },
   dataset,
   isItemVisible,

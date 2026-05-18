@@ -556,6 +556,13 @@ export const selectorChartSeriesFlatbushMap = createSelectorMemoized(
         yAxisId = defaultYAxisId,
       } = validSeries.series[seriesId];
 
+      // A series can transiently have no data while the async series processor
+      // is still settling. Flatbush requires a positive item count, so skip
+      // empty series instead of constructing an invalid spatial index.
+      if (data.length === 0) {
+        return;
+      }
+
       const flatbush = new Flatbush(data.length);
 
       const originalXScale = xAxesScaleMap[xAxisId];

@@ -9,6 +9,8 @@ import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
+import { AsyncScatter } from './AsyncScatter';
+import { SCATTER_ASYNC_THRESHOLD } from './scatterRendererConstants';
 import { useUtilityClasses } from './scatterClasses';
 
 export interface ScatterPlotSlots extends ScatterSlots {
@@ -76,7 +78,23 @@ function ScatterPlot(props: ScatterPlotProps) {
   const defaultYAxisId = yAxisIds[0];
   const defaultZAxisId = zAxisIds[0];
 
-  const DefaultScatterItems = renderer === 'svg-batch' ? BatchScatter : Scatter;
+  // `svg-single` (default) renders one element per point. Above
+  // `SCATTER_ASYNC_THRESHOLD` total points it uses the async, batched
+  // implementation (`AsyncScatter`); below it the original `Scatter`. Both are
+  // selected by `renderer === 'svg-single'`. `svg-batch` is unaffected.
+  const totalPointCount = seriesOrder.reduce(
+    (sum, seriesId) => (series[seriesId].hidden ? sum : sum + series[seriesId].data.length),
+    0,
+  );
+
+  let DefaultScatterItems: React.JSXElementConstructor<ScatterProps>;
+  if (renderer === 'svg-batch') {
+    DefaultScatterItems = BatchScatter;
+  } else if (totalPointCount > SCATTER_ASYNC_THRESHOLD) {
+    DefaultScatterItems = AsyncScatter;
+  } else {
+    DefaultScatterItems = Scatter;
+  }
   const ScatterItems = slots?.scatter ?? DefaultScatterItems;
 
   return (

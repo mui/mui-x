@@ -22,8 +22,14 @@ export type SeriesProcessorResult<SeriesType extends ChartSeriesType> = {
   ? { stackingGroups: StackingGroupsType }
   : {});
 
+/*
+ * A series processor may run synchronously (returning the result directly) or
+ * asynchronously (returning a Promise). Async processors are awaited by the
+ * `useChartSeries` plugin effect and their result is written back to the store
+ * once settled. Selectors stay synchronous and read the last settled value.
+ */
 export type SeriesProcessor<SeriesType extends ChartSeriesType> = (
   params: SeriesProcessorParams<SeriesType>,
   dataset?: Readonly<DatasetType>,
   isItemVisible?: IsItemVisibleFunction,
-) => SeriesProcessorResult<SeriesType>;
+) => SeriesProcessorResult<SeriesType> | Promise<SeriesProcessorResult<SeriesType>>;

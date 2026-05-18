@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-import { createRenderer } from '@mui/internal-test-utils';
+import { act, createRenderer, flushMicrotasks } from '@mui/internal-test-utils';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 
@@ -51,7 +51,7 @@ describe('ChartsAxisZoomSliderPreview', () => {
     expect(container.querySelector('svg')).not.toBeNull();
   });
 
-  it('handles two axes with zoom slider preview in a scatter chart', () => {
+  it('handles two axes with zoom slider preview in a scatter chart', async () => {
     const { container } = render(
       <ScatterChartPro
         xAxis={[
@@ -80,5 +80,11 @@ describe('ChartsAxisZoomSliderPreview', () => {
     );
 
     expect(container.querySelector('svg')).not.toBeNull();
+
+    // Scatter's series processor is async; let it settle inside `act` so the
+    // resulting store update doesn't warn about not being wrapped in act.
+    await act(async () => {
+      await flushMicrotasks();
+    });
   });
 });

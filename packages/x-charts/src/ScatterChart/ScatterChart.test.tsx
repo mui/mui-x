@@ -1,4 +1,4 @@
-import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, screen, waitFor } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { ScatterChart, scatterClasses } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -174,25 +174,32 @@ describe('<ScatterChart />', () => {
   });
 
   describe('classes', () => {
-    it('should apply scatterClasses.root to the ScatterPlot root element', () => {
+    it('should apply scatterClasses.root to the ScatterPlot root element', async () => {
       render(<ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} hideLegend />);
-      const root = document.querySelector<HTMLElement>(`.${scatterClasses.root}`);
 
-      expect(root).not.to.equal(null);
+      await waitFor(() =>
+        expect(document.querySelector<HTMLElement>(`.${scatterClasses.root}`)).not.to.equal(null),
+      );
     });
 
-    it('should apply scatterClasses.series to series group elements', () => {
+    it('should apply scatterClasses.series to series group elements', async () => {
       render(<ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} hideLegend />);
-      const seriesGroups = document.querySelectorAll<HTMLElement>(`.${scatterClasses.series}`);
 
-      expect(seriesGroups.length).to.equal(1);
+      await waitFor(() =>
+        expect(
+          document.querySelectorAll<HTMLElement>(`.${scatterClasses.series}`).length,
+        ).to.equal(1),
+      );
     });
 
-    it('should apply scatterClasses.marker to scatter marker elements', () => {
+    it('should apply scatterClasses.marker to scatter marker elements', async () => {
       render(<ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} hideLegend />);
-      const markers = document.querySelectorAll<HTMLElement>(`.${scatterClasses.marker}`);
 
-      expect(markers.length).to.equal(5);
+      await waitFor(() =>
+        expect(
+          document.querySelectorAll<HTMLElement>(`.${scatterClasses.marker}`).length,
+        ).to.equal(5),
+      );
     });
   });
 });

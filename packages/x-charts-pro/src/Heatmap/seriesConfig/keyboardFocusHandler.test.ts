@@ -6,6 +6,8 @@ const state = {
   series: {
     seriesConfig: { heatmap: {} } as any,
     idToType: new Map([['heatmap-1', 'heatmap' as const]]),
+    processed: {},
+    processedStatus: 'settled' as const,
     defaultizedSeries: {
       heatmap: {
         seriesOrder: ['heatmap-1'],

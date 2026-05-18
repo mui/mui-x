@@ -14,8 +14,8 @@ describe('ScatterChart - seriesProcessor', () => {
       },
     };
 
-    it('should get data from the dataset', () => {
-      const result = scatterProcessor({ seriesOrder, series }, [
+    it('should get data from the dataset', async () => {
+      const result = await scatterProcessor({ seriesOrder, series }, [
         { name: 'p1', a: 1, b: 2 },
         { name: 'p2', a: 3, b: 4 },
       ]);
@@ -40,8 +40,8 @@ describe('ScatterChart - seriesProcessor', () => {
       },
     };
 
-    it('should get data using valueGetter without datasetKeys', () => {
-      const result = scatterProcessor({ seriesOrder, series }, [
+    it('should get data using valueGetter without datasetKeys', async () => {
+      const result = await scatterProcessor({ seriesOrder, series }, [
         { city: 'London', lon: -0.12, lat: 51.5 },
         { city: 'Paris', lon: 2.35, lat: 48.86 },
       ]);
