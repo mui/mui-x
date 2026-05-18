@@ -4,7 +4,10 @@ import Typography from '@mui/material/Typography';
 import { ChatMessage } from '@mui/x-chat';
 
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
-import { MessageErrorEffect, ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
+import {
+  MessageErrorEffect,
+  ScopedChat,
+} from 'docs/src/modules/components/chat-playground/sharedProviders';
 import {
   ChoiceControl,
   DividerLabel,

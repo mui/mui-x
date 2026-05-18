@@ -8,8 +8,14 @@ import {
 } from '@mui/x-chat';
 
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
-import { ChatChrome, ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
-import { ChoiceControl, DividerLabel } from 'docs/src/modules/components/chat-playground/controls';
+import {
+  ChatChrome,
+  ScopedChat,
+} from 'docs/src/modules/components/chat-playground/sharedProviders';
+import {
+  ChoiceControl,
+  DividerLabel,
+} from 'docs/src/modules/components/chat-playground/controls';
 import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
 import { users } from 'docs/src/modules/components/chat-playground/data';
 
