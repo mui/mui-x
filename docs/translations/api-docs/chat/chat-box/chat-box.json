@@ -35,6 +35,9 @@
     "members": {
       "description": "Known chat participants. Used to derive the local user / assistant user when explicit props are omitted, and to enrich message authors by resolved author id at render time."
     },
+    "roleDisplayNames": {
+      "description": "Locale-driven fallback labels for messages without explicit author information."
+    },
     "slotProps": { "description": "The extra props for the slot components." },
     "slots": { "description": "The components used for each slot inside the ChatBox." },
     "storeClass": { "description": "The store class to use for this provider." },
