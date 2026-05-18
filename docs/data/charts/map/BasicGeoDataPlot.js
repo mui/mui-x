@@ -46,7 +46,7 @@ export default function BasicGeoDataPlot() {
               { name: 'Czechia' },
               { name: 'Denmark' },
               { name: 'Estonia' },
-              { name: 'France', value: 10 },
+              { name: 'France' },
               { name: 'Finland' },
               { name: 'Germany' },
               { name: 'Hungary' },
