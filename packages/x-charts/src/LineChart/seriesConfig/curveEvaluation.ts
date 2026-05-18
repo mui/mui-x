@@ -211,7 +211,7 @@ export function evaluateCurveY(
 
   curveInstance.lineStart();
   for (const p of points) {
-    if (!crossingDetected && (p.x > targetX) !== initialSide) {
+    if (!crossingDetected && p.x > targetX !== initialSide) {
       searchStartIndex = Math.max(0, capture.segments.length - 1);
       crossingDetected = true;
     }
