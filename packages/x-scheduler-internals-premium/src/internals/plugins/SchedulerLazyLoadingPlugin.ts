@@ -18,16 +18,6 @@ export class SchedulerLazyLoadingPlugin<
 
   private dataManager: SchedulerDataManager | null = null;
   private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
-  private nextErrorKey = 0;
-
-  private pushError = (error: unknown) => {
-    const wrapped =
-      error instanceof Error
-        ? error
-        : /* minify-error-disabled */ new Error(String(error), { cause: error });
-    this.nextErrorKey += 1;
-    return [...this.store.state.errors, { error: wrapped, key: String(this.nextErrorKey) }];
-  };
 
   // TODO #22418: add a dispose lifecycle. The `dataManager` keeps timers (debounce), the
   // `eventsUpdated` subscription below is never unsubscribed, and consumer plugins
@@ -59,7 +49,7 @@ export class SchedulerLazyLoadingPlugin<
         const { adapter } = this.store.state;
 
         // Flip `isLoading` before the debounce window so the skeleton shows immediately,
-        // not after the 150 ms wait.
+        // not after the debounce window.
         if (
           this.cache &&
           !this.cache.hasCoverage(
@@ -77,11 +67,8 @@ export class SchedulerLazyLoadingPlugin<
         }
       }
     } catch (error) {
-      this.store.update({
-        ...this.store.state,
-        errors: this.pushError(error),
-        isLoading: false,
-      });
+      this.store.pushError(error);
+      this.store.set('isLoading', false);
     }
   };
 
@@ -104,22 +91,24 @@ export class SchedulerLazyLoadingPlugin<
         adapter.getTime(adapter.endOfDay(range.end)),
       )
     ) {
-      const allCachedEvents = this.cache?.getAll() || [];
-      const eventsState = buildEventsState(
-        { ...this.store.parameters, events: allCachedEvents } as Parameters,
-        adapter,
-        displayTimezone,
-        this.store.state.recurringEventsPlugin,
-      );
+      try {
+        const allCachedEvents = this.cache?.getAll() || [];
+        const eventsState = buildEventsState(
+          { ...this.store.parameters, events: allCachedEvents } as Parameters,
+          adapter,
+          displayTimezone,
+          this.store.state.recurringEventsPlugin,
+        );
 
-      this.store.update({
-        ...this.store.state,
-        ...eventsState,
-        isLoading: false,
-        errors: [],
-      });
-
-      await this.dataManager.setRequestSettled(range);
+        this.store.update({
+          ...this.store.state,
+          ...eventsState,
+          isLoading: false,
+          errors: [],
+        });
+      } finally {
+        await this.dataManager.setRequestSettled(range);
+      }
 
       return;
     }
@@ -145,7 +134,7 @@ export class SchedulerLazyLoadingPlugin<
         errors: [],
       });
     } catch (error) {
-      this.store.set('errors', this.pushError(error));
+      this.store.pushError(error);
     } finally {
       this.store.set('isLoading', false);
       await this.dataManager.setRequestSettled(range);
@@ -169,14 +158,11 @@ export class SchedulerLazyLoadingPlugin<
       });
 
       if (!shouldUpdateEvents.success) {
-        this.store.set(
-          'errors',
-          this.pushError(
-            new Error(
-              'MUI X Scheduler: `dataSource.updateEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
-                'To surface a specific message to the user, throw a descriptive Error from `updateEvents` instead. ' +
-                'See the `updateEvents` contract at https://mui.com/x/react-scheduler/event-calendar/lazy-loading/ (EventCalendar) or https://mui.com/x/react-scheduler/event-timeline/lazy-loading/ (EventTimeline).',
-            ),
+        this.store.pushError(
+          new Error(
+            'MUI X Scheduler: `dataSource.updateEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
+              'To surface a specific message to the user, throw a descriptive Error from `updateEvents` instead. ' +
+              'See the `updateEvents` contract at https://mui.com/x/react-scheduler/event-calendar/lazy-loading/ (EventCalendar) or https://mui.com/x/react-scheduler/event-timeline/lazy-loading/ (EventTimeline).',
           ),
         );
         return;
@@ -223,7 +209,7 @@ export class SchedulerLazyLoadingPlugin<
         errors: [],
       });
     } catch (error) {
-      this.store.set('errors', this.pushError(error));
+      this.store.pushError(error);
     }
   };
 }

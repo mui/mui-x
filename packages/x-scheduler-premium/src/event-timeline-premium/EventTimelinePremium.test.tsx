@@ -667,7 +667,7 @@ describe('<EventTimelinePremium />', () => {
         expect(screen.queryByText('Shared error')).to.equal(null);
       });
 
-      // Plugin re-encounters the same failure and pushes a new entry with a fresh key.
+      // Simulate the plugin re-pushing the same Error instance under a new key.
       await act(async () => {
         store.set('errors', [{ error: sharedError, key: '2' }]);
       });

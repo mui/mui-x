@@ -410,5 +410,57 @@ premiumStoreClasses.forEach((storeClass) => {
 
       expect(store.state.errors).toHaveLength(0);
     });
+
+    describe('dismissError', () => {
+      it('should remove only the entry whose key matches and preserve order', () => {
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
+        const a = new Error('A');
+        const b = new Error('B');
+        const c = new Error('C');
+        store.set('errors', [
+          { error: a, key: '1' },
+          { error: b, key: '2' },
+          { error: c, key: '3' },
+        ]);
+
+        store.dismissError('2');
+
+        expect(store.state.errors).toHaveLength(2);
+        expect(store.state.errors[0].key).to.equal('1');
+        expect(store.state.errors[0].error).to.equal(a);
+        expect(store.state.errors[1].key).to.equal('3');
+        expect(store.state.errors[1].error).to.equal(c);
+      });
+
+      it('should distinguish duplicate Error instances by key', () => {
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
+        const shared = new Error('shared');
+        store.set('errors', [
+          { error: shared, key: '1' },
+          { error: shared, key: '2' },
+        ]);
+
+        store.dismissError('1');
+
+        expect(store.state.errors).toHaveLength(1);
+        expect(store.state.errors[0].key).to.equal('2');
+        expect(store.state.errors[0].error).to.equal(shared);
+      });
+
+      it('should be a no-op when the key does not exist', () => {
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS }, adapter);
+        const entries = [
+          { error: new Error('A'), key: '1' },
+          { error: new Error('B'), key: '2' },
+        ];
+        store.set('errors', entries);
+
+        store.dismissError('does-not-exist');
+
+        expect(store.state.errors).toHaveLength(2);
+        expect(store.state.errors[0]).to.equal(entries[0]);
+        expect(store.state.errors[1]).to.equal(entries[1]);
+      });
+    });
   });
 });

@@ -20,7 +20,14 @@ import { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
 import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
 export interface StoredError {
+  /**
+   * The error itself. Non-Error rejections are wrapped, preserving the original via `cause`.
+   */
   error: Error;
+  /**
+   * Stable identifier assigned at push time. Suitable as a React key and as the
+   * argument to `store.dismissError(key)`.
+   */
   key: string;
 }
 

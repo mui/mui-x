@@ -70,8 +70,6 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
       updateEvents: noopUpdateEvents,
     };
     const params = { ...DEFAULT_PARAMS, dataSource };
-    // Construct the store but skip the parameters update — `hasInitialized` stays false
-    // so the lazy-loading effect must keep its selector at `null` and never fire.
     const store = new EventTimelinePremiumStore(params, adapter);
 
     // Mutate the visible date so the range key would change if the selector were live.
@@ -147,7 +145,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     await flushDebounce();
 
     // Navigate to B before A resolves.
-    (store as any).set('visibleDate', adapter.date('2025-09-15T00:00:00Z', 'default'));
+    store.goToDate(adapter.date('2025-09-15T00:00:00Z', 'default'), noopUIEvent);
     await flushEffect();
     await flushDebounce();
     expect(dataSource.getEvents.calledTwice).to.equal(true);
@@ -177,7 +175,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
 
     // `dayAndHour` snaps the range to startOfDay(visibleDate), so moving a few hours within the same day keeps it identical.
     const sameDayLater = adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 5);
-    (store as any).set('visibleDate', sameDayLater);
+    store.goToDate(sameDayLater, noopUIEvent);
 
     await flushEffect();
     await flushDebounce();

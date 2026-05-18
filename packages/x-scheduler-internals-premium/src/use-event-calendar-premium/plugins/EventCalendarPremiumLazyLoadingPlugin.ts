@@ -55,7 +55,16 @@ export class EventCalendarPremiumLazyLoadingPlugin<
           end: visibleDays[visibleDays.length - 1].value,
         };
 
-        queueMicrotask(() => this.queueDataFetchForRange(range, isInstantLoad));
+        queueMicrotask(() => {
+          this.queueDataFetchForRange(range, isInstantLoad).catch((error) => {
+            if (process.env.NODE_ENV !== 'production') {
+              console.error(
+                'MUI X Scheduler: unexpected rejection from queueDataFetchForRange',
+                error,
+              );
+            }
+          });
+        });
       },
     );
   }
