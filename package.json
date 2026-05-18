@@ -72,7 +72,7 @@
     "@babel/traverse": "catalog:",
     "@babel/types": "7.29.0",
     "@emotion/cache": "catalog:",
-    "@inquirer/prompts": "8.4.2",
+    "@inquirer/prompts": "8.4.3",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.20",
     "@mui/internal-babel-plugin-minify-errors": "2.0.8-canary.27",
     "@mui/internal-bundle-size-checker": "1.0.9-canary.79",
@@ -122,7 +122,7 @@
     "moment": "catalog:",
     "moment-timezone": "catalog:",
     "picomatch": "4.0.4",
-    "pkg-pr-new": "0.0.71",
+    "pkg-pr-new": "0.0.72",
     "playwright": "catalog:",
     "prettier": "3.8.3",
     "pretty-quick": "4.2.2",
@@ -133,7 +133,7 @@
     "serve": "catalog:",
     "sinon": "22.0.0",
     "string-replace-loader": "3.3.0",
-    "stylelint": "17.11.0",
+    "stylelint": "17.11.1",
     "tsx": "catalog:",
     "typescript": "5.9.3",
     "unist-util-visit": "5.1.0",
@@ -144,7 +144,7 @@
     "zod": "4.4.3"
   },
   "config": {
-    "valeVersion": "3.14.1"
+    "valeVersion": "3.14.2"
   },
   "packageManager": "pnpm@10.33.4",
   "engines": {
