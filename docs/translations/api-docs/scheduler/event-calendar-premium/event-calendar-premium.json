@@ -1,5 +1,5 @@
 {
-  "componentDescription": "Premium version of EventCalendar with lazy loading support.\nUses EventCalendarPremiumStore which extends EventCalendarStore with lazy loading plugin.",
+  "componentDescription": "Premium version of EventCalendar with support for lazy loading and recurring events.",
   "propDescriptions": {
     "apiRef": {
       "description": "The ref object that allows Event Calendar manipulation. Can be instantiated with <code>useEventCalendarPremiumApiRef()</code>."
