@@ -40,6 +40,7 @@ export function createEchoAdapter(options: CreateEchoAdapterOptions = {}): ChatA
       let closed = false;
       let timer: ReturnType<typeof setTimeout> | null = null;
       let streamController: ReadableStreamDefaultController<ChatMessageChunk> | null = null;
+      let handleAbort = () => {};
 
       const cleanup = () => {
         if (timer != null) {
@@ -62,7 +63,7 @@ export function createEchoAdapter(options: CreateEchoAdapterOptions = {}): ChatA
         }
       };
 
-      const handleAbort = () => close();
+      handleAbort = () => close();
 
       return new ReadableStream<ChatMessageChunk>({
         start(controller) {

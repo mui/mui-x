@@ -1,4 +1,6 @@
 [
+  { "name": "AiSdkChatInstance", "kind": "Interface" },
+  { "name": "AiSdkUIMessageChunk", "kind": "TypeAlias" },
   { "name": "ChatAttachmentRejection", "kind": "Interface" },
   { "name": "ChatAttachmentRejectionReason", "kind": "TypeAlias" },
   { "name": "ChatAttachmentsConfig", "kind": "Interface" },
@@ -127,8 +129,6 @@
   { "name": "ChatUnreadMarkerClassKey", "kind": "TypeAlias" },
   { "name": "ChatUnreadMarkerProps", "kind": "Interface" },
   { "name": "ChatVariant", "kind": "TypeAlias" },
-  { "name": "AiSdkChatInstance", "kind": "Interface" },
-  { "name": "AiSdkUIMessageChunk", "kind": "TypeAlias" },
   { "name": "createAiSdkAdapter", "kind": "Function" },
   { "name": "CreateAiSdkAdapterChatOptions", "kind": "Interface" },
   { "name": "CreateAiSdkAdapterOptions", "kind": "TypeAlias" },

@@ -98,6 +98,8 @@ describe('createEchoAdapter', () => {
 
       await stream.cancel('no longer needed');
       await vi.advanceTimersByTimeAsync(100);
+
+      expect(vi.getTimerCount()).toBe(0);
     } finally {
       vi.useRealTimers();
     }
