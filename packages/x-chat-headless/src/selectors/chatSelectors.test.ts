@@ -112,6 +112,18 @@ describe('chatSelectors', () => {
     expect(chatSelectors.messageError(store.state, 'm3')?.message).toBe('Assistant message failed');
   });
 
+  it('uses locale role labels when resolving fallback message authors', () => {
+    const store = new ChatStore({ initialMessages: [assistantMessage] });
+
+    expect(
+      chatSelectors.messageAuthor(store.state, 'm2', {
+        roleDisplayNames: { assistant: 'Assistent' },
+      }),
+    ).toMatchObject({
+      displayName: 'Assistent',
+    });
+  });
+
   it('memoizes message and conversation arrays when their inputs have not changed', () => {
     const store = new ChatStore({
       initialMessages: [userMessage],

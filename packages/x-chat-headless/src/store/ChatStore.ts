@@ -4,6 +4,7 @@ import type {
   ChatDraftAttachment,
   ChatMessage,
   ChatMessageAuthorGetterProps,
+  ChatRole,
   ChatUser,
 } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
@@ -23,6 +24,8 @@ export interface ChatStoreParameters<Cursor = string> extends ChatMessageAuthorG
    * Also used to enrich message authors when a rendered message resolves to `currentUser.id`.
    */
   currentUser?: ChatUser;
+  /** Locale-driven fallback labels for messages without explicit author information. */
+  roleDisplayNames?: Partial<Record<ChatRole, string>>;
   messages?: ChatMessage[];
   /** The initial messages when uncontrolled. Ignored after initialization and when `messages` is provided. */
   initialMessages?: ChatMessage[];

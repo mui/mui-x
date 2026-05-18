@@ -215,17 +215,33 @@ describe('createSendMessageActions', () => {
     it('automatically reconnects once when a stream closes before a terminal chunk', async () => {
       const store = new ChatStore();
       store.setActiveConversation('c1');
+      const onFinish = vi.fn();
       const reconnectToStream = vi.fn().mockResolvedValue(
         createStream([
-          { type: 'text-delta', id: 'text-1', delta: ' world' },
-          { type: 'finish', messageId: 'a1', finishReason: 'stop' },
+          { sequence: 2, eventId: 'e2', chunk: { type: 'text-delta', id: 'text-1', delta: '!' } },
+          {
+            sequence: 3,
+            eventId: 'e3',
+            chunk: { type: 'text-delta', id: 'text-1', delta: ' world' },
+          },
+          { sequence: 4, eventId: 'e4', chunk: { type: 'text-end', id: 'text-1' } },
+          {
+            sequence: 5,
+            eventId: 'e5',
+            chunk: { type: 'finish', messageId: 'a1', finishReason: 'stop' },
+          },
         ]),
       );
       const adapter = createAdapter({
         sendMessage: vi.fn().mockResolvedValue(
           createStream([
-            { type: 'start', messageId: 'a1' },
-            { type: 'text-delta', id: 'text-1', delta: 'Hello' },
+            { sequence: 0, eventId: 'e0', chunk: { type: 'start', messageId: 'a1' } },
+            { sequence: 1, eventId: 'e1', chunk: { type: 'text-start', id: 'text-1' } },
+            {
+              sequence: 2,
+              eventId: 'e2',
+              chunk: { type: 'text-delta', id: 'text-1', delta: 'Hello' },
+            },
           ]),
         ),
         reconnectToStream,
@@ -234,7 +250,7 @@ describe('createSendMessageActions', () => {
       const { sendMessage } = createSendMessageActions({
         store,
         storeUnknown: asUnknown(store),
-        runtimeRef: { current: { adapter } },
+        runtimeRef: { current: { adapter, onFinish } },
         setRuntimeError: vi.fn(),
         assistantMessageIdByUserMessageIdRef: { current: new Map() },
       });
@@ -253,6 +269,12 @@ describe('createSendMessageActions', () => {
         { type: 'text', text: ' world', state: 'done' },
       ]);
       expect(store.state.error).toBe(null);
+      expect(onFinish).toHaveBeenCalledTimes(1);
+      expect(onFinish.mock.calls[0][0]).toMatchObject({
+        isDisconnect: false,
+        isError: false,
+        message: { id: 'a1', status: 'sent' },
+      });
 
       const userMsg = Object.values(store.state.messagesById).find((m) => m.role === 'user');
       expect(userMsg!.status).toBe('sent');

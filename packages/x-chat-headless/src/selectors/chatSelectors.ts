@@ -46,6 +46,7 @@ export const chatSelectors = {
         getMessageAuthorId: parameters.getMessageAuthorId,
         getMessageAuthorDisplayName: parameters.getMessageAuthorDisplayName,
         getMessageAuthorAvatarUrl: parameters.getMessageAuthorAvatarUrl,
+        roleDisplayNames: parameters.roleDisplayNames,
       });
     },
   ),

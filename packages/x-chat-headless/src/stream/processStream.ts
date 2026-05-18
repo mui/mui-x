@@ -45,6 +45,11 @@ export interface ProcessStreamOptions {
    * so they apply (#5).
    */
   reconnectFromSequence?: number;
+  /**
+   * Event ids already consumed before this stream attempt.
+   * Used when reconnecting so replayed envelopes can be skipped.
+   */
+  seenEventIds?: Iterable<string>;
 }
 
 export interface ProcessStreamResult {
@@ -54,6 +59,8 @@ export interface ProcessStreamResult {
   isAbort: boolean;
   isDisconnect: boolean;
   isError: boolean;
+  nextSequence?: number;
+  seenEventIds?: string[];
 }
 
 const DEFAULT_STREAM_FLUSH_INTERVAL = 16;
@@ -104,7 +111,7 @@ export async function processStream<Cursor = string>(
   let expectedSequence: number | undefined =
     options.reconnectFromSequence != null ? options.reconnectFromSequence : undefined;
 
-  const seenEventIds = new Set<string>();
+  const seenEventIds = new Set<string>(options.seenEventIds);
   const bufferedChunksBySequence = new Map<number, ChatMessageChunk>();
   const flushInterval = Math.max(0, options.flushInterval ?? DEFAULT_STREAM_FLUSH_INTERVAL);
 
@@ -116,6 +123,13 @@ export async function processStream<Cursor = string>(
     }
 
     finishCalled = true;
+    const resultWithProgress: ProcessStreamResult = { ...result };
+    if (expectedSequence != null) {
+      resultWithProgress.nextSequence = expectedSequence;
+    }
+    if (seenEventIds.size > 0) {
+      resultWithProgress.seenEventIds = Array.from(seenEventIds);
+    }
 
     if (options.onFinish) {
       await options.onFinish({
@@ -123,17 +137,17 @@ export async function processStream<Cursor = string>(
           storeUnknown,
           targetMessageId,
           options.conversationId,
-          result.status,
+          resultWithProgress.status,
         ),
         messages: store.state.messageIds.map((id) => store.state.messagesById[id]).filter(Boolean),
-        isAbort: result.isAbort,
-        isDisconnect: result.isDisconnect,
-        isError: result.isError,
-        finishReason: result.finishReason,
+        isAbort: resultWithProgress.isAbort,
+        isDisconnect: resultWithProgress.isDisconnect,
+        isError: resultWithProgress.isError,
+        finishReason: resultWithProgress.finishReason,
       });
     }
 
-    return result;
+    return resultWithProgress;
   };
 
   let startAuthor: ChatMessage['author'];

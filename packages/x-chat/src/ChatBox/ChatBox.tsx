@@ -39,11 +39,11 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   inProps: ChatBoxProps<Cursor>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChatBox' });
   const isActiveConversationIdControlled = Object.prototype.hasOwnProperty.call(
-    props,
+    inProps,
     'activeConversationId',
   );
+  const props = useThemeProps({ props: inProps, name: 'MuiChatBox' });
 
   const {
     // ChatRoot / provider props

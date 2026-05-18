@@ -14,6 +14,7 @@ import {
   findAssistantMessageIdsForRetry,
   removeAssistantMessageIds,
 } from './useChatControllerHelpers';
+import { getFinishMessage } from '../../stream/streamHelpers';
 
 export interface SendMessageActionsRuntimeRef<Cursor = string> {
   adapter: ChatAdapter<Cursor>;
@@ -41,21 +42,51 @@ export function createSendMessageActions<Cursor = string>(params: {
   let isSending = false;
   const attachmentsByUserMessageId = new Map<string, ChatDraftAttachment[]>();
 
+  function pruneAttachmentsByMessageIds(messageIds: readonly string[]) {
+    if (attachmentsByUserMessageId.size === 0) {
+      return;
+    }
+
+    const activeMessageIds = new Set(messageIds);
+
+    for (const messageId of attachmentsByUserMessageId.keys()) {
+      if (!activeMessageIds.has(messageId)) {
+        attachmentsByUserMessageId.delete(messageId);
+      }
+    }
+  }
+
   async function processStreamWithReconnect(
     stream: Awaited<ReturnType<ChatAdapter<Cursor>['sendMessage']>>,
     conversationId: string | undefined,
     abortController: AbortController,
   ): Promise<ProcessStreamResult> {
+    const adapter = runtimeRef.current.adapter;
+    const shouldDeferFinish = Boolean(adapter.reconnectToStream);
     const processOptions = {
       conversationId,
       signal: abortController.signal,
       flushInterval: runtimeRef.current.streamFlushInterval,
       onToolCall: runtimeRef.current.onToolCall,
-      onFinish: runtimeRef.current.onFinish,
+      onFinish: shouldDeferFinish ? undefined : runtimeRef.current.onFinish,
       onData: runtimeRef.current.onData,
     };
+    const emitDeferredFinish = async (result: ProcessStreamResult) => {
+      if (!shouldDeferFinish || !runtimeRef.current.onFinish) {
+        return;
+      }
+
+      await runtimeRef.current.onFinish({
+        message: getFinishMessage(storeUnknown, result.messageId, conversationId, result.status),
+        messages: getMessages(storeUnknown),
+        isAbort: result.isAbort,
+        isDisconnect: result.isDisconnect,
+        isError: result.isError,
+        finishReason: result.finishReason,
+      });
+    };
+
     const result = await processStream(store, stream, processOptions);
-    const adapter = runtimeRef.current.adapter;
 
     if (
       !result.isDisconnect ||
@@ -63,6 +94,7 @@ export function createSendMessageActions<Cursor = string>(params: {
       !adapter.reconnectToStream ||
       abortController.signal.aborted
     ) {
+      await emitDeferredFinish(result);
       return result;
     }
 
@@ -76,28 +108,30 @@ export function createSendMessageActions<Cursor = string>(params: {
 
       if (!reconnectStream || abortController.signal.aborted) {
         store.setStreaming(false);
+        await emitDeferredFinish(result);
         return result;
       }
 
       return await processStream(store, reconnectStream, {
         ...processOptions,
+        onFinish: runtimeRef.current.onFinish,
         messageId: result.messageId,
-        // Allow any replayed sequence number to apply on the reconnected
-        // stream (#5). Without this, chunks the server resends from an
-        // earlier point would be silently dropped by the sequence guard.
-        reconnectFromSequence: 0,
+        reconnectFromSequence: result.nextSequence,
+        seenEventIds: result.seenEventIds,
       });
     } catch (error) {
       store.setStreaming(false);
 
       if (abortController.signal.aborted) {
-        return {
+        const cancelledResult: ProcessStreamResult = {
           messageId: result.messageId,
           status: 'cancelled',
           isAbort: true,
           isDisconnect: false,
           isError: false,
         };
+        await emitDeferredFinish(cancelledResult);
+        return cancelledResult;
       }
 
       store.setError(
@@ -114,13 +148,15 @@ export function createSendMessageActions<Cursor = string>(params: {
         ),
       );
 
-      return {
+      const errorResult: ProcessStreamResult = {
         messageId: result.messageId,
         status: 'error',
         isAbort: false,
         isDisconnect: true,
         isError: true,
       };
+      await emitDeferredFinish(errorResult);
+      return errorResult;
     }
   }
 
@@ -269,9 +305,10 @@ export function createSendMessageActions<Cursor = string>(params: {
       assistantMessageIds,
       assistantMessageIdByUserMessageIdRef.current,
     );
+    pruneAttachmentsByMessageIds(store.state.messageIds);
 
     await sendExistingMessage(message, attachmentsByUserMessageId.get(messageId));
   }
 
-  return { sendMessage, retry };
+  return { sendMessage, retry, pruneAttachmentsByMessageIds };
 }

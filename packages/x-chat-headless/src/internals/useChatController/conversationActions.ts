@@ -43,6 +43,9 @@ export function createConversationActions<Cursor = string>(params: {
     }
 
     if (!runtimeRef.current.adapter.listMessages) {
+      if (resetWhenUndefined) {
+        store.resetMessages();
+      }
       return;
     }
 

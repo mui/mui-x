@@ -78,6 +78,46 @@ describe('createConversationActions', () => {
       expect(store.state.messageIds).toEqual([]);
     });
 
+    it('clears stale messages when switching to a conversation without listMessages support', async () => {
+      const store = new ChatStore({ initialMessages: [userMessage] });
+      store.setActiveConversation('c2');
+      const adapter = createAdapter();
+      delete (adapter as any).listMessages;
+
+      const { loadConversationMessages } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+      });
+
+      await loadConversationMessages('c2');
+
+      expect(store.state.messageIds).toEqual([]);
+    });
+
+    it('keeps initial messages on initial load when listMessages is unavailable', async () => {
+      const store = new ChatStore({ initialMessages: [userMessage] });
+      store.setActiveConversation('c1');
+      const adapter = createAdapter();
+      delete (adapter as any).listMessages;
+
+      const { loadConversationMessages } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+      });
+
+      await loadConversationMessages('c1', { resetWhenUndefined: false });
+
+      expect(store.state.messageIds).toEqual(['m1']);
+    });
+
     it('calls adapter.listMessages and populates store on success', async () => {
       const store = new ChatStore();
       store.setActiveConversation('c1');

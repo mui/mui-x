@@ -112,7 +112,7 @@ export function useChatController<Cursor = string>({
     [setRuntimeError, stopStreaming, store],
   );
 
-  const { sendMessage, retry } = React.useMemo(
+  const { sendMessage, retry, pruneAttachmentsByMessageIds } = React.useMemo(
     () =>
       createSendMessageActions({
         store,
@@ -218,82 +218,6 @@ export function useChatController<Cursor = string>({
     [storeUnknown, conversationNavigationRequestIdRef],
   );
 
-  // Some adapters build streams via setTimeout-based producers that call
-  // `controller.enqueue` after the consumer has cancelled. The synchronous
-  // throw from `enqueue` escapes as an unhandled error since it lives outside
-  // any awaited Promise. We monitor `error`/`unhandledrejection` for that
-  // pattern, route the first occurrence to the chat's error state, and dedupe
-  // the (often hundreds of) repeats from a single leaky stream.
-  React.useEffect(() => {
-    const win = (globalThis as unknown as { window?: Window }).window;
-    if (!win) {
-      return undefined;
-    }
-
-    const STREAM_PRODUCER_ERROR_PATTERN =
-      /enqueue.*(closed|cancelled)|(closed|cancelled).*enqueue|invalid state.*(closed|cancelled).*stream/i;
-    const DEDUPE_WINDOW_MS = 3000;
-    let alreadyReported = false;
-    let lastMatchAt = 0;
-
-    const reportIfStreamProducerError = (rawMessage: string): boolean => {
-      if (!STREAM_PRODUCER_ERROR_PATTERN.test(rawMessage)) {
-        return false;
-      }
-      const now = Date.now();
-      if (alreadyReported && now - lastMatchAt < DEDUPE_WINDOW_MS) {
-        lastMatchAt = now;
-        return true; // matched but deduped — caller still preventDefaults
-      }
-      alreadyReported = true;
-      lastMatchAt = now;
-      setRuntimeError(
-        createRuntimeError(
-          'STREAM_ERROR',
-          'The chat adapter produced data after the stream was cancelled. ' +
-            "This usually means the stream's `cancel()` callback isn't stopping its producer.",
-          'stream',
-          true,
-          false,
-        ),
-      );
-      return true;
-    };
-
-    const handleError = (event: ErrorEvent) => {
-      const errorObject = event.error;
-      const errorMessage =
-        errorObject && typeof errorObject === 'object' && 'message' in errorObject
-          ? String((errorObject as { message: unknown }).message)
-          : '';
-      const message = errorMessage || event.message || '';
-      if (reportIfStreamProducerError(message)) {
-        event.preventDefault();
-      }
-    };
-
-    const handleRejection = (event: PromiseRejectionEvent) => {
-      const reason: unknown = event.reason;
-      let message = '';
-      if (reason instanceof Error) {
-        message = reason.message;
-      } else if (typeof reason === 'string') {
-        message = reason;
-      }
-      if (reportIfStreamProducerError(message)) {
-        event.preventDefault();
-      }
-    };
-
-    win.addEventListener('error', handleError);
-    win.addEventListener('unhandledrejection', handleRejection);
-
-    return () => {
-      win.removeEventListener('error', handleError);
-      win.removeEventListener('unhandledrejection', handleRejection);
-    };
-  }, [setRuntimeError]);
-
   React.useEffect(() => {
     let isDisposed = false;
 
@@ -369,6 +293,14 @@ export function useChatController<Cursor = string>({
       cleanup?.();
     };
   }, [adapter, handleRealtimeEvent, setRuntimeError]);
+
+  useStoreEffect(
+    store,
+    (state) => state.messageIds,
+    (_, nextMessageIds) => {
+      pruneAttachmentsByMessageIds(nextMessageIds);
+    },
+  );
 
   useStoreEffect(
     store,
