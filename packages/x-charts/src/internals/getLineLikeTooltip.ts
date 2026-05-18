@@ -19,11 +19,7 @@ export function getLineLikeTooltip<SeriesType extends LineLikeTooltipChartType>(
   params: TooltipGetterParams<SeriesType>,
   options: LineLikeTooltipOptions = {},
 ): TooltipGetterResult<SeriesType> {
-  // SAFETY: bar/radialBar/line/radialLine/scatter series share every field accessed here
-  // (label, data, valueFormatter, labelMarkType). showMark/shape are only read when
-  // includeMarkShape=true (line/radialLine only).
-  const typed = params as TooltipGetterParams<'line'>;
-  const { series, getColor, identifier } = typed;
+  const { series, getColor, identifier } = params;
 
   if (!identifier || identifier.dataIndex === undefined) {
     return null as TooltipGetterResult<SeriesType>;
@@ -46,7 +42,11 @@ export function getLineLikeTooltip<SeriesType extends LineLikeTooltipChartType>(
     formattedValue,
     markType: series.labelMarkType,
     ...(options.includeMarkShape && {
-      markShape: series.showMark ? series.shape : undefined,
+      // showMark / shape only exist on line and radialLine series; consumers that pass
+      // includeMarkShape: true must be one of those types.
+      markShape: (series as TooltipGetterParams<'line'>['series']).showMark
+        ? (series as TooltipGetterParams<'line'>['series']).shape
+        : undefined,
     }),
   };
 

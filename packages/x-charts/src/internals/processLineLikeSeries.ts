@@ -37,13 +37,9 @@ export function processLineLikeSeries<SeriesType extends LineLikeChartType>(
   isItemVisible: IsItemVisibleFunction | undefined,
   seriesType: SeriesType,
 ): SeriesProcessorResult<SeriesType> {
-  // SAFETY: 'line' and 'radialLine' series are structurally identical for every field
-  // accessed in this body. The fields that differ (xAxisId/yAxisId vs rotationAxisId/radiusAxisId)
-  // are only spread through via `...series[id]` and never read here.
-  const typedParams = params as SeriesProcessorParams<'line'>;
-  const { seriesOrder, series } = typedParams;
+  const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({
-    ...typedParams,
+    ...params,
     defaultStrategy: { stackOffset: 'none' },
   });
 
@@ -159,9 +155,12 @@ ${titleCase} plots only support numeric and null values.`,
         data = series[id].data!;
       }
       const hidden = !isItemVisible?.({ type: seriesType, seriesId: id });
+      // SAFETY: 'line' and 'radialLine' series inputs are structurally identical for the
+      // fields needed to build the defaultized series result. The differing axis-ID fields
+      // are passed through via spread without being read.
       completedSeries[id] = {
         labelMarkType: 'line+mark',
-        ...series[id],
+        ...(series as SeriesProcessorParams<'line'>['series'])[id],
         shape: series[id].shape ?? defaultShapes[(idToIndex.get(id) ?? 0) % defaultShapes.length],
         data,
         valueFormatter: series[id].valueFormatter ?? lineValueFormatter,
@@ -172,9 +171,6 @@ ${titleCase} plots only support numeric and null values.`,
     });
   });
 
-  // SAFETY: result is built from `series[id]` (spread) plus shape/data/valueFormatter/hidden/
-  // stackedData/visibleStackedData/labelMarkType — all fields required by both
-  // SeriesProcessorResult<'line'> and SeriesProcessorResult<'radialLine'>.
   return {
     seriesOrder,
     stackingGroups,
