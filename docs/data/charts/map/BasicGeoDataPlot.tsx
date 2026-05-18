@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { feature as  topojsonFeature} from 'topojson-client';
+import { feature as topojsonFeature } from 'topojson-client';
 import countriesTopology from 'world-atlas/countries-110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
@@ -49,7 +49,7 @@ export default function BasicGeoDataPlot() {
               { name: 'Czechia' },
               { name: 'Denmark' },
               { name: 'Estonia' },
-              { name: 'France', value: 10 },
+              { name: 'France' },
               { name: 'Finland' },
               { name: 'Germany' },
               { name: 'Hungary' },
