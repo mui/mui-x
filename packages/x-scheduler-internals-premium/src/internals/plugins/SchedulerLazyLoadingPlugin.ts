@@ -65,10 +65,7 @@ export class SchedulerLazyLoadingPlugin<
         await this.queueDataFetchForRange(range, instantLoad);
       } catch (error) {
         if (process.env.NODE_ENV !== 'production') {
-          console.error(
-            'MUI X Scheduler: unexpected error in lazy-loading microtask',
-            error,
-          );
+          console.error('MUI X Scheduler: unexpected error in lazy-loading microtask', error);
         }
       }
     });

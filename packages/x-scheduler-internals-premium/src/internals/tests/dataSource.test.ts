@@ -495,11 +495,21 @@ describe('SchedulerDataSourceCacheDefault', () => {
     });
 
     cache.setRange(0, 1000, [buildEvent('1'), buildEvent('2'), buildEvent('3')]);
-    expect(cache.getAll().map((e) => e.id).sort()).to.deep.equal(['1', '2', '3']);
+    expect(
+      cache
+        .getAll()
+        .map((e) => e.id)
+        .sort(),
+    ).to.deep.equal(['1', '2', '3']);
 
     // Server deletes event 2 between fetches. Refetch returns only 1 and 3.
     cache.setRange(0, 1000, [buildEvent('1'), buildEvent('3')]);
 
-    expect(cache.getAll().map((e) => e.id).sort()).to.deep.equal(['1', '3']);
+    expect(
+      cache
+        .getAll()
+        .map((e) => e.id)
+        .sort(),
+    ).to.deep.equal(['1', '3']);
   });
 });

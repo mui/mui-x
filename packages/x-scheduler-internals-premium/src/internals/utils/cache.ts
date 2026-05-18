@@ -122,7 +122,11 @@ export class SchedulerDataSourceCacheDefault<
     const newIds = new Set(newEvents.map((event) => String((event as any).id)));
     for (const id of Object.keys(this.cache)) {
       const entry = this.cache[id];
-      if (entry.sourceRangeKey !== null && replacedRangeKeys.has(entry.sourceRangeKey) && !newIds.has(id)) {
+      if (
+        entry.sourceRangeKey !== null &&
+        replacedRangeKeys.has(entry.sourceRangeKey) &&
+        !newIds.has(id)
+      ) {
         delete this.cache[id];
       }
     }

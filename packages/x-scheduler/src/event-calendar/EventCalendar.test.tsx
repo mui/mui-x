@@ -471,18 +471,13 @@ describe('EventCalendar', () => {
     it('should render multiple alerts when state.errors contains multiple errors', () => {
       renderErrorContainer([new Error('First error'), new Error('Second error')]);
 
-      expect(
-        document.querySelectorAll(`.${eventCalendarClasses.errorAlert}`).length,
-      ).to.equal(2);
+      expect(document.querySelectorAll(`.${eventCalendarClasses.errorAlert}`).length).to.equal(2);
       expect(screen.getByText('First error')).not.to.equal(null);
       expect(screen.getByText('Second error')).not.to.equal(null);
     });
 
     it('should remove only the dismissed alert and keep the others', async () => {
-      const { user } = renderErrorContainer([
-        new Error('First error'),
-        new Error('Second error'),
-      ]);
+      const { user } = renderErrorContainer([new Error('First error'), new Error('Second error')]);
 
       const closeButtons = screen.getAllByRole('button', { name: /close/i });
       expect(closeButtons.length).to.equal(2);
@@ -490,9 +485,7 @@ describe('EventCalendar', () => {
       await user.click(closeButtons[0]);
 
       await waitFor(() => {
-        expect(
-          document.querySelectorAll(`.${eventCalendarClasses.errorAlert}`).length,
-        ).to.equal(1);
+        expect(document.querySelectorAll(`.${eventCalendarClasses.errorAlert}`).length).to.equal(1);
       });
       expect(screen.queryByText('First error')).to.equal(null);
       expect(screen.getByText('Second error')).not.to.equal(null);
