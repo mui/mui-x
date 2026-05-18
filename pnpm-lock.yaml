@@ -3949,15 +3949,6 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/confirm@6.0.12':
-    resolution: {integrity: sha512-h9FgGun3QwVYNj5TWIZZ+slii73bMoBFjPfVIGtnFuL4t8gBiNDV9PcSfIzkuxvgquJKt9nr1QzszpBzTbH8Og==}
-    engines: {node: '>=23.5.0 || ^22.13.0 || ^21.7.0 || ^20.12.0'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-
   '@inquirer/confirm@6.0.13':
     resolution: {integrity: sha512-wkGPC7yJ5WJk1DJ5SX7fzk+gfj4BM8cf5dDDi71B/551xHrdsZVRJOC0WyikXd0pEsb/9cLniuE4atbsMqmFkw==}
     engines: {node: '>=23.5.0 || ^22.13.0 || ^21.7.0 || ^20.12.0'}
@@ -3978,15 +3969,6 @@ packages:
 
   '@inquirer/core@11.1.10':
     resolution: {integrity: sha512-a4Q5BXHQAHa9eO202sTaFCHFYVB3x5fauDuThEAdZ9gfn76pSxiKU7wWcEH0N1O0XmQvNfQNU6QXpiRxmYQx+A==}
-    engines: {node: '>=23.5.0 || ^22.13.0 || ^21.7.0 || ^20.12.0'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-
-  '@inquirer/core@11.1.9':
-    resolution: {integrity: sha512-BDE4fG22uYh1bGSifcj7JSx119TVYNViMhMu85usp4Fswrzh6M0DV3yld64jA98uOAa2GSQ4Bg4bZRm2d2cwSg==}
     engines: {node: '>=23.5.0 || ^22.13.0 || ^21.7.0 || ^20.12.0'}
     peerDependencies:
       '@types/node': '>=18'
@@ -4167,15 +4149,6 @@ packages:
   '@inquirer/select@4.4.2':
     resolution: {integrity: sha512-l4xMuJo55MAe+N7Qr4rX90vypFwCajSakx59qe/tMaC1aEHWLyw68wF4o0A4SLAY4E0nd+Vt+EyskeDIqu1M6w==}
     engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-
-  '@inquirer/select@5.1.4':
-    resolution: {integrity: sha512-2kWcGKPMLAXAWRp1AH1SLsQmX+j0QjeljyXMUji9WMZC8nRDO0b7qquIGr6143E7KMLt3VAIGNXzwa/6PXQs4Q==}
-    engines: {node: '>=23.5.0 || ^22.13.0 || ^21.7.0 || ^20.12.0'}
     peerDependencies:
       '@types/node': '>=18'
     peerDependenciesMeta:
@@ -13398,13 +13371,6 @@ snapshots:
     optionalDependencies:
       '@types/node': 22.19.3
 
-  '@inquirer/confirm@6.0.12(@types/node@22.19.3)':
-    dependencies:
-      '@inquirer/core': 11.1.9(@types/node@22.19.3)
-      '@inquirer/type': 4.0.5(@types/node@22.19.3)
-    optionalDependencies:
-      '@types/node': 22.19.3
-
   '@inquirer/confirm@6.0.13(@types/node@22.19.3)':
     dependencies:
       '@inquirer/core': 11.1.10(@types/node@22.19.3)
@@ -13426,18 +13392,6 @@ snapshots:
       '@types/node': 22.19.3
 
   '@inquirer/core@11.1.10(@types/node@22.19.3)':
-    dependencies:
-      '@inquirer/ansi': 2.0.5
-      '@inquirer/figures': 2.0.5
-      '@inquirer/type': 4.0.5(@types/node@22.19.3)
-      cli-width: 4.1.0
-      fast-wrap-ansi: 0.2.0
-      mute-stream: 3.0.0
-      signal-exit: 4.1.0
-    optionalDependencies:
-      '@types/node': 22.19.3
-
-  '@inquirer/core@11.1.9(@types/node@22.19.3)':
     dependencies:
       '@inquirer/ansi': 2.0.5
       '@inquirer/figures': 2.0.5
@@ -13611,15 +13565,6 @@ snapshots:
       '@inquirer/figures': 1.0.15
       '@inquirer/type': 3.0.10(@types/node@22.19.3)
       yoctocolors-cjs: 2.1.3
-    optionalDependencies:
-      '@types/node': 22.19.3
-
-  '@inquirer/select@5.1.4(@types/node@22.19.3)':
-    dependencies:
-      '@inquirer/ansi': 2.0.5
-      '@inquirer/core': 11.1.9(@types/node@22.19.3)
-      '@inquirer/figures': 2.0.5
-      '@inquirer/type': 4.0.5(@types/node@22.19.3)
     optionalDependencies:
       '@types/node': 22.19.3
 
@@ -13825,8 +13770,8 @@ snapshots:
       '@eslint/config-helpers': 0.5.5
       '@eslint/js': 10.0.1(eslint@9.39.4(jiti@2.7.0))
       '@eslint/json': 1.2.0
-      '@inquirer/confirm': 6.0.12(@types/node@22.19.3)
-      '@inquirer/select': 5.1.4(@types/node@22.19.3)
+      '@inquirer/confirm': 6.0.13(@types/node@22.19.3)
+      '@inquirer/select': 5.1.5(@types/node@22.19.3)
       '@mui/internal-babel-plugin-display-name': 1.0.4-canary.20(@babel/core@7.29.0)(@babel/preset-react@7.28.5(@babel/core@7.29.0))
       '@mui/internal-babel-plugin-minify-errors': 2.0.8-canary.27(@babel/core@7.29.0)
       '@mui/internal-babel-plugin-resolve-imports': 2.0.7-canary.36(@babel/core@7.29.0)
