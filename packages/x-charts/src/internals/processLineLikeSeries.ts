@@ -31,12 +31,12 @@ const lineValueFormatter = ((v) =>
 
 type LineLikeChartType = Extract<ChartSeriesType, 'line' | 'radialLine'>;
 
-export function processLineLikeSeries<T extends LineLikeChartType>(
-  params: SeriesProcessorParams<T>,
+export function processLineLikeSeries<SeriesType extends LineLikeChartType>(
+  params: SeriesProcessorParams<SeriesType>,
   dataset: Readonly<DatasetType> | undefined,
   isItemVisible: IsItemVisibleFunction | undefined,
-  seriesType: T,
-): SeriesProcessorResult<T> {
+  seriesType: SeriesType,
+): SeriesProcessorResult<SeriesType> {
   // SAFETY: 'line' and 'radialLine' series are structurally identical for every field
   // accessed in this body. The fields that differ (xAxisId/yAxisId vs rotationAxisId/radiusAxisId)
   // are only spread through via `...series[id]` and never read here.
@@ -179,5 +179,5 @@ ${titleCase} plots only support numeric and null values.`,
     seriesOrder,
     stackingGroups,
     series: completedSeries,
-  } as unknown as SeriesProcessorResult<T>;
+  } as unknown as SeriesProcessorResult<SeriesType>;
 }
