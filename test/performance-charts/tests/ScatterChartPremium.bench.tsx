@@ -13,7 +13,10 @@ const xData = data.map((d) => d.x);
 // Lets the ChartsWebGLLayer ResizeObserver + canvas init settle deterministically
 // before the harness samples renders. Without this, iterations race and produce
 // different render-event counts.
-const waitForWebGLToSettle = () => new Promise<void>((r) => setTimeout(r, 100));
+const waitForWebGLToSettle = () =>
+  new Promise<void>((r) => {
+    setTimeout(r, 100);
+  });
 
 benchmark(
   'ScatterChartPremium with big data amount (webgl renderer)',
