@@ -104,19 +104,21 @@ describe('<DateRangeCalendar />', () => {
     });
 
     it('prop: disableDragEditing - should not allow dragging range', () => {
+      const onChange = spy();
       render(
         <DateRangeCalendar
+          onChange={onChange}
           defaultValue={[adapterToUse.date('2018-01-01'), adapterToUse.date('2018-01-31')]}
           disableDragEditing
         />,
       );
 
-      expect(screen.getByRole('gridcell', { name: '1', selected: true })).to.not.have.attribute(
-        'draggable',
-      );
-      expect(screen.getByRole('gridcell', { name: '31', selected: true })).to.not.have.attribute(
-        'draggable',
-      );
+      const startDay = screen.getByRole('gridcell', { name: '1', selected: true });
+      const targetDay = getPickerDay('15');
+
+      executeDateDrag(startDay, targetDay);
+
+      expect(onChange.callCount).to.equal(0);
     });
 
     describe('dragging behavior', () => {
@@ -588,18 +590,21 @@ describe('<DateRangeCalendar />', () => {
           {...{ [prop]: true }}
         />,
       );
-      expect(screen.getByRole('gridcell', { name: '1', selected: true })).to.not.have.attribute(
-        'draggable',
-      );
-      expect(screen.getByRole('gridcell', { name: '10', selected: true })).to.not.have.attribute(
-        'draggable',
-      );
       if (prop === 'disabled') {
         // eslint-disable-next-line vitest/no-conditional-expect
         expect(screen.getByRole('gridcell', { name: '1', selected: true })).to.have.attribute(
           'disabled',
         );
       }
+      // Drag-to-edit must be inert as well — `disabled` / `readOnly` cascade
+      // into `shouldDisableDragEditing` inside the calendar, so the gesture
+      // should never fire `onChange`.
+      executeDateDrag(
+        screen.getByRole('gridcell', { name: '1', selected: true }),
+        getPickerDay('5'),
+      );
+      expect(handleChange.callCount).to.equal(0);
+
       await user.setup({ pointerEventsCheck: 0 }).click(getPickerDay('2'));
       expect(handleChange.callCount).to.equal(0);
     });
