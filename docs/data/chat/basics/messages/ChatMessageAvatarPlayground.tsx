@@ -11,14 +11,14 @@ import type {
   ChatMessage,
   ChatVariant,
 } from '@mui/x-chat/headless';
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { ChatChrome, ScopedChat } from '../../_playground/sharedProviders';
-import { ChoiceControl, DividerLabel } from '../../_playground/controls';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import { ChatChrome, ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
+import { ChoiceControl, DividerLabel } from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
   type CustomizationDef,
-} from '../../_playground/useCustomizations';
-import { users } from '../../_playground/data';
+} from 'docs/src/modules/components/chat-playground/useCustomizations';
+import { users } from 'docs/src/modules/components/chat-playground/data';
 
 const conversation: ChatConversation = {
   id: 'avatar-playground',

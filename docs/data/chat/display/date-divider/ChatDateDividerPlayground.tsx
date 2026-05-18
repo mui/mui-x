@@ -2,18 +2,18 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatDateDivider } from '@mui/x-chat';
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { ScopedChat } from '../../_playground/sharedProviders';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
 import {
   ChoiceControl,
   DividerLabel,
   SelectControl,
-} from '../../_playground/controls';
+} from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
   type CustomizationDef,
-} from '../../_playground/useCustomizations';
-import { users } from '../../_playground/data';
+} from 'docs/src/modules/components/chat-playground/useCustomizations';
+import { users } from 'docs/src/modules/components/chat-playground/data';
 
 const conversation: ChatConversation = {
   id: 'date-playground',

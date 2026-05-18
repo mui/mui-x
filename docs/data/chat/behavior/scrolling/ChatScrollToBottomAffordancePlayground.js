@@ -3,16 +3,16 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import { ChatMessageList, ChatScrollToBottomAffordance } from '@mui/x-chat';
 
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
-import { ScopedChat } from '../../_playground/sharedProviders';
-import { MessageBubble } from '../../_playground/MessageBubble';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
+import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
+import { MessageBubble } from 'docs/src/modules/components/chat-playground/MessageBubble';
 import {
   ChoiceControl,
   DividerLabel,
   NumberControl,
-} from '../../_playground/controls';
-import { useCustomizations } from '../../_playground/useCustomizations';
-import { users } from '../../_playground/data';
+} from 'docs/src/modules/components/chat-playground/controls';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
+import { users } from 'docs/src/modules/components/chat-playground/data';
 
 const conversation = {
   id: 'scroll-playground',

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { ChatMessageSource, ChatMessageSources } from '@mui/x-chat';
-import { PlaygroundCard } from '../../../_playground/PlaygroundCard';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import {
   DividerLabel,
   NumberControl,
   TextControl,
-} from '../../../_playground/controls';
-import { useCustomizations } from '../../../_playground/useCustomizations';
+} from 'docs/src/modules/components/chat-playground/controls';
+import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
 
 const POOL = [
   { href: 'https://mui.com/x/react-chat/', title: 'MUI X Chat overview' },

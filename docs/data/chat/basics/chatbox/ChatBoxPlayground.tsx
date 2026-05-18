@@ -2,23 +2,23 @@ import * as React from 'react';
 import { ChatBox } from '@mui/x-chat';
 import type { ChatBoxLayoutMode, ChatDensity, ChatVariant } from '@mui/x-chat';
 import type { SxProps, Theme } from '@mui/material/styles';
-import { PlaygroundCard } from '../../_playground/PlaygroundCard';
+import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import {
   ChoiceControl,
   DividerLabel,
   SwitchControl,
-} from '../../_playground/controls';
+} from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
   type CustomizationDef,
-} from '../../_playground/useCustomizations';
+} from 'docs/src/modules/components/chat-playground/useCustomizations';
 import {
   conversations,
   initialThreads,
   makeAdapter,
   sampleSuggestions,
   users,
-} from '../../_playground/data';
+} from 'docs/src/modules/components/chat-playground/data';
 
 const DEFAULTS = {
   variant: 'default' as ChatVariant,
