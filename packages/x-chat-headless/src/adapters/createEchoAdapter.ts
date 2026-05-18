@@ -37,14 +37,50 @@ export function createEchoAdapter(options: CreateEchoAdapterOptions = {}): ChatA
       const reply = respond(text);
       const replyId = `reply-${message.id}`;
       const partId = `${replyId}-text`;
+      let closed = false;
+      let timer: ReturnType<typeof setTimeout> | null = null;
+      let streamController: ReadableStreamDefaultController<ChatMessageChunk> | null = null;
+
+      const cleanup = () => {
+        if (timer != null) {
+          clearTimeout(timer);
+          timer = null;
+        }
+        signal.removeEventListener('abort', handleAbort);
+      };
+
+      const close = () => {
+        if (closed) {
+          return;
+        }
+        closed = true;
+        cleanup();
+        try {
+          streamController?.close();
+        } catch {
+          // already closed
+        }
+      };
+
+      const handleAbort = () => close();
 
       return new ReadableStream<ChatMessageChunk>({
         start(controller) {
-          const timer = setTimeout(() => {
+          streamController = controller;
+
+          if (signal.aborted) {
+            close();
+            return;
+          }
+
+          timer = setTimeout(() => {
+            timer = null;
             if (signal.aborted) {
-              controller.close();
+              close();
               return;
             }
+            closed = true;
+            cleanup();
             controller.enqueue({ type: 'start', messageId: replyId });
             controller.enqueue({ type: 'text-start', id: partId });
             controller.enqueue({ type: 'text-delta', id: partId, delta: reply });
@@ -53,18 +89,12 @@ export function createEchoAdapter(options: CreateEchoAdapterOptions = {}): ChatA
             controller.close();
           }, delayMs);
 
-          signal.addEventListener(
-            'abort',
-            () => {
-              clearTimeout(timer);
-              try {
-                controller.close();
-              } catch {
-                // already closed
-              }
-            },
-            { once: true },
-          );
+          signal.addEventListener('abort', handleAbort, { once: true });
+        },
+        cancel() {
+          closed = true;
+          cleanup();
+          streamController = null;
         },
       });
     },

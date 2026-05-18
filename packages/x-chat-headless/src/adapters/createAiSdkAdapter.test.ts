@@ -105,9 +105,13 @@ describe('createAiSdkAdapter — { stream } branch', () => {
 
   it('decodes an SSE byte stream (data: prefix + [DONE] terminator)', async () => {
     const sse =
+      'event: message\n' +
+      'id: 1\n' +
       'data: {"type":"start","messageId":"m1"}\n\n' +
+      ': keep-alive\n\n' +
       'data: {"type":"text-start","id":"t"}\n\n' +
       'data: {"type":"text-delta","id":"t","delta":"yo"}\n\n' +
+      'retry: 1000\n' +
       'data: {"type":"text-end","id":"t"}\n\n' +
       'data: {"type":"finish","messageId":"m1","finishReason":"stop"}\n\n' +
       'data: [DONE]\n\n';
@@ -244,6 +248,30 @@ describe('createAiSdkAdapter — { stream } branch', () => {
     await result.cancel('aborted');
     expect(upstreamCancel).toHaveBeenCalled();
   });
+
+  it('passes attachments and metadata to the stream callback', async () => {
+    const file = new File(['hello'], 'hello.txt', { type: 'text/plain' });
+    const stream = vi.fn(() =>
+      makeReadableStream<AiSdkUIMessageChunk>([{ type: 'finish', messageId: 'm1' }]),
+    );
+    const adapter = createAiSdkAdapter({ stream });
+
+    await adapter.sendMessage({
+      message: makeUserMessage('hi'),
+      messages: [],
+      attachments: [{ localId: 'a1', file, status: 'queued' }],
+      metadata: { model: 'fast' },
+      signal: new AbortController().signal,
+    });
+
+    expect(stream).toHaveBeenCalledWith({
+      message: makeUserMessage('hi'),
+      messages: [],
+      attachments: [{ localId: 'a1', file, status: 'queued' }],
+      metadata: { model: 'fast' },
+      signal: expect.any(AbortSignal),
+    });
+  });
 });
 
 describe('createAiSdkAdapter — { chat } branch', () => {
@@ -292,6 +320,21 @@ describe('createAiSdkAdapter — { chat } branch', () => {
       'finish',
     ]);
     expect((chunks[2] as { delta: string }).delta).toBe('hello from ai sdk');
+  });
+
+  it('forwards attachments to chat.sendMessage as files', async () => {
+    const file = new File(['hello'], 'hello.txt', { type: 'text/plain' });
+    const chat = makeChat('hello from ai sdk');
+    const adapter = createAiSdkAdapter({ chat });
+
+    await adapter.sendMessage({
+      message: makeUserMessage('hi'),
+      messages: [],
+      attachments: [{ localId: 'a1', file, status: 'queued' }],
+      signal: new AbortController().signal,
+    });
+
+    expect(chat.sendMessage).toHaveBeenCalledWith({ text: 'hi', files: [file] });
   });
 
   it('forwards abort to chat.stop()', async () => {

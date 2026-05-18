@@ -24,6 +24,8 @@ export type AiSdkUIMessageChunk =
 export interface CreateAiSdkAdapterRequest {
   message: ChatMessage;
   messages: ChatMessage[];
+  attachments?: ChatSendMessageInput['attachments'];
+  metadata?: ChatSendMessageInput['metadata'];
   signal: AbortSignal;
 }
 
@@ -72,7 +74,7 @@ export interface CreateAiSdkAdapterChatOptions {
    * A `@ai-sdk/react` `useChat()` return value (or anything matching the
    * `AiSdkChatInstance` shape). The adapter will:
    *
-   * - call `chat.sendMessage({ text })` when the user sends a message,
+   * - call `chat.sendMessage({ text, files })` when the user sends a message,
    * - forward MUI X Chat's abort signal to `chat.stop()`,
    * - emit the assistant reply as a single text chunk once
    *   `chat.sendMessage` resolves.
@@ -111,6 +113,9 @@ function parseStreamLine(rawLine: string): unknown | null {
   // (`:` prefix) and SSE field lines we don't care about (`event:`, `id:`, …).
   const trimmed = rawLine.trim();
   if (trimmed.length === 0 || trimmed.startsWith(':')) {
+    return null;
+  }
+  if (!trimmed.startsWith('data:') && /^[\w-]+:/.test(trimmed)) {
     return null;
   }
   const payload = trimmed.startsWith('data:') ? trimmed.slice(5).trimStart() : trimmed;
@@ -272,13 +277,17 @@ function createChatBasedAdapter(chat: AiSdkChatInstance): ChatAdapter {
   return {
     async sendMessage(input: ChatSendMessageInput) {
       const userText = getMessageText(input.message);
+      const files = input.attachments?.map((attachment) => attachment.file);
       const lengthBefore = chat.messages.length;
 
       const onAbort = () => chat.stop();
       input.signal.addEventListener('abort', onAbort, { once: true });
 
       try {
-        await chat.sendMessage({ text: userText });
+        await chat.sendMessage({
+          text: userText,
+          ...(files && files.length > 0 ? { files } : {}),
+        });
       } finally {
         input.signal.removeEventListener('abort', onAbort);
       }
@@ -333,6 +342,8 @@ export function createAiSdkAdapter(options: CreateAiSdkAdapterOptions): ChatAdap
       const upstream = await streamFn({
         message: input.message,
         messages: input.messages,
+        attachments: input.attachments,
+        metadata: input.metadata,
         signal: input.signal,
       });
 

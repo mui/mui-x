@@ -219,5 +219,13 @@ export type {
 } from './ChatIndicators/chatUnreadMarkerClasses';
 
 // ─── Built-in adapters (re-exported for quickstart convenience) ───────────────
-export { createEchoAdapter } from '@mui/x-chat-headless';
-export type { CreateEchoAdapterOptions } from '@mui/x-chat-headless';
+export { createAiSdkAdapter, createEchoAdapter } from '@mui/x-chat-headless';
+export type {
+  AiSdkChatInstance,
+  AiSdkUIMessageChunk,
+  CreateAiSdkAdapterChatOptions,
+  CreateAiSdkAdapterOptions,
+  CreateAiSdkAdapterRequest,
+  CreateAiSdkAdapterStreamOptions,
+  CreateEchoAdapterOptions,
+} from '@mui/x-chat-headless';
