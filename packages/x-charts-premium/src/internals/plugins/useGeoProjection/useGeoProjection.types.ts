@@ -28,6 +28,11 @@ export interface UseGeoProjectionState {
   geoProjection: {
     geoData: ExtendedFeatureCollection | null;
     projection: GeoProjectionInput | null;
+    /**
+     * The two standard parallels used by conic projections, if applicable.
+     * Used for projection 'conicConformal', 'conicEqualArea', 'conicEquidistant'.
+     */
+    parallels?: [number, number] | null;
   };
 }
 

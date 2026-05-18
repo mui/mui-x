@@ -21,23 +21,33 @@ import {
 import { type UseGeoProjectionSignature } from './useGeoProjection.types';
 
 const PROJECTION_FACTORIES: Record<string, (() => GeoProjection) | undefined> = {
-  albers: geoAlbers,
-  albersUsa: geoAlbersUsa,
+  // Azimuthal projections (https://d3js.org/d3-geo/azimuthal)
   azimuthalEqualArea: geoAzimuthalEqualArea,
   azimuthalEquidistant: geoAzimuthalEquidistant,
+  gnomonic: geoGnomonic,
+  orthographic: geoOrthographic,
+  stereographic: geoStereographic,
+
+  // Conic projections (https://d3js.org/d3-geo/conic)
   conicConformal: geoConicConformal,
   conicEqualArea: geoConicEqualArea,
   conicEquidistant: geoConicEquidistant,
-  equalEarth: geoEqualEarth,
+  albers: geoAlbers,
+  albersUsa: geoAlbersUsa, // Special composition for the USA with an edge case for Alaska and Hawaii.
+
+  // Cylindrical projections (https://d3js.org/d3-geo/cylindrical)
   equirectangular: geoEquirectangular,
-  gnomonic: geoGnomonic,
   mercator: geoMercator,
-  naturalEarth1: geoNaturalEarth1,
-  orthographic: geoOrthographic,
-  stereographic: geoStereographic,
   transverseMercator: geoTransverseMercator,
+  equalEarth: geoEqualEarth,
+  naturalEarth1: geoNaturalEarth1,
 };
 
+const isConicProjection = (
+  projection: GeoProjection,
+): projection is GeoProjection & { parallels(parallels: [number, number]): GeoProjection } => {
+  return 'parallels' in projection && typeof projection.parallels === 'function';
+};
 export const selectorChartGeoProjectionState = (
   state: ChartState<[], [UseGeoProjectionSignature]>,
 ) => state.geoProjection;
@@ -52,6 +62,10 @@ export const selectorChartRawProjection = createSelector(
   (geoProjection) => geoProjection?.projection ?? null,
 );
 
+const selectorChartParallels = createSelector(
+  selectorChartGeoProjectionState,
+  (geoProjection) => geoProjection?.parallels ?? ([30, 60] as [number, number]),
+);
 /**
  * Map a feature's `properties.name` to its index in `geoData.features`,
  * for fast lookup by name when joining series rows to features.
@@ -88,8 +102,9 @@ export const selectorChartGeoFeatureIndexByName = createSelectorMemoized(
 export const selectorChartProjection = createSelectorMemoized(
   selectorChartRawProjection,
   selectorChartRawGeoData,
+  selectorChartParallels,
   selectorChartDrawingArea,
-  (projectionInput, geoData, drawingArea): GeoProjection | null => {
+  (projectionInput, geoData, parallels, drawingArea): GeoProjection | null => {
     if (!projectionInput) {
       return null;
     }
@@ -100,12 +115,15 @@ export const selectorChartProjection = createSelectorMemoized(
         if (process.env.NODE_ENV !== 'production') {
           console.error(
             `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
-              `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
+            `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
           );
         }
         return null;
       }
       projection = factory();
+      if (isConicProjection(projection)) {
+        projection.parallels(parallels)
+      }
     } else {
       projection = projectionInput;
     }
