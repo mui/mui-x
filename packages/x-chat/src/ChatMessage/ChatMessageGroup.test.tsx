@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import { ChatRoot, type ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
+import { ChatMessageGroup } from './ChatMessageGroup';
 
 const { render } = createRenderer();
 

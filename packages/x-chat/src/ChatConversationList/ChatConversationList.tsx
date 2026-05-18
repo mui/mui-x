@@ -52,9 +52,6 @@ const ChatConversationListStyled = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
-  // Default inline-sidebar width token. Consumed by the scroller below and by the
-  // narrow-layout Drawer in ChatBoxContent; override it to resize the conversation list.
-  '--ChatBox-conversationListWidth': '260px',
   display: 'flex',
   flexDirection: 'column',
   padding: theme.spacing(0.5, 0),
@@ -74,14 +71,11 @@ const ChatConversationListScrollerStyled = styled('div', {
   borderRight: '1px solid',
   borderRightColor: (theme.vars || theme).palette.divider,
   backgroundColor: (theme.vars || theme).palette.background.paper,
-  width: 'var(--ChatBox-conversationListWidth, 260px)',
+  width: '100%',
   height: '100%',
   overflow: 'hidden',
   flexShrink: 0,
-  // Anonymous container query: ChatBox sets `containerType: 'inline-size'` without a
-  // `containerName`, so this matches the nearest size container (the ChatBox root) and
-  // hides the inline sidebar on narrow layouts. Mirrors `ChatBoxContent`'s JS observer.
-  '@container (max-width: 599.95px)': {
+  '@container chatbox (max-width: 599.95px)': {
     display: 'none',
   },
 }));

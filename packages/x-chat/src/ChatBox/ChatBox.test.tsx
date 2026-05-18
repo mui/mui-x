@@ -374,6 +374,38 @@ describe('ChatBox', () => {
       expect(threadPane.style.backgroundColor).toBe('rgb(7, 8, 9)');
     });
 
+    it('keeps the conversation list width controlled by the ChatBox layout pane', async () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialConversations={conversations}
+          initialActiveConversationId="c1"
+          features={conversationListFeatures}
+          variant="compact"
+          data-resize-width="720"
+          sx={{ height: 480 }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).not.toBe(null);
+      });
+
+      const conversationList = document.querySelector(
+        '.MuiChatConversationList-root',
+      ) as HTMLElement;
+      const scroller = document.querySelector('.MuiChatConversationList-scroller') as HTMLElement;
+
+      expect(
+        window
+          .getComputedStyle(conversationList)
+          .getPropertyValue('--ChatBox-conversationListWidth'),
+      ).toBe('220px');
+      expect(scroller).toHaveComputedStyle({ width: '100%' });
+    });
+
     it('shows the conversation menu button only when the chat box container is narrow', async () => {
       const { rerender } = render(
         <ChatBox

@@ -86,8 +86,6 @@ const TARGET_JSX_NAMES = new Set([
   'ChatBox',
   'ChatMessageList',
   'ChatMessageGroup',
-  'ChatMessage',
-  'ChatComposer',
   'ChatConversation',
 ]);
 

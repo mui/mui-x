@@ -6,6 +6,7 @@ import { ChatRoot, MessageRoot, useChatStore } from '@mui/x-chat-headless';
 import { ChatMessageContent } from './ChatMessageContent';
 
 const { render } = createRenderer();
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 function createAdapter(): ChatAdapter {
   return {
@@ -181,6 +182,27 @@ describe('ChatMessageContent', () => {
       const summary = document.querySelector('summary');
       expect(summary).not.toBe(null);
       expect(summary!.querySelector('svg')).not.toBe(null);
+    });
+
+    it.skipIf(isJSDOM)('renders the tool header as a full-width row', () => {
+      renderWithMessage({
+        id: 'm1',
+        role: 'assistant',
+        parts: [
+          {
+            type: 'tool',
+            toolInvocation: {
+              toolCallId: 'tc1',
+              toolName: 'searchTool',
+              state: 'output-available',
+              input: {},
+              output: {},
+            },
+          },
+        ],
+      });
+
+      expect(document.querySelector('summary')).toHaveComputedStyle({ display: 'flex' });
     });
 
     it('renders Input and Output as independently collapsible sections', () => {

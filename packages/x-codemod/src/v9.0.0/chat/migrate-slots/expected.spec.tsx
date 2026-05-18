@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ChatBox } from '@mui/x-chat';
+import { ChatBox, ChatComposer, ChatMessage } from '@mui/x-chat';
 
 function MyChat() {
   return (
@@ -38,5 +38,30 @@ function MyChat() {
         },
       }}
     />
+  );
+}
+
+function StandaloneSlots() {
+  return (
+    <>
+      <ChatMessage
+        slots={{
+          avatar: CustomAvatar,
+          content: CustomContent,
+        }}
+        slotProps={{
+          avatar: { sx: { width: 32 } },
+        }}
+      />
+      <ChatComposer
+        slots={{
+          input: CustomInput,
+          send: CustomSend,
+        }}
+        slotProps={{
+          input: { placeholder: 'Ask…' },
+        }}
+      />
+    </>
   );
 }

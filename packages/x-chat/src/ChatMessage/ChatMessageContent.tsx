@@ -356,7 +356,7 @@ const ChatToolPartHeader = styled('summary', {
   name: 'MuiChatMessage',
   slot: 'ToolHeader',
 })(({ theme }) => ({
-  display: 'inline-flex',
+  display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(0.625),
   padding: theme.spacing(0.25, 0),
