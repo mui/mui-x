@@ -16,7 +16,7 @@ const MapShapeRoot = styled('path', {
   slot: 'Root',
 })({
   transitionProperty: 'opacity, fill, filter',
-  transitionDuration: '200ms',
+  transitionDuration: '50ms',
   transitionTimingFunction: 'ease-in',
 });
 

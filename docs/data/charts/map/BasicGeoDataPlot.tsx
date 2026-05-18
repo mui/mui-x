@@ -1,14 +1,15 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { feature } from 'topojson-client';
+import { feature as  topojsonFeature} from 'topojson-client';
 import countriesTopology from 'world-atlas/countries-110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
+import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 import { ChartsLegend } from '@mui/x-charts-premium/ChartsLegend';
 
-const countries = feature(
+const countries = topojsonFeature(
   countriesTopology as any,
   'countries',
 ) as unknown as ExtendedFeatureCollection;
@@ -30,6 +31,8 @@ export default function BasicGeoDataPlot() {
               name: feature.properties?.name,
               color: `hsl(${(index / countries.features.length) * 360}, 50%, 70%)`,
             })),
+            valueFormatter: (point) =>
+              point.value != null ? `${point.value} units` : 'No data',
           },
           {
             type: 'mapShape',
@@ -46,7 +49,7 @@ export default function BasicGeoDataPlot() {
               { name: 'Czechia' },
               { name: 'Denmark' },
               { name: 'Estonia' },
-              { name: 'France' },
+              { name: 'France', value: 10 },
               { name: 'Finland' },
               { name: 'Germany' },
               { name: 'Hungary' },
@@ -66,6 +69,8 @@ export default function BasicGeoDataPlot() {
               { name: 'Spain' },
               { name: 'Sweden' },
             ],
+            valueFormatter: (point) =>
+              point.value != null ? `${point.value} units` : 'No data',
           },
         ]}
       >
@@ -74,6 +79,7 @@ export default function BasicGeoDataPlot() {
           <GeoDataPlot fill="transparent" stroke="#0d47a1" />
           <MapShapePlot />
         </ChartsSurface>
+        <ChartsTooltip trigger="item" />
       </ChartsGeoDataProviderPremium>
     </Box>
   );
