@@ -92,8 +92,10 @@ export function getComponentImports(name: string, filename: string) {
     }
   }
 
-  return [
-    `import { ${name} } from '${subdirectoryImportPath}';`,
-    `import { ${name} } from '${rootImportPath}';`,
-  ];
+  return Array.from(
+    new Set([
+      `import { ${name} } from '${subdirectoryImportPath}';`,
+      `import { ${name} } from '${rootImportPath}';`,
+    ]),
+  );
 }
