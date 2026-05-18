@@ -15,13 +15,7 @@ const seriesProcessor: SeriesProcessor<'ohlc'> = (params, dataset, isItemVisible
     const seriesData = series[id];
     const datasetKeys = seriesData?.datasetKeys;
 
-    if (
-      seriesData.data === undefined &&
-      dataset === undefined &&
-      process.env.NODE_ENV !== 'production'
-    ) {
-      // TODO: fix mui/no-guarded-throw
-      // eslint-disable-next-line mui/no-guarded-throw
+    if (seriesData.data === undefined && dataset === undefined) {
       throw new Error(
         `MUI X Charts: OHLC series with id='${id}' has no data.
 Either provide a data property to the series or use the dataset prop.`,
