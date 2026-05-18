@@ -61,7 +61,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatBox',
     status: 'core',
     sectionId: 'full-surfaces',
-    href: '/x/react-chat/basics/chatbox/#interactive-playground',
+    href: '/x/react-chat/basics/chatbox/',
     Thumbnail: ChatBoxThumb,
   },
   {
@@ -69,7 +69,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatConversation',
     status: 'compound',
     sectionId: 'full-surfaces',
-    href: '/x/react-chat/basics/conversation/#interactive-playground',
+    href: '/x/react-chat/basics/conversation/',
     Thumbnail: ChatConversationThumb,
   },
 
@@ -79,7 +79,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatConversationList',
     status: 'compound',
     sectionId: 'layout-and-navigation',
-    href: '/x/react-chat/multi-conversation/conversation-list/#interactive-playground',
+    href: '/x/react-chat/multi-conversation/conversation-list/',
     Thumbnail: ChatConversationListThumb,
   },
   {
@@ -87,7 +87,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatConversationHeader',
     status: 'compound',
     sectionId: 'layout-and-navigation',
-    href: '/x/react-chat/multi-conversation/conversation-header/#interactive-playground',
+    href: '/x/react-chat/multi-conversation/conversation-header/',
     Thumbnail: ChatConversationHeaderThumb,
   },
 
@@ -97,7 +97,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageList',
     status: 'compound',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/#interactive-playground',
+    href: '/x/react-chat/basics/messages/',
     Thumbnail: ChatMessageListThumb,
   },
   {
@@ -105,7 +105,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageGroup',
     status: 'compound',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/#interactive-playground',
+    href: '/x/react-chat/basics/messages/',
     Thumbnail: ChatMessageGroupThumb,
   },
   {
@@ -113,7 +113,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessage',
     status: 'compound',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/#interactive-playground',
+    href: '/x/react-chat/basics/messages/',
     Thumbnail: ChatMessageThumb,
   },
   {
@@ -121,7 +121,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageAvatar',
     status: 'slot',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/#interactive-playground',
+    href: '/x/react-chat/basics/messages/',
     Thumbnail: ChatMessageAvatarThumb,
   },
   {
@@ -129,7 +129,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageAuthorLabel',
     status: 'slot',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/#interactive-playground',
+    href: '/x/react-chat/basics/messages/',
     Thumbnail: ChatMessageAuthorLabelThumb,
   },
   {
@@ -137,7 +137,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageContent',
     status: 'slot',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/#interactive-playground',
+    href: '/x/react-chat/basics/messages/',
     Thumbnail: ChatMessageContentThumb,
   },
   {
@@ -145,7 +145,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageMeta',
     status: 'slot',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/#interactive-playground',
+    href: '/x/react-chat/basics/messages/',
     Thumbnail: ChatMessageMetaThumb,
   },
   {
@@ -153,7 +153,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageInlineMeta',
     status: 'slot',
     sectionId: 'messages',
-    href: '/x/react-chat/basics/messages/#interactive-playground',
+    href: '/x/react-chat/basics/messages/',
     Thumbnail: ChatMessageInlineMetaThumb,
   },
   {
@@ -161,7 +161,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageActions',
     status: 'slot',
     sectionId: 'messages',
-    href: '/x/react-chat/display/message-actions/#interactive-playground',
+    href: '/x/react-chat/display/message-actions/',
     Thumbnail: ChatMessageActionsThumb,
   },
   {
@@ -169,7 +169,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageError',
     status: 'state',
     sectionId: 'messages',
-    href: '/x/react-chat/behavior/error-handling/#interactive-playground',
+    href: '/x/react-chat/behavior/error-handling/',
     Thumbnail: ChatMessageErrorThumb,
   },
 
@@ -179,7 +179,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatComposer',
     status: 'compound',
     sectionId: 'composer',
-    href: '/x/react-chat/basics/composer/#interactive-playground',
+    href: '/x/react-chat/basics/composer/',
     Thumbnail: ChatComposerThumb,
   },
   {
@@ -187,7 +187,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatComposerAttachButton',
     status: 'slot',
     sectionId: 'composer',
-    href: '/x/react-chat/behavior/attachments/#interactive-playgrounds',
+    href: '/x/react-chat/behavior/attachments/',
     Thumbnail: ChatComposerAttachButtonThumb,
   },
   {
@@ -195,7 +195,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatComposerAttachmentList',
     status: 'slot',
     sectionId: 'composer',
-    href: '/x/react-chat/behavior/attachments/#interactive-playgrounds',
+    href: '/x/react-chat/behavior/attachments/',
     Thumbnail: ChatComposerAttachmentListThumb,
   },
 
@@ -205,7 +205,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatSuggestions',
     status: 'state',
     sectionId: 'states',
-    href: '/x/react-chat/behavior/suggestions/#interactive-playground',
+    href: '/x/react-chat/behavior/suggestions/',
     Thumbnail: ChatSuggestionsThumb,
   },
   {
@@ -213,7 +213,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatTypingIndicator',
     status: 'state',
     sectionId: 'states',
-    href: '/x/react-chat/behavior/typing-indicators/#interactive-playground',
+    href: '/x/react-chat/behavior/typing-indicators/',
     Thumbnail: ChatTypingIndicatorThumb,
   },
   {
@@ -221,7 +221,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatUnreadMarker',
     status: 'state',
     sectionId: 'states',
-    href: '/x/react-chat/display/unread-marker/#interactive-playground',
+    href: '/x/react-chat/display/unread-marker/',
     Thumbnail: ChatUnreadMarkerThumb,
   },
   {
@@ -229,7 +229,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageSkeleton',
     status: 'presentational',
     sectionId: 'states',
-    href: '/x/react-chat/display/loading-and-empty-states/#interactive-playground',
+    href: '/x/react-chat/display/loading-and-empty-states/',
     Thumbnail: ChatMessageSkeletonThumb,
   },
   {
@@ -237,7 +237,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatScrollToBottomAffordance',
     status: 'state',
     sectionId: 'states',
-    href: '/x/react-chat/behavior/scrolling/#interactive-playground',
+    href: '/x/react-chat/behavior/scrolling/',
     Thumbnail: ChatScrollToBottomAffordanceThumb,
   },
   {
@@ -245,7 +245,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatDateDivider',
     status: 'state',
     sectionId: 'states',
-    href: '/x/react-chat/display/date-divider/#interactive-playground',
+    href: '/x/react-chat/display/date-divider/',
     Thumbnail: ChatDateDividerThumb,
   },
 
@@ -255,7 +255,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatMessageSources',
     status: 'presentational',
     sectionId: 'ai-and-rich-content',
-    href: '/x/react-chat/display/message-parts/sources-and-citations/#interactive-playground',
+    href: '/x/react-chat/display/message-parts/sources-and-citations/',
     Thumbnail: ChatMessageSourcesThumb,
   },
   {
@@ -263,7 +263,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatCodeBlock',
     status: 'presentational',
     sectionId: 'ai-and-rich-content',
-    href: '/x/react-chat/display/message-parts/code-blocks/#interactive-playground',
+    href: '/x/react-chat/display/message-parts/code-blocks/',
     Thumbnail: ChatCodeBlockThumb,
   },
   {
@@ -271,7 +271,7 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     name: 'ChatConfirmation',
     status: 'presentational',
     sectionId: 'ai-and-rich-content',
-    href: '/x/react-chat/ai-and-agents/tool-approval/#interactive-playground',
+    href: '/x/react-chat/ai-and-agents/tool-approval/',
     Thumbnail: ChatConfirmationThumb,
   },
 ];
