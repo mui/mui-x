@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { benchmark } from '@mui/internal-benchmark';
 import { ScatterChartPremium } from '@mui/x-charts-premium/ScatterChartPremium';
-import { waitForWebGLToSettle } from '../utils';
+import { benchWebGLInteraction } from '../utils';
 
 const dataLength = 50_000;
 const data = Array.from({ length: dataLength }).map((_, i) => ({
@@ -31,7 +31,7 @@ benchmark(
       skipAnimation
     />
   ),
-  waitForWebGLToSettle,
+  benchWebGLInteraction,
 );
 
 benchmark(
@@ -58,5 +58,5 @@ benchmark(
       skipAnimation
     />
   ),
-  waitForWebGLToSettle,
+  benchWebGLInteraction,
 );
