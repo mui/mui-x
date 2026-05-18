@@ -85,14 +85,16 @@ export const sanitizeFilterModel = (
   const hasSeveralItems = model.items.length > 1;
 
   let items: GridFilterItem[];
-  if (hasSeveralItems && disableMultipleColumnsFiltering && process.env.NODE_ENV !== 'production') {
-    warnOnce(
-      [
-        'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
-        'If you are using the community version of the Data Grid, this prop is always `true`.',
-      ],
-      'error',
-    );
+  if (hasSeveralItems && disableMultipleColumnsFiltering) {
+    if (process.env.NODE_ENV !== 'production') {
+      warnOnce(
+        [
+          'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
+          'If you are using the community version of the Data Grid, this prop is always `true`.',
+        ],
+        'error',
+      );
+    }
     items = [model.items[0]];
   } else {
     items = model.items;

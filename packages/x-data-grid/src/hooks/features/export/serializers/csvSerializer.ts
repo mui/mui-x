@@ -110,14 +110,13 @@ const serializeRow = ({
 
   columns.forEach((column) => {
     const cellParams = getCellParams(id, column.field);
-    if (
-      String(cellParams.formattedValue) === '[object Object]' &&
-      process.env.NODE_ENV !== 'production'
-    ) {
-      warnOnce([
-        'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
-        'You can provide a `valueFormatter` with a string representation to be used.',
-      ]);
+    if (String(cellParams.formattedValue) === '[object Object]') {
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+          'You can provide a `valueFormatter` with a string representation to be used.',
+        ]);
+      }
     }
     row.addValue(
       serializeCellValue(cellParams, {
