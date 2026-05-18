@@ -111,6 +111,7 @@ import {
   useGridAiAssistant,
   aiAssistantStateInitializer,
 } from '../hooks/features/aiAssistant/useGridAiAssistant';
+import { useGridCopilot } from '../hooks/features/copilot/useGridCopilot';
 import { useGridSidebar, sidebarStateInitializer } from '../hooks/features/sidebar/useGridSidebar';
 import {
   chartsIntegrationStateInitializer,
@@ -249,6 +250,7 @@ export const useDataGridPremiumComponent = (
   useGridVirtualization(apiRef, props);
   useGridListView(apiRef, props);
   useGridAiAssistant(apiRef, props);
+  useGridCopilot(apiRef, props);
   useGridChartsIntegration(apiRef, props);
   useGridHistory(apiRef, props);
   useGridPivotingExportState(apiRef);

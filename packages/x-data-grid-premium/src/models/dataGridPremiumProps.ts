@@ -18,6 +18,7 @@ import type {
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
   DataGridPremiumSharedPropsWithDefaultValue,
 } from '@mui/x-data-grid-pro/internals';
+import type { ChatSuggestion } from '@mui/x-chat-headless';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import type {
   GridAggregationModel,
@@ -44,6 +45,7 @@ import type {
   PromptResponse,
   PromptSuggestion,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import type { GridCopilotAdapter } from '../hooks/features/copilot/gridCopilotInterfaces';
 import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
@@ -153,6 +155,18 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default false
    */
   aiAssistant: boolean;
+  /**
+   * If `true`, the Copilot side panel is enabled.
+   * @default false
+   */
+  copilot: boolean;
+  /**
+   * If `true`, the Copilot executor accepts mutating commands (data updates,
+   * exports, history clear, dataSource writes, etc.). Default-off because
+   * these commands have user-visible side effects beyond changing the view.
+   * @default false
+   */
+  enableMutatingActions: boolean;
   /**
    * If `true`, the charts integration feature is enabled.
    * @default false
@@ -365,6 +379,19 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
     promptContext: string,
     conversationId?: string,
   ) => Promise<PromptResponse>;
+  /**
+   * The adapter (a.k.a. "model") that powers the Copilot side panel.
+   * Extends the `@mui/x-chat-headless` `ChatAdapter` so a single object can provide
+   * conversations, messages, and (later) grid-aware behaviour.
+   * If not provided, a built-in echo adapter is used.
+   */
+  copilotAdapter?: GridCopilotAdapter;
+  /**
+   * Prompt suggestions displayed in the Copilot panel's empty state.
+   * Clicking a suggestion pre-fills the composer.
+   * If not provided, a generic default list is used.
+   */
+  copilotSuggestions?: Array<ChatSuggestion | string>;
   /**
    * Callback fired when the sidebar is closed.
    * @param {GridSidebarParams} params With all properties from [[GridSidebarParams]].

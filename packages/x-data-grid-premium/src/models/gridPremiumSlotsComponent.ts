@@ -20,6 +20,12 @@ export interface GridPremiumSlotsComponent
    */
   chartsPanel: React.JSXElementConstructor<any> | null;
   /**
+   * Component rendered when the Copilot side panel is open.
+   * Only used when the `copilot` prop is passed to the grid.
+   * @default GridCopilotPanel
+   */
+  copilotPanel: React.JSXElementConstructor<any>;
+  /**
    * Component rendered when pivot mode is enabled but no rows are defined.
    * @default GridEmptyPivotOverlay
    */

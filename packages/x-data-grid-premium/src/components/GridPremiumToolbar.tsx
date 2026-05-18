@@ -12,6 +12,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { PivotPanelTrigger } from './pivotPanel/PivotPanelTrigger';
 import { AiAssistantPanelTrigger } from './aiAssistantPanel';
 import { ChartsPanelTrigger } from './chartsPanel/ChartsPanelTrigger';
+import { CopilotPanelTrigger } from './copilotPanel/CopilotPanelTrigger';
 import {
   gridHistoryCanRedoSelector,
   gridHistoryCanUndoSelector,
@@ -105,6 +106,17 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
             <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarAssistant')}>
               <ToolbarButton {...triggerProps} color="default">
                 <rootProps.slots.aiAssistantIcon fontSize="small" />
+              </ToolbarButton>
+            </rootProps.slots.baseTooltip>
+          )}
+        />
+      )}
+      {rootProps.copilot && (
+        <CopilotPanelTrigger
+          render={(triggerProps, state) => (
+            <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarCopilot')}>
+              <ToolbarButton {...triggerProps} color={state.open ? 'primary' : 'default'}>
+                <rootProps.slots.copilotIcon fontSize="small" />
               </ToolbarButton>
             </rootProps.slots.baseTooltip>
           )}
