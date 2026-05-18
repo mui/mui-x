@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  ChatMessage,
-  ChatMessageAvatar,
-  ChatMessageContent,
-  ChatMessageGroup,
-} from '@mui/x-chat';
+import { ChatMessage, ChatMessageAvatar, ChatMessageContent, ChatMessageGroup } from '@mui/x-chat';
 
 interface MessageBubbleProps {
   messageId: string;

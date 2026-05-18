@@ -20,14 +20,7 @@ export type PlaygroundCardStatus =
 
 export interface PlaygroundCardStatusBadge {
   label: string;
-  color?:
-    | 'default'
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'info'
-    | 'warning'
-    | 'error';
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error';
 }
 
 export interface PlaygroundCardRegistryMetadata {
@@ -208,12 +201,7 @@ const defaultRegistryMetadata: Record<string, PlaygroundCardRegistryMetadata> = 
   },
   ChatMessageList: {
     status: 'compound',
-    slots: [
-      'messageList',
-      'messageListScroller',
-      'messageListContent',
-      'messageListOverlay',
-    ],
+    slots: ['messageList', 'messageListScroller', 'messageListContent', 'messageListOverlay'],
     classKeys: ['root', 'scroller', 'content'],
   },
   ChatMessageGroup: {
@@ -371,14 +359,7 @@ const defaultRegistryMetadata: Record<string, PlaygroundCardRegistryMetadata> = 
   },
   ChatConfirmation: {
     status: 'presentational',
-    classKeys: [
-      'root',
-      'icon',
-      'message',
-      'actions',
-      'confirmButton',
-      'cancelButton',
-    ],
+    classKeys: ['root', 'icon', 'message', 'actions', 'confirmButton', 'cancelButton'],
   },
 };
 
@@ -395,10 +376,7 @@ const statusLabels: Record<PlaygroundCardStatus, string> = {
   deprecated: 'Deprecated',
 };
 
-const statusColors: Record<
-  PlaygroundCardStatus,
-  PlaygroundCardStatusBadge['color']
-> = {
+const statusColors: Record<PlaygroundCardStatus, PlaygroundCardStatusBadge['color']> = {
   core: 'primary',
   compound: 'secondary',
   slot: 'info',
@@ -430,10 +408,7 @@ function resolveStatus(
   return status;
 }
 
-function getPreviewSizing(
-  previewSize: PlaygroundPreviewSize | undefined,
-  minHeight: number,
-) {
+function getPreviewSizing(previewSize: PlaygroundPreviewSize | undefined, minHeight: number) {
   if (previewSize && typeof previewSize === 'object') {
     return {
       minHeight: previewSize.minHeight ?? {
@@ -733,9 +708,7 @@ function ClassCustomizationRow({
               border: '1px solid',
               borderColor: item.parseError ? 'error.main' : 'divider',
               bgcolor:
-                theme.palette.mode === 'dark'
-                  ? 'rgba(0, 0, 0, 0.25)'
-                  : 'rgba(255, 255, 255, 0.6)',
+                theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.25)' : 'rgba(255, 255, 255, 0.6)',
               color: 'text.primary',
               outline: 'none',
               '&:focus-visible': {
@@ -783,13 +756,7 @@ function ClassCustomizationRow({
   );
 }
 
-function ResetButton({
-  onClick,
-  label = 'Reset',
-}: {
-  onClick: () => void;
-  label?: string;
-}) {
+function ResetButton({ onClick, label = 'Reset' }: { onClick: () => void; label?: string }) {
   return (
     <Tooltip title="Reset to defaults" placement="top" arrow>
       <Box
@@ -845,10 +812,7 @@ function CopyCodeBar({ getCode }: { getCode: () => string }) {
       if (timeoutRef.current !== undefined) {
         clearTimeout(timeoutRef.current);
       }
-      timeoutRef.current = setTimeout(
-        () => setCopied(false),
-        1500,
-      ) as unknown as number;
+      timeoutRef.current = setTimeout(() => setCopied(false), 1500) as unknown as number;
     } catch {
       // ignore — clipboard may be blocked in iframes
     }
@@ -866,9 +830,7 @@ function CopyCodeBar({ getCode }: { getCode: () => string }) {
         borderTop: '1px solid',
         borderColor: 'divider',
         bgcolor:
-          theme.palette.mode === 'dark'
-            ? 'rgba(255, 255, 255, 0.03)'
-            : 'rgba(0, 0, 0, 0.02)',
+          theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)',
       })}
     >
       <Typography
@@ -889,9 +851,7 @@ function CopyCodeBar({ getCode }: { getCode: () => string }) {
           border: '1px solid',
           borderColor: copied ? theme.palette.success.main : 'divider',
           background:
-            theme.palette.mode === 'dark'
-              ? 'rgba(255, 255, 255, 0.04)'
-              : 'rgba(0, 0, 0, 0.02)',
+            theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)',
           color: copied ? theme.palette.success.main : 'text.primary',
           fontSize: '0.7rem',
           fontWeight: 600,
@@ -902,9 +862,7 @@ function CopyCodeBar({ getCode }: { getCode: () => string }) {
           flexShrink: 0,
           transition: 'color 0.15s ease, border-color 0.15s ease',
           '&:hover': {
-            borderColor: copied
-              ? theme.palette.success.main
-              : theme.palette.primary.main,
+            borderColor: copied ? theme.palette.success.main : theme.palette.primary.main,
             color: copied ? theme.palette.success.main : theme.palette.primary.main,
           },
         })}
@@ -928,11 +886,7 @@ function CollapseChevronIcon({ direction }: { direction: 'left' | 'right' }) {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      {direction === 'right' ? (
-        <path d="M9 5l7 7-7 7" />
-      ) : (
-        <path d="M15 5l-7 7 7 7" />
-      )}
+      {direction === 'right' ? <path d="M9 5l7 7-7 7" /> : <path d="M15 5l-7 7 7 7" />}
     </svg>
   );
 }
@@ -949,9 +903,7 @@ function CollapseFooter({ onCollapse }: { onCollapse: () => void }) {
         borderTop: '1px solid',
         borderColor: 'divider',
         bgcolor:
-          theme.palette.mode === 'dark'
-            ? 'rgba(255, 255, 255, 0.03)'
-            : 'rgba(0, 0, 0, 0.02)',
+          theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)',
       })}
     >
       <Tooltip title="Collapse panel" placement="top" arrow>
@@ -1017,8 +969,7 @@ function CollapsedStrip({
         p: 0,
         py: 1.25,
         color: 'text.secondary',
-        transition:
-          'background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease',
+        transition: 'background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease',
         position: 'relative',
         '&:hover, &:focus-visible': {
           color: 'text.primary',
@@ -1115,15 +1066,9 @@ export function PlaygroundCard({
     ...registry,
     componentName: inferredComponentName,
     importName:
-      importName ??
-      registry?.importName ??
-      defaultMetadata?.importName ??
-      inferredComponentName,
+      importName ?? registry?.importName ?? defaultMetadata?.importName ?? inferredComponentName,
     packageName:
-      packageName ??
-      registry?.packageName ??
-      defaultMetadata?.packageName ??
-      DEFAULT_PACKAGE_NAME,
+      packageName ?? registry?.packageName ?? defaultMetadata?.packageName ?? DEFAULT_PACKAGE_NAME,
     sourcePath: sourcePath ?? registry?.sourcePath ?? defaultMetadata?.sourcePath,
     docsPath: docsPath ?? registry?.docsPath ?? defaultMetadata?.docsPath,
     status: status ?? registry?.status ?? defaultMetadata?.status,
@@ -1147,9 +1092,7 @@ export function PlaygroundCard({
       data-docs-path={resolvedMetadata.docsPath}
       data-status={statusBadge?.label}
       data-status-key={
-        typeof resolvedMetadata.status === 'string'
-          ? resolvedMetadata.status
-          : undefined
+        typeof resolvedMetadata.status === 'string' ? resolvedMetadata.status : undefined
       }
       data-parent={resolvedMetadata.parent}
       data-slots={joinDataAttribute(resolvedMetadata.slots)}
@@ -1192,11 +1135,7 @@ export function PlaygroundCard({
           flex: 1,
           display: 'grid',
           gap: { xs: 0.75, md: 1 },
-          gridTemplateColumns: getGridTemplateColumns(
-            controls,
-            controlsCollapsed,
-            controlsWidth,
-          ),
+          gridTemplateColumns: getGridTemplateColumns(controls, controlsCollapsed, controlsWidth),
           minHeight: 0,
           p: { xs: 1, sm: 1.25 },
         }}
@@ -1244,8 +1183,7 @@ export function PlaygroundCard({
               borderRadius: 2,
               border: '1px solid',
               borderColor: 'divider',
-              bgcolor: (theme) =>
-                theme.palette.mode === 'dark' ? 'grey.900' : 'grey.50',
+              bgcolor: (theme) => (theme.palette.mode === 'dark' ? 'grey.900' : 'grey.50'),
               alignSelf: 'stretch',
               width: '100%',
               minWidth: 0,

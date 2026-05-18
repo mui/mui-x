@@ -68,10 +68,7 @@ function PropCard({
         border: '1px solid',
         borderColor: 'divider',
         borderRadius: 1.5,
-        bgcolor:
-          theme.palette.mode === 'dark'
-            ? 'rgba(255, 255, 255, 0.02)'
-            : 'background.paper',
+        bgcolor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.02)' : 'background.paper',
         px: 1.25,
         py: 1,
         minWidth: 0,
@@ -154,10 +151,7 @@ export function SwitchControl({
         border: '1px solid',
         borderColor: 'divider',
         borderRadius: 1.5,
-        bgcolor:
-          theme.palette.mode === 'dark'
-            ? 'rgba(255, 255, 255, 0.02)'
-            : 'background.paper',
+        bgcolor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.02)' : 'background.paper',
         px: 1.25,
         py: 0.625,
         minWidth: 0,
@@ -229,11 +223,7 @@ export function ChoiceControl<T extends string>({
   disabled = false,
 }: ChoiceControlProps<T>) {
   return (
-    <PropCard
-      label={label}
-      helperText={helperText}
-      meta={`enum · ${options.length}`}
-    >
+    <PropCard label={label} helperText={helperText} meta={`enum · ${options.length}`}>
       <RadioGroup
         value={value}
         onChange={(event) => onChange(event.target.value as T)}
@@ -261,8 +251,7 @@ export function ChoiceControl<T extends string>({
                 <Typography
                   variant="caption"
                   sx={(theme) => ({
-                    fontFamily:
-                      theme.typography.fontFamilyCode ?? 'Menlo, monospace',
+                    fontFamily: theme.typography.fontFamilyCode ?? 'Menlo, monospace',
                     fontSize: '0.74rem',
                     fontWeight: isSelected ? 600 : 400,
                     color: isSelected ? 'primary.main' : 'text.primary',
@@ -291,9 +280,7 @@ export function ChoiceControl<T extends string>({
                   bgcolor: isSelected ? selectedBg : 'transparent',
                   transition: 'background-color 0.15s ease',
                   '&:hover': {
-                    bgcolor: isSelected
-                      ? selectedHoverBg
-                      : theme.palette.action.hover,
+                    bgcolor: isSelected ? selectedHoverBg : theme.palette.action.hover,
                   },
                   '& .MuiFormControlLabel-label': { minWidth: 0, flex: 1 },
                 };
@@ -321,11 +308,7 @@ export function SelectControl<T extends string>({
   disabled = false,
 }: SelectControlProps<T>) {
   return (
-    <PropCard
-      label={label}
-      helperText={helperText}
-      meta={`enum · ${options.length}`}
-    >
+    <PropCard label={label} helperText={helperText} meta={`enum · ${options.length}`}>
       <TextField
         size="small"
         select
@@ -336,8 +319,7 @@ export function SelectControl<T extends string>({
         sx={{
           '& .MuiOutlinedInput-root': {
             fontSize: '0.75rem',
-            fontFamily: (theme) =>
-              theme.typography.fontFamilyCode ?? 'Menlo, monospace',
+            fontFamily: (theme) => theme.typography.fontFamilyCode ?? 'Menlo, monospace',
           },
           '& .MuiSelect-select': {
             py: 0.625,
@@ -445,8 +427,7 @@ export function TextControl({
         sx={{
           '& .MuiOutlinedInput-root': {
             fontSize: '0.75rem',
-            fontFamily: (theme) =>
-              theme.typography.fontFamilyCode ?? 'Menlo, monospace',
+            fontFamily: (theme) => theme.typography.fontFamilyCode ?? 'Menlo, monospace',
           },
           '& .MuiOutlinedInput-input': {
             py: 0.625,
@@ -549,8 +530,7 @@ export function SxTextareaControl({
         sx={{
           '& .MuiOutlinedInput-root': {
             fontSize: '0.7rem',
-            fontFamily: (theme) =>
-              theme.typography.fontFamilyCode ?? 'Menlo, monospace',
+            fontFamily: (theme) => theme.typography.fontFamilyCode ?? 'Menlo, monospace',
             alignItems: 'flex-start',
           },
           '& .MuiOutlinedInput-input': {
@@ -565,8 +545,7 @@ export function SxTextareaControl({
           color="error"
           sx={{
             fontSize: '0.65rem',
-            fontFamily: (theme) =>
-              theme.typography.fontFamilyCode ?? 'Menlo, monospace',
+            fontFamily: (theme) => theme.typography.fontFamilyCode ?? 'Menlo, monospace',
           }}
         >
           {parseError}

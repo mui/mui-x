@@ -103,13 +103,7 @@ export function ScopedChat({
   const resolvedMembers = members ?? demoMembers;
   const seedKey = React.useMemo(
     () =>
-      deriveSeedKey(
-        conversations,
-        messages,
-        activeConversationId,
-        currentUser,
-        resolvedMembers,
-      ),
+      deriveSeedKey(conversations, messages, activeConversationId, currentUser, resolvedMembers),
     [conversations, messages, activeConversationId, currentUser, resolvedMembers],
   );
   return (
