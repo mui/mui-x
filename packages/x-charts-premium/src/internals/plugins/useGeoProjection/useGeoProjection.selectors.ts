@@ -26,7 +26,6 @@ import type {
   UseGeoProjectionState,
 } from './useGeoProjection.types';
 
-
 const PROJECTION_FACTORIES: Record<D3NamedProjection, (() => GeoProjection) | undefined> = {
   // Azimuthal projections (https://d3js.org/d3-geo/azimuthal)
   azimuthalEqualArea: geoAzimuthalEqualArea,
@@ -124,7 +123,7 @@ export const selectorChartProjection = createSelectorMemoized(
         if (process.env.NODE_ENV !== 'production') {
           console.error(
             `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
-            `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
+              `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
           );
         }
         return null;

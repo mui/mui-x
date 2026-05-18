@@ -2,22 +2,22 @@ import { type ChartPluginSignature } from '@mui/x-charts/internals';
 import { type GeoProjection, type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 
 export type D3NamedProjection =
-  'azimuthalEqualArea' |
-  'azimuthalEquidistant' |
-  'gnomonic' |
-  'orthographic' |
-  'stereographic' |
-  'conicConformal' |
-  'conicEqualArea' |
-  'conicEquidistant' |
-  'albers' |
-  'albersUsa' |
-  'equirectangular' |
-  'mercator' |
-  'transverseMercator' |
-  'equalEarth' |
-  'naturalEarth1';
-  
+  | 'azimuthalEqualArea'
+  | 'azimuthalEquidistant'
+  | 'gnomonic'
+  | 'orthographic'
+  | 'stereographic'
+  | 'conicConformal'
+  | 'conicEqualArea'
+  | 'conicEquidistant'
+  | 'albers'
+  | 'albersUsa'
+  | 'equirectangular'
+  | 'mercator'
+  | 'transverseMercator'
+  | 'equalEarth'
+  | 'naturalEarth1';
+
 /**
  * A d3-geo projection accepted by `useGeoProjection`.
  *
