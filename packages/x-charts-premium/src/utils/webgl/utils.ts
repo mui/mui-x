@@ -32,21 +32,6 @@ export function bindQuadBuffer(
   gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
 }
 
-export function attachShader(
-  gl: WebGL2RenderingContext,
-  program: WebGLProgram,
-  shaderSource: string,
-  shaderType: WebGL2RenderingContext['FRAGMENT_SHADER'] | WebGL2RenderingContext['VERTEX_SHADER'],
-) {
-  const shader = gl.createShader(shaderType)!;
-  gl.shaderSource(shader, shaderSource);
-  gl.compileShader(shader);
-
-  gl.attachShader(program, shader);
-
-  return shader;
-}
-
 export type GrowableBuffer = {
   buffer: WebGLBuffer;
   /* Highest byte length ever uploaded; lets us reuse the GPU allocation via bufferSubData. */
