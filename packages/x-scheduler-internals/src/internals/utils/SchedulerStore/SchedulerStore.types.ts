@@ -19,6 +19,18 @@ import {
 import { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
 import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
+export interface StoredError {
+  /**
+   * The error itself. Non-Error rejections are wrapped, preserving the original via `cause`.
+   */
+  error: Error;
+  /**
+   * Stable identifier assigned at push time. Suitable as a React key and as the
+   * argument to `store.dismissError(key)`.
+   */
+  key: string;
+}
+
 export interface SchedulerState<TEvent extends object = any> {
   /**
    * The adapter of the date library.
@@ -160,8 +172,10 @@ export interface SchedulerState<TEvent extends object = any> {
   isLoading: boolean;
   /**
    * The errors that occurred during data fetching.
+   * Each entry carries a stable `key` assigned at push time so the UI can use it
+   * directly as a React key and as the argument to `store.dismissError(key)`.
    */
-  errors: Error[];
+  errors: readonly StoredError[];
   /**
    * Plugin that provides recurring-events support. `null` when not attached.
    */

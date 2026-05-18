@@ -251,6 +251,36 @@ export class SchedulerStore<
   };
 
   /**
+   * Removes the error with the given key from `state.errors`.
+   * The key is the one carried by the matching `StoredError` entry.
+   */
+  public dismissError = (key: string) => {
+    this.set(
+      'errors',
+      this.state.errors.filter((entry) => entry.key !== key),
+    );
+  };
+
+  private nextErrorKey = 0;
+
+  /**
+   * Appends an error to `state.errors`, wrapping non-Error rejections to preserve
+   * the original payload via `cause`. The store owns the key counter so uniqueness
+   * is enforced in one place. Does not dedupe — pushing the same `Error` instance
+   * twice produces two entries (intentional; e.g. a retried failure that should
+   * re-display after the previous one was dismissed).
+   * @internal
+   */
+  public pushError = (error: unknown) => {
+    const wrapped =
+      error instanceof Error
+        ? error
+        : /* minify-error-disabled */ new Error(String(error), { cause: error });
+    this.nextErrorKey += 1;
+    this.set('errors', [...this.state.errors, { error: wrapped, key: String(this.nextErrorKey) }]);
+  };
+
+  /**
    * Registers an effect to be run when the value returned by the selector changes.
    */
   public registerStoreEffect = <Value>(

@@ -45,7 +45,16 @@ type CachedRange = {
 type CachedEvent<T> = {
   value: T;
   expiry: number;
+  /**
+   * Key of the range this event was loaded by (`${start}:${end}`), or `null` for
+   * events upserted outside of `setRange` (e.g. from `eventsUpdated` mutations).
+   * Used by `setRange` to evict events that previously belonged to a fully-replaced
+   * range but are missing from the new fetch — i.e. server-side deletes.
+   */
+  sourceRangeKey: string | null;
 };
+
+const getRangeKey = (start: number, end: number) => `${start}:${end}`;
 
 export class SchedulerDataSourceCacheDefault<
   TEvent extends object,
@@ -99,16 +108,38 @@ export class SchedulerDataSourceCacheDefault<
 
   setRange(start: number, end: number, newEvents: TEvent[]) {
     const expiry = Date.now() + this.ttl;
+    const newRangeKey = getRangeKey(start, end);
 
-    // 1. Update Events (Refreshes the expiry of these specific data points)
-    for (const event of newEvents) {
-      this.upsert(event);
+    // 1. Evict events from fully-replaced ranges that are missing from `newEvents`
+    //    (server-side deletes). Without this, `getAll()` would surface the deleted
+    //    events until their TTL elapses.
+    const replacedRangeKeys = new Set<string>();
+    for (const range of this.loadedRanges) {
+      if (range.start >= start && range.end <= end) {
+        replacedRangeKeys.add(getRangeKey(range.start, range.end));
+      }
+    }
+    const newIds = new Set(newEvents.map((event) => String((event as any).id)));
+    for (const id of Object.keys(this.cache)) {
+      const entry = this.cache[id];
+      if (
+        entry.sourceRangeKey !== null &&
+        replacedRangeKeys.has(entry.sourceRangeKey) &&
+        !newIds.has(id)
+      ) {
+        delete this.cache[id];
+      }
     }
 
-    // 2. Add New Range
+    // 2. Update Events (Refreshes the expiry of these specific data points)
+    for (const event of newEvents) {
+      this.upsert(event, newRangeKey);
+    }
+
+    // 3. Add New Range
     const newRange: CachedRange = { start, end, expiry };
 
-    // 3. Clean up the Registry
+    // 4. Clean up the Registry
     // We want to remove the parts of existing ranges that are covered by the new range.
     const nextRanges: CachedRange[] = [];
 
@@ -150,10 +181,10 @@ export class SchedulerDataSourceCacheDefault<
     this.loadedRanges = nextRanges;
   }
 
-  upsert(event: TEvent) {
+  upsert(event: TEvent, sourceRangeKey: string | null = null) {
     const id = String((event as any).id);
     const expiry = Date.now() + this.ttl;
-    this.cache[id] = { value: event, expiry };
+    this.cache[id] = { value: event, expiry, sourceRangeKey };
   }
 
   remove(id: string) {
