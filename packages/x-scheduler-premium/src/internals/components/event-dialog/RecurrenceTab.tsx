@@ -25,12 +25,18 @@ import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-schedul
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   schedulerEventSelectors,
-  schedulerRecurringEventSelectors,
+  schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventDialogStyledContext } from './EventDialogStyledContext';
-import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './utils';
-import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
-import { EventDialogTabPanel, EventDialogTabContent } from './EventDialogTabPanel';
+import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
+import {
+  useEventDialogStyledContext,
+  ControlledValue,
+  EndsSelection,
+  getEndsSelectionFromRRule,
+  formatDayOfMonthAndMonthFullLetter,
+  EventDialogTabPanel,
+  EventDialogTabContent,
+} from '@mui/x-scheduler/internals';
 
 const SectionHeaderTitle = styled('legend', {
   name: 'MuiEventDialog',
@@ -170,11 +176,11 @@ interface RecurrenceTabProps {
   occurrence: SchedulerRenderableEventOccurrence;
   controlled: ControlledValue;
   setControlled: React.Dispatch<React.SetStateAction<ControlledValue>>;
-  value: string;
+  tabValue: string;
 }
 
 export function RecurrenceTab(props: RecurrenceTabProps) {
-  const { occurrence, controlled, setControlled, value: tabValue } = props;
+  const { occurrence, controlled, setControlled, tabValue } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -193,13 +199,19 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     occurrence.id,
   );
   const inputsDisabled = controlled.recurrenceSelection === null || isPropertyReadOnly('rrule');
-  const monthlyRef = useStore(
-    store,
-    schedulerRecurringEventSelectors.monthlyReference,
-    occurrence.displayTimezone.start,
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const monthlyRef = React.useMemo(
+    () => getMonthlyReference(adapter, occurrence.displayTimezone.start),
+    [adapter, occurrence.displayTimezone.start],
   );
-  const weeklyDays = useStore(store, schedulerRecurringEventSelectors.weeklyDays);
+  const weeklyDays = React.useMemo(
+    () => getWeeklyDays(adapter, visibleDate),
+    [adapter, visibleDate],
+  );
 
+  // Form-state drafts: every preset carries both `byDay` and `byMonthDay` (empty when
+  // not used) so the controlled form keeps a consistent shape as the user switches presets.
+  // Differs from `computePresets`, which only includes the fields each preset actually serializes.
   const presetDraftMap = React.useMemo(
     () => ({
       DAILY: { freq: 'DAILY' as const, interval: 1, byDay: [], byMonthDay: [] },
