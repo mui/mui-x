@@ -226,6 +226,6 @@ const renderers: ChatPartRendererMap = {
 ## See also
 
 - [Tool calling](/x/react-chat/ai-and-agents/tool-calling/) for details on the full tool invocation lifecycle and chunk protocol.
-- [Adapter—Sending tool approval responses](/x/react-chat/backend/adapters/#sending-tool-approval-responses) for details on the `addToolApprovalResponse()` method.
+- [Adapter—`addToolApprovalResponse(input)`](/x/react-chat/backend/adapters/#addtoolapprovalresponseinput) for details on the approval response method.
 - [Streaming](/x/react-chat/behavior/streaming/) for details on the `tool-approval-request` chunk type.
 - [Reasoning](/x/react-chat/ai-and-agents/reasoning/) for details on displaying LLM thinking alongside tool calls.
