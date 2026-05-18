@@ -5,7 +5,6 @@ import {
   OccurrenceContainerLayout,
   OccurrenceLanePosition,
   SchedulerEventOccurrence,
-  SchedulerOccurrencePositions,
   SchedulerResourceId,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
@@ -14,28 +13,16 @@ import { computeTimedLanes, ComputeTimedLanesPrevious } from '@mui/x-scheduler-i
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 
-export interface TimelineVisibleWindow {
+interface TimelineVisibleWindow {
   start: TemporalSupportedObject;
   end: TemporalSupportedObject;
 }
 
-export interface SchedulerTimelineOccurrencesByResource {
+interface SchedulerTimelineOccurrencesByResource {
   byKey: ReadonlyMap<string, SchedulerEventOccurrence>;
   keysByResource: ReadonlyMap<SchedulerResourceId, readonly string[]>;
   resourceIds: readonly SchedulerResourceId[];
 }
-
-const EMPTY_OCCURRENCES: SchedulerTimelineOccurrencesByResource = {
-  byKey: new Map(),
-  keysByResource: new Map(),
-  resourceIds: EMPTY_ARRAY as readonly SchedulerResourceId[],
-};
-
-const EMPTY_POSITIONS: SchedulerOccurrencePositions<OccurrenceContainerLayout> = {
-  positionByKey: new Map(),
-  byContainer: new Map(),
-  maxLane: 1,
-};
 
 /**
  * Visible time window for the timeline. Split out of `eventTimelinePremiumPresetSelectors.config`
@@ -125,8 +112,6 @@ const positionsSelector = createSelectorMemoized(
 );
 
 export const eventTimelineOccurrencePositionSelectors = {
-  /** Visible `{ start, end }` window. */
-  visibleWindow: visibleWindowSelector,
   /** All occurrences in the timeline, indexed by occurrence key and grouped by resource. */
   visibleOccurrences: visibleOccurrencesSelector,
   /** Lane positions per resource. */
@@ -161,6 +146,4 @@ export const eventTimelineOccurrencePositionSelectors = {
     (positions, resourceId: SchedulerResourceId | null): number =>
       resourceId == null ? 1 : (positions.byContainer.get(resourceId)?.maxLane ?? 1),
   ),
-  /** Empty-state defaults exported for callers that need a stable empty value. */
-  empty: { occurrences: EMPTY_OCCURRENCES, positions: EMPTY_POSITIONS },
 };

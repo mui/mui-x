@@ -8,7 +8,6 @@ import type {
   SchedulerOccurrencePositions,
   OccurrenceContainerLayout,
   DayGridContainerLayout,
-  OccurrenceLanePosition,
   SchedulerProcessedDate,
   SchedulerProcessedEvent,
 } from '../models';
@@ -291,12 +290,6 @@ export const eventCalendarOccurrencePositionSelectors = {
     (positions, dayKey: string): DayGridContainerLayout | null =>
       positions.byContainer.get(dayKey) ?? null,
   ),
-  dayGridPositionByKey: createSelector(
-    dayGridPositionsSelector,
-    (positions, occurrenceKey: string): OccurrenceLanePosition | null =>
-      positions.positionByKey.get(occurrenceKey) ?? null,
-  ),
-  dayGridMaxLane: createSelector(dayGridPositionsSelector, (positions) => positions.maxLane),
 
   // Time-grid (Day/Week time area)
   timeGridPositions: timeGridPositionsSelector,
@@ -305,10 +298,4 @@ export const eventCalendarOccurrencePositionSelectors = {
     (positions, dayKey: string): OccurrenceContainerLayout | null =>
       positions.byContainer.get(dayKey) ?? null,
   ),
-  timeGridPositionByKey: createSelector(
-    timeGridPositionsSelector,
-    (positions, occurrenceKey: string): OccurrenceLanePosition | null =>
-      positions.positionByKey.get(occurrenceKey) ?? null,
-  ),
-  timeGridMaxLane: createSelector(timeGridPositionsSelector, (positions) => positions.maxLane),
 };

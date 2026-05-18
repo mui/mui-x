@@ -17,7 +17,7 @@ import type { Adapter } from '../../use-adapter/useAdapter.types';
  * time-grid container. Occurrences that return `false` are excluded from the layout
  * entirely (not assigned a lane and not present in the container's `orderedKeys`).
  */
-export type ShouldAddPosition = (occurrence: SchedulerEventOccurrence, adapter: Adapter) => boolean;
+type ShouldAddPosition = (occurrence: SchedulerEventOccurrence, adapter: Adapter) => boolean;
 
 /**
  * Snapshot of the previous compute call. Passed back in to enable per-row /
@@ -333,8 +333,9 @@ export function computeTimedLanes(parameters: {
 }
 
 /**
- * Reuse an existing `OccurrenceLanePosition` object when its `(firstLane, lastLane)`
- * is unchanged, so downstream `dayGridPositionByKey(key)` subscriptions short-circuit.
+ * Reuse an existing `OccurrenceLanePosition` object when its `(firstLane, lastLane)` is
+ * unchanged, so downstream consumers reading `byContainer.get(...).positionByKey.get(key)`
+ * short-circuit on identity.
  */
 function internPosition(
   previousPositions: ReadonlyMap<string, OccurrenceLanePosition> | undefined,
