@@ -21,7 +21,7 @@ export class SchedulerLazyLoadingPlugin<
 
   // TODO #22418: add a dispose lifecycle. The `dataManager` keeps timers (debounce), the
   // `eventsUpdated` subscription below is never unsubscribed, and consumer plugins
-  // (timeline) attach `registerStoreEffect` callbacks. After unmount, in-flight fetches
+  // attach `registerStoreEffect` callbacks. After unmount, in-flight fetches
   // and pending debounce callbacks can still write to a torn-down store.
   constructor(store: SchedulerStore<TEvent, any, State, Parameters>) {
     this.store = store;
@@ -48,8 +48,8 @@ export class SchedulerLazyLoadingPlugin<
       if (this.dataManager) {
         const { adapter } = this.store.state;
 
-        // Flip `isLoading` before the debounce window so the skeleton shows immediately,
-        // not after the debounce window.
+        // Flip `isLoading` synchronously so the skeleton shows immediately,
+        // before any debounce delay on the queued path.
         if (
           this.cache &&
           !this.cache.hasCoverage(
