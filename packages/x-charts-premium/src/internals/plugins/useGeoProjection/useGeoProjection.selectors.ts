@@ -16,11 +16,18 @@ import {
   geoOrthographic,
   geoStereographic,
   geoTransverseMercator,
+  type ExtendedFeatureCollection,
   type GeoProjection,
 } from '@mui/x-charts-vendor/d3-geo';
-import { type UseGeoProjectionSignature } from './useGeoProjection.types';
+import type {
+  D3NamedProjection,
+  GeoProjectionInput,
+  UseGeoProjectionSignature,
+  UseGeoProjectionState,
+} from './useGeoProjection.types';
 
-const PROJECTION_FACTORIES: Record<string, (() => GeoProjection) | undefined> = {
+
+const PROJECTION_FACTORIES: Record<D3NamedProjection, (() => GeoProjection) | undefined> = {
   // Azimuthal projections (https://d3js.org/d3-geo/azimuthal)
   azimuthalEqualArea: geoAzimuthalEqualArea,
   azimuthalEquidistant: geoAzimuthalEquidistant,
@@ -50,21 +57,23 @@ const isConicProjection = (
 };
 export const selectorChartGeoProjectionState = (
   state: ChartState<[], [UseGeoProjectionSignature]>,
-) => state.geoProjection;
+): UseGeoProjectionState['geoProjection'] | undefined => state.geoProjection;
 
-export const selectorChartRawGeoData = createSelector(
+export const selectorChartRawGeoData: (
+  state: ChartState<[], [UseGeoProjectionSignature]>,
+) => ExtendedFeatureCollection | null = createSelector(
   selectorChartGeoProjectionState,
   (geoProjection) => geoProjection?.geoData ?? null,
 );
 
 export const selectorChartRawProjection = createSelector(
   selectorChartGeoProjectionState,
-  (geoProjection) => geoProjection?.projection ?? null,
+  (geoProjection): GeoProjectionInput | null => geoProjection?.projection ?? null,
 );
 
 const selectorChartParallels = createSelector(
   selectorChartGeoProjectionState,
-  (geoProjection) => geoProjection?.parallels ?? ([30, 60] as [number, number]),
+  (geoProjection): [number, number] => geoProjection?.parallels ?? [30, 60],
 );
 /**
  * Map a feature's `properties.name` to its index in `geoData.features`,
@@ -115,7 +124,7 @@ export const selectorChartProjection = createSelectorMemoized(
         if (process.env.NODE_ENV !== 'production') {
           console.error(
             `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
-              `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
+            `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
           );
         }
         return null;

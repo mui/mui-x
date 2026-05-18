@@ -1,13 +1,30 @@
 import { type ChartPluginSignature } from '@mui/x-charts/internals';
 import { type GeoProjection, type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 
+export type D3NamedProjection =
+  'azimuthalEqualArea' |
+  'azimuthalEquidistant' |
+  'gnomonic' |
+  'orthographic' |
+  'stereographic' |
+  'conicConformal' |
+  'conicEqualArea' |
+  'conicEquidistant' |
+  'albers' |
+  'albersUsa' |
+  'equirectangular' |
+  'mercator' |
+  'transverseMercator' |
+  'equalEarth' |
+  'naturalEarth1';
+  
 /**
  * A d3-geo projection accepted by `useGeoProjection`.
  *
  * Either a built-in projection name (e.g. `'mercator'`, `'naturalEarth1'`)
  * or a `GeoProjection` instance returned by a d3-geo factory.
  */
-export type GeoProjectionInput = string | GeoProjection;
+export type GeoProjectionInput = D3NamedProjection | GeoProjection;
 
 export interface UseGeoProjectionParameters {
   /**
