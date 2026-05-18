@@ -93,10 +93,10 @@ jobs:
           command: |
             # Fully saturate all the available CPUs by splitting the tests in 1 shard per CPU
             pnpm exec concurrently \
-              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=1/4" \
-              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=2/4" \
-              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=3/4" \
-              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=4/4" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=1/4" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=2/4" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=3/4" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=4/4" \
               || TEST_EXIT_CODE=$?
             pnpm exec vitest run --merge-reports
             # Reports merged, we can now exit with the stored code
@@ -108,7 +108,7 @@ jobs:
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.59.1-noble
-    resource_class: large
+    resource_class: xlarge
     steps:
       - checkout
       - install-deps:
@@ -200,7 +200,7 @@ jobs:
             git add -A && git diff --exit-code --staged
   test_types:
     <<: *default-job
-    resource_class: medium+
+    resource_class: large
     steps:
       - checkout
       - install-deps
@@ -264,7 +264,7 @@ jobs:
           react-version: << parameters.react-version >>
       - run:
           name: Install ffmpeg
-          command: apt update && apt upgrade -y && apt install ffmpeg -y
+          command: apt-get update && apt-get install ffmpeg --no-install-recommends -y
       - run:
           name: Build packages
           command: pnpm release:build

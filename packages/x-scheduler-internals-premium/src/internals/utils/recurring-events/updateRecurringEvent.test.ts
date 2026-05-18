@@ -5,7 +5,7 @@ import {
   SchedulerProcessedEventRecurrenceRule,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import { mergeDateAndTime } from '../date-utils';
+import { mergeDateAndTime } from '@mui/x-scheduler-internals/internals';
 import {
   adjustRRuleForAllMove,
   applyRecurringUpdateAll,

@@ -644,7 +644,6 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-charts-bars',
             title: 'Bars',
-            newFeature: true,
             children: [
               { pathname: '/x/react-charts/bars', title: 'Bars overview' },
               {
@@ -706,13 +705,20 @@ const pages: MuiPage[] = [
             unstable: true,
           },
           {
+            pathname: '/x/react-charts/radial-bars',
+            title: 'Radial Bars',
+            plan: 'premium',
+            unstable: true,
+          },
+          {
             pathname: '/x/react-charts/radial-lines',
+            title: 'Radial Lines',
             plan: 'premium',
             unstable: true,
           },
           {
             pathname: '/x/react-charts/#planned-charts',
-            title: 'Future Components',
+            title: 'Future components',
             planned: true,
           },
           {
