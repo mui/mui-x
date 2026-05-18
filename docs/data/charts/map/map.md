@@ -22,7 +22,6 @@ The map provider `ChartsGeoDataProviderPremium` uses three main props:
 
 The series can be of type `'mapShape'`, `'mapPoint'`, or `'mapLink'`.
 
-
 {{"demo": "BasicGeoDataPlot.js"}}
 
 ## Composition
