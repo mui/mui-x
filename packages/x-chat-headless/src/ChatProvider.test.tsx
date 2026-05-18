@@ -223,8 +223,9 @@ describe('ChatProvider', () => {
       result.current.setComposerValue('Draft one');
     });
 
-    expect(onMessagesChange.callCount).toBe(1);
-    expect(onMessagesChange.lastCall.args[0]).toEqual([message1]);
+    expect(onMessagesChange.callCount).toBe(2);
+    expect(onMessagesChange.getCall(0).args[0]).toEqual([message1]);
+    expect(onMessagesChange.lastCall.args[0]).toEqual([]);
     expect(onConversationsChange.callCount).toBe(1);
     expect(onConversationsChange.lastCall.args[0]).toEqual([conversation1]);
     expect(onActiveConversationChange.callCount).toBe(1);
