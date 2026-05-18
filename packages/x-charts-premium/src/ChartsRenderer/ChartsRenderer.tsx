@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
-import { configurationOptions } from './configuration';
+import { chartDefaults } from './defaults';
 import { colorPaletteLookup } from './colors';
 import { type BarSeries } from '../BarChart';
 
@@ -100,12 +100,7 @@ function ChartsRenderer({
     return String(value);
   };
 
-  const sections = configurationOptions[chartType]?.customization || [];
-  const defaultOptions = Object.fromEntries(
-    sections.flatMap((section) =>
-      Object.entries(section.controls).map(([key, value]) => [key, value.default]),
-    ),
-  );
+  const defaultOptions = chartDefaults[chartType as keyof typeof chartDefaults] ?? {};
 
   // merge passed options with the defaults
   const chartConfiguration = React.useMemo(() => {
