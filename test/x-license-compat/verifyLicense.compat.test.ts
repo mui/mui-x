@@ -21,9 +21,13 @@
 // v9 (the current major) uses the `@mui/x-license` workspace dep, so it auto-tracks
 // whatever is in the repo, no Renovate bump PR after every release.
 //
-// When v10 ships:
+// When v10 ships (rationale: https://github.com/mui/mui-x/pull/22504):
+//   #npm-tag-reference
 //   - Switch the workspace dep target to the new major (i.e. v10 becomes the workspace).
-//   - Pin v9 here as an npm alias to its latest published 9.x.
+//   - Pin v9 here as an npm alias to its latest published 9.x, e.g.:
+//       "x-license-v9": "npm:@mui/x-license@9.X.Y"
+//     (use an exact version, not a range, the matrix should be locked to a frozen
+//     released contract, the same way v5–v8 are pinned today).
 //   - Drop the oldest pin (v5) if it's out of support by then.
 //
 // A failing cell is a real backwards-compat regression, either the wire format changed in a
