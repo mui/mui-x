@@ -1340,4 +1340,40 @@ describe('<DataGrid /> - Layout & warnings', () => {
       );
     },
   );
+
+  // See https://github.com/mui/mui-x/issues/22510
+  // Need layout
+  it.skipIf(isJSDOM)(
+    'should keep the vertical scrollbar after the container size oscillates across the threshold',
+    async () => {
+      function TestCase({ height }: { height: number }) {
+        return (
+          <div style={{ width: 300, height }}>
+            <DataGrid
+              rows={Array.from({ length: 3 }, (_, i) => ({ id: i, brand: `b${i}` }))}
+              columns={[{ field: 'brand' }]}
+              resizeThrottleMs={0}
+            />
+          </div>
+        );
+      }
+      const { setProps } = render(<TestCase height={150} />);
+      await waitFor(() => {
+        expect(getVariable('--DataGrid-hasScrollY')).to.equal('1');
+      });
+      // The pauses between size changes simulate real user-driven window resize,
+      // which is paced by mouse motion and is hundreds of milliseconds apart -
+      // unlike a layout feedback loop, which flips within one render frame.
+      await sleep(150);
+      setProps({ height: 400 });
+      await waitFor(() => {
+        expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
+      });
+      await sleep(150);
+      setProps({ height: 150 });
+      await waitFor(() => {
+        expect(getVariable('--DataGrid-hasScrollY')).to.equal('1');
+      });
+    },
+  );
 });

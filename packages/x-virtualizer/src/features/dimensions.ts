@@ -128,14 +128,20 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
   const isFirstSizing = React.useRef(true);
 
   // Vertical scrollbar oscillation detector.
-  // Counts consecutive hasScrollY flips that happen with no row-height change.
+  // Counts consecutive hasScrollY flips that happen with no row-height change
+  // and within the same synchronous render chain (consecutive flips occur within
+  // a few milliseconds, whereas user-driven resize flips are paced by user input
+  // and resizeThrottleMs and are separated by hundreds of milliseconds).
   // After 2 flips it is certainly a layout feedback loop, so every further flip
-  // is forced to false (no scrollbar). The counter resets when row heights change.
+  // is forced to false (no scrollbar). The counter resets when row heights
+  // change or when enough time has passed since the previous flip.
   // Only vertical scrollbar can oscillate because column widths are never 'auto'.
   // https://github.com/mui/mui-x/issues/20539
+  // https://github.com/mui/mui-x/issues/22510
   const scrollYOscillation = React.useRef({
     counter: 0,
     heights: { content: 0, pinnedTop: 0, pinnedBottom: 0 },
+    lastFlipTimestamp: 0,
   });
 
   const {
@@ -247,6 +253,15 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           }
 
           if (prevDimensions.isReady && hasScrollY !== prevDimensions.hasScrollY) {
+            const now = Date.now();
+            // Reset when the previous flip is too old to be part of the same
+            // synchronous render chain. Layout feedback loops flip within a single
+            // browser frame; user-driven resize flips are paced by user input and
+            // resizeThrottleMs (>= 60ms by default).
+            if (now - osc.lastFlipTimestamp > 100) {
+              osc.counter = 0;
+            }
+            osc.lastFlipTimestamp = now;
             if (!heightsChanged) {
               osc.counter += 1;
             }
