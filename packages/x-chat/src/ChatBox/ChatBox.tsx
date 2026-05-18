@@ -50,6 +50,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
     adapter,
     members,
     currentUser,
+    roleDisplayNames,
     messages,
     initialMessages,
     onMessagesChange,
@@ -103,6 +104,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
       adapter={adapter}
       members={members}
       currentUser={currentUser}
+      roleDisplayNames={roleDisplayNames}
       messages={messages}
       initialMessages={initialMessages}
       onMessagesChange={onMessagesChange}
@@ -566,6 +568,14 @@ ChatBox.propTypes = {
     'step-start': PropTypes.func,
     text: PropTypes.func,
     tool: PropTypes.func,
+  }),
+  /**
+   * Locale-driven fallback labels for messages without explicit author information.
+   */
+  roleDisplayNames: PropTypes.shape({
+    assistant: PropTypes.string,
+    system: PropTypes.string,
+    user: PropTypes.string,
   }),
   /**
    * The extra props for the slot components.

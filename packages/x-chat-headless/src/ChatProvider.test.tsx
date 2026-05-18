@@ -202,6 +202,17 @@ describe('ChatProvider', () => {
     expect(result.current.partRenderers).toEqual({});
   });
 
+  it('forwards role display names to the store parameters', () => {
+    const roleDisplayNames = { assistant: 'Assistent' };
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter(),
+      roleDisplayNames,
+    });
+    const { result } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+    expect(result.current.parameters.roleDisplayNames).toBe(roleDisplayNames);
+  });
+
   it('calls uncontrolled onChange callbacks for internal store mutations', () => {
     const onMessagesChange = spy();
     const onConversationsChange = spy();

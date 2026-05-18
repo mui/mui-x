@@ -54,6 +54,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     storeClass,
     members,
     currentUser,
+    roleDisplayNames,
     getMessageAuthorId,
     getMessageAuthorDisplayName,
     getMessageAuthorAvatarUrl,
@@ -75,6 +76,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     () => ({
       members,
       currentUser,
+      roleDisplayNames,
       getMessageAuthorId,
       getMessageAuthorDisplayName,
       getMessageAuthorAvatarUrl,
@@ -95,6 +97,7 @@ export function ChatProvider<Cursor = string>(props: ChatProviderProps<Cursor>) 
     [
       members,
       currentUser,
+      roleDisplayNames,
       getMessageAuthorId,
       getMessageAuthorDisplayName,
       getMessageAuthorAvatarUrl,

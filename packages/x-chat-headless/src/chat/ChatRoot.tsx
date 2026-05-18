@@ -65,6 +65,7 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
     density,
     members,
     currentUser,
+    roleDisplayNames,
     getMessageAuthorId,
     getMessageAuthorDisplayName,
     getMessageAuthorAvatarUrl,
@@ -128,6 +129,7 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
       streamFlushInterval={streamFlushInterval}
       partRenderers={partRenderers}
       storeClass={storeClass}
+      roleDisplayNames={roleDisplayNames}
     >
       <ChatLocaleProvider localeText={localeText}>
         {(() => {
