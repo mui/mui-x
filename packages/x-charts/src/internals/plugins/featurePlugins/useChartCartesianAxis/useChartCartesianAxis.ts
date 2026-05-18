@@ -36,15 +36,13 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       .map((axis) => axis.id);
     const duplicates = new Set(ids.filter((id, index) => ids.indexOf(id) !== index));
     if (duplicates.size > 0) {
-      if (process.env.NODE_ENV !== 'production') {
-        warnOnce(
-          [
-            `MUI X Charts: The following axis ids are duplicated: ${Array.from(duplicates).join(', ')}.`,
-            `Please make sure that each axis has a unique id.`,
-          ].join('\n'),
-          'error',
-        );
-      }
+      warnOnce(
+        [
+          `MUI X Charts: The following axis ids are duplicated: ${Array.from(duplicates).join(', ')}.`,
+          `Please make sure that each axis has a unique id.`,
+        ].join('\n'),
+        'error',
+      );
     }
   }
 
