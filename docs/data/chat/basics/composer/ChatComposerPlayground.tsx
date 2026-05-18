@@ -11,7 +11,10 @@ import {
 } from '@mui/x-chat';
 import type { ChatAttachmentsConfig, ChatVariant } from '@mui/x-chat/headless';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
-import { ScopedChat, ChatChrome } from 'docs/src/modules/components/chat-playground/sharedProviders';
+import {
+  ScopedChat,
+  ChatChrome,
+} from 'docs/src/modules/components/chat-playground/sharedProviders';
 import { emptyConversation } from 'docs/src/modules/components/chat-playground/sharedFixtures';
 import {
   ChoiceControl,

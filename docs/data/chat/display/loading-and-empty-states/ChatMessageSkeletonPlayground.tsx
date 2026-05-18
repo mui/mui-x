@@ -2,7 +2,10 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatMessageSkeleton } from '@mui/x-chat';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
-import { DividerLabel, NumberControl } from 'docs/src/modules/components/chat-playground/controls';
+import {
+  DividerLabel,
+  NumberControl,
+} from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
   type CustomizationDef,

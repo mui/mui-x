@@ -2,9 +2,15 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChatTypingIndicator } from '@mui/x-chat';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
-import { ScopedChat, TypingEffect } from 'docs/src/modules/components/chat-playground/sharedProviders';
+import {
+  ScopedChat,
+  TypingEffect,
+} from 'docs/src/modules/components/chat-playground/sharedProviders';
 import { emptyConversation } from 'docs/src/modules/components/chat-playground/sharedFixtures';
-import { DividerLabel, NumberControl } from 'docs/src/modules/components/chat-playground/controls';
+import {
+  DividerLabel,
+  NumberControl,
+} from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
   type CustomizationDef,

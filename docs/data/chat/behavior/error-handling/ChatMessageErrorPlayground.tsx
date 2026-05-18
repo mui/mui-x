@@ -7,7 +7,10 @@ import type {
   ChatMessage as ChatMessageEntity,
 } from '@mui/x-chat/headless';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
-import { MessageErrorEffect, ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
+import {
+  MessageErrorEffect,
+  ScopedChat,
+} from 'docs/src/modules/components/chat-playground/sharedProviders';
 import {
   ChoiceControl,
   DividerLabel,

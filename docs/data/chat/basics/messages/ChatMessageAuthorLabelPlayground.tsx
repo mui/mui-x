@@ -8,7 +8,10 @@ import {
 import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
-import { ChoiceControl, DividerLabel } from 'docs/src/modules/components/chat-playground/controls';
+import {
+  ChoiceControl,
+  DividerLabel,
+} from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
   type CustomizationDef,
