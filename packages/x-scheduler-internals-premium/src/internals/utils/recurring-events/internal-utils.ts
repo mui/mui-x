@@ -1,11 +1,11 @@
-import { Adapter } from '../../../use-adapter';
+import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
   SchedulerProcessedEventRecurrenceRule,
-} from '../../../models';
+} from '@mui/x-scheduler-internals/models';
 
 const adapterCache = new WeakMap<
   Adapter,

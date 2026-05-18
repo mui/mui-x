@@ -1,4 +1,4 @@
-import { Adapter } from '../../../use-adapter';
+import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   RecurringEventByDayValue,
   SchedulerProcessedEventRecurrenceRule,
@@ -10,21 +10,23 @@ import {
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
-} from '../../../models';
-import type { UpdateEventsParameters } from '../SchedulerStore';
-import { dateToEventString, getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
+} from '@mui/x-scheduler-internals/models';
+import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
+import {
+  extractStandaloneEvent,
+  dateToEventString,
+  getDateKey,
+  getOccurrenceEnd,
+  mergeDateAndTime,
+} from '@mui/x-scheduler-internals/internals';
 import {
   getRemainingOccurrences,
   getWeekDayCode,
   NOT_LOCALIZED_WEEK_DAYS,
   parsesByDayForWeeklyFrequency,
 } from './internal-utils';
-import { createEventFromRecurringEvent } from './createEventFromRecurringEvent';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 
-/**
- * Generates the update to apply in order to update a recurring event according to the given `scope`.
- */
 export function updateRecurringEvent(
   adapter: Adapter,
   originalEvent: SchedulerProcessedEvent,
@@ -274,7 +276,7 @@ export function applyRecurringUpdateOnlyThis(
   }
 
   return {
-    created: [createEventFromRecurringEvent(originalEvent, stringifiedChanges)],
+    created: [extractStandaloneEvent(originalEvent, stringifiedChanges)],
     updated: [
       {
         id: originalEvent.id,
