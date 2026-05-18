@@ -167,7 +167,10 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 export function EventDialogProvider(props: EventDialogProviderProps) {
   const { children, optionalRenderers, ...other } = props;
   const store = useSchedulerStoreContext();
-  const isRecurringScopeDialogOpen = useStore(store, schedulerOtherSelectors.isRecurringScopeDialogOpen);
+  const isRecurringScopeDialogOpen = useStore(
+    store,
+    schedulerOtherSelectors.isRecurringScopeDialogOpen,
+  );
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
   const RecurringScopeDialogRenderer = optionalRenderers?.recurringScopeDialog;
