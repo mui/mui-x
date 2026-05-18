@@ -43,7 +43,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
-  const { classes, localeText } = useEventCalendarStyledContext();
+  const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const weekNumber = adapter.getWeekNumber(days[0].value);
 
   const { start, end } = React.useMemo(
@@ -53,6 +53,10 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
     }),
     [adapter, days],
   );
+
+  const weekNumberId = showWeekNumber
+    ? `${schedulerId}-MonthViewWeekNumber-${weekNumber}`
+    : undefined;
 
   return (
     <MonthViewRow
@@ -66,8 +70,9 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
       {showWeekNumber && (
         <MonthViewWeekNumberCell
           className={classes.monthViewWeekNumberCell}
-          role="rowheader"
+          id={weekNumberId}
           aria-label={localeText.weekNumberAriaLabel(weekNumber)}
+          aria-hidden="true"
         >
           {weekNumber}
         </MonthViewWeekNumberCell>
@@ -78,6 +83,8 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           key={day.key}
           day={day}
           maxEvents={maxEvents}
+          colIndex={dayIdx + 1}
+          ariaLabelledBy={weekNumberId}
         />
       ))}
     </MonthViewRow>

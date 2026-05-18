@@ -43,7 +43,7 @@ const agendaCombinedSelector = createSelectorMemoized(
   eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
   schedulerEventSelectors.processedEventList,
   schedulerResourceSelectors.visibleMap,
-  schedulerOtherSelectors.plan,
+  schedulerOtherSelectors.recurringEventsPlugin,
   (
     adapter,
     visibleDate,
@@ -52,7 +52,7 @@ const agendaCombinedSelector = createSelectorMemoized(
     showEmptyDaysInAgenda,
     events,
     visibleResources,
-    plan,
+    recurringEventsPlugin,
   ): AgendaCombined => {
     const amount = AGENDA_VIEW_DAYS_AMOUNT;
 
@@ -75,7 +75,7 @@ const agendaCombinedSelector = createSelectorMemoized(
       events,
       visibleResources,
       displayTimezone,
-      plan,
+      recurringEventsPlugin,
       accumulatedDays,
       byKey,
       keysByDay,
@@ -128,7 +128,7 @@ const agendaCombinedSelector = createSelectorMemoized(
         events,
         visibleResources,
         displayTimezone,
-        plan,
+        recurringEventsPlugin,
         accumulatedDays,
         byKey,
         keysByDay,
@@ -194,7 +194,7 @@ interface AppendChunkParameters {
   events: ReturnType<typeof schedulerEventSelectors.processedEventList>;
   visibleResources: ReturnType<typeof schedulerResourceSelectors.visibleMap>;
   displayTimezone: ReturnType<typeof schedulerOtherSelectors.displayTimezone>;
-  plan: ReturnType<typeof schedulerOtherSelectors.plan>;
+  recurringEventsPlugin: ReturnType<typeof schedulerOtherSelectors.recurringEventsPlugin>;
   accumulatedDays: SchedulerProcessedDate[];
   byKey: Map<string, SchedulerEventOccurrence>;
   keysByDay: Map<string, string[]>;
@@ -213,7 +213,7 @@ function appendChunk(parameters: AppendChunkParameters): void {
     events,
     visibleResources,
     displayTimezone,
-    plan,
+    recurringEventsPlugin,
     accumulatedDays,
     byKey,
     keysByDay,
@@ -239,7 +239,7 @@ function appendChunk(parameters: AppendChunkParameters): void {
     events,
     visibleResources,
     displayTimezone,
-    plan,
+    recurringEventsPlugin,
   });
 
   for (const occurrence of occurrences) {

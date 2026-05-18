@@ -397,19 +397,26 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       ref={handleRef}
       {...other}
       className={clsx(className, classes.dayTimeGridContainer)}
+      aria-rowcount={3}
+      aria-colcount={days.length}
     >
       <DayTimeGridHeader
         className={classes.dayTimeGridHeader}
         as={CalendarGrid.HeaderRow}
+        aria-rowindex={1}
         style={{ '--column-count': days.length } as React.CSSProperties}
       >
-        <DayTimeGridAllDayEventsCell className={classes.dayTimeGridAllDayEventsCell} />
+        <DayTimeGridAllDayEventsCell
+          className={classes.dayTimeGridAllDayEventsCell}
+          aria-hidden="true"
+        />
         {days.map((day, index) => (
           <DayTimeGridHeaderCell
             key={day.key}
             className={classes.dayTimeGridHeaderCell}
             date={day}
             ariaLabelFormat={`${adapter.formats.weekday} ${adapter.formats.dayOfMonth}`}
+            aria-colindex={index + 1}
             data-has-scroll={(index === days.length - 1 && hasScroll) || undefined}
           >
             {hasDayView ? (
@@ -441,7 +448,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         <DayTimeGridAllDayEventsHeaderCell
           className={classes.dayTimeGridAllDayEventsHeaderCell}
           id={`${schedulerId}-DayTimeGridAllDayEventsHeaderCell`}
-          role="columnheader"
+          aria-hidden="true"
         >
           {localeText.allDay}
         </DayTimeGridAllDayEventsHeaderCell>
@@ -449,11 +456,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           as={CalendarGrid.DayRow}
           start={start}
           end={end}
-          role="row"
           className={classes.dayTimeGridAllDayEventsRow}
         >
-          {days.map((day) => (
-            <DayGridCell key={day.key} day={day} />
+          {days.map((day, index) => (
+            <DayGridCell key={day.key} day={day} colIndex={index + 1} />
           ))}
         </DayTimeGridAllDayEventsRow>
         <div className={classes.dayTimeGridScrollablePlaceholder} />
@@ -479,12 +485,13 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               ))}
             </DayTimeGridTimeAxis>
 
-            <DayTimeGridGrid className={classes.dayTimeGridGrid}>
+            <DayTimeGridGrid className={classes.dayTimeGridGrid} role="row" aria-rowindex={3}>
               {days.map((day, index) => (
                 <TimeGridColumn
                   key={day.key}
                   day={day}
                   index={index}
+                  colIndex={index + 1}
                   showCurrentTimeIndicator={showCurrentTimeIndicator && isTodayInView}
                 />
               ))}

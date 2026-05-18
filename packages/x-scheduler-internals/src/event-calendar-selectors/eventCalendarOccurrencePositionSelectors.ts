@@ -135,8 +135,8 @@ const defaultVisibleOccurrencesSelector = createSelectorMemoized(
   schedulerEventSelectors.processedEventList,
   schedulerResourceSelectors.visibleMap,
   schedulerOtherSelectors.displayTimezone,
-  schedulerOtherSelectors.plan,
-  (adapter, days, events, visibleResources, displayTimezone, plan) => {
+  schedulerOtherSelectors.recurringEventsPlugin,
+  (adapter, days, events, visibleResources, displayTimezone, recurringEventsPlugin) => {
     const byKey = new Map<string, SchedulerEventOccurrence>();
     const keysByDay = new Map<string, string[]>();
     const dayKeys: string[] = [];
@@ -162,7 +162,7 @@ const defaultVisibleOccurrencesSelector = createSelectorMemoized(
       events,
       visibleResources,
       displayTimezone,
-      plan,
+      recurringEventsPlugin,
       previous:
         previousVisibleOccurrences !== null && previousEventByKey !== null
           ? { byKey: previousVisibleOccurrences.byKey, eventByKey: previousEventByKey }

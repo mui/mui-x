@@ -90,7 +90,7 @@ describe('event-utils', () => {
         events: [visibleEvent, hiddenEvent],
         visibleResources: { visible: true, hidden: false },
         displayTimezone: 'default',
-        plan: 'premium',
+        recurringEventsPlugin: null,
       });
 
       expect(result).to.have.length(1);
@@ -117,7 +117,7 @@ describe('event-utils', () => {
         events: [event],
         visibleResources: {},
         displayTimezone: 'Europe/Paris',
-        plan: 'premium',
+        recurringEventsPlugin: null,
       });
 
       expect(result.length).to.be.greaterThan(0);
@@ -143,7 +143,7 @@ describe('event-utils', () => {
         events: [event],
         visibleResources: {},
         displayTimezone: 'default',
-        plan: 'premium',
+        recurringEventsPlugin: null,
       });
 
       expect(result).to.have.length(0);

@@ -29,7 +29,7 @@ function buildOccurrencesByDay(
     events,
     visibleResources: {},
     displayTimezone: 'default',
-    plan: 'premium',
+    recurringEventsPlugin: null,
     previous: options?.previous,
     outEventByKey: options?.outEventByKey,
   });

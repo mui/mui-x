@@ -113,7 +113,7 @@ const TimeGridColumnEvent = React.memo(function TimeGridColumnEvent(
 });
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
-  const { day, showCurrentTimeIndicator, index } = props;
+  const { day, showCurrentTimeIndicator, index, colIndex } = props;
 
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
@@ -134,6 +134,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
       start={start}
       end={end}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
+      aria-colindex={colIndex}
       data-weekend={isWeekend(adapter, day.value) || undefined}
       style={{ '--columns-count': maxLane } as React.CSSProperties}
     >
@@ -245,6 +246,7 @@ function ColumnInteractiveLayer({
 interface TimeGridColumnProps {
   day: SchedulerProcessedDate;
   index: number;
+  colIndex: number;
   showCurrentTimeIndicator: boolean;
 }
 
