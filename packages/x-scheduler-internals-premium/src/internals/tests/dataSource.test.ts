@@ -417,11 +417,7 @@ premiumStoreClasses.forEach((storeClass) => {
         newEvents: [updatedEvent],
       });
 
-      await Promise.resolve();
-      await Promise.resolve();
-      await Promise.resolve();
-
-      expect(store.state.errors).toHaveLength(0);
+      await vi.waitFor(() => expect(store.state.errors).toHaveLength(0));
     });
 
     describe('pushError', () => {
