@@ -498,7 +498,7 @@ describe('SchedulerDataSourceCacheDefault', () => {
     expect(
       cache
         .getAll()
-        .map((e) => e.id)
+        .map((event) => event.id)
         .sort(),
     ).to.deep.equal(['1', '2', '3']);
 
@@ -508,7 +508,7 @@ describe('SchedulerDataSourceCacheDefault', () => {
     expect(
       cache
         .getAll()
-        .map((e) => e.id)
+        .map((event) => event.id)
         .sort(),
     ).to.deep.equal(['1', '3']);
   });
