@@ -85,7 +85,7 @@ export const sanitizeFilterModel = (
   const hasSeveralItems = model.items.length > 1;
 
   let items: GridFilterItem[];
-  if (hasSeveralItems && disableMultipleColumnsFiltering) {
+  if (hasSeveralItems && disableMultipleColumnsFiltering && process.env.NODE_ENV !== 'production') {
     warnOnce(
       [
         'MUI X: The `filterModel` can only contain a single item when the `disableMultipleColumnsFiltering` prop is set to `true`.',
@@ -101,14 +101,14 @@ export const sanitizeFilterModel = (
   const hasItemsWithoutIds = hasSeveralItems && items.some((item) => item.id == null);
   const hasItemWithoutOperator = items.some((item) => item.operator == null);
 
-  if (hasItemsWithoutIds) {
+  if (hasItemsWithoutIds && process.env.NODE_ENV !== 'production') {
     warnOnce(
       'MUI X: The `id` field is required on `filterModel.items` when you use multiple filters.',
       'error',
     );
   }
 
-  if (hasItemWithoutOperator) {
+  if (hasItemWithoutOperator && process.env.NODE_ENV !== 'production') {
     warnOnce(
       'MUI X: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
       'error',

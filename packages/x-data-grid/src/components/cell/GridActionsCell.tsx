@@ -116,7 +116,7 @@ function GridActionsCell<
         });
       } else if (child.type === GridActionsCellItem || suppressChildrenValidation) {
         actions.push(child);
-      } else {
+      } else if (process.env.NODE_ENV !== 'production') {
         const childType = typeof child.type === 'function' ? child.type.name : child.type;
         warnOnce(
           `MUI X: Invalid child type in \`GridActionsCell\`. Expected \`GridActionsCellItem\` or \`React.Fragment\`, got \`${childType}\`.
