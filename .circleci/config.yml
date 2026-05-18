@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/a10a6b9731ae81fcaa0abaab456b986df1d57f8e/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/7c091ffc8105f41363b1bd9907eca180c8c1d21e/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -93,10 +93,10 @@ jobs:
           command: |
             # Fully saturate all the available CPUs by splitting the tests in 1 shard per CPU
             pnpm exec concurrently \
-              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=1/4" \
-              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=2/4" \
-              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=3/4" \
-              "pnpm test:unit:jsdom --reporter=blob --reporter=dot --shard=4/4" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=1/4" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=2/4" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=3/4" \
+              "pnpm test:unit:jsdom --no-file-parallelism --reporter=blob --reporter=dot --shard=4/4" \
               || TEST_EXIT_CODE=$?
             pnpm exec vitest run --merge-reports
             # Reports merged, we can now exit with the stored code
@@ -107,8 +107,8 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
-    resource_class: large
+      playwright-img-version: v1.60.0-noble
+    resource_class: xlarge
     steps:
       - checkout
       - install-deps:
@@ -199,7 +199,7 @@ jobs:
             git add -A && git diff --exit-code --staged
   test_types:
     <<: *default-job
-    resource_class: medium+
+    resource_class: large
     steps:
       - checkout
       - install-deps
@@ -218,7 +218,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     steps:
       - checkout
       - install-deps:
@@ -233,7 +233,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     steps:
       - checkout
       - install-deps
@@ -256,14 +256,14 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
           name: Install ffmpeg
-          command: apt update && apt upgrade -y && apt install ffmpeg -y
+          command: apt-get update && apt-get install ffmpeg --no-install-recommends -y
       - run:
           name: Build packages
           command: pnpm release:build
@@ -277,7 +277,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     resource_class: medium
     steps:
       - checkout

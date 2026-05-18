@@ -4,7 +4,8 @@ import { screen } from '@mui/internal-test-utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { describeAdapters, createPickerRenderer } from 'test/utils/pickers';
+import { createPickerRenderer } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
 const getHourLabels = () =>
   screen
