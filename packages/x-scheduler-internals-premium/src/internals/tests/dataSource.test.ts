@@ -228,10 +228,9 @@ premiumStoreClasses.forEach((storeClass) => {
     });
 
     it('should wrap non-Error rejections from dataSource.getEvents into Error instances', async () => {
+      const rejection = { status: 500, toString: () => '500 Internal Server Error' };
       const dataSource = {
-        getEvents: spy(() =>
-          Promise.reject({ status: 500, toString: () => '500 Internal Server Error' }),
-        ),
+        getEvents: spy(() => Promise.reject(rejection)),
         updateEvents: async () => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
@@ -244,6 +243,34 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.errors).toHaveLength(1);
       expect(store.state.errors[0].error).to.be.instanceOf(Error);
       expect(store.state.errors[0].error.message).to.equal('500 Internal Server Error');
+      // `cause` preserves the original payload for telemetry/devtools.
+      expect(store.state.errors[0].error.cause).to.equal(rejection);
+    });
+
+    it('should wrap non-Error rejections from dataSource.updateEvents into Error instances', async () => {
+      const rejection = { status: 500, toString: () => '500 Update Failed' };
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: spy(() => Promise.reject(rejection)),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      store.publishEvent('eventsUpdated', {
+        deleted: [],
+        updated: new Map([['1', { id: '1' }]]),
+        created: [],
+        newEvents: [],
+      });
+
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(dataSource.updateEvents.calledOnce).to.equal(true);
+      expect(store.state.errors).toHaveLength(1);
+      expect(store.state.errors[0].error).to.be.instanceOf(Error);
+      expect(store.state.errors[0].error.message).to.equal('500 Update Failed');
+      expect(store.state.errors[0].error.cause).to.equal(rejection);
     });
 
     it('should push an error to state.errors when dataSource.updateEvents rejects', async () => {

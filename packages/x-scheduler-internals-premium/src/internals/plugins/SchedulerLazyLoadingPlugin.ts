@@ -131,8 +131,10 @@ export class SchedulerLazyLoadingPlugin<
         adapter.getTime(adapter.endOfDay(range.end)),
         events ?? [],
       );
+      // Build from the full cache so a late-arriving stale fetch can't drop the visible range's events.
+      const allCachedEvents = this.cache!.getAll();
       const eventsState = buildEventsState(
-        { ...this.store.parameters, events } as Parameters,
+        { ...this.store.parameters, events: allCachedEvents } as Parameters,
         adapter,
         displayTimezone,
         this.store.state.recurringEventsPlugin,
@@ -171,9 +173,9 @@ export class SchedulerLazyLoadingPlugin<
           'errors',
           this.pushError(
             new Error(
-              'MUI X Scheduler: dataSource.updateEvents returned { success: false }. ' +
-                'The optimistic event mutation was not persisted to the cache. ' +
-                'Throw from updateEvents to signal failure explicitly, or return { success: true } after handling the error.',
+              'MUI X Scheduler: `dataSource.updateEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
+                'To surface a specific message to the user, throw a descriptive Error from `updateEvents` instead. ' +
+                'See the `updateEvents` contract at https://mui.com/x/react-scheduler/event-calendar/lazy-loading/ (EventCalendar) or https://mui.com/x/react-scheduler/event-timeline/lazy-loading/ (EventTimeline).',
             ),
           ),
         );

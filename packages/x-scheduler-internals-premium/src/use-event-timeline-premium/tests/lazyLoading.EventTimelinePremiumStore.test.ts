@@ -108,6 +108,64 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     expect(dataSource.getEvents.calledTwice).to.equal(true);
   });
 
+  it('should not overwrite the visible range with a late-arriving fetch from a stale range', async () => {
+    let resolveA: (events: TestEvent[]) => void = () => {};
+    let resolveB: (events: TestEvent[]) => void = () => {};
+    const eventsA: TestEvent[] = [
+      {
+        id: 'a',
+        start: '2025-07-01T00:00:00.000Z',
+        end: '2025-07-01T11:00:00.000Z',
+        title: 'Event A',
+      },
+    ];
+    const eventsB: TestEvent[] = [
+      {
+        id: 'b',
+        start: '2025-09-01T00:00:00.000Z',
+        end: '2025-09-01T11:00:00.000Z',
+        title: 'Event B',
+      },
+    ];
+    let callIndex = 0;
+    const dataSource = {
+      getEvents: spy(
+        () =>
+          new Promise<TestEvent[]>((resolve) => {
+            callIndex += 1;
+            if (callIndex === 1) {
+              resolveA = resolve;
+            } else {
+              resolveB = resolve;
+            }
+          }),
+      ),
+      updateEvents: noopUpdateEvents,
+    };
+    const params = { ...DEFAULT_PARAMS, dataSource };
+    const store = new EventTimelinePremiumStore(params, adapter);
+    // Mount: starts fetch A.
+    store.updateStateFromParameters(params, adapter);
+    await flushEffect();
+    await flushDebounce();
+
+    // Navigate to B before A resolves: starts fetch B.
+    (store as any).set('visibleDate', adapter.date('2025-09-15T00:00:00Z', 'default'));
+    await flushEffect();
+    await flushDebounce();
+    expect(dataSource.getEvents.calledTwice).to.equal(true);
+
+    // B resolves first → state reflects B.
+    resolveB(eventsB);
+    await flushEffect();
+    expect(store.state.eventIdList).to.include('b');
+
+    // A resolves late → must NOT drop B's data.
+    resolveA(eventsA);
+    await flushEffect();
+    expect(store.state.eventIdList).to.include('b');
+  });
+
   it('should NOT fetch again when visibleDate changes but the range stays the same', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
