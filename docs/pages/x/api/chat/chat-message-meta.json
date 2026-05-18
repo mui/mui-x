@@ -118,6 +118,6 @@
   "muiName": "MuiChatMessageMeta",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageMeta.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message appearance</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message Appearance</a></li></ul>",
   "cssComponent": false
 }
