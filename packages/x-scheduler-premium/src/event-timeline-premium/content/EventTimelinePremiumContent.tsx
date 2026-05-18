@@ -19,6 +19,7 @@ import {
   useEventDialogContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
+import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { EventTimelinePremiumHeader } from './timeline-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
@@ -411,7 +412,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   return (
     <EventTimelinePremiumContentRoot ref={handleRef} className={classes.content} {...props}>
-      <EventDialogProvider>
+      <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
         <EventTimelinePremiumGrid
           className={classes.grid}
           style={{ '--unit-width': `${presetConfig.tickWidth}px` } as React.CSSProperties}

@@ -2,6 +2,7 @@ import { adapter } from 'test/utils/scheduler/adapters';
 import { processEvent } from '@mui/x-scheduler-internals/process-event';
 import { EventBuilder } from 'test/utils/scheduler/event-builder';
 import { SchedulerEvent } from '@mui/x-scheduler-internals/models';
+import { schedulerRecurringEventsPlugin } from '@mui/x-scheduler-internals-premium/internals';
 
 describe('processEvent', () => {
   it('should keep event timezone in modelInBuiltInFormat', () => {
@@ -57,7 +58,7 @@ describe('processEvent', () => {
         })
         .build();
 
-      const processed = processEvent(event, 'Asia/Tokyo', adapter);
+      const processed = processEvent(event, 'Asia/Tokyo', adapter, schedulerRecurringEventsPlugin);
 
       expect(adapter.getTimezone(processed.displayTimezone.rrule!.until!)).to.equal('Asia/Tokyo');
     });
@@ -72,6 +73,7 @@ describe('processEvent', () => {
         },
         'Pacific/Kiritimati',
         adapter,
+        schedulerRecurringEventsPlugin,
       );
 
       expect(adapter.getTimezone(processed.displayTimezone.rrule!.until!)).to.equal(
@@ -142,7 +144,12 @@ describe('processEvent', () => {
         .recurrent('DAILY')
         .build();
 
-      const processed = processEvent(event, 'Europe/Paris', adapter);
+      const processed = processEvent(
+        event,
+        'Europe/Paris',
+        adapter,
+        schedulerRecurringEventsPlugin,
+      );
 
       expect(processed.dataTimezone.exDates).to.have.length(1);
       // 09:00 NY (UTC-5) = 14:00 UTC
@@ -205,6 +212,22 @@ describe('processEvent', () => {
 
       expect(processed.modelInBuiltInFormat.start).to.equal('2025-01-01T09:00:00');
       expect(processed.modelInBuiltInFormat.end).to.equal('2025-01-01T10:00:00');
+    });
+  });
+
+  describe('without recurring events plugin', () => {
+    it('should warn and leave rrule undefined on both timezones when no plugin is provided', () => {
+      const event = EventBuilder.new(adapter).rrule({ freq: 'DAILY' }).build();
+
+      let processed!: ReturnType<typeof processEvent>;
+      expect(() => {
+        processed = processEvent(event, 'Europe/Paris', adapter);
+      }).toWarnDev([
+        'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+      ]);
+
+      expect(processed.dataTimezone.rrule).to.equal(undefined);
+      expect(processed.displayTimezone.rrule).to.equal(undefined);
     });
   });
 });
