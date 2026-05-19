@@ -222,7 +222,13 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
       props: { isDayDraggable: true },
       style: {
         cursor: 'grab',
+        // Stop the browser from scrolling the page when the user drags a finger
+        // across the cell — the drag is driven by our own Pointer Events handler.
         touchAction: 'none',
+        // Prevent the iOS text-selection callout from racing the drag gesture.
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        userSelect: 'none',
       },
     },
     {
@@ -524,7 +530,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
       onMouseEnter={(event) => onMouseEnter(event, day)}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
-      draggable={draggable}
       {...other}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
