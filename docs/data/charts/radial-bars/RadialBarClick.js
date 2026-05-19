@@ -9,6 +9,9 @@ import { Unstable_RadialBarChart as RadialBarChart } from '@mui/x-charts-premium
 
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+
 const highlightScope = { highlight: 'item' };
 
 const series = [
@@ -34,30 +37,33 @@ const series = [
   },
 ];
 
-const radialChartParams = {
-  series,
+const bandAxis = {
+  data: ['0', '3', '6', '9', '12'],
+  id: 'axis1',
+  scaleType: 'band',
+  disableLine: true,
+  disableTicks: true,
+};
+
+const valueAxis = {
+  tickLabelPosition: 'center',
+  disableLine: true,
+  disableTicks: true,
+};
+
+const getRadialChartParams = (layout) => ({
+  series: series.map((s) => ({ ...s, layout })),
   rotationAxis: [
-    {
-      data: ['0', '3', '6', '9', '12'],
-      id: 'axis1',
-      scaleType: 'band',
-      disableLine: true,
-      disableTicks: true,
-    },
+    layout === 'vertical' ? bandAxis : { ...valueAxis, tickLabelPosition: 'after' },
   ],
-  radiusAxis: [
-    {
-      tickLabelPosition: 'center',
-      disableLine: true,
-      disableTicks: true,
-    },
-  ],
+  radiusAxis: [layout === 'vertical' ? valueAxis : bandAxis],
   grid: { rotation: true, radius: true },
   height: 400,
-};
+});
 
 export default function RadialBarClick() {
   const [axisData, setAxisData] = React.useState();
+  const [layout, setLayout] = React.useState('vertical');
 
   return (
     <Stack
@@ -66,10 +72,29 @@ export default function RadialBarClick() {
       sx={{ width: '100%' }}
     >
       <Box sx={{ flexGrow: 1 }}>
-        <RadialBarChart
-          {...radialChartParams}
-          onAxisClick={(event, d) => setAxisData(d)}
-        />
+        <ToggleButtonGroup
+          value={layout}
+          exclusive
+          onChange={(event, newLayout) => {
+            if (newLayout !== null) {
+              setLayout(newLayout);
+            }
+          }}
+          aria-label="chart layout"
+        >
+          <ToggleButton key="vertical" value="vertical">
+            vertical
+          </ToggleButton>
+          <ToggleButton key="horizontal" value="horizontal">
+            horizontal
+          </ToggleButton>
+        </ToggleButtonGroup>
+        <Box sx={{ flexGrow: 1 }}>
+          <RadialBarChart
+            {...getRadialChartParams(layout)}
+            onAxisClick={(event, d) => setAxisData(d)}
+          />
+        </Box>
       </Box>
 
       <Stack direction="column" sx={{ width: { xs: '100%', md: '40%' } }}>
