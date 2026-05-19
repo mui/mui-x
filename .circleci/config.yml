@@ -107,7 +107,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     resource_class: xlarge
     steps:
       - checkout
@@ -148,7 +148,6 @@ jobs:
       - install-deps
       - code-infra/eslint
       - code-infra/stylelint
-      - code-infra/markdownlint
       - code-infra/valelint
   test_static:
     <<: *default-job
@@ -219,7 +218,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     steps:
       - checkout
       - install-deps:
@@ -234,7 +233,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     steps:
       - checkout
       - install-deps
@@ -257,7 +256,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     steps:
       - checkout
       - install-deps:
@@ -278,7 +277,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     resource_class: medium
     steps:
       - checkout

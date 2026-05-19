@@ -195,7 +195,7 @@
     "languageTag": "nb-NO",
     "importName": "nbNO",
     "localeName": "Norwegian (Bokmål)",
-    "missingKeysCount": 87,
+    "missingKeysCount": 0,
     "totalKeysCount": 87,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/nbNO.ts"
   },
