@@ -25,8 +25,8 @@ import {
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
   PickersSectionElement,
+  PickersSectionListSlotProps,
 } from '../../PickersSectionList';
-import type { PickersSectionListSlotProps } from '../../PickersSectionList/PickersSectionList.types';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 import { PickerTextFieldOwnerState } from '../../models/fields';
 import { PickerOwnerState } from '../../models/pickers';
@@ -35,23 +35,12 @@ function mergePickersInputBaseSectionContentSlotProps(
   consumerSlotProps: PickersSectionListSlotProps['sectionContent'],
   baseClassName: string,
 ): PickersSectionListSlotProps['sectionContent'] {
-  if (consumerSlotProps == null) {
-    return { className: baseClassName };
-  }
-
-  if (typeof consumerSlotProps === 'function') {
-    return (ownerState: PickerOwnerState) => {
-      const resolved = resolveComponentProps(consumerSlotProps, ownerState) ?? {};
-      return {
-        ...resolved,
-        className: clsx(baseClassName, resolved.className),
-      };
+  return (ownerState: PickerOwnerState) => {
+    const resolved = resolveComponentProps(consumerSlotProps, ownerState) ?? {};
+    return {
+      ...resolved,
+      className: clsx(baseClassName, resolved.className),
     };
-  }
-
-  return {
-    ...consumerSlotProps,
-    className: clsx(baseClassName, consumerSlotProps.className),
   };
 }
 

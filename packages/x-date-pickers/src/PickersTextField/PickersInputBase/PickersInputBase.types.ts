@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import { MuiEvent } from '@mui/x-internals/types';
-import { PickersSectionListProps } from '../../PickersSectionList';
-import type { PickersSectionListSlotProps } from '../../PickersSectionList/PickersSectionList.types';
+import { PickersSectionListProps, PickersSectionListSlotProps } from '../../PickersSectionList';
 import { PickerTextFieldOwnerState } from '../../models/fields';
 
 export interface PickersInputPropsUsedByField extends Pick<
