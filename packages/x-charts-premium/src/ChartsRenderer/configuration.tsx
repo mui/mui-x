@@ -91,10 +91,6 @@ const getAxesSection = (
               'start',
             ]),
           },
-        }
-      : {}),
-    ...(tickOptions
-      ? {
           tickLabelPlacement: {
             label: localeText.chartConfigurationTickLabelPlacement,
             type: 'select',
