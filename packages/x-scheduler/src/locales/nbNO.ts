@@ -57,7 +57,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Startdato',
   startTimeLabel: 'Starttidspunkt',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Alle hendelser',
   cancel: 'Avbryt',
   confirm: 'Bekreft',
