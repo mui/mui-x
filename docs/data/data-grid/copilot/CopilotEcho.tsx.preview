@@ -1,0 +1,16 @@
+<Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 1 }}>
+  <Tabs value={dataSet} onChange={(_, value) => setDataSet(value as DataSet)}>
+    <Tab label="Employees" value="Employee" />
+    <Tab label="Commodities" value="Commodity" />
+  </Tabs>
+</Box>
+<Box sx={{ height: 500, width: '100%' }}>
+  <DataGridPremium
+    key={dataSet}
+    {...data}
+    copilot
+    copilotSuggestions={SUGGESTIONS[dataSet]}
+    initialState={{ sidebar: { open: true, value: GridSidebarValue.Copilot } }}
+    showToolbar
+  />
+</Box>

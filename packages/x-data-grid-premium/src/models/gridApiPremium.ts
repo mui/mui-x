@@ -24,6 +24,7 @@ import type {
   GridPivotingPrivateApi,
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
 import type { GridAiAssistantApi } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import type { GridCopilotApi } from '../hooks/features/copilot/gridCopilotInterfaces';
 import type { GridSidebarApi } from '../hooks/features/sidebar/gridSidebarInterfaces';
 import type {
   GridChartsIntegrationApi,
@@ -49,6 +50,7 @@ export interface GridApiPremium
     GridCellSelectionApi,
     GridPivotingApi,
     GridAiAssistantApi,
+    GridCopilotApi,
     GridSidebarApi,
     GridChartsIntegrationApi,
     GridHistoryApi,

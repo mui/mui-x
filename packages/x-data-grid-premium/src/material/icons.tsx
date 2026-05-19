@@ -57,6 +57,11 @@ export const GridAssistantIcon = createSvgIcon(
   'Assistant',
 );
 
+export const GridCopilotIcon = createSvgIcon(
+  <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m-9.5 9-1 2-1-2-2-1 2-1 1-2 1 2 2 1zm5.5 2-.75-1.5L14 13l1.25-.5L16 11l.75 1.5L18 13l-1.25.5z" />,
+  'Copilot',
+);
+
 export const GridPromptIcon = createSvgIcon(
   <path d="m19 9 1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25z" />,
   'Prompt',

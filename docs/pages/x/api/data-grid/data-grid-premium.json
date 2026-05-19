@@ -58,6 +58,19 @@
     "columnGroupHeaderHeight": { "type": { "name": "number" } },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnVisibilityModel": { "type": { "name": "object" } },
+    "copilot": { "type": { "name": "bool" }, "default": "false" },
+    "copilotAdapter": {
+      "type": {
+        "name": "shape",
+        "description": "{ addToolApprovalResponse?: func, listConversations?: func, listMessages?: func, loadMore?: func, markRead?: func, reconnectToStream?: func, sendMessage: func, setTyping?: func, stop?: func, subscribe?: func }"
+      }
+    },
+    "copilotSuggestions": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ label?: string, value: string }<br>&#124;&nbsp;string&gt;"
+      }
+    },
     "dataSource": {
       "type": {
         "name": "shape",
@@ -106,6 +119,7 @@
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
     },
+    "enableMutatingActions": { "type": { "name": "bool" }, "default": "false" },
     "estimatedRowCount": { "type": { "name": "number" } },
     "experimentalFeatures": {
       "type": {
@@ -865,6 +879,12 @@
       "class": null
     },
     {
+      "name": "copilotPanel",
+      "description": "Component rendered when the Copilot side panel is open.\nOnly used when the `copilot` prop is passed to the grid.",
+      "default": "GridCopilotPanel",
+      "class": null
+    },
+    {
       "name": "emptyPivotOverlay",
       "description": "Component rendered when pivot mode is enabled but no rows are defined.",
       "default": "GridEmptyPivotOverlay",
@@ -1521,6 +1541,18 @@
       "name": "aiAssistantPanelHistoryIcon",
       "description": "Icon used for the AI Assistant panel history icon",
       "default": "GridHistoryIcon",
+      "class": null
+    },
+    {
+      "name": "copilotIcon",
+      "description": "Icon used for the Copilot button.",
+      "default": "GridCopilotIcon",
+      "class": null
+    },
+    {
+      "name": "copilotPanelCloseIcon",
+      "description": "Icon used for the Copilot panel close button.",
+      "default": "GridCloseIcon",
       "class": null
     },
     {

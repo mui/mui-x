@@ -4,6 +4,7 @@ export * from './rowGrouping';
 export * from './export';
 export * from './cellSelection';
 export * from './aiAssistant';
+export * from './copilot';
 export * from './sidebar';
 export * from './pivoting';
 export * from './history';

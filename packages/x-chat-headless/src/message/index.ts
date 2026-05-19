@@ -4,6 +4,7 @@ export { MessageAuthorLabel } from './MessageAuthorLabel';
 export { MessageContent } from './MessageContent';
 export { MessageMeta } from './MessageMeta';
 export { MessageActions } from './MessageActions';
+export { useMessageContext } from './internals/MessageContext';
 export {
   MessageActionsMenu,
   MessageActionsMenuGroup,

@@ -378,6 +378,43 @@ DataGridPremiumRaw.propTypes = {
    */
   columnVisibilityModel: PropTypes.object,
   /**
+   * If `true`, the Copilot side panel is enabled.
+   * @default false
+   */
+  copilot: PropTypes.bool,
+  /**
+   * The adapter (a.k.a. "model") that powers the Copilot side panel.
+   * Extends the `@mui/x-chat-headless` `ChatAdapter` so a single object can provide
+   * conversations, messages, and (later) grid-aware behaviour.
+   * If not provided, a built-in echo adapter is used.
+   */
+  copilotAdapter: PropTypes.shape({
+    addToolApprovalResponse: PropTypes.func,
+    listConversations: PropTypes.func,
+    listMessages: PropTypes.func,
+    loadMore: PropTypes.func,
+    markRead: PropTypes.func,
+    reconnectToStream: PropTypes.func,
+    sendMessage: PropTypes.func.isRequired,
+    setTyping: PropTypes.func,
+    stop: PropTypes.func,
+    subscribe: PropTypes.func,
+  }),
+  /**
+   * Prompt suggestions displayed in the Copilot panel's empty state.
+   * Clicking a suggestion pre-fills the composer.
+   * If not provided, a generic default list is used.
+   */
+  copilotSuggestions: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        label: PropTypes.string,
+        value: PropTypes.string.isRequired,
+      }),
+      PropTypes.string,
+    ]).isRequired,
+  ),
+  /**
    * Data source object.
    */
   dataSource: PropTypes.shape({
@@ -533,6 +570,13 @@ DataGridPremiumRaw.propTypes = {
    * @default "cell"
    */
   editMode: PropTypes.oneOf(['cell', 'row']),
+  /**
+   * If `true`, the Copilot executor accepts mutating commands (data updates,
+   * exports, history clear, dataSource writes, etc.). Default-off because
+   * these commands have user-visible side effects beyond changing the view.
+   * @default false
+   */
+  enableMutatingActions: PropTypes.bool,
   /**
    * Use if the actual rowCount is not known upfront, but an estimation is available.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
