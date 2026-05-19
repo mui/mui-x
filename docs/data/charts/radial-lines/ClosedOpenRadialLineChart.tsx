@@ -53,7 +53,7 @@ export default function ClosedOpenRadialLineChart() {
           },
         ]}
         rotationAxis={[{ scaleType: 'point', data: months, disableLine: true }]}
-        radiusAxis={[{ scaleType: 'linear' }]}
+        radiusAxis={[{ disableLine: true }]}
         grid={{ rotation: true, radius: true }}
       />
     </Box>
