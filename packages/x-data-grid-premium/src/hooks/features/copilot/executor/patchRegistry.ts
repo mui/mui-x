@@ -3,11 +3,7 @@ import { filterHandler } from './reconcilers/filter';
 import { sortHandler } from './reconcilers/sort';
 import { groupingHandler } from './reconcilers/grouping';
 import { aggregationHandler } from './reconcilers/aggregation';
-import {
-  pivotHandler,
-  pivotActiveHandler,
-  pivotModelHandler,
-} from './reconcilers/pivot';
+import { pivotHandler, pivotActiveHandler, pivotModelHandler } from './reconcilers/pivot';
 import {
   columnVisibilityModelHandler,
   columnVisibilityFieldHandler,

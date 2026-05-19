@@ -29,7 +29,8 @@ function applySingleSelectLabelToValue(
       const options = getValueOptions(column as GridSingleSelectColDef) ?? [];
       const matchValue = (candidate: unknown) => {
         const match = options.find(
-          (option) => typeof option === 'object' && option !== null && (option as any).label === candidate,
+          (option) =>
+            typeof option === 'object' && option !== null && (option as any).label === candidate,
         );
         return match ? (match as any).value : candidate;
       };
@@ -64,9 +65,7 @@ export const filterHandler: PatchHandler = {
       const column = colsLookup[item.field];
       const allowedOps = (column.filterOperators ?? []).map((o) => o.value);
       if (item.operator && allowedOps.length > 0 && !allowedOps.includes(item.operator)) {
-        return invalid(
-          `operator '${item.operator}' is not allowed for column '${item.field}'`,
-        );
+        return invalid(`operator '${item.operator}' is not allowed for column '${item.field}'`);
       }
     }
     return ok();

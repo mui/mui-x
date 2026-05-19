@@ -45,6 +45,6 @@ export const selectionCellsHandler: PatchHandler = {
   tier: 2,
   plan: 'premium',
   reconcile: (doc, op, ctx) => {
-    ctx.apiRef.current.setCellSelectionModel(op.op === 'remove' ? {} : doc.selection.cells ?? {});
+    ctx.apiRef.current.setCellSelectionModel(op.op === 'remove' ? {} : (doc.selection.cells ?? {}));
   },
 };

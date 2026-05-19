@@ -1,5 +1,8 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { gridVisibleRowsSelector, gridColumnGroupsUnwrappedModelSelector } from '@mui/x-data-grid-pro';
+import {
+  gridVisibleRowsSelector,
+  gridColumnGroupsUnwrappedModelSelector,
+} from '@mui/x-data-grid-pro';
 import type { PatchHandler, ExecutorContext, JsonPatchOp } from '../types';
 import { ok, invalid } from '../types';
 import type { ChartSlice } from '../stateDocument';

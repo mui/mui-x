@@ -13,10 +13,7 @@ export function tokenize(path: string): string[] {
   if (!path.startsWith('/')) {
     throw new Error(`MUI X Data Grid: JSON Pointer must start with '/' — received '${path}'.`);
   }
-  return path
-    .split('/')
-    .slice(1)
-    .map(decodePointerToken);
+  return path.split('/').slice(1).map(decodePointerToken);
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

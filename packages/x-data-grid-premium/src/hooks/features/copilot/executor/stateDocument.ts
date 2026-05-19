@@ -83,9 +83,7 @@ const EMPTY_PINNED: GridPinnedColumnFields = { left: [], right: [] };
 
 const EMPTY_SELECTION = { type: 'include' as const, ids: [] };
 
-export function snapshotState(
-  apiRef: RefObject<GridPrivateApiPremium>,
-): GridStateDocument {
+export function snapshotState(apiRef: RefObject<GridPrivateApiPremium>): GridStateDocument {
   const charts: Record<string, ChartSlice> = {};
   try {
     const chartsLookup = gridChartsIntegrationChartsLookupSelector(apiRef);

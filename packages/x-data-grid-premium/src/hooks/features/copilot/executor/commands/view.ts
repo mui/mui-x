@@ -50,7 +50,7 @@ export const viewFocus: CommandHandler<FocusParams> = {
   guard: null,
   phase: 'layout',
   validate: (params) => {
-    if (!params || (params.id == null) || typeof params.field !== 'string') {
+    if (!params || params.id == null || typeof params.field !== 'string') {
       return invalid('view.focus requires { id, field }');
     }
     return ok();

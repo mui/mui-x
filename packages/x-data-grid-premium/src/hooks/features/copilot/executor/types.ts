@@ -15,14 +15,7 @@ export type GuardKey =
 
 export type Guards = Record<GuardKey, boolean>;
 
-export type Phase =
-  | 'view'
-  | 'pivot'
-  | 'chart'
-  | 'selection'
-  | 'layout'
-  | 'export'
-  | 'history';
+export type Phase = 'view' | 'pivot' | 'chart' | 'selection' | 'layout' | 'export' | 'history';
 
 /**
  * Canonical slice path inside the GridStateDocument.
@@ -103,11 +96,7 @@ export interface PatchHandler {
   phase: Phase;
   tier: 1 | 2 | 3;
   plan: 'community' | 'pro' | 'premium';
-  validate?: (
-    op: JsonPatchOp,
-    doc: GridStateDocument,
-    ctx: ExecutorContext,
-  ) => ValidationResult;
+  validate?: (op: JsonPatchOp, doc: GridStateDocument, ctx: ExecutorContext) => ValidationResult;
   reconcile: (doc: GridStateDocument, op: JsonPatchOp, ctx: ExecutorContext) => unknown;
 }
 

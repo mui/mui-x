@@ -27,9 +27,7 @@ export const aggregationHandler: PatchHandler = {
         return invalid(`aggregation value for '${field}' must be a string`);
       }
       if (aggFns.length > 0 && !aggFns.includes(aggFunc)) {
-        return invalid(
-          `aggregation function '${aggFunc}' is not registered for this grid`,
-        );
+        return invalid(`aggregation function '${aggFunc}' is not registered for this grid`);
       }
     }
     return ok();

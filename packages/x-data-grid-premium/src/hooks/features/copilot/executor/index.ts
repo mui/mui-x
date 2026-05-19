@@ -25,11 +25,7 @@ export { snapshotState } from './stateDocument';
 export { buildGuards } from './guards';
 export { applyJsonPatch, readAt, tokenize, decodePointerToken } from './jsonPatch';
 
-export {
-  buildPatchRegistry,
-  ALL_PATCH_HANDLERS,
-  type PatchRegistry,
-} from './patchRegistry';
+export { buildPatchRegistry, ALL_PATCH_HANDLERS, type PatchRegistry } from './patchRegistry';
 export {
   buildCommandRegistry,
   ALL_COMMAND_HANDLERS,

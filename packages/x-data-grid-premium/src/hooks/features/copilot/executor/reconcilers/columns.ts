@@ -2,11 +2,7 @@ import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import type { PatchHandler } from '../types';
 import { ok, invalid } from '../types';
 
-const validateField = (
-  field: string,
-  ctx: { apiRef: any },
-  context: string,
-) => {
+const validateField = (field: string, ctx: { apiRef: any }, context: string) => {
   const lookup = gridColumnLookupSelector(ctx.apiRef);
   if (!lookup[field]) {
     return invalid(`unknown column '${field}' in ${context}`);
@@ -23,7 +19,7 @@ export const columnVisibilityModelHandler: PatchHandler = {
   plan: 'community',
   reconcile: (doc, op, ctx) => {
     ctx.apiRef.current.setColumnVisibilityModel(
-      op.op === 'remove' ? {} : doc.columns.visibility ?? {},
+      op.op === 'remove' ? {} : (doc.columns.visibility ?? {}),
     );
   },
 };
@@ -58,7 +54,9 @@ export const columnPinnedHandler: PatchHandler = {
   plan: 'pro',
   reconcile: (doc, op, ctx) => {
     ctx.apiRef.current.setPinnedColumns(
-      op.op === 'remove' ? { left: [], right: [] } : doc.columns.pinned ?? { left: [], right: [] },
+      op.op === 'remove'
+        ? { left: [], right: [] }
+        : (doc.columns.pinned ?? { left: [], right: [] }),
     );
   },
 };

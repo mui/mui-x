@@ -17,7 +17,12 @@ export const selectVisibleTopHandler: CommandHandler<SelectVisibleTopParams> = {
   // Wait for any state slices that change the visible row set.
   dependsOn: () => ['/sort', '/filter', '/grouping', '/pivot'],
   validate: (params) => {
-    if (!params || typeof params.count !== 'number' || !Number.isInteger(params.count) || params.count < 0) {
+    if (
+      !params ||
+      typeof params.count !== 'number' ||
+      !Number.isInteger(params.count) ||
+      params.count < 0
+    ) {
       return invalid('selectVisibleTop.count must be a non-negative integer');
     }
     return ok();

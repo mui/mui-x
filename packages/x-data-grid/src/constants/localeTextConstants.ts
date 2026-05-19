@@ -308,7 +308,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   copilotPanelBeta: 'BETA',
   copilotPanelReload: 'New conversation',
   copilotPanelEmptyStateTitle: 'How can I help?',
-  copilotPanelEmptyStateHelper: 'Ask anything about your data, or pick a suggestion to get started.',
+  copilotPanelEmptyStateHelper:
+    'Ask anything about your data, or pick a suggestion to get started.',
 
   // Prompt field
   promptFieldLabel: 'Prompt',
