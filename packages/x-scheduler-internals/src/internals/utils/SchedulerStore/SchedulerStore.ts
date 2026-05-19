@@ -348,6 +348,17 @@ export class SchedulerStore<
 
     const updated = new Map(updatedParam.map((ev) => [ev.id, ev]));
     const deleted = new Set(deletedParam);
+
+    if (process.env.NODE_ENV !== 'production') {
+      for (const id of deleted) {
+        if (updated.has(id)) {
+          warnOnce([
+            `MUI X Scheduler: id "${String(id)}" appears in both \`deleted\` and \`updated\`.`,
+            '`deleted`, `updated` and `created` must be pairwise disjoint, otherwise the order of operations is undefined.',
+          ]);
+        }
+      }
+    }
     const originalEventIds = schedulerEventSelectors.idList(this.state);
     const originalEventModelLookup = schedulerEventSelectors.modelLookup(this.state);
     const newEvents: TEvent[] = [];

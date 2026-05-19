@@ -213,49 +213,51 @@ export class SchedulerLazyLoadingPlugin<
       return;
     }
 
+    let shouldUpdateEvents: { success: boolean };
     try {
-      const shouldUpdateEvents = await dataSource.updateEvents({
+      shouldUpdateEvents = await dataSource.updateEvents({
         deleted,
         updated: updated as TEvent[],
         created: created as TEvent[],
       });
-
-      if (!shouldUpdateEvents.success) {
-        this.store.pushError(
-          new Error(
-            'MUI X Scheduler: `dataSource.updateEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
-              'To surface a specific message to the user, throw a descriptive Error from `updateEvents` instead. ' +
-              'See the `updateEvents` contract at https://mui.com/x/react-scheduler/event-calendar/lazy-loading/ (EventCalendar) or https://mui.com/x/react-scheduler/event-timeline/lazy-loading/ (EventTimeline).',
-          ),
-        );
-        return;
-      }
-
-      for (const id of deleted) {
-        this.cache.remove(String(id));
-      }
-
-      for (const event of created as TEvent[]) {
-        this.cache.upsert(event);
-      }
-      for (const event of updated as TEvent[]) {
-        this.cache.upsert(event);
-      }
-
-      const eventsState = buildEventsState(
-        { ...this.store.parameters, events: newEvents },
-        adapter,
-        displayTimezone,
-        this.store.state.recurringEventsPlugin,
-      );
-
-      this.store.update({
-        ...this.store.state,
-        ...eventsState,
-        errors: [],
-      });
     } catch (error) {
       this.store.pushError(error);
+      return;
     }
+
+    if (!shouldUpdateEvents.success) {
+      this.store.pushError(
+        new Error(
+          'MUI X Scheduler: `dataSource.updateEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
+            'To surface a specific message to the user, throw a descriptive Error from `updateEvents` instead. ' +
+            'See the `updateEvents` contract at https://mui.com/x/react-scheduler/event-calendar/lazy-loading/ (EventCalendar) or https://mui.com/x/react-scheduler/event-timeline/lazy-loading/ (EventTimeline).',
+        ),
+      );
+      return;
+    }
+
+    for (const id of deleted) {
+      this.cache.remove(String(id));
+    }
+
+    for (const event of created as TEvent[]) {
+      this.cache.upsert(event);
+    }
+    for (const event of updated as TEvent[]) {
+      this.cache.upsert(event);
+    }
+
+    const eventsState = buildEventsState(
+      { ...this.store.parameters, events: newEvents },
+      adapter,
+      displayTimezone,
+      this.store.state.recurringEventsPlugin,
+    );
+
+    this.store.update({
+      ...this.store.state,
+      ...eventsState,
+      errors: [],
+    });
   };
 }

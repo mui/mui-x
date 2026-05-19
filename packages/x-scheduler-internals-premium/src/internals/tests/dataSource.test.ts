@@ -7,12 +7,29 @@ import { DEBOUNCE_MS } from '../utils/queue';
 
 const DEFAULT_PARAMS = { events: [] };
 
+/**
+ * Flushes the chain of microtasks produced by `store.updateEvents` →
+ * `queueMicrotask(publishEvent)` → handler `await dataSource.updateEvents`
+ * → continuation. Three ticks cover the whole pipeline.
+ */
+const flushMicrotasks = async () => {
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+};
+
 // Basic types for testing
 interface TestEvent {
   id: string;
   start: string;
   end: string;
   title: string;
+}
+
+interface UpdateEventsParams<TEvent extends object = TestEvent> {
+  deleted: SchedulerEventId[];
+  updated: TEvent[];
+  created: TEvent[];
 }
 
 const mockFetchData = async (_start: Date, _end: Date): Promise<TestEvent[]> => {
@@ -113,11 +130,7 @@ premiumStoreClasses.forEach((storeClass) => {
     });
 
     it('should pass full event objects to dataSource.updateEvents on create', async () => {
-      const mockUpdateEvents = async (_params: {
-        deleted: SchedulerEventId[];
-        updated: TestEvent[];
-        created: TestEvent[];
-      }) => ({ success: true });
+      const mockUpdateEvents = async (_params: UpdateEventsParams) => ({ success: true });
       const updateEventsSpy = spy(mockUpdateEvents);
       const dataSource = {
         getEvents: spy(mockFetchData),
@@ -131,9 +144,7 @@ premiumStoreClasses.forEach((storeClass) => {
         title: 'Created Event',
       });
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, 0);
-      });
+      await flushMicrotasks();
 
       expect(updateEventsSpy.calledOnce).to.equal(true);
       const callArgs = updateEventsSpy.firstCall.args[0];
@@ -152,11 +163,7 @@ premiumStoreClasses.forEach((storeClass) => {
     });
 
     it('should pass full event objects to dataSource.updateEvents on update', async () => {
-      const mockUpdateEvents = async (_params: {
-        deleted: SchedulerEventId[];
-        updated: TestEvent[];
-        created: TestEvent[];
-      }) => ({ success: true });
+      const mockUpdateEvents = async (_params: UpdateEventsParams) => ({ success: true });
       const updateEventsSpy = spy(mockUpdateEvents);
       const dataSource = {
         getEvents: spy(mockFetchData),
@@ -176,9 +183,7 @@ premiumStoreClasses.forEach((storeClass) => {
         end: adapter.date('2025-07-01T12:00:00Z', 'default'),
       });
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, 0);
-      });
+      await flushMicrotasks();
 
       expect(updateEventsSpy.calledOnce).to.equal(true);
       const callArgs = updateEventsSpy.firstCall.args[0];
@@ -193,12 +198,36 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(callArgs.deleted).toHaveLength(0);
     });
 
+    it('should upsert the updated event into the cache so a re-fetch of the same range returns the new version', async () => {
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: spy(async () => ({ success: true })),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      expect(dataSource.getEvents.calledOnce).to.equal(true);
+
+      store.updateEvent({
+        id: '1',
+        title: 'Event 1 Updated',
+      });
+
+      await flushMicrotasks();
+
+      // Re-fetching the same covered range should not call getEvents again
+      // and should expose the updated event from the cache.
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      expect(dataSource.getEvents.calledOnce).to.equal(true);
+
+      const stored = store.state.processedEventLookup.get('1');
+      expect(stored?.title).to.equal('Event 1 Updated');
+    });
+
     it('should pass IDs (not full event objects) to dataSource.updateEvents on delete', async () => {
-      const mockUpdateEvents = async (_params: {
-        deleted: SchedulerEventId[];
-        updated: TestEvent[];
-        created: TestEvent[];
-      }) => ({ success: true });
+      const mockUpdateEvents = async (_params: UpdateEventsParams) => ({ success: true });
       const updateEventsSpy = spy(mockUpdateEvents);
       const dataSource = {
         getEvents: spy(mockFetchData),
@@ -212,9 +241,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.deleteEvent('1');
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, 0);
-      });
+      await flushMicrotasks();
 
       expect(updateEventsSpy.calledOnce).to.equal(true);
       const callArgs = updateEventsSpy.firstCall.args[0];
@@ -261,11 +288,9 @@ premiumStoreClasses.forEach((storeClass) => {
         },
       };
 
-      const mockUpdateEvents = async (_params: {
-        deleted: SchedulerEventId[];
-        updated: MyEvent[];
-        created: MyEvent[];
-      }) => ({ success: true });
+      const mockUpdateEvents = async (_params: UpdateEventsParams<MyEvent>) => ({
+        success: true,
+      });
       const updateEventsSpy = spy(mockUpdateEvents);
       const initialEvent: MyEvent = {
         myId: '1',
@@ -288,9 +313,7 @@ premiumStoreClasses.forEach((storeClass) => {
         title: 'Created Event',
       });
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, 0);
-      });
+      await flushMicrotasks();
 
       expect(updateEventsSpy.calledOnce).to.equal(true);
       const createArgs = updateEventsSpy.firstCall.args[0];
@@ -314,9 +337,7 @@ premiumStoreClasses.forEach((storeClass) => {
         end: adapter.date('2025-07-01T12:00:00Z', 'default'),
       });
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, 0);
-      });
+      await flushMicrotasks();
 
       expect(updateEventsSpy.calledTwice).to.equal(true);
       const updateArgs = updateEventsSpy.secondCall.args[0];
@@ -329,12 +350,8 @@ premiumStoreClasses.forEach((storeClass) => {
       });
     });
 
-    it('should not update store state when dataSource.updateEvents returns success: false', async () => {
-      const mockUpdateEvents = async (_params: {
-        deleted: SchedulerEventId[];
-        updated: TestEvent[];
-        created: TestEvent[];
-      }) => ({ success: false });
+    it('should not update store state when dataSource.updateEvents returns success: false on create', async () => {
+      const mockUpdateEvents = async (_params: UpdateEventsParams) => ({ success: false });
       const dataSource = {
         getEvents: spy(mockFetchData),
         updateEvents: spy(mockUpdateEvents),
@@ -354,12 +371,54 @@ premiumStoreClasses.forEach((storeClass) => {
         title: 'Rejected Event',
       });
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, 0);
-      });
+      await flushMicrotasks();
 
       expect(store.state.eventIdList).toEqual(initialIds);
       expect(store.state.eventIdList).not.toContain(createdId);
+    });
+
+    it('should not update store state when dataSource.updateEvents returns success: false on update', async () => {
+      const mockUpdateEvents = async (_params: UpdateEventsParams) => ({ success: false });
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: spy(mockUpdateEvents),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+
+      store.updateEvent({
+        id: '1',
+        title: 'Rejected Update',
+      });
+
+      await flushMicrotasks();
+
+      // The cache wasn't updated, so the stored event keeps its original title.
+      const stored = store.state.processedEventLookup.get('1');
+      expect(stored?.title).to.equal('Event 1');
+    });
+
+    it('should not remove event from cache when dataSource.updateEvents returns success: false on delete', async () => {
+      const mockUpdateEvents = async (_params: UpdateEventsParams) => ({ success: false });
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: spy(mockUpdateEvents),
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+
+      store.deleteEvent('1');
+
+      await flushMicrotasks();
+
+      // The cache wasn't updated, so the event is still present.
+      expect(store.state.eventIdList).toContain('1');
     });
 
     it('should handle an empty events array from dataSource.getEvents', async () => {
