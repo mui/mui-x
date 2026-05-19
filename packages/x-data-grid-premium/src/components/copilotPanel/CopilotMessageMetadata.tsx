@@ -55,10 +55,7 @@ const Value = styled('span')({
   wordBreak: 'break-all',
 });
 
-function formatCost(costUsd: number | null | undefined): string {
-  if (costUsd == null) {
-    return 'Free (BYOK)';
-  }
+function formatCost(costUsd: number): string {
   if (costUsd === 0) {
     return '$0.00';
   }
@@ -82,7 +79,7 @@ function CopilotMessageMetadata() {
   const modelId = metadata?.modelId ?? null;
   const costUsd = metadata?.costUsd;
   const hasModel = typeof modelId === 'string' && modelId.length > 0;
-  const hasCost = costUsd !== undefined;
+  const hasCost = typeof costUsd === 'number';
   if (!hasModel && !hasCost) {
     return null;
   }
@@ -100,7 +97,7 @@ function CopilotMessageMetadata() {
         {hasCost && (
           <Row>
             <Label>Cost</Label>
-            <Value>{formatCost(costUsd ?? null)}</Value>
+            <Value>{formatCost(costUsd)}</Value>
           </Row>
         )}
       </Body>
