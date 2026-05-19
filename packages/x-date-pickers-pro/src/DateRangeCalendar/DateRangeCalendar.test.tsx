@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { screen, fireEvent, within, waitFor } from '@mui/internal-test-utils';
+import { screen, fireEvent, createEvent, within, waitFor } from '@mui/internal-test-utils';
 import {
   adapterToUse,
   executeDateDrag,
@@ -499,6 +499,91 @@ describe('<DateRangeCalendar />', () => {
         fireEvent.pointerUp(document, { pointerId: 1 });
 
         expect(onChange.callCount).to.equal(0);
+      });
+
+      it('should preventDefault on `touchmove` during a touch drag', () => {
+        // For touch pointers, the hook attaches a non-passive `touchmove`
+        // listener on the owner document to suppress page scroll while the
+        // finger crosses cell boundaries.
+        render(
+          <DateRangeCalendar
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '31', selected: true });
+        const endDay = getPickerDay('29');
+
+        fireEvent.pointerDown(startDay, {
+          pointerId: 1,
+          button: 0,
+          isPrimary: true,
+          pointerType: 'touch',
+        });
+        fireEvent.pointerOver(endDay, { pointerId: 1 });
+
+        const touchMove = createEvent.touchMove(document, { cancelable: true });
+        fireEvent(document, touchMove);
+        expect(touchMove.defaultPrevented).to.equal(true);
+
+        fireEvent.pointerUp(endDay, { pointerId: 1 });
+      });
+
+      it('should not register the touchmove listener for mouse pointers', () => {
+        // Mouse/pen never fire touch events, so the listener is skipped. If
+        // it somehow got attached, a touchmove would be preventDefaulted
+        // unnecessarily.
+        render(
+          <DateRangeCalendar
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '31', selected: true });
+        const endDay = getPickerDay('29');
+
+        fireEvent.pointerDown(startDay, {
+          pointerId: 1,
+          button: 0,
+          isPrimary: true,
+          pointerType: 'mouse',
+        });
+        fireEvent.pointerOver(endDay, { pointerId: 1 });
+
+        const touchMove = createEvent.touchMove(document, { cancelable: true });
+        fireEvent(document, touchMove);
+        expect(touchMove.defaultPrevented).to.equal(false);
+
+        fireEvent.pointerUp(endDay, { pointerId: 1 });
+      });
+
+      it('should resolve the drop target when pointerup lands on a child of the day button', () => {
+        // `event.target` is the actual element the pointer was over at
+        // release. If the user lifts over a TouchRipple span or text node
+        // inside the button, `finalizeGesture` must walk up to find the
+        // owning day cell rather than dropping on `null`.
+        const onChange = spy();
+        render(
+          <DateRangeCalendar
+            onChange={onChange}
+            defaultValue={[adapterToUse.date('2018-01-10'), adapterToUse.date('2018-01-31')]}
+          />,
+        );
+
+        const startDay = screen.getByRole('gridcell', { name: '31', selected: true });
+        const endDay = getPickerDay('29');
+
+        const endDayChild = document.createElement('span');
+        endDay.appendChild(endDayChild);
+
+        fireEvent.pointerDown(startDay, { pointerId: 1, button: 0, isPrimary: true });
+        fireEvent.pointerOver(endDay, { pointerId: 1 });
+        // Release on the child — the drop target should still resolve to
+        // the day button via the `.closest('button')` / data-attribute walk.
+        fireEvent.pointerUp(endDayChild, { pointerId: 1 });
+
+        expect(onChange.callCount).to.equal(1);
+        expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
       });
     });
   });
