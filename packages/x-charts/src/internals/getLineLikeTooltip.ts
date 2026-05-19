@@ -46,8 +46,8 @@ export function getLineLikeTooltip<SeriesType extends LineLikeTooltipChartType>(
     markType: series.labelMarkType,
     ...(options.includeMarkShape &&
       (series.type === 'line' || series.type === 'radialLine') && {
-      markShape: series.showMark ? series.shape : undefined,
-    }),
+        markShape: series.showMark ? series.shape : undefined,
+      }),
   };
 
   return result as TooltipGetterResult<SeriesType>;
