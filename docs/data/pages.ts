@@ -75,10 +75,7 @@ const schedulerPages: MuiPage[] = [
           { pathname: '/x/react-scheduler/event-timeline/drag-interactions' },
           { pathname: '/x/react-scheduler/event-timeline/editing' },
           { pathname: '/x/react-scheduler/event-timeline/presets' },
-          {
-            pathname: '/x/react-scheduler/event-timeline/lazy-loading',
-            planned: true,
-          },
+          { pathname: '/x/react-scheduler/event-timeline/lazy-loading' },
           {
             pathname: '/x/react-scheduler/event-timeline/virtualization',
             planned: true,
@@ -647,7 +644,6 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-charts-bars',
             title: 'Bars',
-            newFeature: true,
             children: [
               { pathname: '/x/react-charts/bars', title: 'Bars overview' },
               {
@@ -710,17 +706,19 @@ const pages: MuiPage[] = [
           },
           {
             pathname: '/x/react-charts/radial-bars',
+            title: 'Radial Bars',
             plan: 'premium',
             unstable: true,
           },
           {
             pathname: '/x/react-charts/radial-lines',
+            title: 'Radial Lines',
             plan: 'premium',
             unstable: true,
           },
           {
             pathname: '/x/react-charts/#planned-charts',
-            title: 'Future Components',
+            title: 'Future components',
             planned: true,
           },
           {
