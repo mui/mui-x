@@ -17,7 +17,9 @@ import {
 
 const getLocalizedConfigOptions = (localeText: ChartsLocaleText, keys: Array<string>) =>
   keys.map((key) => ({
-    content: localeText[`chartConfigurationOption${capitalize(key)}`],
+    content: localeText[
+      `chartConfigurationOption${capitalize(key)}` as keyof ChartsLocaleText
+    ] as string,
     value: key,
   }));
 
@@ -186,7 +188,11 @@ const getColorOptions = (localeText: ChartsLocaleText) => ({
     value: key,
     content: (
       <PaletteOption palette={palette}>
-        {localeText[`chartPaletteName${capitalize(key.replace(/Palette$/, ''))}`]}
+        {
+          localeText[
+            `chartPaletteName${capitalize(key.replace(/Palette$/, ''))}` as keyof ChartsLocaleText
+          ] as string
+        }
       </PaletteOption>
     ),
   })),
