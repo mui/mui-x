@@ -30,10 +30,10 @@ function ScatterAsync(props: ScatterProps) {
   const nBatches = Math.max(1, Math.ceil(count / SCATTER_BATCH_SIZE));
 
   // Reveal is driven by the plot-wide scheduler so the per-frame work is
-  // bounded across all series. This series' batches occupy the global range
-  // `[offset, offset + nBatches)`.
-  const { revealedGlobalBatches, getSeriesBatchOffset } = useScatterReveal();
-  const offset = getSeriesBatchOffset(series.id);
+  // bounded across all series, and batches are interleaved round-robin so every
+  // series progresses together.
+  const { getSeriesRevealedBatches } = useScatterReveal();
+  const revealedBatches = getSeriesRevealedBatches(series.id);
 
   const batches: React.ReactNode[] = [];
   for (let b = 0; b < nBatches; b += 1) {
@@ -50,7 +50,7 @@ function ScatterAsync(props: ScatterProps) {
         start={start}
         end={end}
         classes={classes}
-        revealed={offset + b < revealedGlobalBatches}
+        revealed={b < revealedBatches}
       />,
     );
   }

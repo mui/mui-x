@@ -19,20 +19,62 @@ export interface ScatterRevealSeries {
 
 interface ScatterRevealContextValue {
   /**
-   * Number of batches revealed so far, counted globally across every series in
-   * order. A single scheduler advances this, so the per-frame work is bounded
-   * regardless of how many series there are.
+   * Number of batches revealed so far, counted globally across every series. A
+   * single scheduler advances this, so the per-frame work is bounded regardless
+   * of how many series there are.
    */
   revealedGlobalBatches: number;
-  // Cumulative batch offset of `seriesId` (sum of preceding series' batches).
-  getSeriesBatchOffset: (seriesId: SeriesId) => number;
+  // How many of `seriesId`'s own batches are revealed. Batches are interleaved
+  // round-robin across series, so every series progresses together rather than
+  // one series finishing entirely before the next starts.
+  getSeriesRevealedBatches: (seriesId: SeriesId) => number;
 }
 
 const DEFAULT_VALUE: ScatterRevealContextValue = {
   // No provider (e.g. used directly as a slot): reveal everything.
   revealedGlobalBatches: Number.POSITIVE_INFINITY,
-  getSeriesBatchOffset: () => 0,
+  getSeriesRevealedBatches: () => Number.POSITIVE_INFINITY,
 };
+
+/**
+ * Builds the round-robin reveal order: batch 0 of every series, then batch 1 of
+ * every series, and so on (series with fewer batches simply drop out of later
+ * rounds). `positions[seriesId]` holds the ascending global indices at which
+ * that series' batches are revealed.
+ */
+function buildRevealOrder(plan: ScatterRevealSeries[]) {
+  const positions = new Map<SeriesId, number[]>();
+  let maxBatches = 0;
+  for (const entry of plan) {
+    positions.set(entry.seriesId, []);
+    maxBatches = Math.max(maxBatches, entry.nBatches);
+  }
+  let global = 0;
+  for (let round = 0; round < maxBatches; round += 1) {
+    for (const entry of plan) {
+      if (round < entry.nBatches) {
+        positions.get(entry.seriesId)!.push(global);
+        global += 1;
+      }
+    }
+  }
+  return { positions, total: global };
+}
+
+/** Number of ascending values in `sorted` that are strictly less than `value`. */
+function countBelow(sorted: number[], value: number) {
+  let lo = 0;
+  let hi = sorted.length;
+  while (lo < hi) {
+    const mid = Math.floor((lo + hi) / 2);
+    if (sorted[mid] < value) {
+      lo = mid + 1;
+    } else {
+      hi = mid;
+    }
+  }
+  return lo;
+}
 
 const ScatterRevealContext = React.createContext<ScatterRevealContextValue>(DEFAULT_VALUE);
 
@@ -80,19 +122,12 @@ export interface ScatterAsyncRevealProviderProps {
 export function ScatterAsyncRevealProvider(props: ScatterAsyncRevealProviderProps) {
   const { plan, children } = props;
 
-  const totalBatches = plan.reduce((sum, entry) => sum + entry.nBatches, 0);
-
-  // Offsets/total are recomputed every render (cheap — a handful of series)
-  // but read through refs so neither the reveal effect nor the context value
-  // churn on unrelated re-renders.
-  const offsets = new Map<SeriesId, number>();
-  let acc = 0;
-  for (const entry of plan) {
-    offsets.set(entry.seriesId, acc);
-    acc += entry.nBatches;
-  }
-  const offsetsRef = React.useRef(offsets);
-  offsetsRef.current = offsets;
+  // The reveal order and total are recomputed every render (cheap — a handful
+  // of series) but read through refs so neither the reveal effect nor the
+  // context value churn on unrelated re-renders.
+  const { positions, total: totalBatches } = buildRevealOrder(plan);
+  const positionsRef = React.useRef(positions);
+  positionsRef.current = positions;
   const totalBatchesRef = React.useRef(totalBatches);
   totalBatchesRef.current = totalBatches;
 
@@ -177,7 +212,8 @@ export function ScatterAsyncRevealProvider(props: ScatterAsyncRevealProviderProp
   const value = React.useMemo<ScatterRevealContextValue>(
     () => ({
       revealedGlobalBatches,
-      getSeriesBatchOffset: (seriesId: SeriesId) => offsetsRef.current.get(seriesId) ?? 0,
+      getSeriesRevealedBatches: (seriesId: SeriesId) =>
+        countBelow(positionsRef.current.get(seriesId) ?? [], revealedGlobalBatches),
     }),
     [revealedGlobalBatches],
   );
