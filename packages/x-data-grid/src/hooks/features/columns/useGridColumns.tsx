@@ -533,10 +533,6 @@ export function useGridColumns(
   );
 
   useGridEvent(apiRef, 'columnsChange', checkMultiSelectColumns);
-
-  React.useEffect(() => {
-    checkMultiSelectColumns(gridColumnFieldsSelector(apiRef));
-  }, [checkMultiSelectColumns, apiRef]);
 }
 
 function mergeColumnsState(columnsState: GridColumnsState) {
