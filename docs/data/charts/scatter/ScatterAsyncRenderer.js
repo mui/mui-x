@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import Chance from 'chance';
 
-const NUMBER_OF_SERIES = 2;
+const NUMBER_OF_SERIES = 3;
 
 const POINT_COUNT = 20000;
 
@@ -80,40 +80,95 @@ function MainThreadSpinner() {
   );
 }
 
+// Renders the timing readout in its own component so that updating the
+// measured values does NOT re-render the (heavy) chart — otherwise each
+// state update would reconcile thousands of points and stall the main
+// thread, making the spinner stutter exactly when a value appears.
+function RenderTimers(props) {
+  const { containerRef, startRef, runId } = props;
+  const [firstMs, setFirstMs] = React.useState(null);
+  const [totalMs, setTotalMs] = React.useState(null);
+  // Number of distinct paint steps (frames on which the point count grew).
+  const [paints, setPaints] = React.useState(0);
+
+  React.useEffect(() => {
+    setFirstMs(null);
+    setTotalMs(null);
+    setPaints(0);
+    if (runId === 0 || startRef.current === null) {
+      return undefined;
+    }
+    // Rendering is considered complete when the point count stops growing for
+    // this many consecutive frames (longer than the gap between batches).
+    const STABLE_FRAMES = 12;
+    let frame = 0;
+    let firstSeen = false;
+    let lastCount = 0;
+    let stableFrames = 0;
+    let paintCount = 0;
+    // Time of the most recent point-count change, so the reported total is the
+    // moment the last batch painted, not when stability was confirmed.
+    let lastChangeAt = 0;
+    const check = () => {
+      const now = performance.now();
+      const count = containerRef.current?.querySelectorAll('circle').length ?? 0;
+
+      if (!firstSeen && count > 0) {
+        firstSeen = true;
+        setFirstMs(now - startRef.current);
+      }
+
+      if (firstSeen) {
+        if (count === lastCount) {
+          stableFrames += 1;
+        } else {
+          stableFrames = 0;
+          lastCount = count;
+          lastChangeAt = now;
+          paintCount += 1;
+          setPaints(paintCount);
+        }
+        if (stableFrames >= STABLE_FRAMES) {
+          setTotalMs(lastChangeAt - startRef.current);
+          return;
+        }
+      }
+
+      frame = requestAnimationFrame(check);
+    };
+    frame = requestAnimationFrame(check);
+    return () => cancelAnimationFrame(frame);
+  }, [runId, containerRef, startRef]);
+
+  return (
+    <React.Fragment>
+      <Typography variant="body2" sx={{ minWidth: 110 }}>
+        first paint: {firstMs === null ? '—' : `${firstMs.toFixed(0)} ms`}
+      </Typography>
+      <Typography variant="body2" sx={{ minWidth: 110 }}>
+        total: {totalMs === null ? '—' : `${totalMs.toFixed(0)} ms`}
+      </Typography>
+      <Typography variant="body2" sx={{ minWidth: 90 }}>
+        paints: {paints}
+      </Typography>
+    </React.Fragment>
+  );
+}
+
 export default function ScatterAsyncRenderer() {
   const [mode, setMode] = React.useState('sync');
   const series = mode === 'sync' ? syncSeries : asyncSeries;
 
-  // Time from a button click to the first DOM update of the chart.
-  const [elapsedMs, setElapsedMs] = React.useState(null);
   const containerRef = React.useRef(null);
-  // Bumped on every click; the measurement effect keys off it.
+  // Bumped on every click; `RenderTimers` keys its measurement off it.
   const [runId, setRunId] = React.useState(0);
   const startRef = React.useRef(null);
 
   const select = (next) => {
     startRef.current = performance.now();
-    setElapsedMs(null);
     setRunId((id) => id + 1);
     setMode(next);
   };
-
-  React.useEffect(() => {
-    if (runId === 0 || startRef.current === null) {
-      return undefined;
-    }
-    let frame = 0;
-    const check = () => {
-      const count = containerRef.current?.querySelectorAll('circle').length ?? 0;
-      if (count > 0) {
-        setElapsedMs(performance.now() - startRef.current);
-        return;
-      }
-      frame = requestAnimationFrame(check);
-    };
-    frame = requestAnimationFrame(check);
-    return () => cancelAnimationFrame(frame);
-  }, [runId]);
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
@@ -142,9 +197,11 @@ export default function ScatterAsyncRenderer() {
           Progressive
         </Button>
         <MainThreadSpinner />
-        <Typography variant="body2" sx={{ minWidth: 130 }}>
-          first paint: {elapsedMs === null ? '—' : `${elapsedMs.toFixed(0)} ms`}
-        </Typography>
+        <RenderTimers
+          containerRef={containerRef}
+          startRef={startRef}
+          runId={runId}
+        />
       </Stack>
       <div ref={containerRef} style={{ width: '100%' }}>
         <ScatterChart
