@@ -121,12 +121,6 @@
       "class": null
     },
     {
-      "name": "line",
-      "description": "The component that renders the line.",
-      "default": "LineElementPath",
-      "class": null
-    },
-    {
       "name": "loadingOverlay",
       "description": "Overlay component rendered when the chart is in a loading state.",
       "default": "ChartsLoadingOverlay",
