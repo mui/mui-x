@@ -166,16 +166,17 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
     return reordered;
   }, [value, filterModel.items, colDef.field]);
 
-  // Focus the overflow chip when the cell receives focus. Ref is null when there's no
-  // overflow chip rendered (i.e. all chips fit), which naturally no-ops.
-  useGridEvent(apiRef, 'cellFocusIn', (params) => {
-    if (params.id !== id || params.field !== colDef.field || isAutoHeight || popupOpen) {
+  // Focus the overflow chip when the cell is focused. Covers mount-with-focus (e.g.
+  // after exiting edit mode via Escape, which doesn't publish a focus event) and
+  // popup-close-while-focused. Ref is null when no overflow chip is rendered, no-op.
+  React.useEffect(() => {
+    if (isAutoHeight || !hasFocus || popupOpen) {
       return;
     }
     if (overflowChipRef.current && overflowChipRef.current !== document.activeElement) {
       overflowChipRef.current.focus();
     }
-  });
+  }, [hasFocus, popupOpen, isAutoHeight]);
 
   useGridEvent(apiRef, 'cellFocusOut', (params) => {
     if (params.id !== id || params.field !== colDef.field) {
@@ -280,9 +281,7 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
               if (event.key === 'Escape') {
                 event.stopPropagation();
                 setPopupOpen(false);
-                const focusTarget =
-                  overflowChipRef.current ?? apiRef.current.getCellElement(id, colDef.field);
-                focusTarget?.focus();
+                apiRef.current.getCellElement(id, colDef.field)?.focus();
               }
             }}
             {...slotProps?.popperContent}
