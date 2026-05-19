@@ -14,9 +14,16 @@ export const SCATTER_ASYNC_THRESHOLD = 2000;
 
 /**
  * How many batches are revealed per reveal tick once the render data is ready.
- * Reveal ticks happen every other animation frame (a frame is skipped between
- * commits to leave the browser CPU time for layout/paint/input). Lower spreads
- * the paint over more ticks (smoother, more visibly progressive); higher
- * finishes sooner. One batch at the default batch size paints ~1000 points.
+ * Lower spreads the paint over more ticks (smoother, more visibly progressive);
+ * higher finishes sooner. One batch at the default batch size paints ~1000
+ * points.
  */
 export const SCATTER_REVEAL_BATCHES_PER_FRAME = 1;
+
+/**
+ * How many animation frames are skipped between two reveal ticks. `0` reveals
+ * on every frame; `1` (default) reveals every other frame, leaving the browser
+ * an idle frame for layout, paint and input handling between commits. Higher
+ * values give the browser more CPU headroom at the cost of a slower paint.
+ */
+export const SCATTER_REVEAL_FRAMES_SKIPPED = 1;

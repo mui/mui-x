@@ -1,7 +1,10 @@
 'use client';
 import * as React from 'react';
 import { type SeriesId } from '../../models/seriesType/common';
-import { SCATTER_REVEAL_BATCHES_PER_FRAME } from './scatterRendererConstants';
+import {
+  SCATTER_REVEAL_BATCHES_PER_FRAME,
+  SCATTER_REVEAL_FRAMES_SKIPPED,
+} from './scatterRendererConstants';
 
 /**
  * One ordered entry per (non-hidden) scatter series rendered by the async
@@ -125,25 +128,40 @@ export function ScatterAsyncRevealProvider(props: ScatterAsyncRevealProviderProp
 
     let frame = 0;
     let cancelled = false;
-    const step = () => {
+
+    // Schedule `step` after skipping `SCATTER_REVEAL_FRAMES_SKIPPED` frames, so
+    // the browser keeps idle frames for layout, paint and input handling
+    // between commits. Function declarations are hoisted, so `step` and
+    // `scheduleNext` can reference each other regardless of order.
+    function scheduleNext() {
+      let remaining = SCATTER_REVEAL_FRAMES_SKIPPED;
+      const tick = () => {
+        if (cancelled) {
+          return;
+        }
+        if (remaining > 0) {
+          remaining -= 1;
+          frame = requestAnimationFrame(tick);
+          return;
+        }
+        step();
+      };
+      frame = requestAnimationFrame(tick);
+    }
+
+    function step() {
       if (cancelled) {
         return;
       }
       setRevealedGlobalBatches((current) => {
         const next = Math.min(total, current + SCATTER_REVEAL_BATCHES_PER_FRAME);
         if (next < total) {
-          // Skip one frame between commits so the browser keeps an idle frame
-          // for layout, paint and input handling.
-          frame = requestAnimationFrame(() => {
-            if (cancelled) {
-              return;
-            }
-            frame = requestAnimationFrame(step);
-          });
+          scheduleNext();
         }
         return next;
       });
-    };
+    }
+
     frame = requestAnimationFrame(step);
 
     return () => {
