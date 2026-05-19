@@ -1,20 +1,17 @@
-import type { CommonSeriesType, ColorCallbackValue } from '../models/seriesType/common';
-import type { ChartSeriesType } from '../models/seriesType/config';
+import type { DefaultizedSeriesType } from '../models/seriesType';
+import type { ColorCallbackValue } from '../models/seriesType/common';
 import { getSeriesColorFn } from './getSeriesColorFn';
 
-export interface ResolveColorProcessorParams<V> {
-  series: {
-    color: NonNullable<CommonSeriesType<number | null, ChartSeriesType>['color']>;
-    data: readonly (number | null)[];
-    colorGetter?: CommonSeriesType<number | null, ChartSeriesType>['colorGetter'];
-  };
+type LineOrBarSeriesType = 'line' | 'bar' | 'radialLine' | 'radialBar';
+export interface ResolveColorProcessorParams<SeriesType extends LineOrBarSeriesType, V> {
+  series: Pick<DefaultizedSeriesType<SeriesType>, 'color' | 'data' | 'colorGetter'>;
   valueColorScale?: (value: number) => string | null;
-  categoryColorScale?: (value: NonNullable<V>) => string | null;
+  categoryColorScale?: (value: V) => string | null;
   categoryValues?: readonly V[];
 }
 
-export function resolveColorProcessor<V>(
-  params: ResolveColorProcessorParams<V>,
+export function resolveColorProcessor<SeriesType extends LineOrBarSeriesType, V>(
+  params: ResolveColorProcessorParams<SeriesType, V>,
 ): (dataIndex?: number) => string {
   const { series, valueColorScale, categoryColorScale, categoryValues } = params;
   const getSeriesColor = getSeriesColorFn(series);
