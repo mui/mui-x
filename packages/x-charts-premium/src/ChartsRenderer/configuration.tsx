@@ -195,21 +195,15 @@ const getLegendSection = (
   },
 });
 
-const getColors = (localeText: ChartsLocaleText) => [
-  { key: 'rainbowSurgePalette', name: localeText.chartPaletteNameRainbowSurge },
-  { key: 'blueberryTwilightPalette', name: localeText.chartPaletteNameBlueberryTwilight },
-  { key: 'mangoFusionPalette', name: localeText.chartPaletteNameMangoFusion },
-  { key: 'cheerfulFiestaPalette', name: localeText.chartPaletteNameCheerfulFiesta },
-  { key: 'strawberrySkyPalette', name: localeText.chartPaletteNameStrawberrySky },
-  { key: 'bluePalette', name: localeText.chartPaletteNameBlue },
-  { key: 'greenPalette', name: localeText.chartPaletteNameGreen },
-  { key: 'purplePalette', name: localeText.chartPaletteNamePurple },
-  { key: 'redPalette', name: localeText.chartPaletteNameRed },
-  { key: 'orangePalette', name: localeText.chartPaletteNameOrange },
-  { key: 'yellowPalette', name: localeText.chartPaletteNameYellow },
-  { key: 'cyanPalette', name: localeText.chartPaletteNameCyan },
-  { key: 'pinkPalette', name: localeText.chartPaletteNamePink },
-];
+const getColors = (localeText: ChartsLocaleText) => {
+  const trimPaletteName = (key: string) => key.replace(/Palette$/, '');
+  return Object.entries(colorPaletteLookup).map(([key]) => ({
+    key,
+    name: localeText[
+      `chartPaletteName${capitalize(trimPaletteName(key))}` as keyof ChartsLocaleText
+    ],
+  }));
+};
 
 const getColorOptions = (localeText: ChartsLocaleText) => ({
   label: localeText.chartPaletteLabel,
