@@ -104,11 +104,13 @@ export interface PresetConfig {
   getStartDate: (
     adapter: TemporalAdapter,
     visibleDate: TemporalSupportedObject,
+    weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 | undefined,
   ) => TemporalSupportedObject;
   getEndDate: (
     adapter: TemporalAdapter,
     start: TemporalSupportedObject,
     unitCount: number,
+    weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 | undefined,
   ) => TemporalSupportedObject;
   /**
    * Returns the exact number of CSS ticks for the visible range. Override

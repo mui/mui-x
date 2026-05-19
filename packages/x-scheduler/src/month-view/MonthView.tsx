@@ -157,6 +157,7 @@ export const MonthView = React.memo(
 
     // Selector hooks
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
+    const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
 
     // State hooks
     const [maxEvents, setMaxEvents] = React.useState<number>(2);
@@ -165,20 +166,13 @@ export const MonthView = React.memo(
     const { days } = useEventCalendarView(MONTH_VIEW_CONFIG);
 
     const weeks = React.useMemo(() => {
-      const tempWeeks: SchedulerProcessedDate[][] = [];
-      let weekNumber: number | null = null;
-      for (const day of days) {
-        const prevWeek = tempWeeks[tempWeeks.length - 1];
-        const dayWeekNumber = adapter.getWeekNumber(day.value);
-        if (weekNumber !== dayWeekNumber) {
-          weekNumber = dayWeekNumber;
-          tempWeeks.push([day]);
-        } else {
-          prevWeek.push(day);
-        }
+      const chunkSize = showWeekends ? 7 : 5;
+      const result: SchedulerProcessedDate[][] = [];
+      for (let i = 0; i < days.length; i += chunkSize) {
+        result.push(days.slice(i, i + chunkSize));
       }
-      return tempWeeks;
-    }, [adapter, days]);
+      return result;
+    }, [days, showWeekends]);
 
     const monthViewRowsPerType = React.useMemo(
       () => ({ 'day-grid': weeks.length }) as const,

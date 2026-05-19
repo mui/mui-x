@@ -70,3 +70,22 @@ export function getEndOfWeek(
   const weekStart = getStartOfWeek(adapter, date, weekStartsOn);
   return adapter.endOfDay(adapter.addDays(weekStart, 6));
 }
+
+/**
+ * Returns the week number for `date`, using `weekStartsOn` as the first day of
+ * the week (0 = Sunday … 6 = Saturday).
+ */
+export function getWeekNumber(
+  adapter: TemporalAdapter,
+  date: TemporalSupportedObject,
+  weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 | undefined,
+): number {
+  if (weekStartsOn === undefined) {
+    return adapter.getWeekNumber(date);
+  }
+  const weekStart = getStartOfWeek(adapter, date, weekStartsOn);
+  const midWeek = adapter.addDays(weekStart, 3);
+  const jan4 = adapter.addDays(adapter.startOfYear(midWeek), 3);
+  const week1Start = getStartOfWeek(adapter, jan4, weekStartsOn);
+  return adapter.differenceInDays(weekStart, week1Start) / 7 + 1;
+}

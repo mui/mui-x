@@ -1,5 +1,4 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import { getEndOfWeek, getStartOfWeek } from '@mui/x-scheduler-internals/get-week-boundaries';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS } from '../internals/utils/preset-utils';
@@ -30,14 +29,8 @@ export const eventTimelinePremiumPresetSelectors = {
         headers,
         timeResolution,
       } = config;
-      const start =
-        preset === 'dayAndWeek'
-          ? getStartOfWeek(adapter, visibleDate, weekStartsOn)
-          : getStartDate(adapter, visibleDate);
-      const end =
-        preset === 'dayAndWeek'
-          ? getEndOfWeek(adapter, adapter.addWeeks(start, unitCount - 1), weekStartsOn)
-          : getEndDate(adapter, start, unitCount);
+      const start = getStartDate(adapter, visibleDate, weekStartsOn);
+      const end = getEndDate(adapter, start, unitCount, weekStartsOn);
 
       return {
         tickCount: getCssUnitCount ? getCssUnitCount(adapter, start, end) : unitCount,

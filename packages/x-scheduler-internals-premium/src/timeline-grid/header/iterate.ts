@@ -1,4 +1,5 @@
 import { TemporalAdapter, TemporalSupportedObject } from '@mui/x-scheduler-internals/base-ui-copy';
+import { getStartOfWeek } from '@mui/x-scheduler-internals/get-week-boundaries';
 import { IteratedCell, PresetHeaderUnit } from '../../models';
 
 export function iterate(
@@ -7,6 +8,7 @@ export function iterate(
   tickUnit: PresetHeaderUnit,
   rangeStart: TemporalSupportedObject,
   rangeEnd: TemporalSupportedObject,
+  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6,
 ): IteratedCell[] {
   if (adapter.isBefore(rangeEnd, rangeStart)) {
     throw new Error(
@@ -19,10 +21,15 @@ export function iterate(
   // `rangeEnd` is inclusive (e.g. `endOfDay` = 23:59:59.999). Floor it to the
   // tick boundary and add one tick to get an exclusive end the loop can compare
   // against without depending on millisecond precision.
-  const rangeEndExclusive = addUnit(adapter, startOf(adapter, rangeEnd, tickUnit), tickUnit, 1);
+  const rangeEndExclusive = addUnit(
+    adapter,
+    startOf(adapter, rangeEnd, tickUnit, weekStartsOn),
+    tickUnit,
+    1,
+  );
 
   const cells: IteratedCell[] = [];
-  let cursor = startOf(adapter, rangeStart, unit);
+  let cursor = startOf(adapter, rangeStart, unit, weekStartsOn);
   let index = 0;
 
   while (adapter.isBefore(cursor, rangeEndExclusive)) {
@@ -63,6 +70,7 @@ function startOf(
   adapter: TemporalAdapter,
   date: TemporalSupportedObject,
   unit: PresetHeaderUnit,
+  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6,
 ): TemporalSupportedObject {
   switch (unit) {
     case 'hour':
@@ -70,7 +78,7 @@ function startOf(
     case 'day':
       return adapter.startOfDay(date);
     case 'week':
-      return adapter.startOfWeek(date);
+      return getStartOfWeek(adapter, date, weekStartsOn);
     case 'month':
       return adapter.startOfMonth(date);
     case 'year':

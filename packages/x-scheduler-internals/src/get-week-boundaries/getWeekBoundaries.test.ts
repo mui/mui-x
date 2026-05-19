@@ -1,5 +1,5 @@
 import { adapter } from 'test/utils/scheduler/adapters';
-import { getStartOfWeek, getEndOfWeek } from './getWeekBoundaries';
+import { getStartOfWeek, getEndOfWeek, getWeekNumber } from './getWeekBoundaries';
 
 const wednesday = adapter.date('2025-01-08T12:00:00.000Z', 'UTC');
 
@@ -62,5 +62,46 @@ describe('getEndOfWeek', () => {
     const start = getStartOfWeek(adapter, wednesday, 1);
     const end = getEndOfWeek(adapter, wednesday, 1);
     expect(adapter.isSameDay(adapter.addDays(start, 6), end)).to.equal(true);
+  });
+});
+
+describe('getWeekNumber', () => {
+  it('delegates to adapter.getWeekNumber when weekStartsOn is undefined', () => {
+    const result = getWeekNumber(adapter, wednesday, undefined);
+    expect(result).to.equal(adapter.getWeekNumber(wednesday));
+  });
+
+  it('returns week 2 for 2025-01-08 (Wednesday) with weekStartsOn=1 (ISO Mon)', () => {
+    // ISO week 2 of 2025: Mon 2025-01-06 – Sun 2025-01-12
+    const result = getWeekNumber(adapter, wednesday, 1);
+    expect(result).to.equal(2);
+  });
+
+  it('returns week 1 for 2025-01-01 (Wednesday) with weekStartsOn=1 (ISO Mon)', () => {
+    // ISO week 1 of 2025: Mon 2024-12-30 – Sun 2025-01-05, but Jan 1 is in that week.
+    // Actually Jan 1 2025 is a Wednesday; its Mon is Dec 30 2024 and midpoint (Thu) is Jan 2, which is in 2025.
+    // So it belongs to week 1 of 2025.
+    const jan1 = adapter.date('2025-01-01T12:00:00.000Z', 'UTC');
+    const result = getWeekNumber(adapter, jan1, 1);
+    expect(result).to.equal(1);
+  });
+
+  it('returns week 52/53 for Dec 29 2025 with weekStartsOn=1 — belongs to last week of 2025', () => {
+    // Dec 29 2025 is a Monday, so its midpoint (Thu) is Jan 1 2026, which is in 2026.
+    // That means this week belongs to week 1 of 2026.
+    const dec29 = adapter.date('2025-12-29T12:00:00.000Z', 'UTC');
+    const result = getWeekNumber(adapter, dec29, 1);
+    expect(result).to.equal(1);
+  });
+
+  it('returns week 2 for 2025-01-08 with weekStartsOn=0 (Sun)', () => {
+    // Sun-week: week starts on Sun Jan 5 2025, midpoint is Wed Jan 8, still in 2025
+    // Jan 4 2025 is a Saturday, its Sun-week starts Jan 5 2024 – wait, Jan 4 is Sat,
+    // so Sun-week containing Jan 4 starts Dec 29 2024 (prev Sunday).
+    // week1Start for Sun weeks: getStartOfWeek(jan4=Jan4,0) = Dec 29 2024
+    // weekStart for Jan 8: getStartOfWeek(Jan8, 0) = Jan 5 2025
+    // diff = Jan5 – Dec29 = 7 days => week 2
+    const result = getWeekNumber(adapter, wednesday, 0);
+    expect(result).to.equal(2);
   });
 });

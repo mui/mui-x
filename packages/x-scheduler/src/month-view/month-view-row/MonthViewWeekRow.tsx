@@ -7,6 +7,7 @@ import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { getWeekNumber } from '@mui/x-scheduler-internals/get-week-boundaries';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { MonthViewCell } from './MonthViewCell';
 import { useEventCalendarStyledContext } from '../../event-calendar/EventCalendarStyledContext';
@@ -44,9 +45,10 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
+  const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
-  const weekNumber = adapter.getWeekNumber(days[0].value);
+  const weekNum = getWeekNumber(adapter, days[0].value, weekStartsOn);
 
   const { start, end } = React.useMemo(
     () => ({
@@ -56,14 +58,12 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
     [adapter, days],
   );
 
-  const weekNumberId = showWeekNumber
-    ? `${schedulerId}-MonthViewWeekNumber-${weekNumber}`
-    : undefined;
+  const weekNumberId = showWeekNumber ? `${schedulerId}-MonthViewWeekNumber-${weekNum}` : undefined;
 
   return (
     <MonthViewRow
       className={classes.monthViewRow}
-      key={weekNumber}
+      key={weekNum}
       start={start}
       end={end}
       rowIndex={rowIndex}
@@ -73,10 +73,10 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
         <MonthViewWeekNumberCell
           className={classes.monthViewWeekNumberCell}
           id={weekNumberId}
-          aria-label={localeText.weekNumberAriaLabel(weekNumber)}
+          aria-label={localeText.weekNumberAriaLabel(weekNum)}
           aria-hidden="true"
         >
-          {weekNumber}
+          {weekNum}
         </MonthViewWeekNumberCell>
       )}
       {occurrences.days.map((day, dayIdx) => (

@@ -8,7 +8,7 @@ const defaultPreferences = {
   weekStartsOn: 1,
 };
 
-export default function PreferencesMenu() {
+export default function TimelinePreferences() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
