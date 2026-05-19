@@ -25,6 +25,25 @@ const timeSensitiveSuites = [
   'RowSpanningCalendar',
 ];
 
+interface RouteConfig {
+  /**
+   * Wait for this selector before screenshotting, on top of the testcase
+   * `aria-busy` gate (which only tracks font loading, not async demo data).
+   */
+  waitForSelector?: string;
+}
+
+// Per-route overrides, keyed by exact route url (`/${suite}/${name}`).
+const TEST_CONFIG: Record<string, RouteConfig> = {
+  '/test-regressions-data-grid/DataGridScrollRestoration': {
+    // The grid remounts when its async demo-data arrives
+    // (`key={String(loading)}`) and then restores its scroll. `aria-busy`
+    // doesn't cover that; sequential runs used to leave enough time, but
+    // pooled pages under concurrency don't, so wait for rendered rows.
+    waitForSelector: '.MuiDataGrid-row .MuiDataGrid-cell',
+  },
+};
+
 await main();
 
 async function main() {
@@ -145,6 +164,11 @@ async function main() {
             const testcase = await page.waitForSelector(
               `[data-testid="testcase"][data-testpath="${route.url}"]:not([aria-busy="true"])`,
             );
+
+            const routeConfig = TEST_CONFIG[route.url];
+            if (routeConfig?.waitForSelector) {
+              await page.waitForSelector(routeConfig.waitForSelector);
+            }
 
             await page.evaluate(async () => {
               const images = document.querySelectorAll('img');
