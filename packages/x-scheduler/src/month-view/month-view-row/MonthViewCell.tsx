@@ -168,7 +168,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   props: MonthViewCellProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { day, row, maxEvents } = props;
+  const { day, row, maxEvents, colIndex, ariaLabelledBy } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -225,6 +225,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       ref={handleRef}
       key={day.key}
       value={day.value}
+      aria-colindex={colIndex}
+      aria-labelledby={ariaLabelledBy}
       data-current={isToday || undefined}
       data-other-month={!isCurrentMonth || undefined}
       data-weekend={isWeekend(adapter, day.value) || undefined}
@@ -289,4 +291,6 @@ interface MonthViewCellProps {
   day: useEventOccurrencesWithDayGridPosition.DayData;
   row: useEventOccurrencesWithDayGridPosition.ReturnValue;
   maxEvents: number;
+  colIndex: number;
+  ariaLabelledBy?: string;
 }

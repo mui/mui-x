@@ -7,7 +7,7 @@
     "axisHighlight": {
       "type": {
         "name": "shape",
-        "description": "{ radius?: 'line'<br>&#124;&nbsp;'none', rotation?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
+        "description": "{ radius?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', rotation?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
       },
       "default": "{ rotation: 'line' }",
       "seeMoreLink": {
@@ -118,12 +118,6 @@
       "name": "legend",
       "description": "Custom rendering of the legend.",
       "default": "ChartsLegend",
-      "class": null
-    },
-    {
-      "name": "line",
-      "description": "The component that renders the line.",
-      "default": "LineElementPath",
       "class": null
     },
     {

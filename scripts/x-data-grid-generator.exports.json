@@ -79,6 +79,7 @@
   { "name": "renderRating", "kind": "Function" },
   { "name": "renderStatus", "kind": "Function" },
   { "name": "renderTotalPrice", "kind": "Function" },
+  { "name": "resetRandomGenerators", "kind": "Function" },
   { "name": "useBasicDemoData", "kind": "Variable" },
   { "name": "useDemoData", "kind": "Variable" },
   { "name": "UseDemoDataOptions", "kind": "Interface" },
