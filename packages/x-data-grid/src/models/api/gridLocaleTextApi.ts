@@ -286,6 +286,19 @@ export interface GridLocaleText {
   copilotPanelReload: string;
   copilotPanelEmptyStateTitle: string;
   copilotPanelEmptyStateHelper: string;
+  copilotPanelMenu: string;
+  copilotPanelBack: string;
+  copilotPanelHistory: string;
+  copilotPanelMoreSuggestions: string;
+  copilotPanelViewAll: string;
+  copilotPanelSettings: string;
+  copilotPanelSendFeedback: string;
+  copilotPanelReport: string;
+  copilotPanelSession: string;
+  copilotPanelAll: string;
+  copilotPanelAsk: string;
+  copilotPanelToday: string;
+  copilotPanelYesterday: string;
 
   // Prompt
   promptRerun: string;

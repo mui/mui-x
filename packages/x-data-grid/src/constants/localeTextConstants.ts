@@ -310,6 +310,19 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   copilotPanelEmptyStateTitle: 'How can I help?',
   copilotPanelEmptyStateHelper:
     'Ask anything about your data, or pick a suggestion to get started.',
+  copilotPanelMenu: 'Open Copilot menu',
+  copilotPanelBack: 'Back to Copilot',
+  copilotPanelHistory: 'History',
+  copilotPanelMoreSuggestions: 'More suggestions',
+  copilotPanelViewAll: 'View all',
+  copilotPanelSettings: 'Settings',
+  copilotPanelSendFeedback: 'Send feedback',
+  copilotPanelReport: 'Report',
+  copilotPanelSession: 'Session',
+  copilotPanelAll: 'All',
+  copilotPanelAsk: 'Ask',
+  copilotPanelToday: 'Today',
+  copilotPanelYesterday: 'Yesterday',
 
   // Prompt field
   promptFieldLabel: 'Prompt',
