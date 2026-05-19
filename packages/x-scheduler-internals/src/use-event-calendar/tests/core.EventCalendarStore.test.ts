@@ -35,6 +35,7 @@ describe('Core - EventCalendarStore', () => {
         editedEventId: null,
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
+        openEventId: null,
         pendingUpdateRecurringEventParameters: null,
         plan: 'community',
         preferences: EMPTY_OBJECT,

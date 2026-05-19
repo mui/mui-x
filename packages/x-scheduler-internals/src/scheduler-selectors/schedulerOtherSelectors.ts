@@ -29,4 +29,5 @@ export const schedulerOtherSelectors = {
   areRecurringEventsAvailable: createSelector((state: State) => state.plan === 'premium'),
   isLoading: createSelector((state: State) => state.isLoading),
   errors: createSelector((state: State) => state.errors),
+  openEventId: createSelector((state: State) => state.openEventId),
 };

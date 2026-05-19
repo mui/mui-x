@@ -169,6 +169,11 @@ export interface SchedulerState<TEvent extends object = any> {
    * The errors that occurred during data fetching.
    */
   errors: Error[];
+  /**
+   * The ID of the event currently open in the event dialog.
+   * `null` when no event dialog is open.
+   */
+  openEventId: SchedulerEventId | null;
 }
 
 export interface SchedulerDataSource<TEvent extends object> {

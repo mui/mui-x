@@ -86,13 +86,20 @@ export function createModal<TData>(config: CreateModalConfig) {
     ref: React.ForwardedRef<HTMLElement | null>,
   ) {
     const { data, onClick, children } = props;
-    const { onOpen } = useModalContext();
+    const { onOpen, onClose, isOpen, data: currentData } = useModalContext();
 
     return React.cloneElement(children as React.ReactElement<any>, {
       ref,
       onClick: (event: React.MouseEvent) => {
         onClick?.(event);
-        onOpen(ref as React.RefObject<HTMLElement | null>, data);
+        // Toggle: close if clicking the trigger for the already-open dialog entry.
+        const dataId = (data as any)?.id;
+        const currentId = (currentData as any)?.id;
+        if (isOpen && dataId != null && dataId === currentId) {
+          onClose();
+        } else {
+          onOpen(ref as React.RefObject<HTMLElement | null>, data);
+        }
       },
     });
   });

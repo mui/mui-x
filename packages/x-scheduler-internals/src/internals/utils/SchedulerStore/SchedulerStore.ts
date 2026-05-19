@@ -109,6 +109,7 @@ export class SchedulerStore<
         adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
       errors: [],
       isLoading: !!parameters.dataSource,
+      openEventId: null,
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -627,11 +628,20 @@ export class SchedulerStore<
   };
 
   /**
+   * Sets the ID of the event currently open in the event dialog.
+   * Pass `null` to clear the open event.
+   */
+  public setOpenEventId = (eventId: SchedulerEventId | null) => {
+    this.set('openEventId', eventId);
+  };
+
+  /**
    * Builds an object containing the methods that should be exposed publicly by the scheduler components.
    */
   public buildPublicAPI() {
     return {
       setVisibleDate: this.setVisibleDate,
+      setOpenEventId: this.setOpenEventId,
     };
   }
 }
