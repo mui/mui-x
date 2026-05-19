@@ -118,6 +118,41 @@ describe('<DateField /> - Selection', () => {
         expect(document.activeElement?.getAttribute('role')).not.to.equal('spinbutton');
       },
     );
+
+    // The closest-section distance math relies on real `getBoundingClientRect`
+    // layout, so JSDOM (where rects are 0x0) only ever picks index 0.
+    // Fire on the sections container directly so the click target is not
+    // inside any section span — that's the case where the closest-section
+    // logic actually decides the outcome (section spans have their own
+    // `onClick` handler that would otherwise win on the click bubble).
+    it.skipIf(isJSDOM)('should focus the section closest to the click point', () => {
+      const view = renderWithProps({});
+
+      const sectionsContainer = view.getSectionsContainer();
+      const spinbuttons = sectionsContainer.querySelectorAll<HTMLElement>('[role="spinbutton"]');
+      const monthCenter =
+        (spinbuttons[0].getBoundingClientRect().left +
+          spinbuttons[0].getBoundingClientRect().right) /
+        2;
+      const dayCenter =
+        (spinbuttons[1].getBoundingClientRect().left +
+          spinbuttons[1].getBoundingClientRect().right) /
+        2;
+      const yearCenter =
+        (spinbuttons[2].getBoundingClientRect().left +
+          spinbuttons[2].getBoundingClientRect().right) /
+        2;
+
+      // Closer to Day than to Month or Year.
+      const clientX = dayCenter + 1;
+      expect(Math.abs(clientX - dayCenter)).to.be.lessThan(Math.abs(clientX - monthCenter));
+      expect(Math.abs(clientX - dayCenter)).to.be.lessThan(Math.abs(clientX - yearCenter));
+
+      fireEvent.mouseDown(sectionsContainer, { clientX });
+      fireEvent.click(sectionsContainer, { clientX });
+
+      expect(getCleanedSelectedContent()).to.equal('DD');
+    });
   });
 
   describe('key: Ctrl + A', () => {

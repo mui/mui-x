@@ -217,15 +217,23 @@ export function useFieldRootProps(
       return;
     }
     const target = event.target as Element;
-    const root = domGetters.getRoot();
-    if (!root.contains(target)) {
+    // `sectionListRoot` is the sections container (a descendant of the
+    // InputBase root that owns this handler). The guard rejects clicks on
+    // sibling adornments (open / clear buttons, etc.) which have their own
+    // behavior and must not get intercepted here.
+    const sectionListRoot = domGetters.getRoot();
+    if (!sectionListRoot.contains(target)) {
       return;
     }
-    if (target.closest('[data-sectionindex]')) {
+    // Skip only clicks that landed directly on a section's content span; let
+    // separator-span clicks (siblings of the content inside the same section
+    // container) fall through to the closest-section logic, since the CSS
+    // gate has already disabled Chromium's native delegation for them.
+    if (target.closest('[role="spinbutton"]')) {
       return;
     }
     event.preventDefault();
-    const closestSectionIndex = findClosestSectionIndexToPoint(root, event.clientX);
+    const closestSectionIndex = findClosestSectionIndexToPoint(sectionListRoot, event.clientX);
     if (closestSectionIndex == null) {
       return;
     }
