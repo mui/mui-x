@@ -1,11 +1,11 @@
-import { Adapter } from '../../../use-adapter';
+import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
   SchedulerProcessedEventRecurrenceRule,
   RecurringEventWeekDayCode,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
-} from '../../../models';
+} from '@mui/x-scheduler-internals/models';
 import { getWeekDayCode, NOT_LOCALIZED_WEEK_DAYS_INDEXES } from './internal-utils';
 
 export function applyDataTimezoneToEventUpdate({

@@ -179,9 +179,9 @@ export const schedulerEventSelectors = {
   ),
   isRecurring: createSelector(
     processedEventSelector,
-    (state: State) => state.plan,
-    (event, plan, _eventId: SchedulerEventId) =>
-      plan === 'premium' && Boolean(event?.dataTimezone.rrule),
+    (state: State) => state.recurringEventsPlugin,
+    (event, recurringEventsPlugin, _eventId: SchedulerEventId) =>
+      recurringEventsPlugin != null && Boolean(event?.dataTimezone.rrule),
   ),
 };
 

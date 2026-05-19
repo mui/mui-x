@@ -18,5 +18,6 @@ benchmark('Heatmap: 100x100 grid', () => (
     series={[{ data }]}
     width={500}
     height={300}
+    skipAnimation
   />
 ));
