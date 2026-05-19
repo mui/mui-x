@@ -2,11 +2,8 @@ import { SchedulerEventId } from '../../models';
 
 interface SchedulerEventLookup {
   /**
-   * Fired after events are updated (created, updated, or deleted).
-   * Premium plugins can subscribe to this event to sync caches.
-   * `created` and `updated` carry full event objects (with all changes already
-   * applied) so subscribers can persist them without re-resolving ids through
-   * `eventModelStructure`. `deleted` only carries ids since that's enough.
+   * Fired after events are created, updated or deleted.
+   * `created` and `updated` carry full event objects; `deleted` carries only ids.
    */
   eventsUpdated: {
     parameters: {
