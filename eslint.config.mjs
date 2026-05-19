@@ -201,6 +201,8 @@ export default defineConfig(
       'react-hooks/purity': 'off',
       'react-hooks/static-components': 'off',
 
+      'mui/no-presentation-role': 'error',
+
       // TODO(@Janpot) Fix issues and turn back on
       'mui/consistent-production-guard': 'off',
     },
@@ -372,6 +374,10 @@ export default defineConfig(
     },
     rules: {
       'consistent-default-export-name/default-export-match-filename': ['error'],
+      // `role="none"` is an alias for `role="presentation"`, but aria-query treats
+      // them differently and reports `aria-hidden` as unsupported on `none`.
+      // See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1090
+      'jsx-a11y/role-supports-aria-props': 'off',
     },
   },
 
