@@ -12,6 +12,7 @@ import eslintPluginMuiX from 'eslint-plugin-mui-x';
 import { defineConfig } from 'eslint/config';
 import * as path from 'node:path';
 import * as url from 'node:url';
+import remarkConfig from './.remarkrc.mjs';
 
 const filename = url.fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -112,7 +113,13 @@ export default defineConfig(
     baseDirectory: dirname,
     enableReactCompiler: isAnyReactCompilerPluginEnabled,
     materialUi: true,
+    markdown: true,
   }),
+  // eslint-plugin-mdx loads `.remarkrc.mjs` itself, but ESLint doesn't know
+  // that file is a config dependency, so `--cache` doesn't invalidate when
+  // it changes. Embedding the imported value in a setting puts its content
+  // into the resolved-config hash, forcing cache invalidation on edits.
+  { settings: { remarkConfig } },
   {
     name: 'MUI X Overrides',
     files: [`**/*${EXTENSION_TS}`],
