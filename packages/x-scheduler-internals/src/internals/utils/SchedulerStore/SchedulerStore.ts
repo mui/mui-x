@@ -90,7 +90,7 @@ export class SchedulerStore<
     const schedulerInitialState: SchedulerState<TEvent> = {
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       ...(parameters.dataSource
-        ? MOCK_EVENT_STATE
+        ? { ...MOCK_EVENT_STATE, eventModelStructure: parameters.eventModelStructure ?? {} }
         : buildEventsState(
             parameters,
             adapter,
@@ -351,31 +351,34 @@ export class SchedulerStore<
     const originalEventIds = schedulerEventSelectors.idList(this.state);
     const originalEventModelLookup = schedulerEventSelectors.modelLookup(this.state);
     const newEvents: TEvent[] = [];
+    const updatedEvents: TEvent[] = [];
 
     if (deleted.size > 0 || updated.size > 0) {
       for (const eventId of originalEventIds) {
         if (deleted.has(eventId)) {
           continue;
         }
-        const processedEvent = updated.has(eventId)
-          ? this.state.processedEventLookup.get(eventId)
-          : undefined;
-        const newEvent = updated.has(eventId)
-          ? getUpdatedEventModelFromChanges<TEvent>(
-              originalEventModelLookup.get(eventId),
-              updated.get(eventId)!,
-              this.state.eventModelStructure,
-              this.state.adapter,
-              processedEvent!.modelInBuiltInFormat,
-            )
-          : originalEventModelLookup.get(eventId);
-        newEvents.push(newEvent);
+        if (updated.has(eventId)) {
+          const processedEvent = this.state.processedEventLookup.get(eventId);
+          const newEvent = getUpdatedEventModelFromChanges<TEvent>(
+            originalEventModelLookup.get(eventId),
+            updated.get(eventId)!,
+            this.state.eventModelStructure,
+            this.state.adapter,
+            processedEvent!.modelInBuiltInFormat,
+          );
+          newEvents.push(newEvent);
+          updatedEvents.push(newEvent);
+        } else {
+          newEvents.push(originalEventModelLookup.get(eventId));
+        }
       }
     } else {
       newEvents.push(...schedulerEventSelectors.modelList(this.state));
     }
 
     const createdIds: SchedulerEventId[] = [];
+    const createdEvents: TEvent[] = [];
     for (const createdEvent of created) {
       const response = createEventModel(
         createdEvent,
@@ -383,6 +386,7 @@ export class SchedulerStore<
         this.state.adapter,
       );
       newEvents.push(response.model);
+      createdEvents.push(response.model);
       createdIds.push(response.id);
     }
 
@@ -392,8 +396,8 @@ export class SchedulerStore<
     queueMicrotask(() =>
       this.publishEvent('eventsUpdated', {
         deleted: deletedParam ?? [],
-        updated,
-        created: createdIds,
+        updated: updatedEvents,
+        created: createdEvents,
         newEvents,
       }),
     );

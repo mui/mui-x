@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { describe, expect, it, vi } from 'vitest';
-import { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+import { SchedulerEventId, SchedulerEventModelStructure } from '@mui/x-scheduler-internals/models';
 import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { DEBOUNCE_MS } from '../utils/queue';
@@ -223,6 +223,112 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(callArgs.created).toHaveLength(0);
     });
 
+    it('should pass full event objects keyed by custom eventModelStructure to dataSource.updateEvents', async () => {
+      interface MyEvent {
+        myId: string;
+        myTitle: string;
+        myStart: string;
+        myEnd: string;
+      }
+      const eventModelStructure: SchedulerEventModelStructure<MyEvent> = {
+        id: {
+          getter: (event) => event.myId,
+          setter: (event, value) => {
+            event.myId = value.toString();
+            return event;
+          },
+        },
+        title: {
+          getter: (event) => event.myTitle,
+          setter: (event, value) => {
+            event.myTitle = value;
+            return event;
+          },
+        },
+        start: {
+          getter: (event) => event.myStart,
+          setter: (event, value) => {
+            event.myStart = value;
+            return event;
+          },
+        },
+        end: {
+          getter: (event) => event.myEnd,
+          setter: (event, value) => {
+            event.myEnd = value;
+            return event;
+          },
+        },
+      };
+
+      const mockUpdateEvents = async (_params: {
+        deleted: SchedulerEventId[];
+        updated: MyEvent[];
+        created: MyEvent[];
+      }) => ({ success: true });
+      const updateEventsSpy = spy(mockUpdateEvents);
+      const initialEvent: MyEvent = {
+        myId: '1',
+        myTitle: 'Event 1',
+        myStart: '2025-07-01T09:00:00.000Z',
+        myEnd: '2025-07-01T10:00:00.000Z',
+      };
+      const dataSource = {
+        getEvents: spy(async () => [initialEvent]),
+        updateEvents: updateEventsSpy,
+      };
+      const store = new storeClass.Value(
+        { events: [], eventModelStructure, dataSource },
+        adapter,
+      );
+
+      const createdId = store.createEvent({
+        start: '2025-07-02T09:00:00.000Z',
+        end: '2025-07-02T10:00:00.000Z',
+        title: 'Created Event',
+      });
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+
+      expect(updateEventsSpy.calledOnce).to.equal(true);
+      const createArgs = updateEventsSpy.firstCall.args[0];
+      expect(createArgs.created).toHaveLength(1);
+      expect(createArgs.created[0]).toMatchObject({
+        myId: createdId,
+        myTitle: 'Created Event',
+        myStart: '2025-07-02T09:00:00.000Z',
+        myEnd: '2025-07-02T10:00:00.000Z',
+      });
+
+      // Now seed the store from the dataSource and update an event by its custom id
+      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+
+      store.updateEvent({
+        id: '1',
+        title: 'Event 1 Updated',
+        start: adapter.date('2025-07-01T11:00:00Z', 'default'),
+        end: adapter.date('2025-07-01T12:00:00Z', 'default'),
+      });
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+
+      expect(updateEventsSpy.calledTwice).to.equal(true);
+      const updateArgs = updateEventsSpy.secondCall.args[0];
+      expect(updateArgs.updated).toHaveLength(1);
+      expect(updateArgs.updated[0]).toMatchObject({
+        myId: '1',
+        myTitle: 'Event 1 Updated',
+        myStart: '2025-07-01T11:00:00.000Z',
+        myEnd: '2025-07-01T12:00:00.000Z',
+      });
+    });
+
     it('should not update store state when dataSource.updateEvents returns success: false', async () => {
       const mockUpdateEvents = async (_params: {
         deleted: SchedulerEventId[];
@@ -399,9 +505,9 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.publishEvent('eventsUpdated', {
         deleted: [],
-        updated: new Map([['1', { id: '1' }]]),
+        updated: [{ id: '1' }],
         created: [],
-        newEvents: [],
+        newEvents: [{ id: '1' }],
       });
 
       await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
@@ -410,28 +516,6 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.errors[0].error).to.be.instanceOf(Error);
       expect(store.state.errors[0].error.message).to.equal('500 Update Failed');
       expect(store.state.errors[0].error.cause).to.equal(rejection);
-    });
-
-    it('should warn in dev when eventsUpdated reports an id missing from newEvents', async () => {
-      const dataSource = {
-        getEvents: spy(mockFetchData),
-        updateEvents: async () => ({ success: true }),
-      };
-      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
-
-      await expect(async () => {
-        store.publishEvent('eventsUpdated', {
-          deleted: [],
-          updated: new Map([['ghost', { id: 'ghost' }]]),
-          created: [],
-          newEvents: [],
-        });
-        await Promise.resolve();
-        await Promise.resolve();
-        await Promise.resolve();
-      }).toWarnDev(
-        'MUI X Scheduler: eventsUpdated reported id "ghost" as created or updated, but it is missing from `newEvents`.',
-      );
     });
 
     it('should push an error to state.errors when dataSource.updateEvents rejects', async () => {
@@ -445,9 +529,9 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.publishEvent('eventsUpdated', {
         deleted: [],
-        updated: new Map([['1', { id: '1' }]]),
+        updated: [{ id: '1' }],
         created: [],
-        newEvents: [],
+        newEvents: [{ id: '1' }],
       });
 
       await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
@@ -465,9 +549,9 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.publishEvent('eventsUpdated', {
         deleted: [],
-        updated: new Map([['1', { id: '1' }]]),
+        updated: [{ id: '1' }],
         created: [],
-        newEvents: [],
+        newEvents: [{ id: '1' }],
       });
 
       await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
@@ -557,7 +641,7 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       store.publishEvent('eventsUpdated', {
         deleted: [],
-        updated: new Map([['1', { id: '1' }]]),
+        updated: [updatedEvent],
         created: [],
         newEvents: [updatedEvent],
       });

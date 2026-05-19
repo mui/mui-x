@@ -403,7 +403,7 @@ describe('Lazy loading - EventTimelinePremiumStore', () => {
     };
     store.publishEvent('eventsUpdated', {
       deleted: [],
-      updated: new Map([['1', { id: '1' }]]),
+      updated: [updatedEvent],
       created: [],
       newEvents: [updatedEvent],
     });

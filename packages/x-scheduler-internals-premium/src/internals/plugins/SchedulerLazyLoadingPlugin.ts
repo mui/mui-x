@@ -1,4 +1,4 @@
-import { SchedulerEventId, TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
+import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import {
   SchedulerState,
   SchedulerParameters,
@@ -214,26 +214,10 @@ export class SchedulerLazyLoadingPlugin<
     }
 
     try {
-      const createdIdSet = new Set(created);
-      const createdEvents: TEvent[] = [];
-      const updatedEvents: TEvent[] = [];
-      const seenIds = new Set<unknown>();
-
-      for (const event of newEvents) {
-        const id = (event as { id: SchedulerEventId }).id;
-        if (createdIdSet.has(id)) {
-          createdEvents.push(event);
-          seenIds.add(id);
-        } else if (updated.has(id)) {
-          updatedEvents.push(event);
-          seenIds.add(id);
-        }
-      }
-
       const shouldUpdateEvents = await dataSource.updateEvents({
         deleted,
-        updated: updatedEvents,
-        created: createdEvents,
+        updated: updated as TEvent[],
+        created: created as TEvent[],
       });
 
       if (!shouldUpdateEvents.success) {
@@ -251,25 +235,11 @@ export class SchedulerLazyLoadingPlugin<
         this.cache.remove(String(id));
       }
 
-      for (const event of createdEvents) {
+      for (const event of created as TEvent[]) {
         this.cache.upsert(event);
       }
-      for (const event of updatedEvents) {
+      for (const event of updated as TEvent[]) {
         this.cache.upsert(event);
-      }
-
-      if (process.env.NODE_ENV !== 'production') {
-        const warnMissingId = (id: unknown) => {
-          if (!seenIds.has(id)) {
-            console.warn(
-              `MUI X Scheduler: eventsUpdated reported id "${String(id)}" as created or updated, ` +
-                `but it is missing from \`newEvents\`. The cache was not updated for this id. ` +
-                `Make sure the publisher includes the new version of every modified event in \`newEvents\`.`,
-            );
-          }
-        };
-        createdIdSet.forEach(warnMissingId);
-        updated.forEach((_value, id) => warnMissingId(id));
       }
 
       const eventsState = buildEventsState(
