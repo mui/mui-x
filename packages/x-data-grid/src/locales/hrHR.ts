@@ -62,6 +62,9 @@ const hrHRGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   toolbarAssistant: 'AI Asistent',
 
+  // Toolbar Copilot button
+  // toolbarCopilot: 'Copilot',
+
   // Columns management text
   columnsManagementSearchTitle: 'Traži',
   columnsManagementNoColumns: 'Nema stupaca',
@@ -315,6 +318,14 @@ const hrHRGrid: Partial<GridLocaleText> = {
   // aiAssistantPanelConversationHistory: 'Conversation history',
   // aiAssistantPanelEmptyConversation: 'No prompt history',
   aiAssistantSuggestions: 'Prijedlozi',
+
+  // Copilot panel
+  // copilotPanelTitle: 'Copilot',
+  // copilotPanelClose: 'Close Copilot',
+  // copilotPanelBeta: 'BETA',
+  // copilotPanelReload: 'New conversation',
+  // copilotPanelEmptyStateTitle: 'How can I help?',
+  // copilotPanelEmptyStateHelper: 'Ask anything about your data, or pick a suggestion to get started.',
 
   // Prompt field
   promptFieldLabel: 'Upit',

@@ -60,6 +60,9 @@ const nnNOGrid: Partial<GridLocaleText> = {
   // Toolbar AI Assistant button
   toolbarAssistant: 'AI Assistent',
 
+  // Toolbar Copilot button
+  // toolbarCopilot: 'Copilot',
+
   // Columns management text
   columnsManagementSearchTitle: 'Søk',
   columnsManagementNoColumns: 'Ingen kolonner',
@@ -299,6 +302,14 @@ const nnNOGrid: Partial<GridLocaleText> = {
   aiAssistantPanelConversationHistory: 'Samtalehistorikk',
   aiAssistantPanelEmptyConversation: 'Ingen prompt-historikk',
   aiAssistantSuggestions: 'Forslag',
+
+  // Copilot panel
+  // copilotPanelTitle: 'Copilot',
+  // copilotPanelClose: 'Close Copilot',
+  // copilotPanelBeta: 'BETA',
+  // copilotPanelReload: 'New conversation',
+  // copilotPanelEmptyStateTitle: 'How can I help?',
+  // copilotPanelEmptyStateHelper: 'Ask anything about your data, or pick a suggestion to get started.',
 
   // Prompt field
   promptFieldLabel: 'Prompt',
