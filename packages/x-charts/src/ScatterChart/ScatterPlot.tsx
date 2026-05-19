@@ -10,7 +10,11 @@ import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
 import { AsyncScatter } from './AsyncScatter';
-import { SCATTER_ASYNC_THRESHOLD } from './scatterRendererConstants';
+import {
+  ScatterAsyncRevealProvider,
+  type ScatterRevealSeries,
+} from './scatterAsyncReveal';
+import { SCATTER_ASYNC_THRESHOLD, SCATTER_BATCH_SIZE } from './scatterRendererConstants';
 import { useUtilityClasses } from './scatterClasses';
 
 export interface ScatterPlotSlots extends ScatterSlots {
@@ -97,39 +101,65 @@ function ScatterPlot(props: ScatterPlotProps) {
   }
   const ScatterItems = slots?.scatter ?? DefaultScatterItems;
 
+  const items = seriesOrder.map((seriesId) => {
+    const { id, xAxisId, yAxisId, zAxisId, color, hidden } = series[seriesId];
+
+    if (hidden) {
+      return null;
+    }
+
+    const colorGetter = scatterSeriesConfig.colorProcessor(
+      series[seriesId],
+      xAxis[xAxisId ?? defaultXAxisId],
+      yAxis[yAxisId ?? defaultYAxisId],
+      zAxis[zAxisId ?? defaultZAxisId],
+    );
+    const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
+    const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
+    return (
+      <ScatterItems
+        key={id}
+        xScale={xScale}
+        yScale={yScale}
+        color={color}
+        colorGetter={colorGetter}
+        series={series[seriesId]}
+        onItemClick={onItemClick}
+        slots={slots}
+        slotProps={slotProps}
+        {...slotProps?.scatter}
+      />
+    );
+  });
+
+  // When the async renderer is used, a single shared scheduler drives the
+  // progressive paint across every series so the per-frame work is bounded
+  // regardless of series count.
+  const content =
+    ScatterItems === AsyncScatter ? (
+      <ScatterAsyncRevealProvider
+        plan={seriesOrder.reduce((plan, seriesId) => {
+          if (!series[seriesId].hidden) {
+            plan.push({
+              seriesId,
+              nBatches: Math.max(
+                1,
+                Math.ceil(series[seriesId].data.length / SCATTER_BATCH_SIZE),
+              ),
+              dataRef: series[seriesId].data,
+            });
+          }
+          return plan;
+        }, [] as ScatterRevealSeries[])}
+      >
+        {items}
+      </ScatterAsyncRevealProvider>
+    ) : (
+      items
+    );
+
   return (
-    <ScatterPlotRoot className={clsx(classes.root, className)}>
-      {seriesOrder.map((seriesId) => {
-        const { id, xAxisId, yAxisId, zAxisId, color, hidden } = series[seriesId];
-
-        if (hidden) {
-          return null;
-        }
-
-        const colorGetter = scatterSeriesConfig.colorProcessor(
-          series[seriesId],
-          xAxis[xAxisId ?? defaultXAxisId],
-          yAxis[yAxisId ?? defaultYAxisId],
-          zAxis[zAxisId ?? defaultZAxisId],
-        );
-        const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
-        const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
-        return (
-          <ScatterItems
-            key={id}
-            xScale={xScale}
-            yScale={yScale}
-            color={color}
-            colorGetter={colorGetter}
-            series={series[seriesId]}
-            onItemClick={onItemClick}
-            slots={slots}
-            slotProps={slotProps}
-            {...slotProps?.scatter}
-          />
-        );
-      })}
-    </ScatterPlotRoot>
+    <ScatterPlotRoot className={clsx(classes.root, className)}>{content}</ScatterPlotRoot>
   );
 }
 
