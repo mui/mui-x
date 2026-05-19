@@ -177,7 +177,15 @@ export function useFieldRootProps(
     if (parsedSelectedSections === 'all') {
       setFocused(true);
       containerClickTimeout.start(0, () => {
-        const cursorPosition = document.getSelection()!.getRangeAt(0).startOffset;
+        // `getSelection`/`getRangeAt` can be unset transiently (e.g. focus
+        // moved before this 0-tick callback ran). Fall back to the first
+        // section in that case.
+        const selection = document.getSelection();
+        if (!selection || selection.rangeCount === 0) {
+          setSelectedSections(sectionOrder.startIndex);
+          return;
+        }
+        const cursorPosition = selection.getRangeAt(0).startOffset;
 
         if (cursorPosition === 0) {
           setSelectedSections(sectionOrder.startIndex);
@@ -200,7 +208,7 @@ export function useFieldRootProps(
       return;
     }
 
-    // Section clicks are handled by `handleMouseDown` / the section's own `onFocus`.
+    // Section selection is driven by focus, not click.
     if (!focused) {
       setFocused(true);
     }
@@ -333,6 +341,8 @@ export function useFieldRootProps(
 
 /**
  * Returns the index of the section whose horizontal center is closest to `clientX`.
+ * Returns `null` only if the field renders zero sections (defensive — a
+ * rendered field always has at least one).
  */
 function findClosestSectionIndexToPoint(root: HTMLElement, clientX: number): number | null {
   const sections = root.querySelectorAll<HTMLElement>('[role="spinbutton"]');

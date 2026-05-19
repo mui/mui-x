@@ -201,6 +201,10 @@ export const useField = <
   });
 
   const handleRootMouseDown = useEventCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    // Mirrors `handleRootClick`: a propagated mousedown from the clear or open
+    // button (both call `preventDefault`) must not trigger closest-section
+    // focus. Userland `onMouseDown` that calls `preventDefault` likewise
+    // opts out of the new focus behavior.
     if (event.isDefaultPrevented()) {
       return;
     }

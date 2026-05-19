@@ -74,31 +74,64 @@ describe('<DateField /> - Selection', () => {
   });
 
   describe('Click on a non-section element inside the field root', () => {
-    it('should select the section closest to the click point when clicking on a non-section descendant of the field root', () => {
+    it('should select a section when clicking on a non-section descendant of the field root', () => {
       const view = renderWithProps({});
 
-      // Clicks on padding/separator gaps should focus the closest section.
       const sectionsContainer = view.getSectionsContainer();
       fireEvent.mouseDown(sectionsContainer);
       fireEvent.click(sectionsContainer);
 
-      expect(getCleanedSelectedContent()).not.to.equal('');
+      // JSDOM rects are 0x0, so `findClosestSectionIndexToPoint` deterministically
+      // picks the first section. The actual closest-section math is covered by
+      // the browser-only test below.
+      expect(getCleanedSelectedContent()).to.equal('MM');
     });
 
-    it('should still select a section when clicking directly on it', () => {
+    it('should not preventDefault on mousedown when clicking directly on a section span', () => {
       const view = renderWithProps({});
 
       const yearSection = view.getSection(2);
-      fireEvent.mouseDown(yearSection);
-      fireEvent.click(yearSection);
+      // Asserts the discriminating fact: `target.closest('[role="spinbutton"]')`
+      // makes `handleMouseDown` early-return for direct section clicks, so the
+      // native focus path stays intact.
+      const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+      yearSection.dispatchEvent(event);
+      expect(event.defaultPrevented).to.equal(false);
 
+      fireEvent.click(yearSection);
       expect(getCleanedSelectedContent()).to.equal('YYYY');
+    });
+
+    it('should not select any section on mousedown when the field is disabled', () => {
+      const view = renderWithProps({ disabled: true });
+
+      const sectionsContainer = view.getSectionsContainer();
+      fireEvent.mouseDown(sectionsContainer);
+      fireEvent.click(sectionsContainer);
+
+      expect(getCleanedSelectedContent()).to.equal('');
+    });
+
+    it('should preserve the all-sections selection when clicking the sections container', async () => {
+      const view = renderWithProps({});
+      await view.selectSection('month');
+      await view.user.keyboard('{Control>}a{/Control}');
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
+
+      // mousedown's closest-section path must early-return when the field is
+      // in 'all' mode so the Ctrl+A cursor-positioning click-handler keeps
+      // its semantics.
+      const sectionsContainer = view.getSectionsContainer();
+      fireEvent.mouseDown(sectionsContainer);
+
+      expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
     });
 
     // Chromium delegates focus from a non-contenteditable ancestor click onto
     // the nearest contenteditable descendant — but only for trusted pointer
-    // events. We use vitest's CDP-backed `userEvent` here; synthetic events
-    // skip default actions and would let the test pass regardless.
+    // events. We drive the click via Playwright (real pointer events) here;
+    // synthetic React events don't trigger Chromium's native delegation, so
+    // the test would pass vacuously without them.
     it.skipIf(isJSDOM)(
       'should not focus any section when clicking on an ancestor outside the field root',
       async () => {
