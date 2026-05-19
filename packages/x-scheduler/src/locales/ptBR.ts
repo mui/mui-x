@@ -57,7 +57,7 @@ const ptBRDialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Data de início',
   startTimeLabel: 'Hora de início',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Todos os eventos',
   cancel: 'Cancelar',
   confirm: 'Confirmar',

@@ -195,8 +195,13 @@
     "languageTag": "nb-NO",
     "importName": "nbNO",
     "localeName": "Norwegian (Bokmål)",
+<<<<<<< feature/21911-add-preference-of-the-week-start
     "missingKeysCount": 91,
     "totalKeysCount": 91,
+=======
+    "missingKeysCount": 0,
+    "totalKeysCount": 87,
+>>>>>>> master
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-scheduler/src/locales/nbNO.ts"
   },
   {
