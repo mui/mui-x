@@ -515,22 +515,28 @@ export function useGridColumns(
     }
   }, [apiRef, logger, props.columnVisibilityModel]);
 
-  const checkMultiSelectColumns = React.useCallback(() => {
-    if (props.signature !== GridSignature.DataGrid) {
-      return;
-    }
-    if (gridColumnDefinitionsSelector(apiRef).some((col) => col.type === 'multiSelect')) {
-      warnOnce([
-        'MUI X: The `multiSelect` column type is available in Pro and Premium versions',
-        'Use `<DataGridPro />` or `<DataGridPremium />` to render it correctly.',
-        'For more details, see https://mui.com/x/react-data-grid/column-definition/#multi-select',
-      ]);
-    }
-  }, [apiRef, props.signature]);
+  const checkMultiSelectColumns = React.useCallback(
+    (orderedFields: string[]) => {
+      if (props.signature !== GridSignature.DataGrid) {
+        return;
+      }
+      const lookup = gridColumnLookupSelector(apiRef);
+      if (orderedFields.some((field) => lookup[field]?.type === 'multiSelect')) {
+        warnOnce([
+          'MUI X: The `multiSelect` column type is available in Pro and Premium versions',
+          'Use `<DataGridPro />` or `<DataGridPremium />` to render it correctly.',
+          'For more details, see https://mui.com/x/react-data-grid/column-definition/#multi-select-keyboard-interactions',
+        ]);
+      }
+    },
+    [apiRef, props.signature],
+  );
 
   useGridEvent(apiRef, 'columnsChange', checkMultiSelectColumns);
 
-  React.useEffect(checkMultiSelectColumns, [checkMultiSelectColumns]);
+  React.useEffect(() => {
+    checkMultiSelectColumns(gridColumnFieldsSelector(apiRef));
+  }, [checkMultiSelectColumns, apiRef]);
 }
 
 function mergeColumnsState(columnsState: GridColumnsState) {
