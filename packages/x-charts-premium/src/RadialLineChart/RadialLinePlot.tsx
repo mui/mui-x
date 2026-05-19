@@ -24,7 +24,7 @@ export function RadialLinePlot(props: RadialLinePlotProps) {
 
   return (
     <RadialLinePlotRoot className={classes.linePlot} transform={`translate(${cx} ${cy})`}>
-      {completedData.map(({ points, seriesId, color, hidden, curve }) => (
+      {completedData.map(({ points, seriesId, color, hidden, curve, closePath }) => (
         <RadialLine
           key={seriesId}
           seriesId={seriesId}
@@ -32,6 +32,7 @@ export function RadialLinePlot(props: RadialLinePlotProps) {
           hidden={hidden}
           points={points}
           curve={curve}
+          closePath={closePath}
           className={classes.line}
         />
       ))}
