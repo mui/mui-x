@@ -17,7 +17,7 @@ export const SCATTER_ASYNC_THRESHOLD = 10000;
  * Lower spreads the paint over more ticks (smoother, more visibly progressive);
  * higher finishes sooner.
  */
-export const SCATTER_REVEAL_BATCHES_PER_FRAME = 1;
+export const SCATTER_REVEAL_BATCHES_PER_FRAME = 5;
 
 /**
  * How many animation frames are skipped between two reveal ticks. `0` reveals

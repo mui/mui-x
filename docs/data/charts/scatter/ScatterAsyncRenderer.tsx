@@ -126,14 +126,14 @@ export default function ScatterAsyncRenderer() {
           size="small"
           onClick={() => select('sync')}
         >
-          sync
+          Single
         </Button>
         <Button
           variant={mode === 'async' ? 'contained' : 'outlined'}
           size="small"
           onClick={() => select('async')}
         >
-          async
+          Progressive
         </Button>
         <MainThreadSpinner />
         <Typography variant="body2" sx={{ minWidth: 130 }}>

@@ -94,9 +94,6 @@ export default function ScatterAsyncRenderer() {
   const select = (next) => {
     startRef.current = performance.now();
     setElapsedMs(null);
-    // Bumping `runId` also remounts the chart (see `key` below), so the click
-    // always produces a fresh render to measure — even when re-selecting the
-    // current mode — and the previous points are gone until the new ones paint.
     setRunId((id) => id + 1);
     setMode(next);
   };
@@ -108,8 +105,6 @@ export default function ScatterAsyncRenderer() {
     let frame = 0;
     const check = () => {
       const count = containerRef.current?.querySelectorAll('circle').length ?? 0;
-      // The chart was just remounted, so it starts with no points. The first
-      // frame that has any point painted is the first visible update.
       if (count > 0) {
         setElapsedMs(performance.now() - startRef.current);
         return;
@@ -137,14 +132,14 @@ export default function ScatterAsyncRenderer() {
           size="small"
           onClick={() => select('sync')}
         >
-          sync
+          Single
         </Button>
         <Button
           variant={mode === 'async' ? 'contained' : 'outlined'}
           size="small"
           onClick={() => select('async')}
         >
-          async
+          Progressive
         </Button>
         <MainThreadSpinner />
         <Typography variant="body2" sx={{ minWidth: 130 }}>
