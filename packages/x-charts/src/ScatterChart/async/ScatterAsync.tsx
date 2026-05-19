@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { type ScatterProps } from './Scatter';
-import { useUtilityClasses } from './scatterClasses';
-import { ScatterBatch } from './ScatterBatch';
+import { type ScatterProps } from '../Scatter';
+import { useUtilityClasses } from '../scatterClasses';
+import { ScatterAsyncBatch } from './ScatterAsyncBatch';
 import { useScatterReveal } from './scatterAsyncReveal';
 import { SCATTER_BATCH_SIZE } from './scatterRendererConstants';
 
@@ -22,7 +22,7 @@ import { SCATTER_BATCH_SIZE } from './scatterRendererConstants';
  * Note: the public API (`ScatterProps`, slots, interactions) is identical to
  * `Scatter`, so it is a drop-in replacement.
  */
-function AsyncScatter(props: ScatterProps) {
+function ScatterAsync(props: ScatterProps) {
   const { series, colorGetter, onItemClick, slots, slotProps, classes: inClasses } = props;
   const classes = useUtilityClasses({ classes: inClasses });
 
@@ -40,7 +40,7 @@ function AsyncScatter(props: ScatterProps) {
     const start = b * SCATTER_BATCH_SIZE;
     const end = Math.min(count, start + SCATTER_BATCH_SIZE);
     batches.push(
-      <ScatterBatch
+      <ScatterAsyncBatch
         key={b}
         series={series}
         colorGetter={colorGetter}
@@ -58,7 +58,7 @@ function AsyncScatter(props: ScatterProps) {
   return <React.Fragment>{batches}</React.Fragment>;
 }
 
-AsyncScatter.propTypes = {
+ScatterAsync.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -74,4 +74,4 @@ AsyncScatter.propTypes = {
   yScale: PropTypes.func.isRequired,
 } as any;
 
-export { AsyncScatter };
+export { ScatterAsync };

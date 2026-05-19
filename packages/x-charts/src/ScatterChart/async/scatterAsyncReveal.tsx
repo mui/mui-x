@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { type SeriesId } from '../models/seriesType/common';
+import { type SeriesId } from '../../models/seriesType/common';
 import { SCATTER_REVEAL_BATCHES_PER_FRAME } from './scatterRendererConstants';
 
 /**
@@ -66,7 +66,7 @@ export interface ScatterAsyncRevealProviderProps {
 }
 
 /**
- * Owns the single reveal scheduler shared by every `AsyncScatter` of a plot.
+ * Owns the single reveal scheduler shared by every `ScatterAsync` of a plot.
  *
  * Instead of each series running its own animation-frame loop (which would
  * reveal N batches per frame for N series and saturate the CPU), one loop

@@ -9,12 +9,12 @@ import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
-import { AsyncScatter } from './AsyncScatter';
+import { ScatterAsync } from './async/ScatterAsync';
 import {
   ScatterAsyncRevealProvider,
   type ScatterRevealSeries,
-} from './scatterAsyncReveal';
-import { SCATTER_ASYNC_THRESHOLD, SCATTER_BATCH_SIZE } from './scatterRendererConstants';
+} from './async/scatterAsyncReveal';
+import { SCATTER_ASYNC_THRESHOLD, SCATTER_BATCH_SIZE } from './async/scatterRendererConstants';
 import { useUtilityClasses } from './scatterClasses';
 
 export interface ScatterPlotSlots extends ScatterSlots {
@@ -84,7 +84,7 @@ function ScatterPlot(props: ScatterPlotProps) {
 
   // `svg-single` (default) renders one element per point. Above
   // `SCATTER_ASYNC_THRESHOLD` total points it uses the async, batched
-  // implementation (`AsyncScatter`); below it the original `Scatter`. Both are
+  // implementation (`ScatterAsync`); below it the original `Scatter`. Both are
   // selected by `renderer === 'svg-single'`. `svg-batch` is unaffected.
   const totalPointCount = seriesOrder.reduce(
     (sum, seriesId) => (series[seriesId].hidden ? sum : sum + series[seriesId].data.length),
@@ -95,7 +95,7 @@ function ScatterPlot(props: ScatterPlotProps) {
   if (renderer === 'svg-batch') {
     DefaultScatterItems = BatchScatter;
   } else if (totalPointCount > SCATTER_ASYNC_THRESHOLD) {
-    DefaultScatterItems = AsyncScatter;
+    DefaultScatterItems = ScatterAsync;
   } else {
     DefaultScatterItems = Scatter;
   }
@@ -136,7 +136,7 @@ function ScatterPlot(props: ScatterPlotProps) {
   // progressive paint across every series so the per-frame work is bounded
   // regardless of series count.
   const content =
-    ScatterItems === AsyncScatter ? (
+    ScatterItems === ScatterAsync ? (
       <ScatterAsyncRevealProvider
         plan={seriesOrder.reduce((plan, seriesId) => {
           if (!series[seriesId].hidden) {

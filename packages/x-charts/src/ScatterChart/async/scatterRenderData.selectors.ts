@@ -1,11 +1,11 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { type SeriesId } from '../models/seriesType/common';
-import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
-import { selectorChartSeriesProcessed } from '../internals/plugins/corePlugins/useChartSeries';
+import { type SeriesId } from '../../models/seriesType/common';
+import { getValueToPositionMapper } from '../../hooks/getValueToPositionMapper';
+import { selectorChartSeriesProcessed } from '../../internals/plugins/corePlugins/useChartSeries';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+} from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { SCATTER_BATCH_SIZE } from './scatterRendererConstants';
 
 /**
