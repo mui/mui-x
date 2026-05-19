@@ -14,7 +14,9 @@ import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 /* eslint-disable no-underscore-dangle */
 
-// Separates intra-frame feedback loops (#20539) from user-paced resize (#22510).
+// Max time between hasScrollY flips that still counts as the same render
+// chain. Feedback loops (#20539) flip within one browser frame; user-paced
+// resize (#22510) flips are separated by ResizeObserver ticks + resizeThrottleMs.
 const OSCILLATION_FLIP_WINDOW_MS = 100;
 
 export type DimensionsParams = {
@@ -130,9 +132,12 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
 function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api: {}) {
   const isFirstSizing = React.useRef(true);
 
-  // Vertical scrollbar oscillation detector. After 2 hasScrollY flips with no
-  // row-height change and within OSCILLATION_FLIP_WINDOW_MS, force hasScrollY
-  // off — it's a layout feedback loop, not a real need for a scrollbar.
+  // Vertical scrollbar oscillation detector. Counts consecutive hasScrollY
+  // flips with no row-height change. After 2 flips within
+  // OSCILLATION_FLIP_WINDOW_MS it is a layout feedback loop, so hasScrollY is
+  // forced off. The counter resets on row-height changes or when the previous
+  // flip is older than the window (user-paced resize, not a loop).
+  // Only vertical scrollbar can oscillate because column widths are never 'auto'.
   // https://github.com/mui/mui-x/issues/20539
   // https://github.com/mui/mui-x/issues/22510
   const scrollYOscillation = React.useRef({
@@ -228,7 +233,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           }
         }
 
-        // Detect vertical scrollbar oscillation (see scrollYOscillation above).
+        // Detect vertical scrollbar oscillation — caused by stale rootSize or
+        // the horizontal scrollbar's height cascading. See scrollYOscillation.
         {
           const osc = scrollYOscillation.current;
           const heightsChanged =
