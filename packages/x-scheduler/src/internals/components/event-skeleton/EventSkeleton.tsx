@@ -1,4 +1,5 @@
 'use client';
+// TODO #22309: unify with EventTimelinePremiumSkeleton — diverges in props (`data-variant` required here), sizing (variant-based absolute positioning vs theme-derived height), and styled context. On unification, prefer the timeline's theme-derived sizing.
 import Skeleton from '@mui/material/Skeleton';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';

@@ -14,11 +14,67 @@ export class SchedulerLazyLoadingPlugin<
   State extends SchedulerState,
   Parameters extends SchedulerParameters<TEvent, any>,
 > {
-  private store: SchedulerStore<TEvent, any, State, Parameters>;
+  protected store: SchedulerStore<TEvent, any, State, Parameters>;
 
   private dataManager: SchedulerDataManager | null = null;
   private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
 
+  private isFetchScheduled = false;
+  private pendingIsInstantLoad = false;
+  private pendingComputeRange:
+    | (() => { start: TemporalSupportedObject; end: TemporalSupportedObject })
+    | null = null;
+
+  /**
+   * Range key of the most recently requested fetch. Used to skip stale fetches:
+   * if a request resolves while a different range has been requested since, its
+   * cache write + state update are dropped so the latest range's data isn't
+   * polluted by stale, possibly-deleted events.
+   */
+  private latestRequestedRangeKey: string | null = null;
+
+  /**
+   * Coalesces multiple calls within the same tick into one microtask. The latest
+   * `computeRange` wins; `isInstantLoad=true` is sticky across coalesced calls.
+   */
+  protected scheduleFetch = (
+    computeRange: () => { start: TemporalSupportedObject; end: TemporalSupportedObject },
+    isInstantLoad: boolean,
+  ) => {
+    if (isInstantLoad) {
+      this.pendingIsInstantLoad = true;
+    }
+    this.pendingComputeRange = computeRange;
+
+    if (this.isFetchScheduled) {
+      return;
+    }
+    this.isFetchScheduled = true;
+
+    queueMicrotask(async () => {
+      try {
+        this.isFetchScheduled = false;
+        const instantLoad = this.pendingIsInstantLoad;
+        const compute = this.pendingComputeRange;
+        this.pendingIsInstantLoad = false;
+        this.pendingComputeRange = null;
+        if (!compute) {
+          return;
+        }
+        const range = compute();
+        await this.queueDataFetchForRange(range, instantLoad);
+      } catch (error) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('MUI X Scheduler: unexpected error in lazy-loading microtask', error);
+        }
+      }
+    });
+  };
+
+  // TODO #22418: add a dispose lifecycle. The `dataManager` keeps timers (debounce), the
+  // `eventsUpdated` subscription below is never unsubscribed, and consumer plugins
+  // attach `registerStoreEffect` callbacks. After unmount, in-flight fetches
+  // and pending debounce callbacks can still write to a torn-down store.
   constructor(store: SchedulerStore<TEvent, any, State, Parameters>) {
     this.store = store;
 
@@ -29,7 +85,6 @@ export class SchedulerLazyLoadingPlugin<
         this.loadEventsFromDataSource,
       );
 
-      // Subscribe to events updated event to sync cache
       this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated);
     }
   }
@@ -41,26 +96,32 @@ export class SchedulerLazyLoadingPlugin<
     },
     immediate = false,
   ) => {
-    if (this.dataManager) {
-      const { adapter } = this.store.state;
+    try {
+      if (this.dataManager) {
+        const { adapter } = this.store.state;
+        this.latestRequestedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
 
-      // Set loading state immediately (before the debounce delay)
+        // Flip `isLoading` synchronously so the skeleton shows immediately,
+        // before any debounce delay on the queued path.
+        if (
+          this.cache &&
+          !this.cache.hasCoverage(
+            adapter.getTime(range.start),
+            adapter.getTime(adapter.endOfDay(range.end)),
+          )
+        ) {
+          this.store.set('isLoading', true);
+        }
 
-      if (
-        this.cache &&
-        !this.cache.hasCoverage(
-          adapter.getTime(range.start),
-          adapter.getTime(adapter.endOfDay(range.end)),
-        )
-      ) {
-        this.store.set('isLoading', true);
+        if (immediate) {
+          await this.dataManager.queueImmediate([range]);
+        } else {
+          await this.dataManager.queue([range]);
+        }
       }
-
-      if (immediate) {
-        await this.dataManager.queueImmediate([range]);
-      } else {
-        await this.dataManager.queue([range]);
-      }
+    } catch (error) {
+      this.store.pushError(error);
+      this.store.set('isLoading', false);
     }
   };
 
@@ -83,48 +144,61 @@ export class SchedulerLazyLoadingPlugin<
         adapter.getTime(adapter.endOfDay(range.end)),
       )
     ) {
-      const allCachedEvents = this.cache?.getAll() || [];
-      const eventsState = buildEventsState(
-        { ...this.store.parameters, events: allCachedEvents } as Parameters,
-        adapter,
-        displayTimezone,
-      );
+      try {
+        const allCachedEvents = this.cache.getAll();
+        const eventsState = buildEventsState(
+          { ...this.store.parameters, events: allCachedEvents } as Parameters,
+          adapter,
+          displayTimezone,
+          this.store.state.recurringEventsPlugin,
+        );
 
-      this.store.update({
-        ...this.store.state,
-        ...eventsState,
-        isLoading: false,
-      });
-
-      await this.dataManager.setRequestSettled(range);
+        this.store.update({
+          ...this.store.state,
+          ...eventsState,
+          isLoading: false,
+          errors: [],
+        });
+      } finally {
+        await this.dataManager.setRequestSettled(range);
+      }
 
       return;
     }
 
     try {
+      const fetchedRangeKey = `${adapter.getTime(range.start)}:${adapter.getTime(adapter.endOfDay(range.end))}`;
       const events = await dataSource.getEvents(range.start, range.end);
+
+      // Drop the result if a more recent range has been requested since this
+      // fetch started — its events are now stale relative to the latest range
+      // (e.g. a server-side delete could be hidden by re-introducing them).
+      if (this.latestRequestedRangeKey !== fetchedRangeKey) {
+        return;
+      }
+
       this.cache!.setRange(
         adapter.getTime(range.start),
         adapter.getTime(adapter.endOfDay(range.end)),
         events ?? [],
       );
+      // Build from the full cache so disjoint already-cached ranges stay visible
+      // when the visible range expands to cover them.
+      const allCachedEvents = this.cache.getAll();
       const eventsState = buildEventsState(
-        { ...this.store.parameters, events } as Parameters,
+        { ...this.store.parameters, events: allCachedEvents } as Parameters,
         adapter,
         displayTimezone,
+        this.store.state.recurringEventsPlugin,
       );
       this.store.update({
         ...this.store.state,
         ...eventsState,
         errors: [],
       });
-      // Mark request as settled
-      await this.dataManager.setRequestSettled(range);
     } catch (error) {
-      this.store.set('errors', [error]);
-      await this.dataManager.setRequestSettled(range);
+      this.store.pushError(error);
     } finally {
-      // Unset loading state
       this.store.set('isLoading', false);
       await this.dataManager.setRequestSettled(range);
     }
@@ -143,13 +217,16 @@ export class SchedulerLazyLoadingPlugin<
       const createdIdSet = new Set(created);
       const createdEvents: TEvent[] = [];
       const updatedEvents: TEvent[] = [];
+      const seenIds = new Set<unknown>();
 
       for (const event of newEvents) {
         const id = (event as { id: SchedulerEventId }).id;
         if (createdIdSet.has(id)) {
           createdEvents.push(event);
+          seenIds.add(id);
         } else if (updated.has(id)) {
           updatedEvents.push(event);
+          seenIds.add(id);
         }
       }
 
@@ -160,10 +237,16 @@ export class SchedulerLazyLoadingPlugin<
       });
 
       if (!shouldUpdateEvents.success) {
+        this.store.pushError(
+          new Error(
+            'MUI X Scheduler: `dataSource.updateEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
+              'To surface a specific message to the user, throw a descriptive Error from `updateEvents` instead. ' +
+              'See the `updateEvents` contract at https://mui.com/x/react-scheduler/event-calendar/lazy-loading/ (EventCalendar) or https://mui.com/x/react-scheduler/event-timeline/lazy-loading/ (EventTimeline).',
+          ),
+        );
         return;
       }
 
-      // Update cache
       for (const id of deleted) {
         this.cache.remove(String(id));
       }
@@ -175,18 +258,34 @@ export class SchedulerLazyLoadingPlugin<
         this.cache.upsert(event);
       }
 
+      if (process.env.NODE_ENV !== 'production') {
+        const warnMissingId = (id: unknown) => {
+          if (!seenIds.has(id)) {
+            console.warn(
+              `MUI X Scheduler: eventsUpdated reported id "${String(id)}" as created or updated, ` +
+                `but it is missing from \`newEvents\`. The cache was not updated for this id. ` +
+                `Make sure the publisher includes the new version of every modified event in \`newEvents\`.`,
+            );
+          }
+        };
+        createdIdSet.forEach(warnMissingId);
+        updated.forEach((_value, id) => warnMissingId(id));
+      }
+
       const eventsState = buildEventsState(
         { ...this.store.parameters, events: newEvents },
         adapter,
         displayTimezone,
+        this.store.state.recurringEventsPlugin,
       );
 
       this.store.update({
         ...this.store.state,
         ...eventsState,
+        errors: [],
       });
     } catch (error) {
-      this.store.set('errors', [error]);
+      this.store.pushError(error);
     }
   };
 }

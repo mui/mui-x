@@ -1,5 +1,5 @@
-import { Adapter } from '../../../use-adapter';
-import { TemporalSupportedObject } from '../../../models';
+import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
+import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { getWeekDayCode, nthWeekdayOfMonth } from './internal-utils';
 
 /**
