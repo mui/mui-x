@@ -100,6 +100,10 @@ describe('<ScatterChart />', () => {
         <ScatterChart {...config} disableHitArea series={[{ id: 's1', data: config.dataset }]} />
       </div>,
     );
+    // The scatter series processor is async, so the markers render after a microtask.
+    await waitFor(() =>
+      expect(document.querySelectorAll<HTMLElement>('circle').length).to.equal(5),
+    );
     const marks = document.querySelectorAll<HTMLElement>('circle');
 
     await user.pointer([

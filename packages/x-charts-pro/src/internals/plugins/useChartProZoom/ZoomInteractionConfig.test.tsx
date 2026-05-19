@@ -1,7 +1,7 @@
 /* eslint-disable no-promise-executor-return */
 
 import * as React from 'react';
-import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
@@ -732,8 +732,12 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       const layerContainer = container.querySelector<HTMLElement>(
         `.${chartsSvgLayerClasses.root}`,
       )!.parentElement!;
-      expect(getAxisTickValues('x')).to.deep.equal(['10', '20']);
-      expect(getAxisTickValues('y')).to.deep.equal(['10', '20']);
+      // The scatter series processor is async, so the axis domain settles after
+      // a microtask.
+      await waitFor(() => {
+        expect(getAxisTickValues('x')).to.deep.equal(['10', '20']);
+        expect(getAxisTickValues('y')).to.deep.equal(['10', '20']);
+      });
 
       // Simulate wheel scroll
       fireEvent.wheel(layerContainer, {
@@ -884,6 +888,9 @@ describe.skipIf(isJSDOM)('ZoomInteractionConfig Keys and Modes', () => {
       const layerContainer = container.querySelector<HTMLElement>(
         `.${chartsSvgLayerClasses.root}`,
       )!.parentElement!;
+      // The scatter series processor is async; wait for the axis to settle
+      // before capturing the baseline ticks.
+      await waitFor(() => expect(getAxisTickValues('x').length).to.be.greaterThan(0));
       const initialXTicks = getAxisTickValues('x');
 
       // Simulate wheel scroll - should NOT pan because both axes have zoom

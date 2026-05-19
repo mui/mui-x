@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { renderHook } from '@mui/internal-test-utils';
+import { renderHook, waitFor } from '@mui/internal-test-utils';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { type ScatterSeriesType } from '@mui/x-charts/models';
 import { useScatterWebGLPlotData } from './useScatterWebGLPlotData';
@@ -43,14 +43,15 @@ function createWrapper(series: ScatterSeriesType[], extraKey: number = 0) {
 }
 
 describe('useScatterWebGLPlotData', () => {
-  it('includes every visible point', () => {
+  it('includes every visible point', async () => {
     const { result } = renderHook(() => useScatterWebGLPlotData(), {
       wrapper: createWrapper(baseSeries),
     });
-    expect(result.current.pointCount).to.equal(4);
+    // The scatter series processor is async, so the data settles after a microtask.
+    await waitFor(() => expect(result.current.pointCount).to.equal(4));
   });
 
-  it('skips data points that fall outside the axis scale', () => {
+  it('skips data points that fall outside the axis scale', async () => {
     const series: ScatterSeriesType[] = [
       {
         type: 'scatter',
@@ -66,14 +67,16 @@ describe('useScatterWebGLPlotData', () => {
     const { result } = renderHook(() => useScatterWebGLPlotData(), {
       wrapper: createWrapper(series),
     });
-    expect(result.current.pointCount).to.equal(2);
+    await waitFor(() => expect(result.current.pointCount).to.equal(2));
   });
 
-  it('reuses sizes and colors Float32Arrays when the series identity is stable', () => {
+  it('reuses sizes and colors Float32Arrays when the series identity is stable', async () => {
     const { result, rerender } = renderHook(() => useScatterWebGLPlotData(), {
       wrapper: createWrapper(baseSeries),
     });
 
+    // Wait for the async scatter processor to settle before capturing.
+    await waitFor(() => expect(result.current.pointCount).to.equal(4));
     const firstSizes = result.current.sizes;
     const firstColors = result.current.colors;
 
