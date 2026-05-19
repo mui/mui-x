@@ -46,7 +46,7 @@ export function usePreviousMonthDisabled(
     const firstEnabledMonth = adapter.startOfMonth(
       disablePast && adapter.isAfter(now, minDate) ? now : minDate,
     );
-    return !adapter.isBefore(firstEnabledMonth, month);
+    return !adapter.isBefore(firstEnabledMonth, adapter.startOfMonth(month));
   }, [disablePast, minDate, month, adapter, timezone]);
 }
 
