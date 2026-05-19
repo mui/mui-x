@@ -14,7 +14,6 @@ import {
   getDataGridUtilityClass,
   useGridRootProps,
   useGridApiContext,
-  useGridEvent,
   useGridSelector,
 } from '@mui/x-data-grid';
 import {
@@ -166,24 +165,25 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
     return reordered;
   }, [value, filterModel.items, colDef.field]);
 
-  // Focus the overflow chip when the cell is focused. Covers mount-with-focus (e.g.
-  // after exiting edit mode via Escape, which doesn't publish a focus event) and
-  // popup-close-while-focused. Ref is null when no overflow chip is rendered, no-op.
+  // Focus the overflow chip when the cell is focused, and close the popup on focus loss.
+  // Centralized in a single effect to avoid registering a `cellFocusOut` listener per
+  // cell (EventManager warns past 20). Covers mount-with-focus (e.g. after exiting edit
+  // mode via Escape, which doesn't publish a focus event) and popup-close-while-focused.
   React.useEffect(() => {
-    if (isAutoHeight || !hasFocus || popupOpen) {
+    if (isAutoHeight) {
+      return;
+    }
+    if (!hasFocus) {
+      setPopupOpen(false);
+      return;
+    }
+    if (popupOpen) {
       return;
     }
     if (overflowChipRef.current && overflowChipRef.current !== document.activeElement) {
       overflowChipRef.current.focus();
     }
   }, [hasFocus, popupOpen, isAutoHeight]);
-
-  useGridEvent(apiRef, 'cellFocusOut', (params) => {
-    if (params.id !== id || params.field !== colDef.field) {
-      return;
-    }
-    setPopupOpen(false);
-  });
 
   const handleOverflowClick = (event: React.MouseEvent) => {
     // event.detail === 0 means keyboard-triggered click (Enter keyup on focused button).
