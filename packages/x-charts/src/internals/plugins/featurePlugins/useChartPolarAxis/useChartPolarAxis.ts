@@ -21,6 +21,7 @@ import {
 import { getRotationAxisIndex } from './getAxisIndex';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
+import { isPolarSeriesType } from '../../../isPolar';
 
 export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
@@ -242,7 +243,7 @@ export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = (
       const seriesValues: Record<string, number | null | undefined> = {};
 
       Object.keys(processedSeries)
-        .filter((seriesType): seriesType is 'radar' => seriesType === 'radar')
+        .filter(isPolarSeriesType)
         .forEach((seriesType) => {
           processedSeries[seriesType]?.seriesOrder.forEach((seriesId) => {
             const seriesItem = processedSeries[seriesType]!.series[seriesId];
