@@ -1,6 +1,5 @@
-import * as React from 'react';
-import { LineChart, LineChartSlots } from '@mui/x-charts/LineChart';
-import { PropsFromSlot } from '@mui/x-charts';
+import { LineChart, type LineChartSlots } from '@mui/x-charts/LineChart';
+import type { PropsFromSlot } from '@mui/x-internals';
 
 declare module '@mui/x-charts' {
   interface TooltipPropsOverrides {
