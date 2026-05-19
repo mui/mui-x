@@ -37,6 +37,7 @@ describe('<AdapterDayjsBuddhist />', () => {
     describe('with Thai locale', () => {
       const { render, adapter } = createPickerRenderer({
         adapterName: 'dayjs-buddhist',
+        Adapter: AdapterDayjsBuddhist,
         locale: { code: 'th' },
       });
 

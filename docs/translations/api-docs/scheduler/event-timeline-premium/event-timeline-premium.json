@@ -94,6 +94,18 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the current time indicator circle element"
     },
+    "errorAlert": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "error alert elements"
+    },
+    "errorContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the error container element"
+    },
+    "errorMessage": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "error message elements"
+    },
     "event": { "description": "Styles applied to {{nodeName}}.", "nodeName": "event elements" },
     "eventDialog": {
       "description": "Styles applied to {{nodeName}}.",
@@ -314,6 +326,10 @@
     "eventsHeaderCellContent": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the events header cell content element"
+    },
+    "eventSkeleton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event skeleton elements rendered while events are loading"
     },
     "eventsSubGrid": {
       "description": "Styles applied to {{nodeName}}.",

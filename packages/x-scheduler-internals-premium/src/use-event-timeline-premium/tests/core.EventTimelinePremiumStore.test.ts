@@ -1,6 +1,7 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { schedulerRecurringEventsPlugin } from '../../internals/plugins/schedulerRecurringEventsPlugin';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
 const DEFAULT_PARAMS = { events: [] };
@@ -30,11 +31,11 @@ describe('Core - EventTimelinePremiumStore', () => {
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingUpdateRecurringEventParameters: null,
-        plan: 'premium',
         preferences: EMPTY_OBJECT,
         processedEventLookup: new Map(),
         processedResourceLookup: new Map(),
         readOnly: false,
+        recurringEventsPlugin: schedulerRecurringEventsPlugin,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [],
         resourceModelStructure: undefined,
@@ -45,6 +46,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         visibleResources: {},
         isLoading: false,
         errors: [],
+        hasInitialized: false,
       };
 
       expect(store.state).to.deep.equal(expectedState);

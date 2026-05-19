@@ -14,7 +14,7 @@ export function getDayList(parameters: GetDaytListParameters): GetDaytListReturn
       // TODO: fix mui/no-guarded-throw
       // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
-        `MUI: getDayList: The 'end' parameter must be a day after the 'start' parameter.`,
+        `MUI X Scheduler: getDayList: The 'end' parameter must be a day after the 'start' parameter.`,
       );
     }
   }
