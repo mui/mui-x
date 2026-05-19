@@ -119,7 +119,9 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
   const classes = useUtilityClasses(rootProps as OwnerState);
   const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-  const isAutoHeight = privateApiRef.current.rowHasAutoHeight(id);
+  const isAutoHeight = useGridSelector(privateApiRef, () =>
+    privateApiRef.current.rowHasAutoHeight(id),
+  );
 
   const [popupOpen, setPopupOpen] = React.useState(false);
   const cellRef = React.useRef<HTMLDivElement>(null);
