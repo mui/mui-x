@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "alwaysVisible": {
+      "description": "Render the suggestions even when the thread already contains messages. By default <code>SuggestionsRoot</code> hides itself once a message exists, since the empty state is its primary use case. Set this to <code>true</code> to use it inline after an assistant reply (e.g. for follow-up prompts)."
+    },
     "autoSubmit": { "description": "Whether to auto-submit when a suggestion is clicked." },
     "suggestions": {
       "description": "Suggestion items. Strings are normalized to <code>{ value, label }</code>. Ignored when <code>children</code> are provided."

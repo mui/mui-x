@@ -40,6 +40,14 @@ export interface SuggestionsRootProps extends Omit<
    * @default false
    */
   autoSubmit?: boolean;
+  /**
+   * Render the suggestions even when the thread already contains messages.
+   * By default `SuggestionsRoot` hides itself once a message exists, since
+   * the empty state is its primary use case. Set this to `true` to use it
+   * inline after an assistant reply (e.g. for follow-up prompts).
+   * @default false
+   */
+  alwaysVisible?: boolean;
   children?: React.ReactNode;
 }
 
@@ -51,7 +59,15 @@ export const SuggestionsRoot = React.forwardRef(function SuggestionsRoot(
   props: SuggestionsRootProps,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const { slots, slotProps, suggestions, autoSubmit = false, children, ...other } = props;
+  const {
+    slots,
+    slotProps,
+    suggestions,
+    autoSubmit = false,
+    alwaysVisible = false,
+    children,
+    ...other
+  } = props;
   const messageIds = useMessageIds();
   const { setValue, submit } = useChatComposer();
   const localeText = useChatLocaleText();
@@ -103,7 +119,7 @@ export const SuggestionsRoot = React.forwardRef(function SuggestionsRoot(
     },
   });
 
-  if (!isEmpty) {
+  if (!isEmpty && !alwaysVisible) {
     return null;
   }
 

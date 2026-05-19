@@ -163,11 +163,21 @@ function DefaultMessageItem({
     Boolean(message?.createdAt) || Boolean(message?.editedAt) || Boolean(message?.status);
   const inlineMeta = isDefault && !isStreaming && hasMeta ? <ChatMessageInlineMeta /> : undefined;
 
+  const messageContentProps = slotProps?.messageContent ?? {};
+  const consumerAfterContent = messageContentProps.afterContent;
+  const composedAfterContent =
+    consumerAfterContent !== undefined || inlineMeta !== undefined ? (
+      <React.Fragment>
+        {consumerAfterContent}
+        {inlineMeta}
+      </React.Fragment>
+    ) : undefined;
+
   return (
     <MessageGroupComponent messageId={id} {...(slotProps?.messageGroup ?? {})}>
       <MessageRootComponent messageId={id} {...(slotProps?.messageRoot ?? {})}>
         <MessageAvatarComponent {...(slotProps?.messageAvatar ?? {})} />
-        <MessageContentComponent {...(slotProps?.messageContent ?? {})} afterContent={inlineMeta} />
+        <MessageContentComponent {...messageContentProps} afterContent={composedAfterContent} />
         {/* External meta is only used in the compact variant */}
         {!isDefault && <MessageMetaComponent {...(slotProps?.messageMeta ?? {})} />}
         {MessageActionsSlot && (

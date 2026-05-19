@@ -92,6 +92,14 @@ ChatSuggestions.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * Render the suggestions even when the thread already contains messages.
+   * By default `SuggestionsRoot` hides itself once a message exists, since
+   * the empty state is its primary use case. Set this to `true` to use it
+   * inline after an assistant reply (e.g. for follow-up prompts).
+   * @default false
+   */
+  alwaysVisible: PropTypes.bool,
+  /**
    * Whether to auto-submit when a suggestion is clicked.
    * @default false
    */
