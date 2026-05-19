@@ -15,7 +15,7 @@ function getSundayDayNumber(adapter: TemporalAdapter): number {
   let cached = sundayDayNumberCache.get(adapter);
   if (cached === undefined) {
     // 2025-01-05 is a Sunday; use UTC noon to survive any timezone offset
-    const knownSunday = adapter.date('2025-01-05T12:00:00.000Z', 'UTC');
+    const knownSunday = adapter.date('2025-01-05', 'UTC');
     cached = adapter.getDayOfWeek(knownSunday);
     sundayDayNumberCache.set(adapter, cached);
   }
