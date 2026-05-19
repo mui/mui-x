@@ -14,11 +14,7 @@ import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 /* eslint-disable no-underscore-dangle */
 
-// Boundary between an intra-frame layout feedback loop (consecutive hasScrollY
-// flips inside a single browser frame, see #20539) and user-paced resize flips
-// (separated by ResizeObserver ticks and resizeThrottleMs, see #22510). Two
-// flips inside this window are treated as oscillation and the vertical
-// scrollbar is force-suppressed; flips outside it reset the counter.
+// Separates intra-frame feedback loops (#20539) from user-paced resize (#22510).
 const OSCILLATION_FLIP_WINDOW_MS = 100;
 
 export type DimensionsParams = {
@@ -134,15 +130,9 @@ function initializeState(params: ParamsWithDefaults): Dimensions.State {
 function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api: {}) {
   const isFirstSizing = React.useRef(true);
 
-  // Vertical scrollbar oscillation detector.
-  // Counts consecutive hasScrollY flips that happen with no row-height change
-  // and within the same synchronous render chain (consecutive flips occur within
-  // a few milliseconds, whereas user-driven resize flips are paced by user input
-  // and resizeThrottleMs and are separated by hundreds of milliseconds).
-  // After 2 flips it is certainly a layout feedback loop, so every further flip
-  // is forced to false (no scrollbar). The counter resets when row heights
-  // change or when enough time has passed since the previous flip.
-  // Only vertical scrollbar can oscillate because column widths are never 'auto'.
+  // Vertical scrollbar oscillation detector. After 2 hasScrollY flips with no
+  // row-height change and within OSCILLATION_FLIP_WINDOW_MS, force hasScrollY
+  // off — it's a layout feedback loop, not a real need for a scrollbar.
   // https://github.com/mui/mui-x/issues/20539
   // https://github.com/mui/mui-x/issues/22510
   const scrollYOscillation = React.useRef({
@@ -238,11 +228,7 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           }
         }
 
-        // Detect vertical scrollbar oscillation.
-        // Track consecutive hasScrollY flips with no row-height change.
-        // Once confirmed (≥ 2 flips), force hasScrollY off — the scrollbar is
-        // not genuinely needed, it is a layout feedback loop caused by stale
-        // rootSize or the horizontal scrollbar's height cascading.
+        // Detect vertical scrollbar oscillation (see scrollYOscillation above).
         {
           const osc = scrollYOscillation.current;
           const heightsChanged =
@@ -260,13 +246,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           }
 
           if (prevDimensions.isReady && hasScrollY !== prevDimensions.hasScrollY) {
-            // performance.now is monotonic — Date.now reads the wall clock and
-            // could jump (NTP, manual time change), breaking the elapsed-time check.
+            // performance.now is monotonic; Date.now can jump (NTP, clock change).
             const now = performance.now();
-            // Reset when the previous flip is too old to be part of the same
-            // synchronous render chain. Layout feedback loops flip within a single
-            // browser frame; user-driven resize flips are paced by user input and
-            // resizeThrottleMs (>= 60ms by default).
             if (now - osc.lastFlipTimestamp > OSCILLATION_FLIP_WINDOW_MS) {
               osc.counter = 0;
             }
