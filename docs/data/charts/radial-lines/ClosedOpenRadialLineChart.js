@@ -26,7 +26,7 @@ export default function ClosedOpenRadialLineChart() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 2, width: '100%', mb: 2 }}>
+      <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 2, width: '100%' }}>
         <FormControlLabel
           checked={area}
           control={<Checkbox onChange={(event) => setArea(event.target.checked)} />}
@@ -43,7 +43,7 @@ export default function ClosedOpenRadialLineChart() {
         />
       </Stack>
       <RadialLineChart
-        height={400}
+        height={300}
         series={[
           {
             data: [3, 5, 7, 10, 12, 15, 18, 16, 13, 9, 6, 4],
@@ -52,7 +52,7 @@ export default function ClosedOpenRadialLineChart() {
             closePath,
           },
         ]}
-        rotationAxis={[{ scaleType: 'point', data: months }]}
+        rotationAxis={[{ scaleType: 'point', data: months, disableLine: true }]}
         radiusAxis={[{ scaleType: 'linear' }]}
         grid={{ rotation: true, radius: true }}
       />
