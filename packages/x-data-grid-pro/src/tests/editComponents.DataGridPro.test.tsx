@@ -802,19 +802,6 @@ describe('<DataGridPro /> - Edit components', () => {
       });
     });
 
-    it.skipIf(isJSDOM)('should restore focus to the cell after Escape so arrow nav works', async () => {
-      const { user } = render(<TestCase />);
-
-      const cell = getCell(0, 0);
-      await user.dblClick(cell);
-      await user.keyboard('{Escape}');
-
-      await waitFor(() => {
-        expect(cell).not.to.have.class('MuiDataGrid-cell--editing');
-      });
-      expect(cell.contains(document.activeElement)).to.equal(true);
-    });
-
     it('should work with object value options', async () => {
       defaultData.columns = [
         {
@@ -1042,6 +1029,8 @@ describe('<DataGridPro /> - Edit components', () => {
         await waitFor(() => {
           expect(getRow(0)).not.to.have.class('MuiDataGrid-row--editing');
         });
+        // Focus must stay inside the cell so arrow-key navigation continues to work.
+        expect(cell.contains(document.activeElement)).to.equal(true);
       });
     });
 
