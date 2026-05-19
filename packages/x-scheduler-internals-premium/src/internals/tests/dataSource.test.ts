@@ -226,6 +226,74 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(stored?.title).to.equal('Event 1 Updated');
     });
 
+    it('should upsert into the cache the same event reference passed to dataSource.updateEvents', async () => {
+      const updateEventsSpy = spy(async (_params: UpdateEventsParams) => ({ success: true }));
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: updateEventsSpy,
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+
+      store.updateEvent({
+        id: '1',
+        title: 'Bucketed payload',
+      });
+
+      await flushMicrotasks();
+
+      const payloadEvent = updateEventsSpy.firstCall.args[0].updated[0];
+
+      // A re-fetch of the same range serves from cache. The cached event must be
+      // the exact same reference forwarded to the data source — both consumers
+      // share the bucketed array produced by the store.
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+
+      const stored = store.state.eventModelLookup.get('1');
+      expect(stored).to.equal(payloadEvent);
+    });
+
+    it('should forward a mixed create+update+delete batch to dataSource.updateEvents in one call', async () => {
+      const updateEventsSpy = spy(async (_params: UpdateEventsParams) => ({ success: true }));
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: updateEventsSpy,
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      const updatedEvent: TestEvent = {
+        id: '1',
+        title: 'Updated',
+        start: '2025-07-01T00:00:00.000Z',
+        end: '2025-07-01T11:00:00.000Z',
+      };
+      const createdEvent: TestEvent = {
+        id: '2',
+        title: 'Created',
+        start: '2025-07-02T00:00:00.000Z',
+        end: '2025-07-02T11:00:00.000Z',
+      };
+
+      store.publishEvent('eventsUpdated', {
+        deleted: ['3'],
+        updated: [updatedEvent],
+        created: [createdEvent],
+        newEvents: [updatedEvent, createdEvent],
+      });
+
+      await vi.waitFor(() => expect(updateEventsSpy.calledOnce).to.equal(true));
+
+      const args = updateEventsSpy.firstCall.args[0];
+      expect(args.deleted).toEqual(['3']);
+      expect(args.updated).toHaveLength(1);
+      expect(args.updated[0]).to.equal(updatedEvent);
+      expect(args.created).toHaveLength(1);
+      expect(args.created[0]).to.equal(createdEvent);
+    });
+
     it('should pass IDs (not full event objects) to dataSource.updateEvents on delete', async () => {
       const mockUpdateEvents = async (_params: UpdateEventsParams) => ({ success: true });
       const updateEventsSpy = spy(mockUpdateEvents);
