@@ -1,8 +1,9 @@
 import type { DefaultizedSeriesType } from '../models/seriesType';
 import type { ColorCallbackValue } from '../models/seriesType/common';
+import type { ChartSeriesType } from '../models/seriesType/config';
 import { getSeriesColorFn } from './getSeriesColorFn';
 
-type LineOrBarSeriesType = 'line' | 'bar' | 'radialLine' | 'radialBar';
+type LineOrBarSeriesType = Extract<ChartSeriesType, 'line' | 'bar' | 'radialLine' | 'radialBar'>;
 export interface ResolveColorProcessorParams<SeriesType extends LineOrBarSeriesType, V> {
   series: Pick<DefaultizedSeriesType<SeriesType>, 'color' | 'data' | 'colorGetter'>;
   valueColorScale?: (value: number) => string | null;
