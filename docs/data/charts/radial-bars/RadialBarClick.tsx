@@ -51,7 +51,7 @@ const radialChartParams = {
   ],
   radiusAxis: [
     {
-      tickLabelPosition: 'center',
+      tickLabelPosition: 'center' as const,
       disableLine: true,
       disableTicks: true,
     },

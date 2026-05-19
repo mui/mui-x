@@ -37,8 +37,22 @@ const series = [
 const radialChartParams = {
   series,
   rotationAxis: [
-    { data: ['0', '3', '6', '9', '12'], id: 'axis1', scaleType: 'band' },
+    {
+      data: ['0', '3', '6', '9', '12'],
+      id: 'axis1',
+      scaleType: 'band',
+      disableLine: true,
+      disableTicks: true,
+    },
   ],
+  radiusAxis: [
+    {
+      tickLabelPosition: 'center',
+      disableLine: true,
+      disableTicks: true,
+    },
+  ],
+  grid: { rotation: true, radius: true },
   height: 400,
 };
 
