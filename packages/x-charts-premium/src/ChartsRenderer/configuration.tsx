@@ -187,10 +187,7 @@ const getLegendSection = (
       label: localeText.chartConfigurationLegendDirection,
       type: 'select',
       default: defaultDirection,
-      options: [
-        { content: localeText.chartConfigurationOptionHorizontal, value: 'horizontal' },
-        { content: localeText.chartConfigurationOptionVertical, value: 'vertical' },
-      ],
+      options: getLocalizedConfigOptions(localeText, ['horizontal', 'vertical']),
     },
   },
 });
