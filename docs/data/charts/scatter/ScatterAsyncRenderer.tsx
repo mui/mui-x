@@ -7,8 +7,7 @@ import Chance from 'chance';
 
 const NUMBER_OF_SERIES = 2;
 
-const SYNC_COUNT = 10000;
-const ASYNC_COUNT = 20000;
+const POINT_COUNT = 20000;
 
 // Gaussian-ish blobs so the progressive, batched paint is easy to see. Points
 // are split into `NUMBER_OF_SERIES` contiguous series, each offset into its
@@ -35,8 +34,8 @@ function makeSeries(chance: Chance.Chance, count: number) {
 
 // Built once outside the component so toggling does not regenerate the points
 // and the series keep stable references.
-const syncSeries = makeSeries(new Chance(42), SYNC_COUNT);
-const asyncSeries = makeSeries(new Chance(43), ASYNC_COUNT);
+const syncSeries = makeSeries(new Chance(42), POINT_COUNT);
+const asyncSeries = makeSeries(new Chance(43), POINT_COUNT);
 
 // A spinner whose rotation is advanced in JS on every animation frame (not a
 // CSS animation, which runs on the compositor and stays smooth regardless).
@@ -85,11 +84,9 @@ export default function ScatterAsyncRenderer() {
   // Bumped on every click; the measurement effect keys off it.
   const [runId, setRunId] = React.useState(0);
   const startRef = React.useRef<number | null>(null);
-  const baselineRef = React.useRef(0);
 
   const select = (next: 'sync' | 'async') => {
     startRef.current = performance.now();
-    baselineRef.current = containerRef.current?.querySelectorAll('circle').length ?? 0;
     setElapsedMs(null);
     setRunId((id) => id + 1);
     setMode(next);
@@ -102,9 +99,7 @@ export default function ScatterAsyncRenderer() {
     let frame = 0;
     const check = () => {
       const count = containerRef.current?.querySelectorAll('circle').length ?? 0;
-      // First animation frame on which the painted points differ from what was
-      // on screen at click time = the first visible update.
-      if (count !== baselineRef.current) {
+      if (count > 0) {
         setElapsedMs(performance.now() - startRef.current!);
         return;
       }
@@ -123,8 +118,8 @@ export default function ScatterAsyncRenderer() {
       >
         <Typography variant="h6" sx={{ textAlign: 'center' }}>
           {mode === 'sync'
-            ? `${SYNC_COUNT.toLocaleString()} points`
-            : `${ASYNC_COUNT.toLocaleString()} points`}
+            ? `${POINT_COUNT.toLocaleString()} points`
+            : `${POINT_COUNT.toLocaleString()} points`}
         </Typography>
         <Button
           variant={mode === 'sync' ? 'contained' : 'outlined'}
@@ -147,13 +142,15 @@ export default function ScatterAsyncRenderer() {
       </Stack>
       <div ref={containerRef} style={{ width: '100%' }}>
         <ScatterChart
+          key={runId}
           series={series}
           height={400}
-          // `svg-single` is the default. Above the internal threshold it
-          // automatically switches to the async, batched implementation: every
-          // batch group mounts immediately and its points are painted
-          // progressively as the series/axes processors settle.
-          renderer="svg-single"
+          // Force the renderer so the two modes are directly comparable:
+          // - `svg-single`: original synchronous per-item renderer.
+          // - `svg-progressive`: batched renderer that paints over several
+          //   animation frames to keep the main thread responsive.
+          // (Leaving `renderer` unset would pick automatically by point count.)
+          renderer={mode === 'sync' ? 'svg-single' : 'svg-progressive'}
         />
       </div>
     </Stack>

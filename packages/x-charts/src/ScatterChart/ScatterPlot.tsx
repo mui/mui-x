@@ -25,7 +25,7 @@ export interface ScatterPlotSlotProps extends ScatterSlotProps {
   scatter?: Partial<ScatterProps>;
 }
 
-export type RendererType = 'svg-single' | 'svg-batch';
+export type RendererType = 'svg-single' | 'svg-progressive' | 'svg-batch';
 
 export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick' | 'classes'> {
   className?: string;
@@ -41,11 +41,13 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick' | 'cl
   slotProps?: ScatterPlotSlotProps;
   /**
    * The type of renderer to use for the scatter plot.
-   * - `svg-single`: Renders every scatter item in a `<circle />` element.
+   * - `svg-single`: Renders every scatter item in a `<circle />` element, synchronously.
+   * - `svg-progressive`: Renders every scatter item in a `<circle />` element, in progressive batches that paint over several animation frames to keep the main thread responsive.
    * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
    *                Read more: https://mui.com/x/react-charts/scatter/#performance
    *
-   * @default 'svg-single'
+   * When not set, the renderer is chosen automatically: `svg-progressive` above an internal point-count threshold, `svg-single` otherwise.
+   * @default undefined (auto)
    */
   renderer?: RendererType;
 }
@@ -82,10 +84,12 @@ function ScatterPlot(props: ScatterPlotProps) {
   const defaultYAxisId = yAxisIds[0];
   const defaultZAxisId = zAxisIds[0];
 
-  // `svg-single` (default) renders one element per point. Above
-  // `SCATTER_ASYNC_THRESHOLD` total points it uses the async, batched
-  // implementation (`ScatterAsync`); below it the original `Scatter`. Both are
-  // selected by `renderer === 'svg-single'`. `svg-batch` is unaffected.
+  // Renderer selection:
+  // - `svg-batch`        → path-based batch renderer.
+  // - `svg-single`       → force the original synchronous per-item renderer.
+  // - `svg-progressive`  → force the progressive batched per-item renderer.
+  // - undefined ("auto") → progressive above `SCATTER_ASYNC_THRESHOLD` total
+  //                        points, original otherwise.
   const totalPointCount = seriesOrder.reduce(
     (sum, seriesId) => (series[seriesId].hidden ? sum : sum + series[seriesId].data.length),
     0,
@@ -94,10 +98,13 @@ function ScatterPlot(props: ScatterPlotProps) {
   let DefaultScatterItems: React.JSXElementConstructor<ScatterProps>;
   if (renderer === 'svg-batch') {
     DefaultScatterItems = BatchScatter;
-  } else if (totalPointCount > SCATTER_ASYNC_THRESHOLD) {
+  } else if (renderer === 'svg-single') {
+    DefaultScatterItems = Scatter;
+  } else if (renderer === 'svg-progressive') {
     DefaultScatterItems = ScatterAsync;
   } else {
-    DefaultScatterItems = Scatter;
+    DefaultScatterItems =
+      totalPointCount > SCATTER_ASYNC_THRESHOLD ? ScatterAsync : Scatter;
   }
   const ScatterItems = slots?.scatter ?? DefaultScatterItems;
 
@@ -176,13 +183,15 @@ ScatterPlot.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * The type of renderer to use for the scatter plot.
-   * - `svg-single`: Renders every scatter item in a `<circle />` element.
+   * - `svg-single`: Renders every scatter item in a `<circle />` element, synchronously.
+   * - `svg-progressive`: Renders every scatter item in a `<circle />` element, in progressive batches that paint over several animation frames to keep the main thread responsive.
    * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
    *                Read more: https://mui.com/x/react-charts/scatter/#performance
    *
-   * @default 'svg-single'
+   * When not set, the renderer is chosen automatically: `svg-progressive` above an internal point-count threshold, `svg-single` otherwise.
+   * @default undefined (auto)
    */
-  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-progressive', 'svg-single']),
   /**
    * The props used for each component slot.
    * @default {}
