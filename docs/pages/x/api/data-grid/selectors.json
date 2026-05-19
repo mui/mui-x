@@ -82,6 +82,7 @@
     "category": "Visible Columns",
     "description": "Get the summed width of all the visible columns."
   },
+  { "name": "gridCopilotPanelOpenSelector", "returnType": "boolean", "description": "" },
   {
     "name": "gridDataRowIdsSelector",
     "returnType": "GridRowId[]",
