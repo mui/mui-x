@@ -103,16 +103,6 @@ const getAxesSection = (
           },
         }
       : {}),
-    ...(tickOptions
-      ? {
-          tickLabelPlacement: {
-            label: localeText.chartConfigurationTickLabelPlacement,
-            type: 'select',
-            default: 'middle',
-            options: getLocalizedConfigOptions(localeText, ['middle', 'tick']),
-          },
-        }
-      : {}),
     seriesAxisReverse: {
       label: localeText.chartConfigurationSeriesAxisReverse,
       type: 'boolean',
