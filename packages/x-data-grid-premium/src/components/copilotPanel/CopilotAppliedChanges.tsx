@@ -460,14 +460,42 @@ function commandEntryToChange(
 
 function entryToChanges(entry: AppliedEntry, helpers: ChangeBuilderHelpers): Change[] {
   // Synthetic auto-activate entry pushed by the executor — `line` isn't JSON.
-  if (entry.kind === 'patch' && entry.line === '<auto>' && entry.path === '/pivot/active') {
-    return [
-      {
-        label: 'Pivot enabled',
-        description: entry.description ?? 'auto-activated because /pivot/model was configured',
-        icon: helpers.slots.promptPivotIcon,
-      },
-    ];
+  if (entry.kind === 'patch' && entry.line === '<auto>') {
+    if (entry.path === '/pivot/active') {
+      return [
+        {
+          label: 'Pivot enabled',
+          description: entry.description ?? 'auto-activated because /pivot/model was configured',
+          icon: helpers.slots.promptPivotIcon,
+        },
+      ];
+    }
+    if (entry.path === '/columns/pinned') {
+      const description = entry.description ?? 'auto-pinned grouping columns to the left';
+      const label = description.startsWith('auto-unpinned')
+        ? 'Unpinned grouping columns'
+        : 'Pinned grouping columns';
+      return [
+        {
+          label,
+          description,
+          icon: helpers.slots.promptGroupIcon,
+        },
+      ];
+    }
+    if (entry.path === '/columns/order') {
+      const description = entry.description ?? 'auto-reordered columns';
+      const label = description.startsWith('auto-restored')
+        ? 'Restored column order'
+        : 'Moved aggregated columns';
+      return [
+        {
+          label,
+          description,
+          icon: helpers.slots.promptAggregationIcon,
+        },
+      ];
+    }
   }
 
   const parsed = safeParse(entry.line);

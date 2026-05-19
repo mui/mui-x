@@ -449,6 +449,278 @@ describe('<DataGridPremium /> - Copilot per-op chip generation', () => {
     expect(changes).to.have.lengthOf(1);
     expect(changes[0].label).to.equal('Cleared selection');
   });
+
+  it('renders chip for synthetic <auto> /columns/pinned (auto-pin)', () => {
+    const entry = {
+      kind: 'patch' as const,
+      path: '/columns/pinned',
+      line: '<auto>',
+      description: 'auto-pinned grouping columns to the left',
+    };
+    const changes = entryToChanges(entry, helpers);
+    expect(changes).to.have.lengthOf(1);
+    expect(changes[0].label).to.equal('Pinned grouping columns');
+    expect(changes[0].description).to.contain('auto-pinned');
+  });
+
+  it('renders chip for synthetic <auto> /columns/pinned (auto-unpin)', () => {
+    const entry = {
+      kind: 'patch' as const,
+      path: '/columns/pinned',
+      line: '<auto>',
+      description: 'auto-unpinned grouping columns',
+    };
+    const changes = entryToChanges(entry, helpers);
+    expect(changes).to.have.lengthOf(1);
+    expect(changes[0].label).to.equal('Unpinned grouping columns');
+  });
+
+  it('renders chip for synthetic <auto> /columns/order (auto-move)', () => {
+    const entry = {
+      kind: 'patch' as const,
+      path: '/columns/order',
+      line: '<auto>',
+      description: 'auto-moved aggregated columns to start: salary',
+    };
+    const changes = entryToChanges(entry, helpers);
+    expect(changes).to.have.lengthOf(1);
+    expect(changes[0].label).to.equal('Moved aggregated columns');
+    expect(changes[0].description).to.contain('salary');
+  });
+
+  it('renders chip for synthetic <auto> /columns/order (auto-restore)', () => {
+    const entry = {
+      kind: 'patch' as const,
+      path: '/columns/order',
+      line: '<auto>',
+      description: 'auto-restored columns to original position: salary',
+    };
+    const changes = entryToChanges(entry, helpers);
+    expect(changes).to.have.lengthOf(1);
+    expect(changes[0].label).to.equal('Restored column order');
+  });
+});
+
+describe('<DataGridPremium /> - Copilot grouping + aggregation auto-layout', () => {
+  const { render } = createRenderer();
+
+  let apiRef: RefObject<GridApi | null>;
+
+  function Test(props: Partial<DataGridPremiumProps> = {}) {
+    apiRef = useGridApiRef();
+    return (
+      <div style={{ width: 600, height: 400 }}>
+        <DataGridPremium rows={ROWS} columns={COLUMNS} apiRef={apiRef} copilot {...props} />
+      </div>
+    );
+  }
+
+  function findAutoEntry(result: any, path: string, descriptionPrefix?: string) {
+    return result.applied.find(
+      (entry: any) =>
+        entry.kind === 'patch' &&
+        entry.line === '<auto>' &&
+        entry.path === path &&
+        (descriptionPrefix === undefined ||
+          (typeof entry.description === 'string' &&
+            entry.description.startsWith(descriptionPrefix))),
+    );
+  }
+
+  it('auto-pins grouping column when /grouping is applied', async () => {
+    render(<Test />);
+
+    let result: any;
+    await act(async () => {
+      result = (apiRef.current as any)?.copilot.applyEnvelope({
+        setGridState: JSON.stringify({
+          op: 'replace',
+          path: '/grouping',
+          value: ['country'],
+        }),
+      });
+    });
+
+    const pinned = (apiRef.current as any)?.getPinnedColumns();
+    expect(pinned.left).to.include('__row_group_by_columns_group__');
+
+    const autoEntry = findAutoEntry(result, '/columns/pinned', 'auto-pinned');
+    expect(autoEntry, 'auto-pin entry should be present').to.not.equal(undefined);
+  });
+
+  it('auto-unpins grouping column when /grouping is cleared', async () => {
+    render(
+      <Test
+        initialState={{
+          rowGrouping: { model: ['country'] },
+          pinnedColumns: { left: ['__row_group_by_columns_group__'], right: [] },
+        }}
+      />,
+    );
+
+    let result: any;
+    await act(async () => {
+      result = (apiRef.current as any)?.copilot.applyEnvelope({
+        setGridState: JSON.stringify({ op: 'replace', path: '/grouping', value: [] }),
+      });
+    });
+
+    const pinned = (apiRef.current as any)?.getPinnedColumns();
+    expect(pinned.left).to.not.include('__row_group_by_columns_group__');
+
+    const autoEntry = findAutoEntry(result, '/columns/pinned', 'auto-unpinned');
+    expect(autoEntry).to.not.equal(undefined);
+  });
+
+  it('moves freshly-aggregated column to the start', async () => {
+    render(<Test />);
+
+    let result: any;
+    await act(async () => {
+      result = (apiRef.current as any)?.copilot.applyEnvelope({
+        setGridState: JSON.stringify({
+          op: 'replace',
+          path: '/aggregation',
+          value: { salary: 'sum' },
+        }),
+      });
+    });
+
+    const order: string[] = (apiRef.current as any)?.state.columns.orderedFields ?? [];
+    expect(order[0]).to.equal('salary');
+
+    const autoEntry = findAutoEntry(result, '/columns/order', 'auto-moved');
+    expect(autoEntry).to.not.equal(undefined);
+    expect(autoEntry.description).to.contain('salary');
+  });
+
+  it('restores a previously-aggregated column to its original position', async () => {
+    render(<Test />);
+
+    await act(async () => {
+      (apiRef.current as any)?.copilot.applyEnvelope({
+        setGridState: JSON.stringify({
+          op: 'replace',
+          path: '/aggregation',
+          value: { salary: 'sum' },
+        }),
+      });
+    });
+
+    let result: any;
+    await act(async () => {
+      result = (apiRef.current as any)?.copilot.applyEnvelope({
+        setGridState: JSON.stringify({ op: 'replace', path: '/aggregation', value: {} }),
+      });
+    });
+
+    const order: string[] = (apiRef.current as any)?.state.columns.orderedFields ?? [];
+    // Original position for salary was index 3 (after id, country, position).
+    expect(order.indexOf('salary')).to.equal(3);
+
+    const autoEntry = findAutoEntry(result, '/columns/order', 'auto-restored');
+    expect(autoEntry).to.not.equal(undefined);
+  });
+
+  it('pins grouping column and moves aggregated column in one envelope', async () => {
+    render(<Test />);
+
+    let result: any;
+    await act(async () => {
+      result = (apiRef.current as any)?.copilot.applyEnvelope({
+        setGridState: [
+          JSON.stringify({ op: 'replace', path: '/grouping', value: ['country'] }),
+          JSON.stringify({
+            op: 'replace',
+            path: '/aggregation',
+            value: { salary: 'sum' },
+          }),
+        ].join('\n'),
+      });
+    });
+
+    const pinned = (apiRef.current as any)?.getPinnedColumns();
+    expect(pinned.left).to.include('__row_group_by_columns_group__');
+
+    const order: string[] = (apiRef.current as any)?.state.columns.orderedFields ?? [];
+    // Aggregated column lands immediately after the pinned region.
+    const pinnedCount = pinned.left.length;
+    expect(order[pinnedCount]).to.equal('salary');
+
+    expect(findAutoEntry(result, '/columns/pinned', 'auto-pinned')).to.not.equal(undefined);
+    expect(findAutoEntry(result, '/columns/order', 'auto-moved')).to.not.equal(undefined);
+  });
+
+  it('skips auto-pin when the LLM explicitly sets /columns/pinned', async () => {
+    render(<Test />);
+
+    let result: any;
+    await act(async () => {
+      result = (apiRef.current as any)?.copilot.applyEnvelope({
+        setGridState: [
+          JSON.stringify({ op: 'replace', path: '/grouping', value: ['country'] }),
+          JSON.stringify({
+            op: 'replace',
+            path: '/columns/pinned',
+            value: { left: ['id'], right: [] },
+          }),
+        ].join('\n'),
+      });
+    });
+
+    const autoEntry = findAutoEntry(result, '/columns/pinned', 'auto-');
+    expect(autoEntry, 'no auto-pin entry should appear').to.equal(undefined);
+  });
+
+  it('skips auto-reorder when the LLM explicitly sets /columns/order', async () => {
+    render(<Test />);
+
+    let result: any;
+    await act(async () => {
+      result = (apiRef.current as any)?.copilot.applyEnvelope({
+        setGridState: [
+          JSON.stringify({
+            op: 'replace',
+            path: '/aggregation',
+            value: { salary: 'sum' },
+          }),
+          JSON.stringify({
+            op: 'replace',
+            path: '/columns/order',
+            value: ['country', 'id', 'position', 'salary'],
+          }),
+        ].join('\n'),
+      });
+    });
+
+    const autoEntry = findAutoEntry(result, '/columns/order', 'auto-');
+    expect(autoEntry, 'no auto-reorder entry should appear').to.equal(undefined);
+  });
+
+  it('does not re-pin when grouping column is already pinned', async () => {
+    render(
+      <Test
+        initialState={{
+          rowGrouping: { model: ['country'] },
+          pinnedColumns: { left: ['__row_group_by_columns_group__'], right: [] },
+        }}
+      />,
+    );
+
+    let result: any;
+    await act(async () => {
+      result = (apiRef.current as any)?.copilot.applyEnvelope({
+        setGridState: JSON.stringify({
+          op: 'replace',
+          path: '/grouping',
+          value: ['country'],
+        }),
+      });
+    });
+
+    const autoEntry = findAutoEntry(result, '/columns/pinned', 'auto-');
+    expect(autoEntry, 'no auto-pin entry when state already matches').to.equal(undefined);
+  });
 });
 
 describe('<DataGridPremium /> - Copilot chat persistence', () => {

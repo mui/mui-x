@@ -24,6 +24,11 @@ export interface ExecutorOptions {
   props: DataGridPremiumProcessedProps;
   // Optional progress callback invoked after every dispatched line.
   onProgress?: (result: GridCopilotExecutionResult) => void;
+  // Optional shared map for tracking the original column index of fields
+  // displaced into the aggregation slot. Pass a stable instance across
+  // executor lifetimes (e.g. from a parent hook) so restore-on-unaggregate
+  // works across turns; defaults to a fresh map if omitted.
+  displacedAggregationOrigins?: Map<string, number>;
 }
 
 export interface Executor {
@@ -46,6 +51,8 @@ interface DeferredCommand {
 
 export function makeExecutor(options: ExecutorOptions): Executor {
   const { apiRef, props, onProgress } = options;
+  const displacedAggregationOrigins =
+    options.displacedAggregationOrigins ?? new Map<string, number>();
 
   const guards: Guards = buildGuards(props);
   const patchRegistry: PatchRegistry = buildPatchRegistry(guards);
@@ -56,8 +63,16 @@ export function makeExecutor(options: ExecutorOptions): Executor {
   let results: GridCopilotExecutionResult = { applied: [], skipped: [] };
   let deferredCommands: DeferredCommand[] = [];
   let setGridStateActive = false;
+  let envelopeStartDoc: GridStateDocument | null = null;
+  // `displacedAggregationOrigins` records the original column index of every
+  // field we displaced into the leading "aggregation" slot, so we can restore
+  // it once the field exits the aggregation model. Shared across executor
+  // instances via `options.displacedAggregationOrigins` so the restore still
+  // works after a fresh executor is constructed on a later turn.
   const seen = new Set<string>();
   const buffers: Record<number, string> = {};
+
+  const GROUPING_FIELD_PREFIX = '__row_group_by_columns_group';
 
   function getCtx(): ExecutorContext {
     return { apiRef, props, guards, doc, appliedSlices, results };
@@ -227,6 +242,172 @@ export function makeExecutor(options: ExecutorOptions): Executor {
     onProgress?.(results);
   }
 
+  // Pin every grouping column to the left whenever /grouping changes. Unpins
+  // them when grouping clears. Skipped if the LLM explicitly set
+  // /columns/pinned in the same envelope.
+  function autoPinGroupingColumns(userAppliedSlices: Set<SlicePath>): void {
+    if (!userAppliedSlices.has('/grouping')) {
+      return;
+    }
+    if (
+      userAppliedSlices.has('/columns/pinned') ||
+      userAppliedSlices.has('/columns/pinned/<side>')
+    ) {
+      return;
+    }
+
+    const liveOrder = apiRef.current.state.columns?.orderedFields ?? [];
+    const currentPinnedLeft = doc.columns.pinned.left ?? [];
+    const right = doc.columns.pinned.right ?? [];
+
+    let desired: string[];
+    let description: string;
+    if (doc.grouping.length > 0) {
+      const groupingFields = liveOrder.filter((f) => f.startsWith(GROUPING_FIELD_PREFIX));
+      const missing = groupingFields.filter((f) => !currentPinnedLeft.includes(f));
+      if (missing.length === 0) {
+        return;
+      }
+      desired = [...currentPinnedLeft, ...missing];
+      description = 'auto-pinned grouping columns to the left';
+    } else {
+      desired = currentPinnedLeft.filter((f) => !f.startsWith(GROUPING_FIELD_PREFIX));
+      if (desired.length === currentPinnedLeft.length) {
+        return;
+      }
+      description = 'auto-unpinned grouping columns';
+    }
+
+    apiRef.current.setPinnedColumns({ left: desired, right });
+    doc = {
+      ...doc,
+      columns: { ...doc.columns, pinned: { left: desired, right } },
+    };
+    appliedSlices.add('/columns/pinned');
+    results.applied.push({
+      kind: 'patch',
+      line: '<auto>',
+      path: '/columns/pinned',
+      description,
+    });
+    onProgress?.(results);
+  }
+
+  // Move freshly-aggregated columns to the start of the unpinned region, and
+  // restore previously-displaced columns when they exit the aggregation model.
+  // Skipped if the LLM explicitly set /columns/order in the same envelope.
+  function autoReorderAggregationColumns(userAppliedSlices: Set<SlicePath>): void {
+    if (!userAppliedSlices.has('/aggregation')) {
+      return;
+    }
+    if (userAppliedSlices.has('/columns/order')) {
+      return;
+    }
+    if (!envelopeStartDoc) {
+      return;
+    }
+
+    const prevAgg = envelopeStartDoc.aggregation ?? {};
+    const nextAgg = doc.aggregation ?? {};
+    const added: string[] = [];
+    const removed: string[] = [];
+    Object.keys(nextAgg).forEach((f) => {
+      if (!(f in prevAgg)) {
+        added.push(f);
+      }
+    });
+    Object.keys(prevAgg).forEach((f) => {
+      if (!(f in nextAgg)) {
+        removed.push(f);
+      }
+    });
+    if (added.length === 0 && removed.length === 0) {
+      return;
+    }
+
+    const liveOrderBefore = apiRef.current.state.columns?.orderedFields ?? [];
+    const pinnedLeftCount = (doc.columns.pinned.left ?? []).length;
+
+    // Idempotency for additions: if `added` is already sitting at the head of
+    // the unpinned region in the right order, skip the moves.
+    const headSlice = liveOrderBefore.slice(pinnedLeftCount, pinnedLeftCount + added.length);
+    const addedAlreadyCorrect = added.length > 0 && added.every((f, i) => headSlice[i] === f);
+
+    // Record origins for each added field BEFORE moving anything, so the
+    // recorded indices reflect the pre-auto-move state.
+    if (!addedAlreadyCorrect) {
+      added.forEach((field) => {
+        if (!displacedAggregationOrigins.has(field)) {
+          const idx = liveOrderBefore.indexOf(field);
+          if (idx >= 0) {
+            displacedAggregationOrigins.set(field, idx);
+          }
+        }
+      });
+    }
+
+    const movedFields: string[] = [];
+    if (!addedAlreadyCorrect) {
+      // Iterate in reverse so added[0] ends up at pinnedLeftCount, added[1] at
+      // pinnedLeftCount+1, etc.
+      for (let i = added.length - 1; i >= 0; i -= 1) {
+        const field = added[i];
+        try {
+          apiRef.current.setColumnIndex(field, pinnedLeftCount);
+          movedFields.unshift(field);
+        } catch {
+          // ignore — column may have been removed from the grid
+        }
+      }
+    }
+
+    const restoredFields: string[] = [];
+    removed.forEach((field) => {
+      const origIdx = displacedAggregationOrigins.get(field);
+      if (origIdx === undefined) {
+        return;
+      }
+      const currentIdx = apiRef.current.state.columns?.orderedFields?.indexOf(field) ?? -1;
+      if (currentIdx === origIdx) {
+        displacedAggregationOrigins.delete(field);
+        return;
+      }
+      try {
+        apiRef.current.setColumnIndex(field, origIdx);
+        restoredFields.push(field);
+        displacedAggregationOrigins.delete(field);
+      } catch {
+        // ignore
+      }
+    });
+
+    if (movedFields.length === 0 && restoredFields.length === 0) {
+      return;
+    }
+
+    const newOrder = apiRef.current.state.columns?.orderedFields ?? doc.columns.order;
+    doc = { ...doc, columns: { ...doc.columns, order: newOrder } };
+    appliedSlices.add('/columns/order');
+
+    if (movedFields.length > 0) {
+      results.applied.push({
+        kind: 'patch',
+        line: '<auto>',
+        path: '/columns/order',
+        description: `auto-moved aggregated columns to start: ${movedFields.join(', ')}`,
+      });
+    }
+    if (restoredFields.length > 0) {
+      results.applied.push({
+        kind: 'patch',
+        line: '<auto>',
+        path: '/columns/order',
+        description: `auto-restored columns to original position: ${restoredFields.join(', ')}`,
+      });
+    }
+    onProgress?.(results);
+  }
+
   function drainDeferred(): void {
     if (deferredCommands.length === 0) {
       return;
@@ -272,6 +453,9 @@ export function makeExecutor(options: ExecutorOptions): Executor {
 
   function pushChunk(toolIndex: number, toolName: ToolName, chunk: string): void {
     if (toolName === 'setGridState') {
+      if (envelopeStartDoc === null) {
+        envelopeStartDoc = doc;
+      }
       setGridStateActive = true;
     }
     const previous = buffers[toolIndex] ?? '';
@@ -290,14 +474,20 @@ export function makeExecutor(options: ExecutorOptions): Executor {
     }
     if (toolName === 'setGridState') {
       setGridStateActive = false;
+      const userAppliedSlices = new Set(appliedSlices);
       autoActivatePivotIfConfigured();
+      autoPinGroupingColumns(userAppliedSlices);
+      autoReorderAggregationColumns(userAppliedSlices);
       drainDeferred();
     }
   }
 
   function onAllToolsStop(): void {
     setGridStateActive = false;
+    const userAppliedSlices = new Set(appliedSlices);
     autoActivatePivotIfConfigured();
+    autoPinGroupingColumns(userAppliedSlices);
+    autoReorderAggregationColumns(userAppliedSlices);
     drainDeferred();
     const finalized = deferredCommands;
     deferredCommands = [];
@@ -312,6 +502,7 @@ export function makeExecutor(options: ExecutorOptions): Executor {
         tryRunCommand(d);
       }
     });
+    envelopeStartDoc = null;
   }
 
   function applyEnvelope(envelope: GridCopilotEnvelope): GridCopilotExecutionResult {
@@ -337,6 +528,9 @@ export function makeExecutor(options: ExecutorOptions): Executor {
       delete buffers[Number(key)];
     });
     setGridStateActive = false;
+    envelopeStartDoc = null;
+    // `displacedAggregationOrigins` is intentionally not cleared — it may be
+    // shared with other executor instances via `options.displacedAggregationOrigins`.
   }
 
   return {

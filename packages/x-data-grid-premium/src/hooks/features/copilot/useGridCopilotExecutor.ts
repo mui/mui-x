@@ -215,6 +215,10 @@ export function useGridCopilotExecutor(
   const executorRef = React.useRef<Executor | null>(null);
   const resultsByMessageId = React.useRef<Map<string, GridCopilotExecutionResult>>(new Map());
   const subscribers = React.useRef<Set<() => void>>(new Set());
+  // Shared across every executor instance so the auto-reorder logic can
+  // restore a previously-aggregated column to its original index even when a
+  // new executor was created for the turn that removes the aggregation.
+  const displacedAggregationOrigins = React.useRef<Map<string, number>>(new Map());
 
   const onResults = React.useCallback((messageId: string, results: GridCopilotExecutionResult) => {
     const map = resultsByMessageId.current;
@@ -249,7 +253,11 @@ export function useGridCopilotExecutor(
 
   const getExecutor = React.useCallback((): Executor => {
     if (!executorRef.current) {
-      executorRef.current = makeExecutor({ apiRef, props });
+      executorRef.current = makeExecutor({
+        apiRef,
+        props,
+        displacedAggregationOrigins: displacedAggregationOrigins.current,
+      });
     }
     return executorRef.current;
   }, [apiRef, props]);
@@ -264,7 +272,11 @@ export function useGridCopilotExecutor(
       sendMessage: async (input) => {
         const stream = await inner.sendMessage(input);
         const [forChatBox, forExecutor] = stream.tee();
-        const executor = makeExecutor({ apiRef, props });
+        const executor = makeExecutor({
+          apiRef,
+          props,
+          displacedAggregationOrigins: displacedAggregationOrigins.current,
+        });
         executorRef.current = executor;
         // Fire-and-forget. Errors land in the executor's `skipped[]`.
         void consumeForExecutor(forExecutor, executor, onResults);
@@ -276,7 +288,11 @@ export function useGridCopilotExecutor(
   const applyEnvelope = React.useCallback(
     (envelope: GridCopilotEnvelope): GridCopilotExecutionResult => {
       // Fresh executor per envelope.
-      const executor = makeExecutor({ apiRef, props });
+      const executor = makeExecutor({
+        apiRef,
+        props,
+        displacedAggregationOrigins: displacedAggregationOrigins.current,
+      });
       executorRef.current = executor;
       return executor.applyEnvelope(envelope);
     },
