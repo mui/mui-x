@@ -39,10 +39,7 @@ function CopilotVoiceButton() {
 
     let finalText = '';
 
-    instance.onresult = (event: {
-      results: SpeechRecognitionResultList;
-      resultIndex: number;
-    }) => {
+    instance.onresult = (event: { results: SpeechRecognitionResultList; resultIndex: number }) => {
       let interim = '';
       finalText = '';
       for (let i = event.resultIndex; i < event.results.length; i += 1) {

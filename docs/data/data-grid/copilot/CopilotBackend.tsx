@@ -261,7 +261,10 @@ export default function CopilotBackend() {
     <GridChartsIntegrationContextProvider>
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 1 }}>
-          <Tabs value={dataSet} onChange={(_, value) => setDataSet(value as DataSet)}>
+          <Tabs
+            value={dataSet}
+            onChange={(_, value) => setDataSet(value as DataSet)}
+          >
             <Tab label="Employees" value="Employee" />
             <Tab label="Commodities" value="Commodity" />
           </Tabs>
@@ -277,7 +280,9 @@ export default function CopilotBackend() {
             copilotSuggestions={SUGGESTIONS[dataSet]}
             slots={{ chartsPanel: GridChartsPanel }}
             slotProps={{ chartsPanel: { schema: configurationOptions } }}
-            initialState={{ sidebar: { open: true, value: GridSidebarValue.Copilot } }}
+            initialState={{
+              sidebar: { open: true, value: GridSidebarValue.Copilot },
+            }}
             showToolbar
           />
         </Box>
