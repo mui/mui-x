@@ -274,6 +274,14 @@ export async function processStream<Cursor = string>(
         targetMessageId ??= chunk.messageId;
         ensureAssistantMessage();
         finishReason = chunk.finishReason;
+        if (chunk.messageMetadata) {
+          updateMessage(storeUnknown, ensureAssistantMessage().id, (message) => ({
+            metadata: {
+              ...message.metadata,
+              ...chunk.messageMetadata,
+            },
+          }));
+        }
         didReceiveTerminalChunk = true;
         finalizeMessage('sent');
         store.setStreaming(false);
