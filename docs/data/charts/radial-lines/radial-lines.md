@@ -19,6 +19,12 @@ The `RadialLineChart` component accepts `series`, `rotationAxis`, and `radiusAxi
 
 {{"demo": "BasicRadialLineChart.js", "bg": "outline"}}
 
+## Closing path
+
+To draw the line between the last and first point of the series, set the series property `closePath` to `true`.
+
+{{"demo": "ClosedOpenRadialLineChart.js", "bg": "outline"}}
+
 ## Axes
 
 Like for line series, the rotation axis can have any scale type, and the radius axis can use any continuous scale type.
