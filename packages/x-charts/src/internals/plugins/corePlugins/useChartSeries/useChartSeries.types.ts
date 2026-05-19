@@ -15,10 +15,12 @@ import {
   type SeriesProcessorResult,
   type UseChartSeriesConfigSignature,
 } from '../useChartSeriesConfig';
+import { type UseChartIdSignature } from '../useChartId';
 import {
   type VisibilityIdentifier,
   type VisibilityIdentifierWithType,
 } from '../../featurePlugins/useChartVisibilityManager/useChartVisibilityManager.types';
+import { type AsyncStatus } from '../../utils/asyncResource';
 
 export interface UseChartSeriesParameters<SeriesType extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -75,6 +77,21 @@ export interface UseChartSeriesState<SeriesType extends ChartSeriesType = ChartS
     defaultizedSeries: DefaultizedSeriesGroups<SeriesType>;
     idToType: SeriesIdToType;
     dataset?: Readonly<DatasetType>;
+    /**
+     * Lifecycle status of the async series pipeline (load + defaultize).
+     * Optional for backwards compatibility with state fixtures that pre-date
+     * the async pipeline; absent is treated as 'success'.
+     * - 'idle': no input
+     * - 'pending': loader in flight
+     * - 'success': last resolution committed
+     * - 'error': last resolution rejected; consumer should surface the error
+     */
+    status?: AsyncStatus;
+    /**
+     * Set when `status === 'error'`. The plugin re-throws this from its body
+     * so React error boundaries catch it.
+     */
+    error?: Error;
   };
 }
 
@@ -120,5 +137,5 @@ export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSe
     defaultizedParams: UseChartSeriesDefaultizedParameters<SeriesType>;
     state: UseChartSeriesState<SeriesType>;
     instance: UseChartSeriesInstance;
-    dependencies: [UseChartSeriesConfigSignature<SeriesType>];
+    dependencies: [UseChartSeriesConfigSignature<SeriesType>, UseChartIdSignature];
   }>;

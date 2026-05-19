@@ -1,4 +1,5 @@
 import type { TooltipItemPositionGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { getScatterX, getScatterY } from '../scatterDataAccess';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'scatter'> = (params) => {
   const { series, identifier, axesConfig } = params;
@@ -16,8 +17,8 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'scatter'> = (params)
     return null;
   }
 
-  const xValue = itemSeries.data?.[identifier.dataIndex].x;
-  const yValue = itemSeries.data?.[identifier.dataIndex].y;
+  const xValue = itemSeries.data ? getScatterX(itemSeries.data, identifier.dataIndex) : undefined;
+  const yValue = itemSeries.data ? getScatterY(itemSeries.data, identifier.dataIndex) : undefined;
 
   if (xValue == null || yValue == null) {
     return null;

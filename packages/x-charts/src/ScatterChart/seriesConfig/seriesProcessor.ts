@@ -1,4 +1,4 @@
-import { type ScatterValueType } from '../../models';
+import { type ScatterData, type ScatterValueType } from '../../models';
 import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const seriesProcessor: SeriesProcessor<'scatter'> = (
@@ -23,7 +23,7 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
         );
       }
 
-      let data: readonly ScatterValueType[];
+      let data: ScatterData;
       if (seriesData.valueGetter) {
         data = dataset?.map(seriesData.valueGetter!) ?? [];
       } else if (datasetKeys) {

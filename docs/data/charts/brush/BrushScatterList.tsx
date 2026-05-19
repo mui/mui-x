@@ -76,7 +76,9 @@ function SelectedPointsList() {
     const maxDataY = yScale.invert(minY);
 
     // Filter data points within the brush selection
-    const d = series.data
+    const d = (
+      series.data as readonly { x: number; y: number; id?: number | string }[]
+    )
       .map((point, index) => ({
         x: point.x as number,
         y: point.y as number,

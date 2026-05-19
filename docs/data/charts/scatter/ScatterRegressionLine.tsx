@@ -60,7 +60,9 @@ function RegressionLine({ seriesId }: { seriesId: string }) {
   const yScale = useYScale(series.yAxisId!);
   const clipPathId = `linear-regression-clip-${useId()}`;
 
-  const { m, b } = linearRegression(series.data ?? []);
+  const { m, b } = linearRegression(
+    (series.data ?? []) as readonly { x: number; y: number }[],
+  );
 
   const xDomain = xScale.domain() as [number, number];
   const x1 = xScale(xDomain[0]);

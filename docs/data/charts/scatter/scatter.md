@@ -176,6 +176,40 @@ The example below uses the `renderer` prop to render 16,000 points with better p
 
 {{"demo": "ScatterBatchRenderer.js"}}
 
+### Async processing pipeline
+
+When the `series` prop changes, the chart's internal defaultize step is scheduled on the next macrotask instead of running inline.
+This keeps the React commit cheap, lets the browser paint the previous state immediately, and exposes a `pending → success` (or `error`) status that downstream components can subscribe to via `selectorChartSeriesStatus`.
+
+The example below uses 100,000 points across three clusters.
+Click _Reshuffle_ to swap the dataset and watch the status flip to `pending` while the new data is being processed.
+The _Rapid reshuffle_ button fires three swaps back-to-back — the request-id mechanism drops the stale results so only the final commit lands.
+
+{{"demo": "ScatterAsyncProcessing.js"}}
+
+#### Web Worker offload [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+`@mui/x-charts-premium` exports a `setupChartsAsyncWorker` helper that lets the defaultize step run inside a Web Worker, off the main thread. There is no chart-level prop or context to wire up: the chart auto-detects a worker on a `BroadcastChannel` and falls back to the main thread when none is present.
+
+The setup is exactly two files in your app:
+
+```ts
+// chartsWorker.ts (the worker entry handed to your bundler)
+import { setupChartsAsyncWorker } from '@mui/x-charts-premium';
+
+setupChartsAsyncWorker();
+```
+
+```ts
+// app entry — instantiate the worker once, anywhere before charts render.
+// (Vite shown below; Webpack/Rspack worker imports work the same way.)
+import ChartsWorker from './chartsWorker?worker';
+
+new ChartsWorker();
+```
+
+If you customize `seriesConfig` on the chart, pass the same config to `setupChartsAsyncWorker({ seriesConfig })` so the worker produces consistent results.
+
 ### WebGL renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 For very large datasets, `ScatterChartPremium` supports a `webgl` renderer that draws points into a dedicated WebGL canvas layered behind the SVG.

@@ -7,8 +7,18 @@
  *
  * `showError` can simply use `console.error` again.
  */
-const isCodeSandbox =
-  typeof window !== 'undefined' && window.location.hostname.endsWith('.csb.app');
+function detectCodeSandbox(): boolean {
+  try {
+    // Wrapped in try/catch because webpack may inline `typeof window` based on
+    // the target platform; in a Web Worker the inlined check passes but
+    // `window.location` still throws a ReferenceError at runtime.
+    return typeof window !== 'undefined' && window.location.hostname.endsWith('.csb.app');
+  } catch {
+    return false;
+  }
+}
+
+const isCodeSandbox = detectCodeSandbox();
 
 function showError(message: string[]) {
   // eslint-disable-next-line no-console

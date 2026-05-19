@@ -516,12 +516,14 @@ export const selectorChartRawAxis = createSelector(
 
 export const selectorChartDefaultXAxisId = createSelector(
   selectorChartRawXAxis,
-  (xAxes) => xAxes![0].id,
+  // The async cartesian-axis pipeline starts in `pending` with an empty
+  // axis array; return `undefined` until the next-tick commit lands.
+  (xAxes) => xAxes?.[0]?.id,
 );
 
 export const selectorChartDefaultYAxisId = createSelector(
   selectorChartRawYAxis,
-  (yAxes) => yAxes![0].id,
+  (yAxes) => yAxes?.[0]?.id,
 );
 
 const EMPTY_MAP = new Map<SeriesId, Flatbush>();
@@ -545,7 +547,8 @@ export const selectorChartSeriesFlatbushMap = createSelectorMemoized(
     const validSeries = allSeries.scatter;
     const flatbushMap = new Map<SeriesId, Flatbush>();
 
-    if (!validSeries) {
+    if (!validSeries || defaultXAxisId === undefined || defaultYAxisId === undefined) {
+      // Axes not yet committed by the async pipeline — return an empty map.
       return flatbushMap;
     }
 
@@ -556,15 +559,28 @@ export const selectorChartSeriesFlatbushMap = createSelectorMemoized(
         yAxisId = defaultYAxisId,
       } = validSeries.series[seriesId];
 
-      const flatbush = new Flatbush(data.length);
+      const isColumnar = data != null && (data as { __columnar?: true }).__columnar === true;
+      const length = isColumnar ? (data as { length: number }).length : data.length;
+
+      const flatbush = new Flatbush(length);
 
       const originalXScale = xAxesScaleMap[xAxisId];
       const originalYScale = yAxesScaleMap[yAxisId];
 
-      for (const datum of data) {
-        // Add the points using a [0, 1] range so that we don't need to recreate the Flatbush structure when zooming.
-        // This doesn't happen in practice, though, because currently the scales depend on the drawing area.
-        flatbush.add(originalXScale(datum.x)!, originalYScale(datum.y)!);
+      if (isColumnar) {
+        // Tight typed-array loop: avoids dereferencing `{x, y}` per point.
+        const columnar = data as { x: Float64Array; y: Float64Array; length: number };
+        const xs = columnar.x;
+        const ys = columnar.y;
+        for (let i = 0; i < length; i += 1) {
+          flatbush.add(originalXScale(xs[i])!, originalYScale(ys[i])!);
+        }
+      } else {
+        for (const datum of data as readonly { x: number; y: number }[]) {
+          // Add the points using a [0, 1] range so that we don't need to recreate the Flatbush structure when zooming.
+          // This doesn't happen in practice, though, because currently the scales depend on the drawing area.
+          flatbush.add(originalXScale(datum.x)!, originalYScale(datum.y)!);
+        }
       }
 
       flatbush.finish();

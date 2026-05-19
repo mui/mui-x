@@ -17,6 +17,7 @@ import {
 } from '../useChartCartesianAxis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { findClosestPoints } from './findClosestPoints';
+import { getScatterX, getScatterY } from '../../../../ScatterChart/scatterDataAccess';
 
 export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = ({
   params,
@@ -110,9 +111,10 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
           continue;
         }
 
-        const point = aSeries.data[closestPointIndex];
-        const scaledX = xScale(point.x);
-        const scaledY = yScale(point.y);
+        const pointX = getScatterX(aSeries.data, closestPointIndex);
+        const pointY = getScatterY(aSeries.data, closestPointIndex);
+        const scaledX = xScale(pointX);
+        const scaledY = yScale(pointY);
 
         const distSq = (scaledX! - svgPoint.x) ** 2 + (scaledY! - svgPoint.y) ** 2;
 

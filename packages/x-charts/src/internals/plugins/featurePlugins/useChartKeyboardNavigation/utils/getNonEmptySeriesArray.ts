@@ -16,9 +16,16 @@ export function getNonEmptySeriesArray<OutSeriesType extends Exclude<ChartSeries
           if ('hidden' in seriesItem && seriesItem.hidden) {
             return false;
           }
-          return (
-            seriesItem.data.length > 0 && seriesItem.data.some((value: unknown) => value != null)
-          );
+          const data = seriesItem.data as unknown;
+          if (
+            data != null &&
+            typeof data === 'object' &&
+            (data as { __columnar?: true }).__columnar === true
+          ) {
+            return (data as { length: number }).length > 0;
+          }
+          const arrayData = data as readonly unknown[];
+          return arrayData.length > 0 && arrayData.some((value: unknown) => value != null);
         })
         .map((seriesId: SeriesId) => ({
           type,

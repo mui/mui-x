@@ -170,7 +170,9 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
 }) {
-  if (allAxis === undefined) {
+  if (allAxis === undefined || allAxis.length === 0) {
+    // The async cartesian-axis pipeline starts in `pending` with an empty
+    // axis array; bail out until the next-tick commit lands.
     return {
       axis: {},
       axisIds: [],

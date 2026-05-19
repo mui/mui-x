@@ -114,13 +114,32 @@ export function useScatterWebGLPlotData(): ScatterWebGLPlotData {
       const [cr, cg, cb, ca] = parseColor(s.color);
       const markerSize = s.markerSize ?? DEFAULT_MARKER_SIZE;
 
-      for (let i = 0; i < data.length; i += 1) {
-        const point = data[i];
-        if (point == null) {
-          continue;
+      const isColumnar = (data as { __columnar?: true }).__columnar === true;
+      const length = isColumnar ? (data as { length: number }).length : data.length;
+      const columnarXs = isColumnar
+        ? (data as { x: Float64Array }).x
+        : (undefined as unknown as Float64Array);
+      const columnarYs = isColumnar
+        ? (data as { y: Float64Array }).y
+        : (undefined as unknown as Float64Array);
+      const arrayData = isColumnar ? undefined : (data as readonly { x: number; y: number }[]);
+
+      for (let i = 0; i < length; i += 1) {
+        let px: number;
+        let py: number;
+        if (isColumnar) {
+          px = columnarXs[i];
+          py = columnarYs[i];
+        } else {
+          const point = arrayData![i];
+          if (point == null) {
+            continue;
+          }
+          px = point.x;
+          py = point.y;
         }
-        const sx = xScale(point.x);
-        const sy = yScale(point.y);
+        const sx = xScale(px);
+        const sy = yScale(py);
         if (sx == null || sy == null || Number.isNaN(sx) || Number.isNaN(sy)) {
           continue;
         }

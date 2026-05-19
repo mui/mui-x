@@ -1,4 +1,5 @@
 import { type CartesianExtremumGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { getScatterPoint, isColumnarScatterData } from '../scatterDataAccess';
 
 export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
   const { series, axis, isDefaultAxis, getFilters } = params;
@@ -23,7 +24,49 @@ export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
       seriesYAxisId: series[seriesId].yAxisId,
     });
 
-    const seriesData = series[seriesId].data ?? [];
+    const seriesData = series[seriesId].data;
+    if (seriesData === undefined) {
+      continue;
+    }
+
+    if (isColumnarScatterData(seriesData)) {
+      const xs = seriesData.x;
+      const length = seriesData.length;
+      if (!filter) {
+        // Fast path: tight typed-array loop, no per-point allocations.
+        // Guard against non-finite values — they would pull the axis
+        // domain to ±Infinity and blank the chart out.
+        for (let i = 0; i < length; i += 1) {
+          const x = xs[i];
+          if (!Number.isFinite(x)) {
+            continue;
+          }
+          if (x < min) {
+            min = x;
+          }
+          if (x > max) {
+            max = x;
+          }
+        }
+      } else {
+        for (let i = 0; i < length; i += 1) {
+          if (!filter(getScatterPoint(seriesData, i), i)) {
+            continue;
+          }
+          const x = xs[i];
+          if (!Number.isFinite(x)) {
+            continue;
+          }
+          if (x < min) {
+            min = x;
+          }
+          if (x > max) {
+            max = x;
+          }
+        }
+      }
+      continue;
+    }
 
     for (let i = 0; i < seriesData.length; i += 1) {
       const d = seriesData[i];
@@ -69,7 +112,46 @@ export const getExtremumY: CartesianExtremumGetter<'scatter'> = (params) => {
       seriesYAxisId: series[seriesId].yAxisId,
     });
 
-    const seriesData = series[seriesId].data ?? [];
+    const seriesData = series[seriesId].data;
+    if (seriesData === undefined) {
+      continue;
+    }
+
+    if (isColumnarScatterData(seriesData)) {
+      const ys = seriesData.y;
+      const length = seriesData.length;
+      if (!filter) {
+        for (let i = 0; i < length; i += 1) {
+          const y = ys[i];
+          if (!Number.isFinite(y)) {
+            continue;
+          }
+          if (y < min) {
+            min = y;
+          }
+          if (y > max) {
+            max = y;
+          }
+        }
+      } else {
+        for (let i = 0; i < length; i += 1) {
+          if (!filter(getScatterPoint(seriesData, i), i)) {
+            continue;
+          }
+          const y = ys[i];
+          if (!Number.isFinite(y)) {
+            continue;
+          }
+          if (y < min) {
+            min = y;
+          }
+          if (y > max) {
+            max = y;
+          }
+        }
+      }
+      continue;
+    }
 
     for (let i = 0; i < seriesData.length; i += 1) {
       const d = seriesData[i];

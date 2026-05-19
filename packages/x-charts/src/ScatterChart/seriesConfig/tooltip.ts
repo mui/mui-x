@@ -1,5 +1,6 @@
 import { getLabel } from '../../internals/getLabel';
 import type { TooltipGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { getScatterPoint } from '../scatterDataAccess';
 
 const tooltipGetter: TooltipGetter<'scatter'> = (params) => {
   const { series, getColor, identifier } = params;
@@ -9,7 +10,7 @@ const tooltipGetter: TooltipGetter<'scatter'> = (params) => {
   }
 
   const label = getLabel(series.label, 'tooltip');
-  const value = series.data[identifier.dataIndex];
+  const value = getScatterPoint(series.data, identifier.dataIndex);
   const formattedValue = series.valueFormatter(value, { dataIndex: identifier.dataIndex });
 
   return {

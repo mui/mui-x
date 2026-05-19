@@ -17,6 +17,7 @@ import {
   type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { appendAtKey } from '../internals/appendAtKey';
+import { getScatterPoint, isColumnarScatterData } from './scatterDataAccess';
 
 export interface BatchScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -38,6 +39,15 @@ function createPath(x: number, y: number, markerSize: number) {
   return `M${x - markerSize} ${y} a${markerSize} ${markerSize} 0 1 1 0 ${ALMOST_ZERO}`;
 }
 
+/**
+ * Threshold above which path generation is sliced across multiple macrotasks
+ * so the main thread can paint and respond to input between chunks. Below
+ * this threshold, the cost of synchronous work is negligible and slicing
+ * would just add latency.
+ */
+const ASYNC_CHUNK_THRESHOLD = 5_000;
+const CHUNK_SIZE = 5_000;
+
 function useCreatePaths(
   seriesData: DefaultizedScatterSeriesType['data'],
   markerSize: number,
@@ -47,40 +57,101 @@ function useCreatePaths(
   colorGetter?: ColorGetter<'scatter'>,
 ) {
   const { instance } = useChartsContext();
-  const getXPosition = getValueToPositionMapper(xScale);
-  const getYPosition = getValueToPositionMapper(yScale);
+  const length = isColumnarScatterData(seriesData) ? seriesData.length : seriesData.length;
+  const [pathsState, setPathsState] = React.useState<Map<string, string[]>>(() => new Map());
 
-  const paths = new Map<string, string[]>();
-  const temporaryPaths = new Map<string, string[]>();
+  React.useEffect(() => {
+    const getXPosition = getValueToPositionMapper(xScale);
+    const getYPosition = getValueToPositionMapper(yScale);
 
-  for (let i = 0; i < seriesData.length; i += 1) {
-    const scatterPoint = seriesData[i];
+    const paths = new Map<string, string[]>();
+    const temporaryPaths = new Map<string, string[]>();
 
-    const x = getXPosition(scatterPoint.x);
-    const y = getYPosition(scatterPoint.y);
+    const isColumnar = isColumnarScatterData(seriesData);
+    const xs = isColumnar ? seriesData.x : null;
+    const ys = isColumnar ? seriesData.y : null;
+    const arrayData = isColumnar
+      ? null
+      : (seriesData as Exclude<
+          typeof seriesData,
+          ReturnType<typeof isColumnarScatterData> extends true ? never : never
+        >);
 
-    if (!instance.isPointInside(x, y)) {
-      continue;
+    let i = 0;
+    let cancelled = false;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    const buildPointBatch = (until: number) => {
+      for (; i < until; i += 1) {
+        let px: number;
+        let py: number;
+        if (isColumnar) {
+          px = xs![i];
+          py = ys![i];
+        } else {
+          const p = arrayData![i];
+          px = p.x;
+          py = p.y;
+        }
+        const x = getXPosition(px);
+        const y = getYPosition(py);
+        if (!instance.isPointInside(x, y)) {
+          continue;
+        }
+        const path = createPath(x, y, markerSize);
+        const fill = colorGetter ? colorGetter(i) : color;
+        const tempPath = appendAtKey(temporaryPaths, fill, path);
+        if (tempPath.length >= MAX_POINTS_PER_PATH) {
+          appendAtKey(paths, fill, tempPath.join(''));
+          temporaryPaths.delete(fill);
+        }
+      }
+    };
+
+    const finalize = () => {
+      for (const [fill, tempPath] of temporaryPaths.entries()) {
+        if (tempPath.length > 0) {
+          appendAtKey(paths, fill, tempPath.join(''));
+        }
+      }
+      setPathsState(paths);
+    };
+
+    if (length <= ASYNC_CHUNK_THRESHOLD) {
+      // Synchronous fast path: small dataset, no slicing overhead.
+      buildPointBatch(length);
+      finalize();
+      return () => {
+        cancelled = true;
+      };
     }
 
-    const path = createPath(x, y, markerSize);
-    const fill = colorGetter ? colorGetter(i) : color;
+    const processChunk = () => {
+      if (cancelled) {
+        return;
+      }
+      const until = Math.min(i + CHUNK_SIZE, length);
+      buildPointBatch(until);
+      if (i < length) {
+        // Yield via macrotask so the browser can paint + handle input
+        // between chunks. `setTimeout(0)` is more reliable than
+        // `requestIdleCallback` (which doesn't fire under sustained load).
+        timeoutId = setTimeout(processChunk, 0);
+      } else {
+        finalize();
+      }
+    };
+    processChunk();
 
-    const tempPath = appendAtKey(temporaryPaths, fill, path);
+    return () => {
+      cancelled = true;
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [seriesData, markerSize, xScale, yScale, color, colorGetter, instance, length]);
 
-    if (tempPath.length >= MAX_POINTS_PER_PATH) {
-      appendAtKey(paths, fill, tempPath.join(''));
-      temporaryPaths.delete(fill);
-    }
-  }
-
-  for (const [fill, tempPath] of temporaryPaths.entries()) {
-    if (tempPath.length > 0) {
-      appendAtKey(paths, fill, tempPath.join(''));
-    }
-  }
-
-  return paths;
+  return pathsState;
 }
 
 export interface BatchScatterPathsProps {
@@ -153,36 +224,40 @@ export function BatchScatter(props: BatchScatterProps) {
 
   const siblings: React.ReactNode[] = [];
   if (seriesHighlightedItem != null) {
-    const datum = series.data[seriesHighlightedItem];
-    const getXPosition = getValueToPositionMapper(xScale);
-    const getYPosition = getValueToPositionMapper(yScale);
+    const datum = getScatterPoint(series.data, seriesHighlightedItem);
+    if (datum != null) {
+      const getXPosition = getValueToPositionMapper(xScale);
+      const getYPosition = getValueToPositionMapper(yScale);
 
-    siblings.push(
-      <path
-        key={`highlighted-${series.id}`}
-        fill={colorGetter ? colorGetter(seriesHighlightedItem) : color}
-        data-highlighted
-        d={createPath(
-          getXPosition(datum.x),
-          getYPosition(datum.y),
-          markerSize * highlightedModifier,
-        )}
-      />,
-    );
+      siblings.push(
+        <path
+          key={`highlighted-${series.id}`}
+          fill={colorGetter ? colorGetter(seriesHighlightedItem) : color}
+          data-highlighted
+          d={createPath(
+            getXPosition(datum.x),
+            getYPosition(datum.y),
+            markerSize * highlightedModifier,
+          )}
+        />,
+      );
+    }
   }
 
   if (seriesUnfadedItem != null) {
-    const datum = series.data[seriesUnfadedItem];
-    const getXPosition = getValueToPositionMapper(xScale);
-    const getYPosition = getValueToPositionMapper(yScale);
+    const datum = getScatterPoint(series.data, seriesUnfadedItem);
+    if (datum != null) {
+      const getXPosition = getValueToPositionMapper(xScale);
+      const getYPosition = getValueToPositionMapper(yScale);
 
-    siblings.push(
-      <path
-        key={`unfaded-${series.id}`}
-        fill={colorGetter ? colorGetter(seriesUnfadedItem) : color}
-        d={createPath(getXPosition(datum.x), getYPosition(datum.y), markerSize)}
-      />,
-    );
+      siblings.push(
+        <path
+          key={`unfaded-${series.id}`}
+          fill={colorGetter ? colorGetter(seriesUnfadedItem) : color}
+          d={createPath(getXPosition(datum.x), getYPosition(datum.y), markerSize)}
+        />,
+      );
+    }
   }
 
   return (

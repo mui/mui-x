@@ -4,6 +4,7 @@ import {
   type ScatterItemIdentifier,
   type ScatterValueType,
 } from '../models/seriesType/scatter';
+import { getScatterPoint } from './scatterDataAccess';
 
 export interface ResolvedScatterItem {
   cx: number;
@@ -36,10 +37,10 @@ export function useScatterItemPosition(
     return null;
   }
 
-  const scatterPoint = series.data[item.dataIndex];
-  if (!scatterPoint) {
+  if (item.dataIndex < 0 || item.dataIndex >= series.data.length) {
     return null;
   }
+  const scatterPoint = getScatterPoint(series.data, item.dataIndex);
 
   const xAxisId = series.xAxisId ?? xAxisIds[0];
   const yAxisId = series.yAxisId ?? yAxisIds[0];
