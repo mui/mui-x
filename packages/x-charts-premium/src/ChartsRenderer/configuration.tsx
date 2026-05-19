@@ -201,7 +201,7 @@ const getColors = (localeText: ChartsLocaleText) => {
     key,
     name: localeText[
       `chartPaletteName${capitalize(trimPaletteName(key))}` as keyof ChartsLocaleText
-    ],
+    ] as string,
   }));
 };
 
