@@ -184,8 +184,6 @@ export interface SchedulerState<TEvent extends object = any> {
 
 /**
  * Result of `dataSource.persistEvents`.
- * Named so it can grow (e.g. per-item failures, server-assigned ids) without
- * forcing every consumer to update their signature.
  */
 export interface SchedulerPersistEventsResult {
   success: boolean;
@@ -196,17 +194,8 @@ export interface SchedulerDataSource<TEvent extends object> {
   /**
    * Called when events are created, updated or deleted so the consumer can persist them.
    *
-   * `deleted` only carries IDs because the events no longer exist after the operation,
-   * so passing the full objects would waste payload. `created` and `updated` carry full
-   * event objects (with all changes already applied) so backends can persist them
-   * directly without re-resolving fields through `eventModelStructure`.
-   *
-   * Failure can be reported in two ways with different observable effects:
-   * - Throwing surfaces the error in `state.errors` with the thrown message — use it
-   *   when you want a specific user-facing message.
-   * - Returning `{ success: false }` aborts the scheduler's cache/state update and
-   *   pushes a generic `MUI X Scheduler:` error to `state.errors` — use it when the
-   *   backend has already shown its own UI for the failure.
+   * Throw to surface a custom error in `state.errors`. Return `{ success: false }`
+   * to abort the cache/state update with a generic error.
    */
   persistEvents: (parameters: {
     deleted: SchedulerEventId[];
