@@ -3,8 +3,8 @@ import { styled, useTheme } from '@mui/material/styles';
 import { GridChartsPaletteIcon } from '../icons';
 
 const PaletteOptionRoot = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'PaletteOptionRoot',
+  name: 'MuiChartsPaletteOption',
+  slot: 'Root',
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -12,8 +12,8 @@ const PaletteOptionRoot = styled('div', {
 }));
 
 const PaletteOptionIcon = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'PaletteOptionIcon',
+  name: 'MuiChartsPaletteOption',
+  slot: 'Icon',
 })(({ theme }) => ({
   width: 24,
   height: 24,
