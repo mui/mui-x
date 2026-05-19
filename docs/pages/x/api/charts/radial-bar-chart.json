@@ -28,21 +28,21 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radialBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radialBar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radialBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radialBar' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex: number, seriesId: string, type: 'radialBar' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
+        "description": "{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'radialBar' }"
       }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radialBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radialBar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radialBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radialBar' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -94,7 +94,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex: number, seriesId: string, type: 'radialBar' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
+        "description": "{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'radialBar' }"
       }
     },
     "width": { "type": { "name": "number" } }

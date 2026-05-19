@@ -257,6 +257,7 @@ jobs:
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.60.0-noble
+    resource_class: large
     steps:
       - checkout
       - install-deps:
@@ -264,9 +265,6 @@ jobs:
       - run:
           name: Install ffmpeg
           command: apt-get update && apt-get install ffmpeg --no-install-recommends -y
-      - run:
-          name: Build packages
-          command: pnpm release:build
       - run:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
