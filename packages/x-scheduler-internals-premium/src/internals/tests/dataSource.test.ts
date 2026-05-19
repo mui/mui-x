@@ -352,12 +352,12 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(args.deleted).toEqual(['1', '2']);
 
       expect(args.updated).toHaveLength(2);
-      expect(args.updated.map((e) => e.id)).toEqual(['3', '4']);
-      expect(args.updated.map((e) => e.title)).toEqual(['E3 updated', 'E4 updated']);
+      expect(args.updated.map((event) => event.id)).toEqual(['3', '4']);
+      expect(args.updated.map((event) => event.title)).toEqual(['E3 updated', 'E4 updated']);
 
       expect(args.created).toHaveLength(2);
-      expect(args.created.map((e) => e.id)).toEqual(createdIds);
-      expect(args.created.map((e) => e.title)).toEqual(['New A', 'New B']);
+      expect(args.created.map((event) => event.id)).toEqual(createdIds);
+      expect(args.created.map((event) => event.title)).toEqual(['New A', 'New B']);
     });
 
     it('should pass IDs (not full event objects) to dataSource.persistEvents on delete', async () => {
