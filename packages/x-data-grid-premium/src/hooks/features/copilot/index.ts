@@ -1,4 +1,8 @@
 export type { GridCopilotAdapter, GridCopilotApi } from './gridCopilotInterfaces';
+export {
+  createGridCopilotLocalStorageAdapter,
+  type GridCopilotLocalStorageAdapterOptions,
+} from './createGridCopilotLocalStorageAdapter';
 export { gridCopilotPanelOpenSelector } from './gridCopilotSelectors';
 export {
   // Types
