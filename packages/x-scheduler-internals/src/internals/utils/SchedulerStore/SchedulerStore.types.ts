@@ -183,7 +183,7 @@ export interface SchedulerState<TEvent extends object = any> {
 }
 
 /**
- * Result of `dataSource.updateEvents`.
+ * Result of `dataSource.persistEvents`.
  * Named so it can grow (e.g. per-item failures, server-assigned ids) without
  * forcing every consumer to update their signature.
  */
@@ -208,7 +208,7 @@ export interface SchedulerDataSource<TEvent extends object> {
    *   pushes a generic `MUI X Scheduler:` error to `state.errors` — use it when the
    *   backend has already shown its own UI for the failure.
    */
-  updateEvents: (parameters: {
+  persistEvents: (parameters: {
     deleted: SchedulerEventId[];
     updated: TEvent[];
     created: TEvent[];

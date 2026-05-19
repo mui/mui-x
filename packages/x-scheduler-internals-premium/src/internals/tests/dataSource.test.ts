@@ -9,7 +9,7 @@ const DEFAULT_PARAMS = { events: [] };
 
 /**
  * Flushes the chain of microtasks produced by `store.updateEvents` →
- * `queueMicrotask(publishEvent)` → handler `await dataSource.updateEvents`
+ * `queueMicrotask(publishEvent)` → handler `await dataSource.persistEvents`
  * → continuation. Three ticks cover the whole pipeline.
  */
 const flushMicrotasks = async () => {
@@ -26,7 +26,7 @@ interface TestEvent {
   title: string;
 }
 
-interface UpdateEventsParams<TEvent extends object = TestEvent> {
+interface PersistEventsParams<TEvent extends object = TestEvent> {
   deleted: SchedulerEventId[];
   updated: TEvent[];
   created: TEvent[];
@@ -52,7 +52,7 @@ premiumStoreClasses.forEach((storeClass) => {
     it('should fetch events from data source when queueDataFetchForRange is called (lazy load)', async () => {
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async() => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -76,7 +76,7 @@ premiumStoreClasses.forEach((storeClass) => {
     it('should fetch new events when visible range changes to an uncached area', async () => {
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async() => ({ success: true }),
       };
 
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
@@ -104,7 +104,7 @@ premiumStoreClasses.forEach((storeClass) => {
     it('should use cached data when fetching a range that is already covered', async () => {
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async() => ({ success: true }),
       };
 
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
@@ -129,12 +129,12 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.eventIdList).toHaveLength(1);
     });
 
-    it('should pass full event objects to dataSource.updateEvents on create', async () => {
-      const mockUpdateEvents = async (_params: UpdateEventsParams) => ({ success: true });
-      const updateEventsSpy = spy(mockUpdateEvents);
+    it('should pass full event objects to dataSource.persistEvents on create', async () => {
+      const mockPersistEvents = async (_params: PersistEventsParams) => ({ success: true });
+      const persistEventsSpy = spy(mockPersistEvents);
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: updateEventsSpy,
+        persistEvents: persistEventsSpy,
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -146,8 +146,8 @@ premiumStoreClasses.forEach((storeClass) => {
 
       await flushMicrotasks();
 
-      expect(updateEventsSpy.calledOnce).to.equal(true);
-      const callArgs = updateEventsSpy.firstCall.args[0];
+      expect(persistEventsSpy.calledOnce).to.equal(true);
+      const callArgs = persistEventsSpy.firstCall.args[0];
       expect(callArgs.created).toHaveLength(1);
       expect(callArgs.created[0]).toMatchObject({
         id: createdId,
@@ -162,12 +162,12 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.eventIdList).toContain(createdId);
     });
 
-    it('should pass full event objects to dataSource.updateEvents on update', async () => {
-      const mockUpdateEvents = async (_params: UpdateEventsParams) => ({ success: true });
-      const updateEventsSpy = spy(mockUpdateEvents);
+    it('should pass full event objects to dataSource.persistEvents on update', async () => {
+      const mockPersistEvents = async (_params: PersistEventsParams) => ({ success: true });
+      const persistEventsSpy = spy(mockPersistEvents);
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: updateEventsSpy,
+        persistEvents: persistEventsSpy,
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -185,8 +185,8 @@ premiumStoreClasses.forEach((storeClass) => {
 
       await flushMicrotasks();
 
-      expect(updateEventsSpy.calledOnce).to.equal(true);
-      const callArgs = updateEventsSpy.firstCall.args[0];
+      expect(persistEventsSpy.calledOnce).to.equal(true);
+      const callArgs = persistEventsSpy.firstCall.args[0];
       expect(callArgs.updated).toHaveLength(1);
       expect(callArgs.updated[0]).toMatchObject({
         id: '1',
@@ -201,7 +201,7 @@ premiumStoreClasses.forEach((storeClass) => {
     it('should upsert the updated event into the cache so a re-fetch of the same range returns the new version', async () => {
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: spy(async () => ({ success: true })),
+        persistEvents: spy(async () => ({ success: true })),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -226,11 +226,11 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(stored?.title).to.equal('Event 1 Updated');
     });
 
-    it('should upsert into the cache the same event reference passed to dataSource.updateEvents', async () => {
-      const updateEventsSpy = spy(async (_params: UpdateEventsParams) => ({ success: true }));
+    it('should upsert into the cache the same event reference passed to dataSource.persistEvents', async () => {
+      const persistEventsSpy = spy(async (_params: PersistEventsParams) => ({ success: true }));
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: updateEventsSpy,
+        persistEvents: persistEventsSpy,
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -245,7 +245,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       await flushMicrotasks();
 
-      const payloadEvent = updateEventsSpy.firstCall.args[0].updated[0];
+      const payloadEvent = persistEventsSpy.firstCall.args[0].updated[0];
 
       // A re-fetch of the same range serves from cache. The cached event must be
       // the exact same reference forwarded to the data source — both consumers
@@ -256,11 +256,11 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(stored).to.equal(payloadEvent);
     });
 
-    it('should forward a mixed create+update+delete batch to dataSource.updateEvents in one call', async () => {
-      const updateEventsSpy = spy(async (_params: UpdateEventsParams) => ({ success: true }));
+    it('should forward all three buckets in a single dataSource.persistEvents call when the plugin receives a mixed eventsUpdated payload', async () => {
+      const persistEventsSpy = spy(async (_params: PersistEventsParams) => ({ success: true }));
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: updateEventsSpy,
+        persistEvents: persistEventsSpy,
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -284,9 +284,9 @@ premiumStoreClasses.forEach((storeClass) => {
         newEvents: [updatedEvent, createdEvent],
       });
 
-      await vi.waitFor(() => expect(updateEventsSpy.calledOnce).to.equal(true));
+      await vi.waitFor(() => expect(persistEventsSpy.calledOnce).to.equal(true));
 
-      const args = updateEventsSpy.firstCall.args[0];
+      const args = persistEventsSpy.firstCall.args[0];
       expect(args.deleted).toEqual(['3']);
       expect(args.updated).toHaveLength(1);
       expect(args.updated[0]).to.equal(updatedEvent);
@@ -294,12 +294,58 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(args.created[0]).to.equal(createdEvent);
     });
 
-    it('should pass IDs (not full event objects) to dataSource.updateEvents on delete', async () => {
-      const mockUpdateEvents = async (_params: UpdateEventsParams) => ({ success: true });
-      const updateEventsSpy = spy(mockUpdateEvents);
+    it('should preserve multi-item batches (2 deletes + 2 updates + 2 creates) through the store and the plugin', async () => {
+      const persistEventsSpy = spy(async (_params: PersistEventsParams) => ({ success: true }));
+      const seeded: TestEvent[] = [
+        { id: '1', start: '2025-07-01T00:00:00.000Z', end: '2025-07-01T01:00:00.000Z', title: 'E1' },
+        { id: '2', start: '2025-07-02T00:00:00.000Z', end: '2025-07-02T01:00:00.000Z', title: 'E2' },
+        { id: '3', start: '2025-07-03T00:00:00.000Z', end: '2025-07-03T01:00:00.000Z', title: 'E3' },
+        { id: '4', start: '2025-07-04T00:00:00.000Z', end: '2025-07-04T01:00:00.000Z', title: 'E4' },
+      ];
+      const dataSource = {
+        getEvents: spy(async () => seeded),
+        persistEvents: persistEventsSpy,
+      };
+      const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
+
+      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+
+      const { created: createdIds } = (store as any).updateEvents({
+        deleted: ['1', '2'],
+        updated: [
+          { id: '3', title: 'E3 updated' },
+          { id: '4', title: 'E4 updated' },
+        ],
+        created: [
+          { start: '2025-07-05T00:00:00.000Z', end: '2025-07-05T01:00:00.000Z', title: 'New A' },
+          { start: '2025-07-06T00:00:00.000Z', end: '2025-07-06T01:00:00.000Z', title: 'New B' },
+        ],
+      });
+
+      await flushMicrotasks();
+
+      expect(persistEventsSpy.calledOnce).to.equal(true);
+      const args = persistEventsSpy.firstCall.args[0];
+
+      expect(args.deleted).toEqual(['1', '2']);
+
+      expect(args.updated).toHaveLength(2);
+      expect(args.updated.map((e) => e.id)).toEqual(['3', '4']);
+      expect(args.updated.map((e) => e.title)).toEqual(['E3 updated', 'E4 updated']);
+
+      expect(args.created).toHaveLength(2);
+      expect(args.created.map((e) => e.id)).toEqual(createdIds);
+      expect(args.created.map((e) => e.title)).toEqual(['New A', 'New B']);
+    });
+
+    it('should pass IDs (not full event objects) to dataSource.persistEvents on delete', async () => {
+      const mockPersistEvents = async (_params: PersistEventsParams) => ({ success: true });
+      const persistEventsSpy = spy(mockPersistEvents);
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: updateEventsSpy,
+        persistEvents: persistEventsSpy,
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -311,14 +357,14 @@ premiumStoreClasses.forEach((storeClass) => {
 
       await flushMicrotasks();
 
-      expect(updateEventsSpy.calledOnce).to.equal(true);
-      const callArgs = updateEventsSpy.firstCall.args[0];
+      expect(persistEventsSpy.calledOnce).to.equal(true);
+      const callArgs = persistEventsSpy.firstCall.args[0];
       expect(callArgs.deleted).toEqual(['1']);
       expect(callArgs.updated).toHaveLength(0);
       expect(callArgs.created).toHaveLength(0);
     });
 
-    it('should pass full event objects keyed by custom eventModelStructure to dataSource.updateEvents', async () => {
+    it('should pass full event objects keyed by custom eventModelStructure to dataSource.persistEvents', async () => {
       interface MyEvent {
         myId: string;
         myTitle: string;
@@ -356,10 +402,10 @@ premiumStoreClasses.forEach((storeClass) => {
         },
       };
 
-      const mockUpdateEvents = async (_params: UpdateEventsParams<MyEvent>) => ({
+      const mockPersistEvents = async (_params: PersistEventsParams<MyEvent>) => ({
         success: true,
       });
-      const updateEventsSpy = spy(mockUpdateEvents);
+      const persistEventsSpy = spy(mockPersistEvents);
       const initialEvent: MyEvent = {
         myId: '1',
         myTitle: 'Event 1',
@@ -368,7 +414,7 @@ premiumStoreClasses.forEach((storeClass) => {
       };
       const dataSource = {
         getEvents: spy(async () => [initialEvent]),
-        updateEvents: updateEventsSpy,
+        persistEvents: persistEventsSpy,
       };
       const store = new storeClass.Value(
         { events: [], eventModelStructure, dataSource },
@@ -383,8 +429,8 @@ premiumStoreClasses.forEach((storeClass) => {
 
       await flushMicrotasks();
 
-      expect(updateEventsSpy.calledOnce).to.equal(true);
-      const createArgs = updateEventsSpy.firstCall.args[0];
+      expect(persistEventsSpy.calledOnce).to.equal(true);
+      const createArgs = persistEventsSpy.firstCall.args[0];
       expect(createArgs.created).toHaveLength(1);
       expect(createArgs.created[0]).toMatchObject({
         myId: createdId,
@@ -407,8 +453,8 @@ premiumStoreClasses.forEach((storeClass) => {
 
       await flushMicrotasks();
 
-      expect(updateEventsSpy.calledTwice).to.equal(true);
-      const updateArgs = updateEventsSpy.secondCall.args[0];
+      expect(persistEventsSpy.calledTwice).to.equal(true);
+      const updateArgs = persistEventsSpy.secondCall.args[0];
       expect(updateArgs.updated).toHaveLength(1);
       expect(updateArgs.updated[0]).toMatchObject({
         myId: '1',
@@ -418,11 +464,11 @@ premiumStoreClasses.forEach((storeClass) => {
       });
     });
 
-    it('should not update store state when dataSource.updateEvents returns success: false on create', async () => {
-      const mockUpdateEvents = async (_params: UpdateEventsParams) => ({ success: false });
+    it('should not update store state when dataSource.persistEvents returns success: false on create', async () => {
+      const mockPersistEvents = async (_params: PersistEventsParams) => ({ success: false });
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: spy(mockUpdateEvents),
+        persistEvents: spy(mockPersistEvents),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -445,11 +491,11 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.eventIdList).not.toContain(createdId);
     });
 
-    it('should not update store state when dataSource.updateEvents returns success: false on update', async () => {
-      const mockUpdateEvents = async (_params: UpdateEventsParams) => ({ success: false });
+    it('should not update store state when dataSource.persistEvents returns success: false on update', async () => {
+      const mockPersistEvents = async (_params: PersistEventsParams) => ({ success: false });
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: spy(mockUpdateEvents),
+        persistEvents: spy(mockPersistEvents),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -469,11 +515,11 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(stored?.title).to.equal('Event 1');
     });
 
-    it('should not remove event from cache when dataSource.updateEvents returns success: false on delete', async () => {
-      const mockUpdateEvents = async (_params: UpdateEventsParams) => ({ success: false });
+    it('should not remove event from cache when dataSource.persistEvents returns success: false on delete', async () => {
+      const mockPersistEvents = async (_params: PersistEventsParams) => ({ success: false });
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: spy(mockUpdateEvents),
+        persistEvents: spy(mockPersistEvents),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -492,7 +538,7 @@ premiumStoreClasses.forEach((storeClass) => {
     it('should handle an empty events array from dataSource.getEvents', async () => {
       const dataSource = {
         getEvents: spy(async () => [] as TestEvent[]),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async() => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -527,7 +573,7 @@ premiumStoreClasses.forEach((storeClass) => {
             },
           ];
         }),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async() => ({ success: true }),
       };
 
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
@@ -553,7 +599,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const dataSource = {
         getEvents: spy(() => fetchPromise),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async() => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -582,7 +628,7 @@ premiumStoreClasses.forEach((storeClass) => {
       try {
         const dataSource = {
           getEvents: spy(mockFetchData),
-          updateEvents: async () => ({ success: true }),
+          persistEvents: async() => ({ success: true }),
         };
         const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -606,7 +652,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const rejection = { status: 500, toString: () => '500 Internal Server Error' };
       const dataSource = {
         getEvents: spy(() => Promise.reject(rejection)),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async() => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -622,11 +668,11 @@ premiumStoreClasses.forEach((storeClass) => {
       expect(store.state.errors[0].error.cause).to.equal(rejection);
     });
 
-    it('should wrap non-Error rejections from dataSource.updateEvents into Error instances', async () => {
+    it('should wrap non-Error rejections from dataSource.persistEvents into Error instances', async () => {
       const rejection = { status: 500, toString: () => '500 Update Failed' };
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: spy(() => Promise.reject(rejection)),
+        persistEvents: spy(() => Promise.reject(rejection)),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -639,16 +685,16 @@ premiumStoreClasses.forEach((storeClass) => {
 
       await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
 
-      expect(dataSource.updateEvents.calledOnce).to.equal(true);
+      expect(dataSource.persistEvents.calledOnce).to.equal(true);
       expect(store.state.errors[0].error).to.be.instanceOf(Error);
       expect(store.state.errors[0].error.message).to.equal('500 Update Failed');
       expect(store.state.errors[0].error.cause).to.equal(rejection);
     });
 
-    it('should push an error to state.errors when dataSource.updateEvents rejects', async () => {
+    it('should push an error to state.errors when dataSource.persistEvents rejects', async () => {
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: spy(async () => {
+        persistEvents: spy(async () => {
           throw new Error('Update failed');
         }),
       };
@@ -663,14 +709,14 @@ premiumStoreClasses.forEach((storeClass) => {
 
       await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
 
-      expect(dataSource.updateEvents.calledOnce).to.equal(true);
+      expect(dataSource.persistEvents.calledOnce).to.equal(true);
       expect(store.state.errors[0].error.message).to.equal('Update failed');
     });
 
-    it('should push an error to state.errors when dataSource.updateEvents returns { success: false }', async () => {
+    it('should push an error to state.errors when dataSource.persistEvents returns { success: false }', async () => {
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: spy(async () => ({ success: false })),
+        persistEvents: spy(async () => ({ success: false })),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -683,7 +729,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
 
-      expect(dataSource.updateEvents.calledOnce).to.equal(true);
+      expect(dataSource.persistEvents.calledOnce).to.equal(true);
       expect(store.state.errors[0].error.message).to.include('{ success: false }');
     });
 
@@ -692,7 +738,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: spy(async () => {
           throw new Error('Fetch failed');
         }),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async() => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -711,7 +757,7 @@ premiumStoreClasses.forEach((storeClass) => {
     it('should reject the debounced queue() promise when fetchFunction throws from the cache-hit branch', async () => {
       const dataSource = {
         getEvents: spy(mockFetchData),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async() => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -750,7 +796,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: spy(async () => {
           throw new Error('Fetch failed');
         }),
-        updateEvents: spy(async () => ({ success: true })),
+        persistEvents: spy(async () => ({ success: true })),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 

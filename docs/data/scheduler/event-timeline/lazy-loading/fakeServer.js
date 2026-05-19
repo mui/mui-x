@@ -23,7 +23,7 @@ export async function getEvents(start, end) {
   });
 }
 
-export async function updateEvents(params) {
+export async function persistEvents(params) {
   const { deleted, updated, created } = params;
 
   for (const id of deleted) {

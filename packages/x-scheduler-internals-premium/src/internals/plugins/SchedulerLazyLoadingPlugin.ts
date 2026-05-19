@@ -213,9 +213,9 @@ export class SchedulerLazyLoadingPlugin<
       return;
     }
 
-    let shouldUpdateEvents: { success: boolean };
+    let persistResult: { success: boolean };
     try {
-      shouldUpdateEvents = await dataSource.updateEvents({
+      persistResult = await dataSource.persistEvents({
         deleted,
         updated: updated as TEvent[],
         created: created as TEvent[],
@@ -225,12 +225,12 @@ export class SchedulerLazyLoadingPlugin<
       return;
     }
 
-    if (!shouldUpdateEvents.success) {
+    if (!persistResult.success) {
       this.store.pushError(
         new Error(
-          'MUI X Scheduler: `dataSource.updateEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
-            'To surface a specific message to the user, throw a descriptive Error from `updateEvents` instead. ' +
-            'See the `updateEvents` contract at https://mui.com/x/react-scheduler/event-calendar/lazy-loading/ (EventCalendar) or https://mui.com/x/react-scheduler/event-timeline/lazy-loading/ (EventTimeline).',
+          'MUI X Scheduler: `dataSource.persistEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
+            'To surface a specific message to the user, throw a descriptive Error from `persistEvents` instead. ' +
+            'See the `persistEvents` contract at https://mui.com/x/react-scheduler/event-calendar/lazy-loading/ (EventCalendar) or https://mui.com/x/react-scheduler/event-timeline/lazy-loading/ (EventTimeline).',
         ),
       );
       return;

@@ -20,7 +20,7 @@ export async function getEvents(start: Date, end: Date): Promise<SchedulerEvent[
   });
 }
 
-export async function updateEvents(params: {
+export async function persistEvents(params: {
   deleted: SchedulerEventId[];
   updated: SchedulerEvent[];
   created: SchedulerEvent[];
