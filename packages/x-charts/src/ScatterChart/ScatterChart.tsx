@@ -439,13 +439,15 @@ ScatterChart.propTypes = {
   onTooltipItemChange: PropTypes.func,
   /**
    * The type of renderer to use for the scatter plot.
-   * - `svg-single`: Renders every scatter item in a `<circle />` element.
+   * - `svg-single`: Renders every scatter item in a `<circle />` element, synchronously.
+   * - `svg-progressive`: Renders every scatter item in a `<circle />` element, in progressive batches that paint over several animation frames to keep the main thread responsive.
    * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
    *                Read more: https://mui.com/x/react-charts/scatter/#performance
    *
-   * @default 'svg-single'
+   * When not set, the renderer is chosen automatically: `svg-progressive` above an internal point-count threshold, `svg-single` otherwise.
+   * @default undefined (auto)
    */
-  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-progressive', 'svg-single']),
   /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeries]] objects.

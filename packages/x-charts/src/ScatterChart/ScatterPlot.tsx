@@ -25,7 +25,7 @@ export interface ScatterPlotSlotProps extends ScatterSlotProps {
   scatter?: Partial<ScatterProps>;
 }
 
-export type RendererType = 'svg-single' | 'svg-progressive' | 'svg-batch';
+export type RendererType = 'svg-single' | 'svg-batch';
 
 export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick' | 'classes'> {
   className?: string;
@@ -49,7 +49,7 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick' | 'cl
    * When not set, the renderer is chosen automatically: `svg-progressive` above an internal point-count threshold, `svg-single` otherwise.
    * @default undefined (auto)
    */
-  renderer?: RendererType;
+  renderer?: RendererType | 'svg-progressive';
 }
 
 const ScatterPlotRoot = styled('g', {
