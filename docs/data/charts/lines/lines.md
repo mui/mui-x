@@ -49,6 +49,15 @@ Set the series `area` property to `true` to fill the area under the line.
 
 {{"demo": "BasicArea.js"}}
 
+### Marks
+
+Add `showMark: true` to display marks.
+
+To modify the mark, use the property `shape`.
+It accepts 7 shapes: `'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, and `'wye'`.
+
+{{"demo": "LineMarkShape.js", "bg": "outline"}}
+
 ### Log scale
 
 A y-axis with a log scale cannot plot a line that crosses zero, and it cannot plot an area chart, because the logarithm of zero is undefined.
@@ -155,6 +164,11 @@ Note that `onAxisClick` runs for both bar and line series when you mix them.
 
 ### Pointer interaction 🧪
 
+:::warning
+This feature is in preview.
+It is ready for production use, and its API, visuals, and behavior may change in future minor or patch releases.
+:::
+
 By default, line and area series are highlighted when the pointer hovers directly over the SVG element (the line stroke or area fill).
 This can make it difficult to interact with thin lines.
 
@@ -163,11 +177,6 @@ For area series, it detects whether the pointer is inside the filled area.
 For line series (without area), it finds the series whose curve is closest to the pointer's vertical position.
 
 This uses the same curve interpolation as the rendered line (for example, `monotoneX`, `catmullRom`), so the hit detection matches the visual shape.
-
-:::warning
-This feature is experimental.
-Its API and behavior may change in future releases.
-:::
 
 {{"demo": "LinePointerInteraction.js"}}
 

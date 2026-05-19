@@ -1,6 +1,7 @@
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { expectFieldValue, describeAdapters } from 'test/utils/pickers';
+import { expectFieldValue } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
 describe('<TimeField /> - Timezone', () => {
   describeAdapters('DST meridiem toggling', TimeField, ({ adapter, renderWithProps }) => {
