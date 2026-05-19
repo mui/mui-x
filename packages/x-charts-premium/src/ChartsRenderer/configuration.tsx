@@ -195,23 +195,17 @@ const getLegendSection = (
   },
 });
 
-const getColors = (localeText: ChartsLocaleText) => {
-  const trimPaletteName = (key: string) => key.replace(/Palette$/, '');
-  return Object.entries(colorPaletteLookup).map(([key]) => ({
-    key,
-    name: localeText[
-      `chartPaletteName${capitalize(trimPaletteName(key))}` as keyof ChartsLocaleText
-    ] as string,
-  }));
-};
-
 const getColorOptions = (localeText: ChartsLocaleText) => ({
   label: localeText.chartPaletteLabel,
   type: 'select' as const,
   default: 'rainbowSurgePalette',
-  options: getColors(localeText).map(({ key, name }) => ({
+  options: Array.from(colorPaletteLookup.entries()).map(([key, palette]) => ({
     value: key,
-    content: <PaletteOption palette={colorPaletteLookup.get(key)!}>{name}</PaletteOption>,
+    content: (
+      <PaletteOption palette={palette}>
+        {localeText[`chartPaletteName${capitalize(key.replace(/Palette$/, ''))}`]}
+      </PaletteOption>
+    ),
   })),
 });
 
