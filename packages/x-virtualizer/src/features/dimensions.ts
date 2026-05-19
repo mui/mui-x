@@ -14,6 +14,13 @@ import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 /* eslint-disable no-underscore-dangle */
 
+// Boundary between an intra-frame layout feedback loop (consecutive hasScrollY
+// flips inside a single browser frame, see #20539) and user-paced resize flips
+// (separated by ResizeObserver ticks and resizeThrottleMs, see #22510). Two
+// flips inside this window are treated as oscillation and the vertical
+// scrollbar is force-suppressed; flips outside it reset the counter.
+const OSCILLATION_FLIP_WINDOW_MS = 100;
+
 export type DimensionsParams = {
   rowHeight: number;
   columnsTotalWidth?: number;
@@ -253,12 +260,14 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
           }
 
           if (prevDimensions.isReady && hasScrollY !== prevDimensions.hasScrollY) {
-            const now = Date.now();
+            // performance.now is monotonic — Date.now reads the wall clock and
+            // could jump (NTP, manual time change), breaking the elapsed-time check.
+            const now = performance.now();
             // Reset when the previous flip is too old to be part of the same
             // synchronous render chain. Layout feedback loops flip within a single
             // browser frame; user-driven resize flips are paced by user input and
             // resizeThrottleMs (>= 60ms by default).
-            if (now - osc.lastFlipTimestamp > 100) {
+            if (now - osc.lastFlipTimestamp > OSCILLATION_FLIP_WINDOW_MS) {
               osc.counter = 0;
             }
             osc.lastFlipTimestamp = now;

@@ -1376,4 +1376,51 @@ describe('<DataGrid /> - Layout & warnings', () => {
       });
     },
   );
+
+  // See https://github.com/mui/mui-x/issues/20539
+  // Need layout
+  it.skipIf(isJSDOM)(
+    'should force the vertical scrollbar off when consecutive flips happen inside one render frame',
+    async () => {
+      // Stub performance.now so we can control the elapsed-time check inside
+      // the oscillation detector. With two consecutive hasScrollY flips falling
+      // inside the 100ms window the detector should treat them as a layout
+      // feedback loop and force-suppress the scrollbar (the protection added
+      // by PR #21820).
+      let mockTime = 1000;
+      const performanceNowStub = stub(performance, 'now').callsFake(() => mockTime);
+      try {
+        function TestCase({ height }: { height: number }) {
+          return (
+            <div style={{ width: 300, height }}>
+              <DataGrid
+                rows={Array.from({ length: 3 }, (_, i) => ({ id: i, brand: `b${i}` }))}
+                columns={[{ field: 'brand' }]}
+                resizeThrottleMs={0}
+              />
+            </div>
+          );
+        }
+        const { setProps } = render(<TestCase height={150} />);
+        await waitFor(() => {
+          expect(getVariable('--DataGrid-hasScrollY')).to.equal('1');
+        });
+        // First flip - starts a fresh oscillation sequence past the window.
+        mockTime += 200;
+        setProps({ height: 400 });
+        await waitFor(() => {
+          expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
+        });
+        // Second flip inside the window - the detector forces hasScrollY off
+        // even though the natural state at height 150 is "needs scrollbar".
+        mockTime += 30;
+        setProps({ height: 150 });
+        await waitFor(() => {
+          expect(getVariable('--DataGrid-hasScrollY')).to.equal('0');
+        });
+      } finally {
+        performanceNowStub.restore();
+      }
+    },
+  );
 });
