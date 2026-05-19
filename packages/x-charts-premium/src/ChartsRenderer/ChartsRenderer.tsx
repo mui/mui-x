@@ -100,7 +100,8 @@ function ChartsRenderer({
     return String(value);
   };
 
-  const defaultOptions = chartDefaults[chartType as keyof typeof chartDefaults] ?? {};
+  const defaultOptions: Record<string, any> =
+    chartDefaults[chartType as keyof typeof chartDefaults] ?? {};
 
   // merge passed options with the defaults
   const chartConfiguration = React.useMemo(() => {
