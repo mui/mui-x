@@ -8,6 +8,7 @@ import {
   GridChartsPanel,
   GridChartsRendererProxy,
   GridSidebarValue,
+  createGridCopilotLocalStorageAdapter,
   snapshotState,
   buildGuards,
 } from '@mui/x-data-grid-premium';
@@ -25,8 +26,12 @@ const BACKEND_URL = IS_DEPLOY
   : 'http://localhost:5055/api/v1/datagrid/copilot';
 // Local-dev test key from apps/mui-backend/.env.local; deploy preview uses the PR-1691 key.
 const API_KEY = IS_DEPLOY
-  ? atob('c2stbXVpLTNnRkpJREhDdGNRajJxV3BaaURpUUZFSjV0ZXF4QlF0RlFMVnk3dHpIcjY1Q1hkZFd0SXBvVzRLUm9a')
-  : atob('c2stbXVpLVJrSlZUVVpNZU52UGk3cmZycGVzc2lSM3JVdW14ZEw2ZW00YmpjN0kxRlFZZ25oZDkzUkNxaFpUZnJs');
+  ? atob(
+      'c2stbXVpLTNnRkpJREhDdGNRajJxV3BaaURpUUZFSjV0ZXF4QlF0RlFMVnk3dHpIcjY1Q1hkZFd0SXBvVzRLUm9a',
+    )
+  : atob(
+      'c2stbXVpLVJrSlZUVVpNZU52UGk3cmZycGVzc2lSM3JVdW14ZEw2ZW00YmpjN0kxRlFZZ25oZDkzUkNxaFpUZnJs',
+    );
 
 const VISIBLE_FIELDS = {
   Employee: [
@@ -239,7 +244,13 @@ export default function CopilotBackend() {
     rowLength: 100,
   });
 
-  const adapter = React.useMemo(() => createBackendAdapter(apiRef), []);
+  const adapter = React.useMemo(
+    () =>
+      createGridCopilotLocalStorageAdapter(createBackendAdapter(apiRef), {
+        key: `copilot-demo-${dataSet}`,
+      }),
+    [dataSet],
+  );
 
   const columns = React.useMemo(() => {
     const overrides = COLUMN_OVERRIDES[dataSet];

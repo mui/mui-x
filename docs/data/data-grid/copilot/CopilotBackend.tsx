@@ -8,6 +8,7 @@ import {
   GridChartsPanel,
   GridChartsRendererProxy,
   GridSidebarValue,
+  createGridCopilotLocalStorageAdapter,
   type GridApi,
   type GridColDef,
   type GridCopilotAdapter,
@@ -28,8 +29,12 @@ const BACKEND_URL = IS_DEPLOY
   : 'http://localhost:5055/api/v1/datagrid/copilot';
 // Local-dev test key from apps/mui-backend/.env.local; deploy preview uses the PR-1691 key.
 const API_KEY = IS_DEPLOY
-  ? atob('c2stbXVpLTNnRkpJREhDdGNRajJxV3BaaURpUUZFSjV0ZXF4QlF0RlFMVnk3dHpIcjY1Q1hkZFd0SXBvVzRLUm9a')
-  : atob('c2stbXVpLVJrSlZUVVpNZU52UGk3cmZycGVzc2lSM3JVdW14ZEw2ZW00YmpjN0kxRlFZZ25oZDkzUkNxaFpUZnJs');
+  ? atob(
+      'c2stbXVpLTNnRkpJREhDdGNRajJxV3BaaURpUUZFSjV0ZXF4QlF0RlFMVnk3dHpIcjY1Q1hkZFd0SXBvVzRLUm9a',
+    )
+  : atob(
+      'c2stbXVpLVJrSlZUVVpNZU52UGk3cmZycGVzc2lSM3JVdW14ZEw2ZW00YmpjN0kxRlFZZ25oZDkzUkNxaFpUZnJs',
+    );
 
 type DataSet = 'Employee' | 'Commodity';
 
@@ -194,7 +199,94 @@ function buildGridContext(apiRef: RefObject<GridApi>) {
     columns,
     aggregationFunctions: ['sum', 'avg', 'min', 'max', 'size'],
     state,
-    catalog: { version: 1 as const, statePaths: [], commands: [] },
+    catalog: {
+      version: 1 as const,
+      statePaths: [],
+      commands: [
+        {
+          type: 'history.undo',
+          namespace: 'history',
+          tier: 2,
+          plan: 'premium',
+          guard: null,
+          description:
+            "Revert every action applied by the previous assistant message (one history slice) in a single step.",
+        },
+        {
+          type: 'state.reset',
+          namespace: 'state',
+          tier: 2,
+          plan: 'premium',
+          guard: null,
+          description:
+            'Clear all shaping in one step: sort, filter, grouping, aggregation, pivot, charts, column visibility/pinning/order, selection.',
+        },
+        {
+          type: 'state.restore',
+          namespace: 'state',
+          tier: 2,
+          plan: 'community',
+          guard: null,
+          description: 'Restore a previously saved grid state.',
+        },
+        {
+          type: 'state.export',
+          namespace: 'state',
+          tier: 2,
+          plan: 'community',
+          guard: null,
+          description: 'Export the current grid state.',
+        },
+        {
+          type: 'view.scroll',
+          namespace: 'view',
+          tier: 2,
+          plan: 'community',
+          guard: null,
+          description: 'Scroll the viewport to a rowIndex/colIndex.',
+        },
+        {
+          type: 'view.focus',
+          namespace: 'view',
+          tier: 2,
+          plan: 'community',
+          guard: null,
+          description: 'Focus a specific cell (id, field).',
+        },
+        {
+          type: 'columns.autosize',
+          namespace: 'columns',
+          tier: 2,
+          plan: 'community',
+          guard: null,
+          description: 'Autosize columns to content.',
+        },
+        {
+          type: 'rows.expandAll',
+          namespace: 'rows',
+          tier: 2,
+          plan: 'pro',
+          guard: null,
+          description: 'Expand every group row.',
+        },
+        {
+          type: 'rows.collapseAll',
+          namespace: 'rows',
+          tier: 2,
+          plan: 'pro',
+          guard: null,
+          description: 'Collapse every group row.',
+        },
+        {
+          type: 'selection.selectVisibleTop',
+          namespace: 'selection',
+          tier: 1,
+          plan: 'community',
+          guard: 'rowSelection',
+          description: 'Select the top N visible rows.',
+        },
+      ],
+    },
   };
 }
 
@@ -245,8 +337,14 @@ export default function CopilotBackend() {
   });
 
   const adapter = React.useMemo(
-    () => createBackendAdapter(apiRef as unknown as RefObject<GridApi>),
-    [],
+    () =>
+      createGridCopilotLocalStorageAdapter(
+        createBackendAdapter(apiRef as unknown as RefObject<GridApi>),
+        {
+          key: `copilot-demo-${dataSet}`,
+        },
+      ),
+    [dataSet],
   );
 
   const columns = React.useMemo(() => {
