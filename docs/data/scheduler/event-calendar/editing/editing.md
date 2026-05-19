@@ -162,7 +162,7 @@ This feature isn't available yet, but it is planned—you can 👍 upvote [this 
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-With this feature, your users would be able to copy and paste events within the calendar.
+With this feature, users would be able to copy and paste events within the calendar.
 
 ## Undo and redo 🚧
 
@@ -171,4 +171,4 @@ This feature isn't available yet, but it is planned—you can 👍 upvote [this 
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-With this feature, your users would be able to undo and redo changes made to events.
+With this feature, users would be able to undo and redo changes made to events.

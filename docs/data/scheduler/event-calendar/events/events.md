@@ -196,4 +196,4 @@ This feature isn't available yet, but it is planned—you can 👍 upvote [this 
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 
-With this feature, your users would be able to define constraints on events, such as restricting them to specific time ranges or resources.
+With this feature, users would be able to define constraints on events, such as restricting them to specific time ranges or resources.
