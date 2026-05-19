@@ -7,6 +7,7 @@ import { DEFAULT_LOCALE, type ChartsLocaleText } from '@mui/x-charts/locales';
 import capitalize from '@mui/utils/capitalize';
 import { PaletteOption } from './components/PaletteOption';
 import { colorPaletteLookup } from './colors';
+import { chartDefaults } from './defaults';
 import {
   GridBarChartIcon,
   GridColumnChartIcon,
@@ -28,9 +29,13 @@ const getChartSection = (localeText: ChartsLocaleText): GridChartsConfigurationS
     showToolbar: {
       label: localeText.chartConfigurationShowToolbar,
       type: 'boolean',
-      default: false,
+      default: chartDefaults.column.showToolbar,
     },
-    height: { label: localeText.chartConfigurationHeight, type: 'number', default: 350 },
+    height: {
+      label: localeText.chartConfigurationHeight,
+      type: 'number',
+      default: chartDefaults.column.height,
+    },
     grid: {
       label: localeText.chartConfigurationGrid,
       type: 'select',
@@ -40,7 +45,7 @@ const getChartSection = (localeText: ChartsLocaleText): GridChartsConfigurationS
     skipAnimation: {
       label: localeText.chartConfigurationSkipAnimation,
       type: 'boolean',
-      default: false,
+      default: chartDefaults.column.skipAnimation,
     },
   },
 });
@@ -55,12 +60,12 @@ const getAxesSection = (
     categoriesAxisLabel: {
       label: localeText.chartConfigurationCategoriesAxisLabel,
       type: 'string',
-      default: '',
+      default: chartDefaults.column.categoriesAxisLabel,
     },
     seriesAxisLabel: {
       label: localeText.chartConfigurationSeriesAxisLabel,
       type: 'string',
-      default: '',
+      default: chartDefaults.column.seriesAxisLabel,
     },
     xAxisPosition: {
       label: localeText.chartConfigurationXAxisPosition,
@@ -112,7 +117,7 @@ const getAxesSection = (
     seriesAxisReverse: {
       label: localeText.chartConfigurationSeriesAxisReverse,
       type: 'boolean',
-      default: false,
+      default: chartDefaults.column.seriesAxisReverse,
     },
   },
 });
@@ -210,7 +215,7 @@ const getColors = (localeText: ChartsLocaleText) => [
 const getColorOptions = (localeText: ChartsLocaleText) => ({
   label: localeText.chartPaletteLabel,
   type: 'select' as const,
-  default: 'rainbowSurgePalette',
+  default: chartDefaults.column.colors,
   options: getColors(localeText).map(({ key, name }) => ({
     value: key,
     content: <PaletteOption palette={colorPaletteLookup.get(key)!}>{name}</PaletteOption>,
@@ -231,13 +236,13 @@ const getBarColumnCustomization = (
       borderRadius: {
         label: localeText.chartConfigurationBorderRadius,
         type: 'number',
-        default: 0,
+        default: chartDefaults[type].borderRadius,
       },
       colors: getColorOptions(localeText),
       categoryGapRatio: {
         label: localeText.chartConfigurationCategoryGapRatio,
         type: 'number',
-        default: 0.2,
+        default: chartDefaults[type].categoryGapRatio,
         htmlAttributes: {
           min: '0',
           max: '1',
@@ -247,7 +252,7 @@ const getBarColumnCustomization = (
       barGapRatio: {
         label: localeText.chartConfigurationBarGapRatio,
         type: 'number',
-        default: 0.1,
+        default: chartDefaults[type].barGapRatio,
         htmlAttributes: {
           min: '0',
           max: '1',
@@ -257,7 +262,7 @@ const getBarColumnCustomization = (
       stacked: {
         label: localeText.chartConfigurationStacked,
         type: 'boolean',
-        default: false,
+        default: chartDefaults[type].stacked,
         isDisabled: ({ values }: { values: any[] }) => values.length < 2,
       },
       itemLabel: {
@@ -309,13 +314,13 @@ const getLineAreaCustomization = (
       stacked: {
         label: localeText.chartConfigurationStacked,
         type: 'boolean',
-        default: false,
+        default: chartDefaults[type].stacked,
         isDisabled: ({ values }: { values: any[] }) => values.length < 2,
       },
       showMark: {
         label: localeText.chartConfigurationShowMark,
         type: 'boolean',
-        default: type === 'line',
+        default: chartDefaults[type].showMark,
       },
     },
   },
@@ -367,7 +372,7 @@ export const getLocalizedConfigurationOptions = (
             seriesGap: {
               label: localeText.chartConfigurationSeriesGap,
               type: 'number',
-              default: 10,
+              default: chartDefaults.pie.seriesGap,
               isDisabled: ({ values }: { values: any[] }) => values.length < 2,
               htmlAttributes: {
                 min: '0',
@@ -376,12 +381,12 @@ export const getLocalizedConfigurationOptions = (
             paddingAngle: {
               label: localeText.chartConfigurationPaddingAngle,
               type: 'number',
-              default: 0,
+              default: chartDefaults.pie.paddingAngle,
             },
             cornerRadius: {
               label: localeText.chartConfigurationCornerRadius,
               type: 'number',
-              default: 0,
+              default: chartDefaults.pie.cornerRadius,
             },
             itemLabel: {
               label: localeText.chartConfigurationArcLabels,
@@ -398,34 +403,42 @@ export const getLocalizedConfigurationOptions = (
             showToolbar: {
               label: localeText.chartConfigurationShowToolbar,
               type: 'boolean',
-              default: false,
+              default: chartDefaults.pie.showToolbar,
             },
             innerRadius: {
               label: localeText.chartConfigurationInnerRadius,
               type: 'number',
-              default: 50,
+              default: chartDefaults.pie.innerRadius,
             },
             outerRadius: {
               label: localeText.chartConfigurationOuterRadius,
               type: 'number',
-              default: 150,
+              default: chartDefaults.pie.outerRadius,
             },
             startAngle: {
               label: localeText.chartConfigurationStartAngle,
               type: 'number',
-              default: 0,
+              default: chartDefaults.pie.startAngle,
             },
             endAngle: {
               label: localeText.chartConfigurationEndAngle,
               type: 'number',
-              default: 360,
+              default: chartDefaults.pie.endAngle,
             },
-            height: { label: localeText.chartConfigurationHeight, type: 'number', default: 350 },
-            width: { label: localeText.chartConfigurationWidth, type: 'number', default: 350 },
+            height: {
+              label: localeText.chartConfigurationHeight,
+              type: 'number',
+              default: chartDefaults.pie.height,
+            },
+            width: {
+              label: localeText.chartConfigurationWidth,
+              type: 'number',
+              default: chartDefaults.pie.width,
+            },
             skipAnimation: {
               label: localeText.chartConfigurationSkipAnimation,
               type: 'boolean',
-              default: false,
+              default: chartDefaults.pie.skipAnimation,
             },
           },
         },
