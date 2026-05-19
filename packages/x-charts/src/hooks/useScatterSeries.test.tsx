@@ -1,4 +1,10 @@
-import { renderHook, waitFor, act, flushMicrotasks, type RenderHookResult } from '@mui/internal-test-utils';
+import {
+  renderHook,
+  waitFor,
+  act,
+  flushMicrotasks,
+  type RenderHookResult,
+} from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useScatterSeries, useScatterSeriesContext } from './useScatterSeries';
 import { type DefaultizedScatterSeriesType, type ScatterSeriesType } from '../models';
@@ -53,20 +59,14 @@ describe('useScatterSeries', () => {
   it('should return all scatter series when no seriesId is provided', async () => {
     const { result } = renderHook(() => useScatterSeries(), options);
     await waitFor(() =>
-      expect(result.current?.map((v) => v?.id)).to.deep.equal([
-        mockSeries[0].id,
-        mockSeries[1].id,
-      ]),
+      expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id, mockSeries[1].id]),
     );
   });
 
   it('should return the specific scatter series when multiple seriesIds are provided', async () => {
     const { result } = renderHook(() => useScatterSeries(['2', '1']), options);
     await waitFor(() =>
-      expect(result.current?.map((v) => v?.id)).to.deep.equal([
-        mockSeries[1].id,
-        mockSeries[0].id,
-      ]),
+      expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[1].id, mockSeries[0].id]),
     );
   });
 

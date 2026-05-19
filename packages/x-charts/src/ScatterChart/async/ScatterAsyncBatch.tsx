@@ -23,11 +23,10 @@ import {
   selectorScatterSeriesRenderData,
 } from './scatterRenderData.selectors';
 
-export interface ScatterAsyncBatchProps
-  extends Pick<
-    ScatterProps,
-    'series' | 'colorGetter' | 'onItemClick' | 'slots' | 'slotProps' | 'classes'
-  > {
+export interface ScatterAsyncBatchProps extends Pick<
+  ScatterProps,
+  'series' | 'colorGetter' | 'onItemClick' | 'slots' | 'slotProps' | 'classes'
+> {
   series: DefaultizedScatterSeriesType;
   colorGetter: ColorGetter<'scatter'>;
   /** First point index of this batch (inclusive). */
@@ -43,13 +42,7 @@ export interface ScatterAsyncBatchProps
 }
 
 /**
- * Renders a single batch of scatter markers.
- *
- * The `<g>` always mounts (cheap). Its children are rendered only from the
- * zero-copy `subarray` view of this batch's slice of the packed coordinates
- * typed array, and only once that render data is available — while the async
- * series/axes processors are still pending the selector returns `undefined`
- * and this batch renders an empty `<g>`, filling in progressively.
+ * @ignore - internal component.
  */
 function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
   const {

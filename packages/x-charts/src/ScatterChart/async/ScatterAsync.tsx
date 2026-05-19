@@ -7,19 +7,7 @@ import { useScatterReveal } from './scatterAsyncReveal';
 import { SCATTER_BATCH_SIZE } from './scatterRendererConstants';
 
 /**
- * Async, batched implementation of the default (`svg-single`) scatter renderer.
- *
- * Used automatically by `ScatterPlot` instead of `Scatter` when the total
- * point count exceeds `SCATTER_ASYNC_THRESHOLD`. It splits the series into
- * fixed-size batches; every batch `<g>` mounts immediately (cheap) while its
- * markers are rendered lazily from a zero-copy view on the packed coordinates
- * typed array. A single scheduler shared by all series of the plot (see
- * `ScatterAsyncRevealProvider`) reveals one batch across all series per tick,
- * so the points paint progressively and the per-frame work stays bounded no
- * matter how many series there are.
- *
- * Note: the public API (`ScatterProps`, slots, interactions) is identical to
- * `Scatter`, so it is a drop-in replacement.
+ * @ignore - internal component.
  */
 function ScatterAsync(props: ScatterProps) {
   const { series, colorGetter, onItemClick, slots, slotProps, classes } = props;

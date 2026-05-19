@@ -10,10 +10,7 @@ import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
 import { ScatterAsync } from './async/ScatterAsync';
-import {
-  ScatterAsyncRevealProvider,
-  type ScatterRevealSeries,
-} from './async/scatterAsyncReveal';
+import { ScatterAsyncRevealProvider, type ScatterRevealSeries } from './async/scatterAsyncReveal';
 import { SCATTER_ASYNC_THRESHOLD, SCATTER_BATCH_SIZE } from './async/scatterRendererConstants';
 import { useUtilityClasses } from './scatterClasses';
 
@@ -103,8 +100,7 @@ function ScatterPlot(props: ScatterPlotProps) {
   } else if (renderer === 'svg-progressive') {
     DefaultScatterItems = ScatterAsync;
   } else {
-    DefaultScatterItems =
-      totalPointCount > SCATTER_ASYNC_THRESHOLD ? ScatterAsync : Scatter;
+    DefaultScatterItems = totalPointCount > SCATTER_ASYNC_THRESHOLD ? ScatterAsync : Scatter;
   }
   const ScatterItems = slots?.scatter ?? DefaultScatterItems;
 
@@ -149,10 +145,7 @@ function ScatterPlot(props: ScatterPlotProps) {
           if (!series[seriesId].hidden) {
             plan.push({
               seriesId,
-              nBatches: Math.max(
-                1,
-                Math.ceil(series[seriesId].data.length / SCATTER_BATCH_SIZE),
-              ),
+              nBatches: Math.max(1, Math.ceil(series[seriesId].data.length / SCATTER_BATCH_SIZE)),
               dataRef: series[seriesId].data,
             });
           }
@@ -165,9 +158,7 @@ function ScatterPlot(props: ScatterPlotProps) {
       items
     );
 
-  return (
-    <ScatterPlotRoot className={clsx(classes.root, className)}>{content}</ScatterPlotRoot>
-  );
+  return <ScatterPlotRoot className={clsx(classes.root, className)}>{content}</ScatterPlotRoot>;
 }
 
 ScatterPlot.propTypes = {

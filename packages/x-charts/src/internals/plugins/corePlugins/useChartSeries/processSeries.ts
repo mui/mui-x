@@ -83,9 +83,7 @@ const isThenable = (value: unknown): value is Promise<unknown> =>
  * Each type maps either to a settled result or to a Promise resolving to one.
  */
 export type RawProcessedSeries<SeriesType extends ChartSeriesType = ChartSeriesType> = {
-  [type in SeriesType]?:
-    | SeriesProcessorResultOf<type>
-    | Promise<SeriesProcessorResultOf<type>>;
+  [type in SeriesType]?: SeriesProcessorResultOf<type> | Promise<SeriesProcessorResultOf<type>>;
 };
 
 type SeriesProcessorResultOf<SeriesType extends ChartSeriesType> = NonNullable<

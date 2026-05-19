@@ -15,7 +15,8 @@ const POINT_COUNT = 20000;
 function makeSeries(chance: Chance.Chance, count: number) {
   const remainder = count % NUMBER_OF_SERIES;
   return Array.from({ length: NUMBER_OF_SERIES }, (_, seriesIndex) => {
-    const size = Math.floor(count / NUMBER_OF_SERIES) + (seriesIndex < remainder ? 1 : 0);
+    const size =
+      Math.floor(count / NUMBER_OF_SERIES) + (seriesIndex < remainder ? 1 : 0);
     const offsetX = (seriesIndex % 2) * 50;
     const offsetY = seriesIndex * 25;
     const data = Array.from({ length: size }, () => {
@@ -28,7 +29,12 @@ function makeSeries(chance: Chance.Chance, count: number) {
         y: offsetY + radius * Math.sin(angle) + noiseY,
       };
     });
-    return { id: `series-${seriesIndex}`, label: `Series ${seriesIndex + 1}`, data, markerSize: 2 };
+    return {
+      id: `series-${seriesIndex}`,
+      label: `Series ${seriesIndex + 1}`,
+      data,
+      markerSize: 2,
+    };
   });
 }
 
@@ -195,7 +201,11 @@ export default function ScatterAsyncRenderer() {
           Progressive
         </Button>
         <MainThreadSpinner />
-        <RenderTimers containerRef={containerRef} startRef={startRef} runId={runId} />
+        <RenderTimers
+          containerRef={containerRef}
+          startRef={startRef}
+          runId={runId}
+        />
       </Stack>
       <div ref={containerRef} style={{ width: '100%' }}>
         <ScatterChart

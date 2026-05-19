@@ -186,9 +186,9 @@ describe('<ScatterChart />', () => {
       render(<ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} hideLegend />);
 
       await waitFor(() =>
-        expect(
-          document.querySelectorAll<HTMLElement>(`.${scatterClasses.series}`).length,
-        ).to.equal(1),
+        expect(document.querySelectorAll<HTMLElement>(`.${scatterClasses.series}`).length).to.equal(
+          1,
+        ),
       );
     });
 
@@ -196,9 +196,9 @@ describe('<ScatterChart />', () => {
       render(<ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} hideLegend />);
 
       await waitFor(() =>
-        expect(
-          document.querySelectorAll<HTMLElement>(`.${scatterClasses.marker}`).length,
-        ).to.equal(5),
+        expect(document.querySelectorAll<HTMLElement>(`.${scatterClasses.marker}`).length).to.equal(
+          5,
+        ),
       );
     });
   });
