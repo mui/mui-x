@@ -251,12 +251,12 @@ RadialBarChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialBar']),
+        type: PropTypes.oneOf(['radialBar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialBar']).isRequired,
+        type: PropTypes.oneOf(['radialBar']),
       }),
     ]).isRequired,
   ),
@@ -272,11 +272,11 @@ RadialBarChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
   ]),
   /**
@@ -310,12 +310,12 @@ RadialBarChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialBar']),
+        type: PropTypes.oneOf(['radialBar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialBar']).isRequired,
+        type: PropTypes.oneOf(['radialBar']),
       }),
     ]).isRequired,
   ),
@@ -413,11 +413,11 @@ RadialBarChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
   ]),
   /**
