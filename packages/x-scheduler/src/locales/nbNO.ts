@@ -97,6 +97,10 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Vis ukenummer',
   timeFormat: 'Tidsformat',
   viewSpecificOptions: (view) => `${view} visningsalternativer`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Hele dagen',
