@@ -166,7 +166,7 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
 
   // Measure chip and container widths after render. `getBoundingClientRect` is sub-pixel,
   // which keeps the chip-fit math aligned with the browser's actual layout.
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (autoWrap) {
       return;
     }
@@ -233,7 +233,7 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
     isDragResizingThisField,
   ]);
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     prevVisibleCountRef.current = visibleCount;
   }, [visibleCount]);
 
