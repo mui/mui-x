@@ -11,7 +11,7 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid';
 import type { GridSlotProps, ValueOptions } from '@mui/x-data-grid';
-import { NotRendered } from '@mui/x-data-grid/internals';
+import { NotRendered, useSyncExternalStore } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import {
   DEFAULT_GAP,
@@ -107,8 +107,25 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
 
   const [measuredCount, setMeasuredCount] = React.useState(0);
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
-  const [overflowMetrics, setOverflowMetrics] = React.useState(
+
+  const subscribeMetrics = React.useCallback(
+    (notify: () => void) => {
+      const cache = privateApiRef.current.caches.multiSelect;
+      if (!cache) {
+        return () => {};
+      }
+      return cache.subscribeOverflowMetrics(field, notify);
+    },
+    [privateApiRef, field],
+  );
+  const getMetricsSnapshot = React.useCallback(
     () => privateApiRef.current.caches.multiSelect?.getOverflowMetrics(field) ?? null,
+    [privateApiRef, field],
+  );
+  const overflowMetrics = useSyncExternalStore(
+    subscribeMetrics,
+    getMetricsSnapshot,
+    getMetricsSnapshot,
   );
 
   const arrayKey = React.useMemo(() => values.join('\0'), [values]);
@@ -146,14 +163,6 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
       }
     });
   }, [field, autoWrap, privateApiRef]);
-
-  React.useEffect(() => {
-    const cache = privateApiRef.current.caches.multiSelect;
-    if (!cache) {
-      return undefined;
-    }
-    return cache.subscribeOverflowMetrics(field, setOverflowMetrics);
-  }, [privateApiRef, field]);
 
   // Measure chip and container widths after render. `getBoundingClientRect` is sub-pixel,
   // which keeps the chip-fit math aligned with the browser's actual layout.

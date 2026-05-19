@@ -251,3 +251,5 @@ export { createSvgIcon } from '../material/icons/createSvgIcon';
 export { useGridPanelContext } from '../components/panel/GridPanelContext';
 
 export type { RowReorderDropPosition, RowReorderDragDirection } from '../models/api/gridRowApi';
+
+export { useSyncExternalStore } from 'use-sync-external-store/shim';
