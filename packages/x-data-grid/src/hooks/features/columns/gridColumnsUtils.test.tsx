@@ -1,11 +1,36 @@
 import type * as React from 'react';
-import { computeFlexColumnsWidth, createColumnsState } from './gridColumnsUtils';
+import {
+  computeFlexColumnsWidth,
+  createColumnsState,
+  hydrateColumnsWidth,
+} from './gridColumnsUtils';
 import type { GridColDef } from '../../../models/colDef/gridColDef';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { GridColumnsState } from './gridColumnsInterfaces';
+import type { GridColumnsRawState, GridColumnsState } from './gridColumnsInterfaces';
 
 describe('gridColumnsUtils', () => {
   describe('createColumnsState', () => {
+    const createMockApiRef = () => {
+      const mockState: { columns: GridColumnsState } = {
+        columns: {
+          orderedFields: [],
+          lookup: {},
+          columnVisibilityModel: {},
+          initialColumnVisibilityModel: {},
+        },
+      };
+
+      return {
+        apiRef: {
+          current: {
+            state: mockState,
+            unstable_applyPipeProcessors: (_name: string, state: any) => state,
+          },
+        } as React.RefObject<GridApiCommunity>,
+        mockState,
+      };
+    };
+
     it('should sync columns state when column props are removed', () => {
       const fn = () => null;
 
@@ -21,21 +46,7 @@ describe('gridColumnsUtils', () => {
         { field: 'string', type: 'string', renderHeader: fn, renderCell: fn },
       ];
 
-      // Add a mock state to simulate that the columns state is already initialized
-      const mockState: { columns: GridColumnsState } = {
-        columns: {
-          orderedFields: [],
-          lookup: {},
-          columnVisibilityModel: {},
-          initialColumnVisibilityModel: {},
-        },
-      };
-      const mockApiRef = {
-        current: {
-          state: mockState,
-          unstable_applyPipeProcessors: (_name: string, state: any) => state,
-        },
-      } as React.RefObject<GridApiCommunity>;
+      const { apiRef: mockApiRef, mockState } = createMockApiRef();
 
       // Add columns with more props to the state
       const stateWithMoreProps = createColumnsState({
@@ -71,6 +82,54 @@ describe('gridColumnsUtils', () => {
       expect(stateWithRenderHeader.lookup.default.renderCell).toBeUndefined();
       expect(stateWithRenderHeader.lookup.number.renderCell).toBeUndefined();
       expect(stateWithRenderHeader.lookup.string.renderCell).toBeUndefined();
+    });
+  });
+
+  describe('hydrateColumnsWidth', () => {
+    const hydrateColumn = (column: GridColDef) => {
+      const columnsState: GridColumnsRawState = {
+        orderedFields: [column.field],
+        lookup: { [column.field]: column },
+        columnVisibilityModel: {},
+        initialColumnVisibilityModel: {},
+      };
+
+      return hydrateColumnsWidth(columnsState, undefined).lookup[column.field];
+    };
+
+    it('should preserve explicit zero values for non-flex column dimensions', () => {
+      expect(hydrateColumn({ field: 'narrow', width: 30, minWidth: 0 }).computedWidth).to.equal(30);
+      expect(hydrateColumn({ field: 'zeroWidth', width: 0, minWidth: 0 }).computedWidth).to.equal(
+        0,
+      );
+      expect(hydrateColumn({ field: 'defaultMinWidth', width: 30 }).computedWidth).to.equal(50);
+      expect(
+        hydrateColumn({ field: 'zeroMaxWidth', width: 30, minWidth: 0, maxWidth: 0 }).computedWidth,
+      ).to.equal(0);
+    });
+
+    it('should use the column type default dimensions for missing values', () => {
+      expect(hydrateColumn({ field: 'number', type: 'number' }).computedWidth).to.equal(100);
+      expect(
+        hydrateColumn({ field: 'numberMinWidth', type: 'number', width: 30 }).computedWidth,
+      ).to.equal(50);
+    });
+
+    it('should use default dimensions when non-flex column dimensions are NaN', () => {
+      expect(
+        hydrateColumn({ field: 'invalidWidth', width: Number.NaN, minWidth: 0 }).computedWidth,
+      ).to.equal(100);
+      expect(
+        hydrateColumn({ field: 'invalidMinWidth', width: 30, minWidth: Number.NaN }).computedWidth,
+      ).to.equal(50);
+      expect(
+        hydrateColumn({
+          field: 'invalidMaxWidth',
+          width: 200,
+          minWidth: 0,
+          maxWidth: Number.NaN,
+        }).computedWidth,
+      ).to.equal(200);
     });
   });
 
