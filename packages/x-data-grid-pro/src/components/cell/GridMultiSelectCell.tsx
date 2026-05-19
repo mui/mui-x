@@ -14,6 +14,7 @@ import {
   getDataGridUtilityClass,
   useGridRootProps,
   useGridApiContext,
+  useGridEvent,
   useGridSelector,
 } from '@mui/x-data-grid';
 import {
@@ -167,19 +168,21 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
 
   // Focus the overflow chip when the cell receives focus. Ref is null when there's no
   // overflow chip rendered (i.e. all chips fit), which naturally no-ops.
-  React.useEffect(() => {
-    if (isAutoHeight) {
+  useGridEvent(apiRef, 'cellFocusIn', (params) => {
+    if (params.id !== id || params.field !== colDef.field || isAutoHeight || popupOpen) {
       return;
     }
-    if (hasFocus && !popupOpen) {
-      if (overflowChipRef.current && overflowChipRef.current !== document.activeElement) {
-        overflowChipRef.current.focus();
-      }
+    if (overflowChipRef.current && overflowChipRef.current !== document.activeElement) {
+      overflowChipRef.current.focus();
     }
-    if (!hasFocus) {
-      setPopupOpen(false);
+  });
+
+  useGridEvent(apiRef, 'cellFocusOut', (params) => {
+    if (params.id !== id || params.field !== colDef.field) {
+      return;
     }
-  }, [hasFocus, popupOpen, isAutoHeight]);
+    setPopupOpen(false);
+  });
 
   const handleOverflowClick = (event: React.MouseEvent) => {
     // event.detail === 0 means keyboard-triggered click (Enter keyup on focused button).
@@ -277,7 +280,9 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
               if (event.key === 'Escape') {
                 event.stopPropagation();
                 setPopupOpen(false);
-                apiRef.current.getCellElement(id, colDef.field)?.focus();
+                const focusTarget =
+                  overflowChipRef.current ?? apiRef.current.getCellElement(id, colDef.field);
+                focusTarget?.focus();
               }
             }}
             {...slotProps?.popperContent}

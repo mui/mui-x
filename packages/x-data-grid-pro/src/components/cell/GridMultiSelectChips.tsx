@@ -99,7 +99,6 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
 
   const chipsRef = React.useRef<Map<number, HTMLDivElement>>(new Map());
   const chipWidthsRef = React.useRef<Map<number, number>>(new Map());
-  const prevArrayKeyRef = React.useRef<string | null>(null);
   const prevVisibleCountRef = React.useRef<number>(values.length);
   // Stable `column.width - container.width` offset (cell padding + borders), so during
   // active drag we can derive container width from the resize event's `params.width`
@@ -113,18 +112,14 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
   );
 
   const arrayKey = React.useMemo(() => values.join('\0'), [values]);
+  const [prevArrayKey, setPrevArrayKey] = React.useState(arrayKey);
 
-  React.useEffect(() => {
-    if (autoWrap) {
-      return;
-    }
-    if (prevArrayKeyRef.current !== null && prevArrayKeyRef.current !== arrayKey) {
-      chipWidthsRef.current.clear();
-      setMeasuredCount(0);
-      setContainerWidth(null);
-    }
-    prevArrayKeyRef.current = arrayKey;
-  }, [arrayKey, autoWrap]);
+  if (!autoWrap && prevArrayKey !== arrayKey) {
+    setPrevArrayKey(arrayKey);
+    chipWidthsRef.current.clear();
+    setMeasuredCount(0);
+    setContainerWidth(null);
+  }
 
   // Re-measure on committed column width changes; active drag flows through the
   // shared subscription below.

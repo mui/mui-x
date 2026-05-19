@@ -17,6 +17,7 @@ import {
   getDataGridUtilityClass,
   useGridRootProps,
   useGridApiContext,
+  useGridEvent,
   useGridSelector,
   GridCellEditStopReasons,
 } from '@mui/x-data-grid';
@@ -193,27 +194,29 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
     }
   };
 
+  // Reset `open` when the cell loses focus so re-entering (Shift+Tab back) reopens
+  // the autocomplete by default — matches the "every focus opens the autocomplete"
+  // expectation.
+  const [prevHasFocus, setPrevHasFocus] = React.useState(hasFocus);
+  if (hasFocus !== prevHasFocus) {
+    setPrevHasFocus(hasFocus);
+    if (!hasFocus && rootProps.editMode === 'row') {
+      setOpen(true);
+    }
+  }
+
   // The Modal locks body scroll and the autocomplete input is body-portaled, so the
   // browser default scroll-into-view that text-input cells rely on doesn't fire here —
-  // call `apiRef.scrollToIndexes` on the focus-gain edge to bring the cell into view.
-  const prevHasFocusRef = React.useRef(false);
-  useEnhancedEffect(() => {
-    if (rootProps.editMode !== 'row') {
+  // call `apiRef.scrollToIndexes` when this cell gains focus to bring it into view.
+  useGridEvent(apiRef, 'cellFocusIn', (params) => {
+    if (params.id !== id || params.field !== field || rootProps.editMode !== 'row') {
       return;
     }
-    if (!hasFocus) {
-      setOpen(true);
-      prevHasFocusRef.current = false;
-      return;
-    }
-    if (!prevHasFocusRef.current) {
-      apiRef.current.scrollToIndexes({
-        colIndex: apiRef.current.getColumnIndex(field, true),
-        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
-      });
-      prevHasFocusRef.current = true;
-    }
-  }, [hasFocus, rootProps.editMode, apiRef, field, id]);
+    apiRef.current.scrollToIndexes({
+      colIndex: apiRef.current.getColumnIndex(field, true),
+      rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+    });
+  });
 
   useEnhancedEffect(() => {
     if (rootProps.editMode !== 'row') {
