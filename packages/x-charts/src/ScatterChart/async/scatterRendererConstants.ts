@@ -10,7 +10,7 @@ export const SCATTER_BATCH_SIZE = 1000;
  * switches the `svg-single` renderer to the async, batched implementation.
  * Below it, the original per-item `Scatter` renderer is used.
  */
-export const SCATTER_ASYNC_THRESHOLD = 2000;
+export const SCATTER_ASYNC_THRESHOLD = 3000;
 
 /**
  * How many batches are revealed per reveal tick once the render data is ready.
