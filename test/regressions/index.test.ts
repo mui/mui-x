@@ -4,6 +4,13 @@ import { type Browser, chromium, type ConsoleMessage, type Page } from '@playwri
 import fs from 'node:fs/promises';
 import { test as base } from 'vitest';
 
+declare global {
+  interface Window {
+    /** Removes the pointer dot and its listener — set by `enablePointerDot`. */
+    pointerDotCleanup?: () => void;
+  }
+}
+
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
   'ColumnAutosizingAsync',
@@ -286,6 +293,7 @@ async function main() {
 
     test('should highlight line series when pointer is within the proximity threshold', async ({
       pooled,
+      onTestFinished,
     }) => {
       const { page } = pooled;
       const route = '/test-regressions-charts/LineChartPointerInteraction';
@@ -299,7 +307,7 @@ async function main() {
 
       await sleep(10);
 
-      await enablePointerDot(page);
+      await enablePointerDot(page, onTestFinished);
 
       // At index 5: Series C (area)=9, Series A=5, Series B=3. yAxis 0-10.
       // Both tests position the pointer relative to Series A's line.
@@ -318,13 +326,13 @@ async function main() {
 
     test('should highlight area series when pointer is inside fill but outside line threshold', async ({
       pooled,
+      onTestFinished,
     }) => {
       const { page } = pooled;
       const route = '/test-regressions-charts/LineChartPointerInteraction';
       const screenshotPath = path.resolve(screenshotDir, `.${route}AreaHighlight.png`);
 
       await navigateToTest(page, route);
-      await page.reload(); // Ensure a fresh state since we may reuse a pooled page.
 
       const testcase = await page.waitForSelector(
         `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
@@ -332,7 +340,7 @@ async function main() {
 
       await sleep(10);
 
-      await enablePointerDot(page);
+      await enablePointerDot(page, onTestFinished);
 
       // Same reference point, but 17px below Series A → outside threshold → area highlighted
       const drawingArea = await getDrawingArea(page);
@@ -561,8 +569,21 @@ function screenshotPrintDialogPreview(
   });
 }
 
-/** Adds a red dot on the body that follows the mouse cursor. */
-async function enablePointerDot(page: Page) {
+// Adds a red dot on the body that follows the mouse cursor.
+// Takes the test context's `onTestFinished` (rather than the global one, so it
+// stays correct if these tests ever move under `describe.concurrent`) to tear
+// the dot and its document-level pointermove listener down once the test
+// finishes — otherwise they would leak onto the pooled page for the next test.
+async function enablePointerDot(
+  page: Page,
+  onTestFinished: (fn: () => void | Promise<void>) => void,
+) {
+  onTestFinished(async () => {
+    await page.evaluate(() => {
+      window.pointerDotCleanup?.();
+    });
+  });
+
   await page.evaluate(() => {
     const dot = document.createElement('div');
     Object.assign(dot.style, {
@@ -577,10 +598,17 @@ async function enablePointerDot(page: Page) {
     });
     document.body.appendChild(dot);
 
-    document.addEventListener('pointermove', (event) => {
+    const handlePointerMove = (event: PointerEvent) => {
       dot.style.left = `${event.clientX}px`;
       dot.style.top = `${event.clientY}px`;
-    });
+    };
+    document.addEventListener('pointermove', handlePointerMove);
+
+    window.pointerDotCleanup = () => {
+      document.removeEventListener('pointermove', handlePointerMove);
+      dot.remove();
+      delete window.pointerDotCleanup;
+    };
   });
 }
 
