@@ -398,7 +398,7 @@ RadialLineChart.propTypes = {
   rotationAxis: PropTypes.arrayOf(PropTypes.object),
   /**
    * The series to display in the line chart.
-   * An array of [[LineSeries]] objects.
+   * An array of [[RadialLineSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
