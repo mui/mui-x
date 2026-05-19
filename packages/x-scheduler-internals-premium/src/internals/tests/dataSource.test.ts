@@ -52,7 +52,7 @@ premiumStoreClasses.forEach((storeClass) => {
     it('should fetch events from data source when queueDataFetchForRange is called (lazy load)', async () => {
       const dataSource = {
         getEvents: spy(mockFetchData),
-        persistEvents: async() => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -76,7 +76,7 @@ premiumStoreClasses.forEach((storeClass) => {
     it('should fetch new events when visible range changes to an uncached area', async () => {
       const dataSource = {
         getEvents: spy(mockFetchData),
-        persistEvents: async() => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
 
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
@@ -104,7 +104,7 @@ premiumStoreClasses.forEach((storeClass) => {
     it('should use cached data when fetching a range that is already covered', async () => {
       const dataSource = {
         getEvents: spy(mockFetchData),
-        persistEvents: async() => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
 
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
@@ -297,10 +297,30 @@ premiumStoreClasses.forEach((storeClass) => {
     it('should preserve multi-item batches (2 deletes + 2 updates + 2 creates) through the store and the plugin', async () => {
       const persistEventsSpy = spy(async (_params: PersistEventsParams) => ({ success: true }));
       const seeded: TestEvent[] = [
-        { id: '1', start: '2025-07-01T00:00:00.000Z', end: '2025-07-01T01:00:00.000Z', title: 'E1' },
-        { id: '2', start: '2025-07-02T00:00:00.000Z', end: '2025-07-02T01:00:00.000Z', title: 'E2' },
-        { id: '3', start: '2025-07-03T00:00:00.000Z', end: '2025-07-03T01:00:00.000Z', title: 'E3' },
-        { id: '4', start: '2025-07-04T00:00:00.000Z', end: '2025-07-04T01:00:00.000Z', title: 'E4' },
+        {
+          id: '1',
+          start: '2025-07-01T00:00:00.000Z',
+          end: '2025-07-01T01:00:00.000Z',
+          title: 'E1',
+        },
+        {
+          id: '2',
+          start: '2025-07-02T00:00:00.000Z',
+          end: '2025-07-02T01:00:00.000Z',
+          title: 'E2',
+        },
+        {
+          id: '3',
+          start: '2025-07-03T00:00:00.000Z',
+          end: '2025-07-03T01:00:00.000Z',
+          title: 'E3',
+        },
+        {
+          id: '4',
+          start: '2025-07-04T00:00:00.000Z',
+          end: '2025-07-04T01:00:00.000Z',
+          title: 'E4',
+        },
       ];
       const dataSource = {
         getEvents: spy(async () => seeded),
@@ -416,10 +436,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: spy(async () => [initialEvent]),
         persistEvents: persistEventsSpy,
       };
-      const store = new storeClass.Value(
-        { events: [], eventModelStructure, dataSource },
-        adapter,
-      );
+      const store = new storeClass.Value({ events: [], eventModelStructure, dataSource }, adapter);
 
       const createdId = store.createEvent({
         start: '2025-07-02T09:00:00.000Z',
@@ -538,7 +555,7 @@ premiumStoreClasses.forEach((storeClass) => {
     it('should handle an empty events array from dataSource.getEvents', async () => {
       const dataSource = {
         getEvents: spy(async () => [] as TestEvent[]),
-        persistEvents: async() => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -573,7 +590,7 @@ premiumStoreClasses.forEach((storeClass) => {
             },
           ];
         }),
-        persistEvents: async() => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
 
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
@@ -599,7 +616,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       const dataSource = {
         getEvents: spy(() => fetchPromise),
-        persistEvents: async() => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -628,7 +645,7 @@ premiumStoreClasses.forEach((storeClass) => {
       try {
         const dataSource = {
           getEvents: spy(mockFetchData),
-          persistEvents: async() => ({ success: true }),
+          persistEvents: async () => ({ success: true }),
         };
         const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -652,7 +669,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const rejection = { status: 500, toString: () => '500 Internal Server Error' };
       const dataSource = {
         getEvents: spy(() => Promise.reject(rejection)),
-        persistEvents: async() => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -738,7 +755,7 @@ premiumStoreClasses.forEach((storeClass) => {
         getEvents: spy(async () => {
           throw new Error('Fetch failed');
         }),
-        persistEvents: async() => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -757,7 +774,7 @@ premiumStoreClasses.forEach((storeClass) => {
     it('should reject the debounced queue() promise when fetchFunction throws from the cache-hit branch', async () => {
       const dataSource = {
         getEvents: spy(mockFetchData),
-        persistEvents: async() => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
