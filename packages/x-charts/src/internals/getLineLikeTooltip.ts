@@ -32,9 +32,6 @@ export function getLineLikeTooltip<SeriesType extends LineLikeTooltipChartType>(
     return null as TooltipGetterResult<SeriesType>;
   }
 
-  // `series.valueFormatter` is a union of formatter signatures with incompatible value
-  // parameters across chart types. We just pass through whatever value `series.data[i]`
-  // returned, so cast the formatter to one of the matching shapes.
   const formattedValue = (series as TooltipGetterParams<'line'>['series']).valueFormatter(
     value as number | null,
     { dataIndex: identifier.dataIndex },
@@ -47,12 +44,9 @@ export function getLineLikeTooltip<SeriesType extends LineLikeTooltipChartType>(
     value,
     formattedValue,
     markType: series.labelMarkType,
-    ...(options.includeMarkShape && {
-      // showMark / shape only exist on line and radialLine series; consumers that pass
-      // includeMarkShape: true must be one of those types.
-      markShape: (series as TooltipGetterParams<'line'>['series']).showMark
-        ? (series as TooltipGetterParams<'line'>['series']).shape
-        : undefined,
+    ...(options.includeMarkShape &&
+      (series.type === 'line' || series.type === 'radialLine') && {
+      markShape: series.showMark ? series.shape : undefined,
     }),
   };
 
