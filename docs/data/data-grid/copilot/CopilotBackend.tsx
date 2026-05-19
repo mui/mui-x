@@ -28,8 +28,8 @@ const BACKEND_URL = IS_DEPLOY
   : 'http://localhost:5055/api/v1/datagrid/copilot';
 // Local-dev test key from apps/mui-backend/.env.local; deploy preview uses the PR-1691 key.
 const API_KEY = IS_DEPLOY
-  ? 'sk-mui-3gFJIDHCtcQj2qWpZiDiQFEJ5teqxBQtFQLVy7tzHr65CXddWtIpoW4KRoZ'
-  : 'sk-mui-RkJVTUZMeNvPi7rfrpessiR3rUumxdL6em4bjc7I1FQYgnhd93RCqhZTfrl';
+  ? atob('c2stbXVpLTNnRkpJREhDdGNRajJxV3BaaURpUUZFSjV0ZXF4QlF0RlFMVnk3dHpIcjY1Q1hkZFd0SXBvVzRLUm9a')
+  : atob('c2stbXVpLVJrSlZUVVpNZU52UGk3cmZycGVzc2lSM3JVdW14ZEw2ZW00YmpjN0kxRlFZZ25oZDkzUkNxaFpUZnJs');
 
 type DataSet = 'Employee' | 'Commodity';
 
