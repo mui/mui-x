@@ -128,6 +128,11 @@ export function ScatterAsyncRevealProvider(props: ScatterAsyncRevealProviderProp
 
     let frame = 0;
     let cancelled = false;
+    // The progression is tracked in this closure variable, not derived inside
+    // a state updater: updater functions must be pure, and React double-invokes
+    // them in StrictMode, which would schedule the animation-frame chain twice
+    // and make the ramp accelerate exponentially.
+    let revealed = 0;
 
     // Schedule `step` after skipping `SCATTER_REVEAL_FRAMES_SKIPPED` frames, so
     // the browser keeps idle frames for layout, paint and input handling
@@ -153,13 +158,11 @@ export function ScatterAsyncRevealProvider(props: ScatterAsyncRevealProviderProp
       if (cancelled) {
         return;
       }
-      setRevealedGlobalBatches((current) => {
-        const next = Math.min(total, current + SCATTER_REVEAL_BATCHES_PER_FRAME);
-        if (next < total) {
-          scheduleNext();
-        }
-        return next;
-      });
+      revealed = Math.min(total, revealed + SCATTER_REVEAL_BATCHES_PER_FRAME);
+      setRevealedGlobalBatches(revealed);
+      if (revealed < total) {
+        scheduleNext();
+      }
     }
 
     frame = requestAnimationFrame(step);

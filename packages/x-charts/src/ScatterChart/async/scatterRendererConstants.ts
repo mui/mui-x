@@ -10,19 +10,18 @@ export const SCATTER_BATCH_SIZE = 1000;
  * switches the `svg-single` renderer to the async, batched implementation.
  * Below it, the original per-item `Scatter` renderer is used.
  */
-export const SCATTER_ASYNC_THRESHOLD = 3000;
+export const SCATTER_ASYNC_THRESHOLD = 10000;
 
 /**
  * How many batches are revealed per reveal tick once the render data is ready.
  * Lower spreads the paint over more ticks (smoother, more visibly progressive);
- * higher finishes sooner. One batch at the default batch size paints ~1000
- * points.
+ * higher finishes sooner.
  */
 export const SCATTER_REVEAL_BATCHES_PER_FRAME = 1;
 
 /**
  * How many animation frames are skipped between two reveal ticks. `0` reveals
- * on every frame; `1` (default) reveals every other frame, leaving the browser
+ * on every frame; `1` reveals every other frame, leaving the browser
  * an idle frame for layout, paint and input handling between commits. Higher
  * values give the browser more CPU headroom at the cost of a slower paint.
  */

@@ -5,56 +5,121 @@ import Typography from '@mui/material/Typography';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import Chance from 'chance';
 
-const POINT_COUNT_SERIES = 10000;
 const NUMBER_OF_SERIES = 2;
-// 2 x 10k points, using the internal threshold of 2k points per series to trigger the async renderer. This is enough to
-// see the progressive paint in action without being too heavy on the CPU.
-// And considering we render in batches of 1k points, this means we'll see 20 batches in total.
-// Rendering is tied to rAF, so the exact number of batches and paint times will vary based on the screen refresh rate,
-// At 60Hz we can expect 30 frames per second, since we skip every other frame to allow the main thread to breathe.
-const POINT_COUNT = POINT_COUNT_SERIES * NUMBER_OF_SERIES;
 
-// Gaussian-ish blobs so the progressive, batched paint is easy to see.
-// Points are grouped by series: each contiguous block of `POINT_COUNT_SERIES`
-// belongs to one series and is offset into its own region.
-function makeData(chance) {
-  const data = [];
-  for (let i = 0; i < POINT_COUNT; i += 1) {
-    const seriesIndex = Math.floor(i / POINT_COUNT_SERIES);
-    const angle = chance.floating({ min: 0, max: 2 * Math.PI });
-    const radius = Math.sqrt(chance.floating({ min: 0, max: 1 })) * 100;
-    const noiseX = chance.floating({ min: -100, max: 10 });
-    const noiseY = chance.floating({ min: -100, max: 10 });
+const SYNC_COUNT = 10000;
+const ASYNC_COUNT = 20000;
+
+// Gaussian-ish blobs so the progressive, batched paint is easy to see. Points
+// are split into `NUMBER_OF_SERIES` contiguous series, each offset into its
+// own region.
+function makeSeries(chance, count) {
+  const remainder = count % NUMBER_OF_SERIES;
+  return Array.from({ length: NUMBER_OF_SERIES }, (_, seriesIndex) => {
+    const size =
+      Math.floor(count / NUMBER_OF_SERIES) + (seriesIndex < remainder ? 1 : 0);
     const offsetX = (seriesIndex % 2) * 50;
     const offsetY = seriesIndex * 25;
-    data.push({
-      x: offsetX + radius * Math.cos(angle) + noiseX,
-      y: offsetY + radius * Math.sin(angle) + noiseY,
+    const data = Array.from({ length: size }, () => {
+      const angle = chance.floating({ min: 0, max: 2 * Math.PI });
+      const radius = Math.sqrt(chance.floating({ min: 0, max: 1 })) * 100;
+      const noiseX = chance.floating({ min: -100, max: 10 });
+      const noiseY = chance.floating({ min: -100, max: 10 });
+      return {
+        x: offsetX + radius * Math.cos(angle) + noiseX,
+        y: offsetY + radius * Math.sin(angle) + noiseY,
+      };
     });
-  }
-  return data;
+    return {
+      id: `series-${seriesIndex}`,
+      label: `Series ${seriesIndex + 1}`,
+      data,
+      markerSize: 2,
+    };
+  });
 }
 
-// Calculate the two datasets outside the component so they don't have to be re-generated.
-const initialData = makeData(new Chance(42));
-const switchData = makeData(new Chance(43));
+// Built once outside the component so toggling does not regenerate the points
+// and the series keep stable references.
+const syncSeries = makeSeries(new Chance(42), SYNC_COUNT);
+const asyncSeries = makeSeries(new Chance(43), ASYNC_COUNT);
+
+// A spinner whose rotation is advanced in JS on every animation frame (not a
+// CSS animation, which runs on the compositor and stays smooth regardless).
+// If the main thread is blocked, this visibly stutters — a live indicator of
+// whether the progressive render keeps the main thread responsive.
+function MainThreadSpinner() {
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    let frame = 0;
+    let angle = 0;
+    const tick = () => {
+      angle = (angle + 6) % 360;
+      if (ref.current) {
+        ref.current.style.transform = `rotate(${angle}deg)`;
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      aria-label="main thread activity"
+      style={{
+        width: 16,
+        height: 16,
+        borderRadius: '50%',
+        border: '2px solid currentColor',
+        borderTopColor: 'transparent',
+        opacity: 0.6,
+      }}
+    />
+  );
+}
 
 export default function ScatterAsyncRenderer() {
-  const [isInitial, setIsInitial] = React.useState(true);
-  const data = isInitial ? initialData : switchData;
-  // Memoize the series so the `data` arrays keep a stable reference across
-  // unrelated re-renders (for example clicking an anchor on the page).
-  // Otherwise new array references would replay the progressive paint.
-  const series = React.useMemo(
-    () =>
-      Array.from({ length: NUMBER_OF_SERIES }, (_, i) => ({
-        id: `series-${i}`,
-        label: `Series ${i + 1}`,
-        data: data.slice(i * POINT_COUNT_SERIES, (i + 1) * POINT_COUNT_SERIES),
-        markerSize: 2,
-      })),
-    [data],
-  );
+  const [mode, setMode] = React.useState('sync');
+  const series = mode === 'sync' ? syncSeries : asyncSeries;
+
+  // Time from a button click to the first DOM update of the chart.
+  const [elapsedMs, setElapsedMs] = React.useState(null);
+  const containerRef = React.useRef(null);
+  // Bumped on every click; the measurement effect keys off it.
+  const [runId, setRunId] = React.useState(0);
+  const startRef = React.useRef(null);
+  const baselineRef = React.useRef(0);
+
+  const select = (next) => {
+    startRef.current = performance.now();
+    baselineRef.current =
+      containerRef.current?.querySelectorAll('circle').length ?? 0;
+    setElapsedMs(null);
+    setRunId((id) => id + 1);
+    setMode(next);
+  };
+
+  React.useEffect(() => {
+    if (runId === 0 || startRef.current === null) {
+      return undefined;
+    }
+    let frame = 0;
+    const check = () => {
+      const count = containerRef.current?.querySelectorAll('circle').length ?? 0;
+      // First animation frame on which the painted points differ from what was
+      // on screen at click time = the first visible update.
+      if (count !== baselineRef.current) {
+        setElapsedMs(performance.now() - startRef.current);
+        return;
+      }
+      frame = requestAnimationFrame(check);
+    };
+    frame = requestAnimationFrame(check);
+    return () => cancelAnimationFrame(frame);
+  }, [runId]);
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
@@ -64,25 +129,40 @@ export default function ScatterAsyncRenderer() {
         sx={{ alignItems: 'center', justifyContent: 'center' }}
       >
         <Typography variant="h6" sx={{ textAlign: 'center' }}>
-          {POINT_COUNT.toLocaleString()} points — default `svg-single` renderer
+          {mode === 'sync'
+            ? `${SYNC_COUNT.toLocaleString()} points`
+            : `${ASYNC_COUNT.toLocaleString()} points`}
         </Typography>
         <Button
-          variant="outlined"
+          variant={mode === 'sync' ? 'contained' : 'outlined'}
           size="small"
-          onClick={() => setIsInitial(!isInitial)}
+          onClick={() => select('sync')}
         >
-          Reshuffle
+          sync
         </Button>
+        <Button
+          variant={mode === 'async' ? 'contained' : 'outlined'}
+          size="small"
+          onClick={() => select('async')}
+        >
+          async
+        </Button>
+        <MainThreadSpinner />
+        <Typography variant="body2" sx={{ minWidth: 130 }}>
+          first paint: {elapsedMs === null ? '—' : `${elapsedMs.toFixed(0)} ms`}
+        </Typography>
       </Stack>
-      <ScatterChart
-        series={series}
-        height={400}
-        // `svg-single` is the default. Above the internal threshold it
-        // automatically switches to the async, batched implementation: every
-        // batch group mounts immediately and its points are painted
-        // progressively as the series/axes processors settle.
-        renderer="svg-single"
-      />
+      <div ref={containerRef} style={{ width: '100%' }}>
+        <ScatterChart
+          series={series}
+          height={400}
+          // `svg-single` is the default. Above the internal threshold it
+          // automatically switches to the async, batched implementation: every
+          // batch group mounts immediately and its points are painted
+          // progressively as the series/axes processors settle.
+          renderer="svg-single"
+        />
+      </div>
     </Stack>
   );
 }
