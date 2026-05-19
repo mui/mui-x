@@ -2,7 +2,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { type ScatterProps } from '../Scatter';
-import { useUtilityClasses } from '../scatterClasses';
 import { ScatterAsyncBatch } from './ScatterAsyncBatch';
 import { useScatterReveal } from './scatterAsyncReveal';
 import { SCATTER_BATCH_SIZE } from './scatterRendererConstants';
@@ -23,8 +22,7 @@ import { SCATTER_BATCH_SIZE } from './scatterRendererConstants';
  * `Scatter`, so it is a drop-in replacement.
  */
 function ScatterAsync(props: ScatterProps) {
-  const { series, colorGetter, onItemClick, slots, slotProps, classes: inClasses } = props;
-  const classes = useUtilityClasses({ classes: inClasses });
+  const { series, colorGetter, onItemClick, slots, slotProps, classes } = props;
 
   const count = series.data.length;
   const nBatches = Math.max(1, Math.ceil(count / SCATTER_BATCH_SIZE));

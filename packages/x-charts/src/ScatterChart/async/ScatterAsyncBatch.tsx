@@ -12,7 +12,7 @@ import {
 } from '../../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from '../ScatterMarker';
 import type { ColorGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
-import type { useUtilityClasses } from '../scatterClasses';
+import { useUtilityClasses } from '../scatterClasses';
 import { useChartsContext } from '../../context/ChartsProvider';
 import { type UseChartTooltipSignature } from '../../internals/plugins/featurePlugins/useChartTooltip';
 import { type UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
@@ -24,7 +24,10 @@ import {
 } from './scatterRenderData.selectors';
 
 export interface ScatterAsyncBatchProps
-  extends Pick<ScatterProps, 'series' | 'colorGetter' | 'onItemClick' | 'slots' | 'slotProps'> {
+  extends Pick<
+    ScatterProps,
+    'series' | 'colorGetter' | 'onItemClick' | 'slots' | 'slotProps' | 'classes'
+  > {
   series: DefaultizedScatterSeriesType;
   colorGetter: ColorGetter<'scatter'>;
   /** First point index of this batch (inclusive). */
@@ -37,7 +40,6 @@ export interface ScatterAsyncBatchProps
    * paint. When `false` the `<g>` still mounts but stays empty.
    */
   revealed: boolean;
-  classes: ReturnType<typeof useUtilityClasses>;
 }
 
 /**
@@ -49,9 +51,20 @@ export interface ScatterAsyncBatchProps
  * series/axes processors are still pending the selector returns `undefined`
  * and this batch renders an empty `<g>`, filling in progressively.
  */
-function ScatterAsyncBatch(props: ScatterAsyncBatchProps) {
-  const { series, colorGetter, onItemClick, slots, slotProps, start, end, revealed, classes } =
-    props;
+function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
+  const {
+    series,
+    colorGetter,
+    onItemClick,
+    slots,
+    slotProps,
+    start,
+    end,
+    revealed,
+    classes: inClasses,
+  } = props;
+
+  const classes = useUtilityClasses({ classes: inClasses });
 
   const { instance } =
     useChartsContext<
@@ -131,5 +144,12 @@ function ScatterAsyncBatch(props: ScatterAsyncBatchProps) {
     </g>
   );
 }
+
+/**
+ * Memoized so a reveal tick (which re-renders every `ScatterAsync`) only
+ * re-renders the one batch whose `revealed` prop actually changed, instead of
+ * re-reconciling every already-painted batch every frame.
+ */
+const ScatterAsyncBatch = React.memo(ScatterAsyncBatchComponent);
 
 export { ScatterAsyncBatch };
