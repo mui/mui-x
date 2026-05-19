@@ -32,6 +32,7 @@ export { useChatStatus } from './hooks/useChatStatus';
 export { useChatStore } from './hooks/useChatStore';
 export { useConversation, useConversations } from './hooks/useConversation';
 export { useMessage, useMessageIds } from './hooks/useMessage';
+export { useMessageContext } from './message';
 
 export {
   chatSelectors,
@@ -102,6 +103,15 @@ export type {
 } from './types/chat-entities';
 
 export type { ChatError, ChatErrorCode } from './types/chat-error';
+
+export type {
+  ChatConversationMetadata,
+  ChatCustomMessagePartMap,
+  ChatDataPartMap,
+  ChatMessageMetadata,
+  ChatToolDefinitionMap,
+  ChatUserMetadata,
+} from './types/chat-type-registry';
 
 export type {
   ChatBuiltInMessagePart,

@@ -12,6 +12,7 @@ import type {
   ChatUser,
 } from '@mui/x-chat-headless';
 import { CopilotToolBlock } from './CopilotToolBlock';
+import { CopilotMessageMetadata } from './CopilotMessageMetadata';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
@@ -246,15 +247,16 @@ function GridCopilotPanel() {
           }}
           slotProps={{
             messageContent: {
+              afterContent: <CopilotMessageMetadata />,
               partProps: {
                 tool: {
                   toolSlots: {
                     setGridState: { root: CopilotToolBlock },
                     runCommands: { root: CopilotToolBlock },
-                  }
-                }
-              }
-            }
+                  },
+                },
+              },
+            },
           }}
         />
       </CopilotPanelBody>
