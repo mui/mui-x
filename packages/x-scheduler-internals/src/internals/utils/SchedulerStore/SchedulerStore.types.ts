@@ -182,13 +182,26 @@ export interface SchedulerState<TEvent extends object = any> {
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
 }
 
+/**
+ * Result of `dataSource.persistEvents`.
+ */
+export interface SchedulerPersistEventsResult {
+  success: boolean;
+}
+
 export interface SchedulerDataSource<TEvent extends object> {
   getEvents: (start: TemporalSupportedObject, end: TemporalSupportedObject) => Promise<TEvent[]>;
-  updateEvents: (parameters: {
+  /**
+   * Called when events are created, updated or deleted so the consumer can persist them.
+   *
+   * Throw to surface a custom error in `state.errors`. Return `{ success: false }`
+   * to abort the cache/state update with a generic error.
+   */
+  persistEvents: (parameters: {
     deleted: SchedulerEventId[];
-    updated: SchedulerEventId[];
-    created: SchedulerEventId[];
-  }) => Promise<{ success: boolean }>;
+    updated: TEvent[];
+    created: TEvent[];
+  }) => Promise<SchedulerPersistEventsResult>;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
