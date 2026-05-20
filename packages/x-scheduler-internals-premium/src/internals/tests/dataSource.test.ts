@@ -481,6 +481,86 @@ premiumStoreClasses.forEach((storeClass) => {
       });
     });
 
+    it('should cache events by their custom-structure id so multiple events coexist and updates survive a re-fetch', async () => {
+      interface MyEvent {
+        myId: string;
+        myTitle: string;
+        myStart: string;
+        myEnd: string;
+      }
+      const eventModelStructure: SchedulerEventModelStructure<MyEvent> = {
+        id: {
+          getter: (event) => event.myId,
+          setter: (event, value) => {
+            event.myId = value.toString();
+            return event;
+          },
+        },
+        title: {
+          getter: (event) => event.myTitle,
+          setter: (event, value) => {
+            event.myTitle = value;
+            return event;
+          },
+        },
+        start: {
+          getter: (event) => event.myStart,
+          setter: (event, value) => {
+            event.myStart = value;
+            return event;
+          },
+        },
+        end: {
+          getter: (event) => event.myEnd,
+          setter: (event, value) => {
+            event.myEnd = value;
+            return event;
+          },
+        },
+      };
+
+      const seeded: MyEvent[] = [
+        {
+          myId: '1',
+          myTitle: 'E1',
+          myStart: '2025-07-01T09:00:00.000Z',
+          myEnd: '2025-07-01T10:00:00.000Z',
+        },
+        {
+          myId: '2',
+          myTitle: 'E2',
+          myStart: '2025-07-02T09:00:00.000Z',
+          myEnd: '2025-07-02T10:00:00.000Z',
+        },
+      ];
+      const dataSource = {
+        getEvents: spy(async () => seeded),
+        persistEvents: spy(async () => ({ success: true })),
+      };
+      const store = new storeClass.Value({ events: [], eventModelStructure, dataSource }, adapter);
+
+      const start = adapter.date('2025-07-01T00:00:00Z', 'default');
+      const end = adapter.date('2025-07-07T00:00:00Z', 'default');
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+
+      // Without a structure-aware cache, both events would collide on key "undefined"
+      // and only one would survive.
+      expect(store.state.eventIdList).to.have.length(2);
+
+      store.updateEvent({
+        id: '1',
+        title: 'E1 updated',
+      });
+      await flushMicrotasks();
+
+      // A re-fetch of the same range must serve from cache and reflect the update.
+      await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
+      expect(dataSource.getEvents.calledOnce).to.equal(true);
+
+      expect(store.state.processedEventLookup.get('1')?.title).to.equal('E1 updated');
+      expect(store.state.processedEventLookup.has('2')).to.equal(true);
+    });
+
     it('should not update store state when dataSource.persistEvents returns success: false on create', async () => {
       const mockPersistEvents = async (_params: PersistEventsParams) => ({ success: false });
       const dataSource = {

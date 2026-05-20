@@ -79,7 +79,10 @@ export class SchedulerLazyLoadingPlugin<
     this.store = store;
 
     if (this.store.parameters.dataSource) {
-      this.cache = new SchedulerDataSourceCacheDefault<TEvent>({ ttl: 300_000 });
+      this.cache = new SchedulerDataSourceCacheDefault<TEvent>({
+        ttl: 300_000,
+        getId: this.store.parameters.eventModelStructure?.id?.getter,
+      });
       this.dataManager = new SchedulerDataManager(
         this.store.state.adapter,
         this.loadEventsFromDataSource,
