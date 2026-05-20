@@ -78,13 +78,23 @@ function ScatterPlot(props: ScatterPlotProps) {
 
   // Register this plot's progressive rendering plan with the chart-wide
   // `useProgressiveRendering` plugin so the scheduler is shared across every
-  // plot composed into the same chart.
+  // plot composed into the same chart. The plugin may be absent when
+  // `ScatterPlot` is composed inside a custom container that doesn't include
+  // it — in that case we fall back to the synchronous renderer.
   const { instance } = useChartsContext<[UseProgressiveRenderingSignature]>();
+  const setProgressivePlan = instance.setProgressivePlan as
+    | UseProgressiveRenderingSignature['instance']['setProgressivePlan']
+    | undefined;
+  const clearProgressivePlan = instance.clearProgressivePlan as
+    | UseProgressiveRenderingSignature['instance']['clearProgressivePlan']
+    | undefined;
+  const hasProgressivePlugin =
+    typeof setProgressivePlan === 'function' && typeof clearProgressivePlan === 'function';
   const plotId = React.useId();
 
   const slotScatter = slots?.scatter;
   const progressivePlan = React.useMemo<ProgressivePlanEntry[]>(() => {
-    if (seriesData === undefined) {
+    if (seriesData === undefined || !hasProgressivePlugin) {
       return [];
     }
     const { series: s, seriesOrder: order } = seriesData;
@@ -112,16 +122,19 @@ function ScatterPlot(props: ScatterPlotProps) {
       }
     });
     return plan;
-  }, [seriesData, renderer, slotScatter]);
+  }, [seriesData, renderer, slotScatter, hasProgressivePlugin]);
 
   React.useEffect(() => {
-    if (progressivePlan.length === 0) {
-      instance.clearProgressivePlan(plotId);
+    if (!setProgressivePlan || !clearProgressivePlan) {
       return undefined;
     }
-    instance.setProgressivePlan(plotId, progressivePlan);
-    return () => instance.clearProgressivePlan(plotId);
-  }, [instance, plotId, progressivePlan]);
+    if (progressivePlan.length === 0) {
+      clearProgressivePlan(plotId);
+      return undefined;
+    }
+    setProgressivePlan(plotId, progressivePlan);
+    return () => clearProgressivePlan(plotId);
+  }, [setProgressivePlan, clearProgressivePlan, plotId, progressivePlan]);
 
   if (seriesData === undefined) {
     return null;
@@ -148,10 +161,18 @@ function ScatterPlot(props: ScatterPlotProps) {
     DefaultScatterItems = BatchScatter;
   } else if (renderer === 'svg-single') {
     DefaultScatterItems = Scatter;
-  } else if (renderer === 'svg-progressive') {
+  } else if (renderer === 'svg-progressive' && hasProgressivePlugin) {
+    DefaultScatterItems = ScatterAsync;
+  } else if (
+    renderer === undefined &&
+    hasProgressivePlugin &&
+    totalPointCount > SCATTER_ASYNC_THRESHOLD
+  ) {
     DefaultScatterItems = ScatterAsync;
   } else {
-    DefaultScatterItems = totalPointCount > SCATTER_ASYNC_THRESHOLD ? ScatterAsync : Scatter;
+    // No progressive plugin available (e.g. custom container without it) or
+    // not enough points to be worth it — fall back to the synchronous renderer.
+    DefaultScatterItems = Scatter;
   }
   const ScatterItems = slots?.scatter ?? DefaultScatterItems;
 

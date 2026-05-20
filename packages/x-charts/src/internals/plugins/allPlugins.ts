@@ -28,6 +28,10 @@ import {
   type UseChartVisibilityManagerSignature,
 } from './featurePlugins/useChartVisibilityManager';
 import { useChartTooltip, type UseChartTooltipSignature } from './featurePlugins/useChartTooltip';
+import {
+  useProgressiveRendering,
+  type UseProgressiveRenderingSignature,
+} from './featurePlugins/useProgressiveRendering';
 
 export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
@@ -40,6 +44,7 @@ export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeries
   UseChartVisibilityManagerSignature<SeriesType>,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
+  UseProgressiveRenderingSignature,
 ];
 
 export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
@@ -52,6 +57,7 @@ export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSe
   UseChartVisibilityManagerSignature<SeriesType>,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
+  UseProgressiveRenderingSignature,
 ];
 
 export const DEFAULT_PLUGINS = [
@@ -64,4 +70,5 @@ export const DEFAULT_PLUGINS = [
   useChartVisibilityManager,
   useChartClosestPoint,
   useChartKeyboardNavigation,
+  useProgressiveRendering,
 ] as const;
