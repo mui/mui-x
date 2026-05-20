@@ -217,9 +217,7 @@ describe('useChartKeyboardNavigation', () => {
       // The scatter series processor is async; wait for the visible series to
       // render. ScatterPlot returns null for hidden series, so Series A's mark
       // group is never rendered.
-      await waitFor(() =>
-        expect(container.querySelector(`[data-series="B"]`)).not.to.equal(null),
-      );
+      await waitFor(() => expect(container.querySelector(`[data-series="B"]`)).not.to.equal(null));
       expect(container.querySelector(`[data-series="A"]`)).to.equal(null);
 
       await user.keyboard('{Tab}');
