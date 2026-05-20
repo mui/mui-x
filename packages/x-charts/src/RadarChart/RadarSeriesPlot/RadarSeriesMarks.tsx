@@ -51,7 +51,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
         }
 
         return (
-          <g key={id}>
+          <g key={id} data-series={id}>
             {points.map((point, index) => (
               <circle
                 key={index}

@@ -25,7 +25,7 @@ export function RadialAreaPlot(props: RadialAreaPlotProps) {
   return (
     <RadialAreaPlotRoot className={classes.areaPlot} transform={`translate(${cx} ${cy})`}>
       {completedData.map(
-        ({ seriesId, color, hidden, area, curve, points }) =>
+        ({ seriesId, color, hidden, area, curve, points, closePath }) =>
           area && (
             <RadialArea
               key={seriesId}
@@ -34,6 +34,7 @@ export function RadialAreaPlot(props: RadialAreaPlotProps) {
               hidden={hidden}
               curve={curve}
               points={points}
+              closePath={closePath}
               className={classes.area}
             />
           ),

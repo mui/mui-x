@@ -261,12 +261,12 @@ BarChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']),
+        type: PropTypes.oneOf(['bar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']).isRequired,
+        type: PropTypes.oneOf(['bar']),
       }),
     ]).isRequired,
   ),
@@ -292,11 +292,11 @@ BarChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar']).isRequired,
     }),
   ]),
   /**
@@ -330,12 +330,12 @@ BarChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']),
+        type: PropTypes.oneOf(['bar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']).isRequired,
+        type: PropTypes.oneOf(['bar']),
       }),
     ]).isRequired,
   ),
@@ -478,11 +478,11 @@ BarChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar']).isRequired,
     }),
   ]),
   /**
