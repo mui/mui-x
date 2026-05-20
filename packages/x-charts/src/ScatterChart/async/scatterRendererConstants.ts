@@ -3,7 +3,7 @@
  * Each batch mounts its own `<g>` immediately; its children (the markers) are
  * rendered from a zero-copy view on the packed coordinates typed array.
  */
-export const SCATTER_BATCH_SIZE = 1000;
+export const SCATTER_BATCH_SIZE = 5000;
 
 /**
  * Total scatter point count (across visible series) above which `ScatterPlot`
