@@ -354,7 +354,7 @@ export class SchedulerStore<
         if (updated.has(id)) {
           warnOnce([
             `MUI X Scheduler: id "${String(id)}" appears in both \`deleted\` and \`updated\`.`,
-            '`deleted`, `updated` and `created` must be pairwise disjoint, otherwise the order of operations is undefined.',
+            'These two arrays must be disjoint, otherwise the order of operations is undefined.',
           ]);
         }
       }

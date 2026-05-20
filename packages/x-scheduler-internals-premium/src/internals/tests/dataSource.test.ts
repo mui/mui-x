@@ -7,17 +7,6 @@ import { DEBOUNCE_MS } from '../utils/queue';
 
 const DEFAULT_PARAMS = { events: [] };
 
-/**
- * Flushes the chain of microtasks produced by `store.updateEvents` →
- * `queueMicrotask(publishEvent)` → handler `await dataSource.persistEvents`
- * → continuation. Three ticks cover the whole pipeline.
- */
-const flushMicrotasks = async () => {
-  await Promise.resolve();
-  await Promise.resolve();
-  await Promise.resolve();
-};
-
 // Basic types for testing
 interface TestEvent {
   id: string;
@@ -144,9 +133,7 @@ premiumStoreClasses.forEach((storeClass) => {
         title: 'Created Event',
       });
 
-      await flushMicrotasks();
-
-      expect(persistEventsSpy.calledOnce).to.equal(true);
+      await vi.waitFor(() => expect(persistEventsSpy.calledOnce).to.equal(true));
       const callArgs = persistEventsSpy.firstCall.args[0];
       expect(callArgs.created).toHaveLength(1);
       expect(callArgs.created[0]).toMatchObject({
@@ -183,9 +170,7 @@ premiumStoreClasses.forEach((storeClass) => {
         end: adapter.date('2025-07-01T12:00:00Z', 'default'),
       });
 
-      await flushMicrotasks();
-
-      expect(persistEventsSpy.calledOnce).to.equal(true);
+      await vi.waitFor(() => expect(persistEventsSpy.calledOnce).to.equal(true));
       const callArgs = persistEventsSpy.firstCall.args[0];
       expect(callArgs.updated).toHaveLength(1);
       expect(callArgs.updated[0]).toMatchObject({
@@ -215,7 +200,7 @@ premiumStoreClasses.forEach((storeClass) => {
         title: 'Event 1 Updated',
       });
 
-      await flushMicrotasks();
+      await vi.waitFor(() => expect(dataSource.persistEvents.calledOnce).to.equal(true));
 
       // Re-fetching the same covered range should not call getEvents again
       // and should expose the updated event from the cache.
@@ -243,7 +228,7 @@ premiumStoreClasses.forEach((storeClass) => {
         title: 'Bucketed payload',
       });
 
-      await flushMicrotasks();
+      await vi.waitFor(() => expect(persistEventsSpy.calledOnce).to.equal(true));
 
       const payloadEvent = persistEventsSpy.firstCall.args[0].updated[0];
 
@@ -344,9 +329,7 @@ premiumStoreClasses.forEach((storeClass) => {
         ],
       });
 
-      await flushMicrotasks();
-
-      expect(persistEventsSpy.calledOnce).to.equal(true);
+      await vi.waitFor(() => expect(persistEventsSpy.calledOnce).to.equal(true));
       const args = persistEventsSpy.firstCall.args[0];
 
       expect(args.deleted).toEqual(['1', '2']);
@@ -375,9 +358,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.deleteEvent('1');
 
-      await flushMicrotasks();
-
-      expect(persistEventsSpy.calledOnce).to.equal(true);
+      await vi.waitFor(() => expect(persistEventsSpy.calledOnce).to.equal(true));
       const callArgs = persistEventsSpy.firstCall.args[0];
       expect(callArgs.deleted).toEqual(['1']);
       expect(callArgs.updated).toHaveLength(0);
@@ -444,9 +425,7 @@ premiumStoreClasses.forEach((storeClass) => {
         title: 'Created Event',
       });
 
-      await flushMicrotasks();
-
-      expect(persistEventsSpy.calledOnce).to.equal(true);
+      await vi.waitFor(() => expect(persistEventsSpy.calledOnce).to.equal(true));
       const createArgs = persistEventsSpy.firstCall.args[0];
       expect(createArgs.created).toHaveLength(1);
       expect(createArgs.created[0]).toMatchObject({
@@ -468,9 +447,7 @@ premiumStoreClasses.forEach((storeClass) => {
         end: adapter.date('2025-07-01T12:00:00Z', 'default'),
       });
 
-      await flushMicrotasks();
-
-      expect(persistEventsSpy.calledTwice).to.equal(true);
+      await vi.waitFor(() => expect(persistEventsSpy.calledTwice).to.equal(true));
       const updateArgs = persistEventsSpy.secondCall.args[0];
       expect(updateArgs.updated).toHaveLength(1);
       expect(updateArgs.updated[0]).toMatchObject({
@@ -551,7 +528,7 @@ premiumStoreClasses.forEach((storeClass) => {
         id: '1',
         title: 'E1 updated',
       });
-      await flushMicrotasks();
+      await vi.waitFor(() => expect(dataSource.persistEvents.calledOnce).to.equal(true));
 
       // A re-fetch of the same range must serve from cache and reflect the update.
       await store.lazyLoading?.queueDataFetchForRange({ start, end }, true);
@@ -582,7 +559,7 @@ premiumStoreClasses.forEach((storeClass) => {
         title: 'Rejected Event',
       });
 
-      await flushMicrotasks();
+      await vi.waitFor(() => expect(dataSource.persistEvents.calledOnce).to.equal(true));
 
       expect(store.state.eventIdList).toEqual(initialIds);
       expect(store.state.eventIdList).not.toContain(createdId);
@@ -605,7 +582,7 @@ premiumStoreClasses.forEach((storeClass) => {
         title: 'Rejected Update',
       });
 
-      await flushMicrotasks();
+      await vi.waitFor(() => expect(dataSource.persistEvents.calledOnce).to.equal(true));
 
       // The cache wasn't updated, so the stored event keeps its original title.
       const stored = store.state.processedEventLookup.get('1');
@@ -626,7 +603,7 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.deleteEvent('1');
 
-      await flushMicrotasks();
+      await vi.waitFor(() => expect(dataSource.persistEvents.calledOnce).to.equal(true));
 
       // The cache wasn't updated, so the event is still present.
       expect(store.state.eventIdList).toContain('1');

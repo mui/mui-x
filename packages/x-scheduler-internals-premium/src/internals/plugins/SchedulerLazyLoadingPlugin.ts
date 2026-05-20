@@ -5,6 +5,7 @@ import {
   SchedulerStore,
   buildEventsState,
   SchedulerEventParameters,
+  SchedulerPersistEventsResult,
 } from '@mui/x-scheduler-internals/internals';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { SchedulerDataManager } from '../utils/queue';
@@ -218,7 +219,7 @@ export class SchedulerLazyLoadingPlugin<
       return;
     }
 
-    let persistResult: { success: boolean };
+    let persistResult: SchedulerPersistEventsResult;
     try {
       persistResult = await dataSource.persistEvents({
         deleted,
