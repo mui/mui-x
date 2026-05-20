@@ -9,11 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _May 20, 2026_
 
-We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
-
-- 🐞 Bugfixes
-
-The following team members contributed to this release:
+We'd like to extend a big thank you to the 2 contributors who made this release possible:
 @arminmeh, @LukasTy
 
 ### Data Grid
