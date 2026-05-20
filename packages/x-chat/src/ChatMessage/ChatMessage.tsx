@@ -216,9 +216,12 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
     const ErrorComp = (slots?.error ?? ChatMessageError) as typeof ChatMessageError;
 
     // Build the inner tree from slots when no `children` were passed (slot-driven).
-    // When `children` are provided, render them as-is for backward compatibility.
+    // When `children` are provided in non-compact mode, render them as-is for
+    // backward compatibility. In compact mode, `children` is the headless group's
+    // injected authorName element (see MessageGroup), so render the slot-driven
+    // tree and let it land in the message's CSS grid alongside the slot children.
     let innerTree: React.ReactNode;
-    if (children !== undefined) {
+    if (children !== undefined && !isCompact) {
       innerTree = (
         <React.Fragment>
           {children}
@@ -248,6 +251,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
 
       innerTree = (
         <React.Fragment>
+          {children}
           {hasAvatar && <AvatarComp {...(slotProps?.avatar ?? {})} />}
           <ContentComp afterContent={inlineMeta} {...(slotProps?.content ?? {})} />
           {externalMeta}
