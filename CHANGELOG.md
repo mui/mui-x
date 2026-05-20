@@ -26,6 +26,16 @@ Same changes as in `@mui/x-data-grid@8.28.7`.
 
 Same changes as in `@mui/x-data-grid-pro@8.28.7`.
 
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.28.7`
+
+- [pickers] Fix disabled state styling for `PickersTextField` standard and filled variants (#22534) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.28.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.28.7`.
+
 ### Docs
 
 - [docs] Automatically update supported versions (#22527) @arminmeh
