@@ -14,6 +14,7 @@
   },
   "exports": {
     "./agenda-view": "./src/agenda-view/index.ts",
+    "./compact-day-time-grid": "./src/compact-day-time-grid/index.ts",
     "./day-view": "./src/day-view/index.ts",
     "./event-calendar": "./src/event-calendar/index.ts",
     "./models": "./src/models/index.ts",

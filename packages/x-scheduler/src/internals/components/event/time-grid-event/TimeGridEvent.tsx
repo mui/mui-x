@@ -24,16 +24,27 @@ const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
   overflowWrap: 'break-word',
 });
 
+const fillAvailableLinesStyles: React.CSSProperties = {
+  display: '-webkit-box',
+  WebkitLineClamp: 99,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  wordBreak: 'break-word',
+  overflowWrap: 'break-word',
+};
+
 const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEvent',
 })<{ palette?: PaletteName }>(({ theme }) => ({
+  '--time-grid-event-column-gap': '12px',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-surface-subtle)',
   position: 'absolute',
-  left: 'calc( ((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
+  left: 'calc( ((100% - var(--time-grid-event-column-gap)) / var(--columns-count)) * (var(--first-index) - 1))',
   right:
-    'calc(((100% - 12px) * (var(--columns-count) - var(--last-index))) / var(--columns-count) + 12px)',
+    'calc(((100% - var(--time-grid-event-column-gap)) * (var(--columns-count) - var(--last-index))) / var(--columns-count) + var(--time-grid-event-column-gap))',
   top: 'calc(var(--y-position) + 1px)',
   bottom: 'calc(100% - var(--y-position) - var(--height))',
   zIndex: 2,
@@ -85,6 +96,17 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     background: 'var(--event-surface-accent)',
     pointerEvents: 'none',
   },
+  '[data-density="compact"] &': {
+    '--time-grid-event-column-gap': '0px',
+    padding: theme.spacing(0.25, 0.5),
+    flexDirection: 'column',
+    '&[data-under-hour="true"]': {
+      flexDirection: 'column',
+    },
+    '&[data-under-fifteen-minutes="true"]': {
+      padding: theme.spacing(0, 0.5),
+    },
+  },
   variants: getPaletteVariants(theme),
 }));
 
@@ -92,14 +114,15 @@ const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventPlaceholder',
 })<{ palette?: PaletteName }>(({ theme }) => ({
+  '--time-grid-event-column-gap': '12px',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-surface-subtle-hover)',
   border: `1px dashed var(--event-on-surface-subtle-secondary)`,
   color: 'var(--event-on-surface-subtle-primary)',
   position: 'absolute',
-  left: 'calc(((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
+  left: 'calc(((100% - var(--time-grid-event-column-gap)) / var(--columns-count)) * (var(--first-index) - 1))',
   right:
-    'calc(((100% - 12px) * (var(--columns-count) - var(--last-index))) / var(--columns-count) + 12px)',
+    'calc(((100% - var(--time-grid-event-column-gap)) * (var(--columns-count) - var(--last-index))) / var(--columns-count) + var(--time-grid-event-column-gap))',
   top: 'var(--y-position)',
   bottom: 'calc(100% - var(--y-position) - var(--height))',
   zIndex: 2,
@@ -108,6 +131,10 @@ const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
   minHeight: 11.5,
   '&[data-under-fifteen-minutes="true"]': {
     padding: theme.spacing(0, 1),
+  },
+  '[data-density="compact"] &': {
+    '--time-grid-event-column-gap': '0px',
+    padding: theme.spacing(0.25, 0.5),
   },
   variants: getPaletteVariants(theme),
   '&::before': {
@@ -135,6 +162,12 @@ const TimeGridEventTitle = styled(Typography, {
     color: 'var(--event-on-surface-selected)',
   },
   ...linesClampStyles(1),
+  '[data-density="compact"] &': {
+    fontSize: '0.6875rem',
+    lineHeight: 1.3,
+    paddingRight: 0,
+    ...fillAvailableLinesStyles,
+  },
 }));
 
 const TimeGridEventTime = styled('time', {
@@ -159,6 +192,9 @@ const TimeGridEventTime = styled('time', {
     fontSize: '11px',
     lineHeight: '11px',
   },
+  '[data-density="compact"] &': {
+    display: 'none',
+  },
 }));
 
 const TimeGridEventRecurringIcon = styled(RepeatRounded, {
@@ -181,6 +217,9 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
     lineHeight: 14,
     padding: 0,
     bottom: 0,
+  },
+  '[data-density="compact"] &': {
+    display: 'none',
   },
 }));
 

@@ -1,5 +1,6 @@
 [
   { "name": "AgendaView", "kind": "Variable" },
+  { "name": "CompactDayTimeGrid", "kind": "Variable" },
   { "name": "DayView", "kind": "Variable" },
   { "name": "EventCalendar", "kind": "Variable" },
   { "name": "EventCalendarApiRef", "kind": "TypeAlias" },
@@ -12,6 +13,7 @@
   { "name": "getEventCalendarUtilityClass", "kind": "Function" },
   { "name": "MonthView", "kind": "Variable" },
   { "name": "StandaloneAgendaView", "kind": "Variable" },
+  { "name": "StandaloneCompactDayTimeGrid", "kind": "Variable" },
   { "name": "StandaloneDayView", "kind": "Variable" },
   { "name": "StandaloneEvent", "kind": "Variable" },
   { "name": "StandaloneMonthView", "kind": "Variable" },

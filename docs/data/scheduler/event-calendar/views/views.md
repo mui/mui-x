@@ -3,7 +3,7 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
-components: EventCalendar, EventCalendarPremium, StandaloneAgendaView, StandaloneDayView, StandaloneWeekView, StandaloneMonthView
+components: EventCalendar, EventCalendarPremium, StandaloneAgendaView, StandaloneDayView, StandaloneWeekView, StandaloneMonthView, StandaloneCompactDayTimeGrid
 ---
 
 # Event Calendar - Views
@@ -37,6 +37,28 @@ The `month` view lets users manage events for an entire month.
 The `agenda` view lets users manage events in a list layout.
 
 {{"demo": "BasicAgendaView.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Compact day/time grid 🧪
+
+:::warning
+The `CompactDayTimeGrid` is a work-in-progress, opt-in component intended for narrow / mobile widths.
+It is currently only available as a standalone view; it is not registered with the Event Calendar view registry yet.
+:::
+
+The `CompactDayTimeGrid` is a compact variant of the day/time grid optimized for narrow viewports.
+It shares the same `DayTimeGrid` engine as the desktop week view but applies a `compact` density token, which:
+
+- uses a smaller typography scale,
+- removes the right padding reserved on each time-grid column for drag-to-create (events fill the column width),
+- shows only the event title (the start/end time is hidden); the title wraps to all available lines and ellipsizes only when no more wrapping is possible.
+
+Use the `dayCount` prop (`1`, `3`, or `7`) to control how many consecutive days are visible starting from the current visible date. The default is `3`.
+
+{{"demo": "CompactDayTimeGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+Use the toggle below to test how the view adapts to each `dayCount` value:
+
+{{"demo": "CompactDayTimeGridDayCount.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Year view 🚧
 

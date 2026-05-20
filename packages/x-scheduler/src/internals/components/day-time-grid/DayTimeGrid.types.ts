@@ -7,4 +7,13 @@ export interface DayTimeGridProps extends ExportedDayTimeGridProps {
   days: SchedulerProcessedDate[];
 }
 
-export interface ExportedDayTimeGridProps extends React.HTMLAttributes<HTMLDivElement> {}
+export interface ExportedDayTimeGridProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * The visual density of the time grid.
+   * `'comfortable'` uses the default desktop spacing and typography.
+   * `'compact'` reduces typography and spacing for narrow / mobile layouts and
+   * hides the event time so only the title is visible.
+   * @default 'comfortable'
+   */
+  density?: 'comfortable' | 'compact';
+}

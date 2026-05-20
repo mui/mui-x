@@ -150,6 +150,10 @@ const DayGridEventTitle = styled('p', {
   '[data-variant="compact"][data-editing] &': {
     color: 'var(--event-on-surface-subtle-primary)',
   },
+  '[data-density="compact"] &': {
+    fontSize: '0.6875rem',
+    lineHeight: 1.3,
+  },
 }));
 
 const DayGridEventTime = styled('time', {
@@ -179,6 +183,9 @@ const DayGridEventTime = styled('time', {
   '[data-variant="compact"][data-editing] &': {
     color: 'var(--event-on-surface-subtle-secondary)',
   },
+  '[data-density="compact"] &': {
+    display: 'none',
+  },
 }));
 
 const DayGridEventRecurringIcon = styled(RepeatRounded, {
@@ -193,6 +200,9 @@ const DayGridEventRecurringIcon = styled(RepeatRounded, {
   },
   '[data-variant="compact"][data-editing] &': {
     color: 'var(--event-on-surface-bold)',
+  },
+  '[data-density="compact"] &': {
+    display: 'none',
   },
 }));
 
