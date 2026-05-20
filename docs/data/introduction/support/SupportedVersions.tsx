@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MarkdownElement } from '@mui/internal-core-docs/MarkdownDocs';
+import { MarkdownElement } from '@mui/docs/MarkdownElement';
 
 interface Column {
   key: string;
