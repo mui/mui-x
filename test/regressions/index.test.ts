@@ -3,6 +3,7 @@ import * as childProcess from 'child_process';
 import { type Browser, chromium, type ConsoleMessage, type Page } from '@playwright/test';
 import fs from 'node:fs/promises';
 import { test as base } from 'vitest';
+import { minimatch } from 'minimatch';
 
 declare global {
   interface Window {
@@ -27,22 +28,54 @@ const timeSensitiveSuites = [
 
 interface RouteConfig {
   /**
+   * Override the playwright viewport for the route. Defaults to
+   * `DEFAULT_VIEWPORT` when no rule matches.
+   */
+  viewport?: { width: number; height: number };
+  /**
    * Wait for this selector before screenshotting, on top of the testcase
    * `aria-busy` gate (which only tracks font loading, not async demo data).
    */
   waitForSelector?: string;
 }
 
-// Per-route overrides, keyed by exact route url (`/${suite}/${name}`).
-const TEST_CONFIG: Record<string, RouteConfig> = {
-  '/test-regressions-data-grid/DataGridScrollRestoration': {
+interface RouteRule extends RouteConfig {
+  /** Minimatch glob against the route URL (`/${suite}/${name}`). */
+  test: string;
+}
+
+const DEFAULT_VIEWPORT = { width: 1000, height: 700 };
+
+// Per-route overrides matched back-to-front against the route URL — the last
+// matching rule wins, and rules don't inherit from each other (an override
+// must restate any field it cares about). Mirrors the rule-array pattern in
+// mui-material's `test/regressions/demoMeta.ts`.
+const TEST_RULES: RouteRule[] = [
+  // Overview composites embed desktop-breakpoint media queries that don't
+  // match at the default 1000x700 viewport, leaving panes hidden in
+  // screenshots. Bump per product so each captures its live-docs desktop
+  // layout.
+  { test: '/test-regressions-overviews-pickers/**', viewport: { width: 1280, height: 800 } },
+  { test: '/test-regressions-overviews-scheduler/**', viewport: { width: 1440, height: 900 } },
+
+  {
+    test: '/test-regressions-data-grid/DataGridScrollRestoration',
     // The grid remounts when its async demo-data arrives
     // (`key={String(loading)}`) and then restores its scroll. `aria-busy`
     // doesn't cover that; sequential runs used to leave enough time, but
     // pooled pages under concurrency don't, so wait for rendered rows.
     waitForSelector: '.MuiDataGrid-row .MuiDataGrid-cell',
   },
-};
+];
+
+function getRouteConfig(routeUrl: string): RouteConfig | undefined {
+  for (let i = TEST_RULES.length - 1; i >= 0; i -= 1) {
+    if (minimatch(routeUrl, TEST_RULES[i].test)) {
+      return TEST_RULES[i];
+    }
+  }
+  return undefined;
+}
 
 await main();
 
@@ -123,24 +156,6 @@ async function main() {
       return undefined;
     };
 
-    // Overview composites embed desktop-breakpoint media queries that don't match
-    // at the default 1000x700 viewport, leaving panes hidden in screenshots. Bump
-    // the viewport per product so each captures its live-docs desktop layout.
-    const overviewViewports: Record<string, { width: number; height: number }> = {
-      pickers: { width: 1280, height: 800 },
-      scheduler: { width: 1440, height: 900 },
-    };
-
-    const defaultViewport = { width: 1000, height: 700 };
-
-    const getViewport = (routeUrl: string) => {
-      const overviewMatch = routeUrl.match(/^\/test-regressions-overviews-([^/]+)\//);
-      if (overviewMatch && overviewViewports[overviewMatch[1]]) {
-        return overviewViewports[overviewMatch[1]];
-      }
-      return defaultViewport;
-    };
-
     describe.concurrent('routes', () => {
       // Close pool pages once the concurrent batch finishes so the
       // sequential print-preview tests below see only one browser window
@@ -172,7 +187,9 @@ async function main() {
               return;
             }
 
-            await page.setViewportSize(getViewport(route.url));
+            const routeConfig = getRouteConfig(route.url);
+
+            await page.setViewportSize(routeConfig?.viewport ?? DEFAULT_VIEWPORT);
 
             await navigateToTest(page, route.url);
 
@@ -185,7 +202,6 @@ async function main() {
               `[data-testid="testcase"][data-testpath="${route.url}"]:not([aria-busy="true"])`,
             );
 
-            const routeConfig = TEST_CONFIG[route.url];
             if (routeConfig?.waitForSelector) {
               await page.waitForSelector(routeConfig.waitForSelector);
             }
