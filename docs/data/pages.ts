@@ -912,12 +912,12 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-chat/basics/chatbox', title: 'ChatBox' },
           {
             pathname: '/x/react-chat/backend/adapters',
-            title: 'Backend Connection',
+            title: 'Adapters',
           },
-          { pathname: '/x/react-chat/behavior/streaming', title: 'Streaming' },
+          { pathname: '/x/react-chat/behavior/streaming' },
           {
             pathname: '/x/react-chat/behavior/error-handling',
-            title: 'Error Handling',
+            title: 'Error handling',
           },
         ],
       },
@@ -927,7 +927,7 @@ const pages: MuiPage[] = [
         children: [
           {
             pathname: '/x/react-chat/customization/slots-and-composition',
-            title: 'Slots & Composition',
+            title: 'Slots and composition',
           },
           { pathname: '/x/react-chat/customization/styling', title: 'Styling' },
           { pathname: '/x/react-chat/customization/tailwind', title: 'Tailwind CSS' },
@@ -939,7 +939,7 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/react-chat/advanced-features',
-        subheader: 'Advanced',
+        subheader: 'Advanced features',
         children: [
           {
             pathname: '/x/react-chat/building-blocks',
@@ -950,7 +950,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-chat/basics/layout', title: 'Layout' },
               {
                 pathname: '/x/react-chat/basics/variants-and-density',
-                title: 'Variants & Density',
+                title: 'Variants and density',
               },
             ],
           },
@@ -960,7 +960,7 @@ const pages: MuiPage[] = [
             children: [
               {
                 pathname: '/x/react-chat/display/message-appearance',
-                title: 'Message Appearance',
+                title: 'Message appearance',
               },
               {
                 pathname: '/x/react-chat/display/message-parts/text-and-markdown',
@@ -984,11 +984,11 @@ const pages: MuiPage[] = [
               },
               {
                 pathname: '/x/react-chat/display/message-actions',
-                title: 'Message Actions',
+                title: 'Message actions',
               },
               {
                 pathname: '/x/react-chat/display/loading-and-empty-states',
-                title: 'Loading & Empty States',
+                title: 'Loading and empty states',
               },
             ],
           },
@@ -1001,47 +1001,47 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-chat/behavior/scrolling', title: 'Scrolling' },
               {
                 pathname: '/x/react-chat/behavior/typing-indicators',
-                title: 'Typing Indicators',
+                title: 'Typing indicators',
               },
             ],
           },
           {
             pathname: '/x/react-chat/multi-conversation',
-            title: 'Multi-Conversation',
+            title: 'Multi-conversation',
             children: [
               {
                 pathname: '/x/react-chat/multi-conversation/conversation-list',
-                title: 'Conversation List',
+                title: 'Conversation list',
               },
               {
                 pathname: '/x/react-chat/multi-conversation/conversation-header',
-                title: 'Conversation Header',
+                title: 'Conversation header',
               },
               {
                 pathname: '/x/react-chat/multi-conversation/history-and-pagination',
-                title: 'History & Pagination',
+                title: 'History and pagination',
               },
               {
                 pathname: '/x/react-chat/multi-conversation/read-receipts',
-                title: 'Read Receipts',
+                title: 'Read receipts',
               },
               {
                 pathname: '/x/react-chat/multi-conversation/real-time-sync',
-                title: 'Real-Time Sync',
+                title: 'Real-time sync',
               },
             ],
           },
           {
             pathname: '/x/react-chat/ai-and-agents',
-            title: 'AI & Agents',
+            title: 'AI and agents',
             children: [
               {
                 pathname: '/x/react-chat/ai-and-agents/tool-calling',
-                title: 'Tool Calling',
+                title: 'Tool calling',
               },
               {
                 pathname: '/x/react-chat/ai-and-agents/tool-approval',
-                title: 'Tool Approval',
+                title: 'Tool approval',
               },
               {
                 pathname: '/x/react-chat/ai-and-agents/reasoning',
@@ -1049,38 +1049,29 @@ const pages: MuiPage[] = [
               },
               {
                 pathname: '/x/react-chat/ai-and-agents/step-tracking',
-                title: 'Step Tracking',
+                title: 'Step tracking',
               },
             ],
           },
           {
             pathname: '/x/react-chat/backend',
-            title: 'Backend Integration',
+            title: 'Backend integration',
             children: [
-              {
-                pathname: '/x/react-chat/backend/building-an-adapter',
-                title: 'Building an Adapter',
-              },
+              { pathname: '/x/react-chat/backend/building-an-adapter' },
               {
                 pathname: '/x/react-chat/backend/real-time-adapters',
-                title: 'Real-Time Adapters',
+                title: 'Real-time adapters',
               },
-              {
-                pathname: '/x/react-chat/backend/controlled-state',
-                title: 'Controlled State',
-              },
+              { pathname: '/x/react-chat/backend/controlled-state' },
             ],
           },
           {
             pathname: '/x/react-chat/demos',
             title: 'Demos',
             children: [
-              { pathname: '/x/react-chat/demos/ai-assistant', title: 'AI Assistant' },
-              { pathname: '/x/react-chat/demos/team-messaging', title: 'Team Messaging' },
-              {
-                pathname: '/x/react-chat/demos/customer-support',
-                title: 'Customer Support',
-              },
+              { pathname: '/x/react-chat/demos/ai-assistant', title: 'AI assistant' },
+              { pathname: '/x/react-chat/demos/team-messaging' },
+              { pathname: '/x/react-chat/demos/customer-support' },
             ],
           },
         ],
