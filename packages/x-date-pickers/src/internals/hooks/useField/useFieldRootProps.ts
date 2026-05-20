@@ -214,9 +214,16 @@ export function useFieldRootProps(
     }
   });
 
-  // Replaces Chromium's focus delegation on non-section clicks (padding,
-  // separator gaps, area past the last section) with an explicit focus on the
-  // nearest section. Direct section clicks fall through to native focus.
+  // Replaces Chromium's focus delegation with an explicit section focus on
+  // every primary mousedown inside the sections container. The CSS gate
+  // (`WebkitUserModify: read-only` while not `:focus-within`) can make the
+  // section's contenteditable span temporarily non-focusable, in which case
+  // Chromium falls back to the sections-container `tabindex=0` and our
+  // `handleFocus` then runs the "no active section" fallback, briefly
+  // selecting the first section before the click bubble corrects it.
+  // Setting the target section here (and letting `syncSelectionToDOM` move
+  // focus via `.focus()`, which works even with the user-modify rule
+  // active) skips that race entirely.
   const handleMouseDown = useEventCallback((event: React.MouseEvent) => {
     if (disabled || !domGetters.isReady() || parsedSelectedSections === 'all') {
       return;
@@ -233,22 +240,19 @@ export function useFieldRootProps(
     if (!sectionListRoot.contains(target)) {
       return;
     }
-    // Skip any click that landed inside a section span (content spinbutton OR
-    // adjacent separator) -- the section container's own `onClick` already
-    // fires on bubble and selects the visually-containing section. Running
-    // the closest-center math here would briefly focus a different section
-    // before the container's `onClick` overrode it, causing a focus flicker
-    // for clicks on the separator between two sections.
-    if (target.closest('[data-sectionindex]')) {
+    // Prefer the visually-containing section (matches Chromium's
+    // delegation + section container `onClick`), fall back to the
+    // closest-by-distance section for padding / past-last-section clicks.
+    const sectionElement = target.closest<HTMLElement>('[data-sectionindex]');
+    const targetSectionIndex = sectionElement
+      ? Number(sectionElement.dataset.sectionindex)
+      : findClosestSectionIndexToPoint(sectionListRoot, event.clientX);
+    if (targetSectionIndex == null) {
       return;
     }
     event.preventDefault();
-    const closestSectionIndex = findClosestSectionIndexToPoint(sectionListRoot, event.clientX);
-    if (closestSectionIndex == null) {
-      return;
-    }
     setFocused(true);
-    setSelectedSections(closestSectionIndex);
+    setSelectedSections(targetSectionIndex);
   });
 
   const handleInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {

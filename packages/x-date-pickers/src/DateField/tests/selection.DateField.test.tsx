@@ -87,28 +87,25 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM');
     });
 
-    it('should not preventDefault on mousedown when clicking inside a section span', () => {
+    it('should select the section directly under the click target', () => {
       const view = renderWithProps({});
 
       const yearSection = view.getSection(2);
-      // The `target.closest('[data-sectionindex]')` early-return in
-      // `handleMouseDown` keeps mousedown defaults intact for any click
-      // inside a section span (content or separator), so the section
-      // container's `onClick` is the single source of truth on the click
-      // bubble.
-      const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
-      yearSection.dispatchEvent(event);
-      expect(event.defaultPrevented).to.equal(false);
-
+      fireEvent.mouseDown(yearSection);
       fireEvent.click(yearSection);
+
       expect(getCleanedSelectedContent()).to.equal('YYYY');
     });
 
-    it('should not flicker focus to a different section when clicking on a section separator', () => {
-      // Regression guard: with a `[role="spinbutton"]` filter the closest-
-      // center math could pick a different section than the one visually
-      // containing the separator, briefly focusing it before the section
-      // container's `onClick` reverted to the container's own section.
+    it('should select the visually-containing section when clicking on a section separator', () => {
+      // Regression guard: without explicit handling, the closest-by-distance
+      // math could pick a different section than the one whose container
+      // visually owns the separator (e.g. the "/" after Month is part of
+      // Month's section span). The section is identified from the
+      // `[data-sectionindex]` ancestor, matching pre-PR Chromium-delegation
+      // behavior, and resolved in mousedown so the user never sees the
+      // first-section fallback flicker when the CSS user-modify gate
+      // briefly bounces focus to the sections-container `tabindex=0`.
       const view = renderWithProps({ defaultValue: adapterToUse.date('2022-04-11') });
 
       const monthSection = view.getSection(0);
@@ -119,14 +116,9 @@ describe('<DateField /> - Selection', () => {
       )!;
       expect(slashAfterMonth.textContent).to.equal('/');
 
-      const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
-      slashAfterMonth.dispatchEvent(event);
-      // Must not preventDefault -- otherwise the closest-section math would
-      // override the section container's choice on the click bubble.
-      expect(event.defaultPrevented).to.equal(false);
-
+      fireEvent.mouseDown(slashAfterMonth);
       fireEvent.click(slashAfterMonth);
-      // The slash is inside Month's section container, so Month wins.
+
       expect(getCleanedSelectedContent()).to.equal('04');
     });
 
