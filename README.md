@@ -1,5 +1,5 @@
 <!-- #host-reference -->
-<!-- markdownlint-disable-next-line -->
+<!-- lint disable mui-first-block-heading -->
 <p align="center">
   <a href="https://mui.com/x/" rel="noopener" target="_blank"><img width="150" height="133" src="https://mui.com/static/logo.svg" alt="MUI X logo"></a>
 </p>
@@ -70,6 +70,7 @@ It's published under an [MIT license](https://www.tldrlegal.com/license/mit-lice
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
 - [`@mui/x-charts`](https://www.npmjs.com/package/@mui/x-charts)
 - [`@mui/x-tree-view`](https://www.npmjs.com/package/@mui/x-tree-view)
+- [`@mui/x-scheduler`](https://www.npmjs.com/package/@mui/x-scheduler)
 
 #### Pro plan
 
@@ -91,6 +92,7 @@ The Premium version is available under a commercial license—visit the [Pricing
 
 - [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium)
 - [`@mui/x-charts-premium`](https://www.npmjs.com/package/@mui/x-charts-premium)
+- [`@mui/x-scheduler-premium`](https://www.npmjs.com/package/@mui/x-scheduler-premium)
 
 ## Support
 

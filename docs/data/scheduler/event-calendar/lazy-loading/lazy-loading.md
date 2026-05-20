@@ -8,7 +8,7 @@ components: EventCalendarPremium
 
 # Event Calendar - Lazy loading events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">The `dataSource` prop accepts a `getEvents()` method to lazily load events.</p>
+<p class="description">Fetch events on demand as users navigate dates and views.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
@@ -45,7 +45,7 @@ In a real-world scenario, you would replace it with your own server-side data fe
 
 ## Error handling
 
-When the `dataSource.getEvents` method rejects, the Scheduler displays an error state.
+When the `dataSource.getEvents` method rejects, the Event Calendar displays an error state.
 Use the toggle button to simulate a server error.
 
 {{"demo": "ErrorHandling.js", "bg": "inline", "defaultCodeOpen": false}}

@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { useLicenseVerifier, Watermark } from '@mui/x-license/internals';
 import { useId } from '@base-ui/utils/useId';
-import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
-import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
-import { useEventCalendarPremium } from '@mui/x-scheduler-headless-premium/use-event-calendar-premium';
+import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
+import { useEventCalendarPremium } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import {
   useEventCalendarUtilityClasses,
   EventCalendarStyledContext,
@@ -18,6 +18,7 @@ import {
   EventCalendarRoot,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
+import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
 import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
 const packageInfo = {
@@ -28,8 +29,7 @@ const packageInfo = {
 const watermark = <Watermark packageInfo={packageInfo} />;
 
 /**
- * Premium version of EventCalendar with lazy loading support.
- * Uses EventCalendarPremiumStore which extends EventCalendarStore with lazy loading plugin.
+ * Premium version of EventCalendar with support for lazy loading and recurring events.
  */
 const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
   TEvent extends object,
@@ -76,7 +76,7 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
     <SchedulerStoreContext.Provider value={store as any}>
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
         <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
-          <EventDialogProvider>
+          <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
             <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
               {watermark}
             </EventCalendarRoot>

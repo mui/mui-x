@@ -57,7 +57,7 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Startdatum',
   startTimeLabel: 'Startzeit',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Alle Ereignisse',
   cancel: 'Abbrechen',
   confirm: 'Bestätigen',
@@ -68,11 +68,8 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
 };
 
 const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Ereignisse für ${resourceName} ausblenden`,
+  // ResourcesTree
   resourcesLabel: 'Ressourcen',
-  resourcesLegendSectionLabel: 'Ressourcenlegende',
-  showEventsLabel: (resourceName) => `Ereignisse für ${resourceName} anzeigen`,
 
   // ViewSwitcher
   agenda: 'Agenda',

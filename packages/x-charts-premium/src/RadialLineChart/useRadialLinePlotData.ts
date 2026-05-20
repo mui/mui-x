@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
+import { getValueToPositionMapper, useRadiusAxes, useRotationAxes } from '@mui/x-charts/hooks';
 import { useChartsContext, type UseChartPolarAxisSignature } from '@mui/x-charts/internals';
-import { type CurveType, type SeriesId } from '@mui/x-charts/models';
+import { type CurveType, type MarkShape, type SeriesId } from '@mui/x-charts/models';
 import { useRadialLineSeriesContext } from '../hooks/useRadialLineSeries';
 
 export interface RadialLinePoint {
@@ -18,8 +18,11 @@ interface RadialLinePlotDataPoint {
   seriesId: SeriesId;
   color: string;
   hidden: boolean;
+  showMark: boolean;
+  shape: MarkShape;
   area?: boolean;
   curve?: CurveType;
+  closePath?: boolean;
 }
 
 export function useRadialLinePlotData() {
@@ -43,13 +46,16 @@ export function useRadialLinePlotData() {
           data,
           hidden,
           area = false,
+          closePath,
           curve,
+          shape,
           rotationAxisId = rotationAxisIds[0],
           radiusAxisId = radiusAxisIds[0],
         } = series[seriesId];
 
         const radiusAxis = radiusAxisMap[radiusAxisId];
         const rotationAxis = rotationAxisMap[rotationAxisId];
+        const rotationPosition = getValueToPositionMapper(rotationAxis.scale);
 
         const points: RadialLinePoint[] = [];
 
@@ -62,7 +68,7 @@ export function useRadialLinePlotData() {
           const baseValue = stackedData[dataIndex]?.[0] ?? radiusAxis.scale.domain()[0];
           const radius = radiusAxis.scale(value as number)!;
           const baseRadius = radiusAxis.scale(baseValue as number)!;
-          const angle = rotationAxis.scale(rotationAxis.data![dataIndex])!;
+          const angle = rotationPosition(rotationAxis.data![dataIndex]);
 
           const [x, y] = instance.polar2svg(radius, angle);
           points.push({ x, y, radius, baseRadius, angle, dataIndex });
@@ -72,8 +78,11 @@ export function useRadialLinePlotData() {
           points,
           seriesId,
           hidden,
+          showMark: Boolean(series[seriesId].showMark),
+          shape: shape ?? 'circle',
           area,
           curve,
+          closePath,
         });
       }
     }

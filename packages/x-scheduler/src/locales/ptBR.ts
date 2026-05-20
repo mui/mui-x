@@ -57,7 +57,7 @@ const ptBRDialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Data de início',
   startTimeLabel: 'Hora de início',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Todos os eventos',
   cancel: 'Cancelar',
   confirm: 'Confirmar',
@@ -68,11 +68,8 @@ const ptBRDialog: Partial<EventDialogLocaleText> = {
 };
 
 const ptBRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Ocultar eventos de ${resourceName}`,
+  // ResourcesTree
   resourcesLabel: 'Recursos',
-  resourcesLegendSectionLabel: 'Legenda de recursos',
-  showEventsLabel: (resourceName) => `Mostrar eventos de ${resourceName}`,
 
   // ViewSwitcher
   agenda: 'Agenda',
