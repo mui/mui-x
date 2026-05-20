@@ -303,7 +303,7 @@ export class SchedulerStore<
    */
   public publishEvent = <E extends SchedulerEvents>(
     name: E,
-    params: SchedulerEventParameters<E>,
+    params: SchedulerEventParameters<TEvent, E>,
   ) => {
     this.eventManager.emit(name, params);
   };
@@ -313,7 +313,7 @@ export class SchedulerStore<
    */
   public subscribeEvent = <E extends SchedulerEvents>(
     eventName: E,
-    handler: SchedulerEventListener<E>,
+    handler: SchedulerEventListener<TEvent, E>,
   ) => {
     this.eventManager.on(eventName, handler);
   };

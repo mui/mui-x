@@ -207,7 +207,9 @@ export class SchedulerLazyLoadingPlugin<
     }
   };
 
-  private handleEventsUpdated = async (params: SchedulerEventParameters<'eventsUpdated'>) => {
+  private handleEventsUpdated = async (
+    params: SchedulerEventParameters<TEvent, 'eventsUpdated'>,
+  ) => {
     const { deleted, updated, created, newEvents } = params;
     const { dataSource } = this.store.parameters;
     const { adapter, displayTimezone } = this.store.state;
@@ -220,8 +222,8 @@ export class SchedulerLazyLoadingPlugin<
     try {
       persistResult = await dataSource.persistEvents({
         deleted,
-        updated: updated as TEvent[],
-        created: created as TEvent[],
+        updated,
+        created,
       });
     } catch (error) {
       this.store.pushError(error);
@@ -243,10 +245,10 @@ export class SchedulerLazyLoadingPlugin<
       this.cache.remove(String(id));
     }
 
-    for (const event of created as TEvent[]) {
+    for (const event of created) {
       this.cache.upsert(event);
     }
-    for (const event of updated as TEvent[]) {
+    for (const event of updated) {
       this.cache.upsert(event);
     }
 

@@ -32,15 +32,15 @@ interface PersistEventsParams<TEvent extends object = TestEvent> {
   created: TEvent[];
 }
 
+const buildTestEvent = (id: string): TestEvent => ({
+  id,
+  start: '2025-07-01T00:00:00.000Z',
+  end: '2025-07-01T11:00:00.000Z',
+  title: `Event ${id}`,
+});
+
 const mockFetchData = async (_start: Date, _end: Date): Promise<TestEvent[]> => {
-  const events: TestEvent[] = [
-    {
-      id: '1',
-      start: '2025-07-01T00:00:00.000Z',
-      end: '2025-07-01T11:00:00.000Z',
-      title: 'Event 1',
-    },
-  ];
+  const events: TestEvent[] = [buildTestEvent('1')];
 
   return new Promise((resolve) => {
     setTimeout(() => resolve(events), 0);
@@ -775,9 +775,9 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.publishEvent('eventsUpdated', {
         deleted: [],
-        updated: [{ id: '1' }],
+        updated: [buildTestEvent('1')],
         created: [],
-        newEvents: [{ id: '1' }],
+        newEvents: [buildTestEvent('1')],
       });
 
       await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
@@ -799,9 +799,9 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.publishEvent('eventsUpdated', {
         deleted: [],
-        updated: [{ id: '1' }],
+        updated: [buildTestEvent('1')],
         created: [],
-        newEvents: [{ id: '1' }],
+        newEvents: [buildTestEvent('1')],
       });
 
       await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
@@ -819,9 +819,9 @@ premiumStoreClasses.forEach((storeClass) => {
 
       store.publishEvent('eventsUpdated', {
         deleted: [],
-        updated: [{ id: '1' }],
+        updated: [buildTestEvent('1')],
         created: [],
-        newEvents: [{ id: '1' }],
+        newEvents: [buildTestEvent('1')],
       });
 
       await vi.waitFor(() => expect(store.state.errors).toHaveLength(1));
@@ -890,7 +890,7 @@ premiumStoreClasses.forEach((storeClass) => {
       const startFailing = adapter.date('2025-07-01T00:00:00Z', 'default');
       const endFailing = adapter.date('2025-07-07T00:00:00Z', 'default');
       const dataSource = {
-        getEvents: spy(async () => {
+        getEvents: spy(async (): Promise<TestEvent[]> => {
           throw new Error('Fetch failed');
         }),
         persistEvents: spy(async () => ({ success: true })),
@@ -903,7 +903,7 @@ premiumStoreClasses.forEach((storeClass) => {
       );
       expect(store.state.errors).toHaveLength(1);
 
-      const updatedEvent = {
+      const updatedEvent: TestEvent = {
         id: '1',
         start: '2025-07-01T00:00:00.000Z',
         end: '2025-07-01T11:00:00.000Z',
