@@ -43,6 +43,10 @@ export const PickersInputBaseRoot = styled('div', {
   position: 'relative',
   boxSizing: 'border-box', // Prevent padding issue with fullWidth.
   letterSpacing: `${round(0.15 / 16)}em`,
+  [`&.${pickersInputBaseClasses.disabled}`]: {
+    color: (theme.vars || theme).palette.action.disabled,
+    cursor: 'default',
+  },
   variants: [
     {
       props: { isInputInFullWidth: true },
