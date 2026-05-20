@@ -233,11 +233,13 @@ export function useFieldRootProps(
     if (!sectionListRoot.contains(target)) {
       return;
     }
-    // Skip only clicks that landed directly on a section's content span; let
-    // separator-span clicks (siblings of the content inside the same section
-    // container) fall through to the closest-section logic, since the CSS
-    // gate has already disabled Chromium's native delegation for them.
-    if (target.closest('[role="spinbutton"]')) {
+    // Skip any click that landed inside a section span (content spinbutton OR
+    // adjacent separator) -- the section container's own `onClick` already
+    // fires on bubble and selects the visually-containing section. Running
+    // the closest-center math here would briefly focus a different section
+    // before the container's `onClick` overrode it, causing a focus flicker
+    // for clicks on the separator between two sections.
+    if (target.closest('[data-sectionindex]')) {
       return;
     }
     event.preventDefault();

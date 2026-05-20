@@ -87,19 +87,47 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM');
     });
 
-    it('should not preventDefault on mousedown when clicking directly on a section span', () => {
+    it('should not preventDefault on mousedown when clicking inside a section span', () => {
       const view = renderWithProps({});
 
       const yearSection = view.getSection(2);
-      // Asserts the discriminating fact: `target.closest('[role="spinbutton"]')`
-      // makes `handleMouseDown` early-return for direct section clicks, so the
-      // native focus path stays intact.
+      // The `target.closest('[data-sectionindex]')` early-return in
+      // `handleMouseDown` keeps mousedown defaults intact for any click
+      // inside a section span (content or separator), so the section
+      // container's `onClick` is the single source of truth on the click
+      // bubble.
       const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
       yearSection.dispatchEvent(event);
       expect(event.defaultPrevented).to.equal(false);
 
       fireEvent.click(yearSection);
       expect(getCleanedSelectedContent()).to.equal('YYYY');
+    });
+
+    it('should not flicker focus to a different section when clicking on a section separator', () => {
+      // Regression guard: with a `[role="spinbutton"]` filter the closest-
+      // center math could pick a different section than the one visually
+      // containing the separator, briefly focusing it before the section
+      // container's `onClick` reverted to the container's own section.
+      const view = renderWithProps({ defaultValue: adapterToUse.date('2022-04-11') });
+
+      const monthSection = view.getSection(0);
+      // The "/" between Month and Day is rendered as Month's `endSeparator`,
+      // so its parent has `data-sectionindex="0"`.
+      const slashAfterMonth = monthSection.parentElement!.querySelector<HTMLElement>(
+        '.MuiPickersInputBase-sectionAfter',
+      )!;
+      expect(slashAfterMonth.textContent).to.equal('/');
+
+      const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+      slashAfterMonth.dispatchEvent(event);
+      // Must not preventDefault -- otherwise the closest-section math would
+      // override the section container's choice on the click bubble.
+      expect(event.defaultPrevented).to.equal(false);
+
+      fireEvent.click(slashAfterMonth);
+      // The slash is inside Month's section container, so Month wins.
+      expect(getCleanedSelectedContent()).to.equal('04');
     });
 
     it('should not select any section on mousedown when the field is disabled', () => {
