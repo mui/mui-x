@@ -1,22 +1,19 @@
 import * as React from 'react';
+import { spy } from 'sinon';
 import {
   createSchedulerRenderer,
   EventBuilder,
   ResourceBuilder,
   SchedulerStoreRunner,
   AnyEventCalendarStore,
+  StateWatcher,
+  adapter,
 } from 'test/utils/scheduler';
-import { screen, within, fireEvent } from '@mui/internal-test-utils';
-import {
-  SchedulerResource,
-  SchedulerOccurrencePlaceholderCreation,
-} from '@mui/x-scheduler-internals/models';
-import { screen } from '@mui/internal-test-utils';
+import { screen, fireEvent } from '@mui/internal-test-utils';
+import { SchedulerResource } from '@mui/x-scheduler-internals/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
-import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventDialogContent, EventDialogProvider, EventDialogTrigger } from './EventDialog';
-import { EventDialogContent } from './EventDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
 
 const personalResource = ResourceBuilder.new().title('Personal').eventColor('teal').build();
@@ -149,15 +146,17 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
   });
 
   describe('Outside-click dismissal', () => {
-    it('should close the dialog when clicking outside the dialog paper', () => {
+    it('should close the dialog when clicking outside the dialog paper', async () => {
       const onClose = spy();
-      render(
+      const { user } = render(
         <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
           <EventDialogContent open {...defaultProps} onClose={onClose} />
         </EventCalendarProvider>,
       );
 
-      fireEvent.click(document.body);
+      // MUI ClickAwayListener uses setTimeout(0) to activate after mount; using
+      // user.click (async) yields the event loop so that macrotask can fire first.
+      await user.click(document.body);
       expect(onClose.callCount).to.equal(1);
     });
 

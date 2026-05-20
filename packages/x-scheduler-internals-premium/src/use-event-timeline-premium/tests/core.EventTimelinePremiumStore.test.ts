@@ -28,6 +28,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         eventModelStructure: undefined,
         displayTimezone: 'default',
         editedEventId: null,
+        openEventId: null,
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingUpdateRecurringEventParameters: null,

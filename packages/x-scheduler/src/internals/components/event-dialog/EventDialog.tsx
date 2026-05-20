@@ -155,7 +155,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 
   // Selector hooks
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
-  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
+  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isRecurringScopeDialogOpen);
 
   const handleClickAway = React.useCallback(
     (event: MouseEvent | TouchEvent) => {
@@ -214,40 +214,6 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
   );
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
 
-  // Track the occurrencePlaceholder object reference at the moment the dialog opens.
-  // This lets onClose detect when a concurrent cell-click set a NEW creation placeholder
-  // (React fires the cell handler before the document-close listener), so we preserve it.
-  const placeholderAtDialogOpen = React.useRef<object | null>(null);
-
-  return (
-    <EventDialog.Provider
-      render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
-        <EventDialogContent
-          open={isOpen}
-          anchorRef={anchorRef}
-          occurrence={occurrence}
-          onClose={onClose}
-          {...other}
-        />
-      )}
-      onOpen={(occurrence) => {
-        placeholderAtDialogOpen.current = store.state.occurrencePlaceholder;
-        store.setEditedEventId(occurrence.id);
-        store.setOpenEventId(occurrence.id);
-      }}
-      onClose={() => {
-        store.setEditedEventId(null);
-        store.setOpenEventId(null);
-        store.setOccurrencePlaceholder(null);
-        store.setOpenEventId(null);
-        // Only clear the occurrence placeholder if it has not been replaced by a new
-        // creation placeholder. A new placeholder means the user clicked an empty cell
-        // while this dialog was open — the cell's React handler fires before the
-        // document-click listener calls onClose, so we must preserve it.
-        if (store.state.occurrencePlaceholder === placeholderAtDialogOpen.current) {
-          store.setOccurrencePlaceholder(null);
-        }
-      }}
   const RecurringScopeDialogRenderer = optionalRenderers?.recurringScopeDialog;
 
   return (
@@ -266,9 +232,11 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
         )}
         onOpen={(occurrence) => {
           store.setEditedEventId(occurrence.id);
+          store.setOpenEventId(occurrence.id);
         }}
         onClose={() => {
           store.setEditedEventId(null);
+          store.setOpenEventId(null);
           store.setOccurrencePlaceholder(null);
         }}
       >
