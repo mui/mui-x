@@ -28,6 +28,11 @@ const timeSensitiveSuites = [
 
 interface RouteConfig {
   /**
+   * Set to `false` to skip the screenshot for this route. Defaults to `true`
+   * when no rule matches.
+   */
+  enabled?: boolean;
+  /**
    * Override the playwright viewport for the route. Defaults to
    * `DEFAULT_VIEWPORT` when no rule matches.
    */
@@ -51,6 +56,21 @@ const DEFAULT_VIEWPORT = { width: 1000, height: 700 };
 // must restate any field it cares about). Mirrors the rule-array pattern in
 // mui-material's `test/regressions/demoMeta.ts`.
 const TEST_RULES: RouteRule[] = [
+  // Routes with dedicated `test` blocks elsewhere in this file (clicks,
+  // mouse positioning, ...) — the generic screenshot pass would race with
+  // those, so opt out here rather than dropping them from the bundle.
+  {
+    test: '/docs-charts-tooltip/Interaction',
+    // There is a dedicated test for it in this file, and this is why we don't
+    // exclude it with the glob pattern in test/regressions/testsBySuite.ts.
+    enabled: false,
+  },
+  {
+    test: '/test-regressions-charts/LineChartPointerInteraction',
+    // Dedicated tests handle mouse positioning.
+    enabled: false,
+  },
+
   // Overview composites embed desktop-breakpoint media queries that don't
   // match at the default 1000x700 viewport, leaving panes hidden in
   // screenshots. Bump per product so each captures its live-docs desktop
@@ -176,18 +196,11 @@ async function main() {
           async ({ pooled }) => {
             const { page, errors } = pooled;
 
-            if (/^\/docs-charts-tooltip\/Interaction/.test(route.url)) {
-              // Ignore tooltip interaction demo screenshot.
-              // There is a dedicated test for it in this file, and this is why we don't exclude it with the glob pattern in test/regressions/testsBySuite.ts
-              return;
-            }
-
-            if (/LineChartPointerInteraction/.test(route.url)) {
-              // Ignore pointer interaction screenshot — dedicated tests handle mouse positioning.
-              return;
-            }
-
             const routeConfig = getRouteConfig(route.url);
+
+            if (routeConfig?.enabled === false) {
+              return;
+            }
 
             await page.setViewportSize(routeConfig?.viewport ?? DEFAULT_VIEWPORT);
 
