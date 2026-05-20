@@ -62,7 +62,7 @@ const useDeprecatedUtilityClasses = (
 
 export type LineHighlightElementProps =
   | (LineHighlightElementCommonProps &
-      ({ shape: 'circle' } & Omit<React.SVGProps<SVGCircleElement>, 'ref' | 'id'>))
+      { shape: 'circle' } & Omit<React.SVGProps<SVGCircleElement>, 'ref' | 'id'>)
   | (LineHighlightElementCommonProps & {
       shape: 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
     } & Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'>);

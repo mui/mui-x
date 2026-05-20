@@ -122,6 +122,7 @@ export default defineConfig(
     },
     rules: {
       '@typescript-eslint/no-redeclare': 'error',
+      'mui/consistent-production-guard': 'off',
       'mui/straight-quotes': 'error',
       // turn off global react compiler plugin as it's controlled per package on this repo
       'react-compiler/react-compiler': 'off',

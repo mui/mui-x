@@ -1,4 +1,4 @@
-/* eslint-disable material-ui/disallow-active-element-as-key-event-target */
+/* eslint-disable mui/disallow-active-element-as-key-event-target */
 import * as React from 'react';
 import { spy } from 'sinon';
 import {
