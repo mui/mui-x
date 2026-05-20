@@ -1,5 +1,6 @@
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
+import { warnOnce } from '@mui/x-internals/warning';
 import { applyStyles, copyCanvasesContent, createExportIframe } from './common';
 import { type ChartImageExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
@@ -31,6 +32,17 @@ export async function exportImage(
     nonce,
     pixelRatio,
   } = params ?? {};
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    pixelRatio !== undefined &&
+    (!Number.isFinite(pixelRatio) || pixelRatio <= 0)
+  ) {
+    warnOnce(
+      'MUI X Charts: `pixelRatio` must be a finite number greater than 0 when exporting a chart as an image.',
+      'error',
+    );
+  }
+
   const drawDocumentPromise = getDrawDocument();
   const doc = ownerDocument(element);
 
