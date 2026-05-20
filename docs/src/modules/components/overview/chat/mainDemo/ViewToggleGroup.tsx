@@ -7,6 +7,7 @@ import ClosedCaptionOutlinedIcon from '@mui/icons-material/ClosedCaptionOutlined
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
+import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   gap: theme.spacing(0.5),
@@ -17,7 +18,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   },
 }));
 
-export type ChatView = 'copilot' | 'messenger' | 'agent' | 'widget' | 'captions';
+export type ChatView = 'basic' | 'copilot' | 'messenger' | 'agent' | 'widget' | 'captions';
 
 export type ViewToggleGroupProps = {
   selected: ChatView;
@@ -46,6 +47,10 @@ export default function ViewToggleGroup({ selected, onToggleChange }: ViewToggle
           }
         }}
       >
+        <ToggleButton value="basic" title="Basic" sx={{ gap: 1 }}>
+          <TuneOutlinedIcon fontSize="small" />
+          Basic
+        </ToggleButton>
         <ToggleButton value="copilot" title="Copilot" sx={{ gap: 1 }}>
           <AutoAwesomeOutlinedIcon fontSize="small" />
           Copilot

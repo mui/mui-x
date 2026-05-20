@@ -114,6 +114,8 @@ export interface PlaygroundCardProps {
   // eslint-disable-next-line jsdoc/require-returns
   /** Returns the JSX snippet for the Copy code action. */
   copyCode?: () => string;
+  /** Hide the card header (title + description + divider). */
+  hideHeader?: boolean;
 }
 
 const DEFAULT_PACKAGE_NAME = '@mui/x-chat';
@@ -1050,6 +1052,7 @@ export function PlaygroundCard({
   classCustomizations,
   onClassesReset,
   copyCode,
+  hideHeader = false,
 }: PlaygroundCardProps) {
   const classesOverrideCount = React.useMemo(
     () => classCustomizations?.filter((entry) => entry.sx.trim()).length ?? 0,
@@ -1114,25 +1117,29 @@ export function PlaygroundCard({
         overflow: 'hidden',
       }}
     >
-      <Stack
-        data-playground-header=""
-        spacing={0.25}
-        sx={{
-          px: { xs: 1.5, sm: 2 },
-          pt: { xs: 1.25, sm: 1.5 },
-          pb: { xs: 1, sm: 1.25 },
-        }}
-      >
-        <Typography variant="subtitle1" sx={{ fontWeight: 700, minWidth: 0 }}>
-          {title}
-        </Typography>
-        {description ? (
-          <Typography variant="caption" color="text.secondary">
-            {description}
-          </Typography>
-        ) : null}
-      </Stack>
-      <Divider data-playground-divider="" flexItem />
+      {!hideHeader && (
+        <React.Fragment>
+          <Stack
+            data-playground-header=""
+            spacing={0.25}
+            sx={{
+              px: { xs: 1.5, sm: 2 },
+              pt: { xs: 1.25, sm: 1.5 },
+              pb: { xs: 1, sm: 1.25 },
+            }}
+          >
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, minWidth: 0 }}>
+              {title}
+            </Typography>
+            {description ? (
+              <Typography variant="caption" color="text.secondary">
+                {description}
+              </Typography>
+            ) : null}
+          </Stack>
+          <Divider data-playground-divider="" flexItem />
+        </React.Fragment>
+      )}
       <Box
         sx={{
           flex: 1,

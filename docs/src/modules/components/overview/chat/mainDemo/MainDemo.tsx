@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
+import ChatBoxPlayground from 'docs/data/chat/basics/chatbox/ChatBoxPlayground';
 import { getSoftEdgesTheme } from '../theme/softEdgesTheme';
 import { getNeutralVibesTheme } from '../theme/neutralVibesTheme';
 import { darkGrey } from '../theme/colors';
@@ -21,6 +22,12 @@ import CopilotDemo from './CopilotDemo';
 import WidgetDemo from './WidgetDemo';
 
 type CustomThemeName = 'default' | 'softEdges' | 'neutralVibes';
+
+const BASIC_PLAYGROUND_DEFAULTS = {
+  conversationList: false,
+  conversationHeader: false,
+  suggestions: false,
+} as const;
 
 // Use CSS variables to avoid first load light/dark blink.
 const darkThemeManagement = {
@@ -38,7 +45,7 @@ const themeOptions: { value: CustomThemeName; label: string }[] = [
 
 export default function MainDemo() {
   const brandingTheme = useTheme();
-  const [selectedView, setSelectedView] = React.useState<ChatView>('copilot');
+  const [selectedView, setSelectedView] = React.useState<ChatView>('basic');
   const [selectedTheme, setSelectedTheme] = React.useState<CustomThemeName>('default');
   const selectedDemo = chatOverviewDemos[selectedView];
   const selectedDemoSourceUrl = getChatOverviewDemoSourceUrl(selectedView);
@@ -85,7 +92,9 @@ export default function MainDemo() {
 
   let demoContent: React.ReactNode;
 
-  if (selectedView === 'messenger') {
+  if (selectedView === 'basic') {
+    demoContent = <ChatBoxPlayground hideHeader defaults={BASIC_PLAYGROUND_DEFAULTS} />;
+  } else if (selectedView === 'messenger') {
     demoContent = (
       <Paper variant="outlined" elevation={0} sx={{ height: 600, width: '100%' }}>
         <MessengerDemo />

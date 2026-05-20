@@ -1,6 +1,7 @@
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from 'docs/constants';
 import {
   agentSource,
+  basicSource,
   captionsSource,
   copilotSource,
   messengerSource,
@@ -33,6 +34,11 @@ function createCodeDemo(title: string, githubSourcePath: string, code: string): 
 }
 
 export const chatOverviewDemos: Record<ChatView, OverviewDemoConfig> = {
+  basic: createCodeDemo(
+    'Drop-in ChatBox',
+    'docs/src/modules/components/overview/chat/mainDemo/code/basic/App.tsx',
+    basicSource,
+  ),
   messenger: createCodeDemo(
     'Multi-conversation inbox',
     'docs/data/chat/material/examples/multi-conversation/MultiConversation.tsx',

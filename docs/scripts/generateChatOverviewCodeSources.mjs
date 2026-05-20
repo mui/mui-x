@@ -7,6 +7,7 @@ const docsRoot = path.resolve(currentDirectory, '..');
 const mainDemoRoot = path.resolve(docsRoot, 'src/modules/components/overview/chat/mainDemo');
 
 const sourceFiles = {
+  basicSource: path.join(mainDemoRoot, 'code/basic/App.tsx'),
   messengerSource: path.join(mainDemoRoot, 'code/messenger/App.tsx'),
   agentSource: path.join(mainDemoRoot, 'code/agent/App.tsx'),
   widgetSource: path.join(mainDemoRoot, 'code/widget/App.tsx'),

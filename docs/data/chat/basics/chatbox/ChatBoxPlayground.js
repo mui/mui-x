@@ -56,48 +56,77 @@ function indent(input, prefix) {
     .join('\n');
 }
 
-export default function ChatBoxPlayground() {
-  const [variant, setVariant] = React.useState(DEFAULTS.variant);
-  const [density, setDensity] = React.useState(DEFAULTS.density);
-  const [layoutMode, setLayoutMode] = React.useState(DEFAULTS.layoutMode);
+export default function ChatBoxPlayground(props = {}) {
+  const { hideHeader, defaults: defaultsOverride } = props;
+  const defaults = React.useMemo(
+    () => ({ ...DEFAULTS, ...defaultsOverride }),
+    [defaultsOverride],
+  );
+  const [variant, setVariant] = React.useState(defaults.variant);
+  const [density, setDensity] = React.useState(defaults.density);
+  const [layoutMode, setLayoutMode] = React.useState(defaults.layoutMode);
   const [conversationList, setConversationList] = React.useState(
-    DEFAULTS.conversationList,
+    defaults.conversationList,
   );
   const [conversationHeader, setConversationHeader] = React.useState(
-    DEFAULTS.conversationHeader,
+    defaults.conversationHeader,
   );
-  const [attachments, setAttachments] = React.useState(DEFAULTS.attachments);
-  const [suggestions, setSuggestions] = React.useState(DEFAULTS.suggestions);
+  const [attachments, setAttachments] = React.useState(defaults.attachments);
+  const [suggestions, setSuggestions] = React.useState(defaults.suggestions);
   const [scrollToBottom, setScrollToBottom] = React.useState(
-    DEFAULTS.scrollToBottom,
+    defaults.scrollToBottom,
   );
-  const [helperText, setHelperText] = React.useState(DEFAULTS.helperText);
-  const [autoScroll, setAutoScroll] = React.useState(DEFAULTS.autoScroll);
+  const [helperText, setHelperText] = React.useState(defaults.helperText);
+  const [autoScroll, setAutoScroll] = React.useState(defaults.autoScroll);
   const [suggestionsAutoSubmit, setSuggestionsAutoSubmit] = React.useState(
-    DEFAULTS.suggestionsAutoSubmit,
+    defaults.suggestionsAutoSubmit,
+  );
+  const [activeConversationId, setActiveConversationId] = React.useState(
+    conversations[0].id,
   );
   const classesCustomizations = useCustomizations(CLASS_DEFS);
   const threadMapRef = React.useRef(initialThreads);
   const adapter = React.useMemo(() => makeAdapter(threadMapRef.current), []);
 
   const handleReset = React.useCallback(() => {
-    setVariant(DEFAULTS.variant);
-    setDensity(DEFAULTS.density);
-    setLayoutMode(DEFAULTS.layoutMode);
-    setConversationList(DEFAULTS.conversationList);
-    setConversationHeader(DEFAULTS.conversationHeader);
-    setAttachments(DEFAULTS.attachments);
-    setSuggestions(DEFAULTS.suggestions);
-    setScrollToBottom(DEFAULTS.scrollToBottom);
-    setHelperText(DEFAULTS.helperText);
-    setAutoScroll(DEFAULTS.autoScroll);
-    setSuggestionsAutoSubmit(DEFAULTS.suggestionsAutoSubmit);
-  }, []);
+    setVariant(defaults.variant);
+    setDensity(defaults.density);
+    setLayoutMode(defaults.layoutMode);
+    setConversationList(defaults.conversationList);
+    setConversationHeader(defaults.conversationHeader);
+    setAttachments(defaults.attachments);
+    setSuggestions(defaults.suggestions);
+    setScrollToBottom(defaults.scrollToBottom);
+    setHelperText(defaults.helperText);
+    setAutoScroll(defaults.autoScroll);
+    setSuggestionsAutoSubmit(defaults.suggestionsAutoSubmit);
+    setActiveConversationId(conversations[0].id);
+  }, [defaults]);
 
   const outerSx = React.useMemo(
     () => classesCustomizations.toClassesSx({ height: '100%' }),
     [classesCustomizations],
   );
+
+  // split / overlay layouts only make sense alongside the conversation list and
+  // its header, so force them on (and lock the toggles) for those modes.
+  const layoutRequiresConversation =
+    layoutMode === 'split' || layoutMode === 'overlay';
+  const effectiveConversationList = layoutRequiresConversation || conversationList;
+  const effectiveConversationHeader =
+    layoutRequiresConversation || conversationHeader;
+  const layoutLockHint = layoutRequiresConversation
+    ? `Required by layoutMode="${layoutMode}".`
+    : undefined;
+
+  // Without the conversation list there's no UI to pick a conversation, so
+  // restore the first one whenever the user lands in that state (e.g. after
+  // a back-click in split mode cleared the selection).
+  React.useEffect(() => {
+    if (!effectiveConversationList && !activeConversationId) {
+      setActiveConversationId(conversations[0].id);
+    }
+  }, [effectiveConversationList, activeConversationId]);
 
   const copyCode = React.useCallback(() => {
     const classEntries = Object.keys(classesCustomizations.values)
@@ -116,8 +145,8 @@ export default function ChatBoxPlayground() {
         : `\n  sx={{ height: '100%' }}`;
 
     const featuresLines = [
-      conversationList ? '    conversationList: true,' : null,
-      conversationHeader ? '    conversationHeader: true,' : null,
+      effectiveConversationList ? '    conversationList: true,' : null,
+      effectiveConversationHeader ? '    conversationHeader: true,' : null,
       scrollToBottom ? '    scrollToBottom: true,' : '    scrollToBottom: false,',
       attachments ? '    attachments: true,' : null,
       helperText ? '    helperText: true,' : '    helperText: false,',
@@ -132,7 +161,8 @@ export default function ChatBoxPlayground() {
   currentUser={currentUser}
   members={members}
   initialConversations={conversations}
-  initialActiveConversationId={conversations[0].id}
+  activeConversationId={activeConversationId}
+  onActiveConversationChange={setActiveConversationId}
   variant="${variant}"
   density="${density}"
   layoutMode="${layoutMode}"
@@ -146,8 +176,8 @@ ${featuresLines}
     variant,
     density,
     layoutMode,
-    conversationList,
-    conversationHeader,
+    effectiveConversationList,
+    effectiveConversationHeader,
     attachments,
     suggestions,
     scrollToBottom,
@@ -161,6 +191,7 @@ ${featuresLines}
     <PlaygroundCard
       title="ChatBox"
       description="Full chat surface — conversation list, header, message list, composer, suggestions, and affordances."
+      hideHeader={hideHeader}
       previewFill
       previewMinHeight={520}
       span={3}
@@ -192,13 +223,17 @@ ${featuresLines}
           <DividerLabel>features</DividerLabel>
           <SwitchControl
             label="conversationList"
-            checked={conversationList}
+            checked={effectiveConversationList}
             onChange={setConversationList}
+            disabled={layoutRequiresConversation}
+            helperText={layoutLockHint}
           />
           <SwitchControl
             label="conversationHeader"
-            checked={conversationHeader}
+            checked={effectiveConversationHeader}
             onChange={setConversationHeader}
+            disabled={layoutRequiresConversation}
+            helperText={layoutLockHint}
           />
           <SwitchControl
             label="attachments"
@@ -243,15 +278,16 @@ ${featuresLines}
           currentUser={users.me}
           members={[users.me, users.assistant, users.alice]}
           initialConversations={conversations}
-          initialActiveConversationId={conversations[0].id}
+          activeConversationId={activeConversationId}
+          onActiveConversationChange={setActiveConversationId}
           variant={variant}
           density={density}
           layoutMode={layoutMode}
           suggestions={sampleSuggestions}
           suggestionsAutoSubmit={suggestionsAutoSubmit}
           features={{
-            conversationList,
-            conversationHeader,
+            conversationList: effectiveConversationList,
+            conversationHeader: effectiveConversationHeader,
             scrollToBottom,
             attachments,
             helperText,
