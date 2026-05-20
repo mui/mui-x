@@ -317,6 +317,20 @@ storeClasses.forEach((storeClass) => {
           }).not.to.throw();
         },
       );
+
+      it('should warn in dev when the same id is in both `deleted` and `updated`', () => {
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({ events: [event] }, adapter);
+
+        expect(() => {
+          (store as any).updateEvents({
+            deleted: [event.id],
+            updated: [{ id: event.id, title: 'will be ignored' }],
+          });
+        }).toWarnDev([
+          `MUI X Scheduler: id "${event.id}" appears in both \`deleted\` and \`updated\`.`,
+        ]);
+      });
     });
 
     describe('Method: deleteEvent', () => {
