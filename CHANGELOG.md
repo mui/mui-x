@@ -5,6 +5,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.28.7
+
+_May 20, 2026_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible:
+@arminmeh, @LukasTy
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.28.7`
+
+- [DataGrid] Fix scrollbar disappearing after multiple resizes (#22516) @LukasTy
+
+#### `@mui/x-data-grid-pro@8.28.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.28.7`.
+
+#### `@mui/x-data-grid-premium@8.28.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.28.7`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.28.7`
+
+- [pickers] Fix disabled state styling for `PickersTextField` standard and filled variants (#22534) @LukasTy
+
+#### `@mui/x-date-pickers-pro@8.28.7` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.28.7`.
+
+### Docs
+
+- [docs] Automatically update supported versions (#22527) @arminmeh
+
 ## 8.28.6
 
 _May 13, 2026_
