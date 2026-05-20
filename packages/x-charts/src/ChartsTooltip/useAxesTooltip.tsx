@@ -216,9 +216,9 @@ export function useAxesTooltip<
         // Test if the series uses the default axis
         if (tooltipItemIndex >= 0) {
           const colorAxisId =
-            'colorAxisId' in seriesToAdd || 'zAxisId' in seriesToAdd
-              ? (seriesToAdd.colorAxisId ?? seriesToAdd.zAxisId)
-              : zAxisIds[0];
+            ('colorAxisId' in seriesToAdd && seriesToAdd.colorAxisId) ||
+            ('zAxisId' in seriesToAdd && seriesToAdd.zAxisId) ||
+            zAxisIds[0];
           const { dataIndex } = tooltipAxes[tooltipItemIndex];
           const color =
             colorProcessors[seriesType]?.(
