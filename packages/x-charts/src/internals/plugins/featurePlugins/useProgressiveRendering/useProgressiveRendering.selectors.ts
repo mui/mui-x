@@ -15,10 +15,7 @@ const selectorProgressiveState: ChartOptionalRootSelector<UseProgressiveRenderin
 ) => state.progressiveRendering;
 
 /** Map of registered plots → their plan. */
-export const selectorProgressivePlans = createSelector(
-  selectorProgressiveState,
-  (s) => s?.plans,
-);
+export const selectorProgressivePlans = createSelector(selectorProgressiveState, (s) => s?.plans);
 
 /** Total number of rounds revealed across all plots so far. */
 export const selectorProgressiveRevealedRounds = createSelector(
