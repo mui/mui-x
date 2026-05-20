@@ -6,9 +6,10 @@
   Internal preview — hidden on export
 </Typography>
 <BarChartPro
-  {...settings}
+  {...data}
   showToolbar
   slotProps={{
+    // Forward the attribute to an internal slot so the legend is also stripped from exports.
     legend: { 'data-hide-on-export': true } as any,
   }}
 />
