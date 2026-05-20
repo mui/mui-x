@@ -33,6 +33,11 @@ const MUI_X_PRODUCTS = [
   },
 ];
 
+const CONNECTOR_LINE_WIDTH = 1;
+const CONNECTOR_LINE_CENTER = 17.5;
+const CONNECTOR_LINE_LEFT = CONNECTOR_LINE_CENTER - CONNECTOR_LINE_WIDTH / 2;
+const CONNECTOR_GAP = 16;
+
 const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
   color: theme.palette.grey[200],
   [`& .${treeItemClasses.content}`]: {
@@ -56,9 +61,9 @@ const CustomTreeItem = styled(TreeItem)(({ theme }) => ({
     }),
   },
   [`& .${treeItemClasses.groupTransition}`]: {
-    marginLeft: 15,
-    paddingLeft: 18,
-    borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+    marginLeft: CONNECTOR_LINE_LEFT,
+    paddingLeft: CONNECTOR_GAP,
+    borderLeft: `${CONNECTOR_LINE_WIDTH}px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
   },
   ...theme.applyStyles('light', {
     color: theme.palette.grey[800],
