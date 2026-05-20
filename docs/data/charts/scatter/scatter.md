@@ -107,17 +107,17 @@ See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) 
 
 {{"demo": "ColorScale.js"}}
 
-### Size scale
+### Size scale (Bubble chart)
 
 You can also map a value to the size of each scatter point.
 
 Set a `sizeMap` on a z-axis and point the series to it with the `sizeAxisId` prop.
 The mapped value comes from the `sizeValue` property on each data point, or from the z-axis data.
 
-{{"demo": "SizeScale.js"}}
-
 The `sizeMap` supports the same `continuous`, `piecewise`, and `ordinal` types as `colorMap`, but it maps values to a marker radius in pixels.
 A series can set both `colorAxisId` and `sizeAxisId` to style points by two values at once.
+
+{{"demo": "SizeScale.js"}}
 
 ### Grid
 
