@@ -199,7 +199,7 @@ EventTimelinePremium.propTypes = {
    */
   dataSource: PropTypes.shape({
     getEvents: PropTypes.func.isRequired,
-    updateEvents: PropTypes.func.isRequired,
+    persistEvents: PropTypes.func.isRequired,
   }),
   /**
    * The locale object from `date-fns` used to format dates.
