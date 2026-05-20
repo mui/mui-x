@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { type SeriesId } from '../../models/seriesType/common';
 import {
-  SCATTER_REVEAL_BATCHES_PER_FRAME,
   SCATTER_REVEAL_FRAMES_SKIPPED,
+  SCATTER_REVEAL_ROUNDS_PER_FRAME,
 } from './scatterRendererConstants';
 
 /**
@@ -19,61 +19,35 @@ export interface ScatterRevealSeries {
 
 interface ScatterRevealContextValue {
   /**
-   * Number of batches revealed so far, counted globally across every series. A
-   * single scheduler advances this, so the per-frame work is bounded regardless
-   * of how many series there are.
+   * Number of *rounds* revealed so far. A round advances every series by one
+   * batch simultaneously, so the chart looks complete from the first paint.
    */
-  revealedGlobalBatches: number;
-  // How many of `seriesId`'s own batches are revealed. Batches are interleaved
-  // round-robin across series, so every series progresses together rather than
-  // one series finishing entirely before the next starts.
+  revealedRounds: number;
+  // How many of `seriesId`'s own batches are revealed. Capped at that series'
+  // total batch count, so series with fewer batches simply stop progressing
+  // while longer series keep filling in.
   getSeriesRevealedBatches: (seriesId: SeriesId) => number;
 }
 
 const DEFAULT_VALUE: ScatterRevealContextValue = {
   // No provider (e.g. used directly as a slot): reveal everything.
-  revealedGlobalBatches: Number.POSITIVE_INFINITY,
+  revealedRounds: Number.POSITIVE_INFINITY,
   getSeriesRevealedBatches: () => Number.POSITIVE_INFINITY,
 };
 
 /**
- * Builds the round-robin reveal order: batch 0 of every series, then batch 1 of
- * every series, and so on (series with fewer batches simply drop out of later
- * rounds). `positions[seriesId]` holds the ascending global indices at which
- * that series' batches are revealed.
+ * Per-series batch counts and the maximum across the plan. One reveal "round"
+ * adds one batch in every series with at least that many batches; the total
+ * number of rounds is therefore `max(entry.nBatches)`.
  */
-function buildRevealOrder(plan: ScatterRevealSeries[]) {
-  const positions = new Map<SeriesId, number[]>();
+function buildRevealPlan(plan: ScatterRevealSeries[]) {
+  const nBatchesBySeries = new Map<SeriesId, number>();
   let maxBatches = 0;
   for (const entry of plan) {
-    positions.set(entry.seriesId, []);
+    nBatchesBySeries.set(entry.seriesId, entry.nBatches);
     maxBatches = Math.max(maxBatches, entry.nBatches);
   }
-  let global = 0;
-  for (let round = 0; round < maxBatches; round += 1) {
-    for (const entry of plan) {
-      if (round < entry.nBatches) {
-        positions.get(entry.seriesId)!.push(global);
-        global += 1;
-      }
-    }
-  }
-  return { positions, total: global };
-}
-
-/** Number of ascending values in `sorted` that are strictly less than `value`. */
-function countBelow(sorted: number[], value: number) {
-  let lo = 0;
-  let hi = sorted.length;
-  while (lo < hi) {
-    const mid = Math.floor((lo + hi) / 2);
-    if (sorted[mid] < value) {
-      lo = mid + 1;
-    } else {
-      hi = mid;
-    }
-  }
-  return lo;
+  return { nBatchesBySeries, totalRounds: maxBatches };
 }
 
 const ScatterRevealContext = React.createContext<ScatterRevealContextValue>(DEFAULT_VALUE);
@@ -113,25 +87,25 @@ export interface ScatterAsyncRevealProviderProps {
 /**
  * Owns the single reveal scheduler shared by every `ScatterAsync` of a plot.
  *
- * Instead of each series running its own animation-frame loop (which would
- * reveal N batches per frame for N series and saturate the CPU), one loop
- * advances a global batch budget: one batch — across all series combined — per
- * reveal tick, with a frame skipped between ticks to leave the browser CPU
- * time. The paint replays whenever any series' `data` reference changes.
+ * Instead of each series running its own animation-frame loop, one loop
+ * advances a global "rounds" counter: each round reveals one more batch in
+ * every series simultaneously, so the chart looks complete from the first
+ * paint rather than appearing series by series. The paint replays whenever any
+ * series' `data` reference changes.
  */
 export function ScatterAsyncRevealProvider(props: ScatterAsyncRevealProviderProps) {
   const { plan, children } = props;
 
-  // The reveal order and total are recomputed every render (cheap — a handful
-  // of series) but read through refs so neither the reveal effect nor the
-  // context value churn on unrelated re-renders.
-  const { positions, total: totalBatches } = buildRevealOrder(plan);
-  const positionsRef = React.useRef(positions);
-  positionsRef.current = positions;
-  const totalBatchesRef = React.useRef(totalBatches);
-  totalBatchesRef.current = totalBatches;
+  // The reveal plan is recomputed every render (cheap — a handful of series)
+  // but read through refs so neither the reveal effect nor the context value
+  // churn on unrelated re-renders.
+  const { nBatchesBySeries, totalRounds } = buildRevealPlan(plan);
+  const nBatchesBySeriesRef = React.useRef(nBatchesBySeries);
+  nBatchesBySeriesRef.current = nBatchesBySeries;
+  const totalRoundsRef = React.useRef(totalRounds);
+  totalRoundsRef.current = totalRounds;
 
-  const [revealedGlobalBatches, setRevealedGlobalBatches] = React.useState(0);
+  const [revealedRounds, setRevealedRounds] = React.useState(0);
 
   // `ScatterPlot` allocates a new `plan` array on every render, so the reveal
   // scheduler cannot key off its identity. Bump a token only when the plan
@@ -144,20 +118,20 @@ export function ScatterAsyncRevealProvider(props: ScatterAsyncRevealProviderProp
     previousPlanRef.current = plan;
     // Reset synchronously during render so new points are never committed all
     // at once for a frame before the effect resets.
-    setRevealedGlobalBatches(0);
+    setRevealedRounds(0);
     setResetToken((token) => token + 1);
   }
 
   React.useEffect(() => {
-    setRevealedGlobalBatches(0);
+    setRevealedRounds(0);
 
-    const total = totalBatchesRef.current;
+    const total = totalRoundsRef.current;
     if (total === 0) {
       return undefined;
     }
 
     if (typeof requestAnimationFrame !== 'function') {
-      setRevealedGlobalBatches(total);
+      setRevealedRounds(total);
       return undefined;
     }
 
@@ -193,8 +167,8 @@ export function ScatterAsyncRevealProvider(props: ScatterAsyncRevealProviderProp
       if (cancelled) {
         return;
       }
-      revealed = Math.min(total, revealed + SCATTER_REVEAL_BATCHES_PER_FRAME);
-      setRevealedGlobalBatches(revealed);
+      revealed = Math.min(total, revealed + SCATTER_REVEAL_ROUNDS_PER_FRAME);
+      setRevealedRounds(revealed);
       if (revealed < total) {
         scheduleNext();
       }
@@ -211,11 +185,11 @@ export function ScatterAsyncRevealProvider(props: ScatterAsyncRevealProviderProp
 
   const value = React.useMemo<ScatterRevealContextValue>(
     () => ({
-      revealedGlobalBatches,
+      revealedRounds,
       getSeriesRevealedBatches: (seriesId: SeriesId) =>
-        countBelow(positionsRef.current.get(seriesId) ?? [], revealedGlobalBatches),
+        Math.min(revealedRounds, nBatchesBySeriesRef.current.get(seriesId) ?? 0),
     }),
-    [revealedGlobalBatches],
+    [revealedRounds],
   );
 
   return <ScatterRevealContext.Provider value={value}>{children}</ScatterRevealContext.Provider>;

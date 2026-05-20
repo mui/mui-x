@@ -13,11 +13,13 @@ export const SCATTER_BATCH_SIZE = 10000;
 export const SCATTER_ASYNC_THRESHOLD = 20000;
 
 /**
- * How many batches are revealed per reveal tick once the render data is ready.
- * Lower spreads the paint over more ticks (smoother, more visibly progressive);
+ * How many *rounds* are revealed per reveal tick once the render data is ready.
+ * A round reveals one batch in every series simultaneously, so the chart looks
+ * complete from the first paint rather than appearing series-by-series. Lower
+ * spreads the paint over more ticks (smoother, more visibly progressive);
  * higher finishes sooner.
  */
-export const SCATTER_REVEAL_BATCHES_PER_FRAME = 1;
+export const SCATTER_REVEAL_ROUNDS_PER_FRAME = 1;
 
 /**
  * How many animation frames are skipped between two reveal ticks. `0` reveals
