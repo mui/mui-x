@@ -22,26 +22,29 @@ export function getSequentialSizeScale<Value extends number | Date>(
   return scaleSequential([config.min ?? 0, config.max ?? 100], config.size);
 }
 
-export function getOrdinalSizeScale<Value extends number | Date | string>(
-  config: OrdinalSizeConfig<Value>,
-): ScaleOrdinal<Value, number, null | number> | ScaleOrdinal<number, number, null | number> {
+export function getOrdinalSizeScale(
+  config: OrdinalSizeConfig,
+): ScaleOrdinal<number | Date | string, number, number | null> {
   if (config.values) {
-    return scaleOrdinal(config.values, config.sizes).unknown(config.unknownSize ?? null);
+    return scaleOrdinal<number | Date | string, number>(config.values, config.sizes).unknown(
+      config.unknownSize ?? null,
+    );
   }
-  return scaleOrdinal(
+  return scaleOrdinal<number | Date | string, number>(
     config.sizes.map((_, index) => index),
     config.sizes,
   ).unknown(config.unknownSize ?? null);
 }
 
-export function getSizeScale<Value extends number | Date = number | Date>(
-  config: ContinuousSizeConfig<Value> | PiecewiseSizeConfig<Value>,
-): ScaleThreshold<Value, number, never> | ScaleSequential<Value, number | null>;
-export function getSizeScale<Value extends number | Date | string>(
-  config: OrdinalSizeConfig<Value>,
-): ScaleOrdinal<Value, number, null | number> | ScaleOrdinal<number, number, null | number>;
-export function getSizeScale<Value extends number | Date | string>(
-  config: ContinuousSizeConfig<Exclude<Value, string>> | PiecewiseSizeConfig<Exclude<Value, string>> | OrdinalSizeConfig<Value>,
-) {
+export function getSizeScale(
+  config: OrdinalSizeConfig,
+): ScaleOrdinal<number | Date | string, number, number | null>;
+export function getSizeScale(
+  config: ContinuousSizeConfig | PiecewiseSizeConfig,
+): ScaleThreshold<number | Date, number> | ScaleSequential<number | Date, number>;
+export function getSizeScale(
+  config: ContinuousSizeConfig | PiecewiseSizeConfig | OrdinalSizeConfig,
+): ScaleOrdinal<number | Date | string, number, number | null> |
+  ScaleThreshold<number | Date, number> | ScaleSequential<number | Date, number> {
   return config.type === 'ordinal' ? getOrdinalSizeScale(config) : getSequentialSizeScale(config);
 }
