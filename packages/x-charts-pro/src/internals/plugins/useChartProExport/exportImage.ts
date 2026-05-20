@@ -29,11 +29,12 @@ export async function exportImage(
     onBeforeExport = defaultOnBeforeExport,
     copyStyles = true,
     nonce,
+    pixelRatio,
   } = params ?? {};
   const drawDocumentPromise = getDrawDocument();
   const doc = ownerDocument(element);
 
-  const ratio = Math.max(window.devicePixelRatio || 1, 1);
+  const ratio = pixelRatio ?? Math.max(window.devicePixelRatio || 1, 2);
   const iframe = createExportIframe(fileName);
   /* We apply the min/max width and height to ensure the SVG doesn't resize in the export.
    * We apply to the original SVG so that the cloned tree will contain the styles and revert these
@@ -48,6 +49,7 @@ export async function exportImage(
   iframe.onload = async () => {
     const exportDoc = iframe.contentDocument!;
     const elementClone = element.cloneNode(true) as Element;
+    elementClone.querySelectorAll('[data-hide-on-export]').forEach((el) => el.remove());
     applyStyles(svg, previousStyles);
     exportDoc.body.replaceChildren(elementClone);
     exportDoc.body.style.margin = '0px';

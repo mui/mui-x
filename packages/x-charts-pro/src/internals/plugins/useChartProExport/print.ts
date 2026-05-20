@@ -19,6 +19,7 @@ export function printChart(
   printWindow.onload = async () => {
     const printDoc = printWindow.contentDocument!;
     const elementClone = element!.cloneNode(true) as Element;
+    elementClone.querySelectorAll('[data-hide-on-export]').forEach((el) => el.remove());
     printDoc.body.replaceChildren(elementClone);
     printDoc.body.style.margin = '0px';
 

@@ -1,0 +1,14 @@
+<Typography
+  data-hide-on-export
+  variant="caption"
+  sx={{ alignSelf: 'center', color: 'warning.main' }}
+>
+  Internal preview — hidden on export
+</Typography>
+<BarChartPro
+  {...settings}
+  showToolbar
+  slotProps={{
+    legend: { 'data-hide-on-export': true } as any,
+  }}
+/>
