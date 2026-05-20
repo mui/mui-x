@@ -18,6 +18,7 @@ import {
   EventCalendarRoot,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
+import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
 import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
 
 const packageInfo = {
@@ -28,8 +29,7 @@ const packageInfo = {
 const watermark = <Watermark packageInfo={packageInfo} />;
 
 /**
- * Premium version of EventCalendar with lazy loading support.
- * Uses EventCalendarPremiumStore which extends EventCalendarStore with lazy loading plugin.
+ * Premium version of EventCalendar with support for lazy loading and recurring events.
  */
 const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
   TEvent extends object,
@@ -76,7 +76,7 @@ const EventCalendarPremium = React.forwardRef(function EventCalendarPremium<
     <SchedulerStoreContext.Provider value={store as any}>
       <EventCalendarStyledContext.Provider value={calendarStyledContextValue}>
         <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
-          <EventDialogProvider>
+          <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
             <EventCalendarRoot className={className} {...other} ref={forwardedRef}>
               {watermark}
             </EventCalendarRoot>
@@ -138,7 +138,7 @@ EventCalendarPremium.propTypes = {
    */
   dataSource: PropTypes.shape({
     getEvents: PropTypes.func.isRequired,
-    updateEvents: PropTypes.func.isRequired,
+    persistEvents: PropTypes.func.isRequired,
   }),
   /**
    * The locale object from `date-fns` used to format dates.

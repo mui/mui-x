@@ -17,7 +17,7 @@ export function createModal<TData>(config: CreateModalConfig) {
     const context = React.useContext(Context);
     if (!context) {
       throw new Error(
-        `MUI: \`${config.contextName}\` is missing. Hook must be placed within its Provider.`,
+        `MUI X Scheduler: \`${config.contextName}\` is missing. Hook must be placed within its Provider.`,
       );
     }
     return context;

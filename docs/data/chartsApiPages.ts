@@ -44,6 +44,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarPlot',
   },
   {
+    pathname: '/x/api/charts/bar-plot-premium',
+    title: 'BarPlotPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/candlestick-chart',
     title: 'CandlestickChart',
     plan: 'premium',

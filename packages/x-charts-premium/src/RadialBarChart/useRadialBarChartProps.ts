@@ -9,6 +9,7 @@ import { type ChartsOverlayProps } from '../ChartsOverlay';
 import { type ChartsRadialDataProviderProps } from '../ChartsRadialDataProvider';
 import type { RadialBarChartProps } from './RadialBarChart';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
+import type { ChartsRadialAxisHighlightProps } from '../ChartsRadialAxisHighlight';
 import {
   RADIAL_BAR_CHART_PLUGINS,
   type RadialBarChartPluginSignatures,
@@ -40,6 +41,7 @@ export const useRadialBarChartProps = (props: RadialBarChartProps) => {
     skipAnimation,
     loading,
     showToolbar,
+    axisHighlight,
     ...other
   } = props;
 
@@ -85,6 +87,12 @@ export const useRadialBarChartProps = (props: RadialBarChartProps) => {
     plugins: RADIAL_BAR_CHART_PLUGINS,
   };
 
+  const isHorizontal = series.some((s) => s.layout === 'horizontal');
+  const axisHighlightProps: ChartsRadialAxisHighlightProps = {
+    ...(isHorizontal ? { radius: 'band' as const } : { rotation: 'band' as const }),
+    ...axisHighlight,
+  };
+
   const gridProps: ChartsRadialGridProps | undefined = grid;
 
   const clipPathGroupProps = {
@@ -120,6 +128,7 @@ export const useRadialBarChartProps = (props: RadialBarChartProps) => {
     clipPathGroupProps,
     overlayProps,
     legendProps,
+    axisHighlightProps,
     children,
   };
 };

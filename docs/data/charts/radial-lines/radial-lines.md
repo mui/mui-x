@@ -8,8 +8,9 @@ components: ChartsRadialDataProvider, ChartsRadialDataProviderPremium, RadialLin
 
 <p class="description">Use radial line charts to show trends along periodic values.</p>
 
-:::info
-This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
+:::warning
+This feature is in preview.
+It is ready for production use, and its API, visuals, and behavior may change in future minor or patch releases.
 :::
 
 ## Basics
@@ -17,6 +18,12 @@ This feature is in preview. It is ready for production use, but its API, visuals
 The `RadialLineChart` component accepts `series`, `rotationAxis`, and `radiusAxis` props to render data in polar coordinates.
 
 {{"demo": "BasicRadialLineChart.js", "bg": "outline"}}
+
+## Closing path
+
+To draw the line between the last and first point of the series, set the series property `closePath` to `true`.
+
+{{"demo": "ClosedOpenRadialLineChart.js", "bg": "outline"}}
 
 ## Axes
 
