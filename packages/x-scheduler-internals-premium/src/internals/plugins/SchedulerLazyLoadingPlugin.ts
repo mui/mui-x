@@ -5,6 +5,7 @@ import {
   SchedulerStore,
   buildEventsState,
   SchedulerEventParameters,
+  SchedulerPersistEventsResult,
 } from '@mui/x-scheduler-internals/internals';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { SchedulerDataManager } from '../utils/queue';
@@ -79,7 +80,10 @@ export class SchedulerLazyLoadingPlugin<
     this.store = store;
 
     if (this.store.parameters.dataSource) {
-      this.cache = new SchedulerDataSourceCacheDefault<TEvent>({ ttl: 300_000 });
+      this.cache = new SchedulerDataSourceCacheDefault<TEvent>({
+        ttl: 300_000,
+        getId: this.store.parameters.eventModelStructure?.id?.getter,
+      });
       this.dataManager = new SchedulerDataManager(
         this.store.state.adapter,
         this.loadEventsFromDataSource,
@@ -204,7 +208,9 @@ export class SchedulerLazyLoadingPlugin<
     }
   };
 
-  private handleEventsUpdated = async (params: SchedulerEventParameters<'eventsUpdated'>) => {
+  private handleEventsUpdated = async (
+    params: SchedulerEventParameters<TEvent, 'eventsUpdated'>,
+  ) => {
     const { deleted, updated, created, newEvents } = params;
     const { dataSource } = this.store.parameters;
     const { adapter, displayTimezone } = this.store.state;
@@ -213,66 +219,51 @@ export class SchedulerLazyLoadingPlugin<
       return;
     }
 
+    let persistResult: SchedulerPersistEventsResult;
     try {
-      const shouldUpdateEvents = await dataSource.updateEvents({
+      persistResult = await dataSource.persistEvents({
         deleted,
-        updated: Array.from(updated.keys()),
+        updated,
         created,
-      });
-
-      if (!shouldUpdateEvents.success) {
-        this.store.pushError(
-          new Error(
-            'MUI X Scheduler: `dataSource.updateEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
-              'To surface a specific message to the user, throw a descriptive Error from `updateEvents` instead. ' +
-              'See the `updateEvents` contract at https://mui.com/x/react-scheduler/event-calendar/lazy-loading/ (EventCalendar) or https://mui.com/x/react-scheduler/event-timeline/lazy-loading/ (EventTimeline).',
-          ),
-        );
-        return;
-      }
-
-      for (const id of deleted) {
-        this.cache.remove(String(id));
-      }
-
-      const modifiedIds = new Set([...created, ...updated.keys()]);
-
-      if (modifiedIds.size > 0) {
-        const seenIds = new Set<unknown>();
-        for (const event of newEvents) {
-          const id = (event as any).id;
-          if (modifiedIds.has(id)) {
-            this.cache.upsert(event);
-            seenIds.add(id);
-          }
-        }
-        if (process.env.NODE_ENV !== 'production') {
-          for (const id of modifiedIds) {
-            if (!seenIds.has(id)) {
-              console.warn(
-                `MUI X Scheduler: eventsUpdated reported id "${String(id)}" as created or updated, ` +
-                  `but it is missing from \`newEvents\`. The cache was not updated for this id. ` +
-                  `Make sure the publisher includes the new version of every modified event in \`newEvents\`.`,
-              );
-            }
-          }
-        }
-      }
-
-      const eventsState = buildEventsState(
-        { ...this.store.parameters, events: newEvents },
-        adapter,
-        displayTimezone,
-        this.store.state.recurringEventsPlugin,
-      );
-
-      this.store.update({
-        ...this.store.state,
-        ...eventsState,
-        errors: [],
       });
     } catch (error) {
       this.store.pushError(error);
+      return;
     }
+
+    if (!persistResult.success) {
+      this.store.pushError(
+        new Error(
+          'MUI X Scheduler: `dataSource.persistEvents` returned `{ success: false }`, so the cache was not updated and the UI is now out of sync with your data source. ' +
+            'To surface a specific message to the user, throw a descriptive Error from `persistEvents` instead. ' +
+            'See the `persistEvents` contract at https://mui.com/x/react-scheduler/event-calendar/lazy-loading/ (EventCalendar) or https://mui.com/x/react-scheduler/event-timeline/lazy-loading/ (EventTimeline).',
+        ),
+      );
+      return;
+    }
+
+    for (const id of deleted) {
+      this.cache.remove(String(id));
+    }
+
+    for (const event of created) {
+      this.cache.upsert(event);
+    }
+    for (const event of updated) {
+      this.cache.upsert(event);
+    }
+
+    const eventsState = buildEventsState(
+      { ...this.store.parameters, events: newEvents },
+      adapter,
+      displayTimezone,
+      this.store.state.recurringEventsPlugin,
+    );
+
+    this.store.update({
+      ...this.store.state,
+      ...eventsState,
+      errors: [],
+    });
   };
 }
