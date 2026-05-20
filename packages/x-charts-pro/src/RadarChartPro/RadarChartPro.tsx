@@ -209,11 +209,11 @@ RadarChartPro.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
     }),
   ]),
   /**
@@ -324,7 +324,6 @@ RadarChartPro.propTypes = {
     labelGap: PropTypes.number,
     max: PropTypes.number,
     metrics: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
       PropTypes.arrayOf(
         PropTypes.shape({
           max: PropTypes.number,
@@ -332,6 +331,7 @@ RadarChartPro.propTypes = {
           name: PropTypes.string.isRequired,
         }),
       ),
+      PropTypes.arrayOf(PropTypes.string),
     ]).isRequired,
     startAngle: PropTypes.number,
   }).isRequired,
@@ -391,11 +391,11 @@ RadarChartPro.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
     }),
   ]),
   /**
