@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/line-element',
+    'docs/translations/api-docs/charts/line-element',
     false,
     /\.\/line-element.*\.json$/,
   );

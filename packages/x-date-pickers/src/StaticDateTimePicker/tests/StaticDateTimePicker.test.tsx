@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers';
 import { DateTimePickerTabs, DateTimePickerTabsProps } from '../../DateTimePicker';
@@ -8,13 +8,13 @@ import { DateTimePickerTabs, DateTimePickerTabsProps } from '../../DateTimePicke
 describe('<StaticDateTimePicker />', () => {
   const { render } = createPickerRenderer();
 
-  it('should allow to select the same day', () => {
+  it('should allow to select the same day', async () => {
     const onChange = spy();
-    render(
+    const { user } = render(
       <StaticDateTimePicker onChange={onChange} defaultValue={adapterToUse.date('2018-01-01')} />,
     );
 
-    fireEvent.click(screen.getByRole('gridcell', { name: '1' }));
+    await user.click(screen.getByRole('gridcell', { name: '1' }));
     expect(onChange.callCount).to.equal(1);
   });
 

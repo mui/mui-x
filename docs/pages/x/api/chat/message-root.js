@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/chat/message-root',
+    'docs/translations/api-docs/chat/message-root',
     false,
     /\.\/message-root.*\.json$/,
   );

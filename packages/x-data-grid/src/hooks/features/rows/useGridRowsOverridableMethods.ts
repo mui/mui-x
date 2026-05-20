@@ -33,32 +33,26 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
         );
       }
 
-      // Get the target index from the targetRowId using the lookup selector
+      // Resolve positions in the filtered view to detect visible-order no-ops.
       const sortedFilteredRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
-      const targetRowIndexUnadjusted = sortedFilteredRowIndexLookup[targetRowId];
+      const targetFilteredIndex = sortedFilteredRowIndexLookup[targetRowId];
+      const sourceFilteredIndex = sortedFilteredRowIndexLookup[sourceRowId];
 
-      if (targetRowIndexUnadjusted === undefined) {
+      if (targetFilteredIndex === undefined) {
         throw new Error(`MUI X: Target row with id #${targetRowId} not found in current view.`);
       }
-
-      const sourceRowIndex = sortedFilteredRowIndexLookup[sourceRowId];
-
-      if (sourceRowIndex === undefined) {
+      if (sourceFilteredIndex === undefined) {
         throw new Error(`MUI X: Source row with id #${sourceRowId} not found in current view.`);
       }
 
-      const dragDirection = targetRowIndexUnadjusted < sourceRowIndex ? 'up' : 'down';
-
-      let targetRowIndex;
-      if (dragDirection === 'up') {
-        targetRowIndex =
-          position === 'above' ? targetRowIndexUnadjusted : targetRowIndexUnadjusted + 1;
-      } else {
-        targetRowIndex =
-          position === 'above' ? targetRowIndexUnadjusted - 1 : targetRowIndexUnadjusted;
-      }
-
-      if (targetRowIndex === sourceRowIndex) {
+      // No-op when the requested drop would not change the visible order.
+      // Mutating the backing tree here would silently reshuffle filtered-out
+      // rows around the source without any visible feedback.
+      if (
+        sourceFilteredIndex === targetFilteredIndex ||
+        (position === 'above' && sourceFilteredIndex === targetFilteredIndex - 1) ||
+        (position === 'below' && sourceFilteredIndex === targetFilteredIndex + 1)
+      ) {
         return;
       }
 
@@ -66,8 +60,34 @@ export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCo
         const group = gridRowTreeSelector(apiRef)[GRID_ROOT_GROUP_ID] as GridGroupNode;
         const allRows = group.children;
 
-        const updatedRows = [...allRows];
-        updatedRows.splice(targetRowIndex, 0, updatedRows.splice(sourceRowIndex, 1)[0]);
+        // Single pass: skip source and inline-insert it adjacent to the target
+        // anchor id so filtered-out rows between source and target keep their
+        // position next to the anchor.
+        const updatedRows: GridRowId[] = [];
+        let sourceFound = false;
+        let targetFound = false;
+
+        for (let i = 0; i < allRows.length; i += 1) {
+          const id = allRows[i];
+          if (id === sourceRowId) {
+            sourceFound = true;
+            continue;
+          }
+          if (id === targetRowId) {
+            targetFound = true;
+            if (position === 'above') {
+              updatedRows.push(sourceRowId, id);
+            } else {
+              updatedRows.push(id, sourceRowId);
+            }
+            continue;
+          }
+          updatedRows.push(id);
+        }
+
+        if (!sourceFound || !targetFound) {
+          return state;
+        }
 
         return {
           ...state,

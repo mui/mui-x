@@ -33,7 +33,7 @@ export default function TitleProperty() {
         defaultVisibleDate={defaultVisibleDate}
         resourceModelStructure={resourceModelStructure}
         resources={resources}
-        defaultView="months"
+        defaultPreset="monthAndYear"
       />
     </div>
   );

@@ -3,7 +3,8 @@ import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { ChartsDataProvider } from '../ChartsDataProvider';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { ChartsWebGLLayer, useWebGLContext } from './ChartsWebGLLayer';
+import { ChartsWebGLLayer } from './ChartsWebGLLayer';
+import { useWebGLContext } from './ChartsWebGLContext';
 
 describe('<WebGLProvider />', () => {
   const { render } = createRenderer();

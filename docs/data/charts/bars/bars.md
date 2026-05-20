@@ -1,7 +1,7 @@
 ---
 title: React Bar chart
 productId: x-charts
-components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
+components: BarChart, BarChartPro, BarElement, BarPlot, BarPlotPremium, ChartsGrid, BarLabel
 ---
 
 # Charts - Bars
@@ -94,7 +94,7 @@ You can test all configuration options in the following demo:
 ### Date axis
 
 If your band axis represents dates that are sorted and evenly spaced (as is typical), you can set `ordinalTimeTicks` to pick certain date frequencies.
-This modifies the [tick management](/x/react-charts/axis/#ordinal-tick-management).
+This modifies the [tick management](/x/react-charts/axis-ticks/#ordinal-tick-management).
 
 Instead of one tick per band, the axis renders ticks according to the provided frequencies and the tick number.
 
@@ -120,7 +120,7 @@ You can work around this limitation by using a [symlog scale](/x/react-charts/ax
 
 You can add a grid in the background of the chart with the `grid` prop.
 
-See [Axis—Grid](/x/react-charts/axis/#grid) for details.
+See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for details.
 
 {{"demo": "GridDemo.js"}}
 
@@ -290,6 +290,20 @@ This has some trade-offs:
 The example below uses the `renderer` prop to improve performance when rendering a dataset with 500 data points.
 
 {{"demo": "BarBatchRenderer.js"}}
+
+### WebGL renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+For even larger datasets, `BarChartPremium` supports a WebGL renderer that draws all bars from a single `<canvas>` element.
+Set the `renderer` prop to `"webgl"` to enable it.
+
+The WebGL renderer has the same trade-offs as the batch renderer, plus a few additional ones:
+
+- Per-bar DOM elements are not rendered, so custom slots that rely on them (such as a custom `bar` slot) are not applied.
+- The WebGL canvas only draws the bar shapes. Axes, grid, highlights, focus outlines, and bar labels continue to rely on SVG.
+- Range bar series still render as SVG regardless of the `renderer` prop.
+- Requires a browser with WebGL 2 support.
+
+{{"demo": "WebGLBars.js"}}
 
 ## Composition
 

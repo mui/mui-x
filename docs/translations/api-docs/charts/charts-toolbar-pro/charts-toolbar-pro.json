@@ -1,6 +1,13 @@
 {
   "componentDescription": "The chart toolbar component for the pro package.",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "rangeButtons": {
+      "description": "Configuration for range buttons shown in the toolbar. Each button zooms the chart to a predefined time range from the end of the data."
+    },
+    "rangeButtonsAxisId": {
+      "description": "The axis ID to apply range buttons to. Defaults to the first x-axis with zoom enabled and a time scale."
+    }
+  },
   "classDescriptions": {},
   "slotDescriptions": { "toolbar": "Custom component for the toolbar." }
 }

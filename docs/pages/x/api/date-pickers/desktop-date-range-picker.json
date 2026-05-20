@@ -297,7 +297,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiDesktopDateRangePicker",
   "forwardsRefTo": "HTMLDivElement",

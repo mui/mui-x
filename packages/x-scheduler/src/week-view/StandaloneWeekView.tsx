@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
+import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/use-event-calendar';
 import { StandaloneWeekViewProps } from './WeekView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventDialogProvider } from '../internals/components/event-dialog';
@@ -97,8 +97,8 @@ StandaloneWeekView.propTypes = {
    */
   defaultView: PropTypes.oneOf(['agenda', 'day', 'month', 'week']),
   /**
-   * The date initially used to determine the visible date range in each view.
-   * To render a controlled calendar, use the `visibleDate` prop.
+   * The date initially used to determine the visible date range.
+   * To render a controlled component, use the `visibleDate` prop.
    * @default today
    */
   defaultVisibleDate: PropTypes.instanceOf(Date),
@@ -242,7 +242,7 @@ StandaloneWeekView.propTypes = {
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['agenda', 'day', 'month', 'week']).isRequired),
   /**
-   * The date currently used to determine the visible date range in each view.
+   * The date currently used to determine the visible date range.
    */
   visibleDate: PropTypes.instanceOf(Date),
   /**

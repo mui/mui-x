@@ -18,17 +18,25 @@ describe('<DateRangePicker />', () => {
     Component: DateRangePicker,
   });
 
-  it('should not use the mobile picker by default', () => {
+  it('should not use the mobile picker by default', async () => {
     stubMatchMedia(true);
-    renderWithProps({});
-    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    const { user } = renderWithProps({});
+    await openPicker(user, {
+      type: 'date-range',
+      initialFocus: 'start',
+      fieldType: 'single-input',
+    });
     expect(screen.queryByRole('dialog')).to.have.class(pickerPopperClasses.root);
   });
 
-  it('should use the mobile picker when `useMediaQuery` returns `false`', () => {
+  it('should use the mobile picker when `useMediaQuery` returns `false`', async () => {
     stubMatchMedia(false);
-    renderWithProps({});
-    openPicker({ type: 'date-range', initialFocus: 'start', fieldType: 'single-input' });
+    const { user } = renderWithProps({});
+    await openPicker(user, {
+      type: 'date-range',
+      initialFocus: 'start',
+      fieldType: 'single-input',
+    });
     expect(screen.queryByRole('dialog')).not.to.have.class(pickerPopperClasses.root);
   });
 

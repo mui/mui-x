@@ -16,7 +16,7 @@ export default function DefaultVisibleResources() {
         onEventsChange={setEvents}
         defaultVisibleDate={defaultVisibleDate}
         resources={resources}
-        defaultView="months"
+        defaultPreset="monthAndYear"
         defaultVisibleResources={{
           product: false,
           design: false,

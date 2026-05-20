@@ -277,7 +277,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiDesktopTimePicker",
   "forwardsRefTo": "HTMLDivElement",

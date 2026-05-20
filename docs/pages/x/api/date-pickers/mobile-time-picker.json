@@ -247,7 +247,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiMobileTimePicker",
   "forwardsRefTo": "HTMLDivElement",

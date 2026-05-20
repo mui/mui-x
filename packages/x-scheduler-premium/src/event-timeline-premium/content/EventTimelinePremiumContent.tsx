@@ -3,25 +3,31 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
-import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
-import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
-import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
+import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
+import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import {
-  eventTimelinePremiumViewSelectors,
+  eventTimelinePremiumPresetSelectors,
   timelineOccurrencePlaceholderSelectors,
-} from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
-import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
-import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
+} from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
+import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
+import {
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   EventDialogProvider,
   EventDialogTrigger,
   useEventDialogContext,
+  getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
-import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearsHeader } from './view-header';
+import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
+import { EventTimelinePremiumHeader } from './timeline-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
+import { EventTimelinePremiumSkeleton } from './event-skeleton';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 
 const EventTimelinePremiumContentRoot = styled('section', {
@@ -147,13 +153,17 @@ const EventTimelinePremiumEventsSubGridRow = styled(TimelineGrid.EventRow, {
   width: 'calc(var(--unit-count) * var(--unit-width))',
   minWidth: '100%',
   display: 'grid',
-  gridTemplateRows: `repeat(var(--lane-count, 1), minmax(calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1)}), auto))`,
+  gridTemplateRows: `repeat(var(--lane-count, 1), minmax(calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1.125)}), auto))`,
   rowGap: theme.spacing(0.5),
   position: 'relative',
   padding: theme.spacing(2, 0),
   alignContent: 'start',
   '&:not(:last-of-type)': {
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+  },
+  '&:focus-visible': {
+    outline: 'none',
+    backgroundColor: getCellFocusBackground(theme),
   },
 }));
 
@@ -218,8 +228,10 @@ function EventRowContent({
   placeholder: useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
 }) {
   const store = useEventTimelinePremiumStoreContext();
+  const { schedulerId } = useEventTimelinePremiumStyledContext();
   const { onOpen: startEditing } = useEventDialogContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
+  const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
   const isCreatingAnEvent = useStore(
     store,
@@ -234,13 +246,17 @@ function EventRowContent({
     startEditing(placeholderRef, placeholder);
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
+  if (isLoading) {
+    return <EventTimelinePremiumSkeleton />;
+  }
+
   return (
     <React.Fragment>
       {occurrences.map((occurrence) => (
         <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
           <EventTimelinePremiumEvent
             occurrence={occurrence}
-            ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
+            ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${occurrence.resource}`}
             variant="regular"
           />
         </EventDialogTrigger>
@@ -249,7 +265,7 @@ function EventRowContent({
         <EventTimelinePremiumEvent
           ref={placeholderRef}
           occurrence={placeholder}
-          ariaLabelledBy={`EventTimelinePremiumTitleCell-${placeholder.resource}`}
+          ariaLabelledBy={`${schedulerId}-EventTimelinePremiumTitleCell-${placeholder.resource}`}
           variant="placeholder"
         />
       )}
@@ -343,16 +359,15 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   // Selector hooks
   const adapter = useAdapterContext();
-  const view = useStore(store, eventTimelinePremiumViewSelectors.view);
   const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
   const showCurrentTimeIndicatorSetting = useStore(
     store,
     schedulerNowSelectors.showCurrentTimeIndicator,
   );
-  const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
+  const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
   const isNowInView = React.useMemo(
-    () => adapter.isWithinRange(now, [viewConfig.start, viewConfig.end]),
-    [adapter, now, viewConfig.start, viewConfig.end],
+    () => adapter.isWithinRange(now, [presetConfig.start, presetConfig.end]),
+    [adapter, now, presetConfig.start, presetConfig.end],
   );
   const showCurrentTimeIndicator = showCurrentTimeIndicatorSetting && isNowInView;
 
@@ -360,6 +375,15 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const syncCircleScroll = React.useCallback((scrollLeft: number) => {
     eventsHeaderCellRef.current?.style.setProperty('--events-scroll-left', String(scrollLeft));
   }, []);
+
+  // Reset horizontal scroll position to the left edge when navigating to a new time period
+  React.useEffect(() => {
+    for (const ref of [eventsScrollerRef, eventsScrollbarRef, eventsHeaderRef]) {
+      if (ref.current) {
+        ref.current.scrollLeft = 0;
+      }
+    }
+  }, [presetConfig.start]);
 
   // Sync horizontal scroll: events body ↔ events scrollbar + events header
   useSyncedHorizontalScroll(
@@ -395,36 +419,14 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     return () => observer.disconnect();
   }, []);
 
-  // Feature hooks
-  let header: React.ReactNode;
-  switch (view) {
-    case 'time':
-      header = <TimeHeader />;
-      break;
-    case 'days':
-      header = <DaysHeader />;
-      break;
-    case 'weeks':
-      header = <WeeksHeader />;
-      break;
-    case 'months':
-      header = <MonthsHeader />;
-      break;
-    case 'years':
-      header = <YearsHeader />;
-      break;
-    default:
-      header = null;
-  }
-
   return (
     <EventTimelinePremiumContentRoot ref={handleRef} className={classes.content} {...props}>
-      <EventDialogProvider>
+      <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
         <EventTimelinePremiumGrid
           className={classes.grid}
-          style={{ '--unit-width': `var(--${view}-cell-width)` } as React.CSSProperties}
+          style={{ '--unit-width': `${presetConfig.tickWidth}px` } as React.CSSProperties}
         >
-          <EventTimelinePremiumHeaderRow className={classes.headerRow}>
+          <EventTimelinePremiumHeaderRow className={classes.headerRow} aria-rowindex={1}>
             <EventTimelinePremiumTitleHeaderCell
               ref={titleHeaderRef}
               className={classes.titleHeaderCell}
@@ -439,7 +441,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                 ref={eventsHeaderRef}
                 className={classes.eventsHeaderCellContent}
               >
-                {header}
+                <EventTimelinePremiumHeader />
               </EventTimelinePremiumEventsHeaderCellContent>
               {showCurrentTimeIndicator && (
                 <EventTimelinePremiumCurrentTimeIndicatorCircle
@@ -449,7 +451,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               )}
             </EventTimelinePremiumEventsHeaderCell>
           </EventTimelinePremiumHeaderRow>
-          <EventTimelinePremiumBodyScroller role="presentation">
+          <EventTimelinePremiumBodyScroller role="none">
             <EventTimelinePremiumTitleSubGrid
               ref={titleSubGridRef}
               className={classes.titleSubGrid}
@@ -460,7 +462,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             </EventTimelinePremiumTitleSubGrid>
             <EventTimelinePremiumEventsSubGridWrapper
               ref={eventsScrollerRef}
-              role="presentation"
+              role="none"
               className={classes.eventsSubGridWrapper}
             >
               <EventTimelinePremiumEventsSubGrid className={classes.eventsSubGrid}>

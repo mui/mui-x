@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid, ChartsWrapper
+components: ScatterChart, ScatterChartPro, ScatterChartPremium, ScatterPlot, ScatterPlotPremium, HighlightedScatterMark, ChartsGrid, ChartsWrapper
 ---
 
 # Charts - Scatter
@@ -111,7 +111,7 @@ See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) 
 
 You can add a grid in the background of the chart with the `grid` prop.
 
-See [Axis—Grid](/x/react-charts/axis/#grid) for details.
+See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for details.
 
 {{"demo": "GridDemo.js"}}
 
@@ -175,6 +175,15 @@ Behavior also differs in a few ways:
 The example below uses the `renderer` prop to render 16,000 points with better performance.
 
 {{"demo": "ScatterBatchRenderer.js"}}
+
+### WebGL renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+For very large datasets, `ScatterChartPremium` supports a `webgl` renderer that draws points into a dedicated WebGL canvas layered behind the SVG.
+This bypasses per-point SVG entirely and trades item-level interactivity for throughput.
+
+The example below renders 200,000 points.
+
+{{"demo": "ScatterWebGLRenderer.js"}}
 
 ## Composition
 

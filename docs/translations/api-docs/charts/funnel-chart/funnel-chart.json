@@ -112,6 +112,8 @@
     "axisTickLabel": "Custom component for tick label.",
     "baseButton": "",
     "baseIconButton": "",
+    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps&gt;</code>.",
+    "baseToggleButtonGroup": "",
     "funnelSection": "Custom component for funnel section.",
     "funnelSectionLabel": "Custom component for funnel section label.",
     "legend": "Custom rendering of the legend.",

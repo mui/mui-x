@@ -8,12 +8,12 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import { demoUsers } from 'docsx/data/chat/core/examples/shared/demoData';
+import { demoUsers } from 'docs/data/chat/core/examples/shared/demoData';
 import {
   createChunkStream,
   createTextResponseChunks,
   getMessageText,
-} from 'docsx/data/chat/core/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message }) {

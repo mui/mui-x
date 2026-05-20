@@ -163,13 +163,30 @@ export const useField = <
   });
 
   const handleRootBlur = useEventCallback((event: React.FocusEvent<HTMLDivElement>) => {
-    onBlur?.(event);
     rootProps.onBlur(event);
+    // Skip the user callback when focus is only moving to another element inside the field
+    // (e.g. the section that gains focus after the focusable root gives it up).
+    const next = event.relatedTarget;
+    if (domGetters.isReady() && next instanceof Node && domGetters.getRoot().contains(next)) {
+      return;
+    }
+    onBlur?.(event);
   });
 
   const handleRootFocus = useEventCallback((event: React.FocusEvent<HTMLDivElement>) => {
-    onFocus?.(event);
     rootProps.onFocus(event);
+    // Skip the user callback when focus is only arriving from another element inside the field
+    // (e.g. the focusable root receiving it before it is forwarded to a section, and the section
+    // focus event bubbling back up to the root).
+    const previous = event.relatedTarget;
+    if (
+      domGetters.isReady() &&
+      previous instanceof Node &&
+      domGetters.getRoot().contains(previous)
+    ) {
+      return;
+    }
+    onFocus?.(event);
   });
 
   const handleRootClick = useEventCallback((event: React.MouseEvent<HTMLDivElement>) => {

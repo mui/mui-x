@@ -1,6 +1,6 @@
 import * as React from 'react';
-import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
+import InterfaceApiPage from 'docs/src/modules/components/InterfaceApiPage';
+import layoutConfig from 'docs/src/modules/utils/dataGridLayoutConfig';
 import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
 import jsonPageContent from './grid-export-state-params.json';
 
@@ -13,7 +13,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/data-grid/',
+    'docs/translations/api-docs/data-grid/',
     false,
     /\.\/grid-export-state-params.*.json$/,
   );

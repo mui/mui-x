@@ -6,11 +6,11 @@ import { ChatBox } from '@mui/x-chat';
 import {
   createEchoAdapter,
   syncConversationPreview,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   inboxConversations,
   inboxThreads,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 const CompactRowSlot = React.forwardRef(function CompactRowSlot(
   { ownerState, ...props },

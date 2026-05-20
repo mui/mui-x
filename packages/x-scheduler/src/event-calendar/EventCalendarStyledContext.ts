@@ -4,6 +4,7 @@ import type { EventCalendarClasses } from './eventCalendarClasses';
 import type { EventCalendarLocaleText } from '../models/translations';
 
 export interface EventCalendarStyledContextValue {
+  schedulerId: string | undefined;
   classes: EventCalendarClasses;
   localeText: EventCalendarLocaleText;
 }

@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { buildApi } from '@mui-internal/api-docs-builder';
+import { buildApi } from '@mui/internal-api-docs-builder';
 import { projectSettings } from './projectSettings';
 
 type CommandOptions = { grep?: string };

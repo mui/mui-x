@@ -13,18 +13,18 @@ import {
   cloneConversations,
   cloneThreadMap,
   syncConversationPreview,
-} from 'docsx/data/chat/headless/examples/shared/demoUtils';
+} from 'docs/data/chat/headless/examples/shared/demoUtils';
 import {
   demoUsers,
   inboxConversations,
   inboxThreads,
-} from 'docsx/data/chat/headless/examples/shared/demoData';
+} from 'docs/data/chat/headless/examples/shared/demoData';
 import {
   demoLocaleText,
   demoSlotProps,
   DemoToolbarButton,
   demoSurfaceStyles,
-} from 'docsx/data/chat/headless/examples/shared/DemoPrimitives';
+} from 'docs/data/chat/headless/examples/shared/DemoPrimitives';
 
 export default function TwoPaneInbox() {
   const [activeConversationId, setActiveConversationId] = React.useState('triage');

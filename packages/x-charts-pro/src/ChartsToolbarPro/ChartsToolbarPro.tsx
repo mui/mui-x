@@ -2,11 +2,14 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Toolbar, type ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
 import {
   useChartsContext,
   useChartsSlots,
   type UseChartCartesianAxisSignature,
+  type AxisId,
 } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
 import useId from '@mui/utils/useId';
@@ -15,6 +18,8 @@ import { ChartsMenu } from './internals/ChartsMenu';
 import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
 import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
 import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
+import { ChartsToolbarRangeButtonTrigger } from './ChartsToolbarRangeButtonTrigger';
+import { type RangeButtonValue } from './rangeButtonValueToZoom';
 import { type ChartsSlotsPro } from '../internals/material';
 import {
   type ChartsToolbarPrintExportOptions,
@@ -25,12 +30,52 @@ import {
   ChartsToolbarImageExportTrigger,
 } from './ChartsToolbarImageExportTrigger';
 
+export type { RangeButtonFunctionParams } from './rangeButtonValueToZoom';
+
+export interface RangeButtonConfig {
+  /**
+   * The label displayed on the button (e.g., "1M", "3M", "1Y").
+   */
+  label: string;
+  /**
+   * The range value.
+   *
+   * - `{ unit, step }` — A calendar interval from the end of the data (e.g., `{ unit: 'month', step: 3 }` for 3 months).
+   * - `[start, end]` — An absolute date range.
+   * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`) and returns zoom percentages (0-100).
+   * - `null` — Resets zoom to show all data.
+   */
+  value: RangeButtonValue;
+}
+
 export interface ChartsToolbarProProps extends ChartsToolbarProps {
   printOptions?: ChartsToolbarPrintExportOptions;
   imageExportOptions?: ChartsToolbarImageExportOptions[];
+  /**
+   * Configuration for range buttons shown in the toolbar.
+   * Each button zooms the chart to a predefined time range from the end of the data.
+   */
+  rangeButtons?: RangeButtonConfig[];
+  /**
+   * The axis ID to apply range buttons to.
+   * Defaults to the first x-axis with zoom enabled and a time scale.
+   */
+  rangeButtonsAxisId?: AxisId;
 }
 
 const DEFAULT_IMAGE_EXPORT_OPTIONS: ChartsToolbarImageExportOptions[] = [{ type: 'image/png' }];
+
+const RangeButtonGroup = styled(ToggleButtonGroup, {
+  name: 'MuiChartsToolbarRangeButtons',
+  slot: 'Root',
+})({
+  alignSelf: 'stretch',
+  '& .MuiToggleButton-root': {
+    fontSize: '0.75rem',
+    minWidth: 'unset',
+    border: 'none',
+  },
+});
 
 /**
  * The chart toolbar component for the pro package.
@@ -38,6 +83,8 @@ const DEFAULT_IMAGE_EXPORT_OPTIONS: ChartsToolbarImageExportOptions[] = [{ type:
 function ChartsToolbarPro({
   printOptions,
   imageExportOptions: rawImageExportOptions,
+  rangeButtons,
+  rangeButtonsAxisId,
   ...other
 }: ChartsToolbarProProps) {
   const { slots, slotProps } = useChartsSlots<ChartsSlotsPro>();
@@ -54,22 +101,44 @@ function ChartsToolbarPro({
   const children: Array<React.JSX.Element> = [];
 
   if (isZoomEnabled) {
+    if (rangeButtons && rangeButtons.length > 0) {
+      children.push(
+        <RangeButtonGroup key="range-buttons" exclusive size="small">
+          {rangeButtons.map((rangeButton) => (
+            <ChartsToolbarRangeButtonTrigger
+              key={rangeButton.label}
+              value={rangeButton.value}
+              label={rangeButton.label}
+              axisId={rangeButtonsAxisId}
+            >
+              {rangeButton.label}
+            </ChartsToolbarRangeButtonTrigger>
+          ))}
+        </RangeButtonGroup>,
+      );
+      children.push(<ChartsToolbarDivider key="range-divider" />);
+    }
+
     const Tooltip = slots.baseTooltip;
     const ZoomOutIcon = slots.zoomOutIcon;
     const ZoomInIcon = slots.zoomInIcon;
 
     children.push(
       <Tooltip key="zoom-in" {...slotProps.baseTooltip} title={localeText.zoomIn}>
-        <ChartsToolbarZoomInTrigger render={<ToolbarButton size="small" />}>
-          <ZoomInIcon fontSize="small" {...slotProps.zoomInIcon} />
-        </ChartsToolbarZoomInTrigger>
+        <span>
+          <ChartsToolbarZoomInTrigger render={<ToolbarButton size="small" />}>
+            <ZoomInIcon fontSize="small" {...slotProps.zoomInIcon} />
+          </ChartsToolbarZoomInTrigger>
+        </span>
       </Tooltip>,
     );
     children.push(
       <Tooltip key="zoom-out" {...slotProps.baseTooltip} title={localeText.zoomOut}>
-        <ChartsToolbarZoomOutTrigger render={<ToolbarButton size="small" />}>
-          <ZoomOutIcon fontSize="small" {...slotProps.zoomOutIcon} />
-        </ChartsToolbarZoomOutTrigger>
+        <span>
+          <ChartsToolbarZoomOutTrigger render={<ToolbarButton size="small" />}>
+            <ZoomOutIcon fontSize="small" {...slotProps.zoomOutIcon} />
+          </ChartsToolbarZoomOutTrigger>
+        </span>
       </Tooltip>,
     );
   }
@@ -173,6 +242,38 @@ ChartsToolbarPro.propTypes = {
     }),
   ),
   printOptions: PropTypes.object,
+  /**
+   * Configuration for range buttons shown in the toolbar.
+   * Each button zooms the chart to a predefined time range from the end of the data.
+   */
+  rangeButtons: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.instanceOf(Date).isRequired),
+        PropTypes.func,
+        PropTypes.shape({
+          step: PropTypes.number,
+          unit: PropTypes.oneOf([
+            'day',
+            'hour',
+            'microsecond',
+            'millisecond',
+            'minute',
+            'month',
+            'second',
+            'week',
+            'year',
+          ]).isRequired,
+        }),
+      ]),
+    }),
+  ),
+  /**
+   * The axis ID to apply range buttons to.
+   * Defaults to the first x-axis with zoom enabled and a time scale.
+   */
+  rangeButtonsAxisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 } as any;
 
 export { ChartsToolbarPro };

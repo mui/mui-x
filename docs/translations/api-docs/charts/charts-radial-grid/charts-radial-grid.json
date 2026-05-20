@@ -1,0 +1,21 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "classes": { "description": "Override or extend the styles applied to the component." },
+    "className": { "description": "A CSS class name applied to the root element." },
+    "radius": { "description": "Displays radius (concentric) grid." },
+    "rotation": { "description": "Displays rotation (spoke) grid." }
+  },
+  "classDescriptions": {
+    "line": { "description": "Styles applied to {{nodeName}}.", "nodeName": "every line element" },
+    "radiusLine": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "radius (circular) lines"
+    },
+    "root": { "description": "Styles applied to the root element." },
+    "rotationLine": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "rotation (spoke) lines"
+    }
+  }
+}

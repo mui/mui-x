@@ -590,6 +590,17 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'price1M']);
     });
 
+    it('should restore the position when the column is reordered before being pinned', async () => {
+      const { setProps } = render(<TestCase nbCols={4} disableVirtualization />);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair', '1M', '2M']);
+      await act(() => apiRef.current?.setColumnIndex('currencyPair', 2)); // move Currency Pair to index 2
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', '1M', 'Currency Pair', '2M']);
+      setProps({ pinnedColumns: { left: ['currencyPair'] } });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['Currency Pair', 'id', '1M', '2M']);
+      setProps({ pinnedColumns: {} });
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', '1M', 'Currency Pair', '2M']); // restored to reordered position
+    });
+
     it('should restore the position when the neighboring columns are reordered', async () => {
       const { setProps } = render(<TestCase nbCols={4} disableVirtualization />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'Currency Pair', '1M', '2M']); // price1M's index = 2

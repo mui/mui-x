@@ -1,4 +1,4 @@
-import 'docsx/src/bootstrap';
+import 'docs/src/bootstrap';
 // --- Post bootstrap -----
 import * as React from 'react';
 import type { DocsAppProps } from '@mui/internal-core-docs/DocsApp';
@@ -13,14 +13,20 @@ import findActivePage from '@mui/internal-core-docs/findActivePage';
 import { getProductInfoFromUrl } from '@mui/internal-core-docs/utils';
 import { pathnameToLanguage } from '@mui/internal-core-docs/helpers';
 import { Translations } from '@mui/internal-core-docs/i18n';
+import type { VersionEntry } from '@mui/internal-core-docs/DocsProvider';
 import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
-import xPages from 'docsx/data/pages'; // DO NOT REMOVE
-import { postProcessImport } from 'docsx/src/modules/utils/postProcessImport';
+import xPages from 'docs/data/pages'; // DO NOT REMOVE
+import { postProcessImport } from 'docs/src/modules/utils/postProcessImport';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-
-import * as config from '../config';
+import {
+  LANGUAGES,
+  LANGUAGES_SSR,
+  LANGUAGES_IGNORE_PAGES,
+  LANGUAGES_IN_PROGRESS,
+} from '@mui/internal-core-docs/constants';
+import { DocsConfig } from '@mui/internal-core-docs/DocsProvider';
 
 export { fontClasses } from '@mui/internal-core-docs/nextFonts';
 
@@ -222,9 +228,9 @@ const CSB_CONFIG = {
       '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
       '@mui/x-scheduler': getMuiPackageVersion('x-scheduler', muiCommitRef),
       '@mui/x-scheduler-premium': getMuiPackageVersion('x-scheduler-premium', muiCommitRef),
-      '@mui/x-scheduler-headless': getMuiPackageVersion('x-scheduler-headless', muiCommitRef),
-      '@mui/x-scheduler-headless-premium': getMuiPackageVersion(
-        'x-scheduler-headless-premium',
+      '@mui/x-scheduler-internals': getMuiPackageVersion('x-scheduler-internals', muiCommitRef),
+      '@mui/x-scheduler-internals-premium': getMuiPackageVersion(
+        'x-scheduler-internals-premium',
         muiCommitRef,
       ),
       '@mui/x-chat': getMuiPackageVersion('x-chat', muiCommitRef),
@@ -239,6 +245,13 @@ const CSB_CONFIG = {
   postProcessImport,
 };
 
+const DOCS_CONFIG: DocsConfig = {
+  LANGUAGES,
+  LANGUAGES_SSR,
+  LANGUAGES_IN_PROGRESS,
+  LANGUAGES_IGNORE_PAGES,
+};
+
 function useThemeWrapper() {
   const router = useRouter();
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
@@ -247,7 +260,7 @@ function useThemeWrapper() {
 }
 
 export default function MyApp(
-  props: AppProps<{ userLanguage: string; translations: Translations }>,
+  props: AppProps<{ userLanguage: string; translations: Translations; versions: VersionEntry[] }>,
 ) {
   const { Component, pageProps } = props;
   const { activePage, activePageParents, productIdentifier, productId, productCategoryId } =
@@ -259,7 +272,7 @@ export default function MyApp(
       {...props}
       Component={Component}
       pageProps={pageProps}
-      docsConfig={config}
+      docsConfig={DOCS_CONFIG}
       serviceWorkerPath="/x/sw.js"
       activePage={activePage}
       activePageParents={activePageParents}
@@ -276,6 +289,7 @@ export default function MyApp(
 
 MyApp.getInitialProps = createGetInitialProps({
   translationsContext: require.context('../translations', false, /\.\/translations.*\.json$/),
+  versions: [],
 });
 
 export { reportWebVitals };

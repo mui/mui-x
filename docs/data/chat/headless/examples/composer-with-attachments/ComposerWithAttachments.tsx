@@ -12,18 +12,18 @@ import type { ChatAdapter } from '@mui/x-chat/headless';
 import {
   createTextResponseChunks,
   createChunkStream,
-} from 'docsx/data/chat/headless/examples/shared/demoUtils';
+} from 'docs/data/chat/headless/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
-} from 'docsx/data/chat/headless/examples/shared/demoData';
+} from 'docs/data/chat/headless/examples/shared/demoData';
 import {
   demoLocaleText,
   demoSlotProps,
   palette,
   AttachmentPreviewList,
   DemoToolbarButton,
-} from 'docsx/data/chat/headless/examples/shared/DemoPrimitives';
+} from 'docs/data/chat/headless/examples/shared/DemoPrimitives';
 
 const agent = demoUsers.agent;
 
