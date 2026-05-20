@@ -6,7 +6,6 @@ import {
   selectorChartXAxis,
   selectorChartYAxis,
 } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { SCATTER_BATCH_SIZE } from './scatterRendererConstants';
 
 /**
  * Pre-computed render data for a single scatter series.
@@ -20,11 +19,6 @@ export interface ScatterSeriesRenderData {
   coords: Float64Array;
   /** Number of points (i.e. `coords.length / 2`). */
   count: number;
-  /**
-   * Cumulative batch boundary offsets (point indices), length `nBatches + 1`.
-   * Batch `b` covers points `[batchBoundaries[b], batchBoundaries[b + 1])`.
-   */
-  batchBoundaries: Uint32Array;
 }
 
 const EMPTY_RENDER_DATA = new Map<SeriesId, ScatterSeriesRenderData>();
@@ -72,13 +66,7 @@ export const selectorScatterRenderData = createSelectorMemoized(
         coords[i * 2 + 1] = getYPosition(data[i].y);
       }
 
-      const nBatches = Math.max(1, Math.ceil(count / SCATTER_BATCH_SIZE));
-      const batchBoundaries = new Uint32Array(nBatches + 1);
-      for (let b = 1; b <= nBatches; b += 1) {
-        batchBoundaries[b] = Math.min(count, b * SCATTER_BATCH_SIZE);
-      }
-
-      result.set(seriesId, { coords, count, batchBoundaries });
+      result.set(seriesId, { coords, count });
     }
 
     return result;

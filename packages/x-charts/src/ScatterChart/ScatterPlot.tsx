@@ -143,19 +143,27 @@ function ScatterPlot(props: ScatterPlotProps) {
   // regardless of series count.
   let content: React.ReactNode = items;
   if (ScatterItems === ScatterAsync) {
-    // The per-tick budget is split evenly across the visible series, so the
-    // per-series batch size depends on how many series there are.
-    const visibleSeriesCount = seriesOrder.reduce(
-      (count, seriesId) => (series[seriesId].hidden ? count : count + 1),
-      0,
-    );
-    const batchSize = getEffectiveScatterBatchSize(visibleSeriesCount);
+    // The per-tick budget targets ~5 commits across the dataset (see
+    // `getEffectiveScatterBatchSize`) and is split evenly across the visible
+    // series, so we need both the visible-series count and the total point
+    // count to size the plan.
+    let visibleSeriesCount = 0;
+    let visibleTotalPoints = 0;
+    seriesOrder.forEach((seriesId) => {
+      if (!series[seriesId].hidden) {
+        visibleSeriesCount += 1;
+        visibleTotalPoints += series[seriesId].data.length;
+      }
+    });
+    const batchSize = getEffectiveScatterBatchSize(visibleSeriesCount, visibleTotalPoints);
     const plan: ScatterRevealSeries[] = [];
     seriesOrder.forEach((seriesId) => {
       if (!series[seriesId].hidden) {
+        const nPoints = series[seriesId].data.length;
         plan.push({
           seriesId,
-          nBatches: Math.max(1, Math.ceil(series[seriesId].data.length / batchSize)),
+          nBatches: Math.max(1, Math.ceil(nPoints / batchSize)),
+          nPoints,
           dataRef: series[seriesId].data,
         });
       }

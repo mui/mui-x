@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { type SeriesId } from '../../models/seriesType/common';
 import {
-  SCATTER_BATCH_SIZE,
+  SCATTER_MAX_BATCH_TOTAL,
   SCATTER_REVEAL_FRAMES_SKIPPED,
   SCATTER_REVEAL_ROUNDS_PER_FRAME,
   getEffectiveScatterBatchSize,
@@ -16,6 +16,8 @@ import {
 export interface ScatterRevealSeries {
   seriesId: SeriesId;
   nBatches: number;
+  /** Number of points in this series; used to derive the per-tick budget. */
+  nPoints: number;
   dataRef: unknown;
 }
 
@@ -26,9 +28,10 @@ interface ScatterRevealContextValue {
    */
   revealedRounds: number;
   /**
-   * Per-series points revealed per tick (i.e. {@link SCATTER_BATCH_SIZE} split
-   * evenly across the visible series). `ScatterAsync` uses it to size its
-   * batches consistently with how the scheduler reveals them.
+   * Per-series points revealed per tick (derived from the total point count
+   * across the visible series — see {@link getEffectiveScatterBatchSize}).
+   * `ScatterAsync` uses it to size its batches consistently with how the
+   * scheduler reveals them.
    */
   batchSize: number;
   // How many of `seriesId`'s own batches are revealed. Capped at that series'
@@ -38,9 +41,9 @@ interface ScatterRevealContextValue {
 }
 
 const DEFAULT_VALUE: ScatterRevealContextValue = {
-  // No provider (e.g. used directly as a slot): reveal everything.
+  // No provider (e.g. used directly as a slot): reveal everything in one go.
   revealedRounds: Number.POSITIVE_INFINITY,
-  batchSize: SCATTER_BATCH_SIZE,
+  batchSize: SCATTER_MAX_BATCH_TOTAL,
   getSeriesRevealedBatches: () => Number.POSITIVE_INFINITY,
 };
 
@@ -109,7 +112,8 @@ export function ScatterAsyncRevealProvider(props: ScatterAsyncRevealProviderProp
   // but read through refs so neither the reveal effect nor the context value
   // churn on unrelated re-renders.
   const { nBatchesBySeries, totalRounds } = buildRevealPlan(plan);
-  const batchSize = getEffectiveScatterBatchSize(plan.length);
+  const totalPoints = plan.reduce((sum, entry) => sum + entry.nPoints, 0);
+  const batchSize = getEffectiveScatterBatchSize(plan.length, totalPoints);
   const nBatchesBySeriesRef = React.useRef(nBatchesBySeries);
   nBatchesBySeriesRef.current = nBatchesBySeries;
   const totalRoundsRef = React.useRef(totalRounds);
