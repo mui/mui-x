@@ -30,15 +30,19 @@ async function readAll(
 ): Promise<AdapterEmittedChunk[]> {
   const reader = stream.getReader();
   const collected: AdapterEmittedChunk[] = [];
-  for (;;) {
-    // eslint-disable-next-line no-await-in-loop
-    const { value, done } = await reader.read();
-    if (done) {
-      break;
+  try {
+    for (;;) {
+      // eslint-disable-next-line no-await-in-loop
+      const { value, done } = await reader.read();
+      if (done) {
+        break;
+      }
+      if (value !== undefined) {
+        collected.push(value);
+      }
     }
-    if (value !== undefined) {
-      collected.push(value);
-    }
+  } finally {
+    reader.releaseLock();
   }
   return collected;
 }
