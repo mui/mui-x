@@ -66,26 +66,53 @@ function renderStatus(status) {
   }
 }
 
+const now = new Date();
+const columns = [
+  {
+    key: 'version',
+    label: 'MUI X version',
+    align: 'right',
+    render: (versionData) => versionData.version,
+  },
+  {
+    key: 'release',
+    label: 'Release',
+    align: 'left',
+    render: (versionData) =>
+      versionData.releaseDate ?? versionData.plannedRelease ?? 'TBD',
+  },
+  {
+    key: 'supported',
+    label: 'Supported',
+    align: 'left',
+    render: (versionData) => renderStatus(getVersionStatus(versionData, now)),
+  },
+];
+
 export default function SupportedVersions() {
-  const now = new Date();
   const props = { sx: { width: '100%' } };
+  const fontFamily = 'inherit'; // prevent `th` and `td` specific font families
 
   return (
     <MarkdownElement {...props}>
       <table>
         <thead>
           <tr>
-            <th align="right">MUI X version</th>
-            <th align="left">Release</th>
-            <th align="left">Supported</th>
+            {columns.map((column) => (
+              <th key={column.key} align={column.align} style={{ fontFamily }}>
+                {column.label}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
           {muiXVersions.map((version) => (
             <tr key={version.version}>
-              <td align="right">{version.version}</td>
-              <td>{version.releaseDate ?? version.plannedRelease ?? 'TBD'}</td>
-              <td>{renderStatus(getVersionStatus(version, now))}</td>
+              {columns.map((column) => (
+                <td key={column.key} align={column.align} style={{ fontFamily }}>
+                  {column.render(version)}
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>
