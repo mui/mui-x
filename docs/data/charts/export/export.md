@@ -114,7 +114,7 @@ The attribute works on any HTML or SVG element in the chart tree.
 
 {{"demo": "ExportChartHideOnExport.js"}}
 
-To hide an internal MUI X Charts component (such as the legend) that you do not render directly, forward the attribute through `slotProps`:
+To hide an internal MUI X Charts component (such as the legend) that you do not render directly, forward the attribute through `slotProps`:
 
 ```tsx
 <BarChartPro slotProps={{ legend: { 'data-hide-on-export': true } }} />
