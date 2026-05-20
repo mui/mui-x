@@ -3,7 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { type ScatterProps } from '../Scatter';
 import { ScatterAsyncBatch } from './ScatterAsyncBatch';
-import { useScatterReveal } from './scatterAsyncReveal';
+import { useStore } from '../../internals/store/useStore';
+import {
+  selectorProgressiveBatchSize,
+  selectorProgressiveSeriesRevealedBatches,
+  type UseProgressiveRenderingSignature,
+} from '../../internals/plugins/featurePlugins/useProgressiveRendering';
 
 /**
  * @ignore - internal component.
@@ -13,13 +18,15 @@ function ScatterAsync(props: ScatterProps) {
 
   const count = series.data.length;
 
-  // Reveal is driven by the plot-wide scheduler. `batchSize` here is the
-  // per-series points budget per tick — `SCATTER_BATCH_SIZE` split evenly
-  // across the visible series — so each round adds one batch in every series
-  // simultaneously.
-  const { getSeriesRevealedBatches, batchSize } = useScatterReveal();
-  const nBatches = Math.max(1, Math.ceil(count / batchSize));
-  const revealedBatches = getSeriesRevealedBatches(series.id);
+  // Reveal is driven by the chart-wide `useProgressiveRendering` plugin so the
+  // scheduler is shared with every other plot composed into the same chart.
+  // `batchSize` is the per-series points budget per tick, derived by the
+  // plugin from the total point count and series count, so every series'
+  // batches stay in lockstep with how the scheduler reveals them.
+  const store = useStore<[UseProgressiveRenderingSignature]>();
+  const batchSize = store.use(selectorProgressiveBatchSize);
+  const revealedBatches = store.use(selectorProgressiveSeriesRevealedBatches, series.id);
+  const nBatches = Math.max(1, Math.ceil(count / Math.max(1, batchSize)));
 
   const batches: React.ReactNode[] = [];
   for (let b = 0; b < nBatches; b += 1) {

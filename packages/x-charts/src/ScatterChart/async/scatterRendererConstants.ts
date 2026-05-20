@@ -18,7 +18,7 @@ export const SCATTER_MIN_BATCH_TOTAL = 1000;
  * series). Prevents a single commit from blocking the main thread for too
  * long; very large datasets simply use more commits.
  */
-export const SCATTER_MAX_BATCH_TOTAL = 20000;
+export const SCATTER_MAX_BATCH_TOTAL = 10000;
 
 /**
  * Per-series points revealed per tick, derived from the total point count
@@ -34,10 +34,7 @@ export const getEffectiveScatterBatchSize = (nSeries: number, totalPoints: numbe
   const safePoints = Math.max(1, totalPoints);
   const totalPerTick = Math.min(
     SCATTER_MAX_BATCH_TOTAL,
-    Math.max(
-      SCATTER_MIN_BATCH_TOTAL,
-      Math.ceil(safePoints / SCATTER_TARGET_PROGRESSIVE_COMMITS),
-    ),
+    Math.max(SCATTER_MIN_BATCH_TOTAL, Math.ceil(safePoints / SCATTER_TARGET_PROGRESSIVE_COMMITS)),
   );
   return Math.max(1, Math.floor(totalPerTick / safeSeries));
 };

@@ -18,6 +18,8 @@ import {
   type ConvertSignaturesIntoPlugins,
   useChartVisibilityManager,
   type UseChartVisibilityManagerSignature,
+  useProgressiveRendering,
+  type UseProgressiveRenderingSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
@@ -40,6 +42,7 @@ export type ScatterChartProPluginSignatures = [
   UseChartKeyboardNavigationSignature,
   UseChartProZoomSignature,
   UseChartProExportSignature,
+  UseProgressiveRenderingSignature,
 ];
 
 export const SCATTER_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartProPluginSignatures> =
@@ -55,4 +58,5 @@ export const SCATTER_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChar
     useChartKeyboardNavigation,
     useChartProZoom,
     useChartProExport,
+    useProgressiveRendering,
   ];

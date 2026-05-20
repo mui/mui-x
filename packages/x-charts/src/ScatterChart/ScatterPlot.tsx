@@ -10,12 +10,13 @@ import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
 import { ScatterAsync } from './async/ScatterAsync';
-import { ScatterAsyncRevealProvider, type ScatterRevealSeries } from './async/scatterAsyncReveal';
-import {
-  SCATTER_ASYNC_THRESHOLD,
-  getEffectiveScatterBatchSize,
-} from './async/scatterRendererConstants';
+import { SCATTER_ASYNC_THRESHOLD } from './async/scatterRendererConstants';
 import { useUtilityClasses } from './scatterClasses';
+import { useChartsContext } from '../context/ChartsProvider';
+import {
+  type ProgressivePlanEntry,
+  type UseProgressiveRenderingSignature,
+} from '../internals/plugins/featurePlugins/useProgressiveRendering';
 
 export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -74,6 +75,53 @@ function ScatterPlot(props: ScatterPlotProps) {
   const { yAxis, yAxisIds } = useYAxes();
   const { zAxis, zAxisIds } = useZAxes();
   const classes = useUtilityClasses({ classes: inClasses });
+
+  // Register this plot's progressive rendering plan with the chart-wide
+  // `useProgressiveRendering` plugin so the scheduler is shared across every
+  // plot composed into the same chart.
+  const { instance } = useChartsContext<[UseProgressiveRenderingSignature]>();
+  const plotId = React.useId();
+
+  const slotScatter = slots?.scatter;
+  const progressivePlan = React.useMemo<ProgressivePlanEntry[]>(() => {
+    if (seriesData === undefined) {
+      return [];
+    }
+    const { series: s, seriesOrder: order } = seriesData;
+    let total = 0;
+    order.forEach((id) => {
+      if (!s[id].hidden) {
+        total += s[id].data.length;
+      }
+    });
+    const usesAsync =
+      slotScatter === undefined &&
+      (renderer === 'svg-progressive' ||
+        (renderer === undefined && total > SCATTER_ASYNC_THRESHOLD));
+    if (!usesAsync) {
+      return [];
+    }
+    const plan: ProgressivePlanEntry[] = [];
+    order.forEach((id) => {
+      if (!s[id].hidden) {
+        plan.push({
+          seriesId: id,
+          nPoints: s[id].data.length,
+          dataRef: s[id].data,
+        });
+      }
+    });
+    return plan;
+  }, [seriesData, renderer, slotScatter]);
+
+  React.useEffect(() => {
+    if (progressivePlan.length === 0) {
+      instance.clearProgressivePlan(plotId);
+      return undefined;
+    }
+    instance.setProgressivePlan(plotId, progressivePlan);
+    return () => instance.clearProgressivePlan(plotId);
+  }, [instance, plotId, progressivePlan]);
 
   if (seriesData === undefined) {
     return null;
@@ -138,40 +186,7 @@ function ScatterPlot(props: ScatterPlotProps) {
     );
   });
 
-  // When the async renderer is used, a single shared scheduler drives the
-  // progressive paint across every series so the per-frame work is bounded
-  // regardless of series count.
-  let content: React.ReactNode = items;
-  if (ScatterItems === ScatterAsync) {
-    // The per-tick budget targets ~5 commits across the dataset (see
-    // `getEffectiveScatterBatchSize`) and is split evenly across the visible
-    // series, so we need both the visible-series count and the total point
-    // count to size the plan.
-    let visibleSeriesCount = 0;
-    let visibleTotalPoints = 0;
-    seriesOrder.forEach((seriesId) => {
-      if (!series[seriesId].hidden) {
-        visibleSeriesCount += 1;
-        visibleTotalPoints += series[seriesId].data.length;
-      }
-    });
-    const batchSize = getEffectiveScatterBatchSize(visibleSeriesCount, visibleTotalPoints);
-    const plan: ScatterRevealSeries[] = [];
-    seriesOrder.forEach((seriesId) => {
-      if (!series[seriesId].hidden) {
-        const nPoints = series[seriesId].data.length;
-        plan.push({
-          seriesId,
-          nBatches: Math.max(1, Math.ceil(nPoints / batchSize)),
-          nPoints,
-          dataRef: series[seriesId].data,
-        });
-      }
-    });
-    content = <ScatterAsyncRevealProvider plan={plan}>{items}</ScatterAsyncRevealProvider>;
-  }
-
-  return <ScatterPlotRoot className={clsx(classes.root, className)}>{content}</ScatterPlotRoot>;
+  return <ScatterPlotRoot className={clsx(classes.root, className)}>{items}</ScatterPlotRoot>;
 }
 
 ScatterPlot.propTypes = {
