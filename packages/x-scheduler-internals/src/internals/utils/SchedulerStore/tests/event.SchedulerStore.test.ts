@@ -299,6 +299,38 @@ storeClasses.forEach((storeClass) => {
         expect(updated.start).to.equal(newStart.toISOString());
         expect(updated.end).to.equal(newEnd.toISOString());
       });
+
+      it.skipIf(storeClass.name !== 'EventCalendarStore')(
+        'should not throw when updating an event that had rrule on input',
+        () => {
+          const event = EventBuilder.new().recurrent('DAILY').build();
+
+          let store: any;
+          expect(() => {
+            store = new storeClass.Value({ events: [event] }, adapter);
+          }).toWarnDev([
+            'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+          ]);
+
+          expect(() => {
+            store.updateEvent({ id: event.id, title: 'updated' });
+          }).not.to.throw();
+        },
+      );
+
+      it('should warn in dev when the same id is in both `deleted` and `updated`', () => {
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({ events: [event] }, adapter);
+
+        expect(() => {
+          (store as any).updateEvents({
+            deleted: [event.id],
+            updated: [{ id: event.id, title: 'will be ignored' }],
+          });
+        }).toWarnDev([
+          `MUI X Scheduler: id "${event.id}" appears in both \`deleted\` and \`updated\`.`,
+        ]);
+      });
     });
 
     describe('Method: deleteEvent', () => {
@@ -385,32 +417,35 @@ storeClasses.forEach((storeClass) => {
         ]);
       });
 
-      it('should remove rrule and exDates from the original event', () => {
-        const onEventsChange = spy();
-        const event = EventBuilder.new().recurrent('DAILY').exDates(['2025-07-14Z']).build();
+      it.skipIf(storeClass.name === 'EventCalendarStore')(
+        'should remove rrule and exDates from the original event',
+        () => {
+          const onEventsChange = spy();
+          const event = EventBuilder.new().recurrent('DAILY').exDates(['2025-07-14Z']).build();
 
-        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+          const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
 
-        const start = adapter.date('2025-07-01T09:00:00Z', 'default');
-        const end = adapter.date('2025-07-01T10:00:00Z', 'default');
-        const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
+          const start = adapter.date('2025-07-01T09:00:00Z', 'default');
+          const end = adapter.date('2025-07-01T10:00:00Z', 'default');
+          const duplicatedId = store.duplicateEventOccurrence(event.id, start, end);
 
-        const originalEventWithoutRecurrence = { ...event };
-        delete originalEventWithoutRecurrence.rrule;
-        delete originalEventWithoutRecurrence.exDates;
+          const originalEventWithoutRecurrence = { ...event };
+          delete originalEventWithoutRecurrence.rrule;
+          delete originalEventWithoutRecurrence.exDates;
 
-        expect(onEventsChange.calledOnce).to.equal(true);
-        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
-          event,
-          {
-            ...originalEventWithoutRecurrence,
-            id: duplicatedId,
-            extractedFromId: event.id,
-            start: start.toISOString(),
-            end: end.toISOString(),
-          },
-        ]);
-      });
+          expect(onEventsChange.calledOnce).to.equal(true);
+          expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+            event,
+            {
+              ...originalEventWithoutRecurrence,
+              id: duplicatedId,
+              extractedFromId: event.id,
+              start: start.toISOString(),
+              end: end.toISOString(),
+            },
+          ]);
+        },
+      );
     });
 
     describe('Method: copyEvent', () => {

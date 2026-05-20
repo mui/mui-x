@@ -59,7 +59,7 @@ export function GridBottomContainer(props: GridBottomContainerProps) {
     <Element
       {...other}
       className={clsx(classes.root, gridClasses['container--bottom'])}
-      role="presentation"
+      role="none"
     >
       {hasAggregation && isLoading && aggregationPosition === 'footer' ? (
         <GridAggregationRowOverlay />
