@@ -234,12 +234,12 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']),
+        type: PropTypes.oneOf(['bar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']).isRequired,
+        type: PropTypes.oneOf(['bar']),
       }),
     ]).isRequired,
   ),
@@ -265,11 +265,11 @@ BarChartPro.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar']).isRequired,
     }),
   ]),
   /**
@@ -303,12 +303,12 @@ BarChartPro.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']),
+        type: PropTypes.oneOf(['bar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']).isRequired,
+        type: PropTypes.oneOf(['bar']),
       }),
     ]).isRequired,
   ),
@@ -467,11 +467,11 @@ BarChartPro.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar']).isRequired,
     }),
   ]),
   /**
@@ -497,15 +497,6 @@ BarChartPro.propTypes = {
     PropTypes.shape({
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
-        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -520,6 +511,15 @@ BarChartPro.propTypes = {
             PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
         }),
       ]),
       data: PropTypes.array,
@@ -548,6 +548,12 @@ BarChartPro.propTypes = {
       PropTypes.oneOfType([
         PropTypes.oneOf(['drag', 'pressAndDrag', 'wheel']),
         PropTypes.shape({
+          allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
+        }),
+        PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['drag']).isRequired,
@@ -557,31 +563,15 @@ BarChartPro.propTypes = {
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['pressAndDrag']).isRequired,
         }),
-        PropTypes.shape({
-          allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['wheel']).isRequired,
-        }),
       ]).isRequired,
     ),
     zoom: PropTypes.arrayOf(
       PropTypes.oneOfType([
         PropTypes.oneOf(['brush', 'doubleTapReset', 'pinch', 'tapAndDrag', 'wheel']),
         PropTypes.shape({
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['wheel']).isRequired,
-        }),
-        PropTypes.shape({
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.array,
-          type: PropTypes.oneOf(['pinch']).isRequired,
-        }),
-        PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+          type: PropTypes.oneOf(['brush']).isRequired,
         }),
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
@@ -591,7 +581,17 @@ BarChartPro.propTypes = {
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['brush']).isRequired,
+          type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['pinch']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
         }),
       ]).isRequired,
     ),

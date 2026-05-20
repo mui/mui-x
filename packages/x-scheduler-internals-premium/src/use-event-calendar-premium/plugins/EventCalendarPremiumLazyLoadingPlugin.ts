@@ -21,8 +21,6 @@ export class EventCalendarPremiumLazyLoadingPlugin<
         const visibleDays =
           state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
 
-        // Build a primitive key that is stable if the visible range didn't change.
-        // Adjust the mapping if your visibleDays items have a different shape.
         const visibleDaysKey = visibleDays.map((day) => day.key).join('|');
 
         return {
@@ -33,14 +31,8 @@ export class EventCalendarPremiumLazyLoadingPlugin<
       },
 
       (previous, next) => {
-        // Bail out if nothing relevant changed.
         if (previous.visibleDaysKey === next.visibleDaysKey) {
           return;
-        }
-
-        let isInstantLoad = false;
-        if (previous.viewConfig == null) {
-          isInstantLoad = true;
         }
 
         const visibleDays =
@@ -50,12 +42,14 @@ export class EventCalendarPremiumLazyLoadingPlugin<
           return;
         }
 
-        const range = {
-          start: visibleDays[0].value,
-          end: visibleDays[visibleDays.length - 1].value,
-        };
-
-        queueMicrotask(() => this.queueDataFetchForRange(range, isInstantLoad));
+        this.scheduleFetch(() => {
+          const days =
+            store.state.viewConfig?.visibleDaysSelector?.(store.state as EventCalendarState) ?? [];
+          return {
+            start: days[0].value,
+            end: days[days.length - 1].value,
+          };
+        }, previous.viewConfig == null);
       },
     );
   }

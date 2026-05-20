@@ -27,7 +27,7 @@
       "description": "The placement of ticks label. Can be the middle of the band, or the tick position. Only used if scale is &#39;band&#39;."
     },
     "tickLabelPosition": {
-      "description": "Set the position of the tick labels relative to the axis line. The before/after is defined based on clockwise direction."
+      "description": "Set the position of the tick labels relative to the axis line. The before/after is defined based on clockwise direction. Using <code>&#39;auto&#39;</code> sets it to <code>&#39;before&#39;</code> if position is <code>&#39;start&#39;</code> and <code>&#39;after&#39;</code> otherwise."
     },
     "tickLabelStyle": { "description": "The style applied to ticks text." },
     "tickMaxStep": {

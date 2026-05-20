@@ -49,13 +49,17 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
     position = 'start',
     disableLine,
     disableTicks,
-    tickLabelPosition = position === 'start' ? 'before' : 'after',
+    tickLabelPosition: tickLabelPositionProp = 'auto',
     tickPosition = position === 'start' ? 'before' : 'after',
     tickSize = 6,
     className,
     classes: classesProp,
   } = settings;
 
+  let tickLabelPosition = tickLabelPositionProp;
+  if (tickLabelPosition === 'auto') {
+    tickLabelPosition = position === 'start' ? 'before' : 'after';
+  }
   const isCentered = tickLabelPosition === 'center';
   const classes = useUtilityClasses({ classes: classesProp, isCentered });
   const theme = useTheme();
@@ -108,17 +112,17 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
           className={classes.line}
         />
       )}
-      {ticks.map(({ offset: radius, formattedValue }, index) => {
+      {ticks.map(({ offset: radius, labelOffset, formattedValue }, index) => {
         if (!formattedValue) {
           return null;
         }
 
-        const tx = cx + dx * radius;
-        const ty = cy + dy * radius;
+        const tickX = cx + dx * radius;
+        const tickY = cy + dy * radius;
 
         // Compute the label position.
-        let labelX = tx;
-        let labelY = ty;
+        let labelX = cx + dx * (radius + labelOffset);
+        let labelY = cy + dy * (radius + labelOffset);
 
         if (tickLabelGap !== 0) {
           labelX += tickLabelGapDx;
@@ -134,10 +138,10 @@ export function ChartsRadiusAxis(props: ChartsRadiusAxisProps) {
           <g key={index} className={classes.tickContainer}>
             {!disableTicks && (
               <line
-                x1={tx}
-                y1={ty}
-                x2={tx + tickDx}
-                y2={ty + tickDy}
+                x1={tickX}
+                y1={tickY}
+                x2={tickX + tickDx}
+                y2={tickY + tickDy}
                 stroke={stroke}
                 className={classes.tick}
               />

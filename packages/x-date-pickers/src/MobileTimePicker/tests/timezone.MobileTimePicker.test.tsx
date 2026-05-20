@@ -1,5 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
-import { describeAdapters } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 
 describe('<MobileTimePicker /> - Timezone', () => {
