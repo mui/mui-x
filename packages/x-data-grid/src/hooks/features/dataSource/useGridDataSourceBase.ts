@@ -377,21 +377,16 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
   const handleFetchRowsOnParamsChange = React.useCallback(() => {
-    if (standardRowsUpdateStrategyActive) {
-      if (!props.dataSourceKeepPreviousData) {
-        apiRef.current.setRows([]);
-      }
-      apiRef.current.setLoading(true);
+    // This handler is only wired up when `standardRowsUpdateStrategyActive` is true via
+    // the `runIf` guards on the returned `events` object, so the calls below don't need
+    // to repeat the strategy check.
+    if (!props.dataSourceKeepPreviousData) {
+      apiRef.current.setRows([]);
     }
+    apiRef.current.setLoading(true);
     stopPolling();
     debouncedFetchRows();
-  }, [
-    apiRef,
-    standardRowsUpdateStrategyActive,
-    props.dataSourceKeepPreviousData,
-    stopPolling,
-    debouncedFetchRows,
-  ]);
+  }, [apiRef, props.dataSourceKeepPreviousData, stopPolling, debouncedFetchRows]);
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {

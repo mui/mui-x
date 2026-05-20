@@ -543,6 +543,7 @@ describe('<DataGrid /> - Data source', () => {
         });
         expect(localApiRef.current?.getRowsCount()).to.equal(1);
         expect(localApiRef.current?.getRow(1)).to.deep.equal({ id: 1, value: 'first' });
+        expect(localApiRef.current?.state.rows.loading).to.equal(false);
       });
     });
   });

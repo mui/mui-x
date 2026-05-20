@@ -201,10 +201,21 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
   );
 
   const handleRowGroupingModelChange = React.useCallback(() => {
-    if (!props.dataSourceKeepPreviousData) {
-      apiRef.current.setRows([]);
+    // The event listener is wired regardless of the active strategy
+    // (see `runIf(!pivotActive && !!props.dataSource, ...)` below), so we have to gate the
+    // `setLoading(true)` here. `fetchRows` only clears the loading flag when a standard
+    // strategy is active, and we don't want to leave the overlay stuck on lazy-loading or
+    // other non-standard strategies.
+    const currentStrategy = apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource);
+    const isStandardStrategyActive =
+      currentStrategy === DataSourceRowsUpdateStrategy.Default ||
+      currentStrategy === DataSourceRowsUpdateStrategy.GroupedData;
+    if (isStandardStrategyActive) {
+      if (!props.dataSourceKeepPreviousData) {
+        apiRef.current.setRows([]);
+      }
+      apiRef.current.setLoading(true);
     }
-    apiRef.current.setLoading(true);
     stopPolling();
     debouncedFetchRows();
   }, [apiRef, props.dataSourceKeepPreviousData, debouncedFetchRows, stopPolling]);
