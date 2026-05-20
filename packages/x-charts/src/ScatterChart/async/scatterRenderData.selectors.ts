@@ -24,11 +24,8 @@ export interface ScatterSeriesRenderData {
 const EMPTY_RENDER_DATA = new Map<SeriesId, ScatterSeriesRenderData>();
 
 /**
- * Builds the packed coordinates typed array and the batch boundaries for every
- * scatter series. Recomputed only when the processed series or the axes (hence
- * the scales) change, which is what gives the progressive paint: while the
- * async series/axes processors are pending the scatter group is absent here and
- * batches render empty; once settled this recomputes and batches fill in.
+ * Packed projected coordinates for every scatter series. Recomputes when the
+ * processed series or axis scales change.
  */
 export const selectorScatterRenderData = createSelectorMemoized(
   selectorChartSeriesProcessed,

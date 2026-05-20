@@ -7,7 +7,7 @@ import { Scatter, type ScatterProps, type ScatterSlotProps, type ScatterSlots } 
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
 import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
-import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
+import { scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
 import { ScatterAsync } from './async/ScatterAsync';
 import { SCATTER_ASYNC_THRESHOLD } from './async/scatterRendererConstants';
@@ -76,11 +76,8 @@ function ScatterPlot(props: ScatterPlotProps) {
   const { zAxis, zAxisIds } = useZAxes();
   const classes = useUtilityClasses({ classes: inClasses });
 
-  // Register this plot's progressive rendering plan with the chart-wide
-  // `useProgressiveRendering` plugin so the scheduler is shared across every
-  // plot composed into the same chart. The plugin may be absent when
-  // `ScatterPlot` is composed inside a custom container that doesn't include
-  // it — in that case we fall back to the synchronous renderer.
+  // The plugin may be absent when `ScatterPlot` is composed inside a custom
+  // container that doesn't include it — fall back to the synchronous renderer.
   const { instance } = useChartsContext<[UseProgressiveRenderingSignature]>();
   const setProgressivePlan = instance.setProgressivePlan as
     | UseProgressiveRenderingSignature['instance']['setProgressivePlan']
@@ -94,34 +91,23 @@ function ScatterPlot(props: ScatterPlotProps) {
 
   const slotScatter = slots?.scatter;
   const progressivePlan = React.useMemo<ProgressivePlanEntry[]>(() => {
-    if (seriesData === undefined || !hasProgressivePlugin) {
+    if (seriesData === undefined || !hasProgressivePlugin || slotScatter !== undefined) {
       return [];
     }
     const { series: s, seriesOrder: order } = seriesData;
+    const entries: ProgressivePlanEntry[] = [];
     let total = 0;
     order.forEach((id) => {
-      if (!s[id].hidden) {
-        total += s[id].data.length;
+      if (s[id].hidden) {
+        return;
       }
+      const nPoints = s[id].data.length;
+      total += nPoints;
+      entries.push({ seriesId: id, nPoints, dataRef: s[id].data });
     });
     const usesAsync =
-      slotScatter === undefined &&
-      (renderer === 'svg-progressive' ||
-        (renderer === undefined && total > SCATTER_ASYNC_THRESHOLD));
-    if (!usesAsync) {
-      return [];
-    }
-    const plan: ProgressivePlanEntry[] = [];
-    order.forEach((id) => {
-      if (!s[id].hidden) {
-        plan.push({
-          seriesId: id,
-          nPoints: s[id].data.length,
-          dataRef: s[id].data,
-        });
-      }
-    });
-    return plan;
+      renderer === 'svg-progressive' || (renderer === undefined && total > SCATTER_ASYNC_THRESHOLD);
+    return usesAsync ? entries : [];
   }, [seriesData, renderer, slotScatter, hasProgressivePlugin]);
 
   React.useEffect(() => {
@@ -145,33 +131,12 @@ function ScatterPlot(props: ScatterPlotProps) {
   const defaultYAxisId = yAxisIds[0];
   const defaultZAxisId = zAxisIds[0];
 
-  // Renderer selection:
-  // - `svg-batch`        → path-based batch renderer.
-  // - `svg-single`       → force the original synchronous per-item renderer.
-  // - `svg-progressive`  → force the progressive batched per-item renderer.
-  // - undefined ("auto") → progressive above `SCATTER_ASYNC_THRESHOLD` total
-  //                        points, original otherwise.
-  const totalPointCount = seriesOrder.reduce(
-    (sum, seriesId) => (series[seriesId].hidden ? sum : sum + series[seriesId].data.length),
-    0,
-  );
-
   let DefaultScatterItems: React.JSXElementConstructor<ScatterProps>;
   if (renderer === 'svg-batch') {
     DefaultScatterItems = BatchScatter;
-  } else if (renderer === 'svg-single') {
-    DefaultScatterItems = Scatter;
-  } else if (renderer === 'svg-progressive' && hasProgressivePlugin) {
-    DefaultScatterItems = ScatterAsync;
-  } else if (
-    renderer === undefined &&
-    hasProgressivePlugin &&
-    totalPointCount > SCATTER_ASYNC_THRESHOLD
-  ) {
+  } else if (progressivePlan.length > 0) {
     DefaultScatterItems = ScatterAsync;
   } else {
-    // No progressive plugin available (e.g. custom container without it) or
-    // not enough points to be worth it — fall back to the synchronous renderer.
     DefaultScatterItems = Scatter;
   }
   const ScatterItems = slots?.scatter ?? DefaultScatterItems;

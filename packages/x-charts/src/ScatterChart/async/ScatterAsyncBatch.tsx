@@ -86,8 +86,6 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
   });
 
   if (renderData === undefined || !revealed) {
-    // Render data not ready yet (processors/axes pending) or this batch has not
-    // been revealed yet by the progressive scheduler. Mount empty.
     return <g data-series={series.id} className={classes.series} />;
   }
 
@@ -138,11 +136,8 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
   );
 }
 
-/**
- * Memoized so a reveal tick (which re-renders every `ScatterAsync`) only
- * re-renders the one batch whose `revealed` prop actually changed, instead of
- * re-reconciling every already-painted batch every frame.
- */
+// Memoized so a reveal tick (which re-renders every `ScatterAsync`) only
+// re-renders the one batch whose `revealed` prop changed.
 const ScatterAsyncBatch = React.memo(ScatterAsyncBatchComponent);
 
 export { ScatterAsyncBatch };

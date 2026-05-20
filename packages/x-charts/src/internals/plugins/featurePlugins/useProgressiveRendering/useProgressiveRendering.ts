@@ -56,9 +56,6 @@ export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignatu
     });
   });
 
-  // Drive the rAF scheduler. Re-runs only when the registered plans change
-  // (Map identity changes only via the setters above, which already gate on
-  // structural equality), so unrelated re-renders don't restart the paint.
   const plans = store.use(selectorProgressivePlans) ?? EMPTY_PLANS;
 
   React.useEffect(() => {

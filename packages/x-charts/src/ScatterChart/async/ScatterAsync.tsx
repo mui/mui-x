@@ -18,11 +18,6 @@ function ScatterAsync(props: ScatterProps) {
 
   const count = series.data.length;
 
-  // Reveal is driven by the chart-wide `useProgressiveRendering` plugin so the
-  // scheduler is shared with every other plot composed into the same chart.
-  // `batchSize` is the per-series points budget per tick, derived by the
-  // plugin from the total point count and series count, so every series'
-  // batches stay in lockstep with how the scheduler reveals them.
   const store = useStore<[UseProgressiveRenderingSignature]>();
   const batchSize = store.use(selectorProgressiveBatchSize);
   const revealedBatches = store.use(selectorProgressiveSeriesRevealedBatches, series.id);
