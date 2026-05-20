@@ -3,14 +3,14 @@
  * Each batch mounts its own `<g>` immediately; its children (the markers) are
  * rendered from a zero-copy view on the packed coordinates typed array.
  */
-export const SCATTER_BATCH_SIZE = 5000;
+export const SCATTER_BATCH_SIZE = 10000;
 
 /**
  * Total scatter point count (across visible series) above which `ScatterPlot`
  * switches the `svg-single` renderer to the async, batched implementation.
  * Below it, the original per-item `Scatter` renderer is used.
  */
-export const SCATTER_ASYNC_THRESHOLD = 10000;
+export const SCATTER_ASYNC_THRESHOLD = 20000;
 
 /**
  * How many batches are revealed per reveal tick once the render data is ready.
