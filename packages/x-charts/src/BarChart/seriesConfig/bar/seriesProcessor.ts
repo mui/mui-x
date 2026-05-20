@@ -37,7 +37,9 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
           d3Dataset[index][id] = value;
         }
       });
-    } else if (dataset === undefined) {
+    } else if (dataset === undefined && process.env.NODE_ENV !== 'production') {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         `MUI X Charts: Bar series with id="${id}" has no data. ` +
           'The chart cannot render this series without data. ' +
