@@ -43,7 +43,7 @@ export interface ZAxisDefaultized extends ZAxisConfig {
   | ScaleSequential<string, string | null>
   | ScaleThreshold<number | Date, string | null>;
   sizeScale?:
-  | ScaleOrdinal<string | number | Date, string, number | null>
+  | ScaleOrdinal<string | number | Date, number, number | null>
   | ScaleOrdinal<number, number, number | null>
   | ScaleSequential<number, number | null>
   | ScaleThreshold<number | Date, number | null>;

@@ -15,6 +15,10 @@ export type ScatterValueType = {
    */
   colorValue?: any;
   /**
+   * The value used to compute the size of the scatter point through a size axis.
+   */
+  sizeValue?: any;
+  /**
    * The value used to compute the color of the scatter point through a color axis.
    * @deprecated Use `colorValue` instead.
    */
@@ -42,6 +46,11 @@ export interface ScatterSeriesType
    * It points to the id of an axis defined with the `zAxis` prop.
    */
   colorAxisId?: string;
+  /**
+   * The id of the size axis used to compute the size of the scatter points.
+   * It points to the id of an axis defined with the `zAxis` prop.
+   */
+  sizeAxisId?: string;
   /**
    * The id of the z-axis used to render the series.
    * @deprecated Use `colorAxisId` instead.
@@ -75,6 +84,10 @@ export interface ScatterSeriesType
      * The key used to retrieve data from the dataset for the color value.
      */
     color?: string;
+    /**
+     * The key used to retrieve data from the dataset for the size value.
+     */
+    size?: string;
     /**
      * The key used to retrieve data from the dataset for the Z axis.
      * @deprecated Use `color` instead.
