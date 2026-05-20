@@ -1,10 +1,18 @@
-type SchedulerDataSourceCacheConfig = {
+import { SchedulerEventId } from '@mui/x-scheduler-internals/models';
+
+type SchedulerDataSourceCacheConfig<TEvent extends object> = {
   /**
    * Time To Live for each cache entry in milliseconds.
    * After this time the cache entry will become stale and the next query will result in cache miss.
    * @default 300_000 (5 minutes)
    */
   ttl?: number;
+  /**
+   * Resolves the id of an event. Required for consumers using a custom
+   * `eventModelStructure` whose events don't have a literal `id` field.
+   * @default (event) => (event as any).id
+   */
+  getId?: (event: TEvent) => SchedulerEventId;
 };
 
 export interface SchedulerDataSourceCache<TEvent extends object> {
@@ -66,9 +74,12 @@ export class SchedulerDataSourceCacheDefault<
 
   private ttl: number;
 
-  constructor({ ttl = 300000 }: SchedulerDataSourceCacheConfig = {}) {
+  private getId: (event: TEvent) => SchedulerEventId;
+
+  constructor({ ttl = 300000, getId }: SchedulerDataSourceCacheConfig<TEvent> = {}) {
     this.cache = {};
     this.ttl = ttl;
+    this.getId = getId ?? ((event: TEvent) => (event as any).id);
   }
 
   hasCoverage(start: number, end: number): boolean {
@@ -119,7 +130,7 @@ export class SchedulerDataSourceCacheDefault<
         replacedRangeKeys.add(getRangeKey(range.start, range.end));
       }
     }
-    const newIds = new Set(newEvents.map((event) => String((event as any).id)));
+    const newIds = new Set(newEvents.map((event) => String(this.getId(event))));
     for (const id of Object.keys(this.cache)) {
       const entry = this.cache[id];
       if (
@@ -182,7 +193,7 @@ export class SchedulerDataSourceCacheDefault<
   }
 
   upsert(event: TEvent, sourceRangeKey: string | null = null) {
-    const id = String((event as any).id);
+    const id = String(this.getId(event));
     const expiry = Date.now() + this.ttl;
     this.cache[id] = { value: event, expiry, sourceRangeKey };
   }
