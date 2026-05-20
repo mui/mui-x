@@ -120,7 +120,6 @@ To hide an internal MUI X Charts component (such as the legend) that you do not 
 <BarChartPro slotProps={{ legend: { 'data-hide-on-export': true } }} />
 ```
 
-For elements that `slotProps` cannot reach, fall back to the [`onBeforeExport`](#add-custom-styles-before-exporting) callback.
 
 ## Copy styles
 
