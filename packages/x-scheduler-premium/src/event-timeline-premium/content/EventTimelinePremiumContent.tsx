@@ -23,6 +23,7 @@ import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-intern
 import {
   schedulerNowSelectors,
   schedulerOccurrenceSelectors,
+  schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
@@ -31,10 +32,12 @@ import {
   useEventDialogContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
+import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { EventTimelinePremiumHeader } from './timeline-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
+import { EventTimelinePremiumSkeleton } from './event-skeleton';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import {
   EventTimelinePremiumVirtualizerContext,
@@ -179,7 +182,7 @@ const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   overflow: 'clip',
   width: 'calc(var(--unit-count) * var(--unit-width))',
   display: 'grid',
-  gridTemplateRows: `repeat(var(--lane-count, 1), minmax(calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1)}), auto))`,
+  gridTemplateRows: `repeat(var(--lane-count, 1), minmax(calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1.125)}), auto))`,
   rowGap: theme.spacing(0.5),
   position: 'relative',
   padding: theme.spacing(2, 0),
@@ -476,6 +479,7 @@ function EventRowContent({
   const { schedulerId } = useEventTimelinePremiumStyledContext();
   const { onOpen: startEditing } = useEventDialogContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
+  const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
   const isCreatingAnEvent = useStore(
     store,
@@ -489,6 +493,10 @@ function EventRowContent({
     }
     startEditing(placeholderRef, placeholder);
   }, [isCreatingAnEvent, placeholder, startEditing]);
+
+  if (isLoading) {
+    return <EventTimelinePremiumSkeleton />;
+  }
 
   return (
     <React.Fragment>
@@ -705,7 +713,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     >
       <EventTimelinePremiumVirtualizerContext.Provider value={virtualizer.store}>
         <TitleColumnWidthProvider value={reportTitleWidth}>
-          <EventDialogProvider>
+          <EventDialogProvider optionalRenderers={PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS}>
             <EventTimelinePremiumGrid
               className={classes.grid}
               {...scrollerProps}

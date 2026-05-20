@@ -24,6 +24,13 @@ export interface EventTimelinePremiumState extends SchedulerState {
    * Set via ResizeObserver on the title header cell.
    */
   titleColumnWidth: number;
+  /**
+   * `false` until the first parameters→state mapping has applied, then `true`.
+   * Gates the lazy-loading plugin's first fetch so it doesn't run against the
+   * constructor-only initial state.
+   * @internal
+   */
+  hasInitialized: boolean;
 }
 
 export interface EventTimelinePremiumParameters<
