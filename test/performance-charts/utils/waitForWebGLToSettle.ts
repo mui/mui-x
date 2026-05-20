@@ -5,12 +5,19 @@
  *
  * The benchmark harness forces `--disable-gpu`; WebGL runs through SwiftShader
  * (software). On CI under load, the first frame can take well over 100ms to
- * commit — a fixed delay is flaky. Poll the canvas until at least one pixel
- * has been drawn (with a generous timeout), so iterations start from a known,
- * non-empty state.
+ * commit — a fixed short delay is flaky for the canvas-empty check.
+ *
+ * The harness also collects React Profiler render events for every iteration
+ * and asserts that all iterations produced the same render-event count. The
+ * `requestRender` calls from WebGL plot `useEffect`s land in a tail after
+ * mount — if some iterations close their measurement window before that tail
+ * lands and others don't, counts diverge. So we wait a deterministic minimum
+ * window on every iteration (long enough for those effects to flush) and only
+ * poll past that for the slow-draw case.
  */
-const POLL_INTERVAL_MS = 50;
+const MIN_WAIT_MS = 300;
 const MAX_WAIT_MS = 2000;
+const POLL_INTERVAL_MS = 50;
 
 function canvasHasContent(): boolean {
   const canvas = document.querySelector('canvas');
@@ -42,9 +49,12 @@ function canvasHasContent(): boolean {
 }
 
 export const waitForWebGLToSettle = async () => {
-  const deadline = performance.now() + MAX_WAIT_MS;
-  while (performance.now() < deadline) {
-    if (canvasHasContent()) {
+  const start = performance.now();
+  const minDeadline = start + MIN_WAIT_MS;
+  const maxDeadline = start + MAX_WAIT_MS;
+  while (performance.now() < maxDeadline) {
+    const now = performance.now();
+    if (now >= minDeadline && canvasHasContent()) {
       return;
     }
     // eslint-disable-next-line no-await-in-loop -- polling is inherently sequential
