@@ -41,10 +41,12 @@ export function getSizeScale(
 ): ScaleOrdinal<number | Date | string, number, number | null>;
 export function getSizeScale(
   config: ContinuousSizeConfig | PiecewiseSizeConfig,
-): ScaleThreshold<number | Date, number> | ScaleSequential<number | Date, number>;
+): ScaleThreshold<number | Date, number | null> | ScaleSequential<number, number | null>;
 export function getSizeScale(
   config: ContinuousSizeConfig | PiecewiseSizeConfig | OrdinalSizeConfig,
-): ScaleOrdinal<number | Date | string, number, number | null> |
-  ScaleThreshold<number | Date, number> | ScaleSequential<number | Date, number> {
+):
+  | ScaleOrdinal<number | Date | string, number, number | null>
+  | ScaleThreshold<number | Date, number | null>
+  | ScaleSequential<number, number | null> {
   return config.type === 'ordinal' ? getOrdinalSizeScale(config) : getSequentialSizeScale(config);
 }

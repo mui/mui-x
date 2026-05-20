@@ -29,10 +29,10 @@ function processColorMap(axisConfig: ZAxisConfig) {
       axisConfig.colorMap.type === 'ordinal' && axisConfig.data
         ? getOrdinalColorScale({ values: axisConfig.data, ...axisConfig.colorMap })
         : getColorScale(
-          axisConfig.colorMap.type === 'continuous'
-            ? { min: axisConfig.min, max: axisConfig.max, ...axisConfig.colorMap }
-            : axisConfig.colorMap,
-        ),
+            axisConfig.colorMap.type === 'continuous'
+              ? { min: axisConfig.min, max: axisConfig.max, ...axisConfig.colorMap }
+              : axisConfig.colorMap,
+          ),
   };
 }
 
@@ -44,13 +44,13 @@ function processSizeMap(axisConfig: ZAxisConfig) {
   return {
     ...axisConfig,
     sizeScale:
-      axisConfig.sizeMap.type === 'ordinal' && axisConfig.data
+      axisConfig.sizeMap.type === 'ordinal'
         ? getOrdinalSizeScale({ values: axisConfig.data, ...axisConfig.sizeMap })
         : getSizeScale(
-          axisConfig.sizeMap.type === 'continuous'
-            ? { min: axisConfig.min, max: axisConfig.max, ...axisConfig.sizeMap }
-            : axisConfig.sizeMap,
-        ),
+            axisConfig.sizeMap.type === 'continuous'
+              ? { min: axisConfig.min, max: axisConfig.max, ...axisConfig.sizeMap }
+              : axisConfig.sizeMap,
+          ),
   };
 }
 
@@ -78,8 +78,8 @@ function getZAxisState(
     if (dataset === undefined) {
       throw new Error(
         'MUI X Charts: The z-axis uses `dataKey` or `valueGetter` but no `dataset` is provided. ' +
-        'When using dataKey or valueGetter, a dataset must be provided to retrieve the axis data. ' +
-        'Either provide a dataset prop or use the data property directly on the z-axis.',
+          'When using dataKey or valueGetter, a dataset must be provided to retrieve the axis data. ' +
+          'Either provide a dataset prop or use the data property directly on the z-axis.',
       );
     }
     zAxisLookup[defaultizedId] = processSizeMap(
