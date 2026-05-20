@@ -66,6 +66,36 @@
       "isGlobal": false
     },
     {
+      "key": "markCircle",
+      "className": "MuiChartsLegend-markCircle",
+      "description": "Styles applied to \"circle\" marks.",
+      "isGlobal": false
+    },
+    {
+      "key": "markColored",
+      "className": "MuiChartsLegend-markColored",
+      "description": "Styles applied to the element with fill/stroke color.",
+      "isGlobal": false
+    },
+    {
+      "key": "markLine",
+      "className": "MuiChartsLegend-markLine",
+      "description": "Styles applied to \"line\" marks.",
+      "isGlobal": false
+    },
+    {
+      "key": "markLineAndShape",
+      "className": "MuiChartsLegend-markLineAndShape",
+      "description": "Styles applied to \"line+mark\" marks.",
+      "isGlobal": false
+    },
+    {
+      "key": "markSquare",
+      "className": "MuiChartsLegend-markSquare",
+      "description": "Styles applied to \"square\" marks.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
       "className": "MuiChartsLegend-root",
       "description": "Styles applied to the root element.",

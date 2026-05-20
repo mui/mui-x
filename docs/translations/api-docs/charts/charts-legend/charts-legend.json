@@ -31,6 +31,26 @@
     },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
     "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "series mark element" },
+    "markCircle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "&quot;circle&quot; marks"
+    },
+    "markColored": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the element with fill/stroke color"
+    },
+    "markLine": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "&quot;line&quot; marks"
+    },
+    "markLineAndShape": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "&quot;line+mark&quot; marks"
+    },
+    "markSquare": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "&quot;square&quot; marks"
+    },
     "root": { "description": "Styles applied to the root element." },
     "series": { "description": "Styles applied to {{nodeName}}.", "nodeName": "a series element" },
     "vertical": {

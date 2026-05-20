@@ -115,6 +115,13 @@ const ChartsLegend = consumeSlots(
     const { direction, onItemClick, className, classes, toggleVisibilityOnClick, ...other } = props;
 
     const isButton = Boolean(onItemClick || toggleVisibilityOnClick);
+    const markClasses = {
+      line: classes?.markLine,
+      lineAndMark: classes?.markLineAndShape,
+      square: classes?.markSquare,
+      circle: classes?.markCircle,
+      fill: classes?.markColored,
+    };
 
     const handleClick = useEventCallback(
       (item: SeriesLegendItemParams, i: number) =>
@@ -165,6 +172,7 @@ const ChartsLegend = consumeSlots(
                 >
                   <ChartsLabelMark
                     className={classes?.mark}
+                    classes={markClasses}
                     color={item.color}
                     type={item.markType}
                     markShape={item.markShape}
@@ -175,6 +183,7 @@ const ChartsLegend = consumeSlots(
                 <div className={clsx(classes?.series, !isVisible && classes?.hidden)}>
                   <ChartsLabelMark
                     className={classes?.mark}
+                    classes={markClasses}
                     color={item.color}
                     type={item.markType}
                     markShape={item.markShape}

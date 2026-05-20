@@ -108,4 +108,44 @@ describe('<PiecewiseColorLegend />', () => {
 
     expect(screen.getByRole('list').className).contains(piecewiseColorLegendClasses.inlineEnd);
   });
+
+  it('should apply mark classes to nested label mark slots', () => {
+    render(
+      <ChartsDataProvider
+        height={50}
+        width={50}
+        series={[
+          {
+            type: 'line',
+            label: 'Line 1',
+            data: [10, 20, 30, 40, 50],
+          },
+        ]}
+        zAxis={[
+          {
+            colorMap: {
+              type: 'piecewise',
+              thresholds: [new Date(1961, 0, 1), new Date(1990, 0, 1)],
+              colors: ['blue', 'gray', 'red'],
+            },
+          },
+        ]}
+      >
+        <PiecewiseColorLegend
+          markType="line"
+          classes={{
+            mark: 'mark-root',
+            markLine: 'mark-line',
+            markColored: 'mark-colored',
+          }}
+        />
+        <ChartsSurface />
+      </ChartsDataProvider>,
+    );
+
+    const list = screen.getByRole('list');
+    expect(list.querySelector('.mark-root')).not.to.equal(null);
+    expect(list.querySelector('.mark-line')).not.to.equal(null);
+    expect(list.querySelector('.mark-colored')).not.to.equal(null);
+  });
 });

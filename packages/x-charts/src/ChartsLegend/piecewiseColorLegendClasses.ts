@@ -29,6 +29,16 @@ export interface PiecewiseColorLegendClasses {
   inlineEnd: string;
   /** Styles applied to the marks. */
   mark: string;
+  /** Styles applied to "line" marks. */
+  markLine: string;
+  /** Styles applied to "line+mark" marks. */
+  markLineAndShape: string;
+  /** Styles applied to "square" marks. */
+  markSquare: string;
+  /** Styles applied to "circle" marks. */
+  markCircle: string;
+  /** Styles applied to the element with fill/stroke color. */
+  markColored: string;
   /** Styles applied to the series label. */
   label: string;
 }
@@ -49,6 +59,11 @@ export const useUtilityClasses = (props: PiecewiseColorLegendProps & ChartsLegen
     maxLabel: ['maxLabel'],
     item: ['item'],
     mark: ['mark'],
+    markLine: ['markLine'],
+    markLineAndShape: ['markLineAndShape'],
+    markSquare: ['markSquare'],
+    markCircle: ['markCircle'],
+    markColored: ['markColored'],
     label: ['label'],
   };
 
@@ -70,6 +85,11 @@ export const piecewiseColorLegendClasses: PiecewiseColorLegendClasses = generate
     'inlineStart',
     'inlineEnd',
     'mark',
+    'markLine',
+    'markLineAndShape',
+    'markSquare',
+    'markCircle',
+    'markColored',
     'label',
   ],
 );

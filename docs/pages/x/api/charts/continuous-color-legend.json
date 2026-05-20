@@ -60,6 +60,12 @@
       "isGlobal": false
     },
     {
+      "key": "gradientColored",
+      "className": "MuiContinuousColorLegend-gradientColored",
+      "description": "Styles applied to the element filled by the gradient.",
+      "isGlobal": false
+    },
+    {
       "key": "horizontal",
       "className": "MuiContinuousColorLegend-horizontal",
       "description": "Styles applied to the legend in row layout.",

@@ -38,6 +38,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the list item with the gradient"
     },
+    "gradientColored": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the element filled by the gradient"
+    },
     "horizontal": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the legend in row layout"

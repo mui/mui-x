@@ -1,6 +1,6 @@
 import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import { PieChart } from '@mui/x-charts/PieChart';
-import { labelMarkClasses } from '@mui/x-charts/ChartsLabel';
+import { legendClasses } from '@mui/x-charts/ChartsLegend';
 
 const data = [
   { id: 0, value: 10, label: 'Series A' },
@@ -40,7 +40,7 @@ export default function LegendTextStyling() {
               sx: {
                 fontSize: props.fontSize,
                 color: props.color,
-                [`.${labelMarkClasses.fill}`]: {
+                [`.${legendClasses.markColored}`]: {
                   fill: props.markColor,
                 },
               },
@@ -50,7 +50,7 @@ export default function LegendTextStyling() {
       )}
       getCode={({ props }) => {
         return `import { PieChart } from '@mui/x-charts/PieChart';
-import { labelMarkClasses } from '@mui/x-charts/ChartsLabel';
+import { legendClasses } from '@mui/x-charts/ChartsLegend';
 
 <PieChart
   {/** ... */}
@@ -59,7 +59,7 @@ import { labelMarkClasses } from '@mui/x-charts/ChartsLabel';
       sx: {
         fontSize: ${props.fontSize},
         color: ${props.color},
-        [\`.\${labelMarkClasses.fill}\`]: {
+        [\`.\${legendClasses.markColored}\`]: {
           fill: ${props.markColor},
         },
       },

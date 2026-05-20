@@ -1,6 +1,5 @@
 import { LineChart, LineChartProps, lineClasses } from '@mui/x-charts/LineChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
-import { labelMarkClasses } from '@mui/x-charts/ChartsLabel';
 
 const monthlySalesData = [
   { month: 'Jan', productA: 120, productB: 90 },
@@ -46,18 +45,18 @@ export default function LegendStyleSeries() {
     <LineChart
       {...settings}
       sx={{
-        [`.${lineClasses.line}, .${labelMarkClasses.fill}`]: {
+        [`.${lineClasses.line}, .${legendClasses.markColored}`]: {
           strokeWidth: 1,
         },
-        [`.${lineClasses.line}[data-series="a"], .${legendClasses.item}[data-series="a"] .${labelMarkClasses.fill}`]:
+        [`.${lineClasses.line}[data-series="a"], .${legendClasses.item}[data-series="a"] .${legendClasses.markColored}`]:
           {
             strokeDasharray: '5 5',
           },
-        [`.${lineClasses.line}[data-series="b"], .${legendClasses.item}[data-series="b"] .${labelMarkClasses.fill}`]:
+        [`.${lineClasses.line}[data-series="b"], .${legendClasses.item}[data-series="b"] .${legendClasses.markColored}`]:
           {
             strokeDasharray: '3 2',
           },
-        [`.${labelMarkClasses.root}`]: {
+        [`.${legendClasses.mark}`]: {
           width: 24,
         },
       }}

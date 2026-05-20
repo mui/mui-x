@@ -243,6 +243,11 @@ const ContinuousColorLegend = consumeThemeProps(
 
     const minText = getText(minLabel, minValue, formattedMin);
     const maxText = getText(maxLabel, maxValue, formattedMax);
+    const gradientClasses = {
+      horizontal: classes?.horizontal,
+      vertical: classes?.vertical,
+      fill: classes?.gradientColored,
+    };
 
     const minComponent = (
       <li className={classes?.minLabel}>
@@ -266,6 +271,7 @@ const ContinuousColorLegend = consumeThemeProps(
         {reverse ? maxComponent : minComponent}
         <li className={classes?.gradient}>
           <ChartsLabelGradient
+            classes={gradientClasses}
             direction={direction}
             rotate={rotateGradient}
             reverse={reverse}

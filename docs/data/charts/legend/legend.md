@@ -102,7 +102,7 @@ You can hide the legend with the `hideLegend` prop of the Chart.
 
 You can change the `label` style by targeting the root component's font properties.
 
-The mark is an SVG element, so you can use the `fill` property to change its color.
+The mark is an SVG element, so you can use `legendClasses.markColored` (or `.MuiChartsLegend-markColored`) to change its color.
 You can do this via the `sx` prop, CSS Modules, or other CSS approaches, as shown in the demo below:
 
 {{"demo": "LegendTextStyling.js", "hideToolbar": true, "bg": "playground"}}

@@ -1,4 +1,4 @@
-import { createRenderer, describeConformance } from '@mui/internal-test-utils';
+import { createRenderer, describeConformance, screen } from '@mui/internal-test-utils';
 import { ContinuousColorLegend, continuousColorLegendClasses } from '@mui/x-charts/ChartsLegend';
 import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
@@ -49,4 +49,42 @@ describe('<ContinuousColorLegend />', () => {
     // SKIP
     skip: ['themeVariants', 'componentProp'],
   }));
+
+  it('should apply gradient classes to nested label gradient slots', () => {
+    render(
+      <ChartsDataProvider
+        height={50}
+        width={50}
+        series={[
+          {
+            type: 'line',
+            label: 'Line 1',
+            data: [10, 20, 30, 40, 50],
+          },
+        ]}
+        zAxis={[
+          {
+            colorMap: {
+              type: 'continuous',
+              min: -0.5,
+              max: 1.5,
+              color: (t) => `${t}`,
+            },
+          },
+        ]}
+      >
+        <ContinuousColorLegend
+          classes={{
+            horizontal: 'gradient-horizontal',
+            gradientColored: 'gradient-colored',
+          }}
+        />
+        <ChartsSurface />
+      </ChartsDataProvider>,
+    );
+
+    const list = screen.getByRole('list');
+    expect(list.className).contains('gradient-horizontal');
+    expect(list.querySelector('.gradient-colored')).not.to.equal(null);
+  });
 });

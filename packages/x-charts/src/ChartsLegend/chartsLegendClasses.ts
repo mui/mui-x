@@ -15,6 +15,16 @@ export interface ChartsLegendClasses {
   hidden: string;
   /** Styles applied to series mark element. */
   mark: string;
+  /** Styles applied to "line" marks. */
+  markLine: string;
+  /** Styles applied to "line+mark" marks. */
+  markLineAndShape: string;
+  /** Styles applied to "square" marks. */
+  markSquare: string;
+  /** Styles applied to "circle" marks. */
+  markCircle: string;
+  /** Styles applied to the element with fill/stroke color. */
+  markColored: string;
   /** Styles applied to the series label. */
   label: string;
   /** Styles applied to the legend in column layout. */
@@ -33,6 +43,11 @@ export const useUtilityClasses = (props: ChartsLegendProps & ChartsLegendSlotExt
     root: ['root', direction],
     item: ['item'],
     mark: ['mark'],
+    markLine: ['markLine'],
+    markLineAndShape: ['markLineAndShape'],
+    markSquare: ['markSquare'],
+    markCircle: ['markCircle'],
+    markColored: ['markColored'],
     label: ['label'],
     series: ['series'],
     hidden: ['hidden'],
@@ -46,6 +61,11 @@ export const legendClasses: ChartsLegendClasses = generateUtilityClasses('MuiCha
   'item',
   'series',
   'mark',
+  'markLine',
+  'markLineAndShape',
+  'markSquare',
+  'markCircle',
+  'markColored',
   'label',
   'vertical',
   'horizontal',

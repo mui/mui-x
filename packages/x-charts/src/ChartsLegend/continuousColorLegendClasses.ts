@@ -13,6 +13,8 @@ export interface ContinuousColorLegendClasses {
   maxLabel: string;
   /** Styles applied to the list item with the gradient. */
   gradient: string;
+  /** Styles applied to the element filled by the gradient. */
+  gradientColored: string;
   /** Styles applied to the legend in column layout. */
   vertical: string;
   /** Styles applied to the legend in row layout. */
@@ -40,7 +42,7 @@ export const useUtilityClasses = (
     minLabel: ['minLabel'],
     maxLabel: ['maxLabel'],
     gradient: ['gradient'],
-    mark: ['mark'],
+    gradientColored: ['gradientColored'],
     label: ['label'],
   };
 
@@ -54,6 +56,7 @@ export const continuousColorLegendClasses: ContinuousColorLegendClasses = genera
     'minLabel',
     'maxLabel',
     'gradient',
+    'gradientColored',
     'vertical',
     'horizontal',
     'start',

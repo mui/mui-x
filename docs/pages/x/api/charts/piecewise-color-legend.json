@@ -100,6 +100,36 @@
       "isGlobal": false
     },
     {
+      "key": "markCircle",
+      "className": "MuiPiecewiseColorLegend-markCircle",
+      "description": "Styles applied to \"circle\" marks.",
+      "isGlobal": false
+    },
+    {
+      "key": "markColored",
+      "className": "MuiPiecewiseColorLegend-markColored",
+      "description": "Styles applied to the element with fill/stroke color.",
+      "isGlobal": false
+    },
+    {
+      "key": "markLine",
+      "className": "MuiPiecewiseColorLegend-markLine",
+      "description": "Styles applied to \"line\" marks.",
+      "isGlobal": false
+    },
+    {
+      "key": "markLineAndShape",
+      "className": "MuiPiecewiseColorLegend-markLineAndShape",
+      "description": "Styles applied to \"line+mark\" marks.",
+      "isGlobal": false
+    },
+    {
+      "key": "markSquare",
+      "className": "MuiPiecewiseColorLegend-markSquare",
+      "description": "Styles applied to \"square\" marks.",
+      "isGlobal": false
+    },
+    {
       "key": "maxLabel",
       "className": "MuiPiecewiseColorLegend-maxLabel",
       "description": "Styles applied to the list item that renders the `maxLabel`.",

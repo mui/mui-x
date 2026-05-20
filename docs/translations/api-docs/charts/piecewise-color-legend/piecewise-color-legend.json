@@ -54,6 +54,26 @@
     "item": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the list items" },
     "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the series label" },
     "mark": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the marks" },
+    "markCircle": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "&quot;circle&quot; marks"
+    },
+    "markColored": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the element with fill/stroke color"
+    },
+    "markLine": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "&quot;line&quot; marks"
+    },
+    "markLineAndShape": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "&quot;line+mark&quot; marks"
+    },
+    "markSquare": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "&quot;square&quot; marks"
+    },
     "maxLabel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the list item that renders the <code>maxLabel</code>"

@@ -210,6 +210,13 @@ const PiecewiseColorLegend = consumeThemeProps(
     const isExtremes = labelPosition === 'extremes';
     const isInlineStart = labelPosition === 'inline-start';
     const isInlineEnd = labelPosition === 'inline-end';
+    const markClasses = {
+      line: classes?.markLine,
+      lineAndMark: classes?.markLineAndShape,
+      square: classes?.markSquare,
+      circle: classes?.markCircle,
+      fill: classes?.markColored,
+    };
 
     return (
       <RootElement
@@ -275,7 +282,12 @@ const PiecewiseColorLegend = consumeThemeProps(
                 })}
               >
                 {isTextBefore && <ChartsLabel className={classes?.label}>{label}</ChartsLabel>}
-                <ChartsLabelMark className={classes?.mark} type={markType} color={color} />
+                <ChartsLabelMark
+                  className={classes?.mark}
+                  classes={markClasses}
+                  type={markType}
+                  color={color}
+                />
                 {isTextAfter && <ChartsLabel className={classes?.label}>{label}</ChartsLabel>}
               </Element>
             </li>
