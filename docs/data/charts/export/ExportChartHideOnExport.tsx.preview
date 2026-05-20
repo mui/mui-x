@@ -1,15 +1,40 @@
-<Typography
-  data-hide-on-export
-  variant="caption"
-  sx={{ alignSelf: 'center', color: 'warning.main' }}
+<Button
+  variant="contained"
+  sx={{ alignSelf: 'flex-start', mb: 1 }}
+  onClick={() => apiRef.current?.exportAsImage()}
 >
-  Internal preview — hidden on export
-</Typography>
-<BarChartPro
-  {...data}
-  showToolbar
-  slotProps={{
-    // Forward the attribute to an internal slot so the legend is also stripped from exports.
-    legend: { 'data-hide-on-export': true } as any,
-  }}
-/>
+  Export as image
+</Button>
+<ChartsDataProviderPro
+  apiRef={apiRef}
+  height={300}
+  series={[
+    { type: 'bar', label: 'Sales', data: [42, 58, 71, 65, 80] },
+    { type: 'bar', label: 'Returns', data: [4, 6, 9, 7, 11] },
+  ]}
+  xAxis={[
+    {
+      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+      scaleType: 'band',
+      id: 'x-axis',
+    },
+  ]}
+>
+  <CustomWrapper>
+    <Typography
+      data-hide-on-export
+      variant="caption"
+      sx={{ alignSelf: 'center', color: 'warning.main' }}
+    >
+      Internal preview — hidden on export
+    </Typography>
+    <ChartsSurface>
+      <BarPlot />
+      <ChartsXAxis axisId="x-axis" />
+      <ChartsYAxis />
+    </ChartsSurface>
+    <div data-hide-on-export>
+      <ChartsLegend direction="horizontal" />
+    </div>
+  </CustomWrapper>
+</ChartsDataProviderPro>

@@ -120,7 +120,6 @@ To hide an internal MUI X Charts component (such as the legend) that you do not 
 <BarChartPro slotProps={{ legend: { 'data-hide-on-export': true } }} />
 ```
 
-
 ## Copy styles
 
 The styles of the page the chart belongs to are copied to the export iframe by default.
