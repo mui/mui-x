@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { type ScatterProps } from '../Scatter';
 import { ScatterAsyncBatch } from './ScatterAsyncBatch';
 import { useScatterReveal } from './scatterAsyncReveal';
-import { SCATTER_BATCH_SIZE } from './scatterRendererConstants';
 
 /**
  * @ignore - internal component.
@@ -13,18 +12,19 @@ function ScatterAsync(props: ScatterProps) {
   const { series, colorGetter, onItemClick, slots, slotProps, classes } = props;
 
   const count = series.data.length;
-  const nBatches = Math.max(1, Math.ceil(count / SCATTER_BATCH_SIZE));
 
-  // Reveal is driven by the plot-wide scheduler so the per-frame work is
-  // bounded across all series, and batches are interleaved round-robin so every
-  // series progresses together.
-  const { getSeriesRevealedBatches } = useScatterReveal();
+  // Reveal is driven by the plot-wide scheduler. `batchSize` here is the
+  // per-series points budget per tick — `SCATTER_BATCH_SIZE` split evenly
+  // across the visible series — so each round adds one batch in every series
+  // simultaneously.
+  const { getSeriesRevealedBatches, batchSize } = useScatterReveal();
+  const nBatches = Math.max(1, Math.ceil(count / batchSize));
   const revealedBatches = getSeriesRevealedBatches(series.id);
 
   const batches: React.ReactNode[] = [];
   for (let b = 0; b < nBatches; b += 1) {
-    const start = b * SCATTER_BATCH_SIZE;
-    const end = Math.min(count, start + SCATTER_BATCH_SIZE);
+    const start = b * batchSize;
+    const end = Math.min(count, start + batchSize);
     batches.push(
       <ScatterAsyncBatch
         key={b}

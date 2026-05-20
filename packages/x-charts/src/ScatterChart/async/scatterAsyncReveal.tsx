@@ -2,8 +2,10 @@
 import * as React from 'react';
 import { type SeriesId } from '../../models/seriesType/common';
 import {
+  SCATTER_BATCH_SIZE,
   SCATTER_REVEAL_FRAMES_SKIPPED,
   SCATTER_REVEAL_ROUNDS_PER_FRAME,
+  getEffectiveScatterBatchSize,
 } from './scatterRendererConstants';
 
 /**
@@ -23,6 +25,12 @@ interface ScatterRevealContextValue {
    * batch simultaneously, so the chart looks complete from the first paint.
    */
   revealedRounds: number;
+  /**
+   * Per-series points revealed per tick (i.e. {@link SCATTER_BATCH_SIZE} split
+   * evenly across the visible series). `ScatterAsync` uses it to size its
+   * batches consistently with how the scheduler reveals them.
+   */
+  batchSize: number;
   // How many of `seriesId`'s own batches are revealed. Capped at that series'
   // total batch count, so series with fewer batches simply stop progressing
   // while longer series keep filling in.
@@ -32,6 +40,7 @@ interface ScatterRevealContextValue {
 const DEFAULT_VALUE: ScatterRevealContextValue = {
   // No provider (e.g. used directly as a slot): reveal everything.
   revealedRounds: Number.POSITIVE_INFINITY,
+  batchSize: SCATTER_BATCH_SIZE,
   getSeriesRevealedBatches: () => Number.POSITIVE_INFINITY,
 };
 
@@ -100,6 +109,7 @@ export function ScatterAsyncRevealProvider(props: ScatterAsyncRevealProviderProp
   // but read through refs so neither the reveal effect nor the context value
   // churn on unrelated re-renders.
   const { nBatchesBySeries, totalRounds } = buildRevealPlan(plan);
+  const batchSize = getEffectiveScatterBatchSize(plan.length);
   const nBatchesBySeriesRef = React.useRef(nBatchesBySeries);
   nBatchesBySeriesRef.current = nBatchesBySeries;
   const totalRoundsRef = React.useRef(totalRounds);
@@ -186,10 +196,11 @@ export function ScatterAsyncRevealProvider(props: ScatterAsyncRevealProviderProp
   const value = React.useMemo<ScatterRevealContextValue>(
     () => ({
       revealedRounds,
+      batchSize,
       getSeriesRevealedBatches: (seriesId: SeriesId) =>
         Math.min(revealedRounds, nBatchesBySeriesRef.current.get(seriesId) ?? 0),
     }),
-    [revealedRounds],
+    [revealedRounds, batchSize],
   );
 
   return <ScatterRevealContext.Provider value={value}>{children}</ScatterRevealContext.Provider>;

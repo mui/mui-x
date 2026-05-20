@@ -1,9 +1,23 @@
 /**
- * Number of scatter points rendered per batch by the async `svg-single` renderer.
- * Each batch mounts its own `<g>` immediately; its children (the markers) are
- * rendered from a zero-copy view on the packed coordinates typed array.
+ * Total number of scatter points revealed per tick by the async `svg-single`
+ * renderer, across every series combined. The budget is split evenly between
+ * the visible series — with `N` series, each one reveals
+ * `floor(SCATTER_BATCH_SIZE / N)` more points per tick — so every series
+ * progresses together rather than appearing one at a time.
+ *
+ * The browser repaints every already-painted circle on each commit, so total
+ * wall time scales with the number of commits times the growing point count.
+ * Larger budgets mean fewer commits (and a faster overall paint) at the cost
+ * of more main-thread work per commit.
  */
 export const SCATTER_BATCH_SIZE = 10000;
+
+/**
+ * Per-series points revealed per tick, derived from {@link SCATTER_BATCH_SIZE}
+ * by splitting the budget evenly across the visible series.
+ */
+export const getEffectiveScatterBatchSize = (nSeries: number) =>
+  Math.max(1, Math.floor(SCATTER_BATCH_SIZE / Math.max(1, nSeries)));
 
 /**
  * Total scatter point count (across visible series) above which `ScatterPlot`

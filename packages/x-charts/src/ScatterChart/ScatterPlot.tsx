@@ -11,7 +11,10 @@ import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
 import { ScatterAsync } from './async/ScatterAsync';
 import { ScatterAsyncRevealProvider, type ScatterRevealSeries } from './async/scatterAsyncReveal';
-import { SCATTER_ASYNC_THRESHOLD, SCATTER_BATCH_SIZE } from './async/scatterRendererConstants';
+import {
+  SCATTER_ASYNC_THRESHOLD,
+  getEffectiveScatterBatchSize,
+} from './async/scatterRendererConstants';
 import { useUtilityClasses } from './scatterClasses';
 
 export interface ScatterPlotSlots extends ScatterSlots {
@@ -138,25 +141,27 @@ function ScatterPlot(props: ScatterPlotProps) {
   // When the async renderer is used, a single shared scheduler drives the
   // progressive paint across every series so the per-frame work is bounded
   // regardless of series count.
-  const content =
-    ScatterItems === ScatterAsync ? (
-      <ScatterAsyncRevealProvider
-        plan={seriesOrder.reduce((plan, seriesId) => {
-          if (!series[seriesId].hidden) {
-            plan.push({
-              seriesId,
-              nBatches: Math.max(1, Math.ceil(series[seriesId].data.length / SCATTER_BATCH_SIZE)),
-              dataRef: series[seriesId].data,
-            });
-          }
-          return plan;
-        }, [] as ScatterRevealSeries[])}
-      >
-        {items}
-      </ScatterAsyncRevealProvider>
-    ) : (
-      items
+  let content: React.ReactNode = items;
+  if (ScatterItems === ScatterAsync) {
+    // The per-tick budget is split evenly across the visible series, so the
+    // per-series batch size depends on how many series there are.
+    const visibleSeriesCount = seriesOrder.reduce(
+      (count, seriesId) => (series[seriesId].hidden ? count : count + 1),
+      0,
     );
+    const batchSize = getEffectiveScatterBatchSize(visibleSeriesCount);
+    const plan: ScatterRevealSeries[] = [];
+    seriesOrder.forEach((seriesId) => {
+      if (!series[seriesId].hidden) {
+        plan.push({
+          seriesId,
+          nBatches: Math.max(1, Math.ceil(series[seriesId].data.length / batchSize)),
+          dataRef: series[seriesId].data,
+        });
+      }
+    });
+    content = <ScatterAsyncRevealProvider plan={plan}>{items}</ScatterAsyncRevealProvider>;
+  }
 
   return <ScatterPlotRoot className={clsx(classes.root, className)}>{content}</ScatterPlotRoot>;
 }
