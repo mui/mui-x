@@ -1796,6 +1796,56 @@ describe('<EventDialogContent open />', () => {
       fireEvent.click(screen.getByText('Event B'));
       expect(onClose.callCount).to.equal(0);
     });
+
+    it('should clear occurrencePlaceholder set by a cell click that also dismissed the dialog', async () => {
+      const start = adapter.date('2025-05-26T09:00:00Z', 'default');
+      const end = adapter.date('2025-05-26T09:30:00Z', 'default');
+      let storeRef: AnyEventCalendarStore | undefined;
+
+      const { user } = render(
+        <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) => {
+              storeRef = store;
+            }}
+          />
+          <EventDialogProvider>
+            <EventDialogTrigger occurrence={defaultProps.occurrence}>
+              <button type="button">Open Event</button>
+            </EventDialogTrigger>
+            {/* Simulates an empty-cell click: sets a creation placeholder then bubbles to document */}
+            <button
+              type="button"
+              onClick={() => {
+                storeRef!.setOccurrencePlaceholder({
+                  type: 'creation',
+                  surfaceType: 'time-grid',
+                  start,
+                  end,
+                  lockSurfaceType: false,
+                  resourceId: null,
+                });
+              }}
+            >
+              Empty cell
+            </button>
+          </EventDialogProvider>
+        </EventCalendarProvider>,
+      );
+
+      // Find the button before the dialog opens (MUI Dialog marks background elements as
+      // aria-hidden while open, so we must grab the reference first).
+      const emptyCellBtn = screen.getByRole('button', { name: /empty cell/i });
+
+      await user.click(screen.getByRole('button', { name: /open event/i }));
+
+      // Dispatch a native click — triggers both the button's React onClick (sets the
+      // placeholder) and the document bubble listener (calls onClose).
+      fireEvent.click(emptyCellBtn);
+
+      expect(storeRef!.state.occurrencePlaceholder).to.equal(null);
+    });
   });
 
   describe('openEventId store sync', () => {
@@ -1867,10 +1917,7 @@ describe('<EventDialogContent open />', () => {
         .toOccurrence();
 
       const { user } = render(
-        <EventCalendarProvider
-          events={[DEFAULT_EVENT, SECOND_EVENT]}
-          resources={resources}
-        >
+        <EventCalendarProvider events={[DEFAULT_EVENT, SECOND_EVENT]} resources={resources}>
           <StateWatcher
             Context={SchedulerStoreContext}
             selector={(s) => s.editedEventId}

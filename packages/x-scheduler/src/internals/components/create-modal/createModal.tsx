@@ -92,7 +92,6 @@ export function createModal<TData>(config: CreateModalConfig) {
       ref,
       onClick: (event: React.MouseEvent) => {
         onClick?.(event);
-        // Toggle: close if clicking the trigger for the already-open dialog entry.
         const dataId = (data as any)?.id;
         const currentId = (currentData as any)?.id;
         if (isOpen && dataId != null && dataId === currentId) {

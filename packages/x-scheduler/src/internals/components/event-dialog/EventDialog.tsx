@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps, dialogClasses } from '@mui/material/Dialog';
 import { backdropClasses } from '@mui/material/Backdrop';
@@ -28,8 +29,6 @@ const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',
   slot: 'Root',
 })({
-  // Allow clicks to pass through the modal overlay so that clicking another
-  // event while this dialog is open reaches its EventDialogTrigger directly.
   pointerEvents: 'none',
   [`& .${backdropClasses.root}`]: {
     backgroundColor: 'transparent',
@@ -41,7 +40,6 @@ const EventDialogRoot = styled(Dialog, {
   },
   [`& .${dialogClasses.paper}`]: {
     margin: 0,
-    // Re-enable pointer events on the dialog paper so its content remains interactive.
     pointerEvents: 'auto',
   },
 });
@@ -114,6 +112,24 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
   return <EventDialogPaper {...other} ref={nodeRef} className={className} />;
 } as any as DialogProps['PaperComponent'];
 
+function isFromEventDialogTrigger(event: MouseEvent | TouchEvent): boolean {
+  const composedPath = event.composedPath?.();
+  if (composedPath) {
+    for (const node of composedPath) {
+      if (!(node instanceof Element)) {
+        continue;
+      }
+      if (node.matches('[data-event-dialog-trigger]')) {
+        return true;
+      }
+    }
+  }
+  if (event.target instanceof Element) {
+    return Boolean(event.target.closest('[data-event-dialog-trigger]'));
+  }
+  return false;
+}
+
 const EventDialog = createModal<SchedulerRenderableEventOccurrence>({
   contextName: 'EventDialogContext',
 });
@@ -128,6 +144,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventDialog' });
   const { style, anchorRef, occurrence, onClose, open, ...other } = props;
+  const dialogInstanceKey = occurrence.key ?? occurrence.id;
   // Context hooks
   const store = useSchedulerStoreContext();
   const { schedulerId, classes } = useEventDialogStyledContext();
@@ -136,61 +153,51 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
   const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
 
-  // When the modal overlay has pointer-events:none, the backdrop no longer intercepts
-  // outside clicks. This effect replaces backdrop-based dismissal: it closes the dialog
-  // when the user clicks outside the dialog paper and outside any event trigger.
-  // Event trigger clicks are left alone so the trigger can switch to that event.
-  React.useEffect(() => {
-    if (!open || isScopeDialogOpen) {
-      return undefined;
-    }
-
-    const handleDocumentClick = (clickEvent: MouseEvent) => {
-      const target = clickEvent.target as Element;
-      // Clicking inside the dialog paper — do nothing.
-      if (target.closest('[role="dialog"]')) {
-        return;
-      }
+  const handleClickAway = React.useCallback(
+    (event: MouseEvent | TouchEvent) => {
       // Clicking another event trigger — let EventDialogTrigger handle switching.
-      if (target.closest('[data-event-dialog-trigger]')) {
+      if (isFromEventDialogTrigger(event)) {
         return;
       }
       onClose();
-    };
-
-    document.addEventListener('click', handleDocumentClick);
-    return () => {
-      document.removeEventListener('click', handleDocumentClick);
-    };
-  }, [open, onClose, isScopeDialogOpen]);
+    },
+    [onClose],
+  );
 
   // Ref hooks
   const dragHandlerRef = React.useRef<HTMLElement>(null);
 
   return (
-    <EventDialogRoot
-      ref={forwardedRef}
-      open={open}
-      onClose={onClose}
-      PaperComponent={PaperComponent}
-      aria-labelledby={`${schedulerId}-event-dialog-title`}
-      aria-modal="false"
-      className={classes.eventDialog}
-      slotProps={{
-        paper: { className: classes.eventDialogPaper, anchorRef, dragHandlerRef } as PaperProps,
-      }}
-      {...other}
+    <ClickAwayListener
+      onClickAway={handleClickAway}
+      mouseEvent={open && !isScopeDialogOpen ? 'onClick' : false}
+      touchEvent={false}
     >
-      {isEventReadOnly ? (
-        <ReadonlyContent
-          occurrence={occurrence}
-          onClose={onClose}
-          dragHandlerRef={dragHandlerRef}
-        />
-      ) : (
-        <FormContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
-      )}
-    </EventDialogRoot>
+      <EventDialogRoot
+        key={dialogInstanceKey}
+        ref={forwardedRef}
+        open={open}
+        onClose={onClose}
+        PaperComponent={PaperComponent}
+        aria-labelledby={`${schedulerId}-event-dialog-title`}
+        aria-modal="false"
+        className={classes.eventDialog}
+        slotProps={{
+          paper: { className: classes.eventDialogPaper, anchorRef, dragHandlerRef } as PaperProps,
+        }}
+        {...other}
+      >
+        {isEventReadOnly ? (
+          <ReadonlyContent
+            occurrence={occurrence}
+            onClose={onClose}
+            dragHandlerRef={dragHandlerRef}
+          />
+        ) : (
+          <FormContent occurrence={occurrence} onClose={onClose} dragHandlerRef={dragHandlerRef} />
+        )}
+      </EventDialogRoot>
+    </ClickAwayListener>
   );
 });
 
@@ -224,6 +231,8 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
       onClose={() => {
         store.setEditedEventId(null);
         store.setOpenEventId(null);
+        store.setOccurrencePlaceholder(null);
+        store.setOpenEventId(null);
         // Only clear the occurrence placeholder if it has not been replaced by a new
         // creation placeholder. A new placeholder means the user clicked an empty cell
         // while this dialog was open — the cell's React handler fires before the
@@ -243,9 +252,6 @@ export function EventDialogTrigger(props: EventDialogTriggerProps) {
   const { occurrence, children, ...other } = props;
   const ref = React.useRef<HTMLElement | null>(null);
 
-  // Add a data attribute to the event element so the outside-click dismissal
-  // handler can distinguish event clicks (which switch the dialog) from empty-
-  // slot clicks (which should only close the dialog).
   const annotatedChild = React.isValidElement(children)
     ? React.cloneElement(children as React.ReactElement<any>, {
         'data-event-dialog-trigger': 'true',

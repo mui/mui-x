@@ -1,7 +1,10 @@
 {
   "props": {
     "apiRef": {
-      "type": { "name": "shape", "description": "{ current?: { setVisibleDate?: func } }" }
+      "type": {
+        "name": "shape",
+        "description": "{ current?: { setOpenEventId?: func, setVisibleDate?: func } }"
+      }
     },
     "areEventsDraggable": { "type": { "name": "bool" }, "default": "true" },
     "areEventsResizable": {
