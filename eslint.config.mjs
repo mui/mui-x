@@ -250,6 +250,12 @@ export default defineConfig(
       'compat/compat': 'off',
     },
   },
+  {
+    files: [`packages/x-charts{,-*}/**/*Highlight*.selectors${EXTENSION_TS}`],
+    rules: {
+      'compat/compat': 'off',
+    },
+  },
 
   {
     files: [

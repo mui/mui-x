@@ -148,17 +148,7 @@
     "zod": "^4.3.6"
   },
   "resolutions": {
-    "ast-types": "^0.14.2",
-    "@types/react": "19.2.7",
-    "eslint-plugin-react-hooks": "7.0.1",
-    "eslint-plugin-compat": "6.0.2"
-  },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.2.7",
-      "eslint-plugin-react-hooks": "7.0.1",
-      "eslint-plugin-compat": "6.0.2"
-    }
+    "ast-types": "^0.14.2"
   },
   "packageManager": "pnpm@10.27.0",
   "engines": {
