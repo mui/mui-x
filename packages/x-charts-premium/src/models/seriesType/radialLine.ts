@@ -27,6 +27,10 @@ export interface RadialLineSeriesType
    * @default 'linear'
    */
   curve?: CurveType;
+  /**
+   * If `true`, the line will be closed by connecting the last point to the first one.
+   */
+  closePath?: boolean;
 }
 /**
  * An object that allows to identify a single line.
