@@ -12,7 +12,7 @@ interface TestEvent {
   title: string;
 }
 
-const noopUpdateEvents = async () => ({ success: true });
+const noopPersistEvents = async () => ({ success: true });
 
 const noopUIEvent: any = {};
 
@@ -69,7 +69,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
   it('should fire the initial fetch when a view becomes available', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -86,7 +86,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
   it('should NOT fetch before a view registers (visibleDays empty)', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
@@ -102,7 +102,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
   it('should fetch a new range when visibleDate moves outside of the cached range', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
     store.setViewConfig(buildViewConfig());
@@ -121,7 +121,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
   it('should coalesce multiple range-changing updates within the same tick into a single fetch', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
     store.setViewConfig(buildViewConfig());
@@ -182,7 +182,7 @@ describe('Lazy loading - EventCalendarPremiumStore', () => {
             }
           }),
       ),
-      updateEvents: noopUpdateEvents,
+      persistEvents: noopPersistEvents,
     };
     const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
     store.setViewConfig(buildViewConfig());
