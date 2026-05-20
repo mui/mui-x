@@ -99,7 +99,15 @@ interface BatchScatterPathsProps {
 
 function BatchScatterPaths(props: BatchScatterPathsProps) {
   const { series, xScale, yScale, color, colorGetter, markerSize, sizeGetter } = props;
-  const paths = useCreatePaths(series.data, markerSize, xScale, yScale, color, colorGetter, sizeGetter);
+  const paths = useCreatePaths(
+    series.data,
+    markerSize,
+    xScale,
+    yScale,
+    color,
+    colorGetter,
+    sizeGetter,
+  );
 
   const children: React.ReactNode[] = [];
 

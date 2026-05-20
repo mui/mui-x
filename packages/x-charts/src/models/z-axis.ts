@@ -1,5 +1,9 @@
 import type { ScaleOrdinal, ScaleSequential, ScaleThreshold } from '@mui/x-charts-vendor/d3-scale';
-import type { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig, } from './colorMapping';
+import type {
+  ContinuousColorConfig,
+  OrdinalColorConfig,
+  PiecewiseColorConfig,
+} from './colorMapping';
 import type { OrdinalSizeConfig, ContinuousSizeConfig, PiecewiseSizeConfig } from './sizeMapping';
 import { type DatasetElementType } from './seriesType/config';
 
@@ -38,13 +42,13 @@ export interface ZAxisConfig<V = any> {
 
 export interface ZAxisDefaultized extends ZAxisConfig {
   colorScale?:
-  | ScaleOrdinal<string | number | Date, string, string | null>
-  | ScaleOrdinal<number, string, string | null>
-  | ScaleSequential<string, string | null>
-  | ScaleThreshold<number | Date, string | null>;
+    | ScaleOrdinal<string | number | Date, string, string | null>
+    | ScaleOrdinal<number, string, string | null>
+    | ScaleSequential<string, string | null>
+    | ScaleThreshold<number | Date, string | null>;
   sizeScale?:
-  | ScaleOrdinal<string | number | Date, number, number | null>
-  | ScaleOrdinal<number, number, number | null>
-  | ScaleSequential<number, number | null>
-  | ScaleThreshold<number | Date, number | null>;
+    | ScaleOrdinal<string | number | Date, number, number | null>
+    | ScaleOrdinal<number, number, number | null>
+    | ScaleSequential<number, number | null>
+    | ScaleThreshold<number | Date, number | null>;
 }
