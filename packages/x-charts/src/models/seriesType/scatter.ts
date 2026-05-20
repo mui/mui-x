@@ -10,6 +10,14 @@ import { type DatasetElementType } from './config';
 export type ScatterValueType = {
   x: number;
   y: number;
+  /**
+   * The value used to compute the color of the scatter point through a color axis.
+   */
+  colorValue?: any;
+  /**
+   * The value used to compute the color of the scatter point through a color axis.
+   * @deprecated Use `colorValue` instead.
+   */
   z?: any;
   /**
    * A unique identifier for the scatter point
@@ -30,7 +38,13 @@ export interface ScatterSeriesType
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
   /**
+   * The id of the color axis used to compute the color of the scatter points.
+   * It points to the id of an axis defined with the `zAxis` prop.
+   */
+  colorAxisId?: string;
+  /**
    * The id of the z-axis used to render the series.
+   * @deprecated Use `colorAxisId` instead.
    */
   zAxisId?: string;
 
@@ -45,8 +59,8 @@ export interface ScatterSeriesType
   /**
    * The keys used to retrieve data from the dataset.
    *
-   * When this prop is provided, all of `x`, `y`, and `id` must be provided.
-   * While `z` is optional.
+   * When this prop is provided, both `x` and `y` must be provided.
+   * While `color` and `id` are optional.
    */
   datasetKeys?: {
     /**
@@ -58,7 +72,12 @@ export interface ScatterSeriesType
      */
     y: string;
     /**
+     * The key used to retrieve data from the dataset for the color value.
+     */
+    color?: string;
+    /**
      * The key used to retrieve data from the dataset for the Z axis.
+     * @deprecated Use `color` instead.
      */
     z?: string;
     /**

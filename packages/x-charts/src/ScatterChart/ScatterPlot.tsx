@@ -82,7 +82,7 @@ function ScatterPlot(props: ScatterPlotProps) {
   return (
     <ScatterPlotRoot className={clsx(classes.root, className)}>
       {seriesOrder.map((seriesId) => {
-        const { id, xAxisId, yAxisId, zAxisId, color, hidden } = series[seriesId];
+        const { id, xAxisId, yAxisId, colorAxisId, zAxisId, color, hidden } = series[seriesId];
 
         if (hidden) {
           return null;
@@ -92,7 +92,7 @@ function ScatterPlot(props: ScatterPlotProps) {
           series[seriesId],
           xAxis[xAxisId ?? defaultXAxisId],
           yAxis[yAxisId ?? defaultYAxisId],
-          zAxis[zAxisId ?? defaultZAxisId],
+          zAxis[colorAxisId ?? zAxisId ?? defaultZAxisId],
         );
         const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
         const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
