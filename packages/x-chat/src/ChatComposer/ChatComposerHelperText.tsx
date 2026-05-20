@@ -48,8 +48,8 @@ const ChatComposerHelperText = React.forwardRef<HTMLParagraphElement, ChatCompos
         ref={ref}
         {...other}
         slots={{
-          helperText: slots?.helperText ?? ChatComposerHelperTextStyled,
           ...slots,
+          helperText: slots?.helperText ?? ChatComposerHelperTextStyled,
         }}
         slotProps={{
           ...slotProps,

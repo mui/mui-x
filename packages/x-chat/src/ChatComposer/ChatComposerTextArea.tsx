@@ -63,8 +63,8 @@ const ChatComposerTextArea = React.forwardRef<HTMLTextAreaElement, ChatComposerT
         ref={ref}
         {...other}
         slots={{
-          input: slots?.input ?? ChatComposerTextAreaStyled,
           ...slots,
+          input: slots?.input ?? ChatComposerTextAreaStyled,
         }}
         slotProps={{
           ...slotProps,

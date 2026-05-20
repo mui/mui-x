@@ -164,8 +164,8 @@ const ChatComposerAttachmentList = React.forwardRef<
       ref={ref}
       {...other}
       slots={{
-        attachmentList: slots?.attachmentList ?? ChatComposerAttachmentListStyled,
         ...slots,
+        attachmentList: slots?.attachmentList ?? ChatComposerAttachmentListStyled,
       }}
       slotProps={{
         ...slotProps,

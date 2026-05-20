@@ -44,8 +44,8 @@ const ChatConversationTitle = React.forwardRef<HTMLDivElement, ChatConversationT
         ref={ref}
         {...other}
         slots={{
-          title: slots?.title ?? ChatConversationTitleStyled,
           ...slots,
+          title: slots?.title ?? ChatConversationTitleStyled,
         }}
         slotProps={{
           ...slotProps,

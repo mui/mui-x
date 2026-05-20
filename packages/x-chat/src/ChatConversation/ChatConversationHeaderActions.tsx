@@ -45,8 +45,8 @@ const ChatConversationHeaderActions = React.forwardRef<
       ref={ref}
       {...other}
       slots={{
-        actions: slots?.actions ?? ChatConversationHeaderActionsStyled,
         ...slots,
+        actions: slots?.actions ?? ChatConversationHeaderActionsStyled,
       }}
       slotProps={{
         ...slotProps,

@@ -71,8 +71,8 @@ const ChatComposerSendButton = React.forwardRef<HTMLButtonElement, ChatComposerS
         ref={ref}
         {...other}
         slots={{
-          sendButton: slots?.sendButton ?? ChatComposerSendButtonStyled,
           ...slots,
+          sendButton: slots?.sendButton ?? ChatComposerSendButtonStyled,
         }}
         slotProps={{
           ...slotProps,

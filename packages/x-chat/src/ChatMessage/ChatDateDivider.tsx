@@ -59,10 +59,10 @@ const ChatDateDivider = React.forwardRef<HTMLDivElement, ChatDateDividerProps>(
         ref={ref}
         {...other}
         slots={{
+          ...slots,
           divider: slots?.divider ?? ChatDateDividerStyled,
           line: slots?.line ?? ChatDateDividerLineStyled,
           label: slots?.label ?? ChatDateDividerLabelStyled,
-          ...slots,
         }}
         slotProps={{
           ...slotProps,

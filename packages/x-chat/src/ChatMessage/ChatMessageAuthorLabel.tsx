@@ -37,8 +37,8 @@ const ChatMessageAuthorLabel = React.forwardRef<HTMLSpanElement, ChatMessageAuth
         ref={ref}
         {...other}
         slots={{
-          authorLabel: slots?.authorLabel ?? ChatMessageAuthorLabelStyled,
           ...slots,
+          authorLabel: slots?.authorLabel ?? ChatMessageAuthorLabelStyled,
         }}
         slotProps={{
           ...slotProps,

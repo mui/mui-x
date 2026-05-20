@@ -43,8 +43,8 @@ const ChatConversationHeader = React.forwardRef<HTMLElement, ChatConversationHea
       <ConversationHeader
         {...other}
         slots={{
-          header: slots?.header ?? ChatConversationHeaderStyled,
           ...slots,
+          header: slots?.header ?? ChatConversationHeaderStyled,
         }}
         slotProps={{
           ...slotProps,

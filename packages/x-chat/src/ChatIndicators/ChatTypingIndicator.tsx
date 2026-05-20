@@ -43,8 +43,8 @@ const ChatTypingIndicator = React.forwardRef<HTMLDivElement, ChatTypingIndicator
         ref={ref}
         {...other}
         slots={{
-          root: slots?.root ?? ChatTypingIndicatorStyled,
           ...slots,
+          root: slots?.root ?? ChatTypingIndicatorStyled,
         }}
         slotProps={{
           ...slotProps,

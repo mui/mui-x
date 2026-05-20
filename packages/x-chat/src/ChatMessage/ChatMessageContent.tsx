@@ -1138,9 +1138,9 @@ const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentPr
         ref={ref}
         {...other}
         slots={{
+          ...slots,
           content: slots?.content ?? ChatMessageContentStyled,
           bubble: slots?.bubble ?? ChatMessageBubbleStyled,
-          ...slots,
         }}
         slotProps={{
           ...slotProps,

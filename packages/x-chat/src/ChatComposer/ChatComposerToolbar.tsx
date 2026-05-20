@@ -37,8 +37,8 @@ const ChatComposerToolbar = React.forwardRef<HTMLDivElement, ChatComposerToolbar
         ref={ref}
         {...other}
         slots={{
-          toolbar: slots?.toolbar ?? ChatComposerToolbarStyled,
           ...slots,
+          toolbar: slots?.toolbar ?? ChatComposerToolbarStyled,
         }}
         slotProps={{
           ...slotProps,

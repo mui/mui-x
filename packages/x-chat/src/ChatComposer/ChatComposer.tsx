@@ -259,8 +259,8 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
         {...other}
         attachmentConfig={attachmentConfig}
         slots={{
-          root: slots?.root ?? ChatComposerStyled,
           ...slots,
+          root: slots?.root ?? ChatComposerStyled,
         }}
         slotProps={{
           ...slotProps,

@@ -56,8 +56,8 @@ const ChatMessageAvatar = React.forwardRef<HTMLDivElement, ChatMessageAvatarProp
         ref={ref}
         {...other}
         slots={{
-          avatar: slots?.avatar ?? ChatMessageAvatarStyled,
           ...slots,
+          avatar: slots?.avatar ?? ChatMessageAvatarStyled,
         }}
         slotProps={{
           ...slotProps,

@@ -45,8 +45,8 @@ const ChatConversationSubtitle = React.forwardRef<
       ref={ref}
       {...other}
       slots={{
-        subtitle: slots?.subtitle ?? ChatConversationSubtitleStyled,
         ...slots,
+        subtitle: slots?.subtitle ?? ChatConversationSubtitleStyled,
       }}
       slotProps={{
         ...slotProps,

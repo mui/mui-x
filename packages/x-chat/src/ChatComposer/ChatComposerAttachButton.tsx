@@ -69,8 +69,8 @@ const ChatComposerAttachButton = React.forwardRef<HTMLButtonElement, ChatCompose
         ref={ref}
         {...other}
         slots={{
-          attachButton: slots?.attachButton ?? ChatComposerAttachButtonStyled,
           ...slots,
+          attachButton: slots?.attachButton ?? ChatComposerAttachButtonStyled,
         }}
         slotProps={{
           ...slotProps,

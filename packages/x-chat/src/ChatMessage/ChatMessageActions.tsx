@@ -60,8 +60,8 @@ const ChatMessageActions = React.forwardRef<HTMLDivElement, ChatMessageActionsPr
         ref={ref}
         {...other}
         slots={{
-          actions: slots?.actions ?? ChatMessageActionsStyled,
           ...slots,
+          actions: slots?.actions ?? ChatMessageActionsStyled,
         }}
         slotProps={{
           ...slotProps,

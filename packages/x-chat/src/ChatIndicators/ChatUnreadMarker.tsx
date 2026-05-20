@@ -52,9 +52,9 @@ const ChatUnreadMarker = React.forwardRef<HTMLDivElement, ChatUnreadMarkerProps>
         ref={ref}
         {...other}
         slots={{
+          ...slots,
           root: slots?.root ?? ChatUnreadMarkerStyled,
           label: slots?.label ?? ChatUnreadMarkerLabelStyled,
-          ...slots,
         }}
         slotProps={{
           ...slotProps,

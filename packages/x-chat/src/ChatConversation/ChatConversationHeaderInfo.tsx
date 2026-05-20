@@ -42,8 +42,8 @@ const ChatConversationHeaderInfo = React.forwardRef<
       ref={ref}
       {...other}
       slots={{
-        headerInfo: slots?.headerInfo ?? ChatConversationHeaderInfoStyled,
         ...slots,
+        headerInfo: slots?.headerInfo ?? ChatConversationHeaderInfoStyled,
       }}
       slotProps={{
         ...slotProps,

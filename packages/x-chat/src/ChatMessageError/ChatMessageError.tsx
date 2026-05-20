@@ -140,8 +140,8 @@ const ChatMessageError = React.forwardRef<HTMLDivElement, ChatMessageErrorProps>
         ref={ref}
         {...other}
         slots={{
-          root: slots?.root ?? ChatMessageErrorSlot,
           ...slots,
+          root: slots?.root ?? ChatMessageErrorSlot,
         }}
         slotProps={{
           ...slotProps,
