@@ -22,6 +22,10 @@ export class EventCalendarPremiumStore<
     this.lazyLoading = new EventCalendarPremiumLazyLoadingPlugin<TEvent>(this);
   }
 
+  protected override disposePlugins(): void {
+    this.lazyLoading?.dispose();
+  }
+
   public buildPublicAPI() {
     return {
       ...super.buildPublicAPI(),

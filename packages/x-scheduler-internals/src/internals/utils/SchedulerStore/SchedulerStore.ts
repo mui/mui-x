@@ -243,12 +243,46 @@ export class SchedulerStore<
     this.parameters = parameters;
   };
 
+  private isDisposed = false;
+
+  private isDisposeCancelled = false;
+
+  private isDisposeScheduled = false;
+
   /**
-   * Returns a cleanup function that need to be called when the store is destroyed.
+   * Returns a cleanup function to call when the store's owner unmounts. The actual
+   * dispose is deferred to the next microtask so React StrictMode's synchronous
+   * mount-unmount-mount cycle doesn't tear the store down between the two mounts —
+   * the second mount calls `disposeEffect` again, which cancels the pending dispose.
    */
   public disposeEffect = () => {
-    return this.timeoutManager.clearAll;
+    this.isDisposeCancelled = true;
+    return () => {
+      if (this.isDisposed) {
+        return;
+      }
+      this.isDisposeCancelled = false;
+      if (this.isDisposeScheduled) {
+        return;
+      }
+      this.isDisposeScheduled = true;
+      queueMicrotask(() => {
+        this.isDisposeScheduled = false;
+        if (this.isDisposed || this.isDisposeCancelled) {
+          return;
+        }
+        this.isDisposed = true;
+        this.disposePlugins();
+        this.timeoutManager.clearAll();
+        this.eventManager.removeAllListeners();
+      });
+    };
   };
+
+  /**
+   * Hook for subclasses to dispose owned plugins.
+   */
+  protected disposePlugins(): void {}
 
   /**
    * Removes the error with the given key from `state.errors`.
@@ -309,13 +343,14 @@ export class SchedulerStore<
   };
 
   /**
-   * Subscribe to an event emitted by the store.
+   * Subscribe to an event emitted by the store. Returns an unsubscribe function.
    */
   public subscribeEvent = <E extends SchedulerEvents>(
     eventName: E,
     handler: SchedulerEventListener<TEvent, E>,
-  ) => {
+  ): (() => void) => {
     this.eventManager.on(eventName, handler);
+    return () => this.eventManager.removeListener(eventName, handler);
   };
 
   protected setVisibleDate = ({

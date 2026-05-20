@@ -13,10 +13,12 @@ export class EventCalendarPremiumLazyLoadingPlugin<
   EventCalendarPremiumState,
   EventCalendarPremiumParameters<TEvent, any>
 > {
+  private unsubscribeStateEffect: (() => void) | null = null;
+
   constructor(store: EventCalendarPremiumStore<TEvent, any>) {
     super(store);
 
-    store.registerStoreEffect(
+    this.unsubscribeStateEffect = store.registerStoreEffect(
       (state) => {
         const visibleDays =
           state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
@@ -52,5 +54,11 @@ export class EventCalendarPremiumLazyLoadingPlugin<
         }, previous.viewConfig == null);
       },
     );
+  }
+
+  public override dispose(): void {
+    this.unsubscribeStateEffect?.();
+    this.unsubscribeStateEffect = null;
+    super.dispose();
   }
 }

@@ -124,6 +124,10 @@ export class EventTimelinePremiumStore<
     this.lazyLoading = new EventTimelinePremiumLazyLoadingPlugin(this);
   }
 
+  protected override disposePlugins(): void {
+    this.lazyLoading?.dispose();
+  }
+
   private assertPresetValidity(preset: EventTimelinePremiumPreset) {
     const presets = this.state.presets;
     if (!presets.includes(preset)) {

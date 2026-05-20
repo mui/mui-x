@@ -19,10 +19,12 @@ export class EventTimelinePremiumLazyLoadingPlugin<
   EventTimelinePremiumState,
   EventTimelinePremiumParameters<TEvent, any>
 > {
+  private unsubscribeStateEffect: (() => void) | null = null;
+
   constructor(store: EventTimelinePremiumStore<TEvent, any>) {
     super(store);
 
-    store.registerStoreEffect(
+    this.unsubscribeStateEffect = store.registerStoreEffect(
       (state) => {
         if (!state.hasInitialized) {
           return null;
@@ -42,5 +44,11 @@ export class EventTimelinePremiumLazyLoadingPlugin<
         }, previousKey === null);
       },
     );
+  }
+
+  public override dispose(): void {
+    this.unsubscribeStateEffect?.();
+    this.unsubscribeStateEffect = null;
+    super.dispose();
   }
 }

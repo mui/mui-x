@@ -142,6 +142,9 @@ export class SchedulerDataManager {
    * takes over — callers shouldn't treat the resolution as a fetch-completion signal.
    */
   public queue = async (ranges: DateRange[]) => {
+    if (this.isDisposed) {
+      return undefined;
+    }
     if (this.pendingDebounceResolve) {
       this.pendingDebounceResolve();
       this.pendingDebounceResolve = null;
@@ -175,6 +178,9 @@ export class SchedulerDataManager {
    * Useful for initial load or forced refresh.
    */
   public queueImmediate = async (ranges: DateRange[]) => {
+    if (this.isDisposed) {
+      return;
+    }
     // Clear any pending debounce
     this.timeoutManager.clearTimeout('debounce');
     if (this.pendingDebounceResolve) {
@@ -200,7 +206,23 @@ export class SchedulerDataManager {
     this.queuedRequests.clear();
   };
 
+  private isDisposed = false;
+
+  public dispose = () => {
+    if (this.isDisposed) {
+      return;
+    }
+    this.isDisposed = true;
+    this.cancelQueuedRequests();
+    this.timeoutManager.clearAll();
+    this.pendingRequests.clear();
+    this.settledRequests.clear();
+  };
+
   public setRequestSettled = async (range: DateRange) => {
+    if (this.isDisposed) {
+      return;
+    }
     const key = getDateRangeKey(this.adapter, range);
     this.pendingRequests.delete(key);
     this.settledRequests.add(key);

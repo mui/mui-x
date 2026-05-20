@@ -34,6 +34,10 @@ export class SchedulerLazyLoadingPlugin<
    */
   private latestRequestedRangeKey: string | null = null;
 
+  private unsubscribeEventsUpdated: (() => void) | null = null;
+
+  protected isDisposed = false;
+
   /**
    * Coalesces multiple calls within the same tick into one microtask. The latest
    * `computeRange` wins; `isInstantLoad=true` is sticky across coalesced calls.
@@ -54,6 +58,9 @@ export class SchedulerLazyLoadingPlugin<
 
     queueMicrotask(async () => {
       try {
+        if (this.isDisposed) {
+          return;
+        }
         this.isFetchScheduled = false;
         const instantLoad = this.pendingIsInstantLoad;
         const compute = this.pendingComputeRange;
@@ -72,10 +79,6 @@ export class SchedulerLazyLoadingPlugin<
     });
   };
 
-  // TODO #22418: add a dispose lifecycle. The `dataManager` keeps timers (debounce), the
-  // `eventsUpdated` subscription below is never unsubscribed, and consumer plugins
-  // attach `registerStoreEffect` callbacks. After unmount, in-flight fetches
-  // and pending debounce callbacks can still write to a torn-down store.
   constructor(store: SchedulerStore<TEvent, any, State, Parameters>) {
     this.store = store;
 
@@ -89,8 +92,25 @@ export class SchedulerLazyLoadingPlugin<
         this.loadEventsFromDataSource,
       );
 
-      this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated);
+      this.unsubscribeEventsUpdated = this.store.subscribeEvent(
+        'eventsUpdated',
+        this.handleEventsUpdated,
+      );
     }
+  }
+
+  public dispose(): void {
+    if (this.isDisposed) {
+      return;
+    }
+    this.isDisposed = true;
+    this.latestRequestedRangeKey = null;
+    this.pendingComputeRange = null;
+    this.unsubscribeEventsUpdated?.();
+    this.unsubscribeEventsUpdated = null;
+    this.dataManager?.dispose();
+    this.dataManager = null;
+    this.cache = null;
   }
 
   public queueDataFetchForRange = async (
@@ -227,7 +247,14 @@ export class SchedulerLazyLoadingPlugin<
         created,
       });
     } catch (error) {
+      if (this.isDisposed) {
+        return;
+      }
       this.store.pushError(error);
+      return;
+    }
+
+    if (this.isDisposed) {
       return;
     }
 
