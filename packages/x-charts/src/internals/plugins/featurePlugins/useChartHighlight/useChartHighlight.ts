@@ -32,6 +32,10 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
   });
 
   useEnhancedEffect(() => {
+    if (params.highlightedItem === undefined) {
+      return;
+    }
+
     if (store.state.highlight.item !== params.highlightedItem) {
       if (params.highlightedItem === null) {
         store.set('highlight', {
