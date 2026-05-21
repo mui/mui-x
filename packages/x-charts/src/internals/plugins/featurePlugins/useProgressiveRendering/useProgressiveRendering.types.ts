@@ -1,4 +1,5 @@
 import { type SeriesId } from '../../../../models/seriesType/common';
+import type { RendererType } from '../../../../ScatterChart';
 import { type ChartPluginSignature } from '../../models';
 
 export interface UseProgressiveRenderingState {
@@ -27,7 +28,11 @@ export interface UseProgressiveRenderingInstance {
    * call. Re-calling with the same `plotId` replaces the previous set; a no-op
    * when the set is unchanged.
    */
-  registerProgressivePlan(plotId: string, seriesIds: readonly SeriesId[]): (() => void) | undefined;
+  registerProgressivePlan(
+    plotId: string,
+    seriesIds: readonly SeriesId[],
+    renderer: RendererType | 'svg-progressive' | undefined,
+  ): (() => void) | undefined;
 }
 
 export type UseProgressiveRenderingSignature = ChartPluginSignature<{

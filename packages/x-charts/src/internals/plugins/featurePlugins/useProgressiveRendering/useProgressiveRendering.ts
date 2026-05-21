@@ -8,7 +8,9 @@ import {
   sameSeriesIds,
   selectorProgressivePlans,
   selectorProgressiveTotalRounds,
+  selectorShouldUseProgressiveRenderer,
 } from './useProgressiveRendering.selectors';
+import type { RendererType } from '../../../../ScatterChart';
 
 const EMPTY_PLANS: ReadonlyMap<string, readonly SeriesId[]> = new Map();
 
@@ -43,10 +45,15 @@ export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignatu
   store,
 }) => {
   const registerProgressivePlan = useEventCallback(
-    (plotId: string, seriesIds: readonly SeriesId[]) => {
-      if (seriesIds.length === 0) {
+    (
+      plotId: string,
+      seriesIds: readonly SeriesId[],
+      renderer: RendererType | 'svg-progressive' | undefined,
+    ) => {
+      if (!selectorShouldUseProgressiveRenderer(store.state, seriesIds, renderer)) {
         return undefined;
       }
+
       const current = store.state.progressiveRendering.plans.get(plotId);
       if (!sameSeriesIds(current, seriesIds)) {
         const nextPlans = new Map(store.state.progressiveRendering.plans);

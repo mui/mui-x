@@ -5,6 +5,14 @@ import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import { type UseProgressiveRenderingSignature } from './useProgressiveRendering.types';
+import type { RendererType } from '../../../../ScatterChart';
+
+/**
+ * Total point count above which the auto (`renderer` unset) mode switches to
+ * the progressive renderer. Below it the synchronous renderer is used, since
+ * the progressive paint's overhead is not worth it for small datasets.
+ */
+const PROGRESSIVE_POINT_THRESHOLD = 20000;
 
 /**
  * Target number of reveal commits. Each commit repaints every already-painted
@@ -133,6 +141,34 @@ export const selectorProgressiveSeriesRevealedBatches = createSelector(
   selectorProgressiveRevealedRounds,
   function selectorProgressiveSeriesRevealedBatches(agg, revealed, seriesId: SeriesId) {
     return Math.min(revealed, agg.nBatchesBySeries.get(seriesId) ?? 0);
+  },
+);
+
+/**
+ * Whether `seriesIds` should be rendered progressively given the requested
+ * `renderer`:
+ * - `svg-single` / `svg-batch`: never (those are non-progressive renderers).
+ * - `svg-progressive`: always.
+ * - unset (auto): only above {@link PROGRESSIVE_POINT_THRESHOLD} total points.
+ */
+export const selectorShouldUseProgressiveRenderer = createSelector(
+  selectorChartSeriesProcessed,
+  (
+    processedSeries,
+    seriesIds: readonly SeriesId[],
+    renderer: RendererType | 'svg-progressive' | undefined,
+  ) => {
+    if (renderer === 'svg-single' || renderer === 'svg-batch') {
+      return false;
+    }
+    if (renderer === 'svg-progressive') {
+      return true;
+    }
+    let totalPoints = 0;
+    for (const seriesId of seriesIds) {
+      totalPoints += getSeriesPointCount(processedSeries, seriesId);
+    }
+    return totalPoints > PROGRESSIVE_POINT_THRESHOLD;
   },
 );
 

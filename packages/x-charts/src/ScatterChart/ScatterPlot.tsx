@@ -12,7 +12,11 @@ import { BatchScatter } from './BatchScatter';
 import { ScatterAsync } from './async/ScatterAsync';
 import { useUtilityClasses } from './scatterClasses';
 import { useChartsContext } from '../context/ChartsProvider';
-import { type UseProgressiveRenderingSignature } from '../internals/plugins/featurePlugins/useProgressiveRendering';
+import { useStore } from '../internals/store/useStore';
+import {
+  selectorShouldUseProgressiveRenderer,
+  type UseProgressiveRenderingSignature,
+} from '../internals/plugins/featurePlugins/useProgressiveRendering';
 import { type SeriesId } from '../models/seriesType/common';
 
 const EMPTY_SERIES_IDS: readonly SeriesId[] = [];
@@ -76,14 +80,14 @@ function ScatterPlot(props: ScatterPlotProps) {
   const classes = useUtilityClasses({ classes: inClasses });
 
   const { instance } = useChartsContext<[UseProgressiveRenderingSignature]>();
+  const store = useStore<[UseProgressiveRenderingSignature]>();
   const plotId = React.useId();
-  const isProgressive = React.useMemo(() => {
-    const result = instance.registerProgressivePlan(
-      plotId,
-      seriesData?.seriesOrder ?? EMPTY_SERIES_IDS,
-    );
-    return renderer === 'svg-progressive' || (renderer === undefined && result !== undefined);
-  }, [instance, plotId, seriesData?.seriesOrder]);
+  const seriesIds = seriesData?.seriesOrder ?? EMPTY_SERIES_IDS;
+  const isProgressive = store.use(selectorShouldUseProgressiveRenderer, seriesIds, renderer);
+  React.useEffect(
+    () => instance.registerProgressivePlan(plotId, seriesIds, renderer),
+    [instance, plotId, seriesIds, renderer],
+  );
 
   if (seriesData === undefined) {
     return null;
