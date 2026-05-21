@@ -1,6 +1,6 @@
 # Changelog
 
-## 9.2.1
+## 9.3.0
 
 _May 21, 2026_
 
@@ -20,37 +20,37 @@ The following team members contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@9.2.1`
+#### `@mui/x-data-grid@9.3.0`
 
 - [DataGrid] Fix scrollbar disappearing after multiple resizes (#22512) @LukasTy
 - [DataGrid] Revert "Add support for pinned columns in `GridVirtualScroller`" (#22467) @oliviertassinari
 - [l10n] Improve Swedish (svSE) locale (#21851) @viktormelin
 
-#### `@mui/x-data-grid-pro@9.2.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@9.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@9.2.1`.
+Same changes as in `@mui/x-data-grid@9.3.0`.
 
-#### `@mui/x-data-grid-premium@9.2.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@9.3.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@9.2.1`.
+Same changes as in `@mui/x-data-grid-pro@9.3.0`.
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@9.2.1`
+#### `@mui/x-date-pickers@9.3.0`
 
 - [pickers] Fix disabled state styling for `PickersTextField` standard and filled variants (#22189) @LukasTy
 - [pickers] Fix previous month disabled state calculation (#22524) @mj12albert
 - [pickers] Merge `slotProps.sectionContent` in `PickersInputBase` (#22324) @rin
 
-#### `@mui/x-date-pickers-pro@9.2.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@9.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@9.2.1`, plus:
+Same changes as in `@mui/x-date-pickers@9.3.0`, plus:
 
 - [DateRangeCalendar] Use Pointer Events for drag editing (#22279) @LukasTy
 
 ### Charts
 
-#### `@mui/x-charts@9.2.1`
+#### `@mui/x-charts@9.3.0`
 
 - [charts] Add `data-series` to elements of radar chart (#22523) @alexfauquette
 - [charts] Add environment check for warning messages in axis and radar hooks (#22506) @sai6855
@@ -59,25 +59,21 @@ Same changes as in `@mui/x-date-pickers@9.2.1`, plus:
 - [charts] Fix use of deprecated API in docs (#22469) @oliviertassinari
 - [charts] Improve performance of `evaluateCurveY` function (#22407) @sai6855
 
-#### `@mui/x-charts-pro@9.2.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@9.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@9.2.1`.
+Same changes as in `@mui/x-charts@9.3.0`.
 
-#### `@mui/x-charts-premium@9.2.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-charts-premium@9.3.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@9.2.1`, plus:
+Same changes as in `@mui/x-charts-pro@9.3.0`, plus:
 
 - [charts-premium] Add `closePath` option to the radial line series (#22517) @alexfauquette
 
 ### Tree View
 
-#### `@mui/x-tree-view@9.1.0`
+#### `@mui/x-tree-view-pro@9.3.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Internal changes.
-
-#### `@mui/x-tree-view-pro@9.1.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
-
-Same changes as in `@mui/x-tree-view@9.1.0`.
 
 ### Scheduler
 
@@ -92,6 +88,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-alpha.7`, plus:
 - [scheduler] Apply lazy loading to `EventTimelinePremium` (#22308) @rita-codes
 - [scheduler] Deduplicate staged ranges within the debounce window (#22476) @Anexus5919
 - [scheduler] Pass full event objects to `dataSource.updateEvents` (#22462) @rita-codes
+
 ### Docs
 
 - [docs] Automatically update supported versions (#21850) @arminmeh
