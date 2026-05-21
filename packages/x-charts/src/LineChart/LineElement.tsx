@@ -32,11 +32,7 @@ export interface LineElementSlots {
 }
 
 export interface LineElementSlotProps {
-  line?: SlotComponentPropsFromProps<
-    AnimatedLineProps & LinePropsOverrides,
-    {},
-    LineElementOwnerState
-  >;
+  line?: SlotComponentPropsFromProps<AnimatedLineProps, LinePropsOverrides, LineElementOwnerState>;
 }
 
 export interface LineElementProps

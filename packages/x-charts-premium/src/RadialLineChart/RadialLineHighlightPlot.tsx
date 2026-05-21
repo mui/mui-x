@@ -23,8 +23,8 @@ export interface RadialLineHighlightPlotSlots {
 
 export interface RadialLineHighlightPlotSlotProps {
   radialLineHighlight?: SlotComponentPropsFromProps<
-    RadialLineHighlightElementProps & RadialLineHighlightPropsOverrides,
-    {},
+    RadialLineHighlightElementProps,
+    RadialLineHighlightPropsOverrides,
     {}
   >;
 }

@@ -19,11 +19,7 @@ export interface BarLabelSlots {
 }
 
 export interface BarLabelSlotProps {
-  barLabel?: SlotComponentPropsFromProps<
-    BarLabelProps & BarLabelPropsOverrides,
-    {},
-    BarLabelOwnerState
-  >;
+  barLabel?: SlotComponentPropsFromProps<BarLabelProps, BarLabelPropsOverrides, BarLabelOwnerState>;
 }
 
 export type BarLabelItemProps<V extends BarValueType | null> = Omit<

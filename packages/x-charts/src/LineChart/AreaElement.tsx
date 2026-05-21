@@ -30,11 +30,7 @@ export interface AreaElementSlots {
 }
 
 export interface AreaElementSlotProps {
-  area?: SlotComponentPropsFromProps<
-    AnimatedAreaProps & AreaPropsOverrides,
-    {},
-    AreaElementOwnerState
-  >;
+  area?: SlotComponentPropsFromProps<AnimatedAreaProps, AreaPropsOverrides, AreaElementOwnerState>;
 }
 
 export interface AreaElementProps

@@ -53,13 +53,13 @@ export interface ChartsOverlaySlots {
 }
 export interface ChartsOverlaySlotProps {
   loadingOverlay?: SlotComponentPropsFromProps<
-    CommonOverlayProps & LoadingOverlayPropsOverrides,
-    {},
+    CommonOverlayProps,
+    LoadingOverlayPropsOverrides,
     {}
   >;
   noDataOverlay?: SlotComponentPropsFromProps<
-    CommonOverlayProps & NoDataOverlayPropsOverrides,
-    {},
+    CommonOverlayProps,
+    NoDataOverlayPropsOverrides,
     {}
   >;
 }

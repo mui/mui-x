@@ -17,7 +17,7 @@ export interface BarElementSlots {
   bar?: React.JSXElementConstructor<BarProps & BarPropsOverrides>;
 }
 export interface BarElementSlotProps {
-  bar?: SlotComponentPropsFromProps<BarProps & BarPropsOverrides, {}, BarElementOwnerState>;
+  bar?: SlotComponentPropsFromProps<BarProps, BarPropsOverrides, BarElementOwnerState>;
 }
 
 export type BarElementProps = Omit<

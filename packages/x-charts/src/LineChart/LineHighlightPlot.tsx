@@ -25,8 +25,8 @@ export interface LineHighlightPlotSlots {
 
 export interface LineHighlightPlotSlotProps {
   lineHighlight?: SlotComponentPropsFromProps<
-    LineHighlightElementProps & LineHighlightPropsOverrides,
-    {},
+    LineHighlightElementProps,
+    LineHighlightPropsOverrides,
     {}
   >;
 }
