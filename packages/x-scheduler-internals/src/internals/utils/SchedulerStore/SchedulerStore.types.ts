@@ -177,14 +177,13 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   errors: readonly StoredError[];
   /**
-   * Plugin that provides recurring-events support. `null` when not attached.
-   */
-  errors: Error[];
-  /**
    * The ID of the event currently open in the event dialog.
    * `null` when no event dialog is open.
    */
   openEventId: SchedulerEventId | null;
+  /**
+   * Plugin that provides recurring-events support. `null` when not attached.
+   */
   recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
 }
 
