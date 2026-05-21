@@ -140,9 +140,7 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     const start = currentAxisZoom?.start ?? 0;
     const end = currentAxisZoom?.end ?? 100;
     const epsilon = 0.01;
-    return (
-      Math.abs(start - startZoom) < epsilon && Math.abs(end - endZoom) < epsilon
-    );
+    return Math.abs(start - startZoom) < epsilon && Math.abs(end - endZoom) < epsilon;
   }, [startZoom, endZoom, isValueNull, currentAxisZoom, canZoomOut]);
 
   const element = useComponentRenderer(slots.baseToggleButton, render, {
