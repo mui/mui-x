@@ -393,6 +393,15 @@ async function generateChangelog({
   }) => {
     const hasProVersion = proCommits !== null;
     const hasPremiumVersion = premiumCommits !== null;
+
+    if (
+      baseCommits.length === 0 &&
+      (proCommits?.length ?? 0) === 0 &&
+      (premiumCommits?.length ?? 0) === 0
+    ) {
+      return '';
+    }
+
     const packageVersion = nextVersion ? getPackageVersion(packageName) : '__VERSION__';
 
     const lines = [`### ${productName}`];
