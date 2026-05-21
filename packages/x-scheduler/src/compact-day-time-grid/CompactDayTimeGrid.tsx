@@ -17,7 +17,6 @@ const COMPACT_DAY_TIME_GRID_CONFIGS: Record<CompactDayTimeGridDayCount, EventCal
 
 /**
  * A compact day/time grid optimized for mobile / narrow widths.
- * It renders the underlying `DayTimeGrid` engine with the `compact` density token.
  *
  * For now this view is opt-in and only intended for standalone usage at narrow widths.
  */
@@ -31,6 +30,6 @@ export const CompactDayTimeGrid = React.memo(
     // Feature hooks
     const { days } = useEventCalendarView(COMPACT_DAY_TIME_GRID_CONFIGS[dayCount]);
 
-    return <DayTimeGrid ref={forwardedRef} days={days} density="compact" {...other} />;
+    return <DayTimeGrid ref={forwardedRef} days={days} {...other} />;
   }),
 );

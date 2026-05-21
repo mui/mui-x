@@ -8,6 +8,7 @@ import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
+import { EVENT_CALENDAR_CONTAINER_NAME } from '../../../constants';
 import { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -23,16 +24,6 @@ const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
   wordBreak: 'break-word',
   overflowWrap: 'break-word',
 });
-
-const fillAvailableLinesStyles: React.CSSProperties = {
-  display: '-webkit-box',
-  WebkitLineClamp: 99,
-  WebkitBoxOrient: 'vertical',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  wordBreak: 'break-word',
-  overflowWrap: 'break-word',
-};
 
 const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   name: 'MuiEventCalendar',
@@ -96,18 +87,10 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     background: 'var(--event-surface-accent)',
     pointerEvents: 'none',
   },
-  '[data-density="compact"] &': {
-    '--time-grid-event-column-gap': '0px',
-    padding: theme.spacing(0.25, 0.5),
-    flexDirection: 'column',
-    '&[data-under-hour="true"]': {
-      flexDirection: 'column',
-    },
-    '&[data-under-fifteen-minutes="true"]': {
-      padding: theme.spacing(0, 0.5),
-    },
-  },
   variants: getPaletteVariants(theme),
+  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < 550px)`]: {
+    '--time-grid-event-column-gap': '6px',
+  },
 }));
 
 const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
@@ -132,14 +115,13 @@ const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
   '&[data-under-fifteen-minutes="true"]': {
     padding: theme.spacing(0, 1),
   },
-  '[data-density="compact"] &': {
-    '--time-grid-event-column-gap': '0px',
-    padding: theme.spacing(0.25, 0.5),
-  },
   variants: getPaletteVariants(theme),
   '&::before': {
     content: '""',
     position: 'absolute',
+  },
+  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < 550px)`]: {
+    '--time-grid-event-column-gap': '6px',
   },
 }));
 
@@ -150,7 +132,7 @@ const TimeGridEventTitle = styled(Typography, {
   margin: 0,
   color: 'var(--event-on-surface-subtle-primary)',
   fontWeight: theme.typography.fontWeightMedium,
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-eventTitle)',
   lineHeight: 1.43,
   paddingRight: theme.spacing(1.5),
   height: 'fit-content',
@@ -162,12 +144,6 @@ const TimeGridEventTitle = styled(Typography, {
     color: 'var(--event-on-surface-selected)',
   },
   ...linesClampStyles(1),
-  '[data-density="compact"] &': {
-    fontSize: '0.6875rem',
-    lineHeight: 1.3,
-    paddingRight: 0,
-    ...fillAvailableLinesStyles,
-  },
 }));
 
 const TimeGridEventTime = styled('time', {
@@ -176,7 +152,7 @@ const TimeGridEventTime = styled('time', {
 })(({ theme }) => ({
   color: 'var(--event-on-surface-subtle-secondary)',
   fontWeight: theme.typography.fontWeightRegular,
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-timeText)',
   lineHeight: 1.43,
   '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',
@@ -191,9 +167,6 @@ const TimeGridEventTime = styled('time', {
   '@container (max-height: 20px)': {
     fontSize: '11px',
     lineHeight: '11px',
-  },
-  '[data-density="compact"] &': {
-    display: 'none',
   },
 }));
 
@@ -217,9 +190,6 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
     lineHeight: 14,
     padding: 0,
     bottom: 0,
-  },
-  '[data-density="compact"] &': {
-    display: 'none',
   },
 }));
 

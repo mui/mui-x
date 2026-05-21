@@ -5,7 +5,7 @@ import { ExportedDayTimeGridProps } from '../internals/components/day-time-grid/
 
 export type CompactDayTimeGridDayCount = 1 | 3 | 7;
 
-export interface CompactDayTimeGridProps extends Omit<ExportedDayTimeGridProps, 'density'> {
+export interface CompactDayTimeGridProps extends ExportedDayTimeGridProps {
   /**
    * The number of days to display starting from the visible date.
    * - `1`: a single day.

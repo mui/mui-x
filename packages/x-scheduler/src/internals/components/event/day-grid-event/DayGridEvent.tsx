@@ -135,7 +135,7 @@ const DayGridEventTitle = styled('p', {
 })(({ theme }) => ({
   margin: 0,
   fontWeight: theme.typography.fontWeightMedium,
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-eventTitle)',
   lineHeight: 1.43,
   flexGrow: 1,
   '[data-variant="filled"] &': {
@@ -149,10 +149,6 @@ const DayGridEventTitle = styled('p', {
   },
   '[data-variant="compact"][data-editing] &': {
     color: 'var(--event-on-surface-subtle-primary)',
-  },
-  '[data-density="compact"] &': {
-    fontSize: '0.6875rem',
-    lineHeight: 1.3,
   },
 }));
 
@@ -183,9 +179,6 @@ const DayGridEventTime = styled('time', {
   '[data-variant="compact"][data-editing] &': {
     color: 'var(--event-on-surface-subtle-secondary)',
   },
-  '[data-density="compact"] &': {
-    display: 'none',
-  },
 }));
 
 const DayGridEventRecurringIcon = styled(RepeatRounded, {
@@ -200,9 +193,6 @@ const DayGridEventRecurringIcon = styled(RepeatRounded, {
   },
   '[data-variant="compact"][data-editing] &': {
     color: 'var(--event-on-surface-bold)',
-  },
-  '[data-density="compact"] &': {
-    display: 'none',
   },
 }));
 

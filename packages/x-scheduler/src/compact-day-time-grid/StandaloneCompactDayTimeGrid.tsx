@@ -5,6 +5,7 @@ import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/us
 import { StandaloneCompactDayTimeGridProps } from './CompactDayTimeGrid.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventDialogProvider } from '../internals/components/event-dialog';
+import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
 import { CompactDayTimeGrid } from './CompactDayTimeGrid';
 
 /**
@@ -25,11 +26,13 @@ const StandaloneCompactDayTimeGrid = React.forwardRef(function StandaloneCompact
   >(props);
 
   return (
-    <EventCalendarProvider {...parameters}>
-      <EventDialogProvider>
-        <CompactDayTimeGrid ref={forwardedRef} {...forwardedProps} />
-      </EventDialogProvider>
-    </EventCalendarProvider>
+    <ResponsiveTypographyContainer>
+      <EventCalendarProvider {...parameters}>
+        <EventDialogProvider>
+          <CompactDayTimeGrid ref={forwardedRef} {...forwardedProps} />
+        </EventDialogProvider>
+      </EventCalendarProvider>
+    </ResponsiveTypographyContainer>
   );
 }) as StandaloneCompactDayTimeGridComponent;
 

@@ -34,15 +34,6 @@ describe('<CompactDayTimeGrid />', () => {
     )!;
   }
 
-  describe('density', () => {
-    it('should render with data-density="compact" on the root container', () => {
-      renderWithProviders(<CompactDayTimeGrid />);
-      const root = getDayTimeGrid();
-      expect(root).not.to.equal(null);
-      expect(root.getAttribute('data-density')).to.equal('compact');
-    });
-  });
-
   describe('dayCount', () => {
     it('should render 3 day columns by default', () => {
       renderWithProviders(<CompactDayTimeGrid />);
@@ -101,7 +92,7 @@ describe('<CompactDayTimeGrid />', () => {
   });
 
   describe('event rendering', () => {
-    it('should render event titles but hide event time elements via CSS', () => {
+    it('should render event titles and time elements', () => {
       const event = EventBuilder.new()
         .title('Compact Event')
         .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
@@ -109,14 +100,10 @@ describe('<CompactDayTimeGrid />', () => {
 
       renderWithProviders(<CompactDayTimeGrid dayCount={1} />, [event]);
 
-      // The title is rendered.
       expect(screen.getAllByText('Compact Event').length).to.be.greaterThan(0);
 
-      // Time elements still exist in the DOM but are hidden via CSS (density=compact).
-      // Make sure the time element exists for the rendered event.
       const root = getDayTimeGrid();
       const timeElements = root.querySelectorAll(`.${eventCalendarClasses.timeGridEventTime}`);
-      // There is one time element per event (start time / range).
       expect(timeElements.length).to.be.greaterThan(0);
     });
   });

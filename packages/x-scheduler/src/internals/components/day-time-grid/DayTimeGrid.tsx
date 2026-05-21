@@ -20,13 +20,12 @@ import clsx from 'clsx';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
-import { useFormatHour, useFormatTime } from '../../../internals/hooks/useFormatTime';
+import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
+import { EVENT_CALENDAR_CONTAINER_NAME } from '../../constants/responsiveTypography';
 
-const FIXED_CELL_WIDTH = 68;
-const FIXED_CELL_WIDTH_COMPACT = 44;
 const HOUR_HEIGHT = 46;
 const HOURS_IN_DAY = 24;
 
@@ -34,7 +33,7 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridContainer',
 })(({ theme }) => ({
-  '--fixed-cell-width': `${FIXED_CELL_WIDTH}px`,
+  '--fixed-cell-width': 'var(--EventCalendar-size-fixedCellWidth)',
   '--hour-height': `${HOUR_HEIGHT}px`,
   '--has-scroll': 1,
   width: '100%',
@@ -45,9 +44,6 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderRadius: theme.shape.borderRadius,
   maxHeight: '100%',
-  '&[data-density="compact"]': {
-    '--fixed-cell-width': `${FIXED_CELL_WIDTH_COMPACT}px`,
-  },
 }));
 
 const DayTimeGridRoot = styled('div', {
@@ -142,7 +138,7 @@ const DayTimeGridAllDayEventsHeaderCell = styled('div', {
 })(({ theme }) => ({
   gridColumn: '1',
   gridRow: '1',
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-timeText)',
   fontStyle: 'italic',
   padding: theme.spacing(1),
   textAlign: 'end',
@@ -161,10 +157,6 @@ const DayTimeGridHeaderContent = styled('span', {
   alignItems: 'center',
   gap: theme.spacing(1),
   padding: theme.spacing(1.25),
-  '[data-density="compact"] &': {
-    gap: theme.spacing(0.5),
-    padding: theme.spacing(1.5, 0.5, 0.5),
-  },
 }));
 
 const DayTimeGridHeaderCell = styled(CalendarGrid.HeaderCell, {
@@ -235,16 +227,13 @@ const DayTimeGridHeaderDayName = styled('span', {
   '[data-current] &': {
     color: (theme.vars || theme).palette.primary.main,
   },
-  '[data-density="compact"] &': {
-    fontSize: theme.typography.caption.fontSize,
-  },
 }));
 
 const DayTimeGridHeaderDayNumber = styled('span', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridHeaderDayNumber',
 })(({ theme }) => ({
-  fontSize: theme.typography.h5.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-dayNumber)',
   lineHeight: 1,
   width: 46,
   height: 46,
@@ -262,10 +251,9 @@ const DayTimeGridHeaderDayNumber = styled('span', {
   '[data-current] button:hover &': {
     backgroundColor: (theme.vars || theme).palette.primary.dark,
   },
-  '[data-density="compact"] &': {
-    fontSize: theme.typography.body1.fontSize,
-    width: 30,
-    height: 30,
+  [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < 550px)`]: {
+    width: 32,
+    height: 32,
   },
 }));
 
@@ -315,23 +303,16 @@ const DayTimeGridTimeAxisCell = styled('div', {
     top: 'calc(var(--hour) * var(--hour-height))',
     zIndex: 1,
   },
-  '[data-density="compact"] &': {
-    paddingInline: theme.spacing(0.5),
-    overflowX: 'clip',
-  },
 }));
 
 const DayTimeGridTimeAxisText = styled('time', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridTimeAxisText',
 })(({ theme }) => ({
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: 'var(--EventCalendar-fontSize-timeText)',
   lineHeight: 'calc(100% / 24)',
   color: (theme.vars || theme).palette.text.secondary,
   whiteSpace: 'nowrap',
-  '[data-density="compact"] &': {
-    fontSize: '0.625rem',
-  },
 }));
 
 const DayTimeGridGrid = styled('div', {
@@ -348,7 +329,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { days, className, density = 'comfortable', ...other } = props;
+  const { days, className, ...other } = props;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -379,8 +360,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   });
 
   const formatTime = useFormatTime();
-  const formatHour = useFormatHour();
-  const formatAxisTime = density === 'compact' ? formatHour : formatTime;
 
   const [hasScroll, setHasScroll] = React.useState(false);
 
@@ -432,7 +411,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       className={clsx(className, classes.dayTimeGridContainer)}
       aria-rowcount={3}
       aria-colcount={days.length}
-      data-density={density}
     >
       <DayTimeGridHeader
         className={classes.dayTimeGridHeader}
@@ -513,7 +491,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   style={{ '--hour': hour } as React.CSSProperties}
                 >
                   <DayTimeGridTimeAxisText className={classes.dayTimeGridTimeAxisText} as="time">
-                    {hour === 0 ? null : formatAxisTime(adapter.setHours(template, hour))}
+                    {hour === 0 ? null : formatTime(adapter.setHours(template, hour))}
                   </DayTimeGridTimeAxisText>
                 </DayTimeGridTimeAxisCell>
               ))}

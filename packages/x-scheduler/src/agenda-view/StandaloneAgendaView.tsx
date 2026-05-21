@@ -5,6 +5,7 @@ import { useExtractEventCalendarParameters } from '@mui/x-scheduler-internals/us
 import { StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventDialogProvider } from '../internals/components/event-dialog';
+import { ResponsiveTypographyContainer } from '../internals/components/ResponsiveTypographyContainer';
 import { AgendaView } from './AgendaView';
 
 /**
@@ -24,11 +25,13 @@ const StandaloneAgendaView = React.forwardRef(function StandaloneAgendaView<
   >(props);
 
   return (
-    <EventCalendarProvider {...parameters}>
-      <EventDialogProvider>
-        <AgendaView ref={forwardedRef} {...forwardedProps} />
-      </EventDialogProvider>
-    </EventCalendarProvider>
+    <ResponsiveTypographyContainer>
+      <EventCalendarProvider {...parameters}>
+        <EventDialogProvider>
+          <AgendaView ref={forwardedRef} {...forwardedProps} />
+        </EventDialogProvider>
+      </EventCalendarProvider>
+    </ResponsiveTypographyContainer>
   );
 }) as StandaloneAgendaViewComponent;
 

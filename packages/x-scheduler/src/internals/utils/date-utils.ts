@@ -56,13 +56,3 @@ export function formatHourAndMinutes(
 
   return adapter.formatByString(date, timeFormat);
 }
-
-/**
- * @example "1 PM" or "13"
- */
-export function formatHour(date: TemporalSupportedObject, adapter: Adapter, ampm: boolean) {
-  const f = adapter.formats;
-  const timeFormat = ampm ? `${f.hours12h} ${f.meridiem}` : f.hours24h;
-
-  return adapter.formatByString(date, timeFormat);
-}
