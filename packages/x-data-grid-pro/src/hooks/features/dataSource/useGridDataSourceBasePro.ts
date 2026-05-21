@@ -352,9 +352,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   const handleGroupedDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
-        if (!props.dataSourceKeepPreviousData) {
-          apiRef.current.setRows([]);
-        }
+        apiRef.current.setRows([]);
         return;
       }
 
@@ -401,7 +399,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       );
       startPolling();
     },
-    [apiRef, props.dataSourceKeepPreviousData, startPolling],
+    [apiRef, startPolling],
   );
 
   const dataSourceApi: GridDataSourceApiPro = {

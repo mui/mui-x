@@ -50,7 +50,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     DataGridProcessedProps,
     | 'dataSource'
     | 'dataSourceCache'
-    | 'dataSourceKeepPreviousData'
     | 'onDataSourceError'
     | 'pageSizeOptions'
     | 'pagination'
@@ -300,9 +299,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
-        if (!props.dataSourceKeepPreviousData) {
-          apiRef.current.setRows([]);
-        }
+        apiRef.current.setRows([]);
         return;
       }
 
@@ -318,7 +315,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       );
       startPolling();
     },
-    [apiRef, props.dataSourceKeepPreviousData, startPolling],
+    [apiRef, startPolling],
   );
 
   const dataSourceUpdateRow = props.dataSource?.updateRow;
@@ -377,16 +374,17 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
   const handleFetchRowsOnParamsChange = React.useCallback(() => {
-    // This handler is only wired up when `standardRowsUpdateStrategyActive` is true via
-    // the `runIf` guards on the returned `events` object, so the calls below don't need
-    // to repeat the strategy check.
-    if (!props.dataSourceKeepPreviousData) {
-      apiRef.current.setRows([]);
-    }
+    // Clear the rows first and immediately mark the grid as loading so the overlay
+    // selector never observes the intermediate `rows=[] && loading=false` state that
+    // would otherwise pick `noRowsOverlay`. Order matters: `setRows([])` rebuilds
+    // `state.rows` from `props.loading`, so the `setLoading(true)` call must come after
+    // it to survive the rebuild. This handler is only wired up when a standard strategy
+    // is active via the `runIf` guards on the returned `events` object.
+    apiRef.current.setRows([]);
     apiRef.current.setLoading(true);
     stopPolling();
     debouncedFetchRows();
-  }, [apiRef, props.dataSourceKeepPreviousData, stopPolling, debouncedFetchRows]);
+  }, [apiRef, stopPolling, debouncedFetchRows]);
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {

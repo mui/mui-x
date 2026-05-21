@@ -211,14 +211,14 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
       currentStrategy === DataSourceRowsUpdateStrategy.Default ||
       currentStrategy === DataSourceRowsUpdateStrategy.GroupedData;
     if (isStandardStrategyActive) {
-      if (!props.dataSourceKeepPreviousData) {
-        apiRef.current.setRows([]);
-      }
+      // Order matters: `setRows([])` rebuilds `state.rows` from `props.loading`, so the
+      // `setLoading(true)` call must come after it to survive the rebuild.
+      apiRef.current.setRows([]);
       apiRef.current.setLoading(true);
     }
     stopPolling();
     debouncedFetchRows();
-  }, [apiRef, props.dataSourceKeepPreviousData, debouncedFetchRows, stopPolling]);
+  }, [apiRef, debouncedFetchRows, stopPolling]);
 
   const privateApi: GridDataSourcePremiumPrivateApi = {
     ...api.private,

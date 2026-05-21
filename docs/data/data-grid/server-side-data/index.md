@@ -172,14 +172,6 @@ In a real-world scenario you would replace this with your own server-side data-f
 Open the Info section of your browser console to see the requests being made and the data being fetched in response.
 :::
 
-### Keep previous data while fetching
-
-By default, the Data Grid clears the visible rows and shows a loading overlay while it fetches new data after pagination, sorting, filtering, or row grouping changes.
-Pass the `dataSourceKeepPreviousData` prop to keep the previously displayed rows visible until the next response arrives.
-The loading overlay is rendered on top of the previous rows, which prevents the grid height from collapsing between pages.
-
-{{"demo": "ServerSideDataGridKeepPreviousData.js", "bg": "inline"}}
-
 ## Data caching
 
 The Data Source caches fetched data by default.

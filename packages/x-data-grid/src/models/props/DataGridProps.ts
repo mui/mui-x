@@ -375,12 +375,6 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    */
   dataSourceRevalidateMs: number;
   /**
-   * If `true`, the previously displayed rows are kept visible while new rows are being fetched after pagination, sorting, filtering, or row grouping changes.
-   * The loading overlay is rendered on top of the previous rows.
-   * @default false
-   */
-  dataSourceKeepPreviousData: boolean;
-  /**
    * If `true`, reordering columns is disabled.
    * @default false
    */

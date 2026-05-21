@@ -78,66 +78,6 @@ describe('<DataGridPremium /> - Data source row grouping (loading state)', () =>
       expect(apiRef.current?.state.rows.loading).to.equal(false);
     });
   });
-
-  it('should keep the previous rows visible on row grouping change when dataSourceKeepPreviousData is true', async () => {
-    let resolveSecond: (response: GridGetRowsResponse) => void = () => {};
-    const responses: GridGetRowsResponse[] = [{ rows: [{ id: 'A', group: 'A' }], rowCount: 1 }];
-    let callIndex = 0;
-    const getRows = spy(() => {
-      const index = callIndex;
-      callIndex += 1;
-      if (index === 0) {
-        return Promise.resolve(responses[0]);
-      }
-      return new Promise<GridGetRowsResponse>((resolve) => {
-        resolveSecond = resolve;
-      });
-    });
-    const dataSource: GridDataSource = {
-      getRows: getRows as unknown as GridDataSource['getRows'],
-      getGroupKey: (row) => row.group,
-      getChildrenCount: () => 0,
-    };
-    let apiRef: RefObject<GridApi | null> = { current: null };
-    function Test(props: Partial<DataGridPremiumProps>) {
-      apiRef = useGridApiRef();
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGridPremium
-            apiRef={apiRef}
-            columns={[{ field: 'group' }]}
-            dataSource={dataSource}
-            dataSourceCache={null}
-            dataSourceKeepPreviousData
-            disableVirtualization
-            rowGroupingModel={['group']}
-            {...props}
-          />
-        </div>
-      );
-    }
-
-    const { setProps } = render(<Test />);
-
-    await waitFor(() => {
-      expect(apiRef.current?.getRow('A')).to.deep.equal({ id: 'A', group: 'A' });
-    });
-
-    setProps({ rowGroupingModel: ['group', 'category'] });
-
-    await waitFor(() => {
-      expect(getRows.callCount).to.equal(2);
-    });
-    // Previous row remains visible while the new grouping query is in flight.
-    expect(apiRef.current?.getRow('A')).to.deep.equal({ id: 'A', group: 'A' });
-    expect(apiRef.current?.state.rows.loading).to.equal(true);
-
-    resolveSecond({ rows: [{ id: 'A', group: 'A' }], rowCount: 1 });
-
-    await waitFor(() => {
-      expect(apiRef.current?.state.rows.loading).to.equal(false);
-    });
-  });
 });
 
 describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () => {
