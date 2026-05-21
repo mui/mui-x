@@ -2,21 +2,32 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { type ChartPlugin } from '../../models';
+import { type SeriesId } from '../../../../models/seriesType/common';
+import { type UseProgressiveRenderingSignature } from './useProgressiveRendering.types';
 import {
-  SCATTER_REVEAL_FRAMES_SKIPPED,
-  SCATTER_REVEAL_ROUNDS_PER_FRAME,
-} from '../../../../ScatterChart/async/scatterRendererConstants';
-import {
-  type ProgressivePlanEntry,
-  type UseProgressiveRenderingSignature,
-} from './useProgressiveRendering.types';
-import {
-  sameProgressivePlan,
+  sameSeriesIds,
   selectorProgressivePlans,
   selectorProgressiveTotalRounds,
 } from './useProgressiveRendering.selectors';
 
-const EMPTY_PLANS: ReadonlyMap<string, readonly ProgressivePlanEntry[]> = new Map();
+const EMPTY_PLANS: ReadonlyMap<string, readonly SeriesId[]> = new Map();
+
+/**
+ * How many *rounds* are revealed per reveal tick once the render data is ready.
+ * A round reveals one batch in every series simultaneously, so the chart looks
+ * complete from the first paint rather than appearing series-by-series. Lower
+ * spreads the paint over more ticks (smoother, more visibly progressive);
+ * higher finishes sooner.
+ */
+const REVEAL_ROUNDS_PER_FRAME = 1;
+
+/**
+ * How many animation frames are skipped between two reveal ticks. `0` reveals
+ * on every frame; `1` reveals every other frame, leaving the browser an idle
+ * frame for layout, paint and input handling between commits. Higher values
+ * give the browser more CPU headroom at the cost of a slower paint.
+ */
+const REVEAL_FRAMES_SKIPPED = 0;
 
 /**
  * Chart-wide progressive rendering coordinator.
@@ -31,30 +42,31 @@ const EMPTY_PLANS: ReadonlyMap<string, readonly ProgressivePlanEntry[]> = new Ma
 export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignature> = ({
   store,
 }) => {
-  const setProgressivePlan = useEventCallback(
-    (plotId: string, plan: readonly ProgressivePlanEntry[]) => {
-      const current = store.state.progressiveRendering.plans.get(plotId);
-      if (sameProgressivePlan(current, plan)) {
-        return;
+  const registerProgressivePlan = useEventCallback(
+    (plotId: string, seriesIds: readonly SeriesId[]) => {
+      if (seriesIds.length === 0) {
+        return undefined;
       }
-      const nextPlans = new Map(store.state.progressiveRendering.plans);
-      nextPlans.set(plotId, plan);
-      // A real plan change restarts the progressive paint.
-      store.set('progressiveRendering', { plans: nextPlans, revealedRounds: 0 });
+      const current = store.state.progressiveRendering.plans.get(plotId);
+      if (!sameSeriesIds(current, seriesIds)) {
+        const nextPlans = new Map(store.state.progressiveRendering.plans);
+        nextPlans.set(plotId, seriesIds);
+        // A real plan change restarts the progressive paint.
+        store.set('progressiveRendering', { plans: nextPlans, revealedRounds: 0 });
+      }
+      return () => {
+        if (!store.state.progressiveRendering.plans.has(plotId)) {
+          return;
+        }
+        const nextPlans = new Map(store.state.progressiveRendering.plans);
+        nextPlans.delete(plotId);
+        store.set('progressiveRendering', {
+          ...store.state.progressiveRendering,
+          plans: nextPlans,
+        });
+      };
     },
   );
-
-  const clearProgressivePlan = useEventCallback((plotId: string) => {
-    if (!store.state.progressiveRendering.plans.has(plotId)) {
-      return;
-    }
-    const nextPlans = new Map(store.state.progressiveRendering.plans);
-    nextPlans.delete(plotId);
-    store.set('progressiveRendering', {
-      ...store.state.progressiveRendering,
-      plans: nextPlans,
-    });
-  });
 
   const plans = store.use(selectorProgressivePlans) ?? EMPTY_PLANS;
 
@@ -79,7 +91,7 @@ export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignatu
     let revealed = 0;
 
     function scheduleNext() {
-      let remaining = SCATTER_REVEAL_FRAMES_SKIPPED;
+      let remaining = REVEAL_FRAMES_SKIPPED;
       const tick = () => {
         if (cancelled) {
           return;
@@ -99,7 +111,7 @@ export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignatu
         return;
       }
       const total = selectorProgressiveTotalRounds(store.state);
-      revealed = Math.min(total, revealed + SCATTER_REVEAL_ROUNDS_PER_FRAME);
+      revealed = Math.min(total, revealed + REVEAL_ROUNDS_PER_FRAME);
       store.set('progressiveRendering', {
         ...store.state.progressiveRendering,
         revealedRounds: revealed,
@@ -117,7 +129,7 @@ export const useProgressiveRendering: ChartPlugin<UseProgressiveRenderingSignatu
     };
   }, [plans, store]);
 
-  return { instance: { setProgressivePlan, clearProgressivePlan } };
+  return { instance: { registerProgressivePlan } };
 };
 
 useProgressiveRendering.params = {};

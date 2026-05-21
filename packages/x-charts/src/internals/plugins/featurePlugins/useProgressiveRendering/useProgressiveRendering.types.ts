@@ -1,27 +1,15 @@
 import { type SeriesId } from '../../../../models/seriesType/common';
 import { type ChartPluginSignature } from '../../models';
 
-/**
- * One entry per (non-hidden) series that participates in the progressive
- * paint. `dataRef` is the series' `data` reference and is used to detect a
- * real data change (so unrelated re-renders don't replay the paint).
- */
-export interface ProgressivePlanEntry {
-  seriesId: SeriesId;
-  /** Number of points in this series. */
-  nPoints: number;
-  /** Reference to the source data array, used for change detection. */
-  dataRef: unknown;
-}
-
 export interface UseProgressiveRenderingState {
   progressiveRendering: {
     /**
-     * Per-plot plans, keyed by an opaque plot id. Each plot (e.g. a separate
-     * `ScatterPlot` composed into the same chart) registers its own plan.
-     * The scheduler aggregates them into a single global progression.
+     * Per-plot sets of series ids that should be progressively revealed, keyed
+     * by an opaque plot id. Each plot (e.g. a separate `ScatterPlot` composed
+     * into the same chart) registers its own set. The scheduler aggregates
+     * them and reads point counts straight from the processed series.
      */
-    plans: ReadonlyMap<string, readonly ProgressivePlanEntry[]>;
+    plans: ReadonlyMap<string, readonly SeriesId[]>;
     /**
      * Number of *rounds* revealed so far. A round adds one batch in every
      * registered series simultaneously, so every series progresses together.
@@ -32,13 +20,14 @@ export interface UseProgressiveRenderingState {
 
 export interface UseProgressiveRenderingInstance {
   /**
-   * Register (or replace) the progressive plan for `plotId`. A no-op when the
-   * supplied plan is structurally identical to the previous one, so it is
-   * safe to call on every render.
+   * Register the set of series ids that `plotId` wants progressively revealed,
+   * and return a cleanup function that unregisters them. Designed to be called
+   * from a `React.useEffect`: returning the unregister function makes the
+   * effect's cleanup tear the registration down on unmount or before the next
+   * call. Re-calling with the same `plotId` replaces the previous set; a no-op
+   * when the set is unchanged.
    */
-  setProgressivePlan(plotId: string, plan: readonly ProgressivePlanEntry[]): void;
-  /** Remove the plan registered for `plotId` (e.g. on unmount). */
-  clearProgressivePlan(plotId: string): void;
+  registerProgressivePlan(plotId: string, seriesIds: readonly SeriesId[]): (() => void) | undefined;
 }
 
 export type UseProgressiveRenderingSignature = ChartPluginSignature<{

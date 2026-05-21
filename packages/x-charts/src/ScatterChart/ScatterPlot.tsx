@@ -10,13 +10,12 @@ import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
 import { ScatterAsync } from './async/ScatterAsync';
-import { SCATTER_ASYNC_THRESHOLD } from './async/scatterRendererConstants';
 import { useUtilityClasses } from './scatterClasses';
 import { useChartsContext } from '../context/ChartsProvider';
-import {
-  type ProgressivePlanEntry,
-  type UseProgressiveRenderingSignature,
-} from '../internals/plugins/featurePlugins/useProgressiveRendering';
+import { type UseProgressiveRenderingSignature } from '../internals/plugins/featurePlugins/useProgressiveRendering';
+import { type SeriesId } from '../models/seriesType/common';
+
+const EMPTY_SERIES_IDS: readonly SeriesId[] = [];
 
 export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -76,51 +75,15 @@ function ScatterPlot(props: ScatterPlotProps) {
   const { zAxis, zAxisIds } = useZAxes();
   const classes = useUtilityClasses({ classes: inClasses });
 
-  // The plugin may be absent when `ScatterPlot` is composed inside a custom
-  // container that doesn't include it — fall back to the synchronous renderer.
   const { instance } = useChartsContext<[UseProgressiveRenderingSignature]>();
-  const setProgressivePlan = instance.setProgressivePlan as
-    | UseProgressiveRenderingSignature['instance']['setProgressivePlan']
-    | undefined;
-  const clearProgressivePlan = instance.clearProgressivePlan as
-    | UseProgressiveRenderingSignature['instance']['clearProgressivePlan']
-    | undefined;
-  const hasProgressivePlugin =
-    typeof setProgressivePlan === 'function' && typeof clearProgressivePlan === 'function';
   const plotId = React.useId();
-
-  const slotScatter = slots?.scatter;
-  const progressivePlan = React.useMemo<ProgressivePlanEntry[]>(() => {
-    if (seriesData === undefined || !hasProgressivePlugin || slotScatter !== undefined) {
-      return [];
-    }
-    const { series: s, seriesOrder: order } = seriesData;
-    const entries: ProgressivePlanEntry[] = [];
-    let total = 0;
-    order.forEach((id) => {
-      if (s[id].hidden) {
-        return;
-      }
-      const nPoints = s[id].data.length;
-      total += nPoints;
-      entries.push({ seriesId: id, nPoints, dataRef: s[id].data });
-    });
-    const usesAsync =
-      renderer === 'svg-progressive' || (renderer === undefined && total > SCATTER_ASYNC_THRESHOLD);
-    return usesAsync ? entries : [];
-  }, [seriesData, renderer, slotScatter, hasProgressivePlugin]);
-
-  React.useEffect(() => {
-    if (!setProgressivePlan || !clearProgressivePlan) {
-      return undefined;
-    }
-    if (progressivePlan.length === 0) {
-      clearProgressivePlan(plotId);
-      return undefined;
-    }
-    setProgressivePlan(plotId, progressivePlan);
-    return () => clearProgressivePlan(plotId);
-  }, [setProgressivePlan, clearProgressivePlan, plotId, progressivePlan]);
+  const isProgressive = React.useMemo(() => {
+    const result = instance.registerProgressivePlan(
+      plotId,
+      seriesData?.seriesOrder ?? EMPTY_SERIES_IDS,
+    );
+    return renderer === 'svg-progressive' || (renderer === undefined && result !== undefined);
+  }, [instance, plotId, seriesData?.seriesOrder]);
 
   if (seriesData === undefined) {
     return null;
@@ -134,7 +97,7 @@ function ScatterPlot(props: ScatterPlotProps) {
   let DefaultScatterItems: React.JSXElementConstructor<ScatterProps>;
   if (renderer === 'svg-batch') {
     DefaultScatterItems = BatchScatter;
-  } else if (progressivePlan.length > 0) {
+  } else if (isProgressive) {
     DefaultScatterItems = ScatterAsync;
   } else {
     DefaultScatterItems = Scatter;

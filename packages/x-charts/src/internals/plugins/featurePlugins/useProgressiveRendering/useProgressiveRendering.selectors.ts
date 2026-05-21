@@ -1,20 +1,54 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { type SeriesId } from '../../../../models/seriesType/common';
-import {
-  SCATTER_MIN_BATCH_TOTAL,
-  getEffectiveScatterBatchSize,
-} from '../../../../ScatterChart/async/scatterRendererConstants';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
+import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
+import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
-import {
-  type ProgressivePlanEntry,
-  type UseProgressiveRenderingSignature,
-} from './useProgressiveRendering.types';
+import { type UseProgressiveRenderingSignature } from './useProgressiveRendering.types';
+
+/**
+ * Target number of reveal commits. Each commit repaints every already-painted
+ * circle, so the total progressive wall time is roughly `(C + 1) / 2` times a
+ * single synchronous render (where `C` is the number of commits). Targeting
+ * `5` commits keeps the progressive paint at roughly 2–3× the sync render time.
+ */
+const TARGET_PROGRESSIVE_COMMITS = 5;
+
+/**
+ * Lower bound for the per-tick reveal budget (total points across every
+ * series). Prevents tiny commits whose React overhead would dominate.
+ */
+const MIN_BATCH_TOTAL = 1000;
+
+/**
+ * Upper bound for the per-tick reveal budget (total points across every
+ * series). Prevents a single commit from blocking the main thread for too
+ * long; very large datasets simply use more commits.
+ */
+const MAX_BATCH_TOTAL = 10000;
+
+/**
+ * Per-series points revealed per tick, derived from the total point count
+ * across visible series and the number of visible series. The total per-tick
+ * budget aims for {@link TARGET_PROGRESSIVE_COMMITS} commits, clamped by
+ * {@link MIN_BATCH_TOTAL} / {@link MAX_BATCH_TOTAL}, then split evenly across
+ * the visible series so every series progresses together.
+ */
+const getEffectiveBatchSize = (nSeries: number, totalPoints: number) => {
+  const safeSeries = Math.max(1, nSeries);
+  const safePoints = Math.max(1, totalPoints);
+  const totalPerTick = Math.min(
+    MAX_BATCH_TOTAL,
+    Math.max(MIN_BATCH_TOTAL, Math.ceil(safePoints / TARGET_PROGRESSIVE_COMMITS)),
+  );
+  return Math.max(1, Math.floor(totalPerTick / safeSeries));
+};
 
 const selectorProgressiveState: ChartOptionalRootSelector<UseProgressiveRenderingSignature> = (
   state,
 ) => state.progressiveRendering;
 
-/** Map of registered plots → their plan. */
+/** Map of registered plots → their set of series ids. */
 export const selectorProgressivePlans = createSelector(selectorProgressiveState, (s) => s?.plans);
 
 /** Total number of rounds revealed across all plots so far. */
@@ -23,38 +57,55 @@ export const selectorProgressiveRevealedRounds = createSelector(
   (s) => s?.revealedRounds ?? 0,
 );
 
+/** Point count of a series, looked up across every processed series type. */
+function getSeriesPointCount(processedSeries: ProcessedSeries, seriesId: SeriesId): number {
+  for (const type in processedSeries) {
+    if (!Object.hasOwn(processedSeries, type)) {
+      continue;
+    }
+    const item = processedSeries[type as ChartSeriesType]?.series[seriesId];
+    if (item) {
+      return Array.isArray(item.data) ? item.data.length : 0;
+    }
+  }
+  return 0;
+}
+
 /**
  * Aggregated view of every registered plan: the per-series batch counts, the
  * total number of rounds, and the per-series batch size (so every consumer
- * sizes its batches the same way).
+ * sizes its batches the same way). Point counts are read straight from the
+ * processed series rather than carried by the registration.
  */
 export const selectorProgressiveAggregate = createSelectorMemoized(
   selectorProgressivePlans,
-  function selectorProgressiveAggregate(plans) {
+  selectorChartSeriesProcessed,
+  function selectorProgressiveAggregate(plans, processedSeries) {
     const nBatchesBySeries = new Map<SeriesId, number>();
     if (!plans || plans.size === 0) {
-      return { nBatchesBySeries, totalRounds: 0, batchSize: SCATTER_MIN_BATCH_TOTAL };
+      return { nBatchesBySeries, totalRounds: 0, batchSize: MIN_BATCH_TOTAL };
     }
 
     let nSeries = 0;
     let totalPoints = 0;
-    plans.forEach((plan) => {
-      nSeries += plan.length;
-      for (const entry of plan) {
-        totalPoints += entry.nPoints;
-      }
+    const pointCounts = new Map<SeriesId, number>();
+    plans.forEach((seriesIds) => {
+      seriesIds.forEach((seriesId) => {
+        const nPoints = getSeriesPointCount(processedSeries, seriesId);
+        pointCounts.set(seriesId, nPoints);
+        nSeries += 1;
+        totalPoints += nPoints;
+      });
     });
 
-    const batchSize = getEffectiveScatterBatchSize(nSeries, totalPoints);
+    const batchSize = getEffectiveBatchSize(nSeries, totalPoints);
 
     let totalRounds = 0;
-    plans.forEach((plan) => {
-      for (const entry of plan) {
-        const n = Math.max(1, Math.ceil(entry.nPoints / batchSize));
-        nBatchesBySeries.set(entry.seriesId, n);
-        if (n > totalRounds) {
-          totalRounds = n;
-        }
+    pointCounts.forEach((nPoints, seriesId) => {
+      const n = Math.max(1, Math.ceil(nPoints / batchSize));
+      nBatchesBySeries.set(seriesId, n);
+      if (n > totalRounds) {
+        totalRounds = n;
       }
     });
 
@@ -85,24 +136,13 @@ export const selectorProgressiveSeriesRevealedBatches = createSelector(
   },
 );
 
-/**
- * Structural equality between two progressive plans: same series, in the same
- * order, with the same `data` references and the same point counts. Used by
- * `setProgressivePlan` to skip no-op updates.
- */
-export function sameProgressivePlan(
-  a: readonly ProgressivePlanEntry[] | undefined,
-  b: readonly ProgressivePlanEntry[],
-) {
+/** Order-sensitive equality between two registered series-id sets. */
+export function sameSeriesIds(a: readonly SeriesId[] | undefined, b: readonly SeriesId[]): boolean {
   if (!a || a.length !== b.length) {
     return false;
   }
   for (let i = 0; i < a.length; i += 1) {
-    if (
-      a[i].seriesId !== b[i].seriesId ||
-      a[i].dataRef !== b[i].dataRef ||
-      a[i].nPoints !== b[i].nPoints
-    ) {
+    if (a[i] !== b[i]) {
       return false;
     }
   }
