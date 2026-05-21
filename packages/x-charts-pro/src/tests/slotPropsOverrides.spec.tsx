@@ -1,6 +1,6 @@
+import { BarChartPro, type BarChartProSlots } from '@mui/x-charts-pro/BarChartPro';
 import { Heatmap, type HeatmapSlots } from '@mui/x-charts-pro/Heatmap';
 import { FunnelChart, type FunnelChartSlots } from '@mui/x-charts-pro/FunnelChart';
-import type { ChartsSlotsPro } from '@mui/x-charts-pro/internals';
 import type { PropsFromSlot } from '@mui/x-charts/models';
 
 declare module '@mui/x-charts/models' {
@@ -50,27 +50,74 @@ declare module '@mui/x-charts-pro/models' {
   }
 }
 
-// Pro base + icon slots flow through `ChartsSlotsPro`. End users rarely override
-// them directly, so cover them as type-only assertions instead of JSX.
-type AssertBaseDivider = PropsFromSlot<ChartsSlotsPro['baseDivider']>['customDividerProp'];
-type AssertBaseMenuItem = PropsFromSlot<ChartsSlotsPro['baseMenuItem']>['customMenuItemProp'];
-type AssertBaseMenuList = PropsFromSlot<ChartsSlotsPro['baseMenuList']>['customMenuListProp'];
-type AssertBasePopper = PropsFromSlot<ChartsSlotsPro['basePopper']>['customPopperProp'];
-type AssertBaseTooltip = PropsFromSlot<ChartsSlotsPro['baseTooltip']>['customBaseTooltipProp'];
-type AssertZoomIn = PropsFromSlot<ChartsSlotsPro['zoomInIcon']>['customZoomInProp'];
-type AssertZoomOut = PropsFromSlot<ChartsSlotsPro['zoomOutIcon']>['customZoomOutProp'];
-type AssertExport = PropsFromSlot<ChartsSlotsPro['exportIcon']>['customExportProp'];
+// Pro base + icon slots flow through `Partial<ChartsSlotsPro>` on every pro chart.
+function CustomBaseDivider({
+  customDividerProp,
+}: PropsFromSlot<BarChartProSlots['baseDivider']>) {
+  return <hr data-prop={customDividerProp} />;
+}
+function CustomBaseMenuItem({
+  customMenuItemProp,
+}: PropsFromSlot<BarChartProSlots['baseMenuItem']>) {
+  return <li data-prop={customMenuItemProp} />;
+}
+function CustomBaseMenuList({
+  customMenuListProp,
+}: PropsFromSlot<BarChartProSlots['baseMenuList']>) {
+  return <ul data-prop={customMenuListProp} />;
+}
+function CustomBasePopper({ customPopperProp }: PropsFromSlot<BarChartProSlots['basePopper']>) {
+  return <div data-prop={customPopperProp} />;
+}
+function CustomBaseTooltip({
+  customBaseTooltipProp,
+}: PropsFromSlot<BarChartProSlots['baseTooltip']>) {
+  return <div data-prop={customBaseTooltipProp} />;
+}
+function CustomZoomInIcon({ customZoomInProp }: PropsFromSlot<BarChartProSlots['zoomInIcon']>) {
+  return <svg data-prop={customZoomInProp} />;
+}
+function CustomZoomOutIcon({
+  customZoomOutProp,
+}: PropsFromSlot<BarChartProSlots['zoomOutIcon']>) {
+  return <svg data-prop={customZoomOutProp} />;
+}
+function CustomExportIcon({ customExportProp }: PropsFromSlot<BarChartProSlots['exportIcon']>) {
+  return <svg data-prop={customExportProp} />;
+}
 
-export type _ProBaseAssertions = [
-  AssertBaseDivider,
-  AssertBaseMenuItem,
-  AssertBaseMenuList,
-  AssertBasePopper,
-  AssertBaseTooltip,
-  AssertZoomIn,
-  AssertZoomOut,
-  AssertExport,
-];
+export function AugmentedProBaseSlotsUsage() {
+  return (
+    <BarChartPro
+      height={200}
+      series={[{ data: [1, 2, 3] }]}
+      slots={{
+        baseDivider: CustomBaseDivider,
+        baseMenuItem: CustomBaseMenuItem,
+        baseMenuList: CustomBaseMenuList,
+        basePopper: CustomBasePopper,
+        baseTooltip: CustomBaseTooltip,
+        zoomInIcon: CustomZoomInIcon,
+        zoomOutIcon: CustomZoomOutIcon,
+        exportIcon: CustomExportIcon,
+      }}
+      slotProps={{
+        baseDivider: { customDividerProp: 'a' },
+        baseMenuItem: { customMenuItemProp: 'a' },
+        baseMenuList: { customMenuListProp: 'a' },
+        basePopper: { open: false, customPopperProp: 'a' },
+        baseTooltip: {
+          title: 't',
+          children: <span />,
+          customBaseTooltipProp: 'a',
+        },
+        zoomInIcon: { customZoomInProp: 'a' },
+        zoomOutIcon: { customZoomOutProp: 'a' },
+        exportIcon: { customExportProp: 'a' },
+      }}
+    />
+  );
+}
 
 // Heatmap covers the pro tooltip + cell slots.
 function CustomHeatmapTooltip({ heatmapTooltipExtra }: PropsFromSlot<HeatmapSlots['tooltip']>) {

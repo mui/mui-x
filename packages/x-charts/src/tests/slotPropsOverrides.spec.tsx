@@ -3,7 +3,6 @@ import { LineChart, type LineChartSlots } from '@mui/x-charts/LineChart';
 import { PieChart, type PieChartSlots } from '@mui/x-charts/PieChart';
 import { ScatterChart, type ScatterChartSlots } from '@mui/x-charts/ScatterChart';
 import type { PropsFromSlot } from '@mui/x-charts/models';
-import type { ChartsSlots } from '@mui/x-charts/internals';
 
 declare module '@mui/x-charts' {
   // Base slots
@@ -89,26 +88,6 @@ declare module '@mui/x-charts' {
     customToolbarProp?: string;
   }
 }
-
-// Base slots flow through `ChartsSlots`. End users rarely override them
-// directly, so cover them as type-only assertions instead of JSX.
-type AssertBaseButton = PropsFromSlot<ChartsSlots['baseButton']>['customButtonProp'];
-type AssertBaseIconButton = PropsFromSlot<
-  ChartsSlots['baseIconButton']
->['customIconButtonProp'];
-type AssertBaseToggleButton = PropsFromSlot<
-  ChartsSlots['baseToggleButton']
->['customToggleButtonProp'];
-type AssertBaseToggleButtonGroup = PropsFromSlot<
-  ChartsSlots['baseToggleButtonGroup']
->['customToggleButtonGroupProp'];
-
-export type _BaseAssertions = [
-  AssertBaseButton,
-  AssertBaseIconButton,
-  AssertBaseToggleButton,
-  AssertBaseToggleButtonGroup,
-];
 
 // LineChart covers tooltip, line, area, mark, lineHighlight, axis slots,
 // legend, toolbar, and the two overlays.
@@ -274,6 +253,50 @@ export function AugmentedScatterChartUsage() {
       slotProps={{
         scatter: { customScatterProp: 'a' },
         marker: { customMarkerProp: 'a' },
+      }}
+    />
+  );
+}
+
+// Base slots (baseButton, baseIconButton, baseToggleButton, baseToggleButtonGroup)
+// flow through `Partial<ChartsSlots>` on every chart's slots interface.
+function CustomBaseButton({
+  customButtonProp,
+}: PropsFromSlot<LineChartSlots['baseButton']>) {
+  return <button type="button" data-prop={customButtonProp}>Hello</button>;
+}
+function CustomBaseIconButton({
+  customIconButtonProp,
+}: PropsFromSlot<LineChartSlots['baseIconButton']>) {
+  return <button type="button" data-prop={customIconButtonProp}>Hello</button>;
+}
+function CustomBaseToggleButton({
+  customToggleButtonProp,
+}: PropsFromSlot<LineChartSlots['baseToggleButton']>) {
+  return <button type="button" data-prop={customToggleButtonProp}>Hello</button>;
+}
+function CustomBaseToggleButtonGroup({
+  customToggleButtonGroupProp,
+}: PropsFromSlot<LineChartSlots['baseToggleButtonGroup']>) {
+  return <div data-prop={customToggleButtonGroupProp} />;
+}
+
+export function AugmentedBaseSlotsUsage() {
+  return (
+    <LineChart
+      height={200}
+      series={[{ data: [1, 2, 3] }]}
+      slots={{
+        baseButton: CustomBaseButton,
+        baseIconButton: CustomBaseIconButton,
+        baseToggleButton: CustomBaseToggleButton,
+        baseToggleButtonGroup: CustomBaseToggleButtonGroup,
+      }}
+      slotProps={{
+        baseButton: { customButtonProp: 'a' },
+        baseIconButton: { customIconButtonProp: 'a' },
+        baseToggleButton: { value: 'v', customToggleButtonProp: 'a' },
+        baseToggleButtonGroup: { customToggleButtonGroupProp: 'a' },
       }}
     />
   );

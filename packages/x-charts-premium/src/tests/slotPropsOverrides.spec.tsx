@@ -1,5 +1,5 @@
 import {
-  RadialLineChart,
+  Unstable_RadialLineChart as RadialLineChart,
   type RadialLineChartSlots,
 } from '@mui/x-charts-premium/RadialLineChart';
 import {
