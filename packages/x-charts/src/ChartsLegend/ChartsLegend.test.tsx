@@ -47,7 +47,13 @@ describe('<ChartsLegend />', () => {
         width={50}
         series={[
           { type: 'line', id: 'line', label: 'Line', data: [10], labelMarkType: 'line' },
-          { type: 'line', id: 'line-mark', label: 'Line+Mark', data: [20], labelMarkType: 'line+mark' },
+          {
+            type: 'line',
+            id: 'line-mark',
+            label: 'Line+Mark',
+            data: [20],
+            labelMarkType: 'line+mark',
+          },
           { type: 'line', id: 'square', label: 'Square', data: [30], labelMarkType: 'square' },
           { type: 'line', id: 'circle', label: 'Circle', data: [40], labelMarkType: 'circle' },
         ]}
