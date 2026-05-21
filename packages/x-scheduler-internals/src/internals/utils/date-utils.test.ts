@@ -1,5 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { mergeDateAndTime, getStartOfWeek, getEndOfWeek, getWeekNumber } from './date-utils';
+import { TemporalAdapter } from '../../base-ui-copy/types';
 
 const wednesday = adapter.date('2025-01-08T12:00:00.000Z', 'UTC');
 
@@ -119,6 +120,25 @@ describe('date-utils', () => {
       // diff = Jan5 – Dec29 = 7 days => week 2
       const result = getWeekNumber(adapter, wednesday, 0);
       expect(result).to.equal(2);
+    });
+  });
+
+  describe('runtime guards', () => {
+    it('getStartOfWeek throws in dev when weekStartsOn is out of range', () => {
+      expect(() => getStartOfWeek(adapter, wednesday, 7 as any)).to.throw(/weekStartsOn/);
+    });
+
+    it('getStartOfWeek throws in dev when weekStartsOn is a float', () => {
+      expect(() => getStartOfWeek(adapter, wednesday, 1.5 as any)).to.throw(/weekStartsOn/);
+    });
+
+    it('getSundayDayNumber throws in dev when adapter.getDayOfWeek returns out-of-range value', () => {
+      const badAdapter = {
+        ...adapter,
+        getDayOfWeek: () => 0,
+      } as unknown as TemporalAdapter;
+      // Use an object not previously seen so the WeakMap has no cache for it
+      expect(() => getStartOfWeek(badAdapter, wednesday, 1)).to.throw(/getDayOfWeek/);
     });
   });
 });

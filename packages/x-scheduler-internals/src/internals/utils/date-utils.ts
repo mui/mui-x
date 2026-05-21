@@ -110,6 +110,13 @@ function getSundayDayNumber(adapter: Adapter): number {
     // 2025-01-05 is a Sunday; use UTC noon to survive any timezone offset
     const knownSunday = adapter.date('2025-01-05', 'UTC');
     cached = adapter.getDayOfWeek(knownSunday);
+    if (!Number.isInteger(cached) || cached < 1 || cached > 7) {
+      throw new Error(
+        `MUI X Scheduler: adapter.getDayOfWeek returned an unexpected value (${cached}).` +
+          ' Expected an integer in the range 1–7.' +
+          ' Check that your adapter implements getDayOfWeek correctly.',
+      );
+    }
     sundayDayNumberCache.set(adapter, cached);
   }
   return cached;
@@ -132,6 +139,13 @@ export function getStartOfWeek(
 ): TemporalSupportedObject {
   if (weekStartsOn === undefined) {
     return adapter.startOfWeek(date);
+  }
+
+  if (!Number.isInteger(weekStartsOn) || (weekStartsOn as number) < 0 || (weekStartsOn as number) > 6) {
+    throw new Error(
+      `MUI X Scheduler: weekStartsOn must be an integer between 0 (Sunday) and 6 (Saturday),` +
+        ` but received ${weekStartsOn}.`,
+    );
   }
 
   // Adapter day-number for the desired first weekday:
