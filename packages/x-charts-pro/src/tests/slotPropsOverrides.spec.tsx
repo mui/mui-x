@@ -1,7 +1,8 @@
 import { BarChartPro, type BarChartProSlots } from '@mui/x-charts-pro/BarChartPro';
 import { Heatmap, type HeatmapSlots } from '@mui/x-charts-pro/Heatmap';
 import { FunnelChart, type FunnelChartSlots } from '@mui/x-charts-pro/FunnelChart';
-import type { PropsFromSlot } from '@mui/x-charts/models';
+// eslint-disable-next-line no-restricted-imports
+import type { PropsFromSlot } from '@mui/x-charts';
 
 declare module '@mui/x-charts' {
   interface TooltipPropsOverrides {

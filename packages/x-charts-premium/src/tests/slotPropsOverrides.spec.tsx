@@ -6,7 +6,8 @@ import {
   ScatterChartPremium,
   type ScatterChartPremiumSlots,
 } from '@mui/x-charts-premium/ScatterChartPremium';
-import type { PropsFromSlot } from '@mui/x-charts/models';
+// eslint-disable-next-line no-restricted-imports
+import type { PropsFromSlot } from '@mui/x-charts';
 
 declare module '@mui/x-charts' {
   interface TooltipPropsOverrides {
