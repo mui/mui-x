@@ -37,6 +37,7 @@
     "dataSourceCache": {
       "type": { "name": "shape", "description": "{ clear: func, get: func, set: func }" }
     },
+    "dataSourceKeepPreviousData": { "type": { "name": "bool" }, "default": "false" },
     "dataSourceRevalidateMs": { "type": { "name": "number" }, "default": "0" },
     "density": {
       "type": {
