@@ -3,13 +3,13 @@ import { Heatmap, type HeatmapSlots } from '@mui/x-charts-pro/Heatmap';
 import { FunnelChart, type FunnelChartSlots } from '@mui/x-charts-pro/FunnelChart';
 import type { PropsFromSlot } from '@mui/x-charts/models';
 
-declare module '@mui/x-charts/models' {
+declare module '@mui/x-charts' {
   interface TooltipPropsOverrides {
     heatmapTooltipExtra?: string;
   }
 }
 
-declare module '@mui/x-charts-pro/models' {
+declare module '@mui/x-charts-pro' {
   // Pro base slots
   interface BaseDividerPropsOverrides {
     customDividerProp?: string;

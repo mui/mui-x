@@ -8,13 +8,13 @@ import {
 } from '@mui/x-charts-premium/ScatterChartPremium';
 import type { PropsFromSlot } from '@mui/x-charts/models';
 
-declare module '@mui/x-charts/models' {
+declare module '@mui/x-charts' {
   interface TooltipPropsOverrides {
     scatterPremiumTooltipExtra?: string;
   }
 }
 
-declare module '@mui/x-charts-premium/models' {
+declare module '@mui/x-charts-premium' {
   interface RadialLineHighlightPropsOverrides {
     customRadialLineHighlightProp?: string;
   }
