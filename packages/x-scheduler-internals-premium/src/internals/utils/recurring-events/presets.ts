@@ -6,7 +6,7 @@ import type {
   SchedulerProcessedDate,
   SchedulerProcessedEventRecurrenceRule,
 } from '@mui/x-scheduler-internals/models';
-import { getStartOfWeek } from '@mui/x-scheduler-internals/get-week-boundaries';
+import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 import { getWeekDayCode } from './internal-utils';
 

@@ -1,5 +1,5 @@
 import { TemporalAdapter, TemporalSupportedObject } from '@mui/x-scheduler-internals/base-ui-copy';
-import { getStartOfWeek } from '@mui/x-scheduler-internals/get-week-boundaries';
+import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
 import { IteratedCell, PresetHeaderUnit } from '../../models';
 
 export function iterate(
