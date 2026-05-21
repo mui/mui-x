@@ -115,7 +115,7 @@ const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
   borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
   overflowX: 'hidden',
   position: 'absolute',
-  zIndex: 4,
+  zIndex: 5,
   backgroundColor: (theme.vars || theme).palette.background.default,
 }));
 
@@ -127,6 +127,7 @@ const EventTimelinePremiumEventsHeaderCell = styled(TimelineGrid.Cell, {
   minWidth: 0,
   position: 'relative',
   overflowX: 'clip',
+  zIndex: 4,
 });
 
 const EventTimelinePremiumEventsHeaderCellContent = styled('div', {
@@ -163,15 +164,12 @@ const EventTimelinePremiumViewport = styled('div', {
 const EventTimelinePremiumBodyRow = styled(TimelineGrid.BodyRow, {
   name: 'MuiEventTimeline',
   slot: 'BodyRow',
-})(({ theme }) => ({
+})({
   display: 'flex',
   width: 'var(--row-width)',
   position: 'relative',
   breakInside: 'avoid',
-  '&:not(:last-of-type)': {
-    borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-  },
-}));
+});
 
 const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   name: 'MuiEventTimeline',
@@ -187,6 +185,8 @@ const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   position: 'relative',
   padding: theme.spacing(2, 0),
   alignContent: 'start',
+  zIndex: 1,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   transform: 'translateX(calc(-1 * var(--events-scroll-left, 0) * 1px))',
   '&:focus-visible': {
     outline: 'none',
@@ -201,9 +201,7 @@ const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTime
   position: 'absolute',
   top: 0,
   bottom: 0,
-  gridColumn: 2,
-  marginLeft:
-    'calc(var(--unit-count) * var(--unit-width) * var(--x-position) - var(--events-scroll-left, 0) * 1px)',
+  left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position))',
   width: 0,
   zIndex: 2,
   borderLeft: `2px solid ${(theme.vars || theme).palette.primary.main}`,
@@ -215,16 +213,15 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
   slot: 'CurrentTimeIndicatorCircle',
 })(({ theme }) => ({
   position: 'absolute',
-  bottom: -5,
-  left: 0,
+  // Center the circle on the header/body boundary (RowContainer's top edge).
+  top: -3,
   // 3px = half the circle's width (4px) minus half the line's width (1px), to center the circle on the line.
-  transform:
-    'translateX(calc(var(--unit-count) * var(--unit-width) * var(--x-position) - var(--events-scroll-left, 0) * 1px - 3px))',
+  left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position) - 3px)',
   width: 8,
   height: 8,
   borderRadius: '50%',
   backgroundColor: (theme.vars || theme).palette.primary.main,
-  zIndex: 1,
+  zIndex: 2,
 }));
 
 // In macOS Safari and Gnome Web, scrollbars are overlaid and report size 0.
@@ -345,12 +342,6 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
           <EventTimelinePremiumEventsHeaderCellContent className={classes.eventsHeaderCellContent}>
             <EventTimelinePremiumHeader tickRange={tickRange} />
           </EventTimelinePremiumEventsHeaderCellContent>
-          {showCurrentTimeIndicator && (
-            <EventTimelinePremiumCurrentTimeIndicatorCircle
-              className={classes.currentTimeIndicatorCircle}
-              aria-hidden
-            />
-          )}
         </EventTimelinePremiumEventsHeaderCell>
       </EventTimelinePremiumHeaderRow>
     );
@@ -727,15 +718,21 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                   />
                   <RowContainer role="rowgroup" {...positionerProps}>
                     {virtualizer.api.getters.getRows()}
+                    {showCurrentTimeIndicator && (
+                      <React.Fragment>
+                        <EventTimelinePremiumCurrentTimeIndicator
+                          className={classes.currentTimeIndicator}
+                          aria-hidden
+                        />
+                        <EventTimelinePremiumCurrentTimeIndicatorCircle
+                          className={classes.currentTimeIndicatorCircle}
+                          aria-hidden
+                        />
+                      </React.Fragment>
+                    )}
                   </RowContainer>
                   <FillerRow />
                 </EventTimelinePremiumViewport>
-                {showCurrentTimeIndicator && (
-                  <EventTimelinePremiumCurrentTimeIndicator
-                    className={classes.currentTimeIndicator}
-                    aria-hidden
-                  />
-                )}
               </EventTimelinePremiumScrollerContent>
             </EventTimelinePremiumGrid>
             {hasScrollY && (

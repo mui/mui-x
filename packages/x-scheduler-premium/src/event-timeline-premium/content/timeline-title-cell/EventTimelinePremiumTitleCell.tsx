@@ -19,6 +19,7 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   flex: '0 0 auto',
   width: 'var(--title-column-width)',
   borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   overflow: 'hidden',
   padding: theme.spacing(2),
   paddingLeft: `calc(${theme.spacing(2)} + var(--resource-depth) * ${theme.spacing(2)})`,
