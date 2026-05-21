@@ -22,6 +22,9 @@ function getLabelMarkUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLabelMark', slot);
 }
 
+/**
+ * @deprecated Use legend classes (`legendClasses`, `continuousColorLegendClasses`, or `piecewiseColorLegendClasses`) instead.
+ * */
 export const labelMarkClasses: ChartsLabelMarkClasses = generateUtilityClasses(
   'MuiChartsLabelMark',
   ['root', 'line', 'lineAndMark', 'square', 'circle', 'fill'],

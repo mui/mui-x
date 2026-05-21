@@ -16,10 +16,13 @@ export interface ChartsLabelGradientClasses {
   fill: string;
 }
 
-export function getLabelGradientUtilityClass(slot: string) {
+function getLabelGradientUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLabelGradient', slot);
 }
 
+/**
+ * @deprecated Use legend classes (`legendClasses`, `continuousColorLegendClasses`, or `piecewiseColorLegendClasses`) instead.
+ * */
 export const labelGradientClasses: ChartsLabelGradientClasses = generateUtilityClasses(
   'MuiChartsLabelGradient',
   ['root', 'vertical', 'horizontal', 'mask', 'fill'],

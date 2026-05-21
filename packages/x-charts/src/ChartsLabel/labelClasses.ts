@@ -8,10 +8,13 @@ export interface ChartsLabelClasses {
   root: string;
 }
 
-export function getLabelUtilityClass(slot: string) {
+function getLabelUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsLabel', slot);
 }
 
+/**
+ * @deprecated Use legend classes (`legendClasses`, `continuousColorLegendClasses`, or `piecewiseColorLegendClasses`) instead.
+ * */
 export const labelClasses: ChartsLabelClasses = generateUtilityClasses('MuiChartsLabel', ['root']);
 
 export const useUtilityClasses = (props: ChartsLabelProps) => {
