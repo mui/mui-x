@@ -62,6 +62,17 @@ export interface SchedulerRecurringEventsPluginInterface {
   ): UpdateEventsParameters;
 
   /**
+   * Generates the update payload to apply when deleting a recurring event, scoped to
+   * a single occurrence, the occurrence and the following ones, or the entire series.
+   */
+  deleteRecurringEvent(
+    adapter: Adapter,
+    originalEvent: SchedulerProcessedEvent,
+    occurrenceStart: TemporalSupportedObject,
+    scope: RecurringEventUpdateScope,
+  ): UpdateEventsParameters;
+
+  /**
    * Normalizes display-timezone changes (start/end/rrule) back to the event's data
    * timezone before they are persisted.
    */

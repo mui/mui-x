@@ -29,7 +29,7 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringSc
     const handleOpenChange = React.useCallback(
       (next: boolean) => {
         if (!next) {
-          store.selectRecurringEventUpdateScope(null);
+          store.selectRecurringEventScope(null);
         }
       },
       [store],
@@ -39,7 +39,7 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringSc
       event.preventDefault();
       const form = new FormData(event.currentTarget);
       const recurrenceScopeValue = form.get('recurrenceScope') as RecurringEventUpdateScope;
-      store.selectRecurringEventUpdateScope(recurrenceScopeValue);
+      store.selectRecurringEventScope(recurrenceScopeValue);
     };
 
     return (
@@ -74,7 +74,7 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, RecurringSc
             </FormControl>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => store.selectRecurringEventUpdateScope(null)} type="button">
+            <Button onClick={() => store.selectRecurringEventScope(null)} type="button">
               {localeText.cancel}
             </Button>
             <Button variant="contained" type="submit">
