@@ -7,6 +7,7 @@ _May 21, 2026_
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 📆 Refactor Calendar Range drag editing to use Pointer Events instead of drag and touch events combination (#22279)
+- ✨ Apply lazy loading to `EventTimelinePremium` (#22308)
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 - 🌎 Added Norwegian bokmål (nb-NO) locale to the Scheduler
