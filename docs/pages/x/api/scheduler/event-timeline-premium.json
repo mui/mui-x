@@ -18,7 +18,7 @@
     "canDropEventsToTheOutside": { "type": { "name": "bool" }, "default": "false" },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "dataSource": {
-      "type": { "name": "shape", "description": "{ getEvents: func, updateEvents: func }" }
+      "type": { "name": "shape", "description": "{ getEvents: func, persistEvents: func }" }
     },
     "dateLocale": { "type": { "name": "object" }, "default": "enUS (English)" },
     "defaultPreferences": {
