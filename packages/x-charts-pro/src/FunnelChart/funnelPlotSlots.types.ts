@@ -16,7 +16,9 @@ export interface FunnelPlotSlots {
    * Custom component for funnel section label.
    * @default FunnelSectionLabel
    */
-  funnelSectionLabel?: React.ElementType<FunnelSectionLabelProps & FunnelSectionLabelPropsOverrides>;
+  funnelSectionLabel?: React.ElementType<
+    FunnelSectionLabelProps & FunnelSectionLabelPropsOverrides
+  >;
 }
 
 export interface FunnelPlotSlotProps {

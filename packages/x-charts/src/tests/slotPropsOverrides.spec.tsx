@@ -119,9 +119,7 @@ function CustomAxisTickLabel({
 }: PropsFromSlot<LineChartSlots['axisTickLabel']>) {
   return <text data-prop={customAxisTickLabelProp} />;
 }
-function CustomAxisLabel({
-  customAxisLabelProp,
-}: PropsFromSlot<LineChartSlots['axisLabel']>) {
+function CustomAxisLabel({ customAxisLabelProp }: PropsFromSlot<LineChartSlots['axisLabel']>) {
   return <text data-prop={customAxisLabelProp} />;
 }
 function CustomXAxis({ customXAxisProp }: PropsFromSlot<LineChartSlots['xAxis']>) {
@@ -216,9 +214,7 @@ export function AugmentedBarChartUsage() {
 function CustomPieArc({ customPieArcProp }: PropsFromSlot<PieChartSlots['pieArc']>) {
   return <path data-prop={customPieArcProp} />;
 }
-function CustomPieArcLabel({
-  customPieArcLabelProp,
-}: PropsFromSlot<PieChartSlots['pieArcLabel']>) {
+function CustomPieArcLabel({ customPieArcLabelProp }: PropsFromSlot<PieChartSlots['pieArcLabel']>) {
   return <text>{customPieArcLabelProp}</text>;
 }
 
@@ -260,20 +256,30 @@ export function AugmentedScatterChartUsage() {
 
 // Base slots (baseButton, baseIconButton, baseToggleButton, baseToggleButtonGroup)
 // flow through `Partial<ChartsSlots>` on every chart's slots interface.
-function CustomBaseButton({
-  customButtonProp,
-}: PropsFromSlot<LineChartSlots['baseButton']>) {
-  return <button type="button" data-prop={customButtonProp}>Hello</button>;
+function CustomBaseButton({ customButtonProp }: PropsFromSlot<LineChartSlots['baseButton']>) {
+  return (
+    <button type="button" data-prop={customButtonProp}>
+      Hello
+    </button>
+  );
 }
 function CustomBaseIconButton({
   customIconButtonProp,
 }: PropsFromSlot<LineChartSlots['baseIconButton']>) {
-  return <button type="button" data-prop={customIconButtonProp}>Hello</button>;
+  return (
+    <button type="button" data-prop={customIconButtonProp}>
+      Hello
+    </button>
+  );
 }
 function CustomBaseToggleButton({
   customToggleButtonProp,
 }: PropsFromSlot<LineChartSlots['baseToggleButton']>) {
-  return <button type="button" data-prop={customToggleButtonProp}>Hello</button>;
+  return (
+    <button type="button" data-prop={customToggleButtonProp}>
+      Hello
+    </button>
+  );
 }
 function CustomBaseToggleButtonGroup({
   customToggleButtonGroupProp,

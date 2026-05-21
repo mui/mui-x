@@ -51,9 +51,7 @@ declare module '@mui/x-charts-pro/models' {
 }
 
 // Pro base + icon slots flow through `Partial<ChartsSlotsPro>` on every pro chart.
-function CustomBaseDivider({
-  customDividerProp,
-}: PropsFromSlot<BarChartProSlots['baseDivider']>) {
+function CustomBaseDivider({ customDividerProp }: PropsFromSlot<BarChartProSlots['baseDivider']>) {
   return <hr data-prop={customDividerProp} />;
 }
 function CustomBaseMenuItem({
@@ -77,9 +75,7 @@ function CustomBaseTooltip({
 function CustomZoomInIcon({ customZoomInProp }: PropsFromSlot<BarChartProSlots['zoomInIcon']>) {
   return <svg data-prop={customZoomInProp} />;
 }
-function CustomZoomOutIcon({
-  customZoomOutProp,
-}: PropsFromSlot<BarChartProSlots['zoomOutIcon']>) {
+function CustomZoomOutIcon({ customZoomOutProp }: PropsFromSlot<BarChartProSlots['zoomOutIcon']>) {
   return <svg data-prop={customZoomOutProp} />;
 }
 function CustomExportIcon({ customExportProp }: PropsFromSlot<BarChartProSlots['exportIcon']>) {
