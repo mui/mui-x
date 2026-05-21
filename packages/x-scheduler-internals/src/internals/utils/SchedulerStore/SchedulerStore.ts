@@ -250,10 +250,9 @@ export class SchedulerStore<
   private isDisposeScheduled = false;
 
   /**
-   * Returns a cleanup function to call when the store's owner unmounts. The actual
-   * dispose is deferred to the next microtask so React StrictMode's synchronous
-   * mount-unmount-mount cycle doesn't tear the store down between the two mounts —
-   * the second mount calls `disposeEffect` again, which cancels the pending dispose.
+   * Returns a cleanup function for the store's owner. Dispose is deferred to a
+   * microtask so React StrictMode's mount-unmount-mount cycle doesn't tear the
+   * store down between mounts.
    */
   public disposeEffect = () => {
     this.isDisposeCancelled = true;
@@ -272,9 +271,16 @@ export class SchedulerStore<
           return;
         }
         this.isDisposed = true;
-        this.disposePlugins();
-        this.timeoutManager.clearAll();
-        this.eventManager.removeAllListeners();
+        try {
+          this.disposePlugins();
+        } catch (error) {
+          if (process.env.NODE_ENV !== 'production') {
+            console.error('MUI X Scheduler: error while disposing plugins.', error);
+          }
+        } finally {
+          this.timeoutManager.clearAll();
+          this.eventManager.removeAllListeners();
+        }
       });
     };
   };

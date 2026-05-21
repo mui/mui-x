@@ -23,7 +23,7 @@ export class EventCalendarPremiumStore<
   }
 
   protected override disposePlugins(): void {
-    this.lazyLoading?.dispose();
+    this.lazyLoading.dispose();
   }
 
   public buildPublicAPI() {

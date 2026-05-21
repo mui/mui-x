@@ -144,6 +144,9 @@ export class SchedulerLazyLoadingPlugin<
         }
       }
     } catch (error) {
+      if (this.isDisposed) {
+        return;
+      }
       this.store.pushError(error);
       this.store.set('isLoading', false);
     }
@@ -158,18 +161,19 @@ export class SchedulerLazyLoadingPlugin<
   }) => {
     const { dataSource } = this.store.parameters;
     const { adapter, displayTimezone } = this.store.state;
+    // Capture locally so a concurrent dispose nulling `this.dataManager`/`this.cache`
+    // during the await below doesn't crash the finally blocks.
+    const dataManager = this.dataManager;
+    const cache = this.cache;
 
-    if (!dataSource || !this.cache || !this.dataManager) {
+    if (!dataSource || !cache || !dataManager) {
       return;
     }
     if (
-      this.cache.hasCoverage(
-        adapter.getTime(range.start),
-        adapter.getTime(adapter.endOfDay(range.end)),
-      )
+      cache.hasCoverage(adapter.getTime(range.start), adapter.getTime(adapter.endOfDay(range.end)))
     ) {
       try {
-        const allCachedEvents = this.cache.getAll();
+        const allCachedEvents = cache.getAll();
         const eventsState = buildEventsState(
           { ...this.store.parameters, events: allCachedEvents } as Parameters,
           adapter,
@@ -184,7 +188,7 @@ export class SchedulerLazyLoadingPlugin<
           errors: [],
         });
       } finally {
-        await this.dataManager.setRequestSettled(range);
+        await dataManager.setRequestSettled(range);
       }
 
       return;
@@ -201,14 +205,14 @@ export class SchedulerLazyLoadingPlugin<
         return;
       }
 
-      this.cache!.setRange(
+      cache.setRange(
         adapter.getTime(range.start),
         adapter.getTime(adapter.endOfDay(range.end)),
         events ?? [],
       );
       // Build from the full cache so disjoint already-cached ranges stay visible
       // when the visible range expands to cover them.
-      const allCachedEvents = this.cache.getAll();
+      const allCachedEvents = cache.getAll();
       const eventsState = buildEventsState(
         { ...this.store.parameters, events: allCachedEvents } as Parameters,
         adapter,
@@ -221,10 +225,15 @@ export class SchedulerLazyLoadingPlugin<
         errors: [],
       });
     } catch (error) {
+      if (this.isDisposed) {
+        return;
+      }
       this.store.pushError(error);
     } finally {
-      this.store.set('isLoading', false);
-      await this.dataManager.setRequestSettled(range);
+      if (!this.isDisposed) {
+        this.store.set('isLoading', false);
+      }
+      await dataManager.setRequestSettled(range);
     }
   };
 
@@ -248,6 +257,12 @@ export class SchedulerLazyLoadingPlugin<
       });
     } catch (error) {
       if (this.isDisposed) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error(
+            'MUI X Scheduler: `dataSource.persistEvents` rejected after the store was disposed; the error will not be surfaced to the user.',
+            error,
+          );
+        }
         return;
       }
       this.store.pushError(error);

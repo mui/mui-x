@@ -125,7 +125,7 @@ export class EventTimelinePremiumStore<
   }
 
   protected override disposePlugins(): void {
-    this.lazyLoading?.dispose();
+    this.lazyLoading.dispose();
   }
 
   private assertPresetValidity(preset: EventTimelinePremiumPreset) {

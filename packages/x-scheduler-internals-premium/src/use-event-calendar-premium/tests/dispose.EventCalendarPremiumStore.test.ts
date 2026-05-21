@@ -2,39 +2,16 @@ import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
 import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
-import { DEBOUNCE_MS } from '../../internals/utils/queue';
+import {
+  buildEvents,
+  DEFAULT_PARAMS,
+  flushDebounce,
+  flushEffect,
+  noopPersistEvents,
+  noopUIEvent,
+  TestEvent,
+} from '../../internals/tests/disposeTestHelpers';
 import { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
-
-interface TestEvent {
-  id: string;
-  start: string;
-  end: string;
-  title: string;
-}
-
-const noopPersistEvents = async () => ({ success: true });
-const noopUIEvent: any = {};
-
-const buildEvents = (): TestEvent[] => [
-  {
-    id: '1',
-    start: '2025-07-01T00:00:00.000Z',
-    end: '2025-07-01T11:00:00.000Z',
-    title: 'Event 1',
-  },
-];
-
-const flushEffect = async () => {
-  await Promise.resolve();
-  await Promise.resolve();
-};
-
-const flushDebounce = () => vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
-
-const DEFAULT_PARAMS = {
-  events: [] as TestEvent[],
-  defaultVisibleDate: DEFAULT_TESTING_VISIBLE_DATE,
-};
 
 const buildViewConfig = (): any => ({
   siblingVisibleDateGetter: ({ visibleDate }: any) => visibleDate,
@@ -105,7 +82,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     // A subsequent navigation goes through the debounced path.
     store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
 
-    // Let scheduleFetch's microtask flush; the debounce timer is now armed.
+    // Arm the debounce timer.
     await flushEffect();
 
     store.disposeEffect()();
@@ -113,7 +90,6 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     await flushDebounce();
     await flushEffect();
 
-    // No second fetch happened — only the initial immediate one.
     expect(dataSource.getEvents.calledOnce).to.equal(true);
   });
 
@@ -165,14 +141,39 @@ describe('Dispose - EventCalendarPremiumStore', () => {
 
     store.disposeEffect()();
 
-    // Navigation after dispose must not re-trigger the registerStoreEffect that
-    // schedules fetches on visible-day changes.
+    // Navigation after dispose must not re-trigger the visible-day registerStoreEffect.
     store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
 
     await flushEffect();
     await flushDebounce();
 
     expect(dataSource.getEvents.calledOnce).to.equal(true);
+  });
+
+  it('should survive a StrictMode mount-unmount-mount cycle', async () => {
+    const dataSource = {
+      getEvents: spy(async () => buildEvents()),
+      persistEvents: noopPersistEvents,
+    };
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    store.setViewConfig(buildViewConfig());
+
+    await flushEffect();
+    await flushDebounce();
+    expect(dataSource.getEvents.calledOnce).to.equal(true);
+
+    // First mount's cleanup runs, then the second mount calls `disposeEffect` again
+    // synchronously — before the deferred dispose microtask fires.
+    store.disposeEffect()();
+    store.disposeEffect();
+    await flushEffect();
+
+    // Store still alive: a navigation triggers a new fetch.
+    store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
+    await flushEffect();
+    await flushDebounce();
+
+    expect(dataSource.getEvents.callCount).to.equal(2);
   });
 
   it('should be safe to call the dispose cleanup twice', async () => {
@@ -187,9 +188,10 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     await flushDebounce();
 
     const cleanup = store.disposeEffect();
-    expect(() => {
-      cleanup();
-      cleanup();
-    }).not.to.throw();
+    cleanup();
+    // Flush the microtask so the second cleanup hits the post-dispose path
+    // rather than the already-scheduled short-circuit.
+    await flushEffect();
+    expect(() => cleanup()).not.to.throw();
   });
 });
