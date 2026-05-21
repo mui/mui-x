@@ -88,6 +88,8 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     [rawXAxes, resolvedAxisId],
   );
   const isOrdinal = resolvedAxis?.scaleType === 'band' || resolvedAxis?.scaleType === 'point';
+  // Use isValueNull instead of value === null to avoid unnecessary re-renders when value is a new function/object on each render.
+  const isValueNull = value === null;
 
   // Get the full domain for the target axis, ignoring the current zoom.
   // For ordinal axes (band/point), use index-based range since domain values are categories.
@@ -107,37 +109,41 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     return { min: Number(min), max: Number(max) };
   }, [resolvedAxisId, domains, isOrdinal]);
 
-  const handleClick = React.useCallback(() => {
-    if (resolvedAxisId === undefined || !axisDomain) {
-      return;
+  // Destructure so that returning a new object from rangeButtonValueToZoom doesn't cause unnecessary re-renders in handleClick.
+  const { start: startZoom, end: endZoom } = React.useMemo(() => {
+    if (axisDomain === undefined) {
+      return { start: undefined, end: undefined };
     }
-    const zoom = rangeButtonValueToZoom(value, {
+    return rangeButtonValueToZoom(value, {
       scaleType: resolvedAxis?.scaleType ?? 'linear',
       data: resolvedAxis?.data,
       domain: axisDomain,
     });
+  }, [axisDomain, value, resolvedAxis]);
+
+  const handleClick = React.useCallback(() => {
+    if (resolvedAxisId === undefined || startZoom === undefined || endZoom === undefined) {
+      return;
+    }
     instance.setAxisZoomData(resolvedAxisId, {
       axisId: resolvedAxisId,
-      start: zoom.start,
-      end: zoom.end,
+      start: startZoom,
+      end: endZoom,
     });
-  }, [resolvedAxisId, resolvedAxis, axisDomain, value, instance]);
+  }, [resolvedAxisId, startZoom, endZoom, instance]);
 
   // A button is selected when the current zoom range matches its computed range.
   const isActive = React.useMemo(() => {
-    if (axisDomain === undefined) {
-      return value === null && !canZoomOut;
+    if (startZoom === undefined || endZoom === undefined) {
+      return isValueNull && !canZoomOut;
     }
-    const target = rangeButtonValueToZoom(value, {
-      scaleType: resolvedAxis?.scaleType ?? 'linear',
-      data: resolvedAxis?.data,
-      domain: axisDomain,
-    });
     const start = currentAxisZoom?.start ?? 0;
     const end = currentAxisZoom?.end ?? 100;
     const epsilon = 0.01;
-    return Math.abs(start - target.start) < epsilon && Math.abs(end - target.end) < epsilon;
-  }, [axisDomain, value, resolvedAxis, currentAxisZoom, canZoomOut]);
+    return (
+      Math.abs(start - startZoom) < epsilon && Math.abs(end - endZoom) < epsilon
+    );
+  }, [startZoom, endZoom, isValueNull, currentAxisZoom, canZoomOut]);
 
   const element = useComponentRenderer(slots.baseToggleButton, render, {
     ...slotProps.baseToggleButton,
