@@ -135,7 +135,11 @@ export function getStartOfWeek(
     return adapter.startOfWeek(date);
   }
 
-  if (!Number.isInteger(weekStartsOn) || (weekStartsOn as number) < 0 || (weekStartsOn as number) > 6) {
+  if (
+    !Number.isInteger(weekStartsOn) ||
+    (weekStartsOn as number) < 0 ||
+    (weekStartsOn as number) > 6
+  ) {
     throw new Error(
       `MUI X Scheduler: weekStartsOn must be an integer between 0 (Sunday) and 6 (Saturday),` +
         ` but received ${weekStartsOn}.`,

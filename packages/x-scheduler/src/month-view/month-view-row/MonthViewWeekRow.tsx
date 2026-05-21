@@ -58,7 +58,9 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
     [adapter, days],
   );
 
-  const weekNumberId = showWeekNumber ? `${schedulerId}-MonthViewWeekNumber-${weekNumber}` : undefined;
+  const weekNumberId = showWeekNumber
+    ? `${schedulerId}-MonthViewWeekNumber-${weekNumber}`
+    : undefined;
 
   return (
     <MonthViewRow

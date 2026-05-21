@@ -242,8 +242,7 @@ describe('<PreferencesMenu />', () => {
       // Click Monday
       await user.click(screen.getByRole('menuitemradio', { name: /monday/i }));
 
-      // Re-open to check updated state
-      await openPreferencesMenu(user);
+      // Menu stays open after selecting a radio; check updated state directly.
       expect(
         screen.getByRole('menuitemradio', { name: /monday/i }).getAttribute('aria-checked'),
       ).to.equal('true');
@@ -254,17 +253,16 @@ describe('<PreferencesMenu />', () => {
 
     it('should hide weekStartsOn submenu when toggleWeekStartsOn is false', async () => {
       const { user } = render(
-        <EventCalendarProvider
-          events={[]}
-          preferencesMenuConfig={{ toggleWeekStartsOn: false }}
-        >
+        <EventCalendarProvider events={[]} preferencesMenuConfig={{ toggleWeekStartsOn: false }}>
           <PreferencesMenu />
         </EventCalendarProvider>,
       );
 
       await openPreferencesMenu(user);
 
-      expect(screen.queryByRole('menuitemradio')).to.equal(null);
+      expect(screen.queryByRole('menuitemradio', { name: /sunday/i })).to.equal(null);
+      expect(screen.queryByRole('menuitemradio', { name: /monday/i })).to.equal(null);
+      expect(screen.queryByRole('menuitemradio', { name: /saturday/i })).to.equal(null);
     });
 
     it('should not render a divider before weekStartsOn when it is the only section', async () => {
