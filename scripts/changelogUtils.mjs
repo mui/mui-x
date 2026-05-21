@@ -416,11 +416,8 @@ async function generateChangelog({
       (proCommits?.length ?? 0) === 0 &&
       (premiumCommits?.length ?? 0) === 0;
 
-    // Skip the section when there are no commits and the base package was not
-    // bumped since `lastRelease`. When the package is bumped without commits
-    // (e.g. an `x-internals` dependency update propagated a version bump), we
-    // still want to render the section with `Internal changes.` so consumers
-    // know a new version shipped.
+    // Keep rendering `Internal changes.` when a package is bumped without
+    // commits (e.g. an `x-internals` update propagating a version bump).
     if (hasNoCommits && !isPackageBumped(packageName, packageVersion)) {
       return '';
     }
