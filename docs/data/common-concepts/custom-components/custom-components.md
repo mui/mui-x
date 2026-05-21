@@ -230,6 +230,7 @@ function MyApp() {
   );
 }
 ```
+
 For more details, see:
 
 - [Data Grid - Custom slots and subcomponents—Custom slot props with TypeScript](/x/react-data-grid/components/#custom-slot-props-with-typescript)
