@@ -1,5 +1,5 @@
 import { TemporalTimezone, TemporalSupportedObject } from '../../base-ui-copy/types';
-import { SchedulerProcessedEvent } from '../../models';
+import { SchedulerProcessedEvent, WeekStartsOn } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 
 /**
@@ -95,12 +95,9 @@ export function getOccurrenceEnd({
 }
 
 /**
- * The 1..7 adapter day-number that corresponds to a given JS weekday (0=Sun … 6=Sat).
- * Resolved once per adapter instance via a known-Sunday reference date.
- *
- * getDayOfWeek returns a locale-relative number (1 = locale's first weekday).
- * By probing a known Sunday we anchor the mapping without touching the adapter
- * interface or pulling in date-library internals.
+ * Maps a known-Sunday reference date through adapter.getDayOfWeek to anchor
+ * the 1..7 adapter day-number to JS weekdays (0=Sun … 6=Sat). Cached per
+ * adapter instance.
  */
 const sundayDayNumberCache = new WeakMap<Adapter, number>();
 
@@ -128,14 +125,11 @@ function getSundayDayNumber(adapter: Adapter): number {
  *
  * When `weekStartsOn` is `undefined` the locale default (adapter.startOfWeek)
  * is used unchanged.
- *
- * Uses only the adapter primitives `getDayOfWeek`, `addDays`, and `startOfDay`
- * so it works with any TemporalAdapter implementation.
  */
 export function getStartOfWeek(
   adapter: Adapter,
   date: TemporalSupportedObject,
-  weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 | undefined,
+  weekStartsOn: WeekStartsOn | undefined,
 ): TemporalSupportedObject {
   if (weekStartsOn === undefined) {
     return adapter.startOfWeek(date);
@@ -148,9 +142,7 @@ export function getStartOfWeek(
     );
   }
 
-  // Adapter day-number for the desired first weekday:
-  //   getDayOfWeek(Sunday) = s  (a number in 1..7)
-  //   getDayOfWeek(Sunday + k) = ((s - 1 + k) % 7) + 1
+  // getDayOfWeek(Sunday) = s  =>  getDayOfWeek(Sunday + k) = ((s - 1 + k) % 7) + 1
   const s = getSundayDayNumber(adapter);
   const targetDayNumber = ((s - 1 + weekStartsOn) % 7) + 1;
 
@@ -168,7 +160,7 @@ export function getStartOfWeek(
 export function getEndOfWeek(
   adapter: Adapter,
   date: TemporalSupportedObject,
-  weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 | undefined,
+  weekStartsOn: WeekStartsOn | undefined,
 ): TemporalSupportedObject {
   if (weekStartsOn === undefined) {
     return adapter.endOfWeek(date);
@@ -181,11 +173,16 @@ export function getEndOfWeek(
 /**
  * Returns the week number for `date`, using `weekStartsOn` as the first day of
  * the week (0 = Sunday … 6 = Saturday).
+ *
+ * Applies the ISO 8601 "4-day minimum" rule (the Thursday of each week
+ * determines its year) with a parametric first day of the week. When
+ * `weekStartsOn` is 1 the result is a standard ISO 8601 week number; for
+ * other values it is the same algorithm with a shifted origin.
  */
 export function getWeekNumber(
   adapter: Adapter,
   date: TemporalSupportedObject,
-  weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6 | undefined,
+  weekStartsOn: WeekStartsOn | undefined,
 ): number {
   if (weekStartsOn === undefined) {
     return adapter.getWeekNumber(date);

@@ -1,3 +1,6 @@
+/** Day-of-week index: 0 = Sunday, 1 = Monday, …, 6 = Saturday. */
+export type WeekStartsOn = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
 export interface SchedulerPreferences {
   /**
    * Whether the component should display the time in 12-hour format with AM/PM meridiem.
@@ -7,10 +10,10 @@ export interface SchedulerPreferences {
   /**
    * The day the week starts on.
    * 0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday.
-   * When not set, the locale default is used.
-   * @default undefined
+   * When not set, the locale's first day of the week is used.
+   * @default The locale's first day of the week
    */
-  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  weekStartsOn?: WeekStartsOn;
 }
 
 export interface EventCalendarPreferences extends SchedulerPreferences {

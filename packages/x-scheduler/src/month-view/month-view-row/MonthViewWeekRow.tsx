@@ -48,7 +48,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
   const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
-  const weekNum = getWeekNumber(adapter, days[0].value, weekStartsOn);
+  const weekNumber = getWeekNumber(adapter, days[0].value, weekStartsOn);
 
   const { start, end } = React.useMemo(
     () => ({
@@ -58,12 +58,11 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
     [adapter, days],
   );
 
-  const weekNumberId = showWeekNumber ? `${schedulerId}-MonthViewWeekNumber-${weekNum}` : undefined;
+  const weekNumberId = showWeekNumber ? `${schedulerId}-MonthViewWeekNumber-${weekNumber}` : undefined;
 
   return (
     <MonthViewRow
       className={classes.monthViewRow}
-      key={weekNum}
       start={start}
       end={end}
       rowIndex={rowIndex}
@@ -73,10 +72,10 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
         <MonthViewWeekNumberCell
           className={classes.monthViewWeekNumberCell}
           id={weekNumberId}
-          aria-label={localeText.weekNumberAriaLabel(weekNum)}
+          aria-label={localeText.weekNumberAriaLabel(weekNumber)}
           aria-hidden="true"
         >
-          {weekNum}
+          {weekNumber}
         </MonthViewWeekNumberCell>
       )}
       {occurrences.days.map((day, dayIdx) => (

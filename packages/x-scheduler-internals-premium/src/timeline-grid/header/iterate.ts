@@ -1,4 +1,5 @@
 import { TemporalAdapter, TemporalSupportedObject } from '@mui/x-scheduler-internals/base-ui-copy';
+import { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
 import { IteratedCell, PresetHeaderUnit } from '../../models';
 
@@ -8,7 +9,7 @@ export function iterate(
   tickUnit: PresetHeaderUnit,
   rangeStart: TemporalSupportedObject,
   rangeEnd: TemporalSupportedObject,
-  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6,
+  weekStartsOn?: WeekStartsOn,
 ): IteratedCell[] {
   if (adapter.isBefore(rangeEnd, rangeStart)) {
     throw new Error(
@@ -70,7 +71,7 @@ function startOf(
   adapter: TemporalAdapter,
   date: TemporalSupportedObject,
   unit: PresetHeaderUnit,
-  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6,
+  weekStartsOn?: WeekStartsOn,
 ): TemporalSupportedObject {
   switch (unit) {
     case 'hour':
