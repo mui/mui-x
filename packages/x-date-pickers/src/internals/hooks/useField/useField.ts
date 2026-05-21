@@ -4,6 +4,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { warnOnce } from '@mui/x-internals/warning';
+import { MuiEvent } from '@mui/x-internals/types';
 import { parseSelectedSections } from './useField.utils';
 import {
   UseFieldDOMGetters,
@@ -200,17 +201,24 @@ export const useField = <
     rootProps.onClick(event);
   });
 
-  const handleRootMouseDown = useEventCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    // Mirrors `handleRootClick`: a propagated mousedown from the clear or open
-    // button (both call `preventDefault`) must not trigger closest-section
-    // focus. Userland `onMouseDown` that calls `preventDefault` likewise
-    // opts out of the new focus behavior.
-    if (event.isDefaultPrevented()) {
-      return;
-    }
-    onMouseDown?.(event);
-    rootProps.onMouseDown(event);
-  });
+  const handleRootMouseDown = useEventCallback(
+    (event: MuiEvent<React.MouseEvent<HTMLDivElement>>) => {
+      // Skip propagated mousedowns from the clear / open buttons (their own
+      // handlers `preventDefault`), mirroring `handleRootClick`.
+      if (event.isDefaultPrevented()) {
+        return;
+      }
+      onMouseDown?.(event);
+      // Userland can opt out of the closest-section focus behavior by setting
+      // `event.defaultMuiPrevented = true` in their `onMouseDown` (clean
+      // opt-out that doesn't also suppress browser defaults like
+      // `preventDefault` would).
+      if (event.defaultMuiPrevented) {
+        return;
+      }
+      rootProps.onMouseDown(event);
+    },
+  );
 
   const handleRootPaste = useEventCallback((event: React.ClipboardEvent<HTMLDivElement>) => {
     onPaste?.(event);

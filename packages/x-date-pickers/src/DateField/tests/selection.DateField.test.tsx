@@ -147,6 +147,23 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
     });
 
+    it('should let a userland onMouseDown opt out via `event.defaultMuiPrevented`', () => {
+      const view = renderWithProps({
+        onMouseDown: (event) => {
+          (event as any).defaultMuiPrevented = true;
+        },
+      });
+
+      const sectionsContainer = view.getSectionsContainer();
+      fireEvent.mouseDown(sectionsContainer);
+      fireEvent.click(sectionsContainer);
+
+      // The closest-section handler never ran, so no section is selected.
+      // (The click bubble doesn't hit a section container either since the
+      // click target is the sections-container itself.)
+      expect(getCleanedSelectedContent()).to.equal('');
+    });
+
     // Chromium delegates focus from a non-contenteditable ancestor click onto
     // the nearest contenteditable descendant — but only for trusted pointer
     // events. We drive the click via Playwright (real pointer events) here;
