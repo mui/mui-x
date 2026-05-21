@@ -6,10 +6,11 @@ _May 21, 2026_
 
 We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
 
+- 📆 Refactor Calendar Range drag editing to use Pointer Events instead of drag and touch events combination (#22279)
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 - 🌎 Added Norwegian bokmål (nb-NO) locale to the Scheduler
-- 🌎 Improved Swedish (svSE) locale on the Data Grid
+- 🌎 Improved Swedish (sv-SE) locale on the Data Grid
 
 Special thanks go out to these community members for their valuable contributions:
 @Anexus5919, @jvskriubakken, @rin, @viktormelin
@@ -82,16 +83,15 @@ Same changes as in `@mui/x-tree-view@9.1.0`.
 
 #### `@mui/x-scheduler@9.0.0-alpha.7`
 
-- [scheduler] Apply lazy loading to `EventTimelinePremium` (#22308) @rita-codes
-- [scheduler] Deduplicate staged ranges within the debounce window (#22476) @Anexus5919
-- [scheduler] Moving recurring events to premium (#22430) @rita-codes
-- [scheduler] Pass full event objects to `dataSource.updateEvents` (#22462) @rita-codes
 - [I10n] Add Norwegian bokmål (nb-NO) locale (#22415) @jvskriubakken
 
 #### `@mui/x-scheduler-premium@9.0.0-alpha.7` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-scheduler@9.0.0-alpha.7`.
+Same changes as in `@mui/x-scheduler@9.0.0-alpha.7`, plus:
 
+- [scheduler] Apply lazy loading to `EventTimelinePremium` (#22308) @rita-codes
+- [scheduler] Deduplicate staged ranges within the debounce window (#22476) @Anexus5919
+- [scheduler] Pass full event objects to `dataSource.updateEvents` (#22462) @rita-codes
 ### Docs
 
 - [docs] Automatically update supported versions (#21850) @arminmeh
