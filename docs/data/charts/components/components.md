@@ -93,12 +93,6 @@ For example, you can use `useLineSeries()` to obtain the series of a Line Chart 
 
 ## Custom slot props with TypeScript
 
-:::success
-This section focuses on module augmentation.
-
-See [Custom slots and subcomponents—Usage with TypeScript](/x/common-concepts/custom-components/#usage-with-typescript) if you don't want to use this approach.
-:::
-
 If the custom component requires additional props to work properly, TypeScript may throw type errors.
 To solve these type errors, use [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) to enhance the props interface.
 

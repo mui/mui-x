@@ -230,34 +230,10 @@ function MyApp() {
   );
 }
 ```
+For more details, see:
 
-The same pattern applies to the Charts packages:
-
-```ts
-declare module '@mui/x-charts' {
-  interface TooltipPropsOverrides {
-    label: string;
-  }
-}
-```
-
-```tsx
-function CustomTooltip({ label }: PropsFromSlot<LineChartSlots['tooltip']>) {
-  return <div>{label}</div>;
-}
-
-function MyApp() {
-  return (
-    <LineChart
-      series={[{ data: [1, 2, 3] }]}
-      slots={{ tooltip: CustomTooltip }}
-      slotProps={{ tooltip: { label: 'Value' } }}
-    />
-  );
-}
-```
-
-See [Data Grid - Custom slots and subcomponents—Custom slot props with TypeScript](/x/react-data-grid/components/#custom-slot-props-with-typescript) or [Charts - Custom slot props with TypeScript](/x/react-charts/components/#custom-slot-props-with-typescript) for more details.
+- [Data Grid - Custom slots and subcomponents—Custom slot props with TypeScript](/x/react-data-grid/components/#custom-slot-props-with-typescript)
+- [Charts - Custom slot props with TypeScript](/x/react-charts/components/#custom-slot-props-with-typescript)
 
 :::warning
 The module augmentation feature isn't implemented yet for the other sets of components. It's coming.
