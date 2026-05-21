@@ -467,9 +467,6 @@ importers:
       '@babel/core':
         specifier: 'catalog:'
         version: 7.29.0
-      '@babel/runtime':
-        specifier: 'catalog:'
-        version: 7.29.2
       '@date-fns/tz':
         specifier: 'catalog:'
         version: 1.4.1
@@ -488,9 +485,6 @@ importers:
       '@emotion/styled':
         specifier: 'catalog:'
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6)
-      '@mui/base':
-        specifier: ^5.0.0-beta.70
-        version: 5.0.0-beta.70(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@mui/icons-material':
         specifier: 'catalog:'
         version: 9.0.1(@mui/material@9.0.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.14)(react@19.2.6)
@@ -590,9 +584,6 @@ importers:
       chance:
         specifier: 'catalog:'
         version: 1.1.13
-      clipboard-copy:
-        specifier: ^4.0.1
-        version: 4.0.1
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
@@ -614,18 +605,12 @@ importers:
       es-toolkit:
         specifier: 'catalog:'
         version: 1.46.1
-      fg-loadcss:
-        specifier: ^3.1.0
-        version: 3.1.0
       jscodeshift:
         specifier: 'catalog:'
         version: 17.3.0(@babel/preset-env@7.29.5(@babel/core@7.29.0))
       luxon:
         specifier: 'catalog:'
         version: 3.7.2
-      lz-string:
-        specifier: ^1.5.0
-        version: 1.5.0
       markdown-to-jsx:
         specifier: ^9.8.0
         version: 9.8.0(react@19.2.6)
@@ -647,21 +632,12 @@ importers:
       next:
         specifier: ^16.2.6
         version: 16.2.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      nprogress:
-        specifier: ^0.2.0
-        version: 0.2.0
-      postcss:
-        specifier: ^8.5.14
-        version: 8.5.14
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
       react:
         specifier: 'catalog:'
         version: 19.2.6
-      react-docgen:
-        specifier: ^8.0.3
-        version: 8.0.3
       react-dom:
         specifier: 'catalog:'
         version: 19.2.6(react@19.2.6)
@@ -677,9 +653,6 @@ importers:
       react-simple-code-editor:
         specifier: ^0.14.1
         version: 0.14.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      recast:
-        specifier: ^0.23.9
-        version: 0.23.11
       rifm:
         specifier: 0.12.1
         version: 0.12.1(react@19.2.6)
@@ -714,15 +687,6 @@ importers:
       '@types/d3-scale-chromatic':
         specifier: 3.1.0
         version: 3.1.0
-      '@types/doctrine':
-        specifier: 0.0.9
-        version: 0.0.9
-      '@types/fg-loadcss':
-        specifier: 3.1.3
-        version: 3.1.3
-      '@types/gtag.js':
-        specifier: 0.0.20
-        version: 0.0.20
       '@types/luxon':
         specifier: 'catalog:'
         version: 3.7.1
@@ -732,9 +696,6 @@ importers:
       '@types/moment-jalaali':
         specifier: 'catalog:'
         version: 0.7.9
-      '@types/nprogress':
-        specifier: 0.2.3
-        version: 0.2.3
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -4221,18 +4182,6 @@ packages:
   '@mdn/browser-compat-data@6.1.5':
     resolution: {integrity: sha512-PzdZZzRhcXvKB0begee28n5lvwAcinGKYuLZOVxHAZm+n7y01ddEGfdS1ZXRuVcV+ndG6mSEAE8vgudom5UjYg==}
 
-  '@mui/base@5.0.0-beta.70':
-    resolution: {integrity: sha512-Tb/BIhJzb0pa5zv/wu7OdokY9ZKEDqcu1BDFnohyvGCoHuSXbEr90rPq1qeNW3XvTBIbNWHEF7gqge+xpUo6tQ==}
-    engines: {node: '>=14.0.0'}
-    deprecated: This package has been replaced by @base-ui/react
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
   '@mui/core-downloads-tracker@9.0.1':
     resolution: {integrity: sha512-GzamIIhZ1bH77dq7eKaeyRgJdkypsxin4jBFq2EMs4lBWRR0LFO1CSVMsoebn/VvjcNrnrOrjy48MkrkQUK2iw==}
 
@@ -4504,16 +4453,6 @@ packages:
   '@mui/utils@5.17.1':
     resolution: {integrity: sha512-jEZ8FTqInt2WzxDV8bhImWBqeQRD99c/id/fq83H0ER9tFl+sfZlaAoCdznGvbSQQ9ividMxqSV2c7cC1vBcQg==}
     engines: {node: '>=12.0.0'}
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
-  '@mui/utils@6.4.9':
-    resolution: {integrity: sha512-Y12Q9hbK9g+ZY0T3Rxrx9m2m10gaphDuUMgWxyV5kNJevVxXYCLclYUCC9vXaIk1/NdNDTcW2Yfr2OGvNFNmHg==}
-    engines: {node: '>=14.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -5715,12 +5654,6 @@ packages:
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
-  '@types/fg-loadcss@3.1.3':
-    resolution: {integrity: sha512-l9Cf3szP7MbYXRuWnnctz6BRRADeGIakbY7+FtZSvvV+Rg+Ytv961FcXBtwpQrdjCbd4lIyawBADayxKA2GiaA==}
-
-  '@types/gtag.js@0.0.20':
-    resolution: {integrity: sha512-wwAbk3SA2QeU67unN7zPxjEHmPmlXwZXZvQEpbEUQuMCRGgKyE1m6XDuTUA9b6pCGb/GqJmdfMOY5LuDjJSbbg==}
-
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
 
@@ -5768,9 +5701,6 @@ packages:
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
-
-  '@types/nprogress@0.2.3':
-    resolution: {integrity: sha512-k7kRA033QNtC+gLc4VPlfnue58CM1iQLgn1IMAU8VPHGOj7oIHPp9UlhedEnD/Gl8evoCjwkZjlBORtZ3JByUA==}
 
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
@@ -13540,20 +13470,6 @@ snapshots:
 
   '@mdn/browser-compat-data@6.1.5': {}
 
-  '@mui/base@5.0.0-beta.70(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
-    dependencies:
-      '@babel/runtime': 7.29.2
-      '@floating-ui/react-dom': 2.1.8(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      '@mui/types': 7.2.24(@types/react@19.2.14)
-      '@mui/utils': 6.4.9(@types/react@19.2.14)(react@19.2.6)
-      '@popperjs/core': 2.11.8
-      clsx: 2.1.1
-      prop-types: 15.8.1
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
-    optionalDependencies:
-      '@types/react': 19.2.14
-
   '@mui/core-downloads-tracker@9.0.1': {}
 
   '@mui/icons-material@9.0.1(@mui/material@9.0.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.14)(react@19.2.6)':
@@ -14074,18 +13990,6 @@ snapshots:
       '@types/react': 19.2.14
 
   '@mui/utils@5.17.1(@types/react@19.2.14)(react@19.2.6)':
-    dependencies:
-      '@babel/runtime': 7.29.2
-      '@mui/types': 7.2.24(@types/react@19.2.14)
-      '@types/prop-types': 15.7.15
-      clsx: 2.1.1
-      prop-types: 15.8.1
-      react: 19.2.6
-      react-is: 19.2.4
-    optionalDependencies:
-      '@types/react': 19.2.14
-
-  '@mui/utils@6.4.9(@types/react@19.2.14)(react@19.2.6)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@mui/types': 7.2.24(@types/react@19.2.14)
@@ -15212,10 +15116,6 @@ snapshots:
 
   '@types/estree@1.0.8': {}
 
-  '@types/fg-loadcss@3.1.3': {}
-
-  '@types/gtag.js@0.0.20': {}
-
   '@types/hast@3.0.4':
     dependencies:
       '@types/unist': 3.0.3
@@ -15263,8 +15163,6 @@ snapshots:
     optional: true
 
   '@types/normalize-package-data@2.4.4': {}
-
-  '@types/nprogress@0.2.3': {}
 
   '@types/parse-json@4.0.2': {}
 
