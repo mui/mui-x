@@ -5,6 +5,7 @@ import {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
+import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
 
 export function deleteRecurringEvent(
   adapter: Adapter,
@@ -73,12 +74,15 @@ export function applyRecurringDeleteFollowing(
   const originalRule = originalEvent.dataTimezone.rrule!;
   const { count, until, ...baseRule } = originalRule;
 
-  const shouldDropWholeSeries = adapter.isBefore(
+  const occurrencesBefore = getRecurringEventOccurrencesForVisibleDays(
+    originalEvent,
+    originalEvent.dataTimezone.start.value,
     adapter.endOfDay(untilDate),
-    adapter.startOfDay(originalEvent.dataTimezone.start.value),
+    adapter,
+    originalEvent.dataTimezone.timezone,
   );
 
-  if (shouldDropWholeSeries) {
+  if (occurrencesBefore.length === 0) {
     return { deleted: [originalEvent.id] };
   }
 

@@ -82,6 +82,23 @@ describe('recurring-events/deleteRecurringEvent', () => {
       expect(result).to.deep.equal({ deleted: [defaultEvent.id] });
     });
 
+    it('should drop the whole series when all earlier occurrences are excluded by EXDATEs', () => {
+      const event = EventBuilder.new()
+        .singleDay('2025-01-01T09:00:00Z')
+        .rrule({ freq: 'DAILY', interval: 1 })
+        .exDates([
+          '2025-01-01T09:00:00Z',
+          '2025-01-02T09:00:00Z',
+          '2025-01-03T09:00:00Z',
+          '2025-01-04T09:00:00Z',
+        ])
+        .toProcessed();
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
+
+      const result = applyRecurringDeleteFollowing(adapter, event, occurrenceStart);
+      expect(result).to.deep.equal({ deleted: [event.id] });
+    });
+
     it('should drop COUNT/UNTIL from the truncated rule', () => {
       const countedEvent = EventBuilder.new()
         .singleDay('2025-01-01T09:00:00Z')
