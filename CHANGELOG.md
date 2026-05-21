@@ -4,7 +4,7 @@
 
 _May 21, 2026_
 
-We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 16 contributors who made this release possible. Here are some highlights ✨:
 
 - 📆 Refactor Calendar Range drag editing to use Pointer Events instead of drag and touch events combination (#22279)
 - ✨ Apply lazy loading to `EventTimelinePremium` (#22308)
@@ -14,7 +14,7 @@ We'd like to extend a big thank you to the 15 contributors who made this release
 - 🌎 Improved Swedish (sv-SE) locale on the Data Grid
 
 Special thanks go out to these community members for their valuable contributions:
-@Anexus5919, @jvskriubakken, @rin, @viktormelin
+@Anexus5919, @jvskriubakken, @oscar-b, @rin, @viktormelin
 
 The following team members contributed to this release:
 @aemartos, @alexfauquette, @arminmeh, @Janpot, @JCQuintas, @LukasTy, @mj12albert, @oliviertassinari, @rita-codes, @romgrk, @sai6855
@@ -56,6 +56,7 @@ Same changes as in `@mui/x-date-pickers@9.3.0`, plus:
 - [charts] Add `data-series` to elements of radar chart (#22523) @alexfauquette
 - [charts] Add environment check for warning messages in axis and radar hooks (#22506) @sai6855
 - [charts] Chart `seriesConfig` deduplication for lines and bars (#22257) @sai6855
+- [charts] Fix highlighted item crash (#22539) @oscar-b
 - [charts] Fix the line and mark class (#22526) @alexfauquette
 - [charts] Fix use of deprecated API in docs (#22469) @oliviertassinari
 - [charts] Improve performance of `evaluateCurveY` function (#22407) @sai6855
