@@ -113,9 +113,12 @@ For example, for the `tooltip` slot, the interface name is `TooltipPropsOverride
 These files list every overridable interface for the Charts packages:
 
 - [`@mui/x-charts`](https://github.com/mui/mui-x/blob/-/packages/x-charts/src/models/chartsSlotsComponentsProps.ts)
-- [`@mui/x-charts-pro`](https://github.com/mui/mui-x/blob/-/packages/x-charts-pro/src/models/chartsSlotsComponentsPropsPro.ts) (pro-only slots)
+- [`@mui/x-charts-pro`](https://github.com/mui/mui-x/blob/-/packages/x-charts-pro/src/models/chartsSlotsComponentsPropsPro.ts) (pro-only slots: heatmap `cell`, funnel sections, pro toolbar icons, pro base slots)
+- [`@mui/x-charts-premium`](https://github.com/mui/mui-x/blob/-/packages/x-charts-premium/src/models/chartsSlotsComponentsPropsPremium.ts) (premium-only slots: `radialLineHighlight`)
 
-```tsx
+<codeblock storageKey="pricing-plan">
+
+```tsx Community
 // augment the props for the tooltip slot
 declare module '@mui/x-charts' {
   interface TooltipPropsOverrides {
@@ -140,15 +143,65 @@ declare module '@mui/x-charts' {
 />;
 ```
 
-Pro-only slots (such as `cell` on the Heatmap, `funnelSection` on the Funnel Chart, or the pro toolbar's icons) are augmented through `@mui/x-charts-pro`:
-
-```ts
+```tsx Pro
+// augment the props for a pro-only slot (heatmap cell)
 declare module '@mui/x-charts-pro' {
   interface CellPropsOverrides {
-    highlightedColor: string;
+    someCustomString: string;
+    someCustomNumber: number;
   }
 }
+
+<Heatmap
+  xAxis={[{ data: [1, 2, 3] }]}
+  yAxis={[{ data: [1, 2, 3] }]}
+  series={[{ data: [[0, 0, 1]] }]}
+  slots={{
+    // custom component passed to the cell slot
+    cell: CustomHeatmapCell,
+  }}
+  slotProps={{
+    cell: {
+      // props used by CustomHeatmapCell
+      someCustomString: 'Hello',
+      someCustomNumber: 42,
+    },
+  }}
+/>;
 ```
+
+```tsx Premium
+// augment the props for a premium-only slot (radial line highlight)
+declare module '@mui/x-charts-premium' {
+  interface RadialLineHighlightPropsOverrides {
+    someCustomString: string;
+    someCustomNumber: number;
+  }
+}
+
+<RadialLineChart
+  series={[{ data: [1, 2, 3] }]}
+  radiusAxis={[{ data: [1, 2, 3] }]}
+  rotationAxis={[{ data: [0, 120, 240] }]}
+  slots={{
+    // custom component passed to the radialLineHighlight slot
+    radialLineHighlight: CustomRadialLineHighlight,
+  }}
+  slotProps={{
+    radialLineHighlight: {
+      // props used by CustomRadialLineHighlight
+      someCustomString: 'Hello',
+      someCustomNumber: 42,
+    },
+  }}
+/>;
+```
+
+</codeblock>
+
+:::info
+Augmentations always target the module where the interface is **originally declared**. The Pro and Premium tabs above augment `@mui/x-charts-pro` and `@mui/x-charts-premium` because the example slots (`cell`, `radialLineHighlight`) are declared in those packages. Slots shared across tiers (such as `tooltip`, `legend`, `toolbar`) are declared in `@mui/x-charts` — augment them via `declare module '@mui/x-charts'` regardless of which chart you use.
+:::
 
 ## HTML components
 
