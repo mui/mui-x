@@ -301,8 +301,7 @@ const EventTimelinePremiumFillerRow = styled('div', {
 }));
 
 const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndicator: boolean }>(
-  function HeaderRowContent(props, ref) {
-    const { showCurrentTimeIndicator } = props;
+  function HeaderRowContent(_props, ref) {
     const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
     const { classes, localeText, resourceColumnLabel } = useEventTimelinePremiumStyledContext();
 
