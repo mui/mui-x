@@ -52,7 +52,7 @@ See the [Item height](/x/react-tree-view/rich-tree-view/items/#item-height) docu
 
 Virtualization requires a flat DOM structure where all items are rendered as siblings, regardless of their hierarchy in the tree.
 `<RichTreeViewPro />` defaults to `domStructure="flat"`.
-When virtualization is enabled, `domStructure` is locked to `"flat"` and cannot be changed.
+The nested DOM structure is not supported while virtualization is enabled.
 
 ```html
 <ul>
