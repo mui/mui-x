@@ -1,7 +1,6 @@
 import { type ChartsTooltipProps } from './ChartsTooltip';
 import { type TriggerOptions } from './utils';
-
-export interface TooltipPropsOverrides {}
+import type { TooltipPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface ChartsTooltipSlots<T extends TriggerOptions = TriggerOptions> {
   /**

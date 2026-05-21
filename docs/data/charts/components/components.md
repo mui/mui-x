@@ -91,6 +91,65 @@ For example, you can use `useLineSeries()` to obtain the series of a Line Chart 
 
 {{"demo": "SeriesDemo.js"}}
 
+## Custom slot props with TypeScript
+
+:::success
+This section focuses on module augmentation.
+
+See [Custom slots and subcomponents—Usage with TypeScript](/x/common-concepts/custom-components/#usage-with-typescript) if you don't want to use this approach.
+:::
+
+If the custom component requires additional props to work properly, TypeScript may throw type errors.
+To solve these type errors, use [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) to enhance the props interface.
+
+The naming of overridable interfaces uses a pattern like this:
+
+```js
+`${slotNameInPascalCase}PropsOverrides`;
+```
+
+For example, for the `tooltip` slot, the interface name is `TooltipPropsOverrides`.
+
+These files list every overridable interface for the Charts packages:
+
+- [`@mui/x-charts`](https://github.com/mui/mui-x/blob/-/packages/x-charts/src/models/chartsSlotsComponentsProps.ts)
+- [`@mui/x-charts-pro`](https://github.com/mui/mui-x/blob/-/packages/x-charts-pro/src/models/chartsSlotsComponentsPropsPro.ts) (pro-only slots)
+
+```tsx
+// augment the props for the tooltip slot
+declare module '@mui/x-charts' {
+  interface TooltipPropsOverrides {
+    someCustomString: string;
+    someCustomNumber: number;
+  }
+}
+
+<LineChart
+  series={[{ data: [1, 2, 3] }]}
+  slots={{
+    // custom component passed to the tooltip slot
+    tooltip: CustomTooltip,
+  }}
+  slotProps={{
+    tooltip: {
+      // props used by CustomTooltip
+      someCustomString: 'Hello',
+      someCustomNumber: 42,
+    },
+  }}
+/>;
+```
+
+Pro-only slots (such as `cell` on the Heatmap, `funnelSection` on the Funnel Chart, or the pro toolbar's icons) are augmented through `@mui/x-charts-pro`:
+
+```ts
+declare module '@mui/x-charts-pro' {
+  interface CellPropsOverrides {
+    highlightedColor: string;
+  }
+}
+```
+
 ## HTML components
 
 Use the `ChartsDataProvider` to access chart data from any component.

@@ -10,13 +10,14 @@ import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
 import { useUtilityClasses } from './scatterClasses';
+import type { ScatterPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface ScatterPlotSlots extends ScatterSlots {
-  scatter?: React.JSXElementConstructor<ScatterProps>;
+  scatter?: React.JSXElementConstructor<ScatterProps & ScatterPropsOverrides>;
 }
 
 export interface ScatterPlotSlotProps extends ScatterSlotProps {
-  scatter?: Partial<ScatterProps>;
+  scatter?: Partial<ScatterProps> & ScatterPropsOverrides;
 }
 
 export type RendererType = 'svg-single' | 'svg-batch';

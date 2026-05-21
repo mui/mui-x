@@ -9,4 +9,5 @@ export type {
   ZoomSliderShowTooltip,
 } from '@mui/x-charts/internals';
 export * from './seriesType';
+export * from './chartsSlotsComponentsPropsPro';
 export { defaultOnBeforeExport } from '../internals/plugins/useChartProExport/defaults';
