@@ -21,7 +21,7 @@ export default function PreferencesMenu() {
           toggleWeekendVisibility: false,
           toggleWeekStartsOn: true,
         }}
-        defaultPreferences={{ isSidePanelOpen: false, weekStartsOn: 1 }}
+        defaultPreferences={{ isSidePanelOpen: false, weekStartsOn: 0 }}
       />
     </div>
   );
