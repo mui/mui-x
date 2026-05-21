@@ -20,11 +20,11 @@ import {
   createChunkStream,
   createTextResponseChunks,
   randomId,
-} from 'docsx/data/chat/material/examples/shared/demoUtils';
+} from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
   demoUsers,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 const CONVERSATION_ID = 'no-history-conv';
 
@@ -73,7 +73,6 @@ const initialMessages = [
 function SendIcon() {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden="true"

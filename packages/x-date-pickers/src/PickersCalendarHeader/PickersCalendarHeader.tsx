@@ -220,8 +220,11 @@ const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader(
       className={clsx(classes.root, className)}
       ref={ref}
     >
+      {/* `role="none"` is an alias for `role="presentation"`, but aria-query treats them differently. */}
+      {/* See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1090 */}
+      {/* eslint-disable-next-line jsx-a11y/role-supports-aria-props */}
       <PickersCalendarHeaderLabelContainer
-        role="presentation"
+        role="none"
         onClick={handleToggleView}
         ownerState={ownerState}
         // putting this on the label item element below breaks when using transition

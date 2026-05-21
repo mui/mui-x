@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/charts-toolbar-range-button-trigger',
+    'docs/translations/api-docs/charts/charts-toolbar-range-button-trigger',
     false,
     /\.\/charts-toolbar-range-button-trigger.*\.json$/,
   );

@@ -18,7 +18,6 @@ describe('<MobileDateRangePicker /> - Describe Conformance', () => {
       'themeStyleOverrides',
       'themeVariants',
       'mergeClassName',
-      'propsSpread',
     ],
   }));
 });

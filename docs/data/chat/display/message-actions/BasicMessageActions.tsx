@@ -5,11 +5,11 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ChatBox } from '@mui/x-chat';
-import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 function MyMessageActions() {
   return (

@@ -6,5 +6,5 @@
   localeText={{
     timelineResourceTitleHeader: 'Team member',
   }}
-  defaultView="months"
+  defaultPreset="monthAndYear"
 />

@@ -1,6 +1,7 @@
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { expectFieldValue, describeAdapters } from 'test/utils/pickers';
+import { expectFieldValue } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
 describe('<TimeField /> - Timezone', () => {
   describeAdapters('DST meridiem toggling', TimeField, ({ adapter, renderWithProps }) => {
@@ -24,7 +25,7 @@ describe('<TimeField /> - Timezone', () => {
           onChange,
         });
 
-        await view.selectSectionAsync('meridiem');
+        await view.selectSection('meridiem');
         // Toggle PM → AM
         await view.user.keyboard('{ArrowDown}');
 
@@ -50,7 +51,7 @@ describe('<TimeField /> - Timezone', () => {
           onChange,
         });
 
-        await view.selectSectionAsync('meridiem');
+        await view.selectSection('meridiem');
         // Toggle AM → PM
         await view.user.keyboard('{ArrowUp}');
 

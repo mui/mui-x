@@ -1,5 +1,5 @@
 import { MarkdownDocs } from '@mui/internal-core-docs/MarkdownDocs';
-import * as pageProps from 'docsx/data/chat/material/composer/composer.md?muiMarkdown';
+import * as pageProps from 'docs/data/chat/material/composer/composer.md?muiMarkdown';
 
 export default function Page() {
   return <MarkdownDocs {...pageProps} />;

@@ -1,5 +1,6 @@
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { describeAdapters, getFieldInputRoot } from 'test/utils/pickers';
+import { getFieldInputRoot } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
 // Regression: invalid state should not temporarily clear during keyboard spin when sections are still invalid
 // Reproduction steps covered:
@@ -16,7 +17,7 @@ describeAdapters(
       const view = renderWithProps({}); // default format is numeric, e.g. MM/DD/YYYY
 
       // Make month invalid by typing "00"
-      await view.selectSectionAsync('month');
+      await view.selectSection('month');
       await view.user.keyboard('00');
       await view.user.tab();
 
@@ -25,13 +26,13 @@ describeAdapters(
       // Should be invalid now
       expect(inputRoot).to.have.attribute('aria-invalid', 'true');
 
-      await view.selectSectionAsync('day');
+      await view.selectSection('day');
 
       // Returns to valid after refocusing (incomplete date)
       expect(inputRoot).to.have.attribute('aria-invalid', 'false');
       await view.user.keyboard('05');
 
-      await view.selectSectionAsync('year');
+      await view.selectSection('year');
       await view.user.keyboard('2025');
 
       // Should now be invalid

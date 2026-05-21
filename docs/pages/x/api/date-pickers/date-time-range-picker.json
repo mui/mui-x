@@ -388,7 +388,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiDateTimeRangePicker",
   "forwardsRefTo": "HTMLDivElement",

@@ -405,8 +405,8 @@ export async function buildInterfacesDocumentationPage(
     await writePrettifiedFile(
       path.resolve(apiPagesDirectory, `${slug}.js`),
       `import * as React from 'react';
-    import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
-    import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
+    import InterfaceApiPage from 'docs/src/modules/components/InterfaceApiPage';
+    import layoutConfig from 'docs/src/modules/utils/dataGridLayoutConfig';
     import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
     import jsonPageContent from './${slug}.json';
   

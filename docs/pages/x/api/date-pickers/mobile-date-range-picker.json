@@ -287,7 +287,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiMobileDateRangePicker",
   "forwardsRefTo": "HTMLDivElement",

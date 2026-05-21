@@ -15,13 +15,13 @@ import {
   syncConversationPreview,
   formatConversationTime,
   formatMessageTime,
-} from 'docsx/data/chat/headless/examples/shared/demoUtils';
+} from 'docs/data/chat/headless/examples/shared/demoUtils';
 import {
   demoUsers,
   inboxConversations,
   inboxThreads,
-} from 'docsx/data/chat/headless/examples/shared/demoData';
-import { DemoToolbarButton } from 'docsx/data/chat/headless/examples/shared/DemoPrimitives';
+} from 'docs/data/chat/headless/examples/shared/demoData';
+import { DemoToolbarButton } from 'docs/data/chat/headless/examples/shared/DemoPrimitives';
 
 const brand = {
   background: '#f0f2f5',

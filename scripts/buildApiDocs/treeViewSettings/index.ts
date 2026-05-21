@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { LANGUAGES } from 'docsx/config';
+import { LANGUAGES } from '@mui/internal-core-docs/constants';
 import {
   ProjectSettings,
   ComponentReactApi,
@@ -80,7 +80,7 @@ export default treeViewApiPages;
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/tree-view',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/tree-view',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/tree-view',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: [],

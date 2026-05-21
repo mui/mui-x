@@ -18,7 +18,7 @@ export default function DisableResizing() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         areEventsResizable={false}
-        defaultView="months"
+        defaultPreset="monthAndYear"
       />
     </div>
   );

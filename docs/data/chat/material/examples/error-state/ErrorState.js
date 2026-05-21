@@ -5,7 +5,7 @@ import {
   minimalConversation,
   minimalMessages,
   demoUsers,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 const demoMembers = [demoUsers.you, demoUsers.agent];
 

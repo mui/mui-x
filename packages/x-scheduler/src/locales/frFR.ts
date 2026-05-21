@@ -57,7 +57,7 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Date de début',
   startTimeLabel: 'Heure de début',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Tous les évènements',
   cancel: 'Annuler',
   confirm: 'Confirmer',
@@ -68,11 +68,8 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
 };
 
 const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Masquer les événements de ${resourceName}`,
+  // ResourcesTree
   resourcesLabel: 'Ressources',
-  resourcesLegendSectionLabel: 'Légende des ressources',
-  showEventsLabel: (resourceName) => `Afficher les événements de ${resourceName}`,
 
   // ViewSwitcher
   agenda: 'Agenda',

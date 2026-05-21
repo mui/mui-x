@@ -166,7 +166,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiStaticTimePicker",
   "forwardsRefTo": "HTMLDivElement",

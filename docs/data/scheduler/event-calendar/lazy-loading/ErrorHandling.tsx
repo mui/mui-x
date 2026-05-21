@@ -3,12 +3,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
-import { SchedulerEvent } from '@mui/x-scheduler-headless/models';
+import { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
   resources,
   defaultVisibleDate,
   getEvents,
-  updateEvents,
+  persistEvents,
 } from './fakeServer';
 
 export default function ErrorHandling() {
@@ -39,7 +39,7 @@ export default function ErrorHandling() {
       />
       <div style={{ height: '700px', width: '100%' }}>
         <EventCalendarPremium
-          dataSource={{ getEvents: fetchData, updateEvents }}
+          dataSource={{ getEvents: fetchData, persistEvents }}
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}
           defaultPreferences={{ isSidePanelOpen: false }}

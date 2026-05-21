@@ -904,7 +904,7 @@ async function main() {
       console.log(`Creating branch from master for current major version: ${branchSource}`);
     }
 
-    await execa('git', ['checkout', '-b', branchName, '--no-track', branchSource]);
+    await execa('git', ['checkout', '-b', branchName, '--track', branchSource]);
 
     // Update package.json
     await updatePackageJson(newVersion);

@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { LANGUAGES } from 'docsx/config';
+import { LANGUAGES } from '@mui/internal-core-docs/constants';
 import {
   ProjectSettings,
   ComponentReactApi,
@@ -91,24 +91,22 @@ export default schedulerApiPages;
       'x-scheduler/src/event-calendar/header-toolbar/preferences-menu/PreferencesMenu.tsx',
       'x-scheduler/src/event-calendar/header-toolbar/view-switcher/ViewSwitcher.tsx',
       'x-scheduler/src/event-calendar/mini-calendar/MiniCalendar.tsx',
-      'x-scheduler/src/event-calendar/resources-legend/ResourcesLegend.tsx',
+      'x-scheduler/src/event-calendar/resources-tree/ResourcesTree.tsx',
       // Internal sub-components of MonthView
       'x-scheduler/src/month-view/month-view-row/MonthViewCell.tsx',
       'x-scheduler/src/month-view/month-view-row/MonthViewWeekRow.tsx',
       // Internal sub-components of EventTimelinePremium
       'x-scheduler-premium/src/event-timeline-premium/content/EventTimelinePremiumContent.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/event-skeleton/EventTimelinePremiumSkeleton.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-event/EventTimelinePremiumEvent.tsx',
       'x-scheduler-premium/src/event-timeline-premium/content/timeline-title-cell/EventTimelinePremiumTitleCell.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/DaysHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/MonthsHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/TimeHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/WeeksHeader.tsx',
-      'x-scheduler-premium/src/event-timeline-premium/content/view-header/YearsHeader.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/content/timeline-header/EventTimelinePremiumHeader.tsx',
+      'x-scheduler-premium/src/event-timeline-premium/error-container/EventTimelinePremiumErrorContainer.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
   translationPagesDirectory: 'docs/translations/api-docs/scheduler',
-  importTranslationPagesDirectory: 'docsx/translations/api-docs/scheduler',
+  importTranslationPagesDirectory: 'docs/translations/api-docs/scheduler',
   getComponentImports,
   propsSettings: {
     propsWithoutDefaultVerification: [],

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { TimelineGrid } from '@mui/x-scheduler-headless-premium/timeline-grid';
-import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
-import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
+import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
+import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
+import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium-store-context';
 import { getPaletteVariants } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumStyledContext } from '../../EventTimelinePremiumStyledContext';
 
-const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.Row, {
+const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.TitleRow, {
   name: 'MuiEventTimeline',
   slot: 'TitleCellRow',
 })(({ theme }) => ({
@@ -17,6 +17,11 @@ const EventTimelinePremiumTitleCellRow = styled(TimelineGrid.Row, {
   alignContent: 'start',
   '&:not(:last-of-type)': {
     borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+  },
+  '&:focus-visible': {
+    outline: 'none',
+    boxShadow: `inset 0 0 0 2px ${(theme.vars || theme).palette.primary.main}`,
+    borderRadius: theme.shape.borderRadius,
   },
 }));
 

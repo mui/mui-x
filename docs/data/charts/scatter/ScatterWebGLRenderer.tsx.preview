@@ -1,0 +1,12 @@
+<ScatterChartPremium
+  series={series}
+  xAxis={[{ min: -6, max: 12, zoom: true }]}
+  yAxis={[{ min: -6, max: 12, zoom: true }]}
+  height={400}
+  renderer="webgl"
+  slotProps={{
+    legend: {
+      toggleVisibilityOnClick: true,
+    },
+  }}
+/>

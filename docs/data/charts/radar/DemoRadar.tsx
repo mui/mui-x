@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
-import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
+import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import { RadarChart } from '@mui/x-charts/RadarChart';
 
 export default function DemoRadar() {
