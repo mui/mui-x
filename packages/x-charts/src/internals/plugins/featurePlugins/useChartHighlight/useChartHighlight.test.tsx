@@ -146,4 +146,37 @@ describe('highlight', () => {
     await user.pointer({ target: bars[0], coords: getCenter(bars[0]) });
     expect(handleHighlight.callCount).to.equal(2);
   });
+
+  it('should warn but not crash when switching highlightedItem from controlled to uncontrolled', () => {
+    const errorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    try {
+      const { setProps } = render(
+        <BarChart
+          height={100}
+          width={100}
+          skipAnimation
+          margin={0}
+          series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
+          highlightedItem={{ seriesId: 'A', dataIndex: 1 }}
+        />,
+      );
+
+      expect(() => {
+        setProps({
+          highlightedItem: undefined,
+        });
+      }).not.to.throw();
+
+      expect(
+        errorMock.mock.calls.some(([message]) =>
+          String(message).includes(
+            'A component is changing the controlled highlightedItem state of Chart to be uncontrolled',
+          ),
+        ),
+      ).to.equal(true);
+    } finally {
+      errorMock.mockRestore();
+    }
+  });
 });
