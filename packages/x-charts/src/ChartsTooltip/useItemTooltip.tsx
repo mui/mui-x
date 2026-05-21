@@ -71,7 +71,7 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
 
   const colorAxisId: AxisId | undefined =
     'colorAxisId' in itemSeries || 'zAxisId' in itemSeries
-      ? (itemSeries.colorAxisId ?? itemSeries.zAxisId)
+      ? (itemSeries.colorAxisId ?? itemSeries.zAxisId ?? zAxisIds[0])
       : zAxisIds[0];
 
   const mainAxis =

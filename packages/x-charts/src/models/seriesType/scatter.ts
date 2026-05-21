@@ -69,7 +69,7 @@ export interface ScatterSeriesType
    * The keys used to retrieve data from the dataset.
    *
    * When this prop is provided, both `x` and `y` must be provided.
-   * While `color` and `id` are optional.
+   * While `color`, `size`, and `id` are optional.
    */
   datasetKeys?: {
     /**

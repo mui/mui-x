@@ -31,11 +31,11 @@ export interface ZAxisConfig<V = any> {
    */
   max?: number;
   /**
-   * The config that defined how the values should be mapped to colors.
+   * The config that defines how the values should be mapped to colors.
    */
   colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   /**
-   * The config that defined how the values should be mapped to sizes.
+   * The config that defines how the values should be mapped to sizes.
    */
   sizeMap?: OrdinalSizeConfig | ContinuousSizeConfig | PiecewiseSizeConfig;
 }

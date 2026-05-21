@@ -33,7 +33,7 @@ If your data is stored in an array of objects, you can use the `dataset` helper 
 It accepts an array of objects such as `dataset={[{a: 1, b: 32, c: 873}, {a: 2, b: 41, c: 182}, ...]}`.
 
 Scatter series use a different pattern than other charts: use the `datasetKeys` property with an object that has required `x` and `y` keys.
-You can also include optional `id` and `color` keys.
+You can also include optional `id`, `color`, and `size` keys.
 
 See the [Dataset](/x/react-charts/dataset/) page to learn more.
 
