@@ -252,6 +252,7 @@ const VirtualScrollbarVertical = styled(VirtualScrollbar, {
   overflowY: 'auto',
   overflowX: 'hidden',
   outline: 0,
+  scrollbarWidth: 'thin',
   '& > div': {
     width: 'var(--size)',
   },
@@ -268,6 +269,7 @@ const VirtualScrollbarHorizontal = styled(VirtualScrollbar, {
   overflowY: 'hidden',
   overflowX: 'auto',
   outline: 0,
+  scrollbarWidth: 'thin',
   '& > div': {
     height: 'var(--size)',
   },
