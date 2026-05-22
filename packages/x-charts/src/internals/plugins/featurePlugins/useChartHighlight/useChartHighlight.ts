@@ -2,7 +2,6 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import type { ChartPluginOptions, ChartResponse, ChartPlugin } from '../../models';
 import type { UseChartHighlightSignature } from './useChartHighlight.types';
 import type {
@@ -68,9 +67,16 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
   }, [store, params.highlightedItem, instance]);
 
   const clearHighlight = useEventCallback(() => {
-    params.onHighlightChange?.(null);
     const prevHighlight = store.state.highlight;
-    if (prevHighlight.item === null || prevHighlight.isControlled) {
+    const prevItem = prevHighlight.item ?? null;
+
+    if (prevItem === null) {
+      return;
+    }
+
+    params.onHighlightChange?.(null);
+
+    if (prevHighlight.isControlled) {
       return;
     }
 
@@ -96,8 +102,14 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
         'highlightItem',
       ) satisfies HighlightItemIdentifierWithType<SeriesType>;
       const cleanedIdentifier = instance.cleanIdentifier(identifierWithType, 'highlightItem');
-      if (fastObjectShallowCompare(prevHighlight.item, cleanedIdentifier)) {
-        return;
+      const prevItem = prevHighlight.item;
+
+      if (prevItem != null) {
+        if (
+          instance.serializeIdentifier(prevItem) === instance.serializeIdentifier(cleanedIdentifier)
+        ) {
+          return;
+        }
       }
 
       params.onHighlightChange?.(cleanedIdentifier);
