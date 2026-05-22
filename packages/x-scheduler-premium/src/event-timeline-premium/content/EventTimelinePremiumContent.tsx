@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled, useTheme, Theme } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
@@ -47,6 +48,7 @@ import {
   useEventTimelinePremiumVirtualizerStore,
 } from './EventTimelinePremiumVirtualizerContext';
 import { TitleColumnWidthProvider, useTitleColumnWidth } from './useTitleColumnWidth';
+import { useTitleScrollSync } from './useTitleScrollSync';
 
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimeline',
@@ -275,6 +277,23 @@ const VirtualScrollbarHorizontal = styled(VirtualScrollbar, {
   },
   bottom: 0,
   left: 'var(--title-column-width)',
+});
+
+const VirtualScrollbarTitleHorizontal = styled(VirtualScrollbar, {
+  name: 'MuiEventTimeline',
+  slot: 'VirtualScrollbarTitleHorizontal',
+})({
+  width: 'var(--title-column-width)',
+  height: 'var(--size)',
+  overflowY: 'hidden',
+  overflowX: 'auto',
+  outline: 0,
+  scrollbarWidth: 'thin',
+  '& > div': {
+    height: 'var(--size)',
+  },
+  bottom: 0,
+  left: 0,
 });
 
 const RowContainer = styled('div', {
@@ -512,7 +531,7 @@ function EventRowContent({
 function useElementHeight(ref: React.RefObject<HTMLElement | null>): number {
   const [height, setHeight] = React.useState(0);
 
-  React.useEffect(() => {
+  useIsoLayoutEffect(() => {
     const element = ref.current;
     if (!element) {
       return undefined;
@@ -574,7 +593,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   // Measure header height for the virtualizer's topPinnedHeight
   const headerHeight = useElementHeight(headerRowRef);
 
+  // Measure the container so the title column can be capped at half its width.
+  const containerWidth = useElementWidth(containerRef);
+
   // Virtualizer setup
+  const scrollbarTitleRef = React.useRef<HTMLDivElement | null>(null);
   const scrollbarVerticalRef = React.useRef<HTMLDivElement | null>(null);
   const scrollbarHorizontalRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -592,8 +615,14 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     [resources],
   );
 
-  const { width: titleColumnWidth, report: reportTitleWidth } = useTitleColumnWidth({
+  const {
+    width: titleColumnWidth,
+    contentWidth: titleContentWidth,
+    hasOverflow: hasTitleOverflow,
+    report: reportTitleWidth,
+  } = useTitleColumnWidth({
     minWidth: 50,
+    maxWidth: containerWidth > 0 ? containerWidth / 4 : undefined,
     rows,
   });
 
@@ -712,9 +741,18 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     }
   }, [presetConfig.start]);
 
+  useTitleScrollSync({
+    enabled: hasTitleOverflow,
+    containerRef,
+    gridRef,
+    scrollbarRef: scrollbarTitleRef,
+    titleCellClassName: classes.titleCell,
+  });
+
   const eventsWidth = presetConfig.tickCount * presetConfig.tickWidth;
   const hasScrollX = dimensions.hasScrollX;
   const hasScrollY = dimensions.hasScrollY;
+  const hasBottomScrollbar = hasScrollX || hasTitleOverflow;
 
   return (
     <EventTimelinePremiumContentRoot
@@ -729,7 +767,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
           '--unit-width': `${presetConfig.tickWidth}px`,
           '--scrollbar-size': `${dimensions.scrollbarSize}px`,
           '--header-height': `${headerHeight}px`,
-          '--has-scroll-x': Number(hasScrollX),
+          '--has-scroll-x': Number(hasBottomScrollbar),
           '--has-scroll-y': Number(hasScrollY),
         } as React.CSSProperties
       }
@@ -787,6 +825,16 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                 <div style={{ width: eventsWidth }} />
               </VirtualScrollbarHorizontal>
             )}
+            {hasTitleOverflow && (
+              <VirtualScrollbarTitleHorizontal
+                ref={scrollbarTitleRef}
+                tabIndex={-1}
+                aria-hidden="true"
+                onFocus={(event: React.FocusEvent<HTMLDivElement>) => event.target.blur()}
+              >
+                <div style={{ width: titleContentWidth }} />
+              </VirtualScrollbarTitleHorizontal>
+            )}
           </EventDialogProvider>
         </TitleColumnWidthProvider>
       </EventTimelinePremiumVirtualizerContext.Provider>
@@ -825,4 +873,35 @@ function getRowHeightForLaneCount(theme: Theme, laneCount: number): number {
   const lanes = Math.max(1, laneCount);
   // 2 paddings + N lanes + (N-1) row-gaps + bottom border.
   return 2 * padding + lanes * laneMin + (lanes - 1) * gap + 1;
+}
+
+/**
+ * Measures the width of an element via ResizeObserver and returns it as state.
+ */
+function useElementWidth(ref: React.RefObject<HTMLElement | null>): number {
+  const [width, setWidth] = React.useState(0);
+
+  useIsoLayoutEffect(() => {
+    const element = ref.current;
+    if (!element) {
+      return undefined;
+    }
+
+    if (typeof ResizeObserver === 'undefined') {
+      setWidth(element.offsetWidth);
+      return undefined;
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setWidth(entry.borderBoxSize[0].inlineSize);
+      }
+    });
+
+    setWidth(element.offsetWidth);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref]);
+
+  return width;
 }

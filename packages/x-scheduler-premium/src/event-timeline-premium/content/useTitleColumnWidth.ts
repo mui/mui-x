@@ -20,12 +20,17 @@ export function useReportTitleWidth(): Report {
  * Tracks each rendered title cell's natural width and exposes the max
  * across all known resources, so virtualized-out rows still keep their
  * cached width and the column auto-sizes to fit the widest title.
+ *
+ * When `maxWidth` is provided, the visible column `width` is capped at it,
+ * while `contentWidth` keeps the uncapped natural width so a horizontal
+ * scrollbar can scroll the overflow.
  */
 export function useTitleColumnWidth<T extends { id: SchedulerResourceId }>(parameters: {
   minWidth: number;
+  maxWidth?: number;
   rows: readonly T[];
 }) {
-  const { minWidth, rows } = parameters;
+  const { minWidth, maxWidth, rows } = parameters;
 
   const cache = React.useRef<Map<SchedulerResourceId, number>>(new Map());
   const [observed, setObserved] = React.useState(0);
@@ -65,5 +70,12 @@ export function useTitleColumnWidth<T extends { id: SchedulerResourceId }>(param
     }
   }, [rows, recompute]);
 
-  return { width: Math.max(minWidth, observed), report };
+  const contentWidth = Math.max(minWidth, observed);
+  const width =
+    maxWidth != null && maxWidth > 0
+      ? Math.min(contentWidth, Math.max(minWidth, maxWidth))
+      : contentWidth;
+  const hasOverflow = contentWidth > width;
+
+  return { width, contentWidth, hasOverflow, report };
 }

@@ -54,10 +54,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
     return (
       <div key={`${level.unit}:${levelIndex}`} className={classNames?.row} data-level={levelIndex}>
         {offsetInTicks > 0 && (
-          <div
-            role="none"
-            style={{ width: `calc(var(--unit-width) * ${offsetInTicks})` }}
-          />
+          <div role="none" style={{ width: `calc(var(--unit-width) * ${offsetInTicks})` }} />
         )}
         {cells.map((cell) => (
           <div

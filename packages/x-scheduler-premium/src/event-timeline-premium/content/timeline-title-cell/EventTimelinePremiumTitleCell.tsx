@@ -32,6 +32,9 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelineGrid.TitleRow, {
   height: '100%',
   zIndex: 3,
   backgroundColor: (theme.vars || theme).palette.background.default,
+  // Let JS handle horizontal panning (redirected to the title scrollbar)
+  // while the browser still handles vertical row scrolling.
+  touchAction: 'pan-y',
   variants: getPaletteVariants(theme),
   '&:focus-visible': {
     outline: 'none',
@@ -54,6 +57,9 @@ const EventTimelinePremiumTitleCellContent = styled('span', {
   width: 'max-content',
   flexShrink: 0,
   whiteSpace: 'nowrap',
+  // Shared horizontal scroll for all title cells (the header title cell
+  // is not wrapped in this element and therefore does not move).
+  transform: 'translateX(calc(-1 * var(--title-scroll-left, 0) * 1px))',
 }));
 
 const ResourceLegendColor = styled('span', {
@@ -116,10 +122,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
       }
       data-palette={eventColor}
     >
-      <EventTimelinePremiumTitleCellContent
-        ref={contentRef}
-        className={classes.titleCellContent}
-      >
+      <EventTimelinePremiumTitleCellContent ref={contentRef} className={classes.titleCellContent}>
         <ResourceLegendColor className={classes.titleCellLegendColor} />
         {resource!.title}
       </EventTimelinePremiumTitleCellContent>
