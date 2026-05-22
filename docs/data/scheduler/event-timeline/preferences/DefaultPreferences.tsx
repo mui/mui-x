@@ -5,6 +5,7 @@ import { initialEvents, resources } from '../../datasets/company-roadmap';
 
 const defaultPreferences: Partial<EventCalendarPreferences> = {
   ampm: false,
+  weekStartsOn: 1,
 };
 
 export default function DefaultPreferences() {
@@ -17,7 +18,7 @@ export default function DefaultPreferences() {
         resources={resources}
         defaultPreferences={defaultPreferences}
         onEventsChange={setEvents}
-        defaultPreset="monthAndYear"
+        defaultPreset="dayAndWeek"
       />
     </div>
   );
