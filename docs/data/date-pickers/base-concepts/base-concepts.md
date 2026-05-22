@@ -186,6 +186,48 @@ const cleanText = (string) =>
 expect(cleanText(input.value)).to.equal('04-17-2022');
 ```
 
+### End-to-end testing with Playwright
+
+The field's accessible DOM structure exposes a single, form-submittable element that supports both interaction and assertion: a visually-hidden `<input>` rendered alongside the `role="group"` container.
+You can target it via `getByRole('textbox', { includeHidden: true })`.
+Unlike the visible section spans, this input doesn't contain the invisible Unicode characters mentioned above, so assertions don't need any cleanup.
+
+The minimum pattern to fill a date and assert its value:
+
+```ts
+const input = page.getByRole('textbox', { includeHidden: true });
+await input.fill('02/12/2020');
+await expect(input).toHaveValue('02/12/2020');
+```
+
+This works because the visually-hidden input is a 1px clipped element (not `display: none`), so Playwright's actionability checks pass.
+`includeHidden: true` is only required for the locator to find the element, since the input carries `aria-hidden="true"`.
+
+If you need to drive individual sections (for example, keyboard-flow tests), each section is exposed as a `role="spinbutton"` accessible by its localized name:
+
+```ts
+await page.getByRole('spinbutton', { name: 'Month' }).fill('04');
+await page.getByRole('spinbutton', { name: 'Day' }).fill('11');
+await page.getByRole('spinbutton', { name: 'Year' }).fill('2022');
+```
+
+:::warning
+The `spinbutton` accessible names are locale-dependent.
+Use the localized labels if your tests run against a non-English locale.
+:::
+
+:::info
+The hidden input's value substitutes placeholders for empty sections (for example, `04/DD/YYYY` if only the month is filled).
+For partial-fill assertions, prefer reading section content via `getByRole('spinbutton', { name: ... })`.
+:::
+
+A few additional gotchas:
+
+- **Date format and locale**. The hidden input's value uses the picker's configured format. `04/11/2022` parses as April 11 in `en-US` but November 4 in `en-GB`. Pin your tests to a fixed locale, or generate the expected string from the same adapter you configured the picker with.
+- **Range pickers expose two sets of sections**. With a single-input range picker each `spinbutton` role appears twice; scope using `.first()` / `.last()` (or `.nth(i)`) to target the start or end side. With a multi-input range picker the two fields are separate `role="group"` containers; target each input via a parent locator.
+- **Wait for the picker dialog to detach**. After selecting a date in a desktop picker, the dialog closes asynchronously. Race with the closing transition and you get flaky failures. Add `await page.waitForSelector('[role="dialog"]', { state: 'detached' })` before the next assertion.
+- **Mobile picker variants don't expect text input on the field**. Tapping the field on `MobileDatePicker` / `MobileDateTimePicker` opens the picker dialog rather than focusing the sections for typing. Drive these by interacting with the dialog gridcells (`getByRole('gridcell', { name: '11' })`) and confirming via the action buttons.
+
 ## Overriding slots and slot props
 
 Date and Time Pickers are complex components built using many subcomponents known as **slots**.
