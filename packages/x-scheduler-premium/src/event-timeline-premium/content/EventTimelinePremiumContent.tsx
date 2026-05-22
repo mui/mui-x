@@ -214,6 +214,7 @@ const EventTimelinePremiumTitleScrollbar = styled('div', {
 })(({ theme }) => ({
   gridRow: 3,
   gridColumn: 1,
+  minHeight: PROXY_SCROLLBAR_SIZE,
   overflowX: 'auto',
   overflowY: 'hidden',
   scrollbarWidth: 'thin',
@@ -228,6 +229,7 @@ const EventTimelinePremiumEventsScrollbar = styled('div', {
 })({
   gridRow: 3,
   gridColumn: 2,
+  minHeight: PROXY_SCROLLBAR_SIZE,
   overflowX: 'auto',
   overflowY: 'hidden',
   scrollbarWidth: 'thin',
@@ -374,10 +376,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const titleScrollbarSpacerRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
-  // Whether each column overflows horizontally, used to give its proxy scrollbar a real track height.
-  const [hasTitleScroll, setHasTitleScroll] = React.useState(false);
-  const [hasEventsScroll, setHasEventsScroll] = React.useState(false);
-
   // Selector hooks
   const adapter = useAdapterContext();
   const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
@@ -425,9 +423,11 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
       return undefined;
     }
     const updateWidth = () => {
-      const overflowing = subgrid.scrollWidth > subgrid.clientWidth;
-      setHasTitleScroll(overflowing);
-      spacer.style.width = overflowing ? `${subgrid.scrollWidth}px` : '';
+      if (subgrid.scrollWidth > subgrid.clientWidth) {
+        spacer.style.width = `${subgrid.scrollWidth}px`;
+      } else {
+        spacer.style.width = '';
+      }
     };
     updateWidth();
     if (typeof ResizeObserver === 'undefined') {
@@ -437,22 +437,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     observer.observe(subgrid);
     return () => observer.disconnect();
   }, []);
-
-  // Track whether the events column overflows horizontally to size its proxy scrollbar track
-  React.useEffect(() => {
-    const scroller = eventsScrollerRef.current;
-    if (!scroller) {
-      return undefined;
-    }
-    const update = () => setHasEventsScroll(scroller.scrollWidth > scroller.clientWidth);
-    update();
-    if (typeof ResizeObserver === 'undefined') {
-      return undefined;
-    }
-    const observer = new ResizeObserver(update);
-    observer.observe(scroller);
-    return () => observer.disconnect();
-  }, [presetConfig.tickCount, presetConfig.tickWidth]);
 
   return (
     <EventTimelinePremiumContentRoot ref={handleRef} className={classes.content} {...props}>
@@ -525,18 +509,10 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               )}
             </EventTimelinePremiumEventsSubGridWrapper>
           </EventTimelinePremiumBodyScroller>
-          <EventTimelinePremiumTitleScrollbar
-            ref={titleScrollbarRef}
-            aria-hidden
-            style={{ minHeight: hasTitleScroll ? PROXY_SCROLLBAR_SIZE : undefined }}
-          >
+          <EventTimelinePremiumTitleScrollbar ref={titleScrollbarRef} aria-hidden>
             <div ref={titleScrollbarSpacerRef} style={{ height: 1 }} />
           </EventTimelinePremiumTitleScrollbar>
-          <EventTimelinePremiumEventsScrollbar
-            ref={eventsScrollbarRef}
-            aria-hidden
-            style={{ minHeight: hasEventsScroll ? PROXY_SCROLLBAR_SIZE : undefined }}
-          >
+          <EventTimelinePremiumEventsScrollbar ref={eventsScrollbarRef} aria-hidden>
             <div
               style={{
                 width: 'calc(var(--unit-count) * var(--unit-width))',
