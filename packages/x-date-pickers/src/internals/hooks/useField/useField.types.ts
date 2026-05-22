@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { MuiEvent } from '@mui/x-internals/types';
 import {
   FieldSectionType,
   FieldSection,
@@ -120,12 +119,7 @@ export interface UseFieldForwardedProps {
   focused?: boolean;
   sectionListRef?: React.Ref<PickersSectionListRef>;
   onClick?: React.MouseEventHandler;
-  /**
-   * Callback fired on mouse down. Set `event.defaultMuiPrevented = true` to
-   * opt out of the field's closest-section focus behavior on blank-space
-   * clicks without suppressing browser defaults.
-   */
-  onMouseDown?: React.EventHandler<MuiEvent<React.MouseEvent>>;
+  onMouseDown?: React.MouseEventHandler;
   onKeyDown?: React.KeyboardEventHandler;
   onFocus?: React.FocusEventHandler;
   onBlur?: React.FocusEventHandler;

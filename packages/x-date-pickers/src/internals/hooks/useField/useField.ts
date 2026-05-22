@@ -4,7 +4,6 @@ import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { warnOnce } from '@mui/x-internals/warning';
-import { MuiEvent } from '@mui/x-internals/types';
 import { parseSelectedSections } from './useField.utils';
 import {
   UseFieldDOMGetters,
@@ -201,24 +200,18 @@ export const useField = <
     rootProps.onClick(event);
   });
 
-  const handleRootMouseDown = useEventCallback(
-    (event: MuiEvent<React.MouseEvent<HTMLDivElement>>) => {
-      // Skip propagated mousedowns from the clear / open buttons (their own
-      // handlers `preventDefault`), mirroring `handleRootClick`.
-      if (event.isDefaultPrevented()) {
-        return;
-      }
-      onMouseDown?.(event);
-      // Userland can opt out of the closest-section focus behavior by setting
-      // `event.defaultMuiPrevented = true` in their `onMouseDown` (clean
-      // opt-out that doesn't also suppress browser defaults like
-      // `preventDefault` would).
-      if (event.defaultMuiPrevented) {
-        return;
-      }
-      rootProps.onMouseDown(event);
-    },
-  );
+  const handleRootMouseDown = useEventCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    // Skip propagated mousedowns from the clear / open buttons (their own
+    // handlers `preventDefault`), mirroring `handleRootClick`. No userland
+    // opt-out is exposed here: `rootProps.onMouseDown` is the section-
+    // selection mechanism for this field, so allowing consumers to suppress
+    // it would leave the field unable to focus a section on click.
+    if (event.isDefaultPrevented()) {
+      return;
+    }
+    onMouseDown?.(event);
+    rootProps.onMouseDown(event);
+  });
 
   const handleRootPaste = useEventCallback((event: React.ClipboardEvent<HTMLDivElement>) => {
     onPaste?.(event);
