@@ -33,7 +33,7 @@ The day-time grid is exposed as a `role="grid"` with three logical rows:
 
 |     Row | `aria-rowindex` | Content                                                                                                                                                                                             |
 | ------: | :-------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|  Header | `1`             | Day column headers — `role="columnheader"` with an `aria-label` containing the full weekday name and date (e.g., `"Monday 26"`)                                                                     |
+| Header | `1`             | Day column headers — `role="columnheader"` with an `aria-label` containing the full weekday name and date (for example, `"Monday 26"`)                                                                     |
 | All-day | `2`             | All-day event cells — `role="gridcell"` with `aria-labelledby` pointing to the column header. The visible "All day" label is `aria-hidden="true"` and referenced via `aria-labelledby` on each cell |
 |   Timed | `3`             | Per-column time cells                                                                                                                                                                               |
 
@@ -59,7 +59,7 @@ The grid body is wrapped in a `role="rowgroup"` element. Day cells use `role="gr
 - `aria-selected` — on the currently active (selected) date
 - A roving `tabIndex` — `0` on the active cell, `-1` on all others
 
-Weekday column headers carry a `role="columnheader"` with an `aria-label` containing the full weekday name (e.g., `"Sunday"`).
+Weekday column headers carry a `role="columnheader"` with an `aria-label` containing the full weekday name (for example, `"Sunday"`).
 
 ### Events
 
@@ -67,13 +67,13 @@ Each event element has an `aria-labelledby` that composes the day column header 
 
 Multi-day events are rendered once as the main (visible) element and additionally as invisible placeholder elements in the spanned cells. The placeholder elements carry `aria-hidden="true"` so assistive technologies see only one announcement per event.
 
-The resource color indicator inside an event uses `role="img"` with an `aria-label` describing the resource (e.g., `"Resource: Sport"`). When no resource is assigned the label falls back to the localized `noResourceAriaLabel` value.
+The resource color indicator inside an event uses `role="img"` with an `aria-label` describing the resource (for example, `"Resource: Sport"`). When no resource is assigned the label falls back to the localized `noResourceAriaLabel` value.
 
 Recurring event icons are `aria-hidden="true"` as they are decorative.
 
 ### Agenda view
 
-Each day group in the agenda carries `aria-labelledby` pointing to its day header cell. The day header cell itself has an `aria-label` composed of the weekday name and day-of-month (e.g., `"Monday 26"`).
+Each day group in the agenda carries `aria-labelledby` pointing to its day header cell. The day header cell itself has an `aria-label` composed of the weekday name and day-of-month (for example, `"Monday 26"`).
 
 ### Main calendar region
 
@@ -110,7 +110,7 @@ The Resources sidebar exposes a `role="tree"` following the [WAI-ARIA Tree patte
 ## Live region announcements
 
 The current date range label in the header toolbar is wrapped in an `aria-live="polite"` region.
-When a user navigates to the previous or next time span (e.g., clicking **Previous week**), the updated date range is announced automatically by screen readers without requiring focus to move.
+When a user navigates to the previous or next time span (for example, clicking **Previous week**), the updated date range is announced automatically by screen readers without requiring focus to move.
 
 ## Event dialog
 
@@ -119,7 +119,7 @@ The Event Dialog is a non-modal dialog (`aria-modal="false"`) that floats next t
 - It is announced by screen readers via `aria-labelledby` pointing to the dialog title.
 - The Close button carries a localized `aria-label` (default: `"Close"`).
 - The event title input is labeled with a localized `aria-label` (default: `"Event title"`).
-- The color picker group has an `aria-label` (default: `"Event color"`), and each individual color option button is labeled (e.g., `"Select green as event color"`).
+- The color picker group has an `aria-label` (default: `"Event color"`), and each individual color option button is labeled (for example, `"Select green as event color"`).
 - The Recurrence tab panel uses `role="tabpanel"` with `aria-labelledby` pointing to its tab.
 - The recurring scope confirmation dialog radio group has an `aria-label` (default: `"Editing recurring events scope"`).
 
@@ -127,7 +127,7 @@ The Event Dialog is a non-modal dialog (`aria-modal="false"`) that floats next t
 
 When a month cell has more events than can be displayed, a **"X more"** button opens a popover listing all events for that day.
 
-- The popover header element carries an `aria-label` with the full formatted date (e.g., `"Monday, May 26"`).
+- The popover header element carries an `aria-label` with the full formatted date (for example, `"Monday, May 26"`).
 - Each event inside the popover uses `aria-labelledby` that composes the popover header ID and the event title element ID, so screen readers announce the day context alongside the event title.
 - Event items have `role="button"` with `tabIndex="0"`, and can be activated with <kbd class="key">Enter</kbd> or <kbd class="key">Space</kbd>.
 
@@ -136,7 +136,7 @@ When a month cell has more events than can be displayed, a **"X more"** button o
 The Preferences menu button exposes `aria-haspopup="true"`, `aria-expanded`, and `aria-controls`.
 Inside the menu:
 
-- Toggle items (e.g., **Show weekends**, **Show week number**) use `role="menuitemcheckbox"` with `aria-checked`.
+- Toggle items (for example, **Show weekends**, **Show week number**) use `role="menuitemcheckbox"` with `aria-checked`.
 - Time format options use `role="menuitemradio"` with `aria-checked`.
 
 ## Localization of ARIA labels
@@ -173,7 +173,7 @@ The following keys are specifically relevant to accessibility:
 }
 ```
 
-See the [localization page](/x/react-scheduler/localization/) for the full list of available keys and instructions on how to apply them.
+See the [Event Calendar localization page](/x/react-scheduler/event-calendar/localization/) and the [Event Timeline localization page](/x/react-scheduler/event-timeline/localization/) for the full list of available keys and instructions on how to apply them.
 
 ## Known limitations
 
