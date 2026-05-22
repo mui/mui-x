@@ -263,7 +263,7 @@ const VirtualScrollbarHorizontal = styled(VirtualScrollbar, {
   name: 'MuiEventTimeline',
   slot: 'VirtualScrollbarHorizontal',
 })({
-  width: 'calc(100% - var(--has-scroll-y, 0) * var(--scrollbar-size, 10px))',
+  width: 'calc(100% - var(--title-column-width))',
   height: 'var(--size)',
   overflowY: 'hidden',
   overflowX: 'auto',
@@ -272,7 +272,7 @@ const VirtualScrollbarHorizontal = styled(VirtualScrollbar, {
     height: 'var(--size)',
   },
   bottom: 0,
-  left: 0,
+  left: 'var(--title-column-width)',
 });
 
 const RowContainer = styled('div', {
