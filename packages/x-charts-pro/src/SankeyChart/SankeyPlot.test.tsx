@@ -1,8 +1,7 @@
-import { createRenderer } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { SankeyPlot, sankeyClasses, SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { spy } from 'sinon';
-import { getCenter } from 'test/utils/charts/getCenter';
 
 describe('<SankeyPlot />', () => {
   const { render } = createRenderer();
@@ -31,28 +30,26 @@ describe('<SankeyPlot />', () => {
     expect(root).not.to.equal(null);
   });
 
-  it.skipIf(isJSDOM)(
-    'should not call onHighlightChange when re-entering the controlled node',
-    async () => {
-      const handleHighlight = spy();
-      const { container, user } = render(
-        <SankeyChart
-          height={400}
-          width={400}
-          series={{
-            id: 'S',
-            data: {
-              nodes: [{ id: 'X' }, { id: 'Y' }],
-              links: [{ source: 'X', target: 'Y', value: 1 }],
-            },
-          }}
-          highlightedItem={{ seriesId: 'S', subType: 'node', nodeId: 'X' }}
-          onHighlightChange={handleHighlight}
-        />,
-      );
-      const nodeX = container.querySelector('[data-node="X"]') as Element;
-      await user.pointer({ target: nodeX, coords: getCenter(nodeX) });
-      expect(handleHighlight.callCount).to.equal(0);
-    },
-  );
+  it('should not call onHighlightChange when re-entering the controlled node', async () => {
+    const handleHighlight = spy();
+    const { container } = render(
+      <SankeyChart
+        height={400}
+        width={400}
+        series={{
+          id: 'S',
+          data: {
+            nodes: [{ id: 'X' }, { id: 'Y' }],
+            links: [{ source: 'X', target: 'Y', value: 1 }],
+          },
+        }}
+        highlightedItem={{ seriesId: 'S', subType: 'node', nodeId: 'X' }}
+        onHighlightChange={handleHighlight}
+      />,
+    );
+    const nodeX = container.querySelector('[data-node="X"]') as Element;
+    expect(nodeX).not.to.equal(null);
+    fireEvent.pointerEnter(nodeX);
+    expect(handleHighlight.callCount).to.equal(0);
+  });
 });
