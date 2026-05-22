@@ -104,12 +104,11 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
       const cleanedIdentifier = instance.cleanIdentifier(identifierWithType, 'highlightItem');
       const prevItem = prevHighlight.item;
 
-      if (prevItem != null) {
-        if (
-          instance.serializeIdentifier(prevItem) === instance.serializeIdentifier(cleanedIdentifier)
-        ) {
-          return;
-        }
+      if (
+        prevItem != null &&
+        instance.serializeIdentifier(prevItem) === instance.serializeIdentifier(cleanedIdentifier)
+      ) {
+        return;
       }
 
       params.onHighlightChange?.(cleanedIdentifier);
