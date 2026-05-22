@@ -7,6 +7,7 @@ import {
 import type { GridColDef } from '../../../models/colDef/gridColDef';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridColumnsRawState, GridColumnsState } from './gridColumnsInterfaces';
+import type { GridDimensions } from '../dimensions';
 
 describe('gridColumnsUtils', () => {
   describe('createColumnsState', () => {
@@ -86,15 +87,26 @@ describe('gridColumnsUtils', () => {
   });
 
   describe('hydrateColumnsWidth', () => {
-    const hydrateColumn = (column: GridColDef) => {
-      const columnsState: GridColumnsRawState = {
-        orderedFields: [column.field],
-        lookup: { [column.field]: column },
-        columnVisibilityModel: {},
-        initialColumnVisibilityModel: {},
-      };
+    const createRawColumnsState = (columns: GridColDef[]): GridColumnsRawState => ({
+      orderedFields: columns.map((column) => column.field),
+      lookup: Object.fromEntries(columns.map((column) => [column.field, column])),
+      columnVisibilityModel: {},
+      initialColumnVisibilityModel: {},
+    });
 
-      return hydrateColumnsWidth(columnsState, undefined).lookup[column.field];
+    const createDimensions = (width: number) =>
+      ({
+        viewportOuterSize: { width },
+        hasScrollY: false,
+        scrollbarSize: 0,
+      }) as GridDimensions;
+
+    const hydrateColumns = (columns: GridColDef[], dimensions?: GridDimensions) => {
+      return hydrateColumnsWidth(createRawColumnsState(columns), dimensions).lookup;
+    };
+
+    const hydrateColumn = (column: GridColDef) => {
+      return hydrateColumns([column])[column.field];
     };
 
     it('should preserve explicit zero values for non-flex column dimensions', () => {
@@ -130,6 +142,18 @@ describe('gridColumnsUtils', () => {
           maxWidth: Number.NaN,
         }).computedWidth,
       ).to.equal(200);
+    });
+
+    it('should preserve explicit zero minWidth values for flex columns', () => {
+      const columns = [
+        { field: 'id', flex: 1, minWidth: 0 },
+        { field: 'name', flex: 2, minWidth: 0 },
+      ];
+
+      const columnsLookup = hydrateColumns(columns, createDimensions(300));
+
+      expect(columnsLookup.id.computedWidth).to.equal(100);
+      expect(columnsLookup.name.computedWidth).to.equal(200);
     });
   });
 
