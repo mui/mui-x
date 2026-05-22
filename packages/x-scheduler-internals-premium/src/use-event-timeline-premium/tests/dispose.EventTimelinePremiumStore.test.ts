@@ -1,6 +1,7 @@
 import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { adapter } from 'test/utils/scheduler';
+import { adapter, EventBuilder } from 'test/utils/scheduler';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models/event';
 import {
   buildEvents,
   DEFAULT_PARAMS,
@@ -8,7 +9,6 @@ import {
   flushEffect,
   noopPersistEvents,
   noopUIEvent,
-  TestEvent,
 } from '../../internals/tests/disposeTestHelpers';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
@@ -22,8 +22,8 @@ describe('Dispose - EventTimelinePremiumStore', () => {
   });
 
   it('should not write to the store when a pending getEvents resolves after dispose', async () => {
-    let resolveFetch!: (value: TestEvent[]) => void;
-    const fetchPromise = new Promise<TestEvent[]>((resolve) => {
+    let resolveFetch!: (value: SchedulerEvent[]) => void;
+    const fetchPromise = new Promise<SchedulerEvent[]>((resolve) => {
       resolveFetch = resolve;
     });
     const dataSource = {
@@ -91,12 +91,11 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     store.disposeEffect()();
     await flushEffect();
 
-    const updated: TestEvent = {
-      id: '1',
-      start: '2025-07-01T00:00:00.000Z',
-      end: '2025-07-01T11:00:00.000Z',
-      title: 'Updated',
-    };
+    const updated = EventBuilder.new()
+      .id('1')
+      .title('Updated')
+      .span('2025-07-01T00:00:00.000Z', '2025-07-01T11:00:00.000Z')
+      .build();
     store.publishEvent('eventsUpdated', {
       deleted: [],
       updated: [updated],
@@ -223,12 +222,11 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    const updated: TestEvent = {
-      id: '1',
-      start: '2025-07-01T00:00:00.000Z',
-      end: '2025-07-01T11:00:00.000Z',
-      title: 'Updated',
-    };
+    const updated = EventBuilder.new()
+      .id('1')
+      .title('Updated')
+      .span('2025-07-01T00:00:00.000Z', '2025-07-01T11:00:00.000Z')
+      .build();
     store.publishEvent('eventsUpdated', {
       deleted: [],
       updated: [updated],
