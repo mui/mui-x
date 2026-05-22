@@ -1,6 +1,5 @@
 import { createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { SankeyPlot, sankeyClasses, SankeyChart } from '@mui/x-charts-pro/SankeyChart';
-import { isJSDOM } from 'test/utils/skipIf';
 import { spy } from 'sinon';
 
 describe('<SankeyPlot />', () => {
