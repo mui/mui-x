@@ -355,8 +355,21 @@ export const updateCacheWithNewRows = ({
       }
 
       // Update the data row lookups.
-      // Preserve prototype of partialRow to support class-based row models
-      const merged = Object.create(Object.getPrototypeOf(partialRow));
+      // Prototype-preservation rules:
+      //   1. If partialRow is a class instance (non-plain object), use its prototype — the
+      //      caller is passing in a fully-constructed instance and owns the prototype chain.
+      //   2. If partialRow is a plain object (Object.prototype), prefer oldRow's prototype so
+      //      that a partial-update object does not silently discard the existing row's class.
+      //   3. If both are plain objects the result is also a plain object (no-op).
+      //
+      // Note: private class fields (#field syntax) cannot be preserved through a spread-style
+      // merge because the brand check is tied to the original instance. Rows that rely on
+      // private fields must supply a fully-constructed instance as partialRow (rule 1 above)
+      // rather than a plain-object partial update.
+      const partialRowProto = Object.getPrototypeOf(partialRow);
+      const isPartialRowPlain = partialRowProto === Object.prototype || partialRowProto === null;
+      const proto = isPartialRowPlain ? Object.getPrototypeOf(oldRow) : partialRowProto;
+      const merged = Object.create(proto);
       Object.assign(merged, oldRow, partialRow);
       dataRowIdToModelLookup[id] = merged;
       return;
