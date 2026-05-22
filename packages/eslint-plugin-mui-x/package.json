@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@types/eslint": "9.6.1",
+    "@types/react": "catalog:",
     "@typescript-eslint/parser": "catalog:",
     "@typescript-eslint/rule-tester": "8.59.3"
   },
