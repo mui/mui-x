@@ -33,6 +33,20 @@ export function useEventOccurrencesWithTimelinePosition(
   }, [adapter, occurrences, maxSpan]);
 }
 
+/**
+ * Pure helper that returns the lane count (`maxIndex`) for a set of
+ * occurrences. Equivalent to `useEventOccurrencesWithTimelinePosition().maxIndex`
+ * but callable outside React (e.g. inside a `useMemo`).
+ */
+export function computeOccurrencesMaxIndex(
+  adapter: Adapter,
+  occurrences: readonly SchedulerEventOccurrence[],
+): number {
+  const sortedOccurrences = sortEventOccurrences(occurrences);
+  const conflicts = buildOccurrenceConflicts(adapter, sortedOccurrences);
+  return buildFirstIndexLookup(conflicts).maxIndex;
+}
+
 export namespace useEventOccurrencesWithTimelinePosition {
   export interface Parameters {
     /**

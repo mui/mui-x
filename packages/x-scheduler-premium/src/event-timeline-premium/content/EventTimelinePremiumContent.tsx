@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme, Theme } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
 import useLazyRef from '@mui/utils/useLazyRef';
@@ -19,7 +19,10 @@ import {
   eventTimelinePremiumPresetSelectors,
   timelineOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
-import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
+import {
+  computeOccurrencesMaxIndex,
+  useEventOccurrencesWithTimelinePosition,
+} from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import {
   schedulerNowSelectors,
   schedulerOccurrenceSelectors,
@@ -44,8 +47,6 @@ import {
   useEventTimelinePremiumVirtualizerStore,
 } from './EventTimelinePremiumVirtualizerContext';
 import { TitleColumnWidthProvider, useTitleColumnWidth } from './useTitleColumnWidth';
-
-const ROW_HEIGHT = 74;
 
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimeline',
@@ -625,6 +626,24 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const { tickCount, tickWidth } = presetConfig;
   const columnsTotalWidth = titleColumnWidth + tickCount * tickWidth;
 
+  // Row heights mirror the CSS. The cell stretches to fit overlapping events
+  // (`--lane-count` lanes), so we need the per-resource lane count.
+  const theme = useTheme();
+  const laneCountByResource = React.useMemo(() => {
+    const map = new Map<SchedulerResourceId, number>();
+    for (const { resource, occurrences } of resources) {
+      map.set(resource.id, computeOccurrencesMaxIndex(adapter, occurrences));
+    }
+    return map;
+  }, [resources, adapter]);
+
+  const getRowHeight = React.useCallback(
+    (row: { id: SchedulerResourceId }) =>
+      getRowHeightForLaneCount(theme, laneCountByResource.get(row.id) ?? 1),
+    [theme, laneCountByResource],
+  );
+  const defaultRowHeight = React.useMemo(() => getRowHeightForLaneCount(theme, 1), [theme]);
+
   const titleColumn = React.useMemo<ColumnWithWidth>(
     () => ({ key: 'title', computedWidth: titleColumnWidth }),
     [titleColumnWidth],
@@ -646,7 +665,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const virtualizer = useVirtualizer({
     layout,
     dimensions: {
-      rowHeight: ROW_HEIGHT,
+      rowHeight: defaultRowHeight,
       topPinnedHeight: headerHeight,
       columnsTotalWidth,
       leftPinnedWidth: titleColumnWidth,
@@ -658,6 +677,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     columns,
     pinnedColumns,
     renderRow,
+    getRowHeight,
   });
 
   const containerProps = virtualizer.store.use(LayoutDataGrid.selectors.containerProps);
@@ -760,3 +780,36 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     </EventTimelinePremiumContentRoot>
   );
 });
+
+// `EventsCell` is the tallest in-flow child of the body row and therefore drives
+// its rendered height. These helpers mirror the CSS so the virtualizer's
+// `getRowHeight` returns the same value the browser will lay out.
+//
+// CSS for EventsCell:
+//   padding: theme.spacing(2, 0);
+//   grid-template-rows: repeat(var(--lane-count, 1),
+//                              minmax(calc(${body2.lineHeight}em + ${theme.spacing(1.125)}), auto));
+//   row-gap: theme.spacing(0.5);
+//   border-bottom: 1px solid divider;
+//
+// `em` in the grid track resolves against the EventsCell's font-size, which
+// inherits `theme.typography.body2.fontSize` from the Content root.
+function getEventsCellLaneMinHeight(theme: Theme): number {
+  const fontSizeRem = parseFloat(String(theme.typography.body2.fontSize));
+  const fontSize =
+    Number.isFinite(fontSizeRem) && fontSizeRem > 0
+      ? fontSizeRem * (theme.typography.htmlFontSize ?? 16)
+      : 14;
+  const lineHeight = Number(theme.typography.body2.lineHeight) || 1.43;
+  const extra = parseFloat(theme.spacing(1.125)) || 9;
+  return lineHeight * fontSize + extra;
+}
+
+function getRowHeightForLaneCount(theme: Theme, laneCount: number): number {
+  const padding = parseFloat(theme.spacing(2)) || 16;
+  const gap = parseFloat(theme.spacing(0.5)) || 4;
+  const laneMin = getEventsCellLaneMinHeight(theme);
+  const lanes = Math.max(1, laneCount);
+  // 2 paddings + N lanes + (N-1) row-gaps + bottom border.
+  return 2 * padding + lanes * laneMin + (lanes - 1) * gap + 1;
+}
