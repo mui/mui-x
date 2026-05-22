@@ -34,11 +34,7 @@ export default function ToggleSeriesVisibility() {
         series={series}
         layout="horizontal"
         height={300}
-        slotProps={{
-          legend: {
-            toggleVisibilityOnClick: true,
-          },
-        }}
+        slotProps={{ legend: { toggleVisibilityOnClick: true } }}
       />
     </div>
   );
