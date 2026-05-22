@@ -43,7 +43,7 @@ export const RichTreeViewItem = React.memo(function RichTreeViewItem({
     elementType: Item,
     externalSlotProps: itemSlotProps,
     additionalProps: { label: itemMeta?.label, id: itemMeta?.idAttribute, itemId },
-    ownerState: { itemId, label: itemMeta?.label as string },
+    ownerState: { itemId, label: itemMeta?.label },
   });
 
   return (
@@ -103,7 +103,7 @@ export function RichTreeViewItems<TProps extends object>(props: RichTreeViewItem
 
 interface RichTreeViewItemsOwnerState {
   itemId: TreeViewItemId;
-  label: string;
+  label: React.ReactNode;
 }
 
 export interface RichTreeViewItemsSlots {

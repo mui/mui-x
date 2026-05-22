@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { MinimalTreeViewStore } from '../MinimalTreeViewStore';
 
 export interface TreeViewItemMeta {
@@ -13,8 +14,10 @@ export interface TreeViewItemMeta {
   depth?: number;
   /**
    * Only defined for `<RichTreeView />` and `<RichTreeViewPro />`.
+   * Can be a `React.ReactNode` when `getItemLabel` returns a node.
+   * String labels are used for keyboard type-ahead; non-string labels are skipped.
    */
-  label?: string;
+  label?: React.ReactNode;
 }
 
 export interface TreeViewAnyStore extends MinimalTreeViewStore<any, any, any, any> {

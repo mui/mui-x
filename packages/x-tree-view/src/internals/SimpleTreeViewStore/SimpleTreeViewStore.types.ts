@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { MinimalTreeViewParameters, MinimalTreeViewState } from '../MinimalTreeViewStore';
 
 export interface SimpleTreeViewState<
@@ -20,6 +21,6 @@ export interface SimpleTreeViewStoreParameters<Multiple extends boolean | undefi
 
 export interface SimpleTreeViewItem {
   id: string;
-  label: string;
+  label: React.ReactNode;
   children?: SimpleTreeViewItem[];
 }
