@@ -50,7 +50,7 @@ describe('<SankeyPlot />', () => {
           onHighlightChange={handleHighlight}
         />,
       );
-      const nodeX = container.querySelector('[data-node-id="X"]') as Element;
+      const nodeX = container.querySelector('[data-node="X"]') as Element;
       await user.pointer({ target: nodeX, coords: getCenter(nodeX) });
       expect(handleHighlight.callCount).to.equal(0);
     },
