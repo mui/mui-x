@@ -38,6 +38,7 @@ export function deleteRecurringEvent(
 
 /**
  * Deletes a single occurrence by adding an EXDATE to the series.
+ * Drops the whole series when excluding the occurrence would leave no occurrence.
  * @returns The updated list of events.
  */
 export function applyRecurringDeleteOnlyThis(
@@ -45,16 +46,34 @@ export function applyRecurringDeleteOnlyThis(
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: TemporalSupportedObject,
 ): UpdateEventsParameters {
+  const exDates = [
+    ...(originalEvent.dataTimezone.exDates ?? []),
+    adapter.startOfDay(occurrenceStart),
+  ];
+
+  const rule = originalEvent.dataTimezone.rrule!;
+  if (rule.count != null || rule.until != null) {
+    const eventWithExDates: SchedulerProcessedEvent = {
+      ...originalEvent,
+      dataTimezone: { ...originalEvent.dataTimezone, exDates },
+    };
+    const seriesStart = originalEvent.dataTimezone.start.value;
+    const rangeEnd =
+      rule.until ?? adapter.addYears(seriesStart, (rule.count ?? 1) * (rule.interval ?? 1));
+    const remaining = getRecurringEventOccurrencesForVisibleDays(
+      eventWithExDates,
+      seriesStart,
+      adapter.endOfDay(rangeEnd),
+      adapter,
+      originalEvent.dataTimezone.timezone,
+    );
+    if (remaining.length === 0) {
+      return { deleted: [originalEvent.id] };
+    }
+  }
+
   return {
-    updated: [
-      {
-        id: originalEvent.id,
-        exDates: [
-          ...(originalEvent.dataTimezone.exDates ?? []),
-          adapter.startOfDay(occurrenceStart),
-        ],
-      },
-    ],
+    updated: [{ id: originalEvent.id, exDates }],
   };
 }
 

@@ -56,6 +56,43 @@ describe('recurring-events/deleteRecurringEvent', () => {
         },
       ]);
     });
+
+    it('should delete the whole series when removing the only occurrence of a finite series', () => {
+      const event = EventBuilder.new()
+        .singleDay('2025-01-01T09:00:00Z')
+        .rrule({ freq: 'DAILY', interval: 1, count: 1 })
+        .toProcessed();
+      const occurrenceStart = adapter.date('2025-01-01T09:00:00Z', 'default');
+
+      const result = applyRecurringDeleteOnlyThis(adapter, event, occurrenceStart);
+      expect(result).to.deep.equal({ deleted: [event.id] });
+    });
+
+    it('should delete the whole series when all other occurrences are already excluded', () => {
+      const event = EventBuilder.new()
+        .singleDay('2025-01-01T09:00:00Z')
+        .rrule({ freq: 'DAILY', interval: 1, count: 3 })
+        .exDates(['2025-01-01T09:00:00Z', '2025-01-02T09:00:00Z'])
+        .toProcessed();
+      const occurrenceStart = adapter.date('2025-01-03T09:00:00Z', 'default');
+
+      const result = applyRecurringDeleteOnlyThis(adapter, event, occurrenceStart);
+      expect(result).to.deep.equal({ deleted: [event.id] });
+    });
+
+    it('should keep a finite series when other occurrences remain', () => {
+      const event = EventBuilder.new()
+        .singleDay('2025-01-01T09:00:00Z')
+        .rrule({ freq: 'DAILY', interval: 1, count: 3 })
+        .toProcessed();
+      const occurrenceStart = adapter.date('2025-01-02T09:00:00Z', 'default');
+
+      const result = applyRecurringDeleteOnlyThis(adapter, event, occurrenceStart);
+      expect(result.deleted).to.equal(undefined);
+      expect(result.updated).to.deep.equal([
+        { id: event.id, exDates: [adapter.startOfDay(occurrenceStart)] },
+      ]);
+    });
   });
 
   describe('applyRecurringDeleteFollowing', () => {
