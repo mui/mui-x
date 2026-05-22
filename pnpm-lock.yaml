@@ -766,6 +766,9 @@ importers:
       '@types/eslint':
         specifier: 9.6.1
         version: 9.6.1
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.14
       '@typescript-eslint/parser':
         specifier: 'catalog:'
         version: 8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
