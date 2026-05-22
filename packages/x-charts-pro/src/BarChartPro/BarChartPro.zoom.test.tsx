@@ -257,4 +257,36 @@ describe.skipIf(isJSDOM)('<BarChartPro /> - Zoom', () => {
     // Should have zoomed in to show fewer ticks
     expect(getAxisTickValues('x').length).to.be.lessThan(4);
   });
+
+  describe('initialZoom with range values', () => {
+    it('should resolve a string range to the matching axis values', () => {
+      render(
+        <BarChartPro {...barChartProps} initialZoom={[{ axisId: 'x', value: ['B', 'C'] }]} />,
+        options,
+      );
+
+      expect(getAxisTickValues('x')).to.deep.equal(['B', 'C']);
+    });
+
+    it('should resolve a function range value', () => {
+      render(
+        <BarChartPro
+          {...barChartProps}
+          initialZoom={[{ axisId: 'x', value: () => ({ start: 75, end: 100 }) }]}
+        />,
+        options,
+      );
+
+      expect(getAxisTickValues('x')).to.deep.equal(['D']);
+    });
+
+    it('should still apply explicit zoom percentages alongside range values', () => {
+      render(
+        <BarChartPro {...barChartProps} initialZoom={[{ axisId: 'x', start: 75, end: 100 }]} />,
+        options,
+      );
+
+      expect(getAxisTickValues('x')).to.deep.equal(['D']);
+    });
+  });
 });

@@ -143,6 +143,31 @@ The `zoom` state is an array of objects that define the zoom state for each axis
 
 {{"demo": "ExternalZoomManagement.js"}}
 
+#### Initialize with a range value
+
+Instead of percentages, an `initialZoom` entry can describe the range to display with `{ axisId, value }`.
+The `value` accepts the same formats as the [toolbar range buttons](/x/react-charts/toolbar/#range-button-values): a calendar interval, an absolute range, a function, or `null`.
+
+```jsx
+<LineChartPro
+  // Show the last 3 months of data
+  initialZoom={[{ axisId: 'x', value: { unit: 'month', step: 3 } }]}
+/>
+```
+
+For ordinal (band/point) axes, an absolute range can also be expressed with the axis values themselves:
+
+```jsx
+<BarChartPro
+  // Zoom from the 'Feb' category to the 'May' category
+  initialZoom={[{ axisId: 'x', value: ['Feb', 'May'] }]}
+/>
+```
+
+Range values are only supported by the uncontrolled `initialZoom` prop. The controlled `zoomData` prop still expects explicit percentages.
+
+{{"demo": "ZoomInitialRange.js"}}
+
 ### Zoom synchronization
 
 Control the zoom state to synchronize zoom between multiple charts.

@@ -30,7 +30,11 @@ import {
   ChartsToolbarImageExportTrigger,
 } from './ChartsToolbarImageExportTrigger';
 
-export type { RangeButtonFunctionParams } from './rangeButtonValueToZoom';
+export type {
+  RangeButtonFunctionParams,
+  RangeButtonValue,
+  RangeButtonIntervalUnit,
+} from './rangeButtonValueToZoom';
 
 export interface RangeButtonConfig {
   /**
