@@ -25,3 +25,17 @@ export const selectorChartRawYAxis: SelectorChartRawYAxisType = (state) => state
 export const selectorChartCartesianAxesGap = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
 ) => state.cartesianAxis?.axesGap ?? 0;
+
+/**
+ * Lifecycle status of the async cartesian-axis processing pipeline.
+ */
+export const selectorChartCartesianAxisStatus = (
+  state: ChartState<[], [UseChartCartesianAxisSignature]>,
+) => state.cartesianAxis?.status ?? 'success';
+
+/**
+ * Last error captured by the cartesian-axis processing pipeline (if any).
+ */
+export const selectorChartCartesianAxisError = (
+  state: ChartState<[], [UseChartCartesianAxisSignature]>,
+) => state.cartesianAxis?.error;
