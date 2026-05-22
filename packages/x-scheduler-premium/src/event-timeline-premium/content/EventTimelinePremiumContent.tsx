@@ -699,6 +699,17 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   );
   const gridMergedRef = useMergedRefs(scrollerProps.ref as React.Ref<HTMLDivElement>, gridRef);
 
+  // Reset horizontal scroll when navigating to a new time period.
+  React.useEffect(() => {
+    const grid = gridRef.current;
+    if (grid) {
+      grid.scrollLeft = 0;
+    }
+    if (scrollbarHorizontalRef.current) {
+      scrollbarHorizontalRef.current.scrollLeft = 0;
+    }
+  }, [presetConfig.start]);
+
   const eventsWidth = presetConfig.tickCount * presetConfig.tickWidth;
   const hasScrollX = dimensions.hasScrollX;
   const hasScrollY = dimensions.hasScrollY;
