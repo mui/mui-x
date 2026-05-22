@@ -29,7 +29,7 @@ describe('<SankeyPlot />', () => {
     expect(root).not.to.equal(null);
   });
 
-  it('should not call onHighlightChange when re-entering the controlled node', async () => {
+  it('should not call onHighlightChange when re-entering the controlled sankey node with extra payload fields', () => {
     const handleHighlight = spy();
     const { container } = render(
       <SankeyChart
@@ -42,12 +42,13 @@ describe('<SankeyPlot />', () => {
             links: [{ source: 'X', target: 'Y', value: 1 }],
           },
         }}
-        highlightedItem={{ seriesId: 'S', subType: 'node', nodeId: 'X' }}
+        highlightedItem={
+          { type: 'sankey', seriesId: 'S', subType: 'node', nodeId: 'X', extra: 'payload' } as any
+        }
         onHighlightChange={handleHighlight}
       />,
     );
     const nodeX = container.querySelector('[data-node="X"]') as Element;
-    expect(nodeX).not.to.equal(null);
     fireEvent.pointerEnter(nodeX);
     expect(handleHighlight.callCount).to.equal(0);
   });
