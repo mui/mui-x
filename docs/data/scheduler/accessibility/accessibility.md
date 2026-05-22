@@ -33,7 +33,7 @@ The day-time grid is exposed as a `role="grid"` with three logical rows:
 
 |     Row | `aria-rowindex` | Content                                                                                                                                                                                             |
 | ------: | :-------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Header | `1`             | Day column headers — `role="columnheader"` with an `aria-label` containing the full weekday name and date (for example, `"Monday 26"`)                                                                     |
+|  Header | `1`             | Day column headers — `role="columnheader"` with an `aria-label` containing the full weekday name and date (for example, `"Monday 26"`)                                                              |
 | All-day | `2`             | All-day event cells — `role="gridcell"` with `aria-labelledby` pointing to the column header. The visible "All day" label is `aria-hidden="true"` and referenced via `aria-labelledby` on each cell |
 |   Timed | `3`             | Per-column time cells                                                                                                                                                                               |
 
