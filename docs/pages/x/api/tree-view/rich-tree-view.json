@@ -77,6 +77,8 @@
       "default": "12px"
     },
     "itemHeight": { "type": { "name": "number" }, "default": "null" },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
+    "loadingItemsCount": { "type": { "name": "number" }, "default": "5" },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },
