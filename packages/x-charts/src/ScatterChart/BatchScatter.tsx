@@ -158,7 +158,7 @@ export function BatchScatter(props: BatchScatterProps) {
   const { store } = useChartsContext<[UseChartHighlightSignature<'scatter'>]>();
   const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.id);
   const isSeriesFaded = store.use(selectorChartIsSeriesFaded, series.id);
-  const seriesHighlightedItem = store.use(selectorChartSeriesHighlightedItem, series.id);
+  const seriesHighlightedItemDataIndex = store.use(selectorChartSeriesHighlightedItem, series.id);
   const seriesUnfadedItem = store.use(selectorChartSeriesUnfadedItem, series.id);
   const highlightedModifier = 1.2;
   const highlightMultiplier = isSeriesHighlighted ? highlightedModifier : 1;
@@ -167,20 +167,20 @@ export function BatchScatter(props: BatchScatterProps) {
   const classes = useUtilityClasses(props);
 
   const siblings: React.ReactNode[] = [];
-  if (seriesHighlightedItem != null) {
-    const datum = series.data[seriesHighlightedItem];
+  if (seriesHighlightedItemDataIndex != null) {
+    const datum = series.data[seriesHighlightedItemDataIndex];
     const getXPosition = getValueToPositionMapper(xScale);
     const getYPosition = getValueToPositionMapper(yScale);
 
     siblings.push(
       <path
         key={`highlighted-${series.id}`}
-        fill={colorGetter ? colorGetter(seriesHighlightedItem) : color}
+        fill={colorGetter ? colorGetter(seriesHighlightedItemDataIndex) : color}
         data-highlighted
         d={createPath(
           getXPosition(datum.x),
           getYPosition(datum.y),
-          getMarkerRadius(seriesHighlightedItem) * highlightedModifier,
+          getMarkerRadius(seriesHighlightedItemDataIndex) * highlightedModifier,
         )}
       />,
     );
@@ -218,7 +218,7 @@ export function BatchScatter(props: BatchScatterProps) {
           yScale={yScale}
           color={color}
           colorGetter={colorGetter}
-          sizeGetter={sizeGetter}
+          sizeGetter={getMarkerRadius}
           markerSize={series.markerSize}
         />
       </Group>
