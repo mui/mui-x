@@ -32,7 +32,7 @@ describe('ScatterChart - seriesProcessor', () => {
         type: 'scatter',
         id: 'id1',
         color: 'red',
-        datasetKeys: { x: 'a', y: 'b', color: 'c', id: 'name' },
+        datasetKeys: { x: 'a', y: 'b', colorValue: 'c', id: 'name' },
       },
     };
 
@@ -54,7 +54,7 @@ describe('ScatterChart - seriesProcessor', () => {
         type: 'scatter',
         id: 'id1',
         color: 'red',
-        datasetKeys: { x: 'a', y: 'b', size: 'c', id: 'name' },
+        datasetKeys: { x: 'a', y: 'b', sizeValue: 'c', id: 'name' },
       },
     };
 

@@ -83,14 +83,14 @@ export interface ScatterSeriesType
     /**
      * The key used to retrieve data from the dataset for the color value.
      */
-    color?: string;
+    colorValue?: string;
     /**
      * The key used to retrieve data from the dataset for the size value.
      */
-    size?: string;
+    sizeValue?: string;
     /**
      * The key used to retrieve data from the dataset for the Z axis.
-     * @deprecated Use `color` instead.
+     * @deprecated Use `colorValue` instead.
      */
     z?: string;
     /**

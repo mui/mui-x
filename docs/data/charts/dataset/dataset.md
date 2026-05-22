@@ -78,7 +78,7 @@ series={[
     datasetKeys: {
       x: 'lng',
       y: 'lat',
-      color: 'population',
+      colorValue: 'population',
       id: 'city',
     },
     // Or with valueGetter

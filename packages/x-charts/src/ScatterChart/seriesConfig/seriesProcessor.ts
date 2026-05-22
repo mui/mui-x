@@ -34,11 +34,11 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
 
             const rep = { x, y } as ScatterValueType;
 
-            if (datasetKeys.color !== undefined) {
-              rep.colorValue = d[datasetKeys.color];
+            if (datasetKeys.colorValue !== undefined) {
+              rep.colorValue = d[datasetKeys.colorValue];
             }
-            if (datasetKeys.size !== undefined) {
-              rep.sizeValue = d[datasetKeys.size];
+            if (datasetKeys.sizeValue !== undefined) {
+              rep.sizeValue = d[datasetKeys.sizeValue];
             }
             if (datasetKeys.z !== undefined) {
               rep.z = d[datasetKeys.z];
