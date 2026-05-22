@@ -2,7 +2,7 @@
 productId: x-scheduler
 title: Accessibility
 githubLabel: 'scope: scheduler'
-waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
+waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 packageName: '@mui/x-scheduler'
 ---
 
@@ -22,6 +22,8 @@ Common conformance guidelines for accessibility include:
 
 [WCAG 2.2](https://www.w3.org/TR/WCAG22/) has three levels of conformance: A, AA, and AAA.
 Level AA exceeds the basic criteria for accessibility and is a common target for most organizations, so this is what we aim to support.
+
+The [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a scheduler component.
 
 ## ARIA structure and semantics
 
@@ -85,19 +87,38 @@ The main calendar view area is rendered as a `<section>` element with `aria-labe
 The key assignments in the table below apply to Windows and Linux users.
 
 On macOS replace <kbd class="key">Ctrl</kbd> with <kbd class="key">⌘ Command</kbd>.
-:::
+
+Some devices may lack certain keys, requiring the use of key combinations. In this case, replace:
+
+- <kbd class="key">Home</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Left</kbd></kbd>
+- <kbd class="key">End</kbd> with <kbd><kbd class="key">Fn</kbd>+<kbd class="key">Arrow Right</kbd></kbd>
+  :::
+
+### Calendar grid
+
+The Week, Day, and Month views implement a `role="grid"` with full arrow key navigation between cells.
+
+**Week and Day views** expose three logical rows: the header row (day names), the all-day row, and the timed-events row. Arrow keys move across all three rows.
+
+**Month view** exposes the header row and one day-grid row per week. Arrow keys move between the header and each week row, and between individual weeks.
+
+|                               Keys | Description                                                                                                                                                                                                                |
+| ---------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|  <kbd class="key">Arrow Left</kbd> | Moves focus to the previous column in the same row                                                                                                                                                                         |
+| <kbd class="key">Arrow Right</kbd> | Moves focus to the next column in the same row                                                                                                                                                                             |
+|    <kbd class="key">Arrow Up</kbd> | Moves focus to the same column in the row above. In Week/Day view: from all-day row to header, or from time-grid row to all-day. In Month view: from a week row to the one above, or from the first week row to the header |
+|  <kbd class="key">Arrow Down</kbd> | Moves focus to the same column in the row below                                                                                                                                                                            |
+|       <kbd class="key">Enter</kbd> | On a day-grid or time-grid cell: starts event creation for that date or time slot. On a header cell: activates the day button (navigates to that day's view)                                                               |
+
+#### Tab sequence
+
+All grid cells have `tabIndex="0"`, so the <kbd class="key">Tab</kbd> key flows through the grid cell by cell in document order. When a focused cell contains events, <kbd class="key">Tab</kbd> enters the events inside it before moving to the next cell.
 
 ### Resources sidebar
 
-The Resources sidebar exposes a `role="tree"` following the [WAI-ARIA Tree pattern](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/).
+The Resources sidebar uses the [MUI X Rich Tree View](/x/react-tree-view/) internally and inherits its full keyboard behavior. See the [Tree View accessibility page](/x/react-tree-view/accessibility/) for the complete keyboard interaction reference.
 
-|                               Keys | Description                                                              |
-| ---------------------------------: | :----------------------------------------------------------------------- |
-|    <kbd class="key">Arrow Up</kbd> | Moves focus to the previous tree item                                    |
-|  <kbd class="key">Arrow Down</kbd> | Moves focus to the next tree item                                        |
-| <kbd class="key">Arrow Right</kbd> | Expands a collapsed parent resource node                                 |
-|  <kbd class="key">Arrow Left</kbd> | Collapses an expanded parent resource node, or moves focus to its parent |
-|       <kbd class="key">Space</kbd> | Toggles the visibility of the focused resource (checks or unchecks it)   |
+<kbd class="key">Space</kbd> additionally toggles the visibility (checked state) of the focused resource.
 
 ### Menus and popovers
 
@@ -177,12 +198,12 @@ See the [Event Calendar localization page](/x/react-scheduler/event-calendar/loc
 
 ## Known limitations
 
-### No arrow key navigation within calendar grids
-
-The Week, Day, and Month views expose full ARIA grid semantics (`role="grid"`, `aria-rowcount`, `aria-colcount`, `aria-rowindex`, `aria-colindex`) but do **not** currently implement arrow key navigation between grid cells. Keyboard users can Tab to interactive elements (events and buttons) but cannot use arrow keys to move focus between day cells.
-
-This means the Scheduler does not yet fully conform to the [WAI-ARIA Grid pattern](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), which requires arrow key interaction.
-
 ### No arrow key navigation in the mini calendar
 
-Similarly, the mini calendar in the side panel exposes `role="grid"` and a roving `tabIndex` on the active date, but arrow key navigation between day cells is not implemented.
+The mini calendar in the side panel exposes `role="grid"` and a roving `tabIndex` on the active date, but arrow key navigation between day cells is not implemented. Clicking a date or using the previous/next month buttons are the only supported interaction methods.
+
+## API
+
+- [EventCalendar](/x/api/scheduler/event-calendar/)
+- [EventCalendarPremium](/x/api/scheduler/event-calendar-premium/)
+- [EventTimelinePremium](/x/api/scheduler/event-timeline-premium/)
