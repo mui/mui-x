@@ -47,8 +47,8 @@ export class EventTimelinePremiumLazyLoadingPlugin<
   }
 
   public override dispose(): void {
+    super.dispose();
     this.unsubscribeStateEffect?.();
     this.unsubscribeStateEffect = null;
-    super.dispose();
   }
 }

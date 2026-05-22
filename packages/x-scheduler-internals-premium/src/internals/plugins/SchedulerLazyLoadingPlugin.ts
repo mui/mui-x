@@ -161,8 +161,7 @@ export class SchedulerLazyLoadingPlugin<
   }) => {
     const { dataSource } = this.store.parameters;
     const { adapter, displayTimezone } = this.store.state;
-    // Capture locally so a concurrent dispose nulling `this.dataManager`/`this.cache`
-    // during the await below doesn't crash the finally blocks.
+    // Capture locally; `dispose` may null these during the await.
     const dataManager = this.dataManager;
     const cache = this.cache;
 

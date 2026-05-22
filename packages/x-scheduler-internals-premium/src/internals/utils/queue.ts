@@ -63,6 +63,8 @@ export class SchedulerDataManager {
 
   private fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>;
 
+  private isDisposed = false;
+
   constructor(
     adapter: Adapter,
     fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>,
@@ -203,19 +205,6 @@ export class SchedulerDataManager {
     this.queuedRequests.clear();
   };
 
-  private isDisposed = false;
-
-  public dispose = () => {
-    if (this.isDisposed) {
-      return;
-    }
-    this.isDisposed = true;
-    this.cancelQueuedRequests();
-    this.timeoutManager.clearAll();
-    this.pendingRequests.clear();
-    this.settledRequests.clear();
-  };
-
   public setRequestSettled = async (range: DateRange) => {
     if (this.isDisposed) {
       return;
@@ -226,8 +215,27 @@ export class SchedulerDataManager {
     await this.processQueue();
   };
 
+  /**
+   * Soft reset: drops queued/pending/settled state but keeps the manager usable.
+   * Use `dispose` for terminal teardown.
+   */
   public clear = () => {
     this.cancelQueuedRequests();
+    this.pendingRequests.clear();
+    this.settledRequests.clear();
+  };
+
+  /**
+   * Terminal teardown: subsequent `queue`/`queueImmediate`/`setRequestSettled`
+   * calls become no-ops.
+   */
+  public dispose = () => {
+    if (this.isDisposed) {
+      return;
+    }
+    this.isDisposed = true;
+    this.cancelQueuedRequests();
+    this.timeoutManager.clearAll();
     this.pendingRequests.clear();
     this.settledRequests.clear();
   };

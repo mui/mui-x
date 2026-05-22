@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import { vi } from 'vitest';
 import { DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
 import { DEBOUNCE_MS } from '../utils/queue';
@@ -11,7 +12,7 @@ export interface TestEvent {
 
 export const noopPersistEvents = async () => ({ success: true });
 
-export const noopUIEvent: any = {};
+export const noopUIEvent = {} as React.UIEvent;
 
 export const buildEvents = (): TestEvent[] => [
   {

@@ -250,9 +250,7 @@ export class SchedulerStore<
   private isDisposeScheduled = false;
 
   /**
-   * Returns a cleanup function for the store's owner. Dispose is deferred to a
-   * microtask so React StrictMode's mount-unmount-mount cycle doesn't tear the
-   * store down between mounts.
+   * Returns a cleanup function. Dispose runs on a microtask so a remount can cancel it.
    */
   public disposeEffect = () => {
     this.isDisposeCancelled = true;
@@ -285,9 +283,6 @@ export class SchedulerStore<
     };
   };
 
-  /**
-   * Hook for subclasses to dispose owned plugins.
-   */
   protected disposePlugins(): void {}
 
   /**
