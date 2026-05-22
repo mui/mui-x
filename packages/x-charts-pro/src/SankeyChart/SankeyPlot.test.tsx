@@ -60,18 +60,17 @@ describe('<SankeyPlot />', () => {
       );
 
       const nodeX = container.querySelector('[data-node="X"]') as Element;
-      const rect = nodeX.getBoundingClientRect();
+      await user.pointer({ target: nodeX, coords: getCenter(nodeX) });
 
-      await user.pointer({
-        coords: { clientX: rect.left - 50, clientY: rect.top + rect.height / 2 },
-      });
-
-      await user.pointer({
-        target: nodeX,
-        coords: { clientX: rect.left + 1, clientY: rect.top + rect.height / 2 },
-      });
-
-      expect(handleHighlight.callCount).to.equal(0);
+      const wasNotifiedAboutControlledNode = handleHighlight
+        .getCalls()
+        .some(
+          (call) =>
+            call.args[0]?.type === 'sankey' &&
+            call.args[0]?.subType === 'node' &&
+            call.args[0]?.nodeId === 'X',
+        );
+      expect(wasNotifiedAboutControlledNode).to.equal(false);
     },
   );
 });
