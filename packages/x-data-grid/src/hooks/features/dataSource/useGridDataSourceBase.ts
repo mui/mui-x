@@ -126,6 +126,9 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
 
       if (!skipCache && responses.every((response) => response !== undefined)) {
+        // Bump the request id so any cache-miss request still in flight is treated as
+        // stale and won't override the cached data we're about to apply.
+        lastRequestId.current += 1;
         apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
           response: CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]),
           fetchParams,
