@@ -68,7 +68,7 @@ export const GridMainContainer = forwardRef<
       {...rootProps.slotProps?.main}
       ref={ref}
     >
-      <GridPanelAnchor role="presentation" data-id="gridPanelAnchor" />
+      <GridPanelAnchor role="none" data-id="gridPanelAnchor" />
       {props.children}
     </Element>
   );
