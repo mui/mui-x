@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, EventBuilder } from 'test/utils/scheduler';
-import type { SchedulerEvent } from '@mui/x-scheduler-internals/models/event';
+import type { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
   buildEvents,
   DEFAULT_PARAMS,

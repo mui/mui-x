@@ -1,8 +1,7 @@
 import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE, EventBuilder } from 'test/utils/scheduler';
-import type { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
-import type { SchedulerEvent } from '@mui/x-scheduler-internals/models/event';
+import type { SchedulerEvent, SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 import {
   buildEvents,
   DEFAULT_PARAMS,
