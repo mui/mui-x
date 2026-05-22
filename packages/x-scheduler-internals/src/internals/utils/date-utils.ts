@@ -109,6 +109,7 @@ function getSundayDayNumber(adapter: Adapter): number {
     cached = adapter.getDayOfWeek(knownSunday);
     if (process.env.NODE_ENV !== 'production') {
       if (!Number.isInteger(cached) || cached < 1 || cached > 7) {
+        // eslint-disable-next-line mui/no-guarded-throw
         throw new Error(
           `MUI X Scheduler: adapter.getDayOfWeek returned an unexpected value (${cached}).` +
             ' Expected an integer in the range 1–7.' +
@@ -143,6 +144,7 @@ export function getStartOfWeek(
       (weekStartsOn as number) < 0 ||
       (weekStartsOn as number) > 6
     ) {
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         `MUI X Scheduler: weekStartsOn must be an integer between 0 (Sunday) and 6 (Saturday),` +
           ` but received ${weekStartsOn}.`,
