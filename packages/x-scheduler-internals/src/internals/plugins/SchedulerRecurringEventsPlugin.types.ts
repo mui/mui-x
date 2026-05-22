@@ -1,7 +1,7 @@
 import type { TemporalSupportedObject, TemporalTimezone } from '../../base-ui-copy/types';
 import type {
   RecurringEventPresetKey,
-  RecurringEventUpdateScope,
+  RecurringEventScope,
   RecurringEventWeekDayCode,
   SchedulerEventOccurrence,
   SchedulerEventRecurrenceRule,
@@ -58,7 +58,7 @@ export interface SchedulerRecurringEventsPluginInterface {
     originalEvent: SchedulerProcessedEvent,
     occurrenceStart: TemporalSupportedObject,
     changes: SchedulerEventUpdatedProperties,
-    scope: RecurringEventUpdateScope,
+    scope: RecurringEventScope,
   ): UpdateEventsParameters;
 
   /**
@@ -69,7 +69,7 @@ export interface SchedulerRecurringEventsPluginInterface {
     adapter: Adapter,
     originalEvent: SchedulerProcessedEvent,
     occurrenceStart: TemporalSupportedObject,
-    scope: RecurringEventUpdateScope,
+    scope: RecurringEventScope,
   ): UpdateEventsParameters;
 
   /**

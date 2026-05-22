@@ -23,7 +23,7 @@ describe('recurring-events/deleteRecurringEvent', () => {
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
       expect(() => {
         deleteRecurringEvent(adapter, defaultEvent, occurrenceStart, 'bogus' as any);
-      }).to.throw(/not supported for recurring event deletions/);
+      }).to.throw(/not supported for recurring events/);
     });
   });
 
@@ -92,6 +92,19 @@ describe('recurring-events/deleteRecurringEvent', () => {
       expect(result.updated).to.deep.equal([
         { id: event.id, exDates: [adapter.startOfDay(occurrenceStart)] },
       ]);
+    });
+
+    it('should drop the series in the event timezone when removing the only occurrence near a DST change', () => {
+      const event = EventBuilder.new(adapter)
+        .singleDay('2025-03-09T12:00:00Z')
+        .withDataTimezone('America/New_York')
+        .withDisplayTimezone('Europe/Madrid')
+        .rrule({ freq: 'DAILY', interval: 1, count: 1 })
+        .toProcessed();
+      const occurrenceStart = event.dataTimezone.start.value;
+
+      const result = applyRecurringDeleteOnlyThis(adapter, event, occurrenceStart);
+      expect(result).to.deep.equal({ deleted: [event.id] });
     });
   });
 

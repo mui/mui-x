@@ -1,17 +1,17 @@
 import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
-  RecurringEventUpdateScope,
+  RecurringEventScope,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
 import type { UpdateEventsParameters } from '@mui/x-scheduler-internals/internals';
-import { getRecurringEventOccurrencesForVisibleDays } from './getRecurringEventOccurrencesForVisibleDays';
+import { hasOccurrenceBefore, hasRemainingOccurrence } from './seriesOccurrence';
 
 export function deleteRecurringEvent(
   adapter: Adapter,
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: TemporalSupportedObject,
-  scope: RecurringEventUpdateScope,
+  scope: RecurringEventScope,
 ): UpdateEventsParameters {
   switch (scope) {
     case 'this-and-following': {
@@ -28,7 +28,7 @@ export function deleteRecurringEvent(
 
     default: {
       throw new Error(
-        `MUI X Scheduler: The scope "${scope}" is not supported for recurring event deletions. ` +
+        `MUI X Scheduler: The scope "${scope}" is not supported for recurring events. ` +
           'Supported scopes are "all", "only-this", and "this-and-following". ' +
           'Use one of the supported scope values.',
       );
@@ -51,25 +51,8 @@ export function applyRecurringDeleteOnlyThis(
     adapter.startOfDay(occurrenceStart),
   ];
 
-  const rule = originalEvent.dataTimezone.rrule!;
-  if (rule.count != null || rule.until != null) {
-    const eventWithExDates: SchedulerProcessedEvent = {
-      ...originalEvent,
-      dataTimezone: { ...originalEvent.dataTimezone, exDates },
-    };
-    const seriesStart = originalEvent.dataTimezone.start.value;
-    const rangeEnd =
-      rule.until ?? adapter.addYears(seriesStart, (rule.count ?? 1) * (rule.interval ?? 1));
-    const remaining = getRecurringEventOccurrencesForVisibleDays(
-      eventWithExDates,
-      seriesStart,
-      adapter.endOfDay(rangeEnd),
-      adapter,
-      originalEvent.dataTimezone.timezone,
-    );
-    if (remaining.length === 0) {
-      return { deleted: [originalEvent.id] };
-    }
+  if (!hasRemainingOccurrence(adapter, originalEvent, exDates)) {
+    return { deleted: [originalEvent.id] };
   }
 
   return {
@@ -87,24 +70,12 @@ export function applyRecurringDeleteFollowing(
   originalEvent: SchedulerProcessedEvent,
   occurrenceStart: TemporalSupportedObject,
 ): UpdateEventsParameters {
-  const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
-  const untilDate = adapter.addDays(occurrenceDayStart, -1);
-
-  const originalRule = originalEvent.dataTimezone.rrule!;
-  const { count, until, ...baseRule } = originalRule;
-
-  const occurrencesBefore = getRecurringEventOccurrencesForVisibleDays(
-    originalEvent,
-    originalEvent.dataTimezone.start.value,
-    adapter.endOfDay(untilDate),
-    adapter,
-    originalEvent.dataTimezone.timezone,
-  );
-
-  if (occurrencesBefore.length === 0) {
+  if (!hasOccurrenceBefore(adapter, originalEvent, occurrenceStart)) {
     return { deleted: [originalEvent.id] };
   }
 
+  const untilDate = adapter.addDays(adapter.startOfDay(occurrenceStart), -1);
+  const { count, until, ...baseRule } = originalEvent.dataTimezone.rrule!;
   return {
     updated: [{ id: originalEvent.id, rrule: { ...baseRule, until: untilDate } }],
   };

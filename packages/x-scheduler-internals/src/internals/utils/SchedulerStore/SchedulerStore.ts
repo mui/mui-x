@@ -9,7 +9,7 @@ import {
   SchedulerResourceId,
   TemporalSupportedObject,
   SchedulerEventUpdatedProperties,
-  RecurringEventUpdateScope,
+  RecurringEventScope,
   SchedulerPreferences,
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
@@ -520,7 +520,7 @@ export class SchedulerStore<
    * Applies the pending recurring event operation after the user selects a scope.
    * @param scope The selected scope, or null if canceled.
    */
-  public selectRecurringEventScope = (scope: RecurringEventUpdateScope | null) => {
+  public selectRecurringEventScope = (scope: RecurringEventScope | null) => {
     const { recurringEventsPlugin, pendingRecurringEventOperation, adapter } = this.state;
     if (recurringEventsPlugin == null || pendingRecurringEventOperation == null) {
       return;

@@ -8,14 +8,14 @@ export type RecurringEventFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 export type RecurringEventPresetKey = RecurringEventFrequency;
 
 /**
- * The scope of a recurring event update.
+ * The scope of a recurring event change (update or deletion).
  *
- * - `only-this`: Updates only the selected occurrence of the recurring event.
- * - `this-and-following`: Updates the selected occurrence and all following occurrences,
+ * - `only-this`: Affects only the selected occurrence of the recurring event.
+ * - `this-and-following`: Affects the selected occurrence and all following occurrences,
  *   but leaves the previous ones untouched.
- * - `all`: Updates all occurrences in the recurring series, past, present, and future.
+ * - `all`: Affects all occurrences in the recurring series, past, present, and future.
  */
-export type RecurringEventUpdateScope = 'this-and-following' | 'all' | 'only-this';
+export type RecurringEventScope = 'this-and-following' | 'all' | 'only-this';
 
 /**
  * Two-letter weekday codes expected by the `byDay` property of the recurrence rule,

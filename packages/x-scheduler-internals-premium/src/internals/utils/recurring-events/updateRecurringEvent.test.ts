@@ -449,6 +449,36 @@ describe('recurring-events/updateRecurringEvent', () => {
         (updatedEvents.updated![0].rrule as SchedulerProcessedEventRecurrenceRule)!.until,
       ).toEqualDateTime(expectedUntil);
     });
+
+    it('should drop the original series when all occurrences before the cut are excluded by EXDATEs', () => {
+      const original = EventBuilder.new()
+        .singleDay('2025-01-01T09:00:00Z')
+        .rrule({ freq: 'DAILY', interval: 1 })
+        .exDates([
+          '2025-01-01T09:00:00Z',
+          '2025-01-02T09:00:00Z',
+          '2025-01-03T09:00:00Z',
+          '2025-01-04T09:00:00Z',
+        ])
+        .toProcessed();
+      const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
+      const changes: SchedulerEventUpdatedProperties = {
+        id: original.id,
+        start: adapter.date('2025-01-05T11:00:00Z', 'default'),
+        end: adapter.date('2025-01-05T12:00:00Z', 'default'),
+      };
+
+      const updatedEvents = applyRecurringUpdateFollowing(
+        adapter,
+        original,
+        occurrenceStart,
+        changes,
+      );
+
+      expect(updatedEvents.updated).to.equal(undefined);
+      expect(updatedEvents.deleted).to.deep.equal([original.id]);
+      expect(updatedEvents.created).to.have.length(1);
+    });
   });
 
   describe('adjustRRuleForAllMove', () => {
@@ -879,6 +909,31 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(
         adapter.isSameDay(updated.updated![0].exDates![0], adapter.startOfDay(occurrenceStart)),
       ).to.equal(true);
+    });
+
+    it('should delete the original series when only-this empties a finite series', () => {
+      const original = EventBuilder.new()
+        .singleDay('2025-01-01T09:00:00Z')
+        .rrule({ freq: 'DAILY', interval: 1, count: 1 })
+        .toProcessed();
+      const occurrenceStart = adapter.date('2025-01-01T09:00:00Z', 'default');
+      const changes: SchedulerEventUpdatedProperties = {
+        id: original.id,
+        title: 'Detached',
+        start: adapter.date('2025-01-01T11:00:00Z', 'default'),
+        end: adapter.date('2025-01-01T12:00:00Z', 'default'),
+      };
+
+      const updatedEvents = applyRecurringUpdateOnlyThis(
+        adapter,
+        original,
+        occurrenceStart,
+        changes,
+      );
+
+      expect(updatedEvents.updated).to.equal(undefined);
+      expect(updatedEvents.deleted).to.deep.equal([original.id]);
+      expect(updatedEvents.created).to.have.length(1);
     });
   });
 });

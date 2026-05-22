@@ -211,6 +211,40 @@ describe('<EventDialogContent open />', () => {
     expect(onEventsChange.firstCall.firstArg).to.deep.equal([]);
   });
 
+  it('should delete a non-recurring event directly without opening the scope dialog', async () => {
+    let deleteEventSpy, deleteRecurringEventSpy;
+    const { user } = render(
+      <EventCalendarProvider
+        events={[DEFAULT_EVENT]}
+        resources={resources}
+        storeClass={PremiumTestStore}
+      >
+        <StoreSpy
+          Context={SchedulerStoreContext}
+          method="deleteEvent"
+          onSpyReady={(sp) => {
+            deleteEventSpy = sp;
+          }}
+        />
+        <StoreSpy
+          Context={SchedulerStoreContext}
+          method="deleteRecurringEvent"
+          onSpyReady={(sp) => {
+            deleteRecurringEventSpy = sp;
+          }}
+        />
+        <TestEventDialogContent open {...defaultProps} />
+        <RecurringScopeDialog />
+      </EventCalendarProvider>,
+    );
+
+    await user.click(screen.getByRole('button', { name: /delete event/i }));
+
+    expect(deleteEventSpy?.calledOnce).to.equal(true);
+    expect(deleteRecurringEventSpy?.called).to.equal(false);
+    expect(screen.queryByText(/Apply this change to:/i)).to.equal(null);
+  });
+
   describe('read-only events', () => {
     it('should render ReadonlyContent', () => {
       const readOnlyEvent = { ...DEFAULT_EVENT, readOnly: true };
@@ -1124,6 +1158,40 @@ describe('<EventDialogContent open />', () => {
           const updatedEvents = onEventsChange.lastCall.firstArg;
           expect(updatedEvents).to.have.length(1);
           expect(updatedEvents[0].exDates).to.have.length(1);
+        });
+
+        it("should truncate the series with scope 'this-and-following' on Confirm", async () => {
+          const onEventsChange = spy();
+          const laterOccurrence = EventBuilder.new(adapter)
+            .id(originalRecurringEvent.id)
+            .title(originalRecurringEvent.title)
+            .description(originalRecurringEvent.description)
+            .span(originalRecurringEvent.start, originalRecurringEvent.end)
+            .recurrent('DAILY')
+            .toOccurrence('2025-06-13T10:00:00Z');
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[originalRecurringEvent]}
+              onEventsChange={onEventsChange}
+              resources={resources}
+              storeClass={PremiumTestStore}
+            >
+              <TestEventDialogContent open {...defaultProps} occurrence={laterOccurrence} />
+
+              <RecurringScopeDialog />
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('button', { name: /delete event/i }));
+          await screen.findByText(/Apply this change to:/i);
+          await user.click(screen.getByText(/This and following events/i));
+          await user.click(screen.getByRole('button', { name: /Confirm/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updatedEvents = onEventsChange.lastCall.firstArg;
+          expect(updatedEvents).to.have.length(1);
+          expect(updatedEvents[0].rrule.until).not.to.equal(undefined);
         });
       });
 

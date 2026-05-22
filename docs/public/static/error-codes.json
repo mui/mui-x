@@ -240,7 +240,7 @@
   "240": "MUI X Scheduler: Invalid BYMONTH values \"%s\". BYMONTH values must be integers between 1 and 12. Provide valid month values.",
   "241": "MUI X Scheduler: Invalid COUNT value \"%s\". COUNT must be a positive integer (1 or greater). Provide a valid count value.",
   "242": "MUI X Scheduler: Invalid UNTIL date \"%s\". The UNTIL value must be a valid date in ISO format. Provide a valid date string.",
-  "243": "MUI X Scheduler: The scope \"%s\" is not supported for recurring event updates. Supported scopes are \"all\", \"only-this\", and \"this-and-following\". Use one of the supported scope values.",
+  "243": "MUI X Scheduler: The scope \"%s\" is not supported for recurring events. Supported scopes are \"all\", \"only-this\", and \"this-and-following\". Use one of the supported scope values.",
   "244": "MUI: useEventCalendarPremiumStoreContext must be used within an <EventCalendarPremium /> component",
   "245": "MUI: useEventTimelinePremiumStoreContext must be used within an <EventTimelinePremium /> component",
   "246": "MUI: `TimelineGridEventContext` is missing. TimelineGrid Event parts must be placed within <TimelineGrid.Event />.",
