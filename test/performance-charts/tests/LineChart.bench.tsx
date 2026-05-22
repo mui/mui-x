@@ -30,3 +30,43 @@ benchmark('Area chart with big data amount (no marks)', () => (
     skipAnimation
   />
 ));
+
+const stackedSeriesCount = 10;
+const stackedSeries = Array.from({ length: stackedSeriesCount }, (_, s) => ({
+  data: Array.from({ length: dataLength }, (__, i) => 5 + Math.sin((i + s) / 5) * 5),
+  area: true,
+  showMark: false,
+  stack: 'total',
+}));
+
+benchmark('LineChart stacked area with multiple series', () => (
+  <LineChart
+    xAxis={[{ data: xData, domainLimit: 'nice' }]}
+    series={stackedSeries}
+    width={500}
+    height={300}
+    skipAnimation
+  />
+));
+
+const dateOrigin = new Date(2020, 0, 1).getTime();
+const dateXData = Array.from(
+  { length: dataLength },
+  (_, i) => new Date(dateOrigin + i * 24 * 3600 * 1000),
+);
+
+benchmark('LineChart with date axis and big data amount', () => (
+  <LineChart
+    xAxis={[
+      {
+        data: dateXData,
+        scaleType: 'time',
+        valueFormatter: (value: Date) => value.toLocaleDateString('en-US'),
+      },
+    ]}
+    series={[{ data: yData, showMark: false }]}
+    width={500}
+    height={300}
+    skipAnimation
+  />
+));
