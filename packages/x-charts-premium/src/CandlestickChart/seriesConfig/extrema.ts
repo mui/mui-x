@@ -18,6 +18,9 @@ const getValueExtremum: CartesianExtremumGetter<'ohlc'> = (params) => {
 
   return Object.keys(series)
     .filter((seriesId) => {
+      if (axis.domainSeries === 'visible' && series[seriesId].hidden) {
+        return false;
+      }
       const axisId = series[seriesId].yAxisId;
       return axisId === axis.id || (isDefaultAxis && axisId === undefined);
     })

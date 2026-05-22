@@ -11,6 +11,10 @@ export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
       continue;
     }
 
+    if (axis.domainSeries === 'visible' && series[seriesId].hidden) {
+      continue;
+    }
+
     const axisId = series[seriesId].xAxisId;
     if (!(axisId === axis.id || (axisId === undefined && isDefaultAxis))) {
       continue;
@@ -54,6 +58,10 @@ export const getExtremumY: CartesianExtremumGetter<'scatter'> = (params) => {
 
   for (const seriesId in series) {
     if (!Object.hasOwn(series, seriesId)) {
+      continue;
+    }
+
+    if (axis.domainSeries === 'visible' && series[seriesId].hidden) {
       continue;
     }
 

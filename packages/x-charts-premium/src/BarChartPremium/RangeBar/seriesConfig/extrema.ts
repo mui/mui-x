@@ -28,6 +28,9 @@ const getValueExtremum =
 
     return Object.keys(series)
       .filter((seriesId) => {
+        if (axis.domainSeries === 'visible' && series[seriesId].hidden) {
+          return false;
+        }
         const axisId = direction === 'x' ? series[seriesId].xAxisId : series[seriesId].yAxisId;
         return axisId === axis.id || (isDefaultAxis && axisId === undefined);
       })
