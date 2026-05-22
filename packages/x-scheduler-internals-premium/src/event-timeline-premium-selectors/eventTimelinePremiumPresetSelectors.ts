@@ -1,4 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS } from '../internals/utils/preset-utils';
 
@@ -11,14 +12,15 @@ export const eventTimelinePremiumPresetSelectors = {
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,
     (state: State) => state.preset,
-    (titleColumnWidth, adapter, visibleDate, preset) => {
+    schedulerPreferenceSelectors.weekStartsOn,
+    (titleColumnWidth, adapter, visibleDate, preset, weekStartsOn) => {
       const config = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
       if (!config) {
         return 0;
       }
       const { getStartDate, getEndDate, unitCount, getCssUnitCount, tickWidth } = config;
-      const start = getStartDate(adapter, visibleDate);
-      const end = getEndDate(adapter, start, unitCount);
+      const start = getStartDate(adapter, visibleDate, weekStartsOn);
+      const end = getEndDate(adapter, start, unitCount, weekStartsOn);
       const tickCount = getCssUnitCount ? getCssUnitCount(adapter, start, end) : unitCount;
       return titleColumnWidth + tickCount * tickWidth;
     },
@@ -27,7 +29,8 @@ export const eventTimelinePremiumPresetSelectors = {
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,
     (state: State) => state.preset,
-    (adapter, visibleDate, preset) => {
+    schedulerPreferenceSelectors.weekStartsOn,
+    (adapter, visibleDate, preset, weekStartsOn) => {
       const config = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
       if (!config) {
         throw new Error(
@@ -45,8 +48,8 @@ export const eventTimelinePremiumPresetSelectors = {
         headers,
         timeResolution,
       } = config;
-      const start = getStartDate(adapter, visibleDate);
-      const end = getEndDate(adapter, start, unitCount);
+      const start = getStartDate(adapter, visibleDate, weekStartsOn);
+      const end = getEndDate(adapter, start, unitCount, weekStartsOn);
 
       return {
         tickCount: getCssUnitCount ? getCssUnitCount(adapter, start, end) : unitCount,

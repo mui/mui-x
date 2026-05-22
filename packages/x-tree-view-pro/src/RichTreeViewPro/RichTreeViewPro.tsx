@@ -242,9 +242,10 @@ RichTreeViewPro.propTypes = {
    */
   disableVirtualization: PropTypes.bool,
   /**
-   * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
-   * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
-   * Nested DOM structure is not compatible with collapse / expansion animations.
+   * When `'flat'`, the tree is rendered as a flat list (children are rendered as siblings of their parent).
+   * When `'nested'`, children are rendered inside their parent's groupTransition slot.
+   * Collapse/expansion animations that rely on the groupTransition slot only work with the nested DOM structure.
+   * Nested DOM structure is not compatible with virtualization.
    * @default 'flat'
    */
   domStructure: PropTypes.oneOf(['flat', 'nested']),

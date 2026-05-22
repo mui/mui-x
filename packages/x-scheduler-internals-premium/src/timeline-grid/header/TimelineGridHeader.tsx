@@ -32,9 +32,10 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
     eventTimelinePremiumPresetSelectors.config,
   );
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
+  const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
 
   const children = headers.map((level, levelIndex) => {
-    const allCells = iterate(adapter, level.unit, timeResolution, start, end);
+    const allCells = iterate(adapter, level.unit, timeResolution, start, end, weekStartsOn);
 
     let cells: ReturnType<typeof iterate>;
     let offsetInTicks = 0;

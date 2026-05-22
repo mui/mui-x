@@ -97,6 +97,10 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Afișează numărul săptămânii',
   timeFormat: 'Formatul orei',
   viewSpecificOptions: (view) => `Opțiuni pentru vizualizarea ${view}`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Toată ziua',
