@@ -1,13 +1,13 @@
 ---
 productId: x-chat
-title: Chat - Core adapters
+title: Chat - Core Adapters
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Core adapters
+# Chat - Core Adapters
 
-<p class="description">Write a <code>ChatAdapter</code> to connect the core runtime to any backend — HTTP, SSE, WebSocket, or AI SDK.</p>
+<p class="description">Write a ChatAdapter to connect the core runtime to any backend—HTTP, SSE, WebSocket, or AI SDK.</p>
 
 The `ChatAdapter` interface is the transport boundary between the core runtime and your backend.
 Only one method is required: `sendMessage()`.
@@ -76,7 +76,7 @@ interface ChatAdapter<Cursor = string> {
 
 ## Method reference
 
-### `sendMessage(input)` (required)
+### Sending a message (required)
 
 Sends a user message and returns a readable stream of response chunks.
 
@@ -91,9 +91,9 @@ interface ChatSendMessageInput {
 }
 ```
 
-The `signal` is connected to `stopStreaming()` — when the user cancels, the signal aborts, giving your adapter a chance to clean up.
+The `signal` is connected to `stopStreaming()`—when the user cancels, the signal aborts, giving your adapter a chance to clean up.
 
-### `listConversations(input?)`
+### Loading the conversation list
 
 Loads the conversation list, typically called on mount.
 
@@ -110,7 +110,7 @@ interface ChatListConversationsResult<Cursor> {
 }
 ```
 
-### `listMessages(input)`
+### Loading messages
 
 Loads messages for a conversation, called when `activeConversationId` changes.
 
@@ -128,7 +128,7 @@ interface ChatListMessagesResult<Cursor> {
 }
 ```
 
-### `reconnectToStream(input)`
+### Reconnecting to an interrupted stream
 
 Resumes an interrupted stream, for example after an SSE disconnect.
 
@@ -142,7 +142,7 @@ interface ChatReconnectToStreamInput {
 
 Returns `null` if reconnection is not possible.
 
-### `setTyping(input)`
+### Sending a typing indicator
 
 Sends a typing indicator to the backend.
 
@@ -153,7 +153,7 @@ interface ChatSetTypingInput {
 }
 ```
 
-### `markRead(input)`
+### Marking messages as read
 
 Marks a conversation or specific message as read.
 
@@ -164,7 +164,7 @@ interface ChatMarkReadInput {
 }
 ```
 
-### `subscribe(input)`
+### Subscribing to realtime events
 
 Starts a realtime subscription.
 Called on mount, returns a cleanup function called on unmount.
@@ -177,7 +177,7 @@ interface ChatSubscribeInput {
 type ChatSubscriptionCleanup = () => void;
 ```
 
-### `loadMore(cursor?)`
+### Loading older messages
 
 Loads older messages for the current conversation using a pagination cursor.
 
@@ -189,7 +189,7 @@ interface ChatLoadMoreResult<Cursor> {
 }
 ```
 
-### `addToolApprovalResponse(input)`
+### Submitting a tool approval response
 
 Sends a tool approval decision back to the backend.
 
@@ -201,7 +201,7 @@ interface ChatAddToolApproveResponseInput {
 }
 ```
 
-### `stop()`
+### Stopping the stream
 
 Called alongside the abort signal when the user stops streaming.
 Use this for server-side cleanup that goes beyond closing the stream.
@@ -331,10 +331,11 @@ When an adapter method throws, the runtime:
 
 1. Records a `ChatError` with the appropriate `source` field (`'send'`, `'history'`, or `'adapter'`).
 2. Surfaces the error through `useChat().error`, `useChatStatus().error`, and the `onError` callback.
-3. Sets `recoverable` based on the error type — stream disconnects are typically recoverable, while send failures may be retryable.
+3. Sets `recoverable` based on the error type—stream disconnects are typically recoverable, while send failures may be retryable.
 
 :::info
-You do not need to catch errors inside adapter methods — the runtime handles them for you. When an adapter method throws, the runtime records a `ChatError`, surfaces it through the UI and callbacks, and marks it recoverable or retryable when applicable.
+You do not need to catch errors inside adapter methods—the runtime handles them for you.
+When an adapter method throws, the runtime records a `ChatError`, surfaces it through the UI and callbacks, and marks it recoverable or retryable when applicable.
 :::
 
 ## See also

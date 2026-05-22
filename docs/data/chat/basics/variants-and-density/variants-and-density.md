@@ -1,14 +1,14 @@
 ---
 productId: x-chat
-title: Variants & Density
+title: Variants and Density
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - Variants & Density
+# Chat - Variants and Density
 
-<p class="description">Switch between the default bubble layout and a compact messenger-style layout, and control vertical spacing with the density prop.</p>
+<p class="description">Switch between bubble and compact messenger-style layouts, and control vertical spacing between messages.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -33,10 +33,10 @@ Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layou
 
 Compact mode applies the following changes to the message list:
 
-- **No bubbles** — messages render as plain text without background colors or padding.
-- **Left-aligned** — all messages are left-aligned regardless of role (no right-aligned user messages).
-- **Group header timestamps** — the timestamp moves from below each message to the group header, displayed next to the author name.
-- **Avatars preserved** — avatars remain visible for the first message in each group.
+- **No bubbles**: messages render as plain text without background colors or padding.
+- **Left-aligned**: all messages are left-aligned regardless of role (no right-aligned user messages).
+- **Group header timestamps**: the timestamp moves from below each message to the group header, displayed next to the author name.
+- **Avatars preserved**: avatars remain visible for the first message in each group.
 
 When set on `ChatBox`, the variant automatically applies to the conversation list as well.
 
@@ -57,7 +57,7 @@ The compact variant is particularly effective for conversations with many short 
 ## Density
 
 The `density` prop controls the vertical spacing between messages independently of the variant.
-Three values are available — `compact`, `standard` (default), and `comfortable` — mirroring the density model used in [Data Grid](/x/react-data-grid/accessibility/#density).
+Three values are available: `compact`, `standard` (default), and `comfortable`, mirroring the density model used in [Data Grid](/x/react-data-grid/accessibility/#density).
 
 ```tsx
 <ChatBox density="compact" adapter={adapter} />
@@ -79,7 +79,7 @@ Use the toggle in the demo below to compare the three density levels:
 
 ### Combining variant and density
 
-The `density` prop is independent of `variant` — you can combine `variant="compact"` with any density value:
+The `density` prop is independent of `variant`—you can combine `variant="compact"` with any density value:
 
 ```tsx
 {

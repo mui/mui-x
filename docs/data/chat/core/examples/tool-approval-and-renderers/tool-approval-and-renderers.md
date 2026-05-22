@@ -1,11 +1,11 @@
 ---
-title: Chat - Tool approval and renderers
+title: Chat - Tool Approval and Renderers
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Tool approval and renderers
+# Chat - Tool Approval and Renderers
 
 <p class="description">Combine AI-native runtime features by approving a tool call and rendering a custom message part through the registry.</p>
 
@@ -23,7 +23,7 @@ This demo covers the main extension points for tool-assisted AI interactions:
 ### Tool approval flow
 
 When the stream sends a `tool-approval-request` chunk, the tool invocation moves to `state: 'approval-requested'`.
-Your UI renders an approve/deny interface.
+Your UI renders an approval interface.
 When the user responds, call `addToolApprovalResponse()`:
 
 ```tsx
@@ -83,10 +83,10 @@ For a dedicated walkthrough of TypeScript module augmentation, see [Type augment
 
 ## Key takeaways
 
-- Tool approval is a first-class runtime feature — the stream pauses at `approval-requested` until you respond
-- `addToolApprovalResponse()` drives the approval/denial decision
+- Tool approval is a first-class runtime feature—the stream pauses at `approval-requested` until you respond
+- `addToolApprovalResponse()` drives the approval decision
 - After tool resolution, the adapter can emit a `message-added` event to deliver the assistant's follow-up interpretation of the result
-- `partRenderers` decouples rendering from the message loop — register once, look up anywhere
+- `partRenderers` decouples rendering from the message loop—register once, look up anywhere
 - Custom part types registered through module augmentation integrate seamlessly with the renderer registry
 
 ## See also

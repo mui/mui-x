@@ -1,14 +1,14 @@
 ---
 productId: x-chat
-title: Events & Callbacks
+title: Events and Callbacks
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - Events & Callbacks
+# Chat - Events and Callbacks
 
-<p class="description">Respond to streaming lifecycle events, tool calls, data chunks, and errors using callback props on <code>ChatProvider</code> and <code>ChatBox</code>.</p>
+<p class="description">Respond to streaming lifecycle events, tool calls, data chunks, and errors using callback props on ChatProvider and ChatBox.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -24,7 +24,7 @@ Use them for logging, analytics, side effects, and error handling without modify
 | `onData`     | When a `data-*` chunk arrives during streaming | Transient data, app-level side effects |
 | `onError`    | When any runtime error surfaces                | Error reporting, toast notifications   |
 
-## `onFinish`
+## Responding to stream completion
 
 Fires when a stream finishes, aborts, disconnects, or errors.
 This is the primary callback for post-stream side effects.
@@ -68,10 +68,10 @@ The `onFinish` callback fires in four scenarios:
 | Disconnect | `false`   | `true`         | `false`   | Connection dropped mid-stream |
 | Error      | `false`   | `false`        | `true`    | Stream ended with an error    |
 
-## `onToolCall`
+## Responding to tool invocations
 
 Fires when a tool invocation state changes during streaming.
-Use it for side effects outside the message list — logging, analytics, or triggering external workflows.
+Use it for side effects outside the message list—logging, analytics, or triggering external workflows.
 
 ```ts
 interface ChatOnToolCallPayload {
@@ -86,7 +86,7 @@ interface ChatOnToolCallPayload {
     console.log(`Tool ${toolCall.toolName}: ${toolCall.state}`);
 
     if (toolCall.state === 'output-available') {
-      // Tool execution completed — trigger follow-up
+      // Tool execution completed—trigger follow-up
       analytics.track('tool_executed', { tool: toolCall.toolName });
     }
   }}
@@ -105,7 +105,7 @@ interface ChatOnToolCallPayload {
 | `output-error`       | Tool execution failed                  |
 | `output-denied`      | User denied the tool execution         |
 
-## `onData`
+## Handling data chunks
 
 Fires when a `data-*` chunk arrives during streaming.
 Use it for transient data that should trigger app-level side effects without being persisted in the message.
@@ -125,11 +125,11 @@ type ChatOnData = (part: ChatDataMessagePart) => void;
 />
 ```
 
-This callback is useful for backend-driven UI updates that are transient — progress bars, status indicators, or notifications that should not be stored as message parts.
+This callback is useful for backend-driven UI updates that are transient—progress bars, status indicators, or notifications that should not be stored as message parts.
 
-## `onError`
+## Handling errors
 
-Fires when any runtime error surfaces — from adapter methods, stream processing, or rendering.
+Fires when any runtime error surfaces: from adapter methods, stream processing, or rendering.
 
 ```ts
 type ChatOnError = (error: ChatError) => void;
@@ -152,7 +152,7 @@ type ChatOnError = (error: ChatError) => void;
 />
 ```
 
-### The `ChatError` type
+### Error type reference
 
 ```ts
 type ChatErrorCode =
@@ -191,7 +191,7 @@ Errors also surface through hooks, so you can display them in custom UI:
 // Via useChat()
 const { error } = useChat();
 
-// Via useChatStatus() — lighter weight, no message subscriptions
+// Via useChatStatus()—lighter weight, no message subscriptions
 const { error } = useChatStatus();
 ```
 
@@ -224,5 +224,5 @@ All callbacks are registered as props on `ChatBox` or `ChatProvider`:
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the adapter interface that produces these events.
-- [Controlled State](/x/react-chat/backend/controlled-state/) for the full `ChatProvider` props reference.
-- [Hooks Reference](/x/react-chat/resources/hooks/) for `useChatStatus()` and reading error state in components.
+- [Controlled state](/x/react-chat/backend/controlled-state/) for the full `ChatProvider` props reference.
+- [Hooks reference](/x/react-chat/resources/hooks/) for `useChatStatus()` and reading error state in components.

@@ -1,11 +1,11 @@
 ---
-title: Chat - Error state
+title: Chat - Error State
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Error state
+# Chat - Error State
 
 <p class="description">How the ChatBox behaves when the adapter throws an error during message sending.</p>
 

@@ -1,11 +1,11 @@
 ---
-title: Chat - Slow streaming
+title: Chat - Slow Streaming
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Slow streaming
+# Chat - Slow Streaming
 
 <p class="description">A ChatBox with a deliberately slow streaming adapter to observe the real-time text rendering behavior.</p>
 

@@ -1,13 +1,13 @@
 ---
 productId: x-chat
-title: Chat - State and store
+title: Chat - State and Store
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - State and store
+# Chat - State and Store
 
-<p class="description">Configure the runtime via <code>ChatProvider</code> props, choose controlled or uncontrolled state, and explore the normalized store.</p>
+<p class="description">Configure the runtime via ChatProvider props, choose controlled or uncontrolled state, and explore the normalized store.</p>
 
 `ChatProvider` is the single entry point for the core runtime.
 It creates the chat store, wires the adapter, and makes hooks and selectors available to every descendant component.
@@ -16,7 +16,7 @@ The following demo shows controlled state in action:
 
 {{"demo": "../examples/controlled-state/ControlledStateHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
-## `ChatProvider` props
+## Provider props
 
 ### Required
 
@@ -31,7 +31,8 @@ Each public state model supports both controlled and uncontrolled modes.
 Use `default*` props to let the runtime own the value, or pass the value directly to control it from React state.
 
 :::info
-Start with `initial*` (uncontrolled) props during prototyping, then switch to controlled props when you need to sync with external state. You can switch modes at any time without changing the runtime model.
+Start with `initial*` (uncontrolled) props during prototyping, then switch to controlled props when you need to sync with external state.
+You can switch modes at any time without changing the runtime model.
 :::
 
 | Model               | Controlled prop        | Default prop                  | Change callback              |
@@ -58,7 +59,7 @@ Start with `initial*` (uncontrolled) props during prototyping, then switch to co
 | `partRenderers`       | `ChatPartRendererMap`  | `{}`        | Custom renderers for message part types     |
 | `storeClass`          | `ChatStoreConstructor` | `ChatStore` | Custom store class for advanced subclassing |
 
-## Controlled vs uncontrolled
+## Controlled and uncontrolled modes
 
 ### Start uncontrolled
 
@@ -78,7 +79,7 @@ The runtime manages the state internally and feeds it to hooks automatically.
 
 ### Move to controlled
 
-When you need to own the data externally — for example, to sync with a global store or persist across navigation — pass the state directly:
+When you need to own the data externally—for example, to sync with a global store or persist across navigation—pass the state directly:
 
 ```tsx
 const [messages, setMessages] = React.useState<ChatMessage[]>([]);
@@ -95,7 +96,7 @@ const [activeId, setActiveId] = React.useState<string | undefined>('support');
 </ChatProvider>;
 ```
 
-The runtime still streams, normalizes, and derives selectors — you just own the source of truth.
+The runtime still streams, normalizes, and derives selectors—you just own the source of truth.
 
 You can switch from uncontrolled to controlled at any time without changing the runtime model.
 
@@ -120,7 +121,7 @@ The store keeps data in a normalized shape for efficient streaming and updates:
 | `error`                       | `ChatError \| null`                       | Current error state                          |
 | `activeStreamAbortController` | `AbortController \| null`                 | Controller for aborting the active stream    |
 
-This normalization is why streaming updates are efficient — updating one message does not require rebuilding the entire thread array.
+This normalization is why streaming updates are efficient—updating one message does not require rebuilding the entire thread array.
 
 ## Error model
 
@@ -147,10 +148,10 @@ Errors surface through:
 
 ## Callbacks
 
-### `onToolCall`
+### Observing tool calls
 
 Fires when a tool invocation state changes during streaming.
-Use it for side effects outside the message list — logging, analytics, or triggering external workflows.
+Use it for side effects outside the message list—logging, analytics, or triggering external workflows.
 
 ```ts
 interface ChatOnToolCallPayload {
@@ -158,7 +159,7 @@ interface ChatOnToolCallPayload {
 }
 ```
 
-### `onFinish`
+### Responding to stream completion
 
 Fires when a stream reaches a terminal state (success, abort, disconnect, or error).
 
@@ -173,7 +174,7 @@ interface ChatOnFinishPayload {
 }
 ```
 
-### `onData`
+### Handling data chunks
 
 Fires when a `data-*` chunk arrives.
 Use it for transient data that should trigger app-level side effects without being persisted in the message.

@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Chat - Headless conversation list
+title: Chat - Headless Conversation List
 packageName: '@mui/x-chat/headless'
 components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless conversation list
+# Chat - Headless Conversation List
 
 <p class="description">Render and navigate the conversation rail with structural list primitives, built-in selection behavior, and roving focus.</p>
 
@@ -27,7 +27,7 @@ The conversation list surface is built from:
 - `ConversationList.Timestamp`
 - `ConversationList.UnreadBadge`
 
-## `ConversationList.Root`
+## List root behavior
 
 `ConversationList.Root` reads the current conversation collection from chat state and renders a `listbox` with one `option` per conversation.
 

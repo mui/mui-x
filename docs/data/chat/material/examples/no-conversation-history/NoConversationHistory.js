@@ -28,7 +28,7 @@ import {
 
 const CONVERSATION_ID = 'no-history-conv';
 
-// Adapter has only `sendMessage` — no `listConversations` or `listMessages`.
+// Adapter has only `sendMessage`—no `listConversations` or `listMessages`.
 // ChatBox cannot fetch conversation history, and no `conversations` prop is passed,
 // so the conversation list panel is never rendered.
 const adapter = {
@@ -50,7 +50,7 @@ const initialMessages = [
     role: 'assistant',
     author: demoUsers.agent,
     createdAt: '2026-03-15T09:58:00.000Z',
-    text: 'Hello! This thread is composed directly from individual components — no ChatBox, no header, no sidebar.',
+    text: 'Hello! This thread is composed directly from individual components—no ChatBox, no header, no sidebar.',
   }),
   createTextMessage({
     id: 'nh-msg-2',
@@ -66,7 +66,7 @@ const initialMessages = [
     role: 'assistant',
     author: demoUsers.agent,
     createdAt: '2026-03-15T10:01:00.000Z',
-    text: 'Exactly. Use ChatRoot for the context, then add only the pieces you need — message list, composer, or a header if you want one.',
+    text: 'Exactly. Use ChatRoot for the context, then add only the pieces you need—message list, composer, or a header if you want one.',
   }),
 ];
 

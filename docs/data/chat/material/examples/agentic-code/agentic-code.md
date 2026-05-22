@@ -1,13 +1,13 @@
 ---
-title: Chat - Agentic code assistant
+title: Chat - Agentic Code Assistant
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Agentic code assistant
+# Chat - Agentic Code Assistant
 
-<p class="description">Streaming tool calls (Bash, Read, Edit, Write, Glob), reasoning, step boundaries, and an interactive approval flow — driven entirely by the adapter API.</p>
+<p class="description">Streaming tool calls (Bash, Read, Edit, Write, Glob), reasoning, step boundaries, and an interactive approval flow—driven entirely by the adapter API.</p>
 
 {{"demo": "AgenticCode.js", "bg": "inline"}}
 
@@ -16,11 +16,11 @@ githubLabel: 'scope: chat'
 The demo has three pre-populated conversations, each showcasing a different aspect of the
 agentic loop:
 
-- **Fix test failures** — a complete multi-step task: `glob` finds the files, `read_file`
+- **Fix test failures**: a complete multi-step task: `glob` finds the files, `read_file`
   inspects the broken import, `edit_file` patches it, and `bash` confirms the tests pass.
-- **Add dark mode toggle** — `read_file` inspects the existing component, `write_file`
+- **Add dark mode toggle**: `read_file` inspects the existing component, `write_file`
   creates a new one, then `bash` verifies the build.
-- **Clean build artifacts** — a `bash` command in the `approval-requested` state. Click
+- **Clean build artifacts**: a `bash` command in the `approval-requested` state. Click
   **Approve** or **Deny** to see the state transition live.
 
 Send any new message in any conversation to watch the scripted agentic stream play out from
@@ -32,13 +32,13 @@ The adapter's `sendMessage` method returns a `ReadableStream` of typed chunks. T
 flow through a state machine driven by those chunks:
 
 ```ts
-// 1. Tool starts — input streams in as JSON deltas
+// 1. Tool starts—input streams in as JSON deltas
 { type: 'tool-input-start', toolCallId, toolName: 'glob', dynamic: true }
 { type: 'tool-input-delta', toolCallId, inputTextDelta: '{"pattern":' }
 { type: 'tool-input-delta', toolCallId, inputTextDelta: '"src/**/*.ts"}' }
 { type: 'tool-input-available', toolCallId, toolName: 'glob', input: { pattern: 'src/**/*.ts' } }
 
-// 2. Tool finishes — output arrives as a single chunk
+// 2. Tool finishes—output arrives as a single chunk
 { type: 'tool-output-available', toolCallId, output: { files: ['src/api.ts', ...] } }
 ```
 
@@ -72,7 +72,7 @@ Before the first tool call the model emits a reasoning chunk sequence:
 { type: 'reasoning-end', id }
 ```
 
-This produces a collapsible `ReasoningPart` in the message — collapsed by default so it
+This produces a collapsible `ReasoningPart` in the message—collapsed by default so it
 doesn't dominate the conversation but still inspectable.
 
 ## Step boundaries
@@ -89,7 +89,7 @@ on `ChatBox`.
 
 ### Icon styles
 
-Five variations of the `icon` slot — from the default first-letter monogram to
+Five variations of the `icon` slot—from the default first-letter monogram to
 emoji, coloured circles, terminal squares, and Unicode symbols. Each icon
 receives `ownerState.toolName` so a single component can branch on the tool type.
 
@@ -97,7 +97,7 @@ receives `ownerState.toolName` so a single component can branch on the tool type
 
 ### Block themes
 
-Five color themes, all built on `toolSlotProps` — per-tool overrides that style
+Five color themes, all built on `toolSlotProps`—per-tool overrides that style
 the header, icon, title, state chip, and root border without touching the global
 slots. This keeps collapse/expand and all other built-in behaviors intact while
 giving each tool its own distinct accent: **Colorful** (gradient + circular icon),
@@ -111,15 +111,15 @@ with glowing accents).
 
 Replace the tool block entirely by providing a custom `root` slot component via
 `toolSlots`. The component receives `ownerState.toolName` and `ownerState.state`
-from the slot system — no default markup, no expand/collapse. Here each call
+from the slot system—no default markup, no expand/collapse. Here each call
 renders as a single-line process trace: tool name, a dotted rule, and a state badge.
 
 {{"demo": "ToolStylingC.js", "bg": "inline"}}
 
 ## See also
 
-- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/) — two-pane inbox layout
-- [Split layout](/x/react-chat/material/examples/split-layout/) — place message list and composer in separate DOM zones
+- [Multi-conversation](/x/react-chat/material/examples/multi-conversation/): two-pane inbox layout
+- [Split layout](/x/react-chat/material/examples/split-layout/): place message list and composer in separate DOM zones
 
 ## API
 

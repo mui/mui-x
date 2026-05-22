@@ -32,14 +32,14 @@ Pass an array of strings to the `suggestions` prop on `ChatBox`:
 
 Suggestions are hidden once the first message appears in the conversation.
 
-## `ChatSuggestion` objects
+## Using suggestion objects
 
 For more control, pass `ChatSuggestion` objects instead of plain strings.
 This lets you set a display label that differs from the value pre-filled into the composer:
 
 {{"demo": "SuggestionsWithLabels.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-### `ChatSuggestion` type
+### Suggestion object fields
 
 | Property | Type     | Description                                               |
 | :------- | :------- | :-------------------------------------------------------- |
@@ -94,7 +94,7 @@ function App() {
 
 Suggestions are only displayed in the empty state (when the message list has no messages), so dynamic updates only take effect before the first message is sent.
 
-## The `ChatSuggestions` component
+## Custom layout usage
 
 When building a custom layout, use `ChatSuggestions` directly inside a `ChatRoot` provider:
 

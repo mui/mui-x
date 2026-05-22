@@ -8,11 +8,12 @@ components: ChatBox
 
 # Chat - Real-Time Sync
 
-<p class="description">Push typing, presence, and collection changes into the runtime via the adapter's <code>subscribe()</code> method for live synchronization.</p>
+<p class="description">Push typing, presence, and collection changes into the runtime via the adapter's subscribe() method for live synchronization.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The adapter's `subscribe()` method enables push-based updates from the backend. The runtime calls it on mount and cleans it up on unmount, keeping the subscription lifecycle fully managed.
+The adapter's `subscribe()` method enables push-based updates from the backend.
+The runtime calls it on mount and cleans it up on unmount, keeping the subscription lifecycle fully managed.
 
 ## Subscription lifecycle
 
@@ -47,7 +48,8 @@ async subscribe({ onEvent }) {
 
 ## Event types
 
-The `onEvent` callback receives `ChatRealtimeEvent` objects. There are nine event variants organized in five categories.
+The `onEvent` callback receives `ChatRealtimeEvent` objects.
+There are nine event variants organized in five categories.
 
 ### Conversation events
 
@@ -85,7 +87,8 @@ The `onEvent` callback receives `ChatRealtimeEvent` objects. There are nine even
 
 ## Dispatching events from the backend
 
-Each event is a plain object with a `type` field. Here are the full shapes:
+Each event is a plain object with a `type` field.
+Here are the full shapes:
 
 ```ts
 // Conversation events
@@ -139,7 +142,8 @@ onEvent({
 
 ### Presence
 
-Presence events update the `isOnline` field on `ChatUser` objects inside conversation participants. Use `useConversation(id)` or `useConversations()` to see participant presence:
+Presence events update the `isOnline` field on `ChatUser` objects inside conversation participants.
+Use `useConversation(id)` or `useConversations()` to see participant presence:
 
 ```ts
 onEvent({
@@ -151,7 +155,8 @@ onEvent({
 
 ### Read state
 
-Read events update the `readState` and `unreadCount` fields on `ChatConversation`. Use `useConversation(id)` to reflect read status in the UI:
+Read events update the `readState` and `unreadCount` fields on `ChatConversation`.
+Use `useConversation(id)` to reflect read status in the UI:
 
 ```ts
 onEvent({
@@ -182,7 +187,8 @@ onEvent({
 
 ### Removing a conversation
 
-When a `conversation-removed` event arrives and the removed conversation is the active one, the runtime resets `activeConversationId` to `undefined`. Your UI can respond by showing a placeholder or selecting the next conversation.
+When a `conversation-removed` event arrives and the removed conversation is the active one, the runtime resets `activeConversationId` to `undefined`.
+Your UI can respond by showing a placeholder or selecting the next conversation.
 
 ```ts
 onEvent({
@@ -209,7 +215,8 @@ onEvent({
 
 ## Reconnection
 
-The runtime manages subscription cleanup automatically on unmount. For reconnection handling after network drops, implement the logic inside your `subscribe()` method:
+The runtime manages subscription cleanup automatically on unmount.
+For reconnection handling after network drops, implement the logic inside your `subscribe()` method:
 
 ```tsx
 subscribe({ onEvent }) {
@@ -253,10 +260,11 @@ async setTyping({ conversationId, isTyping }) {
 },
 ```
 
-The runtime calls `setTyping` when the composer value changes from empty to non-empty (and vice versa). To receive typing indicators from other users, push `typing` events through the `onEvent` callback in `subscribe()`.
+The runtime calls `setTyping` when the composer value changes from empty to non-empty (and vice versa).
+To receive typing indicators from other users, push `typing` events through the `onEvent` callback in `subscribe()`.
 
 ## See also
 
-- [Read Receipts](/x/react-chat/multi-conversation/read-receipts/) for the `markRead()` adapter method and unread badge display.
-- [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that reflects realtime conversation updates.
+- [Read receipts](/x/react-chat/multi-conversation/read-receipts/) for the `markRead()` adapter method and unread badge display.
+- [Conversation list](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that reflects realtime conversation updates.
 - [Adapter](/x/react-chat/backend/adapters/) for the full `subscribe()` and `setTyping()` method reference.

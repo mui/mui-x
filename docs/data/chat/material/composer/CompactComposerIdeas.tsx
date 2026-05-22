@@ -11,7 +11,7 @@ import {
 } from 'docs/data/chat/material/examples/shared/demoData';
 
 // Idea 1: Top separator only
-// Clean divider — no side/bottom borders, no background, no radius.
+// Clean divider—no side/bottom borders, no background, no radius.
 // Focus thickens the top border and colors it primary.
 const theme1 = (base: ReturnType<typeof createTheme>) =>
   createTheme(base, {
@@ -67,7 +67,7 @@ const theme2 = (base: ReturnType<typeof createTheme>) =>
   });
 
 // Idea 3: Elevated card
-// Margin, normal radius, no border — uses elevation shadow instead.
+// Margin, normal radius, no border—uses elevation shadow instead.
 // Focus deepens the shadow with a primary tint.
 const theme3 = (base: ReturnType<typeof createTheme>) =>
   createTheme(base, {
@@ -125,7 +125,7 @@ const theme4 = (base: ReturnType<typeof createTheme>) =>
   });
 
 // Idea 5: Inset outlined
-// Margin all around, full border, normal borderRadius — same treatment as default variant.
+// Margin all around, full border, normal borderRadius—same treatment as default variant.
 // Focus: primary border + ring. The "classic" text field look.
 const theme5 = (base: ReturnType<typeof createTheme>) =>
   createTheme(base, {
@@ -152,27 +152,27 @@ const theme5 = (base: ReturnType<typeof createTheme>) =>
 
 const ideas = [
   {
-    label: '1 — Top separator',
+    label: '1—Top separator',
     description: 'Only a top border divider. Focus colors it primary.',
     createTheme: theme1,
   },
   {
-    label: '2 — Floating pill',
+    label: '2—Floating pill',
     description: 'Margin + pill-shaped radius. Focus adds primary ring.',
     createTheme: theme2,
   },
   {
-    label: '3 — Elevated card',
+    label: '3—Elevated card',
     description: 'No border, elevation shadow. Focus deepens shadow.',
     createTheme: theme3,
   },
   {
-    label: '4 — Borderless minimal',
+    label: '4—Borderless minimal',
     description: 'Top separator, transparent bg. Focus tints background.',
     createTheme: theme4,
   },
   {
-    label: '5 — Inset outlined',
+    label: '5—Inset outlined',
     description: 'Margin + border + radius like default variant.',
     createTheme: theme5,
   },

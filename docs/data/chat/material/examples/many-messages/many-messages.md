@@ -1,11 +1,11 @@
 ---
-title: Chat - Many messages
+title: Chat - Many Messages
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Many messages
+# Chat - Many Messages
 
 <p class="description">Testing scroll behavior and performance with a large number of messages.</p>
 

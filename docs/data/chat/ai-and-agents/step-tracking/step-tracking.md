@@ -8,11 +8,12 @@ components: ChatMessageContent
 
 # Chat - Step Tracking
 
-<p class="description">Track multi-step agent progress using <code>start-step</code> and <code>finish-step</code> stream chunks that create visual delimiters in the message.</p>
+<p class="description">Track and display multi-step agent progress with visual delimiters in the message stream.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Agentic AI workflows often involve multiple processing steps — reasoning, tool calls, intermediate results, and a final answer. Step tracking lets you visually delimit these phases in the message stream so users can follow the agent's progress.
+Agentic AI workflows often involve multiple processing steps: reasoning, tool calls, intermediate results, and a final answer.
+Step tracking lets you visually delimit these phases in the message stream so users can follow the agent's progress.
 
 ## Step boundary chunks
 
@@ -33,7 +34,7 @@ interface ChatFinishStepChunk {
 }
 ```
 
-## `ChatStepStartMessagePart`
+## Step start part structure
 
 When a `start-step` chunk arrives, the runtime creates a `ChatStepStartMessagePart` on the assistant message:
 
@@ -43,7 +44,7 @@ interface ChatStepStartMessagePart {
 }
 ```
 
-The `finish-step` chunk signals the end of the current step but does not create a separate message part — it serves as a boundary marker in the stream.
+The `finish-step` chunk signals the end of the current step but does not create a separate message part—it serves as a boundary marker in the stream.
 
 ## Streaming example
 
@@ -117,7 +118,8 @@ const adapter: ChatAdapter = {
 
 ## Displaying step progress
 
-The `step-start` parts act as delimiters in the message's `parts` array. You can render them as visual separators, progress indicators, or collapsible sections.
+The `step-start` parts act as delimiters in the message's `parts` array.
+You can render them as visual separators, progress indicators, or collapsible sections.
 
 ### Step delimiter renderer
 
@@ -203,11 +205,13 @@ After streaming, the message's `parts` array contains `step-start` entries inter
 ];
 ```
 
-This structure makes it straightforward to group parts by step when building custom renderers. Iterate through the parts and treat each `step-start` as a new group boundary.
+This structure makes it straightforward to group parts by step when building custom renderers.
+Iterate through the parts and treat each `step-start` as a new group boundary.
 
 ## Steps with reasoning and tool calls
 
-Steps compose naturally with reasoning and tool calling. A single step can contain reasoning, one or more tool invocations, and text:
+Steps compose naturally with reasoning and tool calling.
+A single step can contain reasoning, one or more tool invocations, and text:
 
 ```tsx
 // Step with reasoning + tool call
@@ -240,7 +244,7 @@ controller.enqueue({ type: 'finish-step' });
 
 ## See also
 
-- [Tool Calling](/x/react-chat/ai-and-agents/tool-calling/) for the tool invocation lifecycle within steps.
+- [Tool calling](/x/react-chat/ai-and-agents/tool-calling/) for the tool invocation lifecycle within steps.
 - [Reasoning](/x/react-chat/ai-and-agents/reasoning/) for displaying LLM thinking traces.
 - [Streaming](/x/react-chat/behavior/streaming/) for the full chunk protocol reference including step boundary chunks.
-- [Tool Approval](/x/react-chat/ai-and-agents/tool-approval/) for human-in-the-loop checkpoints within agent steps.
+- [Tool approval](/x/react-chat/ai-and-agents/tool-approval/) for human-in-the-loop checkpoints within agent steps.

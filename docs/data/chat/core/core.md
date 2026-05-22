@@ -99,7 +99,7 @@ See [Selectors](/x/react-chat/core/selectors/) for the full selector table and u
 ## Adapter contract
 
 `ChatAdapter` is the transport boundary between the runtime and your backend.
-Only `sendMessage()` is required — everything else is optional and incrementally adopted.
+Only `sendMessage()` is required—everything else is optional and incrementally adopted.
 The adapter works with HTTP, SSE, WebSocket, or AI SDK-style streaming backends.
 
 See [Adapters](/x/react-chat/core/adapters/) for the full interface reference, a step-by-step writing guide, and backend pattern guidance.
@@ -122,7 +122,7 @@ See [Realtime](/x/react-chat/core/realtime/) for event types, store effects, and
 ## Type augmentation
 
 Module augmentation lets you add app-specific metadata, typed tool definitions, typed `data-*` payloads, and custom message parts.
-Types flow through the entire stack at compile time — no provider props needed.
+Types flow through the entire stack at compile time—no provider props needed.
 
 See [Type augmentation](/x/react-chat/core/types/) for the six registry interfaces, a step-by-step guide, and an end-to-end example.
 

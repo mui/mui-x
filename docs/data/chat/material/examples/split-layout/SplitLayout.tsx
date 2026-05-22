@@ -49,7 +49,7 @@ const initialMessages = [
     role: 'assistant',
     author: demoUsers.agent,
     createdAt: '2026-03-15T09:58:00.000Z',
-    text: 'The message list (left) and the composer (right) are siblings in the DOM — neither is nested inside the other.',
+    text: 'The message list (left) and the composer (right) are siblings in the DOM—neither is nested inside the other.',
   }),
   createTextMessage({
     id: 'sl-msg-2',
@@ -82,7 +82,7 @@ function SendIcon() {
   );
 }
 
-// Left column — message display. Must be inside ChatRoot to call useMessageIds().
+// Left column—message display. Must be inside ChatRoot to call useMessageIds().
 function MessagePane() {
   const messageIds = useMessageIds();
 
@@ -105,7 +105,7 @@ function MessagePane() {
   );
 }
 
-// Right column — composer. Sibling of MessagePane, still inside ChatRoot.
+// Right column—composer. Sibling of MessagePane, still inside ChatRoot.
 // ChatComposer uses useChatComposer() from the shared context.
 function InputPane() {
   return (
@@ -123,7 +123,7 @@ function InputPane() {
         Composer
       </Typography>
       <Typography variant="caption" color="text.disabled">
-        Separate DOM zone — connected only via ChatRoot
+        Separate DOM zone—connected only via ChatRoot
       </Typography>
       <Divider />
       <Box sx={{ flex: 1 }} />
@@ -162,9 +162,9 @@ export default function SplitLayout() {
           '*, *::before, *::after': { boxSizing: 'inherit' },
         }}
       >
-        {/* Zone A: message display — could be in main content, a panel, a modal */}
+        {/* Zone A: message display—could be in main content, a panel, a modal */}
         <MessagePane />
-        {/* Zone B: composer — could be in a toolbar, sidebar, or footer */}
+        {/* Zone B: composer—could be in a toolbar, sidebar, or footer */}
         <InputPane />
       </Box>
     </ChatRoot>

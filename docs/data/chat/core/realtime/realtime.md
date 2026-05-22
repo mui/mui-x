@@ -1,13 +1,13 @@
 ---
 productId: x-chat
-title: Chat - Core realtime
+title: Chat - Core Realtime
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Core realtime
+# Chat - Core Realtime
 
-<p class="description">Push typing, presence, read state, and collection changes into the runtime through the adapter's <code>subscribe()</code> method.</p>
+<p class="description">Push typing, presence, read state, and collection changes into the runtime through the adapter's subscribe() method.</p>
 
 The adapter's `subscribe()` method enables push-based updates from the backend.
 The runtime calls it on mount and cleans it up on unmount, keeping the subscription lifecycle fully managed.

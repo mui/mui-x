@@ -12,7 +12,7 @@ components: ChatBox
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-## sx prop
+## Using the sx prop
 
 The `sx` prop on `ChatBox` applies styles to the outermost root element.
 Use it for layout constraints such as height and width:
@@ -76,7 +76,7 @@ const darkTheme = createTheme({ palette: { mode: 'dark' } });
 </ThemeProvider>;
 ```
 
-## classes prop
+## Injecting CSS class names
 
 Inject custom class names onto the root and layout elements using the `classes` prop:
 
@@ -111,7 +111,7 @@ import { chatBoxClasses } from '@mui/x-chat';
 //            chatBoxClasses.conversationsPane, chatBoxClasses.threadPane
 ```
 
-## slotProps for targeted styling
+## Styling subcomponents with slotProps
 
 Pass `sx` overrides to any internal subcomponent using `slotProps` without replacing the component:
 
@@ -127,5 +127,5 @@ Pass `sx` overrides to any internal subcomponent using `slotProps` without repla
 
 ## See also
 
-- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing subcomponents entirely.
+- [Slots and composition](/x/react-chat/customization/slots-and-composition/) for replacing subcomponents entirely.
 - [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling with utility classes.

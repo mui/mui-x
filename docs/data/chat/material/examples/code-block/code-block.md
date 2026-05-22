@@ -5,14 +5,14 @@ packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Code block
+# Chat - Code Block
 
-<p class="description">Display code with a language label and copy-to-clipboard button using the <code>ChatCodeBlock</code> component.</p>
+<p class="description">Display code with a language label and copy-to-clipboard button using the ChatCodeBlock component.</p>
 
-- **Automatic rendering** — `ChatBox` renders code fences from markdown as `ChatCodeBlock` automatically. No extra config needed.
-- **Language label** — the language specified in the code fence (for example, ` ```python `) appears in the header bar.
-- **Copy button** — clicking copies the raw code string to the clipboard and shows a check mark for 2 seconds.
-- **Custom highlighter** — the standalone section below the chat shows the `highlighter` prop with a minimal Python keyword coloriser (no library required).
+- **Automatic rendering**: `ChatBox` renders code fences from markdown as `ChatCodeBlock` automatically. No extra config needed.
+- **Language label**: the language specified in the code fence (for example, ` ```python `) appears in the header bar.
+- **Copy button**: clicking copies the raw code string to the clipboard and shows a check mark for 2 seconds.
+- **Custom highlighter**: the standalone section below the chat shows the `highlighter` prop with a minimal Python keyword coloriser (no library required).
 
 {{"demo": "CodeBlock.js", "bg": "inline"}}
 
@@ -30,7 +30,7 @@ import { ChatCodeBlock } from '@mui/x-chat';
 
 ## Custom labels
 
-Set `language` to any string — it is displayed as-is in the header:
+Set `language` to any string—it is displayed as-is in the header:
 
 ```jsx
 <ChatCodeBlock language="bash">{`pnpm add @mui/x-chat`}</ChatCodeBlock>
@@ -64,7 +64,7 @@ function ShikiBlock({ code, language }) {
 
 ## Automatic rendering in chat
 
-When using `ChatBox`, any code fence in a markdown assistant message is automatically rendered as a `ChatCodeBlock`. This requires no additional configuration — the `renderMarkdown` function used internally by `ChatMessageContent` emits `ChatCodeBlock` for every code fence it encounters.
+When using `ChatBox`, any code fence in a markdown assistant message is automatically rendered as a `ChatCodeBlock`. This requires no additional configuration—the `renderMarkdown` function used internally by `ChatMessageContent` emits `ChatCodeBlock` for every code fence it encounters.
 
 To customize the rendering further, override `partProps.text.renderText` on `ChatMessageContent`.
 

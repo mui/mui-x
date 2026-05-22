@@ -65,7 +65,7 @@ export function createTextMessage(params) {
 }
 
 // ---------------------------------------------------------------------------
-// Conversation IDs — static strings to avoid SSR/client hydration mismatches.
+// Conversation IDs—static strings to avoid SSR/client hydration mismatches.
 // ---------------------------------------------------------------------------
 
 const starterConvId = 'conv-starter';
@@ -98,7 +98,7 @@ export const minimalMessages = [
     role: 'user',
     author: demoUsers.you,
     createdAt: '2026-03-15T10:00:00.000Z',
-    text: 'Great — the bubble colors come from palette.primary and the typography from the theme.',
+    text: 'Great—the bubble colors come from palette.primary and the typography from the theme.',
   }),
 ];
 

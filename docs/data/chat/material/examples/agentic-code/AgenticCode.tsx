@@ -79,7 +79,7 @@ function makeAssistantMessage(
   };
 }
 
-// --- Conversation IDs — generated once at module load -----------------------
+// --- Conversation IDs—generated once at module load -----------------------
 
 const fixTestsId = 'ac-fix-tests';
 const addFeatureId = 'ac-add-feature';
@@ -131,7 +131,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       { type: 'step-start' },
       {
         type: 'reasoning',
-        text: 'I need to locate the failing test files and trace which imports changed during the refactor. The error is most likely a path issue — components were probably moved to a subdirectory.',
+        text: 'I need to locate the failing test files and trace which imports changed during the refactor. The error is most likely a path issue—components were probably moved to a subdirectory.',
         state: 'done',
       },
       {
@@ -199,7 +199,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
       },
       {
         type: 'text',
-        text: 'All 3 test files are now passing. The import path was wrong after the refactor — components moved from `src/` to `src/components/`.',
+        text: 'All 3 test files are now passing. The import path was wrong after the refactor—components moved from `src/` to `src/components/`.',
         state: 'done',
       },
     ]),
@@ -292,7 +292,7 @@ const initialThreads: Record<string, ChatMessage[]> = {
         { type: 'step-start' },
         {
           type: 'text',
-          text: "I'll run a cleanup command. This will permanently delete build output and untracked files — please confirm before I proceed.",
+          text: "I'll run a cleanup command. This will permanently delete build output and untracked files—please confirm before I proceed.",
           state: 'done',
         },
         {

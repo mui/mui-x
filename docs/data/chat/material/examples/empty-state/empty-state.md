@@ -1,15 +1,15 @@
 ---
-title: Chat - Empty state
+title: Chat - Empty State
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Empty state
+# Chat - Empty State
 
 <p class="description">A ChatBox with an active conversation but no messages yet.</p>
 
-This demo shows the empty state of a ChatBox - an active conversation with zero messages, revealing how the component looks before any interaction.
+This demo shows the empty state of a ChatBox: an active conversation with zero messages, revealing how the component looks before any interaction.
 
 - Empty message list area
 - Composer is ready for input

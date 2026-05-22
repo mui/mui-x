@@ -1,11 +1,11 @@
 ---
-title: Chat - Minimal headless shell
+title: Chat - Minimal Headless Shell
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Minimal headless shell
+# Chat - Minimal Headless Shell
 
 <p class="description">Start with the smallest complete chat surface built from headless primitives.</p>
 

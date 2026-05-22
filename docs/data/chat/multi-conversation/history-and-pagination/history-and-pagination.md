@@ -1,22 +1,24 @@
 ---
 productId: x-chat
-title: History & Pagination
+title: History and Pagination
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageList
 ---
 
-# Chat - History & Pagination
+# Chat - History and Pagination
 
-<p class="description">Load older messages on demand using cursor-based pagination through the adapter's <code>listMessages</code> method.</p>
+<p class="description">Load older messages on demand using cursor-based pagination through the adapter's listMessages method.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-When working with multi-conversation layouts, each conversation typically has a message history stored on the server. The `listMessages` adapter method lets you load that history page by page using cursor-based pagination.
+When working with multi-conversation layouts, each conversation typically has a message history stored on the server.
+The `listMessages` adapter method lets you load that history page by page using cursor-based pagination.
 
-## The `listMessages` adapter method
+## Implementing listMessages
 
-Implement `listMessages` to load message history when the user opens a conversation. The runtime calls it whenever `activeConversationId` changes to a non-null conversation, clearing any previously loaded messages before fetching the new page.
+Implement `listMessages` to load message history when the user opens a conversation.
+The runtime calls it whenever `activeConversationId` changes to a non-null conversation, clearing any previously loaded messages before fetching the new page.
 
 ```ts
 interface ChatListMessagesInput<Cursor> {
@@ -45,7 +47,8 @@ async listMessages({ conversationId, cursor }) {
 
 ## Cursor-based pagination
 
-The adapter interface is generic over the cursor type. The default is `string`, which covers opaque server cursors, Base64 tokens, and ISO timestamps.
+The adapter interface is generic over the cursor type.
+The default is `string`, which covers opaque server cursors, Base64 tokens, and ISO timestamps.
 
 If your API uses a structured cursor, provide the type at the call site:
 
@@ -76,9 +79,10 @@ const adapter: ChatAdapter<MyCursor> = {
 
 The cursor type flows automatically through `ChatBox`, the store, hooks, and all adapter input and output types.
 
-## The `hasMoreHistory` state
+## Tracking pagination state
 
-When `listMessages` returns `hasMore: true`, the runtime sets `hasMoreHistory` to `true` in the store. This flag tells the message list that an additional page of history can be fetched when the user scrolls to the top.
+When `listMessages` returns `hasMore: true`, the runtime sets `hasMoreHistory` to `true` in the store.
+This flag tells the message list that an additional page of history can be fetched when the user scrolls to the top.
 
 The normalized store tracks history pagination state:
 
@@ -89,23 +93,27 @@ The normalized store tracks history pagination state:
 
 ## Loading older messages
 
-When `hasMoreHistory` is `true`, the message list automatically calls `listMessages` with the stored `historyCursor` as soon as the user scrolls to the top of the list. There is no separate button rendered by `ChatBox`; the load is triggered by the scroll position.
+When `hasMoreHistory` is `true`, the message list automatically calls `listMessages` with the stored `historyCursor` as soon as the user scrolls to the top of the list.
+There is no separate button rendered by `ChatBox`; the load is triggered by the scroll position.
 
 The flow works as follows:
 
-1. User opens a conversation — runtime calls `listMessages({ conversationId })`.
+1. User opens a conversation—runtime calls `listMessages({ conversationId })`.
 2. Adapter returns messages plus `{ cursor: nextCursor, hasMore: true }`.
 3. Runtime stores messages, sets `hasMoreHistory: true` and `historyCursor: nextCursor`.
-4. User scrolls to the top — runtime automatically calls `listMessages({ conversationId, cursor: nextCursor })`.
+4. User scrolls to the top—runtime automatically calls `listMessages({ conversationId, cursor: nextCursor })`.
 5. Adapter returns the next page. If `hasMore: false`, no further automatic loads are triggered.
 
 ## History loading indicator
 
-While `listMessages` is in flight, the runtime blocks duplicate requests (a debounce guard prevents overlapping loads). However, `ChatBox` and `ChatMessageList` do not render a built-in loading indicator during history fetches. If you want to show a spinner or skeleton at the top of the list while older messages are loading, implement it yourself using the `overlay` prop on `ChatMessageList` combined with the `hasMoreHistory` and `isStreaming` values from `useChat`.
+While `listMessages` is in flight, the runtime blocks duplicate requests (a debounce guard prevents overlapping loads).
+However, `ChatBox` and `ChatMessageList` do not render a built-in loading indicator during history fetches.
+If you want to show a spinner or skeleton at the top of the list while older messages are loading, implement it yourself using the `overlay` prop on `ChatMessageList` combined with the `hasMoreHistory` and `isStreaming` values from `useChat()`.
 
 ## Error handling
 
-If `listMessages` throws, the runtime records a `ChatError` with `source: 'history'` and surfaces it through the error model. The error is recoverable — the user can retry by triggering the load again.
+If `listMessages` throws, the runtime records a `ChatError` with `source: 'history'` and surfaces it through the error model.
+The error is recoverable—the user can retry by triggering the load again.
 
 ```tsx
 <ChatBox
@@ -121,5 +129,5 @@ If `listMessages` throws, the runtime records a `ChatError` with `source: 'histo
 ## See also
 
 - [Adapter](/x/react-chat/backend/adapters/) for the full adapter interface reference.
-- [Conversation List](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that triggers conversation switches.
-- [Real-Time Sync](/x/react-chat/multi-conversation/real-time-sync/) for pushing new messages through subscriptions.
+- [Conversation list](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that triggers conversation switches.
+- [Real-time sync](/x/react-chat/multi-conversation/real-time-sync/) for pushing new messages through subscriptions.

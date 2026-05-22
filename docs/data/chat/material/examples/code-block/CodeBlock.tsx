@@ -31,7 +31,7 @@ const ASSISTANT_REPLY = `Here's a recursive Python function that flattens a nest
 ${PYTHON_SNIPPET}
 \`\`\`
 
-It works by iterating over each item — if the item is itself a list it recurses, otherwise it appends the value directly.`;
+It works by iterating over each item—if the item is itself a list it recurses, otherwise it appends the value directly.`;
 
 const INITIAL_MESSAGES = [
   createTextMessage({
@@ -52,7 +52,7 @@ const INITIAL_MESSAGES = [
   }),
 ];
 
-// Minimal keyword highlighter — no library needed for the demo
+// Minimal keyword highlighter—no library needed for the demo
 const KW_AT_START = /^(def|for|if|else|return|in|isinstance)(?=\W|$)/;
 const KW_ANYWHERE = /\b(?:def|for|if|else|return|in|isinstance)\b/;
 

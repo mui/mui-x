@@ -1,18 +1,19 @@
 ---
 productId: x-chat
-title: Text & Markdown
+title: Text and Markdown
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageContent
 ---
 
-# Chat - Text & Markdown
+# Chat - Text and Markdown
 
-<p class="description">Render plain text and markdown content in chat messages using the <code>ChatTextMessagePart</code> type and the built-in markdown renderer.</p>
+<p class="description">Render plain text and markdown in chat messages with the built-in markdown parser.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Text parts are the most common message part type. Every message with written content — whether from a human user or an AI assistant — uses one or more `text` parts to carry that content.
+Text parts are the most common message part type.
+Every message with written content—whether from a human user or an AI assistant—uses one or more `text` parts to carry that content.
 
 ## The text part data model
 
@@ -26,7 +27,8 @@ interface ChatTextMessagePart {
 }
 ```
 
-A message can contain multiple text parts alongside other part types (files, sources, tool calls). The `parts` array on `ChatMessage` holds them all:
+A message can contain multiple text parts alongside other part types (files, sources, tool calls).
+The `parts` array on `ChatMessage` holds them all:
 
 ```ts
 const message: ChatMessage = {
@@ -47,7 +49,8 @@ const message: ChatMessage = {
 
 ## Markdown rendering
 
-When using `ChatBox` with the Material UI layer (`@mui/x-chat`), text parts are rendered through a built-in markdown parser that converts common markdown syntax into React elements. This happens automatically — no configuration is needed.
+When using `ChatBox` with the Material UI layer (`@mui/x-chat`), text parts are rendered through a built-in markdown parser that converts common markdown syntax into React elements.
+This happens automatically—no configuration is needed.
 
 The built-in parser supports:
 
@@ -83,7 +86,8 @@ This lets you plug in any markdown library (react-markdown, remark, MDX) while k
 
 ## Streaming text
 
-Text parts support incremental delivery through the streaming protocol. The stream uses three chunk types to build up a text part:
+Text parts support incremental delivery through the streaming protocol.
+The stream uses three chunk types to build up a text part:
 
 | Chunk type   | Purpose                         |
 | :----------- | :------------------------------ |
@@ -91,7 +95,8 @@ Text parts support incremental delivery through the streaming protocol. The stre
 | `text-delta` | Appends a string fragment       |
 | `text-end`   | Marks the text part as complete |
 
-While tokens are arriving, the part's `state` field is `'streaming'`. Once the `text-end` chunk arrives, `state` transitions to `'done'`.
+While tokens are arriving, the part's `state` field is `'streaming'`.
+Once the `text-end` chunk arrives, `state` transitions to `'done'`.
 
 ```ts
 // During streaming
@@ -118,5 +123,5 @@ The message list auto-scrolls to follow new streaming content as long as the use
 
 ## See also
 
-- [Code Blocks](/x/react-chat/display/message-parts/code-blocks/) for syntax-highlighted code fence rendering
-- [Message Appearance](/x/react-chat/display/message-appearance/) for visual presentation of the message list
+- [Code blocks](/x/react-chat/display/message-parts/code-blocks/) for syntax-highlighted code fence rendering
+- [Message appearance](/x/react-chat/display/message-appearance/) for visual presentation of the message list

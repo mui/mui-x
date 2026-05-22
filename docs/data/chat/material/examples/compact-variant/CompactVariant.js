@@ -12,7 +12,7 @@ import {
 
 const adapter = createEchoAdapter({
   respond: (text) =>
-    `Received: "${text}". Notice the compact layout — no message bubbles, everything left-aligned, author names above each group.`,
+    `Received: "${text}". Notice the compact layout—no message bubbles, everything left-aligned, author names above each group.`,
 });
 
 export default function CompactVariant() {

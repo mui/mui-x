@@ -18,7 +18,7 @@ This demo demonstrates the runtime behavior behind realtime push updates:
 
 ## Key concepts
 
-### The `subscribe()` adapter method
+### Setting up the subscription
 
 When `ChatProvider` mounts and the adapter implements `subscribe()`, the runtime calls it with an `onEvent` callback.
 The adapter pushes events through this callback and returns a cleanup function:
@@ -91,7 +91,7 @@ onEvent({
 
 ## Key takeaways
 
-- The runtime fully manages the subscription lifecycle — `subscribe()` on mount, cleanup on unmount
+- The runtime fully manages the subscription lifecycle—`subscribe()` on mount, cleanup on unmount
 - Typing, presence, and read events update the store automatically
 - `useChatStatus().typingUserIds` is the primary hook for typing indicators
 - Presence and read updates surface through conversation-level selectors

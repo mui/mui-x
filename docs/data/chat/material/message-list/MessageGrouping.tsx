@@ -23,7 +23,7 @@ const conversation: ChatConversation = {
   lastMessageAt: '2026-03-15T10:05:00.000Z',
 };
 
-// Messages from the same author spaced 30 seconds apart — well within a
+// Messages from the same author spaced 30 seconds apart—well within a
 // 1-minute grouping window but outside a very short one.
 const messages: ChatMessage[] = [
   createTextMessage({

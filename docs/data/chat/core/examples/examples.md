@@ -1,13 +1,13 @@
 ---
-title: Chat - Core examples
+title: Chat - Core Examples
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Core examples
+# Chat - Core Examples
 
-<p class="description">Demo-first patterns for building custom chat UIs with <code>@mui/x-chat/headless</code> and plain React markup.</p>
+<p class="description">Demo-first patterns for building custom chat UIs with @mui/x-chat/headless and plain React markup.</p>
 
 These demos stay strictly within the core layer.
 They use the runtime, hooks, selectors, callbacks, and adapter contract without relying on headless components or Material UI primitives.

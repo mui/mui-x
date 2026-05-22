@@ -1,11 +1,11 @@
 ---
-title: Chat - Long messages
+title: Chat - Long Messages
 productId: x-chat
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Long messages
+# Chat - Long Messages
 
 <p class="description">Testing text wrapping, word-break behavior, and special content in message bubbles.</p>
 

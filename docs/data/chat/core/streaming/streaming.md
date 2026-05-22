@@ -1,11 +1,11 @@
 ---
 productId: x-chat
-title: Chat - Core streaming
+title: Chat - Core Streaming
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Core streaming
+# Chat - Core Streaming
 
 <p class="description">Understand the stream chunk protocol that turns adapter responses into normalized message state, including text, reasoning, tool, source, file, and data chunks.</p>
 
@@ -50,7 +50,7 @@ Multiple `text-delta` chunks are batched according to `streamFlushInterval` befo
 | `reasoning-delta` | `id`, `delta` | Append reasoning content    |
 | `reasoning-end`   | `id`          | Finalize the reasoning part |
 
-Reasoning chunks create a `ChatReasoningMessagePart` — useful for chain-of-thought or thinking trace displays.
+Reasoning chunks create a `ChatReasoningMessagePart`—useful for chain-of-thought or thinking trace displays.
 
 ### Tool chunks
 
@@ -66,7 +66,7 @@ Reasoning chunks create a `ChatReasoningMessagePart` — useful for chain-of-tho
 | `tool-output-denied`    | `toolCallId`, `reason?`                          | User denied the tool call     |
 
 Tool chunks create `ChatToolMessagePart` or `ChatDynamicToolMessagePart` entries.
-The `toolInvocation.state` tracks the tool lifecycle: `'input-streaming'` → `'input-available'` → `'approval-requested'` → `'output-available'` (or `'output-error'` / `'output-denied'`).
+The `toolInvocation.state` tracks the tool lifecycle: `'input-streaming'` → `'input-available'` → `'approval-requested'` → `'output-available'` (or `'output-error'` or `'output-denied'`).
 
 ### Source chunks
 
@@ -125,13 +125,14 @@ interface ChatStreamEnvelope {
 The runtime accepts both raw `ChatMessageChunk` objects and enveloped chunks in the same stream.
 Envelopes are useful for SSE-based transports where chunks might arrive out of order or be replayed.
 
-## `streamFlushInterval`
+## Controlling the flush interval
 
 Rapid text and reasoning deltas are batched before being applied to the store.
 The `streamFlushInterval` prop on `ChatProvider` controls the batching window (default: 16ms).
 
 :::info
-Lower values mean faster visual updates but more store mutations. Higher values reduce mutation frequency at the cost of perceived latency.
+Lower values mean faster visual updates but more store mutations.
+Higher values reduce mutation frequency at the cost of perceived latency.
 :::
 
 ```tsx
@@ -153,11 +154,11 @@ The stream processor maps chunks to `ChatMessagePart` entries:
 
 The message's `status` field also updates through the stream:
 
-- `'sending'` → set when the user message is optimistically added
-- `'streaming'` → set when `start` arrives
-- `'sent'` → set when `finish` arrives
-- `'cancelled'` → set when `abort` arrives
-- `'error'` → set when the stream fails
+- `'sending'`: set when the user message is optimistically added
+- `'streaming'`: set when `start` arrives
+- `'sent'`: set when `finish` arrives
+- `'cancelled'`: set when `abort` arrives
+- `'error'`: set when the stream fails
 
 ## Error and disconnect handling
 

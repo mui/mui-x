@@ -219,7 +219,7 @@ export function AttachmentPreviewList() {
 }
 
 // ---------------------------------------------------------------------------
-// Shared slot props — identical across all headless demos
+// Shared slot props—identical across all headless demos
 // ---------------------------------------------------------------------------
 
 export const demoSlotProps = {

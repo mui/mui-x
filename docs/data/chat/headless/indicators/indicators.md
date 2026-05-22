@@ -1,12 +1,12 @@
 ---
 productId: x-chat
-title: Chat - Headless indicators
+title: Chat - Headless Indicators
 packageName: '@mui/x-chat/headless'
 components: TypingIndicator, UnreadMarker, ScrollToBottomAffordance
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Headless indicators
+# Chat - Headless Indicators
 
 <p class="description">Use shared structural affordances for typing, unread boundaries, and scroll-to-bottom behavior.</p>
 
@@ -24,7 +24,7 @@ The indicator group is built from:
 
 These primitives are small, but they encode thread-specific semantics that are easy to get wrong when rebuilt from scratch.
 
-## `TypingIndicator`
+## Showing typing activity
 
 `TypingIndicator` reads typing state for the active conversation and resolves display names from:
 
@@ -51,7 +51,7 @@ import { Indicators, Conversation } from '@mui/x-chat/headless';
 
 Use it in the thread header or just above the composer when typing feedback should stay close to the active draft area.
 
-## `UnreadMarker`
+## Marking the unread boundary
 
 `UnreadMarker` inserts a structural boundary into the message flow.
 
@@ -77,7 +77,7 @@ The component renders only for the row that starts the unread region and applies
 
 You can replace both the separator root and the label through slots.
 
-## `ScrollToBottomAffordance`
+## Showing the scroll-to-bottom affordance
 
 `ScrollToBottomAffordance` consumes message-list context and appears only when the user is away from the bottom of the thread.
 

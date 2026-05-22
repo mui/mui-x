@@ -1,11 +1,11 @@
 ---
-title: Chat - Conversation history
+title: Chat - Conversation History
 productId: x-chat
 packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Conversation history
+# Chat - Conversation History
 
 <p class="description">Use adapter-driven conversations, thread loading, and history paging without any structural UI components.</p>
 
@@ -27,13 +27,13 @@ Two optional adapter methods enable conversation orchestration:
 ```tsx
 const adapter: ChatAdapter = {
   async listConversations() {
-    // Called on mount — returns the conversation list
+    // Called on mount—returns the conversation list
     const res = await fetch('/api/conversations');
     return { conversations: await res.json() };
   },
 
   async listMessages({ conversationId, cursor }) {
-    // Called when activeConversationId changes — returns thread messages
+    // Called when activeConversationId changes—returns thread messages
     const res = await fetch(`/api/threads/${conversationId}?cursor=${cursor ?? ''}`);
     const { messages, nextCursor, hasMore } = await res.json();
     return { messages, cursor: nextCursor, hasMore };
@@ -71,7 +71,7 @@ const { setActiveConversation } = useChat();
 
 ## Key takeaways
 
-- `listConversations()` and `listMessages()` are optional adapter methods — the runtime skips them if not implemented
+- `listConversations()` and `listMessages()` are optional adapter methods—the runtime skips them if not implemented
 - History pagination is driven by cursors and the `hasMoreHistory` flag
 - Switching conversations triggers automatic thread loading through the adapter
 - New messages can still be sent and streamed within a loaded thread

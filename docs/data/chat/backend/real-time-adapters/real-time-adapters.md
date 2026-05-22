@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Real-Time Adapters
 
-<p class="description">Push typing indicators, presence updates, read receipts, and collection changes into the runtime through the adapter's <code>subscribe()</code> method.</p>
+<p class="description">Push typing indicators, presence updates, read receipts, and conversation changes from your backend into the chat runtime in real time.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -110,7 +110,7 @@ Here are the full shapes:
 { type: 'read', conversationId: string, messageId?: string, userId?: string }
 ```
 
-## The `setTyping()` method
+## Sending typing indicators
 
 Implement `setTyping()` to send a typing indicator to your backend when the user is composing a message.
 The runtime calls it when the composer value changes from empty to non-empty (and vice versa).
@@ -133,10 +133,10 @@ async setTyping({ conversationId, isTyping }) {
 
 To receive typing indicators from other users in the UI, implement `subscribe()` and emit `typing` events through the `onEvent` callback.
 
-## The `markRead()` method
+## Marking messages as read
 
 Implement `markRead()` to signal to your backend that the user has seen a conversation or a specific message.
-The runtime does not call this automatically — call `adapter.markRead()` directly from your own UI event handler.
+The runtime does not call this automatically—call `adapter.markRead()` directly from your own UI event handler.
 
 ```ts
 interface ChatMarkReadInput {
@@ -147,7 +147,7 @@ interface ChatMarkReadInput {
 
 ## Stream reconnection
 
-Implement `reconnectToStream()` to resume an interrupted stream — for example, when an SSE connection drops mid-response.
+Implement `reconnectToStream()` to resume an interrupted stream—for example, when an SSE connection drops mid-response.
 The runtime calls it automatically after detecting a disconnected stream.
 
 ```ts
@@ -246,7 +246,7 @@ const adapter: ChatAdapter = {
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the full adapter interface including `subscribe()`.
-- [Hooks Reference](/x/react-chat/resources/hooks/) for `useChatStatus()` and the typing/presence consumption pattern.
-- [Selectors Reference](/x/react-chat/resources/selectors/) for `chatSelectors.typingUserIds` and other store selectors.
+- [Hooks reference](/x/react-chat/resources/hooks/) for `useChatStatus()` and the typing/presence consumption pattern.
+- [Selectors reference](/x/react-chat/resources/selectors/) for `chatSelectors.typingUserIds` and other store selectors.
 
 ## API

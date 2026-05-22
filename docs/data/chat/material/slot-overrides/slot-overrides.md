@@ -1,18 +1,18 @@
 ---
 productId: x-chat
-title: Chat - Slot overrides
+title: Chat - Slot Overrides
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatRoot
 ---
 
-# Chat - Slot overrides
+# Chat - Slot Overrides
 
-<p class="description">Replace individual subcomponents inside ChatBox with your own implementations using the <code>slots</code> and <code>slotProps</code> API.</p>
+<p class="description">Replace individual subcomponents inside ChatBox with your own implementations using the slots and slotProps API.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-`ChatBox` composes many themed subcomponents internally — message bubbles, the composer, the conversation list, date dividers, and more.
+`ChatBox` composes many themed subcomponents internally—message bubbles, the composer, the conversation list, date dividers, and more.
 The `slots` prop lets you swap any of them with your own component, while `slotProps` passes extra props to those components without replacing them.
 
 ## Basic replacement
@@ -82,7 +82,8 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 | `suggestions`     | `ChatSuggestions`              | `<div>`    | Prompt suggestion chips                |
 
 :::info
-The `typingIndicator`, `unreadMarker`, and `messageActions` slots are defined in the type interface but are not currently consumed by `ChatBox`'s internal composition. To customize these, use the standalone components directly in a custom layout with `ChatProvider`.
+The `typingIndicator`, `unreadMarker`, and `messageActions` slots are defined in the type interface but are not currently consumed by `ChatBox`'s internal composition.
+To customize these, use the standalone components directly in a custom layout with `ChatProvider`.
 :::
 
 ## Hiding a slot
@@ -100,7 +101,7 @@ Return `null` from a slot to remove it entirely:
 />
 ```
 
-For common show/hide needs, prefer the `features` prop which handles the logic cleanly:
+For common visibility needs, prefer the `features` prop which handles the logic cleanly:
 
 {{"demo": "FeatureFlags.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -118,7 +119,8 @@ The `autoScroll` feature flag controls scroll behavior rather than slot visibili
 
 ## Feature flags and slot rendering
 
-When a feature flag is set to `false`, the corresponding slot is **not rendered at all** — even if you provide a custom component via `slots`. The feature flag takes precedence:
+When a feature flag is set to `false`, the corresponding slot is **not rendered at all**—even if you provide a custom component via `slots`.
+The feature flag takes precedence:
 
 ```tsx
 {/* The custom button does not render because the feature is disabled */}

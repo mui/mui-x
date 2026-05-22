@@ -1,6 +1,6 @@
 ---
 productId: x-chat
-title: Chat - Material UI customization
+title: Chat - Material UI Customization
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatRoot
@@ -16,7 +16,7 @@ The following demo shows a custom-themed chat surface:
 
 {{"demo": "../examples/custom-theme/CustomTheme.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
-## sx prop
+## Using the sx prop
 
 The `sx` prop on `ChatBox` applies styles to the outermost root element.
 Use it for layout constraints such as height and width:
@@ -80,7 +80,7 @@ const darkTheme = createTheme({ palette: { mode: 'dark' } });
 </ThemeProvider>;
 ```
 
-## classes prop
+## Injecting CSS class names
 
 Inject custom class names onto the root and layout elements using the `classes` prop:
 
@@ -104,7 +104,7 @@ Inject custom class names onto the root and layout elements using the `classes` 
 | `conversationsPane` | `MuiChatBox-conversationsPane` | Conversations sidebar pane |
 | `threadPane`        | `MuiChatBox-threadPane`        | Thread pane                |
 
-## slotProps
+## Passing slot props
 
 Pass props directly to any internal subcomponent using `slotProps`.
 This is useful for setting `aria-label` attributes, `sx` overrides, or other component-specific props without replacing the component:
@@ -149,7 +149,7 @@ This is useful for setting `aria-label` attributes, `sx` overrides, or other com
 | `unreadMarker`         | `Partial<ChatUnreadMarkerProps>`             | Unread marker           |
 | `scrollToBottom`       | `Partial<ChatScrollToBottomAffordanceProps>` | Scroll to bottom button |
 
-## slots
+## Replacing slots
 
 Replace any subcomponent entirely using the `slots` prop.
 The replacement component must accept the same props as the default.

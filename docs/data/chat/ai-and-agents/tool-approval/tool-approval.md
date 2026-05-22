@@ -8,28 +8,28 @@ components: ChatConfirmation
 
 # Chat - Tool Approval
 
-<p class="description">Add human-in-the-loop checkpoints before the agent executes tool calls, using the approval lifecycle and the <code>ChatConfirmation</code> UI component.</p>
+<p class="description">Add human-in-the-loop checkpoints to review and approve or deny agent tool calls before they execute.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Tool approval lets you pause the agent when it requests a potentially dangerous action, present the user with an approve/deny interface, and resume or cancel the tool execution based on the user's decision.
+Tool approval lets you pause the agent when it requests a potentially dangerous action, present the user with an approval interface, and resume or cancel the tool execution based on the user's decision.
 
 ## Approval workflow
 
 The approval lifecycle extends the standard tool invocation states with two additional phases:
 
-| State                | Description                             |
-| :------------------- | :-------------------------------------- |
-| `input-streaming`    | Tool input JSON is being streamed       |
-| `input-available`    | Tool input is fully available           |
-| `approval-requested` | Stream pauses — user approval is needed |
-| `approval-responded` | User has responded, stream continues    |
-| `output-available`   | Tool output is ready (if approved)      |
-| `output-denied`      | User denied the tool call               |
+| State                | Description                           |
+| :------------------- | :------------------------------------ |
+| `input-streaming`    | Tool input JSON is being streamed     |
+| `input-available`    | Tool input is fully available         |
+| `approval-requested` | Stream pauses—user approval is needed |
+| `approval-responded` | User has responded, stream continues  |
+| `output-available`   | Tool output is ready (if approved)    |
+| `output-denied`      | User denied the tool call             |
 
 The stream pauses at `approval-requested` until your UI calls `addToolApprovalResponse()`.
 
-## Stream chunk: `tool-approval-request`
+## Triggering an approval request
 
 When the backend determines a tool call needs user approval, it sends a `tool-approval-request` chunk:
 
@@ -52,7 +52,7 @@ controller.enqueue({
 
 When this chunk arrives, the tool invocation moves to `state: 'approval-requested'`.
 
-## The `addToolApprovalResponse` adapter method
+## Implementing approval responses
 
 Implement `addToolApprovalResponse` on your adapter to send the user's decision to the backend:
 
@@ -73,7 +73,7 @@ async addToolApprovalResponse({ id, approved, reason }) {
 },
 ```
 
-## Approve/deny flow in the UI
+## Responding to approval requests in the UI
 
 Use `useChat()` to call `addToolApprovalResponse` from your component:
 
@@ -94,9 +94,11 @@ await addToolApprovalResponse({
 });
 ```
 
-After responding, the tool invocation moves to `state: 'approval-responded'`, and the stream continues. If approved, the tool proceeds to execution and eventually reaches `output-available`. If denied, the tool moves to `output-denied`.
+After responding, the tool invocation moves to `state: 'approval-responded'`, and the stream continues.
+If approved, the tool proceeds to execution and eventually reaches `output-available`.
+If denied, the tool moves to `output-denied`.
 
-## `ChatConfirmation` UI component
+## Prompting the user for confirmation
 
 `ChatConfirmation` renders a prominent warning card with a message and two action buttons for human-in-the-loop checkpoints:
 
@@ -126,7 +128,8 @@ Use `confirmLabel` and `cancelLabel` to tailor the button text to the action:
 
 ### Connecting to the adapter
 
-Hold the card visibility in `React.useState`. Show the card when the agent triggers a confirmation step, and hide it once the user responds:
+Hold the card visibility in `React.useState`.
+Show the card when the agent triggers a confirmation step, and hide it once the user responds:
 
 ```tsx
 const [pendingConfirmation, setPendingConfirmation] = React.useState(false);
@@ -163,7 +166,8 @@ const adapter = React.useMemo(
 
 ## Relationship to tool-call approval
 
-The built-in tool part `approval-requested` state handles the narrow case of approving a specific tool call — it renders inside the collapsible tool widget. `ChatConfirmation` is a broader, more prominent pattern for any "human-in-the-loop" checkpoint that does not require a structured tool invocation.
+The built-in tool part `approval-requested` state handles the narrow case of approving a specific tool call—it renders inside the collapsible tool widget.
+`ChatConfirmation` is a broader, more prominent pattern for any human-in-the-loop checkpoint that does not require a structured tool invocation.
 
 Use the stream-based `tool-approval-request` when:
 
@@ -219,7 +223,7 @@ const renderers: ChatPartRendererMap = {
 
 ## See also
 
-- [Tool Calling](/x/react-chat/ai-and-agents/tool-calling/) for the full tool invocation lifecycle and chunk protocol.
+- [Tool calling](/x/react-chat/ai-and-agents/tool-calling/) for the full tool invocation lifecycle and chunk protocol.
 - [Adapter](/x/react-chat/backend/adapters/) for the `addToolApprovalResponse()` method reference.
 - [Streaming](/x/react-chat/behavior/streaming/) for the `tool-approval-request` chunk type.
 - [Reasoning](/x/react-chat/ai-and-agents/reasoning/) for displaying LLM thinking alongside tool calls.
