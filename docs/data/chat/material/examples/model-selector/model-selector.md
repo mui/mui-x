@@ -7,18 +7,16 @@ githubLabel: 'scope: chat'
 
 # Chat - Model selector
 
-<p class="description">Add a model picker to the conversation header using the <code>conversationHeaderActions</code> slot.</p>
+<p class="description">Let users switch between AI models from the conversation header.</p>
 
-This demo shows how to place a MUI `Select` inside the conversation header so users can switch between AI models.
-No new component is needed — drop any MUI control into `slots.conversationHeaderActions`.
+The demo below shows how to place a Material UI `Select` inside the conversation header so users can switch between AI models.
+No new component is needed—drop any Material UI control into `slots.conversationHeaderActions`.
 
-- `slots.conversationHeaderActions` accepting a custom component that renders a `Select`
-- Controlled model state owned by the selector component
-- The `Select` placed inline in the header via `marginInlineStart: 'auto'` (applied automatically by `ChatConversationHeaderActions`)
+The demo below shows a `Select` mounted in the `conversationHeaderActions` slot, with model state owned by the selector component:
 
 {{"demo": "ModelSelector.js", "bg": "inline"}}
 
-## The pattern
+## Mounting the model selector
 
 ```tsx
 function MyModelSelector() {
@@ -31,13 +29,13 @@ function MyModelSelector() {
   );
 }
 
-<ChatBox slots={{ conversationHeaderActions: MyModelSelector }} />;
+<ChatBox slots={{ conversation: { headerActions: MyModelSelector } }} />;
 ```
 
 ## Passing the model to the adapter
 
 The demo above keeps model state inside the selector.
-To also pass the selected model to `adapter.sendMessage`, hoist state up to the parent and construct the adapter with `React.useMemo`:
+To pass the selected model to `adapter.sendMessage`, hoist state to the parent and construct the adapter with `React.useMemo`:
 
 ```tsx
 export default function App() {
@@ -57,7 +55,7 @@ export default function App() {
     [model],
   );
 
-  // Stable reference — defined outside or memoized to avoid remounts
+  // Stable reference—defined outside or memoized to avoid remounts
   const HeaderActions = React.useMemo(
     () =>
       function ModelSelector() {
@@ -78,7 +76,7 @@ export default function App() {
   return (
     <ChatBox
       adapter={adapter}
-      slots={{ conversationHeaderActions: HeaderActions }}
+      slots={{ conversation: { headerActions: HeaderActions } }}
     />
   );
 }
@@ -86,15 +84,15 @@ export default function App() {
 
 ## Implementation notes
 
-- `ChatConversationHeaderActions` already applies `marginInlineStart: 'auto'` so the selector floats to the right automatically.
+- `ChatConversationHeaderActions` applies `marginInlineStart: 'auto'` so the selector aligns to the end of the header.
 - Define the slot component **outside** the render function, or stabilize it with `React.useMemo`, to avoid remounting the header on every render.
 - Use `size="small"` on `Select` to match the default header height.
 
 ## See also
 
-- [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for replacing deeper subcomponents
-- [Customization](/x/react-chat/material/customization/) for the full slot key reference
+- See [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for details on replacing deeper subcomponents.
+- See [Customization](/x/react-chat/material/customization/) for the full slot key reference.
 
 ## API
 
-- [ChatRoot](/x/api/chat/chat-root/)
+- [`ChatRoot`](/x/api/chat/chat-root/)

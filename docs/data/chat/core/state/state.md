@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - State and store
 
-<p class="description">Configure the runtime via <code>ChatProvider</code> props, choose controlled or uncontrolled state, and explore the normalized store.</p>
+<p class="description">Manage chat state with controlled and uncontrolled props on <code>ChatProvider</code> and a normalized internal store.</p>
 
 `ChatProvider` is the single entry point for the core runtime.
 It creates the chat store, wires the adapter, and makes hooks and selectors available to every descendant component.
@@ -16,14 +16,14 @@ The following demo shows controlled state in action:
 
 {{"demo": "../examples/controlled-state/ControlledStateHeadlessChat.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
-## `ChatProvider` props
+## Configuring the runtime
 
 ### Required
 
 | Prop       | Type                  | Description           |
 | :--------- | :-------------------- | :-------------------- |
 | `adapter`  | `ChatAdapter<Cursor>` | The transport adapter |
-| `children` | `React.ReactNode`     | Your UI tree          |
+| `children` | `React.ReactNode`     | The UI tree           |
 
 ### Controlled and uncontrolled state
 
@@ -31,7 +31,8 @@ Each public state model supports both controlled and uncontrolled modes.
 Use `default*` props to let the runtime own the value, or pass the value directly to control it from React state.
 
 :::info
-Start with `initial*` (uncontrolled) props during prototyping, then switch to controlled props when you need to sync with external state. You can switch modes at any time without changing the runtime model.
+Start with `initial*` (uncontrolled) props during prototyping, then switch to controlled props to sync with external state.
+You can switch modes at any time without changing the runtime model.
 :::
 
 | Model               | Controlled prop        | Default prop                  | Change callback              |
@@ -78,7 +79,7 @@ The runtime manages the state internally and feeds it to hooks automatically.
 
 ### Move to controlled
 
-When you need to own the data externally — for example, to sync with a global store or persist across navigation — pass the state directly:
+When you need to own the data externally—for example, to sync with a global store or persist across navigation—pass the state directly:
 
 ```tsx
 const [messages, setMessages] = React.useState<ChatMessage[]>([]);
@@ -95,7 +96,7 @@ const [activeId, setActiveId] = React.useState<string | undefined>('support');
 </ChatProvider>;
 ```
 
-The runtime still streams, normalizes, and derives selectors — you just own the source of truth.
+The runtime still streams, normalizes, and derives selectors—you own the source of truth.
 
 You can switch from uncontrolled to controlled at any time without changing the runtime model.
 
@@ -103,24 +104,24 @@ You can switch from uncontrolled to controlled at any time without changing the 
 
 The store keeps data in a normalized shape for efficient streaming and updates:
 
-| Internal field                | Type                                      | Description                                  |
-| :---------------------------- | :---------------------------------------- | :------------------------------------------- |
-| `messageIds`                  | `string[]`                                | Ordered message IDs                          |
-| `messagesById`                | `Record<string, ChatMessage>`             | Message records by ID                        |
-| `conversationIds`             | `string[]`                                | Ordered conversation IDs                     |
-| `conversationsById`           | `Record<string, ChatConversation>`        | Conversation records by ID                   |
-| `activeConversationId`        | `string \| undefined`                     | Active conversation                          |
-| `typingByConversation`        | `Record<string, Record<string, boolean>>` | Typing state per conversation per user       |
-| `isStreaming`                 | `boolean`                                 | Whether a stream is active                   |
-| `hasMoreHistory`              | `boolean`                                 | Whether more history is available            |
-| `historyCursor`               | `Cursor \| undefined`                     | Pagination cursor for history loading        |
-| `composerValue`               | `string`                                  | Current draft text                           |
-| `composerIsComposing`         | `boolean`                                 | Whether an IME composition session is active |
-| `composerAttachments`         | `ChatDraftAttachment[]`                   | File attachments in the draft                |
-| `error`                       | `ChatError \| null`                       | Current error state                          |
-| `activeStreamAbortController` | `AbortController \| null`                 | Controller for aborting the active stream    |
+| Internal field                | Type                                      | Description                                  |                                           |
+| :---------------------------- | :---------------------------------------- | :------------------------------------------- | :---------------------------------------- |
+| `messageIds`                  | `string[]`                                | Ordered message IDs                          |                                           |
+| `messagesById`                | `Record<string, ChatMessage>`             | Message records by ID                        |                                           |
+| `conversationIds`             | `string[]`                                | Ordered conversation IDs                     |                                           |
+| `conversationsById`           | `Record<string, ChatConversation>`        | Conversation records by ID                   |                                           |
+| `activeConversationId`        | `string \                                 | undefined`                                   | Active conversation                       |
+| `typingByConversation`        | `Record<string, Record<string, boolean>>` | Typing state per conversation per user       |                                           |
+| `isStreaming`                 | `boolean`                                 | Whether a stream is active                   |                                           |
+| `hasMoreHistory`              | `boolean`                                 | Whether more history is available            |                                           |
+| `historyCursor`               | `Cursor \                                 | undefined`                                   | Pagination cursor for history loading     |
+| `composerValue`               | `string`                                  | Current draft text                           |                                           |
+| `composerIsComposing`         | `boolean`                                 | Whether an IME composition session is active |                                           |
+| `composerAttachments`         | `ChatDraftAttachment[]`                   | File attachments in the draft                |                                           |
+| `error`                       | `ChatError \                              | null`                                        | Current error state                       |
+| `activeStreamAbortController` | `AbortController \                        | null`                                        | Controller for aborting the active stream |
 
-This normalization is why streaming updates are efficient — updating one message does not require rebuilding the entire thread array.
+This normalization is why streaming updates are efficient—updating one message does not require rebuilding the entire thread array.
 
 ## Error model
 
@@ -150,7 +151,7 @@ Errors surface through:
 ### `onToolCall`
 
 Fires when a tool invocation state changes during streaming.
-Use it for side effects outside the message list — logging, analytics, or triggering external workflows.
+Use it for side effects outside the message list—logging, analytics, or triggering external workflows.
 
 ```ts
 interface ChatOnToolCallPayload {
@@ -178,7 +179,7 @@ interface ChatOnFinishPayload {
 Fires when a `data-*` chunk arrives.
 Use it for transient data that should trigger app-level side effects without being persisted in the message.
 
-## Part renderer registration
+## Registering part renderers
 
 Register custom renderers for message part types through the `partRenderers` prop:
 
@@ -194,7 +195,7 @@ const renderers: ChatPartRendererMap = {
 
 Registered renderers are available through `useChatPartRenderer(partType)` inside any descendant component.
 
-## Custom store class
+## Providing a custom store class
 
 For advanced use cases, pass a custom store class via the `storeClass` prop.
 The class must satisfy `ChatStoreConstructor<Cursor>`:

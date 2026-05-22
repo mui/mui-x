@@ -1,24 +1,24 @@
 ---
 productId: x-chat
-title: Slots & Composition
+title: Slots and composition
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatBox
 ---
 
-# Chat - Slots & Composition
+# Chat - Slots and composition
 
-<p class="description">Replace individual subcomponents inside ChatBox with your own implementations using the <code>slots</code> and <code>slotProps</code> API.</p>
+<p class="description">Swap individual <code>ChatBox</code> subcomponents using the <code>slots</code> and <code>slotProps</code> APIs.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-`ChatBox` composes many themed subcomponents internally — message bubbles, the composer, the conversation list, date dividers, and more.
+`ChatBox` composes many themed subcomponents internally—message bubbles, the composer, the conversation list, date dividers, and more.
 The `slots` prop lets you swap any of them with your own component, while `slotProps` passes extra props to those components without replacing them.
 
-## Basic replacement
+## Replacing a slot
 
 Pass a custom component to a named slot.
-Your component receives the same props that the default component would receive:
+The custom component receives the same props as the default:
 
 ```tsx
 const CustomMessageContent = React.forwardRef(
@@ -33,7 +33,7 @@ const CustomMessageContent = React.forwardRef(
   },
 );
 
-<ChatBox slots={{ messageContent: CustomMessageContent }} />;
+<ChatBox slots={{ message: { content: CustomMessageContent } }} />;
 ```
 
 ## Passing extra props with `slotProps`
@@ -43,14 +43,18 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 ```tsx
 <ChatBox
   slotProps={{
-    conversationList: { 'aria-label': 'Chat threads' },
-    composerInput: { placeholder: 'Ask anything...' },
-    composerSendButton: { sx: { borderRadius: 6 } },
+    conversation: {
+      list: { 'aria-label': 'Chat threads' },
+    },
+    composer: {
+      input: { placeholder: 'Ask anything...' },
+      send: { sx: { borderRadius: 6 } },
+    },
   }}
 />
 ```
 
-## Complete slot reference
+## Slot reference
 
 ### Layout slots
 
@@ -61,51 +65,63 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 | `conversationsPane` | `div`             | `<div>` | Conversations sidebar container            |
 | `threadPane`        | `div`             | `<div>` | Thread (message list + composer) container |
 
-### Conversation slots
+### Conversation slots (`conversation.*`)
 
-| Slot name                   | Default component               | Element    | Description                         |
-| :-------------------------- | :------------------------------ | :--------- | :---------------------------------- |
-| `conversationList`          | `ChatConversationList`          | `<div>`    | Conversation list                   |
-| `conversationHeader`        | `ChatConversationHeader`        | `<header>` | Header bar above the message list   |
-| `conversationTitle`         | `ChatConversationTitle`         | `<div>`    | Conversation name                   |
-| `conversationSubtitle`      | `ChatConversationSubtitle`      | `<div>`    | Secondary line (participants, etc.) |
-| `conversationHeaderActions` | `ChatConversationHeaderActions` | `<div>`    | Action buttons in the header        |
+| Slot name                     | Default component               | Element    | Description                         |
+| :---------------------------- | :------------------------------ | :--------- | :---------------------------------- |
+| `conversation.root`           | `ChatConversation`              | `<div>`    | Thread wrapper element              |
+| `conversation.list`           | `ChatConversationList`          | `<div>`    | Conversation list                   |
+| `conversation.header`         | `ChatConversationHeader`        | `<header>` | Header bar above the message list   |
+| `conversation.title`          | `ChatConversationTitle`         | `<div>`    | Conversation name                   |
+| `conversation.subtitle`       | `ChatConversationSubtitle`      | `<div>`    | Secondary line (participants, etc.) |
+| `conversation.headerActions`  | `ChatConversationHeaderActions` | `<div>`    | Action buttons in the header        |
 
-### Message list slots
+### Messages list slots (`messagesList.*`)
 
-| Slot name        | Default component    | Element | Description                   |
-| :--------------- | :------------------- | :------ | :---------------------------- |
-| `messageList`    | `ChatMessageList`    | `<div>` | Scrollable message container  |
-| `messageRoot`    | `ChatMessage`        | `<div>` | Individual message row        |
-| `messageAvatar`  | `ChatMessageAvatar`  | `<div>` | Author avatar                 |
-| `messageContent` | `ChatMessageContent` | `<div>` | Message bubble                |
-| `messageMeta`    | `ChatMessageMeta`    | `<div>` | Timestamp and delivery status |
-| `messageActions` | `ChatMessageActions` | `<div>` | Hover action menu             |
-| `messageGroup`   | `ChatMessageGroup`   | `<div>` | Same-author message group     |
-| `dateDivider`    | `ChatDateDivider`    | `<div>` | Date separator between groups |
+| Slot name                   | Default component  | Element | Description                   |
+| :-------------------------- | :----------------- | :------ | :---------------------------- |
+| `messagesList.root`         | `ChatMessageList`  | `<div>` | Scrollable message container  |
+| `messagesList.group`        | `ChatMessageGroup` | `<div>` | Same-author message group     |
+| `messagesList.dateDivider`  | `ChatDateDivider`  | `<div>` | Date separator between groups |
+| `messagesList.unreadMarker` | `ChatUnreadMarker` | `<div>` | "New messages" marker         |
 
-### Composer slots
+### Per-message slots (`message.*`)
 
-| Slot name              | Default component          | Element      | Description             |
-| :--------------------- | :------------------------- | :----------- | :---------------------- |
-| `composerRoot`         | `ChatComposer`             | `<form>`     | Composer container      |
-| `composerInput`        | `ChatComposerTextArea`     | `<textarea>` | Auto-resizing text area |
-| `composerSendButton`   | `ChatComposerSendButton`   | `<button>`   | Submit button           |
-| `composerAttachButton` | `ChatComposerAttachButton` | `<button>`   | File attach trigger     |
-| `composerToolbar`      | `ChatComposerToolbar`      | `<div>`      | Button row              |
-| `composerHelperText`   | `ChatComposerHelperText`   | `<div>`      | Disclaimer or hint      |
+| Slot name              | Default component       | Element | Description                                  |
+| :--------------------- | :---------------------- | :------ | :------------------------------------------- |
+| `message.root`         | `ChatMessage`           | `<div>` | Individual message row                       |
+| `message.avatar`       | `ChatMessageAvatar`     | `<div>` | Author avatar (pass `null` to hide)          |
+| `message.content`      | `ChatMessageContent`    | `<div>` | Message bubble                               |
+| `message.meta`         | `ChatMessageMeta`       | `<div>` | External timestamp (compact variant)         |
+| `message.inlineMeta`   | `ChatMessageInlineMeta` | `<div>` | Inline timestamp (default variant)           |
+| `message.error`        | `ChatMessageError`      | `<div>` | Error card shown when message status is error|
+| `message.actions`      | `ChatMessageActions`    | `<div>` | Hover action menu (pass `null` to hide)      |
+| `message.authorName`   | styled `div`            | `<div>` | Author name label (pass `null` to hide)      |
 
-### Indicator slots
+### Composer slots (`composer.*`)
+
+| Slot name                | Default component            | Element      | Description             |
+| :----------------------- | :--------------------------- | :----------- | :---------------------- |
+| `composer.root`          | `ChatComposer`               | `<form>`     | Composer container      |
+| `composer.input`         | `ChatComposerTextArea`       | `<textarea>` | Auto-resizing text area |
+| `composer.send`          | `ChatComposerSendButton`     | `<button>`   | Submit button           |
+| `composer.attach`        | `ChatComposerAttachButton`   | `<button>`   | File attach trigger     |
+| `composer.attachmentList`| `ChatComposerAttachmentList` | `<div>`      | Selected file pills     |
+| `composer.toolbar`       | `ChatComposerToolbar`        | `<div>`      | Button row              |
+| `composer.helperText`    | `ChatComposerHelperText`     | `<div>`      | Disclaimer or hint      |
+
+### Indicator slots (top-level)
 
 | Slot name         | Default component              | Element    | Description                            |
 | :---------------- | :----------------------------- | :--------- | :------------------------------------- |
 | `typingIndicator` | `ChatTypingIndicator`          | `<div>`    | Animated dots while assistant responds |
-| `unreadMarker`    | `ChatUnreadMarker`             | `<div>`    | "New messages" marker                  |
 | `scrollToBottom`  | `ChatScrollToBottomAffordance` | `<button>` | Floating scroll-to-bottom button       |
 | `suggestions`     | `ChatSuggestions`              | `<div>`    | Prompt suggestion chips                |
+| `emptyState`      | _none_                         | `<div>`    | Custom empty-thread view               |
 
 :::info
-The `typingIndicator`, `unreadMarker`, and `messageActions` slots are defined in the type interface but are not currently consumed by `ChatBox`'s internal composition. To customize these, use the standalone components directly in a custom layout with `ChatProvider`.
+The `typingIndicator` slot is defined in the type interface but is not yet consumed by `ChatBox`'s internal composition.
+To customize it, use the standalone components in a custom layout with `ChatProvider`.
 :::
 
 ## Hiding a slot
@@ -114,16 +130,17 @@ Return `null` from a slot to remove it entirely, or use the `features` prop for 
 
 {{"demo": "FeatureFlags.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-## Feature flags and slot rendering
+## Interaction with the `features` prop
 
-When a feature flag is set to `false`, the corresponding slot is **not rendered at all** — even if you provide a custom component via `slots`. The feature flag takes precedence:
+When a feature flag is set to `false`, the corresponding slot is **not rendered at all**—even if you provide a custom component via `slots`.
+The feature flag takes precedence:
 
 ```tsx
 {/* The custom button does not render because the feature is disabled */}
 <ChatBox
   adapter={adapter}
   features={{ attachments: false }}
-  slots={{ composerAttachButton: MyCustomButton }}  {/* ignored */}
+  slots={{ composer: { attach: MyCustomButton } }}  {/* ignored */}
 />
 ```
 
@@ -133,6 +150,7 @@ The `autoScroll` feature flag controls scroll behavior rather than slot visibili
 <ChatBox
   adapter={adapter}
   features={{
+    conversationList: true, // opt into the built-in sidebar / drawer
     autoScroll: { buffer: 300 }, // Custom threshold (default: 150px)
     // autoScroll: false,        // Disable auto-scrolling entirely
   }}
@@ -149,27 +167,16 @@ To conditionally show a custom component, keep the feature flag enabled and hand
 | `layout`               | `SlotComponentProps<'div'>`                  | Layout div              |
 | `conversationsPane`    | `SlotComponentProps<'div'>`                  | Conversations pane div  |
 | `threadPane`           | `SlotComponentProps<'div'>`                  | Thread pane div         |
-| `conversationList`     | `Partial<ChatConversationListProps>`         | Conversation list       |
-| `conversationHeader`   | `Partial<ChatConversationHeaderProps>`       | Thread header           |
-| `conversationTitle`    | `Partial<ChatConversationTitleProps>`        | Thread title            |
-| `conversationSubtitle` | `Partial<ChatConversationSubtitleProps>`     | Thread subtitle         |
-| `messageList`          | `Partial<ChatMessageListProps>`              | Message list            |
-| `messageRoot`          | `Partial<ChatMessageProps>`                  | Each message container  |
-| `messageAvatar`        | `Partial<ChatMessageAvatarProps>`            | Message avatar          |
-| `messageContent`       | `Partial<ChatMessageContentProps>`           | Message content/bubble  |
-| `messageMeta`          | `Partial<ChatMessageMetaProps>`              | Message timestamp       |
-| `messageActions`       | `Partial<ChatMessageActionsProps>`           | Message action menu     |
-| `messageGroup`         | `Partial<ChatMessageGroupProps>`             | Message group container |
-| `dateDivider`          | `Partial<ChatDateDividerProps>`              | Date separator          |
-| `composerRoot`         | `Partial<ChatComposerProps>`                 | Composer form root      |
-| `composerInput`        | `Partial<ChatComposerTextAreaProps>`         | Composer textarea       |
-| `composerSendButton`   | `Partial<ChatComposerSendButtonProps>`       | Send button             |
-| `composerAttachButton` | `Partial<ChatComposerAttachButtonProps>`     | Attach button           |
-| `composerToolbar`      | `Partial<ChatComposerToolbarProps>`          | Toolbar container       |
-| `composerHelperText`   | `Partial<ChatComposerHelperTextProps>`       | Helper text below input |
+| `conversation`         | `ChatBoxConversationSlotProps`               | Conversation family     |
+| `messagesList`         | `ChatBoxMessagesListSlotProps`               | Messages list family    |
+| `message`              | `ChatBoxMessageSlotProps`                    | Per-message family      |
+| `composer`             | `ChatBoxComposerSlotProps`                   | Composer family         |
 | `typingIndicator`      | `Partial<ChatTypingIndicatorProps>`          | Typing indicator        |
-| `unreadMarker`         | `Partial<ChatUnreadMarkerProps>`             | Unread marker           |
 | `scrollToBottom`       | `Partial<ChatScrollToBottomAffordanceProps>` | Scroll to bottom button |
+| `suggestions`          | `Partial<ChatSuggestionsProps>`              | Suggestions component   |
+| `emptyState`           | `SlotComponentProps<'div'>`                  | Custom empty-thread div |
+
+Each nested family object mirrors the same shape as the matching `slots.*` namespace — pass leaf props like `slotProps.message.avatar`, `slotProps.composer.input`, etc.
 
 ## CSS classes
 
@@ -190,22 +197,26 @@ Import the slot types for type-safe custom components:
 import type { ChatBoxSlots, ChatBoxSlotProps } from '@mui/x-chat';
 
 // Your custom slot component receives the same props as the default
-const MyMessageContent: ChatBoxSlots['messageContent'] = (props) => {
+const MyMessageContent: NonNullable<NonNullable<ChatBoxSlots['message']>['content']> = (props) => {
   return <div className="custom-bubble" {...props} />;
 };
 
 // Type-safe slotProps
 const mySlotProps: ChatBoxSlotProps = {
-  composerInput: { placeholder: 'Type here...' },
-  messageList: { sx: { p: 2 } },
+  composer: {
+    input: { placeholder: 'Type here...' },
+  },
+  messagesList: {
+    root: { sx: { p: 2 } },
+  },
 };
 ```
 
 ## Combining slots with theme overrides
 
 Slots replace the component entirely, while theme `styleOverrides` adjust the default component's styles.
-You can use both together — for example, swap the message content component via a slot while applying global border-radius tweaks through the theme.
+You can use both together—for example, swap the message content component via a slot while applying global border-radius tweaks through the theme.
 
 ## See also
 
-- [Styling](/x/react-chat/customization/styling/) for `sx` prop, theme overrides, and dark mode.
+- See [Styling](/x/react-chat/customization/styling/) for details on the `sx` prop, theme overrides, and dark mode.

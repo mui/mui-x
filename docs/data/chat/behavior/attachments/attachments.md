@@ -8,12 +8,20 @@ components: ChatComposerAttachButton
 
 # Chat - Attachments
 
-<p class="description">Enable file attachments in the composer, with support for MIME type filtering, file size limits, upload progress tracking, and rejection callbacks.</p>
+<p class="description">Let users attach files to chat messages with MIME-type, size, and count validation.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The attach button opens the browser file picker.
 Selected files are queued as draft attachments and previewed in the composer area before the message is sent.
+
+## Playground
+
+The demos below let you tune the attach button and the pending-attachment list:
+
+{{"demo": "ChatComposerAttachButtonPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
+{{"demo": "ChatComposerAttachmentListPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Enabling attachments
 
@@ -26,7 +34,7 @@ Hide the attach button entirely by setting the `attachments` feature flag to `fa
 
 {{"demo": "../../material/composer/ComposerHiddenAttachButton.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-## Attachment validation
+## Validating attachments
 
 Pass a configuration object to the `attachments` feature flag to control which files are accepted:
 
@@ -48,7 +56,7 @@ Pass a configuration object to the `attachments` feature flag to control which f
 />
 ```
 
-### `ChatAttachmentsConfig`
+### Attachments configuration reference
 
 | Property             | Type                                              | Default     | Description                                                                                                                                                                |
 | :------------------- | :------------------------------------------------ | :---------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -61,12 +69,12 @@ Pass a configuration object to the `attachments` feature flag to control which f
 
 When a file is rejected, the `ChatAttachmentRejection` object contains:
 
-| Property | Type                                         | Description               |
-| :------- | :------------------------------------------- | :------------------------ |
-| `file`   | `File`                                       | The browser File object   |
-| `reason` | `'mime-type' \| 'file-size' \| 'file-count'` | Why the file was rejected |
+| Property | Type           | Description             |               |                           |
+| :------- | :------------- | :---------------------- | :------------ | :------------------------ |
+| `file`   | `File`         | The browser File object |               |                           |
+| `reason` | `'mime-type' \ | 'file-size' \           | 'file-count'` | Why the file was rejected |
 
-## The `ChatDraftAttachment` lifecycle
+## Draft attachment lifecycle
 
 Each file goes through a status lifecycle as it moves from selection to submission:
 
@@ -83,17 +91,17 @@ queued  -->  uploading  -->  uploaded  -->  (sent with message)
 | `uploaded`  | Upload completed. The file is ready to be sent with the message.     |
 | `error`     | Upload failed. The attachment can be removed or retried by the user. |
 
-### `ChatDraftAttachment` type
+### Draft attachment type reference
 
-| Property     | Type                                               | Description                                  |
-| :----------- | :------------------------------------------------- | :------------------------------------------- |
-| `localId`    | `string`                                           | Unique identifier for this draft attachment  |
-| `file`       | `File`                                             | The browser File object                      |
-| `previewUrl` | `string \| undefined`                              | Object URL for image previews (auto-created) |
-| `status`     | `'queued' \| 'uploading' \| 'uploaded' \| 'error'` | Upload lifecycle status                      |
-| `progress`   | `number \| undefined`                              | Upload progress (0--100)                     |
+| Property     | Type        | Description                                 |                                              |          |                         |
+| :----------- | :---------- | :------------------------------------------ | :------------------------------------------- | :------- | :---------------------- |
+| `localId`    | `string`    | Unique identifier for this draft attachment |                                              |          |                         |
+| `file`       | `File`      | The browser File object                     |                                              |          |                         |
+| `previewUrl` | `string \   | undefined`                                  | Object URL for image previews (auto-created) |          |                         |
+| `status`     | `'queued' \ | 'uploading' \                               | 'uploaded' \                                 | 'error'` | Upload lifecycle status |
+| `progress`   | `number \   | undefined`                                  | Upload progress (0--100)                     |          |                         |
 
-## Programmatic attachment management
+## Managing attachments programmatically
 
 The `useChatComposer()` hook provides direct access to attachment state:
 
@@ -128,9 +136,9 @@ function AttachmentManager() {
 | `removeAttachment` | `(localId: string) => void` | Remove a queued attachment  |
 | `clear`            | `() => void`                | Reset value and attachments |
 
-## Attachments in the adapter
+## Sending attachments through the adapter
 
-When the user submits a message with attachments, the adapter's `sendMessage` receives them in the input:
+When the user submits a message with attachments, the adapter's `sendMessage()` method receives them in the input:
 
 ```tsx
 async sendMessage({ message, attachments, signal }) {
@@ -151,5 +159,5 @@ async sendMessage({ message, attachments, signal }) {
 
 ## See also
 
-- [Composer](/x/react-chat/basics/composer/) for the full composer component reference.
-- [Adapter](/x/react-chat/backend/adapters/) for how attachments flow through `sendMessage`.
+- [Composer](/x/react-chat/basics/composer/) for the full Composer reference.
+- [Adapter](/x/react-chat/backend/adapters/) for details on how attachments flow through `sendMessage()`.

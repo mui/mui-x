@@ -54,7 +54,11 @@ export default function ThemeAndSlotCombination() {
         initialActiveConversationId={minimalConversation.id}
         initialConversations={[minimalConversation]}
         initialMessages={minimalMessages}
-        slots={{ messageAvatar: BotAvatar }}
+        slots={{
+          message: {
+            avatar: BotAvatar,
+          },
+        }}
         sx={{
           height: 500,
           border: '1px solid',

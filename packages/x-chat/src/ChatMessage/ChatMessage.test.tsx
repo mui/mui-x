@@ -112,13 +112,13 @@ describe('ChatMessage', () => {
     expect(document.querySelector('.MuiChatMessage-root')).not.toBe(null);
   });
 
-  it('forwards custom className to the message root via slotProps.messageRoot', () => {
+  it('forwards custom className to the message root via slotProps.message', () => {
     render(
       <ChatBox
         adapter={createAdapter()}
         initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] }]}
         slotProps={{
-          messageRoot: { className: 'my-custom-class' },
+          message: { root: { className: 'my-custom-class' } },
         }}
       >
         {null}
@@ -126,5 +126,50 @@ describe('ChatMessage', () => {
     );
 
     expect(document.querySelector('.my-custom-class')).not.toBe(null);
+  });
+
+  it("treats role:'user' messages from non-current users as outer messages (Alice case)", () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        currentUser={{ id: 'me', displayName: 'Me' }}
+        members={[
+          { id: 'me', displayName: 'Me' },
+          { id: 'alice', displayName: 'Alice Chen' },
+          { id: 'agent', displayName: 'MUI Assistant' },
+        ]}
+        initialMessages={[
+          {
+            id: 'm-alice',
+            role: 'user',
+            author: { id: 'alice' },
+            parts: [{ type: 'text', text: 'Hi from Alice' }],
+          },
+          {
+            id: 'm-me',
+            role: 'user',
+            author: { id: 'me' },
+            parts: [{ type: 'text', text: 'Hi from me' }],
+          },
+        ]}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    const aliceRoot = document.querySelector(
+      '.MuiChatMessage-root[aria-label="Message from Alice Chen"]',
+    );
+    const meRoot = document.querySelector('.MuiChatMessage-root[aria-label="Message from Me"]');
+
+    expect(aliceRoot).not.toBe(null);
+    expect(meRoot).not.toBe(null);
+
+    // Alice's role is 'user' — the role hook is preserved for downstream styling.
+    expect(aliceRoot!.classList.contains('MuiChatMessage-roleUser')).toBe(true);
+    // …but Alice is NOT the current user, so the bubble must NOT be marked as own.
+    expect(aliceRoot!.getAttribute('data-is-own-message')).toBe(null);
+    // The current user's own user-role message IS marked as own.
+    expect(meRoot!.getAttribute('data-is-own-message')).toBe('true');
   });
 });

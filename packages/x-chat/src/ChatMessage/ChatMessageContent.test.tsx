@@ -72,10 +72,10 @@ describe('ChatMessageContent', () => {
       // Reasoning renders a <details> with a <summary>
       const details = document.querySelector('details');
       expect(details).not.toBe(null);
-      // Summary should contain "Reasoning" (default locale)
+      // Summary should contain "Thoughts" (default locale)
       const summary = details!.querySelector('summary');
       expect(summary).not.toBe(null);
-      expect(summary!.textContent).toContain('Reasoning');
+      expect(summary!.textContent).toContain('Thoughts');
     });
 
     it('is open when streaming', () => {
@@ -160,7 +160,7 @@ describe('ChatMessageContent', () => {
       expect(screen.getByText('Deny')).not.toBe(null);
     });
 
-    it('tool icon shows first letter of toolName', () => {
+    it('renders a default tool icon SVG in the header', () => {
       renderWithMessage({
         id: 'm1',
         role: 'assistant',
@@ -176,8 +176,60 @@ describe('ChatMessageContent', () => {
           },
         ],
       });
-      // The icon component renders the first letter uppercased
-      expect(screen.getByText('S')).not.toBe(null);
+      // The default icon is now an inline SVG inside the styled icon span,
+      // sitting in the summary header alongside the tool title.
+      const summary = document.querySelector('summary');
+      expect(summary).not.toBe(null);
+      expect(summary!.querySelector('svg')).not.toBe(null);
+    });
+
+    it('renders Input and Output as independently collapsible sections', () => {
+      renderWithMessage({
+        id: 'm1',
+        role: 'assistant',
+        parts: [
+          {
+            type: 'tool',
+            toolInvocation: {
+              toolCallId: 'tc1',
+              toolName: 'searchTool',
+              state: 'output-available',
+              input: { query: 'test' },
+              output: { result: 'found' },
+              title: 'Search Tool',
+            },
+          },
+        ],
+      });
+      // Find all <details> — root + 2 sections (input + output) = 3.
+      const allDetails = document.querySelectorAll('details');
+      expect(allDetails.length).toBe(3);
+      expect(screen.getByText('Tool called:')).not.toBe(null);
+      expect(screen.getByText('Tool result:')).not.toBe(null);
+    });
+
+    it('renders a status icon with state aria-label when output is available', () => {
+      renderWithMessage({
+        id: 'm1',
+        role: 'assistant',
+        parts: [
+          {
+            type: 'tool',
+            toolInvocation: {
+              toolCallId: 'tc1',
+              toolName: 'searchTool',
+              state: 'output-available',
+              input: {},
+              output: {},
+            },
+          },
+        ],
+      });
+      // State component is a [role="status"] element with aria-label = locale state label.
+      const status = document.querySelector('[role="status"]');
+      expect(status).not.toBe(null);
+      expect(status!.getAttribute('aria-label')).toBe('Completed');
+      expect(status!.querySelector('svg')).not.toBe(null);
     });
   });
 

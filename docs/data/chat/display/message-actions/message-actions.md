@@ -1,18 +1,25 @@
 ---
 productId: x-chat
-title: Message Actions
+title: Message actions
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 components: ChatMessageActions
 ---
 
-# Chat - Message Actions
+# Chat - Message actions
 
-<p class="description">Add hover-triggered action buttons to messages for copy, edit, delete, and custom operations.</p>
+<p class="description">Reveal per-message action buttons on hover or focus for copy, edit, delete, and custom operations.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-`ChatMessageActions` renders an action bar that appears when the user hovers over a message or focuses within it. The actions area is positioned in the message grid and transitions from hidden to visible using an opacity animation.
+`ChatMessageActions` renders an action bar that appears when the user hovers over a `ChatMessage` row or focuses within it.
+The actions area occupies the `actions` grid area of the message row and fades in via an opacity transition.
+
+## Playground
+
+Toggle action buttons, variant, and density to preview the hover-revealed toolbar:
+
+{{"demo": "ChatMessageActionsPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Import
 
@@ -32,7 +39,8 @@ The action bar is hidden by default (`opacity: 0`) and becomes visible when:
 - The user hovers over the parent `ChatMessage` row
 - Focus moves to an element inside the `ChatMessage` row (keyboard navigation)
 
-The transition uses a short opacity animation. When the user prefers reduced motion, the transition is disabled.
+The transition uses a short opacity animation.
+When the user prefers reduced motion, the transition is disabled.
 
 ```css
 /* Visibility is controlled by the parent message's hover/focus state */
@@ -56,7 +64,8 @@ ChatMessage (grid)
 
 ## Adding custom actions
 
-The `MessageActions` primitive renders a `<div>` (or custom slot element) that you populate with your own action buttons. Override the actions slot through `ChatBox`:
+`ChatMessageActions` renders a `<div>` (or custom slot element) that you populate with action buttons.
+Override the `actions` slot through `ChatBox`:
 
 {{"demo": "BasicMessageActions.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -68,7 +77,7 @@ Inside a custom actions component, use the `ownerState` prop to access the curre
 
 ## Owner state
 
-The `MessageActions` component receives the message context as owner state, which slot components can use for conditional styling:
+`ChatMessageActions` exposes the message context as owner state so slot components can style themselves conditionally:
 
 | Property    | Type                | Description                       |
 | :---------- | :------------------ | :-------------------------------- |
@@ -86,4 +95,4 @@ The `MessageActions` component receives the message context as owner state, whic
 
 ## See also
 
-- [Message Appearance](/x/react-chat/display/message-appearance/) for the overall message layout and visual presentation
+- [Message appearance](/x/react-chat/display/message-appearance/) for the overall message layout and visual presentation

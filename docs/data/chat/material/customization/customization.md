@@ -12,11 +12,11 @@ components: ChatRoot
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-The following demo shows a custom-themed chat surface:
+The demo below shows a custom-themed chat surface:
 
 {{"demo": "../examples/custom-theme/CustomTheme.js", "bg": "inline", "defaultCodeOpen": false, "hideToolbar": true}}
 
-## sx prop
+## Styling the root element with the sx prop
 
 The `sx` prop on `ChatBox` applies styles to the outermost root element.
 Use it for layout constraints such as height and width:
@@ -36,7 +36,7 @@ Use it for layout constraints such as height and width:
 
 ## Theme component overrides
 
-Use `createTheme` to apply style overrides that apply globally across your application.
+Use `createTheme()` to apply style overrides globally across the application.
 Import `'@mui/x-chat/themeAugmentation'` for TypeScript autocomplete:
 
 ```tsx
@@ -80,7 +80,7 @@ const darkTheme = createTheme({ palette: { mode: 'dark' } });
 </ThemeProvider>;
 ```
 
-## classes prop
+## Injecting custom class names
 
 Inject custom class names onto the root and layout elements using the `classes` prop:
 
@@ -104,56 +104,46 @@ Inject custom class names onto the root and layout elements using the `classes` 
 | `conversationsPane` | `MuiChatBox-conversationsPane` | Conversations sidebar pane |
 | `threadPane`        | `MuiChatBox-threadPane`        | Thread pane                |
 
-## slotProps
+## Passing props to internal subcomponents
 
-Pass props directly to any internal subcomponent using `slotProps`.
-This is useful for setting `aria-label` attributes, `sx` overrides, or other component-specific props without replacing the component:
+Pass props directly to any internal subcomponent using `slotProps`—useful for setting `aria-label` attributes, applying `sx` overrides, or supplying other component-specific props without replacing the component:
 
 ```tsx
 <ChatBox
   slotProps={{
-    conversationList: { 'aria-label': 'Chat threads' },
-    composerInput: { placeholder: 'Ask anything...' },
-    composerSendButton: { sx: { borderRadius: 6 } },
+    conversation: {
+      list: { 'aria-label': 'Chat threads' },
+    },
+    composer: {
+      input: { placeholder: 'Ask anything...' },
+      send: { sx: { borderRadius: 6 } },
+    },
   }}
 />
 ```
 
 ### Available slotProps keys
 
-| Key                    | Type                                         | Description             |
-| :--------------------- | :------------------------------------------- | :---------------------- |
-| `root`                 | `SlotComponentProps<'div'>`                  | Outermost div           |
-| `layout`               | `SlotComponentProps<'div'>`                  | Layout div              |
-| `conversationsPane`    | `SlotComponentProps<'div'>`                  | Conversations pane div  |
-| `threadPane`           | `SlotComponentProps<'div'>`                  | Thread pane div         |
-| `conversationList`     | `Partial<ChatConversationListProps>`         | Conversation list       |
-| `conversationHeader`   | `Partial<ChatConversationHeaderProps>`       | Thread header           |
-| `conversationTitle`    | `Partial<ChatConversationTitleProps>`        | Thread title            |
-| `conversationSubtitle` | `Partial<ChatConversationSubtitleProps>`     | Thread subtitle         |
-| `messageList`          | `Partial<ChatMessageListProps>`              | Message list            |
-| `messageRoot`          | `Partial<ChatMessageProps>`                  | Each message container  |
-| `messageAvatar`        | `Partial<ChatMessageAvatarProps>`            | Message avatar          |
-| `messageContent`       | `Partial<ChatMessageContentProps>`           | Message content/bubble  |
-| `messageMeta`          | `Partial<ChatMessageMetaProps>`              | Message timestamp       |
-| `messageActions`       | `Partial<ChatMessageActionsProps>`           | Message action menu     |
-| `messageGroup`         | `Partial<ChatMessageGroupProps>`             | Message group container |
-| `dateDivider`          | `Partial<ChatDateDividerProps>`              | Date separator          |
-| `composerRoot`         | `Partial<ChatComposerProps>`                 | Composer form root      |
-| `composerInput`        | `Partial<ChatComposerTextAreaProps>`         | Composer textarea       |
-| `composerSendButton`   | `Partial<ChatComposerSendButtonProps>`       | Send button             |
-| `composerAttachButton` | `Partial<ChatComposerAttachButtonProps>`     | Attach button           |
-| `composerToolbar`      | `Partial<ChatComposerToolbarProps>`          | Toolbar container       |
-| `composerHelperText`   | `Partial<ChatComposerHelperTextProps>`       | Helper text below input |
-| `typingIndicator`      | `Partial<ChatTypingIndicatorProps>`          | Typing indicator        |
-| `unreadMarker`         | `Partial<ChatUnreadMarkerProps>`             | Unread marker           |
-| `scrollToBottom`       | `Partial<ChatScrollToBottomAffordanceProps>` | Scroll to bottom button |
+| Key                 | Type                                         | Description                                                                              |
+| :------------------ | :------------------------------------------- | :--------------------------------------------------------------------------------------- |
+| `root`              | `SlotComponentProps<'div'>`                  | Outermost div                                                                            |
+| `layout`            | `SlotComponentProps<'div'>`                  | Layout div                                                                               |
+| `conversationsPane` | `SlotComponentProps<'div'>`                  | Conversations pane div                                                                   |
+| `threadPane`        | `SlotComponentProps<'div'>`                  | Thread pane div                                                                          |
+| `conversation`      | `ChatBoxConversationSlotProps`               | Conversation family (root, list, header, title, subtitle, headerInfo, headerActions)     |
+| `messagesList`      | `ChatBoxMessagesListSlotProps`               | List family (root, group, dateDivider, unreadMarker)                                     |
+| `message`           | `ChatBoxMessageSlotProps`                    | Per-message family (root, avatar, content, meta, inlineMeta, error, actions, authorName) |
+| `composer`          | `ChatBoxComposerSlotProps`                   | Composer family (root, input, send, attach, attachmentList, toolbar, helperText)         |
+| `typingIndicator`   | `Partial<ChatTypingIndicatorProps>`          | Typing indicator                                                                         |
+| `scrollToBottom`    | `Partial<ChatScrollToBottomAffordanceProps>` | Scroll to bottom button                                                                  |
+| `suggestions`       | `Partial<ChatSuggestionsProps>`              | Suggestions component                                                                    |
+| `emptyState`        | `SlotComponentProps<'div'>`                  | Custom empty-thread div                                                                  |
 
-## slots
+## Replacing subcomponents with slots
 
 Replace any subcomponent entirely using the `slots` prop.
 The replacement component must accept the same props as the default.
-See [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for a runnable demo using a `Paper`-based bubble.
+See [Slot overrides](/x/react-chat/material/examples/slot-overrides/) for details.
 
 A common pattern is to wrap the default component and override one of its inner slots:
 
@@ -170,39 +160,46 @@ const CustomMessageContent = React.forwardRef(
   },
 );
 
-<ChatBox slots={{ messageContent: CustomMessageContent }} />;
+<ChatBox slots={{ message: { content: CustomMessageContent } }} />;
 ```
 
 ### Available slots
 
-| Key                         | Default component               | Description                  |
-| :-------------------------- | :------------------------------ | :--------------------------- |
-| `root`                      | `div`                           | Outermost container          |
-| `layout`                    | `div`                           | Layout element               |
-| `conversationsPane`         | `div`                           | Conversations sidebar pane   |
-| `threadPane`                | `div`                           | Thread pane                  |
-| `conversationList`          | `ChatConversationList`          | Conversation list            |
-| `conversationHeader`        | `ChatConversationHeader`        | Thread header                |
-| `conversationTitle`         | `ChatConversationTitle`         | Thread title text            |
-| `conversationSubtitle`      | `ChatConversationSubtitle`      | Thread subtitle text         |
-| `conversationHeaderActions` | `ChatConversationHeaderActions` | Header action area           |
-| `messageList`               | `ChatMessageList`               | Virtualized message list     |
-| `messageRoot`               | `ChatMessage`                   | Each message container       |
-| `messageAvatar`             | `ChatMessageAvatar`             | Message avatar               |
-| `messageContent`            | `ChatMessageContent`            | Message content/bubble       |
-| `messageMeta`               | `ChatMessageMeta`               | Message timestamp and status |
-| `messageActions`            | `ChatMessageActions`            | Message action menu          |
-| `messageGroup`              | `ChatMessageGroup`              | Groups consecutive messages  |
-| `dateDivider`               | `ChatDateDivider`               | Date boundary separator      |
-| `composerRoot`              | `ChatComposer`                  | Composer form                |
-| `composerInput`             | `ChatComposerTextArea`          | Textarea input               |
-| `composerSendButton`        | `ChatComposerSendButton`        | Send button                  |
-| `composerAttachButton`      | `ChatComposerAttachButton`      | Attach button                |
-| `composerToolbar`           | `ChatComposerToolbar`           | Toolbar container            |
-| `composerHelperText`        | `ChatComposerHelperText`        | Helper text                  |
-| `typingIndicator`           | `ChatTypingIndicator`           | Typing indicator             |
-| `unreadMarker`              | `ChatUnreadMarker`              | Unread message marker        |
-| `scrollToBottom`            | `ChatScrollToBottomAffordance`  | Scroll to bottom affordance  |
+| Key                          | Default component               | Description                  |
+| :--------------------------- | :------------------------------ | :--------------------------- |
+| `root`                       | `div`                           | Outermost container          |
+| `layout`                     | `div`                           | Layout element               |
+| `conversationsPane`          | `div`                           | Conversations sidebar pane   |
+| `threadPane`                 | `div`                           | Thread pane                  |
+| `conversation.root`          | `ChatConversation`              | Thread wrapper               |
+| `conversation.list`          | `ChatConversationList`          | Conversation sidebar list    |
+| `conversation.header`        | `ChatConversationHeader`        | Thread header                |
+| `conversation.title`         | `ChatConversationTitle`         | Thread title text            |
+| `conversation.subtitle`      | `ChatConversationSubtitle`      | Thread subtitle text         |
+| `conversation.headerActions` | `ChatConversationHeaderActions` | Header action area           |
+| `messagesList.root`          | `ChatMessageList`               | Virtualized message list     |
+| `messagesList.group`         | `ChatMessageGroup`              | Groups consecutive messages  |
+| `messagesList.dateDivider`   | `ChatDateDivider`               | Date boundary separator      |
+| `messagesList.unreadMarker`  | `ChatUnreadMarker`              | Unread marker                |
+| `message.root`               | `ChatMessage`                   | Each message container       |
+| `message.avatar`             | `ChatMessageAvatar`             | Message avatar (`null` hides)|
+| `message.content`            | `ChatMessageContent`            | Message content/bubble       |
+| `message.meta`               | `ChatMessageMeta`               | External timestamp (compact) |
+| `message.inlineMeta`         | `ChatMessageInlineMeta`         | Inline timestamp (default)   |
+| `message.error`              | `ChatMessageError`              | Error card                   |
+| `message.actions`            | `ChatMessageActions`            | Message action menu          |
+| `message.authorName`         | styled `div`                    | Author label (`null` hides)  |
+| `composer.root`              | `ChatComposer`                  | Composer form                |
+| `composer.input`             | `ChatComposerTextArea`          | Textarea input               |
+| `composer.send`              | `ChatComposerSendButton`        | Send button                  |
+| `composer.attach`            | `ChatComposerAttachButton`      | Attach button                |
+| `composer.attachmentList`    | `ChatComposerAttachmentList`    | Selected file pills          |
+| `composer.toolbar`           | `ChatComposerToolbar`           | Toolbar container            |
+| `composer.helperText`        | `ChatComposerHelperText`        | Helper text                  |
+| `typingIndicator`            | `ChatTypingIndicator`           | Typing indicator             |
+| `scrollToBottom`             | `ChatScrollToBottomAffordance`  | Scroll to bottom affordance  |
+| `suggestions`                | `ChatSuggestions`               | Prompt suggestion chips      |
+| `emptyState`                 | _none_                          | Custom empty-thread view     |
 
 ## See also
 
@@ -210,4 +207,4 @@ const CustomMessageContent = React.forwardRef(
 
 ## API
 
-- [ChatRoot](/x/api/chat/chat-root/)
+- [`ChatRoot`](/x/api/chat/chat-root/)

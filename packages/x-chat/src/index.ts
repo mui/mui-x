@@ -5,6 +5,8 @@ export type {
   ChatBoxSlots,
   ChatBoxSlotProps,
   ChatBoxFeatures,
+  ChatBoxLayoutMode,
+  ChatBoxLayoutModeBreakpoints,
 } from './ChatBox/ChatBox.types';
 export type { ChatVariant, ChatDensity } from '@mui/x-chat-headless';
 export type {
@@ -116,6 +118,18 @@ export type { ChatDateDividerProps } from './ChatMessage/ChatDateDivider';
 export { chatMessageClasses, getChatMessageUtilityClass } from './ChatMessage/chatMessageClasses';
 export type { ChatMessageClasses, ChatMessageClassKey } from './ChatMessage/chatMessageClasses';
 
+// ─── ChatMessageError ─────────────────────────────────────────────────────────
+export { ChatMessageError } from './ChatMessageError/ChatMessageError';
+export type { ChatMessageErrorProps } from './ChatMessageError/ChatMessageError';
+export {
+  chatMessageErrorClasses,
+  getChatMessageErrorUtilityClass,
+} from './ChatMessageError/chatMessageErrorClasses';
+export type {
+  ChatMessageErrorClasses,
+  ChatMessageErrorClassKey,
+} from './ChatMessageError/chatMessageErrorClasses';
+
 // ─── ChatMessageList ──────────────────────────────────────────────────────────
 export { ChatMessageList } from './ChatMessageList/ChatMessageList';
 export type { ChatMessageListProps } from './ChatMessageList/ChatMessageList';
@@ -217,3 +231,7 @@ export type {
   ChatUnreadMarkerClasses,
   ChatUnreadMarkerClassKey,
 } from './ChatIndicators/chatUnreadMarkerClasses';
+
+// ─── Built-in adapters (re-exported for quickstart convenience) ───────────────
+export { createEchoAdapter } from '@mui/x-chat-headless';
+export type { CreateEchoAdapterOptions } from '@mui/x-chat-headless';

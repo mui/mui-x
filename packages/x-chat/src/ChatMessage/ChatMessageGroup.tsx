@@ -3,26 +3,31 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
-import {
-  MessageGroup,
-  type MessageGroupProps,
-  useChatVariant,
-  useMessage,
-} from '@mui/x-chat-headless';
+import { MessageGroup, type MessageGroupProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
-import { ChatMessage } from './ChatMessage';
-import { ChatMessageAvatar } from './ChatMessageAvatar';
-import { ChatMessageContent } from './ChatMessageContent';
-import { ChatMessageMeta } from './ChatMessageMeta';
-import { ChatMessageInlineMeta } from './ChatMessageInlineMeta';
+import { ChatMessage, type ChatMessageSlots, type ChatMessageSlotProps } from './ChatMessage';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageGroup');
 
-export interface ChatMessageGroupProps extends MessageGroupProps {
+export interface ChatMessageGroupSlots {
+  /** The styled group wrapper element. */
+  root?: React.ElementType;
+  /** Nested slot map forwarded to the inner ChatMessage. */
+  message?: Partial<ChatMessageSlots>;
+}
+
+export interface ChatMessageGroupSlotProps {
+  root?: Record<string, unknown>;
+  message?: ChatMessageSlotProps;
+}
+
+export interface ChatMessageGroupProps extends Omit<MessageGroupProps, 'slots' | 'slotProps'> {
   className?: string;
   sx?: SxProps<Theme>;
   classes?: Partial<ChatMessageClasses>;
+  slots?: ChatMessageGroupSlots;
+  slotProps?: ChatMessageGroupSlotProps;
 }
 
 const ChatMessageGroupStyled = styled('div', {
@@ -54,21 +59,24 @@ const ChatMessageGroupStyled = styled('div', {
     gap: 0,
     width: '100%',
     marginBlockStart,
+    // When the avatar slot is hidden, drop the reserved avatar size so any
+    // descendant relying on the variable (padding, author-name offset) collapses too.
+    '&.MuiChatMessage-noAvatar': {
+      '--MuiChatMessage-avatarSize': '0px',
+    },
   };
 });
 
 const ChatMessageGroupAuthorNameStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'GroupAuthorName',
-})<{ ownerState?: { authorRole?: string; variant?: string } }>(({ theme, ownerState }) => ({
+})<{ ownerState?: { isOwnMessage?: boolean; variant?: string } }>(({ theme, ownerState }) => ({
   fontSize: theme.typography.caption.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
   color: (theme.vars || theme).palette.text.secondary,
   marginBottom: 0,
   ...(ownerState?.variant === 'compact'
     ? {
-        // Compact: author name lives inside the message grid in the "authorName" area.
-        // It shares a row with the avatar. Flex to push timestamp to the right.
         gridArea: 'authorName',
         display: 'flex',
         alignItems: 'center',
@@ -78,8 +86,7 @@ const ChatMessageGroupAuthorNameStyled = styled('div', {
         color: (theme.vars || theme).palette.primary.main,
       }
     : {
-        // Default: offset by avatar width, user right-aligned
-        ...(ownerState?.authorRole === 'user'
+        ...(ownerState?.isOwnMessage
           ? {
               textAlign: 'right' as const,
               paddingInlineEnd: `calc(var(--MuiChatMessage-avatarSize) + ${theme.spacing(2)} + ${theme.spacing(0.5)})`,
@@ -89,6 +96,10 @@ const ChatMessageGroupAuthorNameStyled = styled('div', {
             }),
       }),
 }));
+
+function HiddenAuthorName() {
+  return null;
+}
 
 const ChatMessageGroupTimestampStyled = styled('span', {
   name: 'MuiChatMessage',
@@ -100,32 +111,6 @@ const ChatMessageGroupTimestampStyled = styled('span', {
   whiteSpace: 'nowrap',
   flexShrink: 0,
 }));
-
-/**
- * Default content rendered inside ChatMessageGroup when no children are provided.
- * Uses the variant-aware styled components (avatar, content bubble, meta).
- */
-function ChatMessageGroupDefaultContent({ messageId }: { messageId: string }) {
-  const variant = useChatVariant();
-  const isCompact = variant === 'compact';
-  const message = useMessage(messageId);
-  const isStreaming = message?.status === 'streaming';
-  const hasMeta =
-    Boolean(message?.createdAt) || Boolean(message?.editedAt) || Boolean(message?.status);
-  // In the default variant, meta is rendered inline inside the bubble.
-  // Skip it during streaming — there is no timestamp yet, and the streaming state
-  // is already communicated via the MuiChatMessage-streaming CSS class.
-  const afterContent =
-    !isCompact && !isStreaming && hasMeta ? <ChatMessageInlineMeta /> : undefined;
-
-  return (
-    <React.Fragment>
-      <ChatMessageAvatar />
-      <ChatMessageContent afterContent={afterContent} />
-      {isCompact && <ChatMessageMeta />}
-    </React.Fragment>
-  );
-}
 
 const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>(
   function ChatMessageGroup(inProps, ref) {
@@ -142,15 +127,38 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
     } = props;
     const classes = useChatMessageUtilityClasses(classesProp);
 
-    // When no children are provided, render the default styled message layout.
-    // This ensures ChatMessageGroup works as a standalone component with proper
-    // styling for both default and compact variants.
+    // The inner-message slot map (`slots.message`) flows through to ChatMessage.
+    // The `root` slot is the group's own styled wrapper element (wrapper-only).
+    const innerMessageSlots = slots?.message;
+    const innerMessageSlotProps = slotProps?.message;
+    const MessageRootSlot = (innerMessageSlots?.root ?? ChatMessage) as typeof ChatMessage;
+
+    // Track whether the avatar slot is explicitly nulled — used to mirror the
+    // `noAvatar` class on the group wrapper so any descendant CSS that reads
+    // `var(--MuiChatMessage-avatarSize)` can collapse the reserved space.
+    const hasAvatar = innerMessageSlots?.avatar !== null;
+
+    // `authorName` is rendered by the headless MessageGroup (group-level), but
+    // consumer-facing it lives under `slots.message.authorName` so all per-row
+    // overrides cluster in one namespace. Null hides the label entirely.
+    const authorNameOverride = innerMessageSlots?.authorName;
+    const AuthorNameSlot =
+      authorNameOverride === null
+        ? (HiddenAuthorName as React.ElementType)
+        : ((authorNameOverride ?? ChatMessageGroupAuthorNameStyled) as React.ElementType);
+
+    // Render priority:
+    // 1. Explicit `children` (legacy: caller provided their own composition)
+    // 2. Inner ChatMessage instance with the forwarded nested slot map
     const resolvedChildren =
       children ??
       (messageId ? (
-        <ChatMessage messageId={messageId}>
-          <ChatMessageGroupDefaultContent messageId={messageId} />
-        </ChatMessage>
+        <MessageRootSlot
+          messageId={messageId}
+          slots={innerMessageSlots}
+          slotProps={innerMessageSlotProps}
+          {...(innerMessageSlotProps?.root ?? {})}
+        />
       ) : null);
 
     return (
@@ -159,18 +167,17 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
         messageId={messageId}
         {...other}
         slots={{
-          group: slots?.group ?? ChatMessageGroupStyled,
-          authorName: slots?.authorName ?? ChatMessageGroupAuthorNameStyled,
-          groupTimestamp: slots?.groupTimestamp ?? ChatMessageGroupTimestampStyled,
-          ...slots,
+          group: (slots?.root ?? ChatMessageGroupStyled) as React.ElementType,
+          authorName: AuthorNameSlot,
+          groupTimestamp: ChatMessageGroupTimestampStyled,
         }}
         slotProps={{
-          ...slotProps,
           group: {
-            className: clsx(classes.group, className),
+            className: clsx(classes.group, !hasAvatar && classes.noAvatar, className),
             sx,
-            ...(slotProps?.group as object),
+            ...(slotProps?.root ?? {}),
           } as any,
+          authorName: innerMessageSlotProps?.authorName as any,
         }}
       >
         {resolvedChildren}

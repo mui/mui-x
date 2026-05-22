@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/internal-test-utils';
+import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
@@ -19,6 +19,8 @@ function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
   };
 }
 
+const conversationListFeatures = { conversationList: true } as const;
+
 describe('ChatConversationList', () => {
   it('renders without crashing and applies MuiChatConversationList-root class', () => {
     render(
@@ -28,6 +30,7 @@ describe('ChatConversationList', () => {
           { id: 'c1', title: 'General' },
           { id: 'c2', title: 'Support' },
         ]}
+        features={conversationListFeatures}
       >
         {null}
       </ChatBox>,
@@ -44,6 +47,7 @@ describe('ChatConversationList', () => {
           { id: 'c1', title: 'General' },
           { id: 'c2', title: 'Support' },
         ]}
+        features={conversationListFeatures}
       >
         {null}
       </ChatBox>,
@@ -53,7 +57,7 @@ describe('ChatConversationList', () => {
     expect(items.length).toBe(2);
   });
 
-  it('applies MuiChatConversationList-itemSelected class on the active conversation', () => {
+  it('applies MuiChatConversationList-itemSelected class on the active conversation', async () => {
     render(
       <ChatBox
         adapter={createAdapter()}
@@ -62,15 +66,17 @@ describe('ChatConversationList', () => {
           { id: 'c2', title: 'Support' },
         ]}
         initialActiveConversationId="c1"
+        features={conversationListFeatures}
       >
         {null}
       </ChatBox>,
     );
 
-    const selectedItem = document.querySelector('.MuiChatConversationList-itemSelected');
-    expect(selectedItem).not.toBe(null);
-    // Only one item should be selected
-    expect(document.querySelectorAll('.MuiChatConversationList-itemSelected').length).toBe(1);
+    await waitFor(() => {
+      const selectedItem = document.querySelector('.MuiChatConversationList-itemSelected');
+      expect(selectedItem).not.toBe(null);
+      expect(document.querySelectorAll('.MuiChatConversationList-itemSelected').length).toBe(1);
+    });
   });
 
   it('applies MuiChatConversationList-itemUnread class to unread conversations', () => {
@@ -80,6 +86,7 @@ describe('ChatConversationList', () => {
         initialConversations={[
           { id: 'c1', title: 'General', unreadCount: 3, readState: 'unread' as const },
         ]}
+        features={conversationListFeatures}
       >
         {null}
       </ChatBox>,
@@ -90,7 +97,11 @@ describe('ChatConversationList', () => {
 
   it('renders NoopScrollbar (no scrollbar elements) in the conversation list', () => {
     render(
-      <ChatBox adapter={createAdapter()} initialConversations={[{ id: 'c1', title: 'General' }]}>
+      <ChatBox
+        adapter={createAdapter()}
+        initialConversations={[{ id: 'c1', title: 'General' }]}
+        features={conversationListFeatures}
+      >
         {null}
       </ChatBox>,
     );

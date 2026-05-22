@@ -13,7 +13,7 @@ components: MessageListRoot, MessageListDateDivider, ScrollToBottomAffordance
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The message list is the scrollable region that renders conversation history.
-`ChatMessageList` provides Material UI styling — scroll behavior, overflow, padding, and thin scrollbar are handled out of the box.
+`ChatMessageList` provides Material UI styling—scroll behavior, overflow, padding, and a thin scrollbar are handled automatically.
 
 ## Import
 
@@ -49,7 +49,7 @@ The message list automatically scrolls to the bottom when:
 - New messages arrive from the assistant while the user is near the bottom.
 - Streaming content grows (token-by-token updates).
 
-The auto-scroll behavior is gated by a **buffer** — if the user has scrolled more than `buffer` pixels away from the bottom, automatic scrolling pauses so the user can read earlier messages without interruption.
+The auto-scroll behavior is gated by a **buffer**—if the user has scrolled more than `buffer` pixels away from the bottom, automatic scrolling pauses so the user can read earlier messages without interruption.
 
 ### Configuration
 
@@ -89,9 +89,10 @@ Customize the date format through `slotProps`. The demo below uses a short month
 
 Consecutive messages from the same author are grouped together into a `ChatMessageGroup`.
 Within a group only the first message displays the avatar, reducing visual repetition and making the conversation easier to scan.
+If no avatar resolves for that author, the avatar slot is omitted entirely.
 
 The grouping window defaults to 5 minutes (300,000 ms). Customize it through `slotProps`.
-The demo below sets the window to 1 minute (60,000 ms) — notice how messages more than 1 minute apart start a new group with a fresh avatar:
+The demo below sets the window to 1 minute (60,000 ms)—messages more than 1 minute apart start a new group with a fresh avatar:
 
 {{"demo": "MessageGrouping.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -100,10 +101,10 @@ The demo below sets the window to 1 minute (60,000 ms) — notice how messages m
 Set `variant="compact"` on `ChatBox` to switch to a dense, messenger-style layout.
 Compact mode applies the following changes to the message list:
 
-- **No bubbles** — messages render as plain text without background colors or padding.
-- **Left-aligned** — all messages are left-aligned regardless of role (no right-aligned user messages).
-- **Group header timestamps** — the timestamp moves from below each message to the group header, displayed next to the author name.
-- **Avatars preserved** — avatars remain visible for the first message in each group.
+- **No bubbles**—messages render as plain text without background colors or padding.
+- **Left-aligned**—all messages are left-aligned regardless of role (no right-aligned user messages).
+- **Group header timestamps**—the timestamp moves from below each message to the group header, displayed next to the author name.
+- **Avatars preserved when available**—the first message in each group still shows its resolved avatar.
 
 When set on `ChatBox`, the variant automatically applies to the conversation list as well.
 
@@ -116,7 +117,7 @@ When set on `ChatBox`, the variant automatically applies to the conversation lis
 ## Density
 
 The `density` prop controls the vertical spacing between messages.
-Three values are available — `compact`, `standard` (default), and `comfortable` — mirroring the density model used in [Data Grid](/x/react-data-grid/accessibility/#density).
+Three values are available—`compact`, `standard` (default), and `comfortable`—mirroring the density model used in [Data Grid—Density](/x/react-data-grid/accessibility/#density).
 
 Use the toggle in the demo below to compare the three density levels:
 
@@ -127,7 +128,7 @@ Use the toggle in the demo below to compare the three density levels:
 <ChatBox density="comfortable" adapter={adapter} />
 ```
 
-The `density` prop is independent of `variant` — you can combine `variant="compact"` with any density value.
+The `density` prop is independent of `variant`—combine `variant="compact"` with any density value.
 
 ## Loading and streaming states
 
@@ -157,7 +158,7 @@ listRef.current?.scrollToBottom({ behavior: 'smooth' });
 <ChatMessageList ref={listRef} />;
 ```
 
-## MessageListContext
+## Accessing scroll state with context
 
 Child components inside the message list can access scroll state via context:
 
@@ -194,19 +195,19 @@ The message list includes built-in ARIA attributes:
 
 The following slots are available for customization through `ChatBox`:
 
-| Slot             | Component            | Description               |
-| :--------------- | :------------------- | :------------------------ |
-| `messageList`    | `ChatMessageList`    | The scrollable container  |
-| `messageRoot`    | `ChatMessage`        | Individual message row    |
-| `messageAvatar`  | `ChatMessageAvatar`  | Author avatar             |
-| `messageContent` | `ChatMessageContent` | Message bubble            |
-| `messageMeta`    | `ChatMessageMeta`    | Timestamp and status      |
-| `messageActions` | `ChatMessageActions` | Hover action menu         |
-| `messageGroup`   | `ChatMessageGroup`   | Same-author message group |
-| `dateDivider`    | `ChatDateDivider`    | Date separator            |
+| Slot          | Component            | Description               |
+| :------------ | :------------------- | :------------------------ |
+| `messageList` | `ChatMessageList`    | The scrollable container  |
+| `message`     | `ChatMessage`        | Individual message row    |
+| `avatar`      | `ChatMessageAvatar`  | Author avatar             |
+| `content`     | `ChatMessageContent` | Message bubble            |
+| `meta`        | `ChatMessageMeta`    | Timestamp and status      |
+| `actions`     | `ChatMessageActions` | Hover action menu         |
+| `group`       | `ChatMessageGroup`   | Same-author message group |
+| `dateDivider` | `ChatDateDivider`    | Date separator            |
 
 ## API
 
-- [MessageListRoot](/x/api/chat/message-list-root/)
-- [MessageListDateDivider](/x/api/chat/message-list-date-divider/)
-- [ScrollToBottomAffordance](/x/api/chat/scroll-to-bottom-affordance/)
+- [`MessageListRoot`](/x/api/chat/message-list-root/)
+- [`MessageListDateDivider`](/x/api/chat/message-list-date-divider/)
+- [`ScrollToBottomAffordance`](/x/api/chat/scroll-to-bottom-affordance/)

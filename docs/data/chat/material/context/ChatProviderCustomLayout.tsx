@@ -7,14 +7,9 @@ import {
   ChatComposerSendButton,
   ChatComposerTextArea,
   ChatComposerToolbar,
-  ChatMessage,
-  ChatMessageAvatar,
-  ChatMessageContent,
-  ChatMessageGroup,
-  ChatMessageInlineMeta,
   ChatMessageList,
 } from '@mui/x-chat';
-import { ChatProvider, useMessageIds } from '@mui/x-chat/headless';
+import { ChatProvider } from '@mui/x-chat/headless';
 import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   createTextMessage,
@@ -66,23 +61,9 @@ function SendIcon() {
 }
 
 function CustomChat() {
-  const messageIds = useMessageIds();
-
-  const renderItem = React.useCallback(
-    (params: { id: string }) => (
-      <ChatMessageGroup key={params.id} messageId={params.id}>
-        <ChatMessage messageId={params.id}>
-          <ChatMessageAvatar />
-          <ChatMessageContent afterContent={<ChatMessageInlineMeta />} />
-        </ChatMessage>
-      </ChatMessageGroup>
-    ),
-    [],
-  );
-
   return (
     <ChatConversation>
-      <ChatMessageList renderItem={renderItem} items={messageIds} />
+      <ChatMessageList />
       <ChatComposer>
         <ChatComposerTextArea placeholder="Type a message..." />
         <ChatComposerToolbar>

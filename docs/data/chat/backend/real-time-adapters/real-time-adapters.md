@@ -1,13 +1,13 @@
 ---
 productId: x-chat
-title: Real-Time Adapters
+title: Real-time adapters
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
 ---
 
-# Chat - Real-Time Adapters
+# Chat - Real-time adapters
 
-<p class="description">Push typing indicators, presence updates, read receipts, and collection changes into the runtime through the adapter's <code>subscribe()</code> method.</p>
+<p class="description">Push typing indicators, presence updates, read receipts, and conversation changes from your backend into the chat runtime in real time.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
@@ -45,49 +45,10 @@ async subscribe({ onEvent }) {
 },
 ```
 
-## Event types
-
-The `onEvent` callback receives `ChatRealtimeEvent` objects.
-There are nine event variants organized into five categories.
-
-### Conversation events
-
-| Event type             | Payload              | Store effect                                                |
-| :--------------------- | :------------------- | :---------------------------------------------------------- |
-| `conversation-added`   | `{ conversation }`   | Adds the conversation to the store                          |
-| `conversation-updated` | `{ conversation }`   | Replaces the conversation record                            |
-| `conversation-removed` | `{ conversationId }` | Removes the conversation and resets active ID if it matched |
-
-### Message events
-
-| Event type        | Payload                          | Store effect                       |
-| :---------------- | :------------------------------- | :--------------------------------- |
-| `message-added`   | `{ message }`                    | Adds the message to the store      |
-| `message-updated` | `{ message }`                    | Replaces the message record        |
-| `message-removed` | `{ messageId, conversationId? }` | Removes the message from the store |
-
-### Typing events
-
-| Event type | Payload                                | Store effect                                |
-| :--------- | :------------------------------------- | :------------------------------------------ |
-| `typing`   | `{ conversationId, userId, isTyping }` | Updates the typing map for the conversation |
-
-### Presence events
-
-| Event type | Payload                | Store effect                                             |
-| :--------- | :--------------------- | :------------------------------------------------------- |
-| `presence` | `{ userId, isOnline }` | Updates `isOnline` on matching conversation participants |
-
-### Read events
-
-| Event type | Payload                                   | Store effect                          |
-| :--------- | :---------------------------------------- | :------------------------------------ |
-| `read`     | `{ conversationId, messageId?, userId? }` | Updates the conversation's read state |
-
 ## Dispatching events from the backend
 
 Each event is a plain object with a `type` field.
-Here are the full shapes:
+The available event shapes are shown below:
 
 ```ts
 // Conversation events
@@ -110,7 +71,7 @@ Here are the full shapes:
 { type: 'read', conversationId: string, messageId?: string, userId?: string }
 ```
 
-## The `setTyping()` method
+## Sending typing indicators
 
 Implement `setTyping()` to send a typing indicator to your backend when the user is composing a message.
 The runtime calls it when the composer value changes from empty to non-empty (and vice versa).
@@ -133,10 +94,10 @@ async setTyping({ conversationId, isTyping }) {
 
 To receive typing indicators from other users in the UI, implement `subscribe()` and emit `typing` events through the `onEvent` callback.
 
-## The `markRead()` method
+## Marking messages as read
 
 Implement `markRead()` to signal to your backend that the user has seen a conversation or a specific message.
-The runtime does not call this automatically — call `adapter.markRead()` directly from your own UI event handler.
+The runtime does not call this automatically—call `adapter.markRead()` directly from your own UI event handler.
 
 ```ts
 interface ChatMarkReadInput {
@@ -147,8 +108,8 @@ interface ChatMarkReadInput {
 
 ## Stream reconnection
 
-Implement `reconnectToStream()` to resume an interrupted stream — for example, when an SSE connection drops mid-response.
-The runtime calls it automatically after detecting a disconnected stream.
+Implement `reconnectToStream()` to resume an interrupted stream—for example, when an SSE connection drops mid-response.
+The runtime calls it automatically after detecting a disconnected stream, with one reconnect attempt for the interrupted assistant message.
 
 ```ts
 interface ChatReconnectToStreamInput {
@@ -206,7 +167,7 @@ Use `useConversation(id)` to reflect read status in the UI.
 
 ## WebSocket integration example
 
-A complete adapter with WebSocket-based real-time events:
+The example below shows a complete adapter with WebSocket-based real-time events:
 
 ```tsx
 import type { ChatAdapter } from '@mui/x-chat/headless';
@@ -243,10 +204,48 @@ const adapter: ChatAdapter = {
 };
 ```
 
+## Event reference
+
+The `onEvent` callback can emit nine event variants organized into five categories.
+
+### Conversation events
+
+| Event type             | Payload              | Store effect                                                |
+| :--------------------- | :------------------- | :---------------------------------------------------------- |
+| `conversation-added`   | `{ conversation }`   | Adds the conversation to the store                          |
+| `conversation-updated` | `{ conversation }`   | Replaces the conversation record                            |
+| `conversation-removed` | `{ conversationId }` | Removes the conversation and resets active ID if it matched |
+
+### Message events
+
+| Event type        | Payload                          | Store effect                       |
+| :---------------- | :------------------------------- | :--------------------------------- |
+| `message-added`   | `{ message }`                    | Adds the message to the store      |
+| `message-updated` | `{ message }`                    | Replaces the message record        |
+| `message-removed` | `{ messageId, conversationId? }` | Removes the message from the store |
+
+### Typing events
+
+| Event type | Payload                                | Store effect                                |
+| :--------- | :------------------------------------- | :------------------------------------------ |
+| `typing`   | `{ conversationId, userId, isTyping }` | Updates the typing map for the conversation |
+
+### Presence events
+
+| Event type | Payload                | Store effect                                             |
+| :--------- | :--------------------- | :------------------------------------------------------- |
+| `presence` | `{ userId, isOnline }` | Updates `isOnline` on matching conversation participants |
+
+### Read events
+
+| Event type | Payload                                   | Store effect                          |
+| :--------- | :---------------------------------------- | :------------------------------------ |
+| `read`     | `{ conversationId, messageId?, userId? }` | Updates the conversation's read state |
+
 ## See also
 
-- [Adapters](/x/react-chat/backend/adapters/) for the full adapter interface including `subscribe()`.
-- [Hooks Reference](/x/react-chat/resources/hooks/) for `useChatStatus()` and the typing/presence consumption pattern.
-- [Selectors Reference](/x/react-chat/resources/selectors/) for `chatSelectors.typingUserIds` and other store selectors.
+- See [Adapters](/x/react-chat/backend/adapters/) for the full adapter interface including `subscribe()`.
+- See [Hooks reference](/x/react-chat/resources/hooks/) for `useChatStatus()` and the typing/presence consumption pattern.
+- See [Selectors reference](/x/react-chat/resources/selectors/) for `chatSelectors.typingUserIds` and other store selectors.
 
 ## API

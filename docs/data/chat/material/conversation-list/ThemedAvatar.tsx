@@ -73,6 +73,7 @@ export default function ThemedAvatar() {
       activeConversationId={activeConversationId}
       conversations={conversations}
       messages={messages}
+      features={{ conversationList: true }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {
           setActiveConversationId(nextId);
@@ -85,8 +86,10 @@ export default function ThemedAvatar() {
         );
       }}
       slotProps={{
-        conversationList: {
-          slots: { itemAvatar: ThemedAvatarSlot },
+        conversation: {
+          list: {
+            slots: { itemAvatar: ThemedAvatarSlot },
+          },
         },
       }}
       sx={{

@@ -3,6 +3,7 @@ import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
+import { useMessageError } from '../hooks/useMessageError';
 import { useIsHydrated } from '../chat/internals/useIsHydrated';
 import { ProgressIndicator, ProgressRoot, ProgressTrack } from '../internals/ProgressSlots';
 import { useMessageContext } from './internals/MessageContext';
@@ -69,7 +70,13 @@ export const MessageMeta = React.forwardRef(function MessageMeta(
   // For other roles, skip them — showing "Sent" under an incoming message is confusing.
   const messageStatus = ownerState.message?.status;
   const isDeliveryStatus = messageStatus === 'sent' || messageStatus === 'read';
-  const showStatus = messageStatus && !(isDeliveryStatus && ownerState.message?.role !== 'user');
+  const messageError = useMessageError(ownerState.messageId);
+  // The inline per-message error already surfaces matching runtime errors, so
+  // only suppress the generic "Error" label when that detail is actually present.
+  const showStatus =
+    messageStatus &&
+    (messageStatus !== 'error' || !messageError) &&
+    !(isDeliveryStatus && ownerState.message?.role !== 'user');
   const statusLabel = showStatus ? localeText.messageStatusLabel(messageStatus) : '';
   const hasMeta = showTimestamp || Boolean(statusLabel) || ownerState.message?.editedAt != null;
   void ownerStateProp;

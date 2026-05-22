@@ -8,11 +8,11 @@ components: ChatBox
 
 # Chat - Styling
 
-<p class="description">Override styles using the <code>sx</code> prop, Material UI theme component overrides, dark mode, and CSS class injection.</p>
+<p class="description">Customize the appearance of Chat components to match your application's design system.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-## sx prop
+## Applying styles with the sx prop
 
 The `sx` prop on `ChatBox` applies styles to the outermost root element.
 Use it for layout constraints such as height and width:
@@ -32,7 +32,7 @@ Use it for layout constraints such as height and width:
 
 ## Theme component overrides
 
-Use `createTheme` to apply style overrides that apply globally across your application.
+Use `createTheme()` to apply style overrides globally across the application.
 Import `'@mui/x-chat/themeAugmentation'` for TypeScript autocomplete:
 
 ```tsx
@@ -66,7 +66,7 @@ const theme = createTheme({
 ## Dark mode
 
 `ChatBox` uses the `(theme.vars || theme).palette.*` pattern throughout.
-Dark mode works automatically when you toggle `palette.mode` in your theme:
+Dark mode works automatically when you toggle `palette.mode` in the theme:
 
 ```tsx
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
@@ -76,7 +76,7 @@ const darkTheme = createTheme({ palette: { mode: 'dark' } });
 </ThemeProvider>;
 ```
 
-## classes prop
+## Injecting custom class names
 
 Inject custom class names onto the root and layout elements using the `classes` prop:
 
@@ -100,7 +100,7 @@ Inject custom class names onto the root and layout elements using the `classes` 
 | `conversationsPane` | `MuiChatBox-conversationsPane` | Conversations sidebar pane |
 | `threadPane`        | `MuiChatBox-threadPane`        | Thread pane                |
 
-## CSS class constants
+## Targeting classes in CSS
 
 The `chatBoxClasses` utility object provides class name constants for CSS targeting:
 
@@ -111,21 +111,25 @@ import { chatBoxClasses } from '@mui/x-chat';
 //            chatBoxClasses.conversationsPane, chatBoxClasses.threadPane
 ```
 
-## slotProps for targeted styling
+## Styling subcomponents with slotProps
 
 Pass `sx` overrides to any internal subcomponent using `slotProps` without replacing the component:
 
 ```tsx
 <ChatBox
   slotProps={{
-    conversationList: { 'aria-label': 'Chat threads' },
-    composerInput: { placeholder: 'Ask anything...' },
-    composerSendButton: { sx: { borderRadius: 6 } },
+    conversation: {
+      list: { 'aria-label': 'Chat threads' },
+    },
+    composer: {
+      input: { placeholder: 'Ask anything...' },
+      send: { sx: { borderRadius: 6 } },
+    },
   }}
 />
 ```
 
 ## See also
 
-- [Slots & Composition](/x/react-chat/customization/slots-and-composition/) for replacing subcomponents entirely.
-- [Tailwind CSS](/x/react-chat/customization/tailwind/) for styling with utility classes.
+- See [Slots and composition](/x/react-chat/customization/slots-and-composition/) for details.
+- See [Tailwind CSS support](/x/react-chat/customization/tailwind/) for details.

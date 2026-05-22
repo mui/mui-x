@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import { useMessage, useMessageIds, useConversations } from '@mui/x-chat-headless';
-import Drawer from '@mui/material/Drawer';
+import { useChat, useMessageIds, useConversations } from '@mui/x-chat-headless';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import {
   ChatLayout,
   useChatLocaleText,
@@ -27,48 +27,68 @@ import { ChatComposerAttachmentList } from '../ChatComposer/ChatComposerAttachme
 import { ChatComposerToolbar } from '../ChatComposer/ChatComposerToolbar';
 import { ChatComposerHelperText } from '../ChatComposer/ChatComposerHelperText';
 import { ChatMessageList } from '../ChatMessageList/ChatMessageList';
-import { ChatMessageGroup } from '../ChatMessage/ChatMessageGroup';
-import { ChatMessageContent } from '../ChatMessage/ChatMessageContent';
-import { ChatMessageMeta } from '../ChatMessage/ChatMessageMeta';
-import { ChatMessageAvatar } from '../ChatMessage/ChatMessageAvatar';
-import { ChatMessage } from '../ChatMessage/ChatMessage';
-import { ChatMessageActions } from '../ChatMessage/ChatMessageActions';
-import { ChatMessageInlineMeta } from '../ChatMessage/ChatMessageInlineMeta';
+import { DefaultMessageItem } from '../ChatMessageList/DefaultMessageItem';
 import { ChatScrollToBottomAffordance } from '../ChatIndicators/ChatScrollToBottomAffordance';
-import { ChatSuggestions } from '../ChatSuggestions/ChatSuggestions';
-import type { ChatBoxSlots, ChatBoxSlotProps, ChatBoxFeatures } from './ChatBox.types';
+import { ChatSuggestions, type ChatSuggestionsProps } from '../ChatSuggestions/ChatSuggestions';
+import type {
+  ChatBoxSlots,
+  ChatBoxSlotProps,
+  ChatBoxFeatures,
+  ChatBoxLayoutMode,
+  ChatBoxLayoutModeBreakpoints,
+} from './ChatBox.types';
 import DefaultSendIcon from '../icons/DefaultSendIcon';
 import DefaultAttachIcon from '../icons/DefaultAttachIcon';
 import DefaultMenuIcon from '../icons/DefaultMenuIcon';
+import DefaultCloseIcon from '../icons/DefaultCloseIcon';
 
-const NARROW_BREAKPOINT = 600;
+const DEFAULT_OVERLAY_BREAKPOINT = 600;
+const DEFAULT_SPLIT_BREAKPOINT = 450;
 
 /**
- * Observes the ChatBox root element's inline size and returns `true`
- * when it is narrower than the breakpoint. This mirrors the
- * `@container (max-width: 599.95px)` rule used in CSS so the JS
- * side can show/hide the drawer and menu button in sync.
+ * Observes the ChatBox root element's inline size so the JS behavior
+ * can stay aligned with container-query-driven layout changes.
  */
-function useContainerNarrow(ref: React.RefObject<HTMLElement | null>): boolean {
-  const [narrow, setNarrow] = React.useState(false);
+function useContainerWidth(ref: React.RefObject<HTMLElement | null>): number | null {
+  const [width, setWidth] = React.useState<number | null>(null);
 
   React.useEffect(() => {
     const el = ref.current;
-    if (!el || typeof globalThis.ResizeObserver === 'undefined') {
+    if (!el) {
+      return undefined;
+    }
+
+    const updateWidth = (nextWidth: number) => {
+      setWidth(nextWidth);
+    };
+
+    const initialWidth = el.getBoundingClientRect().width;
+    if (initialWidth > 0) {
+      updateWidth(initialWidth);
+    }
+
+    if (typeof globalThis.ResizeObserver === 'undefined') {
       return undefined;
     }
 
     const ro = new globalThis.ResizeObserver((entries) => {
       for (const entry of entries) {
-        const width = entry.contentBoxSize?.[0]?.inlineSize ?? entry.contentRect.width;
-        setNarrow(width < NARROW_BREAKPOINT);
+        const borderBoxSize = Array.isArray(entry.borderBoxSize)
+          ? entry.borderBoxSize[0]
+          : entry.borderBoxSize;
+        const contentBoxSize = Array.isArray(entry.contentBoxSize)
+          ? entry.contentBoxSize[0]
+          : entry.contentBoxSize;
+        const nextWidth =
+          borderBoxSize?.inlineSize ?? contentBoxSize?.inlineSize ?? entry.contentRect.width;
+        updateWidth(nextWidth);
       }
     });
     ro.observe(el);
     return () => ro.disconnect();
   }, [ref]);
 
-  return narrow;
+  return width;
 }
 
 const ChatBoxEmptyState = styled('div', {
@@ -116,11 +136,109 @@ const ChatBoxEmptyStateHelper = styled('p', {
   color: (theme.vars || theme).palette.text.disabled,
 }));
 
+const ChatBoxMessageListWrapper = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'MessageListWrapper',
+})({
+  position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+  minHeight: 0,
+});
+
+const ChatBoxCustomEmptyStateOverlay = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'EmptyStateOverlay',
+})({
+  position: 'absolute',
+  inset: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  pointerEvents: 'none',
+});
+
+const ChatBoxCustomEmptyStateInner = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'EmptyStateOverlayInner',
+})({
+  pointerEvents: 'auto',
+});
+
+const ChatBoxDrawerContent = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'DrawerContent',
+})({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+  minHeight: 0,
+});
+
+const ChatBoxDrawerHeader = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'DrawerHeader',
+})(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  padding: theme.spacing(1, 1, 0.5),
+  backgroundColor: (theme.vars || theme).palette.background.paper,
+}));
+
+const ChatBoxConversationOverlay = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'ConversationOverlay',
+})(({ theme }) => ({
+  position: 'absolute',
+  inset: 0,
+  zIndex: theme.zIndex.modal,
+  pointerEvents: 'none',
+}));
+
+const ChatBoxConversationOverlayBackdrop = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'ConversationOverlayBackdrop',
+})(({ theme }) => ({
+  position: 'absolute',
+  inset: 0,
+  backgroundColor: (theme.vars || theme).palette.action.disabledBackground,
+  cursor: 'pointer',
+  pointerEvents: 'auto',
+}));
+
+const ChatBoxConversationOverlayPanel = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'ConversationOverlayPanel',
+})({
+  position: 'absolute',
+  insetBlock: 0,
+  insetInlineStart: 0,
+  height: '100%',
+  maxWidth: '100%',
+  pointerEvents: 'auto',
+});
+
+const DefaultBackIcon = React.memo(function DefaultBackIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      style={{ width: '1em', height: '1em' }}
+    >
+      <path d="M20 11H7.83l5.58-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z" />
+    </svg>
+  );
+});
+
 interface ChatBoxContentProps {
   variant?: ChatVariant;
   slots?: Partial<ChatBoxSlots>;
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
+  layoutMode?: ChatBoxLayoutMode;
+  layoutModeBreakpoints?: Partial<ChatBoxLayoutModeBreakpoints>;
   rootRef: React.RefObject<HTMLElement | null>;
   layoutClassName?: string;
   conversationsPaneClassName?: string;
@@ -129,88 +247,64 @@ interface ChatBoxContentProps {
   suggestionsAutoSubmit?: boolean;
 }
 
-function DefaultMessageItem({
-  id,
-  slots,
-  slotProps,
-}: {
-  id: string;
-  slots?: Partial<ChatBoxSlots>;
-  slotProps?: ChatBoxSlotProps;
-  features?: ChatBoxFeatures;
-}) {
-  const variant = useChatVariant();
-  const message = useMessage(id);
-  const MessageGroupComponent = (slots?.messageGroup ??
-    ChatMessageGroup) as typeof ChatMessageGroup;
-  const MessageAvatarComponent = (slots?.messageAvatar ??
-    ChatMessageAvatar) as typeof ChatMessageAvatar;
-  const MessageContentComponent = (slots?.messageContent ??
-    ChatMessageContent) as typeof ChatMessageContent;
-  const MessageMetaComponent = (slots?.messageMeta ?? ChatMessageMeta) as typeof ChatMessageMeta;
-  const MessageRootComponent = (slots?.messageRoot ?? ChatMessage) as typeof ChatMessage;
-  const MessageActionsSlot = slots?.messageActions;
+function normalizeLayoutModeBreakpoints(
+  breakpoints?: Partial<ChatBoxLayoutModeBreakpoints>,
+): ChatBoxLayoutModeBreakpoints {
+  const overlay = breakpoints?.overlay ?? DEFAULT_OVERLAY_BREAKPOINT;
+  const split = Math.min(breakpoints?.split ?? DEFAULT_SPLIT_BREAKPOINT, overlay);
 
-  const isDefault = variant !== 'compact';
-  const isStreaming = message?.status === 'streaming';
-
-  // Default variant: inline meta inside the bubble (Telegram-style).
-  // Skip during streaming — there is no timestamp yet, and the streaming state
-  // is already communicated via the MuiChatMessage-streaming CSS class.
-  // Also skip when the message carries no displayable meta at all (no timestamp,
-  // no edited label, no delivery status) so the spacer does not add dead space.
-  const hasMeta =
-    Boolean(message?.createdAt) || Boolean(message?.editedAt) || Boolean(message?.status);
-  const inlineMeta = isDefault && !isStreaming && hasMeta ? <ChatMessageInlineMeta /> : undefined;
-
-  return (
-    <MessageGroupComponent messageId={id} {...(slotProps?.messageGroup ?? {})}>
-      <MessageRootComponent messageId={id} {...(slotProps?.messageRoot ?? {})}>
-        <MessageAvatarComponent {...(slotProps?.messageAvatar ?? {})} />
-        <MessageContentComponent {...(slotProps?.messageContent ?? {})} afterContent={inlineMeta} />
-        {/* External meta is only used in the compact variant */}
-        {!isDefault && <MessageMetaComponent {...(slotProps?.messageMeta ?? {})} />}
-        {MessageActionsSlot && (
-          <ChatMessageActions {...(slotProps?.messageActions ?? {})}>
-            <MessageActionsSlot messageId={id} />
-          </ChatMessageActions>
-        )}
-      </MessageRootComponent>
-    </MessageGroupComponent>
-  );
+  return { overlay, split };
 }
 
 function DefaultConversationHeader({
   slots,
   slotProps,
   features,
+  onBackClick,
+  showBackButton,
   onMenuClick,
   showMenuButton,
 }: {
-  slots?: Partial<ChatBoxSlots>;
+  slots?: ChatBoxSlots;
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
+  onBackClick?: () => void;
+  showBackButton?: boolean;
   onMenuClick?: () => void;
   showMenuButton?: boolean;
 }) {
+  const conversationSlots = slots?.conversation;
+  const conversationSlotProps = slotProps?.conversation;
   const localeText = useChatLocaleText();
 
   if (features?.conversationHeader === false) {
     return null;
   }
-  const ConversationHeaderComponent = (slots?.conversationHeader ??
+  const ConversationHeaderComponent = (conversationSlots?.header ??
     ChatConversationHeader) as typeof ChatConversationHeader;
-  const ConversationHeaderInfoComponent = (slots?.conversationHeaderInfo ??
+  const ConversationHeaderInfoComponent = (conversationSlots?.headerInfo ??
     ChatConversationHeaderInfo) as typeof ChatConversationHeaderInfo;
-  const ConversationTitleComponent = (slots?.conversationTitle ??
+  const ConversationTitleComponent = (conversationSlots?.title ??
     ChatConversationTitle) as typeof ChatConversationTitle;
-  const ConversationSubtitleComponent = (slots?.conversationSubtitle ??
+  const ConversationSubtitleComponent = (conversationSlots?.subtitle ??
     ChatConversationSubtitle) as typeof ChatConversationSubtitle;
-  const ConversationHeaderActionsComponent = (slots?.conversationHeaderActions ??
+  const ConversationHeaderActionsComponent = (conversationSlots?.headerActions ??
     ChatConversationHeaderActions) as typeof ChatConversationHeaderActions;
 
   return (
-    <ConversationHeaderComponent {...(slotProps?.conversationHeader ?? {})}>
+    <ConversationHeaderComponent {...(conversationSlotProps?.header ?? {})}>
+      {showBackButton && (
+        <Tooltip title={localeText.conversationHeaderBackLabel}>
+          <IconButton
+            size="small"
+            aria-label={localeText.conversationHeaderBackLabel}
+            onClick={onBackClick}
+            sx={{ mr: 1 }}
+          >
+            <DefaultBackIcon />
+          </IconButton>
+        </Tooltip>
+      )}
       {showMenuButton && (
         <Tooltip title={localeText.conversationHeaderMenuLabel}>
           <IconButton
@@ -223,13 +317,94 @@ function DefaultConversationHeader({
           </IconButton>
         </Tooltip>
       )}
-      <ConversationHeaderInfoComponent {...(slotProps?.conversationHeaderInfo ?? {})}>
-        <ConversationTitleComponent {...(slotProps?.conversationTitle ?? {})} />
-        <ConversationSubtitleComponent {...(slotProps?.conversationSubtitle ?? {})} />
+      <ConversationHeaderInfoComponent {...(conversationSlotProps?.headerInfo ?? {})}>
+        <ConversationTitleComponent {...(conversationSlotProps?.title ?? {})} />
+        <ConversationSubtitleComponent {...(conversationSlotProps?.subtitle ?? {})} />
       </ConversationHeaderInfoComponent>
-      <ConversationHeaderActionsComponent {...(slotProps?.conversationHeaderActions ?? {})} />
+      <ConversationHeaderActionsComponent {...(conversationSlotProps?.headerActions ?? {})} />
     </ConversationHeaderComponent>
   );
+}
+
+function mergeConversationListItemSlotProps(itemSlotProps: any, handleDrawerClose: () => void) {
+  return (params: any) => {
+    const externalProps =
+      typeof itemSlotProps === 'function' ? itemSlotProps(params) : (itemSlotProps ?? {});
+
+    return {
+      ...externalProps,
+      onClick: (event: React.MouseEvent) => {
+        externalProps?.onClick?.(event);
+        handleDrawerClose();
+      },
+    };
+  };
+}
+
+function mergeConversationListLayoutSlotProps(slotProp: any, extraStyle: React.CSSProperties) {
+  return (ownerState: any) => {
+    const externalProps = typeof slotProp === 'function' ? slotProp(ownerState) : (slotProp ?? {});
+
+    return {
+      ...externalProps,
+      style: {
+        ...extraStyle,
+        ...(externalProps?.style ?? {}),
+      },
+    };
+  };
+}
+
+function mergeLayoutSlotProps(
+  slotProp: any,
+  internalProps: { className?: string; style?: React.CSSProperties },
+) {
+  return (ownerState: any) => {
+    const externalProps = typeof slotProp === 'function' ? slotProp(ownerState) : (slotProp ?? {});
+    const className = [internalProps.className, externalProps?.className].filter(Boolean).join(' ');
+
+    return {
+      ...externalProps,
+      ...(className ? { className } : {}),
+      style: {
+        ...(internalProps.style ?? {}),
+        ...(externalProps?.style ?? {}),
+      },
+    };
+  };
+}
+
+function createConversationListSlotProps(
+  baseSlotProps: any,
+  options: {
+    fullWidth?: boolean;
+    onItemClick?: () => void;
+  } = {},
+) {
+  return {
+    ...baseSlotProps,
+    root: mergeConversationListLayoutSlotProps(baseSlotProps?.root, {
+      flex: 1,
+      minHeight: 0,
+    }),
+    scroller: mergeConversationListLayoutSlotProps(baseSlotProps?.scroller, {
+      display: 'flex',
+      flex: 1,
+      minHeight: 0,
+      width: '100%',
+      borderRight: 0,
+      ...(options.fullWidth ? { maxWidth: '100%' } : {}),
+    }),
+    viewport: mergeConversationListLayoutSlotProps(baseSlotProps?.viewport, {
+      flex: 1,
+      minHeight: 0,
+    }),
+    ...(options.onItemClick
+      ? {
+          item: mergeConversationListItemSlotProps(baseSlotProps?.item, options.onItemClick),
+        }
+      : {}),
+  };
 }
 
 function DefaultComposer({
@@ -237,45 +412,58 @@ function DefaultComposer({
   slotProps,
   features,
 }: {
-  slots?: Partial<ChatBoxSlots>;
+  slots?: ChatBoxSlots;
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
 }) {
+  const composerSlots = slots?.composer;
+  const composerSlotProps = slotProps?.composer;
   const contextVariant = useChatVariant();
-  const variant = slotProps?.composerRoot?.variant ?? contextVariant;
+  const variant = composerSlotProps?.root?.variant ?? contextVariant;
   const showAttachments = features?.attachments !== false;
   const showHelperText = features?.helperText !== false;
   const attachmentConfig =
     typeof features?.attachments === 'object' ? features.attachments : undefined;
-  const ComposerRootComponent = (slots?.composerRoot ?? ChatComposer) as typeof ChatComposer;
-  const ComposerInputComponent = (slots?.composerInput ??
+  // `slots.composer.root` is wrapper-only: it swaps the styled root element of
+  // `<ChatComposer>` while the default attach/input/send/toolbar render inside
+  // via children. To go further (whole-composer replacement) consumers compose
+  // their own form using the public composer hooks.
+  const composerRootSlotOverride = composerSlots?.root;
+  const ComposerInputComponent = (composerSlots?.input ??
     ChatComposerTextArea) as typeof ChatComposerTextArea;
-  const ComposerToolbarComponent = (slots?.composerToolbar ??
+  const ComposerToolbarComponent = (composerSlots?.toolbar ??
     ChatComposerToolbar) as typeof ChatComposerToolbar;
-  const ComposerSendButtonComponent = (slots?.composerSendButton ??
+  // Presentational slots: `null` hides the piece and the surrounding layout
+  // collapses. `undefined` falls back to the default component.
+  const showSendButton = composerSlots?.send !== null;
+  const ComposerSendButtonComponent = (composerSlots?.send ??
     ChatComposerSendButton) as typeof ChatComposerSendButton;
-  const ComposerAttachButtonComponent = (slots?.composerAttachButton ??
+  const showAttachButton = showAttachments && composerSlots?.attach !== null;
+  const ComposerAttachButtonComponent = (composerSlots?.attach ??
     ChatComposerAttachButton) as typeof ChatComposerAttachButton;
-  const ComposerAttachmentListComponent = (slots?.composerAttachmentList ??
+  const ComposerAttachmentListComponent = (composerSlots?.attachmentList ??
     ChatComposerAttachmentList) as typeof ChatComposerAttachmentList;
-  const ComposerHelperTextComponent = (slots?.composerHelperText ??
+  const ComposerHelperTextComponent = (composerSlots?.helperText ??
     ChatComposerHelperText) as typeof ChatComposerHelperText;
   const localeText = useChatLocaleText();
 
+  // Forward `slots.composer.root` as ChatComposer's own root slot override.
+  const composerRootProps = {
+    attachmentConfig,
+    ...(composerSlotProps?.root ?? {}),
+    slots: { root: composerRootSlotOverride, ...((composerSlotProps?.root as any)?.slots ?? {}) },
+  } as any;
+
   if (variant === 'compact') {
     return (
-      <ComposerRootComponent
-        variant="compact"
-        attachmentConfig={attachmentConfig}
-        {...(slotProps?.composerRoot ?? {})}
-      >
+      <ChatComposer variant="compact" {...composerRootProps}>
         {showAttachments && (
-          <ComposerAttachmentListComponent {...(slotProps?.composerAttachmentList ?? {})} />
+          <ComposerAttachmentListComponent {...(composerSlotProps?.attachmentList ?? {})} />
         )}
-        {showAttachments && (
+        {showAttachButton && (
           <ComposerAttachButtonComponent
             aria-label={localeText.composerAttachButtonLabel}
-            {...(slotProps?.composerAttachButton ?? {})}
+            {...(composerSlotProps?.attach ?? {})}
           >
             <DefaultAttachIcon />
           </ComposerAttachButtonComponent>
@@ -283,45 +471,127 @@ function DefaultComposer({
         <ComposerInputComponent
           maxRows={5}
           placeholder={localeText.composerInputPlaceholder}
-          {...(slotProps?.composerInput ?? {})}
+          {...(composerSlotProps?.input ?? {})}
         />
-        <ComposerSendButtonComponent
-          aria-label={localeText.composerSendButtonLabel}
-          {...(slotProps?.composerSendButton ?? {})}
-        >
-          <DefaultSendIcon />
-        </ComposerSendButtonComponent>
-      </ComposerRootComponent>
+        {/*
+          Honor the `toolbar` slot in compact too: wrapping the trailing send
+          button gives consumers a single override point to inject extra
+          actions (mic, model picker, slash menu, etc.) without hijacking the
+          attach slot. The default toolbar in compact composes via the
+          ChatComposer's row-flex so the visual layout is unchanged.
+        */}
+        {showSendButton && (
+          <ComposerToolbarComponent {...(composerSlotProps?.toolbar ?? {})}>
+            <ComposerSendButtonComponent
+              aria-label={localeText.composerSendButtonLabel}
+              {...(composerSlotProps?.send ?? {})}
+            >
+              <DefaultSendIcon />
+            </ComposerSendButtonComponent>
+          </ComposerToolbarComponent>
+        )}
+      </ChatComposer>
     );
   }
 
   return (
-    <ComposerRootComponent attachmentConfig={attachmentConfig} {...(slotProps?.composerRoot ?? {})}>
+    <ChatComposer {...composerRootProps}>
       {showAttachments && (
-        <ComposerAttachmentListComponent {...(slotProps?.composerAttachmentList ?? {})} />
+        <ComposerAttachmentListComponent {...(composerSlotProps?.attachmentList ?? {})} />
       )}
       <ComposerInputComponent
         placeholder={localeText.composerInputPlaceholder}
-        {...(slotProps?.composerInput ?? {})}
+        {...(composerSlotProps?.input ?? {})}
       />
-      {showHelperText && <ComposerHelperTextComponent {...(slotProps?.composerHelperText ?? {})} />}
-      <ComposerToolbarComponent {...(slotProps?.composerToolbar ?? {})}>
-        {showAttachments && (
+      {showHelperText && (
+        <ComposerHelperTextComponent {...(composerSlotProps?.helperText ?? {})} />
+      )}
+      <ComposerToolbarComponent {...(composerSlotProps?.toolbar ?? {})}>
+        {showAttachButton && (
           <ComposerAttachButtonComponent
             aria-label={localeText.composerAttachButtonLabel}
-            {...(slotProps?.composerAttachButton ?? {})}
+            {...(composerSlotProps?.attach ?? {})}
           >
             <DefaultAttachIcon />
           </ComposerAttachButtonComponent>
         )}
-        <ComposerSendButtonComponent
-          aria-label={localeText.composerSendButtonLabel}
-          {...(slotProps?.composerSendButton ?? {})}
-        >
-          <DefaultSendIcon />
-        </ComposerSendButtonComponent>
+        {showSendButton && (
+          <ComposerSendButtonComponent
+            aria-label={localeText.composerSendButtonLabel}
+            {...(composerSlotProps?.send ?? {})}
+          >
+            <DefaultSendIcon />
+          </ComposerSendButtonComponent>
+        )}
       </ComposerToolbarComponent>
-    </ComposerRootComponent>
+    </ChatComposer>
+  );
+}
+
+function AboveComposerSuggestions(props: {
+  SuggestionsComponent: typeof ChatSuggestions;
+  suggestions: Array<ChatSuggestion | string> | undefined;
+  autoSubmit: boolean | undefined;
+  consumerSlotProps: Partial<ChatSuggestionsProps> | undefined;
+}) {
+  const { SuggestionsComponent, suggestions, autoSubmit, consumerSlotProps } = props;
+  const consumerSuggestionsSlotProps = (consumerSlotProps?.slotProps as any) ?? {};
+  const consumerRootSlotProp = consumerSuggestionsSlotProps.root ?? {};
+  const consumerRootSx = consumerRootSlotProp.sx;
+  // Two visual modes keyed off the `data-empty` attribute that SuggestionsRoot
+  // sets when the thread has zero messages:
+  // - empty (data-empty present): vertical column of pills, centered. Reads as a
+  //   hero CTA alongside the custom empty-state slot.
+  // - active (data-empty absent): horizontal "next-prompt" row above the composer
+  //   with overflow-x scrolling for long suggestion sets.
+  const aboveComposerDefaultsSx = {
+    '&[data-empty]': {
+      flexDirection: 'column',
+      alignItems: 'center',
+      flexWrap: 'nowrap',
+      overflowX: 'visible',
+      gap: (theme: any) => theme.spacing(1),
+      padding: (theme: any) => theme.spacing(2),
+    },
+    '&:not([data-empty])': {
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      // `justify-content: center` from ChatSuggestionsRootStyled pushes the
+      // items into negative space when they overflow — the browser only lets
+      // you scroll into the right overflow, so the leftmost pill becomes
+      // unreachable. Pack items from the start so overflow is one-sided.
+      justifyContent: 'flex-start',
+      overflowX: 'auto',
+      gap: (theme: any) => theme.spacing(1),
+      paddingInline: (theme: any) => theme.spacing(1.5),
+      paddingBlock: (theme: any) => theme.spacing(1),
+      scrollbarWidth: 'thin',
+      // Keep pills from squishing once the row overflows.
+      '& .MuiChatSuggestions-item': { flex: '0 0 auto' },
+    },
+  };
+  let mergedRootSx: unknown = aboveComposerDefaultsSx;
+  if (Array.isArray(consumerRootSx)) {
+    mergedRootSx = [aboveComposerDefaultsSx, ...consumerRootSx];
+  } else if (consumerRootSx) {
+    mergedRootSx = [aboveComposerDefaultsSx, consumerRootSx];
+  }
+  return (
+    <SuggestionsComponent
+      suggestions={suggestions}
+      autoSubmit={autoSubmit}
+      alwaysVisible
+      {...(consumerSlotProps ?? {})}
+      slotProps={
+        {
+          ...consumerSuggestionsSlotProps,
+          root: {
+            ...consumerRootSlotProp,
+            sx: mergedRootSx,
+          },
+        } as any
+      }
+    />
   );
 }
 
@@ -331,6 +601,8 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
     slots,
     slotProps,
     features,
+    layoutMode,
+    layoutModeBreakpoints,
     rootRef,
     layoutClassName,
     conversationsPaneClassName,
@@ -341,39 +613,121 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const showScrollToBottom = features?.scrollToBottom !== false;
   const showSuggestions =
     features?.suggestions !== false && !!suggestions && suggestions.length > 0;
+  const CustomEmptyStateComponent = slots?.emptyState;
 
   const autoScrollProp = features?.autoScroll ?? true;
+  const { activeConversationId, setActiveConversation } = useChat();
 
-  const isNarrow = useContainerNarrow(rootRef);
+  const containerWidth = useContainerWidth(rootRef);
+  const normalizedBreakpoints = React.useMemo(
+    () => normalizeLayoutModeBreakpoints(layoutModeBreakpoints),
+    [layoutModeBreakpoints],
+  );
+  const resolvedLayoutMode = React.useMemo<ChatBoxLayoutMode>(() => {
+    if (layoutMode != null) {
+      return layoutMode;
+    }
+
+    if (containerWidth == null) {
+      return 'standard';
+    }
+
+    if (containerWidth < normalizedBreakpoints.split) {
+      return 'split';
+    }
+
+    if (containerWidth < normalizedBreakpoints.overlay) {
+      return 'overlay';
+    }
+
+    return 'standard';
+  }, [containerWidth, layoutMode, normalizedBreakpoints]);
+  const isNarrow = resolvedLayoutMode !== 'standard';
+  const isFullWidthDrawer =
+    containerWidth == null ? false : containerWidth < normalizedBreakpoints.split;
+  const isMobileSplitView = resolvedLayoutMode === 'split';
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-
+  const drawerCloseButtonRef = React.useRef<HTMLButtonElement | null>(null);
+  const drawerOpenerRef = React.useRef<HTMLElement | null>(null);
+  const wasDrawerOpenRef = React.useRef(false);
   const messageIds = useMessageIds();
   const conversations = useConversations();
   const localeText = useChatLocaleText();
-  const hasConversationList = conversations.length > 0;
+  const hasConversationList = features?.conversationList === true && conversations.length > 0;
+
+  const isEmptyThread = messageIds.length === 0;
+  const showCustomEmptyState = isEmptyThread && Boolean(CustomEmptyStateComponent);
+  const showDefaultEmptyState = isEmptyThread && !CustomEmptyStateComponent && !showSuggestions;
+  const showCenterSuggestions = isEmptyThread && !CustomEmptyStateComponent && showSuggestions;
+  const showAboveComposerSuggestions = showSuggestions && !showCenterSuggestions;
+
+  const restoreDrawerFocus = React.useCallback(() => {
+    const drawerOpener = drawerOpenerRef.current;
+    drawerOpenerRef.current = null;
+
+    if (drawerOpener && globalThis.document?.contains(drawerOpener)) {
+      drawerOpener.focus();
+    }
+  }, []);
 
   const handleMenuClick = React.useCallback(() => {
+    drawerOpenerRef.current =
+      globalThis.document?.activeElement instanceof HTMLElement
+        ? globalThis.document.activeElement
+        : null;
     setDrawerOpen(true);
   }, []);
 
   const handleDrawerClose = React.useCallback(() => {
     setDrawerOpen(false);
   }, []);
+
+  const handleDrawerKeyDown = React.useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key !== 'Escape') {
+        return;
+      }
+
+      event.stopPropagation();
+      handleDrawerClose();
+    },
+    [handleDrawerClose],
+  );
+
+  const handleBackClick = React.useCallback(() => {
+    void setActiveConversation(undefined);
+  }, [setActiveConversation]);
+
+  React.useEffect(() => {
+    if (!isNarrow || isMobileSplitView) {
+      setDrawerOpen(false);
+    }
+  }, [isMobileSplitView, isNarrow]);
+
+  React.useLayoutEffect(() => {
+    if (drawerOpen) {
+      wasDrawerOpenRef.current = true;
+      drawerCloseButtonRef.current?.focus();
+    } else if (wasDrawerOpenRef.current) {
+      wasDrawerOpenRef.current = false;
+      restoreDrawerFocus();
+    }
+  }, [drawerOpen, restoreDrawerFocus]);
+
   const ScrollToBottomComponent = (slots?.scrollToBottom ??
     ChatScrollToBottomAffordance) as typeof ChatScrollToBottomAffordance;
-  const ConversationListComponent = (slots?.conversationList ??
+  const ConversationListComponent = (slots?.conversation?.list ??
     ChatConversationList) as typeof ChatConversationList;
-  const MessageListComponent = (slots?.messageList ?? ChatMessageList) as typeof ChatMessageList;
+  const MessageListComponent = (slots?.messagesList?.root ??
+    ChatMessageList) as typeof ChatMessageList;
   const SuggestionsComponent = (slots?.suggestions ?? ChatSuggestions) as typeof ChatSuggestions;
 
   // Use refs so renderItem is stable and doesn't cause the virtualized list
   // to re-render every time a new object reference is passed for slots/slotProps.
   const slotsRef = React.useRef(slots);
   const slotPropsRef = React.useRef(slotProps);
-  const featuresRef = React.useRef(features);
   slotsRef.current = slots;
   slotPropsRef.current = slotProps;
-  featuresRef.current = features;
 
   const renderItem = React.useCallback(
     ({ id }: { id: string; index: number }) => (
@@ -382,125 +736,216 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
         id={id}
         slots={slotsRef.current}
         slotProps={slotPropsRef.current}
-        features={featuresRef.current}
       />
     ),
     [],
   );
 
+  const drawerConversationListSlotProps = React.useMemo(
+    () =>
+      createConversationListSlotProps(slotProps?.conversation?.list?.slotProps, {
+        onItemClick: handleDrawerClose,
+      }),
+    [handleDrawerClose, slotProps?.conversation?.list?.slotProps],
+  );
+
+  const splitConversationListSlotProps = React.useMemo(
+    () =>
+      createConversationListSlotProps(slotProps?.conversation?.list?.slotProps, {
+        fullWidth: true,
+      }),
+    [slotProps?.conversation?.list?.slotProps],
+  );
+
+  const showSplitConversationList =
+    hasConversationList && isMobileSplitView && !activeConversationId;
+  const showThreadView =
+    !hasConversationList || !isMobileSplitView || Boolean(activeConversationId);
+  const showDrawerMenuButton = hasConversationList && isNarrow && !isMobileSplitView;
+  const showBackButton = hasConversationList && isMobileSplitView && Boolean(activeConversationId);
+  let conversationsPaneStyle: React.CSSProperties;
+
+  if (isMobileSplitView) {
+    conversationsPaneStyle = {
+      width: '100%',
+      flex: '1 1 100%',
+      minWidth: 0,
+      overflow: 'hidden',
+    };
+  } else if (isNarrow) {
+    conversationsPaneStyle = {
+      width: 0,
+      flex: '0 0 0px',
+      overflow: 'visible',
+    };
+  } else {
+    conversationsPaneStyle = {
+      width: 'var(--ChatBox-conversationListWidth, 260px)',
+      flex: '0 0 var(--ChatBox-conversationListWidth, 260px)',
+      minWidth: 0,
+      overflow: 'hidden',
+    };
+  }
+
   return (
     <ChatLayout
-      className={layoutClassName}
-      style={{ flex: 1, minHeight: 0 }}
+      slots={{
+        root: slots?.layout,
+        conversationsPane: slots?.conversationsPane,
+        threadPane: slots?.threadPane,
+      }}
       slotProps={{
-        conversationsPane: {
-          ...(conversationsPaneClassName ? { className: conversationsPaneClassName } : {}),
-          style: {},
-        },
-        threadPane: {
-          ...(threadPaneClassName ? { className: threadPaneClassName } : {}),
+        root: mergeLayoutSlotProps(slotProps?.layout, {
+          className: layoutClassName,
+          style: { flex: 1, minHeight: 0 },
+        }),
+        conversationsPane: mergeLayoutSlotProps(slotProps?.conversationsPane, {
+          className: conversationsPaneClassName,
+          style: conversationsPaneStyle,
+        }),
+        threadPane: mergeLayoutSlotProps(slotProps?.threadPane, {
+          className: threadPaneClassName,
           style: {
             flex: 1,
+            width: isNarrow ? '100%' : undefined,
             minWidth: 0,
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
           },
-        },
+        }),
       }}
     >
-      {hasConversationList && (
-        <ConversationListComponent variant={variant} {...(slotProps?.conversationList ?? {})} />
+      {hasConversationList && !isNarrow && (
+        <ConversationListComponent variant={variant} {...(slotProps?.conversation?.list ?? {})} />
       )}
 
-      {hasConversationList && isNarrow && (
-        <Drawer
-          open={drawerOpen}
-          onClose={handleDrawerClose}
-          slotProps={{
-            paper: {
-              sx: {
-                width: 'var(--ChatBox-conversationListWidth, 260px)',
-                maxWidth: '80vw',
-              },
-            },
+      {hasConversationList && isNarrow && !isMobileSplitView && drawerOpen && (
+        <ChatBoxConversationOverlay>
+          <ChatBoxConversationOverlayBackdrop aria-hidden="true" onClick={handleDrawerClose} />
+          <MUIFocusTrap open={drawerOpen} disableRestoreFocus>
+            <ChatBoxConversationOverlayPanel
+              aria-label={localeText.conversationHeaderMenuLabel}
+              aria-modal="true"
+              role="dialog"
+              onKeyDown={handleDrawerKeyDown}
+              tabIndex={-1}
+              style={{
+                width: isFullWidthDrawer
+                  ? '100%'
+                  : 'min(var(--ChatBox-conversationListWidth, 260px), 100%)',
+              }}
+            >
+              <ChatBoxDrawerContent>
+                <ChatBoxDrawerHeader>
+                  <Tooltip title={localeText.conversationHeaderCloseLabel}>
+                    <IconButton
+                      size="small"
+                      aria-label={localeText.conversationHeaderCloseLabel}
+                      onClick={handleDrawerClose}
+                      ref={drawerCloseButtonRef}
+                    >
+                      <DefaultCloseIcon />
+                    </IconButton>
+                  </Tooltip>
+                </ChatBoxDrawerHeader>
+                <ConversationListComponent
+                  variant={variant}
+                  {...(slotProps?.conversation?.list ?? {})}
+                  slotProps={drawerConversationListSlotProps}
+                />
+              </ChatBoxDrawerContent>
+            </ChatBoxConversationOverlayPanel>
+          </MUIFocusTrap>
+        </ChatBoxConversationOverlay>
+      )}
+
+      {showSplitConversationList && (
+        <ConversationListComponent
+          variant={variant}
+          {...(slotProps?.conversation?.list ?? {})}
+          slotProps={splitConversationListSlotProps}
+        />
+      )}
+
+      {showThreadView && (
+        <ChatConversation
+          {...(slotProps?.conversation?.root ?? {})}
+          slots={{
+            root: slots?.conversation?.root,
+            ...((slotProps?.conversation?.root as any)?.slots ?? {}),
           }}
         >
-          <ConversationListComponent
-            variant={variant}
-            {...(slotProps?.conversationList ?? {})}
-            slotProps={{
-              ...slotProps?.conversationList?.slotProps,
-              item: (params: any) => {
-                const externalSlotProps = slotProps?.conversationList?.slotProps?.item;
-                const externalProps =
-                  typeof externalSlotProps === 'function'
-                    ? externalSlotProps(params)
-                    : externalSlotProps;
-                return {
-                  ...externalProps,
-                  onClick: (event: React.MouseEvent) => {
-                    (externalProps as any)?.onClick?.(event);
-                    handleDrawerClose();
-                  },
-                };
-              },
-            }}
+          <DefaultConversationHeader
+            slots={slots}
+            slotProps={slotProps}
+            features={features}
+            onBackClick={handleBackClick}
+            showBackButton={showBackButton}
+            onMenuClick={handleMenuClick}
+            showMenuButton={showDrawerMenuButton}
           />
-        </Drawer>
+          <ChatBoxMessageListWrapper>
+            <MessageListComponent
+              renderItem={renderItem}
+              items={messageIds}
+              autoScroll={autoScrollProp}
+              overlay={
+                <React.Fragment>
+                  {showDefaultEmptyState && (
+                    <ChatBoxEmptyState>
+                      <ChatBoxEmptyStateIcon
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                      </ChatBoxEmptyStateIcon>
+                      <ChatBoxEmptyStateTitle>
+                        {localeText.threadNoMessagesLabel}
+                      </ChatBoxEmptyStateTitle>
+                      <ChatBoxEmptyStateHelper>
+                        {localeText.threadNoMessagesHelperText}
+                      </ChatBoxEmptyStateHelper>
+                    </ChatBoxEmptyState>
+                  )}
+                  {showCenterSuggestions && (
+                    <SuggestionsComponent
+                      suggestions={suggestions}
+                      autoSubmit={suggestionsAutoSubmit}
+                      {...(slotProps?.suggestions ?? {})}
+                    />
+                  )}
+                  {showScrollToBottom && (
+                    <ScrollToBottomComponent {...(slotProps?.scrollToBottom ?? {})} />
+                  )}
+                </React.Fragment>
+              }
+              {...(slotProps?.messagesList?.root ?? {})}
+            />
+            {showCustomEmptyState && CustomEmptyStateComponent && (
+              <ChatBoxCustomEmptyStateOverlay>
+                <ChatBoxCustomEmptyStateInner>
+                  <CustomEmptyStateComponent {...(slotProps?.emptyState ?? {})} />
+                </ChatBoxCustomEmptyStateInner>
+              </ChatBoxCustomEmptyStateOverlay>
+            )}
+          </ChatBoxMessageListWrapper>
+          {showAboveComposerSuggestions && (
+            <AboveComposerSuggestions
+              SuggestionsComponent={SuggestionsComponent}
+              suggestions={suggestions}
+              autoSubmit={suggestionsAutoSubmit}
+              consumerSlotProps={slotProps?.suggestions}
+            />
+          )}
+          <DefaultComposer slots={slots} slotProps={slotProps} features={features} />
+        </ChatConversation>
       )}
-
-      <ChatConversation>
-        <DefaultConversationHeader
-          slots={slots}
-          slotProps={slotProps}
-          features={features}
-          onMenuClick={handleMenuClick}
-          showMenuButton={hasConversationList && isNarrow}
-        />
-        <MessageListComponent
-          renderItem={renderItem}
-          items={messageIds}
-          autoScroll={autoScrollProp}
-          overlay={
-            <React.Fragment>
-              {messageIds.length === 0 && !showSuggestions && (
-                <ChatBoxEmptyState>
-                  <ChatBoxEmptyStateIcon
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                  </ChatBoxEmptyStateIcon>
-                  <ChatBoxEmptyStateTitle>
-                    {localeText.threadNoMessagesLabel}
-                  </ChatBoxEmptyStateTitle>
-                  <ChatBoxEmptyStateHelper>
-                    {localeText.threadNoMessagesHelperText}
-                  </ChatBoxEmptyStateHelper>
-                </ChatBoxEmptyState>
-              )}
-              {showSuggestions && messageIds.length === 0 && (
-                <SuggestionsComponent
-                  suggestions={suggestions}
-                  autoSubmit={suggestionsAutoSubmit}
-                  {...(slotProps?.suggestions ?? {})}
-                />
-              )}
-              {showScrollToBottom && (
-                <ScrollToBottomComponent {...(slotProps?.scrollToBottom ?? {})} />
-              )}
-            </React.Fragment>
-          }
-          {...(slotProps?.messageList ?? {})}
-        />
-        <DefaultComposer slots={slots} slotProps={slotProps} features={features} />
-      </ChatConversation>
     </ChatLayout>
   );
 }

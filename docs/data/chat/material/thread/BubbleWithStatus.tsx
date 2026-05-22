@@ -60,7 +60,11 @@ export default function BubbleWithStatus() {
       initialActiveConversationId={minimalConversation.id}
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
-      slots={{ messageContent: CustomMessageContent }}
+      slots={{
+        message: {
+          content: CustomMessageContent,
+        },
+      }}
       sx={{
         height: 500,
         border: '1px solid',

@@ -85,6 +85,12 @@
       "isGlobal": false
     },
     {
+      "key": "noAvatar",
+      "className": "MuiChatMessageActions-noAvatar",
+      "description": "Applied when the avatar slot is hidden (`slots.avatar: null`) so the grid drops the avatar track.",
+      "isGlobal": false
+    },
+    {
       "key": "roleAssistant",
       "className": "MuiChatMessageActions-roleAssistant",
       "description": "Applied when the message role is 'assistant'",
@@ -114,6 +120,6 @@
   "muiName": "MuiChatMessageActions",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageActions.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/display/message-actions/\">Chat - Message Actions</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-chat/display/message-actions/\">Chat - Message actions</a></li></ul>",
   "cssComponent": false
 }

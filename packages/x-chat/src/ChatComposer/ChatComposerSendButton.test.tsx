@@ -30,11 +30,11 @@ describe('ChatComposerSendButton', () => {
     expect(document.querySelector('.MuiChatComposer-sendButton')).not.toBe(null);
   });
 
-  it('forwards custom className via slotProps.composerSendButton', () => {
+  it('forwards custom className via slotProps.send', () => {
     render(
       <ChatBox
         adapter={createAdapter()}
-        slotProps={{ composerSendButton: { className: 'custom-send-btn' } }}
+        slotProps={{ composer: { send: { className: 'custom-send-btn' } } }}
       >
         {null}
       </ChatBox>,

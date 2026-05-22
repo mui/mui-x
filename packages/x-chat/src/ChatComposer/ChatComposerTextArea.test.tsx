@@ -30,11 +30,11 @@ describe('ChatComposerTextArea', () => {
     expect(document.querySelector('.MuiChatComposer-textArea')).not.toBe(null);
   });
 
-  it('forwards custom className via slotProps.composerInput', () => {
+  it('forwards custom className via slotProps.input', () => {
     render(
       <ChatBox
         adapter={createAdapter()}
-        slotProps={{ composerInput: { className: 'custom-textarea' } }}
+        slotProps={{ composer: { input: { className: 'custom-textarea' } } }}
       >
         {null}
       </ChatBox>,

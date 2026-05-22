@@ -1,4 +1,5 @@
 import transformCharts from '../charts/preset-safe';
+import transformChat from '../chat/preset-safe';
 import transformPickers from '../pickers/preset-safe';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../types';
 
@@ -6,6 +7,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   [
     // Add others here as they are created
     transformCharts,
+    transformChat,
     transformPickers,
   ].forEach((transform) => {
     file.source = transform(file, api, options);
