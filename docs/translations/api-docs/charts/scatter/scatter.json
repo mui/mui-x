@@ -17,6 +17,9 @@
           "description": "The scatter item identifier."
         }
       }
+    },
+    "sizeGetter": {
+      "description": "Function to get the marker size of a scatter item given its data index."
     }
   },
   "classDescriptions": {
