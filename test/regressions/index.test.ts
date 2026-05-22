@@ -80,11 +80,11 @@ const TEST_RULES: RouteRule[] = [
 
   {
     test: '/test-regressions-data-grid/DataGridScrollRestoration',
-    // The grid remounts when its async demo-data arrives
-    // (`key={String(loading)}`) and then restores its scroll. `aria-busy`
-    // doesn't cover that; sequential runs used to leave enough time, but
-    // pooled pages under concurrency don't, so wait for rendered rows.
-    waitForSelector: '.MuiDataGrid-row .MuiDataGrid-cell',
+    // The grid restores its scroll to top:2000/left:2000 after an async remount.
+    // `aria-rowindex` is the absolute dataset position, so a mid-viewport row for
+    // the restored scroll (top:2000, 52px rows => row ~41 => aria-rowindex 43)
+    // only enters the DOM once the virtualizer has rendered the scrolled window.
+    waitForSelector: '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell',
   },
 ];
 
@@ -216,7 +216,10 @@ async function main() {
             );
 
             if (routeConfig?.waitForSelector) {
-              await page.waitForSelector(routeConfig.waitForSelector);
+              // Scope the wait to this route's testcase: pooled pages keep the
+              // previous route's DOM around briefly, and a global selector could
+              // match a leftover grid instead of the one being screenshotted.
+              await testcase.waitForSelector(routeConfig.waitForSelector);
             }
 
             await page.evaluate(async () => {
