@@ -226,7 +226,6 @@ A few additional gotchas:
 - **Date format and locale**. The hidden input's value uses the picker's configured format. `04/11/2022` parses as April 11 in `en-US` but November 4 in `en-GB`. Pin your tests to a fixed locale, or generate the expected string from the same adapter you configured the picker with.
 - **Range pickers expose two sets of sections**. With a single-input range picker each `spinbutton` role appears twice; scope using `.first()` / `.last()` (or `.nth(i)`) to target the start or end side. With a multi-input range picker the two fields are separate `role="group"` containers; target each input via a parent locator.
 - **Wait for the picker dialog to detach**. After selecting a date in a desktop picker, the dialog closes asynchronously. Race with the closing transition and you get flaky failures. Add `await page.waitForSelector('[role="dialog"]', { state: 'detached' })` before the next assertion.
-- **Mobile picker variants don't expect text input on the field**. Tapping the field on `MobileDatePicker` / `MobileDateTimePicker` opens the picker dialog rather than focusing the sections for typing. Drive these by interacting with the dialog gridcells (`getByRole('gridcell', { name: '11' })`) and confirming via the action buttons.
 
 ## Overriding slots and slot props
 
