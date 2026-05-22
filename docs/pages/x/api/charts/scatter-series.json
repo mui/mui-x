@@ -15,7 +15,7 @@
     "data": { "type": { "description": "readonly ScatterValueType[]" } },
     "datasetKeys": {
       "type": {
-        "description": "{<br />  /**<br />   * The key used to retrieve data from the dataset for the X axis.<br />   */<br />  x: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Y axis.<br />   */<br />  y: string<br />  /**<br />   * The key used to retrieve data from the dataset for the color value.<br />   */<br />  color?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the size value.<br />   */<br />  size?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Z axis.<br />   * @deprecated Use `color` instead.<br />   */<br />  z?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the id.<br />   */<br />  id?: string<br />}"
+        "description": "{<br />  /**<br />   * The key used to retrieve data from the dataset for the X axis.<br />   */<br />  x: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Y axis.<br />   */<br />  y: string<br />  /**<br />   * The key used to retrieve data from the dataset for the color value.<br />   */<br />  colorValue?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the size value.<br />   */<br />  sizeValue?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Z axis.<br />   * @deprecated Use `colorValue` instead.<br />   */<br />  z?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the id.<br />   */<br />  id?: string<br />}"
       }
     },
     "highlightScope": { "type": { "description": "HighlightScope&lt;SeriesType&gt;" } },
