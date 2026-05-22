@@ -231,9 +231,9 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
 // The virtual scrollbar container needs a real size, so we clamp to at least 14px.
 const SCROLLBAR_SIZE_CSS = 'calc(max(var(--scrollbar-size, 10px), 14px))';
 
-const VirtualScrollbar = styled('div', {
+const Scrollbar = styled('div', {
   name: 'MuiEventTimeline',
-  slot: 'VirtualScrollbar',
+  slot: 'Scrollbar',
 })({
   position: 'absolute',
   display: 'inline-block',
@@ -244,9 +244,9 @@ const VirtualScrollbar = styled('div', {
   '--size': SCROLLBAR_SIZE_CSS,
 });
 
-const VirtualScrollbarVertical = styled(VirtualScrollbar, {
+const ScrollbarVertical = styled(Scrollbar, {
   name: 'MuiEventTimeline',
-  slot: 'VirtualScrollbarVertical',
+  slot: 'ScrollbarVertical',
 })({
   width: 'var(--size)',
   height:
@@ -262,9 +262,9 @@ const VirtualScrollbarVertical = styled(VirtualScrollbar, {
   right: 0,
 });
 
-const VirtualScrollbarHorizontal = styled(VirtualScrollbar, {
+const ScrollbarHorizontal = styled(Scrollbar, {
   name: 'MuiEventTimeline',
-  slot: 'VirtualScrollbarHorizontal',
+  slot: 'ScrollbarHorizontal',
 })({
   width: 'calc(100% - var(--title-column-width))',
   height: 'var(--size)',
@@ -279,9 +279,9 @@ const VirtualScrollbarHorizontal = styled(VirtualScrollbar, {
   left: 'var(--title-column-width)',
 });
 
-const VirtualScrollbarTitleHorizontal = styled(VirtualScrollbar, {
+const ScrollbarTitleHorizontal = styled(Scrollbar, {
   name: 'MuiEventTimeline',
-  slot: 'VirtualScrollbarTitleHorizontal',
+  slot: 'ScrollbarTitleHorizontal',
 })({
   width: 'var(--title-column-width)',
   height: 'var(--size)',
@@ -806,34 +806,34 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               </EventTimelinePremiumScrollerContent>
             </EventTimelinePremiumGrid>
             {hasScrollY && (
-              <VirtualScrollbarVertical
+              <ScrollbarVertical
                 ref={scrollbarVerticalProps.ref}
                 tabIndex={-1}
                 aria-hidden="true"
                 onFocus={(event: React.FocusEvent<HTMLDivElement>) => event.target.blur()}
               >
                 <div style={{ height: dimensions.minimumSize.height - headerHeight }} />
-              </VirtualScrollbarVertical>
+              </ScrollbarVertical>
             )}
             {hasScrollX && (
-              <VirtualScrollbarHorizontal
+              <ScrollbarHorizontal
                 ref={scrollbarHorizontalProps.ref}
                 tabIndex={-1}
                 aria-hidden="true"
                 onFocus={(event: React.FocusEvent<HTMLDivElement>) => event.target.blur()}
               >
                 <div style={{ width: eventsWidth }} />
-              </VirtualScrollbarHorizontal>
+              </ScrollbarHorizontal>
             )}
             {hasTitleOverflow && (
-              <VirtualScrollbarTitleHorizontal
+              <ScrollbarTitleHorizontal
                 ref={scrollbarTitleRef}
                 tabIndex={-1}
                 aria-hidden="true"
                 onFocus={(event: React.FocusEvent<HTMLDivElement>) => event.target.blur()}
               >
                 <div style={{ width: titleContentWidth }} />
-              </VirtualScrollbarTitleHorizontal>
+              </ScrollbarTitleHorizontal>
             )}
           </EventDialogProvider>
         </TitleColumnWidthProvider>
