@@ -99,16 +99,12 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
       ) satisfies HighlightItemIdentifierWithType<SeriesType>;
       const cleanedIdentifier = instance.cleanIdentifier(identifierWithType, 'highlightItem');
 
-      const prevItem = prevHighlight.item ?? null;
+      const prevItem = prevHighlight.item;
       const isSame =
         prevItem == null || cleanedIdentifier == null
           ? prevItem === (cleanedIdentifier ?? null)
           : instance.serializeIdentifier(prevItem) ===
             instance.serializeIdentifier(cleanedIdentifier);
-
-      if (isSame) {
-        return;
-      }
 
       if (isSame) {
         return;
