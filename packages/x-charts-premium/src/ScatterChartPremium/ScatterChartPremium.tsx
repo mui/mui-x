@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import {
   HighlightedScatterMark,
-  MarkerLabelPlot,
   type ScatterChartProps,
   type ScatterChartSlots,
   type ScatterChartSlotProps,
@@ -19,7 +18,7 @@ import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import { useScatterChartProps } from '@mui/x-charts/internals';
+import { useScatterChartProps, MarkerLabelPlot } from '@mui/x-charts/internals';
 import {
   type ChartsToolbarProSlotProps,
   type ChartsToolbarProSlots,

@@ -1,4 +1,3 @@
-export * from './MarkerLabel';
-export * from './MarkerLabelItem';
-export * from './MarkerLabelPlot';
-export * from './getMarkerLabel';
+export { MarkerLabel } from './MarkerLabel';
+export type { MarkerLabelProps, MarkerLabelOwnerState } from './MarkerLabel';
+export type { MarkerLabelSlotProps, MarkerLabelSlots } from './MarkerLabelItem';
