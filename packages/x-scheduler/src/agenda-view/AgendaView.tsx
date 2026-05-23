@@ -7,7 +7,10 @@ import { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { sortEventOccurrences } from '@mui/x-scheduler-internals/sort-event-occurrences';
-import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
+import {
+  eventCalendarAgendaSelectors,
+  eventCalendarPreferenceSelectors,
+} from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-internals/constants';
@@ -130,6 +133,19 @@ const EventsList = styled('ul', {
   flexGrow: 1,
 }));
 
+const AgendaWeekNumberLabel = styled('span', {
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewWeekNumberLabel',
+})(({ theme }) => ({
+  fontSize: theme.typography.caption.fontSize,
+  lineHeight: 1,
+  color: (theme.vars || theme).palette.text.secondary,
+  fontStyle: 'italic',
+  '[data-current] &': {
+    color: 'inherit',
+  },
+}));
+
 const AGENDA_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addDays(
@@ -149,7 +165,7 @@ export const AgendaView = React.memo(
   ) {
     // Context hooks
     const adapter = useAdapterContext();
-    const { schedulerId, classes } = useEventCalendarStyledContext();
+    const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
     const store = useEventCalendarStoreContext();
 
     // Ref hooks
@@ -158,6 +174,7 @@ export const AgendaView = React.memo(
 
     // Selector hooks
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+    const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
 
     // Feature hooks
     const { days } = useEventCalendarView(AGENDA_VIEW_CONFIG);
@@ -168,11 +185,14 @@ export const AgendaView = React.memo(
 
     const daysWithOccurrences = React.useMemo(
       () =>
-        days.map((date) => {
+        days.map((date, index) => {
           const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || []);
-          return { date, occurrences };
+          const weekNumber = adapter.getWeekNumber(date.value);
+          const isFirstDayOfWeek =
+            index === 0 || adapter.getWeekNumber(days[index - 1].value) !== weekNumber;
+          return { date, occurrences, weekNumber, isFirstDayOfWeek };
         }),
-      [days, occurrencesMap],
+      [adapter, days, occurrencesMap],
     );
 
     return (
@@ -181,7 +201,7 @@ export const AgendaView = React.memo(
         ref={handleRef}
         className={clsx(props.className, classes.agendaView)}
       >
-        {daysWithOccurrences.map(({ date, occurrences }) => (
+        {daysWithOccurrences.map(({ date, occurrences, isFirstDayOfWeek, weekNumber }) => (
           <AgendaViewRow
             className={classes.agendaViewRow}
             key={date.key}
@@ -214,6 +234,14 @@ export const AgendaView = React.memo(
                   {adapter.format(date.value, 'monthFullLetter')},{' '}
                   {adapter.format(date.value, 'yearPadded')}
                 </AgendaYearAndMonthLabel>
+                {showWeekNumber && isFirstDayOfWeek && (
+                  <AgendaWeekNumberLabel
+                    className={classes.agendaViewWeekNumberLabel}
+                    aria-label={localeText.weekNumberAriaLabel(weekNumber)}
+                  >
+                    {localeText.weekAbbreviation} {weekNumber}
+                  </AgendaWeekNumberLabel>
+                )}
               </WeekDayCell>
             </DayHeaderCell>
             <EventsList className={classes.agendaViewEventsList}>

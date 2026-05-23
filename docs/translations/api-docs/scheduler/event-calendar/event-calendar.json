@@ -112,6 +112,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "agenda view week day name label elements"
     },
+    "agendaViewWeekNumberLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "agenda view week number label elements"
+    },
     "agendaViewYearAndMonthLabel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "agenda view year and month label elements"
@@ -259,6 +263,10 @@
     "dayTimeGridTimeAxisText": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "day time grid time axis text elements"
+    },
+    "dayTimeGridWeekNumber": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid week number element"
     },
     "errorAlert": {
       "description": "Styles applied to {{nodeName}}.",

@@ -82,6 +82,8 @@ export interface EventCalendarClasses extends EventDialogClasses {
   agendaViewYearAndMonthLabel: string;
   /** Styles applied to the agenda view events list element. */
   agendaViewEventsList: string;
+  /** Styles applied to agenda view week number label elements. */
+  agendaViewWeekNumberLabel: string;
   /** Styles applied to event skeleton elements. */
   eventSkeleton: string;
   /** Styles applied to the month view root element. */
@@ -126,6 +128,8 @@ export interface EventCalendarClasses extends EventDialogClasses {
   dayTimeGridAllDayEventsRow: string;
   /** Styles applied to day time grid all day events cell elements. */
   dayTimeGridAllDayEventsCell: string;
+  /** Styles applied to the day time grid week number element. */
+  dayTimeGridWeekNumber: string;
   /** Styles applied to the day time grid all day events header cell element. */
   dayTimeGridAllDayEventsHeaderCell: string;
   /** Styles applied to day time grid header content elements. */
@@ -310,6 +314,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'agendaViewWeekDayNameLabel',
     'agendaViewYearAndMonthLabel',
     'agendaViewEventsList',
+    'agendaViewWeekNumberLabel',
     'eventSkeleton',
     'monthView',
     'monthViewGrid',
@@ -332,6 +337,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'dayTimeGridAllDayEventsGrid',
     'dayTimeGridAllDayEventsRow',
     'dayTimeGridAllDayEventsCell',
+    'dayTimeGridWeekNumber',
     'dayTimeGridAllDayEventsHeaderCell',
     'dayTimeGridHeaderContent',
     'dayTimeGridHeaderButton',
@@ -442,6 +448,7 @@ const slots = {
   agendaViewWeekDayNameLabel: ['agendaViewWeekDayNameLabel'],
   agendaViewYearAndMonthLabel: ['agendaViewYearAndMonthLabel'],
   agendaViewEventsList: ['agendaViewEventsList'],
+  agendaViewWeekNumberLabel: ['agendaViewWeekNumberLabel'],
   eventSkeleton: ['eventSkeleton'],
   monthView: ['monthView'],
   monthViewGrid: ['monthViewGrid'],
@@ -464,6 +471,7 @@ const slots = {
   dayTimeGridAllDayEventsGrid: ['dayTimeGridAllDayEventsGrid'],
   dayTimeGridAllDayEventsRow: ['dayTimeGridAllDayEventsRow'],
   dayTimeGridAllDayEventsCell: ['dayTimeGridAllDayEventsCell'],
+  dayTimeGridWeekNumber: ['dayTimeGridWeekNumber'],
   dayTimeGridAllDayEventsHeaderCell: ['dayTimeGridAllDayEventsHeaderCell'],
   dayTimeGridHeaderContent: ['dayTimeGridHeaderContent'],
   dayTimeGridHeaderButton: ['dayTimeGridHeaderButton'],

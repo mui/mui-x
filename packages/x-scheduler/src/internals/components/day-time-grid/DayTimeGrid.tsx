@@ -6,7 +6,10 @@ import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
-import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
+import {
+  eventCalendarPreferenceSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-internals/event-calendar-selectors';
 import {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
@@ -321,6 +324,18 @@ const DayTimeGridGrid = styled('div', {
   position: 'relative',
 });
 
+const DayTimeGridWeekNumber = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridWeekNumber',
+})(({ theme }) => ({
+  fontSize: theme.typography.caption.fontSize,
+  color: (theme.vars || theme).palette.text.secondary,
+  fontStyle: 'italic',
+  lineHeight: 1,
+  padding: theme.spacing(0.5, 0),
+  textAlign: 'center',
+}));
+
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -342,6 +357,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
   const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
+  const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
 
   // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
@@ -389,6 +405,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const template = adapter.date('2020-01-01T00:00:00', 'default');
 
+  const weekNumber = adapter.getWeekNumber(days[0].value);
+
   const renderHeaderContent = (day: SchedulerProcessedDate) => (
     <DayTimeGridHeaderContent className={classes.dayTimeGridHeaderContent}>
       <DayTimeGridHeaderDayName className={classes.dayTimeGridHeaderDayName}>
@@ -416,8 +434,17 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       >
         <DayTimeGridAllDayEventsCell
           className={classes.dayTimeGridAllDayEventsCell}
-          aria-hidden="true"
-        />
+          aria-hidden={!showWeekNumber}
+          aria-label={showWeekNumber ? localeText.weekNumberAriaLabel(weekNumber) : undefined}
+        >
+          {showWeekNumber && (
+            <DayTimeGridWeekNumber className={classes.dayTimeGridWeekNumber}>
+              {localeText.weekAbbreviation}
+              <br />
+              {weekNumber}
+            </DayTimeGridWeekNumber>
+          )}
+        </DayTimeGridAllDayEventsCell>
         {days.map((day, index) => (
           <DayTimeGridHeaderCell
             key={day.key}
