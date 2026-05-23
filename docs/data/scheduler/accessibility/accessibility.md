@@ -54,7 +54,9 @@ When `showWeekNumber` is enabled, the week-number labels are `aria-hidden="true"
 
 The mini calendar is exposed as a `role="grid"` with an `aria-label` (localized — default: `"Calendar"`).
 
-The grid body is wrapped in a `role="rowgroup"` element. Day cells use `role="gridcell"` and carry:
+The grid body is wrapped in a `role="rowgroup"` element. Each day cell consists of a `role="gridcell"` container (with `aria-colindex`) wrapping a button element.
+
+The button element carries:
 
 - `aria-label` — the full formatted date string
 - `aria-current="date"` — on today's date
@@ -130,15 +132,21 @@ The Resources sidebar uses the [MUI X Rich Tree View](/x/react-tree-view/) inte
 
 ## Live region announcements
 
-The current date range label in the header toolbar is wrapped in an `aria-live="polite"` region.
-When a user navigates to the previous or next time span (for example, clicking **Previous week**), the updated date range is announced automatically by screen readers without requiring focus to move.
+The current month and year label in the header toolbar is wrapped in an `aria-live="polite"` region.
+When a user navigates to the previous or next time span (for example, clicking **Previous week**), the updated toolbar label is automatically announced by screen readers without requiring focus to move.
 
 ## Event dialog
 
 The Event Dialog is a non-modal dialog (`aria-modal="false"`) that floats next to the event that opened it.
 
-- It is announced by screen readers via `aria-labelledby` pointing to the dialog title.
+### Read-only dialog
+
+- Uses `aria-labelledby` pointing to a title with `id="${schedulerId}-draggable-dialog-title"`.
 - The Close button carries a localized `aria-label` (default: `"Close"`).
+
+### Editable dialog
+
+- Uses `aria-labelledby` pointing to a title with `id="${schedulerId}-event-dialog-title"`.
 - The event title input is labeled with a localized `aria-label` (default: `"Event title"`).
 - The color picker group has an `aria-label` (default: `"Event color"`), and each individual color option button is labeled (for example, `"Select green as event color"`).
 - The Recurrence tab panel uses `role="tabpanel"` with `aria-labelledby` pointing to its tab.
@@ -162,7 +170,7 @@ Inside the menu:
 
 ## Localization of ARIA labels
 
-All user-facing accessible labels are provided through the `localeText` prop and can be customized.
+Most user-facing accessible labels are provided through the `localeText` prop and can be customized.
 The following keys are specifically relevant to accessibility:
 
 ```ts

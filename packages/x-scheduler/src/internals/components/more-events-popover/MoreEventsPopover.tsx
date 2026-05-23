@@ -93,7 +93,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
               occurrence={occurrence}
               date={day}
-              ariaLabelledBy={`PopoverHeader-${day.key}`}
+              ariaLabelledBy={`${schedulerId}-PopoverHeader-${day.key}`}
             />
           </EventDialogTrigger>
         ))}
