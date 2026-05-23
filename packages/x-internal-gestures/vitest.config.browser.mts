@@ -9,9 +9,9 @@ export default mergeConfig(
     test: {
       name: getTestName(import.meta.url),
       setupFiles: [fileURLToPath(new URL('./src/matchers/index.ts', import.meta.url))],
+      isolate: true,
       browser: {
         enabled: true,
-        isolate: true,
         instances: [
           { browser: 'chromium' },
           // V8 Coverage in browser mode is not supported yet outside of chromium
