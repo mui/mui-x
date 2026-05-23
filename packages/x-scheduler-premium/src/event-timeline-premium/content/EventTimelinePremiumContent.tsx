@@ -296,6 +296,24 @@ const ScrollbarTitleHorizontal = styled(Scrollbar, {
   left: 0,
 });
 
+// When the title scrollbar is not rendered (no overflow) but the events
+// horizontal scrollbar is, this filler sits in the bottom-left strip to
+// extend the title column's right border down to the very bottom.
+const TitleScrollbarFiller = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'TitleScrollbarFiller',
+})(({ theme }) => ({
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  width: 'var(--title-column-width)',
+  height: SCROLLBAR_SIZE_CSS,
+  borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
+  backgroundColor: (theme.vars || theme).palette.background.default,
+  zIndex: 6,
+  pointerEvents: 'none',
+}));
+
 const RowContainer = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'RowContainer',
@@ -835,6 +853,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                 <div style={{ width: titleContentWidth }} />
               </ScrollbarTitleHorizontal>
             )}
+            {!hasTitleOverflow && hasScrollX && <TitleScrollbarFiller aria-hidden="true" />}
           </EventDialogProvider>
         </TitleColumnWidthProvider>
       </EventTimelinePremiumVirtualizerContext.Provider>
