@@ -57,7 +57,8 @@ export function useTitleScrollSync(params: UseTitleScrollSyncParameters): void {
   // the dedicated scrollbar, so the title column scrolls as a block.
   React.useEffect(() => {
     const grid = gridRef.current;
-    if (!grid || !enabled) {
+    const scrollbar = scrollbarRef.current;
+    if (!grid || !scrollbar || !enabled) {
       return undefined;
     }
 
@@ -66,10 +67,6 @@ export function useTitleScrollSync(params: UseTitleScrollSyncParameters): void {
 
     const onWheel = (event: WheelEvent) => {
       if (event.deltaX === 0 || !isOverTitleCell(event.target)) {
-        return;
-      }
-      const scrollbar = scrollbarRef.current;
-      if (!scrollbar) {
         return;
       }
       event.preventDefault();
@@ -94,8 +91,9 @@ export function useTitleScrollSync(params: UseTitleScrollSyncParameters): void {
       }
       touchActive = true;
       touchDirection = 'unknown';
-      touchStartX = touchLastX = event.touches[0].clientX;
+      touchStartX = event.touches[0].clientX;
       touchStartY = event.touches[0].clientY;
+      touchLastX = touchStartX;
     };
 
     const onTouchMove = (event: TouchEvent) => {
@@ -120,10 +118,6 @@ export function useTitleScrollSync(params: UseTitleScrollSyncParameters): void {
         return;
       }
 
-      const scrollbar = scrollbarRef.current;
-      if (!scrollbar) {
-        return;
-      }
       event.preventDefault();
       scrollbar.scrollLeft -= x - touchLastX;
       touchLastX = x;

@@ -339,6 +339,8 @@ function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api
     [
       store,
       layout.refs.container,
+      layout.refs.scrollbarHorizontal,
+      layout.refs.scrollbarVertical,
       params.dimensions.scrollbarSize,
       params.dimensions.autoHeight,
       params.dimensions.minimalContentHeight,
