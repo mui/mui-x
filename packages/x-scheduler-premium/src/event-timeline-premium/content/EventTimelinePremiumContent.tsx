@@ -47,7 +47,12 @@ import {
   EventTimelinePremiumVirtualizerContext,
   useEventTimelinePremiumVirtualizerStore,
 } from './EventTimelinePremiumVirtualizerContext';
-import { TitleColumnWidthProvider, useTitleColumnWidth } from './useTitleColumnWidth';
+import {
+  TitleColumnWidthProvider,
+  useTitleColumnWidth,
+  useReportTitleWidth,
+  TITLE_HEADER_KEY,
+} from './useTitleColumnWidth';
 import { useTitleScrollSync } from './useTitleScrollSync';
 
 const EventTimelinePremiumContentRoot = styled('section', {
@@ -344,6 +349,7 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
   function HeaderRowContent(_props, ref) {
     const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
     const { classes, localeText, resourceColumnLabel } = useEventTimelinePremiumStyledContext();
+    const reportTitleWidth = useReportTitleWidth();
 
     const pinnedLeftOffset = virtualizerStore.use(
       Virtualization.selectors.pinnedLeftOffsetSelector,
@@ -363,6 +369,23 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
       [renderContext.firstColumnIndex, renderContext.lastColumnIndex],
     );
 
+    // Measure the header title cell's natural width so the title column
+    // also accounts for the header label, not just the body rows.
+    const titleHeaderCellRef = React.useRef<HTMLDivElement | null>(null);
+    const titleHeaderContentRef = React.useRef<HTMLSpanElement | null>(null);
+    useIsoLayoutEffect(() => {
+      const cell = titleHeaderCellRef.current;
+      const content = titleHeaderContentRef.current;
+      if (!cell || !content || typeof ResizeObserver === 'undefined') {
+        return undefined;
+      }
+      const observer = new ResizeObserver(() => {
+        reportTitleWidth(TITLE_HEADER_KEY, cell.scrollWidth);
+      });
+      observer.observe(content);
+      return () => observer.disconnect();
+    }, [reportTitleWidth]);
+
     return (
       <EventTimelinePremiumHeaderRow
         ref={ref}
@@ -371,10 +394,16 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
         {...containerVerticalProps}
       >
         <EventTimelinePremiumTitleHeaderCell
+          ref={titleHeaderCellRef}
           className={classes.titleHeaderCell}
           style={{ transform: `translateX(${pinnedLeftOffset}px)` }}
         >
-          {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
+          <span
+            ref={titleHeaderContentRef}
+            style={{ width: 'max-content', whiteSpace: 'nowrap', flexShrink: 0 }}
+          >
+            {resourceColumnLabel ?? localeText.timelineResourceTitleHeader}
+          </span>
         </EventTimelinePremiumTitleHeaderCell>
         <div role="none" style={{ width: 'var(--title-column-width)' }} />
         <EventTimelinePremiumEventsHeaderCell className={classes.eventsHeaderCell}>
@@ -544,10 +573,14 @@ function EventRowContent({
 }
 
 /**
- * Measures the height of an element via ResizeObserver and returns it as state.
+ * Measures one dimension (`'width'` or `'height'`) of an element via
+ * ResizeObserver and returns it as state.
  */
-function useElementHeight(ref: React.RefObject<HTMLElement | null>): number {
-  const [height, setHeight] = React.useState(0);
+function useElementSize(
+  ref: React.RefObject<HTMLElement | null>,
+  dimension: 'width' | 'height',
+): number {
+  const [size, setSize] = React.useState(0);
 
   useIsoLayoutEffect(() => {
     const element = ref.current;
@@ -555,23 +588,26 @@ function useElementHeight(ref: React.RefObject<HTMLElement | null>): number {
       return undefined;
     }
 
+    const measure = (el: HTMLElement) => (dimension === 'width' ? el.offsetWidth : el.offsetHeight);
+
     if (typeof ResizeObserver === 'undefined') {
-      setHeight(element.offsetHeight);
+      setSize(measure(element));
       return undefined;
     }
 
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        setHeight(entry.borderBoxSize[0].blockSize);
+        const box = entry.borderBoxSize[0];
+        setSize(dimension === 'width' ? box.inlineSize : box.blockSize);
       }
     });
 
-    setHeight(element.offsetHeight);
+    setSize(measure(element));
     observer.observe(element);
     return () => observer.disconnect();
-  }, [ref]);
+  }, [ref, dimension]);
 
-  return height;
+  return size;
 }
 
 export const EventTimelinePremiumContent = React.forwardRef(function EventTimelinePremiumContent(
@@ -609,10 +645,10 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   );
 
   // Measure header height for the virtualizer's topPinnedHeight
-  const headerHeight = useElementHeight(headerRowRef);
+  const headerHeight = useElementSize(headerRowRef, 'height');
 
   // Measure the container so the title column can be capped at half its width.
-  const containerWidth = useElementWidth(containerRef);
+  const containerWidth = useElementSize(containerRef, 'width');
 
   // Virtualizer setup
   const scrollbarTitleRef = React.useRef<HTMLDivElement | null>(null);
@@ -892,35 +928,4 @@ function getRowHeightForLaneCount(theme: Theme, laneCount: number): number {
   const lanes = Math.max(1, laneCount);
   // 2 paddings + N lanes + (N-1) row-gaps + bottom border.
   return 2 * padding + lanes * laneMin + (lanes - 1) * gap + 1;
-}
-
-/**
- * Measures the width of an element via ResizeObserver and returns it as state.
- */
-function useElementWidth(ref: React.RefObject<HTMLElement | null>): number {
-  const [width, setWidth] = React.useState(0);
-
-  useIsoLayoutEffect(() => {
-    const element = ref.current;
-    if (!element) {
-      return undefined;
-    }
-
-    if (typeof ResizeObserver === 'undefined') {
-      setWidth(element.offsetWidth);
-      return undefined;
-    }
-
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        setWidth(entry.borderBoxSize[0].inlineSize);
-      }
-    });
-
-    setWidth(element.offsetWidth);
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [ref]);
-
-  return width;
 }

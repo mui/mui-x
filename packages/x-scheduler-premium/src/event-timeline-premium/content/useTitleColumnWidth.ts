@@ -2,7 +2,10 @@
 import * as React from 'react';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 
-type Report = (resourceId: SchedulerResourceId, width: number) => void;
+export const TITLE_HEADER_KEY = Symbol('title-header');
+
+type Key = SchedulerResourceId | typeof TITLE_HEADER_KEY;
+type Report = (key: Key, width: number) => void;
 
 const Context = React.createContext<Report | null>(null);
 
@@ -32,7 +35,7 @@ export function useTitleColumnWidth<T extends { id: SchedulerResourceId }>(param
 }) {
   const { minWidth, maxWidth, rows } = parameters;
 
-  const cache = React.useRef<Map<SchedulerResourceId, number>>(new Map());
+  const cache = React.useRef<Map<Key, number>>(new Map());
   const [observed, setObserved] = React.useState(0);
 
   const recompute = React.useCallback(() => {
@@ -57,7 +60,8 @@ export function useTitleColumnWidth<T extends { id: SchedulerResourceId }>(param
   );
 
   React.useEffect(() => {
-    const valid = new Set(rows.map((r) => r.id));
+    const valid = new Set<Key>(rows.map((r) => r.id));
+    valid.add(TITLE_HEADER_KEY);
     let removed = false;
     for (const id of Array.from(cache.current.keys())) {
       if (!valid.has(id)) {
