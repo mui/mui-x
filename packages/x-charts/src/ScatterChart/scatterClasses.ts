@@ -16,6 +16,10 @@ export interface ScatterClasses {
   focusedMark: string;
   /** Styles applied to the highlighted scatter mark element. */
   highlightedMark: string;
+  /** Styles applied to the group surrounding a series' marker labels. */
+  seriesLabels: string;
+  /** Styles applied to an individual marker label. */
+  label: string;
 }
 
 export type ScatterClassKey = keyof ScatterClasses;
@@ -30,6 +34,8 @@ export const scatterClasses: ScatterClasses = generateUtilityClasses('MuiScatter
   'marker',
   'focusedMark',
   'highlightedMark',
+  'seriesLabels',
+  'label',
 ]);
 
 export interface UseUtilityClassesOptions {
@@ -44,6 +50,8 @@ export const useUtilityClasses = (options?: UseUtilityClassesOptions) => {
     marker: ['marker'],
     focusedMark: ['focusedMark'],
     highlightedMark: ['highlightedMark'],
+    seriesLabels: ['seriesLabels'],
+    label: ['label'],
   };
 
   return composeClasses(slots, getScatterUtilityClass, classes);

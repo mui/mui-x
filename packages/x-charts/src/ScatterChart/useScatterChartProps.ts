@@ -11,6 +11,7 @@ import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
 import { SCATTER_CHART_PLUGINS, type ScatterChartPluginSignatures } from './ScatterChart.plugins';
 import { type UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
+import { type MarkerLabelPlotProps } from './MarkerLabel/MarkerLabelPlot';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props
@@ -100,6 +101,11 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     renderer,
   };
 
+  const markerLabelPlotProps: MarkerLabelPlotProps = {
+    slots,
+    slotProps,
+  };
+
   const overlayProps: ChartsOverlayProps = {
     loading,
     slots,
@@ -131,6 +137,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     chartsAxisProps,
     gridProps,
     scatterPlotProps,
+    markerLabelPlotProps,
     overlayProps,
     legendProps,
     axisHighlightProps,

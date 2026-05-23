@@ -6,5 +6,6 @@ export * from './ScatterMarker';
 export * from './FocusedScatterMark';
 export * from './HighlightedScatterMark';
 export * from './ScatterChart.plugins';
+export * from './MarkerLabel';
 export { scatterClasses } from './scatterClasses';
 export type { ScatterClassKey, ScatterClasses } from './scatterClasses';

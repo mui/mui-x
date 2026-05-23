@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import {
   HighlightedScatterMark,
+  MarkerLabelPlot,
   type ScatterChartProps,
   type ScatterChartSlots,
   type ScatterChartSlotProps,
@@ -95,6 +96,7 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
     chartsAxisProps,
     gridProps,
     scatterPlotProps,
+    markerLabelPlotProps,
     overlayProps,
     legendProps,
     axisHighlightProps,
@@ -145,11 +147,13 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
             {renderer !== 'webgl' && (
               <g data-drawing-container>
                 <ScatterPlotPremium {...scatterPlotProps} renderer={renderer} />
+                <MarkerLabelPlot {...markerLabelPlotProps} />
               </g>
             )}
             {renderer === 'webgl' && (
               <g data-drawing-container>
                 <HighlightedScatterMark />
+                <MarkerLabelPlot {...markerLabelPlotProps} />
               </g>
             )}
             <ChartsOverlay {...overlayProps} />

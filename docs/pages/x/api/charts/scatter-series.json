@@ -15,7 +15,7 @@
     "data": { "type": { "description": "readonly ScatterValueType[]" } },
     "datasetKeys": {
       "type": {
-        "description": "{<br />  /**<br />   * The key used to retrieve data from the dataset for the X axis.<br />   */<br />  x: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Y axis.<br />   */<br />  y: string<br />  /**<br />   * The key used to retrieve data from the dataset for the color value.<br />   */<br />  colorValue?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the size value.<br />   */<br />  sizeValue?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Z axis.<br />   * @deprecated Use `colorValue` instead.<br />   */<br />  z?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the id.<br />   */<br />  id?: string<br />}"
+        "description": "{<br />  /**<br />   * The key used to retrieve data from the dataset for the X axis.<br />   */<br />  x: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Y axis.<br />   */<br />  y: string<br />  /**<br />   * The key used to retrieve data from the dataset for the color value.<br />   */<br />  colorValue?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the size value.<br />   */<br />  sizeValue?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the marker label.<br />   */<br />  label?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the Z axis.<br />   * @deprecated Use `colorValue` instead.<br />   */<br />  z?: string<br />  /**<br />   * The key used to retrieve data from the dataset for the id.<br />   */<br />  id?: string<br />}"
       }
     },
     "highlightScope": { "type": { "description": "HighlightScope&lt;SeriesType&gt;" } },
@@ -24,6 +24,7 @@
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
     },
     "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
+    "markerLabel": { "type": { "description": "'label' | MarkerLabelFunction" } },
     "markerSize": { "type": { "description": "number" } },
     "preview": {
       "type": {

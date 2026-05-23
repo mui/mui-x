@@ -39,6 +39,12 @@
       "isGlobal": false
     },
     {
+      "key": "label",
+      "className": "MuiScatter-label",
+      "description": "Styles applied to an individual marker label.",
+      "isGlobal": false
+    },
+    {
       "key": "root",
       "className": "MuiScatter-root",
       "description": "Styles applied to the scatter plot element.",
@@ -48,6 +54,12 @@
       "key": "series",
       "className": "MuiScatter-series",
       "description": "Styles applied to the group surrounding a series' scatter elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "seriesLabels",
+      "className": "MuiScatter-seriesLabels",
+      "description": "Styles applied to the group surrounding a series' marker labels.",
       "isGlobal": false
     }
   ],

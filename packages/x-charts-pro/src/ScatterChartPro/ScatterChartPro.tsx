@@ -8,6 +8,7 @@ import {
   type ScatterChartSlotProps,
   type ScatterChartSlots,
   ScatterPlot,
+  MarkerLabelPlot,
 } from '@mui/x-charts/ScatterChart';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
@@ -93,6 +94,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     chartsAxisProps,
     gridProps,
     scatterPlotProps,
+    markerLabelPlotProps,
     overlayProps,
     legendProps,
     axisHighlightProps,
@@ -127,6 +129,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           <g data-drawing-container>
             {/* The `data-drawing-container` indicates that children are part of the drawing area. Ref: https://github.com/mui/mui-x/issues/13659 */}
             <ScatterPlot {...scatterPlotProps} />
+            <MarkerLabelPlot {...markerLabelPlotProps} />
           </g>
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
