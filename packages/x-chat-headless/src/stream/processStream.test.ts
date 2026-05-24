@@ -79,6 +79,40 @@ describe('processStream', () => {
     });
   });
 
+  it('tolerates a leading `message-metadata` chunk and buffers it onto the assistant message created by the next `start`', async () => {
+    // Mirrors the wire format the grid Copilot A/B adapter receives: the
+    // backend writes a leading `message-metadata` carrying the AB preamble
+    // (responseId / abPairId / abTwinUrl) BEFORE the AI SDK's `start`
+    // chunk. Earlier versions of processStream errored on the missing
+    // target id; now the metadata buffers until `start` and lands on the
+    // freshly-created message.
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        // Note: backend uses `messageMetadata` (AI-SDK shape); processStream
+        // accepts either `messageMetadata` or `metadata`.
+        {
+          type: 'message-metadata' as const,
+          messageMetadata: { responseId: 'r-1', abPairId: 'p-1', abVariant: 'A' },
+        } as any,
+        { type: 'start', messageId: 'a1' },
+        { type: 'text-delta', id: 't1', delta: 'Hello' },
+        { type: 'finish', messageId: 'a1', finishReason: 'stop' },
+      ]),
+      { conversationId: 'c1' },
+    );
+
+    expect(store.state.error).toBeNull();
+    expect(store.state.messagesById.a1).toBeDefined();
+    expect(store.state.messagesById.a1.metadata).toMatchObject({
+      responseId: 'r-1',
+      abPairId: 'p-1',
+      abVariant: 'A',
+    });
+  });
+
   it('lands sibling assistant messages when a second `start` with a different messageId arrives', async () => {
     // Adapters that fan out parallel responses (the grid Copilot A/B
     // adapter) merge two upstream streams into one logical chunk stream.

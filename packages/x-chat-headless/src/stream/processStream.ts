@@ -107,6 +107,18 @@ export async function processStream<Cursor = string>(
   const seenEventIds = new Set<string>();
   const bufferedChunksBySequence = new Map<number, ChatMessageChunk>();
   const flushInterval = Math.max(0, options.flushInterval ?? DEFAULT_STREAM_FLUSH_INTERVAL);
+  // Metadata frames that arrived before the `start` chunk (e.g. the
+  // server-side A/B preamble that ships `responseId` / `abPairId` /
+  // `abTwinUrl` ahead of any model output). Flushed onto the assistant
+  // message the moment it gets created so the consumer (e.g. the A/B
+  // adapter) can read it from the very first render.
+  const pendingMessageMetadataByMessageId = new Map<
+    string,
+    Partial<import('../types').ChatMessageMetadata>
+  >();
+  let pendingMessageMetadataForNextStart:
+    | Partial<import('../types').ChatMessageMetadata>
+    | undefined;
 
   const reader = stream.getReader();
 
@@ -274,7 +286,7 @@ export async function processStream<Cursor = string>(
     }
 
     switch (chunk.type) {
-      case 'start':
+      case 'start': {
         // Multi-message-per-turn support: when an upstream adapter wraps
         // multiple assistant responses into one logical stream (e.g. the
         // grid Copilot A/B adapter, which fires a twin fetch in parallel),
@@ -292,7 +304,25 @@ export async function processStream<Cursor = string>(
         targetMessageId = chunk.messageId;
         startAuthor = chunk.author;
         ensureAssistantMessage();
+        // Flush any metadata frames that landed BEFORE this `start` —
+        // either ones explicitly addressed to this id, or the floating
+        // pre-`start` slot that's filled by adapters which emit metadata
+        // ahead of the model output.
+        const pendingByMessageId = pendingMessageMetadataByMessageId.get(chunk.messageId);
+        const pendingFloating = pendingMessageMetadataForNextStart;
+        if (pendingByMessageId || pendingFloating) {
+          updateMessage(storeUnknown, chunk.messageId, (message) => ({
+            metadata: {
+              ...message.metadata,
+              ...(pendingFloating ?? {}),
+              ...(pendingByMessageId ?? {}),
+            },
+          }));
+          pendingMessageMetadataByMessageId.delete(chunk.messageId);
+          pendingMessageMetadataForNextStart = undefined;
+        }
         return;
+      }
 
       case 'finish':
         // Finish chunks always target the specific messageId on the chunk
@@ -564,14 +594,41 @@ export async function processStream<Cursor = string>(
         ensureAssistantMessage();
         return;
 
-      case 'message-metadata':
+      case 'message-metadata': {
+        // The AI SDK's UI Message Stream emits `message-metadata` chunks with
+        // a `messageMetadata` field — the same shape `finish` carries. The
+        // historical chat-headless type called it `metadata`. Accept both so
+        // adapters streaming from the AI SDK directly (the grid Copilot
+        // does) keep working without a translation layer.
+        const payload =
+          ((chunk as { messageMetadata?: Partial<import('../types').ChatMessageMetadata> })
+            .messageMetadata as Partial<import('../types').ChatMessageMetadata> | undefined) ??
+          ((chunk as { metadata?: Partial<import('../types').ChatMessageMetadata> }).metadata as
+            | Partial<import('../types').ChatMessageMetadata>
+            | undefined);
+        if (!payload) {
+          return;
+        }
+        // Some backends emit a leading `message-metadata` BEFORE the `start`
+        // chunk (e.g. the Copilot's A/B preamble carrying `responseId` and
+        // `abTwinUrl`). Calling `ensureAssistantMessage()` here would throw
+        // because `targetMessageId` is still unset. Buffer instead and flush
+        // on the next `start`.
+        if (!targetMessageId) {
+          pendingMessageMetadataForNextStart = {
+            ...(pendingMessageMetadataForNextStart ?? {}),
+            ...payload,
+          };
+          return;
+        }
         updateMessage(storeUnknown, ensureAssistantMessage().id, (message) => ({
           metadata: {
             ...message.metadata,
-            ...chunk.metadata,
+            ...payload,
           },
         }));
         return;
+      }
 
       default:
         if (isDataChunk(chunk)) {
