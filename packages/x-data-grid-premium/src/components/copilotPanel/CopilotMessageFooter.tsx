@@ -2,8 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
-import { useMessageContext, useMessageIds, useChatStore } from '@mui/x-chat-headless';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useMessageContext, useChatStore } from '@mui/x-chat-headless';
 
 /**
  * Footer rendered under every assistant message in the Copilot panel.
@@ -69,21 +68,6 @@ const FooterButton = styled('button', {
   },
 });
 
-const FooterBadge = styled('span', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotMessageFooterBadge',
-})({
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: vars.spacing(0.25),
-  padding: vars.spacing(0.25, 0.5),
-  borderRadius: vars.radius.base,
-  border: `1px solid ${vars.colors.border.base}`,
-  background: vars.colors.background.overlay,
-  font: vars.typography.font.small,
-  color: vars.colors.foreground.base,
-});
-
 /** Discriminated payload posted to the consumer-supplied feedback handler. */
 export type CopilotFeedbackPayload =
   | {
@@ -122,45 +106,14 @@ export function CopilotFeedbackProvider({
   );
 }
 
-function useCopilotFeedback(): CopilotFeedbackSubmit | null {
+export function useCopilotFeedback(): CopilotFeedbackSubmit | null {
   return React.useContext(CopilotFeedbackContext);
-}
-
-/**
- * Locate the sibling assistant message that shares an `abPairId` with
- * `currentMessageId`. Returns `null` if no sibling exists (the twin fetch
- * hasn't landed yet, the sibling was scrolled off, etc.).
- */
-function useAbSibling(currentMessageId: string, abPairId: string | undefined) {
-  const messageIds = useMessageIds();
-  const store = useChatStore();
-  return React.useMemo(() => {
-    if (!abPairId) {
-      return null;
-    }
-    for (const id of messageIds) {
-      if (id === currentMessageId) {
-        continue;
-      }
-      const message = store.state.messagesById[id];
-      if (
-        message &&
-        message.role === 'assistant' &&
-        message.metadata?.abPairId === abPairId &&
-        message.id !== currentMessageId
-      ) {
-        return message;
-      }
-    }
-    return null;
-  }, [messageIds, abPairId, currentMessageId, store.state.messagesById]);
 }
 
 function CopilotMessageFooter() {
   const ctx = useMessageContext();
   const message = ctx.message;
   const store = useChatStore();
-  const apiRef = useGridApiContext();
   const submitFeedback = useCopilotFeedback();
   const [pending, setPending] = React.useState<string | null>(null);
 
@@ -169,8 +122,6 @@ function CopilotMessageFooter() {
   const abVariant = messageMetadata?.abVariant;
   const responseId = messageMetadata?.responseId;
   const userFeedback = messageMetadata?.userFeedback;
-  const userAbChoice = messageMetadata?.userAbChoice;
-  const sibling = useAbSibling(message?.id ?? '', abPairId);
 
   if (!message || message.role !== 'assistant' || message.status === 'streaming') {
     return null;
@@ -206,79 +157,12 @@ function CopilotMessageFooter() {
     }
   };
 
-  const onPick = async (variant: 'A' | 'B') => {
-    if (!abPairId || !sibling || !abVariant) {
-      return;
-    }
-    const siblingResponseId = sibling.metadata?.responseId;
-    if (!siblingResponseId) {
-      return;
-    }
-    const chosenResponseId = variant === abVariant ? responseId : siblingResponseId;
-    const otherResponseId = variant === abVariant ? siblingResponseId : responseId;
-    const chosenMessageId = variant === abVariant ? message.id : sibling.id;
-    setPending(`pick:${variant}`);
-    // Switch the grid preview FIRST so the user sees the picked variant
-    // immediately, before the (possibly slow) feedback POST round-trip.
-    // No-op when picking the already-applied variant (typically A).
-    try {
-      apiRef.current?.copilot?.switchToVariant?.(chosenMessageId);
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.warn('[Copilot] switchToVariant failed:', err);
-    }
-    try {
-      if (submitFeedback) {
-        await submitFeedback({
-          kind: 'ab-pick',
-          abPairId,
-          chosenResponseId,
-          otherResponseId,
-          chosenVariant: variant,
-        });
-      }
-      // Patch both messages so the picked state survives reload and the
-      // sibling footer collapses to its "not chosen" badge.
-      const patch = { userAbChoice: variant } as const;
-      store.updateMessage(message.id, {
-        metadata: { ...messageMetadata, ...patch },
-      });
-      store.updateMessage(sibling.id, {
-        metadata: { ...sibling.metadata, ...patch },
-      });
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.warn('[Copilot] ab-pick failed:', err);
-    } finally {
-      setPending(null);
-    }
-  };
-
-  // ── A/B pick UI ─────────────────────────────────────────────────────────
+  // AB-pair messages are rendered inside a tabbed card by
+  // `CopilotAbVariantTabs`; the tabs themselves drive variant selection
+  // and feedback, so the footer skips its own pick UI to avoid a redundant
+  // button + a "waiting for sibling…" stub while a sibling streams.
   if (abPairId && abVariant) {
-    if (userAbChoice) {
-      const isWinner = userAbChoice === abVariant;
-      return (
-        <FooterRow>
-          <FooterBadge>{isWinner ? '✓ You picked this' : 'Not picked'}</FooterBadge>
-        </FooterRow>
-      );
-    }
-    // Pre-pick: render the "use this answer" button. The sibling message
-    // renders its own button independently — clicking either one settles
-    // the pair via `updateMessage` patches on both messages.
-    return (
-      <FooterRow>
-        <FooterButton
-          type="button"
-          onClick={() => onPick(abVariant)}
-          disabled={pending === `pick:${abVariant}` || !sibling}
-        >
-          Use this answer ({abVariant})
-        </FooterButton>
-        {!sibling && <span>waiting for sibling…</span>}
-      </FooterRow>
-    );
+    return null;
   }
 
   // ── Thumbs UI ───────────────────────────────────────────────────────────

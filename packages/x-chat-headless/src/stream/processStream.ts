@@ -609,20 +609,31 @@ export async function processStream<Cursor = string>(
         if (!payload) {
           return;
         }
-        // Two buffering cases route this metadata away from the current
-        // `targetMessageId`:
-        //   1. Stream hasn't started yet — `targetMessageId` is unset, so a
-        //      leading metadata frame can't be addressed; buffer for the next
-        //      `start`.
-        //   2. The current target has already finished (a `finish` chunk
-        //      came earlier). The next chunk we care about is a fresh
-        //      `start` for a sibling message (the grid Copilot A/B adapter
-        //      sequence: finish(A) → message-metadata(B preamble) → start(B)).
-        //      Without this guard, B's leading metadata would mutate A's
-        //      already-finalized message and overwrite A's `responseId` /
-        //      `abVariant`.
-        const targetClosed = didReceiveTerminalChunk;
-        if (!targetMessageId || targetClosed) {
+        // The wire format conflates two different "metadata" payloads under
+        // the same chunk type:
+        //   - Preamble of a NEW assistant turn (carries `responseId`).
+        //   - Trailing fragment of the CURRENT turn (e.g. a `suggestions`
+        //     frame, emitted by the Copilot backend after `finish`).
+        // We use the presence of a *new* `responseId` as the discriminator:
+        // it's the per-turn primary key, so a fresh value means "this
+        // metadata is for a sibling that hasn't started yet". Trailing
+        // fragments (no responseId, OR same responseId as the current
+        // target) always apply to the current target — even after its
+        // `finish` chunk landed.
+        const currentMessage = targetMessageId
+          ? store.state.messagesById[targetMessageId]
+          : undefined;
+        const incomingResponseId =
+          typeof (payload as { responseId?: unknown }).responseId === 'string'
+            ? ((payload as { responseId?: string }).responseId as string)
+            : undefined;
+        const currentResponseId =
+          typeof (currentMessage?.metadata as { responseId?: unknown })?.responseId === 'string'
+            ? ((currentMessage!.metadata as { responseId: string }).responseId as string)
+            : undefined;
+        const declaresNewTurn =
+          incomingResponseId !== undefined && incomingResponseId !== currentResponseId;
+        if (!targetMessageId || declaresNewTurn) {
           pendingMessageMetadataForNextStart = {
             ...(pendingMessageMetadataForNextStart ?? {}),
             ...payload,

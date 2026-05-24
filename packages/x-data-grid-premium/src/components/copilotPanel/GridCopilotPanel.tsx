@@ -25,7 +25,13 @@ import type {
   ChatUser,
   ToolPartSlots,
 } from '@mui/x-chat-headless';
-import { ChatRoot, useChat, useChatComposer, useMessageIds } from '@mui/x-chat-headless';
+import {
+  ChatRoot,
+  useChat,
+  useChatComposer,
+  useChatStore,
+  useMessageIds,
+} from '@mui/x-chat-headless';
 import { GridMenuIcon } from '@mui/x-data-grid';
 import { createSvgIcon } from '@mui/x-data-grid/internals';
 import {
@@ -36,6 +42,7 @@ import { CopilotToolBlock } from './CopilotToolBlock';
 import { CopilotDataQueryApproval } from './CopilotDataQueryApproval';
 import { CopilotMessageMetadata } from './CopilotMessageMetadata';
 import { CopilotMessageFooter } from './CopilotMessageFooter';
+import { CopilotAbVariantTabs } from './CopilotAbVariantTabs';
 import { CopilotStreamingIndicator } from './CopilotStreamingIndicator';
 import { CopilotTurnSpacer } from './CopilotTurnSpacer';
 import { getGridCopilotLocalStorageAdapterController } from '../../hooks/features/copilot/createGridCopilotLocalStorageAdapter';
@@ -787,6 +794,62 @@ function CopilotMessageItem({
     }),
     [pluginToolSlots],
   );
+
+  // A/B-pair detection: when two assistant messages share an `abPairId`, we
+  // collapse them into a single tabbed card rendered by `CopilotAbVariantTabs`.
+  // The card is rendered by the LEADER (first sibling in `messageIds` order)
+  // and the FOLLOWER renders nothing — that way the tabbed UI shows up in the
+  // chronological position of the first-arrived variant, and the second
+  // variant doesn't take up a second slot in the message list.
+  const store = useChatStore();
+  const messageIds = useMessageIds();
+  const message = store.state.messagesById[id];
+  const abPairId = message?.metadata?.abPairId;
+  const pair = React.useMemo(() => {
+    if (!abPairId) {
+      return null;
+    }
+    let leaderId: string | undefined;
+    let followerId: string | undefined;
+    for (const otherId of messageIds) {
+      const other = store.state.messagesById[otherId];
+      if (!other || other.role !== 'assistant') {
+        continue;
+      }
+      if (other.metadata?.abPairId !== abPairId) {
+        continue;
+      }
+      if (!leaderId) {
+        leaderId = otherId;
+      } else if (!followerId) {
+        followerId = otherId;
+        break;
+      }
+    }
+    if (!leaderId || !followerId) {
+      return null;
+    }
+    return { leaderId, followerId };
+  }, [abPairId, messageIds, store.state.messagesById]);
+
+  if (pair) {
+    if (id === pair.followerId) {
+      // The leader rendered the tabbed card already; suppress this slot.
+      return null;
+    }
+    const leader = store.state.messagesById[pair.leaderId];
+    const follower = store.state.messagesById[pair.followerId];
+    if (!leader || !follower) {
+      // Fall through to single-message rendering until both siblings exist.
+    } else {
+      const variantA = leader.metadata?.abVariant === 'A' ? leader : follower;
+      const variantB = leader.metadata?.abVariant === 'A' ? follower : leader;
+      return (
+        <CopilotAbVariantTabs variantA={variantA} variantB={variantB} toolSlots={toolSlots} />
+      );
+    }
+  }
+
   return (
     <ChatMessageGroup messageId={id} slots={{ authorName: CopilotAuthorNameSlot }}>
       <ChatMessage messageId={id}>

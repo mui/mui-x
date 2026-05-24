@@ -146,13 +146,23 @@ describe('processStream', () => {
   });
 
   it('routes a `message-metadata` chunk that lands AFTER a `finish` to the NEXT sibling, not back to the finalised message', async () => {
-    // Reproduces the grid Copilot A/B wire sequence:
-    //   message-metadata(A preamble) → start(A) → ... → finish(A)
-    //   → message-metadata(B preamble) → start(B) → ... → finish(B)
-    // Without the "target closed → buffer for next start" guard, variant B's
-    // leading metadata would be merged onto the just-finalised message A
-    // (overwriting A's responseId / abVariant). Each sibling must end up
-    // with its OWN preamble.
+    // Reproduces the grid Copilot A/B wire sequence with the SECOND
+    // message-metadata frame that the Copilot backend emits after each
+    // variant's `finish` (the `suggestions` frame). The full per-variant
+    // wire frames are:
+    //   message-metadata(A preamble)
+    //   start(A) → ... → finish(A, messageMetadata)
+    //   message-metadata(A suggestions)
+    //   message-metadata(B preamble)
+    //   start(B) → ... → finish(B, messageMetadata)
+    //   message-metadata(B suggestions)
+    //
+    // Three things must happen for the demo to work:
+    //  1. A's preamble flushes onto A's `start`.
+    //  2. A's suggestions frame applies to A even though it arrives AFTER
+    //     A's `finish` (no sibling yet).
+    //  3. B's preamble must NOT mutate the just-finalised A — it must be
+    //     buffered until B's `start` arrives.
     const store = new ChatStore();
 
     await processStream(
@@ -164,26 +174,61 @@ describe('processStream', () => {
         } as any,
         { type: 'start', messageId: 'a1' },
         { type: 'text-delta', id: 't1', delta: 'A response' },
-        { type: 'finish', messageId: 'a1', finishReason: 'stop' },
+        {
+          type: 'finish',
+          messageId: 'a1',
+          finishReason: 'stop',
+          messageMetadata: { modelId: 'model-A', costUsd: 0.001 },
+        } as any,
+        // A's trailing suggestions frame — should land on A (no sibling
+        // has started yet, so this is the only candidate).
+        {
+          type: 'message-metadata' as const,
+          messageMetadata: { suggestions: ['follow-up-A'] },
+        } as any,
+        // B's preamble — `targetMessageId` still points at A but A is
+        // finalised; this metadata must buffer for B's upcoming `start`.
         {
           type: 'message-metadata' as const,
           messageMetadata: { responseId: 'r-B', abPairId: 'p-1', abVariant: 'B' },
         } as any,
         { type: 'start', messageId: 'b1' },
         { type: 'text-delta', id: 't2', delta: 'B response' },
-        { type: 'finish', messageId: 'b1', finishReason: 'stop' },
+        {
+          type: 'finish',
+          messageId: 'b1',
+          finishReason: 'stop',
+          messageMetadata: { modelId: 'model-B', costUsd: 0.002 },
+        } as any,
+        {
+          type: 'message-metadata' as const,
+          messageMetadata: { suggestions: ['follow-up-B'] },
+        } as any,
       ]),
       { conversationId: 'c1', allowMultipleMessages: true },
     );
 
+    // A retains its own preamble + finish-bound metadata. The trailing
+    // suggestions frame lands here (A is the only finalised sibling at
+    // that point).
     expect(store.state.messagesById.a1.metadata).toMatchObject({
       responseId: 'r-A',
       abVariant: 'A',
+      modelId: 'model-A',
+      costUsd: 0.001,
     });
+    // B inherits its preamble + its own finish metadata + its trailing
+    // suggestions — none of A's metadata leaks through.
     expect(store.state.messagesById.b1.metadata).toMatchObject({
       responseId: 'r-B',
       abVariant: 'B',
+      modelId: 'model-B',
+      costUsd: 0.002,
+      suggestions: ['follow-up-B'],
     });
+    // And crucially: A's metadata was NOT overwritten by B's preamble.
+    expect(store.state.messagesById.a1.metadata?.responseId).toBe('r-A');
+    expect(store.state.messagesById.a1.metadata?.abVariant).toBe('A');
   });
 
   it('finalizes the previous sibling even when no finish chunk fires before a new start', async () => {

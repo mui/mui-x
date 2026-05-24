@@ -1,0 +1,329 @@
+'use client';
+import * as React from 'react';
+import { styled } from '@mui/system';
+import { vars } from '@mui/x-data-grid-pro/internals';
+import {
+  ChatMessage,
+  ChatMessageContent,
+  ChatMessageGroup,
+  ChatMessageMeta,
+} from '@mui/x-chat';
+import { useChatStore } from '@mui/x-chat-headless';
+import type { ChatMessage as HeadlessChatMessage } from '@mui/x-chat-headless';
+import type { ToolPartSlots } from '@mui/x-chat-headless';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { CopilotStreamingIndicator } from './CopilotStreamingIndicator';
+import { CopilotMessageMetadata } from './CopilotMessageMetadata';
+import { useCopilotFeedback } from './CopilotMessageFooter';
+
+/**
+ * Tabbed wrapper rendered in place of an A/B pair's two sibling messages.
+ *
+ * Behaviour:
+ *  - Two tabs ("A" / "B"), each labelled with the variant's model arm so the
+ *    user has SOMETHING to differentiate them at a glance.
+ *  - Clicking a tab calls `apiRef.current.copilot.switchToVariant(messageId)`
+ *    which runs `history.undo` on the previously-applied variant and replays
+ *    the picked variant's cached envelope. The grid swaps state instantly.
+ *  - The first tab click also POSTs `kind: 'ab-pick'` feedback through the
+ *    `CopilotFeedbackProvider`. Subsequent clicks switch preview only.
+ *  - The picked variant's `userAbChoice` is patched onto BOTH sibling messages
+ *    (via `ChatStore.updateMessage`) so the choice round-trips through
+ *    localStorage and tabs stay sticky across reloads.
+ *  - During streaming, the not-yet-finished variant's tab is enabled but the
+ *    underlying message renders its own streaming indicator (the
+ *    `ChatMessageContent` is variant-aware).
+ *
+ * The card replaces the two separate sibling messages that would otherwise
+ * stack vertically in the conversation — looks much cleaner and matches the
+ * mental model of "two candidate answers, pick one".
+ */
+
+const Card = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotAbVariantCard',
+})({
+  marginTop: vars.spacing(1),
+  marginBottom: vars.spacing(1),
+  border: `1px solid ${vars.colors.border.base}`,
+  borderRadius: vars.radius.base,
+  overflow: 'hidden',
+  background: vars.colors.background.base,
+});
+
+const TabBar = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotAbVariantTabBar',
+})({
+  display: 'flex',
+  borderBottom: `1px solid ${vars.colors.border.base}`,
+  background: vars.colors.background.overlay,
+});
+
+const TabButton = styled('button', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotAbVariantTab',
+})({
+  appearance: 'none',
+  cursor: 'pointer',
+  flex: 1,
+  padding: vars.spacing(1, 1.25),
+  background: 'transparent',
+  border: 'none',
+  borderRight: `1px solid ${vars.colors.border.base}`,
+  color: vars.colors.foreground.muted,
+  font: vars.typography.font.small,
+  textAlign: 'left',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  gap: vars.spacing(0.25),
+  transition: 'background 120ms ease, color 120ms ease',
+  ':last-child': {
+    borderRight: 'none',
+  },
+  ':hover': {
+    background: vars.colors.background.base,
+    color: vars.colors.foreground.base,
+  },
+  '&[aria-selected="true"]': {
+    background: vars.colors.background.base,
+    color: vars.colors.foreground.base,
+    boxShadow: `inset 0 -2px 0 ${vars.colors.foreground.accent}`,
+  },
+  '&[disabled]': {
+    cursor: 'default',
+    opacity: 0.65,
+  },
+});
+
+const TabLabel = styled('span', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotAbVariantTabLabel',
+})({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: vars.spacing(0.5),
+  fontWeight: 600,
+});
+
+const TabSubLabel = styled('span', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotAbVariantTabSubLabel',
+})({
+  font: vars.typography.font.small,
+  color: vars.colors.foreground.muted,
+  textTransform: 'lowercase',
+});
+
+const Chip = styled('span', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotAbVariantChip',
+})({
+  display: 'inline-flex',
+  alignItems: 'center',
+  padding: vars.spacing(0, 0.5),
+  borderRadius: vars.radius.base,
+  background: vars.colors.background.overlay,
+  color: vars.colors.foreground.muted,
+  font: vars.typography.font.small,
+});
+
+const Body = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotAbVariantBody',
+})({
+  padding: vars.spacing(1),
+});
+
+function shortenModel(modelId: string | null | undefined): string {
+  if (!modelId) {
+    return 'unknown';
+  }
+  // Trim the provider prefix when present (e.g. `anthropic/claude-haiku-4-5`
+  // → `claude-haiku-4-5`) so the tab stays compact on narrow panels.
+  const slash = modelId.indexOf('/');
+  return slash >= 0 ? modelId.slice(slash + 1) : modelId;
+}
+
+interface VariantTabProps {
+  variant: 'A' | 'B';
+  selected: boolean;
+  message: HeadlessChatMessage;
+  isWinner: boolean;
+  isLoser: boolean;
+  onClick: () => void;
+}
+
+function VariantTab({ variant, selected, message, isWinner, isLoser, onClick }: VariantTabProps) {
+  const modelLabel = shortenModel(message.metadata?.modelArmId ?? message.metadata?.modelId);
+  const promptVersion = message.metadata?.promptVersion;
+  const isStreaming = message.status === 'streaming';
+  return (
+    <TabButton
+      type="button"
+      aria-selected={selected}
+      onClick={onClick}
+      disabled={false}
+      title={`Variant ${variant} • ${modelLabel}${promptVersion ? ` • prompt ${promptVersion}` : ''}`}
+    >
+      <TabLabel>
+        Variant {variant}
+        {isWinner && <Chip aria-label="Chosen variant">✓ chosen</Chip>}
+        {isLoser && <Chip>not picked</Chip>}
+        {isStreaming && <Chip>streaming…</Chip>}
+      </TabLabel>
+      <TabSubLabel>
+        {modelLabel}
+        {promptVersion ? ` · ${promptVersion}` : ''}
+      </TabSubLabel>
+    </TabButton>
+  );
+}
+
+interface CopilotAbVariantTabsProps {
+  variantA: HeadlessChatMessage;
+  variantB: HeadlessChatMessage;
+  toolSlots: Record<string, Partial<ToolPartSlots>>;
+}
+
+export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotAbVariantTabsProps) {
+  const store = useChatStore();
+  const apiRef = useGridApiContext();
+  const submitFeedback = useCopilotFeedback();
+
+  const abPairId = variantA.metadata?.abPairId ?? variantB.metadata?.abPairId ?? '';
+  const persistedChoice =
+    variantA.metadata?.userAbChoice ?? variantB.metadata?.userAbChoice ?? undefined;
+
+  // Local UI state: which tab is currently visible. Initialises to the
+  // persisted user choice (so reload lands on the picked variant) or 'A'
+  // otherwise. The executor always previews variant A first while
+  // streaming, so 'A' is the safe default.
+  const [activeVariant, setActiveVariant] = React.useState<'A' | 'B'>(persistedChoice ?? 'A');
+  const [submitting, setSubmitting] = React.useState(false);
+
+  // Re-sync if the user reloads with a different persisted choice.
+  React.useEffect(() => {
+    if (persistedChoice && persistedChoice !== activeVariant) {
+      setActiveVariant(persistedChoice);
+    }
+    // We only want to react to *new* persisted values, not every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [persistedChoice]);
+
+  const handleSwitch = React.useCallback(
+    async (target: 'A' | 'B') => {
+      if (target === activeVariant) {
+        return;
+      }
+      const targetMessage = target === 'A' ? variantA : variantB;
+      const otherMessage = target === 'A' ? variantB : variantA;
+
+      // Swap the grid preview FIRST so the user sees the picked variant
+      // instantly, before the (potentially slow) feedback POST.
+      try {
+        apiRef.current?.copilot?.switchToVariant?.(targetMessage.id);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('[Copilot] switchToVariant failed:', err);
+      }
+      setActiveVariant(target);
+
+      // Commit the choice the first time the user switches off the default.
+      // Subsequent tab clicks (e.g. flipping back to A) keep the preview
+      // working without re-firing feedback.
+      if (!persistedChoice) {
+        setSubmitting(true);
+        try {
+          if (submitFeedback && abPairId) {
+            const chosenResponseId = targetMessage.metadata?.responseId;
+            const otherResponseId = otherMessage.metadata?.responseId;
+            if (chosenResponseId && otherResponseId) {
+              await submitFeedback({
+                kind: 'ab-pick',
+                abPairId,
+                chosenResponseId,
+                otherResponseId,
+                chosenVariant: target,
+              });
+            }
+          }
+          // Mirror the choice onto both messages so it survives reload via
+          // the localStorage round-trip.
+          const patch = { userAbChoice: target } as const;
+          store.updateMessage(variantA.id, {
+            metadata: { ...variantA.metadata, ...patch },
+          });
+          store.updateMessage(variantB.id, {
+            metadata: { ...variantB.metadata, ...patch },
+          });
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn('[Copilot] ab-pick feedback failed:', err);
+        } finally {
+          setSubmitting(false);
+        }
+      }
+    },
+    [
+      activeVariant,
+      variantA,
+      variantB,
+      apiRef,
+      submitFeedback,
+      abPairId,
+      persistedChoice,
+      store,
+    ],
+  );
+
+  const activeMessage = activeVariant === 'A' ? variantA : variantB;
+  const winnerVariant = persistedChoice;
+
+  return (
+    <Card>
+      <TabBar role="tablist" aria-label="A/B test variants">
+        <VariantTab
+          variant="A"
+          selected={activeVariant === 'A'}
+          message={variantA}
+          isWinner={winnerVariant === 'A'}
+          isLoser={winnerVariant === 'B'}
+          onClick={() => handleSwitch('A')}
+        />
+        <VariantTab
+          variant="B"
+          selected={activeVariant === 'B'}
+          message={variantB}
+          isWinner={winnerVariant === 'B'}
+          isLoser={winnerVariant === 'A'}
+          onClick={() => handleSwitch('B')}
+        />
+      </TabBar>
+      <Body role="tabpanel" aria-labelledby={`copilot-ab-tab-${activeVariant}`}>
+        <ChatMessageGroup messageId={activeMessage.id}>
+          <ChatMessage messageId={activeMessage.id}>
+            <ChatMessageContent
+              afterContent={
+                <React.Fragment>
+                  <CopilotStreamingIndicator />
+                  <CopilotMessageMetadata />
+                  {submitting && (
+                    <Chip aria-live="polite">recording your pick…</Chip>
+                  )}
+                </React.Fragment>
+              }
+              partProps={{
+                tool: {
+                  toolSlots,
+                },
+              }}
+            />
+            <ChatMessageMeta />
+          </ChatMessage>
+        </ChatMessageGroup>
+      </Body>
+    </Card>
+  );
+}
