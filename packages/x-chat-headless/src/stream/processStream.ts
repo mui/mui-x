@@ -609,12 +609,20 @@ export async function processStream<Cursor = string>(
         if (!payload) {
           return;
         }
-        // Some backends emit a leading `message-metadata` BEFORE the `start`
-        // chunk (e.g. the Copilot's A/B preamble carrying `responseId` and
-        // `abTwinUrl`). Calling `ensureAssistantMessage()` here would throw
-        // because `targetMessageId` is still unset. Buffer instead and flush
-        // on the next `start`.
-        if (!targetMessageId) {
+        // Two buffering cases route this metadata away from the current
+        // `targetMessageId`:
+        //   1. Stream hasn't started yet — `targetMessageId` is unset, so a
+        //      leading metadata frame can't be addressed; buffer for the next
+        //      `start`.
+        //   2. The current target has already finished (a `finish` chunk
+        //      came earlier). The next chunk we care about is a fresh
+        //      `start` for a sibling message (the grid Copilot A/B adapter
+        //      sequence: finish(A) → message-metadata(B preamble) → start(B)).
+        //      Without this guard, B's leading metadata would mutate A's
+        //      already-finalized message and overwrite A's `responseId` /
+        //      `abVariant`.
+        const targetClosed = didReceiveTerminalChunk;
+        if (!targetMessageId || targetClosed) {
           pendingMessageMetadataForNextStart = {
             ...(pendingMessageMetadataForNextStart ?? {}),
             ...payload,

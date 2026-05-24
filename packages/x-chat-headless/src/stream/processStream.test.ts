@@ -145,6 +145,47 @@ describe('processStream', () => {
     ]);
   });
 
+  it('routes a `message-metadata` chunk that lands AFTER a `finish` to the NEXT sibling, not back to the finalised message', async () => {
+    // Reproduces the grid Copilot A/B wire sequence:
+    //   message-metadata(A preamble) → start(A) → ... → finish(A)
+    //   → message-metadata(B preamble) → start(B) → ... → finish(B)
+    // Without the "target closed → buffer for next start" guard, variant B's
+    // leading metadata would be merged onto the just-finalised message A
+    // (overwriting A's responseId / abVariant). Each sibling must end up
+    // with its OWN preamble.
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        {
+          type: 'message-metadata' as const,
+          messageMetadata: { responseId: 'r-A', abPairId: 'p-1', abVariant: 'A' },
+        } as any,
+        { type: 'start', messageId: 'a1' },
+        { type: 'text-delta', id: 't1', delta: 'A response' },
+        { type: 'finish', messageId: 'a1', finishReason: 'stop' },
+        {
+          type: 'message-metadata' as const,
+          messageMetadata: { responseId: 'r-B', abPairId: 'p-1', abVariant: 'B' },
+        } as any,
+        { type: 'start', messageId: 'b1' },
+        { type: 'text-delta', id: 't2', delta: 'B response' },
+        { type: 'finish', messageId: 'b1', finishReason: 'stop' },
+      ]),
+      { conversationId: 'c1', allowMultipleMessages: true },
+    );
+
+    expect(store.state.messagesById.a1.metadata).toMatchObject({
+      responseId: 'r-A',
+      abVariant: 'A',
+    });
+    expect(store.state.messagesById.b1.metadata).toMatchObject({
+      responseId: 'r-B',
+      abVariant: 'B',
+    });
+  });
+
   it('finalizes the previous sibling even when no finish chunk fires before a new start', async () => {
     // Defensive case: if the upstream loses a `finish` chunk for the
     // first sibling, the second `start` still terminates it cleanly so
