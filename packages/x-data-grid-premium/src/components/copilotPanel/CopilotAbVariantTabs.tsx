@@ -136,6 +136,63 @@ const Body = styled('div', {
   padding: vars.spacing(1),
 });
 
+const CommitBar = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotAbVariantCommitBar',
+})({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: vars.spacing(0.75),
+  padding: vars.spacing(0.75, 1),
+  borderTop: `1px solid ${vars.colors.border.base}`,
+  background: vars.colors.background.overlay,
+  font: vars.typography.font.small,
+  color: vars.colors.foreground.muted,
+});
+
+const CommitButton = styled('button', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotAbVariantCommitButton',
+})({
+  appearance: 'none',
+  cursor: 'pointer',
+  padding: vars.spacing(0.5, 1),
+  borderRadius: vars.radius.base,
+  border: `1px solid ${vars.colors.border.base}`,
+  background: vars.colors.background.base,
+  color: vars.colors.foreground.base,
+  font: vars.typography.font.small,
+  fontWeight: 600,
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: vars.spacing(0.25),
+  transition: 'background 120ms ease, border-color 120ms ease',
+  ':hover': {
+    background: vars.colors.background.overlay,
+    borderColor: vars.colors.foreground.muted,
+  },
+  '&[disabled]': {
+    cursor: 'default',
+    opacity: 0.65,
+  },
+});
+
+const CommitBadge = styled('span', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotAbVariantCommitBadge',
+})({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: vars.spacing(0.25),
+  padding: vars.spacing(0.25, 0.5),
+  borderRadius: vars.radius.base,
+  border: `1px solid ${vars.colors.border.base}`,
+  background: vars.colors.background.base,
+  color: vars.colors.foreground.base,
+  font: vars.typography.font.small,
+});
+
 function shortenModel(modelId: string | null | undefined): string {
   if (!modelId) {
     return 'unknown';
@@ -212,16 +269,17 @@ export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotA
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [persistedChoice]);
 
-  const handleSwitch = React.useCallback(
-    async (target: 'A' | 'B') => {
+  // Tabs are **preview-only** — clicking a tab swaps the grid state to
+  // that variant's cached envelope but does NOT commit the choice. The
+  // commit happens via the explicit "Use this answer" button below, so
+  // the user can flip through both variants on the grid before deciding
+  // which one to mark as the winner for analytics.
+  const handlePreview = React.useCallback(
+    (target: 'A' | 'B') => {
       if (target === activeVariant) {
         return;
       }
       const targetMessage = target === 'A' ? variantA : variantB;
-      const otherMessage = target === 'A' ? variantB : variantA;
-
-      // Swap the grid preview FIRST so the user sees the picked variant
-      // instantly, before the (potentially slow) feedback POST.
       try {
         apiRef.current?.copilot?.switchToVariant?.(targetMessage.id);
       } catch (err) {
@@ -229,57 +287,61 @@ export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotA
         console.warn('[Copilot] switchToVariant failed:', err);
       }
       setActiveVariant(target);
+    },
+    [activeVariant, variantA, variantB, apiRef],
+  );
 
-      // Commit the choice the first time the user switches off the default.
-      // Subsequent tab clicks (e.g. flipping back to A) keep the preview
-      // working without re-firing feedback.
-      if (!persistedChoice) {
-        setSubmitting(true);
-        try {
-          if (submitFeedback && abPairId) {
-            const chosenResponseId = targetMessage.metadata?.responseId;
-            const otherResponseId = otherMessage.metadata?.responseId;
-            if (chosenResponseId && otherResponseId) {
-              await submitFeedback({
-                kind: 'ab-pick',
-                abPairId,
-                chosenResponseId,
-                otherResponseId,
-                chosenVariant: target,
-              });
-            }
-          }
-          // Mirror the choice onto both messages so it survives reload via
-          // the localStorage round-trip.
-          const patch = { userAbChoice: target } as const;
-          store.updateMessage(variantA.id, {
-            metadata: { ...variantA.metadata, ...patch },
+  // Explicit commit: POST `kind: 'ab-pick'` feedback and persist the
+  // choice on both sibling messages so analytics (the
+  // `copilot-ab-winner` scorer + `ab_user_choice` on `copilot_request`)
+  // can track which variant the user actually selected. Idempotent —
+  // re-clicking the same picked variant is a no-op; picking the other
+  // variant overwrites the previous choice and re-fires feedback.
+  const handlePick = React.useCallback(
+    async (target: 'A' | 'B') => {
+      if (target === persistedChoice) {
+        return;
+      }
+      const targetMessage = target === 'A' ? variantA : variantB;
+      const otherMessage = target === 'A' ? variantB : variantA;
+      const chosenResponseId = targetMessage.metadata?.responseId;
+      const otherResponseId = otherMessage.metadata?.responseId;
+      if (!chosenResponseId || !otherResponseId || !abPairId) {
+        return;
+      }
+      setSubmitting(true);
+      try {
+        if (submitFeedback) {
+          await submitFeedback({
+            kind: 'ab-pick',
+            abPairId,
+            chosenResponseId,
+            otherResponseId,
+            chosenVariant: target,
           });
-          store.updateMessage(variantB.id, {
-            metadata: { ...variantB.metadata, ...patch },
-          });
-        } catch (err) {
-          // eslint-disable-next-line no-console
-          console.warn('[Copilot] ab-pick feedback failed:', err);
-        } finally {
-          setSubmitting(false);
         }
+        const patch = { userAbChoice: target } as const;
+        store.updateMessage(variantA.id, {
+          metadata: { ...variantA.metadata, ...patch },
+        });
+        store.updateMessage(variantB.id, {
+          metadata: { ...variantB.metadata, ...patch },
+        });
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('[Copilot] ab-pick feedback failed:', err);
+      } finally {
+        setSubmitting(false);
       }
     },
-    [
-      activeVariant,
-      variantA,
-      variantB,
-      apiRef,
-      submitFeedback,
-      abPairId,
-      persistedChoice,
-      store,
-    ],
+    [persistedChoice, variantA, variantB, abPairId, submitFeedback, store],
   );
 
   const activeMessage = activeVariant === 'A' ? variantA : variantB;
   const winnerVariant = persistedChoice;
+
+  const activeIsWinner = winnerVariant === activeVariant;
+  const bothStreamed = variantA.status !== 'streaming' && variantB.status !== 'streaming';
 
   return (
     <Card>
@@ -290,7 +352,7 @@ export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotA
           message={variantA}
           isWinner={winnerVariant === 'A'}
           isLoser={winnerVariant === 'B'}
-          onClick={() => handleSwitch('A')}
+          onClick={() => handlePreview('A')}
         />
         <VariantTab
           variant="B"
@@ -298,7 +360,7 @@ export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotA
           message={variantB}
           isWinner={winnerVariant === 'B'}
           isLoser={winnerVariant === 'A'}
-          onClick={() => handleSwitch('B')}
+          onClick={() => handlePreview('B')}
         />
       </TabBar>
       <Body role="tabpanel" aria-labelledby={`copilot-ab-tab-${activeVariant}`}>
@@ -309,9 +371,6 @@ export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotA
                 <React.Fragment>
                   <CopilotStreamingIndicator />
                   <CopilotMessageMetadata />
-                  {submitting && (
-                    <Chip aria-live="polite">recording your pick…</Chip>
-                  )}
                 </React.Fragment>
               }
               partProps={{
@@ -324,6 +383,37 @@ export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotA
           </ChatMessage>
         </ChatMessageGroup>
       </Body>
+      {bothStreamed && (
+        <CommitBar>
+          {winnerVariant ? (
+            <React.Fragment>
+              <CommitBadge>✓ Selected Variant {winnerVariant}</CommitBadge>
+              {!activeIsWinner && (
+                <CommitButton
+                  type="button"
+                  onClick={() => handlePick(activeVariant)}
+                  disabled={submitting}
+                  title={`Replace your pick with Variant ${activeVariant}`}
+                >
+                  Switch pick to {activeVariant}
+                </CommitButton>
+              )}
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <span>Pick the answer that worked better:</span>
+              <CommitButton
+                type="button"
+                onClick={() => handlePick(activeVariant)}
+                disabled={submitting}
+                title={`Record Variant ${activeVariant} as the winner`}
+              >
+                {submitting ? 'Recording…' : `Use Variant ${activeVariant}`}
+              </CommitButton>
+            </React.Fragment>
+          )}
+        </CommitBar>
+      )}
     </Card>
   );
 }
