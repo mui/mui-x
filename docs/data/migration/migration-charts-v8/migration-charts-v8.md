@@ -186,6 +186,10 @@ Follow the [Material UI migration guide](/material-ui/migration/upgrade-to-v9/)
 +"@mui/system": "^7.3.0",
 ```
 
+## Update your license key (Pro and Premium)
+
+{{"component": "modules/components/V9LicenseUpgradeWarning.js"}}
+
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v9. You can run `v9.0.0/charts/preset-safe` targeting only Charts or `v9.0.0/preset-safe` to target the other packages as well.

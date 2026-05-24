@@ -108,7 +108,7 @@ export function ChartsAccessibilityProxy() {
 
   return (
     <div
-      role="presentation"
+      role="none"
       tabIndex={message ? undefined : 0}
       ref={containerRef}
       style={fullSizeLayerStyle}

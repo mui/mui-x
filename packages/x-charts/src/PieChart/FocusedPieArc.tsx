@@ -44,6 +44,10 @@ export function FocusedPieArc(
 
   const item = series.data[focusedItem.dataIndex];
 
+  if (!item || item.hidden) {
+    return null;
+  }
+
   const { arcLabelRadius, ...arcSizes } = getModifiedArcProperties(
     series,
     pieSeriesLayout[focusedItem.seriesId],

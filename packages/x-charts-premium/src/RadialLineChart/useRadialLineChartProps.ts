@@ -3,6 +3,7 @@ import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { type ChartsClipPathProps } from '../ChartsClipPath';
 import { type ChartsRadialGridProps } from '../ChartsRadialGrid';
+import { type ChartsRadialAxisHighlightProps } from '../ChartsRadialAxisHighlight';
 import { type ChartsLegendSlotExtension } from '../ChartsLegend';
 import { type ChartsOverlayProps } from '../ChartsOverlay';
 
@@ -35,6 +36,7 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
     disableLineItemHighlight,
     hideLegend,
     grid,
+    axisHighlight,
     children,
     slots,
     slotProps,
@@ -57,6 +59,19 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
     [disableLineItemHighlight, series],
   );
 
+  const defaultRotationAxis = React.useMemo(() => {
+    return [
+      {
+        id: DEFAULT_ROTATION_AXIS_KEY,
+        scaleType: 'point' as const,
+        data: Array.from(
+          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
+          (_, index) => index,
+        ),
+      },
+    ];
+  }, [series, dataset]);
+
   const chartsContainerProps: ChartsRadialDataProviderProps<
     'radialLine',
     RadialLineChartPluginSignatures
@@ -68,22 +83,18 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
     margin,
     colors,
     dataset,
-    rotationAxis: rotationAxis ?? [
-      {
-        id: DEFAULT_ROTATION_AXIS_KEY,
-        scaleType: 'point',
-        data: Array.from(
-          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
-          (_, index) => index,
-        ),
-      },
-    ],
+    rotationAxis: rotationAxis ?? defaultRotationAxis,
     radiusAxis,
     skipAnimation,
     plugins: RADIAL_LINE_CHART_PLUGINS,
   };
 
   const gridProps: ChartsRadialGridProps | undefined = grid;
+
+  const axisHighlightProps: ChartsRadialAxisHighlightProps = {
+    rotation: 'line' as const,
+    ...axisHighlight,
+  };
 
   const clipPathGroupProps = {
     clipPath: `url(#${clipPathId})`,
@@ -114,6 +125,7 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
     chartsWrapperProps,
     chartsContainerProps,
     gridProps,
+    axisHighlightProps,
     clipPathProps,
     clipPathGroupProps,
     overlayProps,

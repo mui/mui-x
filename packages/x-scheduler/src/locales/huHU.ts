@@ -56,7 +56,7 @@ const huHUDialog: Partial<EventDialogLocaleText> = {
   // startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   // startDateLabel: 'Start date',
   // startTimeLabel: 'Start time',
-  // ScopeDialog
+  // RecurringScopeDialog
   // all: 'All events',
   // cancel: 'Cancel',
   // confirm: 'Confirm',
@@ -67,11 +67,8 @@ const huHUDialog: Partial<EventDialogLocaleText> = {
 };
 
 const huHUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  // hideEventsLabel: resourceName => `Hide events for ${resourceName}`,
+  // ResourcesTree
   // resourcesLabel: 'Resources',
-  // resourcesLegendSectionLabel: 'Resource legend',
-  // showEventsLabel: resourceName => `Show events for ${resourceName}`,
   // ViewSwitcher
   // agenda: 'Agenda',
   // day: 'Day',
@@ -96,6 +93,10 @@ const huHUCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // showWeekNumber: 'Show week number',
   // timeFormat: 'Time format',
   // viewSpecificOptions: view => `${view} view options`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
   // WeekView
   // allDay: 'All day',
   // MonthView

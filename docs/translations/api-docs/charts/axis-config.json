@@ -1,10 +1,11 @@
 {
-  "interfaceDescription": "Use this type for advanced typing. For basic usage, use <code>XAxis</code>, <code>YAxis</code>, <code>RotationAxis</code> or <code>RadiusAxis</code>.",
+  "interfaceDescription": "Use this type for advanced typing. For basic usage, use <code>XAxis</code> or <code>YAxis</code>.",
   "propertiesDescriptions": {
     "id": {
       "description": "ID used to identify the axis.<br /><br />The ID must be unique across all axes in this chart."
     },
     "scaleType": { "description": "" },
+    "axis": { "description": "" },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "className": { "description": "A CSS class name applied to the root element." },
     "colorMap": { "description": "" },
@@ -67,6 +68,9 @@
     "valueFormatter": { "description": "Formats the axis value." },
     "valueGetter": {
       "description": "A function to extract and transform the value from the <code>dataset</code> item.<br />It receives the full dataset item and should return the axis value.<br />Can be used as an alternative to <code>dataKey</code>."
+    },
+    "width": {
+      "description": "The width of the axis.<br />Set to <code>&#39;auto&#39;</code> to automatically calculate the width based on tick label measurements."
     },
     "zoom": { "description": "" }
   }

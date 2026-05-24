@@ -5,6 +5,7 @@ export * from './useChartCartesianAxisLayout.selectors';
 export * from './useChartCartesianInteraction.selectors';
 export * from './useChartCartesianHighlight.selectors';
 export * from './useChartCartesianAxisPreview.selectors';
+export { getBandIndex } from './useChartCartesianAxisPosition.selectors';
 export * from './useChartAxisAutoSize.selectors';
 export * from './useChartCartesianTooltip.selectors';
 export { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';

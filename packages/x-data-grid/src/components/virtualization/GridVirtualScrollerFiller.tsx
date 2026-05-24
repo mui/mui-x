@@ -73,7 +73,7 @@ function GridVirtualScrollerFiller({ rowsLength }: Props) {
   return (
     <Filler
       className={gridClasses.filler}
-      role="presentation"
+      role="none"
       style={
         {
           height,

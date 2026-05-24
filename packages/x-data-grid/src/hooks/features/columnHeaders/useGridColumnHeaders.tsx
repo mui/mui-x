@@ -198,11 +198,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
     return (
       <React.Fragment>
-        {isNotPinned && <div role="presentation" style={{ width: leftOffsetWidth }} />}
+        {isNotPinned && <div role="none" style={{ width: leftOffsetWidth }} />}
         {children}
         {isNotPinned && (
           <div
-            role="presentation"
+            role="none"
             className={clsx(
               gridClasses.filler,
               gridClasses['filler--horizontal'],

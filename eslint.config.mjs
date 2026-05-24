@@ -12,6 +12,7 @@ import eslintPluginMuiX from 'eslint-plugin-mui-x';
 import { defineConfig } from 'eslint/config';
 import * as path from 'node:path';
 import * as url from 'node:url';
+import remarkConfig from './.remarkrc.mjs';
 
 const filename = url.fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -27,9 +28,9 @@ const PICKERS_PACKAGES = ['x-date-pickers', 'x-date-pickers-pro'];
 const TREE_VIEW_PACKAGES = ['x-tree-view', 'x-tree-view-pro'];
 const SCHEDULER_PACKAGES = [
   'x-scheduler',
-  'x-scheduler-headless',
+  'x-scheduler-internals',
   'x-scheduler-premium',
-  'x-scheduler-headless-premium',
+  'x-scheduler-internals-premium',
 ];
 
 // Enable React Compiler Plugin rules globally
@@ -80,8 +81,8 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-tree-view-pro',
   '@mui/x-scheduler',
   '@mui/x-scheduler-premium',
-  '@mui/x-scheduler-headless',
-  '@mui/x-scheduler-headless-premium',
+  '@mui/x-scheduler-internals',
+  '@mui/x-scheduler-internals-premium',
 ];
 
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
@@ -112,7 +113,13 @@ export default defineConfig(
     baseDirectory: dirname,
     enableReactCompiler: isAnyReactCompilerPluginEnabled,
     materialUi: true,
+    markdown: true,
   }),
+  // eslint-plugin-mdx loads `.remarkrc.mjs` itself, but ESLint doesn't know
+  // that file is a config dependency, so `--cache` doesn't invalidate when
+  // it changes. Embedding the imported value in a setting puts its content
+  // into the resolved-config hash, forcing cache invalidation on edits.
+  { settings: { remarkConfig } },
   {
     name: 'MUI X Overrides',
     files: [`**/*${EXTENSION_TS}`],
@@ -193,6 +200,8 @@ export default defineConfig(
       'react-hooks/preserve-manual-memoization': 'off',
       'react-hooks/purity': 'off',
       'react-hooks/static-components': 'off',
+
+      'mui/no-presentation-role': 'error',
 
       // TODO(@Janpot) Fix issues and turn back on
       'mui/consistent-production-guard': 'off',
@@ -365,6 +374,10 @@ export default defineConfig(
     },
     rules: {
       'consistent-default-export-name/default-export-match-filename': ['error'],
+      // `role="none"` is an alias for `role="presentation"`, but aria-query treats
+      // them differently and reports `aria-hidden` as unsupported on `none`.
+      // See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1090
+      'jsx-a11y/role-supports-aria-props': 'off',
     },
   },
 
@@ -425,9 +438,9 @@ export default defineConfig(
   {
     files: [
       'packages/x-scheduler/**/*{.tsx,.ts,.js}',
-      'packages/x-scheduler-headless/**/*{.tsx,.ts,.js}',
+      'packages/x-scheduler-internals/**/*{.tsx,.ts,.js}',
       'packages/x-scheduler-premium/**/*{.tsx,.ts,.js}',
-      'packages/x-scheduler-headless-premium/**/*{.tsx,.ts,.js}',
+      'packages/x-scheduler-internals-premium/**/*{.tsx,.ts,.js}',
     ],
     rules: {
       // Base UI lint rules
@@ -451,8 +464,8 @@ export default defineConfig(
     'x-date-pickers-pro',
     'x-scheduler',
     'x-scheduler-premium',
-    'x-scheduler-headless',
-    'x-scheduler-headless-premium',
+    'x-scheduler-internals',
+    'x-scheduler-internals-premium',
     'x-tree-view',
     'x-tree-view-pro',
     'x-license',
@@ -503,7 +516,7 @@ export default defineConfig(
 
   // We can't use the react-compiler plugin in the base-ui-utils folder because the Base UI team doesn't use it yet.
   {
-    files: ['packages/x-scheduler-headless/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
+    files: ['packages/x-scheduler-internals/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
     rules: {
       'react-compiler/react-compiler': 'off',
     },
@@ -514,8 +527,8 @@ export default defineConfig(
     files: [
       `packages/x-scheduler/src/**/*${EXTENSION_TS}`,
       `packages/x-scheduler-premium/src/**/*${EXTENSION_TS}`,
-      `packages/x-scheduler-headless/src/**/*${EXTENSION_TS}`,
-      `packages/x-scheduler-headless-premium/src/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler-internals/src/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler-internals-premium/src/**/*${EXTENSION_TS}`,
       `packages/x-virtualizer/src/**/*${EXTENSION_TS}`,
     ],
     rules: {

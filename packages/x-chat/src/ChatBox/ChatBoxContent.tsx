@@ -467,7 +467,6 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
               {messageIds.length === 0 && !showSuggestions && (
                 <ChatBoxEmptyState>
                   <ChatBoxEmptyStateIcon
-                    xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"

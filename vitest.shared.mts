@@ -16,7 +16,7 @@ export const alias = [
     { lib: 'x-tree-view', plans: ['pro'] },
     { lib: 'x-data-grid', plans: ['pro', 'premium', 'generator'] },
     { lib: 'x-scheduler', plans: ['premium'] },
-    { lib: 'x-scheduler-headless', plans: ['premium'] },
+    { lib: 'x-scheduler-internals', plans: ['premium'] },
     { lib: 'x-internals' },
     { lib: 'x-internal-gestures' },
     { lib: 'x-license' },
@@ -53,10 +53,6 @@ export default defineConfig({
   define: {
     'process.env.NODE_ENV': '"test"',
     __ALLOW_TEST_LICENSES__: 'true',
-  },
-  esbuild: {
-    minifyIdentifiers: false,
-    keepNames: true,
   },
   resolve: {
     alias,
@@ -111,14 +107,14 @@ export default defineConfig({
     // Performance improvements for the tests.
     // https://vitest.dev/guide/improving-performance.html#improving-performance
     ...(process.env.CI && {
-      // Important to avoid timeouts on CI.
-      fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.
-      testTimeout: 30000,
+      // Tests run ~3x slower under React 19 stable than React 18 (CPU-bound,
+      // mostly @testing-library/user-event async timing); the slowest legitimate
+      // tests touch ~17s in CI, so 30s leaves no headroom for noise.
+      testTimeout: 60000,
       // Retry failed tests up to 3 times. This is useful for flaky tests.
       retry: 3,
-      // Reduce the number of workers to avoid CI timeouts.
-      maxWorkers: 1,
+      maxWorkers: 2,
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },

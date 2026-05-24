@@ -1,4 +1,5 @@
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
+import * as React from 'react';
 import { spy } from 'sinon';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { RichTreeViewProStore } from '../../RichTreeViewProStore';
@@ -32,7 +33,7 @@ async function awaitMockFetch() {
 
 describeTreeView<RichTreeViewProStore<any, any>>(
   'TreeViewLazyLoadingPlugin',
-  ({ render, treeViewComponentName }) => {
+  ({ render, renderFromJSX, treeViewComponentName, TreeViewComponent, TreeItemComponent }) => {
     if (treeViewComponentName === 'SimpleTreeView' || treeViewComponentName === 'RichTreeView') {
       return;
     }
@@ -190,6 +191,79 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         await screen.findByText('1-1-1-1');
         expect(view.isItemExpanded('1')).to.equal(true);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '1-1-1', '1-1-1-1']);
+      });
+
+      it('should allow items loaded after remounting to be expanded from onItemsLazyLoaded', async () => {
+        let responseId = 0;
+        const fetchDataWithNested = async (): Promise<ItemType[]> => {
+          responseId += 1;
+
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve([
+                {
+                  id: `${responseId}`,
+                  childrenCount: 1,
+                  children: [{ id: `${responseId}-1`, childrenCount: 0 }],
+                },
+              ]);
+            }, 0);
+          });
+        };
+
+        function TestCase() {
+          const apiRef = React.useRef<any>(undefined);
+          const [treeKey, setTreeKey] = React.useState(0);
+
+          return (
+            <React.Fragment>
+              <button type="button" onClick={() => setTreeKey((previousKey) => previousKey + 1)}>
+                regenerate key
+              </button>
+              <TreeViewComponent
+                key={treeKey}
+                items={[]}
+                apiRef={apiRef}
+                dataSource={{
+                  getChildrenCount: (item) => item?.childrenCount as number,
+                  getTreeItems: fetchDataWithNested,
+                }}
+                disableVirtualization
+                slots={{ item: TreeItemComponent }}
+                slotProps={{
+                  item: (ownerState) =>
+                    ({
+                      'data-testid': ownerState.itemId,
+                    }) as any,
+                }}
+                getItemLabel={(item) => item.id}
+                onItemsLazyLoaded={({ items }) => {
+                  items.forEach((item) => {
+                    if (item.children && item.children.length > 0) {
+                      apiRef.current?.setItemExpansion({
+                        event: null,
+                        itemId: item.id,
+                        shouldBeExpanded: true,
+                      });
+                    }
+                  });
+                }}
+              />
+            </React.Fragment>
+          );
+        }
+
+        const view = renderFromJSX(<TestCase />);
+
+        await awaitMockFetch();
+        await screen.findByText('1-1');
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
+
+        fireEvent.click(screen.getByRole('button', { name: 'regenerate key' }));
+
+        await awaitMockFetch();
+        await screen.findByText('2-1');
+        expect(view.getAllTreeItemIds()).to.deep.equal(['2', '2-1']);
       });
 
       it('should use the data from props.items on mount', () => {

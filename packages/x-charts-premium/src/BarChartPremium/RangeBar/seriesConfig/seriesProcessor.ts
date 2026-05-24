@@ -20,6 +20,8 @@ const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset, isItemVis
       dataset === undefined &&
       process.env.NODE_ENV !== 'production'
     ) {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         `MUI X Charts: range bar series with id='${id}' has no data.
 Either provide a data property to the series or use the dataset prop.`,

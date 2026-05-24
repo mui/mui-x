@@ -11,7 +11,6 @@ import { GridRoot } from './styledComponents';
 import { ChartsRotationGrid } from './ChartsRotationGrid';
 import { ChartsRadiusGrid } from './ChartsRadiusGrid';
 import { useRotationAxes, useRadiusAxes } from '../hooks/useAxis';
-import { EPSILON } from '../utils/epsilon';
 
 const useUtilityClasses = ({ classes }: ChartsRadialGridProps) => {
   const slots = {
@@ -67,20 +66,8 @@ function ChartsRadialGrid(inProps: ChartsRadialGridProps) {
   const outerRadius = radiusAxisConfig?.scale.range()[1] ?? 0;
 
   const startAngle = rotationAxisConfig?.scale.range()[0] ?? 0;
-  let endAngle = rotationAxisConfig?.scale.range()[1] ?? 0;
-
-  if (rotationAxisConfig.scaleType === 'point') {
-    // The rotation gap we add between the first and last point.
-    const dataRotationGap = (2 * Math.PI) / rotationAxisConfig.data!.length;
-
-    // The missing angle between the last and first point.
-    const angleGap = 2 * Math.PI - Math.abs(endAngle - startAngle);
-    if (Math.abs(angleGap - dataRotationGap) < EPSILON) {
-      // If they are close enough we close the circle.
-      // Otherwise it means user deliberately modified the angles and so keep it as it is.
-      endAngle = startAngle + 2 * Math.PI;
-    }
-  }
+  const endAngle = rotationAxisConfig?.scale.range()[1] ?? 0;
+  const isFullCircle = rotationAxisConfig?.isFullCircle ?? false;
 
   return (
     <GridRoot {...other} className={clsx(classes.root, className)}>
@@ -98,6 +85,7 @@ function ChartsRadialGrid(inProps: ChartsRadialGridProps) {
           axis={radiusAxisConfig}
           startAngle={startAngle}
           endAngle={endAngle}
+          isFullCircle={isFullCircle}
           classes={classes}
         />
       )}

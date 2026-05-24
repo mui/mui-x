@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
-import { describeAdapters } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 import { DateRangeCalendar } from './DateRangeCalendar';
 
 describe('<DateRangeCalendar /> - Timezone', () => {

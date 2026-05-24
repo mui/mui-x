@@ -1,4 +1,5 @@
-import { expectFieldValue, describeAdapters } from 'test/utils/pickers';
+import { expectFieldValue } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 import { DateField } from '@mui/x-date-pickers/DateField';
 
 describeAdapters('<DateField /> - Format', DateField, ({ adapter, renderWithProps }) => {

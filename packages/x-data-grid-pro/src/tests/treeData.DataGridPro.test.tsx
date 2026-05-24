@@ -231,6 +231,21 @@ describe('<DataGridPro /> - Tree data', () => {
         'C',
       ]);
     });
+
+    // Regression test for https://github.com/mui/mui-x/issues/22310
+    it('should not crash when path segments match Object.prototype property names', () => {
+      render(
+        <Test
+          rows={[
+            { id: 0, name: 'constructor.leaf1' },
+            { id: 1, name: 'constructor.leaf2' },
+          ]}
+          getRowId={(row) => row.id}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+      expect(getColumnValues(1)).to.deep.equal(['', 'constructor.leaf1', 'constructor.leaf2']);
+    });
   });
 
   describe('prop: defaultGroupingExpansionDepth', () => {

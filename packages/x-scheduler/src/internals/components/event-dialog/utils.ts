@@ -6,8 +6,8 @@ import {
   TemporalSupportedObject,
   SchedulerProcessedDate,
   TemporalTimezone,
-} from '@mui/x-scheduler-headless/models';
-import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
+} from '@mui/x-scheduler-internals/models';
+import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { EventDialogLocaleText } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
