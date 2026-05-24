@@ -116,6 +116,32 @@ const TabSubLabel = styled('span', {
   textTransform: 'lowercase',
 });
 
+const TabStats = styled('span', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotAbVariantTabStats',
+})({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: vars.spacing(0.5),
+  marginTop: vars.spacing(0.25),
+  font: vars.typography.font.small,
+  color: vars.colors.foreground.muted,
+});
+
+const TabStat = styled('span', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotAbVariantTabStat',
+})({
+  display: 'inline-flex',
+  alignItems: 'center',
+  // Subtle visual separator between price and latency.
+  ':not(:last-of-type)::after': {
+    content: '"·"',
+    marginLeft: vars.spacing(0.5),
+    opacity: 0.6,
+  },
+});
+
 const Chip = styled('span', {
   name: 'MuiDataGrid',
   slot: 'CopilotAbVariantChip',
@@ -203,6 +229,21 @@ function shortenModel(modelId: string | null | undefined): string {
   return slash >= 0 ? modelId.slice(slash + 1) : modelId;
 }
 
+function formatCost(costUsd: number | null | undefined): string | null {
+  if (typeof costUsd !== 'number' || Number.isNaN(costUsd)) {
+    return null;
+  }
+  if (costUsd === 0) {
+    return '$0';
+  }
+  // Sub-cent precision when the cost is small, two decimals otherwise.
+  if (costUsd < 0.01) {
+    const fixed = costUsd.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+    return `$${fixed}`;
+  }
+  return `$${costUsd.toFixed(2)}`;
+}
+
 interface VariantTabProps {
   variant: 'A' | 'B';
   selected: boolean;
@@ -216,13 +257,22 @@ function VariantTab({ variant, selected, message, isWinner, isLoser, onClick }: 
   const modelLabel = shortenModel(message.metadata?.modelArmId ?? message.metadata?.modelId);
   const promptVersion = message.metadata?.promptVersion;
   const isStreaming = message.status === 'streaming';
+  // Per-variant headline stats — cost + latency. Both arrive on the
+  // `finish` chunk's `messageMetadata`, so they're set as soon as the
+  // variant's stream completes (the tab updates without a separate
+  // round-trip). Skipped when the value is missing or while streaming.
+  const costLabel = formatCost(message.metadata?.costUsd);
+  const elapsedTime = message.metadata?.elapsedTime;
+  const latencyLabel =
+    typeof elapsedTime === 'string' && elapsedTime.length > 0 ? elapsedTime : null;
+  const hasStats = !isStreaming && (costLabel !== null || latencyLabel !== null);
   return (
     <TabButton
       type="button"
       aria-selected={selected}
       onClick={onClick}
       disabled={false}
-      title={`Variant ${variant} • ${modelLabel}${promptVersion ? ` • prompt ${promptVersion}` : ''}`}
+      title={`Variant ${variant} • ${modelLabel}${promptVersion ? ` • prompt ${promptVersion}` : ''}${costLabel ? ` • ${costLabel}` : ''}${latencyLabel ? ` • ${latencyLabel}` : ''}`}
     >
       <TabLabel>
         Variant {variant}
@@ -234,6 +284,12 @@ function VariantTab({ variant, selected, message, isWinner, isLoser, onClick }: 
         {modelLabel}
         {promptVersion ? ` · ${promptVersion}` : ''}
       </TabSubLabel>
+      {hasStats && (
+        <TabStats aria-label="Variant stats">
+          {costLabel !== null && <TabStat title="Total cost">{costLabel}</TabStat>}
+          {latencyLabel !== null && <TabStat title="Response latency">{latencyLabel}</TabStat>}
+        </TabStats>
+      )}
     </TabButton>
   );
 }
