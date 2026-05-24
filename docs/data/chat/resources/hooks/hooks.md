@@ -138,7 +138,7 @@ function StatusFooter() {
   if (error) return <Alert severity="error">{error.message}</Alert>;
   if (isStreaming) return <LinearProgress />;
   if (typingUserIds.length > 0) {
-    return <Typography variant="caption">Someone is typing...</Typography>;
+    return <Typography variant="caption">Someone is typing…</Typography>;
   }
   return null;
 }
