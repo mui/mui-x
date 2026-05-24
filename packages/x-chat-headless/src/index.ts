@@ -59,7 +59,11 @@ export {
 
 export type { ChatProviderProps } from './ChatProvider';
 
-export type { ChatAdapter, PaginationDirection } from './adapters/chatAdapter';
+export type {
+  ChatAdapter,
+  ChatSendMessageInput,
+  PaginationDirection,
+} from './adapters/chatAdapter';
 
 export { createAiSdkAdapter } from './adapters/createAiSdkAdapter';
 export type {

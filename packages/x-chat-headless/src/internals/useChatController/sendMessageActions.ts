@@ -80,6 +80,7 @@ export function createSendMessageActions<Cursor = string>(params: {
         onToolCall: runtimeRef.current.onToolCall,
         onFinish: runtimeRef.current.onFinish,
         onData: runtimeRef.current.onData,
+        allowMultipleMessages: runtimeRef.current.adapter.allowMultipleMessages,
       });
 
       let status: 'cancelled' | 'error' | 'sent';
