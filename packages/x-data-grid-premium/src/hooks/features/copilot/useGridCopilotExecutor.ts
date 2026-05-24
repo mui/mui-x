@@ -984,7 +984,14 @@ function injectExecutorResultsMetadata(
   return new ReadableStream<ChatMessageChunk | ChatStreamEnvelope>({
     async start(controller) {
       const reader = source.getReader();
-      let bufferedFinish: ChatMessageChunk | ChatStreamEnvelope | undefined;
+      // Slip the executor-results frame in BEFORE the very first `finish`
+      // chunk so it rides on the variant that the executor actually
+      // applied to the grid (variant A in A/B mode, the sole response in
+      // single mode). Subsequent `finish` chunks (variant B in A/B mode)
+      // pass through verbatim — they carry their own `messageMetadata`
+      // (modelId/costUsd/elapsedTime) that has to reach `processStream`'s
+      // `case 'finish'` to land on the matching message.
+      let firstFinishHandled = false;
       try {
         while (true) {
           // eslint-disable-next-line no-await-in-loop
@@ -993,11 +1000,31 @@ function injectExecutorResultsMetadata(
             break;
           }
           const chunk = isEnvelope(value) ? value.chunk : value;
-          if (chunk.type === 'finish') {
-            // Hold the terminal `finish` so the metadata chunk lands first
-            // — `processStream`'s `case 'finish'` flips the message to
-            // `sent`, after which any later chunks would be ignored.
-            bufferedFinish = value;
+          if (chunk.type === 'finish' && !firstFinishHandled) {
+            firstFinishHandled = true;
+            // Resolve the executor's result for this turn (or time out so
+            // a hung executor doesn't block the message from closing).
+            // Branches of the teed stream advance lock-step, so by the
+            // time we read the chat-branch `finish` the executor branch
+            // has already fired `onResults` and resolved the promise.
+            // eslint-disable-next-line no-await-in-loop
+            const result = await Promise.race([
+              resultsPromise,
+              new Promise<undefined>((resolve) => {
+                setTimeout(() => resolve(undefined), RESULTS_AWAIT_TIMEOUT_MS);
+              }),
+            ]).catch(() => undefined);
+
+            if (result && (result.applied.length > 0 || result.skipped.length > 0)) {
+              const metadataChunk: ChatMessageChunk = {
+                type: 'message-metadata',
+                metadata: {
+                  gridCopilotExecutionResult: result,
+                },
+              } as unknown as ChatMessageChunk;
+              controller.enqueue(metadataChunk);
+            }
+            controller.enqueue(value);
             continue;
           }
           controller.enqueue(value);
@@ -1009,31 +1036,6 @@ function injectExecutorResultsMetadata(
         reader.releaseLock();
       }
 
-      let result: GridCopilotExecutionResult | undefined;
-      try {
-        result = await Promise.race([
-          resultsPromise,
-          new Promise<undefined>((resolve) => {
-            setTimeout(() => resolve(undefined), RESULTS_AWAIT_TIMEOUT_MS);
-          }),
-        ]);
-      } catch {
-        result = undefined;
-      }
-
-      if (result && (result.applied.length > 0 || result.skipped.length > 0)) {
-        const metadataChunk: ChatMessageChunk = {
-          type: 'message-metadata',
-          metadata: {
-            gridCopilotExecutionResult: result,
-          },
-        } as unknown as ChatMessageChunk;
-        controller.enqueue(metadataChunk);
-      }
-
-      if (bufferedFinish !== undefined) {
-        controller.enqueue(bufferedFinish);
-      }
       controller.close();
     },
   });
