@@ -57,6 +57,7 @@ default-job: &default-job
     BASE_BRANCH: master
   working_directory: /tmp/mui
   executor: code-infra/mui-node
+  resource_class: medium
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -276,7 +277,6 @@ jobs:
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.60.0-noble
-    resource_class: medium
     steps:
       - checkout
       - run:
