@@ -826,22 +826,28 @@ function CopilotMessageItem({
     [pluginToolSlots],
   );
 
-  // A/B-pair detection: when two assistant messages share an `abPairId`, we
-  // collapse them into a single tabbed card rendered by `CopilotAbVariantTabs`.
-  // The card is rendered by the LEADER (first sibling in `messageIds` order)
-  // and the FOLLOWER renders nothing — that way the tabbed UI shows up in the
-  // chronological position of the first-arrived variant, and the second
-  // variant doesn't take up a second slot in the message list.
+  // A/B-pair detection: when an assistant message carries `abPairId`, we
+  // render a tabbed card instead of the standard message bubble. The card
+  // mounts as soon as VARIANT A's preamble lands — the twin (variant B)
+  // may still be streaming, in which case the Variant B tab shows a
+  // placeholder until B's first chunks arrive. That gives the user an
+  // immediate visual cue that an A/B comparison is in progress, instead
+  // of waiting for both responses to finish before the UI changes shape.
+  //
+  // Suppression rule: variant B's message (when it does arrive) is the
+  // FOLLOWER — its slot in the message list returns `null` so the tabbed
+  // card stays in variant A's chronological position.
   const store = useChatStore();
   const messageIds = useMessageIds();
   const message = store.state.messagesById[id];
   const abPairId = message?.metadata?.abPairId;
+  const abVariant = message?.metadata?.abVariant;
   const pair = React.useMemo(() => {
     if (!abPairId) {
       return null;
     }
-    let leaderId: string | undefined;
-    let followerId: string | undefined;
+    let variantAId: string | undefined;
+    let variantBId: string | undefined;
     for (const otherId of messageIds) {
       const other = store.state.messagesById[otherId];
       if (!other || other.role !== 'assistant') {
@@ -850,36 +856,46 @@ function CopilotMessageItem({
       if (other.metadata?.abPairId !== abPairId) {
         continue;
       }
-      if (!leaderId) {
-        leaderId = otherId;
-      } else if (!followerId) {
-        followerId = otherId;
+      if (other.metadata?.abVariant === 'A' && !variantAId) {
+        variantAId = otherId;
+      } else if (other.metadata?.abVariant === 'B' && !variantBId) {
+        variantBId = otherId;
+      }
+      if (variantAId && variantBId) {
         break;
       }
     }
-    if (!leaderId || !followerId) {
+    if (!variantAId && !variantBId) {
       return null;
     }
-    return { leaderId, followerId };
+    return { variantAId, variantBId };
   }, [abPairId, messageIds, store.state.messagesById]);
 
   if (pair) {
-    if (id === pair.followerId) {
-      // The leader rendered the tabbed card already; suppress this slot.
+    // The follower (variant B) always suppresses — variant A's slot
+    // hosts the tabbed card. When variant A doesn't yet exist (rare
+    // edge case where B arrives first), variant B renders the card
+    // until A catches up.
+    const leaderId = pair.variantAId ?? pair.variantBId!;
+    if (id !== leaderId) {
       return null;
     }
-    const leader = store.state.messagesById[pair.leaderId];
-    const follower = store.state.messagesById[pair.followerId];
-    if (!leader || !follower) {
-      // Fall through to single-message rendering until both siblings exist.
-    } else {
-      const variantA = leader.metadata?.abVariant === 'A' ? leader : follower;
-      const variantB = leader.metadata?.abVariant === 'A' ? follower : leader;
+    const variantA = pair.variantAId ? store.state.messagesById[pair.variantAId] : undefined;
+    const variantB = pair.variantBId ? store.state.messagesById[pair.variantBId] : undefined;
+    if (variantA || variantB) {
       return (
-        <CopilotAbVariantTabs variantA={variantA} variantB={variantB} toolSlots={toolSlots} />
+        <CopilotAbVariantTabs
+          abPairId={abPairId!}
+          variantA={variantA}
+          variantB={variantB}
+          toolSlots={toolSlots}
+        />
       );
     }
   }
+  // `abVariant` exists without a pair record: defensive fallback — keep the
+  // normal single-message rendering so the user at least sees the response.
+  void abVariant;
 
   return (
     <ChatMessageGroup messageId={id} slots={{ authorName: CopilotAuthorNameSlot }}>

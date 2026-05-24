@@ -162,6 +162,17 @@ const Body = styled('div', {
   padding: vars.spacing(1),
 });
 
+const BodyPlaceholder = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotAbVariantBodyPlaceholder',
+})({
+  padding: vars.spacing(1.5),
+  textAlign: 'center',
+  color: vars.colors.foreground.muted,
+  font: vars.typography.font.small,
+  fontStyle: 'italic',
+});
+
 const CommitBar = styled('div', {
   name: 'MuiDataGrid',
   slot: 'CopilotAbVariantCommitBar',
@@ -247,13 +258,34 @@ function formatCost(costUsd: number | null | undefined): string | null {
 interface VariantTabProps {
   variant: 'A' | 'B';
   selected: boolean;
-  message: HeadlessChatMessage;
+  message: HeadlessChatMessage | undefined;
   isWinner: boolean;
   isLoser: boolean;
   onClick: () => void;
 }
 
 function VariantTab({ variant, selected, message, isWinner, isLoser, onClick }: VariantTabProps) {
+  // Placeholder while the twin variant's stream hasn't started yet.
+  // Mounting the tab eagerly (instead of waiting for both responses)
+  // gives the user an immediate visual cue that an A/B comparison is in
+  // progress and avoids an awkward layout shift mid-stream.
+  if (!message) {
+    return (
+      <TabButton
+        type="button"
+        aria-selected={selected}
+        onClick={onClick}
+        disabled
+        title={`Variant ${variant} is loading…`}
+      >
+        <TabLabel>
+          Variant {variant}
+          <Chip>loading…</Chip>
+        </TabLabel>
+        <TabSubLabel>waiting for response…</TabSubLabel>
+      </TabButton>
+    );
+  }
   const modelLabel = shortenModel(message.metadata?.modelArmId ?? message.metadata?.modelId);
   const promptVersion = message.metadata?.promptVersion;
   const isStreaming = message.status === 'streaming';
@@ -295,19 +327,27 @@ function VariantTab({ variant, selected, message, isWinner, isLoser, onClick }: 
 }
 
 interface CopilotAbVariantTabsProps {
-  variantA: HeadlessChatMessage;
-  variantB: HeadlessChatMessage;
+  /** Shared pair id — known from the leader's preamble before both
+   *  variants have streamed. Required so feedback POSTs work even when
+   *  one of the variants is still pending. */
+  abPairId: string;
+  variantA: HeadlessChatMessage | undefined;
+  variantB: HeadlessChatMessage | undefined;
   toolSlots: Record<string, Partial<ToolPartSlots>>;
 }
 
-export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotAbVariantTabsProps) {
+export function CopilotAbVariantTabs({
+  abPairId,
+  variantA,
+  variantB,
+  toolSlots,
+}: CopilotAbVariantTabsProps) {
   const store = useChatStore();
   const apiRef = useGridApiContext();
   const submitFeedback = useCopilotFeedback();
 
-  const abPairId = variantA.metadata?.abPairId ?? variantB.metadata?.abPairId ?? '';
   const persistedChoice =
-    variantA.metadata?.userAbChoice ?? variantB.metadata?.userAbChoice ?? undefined;
+    variantA?.metadata?.userAbChoice ?? variantB?.metadata?.userAbChoice ?? undefined;
 
   // Local UI state: which tab is currently visible. Initialises to the
   // persisted user choice (so reload lands on the picked variant) or 'A'
@@ -329,18 +369,22 @@ export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotA
   // that variant's cached envelope but does NOT commit the choice. The
   // commit happens via the explicit "Use this answer" button below, so
   // the user can flip through both variants on the grid before deciding
-  // which one to mark as the winner for analytics.
+  // which one to mark as the winner for analytics. Tab clicks for a
+  // variant that hasn't streamed yet just toggle the visible content (no
+  // grid swap — there's no cached envelope to replay).
   const handlePreview = React.useCallback(
     (target: 'A' | 'B') => {
       if (target === activeVariant) {
         return;
       }
       const targetMessage = target === 'A' ? variantA : variantB;
-      try {
-        apiRef.current?.copilot?.switchToVariant?.(targetMessage.id);
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.warn('[Copilot] switchToVariant failed:', err);
+      if (targetMessage) {
+        try {
+          apiRef.current?.copilot?.switchToVariant?.(targetMessage.id);
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn('[Copilot] switchToVariant failed:', err);
+        }
       }
       setActiveVariant(target);
     },
@@ -352,7 +396,10 @@ export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotA
   // `copilot-ab-winner` scorer + `ab_user_choice` on `copilot_request`)
   // can track which variant the user actually selected. Idempotent —
   // re-clicking the same picked variant is a no-op; picking the other
-  // variant overwrites the previous choice and re-fires feedback.
+  // variant overwrites the previous choice and re-fires feedback. The
+  // button surfaces only once both variants have finished streaming, so
+  // this path always sees fully-formed messages — but we still guard
+  // defensively against missing siblings.
   const handlePick = React.useCallback(
     async (target: 'A' | 'B') => {
       if (target === persistedChoice) {
@@ -360,6 +407,9 @@ export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotA
       }
       const targetMessage = target === 'A' ? variantA : variantB;
       const otherMessage = target === 'A' ? variantB : variantA;
+      if (!targetMessage || !otherMessage) {
+        return;
+      }
       const chosenResponseId = targetMessage.metadata?.responseId;
       const otherResponseId = otherMessage.metadata?.responseId;
       if (!chosenResponseId || !otherResponseId || !abPairId) {
@@ -377,11 +427,11 @@ export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotA
           });
         }
         const patch = { userAbChoice: target } as const;
-        store.updateMessage(variantA.id, {
-          metadata: { ...variantA.metadata, ...patch },
+        store.updateMessage(targetMessage.id, {
+          metadata: { ...targetMessage.metadata, ...patch },
         });
-        store.updateMessage(variantB.id, {
-          metadata: { ...variantB.metadata, ...patch },
+        store.updateMessage(otherMessage.id, {
+          metadata: { ...otherMessage.metadata, ...patch },
         });
       } catch (err) {
         // eslint-disable-next-line no-console
@@ -397,7 +447,15 @@ export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotA
   const winnerVariant = persistedChoice;
 
   const activeIsWinner = winnerVariant === activeVariant;
-  const bothStreamed = variantA.status !== 'streaming' && variantB.status !== 'streaming';
+  // Show the commit bar only once both variants have FINISHED streaming
+  // (i.e. both messages exist AND neither is mid-stream). Picking before
+  // a variant has fully arrived would race with the executor and risk
+  // sending an `ab-pick` with a half-formed responseId.
+  const bothStreamed =
+    !!variantA &&
+    !!variantB &&
+    variantA.status !== 'streaming' &&
+    variantB.status !== 'streaming';
 
   return (
     <Card>
@@ -420,24 +478,28 @@ export function CopilotAbVariantTabs({ variantA, variantB, toolSlots }: CopilotA
         />
       </TabBar>
       <Body role="tabpanel" aria-labelledby={`copilot-ab-tab-${activeVariant}`}>
-        <ChatMessageGroup messageId={activeMessage.id}>
-          <ChatMessage messageId={activeMessage.id}>
-            <ChatMessageContent
-              afterContent={
-                <React.Fragment>
-                  <CopilotStreamingIndicator />
-                  <CopilotMessageMetadata />
-                </React.Fragment>
-              }
-              partProps={{
-                tool: {
-                  toolSlots,
-                },
-              }}
-            />
-            <ChatMessageMeta />
-          </ChatMessage>
-        </ChatMessageGroup>
+        {activeMessage ? (
+          <ChatMessageGroup messageId={activeMessage.id}>
+            <ChatMessage messageId={activeMessage.id}>
+              <ChatMessageContent
+                afterContent={
+                  <React.Fragment>
+                    <CopilotStreamingIndicator />
+                    <CopilotMessageMetadata />
+                  </React.Fragment>
+                }
+                partProps={{
+                  tool: {
+                    toolSlots,
+                  },
+                }}
+              />
+              <ChatMessageMeta />
+            </ChatMessage>
+          </ChatMessageGroup>
+        ) : (
+          <BodyPlaceholder>Waiting for Variant {activeVariant} to respond…</BodyPlaceholder>
+        )}
       </Body>
       {bothStreamed && (
         <CommitBar>
