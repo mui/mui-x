@@ -3,6 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import { useMessageContext, useMessageIds, useChatStore } from '@mui/x-chat-headless';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 /**
  * Footer rendered under every assistant message in the Copilot panel.
@@ -159,6 +160,7 @@ function CopilotMessageFooter() {
   const ctx = useMessageContext();
   const message = ctx.message;
   const store = useChatStore();
+  const apiRef = useGridApiContext();
   const submitFeedback = useCopilotFeedback();
   const [pending, setPending] = React.useState<string | null>(null);
 
@@ -205,7 +207,7 @@ function CopilotMessageFooter() {
   };
 
   const onPick = async (variant: 'A' | 'B') => {
-    if (!submitFeedback || !abPairId || !sibling || !abVariant) {
+    if (!abPairId || !sibling || !abVariant) {
       return;
     }
     const siblingResponseId = sibling.metadata?.responseId;
@@ -214,15 +216,27 @@ function CopilotMessageFooter() {
     }
     const chosenResponseId = variant === abVariant ? responseId : siblingResponseId;
     const otherResponseId = variant === abVariant ? siblingResponseId : responseId;
+    const chosenMessageId = variant === abVariant ? message.id : sibling.id;
     setPending(`pick:${variant}`);
+    // Switch the grid preview FIRST so the user sees the picked variant
+    // immediately, before the (possibly slow) feedback POST round-trip.
+    // No-op when picking the already-applied variant (typically A).
     try {
-      await submitFeedback({
-        kind: 'ab-pick',
-        abPairId,
-        chosenResponseId,
-        otherResponseId,
-        chosenVariant: variant,
-      });
+      apiRef.current?.copilot?.switchToVariant?.(chosenMessageId);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[Copilot] switchToVariant failed:', err);
+    }
+    try {
+      if (submitFeedback) {
+        await submitFeedback({
+          kind: 'ab-pick',
+          abPairId,
+          chosenResponseId,
+          otherResponseId,
+          chosenVariant: variant,
+        });
+      }
       // Patch both messages so the picked state survives reload and the
       // sibling footer collapses to its "not chosen" badge.
       const patch = { userAbChoice: variant } as const;

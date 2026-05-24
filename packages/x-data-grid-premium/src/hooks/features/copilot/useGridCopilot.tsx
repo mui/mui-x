@@ -19,8 +19,16 @@ export const useGridCopilot = (
   const isCopilotAvailable = !!props.copilot;
   const { slots } = props;
 
-  const { wrappedAdapter, applyEnvelope, getResultsForMessage, subscribeResults } =
-    useGridCopilotExecutor(apiRef, props);
+  const {
+    wrappedAdapter,
+    applyEnvelope,
+    switchToVariant,
+    getResultsForMessage,
+    subscribeResults,
+    queryResults,
+    hydrateQueryResultsFromMessages,
+  } = useGridCopilotExecutor(apiRef, props);
+  const getQueryResults = React.useCallback(() => queryResults, [queryResults]);
 
   const addCopilotPanel = React.useCallback<GridPipeProcessor<'sidebar'>>(
     (initialValue, value) => {
@@ -52,7 +60,17 @@ export const useGridCopilot = (
   useGridApiMethod(
     apiRef,
     {
-      copilot: { open, close, getAdapter, applyEnvelope, getResultsForMessage, subscribeResults },
+      copilot: {
+        open,
+        close,
+        getAdapter,
+        applyEnvelope,
+        switchToVariant,
+        getResultsForMessage,
+        subscribeResults,
+        getQueryResults,
+        hydrateQueryResultsFromMessages,
+      },
     },
     'public',
   );
