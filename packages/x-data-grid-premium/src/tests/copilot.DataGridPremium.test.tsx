@@ -103,6 +103,31 @@ function createAssistantTextStream(
   });
 }
 
+function createAssistantSetGridStateStream(
+  messageId: string,
+  patchesJsonl: string,
+): ReadableStream<ChatMessageChunk | ChatStreamEnvelope> {
+  const toolCallId = `${messageId}-set-grid-state`;
+  return new ReadableStream<ChatMessageChunk | ChatStreamEnvelope>({
+    start(controller) {
+      controller.enqueue({ type: 'start', messageId });
+      controller.enqueue({
+        type: 'tool-input-start',
+        toolCallId,
+        toolName: 'setGridState',
+      } as ChatMessageChunk);
+      controller.enqueue({
+        type: 'tool-input-available',
+        toolCallId,
+        toolName: 'setGridState',
+        input: { patches: patchesJsonl },
+      } as ChatMessageChunk);
+      controller.enqueue({ type: 'finish', messageId, finishReason: 'stop' });
+      controller.close();
+    },
+  });
+}
+
 describe('<DataGridPremium /> - Copilot pivot auto-activation', () => {
   const { render } = createRenderer();
 
@@ -723,6 +748,177 @@ describe('<DataGridPremium /> - Copilot grouping + aggregation auto-layout', () 
   });
 });
 
+// Regression suite for the chartsIntegration stale-closure overwrite. The
+// failure mode was: when an envelope set `/aggregation` and `/charts/<id>` in
+// the same tick, the chart hook's debounced `updateOtherModels` would re-read
+// `aggregationModel` from a stale React closure and overwrite the just-set
+// function with the first available one (`'sum'` for most numeric columns).
+// These tests pin down the multi-feature behaviour the Copilot reconciler
+// relies on so any future regression surfaces fast.
+describe('<DataGridPremium /> - Copilot multi-feature envelopes', () => {
+  const { render } = createRenderer();
+  let apiRef: RefObject<GridApi | null>;
+
+  function Test(props: Partial<DataGridPremiumProps> = {}) {
+    apiRef = useGridApiRef();
+    return (
+      <div style={{ width: 700, height: 500 }}>
+        <DataGridPremium
+          rows={ROWS}
+          columns={COLUMNS}
+          apiRef={apiRef}
+          copilot
+          chartsIntegration
+          {...props}
+        />
+      </div>
+    );
+  }
+
+  function envelopeFromPatches(patches: Array<Record<string, unknown>>): string {
+    return patches.map((p) => JSON.stringify(p)).join('\n');
+  }
+
+  it('preserves /aggregation when applied alongside /charts/<id> in one envelope', async () => {
+    render(<Test />);
+
+    await act(async () => {
+      (apiRef.current as any)?.copilot.applyEnvelope({
+        setGridState: envelopeFromPatches([
+          { op: 'replace', path: '/grouping', value: ['country'] },
+          { op: 'replace', path: '/aggregation', value: { salary: 'avg' } },
+          {
+            op: 'replace',
+            path: '/charts/main',
+            value: {
+              type: 'column',
+              dimensions: [{ field: 'country' }],
+              values: [{ field: 'salary' }],
+              synced: true,
+            },
+          },
+        ]),
+      });
+    });
+
+    // Wait for the debounced chart pipeline to flush.
+    await new Promise((r) => {
+      setTimeout(r, 50);
+    });
+
+    expect((apiRef.current as any)?.state.aggregation.model).to.deep.equal({ salary: 'avg' });
+  });
+
+  ['min', 'max', 'avg', 'size'].forEach((aggFn) => {
+    it(`preserves /aggregation='${aggFn}' with a chart in the same envelope`, async () => {
+      render(<Test />);
+
+      await act(async () => {
+        (apiRef.current as any)?.copilot.applyEnvelope({
+          setGridState: envelopeFromPatches([
+            { op: 'replace', path: '/grouping', value: ['country'] },
+            { op: 'replace', path: '/aggregation', value: { salary: aggFn } },
+            {
+              op: 'replace',
+              path: '/charts/main',
+              value: {
+                type: 'column',
+                dimensions: [{ field: 'country' }],
+                values: [{ field: 'salary' }],
+                synced: true,
+              },
+            },
+          ]),
+        });
+      });
+
+      await new Promise((r) => {
+        setTimeout(r, 50);
+      });
+
+      expect((apiRef.current as any)?.state.aggregation.model).to.deep.equal({ salary: aggFn });
+    });
+  });
+
+  it('preserves a multi-column /aggregation alongside a multi-value chart', async () => {
+    render(<Test />);
+
+    await act(async () => {
+      (apiRef.current as any)?.copilot.applyEnvelope({
+        setGridState: envelopeFromPatches([
+          { op: 'replace', path: '/grouping', value: ['country'] },
+          { op: 'replace', path: '/aggregation', value: { salary: 'avg', id: 'max' } },
+          {
+            op: 'replace',
+            path: '/charts/main',
+            value: {
+              type: 'column',
+              dimensions: [{ field: 'country' }],
+              values: [{ field: 'salary' }, { field: 'id' }],
+              synced: true,
+            },
+          },
+        ]),
+      });
+    });
+
+    await new Promise((r) => {
+      setTimeout(r, 50);
+    });
+
+    expect((apiRef.current as any)?.state.aggregation.model).to.deep.equal({
+      salary: 'avg',
+      id: 'max',
+    });
+  });
+
+  it('applies filter, sort, grouping, aggregation and chart together without cross-feature corruption', async () => {
+    render(<Test />);
+
+    await act(async () => {
+      (apiRef.current as any)?.copilot.applyEnvelope({
+        setGridState: envelopeFromPatches([
+          {
+            op: 'replace',
+            path: '/filter',
+            value: {
+              items: [{ id: 0, field: 'salary', operator: '>', value: 100 }],
+            },
+          },
+          {
+            op: 'replace',
+            path: '/sort',
+            value: [{ field: 'salary', sort: 'desc' }],
+          },
+          { op: 'replace', path: '/grouping', value: ['country'] },
+          { op: 'replace', path: '/aggregation', value: { salary: 'avg' } },
+          {
+            op: 'replace',
+            path: '/charts/main',
+            value: {
+              type: 'column',
+              dimensions: [{ field: 'country' }],
+              values: [{ field: 'salary' }],
+              synced: true,
+            },
+          },
+        ]),
+      });
+    });
+
+    await new Promise((r) => {
+      setTimeout(r, 50);
+    });
+
+    const state = (apiRef.current as any)?.state;
+    expect(state.filter.filterModel.items.length).to.equal(1);
+    expect(state.filter.filterModel.items[0].field).to.equal('salary');
+    expect(state.sorting.sortModel).to.deep.equal([{ field: 'salary', sort: 'desc' }]);
+    expect(state.rowGrouping.model).to.deep.equal(['country']);
+    expect(state.aggregation.model).to.deep.equal({ salary: 'avg' });
+  });
+});
+
 describe('<DataGridPremium /> - Copilot chat persistence', () => {
   const { render } = createRenderer();
   const getStorageKey = (key = 'default') => `mui-x-copilot-history:v1:${key}`;
@@ -1269,5 +1465,41 @@ describe('<DataGridPremium /> - Copilot chat persistence', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Open Copilot menu' }));
     expect(await screen.findByText('No prompt history')).not.to.equal(null);
+  });
+
+  it('persists the executor result on message.metadata so custom UIs survive reload', async () => {
+    const sendInputs: Array<Parameters<ChatAdapter['sendMessage']>[0]> = [];
+    const patchLine = JSON.stringify({
+      op: 'replace',
+      path: '/sort',
+      value: [{ field: 'salary', sort: 'desc' }],
+    });
+    const adapter: ChatAdapter = {
+      async sendMessage(input) {
+        sendInputs.push(input);
+        return createAssistantSetGridStateStream(`assistant-${sendInputs.length}`, patchLine);
+      },
+    };
+
+    render(<Test adapter={createGridCopilotLocalStorageAdapter(adapter)} />);
+
+    await sendPrompt('Sort by salary desc', 1, sendInputs);
+
+    const conversationId = sendInputs[0].conversationId!;
+
+    await waitFor(() => {
+      const stored = readStoredCopilotState();
+      const persistedMessages = stored.messagesByConversationId[conversationId];
+      expect(persistedMessages, 'persisted messages').to.not.equal(undefined);
+      const assistantMessage = persistedMessages.find((m: any) => m.role === 'assistant');
+      expect(assistantMessage, 'persisted assistant message').to.not.equal(undefined);
+      const execResult = assistantMessage.metadata?.gridCopilotExecutionResult;
+      expect(execResult, 'gridCopilotExecutionResult on message.metadata').to.not.equal(undefined);
+      expect(execResult.applied).to.be.an('array');
+      const patchEntry = execResult.applied.find(
+        (entry: any) => entry.kind === 'patch' && entry.path === '/sort',
+      );
+      expect(patchEntry, 'sort patch entry in persisted applied list').to.not.equal(undefined);
+    });
   });
 });
