@@ -23,12 +23,19 @@ import type {
   ChatSuggestion,
   ChatStreamEnvelope,
   ChatUser,
+  ToolPartSlots,
 } from '@mui/x-chat-headless';
 import { ChatRoot, useChat, useChatComposer, useMessageIds } from '@mui/x-chat-headless';
 import { GridMenuIcon } from '@mui/x-data-grid';
 import { createSvgIcon } from '@mui/x-data-grid/internals';
+import {
+  CopilotPluginRenderProvider,
+  type CopilotPlugin,
+} from '../../hooks/features/copilot/plugins';
 import { CopilotToolBlock } from './CopilotToolBlock';
+import { CopilotDataQueryApproval } from './CopilotDataQueryApproval';
 import { CopilotMessageMetadata } from './CopilotMessageMetadata';
+import { CopilotMessageFooter } from './CopilotMessageFooter';
 import { CopilotStreamingIndicator } from './CopilotStreamingIndicator';
 import { CopilotTurnSpacer } from './CopilotTurnSpacer';
 import { getGridCopilotLocalStorageAdapterController } from '../../hooks/features/copilot/createGridCopilotLocalStorageAdapter';
@@ -379,6 +386,13 @@ const CopilotDisclaimer = styled('div', {
   fontWeight: vars.typography.fontWeight.medium,
   color: vars.colors.foreground.muted,
   fontSize: '8pt',
+});
+
+const PostTurnSuggestionsShell = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'CopilotPanelPostTurnSuggestions',
+})({
+  marginBottom: vars.spacing(0.75),
 });
 
 const CopilotMenuRoot = styled('div', {
@@ -757,7 +771,22 @@ function CopilotAuthorNameSlot(props: {
   );
 }
 
-function CopilotMessageItem({ id }: { id: string }) {
+function CopilotMessageItem({
+  id,
+  pluginToolSlots,
+}: {
+  id: string;
+  pluginToolSlots: Record<string, Partial<ToolPartSlots>>;
+}) {
+  const toolSlots = React.useMemo(
+    () => ({
+      setGridState: { root: CopilotToolBlock },
+      runCommands: { root: CopilotToolBlock },
+      queryGridData: { root: CopilotDataQueryApproval },
+      ...pluginToolSlots,
+    }),
+    [pluginToolSlots],
+  );
   return (
     <ChatMessageGroup messageId={id} slots={{ authorName: CopilotAuthorNameSlot }}>
       <ChatMessage messageId={id}>
@@ -766,14 +795,12 @@ function CopilotMessageItem({ id }: { id: string }) {
             <React.Fragment>
               <CopilotStreamingIndicator />
               <CopilotMessageMetadata />
+              <CopilotMessageFooter />
             </React.Fragment>
           }
           partProps={{
             tool: {
-              toolSlots: {
-                setGridState: { root: CopilotToolBlock },
-                runCommands: { root: CopilotToolBlock },
-              },
+              toolSlots,
             },
           }}
         />
@@ -783,9 +810,69 @@ function CopilotMessageItem({ id }: { id: string }) {
   );
 }
 
+const EMPTY_QUERY_RESULTS = new Map() as unknown as ReadonlyMap<string, never>;
+
+function mergePluginToolSlots(
+  plugins: readonly CopilotPlugin[] | undefined,
+): Record<string, Partial<ToolPartSlots>> {
+  if (!plugins?.length) {
+    return {};
+  }
+  const merged: Record<string, Partial<ToolPartSlots>> = {};
+  for (const plugin of plugins) {
+    if (!plugin.toolSlots) {
+      continue;
+    }
+    for (const [toolName, slot] of Object.entries(plugin.toolSlots)) {
+      merged[toolName] = slot;
+    }
+  }
+  return merged;
+}
+
+/**
+ * Compact chip strip rendered above the composer that surfaces the
+ * suggestions emitted by the backend on every assistant turn
+ * (`message.metadata.suggestions`). Stays visible after the empty-state
+ * hero is gone (via `alwaysVisible`) so users always have a one-tap
+ * follow-up. Renders nothing while the latest assistant message has no
+ * suggestions yet.
+ */
+function CopilotPostTurnSuggestions() {
+  const { messages } = useChat();
+  const lastSuggestions = React.useMemo<string[] | undefined>(() => {
+    for (let i = messages.length - 1; i >= 0; i -= 1) {
+      const m = messages[i];
+      if (m.role !== 'assistant') {
+        continue;
+      }
+      const metadata = m.metadata as { suggestions?: unknown } | undefined;
+      if (metadata?.suggestions && Array.isArray(metadata.suggestions)) {
+        const stringSuggestions = metadata.suggestions.filter(
+          (s): s is string => typeof s === 'string',
+        );
+        return stringSuggestions.length > 0 ? stringSuggestions : undefined;
+      }
+      return undefined;
+    }
+    return undefined;
+  }, [messages]);
+
+  if (!lastSuggestions || lastSuggestions.length === 0) {
+    return null;
+  }
+
+  return (
+    <PostTurnSuggestionsShell>
+      <ChatSuggestions suggestions={lastSuggestions.slice(0, 4)} alwaysVisible autoSubmit />
+    </PostTurnSuggestionsShell>
+  );
+}
+
 function CopilotComposer() {
   return (
     <CopilotComposerShell>
+      <CopilotPostTurnSuggestions />
       <ChatComposer
         variant="compact"
         features={{ attachments: false }}
@@ -825,13 +912,38 @@ CopilotMessageListContent.propTypes = {
   ownerState: PropTypes.any,
 } as any;
 
-function CopilotThreadView({ suggestions }: { suggestions: Array<ChatSuggestion | string> }) {
+/**
+ * Re-executes `queryGridData` tool calls from the persisted message list so
+ * the in-memory result cache (which plugins consult to resolve `$state`
+ * paths) survives a localStorage reload. Renders nothing; subscribes to
+ * `useChat().messages` and calls the grid API's hydrate method whenever the
+ * messages array changes.
+ */
+function CopilotQueryResultsHydrator() {
+  const apiRef = useGridApiContext();
+  const { messages } = useChat();
+  React.useEffect(() => {
+    apiRef.current.copilot.hydrateQueryResultsFromMessages?.(messages);
+  }, [apiRef, messages]);
+  return null;
+}
+
+function CopilotThreadView({
+  suggestions,
+  pluginToolSlots,
+}: {
+  suggestions: Array<ChatSuggestion | string>;
+  pluginToolSlots: Record<string, Partial<ToolPartSlots>>;
+}) {
   const apiRef = useGridApiContext();
   const messageIds = useMessageIds();
 
-  const renderItem = React.useCallback((params: { id: string }) => {
-    return <CopilotMessageItem id={params.id} />;
-  }, []);
+  const renderItem = React.useCallback(
+    (params: { id: string }) => {
+      return <CopilotMessageItem id={params.id} pluginToolSlots={pluginToolSlots} />;
+    },
+    [pluginToolSlots],
+  );
 
   return (
     <CopilotThreadRoot>
@@ -887,6 +999,7 @@ type CopilotPanelView = 'thread' | 'menu' | 'history' | 'suggestions';
 interface CopilotPanelContentProps {
   suggestions: Array<ChatSuggestion | string>;
   view: CopilotPanelView;
+  pluginToolSlots: Record<string, Partial<ToolPartSlots>>;
   onOpenMenu: () => void;
   onCloseMenu: () => void;
   onSelectConversation: (conversationId: string) => void;
@@ -1284,6 +1397,7 @@ function CopilotPanelContent(props: CopilotPanelContentProps) {
   const {
     suggestions,
     view,
+    pluginToolSlots,
     onOpenMenu,
     onCloseMenu,
     onSelectConversation,
@@ -1340,7 +1454,7 @@ function CopilotPanelContent(props: CopilotPanelContentProps) {
     <React.Fragment>
       <CopilotThreadHeader onOpenMenu={onOpenMenu} onNewConversation={onNewConversation} />
       <CopilotPanelBody>
-        <CopilotThreadView suggestions={suggestions} />
+        <CopilotThreadView suggestions={suggestions} pluginToolSlots={pluginToolSlots} />
       </CopilotPanelBody>
     </React.Fragment>
   );
@@ -1351,6 +1465,17 @@ function GridCopilotPanel() {
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
   const [view, setView] = React.useState<CopilotPanelView>('thread');
+  const copilotPlugins = (rootProps as { copilotPlugins?: readonly CopilotPlugin[] })
+    .copilotPlugins;
+  const pluginToolSlots = React.useMemo(
+    () => mergePluginToolSlots(copilotPlugins),
+    [copilotPlugins],
+  );
+  const queryResults = apiRef.current.copilot?.getQueryResults?.() ?? EMPTY_QUERY_RESULTS;
+  const pluginRenderContextValue = React.useMemo(
+    () => ({ queryResults, apiRef }),
+    [queryResults, apiRef],
+  );
   // The wrapped adapter tees the response stream so tool-call events apply
   // to the grid via the executor. Falls back to the user-provided adapter
   // (no wrapping), then to the built-in echo adapter for the empty state.
@@ -1627,40 +1752,44 @@ function GridCopilotPanel() {
 
   return (
     <CopilotPanelRoot className={classes.root}>
-      <ChatRoot
-        key={`${supportsPersistentHistory ? 'history' : 'single'}-${resetKey}`}
-        adapter={adapter}
-        activeConversationId={supportsPersistentHistory ? activeConversationId : undefined}
-        currentUser={COPILOT_CURRENT_USER}
-        density="standard"
-        variant="compact"
-        localeText={{
-          composerInputAriaLabel: apiRef.current.getLocaleText('promptFieldLabel'),
-          composerInputPlaceholder: apiRef.current.getLocaleText('promptFieldPlaceholder'),
-          composerSendButtonLabel: apiRef.current.getLocaleText('promptFieldSend'),
-          suggestionsLabel: apiRef.current.getLocaleText('aiAssistantSuggestions'),
-        }}
-        onActiveConversationChange={
-          supportsPersistentHistory ? handleActiveConversationChange : undefined
-        }
-        onFinish={handleFinish}
-        slotProps={{
-          root: {
-            style: { display: 'contents' },
-          },
-        }}
-      >
-        <CopilotPanelContent
-          suggestions={rootProps.copilotSuggestions ?? DEFAULT_SUGGESTIONS}
-          view={view}
-          onOpenMenu={() => setView('menu')}
-          onCloseMenu={() => setView('thread')}
-          onSelectConversation={handleSelectConversation}
-          onOpenHistory={() => setView('history')}
-          onOpenSuggestions={() => setView('suggestions')}
-          onNewConversation={handleNewConversation}
-        />
-      </ChatRoot>
+      <CopilotPluginRenderProvider value={pluginRenderContextValue}>
+        <ChatRoot
+          key={`${supportsPersistentHistory ? 'history' : 'single'}-${resetKey}`}
+          adapter={adapter}
+          activeConversationId={supportsPersistentHistory ? activeConversationId : undefined}
+          currentUser={COPILOT_CURRENT_USER}
+          density="standard"
+          variant="compact"
+          localeText={{
+            composerInputAriaLabel: apiRef.current.getLocaleText('promptFieldLabel'),
+            composerInputPlaceholder: apiRef.current.getLocaleText('promptFieldPlaceholder'),
+            composerSendButtonLabel: apiRef.current.getLocaleText('promptFieldSend'),
+            suggestionsLabel: apiRef.current.getLocaleText('aiAssistantSuggestions'),
+          }}
+          onActiveConversationChange={
+            supportsPersistentHistory ? handleActiveConversationChange : undefined
+          }
+          onFinish={handleFinish}
+          slotProps={{
+            root: {
+              style: { display: 'contents' },
+            },
+          }}
+        >
+          <CopilotQueryResultsHydrator />
+          <CopilotPanelContent
+            suggestions={rootProps.copilotSuggestions ?? DEFAULT_SUGGESTIONS}
+            view={view}
+            pluginToolSlots={pluginToolSlots}
+            onOpenMenu={() => setView('menu')}
+            onCloseMenu={() => setView('thread')}
+            onSelectConversation={handleSelectConversation}
+            onOpenHistory={() => setView('history')}
+            onOpenSuggestions={() => setView('suggestions')}
+            onNewConversation={handleNewConversation}
+          />
+        </ChatRoot>
+      </CopilotPluginRenderProvider>
     </CopilotPanelRoot>
   );
 }

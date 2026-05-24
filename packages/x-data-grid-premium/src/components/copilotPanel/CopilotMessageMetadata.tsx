@@ -18,6 +18,20 @@ declare module '@mui/x-chat-headless/types' {
     suggestions?: Array<ChatSuggestion | string> | null;
     suggestionsModelId?: string | null;
     suggestionsCostUsd?: number | null;
+    // A/B-test correlation fields. Set on every assistant message the
+    // backend emits when `COPILOT_AB_TEST_RATE > 0`. `abPairId` groups the
+    // two sibling messages; `abVariant` labels each ('A' or 'B'). The
+    // footer uses these to render the pick-one card and to POST
+    // `kind: 'ab-pick'` feedback. `userFeedback` / `userAbChoice` survive
+    // the localStorage round-trip so the footer collapses to a steady
+    // "✓ Chosen" / "Thanks!" state on reload.
+    abPairId?: string;
+    abVariant?: 'A' | 'B';
+    promptVersion?: 'v2' | 'v5';
+    modelArmId?: string;
+    responseId?: string;
+    userFeedback?: 'positive' | 'negative';
+    userAbChoice?: 'A' | 'B';
   }
 }
 
@@ -184,11 +198,7 @@ function CopilotMessageMetadata() {
       )}
       {hasSuggestions && (
         <SuggestionsBlock>
-          <ChatSuggestions
-            suggestions={suggestionsList.slice(0, 3)}
-            autoSubmit
-            alwaysVisible
-          />
+          <ChatSuggestions suggestions={suggestionsList.slice(0, 3)} autoSubmit alwaysVisible />
         </SuggestionsBlock>
       )}
     </React.Fragment>

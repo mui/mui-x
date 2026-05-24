@@ -1,8 +1,39 @@
 export type { GridCopilotAdapter, GridCopilotApi } from './gridCopilotInterfaces';
+export { buildCopilotColumnContext, type CopilotColumnContextBase } from './buildColumnContext';
+export type {
+  CopilotPlugin,
+  CopilotPluginContext,
+  CopilotPluginRenderContextValue,
+} from './plugins';
+export {
+  CopilotPluginRenderProvider,
+  useCopilotPluginRenderContext,
+  findToolPartByCallId,
+} from './plugins';
+export type {
+  GridDataQueryInput,
+  GridDataQueryResult,
+  GridDataAggregationResult,
+  GridDataQueryPreview,
+} from './executor/queryGridData';
+export { evaluateFormula } from './executor/formula';
+export type {
+  FormulaResult,
+  FormulaSuccess,
+  FormulaFailure,
+  FormulaScope,
+  FormulaValue,
+  FormulaEvalContext,
+} from './executor/formula';
 export {
   createGridCopilotLocalStorageAdapter,
   type GridCopilotLocalStorageAdapterOptions,
 } from './createGridCopilotLocalStorageAdapter';
+export {
+  createGridCopilotAbAdapter,
+  type CreateGridCopilotAbAdapterOptions,
+  type AbTwinMetadata,
+} from './createGridCopilotAbAdapter';
 export { gridCopilotPanelOpenSelector } from './gridCopilotSelectors';
 export {
   // Types
