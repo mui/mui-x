@@ -400,6 +400,37 @@ const PostTurnSuggestionsShell = styled('div', {
   slot: 'CopilotPanelPostTurnSuggestions',
 })({
   marginBottom: vars.spacing(0.75),
+  // Force a single-row horizontal layout for the follow-up chips: they
+  // stack vertically by default (the underlying `ChatSuggestions` root
+  // uses `flexWrap: wrap` with a centered column on narrow panels). Side
+  // panels are tall + narrow, so a horizontal strip immediately above the
+  // composer keeps the chat scroll area unobstructed; chips overflowing
+  // the panel width scroll horizontally instead of pushing the composer
+  // down.
+  overflow: 'hidden',
+  '& .MuiChatSuggestions-root': {
+    display: 'flex',
+    flexWrap: 'nowrap',
+    justifyContent: 'flex-start',
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    padding: vars.spacing(0.5, 0.25),
+    gap: vars.spacing(0.75),
+    // Tame the horizontal scrollbar to a thin track so it doesn't compete
+    // with the composer's send button for visual weight.
+    scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      height: 6,
+    },
+    '&::-webkit-scrollbar-thumb': {
+      borderRadius: 3,
+      background: vars.colors.border.base,
+    },
+  },
+  '& .MuiChatSuggestions-item': {
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+  },
 });
 
 const CopilotMenuRoot = styled('div', {

@@ -2,8 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
-import { ChatSuggestions } from '@mui/x-chat';
-import { type ChatSuggestion, useMessageContext, useMessageIds } from '@mui/x-chat-headless';
+import { type ChatSuggestion, useMessageContext } from '@mui/x-chat-headless';
 
 // Augment the chat-headless message metadata shape so `message.metadata.modelId`
 // / `costUsd` / `elapsedTime` / `suggestions` are visible to TypeScript. The
@@ -72,14 +71,6 @@ const Value = styled('td')({
   wordBreak: 'break-all',
 });
 
-const SuggestionsBlock = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotMessageSuggestions',
-})({
-  marginTop: vars.spacing(1),
-  width: '100%',
-});
-
 function formatCost(costUsd: number): string {
   if (costUsd === 0) {
     return '$0.00';
@@ -111,7 +102,6 @@ function useExposeMetadata(): boolean {
 function CopilotMessageMetadata() {
   const ctx = useMessageContext();
   const message = ctx.message;
-  const messageIds = useMessageIds();
   const exposeMetadata = useExposeMetadata();
   if (!message || message.role !== 'assistant') {
     return null;
@@ -131,10 +121,6 @@ function CopilotMessageMetadata() {
   const hasSuggestionsCost = typeof suggestionsCostUsd === 'number';
   const suggestionsList = Array.isArray(suggestions) ? suggestions : [];
   const hasSuggestionsRows = suggestionsList.length > 0;
-  // Only surface follow-up suggestions on the most recent assistant message
-  // so stale suggestions from earlier turns don't accumulate in the thread.
-  const isLastMessage = messageIds[messageIds.length - 1] === message.id;
-  const hasSuggestions = isLastMessage && hasSuggestionsRows;
 
   const hasAnyMetadataRow =
     hasModel ||
@@ -143,7 +129,7 @@ function CopilotMessageMetadata() {
     hasSuggestionsModel ||
     hasSuggestionsCost ||
     hasSuggestionsRows;
-  if (!hasAnyMetadataRow && !hasSuggestions) {
+  if (!hasAnyMetadataRow) {
     return null;
   }
 
@@ -196,11 +182,14 @@ function CopilotMessageMetadata() {
           </Table>
         </Card>
       )}
-      {hasSuggestions && (
-        <SuggestionsBlock>
-          <ChatSuggestions suggestions={suggestionsList.slice(0, 3)} autoSubmit alwaysVisible />
-        </SuggestionsBlock>
-      )}
+      {/*
+        Follow-up suggestion chips for the latest assistant message render
+        in `CopilotPostTurnSuggestions` (mounted above the composer). We
+        deliberately do NOT render them again inside the message body to
+        avoid the duplicated chip strip that showed up after the A/B card
+        landed — each variant kept emitting its own `suggestions` payload
+        and the panel ended up rendering two near-identical lists.
+      */}
     </React.Fragment>
   );
 }
