@@ -35,6 +35,16 @@ export interface ProcessStreamOptions {
   onData?: ChatOnData;
   onToolCall?: ChatOnToolCall;
   onFinish?: ChatOnFinish;
+  /**
+   * When `true`, the read loop keeps going past the first sibling's
+   * terminal chunk (`finish` / `abort`) until the upstream stream closes
+   * naturally. Lets a single `sendMessage` call land more than one
+   * assistant message in the store — used by the grid Copilot A/B adapter,
+   * which merges two parallel responses into one logical chunk stream.
+   *
+   * Default `false` — the production single-response path is unchanged.
+   */
+  allowMultipleMessages?: boolean;
 }
 
 export interface ProcessStreamResult {
@@ -265,13 +275,32 @@ export async function processStream<Cursor = string>(
 
     switch (chunk.type) {
       case 'start':
+        // Multi-message-per-turn support: when an upstream adapter wraps
+        // multiple assistant responses into one logical stream (e.g. the
+        // grid Copilot A/B adapter, which fires a twin fetch in parallel),
+        // a second `start` chunk arrives with a different `messageId`. We
+        // finalize the previous target as `sent` before switching, so each
+        // sibling message ends up in the store with its own status, and we
+        // reset `didReceiveTerminalChunk` so the read loop doesn't exit on
+        // the previous sibling's `finish` chunk. The single-message path is
+        // unchanged (the guards collapse to no-ops).
+        if (targetMessageId && targetMessageId !== chunk.messageId) {
+          finalizeMessage('sent');
+          didReceiveTerminalChunk = false;
+          finishReason = undefined;
+        }
         targetMessageId = chunk.messageId;
         startAuthor = chunk.author;
         ensureAssistantMessage();
         return;
 
       case 'finish':
-        targetMessageId ??= chunk.messageId;
+        // Finish chunks always target the specific messageId on the chunk
+        // — never the floating `targetMessageId`, which may be pointing at
+        // a sibling sent in parallel. Without this distinction, an
+        // interleaved AB stream would write the second message's finish
+        // metadata onto the first sibling.
+        targetMessageId = chunk.messageId ?? targetMessageId;
         ensureAssistantMessage();
         finishReason = chunk.finishReason;
         if (chunk.messageMetadata) {
@@ -635,7 +664,13 @@ export async function processStream<Cursor = string>(
       // eslint-disable-next-line no-await-in-loop
       await processIncoming(value);
 
-      if (didReceiveTerminalChunk) {
+      // In multi-message mode (the grid Copilot A/B adapter merges two
+      // parallel responses into one logical stream) we DON'T break on the
+      // first sibling's `finish` chunk — the upstream will close the reader
+      // naturally once both siblings are done. The next `start` chunk in
+      // `processChunk` resets `didReceiveTerminalChunk` and finalizes the
+      // previous sibling.
+      if (didReceiveTerminalChunk && !options.allowMultipleMessages) {
         break;
       }
     }

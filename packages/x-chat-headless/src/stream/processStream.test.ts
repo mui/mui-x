@@ -79,6 +79,61 @@ describe('processStream', () => {
     });
   });
 
+  it('lands sibling assistant messages when a second `start` with a different messageId arrives', async () => {
+    // Adapters that fan out parallel responses (the grid Copilot A/B
+    // adapter) merge two upstream streams into one logical chunk stream.
+    // processStream should treat a second `start` chunk as the boundary
+    // between siblings: finalize the previous target, then begin a new
+    // assistant message under the fresh id.
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'a1' },
+        { type: 'text-delta', id: 't1', delta: 'A response' },
+        { type: 'finish', messageId: 'a1', finishReason: 'stop' },
+        { type: 'start', messageId: 'b1' },
+        { type: 'text-delta', id: 't2', delta: 'B response' },
+        { type: 'finish', messageId: 'b1', finishReason: 'stop' },
+      ]),
+      { conversationId: 'c1', allowMultipleMessages: true },
+    );
+
+    expect(store.state.messageIds).toEqual(['a1', 'b1']);
+    expect(store.state.messagesById.a1.status).toBe('sent');
+    expect(store.state.messagesById.a1.parts).toEqual([
+      { type: 'text', text: 'A response', state: 'done' },
+    ]);
+    expect(store.state.messagesById.b1.status).toBe('sent');
+    expect(store.state.messagesById.b1.parts).toEqual([
+      { type: 'text', text: 'B response', state: 'done' },
+    ]);
+  });
+
+  it('finalizes the previous sibling even when no finish chunk fires before a new start', async () => {
+    // Defensive case: if the upstream loses a `finish` chunk for the
+    // first sibling, the second `start` still terminates it cleanly so
+    // the store doesn't carry a phantom streaming message.
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'a1' },
+        { type: 'text-delta', id: 't1', delta: 'A response' },
+        { type: 'start', messageId: 'b1' },
+        { type: 'text-delta', id: 't2', delta: 'B response' },
+        { type: 'finish', messageId: 'b1', finishReason: 'stop' },
+      ]),
+      { conversationId: 'c1', allowMultipleMessages: true },
+    );
+
+    expect(store.state.messageIds).toEqual(['a1', 'b1']);
+    expect(store.state.messagesById.a1.status).toBe('sent');
+    expect(store.state.messagesById.b1.status).toBe('sent');
+  });
+
   it('tracks reasoning parts separately from text parts', async () => {
     const store = new ChatStore();
 
