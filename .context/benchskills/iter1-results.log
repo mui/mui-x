@@ -1,0 +1,2332 @@
+Extended Copilot quality benchmark — A/B variants × research arms
+  2 variants × 6 arms × 95 prompts × 1 tool-schemes = 1140 calls
+  schemes:  verbose
+  concurrency: 20 prompts in parallel per (variant, scheme, arm)
+  variants: v2, v5
+  sources:  managed, research
+  datasets: orders, hr, finance, logistics
+  catalog:  44 state paths, 17 commands
+
+
+
+@@@@@@@@@@@@@@@@@@@@ SCHEME: verbose — descriptive multi-word names @@@@@@@@@@@@@@@@@@@@
+
+
+######## VARIANT V2 (scheme=verbose) ########
+
+=== v2/verbose / arm: haiku-4-5 (anthropic/claude-haiku-4-5, managed) ===
+  skill-chart-4                        ✓ (2853ms) $0.027838
+  skill-whatif-2                       ✗ (3017ms) $0.002188 — wrong-tool-call-count
+  skill-pivot-2                        ✓ (3385ms) $0.027944
+  skill-pivot-4                        ✓ (3607ms) $0.002480
+  skill-outlier-5                      ✗ (3617ms) $0.002230 — refused-wrongly,refused-wrongly
+  skill-outlier-4                      ✓ (3744ms) $0.002357
+  skill-outlier-3                      ✗ (3844ms) $0.002948 — refused-wrongly,refused-wrongly
+  skill-outlier-1                      ✗ (4096ms) $0.002492 — refused-wrongly,refused-wrongly
+  skill-chart-5                        ✓ (4158ms) $0.002444
+  skill-chart-1                        ✓ (4629ms) $0.027893
+  skill-pivot-1                        ✓ (4759ms) $0.027985
+  skill-pivot-6                        ✓ (4851ms) $0.002568
+  skill-whatif-4                       ✗ (4901ms) $0.002970 — wrong-tool-call-count
+  skill-outlier-2                      ✗ (4941ms) $0.028141 — refused-wrongly,refused-wrongly
+  skill-pivot-3                        ✓ (4960ms) $0.027810
+  skill-whatif-3                       ✗ (5081ms) $0.002148 — wrong-tool-call-count
+  skill-whatif-1                       ✓ (5128ms) $0.030573
+  skill-chart-3                        ✓ (5301ms) $0.002757
+  skill-pin-2                          ✓ (2299ms) $0.002223
+  skill-pivot-5                        ✓ (5618ms) $0.002174
+  skill-chart-2                        ✓ (5638ms) $0.028039
+  skill-pin-3                          ✓ (2454ms) $0.002228
+  skill-pin-4                          ✓ (2766ms) $0.002040
+  skill-story-2                        ✓ (2745ms) $0.002374
+  reg-formula-3                        ✓ (1636ms) $0.001990
+  reg-pdf-1                            ✗ (2139ms) $0.002266 — missing-required-tool
+  reg-pdf-2                            ✗ (2034ms) $0.002225 — missing-required-tool
+  reg-formula-2                        ✓ (1822ms) $0.001993
+  reg-formula-1                        ✓ (2315ms) $0.001996
+  reg-filter-3                         ✓ (1688ms) $0.001972
+  reg-pdf-3                            ✗ (2540ms) $0.002130 — missing-required-tool
+  reg-pdf-4                            ✗ (2737ms) $0.002402 — missing-required-tool,missing-required-tool
+  skill-surprise-3                     ✓ (3097ms) $0.002601
+  reg-filter-2                         ✓ (2300ms) $0.001932
+  reg-formula-4                        ✓ (2807ms) $0.002103
+  reg-filter-1                         ✓ (2839ms) $0.001978
+  skill-surprise-2                     ✗ (4391ms) $0.002424 — wrong-tool-call-count
+  reg-group-3                          ✓ (1721ms) $0.002034
+  reg-sort-2                           ✓ (2390ms) $0.001917
+  reg-sort-1                           ✓ (3044ms) $0.001904
+  reg-group-1                          ✓ (2495ms) $0.002316
+  skill-surprise-1                     ✗ (4939ms) $0.005377 — wrong-tool-call-count
+  skill-story-1                        ✗ (5511ms) $0.003714 — missing-required-tool
+  reg-group-2                          ✓ (2463ms) $0.002329
+  skill-story-3                        ✗ (5731ms) $0.004169 — missing-required-tool
+  reg-chart-2                          ✓ (2700ms) $0.002497
+  feat-chart-1                         ✓ (2249ms) $0.002475
+  reg-chart-1                          ✓ (2943ms) $0.002729
+  feat-chart-6                         ✓ (1696ms) $0.002115
+  feat-chart-4                         ✓ (2043ms) $0.002564
+  reg-pivot-2                          ✓ (2740ms) $0.002066
+  skill-pin-1                          ✓ (7388ms) $0.002374
+  feat-chart-2                         ✓ (2588ms) $0.002659
+  feat-chart-7                         ✓ (1777ms) $0.002230
+  reg-pivot-1                          ✓ (3279ms) $0.002382
+  feat-chart-3                         ✓ (2830ms) $0.002857
+  feat-chart-8                         ✓ (2286ms) $0.002495
+  feat-chart-5                         ✓ (2878ms) $0.002188
+  feat-pivot-2                         ✓ (2159ms) $0.002185
+  feat-pivot-6                         ✓ (1881ms) $0.002066
+  feat-pivot-3                         ✓ (2136ms) $0.002077
+  feat-pivot-1                         ✓ (2581ms) $0.002368
+  feat-pivot-7                         ✓ (1764ms) $0.002072
+  feat-pivot-4                         ✓ (2429ms) $0.002408
+  feat-group-4                         ✓ (1655ms) $0.001973
+  feat-pivot-5                         ✓ (2592ms) $0.002315
+  feat-group-2                         ✓ (2300ms) $0.001959
+  feat-group-1                         ✓ (2423ms) $0.002323
+  feat-group-5                         ✓ (2609ms) $0.002415
+  feat-group-9                         ✗ (2283ms) $0.002196 — refused-wrongly,refused-wrongly
+  feat-group-7                         ✓ (2386ms) $0.002548
+  feat-group-3                         ✓ (3173ms) $0.002331
+  feat-group-6                         ✓ (3266ms) $0.002327
+  feat-pdf-6                           ✗ (2134ms) $0.002196 — missing-required-tool
+  feat-pdf-4                           ✗ (2366ms) $0.002404 — missing-required-tool
+  feat-pdf-7                           ✗ (2054ms) $0.002307 — missing-required-tool
+  feat-group-12                        ✓ (2689ms) $0.002448
+  feat-group-11                        ✓ (3157ms) $0.002286
+  feat-pdf-2                           ✗ (2704ms) $0.002300 — missing-required-tool
+  feat-pdf-3                           ✗ (2663ms) $0.002193 — missing-required-tool
+  feat-group-10                        ✓ (3656ms) $0.002421
+  feat-pdf-1                           ✗ (3248ms) $0.002293 — missing-required-tool
+  feat-pdf-11                          ✗ (2236ms) $0.002157 — missing-required-tool
+  feat-formula-3                       ✓ (1972ms) $0.002102
+  feat-group-8                         ✓ (4356ms) $0.002387
+  feat-pdf-9                           ✗ (2981ms) $0.002155 — missing-required-tool
+  feat-formula-4                       ✓ (1807ms) $0.002172
+  feat-pdf-5                           ✗ (3504ms) $0.002615 — missing-required-tool
+  feat-pdf-8                           ✗ (3429ms) $0.002947 — missing-required-tool
+  feat-pdf-10                          ✗ (2980ms) $0.002710 — missing-required-tool
+  feat-formula-7                       ✓ (1762ms) $0.002049
+  feat-formula-6                       ✓ (1923ms) $0.002002
+  feat-formula-5                       ✓ (2090ms) $0.002020
+  feat-formula-1                       ✓ (3041ms) $0.002056
+  feat-formula-2                       ✗ (3454ms) $0.002243 — missing-required-tool
+
+=== v2/verbose / arm: qwen3.5-flash-02-23 (qwen/qwen3.5-flash-02-23, managed) ===
+  skill-pivot-5                        ✓ (5782ms) $0.000806
+  skill-chart-1                        ✓ (5988ms) $0.000813
+  skill-chart-3                        ✗ (6193ms) $0.000775 — parse-error,missing-required-paths
+  skill-pivot-1                        ✓ (6862ms) $0.000770
+  skill-outlier-4                      ✗ (6910ms) $0.000769 — missing-required-commands
+  skill-pivot-3                        ✓ (7077ms) $0.000759
+  skill-pivot-2                        ✓ (7311ms) $0.000791
+  skill-outlier-1                      ✗ (7365ms) $0.000785 — missing-required-commands
+  skill-whatif-4                       ✓ (7938ms) $0.000807
+  skill-chart-4                        ✓ (7990ms) $0.000807
+  skill-whatif-2                       ✓ (8034ms) $0.000910
+  skill-chart-2                        ✓ (8854ms) $0.000832
+  skill-outlier-2                      ✓ (8942ms) $0.000855
+  skill-pivot-6                        ✓ (9865ms) $0.001033
+  skill-pin-3                          ✗ (3749ms) $0.000790 — invalid-patch-line,missing-required-tool
+  skill-chart-5                        ✓ (10226ms) $0.000890
+  skill-pin-2                          ✗ (4282ms) $0.000827 — missing-required-tool
+  skill-surprise-1                     ✓ (3266ms) $0.000801
+  skill-whatif-3                       ✗ (11083ms) $0.000926 — wrong-tool-call-count
+[03:10:28.945] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-outlier-5                      ✗ (11231ms) $0.000932 — refused-wrongly,refused-wrongly
+  skill-pin-1                          ✗ (5923ms) $0.000950 — missing-required-tool
+  reg-pdf-1                            ✗ (3923ms) $0.000785 — missing-required-tool
+[03:10:30.276] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-pivot-4                        ✓ (12509ms) $0.000982
+  skill-outlier-3                      ✗ (12759ms) $0.000946 — missing-required-commands
+  skill-surprise-2                     ✗ (5036ms) $0.000761 — wrong-tool-call-count
+  reg-formula-2                        ✓ (2800ms) $0.000782
+  skill-story-1                        ✗ (6272ms) $0.000927 — missing-required-tool
+  skill-whatif-1                       ✓ (13399ms) $0.001064
+  reg-filter-1                         ✓ (2361ms) $0.000755
+  reg-pdf-2                            ✗ (4738ms) $0.000833 — missing-required-tool
+  reg-formula-4                        ✓ (3019ms) $0.000798
+  reg-formula-3                        ✓ (3674ms) $0.000762
+  skill-surprise-3                     ✓ (6050ms) $0.000851
+  reg-formula-1                        ✓ (4228ms) $0.000769
+[03:10:31.904] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:10:32.354] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-pin-4                          ✗ (7454ms) $0.000921 — parse-error,missing-required-tool
+  skill-story-3                        ✓ (7174ms) $0.000911
+  skill-story-2                        ✗ (7415ms) $0.000987 — missing-required-tool
+  reg-pdf-4                            ✗ (4630ms) $0.000842 — missing-required-tool
+[03:10:32.792] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:10:32.806] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-sort-1                           ✓ (3076ms) $0.000757
+  reg-group-1                          ✓ (2407ms) $0.000781
+  reg-filter-3                         ✓ (4192ms) $0.000835
+  reg-group-2                          ✓ (3036ms) $0.000824
+  feat-chart-5                         ✓ (2255ms) $0.000757
+  reg-sort-2                           ✓ (4356ms) $0.000755
+  reg-filter-2                         ✓ (5827ms) $0.000828
+  reg-pivot-2                          ✓ (3612ms) $0.000779
+  feat-chart-4                         ✗ (3337ms) $0.000794 — missing-required-paths
+  feat-chart-2                         ✓ (3795ms) $0.000805
+  feat-chart-6                         ✓ (3537ms) $0.000809
+  reg-pivot-1                          ✓ (4622ms) $0.000840
+  feat-pivot-1                         ✓ (3069ms) $0.000782
+  feat-chart-1                         ✗ (4991ms) $0.000836 — invalid-patch-line
+  feat-pivot-4                         ✓ (3549ms) $0.000790
+  feat-pivot-5                         ✓ (3306ms) $0.000775
+  feat-pivot-3                         ✗ (4694ms) $0.000830 — parse-error,missing-required-paths
+  feat-pivot-7                         ✓ (3681ms) $0.000794
+  feat-group-2                         ✓ (3342ms) $0.000784
+  reg-chart-1                          ✓ (7782ms) $0.001007
+  feat-pivot-2                         ✓ (5846ms) $0.000892
+  reg-pdf-3                            ✗ (12311ms) $0.001091 — parse-error
+  feat-group-4                         ✓ (3911ms) $0.000767
+  feat-chart-3                         ✓ (7939ms) $0.001031
+  feat-chart-7                         ✓ (7568ms) $0.000939
+  feat-group-3                         ✓ (4341ms) $0.000921
+[Langfuse SDK] Unknown error: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:4319:19)[39m
+[90m    at successSteps (node:internal/deps/undici/undici:6967:27)[39m
+[90m    at readAllBytes (node:internal/deps/undici/undici:5890:13)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+  feat-group-8                         ✓ (2816ms) $0.000798
+  feat-group-5                         ✗ (4452ms) $0.000842 — missing-required-paths,missing-required-paths
+  feat-pivot-6                         ✓ (5754ms) $0.000812
+[Langfuse SDK] Unknown error: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:4319:19)[39m
+[90m    at successSteps (node:internal/deps/undici/undici:6967:27)[39m
+[90m    at readAllBytes (node:internal/deps/undici/undici:5890:13)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+  reg-chart-2                          ✓ (9516ms) $0.001034
+  feat-group-7                         ✓ (4333ms) $0.000792
+[Langfuse SDK] Unknown error: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:4319:19)[39m
+[90m    at successSteps (node:internal/deps/undici/undici:6967:27)[39m
+[90m    at readAllBytes (node:internal/deps/undici/undici:5890:13)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+  feat-group-10                        ✓ (3222ms) $0.000801
+  feat-group-11                        ✗ (3377ms) $0.000801 — parse-error,missing-required-paths,missing-required-paths
+  feat-pdf-7                           ✗ (2972ms) $0.000774 — missing-required-tool
+  feat-chart-8                         ✓ (10741ms) $0.001233
+  feat-pdf-6                           ✗ (3446ms) $0.000797 — missing-required-tool
+  feat-formula-1                       ✓ (2593ms) $0.000779
+[03:10:43.363] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:10:43.814] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-10                          ✗ (3368ms) $0.000799 — missing-required-tool
+[03:10:44.296] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-11                          ✗ (3278ms) $0.000769 — missing-required-tool
+[03:10:44.511] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-group-1                         ✓ (9337ms) $0.001173
+[Langfuse SDK] Unknown error: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:4319:19)[39m
+[90m    at successSteps (node:internal/deps/undici/undici:6967:27)[39m
+[90m    at readAllBytes (node:internal/deps/undici/undici:5890:13)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+  feat-pdf-8                           ✗ (4708ms) $0.000886 — missing-required-tool
+[03:10:45.402] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-group-9                         ✓ (7420ms) $0.000990
+[Langfuse SDK] Unknown error: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:4319:19)[39m
+[90m    at successSteps (node:internal/deps/undici/undici:6967:27)[39m
+[90m    at readAllBytes (node:internal/deps/undici/undici:5890:13)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+  feat-formula-6                       ✓ (1947ms) $0.000750
+[Langfuse SDK] Unknown error: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:4319:19)[39m
+[90m    at successSteps (node:internal/deps/undici/undici:6967:27)[39m
+[90m    at readAllBytes (node:internal/deps/undici/undici:5890:13)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+  feat-formula-5                       ✓ (2276ms) $0.000767
+[Langfuse SDK] Unknown error: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:4319:19)[39m
+[90m    at successSteps (node:internal/deps/undici/undici:6967:27)[39m
+[90m    at readAllBytes (node:internal/deps/undici/undici:5890:13)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+  feat-group-12                        ✓ (7363ms) $0.001026
+[Langfuse SDK] Unknown error: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:4319:19)[39m
+[90m    at successSteps (node:internal/deps/undici/undici:6967:27)[39m
+[90m    at readAllBytes (node:internal/deps/undici/undici:5890:13)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+  feat-pdf-1                           ✗ (8307ms) $0.001015 — missing-required-tool
+  feat-formula-3                       ✓ (5155ms) $0.000801
+[Langfuse SDK] Unknown error: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:4319:19)[39m
+[90m    at successSteps (node:internal/deps/undici/undici:6967:27)[39m
+[90m    at readAllBytes (node:internal/deps/undici/undici:5890:13)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+  feat-group-6                         ✗ (11728ms) $0.001220 — hallucinated-column,hallucinated-column
+[Langfuse SDK] Unknown error: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:4319:19)[39m
+[90m    at successSteps (node:internal/deps/undici/undici:6967:27)[39m
+[90m    at readAllBytes (node:internal/deps/undici/undici:5890:13)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+  feat-formula-4                       ✓ (6835ms) $0.000877
+[Langfuse SDK] Unknown error: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:4319:19)[39m
+[90m    at successSteps (node:internal/deps/undici/undici:6967:27)[39m
+[90m    at readAllBytes (node:internal/deps/undici/undici:5890:13)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+  feat-formula-7                       ✓ (6456ms) $0.000793
+  feat-pdf-9                           ✗ (10409ms) $0.001060 — missing-required-tool
+  feat-pdf-5                           ✗ (11476ms) $0.001015 — missing-required-tool
+[Langfuse SDK] Unknown error: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:4319:19)[39m
+[90m    at successSteps (node:internal/deps/undici/undici:6967:27)[39m
+[90m    at readAllBytes (node:internal/deps/undici/undici:5890:13)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+  feat-formula-2                       ✓ (9745ms) $0.001122
+  reg-group-3                          ✓ (23263ms) $0.001788
+[Langfuse SDK] Unknown error: SyntaxError: Unexpected token '<', "<html>
+<h"... is not valid JSON
+    at JSON.parse (<anonymous>)
+[90m    at parseJSONFromBytes (node:internal/deps/undici/undici:4319:19)[39m
+[90m    at successSteps (node:internal/deps/undici/undici:6967:27)[39m
+[90m    at readAllBytes (node:internal/deps/undici/undici:5890:13)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
+  feat-pdf-4                           ✗ (16421ms) $0.001736 — missing-required-tool
+  feat-pdf-2                           ✗ (65393ms) $0.006365 — missing-required-tool
+  feat-pdf-3                           ✓ (72048ms) $0.006667
+
+=== v2/verbose / arm: glm-5.1 (z-ai/glm-5.1, managed) ===
+  skill-pivot-1                        ✓ (3568ms) $0.010289
+  skill-pivot-3                        ✓ (4208ms) $0.002353
+  skill-pivot-2                        ✓ (4745ms) $0.002579
+  skill-chart-3                        ✓ (5276ms) $0.003217
+  skill-outlier-2                      ✗ (5347ms) $0.002665 — refused-wrongly,refused-wrongly
+  skill-pivot-5                        ✓ (5829ms) $0.008226
+  skill-outlier-4                      ✓ (6384ms) $0.003470
+  skill-pivot-4                        ✓ (7178ms) $0.006945
+  skill-outlier-5                      ✗ (7743ms) $0.003800 — refused-wrongly,refused-wrongly
+  skill-chart-2                        ✓ (8187ms) $0.004452
+  skill-whatif-2                       ✗ (9062ms) $0.009249 — wrong-tool-call-count
+  skill-pin-2                          ✗ (5048ms) $0.003448 — missing-required-tool
+  skill-pivot-6                        ✓ (9711ms) $0.007774
+  skill-chart-5                        ✓ (9774ms) $0.005107
+  skill-whatif-3                       ✓ (12368ms) $0.005706
+  skill-outlier-1                      ✓ (13369ms) $0.005138
+  skill-chart-4                        ✓ (13479ms) $0.006076
+  skill-story-2                        ✗ (7947ms) $0.003961 — missing-required-tool
+  reg-pdf-2                            ✗ (4765ms) $0.003067 — missing-required-tool
+  skill-outlier-3                      ✗ (14118ms) $0.008600 — missing-required-commands
+  reg-formula-1                        ✓ (2505ms) $0.002341
+  skill-whatif-1                       ✗ (15078ms) $0.006102 — wrong-tool-call-count
+  reg-formula-4                        ✓ (2419ms) $0.002411
+  reg-formula-3                        ✓ (2780ms) $0.002431
+  reg-filter-1                         ✓ (2808ms) $0.002356
+  skill-story-3                        ✗ (10513ms) $0.004431 — missing-required-tool
+  reg-filter-3                         ✓ (2377ms) $0.002256
+  skill-story-1                        ✗ (12470ms) $0.004504 — missing-required-tool
+  skill-surprise-2                     ✗ (10852ms) $0.004475 — wrong-tool-call-count
+  reg-sort-2                           ✓ (2450ms) $0.002125
+  reg-filter-2                         ✓ (4653ms) $0.002322
+  reg-pdf-1                            ✗ (10213ms) $0.004059 — missing-required-tool
+  reg-pdf-4                            ✗ (9740ms) $0.004705 — missing-required-tool
+  skill-whatif-4                       ✗ (19968ms) $0.010569 — wrong-tool-call-count
+  reg-sort-1                           ✓ (6344ms) $0.002110
+  reg-pivot-2                          ✓ (3438ms) $0.002394
+  skill-surprise-1                     ✗ (15563ms) $0.004787 — wrong-tool-call-count
+  reg-pivot-1                          ✓ (4218ms) $0.002589
+  reg-formula-2                        ✓ (9567ms) $0.002254
+  reg-group-2                          ✓ (6948ms) $0.003877
+  reg-pdf-3                            ✗ (14626ms) $0.008120 — missing-required-tool,missing-required-tool
+  skill-pin-1                          ✗ (21540ms) $0.010551 — missing-required-tool
+  reg-group-1                          ✓ (9043ms) $0.004472
+  skill-pin-3                          ✗ (21581ms) $0.007190 — missing-required-tool
+  skill-surprise-3                     ✗ (18169ms) $0.007308 — wrong-tool-call-count
+  feat-chart-6                         ✓ (5043ms) $0.003109
+  feat-pivot-2                         ✓ (4241ms) $0.002457
+  feat-pivot-6                         ✓ (2120ms) $0.002280
+  feat-pivot-1                         ✓ (5633ms) $0.002850
+  feat-pivot-5                         ✓ (4478ms) $0.002769
+  skill-chart-1                        ✓ (31292ms) $0.011919
+  feat-pivot-4                         ✓ (6715ms) $0.003550
+  feat-pivot-3                         ✓ (9234ms) $0.004375
+  feat-chart-7                         ✓ (12422ms) $0.004904
+  reg-chart-1                          ✓ (18582ms) $0.007171
+  feat-group-3                         ✓ (7462ms) $0.004408
+  feat-group-5                         ✓ (6783ms) $0.004522
+  reg-chart-2                          ✓ (19543ms) $0.007475
+  feat-chart-3                         ✓ (17949ms) $0.005754
+  feat-pivot-7                         ✓ (11601ms) $0.005572
+  feat-chart-5                         ✓ (17125ms) $0.006625
+  feat-chart-4                         ✓ (18731ms) $0.006124
+  reg-group-3                          ✓ (22180ms) $0.009068
+  feat-group-9                         ✓ (4925ms) $0.002516
+  feat-group-7                         ✓ (8813ms) $0.005034
+  feat-chart-1                         ✓ (21924ms) $0.006776
+  feat-group-4                         ✓ (12289ms) $0.004623
+  feat-chart-2                         ✓ (21846ms) $0.007951
+  skill-pin-4                          ✗ (35894ms) $0.012091 — missing-required-tool
+  feat-group-2                         ✓ (13433ms) $0.006512
+  feat-pdf-11                          ✗ (2730ms) $0.002624 — missing-required-tool
+  feat-pdf-5                           ✗ (5370ms) $0.003363 — missing-required-tool
+  feat-group-11                        ✓ (8539ms) $0.004305
+  feat-formula-1                       ✓ (4018ms) $0.002513
+  feat-pdf-6                           ✗ (6607ms) $0.003776 — missing-required-tool
+  feat-pdf-3                           ✗ (8109ms) $0.003608 — missing-required-tool
+  feat-pdf-8                           ✗ (5505ms) $0.003048 — missing-required-tool
+  feat-group-8                         ✓ (13057ms) $0.005405
+  feat-pdf-4                           ✗ (8365ms) $0.004638 — missing-required-tool,missing-required-tool
+  feat-formula-5                       ✓ (2495ms) $0.002256
+  feat-group-10                        ✓ (11569ms) $0.005842
+  feat-group-1                         ✓ (20490ms) $0.009891
+  feat-formula-4                       ✓ (3536ms) $0.003177
+  feat-formula-3                       ✓ (3817ms) $0.002740
+  feat-formula-7                       ✓ (2606ms) $0.002244
+  feat-formula-6                       ✓ (3258ms) $0.002575
+  feat-pdf-7                           ✗ (9508ms) $0.005273 — missing-required-tool
+  feat-pdf-9                           ✗ (9010ms) $0.004244 — missing-required-tool,missing-required-tool
+  feat-group-12                        ✓ (13843ms) $0.006775
+  feat-formula-2                       ✓ (13694ms) $0.006513
+  feat-chart-8                         ✓ (34049ms) $0.014378
+  feat-pdf-2                           ✗ (19765ms) $0.007921 — missing-required-tool
+  feat-group-6                         ✓ (38910ms) $0.014741
+  feat-pdf-10                          ✗ (53716ms) $0.024582 — missing-required-tool
+  feat-pdf-1                           ✗ (64071ms) $0.029145 — missing-required-tool,missing-required-tool
+
+=== v2/verbose / arm: gemini-3.1-flash-lite (google/gemini-3.1-flash-lite-preview, managed) ===
+[03:13:33.065] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-outlier-3                      ✗ (2273ms) $0.001299 — refused-wrongly,refused-wrongly
+  skill-pivot-4                        ✓ (2297ms) $0.001679
+  skill-pivot-2                        ✓ (2303ms) $0.003094
+  skill-whatif-2                       ✗ (2420ms) $0.003109 — wrong-tool-call-count
+  skill-chart-4                        ✓ (2621ms) $0.003438
+  skill-chart-1                        ✓ (2890ms) $0.002050
+  skill-outlier-1                      ✓ (2898ms) $0.003452
+  skill-whatif-3                       ✗ (2901ms) $0.002333 — wrong-tool-call-count
+  skill-whatif-1                       ✗ (2908ms) $0.004211 — wrong-tool-call-count
+  skill-pivot-5                        ✓ (2928ms) $0.001703
+  skill-outlier-2                      ✗ (2960ms) $0.002363 — refused-wrongly,refused-wrongly
+  skill-pivot-6                        ✓ (2973ms) $0.003259
+  skill-pivot-3                        ✓ (3058ms) $0.002949
+  skill-outlier-4                      ✓ (3102ms) $0.001793
+  skill-chart-2                        ✓ (3234ms) $0.003817
+  skill-whatif-4                       ✗ (3276ms) $0.003185 — wrong-tool-call-count
+  skill-chart-5                        ✓ (3656ms) $0.004348
+  skill-chart-3                        ✓ (3858ms) $0.002710
+  skill-pivot-1                        ✓ (4288ms) $0.002377
+  reg-formula-2                        ✓ (1325ms) $0.002878
+  reg-formula-1                        ✓ (1382ms) $0.001628
+  reg-formula-3                        ✓ (1379ms) $0.001647
+  skill-pin-3                          ✗ (2864ms) $0.002140 — missing-required-tool
+  reg-formula-4                        ✓ (1564ms) $0.000749
+  skill-story-2                        ✗ (2624ms) $0.002392 — missing-required-tool
+  reg-filter-1                         ✓ (1254ms) $0.000764
+  reg-pdf-1                            ✗ (2709ms) $0.004093 — missing-required-tool
+  skill-story-1                        ✗ (3167ms) $0.003675 — missing-required-tool
+  skill-surprise-1                     ✗ (2933ms) $0.001714 — wrong-tool-call-count
+[03:13:38.743] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-surprise-3                     ✗ (3232ms) $0.003076 — wrong-tool-call-count
+  skill-pin-4                          ✗ (3736ms) $0.002727 — missing-required-tool
+  skill-pin-1                          ✗ (4018ms) $0.004052 — missing-required-tool
+  reg-pdf-3                            ✗ (3271ms) $0.003314 — missing-required-tool
+  reg-filter-3                         ✓ (1852ms) $0.000730
+  skill-story-3                        ✗ (3603ms) $0.003960 — missing-required-tool
+  reg-sort-2                           ✓ (1395ms) $0.000741
+  skill-outlier-5                      ✗ (6588ms) $0.001944 — refused-wrongly,refused-wrongly
+  skill-pin-2                          ✗ (4313ms) $0.002213 — missing-required-tool
+  reg-pdf-4                            ✗ (3623ms) $0.002459 — missing-required-tool
+  reg-sort-1                           ✓ (1729ms) $0.000749
+  skill-surprise-2                     ✗ (3971ms) $0.003245 — wrong-tool-call-count
+[03:13:39.802] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-pdf-2                            ✗ (4046ms) $0.002863 — missing-required-tool
+[03:13:40.090] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-filter-2                         ✓ (2504ms) $0.001097
+  reg-group-2                          ✓ (1620ms) $0.000823
+  reg-pivot-1                          ✓ (1788ms) $0.001007
+  reg-group-1                          ✓ (2594ms) $0.002424
+  feat-pivot-3                         ✓ (1349ms) $0.000770
+  reg-pivot-2                          ✓ (2124ms) $0.001260
+  feat-chart-5                         ✓ (1799ms) $0.000901
+  feat-chart-7                         ✓ (1993ms) $0.001080
+  reg-chart-2                          ✓ (2808ms) $0.001936
+  reg-group-3                          ✓ (3137ms) $0.002016
+  feat-pivot-1                         ✓ (1967ms) $0.001151
+  feat-pivot-6                         ✓ (1695ms) $0.001677
+  feat-pivot-5                         ✓ (1922ms) $0.002661
+  feat-pivot-4                         ✓ (2097ms) $0.003188
+  feat-chart-6                         ✓ (2653ms) $0.002101
+  feat-pivot-2                         ✓ (2460ms) $0.001847
+  feat-pivot-7                         ✓ (1770ms) $0.001014
+  feat-chart-1                         ✓ (3271ms) $0.002356
+  feat-chart-4                         ✓ (3046ms) $0.002584
+  feat-group-2                         ✓ (1344ms) $0.000825
+  reg-chart-1                          ✓ (3923ms) $0.002042
+  feat-group-6                         ✗ (1183ms) $0.000835 — invalid-patch-line,missing-required-paths
+  feat-group-7                         ✓ (1196ms) $0.000856
+  feat-chart-3                         ✓ (3700ms) $0.002435
+  feat-chart-2                         ✓ (3753ms) $0.002831
+  feat-group-1                         ✓ (2105ms) $0.000866
+  feat-chart-8                         ✗ (3520ms) $0.001839 — refused-wrongly
+  feat-group-5                         ✓ (1758ms) $0.001376
+  feat-group-3                         ✓ (2155ms) $0.000799
+  feat-group-12                        ✓ (1442ms) $0.000834
+  feat-group-8                         ✓ (2490ms) $0.002017
+  feat-group-9                         ✓ (2497ms) $0.002037
+  feat-group-11                        ✓ (2218ms) $0.001634
+  feat-pdf-4                           ✗ (1931ms) $0.002540 — missing-required-tool
+  feat-pdf-10                          ✗ (1414ms) $0.001931 — missing-required-tool
+  feat-formula-1                       ✓ (1347ms) $0.000760
+  feat-group-4                         ✓ (3339ms) $0.001366
+  feat-pdf-6                           ✗ (2100ms) $0.001652 — missing-required-tool
+  feat-formula-3                       ✓ (1368ms) $0.002605
+  feat-pdf-8                           ✗ (1955ms) $0.003579 — missing-required-tool
+  feat-pdf-11                          ✗ (1815ms) $0.001925 — missing-required-tool
+  feat-pdf-5                           ✗ (2462ms) $0.001751 — missing-required-tool
+[03:13:44.515] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:13:44.517] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:13:44.767] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:13:44.897] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:13:45.008] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-2                           ✗ (2764ms) $0.002256 — missing-required-tool
+  feat-pdf-3                           ✗ (3007ms) $0.003436 — missing-required-tool
+  feat-group-10                        ✓ (3471ms) $0.003033
+  feat-formula-6                       ✓ (1182ms) $0.001628
+  feat-pdf-1                           ✗ (3375ms) $0.001980 — missing-required-tool
+[03:13:45.674] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-formula-5                       ✓ (1598ms) $0.001040
+  feat-formula-7                       ✓ (1741ms) $0.001664
+  feat-pdf-9                           ✗ (3395ms) $0.002338 — missing-required-tool
+  feat-pdf-7                           ✗ (3750ms) $0.002689 — missing-required-tool
+  feat-formula-4                       ✓ (3231ms) $0.002592
+  feat-formula-2                       ✓ (3737ms) $0.004291
+
+=== v2/verbose / arm: qwen3.6-flash (qwen/qwen3.6-flash, managed) ===
+  skill-outlier-4                      ✗ (3760ms) $0.002419 — missing-required-commands
+  skill-whatif-3                       ✗ (3916ms) $0.002383 — wrong-tool-call-count
+  skill-pivot-6                        ✓ (4283ms) $0.002671
+  skill-pivot-2                        ✓ (4340ms) $0.002761
+  skill-pivot-3                        ✓ (4754ms) $0.002528
+  skill-pivot-1                        ✓ (4929ms) $0.002800
+  skill-whatif-2                       ✓ (5423ms) $0.003067
+  skill-pivot-5                        ✓ (5775ms) $0.003098
+  skill-outlier-1                      ✗ (5994ms) $0.002807 — missing-required-commands
+  skill-outlier-3                      ✗ (6117ms) $0.003141 — missing-required-commands
+  skill-outlier-2                      ✗ (6922ms) $0.003083 — refused-wrongly,refused-wrongly
+  skill-whatif-1                       ✓ (6953ms) $0.003077
+  skill-whatif-4                       ✓ (7480ms) $0.003667
+  skill-pin-3                          ✗ (3208ms) $0.002367 — hallucinated-column,missing-required-tool
+  skill-outlier-5                      ✗ (7528ms) $0.003255 — missing-required-commands
+  skill-pin-1                          ✗ (4081ms) $0.002702 — missing-required-tool
+  skill-pivot-4                        ✓ (7919ms) $0.003291
+  skill-story-1                        ✓ (3607ms) $0.002720
+[03:13:55.516] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-formula-1                        ✓ (1918ms) $0.002231
+  skill-story-2                        ✓ (4625ms) $0.003120
+  reg-pdf-2                            ✗ (2791ms) $0.002463 — missing-required-tool
+  skill-chart-1                        ✓ (10397ms) $0.004469
+  skill-chart-4                        ✓ (10410ms) $0.004916
+  skill-surprise-2                     ✗ (4462ms) $0.002861 — wrong-tool-call-count
+  reg-formula-2                        ✓ (2782ms) $0.002273
+[03:13:56.904] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-chart-2                        ✓ (10724ms) $0.005418
+  reg-formula-3                        ✓ (3257ms) $0.002659
+  reg-pdf-4                            ✗ (3854ms) $0.002792 — missing-required-tool
+  skill-chart-3                        ✓ (11787ms) $0.005100
+  skill-story-3                        ✗ (6645ms) $0.003222 — missing-required-tool
+  skill-surprise-3                     ✓ (6035ms) $0.003395
+  reg-pdf-1                            ✗ (5528ms) $0.003191 — missing-required-tool
+  skill-pin-2                          ✗ (8621ms) $0.004554 — missing-required-tool
+[03:13:59.311] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-chart-5                        ✓ (12824ms) $0.006069
+  reg-filter-2                         ✓ (6093ms) $0.002388
+  reg-formula-4                        ✓ (7714ms) $0.002298
+  reg-sort-2                           ✓ (5844ms) $0.002317
+  reg-filter-1                         ✓ (7032ms) $0.002428
+  skill-pin-4                          ✗ (12406ms) $0.005735 — missing-required-tool
+  reg-group-1                          ✓ (6821ms) $0.002353
+  reg-sort-1                           ✓ (7284ms) $0.002243
+  reg-pivot-1                          ✓ (5972ms) $0.002413
+  reg-filter-3                         ✓ (8199ms) $0.003106
+  reg-pivot-2                          ✓ (6119ms) $0.002715
+  feat-chart-3                         ✗ (6065ms) $0.003521 — parse-error
+  reg-pdf-3                            ✗ (11257ms) $0.005096 — missing-required-tool
+  reg-chart-1                          ✗ (8221ms) $0.003463 — hallucinated-column
+  feat-chart-6                         ✓ (3501ms) $0.002817
+  reg-group-2                          ✓ (9537ms) $0.003713
+  feat-pivot-3                         ✓ (3432ms) $0.002751
+  feat-pivot-1                         ✓ (4446ms) $0.002773
+  feat-pivot-6                         ✓ (3005ms) $0.002472
+  feat-chart-7                         ✓ (5348ms) $0.003354
+  feat-pivot-5                         ✓ (3679ms) $0.002618
+  feat-chart-5                         ✓ (6026ms) $0.003287
+  reg-group-3                          ✓ (11573ms) $0.003440
+  feat-pivot-7                         ✓ (4013ms) $0.002567
+  feat-pivot-4                         ✓ (4973ms) $0.003199
+  feat-group-1                         ✓ (4100ms) $0.003162
+  feat-group-2                         ✓ (4398ms) $0.003210
+  feat-pivot-2                         ✓ (6787ms) $0.003022
+  feat-group-3                         ✓ (4980ms) $0.003409
+  feat-chart-1                         ✓ (12750ms) $0.003532
+  feat-group-4                         ✓ (5050ms) $0.003075
+  feat-group-7                         ✓ (4516ms) $0.002903
+  feat-group-5                         ✓ (4931ms) $0.003037
+  feat-chart-8                         ✗ (9605ms) $0.003914 — missing-required-paths
+  feat-group-9                         ✓ (4535ms) $0.003005
+  feat-group-10                        ✓ (5332ms) $0.003469
+  feat-pdf-7                           ✗ (2924ms) $0.002573 — missing-required-tool
+  feat-group-6                         ✗ (7043ms) $0.003958 — hallucinated-column,hallucinated-column
+  feat-group-8                         ✓ (6973ms) $0.003899
+[03:14:15.293] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-3                           ✗ (5336ms) $0.003231 — missing-required-tool,missing-required-tool
+  feat-pdf-11                          ✗ (3020ms) $0.002671 — missing-required-tool
+  feat-pdf-1                           ✗ (6518ms) $0.003490 — missing-required-tool,missing-required-tool
+[03:14:16.337] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-formula-1                       ✓ (2528ms) $0.002446
+  feat-pdf-6                           ✗ (4869ms) $0.003157 — missing-required-tool
+  feat-group-11                        ✓ (7477ms) $0.004387
+[03:14:16.930] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-group-12                        ✓ (8406ms) $0.004225
+  feat-pdf-2                           ✗ (8294ms) $0.004179 — hallucinated-column,missing-required-tool
+  feat-formula-6                       ✓ (2501ms) $0.002492
+  feat-formula-5                       ✓ (2640ms) $0.002309
+  feat-formula-3                       ✓ (3594ms) $0.002520
+  feat-pdf-8                           ✗ (6304ms) $0.003662 — missing-required-tool
+  feat-formula-7                       ✓ (2856ms) $0.002601
+  feat-formula-4                       ✓ (4043ms) $0.002656
+  feat-pdf-10                          ✗ (6718ms) $0.003703 — missing-required-tool
+[03:14:19.174] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:14:19.961] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-5                           ✗ (9879ms) $0.005243 — missing-required-tool
+  feat-chart-2                         ✓ (25472ms) $0.010517
+  feat-formula-2                       ✓ (9955ms) $0.005599
+  feat-pdf-9                           ✗ (12477ms) $0.005332 — missing-required-tool
+  skill-surprise-1                     ✗ (34584ms) $0.014164 — wrong-tool-call-count
+  feat-chart-4                         ✓ (36741ms) $0.015133
+  reg-chart-2                          ✓ (39464ms) $0.015253
+  feat-pdf-4                           ✓ (97841ms) $0.040318
+
+=== v2/verbose / arm: kimi-latest [high] (~moonshotai/kimi-latest, research) ===
+  skill-outlier-2                      ✗ (7831ms) $0.008762 — refused-wrongly,refused-wrongly
+  skill-outlier-4                      ✗ (7851ms) $0.008983 — missing-required-commands
+  skill-pivot-5                        ✓ (8067ms) $0.008252
+  skill-pivot-2                        ✓ (8521ms) $0.008106
+  skill-pivot-3                        ✓ (8646ms) $0.008122
+  skill-pivot-1                        ✓ (9804ms) $0.008425
+  skill-outlier-3                      ✗ (11221ms) $0.010087 — missing-required-commands
+  skill-pivot-6                        ✓ (12931ms) $0.009386
+  skill-chart-1                        ✓ (13612ms) $0.009475
+  skill-pivot-4                        ✓ (17715ms) $0.010933
+  skill-outlier-1                      ✗ (19843ms) $0.013717 — refused-wrongly,refused-wrongly
+  skill-story-2                        ✗ (10659ms) $0.009338 — missing-required-tool
+  skill-outlier-5                      ✗ (21087ms) $0.013878 — refused-wrongly,refused-wrongly
+  skill-whatif-3                       ✓ (21458ms) $0.012083
+  skill-story-3                        ✗ (12143ms) $0.009168 — missing-required-tool
+  skill-pin-4                          ✗ (15314ms) $0.011450 — missing-required-tool
+  skill-whatif-2                       ✓ (26600ms) $0.015693
+  reg-formula-1                        ✓ (5112ms) $0.007542
+  reg-formula-2                        ✓ (5414ms) $0.007822
+  reg-formula-4                        ✓ (4883ms) $0.007798
+  skill-chart-2                        ✓ (34437ms) $0.016207
+  skill-surprise-2                     ✗ (20970ms) $0.013633 — wrong-tool-call-count
+  skill-pin-2                          ✗ (26782ms) $0.015476 — missing-required-tool
+  reg-filter-1                         ✓ (6797ms) $0.008667
+  skill-whatif-1                       ✓ (36993ms) $0.016821
+  reg-formula-3                        ✓ (12779ms) $0.009863
+  reg-sort-2                           ✓ (6068ms) $0.007401
+  reg-sort-1                           ✓ (6217ms) $0.007745
+  reg-filter-3                         ✓ (7868ms) $0.008719
+  reg-filter-2                         ✗ (15424ms) $0.009837 — text-instead-of-tools
+  skill-surprise-3                     ✗ (34046ms) $0.021180 — wrong-tool-call-count
+  skill-chart-4                        ✓ (57386ms) $0.029230
+  reg-pivot-1                          ✓ (15796ms) $0.010962
+  skill-chart-3                        ✓ (59149ms) $0.022215
+  skill-pin-1                          ✗ (53844ms) $0.022099 — missing-required-tool
+  reg-pivot-2                          ✓ (13058ms) $0.010000
+  skill-whatif-4                       ✓ (63293ms) $0.023295
+  reg-group-1                          ✓ (29382ms) $0.013935
+  reg-group-3                          ✓ (26246ms) $0.013121
+  reg-pdf-1                            ✗ (46946ms) $0.026971 — missing-required-tool
+  skill-pin-3                          ✗ (61722ms) $0.024589 — missing-required-tool
+  reg-chart-1                          ✓ (31345ms) $0.019309
+  skill-story-1                        ✗ (63754ms) $0.024966 — missing-required-tool
+  feat-pivot-1                         ✓ (7162ms) $0.008081
+  reg-group-2                          ✓ (38846ms) $0.016930
+  feat-pivot-2                         ✓ (9652ms) $0.009477
+  feat-chart-5                         ✓ (15961ms) $0.011512
+  feat-pivot-3                         ✓ (8848ms) $0.009252
+  feat-chart-6                         ✓ (17829ms) $0.013153
+  feat-chart-7                         ✓ (16595ms) $0.011725
+  feat-pivot-4                         ✓ (7863ms) $0.009153
+  feat-pivot-5                         ✓ (7978ms) $0.009258
+  feat-chart-8                         ✗ (15397ms) $0.011174 — refused-wrongly
+  feat-pivot-6                         ✓ (8824ms) $0.008199
+  skill-surprise-1                     ✗ (70748ms) $0.037752 — wrong-tool-call-count
+[03:17:12.749] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pivot-7                         ✓ (9668ms) $0.009687
+  feat-group-4                         ✓ (9920ms) $0.009868
+  feat-group-8                         ✓ (9365ms) $0.009562
+  reg-pdf-3                            ✗ (69581ms) $0.037692 — missing-required-tool,missing-required-tool
+[03:17:19.746] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-group-10                        ✓ (9220ms) $0.009447
+  reg-pdf-2                            ✗ (73361ms) $0.030199 — missing-required-tool
+  feat-group-2                         ✓ (16201ms) $0.012075
+  feat-chart-1                         ✗ (43909ms) $0.024586 — refused-wrongly
+  skill-chart-5                        ✗ (96333ms) $0.036981 — refused-wrongly
+  feat-group-9                         ✓ (19210ms) $0.012934
+  reg-chart-2                          ✓ (61238ms) $0.026097
+  feat-group-5                         ✓ (22733ms) $0.013718
+  reg-pdf-4                            ✗ (81504ms) $0.033219 — missing-required-tool
+  feat-group-7                         ✓ (23021ms) $0.013804
+  feat-group-3                         ✗ (27437ms) $0.016293 — parse-error,missing-required-paths
+  feat-group-1                         ✓ (33510ms) $0.019311
+  feat-formula-1                       ✓ (7320ms) $0.009126
+  feat-group-11                        ✓ (25919ms) $0.015915
+  feat-chart-3                         ✓ (53717ms) $0.025276
+  feat-group-12                        ✓ (22919ms) $0.014597
+  feat-formula-3                       ✓ (6166ms) $0.008329
+  feat-formula-5                       ✓ (5198ms) $0.007674
+  feat-formula-7                       ✓ (4909ms) $0.007974
+  feat-formula-4                       ✓ (7004ms) $0.008636
+  feat-formula-6                       ✓ (7250ms) $0.008467
+  feat-chart-2                         ✗ (76876ms) $0.037293 — refused-wrongly
+[03:18:03.335] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-chart-4                         ✗ (80543ms) $0.038049 — refused-wrongly
+[03:18:08.764] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-formula-2                       ✗ (43209ms) $0.022951 — missing-required-tool
+  feat-pdf-9                           ✗ (56804ms) $0.027036 — missing-required-tool,missing-required-tool
+  feat-group-6                         ✗ (82532ms) $0.037843 — refused-wrongly,refused-wrongly
+[03:18:31.518] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-11                          ✗ (63477ms) $0.029771 — missing-required-tool
+  feat-pdf-8                           ✗ (69380ms) $0.031975 — missing-required-tool
+  feat-pdf-5                           ✗ (76944ms) $0.034686 — missing-required-tool,missing-required-tool
+  feat-pdf-1                           ✗ (82250ms) $0.037612 — missing-required-tool,missing-required-tool
+[03:18:41.505] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-7                           ✗ (78672ms) $0.036367 — missing-required-tool
+  feat-pdf-6                           ✗ (80918ms) $0.038408 — missing-required-tool,missing-required-tool
+[03:18:45.657] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-2                           ✗ (86791ms) $0.037304 — missing-required-tool,missing-required-tool
+[03:18:46.536] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-3                           ✗ (86434ms) $0.037233 — missing-required-tool,missing-required-tool
+[03:18:48.403] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-4                           ✗ (93345ms) $0.037799 — missing-required-tool,missing-required-tool
+[03:18:56.232] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-10                          ✗ (87245ms) $0.037694 — missing-required-tool,missing-required-tool
+
+
+######## VARIANT V5 (scheme=verbose) ########
+
+=== v5/verbose / arm: haiku-4-5 (anthropic/claude-haiku-4-5, managed) ===
+[03:18:58.946] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-chart-5                        ✓ (2376ms) $0.041136
+  skill-pivot-1                        ✓ (2512ms) $0.041239
+  skill-pivot-2                        ✓ (2549ms) $0.041293
+  skill-chart-4                        ✓ (2585ms) $0.040947
+  skill-chart-1                        ✓ (2642ms) $0.002617
+  skill-pivot-3                        ✓ (2771ms) $0.040964
+  skill-whatif-2                       ✗ (2798ms) $0.041247 — wrong-tool-call-count
+  skill-pivot-5                        ✓ (2827ms) $0.041240
+  skill-pivot-4                        ✓ (3182ms) $0.041185
+  skill-chart-3                        ✓ (3197ms) $0.002613
+  skill-whatif-3                       ✓ (3434ms) $0.041420
+  skill-outlier-3                      ✓ (3601ms) $0.041782
+  skill-outlier-1                      ✓ (3678ms) $0.041494
+  skill-chart-2                        ✓ (3803ms) $0.002616
+  skill-pivot-6                        ✓ (3812ms) $0.002720
+  skill-outlier-5                      ✓ (3810ms) $0.003212
+  skill-whatif-4                       ✓ (3813ms) $0.041807
+  skill-outlier-2                      ✓ (4257ms) $0.041856
+  skill-outlier-4                      ✓ (4365ms) $0.041759
+  skill-whatif-1                       ✓ (4420ms) $0.043603
+  skill-pin-2                          ✗ (2036ms) $0.002704 — missing-required-tool
+  skill-pin-1                          ✓ (3070ms) $0.002891
+  skill-story-1                        ✓ (2822ms) $0.002860
+  reg-formula-1                        ✓ (1738ms) $0.002597
+  skill-story-2                        ✓ (2868ms) $0.002980
+  skill-pin-3                          ✓ (3204ms) $0.003289
+  skill-pin-4                          ✓ (3364ms) $0.003847
+  skill-surprise-1                     ✓ (3241ms) $0.003918
+  skill-surprise-2                     ✓ (2893ms) $0.003525
+  reg-formula-3                        ✓ (2308ms) $0.002592
+  skill-surprise-3                     ✓ (3096ms) $0.003773
+  reg-filter-3                         ✓ (1776ms) $0.002573
+  reg-filter-1                         ✓ (2167ms) $0.002579
+  reg-formula-4                        ✓ (2368ms) $0.002624
+  reg-filter-2                         ✓ (2452ms) $0.002534
+  reg-pdf-3                            ✗ (3356ms) $0.003026 — missing-required-tool
+  reg-formula-2                        ✓ (3249ms) $0.002594
+  reg-sort-2                           ✓ (1744ms) $0.002519
+  reg-group-2                          ✓ (1865ms) $0.002571
+  reg-chart-2                          ✓ (1689ms) $0.002614
+  reg-chart-1                          ✓ (1837ms) $0.002631
+  reg-group-3                          ✓ (2050ms) $0.002560
+  reg-pivot-1                          ✓ (1844ms) $0.002698
+  skill-story-3                        ✗ (5281ms) $0.003051 — missing-required-tool
+  feat-chart-2                         ✓ (1904ms) $0.002616
+  reg-group-1                          ✓ (2818ms) $0.002572
+  reg-pivot-2                          ✓ (2285ms) $0.002717
+  feat-chart-3                         ✓ (1989ms) $0.002819
+  feat-chart-5                         ✓ (1801ms) $0.002604
+  reg-pdf-4                            ✓ (5246ms) $0.005789
+  feat-chart-1                         ✓ (2764ms) $0.002681
+  feat-chart-6                         ✓ (2184ms) $0.002621
+  feat-chart-4                         ✓ (2633ms) $0.002645
+  feat-chart-8                         ✓ (2421ms) $0.002852
+  feat-pivot-5                         ✓ (1779ms) $0.002726
+  feat-pivot-7                         ✓ (1736ms) $0.002729
+  feat-pivot-3                         ✓ (2312ms) $0.002734
+  feat-pivot-1                         ✓ (2623ms) $0.002714
+  feat-group-1                         ✓ (1812ms) $0.002579
+  feat-group-3                         ✓ (1657ms) $0.002573
+  feat-pivot-6                         ✓ (2466ms) $0.002717
+  feat-group-2                         ✓ (2190ms) $0.002560
+  reg-pdf-1                            ✓ (7353ms) $0.007592
+  feat-group-4                         ✓ (2218ms) $0.002575
+  feat-group-5                         ✓ (1913ms) $0.002586
+  feat-group-8                         ✓ (1728ms) $0.002573
+  feat-pivot-2                         ✓ (3611ms) $0.002726
+  feat-group-6                         ✓ (2326ms) $0.002693
+  feat-group-10                        ✓ (2039ms) $0.002607
+  feat-group-9                         ✓ (2127ms) $0.002643
+  feat-group-12                        ✓ (1947ms) $0.002595
+  reg-sort-1                           ✓ (7031ms) $0.002505
+  feat-group-11                        ✓ (2617ms) $0.002572
+  reg-pdf-2                            ✓ (9046ms) $0.010797
+  feat-pdf-2                           ✗ (2571ms) $0.003172 — missing-required-tool
+  feat-pivot-4                         ✓ (5068ms) $0.002935
+  feat-group-7                         ✓ (3817ms) $0.002685
+  feat-pdf-1                           ✗ (3071ms) $0.002764 — missing-required-tool
+  feat-pdf-5                           ✗ (2859ms) $0.003221 — missing-required-tool
+  feat-pdf-6                           ✗ (2699ms) $0.002728 — missing-required-tool
+  feat-formula-1                       ✓ (1780ms) $0.002657
+  feat-chart-7                         ✓ (6863ms) $0.002632
+  feat-pdf-8                           ✗ (3009ms) $0.003188 — missing-required-tool
+  feat-formula-3                       ✓ (2068ms) $0.002699
+  feat-formula-2                       ✓ (2409ms) $0.002644
+  feat-formula-6                       ✓ (1717ms) $0.002588
+  feat-formula-7                       ✓ (1920ms) $0.002651
+  feat-formula-5                       ✓ (2430ms) $0.002621
+  feat-pdf-3                           ✓ (5445ms) $0.005559
+  feat-formula-4                       ✓ (3773ms) $0.002729
+  feat-pdf-10                          ✓ (6071ms) $0.005936
+  feat-pdf-11                          ✓ (6190ms) $0.006959
+  feat-pdf-7                           ✓ (8346ms) $0.008543
+  feat-pdf-4                           ✓ (8820ms) $0.009456
+  feat-pdf-9                           ✓ (9276ms) $0.009067
+
+=== v5/verbose / arm: qwen3.5-flash-02-23 (qwen/qwen3.5-flash-02-23, managed) ===
+  skill-chart-2                        ✓ (4687ms) $0.001133
+  skill-chart-1                        ✓ (5166ms) $0.001126
+  skill-pivot-2                        ✓ (5276ms) $0.001119
+  skill-outlier-4                      ✓ (5511ms) $0.001148
+  skill-pivot-1                        ✓ (5759ms) $0.001119
+  skill-pivot-5                        ✓ (5953ms) $0.001150
+  skill-outlier-3                      ✓ (6024ms) $0.001120
+  skill-chart-3                        ✓ (6568ms) $0.001148
+  skill-outlier-2                      ✓ (6587ms) $0.001154
+  skill-chart-5                        ✓ (6608ms) $0.001180
+  skill-pivot-3                        ✓ (6876ms) $0.001190
+  skill-pivot-4                        ✓ (7289ms) $0.001235
+  skill-outlier-1                      ✓ (7300ms) $0.001188
+  skill-outlier-5                      ✗ (7320ms) $0.001208 — invalid-command-line,missing-required-commands
+  skill-whatif-3                       ✓ (7670ms) $0.001269
+  skill-pivot-6                        ✓ (7947ms) $0.001283
+  skill-chart-4                        ✓ (8535ms) $0.001304
+  skill-pin-1                          ✓ (3944ms) $0.001157
+  skill-whatif-4                       ✓ (9663ms) $0.001389
+  skill-pin-3                          ✓ (4950ms) $0.001176
+  skill-whatif-1                       ✓ (10223ms) $0.001501
+  skill-whatif-2                       ✓ (10354ms) $0.001436
+  reg-formula-1                        ✓ (2942ms) $0.001109
+  reg-formula-3                        ✓ (2194ms) $0.001089
+[03:19:29.449] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-pin-4                          ✓ (5670ms) $0.001206
+  reg-formula-4                        ✓ (2681ms) $0.001106
+  skill-pin-2                          ✗ (6203ms) $0.001239 — missing-required-tool
+  skill-surprise-1                     ✓ (5169ms) $0.001290
+  skill-story-3                        ✓ (5934ms) $0.001161
+[03:19:30.965] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-filter-1                         ✓ (2568ms) $0.001160
+  reg-formula-2                        ✓ (4491ms) $0.001098
+  skill-surprise-2                     ✓ (6020ms) $0.001237
+  reg-pdf-4                            ✓ (5295ms) $0.001234
+  reg-sort-2                           ✓ (2034ms) $0.001093
+  skill-surprise-3                     ✓ (6069ms) $0.001328
+  reg-sort-1                           ✓ (2337ms) $0.001092
+[03:19:31.837] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:19:31.848] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:19:31.906] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-pdf-1                            ✓ (6602ms) $0.001249
+  reg-filter-2                         ✓ (3348ms) $0.001175
+[03:19:32.702] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-pdf-2                            ✓ (6587ms) $0.001260
+[03:19:33.100] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-group-1                          ✓ (3447ms) $0.001173
+  reg-pdf-3                            ✗ (7028ms) $0.001337 — missing-required-tool
+  skill-story-2                        ✓ (8398ms) $0.001275
+  reg-group-2                          ✓ (3406ms) $0.001192
+  reg-pivot-1                          ✓ (2947ms) $0.001128
+  reg-group-3                          ✓ (3623ms) $0.001164
+  feat-chart-1                         ✓ (3036ms) $0.001150
+  skill-story-1                        ✗ (9998ms) $0.001234 — invalid-command-line
+  feat-chart-6                         ✓ (3653ms) $0.001152
+  reg-pivot-2                          ✓ (4137ms) $0.001218
+  feat-chart-5                         ✓ (3734ms) $0.001191
+  feat-chart-7                         ✓ (3086ms) $0.001131
+  feat-chart-4                         ✓ (4578ms) $0.001234
+  reg-filter-3                         ✓ (7027ms) $0.001225
+  feat-pivot-1                         ✓ (3421ms) $0.001155
+  reg-chart-2                          ✓ (5562ms) $0.001325
+  reg-chart-1                          ✓ (6073ms) $0.001316
+  feat-pivot-2                         ✓ (3403ms) $0.001217
+  feat-pivot-7                         ✓ (2895ms) $0.001154
+  feat-pivot-5                         ✓ (3381ms) $0.001192
+  feat-pivot-6                         ✓ (3428ms) $0.001195
+  feat-pivot-4                         ✓ (4003ms) $0.001195
+  feat-chart-3                         ✓ (5880ms) $0.001322
+  feat-chart-8                         ✓ (5305ms) $0.001274
+  feat-group-2                         ✓ (3929ms) $0.001191
+  feat-group-5                         ✗ (3608ms) $0.001210 — missing-required-paths,missing-required-paths
+  feat-pivot-3                         ✓ (5907ms) $0.001185
+  feat-group-3                         ✓ (4182ms) $0.001199
+  feat-chart-2                         ✓ (7967ms) $0.001440
+  feat-group-10                        ✓ (3301ms) $0.001143
+  feat-group-9                         ✓ (3338ms) $0.001150
+  feat-group-8                         ✓ (3500ms) $0.001125
+  feat-group-1                         ✓ (5485ms) $0.001326
+  feat-group-12                        ✓ (3995ms) $0.001237
+  feat-group-7                         ✗ (4370ms) $0.001254 — invalid-patch-line,missing-required-paths
+  feat-group-11                        ✓ (4247ms) $0.001210
+  feat-group-6                         ✓ (5135ms) $0.001333
+  feat-pdf-1                           ✓ (5573ms) $0.001322
+  feat-formula-1                       ✓ (2804ms) $0.001164
+  feat-pdf-4                           ✓ (5083ms) $0.001248
+  feat-formula-3                       ✓ (3013ms) $0.001159
+  feat-formula-6                       ✓ (2508ms) $0.001125
+[03:19:42.631] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:19:42.662] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-formula-4                       ✓ (3292ms) $0.001183
+  feat-formula-5                       ✓ (2867ms) $0.001154
+  feat-group-4                         ✓ (8270ms) $0.001490
+  feat-formula-7                       ✓ (3203ms) $0.001145
+  feat-formula-2                       ✓ (4501ms) $0.001269
+  feat-pdf-6                           ✓ (6346ms) $0.001345
+  feat-pdf-2                           ✓ (7900ms) $0.001365
+  feat-pdf-7                           ✓ (6194ms) $0.001336
+  feat-pdf-11                          ✓ (5348ms) $0.001254
+[03:19:44.462] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:19:45.101] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:19:45.101] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:19:45.152] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-3                           ✓ (10341ms) $0.001546
+  feat-pdf-10                          ✓ (8213ms) $0.001505
+[03:19:47.906] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:19:47.974] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-8                           ✓ (10670ms) $0.001500
+[03:19:49.919] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.5-flash-02-23"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-9                           ✓ (12115ms) $0.001667
+  feat-pdf-5                           ✓ (15442ms) $0.002058
+
+=== v5/verbose / arm: glm-5.1 (z-ai/glm-5.1, managed) ===
+  skill-pivot-6                        ✓ (3451ms) $0.012820
+  skill-pivot-2                        ✓ (3626ms) $0.003606
+  skill-outlier-4                      ✓ (3640ms) $0.012834
+  skill-pivot-3                        ✓ (3656ms) $0.003569
+  skill-whatif-3                       ✓ (3804ms) $0.003869
+  skill-outlier-3                      ✓ (4060ms) $0.003554
+  skill-chart-5                        ✓ (4177ms) $0.003341
+  skill-outlier-5                      ✓ (4375ms) $0.006740
+  skill-outlier-1                      ✓ (4387ms) $0.006870
+  skill-chart-1                        ✓ (4488ms) $0.012579
+  skill-outlier-2                      ✓ (5057ms) $0.003482
+  skill-pivot-5                        ✓ (5168ms) $0.006597
+  skill-chart-3                        ✓ (5797ms) $0.013077
+  skill-pivot-1                        ✓ (6017ms) $0.006793
+  skill-whatif-2                       ✓ (6999ms) $0.013318
+  skill-pivot-4                        ✓ (8577ms) $0.007750
+  reg-formula-1                        ✓ (2460ms) $0.003400
+  skill-story-1                        ✓ (6084ms) $0.004175
+  skill-surprise-2                     ✓ (6140ms) $0.005046
+  reg-formula-2                        ✓ (2434ms) $0.003222
+  skill-surprise-3                     ✓ (6573ms) $0.008384
+  skill-story-3                        ✓ (7589ms) $0.005701
+  skill-story-2                        ✓ (7989ms) $0.004989
+  reg-formula-4                        ✓ (2297ms) $0.003127
+  reg-formula-3                        ✓ (3720ms) $0.003430
+  reg-sort-1                           ✓ (2117ms) $0.003031
+  reg-filter-2                         ✓ (3233ms) $0.003254
+  skill-whatif-4                       ✓ (14255ms) $0.015819
+  reg-filter-3                         ✓ (3258ms) $0.003222
+  reg-filter-1                         ✓ (4215ms) $0.003456
+  reg-sort-2                           ✓ (3096ms) $0.003075
+  skill-whatif-1                       ✓ (15375ms) $0.012361
+  skill-surprise-1                     ✓ (11783ms) $0.005525
+  reg-group-2                          ✓ (3603ms) $0.003665
+  reg-pivot-1                          ✓ (3067ms) $0.003597
+  reg-pivot-2                          ✓ (2849ms) $0.003471
+  reg-group-3                          ✓ (5502ms) $0.003578
+  feat-chart-5                         ✓ (2101ms) $0.003312
+  skill-chart-2                        ✓ (20257ms) $0.018618
+  skill-pin-3                          ✓ (17026ms) $0.006120
+  feat-chart-4                         ✓ (4368ms) $0.003880
+  reg-pdf-1                            ✓ (16476ms) $0.007827
+  skill-pin-2                          ✗ (17950ms) $0.010783 — missing-required-tool
+  feat-chart-6                         ✓ (4005ms) $0.003702
+[03:20:14.708] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-pin-1                          ✗ (19427ms) $0.010939 — missing-required-tool
+  feat-chart-1                         ✓ (8156ms) $0.006172
+  feat-chart-7                         ✓ (4455ms) $0.004582
+  feat-pivot-1                         ✓ (3969ms) $0.003265
+  feat-pivot-6                         ✓ (3930ms) $0.003822
+  feat-group-2                         ✓ (2228ms) $0.003689
+  reg-group-1                          ✓ (14172ms) $0.006964
+  feat-pivot-2                         ✓ (5797ms) $0.003687
+  feat-group-3                         ✓ (2544ms) $0.003430
+  reg-pdf-4                            ✓ (20761ms) $0.009013
+  feat-pivot-3                         ✓ (5687ms) $0.004251
+[03:20:19.949] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-group-4                         ✓ (2156ms) $0.003205
+  feat-pivot-7                         ✓ (5150ms) $0.003648
+  feat-pivot-5                         ✓ (6666ms) $0.004828
+  reg-chart-1                          ✓ (14408ms) $0.007817
+  feat-group-5                         ✗ (2668ms) $0.003571 — missing-required-paths,missing-required-paths
+  feat-pivot-4                         ✓ (8093ms) $0.005131
+  feat-chart-8                         ✓ (10544ms) $0.006255
+  feat-group-9                         ✗ (3721ms) $0.003454 — invalid-patch-line,missing-required-paths
+  feat-group-10                        ✓ (4997ms) $0.005120
+  feat-chart-3                         ✓ (15878ms) $0.008488
+  reg-chart-2                          ✓ (22270ms) $0.012241
+  feat-group-7                         ✓ (11613ms) $0.007514
+  reg-pdf-2                            ✓ (33821ms) $0.012495
+  feat-group-8                         ✓ (14621ms) $0.006157
+  feat-group-1                         ✓ (19288ms) $0.012563
+  feat-group-12                        ✓ (16836ms) $0.007564
+  feat-formula-1                       ✓ (4246ms) $0.003530
+  feat-formula-3                       ✓ (3621ms) $0.003643
+  feat-formula-4                       ✓ (3425ms) $0.003580
+  skill-chart-4                        ✓ (49502ms) $0.029698
+  feat-pdf-11                          ✓ (11776ms) $0.005726
+  feat-formula-5                       ✓ (2516ms) $0.003157
+  feat-formula-6                       ✓ (2427ms) $0.003289
+[03:20:43.938] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-formula-7                       ✓ (2206ms) $0.003259
+  feat-pdf-7                           ✓ (23139ms) $0.008993
+  feat-pdf-8                           ✓ (29941ms) $0.013355
+[03:20:55.153] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-group-11                        ✓ (36548ms) $0.014431
+  feat-chart-2                         ✗ (50635ms) $0.020740 — invalid-patch-line
+  skill-pin-4                          ✗ (69087ms) $0.029735 — missing-required-tool
+[03:21:05.915] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-formula-2                       ✓ (40174ms) $0.007904
+  feat-pdf-3                           ✗ (55440ms) $0.032068 — missing-required-tool,missing-required-tool
+  feat-pdf-9                           ✗ (47849ms) $0.033296 — missing-required-tool,missing-required-tool
+[03:21:17.350] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:21:17.553] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-5                           ✗ (63696ms) $0.029528 — missing-required-tool,missing-required-tool
+[03:21:26.902] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-pdf-3                            ✗ (89788ms) $0.029146 — missing-required-tool,missing-required-tool
+[03:21:28.760] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-4                           ✗ (75849ms) $0.028778 — missing-required-tool,missing-required-tool
+  feat-pdf-2                           ✗ (77236ms) $0.028522 — missing-required-tool,missing-required-tool
+[03:21:38.651] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:21:39.061] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-1                           ✗ (78180ms) $0.028589 — missing-required-tool,missing-required-tool
+  feat-group-6                         ✗ (80277ms) $0.029456 — refused-wrongly,refused-wrongly
+[03:21:39.594] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:21:39.813] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-6                           ✗ (78956ms) $0.029319 — missing-required-tool,missing-required-tool
+[03:21:42.626] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "z-ai/glm-5.1"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-10                          ✗ (74755ms) $0.028307 — missing-required-tool,missing-required-tool
+
+=== v5/verbose / arm: gemini-3.1-flash-lite (google/gemini-3.1-flash-lite-preview, managed) ===
+  skill-outlier-3                      ✓ (2355ms) $0.004462
+  skill-pivot-5                        ✓ (2765ms) $0.001623
+  skill-whatif-2                       ✓ (2812ms) $0.004490
+  skill-whatif-1                       ✓ (2875ms) $0.004778
+  skill-chart-1                        ✓ (3031ms) $0.004468
+  skill-outlier-4                      ✓ (3361ms) $0.001733
+  skill-whatif-4                       ✓ (3431ms) $0.005549
+  skill-pivot-6                        ✓ (3450ms) $0.005095
+  skill-chart-3                        ✓ (3482ms) $0.001232
+  skill-whatif-3                       ✓ (3639ms) $0.002871
+  skill-outlier-5                      ✓ (3708ms) $0.002547
+  skill-outlier-2                      ✓ (4023ms) $0.004716
+  skill-pivot-3                        ✓ (4071ms) $0.002030
+  skill-pivot-1                        ✓ (4409ms) $0.005137
+  skill-chart-5                        ✓ (4527ms) $0.002178
+  skill-chart-2                        ✓ (4569ms) $0.003687
+  skill-pin-1                          ✓ (2258ms) $0.002497
+  skill-outlier-1                      ✓ (4644ms) $0.003399
+  skill-pivot-4                        ✓ (5073ms) $0.004688
+  skill-pin-2                          ✗ (2317ms) $0.001781 — missing-required-tool
+  skill-surprise-2                     ✓ (1713ms) $0.001484
+  skill-pin-4                          ✗ (2529ms) $0.001818 — missing-required-tool
+  skill-chart-4                        ✓ (5631ms) $0.003361
+  skill-pin-3                          ✓ (2841ms) $0.001580
+  skill-pivot-2                        ✓ (5933ms) $0.004035
+[03:21:51.211] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-story-1                        ✓ (2911ms) $0.002015
+  skill-story-3                        ✓ (2711ms) $0.001822
+  reg-formula-2                        ✓ (1616ms) $0.001450
+  reg-pdf-3                            ✓ (2350ms) $0.004174
+[03:21:52.433] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-formula-1                        ✓ (1937ms) $0.001781
+  reg-formula-4                        ✓ (1827ms) $0.002678
+  skill-surprise-3                     ✓ (2842ms) $0.002133
+[03:21:52.513] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-formula-3                        ✓ (1956ms) $0.001218
+  skill-story-2                        ✓ (3247ms) $0.004559
+  reg-filter-3                         ✓ (1669ms) $0.001393
+  reg-pdf-2                            ✓ (3189ms) $0.001970
+  reg-sort-1                           ✓ (2124ms) $0.001521
+[03:21:53.238] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-sort-2                           ✓ (2131ms) $0.001541
+  reg-group-1                          ✓ (2124ms) $0.001251
+  reg-pivot-2                          ✓ (1587ms) $0.001286
+  feat-chart-1                         ✓ (1723ms) $0.001230
+  reg-filter-2                         ✓ (3126ms) $0.001232
+  reg-filter-1                         ✓ (3285ms) $0.001931
+  reg-group-3                          ✓ (2451ms) $0.001603
+  skill-surprise-1                     ✗ (4968ms) $0.004839 — wrong-tool-call-count
+  reg-chart-1                          ✓ (2441ms) $0.002857
+  reg-pdf-1                            ✓ (5021ms) $0.003459
+  feat-chart-6                         ✓ (1543ms) $0.001567
+  reg-pdf-4                            ✓ (4405ms) $0.003057
+  reg-group-2                          ✓ (3256ms) $0.002378
+  feat-chart-5                         ✓ (2522ms) $0.001689
+  reg-pivot-1                          ✓ (3070ms) $0.002293
+  feat-chart-7                         ✓ (2019ms) $0.001521
+[03:21:54.759] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:21:54.822] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-chart-4                         ✓ (3027ms) $0.002182
+  feat-pivot-4                         ✓ (1815ms) $0.001811
+  feat-chart-8                         ✓ (2295ms) $0.002224
+  feat-chart-3                         ✓ (3626ms) $0.002892
+  feat-pivot-6                         ✓ (1935ms) $0.001950
+  feat-pivot-1                         ✓ (2709ms) $0.001450
+  feat-group-3                         ✗ (1826ms) $0.001428 — invalid-patch-line,missing-required-paths
+  feat-group-2                         ✓ (1932ms) $0.001575
+  feat-chart-2                         ✓ (4199ms) $0.003625
+  reg-chart-2                          ✓ (4611ms) $0.001740
+  feat-group-4                         ✓ (2015ms) $0.001582
+  feat-pivot-2                         ✓ (3040ms) $0.001857
+  feat-pivot-3                         ✓ (2951ms) $0.001415
+  feat-pivot-5                         ✓ (2883ms) $0.001641
+  feat-group-1                         ✓ (2794ms) $0.002475
+  feat-group-5                         ✓ (2405ms) $0.002257
+  feat-group-9                         ✓ (1962ms) $0.001601
+  feat-group-8                         ✓ (2081ms) $0.001608
+  feat-group-10                        ✓ (1947ms) $0.001414
+  feat-group-6                         ✓ (2634ms) $0.002260
+  feat-group-11                        ✓ (2390ms) $0.001674
+  feat-group-12                        ✓ (2347ms) $0.002208
+  feat-pdf-4                           ✓ (2012ms) $0.001744
+  feat-pivot-7                         ✓ (4350ms) $0.001677
+  feat-pdf-2                           ✓ (2628ms) $0.002191
+  feat-group-7                         ✓ (3964ms) $0.002556
+[03:21:58.703] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:21:59.145] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-formula-1                       ✓ (2540ms) $0.001714
+  feat-formula-3                       ✓ (2766ms) $0.001756
+  feat-formula-6                       ✓ (2020ms) $0.001568
+  feat-pdf-6                           ✓ (3685ms) $0.002716
+  feat-formula-5                       ✓ (2514ms) $0.001607
+  feat-formula-7                       ✓ (2150ms) $0.001798
+[03:22:00.502] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-5                           ✗ (4228ms) $0.003617 — invalid-patch-line
+  feat-pdf-11                          ✓ (3676ms) $0.001736
+  feat-pdf-7                           ✓ (4300ms) $0.002900
+[03:22:01.085] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-formula-4                       ✓ (3439ms) $0.002025
+  feat-pdf-1                           ✗ (5110ms) $0.004113 — invalid-patch-line
+  feat-pdf-8                           ✓ (4342ms) $0.002604
+  feat-pdf-3                           ✓ (5123ms) $0.003791
+[03:22:01.730] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-10                          ✓ (4732ms) $0.002722
+[03:22:01.987] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-formula-2                       ✓ (4935ms) $0.001603
+  feat-pdf-9                           ✓ (6433ms) $0.003991
+
+=== v5/verbose / arm: qwen3.6-flash (qwen/qwen3.6-flash, managed) ===
+[03:22:03.602] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "google/gemini-3.1-flash-lite-preview"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-outlier-1                      ✗ (4597ms) $0.003461 — invalid-command-line,missing-required-commands
+  skill-pivot-1                        ✓ (5284ms) $0.003679
+  skill-pivot-4                        ✓ (5427ms) $0.003560
+  skill-pivot-2                        ✓ (5875ms) $0.003499
+  skill-chart-3                        ✓ (5888ms) $0.003638
+  skill-outlier-3                      ✓ (6246ms) $0.003398
+  skill-chart-5                        ✓ (6392ms) $0.004043
+  skill-outlier-4                      ✓ (6411ms) $0.003745
+  skill-pivot-5                        ✓ (6441ms) $0.003615
+  skill-chart-2                        ✓ (7079ms) $0.004145
+  skill-whatif-4                       ✓ (7151ms) $0.004576
+  skill-whatif-3                       ✓ (7531ms) $0.003984
+  skill-pin-1                          ✗ (3362ms) $0.003321 — missing-required-tool
+  skill-chart-1                        ✓ (8084ms) $0.003586
+  skill-whatif-1                       ✓ (8138ms) $0.004696
+  skill-pivot-3                        ✓ (8322ms) $0.003679
+  skill-outlier-2                      ✓ (8303ms) $0.003361
+  skill-outlier-5                      ✓ (8364ms) $0.003518
+  skill-pivot-6                        ✓ (9375ms) $0.003780
+  reg-formula-2                        ✓ (2222ms) $0.003327
+  reg-formula-1                        ✓ (2923ms) $0.003303
+  skill-whatif-2                       ✓ (11069ms) $0.003624
+  skill-story-2                        ✓ (5296ms) $0.003782
+  skill-pin-2                          ✓ (6771ms) $0.004352
+  reg-formula-3                        ✓ (4134ms) $0.003352
+  reg-formula-4                        ✓ (4196ms) $0.003412
+  skill-story-1                        ✓ (6736ms) $0.003939
+  reg-pdf-1                            ✓ (6005ms) $0.003893
+  skill-story-3                        ✓ (6950ms) $0.004428
+  reg-filter-2                         ✓ (2936ms) $0.003513
+[03:22:16.807] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-surprise-1                     ✓ (7279ms) $0.004387
+  reg-filter-1                         ✓ (4584ms) $0.003900
+  reg-sort-1                           ✓ (2958ms) $0.003240
+  skill-surprise-3                     ✓ (7048ms) $0.004076
+  reg-sort-2                           ✓ (2646ms) $0.003292
+  skill-surprise-2                     ✓ (8040ms) $0.004752
+  reg-pdf-4                            ✓ (6663ms) $0.003759
+  reg-group-1                          ✓ (3656ms) $0.003995
+  skill-chart-4                        ✗ (16111ms) $0.007311 — text-instead-of-tools
+  reg-chart-1                          ✓ (3821ms) $0.003651
+  reg-group-3                          ✓ (4086ms) $0.003507
+  reg-filter-3                         ✓ (5863ms) $0.003668
+  reg-pdf-3                            ✓ (9128ms) $0.004802
+  reg-pdf-2                            ✓ (9743ms) $0.004792
+  skill-pin-4                          ✓ (11580ms) $0.005320
+[03:22:20.734] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:22:20.924] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-group-2                          ✓ (5404ms) $0.004372
+  feat-chart-5                         ✓ (3773ms) $0.003432
+  feat-chart-7                         ✓ (3523ms) $0.003375
+  feat-chart-6                         ✓ (4488ms) $0.003856
+  reg-pivot-1                          ✓ (6514ms) $0.003602
+  feat-pivot-3                         ✓ (3453ms) $0.003548
+  feat-pivot-2                         ✓ (4113ms) $0.003662
+  feat-pivot-1                         ✓ (4689ms) $0.003742
+  feat-chart-8                         ✓ (5478ms) $0.004339
+  feat-group-2                         ✓ (3410ms) $0.003495
+  feat-pivot-7                         ✓ (4149ms) $0.003593
+  feat-pivot-6                         ✓ (5061ms) $0.003490
+  feat-pivot-5                         ✓ (5514ms) $0.004012
+  feat-group-1                         ✓ (4948ms) $0.003699
+  feat-pivot-4                         ✓ (6395ms) $0.004683
+  feat-group-5                         ✓ (4151ms) $0.003805
+  feat-group-3                         ✓ (5897ms) $0.004197
+  feat-chart-3                         ✓ (10240ms) $0.005516
+  feat-group-11                        ✓ (2798ms) $0.003523
+  feat-group-9                         ✓ (3606ms) $0.003802
+  feat-chart-1                         ✓ (11216ms) $0.004032
+  feat-group-10                        ✓ (4492ms) $0.003421
+  feat-group-4                         ✓ (7446ms) $0.005069
+  feat-group-6                         ✓ (6522ms) $0.004563
+  reg-pivot-2                          ✓ (13759ms) $0.003824
+  feat-group-12                        ✓ (5118ms) $0.003890
+  feat-chart-2                         ✓ (13993ms) $0.007704
+  feat-group-7                         ✓ (8040ms) $0.005140
+  feat-pdf-1                           ✓ (7269ms) $0.004722
+  feat-group-8                         ✓ (9117ms) $0.005879
+  feat-chart-4                         ✓ (16965ms) $0.008396
+  feat-pdf-3                           ✓ (8069ms) $0.004804
+  feat-formula-5                       ✓ (6473ms) $0.003456
+  feat-formula-4                       ✓ (7777ms) $0.003703
+  feat-formula-7                       ✓ (8451ms) $0.003445
+  feat-pdf-5                           ✓ (14735ms) $0.005291
+  feat-pdf-2                           ✓ (16530ms) $0.006760
+  feat-formula-3                       ✓ (12817ms) $0.003457
+  feat-formula-1                       ✓ (13756ms) $0.003404
+  feat-formula-6                       ✓ (11973ms) $0.003323
+  feat-pdf-10                          ✗ (16037ms) $0.004556 — missing-required-tool
+  feat-formula-2                       ✓ (14853ms) $0.004389
+  feat-pdf-11                          ✓ (16247ms) $0.005300
+[03:22:45.546] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:22:46.292] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-9                           ✓ (18908ms) $0.005026
+[03:22:47.461] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "qwen/qwen3.6-flash"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-8                           ✓ (23001ms) $0.005400
+  reg-chart-2                          ✓ (47576ms) $0.020144
+  skill-pin-3                          ✗ (59347ms) $0.026447 — missing-required-tool
+  feat-pdf-7                           ✓ (77730ms) $0.027760
+  feat-pdf-4                           ✓ (83420ms) $0.028975
+  feat-pdf-6                           ✓ (108902ms) $0.042620
+
+=== v5/verbose / arm: kimi-latest [high] (~moonshotai/kimi-latest, research) ===
+  skill-pivot-1                        ✓ (9759ms) $0.012063
+  skill-outlier-2                      ✓ (10130ms) $0.012228
+  skill-chart-3                        ✓ (11189ms) $0.012569
+  skill-whatif-3                       ✓ (11438ms) $0.012758
+  skill-outlier-5                      ✓ (11595ms) $0.012707
+  skill-pivot-2                        ✓ (11672ms) $0.012983
+  skill-outlier-1                      ✓ (12187ms) $0.012943
+  skill-outlier-4                      ✓ (12710ms) $0.013531
+  skill-chart-5                        ✓ (12760ms) $0.013355
+  skill-pivot-5                        ✓ (12790ms) $0.013307
+  skill-whatif-2                       ✓ (13679ms) $0.013457
+  skill-pivot-4                        ✓ (14684ms) $0.015289
+  skill-pivot-3                        ✓ (16670ms) $0.014394
+  skill-pivot-6                        ✓ (18412ms) $0.014392
+  skill-outlier-3                      ✓ (19257ms) $0.015421
+  skill-chart-1                        ✓ (21425ms) $0.015894
+  reg-formula-2                        ✓ (6680ms) $0.011731
+  reg-formula-1                        ✓ (11509ms) $0.012792
+  reg-formula-3                        ✓ (5286ms) $0.011742
+  reg-formula-4                        ✓ (7772ms) $0.012336
+  reg-filter-1                         ✓ (6332ms) $0.012395
+  reg-filter-2                         ✓ (6349ms) $0.012602
+  reg-filter-3                         ✗ (10479ms) $0.012576 — text-instead-of-tools
+  reg-sort-1                           ✓ (5631ms) $0.011536
+  reg-sort-2                           ✓ (6624ms) $0.011453
+  skill-chart-4                        ✓ (57625ms) $0.031649
+  skill-whatif-1                       ✓ (70842ms) $0.029466
+  reg-pdf-2                            ✓ (57839ms) $0.025558
+  skill-chart-2                        ✓ (75205ms) $0.036810
+  reg-pivot-1                          ✓ (7972ms) $0.012931
+  reg-group-2                          ✓ (31224ms) $0.019087
+  reg-pivot-2                          ✓ (6639ms) $0.012283
+  skill-pin-3                          ✗ (79389ms) $0.041234 — missing-required-tool
+[03:25:47.405] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-story-1                        ✗ (79465ms) $0.041736 — missing-required-tool
+[03:25:47.894] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-story-2                        ✗ (79731ms) $0.041723 — missing-required-tool
+  skill-surprise-2                     ✗ (78792ms) $0.040947 — wrong-tool-call-count
+[03:25:48.225] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:25:48.382] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-surprise-1                     ✗ (79111ms) $0.041546 — wrong-tool-call-count
+[03:25:48.654] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-pdf-1                            ✗ (78930ms) $0.041179 — missing-required-tool,missing-required-tool
+[03:25:49.443] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-group-3                          ✓ (36548ms) $0.021289
+  feat-chart-5                         ✓ (7089ms) $0.011959
+  reg-group-1                          ✓ (50113ms) $0.025642
+  skill-whatif-4                       ✗ (101322ms) $0.039476 — wrong-tool-call-count
+  feat-pivot-1                         ✓ (7702ms) $0.012454
+[03:25:58.157] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-chart-6                         ✓ (11230ms) $0.014550
+  feat-pivot-2                         ✓ (8471ms) $0.012808
+  skill-pin-1                          ✗ (98530ms) $0.041804 — missing-required-tool
+  feat-pivot-3                         ✓ (8456ms) $0.012502
+[03:26:05.108] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  skill-pin-2                          ✗ (99025ms) $0.042650 — missing-required-tool
+[03:26:05.985] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-chart-7                         ✓ (17545ms) $0.015826
+  skill-pin-4                          ✗ (100085ms) $0.041674 — missing-required-tool
+  skill-story-3                        ✗ (99839ms) $0.042275 — missing-required-tool
+  skill-surprise-3                     ✗ (99316ms) $0.041291 — wrong-tool-call-count
+[03:26:08.359] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:26:08.856] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:26:08.931] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  reg-pdf-3                            ✗ (99268ms) $0.041026 — missing-required-tool,missing-required-tool
+[03:26:12.760] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pivot-6                         ✓ (14207ms) $0.012171
+  reg-pdf-4                            ✗ (99858ms) $0.039058 — missing-required-tool,missing-required-tool
+[03:26:15.096] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pivot-7                         ✓ (12965ms) $0.012993
+  feat-pivot-5                         ✓ (18997ms) $0.013265
+  feat-chart-8                         ✓ (35252ms) $0.021349
+  feat-group-3                         ✓ (19918ms) $0.017682
+  feat-pivot-4                         ✓ (28480ms) $0.016884
+  feat-group-9                         ✓ (16773ms) $0.016027
+  feat-group-7                         ✓ (23686ms) $0.019148
+  feat-group-5                         ✓ (24858ms) $0.018759
+  feat-group-8                         ✓ (20553ms) $0.017409
+  feat-group-12                        ✓ (29371ms) $0.020203
+  feat-group-2                         ✓ (42076ms) $0.023376
+  feat-group-11                        ✓ (35501ms) $0.023346
+  feat-group-4                         ✓ (46583ms) $0.027535
+  reg-chart-2                          ✓ (84176ms) $0.037929
+  feat-group-10                        ✓ (40408ms) $0.025443
+  reg-chart-1                          ✗ (88168ms) $0.041681 — refused-wrongly
+[03:26:55.843] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-formula-1                       ✓ (5505ms) $0.012045
+  feat-chart-1                         ✗ (76321ms) $0.041548 — refused-wrongly
+[03:27:01.198] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-formula-3                       ✓ (6113ms) $0.012183
+  feat-chart-2                         ✗ (77329ms) $0.041280 — refused-wrongly
+[03:27:03.972] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-chart-4                         ✗ (78066ms) $0.040940 — refused-wrongly
+  feat-formula-5                       ✓ (5145ms) $0.011894
+[03:27:05.960] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-formula-4                       ✓ (8415ms) $0.013003
+  feat-formula-6                       ✓ (5797ms) $0.011878
+  feat-group-1                         ✓ (63099ms) $0.033122
+  feat-formula-7                       ✓ (4943ms) $0.012160
+  feat-chart-3                         ✗ (83807ms) $0.040507 — refused-wrongly
+[03:27:11.212] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-group-6                         ✗ (79810ms) $0.041770 — refused-wrongly,refused-wrongly
+[03:27:28.665] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-11                          ✓ (44174ms) $0.023577
+  feat-pdf-1                           ✗ (74267ms) $0.040227 — missing-required-tool,missing-required-tool
+[03:27:38.963] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-formula-2                       ✗ (46299ms) $0.026638 — missing-required-tool
+  feat-pdf-5                           ✗ (71316ms) $0.041398 — missing-required-tool,missing-required-tool
+  feat-pdf-7                           ✗ (70936ms) $0.039554 — missing-required-tool,missing-required-tool
+[03:27:43.933] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:27:44.250] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-2                           ✗ (85345ms) $0.041405 — missing-required-tool,missing-required-tool
+  feat-pdf-3                           ✗ (84849ms) $0.041119 — missing-required-tool,missing-required-tool
+[03:27:51.249] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+[03:27:51.485] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-4                           ✗ (83500ms) $0.041276 — missing-required-tool,missing-required-tool
+[03:27:54.093] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-6                           ✗ (82579ms) $0.040499 — missing-required-tool,missing-required-tool
+[03:27:55.796] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-9                           ✗ (68492ms) $0.041674 — missing-required-tool,missing-required-tool
+[03:27:56.487] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-8                           ✗ (79133ms) $0.040366 — missing-required-tool,missing-required-tool
+[03:28:06.204] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
+  feat-pdf-10                          ✗ (77039ms) $0.040770 — missing-required-tool,missing-required-tool
+
+
+========== AGGREGATES ==========
+
+## §1. Pass rate by variant × arm
+  arm                    v2               v5             
+  haiku-4-5              67/95 (71%)      86/95 (91%)    
+  qwen3.5-flash-02-23    62/95 (65%)      89/95 (94%)    
+  glm-5.1                64/95 (67%)      79/95 (83%)    
+  gemini-3.1-flash-lite  61/95 (64%)      89/95 (94%)    
+  qwen3.6-flash          64/95 (67%)      90/95 (95%)    
+  kimi-latest            56/95 (59%)      63/95 (66%)    
+  ALL                    374/570 (65.6%)  496/570 (87.0%)
+
+## §2. Avg latency by variant × arm
+  arm                    v2       v5     
+  haiku-4-5              3077ms   3216ms 
+  qwen3.5-flash-02-23    7609ms   5478ms 
+  glm-5.1                11630ms  16971ms
+  gemini-3.1-flash-lite  2614ms   3114ms 
+  qwen3.6-flash          8291ms   11146ms
+  kimi-latest            32597ms  41668ms
+
+## §3. Cost by variant × arm (total $ for all 31 prompts)
+  arm                    v2         v5       
+  haiku-4-5              $0.432285  $0.889444
+  qwen3.5-flash-02-23    $0.095191  $0.117848
+  glm-5.1                $0.532877  $0.898483
+  gemini-3.1-flash-lite  $0.205096  $0.232977
+  qwen3.6-flash          $0.389093  $0.519303
+  kimi-latest            $1.674417  $2.334920
+
+## §3b. Avg $ per call (variant × arm)
+  arm                    v2         v5       
+  haiku-4-5              $0.004550  $0.009363
+  qwen3.5-flash-02-23    $0.001002  $0.001241
+  glm-5.1                $0.005609  $0.009458
+  gemini-3.1-flash-lite  $0.002159  $0.002452
+  qwen3.6-flash          $0.004096  $0.005466
+  kimi-latest            $0.017625  $0.024578
+
+## §4. Pass rate by variant × category (across all arms)
+  category                  v2            v5          
+  filter (n=90)             17/18 (94%)   17/18 (94%) 
+  sort (n=48)               12/12 (100%)  12/12 (100%)
+  group-agg (n=138)         82/90 (91%)   83/90 (92%) 
+  pivot (n=54)              24/24 (100%)  24/24 (100%)
+  chart (n=78)              29/30 (97%)   29/30 (97%) 
+  columns (n=48)            0/0 (0%)      0/0 (0%)    
+  view (n=36)               0/0 (0%)      0/0 (0%)    
+  topn (n=30)               0/0 (0%)      0/0 (0%)    
+  command (n=60)            0/0 (0%)      0/0 (0%)    
+  composite (n=42)          0/0 (0%)      0/0 (0%)    
+  refusal (n=48)            0/0 (0%)      0/0 (0%)    
+  date (n=30)               0/0 (0%)      0/0 (0%)    
+  multilingual (n=30)       0/0 (0%)      0/0 (0%)    
+  edge (n=30)               0/0 (0%)      0/0 (0%)    
+  pivot-builder (n=66)      65/66 (98%)   66/66 (100%)
+  chart-suggest (n=60)      49/60 (82%)   54/60 (90%) 
+  outlier-hunt (n=30)       6/30 (20%)    28/30 (93%) 
+  what-if-ghost (n=24)      12/24 (50%)   22/24 (92%) 
+  investigation-log (n=24)  4/24 (17%)    11/24 (46%) 
+  data-story (n=18)         4/18 (22%)    13/18 (72%) 
+  surprise-me (n=18)        4/18 (22%)    14/18 (78%) 
+  pdf-report (n=90)         2/90 (2%)     58/90 (64%) 
+  formula (n=66)            64/66 (97%)   65/66 (98%) 
+
+## §5. Failure-mode histogram by variant (across all arms)
+  failure mode               v2  v5
+  refused-wrongly            22  7 
+  missing-required-paths     8   5 
+  missing-required-commands  10  2 
+  should-refuse-but-emitted  ·   · 
+  text-instead-of-tools      1   2 
+  invalid-patch-line         3   6 
+  invalid-command-line       ·   3 
+  hallucinated-column        5   · 
+  parse-error                7   · 
+  timeout                    ·   · 
+  errored                    ·   · 
+
+## §6. Best variant per (arm × category)
+  arm                    filter  sort    group-agg  pivot   chart   columns  view    topn    command  composite  refusal  date    multilingual  edge    pivot-builder  chart-suggest  outlier-hunt  what-if-ghost  investigation-log  data-story  surprise-me  pdf-report  formula 
+  haiku-4-5              v2 3/3  v2 2/2  v5 15/15   v2 4/4  v2 5/5  v2 0/0   v2 0/0  v2 0/0  v2 0/0   v2 0/0     v2 0/0   v2 0/0  v2 0/0        v2 0/0  v2 11/11       v2 10/10       v5 5/5        v5 3/4         v2 4/4             v5 2/3      v5 3/3       v5 9/15     v5 11/11
+  qwen3.5-flash-02-23    v2 3/3  v2 2/2  v5 13/15   v2 4/4  v2 5/5  v2 0/0   v2 0/0  v2 0/0  v2 0/0   v2 0/0     v2 0/0   v2 0/0  v2 0/0        v2 0/0  v5 11/11       v5 10/10       v5 4/5        v5 4/4         v5 3/4             v5 2/3      v5 3/3       v5 14/15    v2 11/11
+  glm-5.1                v2 3/3  v2 2/2  v2 15/15   v2 4/4  v2 5/5  v2 0/0   v2 0/0  v2 0/0  v2 0/0   v2 0/0     v2 0/0   v2 0/0  v2 0/0        v2 0/0  v2 11/11       v2 10/10       v5 5/5        v5 4/4         v5 1/4             v5 3/3      v5 3/3       v5 6/15     v2 11/11
+  gemini-3.1-flash-lite  v2 3/3  v2 2/2  v2 14/15   v2 4/4  v2 5/5  v2 0/0   v2 0/0  v2 0/0  v2 0/0   v2 0/0     v2 0/0   v2 0/0  v2 0/0        v2 0/0  v2 11/11       v5 10/10       v5 5/5        v5 4/4         v5 2/4             v5 3/3      v5 2/3       v5 13/15    v2 11/11
+  qwen3.6-flash          v2 3/3  v2 2/2  v5 15/15   v2 4/4  v5 5/5  v2 0/0   v2 0/0  v2 0/0  v2 0/0   v2 0/0     v2 0/0   v2 0/0  v2 0/0        v2 0/0  v2 11/11       v5 9/10        v5 4/5        v5 4/4         v5 2/4             v5 3/3      v5 3/3       v5 14/15    v2 11/11
+  kimi-latest            v2 2/3  v2 2/2  v5 14/15   v2 4/4  v2 5/5  v2 0/0   v2 0/0  v2 0/0  v2 0/0   v2 0/0     v2 0/0   v2 0/0  v2 0/0        v2 0/0  v2 11/11       v5 6/10        v5 5/5        v2 4/4         v2 0/4             v2 0/3      v2 0/3       v5 2/15     v2 10/11
+
+## Failure detail (per variant × arm)
+
+### v2
+  - haiku-4-5 — 28 failure(s):
+     [skill-whatif-2] wrong-tool-call-count(answerWithFormula: needed ≥2, got 1)
+        text: "I'll calculate the new average salary if all engineering salaries are raised by 8%."
+     [skill-outlier-5] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-outlier-3] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-outlier-1] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-whatif-4] wrong-tool-call-count(answerWithFormula: needed ≥2, got 1)
+        text: "I need to calculate what the total revenue would be if we doubled the price on orders over $500. Let me break this down: - For orders with price > $500: use doubled price (price * 2) - For orders with…"
+     [skill-outlier-2] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-whatif-3] wrong-tool-call-count(answerWithFormula: needed ≥2, got 1)
+        text: "I'll calculate the impact of a 15% tax on total transaction amounts."
+     [reg-pdf-1] missing-required-tool(composePdfReport)
+        text: "I'll help you generate a PDF summary of the visible orders. First, let me gather the data shape so I can create the report."
+     [reg-pdf-2] missing-required-tool(composePdfReport)
+        text: "I'll create a printable HR report with key salary statistics. Let me first gather the salary data."
+     [reg-pdf-3] missing-required-tool(composePdfReport)
+        text: "I need to gather the data for your report. Let me request a summary of total amounts grouped by category."
+     [reg-pdf-4] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: "I'd like to gather the shipment data for your PDF report. To ensure I capture what you need, let me ask a clarifying question: **Which data would you like included in the summary report?** 1. **All sh…"
+     [skill-surprise-2] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: "I'd be happy to help you analyze the orders! To give you meaningful insights, could you clarify what you're looking for? For example: - **Sales metrics**: Total revenue, average order value, top produ…"
+     [skill-surprise-1] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: "I'll explore your transaction data to find interesting patterns. Let me start by examining the dataset structure and then uncover some key insights."
+     [skill-story-1] missing-required-tool(queryGridData)
+        text: "I'd be happy to help you explore this orders data! Let me give you a quick overview of what's available. Based on the grid structure, you have the following columns: **Order & Customer Info:** - **ord…"
+     [skill-story-3] missing-required-tool(queryGridData)
+        text: "I'll give you a guided tour of the HR data by walking through the structure and key insights. ## **HR Data Overview** You have a **personnel dataset** with the following columns: ### **Core Identity &…"
+     [feat-group-9] refused-wrongly(expected patch on '/grouping'); refused-wrongly(expected patch on '/aggregation')
+     [feat-pdf-6] missing-required-tool(composePdfReport)
+        text: "I'll help you create a downloadable HR report with one table per department. Let me first gather the data structure so I can build the report."
+     [feat-pdf-4] missing-required-tool(composePdfReport)
+        text: "I'll help you create a PDF brief of shipment volume by carrier with weight statistics. Let me first gather the data shape you'll need."
+     [feat-pdf-7] missing-required-tool(composePdfReport)
+        text: "I'll help you create a PDF brief of the largest transactions and their categories. Let me first gather the data on the visible transactions, sorted by amount in descending order."
+     [feat-pdf-2] missing-required-tool(composePdfReport)
+        text: "I'll gather the headcount and average salary data by department, then compose a printable PDF report."
+     [feat-pdf-3] missing-required-tool(composePdfReport)
+        text: "I'll help you generate a transactions report PDF. Let me first gather the data showing total amount and count by transaction type."
+     [feat-pdf-1] missing-required-tool(composePdfReport)
+        text: "I'll build a PDF report showing total revenue and order count per country. Let me first gather the data."
+     [feat-pdf-11] missing-required-tool(composePdfReport)
+        text: "I'll gather the salary data and create a printable report for you."
+     [feat-pdf-9] missing-required-tool(composePdfReport)
+        text: "I'll create a PDF report of late deliveries by carrier. Let me first gather the data."
+     [feat-pdf-5] missing-required-tool(composePdfReport)
+        text: "I'll create a printable PDF summary of the top categories by revenue. Let me first gather the data."
+     [feat-pdf-8] missing-required-tool(composePdfReport)
+        text: "I'll help you create a printable orders report. Let me first gather the data from your grid so I can build the report with the current figures. I need to request: 1. **Summary KPIs** — total revenue a…"
+     [feat-pdf-10] missing-required-tool(composePdfReport)
+        text: "I need to gather data from your grid to compose this PDF. Let me request: 1. **Total amount** across all transactions (using aggregate query) 2. **Breakdown by account** with amounts per account (usin…"
+     [feat-formula-2] missing-required-tool(answerWithFormula)
+        text: "I'll calculate the total amount for debit transactions only. First, let me clarify: looking at the available columns, I see a `type` field with values like "deposit", "withdrawal", "transfer", "fee", …"
+  - qwen3.5-flash-02-23 — 33 failure(s):
+     [skill-chart-3] parse-error(patch: {"op":"replace","path":"/charts/main","value":{"type"); missing-required-paths(/charts/)
+     [skill-outlier-4] missing-required-commands(selection.selectVisibleTop)
+     [skill-outlier-1] missing-required-commands(selection.selectVisibleTop)
+     [skill-pin-3] invalid-patch-line(invalid-value: {"op":"replace","path":"/aggregation","value"); missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-2] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-whatif-3] wrong-tool-call-count(answerWithFormula: needed ≥2, got 1)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-outlier-5] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-pin-1] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-1] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-outlier-3] missing-required-commands(selection.selectVisibleTop)
+     [skill-surprise-2] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-story-1] missing-required-tool(queryGridData)
+        text: "I'd be happy to help you explore this orders data! Let me give you an overview of what's available: ## Available Columns The dataset contains 10 columns across these categories: | Column | Type | Exam…"
+     [reg-pdf-2] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-4] parse-error(patch: {"op":"replace","path":"/grouping","value":["carrier"); missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-story-2] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-4] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-chart-4] missing-required-paths(/charts/)
+     [feat-chart-1] invalid-patch-line(invalid-value: {"op":"replace","path":"/pivot","value":{"act)
+     [feat-pivot-3] parse-error(patch: {"op": "replace", "path": "/pivot", "value": {"active); missing-required-paths(/pivot)
+     [reg-pdf-3] parse-error(patch: {"op":"replace","path":"/grouping","value":["category)
+     [feat-group-5] missing-required-paths(/grouping); missing-required-paths(/aggregation)
+     [feat-group-11] parse-error(patch: {"op":"replace","path":"/grouping","value":["category); missing-required-paths(/grouping); missing-required-paths(/aggregation)
+     [feat-pdf-7] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-6] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-10] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-11] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-8] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-1] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-group-6] hallucinated-column(amountMin); hallucinated-column(amountMax)
+     [feat-pdf-9] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-5] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-4] missing-required-tool(composePdfReport)
+        text: "I'll prepare a PDF brief showing shipment volume by carrier with aggregate weight statistics. First, let me set up the grouping and aggregation, then gather the data shape."
+     [feat-pdf-2] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+  - glm-5.1 — 31 failure(s):
+     [skill-outlier-2] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-outlier-5] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-whatif-2] wrong-tool-call-count(answerWithFormula: needed ≥2, got 1)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-2] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-story-2] missing-required-tool(queryGridData)
+        text: "Let me pull together some key metrics to give you a snapshot of your transaction data!"
+     [reg-pdf-2] missing-required-tool(composePdfReport)
+        text: "I'll start by gathering the salary statistics for the report. Let me request the datashape first."
+     [skill-outlier-3] missing-required-commands(selection.selectVisibleTop)
+     [skill-whatif-1] wrong-tool-call-count(answerWithFormula: needed ≥2, got 1)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-story-3] missing-required-tool(queryGridData)
+        text: "I'll pull together some quick summary stats to orient you around the HR dataset. Let me compute a few key metrics inparallel:"
+     [skill-story-1] missing-required-tool(queryGridData)
+        text: "Here's an overview of your orders data based on the grid structure: **Columns you're working with:** | Column | Type | Details | |---|---|---| | **orderId** | Number | Unique order identifier (e.g. 10…"
+     [skill-surprise-2] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: ""Anything notable" is a bit open-ended, but let me pull together a few quick summary stats that might surface interesting patterns foryou."
+     [reg-pdf-1] missing-required-tool(composePdfReport)
+        text: "I'll gather the data shape for your PDF report — first the aggregate summaries, then the visible rowdetails."
+     [reg-pdf-4] missing-required-tool(composePdfReport)
+        text: "I'll prepare a shipment summary PDF report for you. First, let me gather the data shape — I'll request summary aggregates and visiblerow data."
+     [skill-whatif-4] wrong-tool-call-count(answerWithFormula: needed ≥2, got 1)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-surprise-1] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: "I'll crunch a few highlights across your transaction data to surface what standsout!"
+     [reg-pdf-3] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: "I'll set up the grid to group by category with the sum of amounts, then inspect the data and build the PDF report. Let me start by configuring the grid grouping and aggregation."
+     [skill-pin-1] missing-required-tool(queryGridData)
+        text: "I'll set up a view of salary grouped by department with average salary, and also compute key statistics to spot anything that stands out."
+     [skill-pin-3] missing-required-tool(queryGridData)
+        text: "I'll group the transactions by type, aggregate the key numeric fields so you can spot patterns, and sort by total amount descending to surface the most significant types first."
+     [skill-surprise-3] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: "I'll explore the data from multiple angles to surface interesting patterns. Let me compute some key metrics and set up a grouped viewsimultaneously."
+     [skill-pin-4] missing-required-tool(queryGridData)
+        text: "I'll group by carrier, aggregate shipment count and average weight, sort by volume descending, reorder columns for readability, and then select the top carrier as the standout."
+     [feat-pdf-11] missing-required-tool(composePdfReport)
+        text: "I'll pull the salary aggregates (average, minimum, maximum) and the total row count for the report, then buildthe PDF."
+     [feat-pdf-5] missing-required-tool(composePdfReport)
+        text: "I'll prepare the grid by grouping by category and summing revenue (sorted descending), then inspect the data shape for the PDF report."
+     [feat-pdf-6] missing-required-tool(composePdfReport)
+        text: "I'll build a PDF report with one table per department. First, let me inspect the data shape so I can reference it inthe report."
+     [feat-pdf-3] missing-required-tool(composePdfReport)
+        text: "I'll gather the data shape needed for your report — totals for amount and count, plus per-type rows."
+     [feat-pdf-8] missing-required-tool(composePdfReport)
+        text: "I'll gather the KPI aggregates and the order rows in parallel so we can build your report. The request will cover total revenue, order count, and the visible order details for the table."
+     [feat-pdf-4] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: "I'll set up the grid to group by carrier with weight aggregation, then gather the data shape for the PDF."
+     [feat-pdf-7] missing-required-tool(composePdfReport)
+        text: "I'll sort the grid by amount (descending) to surface the largest transactions, then gather data for the PDFbrief."
+     [feat-pdf-9] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: "I'll start by filtering the grid to show only late deliveries (deliveredAt > eta), then gather the data for the PDF."
+     [feat-pdf-2] missing-required-tool(composePdfReport)
+        text: "I'll set up the grid with grouping by department and salary aggregation, then gather the data shape for the PDF."
+     [feat-pdf-10] missing-required-tool(composePdfReport)
+        text: "I'll set up the grid to group by account and sum amounts, then inspect the data needed for thePDF."
+     [feat-pdf-1] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+  - gemini-3.1-flash-lite — 34 failure(s):
+     [skill-outlier-3] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-whatif-2] wrong-tool-call-count(answerWithFormula: needed ≥2, got 1)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-whatif-3] wrong-tool-call-count(answerWithFormula: needed ≥2, got 1)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-whatif-1] wrong-tool-call-count(answerWithFormula: needed ≥2, got 1)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-outlier-2] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-whatif-4] wrong-tool-call-count(answerWithFormula: needed ≥2, got 1)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-3] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-story-2] missing-required-tool(queryGridData)
+        text: "I'm here to help you analyze, filter, and visualize your transaction data. I don't write narratives, but if you have specific questions—like "what was our total volume in Q1?", "which accounts had the…"
+     [reg-pdf-1] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-story-1] missing-required-tool(queryGridData)
+        text: "This dataset contains information about orders, including: * **Order Details**: `orderId`, `orderDate`, `status` * **Customer Information**: `customer`, `country` * **Product Details**: `product`, `ca…"
+     [skill-surprise-1] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-surprise-3] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-4] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-1] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-3] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-story-3] missing-required-tool(queryGridData)
+        text: "I can help you explore this HR data in several ways. Would you like me to: * **Summarize metrics**: Such as calculating the average salary by department or the total count of employees in a specific l…"
+     [skill-outlier-5] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-pin-2] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-4] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-surprise-2] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: ""Anything notable" is a bit broad. Could you specify what you're interested in finding? For example, I can help you: * **Highlight top performers:** Find the highest-revenue products or your largest c…"
+     [reg-pdf-2] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-group-6] invalid-patch-line(invalid-value: {"op":"replace","path":"/aggregation","value"); missing-required-paths(/aggregation)
+     [feat-chart-8] refused-wrongly(expected patch on '/charts/')
+     [feat-pdf-4] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-10] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-6] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-8] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-11] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-5] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-2] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-3] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-1] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-9] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-7] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+  - qwen3.6-flash — 31 failure(s):
+     [skill-outlier-4] missing-required-commands(selection.selectVisibleTop)
+     [skill-whatif-3] wrong-tool-call-count(answerWithFormula: needed ≥2, got 1)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-outlier-1] missing-required-commands(selection.selectVisibleTop)
+     [skill-outlier-3] missing-required-commands(selection.selectVisibleTop)
+     [skill-outlier-2] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-pin-3] hallucinated-column(amount2); missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-outlier-5] missing-required-commands(selection.selectVisibleTop)
+     [skill-pin-1] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-2] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-surprise-2] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: "That's an open-ended question — I'd need more specifics to help you dig into this data efficiently. What kind of "notable" patterns are you looking for? For example: - **Top orders** by revenue or qua…"
+     [reg-pdf-4] missing-required-tool(composePdfReport)
+        text: "I'll prepare the shipment summary PDF report. First, let me gather the data shape for the summary statistics."
+     [skill-story-3] missing-required-tool(queryGridData)
+        text: "I'll bring you to the top of the dataset so you can start exploring from the beginning."
+     [reg-pdf-1] missing-required-tool(composePdfReport)
+        text: "I'll start by gathering the data shape for the PDF report. This will check the structure of visible orders (only the shape/metadata — the actual values stay in your browser)."
+     [skill-pin-2] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-4] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-chart-3] parse-error(patch: {"op": "replace", "path": "/pivot", "value": {"active)
+     [reg-pdf-3] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-chart-1] hallucinated-column(size)
+     [feat-chart-8] missing-required-paths(/charts/)
+     [feat-pdf-7] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-group-6] hallucinated-column(amount_min); hallucinated-column(amount_max)
+     [feat-pdf-3] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-11] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-1] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-6] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-2] hallucinated-column(headcount); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-8] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-10] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-5] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-9] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-surprise-1] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: "I'll start by computing several key metrics to uncover patterns in this transaction data."
+  - kimi-latest — 39 failure(s):
+     [skill-outlier-2] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-outlier-4] missing-required-commands(selection.selectVisibleTop)
+     [skill-outlier-3] missing-required-commands(selection.selectVisibleTop)
+     [skill-outlier-1] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-story-2] missing-required-tool(queryGridData)
+        text: "I can’t see the actual transaction values, and storytelling about the dataset falls outside what the Data Grid copilot can do. I can help you explore the data instead—for example: - Filter by transact…"
+     [skill-outlier-5] refused-wrongly(expected patch on '/sort'); refused-wrongly(expected command 'selection.selectVisibleTop')
+     [skill-story-3] missing-required-tool(queryGridData)
+        text: "Here is what's in your HR dataset, along with ideas for exploring it. **Columns at a glance** - **name** – Employee name (pinned to the left) - **email** – Work email - **department** – Engineering, S…"
+     [skill-pin-4] missing-required-tool(queryGridData)
+        text: "The request is too subjective to translate into a specific grid operation. Please clarify: 1. How should “delivery performance” be measured? - Number of shipments per carrier? - Share of delivered shi…"
+     [skill-surprise-2] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: "I can help you spot patterns, but “notable” can mean different things. Here are a few specific angles I can surface right away—tell me which one interests you (or ask for all): - **Biggest / smallest …"
+     [skill-pin-2] missing-required-tool(queryGridData)
+        text: ""
+     [reg-filter-2] text-instead-of-tools(expected patch on '/filter' — model emitted JSONL as plain t)
+     [skill-surprise-3] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: ""
+     [skill-pin-1] missing-required-tool(queryGridData)
+        text: ""
+     [reg-pdf-1] missing-required-tool(composePdfReport)
+        text: ""
+     [skill-pin-3] missing-required-tool(queryGridData)
+        text: ""
+     [skill-story-1] missing-required-tool(queryGridData)
+        text: ""
+     [feat-chart-8] refused-wrongly(expected patch on '/charts/')
+     [skill-surprise-1] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-3] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-2] missing-required-tool(composePdfReport)
+        text: ""
+     [feat-chart-1] refused-wrongly(expected patch on '/charts/')
+     [skill-chart-5] refused-wrongly(expected patch on '/charts/')
+     [reg-pdf-4] missing-required-tool(composePdfReport)
+        text: ""
+     [feat-group-3] parse-error(patch: {"op":"replace","path"/grouping","value":["location"]); missing-required-paths(/grouping)
+     [feat-chart-2] refused-wrongly(expected patch on '/charts/')
+     [feat-chart-4] refused-wrongly(expected patch on '/charts/')
+     [feat-formula-2] missing-required-tool(answerWithFormula)
+        text: "The `type` column doesn’t include a `"debit"` option. To answer accurately, please clarify what defines a debit transaction in your data: - **Negative amounts** (e.g., withdrawals, fees)? - **Specific…"
+     [feat-pdf-9] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: "I can't generate that PDF because the grid's filter system doesn't support comparing one column directly to another (like `deliveredAt > eta`). It only lets you compare a column to a static value. Wit…"
+     [feat-group-6] refused-wrongly(expected patch on '/grouping'); refused-wrongly(expected patch on '/aggregation')
+     [feat-pdf-11] missing-required-tool(composePdfReport)
+        text: "I'll create a printable salary report with company-wide average, minimum, and maximum. First, let me retrieve those aggregate figures."
+     [feat-pdf-8] missing-required-tool(composePdfReport)
+        text: ""
+     [feat-pdf-5] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: ""
+     [feat-pdf-1] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-7] missing-required-tool(composePdfReport)
+        text: ""
+     [feat-pdf-6] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-2] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-3] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-4] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-10] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+
+### v5
+  - haiku-4-5 — 9 failure(s):
+     [skill-whatif-2] wrong-tool-call-count(answerWithFormula: needed ≥2, got 1)
+        text: "I'll calculate the new average salary for Engineering with an 8% raise applied."
+     [skill-pin-2] missing-required-tool(queryGridData)
+        text: "I'll investigate revenue by category and surface any notable findings. Let me start by grouping orders by category and summing revenue."
+     [reg-pdf-3] missing-required-tool(composePdfReport)
+        text: "I'll create a PDF report showing total amounts grouped by category. Let me fetch the aggregated data and generate the report in parallel."
+     [skill-story-3] missing-required-tool(queryGridData)
+        text: "I'll take you on a guided tour of the HR data, one scene at a time. Let me start by outlining the journey: **Tour Plan:** 1. **Scene 1** — Overview: Total headcount and department distribution 2. **Sc…"
+     [feat-pdf-2] missing-required-tool(composePdfReport)
+        text: "I'll create a printable HR snapshot with headcount and average salary by department. Let me first gather the aggregated data, then generate the report."
+     [feat-pdf-1] missing-required-tool(composePdfReport)
+        text: "I'll build a PDF report with total revenue and order count per country. Let me first query the data and then generate the report."
+     [feat-pdf-5] missing-required-tool(composePdfReport)
+        text: "I'll create a printable PDF summary of the top categories by revenue. First, I need to query the data to get the revenue totals per category, then generate the PDF report."
+     [feat-pdf-6] missing-required-tool(composePdfReport)
+        text: "I'll create a downloadable HR report with tables organized by department. Let me first gather the data and then generate the report."
+     [feat-pdf-8] missing-required-tool(composePdfReport)
+        text: "I'll create a printable orders report with headline KPIs and a recent orders table. Let me fetch the data first."
+  - qwen3.5-flash-02-23 — 6 failure(s):
+     [skill-outlier-5] invalid-command-line({"type": "selection.selectVisibleTop", "count": 5}); missing-required-commands(selection.selectVisibleTop)
+     [skill-pin-2] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-3] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-story-1] invalid-command-line({"type": "state.restore"})
+     [feat-group-5] missing-required-paths(/grouping); missing-required-paths(/aggregation)
+     [feat-group-7] invalid-patch-line(invalid-value: {"op":"replace","path":"/grouping","value":{"); missing-required-paths(/grouping)
+  - glm-5.1 — 16 failure(s):
+     [skill-pin-2] missing-required-tool(queryGridData)
+        text: "I'll set up the grouped view by category with summed revenue, and compute per-category totals so I can pin a notable finding — all in parallel."
+     [skill-pin-1] missing-required-tool(queryGridData)
+        text: "I'll group by department with average salary, sort descending, and compute per-department averages so I can spot what stands out."
+     [feat-group-5] missing-required-paths(/grouping); missing-required-paths(/aggregation)
+     [feat-group-9] invalid-patch-line(invalid-value: {"op":"replace","path":"/grouping","value":{"); missing-required-paths(/grouping)
+     [feat-chart-2] invalid-patch-line(invalid-value: {"op":"replace","path":"/grouping","value":{")
+     [skill-pin-4] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-3] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-9] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-5] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-3] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-4] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-2] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-1] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-group-6] refused-wrongly(expected patch on '/grouping'); refused-wrongly(expected patch on '/aggregation')
+     [feat-pdf-6] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-10] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: "I'll request the aggregate total and the per-account row data in parallel, then compose the PDF referencing both queries."
+  - gemini-3.1-flash-lite — 6 failure(s):
+     [skill-pin-2] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-4] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-surprise-1] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-group-3] invalid-patch-line(invalid-value: {"op":"replace","path":"/grouping","value":{"); missing-required-paths(/grouping)
+     [feat-pdf-5] invalid-patch-line(invalid-value: {"op":"replace","path":"/grouping","value":{")
+     [feat-pdf-1] invalid-patch-line(invalid-value: {"op":"replace","path":"/grouping","value":{")
+  - qwen3.6-flash — 5 failure(s):
+     [skill-outlier-1] invalid-command-line({"type":"selection.selectVisibleTop","count":5}); missing-required-commands(selection.selectVisibleTop)
+     [skill-pin-1] missing-required-tool(queryGridData)
+        text: "I'll group the data by department and compute average salary to start the analysis."
+     [skill-chart-4] text-instead-of-tools(expected patch on '/charts/' — model emitted JSONL as plain )
+     [feat-pdf-10] missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-3] missing-required-tool(queryGridData)
+        text: "I'll set up a grouped view of transactions by type with aggregated totals, and compute the total amount per type so I can flag interesting patterns."
+  - kimi-latest — 32 failure(s):
+     [reg-filter-3] text-instead-of-tools(expected patch on '/filter' — model emitted JSONL as plain t)
+     [skill-pin-3] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-story-1] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-story-2] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-surprise-2] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-surprise-1] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-1] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-whatif-4] wrong-tool-call-count(answerWithFormula: needed ≥2, got 0)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-1] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-2] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-pin-4] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-story-3] missing-required-tool(queryGridData)
+        text: (empty — model emitted no assistantText this turn)
+     [skill-surprise-3] wrong-tool-call-count(queryGridData: needed ≥2, got 0)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-3] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-pdf-4] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [reg-chart-1] refused-wrongly(expected patch on '/charts/')
+     [feat-chart-1] refused-wrongly(expected patch on '/charts/')
+     [feat-chart-2] refused-wrongly(expected patch on '/charts/')
+     [feat-chart-4] refused-wrongly(expected patch on '/charts/')
+     [feat-chart-3] refused-wrongly(expected patch on '/charts/')
+     [feat-group-6] refused-wrongly(expected patch on '/grouping'); refused-wrongly(expected patch on '/aggregation')
+     [feat-pdf-1] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-formula-2] missing-required-tool(answerWithFormula)
+        text: "The `type` column doesn't contain a "debit" value. Its options are: **deposit**, **withdrawal**, **transfer**, **fee**, **interest**, **refund**. Could you clarify which type(s) you mean by "debit"? F…"
+     [feat-pdf-5] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-7] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-2] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-3] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-4] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-6] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-9] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-8] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+     [feat-pdf-10] missing-required-tool(queryGridData); missing-required-tool(composePdfReport)
+        text: (empty — model emitted no assistantText this turn)
+
+
+Final: 870/1140 (76.3%) calls passed across all variants and arms.
+[03:28:09.290] [33mWARN[39m (27599):
+    [35mscope[39m: "copilot:model"
+    [35mmodelId[39m: "~moonshotai/kimi-latest"
+    [35mmeta[39m: "Copilot model emitted no tool calls and no fallback text"
