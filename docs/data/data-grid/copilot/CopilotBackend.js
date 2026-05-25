@@ -31,7 +31,15 @@ import { formulaPlugin } from '@mui/x-copilot/formula';
 // executor's plugin dispatcher across renders.
 const COPILOT_PLUGINS = [pdfReportPlugin(), formulaPlugin()];
 
-const IS_DEPLOY = process.env.DEPLOY_ENV !== 'development';
+// Pick the local backend whenever the demo is loaded from a localhost
+// dev server, regardless of `DEPLOY_ENV`. The previous gate only flipped
+// to localhost when `DEPLOY_ENV === 'development'`, which Next.js's
+// `next dev` doesn't set — so local docs always hit the Render preview
+// backend and missed any backend changes that hadn't shipped yet.
+const IS_DEV_HOST =
+  typeof window !== 'undefined' &&
+  /^(localhost|127\.0\.0\.1|0\.0\.0\.0)(:|$)/.test(window.location.host);
+const IS_DEPLOY = !IS_DEV_HOST && process.env.DEPLOY_ENV !== 'development';
 const BACKEND_URL = IS_DEPLOY
   ? 'https://mui-backend-pr-1691.onrender.com/api/v1/datagrid/copilot'
   : 'http://localhost:5055/api/v1/datagrid/copilot';
