@@ -82,10 +82,7 @@
       "default": "[\"dayAndHour\", \"dayAndMonth\", \"dayAndWeek\", \"monthAndYear\", \"year\"]"
     },
     "readOnly": { "type": { "name": "bool" }, "default": "false" },
-    "requireResources": {
-      "type": { "name": "bool" },
-      "default": "false on EventCalendar / EventCalendarPremium, true on EventTimelinePremium"
-    },
+    "requireResources": { "type": { "name": "bool" }, "default": "true" },
     "resourceColumnLabel": { "type": { "name": "string" } },
     "resourceModelStructure": { "type": { "name": "object" } },
     "resources": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
