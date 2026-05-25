@@ -137,13 +137,22 @@ const AgendaWeekNumberLabel = styled('span', {
   name: 'MuiEventCalendar',
   slot: 'AgendaViewWeekNumberLabel',
 })(({ theme }) => ({
-  fontSize: theme.typography.caption.fontSize,
+  fontSize: '0.875rem',
+  fontWeight: theme.typography.fontWeightRegular,
   lineHeight: 1,
   color: (theme.vars || theme).palette.text.secondary,
-  fontStyle: 'italic',
-  '[data-current] &': {
-    color: 'inherit',
-  },
+}));
+
+const AgendaViewWeekNumberRow = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewWeekNumberRow',
+})(({ theme }) => ({
+  padding: theme.spacing(0.5, 2),
+  backgroundColor: (theme.vars || theme).palette.grey[200],
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+  ...theme.applyStyles('dark', {
+    backgroundColor: (theme.vars || theme).palette.grey[900],
+  }),
 }));
 
 const AGENDA_VIEW_CONFIG: EventCalendarViewConfig = {
@@ -202,69 +211,73 @@ export const AgendaView = React.memo(
         className={clsx(props.className, classes.agendaView)}
       >
         {daysWithOccurrences.map(({ date, occurrences, isFirstDayOfWeek, weekNumber }) => (
-          <AgendaViewRow
-            className={classes.agendaViewRow}
-            key={date.key}
-            id={`${schedulerId}-AgendaViewRow-${date.key}`}
-            aria-labelledby={`${schedulerId}-DayHeaderCell-${date.key}`}
-          >
-            <DayHeaderCell
-              className={classes.agendaViewDayHeaderCell}
-              id={`${schedulerId}-DayHeaderCell-${date.key}`}
-              aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
-              data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
+          <React.Fragment key={date.key}>
+            {showWeekNumber && isFirstDayOfWeek && (
+              <AgendaViewWeekNumberRow className={classes.agendaViewWeekNumberRow}>
+                <AgendaWeekNumberLabel
+                  className={classes.agendaViewWeekNumberLabel}
+                  aria-label={localeText.weekNumberAriaLabel(weekNumber)}
+                >
+                  {`${localeText.week} ${weekNumber}`}
+                </AgendaWeekNumberLabel>
+              </AgendaViewWeekNumberRow>
+            )}
+            <AgendaViewRow
+              className={classes.agendaViewRow}
+              key={date.key}
+              id={`${schedulerId}-AgendaViewRow-${date.key}`}
+              aria-labelledby={`${schedulerId}-DayHeaderCell-${date.key}`}
             >
-              <DayNumberCell
-                className={classes.agendaViewDayNumberCell}
+              <DayHeaderCell
+                className={classes.agendaViewDayHeaderCell}
+                id={`${schedulerId}-DayHeaderCell-${date.key}`}
+                aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
                 data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
               >
-                {adapter.format(date.value, 'dayOfMonth')}
-              </DayNumberCell>
-              <WeekDayCell className={classes.agendaViewWeekDayCell}>
-                <AgendaWeekDayNameLabel
-                  className={classes.agendaViewWeekDayNameLabel}
-                  style={{ '--number-of-lines': 1 } as React.CSSProperties}
+                <DayNumberCell
+                  className={classes.agendaViewDayNumberCell}
+                  data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
                 >
-                  {adapter.format(date.value, 'weekday')}
-                </AgendaWeekDayNameLabel>
-                <AgendaYearAndMonthLabel
-                  className={classes.agendaViewYearAndMonthLabel}
-                  style={{ '--number-of-lines': 1 } as React.CSSProperties}
-                >
-                  {adapter.format(date.value, 'monthFullLetter')},{' '}
-                  {adapter.format(date.value, 'yearPadded')}
-                </AgendaYearAndMonthLabel>
-                {showWeekNumber && isFirstDayOfWeek && (
-                  <AgendaWeekNumberLabel
-                    className={classes.agendaViewWeekNumberLabel}
-                    aria-label={localeText.weekNumberAriaLabel(weekNumber)}
+                  {adapter.format(date.value, 'dayOfMonth')}
+                </DayNumberCell>
+                <WeekDayCell className={classes.agendaViewWeekDayCell}>
+                  <AgendaWeekDayNameLabel
+                    className={classes.agendaViewWeekDayNameLabel}
+                    style={{ '--number-of-lines': 1 } as React.CSSProperties}
                   >
-                    {localeText.weekAbbreviation} {weekNumber}
-                  </AgendaWeekNumberLabel>
-                )}
-              </WeekDayCell>
-            </DayHeaderCell>
-            <EventsList className={classes.agendaViewEventsList}>
-              {isLoading && (
-                <li className={classes.agendaViewEventListItem}>
-                  <EventSkeleton data-variant="agenda" />
-                </li>
-              )}
-              {!isLoading &&
-                occurrences.map((occurrence) => (
-                  <li key={occurrence.key} className={classes.agendaViewEventListItem}>
-                    <EventDialogTrigger occurrence={occurrence}>
-                      <EventItem
-                        occurrence={occurrence}
-                        date={date}
-                        variant="regular"
-                        ariaLabelledBy={`DayHeaderCell-${date.key}`}
-                      />
-                    </EventDialogTrigger>
+                    {adapter.format(date.value, 'weekday')}
+                  </AgendaWeekDayNameLabel>
+                  <AgendaYearAndMonthLabel
+                    className={classes.agendaViewYearAndMonthLabel}
+                    style={{ '--number-of-lines': 1 } as React.CSSProperties}
+                  >
+                    {adapter.format(date.value, 'monthFullLetter')},{' '}
+                    {adapter.format(date.value, 'yearPadded')}
+                  </AgendaYearAndMonthLabel>
+                </WeekDayCell>
+              </DayHeaderCell>
+              <EventsList className={classes.agendaViewEventsList}>
+                {isLoading && (
+                  <li className={classes.agendaViewEventListItem}>
+                    <EventSkeleton data-variant="agenda" />
                   </li>
-                ))}
-            </EventsList>
-          </AgendaViewRow>
+                )}
+                {!isLoading &&
+                  occurrences.map((occurrence) => (
+                    <li key={occurrence.key} className={classes.agendaViewEventListItem}>
+                      <EventDialogTrigger occurrence={occurrence}>
+                        <EventItem
+                          occurrence={occurrence}
+                          date={date}
+                          variant="regular"
+                          ariaLabelledBy={`DayHeaderCell-${date.key}`}
+                        />
+                      </EventDialogTrigger>
+                    </li>
+                  ))}
+              </EventsList>
+            </AgendaViewRow>
+          </React.Fragment>
         ))}
       </AgendaViewRoot>
     );

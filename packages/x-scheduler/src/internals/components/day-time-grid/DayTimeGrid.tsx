@@ -416,6 +416,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       >
         <DayTimeGridAllDayEventsCell
           className={classes.dayTimeGridAllDayEventsCell}
+          aria-hidden="true"
         ></DayTimeGridAllDayEventsCell>
         {days.map((day, index) => (
           <DayTimeGridHeaderCell
