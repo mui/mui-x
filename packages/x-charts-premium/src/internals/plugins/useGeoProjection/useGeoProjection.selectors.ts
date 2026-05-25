@@ -167,21 +167,19 @@ export const selectorChartProjection = createSelectorMemoized(
     }
     if (geoData) {
       if (isConicProjection(projection)) {
-        projection.translate(
-          translate ?? [
-            drawingArea.left + drawingArea.width / 2,
-            drawingArea.top + drawingArea.height / 2,
-          ],
-        );
-
-        const currentScale = projection.scale();
+        if (rotate && typeof projection.rotate === 'function') {
+          projection.rotate(rotate);
+        }
 
         if (!scale) {
           const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
 
+          const currentScale = projection.scale();
+
           const fitScale = Math.min(
             currentScale * (drawingArea.width / (x1 - x0)),
             currentScale * (drawingArea.height / (y1 - y0)),
+
           );
           projection.scale(fitScale);
         } else {
@@ -194,13 +192,25 @@ export const selectorChartProjection = createSelectorMemoized(
       if (rotate && typeof projection.rotate === 'function') {
         projection.rotate(rotate);
       }
-      projection.fitExtent(
-        [
-          [drawingArea.left, drawingArea.top],
-          [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],
-        ],
-        geoData,
-      );
+
+      if (scale) {
+        projection.scale(scale);
+        projection.clipExtent(
+          [
+            [drawingArea.left, drawingArea.top],
+            [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],
+          ],
+          geoData,
+        );
+      } else {
+        projection.fitExtent(
+          [
+            [drawingArea.left, drawingArea.top],
+            [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],
+          ],
+          geoData,
+        );
+      }
 
       projection.translate(
         translate ?? [
@@ -209,9 +219,6 @@ export const selectorChartProjection = createSelectorMemoized(
         ],
       );
 
-      if (scale) {
-        projection.scale(scale);
-      }
     }
     return projection;
   },

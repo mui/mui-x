@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+import ListSubheader from '@mui/material/ListSubheader';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -30,27 +31,41 @@ const USAStates = topojsonFeature(
   'states',
 ) as unknown as ExtendedFeatureCollection;
 
-const projections: D3NamedProjection[] = [
-  // Azimuthal projections (https://d3js.org/d3-geo/azimuthal)
-  'azimuthalEqualArea',
-  'azimuthalEquidistant',
-  'gnomonic',
-  'orthographic',
-  'stereographic',
-
-  // Conic projections (https://d3js.org/d3-geo/conic)
-  'conicConformal',
-  'conicEqualArea',
-  'conicEquidistant',
-  'albers',
-  'albersUsa', // Special composition for the USA with an edge case for Alaska and Hawaii.
-
-  // Cylindrical projections (https://d3js.org/d3-geo/cylindrical)
-  'equirectangular',
-  'mercator',
-  'transverseMercator',
-  'equalEarth',
-  'naturalEarth1',
+const projectionGroups: { label: string; projections: D3NamedProjection[] }[] = [
+  {
+    // https://d3js.org/d3-geo/azimuthal
+    label: 'Azimuthal',
+    projections: [
+      'azimuthalEqualArea',
+      'azimuthalEquidistant',
+      'gnomonic',
+      'orthographic',
+      'stereographic',
+    ],
+  },
+  {
+    // https://d3js.org/d3-geo/conic
+    label: 'Conic',
+    projections: [
+      //  For now commented because those are more difficult to handle
+      // 'conicConformal',
+      // 'conicEqualArea',
+      // 'conicEquidistant',
+      // 'albers',
+      'albersUsa', // Special composition for the USA with an edge case for Alaska and Hawaii.
+    ],
+  },
+  {
+    // https://d3js.org/d3-geo/cylindrical
+    label: 'Cylindrical',
+    projections: [
+      'equirectangular',
+      'mercator',
+      'transverseMercator',
+      'equalEarth',
+      'naturalEarth1',
+    ],
+  },
 ];
 
 function isCylindrical(projection: D3NamedProjection) {
@@ -74,20 +89,24 @@ function isConicProjection(projection: D3NamedProjection) {
 }
 
 const cities = [
-  { name: 'New York', coordinates: [-74.006, 40.7128] },
+  // { name: 'New York', coordinates: [-74.006, 40.7128] },
   { name: 'Tokyo', coordinates: [139.6917, 35.6895] },
   { name: 'Sydney', coordinates: [151.2093, -33.8688] },
   { name: 'Rio', coordinates: [-43.1729, -22.9068] },
 ];
 
 export default function ProjectionMapShape() {
-  // const [projection, setProjection] = React.useState('naturalEarth1');
   const [projection, setProjection] =
-    React.useState<D3NamedProjection>('conicConformal');
-  const [longitude, setLongitude] = React.useState(0);
-  const [latitude, setLatitude] = React.useState(0);
-  const [scale, setScale] = React.useState(100);
+    React.useState<D3NamedProjection>('naturalEarth1');
+
+  const [autoRotation, setAutoRotation] = React.useState(true);
+  const [rotation, setRotation] = React.useState<[number, number]>([0, 0]);
+
+  const [autoTranslation, setAutoTranslation] = React.useState(true);
+  const [translation, setTranslation] = React.useState<[number, number]>([300, 300]);
+
   const [autoScale, setAutoScale] = React.useState(true);
+  const [scale, setScale] = React.useState(100);
 
   const usaProjection = projection === 'albersUsa';
   return (
@@ -100,13 +119,9 @@ export default function ProjectionMapShape() {
         <ChartsGeoDataProviderPremium
           geoData={isConicProjection(projection) ? USAStates : countries}
           projection={projection}
-          rotate={isConicProjection(projection) ? undefined : [longitude, latitude]}
-          translate={
-            isConicProjection(projection) && !usaProjection
-              ? [longitude, latitude]
-              : undefined
-          }
-          scale={autoScale ? undefined : scale}
+          {...(!autoRotation && { rotate: rotation })}
+          {...(!autoTranslation && { translate: translation })}
+          {...(!autoScale && { scale })}
           height={360}
         >
           <ChartsSurface>
@@ -123,69 +138,140 @@ export default function ProjectionMapShape() {
           onChange={(event) => {
             setProjection(event.target.value as D3NamedProjection);
             if ('transverseMercator' === event.target.value) {
-              setLongitude(0);
+              setRotation((prev) => [prev[0], 0]);
               return;
             }
             if (isCylindrical(event.target.value as D3NamedProjection)) {
-              setLatitude(0);
+              setRotation((prev) => [0, prev[1]]);
             }
           }}
         >
-          {projections.map((name) => (
-            <MenuItem key={name} value={name}>
-              {name}
-            </MenuItem>
-          ))}
+          {projectionGroups.flatMap(({ label, projections }) => [
+            <ListSubheader key={label}>{label}</ListSubheader>,
+            ...projections.map((name) => (
+              <MenuItem key={name} value={name}>
+                {name}
+              </MenuItem>
+            )),
+          ])}
         </TextField>
 
-        <ButtonGroup variant="outlined" aria-label="outlined button group" fullWidth>
-          {cities.map(({ name, coordinates }) => (
-            <Button
-              size="small"
-              key={name}
-              onClick={() => {
-                if (isCylindrical(projection)) {
-                  if ('transverseMercator' === projection) {
-                    setLongitude(0);
-                    setLatitude(-coordinates[1]);
-                  } else {
-                    setLongitude(-coordinates[0]);
-                    setLatitude(0);
-                  }
-                  return;
-                }
-                setLongitude(-coordinates[0]);
-                setLatitude(-coordinates[1]);
-              }}
-              disabled={usaProjection}
-            >
-              {name}
-            </Button>
-          ))}
-        </ButtonGroup>
         <div>
-          <Typography gutterBottom>Longitude: {longitude}</Typography>
-          <Slider
-            value={longitude}
-            min={-360}
-            max={360}
-            size="small"
-            onChange={(_, value) => setLongitude(value as number)}
-            valueLabelDisplay="auto"
-            disabled={usaProjection}
+          <Typography gutterBottom>
+            Rotation: {autoRotation ? 'auto' : `(${rotation[0]}°, ${rotation[1]}°)`}
+          </Typography>
+          <FormControlLabel
+            control={
+              <Checkbox
+                size="small"
+                checked={autoRotation}
+                onChange={(event) => setAutoRotation(event.target.checked)}
+              />
+            }
+            label={`auto rotation`}
           />
+          {autoRotation ? null : (
+            <div>
+              <ButtonGroup
+                variant="outlined"
+                aria-label="outlined button group"
+                fullWidth
+              >
+                {cities.map(({ name, coordinates }) => (
+                  <Button
+                    size="small"
+                    key={name}
+                    onClick={() => {
+                      if ('transverseMercator' === projection) {
+                        return setRotation([0, -coordinates[1]]);
+                      }
+                      if (isCylindrical(projection)) {
+                        return setRotation([-coordinates[0], 0]);
+                      }
+                      setRotation([-coordinates[0], -coordinates[1]]);
+                    }}
+                    disabled={usaProjection}
+                  >
+                    {name}
+                  </Button>
+                ))}
+              </ButtonGroup>
+              <Slider
+                value={rotation[0]}
+                min={-180}
+                max={180}
+                step={10}
+                marks={[{value: 0, label: ""}]}
+                aria-label="longitude"
+                size="small"
+                onChange={(_, value: number) =>
+                  setRotation((prev) => [value, prev[1]])
+                }
+                valueLabelDisplay="auto"
+                disabled={usaProjection}
+              />
+              <Slider
+                value={rotation[1]}
+                min={-180}
+                max={180}
+                step={10}
+                marks={[{value: 0, label: ""}]}
+                aria-label="latitude"
+                size="small"
+                onChange={(_, value: number) =>
+                  setRotation((prev) => [prev[0], value])
+                }
+                valueLabelDisplay="auto"
+                disabled={usaProjection}
+              />
+            </div>
+          )}
         </div>
         <div>
-          <Typography gutterBottom>Latitude: {latitude}</Typography>
-          <Slider
-            value={latitude}
-            min={-360}
-            max={360}
-            size="small"
-            onChange={(_, value) => setLatitude(value as number)}
-            valueLabelDisplay="auto"
-            disabled={usaProjection}
+          <Typography gutterBottom>
+            Translate:{' '}
+            {autoTranslation ? 'auto' : `(${translation[0]}, ${translation[1]})`}
+          </Typography>
+          <FormControlLabel
+            control={
+              <Checkbox
+                size="small"
+                checked={autoTranslation}
+                onChange={(event) => setAutoTranslation(event.target.checked)}
+              />
+            }
+            label={`auto translation`}
           />
+          {autoTranslation ? null : (
+            <div>
+              <Slider
+                value={translation[0]}
+                min={-100}
+                max={500}
+                step={10}
+                aria-label="translate x"
+                size="small"
+                onChange={(_, value: number) =>
+                  setTranslation((prev) => [value, prev[1]])
+                }
+                valueLabelDisplay="auto"
+                disabled={usaProjection}
+              />
+              <Slider
+                value={translation[1]}
+                min={-100}
+                max={500}
+                step={10}
+                aria-label="translate y"
+                size="small"
+                onChange={(_, value: number) =>
+                  setTranslation((prev) => [prev[0], value])
+                }
+                valueLabelDisplay="auto"
+                disabled={usaProjection}
+              />
+            </div>
+          )}
         </div>
         <div>
           <Typography gutterBottom>Scale: {autoScale ? 'auto' : scale}</Typography>
