@@ -139,8 +139,8 @@ catalogs:
       specifier: ^3.2.3
       version: 3.2.3
     date-fns:
-      specifier: ^4.1.0
-      version: 4.1.0
+      specifier: ^4.2.1
+      version: 4.3.0
     date-fns-jalali:
       specifier: ^4.1.0-0
       version: 4.1.0-0
@@ -271,7 +271,7 @@ importers:
         version: 0.0.4-canary.50(@next/eslint-plugin-next@16.2.6)(@types/node@22.19.3)(@typescript-eslint/eslint-plugin@8.58.0(@typescript-eslint/parser@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@typescript-eslint/parser@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.59.3(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.4(jiti@2.7.0)))(eslint@9.39.4(jiti@2.7.0))(jest-diff@30.2.0)(postcss@8.5.14)(prettier@3.8.3)(stylelint@17.11.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.1.6)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 9.0.2-canary.0(ef03d2fc0cc45cd2cd97d49c93b986ae)
+        version: 9.0.2-canary.0(7d51c681532ee69f60faf6e76d5b57be)
       '@mui/internal-markdown':
         specifier: 3.0.8-canary.3
         version: 3.0.8-canary.3
@@ -490,7 +490,7 @@ importers:
         version: 9.0.1(@mui/material@9.0.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.14)(react@19.2.6)
       '@mui/internal-core-docs':
         specifier: 'catalog:'
-        version: 9.0.2-canary.0(70ce5ccd08aa6601445d68a3ac1dcb70)
+        version: 9.0.2-canary.0(66d863440760053a429d20da6957e9b2)
       '@mui/internal-docs-infra':
         specifier: ^0.11.1-canary.11
         version: 0.11.1-canary.11(@types/react@19.2.14)(next@16.2.6(@babel/core@7.29.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.60.0)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(prettier@3.8.3)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@5.9.3)
@@ -595,7 +595,7 @@ importers:
         version: 3.1.0
       date-fns:
         specifier: 'catalog:'
-        version: 4.1.0
+        version: 4.3.0
       date-fns-jalali:
         specifier: 'catalog:'
         version: 4.1.0-0
@@ -1083,7 +1083,7 @@ importers:
         version: 7.29.2
       '@base-ui/react':
         specifier: ^1.4.1
-        version: 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.0.1(@types/react@19.2.14)(react@19.2.6)
@@ -1308,7 +1308,7 @@ importers:
         version: 4.4.12(@types/react@19.2.14)
       date-fns:
         specifier: 'catalog:'
-        version: 4.1.0
+        version: 4.3.0
       react:
         specifier: 'catalog:'
         version: 19.2.6
@@ -1435,7 +1435,7 @@ importers:
         version: 15.7.15
       date-fns:
         specifier: 'catalog:'
-        version: 4.1.0
+        version: 4.3.0
       date-fns-jalali:
         specifier: 'catalog:'
         version: 4.1.0-0
@@ -1524,7 +1524,7 @@ importers:
         version: 15.7.15
       date-fns:
         specifier: 'catalog:'
-        version: 4.1.0
+        version: 4.3.0
       date-fns-jalali:
         specifier: 'catalog:'
         version: 4.1.0-0
@@ -1623,7 +1623,7 @@ importers:
         version: 7.29.2
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.2.9(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -1694,7 +1694,7 @@ importers:
         version: 7.29.2
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.2.9(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -1715,7 +1715,7 @@ importers:
         version: link:../x-internals/build
       date-fns:
         specifier: 'catalog:'
-        version: 4.1.0
+        version: 4.3.0
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
@@ -1750,7 +1750,7 @@ importers:
         version: 7.29.2
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.2.9(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -1778,7 +1778,7 @@ importers:
         version: 1.5.0
       date-fns:
         specifier: 'catalog:'
-        version: 4.1.0
+        version: 4.3.0
       react:
         specifier: 'catalog:'
         version: 19.2.6
@@ -1797,7 +1797,7 @@ importers:
         version: 7.29.2
       '@base-ui/react':
         specifier: 'catalog:'
-        version: 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@base-ui/utils':
         specifier: 'catalog:'
         version: 0.2.9(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -1852,7 +1852,7 @@ importers:
         version: 1.5.0
       date-fns:
         specifier: 'catalog:'
-        version: 4.1.0
+        version: 4.3.0
       react:
         specifier: 'catalog:'
         version: 19.2.6
@@ -2131,7 +2131,7 @@ importers:
         version: 7.7.1
       date-fns:
         specifier: 'catalog:'
-        version: 4.1.0
+        version: 4.3.0
       dayjs:
         specifier: 'catalog:'
         version: 1.11.20
@@ -7048,8 +7048,8 @@ packages:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
 
-  date-fns@4.1.0:
-    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
+  date-fns@4.3.0:
+    resolution: {integrity: sha512-OYcL+3N/jyWbYdFGqoMAhytDgxP9pbYPUUiRCOgn4Fewaadk9l/Wam4Avciiyp2BgkpfQyBV9B+ehnVJych+eQ==}
 
   dateformat@3.0.3:
     resolution: {integrity: sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==}
@@ -12634,7 +12634,7 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@base-ui/react@1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@base-ui/react@1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@base-ui/utils': 0.2.8(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -12646,7 +12646,7 @@ snapshots:
     optionalDependencies:
       '@date-fns/tz': 1.5.0
       '@types/react': 19.2.14
-      date-fns: 4.1.0
+      date-fns: 4.3.0
 
   '@base-ui/utils@0.2.8(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
@@ -13710,10 +13710,10 @@ snapshots:
       - supports-color
       - vitest
 
-  '@mui/internal-core-docs@9.0.2-canary.0(70ce5ccd08aa6601445d68a3ac1dcb70)':
+  '@mui/internal-core-docs@9.0.2-canary.0(66d863440760053a429d20da6957e9b2)':
     dependencies:
       '@babel/runtime': 7.29.2
-      '@base-ui/react': 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@base-ui/react': 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@docsearch/react': 3.9.0(@algolia/client-search@5.35.0)(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(search-insights@2.17.3)
       '@emotion/cache': 11.14.0
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.6)
@@ -13744,10 +13744,10 @@ snapshots:
     optionalDependencies:
       styled-components: 6.4.2(css-to-react-native@3.2.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
 
-  '@mui/internal-core-docs@9.0.2-canary.0(ef03d2fc0cc45cd2cd97d49c93b986ae)':
+  '@mui/internal-core-docs@9.0.2-canary.0(7d51c681532ee69f60faf6e76d5b57be)':
     dependencies:
       '@babel/runtime': 7.29.2
-      '@base-ui/react': 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.1.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@base-ui/react': 1.4.1(@date-fns/tz@1.5.0)(@types/react@19.2.14)(date-fns@4.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@docsearch/react': 4.6.3(@algolia/client-search@5.35.0)(@types/react@19.2.14)(algoliasearch@5.35.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(search-insights@2.17.3)
       '@emotion/cache': 11.14.0
       '@emotion/react': 11.14.0(@types/react@19.2.14)(react@19.2.6)
@@ -16738,7 +16738,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.2
 
-  date-fns@4.1.0: {}
+  date-fns@4.3.0: {}
 
   dateformat@3.0.3: {}
 
