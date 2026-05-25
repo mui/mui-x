@@ -202,18 +202,22 @@ The minimum pattern to fill a date and assert its value:
 
 ```ts
 const input = page.getByRole('textbox', { includeHidden: true, name: 'Departure' });
+await input.focus();
 await input.fill('02/12/2020');
 await expect(input).toHaveValue('02/12/2020');
 ```
 
+The explicit `.focus()` is required: without it Playwright's `.fill()` doesn't propagate the change event through to the field's section state.
 `includeHidden: true` is only required for the locator to find the element, since the input carries `aria-hidden="true"`.
-`.fill()` itself works because the visually-hidden input is a 1px clipped element (not `display: none`), so Playwright's actionability checks pass.
+`.fill()` itself is allowed because the visually-hidden input is a 1px clipped element (not `display: none`), so Playwright's actionability checks pass.
 
-If you need to drive individual sections (for example, keyboard-flow tests), scope through the field's group so the section roles stay unambiguous when multiple pickers are present:
+If you need to drive individual sections (for example, keyboard-flow tests), scope through the field's group so the section roles stay unambiguous when multiple pickers are present, and focus the first section before typing:
 
 ```ts
 const field = page.getByRole('group', { name: 'Departure' });
-await field.getByRole('spinbutton', { name: 'Month' }).fill('04');
+const month = field.getByRole('spinbutton', { name: 'Month' });
+await month.focus();
+await month.fill('04');
 await field.getByRole('spinbutton', { name: 'Day' }).fill('11');
 await field.getByRole('spinbutton', { name: 'Year' }).fill('2022');
 ```
