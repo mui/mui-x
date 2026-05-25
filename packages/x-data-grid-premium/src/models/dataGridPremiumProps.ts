@@ -19,6 +19,7 @@ import type {
   DataGridPremiumSharedPropsWithDefaultValue,
 } from '@mui/x-data-grid-pro/internals';
 import type { ChatSuggestion } from '@mui/x-chat-headless';
+import type { CopilotPlugin } from '../hooks/features/copilot/plugins';
 import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
 import type {
   GridAggregationModel,
@@ -392,6 +393,17 @@ export interface DataGridPremiumPropsWithoutDefaultValue<
    * If not provided, a generic default list is used.
    */
   copilotSuggestions?: Array<ChatSuggestion | string>;
+  /**
+   * Opt-in Copilot plugins (e.g. `pdfReportPlugin()` from `@mui/x-copilot/pdf`).
+   * Each plugin claims one or more client-side tool names. When the model
+   * emits a matching `tool-input-available` chunk, the plugin's
+   * `handleToolCall` runs locally and writes the resulting
+   * `tool-output-available` back into the chat stream — no extra round trip.
+   * The list of enabled plugin ids is also reported to the backend in
+   * `metadata.copilotPlugins` so the backend can conditionally expose
+   * matching server-side tool definitions to the model.
+   */
+  copilotPlugins?: readonly CopilotPlugin[];
   /**
    * Callback fired when the sidebar is closed.
    * @param {GridSidebarParams} params With all properties from [[GridSidebarParams]].

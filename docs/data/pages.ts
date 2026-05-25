@@ -482,6 +482,16 @@ const pages: MuiPage[] = [
     ],
   },
   {
+    pathname: '/x/react-data-studio-group',
+    title: 'Data Studio',
+    unstable: true,
+    children: [
+      { pathname: '/x/react-data-studio', title: 'Demos' },
+      { pathname: '/x/react-data-studio/coffee-beans', title: 'Coffee Beans' },
+      { pathname: '/x/react-data-studio/adventure-works', title: 'Adventure Works' },
+    ],
+  },
+  {
     pathname: '/x/react-date-pickers-group',
     title: 'Date and Time Pickers',
     children: [

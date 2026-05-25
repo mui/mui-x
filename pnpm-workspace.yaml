@@ -90,6 +90,7 @@ ignoredBuiltDependencies:
   - msw
 
 onlyBuiltDependencies:
+  - better-sqlite3
   - '@swc/core'
   - '@vvago/vale'
   - esbuild

@@ -79,6 +79,7 @@ export default withDeploymentConfig({
     // This is needed because the package has next.js imports like `next/script` that need to be transpiled.
     '@mui/internal-core-docs',
   ],
+  serverExternalPackages: ['better-sqlite3', 'knex', 'mongodb', 'mysql2', 'pg'],
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
   assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
@@ -102,6 +103,9 @@ export default withDeploymentConfig({
   // @ts-ignore
   webpack: (config, options) => {
     const plugins = config.plugins.slice();
+    const externals = Array.isArray(config.externals)
+      ? config.externals.slice()
+      : [config.externals].filter(Boolean);
 
     if (process.env.DOCS_STATS_ENABLED) {
       plugins.push(
@@ -118,6 +122,9 @@ export default withDeploymentConfig({
 
     return {
       ...config,
+      externals: options.isServer
+        ? externals.concat(['better-sqlite3', 'knex', 'mongodb', 'mysql2', 'pg'])
+        : config.externals,
       plugins,
       module: {
         ...config.module,
@@ -225,6 +232,14 @@ export default withDeploymentConfig({
     : {
         rewrites: async () => {
           return [
+            {
+              source: '/data-studio/coffee-beans/:dataStudioAction*',
+              destination: '/api/data-studio/coffee-beans/:dataStudioAction*',
+            },
+            {
+              source: '/data-studio/adventure-works/:dataStudioAction*',
+              destination: '/api/data-studio/adventure-works/:dataStudioAction*',
+            },
             { source: `/:lang(${LANGUAGES.join('|')})?/:rest*`, destination: '/:rest*' },
             { source: '/api/:rest*', destination: '/api-docs/:rest*' },
           ];

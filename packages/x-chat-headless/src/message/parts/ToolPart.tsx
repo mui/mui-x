@@ -21,6 +21,13 @@ export interface ToolPartOwnerState {
   role: ChatRole;
   state: ChatToolInvocationState;
   toolName: string;
+  /**
+   * The tool-call identifier from the streamed `tool-input-*` /
+   * `tool-approval-request` chunks. Slot overrides that render multiple
+   * invocations of the same `toolName` in a single message (e.g. a
+   * batched-approval flow) use this to pick out the right invocation.
+   */
+  toolCallId: string;
 }
 
 export interface ToolPartSectionOwnerState extends ToolPartOwnerState {
@@ -159,12 +166,14 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
       role: message.role,
       state: part.toolInvocation.state,
       toolName: part.toolInvocation.toolName,
+      toolCallId: part.toolInvocation.toolCallId,
     }),
     [
       message.id,
       message.role,
       part.toolInvocation.state,
       part.toolInvocation.toolName,
+      part.toolInvocation.toolCallId,
       pendingApproval,
     ],
   );

@@ -65,6 +65,12 @@
         "description": "{ addToolApprovalResponse?: func, listConversations?: func, listMessages?: func, loadMore?: func, markRead?: func, reconnectToStream?: func, sendMessage: func, setTyping?: func, stop?: func, subscribe?: func }"
       }
     },
+    "copilotPlugins": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ handleToolCall: func, id: string, toolNames: Array&lt;string&gt;, toolSlots?: object }&gt;"
+      }
+    },
     "copilotSuggestions": {
       "type": {
         "name": "arrayOf",

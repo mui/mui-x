@@ -22,9 +22,22 @@ export type AiSdkUIMessageChunk =
   | { type: string; [key: string]: unknown };
 
 export interface CreateAiSdkAdapterRequest {
+  /**
+   * Stable id for the active conversation. Forwarded verbatim from
+   * `ChatSendMessageInput.conversationId` so adapters can include it in
+   * their backend request (e.g. for multi-turn history lookups).
+   */
+  conversationId?: string;
   message: ChatMessage;
   messages: ChatMessage[];
   signal: AbortSignal;
+  /**
+   * Per-request metadata supplied by the caller of `sendMessage`. Used to
+   * carry side-channel data the adapter needs but doesn't fit into
+   * `messages` — e.g. approved client-side tool results that the backend
+   * should consume on a follow-up turn.
+   */
+  metadata?: Record<string, unknown>;
 }
 
 export interface CreateAiSdkAdapterStreamOptions {
@@ -331,9 +344,11 @@ export function createAiSdkAdapter(options: CreateAiSdkAdapterOptions): ChatAdap
   return {
     async sendMessage(input: ChatSendMessageInput) {
       const upstream = await streamFn({
+        conversationId: input.conversationId,
         message: input.message,
         messages: input.messages,
         signal: input.signal,
+        metadata: input.metadata,
       });
 
       return convertToChatStream(upstream);

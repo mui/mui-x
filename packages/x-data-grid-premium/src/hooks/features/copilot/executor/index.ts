@@ -34,3 +34,27 @@ export {
 
 export { makeExecutor, type Executor, type ExecutorOptions, type ToolName } from './createExecutor';
 export { promptResponseToPatches } from './promptResponseToPatches';
+export {
+  executeGridDataQuery,
+  previewGridDataQuery,
+  type GridDataQueryInput,
+  type GridDataQueryResult,
+  type GridDataQueryPreview,
+  type GridDataQuerySample,
+  type GridDataAggregationRequest,
+  type GridDataAggregationResult,
+  type GridDataQueryMode,
+  type GridDataQueryRowFilter,
+  type GridDataAggregationFn,
+  type GridDataQueryPreviewColumn,
+} from './queryGridData';
+
+export { evaluateFormula } from './formula';
+export type {
+  FormulaResult,
+  FormulaSuccess,
+  FormulaFailure,
+  FormulaScope,
+  FormulaValue,
+  FormulaEvalContext,
+} from './formula';

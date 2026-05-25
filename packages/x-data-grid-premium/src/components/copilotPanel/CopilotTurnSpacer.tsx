@@ -53,9 +53,7 @@ function CopilotTurnSpacer() {
       }
       raf = requestAnimationFrame(() => {
         raf = 0;
-        const userMessages = content.querySelectorAll<HTMLElement>(
-          '[data-author-role="user"]',
-        );
+        const userMessages = content.querySelectorAll<HTMLElement>('[data-author-role="user"]');
         const lastUser = userMessages[userMessages.length - 1];
         if (!lastUser) {
           if (spacer.style.height !== '0px') {

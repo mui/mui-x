@@ -401,6 +401,24 @@ DataGridPremiumRaw.propTypes = {
     subscribe: PropTypes.func,
   }),
   /**
+   * Opt-in Copilot plugins (e.g. `pdfReportPlugin()` from `@mui/x-copilot/pdf`).
+   * Each plugin claims one or more client-side tool names. When the model
+   * emits a matching `tool-input-available` chunk, the plugin's
+   * `handleToolCall` runs locally and writes the resulting
+   * `tool-output-available` back into the chat stream — no extra round trip.
+   * The list of enabled plugin ids is also reported to the backend in
+   * `metadata.copilotPlugins` so the backend can conditionally expose
+   * matching server-side tool definitions to the model.
+   */
+  copilotPlugins: PropTypes.arrayOf(
+    PropTypes.shape({
+      handleToolCall: PropTypes.func.isRequired,
+      id: PropTypes.string.isRequired,
+      toolNames: PropTypes.arrayOf(PropTypes.string).isRequired,
+      toolSlots: PropTypes.object,
+    }),
+  ),
+  /**
    * Prompt suggestions displayed in the Copilot panel's empty state.
    * Clicking a suggestion pre-fills the composer.
    * If not provided, a generic default list is used.

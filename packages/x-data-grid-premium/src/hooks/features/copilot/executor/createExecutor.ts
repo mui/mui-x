@@ -425,7 +425,7 @@ export function makeExecutor(options: ExecutorOptions): Executor {
     deferredCommands = remaining;
   }
 
-  function pushLine(toolName: ToolName, line: string): void {
+  function pushLine(toolName: 'setGridState' | 'runCommands', line: string): void {
     const trimmed = line.trim();
     if (!trimmed) {
       return;
@@ -463,14 +463,14 @@ export function makeExecutor(options: ExecutorOptions): Executor {
     buffers[toolIndex] = buffer;
     const lines = buffer.split('\n');
     buffers[toolIndex] = lines.pop() ?? '';
-    lines.forEach((raw) => pushLine(toolName, raw));
+    lines.forEach((raw) => pushLine(toolName as 'setGridState' | 'runCommands', raw));
   }
 
   function onToolStop(toolIndex: number, toolName: ToolName): void {
     const tail = (buffers[toolIndex] ?? '').trim();
     buffers[toolIndex] = '';
     if (tail) {
-      pushLine(toolName, tail);
+      pushLine(toolName as 'setGridState' | 'runCommands', tail);
     }
     if (toolName === 'setGridState') {
       setGridStateActive = false;
