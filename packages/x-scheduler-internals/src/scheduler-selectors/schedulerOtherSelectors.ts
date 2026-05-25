@@ -17,7 +17,7 @@ export const schedulerOtherSelectors = {
     (state: State) => state.displayTimezone,
     (adapter, visibleDate, timezone) => adapter.setTimezone(visibleDate, timezone),
   ),
-  isScopeDialogOpen: createSelector(
+  isRecurringScopeDialogOpen: createSelector(
     (state: State) => state.pendingUpdateRecurringEventParameters != null,
   ),
   /**
@@ -29,8 +29,10 @@ export const schedulerOtherSelectors = {
    * Whether each event must have at least one resource assigned.
    */
   requireResources: createSelector((state: State) => state.requireResources),
-  plan: createSelector((state: State) => state.plan),
-  areRecurringEventsAvailable: createSelector((state: State) => state.plan === 'premium'),
+  recurringEventsPlugin: createSelector((state: State) => state.recurringEventsPlugin),
+  areRecurringEventsAvailable: createSelector(
+    (state: State) => state.recurringEventsPlugin != null,
+  ),
   isLoading: createSelector((state: State) => state.isLoading),
   errors: createSelector((state: State) => state.errors),
 };

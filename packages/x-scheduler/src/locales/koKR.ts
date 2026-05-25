@@ -57,7 +57,7 @@ const koKRDialog: Partial<EventDialogLocaleText> = {
   // startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   // startDateLabel: 'Start date',
   // startTimeLabel: 'Start time',
-  // ScopeDialog
+  // RecurringScopeDialog
   // all: 'All events',
   // cancel: 'Cancel',
   // confirm: 'Confirm',
@@ -94,6 +94,10 @@ const koKRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   // showWeekNumber: 'Show week number',
   // timeFormat: 'Time format',
   // viewSpecificOptions: view => `${view} view options`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
   // WeekView
   // allDay: 'All day',
   // MonthView

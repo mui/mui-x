@@ -14,6 +14,7 @@ import {
   EventTimelinePremiumParameters,
 } from './EventTimelinePremiumStore.types';
 import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePremiumLazyLoadingPlugin';
+import { schedulerRecurringEventsPlugin } from '../internals/plugins/schedulerRecurringEventsPlugin';
 import {
   EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS,
   getPresetPxPerDay,
@@ -80,12 +81,14 @@ const mapper: SchedulerParametersToStateMapper<
     preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
     preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
     requireResources: parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES,
+    hasInitialized: false,
   }),
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
     const newState: Partial<EventTimelinePremiumState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
       requireResources: parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES,
+      hasInitialized: true,
     };
 
     updateModel(newState, 'preset', 'defaultPreset');
@@ -110,7 +113,7 @@ export class EventTimelinePremiumStore<
     parameters: EventTimelinePremiumParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
-    super(parameters, adapter, 'EventTimelinePremiumStore', mapper);
+    super(parameters, adapter, 'EventTimelinePremiumStore', mapper, schedulerRecurringEventsPlugin);
 
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.

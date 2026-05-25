@@ -36,12 +36,12 @@ describe('Core - EventCalendarStore', () => {
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingUpdateRecurringEventParameters: null,
-        plan: 'community',
         preferences: EMPTY_OBJECT,
         preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
         processedEventLookup: new Map(),
         processedResourceLookup: new Map(),
         readOnly: false,
+        recurringEventsPlugin: null,
         requireResources: false,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [],
@@ -119,7 +119,7 @@ describe('Core - EventCalendarStore', () => {
           },
           adapter,
         );
-      }).toWarnDev(['MUI: A component is changing the default view state']);
+      }).toWarnDev(['MUI X Scheduler: A component is changing the default view state']);
 
       expect(store.state.view).to.equal(defaultView);
     });
@@ -129,7 +129,7 @@ describe('Core - EventCalendarStore', () => {
 
       expect(() => {
         store.updateStateFromParameters({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
-      }).toWarnDev('MUI: A component is changing the uncontrolled view state');
+      }).toWarnDev('MUI X Scheduler: A component is changing the uncontrolled view state');
 
       expect(store.state.view).to.equal('day');
     });
@@ -145,7 +145,7 @@ describe('Core - EventCalendarStore', () => {
           },
           adapter,
         );
-      }).toWarnDev('MUI: A component is changing the controlled view state');
+      }).toWarnDev('MUI X Scheduler: A component is changing the controlled view state');
 
       expect(store.state.view).to.equal('day');
     });

@@ -50,7 +50,7 @@ export interface EventDialogLocaleText {
   startDateLabel: string;
   startTimeLabel: string;
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: string;
   cancel: string;
   confirm: string;
@@ -90,6 +90,10 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   showWeekNumber: string;
   timeFormat: string;
   viewSpecificOptions: (view: CalendarView) => string;
+  startWeekOn: string;
+  weekdaySunday: string;
+  weekdayMonday: string;
+  weekdaySaturday: string;
 
   // WeekView
   allDay: string;
