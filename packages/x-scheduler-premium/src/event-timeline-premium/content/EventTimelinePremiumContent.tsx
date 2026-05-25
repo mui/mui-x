@@ -903,7 +903,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 //
 // `em` in the grid track resolves against the EventsCell's font-size, which
 // inherits `theme.typography.body2.fontSize` from the Content root.
-function getEventsCellLaneMinHeight(theme: Theme): number {
+export function getEventsCellLaneMinHeight(theme: Theme): number {
   const fontSizeRem = parseFloat(String(theme.typography.body2.fontSize));
   const fontSize =
     Number.isFinite(fontSizeRem) && fontSizeRem > 0
@@ -914,7 +914,7 @@ function getEventsCellLaneMinHeight(theme: Theme): number {
   return lineHeight * fontSize + extra;
 }
 
-function getRowHeightForLaneCount(theme: Theme, laneCount: number): number {
+export function getRowHeightForLaneCount(theme: Theme, laneCount: number): number {
   const padding = parseFloat(theme.spacing(2)) || 16;
   const gap = parseFloat(theme.spacing(0.5)) || 4;
   const laneMin = getEventsCellLaneMinHeight(theme);
