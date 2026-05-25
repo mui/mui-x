@@ -25,6 +25,7 @@ import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 import { EVENT_CALENDAR_CONTAINER_NAME } from '../../constants/responsiveTypography';
+import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 
 const HOUR_HEIGHT = 46;
 const HOURS_IN_DAY = 24;
@@ -329,7 +330,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { days, className, ...other } = props;
+  const { days, className, slots, ...other } = props;
+  const TimeGridEventSlot = slots?.timeGridEvent ?? TimeGridEvent;
 
   // Context hooks
   const adapter = useAdapterContext();
@@ -505,6 +507,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                   index={index}
                   colIndex={index + 1}
                   showCurrentTimeIndicator={showCurrentTimeIndicator && isTodayInView}
+                  timeGridEvent={TimeGridEventSlot}
                 />
               ))}
             </DayTimeGridGrid>

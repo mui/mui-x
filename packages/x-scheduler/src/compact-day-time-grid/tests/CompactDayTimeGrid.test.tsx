@@ -29,9 +29,7 @@ describe('<CompactDayTimeGrid />', () => {
   }
 
   function getDayTimeGrid() {
-    return document.querySelector<HTMLElement>(
-      `.${eventCalendarClasses.dayTimeGridContainer}`,
-    )!;
+    return document.querySelector<HTMLElement>(`.${eventCalendarClasses.dayTimeGridContainer}`)!;
   }
 
   describe('dayCount', () => {
@@ -92,7 +90,7 @@ describe('<CompactDayTimeGrid />', () => {
   });
 
   describe('event rendering', () => {
-    it('should render event titles and time elements', () => {
+    it('should render only the event title (mobile variant) without time elements', () => {
       const event = EventBuilder.new()
         .title('Compact Event')
         .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
@@ -104,7 +102,7 @@ describe('<CompactDayTimeGrid />', () => {
 
       const root = getDayTimeGrid();
       const timeElements = root.querySelectorAll(`.${eventCalendarClasses.timeGridEventTime}`);
-      expect(timeElements.length).to.be.greaterThan(0);
+      expect(timeElements.length).to.equal(0);
     });
   });
 });

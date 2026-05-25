@@ -17,8 +17,7 @@ export interface CompactDayTimeGridProps extends ExportedDayTimeGridProps {
 }
 
 export interface StandaloneCompactDayTimeGridProps<TEvent extends object, TResource extends object>
-  extends CompactDayTimeGridProps,
-    EventCalendarParameters<TEvent, TResource> {
+  extends CompactDayTimeGridProps, EventCalendarParameters<TEvent, TResource> {
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

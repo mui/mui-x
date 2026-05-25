@@ -11,7 +11,7 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-interna
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
+import { TimeGridEventComponent } from '../event/time-grid-event/TimeGridEvent.types';
 import { EventSkeleton } from '../event-skeleton';
 import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
@@ -78,7 +78,7 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
 }));
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
-  const { day, showCurrentTimeIndicator, index, colIndex } = props;
+  const { day, showCurrentTimeIndicator, index, colIndex, timeGridEvent } = props;
 
   const adapter = useAdapterContext();
   const { classes } = useEventCalendarStyledContext();
@@ -106,6 +106,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
         index={index}
         occurrences={occurrences}
         maxIndex={maxIndex}
+        timeGridEvent={timeGridEvent}
       />
     </DayTimeGridColumn>
   );
@@ -118,6 +119,7 @@ function ColumnInteractiveLayer({
   index,
   occurrences,
   maxIndex,
+  timeGridEvent: TimeGridEventComponentSlot,
 }: {
   start: TemporalSupportedObject;
   end: TemporalSupportedObject;
@@ -125,6 +127,7 @@ function ColumnInteractiveLayer({
   index: number;
   occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
   maxIndex: number;
+  timeGridEvent: TimeGridEventComponent;
 }) {
   // Context hooks
   const store = useEventCalendarStoreContext();
@@ -160,10 +163,12 @@ function ColumnInteractiveLayer({
       {!isLoading &&
         occurrences.map((occurrence) => (
           <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
-            <TimeGridEvent occurrence={occurrence} variant="regular" />
+            <TimeGridEventComponentSlot occurrence={occurrence} variant="regular" />
           </EventDialogTrigger>
         ))}
-      {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
+      {placeholder != null && (
+        <TimeGridEventComponentSlot occurrence={placeholder} variant="placeholder" />
+      )}
       {showCurrentTimeIndicator ? (
         <DayTimeGridCurrentTimeIndicator
           className={classes.dayTimeGridCurrentTimeIndicator}
@@ -185,6 +190,7 @@ interface TimeGridColumnProps {
   index: number;
   colIndex: number;
   showCurrentTimeIndicator: boolean;
+  timeGridEvent: TimeGridEventComponent;
 }
 
 /**

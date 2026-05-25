@@ -13,7 +13,7 @@ export const EVENT_CALENDAR_CONTAINER_NAME = 'mui-event-calendar-content';
 //    retargeted at narrower widths by the @container queries below.
 export const responsiveTypographyTokens: CSSObject = {
   // Event title — DayGridEventTitle, TimeGridEventTitle, EventItemTitle.
-  '--EventCalendar-fontSize-eventTitle-sm': '0.65rem',
+  '--EventCalendar-fontSize-eventTitle-sm': '0.6rem',
   '--EventCalendar-fontSize-eventTitle-md': '0.7rem',
   '--EventCalendar-fontSize-eventTitle-lg': '0.75rem',
 
@@ -31,7 +31,7 @@ export const responsiveTypographyTokens: CSSObject = {
   // week/day views), TimeGridEventTime (time on event cards in the
   // time-grid), and DayTimeGridAllDayEventsHeaderCell (the "all day"
   // label above the time axis).
-  '--EventCalendar-fontSize-timeText-sm': '0.625rem',
+  '--EventCalendar-fontSize-timeText-sm': '0.6rem',
   '--EventCalendar-fontSize-timeText-md': '0.7rem',
   '--EventCalendar-fontSize-timeText-lg': '0.75rem',
 
