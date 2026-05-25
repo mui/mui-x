@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "@mui/internal-test-utils/initMatchers",
+      "@mui/material/themeCssVarsAugmentation",
+      "vitest/globals",
+      "node"
+    ],
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]
+}

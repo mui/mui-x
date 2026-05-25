@@ -24,7 +24,7 @@ npm install @mui/x-copilot @json-render/react-pdf @react-pdf/renderer
 
 ```tsx
 import { DataGridPremium } from '@mui/x-data-grid-premium';
-import { pdfReportPlugin } from '@mui/x-copilot/pdf';
+import { pdfReportPlugin } from '@mui/x-copilot/plugins/pdf';
 
 const COPILOT_PLUGINS = [pdfReportPlugin()];
 

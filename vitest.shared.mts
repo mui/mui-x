@@ -12,6 +12,7 @@ export const alias = [
   ...[
     { lib: 'x-charts', plans: ['pro', 'premium'] },
     { lib: 'x-chat', plans: ['headless', 'unstyled'] },
+    { lib: 'x-copilot' },
     { lib: 'x-data-studio' },
     { lib: 'x-date-pickers', plans: ['pro'] },
     { lib: 'x-tree-view', plans: ['pro'] },

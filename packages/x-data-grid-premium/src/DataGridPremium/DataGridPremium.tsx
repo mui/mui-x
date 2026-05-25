@@ -390,6 +390,7 @@ DataGridPremiumRaw.propTypes = {
    */
   copilotAdapter: PropTypes.shape({
     addToolApprovalResponse: PropTypes.func,
+    allowMultipleMessages: PropTypes.bool,
     listConversations: PropTypes.func,
     listMessages: PropTypes.func,
     loadMore: PropTypes.func,

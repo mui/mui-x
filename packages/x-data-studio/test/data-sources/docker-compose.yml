@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - '55432:5432'
+    environment:
+      POSTGRES_DB: datastudio
+      POSTGRES_USER: datastudio
+      POSTGRES_PASSWORD: datastudio
+
+  mysql:
+    image: mysql:8.4
+    ports:
+      - '53306:3306'
+    environment:
+      MYSQL_DATABASE: datastudio
+      MYSQL_USER: datastudio
+      MYSQL_PASSWORD: datastudio
+      MYSQL_ROOT_PASSWORD: datastudio-root

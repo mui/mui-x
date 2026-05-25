@@ -43,6 +43,7 @@
     "@mui/utils": "catalog:",
     "@mui/x-chat": "workspace:^",
     "@mui/x-chat-headless": "workspace:^",
+    "@mui/x-copilot": "workspace:^",
     "@mui/x-data-grid": "workspace:^",
     "@mui/x-data-grid-pro": "workspace:^",
     "@mui/x-internal-exceljs-fork": "catalog:",

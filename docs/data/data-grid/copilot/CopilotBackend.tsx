@@ -28,12 +28,13 @@ import {
   ChartsRenderer,
   configurationOptions,
 } from '@mui/x-charts-premium/ChartsRenderer';
-import { pdfReportPlugin } from '@mui/x-copilot/pdf';
-import { formulaPlugin } from '@mui/x-copilot/formula';
+import { pdfReportPlugin } from '@mui/x-copilot/plugins/pdf';
+// formulaPlugin temporarily disabled — the plugin factory now requires a host
+// `buildEvalContext`; the demo's grid wiring for that is mid-refactor.
 
 // Single plugin instance per module — stable reference avoids re-running the
 // executor's plugin dispatcher across renders.
-const COPILOT_PLUGINS = [pdfReportPlugin(), formulaPlugin()];
+const COPILOT_PLUGINS = [pdfReportPlugin()];
 
 // Pick the local backend whenever the demo is loaded from a localhost
 // dev server, regardless of `DEPLOY_ENV`. The previous gate only flipped

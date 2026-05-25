@@ -489,6 +489,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-studio', title: 'Demos' },
       { pathname: '/x/react-data-studio/coffee-beans', title: 'Coffee Beans' },
       { pathname: '/x/react-data-studio/adventure-works', title: 'Adventure Works' },
+      { pathname: '/x/react-data-studio/copilot', title: 'Copilot' },
     ],
   },
   {
