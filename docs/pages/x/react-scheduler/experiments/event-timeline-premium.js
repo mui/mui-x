@@ -88,7 +88,7 @@ function SchedulerContent({ dataset }) {
   };
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1} sx={{ width: '100%' }}>
       <Stack
         direction="row"
         spacing={1}
