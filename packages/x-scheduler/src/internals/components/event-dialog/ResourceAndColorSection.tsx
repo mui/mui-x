@@ -225,7 +225,16 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
               <ResourceSelectAdornment resource={resource} />
             </InputAdornment>
           }
-          renderValue={() => (resource ? resource.label : localeText.labelInvalidResource)}
+          renderValue={() => {
+            if (resource) {
+              return resource.label;
+            }
+            // `resourceId == null` means the resource is unset, not invalid.
+            if (resourceId == null) {
+              return localeText.labelNoResource;
+            }
+            return localeText.labelInvalidResource;
+          }}
         >
           {resourcesOptions.flatMap((resourceOption) => {
             const items: React.ReactNode[] = [];

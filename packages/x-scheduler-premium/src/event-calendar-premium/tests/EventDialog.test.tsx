@@ -523,6 +523,12 @@ describe('<EventDialogContent open />', () => {
       );
 
       expect(screen.queryByText(/a resource is required/i)).to.equal(null);
+      // An unassigned resource is not the same as an invalid one: the Select reflects
+      // the current state ("No resource") and the error label flags the validation.
+      expect(screen.queryByText(/invalid resource/i)).to.equal(null);
+      expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(
+        /no resource/i,
+      );
 
       await user.click(screen.getByRole('button', { name: /save/i }));
 
