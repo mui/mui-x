@@ -152,6 +152,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
       (resource) => (childrenIdLookup.get(resource.id)?.length ?? 0) > 0,
     );
 
+    let isFirstTopLevel = true;
     return [
       // The no-resource option must stay in the rendered options list so MUI Select's
       // `value=""` keeps matching a MenuItem when an event has no resource yet — otherwise
@@ -169,13 +170,21 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
       ...resources.map((resource) => {
         const depth = resourceDepthLookup.get(resource.id) ?? 0;
         const hasChildren = (childrenIdLookup.get(resource.id)?.length ?? 0) > 0;
+        const isTopLevel = depth === 0;
+        // Skip the divider above the first top-level group when nothing precedes it visually
+        // (the no-resource option is hidden).
+        const showDivider =
+          hasNesting && isTopLevel && (!isFirstTopLevel || !shouldEventRequireResource);
+        if (isTopLevel) {
+          isFirstTopLevel = false;
+        }
         return {
           label: resource.title,
           value: resource.id,
           eventColor: resource.eventColor ?? eventDefaultColor,
-          isGroupRoot: depth === 0 && hasChildren,
+          isGroupRoot: isTopLevel && hasChildren,
           indentLevel: Math.max(0, depth - 1),
-          showDivider: hasNesting && depth === 0,
+          showDivider,
         };
       }),
     ];
