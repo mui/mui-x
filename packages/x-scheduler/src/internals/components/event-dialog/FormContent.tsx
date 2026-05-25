@@ -264,6 +264,7 @@ export function FormContent(props: FormContentProps) {
                 readOnly: isPropertyReadOnly('title'),
                 'aria-label': localeText.eventTitleAriaLabel,
               },
+              formHelperText: { role: 'alert' },
             }}
             error={!!errors.title}
             helperText={errors.title}

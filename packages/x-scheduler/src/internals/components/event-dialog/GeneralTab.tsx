@@ -179,6 +179,7 @@ export function GeneralTab(props: GeneralTabProps) {
                 slotProps={{
                   inputLabel: { shrink: true },
                   input: { readOnly: isPropertyReadOnly('start') },
+                  formHelperText: { role: 'alert' },
                 }}
                 error={!!errors.startDate}
                 helperText={errors.startDate}

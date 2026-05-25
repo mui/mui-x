@@ -276,7 +276,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
             return items;
           })}
         </Select>
-        {error && <FormHelperText>{error}</FormHelperText>}
+        {error && <FormHelperText role="alert">{error}</FormHelperText>}
       </FormControl>
       <ResourceMenuColorToggleGroup
         value={color ? [color] : []}
