@@ -2,6 +2,7 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import type { ChartPluginOptions, ChartResponse, ChartPlugin } from '../../models';
 import type { UseChartHighlightSignature } from './useChartHighlight.types';
 import type {
@@ -12,6 +13,7 @@ import type {
 } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import { createIdentifierWithType } from '../../corePlugins/useChartSeries/useChartSeries';
+import { cleanIdentifier } from '../../corePlugins/useChartSeriesConfig/utils/cleanIdentifier';
 
 export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
   SeriesType extends ChartSeriesType = ChartSeriesType,
@@ -67,16 +69,9 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
   }, [store, params.highlightedItem, instance]);
 
   const clearHighlight = useEventCallback(() => {
-    const prevHighlight = store.state.highlight;
-    const prevItem = prevHighlight.item ?? null;
-
-    if (prevItem === null) {
-      return;
-    }
-
     params.onHighlightChange?.(null);
-
-    if (prevHighlight.isControlled) {
+    const prevHighlight = store.state.highlight;
+    if (prevHighlight.item === null || prevHighlight.isControlled) {
       return;
     }
 
@@ -102,12 +97,7 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
         'highlightItem',
       ) satisfies HighlightItemIdentifierWithType<SeriesType>;
       const cleanedIdentifier = instance.cleanIdentifier(identifierWithType, 'highlightItem');
-      const prevItem = prevHighlight.item;
-
-      if (
-        prevItem != null &&
-        instance.serializeIdentifier(prevItem) === instance.serializeIdentifier(cleanedIdentifier)
-      ) {
+      if (fastObjectShallowCompare(prevHighlight.item, cleanedIdentifier)) {
         return;
       }
 
@@ -137,9 +127,12 @@ useChartHighlight.getInitialState = (params, currentState) => ({
     item:
       params.highlightedItem == null
         ? params.highlightedItem
-        : createIdentifierWithType(currentState)(
-            // Need some as because the generic SeriesType can't be propagated to plugins methods.
-            params.highlightedItem as HighlightItemIdentifier<ChartSeriesType>,
+        : cleanIdentifier(
+            currentState.seriesConfig.config,
+            createIdentifierWithType(currentState)(
+              // Need some as because the generic SeriesType can't be propagated to plugins methods.
+              params.highlightedItem as HighlightItemIdentifier<ChartSeriesType>,
+            ),
           ),
     lastUpdate: 'pointer',
     isControlled: params.highlightedItem !== undefined,
