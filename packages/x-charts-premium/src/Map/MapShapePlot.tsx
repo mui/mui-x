@@ -1,7 +1,6 @@
 'use client';
-import { geoPath } from '@mui/x-charts-vendor/d3-geo';
 import { useGeoData } from '../hooks/useGeoData';
-import { useProjection } from '../hooks/useProjection';
+import { useGeoPath } from '../hooks/useGeoPath';
 import { useMapShapeSeries } from '../hooks/useMapShapeSeries';
 import { useGeoFeatureIndexByName } from '../hooks/useGeoFeatureIndexByName';
 import { MapShape } from './MapShape';
@@ -30,15 +29,13 @@ export interface MapShapePlotProps {
 export function MapShapePlot(props: MapShapePlotProps) {
   const { className, fill, stroke = 'none', strokeWidth = 1 } = props;
   const geoData = useGeoData();
-  const projection = useProjection();
+  const path = useGeoPath();
   const series = useMapShapeSeries();
   const featureIndexByName = useGeoFeatureIndexByName();
 
-  if (!geoData || !projection || series.length === 0) {
+  if (!geoData || !path || series.length === 0) {
     return null;
   }
-
-  const path = geoPath(projection);
 
   return (
     <g className={className}>

@@ -25,7 +25,7 @@ export const useChartsGeoDataProviderPremiumProps = <
   inProps: ChartsGeoDataProviderPremiumProps<SeriesType, TSignatures>,
 ) => {
   // eslint-disable-next-line mui/material-ui-name-matches-component-name
-  const props = useThemeProps({ props: inProps, name: 'MuiChartsGeoDataProvider' });
+  const props = useThemeProps({ props: inProps, name: 'MuiChartsGeoDataProviderPremium' });
 
   const {
     children,

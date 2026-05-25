@@ -16,8 +16,10 @@ import {
   geoOrthographic,
   geoStereographic,
   geoTransverseMercator,
+  geoPath,
   type ExtendedFeatureCollection,
   type GeoProjection,
+  type GeoPath,
 } from '@mui/x-charts-vendor/d3-geo';
 import type {
   D3NamedProjection,
@@ -70,9 +72,26 @@ export const selectorChartRawProjection = createSelector(
   (geoProjection): GeoProjectionInput | null => geoProjection?.projection ?? null,
 );
 
-const selectorChartParallels = createSelector(
+export const selectorChartRawScale = createSelector(
   selectorChartGeoProjectionState,
-  (geoProjection): [number, number] => geoProjection?.parallels ?? [30, 60],
+  (geoProjection): number | null => geoProjection?.scale ?? null,
+);
+
+const selectorChartRotate = createSelectorMemoized(
+  selectorChartGeoProjectionState,
+  (geoProjection): [number, number] | null => geoProjection?.rotate ?? null,
+);
+
+const selectorChartTranslate = createSelectorMemoized(
+  selectorChartGeoProjectionState,
+  (geoProjection): [number, number] | null => geoProjection?.translate ?? null,
+);
+
+const selectorChartParallels = createSelectorMemoized(
+  selectorChartGeoProjectionState,
+  selectorChartRotate,
+  (geoProjection, rotate): [number, number] =>
+    geoProjection?.parallels ?? (rotate ? [rotate[1] - 15, rotate[1] + 15] : [30, 30]),
 );
 /**
  * Map a feature's `properties.name` to its index in `geoData.features`,
@@ -111,8 +130,19 @@ export const selectorChartProjection = createSelectorMemoized(
   selectorChartRawProjection,
   selectorChartRawGeoData,
   selectorChartParallels,
+  selectorChartRotate,
+  selectorChartTranslate,
+  selectorChartRawScale,
   selectorChartDrawingArea,
-  (projectionInput, geoData, parallels, drawingArea): GeoProjection | null => {
+  (
+    projectionInput,
+    geoData,
+    parallels,
+    rotate,
+    translate,
+    scale,
+    drawingArea,
+  ): GeoProjection | null => {
     if (!projectionInput) {
       return null;
     }
@@ -123,7 +153,7 @@ export const selectorChartProjection = createSelectorMemoized(
         if (process.env.NODE_ENV !== 'production') {
           console.error(
             `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
-              `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
+            `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
           );
         }
         return null;
@@ -136,6 +166,34 @@ export const selectorChartProjection = createSelectorMemoized(
       projection = projectionInput;
     }
     if (geoData) {
+      if (isConicProjection(projection)) {
+        projection.translate(
+          translate ?? [
+            drawingArea.left + drawingArea.width / 2,
+            drawingArea.top + drawingArea.height / 2,
+          ],
+        );
+
+        const currentScale = projection.scale();
+
+        if (!scale) {
+          const [[x0, y0], [x1, y1]] = geoPath(projection).bounds(geoData);
+
+          const fitScale = Math.min(
+            currentScale * (drawingArea.width / (x1 - x0)),
+            currentScale * (drawingArea.height / (y1 - y0)),
+          );
+          projection.scale(fitScale);
+        } else {
+          projection.scale(scale);
+        }
+
+        return projection;
+      }
+
+      if (rotate && typeof projection.rotate === 'function') {
+        projection.rotate(rotate);
+      }
       projection.fitExtent(
         [
           [drawingArea.left, drawingArea.top],
@@ -143,7 +201,36 @@ export const selectorChartProjection = createSelectorMemoized(
         ],
         geoData,
       );
+
+      projection.translate(
+        translate ?? [
+          drawingArea.left + drawingArea.width / 2,
+          drawingArea.top + drawingArea.height / 2,
+        ],
+      );
+
+      if (scale) {
+        projection.scale(scale);
+      }
     }
     return projection;
   },
+);
+
+
+
+/**
+ * Resolves the raw `projection` input into a ready-to-use `GeoPath` instance
+ * fitted to the chart's drawing area.
+ */
+export const selectorChartGeoPath = createSelectorMemoized(
+  selectorChartProjection,
+  (
+    projection,
+  ): GeoPath | null => {
+    if (!projection) {
+      return null;
+    }
+    return geoPath(projection);
+  }
 );

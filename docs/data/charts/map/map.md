@@ -1,7 +1,7 @@
 ---
 title: React Map chart
 productId: x-charts
-components: ChartsGeoDataProviderPremium, GeoDataPlot, MapShapePlot, MapShape
+components: ChartsGeoDataProviderPremium, GeoDataPlot, MapShapePlot, MapShape, Graticule
 ---
 
 # Charts - Map [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
@@ -28,7 +28,7 @@ The series can be of type `'mapShape'`, `'mapPoint'`, or `'mapLink'`.
 
 The provider accepts a GeoJSON `FeatureCollection` and a d3-geo projection
 (either a name or a `GeoProjection` instance). `GeoDataPlot` consumes them via the
-`useGeoData` and `useProjection` hooks, fits the projection to the chart's drawing area,
+`useGeoData` and `useGeoPath` hooks, fits the projection to the chart's drawing area,
 and renders one `<path>` per feature.
 
 ```tsx
@@ -55,6 +55,11 @@ so use them to style the background layer.
 ## Modifying the projection
 
 The `projection` prop accepts either a d3-geo projection name or a `GeoProjection` instance.
+You can modify it with props
+
+- `translate: [tx, ty]` Translate the projected map in the SVG
+- `rotate: [lambda, phi, gamma]` Rotate the coordinate before applying the projection. To center the map on a coordinate (long, lat), use `rotate={[-long, -lat]}`.
+- `scale: number` Set zoom scale. If not provided, the scale is chosen to fit the `geoData` in the drawing area. Notice that some projection can lead to infinite coordinates and then degenerated render.
 
 {{"demo": "ProjectionMapShape.js"}}
 

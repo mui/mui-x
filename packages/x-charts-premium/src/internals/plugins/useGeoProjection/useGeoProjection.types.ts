@@ -37,6 +37,19 @@ export interface UseGeoProjectionParameters {
    * or a custom `GeoProjection` instance.
    */
   projection?: GeoProjectionInput;
+  /**
+   * The center of the projection, specified as a `[longitude, latitude]` pair in degrees.
+   */
+  translate?: [number, number];
+  /**
+   * The rotation of the projection, specified as a `[longitude, latitude]` pair in degrees.
+   */
+  rotate?: [number, number];
+  /**
+   * The scale of the projection.
+   * Id not provided the scale will default to fit the entire geoData in the drawing area.
+   */
+  scale?: number;
 }
 
 export type UseGeoProjectionDefaultizedParameters = UseGeoProjectionParameters;
@@ -45,6 +58,9 @@ export interface UseGeoProjectionState {
   geoProjection: {
     geoData: ExtendedFeatureCollection | null;
     projection: GeoProjectionInput | null;
+    translate: [number, number] | null;
+    rotate: [number, number] | null;
+    scale: number | null;
     /**
      * The two standard parallels used by conic projections, if applicable.
      * Used for projection 'conicConformal', 'conicEqualArea', 'conicEquidistant'.

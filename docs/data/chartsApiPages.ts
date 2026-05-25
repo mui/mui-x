@@ -280,6 +280,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'premium',
   },
   {
+    pathname: '/x/api/charts/graticule',
+    title: 'Graticule',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/heatmap',
     title: 'Heatmap',
     plan: 'pro',

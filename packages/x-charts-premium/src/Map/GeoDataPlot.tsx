@@ -1,8 +1,7 @@
 'use client';
 import PropTypes from 'prop-types';
-import { geoPath } from '@mui/x-charts-vendor/d3-geo';
 import { useGeoData } from '../hooks/useGeoData';
-import { useProjection } from '../hooks/useProjection';
+import { useGeoPath } from '../hooks/useGeoPath';
 
 export interface GeoDataPlotProps {
   className?: string;
@@ -29,13 +28,12 @@ export interface GeoDataPlotProps {
 function GeoDataPlot(props: GeoDataPlotProps) {
   const { className, fill = 'currentColor', stroke = 'none', strokeWidth = 1 } = props;
   const geoData = useGeoData();
-  const projection = useProjection();
+  const path = useGeoPath();
 
-  if (!geoData || !projection) {
+  if (!geoData || !path) {
     return null;
   }
 
-  const path = geoPath(projection);
 
   return (
     <g className={className}>

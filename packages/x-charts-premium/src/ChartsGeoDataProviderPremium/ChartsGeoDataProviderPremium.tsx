@@ -52,12 +52,11 @@ export type ChartsGeoDataProviderPremiumProps<
 /**
  * Orchestrates the data providers for geographic chart components and hooks.
  *
- * Similar to `ChartsDataProviderPremium`, but tailored to map / geo series — it does not
- * register cartesian or polar axis plugins, and only supports geo series types.
+ * Similar to `ChartsDataProviderPremium`, but tailored to map / geo series.
  *
  * Demos:
  *
- * - [Composition](https://mui.com/x/react-charts/composition/)
+ * - [Map](https://mui.com/x/react-charts/map/)
  *
  * API:
  *

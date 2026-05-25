@@ -1,5 +1,5 @@
 {
-  "componentDescription": "Orchestrates the data providers for geographic chart components and hooks.\n\nSimilar to `ChartsDataProviderPremium`, but tailored to map / geo series — it does not\nregister cartesian or polar axis plugins, and only supports geo series types.",
+  "componentDescription": "Orchestrates the data providers for geographic chart components and hooks.\n\nSimilar to `ChartsDataProviderPremium`, but tailored to map / geo series.",
   "propDescriptions": {
     "colors": { "description": "Color palette used to colorize multiple series." },
     "height": {
