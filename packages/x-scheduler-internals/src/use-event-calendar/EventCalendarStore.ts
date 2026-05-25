@@ -59,11 +59,7 @@ function warnIfRequireResourcesMisconfigured(
   requireResources: boolean,
   resources: readonly unknown[] | undefined,
 ) {
-  if (
-    process.env.NODE_ENV !== 'production' &&
-    requireResources &&
-    (resources == null || resources.length === 0)
-  ) {
+  if (requireResources && (resources == null || resources.length === 0)) {
     warnOnce([
       'MUI X Scheduler: `requireResources` is `true` but no resources are configured.',
       'Users will not be able to select a resource, and events cannot be saved from the event dialog.',

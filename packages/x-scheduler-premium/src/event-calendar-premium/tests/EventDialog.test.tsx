@@ -455,6 +455,14 @@ describe('<EventDialogContent open />', () => {
   });
 
   describe('requireResources', () => {
+    const eventWithoutResource: SchedulerEvent = { ...DEFAULT_EVENT, resource: undefined };
+    const eventWithoutResourceOccurrence = EventBuilder.new(adapter)
+      .id(eventWithoutResource.id)
+      .title(eventWithoutResource.title)
+      .description(eventWithoutResource.description)
+      .span(eventWithoutResource.start, eventWithoutResource.end)
+      .toOccurrence();
+
     it('should not show the "No resource" option in the dropdown when `requireResources={true}`', async () => {
       const { user } = render(
         <EventCalendarProvider
@@ -494,18 +502,6 @@ describe('<EventDialogContent open />', () => {
     it('should block submit and not call `onEventsChange` when `requireResources={true}` and the event has no resource', async () => {
       const onEventsChange = spy();
 
-      const eventWithoutResource: SchedulerEvent = {
-        ...DEFAULT_EVENT,
-        resource: undefined,
-      };
-
-      const eventWithoutResourceOccurrence = EventBuilder.new(adapter)
-        .id(eventWithoutResource.id)
-        .title(eventWithoutResource.title)
-        .description(eventWithoutResource.description)
-        .span(eventWithoutResource.start, eventWithoutResource.end)
-        .toOccurrence();
-
       const { user } = render(
         <EventCalendarProvider
           events={[eventWithoutResource]}
@@ -538,18 +534,6 @@ describe('<EventDialogContent open />', () => {
 
     it('should unblock submit and clear the error after a resource is selected', async () => {
       const onEventsChange = spy();
-
-      const eventWithoutResource: SchedulerEvent = {
-        ...DEFAULT_EVENT,
-        resource: undefined,
-      };
-
-      const eventWithoutResourceOccurrence = EventBuilder.new(adapter)
-        .id(eventWithoutResource.id)
-        .title(eventWithoutResource.title)
-        .description(eventWithoutResource.description)
-        .span(eventWithoutResource.start, eventWithoutResource.end)
-        .toOccurrence();
 
       const { user } = render(
         <EventCalendarProvider
