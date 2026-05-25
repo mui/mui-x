@@ -29,7 +29,7 @@ function CustomComposerContent() {
             submit();
           }
         }}
-        placeholder="Type a message..."
+        placeholder="Type a message…"
       />
       <IconButton component="label">
         <AttachFileIcon />

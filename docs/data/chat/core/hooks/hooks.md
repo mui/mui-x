@@ -177,8 +177,8 @@ function StatusBar() {
 
   return (
     <div>
-      {isStreaming && <span>Assistant is responding...</span>}
-      {typingUserIds.length > 0 && <span>{typingUserIds.length} typing...</span>}
+      {isStreaming && <span>Assistant is responding…</span>}
+      {typingUserIds.length > 0 && <span>{typingUserIds.length} typing…</span>}
       {error && <span>{error.message}</span>}
     </div>
   );

@@ -156,7 +156,7 @@ const MyMessageContent: ChatBoxSlots['messageContent'] = (props) => {
 
 // Type-safe slotProps
 const mySlotProps: ChatBoxSlotProps = {
-  composerInput: { placeholder: 'Type here...' },
+  composerInput: { placeholder: 'Type here…' },
   messageList: { sx: { p: 2 } },
 };
 ```
