@@ -189,26 +189,33 @@ expect(cleanText(input.value)).to.equal('04-17-2022');
 ### End-to-end testing with Playwright
 
 The field's accessible DOM structure exposes a single, form-submittable element that supports both interaction and assertion: a visually-hidden `<input>` rendered alongside the `role="group"` container.
-You can target it via `getByRole('textbox', { includeHidden: true })`.
-Unlike the visible section spans, this input doesn't contain the invisible Unicode characters mentioned above, so assertions don't need any cleanup.
+When the picker has a `label`, that label becomes the accessible name of both the group and the hidden input (the field wires `<label htmlFor={id}>` automatically), which lets you scope the locator on pages that render more than one picker.
+Unlike the visible section spans, the hidden input doesn't contain the invisible Unicode characters mentioned above, so assertions don't need any cleanup.
+
+Given a labeled picker:
+
+```tsx
+<DatePicker label="Departure" />
+```
 
 The minimum pattern to fill a date and assert its value:
 
 ```ts
-const input = page.getByRole('textbox', { includeHidden: true });
+const input = page.getByRole('textbox', { includeHidden: true, name: 'Departure' });
 await input.fill('02/12/2020');
 await expect(input).toHaveValue('02/12/2020');
 ```
 
-This works because the visually-hidden input is a 1px clipped element (not `display: none`), so Playwright's actionability checks pass.
 `includeHidden: true` is only required for the locator to find the element, since the input carries `aria-hidden="true"`.
+`.fill()` itself works because the visually-hidden input is a 1px clipped element (not `display: none`), so Playwright's actionability checks pass.
 
-If you need to drive individual sections (for example, keyboard-flow tests), each section is exposed as a `role="spinbutton"` accessible by its localized name:
+If you need to drive individual sections (for example, keyboard-flow tests), scope through the field's group so the section roles stay unambiguous when multiple pickers are present:
 
 ```ts
-await page.getByRole('spinbutton', { name: 'Month' }).fill('04');
-await page.getByRole('spinbutton', { name: 'Day' }).fill('11');
-await page.getByRole('spinbutton', { name: 'Year' }).fill('2022');
+const field = page.getByRole('group', { name: 'Departure' });
+await field.getByRole('spinbutton', { name: 'Month' }).fill('04');
+await field.getByRole('spinbutton', { name: 'Day' }).fill('11');
+await field.getByRole('spinbutton', { name: 'Year' }).fill('2022');
 ```
 
 :::warning
