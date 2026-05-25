@@ -45,15 +45,20 @@ describe('<EventTimelinePremiumHeader />', () => {
     presets?: EventTimelinePremiumPreset[];
     defaultPreferences?: { ampm: boolean };
   }) {
+    // The grid is virtualized; sizing the host wide enough to fit the largest preset
+    // (1096 days × 6px = 6576px plus the title column) keeps every header cell mounted
+    // so the structural assertions can inspect them all without simulating scrolls.
     return render(
-      <EventTimelinePremium
-        resources={[engineering]}
-        events={[]}
-        visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-        preset={options.preset}
-        presets={options.presets ?? [options.preset]}
-        defaultPreferences={options.defaultPreferences}
-      />,
+      <div style={{ width: 10000, height: 2000 }}>
+        <EventTimelinePremium
+          resources={[engineering]}
+          events={[]}
+          visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          preset={options.preset}
+          presets={options.presets ?? [options.preset]}
+          defaultPreferences={options.defaultPreferences}
+        />
+      </div>,
     );
   }
 
