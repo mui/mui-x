@@ -574,11 +574,13 @@ describe('<EventDialogContent open />', () => {
       await user.click(screen.getByRole('combobox', { name: /resource/i }));
       await user.click(await screen.findByRole('option', { name: /work/i }));
 
+      // The error should clear as soon as a valid resource is picked, not only after the next save.
+      expect(screen.queryByText(/a resource is required/i)).to.equal(null);
+
       await user.click(screen.getByRole('button', { name: /save/i }));
 
       expect(onEventsChange.calledOnce).to.equal(true);
       expect(onEventsChange.firstCall.firstArg[0].resource).to.equal(workResource.id);
-      expect(screen.queryByText(/a resource is required/i)).to.equal(null);
     });
 
     it('should block submit on a Calendar creation placeholder when `requireResources={true}` and no resource is selected', async () => {

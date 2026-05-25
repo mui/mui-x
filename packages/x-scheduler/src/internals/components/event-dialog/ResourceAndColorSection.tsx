@@ -108,6 +108,7 @@ interface ResourceOptionType {
   isGroupRoot: boolean;
   indentLevel: number;
   showDivider: boolean;
+  hidden?: boolean;
 }
 
 function ResourceSelectAdornment(props: ResourceSelectAdornmentProps) {
@@ -160,18 +161,19 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
     );
 
     return [
-      ...(requireResources
-        ? []
-        : [
-            {
-              label: localeText.labelNoResource,
-              value: null,
-              eventColor: eventDefaultColor,
-              isGroupRoot: false,
-              indentLevel: 0,
-              showDivider: false,
-            },
-          ]),
+      // The no-resource option must stay in the rendered options list so MUI Select's
+      // `value=""` keeps matching a MenuItem when an event has no resource yet — otherwise
+      // MUI logs an "out-of-range value" warning. It's hidden from the menu when
+      // `requireResources` is `true` so the user can't pick it.
+      {
+        label: localeText.labelNoResource,
+        value: null,
+        eventColor: eventDefaultColor,
+        isGroupRoot: false,
+        indentLevel: 0,
+        showDivider: false,
+        hidden: requireResources,
+      },
       ...resources.map((resource) => {
         const depth = resourceDepthLookup.get(resource.id) ?? 0;
         const hasChildren = (childrenIdLookup.get(resource.id)?.length ?? 0) > 0;
@@ -259,8 +261,14 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
                 key={resourceOption.value ?? NO_RESOURCE_VALUE}
                 value={resourceOption.value ?? NO_RESOURCE_VALUE}
                 aria-label={resourceOption.label}
+                aria-hidden={resourceOption.hidden || undefined}
                 className={classes.eventDialogResourceMenuItem}
-                style={{ '--resource-indent': resourceOption.indentLevel } as React.CSSProperties}
+                style={
+                  {
+                    '--resource-indent': resourceOption.indentLevel,
+                    ...(resourceOption.hidden && { display: 'none' }),
+                  } as React.CSSProperties
+                }
               >
                 <ListItemIcon>
                   <ResourceMenuColorDot

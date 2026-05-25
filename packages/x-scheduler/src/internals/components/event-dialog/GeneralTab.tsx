@@ -143,6 +143,7 @@ export function GeneralTab(props: GeneralTabProps) {
   };
 
   const handleResourceChange = (newResource: SchedulerResourceId | null) => {
+    setErrors({});
     const newState = { ...controlled, resourceId: newResource };
     pushPlaceholder(newState);
     setControlled(newState);
