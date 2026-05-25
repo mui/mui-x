@@ -4,7 +4,6 @@ import { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { CompactDayTimeGridDayCount, CompactDayTimeGridProps } from './CompactDayTimeGrid.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
-import { DayTimeGridSlots } from '../internals/components/day-time-grid/DayTimeGrid.types';
 import { createDayTimeGridViewConfig } from '../internals/utils/day-time-grid-view-config';
 import { TimeGridEventMobile } from '../internals/components/event/time-grid-event/TimeGridEventMobile';
 
@@ -13,8 +12,6 @@ const COMPACT_DAY_TIME_GRID_CONFIGS: Record<CompactDayTimeGridDayCount, EventCal
   3: createDayTimeGridViewConfig(3),
   7: createDayTimeGridViewConfig(7),
 };
-
-const SLOTS: DayTimeGridSlots = { timeGridEvent: TimeGridEventMobile };
 
 /**
  * A compact day/time grid optimized for mobile / narrow widths.
@@ -31,6 +28,13 @@ export const CompactDayTimeGrid = React.memo(
     // Feature hooks
     const { days } = useEventCalendarView(COMPACT_DAY_TIME_GRID_CONFIGS[dayCount]);
 
-    return <DayTimeGrid ref={forwardedRef} days={days} slots={SLOTS} {...other} />;
+    return (
+      <DayTimeGrid
+        ref={forwardedRef}
+        days={days}
+        slots={{ timeGridEvent: TimeGridEventMobile }}
+        {...other}
+      />
+    );
   }),
 );

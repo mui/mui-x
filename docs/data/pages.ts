@@ -48,6 +48,10 @@ const schedulerPages: MuiPage[] = [
           { pathname: '/x/react-scheduler/event-calendar/drag-interactions' },
           { pathname: '/x/react-scheduler/event-calendar/editing' },
           { pathname: '/x/react-scheduler/event-calendar/views' },
+          {
+            pathname: '/x/react-scheduler/event-calendar/responsiveness',
+            title: 'Responsiveness 🧪',
+          },
           { pathname: '/x/react-scheduler/event-calendar/lazy-loading', plan: 'premium' },
           {
             pathname: '/x/react-scheduler/event-calendar/filtering',

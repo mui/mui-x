@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { StandaloneCompactDayTimeGrid } from '@mui/x-scheduler/compact-day-time-grid';
 import {
   initialEvents,
@@ -7,8 +7,8 @@ import {
   resources,
 } from '../../datasets/personal-agenda';
 
-export default function CompactDayTimeGrid() {
-  const [events, setEvents] = React.useState(initialEvents);
+export default function CompactWeekView() {
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
     <div style={{ height: '600px', width: '375px', maxWidth: '100%' }}>

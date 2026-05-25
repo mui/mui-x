@@ -3,41 +3,51 @@ import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-import { StandaloneCompactDayTimeGrid } from '@mui/x-scheduler/compact-day-time-grid';
+import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import {
   initialEvents,
   defaultVisibleDate,
   resources,
 } from '../../datasets/personal-agenda';
 
-export default function CompactDayTimeGridDayCount() {
+const MAX_WIDTHS = {
+  sm: 480,
+  md: 720,
+  lg: 1000,
+};
+
+export default function ResponsiveTypographyDemo() {
   const [events, setEvents] = React.useState(initialEvents);
-  const [dayCount, setDayCount] = React.useState(3);
+  const [size, setSize] = React.useState('md');
 
   return (
-    <Stack spacing={2} sx={{ alignItems: 'flex-start' }}>
+    <Stack spacing={2} sx={{ alignItems: 'flex-start', width: '100%' }}>
       <ToggleButtonGroup
-        value={dayCount}
+        value={size}
         exclusive
         size="small"
         onChange={(_, value) => {
           if (value !== null) {
-            setDayCount(value);
+            setSize(value);
           }
         }}
       >
-        <ToggleButton value={1}>1 day</ToggleButton>
-        <ToggleButton value={3}>3 days</ToggleButton>
-        <ToggleButton value={7}>7 days</ToggleButton>
+        <ToggleButton value="sm">sm (480px)</ToggleButton>
+        <ToggleButton value="md">md (720px)</ToggleButton>
+        <ToggleButton value="lg">lg (1000px)</ToggleButton>
       </ToggleButtonGroup>
-      <div style={{ height: '600px', width: '375px', maxWidth: '100%' }}>
-        <StandaloneCompactDayTimeGrid
-          key={dayCount}
+      <div
+        style={{
+          height: '500px',
+          width: '100%',
+          maxWidth: MAX_WIDTHS[size],
+        }}
+      >
+        <StandaloneWeekView
           events={events}
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
-          dayCount={dayCount}
         />
       </div>
     </Stack>
