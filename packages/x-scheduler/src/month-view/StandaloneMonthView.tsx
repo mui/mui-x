@@ -213,7 +213,7 @@ StandaloneMonthView.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * Whether each event must have at least one resource assigned.
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
    * @default false on EventCalendar / EventCalendarPremium, true on EventTimelinePremium
    */
   requireResources: PropTypes.bool,
