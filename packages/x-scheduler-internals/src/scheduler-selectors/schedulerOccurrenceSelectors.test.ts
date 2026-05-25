@@ -9,12 +9,14 @@ import {
 import { processDate } from '../process-date';
 import { schedulerOccurrenceSelectors } from './schedulerOccurrenceSelectors';
 
+const TEST_RESOURCES = [ResourceBuilder.new().build()];
+
 describe('schedulerOccurrenceSelectors', () => {
   describe('isStarted', () => {
     it('should return false when now is before start', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         events: [],
-        resources: [ResourceBuilder.new().build()],
+        resources: TEST_RESOURCES,
       });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T08:00:00Z', 'default');
 
@@ -26,7 +28,7 @@ describe('schedulerOccurrenceSelectors', () => {
     it('should return true when now is equal to start', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         events: [],
-        resources: [ResourceBuilder.new().build()],
+        resources: TEST_RESOURCES,
       });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T10:00:00Z', 'default');
 
@@ -38,7 +40,7 @@ describe('schedulerOccurrenceSelectors', () => {
     it('should return true when now is after start', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         events: [],
-        resources: [ResourceBuilder.new().build()],
+        resources: TEST_RESOURCES,
       });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T10:30:00Z', 'default');
 
@@ -52,7 +54,7 @@ describe('schedulerOccurrenceSelectors', () => {
     it('should return false when now is before end', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         events: [],
-        resources: [ResourceBuilder.new().build()],
+        resources: TEST_RESOURCES,
       });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T10:30:00Z', 'default');
 
@@ -64,7 +66,7 @@ describe('schedulerOccurrenceSelectors', () => {
     it('should return false when now is equal to end', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         events: [],
-        resources: [ResourceBuilder.new().build()],
+        resources: TEST_RESOURCES,
       });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T11:00:00Z', 'default');
 
@@ -76,7 +78,7 @@ describe('schedulerOccurrenceSelectors', () => {
     it('should return true when now is after end', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         events: [],
-        resources: [ResourceBuilder.new().build()],
+        resources: TEST_RESOURCES,
       });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T12:00:00Z', 'default');
 
