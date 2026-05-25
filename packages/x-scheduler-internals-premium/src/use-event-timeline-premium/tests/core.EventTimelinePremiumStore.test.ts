@@ -79,6 +79,15 @@ describe('Core - EventTimelinePremiumStore', () => {
       expect(store.state.requireResources).to.equal(false);
     });
 
+    it('should warn in dev when `requireResources` is `true` but no resources are configured', () => {
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventTimelinePremiumStore({ events: [], resources: [] }, adapter);
+      }).toWarnDev([
+        'MUI X Scheduler: `requireResources` is `true` but no resources are configured.',
+      ]);
+    });
+
     it('should sync `requireResources` when parameters update', () => {
       const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
       expect(store.state.requireResources).to.equal(true);

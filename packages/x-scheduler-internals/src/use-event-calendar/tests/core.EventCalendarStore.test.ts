@@ -71,6 +71,18 @@ describe('Core - EventCalendarStore', () => {
       );
       expect(store.state.requireResources).to.equal(true);
     });
+
+    it('should warn in dev when `requireResources` is `true` but no resources are configured', () => {
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventCalendarStore(
+          { ...DEFAULT_PARAMS, requireResources: true, resources: [] },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: `requireResources` is `true` but no resources are configured.',
+      ]);
+    });
   });
 
   describe('updater', () => {
