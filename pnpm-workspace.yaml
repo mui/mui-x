@@ -15,7 +15,7 @@ catalog:
   '@babel/traverse': ^7.29.0
   '@base-ui/react': ^1.4.1
   '@base-ui/utils': ^0.2.9
-  '@date-fns/tz': ^1.4.1
+  '@date-fns/tz': ^1.5.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
