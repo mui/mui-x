@@ -209,6 +209,8 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
     onResourceChange((value === NO_RESOURCE_VALUE ? null : value) as SchedulerResourceId);
   };
 
+  const errorId = `${schedulerId}-resource-error`;
+
   return (
     <React.Fragment>
       <FormControl size="small" fullWidth error={!!error}>
@@ -222,6 +224,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
           displayEmpty
           onChange={handleChange}
           readOnly={readOnly}
+          aria-describedby={error ? errorId : undefined}
           startAdornment={
             <InputAdornment position="start">
               <ResourceSelectAdornment resource={resource} />
@@ -284,7 +287,11 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
             return items;
           })}
         </Select>
-        {error && <FormHelperText role="alert">{error}</FormHelperText>}
+        {error && (
+          <FormHelperText id={errorId} role="alert">
+            {error}
+          </FormHelperText>
+        )}
       </FormControl>
       <ResourceMenuColorToggleGroup
         value={color ? [color] : []}
