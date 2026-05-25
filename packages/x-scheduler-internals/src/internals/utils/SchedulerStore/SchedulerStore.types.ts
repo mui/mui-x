@@ -93,7 +93,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
    */
-  requireResources: boolean;
+  shouldEventRequireResource: boolean;
   /**
    * Whether the event start or end can be dragged to change its duration without changing its other date.
    * If `true`, both start and end can be resized.
@@ -277,7 +277,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   /**
    * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
    */
-  requireResources?: boolean;
+  shouldEventRequireResource?: boolean;
   /**
    * Whether the event start or end can be dragged to change its duration without changing its other date.
    * If `true`, both start and end can be resized.
@@ -380,11 +380,11 @@ export interface SchedulerParametersToStateMapper<
 > {
   /**
    * Gets the initial state of the store based on the initial parameters.
-   * `requireResources` is left for the mapper to set, because its default depends on the component
+   * `shouldEventRequireResource` is left for the mapper to set, because its default depends on the component
    * (`false` on the Event Calendar, `true` on the Event Timeline).
    */
   getInitialState: (
-    schedulerInitialState: Omit<SchedulerState, 'requireResources'>,
+    schedulerInitialState: Omit<SchedulerState, 'shouldEventRequireResource'>,
     parameters: Parameters,
     adapter: Adapter,
   ) => State;

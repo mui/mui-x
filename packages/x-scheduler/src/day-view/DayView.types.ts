@@ -11,7 +11,7 @@ export interface StandaloneDayViewProps<TEvent extends object, TResource extends
    * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
    * @default false
    */
-  requireResources?: boolean;
+  shouldEventRequireResource?: boolean;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

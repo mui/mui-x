@@ -28,7 +28,7 @@ export const schedulerOtherSelectors = {
   /**
    * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
    */
-  requireResources: createSelector((state: State) => state.requireResources),
+  shouldEventRequireResource: createSelector((state: State) => state.shouldEventRequireResource),
   recurringEventsPlugin: createSelector((state: State) => state.recurringEventsPlugin),
   areRecurringEventsAvailable: createSelector(
     (state: State) => state.recurringEventsPlugin != null,

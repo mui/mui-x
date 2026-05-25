@@ -142,7 +142,10 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
   const resourceDepthLookup = useStore(store, schedulerResourceSelectors.resourceDepthLookup);
   const childrenIdLookup = useStore(store, schedulerResourceSelectors.childrenIdLookup);
   const eventDefaultColor = useStore(store, schedulerOtherSelectors.defaultEventColor);
-  const requireResources = useStore(store, schedulerOtherSelectors.requireResources);
+  const shouldEventRequireResource = useStore(
+    store,
+    schedulerOtherSelectors.shouldEventRequireResource,
+  );
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     const hasNesting = resources.some(
@@ -153,7 +156,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
       // The no-resource option must stay in the rendered options list so MUI Select's
       // `value=""` keeps matching a MenuItem when an event has no resource yet — otherwise
       // MUI logs an "out-of-range value" warning. It's hidden from the menu when
-      // `requireResources` is `true` so the user can't pick it.
+      // `shouldEventRequireResource` is `true` so the user can't pick it.
       {
         label: localeText.labelNoResource,
         value: null,
@@ -161,7 +164,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
         isGroupRoot: false,
         indentLevel: 0,
         showDivider: false,
-        hidden: requireResources,
+        hidden: shouldEventRequireResource,
       },
       ...resources.map((resource) => {
         const depth = resourceDepthLookup.get(resource.id) ?? 0;
@@ -182,7 +185,7 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
     childrenIdLookup,
     localeText.labelNoResource,
     eventDefaultColor,
-    requireResources,
+    shouldEventRequireResource,
   ]);
 
   const resource = React.useMemo(

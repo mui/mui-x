@@ -269,7 +269,7 @@ EventCalendar.propTypes = {
    * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
    * @default false
    */
-  requireResources: PropTypes.bool,
+  shouldEventRequireResource: PropTypes.bool,
   /**
    * The structure of the resource model.
    * It defines how to read and write the properties of the resource model.

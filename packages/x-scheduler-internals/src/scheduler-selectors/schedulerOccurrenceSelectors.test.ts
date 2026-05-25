@@ -96,7 +96,7 @@ describe('schedulerOccurrenceSelectors', () => {
       const state = getEventTimelinePremiumStateFromParameters({
         events: [],
         resources: [],
-        requireResources: false,
+        shouldEventRequireResource: false,
       });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
       expect(response).to.have.length(0);

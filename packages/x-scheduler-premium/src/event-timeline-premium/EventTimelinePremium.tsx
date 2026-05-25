@@ -348,7 +348,7 @@ EventTimelinePremium.propTypes = {
    * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
    * @default true
    */
-  requireResources: PropTypes.bool,
+  shouldEventRequireResource: PropTypes.bool,
   /**
    * The label displayed in the resource column header.
    * When provided, this takes priority over `localeText.timelineResourceTitleHeader`.

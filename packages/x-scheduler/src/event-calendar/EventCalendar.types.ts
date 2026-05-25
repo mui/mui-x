@@ -19,7 +19,7 @@ export interface EventCalendarProps<TEvent extends object, TResource extends obj
    * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
    * @default false
    */
-  requireResources?: boolean;
+  shouldEventRequireResource?: boolean;
   /**
    * Override or extend the styles applied to the component.
    */

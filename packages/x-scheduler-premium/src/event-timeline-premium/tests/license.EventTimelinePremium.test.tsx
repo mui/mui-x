@@ -20,7 +20,7 @@ describe('<EventTimelinePremium /> - License', () => {
       render(
         <EventTimelinePremium
           resources={[]}
-          requireResources={false}
+          shouldEventRequireResource={false}
           events={[]}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           preset="dayAndMonth"
@@ -38,7 +38,7 @@ describe('<EventTimelinePremium /> - License', () => {
       render(
         <EventTimelinePremium
           resources={[]}
-          requireResources={false}
+          shouldEventRequireResource={false}
           events={[]}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
           preset="dayAndMonth"

@@ -454,7 +454,7 @@ describe('<EventDialogContent open />', () => {
     expect(updated.resource).to.equal(undefined);
   });
 
-  describe('requireResources', () => {
+  describe('shouldEventRequireResource', () => {
     const eventWithoutResource: SchedulerEvent = { ...DEFAULT_EVENT, resource: undefined };
     const eventWithoutResourceOccurrence = EventBuilder.new(adapter)
       .id(eventWithoutResource.id)
@@ -463,12 +463,12 @@ describe('<EventDialogContent open />', () => {
       .span(eventWithoutResource.start, eventWithoutResource.end)
       .toOccurrence();
 
-    it('should not show the "No resource" option in the dropdown when `requireResources={true}`', async () => {
+    it('should not show the "No resource" option in the dropdown when `shouldEventRequireResource={true}`', async () => {
       const { user } = render(
         <EventCalendarProvider
           events={[DEFAULT_EVENT]}
           resources={resources}
-          requireResources
+          shouldEventRequireResource
           storeClass={PremiumTestStore}
         >
           <TestEventDialogContent open {...defaultProps} />
@@ -482,12 +482,12 @@ describe('<EventDialogContent open />', () => {
       expect(screen.getByRole('option', { name: /personal/i })).not.to.equal(null);
     });
 
-    it('should show the "No resource" option when `requireResources={false}`', async () => {
+    it('should show the "No resource" option when `shouldEventRequireResource={false}`', async () => {
       const { user } = render(
         <EventCalendarProvider
           events={[DEFAULT_EVENT]}
           resources={resources}
-          requireResources={false}
+          shouldEventRequireResource={false}
           storeClass={PremiumTestStore}
         >
           <TestEventDialogContent open {...defaultProps} />
@@ -499,7 +499,7 @@ describe('<EventDialogContent open />', () => {
       expect(screen.getByRole('option', { name: /no resource/i })).not.to.equal(null);
     });
 
-    it('should block submit and not call `onEventsChange` when `requireResources={true}` and the event has no resource', async () => {
+    it('should block submit and not call `onEventsChange` when `shouldEventRequireResource={true}` and the event has no resource', async () => {
       const onEventsChange = spy();
 
       const { user } = render(
@@ -507,7 +507,7 @@ describe('<EventDialogContent open />', () => {
           events={[eventWithoutResource]}
           onEventsChange={onEventsChange}
           resources={resources}
-          requireResources
+          shouldEventRequireResource
           storeClass={PremiumTestStore}
         >
           <TestEventDialogContent
@@ -540,7 +540,7 @@ describe('<EventDialogContent open />', () => {
           events={[eventWithoutResource]}
           onEventsChange={onEventsChange}
           resources={resources}
-          requireResources
+          shouldEventRequireResource
           storeClass={PremiumTestStore}
         >
           <TestEventDialogContent
@@ -567,7 +567,7 @@ describe('<EventDialogContent open />', () => {
       expect(onEventsChange.firstCall.firstArg[0].resource).to.equal(workResource.id);
     });
 
-    it('should block submit on a Calendar creation placeholder when `requireResources={true}` and no resource is selected', async () => {
+    it('should block submit on a Calendar creation placeholder when `shouldEventRequireResource={true}` and no resource is selected', async () => {
       const onEventsChange = spy();
       const start = adapter.date('2025-05-26T07:30:00Z', 'default');
       const end = adapter.date('2025-05-26T08:30:00Z', 'default');
@@ -582,7 +582,7 @@ describe('<EventDialogContent open />', () => {
           events={[]}
           onEventsChange={onEventsChange}
           resources={resources}
-          requireResources
+          shouldEventRequireResource
           storeClass={PremiumTestStore}
         >
           <SchedulerStoreRunner<AnyEventCalendarStore>

@@ -30,7 +30,7 @@ const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = (
 
 export const DEFAULT_PRESETS: EventTimelinePremiumPreset[] = PRESET_ZOOM_ORDER;
 export const DEFAULT_PRESET: EventTimelinePremiumPreset = PRESET_ZOOM_ORDER[0];
-export const DEFAULT_REQUIRE_RESOURCES = true;
+export const DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE = true;
 
 function sortPresetsByZoomOrder(
   presets: EventTimelinePremiumPreset[],
@@ -72,15 +72,15 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
 
-function warnIfRequireResourcesMisconfigured(
-  requireResources: boolean,
+function warnIfShouldEventRequireResourceMisconfigured(
+  shouldEventRequireResource: boolean,
   resources: readonly unknown[] | undefined,
 ) {
-  if (requireResources && (resources == null || resources.length === 0)) {
+  if (shouldEventRequireResource && (resources == null || resources.length === 0)) {
     warnOnce([
-      'MUI X Scheduler: `requireResources` is `true` but no resources are configured.',
+      'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
       'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
-      'Either provide at least one resource, or set `requireResources={false}`.',
+      'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
     ]);
   }
 }
@@ -90,24 +90,26 @@ const mapper: SchedulerParametersToStateMapper<
   EventTimelinePremiumParameters<any, any>
 > = {
   getInitialState: (schedulerInitialState, parameters) => {
-    const requireResources = parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES;
-    warnIfRequireResourcesMisconfigured(requireResources, parameters.resources);
+    const shouldEventRequireResource =
+      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
+    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
     return {
       ...schedulerInitialState,
       ...deriveStateFromParameters(parameters),
       preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
       preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
-      requireResources,
+      shouldEventRequireResource,
       hasInitialized: false,
     };
   },
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
-    const requireResources = parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES;
-    warnIfRequireResourcesMisconfigured(requireResources, parameters.resources);
+    const shouldEventRequireResource =
+      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
+    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
     const newState: Partial<EventTimelinePremiumState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
-      requireResources,
+      shouldEventRequireResource,
       hasInitialized: true,
     };
 

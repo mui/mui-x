@@ -113,7 +113,10 @@ export function FormContent(props: FormContentProps) {
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
-  const requireResources = useStore(store, schedulerOtherSelectors.requireResources);
+  const shouldEventRequireResource = useStore(
+    store,
+    schedulerOtherSelectors.shouldEventRequireResource,
+  );
 
   // Optional renderer hooks
   const { recurrenceTab: RecurrenceTabRenderer } = useEventDialogOptionalRenderers();
@@ -174,7 +177,7 @@ export function FormContent(props: FormContentProps) {
       return;
     }
 
-    if (requireResources && controlled.resourceId === null) {
+    if (shouldEventRequireResource && controlled.resourceId === null) {
       setErrors({ resource: localeText.requiredResourceError });
       return;
     }

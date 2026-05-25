@@ -49,7 +49,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         ]),
         readOnly: false,
         recurringEventsPlugin: schedulerRecurringEventsPlugin,
-        requireResources: true,
+        shouldEventRequireResource: true,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [TEST_RESOURCE.id],
         resourceModelStructure: undefined,
@@ -66,34 +66,37 @@ describe('Core - EventTimelinePremiumStore', () => {
       expect(store.state).to.deep.equal(expectedState);
     });
 
-    it('should default `requireResources` to `true`', () => {
+    it('should default `shouldEventRequireResource` to `true`', () => {
       const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
-      expect(store.state.requireResources).to.equal(true);
+      expect(store.state.shouldEventRequireResource).to.equal(true);
     });
 
-    it('should respect an explicit `requireResources={false}`', () => {
+    it('should respect an explicit `shouldEventRequireResource={false}`', () => {
       const store = new EventTimelinePremiumStore(
-        { ...DEFAULT_PARAMS, requireResources: false },
+        { ...DEFAULT_PARAMS, shouldEventRequireResource: false },
         adapter,
       );
-      expect(store.state.requireResources).to.equal(false);
+      expect(store.state.shouldEventRequireResource).to.equal(false);
     });
 
-    it('should warn in dev when `requireResources` is `true` but no resources are configured', () => {
+    it('should warn in dev when `shouldEventRequireResource` is `true` but no resources are configured', () => {
       expect(() => {
         // eslint-disable-next-line no-new
         new EventTimelinePremiumStore({ events: [], resources: [] }, adapter);
       }).toWarnDev([
-        'MUI X Scheduler: `requireResources` is `true` but no resources are configured.',
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
       ]);
     });
 
-    it('should sync `requireResources` when parameters update', () => {
+    it('should sync `shouldEventRequireResource` when parameters update', () => {
       const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
-      expect(store.state.requireResources).to.equal(true);
+      expect(store.state.shouldEventRequireResource).to.equal(true);
 
-      store.updateStateFromParameters({ ...DEFAULT_PARAMS, requireResources: false }, adapter);
-      expect(store.state.requireResources).to.equal(false);
+      store.updateStateFromParameters(
+        { ...DEFAULT_PARAMS, shouldEventRequireResource: false },
+        adapter,
+      );
+      expect(store.state.shouldEventRequireResource).to.equal(false);
     });
 
     it('should sort the presets array into the canonical zoom order regardless of input order', () => {

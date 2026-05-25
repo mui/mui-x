@@ -21,7 +21,7 @@ import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEven
 
 export const DEFAULT_VIEWS: CalendarView[] = ['day', 'week', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
-export const DEFAULT_REQUIRE_RESOURCES = false;
+export const DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE = false;
 
 export const DEFAULT_EVENT_CALENDAR_PREFERENCES: EventCalendarPreferences = {
   ...DEFAULT_SCHEDULER_PREFERENCES,
@@ -55,15 +55,15 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
   return { views };
 };
 
-function warnIfRequireResourcesMisconfigured(
-  requireResources: boolean,
+function warnIfShouldEventRequireResourceMisconfigured(
+  shouldEventRequireResource: boolean,
   resources: readonly unknown[] | undefined,
 ) {
-  if (requireResources && (resources == null || resources.length === 0)) {
+  if (shouldEventRequireResource && (resources == null || resources.length === 0)) {
     warnOnce([
-      'MUI X Scheduler: `requireResources` is `true` but no resources are configured.',
+      'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
       'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
-      'Either provide at least one resource, or set `requireResources={false}`.',
+      'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
     ]);
   }
 }
@@ -73,8 +73,9 @@ const mapper: SchedulerParametersToStateMapper<
   EventCalendarParameters<any, any>
 > = {
   getInitialState: (schedulerInitialState, parameters) => {
-    const requireResources = parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES;
-    warnIfRequireResourcesMisconfigured(requireResources, parameters.resources);
+    const shouldEventRequireResource =
+      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
+    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
     return {
       ...schedulerInitialState,
       ...deriveStateFromParameters(parameters),
@@ -88,16 +89,17 @@ const mapper: SchedulerParametersToStateMapper<
             },
       viewConfig: null,
       view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
-      requireResources,
+      shouldEventRequireResource,
     };
   },
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
-    const requireResources = parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES;
-    warnIfRequireResourcesMisconfigured(requireResources, parameters.resources);
+    const shouldEventRequireResource =
+      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
+    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
     const newState: Partial<EventCalendarState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
-      requireResources,
+      shouldEventRequireResource,
     };
 
     updateModel(newState, 'view', 'defaultView');

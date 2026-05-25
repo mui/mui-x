@@ -21,7 +21,7 @@ export interface EventTimelinePremiumProps<TEvent extends object, TResource exte
    * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
    * @default true
    */
-  requireResources?: boolean;
+  shouldEventRequireResource?: boolean;
   /**
    * Override or extend the styles applied to the component.
    */

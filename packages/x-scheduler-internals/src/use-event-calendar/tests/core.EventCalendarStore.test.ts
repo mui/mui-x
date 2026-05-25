@@ -42,7 +42,7 @@ describe('Core - EventCalendarStore', () => {
         processedResourceLookup: new Map(),
         readOnly: false,
         recurringEventsPlugin: null,
-        requireResources: false,
+        shouldEventRequireResource: false,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [],
         resourceModelStructure: undefined,
@@ -59,28 +59,32 @@ describe('Core - EventCalendarStore', () => {
       expect(store.state).to.deep.equal(expectedState);
     });
 
-    it('should default `requireResources` to `false`', () => {
+    it('should default `shouldEventRequireResource` to `false`', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
-      expect(store.state.requireResources).to.equal(false);
+      expect(store.state.shouldEventRequireResource).to.equal(false);
     });
 
-    it('should respect an explicit `requireResources={true}`', () => {
+    it('should respect an explicit `shouldEventRequireResource={true}`', () => {
       const store = new EventCalendarStore(
-        { ...DEFAULT_PARAMS, requireResources: true, resources: [ResourceBuilder.new().build()] },
+        {
+          ...DEFAULT_PARAMS,
+          shouldEventRequireResource: true,
+          resources: [ResourceBuilder.new().build()],
+        },
         adapter,
       );
-      expect(store.state.requireResources).to.equal(true);
+      expect(store.state.shouldEventRequireResource).to.equal(true);
     });
 
-    it('should warn in dev when `requireResources` is `true` but no resources are configured', () => {
+    it('should warn in dev when `shouldEventRequireResource` is `true` but no resources are configured', () => {
       expect(() => {
         // eslint-disable-next-line no-new
         new EventCalendarStore(
-          { ...DEFAULT_PARAMS, requireResources: true, resources: [] },
+          { ...DEFAULT_PARAMS, shouldEventRequireResource: true, resources: [] },
           adapter,
         );
       }).toWarnDev([
-        'MUI X Scheduler: `requireResources` is `true` but no resources are configured.',
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
       ]);
     });
   });
@@ -98,15 +102,19 @@ describe('Core - EventCalendarStore', () => {
       expect(store.state.views).to.deep.equal(['day', 'week']);
     });
 
-    it('should sync `requireResources` when parameters update', () => {
+    it('should sync `shouldEventRequireResource` when parameters update', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
-      expect(store.state.requireResources).to.equal(false);
+      expect(store.state.shouldEventRequireResource).to.equal(false);
 
       store.updateStateFromParameters(
-        { ...DEFAULT_PARAMS, requireResources: true, resources: [ResourceBuilder.new().build()] },
+        {
+          ...DEFAULT_PARAMS,
+          shouldEventRequireResource: true,
+          resources: [ResourceBuilder.new().build()],
+        },
         adapter,
       );
-      expect(store.state.requireResources).to.equal(true);
+      expect(store.state.shouldEventRequireResource).to.equal(true);
     });
 
     it('should respect controlled `view` (updates to new value)', () => {

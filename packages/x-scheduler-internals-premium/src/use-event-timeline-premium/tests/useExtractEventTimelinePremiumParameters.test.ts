@@ -3,15 +3,15 @@ import { ResourceBuilder } from 'test/utils/scheduler';
 import { useExtractEventTimelinePremiumParameters } from '../useExtractEventTimelinePremiumParameters';
 
 describe('useExtractEventTimelinePremiumParameters', () => {
-  it('should forward `requireResources` to the parameters object', () => {
+  it('should forward `shouldEventRequireResource` to the parameters object', () => {
     const { result } = renderHook(() =>
       useExtractEventTimelinePremiumParameters({
         events: [],
         resources: [ResourceBuilder.new().build()],
-        requireResources: true,
+        shouldEventRequireResource: true,
       }),
     );
 
-    expect(result.current.parameters.requireResources).to.equal(true);
+    expect(result.current.parameters.shouldEventRequireResource).to.equal(true);
   });
 });
