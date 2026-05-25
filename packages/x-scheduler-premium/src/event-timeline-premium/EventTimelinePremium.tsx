@@ -345,11 +345,6 @@ EventTimelinePremium.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
-   * @default true
-   */
-  shouldEventRequireResource: PropTypes.bool,
-  /**
    * The label displayed in the resource column header.
    * When provided, this takes priority over `localeText.timelineResourceTitleHeader`.
    */
@@ -364,6 +359,11 @@ EventTimelinePremium.propTypes = {
    * The resources the events can be assigned to.
    */
   resources: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * @default true
+   */
+  shouldEventRequireResource: PropTypes.bool,
   /**
    * Whether the component should display the current time indicator.
    * @default true

@@ -213,11 +213,6 @@ StandaloneAgendaView.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
-   * @default false
-   */
-  shouldEventRequireResource: PropTypes.bool,
-  /**
    * The structure of the resource model.
    * It defines how to read and write the properties of the resource model.
    * If not provided, the resource model is assumed to match the `CalendarResource` interface.
@@ -227,6 +222,11 @@ StandaloneAgendaView.propTypes = {
    * The resources the events can be assigned to.
    */
   resources: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * @default false
+   */
+  shouldEventRequireResource: PropTypes.bool,
   /**
    * Whether the component should display the current time indicator.
    * @default true
