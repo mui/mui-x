@@ -83,6 +83,14 @@ describe('Core - EventCalendarStore', () => {
       expect(store.state.views).to.deep.equal(['day', 'week']);
     });
 
+    it('should sync `requireResources` when parameters update', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.requireResources).to.equal(false);
+
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, requireResources: true }, adapter);
+      expect(store.state.requireResources).to.equal(true);
+    });
+
     it('should respect controlled `view` (updates to new value)', () => {
       const store = new EventCalendarStore({ ...DEFAULT_PARAMS, view: 'day' }, adapter);
 

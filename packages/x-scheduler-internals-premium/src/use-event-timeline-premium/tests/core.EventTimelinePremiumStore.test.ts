@@ -66,6 +66,14 @@ describe('Core - EventTimelinePremiumStore', () => {
       expect(store.state.requireResources).to.equal(false);
     });
 
+    it('should sync `requireResources` when parameters update', () => {
+      const store = new EventTimelinePremiumStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.requireResources).to.equal(true);
+
+      store.updateStateFromParameters({ ...DEFAULT_PARAMS, requireResources: false }, adapter);
+      expect(store.state.requireResources).to.equal(false);
+    });
+
     it('should sort the presets array into the canonical zoom order regardless of input order', () => {
       const store = new EventTimelinePremiumStore(
         { ...DEFAULT_PARAMS, presets: ['year', 'dayAndHour', 'monthAndYear'] },
