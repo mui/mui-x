@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import type { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 
 export const TITLE_HEADER_KEY = Symbol('title-header');
@@ -55,7 +56,7 @@ export function useTitleColumnWidth<T extends { id: SchedulerResourceId }>(param
     [recompute],
   );
 
-  React.useEffect(() => {
+  useIsoLayoutEffect(() => {
     const valid = new Set<Key>(rows.map((r) => r.id));
     valid.add(TITLE_HEADER_KEY);
     let removed = false;

@@ -36,6 +36,7 @@ import {
   useEventDialogContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
+import { useTimelineDragAutoScroll } from '@mui/x-scheduler-internals/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../../internals/eventDialogOptionalRenderers';
 import { EventTimelinePremiumHeader } from './timeline-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
@@ -54,6 +55,7 @@ import {
   TITLE_HEADER_KEY,
 } from './useTitleColumnWidth';
 import { useTitleScrollSync } from './useTitleScrollSync';
+import { useEventTabNavigation } from './useEventTabNavigation';
 
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimeline',
@@ -796,6 +798,22 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     titleCellClassName: classes.titleCell,
   });
 
+  useTimelineDragAutoScroll({
+    scrollerRef: gridRef,
+    pinnedLeftWidth: titleColumnWidth,
+  });
+
+  const { handleKeyDown: handleEventTabKeyDown } = useEventTabNavigation({
+    adapter,
+    resources,
+    scrollerRef: gridRef,
+    collectionStart: presetConfig.start,
+    collectionEnd: presetConfig.end,
+    tickCount: presetConfig.tickCount,
+    tickWidth: presetConfig.tickWidth,
+    titleColumnWidth,
+  });
+
   const eventsWidth = presetConfig.tickCount * presetConfig.tickWidth;
   const hasScrollX = dimensions.hasScrollX;
   const hasScrollY = dimensions.hasScrollY;
@@ -826,6 +844,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               className={classes.grid}
               {...scrollerProps}
               ref={gridMergedRef}
+              onKeyDown={handleEventTabKeyDown}
             >
               <EventTimelinePremiumScrollerContent {...scrollerContentProps}>
                 <EventTimelinePremiumViewport {...viewportProps}>

@@ -153,6 +153,7 @@ export const TimelineGridEvent = React.forwardRef(function TimelineGridEvent(
           [TimelineGridEventCssVars.width]: `${duration * 100}%`,
         } as React.CSSProperties,
       },
+      { [TimelineGridEventDataAttributes.occurrenceKey]: occurrenceKey } as Record<string, string>,
       getButtonProps,
     ],
     stateAttributesMapping: overflowStateAttributesMapping,

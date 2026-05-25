@@ -29,7 +29,7 @@ describe('useTitleColumnWidth', () => {
     const { result, rerender } = renderHook(
       (props: { maxWidth?: number }) =>
         useTitleColumnWidth<Row>({ minWidth: 50, maxWidth: props.maxWidth, rows: [{ id: 'a' }] }),
-      { initialProps: { maxWidth: undefined } },
+      { initialProps: { maxWidth: undefined } as { maxWidth?: number } },
     );
 
     act(() => {
