@@ -44,7 +44,7 @@ This callback function receives an array of hidden item identifiers whenever the
 
 To set the initial hidden items, use the `initialHiddenItems` prop.
 
-The demo below shows a line chart where you can toggle series' visibility and see the count of currently visible series.
+The demo bellow shows a line chart where you can toggle series' visibility and see the count of currently visible series.
 
 {{"demo": "VisibilityOnChange.js"}}
 
