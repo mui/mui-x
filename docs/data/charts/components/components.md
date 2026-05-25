@@ -194,7 +194,9 @@ declare module '@mui/x-charts-premium' {
 </codeblock>
 
 :::info
-Augmentations always target the module where the interface is **originally declared**. The Pro and Premium tabs above augment `@mui/x-charts-pro` and `@mui/x-charts-premium` because the example slots (`cell`, `radialLineHighlight`) are declared in those packages. Slots shared across tiers (such as `tooltip`, `legend`, `toolbar`) are declared in `@mui/x-charts` — augment them via `declare module '@mui/x-charts'` regardless of which chart you use.
+Augmentations always target the module where the interface is **originally declared**.
+The Pro and Premium tabs above augment `@mui/x-charts-pro` and `@mui/x-charts-premium` because the example slots (`cell`, `radialLineHighlight`) are declared in those packages.
+Slots shared across tiers (such as `tooltip`, `legend`, `toolbar`) are declared in `@mui/x-charts` — augment them via `declare module '@mui/x-charts'` regardless of which chart you use.
 :::
 
 ## HTML components
