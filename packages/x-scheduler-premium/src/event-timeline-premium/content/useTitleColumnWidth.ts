@@ -12,11 +12,7 @@ const Context = React.createContext<Report | null>(null);
 export const TitleColumnWidthProvider = Context.Provider;
 
 export function useReportTitleWidth(): Report {
-  const report = React.useContext(Context);
-  if (!report) {
-    throw new Error('MUI X Scheduler: TitleColumnWidthProvider is missing.');
-  }
-  return report;
+  return React.useContext(Context)!;
 }
 
 /**

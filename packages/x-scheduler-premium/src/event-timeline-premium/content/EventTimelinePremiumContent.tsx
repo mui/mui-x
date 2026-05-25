@@ -680,13 +680,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
     rows,
   });
 
-  if (!rows) {
-    throw new Error(
-      'MUI X Scheduler: The timeline encountered an error while retrieving resources. ' +
-        'This is likely a bug in MUI X. Please contact MUI support with details about your configuration and data.',
-    );
-  }
-
   const range = React.useMemo(
     () => ({ firstRowIndex: 0, lastRowIndex: rows.length }),
     [rows.length],

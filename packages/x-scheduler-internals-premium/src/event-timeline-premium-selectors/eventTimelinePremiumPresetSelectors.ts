@@ -6,25 +6,6 @@ import { EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS } from '../internals/utils/preset
 export const eventTimelinePremiumPresetSelectors = {
   preset: createSelector((state: State) => state.preset),
   presets: createSelector((state: State) => state.presets),
-  titleColumnWidth: createSelector((state: State) => state.titleColumnWidth),
-  columnsTotalWidth: createSelectorMemoized(
-    (state: State) => state.titleColumnWidth,
-    (state: State) => state.adapter,
-    (state: State) => state.visibleDate,
-    (state: State) => state.preset,
-    schedulerPreferenceSelectors.weekStartsOn,
-    (titleColumnWidth, adapter, visibleDate, preset, weekStartsOn) => {
-      const config = EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS[preset];
-      if (!config) {
-        return 0;
-      }
-      const { getStartDate, getEndDate, unitCount, getCssUnitCount, tickWidth } = config;
-      const start = getStartDate(adapter, visibleDate, weekStartsOn);
-      const end = getEndDate(adapter, start, unitCount, weekStartsOn);
-      const tickCount = getCssUnitCount ? getCssUnitCount(adapter, start, end) : unitCount;
-      return titleColumnWidth + tickCount * tickWidth;
-    },
-  ),
   config: createSelectorMemoized(
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,
