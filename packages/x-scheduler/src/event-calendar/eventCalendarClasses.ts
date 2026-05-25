@@ -129,7 +129,7 @@ export interface EventCalendarClasses extends EventDialogClasses {
   /** Styles applied to day time grid all day events cell elements. */
   dayTimeGridAllDayEventsCell: string;
   /** Styles applied to the day time grid week number element. */
-  dayTimeGridWeekNumber: string;
+  headerToolbarWeekNumber: string;
   /** Styles applied to the day time grid all day events header cell element. */
   dayTimeGridAllDayEventsHeaderCell: string;
   /** Styles applied to day time grid header content elements. */
@@ -337,7 +337,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'dayTimeGridAllDayEventsGrid',
     'dayTimeGridAllDayEventsRow',
     'dayTimeGridAllDayEventsCell',
-    'dayTimeGridWeekNumber',
+    'headerToolbarWeekNumber',
     'dayTimeGridAllDayEventsHeaderCell',
     'dayTimeGridHeaderContent',
     'dayTimeGridHeaderButton',
@@ -471,7 +471,7 @@ const slots = {
   dayTimeGridAllDayEventsGrid: ['dayTimeGridAllDayEventsGrid'],
   dayTimeGridAllDayEventsRow: ['dayTimeGridAllDayEventsRow'],
   dayTimeGridAllDayEventsCell: ['dayTimeGridAllDayEventsCell'],
-  dayTimeGridWeekNumber: ['dayTimeGridWeekNumber'],
+  headerToolbarWeekNumber: ['headerToolbarWeekNumber'],
   dayTimeGridAllDayEventsHeaderCell: ['dayTimeGridAllDayEventsHeaderCell'],
   dayTimeGridHeaderContent: ['dayTimeGridHeaderContent'],
   dayTimeGridHeaderButton: ['dayTimeGridHeaderButton'],

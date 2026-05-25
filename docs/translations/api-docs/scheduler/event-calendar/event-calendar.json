@@ -264,10 +264,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "day time grid time axis text elements"
     },
-    "dayTimeGridWeekNumber": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the day time grid week number element"
-    },
     "errorAlert": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the error alert element"
@@ -551,6 +547,10 @@
     "headerToolbarTodayButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar today button element"
+    },
+    "headerToolbarWeekNumber": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the day time grid week number element"
     },
     "mainPanel": {
       "description": "Styles applied to {{nodeName}}.",

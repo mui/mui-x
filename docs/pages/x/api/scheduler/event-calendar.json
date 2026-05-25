@@ -382,12 +382,6 @@
       "isGlobal": false
     },
     {
-      "key": "dayTimeGridWeekNumber",
-      "className": "MuiEventCalendar-dayTimeGridWeekNumber",
-      "description": "Styles applied to the day time grid week number element.",
-      "isGlobal": false
-    },
-    {
       "key": "errorAlert",
       "className": "MuiEventCalendar-errorAlert",
       "description": "Styles applied to the error alert element.",
@@ -811,6 +805,12 @@
       "key": "headerToolbarTodayButton",
       "className": "MuiEventCalendar-headerToolbarTodayButton",
       "description": "Styles applied to the header toolbar today button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerToolbarWeekNumber",
+      "className": "MuiEventCalendar-headerToolbarWeekNumber",
+      "description": "Styles applied to the day time grid week number element.",
       "isGlobal": false
     },
     {
