@@ -45,7 +45,7 @@ Calling a hook outside a provider throws an error at development time.
 ```tsx
 function MyStatusBadge() {
   const { isStreaming } = useChatStatus(); // works — inside ChatBox's provider
-  return isStreaming ? <Chip label="Responding..." /> : null;
+  return isStreaming ? <Chip label="Responding…" /> : null;
 }
 
 export default function App() {
@@ -138,7 +138,7 @@ function StatusFooter() {
   if (error) return <Alert severity="error">{error.message}</Alert>;
   if (isStreaming) return <LinearProgress />;
   if (typingUserIds.length > 0) {
-    return <Typography variant="caption">Someone is typing...</Typography>;
+    return <Typography variant="caption">Someone is typing…</Typography>;
   }
   return null;
 }
@@ -281,7 +281,7 @@ function CustomComposer() {
             submit();
           }
         }}
-        placeholder="Type a message..."
+        placeholder="Type a message…"
       />
       <IconButton component="label">
         <AttachFileIcon />

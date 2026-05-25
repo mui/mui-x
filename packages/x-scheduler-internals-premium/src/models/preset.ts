@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { TemporalAdapter, TemporalSupportedObject } from '@mui/x-scheduler-internals/base-ui-copy';
+import { WeekStartsOn } from '@mui/x-scheduler-internals/models';
 
 export type EventTimelinePremiumPreset =
   | 'dayAndHour'
@@ -104,11 +105,13 @@ export interface PresetConfig {
   getStartDate: (
     adapter: TemporalAdapter,
     visibleDate: TemporalSupportedObject,
+    weekStartsOn: WeekStartsOn | undefined,
   ) => TemporalSupportedObject;
   getEndDate: (
     adapter: TemporalAdapter,
     start: TemporalSupportedObject,
     unitCount: number,
+    weekStartsOn: WeekStartsOn | undefined,
   ) => TemporalSupportedObject;
   /**
    * Returns the exact number of CSS ticks for the visible range. Override
