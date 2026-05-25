@@ -16,7 +16,7 @@
     },
     {
       "groupName": "Base UI",
-      "matchPackageNames": ["@base-ui/react", "@base-ui/utils"]
+      "matchPackageNames": ["@base-ui/**"]
     },
     {
       "groupName": "bundling fixtures",
