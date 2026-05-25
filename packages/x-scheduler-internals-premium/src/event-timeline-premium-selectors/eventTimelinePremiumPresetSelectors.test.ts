@@ -1,4 +1,8 @@
-import { adapter, getEventTimelinePremiumStateFromParameters } from 'test/utils/scheduler';
+import {
+  adapter,
+  getEventTimelinePremiumStateFromParameters,
+  ResourceBuilder,
+} from 'test/utils/scheduler';
 import {
   EventTimelinePremiumPreset,
   PresetHeaderUnit,
@@ -6,6 +10,7 @@ import {
 import { eventTimelinePremiumPresetSelectors } from './eventTimelinePremiumPresetSelectors';
 
 const VISIBLE_DATE = adapter.date('2025-07-03T00:00:00Z', 'default');
+const TEST_RESOURCES = [ResourceBuilder.new().build()];
 
 const PRESET_SHAPE: Record<
   EventTimelinePremiumPreset,
@@ -22,6 +27,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
   describe('preset', () => {
     it('should return the preset from state', () => {
       const state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
         events: [],
         preset: 'monthAndYear',
       });
@@ -33,6 +39,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
   describe('presets', () => {
     it('should return the presets from state', () => {
       const state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
         events: [],
         presets: ['dayAndHour', 'dayAndMonth'],
       });
@@ -44,6 +51,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
   describe('config', () => {
     it('should return the configuration for the dayAndHour preset', () => {
       const state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
         events: [],
         preset: 'dayAndHour',
         visibleDate: VISIBLE_DATE,
@@ -58,6 +66,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
     it('should return the configuration for the dayAndMonth preset', () => {
       const state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
         events: [],
         preset: 'dayAndMonth',
         visibleDate: VISIBLE_DATE,
@@ -72,6 +81,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
     it('should return the configuration for the dayAndWeek preset', () => {
       const state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
         events: [],
         preset: 'dayAndWeek',
         visibleDate: VISIBLE_DATE,
@@ -90,6 +100,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
     it('should return the configuration for the monthAndYear preset', () => {
       const state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
         events: [],
         preset: 'monthAndYear',
         visibleDate: VISIBLE_DATE,
@@ -108,11 +119,13 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       // Both ranges span the same 36 months starting in January, but the 2024 window contains
       // the 2024 leap day (Feb 29) while the 2025 window does not.
       const leapStart = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
         events: [],
         preset: 'monthAndYear',
         visibleDate: adapter.date('2024-01-15T00:00:00Z', 'default'),
       });
       const nonLeapStart = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
         events: [],
         preset: 'monthAndYear',
         visibleDate: adapter.date('2025-01-15T00:00:00Z', 'default'),
@@ -126,6 +139,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
     it('should return the configuration for the year preset', () => {
       const state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
         events: [],
         preset: 'year',
         visibleDate: VISIBLE_DATE,
@@ -143,6 +157,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
       // this branch requires casting. Locks in the unconditional throw (vs. a destructure
       // TypeError) for the scenario where a future API allows registering custom presets.
       const validState = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
         events: [],
         preset: 'dayAndHour',
         visibleDate: VISIBLE_DATE,
@@ -159,6 +174,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
 
     it('should return the same reference when the dependencies are unchanged', () => {
       const state = getEventTimelinePremiumStateFromParameters({
+        resources: TEST_RESOURCES,
         events: [],
         preset: 'dayAndMonth',
         visibleDate: VISIBLE_DATE,
@@ -173,6 +189,7 @@ describe('eventTimelinePremiumPresetSelectors', () => {
     (Object.keys(PRESET_SHAPE) as EventTimelinePremiumPreset[]).forEach((preset) => {
       it(`should expose tickWidth and headers for the ${preset} preset`, () => {
         const state = getEventTimelinePremiumStateFromParameters({
+          resources: TEST_RESOURCES,
           events: [],
           preset,
           visibleDate: VISIBLE_DATE,

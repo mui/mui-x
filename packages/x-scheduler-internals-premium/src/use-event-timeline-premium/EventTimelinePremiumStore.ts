@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { warn } from '@base-ui/utils/warn';
+import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
@@ -71,23 +72,46 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
 
+function warnIfRequireResourcesMisconfigured(
+  requireResources: boolean,
+  resources: readonly unknown[] | undefined,
+) {
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    requireResources &&
+    (resources == null || resources.length === 0)
+  ) {
+    warnOnce([
+      'MUI X Scheduler: `requireResources` is `true` but no resources are configured.',
+      'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
+      'Either provide at least one resource, or set `requireResources={false}`.',
+    ]);
+  }
+}
+
 const mapper: SchedulerParametersToStateMapper<
   EventTimelinePremiumState,
   EventTimelinePremiumParameters<any, any>
 > = {
-  getInitialState: (schedulerInitialState, parameters) => ({
-    ...schedulerInitialState,
-    ...deriveStateFromParameters(parameters),
-    preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
-    preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
-    requireResources: parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES,
-    hasInitialized: false,
-  }),
+  getInitialState: (schedulerInitialState, parameters) => {
+    const requireResources = parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES;
+    warnIfRequireResourcesMisconfigured(requireResources, parameters.resources);
+    return {
+      ...schedulerInitialState,
+      ...deriveStateFromParameters(parameters),
+      preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
+      preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
+      requireResources,
+      hasInitialized: false,
+    };
+  },
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
+    const requireResources = parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES;
+    warnIfRequireResourcesMisconfigured(requireResources, parameters.resources);
     const newState: Partial<EventTimelinePremiumState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
-      requireResources: parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES,
+      requireResources,
       hasInitialized: true,
     };
 

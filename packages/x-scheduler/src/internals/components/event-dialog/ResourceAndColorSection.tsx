@@ -23,7 +23,6 @@ import {
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { useStore } from '@base-ui/utils/store';
-import { warnOnce } from '@mui/x-internals/warning';
 import { getPaletteVariants, PaletteName } from '../../utils/tokens';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 
@@ -144,16 +143,6 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
   const childrenIdLookup = useStore(store, schedulerResourceSelectors.childrenIdLookup);
   const eventDefaultColor = useStore(store, schedulerOtherSelectors.defaultEventColor);
   const requireResources = useStore(store, schedulerOtherSelectors.requireResources);
-
-  if (process.env.NODE_ENV !== 'production') {
-    if (requireResources && resources.length === 0) {
-      warnOnce([
-        'MUI X Scheduler: `requireResources` is `true` but no resources are configured.',
-        'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
-        'Either provide at least one resource, or set `requireResources={false}`.',
-      ]);
-    }
-  }
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     const hasNesting = resources.some(

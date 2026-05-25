@@ -1,10 +1,11 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { schedulerRecurringEventsPlugin } from '../../internals/plugins/schedulerRecurringEventsPlugin';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
-const DEFAULT_PARAMS = { events: [] };
+const TEST_RESOURCE = ResourceBuilder.new().id('r1').title('Resource 1').build();
+const DEFAULT_PARAMS = { events: [], resources: [TEST_RESOURCE] };
 
 describe('Core - EventTimelinePremiumStore', () => {
   describe('create', () => {
@@ -33,12 +34,24 @@ describe('Core - EventTimelinePremiumStore', () => {
         pendingUpdateRecurringEventParameters: null,
         preferences: EMPTY_OBJECT,
         processedEventLookup: new Map(),
-        processedResourceLookup: new Map(),
+        processedResourceLookup: new Map([
+          [
+            'r1',
+            {
+              id: 'r1',
+              title: 'Resource 1',
+              areEventsDraggable: undefined,
+              areEventsReadOnly: undefined,
+              areEventsResizable: undefined,
+              eventColor: undefined,
+            },
+          ],
+        ]),
         readOnly: false,
         recurringEventsPlugin: schedulerRecurringEventsPlugin,
         requireResources: true,
         resourceChildrenIdLookup: new Map(),
-        resourceIdList: [],
+        resourceIdList: ['r1'],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
         preset: 'dayAndHour',

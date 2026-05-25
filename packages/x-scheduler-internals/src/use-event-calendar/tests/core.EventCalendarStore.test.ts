@@ -1,4 +1,4 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import {
@@ -65,7 +65,10 @@ describe('Core - EventCalendarStore', () => {
     });
 
     it('should respect an explicit `requireResources={true}`', () => {
-      const store = new EventCalendarStore({ ...DEFAULT_PARAMS, requireResources: true }, adapter);
+      const store = new EventCalendarStore(
+        { ...DEFAULT_PARAMS, requireResources: true, resources: [ResourceBuilder.new().build()] },
+        adapter,
+      );
       expect(store.state.requireResources).to.equal(true);
     });
   });
@@ -87,7 +90,10 @@ describe('Core - EventCalendarStore', () => {
       const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
       expect(store.state.requireResources).to.equal(false);
 
-      store.updateStateFromParameters({ ...DEFAULT_PARAMS, requireResources: true }, adapter);
+      store.updateStateFromParameters(
+        { ...DEFAULT_PARAMS, requireResources: true, resources: [ResourceBuilder.new().build()] },
+        adapter,
+      );
       expect(store.state.requireResources).to.equal(true);
     });
 

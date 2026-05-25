@@ -3,10 +3,10 @@ import {
   SchedulerResourceId,
   SchedulerResourceModelStructure,
 } from '@mui/x-scheduler-internals/models';
-import { adapter, storeClasses } from 'test/utils/scheduler';
+import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
 import { schedulerResourceSelectors } from '../../../../scheduler-selectors';
 
-const DEFAULT_PARAMS = { events: [] };
+const DEFAULT_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };
 
 storeClasses.forEach((storeClass) => {
   describe(`Resource - ${storeClass.name}`, () => {

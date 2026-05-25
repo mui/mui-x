@@ -7,11 +7,12 @@ import {
   EventTimelinePremiumStore,
 } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
 import { adapter } from './adapters';
+import { ResourceBuilder } from './resource-builder';
 
 export const DEFAULT_EVENT_CALENDAR_STATE = new EventCalendarStore({ events: [] }, adapter).state;
 
 export const DEFAULT_EVENT_TIMELINE_PREMIUM_STATE = new EventTimelinePremiumStore(
-  { events: [] },
+  { events: [], resources: [ResourceBuilder.new().build()] },
   adapter,
 ).state;
 

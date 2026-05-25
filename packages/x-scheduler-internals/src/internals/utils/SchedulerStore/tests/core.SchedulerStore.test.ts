@@ -1,11 +1,14 @@
-import { adapter, EventBuilder, storeClasses } from 'test/utils/scheduler';
+import { adapter, EventBuilder, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
 import { SchedulerEvent } from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '../../../../scheduler-selectors';
 
-const DEFAULT_PARAMS = { events: [] as SchedulerEvent[] };
+const DEFAULT_PARAMS = {
+  events: [] as SchedulerEvent[],
+  resources: [ResourceBuilder.new().build()],
+};
 
 storeClasses.forEach((storeClass) => {
   describe(`Core - ${storeClass.name}`, () => {
@@ -15,7 +18,7 @@ storeClasses.forEach((storeClass) => {
         const event2 = EventBuilder.new().build();
         const events = [event1, event2];
 
-        const store = new storeClass.Value({ events }, adapter);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, events }, adapter);
 
         expect(schedulerEventSelectors.idList(store.state)).to.deep.equal([event1.id, event2.id]);
         expect(schedulerEventSelectors.processedEvent(store.state, event1.id)!.title).to.equal(

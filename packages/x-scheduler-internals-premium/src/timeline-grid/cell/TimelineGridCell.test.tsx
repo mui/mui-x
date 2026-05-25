@@ -1,5 +1,9 @@
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
-import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import {
+  createSchedulerRenderer,
+  describeConformance,
+  ResourceBuilder,
+} from 'test/utils/scheduler';
 import { EventTimelinePremiumProvider } from '@mui/x-scheduler-internals-premium/event-timeline-premium-provider';
 
 describe('<TimelineGrid.Cell />', () => {
@@ -9,7 +13,7 @@ describe('<TimelineGrid.Cell />', () => {
     refInstanceof: window.HTMLDivElement,
     render(node) {
       return render(
-        <EventTimelinePremiumProvider events={[]}>
+        <EventTimelinePremiumProvider events={[]} resources={[ResourceBuilder.new().build()]}>
           <TimelineGrid.Root>
             <TimelineGrid.Row>{node}</TimelineGrid.Row>
           </TimelineGrid.Root>

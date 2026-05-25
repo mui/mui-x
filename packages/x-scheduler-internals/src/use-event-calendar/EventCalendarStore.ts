@@ -1,4 +1,5 @@
 import { warn } from '@base-ui/utils/warn';
+import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import {
   EventCalendarPreferences,
@@ -54,30 +55,53 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
   return { views };
 };
 
+function warnIfRequireResourcesMisconfigured(
+  requireResources: boolean,
+  resources: readonly unknown[] | undefined,
+) {
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    requireResources &&
+    (resources == null || resources.length === 0)
+  ) {
+    warnOnce([
+      'MUI X Scheduler: `requireResources` is `true` but no resources are configured.',
+      'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
+      'Either provide at least one resource, or set `requireResources={false}`.',
+    ]);
+  }
+}
+
 const mapper: SchedulerParametersToStateMapper<
   EventCalendarState,
   EventCalendarParameters<any, any>
 > = {
-  getInitialState: (schedulerInitialState, parameters) => ({
-    ...schedulerInitialState,
-    ...deriveStateFromParameters(parameters),
-    preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
-    preferencesMenuConfig:
-      parameters.preferencesMenuConfig === false
-        ? parameters.preferencesMenuConfig
-        : {
-            ...DEFAULT_PREFERENCES_MENU_CONFIG,
-            ...parameters.preferencesMenuConfig,
-          },
-    viewConfig: null,
-    view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
-    requireResources: parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES,
-  }),
+  getInitialState: (schedulerInitialState, parameters) => {
+    const requireResources = parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES;
+    warnIfRequireResourcesMisconfigured(requireResources, parameters.resources);
+    return {
+      ...schedulerInitialState,
+      ...deriveStateFromParameters(parameters),
+      preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
+      preferencesMenuConfig:
+        parameters.preferencesMenuConfig === false
+          ? parameters.preferencesMenuConfig
+          : {
+              ...DEFAULT_PREFERENCES_MENU_CONFIG,
+              ...parameters.preferencesMenuConfig,
+            },
+      viewConfig: null,
+      view: parameters.view ?? parameters.defaultView ?? DEFAULT_VIEW,
+      requireResources,
+    };
+  },
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
+    const requireResources = parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES;
+    warnIfRequireResourcesMisconfigured(requireResources, parameters.resources);
     const newState: Partial<EventCalendarState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
-      requireResources: parameters.requireResources ?? DEFAULT_REQUIRE_RESOURCES,
+      requireResources,
     };
 
     updateModel(newState, 'view', 'defaultView');

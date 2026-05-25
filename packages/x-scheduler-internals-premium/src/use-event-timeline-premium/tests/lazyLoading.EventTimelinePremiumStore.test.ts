@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
+import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
 import { DEBOUNCE_MS } from '../../internals/utils/queue';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
@@ -37,6 +37,7 @@ const flushDebounce = () => vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
 const DEFAULT_PARAMS = {
   events: [] as TestEvent[],
   defaultVisibleDate: DEFAULT_TESTING_VISIBLE_DATE,
+  resources: [ResourceBuilder.new().build()],
 };
 
 describe('Lazy loading - EventTimelinePremiumStore', () => {
