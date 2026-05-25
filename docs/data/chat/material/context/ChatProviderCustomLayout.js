@@ -84,7 +84,7 @@ function CustomChat() {
     <ChatConversation>
       <ChatMessageList renderItem={renderItem} items={messageIds} />
       <ChatComposer>
-        <ChatComposerTextArea placeholder="Type a message..." />
+        <ChatComposerTextArea placeholder="Type a message…" />
         <ChatComposerToolbar>
           <ChatComposerSendButton aria-label="Send message">
             <SendIcon />
