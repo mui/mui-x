@@ -36,10 +36,10 @@ describe('Core - EventTimelinePremiumStore', () => {
         processedEventLookup: new Map(),
         processedResourceLookup: new Map([
           [
-            'r1',
+            TEST_RESOURCE.id,
             {
-              id: 'r1',
-              title: 'Resource 1',
+              id: TEST_RESOURCE.id,
+              title: TEST_RESOURCE.title,
               areEventsDraggable: undefined,
               areEventsReadOnly: undefined,
               areEventsResizable: undefined,
@@ -51,7 +51,7 @@ describe('Core - EventTimelinePremiumStore', () => {
         recurringEventsPlugin: schedulerRecurringEventsPlugin,
         requireResources: true,
         resourceChildrenIdLookup: new Map(),
-        resourceIdList: ['r1'],
+        resourceIdList: [TEST_RESOURCE.id],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
         preset: 'dayAndHour',
