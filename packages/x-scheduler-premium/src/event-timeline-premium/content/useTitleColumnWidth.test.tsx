@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { act, renderHook } from '@mui/internal-test-utils';
 import {
   TITLE_HEADER_KEY,

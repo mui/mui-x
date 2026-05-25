@@ -6,7 +6,7 @@ import {
   SchedulerResource,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-internals/models';
-import type { Adapter } from '@mui/x-scheduler-internals/use-adapter/useAdapter.types';
+import type { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 
 type ResourceWithOccurrences = {
   resource: SchedulerResource;
@@ -78,29 +78,29 @@ export function useEventTabNavigation(params: {
     return false;
   };
 
-  const scrollEventIntoView = (occurrence: SchedulerEventOccurrence) => {
-    const scroller = scrollerRef.current;
-    if (!scroller) {
+  const scrollEventIntoView = useStableCallback((occurrence: SchedulerEventOccurrence) => {
+    if (!scrollerRef.current) {
       return;
     }
     const { fractionStart, fractionEnd } = computeFractionRange(occurrence);
     const eventLeft = fractionStart * eventsTotalWidth;
     const eventRight = fractionEnd * eventsTotalWidth;
-    const eventsViewportWidth = scroller.clientWidth - titleColumnWidth;
-    // scroller.scrollLeft is measured from the start of scrollerContent; the events
-    // area begins after the pinned title column, so the visible events window is
+    const eventsViewportWidth = scrollerRef.current.clientWidth - titleColumnWidth;
+    // scrollLeft is measured from the start of scrollerContent; the events area
+    // begins after the pinned title column, so the visible events window is
     // [scrollLeft, scrollLeft + clientWidth - titleColumnWidth) in event coords.
-    const viewportLeft = scroller.scrollLeft;
+    const viewportLeft = scrollerRef.current.scrollLeft;
     const viewportRight = viewportLeft + eventsViewportWidth;
     // Small breathing room so the target doesn't land flush against the edge,
     // which can re-trigger browser scroll-into-view on focus.
     const PADDING = 32;
     if (eventLeft < viewportLeft) {
-      scroller.scrollLeft = Math.max(0, eventLeft - PADDING);
+      // eslint-disable-next-line react-compiler/react-compiler -- intentional DOM scroll mutation
+      scrollerRef.current.scrollLeft = Math.max(0, eventLeft - PADDING);
     } else if (eventRight > viewportRight) {
-      scroller.scrollLeft = Math.max(0, eventRight - eventsViewportWidth + PADDING);
+      scrollerRef.current.scrollLeft = Math.max(0, eventRight - eventsViewportWidth + PADDING);
     }
-  };
+  });
 
   const navigate = (direction: 1 | -1): boolean => {
     const active = document.activeElement;
