@@ -269,4 +269,36 @@ describe('MiniCalendar', () => {
       });
     });
   });
+
+  describe('weekStartsOn preference', () => {
+    function getFirstWeekdayHeader() {
+      const miniCalendar = getMiniCalendar();
+      return within(miniCalendar).getAllByRole('columnheader')[0];
+    }
+
+    it('should show Sunday as the first weekday header when weekStartsOn is 0', () => {
+      render(<EventCalendar events={[]} defaultPreferences={{ weekStartsOn: 0 }} />);
+
+      expect(getFirstWeekdayHeader().getAttribute('aria-label')).to.match(/sunday/i);
+    });
+
+    it('should show Monday as the first weekday header when weekStartsOn is 1', () => {
+      render(<EventCalendar events={[]} defaultPreferences={{ weekStartsOn: 1 }} />);
+
+      expect(getFirstWeekdayHeader().getAttribute('aria-label')).to.match(/monday/i);
+    });
+
+    it('should show Saturday as the first weekday header when weekStartsOn is 6', () => {
+      render(<EventCalendar events={[]} defaultPreferences={{ weekStartsOn: 6 }} />);
+
+      expect(getFirstWeekdayHeader().getAttribute('aria-label')).to.match(/saturday/i);
+    });
+
+    it('should always render exactly 7 weekday headers regardless of weekStartsOn', () => {
+      render(<EventCalendar events={[]} defaultPreferences={{ weekStartsOn: 6 }} />);
+
+      const miniCalendar = getMiniCalendar();
+      expect(within(miniCalendar).getAllByRole('columnheader').length).to.equal(7);
+    });
+  });
 });

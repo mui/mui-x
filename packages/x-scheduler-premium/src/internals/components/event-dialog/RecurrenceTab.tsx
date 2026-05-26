@@ -26,6 +26,7 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
+  schedulerPreferenceSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { getMonthlyReference, getWeeklyDays } from '@mui/x-scheduler-internals-premium/internals';
 import {
@@ -200,13 +201,14 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   );
   const inputsDisabled = controlled.recurrenceSelection === null || isPropertyReadOnly('rrule');
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
   const monthlyRef = React.useMemo(
     () => getMonthlyReference(adapter, occurrence.displayTimezone.start),
     [adapter, occurrence.displayTimezone.start],
   );
   const weeklyDays = React.useMemo(
-    () => getWeeklyDays(adapter, visibleDate),
-    [adapter, visibleDate],
+    () => getWeeklyDays(adapter, visibleDate, weekStartsOn),
+    [adapter, visibleDate, weekStartsOn],
   );
 
   // Form-state drafts: every preset carries both `byDay` and `byMonthDay` (empty when

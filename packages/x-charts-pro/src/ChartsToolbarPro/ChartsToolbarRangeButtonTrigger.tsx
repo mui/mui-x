@@ -15,7 +15,7 @@ import {
 import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import {
   type UseChartProZoomSignature,
-  selectorChartActiveRangeButtonKey,
+  selectorChartAxisZoomData,
   selectorChartCanZoomOut,
 } from '../internals/plugins/useChartProZoom';
 import { type RangeButtonValue, rangeButtonValueToZoom } from './rangeButtonValueToZoom';
@@ -64,7 +64,6 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } =
     useChartsContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
-  const activeRangeButtonKey = store.use(selectorChartActiveRangeButtonKey);
   const canZoomOut = store.use(selectorChartCanZoomOut);
   const zoomOptionsLookup = store.use(selectorChartZoomOptionsLookup);
   const rawXAxes = store.use(selectorChartRawXAxis);
@@ -81,12 +80,16 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     return rawXAxes.find((axis) => zoomOptionsLookup[axis.id] !== undefined)?.id;
   }, [axisIdProp, rawXAxes, zoomOptionsLookup]);
 
+  const currentAxisZoom = store.use(selectorChartAxisZoomData, resolvedAxisId as AxisId);
+
   // Determine if the resolved axis is ordinal (band/point) to use index-based domain.
   const resolvedAxis = React.useMemo(
     () => rawXAxes?.find((axis) => axis.id === resolvedAxisId),
     [rawXAxes, resolvedAxisId],
   );
   const isOrdinal = resolvedAxis?.scaleType === 'band' || resolvedAxis?.scaleType === 'point';
+  // Use isValueNull instead of value === null to avoid unnecessary re-renders when value is a new function/object on each render.
+  const isValueNull = value === null;
 
   // Get the full domain for the target axis, ignoring the current zoom.
   // For ordinal axes (band/point), use index-based range since domain values are categories.
@@ -106,29 +109,39 @@ const ChartsToolbarRangeButtonTrigger = React.forwardRef<
     return { min: Number(min), max: Number(max) };
   }, [resolvedAxisId, domains, isOrdinal]);
 
-  const handleClick = React.useCallback(() => {
-    if (resolvedAxisId === undefined || !axisDomain) {
-      return;
+  // Destructure so that returning a new object from rangeButtonValueToZoom doesn't cause unnecessary re-renders in handleClick.
+  const { start: startZoom, end: endZoom } = React.useMemo(() => {
+    if (axisDomain === undefined) {
+      return { start: undefined, end: undefined };
     }
-    const zoom = rangeButtonValueToZoom(value, {
+    return rangeButtonValueToZoom(value, {
       scaleType: resolvedAxis?.scaleType ?? 'linear',
       data: resolvedAxis?.data,
       domain: axisDomain,
     });
+  }, [axisDomain, value, resolvedAxis]);
+
+  const handleClick = React.useCallback(() => {
+    if (resolvedAxisId === undefined || startZoom === undefined || endZoom === undefined) {
+      return;
+    }
     instance.setAxisZoomData(resolvedAxisId, {
       axisId: resolvedAxisId,
-      start: zoom.start,
-      end: zoom.end,
+      start: startZoom,
+      end: endZoom,
     });
-    instance.setActiveRangeButtonKey(label);
-  }, [resolvedAxisId, resolvedAxis, axisDomain, value, instance, label]);
+  }, [resolvedAxisId, startZoom, endZoom, instance]);
 
-  // Determine if this button is selected.
-  // When explicitly clicked, activeRangeButtonKey matches the label.
-  // When no button has been clicked and zoom is at full range, the null-value button is active.
-  const isActive =
-    activeRangeButtonKey === label ||
-    (activeRangeButtonKey === null && value === null && !canZoomOut);
+  // A button is selected when the current zoom range matches its computed range.
+  const isActive = React.useMemo(() => {
+    if (startZoom === undefined || endZoom === undefined) {
+      return isValueNull && !canZoomOut;
+    }
+    const start = currentAxisZoom?.start ?? 0;
+    const end = currentAxisZoom?.end ?? 100;
+    const epsilon = 0.01;
+    return Math.abs(start - startZoom) < epsilon && Math.abs(end - endZoom) < epsilon;
+  }, [startZoom, endZoom, isValueNull, currentAxisZoom, canZoomOut]);
 
   const element = useComponentRenderer(slots.baseToggleButton, render, {
     ...slotProps.baseToggleButton,
