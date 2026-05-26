@@ -75,6 +75,7 @@ function CollapsibleTrigger(props: CollapsibleTriggerProps) {
   return (
     <CollapsibleTriggerRoot
       ownerState={ownerState}
+      type="button"
       className={clsx(classes.root, className)}
       tabIndex={0}
       aria-controls={open ? panelId : undefined}
