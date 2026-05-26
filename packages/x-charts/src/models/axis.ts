@@ -18,6 +18,14 @@ import { type DatasetElementType } from './seriesType/config';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
+import type {
+  AxisLinePropsOverrides,
+  AxisTickPropsOverrides,
+  AxisTickLabelPropsOverrides,
+  AxisLabelPropsOverrides,
+  XAxisPropsOverrides,
+  YAxisPropsOverrides,
+} from './chartsSlotsComponentsProps';
 import type { ChartsTextProps } from '../ChartsText';
 import type {
   ContinuousColorConfig,
@@ -59,41 +67,45 @@ export interface ChartsAxisSlots {
    * Custom component for the axis main line.
    * @default 'line'
    */
-  axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  axisLine?: React.JSXElementConstructor<
+    React.SVGAttributes<SVGPathElement> & AxisLinePropsOverrides
+  >;
   /**
    * Custom component for the axis tick.
    * @default 'line'
    */
-  axisTick?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  axisTick?: React.JSXElementConstructor<
+    React.SVGAttributes<SVGPathElement> & AxisTickPropsOverrides
+  >;
   /**
    * Custom component for tick label.
    * @default ChartsText
    */
-  axisTickLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  axisTickLabel?: React.JSXElementConstructor<ChartsTextProps & AxisTickLabelPropsOverrides>;
   /**
    * Custom component for axis label.
    * @default ChartsText
    */
-  axisLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  axisLabel?: React.JSXElementConstructor<ChartsTextProps & AxisLabelPropsOverrides>;
   /**
    * Custom component for the x-axis.
    * @default ChartsXAxis
    */
-  xAxis?: React.JSXElementConstructor<ChartsXAxisProps>;
+  xAxis?: React.JSXElementConstructor<ChartsXAxisProps & XAxisPropsOverrides>;
   /**
    * Custom component for the y-axis.
    * @default ChartsYAxis
    */
-  yAxis?: React.JSXElementConstructor<ChartsYAxisProps>;
+  yAxis?: React.JSXElementConstructor<ChartsYAxisProps & YAxisPropsOverrides>;
 }
 
 export interface ChartsAxisSlotProps {
-  axisLine?: Partial<React.SVGAttributes<SVGPathElement>>;
-  axisTick?: Partial<React.SVGAttributes<SVGPathElement>>;
-  axisTickLabel?: Partial<ChartsTextProps>;
-  axisLabel?: Partial<ChartsTextProps>;
-  xAxis?: Partial<ChartsXAxisProps>;
-  yAxis?: Partial<ChartsYAxisProps>;
+  axisLine?: Partial<React.SVGAttributes<SVGPathElement>> & AxisLinePropsOverrides;
+  axisTick?: Partial<React.SVGAttributes<SVGPathElement>> & AxisTickPropsOverrides;
+  axisTickLabel?: Partial<ChartsTextProps> & AxisTickLabelPropsOverrides;
+  axisLabel?: Partial<ChartsTextProps> & AxisLabelPropsOverrides;
+  xAxis?: Partial<ChartsXAxisProps> & XAxisPropsOverrides;
+  yAxis?: Partial<ChartsYAxisProps> & YAxisPropsOverrides;
 }
 
 export interface ChartsAxisProps extends TickParams {
