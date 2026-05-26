@@ -14,6 +14,10 @@ const COMPONENTS_WITHOUT_PROPTYPES = [
   'AnimatedBarElement',
   /* RadarDataProvider is disabled because many `any` were being generated. More info: https://github.com/mui/mui-x/pull/17968 */
   'RadarDataProvider',
+  /*
+  TODO: remove this line
+  The props CompactDayTimeGrid are temporary. will be removed before merging. */
+  '/CompactDayTimeGrid.tsx',
 ];
 
 /**
