@@ -16,7 +16,7 @@
     },
     "pixelRatio": {
       "type": { "description": "number" },
-      "default": "The larger of `window.devicePixelRatio` and `2`",
+      "default": "The larger of `window.devicePixelRatio` and `1`",
       "isProPlan": true
     },
     "quality": { "type": { "description": "number" }, "default": "0.9", "isProPlan": true },

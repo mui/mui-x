@@ -65,7 +65,7 @@ export interface ChartImageExportOptions extends ChartExportOptions {
   /**
    * The pixel ratio used when rasterizing the chart to a canvas. Higher values produce
    * sharper images at the cost of a larger file size.
-   * @default The larger of `window.devicePixelRatio` and `2`
+   * @default The larger of `window.devicePixelRatio` and `1`
    */
   pixelRatio?: number;
 }
