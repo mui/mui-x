@@ -1,8 +1,5 @@
 import { act, renderHook } from '@mui/internal-test-utils';
-import {
-  TITLE_HEADER_KEY,
-  useTitleColumnWidth,
-} from './useTitleColumnWidth';
+import { TITLE_HEADER_KEY, useTitleColumnWidth } from './useTitleColumnWidth';
 
 type Row = { id: string };
 

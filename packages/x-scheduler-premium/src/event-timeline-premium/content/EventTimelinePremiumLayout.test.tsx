@@ -74,9 +74,7 @@ describe.skipIf(isJSDOM)('<EventTimelinePremium /> layout', () => {
 
     it('should cap the title column at one quarter of the container width', async () => {
       // A deliberately huge title would otherwise push the column past containerWidth/4.
-      const huge = ResourceBuilder.new()
-        .title('X'.repeat(500))
-        .build();
+      const huge = ResourceBuilder.new().title('X'.repeat(500)).build();
 
       const hostWidth = 1200;
       renderTimeline([huge], hostWidth);
