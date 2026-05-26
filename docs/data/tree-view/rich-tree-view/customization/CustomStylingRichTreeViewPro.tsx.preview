@@ -1,0 +1,7 @@
+<RichTreeViewPro
+  defaultExpandedItems={['grid']}
+  itemChildrenIndentation={ITEM_CHILDREN_INDENTATION}
+  itemHeight={ITEM_HEIGHT}
+  slots={{ item: CustomTreeItem }}
+  items={MUI_X_PRODUCTS}
+/>

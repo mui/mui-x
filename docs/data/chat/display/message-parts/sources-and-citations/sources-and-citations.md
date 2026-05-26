@@ -108,7 +108,7 @@ Source parts arrive as single chunks — they are not delivered incrementally:
 { type: 'source-url', sourceId: 'src-1', url: 'https://example.com', title: 'Example' }
 
 // Document source chunk
-{ type: 'source-document', sourceId: 'src-2', title: 'API Reference', text: 'The method accepts...' }
+{ type: 'source-document', sourceId: 'src-2', title: 'API Reference', text: 'The method accepts…' }
 ```
 
 ## Customizing source rendering
