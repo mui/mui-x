@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, waitFor, within } from '@mui/internal-test-utils';
+import { act, createRenderer, waitFor, within } from '@mui/internal-test-utils';
 import { type RefObject } from '@mui/x-internals/types';
 import {
   DataGridPremium,
@@ -72,7 +72,9 @@ describe('<DataGridPremium /> - Data source row grouping (loading state)', () =>
     });
     expect(apiRef.current?.state.rows.loading).to.equal(true);
 
-    resolveSecond({ rows: [{ id: 'A', group: 'A' }], rowCount: 1 });
+    await act(async () => {
+      resolveSecond({ rows: [{ id: 'A', group: 'A' }], rowCount: 1 });
+    });
 
     await waitFor(() => {
       expect(apiRef.current?.state.rows.loading).to.equal(false);
