@@ -231,9 +231,10 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
       await user.click(screen.getByRole('button', { name: /open event/i }));
 
-      // Dispatch a native click — triggers both the button's React onClick (sets the
-      // placeholder) and the document bubble listener (calls onClose).
+      // ClickAwayListener uses 'onMouseDown', so fire click first (sets placeholder)
+      // then mousedown outside to close and clear it.
       fireEvent.click(emptyCellBtn);
+      fireEvent.mouseDown(document.body);
 
       expect(storeRef!.state.occurrencePlaceholder).to.equal(null);
     });
@@ -282,8 +283,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await user.click(screen.getByRole('button', { name: /open event/i }));
       expect(openEventIdChanges.at(-1)).to.equal(DEFAULT_EVENT.id);
 
-      // Click outside the dialog to close it
-      fireEvent.click(document.body);
+      // Mousedown outside closes the dialog (ClickAwayListener uses 'onMouseDown').
+      fireEvent.mouseDown(document.body);
       expect(openEventIdChanges.at(-1)).to.equal(null);
     });
   });
