@@ -71,7 +71,7 @@ function SimpleComposer() {
             submit();
           }
         }}
-        placeholder="Type a message..."
+        placeholder="Type a message…"
       />
       <Button variant="contained" onClick={submit} disabled={isSubmitting}>
         Send

@@ -236,7 +236,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
       it('should have a stable height if the parent container has no intrinsic height', () => {
         render(
           <div>
-            <p>The table keeps growing... and growing...</p>
+            <p>The table keeps growing… and growing…</p>
             <DataGrid {...baselineProps} />
           </div>,
         );

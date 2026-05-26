@@ -1,16 +1,17 @@
 import type * as React from 'react';
 import type { ScatterMarkerProps } from './ScatterMarker';
+import type { MarkerPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface ScatterMarkerSlots {
   /**
    * The component that renders the marker for a scatter point.
    * @default ScatterMarker
    */
-  marker?: React.JSXElementConstructor<ScatterMarkerProps>;
+  marker?: React.JSXElementConstructor<ScatterMarkerProps & MarkerPropsOverrides>;
 }
 
 export interface ScatterMarkerSlotProps {
-  marker?: ScatterMarkerProps;
+  marker?: Partial<ScatterMarkerProps> & MarkerPropsOverrides;
 }
 
 export interface ScatterMarkerSlotExtension {

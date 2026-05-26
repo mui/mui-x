@@ -15,13 +15,20 @@ import {
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
+import type { LineHighlightPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface LineHighlightPlotSlots {
-  lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
+  lineHighlight?: React.JSXElementConstructor<
+    LineHighlightElementProps & LineHighlightPropsOverrides
+  >;
 }
 
 export interface LineHighlightPlotSlotProps {
-  lineHighlight?: SlotComponentPropsFromProps<LineHighlightElementProps, {}, {}>;
+  lineHighlight?: SlotComponentPropsFromProps<
+    LineHighlightElementProps,
+    LineHighlightPropsOverrides,
+    {}
+  >;
 }
 
 export interface LineHighlightPlotProps extends React.SVGAttributes<SVGSVGElement> {

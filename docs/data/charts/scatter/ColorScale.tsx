@@ -171,7 +171,7 @@ export default function ColorScale() {
         code={[
           `<ScatterChart`,
           '  /* ... */',
-          '  series={[{ data: data.map(point => ({...point, z: point.x + point.y})) }]}',
+          '  series={[{ data: data.map(point => ({...point, colorValue: point.x + point.y})) }]}',
           // ColorX
           ...(colorX === 'None' ? ['  xAxis={[{}]}'] : []),
           ...(colorX === 'continuous'
@@ -301,6 +301,6 @@ function getGaussianSeriesData(
         Math.cos(2.0 * Math.PI * chance.floating({ min: 0, max: 0.99 })) *
         stdev[1] +
       mean[1];
-    return { x, y, z: x + y, id: `${mean.join(',')}${i}` };
+    return { x, y, colorValue: x + y, id: `${mean.join(',')}${i}` };
   });
 }

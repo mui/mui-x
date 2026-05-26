@@ -58,7 +58,19 @@ describe('<DataGridPro /> - Lazy loader', () => {
   // Needs layout
   it.skipIf(isJSDOM)('should not call onFetchRows if the viewport is fully loaded', () => {
     const handleFetchRows = spy();
-    const rows = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }];
+    // The virtualizer renders one row past the visible viewport + buffer (see
+    // `getIndexesToRender`), so the loaded section must cover that extra row
+    // to keep the rendered range skeleton-free.
+    const rows = [
+      { id: 1 },
+      { id: 2 },
+      { id: 3 },
+      { id: 4 },
+      { id: 5 },
+      { id: 6 },
+      { id: 7 },
+      { id: 8 },
+    ];
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} rows={rows} />);
     expect(handleFetchRows.callCount).to.equal(0);
   });

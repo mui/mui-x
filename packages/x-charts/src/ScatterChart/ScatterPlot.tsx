@@ -8,6 +8,7 @@ import { useScatterSeriesContext } from '../hooks/useScatterSeries';
 import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig } from './seriesConfig';
+import getMarkerSize from './seriesConfig/getMarkerSize';
 import { BatchScatter } from './BatchScatter';
 import { ScatterAsync } from './async/ScatterAsync';
 import { useUtilityClasses } from './scatterClasses';
@@ -18,15 +19,16 @@ import {
   type UseProgressiveRenderingSignature,
 } from '../internals/plugins/featurePlugins/useProgressiveRendering';
 import { type SeriesId } from '../models/seriesType/common';
+import type { ScatterPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 const EMPTY_SERIES_IDS: readonly SeriesId[] = [];
 
 export interface ScatterPlotSlots extends ScatterSlots {
-  scatter?: React.JSXElementConstructor<ScatterProps>;
+  scatter?: React.JSXElementConstructor<ScatterProps & ScatterPropsOverrides>;
 }
 
 export interface ScatterPlotSlotProps extends ScatterSlotProps {
-  scatter?: Partial<ScatterProps>;
+  scatter?: Partial<ScatterProps> & ScatterPropsOverrides;
 }
 
 export type RendererType = 'svg-single' | 'svg-batch';
@@ -108,38 +110,43 @@ function ScatterPlot(props: ScatterPlotProps) {
   }
   const ScatterItems = slots?.scatter ?? DefaultScatterItems;
 
-  const items = seriesOrder.map((seriesId) => {
-    const { id, xAxisId, yAxisId, zAxisId, color, hidden } = series[seriesId];
+  return (
+    <ScatterPlotRoot className={clsx(classes.root, className)}>
+      {seriesOrder.map((seriesId) => {
+        const { id, xAxisId, yAxisId, colorAxisId, zAxisId, sizeAxisId, color, hidden } =
+          series[seriesId];
 
-    if (hidden) {
-      return null;
-    }
+        if (hidden) {
+          return null;
+        }
 
-    const colorGetter = scatterSeriesConfig.colorProcessor(
-      series[seriesId],
-      xAxis[xAxisId ?? defaultXAxisId],
-      yAxis[yAxisId ?? defaultYAxisId],
-      zAxis[zAxisId ?? defaultZAxisId],
-    );
-    const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
-    const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
-    return (
-      <ScatterItems
-        key={id}
-        xScale={xScale}
-        yScale={yScale}
-        color={color}
-        colorGetter={colorGetter}
-        series={series[seriesId]}
-        onItemClick={onItemClick}
-        slots={slots}
-        slotProps={slotProps}
-        {...slotProps?.scatter}
-      />
-    );
-  });
-
-  return <ScatterPlotRoot className={clsx(classes.root, className)}>{items}</ScatterPlotRoot>;
+        const colorGetter = scatterSeriesConfig.colorProcessor(
+          series[seriesId],
+          xAxis[xAxisId ?? defaultXAxisId],
+          yAxis[yAxisId ?? defaultYAxisId],
+          zAxis[colorAxisId ?? zAxisId ?? defaultZAxisId],
+        );
+        const sizeGetter = getMarkerSize(series[seriesId], zAxis[sizeAxisId ?? defaultZAxisId]);
+        const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
+        const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
+        return (
+          <ScatterItems
+            key={id}
+            xScale={xScale}
+            yScale={yScale}
+            color={color}
+            colorGetter={colorGetter}
+            sizeGetter={sizeGetter}
+            series={series[seriesId]}
+            onItemClick={onItemClick}
+            slots={slots}
+            slotProps={slotProps}
+            {...slotProps?.scatter}
+          />
+        );
+      })}
+    </ScatterPlotRoot>
+  );
 }
 
 ScatterPlot.propTypes = {
