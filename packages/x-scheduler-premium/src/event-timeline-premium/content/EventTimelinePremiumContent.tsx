@@ -223,15 +223,17 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
   slot: 'CurrentTimeIndicatorCircle',
 })(({ theme }) => ({
   position: 'absolute',
-  // Center the circle on the header/body boundary (RowContainer's top edge).
-  top: -3,
+  // Rendered inside the header row so the circle stacks above header cells
+  // (which create their own stacking contexts via `z-index`). `bottom: -3` so
+  // the circle sits centered on the header/body boundary line.
+  bottom: -4,
   // 3px = half the circle's width (4px) minus half the line's width (1px), to center the circle on the line.
   left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position) - 3px)',
   width: 8,
   height: 8,
   borderRadius: '50%',
   backgroundColor: (theme.vars || theme).palette.primary.main,
-  zIndex: 2,
+  zIndex: 6,
 }));
 
 // In macOS Safari and Gnome Web, scrollbars are overlaid and report size 0.
@@ -348,7 +350,8 @@ const EventTimelinePremiumFillerRow = styled('div', {
 }));
 
 const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndicator: boolean }>(
-  function HeaderRowContent(_props, ref) {
+  function HeaderRowContent(props, ref) {
+    const { showCurrentTimeIndicator } = props;
     const virtualizerStore = useEventTimelinePremiumVirtualizerStore();
     const { classes, localeText, resourceColumnLabel } = useEventTimelinePremiumStyledContext();
     const reportTitleWidth = useReportTitleWidth();
@@ -413,6 +416,12 @@ const HeaderRowContent = React.forwardRef<HTMLDivElement, { showCurrentTimeIndic
             <EventTimelinePremiumHeader tickRange={tickRange} />
           </EventTimelinePremiumEventsHeaderCellContent>
         </EventTimelinePremiumEventsHeaderCell>
+        {showCurrentTimeIndicator && (
+          <EventTimelinePremiumCurrentTimeIndicatorCircle
+            className={classes.currentTimeIndicatorCircle}
+            aria-hidden
+          />
+        )}
       </EventTimelinePremiumHeaderRow>
     );
   },
@@ -855,16 +864,10 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                   <RowContainer role="rowgroup" {...positionerProps}>
                     {virtualizer.api.getters.getRows()}
                     {showCurrentTimeIndicator && (
-                      <React.Fragment>
-                        <EventTimelinePremiumCurrentTimeIndicator
-                          className={classes.currentTimeIndicator}
-                          aria-hidden
-                        />
-                        <EventTimelinePremiumCurrentTimeIndicatorCircle
-                          className={classes.currentTimeIndicatorCircle}
-                          aria-hidden
-                        />
-                      </React.Fragment>
+                      <EventTimelinePremiumCurrentTimeIndicator
+                        className={classes.currentTimeIndicator}
+                        aria-hidden
+                      />
                     )}
                   </RowContainer>
                   <FillerRow />
