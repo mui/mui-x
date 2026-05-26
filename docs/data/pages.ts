@@ -952,7 +952,7 @@ const pages: MuiPage[] = [
             ],
           },
           {
-            pathname: '/x/react-chat/display/message-parts-group',
+            pathname: '/x/react-chat/display',
             title: 'Display',
             children: [
               {
