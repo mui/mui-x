@@ -96,10 +96,13 @@ const ChartsLayerContainer = React.forwardRef<HTMLDivElement, ChartsLayerContain
     }
 
     return (
+      // `role="none"` is an alias for `role="presentation"`, but aria-query treats them differently.
+      // See https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/1090
+      // eslint-disable-next-line jsx-a11y/role-supports-aria-props
       <ChartsLayerContainerDiv
         ref={handleRef}
         ownerState={{ width: propsWidth, height: propsHeight }}
-        role="presentation"
+        role="none"
         aria-label={title}
         aria-describedby={desc ? descId : undefined}
         className={clsx(classes.root, className)}

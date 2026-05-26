@@ -33,7 +33,7 @@ If your data is stored in an array of objects, you can use the `dataset` helper 
 It accepts an array of objects such as `dataset={[{a: 1, b: 32, c: 873}, {a: 2, b: 41, c: 182}, ...]}`.
 
 Scatter series use a different pattern than other charts: use the `datasetKeys` property with an object that has required `x` and `y` keys.
-You can also include optional `id` and `z` keys.
+You can also include optional `id`, `colorValue`, and `sizeValue` keys.
 
 See the [Dataset](/x/react-charts/dataset/) page to learn more.
 
@@ -86,13 +86,13 @@ Scatter charts use the following, in order of priority:
 The z-axis is a third axis that lets you style scatter points by a value other than position.
 Pass it with the `zAxis` prop.
 
-The mapped value can come from the `z` property on each series data point, or from the z-axis data.
-You can set the z value in three ways:
+The mapped value can come from the `colorValue` property on each series data point, or from the z-axis data.
+You can set the color value in three ways:
 
 ```jsx
 <ScatterChart
   // First option
-  series={[{ data: [{ id: 0, x: 1, y: 1, z: 5 }] }]}
+  series={[{ data: [{ id: 0, x: 1, y: 1, colorValue: 5 }] }]}
   // Second option
   zAxis={[{ data: [5] }]}
   // Third option
@@ -106,6 +106,18 @@ You can set the z value in three ways:
 See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for the `colorMap` properties.
 
 {{"demo": "ColorScale.js"}}
+
+### Size scale (Bubble chart)
+
+You can also map a value to the size of each scatter point.
+
+Set a `sizeMap` on a z-axis and point the series to it with the `sizeAxisId` prop.
+The mapped value comes from the `sizeValue` property on each data point, or from the z-axis data.
+
+The `sizeMap` supports the same `continuous`, `piecewise`, and `ordinal` types as `colorMap`, but it maps values to a marker radius in pixels.
+A series can set both `colorAxisId` and `sizeAxisId` to style points by two values at once.
+
+{{"demo": "SizeScale.js"}}
 
 ### Grid
 
@@ -156,6 +168,8 @@ See [Custom components](/x/react-charts/components/) for more ways to customize 
 {{"demo": "CustomScatter.js"}}
 
 ## Performance
+
+### SVG batch rendering
 
 Scatter charts can have many points, which can slow down rendering.
 By default, points are drawn with SVG `circle` elements, which may be slow for large datasets.

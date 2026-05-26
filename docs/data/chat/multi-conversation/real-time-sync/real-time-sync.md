@@ -120,7 +120,7 @@ function TypingIndicator() {
 
   if (typingUserIds.length === 0) return null;
 
-  return <span>{typingUserIds.length} user(s) typing...</span>;
+  return <span>{typingUserIds.length} user(s) typing…</span>;
 }
 ```
 

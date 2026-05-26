@@ -5,7 +5,9 @@ import type {
   RecurringEventWeekDayCode,
   SchedulerProcessedDate,
   SchedulerProcessedEventRecurrenceRule,
+  WeekStartsOn,
 } from '@mui/x-scheduler-internals/models';
+import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
 import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 import { getWeekDayCode } from './internal-utils';
 
@@ -77,8 +79,9 @@ export function getDefaultPresetKey(
 export function getWeeklyDays(
   adapter: Adapter,
   visibleDate: TemporalSupportedObject,
+  weekStartsOn?: WeekStartsOn,
 ): { code: RecurringEventWeekDayCode; date: TemporalSupportedObject }[] {
-  const start = adapter.startOfWeek(visibleDate);
+  const start = getStartOfWeek(adapter, visibleDate, weekStartsOn);
   return Array.from({ length: 7 }, (_, i) => {
     const date = adapter.addDays(start, i);
     return { code: getWeekDayCode(adapter, date), date };

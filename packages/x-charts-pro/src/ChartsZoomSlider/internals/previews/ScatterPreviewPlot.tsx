@@ -52,7 +52,7 @@ export function ScatterPreviewPlot({
           return null;
         }
 
-        const { id, xAxisId, yAxisId, zAxisId, color } = series[seriesId];
+        const { id, xAxisId, yAxisId, colorAxisId, zAxisId, color } = series[seriesId];
 
         const xAxis = xAxes[xAxisId ?? defaultXAxisId];
         const yAxis = yAxes[yAxisId ?? defaultYAxisId];
@@ -66,7 +66,7 @@ export function ScatterPreviewPlot({
           series[seriesId],
           xAxis,
           yAxis,
-          zAxes[zAxisId ?? defaultZAxisId],
+          zAxes[colorAxisId ?? zAxisId ?? defaultZAxisId],
         );
         const xScale = xAxis.scale;
         const yScale = yAxis.scale;
