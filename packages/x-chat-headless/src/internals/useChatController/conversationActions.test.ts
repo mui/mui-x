@@ -148,6 +148,52 @@ describe('createConversationActions', () => {
       expect(store.state.error).toBeNull();
     });
 
+    it('clears stale message and history state while loading a new conversation', async () => {
+      const store = new ChatStore({
+        initialMessages: [{ id: 'old', role: 'user', parts: [] }],
+      });
+      store.setActiveConversation('c2');
+      store.setHistoryState({
+        cursor: 'old-cursor',
+        hasMore: true,
+      });
+
+      let resolveFetch!: (value: any) => void;
+      const adapter = createAdapter({
+        listMessages: vi.fn().mockReturnValue(
+          new Promise((resolve) => {
+            resolveFetch = resolve;
+          }),
+        ),
+      });
+
+      const { loadConversationMessages } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+      });
+
+      const promise = loadConversationMessages('c2');
+
+      expect(store.state.messageIds).toEqual([]);
+      expect(store.state.historyCursor).toBeUndefined();
+      expect(store.state.hasMoreHistory).toBe(false);
+
+      resolveFetch({
+        messages: [{ id: 'new', role: 'assistant', parts: [] }],
+        cursor: 'new-cursor',
+        hasMore: true,
+      });
+      await promise;
+
+      expect(store.state.messageIds).toEqual(['new']);
+      expect(store.state.historyCursor).toBe('new-cursor');
+      expect(store.state.hasMoreHistory).toBe(true);
+    });
+
     it('ignores stale response when requestId has changed during fetch', async () => {
       const store = new ChatStore();
       store.setActiveConversation('c1');
