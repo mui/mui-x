@@ -664,25 +664,32 @@ export const useGridDataSourceNestedLazyLoader = (
   );
 
   const removeDuplicateRows = React.useCallback(
-    (rows: GridGetRowsResponse['rows']) => {
+    (rows: GridGetRowsResponse['rows'], parentId: GridRowId = GRID_ROOT_GROUP_ID) => {
       const tree = { ...privateApiRef.current.state.rows.tree };
       const dataRowIdToModelLookup = { ...privateApiRef.current.state.rows.dataRowIdToModelLookup };
-      const rootGroup = tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
-      const rootGroupChildren = [...rootGroup.children];
+      const parentNode = tree[parentId] as GridGroupNode | undefined;
+      if (!parentNode || parentNode.type !== 'group') {
+        return;
+      }
+      const parentChildren = [...parentNode.children];
+      const isRoot = parentId === GRID_ROOT_GROUP_ID;
+      const skeletonDepth = isRoot ? 0 : parentNode.depth + 1;
 
       let duplicateRowCount = 0;
       rows.forEach((row) => {
         const rowId = gridRowIdSelector(privateApiRef, row);
         if (tree[rowId] || dataRowIdToModelLookup[rowId]) {
-          const index = rootGroupChildren.indexOf(rowId);
+          const index = parentChildren.indexOf(rowId);
           if (index !== -1) {
-            const skeletonId = getSkeletonRowId(index);
-            rootGroupChildren[index] = skeletonId;
+            const skeletonId = isRoot
+              ? getSkeletonRowId(index)
+              : getSkeletonNestedRowId(index, parentId);
+            parentChildren[index] = skeletonId;
             tree[skeletonId] = {
               type: 'skeletonRow',
               id: skeletonId,
-              parent: GRID_ROOT_GROUP_ID,
-              depth: 0,
+              parent: parentId,
+              depth: skeletonDepth,
             };
           }
           delete tree[rowId];
@@ -692,7 +699,7 @@ export const useGridDataSourceNestedLazyLoader = (
       });
 
       if (duplicateRowCount > 0) {
-        tree[GRID_ROOT_GROUP_ID] = { ...rootGroup, children: rootGroupChildren };
+        tree[parentId] = { ...parentNode, children: parentChildren };
         privateApiRef.current.setState((state) => ({
           ...state,
           rows: {
