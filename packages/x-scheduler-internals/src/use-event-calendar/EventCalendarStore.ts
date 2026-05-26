@@ -33,6 +33,7 @@ export const DEFAULT_PREFERENCES_MENU_CONFIG: EventCalendarPreferencesMenuConfig
   toggleWeekNumberVisibility: true,
   toggleEmptyDaysInAgenda: true,
   toggleAmpm: true,
+  toggleWeekStartsOn: false,
 };
 
 const deriveStateFromParameters = <TEvent extends object, TResource extends object>(

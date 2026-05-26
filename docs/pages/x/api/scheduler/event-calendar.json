@@ -21,7 +21,7 @@
     "defaultPreferences": {
       "type": {
         "name": "shape",
-        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool }"
+        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
       },
       "default": "{ showWeekends: true, showWeekNumber: false, isSidePanelOpen: true, showEmptyDaysInAgenda: true, ampm: true }"
     },
@@ -62,13 +62,13 @@
     "preferences": {
       "type": {
         "name": "shape",
-        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool }"
+        "description": "{ ampm?: bool, isSidePanelOpen?: bool, showEmptyDaysInAgenda?: bool, showWeekends?: bool, showWeekNumber?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
       }
     },
     "preferencesMenuConfig": {
       "type": {
         "name": "union",
-        "description": "false<br>&#124;&nbsp;{ toggleAmpm?: bool, toggleEmptyDaysInAgenda?: bool, toggleWeekendVisibility?: bool, toggleWeekNumberVisibility?: bool }"
+        "description": "false<br>&#124;&nbsp;{ toggleAmpm?: bool, toggleEmptyDaysInAgenda?: bool, toggleWeekendVisibility?: bool, toggleWeekNumberVisibility?: bool, toggleWeekStartsOn?: bool }"
       },
       "default": "{ toggleWeekendVisibility: true, toggleWeekNumberVisibility: true, toggleAmpm: true, toggleEmptyDaysInAgenda: true }"
     },

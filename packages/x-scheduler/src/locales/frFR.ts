@@ -97,6 +97,10 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Afficher le numéro de semaine',
   timeFormat: "Format de l'heure",
   viewSpecificOptions: (view) => `Options de la vue ${view}`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Toute la journée',
