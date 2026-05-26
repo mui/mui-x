@@ -198,7 +198,11 @@ export const AgendaView = React.memo(
           const occurrences = sortEventOccurrences(occurrencesMap.get(date.key) || []);
           const weekNumber = adapter.getWeekNumber(date.value);
           const isFirstDayOfWeek =
-            index === 0 || adapter.getWeekNumber(days[index - 1].value) !== weekNumber;
+            index === 0 ||
+            !adapter.isSameDay(
+              adapter.startOfWeek(date.value),
+              adapter.startOfWeek(days[index - 1].value),
+            );
           return { date, occurrences, weekNumber, isFirstDayOfWeek };
         }),
       [adapter, days, occurrencesMap],

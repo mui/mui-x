@@ -104,7 +104,8 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
 
-  const weekNumber = adapter.getWeekNumber(visibleDate);
+  const weekStart = view === 'week' ? adapter.startOfWeek(visibleDate) : visibleDate;
+  const weekNumber = adapter.getWeekNumber(weekStart);
   const showViewSwitcher = views.length > 1;
   const showWeekLabel = showWeekNumber && (view === 'week' || view === 'day');
 
