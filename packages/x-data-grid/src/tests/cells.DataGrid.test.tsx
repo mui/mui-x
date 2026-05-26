@@ -363,7 +363,9 @@ describe('<DataGrid /> - Cells', () => {
 
           const popup = document.querySelector('.MuiDataGrid-longTextCellPopup')!;
           const collapseButton = popup.querySelector('button')!;
-          await user.click(collapseButton);
+          // `fireEvent` (not `user.click`) because the popup keeps `pointer-events: none`
+          // until its open transition settles, which never happens under jsdom.
+          fireEvent.click(collapseButton);
 
           expect(handleSubmit.callCount).to.equal(0);
         });
