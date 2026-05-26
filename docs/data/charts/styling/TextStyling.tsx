@@ -12,6 +12,7 @@ export default function TextStyling(): React.JSX.Element {
         {
           data: months,
           label: 'Month',
+          height: 70,
           labelStyle: {
             fontSize: 16,
             fontWeight: 600,
