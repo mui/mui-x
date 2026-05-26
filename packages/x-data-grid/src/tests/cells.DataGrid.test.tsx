@@ -319,6 +319,31 @@ describe('<DataGrid /> - Cells', () => {
           expect(expandButton).to.have.attribute('aria-expanded', 'false');
         });
 
+        // Regression test for https://github.com/mui/mui-x/issues/22382
+        it('should not submit a surrounding form when clicking the expand button', async () => {
+          const handleSubmit = spy((event: React.FormEvent) => {
+            event.preventDefault();
+          });
+
+          const { user } = render(
+            <form onSubmit={handleSubmit}>
+              <div style={{ width: 300, height: 300 }}>
+                <DataGrid {...longTextBaselineProps} />
+              </div>
+            </form>,
+          );
+
+          const cell = getCell(0, 0);
+          await user.click(cell);
+
+          const expandButton = cell.querySelector(
+            'button[aria-haspopup="dialog"]',
+          ) as HTMLButtonElement;
+          await user.click(expandButton);
+
+          expect(handleSubmit.callCount).to.equal(0);
+        });
+
         it('should render custom content via renderContent prop', async () => {
           const customRenderContent = spy((value: string | null) => (
             <span data-testid="custom-content">Custom: {value}</span>

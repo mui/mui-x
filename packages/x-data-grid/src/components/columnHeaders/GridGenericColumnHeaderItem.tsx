@@ -101,10 +101,10 @@ const GridGenericColumnHeaderItem = forwardRef<HTMLDivElement, GridGenericColumn
         <div
           className={classes.draggableContainer}
           draggable={isDraggable}
-          role="presentation"
+          role="none"
           {...draggableContainerProps}
         >
-          <div className={classes.titleContainer} role="presentation">
+          <div className={classes.titleContainer} role="none">
             <div className={classes.titleContainerContent}>
               {headerComponent !== undefined ? (
                 headerComponent

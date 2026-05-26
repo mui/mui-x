@@ -56,7 +56,7 @@ export interface ExportedDayCalendarProps extends ExportedPickerDayProps {
   /**
    * Component rendered on the "day" view when `props.loading` is true.
    * @returns {React.ReactNode} The node to render when loading.
-   * @default () => "..."
+   * @default () => "…"
    */
   renderLoading?: () => React.ReactNode;
   /**
@@ -347,7 +347,7 @@ export function DayCalendar(inProps: DayCalendarProps) {
     onMonthSwitchingAnimationEnd,
     readOnly,
     reduceAnimations,
-    renderLoading = () => <span data-testid="loading-progress">...</span>,
+    renderLoading = () => <span data-testid="loading-progress">…</span>,
     slideDirection,
     TransitionProps,
     disablePast,

@@ -132,9 +132,6 @@ export class SchedulerDataManager {
     await Promise.all(fetchPromises);
   };
 
-  // TODO #22419: deduplicate staged ranges within the debounce window. Rapid navigations to
-  // distinct ranges currently produce N fetches once the debounce flushes, instead of
-  // coalescing to the final range only.
   /**
    * The returned promise resolves when the debounce window flushes, NOT when this
    * specific call's data has been fetched. If a subsequent `queue()` arrives within
@@ -148,7 +145,7 @@ export class SchedulerDataManager {
     }
     this.timeoutManager.clearTimeout('debounce');
 
-    this.stagedRanges = [...(this.stagedRanges ?? []), ...ranges];
+    this.stagedRanges = [...ranges];
 
     return new Promise<void>((resolve, reject) => {
       this.pendingDebounceResolve = resolve;

@@ -224,6 +224,7 @@ function GridLongTextCell(props: GridLongTextCellProps) {
       </GridLongTextCellContent>
       <GridLongTextCellCornerButton
         ref={cornerButtonRef}
+        type="button"
         aria-label={`${value}, ${apiRef.current.getLocaleText('longTextCellExpandLabel')}`}
         aria-haspopup="dialog"
         aria-controls={popupOpen ? popupId : undefined}
@@ -282,6 +283,7 @@ function GridLongTextCell(props: GridLongTextCellProps) {
         >
           {renderContent ? renderContent(value) : value}
           <GridLongTextCellCornerButton
+            type="button"
             aria-label={apiRef.current.getLocaleText('longTextCellCollapseLabel')}
             aria-keyshortcuts="Escape"
             {...slotProps?.collapseButton}
