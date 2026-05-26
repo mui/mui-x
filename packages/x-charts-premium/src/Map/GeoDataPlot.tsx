@@ -41,15 +41,7 @@ function GeoDataPlot(props: GeoDataPlotProps) {
         if (!d) {
           return null;
         }
-        return (
-          <path
-            key={feature.id ?? index}
-            d={d}
-            fill={fill}
-            stroke={stroke}
-            strokeWidth={strokeWidth}
-          />
-        );
+        return <path key={index} d={d} fill={fill} stroke={stroke} strokeWidth={strokeWidth} />;
       })}
     </g>
   );

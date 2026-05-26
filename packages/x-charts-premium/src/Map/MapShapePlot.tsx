@@ -1,8 +1,10 @@
 'use client';
+import * as React from 'react';
+
 import { useGeoData } from '../hooks/useGeoData';
 import { useGeoPath } from '../hooks/useGeoPath';
 import { useMapShapeSeries } from '../hooks/useMapShapeSeries';
-import { useGeoFeatureIndexByName } from '../hooks/useGeoFeatureIndexByName';
+import { useGeoFeatureIndexesByName } from '../hooks/useGeoFeatureIndexesByName';
 import { MapShape } from './MapShape';
 
 export interface MapShapePlotProps {
@@ -31,7 +33,7 @@ export function MapShapePlot(props: MapShapePlotProps) {
   const geoData = useGeoData();
   const path = useGeoPath();
   const series = useMapShapeSeries();
-  const featureIndexByName = useGeoFeatureIndexByName();
+  const featureIndexesByName = useGeoFeatureIndexesByName();
 
   if (!geoData || !path || series.length === 0) {
     return null;
@@ -49,25 +51,31 @@ export function MapShapePlot(props: MapShapePlotProps) {
               if (item.hidden) {
                 return null;
               }
-              const featureIndex = featureIndexByName.get(item.name);
-              if (featureIndex === undefined) {
-                return null;
-              }
-              const feature = geoData.features[featureIndex];
-              const d = path(feature);
-              if (!d) {
+              const featureIndexes = featureIndexesByName.get(item.name);
+              if (featureIndexes === undefined || featureIndexes.length === 0) {
                 return null;
               }
               return (
-                <MapShape
-                  key={item.name ?? dataIndex}
-                  seriesId={id}
-                  dataIndex={dataIndex}
-                  d={d}
-                  color={fill ?? item.color ?? seriesColor}
-                  stroke={stroke}
-                  strokeWidth={strokeWidth}
-                />
+                <React.Fragment key={item.name}>
+                  {featureIndexes.map((featureIndex) => {
+                    const feature = geoData.features[featureIndex];
+                    const d = path(feature);
+                    if (!d) {
+                      return null;
+                    }
+                    return (
+                      <MapShape
+                        key={featureIndex}
+                        seriesId={id}
+                        dataIndex={dataIndex}
+                        d={d}
+                        color={fill ?? item.color ?? seriesColor}
+                        stroke={stroke}
+                        strokeWidth={strokeWidth}
+                      />
+                    );
+                  })}
+                </React.Fragment>
               );
             })}
           </g>
