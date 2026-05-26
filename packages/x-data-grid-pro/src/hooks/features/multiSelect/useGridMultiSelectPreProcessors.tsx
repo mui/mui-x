@@ -21,86 +21,97 @@ import type {
 
 const RESIZE_THROTTLE_MS = 32;
 
-const createMultiSelectCache = (): GridMultiSelectInternalCache => {
-  const dragSubscribers = new Map<string, Set<(width: number) => void>>();
-  const metricsByField = new Map<string, GridMultiSelectOverflowMetrics>();
-  const metricsSubscribers = new Map<
+class GridMultiSelectCache implements GridMultiSelectInternalCache {
+  private dragSubscribers = new Map<string, Set<(width: number) => void>>();
+
+  private metricsByField = new Map<string, GridMultiSelectOverflowMetrics>();
+
+  private metricsSubscribers = new Map<
     string,
     Set<(metrics: GridMultiSelectOverflowMetrics | null) => void>
   >();
-  const notifyMetrics = (field: string, metrics: GridMultiSelectOverflowMetrics | null) => {
-    metricsSubscribers.get(field)?.forEach((cb) => cb(metrics));
+
+  private notifyMetrics = (field: string, metrics: GridMultiSelectOverflowMetrics | null) => {
+    this.metricsSubscribers.get(field)?.forEach((cb) => cb(metrics));
   };
-  return {
-    subscribeDrag(field, callback) {
-      let bucket = dragSubscribers.get(field);
-      if (!bucket) {
-        bucket = new Set();
-        dragSubscribers.set(field, bucket);
-      }
-      bucket.add(callback);
-      return () => {
-        const current = dragSubscribers.get(field);
-        if (!current) {
-          return;
-        }
-        current.delete(callback);
-        if (current.size === 0) {
-          dragSubscribers.delete(field);
-        }
-      };
-    },
-    broadcast(field, width) {
-      dragSubscribers.get(field)?.forEach((cb) => cb(width));
-    },
-    getOverflowMetrics(field) {
-      return metricsByField.get(field) ?? null;
-    },
-    setOverflowMetrics(field, next) {
-      // Skip no-op updates so subscribed cells don't re-render on every measurer ResizeObserver tick.
-      const prev = metricsByField.get(field);
-      if (
-        prev &&
-        prev.gap === next.gap &&
-        fastArrayCompare(prev.overflowChipWidths, next.overflowChipWidths)
-      ) {
+
+  public subscribeDrag = (field: string, callback: (width: number) => void) => {
+    let bucket = this.dragSubscribers.get(field);
+    if (!bucket) {
+      bucket = new Set();
+      this.dragSubscribers.set(field, bucket);
+    }
+    bucket.add(callback);
+    return () => {
+      const current = this.dragSubscribers.get(field);
+      if (!current) {
         return;
       }
-      metricsByField.set(field, next);
-      notifyMetrics(field, next);
-    },
-    deleteOverflowMetrics(field) {
-      if (!metricsByField.has(field)) {
+      current.delete(callback);
+      if (current.size === 0) {
+        this.dragSubscribers.delete(field);
+      }
+    };
+  };
+
+  public broadcast = (field: string, width: number) => {
+    this.dragSubscribers.get(field)?.forEach((cb) => cb(width));
+  };
+
+  public getOverflowMetrics = (field: string) => {
+    return this.metricsByField.get(field) ?? null;
+  };
+
+  public setOverflowMetrics = (field: string, next: GridMultiSelectOverflowMetrics) => {
+    // Skip no-op updates so subscribed cells don't re-render on every measurer ResizeObserver tick.
+    const prev = this.metricsByField.get(field);
+    if (
+      prev &&
+      prev.gap === next.gap &&
+      fastArrayCompare(prev.overflowChipWidths, next.overflowChipWidths)
+    ) {
+      return;
+    }
+    this.metricsByField.set(field, next);
+    this.notifyMetrics(field, next);
+  };
+
+  public deleteOverflowMetrics = (field: string) => {
+    if (!this.metricsByField.has(field)) {
+      return;
+    }
+    this.metricsByField.delete(field);
+    this.notifyMetrics(field, null);
+  };
+
+  public subscribeOverflowMetrics = (
+    field: string,
+    callback: (metrics: GridMultiSelectOverflowMetrics | null) => void,
+  ) => {
+    let bucket = this.metricsSubscribers.get(field);
+    if (!bucket) {
+      bucket = new Set();
+      this.metricsSubscribers.set(field, bucket);
+    }
+    bucket.add(callback);
+    return () => {
+      const current = this.metricsSubscribers.get(field);
+      if (!current) {
         return;
       }
-      metricsByField.delete(field);
-      notifyMetrics(field, null);
-    },
-    subscribeOverflowMetrics(field, callback) {
-      let bucket = metricsSubscribers.get(field);
-      if (!bucket) {
-        bucket = new Set();
-        metricsSubscribers.set(field, bucket);
+      current.delete(callback);
+      if (current.size === 0) {
+        this.metricsSubscribers.delete(field);
       }
-      bucket.add(callback);
-      return () => {
-        const current = metricsSubscribers.get(field);
-        if (!current) {
-          return;
-        }
-        current.delete(callback);
-        if (current.size === 0) {
-          metricsSubscribers.delete(field);
-        }
-      };
-    },
-    teardown() {
-      dragSubscribers.clear();
-      metricsSubscribers.clear();
-      metricsByField.clear();
-    },
+    };
   };
-};
+
+  public teardown = () => {
+    this.dragSubscribers.clear();
+    this.metricsSubscribers.clear();
+    this.metricsByField.clear();
+  };
+}
 
 const renderMultiSelectHeaderDefault = (params: GridColumnHeaderParams) => (
   <React.Fragment>
@@ -121,7 +132,7 @@ export const useGridMultiSelectPreProcessors = (
   // Single per-grid drag broadcaster keeps the EventManager listener count O(1)
   // even when many multiSelect cells are visible.
   if (!apiRef.current.caches.multiSelect) {
-    apiRef.current.caches.multiSelect = createMultiSelectCache();
+    apiRef.current.caches.multiSelect = new GridMultiSelectCache();
   }
   const cache = apiRef.current.caches.multiSelect;
 
