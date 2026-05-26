@@ -10,13 +10,14 @@ import {
   type PieItemIdentifier,
 } from '../models/seriesType/pie';
 import { useTransformData } from './dataTransform/useTransformData';
+import type { PieArcPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface PieArcPlotSlots {
-  pieArc?: React.JSXElementConstructor<PieArcProps>;
+  pieArc?: React.JSXElementConstructor<PieArcProps & PieArcPropsOverrides>;
 }
 
 export interface PieArcPlotSlotProps {
-  pieArc?: Partial<PieArcProps>;
+  pieArc?: Partial<PieArcProps> & PieArcPropsOverrides;
 }
 
 export interface PieArcPlotProps
