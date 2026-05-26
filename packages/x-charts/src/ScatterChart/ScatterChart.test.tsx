@@ -1,4 +1,4 @@
-import { createRenderer, screen, waitFor } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/charts/describeConformance';
 import { ScatterChart, scatterClasses } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -100,10 +100,6 @@ describe('<ScatterChart />', () => {
         <ScatterChart {...config} disableHitArea series={[{ id: 's1', data: config.dataset }]} />
       </div>,
     );
-    // The scatter series processor is async, so the markers render after a microtask.
-    await waitFor(() =>
-      expect(document.querySelectorAll<HTMLElement>('circle').length).to.equal(5),
-    );
     const marks = document.querySelectorAll<HTMLElement>('circle');
 
     await user.pointer([
@@ -178,32 +174,25 @@ describe('<ScatterChart />', () => {
   });
 
   describe('classes', () => {
-    it('should apply scatterClasses.root to the ScatterPlot root element', async () => {
+    it('should apply scatterClasses.root to the ScatterPlot root element', () => {
       render(<ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} hideLegend />);
+      const root = document.querySelector<HTMLElement>(`.${scatterClasses.root}`);
 
-      await waitFor(() =>
-        expect(document.querySelector<HTMLElement>(`.${scatterClasses.root}`)).not.to.equal(null),
-      );
+      expect(root).not.to.equal(null);
     });
 
-    it('should apply scatterClasses.series to series group elements', async () => {
+    it('should apply scatterClasses.series to series group elements', () => {
       render(<ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} hideLegend />);
+      const seriesGroups = document.querySelectorAll<HTMLElement>(`.${scatterClasses.series}`);
 
-      await waitFor(() =>
-        expect(document.querySelectorAll<HTMLElement>(`.${scatterClasses.series}`).length).to.equal(
-          1,
-        ),
-      );
+      expect(seriesGroups.length).to.equal(1);
     });
 
-    it('should apply scatterClasses.marker to scatter marker elements', async () => {
+    it('should apply scatterClasses.marker to scatter marker elements', () => {
       render(<ScatterChart {...config} series={[{ id: 's1', data: config.dataset }]} hideLegend />);
+      const markers = document.querySelectorAll<HTMLElement>(`.${scatterClasses.marker}`);
 
-      await waitFor(() =>
-        expect(document.querySelectorAll<HTMLElement>(`.${scatterClasses.marker}`).length).to.equal(
-          5,
-        ),
-      );
+      expect(markers.length).to.equal(5);
     });
   });
 });

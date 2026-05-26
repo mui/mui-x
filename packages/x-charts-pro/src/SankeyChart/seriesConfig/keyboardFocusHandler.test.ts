@@ -6,8 +6,6 @@ const state = (align: 'left' | 'justify') => ({
   series: {
     seriesConfig: { sankey: {} as any },
     idToType: new Map([['sankey-1', 'sankey' as const]]),
-    processed: {},
-    processedStatus: 'settled' as const,
     defaultizedSeries: {
       sankey: {
         seriesOrder: ['sankey-1'],

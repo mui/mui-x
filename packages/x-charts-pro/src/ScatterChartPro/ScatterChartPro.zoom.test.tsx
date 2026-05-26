@@ -1,6 +1,6 @@
 /* eslint-disable no-promise-executor-return */
 import * as React from 'react';
-import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';
 import { ScatterChartPro } from './ScatterChartPro';
@@ -82,12 +82,8 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
       options,
     );
 
-    // The scatter series processor is async, so the axis domain settles after
-    // a microtask.
-    await waitFor(() => {
-      expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
-      expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
-    });
+    expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
+    expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
 
     const layerContainer = container.querySelector<HTMLElement>(
       `.${chartsSvgLayerClasses.root}`,
@@ -137,10 +133,8 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
         `.${chartsSvgLayerClasses.root}`,
       )!.parentElement!;
 
-      await waitFor(() => {
-        expect(getAxisTickValues('x')).to.deep.equal(['2.6', '2.8', '3.0']);
-        expect(getAxisTickValues('y')).to.deep.equal(['26', '28', '30']);
-      });
+      expect(getAxisTickValues('x')).to.deep.equal(['2.6', '2.8', '3.0']);
+      expect(getAxisTickValues('y')).to.deep.equal(['26', '28', '30']);
 
       // we drag one position
       await user.pointer([
@@ -201,10 +195,8 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
       options,
     );
 
-    await waitFor(() => {
-      expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
-      expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
-    });
+    expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
+    expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
 
     const layerContainer = container.querySelector<HTMLElement>(
       `.${chartsSvgLayerClasses.root}`,
@@ -263,9 +255,7 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
       options,
     );
 
-    await waitFor(() => {
-      expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
-    });
+    expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
 
     const layerContainer = container.querySelector<HTMLElement>(
       `.${chartsSvgLayerClasses.root}`,

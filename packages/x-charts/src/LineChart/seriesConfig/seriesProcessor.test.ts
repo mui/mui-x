@@ -26,13 +26,13 @@ const dataSet = [{ k: 1 }, { k: 2 }, { k: 3 }];
 
 describe('LineChart - formatter', () => {
   describe('data from dataset', () => {
-    it('should get data from the dataset', async () => {
-      const { series } = await lineProcessor({ seriesOrder, series: seriesDataset }, dataSet);
+    it('should get data from the dataset', () => {
+      const { series } = lineProcessor({ seriesOrder, series: seriesDataset }, dataSet);
       expect(series.id1.data).to.deep.equal([1, 2, 3]);
     });
 
-    it('should support missing values', async () => {
-      const { series } = await lineProcessor({ seriesOrder, series: seriesDataset }, [
+    it('should support missing values', () => {
+      const { series } = lineProcessor({ seriesOrder, series: seriesDataset }, [
         { k: 1 },
         { k: null },
         { k: 2 },
@@ -42,8 +42,8 @@ describe('LineChart - formatter', () => {
   });
 
   describe('data from valueGetter', () => {
-    it('should get data using valueGetter', async () => {
-      const { series } = await lineProcessor({ seriesOrder, series: seriesWithValueGetter }, [
+    it('should get data using valueGetter', () => {
+      const { series } = lineProcessor({ seriesOrder, series: seriesWithValueGetter }, [
         { k: '1.5' },
         { k: '2.5' },
         { k: '3.5' },
@@ -51,7 +51,7 @@ describe('LineChart - formatter', () => {
       expect(series.id1.data).to.deep.equal([1.5, 2.5, 3.5]);
     });
 
-    it('should support returning null from valueGetter', async () => {
+    it('should support returning null from valueGetter', () => {
       const seriesWithNullGetter: SeriesProcessorParams<'line'>['series'] = {
         id1: {
           type: 'line',
@@ -60,7 +60,7 @@ describe('LineChart - formatter', () => {
           valueGetter: (item) => (item.k === 'missing' ? null : parseFloat(item.k as string)),
         },
       };
-      const { series } = await lineProcessor({ seriesOrder, series: seriesWithNullGetter }, [
+      const { series } = lineProcessor({ seriesOrder, series: seriesWithNullGetter }, [
         { k: '1' },
         { k: 'missing' },
         { k: '3' },

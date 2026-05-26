@@ -1,4 +1,4 @@
-import { createRenderer, waitFor } from '@mui/internal-test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -47,9 +47,6 @@ describe('ScatterChart - click event', () => {
             onItemClick={onItemClick}
           />
         </div>,
-      );
-      await waitFor(() =>
-        expect(document.querySelectorAll<HTMLElement>('circle').length).to.equal(5),
       );
       const layerContainer = container.querySelector<HTMLElement>(
         `.${chartsSvgLayerClasses.root}`,
@@ -100,9 +97,6 @@ describe('ScatterChart - click event', () => {
           />
         </div>,
       );
-      await waitFor(() =>
-        expect(document.querySelectorAll<HTMLElement>('circle').length).to.equal(5),
-      );
       const marks = document.querySelectorAll<HTMLElement>('circle');
 
       await user.pointer([
@@ -142,9 +136,6 @@ describe('ScatterChart - click event', () => {
           />
         </div>,
       );
-      await waitFor(() =>
-        expect(document.querySelectorAll<HTMLElement>('circle').length).to.equal(5),
-      );
       const layerContainer = container.querySelector<HTMLElement>(
         `.${chartsSvgLayerClasses.root}`,
       )!.parentElement!;
@@ -175,9 +166,6 @@ describe('ScatterChart - click event', () => {
             disableHitArea
           />
         </div>,
-      );
-      await waitFor(() =>
-        expect(document.querySelectorAll<HTMLElement>('circle').length).to.equal(5),
       );
       const marks = document.querySelectorAll<HTMLElement>('circle');
 

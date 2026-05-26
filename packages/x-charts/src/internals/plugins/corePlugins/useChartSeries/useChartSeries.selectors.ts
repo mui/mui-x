@@ -2,8 +2,9 @@ import { createSelectorMemoized, createSelector } from '@mui/x-internals/store';
 import { type SeriesId } from '../../../../models';
 import { type ChartRootSelector } from '../../utils/selectors';
 import { type UseChartSeriesSignature } from './useChartSeries.types';
+import { applySeriesProcessors } from './processSeries';
+import { selectorIsItemVisibleGetter } from '../../featurePlugins/useChartVisibilityManager';
 import { selectorChartSeriesConfig } from '../useChartSeriesConfig/useChartSeriesConfig.selectors';
-import { selectorVisibilityMap } from '../../featurePlugins/useChartVisibilityManager/useChartVisibilityManager.selectors';
 
 export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature> = (state) =>
   state.series;
@@ -23,39 +24,18 @@ export const selectorChartsDataset = createSelector(
 );
 
 /**
- * Get the processed series after applying the (possibly async) series processors.
- * The processing is performed by the `useChartSeries` plugin effect and written
- * back to the store, so this selector stays synchronous and returns the last
- * settled value.
+ * Get the processed series after applying series processors.
+ * This selector computes the processed series on-demand from the defaultized series.
  * @returns {ProcessedSeries} The processed series.
  */
-export const selectorChartSeriesProcessed = createSelector(
-  selectorChartSeriesState,
-  (seriesState) => seriesState.processed,
-);
-
-/**
- * Status of the latest series processing run: `'pending'` while an async
- * processor has not settled yet, `'settled'` otherwise.
- */
-export const selectorChartSeriesProcessedStatus = createSelector(
-  selectorChartSeriesState,
-  (seriesState) => seriesState.processedStatus,
-);
-
-/**
- * Memoized tuple of every input the series processors depend on. Used to drive
- * the processing side effect: whenever any of these change, processors re-run.
- * `createSelectorMemoized` keeps the reference stable until an input changes,
- * so the effect only fires on real input changes.
- */
-export const selectorChartSeriesProcessingInputs = createSelectorMemoized(
+export const selectorChartSeriesProcessed = createSelectorMemoized(
   selectorChartDefaultizedSeries,
-  selectorChartsDataset,
   selectorChartSeriesConfig,
-  selectorVisibilityMap,
-  (defaultizedSeries, dataset, seriesConfig, visibilityMap) =>
-    [defaultizedSeries, dataset, seriesConfig, visibilityMap] as const,
+  selectorChartsDataset,
+  selectorIsItemVisibleGetter,
+  function selectorChartSeriesProcessed(defaultizedSeries, seriesConfig, dataset, isItemVisible) {
+    return applySeriesProcessors(defaultizedSeries, seriesConfig, dataset, isItemVisible);
+  },
 );
 
 /**

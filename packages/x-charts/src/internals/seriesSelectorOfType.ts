@@ -2,10 +2,7 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { type ChartSeriesDefaultized, type ChartsSeriesConfig } from '../models/seriesType/config';
 import { type SeriesId } from '../models/seriesType/common';
-import {
-  selectorChartSeriesProcessed,
-  selectorChartSeriesProcessedStatus,
-} from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
+import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries';
 import { useStore } from './store/useStore';
 
@@ -17,10 +14,8 @@ export const selectorAllSeriesOfType = createSelector(
 
 export const selectorSeriesOfType = createSelectorMemoized(
   selectorChartSeriesProcessed,
-  selectorChartSeriesProcessedStatus,
   <T extends keyof ChartsSeriesConfig>(
     processedSeries: ProcessedSeries,
-    processedStatus: 'pending' | 'settled',
     seriesType: T,
     ids: SeriesId | SeriesId[] | undefined,
   ) => {
@@ -46,13 +41,7 @@ export const selectorSeriesOfType = createSelectorMemoized(
         failedIds.push(id);
       }
     }
-    // Don't warn while the (possibly async) processors haven't settled yet:
-    // the ids may simply not be available for this render.
-    if (
-      process.env.NODE_ENV !== 'production' &&
-      processedStatus === 'settled' &&
-      failedIds.length > 0
-    ) {
+    if (process.env.NODE_ENV !== 'production' && failedIds.length > 0) {
       const formattedIds = failedIds.map((v) => JSON.stringify(v)).join(', ');
       const fnName = `use${seriesType.charAt(0).toUpperCase()}${seriesType.slice(1)}Series`;
       warnOnce([

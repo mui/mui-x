@@ -70,25 +70,11 @@ export type DefaultizedSeriesGroups<SeriesType extends ChartSeriesType = ChartSe
 
 export type SeriesIdToType = ReadonlyMap<SeriesId, ChartSeriesType>;
 
-export type ProcessedSeriesStatus = 'pending' | 'settled';
-
 export interface UseChartSeriesState<SeriesType extends ChartSeriesType = ChartSeriesType> {
   series: {
     defaultizedSeries: DefaultizedSeriesGroups<SeriesType>;
     idToType: SeriesIdToType;
     dataset?: Readonly<DatasetType>;
-    /**
-     * The processed series, after applying the (possibly async) series processors.
-     * For synchronous processors this is available from the first render. For
-     * async processors it holds the last settled value while newer results are
-     * still pending.
-     */
-    processed: ProcessedSeries<SeriesType>;
-    /**
-     * `'pending'` while an async processor has not settled its latest result yet,
-     * `'settled'` otherwise.
-     */
-    processedStatus: ProcessedSeriesStatus;
   };
 }
 

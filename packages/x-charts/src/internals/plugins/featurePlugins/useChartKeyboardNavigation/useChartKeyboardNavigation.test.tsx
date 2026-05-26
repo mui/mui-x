@@ -1,5 +1,5 @@
 import { isJSDOM } from 'test/utils/skipIf';
-import { createRenderer, act, waitFor } from '@mui/internal-test-utils/createRenderer';
+import { createRenderer, act } from '@mui/internal-test-utils/createRenderer';
 import { BarChart, barClasses } from '@mui/x-charts/BarChart';
 import { PieChart, pieClasses } from '@mui/x-charts/PieChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
@@ -214,11 +214,9 @@ describe('useChartKeyboardNavigation', () => {
         />,
       );
 
-      // The scatter series processor is async; wait for the visible series to
-      // render. ScatterPlot returns null for hidden series, so Series A's mark
-      // group is never rendered.
-      await waitFor(() => expect(container.querySelector(`[data-series="B"]`)).not.to.equal(null));
+      // ScatterPlot returns null for hidden series, so Series A's mark group is not rendered.
       expect(container.querySelector(`[data-series="A"]`)).to.equal(null);
+      expect(container.querySelector(`[data-series="B"]`)).not.to.equal(null);
 
       await user.keyboard('{Tab}');
       await user.keyboard('[ArrowRight]');

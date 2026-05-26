@@ -14,13 +14,13 @@ describe('BarChart - seriesProcessor', () => {
       },
     };
 
-    it('should get data from the dataset', async () => {
-      const result = await barProcessor({ seriesOrder, series }, [{ k: 1 }, { k: 2 }, { k: 3 }]);
+    it('should get data from the dataset', () => {
+      const result = barProcessor({ seriesOrder, series }, [{ k: 1 }, { k: 2 }, { k: 3 }]);
       expect(result.series.id1.data).to.deep.equal([1, 2, 3]);
     });
 
-    it('should support missing values', async () => {
-      const result = await barProcessor({ seriesOrder, series }, [{ k: 1 }, { k: null }, { k: 2 }]);
+    it('should support missing values', () => {
+      const result = barProcessor({ seriesOrder, series }, [{ k: 1 }, { k: null }, { k: 2 }]);
       expect(result.series.id1.data).to.deep.equal([1, null, 2]);
     });
   });
@@ -35,8 +35,8 @@ describe('BarChart - seriesProcessor', () => {
       },
     };
 
-    it('should get data using valueGetter', async () => {
-      const result = await barProcessor({ seriesOrder, series }, [
+    it('should get data using valueGetter', () => {
+      const result = barProcessor({ seriesOrder, series }, [
         { k: '10.5' },
         { k: '20.5' },
         { k: '30.5' },
@@ -44,7 +44,7 @@ describe('BarChart - seriesProcessor', () => {
       expect(result.series.id1.data).to.deep.equal([10.5, 20.5, 30.5]);
     });
 
-    it('should support returning null from valueGetter', async () => {
+    it('should support returning null from valueGetter', () => {
       const seriesWithNull: SeriesProcessorParams<'bar'>['series'] = {
         id1: {
           type: 'bar',
@@ -53,7 +53,7 @@ describe('BarChart - seriesProcessor', () => {
           valueGetter: (item) => (item.k === 'n/a' ? null : parseFloat(item.k as string)),
         },
       };
-      const result = await barProcessor({ seriesOrder, series: seriesWithNull }, [
+      const result = barProcessor({ seriesOrder, series: seriesWithNull }, [
         { k: '10' },
         { k: 'n/a' },
         { k: '30' },

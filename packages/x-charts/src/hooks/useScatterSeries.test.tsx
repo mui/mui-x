@@ -1,10 +1,4 @@
-import {
-  renderHook,
-  waitFor,
-  act,
-  flushMicrotasks,
-  type RenderHookResult,
-} from '@mui/internal-test-utils';
+import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useScatterSeries, useScatterSeriesContext } from './useScatterSeries';
 import { type DefaultizedScatterSeriesType, type ScatterSeriesType } from '../models';
@@ -42,35 +36,30 @@ const options: any = {
 };
 
 describe('useScatterSeriesContext', () => {
-  it('should return all scatter series when no seriesIds are provided', async () => {
+  it('should return all scatter series when no seriesIds are provided', () => {
     const { result } = renderHook(() => useScatterSeriesContext(), options);
-    // Scatter's series processor is async, so the data settles after a microtask.
-    await waitFor(() => expect(result.current?.seriesOrder).to.deep.equal(['1', '2']));
+    expect(result.current?.seriesOrder).to.deep.equal(['1', '2']);
     expect(Object.keys(result.current?.series ?? {})).to.deep.equal(['1', '2']);
   });
 });
 
 describe('useScatterSeries', () => {
-  it('should return the specific scatter series when a single seriesId is provided', async () => {
+  it('should return the specific scatter series when a single seriesId is provided', () => {
     const { result } = renderHook(() => useScatterSeries('1'), options);
-    await waitFor(() => expect(result.current?.id).to.deep.equal(mockSeries[0].id));
+    expect(result.current?.id).to.deep.equal(mockSeries[0].id);
   });
 
-  it('should return all scatter series when no seriesId is provided', async () => {
+  it('should return all scatter series when no seriesId is provided', () => {
     const { result } = renderHook(() => useScatterSeries(), options);
-    await waitFor(() =>
-      expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id, mockSeries[1].id]),
-    );
+    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id, mockSeries[1].id]);
   });
 
-  it('should return the specific scatter series when multiple seriesIds are provided', async () => {
+  it('should return the specific scatter series when multiple seriesIds are provided', () => {
     const { result } = renderHook(() => useScatterSeries(['2', '1']), options);
-    await waitFor(() =>
-      expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[1].id, mockSeries[0].id]),
-    );
+    expect(result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[1].id, mockSeries[0].id]);
   });
 
-  it('should return undefined series when invalid seriesIds are provided', async () => {
+  it('should return undefined series when invalid seriesIds are provided', () => {
     const message = [
       `MUI X Charts: The following ids provided to "useScatterSeries" could not be found: "3".`,
       `Make sure that they exist and their series are using the "scatter" series type.`,
@@ -78,22 +67,15 @@ describe('useScatterSeries', () => {
 
     let render: RenderHookResult<DefaultizedScatterSeriesType[], unknown> | undefined;
 
-    // The warning is only emitted once the async processor settles.
-    await expect(async () => {
+    expect(() => {
       render = renderHook(() => useScatterSeries(['1', '3']), options);
-      await waitFor(() =>
-        expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]),
-      );
     }).toWarnDev(message);
+
+    expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
   });
 
-  it('should return empty array when empty seriesIds array is provided', async () => {
+  it('should return empty array when empty seriesIds array is provided', () => {
     const { result } = renderHook(() => useScatterSeries([]), options);
     expect(result.current).to.deep.equal([]);
-    // Let the async scatter processor settle inside `act` so its store update
-    // doesn't trigger a "not wrapped in act" warning after the test.
-    await act(async () => {
-      await flushMicrotasks();
-    });
   });
 });
