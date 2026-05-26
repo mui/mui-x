@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { TimelineGrid } from '@mui/x-scheduler-internals-premium/timeline-grid';
 import { SchedulerResourceId } from '@mui/x-scheduler-internals/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
@@ -92,7 +93,7 @@ export default function EventTimelinePremiumTitleCell(props: { resourceId: Sched
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const contentRef = React.useRef<HTMLSpanElement | null>(null);
 
-  React.useEffect(() => {
+  useIsoLayoutEffect(() => {
     const root = rootRef.current;
     const content = contentRef.current;
     if (!root || !content || typeof ResizeObserver === 'undefined') {

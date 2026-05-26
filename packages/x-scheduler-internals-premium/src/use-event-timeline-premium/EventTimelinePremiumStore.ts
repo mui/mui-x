@@ -79,7 +79,6 @@ const mapper: SchedulerParametersToStateMapper<
     ...deriveStateFromParameters(parameters),
     preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
     preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
-    titleColumnWidth: 0,
     hasInitialized: false,
   }),
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {

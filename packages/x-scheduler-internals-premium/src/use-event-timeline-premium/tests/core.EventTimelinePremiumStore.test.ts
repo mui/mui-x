@@ -40,7 +40,6 @@ describe('Core - EventTimelinePremiumStore', () => {
         resourceIdList: [],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
-        titleColumnWidth: 0,
         preset: 'dayAndHour',
         presets: ['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year'],
         visibleDate: adapter.startOfDay(adapter.now('default')),
