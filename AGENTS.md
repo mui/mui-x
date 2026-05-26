@@ -22,7 +22,6 @@ pnpm prettier:all # Format all files
 
 ```bash
 pnpm stylelint # when editing CSS/style files
-pnpm markdownlint # when editing markdown files
 pnpm generate:exports # when editing code in `packages/x-charts*`
 ```
 
@@ -86,8 +85,6 @@ Every error message must:
 
 Format:
 
-<!-- markdownlint-disable MD038 -->
-
 - Prefix with `MUI X:` (for internal or generic packages) and `MUI X PackageName:` (for example, `MUI X Charts:` or `MUI X Data Grid:`) for specific packages
 - Use string concatenation for readability
 - Include a documentation link when applicable (`https://mui.com/x/...`)
@@ -132,7 +129,7 @@ Refer to `package.json` for other available scripts.
 
 When updating demos in the `docs` folder, only update the `.tsx` files.
 To generate `.js` files, run `pnpm docs:typescript:formatted`.
-After updating the demo, run `pnpm markdownlint` and `pnpm valelint` to ensure the markdown files are valid. Fix the found issues.
+After updating the demo, run `pnpm eslint` and `pnpm valelint` to ensure the markdown files are valid. Fix the found issues.
 
 ## Codemods
 

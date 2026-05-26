@@ -4,6 +4,7 @@ import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getDayList } from '@mui/x-scheduler-internals/get-day-list';
+import { getStartOfWeek, getEndOfWeek } from '@mui/x-scheduler-internals/internals';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 
 const DAYS_IN_WEEK = 7;
@@ -12,26 +13,32 @@ const DAYS_IN_WEEK = 7;
  * Builds an `EventCalendarViewConfig` for a day-time-grid based view.
  *
  * When `dayCount === 7` the config is week-aligned: it snaps the visible range to
- * `startOfWeek` and honors the `showWeekends` preference. For any other value, the
- * config shows `dayCount` consecutive days starting from the current visible date.
+ * `startOfWeek` and honors the `showWeekends` and `weekStartsOn` preferences. For any
+ * other value, the config shows `dayCount` consecutive days starting from the current
+ * visible date.
  */
 export function createDayTimeGridViewConfig(dayCount: number): EventCalendarViewConfig {
   if (dayCount === DAYS_IN_WEEK) {
     return {
       siblingVisibleDateGetter: ({ state, delta }) =>
         state.adapter.addWeeks(
-          state.adapter.startOfWeek(schedulerOtherSelectors.visibleDate(state)),
+          getStartOfWeek(
+            state.adapter,
+            schedulerOtherSelectors.visibleDate(state),
+            eventCalendarPreferenceSelectors.weekStartsOn(state),
+          ),
           delta,
         ),
       visibleDaysSelector: createSelectorMemoized(
         (state: State) => state.adapter,
         schedulerOtherSelectors.visibleDate,
         eventCalendarPreferenceSelectors.showWeekends,
-        (adapter, visibleDate, showWeekends) =>
+        eventCalendarPreferenceSelectors.weekStartsOn,
+        (adapter, visibleDate, showWeekends, weekStartsOn) =>
           getDayList({
             adapter,
-            start: adapter.startOfWeek(visibleDate),
-            end: adapter.endOfWeek(visibleDate),
+            start: getStartOfWeek(adapter, visibleDate, weekStartsOn),
+            end: getEndOfWeek(adapter, visibleDate, weekStartsOn),
             excludeWeekends: !showWeekends,
           }),
       ),

@@ -29,21 +29,21 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radialLine' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radialLine' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radialLine' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radialLine' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radialLine' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radialLine' }"
       }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radialLine' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radialLine' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radialLine' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radialLine' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -95,7 +95,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex?: number, seriesId: string, type: 'radialLine' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string }"
+        "description": "{ dataIndex?: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radialLine' }"
       }
     },
     "width": { "type": { "name": "number" } }
@@ -110,7 +110,7 @@
     { "name": "baseIconButton", "description": "", "class": null },
     {
       "name": "baseToggleButton",
-      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps>`.",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
       "class": null
     },
     { "name": "baseToggleButtonGroup", "description": "", "class": null },
@@ -118,12 +118,6 @@
       "name": "legend",
       "description": "Custom rendering of the legend.",
       "default": "ChartsLegend",
-      "class": null
-    },
-    {
-      "name": "line",
-      "description": "The component that renders the line.",
-      "default": "LineElementPath",
       "class": null
     },
     {

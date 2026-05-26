@@ -18,7 +18,7 @@ function GridScrollbarFillerCell({ pinnedRight }: { pinnedRight?: boolean }) {
 
   return (
     <div
-      role="presentation"
+      role="none"
       className={clsx(classes.root, pinnedRight && classes.pinnedRight)}
       style={{ right: pinnedScrollOffset }}
     />

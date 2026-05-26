@@ -89,6 +89,10 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   showWeekNumber: string;
   timeFormat: string;
   viewSpecificOptions: (view: CalendarView) => string;
+  startWeekOn: string;
+  weekdaySunday: string;
+  weekdayMonday: string;
+  weekdaySaturday: string;
 
   // WeekView
   allDay: string;
