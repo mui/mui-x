@@ -15,6 +15,7 @@ const months = [
   'Nov',
   'Dec',
 ];
+
 const data = [42, 65, 49, 78, 56, 90, 73, 81, 60, 88, 54, 95];
 
 export default function TextStyling() {
