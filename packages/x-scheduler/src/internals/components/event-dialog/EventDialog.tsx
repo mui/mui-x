@@ -7,7 +7,10 @@ import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps, dialogClasses } from '@mui/material/Dialog';
 import { backdropClasses } from '@mui/material/Backdrop';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { SchedulerEventId, SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import {
+  SchedulerEventId,
+  SchedulerRenderableEventOccurrence,
+} from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
@@ -225,7 +228,8 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
 
   const RecurringScopeDialogRenderer = optionalRenderers?.recurringScopeDialog;
 
-  const imperativeRef = React.useRef<ModalImperativeHandle<SchedulerRenderableEventOccurrence>>(null);
+  const imperativeRef =
+    React.useRef<ModalImperativeHandle<SchedulerRenderableEventOccurrence>>(null);
   const lastSyncedEventId = React.useRef<SchedulerEventId | null>(null);
 
   const openEventId = useStore(store, schedulerOtherSelectors.openEventId);
