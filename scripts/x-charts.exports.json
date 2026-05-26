@@ -303,7 +303,6 @@
   { "name": "MarkElement", "kind": "Function" },
   { "name": "MarkElementProps", "kind": "TypeAlias" },
   { "name": "MarkerItem", "kind": "TypeAlias" },
-  { "name": "MarkerLabel", "kind": "Function" },
   { "name": "MarkerLabelContext", "kind": "TypeAlias" },
   { "name": "MarkerLabelFunction", "kind": "TypeAlias" },
   { "name": "MarkerLabelOwnerState", "kind": "Interface" },

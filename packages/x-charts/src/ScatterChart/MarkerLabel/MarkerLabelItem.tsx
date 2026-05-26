@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useUtilityClasses } from '../scatterClasses';
+import { type ScatterClasses } from '../scatterClasses';
 import { useItemHighlightState } from '../../hooks/useItemHighlightState';
+import { type SeriesId } from '../../models/seriesType/common';
 import { type MarkerLabelFunction, type ScatterValueType } from '../../models/seriesType/scatter';
 import { MarkerLabel, type MarkerLabelOwnerState, type MarkerLabelProps } from './MarkerLabel';
 import { getMarkerLabel } from './getMarkerLabel';
@@ -20,7 +22,10 @@ export interface MarkerLabelSlotProps {
   markerLabel?: SlotComponentPropsFromProps<MarkerLabelProps, {}, MarkerLabelOwnerState>;
 }
 
-export type MarkerLabelItemProps = Omit<MarkerLabelOwnerState, 'isFaded' | 'isHighlighted'> & {
+export type MarkerLabelItemProps = {
+  classes?: Partial<ScatterClasses>;
+  seriesId: SeriesId;
+  dataIndex: number;
   slotProps?: MarkerLabelSlotProps;
   slots?: MarkerLabelSlots;
   /**
@@ -49,7 +54,6 @@ function MarkerLabelItem(props: MarkerLabelItemProps) {
   const {
     seriesId,
     classes: innerClasses,
-    color,
     dataIndex,
     slots,
     slotProps,
@@ -69,12 +73,8 @@ function MarkerLabelItem(props: MarkerLabelItemProps) {
   const isFaded = highlightState === 'faded';
 
   const ownerState: MarkerLabelOwnerState = {
-    seriesId,
     classes: innerClasses,
-    color,
     isFaded,
-    isHighlighted,
-    dataIndex,
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -86,11 +86,7 @@ function MarkerLabelItem(props: MarkerLabelItemProps) {
     additionalProps: {
       x,
       y,
-      seriesId,
-      dataIndex,
-      color,
       isFaded,
-      isHighlighted,
       className: classes.label,
       'data-highlighted': isHighlighted || undefined,
       'data-faded': isFaded || undefined,
@@ -117,7 +113,6 @@ MarkerLabelItem.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
-  color: PropTypes.string.isRequired,
   dataIndex: PropTypes.number.isRequired,
   markerLabel: PropTypes.oneOfType([PropTypes.oneOf(['label']), PropTypes.func]).isRequired,
   markerSize: PropTypes.number.isRequired,

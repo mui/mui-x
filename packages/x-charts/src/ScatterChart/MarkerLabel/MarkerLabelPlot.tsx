@@ -8,7 +8,6 @@ import { useXAxes, useYAxes } from '../../hooks';
 import { useZAxes } from '../../hooks/useZAxis';
 import { getValueToPositionMapper } from '../../hooks/getValueToPositionMapper';
 import { useChartsContext } from '../../context/ChartsProvider';
-import { scatterSeriesConfig } from '../seriesConfig';
 import getMarkerSize from '../seriesConfig/getMarkerSize';
 import { useUtilityClasses } from '../scatterClasses';
 import {
@@ -64,28 +63,12 @@ function MarkerLabelPlot(props: MarkerLabelPlotProps) {
     <MarkerLabelPlotRoot className={className}>
       {seriesOrder.map((seriesId) => {
         const seriesItem = series[seriesId];
-        const {
-          id,
-          xAxisId,
-          yAxisId,
-          colorAxisId,
-          zAxisId,
-          sizeAxisId,
-          hidden,
-          markerLabel,
-          data,
-        } = seriesItem;
+        const { id, xAxisId, yAxisId, sizeAxisId, hidden, markerLabel, data } = seriesItem;
 
         if (hidden || !markerLabel) {
           return null;
         }
 
-        const colorGetter = scatterSeriesConfig.colorProcessor(
-          seriesItem,
-          xAxis[xAxisId ?? defaultXAxisId],
-          yAxis[yAxisId ?? defaultYAxisId],
-          zAxis[colorAxisId ?? zAxisId ?? defaultZAxisId],
-        );
         const sizeGetter = getMarkerSize(seriesItem, zAxis[sizeAxisId ?? defaultZAxisId]);
         const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
         const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
@@ -107,7 +90,6 @@ function MarkerLabelPlot(props: MarkerLabelPlotProps) {
                   key={point.id ?? dataIndex}
                   seriesId={id}
                   dataIndex={dataIndex}
-                  color={colorGetter(dataIndex)}
                   x={x}
                   y={y}
                   value={point}
