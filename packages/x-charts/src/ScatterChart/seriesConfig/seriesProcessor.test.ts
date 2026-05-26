@@ -20,8 +20,74 @@ describe('ScatterChart - seriesProcessor', () => {
         { name: 'p2', a: 3, b: 4 },
       ]);
       expect(result.series.id1.data).to.deep.equal([
-        { x: 1, y: 2, z: undefined, id: 'p1' },
-        { x: 3, y: 4, z: undefined, id: 'p2' },
+        { x: 1, y: 2, id: 'p1' },
+        { x: 3, y: 4, id: 'p2' },
+      ]);
+    });
+  });
+
+  describe('data from dataset with datasetKeys.color', () => {
+    const series: SeriesProcessorParams<'scatter'>['series'] = {
+      id1: {
+        type: 'scatter',
+        id: 'id1',
+        color: 'red',
+        datasetKeys: { x: 'a', y: 'b', colorValue: 'c', id: 'name' },
+      },
+    };
+
+    it('should extract colorValue from the dataset', () => {
+      const result = scatterProcessor({ seriesOrder, series }, [
+        { name: 'p1', a: 1, b: 2, c: 10 },
+        { name: 'p2', a: 3, b: 4, c: 20 },
+      ]);
+      expect(result.series.id1.data).to.deep.equal([
+        { x: 1, y: 2, colorValue: 10, id: 'p1' },
+        { x: 3, y: 4, colorValue: 20, id: 'p2' },
+      ]);
+    });
+  });
+
+  describe('data from dataset with datasetKeys.size', () => {
+    const series: SeriesProcessorParams<'scatter'>['series'] = {
+      id1: {
+        type: 'scatter',
+        id: 'id1',
+        color: 'red',
+        datasetKeys: { x: 'a', y: 'b', sizeValue: 'c', id: 'name' },
+      },
+    };
+
+    it('should extract sizeValue from the dataset', () => {
+      const result = scatterProcessor({ seriesOrder, series }, [
+        { name: 'p1', a: 1, b: 2, c: 10 },
+        { name: 'p2', a: 3, b: 4, c: 20 },
+      ]);
+      expect(result.series.id1.data).to.deep.equal([
+        { x: 1, y: 2, sizeValue: 10, id: 'p1' },
+        { x: 3, y: 4, sizeValue: 20, id: 'p2' },
+      ]);
+    });
+  });
+
+  describe('data from dataset with deprecated datasetKeys.z', () => {
+    const series: SeriesProcessorParams<'scatter'>['series'] = {
+      id1: {
+        type: 'scatter',
+        id: 'id1',
+        color: 'red',
+        datasetKeys: { x: 'a', y: 'b', z: 'c', id: 'name' },
+      },
+    };
+
+    it('should still extract z from the dataset', () => {
+      const result = scatterProcessor({ seriesOrder, series }, [
+        { name: 'p1', a: 1, b: 2, c: 10 },
+        { name: 'p2', a: 3, b: 4, c: 20 },
+      ]);
+      expect(result.series.id1.data).to.deep.equal([
+        { x: 1, y: 2, z: 10, id: 'p1' },
+        { x: 3, y: 4, z: 20, id: 'p2' },
       ]);
     });
   });

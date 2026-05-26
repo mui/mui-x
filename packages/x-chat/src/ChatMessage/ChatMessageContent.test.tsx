@@ -67,7 +67,7 @@ describe('ChatMessageContent', () => {
       renderWithMessage({
         id: 'm1',
         role: 'assistant',
-        parts: [{ type: 'reasoning', text: 'Let me think...', state: 'done' }],
+        parts: [{ type: 'reasoning', text: 'Let me think…', state: 'done' }],
       });
       // Reasoning renders a <details> with a <summary>
       const details = document.querySelector('details');
@@ -82,7 +82,7 @@ describe('ChatMessageContent', () => {
       renderWithMessage({
         id: 'm1',
         role: 'assistant',
-        parts: [{ type: 'reasoning', text: 'thinking...', state: 'streaming' }],
+        parts: [{ type: 'reasoning', text: 'thinking…', state: 'streaming' }],
       });
       const details = document.querySelector('details');
       expect(details).not.toBe(null);

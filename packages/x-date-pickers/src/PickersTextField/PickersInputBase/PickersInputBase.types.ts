@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import { MuiEvent } from '@mui/x-internals/types';
-import { PickersSectionListProps } from '../../PickersSectionList';
+import { PickersSectionListProps, PickersSectionListSlotProps } from '../../PickersSectionList';
 import { PickerTextFieldOwnerState } from '../../models/fields';
 
 export interface PickersInputPropsUsedByField extends Pick<
@@ -83,6 +83,11 @@ export interface PickersInputBaseSlotProps {
   root?: PickersInputBaseRootSlotProps;
   input?: PickersInputBaseInputSlotProps;
   htmlInput?: React.ComponentPropsWithRef<'input'>;
+  /**
+   * Props forwarded to each section's content element inside `PickersSectionList`.
+   * Merged with the built-in section content styles.
+   */
+  sectionContent?: PickersSectionListSlotProps['sectionContent'];
 }
 
 export interface PickersInputBaseProps

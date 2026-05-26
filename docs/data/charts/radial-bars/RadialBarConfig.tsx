@@ -35,7 +35,7 @@ export default function RadialBarConfig() {
           knob: 'number',
           defaultValue: 0.1,
           step: 0.1,
-          min: 0,
+          min: -1,
           max: 1,
         },
       }}
@@ -63,15 +63,37 @@ export default function RadialBarConfig() {
               rotationAxis={
                 props.layout === 'vertical'
                   ? [bandAxis]
-                  : [{ scaleType: 'linear', endAngle: 270 }]
+                  : [
+                      {
+                        scaleType: 'linear',
+                        endAngle: 270,
+                        valueFormatter(value, context) {
+                          if (context.location === 'tick') {
+                            return `${value / 1_000_000}M`;
+                          }
+                          return `${value / 1_000}k`;
+                        },
+                      },
+                    ]
               }
               radiusAxis={
                 props.layout === 'horizontal'
                   ? [bandAxis]
-                  : [{ scaleType: 'linear', minRadius: 20 }]
+                  : [
+                      {
+                        scaleType: 'linear',
+                        minRadius: 20,
+                        position: 'none',
+                        valueFormatter(value, context) {
+                          if (context.location === 'tick') {
+                            return `${value / 1_000_000}M`;
+                          }
+                          return `${value / 1_000}k`;
+                        },
+                      },
+                    ]
               }
-
-              // hideLegend
+              grid={{ rotation: true, radius: true }}
             />
           </div>
         );
