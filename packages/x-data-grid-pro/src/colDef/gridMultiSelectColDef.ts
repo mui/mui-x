@@ -2,7 +2,6 @@ import type { GetApplyQuickFilterFn, GridMultiSelectColDef, ValueOptions } from 
 import {
   GRID_STRING_COL_DEF,
   getValueOptions,
-  isMultiSelectColDef,
   escapeRegExp,
   isObject,
   gridRowIdSelector,
@@ -76,12 +75,10 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   rowSpanValueGetter: ((value: (string | number)[]) => multiSelectKey(value)) as any,
   renderCell: renderMultiSelectCell,
   renderEditCell: renderEditMultiSelectCell,
-  valueFormatter: (value: (string | number)[], row, colDef, apiRef) => {
+  valueFormatter: (value: (string | number)[], row, rawColDef, apiRef) => {
     const rowId = gridRowIdSelector(apiRef, row);
-
-    if (!isMultiSelectColDef(colDef)) {
-      return '';
-    }
+    // Always a multiSelect colDef here — this formatter only lives on `GRID_MULTI_SELECT_COL_DEF`.
+    const colDef = rawColDef as GridMultiSelectColDef;
 
     if (!Array.isArray(value)) {
       // Non-array values can come from aggregation (e.g. size count). Pass through so
@@ -100,9 +97,13 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
       return value.map((v) => colDef.getOptionLabel!(v)).join(separator);
     }
 
+    const optionByValue = new Map(
+      valueOptions.map((option) => [colDef.getOptionValue!(option), option]),
+    );
+
     return value
       .map((v) => {
-        const valueOption = valueOptions.find((option) => colDef.getOptionValue!(option) === v);
+        const valueOption = optionByValue.get(v);
         return valueOption ? colDef.getOptionLabel!(valueOption) : String(v);
       })
       .join(separator);
