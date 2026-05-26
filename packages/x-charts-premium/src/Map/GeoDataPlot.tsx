@@ -34,7 +34,6 @@ function GeoDataPlot(props: GeoDataPlotProps) {
     return null;
   }
 
-
   return (
     <g className={className}>
       {geoData.features.map((feature, index) => {

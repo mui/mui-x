@@ -201,7 +201,7 @@ export default function ProjectionMapShape() {
                 min={-180}
                 max={180}
                 step={10}
-                marks={[{value: 0, label: ""}]}
+                marks={[{ value: 0, label: '' }]}
                 aria-label="longitude"
                 size="small"
                 onChange={(_, value: number) =>
@@ -215,7 +215,7 @@ export default function ProjectionMapShape() {
                 min={-180}
                 max={180}
                 step={10}
-                marks={[{value: 0, label: ""}]}
+                marks={[{ value: 0, label: '' }]}
                 aria-label="latitude"
                 size="small"
                 onChange={(_, value: number) =>

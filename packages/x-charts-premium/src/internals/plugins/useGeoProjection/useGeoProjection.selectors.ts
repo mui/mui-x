@@ -153,7 +153,7 @@ export const selectorChartProjection = createSelectorMemoized(
         if (process.env.NODE_ENV !== 'production') {
           console.error(
             `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
-            `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
+              `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
           );
         }
         return null;
@@ -179,7 +179,6 @@ export const selectorChartProjection = createSelectorMemoized(
           const fitScale = Math.min(
             currentScale * (drawingArea.width / (x1 - x0)),
             currentScale * (drawingArea.height / (y1 - y0)),
-
           );
           projection.scale(fitScale);
         } else {
@@ -195,12 +194,10 @@ export const selectorChartProjection = createSelectorMemoized(
 
       if (scale) {
         projection.scale(scale);
-        projection.clipExtent(
-          [
-            [drawingArea.left, drawingArea.top],
-            [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],
-          ]
-        );
+        projection.clipExtent([
+          [drawingArea.left, drawingArea.top],
+          [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],
+        ]);
       } else {
         projection.fitExtent(
           [
@@ -217,13 +214,10 @@ export const selectorChartProjection = createSelectorMemoized(
           drawingArea.top + drawingArea.height / 2,
         ],
       );
-
     }
     return projection;
   },
 );
-
-
 
 /**
  * Resolves the raw `projection` input into a ready-to-use `GeoPath` instance
@@ -236,5 +230,5 @@ export const selectorChartGeoPath = createSelectorMemoized(
       return null;
     }
     return geoPath(projection);
-  }
+  },
 );

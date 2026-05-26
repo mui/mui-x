@@ -5,7 +5,7 @@ import { useGeoPath } from '../hooks/useGeoPath';
 
 export function Graticule(props: Omit<React.SVGProps<SVGPathElement>, 'd'>) {
   const geoData = useGeoData();
-    const path = useGeoPath();
+  const path = useGeoPath();
 
   if (!geoData || !path) {
     return null;
