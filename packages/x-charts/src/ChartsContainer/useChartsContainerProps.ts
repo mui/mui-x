@@ -63,6 +63,7 @@ export const useChartsContainerProps = <
     onHiddenItemsChange,
     hiddenItems,
     initialHiddenItems,
+    asyncProcessing,
     ...other
   } = props as ChartsContainerProps<SeriesType, AllPluginSignatures<SeriesType>>;
 
@@ -108,6 +109,7 @@ export const useChartsContainerProps = <
     onHiddenItemsChange,
     hiddenItems,
     initialHiddenItems,
+    asyncProcessing,
     plugins: plugins ?? DEFAULT_PLUGINS,
     slots,
     slotProps,

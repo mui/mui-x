@@ -6,6 +6,19 @@ import { ChartsLoadingOverlay } from './ChartsLoadingOverlay';
 import { useSeries } from '../hooks/useSeries';
 import { type SeriesId } from '../models/seriesType/common';
 import { ChartsNoDataOverlay } from './ChartsNoDataOverlay';
+import { useStore } from '../internals/store/useStore';
+import {
+  selectorChartIsAsyncProcessing,
+  type UseChartAsyncSeriesProcessorSignature,
+} from '../internals/plugins/corePlugins/useChartAsyncSeriesProcessor';
+
+/**
+ * @returns `true` while the async-series-processor plugin is running its worker.
+ */
+export function useIsAsyncProcessing() {
+  const store = useStore<[UseChartAsyncSeriesProcessorSignature]>();
+  return store.use(selectorChartIsAsyncProcessing);
+}
 
 export function useNoData() {
   const seriesPerType = useSeries();
@@ -72,8 +85,9 @@ export interface ChartsOverlayProps {
 
 export function ChartsOverlay(props: ChartsOverlayProps) {
   const noData = useNoData();
+  const isAsyncProcessing = useIsAsyncProcessing();
 
-  if (props.loading) {
+  if (props.loading || isAsyncProcessing) {
     const LoadingOverlay = props.slots?.loadingOverlay ?? ChartsLoadingOverlay;
     return <LoadingOverlay {...props.slotProps?.loadingOverlay} />;
   }

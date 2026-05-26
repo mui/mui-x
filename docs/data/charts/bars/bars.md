@@ -334,3 +334,21 @@ Here's how the bar chart is composed:
 ```
 
 {{"demo": "BarScatterCompostion.js"}}
+
+## Async processing 🧪
+
+:::warning
+This feature is experimental. The API may change.
+:::
+
+Set `asyncProcessing` to run the series-processing pipeline (extremums, d3-stack, mapping) in a Web Worker. The chart's loading overlay is shown while the worker is busy; the chart re-renders with the full data once the worker returns.
+
+In the demo below, watch the counter while toggling `asyncProcessing` and reloading data. With it on, the counter keeps ticking smoothly. With it off, the counter freezes for the duration of the synchronous render.
+
+{{"demo": "AsyncBarProcessing.js"}}
+
+Constraints:
+
+- Series must use the `data` prop. `valueGetter` is not supported in this mode.
+- SSR / no-Worker environments fall back to the synchronous path silently.
+- The bar render itself is still on the main thread; only the series-processing step moves to the worker. Expect a smaller speedup than for line/scatter at the same point count.
