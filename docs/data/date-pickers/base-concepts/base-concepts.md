@@ -211,13 +211,11 @@ The explicit `.focus()` is required: without it Playwright's `.fill()` doesn't p
 `includeHidden: true` is only required for the locator to find the element, since the input carries `aria-hidden="true"`.
 `.fill()` itself is allowed because the visually-hidden input is a 1px clipped element (not `display: none`), so Playwright's actionability checks pass.
 
-If you need to drive individual sections (for example, keyboard-flow tests), scope through the field's group so the section roles stay unambiguous when multiple pickers are present, and focus the first section before typing:
+If you need to drive individual sections (for example, keyboard-flow tests), scope through the field's group so the section roles stay unambiguous when multiple pickers are present:
 
 ```ts
 const field = page.getByRole('group', { name: 'Departure' });
-const month = field.getByRole('spinbutton', { name: 'Month' });
-await month.focus();
-await month.fill('04');
+await field.getByRole('spinbutton', { name: 'Month' }).fill('04');
 await field.getByRole('spinbutton', { name: 'Day' }).fill('11');
 await field.getByRole('spinbutton', { name: 'Year' }).fill('2022');
 ```
