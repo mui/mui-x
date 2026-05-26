@@ -38,7 +38,7 @@ The desktop `WeekView` is built for wide screens. On a phone it doesn't fit, eve
 
 2 directions:
 
-1. Make the existing views adapt down to ~400px. CSS only, container queries, no JS. Not a aperfect solution, but no broken views on smaller screens.
+1. Make the existing views adapt down to ~400px. CSS only, container queries, no JavaScript. Not a aperfect solution, but no broken views on smaller screens.
 2. Ship a dedicated mobile day/time grid for the best mobile experience.
 
 The mobile view is **opt-in**. We do not auto-switch on viewport width. The final opt-in API (prop, hook, view registry) is still TBD.
@@ -135,5 +135,5 @@ This part is **up for debate**:
   - A `variant: 'comfortable' | 'compact'` prop on `DayTimeGrid` — change styling based on a prop. Makes things harder to maintain and custom logic will make the file even longer and harder to read.
   - A separate `CompactDayTimeGrid` that does not go through `DayTimeGrid` — most decoupled, but duplicates the grid/scroll/header code that's the whole point of sharing. A lot of duplication, almost everything in the current `DayTimeGrid` is resued by the mobile.
   - A React context that tells `DayTimeGrid` which event component to render
-  - Composition (a `<DayTimeGrid.Event>` sub-component the consumer picks)
+  - Composition (a `<DayTimeGrid.Event>` subcomponent the consumer picks)
   - `children` as the event renderer

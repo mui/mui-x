@@ -1,0 +1,12 @@
+{
+  "componentDescription": "A compact day/time grid optimized for mobile / narrow widths that can be used\noutside of the Event Calendar.",
+  "propDescriptions": {
+    "dayCount": {
+      "description": "The number of days to display starting from the visible date. - <code>1</code>: a single day. - <code>3</code>: three consecutive days. - <code>7</code>: the full week."
+    },
+    "sx": {
+      "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    }
+  },
+  "classDescriptions": {}
+}

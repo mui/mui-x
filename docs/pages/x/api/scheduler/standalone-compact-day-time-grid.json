@@ -1,0 +1,22 @@
+{
+  "props": {
+    "dayCount": {
+      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;3<br>&#124;&nbsp;7" },
+      "default": "3"
+    }
+  },
+  "name": "StandaloneCompactDayTimeGrid",
+  "imports": [
+    "import { StandaloneCompactDayTimeGrid } from '@mui/x-scheduler/compact-day-time-grid';",
+    "import { StandaloneCompactDayTimeGrid } from '@mui/x-scheduler';"
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": false,
+  "muiName": "MuiStandaloneCompactDayTimeGrid",
+  "forwardsRefTo": "HTMLDivElement",
+  "filename": "/packages/x-scheduler/src/compact-day-time-grid/StandaloneCompactDayTimeGrid.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-scheduler/event-calendar/responsiveness/\">Event Calendar - Responsiveness 🧪</a></li></ul>",
+  "cssComponent": false
+}

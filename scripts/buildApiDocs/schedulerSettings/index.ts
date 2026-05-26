@@ -85,6 +85,7 @@ export default schedulerApiPages;
       'x-scheduler/src/day-view/DayView.tsx',
       'x-scheduler/src/month-view/MonthView.tsx',
       'x-scheduler/src/week-view/WeekView.tsx',
+      'x-scheduler/src/compact-day-time-grid/CompactDayTimeGrid.tsx',
       // Internal sub-components of EventCalendar
       'x-scheduler/src/event-calendar/EventCalendarRoot.tsx',
       'x-scheduler/src/event-calendar/header-toolbar/HeaderToolbar.tsx',

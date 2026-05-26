@@ -20,6 +20,10 @@ const schedulerApiPages: MuiPage[] = [
     title: 'StandaloneAgendaView',
   },
   {
+    pathname: '/x/api/scheduler/standalone-compact-day-time-grid',
+    title: 'StandaloneCompactDayTimeGrid',
+  },
+  {
     pathname: '/x/api/scheduler/standalone-day-view',
     title: 'StandaloneDayView',
   },

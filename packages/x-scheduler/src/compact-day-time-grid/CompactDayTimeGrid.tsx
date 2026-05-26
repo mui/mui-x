@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { CompactDayTimeGridDayCount, CompactDayTimeGridProps } from './CompactDayTimeGrid.types';
@@ -18,7 +19,7 @@ const COMPACT_DAY_TIME_GRID_CONFIGS: Record<CompactDayTimeGridDayCount, EventCal
  *
  * For now this view is opt-in and only intended for standalone usage at narrow widths.
  */
-export const CompactDayTimeGrid = React.memo(
+const CompactDayTimeGrid = React.memo(
   React.forwardRef(function CompactDayTimeGrid(
     props: CompactDayTimeGridProps,
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -38,3 +39,20 @@ export const CompactDayTimeGrid = React.memo(
     );
   }),
 );
+
+CompactDayTimeGrid.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The number of days to display starting from the visible date.
+   * - `1`: a single day.
+   * - `3`: three consecutive days.
+   * - `7`: the full week.
+   * @default 3
+   */
+  dayCount: PropTypes.oneOf([1, 3, 7]),
+} as any;
+
+export { CompactDayTimeGrid };
