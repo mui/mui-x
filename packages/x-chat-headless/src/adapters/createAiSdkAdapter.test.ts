@@ -194,6 +194,39 @@ describe('createAiSdkAdapter — { stream } branch', () => {
     expect(finish.messageId).toBe(start.messageId);
   });
 
+  it('resets synthetic messageId generation for each stream', async () => {
+    const adapter = createAiSdkAdapter({
+      stream: () =>
+        makeReadableStream<AiSdkUIMessageChunk>([{ type: 'start' }, { type: 'finish' }]),
+    });
+
+    const firstResult = await adapter.sendMessage({
+      message: makeUserMessage('hi'),
+      messages: [],
+      signal: new AbortController().signal,
+    });
+    const secondResult = await adapter.sendMessage({
+      message: makeUserMessage('hi again'),
+      messages: [],
+      signal: new AbortController().signal,
+    });
+
+    const firstChunks = await readAll(firstResult);
+    const secondChunks = await readAll(secondResult);
+    const firstStart = firstChunks[0] as ChatMessageChunk & { messageId: string };
+    const firstFinish = firstChunks[firstChunks.length - 1] as ChatMessageChunk & {
+      messageId: string;
+    };
+    const secondStart = secondChunks[0] as ChatMessageChunk & { messageId: string };
+    const secondFinish = secondChunks[secondChunks.length - 1] as ChatMessageChunk & {
+      messageId: string;
+    };
+
+    expect(firstFinish.messageId).toBe(firstStart.messageId);
+    expect(secondFinish.messageId).toBe(secondStart.messageId);
+    expect(secondStart.messageId).toBe(firstStart.messageId);
+  });
+
   it('preserves a messageId when the AI SDK does provide one', async () => {
     const adapter = createAiSdkAdapter({
       stream: () =>
@@ -251,6 +284,32 @@ describe('createAiSdkAdapter — { stream } branch', () => {
 
     await result.cancel('aborted');
     expect(upstreamCancel).toHaveBeenCalled();
+  });
+
+  it('cancels the upstream stream when the input signal aborts', async () => {
+    const upstreamCancel = vi.fn();
+    const upstream = new ReadableStream<AiSdkUIMessageChunk>({
+      start(controller) {
+        controller.enqueue({ type: 'start', messageId: 'm1' });
+      },
+      cancel: upstreamCancel,
+    });
+
+    const abortController = new AbortController();
+    const adapter = createAiSdkAdapter({ stream: () => upstream });
+
+    await adapter.sendMessage({
+      message: makeUserMessage('hi'),
+      messages: [],
+      signal: abortController.signal,
+    });
+
+    abortController.abort('aborted by user');
+    await new Promise((resolve) => {
+      setTimeout(resolve, 0);
+    });
+
+    expect(upstreamCancel).toHaveBeenCalledWith('aborted by user');
   });
 
   it('passes attachments and metadata to the stream callback', async () => {
