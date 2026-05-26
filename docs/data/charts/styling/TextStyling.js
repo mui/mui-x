@@ -12,6 +12,7 @@ export default function TextStyling() {
         {
           data: months,
           label: 'Month',
+          height: 70,
           labelStyle: {
             fontSize: 16,
             fontWeight: 600,
