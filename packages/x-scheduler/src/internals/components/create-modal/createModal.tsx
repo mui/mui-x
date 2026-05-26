@@ -23,8 +23,10 @@ export function createModal<TData>(config: CreateModalConfig) {
     return context;
   }
 
+  const EMPTY_ANCHOR_REF: React.RefObject<HTMLElement | null> = { current: null };
+
   function Provider(props: ProviderProps<TData>) {
-    const { children, render, onOpen: onOpenProp, onClose: onCloseProp } = props;
+    const { children, render, onOpen: onOpenProp, onClose: onCloseProp, imperativeRef } = props;
     const anchorRef = React.useRef<HTMLElement | null>(null);
     const eventManager = React.useRef(new EventManager());
 
@@ -47,6 +49,19 @@ export function createModal<TData>(config: CreateModalConfig) {
       setState({ isOpen: false, data: null });
       eventManager.current.emit('close');
     });
+
+    React.useImperativeHandle(
+      imperativeRef,
+      () => ({
+        open(data: TData, forwardedAnchorRef?: React.RefObject<HTMLElement | null>) {
+          onOpen(forwardedAnchorRef ?? EMPTY_ANCHOR_REF, data);
+        },
+        close() {
+          onClose();
+        },
+      }),
+      [onOpen, onClose],
+    );
 
     const subscribeCloseHandler = React.useCallback((handler: () => void) => {
       eventManager.current.on('close', handler);
@@ -92,9 +107,9 @@ export function createModal<TData>(config: CreateModalConfig) {
       ref,
       onClick: (event: React.MouseEvent) => {
         onClick?.(event);
-        const dataId = (data as any)?.id;
-        const currentId = (currentData as any)?.id;
-        if (isOpen && dataId != null && dataId === currentId) {
+        const dataKey = (data as any)?.key;
+        const currentKey = (currentData as any)?.key;
+        if (isOpen && dataKey != null && dataKey === currentKey) {
           onClose();
         } else {
           onOpen(ref as React.RefObject<HTMLElement | null>, data);

@@ -7,7 +7,7 @@ import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps, dialogClasses } from '@mui/material/Dialog';
 import { backdropClasses } from '@mui/material/Backdrop';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { SchedulerEventId, SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
@@ -28,6 +28,7 @@ import {
   EventDialogOptionalRenderers,
   EventDialogOptionalRenderersContext,
 } from './EventDialogOptionalRenderersContext';
+import type { ModalImperativeHandle } from '../create-modal/createModal.types';
 
 const EventDialogRoot = styled(Dialog, {
   name: 'MuiEventDialog',
@@ -116,20 +117,27 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
   return <EventDialogPaper {...other} ref={nodeRef} className={className} />;
 } as any as DialogProps['PaperComponent'];
 
-function isFromEventDialogTrigger(event: MouseEvent | TouchEvent): boolean {
+function isFromEventDialogTrigger(
+  event: MouseEvent | TouchEvent,
+  schedulerId: string | undefined,
+): boolean {
+  const selector =
+    schedulerId != null
+      ? `[data-event-dialog-trigger="${schedulerId}"]`
+      : '[data-event-dialog-trigger]';
   const composedPath = event.composedPath?.();
   if (composedPath) {
     for (const node of composedPath) {
       if (!(node instanceof Element)) {
         continue;
       }
-      if (node.matches('[data-event-dialog-trigger]')) {
+      if (node.matches(selector)) {
         return true;
       }
     }
   }
   if (event.target instanceof Element) {
-    return Boolean(event.target.closest('[data-event-dialog-trigger]'));
+    return Boolean(event.target.closest(selector));
   }
   return false;
 }
@@ -159,13 +167,14 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
 
   const handleClickAway = React.useCallback(
     (event: MouseEvent | TouchEvent) => {
-      // Clicking another event trigger — let EventDialogTrigger handle switching.
-      if (isFromEventDialogTrigger(event)) {
+      // Clicking another event trigger in THIS scheduler — let EventDialogTrigger handle switching.
+      // Triggers from a different scheduler instance must not suppress close.
+      if (isFromEventDialogTrigger(event, schedulerId)) {
         return;
       }
       onClose();
     },
-    [onClose],
+    [onClose, schedulerId],
   );
 
   // Ref hooks
@@ -174,7 +183,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   return (
     <ClickAwayListener
       onClickAway={handleClickAway}
-      mouseEvent={open && !isScopeDialogOpen ? 'onClick' : false}
+      mouseEvent={open && !isScopeDialogOpen ? 'onMouseDown' : false}
       touchEvent={false}
     >
       <EventDialogRoot
@@ -216,11 +225,31 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
 
   const RecurringScopeDialogRenderer = optionalRenderers?.recurringScopeDialog;
 
+  const imperativeRef = React.useRef<ModalImperativeHandle<SchedulerRenderableEventOccurrence>>(null);
+  const lastSyncedEventId = React.useRef<SchedulerEventId | null>(null);
+
+  const openEventId = useStore(store, schedulerOtherSelectors.openEventId);
+  React.useEffect(() => {
+    if (openEventId === lastSyncedEventId.current) {
+      return;
+    }
+    lastSyncedEventId.current = openEventId;
+    if (openEventId !== null) {
+      const processed = store.state.processedEventLookup.get(openEventId);
+      if (processed) {
+        imperativeRef.current?.open({ ...processed, key: String(processed.id) });
+      }
+    } else {
+      imperativeRef.current?.close();
+    }
+  }, [openEventId, store]);
+
   return (
     <EventDialogOptionalRenderersContext.Provider
       value={optionalRenderers ?? (EMPTY_OBJECT as EventDialogOptionalRenderers)}
     >
       <EventDialog.Provider
+        imperativeRef={imperativeRef}
         render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
           <EventDialogContent
             open={isOpen}
@@ -232,10 +261,12 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
         )}
         onOpen={(occurrence) => {
           store.setEditedEventId(occurrence.id);
+          lastSyncedEventId.current = occurrence.id;
           store.setOpenEventId(occurrence.id);
         }}
         onClose={() => {
           store.setEditedEventId(null);
+          lastSyncedEventId.current = null;
           store.setOpenEventId(null);
           store.setOccurrencePlaceholder(null);
         }}
@@ -252,10 +283,11 @@ export function EventDialogProvider(props: EventDialogProviderProps) {
 export function EventDialogTrigger(props: EventDialogTriggerProps) {
   const { occurrence, children, ...other } = props;
   const ref = React.useRef<HTMLElement | null>(null);
+  const { schedulerId } = useEventDialogStyledContext();
 
   const annotatedChild = React.isValidElement(children)
     ? React.cloneElement(children as React.ReactElement<any>, {
-        'data-event-dialog-trigger': 'true',
+        'data-event-dialog-trigger': schedulerId ?? 'true',
       })
     : children;
 
