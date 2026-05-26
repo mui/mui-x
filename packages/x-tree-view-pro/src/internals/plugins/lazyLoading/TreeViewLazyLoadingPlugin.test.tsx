@@ -92,6 +92,38 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
       });
 
+      it('should load children if auto-fetched root items have unknown children count', async () => {
+        const mockFetchWithUnknownCount = async (parentId): Promise<ItemType[]> =>
+          new Promise((resolve) => {
+            setTimeout(
+              () =>
+                resolve([
+                  {
+                    id: parentId == null ? '1' : `${parentId}-1`,
+                    childrenCount: -1,
+                  },
+                ]),
+              0,
+            );
+          });
+
+        const view = render({
+          items: [],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchWithUnknownCount,
+          },
+        });
+
+        await awaitMockFetch();
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
+
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
+      });
+
       it('should handle errors during fetching', async () => {
         const errorFetchData = async (): Promise<ItemType[]> => {
           return new Promise((_, reject) => {
