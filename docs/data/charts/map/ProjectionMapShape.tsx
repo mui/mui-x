@@ -188,7 +188,7 @@ export default function ProjectionMapShape() {
                       if (isCylindrical(projection)) {
                         return setRotation([-coordinates[0], 0]);
                       }
-                      setRotation([-coordinates[0], -coordinates[1]]);
+                      return setRotation([-coordinates[0], -coordinates[1]]);
                     }}
                     disabled={usaProjection}
                   >
