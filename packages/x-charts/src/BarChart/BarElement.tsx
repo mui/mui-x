@@ -7,16 +7,17 @@ import { type BarElementOwnerState, useUtilityClasses } from './barClasses';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { AnimatedBarElement, type BarProps } from './AnimatedBarElement';
 import { useIsItemFocused } from '../hooks/useIsItemFocused';
+import type { BarPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface BarElementSlots {
   /**
    * The component that renders the bar.
    * @default BarElementPath
    */
-  bar?: React.JSXElementConstructor<BarProps>;
+  bar?: React.JSXElementConstructor<BarProps & BarPropsOverrides>;
 }
 export interface BarElementSlotProps {
-  bar?: SlotComponentPropsFromProps<BarProps, {}, BarElementOwnerState>;
+  bar?: SlotComponentPropsFromProps<BarProps, BarPropsOverrides, BarElementOwnerState>;
 }
 
 export type BarElementProps = Omit<

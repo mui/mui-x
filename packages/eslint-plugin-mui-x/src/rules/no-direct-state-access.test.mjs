@@ -50,7 +50,7 @@ const useCustomHook = (api: any) => {
     {
       name: 'directly accessing variable inside received grid state',
       code: `
-type GridApiRef = React.MutableRefObject<any>;
+type GridApiRef = React.RefObject<any>;
 const useCustomHook = (apiRef: GridApiRef) => {
   const rows = apiRef.current.state.rows;
 }
@@ -60,7 +60,7 @@ const useCustomHook = (apiRef: GridApiRef) => {
     {
       name: 'directly accessing variable inside grid state from the hook context',
       code: `
-type GridApiRef = React.MutableRefObject<any>;
+type GridApiRef = React.RefObject<any>;
 const useGridApiContext = (): GridApiRef => { return {} };
 const useCustomHook = () => {
   const apiRef = useGridApiContext();
@@ -72,7 +72,7 @@ const useCustomHook = () => {
     {
       name: 'destructuring variable from grid state',
       code: `
-type GridApiRef = React.MutableRefObject<any>;
+type GridApiRef = React.RefObject<any>;
 const useGridApiContext = (): GridApiRef => { return {} };
 const useCustomHook = () => {
   const apiRef = useGridApiContext();

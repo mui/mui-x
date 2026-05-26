@@ -63,10 +63,10 @@ describe('ReasoningPart', () => {
       parts: [{ type: 'reasoning', text: 'Some reasoning', state: 'streaming' }],
     });
 
-    // Default streaming label is "Thinking..."
-    expect(screen.getByText('Thinking...')).not.to.equal(null);
+    // Default streaming label is "Thinking…"
+    expect(screen.getByText('Thinking…')).not.to.equal(null);
     // The details element should be open when streaming
-    const details = screen.getByText('Thinking...').closest('details');
+    const details = screen.getByText('Thinking…').closest('details');
 
     expect(details).not.to.equal(null);
     expect(details!.hasAttribute('open')).to.equal(true);

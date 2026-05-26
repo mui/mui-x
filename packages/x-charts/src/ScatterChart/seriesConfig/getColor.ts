@@ -20,7 +20,10 @@ const getColor: ColorProcessor<'scatter'> = (series, xAxis, yAxis, zAxis) => {
         }
       }
       const value = series.data[dataIndex];
-      const color = value === null ? getSeriesColor({ value, dataIndex }) : zColorScale(value.z);
+      const color =
+        value === null
+          ? getSeriesColor({ value, dataIndex })
+          : zColorScale(value.colorValue ?? value.z);
       if (color === null) {
         return getSeriesColor({ value, dataIndex });
       }
