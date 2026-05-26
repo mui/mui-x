@@ -1,4 +1,7 @@
 import * as React from 'react';
+import Stack from '@mui/material/Stack';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 import { StandaloneCompactDayTimeGrid } from '@mui/x-scheduler/compact-day-time-grid';
 import {
@@ -9,16 +12,33 @@ import {
 
 export default function CompactWeekView() {
   const [events, setEvents] = React.useState(initialEvents);
+  const [dayCount, setDayCount] = React.useState(3);
 
   return (
-    <div style={{ height: '600px', width: '375px', maxWidth: '100%' }}>
-      <StandaloneCompactDayTimeGrid
-        events={events}
-        resources={resources}
-        defaultVisibleDate={defaultVisibleDate}
-        onEventsChange={setEvents}
-        dayCount={3}
-      />
-    </div>
+    <Stack spacing={2} sx={{ alignItems: 'flex-start' }}>
+      <ToggleButtonGroup
+        value={dayCount}
+        exclusive
+        size="small"
+        onChange={(_, value) => {
+          if (value !== null) {
+            setDayCount(value);
+          }
+        }}
+      >
+        <ToggleButton value={1}>1 day</ToggleButton>
+        <ToggleButton value={3}>3 days</ToggleButton>
+        <ToggleButton value={7}>7 days</ToggleButton>
+      </ToggleButtonGroup>
+      <div style={{ height: '600px', width: '375px', maxWidth: '100%' }}>
+        <StandaloneCompactDayTimeGrid
+          events={events}
+          resources={resources}
+          defaultVisibleDate={defaultVisibleDate}
+          onEventsChange={setEvents}
+          dayCount={dayCount}
+        />
+      </div>
+    </Stack>
   );
 }

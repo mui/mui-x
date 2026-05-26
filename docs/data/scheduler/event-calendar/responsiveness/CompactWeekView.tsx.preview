@@ -1,7 +1,0 @@
-<StandaloneCompactDayTimeGrid
-  events={events}
-  resources={resources}
-  defaultVisibleDate={defaultVisibleDate}
-  onEventsChange={setEvents}
-  dayCount={3}
-/>
