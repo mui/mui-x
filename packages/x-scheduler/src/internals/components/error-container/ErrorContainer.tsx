@@ -1,4 +1,7 @@
 'use client';
+// TODO #22309: unify with EventTimelinePremiumErrorContainer. Both variants are
+// structurally identical now; the only differences left are the styled-component names
+// and the styled-context hook.
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
@@ -53,28 +56,20 @@ export function ErrorContainer(props: ErrorContainerProps) {
   const { classes } = useEventCalendarStyledContext();
   const errors = useStore(store, schedulerOtherSelectors.errors);
 
-  const [dismissedErrors, setDismissedErrors] = React.useState<Set<Error>>(new Set());
-
-  const handleDismiss = (error: Error) => {
-    setDismissedErrors(new Set(dismissedErrors).add(error));
-  };
-
   return (
     <ErrorContainerRoot className={clsx(classes.errorContainer, className)}>
-      {errors
-        .filter((error) => !dismissedErrors.has(error))
-        .map((error, index) => (
-          <ErrorAlert
-            className={classes.errorAlert}
-            severity="error"
-            key={index}
-            onClose={() => handleDismiss(error)}
-          >
-            <ErrorMessage className={classes.errorMessage} variant="body2">
-              {error.message}
-            </ErrorMessage>
-          </ErrorAlert>
-        ))}
+      {errors.map(({ error, key }) => (
+        <ErrorAlert
+          className={classes.errorAlert}
+          severity="error"
+          key={key}
+          onClose={() => store.dismissError(key)}
+        >
+          <ErrorMessage className={classes.errorMessage} variant="body2">
+            {error.message}
+          </ErrorMessage>
+        </ErrorAlert>
+      ))}
     </ErrorContainerRoot>
   );
 }

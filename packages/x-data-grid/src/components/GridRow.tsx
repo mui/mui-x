@@ -496,13 +496,9 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       ref={handleRef}
     >
       {leftCells}
-      <div
-        role="presentation"
-        className={gridClasses.cellOffsetLeft}
-        style={{ width: offsetLeft }}
-      />
+      <div role="none" className={gridClasses.cellOffsetLeft} style={{ width: offsetLeft }} />
       {cells}
-      <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
+      <div role="none" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
       <GridRowDragAndDropOverlay rowId={rowId} />
     </div>

@@ -209,7 +209,7 @@ function AdvancedMetrics() {
           fullWidth
           value={composer.value}
           onChange={(event) => composer.setValue(event.target.value)}
-          placeholder="Type a message..."
+          placeholder="Type a message…"
         />
         <Button
           variant="contained"

@@ -57,7 +57,7 @@ const itITDialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Data di inizio',
   startTimeLabel: 'Ora di inizio',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Tutti gli eventi',
   cancel: 'Annulla',
   confirm: 'Conferma',
@@ -97,6 +97,10 @@ const itITCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Mostra numero della settimana',
   timeFormat: 'Formato ora',
   viewSpecificOptions: (view) => `Opzioni vista ${view}`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Tutto il giorno',

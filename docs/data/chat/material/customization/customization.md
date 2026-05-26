@@ -113,7 +113,7 @@ This is useful for setting `aria-label` attributes, `sx` overrides, or other com
 <ChatBox
   slotProps={{
     conversationList: { 'aria-label': 'Chat threads' },
-    composerInput: { placeholder: 'Ask anything...' },
+    composerInput: { placeholder: 'Ask anything…' },
     composerSendButton: { sx: { borderRadius: 6 } },
   }}
 />
