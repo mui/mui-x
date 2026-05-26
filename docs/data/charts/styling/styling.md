@@ -174,7 +174,7 @@ Charts use SVG for rendering, so you can customize them using the `sx` prop and 
 
 {{"demo": "SxStyling.js"}}
 
-### Text Customization
+### Text customization
 
 To customize axis tick labels and axis labels, use the `tickLabelStyle` and `labelStyle` properties on the axis configuration.
 These accept SVG text attributes such as `fill`, `fontSize`, `fontWeight`, and `fontFamily`.
