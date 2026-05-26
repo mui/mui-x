@@ -40,6 +40,9 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
             if (datasetKeys.sizeValue !== undefined) {
               rep.sizeValue = d[datasetKeys.sizeValue];
             }
+            if (datasetKeys.label !== undefined) {
+              rep.label = d[datasetKeys.label] as string | undefined;
+            }
             if (datasetKeys.z !== undefined) {
               rep.z = d[datasetKeys.z];
             }

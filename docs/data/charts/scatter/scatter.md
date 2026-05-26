@@ -1,7 +1,7 @@
 ---
 title: React Scatter chart
 productId: x-charts
-components: ScatterChart, ScatterChartPro, ScatterChartPremium, ScatterPlot, ScatterPlotPremium, HighlightedScatterMark, ChartsGrid, ChartsWrapper
+components: ScatterChart, ScatterChartPro, ScatterChartPremium, ScatterPlot, ScatterPlotPremium, HighlightedScatterMark, ChartsGrid, ChartsWrapper, MarkerLabel
 ---
 
 # Charts - Scatter
@@ -118,6 +118,23 @@ The `sizeMap` supports the same `continuous`, `piecewise`, and `ordinal` types a
 A series can set both `colorAxisId` and `sizeAxisId` to style points by two values at once.
 
 {{"demo": "SizeScale.js"}}
+
+### Labels
+
+You can show a text label next to each scatter point with the `markerLabel` series property.
+
+Set `markerLabel` to `'label'` to read the label from the `label` field of each data point.
+When using a `dataset`, map a column to it with `datasetKeys.label`.
+
+{{"demo": "ScatterMarkerLabel.js"}}
+
+For more control, pass a function to `markerLabel`.
+It receives the point data and the marker context (including the resolved marker size), and should return the string to display.
+Return `null`, `undefined`, or an empty string to skip the label for that point.
+
+The example below uses the marker size from the size axis to only label the larger bubbles.
+
+{{"demo": "ScatterMarkerLabelFunction.js"}}
 
 ### Grid
 

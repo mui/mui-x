@@ -158,6 +158,7 @@
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
     "marker": "The component that renders the marker for a scatter point.",
+    "markerLabel": "The component that renders the marker label.",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "scatter": "",
     "toolbar": "Custom component for the toolbar.",

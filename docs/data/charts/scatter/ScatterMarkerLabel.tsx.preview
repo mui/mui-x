@@ -1,0 +1,5 @@
+<ScatterChart
+  height={300}
+  grid={{ horizontal: true, vertical: true }}
+  series={[{ data, markerSize: 12, markerLabel: 'label' }]}
+/>

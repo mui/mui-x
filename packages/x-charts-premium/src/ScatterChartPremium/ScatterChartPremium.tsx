@@ -18,7 +18,7 @@ import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import { useScatterChartProps } from '@mui/x-charts/internals';
+import { useScatterChartProps, MarkerLabelPlot } from '@mui/x-charts/internals';
 import {
   type ChartsToolbarProSlotProps,
   type ChartsToolbarProSlots,
@@ -95,6 +95,7 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
     chartsAxisProps,
     gridProps,
     scatterPlotProps,
+    markerLabelPlotProps,
     overlayProps,
     legendProps,
     axisHighlightProps,
@@ -145,11 +146,13 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
             {renderer !== 'webgl' && (
               <g data-drawing-container>
                 <ScatterPlotPremium {...scatterPlotProps} renderer={renderer} />
+                <MarkerLabelPlot {...markerLabelPlotProps} />
               </g>
             )}
             {renderer === 'webgl' && (
               <g data-drawing-container>
                 <HighlightedScatterMark />
+                <MarkerLabelPlot {...markerLabelPlotProps} />
               </g>
             )}
             <ChartsOverlay {...overlayProps} />

@@ -1,0 +1,67 @@
+{
+  "props": {},
+  "name": "MarkerLabel",
+  "imports": [
+    "import { MarkerLabel } from '@mui/x-charts/ScatterChart';",
+    "import { MarkerLabel } from '@mui/x-charts';",
+    "import { MarkerLabel } from '@mui/x-charts-pro';",
+    "import { MarkerLabel } from '@mui/x-charts-premium';"
+  ],
+  "slots": [
+    {
+      "name": "markerLabel",
+      "description": "The component that renders the marker label.",
+      "default": "MarkerLabel",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "focusedMark",
+      "className": "MuiMarkerLabel-focusedMark",
+      "description": "Styles applied to the focused scatter mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlightedMark",
+      "className": "MuiMarkerLabel-highlightedMark",
+      "description": "Styles applied to the highlighted scatter mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "label",
+      "className": "MuiMarkerLabel-label",
+      "description": "Styles applied to an individual marker label.",
+      "isGlobal": false
+    },
+    {
+      "key": "marker",
+      "className": "MuiMarkerLabel-marker",
+      "description": "Styles applied to an individual scatter marker element.\nNot applied when using the `svg-batch` renderer.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiMarkerLabel-root",
+      "description": "Styles applied to the scatter plot element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiMarkerLabel-series",
+      "description": "Styles applied to the group surrounding a series' scatter elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "seriesLabels",
+      "className": "MuiMarkerLabel-seriesLabels",
+      "description": "Styles applied to the group surrounding a series' marker labels.",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiMarkerLabel",
+  "filename": "/packages/x-charts/src/ScatterChart/MarkerLabel/MarkerLabel.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li></ul>",
+  "cssComponent": false
+}

@@ -19,6 +19,10 @@ export type ScatterValueType = {
    */
   sizeValue?: any;
   /**
+   * The text to display next to the scatter point when the series `markerLabel` is `'label'`.
+   */
+  label?: string;
+  /**
    * The value used to compute the color of the scatter point through a color axis.
    * @deprecated Use `colorValue` instead.
    */
@@ -28,6 +32,41 @@ export type ScatterValueType = {
    */
   id?: string | number;
 };
+
+/**
+ * Information about a scatter point passed to a `markerLabel` formatter function.
+ */
+export type MarkerItem = {
+  /**
+   * The id of the series the point belongs to.
+   */
+  seriesId: SeriesId;
+  /**
+   * The index of the point in the series data.
+   */
+  dataIndex: number;
+  /**
+   * The full scatter point value.
+   */
+  value: ScatterValueType;
+};
+
+/**
+ * Contextual information passed to a `markerLabel` formatter function.
+ */
+export type MarkerLabelContext = {
+  marker: {
+    /**
+     * The size of the marker (radius in pixels) after the size axis is applied.
+     */
+    size: number;
+  };
+};
+
+export type MarkerLabelFunction = (
+  item: MarkerItem,
+  context: MarkerLabelContext,
+) => string | null | undefined;
 
 export interface ScatterSeriesType
   extends CommonSeriesType<ScatterValueType | null, 'scatter'>, CartesianSeriesType {
@@ -56,7 +95,13 @@ export interface ScatterSeriesType
    * @deprecated Use `colorAxisId` instead.
    */
   zAxisId?: string;
-
+  /**
+   * If provided, a text label is rendered next to each scatter marker.
+   * Set to `'label'` to use the `label` property of each `ScatterValueType` data point,
+   * or provide a function that returns the string to display.
+   * Returning `null`, `undefined`, or an empty string skips the label for that point.
+   */
+  markerLabel?: 'label' | MarkerLabelFunction;
   /**
    * A function to extract and transform the value from the `dataset` item.
    * It receives the full dataset item and should return a scatter value.
@@ -88,6 +133,10 @@ export interface ScatterSeriesType
      * The key used to retrieve data from the dataset for the size value.
      */
     sizeValue?: string;
+    /**
+     * The key used to retrieve data from the dataset for the marker label.
+     */
+    label?: string;
     /**
      * The key used to retrieve data from the dataset for the Z axis.
      * @deprecated Use `colorValue` instead.

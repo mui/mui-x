@@ -1,0 +1,35 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {},
+  "classDescriptions": {
+    "focusedMark": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the focused scatter mark element"
+    },
+    "highlightedMark": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the highlighted scatter mark element"
+    },
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual marker label"
+    },
+    "marker": {
+      "description": "Styles applied to {{nodeName}}. Not applied when using the <code>svg-batch</code> renderer.",
+      "nodeName": "an individual scatter marker element"
+    },
+    "root": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the scatter plot element"
+    },
+    "series": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group surrounding a series&#39; scatter elements"
+    },
+    "seriesLabels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group surrounding a series&#39; marker labels"
+    }
+  },
+  "slotDescriptions": { "markerLabel": "The component that renders the marker label." }
+}

@@ -31,6 +31,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the highlighted scatter mark element"
     },
+    "label": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "an individual marker label"
+    },
     "root": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the scatter plot element"
@@ -38,6 +42,10 @@
     "series": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the group surrounding a series&#39; scatter elements"
+    },
+    "seriesLabels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the group surrounding a series&#39; marker labels"
     }
   },
   "slotDescriptions": { "marker": "The component that renders the marker for a scatter point." }

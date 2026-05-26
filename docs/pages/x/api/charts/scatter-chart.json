@@ -213,6 +213,12 @@
       "class": null
     },
     {
+      "name": "markerLabel",
+      "description": "The component that renders the marker label.",
+      "default": "MarkerLabel",
+      "class": null
+    },
+    {
       "name": "noDataOverlay",
       "description": "Overlay component rendered when the chart has no data to display.",
       "default": "ChartsNoDataOverlay",
