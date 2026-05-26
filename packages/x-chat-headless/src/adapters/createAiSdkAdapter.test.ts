@@ -309,7 +309,8 @@ describe('createAiSdkAdapter — { stream } branch', () => {
       setTimeout(resolve, 0);
     });
 
-    expect(upstreamCancel).toHaveBeenCalledWith('aborted by user');
+    expect(upstreamCancel).toHaveBeenCalledTimes(1);
+    expect(upstreamCancel.mock.calls[0][0]).toBe('aborted by user');
   });
 
   it('passes attachments and metadata to the stream callback', async () => {
