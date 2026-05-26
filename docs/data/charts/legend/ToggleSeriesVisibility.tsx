@@ -16,9 +16,9 @@ export default function ToggleSeriesVisibility() {
   return (
     <div style={{ width: '100%' }}>
       <FormControlLabel
-        checked={domainSeries === 'visible'}
         control={
           <Checkbox
+            checked={domainSeries === 'visible'}
             onChange={(event) =>
               setDomainSeries(event.target.checked ? 'visible' : 'all')
             }

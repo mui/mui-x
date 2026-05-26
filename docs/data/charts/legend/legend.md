@@ -30,10 +30,10 @@ This demo shows how hiding series can impact the x-axis.
 ### Stack series edge case
 
 When series are stacked, we recommend using `domainSeries: 'visible'`.
-Otherwise, hiding the bottom series could bring the other one outside ot the axis domain.
+Otherwise, hiding the bottom series could bring the other one outside of the axis domain.
 
 In this demo, hiding the blue series (New York) decreases the values of the two other ones as expected.
-But if the y-axis does not take it into consideration, the yellow series which has some values bellow 50 goes outside of the drawing area.
+But if the y-axis does not take it into consideration, the yellow series which has some values below 50 goes outside of the drawing area.
 
 {{"demo": "StackLineVisibility.js"}}
 
@@ -44,7 +44,7 @@ This callback function receives an array of hidden item identifiers whenever the
 
 To set the initial hidden items, use the `initialHiddenItems` prop.
 
-The demo bellow shows a line chart where you can toggle series' visibility and see the count of currently visible series.
+The demo below shows a line chart where you can toggle series' visibility and see the count of currently visible series.
 
 {{"demo": "VisibilityOnChange.js"}}
 
