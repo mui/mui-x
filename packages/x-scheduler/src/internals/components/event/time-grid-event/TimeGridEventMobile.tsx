@@ -61,18 +61,27 @@ const TimeGridEventMobileResizeHandler = styled(CalendarGrid.TimeEventResizeHand
   slot: 'TimeGridEventMobileResizeHandler',
 })({
   position: 'absolute',
-  width: 8,
-  height: 8,
-  borderRadius: '50%',
-  backgroundColor: 'var(--event-on-surface-subtle-secondary)',
+  // experimenting with mobbile handlers
+
+  // width: 8,
+  // height: 8,
+  // borderRadius: '50%',
+  // backgroundColor: 'var(--event-on-surface-subtle-secondary)',
+  height: 4,
+  left: 0,
+  right: 0,
   zIndex: 3,
+  cursor: 'ns-resize',
   '&[data-start]': {
-    top: -5,
-    left: 2,
+    // experimenting with mobbile handlers
+    // top: -5,
+    // left: 2,
+    top: 0,
   },
   '&[data-end]': {
-    bottom: -5,
-    right: 2,
+    // bottom: -5,
+    // right: 2,
+    bottom: 0,
   },
 });
 
