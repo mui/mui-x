@@ -68,7 +68,7 @@ These series types require `datasetKeys` or the `valueGetter` to return values i
 
 ### Scatter series
 
-The scatter series requires `x` and `y` values, and optionally `z` and `id` values.
+The scatter series requires `x` and `y` values, and optionally `colorValue`, `sizeValue`, and `id` values.
 You can provide these values with `datasetKeys` or with `valueGetter`.
 
 ```tsx
@@ -78,14 +78,14 @@ series={[
     datasetKeys: {
       x: 'lng',
       y: 'lat',
-      z: 'population',
+      colorValue: 'population',
       id: 'city',
     },
     // Or with valueGetter
     valueGetter: (item) => ({
       x: item.lng,
       y: item.lat,
-      z: item.population / 1_000_000,
+      colorValue: item.population / 1_000_000,
       id: item.city,
     }),
   },

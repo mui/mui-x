@@ -66,7 +66,7 @@ describe('ChatMessage', () => {
             id: 'm1',
             role: 'assistant',
             status: 'streaming',
-            parts: [{ type: 'text', text: '...', state: 'streaming' }],
+            parts: [{ type: 'text', text: '…', state: 'streaming' }],
           },
         ]}
       >

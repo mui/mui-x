@@ -1,13 +1,19 @@
 import { getValueToPositionMapper, useScatterSeriesContext, useXAxes, useYAxes } from '../hooks';
+import { useZAxes } from '../hooks/useZAxis';
 import {
   type DefaultizedScatterSeriesType,
   type ScatterItemIdentifier,
   type ScatterValueType,
 } from '../models/seriesType/scatter';
+import getMarkerSize from './seriesConfig/getMarkerSize';
 
 export interface ResolvedScatterItem {
   cx: number;
   cy: number;
+  /**
+   * The resolved marker size of the scatter point, accounting for any size axis.
+   */
+  markerSize: number;
   series: DefaultizedScatterSeriesType;
   scatterPoint: ScatterValueType;
 }
@@ -26,6 +32,7 @@ export function useScatterItemPosition(
   const scatterSeries = useScatterSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
+  const { zAxis, zAxisIds } = useZAxes();
 
   if (!item || !scatterSeries) {
     return null;
@@ -46,5 +53,7 @@ export function useScatterItemPosition(
   const cx = getValueToPositionMapper(xAxis[xAxisId].scale)(scatterPoint.x);
   const cy = getValueToPositionMapper(yAxis[yAxisId].scale)(scatterPoint.y);
 
-  return { cx, cy, series, scatterPoint };
+  const markerSize = getMarkerSize(series, zAxis[series.sizeAxisId ?? zAxisIds[0]])(item.dataIndex);
+
+  return { cx, cy, markerSize, series, scatterPoint };
 }

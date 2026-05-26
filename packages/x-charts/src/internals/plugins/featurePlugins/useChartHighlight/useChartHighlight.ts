@@ -13,6 +13,7 @@ import type {
 } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import { createIdentifierWithType } from '../../corePlugins/useChartSeries/useChartSeries';
+import { cleanIdentifier } from '../../corePlugins/useChartSeriesConfig/utils/cleanIdentifier';
 
 export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
   SeriesType extends ChartSeriesType = ChartSeriesType,
@@ -32,6 +33,10 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature<any>> = <
   });
 
   useEnhancedEffect(() => {
+    if (params.highlightedItem === undefined) {
+      return;
+    }
+
     if (store.state.highlight.item !== params.highlightedItem) {
       if (params.highlightedItem === null) {
         store.set('highlight', {
@@ -122,9 +127,12 @@ useChartHighlight.getInitialState = (params, currentState) => ({
     item:
       params.highlightedItem == null
         ? params.highlightedItem
-        : createIdentifierWithType(currentState)(
-            // Need some as because the generic SeriesType can't be propagated to plugins methods.
-            params.highlightedItem as HighlightItemIdentifier<ChartSeriesType>,
+        : cleanIdentifier(
+            currentState.seriesConfig.config,
+            createIdentifierWithType(currentState)(
+              // Need some as because the generic SeriesType can't be propagated to plugins methods.
+              params.highlightedItem as HighlightItemIdentifier<ChartSeriesType>,
+            ),
           ),
     lastUpdate: 'pointer',
     isControlled: params.highlightedItem !== undefined,

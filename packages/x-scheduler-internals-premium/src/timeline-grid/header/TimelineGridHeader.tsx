@@ -31,9 +31,10 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
     eventTimelinePremiumPresetSelectors.config,
   );
   const ampm = useStore(store, schedulerPreferenceSelectors.ampm);
+  const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
 
   const children = headers.map((level, levelIndex) => {
-    const cells = iterate(adapter, level.unit, timeResolution, start, end);
+    const cells = iterate(adapter, level.unit, timeResolution, start, end, weekStartsOn);
 
     return (
       <div key={`${level.unit}:${levelIndex}`} className={classNames?.row} data-level={levelIndex}>

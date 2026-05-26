@@ -196,7 +196,7 @@ function MyApp() {
 
 ### Using module augmentation
 
-If you are using one of the Data Grid packages,
+If you are using one of the Data Grid or Charts packages,
 you can also use [module augmentation](/x/react-data-grid/components/#custom-slot-props-with-typescript) to let TypeScript know about your custom props:
 
 ```ts
@@ -231,13 +231,15 @@ function MyApp() {
 }
 ```
 
-See [Data Grid - Custom slots and subcomponents—Custom slot props with TypeScript](/x/react-data-grid/components/#custom-slot-props-with-typescript) for more details.
+For more details, see:
+
+- [Data Grid - Custom slots and subcomponents—Custom slot props with TypeScript](/x/react-data-grid/components/#custom-slot-props-with-typescript)
+- [Charts - Custom slot props with TypeScript](/x/react-charts/components/#custom-slot-props-with-typescript)
 
 :::warning
 The module augmentation feature isn't implemented yet for the other sets of components. It's coming.
 
 - 👍 Upvote [issue 9775](https://github.com/mui/mui-x/issues/9775) if you want to see it land faster on the Date and Time Pickers.
-- 👍 Upvote [issue 14063](https://github.com/mui/mui-x/issues/14063) if you want to see it land faster on the Charts.
 - 👍 Upvote [issue 14062](https://github.com/mui/mui-x/issues/14062) if you want to see it land faster on the Tree View.
 
   :::

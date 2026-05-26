@@ -18,6 +18,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from './ScatterMarker';
 import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { ScatterSizeGetter } from './seriesConfig/getMarkerSize';
 import { useUtilityClasses } from './scatterClasses';
 import type { ScatterClasses } from './scatterClasses';
 import { useScatterPlotData } from './useScatterPlotData';
@@ -40,6 +41,10 @@ export interface ScatterProps {
    * If provided, the color for the specific scatter item is returned.
    */
   colorGetter: ColorGetter<'scatter'>;
+  /**
+   * Function to get the marker size of a scatter item given its data index.
+   */
+  sizeGetter: ScatterSizeGetter;
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
@@ -82,6 +87,7 @@ function Scatter(props: ScatterProps) {
     xScale,
     yScale,
     colorGetter,
+    sizeGetter,
     onItemClick,
     classes: inClasses,
     slots,
@@ -110,7 +116,6 @@ function Scatter(props: ScatterProps) {
     externalSlotProps: slotProps?.marker,
     additionalProps: {
       seriesId: series.id,
-      size: series.markerSize,
     },
     ownerState: {},
   });
@@ -130,6 +135,7 @@ function Scatter(props: ScatterProps) {
             className={clsx(classes.marker, markerProps.className)}
             dataIndex={dataPoint.dataIndex}
             color={colorGetter(dataPoint.dataIndex)}
+            size={sizeGetter(dataPoint.dataIndex)}
             isHighlighted={isItemHighlighted}
             isFaded={isItemFaded}
             x={dataPoint.x}
@@ -176,6 +182,10 @@ Scatter.propTypes = {
    */
   onItemClick: PropTypes.func,
   series: PropTypes.object.isRequired,
+  /**
+   * Function to get the marker size of a scatter item given its data index.
+   */
+  sizeGetter: PropTypes.func.isRequired,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
   xScale: PropTypes.func.isRequired,
