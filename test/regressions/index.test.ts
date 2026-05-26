@@ -24,6 +24,10 @@ async function main() {
 
   const browser = await chromium.launch({
     args: [
+      // Force grayscale antialiasing — `-webkit-font-smoothing: antialiased`
+      // is a no-op on Linux Chromium, so without this flag screenshots pick
+      // up LCD subpixel color fringes that vary across hosts.
+      '--disable-lcd-text',
       // We could add the hide-scrollbars flag, which should improve argos
       // flaky tests based on the scrollbars.
       // '--hide-scrollbars',
