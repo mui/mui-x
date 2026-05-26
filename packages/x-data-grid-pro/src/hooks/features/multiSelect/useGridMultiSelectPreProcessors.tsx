@@ -7,6 +7,7 @@ import {
   type GridStateColDef,
   type GridPipeProcessor,
   useGridRegisterPipeProcessor,
+  COLUMNS_DIMENSION_PROPERTIES,
 } from '@mui/x-data-grid/internals';
 import { useGridEvent } from '@mui/x-data-grid';
 import type { GridColumnHeaderParams } from '@mui/x-data-grid';
@@ -20,6 +21,10 @@ import type {
 } from './gridMultiSelectInterfaces';
 
 const RESIZE_THROTTLE_MS = 32;
+
+// Dimensions are resolved/resized on the processed column state, so they must not be
+// overwritten by the static multiSelect defaults.
+const DIMENSION_KEYS = new Set<string>(COLUMNS_DIMENSION_PROPERTIES);
 
 class GridMultiSelectCache implements GridMultiSelectInternalCache {
   private dragSubscribers = new Map<string, Set<(width: number) => void>>();
@@ -183,7 +188,6 @@ export const useGridMultiSelectPreProcessors = (
           newLookup = { ...lookup };
         }
         const userColumn = userColumnsLookup.get(field);
-        const stateColumn = column as GridStateColDef;
         // Wrap the user's renderHeader (if any) so the per-column measurer is mounted
         // regardless of customization. The measurer is hidden absolutely and does not
         // displace the user's content.
@@ -196,17 +200,19 @@ export const useGridMultiSelectPreProcessors = (
               </React.Fragment>
             )
           : renderMultiSelectHeaderDefault;
-        // Spread `userColumn` (not `column`) — `column` already has string defaults baked in.
-        newLookup[field] = {
-          ...GRID_MULTI_SELECT_COL_DEF,
-          ...userColumn,
-          field,
-          renderHeader: composedRenderHeader,
-          ...(stateColumn.hasBeenResized && {
-            width: stateColumn.width,
-            flex: stateColumn.flex,
-          }),
-        };
+        // Start from the processed column state to keep dimensions, `hasBeenResized` and other
+        // computed props. `column` carries string-type defaults (multiSelect isn't a core column
+        // type), so overlay multiSelect defaults for keys the user didn't set, except dimensions
+        // whose resolved/resized values already live on `column`.
+        const merged = { ...column } as GridStateColDef;
+        let defaultKey: keyof typeof GRID_MULTI_SELECT_COL_DEF;
+        for (defaultKey in GRID_MULTI_SELECT_COL_DEF) {
+          if (!DIMENSION_KEYS.has(defaultKey) && (userColumn as any)?.[defaultKey] === undefined) {
+            (merged as any)[defaultKey] = GRID_MULTI_SELECT_COL_DEF[defaultKey];
+          }
+        }
+        merged.renderHeader = composedRenderHeader;
+        newLookup[field] = merged;
       }
 
       if (newLookup === null) {

@@ -819,6 +819,10 @@ describe('<DataGridPro /> - Columns', () => {
 
       act(() => apiRef.current?.setColumnWidth('tags', 350));
       expect(gridColumnLookupSelector(apiRef).tags.computedWidth).to.equal(350);
+      // Re-apply twice: the resized width must survive repeated hydration, which requires
+      // `hasBeenResized` to be carried over on each pass, not just the first.
+      // @ts-ignore
+      act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       // @ts-ignore
       act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnLookupSelector(apiRef).tags.computedWidth).to.equal(350);
