@@ -158,7 +158,7 @@ describe('createTextDeltaBuffer', () => {
 
     it('appends delta text to a reasoning part', () => {
       const { store, buffer } = setupBuffer([
-        { type: 'reasoning', text: 'Thinking...', state: 'streaming' },
+        { type: 'reasoning', text: 'Thinking…', state: 'streaming' },
       ]);
       buffer.reasoningPartIndexesByStreamId.set('stream-r1', 0);
 
@@ -167,7 +167,7 @@ describe('createTextDeltaBuffer', () => {
       const part = store.state.messagesById.a1.parts[0];
       expect(part).toMatchObject({
         type: 'reasoning',
-        text: 'Thinking... more',
+        text: 'Thinking… more',
         state: 'streaming',
       });
     });

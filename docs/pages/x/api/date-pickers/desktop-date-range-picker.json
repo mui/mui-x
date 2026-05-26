@@ -108,7 +108,7 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => \"...\"",
+      "default": "() => \"…\"",
       "signature": {
         "type": "function() => React.ReactNode",
         "describedArgs": [],
