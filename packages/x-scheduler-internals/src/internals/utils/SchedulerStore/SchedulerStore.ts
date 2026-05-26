@@ -1,3 +1,4 @@
+import '../../../polyfills';
 import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
@@ -77,6 +78,8 @@ export class SchedulerStore<
   protected timeoutManager = new TimeoutManager();
 
   private eventManager = new EventManager();
+
+  protected pluginDisposables = new DisposableStack();
 
   public constructor(
     parameters: Parameters,
@@ -243,47 +246,22 @@ export class SchedulerStore<
     this.parameters = parameters;
   };
 
-  private isDisposed = false;
-
-  private isDisposeCancelled = false;
-
-  private isDisposeScheduled = false;
-
   /**
-   * Returns a cleanup function. Dispose runs on a microtask so a remount can cancel it.
+   * Returns a cleanup function that tears down all owned resources synchronously.
+   * StrictMode mount → unmount → mount cycles rebuild the store; the lazy-loading
+   * cache is re-populated on the next fetch.
    */
-  public disposeEffect = () => {
-    this.isDisposeCancelled = true;
-    return () => {
-      if (this.isDisposed) {
-        return;
+  public disposeEffect = () => () => {
+    try {
+      this.pluginDisposables.dispose();
+    } catch (error) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('MUI X Scheduler: error while disposing plugins.', error);
       }
-      this.isDisposeCancelled = false;
-      if (this.isDisposeScheduled) {
-        return;
-      }
-      this.isDisposeScheduled = true;
-      queueMicrotask(() => {
-        this.isDisposeScheduled = false;
-        if (this.isDisposed || this.isDisposeCancelled) {
-          return;
-        }
-        this.isDisposed = true;
-        try {
-          this.disposePlugins();
-        } catch (error) {
-          if (process.env.NODE_ENV !== 'production') {
-            console.error('MUI X Scheduler: error while disposing plugins.', error);
-          }
-        } finally {
-          this.timeoutManager.clearAll();
-          this.eventManager.removeAllListeners();
-        }
-      });
-    };
+    }
+    this.timeoutManager.clearAll();
+    this.eventManager.removeAllListeners();
   };
-
-  protected disposePlugins(): void {}
 
   /**
    * Removes the error with the given key from `state.errors`.

@@ -121,11 +121,7 @@ export class EventTimelinePremiumStore<
       });
     }
 
-    this.lazyLoading = new EventTimelinePremiumLazyLoadingPlugin(this);
-  }
-
-  protected override disposePlugins(): void {
-    this.lazyLoading.dispose();
+    this.lazyLoading = this.pluginDisposables.use(new EventTimelinePremiumLazyLoadingPlugin(this));
   }
 
   private assertPresetValidity(preset: EventTimelinePremiumPreset) {

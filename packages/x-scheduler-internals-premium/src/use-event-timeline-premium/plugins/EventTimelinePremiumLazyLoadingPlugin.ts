@@ -19,36 +19,30 @@ export class EventTimelinePremiumLazyLoadingPlugin<
   EventTimelinePremiumState,
   EventTimelinePremiumParameters<TEvent, any>
 > {
-  private unsubscribeStateEffect: (() => void) | null = null;
-
   constructor(store: EventTimelinePremiumStore<TEvent, any>) {
     super(store);
 
-    this.unsubscribeStateEffect = store.registerStoreEffect(
-      (state) => {
-        if (!state.hasInitialized) {
-          return null;
-        }
-        const viewConfig = eventTimelinePremiumPresetSelectors.config(state);
-        return `${state.adapter.getTime(viewConfig.start)}|${state.adapter.getTime(viewConfig.end)}`;
-      },
+    this.disposables.defer(
+      store.registerStoreEffect(
+        (state) => {
+          if (!state.hasInitialized) {
+            return null;
+          }
+          const viewConfig = eventTimelinePremiumPresetSelectors.config(state);
+          return `${state.adapter.getTime(viewConfig.start)}|${state.adapter.getTime(viewConfig.end)}`;
+        },
 
-      (previousKey, nextKey) => {
-        if (previousKey === nextKey || !store.parameters.dataSource) {
-          return;
-        }
+        (previousKey, nextKey) => {
+          if (previousKey === nextKey || !store.parameters.dataSource) {
+            return;
+          }
 
-        this.scheduleFetch(() => {
-          const viewConfig = eventTimelinePremiumPresetSelectors.config(store.state);
-          return { start: viewConfig.start, end: viewConfig.end };
-        }, previousKey === null);
-      },
+          this.scheduleFetch(() => {
+            const viewConfig = eventTimelinePremiumPresetSelectors.config(store.state);
+            return { start: viewConfig.start, end: viewConfig.end };
+          }, previousKey === null);
+        },
+      ),
     );
-  }
-
-  public override dispose(): void {
-    super.dispose();
-    this.unsubscribeStateEffect?.();
-    this.unsubscribeStateEffect = null;
   }
 }

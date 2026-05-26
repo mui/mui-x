@@ -19,11 +19,9 @@ export class EventCalendarPremiumStore<
   ) {
     super(parameters, adapter, 'EventCalendarPremiumStore', schedulerRecurringEventsPlugin);
 
-    this.lazyLoading = new EventCalendarPremiumLazyLoadingPlugin<TEvent>(this);
-  }
-
-  protected override disposePlugins(): void {
-    this.lazyLoading.dispose();
+    this.lazyLoading = this.pluginDisposables.use(
+      new EventCalendarPremiumLazyLoadingPlugin<TEvent>(this),
+    );
   }
 
   public buildPublicAPI() {

@@ -1,3 +1,4 @@
+import '@mui/x-scheduler-internals/polyfills';
 import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { getDateKey, TimeoutManager } from '@mui/x-scheduler-internals/internals';
@@ -63,7 +64,11 @@ export class SchedulerDataManager {
 
   private fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>;
 
-  private isDisposed = false;
+  private disposables = new DisposableStack();
+
+  public get disposed(): boolean {
+    return this.disposables.disposed;
+  }
 
   constructor(
     adapter: Adapter,
@@ -79,6 +84,13 @@ export class SchedulerDataManager {
     this.maxConcurrentRequests = options.maxConcurrentRequests ?? MAX_CONCURRENT_REQUESTS;
     this.maxQueuedRequests = options.maxQueuedRequests ?? MAX_QUEUED_REQUESTS;
     this.debounceMs = options.debounceMs ?? DEBOUNCE_MS;
+
+    this.disposables.defer(() => this.cancelQueuedRequests());
+    this.disposables.defer(() => this.timeoutManager.clearAll());
+    this.disposables.defer(() => {
+      this.pendingRequests.clear();
+      this.settledRequests.clear();
+    });
   }
 
   /**
@@ -141,7 +153,7 @@ export class SchedulerDataManager {
    * takes over — callers shouldn't treat the resolution as a fetch-completion signal.
    */
   public queue = async (ranges: DateRange[]) => {
-    if (this.isDisposed) {
+    if (this.disposed) {
       return undefined;
     }
     if (this.pendingDebounceResolve) {
@@ -177,7 +189,7 @@ export class SchedulerDataManager {
    * Useful for initial load or forced refresh.
    */
   public queueImmediate = async (ranges: DateRange[]) => {
-    if (this.isDisposed) {
+    if (this.disposed) {
       return;
     }
     // Clear any pending debounce
@@ -206,7 +218,7 @@ export class SchedulerDataManager {
   };
 
   public setRequestSettled = async (range: DateRange) => {
-    if (this.isDisposed) {
+    if (this.disposed) {
       return;
     }
     const key = getDateRangeKey(this.adapter, range);
@@ -217,7 +229,7 @@ export class SchedulerDataManager {
 
   /**
    * Soft reset: drops queued/pending/settled state but keeps the manager usable.
-   * Use `dispose` for terminal teardown.
+   * Use `[Symbol.dispose]` for terminal teardown.
    */
   public clear = () => {
     this.cancelQueuedRequests();
@@ -229,16 +241,9 @@ export class SchedulerDataManager {
    * Terminal teardown: subsequent `queue`/`queueImmediate`/`setRequestSettled`
    * calls become no-ops.
    */
-  public dispose = () => {
-    if (this.isDisposed) {
-      return;
-    }
-    this.isDisposed = true;
-    this.cancelQueuedRequests();
-    this.timeoutManager.clearAll();
-    this.pendingRequests.clear();
-    this.settledRequests.clear();
-  };
+  [Symbol.dispose](): void {
+    this.disposables.dispose();
+  }
 
   public clearPendingRequest = async (range: DateRange) => {
     const key = getDateRangeKey(this.adapter, range);

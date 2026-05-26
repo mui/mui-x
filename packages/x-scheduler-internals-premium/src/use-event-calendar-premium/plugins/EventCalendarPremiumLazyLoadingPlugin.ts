@@ -13,52 +13,47 @@ export class EventCalendarPremiumLazyLoadingPlugin<
   EventCalendarPremiumState,
   EventCalendarPremiumParameters<TEvent, any>
 > {
-  private unsubscribeStateEffect: (() => void) | null = null;
-
   constructor(store: EventCalendarPremiumStore<TEvent, any>) {
     super(store);
 
-    this.unsubscribeStateEffect = store.registerStoreEffect(
-      (state) => {
-        const visibleDays =
-          state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
+    this.disposables.defer(
+      store.registerStoreEffect(
+        (state) => {
+          const visibleDays =
+            state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
 
-        const visibleDaysKey = visibleDays.map((day) => day.key).join('|');
+          const visibleDaysKey = visibleDays.map((day) => day.key).join('|');
 
-        return {
-          viewConfig: state.viewConfig,
-          visibleDaysKey,
-          isLoading: state.isLoading,
-        };
-      },
-
-      (previous, next) => {
-        if (previous.visibleDaysKey === next.visibleDaysKey) {
-          return;
-        }
-
-        const visibleDays =
-          next.viewConfig?.visibleDaysSelector?.(store.state as EventCalendarState) ?? [];
-
-        if (!store.parameters.dataSource || visibleDays.length === 0) {
-          return;
-        }
-
-        this.scheduleFetch(() => {
-          const days =
-            store.state.viewConfig?.visibleDaysSelector?.(store.state as EventCalendarState) ?? [];
           return {
-            start: days[0].value,
-            end: days[days.length - 1].value,
+            viewConfig: state.viewConfig,
+            visibleDaysKey,
+            isLoading: state.isLoading,
           };
-        }, previous.viewConfig == null);
-      },
-    );
-  }
+        },
 
-  public override dispose(): void {
-    super.dispose();
-    this.unsubscribeStateEffect?.();
-    this.unsubscribeStateEffect = null;
+        (previous, next) => {
+          if (previous.visibleDaysKey === next.visibleDaysKey) {
+            return;
+          }
+
+          const visibleDays =
+            next.viewConfig?.visibleDaysSelector?.(store.state as EventCalendarState) ?? [];
+
+          if (!store.parameters.dataSource || visibleDays.length === 0) {
+            return;
+          }
+
+          this.scheduleFetch(() => {
+            const days =
+              store.state.viewConfig?.visibleDaysSelector?.(store.state as EventCalendarState) ??
+              [];
+            return {
+              start: days[0].value,
+              end: days[days.length - 1].value,
+            };
+          }, previous.viewConfig == null);
+        },
+      ),
+    );
   }
 }

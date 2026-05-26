@@ -103,7 +103,6 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     await flushDebounce();
 
     store.disposeEffect()();
-    await flushEffect();
 
     const updated = EventBuilder.new()
       .id('1')
@@ -144,32 +143,6 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     expect(dataSource.getEvents.calledOnce).to.equal(true);
   });
 
-  it('should survive a StrictMode mount-unmount-mount cycle', async () => {
-    const dataSource = {
-      getEvents: spy(async () => buildEvents()),
-      persistEvents: noopPersistEvents,
-    };
-    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
-    store.setViewConfig(buildViewConfig());
-
-    await flushEffect();
-    await flushDebounce();
-    expect(dataSource.getEvents.calledOnce).to.equal(true);
-
-    // First mount's cleanup runs, then the second mount calls `disposeEffect` again
-    // synchronously — before the deferred dispose microtask fires.
-    store.disposeEffect()();
-    store.disposeEffect();
-    await flushEffect();
-
-    // Store still alive: a navigation triggers a new fetch.
-    store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
-    await flushEffect();
-    await flushDebounce();
-
-    expect(dataSource.getEvents.callCount).to.equal(2);
-  });
-
   it('should be safe to call the dispose cleanup twice', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
@@ -183,7 +156,6 @@ describe('Dispose - EventCalendarPremiumStore', () => {
 
     const cleanup = store.disposeEffect();
     cleanup();
-    await flushEffect();
     expect(() => cleanup()).not.to.throw();
   });
 
@@ -209,7 +181,6 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     await flushDebounce();
 
     expect(() => store.disposeEffect()()).not.to.throw();
-    await flushEffect();
     // No third fetch: the return navigation was served from the cache.
     expect(dataSource.getEvents.callCount).to.equal(2);
   });
@@ -248,7 +219,6 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     expect(dataSource.persistEvents.calledOnce).to.equal(true);
 
     store.disposeEffect()();
-    await flushEffect();
 
     rejectPersist(new Error('boom'));
     await flushEffect();

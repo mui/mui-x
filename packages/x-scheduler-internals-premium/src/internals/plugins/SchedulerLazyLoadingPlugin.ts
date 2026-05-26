@@ -1,3 +1,4 @@
+import '@mui/x-scheduler-internals/polyfills';
 import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import {
   SchedulerState,
@@ -34,9 +35,7 @@ export class SchedulerLazyLoadingPlugin<
    */
   private latestRequestedRangeKey: string | null = null;
 
-  private unsubscribeEventsUpdated: (() => void) | null = null;
-
-  protected isDisposed = false;
+  protected disposables = new DisposableStack();
 
   /**
    * Coalesces multiple calls within the same tick into one microtask. The latest
@@ -58,7 +57,7 @@ export class SchedulerLazyLoadingPlugin<
 
     queueMicrotask(async () => {
       try {
-        if (this.isDisposed) {
+        if (this.disposables.disposed) {
           return;
         }
         this.isFetchScheduled = false;
@@ -87,30 +86,24 @@ export class SchedulerLazyLoadingPlugin<
         ttl: 300_000,
         getId: this.store.parameters.eventModelStructure?.id?.getter,
       });
-      this.dataManager = new SchedulerDataManager(
-        this.store.state.adapter,
-        this.loadEventsFromDataSource,
+      this.dataManager = this.disposables.use(
+        new SchedulerDataManager(this.store.state.adapter, this.loadEventsFromDataSource),
       );
 
-      this.unsubscribeEventsUpdated = this.store.subscribeEvent(
-        'eventsUpdated',
-        this.handleEventsUpdated,
+      this.disposables.defer(
+        this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated),
       );
+      this.disposables.defer(() => {
+        this.latestRequestedRangeKey = null;
+        this.pendingComputeRange = null;
+        this.cache = null;
+        this.dataManager = null;
+      });
     }
   }
 
-  public dispose(): void {
-    if (this.isDisposed) {
-      return;
-    }
-    this.isDisposed = true;
-    this.latestRequestedRangeKey = null;
-    this.pendingComputeRange = null;
-    this.unsubscribeEventsUpdated?.();
-    this.unsubscribeEventsUpdated = null;
-    this.dataManager?.dispose();
-    this.dataManager = null;
-    this.cache = null;
+  [Symbol.dispose](): void {
+    this.disposables.dispose();
   }
 
   public queueDataFetchForRange = async (
@@ -144,7 +137,7 @@ export class SchedulerLazyLoadingPlugin<
         }
       }
     } catch (error) {
-      if (this.isDisposed) {
+      if (this.disposables.disposed) {
         return;
       }
       this.store.pushError(error);
@@ -224,12 +217,12 @@ export class SchedulerLazyLoadingPlugin<
         errors: [],
       });
     } catch (error) {
-      if (this.isDisposed) {
+      if (this.disposables.disposed) {
         return;
       }
       this.store.pushError(error);
     } finally {
-      if (!this.isDisposed) {
+      if (!this.disposables.disposed) {
         this.store.set('isLoading', false);
       }
       await dataManager.setRequestSettled(range);
@@ -255,7 +248,7 @@ export class SchedulerLazyLoadingPlugin<
         created,
       });
     } catch (error) {
-      if (this.isDisposed) {
+      if (this.disposables.disposed) {
         if (process.env.NODE_ENV !== 'production') {
           console.error(
             'MUI X Scheduler: `dataSource.persistEvents` rejected after the store was disposed; the error will not be surfaced to the user.',
@@ -268,7 +261,7 @@ export class SchedulerLazyLoadingPlugin<
       return;
     }
 
-    if (this.isDisposed) {
+    if (this.disposables.disposed) {
       return;
     }
 
