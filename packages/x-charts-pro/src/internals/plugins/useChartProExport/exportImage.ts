@@ -46,7 +46,7 @@ export async function exportImage(
   const drawDocumentPromise = getDrawDocument();
   const doc = ownerDocument(element);
 
-  const ratio = pixelRatio ?? Math.max(window.devicePixelRatio || 1, 2);
+  const ratio = pixelRatio ?? Math.max(window.devicePixelRatio || 1, 1);
   const iframe = createExportIframe(fileName);
   /* We apply the min/max width and height to ensure the SVG doesn't resize in the export.
    * We apply to the original SVG so that the cloned tree will contain the styles and revert these
