@@ -29,6 +29,7 @@ const defaultPreferences = {
 Available properties:
 
 - `ampm`: Whether the component should display the time in 12-hour format with AM/PM meridiem.
+- `weekStartsOn`: The day the week starts on (`0` = Sunday, `1` = Monday, ..., `6` = Saturday).
 - `showWeekends`: Whether weekends are shown in the calendar.
 - `showWeekNumber`: Whether the week number is shown in the calendar.
 - `isSidePanelOpen`: Whether the side panel is open.
@@ -60,6 +61,7 @@ You can customize which preferences are available in the preferences menu using 
 Available properties:
 
 - `toggleAmpm`: Show/hide the menu item that toggles 12/24‑hour time format.
+- `toggleWeekStartsOn`: Show/hide the menu item that changes the first day of the week.
 - `toggleWeekendVisibility`: Show/hide the menu item that toggles weekend visibility.
 - `toggleWeekNumberVisibility`: Show/hide the menu item that toggles week number visibility.
 - `toggleEmptyDaysInAgenda`: Show/hide the menu item that toggles the visibility of days with no event in the agenda view.

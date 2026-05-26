@@ -28,15 +28,27 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
         data = dataset?.map(seriesData.valueGetter!) ?? [];
       } else if (datasetKeys) {
         data =
-          dataset?.map(
-            (d) =>
-              ({
-                x: d[datasetKeys.x] ?? null,
-                y: d[datasetKeys.y] ?? null,
-                z: datasetKeys.z && d[datasetKeys.z],
-                id: datasetKeys.id && d[datasetKeys.id],
-              }) as ScatterValueType,
-          ) ?? [];
+          dataset?.map((d) => {
+            const x = d[datasetKeys.x];
+            const y = d[datasetKeys.y];
+
+            const rep = { x, y } as ScatterValueType;
+
+            if (datasetKeys.colorValue !== undefined) {
+              rep.colorValue = d[datasetKeys.colorValue];
+            }
+            if (datasetKeys.sizeValue !== undefined) {
+              rep.sizeValue = d[datasetKeys.sizeValue];
+            }
+            if (datasetKeys.z !== undefined) {
+              rep.z = d[datasetKeys.z];
+            }
+            if (datasetKeys.id !== undefined) {
+              rep.id = d[datasetKeys.id] as string | number | undefined;
+            }
+
+            return rep;
+          }) ?? [];
       } else {
         data = seriesData.data ?? [];
       }

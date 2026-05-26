@@ -19,6 +19,7 @@ import {
 } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
+import { EventTimelinePremiumErrorContainer } from './error-container';
 import {
   EventTimelinePremiumClasses,
   getEventTimelinePremiumUtilityClass,
@@ -59,6 +60,10 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     eventResizeHandler: ['eventResizeHandler'],
     eventLinesClamp: ['eventLinesClamp'],
     eventRecurringIcon: ['eventRecurringIcon'],
+    eventSkeleton: ['eventSkeleton'],
+    errorContainer: ['errorContainer'],
+    errorAlert: ['errorAlert'],
+    errorMessage: ['errorMessage'],
     ...eventDialogSlots,
   };
 
@@ -133,6 +138,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
             {...other}
           >
             <EventTimelinePremiumContent />
+            <EventTimelinePremiumErrorContainer />
             {watermark}
           </EventTimelinePremiumRoot>
         </EventDialogStyledContext.Provider>
@@ -193,7 +199,7 @@ EventTimelinePremium.propTypes = {
    */
   dataSource: PropTypes.shape({
     getEvents: PropTypes.func.isRequired,
-    updateEvents: PropTypes.func.isRequired,
+    persistEvents: PropTypes.func.isRequired,
   }),
   /**
    * The locale object from `date-fns` used to format dates.
@@ -209,6 +215,7 @@ EventTimelinePremium.propTypes = {
    */
   defaultPreferences: PropTypes.shape({
     ampm: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * The preset initially displayed in the timeline.
@@ -316,6 +323,7 @@ EventTimelinePremium.propTypes = {
    */
   preferences: PropTypes.shape({
     ampm: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * The preset currently displayed in the timeline.

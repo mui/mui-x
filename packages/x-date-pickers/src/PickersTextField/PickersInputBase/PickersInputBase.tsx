@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { useFormControl } from '@mui/material/FormControl';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
@@ -8,6 +9,7 @@ import refType from '@mui/utils/refType';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import useSlotProps from '@mui/utils/useSlotProps';
+import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import visuallyHidden from '@mui/utils/visuallyHidden';
 import { MuiEvent } from '@mui/x-internals/types';
 import {
@@ -23,9 +25,24 @@ import {
   Unstable_PickersSectionListSectionSeparator as PickersSectionListSectionSeparator,
   Unstable_PickersSectionListSectionContent as PickersSectionListSectionContent,
   PickersSectionElement,
+  PickersSectionListSlotProps,
 } from '../../PickersSectionList';
 import { usePickerTextFieldOwnerState } from '../usePickerTextFieldOwnerState';
 import { PickerTextFieldOwnerState } from '../../models/fields';
+import { PickerOwnerState } from '../../models/pickers';
+
+function mergePickersInputBaseSectionContentSlotProps(
+  consumerSlotProps: PickersSectionListSlotProps['sectionContent'],
+  baseClassName: string,
+): PickersSectionListSlotProps['sectionContent'] {
+  return (ownerState: PickerOwnerState) => {
+    const resolved = resolveComponentProps(consumerSlotProps, ownerState) ?? {};
+    return {
+      ...resolved,
+      className: clsx(baseClassName, resolved.className),
+    };
+  };
+}
 
 const round = (value: number) => Math.round(value * 1e5) / 1e5;
 
@@ -43,6 +60,10 @@ export const PickersInputBaseRoot = styled('div', {
   position: 'relative',
   boxSizing: 'border-box', // Prevent padding issue with fullWidth.
   letterSpacing: `${round(0.15 / 16)}em`,
+  [`&.${pickersInputBaseClasses.disabled}`]: {
+    color: (theme.vars || theme).palette.action.disabled,
+    cursor: 'default',
+  },
   variants: [
     {
       props: { isInputInFullWidth: true },
@@ -444,7 +465,10 @@ const PickersInputBase = React.forwardRef(function PickersInputBase(
             ...slotProps?.input,
             ownerState,
           } as any,
-          sectionContent: { className: pickersInputBaseClasses.sectionContent },
+          sectionContent: mergePickersInputBaseSectionContentSlotProps(
+            slotProps?.sectionContent,
+            pickersInputBaseClasses.sectionContent,
+          ),
           sectionSeparator: ({ separatorPosition }) => ({
             className:
               separatorPosition === 'before'

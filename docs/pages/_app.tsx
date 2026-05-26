@@ -13,6 +13,7 @@ import findActivePage from '@mui/internal-core-docs/findActivePage';
 import { getProductInfoFromUrl } from '@mui/internal-core-docs/utils';
 import { pathnameToLanguage } from '@mui/internal-core-docs/helpers';
 import { Translations } from '@mui/internal-core-docs/i18n';
+import type { VersionEntry } from '@mui/internal-core-docs/DocsProvider';
 import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import xPages from 'docs/data/pages'; // DO NOT REMOVE
@@ -259,7 +260,7 @@ function useThemeWrapper() {
 }
 
 export default function MyApp(
-  props: AppProps<{ userLanguage: string; translations: Translations }>,
+  props: AppProps<{ userLanguage: string; translations: Translations; versions: VersionEntry[] }>,
 ) {
   const { Component, pageProps } = props;
   const { activePage, activePageParents, productIdentifier, productId, productCategoryId } =
@@ -288,6 +289,7 @@ export default function MyApp(
 
 MyApp.getInitialProps = createGetInitialProps({
   translationsContext: require.context('../translations', false, /\.\/translations.*\.json$/),
+  versions: [],
 });
 
 export { reportWebVitals };
