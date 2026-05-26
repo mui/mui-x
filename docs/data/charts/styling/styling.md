@@ -180,12 +180,13 @@ To customize axis tick labels and axis labels, use the `tickLabelStyle` and `lab
 These accept SVG style object.
 
 Charts only measure text from inline styles passed through these props.
-Any attribute that affects text size, such as `fontSize`, `fontWeight`, `fontFamily`, or `letterSpacing`, must be set through `tickLabelStyle` or `labelStyle`.
+Any property that affects text size, such as `fontSize`, `fontWeight`, `fontFamily`, or `letterSpacing`, must be set through `tickLabelStyle` or `labelStyle`.
 
 :::warning
 Applying them through the `sx` prop, the `style` prop, or CSS class selectors renders the text at the new size but leaves the measurement at the original size, causing labels to overlap.
-:::
+
 Visual attributes such as `fill` don't affect measurement and can be set either way.
+:::
 
 ```jsx
 // ❌ Layout is computed for the original size, labels overlap.
