@@ -795,8 +795,6 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       await user.click(selectionTrigger!);
 
       expect(handleSubmit.callCount).to.equal(0);
-
-      expect(handleSubmit.callCount).to.equal(0);
     });
 
     it('should allow dimensions and values selection', async () => {
