@@ -199,8 +199,7 @@ export const selectorChartProjection = createSelectorMemoized(
           [
             [drawingArea.left, drawingArea.top],
             [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],
-          ],
-          geoData,
+          ]
         );
       } else {
         projection.fitExtent(
@@ -232,9 +231,7 @@ export const selectorChartProjection = createSelectorMemoized(
  */
 export const selectorChartGeoPath = createSelectorMemoized(
   selectorChartProjection,
-  (
-    projection,
-  ): GeoPath | null => {
+  (projection): GeoPath | null => {
     if (!projection) {
       return null;
     }
