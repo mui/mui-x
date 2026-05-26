@@ -181,7 +181,10 @@ These accept SVG text attributes such as `fill`, `fontSize`, `fontWeight`, and `
 
 Charts only measure text from inline styles passed through these props.
 Any attribute that affects text size, such as `fontSize`, `fontWeight`, `fontFamily`, or `letterSpacing`, must be set through `tickLabelStyle` or `labelStyle`.
+
+:::warning
 Applying them through the `sx` prop, the `style` prop, or CSS class selectors renders the text at the new size but leaves the measurement at the original size, causing labels to overlap.
+:::
 Visual attributes such as `fill` don't affect measurement and can be set either way.
 
 ```jsx
