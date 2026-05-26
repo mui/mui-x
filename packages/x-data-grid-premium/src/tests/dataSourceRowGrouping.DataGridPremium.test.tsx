@@ -323,6 +323,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
         await waitFor(() => expect(apiRef.current!.getRow('sector-tech')).not.to.equal(null));
         await user.click(within(getCell(0, 0)).getByRole('button'));
         await waitFor(() => expect(apiRef.current!.getRow('industry-software')).not.to.equal(null));
+        await user.click(within(getCell(1, 0)).getByRole('button'));
+        await waitFor(() => expect(apiRef.current!.getRow('stock-msft')).not.to.equal(null));
 
         getRowsSpy.resetHistory();
 
@@ -340,9 +342,24 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
           expect(nestedRequest?.groupFields).to.deep.equal(['sector', 'industry']);
         });
 
+        // Deeper expanded levels must also be re-fetched, not only the first.
+        await waitFor(() => {
+          const deepRequest = getRowsSpy.getCalls().find((call) => {
+            const params = call.firstArg as GridGetRowsParams;
+            return (
+              JSON.stringify(params.groupKeys) === JSON.stringify(['Technology', 'Software']) &&
+              isMatchingRequest(params)
+            );
+          })?.firstArg as GridGetRowsParams | undefined;
+
+          expect(deepRequest?.groupFields).to.deep.equal(['sector', 'industry']);
+        });
+
         expect(apiRef.current!.getRow('industry-software')).not.to.equal(null);
         const sectorNode = apiRef.current!.getRowNode<GridGroupNode>('sector-tech')!;
         expect(sectorNode.childrenExpanded).to.equal(true);
+        const softwareNode = apiRef.current!.getRowNode<GridGroupNode>('industry-software')!;
+        expect(softwareNode.childrenExpanded).to.equal(true);
       });
     });
 

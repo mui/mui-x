@@ -115,6 +115,10 @@ export const useGridDataSourceNestedLazyLoader = (
   const rowsStale = React.useRef<boolean>(false);
   const draggedRowId = React.useRef<GridRowId | null>(null);
   const pollingIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+  // Snapshot of the row tree taken right before a sort/filter triggered reset.
+  // Used by nested data updates that fire later in the auto-expansion chain so
+  // they can preserve expansion state below the first level.
+  const previousTreeRef = React.useRef<GridRowTreeConfig | null>(null);
 
   const fetchRows = React.useCallback(
     (params: Partial<GridGetRowsParams>) => {
@@ -639,9 +643,7 @@ export const useGridDataSourceNestedLazyLoader = (
       // sibling subtrees' row IDs.
       let dataRowIds: GridRowId[];
       if (parentId === GRID_ROOT_GROUP_ID) {
-        dataRowIds = targetGroupChildren.filter(
-          (childId) => tree[childId]?.type !== 'skeletonRow',
-        );
+        dataRowIds = targetGroupChildren.filter((childId) => tree[childId]?.type !== 'skeletonRow');
       } else {
         const newIds = new Set(
           targetGroupChildren.filter((childId) => tree[childId]?.type !== 'skeletonRow'),
@@ -798,6 +800,7 @@ export const useGridDataSourceNestedLazyLoader = (
         // Keep the nested lazy-loading tree shape after sort/filter.
         // Plain `setRows()` would recreate expandable groups without child skeleton rows.
         const previousTree = resetRowTree();
+        previousTreeRef.current = previousTree;
         hasExpandedGroupToFetch = replaceNestedRows(
           0,
           response,
@@ -864,7 +867,13 @@ export const useGridDataSourceNestedLazyLoader = (
       let hasExpandedGroupToFetch = false;
       if (!updateLoadedRows(parentId, startIndex, response.rows)) {
         removeDuplicateRows(response.rows, parentId);
-        hasExpandedGroupToFetch = replaceNestedRows(startIndex, response, fetchParams, parentId);
+        hasExpandedGroupToFetch = replaceNestedRows(
+          startIndex,
+          response,
+          fetchParams,
+          parentId,
+          previousTreeRef.current ?? undefined,
+        );
       }
       if (hasExpandedGroupToFetch) {
         fetchVisibleSkeletonRows({ skipFallbackRevalidation: true });
