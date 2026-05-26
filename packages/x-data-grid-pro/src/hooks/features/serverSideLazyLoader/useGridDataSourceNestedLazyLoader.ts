@@ -633,9 +633,25 @@ export const useGridDataSourceNestedLazyLoader = (
       };
 
       // Removes potential remaining skeleton rows from the dataRowIds.
-      const dataRowIds = targetGroupChildren.filter(
-        (childId) => tree[childId]?.type !== 'skeletonRow',
-      );
+      // For the root parent the targetGroupChildren list IS the full root row order,
+      // so we can replace dataRowIds wholesale. For nested parents it only contains
+      // that subtree's children, so we merge into the existing list to avoid wiping
+      // sibling subtrees' row IDs.
+      let dataRowIds: GridRowId[];
+      if (parentId === GRID_ROOT_GROUP_ID) {
+        dataRowIds = targetGroupChildren.filter(
+          (childId) => tree[childId]?.type !== 'skeletonRow',
+        );
+      } else {
+        const newIds = new Set(
+          targetGroupChildren.filter((childId) => tree[childId]?.type !== 'skeletonRow'),
+        );
+        const previousIds = privateApiRef.current.state.rows.dataRowIds;
+        dataRowIds = previousIds.filter(
+          (id) => tree[id] !== undefined && tree[id].type !== 'skeletonRow' && !newIds.has(id),
+        );
+        newIds.forEach((id) => dataRowIds.push(id));
+      }
 
       privateApiRef.current.caches.rows.dataRowIdToModelLookup = dataRowIdToModelLookup;
 
