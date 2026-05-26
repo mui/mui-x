@@ -174,6 +174,15 @@ Charts use SVG for rendering, so you can customize them using the `sx` prop and 
 
 {{"demo": "SxStyling.js"}}
 
+### Text Customization
+
+To customize the text of axis tick labels and axis labels, use the `tickLabelStyle` and `labelStyle` properties on the axis configuration.
+They accept SVG text attributes such as `fill`, `fontSize`, `fontWeight`, `textAnchor`, `dominantBaseline`, and `angle`, and override the theme's typography defaults.
+
+The demo below shows axis labels styled with a custom `fill`, `fontSize`, and `fontWeight`, and tick labels rotated using the `angle` and `textAnchor` properties.
+
+{{"demo": "TextStyling.js"}}
+
 ### Drawing area background
 
 To set a background color in the drawing area, create an SVG `<rect>` element.
