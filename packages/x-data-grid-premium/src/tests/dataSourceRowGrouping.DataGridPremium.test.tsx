@@ -280,7 +280,6 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source row grouping', () =>
       );
       render(
         <TestNestedLazyRowGrouping
-          defaultGroupingExpansionDepth={-1}
           isGroupExpandedByDefault={isGroupExpandedByDefault}
           onFetchRows={getRowsSpy}
         />,
