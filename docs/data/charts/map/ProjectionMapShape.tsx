@@ -13,11 +13,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { feature as topojsonFeature } from 'topojson-client';
 import countriesTopology from 'world-atlas/countries-110m.json';
 import USATopology from 'us-atlas/states-10m.json';
+import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import {
-  Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium,
-  type D3NamedProjection,
-} from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
-import { GeoDataPlot, Graticule } from '@mui/x-charts-premium/Map';
+  D3NamedProjection,
+  GeoDataPlot,
+  Graticule,
+} from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 
