@@ -847,7 +847,7 @@ export const useGridDataSourceNestedLazyLoader = (
       const startIndex = typeof fetchParams.start === 'number' ? fetchParams.start : 0;
       let hasExpandedGroupToFetch = false;
       if (!updateLoadedRows(parentId, startIndex, response.rows)) {
-        removeDuplicateRows(response.rows);
+        removeDuplicateRows(response.rows, parentId);
         hasExpandedGroupToFetch = replaceNestedRows(startIndex, response, fetchParams, parentId);
       }
       if (hasExpandedGroupToFetch) {
