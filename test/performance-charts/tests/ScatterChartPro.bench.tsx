@@ -24,6 +24,7 @@ benchmark('ScatterChartPro with big data amount (single renderer)', () => (
     series={[{ data }]}
     width={500}
     height={300}
+    skipAnimation
   />
 ));
 
@@ -45,6 +46,7 @@ benchmark('ScatterChartPro with big data amount and zoomed in (single renderer)'
       { axisId: 'x', start: 50, end: 50.1 },
       { axisId: 'y', start: 50, end: 50.1 },
     ]}
+    skipAnimation
   />
 ));
 
@@ -63,6 +65,7 @@ benchmark('ScatterChartPro with big data amount (batch renderer)', () => (
     width={500}
     height={300}
     renderer="svg-batch"
+    skipAnimation
   />
 ));
 
@@ -85,5 +88,6 @@ benchmark('ScatterChartPro with big data amount and zoomed in (batch renderer)',
       { axisId: 'y', start: 50, end: 50.1 },
     ]}
     renderer="svg-batch"
+    skipAnimation
   />
 ));

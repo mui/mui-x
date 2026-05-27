@@ -1,7 +1,8 @@
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { act, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { expectFieldValue, describeAdapters, getCleanedSelectedContent } from 'test/utils/pickers';
+import { expectFieldValue, getCleanedSelectedContent } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
 describe('<DateField /> - Editing', () => {
   describeAdapters(

@@ -91,7 +91,7 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
       {...other}
       ref={handleRef}
     >
-      <div className={gridClasses.mainContent} role="presentation">
+      <div className={gridClasses.mainContent} role="none">
         <GridHeader />
         <GridBody>{children}</GridBody>
         <GridFooterPlaceholder />

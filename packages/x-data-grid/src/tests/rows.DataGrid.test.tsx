@@ -1101,10 +1101,14 @@ describe('<DataGrid /> - Rows', () => {
         const border = 1;
         const defaultRowHeight = 52;
         const measuredRowHeight = 101;
+        // The virtualizer renders one extra row past the visible viewport (see
+        // `getIndexesToRender`), so a single-row viewport measures the first
+        // two rows; the rest are left at the default height.
+        const measuredRowCount = 2;
         render(
           <TestCase
             columnHeaderHeight={columnHeaderHeight}
-            height={columnHeaderHeight + 20 + border * 2} // Force to only measure the first row
+            height={columnHeaderHeight + 20 + border * 2}
             getBioContentHeight={() => measuredRowHeight}
             getRowHeight={() => 'auto'}
             rowBufferPx={0}
@@ -1112,9 +1116,8 @@ describe('<DataGrid /> - Rows', () => {
         );
         const element = document.querySelector('.MuiDataGrid-contentFiller');
         const expectedHeight =
-          measuredRowHeight +
-          border + // Measured rows also include the border
-          (baselineProps.rows.length - 1) * defaultRowHeight;
+          measuredRowCount * (measuredRowHeight + border) + // Measured rows also include the border
+          (baselineProps.rows.length - measuredRowCount) * defaultRowHeight;
 
         await waitFor(() => {
           expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
@@ -1126,10 +1129,13 @@ describe('<DataGrid /> - Rows', () => {
         const border = 1;
         const measuredRowHeight = 100;
         const estimatedRowHeight = 90;
+        // See `getIndexesToRender` — a single-row viewport still measures the
+        // first two rows because of the trailing render-context safety row.
+        const measuredRowCount = 2;
         render(
           <TestCase
             columnHeaderHeight={columnHeaderHeight}
-            height={columnHeaderHeight + 20 + border * 2} // Force to only measure the first row
+            height={columnHeaderHeight + 20 + border * 2}
             getBioContentHeight={() => measuredRowHeight}
             getEstimatedRowHeight={() => estimatedRowHeight}
             getRowHeight={() => 'auto'}
@@ -1137,9 +1143,10 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         const element = document.querySelector('.MuiDataGrid-contentFiller');
-        const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
+        const measuredHeight = measuredRowHeight + border; // Measured rows also include the border
         const expectedHeight =
-          firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
+          measuredRowCount * measuredHeight +
+          (baselineProps.rows.length - measuredRowCount) * estimatedRowHeight;
 
         await waitFor(() => {
           expect(element).toHaveComputedStyle({ height: `${expectedHeight}px` });
@@ -1210,8 +1217,11 @@ describe('<DataGrid /> - Rows', () => {
         );
         const virtualScroller = grid('virtualScroller')!;
 
+        // With one row of viewport, `getIndexesToRender` still renders (and
+        // therefore measures) the next row past the visible area, so the first
+        // two rows are measured before any scroll happens.
         await waitFor(() => {
-          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 52 + 52);
+          expect(virtualScroller.scrollHeight).to.equal(columnHeaderHeight + 101 + 101 + 52);
         });
 
         // It calculates the entire height of the scrollbar whenever the scroll event happens

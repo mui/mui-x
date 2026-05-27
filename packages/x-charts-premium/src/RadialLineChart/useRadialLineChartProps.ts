@@ -59,6 +59,19 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
     [disableLineItemHighlight, series],
   );
 
+  const defaultRotationAxis = React.useMemo(() => {
+    return [
+      {
+        id: DEFAULT_ROTATION_AXIS_KEY,
+        scaleType: 'point' as const,
+        data: Array.from(
+          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
+          (_, index) => index,
+        ),
+      },
+    ];
+  }, [series, dataset]);
+
   const chartsContainerProps: ChartsRadialDataProviderProps<
     'radialLine',
     RadialLineChartPluginSignatures
@@ -70,16 +83,7 @@ export const useRadialLineChartProps = (props: RadialLineChartProps) => {
     margin,
     colors,
     dataset,
-    rotationAxis: rotationAxis ?? [
-      {
-        id: DEFAULT_ROTATION_AXIS_KEY,
-        scaleType: 'point',
-        data: Array.from(
-          { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
-          (_, index) => index,
-        ),
-      },
-    ],
+    rotationAxis: rotationAxis ?? defaultRotationAxis,
     radiusAxis,
     skipAnimation,
     plugins: RADIAL_LINE_CHART_PLUGINS,

@@ -57,7 +57,7 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Data de început',
   startTimeLabel: 'Ora de început',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Toate evenimentele',
   cancel: 'Anulează',
   confirm: 'Confirmă',
@@ -68,11 +68,8 @@ const roRODialog: Partial<EventDialogLocaleText> = {
 };
 
 const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Ascunde evenimentele pentru ${resourceName}`,
+  // ResourcesTree
   resourcesLabel: 'Resurse',
-  resourcesLegendSectionLabel: 'Legendă resurse',
-  showEventsLabel: (resourceName) => `Afișează evenimentele pentru ${resourceName}`,
 
   // ViewSwitcher
   agenda: 'Agendă',
@@ -100,6 +97,10 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Afișează numărul săptămânii',
   timeFormat: 'Formatul orei',
   viewSpecificOptions: (view) => `Opțiuni pentru vizualizarea ${view}`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Toată ziua',

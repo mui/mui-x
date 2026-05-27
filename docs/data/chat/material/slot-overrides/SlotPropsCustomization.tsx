@@ -18,7 +18,7 @@ export default function SlotPropsCustomization() {
       initialMessages={minimalMessages}
       slotProps={{
         composerInput: {
-          placeholder: 'Ask me anything...',
+          placeholder: 'Ask me anything…',
         },
         messageList: {
           sx: { backgroundColor: 'grey.50' },

@@ -179,6 +179,8 @@ export const cleanDigitSectionValue = (
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (section.type !== 'day' && section.contentType === 'digit-with-letter') {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error(
         [
           `MUI X: The token "${section.format}" is a digit format with letter in it.'
@@ -254,6 +256,8 @@ export const changeSectionValueFormat = (
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (getDateSectionConfigFromFormatToken(adapter, currentFormat).type === 'weekDay') {
+      // TODO: fix mui/no-guarded-throw
+      // eslint-disable-next-line mui/no-guarded-throw
       throw new Error("changeSectionValueFormat doesn't support week day formats");
     }
   }
