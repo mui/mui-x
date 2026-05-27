@@ -29,7 +29,7 @@ catalog:
   '@mui/utils': 9.0.1
   '@mui/x-internal-exceljs-fork': 4.4.5
   '@playwright/test': 1.60.0
-  '@react-spring/web': ^10.0.3
+  '@react-spring/web': ^10.1.0
   '@types/chance': ^1.1.8
   '@types/luxon': ^3.7.1
   '@types/moment-hijri': ^2.1.4
