@@ -220,6 +220,8 @@ jobs:
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.60.0-noble
+    # Gen2 showed only ~1.2x speedup here, not worth the price increase.
+    resource_class: medium
     steps:
       - checkout
       - install-deps:
@@ -245,6 +247,8 @@ jobs:
             PLAYWRIGHT_TEST_BASE_URL: << parameters.e2e-base-url >>
   test_package:
     <<: *default-job
+    # Gen2 showed no speedup here, not worth the price increase.
+    resource_class: medium
     steps:
       - checkout
       - install-deps:
