@@ -69,7 +69,6 @@ import {
   virtualizationStateInitializer,
   useGridVirtualization,
   useGridDataSourceTreeDataPreProcessors,
-  useGridMultiSelectPreProcessors,
   dataSourceStateInitializer,
   useGridRowSpanning,
   rowSpanningStateInitializer,
@@ -79,6 +78,7 @@ import {
   rowReorderStateInitializer,
   type GridConfiguration,
   useFirstRender,
+  registerMultiSelectColumnType,
 } from '@mui/x-data-grid-pro/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
 import type { GridPrivateApiPremium } from '../models/gridApiPremium';
@@ -118,6 +118,8 @@ import {
   useGridChartsIntegration,
 } from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 import { historyStateInitializer, useGridHistory } from '../hooks/features/history/useGridHistory';
+
+registerMultiSelectColumnType();
 
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -159,7 +161,6 @@ export const useDataGridPremiumComponent = (
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDataSourceTreeDataPreProcessors(apiRef, props);
   useGridRowSelectionPreProcessors(apiRef, props);
-  useGridMultiSelectPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridAggregationPreProcessors(apiRef, props);

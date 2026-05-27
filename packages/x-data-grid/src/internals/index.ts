@@ -4,6 +4,7 @@ export type {
   GridSingleSelectColDef,
 } from '../models/colDef/gridColDef';
 export { GRID_STRING_COL_DEF } from '../colDef/gridStringColDef';
+export { registerGridColumnTypes } from '../colDef/gridColumnTypesRegistry';
 export { gridRowIdSelector } from '../hooks/core/gridPropsSelectors';
 export { GridVirtualScroller } from '../components/virtualization/GridVirtualScroller';
 export { GridVirtualScrollerContent } from '../components/virtualization/GridVirtualScrollerContent';

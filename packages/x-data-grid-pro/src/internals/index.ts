@@ -2,6 +2,7 @@ export * from '@mui/x-data-grid/internals';
 
 export { GridColumnHeaders } from '../components/GridColumnHeaders';
 export { GridMultiSelectMeasurer } from '../components/cell/GridMultiSelectMeasurer';
+export { registerMultiSelectColumnType } from '../colDef/registerMultiSelectColumnType';
 export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
 /*
@@ -47,7 +48,6 @@ export {
 } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
 export { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
 export { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
-export { useGridMultiSelectPreProcessors } from '../hooks/features/multiSelect/useGridMultiSelectPreProcessors';
 export { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
 export { useGridInfiniteLoadingIntersection } from '../hooks/features/serverSideLazyLoader/useGridInfiniteLoadingIntersection';
 export { dataSourceStateInitializer } from '../hooks/features/dataSource/useGridDataSourcePro';

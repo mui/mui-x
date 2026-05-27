@@ -5,6 +5,7 @@ import { useGridRootProps, useGridSelector, gridColumnDefinitionsSelector } from
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { MultiSelectChipsRoot } from './GridMultiSelectChips';
+import { GridMultiSelectCache } from '../../hooks/features/multiSelect/gridMultiSelectCache';
 import { DEFAULT_GAP } from '../../utils/multiSelectCellUtils';
 
 type OwnerState = DataGridProProcessedProps;
@@ -37,6 +38,18 @@ export function GridMultiSelectMeasurer() {
   const ownerState = rootProps as OwnerState;
   const containerRef = React.useRef<HTMLDivElement>(null);
   const chipsRef = React.useRef<Array<HTMLDivElement | null>>([]);
+
+  // The measurer is the sole writer of the overflow metrics, so it owns the cache lifecycle.
+  if (!apiRef.current.caches.multiSelect) {
+    apiRef.current.caches.multiSelect = new GridMultiSelectCache();
+  }
+
+  React.useEffect(() => {
+    const api = apiRef.current;
+    return () => {
+      api.caches.multiSelect?.teardown();
+    };
+  }, [apiRef]);
 
   const measure = React.useCallback(() => {
     const container = containerRef.current;

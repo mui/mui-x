@@ -8,19 +8,11 @@ import type {
   GridColumnRawLookup,
   GridColumnsInitialState,
 } from './gridColumnsInterfaces';
-import {
-  DEFAULT_GRID_COL_TYPE_KEY,
-  GRID_STRING_COL_DEF,
-  getGridDefaultColumnTypes,
-} from '../../../colDef';
+import { GRID_STRING_COL_DEF } from '../../../colDef';
+import { getRegisteredColumnTypeDef } from '../../../colDef/gridColumnTypesRegistry';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import type {
-  GridColDef,
-  GridColTypeDef,
-  GridStateColDef,
-} from '../../../models/colDef/gridColDef';
-import type { GridColType } from '../../../models/colDef/gridColType';
+import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
@@ -33,8 +25,6 @@ import type { GridDimensions } from '../dimensions/gridDimensionsApi';
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
 export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];
-
-const COLUMN_TYPES = getGridDefaultColumnTypes();
 
 /**
  * Computes width for flex columns.
@@ -303,12 +293,7 @@ const applyInitialState = (
 };
 
 export function getDefaultColTypeDef(type: GridColDef['type']) {
-  const lookup = COLUMN_TYPES as Partial<Record<GridColType, GridColTypeDef>>;
-  let colDef = lookup[DEFAULT_GRID_COL_TYPE_KEY]!;
-  if (type && lookup[type]) {
-    colDef = lookup[type]!;
-  }
-  return colDef;
+  return getRegisteredColumnTypeDef(type);
 }
 
 export const createColumnsState = ({
