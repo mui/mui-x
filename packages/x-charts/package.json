@@ -68,6 +68,7 @@
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
+    "bezier-easing-v3": "npm:bezier-easing@^3.0.0",
     "csstype": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
