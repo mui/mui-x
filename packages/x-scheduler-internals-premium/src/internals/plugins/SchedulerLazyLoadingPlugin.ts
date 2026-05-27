@@ -90,9 +90,7 @@ export class SchedulerLazyLoadingPlugin<
         new SchedulerDataManager(this.store.state.adapter, this.loadEventsFromDataSource),
       );
 
-      this.disposables.defer(
-        this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated),
-      );
+      this.disposables.defer(this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated));
       this.disposables.defer(() => {
         this.latestRequestedRangeKey = null;
         this.pendingComputeRange = null;

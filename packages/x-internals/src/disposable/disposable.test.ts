@@ -54,7 +54,12 @@ describe('disposable', () => {
     });
 
     it('disposes a value registered via use() by calling its [Symbol.dispose]()', () => {
-      const inner = { ran: false, [Symbol.dispose]() { this.ran = true; } };
+      const inner = {
+        ran: false,
+        [Symbol.dispose]() {
+          this.ran = true;
+        },
+      };
       const stack = new DisposableStack();
       stack.use(inner);
       stack.dispose();
