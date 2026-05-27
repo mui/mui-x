@@ -35,7 +35,7 @@ export class SchedulerLazyLoadingPlugin<
    */
   private latestRequestedRangeKey: string | null = null;
 
-  protected disposables = new DisposableStack();
+  protected readonly disposables = new DisposableStack();
 
   /**
    * Coalesces multiple calls within the same tick into one microtask. The latest

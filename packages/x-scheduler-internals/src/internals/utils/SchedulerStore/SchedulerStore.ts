@@ -79,7 +79,7 @@ export class SchedulerStore<
 
   private eventManager = new EventManager();
 
-  protected disposables = new DisposableStack();
+  protected readonly disposables = new DisposableStack();
 
   public constructor(
     parameters: Parameters,

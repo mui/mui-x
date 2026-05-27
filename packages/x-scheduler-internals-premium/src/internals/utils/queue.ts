@@ -64,7 +64,7 @@ export class SchedulerDataManager {
 
   private fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>;
 
-  private disposables = new DisposableStack();
+  private readonly disposables = new DisposableStack();
 
   public get disposed(): boolean {
     return this.disposables.disposed;
