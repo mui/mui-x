@@ -4,17 +4,18 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { type SeriesId } from '@mui/x-charts/internals';
 import { useUtilityClasses } from './heatmapClasses';
 import { HeatmapCell, type HeatmapCellOwnerState, type HeatmapCellProps } from './HeatmapCell';
+import type { CellPropsOverrides } from '../models/chartsSlotsComponentsPropsPro';
 
 export interface HeatmapItemSlots {
   /**
    * The component that renders the heatmap cell.
    * @default HeatmapCell
    */
-  cell?: React.ElementType;
+  cell?: React.ElementType<HeatmapCellProps & CellPropsOverrides>;
 }
 
 export interface HeatmapItemSlotProps {
-  cell?: Partial<HeatmapCellProps>;
+  cell?: Partial<HeatmapCellProps> & CellPropsOverrides;
 }
 
 export interface HeatmapItemProps {
@@ -88,7 +89,8 @@ function HeatmapItem(props: HeatmapItemProps) {
     className: classes.cell,
   });
 
-  return <Cell {...cellProps} />;
+  // `useSlotProps` returns a loosely-typed object; the required `x/y/width/height` flow in via `...other`.
+  return <Cell {...(cellProps as unknown as HeatmapCellProps & CellPropsOverrides)} />;
 }
 
 HeatmapItem.propTypes = {

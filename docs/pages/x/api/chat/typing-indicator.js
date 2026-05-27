@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/chat/typing-indicator',
+    'docs/translations/api-docs/chat/typing-indicator',
     false,
     /\.\/typing-indicator.*\.json$/,
   );

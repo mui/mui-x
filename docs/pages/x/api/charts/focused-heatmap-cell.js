@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/focused-heatmap-cell',
+    'docs/translations/api-docs/charts/focused-heatmap-cell',
     false,
     /\.\/focused-heatmap-cell.*\.json$/,
   );

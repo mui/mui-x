@@ -1,6 +1,6 @@
 import * as React from 'react';
-import InterfaceApiPage from 'docsx/src/modules/components/InterfaceApiPage';
-import layoutConfig from 'docsx/src/modules/utils/dataGridLayoutConfig';
+import InterfaceApiPage from 'docs/src/modules/components/InterfaceApiPage';
+import layoutConfig from 'docs/src/modules/utils/dataGridLayoutConfig';
 import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
 import jsonPageContent from './funnel-series.json';
 
@@ -13,7 +13,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/',
+    'docs/translations/api-docs/charts/',
     false,
     /\.\/funnel-series.*.json$/,
   );

@@ -1,5 +1,5 @@
 import { MarkdownDocs } from '@mui/internal-core-docs/MarkdownDocs';
-import * as pageProps from 'docsx/data/chat/behavior/typing-indicators/typing-indicators.md?muiMarkdown';
+import * as pageProps from 'docs/data/chat/behavior/typing-indicators/typing-indicators.md?muiMarkdown';
 
 export default function Page() {
   return <MarkdownDocs {...pageProps} />;

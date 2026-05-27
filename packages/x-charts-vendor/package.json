@@ -44,7 +44,7 @@
     "@babel/cli": "catalog:",
     "@babel/plugin-transform-modules-commonjs": "7.28.6",
     "@babel/plugin-transform-runtime": "catalog:",
-    "babel-plugin-module-resolver": "5.0.2",
+    "babel-plugin-module-resolver": "5.0.3",
     "execa": "catalog:",
     "rimraf": "catalog:"
   },

@@ -20,11 +20,11 @@ import {
   demoConversations,
   demoThreads,
   demoUsers,
-} from 'docsx/data/chat/core/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 import {
   createChunkStream,
   createTextResponseChunks,
-} from 'docsx/data/chat/core/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 
 const adapter: ChatAdapter = {
   async sendMessage({ conversationId }) {
@@ -209,7 +209,7 @@ function AdvancedMetrics() {
           fullWidth
           value={composer.value}
           onChange={(event) => composer.setValue(event.target.value)}
-          placeholder="Type a message..."
+          placeholder="Type a message…"
         />
         <Button
           variant="contained"

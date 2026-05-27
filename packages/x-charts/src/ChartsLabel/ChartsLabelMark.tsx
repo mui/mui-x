@@ -68,8 +68,6 @@ const Root = styled('div', {
       alignItems: 'center',
     },
     [`&.${labelMarkClasses.lineAndMark}`]: {
-      width: 16,
-      height: 16,
       alignItems: 'center',
     },
     [`&.${labelMarkClasses.square}`]: {

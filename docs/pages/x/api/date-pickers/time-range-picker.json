@@ -312,7 +312,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiTimeRangePicker",
   "forwardsRefTo": "HTMLDivElement",

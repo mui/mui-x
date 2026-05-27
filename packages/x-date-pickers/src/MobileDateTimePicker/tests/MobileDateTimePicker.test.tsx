@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers';
 import { hasTouchSupport } from 'test/utils/skipIf';
@@ -92,7 +92,7 @@ describe('<MobileDateTimePicker />', () => {
         />,
       );
 
-      openPicker({ type: 'date-time' });
+      await openPicker(user, { type: 'date-time' });
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -110,13 +110,13 @@ describe('<MobileDateTimePicker />', () => {
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 15));
 
       // Change the hours
-      fireEvent.click(screen.getByRole('button', { name: 'Next' }));
-      fireEvent.click(screen.getByRole('option', { name: '11 hours' }));
+      await user.click(screen.getByRole('button', { name: 'Next' }));
+      await user.click(screen.getByRole('option', { name: '11 hours' }));
       expect(onChange.callCount).to.equal(3);
       expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:00:00'));
 
       // Change the minutes
-      fireEvent.click(screen.getByRole('option', { name: '55 minutes' }));
+      await user.click(screen.getByRole('option', { name: '55 minutes' }));
       expect(onChange.callCount).to.equal(4);
       expect(onChange.lastCall.args[0]).toEqualDateTime(adapterToUse.date('2010-01-15T11:55:00'));
       expect(onAccept.callCount).to.equal(0);

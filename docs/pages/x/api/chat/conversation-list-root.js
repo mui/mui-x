@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/chat/conversation-list-root',
+    'docs/translations/api-docs/chat/conversation-list-root',
     false,
     /\.\/conversation-list-root.*\.json$/,
   );

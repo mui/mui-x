@@ -8,12 +8,12 @@ import {
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import { type PolarAxisDefaultized } from '../models/axis';
-import { EPSILON } from '../utils/epsilon';
 
 interface ChartsRadiusGridProps {
   axis: PolarAxisDefaultized<any, any, any>;
   startAngle: number;
   endAngle: number;
+  isFullCircle: boolean;
   classes: Partial<ChartsRadialGridClasses>;
 }
 
@@ -22,7 +22,7 @@ interface ChartsRadiusGridProps {
  */
 export function ChartsRadiusGrid(props: ChartsRadiusGridProps) {
   const { store } = useChartsContext<[UseChartPolarAxisSignature]>();
-  const { axis, startAngle, endAngle, classes } = props;
+  const { axis, startAngle, endAngle, isFullCircle, classes } = props;
   const { cx, cy } = store.use(selectorChartPolarCenter);
 
   const { scale, tickNumber, tickInterval, tickSpacing } = axis;
@@ -34,8 +34,6 @@ export function ChartsRadiusGrid(props: ChartsRadiusGridProps) {
     tickSpacing,
     direction: 'radius',
   });
-
-  const isFullCircle = Math.abs(endAngle - startAngle) >= 2 * Math.PI - EPSILON;
 
   if (isFullCircle) {
     return (

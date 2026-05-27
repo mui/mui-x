@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/chat/conversation-list-item-avatar',
+    'docs/translations/api-docs/chat/conversation-list-item-avatar',
     false,
     /\.\/conversation-list-item-avatar.*\.json$/,
   );

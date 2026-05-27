@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/radar-series-marks',
+    'docs/translations/api-docs/charts/radar-series-marks',
     false,
     /\.\/radar-series-marks.*\.json$/,
   );

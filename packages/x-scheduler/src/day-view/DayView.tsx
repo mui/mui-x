@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import { createSelectorMemoized } from '@base-ui/utils/store';
-import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
-import type { EventCalendarState as State } from '@mui/x-scheduler-headless/use-event-calendar';
-import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
-import { processDate } from '@mui/x-scheduler-headless/process-date';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
+import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
+import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
+import { processDate } from '@mui/x-scheduler-internals/process-date';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { DayViewProps } from './DayView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 

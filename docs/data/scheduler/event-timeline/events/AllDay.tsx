@@ -44,7 +44,7 @@ export default function AllDay() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-        defaultView="time"
+        defaultPreset="dayAndHour"
       />
     </div>
   );

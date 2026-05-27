@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/focused-funnel-section',
+    'docs/translations/api-docs/charts/focused-funnel-section',
     false,
     /\.\/focused-funnel-section.*\.json$/,
   );

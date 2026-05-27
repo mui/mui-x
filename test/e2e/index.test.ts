@@ -405,14 +405,13 @@ async function initializeEnvironment(
       // https://github.com/mui/mui-x/issues/3795#issuecomment-1025628771
       it('should allow horizontal scroll when there are more columns and no rows', async () => {
         await renderFixture('DataGrid/EmptyGrid');
+        await page.locator('.MuiDataGrid-virtualScroller').waitFor();
         await page.mouse.move(150, 150);
         await page.mouse.wheel(50, 0);
-        await sleep(50);
 
-        const scrollLeft = await page.evaluate(() => {
-          return document.querySelector('.MuiDataGrid-virtualScroller')!.scrollLeft;
-        });
-        expect(scrollLeft).not.to.equal(0);
+        await page.waitForFunction(
+          () => document.querySelector('.MuiDataGrid-virtualScroller')!.scrollLeft > 0,
+        );
       });
 
       // https://github.com/mui/mui-x/issues/4190
@@ -589,14 +588,13 @@ async function initializeEnvironment(
       // https://github.com/mui/mui-x/issues/3524#issuecomment-2313533915
       it('should allow vertical scroll when inside of a flex parent with maxHeight', async () => {
         await renderFixture('DataGrid/MaxHeight');
+        await page.locator('.MuiDataGrid-virtualScroller').waitFor();
         await page.mouse.move(150, 150);
         await page.mouse.wheel(0, 50);
-        await sleep(50);
 
-        const scrollTop = await page.evaluate(() => {
-          return document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop;
-        });
-        expect(scrollTop).not.to.equal(0);
+        await page.waitForFunction(
+          () => document.querySelector('.MuiDataGrid-virtualScroller')!.scrollTop > 0,
+        );
       });
 
       // https://github.com/mui/mui-x/issues/14726
@@ -759,22 +757,6 @@ async function initializeEnvironment(
 
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
         });
-
-        // TODO: enable when v7 fields form submitting is fixed
-        // it('should submit a form when clicking "Enter" key with v7 field', async () => {
-        //   await renderFixture('DatePicker/DesktopDatePickerFormV7');
-
-        //   const monthSpinbutton = page.getByRole(`spinbutton`, { name: 'Month' });
-        //   await monthSpinbutton.focus();
-        //   await monthSpinbutton.press('Enter');
-
-        //   expect(await page.getByRole('textbox', { includeHidden: true }).inputValue()).to.equal(
-        //     '04/17/2022',
-        //   );
-        //   const status = page.getByRole('status');
-        //   expect(await status.isVisible()).to.equal(true);
-        //   expect(await status.textContent()).to.equal('Submitted: 04/17/2022');
-        // });
 
         it('should correctly select a day in a calendar with "AdapterMomentJalaali"', async () => {
           await renderFixture('DatePicker/MomentJalaliDateCalendar');

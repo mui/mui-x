@@ -8,11 +8,11 @@ import {
   MessageList,
   Indicators,
 } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 const adapter = createEchoAdapter({
   respond: (text) =>
@@ -105,7 +105,7 @@ export default function TailwindChatDemo({ window }: { window?: () => Window }) 
                 'placeholder:text-gray-400 dark:placeholder:text-gray-500',
                 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
               )}
-              placeholder="Type a message..."
+              placeholder="Type a message…"
             />
             <Composer.Toolbar className="flex items-center justify-end">
               <Composer.SendButton

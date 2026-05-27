@@ -26,7 +26,7 @@
       "description": "The view initially displayed in the calendar. To render a controlled calendar, use the <code>view</code> prop."
     },
     "defaultVisibleDate": {
-      "description": "The date initially used to determine the visible date range in each view. To render a controlled calendar, use the <code>visibleDate</code> prop."
+      "description": "The date initially used to determine the visible date range. To render a controlled component, use the <code>visibleDate</code> prop."
     },
     "defaultVisibleResources": {
       "description": "The IDs of the resources initially visible. To render a controlled scheduler, use the <code>visibleResources</code> prop."
@@ -66,7 +66,7 @@
     "view": { "description": "The view currently displayed in the calendar." },
     "views": { "description": "The views available in the calendar." },
     "visibleDate": {
-      "description": "The date currently used to determine the visible date range in each view."
+      "description": "The date currently used to determine the visible date range."
     },
     "visibleResources": {
       "description": "The IDs of the resources currently visible. A resource is visible if it is not included in this object or if it is included with <code>true</code> value."

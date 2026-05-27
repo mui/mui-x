@@ -283,7 +283,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiMobileTimeRangePicker",
   "forwardsRefTo": "HTMLDivElement",

@@ -5,11 +5,11 @@ import {
   ChatMessageContent,
   type ChatMessageContentProps,
 } from '@mui/x-chat';
-import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 const BubbleWithStatusSlot = React.forwardRef<
   HTMLDivElement,

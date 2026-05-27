@@ -27,6 +27,9 @@ const GridPanelHeaderRoot = styled('div', {
   padding: vars.spacing(1),
 });
 
+/**
+ * @deprecated This component is not used internally and will be removed in a future major release.
+ */
 function GridPanelHeader(props: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();

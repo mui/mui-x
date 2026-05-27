@@ -11,7 +11,7 @@ productId: x-tree-view
 This is a reference for migrating your site's Tree View from `@mui/lab` to `@mui/x-tree-view`.
 This migration is about the npm packages used, it **does not** affect the behavior of the components in your application.
 
-[//]: # 'You can find why we are moving in this direction in the [announcement blog post](/blog/lab-tree-view-to-mui-x/).'
+<!-- You can find why we are moving in this direction in the [announcement blog post](/blog/lab-tree-view-to-mui-x/). -->
 
 ## Migration steps
 

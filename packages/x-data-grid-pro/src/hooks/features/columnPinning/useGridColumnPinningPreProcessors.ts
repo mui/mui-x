@@ -69,9 +69,15 @@ export const useGridColumnPinningPreProcessors = (
           let index = orderedFieldsBeforePinningColumns.indexOf(field);
           // If index = -1, the pinned field didn't exist in the last processing, it's possibly being added now
           // If index >= newOrderedFieldsBeforePinningColumns.length, then one or more columns were removed
-          // In both cases, use the position from the columns array
+          // If the field is newly pinned, its cache entry may be stale because column reorders bypass
+          // hydrateColumns and never update orderedFieldsBeforePinningColumns
+          // In all these cases, use the position from the columns array
           // TODO: detect removed columns and decrease the positions after it
-          if (index === -1 || index >= newOrderedFieldsBeforePinningColumns.length) {
+          if (
+            index === -1 ||
+            index >= newOrderedFieldsBeforePinningColumns.length ||
+            !prevAllPinnedColumns.current.includes(field)
+          ) {
             index = columnsState.orderedFields.indexOf(field);
           }
 

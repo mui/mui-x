@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/charts-container-premium',
+    'docs/translations/api-docs/charts/charts-container-premium',
     false,
     /\.\/charts-container-premium.*\.json$/,
   );

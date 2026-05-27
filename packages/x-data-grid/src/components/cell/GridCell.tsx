@@ -31,20 +31,12 @@ import {
   gridTabIndexCellSelector,
 } from '../../hooks/features/focus/gridFocusStateSelector';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { PinnedColumnPosition } from '../../internals/constants';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { usePinnedScrollOffset } from '../../hooks/utils/usePinnedScrollOffset';
 import { gridEditCellStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 import { attachPinnedStyle } from '../../internals/utils';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
-
-export const gridPinnedColumnPositionLookup = {
-  [PinnedColumnPosition.LEFT]: GridPinnedColumnPosition.LEFT,
-  [PinnedColumnPosition.RIGHT]: GridPinnedColumnPosition.RIGHT,
-  [PinnedColumnPosition.NONE]: undefined,
-  [PinnedColumnPosition.VIRTUAL]: undefined,
-};
 
 export type GridCellProps = React.HTMLAttributes<HTMLDivElement> & {
   align: GridAlignment;
@@ -382,13 +374,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   }, [hasFocus, cellMode, apiRef]);
 
   if (isCellRowSpanned) {
-    return (
-      <div
-        data-colindex={colIndex}
-        role="presentation"
-        style={{ width: 'var(--width)', ...style }}
-      />
-    );
+    return <div data-colindex={colIndex} role="none" style={{ width: 'var(--width)', ...style }} />;
   }
 
   let handleFocus = other.onFocus;

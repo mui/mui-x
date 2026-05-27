@@ -47,6 +47,10 @@ Follow the [Material UI migration guide](/material-ui/migration/upgrade-to-v9/)
 +"@mui/system": "^7.3.0",
 ```
 
+## Update your license key (Pro and Premium)
+
+{{"component": "modules/components/V9LicenseUpgradeWarning.js"}}
+
 ## Breaking changes
 
 ### Stabilized `experimentalFeatures`

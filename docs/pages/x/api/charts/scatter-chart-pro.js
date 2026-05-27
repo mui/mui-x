@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/scatter-chart-pro',
+    'docs/translations/api-docs/charts/scatter-chart-pro',
     false,
     /\.\/scatter-chart-pro.*\.json$/,
   );

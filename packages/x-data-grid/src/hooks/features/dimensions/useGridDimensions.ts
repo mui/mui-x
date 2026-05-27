@@ -187,6 +187,14 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       if (apiRef.current.rootElementRef.current) {
         setCSSVariables(apiRef.current.rootElementRef.current, next);
       }
+      const virtualScroller = apiRef.current.virtualScrollerRef?.current;
+      if (virtualScroller) {
+        const maxScrollLeft = Math.max(0, next.rowWidth - next.viewportOuterSize.width);
+        const currentScrollLeft = Math.abs(virtualScroller.scrollLeft);
+        if (currentScrollLeft > maxScrollLeft) {
+          apiRef.current.scroll({ left: maxScrollLeft });
+        }
+      }
 
       if (!areElementSizesEqual(next.viewportInnerSize, previous.viewportInnerSize)) {
         apiRef.current.publishEvent('viewportInnerSizeChange', next.viewportInnerSize);

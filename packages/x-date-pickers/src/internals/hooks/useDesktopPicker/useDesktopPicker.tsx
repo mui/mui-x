@@ -6,6 +6,7 @@ import { PickersLayout } from '../../../PickersLayout';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
 import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
+import { extractRootForwardedProps } from '../../utils/utils';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -46,6 +47,7 @@ export const useDesktopPicker = <
   const { ownerState: fieldOwnerState, ...fieldProps } = useSlotProps({
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
+    externalForwardedProps: extractRootForwardedProps(props),
     additionalProps: {
       // Forwarded props
       ...(isToolbarHidden && { id: labelId }),

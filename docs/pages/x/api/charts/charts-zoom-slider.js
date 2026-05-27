@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/charts-zoom-slider',
+    'docs/translations/api-docs/charts/charts-zoom-slider',
     false,
     /\.\/charts-zoom-slider.*\.json$/,
   );

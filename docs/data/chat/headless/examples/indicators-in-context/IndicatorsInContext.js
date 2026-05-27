@@ -12,18 +12,18 @@ import {
 import {
   createEchoAdapter,
   cloneMessages,
-} from 'docsx/data/chat/headless/examples/shared/demoUtils';
+} from 'docs/data/chat/headless/examples/shared/demoUtils';
 import {
   createLongThreadMessages,
   demoUsers,
-} from 'docsx/data/chat/headless/examples/shared/demoData';
+} from 'docs/data/chat/headless/examples/shared/demoData';
 import {
   demoLocaleText,
   demoMessageListSlotProps,
   demoSlotProps,
   DemoScrollToBottomOverlay,
   DemoToolbarButton,
-} from 'docsx/data/chat/headless/examples/shared/DemoPrimitives';
+} from 'docs/data/chat/headless/examples/shared/DemoPrimitives';
 
 function createRealtimeController() {
   let emit = null;

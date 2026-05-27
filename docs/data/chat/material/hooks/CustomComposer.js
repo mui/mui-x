@@ -7,11 +7,11 @@ import IconButton from '@mui/material/IconButton';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { ChatBox } from '@mui/x-chat';
 import { useChatComposer } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docsx/data/chat/material/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/material/examples/shared/demoUtils';
 import {
   minimalConversation,
   minimalMessages,
-} from 'docsx/data/chat/material/examples/shared/demoData';
+} from 'docs/data/chat/material/examples/shared/demoData';
 
 function CustomComposerContent() {
   const { value, setValue, submit, isSubmitting, addAttachment } = useChatComposer();
@@ -29,7 +29,7 @@ function CustomComposerContent() {
             submit();
           }
         }}
-        placeholder="Type a message..."
+        placeholder="Type a message…"
       />
       <IconButton component="label">
         <AttachFileIcon />

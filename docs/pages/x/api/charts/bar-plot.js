@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/charts/bar-plot',
+    'docs/translations/api-docs/charts/bar-plot',
     false,
     /\.\/bar-plot.*\.json$/,
   );

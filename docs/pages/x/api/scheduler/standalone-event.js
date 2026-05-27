@@ -10,7 +10,7 @@ export default function Page(props) {
 
 export async function getStaticProps() {
   const req = require.context(
-    'docsx/translations/api-docs/scheduler/standalone-event',
+    'docs/translations/api-docs/scheduler/standalone-event',
     false,
     /\.\/standalone-event.*\.json$/,
   );

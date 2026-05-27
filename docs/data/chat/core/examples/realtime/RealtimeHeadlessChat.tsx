@@ -17,11 +17,11 @@ import {
   cloneConversations,
   demoConversations,
   demoUsers,
-} from 'docsx/data/chat/core/examples/shared/demoData';
+} from 'docs/data/chat/core/examples/shared/demoData';
 import {
   createChunkStream,
   createTextResponseChunks,
-} from 'docsx/data/chat/core/examples/shared/demoUtils';
+} from 'docs/data/chat/core/examples/shared/demoUtils';
 
 function createRealtimeAdapter() {
   let onEventRef: ((event: ChatRealtimeEvent) => void) | null = null;

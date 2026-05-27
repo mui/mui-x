@@ -9,15 +9,15 @@ import {
   getDefaultMessagePartRenderer,
 } from '@mui/x-chat/headless';
 import type { ChatPartRendererMap } from '@mui/x-chat/headless';
-import { createEchoAdapter } from 'docsx/data/chat/headless/examples/shared/demoUtils';
+import { createEchoAdapter } from 'docs/data/chat/headless/examples/shared/demoUtils';
 import {
   demoLocaleText,
   demoSlotProps,
-} from 'docsx/data/chat/headless/examples/shared/DemoPrimitives';
+} from 'docs/data/chat/headless/examples/shared/DemoPrimitives';
 import {
   demoUsers,
   partRenderingMessages,
-} from 'docsx/data/chat/headless/examples/shared/demoData';
+} from 'docs/data/chat/headless/examples/shared/demoData';
 
 const partRenderers: ChatPartRendererMap = {
   reasoning: ({ part }) => (

@@ -14,7 +14,7 @@ function getRandomNumber(min, max) {
 
 /**
  * Mimic fetch with abort controller https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
- * ⚠️ No IE11 support
+ * ⚠️ No IE 11 support
  */
 function fakeFetch(date, { signal }) {
   return new Promise((resolve, reject) => {
