@@ -123,10 +123,31 @@ const EventTimelinePremiumTitleHeaderCell = styled(TimelineGrid.Cell, {
   alignItems: 'flex-end',
   height: '100%',
   borderRight: `1px solid ${(theme.vars || theme).palette.divider}`,
-  overflowX: 'hidden',
+  // `clip` instead of `hidden` so vertical overflow stays visible; the legacy
+  // overflow rule forces `visible` to `auto` when paired with `hidden`, which
+  // would clip the pseudo-element below.
+  overflowX: 'clip',
   position: 'absolute',
   zIndex: 5,
   backgroundColor: (theme.vars || theme).palette.background.default,
+  // Extends the title column's stacking context below the header so the
+  // current time indicator circle's body-area overflow stays hidden behind
+  // the pinned title column, regardless of horizontal scroll position.
+  // The `border-top` doubles as the title column's bottom divider — it sits
+  // exactly where HeaderRow's `border-bottom` sits in the events area, since
+  // the pseudo's containing block is the cell's padding box (which ends at
+  // HeaderRow's content bottom).
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: -4,
+    height: 4,
+    backgroundColor: (theme.vars || theme).palette.background.default,
+    borderTop: `1px solid ${(theme.vars || theme).palette.divider}`,
+    pointerEvents: 'none',
+  },
 }));
 
 const EventTimelinePremiumEventsHeaderCell = styled(TimelineGrid.Cell, {
@@ -210,7 +231,9 @@ const EventTimelinePremiumCurrentTimeIndicator = styled(TimelineGrid.CurrentTime
 })(({ theme }) => ({
   position: 'absolute',
   top: 0,
-  bottom: 0,
+  // Extend below the row container by the filler height so the line reaches
+  // the very bottom of the viewport when the rows don't fill it.
+  bottom: 'calc(-1 * var(--filler-height, 0px))',
   left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position))',
   width: 0,
   zIndex: 2,
@@ -223,9 +246,7 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
   slot: 'CurrentTimeIndicatorCircle',
 })(({ theme }) => ({
   position: 'absolute',
-  // Rendered inside the header row so the circle stacks above header cells
-  // (which create their own stacking contexts via `z-index`). `bottom: -3` so
-  // the circle sits centered on the header/body boundary line.
+  // `bottom: -4` so the circle sits centered on the header/body boundary line.
   bottom: -4,
   // 3px = half the circle's width (4px) minus half the line's width (1px), to center the circle on the line.
   left: 'calc(var(--title-column-width) + var(--unit-count) * var(--unit-width) * var(--x-position) - 3px)',
@@ -233,7 +254,10 @@ const EventTimelinePremiumCurrentTimeIndicatorCircle = styled(TimelineGrid.Curre
   height: 8,
   borderRadius: '50%',
   backgroundColor: (theme.vars || theme).palette.primary.main,
-  zIndex: 6,
+  // Below the pinned title header (z-index 5) so the title column header
+  // visually covers the circle when it overlaps. Body-area overlap is covered
+  // by the title header cell's `::after` pseudo-element.
+  zIndex: 4,
 }));
 
 // In macOS Safari and Gnome Web, scrollbars are overlaid and report size 0.
@@ -827,6 +851,10 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
   const hasScrollX = dimensions.hasScrollX;
   const hasScrollY = dimensions.hasScrollY;
   const hasBottomScrollbar = hasScrollX || hasTitleOverflow;
+  const fillerHeight = Math.max(
+    0,
+    dimensions.viewportOuterSize.height - dimensions.minimumSize.height,
+  );
 
   return (
     <EventTimelinePremiumContentRoot
@@ -841,6 +869,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
           '--unit-width': `${presetConfig.tickWidth}px`,
           '--scrollbar-size': `${dimensions.scrollbarSize}px`,
           '--header-height': `${headerHeight}px`,
+          '--filler-height': `${fillerHeight}px`,
           '--has-scroll-x': Number(hasBottomScrollbar),
           '--has-scroll-y': Number(hasScrollY),
         } as React.CSSProperties
