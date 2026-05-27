@@ -251,34 +251,51 @@ export class SchedulerStore<
     this.parameters = parameters;
   };
 
+  private cancelPendingDispose = false;
+
   /**
-   * Returns a cleanup function that tears down all owned resources synchronously.
-   * StrictMode mount → unmount → mount cycles rebuild the store; the lazy-loading
-   * cache is re-populated on the next fetch.
+   * Returns a cleanup function that schedules the dispose on the next microtask.
+   * Calling `disposeEffect` again (e.g. React StrictMode's mount → unmount → mount
+   * cycle within the same tick) sets `cancelPendingDispose` to true, so the
+   * scheduled microtask aborts and the store stays alive for the new mount.
+   * The actual `disposables.dispose()` call is synchronous — only the trigger
+   * is deferred by one microtask.
    */
-  public disposeEffect = () => () => {
-    try {
-      this.disposables.dispose();
-    } catch (error) {
-      if (process.env.NODE_ENV !== 'production') {
-        // DisposableStack aggregates per-disposer failures into `SuppressedError`
-        // chains. Unwrap so each underlying failure is visible in the console
-        // instead of just the outermost wrapper.
-        const failures: unknown[] = [];
-        let current: unknown = error;
-        while (
-          typeof current === 'object' &&
-          current !== null &&
-          'error' in current &&
-          'suppressed' in current
-        ) {
-          failures.push((current as { error: unknown }).error);
-          current = (current as { suppressed: unknown }).suppressed;
-        }
-        failures.push(current);
-        console.error('MUI X Scheduler: error while disposing the store.', ...failures);
+  public disposeEffect = () => {
+    this.cancelPendingDispose = true;
+    return () => {
+      if (this.disposables.disposed) {
+        return;
       }
-    }
+      this.cancelPendingDispose = false;
+      queueMicrotask(() => {
+        if (this.cancelPendingDispose) {
+          return;
+        }
+        try {
+          this.disposables.dispose();
+        } catch (error) {
+          if (process.env.NODE_ENV !== 'production') {
+            // DisposableStack aggregates per-disposer failures into `SuppressedError`
+            // chains. Unwrap so each underlying failure is visible in the console
+            // instead of just the outermost wrapper.
+            const failures: unknown[] = [];
+            let current: unknown = error;
+            while (
+              typeof current === 'object' &&
+              current !== null &&
+              'error' in current &&
+              'suppressed' in current
+            ) {
+              failures.push((current as { error: unknown }).error);
+              current = (current as { suppressed: unknown }).suppressed;
+            }
+            failures.push(current);
+            console.error('MUI X Scheduler: error while disposing the store.', ...failures);
+          }
+        }
+      });
+    };
   };
 
   /**

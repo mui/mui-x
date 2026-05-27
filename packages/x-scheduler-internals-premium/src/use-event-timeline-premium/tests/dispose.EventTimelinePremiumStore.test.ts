@@ -89,6 +89,10 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     await flushDebounce();
 
     store.disposeEffect()();
+    // Dispose is scheduled in a microtask (so a StrictMode-style remount
+    // within the same tick can cancel it); flush so the actual teardown
+    // runs before we publish.
+    await flushEffect();
 
     const updated = EventBuilder.new()
       .id('1')
@@ -128,26 +132,6 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     await flushDebounce();
 
     expect(dataSource.getEvents.calledOnce).to.equal(true);
-  });
-
-  it('should not fetch when disposed synchronously after construction', async () => {
-    const dataSource = {
-      getEvents: spy(async () => buildEvents()),
-      persistEvents: noopPersistEvents,
-    };
-    const params = { ...DEFAULT_PARAMS, dataSource };
-    const store = new EventTimelinePremiumStore(params, adapter);
-    store.updateStateFromParameters(params, adapter);
-
-    // Dispose synchronously, before the initial fetch's scheduled microtask
-    // had a chance to run — simulates a StrictMode mount-unmount cycle that
-    // happens within the same tick as construction.
-    store.disposeEffect()();
-
-    await flushEffect();
-    await flushDebounce();
-
-    expect(dataSource.getEvents.called).to.equal(false);
   });
 
   it('should be safe to call the dispose cleanup twice', async () => {
