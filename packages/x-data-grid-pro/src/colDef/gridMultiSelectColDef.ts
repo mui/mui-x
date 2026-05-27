@@ -117,8 +117,12 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
     const getOptionValue = colDef.getOptionValue!;
     const getOptionLabel = colDef.getOptionLabel!;
 
+    // Split on the column's configured separator in addition to the common delimiters, so a
+    // custom `separator` round-trips through copy/paste.
+    const separator = colDef.separator ?? ',';
+    const delimiters = separator ? `${escapeRegExp(separator)}|[,;\\t\\n|]` : '[,;\\t\\n|]';
     const pastedValues = value
-      .split(/[,;\t\n|]+/)
+      .split(new RegExp(`(?:${delimiters})+`))
       .map((v) => v.trim())
       .filter((v) => v.length > 0);
 

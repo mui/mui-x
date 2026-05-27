@@ -82,6 +82,11 @@ describe('GRID_MULTI_SELECT_COL_DEF', () => {
       expect(parse('React,,TypeScript;;Node.js')).to.deep.equal(['React', 'TypeScript', 'Node.js']);
     });
 
+    it('splits on the column-configured separator', () => {
+      const slashColumn = { ...stringOptionsColumn, separator: ' / ' } as GridMultiSelectColDef;
+      expect(parse('React / TypeScript', slashColumn)).to.deep.equal(['React', 'TypeScript']);
+    });
+
     it('matches case-insensitively against option values', () => {
       expect(parse('react, TYPESCRIPT')).to.deep.equal(['React', 'TypeScript']);
     });
