@@ -52,7 +52,7 @@ export function GridPinnedRows({ position }: GridPinnedRowsProps) {
   );
 
   return (
-    <div className={clsx(classes.root, gridClasses[`pinnedRows--${position}`])} role="presentation">
+    <div className={clsx(classes.root, gridClasses[`pinnedRows--${position}`])} role="none">
       {pinnedRows}
     </div>
   );

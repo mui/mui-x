@@ -22,6 +22,7 @@ interface RadialLinePlotDataPoint {
   shape: MarkShape;
   area?: boolean;
   curve?: CurveType;
+  closePath?: boolean;
 }
 
 export function useRadialLinePlotData() {
@@ -45,6 +46,7 @@ export function useRadialLinePlotData() {
           data,
           hidden,
           area = false,
+          closePath,
           curve,
           shape,
           rotationAxisId = rotationAxisIds[0],
@@ -80,6 +82,7 @@ export function useRadialLinePlotData() {
           shape: shape ?? 'circle',
           area,
           curve,
+          closePath,
         });
       }
     }

@@ -95,10 +95,10 @@ const messageStatusLabels: Record<ChatMessageStatus, string> = {
 };
 
 const toolStateLabels: Record<ChatToolInvocationState, string> = {
-  'input-streaming': 'Running...',
-  'input-available': 'Running...',
+  'input-streaming': 'Running…',
+  'input-available': 'Running…',
   'approval-requested': 'Awaiting approval',
-  'approval-responded': 'Running...',
+  'approval-responded': 'Running…',
   'output-available': 'Completed',
   'output-error': 'Failed',
   'output-denied': 'Denied',
@@ -116,7 +116,7 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   messageEditedLabel: 'Edited',
   messageDeletedLabel: 'Deleted',
   messageReasoningLabel: 'Thoughts',
-  messageReasoningStreamingLabel: 'Thinking...',
+  messageReasoningStreamingLabel: 'Thinking…',
   messageToolInputLabel: 'Tool called',
   messageToolOutputLabel: 'Tool result',
   messageToolApproveButtonLabel: 'Approve',
@@ -130,7 +130,7 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   threadNoMessagesLabel: 'No messages yet',
   threadNoMessagesHelperText: 'Type a message to get started',
   genericErrorLabel: 'Something went wrong',
-  loadingLabel: 'Loading...',
+  loadingLabel: 'Loading…',
   messageStatusLabel: (status) => messageStatusLabels[status],
   toolStateLabel: (state) => toolStateLabels[state],
   messageTimestampLabel: (dateTime) => formatMessageTimestamp(dateTime),

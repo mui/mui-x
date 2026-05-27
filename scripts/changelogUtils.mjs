@@ -9,6 +9,7 @@
  * - Uses actual versions from package.json files
  * - Can return the changelog as a string when returnEntry is true
  */
+import { execSync } from 'node:child_process';
 import fs from 'fs';
 import path from 'path';
 import {
@@ -372,6 +373,21 @@ async function generateChangelog({
   const proIcon = `[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')`;
   const premiumIcon = `[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')`;
 
+  const isPackageBumped = (packageName, currentVersion) => {
+    if (!nextVersion) {
+      return true;
+    }
+    try {
+      const previousPackageJson = execSync(
+        `git show ${lastRelease}:packages/${packageName}/package.json`,
+        { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] },
+      );
+      return JSON.parse(previousPackageJson).version !== currentVersion;
+    } catch {
+      return true;
+    }
+  };
+
   /**
    * Generates a changelog section for a product
    * @param {object} options - The options for generating the product section
@@ -394,6 +410,17 @@ async function generateChangelog({
     const hasProVersion = proCommits !== null;
     const hasPremiumVersion = premiumCommits !== null;
     const packageVersion = nextVersion ? getPackageVersion(packageName) : '__VERSION__';
+
+    const hasNoCommits =
+      baseCommits.length === 0 &&
+      (proCommits?.length ?? 0) === 0 &&
+      (premiumCommits?.length ?? 0) === 0;
+
+    // Keep rendering `Internal changes.` when a package is bumped without
+    // commits (e.g. an `x-internals` update propagating a version bump).
+    if (hasNoCommits && !isPackageBumped(packageName, packageVersion)) {
+      return '';
+    }
 
     const lines = [`### ${productName}`];
 
@@ -599,10 +626,11 @@ ${logOtherSection({
  * Fetches and returns the latest tagged version for a given major version.
  * @param {string | undefined} majorVersion
  */
-async function findLatestTaggedVersionForMajor(majorVersion) {
+async function findLatestTaggedVersionForMajor(majorVersion, upstreamRemote = 'origin') {
   // Fetch all tags from all remotes to ensure we have the latest tags.
   await $`git fetch --tags --all`;
-  const { stdout } = await $`git describe --tags --abbrev=0 --match ${`v${majorVersion || ''}*`}`; // only include "version-tags"
+  const { stdout } =
+    await $`git describe --tags --abbrev=0 --match ${`v${majorVersion || ''}*`} ${upstreamRemote}/v${majorVersion}.x`; // only include "version-tags"
   return stdout.trim();
 }
 

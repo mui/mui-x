@@ -10,7 +10,7 @@ export function useEventCalendarStoreContext<TEvent extends object, TResource ex
     context.instanceName !== 'EventCalendarPremiumStore'
   ) {
     throw new Error(
-      'MUI: useEventCalendarStoreContext must be used within an <EventCalendar /> component',
+      'MUI X Scheduler: useEventCalendarStoreContext must be used within an <EventCalendar /> component',
     );
   }
 

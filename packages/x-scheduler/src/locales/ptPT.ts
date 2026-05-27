@@ -57,7 +57,7 @@ const ptPTDialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Data de início',
   startTimeLabel: 'Hora de início',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Todos os eventos',
   cancel: 'Cancelar',
   confirm: 'Confirmar',
@@ -97,6 +97,10 @@ const ptPTCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Mostrar número da semana',
   timeFormat: 'Formato da hora',
   viewSpecificOptions: (view) => `Opções da vista ${view}`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Todo o dia',
