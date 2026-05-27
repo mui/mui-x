@@ -57,7 +57,7 @@ const esESDialog: Partial<EventDialogLocaleText> = {
   startDateLabel: 'Fecha de inicio',
   startTimeLabel: 'Hora de inicio',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Todos los eventos',
   cancel: 'Cancelar',
   confirm: 'Confirmar',
@@ -68,11 +68,8 @@ const esESDialog: Partial<EventDialogLocaleText> = {
 };
 
 const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Ocultar eventos de ${resourceName}`,
+  // ResourcesTree
   resourcesLabel: 'Recursos',
-  resourcesLegendSectionLabel: 'Leyenda de recursos',
-  showEventsLabel: (resourceName) => `Mostrar eventos de ${resourceName}`,
 
   // ViewSwitcher
   agenda: 'Agenda',
@@ -100,6 +97,10 @@ const esESCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Mostrar número de semana',
   timeFormat: 'Formato de hora',
   viewSpecificOptions: (view) => `Opciones de la vista ${view}`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Todo el día',

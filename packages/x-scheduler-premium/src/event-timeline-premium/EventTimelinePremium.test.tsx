@@ -1,8 +1,13 @@
-import { screen } from '@mui/internal-test-utils';
+import * as React from 'react';
+import { spy } from 'sinon';
+import { act, screen, waitFor } from '@mui/internal-test-utils';
 import {
   EventTimelinePremium,
   eventTimelinePremiumClasses,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
 import {
   adapter,
   createSchedulerRenderer,
@@ -15,9 +20,11 @@ import {
   SchedulerEvent,
   SchedulerResource,
   TemporalSupportedObject,
-} from '@mui/x-scheduler-headless/models';
-import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
+} from '@mui/x-scheduler-internals/models';
+import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
+import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
+import { EventTimelinePremiumErrorContainer } from './error-container';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();
@@ -44,8 +51,8 @@ describe('<EventTimelinePremium />', () => {
   function renderTimeline(options?: {
     resources?: SchedulerResource[];
     events?: SchedulerEvent[];
-    view?: EventTimelinePremiumView;
-    views?: EventTimelinePremiumView[];
+    preset?: EventTimelinePremiumPreset;
+    presets?: EventTimelinePremiumPreset[];
     visibleDate?: TemporalSupportedObject;
     showCurrentTimeIndicator?: boolean;
     resourceColumnLabel?: string;
@@ -56,8 +63,10 @@ describe('<EventTimelinePremium />', () => {
         resources={options?.resources ?? baseResources}
         events={options?.events ?? baseEvents}
         visibleDate={options?.visibleDate ?? DEFAULT_TESTING_VISIBLE_DATE}
-        view={options?.view ?? 'days'}
-        views={options?.views ?? ['time', 'days', 'weeks', 'months', 'years']}
+        preset={options?.preset ?? 'dayAndMonth'}
+        presets={
+          options?.presets ?? ['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']
+        }
         showCurrentTimeIndicator={options?.showCurrentTimeIndicator}
         resourceColumnLabel={options?.resourceColumnLabel}
         localeText={options?.localeText}
@@ -74,7 +83,7 @@ describe('<EventTimelinePremium />', () => {
       });
       // Check that we have one title cell per resource by counting the cells with IDs
       const resourceTitleCells = baseResources.map((resource) =>
-        document.getElementById(`EventTimelinePremiumTitleCell-${resource.id}`),
+        document.querySelector(`[id$="-EventTimelinePremiumTitleCell-${resource.id}"]`),
       );
       expect(resourceTitleCells.filter(Boolean).length).to.equal(baseResources.length);
     });
@@ -119,8 +128,8 @@ describe('<EventTimelinePremium />', () => {
           resources={baseResources}
           events={baseEvents}
           visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
-          view="days"
-          views={['days', 'weeks']}
+          preset="dayAndMonth"
+          presets={['dayAndMonth', 'dayAndWeek']}
         />,
       );
       baseEvents.forEach((eventItem) => {
@@ -128,10 +137,39 @@ describe('<EventTimelinePremium />', () => {
       });
     });
 
-    it('should render events correctly in the time view', () => {
+    it('should display recurrence icon only for recurring events', () => {
+      const recurringEvent = EventBuilder.new()
+        .title('Recurring timeline event')
+        .singleDay('2025-07-03T09:00:00Z')
+        .resource(engineering)
+        .recurrent('DAILY')
+        .build();
+      const singleEvent = EventBuilder.new()
+        .title('Single timeline event')
+        .singleDay('2025-07-03T11:00:00Z')
+        .resource(engineering)
+        .build();
+
+      renderTimeline({ events: [recurringEvent, singleEvent], preset: 'dayAndMonth' });
+
+      const recurringEventElements = screen.getAllByLabelText(recurringEvent.title);
+      expect(recurringEventElements.length).to.be.greaterThan(0);
+      recurringEventElements.forEach((element) => {
+        expect(
+          element.querySelector(`.${eventTimelinePremiumClasses.eventRecurringIcon}`),
+        ).not.to.equal(null);
+      });
+
+      const singleEventElement = screen.getByLabelText(singleEvent.title);
+      expect(
+        singleEventElement.querySelector(`.${eventTimelinePremiumClasses.eventRecurringIcon}`),
+      ).to.equal(null);
+    });
+
+    it('should render events correctly in the dayAndHour preset', () => {
       const totalWidth = 6144; // 96 hours * 64px
       const hourBoundaries = { start: 9 * 64, end: 10 * 64 }; // 9:00 - 10:00
-      renderTimeline({ view: 'time' });
+      renderTimeline({ preset: 'dayAndHour' });
 
       const eventElement = screen.getByLabelText(event1.title);
       expect(eventElement).not.to.equal(null);
@@ -143,10 +181,10 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition).to.be.lessThanOrEqual(hourBoundaries.end);
     });
 
-    it('should render events correctly in the days view', () => {
+    it('should render events correctly in the dayAndMonth preset', () => {
       const totalWidth = 6720; // 56 days * 120px
       const dayBoundaries = { start: 1 * 120, end: 2 * 120 }; // 4th - 5th
-      renderTimeline({ view: 'days' });
+      renderTimeline({ preset: 'dayAndMonth' });
 
       const eventElement = screen.getByLabelText(event3.title);
       expect(eventElement).not.to.equal(null);
@@ -158,7 +196,7 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
     });
 
-    it('should render events correctly in the weeks view', () => {
+    it('should render events correctly in the dayAndWeek preset', () => {
       const totalWidth = 64 * 7 * 16; // 64px * 7 days * 16 weeks
       const startOfWeek = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
       const weekDayNumber = adapter.differenceInDays(
@@ -167,7 +205,7 @@ describe('<EventTimelinePremium />', () => {
       );
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
 
-      renderTimeline({ view: 'weeks' });
+      renderTimeline({ preset: 'dayAndWeek' });
 
       const eventElement = screen.getByLabelText(event1.title);
       expect(eventElement).not.to.equal(null);
@@ -179,7 +217,7 @@ describe('<EventTimelinePremium />', () => {
       expect(eventPosition).to.be.lessThanOrEqual(dayBoundaries.end);
     });
 
-    it('should render events correctly in the month view', () => {
+    it('should render events correctly in the monthAndYear preset', () => {
       const nextMonthEvent = EventBuilder.new()
         .title('Next month')
         .span('2025-08-04T13:00:00Z', '2025-09-04T14:30:00Z')
@@ -187,16 +225,23 @@ describe('<EventTimelinePremium />', () => {
         .build();
       const extendedEvents: SchedulerEvent[] = [...baseEvents, nextMonthEvent];
 
-      renderTimeline({ events: extendedEvents, view: 'months' });
+      renderTimeline({ events: extendedEvents, preset: 'monthAndYear' });
 
-      const totalWidth = 180 * 36; // 36 months
+      // monthAndYear ticks per day (6px), so the total width depends on the actual
+      // calendar days in the visible range — read it from the grid CSS variables.
+      const grid = screen.getByRole('grid');
+      const totalWidth =
+        parseFloat(grid.style.getPropertyValue('--unit-width')) *
+        parseFloat(grid.style.getPropertyValue('--unit-count'));
+      const monthWidth = totalWidth / 36;
+
       const event1Element = screen.getByLabelText(event1.title);
       expect(event1Element).not.to.equal(null);
       const xPositioning = event1Element.style.getPropertyValue('--x-position');
 
       const eventPosition = (totalWidth * parseFloat(xPositioning)) / 100;
 
-      expect(eventPosition).to.be.lessThanOrEqual(180); // first month
+      expect(eventPosition).to.be.lessThanOrEqual(monthWidth); // first month
 
       const nextMonthEventElement = screen.getByLabelText('Next month');
       expect(nextMonthEventElement).not.to.equal(null);
@@ -204,11 +249,11 @@ describe('<EventTimelinePremium />', () => {
 
       const eventPosition2 = (totalWidth * parseFloat(xPositioning2)) / 100;
 
-      expect(eventPosition2).to.be.greaterThanOrEqual(180); // second month
-      expect(eventPosition2).to.be.lessThanOrEqual(360); // second month
+      expect(eventPosition2).to.be.greaterThanOrEqual(monthWidth); // second month
+      expect(eventPosition2).to.be.lessThanOrEqual(monthWidth * 2); // second month
     });
 
-    it('should render events correctly in the year view', () => {
+    it('should render events correctly in the year preset', () => {
       const thisYearEvent = EventBuilder.new()
         .span('2025-08-03T13:00:00Z', '2025-09-04T14:30:00Z')
         .resource(engineering)
@@ -218,7 +263,7 @@ describe('<EventTimelinePremium />', () => {
         .resource(engineering)
         .build();
 
-      renderTimeline({ events: [thisYearEvent, nextYearEvent], view: 'years' });
+      renderTimeline({ events: [thisYearEvent, nextYearEvent], preset: 'year' });
 
       const totalWidth = 30 * 200;
       const thisYearEventElement = screen.getByLabelText(thisYearEvent.title);
@@ -303,28 +348,361 @@ describe('<EventTimelinePremium />', () => {
     });
   });
 
-  describe('views', () => {
-    it('should render the correct header and updates CSS variable when switching views', async () => {
+  describe('lazy loading', () => {
+    it('should call dataSource.getEvents when the timeline mounts', async () => {
+      const dataSource = {
+        getEvents: spy(async () => baseEvents),
+        persistEvents: async () => ({ success: true }),
+      };
+
+      render(
+        <EventTimelinePremium
+          resources={baseResources}
+          dataSource={dataSource}
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          defaultPreset="dayAndMonth"
+        />,
+      );
+
+      await waitFor(() => expect(dataSource.getEvents.callCount).to.equal(1));
+    });
+
+    it('should call dataSource.getEvents again when navigating to a different range', async () => {
+      const dataSource = {
+        getEvents: spy(async () => baseEvents),
+        persistEvents: async () => ({ success: true }),
+      };
+
+      function Test() {
+        const [visibleDate, setVisibleDate] = React.useState(DEFAULT_TESTING_VISIBLE_DATE);
+        return (
+          <React.Fragment>
+            <EventTimelinePremium
+              resources={baseResources}
+              dataSource={dataSource}
+              visibleDate={visibleDate}
+              defaultPreset="dayAndMonth"
+            />
+            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
+              Next
+            </button>
+          </React.Fragment>
+        );
+      }
+
+      const { user } = render(<Test />);
+      await waitFor(() => {
+        expect(screen.getByText(event1.title)).not.to.equal(null);
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.equal(0);
+      });
+
+      const initialCount = dataSource.getEvents.callCount;
+      await user.click(screen.getByRole('button', { name: 'Next' }));
+
+      await waitFor(() => expect(dataSource.getEvents.callCount).to.be.greaterThan(initialCount));
+    });
+
+    it('should render the skeleton while events are loading and remove it once they resolve', async () => {
+      let resolveFetch: (value: SchedulerEvent[]) => void = () => {};
+      const dataSource = {
+        getEvents: () =>
+          new Promise<SchedulerEvent[]>((resolve) => {
+            resolveFetch = resolve;
+          }),
+        persistEvents: async () => ({ success: true }),
+      };
+
+      render(
+        <EventTimelinePremium
+          resources={baseResources}
+          dataSource={dataSource}
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          defaultPreset="dayAndMonth"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.be.greaterThan(0);
+      });
+      expect(screen.queryByText(event1.title)).to.equal(null);
+
+      resolveFetch(baseEvents);
+
+      await waitFor(() => {
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.equal(0);
+      });
+      expect(screen.getByText(event1.title)).not.to.equal(null);
+    });
+  });
+
+  describe('error handling', () => {
+    function renderErrorContainer(initialErrors: Error[]) {
+      const store = new EventTimelinePremiumStore({ events: [] }, adapter);
+      store.set(
+        'errors',
+        initialErrors.map((error, index) => ({ error, key: String(index) })),
+      );
+
+      return render(
+        <SchedulerStoreContext.Provider value={store as any}>
+          <EventTimelinePremiumStyledContext.Provider
+            value={{
+              schedulerId: 'test',
+              classes: eventTimelinePremiumClasses,
+              localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+            }}
+          >
+            <EventTimelinePremiumErrorContainer />
+          </EventTimelinePremiumStyledContext.Provider>
+        </SchedulerStoreContext.Provider>,
+      );
+    }
+
+    it('should render an error alert when dataSource.getEvents rejects', async () => {
+      const dataSource = {
+        getEvents: () => Promise.reject(new Error('Network error')),
+        persistEvents: async () => ({ success: true }),
+      };
+
+      render(
+        <EventTimelinePremium
+          resources={baseResources}
+          dataSource={dataSource}
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          defaultPreset="dayAndMonth"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Network error')).not.to.equal(null);
+      });
+    });
+
+    it('should render multiple alerts when state.errors contains multiple errors', () => {
+      renderErrorContainer([new Error('First error'), new Error('Second error')]);
+
+      expect(
+        document.querySelectorAll(`.${eventTimelinePremiumClasses.errorAlert}`).length,
+      ).to.equal(2);
+      expect(screen.getByText('First error')).not.to.equal(null);
+      expect(screen.getByText('Second error')).not.to.equal(null);
+    });
+
+    it('should remove only the dismissed alert and keep the others', async () => {
+      const { user } = renderErrorContainer([new Error('First error'), new Error('Second error')]);
+
+      const closeButtons = screen.getAllByRole('button', { name: /close/i });
+      expect(closeButtons.length).to.equal(2);
+
+      await user.click(closeButtons[0]);
+
+      await waitFor(() => {
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.errorAlert}`).length,
+        ).to.equal(1);
+      });
+      expect(screen.queryByText('First error')).to.equal(null);
+      expect(screen.getByText('Second error')).not.to.equal(null);
+    });
+
+    it('should clear the error alert when a subsequent fetch succeeds', async () => {
+      let callCount = 0;
+      const dataSource = {
+        getEvents: () => {
+          callCount += 1;
+          if (callCount === 1) {
+            return Promise.reject(new Error('Transient error'));
+          }
+          return Promise.resolve(baseEvents);
+        },
+        persistEvents: async () => ({ success: true }),
+      };
+
+      function Test() {
+        const [visibleDate, setVisibleDate] = React.useState(DEFAULT_TESTING_VISIBLE_DATE);
+        return (
+          <React.Fragment>
+            <EventTimelinePremium
+              resources={baseResources}
+              dataSource={dataSource}
+              visibleDate={visibleDate}
+              defaultPreset="dayAndMonth"
+            />
+            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
+              Next
+            </button>
+          </React.Fragment>
+        );
+      }
+
+      const { user } = render(<Test />);
+
+      await waitFor(() => {
+        expect(screen.getByText('Transient error')).not.to.equal(null);
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.equal(0);
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Next' }));
+
+      await waitFor(() => {
+        expect(screen.queryByText('Transient error')).to.equal(null);
+      });
+    });
+
+    it('should clear the error alert when navigating back to a cached range', async () => {
+      let callCount = 0;
+      const dataSource = {
+        getEvents: async () => {
+          callCount += 1;
+          // The second call (the navigation that follows the initial mount fetch) fails.
+          // The third call would normally re-fetch range A — but it's cached, so the
+          // plugin's cache-hit branch must clear `state.errors` without going to the
+          // network.
+          if (callCount === 2) {
+            throw new Error('Network failure');
+          }
+          return baseEvents;
+        },
+        persistEvents: async () => ({ success: true }),
+      };
+
+      function Test() {
+        const [visibleDate, setVisibleDate] = React.useState(DEFAULT_TESTING_VISIBLE_DATE);
+        return (
+          <React.Fragment>
+            <EventTimelinePremium
+              resources={baseResources}
+              dataSource={dataSource}
+              visibleDate={visibleDate}
+              defaultPreset="dayAndMonth"
+            />
+            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, 56))}>
+              Next
+            </button>
+            <button type="button" onClick={() => setVisibleDate(adapter.addDays(visibleDate, -56))}>
+              Prev
+            </button>
+          </React.Fragment>
+        );
+      }
+
+      const { user } = render(<Test />);
+
+      await waitFor(() => {
+        expect(screen.getByText(event1.title)).not.to.equal(null);
+        expect(
+          document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
+        ).to.equal(0);
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Next' }));
+      await waitFor(() => {
+        expect(screen.getByText('Network failure')).not.to.equal(null);
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Prev' }));
+      await waitFor(() => {
+        expect(screen.queryByText('Network failure')).to.equal(null);
+      });
+    });
+
+    it('should render a non-Error rejection by stringifying it', async () => {
+      // dataSource that rejects with a non-Error value (e.g. a `fetch` Response).
+      const nonError = { status: 500, toString: () => '500 Internal Server Error' };
+      const dataSource = {
+        getEvents: () => Promise.reject(nonError),
+        persistEvents: async () => ({ success: true }),
+      };
+
+      render(
+        <EventTimelinePremium
+          resources={baseResources}
+          dataSource={dataSource}
+          defaultVisibleDate={DEFAULT_TESTING_VISIBLE_DATE}
+          defaultPreset="dayAndMonth"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('500 Internal Server Error')).not.to.equal(null);
+      });
+    });
+
+    it('should re-display the same Error instance after dismiss when pushed again with a new key', async () => {
+      const sharedError = new Error('Shared error');
+      const store = new EventTimelinePremiumStore({ events: [] }, adapter);
+      store.set('errors', [{ error: sharedError, key: '1' }]);
+
+      function Test() {
+        const styledContextValue = React.useMemo(
+          () => ({
+            schedulerId: 'test',
+            classes: eventTimelinePremiumClasses,
+            localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
+          }),
+          [],
+        );
+
+        return (
+          <SchedulerStoreContext.Provider value={store as any}>
+            <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
+              <EventTimelinePremiumErrorContainer />
+            </EventTimelinePremiumStyledContext.Provider>
+          </SchedulerStoreContext.Provider>
+        );
+      }
+
+      const { user } = render(<Test />);
+
+      await user.click(screen.getByRole('button', { name: /close/i }));
+      await waitFor(() => {
+        expect(screen.queryByText('Shared error')).to.equal(null);
+      });
+
+      // Simulate the plugin re-pushing the same Error instance under a new key.
+      await act(async () => {
+        store.set('errors', [{ error: sharedError, key: '2' }]);
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Shared error')).not.to.equal(null);
+      });
+    });
+  });
+
+  describe('presets', () => {
+    it('should set --unit-width to the preset tickWidth and render one row per header level', async () => {
       renderTimeline({
-        view: 'time',
-        views: ['days', 'time'],
+        preset: 'dayAndHour',
+        presets: ['dayAndMonth', 'dayAndHour'],
       });
 
       let rootElement = screen.getByRole('grid');
-      // The time header has 24 time cells (one for each hour)
-      expect(rootElement.querySelectorAll('time').length).to.be.greaterThan(0);
-
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('time-cell-width');
+      // dayAndHour: tickWidth = 64px, 2 header rows (day + hour).
+      expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('64px');
+      expect(
+        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
+      ).to.equal(2);
 
       renderTimeline({
-        view: 'days',
-        views: ['days', 'time'],
+        preset: 'dayAndMonth',
+        presets: ['dayAndMonth', 'dayAndHour'],
       });
 
       rootElement = screen.getAllByRole('grid').at(-1) as HTMLElement;
-      // Days header also has time elements for each day
-      expect(rootElement.querySelectorAll('time').length).to.be.greaterThan(0);
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('days-cell-width');
+      // day: tickWidth = 120px, 2 header rows (month + day).
+      expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('120px');
+      expect(
+        rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
+      ).to.equal(2);
     });
   });
 });

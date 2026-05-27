@@ -1,0 +1,16 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "autoSubmit": { "description": "Whether to auto-submit when a suggestion is clicked." },
+    "suggestions": {
+      "description": "Suggestion items. Strings are normalized to <code>{ value, label }</code>. Ignored when <code>children</code> are provided."
+    }
+  },
+  "classDescriptions": {
+    "item": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each suggestion item"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  }
+}

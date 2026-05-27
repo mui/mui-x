@@ -27,7 +27,6 @@ function CustomNoRowsOverlay() {
   return (
     <StyledGridOverlay>
       <svg
-        xmlns="http://www.w3.org/2000/svg"
         fill="none"
         width={96}
         viewBox="0 0 452 257"

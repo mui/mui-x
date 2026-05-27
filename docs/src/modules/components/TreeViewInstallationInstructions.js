@@ -6,8 +6,8 @@ import InstallationInstructions from './InstallationInstructions';
 // For the version branches (e.g., v8.x, v7.x) we should use the version "@^8.0.0" for v8.x, "@^7.0.0" for v7.x, etc.
 
 const packages = {
-  Community: '@mui/x-tree-view@next',
-  Pro: '@mui/x-tree-view-pro@next',
+  Community: '@mui/x-tree-view',
+  Pro: '@mui/x-tree-view-pro',
 };
 
 export default function TreeViewInstallationInstructions() {

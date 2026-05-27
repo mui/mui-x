@@ -31,16 +31,12 @@ export interface UseDesktopRangePickerSlots
   field: React.ElementType;
 }
 
-export interface UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface UseDesktopRangePickerSlotProps
   extends
     PickerPopperSlotProps,
     ExportedPickersLayoutSlotProps<PickerRangeValue>,
     PickerFieldUISlotPropsFromContext {
-  field?: SlotComponentPropsFromProps<
-    PickerRangeFieldSlotProps<TEnableAccessibleFieldDOMStructure>,
-    {},
-    PickerOwnerState
-  >;
+  field?: SlotComponentPropsFromProps<PickerRangeFieldSlotProps, {}, PickerOwnerState>;
 }
 
 export interface DesktopRangeOnlyPickerProps extends NonStaticRangePickerProps {
@@ -52,7 +48,6 @@ export interface DesktopRangeOnlyPickerProps extends NonStaticRangePickerProps {
 
 export interface UseDesktopRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TExternalProps extends UsePickerProps<PickerRangeValue, TView, TError, any>,
 > extends UseRangePickerProps<TView, TError, TExternalProps> {
@@ -65,16 +60,10 @@ export interface UseDesktopRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>;
+  slotProps?: UseDesktopRangePickerSlotProps;
 }
 
 export interface UseDesktopRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
-  TEnableAccessibleFieldDOMStructure extends boolean,
-  TExternalProps extends UseDesktopRangePickerProps<
-    TView,
-    TEnableAccessibleFieldDOMStructure,
-    any,
-    TExternalProps
-  >,
+  TExternalProps extends UseDesktopRangePickerProps<TView, any, TExternalProps>,
 > extends NonStaticRangePickerHookParameters<TView, TExternalProps> {}

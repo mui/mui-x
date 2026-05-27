@@ -8,7 +8,7 @@ import {
   resources,
   defaultVisibleDate,
   getEvents,
-  updateEvents,
+  persistEvents,
 } from './fakeServer';
 
 export default function ErrorHandling() {
@@ -27,7 +27,7 @@ export default function ErrorHandling() {
   );
 
   return (
-    <Stack spacing={2} width="100%">
+    <Stack spacing={2} sx={{ width: '100%' }}>
       <FormControlLabel
         control={
           <Switch
@@ -39,7 +39,7 @@ export default function ErrorHandling() {
       />
       <div style={{ height: '700px', width: '100%' }}>
         <EventCalendarPremium
-          dataSource={{ getEvents: fetchData, updateEvents }}
+          dataSource={{ getEvents: fetchData, persistEvents }}
           resources={resources}
           defaultVisibleDate={defaultVisibleDate}
           defaultPreferences={{ isSidePanelOpen: false }}

@@ -19,6 +19,10 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiChartsGrid'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsGrid'];
   };
+  MuiRadialChartsGrid?: {
+    defaultProps?: ComponentsProps['MuiRadialChartsGrid'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiRadialChartsGrid'];
+  };
   MuiChartsLegend?: {
     defaultProps?: ComponentsProps['MuiChartsLegend'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsLegend'];

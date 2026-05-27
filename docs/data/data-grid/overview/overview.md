@@ -61,7 +61,7 @@ It includes all of the main features listed in the navigation menu, such as edit
 
 {{"demo": "DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-## Pro version [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+### Pro version [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 ```js
 import { DataGridPro } from '@mui/x-data-grid-pro';

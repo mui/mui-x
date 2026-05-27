@@ -7,13 +7,15 @@ import {
   type StackableSeriesType,
   type SeriesId,
 } from './common';
+import { type DatasetElementType } from './config';
 import { type BarItem, type BarLabelContext } from '../../BarChart';
 
 export type BarValueType = number;
 
-export interface BarSeriesType
-  extends CommonSeriesType<BarValueType | null, 'bar'>, CartesianSeriesType, StackableSeriesType {
-  type: 'bar';
+/**
+ * @internal The series type shared by the bar and radialBar charts
+ */
+export interface CommonBarSeriesType {
   /**
    * Data associated to each bar.
    */
@@ -23,6 +25,14 @@ export interface BarSeriesType
    */
   dataKey?: string;
   /**
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return the series value.
+   * Can be used as an alternative to `dataKey`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
+   * @returns {BarValueType | null} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => BarValueType | null;
+  /**
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
@@ -31,11 +41,6 @@ export interface BarSeriesType
    * @default 'vertical'
    */
   layout?: 'horizontal' | 'vertical';
-  /**
-   * Defines how stacked series handle negative values.
-   * @default 'diverging'
-   */
-  stackOffset?: StackOffsetType;
   /**
    * If provided, the value will be used as the minimum size of the bar in pixels.
    * This is useful to avoid bars with a size of 0.
@@ -54,6 +59,15 @@ export interface BarSeriesType
    * @returns {string} The formatted label.
    */
   barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
+}
+
+export interface BarSeriesType
+  extends
+    CommonSeriesType<BarValueType | null, 'bar'>,
+    CartesianSeriesType,
+    StackableSeriesType,
+    CommonBarSeriesType {
+  type: 'bar';
   /**
    * The placement of the bar label. It accepts the following values:
    * - 'center': the label is centered on the bar
@@ -61,6 +75,11 @@ export interface BarSeriesType
    * @default 'center'
    */
   barLabelPlacement?: 'center' | 'outside';
+  /**
+   * Defines how stacked series handle negative values.
+   * @default 'diverging'
+   */
+  stackOffset?: StackOffsetType;
 }
 
 /**

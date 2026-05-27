@@ -1,8 +1,8 @@
-import { screen, fireEvent } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 import {
   createPickerRenderer,
   adapterToUse,
-  expectFieldValueV7,
+  expectFieldValue,
   openPicker,
   describeValue,
   getFieldInputRoot,
@@ -34,38 +34,37 @@ describe('<MobileDateTimePicker /> - Describe Value', () => {
         expectedValueStr = hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm';
       }
 
-      expectFieldValueV7(fieldRoot, expectedValueStr);
+      expectFieldValue(fieldRoot, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue }) => {
+    setNewValue: async (value, { isOpened, applySameValue, user }) => {
       if (!isOpened) {
-        openPicker({ type: 'date-time' });
+        await openPicker(user, { type: 'date-time' });
       }
 
       const newValue = applySameValue
         ? value!
         : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value!, 1), 1), 5);
-      fireEvent.click(
+      await user.click(
         screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
       );
-      fireEvent.click(screen.getByRole('button', { name: 'Next' }));
+      await user.click(screen.getByRole('button', { name: 'Next' }));
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
       const hoursNumber = adapterToUse.getHours(newValue);
-      fireEvent.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
-      fireEvent.click(
+      await user.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+      await user.click(
         screen.getByRole('option', { name: `${adapterToUse.getMinutes(newValue)} minutes` }),
       );
       if (hasMeridiem) {
-        fireEvent.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+        await user.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
       }
 
       // Close the picker
       if (!isOpened) {
-        // eslint-disable-next-line mui/disallow-active-element-as-key-event-target
-        fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+        await user.keyboard('{Escape}');
       } else {
         // return to the date view in case we'd like to repeat the selection process
-        fireEvent.click(screen.getByRole('tab', { name: 'pick date' }));
+        await user.click(screen.getByRole('tab', { name: 'pick date' }));
       }
 
       return newValue;

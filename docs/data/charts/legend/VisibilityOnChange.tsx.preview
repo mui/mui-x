@@ -9,6 +9,6 @@
   initialHiddenItems={[{ type: 'line', seriesId: 'series-a' }]}
   onHiddenItemsChange={(newHiddenItems) => setHiddenItems(newHiddenItems)}
 />
-<Typography variant="body2" textAlign="center">
+<Typography variant="body2" sx={{ textAlign: 'center' }}>
   Visible series: {visibleCount} / {series.length}
 </Typography>

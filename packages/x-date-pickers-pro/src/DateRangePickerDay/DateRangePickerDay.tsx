@@ -222,7 +222,13 @@ const DateRangePickerDayRoot = styled(ButtonBase, {
       props: { isDayDraggable: true },
       style: {
         cursor: 'grab',
+        // Stop the browser from scrolling the page when the user drags a finger
+        // across the cell — the drag is driven by our own Pointer Events handler.
         touchAction: 'none',
+        // Prevent the iOS text-selection callout from racing the drag gesture.
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        userSelect: 'none',
       },
     },
     {
@@ -524,7 +530,6 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay(
       onMouseEnter={(event) => onMouseEnter(event, day)}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
-      draggable={draggable}
       {...other}
       ownerState={ownerState}
       className={clsx(classes.root, className)}
@@ -658,6 +663,11 @@ DateRangePickerDayRaw.propTypes = {
    */
   isVisuallySelected: PropTypes.bool,
   /**
+   * Whether the custom component is expected to render a native `<button>` element
+   * when passing a React component to the `component` or `slots` prop.
+   */
+  nativeButton: PropTypes.bool,
+  /**
    * Callback fired when the component is blurred.
    * @param {React.FocusEvent<HTMLButtonElement>} event The event object.
    * @param {PickerValidDate} day The day.
@@ -763,6 +773,13 @@ DateRangePickerDayRaw.propTypes = {
       }),
     }),
   ]),
+  /**
+   * The HTML [`type`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/button#type)
+   * attribute applied to `button` and `a` elements.
+   * Ignored when rendering non-native buttons.
+   * @default 'button'
+   */
+  type: PropTypes.string,
 } as any;
 
 /**

@@ -54,6 +54,7 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   aggregationFunctions: GRID_AGGREGATION_FUNCTIONS,
   aggregationRowsScope: 'filtered',
   getAggregationPosition: defaultGetAggregationPosition,
+  cellSelectionFillHandle: false,
   disableClipboardPaste: false,
   splitClipboardPastedText: (pastedText, delimiter = '\t') => {
     // Excel on Windows adds an empty line break at the end of the copied text.

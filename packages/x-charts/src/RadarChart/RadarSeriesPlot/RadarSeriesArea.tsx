@@ -57,6 +57,7 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
         return (
           <path
             key={id}
+            data-series={id}
             {...getPathProps({
               seriesId: id,
               points,

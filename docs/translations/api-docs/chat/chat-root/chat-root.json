@@ -1,0 +1,35 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "currentUser": {
+      "description": "The local user sending messages. If omitted, derived from <code>members</code> by finding the entry with <code>role === &#39;user&#39;</code>."
+    },
+    "density": {
+      "description": "The vertical spacing density of chat messages. When provided, wraps descendant components with <code>ChatDensityProvider</code>. - <code>&#39;compact&#39;</code> – Reduced vertical spacing between messages. - <code>&#39;standard&#39;</code> – Default spacing. - <code>&#39;comfortable&#39;</code> – Increased vertical spacing between messages."
+    },
+    "initialActiveConversationId": {
+      "description": "The initial active conversation ID when uncontrolled. Ignored after initialization and when <code>activeConversationId</code> is provided."
+    },
+    "initialComposerValue": {
+      "description": "The initial composer value when uncontrolled. Ignored after initialization and when <code>composerValue</code> is provided."
+    },
+    "initialConversations": {
+      "description": "The initial conversations when uncontrolled. Ignored after initialization and when <code>conversations</code> is provided."
+    },
+    "initialMessages": {
+      "description": "The initial messages when uncontrolled. Ignored after initialization and when <code>messages</code> is provided."
+    },
+    "members": {
+      "description": "All participants in the chat. The current (local) user is derived as the first member with <code>role === &#39;user&#39;</code>, unless <code>currentUser</code> is provided explicitly."
+    },
+    "storeClass": { "description": "The store class to use for this provider." },
+    "streamFlushInterval": {
+      "description": "Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store."
+    },
+    "variant": {
+      "description": "The visual layout variant of the chat. When provided, wraps descendant components with <code>ChatVariantProvider</code> so message and conversation components can respond to the variant. - <code>&#39;default&#39;</code> – Standard layout with avatars, individual timestamps, and full spacing. - <code>&#39;compact&#39;</code> – Messenger-style layout: no avatars, author + timestamp in group header, tighter spacing."
+    }
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "root": "" }
+}

@@ -20,15 +20,15 @@ export default function ColorScale() {
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
       <Stack
         direction="row"
-        gap={1}
         sx={{
+          gap: 1,
+          flexWrap: 'wrap',
           width: '100%',
           '&>div': {
             display: 'flex',
             flexDirection: 'column',
           },
         }}
-        flexWrap="wrap"
       >
         <div>
           <Typography variant="caption">x-axis colorMap</Typography>
@@ -77,7 +77,6 @@ export default function ColorScale() {
           </ToggleButtonGroup>
         </div>
       </Stack>
-
       <ScatterChart
         height={300}
         grid={{ horizontal: true, vertical: true }}
@@ -158,7 +157,7 @@ export default function ColorScale() {
         code={[
           `<ScatterChart`,
           '  /* ... */',
-          '  series={[{ data: data.map(point => ({...point, z: point.x + point.y})) }]}',
+          '  series={[{ data: data.map(point => ({...point, colorValue: point.x + point.y})) }]}',
           // ColorX
           ...(colorX === 'None' ? ['  xAxis={[{}]}'] : []),
           ...(colorX === 'continuous'
@@ -281,6 +280,6 @@ function getGaussianSeriesData(mean, stdev = [0.5, 0.5], N = 50) {
         Math.cos(2.0 * Math.PI * chance.floating({ min: 0, max: 0.99 })) *
         stdev[1] +
       mean[1];
-    return { x, y, z: x + y, id: `${mean.join(',')}${i}` };
+    return { x, y, colorValue: x + y, id: `${mean.join(',')}${i}` };
   });
 }

@@ -128,7 +128,7 @@ export const useGridRowsOverridableMethods = (
     [apiRef, processRowUpdate, onProcessRowUpdateError],
   );
 
-  if (flatTree) {
+  if (flatTree && !props.treeData) {
     return {
       setRowIndex: setRowIndexPlain,
       setRowPosition: setRowPositionPlain,

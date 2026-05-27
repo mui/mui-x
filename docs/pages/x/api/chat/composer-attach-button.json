@@ -1,0 +1,18 @@
+{
+  "props": {},
+  "name": "ComposerAttachButton",
+  "imports": [
+    "import { ComposerAttachButton } from '@mui/x-chat/headless';",
+    "import { ComposerAttachButton } from '@mui/x-chat/headless';"
+  ],
+  "slots": [
+    { "name": "attachButton", "description": "", "class": null },
+    { "name": "attachInput", "description": "", "class": null }
+  ],
+  "classes": [],
+  "muiName": "MuiComposerAttachButton",
+  "filename": "/packages/x-chat-headless/src/composer/ComposerAttachButton.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/composer/\">Chat - Headless composer</a></li>\n<li><a href=\"/x/react-chat/material/composer/\">Chat - Composer</a></li></ul>",
+  "cssComponent": false
+}

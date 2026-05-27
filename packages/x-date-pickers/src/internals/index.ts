@@ -75,8 +75,7 @@ export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
   useFieldInternalPropsWithDefaults,
-  createDateStrForV7HiddenInputFromSections,
-  createDateStrForV6InputFromSections,
+  createDateStrForHiddenInputFromSections,
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,
@@ -120,7 +119,6 @@ export type {
   PickerAnyManager,
   PickerManagerFieldInternalProps,
   PickerManagerFieldInternalPropsWithDefaults,
-  PickerManagerEnableAccessibleFieldDOMStructure,
   PickerManagerError,
   PickerValueManager,
 } from './models/manager';
@@ -181,6 +179,7 @@ export {
 export { resolveTimeViewsResponse, resolveDateTimeFormat } from './utils/date-time-utils';
 export {
   executeInTheNextEventLoopTick,
+  extractRootForwardedProps,
   getActiveElement,
   onSpaceOrEnter,
   mergeSx,

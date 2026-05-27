@@ -10,24 +10,18 @@ import {
   PickerFieldUISlots,
 } from '../internals/components/PickerFieldUI';
 
-export interface UseTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
+export interface UseTimeFieldProps
   extends
-    MakeOptional<
-      UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, TimeValidationError>,
-      'format'
-    >,
+    MakeOptional<UseFieldInternalProps<PickerValue, TimeValidationError>, 'format'>,
     ExportedValidateTimeProps,
     ExportedPickerFieldUIProps,
     AmPmProps {}
 
-export type TimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean = true> =
+export type TimeFieldProps =
   // The hook props
-  UseTimeFieldProps<TEnableAccessibleFieldDOMStructure> &
+  UseTimeFieldProps &
     // The TextField props
-    Omit<
-      BuiltInFieldTextFieldProps<TEnableAccessibleFieldDOMStructure>,
-      keyof UseTimeFieldProps<TEnableAccessibleFieldDOMStructure>
-    > & {
+    Omit<BuiltInFieldTextFieldProps, keyof UseTimeFieldProps> & {
       /**
        * Overridable component slots.
        * @default {}

@@ -11,7 +11,7 @@ githubLabel: 'scope: scheduler'
 
 ## Installation
 
-Install the Scheduler package that best suits your needs — Community, or Premium:
+Install the Scheduler package that best suits your needs—Community, or Premium:
 
 {{"component": "modules/components/SchedulerInstallationInstructions.js"}}
 
@@ -94,7 +94,7 @@ const events: SchedulerEvent[] = [
 
 ### Render the component
 
-With the component imported, and events defined, you're now ready to render the render the Event Timeline as shown below:
+With the component imported and events defined, you're now ready to render the Event Timeline as shown below:
 
 {{"demo": "RenderEventCalendar.js", "defaultCodeOpen": true, "bg": "inline"}}
 
@@ -102,7 +102,7 @@ With the component imported, and events defined, you're now ready to render the 
 
 ### Import the component
 
-Import the `<EventTimelinePremium />` component along with the `SchedulerEvent` and `SchedulerResource` types:
+Import the `EventTimelinePremium` component along with the `SchedulerEvent` and `SchedulerResource` types:
 
 ```js
 import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
@@ -134,7 +134,7 @@ const events: SchedulerEvent[] = [
 ];
 ```
 
-The event passed to the Event Timeline component need to have a resource that represents the entities (people, rooms, equipment) that it is are assigned to:
+Each event passed to the Event Timeline component needs a resource that represents the entities (people, rooms, equipment) it's assigned to:
 
 ```ts
 const resources: SchedulerResource[] = [
@@ -145,7 +145,7 @@ const resources: SchedulerResource[] = [
 
 ### Render the component
 
-With the component imported, and events and resources defined, you're now ready to render the render the Event Timeline as shown below:
+With the component imported and events and resources defined, you're now ready to render the Event Timeline as shown below:
 
 {{"demo": "RenderEventTimelinePremium.js", "defaultCodeOpen": true, "bg": "inline"}}
 
@@ -187,9 +187,10 @@ TODO: Uncomment once available
 
 :::info
 MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
+The Scheduler's advanced features are only available with a Premium license.
 See [Licensing](/x/introduction/licensing/) for details.
 :::
 
-Throughout the documentation, Pro- and Premium-only features are denoted with the [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') and [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') icons, respectively.
+Throughout the documentation, Premium-only features are denoted with the [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') icon.
 
-All documentation for Community components and features also applies to their Pro and Premium counterparts.
+All documentation for Community components and features also applies to their Premium counterparts.

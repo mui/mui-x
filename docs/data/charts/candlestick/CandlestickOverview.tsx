@@ -113,8 +113,8 @@ export default function CandlestickOverview() {
   };
 
   return (
-    <Stack width="100%">
-      <Typography variant="h6" textAlign="center" mb={1}>
+    <Stack sx={{ width: '100%' }}>
+      <Typography variant="h6" sx={{ textAlign: 'center', mb: 1 }}>
         Interactive Brokers Stock Price - 2025
       </Typography>
       <ChartsDataProviderPremium
@@ -355,8 +355,8 @@ function CandlestickTooltip() {
     >
       <Stack
         direction="column"
-        gap={0.5}
         sx={(theme) => ({
+          gap: 0.5,
           ...theme.typography.caption,
           pointerEvents: 'none',
           marginLeft: theme.spacing(1),
@@ -365,8 +365,8 @@ function CandlestickTooltip() {
       >
         <Stack
           direction="row"
-          gap={1}
           sx={(theme) => ({
+            gap: 1,
             width: 'min-content',
             paddingX: theme.spacing(1),
             paddingY: theme.spacing(0.5),

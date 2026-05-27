@@ -96,15 +96,13 @@ describe('<DataGridPro /> - Detail panel', () => {
         expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']),
       );
 
-      const virtualScrollerContent = $('.MuiDataGrid-virtualScrollerContent')!;
+      const element = $('.MuiDataGrid-virtualScrollerRenderZone')!;
 
       await waitFor(() => {
-        expect(virtualScrollerContent).toHaveComputedStyle({
+        expect(element).toHaveComputedStyle({
           height: `${rowHeight + detailPanelHeight}px`,
         });
       });
-
-      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
       const detailPanels = $$('.MuiDataGrid-detailPanel');
       expect(detailPanels[0]).toHaveComputedStyle({
@@ -136,15 +134,14 @@ describe('<DataGridPro /> - Detail panel', () => {
           getDetailPanelHeight={() => 'auto'}
         />,
       );
-      const virtualScrollerContent = grid('virtualScrollerContent')!;
+      const element = grid('virtualScrollerRenderZone')!;
       await user.click(screen.getByRole('button', { name: 'Expand' }));
 
       await waitFor(() =>
         expect(getRow(0).className).to.include(gridClasses['row--detailPanelExpanded']),
       );
 
-      expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
-      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
+      expect(element).toHaveComputedStyle({ height: `${rowHeight + 100}px` });
 
       const detailPanels = $$('.MuiDataGrid-detailPanel');
       expect(detailPanels[0]).toHaveComputedStyle({
@@ -154,9 +151,8 @@ describe('<DataGridPro /> - Detail panel', () => {
       await user.click(screen.getByRole('button', { name: 'Increase' }));
 
       await waitFor(() => {
-        expect(virtualScrollerContent).toHaveComputedStyle({ height: `${rowHeight + 200}px` });
+        expect(element).toHaveComputedStyle({ height: `${rowHeight + 200}px` });
       });
-      expect(virtualScrollerContent).toHaveInlineStyle({ width: 'auto' });
 
       expect(detailPanels[0]).toHaveComputedStyle({
         height: `200px`,

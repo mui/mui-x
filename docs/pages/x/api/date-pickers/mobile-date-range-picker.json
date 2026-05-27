@@ -104,7 +104,7 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => \"...\"",
+      "default": "() => \"…\"",
       "signature": {
         "type": "function() => React.ReactNode",
         "describedArgs": [],
@@ -276,7 +276,7 @@
     {
       "name": "textField",
       "description": "Form control with an input to render the value.",
-      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "default": "<PickersTextField />",
       "class": null
     },
     {
@@ -287,7 +287,7 @@
     }
   ],
   "classes": [],
-  "spread": false,
+  "spread": true,
   "themeDefaultProps": false,
   "muiName": "MuiMobileDateRangePicker",
   "forwardsRefTo": "HTMLDivElement",

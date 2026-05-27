@@ -1,0 +1,40 @@
+{
+  "props": {
+    "autoScroll": {
+      "type": { "name": "union", "description": "{ buffer?: number }<br>&#124;&nbsp;bool" },
+      "default": "true"
+    }
+  },
+  "name": "ChatMessageList",
+  "imports": [
+    "import { ChatMessageList } from '@mui/x-chat/ChatMessageList';",
+    "import { ChatMessageList } from '@mui/x-chat';"
+  ],
+  "classes": [
+    {
+      "key": "content",
+      "className": "MuiChatMessageList-content",
+      "description": "Styles applied to the message list content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChatMessageList-root",
+      "description": "Styles applied to the message list root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scroller",
+      "className": "MuiChatMessageList-scroller",
+      "description": "Styles applied to the message list scroller element.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatMessageList",
+  "filename": "/packages/x-chat/src/ChatMessageList/ChatMessageList.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/messages/\">Chat - Messages</a></li>\n<li><a href=\"/x/react-chat/behavior/scrolling/\">Chat - Scrolling</a></li>\n<li><a href=\"/x/react-chat/multi-conversation/history-and-pagination/\">Chat - History &amp; Pagination</a></li></ul>",
+  "cssComponent": false
+}

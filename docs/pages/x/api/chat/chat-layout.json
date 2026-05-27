@@ -1,0 +1,21 @@
+{
+  "props": {},
+  "name": "ChatLayout",
+  "imports": [
+    "import { ChatLayout } from '@mui/x-chat/headless';",
+    "import { ChatLayout } from '@mui/x-chat/headless';"
+  ],
+  "slots": [
+    { "name": "root", "description": "", "class": null },
+    { "name": "conversationsPane", "description": "", "class": null },
+    { "name": "threadPane", "description": "", "class": null }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatLayout",
+  "filename": "/packages/x-chat-headless/src/chat/ChatLayout.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/basics/layout/\">Chat - Layout</a></li>\n<li><a href=\"/x/react-chat/headless/composition/\">Chat - Headless composition</a></li>\n<li><a href=\"/x/react-chat/\">MUI X Chat</a></li></ul>",
+  "cssComponent": false
+}

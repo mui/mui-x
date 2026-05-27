@@ -52,7 +52,7 @@ export default function ControlledTooltip() {
       sx={{ width: '100%' }}
     >
       <Box sx={{ flexGrow: 1 }}>
-        <Stack spacing={2} alignItems={'center'}>
+        <Stack spacing={2} sx={{ alignItems: 'center' }}>
           <ToggleButtonGroup
             value={tooltipItem?.seriesId ?? null}
             exclusive

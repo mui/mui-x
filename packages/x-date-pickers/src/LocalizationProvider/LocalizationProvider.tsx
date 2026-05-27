@@ -11,8 +11,6 @@ export interface PickersAdapterContextValue {
     maxDate: PickerValidDate;
   };
 
-  // TODO v9: Remove in favor of keeping only `adapter` field
-  utils: MuiPickersAdapter;
   adapter: MuiPickersAdapter;
   localeText: PickersInputLocaleText | undefined;
 }
@@ -24,13 +22,6 @@ export type PickerAdapterContextNullableValue = {
 export const PickerAdapterContext = React.createContext<PickerAdapterContextNullableValue | null>(
   null,
 );
-
-// TODO v9: Remove this public export
-/**
- * The context that provides the date adapter and default dates to the pickers.
- * @deprecated Use `usePickersAdapter` hook if you need access to the adapter instead.
- */
-export const MuiPickersAdapterContext = PickerAdapterContext;
 
 export interface LocalizationProviderProps<TLocale> {
   children?: React.ReactNode;
@@ -81,7 +72,7 @@ export const LocalizationProvider = function LocalizationProvider<TLocale>(
 
   const { adapter: parentAdapter, localeText: parentLocaleText } = React.useContext(
     PickerAdapterContext,
-  ) ?? { utils: undefined, adapter: undefined, localeText: undefined };
+  ) ?? { adapter: undefined, localeText: undefined };
 
   const props: LocalizationProviderProps<TLocale> = useThemeProps({
     // We don't want to pass the `localeText` prop to the theme, that way it will always return the theme value,
@@ -144,7 +135,6 @@ export const LocalizationProvider = function LocalizationProvider<TLocale>(
 
   const contextValue: PickerAdapterContextNullableValue = React.useMemo(() => {
     return {
-      utils: adapter,
       adapter,
       defaultDates,
       localeText,

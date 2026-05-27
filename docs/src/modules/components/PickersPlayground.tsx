@@ -636,14 +636,17 @@ export default function PickersPlayground() {
             </DemoContainer>
           )}
         </ComponentSection>
-        <Divider orientation="vertical" light sx={{ display: { xs: 'none', md: 'flex' } }} />
-        <Divider light sx={{ display: { xs: 'auto', md: 'none' } }} />
+        <Divider
+          orientation="vertical"
+          sx={{ opacity: 0.6, display: { xs: 'none', md: 'flex' } }}
+        />
+        <Divider sx={{ opacity: 0.6, display: { xs: 'auto', md: 'none' } }} />
         <PropControlsSection>
           <Typography
             id="usage-props"
             component="h3"
-            fontWeight="600"
             sx={{
+              fontWeight: '600',
               scrollMarginTop: 160,
               fontFamily: 'General Sans',
               p: 3,
@@ -655,7 +658,7 @@ export default function PickersPlayground() {
           >
             Playground
           </Typography>
-          <Divider light />
+          <Divider sx={{ opacity: 0.6 }} />
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, p: 2, pl: { md: 3 } }}>
             <TriBooleanGroupControl
               label="Toolbar hidden"

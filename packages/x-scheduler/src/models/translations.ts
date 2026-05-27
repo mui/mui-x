@@ -1,4 +1,4 @@
-import { CalendarView } from '@mui/x-scheduler-headless/models';
+import { CalendarView } from '@mui/x-scheduler-internals/models';
 
 export interface EventDialogLocaleText {
   // EventDialog
@@ -49,7 +49,7 @@ export interface EventDialogLocaleText {
   startDateLabel: string;
   startTimeLabel: string;
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: string;
   cancel: string;
   confirm: string;
@@ -60,11 +60,8 @@ export interface EventDialogLocaleText {
 }
 
 export interface EventCalendarLocaleText extends EventDialogLocaleText {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName: string) => string;
+  // ResourcesTree
   resourcesLabel: string;
-  resourcesLegendSectionLabel: string;
-  showEventsLabel: (resourceName: string) => string;
 
   // ViewSwitcher
   agenda: string;
@@ -92,6 +89,10 @@ export interface EventCalendarLocaleText extends EventDialogLocaleText {
   showWeekNumber: string;
   timeFormat: string;
   viewSpecificOptions: (view: CalendarView) => string;
+  startWeekOn: string;
+  weekdaySunday: string;
+  weekdayMonday: string;
+  weekdaySaturday: string;
 
   // WeekView
   allDay: string;

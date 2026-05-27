@@ -7,7 +7,7 @@ import {
   createPickerRenderer,
   adapterToUse,
   getFieldInputRoot,
-  expectFieldValueV7,
+  expectFieldValue,
 } from 'test/utils/pickers';
 import { PickerValue } from '@mui/x-date-pickers/internals';
 
@@ -25,7 +25,7 @@ describe('<DateField /> - fieldRef', () => {
       />,
     );
     const fieldRoot = getFieldInputRoot();
-    expectFieldValueV7(fieldRoot, '04/17/2022');
+    expectFieldValue(fieldRoot, '04/17/2022');
 
     act(() => {
       fieldRef.current?.clearValue();
@@ -33,7 +33,7 @@ describe('<DateField /> - fieldRef', () => {
 
     expect(onChange.calledOnce).to.equal(true);
     expect(onChange.lastCall.args[0]).to.equal(null);
-    expectFieldValueV7(fieldRoot, 'MM/DD/YYYY');
+    expectFieldValue(fieldRoot, 'MM/DD/YYYY');
   });
 
   it('should return the sections with getSections', () => {

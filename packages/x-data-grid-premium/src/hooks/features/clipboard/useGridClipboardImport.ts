@@ -85,7 +85,7 @@ async function getTextFromClipboard(rootEl: HTMLElement) {
 }
 
 // Keeps track of updated rows during clipboard paste
-class CellValueUpdater {
+export class CellValueUpdater {
   rowsToUpdate: Map<GridRowId, GridValidRowModel> = new Map();
 
   updateRow: (row: GridRowModel) => void;

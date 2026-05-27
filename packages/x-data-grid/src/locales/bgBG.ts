@@ -67,7 +67,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
-  filterPanelColumns: 'Колони',
+  filterPanelColumn: 'Колони',
   filterPanelInputLabel: 'Стойност',
   filterPanelInputPlaceholder: 'Стойност на филтъра',
 

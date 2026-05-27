@@ -1,0 +1,37 @@
+{
+  "props": {
+    "autoSubmit": { "type": { "name": "bool" }, "default": "false" },
+    "suggestions": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ label?: string, value: string }<br>&#124;&nbsp;string&gt;"
+      }
+    }
+  },
+  "name": "ChatSuggestions",
+  "imports": [
+    "import { ChatSuggestions } from '@mui/x-chat/ChatSuggestions';",
+    "import { ChatSuggestions } from '@mui/x-chat';"
+  ],
+  "classes": [
+    {
+      "key": "item",
+      "className": "MuiChatSuggestions-item",
+      "description": "Styles applied to each suggestion item.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChatSuggestions-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChatSuggestions",
+  "filename": "/packages/x-chat/src/ChatSuggestions/ChatSuggestions.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/behavior/suggestions/\">Chat - Suggestions</a></li></ul>",
+  "cssComponent": false
+}

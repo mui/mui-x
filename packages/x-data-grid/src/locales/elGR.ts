@@ -68,7 +68,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Τελεστές',
   filterPanelOperatorAnd: 'Καί',
   filterPanelOperatorOr: 'Ή',
-  filterPanelColumns: 'Στήλες',
+  filterPanelColumn: 'Στήλες',
   filterPanelInputLabel: 'Τιμή',
   filterPanelInputPlaceholder: 'Τιμή φίλτρου',
 

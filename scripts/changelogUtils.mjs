@@ -9,6 +9,7 @@
  * - Uses actual versions from package.json files
  * - Can return the changelog as a string when returnEntry is true
  */
+import { execSync } from 'node:child_process';
 import fs from 'fs';
 import path from 'path';
 import {
@@ -23,7 +24,7 @@ const REPO = 'mui-x';
  * @type {string[]}
  * Labels to exclude from the changelog
  */
-const excludeLabels = ['dependencies', 'scope: scheduler'];
+const excludeLabels = ['dependencies'];
 
 /**
  * @type {string[]}
@@ -241,7 +242,7 @@ async function generateChangelog({
   const treeViewCommits = [];
   const treeViewProCommits = [];
   const schedulerCommits = [];
-  const schedulerProCommits = [];
+  const schedulerPremiumCommits = [];
   const internalCommits = [];
   const docsCommits = [];
   const otherCommits = [];
@@ -299,8 +300,8 @@ async function generateChangelog({
         case 'scheduler':
           schedulerCommits.push(commitItem);
           break;
-        case 'scheduler-pro':
-          schedulerProCommits.push(commitItem);
+        case 'scheduler-premium':
+          schedulerPremiumCommits.push(commitItem);
           break;
         case 'docs':
           docsCommits.push(commitItem);
@@ -372,6 +373,21 @@ async function generateChangelog({
   const proIcon = `[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')`;
   const premiumIcon = `[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')`;
 
+  const isPackageBumped = (packageName, currentVersion) => {
+    if (!nextVersion) {
+      return true;
+    }
+    try {
+      const previousPackageJson = execSync(
+        `git show ${lastRelease}:packages/${packageName}/package.json`,
+        { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] },
+      );
+      return JSON.parse(previousPackageJson).version !== currentVersion;
+    } catch {
+      return true;
+    }
+  };
+
   /**
    * Generates a changelog section for a product
    * @param {object} options - The options for generating the product section
@@ -394,6 +410,17 @@ async function generateChangelog({
     const hasProVersion = proCommits !== null;
     const hasPremiumVersion = premiumCommits !== null;
     const packageVersion = nextVersion ? getPackageVersion(packageName) : '__VERSION__';
+
+    const hasNoCommits =
+      baseCommits.length === 0 &&
+      (proCommits?.length ?? 0) === 0 &&
+      (premiumCommits?.length ?? 0) === 0;
+
+    // Keep rendering `Internal changes.` when a package is bumped without
+    // commits (e.g. an `x-internals` update propagating a version bump).
+    if (hasNoCommits && !isPackageBumped(packageName, packageVersion)) {
+      return '';
+    }
 
     const lines = [`### ${productName}`];
 
@@ -422,11 +449,15 @@ async function generateChangelog({
     if (hasPremiumVersion) {
       lines.push(`#### \`@mui/${packageName}-premium@${packageVersion}\` ${premiumIcon}`);
 
+      // Reference the Pro tier if it exists, otherwise fall back to the base
+      // package. Products like Scheduler ship Premium without a Pro tier.
+      const previousTierPackage = hasProVersion ? `@mui/${packageName}-pro` : `@mui/${packageName}`;
+
       if (premiumCommits?.length > 0) {
-        lines.push(`Same changes as in \`@mui/${packageName}-pro@${packageVersion}\`, plus:`);
+        lines.push(`Same changes as in \`${previousTierPackage}@${packageVersion}\`, plus:`);
         lines.push(logCommitEntries(premiumCommits));
       } else {
-        lines.push(`Same changes as in \`@mui/${packageName}-pro@${packageVersion}\`.`);
+        lines.push(`Same changes as in \`${previousTierPackage}@${packageVersion}\`.`);
       }
     }
 
@@ -543,6 +574,14 @@ ${logProductSection({
 })}
 
 ${logProductSection({
+  productName: 'Scheduler',
+  packageName: 'x-scheduler',
+  baseCommits: schedulerCommits,
+  premiumCommits: schedulerPremiumCommits,
+  changelogKey: 'scheduler',
+})}
+
+${logProductSection({
   productName: 'Codemod',
   packageName: 'x-codemod',
   baseCommits: codemodCommits,
@@ -587,10 +626,11 @@ ${logOtherSection({
  * Fetches and returns the latest tagged version for a given major version.
  * @param {string | undefined} majorVersion
  */
-async function findLatestTaggedVersionForMajor(majorVersion) {
+async function findLatestTaggedVersionForMajor(majorVersion, upstreamRemote = 'origin') {
   // Fetch all tags from all remotes to ensure we have the latest tags.
   await $`git fetch --tags --all`;
-  const { stdout } = await $`git describe --tags --abbrev=0 --match ${`v${majorVersion || ''}*`}`; // only include "version-tags"
+  const { stdout } =
+    await $`git describe --tags --abbrev=0 --match ${`v${majorVersion || ''}*`} ${upstreamRemote}/v${majorVersion}.x`; // only include "version-tags"
   return stdout.trim();
 }
 

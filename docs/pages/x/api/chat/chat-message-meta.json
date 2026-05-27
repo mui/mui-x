@@ -1,0 +1,117 @@
+{
+  "props": {},
+  "name": "ChatMessageMeta",
+  "imports": [
+    "import { ChatMessageMeta } from '@mui/x-chat/ChatMessage';",
+    "import { ChatMessageMeta } from '@mui/x-chat';"
+  ],
+  "classes": [
+    {
+      "key": "actions",
+      "className": "MuiChatMessageMeta-actions",
+      "description": "Styles applied to the message actions element.",
+      "isGlobal": false
+    },
+    {
+      "key": "authorLabel",
+      "className": "MuiChatMessageMeta-authorLabel",
+      "description": "Styles applied to the message author label element.",
+      "isGlobal": false
+    },
+    {
+      "key": "avatar",
+      "className": "MuiChatMessageMeta-avatar",
+      "description": "Styles applied to the message avatar element.",
+      "isGlobal": false
+    },
+    {
+      "key": "bubble",
+      "className": "MuiChatMessageMeta-bubble",
+      "description": "Styles applied to the message bubble element inside content.",
+      "isGlobal": false
+    },
+    {
+      "key": "content",
+      "className": "MuiChatMessageMeta-content",
+      "description": "Styles applied to the message content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "dateDivider",
+      "className": "MuiChatMessageMeta-dateDivider",
+      "description": "Styles applied to the date divider element.",
+      "isGlobal": false
+    },
+    {
+      "key": "error",
+      "className": "Mui-error",
+      "description": "Applied when the message has an error status",
+      "isGlobal": true
+    },
+    {
+      "key": "group",
+      "className": "MuiChatMessageMeta-group",
+      "description": "Styles applied to the message group element.",
+      "isGlobal": false
+    },
+    {
+      "key": "groupAuthorName",
+      "className": "MuiChatMessageMeta-groupAuthorName",
+      "description": "Class applied to the group author name element.",
+      "isGlobal": false
+    },
+    {
+      "key": "groupTimestamp",
+      "className": "MuiChatMessageMeta-groupTimestamp",
+      "description": "Class applied to the group timestamp element (compact variant only).",
+      "isGlobal": false
+    },
+    {
+      "key": "inlineMeta",
+      "className": "MuiChatMessageMeta-inlineMeta",
+      "description": "Styles applied to the inline meta container element (default variant).",
+      "isGlobal": false
+    },
+    {
+      "key": "inlineMetaSpacer",
+      "className": "MuiChatMessageMeta-inlineMetaSpacer",
+      "description": "Styles applied to the inline meta spacer element (default variant).",
+      "isGlobal": false
+    },
+    {
+      "key": "meta",
+      "className": "MuiChatMessageMeta-meta",
+      "description": "Styles applied to the message meta element.",
+      "isGlobal": false
+    },
+    {
+      "key": "roleAssistant",
+      "className": "MuiChatMessageMeta-roleAssistant",
+      "description": "Applied when the message role is 'assistant'",
+      "isGlobal": false
+    },
+    {
+      "key": "roleUser",
+      "className": "MuiChatMessageMeta-roleUser",
+      "description": "Applied when the message role is 'user'",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiChatMessageMeta-root",
+      "description": "Styles applied to the message root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "streaming",
+      "className": "MuiChatMessageMeta-streaming",
+      "description": "Applied while the message is streaming",
+      "isGlobal": false
+    }
+  ],
+  "muiName": "MuiChatMessageMeta",
+  "filename": "/packages/x-chat/src/ChatMessage/ChatMessageMeta.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message Appearance</a></li></ul>",
+  "cssComponent": false
+}

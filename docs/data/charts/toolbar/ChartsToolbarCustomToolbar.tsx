@@ -64,31 +64,36 @@ const ResetZoomButton = React.forwardRef<HTMLButtonElement, React.PropsWithChild
 function CustomToolbar() {
   return (
     <Stack
-      width="100%"
       direction="row"
-      alignItems="center"
-      justifyContent="space-between"
-      gap={1}
-      flexWrap="wrap"
+      sx={{
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 1,
+        flexWrap: 'wrap',
+      }}
     >
       <Typography
-        justifyContent="center"
-        sx={{ textAlign: { xs: 'center', sm: 'left' } }}
         variant="h6"
+        sx={{ justifyContent: 'center', textAlign: { xs: 'center', sm: 'left' } }}
       >
         Chart with Custom Toolbar
       </Typography>
       <Stack>
         <Toolbar>
           <Tooltip title="Zoom in">
-            <ChartsToolbarZoomInTrigger render={<ToolbarButton size="small" />}>
-              <ZoomInIcon />
-            </ChartsToolbarZoomInTrigger>
+            <span>
+              <ChartsToolbarZoomInTrigger render={<ToolbarButton size="small" />}>
+                <ZoomInIcon />
+              </ChartsToolbarZoomInTrigger>
+            </span>
           </Tooltip>
           <Tooltip title="Zoom out">
-            <ChartsToolbarZoomOutTrigger render={<ToolbarButton size="small" />}>
-              <ZoomOutIcon />
-            </ChartsToolbarZoomOutTrigger>
+            <span>
+              <ChartsToolbarZoomOutTrigger render={<ToolbarButton size="small" />}>
+                <ZoomOutIcon />
+              </ChartsToolbarZoomOutTrigger>
+            </span>
           </Tooltip>
 
           <ResetZoomButton>Reset</ResetZoomButton>

@@ -31,6 +31,9 @@
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
     "strictStepCurve": { "type": { "description": "boolean" } },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
+    "valueGetter": {
+      "type": { "description": "(item: DatasetElementType&lt;unknown&gt;) =&gt; number | null" }
+    },
     "xAxisId": { "type": { "description": "AxisId" } },
     "yAxisId": { "type": { "description": "AxisId" } }
   }

@@ -1,0 +1,3 @@
+<ChatProvider adapter={adapter} initialActiveConversationId="support">
+  <ComposerInner />
+</ChatProvider>

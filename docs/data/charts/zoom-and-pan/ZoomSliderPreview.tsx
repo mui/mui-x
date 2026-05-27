@@ -24,7 +24,7 @@ import {
   dateAxisFormatter,
   usUnemploymentRate,
 } from '../dataset/usUnemploymentRate';
-import { globalGdpPerCapita } from '../dataset/globalGdpPerCapita';
+import { globalCo2GdpPopulation } from '../dataset/globalCo2GdpPopulation';
 import { globalBirthPerWoman } from '../dataset/globalBirthsPerWoman';
 import {
   continents,
@@ -127,7 +127,7 @@ const scatterSettings = {
     data: countriesInContinent[continent]
       .map((code) => ({
         id: code,
-        x: globalGdpPerCapita.find((d) => d.code === code)?.gdpPerCapita,
+        x: globalCo2GdpPopulation.find((d) => d.code === code)?.gdpPerCapita,
         y: globalBirthPerWoman.find((d) => d.code === code)?.rate,
       }))
       .filter(
@@ -201,7 +201,7 @@ export default function ZoomSliderPreview() {
   };
 
   return (
-    <Stack width="100%" gap={2}>
+    <Stack sx={{ width: '100%', gap: 2 }}>
       <ToggleButtonGroup
         value={chartType}
         exclusive

@@ -236,7 +236,7 @@ export const hydrateColumnsWidth = (
  * Apply the order and the dimensions of the initial state.
  * The columns not registered in `orderedFields` will be placed after the imported columns.
  */
-export const applyInitialState = (
+const applyInitialState = (
   columnsState: GridColumnsRawState,
   initialState: GridColumnsInitialState | undefined,
 ) => {

@@ -23,16 +23,35 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
         );
       }
 
-      const data = !datasetKeys
-        ? (seriesData.data ?? [])
-        : (dataset?.map((d) => {
-            return {
-              x: d[datasetKeys.x] ?? null,
-              y: d[datasetKeys.y] ?? null,
-              z: datasetKeys.z && d[datasetKeys.z],
-              id: datasetKeys.id && d[datasetKeys.id],
-            } as ScatterValueType;
-          }) ?? []);
+      let data: readonly ScatterValueType[];
+      if (seriesData.valueGetter) {
+        data = dataset?.map(seriesData.valueGetter!) ?? [];
+      } else if (datasetKeys) {
+        data =
+          dataset?.map((d) => {
+            const x = d[datasetKeys.x];
+            const y = d[datasetKeys.y];
+
+            const rep = { x, y } as ScatterValueType;
+
+            if (datasetKeys.colorValue !== undefined) {
+              rep.colorValue = d[datasetKeys.colorValue];
+            }
+            if (datasetKeys.sizeValue !== undefined) {
+              rep.sizeValue = d[datasetKeys.sizeValue];
+            }
+            if (datasetKeys.z !== undefined) {
+              rep.z = d[datasetKeys.z];
+            }
+            if (datasetKeys.id !== undefined) {
+              rep.id = d[datasetKeys.id] as string | number | undefined;
+            }
+
+            return rep;
+          }) ?? [];
+      } else {
+        data = seriesData.data ?? [];
+      }
 
       return [
         seriesId,

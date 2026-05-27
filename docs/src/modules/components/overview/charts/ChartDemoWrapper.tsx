@@ -21,11 +21,11 @@ export default function ChartDemoWrapper(
       <Stack
         spacing={1}
         sx={{
+          justifyContent: code ? 'space-between' : 'space-around',
           width: '100%',
           padding: 2,
           minHeight: { md: 500 },
         }}
-        justifyContent={code ? 'space-between' : 'space-around'}
       >
         <Box
           sx={{

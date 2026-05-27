@@ -73,7 +73,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterPanelOperator: '演算子',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
-  filterPanelColumns: '列',
+  filterPanelColumn: '列',
   filterPanelInputLabel: '値',
   filterPanelInputPlaceholder: '値を入力…',
 

@@ -461,7 +461,13 @@ const columns: GridColDef[] = [
             alignItems: 'center',
           }}
         >
-          <Typography variant="body2" fontWeight="medium" fontFamily="IBM Plex Sans">
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: 'medium',
+              fontFamily: 'IBM Plex Sans',
+            }}
+          >
             <Link
               href={`/x/react-data-grid${params.row.detailPage}`}
               target="_blank"

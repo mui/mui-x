@@ -80,8 +80,10 @@ function AutocompleteEditCell(props: GridRenderEditCellParams) {
           {...params}
           error={error}
           slotProps={{
+            ...params.slotProps,
+
             input: {
-              ...params.InputProps,
+              ...params.slotProps.input,
               autoFocus: true,
             },
           }}

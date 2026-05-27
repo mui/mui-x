@@ -5,12 +5,15 @@
     "color": {
       "description": "Color to use when displaying the series.<br />If <code>colorGetter</code> is provided, it will be used to get the color for each data point instead.<br />Otherwise, this color will be used for all data points in the series."
     },
+    "colorAxisId": {
+      "description": "The id of the color axis used to compute the color of the scatter points.<br />It points to the id of an axis defined with the <code>zAxis</code> prop."
+    },
     "colorGetter": {
       "description": "A function that returns a color based on the value and/or the data index of a point.<br />The returned color is used when displaying the specific data point, e.g., a marker in a line chart.<br />When the color of the entire series is required, e.g., in legends, the <code>color</code> property is used instead."
     },
     "data": { "description": "" },
     "datasetKeys": {
-      "description": "The keys used to retrieve data from the dataset.<br /><br />When this prop is provided, all of <code>x</code>, <code>y</code>, and <code>id</code> must be provided.<br />While <code>z</code> is optional."
+      "description": "The keys used to retrieve data from the dataset.<br /><br />When this prop is provided, both <code>x</code> and <code>y</code> must be provided.<br />While <code>color</code>, <code>size</code>, and <code>id</code> are optional."
     },
     "highlightScope": { "description": "The scope to apply when the series is highlighted." },
     "id": { "description": "The id of this series." },
@@ -22,8 +25,14 @@
     },
     "markerSize": { "description": "Size of the markers in the scatter plot, in pixels." },
     "preview": { "description": "" },
+    "sizeAxisId": {
+      "description": "The id of the size axis used to compute the size of the scatter points.<br />It points to the id of an axis defined with the <code>zAxis</code> prop."
+    },
     "valueFormatter": {
       "description": "Formatter used to render values in tooltip or other data display."
+    },
+    "valueGetter": {
+      "description": "A function to extract and transform the value from the <code>dataset</code> item.<br />It receives the full dataset item and should return a scatter value.<br />Can be used as an alternative to <code>datasetKeys</code>."
     },
     "xAxisId": { "description": "The id of the x-axis used to render the series." },
     "yAxisId": { "description": "The id of the y-axis used to render the series." },

@@ -23,13 +23,18 @@ Each data point in a range bar series consists of a `{ start: number, end: numbe
 
 {{"demo": "BasicRangeBar.js"}}
 
+### Using a dataset
+
+You can use the `dataset` prop combined with `datasetKeys` or `valueGetter` on the series to extract range values from dataset items.
+See the [Dataset](/x/react-charts/dataset/) page for more details.
+
 ## Customization
 
 ### Grid
 
 You can add a grid in the background of the chart with the `grid` prop.
 
-See [Axis—Grid](/x/react-charts/axis/#grid) for details.
+See [Axis—Grid](/x/react-charts/axis-ticks/#grid) for details.
 
 ### Border radius
 

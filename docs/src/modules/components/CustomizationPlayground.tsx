@@ -145,7 +145,7 @@ function StylingApproachTabs({ value, onChange, options }: TabsProps) {
         value={value}
         onChange={onChange}
         aria-label="Customization option"
-        TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+        slotProps={{ indicator: { children: <span className="MuiTabs-indicatorSpan" /> } }}
       >
         {(Object.keys(options) as Array<keyof typeof options>)?.map((option) => (
           <Tab value={option} key={option} label={options[option]} />

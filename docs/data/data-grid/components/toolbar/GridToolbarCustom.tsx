@@ -122,7 +122,8 @@ export default function GridToolbarCustom({ window }: { window: () => Window }) 
   });
 
   // This is used only for the example, you can remove it.
-  const documentBody = window !== undefined ? window().document.body : undefined;
+  const documentBody =
+    window !== undefined ? window()?.document?.body || undefined : undefined;
   return (
     <div style={{ height: 400, width: '100%' }}>
       <ThemeProvider theme={theme}>

@@ -1,0 +1,10 @@
+[
+  { "name": "EventCalendarPremium", "kind": "Variable" },
+  { "name": "EventCalendarPremiumApiRef", "kind": "TypeAlias" },
+  { "name": "EventCalendarPremiumProps", "kind": "Interface" },
+  { "name": "EventTimelinePremium", "kind": "Variable" },
+  { "name": "eventTimelinePremiumClasses", "kind": "Variable" },
+  { "name": "EventTimelinePremiumClasses", "kind": "Interface" },
+  { "name": "EventTimelinePremiumClassKey", "kind": "TypeAlias" },
+  { "name": "getEventTimelinePremiumUtilityClass", "kind": "Function" }
+]

@@ -8,8 +8,9 @@ components: CandlestickChart, CandlestickPlot
 
 <p class="description">A candlestick chart is used to visualize price movement over time.</p>
 
-:::warning
-This feature is in preview. It is not yet ready for production use, and its API, visuals and behavior may change in future minor or patch releases.
+:::error
+This feature is in preview.
+It is not yet ready for production use, and its API, visuals, and behavior may change in future minor or patch releases.
 :::
 
 ## Overview
@@ -45,6 +46,8 @@ You can specify the time period with the `xAxis` prop. This axis must have a ban
 ### Using a dataset
 
 You can use the `dataset` prop to provide OHLC data and `datasetKeys` on the series to map dataset fields to the open, high, low, and close values.
+
+See the [Dataset](/x/react-charts/dataset/) page to learn more.
 
 {{"demo": "DatasetCandlestick.js"}}
 
