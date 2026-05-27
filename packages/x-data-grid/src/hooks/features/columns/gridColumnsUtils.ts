@@ -9,7 +9,11 @@ import type {
   GridColumnsInitialState,
 } from './gridColumnsInterfaces';
 import { GRID_STRING_COL_DEF } from '../../../colDef';
-import { getRegisteredColumnTypeDef } from '../../../colDef/gridColumnTypesRegistry';
+import {
+  getRegisteredColumnTypeDef,
+  isCommunityColumnType,
+} from '../../../colDef/gridColumnTypesRegistry';
+import { GridSignature } from '../../../constants/signature';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -313,6 +317,15 @@ export const createColumnsState = ({
 }) => {
   const isInsideStateInitializer = !apiRef.current.state.columns;
 
+  // A community `DataGrid` must not resolve a Pro/Premium-only column type even if a Pro grid
+  // registered it globally in the same bundle (shared module registry). Fall back to the default
+  // type def in that case, so the column behaves like a plain column.
+  const isCommunity = apiRef.current.state.props?.signature === GridSignature.DataGrid;
+  const getColTypeDef = (type: GridColDef['type']) =>
+    isCommunity && !isCommunityColumnType(type)
+      ? getDefaultColTypeDef(undefined)
+      : getDefaultColTypeDef(type);
+
   let columnsState: Omit<GridColumnsRawState, 'lookup'> & {
     lookup: { [field: string]: Omit<GridStateColDef, 'computedWidth'> };
   };
@@ -351,7 +364,7 @@ export const createColumnsState = ({
 
     if (existingState == null) {
       existingState = {
-        ...getDefaultColTypeDef(newColumn.type),
+        ...getColTypeDef(newColumn.type),
         field,
         hasBeenResized: false,
       };
@@ -363,7 +376,7 @@ export const createColumnsState = ({
     // If the column type has changed - merge the existing state with the default column type definition
     if (existingState && existingState.type !== newColumn.type) {
       existingState = {
-        ...getDefaultColTypeDef(newColumn.type),
+        ...getColTypeDef(newColumn.type),
         field,
       };
     }
@@ -380,7 +393,7 @@ export const createColumnsState = ({
     });
 
     const mergedProps = {
-      ...getDefaultColTypeDef(newColumn.type),
+      ...getColTypeDef(newColumn.type),
       hasBeenResized,
       field,
     };

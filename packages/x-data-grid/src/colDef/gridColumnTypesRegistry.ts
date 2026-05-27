@@ -26,6 +26,14 @@ const columnTypesRegistry: Record<string, GridColTypeDef> = {
   longText: GRID_LONG_TEXT_COL_DEF,
 };
 
+// Captured before any `registerGridColumnTypes` call, so it reflects the community-native types
+// only. Used to keep Pro/Premium-registered types (e.g. `multiSelect`) from resolving in a
+// community `DataGrid` even when a Pro grid registered them globally in the same bundle.
+const COMMUNITY_COLUMN_TYPE_KEYS = new Set(Object.keys(columnTypesRegistry));
+
+export const isCommunityColumnType = (type: GridColType | undefined) =>
+  type == null || COMMUNITY_COLUMN_TYPE_KEYS.has(type);
+
 export const registerGridColumnTypes = (columnTypes: Partial<GridColumnTypesRecord>) => {
   Object.assign(columnTypesRegistry, columnTypes);
 };

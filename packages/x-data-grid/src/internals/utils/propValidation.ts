@@ -43,15 +43,6 @@ export const propValidatorsDataGrid: PropValidator<DataGridProcessedProps>[] = [
         'For more detail, see http://mui.com/components/data-grid/pagination/#index-based-pagination',
       ].join('\n')) ||
     undefined,
-  (props) =>
-    (props.signature === GridSignature.DataGrid &&
-      props.columns?.some((column) => column.type === 'multiSelect') &&
-      [
-        'MUI X: The `multiSelect` column type is not available in the community Data Grid.',
-        'It requires the Pro or Premium plan, so these columns fall back to a plain text column.',
-        "Remove `type: 'multiSelect'` or upgrade your plan: https://mui.com/x/introduction/licensing/",
-      ].join('\n')) ||
-    undefined,
 ];
 
 export function validateProps<TProps>(props: TProps, validators: PropValidator<TProps>[]) {
