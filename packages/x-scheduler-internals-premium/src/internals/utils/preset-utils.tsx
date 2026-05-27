@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { TemporalAdapter } from '@mui/x-scheduler-internals/base-ui-copy';
+import { getEndOfWeek, getStartOfWeek } from '@mui/x-scheduler-internals/internals';
 import {
   TemporalSupportedObject,
   EventTimelinePremiumPreset,
@@ -94,9 +95,10 @@ export const EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS: Readonly<
       { unit: 'day', formatDate: formatWeekday1Letter },
     ],
     unitCount: 16, // 16 weeks
-    getStartDate: (adapter, visibleDate) => adapter.startOfWeek(visibleDate),
-    getEndDate: (adapter, start, unitCount) =>
-      adapter.endOfWeek(adapter.addWeeks(start, unitCount - 1)),
+    getStartDate: (adapter, visibleDate, weekStartsOn) =>
+      getStartOfWeek(adapter, visibleDate, weekStartsOn),
+    getEndDate: (adapter, start, unitCount, weekStartsOn) =>
+      getEndOfWeek(adapter, adapter.addWeeks(start, unitCount - 1), weekStartsOn),
     getCssUnitCount: (adapter, start, end) => adapter.differenceInDays(end, start) + 1,
     navigate: (adapter, date, amount) => adapter.addWeeks(date, amount),
   },

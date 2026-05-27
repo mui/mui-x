@@ -35,6 +35,7 @@
     "@types/react-router": "catalog:",
     "@types/semver": "catalog:",
     "@vitejs/plugin-react": "catalog:",
+    "minimatch": "^10.2.4",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-router": "catalog:",

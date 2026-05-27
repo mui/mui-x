@@ -107,7 +107,7 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => <span>...</span>",
+      "default": "() => <span>…</span>",
       "signature": {
         "type": "function() => React.ReactNode",
         "describedArgs": [],
