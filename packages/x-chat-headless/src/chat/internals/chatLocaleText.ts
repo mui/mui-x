@@ -115,7 +115,7 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   messageCopiedCodeButtonLabel: 'Copied',
   messageEditedLabel: 'Edited',
   messageDeletedLabel: 'Deleted',
-  messageReasoningLabel: 'Thoughts',
+  messageReasoningLabel: 'Reasoning',
   messageReasoningStreamingLabel: 'Thinking…',
   messageToolInputLabel: 'Tool called',
   messageToolOutputLabel: 'Tool result',
