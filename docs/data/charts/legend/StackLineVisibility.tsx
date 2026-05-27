@@ -1,16 +1,16 @@
 import * as React from 'react';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { BarChart } from '@mui/x-charts/BarChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 import { dataset, valueFormatter } from '../dataset/weather';
 
 const series = [
-  { dataKey: 'london', label: 'London', valueFormatter },
-  { dataKey: 'paris', label: 'Paris', valueFormatter },
-  { dataKey: 'newYork', label: 'New York', valueFormatter },
+  { dataKey: 'newYork', label: 'New York', valueFormatter, stack: 'a' },
+  { dataKey: 'london', label: 'London', valueFormatter, stack: 'a' },
+  { dataKey: 'paris', label: 'Paris', valueFormatter, stack: 'a' },
 ];
 
-export default function ToggleSeriesVisibility() {
+export default function StackLineVisibility() {
   const [domainSeries, setDomainSeries] = React.useState<'all' | 'visible'>('all');
 
   return (
@@ -24,17 +24,20 @@ export default function ToggleSeriesVisibility() {
             }
           />
         }
-        label="x-axis domain considers only visible series"
+        label="y-axis domain considers only visible series"
         labelPlacement="end"
       />
-      <BarChart
+      <LineChart
         dataset={dataset}
-        yAxis={[{ scaleType: 'band', dataKey: 'month' }]}
-        xAxis={[{ label: 'rainfall (mm)', domainSeries }]}
+        xAxis={[{ scaleType: 'band', dataKey: 'month' }]}
+        yAxis={[{ label: 'rainfall (mm)', domainSeries }]}
         series={series}
-        layout="horizontal"
         height={300}
-        slotProps={{ legend: { toggleVisibilityOnClick: true } }}
+        slotProps={{
+          legend: {
+            toggleVisibilityOnClick: true,
+          },
+        }}
       />
     </div>
   );

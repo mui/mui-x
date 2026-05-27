@@ -598,6 +598,11 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
     | 'strict'
     | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
   /**
+   * Defines the series used to compute the axis domain.
+   * @default "all"
+   */
+  domainSeries?: 'all' | 'visible';
+  /**
    * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
    */
   ignoreTooltip?: boolean;
