@@ -199,8 +199,8 @@ catalogs:
       specifier: ^4.4.5
       version: 4.4.5
     reselect:
-      specifier: ^5.1.1
-      version: 5.1.1
+      specifier: ^5.2.0
+      version: 5.2.0
     rimraf:
       specifier: ^6.1.3
       version: 6.1.3
@@ -771,7 +771,7 @@ importers:
         version: 15.8.1
       reselect:
         specifier: 'catalog:'
-        version: 5.1.1
+        version: 5.2.0
       use-sync-external-store:
         specifier: 'catalog:'
         version: 1.6.0(react@19.2.6)
@@ -1565,7 +1565,7 @@ importers:
         version: 9.0.1(@types/react@19.2.15)(react@19.2.6)
       reselect:
         specifier: 'catalog:'
-        version: 5.1.1
+        version: 5.2.0
       use-sync-external-store:
         specifier: 'catalog:'
         version: 1.6.0(react@19.2.6)
@@ -1989,7 +1989,7 @@ importers:
         version: 4.4.5(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       reselect:
         specifier: 'catalog:'
-        version: 5.1.1
+        version: 5.2.0
       use-sync-external-store:
         specifier: 'catalog:'
         version: 1.6.0(react@19.2.6)
@@ -10289,8 +10289,8 @@ packages:
   reselect@4.1.8:
     resolution: {integrity: sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ==}
 
-  reselect@5.1.1:
-    resolution: {integrity: sha512-K/BG6eIky/SBpzfHZv/dd+9JBFiS4SWV7FIujVyJRux6e45+73RaUHXLmIR1f7WOMaQ0U1km6qwklRQxpJJY0w==}
+  reselect@5.2.0:
+    resolution: {integrity: sha512-AgZ3UOZm3YndfrJ4OYjgrT7bmCm/1iqkjvEfH/oYjzh6PD2qw4QuT3jjnXIrpdt4MTpMXclMT3lXbmRY+XRakw==}
 
   reserved-identifiers@1.0.0:
     resolution: {integrity: sha512-h0bP2Katmvf3hv4Z3WtDl4+6xt/OglQ2Xa6TnhZ/Rm9/7IH1crXQqMwD4J2ngKBonVv+fB55zfGgNDAmsevLVQ==}
@@ -12647,7 +12647,7 @@ snapshots:
       '@floating-ui/utils': 0.2.11
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
-      reselect: 5.1.1
+      reselect: 5.2.0
       use-sync-external-store: 1.6.0(react@19.2.6)
     optionalDependencies:
       '@types/react': 19.2.15
@@ -14066,7 +14066,7 @@ snapshots:
       '@babel/runtime': 7.29.2
       '@mui/utils': 7.3.11(@types/react@19.2.15)(react@19.2.6)
       react: 19.2.6
-      reselect: 5.1.1
+      reselect: 5.2.0
       use-sync-external-store: 1.6.0(react@19.2.6)
     transitivePeerDependencies:
       - '@types/react'
@@ -20742,7 +20742,7 @@ snapshots:
 
   reselect@4.1.8: {}
 
-  reselect@5.1.1: {}
+  reselect@5.2.0: {}
 
   reserved-identifiers@1.0.0: {}
 
