@@ -170,7 +170,7 @@ Inside the menu:
 
 ## Localization of ARIA labels
 
-Most user-facing accessible labels are provided through the `localeText` prop and can be customized.
+All user-facing accessible labels are provided through the `localeText` prop and can be customized.
 The following keys are specifically relevant to accessibility:
 
 ```ts
@@ -179,6 +179,7 @@ The following keys are specifically relevant to accessibility:
   closeButtonAriaLabel: 'Close',
   eventTitleAriaLabel: 'Event title',
   colorPickerLabel: 'Event color',
+  selectColorAriaLabel: (color) => `Select ${color} as event color`,
   radioGroupAriaLabel: 'Editing recurring events scope',
 
   // Events
