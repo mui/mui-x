@@ -337,7 +337,7 @@ describe('MessageRoot', () => {
       'https://example.com/avatar.png',
     );
     expect(screen.getByText('Hello world')).not.to.equal(null);
-    expect(screen.getByText('Thoughts')).not.to.equal(null);
+    expect(screen.getByText('Reasoning')).not.to.equal(null);
     expect(screen.getByText('search')).not.to.equal(null);
     expect(screen.getByText('dynamic-search')).not.to.equal(null);
     expect(screen.getByText('spec.pdf')).not.to.equal(null);

@@ -51,7 +51,7 @@ describe('ReasoningPart', () => {
       parts: [{ type: 'reasoning', text: 'Some chain of thought' }],
     });
 
-    expect(screen.getByText('Thoughts')).not.to.equal(null);
+    expect(screen.getByText('Reasoning')).not.to.equal(null);
     expect(screen.getByText('Some chain of thought')).not.to.equal(null);
   });
 
