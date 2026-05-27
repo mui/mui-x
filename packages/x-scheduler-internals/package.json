@@ -22,7 +22,6 @@
     "./event-calendar-selectors": "./src/event-calendar-selectors/index.ts",
     "./get-day-list": "./src/get-day-list/index.ts",
     "./models": "./src/models/index.ts",
-    "./polyfills": "./src/polyfills/index.ts",
     "./process-date": "./src/process-date/index.ts",
     "./process-event": "./src/process-event/index.ts",
     "./scheduler-selectors": "./src/scheduler-selectors/index.ts",
@@ -40,9 +39,7 @@
     "./use-draggable-dialog": "./src/use-draggable-dialog/index.ts",
     "./use-event-calendar-api-ref": "./src/use-event-calendar-api-ref/index.ts"
   },
-  "sideEffects": [
-    "./src/polyfills/**"
-  ],
+  "sideEffects": false,
   "publishConfig": {
     "access": "public",
     "directory": "build"
@@ -75,7 +72,6 @@
     "@base-ui/react": "catalog:",
     "@base-ui/utils": "catalog:",
     "@date-fns/tz": "catalog:",
-    "core-js": "catalog:",
     "@floating-ui/react": "^0.27.19",
     "@floating-ui/react-dom": "^2.1.8",
     "@floating-ui/utils": "^0.2.11",

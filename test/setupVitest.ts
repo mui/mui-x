@@ -1,5 +1,5 @@
 import { beforeAll, beforeEach, afterEach } from 'vitest';
-import '@mui/x-scheduler-internals/polyfills';
+import '@mui/x-internals/disposable';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/licenseRelease';
 import { config } from 'react-transition-group';

@@ -38,6 +38,7 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
+    "core-js-pure": "catalog:",
     "reselect": "catalog:",
     "use-sync-external-store": "catalog:"
   },

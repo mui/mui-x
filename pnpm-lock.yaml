@@ -132,7 +132,7 @@ catalogs:
     clsx:
       specifier: ^2.1.1
       version: 2.1.1
-    core-js:
+    core-js-pure:
       specifier: ^3.49.0
       version: 3.49.0
     cross-env:
@@ -1566,6 +1566,9 @@ importers:
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.0.1(@types/react@19.2.15)(react@19.2.6)
+      core-js-pure:
+        specifier: 'catalog:'
+        version: 3.49.0
       reselect:
         specifier: 'catalog:'
         version: 5.1.1
@@ -1716,9 +1719,6 @@ importers:
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../x-internals/build
-      core-js:
-        specifier: 'catalog:'
-        version: 3.49.0
       date-fns:
         specifier: 'catalog:'
         version: 4.3.0
@@ -6882,8 +6882,8 @@ packages:
   core-js-compat@3.48.0:
     resolution: {integrity: sha512-OM4cAF3D6VtH/WkLtWvyNC56EZVXsZdU3iqaMG2B4WvYrlqU831pc4UtG5yp0sE9z8Y02wVN7PjW5Zf9Gt0f1Q==}
 
-  core-js@3.49.0:
-    resolution: {integrity: sha512-es1U2+YTtzpwkxVLwAFdSpaIMyQaq0PBgm3YD1W3Qpsn1NAmO3KSgZfu+oGSWVu6NvLHoHCV/aYcsE5wiB7ALg==}
+  core-js-pure@3.49.0:
+    resolution: {integrity: sha512-XM4RFka59xATyJv/cS3O3Kml72hQXUeGRuuTmMYFxwzc9/7C8OYTaIR/Ji+Yt8DXzsFLNhat15cE/JP15HrCgw==}
 
   core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -16560,7 +16560,7 @@ snapshots:
     dependencies:
       browserslist: 4.28.1
 
-  core-js@3.49.0: {}
+  core-js-pure@3.49.0: {}
 
   core-util-is@1.0.3: {}
 

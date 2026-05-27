@@ -1,4 +1,4 @@
-import '@mui/x-scheduler-internals/polyfills';
+import { DisposableStack } from '@mui/x-internals/disposable';
 import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import {
   SchedulerState,
