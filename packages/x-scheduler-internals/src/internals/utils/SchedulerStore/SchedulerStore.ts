@@ -261,7 +261,22 @@ export class SchedulerStore<
       this.disposables.dispose();
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') {
-        console.error('MUI X Scheduler: error while disposing the store.', error);
+        // DisposableStack aggregates per-disposer failures into `SuppressedError`
+        // chains. Unwrap so each underlying failure is visible in the console
+        // instead of just the outermost wrapper.
+        const failures: unknown[] = [];
+        let current: unknown = error;
+        while (
+          typeof current === 'object' &&
+          current !== null &&
+          'error' in current &&
+          'suppressed' in current
+        ) {
+          failures.push((current as { error: unknown }).error);
+          current = (current as { suppressed: unknown }).suppressed;
+        }
+        failures.push(current);
+        console.error('MUI X Scheduler: error while disposing the store.', ...failures);
       }
     }
   };

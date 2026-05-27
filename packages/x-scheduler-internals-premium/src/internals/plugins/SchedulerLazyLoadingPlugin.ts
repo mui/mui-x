@@ -260,6 +260,12 @@ export class SchedulerLazyLoadingPlugin<
     }
 
     if (this.disposables.disposed) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(
+          'MUI X Scheduler: a successful `dataSource.persistEvents` write was discarded because the store was disposed during the await. ' +
+            'The cache will repopulate on the next fetch.',
+        );
+      }
       return;
     }
 
