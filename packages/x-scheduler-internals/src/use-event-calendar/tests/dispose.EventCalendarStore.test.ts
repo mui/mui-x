@@ -1,3 +1,4 @@
+import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter } from 'test/utils/scheduler';
 import { EventCalendarStore } from '../EventCalendarStore';
@@ -24,5 +25,22 @@ describe('Dispose - EventCalendarStore', () => {
     vi.advanceTimersByTime(ONE_MINUTE_IN_MS * 2);
 
     expect(store.state.nowUpdatedEveryMinute).to.equal(initialNow);
+  });
+
+  it('should remove user-registered event listeners after dispose', () => {
+    const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+    const handler = spy();
+    store.subscribeEvent('eventsUpdated', handler);
+
+    store.disposeEffect()();
+
+    store.publishEvent('eventsUpdated', {
+      deleted: [],
+      updated: [],
+      created: [],
+      newEvents: [],
+    });
+
+    expect(handler.called).to.equal(false);
   });
 });
