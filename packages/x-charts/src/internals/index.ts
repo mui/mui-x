@@ -80,6 +80,7 @@ export * from './consumeSlots';
 export * from './consumeThemeProps';
 export * from './defaultizeMargin';
 export * from './colorScale';
+export * from './sizeScale';
 export * from './ticks';
 export * from './dateHelpers';
 export * from './invertScale';

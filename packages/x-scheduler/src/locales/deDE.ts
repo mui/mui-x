@@ -97,6 +97,10 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Kalenderwoche anzeigen',
   timeFormat: 'Zeitformat',
   viewSpecificOptions: (view) => `Optionen der ${view}-Ansicht`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Ganztägig',

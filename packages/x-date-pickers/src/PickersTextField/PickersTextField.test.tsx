@@ -30,6 +30,52 @@ describe('<PickersTextField /> - slot forwarding', () => {
     expect(screen.getByTestId('html-input')).not.to.equal(null);
   });
 
+  it('should merge `slotProps.input.slotProps.sectionContent` onto each section content element', () => {
+    render(
+      <PickersTextField
+        {...STUB_PROPS}
+        slotProps={{
+          input: {
+            slotProps: {
+              sectionContent: { 'data-testid': 'picker-section-content' } as any,
+            },
+          },
+        }}
+      />,
+    );
+
+    const nodes = screen.getAllByTestId('picker-section-content');
+    expect(nodes.length).to.be.greaterThan(0);
+    nodes.forEach((node) => {
+      expect(node.className).to.include('MuiPickersInputBase-sectionContent');
+    });
+  });
+
+  it('should resolve a callback `slotProps.input.slotProps.sectionContent` and merge the result onto each section content element', () => {
+    render(
+      <PickersTextField
+        {...STUB_PROPS}
+        slotProps={{
+          input: {
+            slotProps: {
+              sectionContent: (() => ({
+                'data-testid': 'picker-section-content-fn',
+                className: 'custom-section-content',
+              })) as any,
+            },
+          },
+        }}
+      />,
+    );
+
+    const nodes = screen.getAllByTestId('picker-section-content-fn');
+    expect(nodes.length).to.be.greaterThan(0);
+    nodes.forEach((node) => {
+      expect(node.className).to.include('MuiPickersInputBase-sectionContent');
+      expect(node.className).to.include('custom-section-content');
+    });
+  });
+
   it('should forward `slotProps.inputLabel` to the label element', () => {
     render(
       <PickersTextField
