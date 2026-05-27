@@ -52,7 +52,13 @@ export default function WebGLRangeBars() {
       </FormControl>
       <BarChartPremium
         xAxis={[
-          { id: 'x', data: xData, scaleType: 'band', zoom: { minSpan: 0.05 } },
+          {
+            id: 'x',
+            data: xData,
+            scaleType: 'band',
+            tickSpacing: 50,
+            zoom: { minSpan: 0.05 },
+          },
         ]}
         series={[
           { type: 'rangeBar', data: seriesA, label: 'Series A' },
