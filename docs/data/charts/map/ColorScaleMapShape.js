@@ -1,8 +1,10 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+import { interpolateBlues } from 'd3-scale-chromatic';
 import { feature as topojsonFeature } from 'topojson-client';
 import countriesTopology from 'world-atlas/countries-110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
@@ -16,14 +18,14 @@ import {
 
 import { internetUsageByCountry } from '../dataset/internetUsageByCountry';
 import { withCountryCodeAsName, countryData } from '../dataset/countryData';
-import { blue } from '@mui/material/colors';
 
 const countries = withCountryCodeAsName(
   topojsonFeature(countriesTopology, 'countries'),
 );
 
 const data = Object.keys(countryData).map((code) => ({
-  name: countryData[code].country,
+  name: code,
+  label: countryData[code].country,
   colorValue: internetUsageByCountry[code],
 }));
 
@@ -43,6 +45,9 @@ export default function ColorScaleMapShape() {
         <ToggleButton value="continuous">continuous</ToggleButton>
         <ToggleButton value="piecewise">piecewise</ToggleButton>
       </ToggleButtonGroup>
+      <Typography variant="body2" component="h6" sx={{ textAlign: 'end' }}>
+        Share of the population using the Internet in 2020
+      </Typography>
       <Box sx={{ width: '100%' }}>
         <ChartsGeoDataProviderPremium
           geoData={countries}
@@ -73,7 +78,7 @@ export default function ColorScaleMapShape() {
                   : {
                       type: 'piecewise',
                       thresholds: [25, 50, 75],
-                      colors: [blue[100], blue[300], blue[500], blue[700]],
+                      colors: [0.25, 0.5, 0.75, 1].map(interpolateBlues),
                     },
             },
           ]}
@@ -84,7 +89,7 @@ export default function ColorScaleMapShape() {
           </ChartsSurface>
           <ChartsTooltip trigger="item" />
           {colorMap === 'continuous' ? (
-            <ContinuousColorLegend axisDirection="z" />
+            <ContinuousColorLegend axisDirection="z" sx={{ maxWidth: 150 }} />
           ) : (
             <PiecewiseColorLegend axisDirection="z" direction="horizontal" />
           )}
