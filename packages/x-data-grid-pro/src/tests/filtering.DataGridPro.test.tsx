@@ -1674,6 +1674,50 @@ describe('<DataGridPro /> - Filter', () => {
       expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).to.equal(null);
     });
 
+    it.skipIf(isJSDOM)('should reveal all chips while the column is being resized', async () => {
+      render(
+        <TestCaseMultiSelect
+          rows={[{ id: 1, tags: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript'] }]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              width: 120,
+              valueOptions: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript'],
+            },
+          ]}
+        />,
+      );
+      // Narrow column overflows: some chips hidden behind the `+N` indicator.
+      await waitFor(() => {
+        expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).not.to.equal(null);
+      });
+      // Start resizing this column.
+      act(() => {
+        apiRef.current!.setState((state) => ({
+          ...state,
+          columnResize: { ...state.columnResize, resizingColumnField: 'tags' },
+        }));
+      });
+      // Every chip is revealed, no `+N`.
+      await waitFor(() => {
+        expect(
+          document.querySelectorAll(`.${gridClasses['multiSelectCellChip--hidden']}`),
+        ).to.have.length(0);
+        expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).to.equal(null);
+      });
+      // Releasing the resize recomputes the overflow.
+      act(() => {
+        apiRef.current!.setState((state) => ({
+          ...state,
+          columnResize: { ...state.columnResize, resizingColumnField: '' },
+        }));
+      });
+      await waitFor(() => {
+        expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).not.to.equal(null);
+      });
+    });
+
     describe.skipIf(isJSDOM)('overflow popup', () => {
       function TestCaseOverflow(props: Partial<DataGridProProps>) {
         apiRef = useGridApiRef();

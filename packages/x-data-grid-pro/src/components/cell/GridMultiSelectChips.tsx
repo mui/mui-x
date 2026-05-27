@@ -4,7 +4,12 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { gridClasses, useGridRootProps } from '@mui/x-data-grid';
+import {
+  gridClasses,
+  gridResizingColumnFieldSelector,
+  useGridRootProps,
+  useGridSelector,
+} from '@mui/x-data-grid';
 import type { GridSlotProps, ValueOptions } from '@mui/x-data-grid';
 import { NotRendered, useSyncExternalStore } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
@@ -45,6 +50,7 @@ export interface GridMultiSelectChipsProps<V extends ValueOptions = ValueOptions
   'children'
 > {
   values: any[];
+  field: string;
   columnWidth: number;
   optionByValue: Map<any, ValueOptions>;
   getOptionLabel: (option: ValueOptions) => string;
@@ -72,6 +78,7 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
 ) {
   const {
     values,
+    field,
     columnWidth,
     optionByValue,
     getOptionLabel,
@@ -157,8 +164,13 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
   const overflowWidths = overflowMetrics?.overflowChipWidths ?? DEFAULT_OVERFLOW_CHIP_WIDTHS;
   const gap = overflowMetrics?.gap ?? DEFAULT_GAP;
 
+  // While this column is being drag-resized, render every chip and let the cell clip them.
+  // The `+N` overflow is recomputed once the resize is committed (see the `columnWidth` effect).
+  const isResizingThisColumn =
+    useGridSelector(privateApiRef, gridResizingColumnFieldSelector) === field;
+
   const visibleCount = React.useMemo(() => {
-    if (autoWrap || values.length === 0) {
+    if (autoWrap || isResizingThisColumn || values.length === 0) {
       return values.length;
     }
     if (containerWidth === null || containerWidth === 0 || measuredCount < values.length) {
@@ -171,7 +183,15 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
       overflowWidths,
       gap,
     );
-  }, [values.length, measuredCount, containerWidth, autoWrap, overflowWidths, gap]);
+  }, [
+    values.length,
+    measuredCount,
+    containerWidth,
+    autoWrap,
+    isResizingThisColumn,
+    overflowWidths,
+    gap,
+  ]);
 
   const hiddenCount = values.length - visibleCount;
 

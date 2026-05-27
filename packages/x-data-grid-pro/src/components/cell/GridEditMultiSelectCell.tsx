@@ -256,6 +256,7 @@ function GridEditMultiSelectCell<V extends ValueOptions = ValueOptions>(
       <GridEditMultiSelectChips
         ref={setAnchorEl as React.Ref<HTMLDivElement>}
         values={currentValue}
+        field={field}
         columnWidth={colDef.computedWidth}
         autoWrap={isAutoHeight}
         optionByValue={optionByValue}
