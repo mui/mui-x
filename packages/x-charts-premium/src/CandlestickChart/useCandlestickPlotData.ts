@@ -62,35 +62,45 @@ export function useCandlestickPlotData(
    * `parseColor` returns bytes in [0, 255]. Uint8Clamped rounds + clamps automatically,
    * so brightness multiplications can't overflow. */
   const colors = React.useMemo(() => {
-    const candleColors = new Uint8ClampedArray(series.data.length * 4);
-    const wickColors = new Uint8ClampedArray(series.data.length * 2 * 4);
+    const n = series.data.length;
+    const candleColors = new Uint8ClampedArray(n * 4);
+    const wickColors = new Uint8ClampedArray(n * 2 * 4);
 
+    /* The wick color is theme-derived and identical for every wick. Pre-build an
+     * 8-byte template (both wicks for one candle) and copy it in via the typed
+     * array memcpy path instead of writing 8 bytes per candle by hand. */
     const [wickR, wickG, wickB, wickA] = wickColor;
+    const wickPair = new Uint8ClampedArray([
+      wickR,
+      wickG,
+      wickB,
+      wickA,
+      wickR,
+      wickG,
+      wickB,
+      wickA,
+    ]);
 
-    for (let dataIndex = 0; dataIndex < series.data.length; dataIndex += 1) {
+    for (let dataIndex = 0; dataIndex < n; dataIndex += 1) {
       const datum = series.data[dataIndex];
+      const candleOffset = dataIndex * 4;
+      const wickOffset = dataIndex * 8;
 
       if (datum === null) {
         /* Alpha 0 hides the candle and both wicks; src-alpha blending makes RGB irrelevant. */
-        candleColors[dataIndex * 4 + 3] = 0;
-        wickColors[dataIndex * 2 * 4 + 3] = 0;
-        wickColors[(dataIndex * 2 + 1) * 4 + 3] = 0;
+        candleColors[candleOffset + 3] = 0;
+        wickColors[wickOffset + 3] = 0;
+        wickColors[wickOffset + 7] = 0;
         continue;
       }
 
       const candleColor = parseColor(colorGetter(dataIndex));
-      candleColors[dataIndex * 4] = candleColor[0];
-      candleColors[dataIndex * 4 + 1] = candleColor[1];
-      candleColors[dataIndex * 4 + 2] = candleColor[2];
-      candleColors[dataIndex * 4 + 3] = candleColor[3];
+      candleColors[candleOffset] = candleColor[0];
+      candleColors[candleOffset + 1] = candleColor[1];
+      candleColors[candleOffset + 2] = candleColor[2];
+      candleColors[candleOffset + 3] = candleColor[3];
 
-      for (let w = 0; w < 2; w += 1) {
-        const wickIdx = (dataIndex * 2 + w) * 4;
-        wickColors[wickIdx] = wickR;
-        wickColors[wickIdx + 1] = wickG;
-        wickColors[wickIdx + 2] = wickB;
-        wickColors[wickIdx + 3] = wickA;
-      }
+      wickColors.set(wickPair, wickOffset);
 
       const highlightState = getHighlightState({
         type: 'ohlc',
@@ -100,22 +110,19 @@ export function useCandlestickPlotData(
 
       if (highlightState === 'highlighted') {
         /* Mimics CSS's filter: brightness(1.2): multiplies RGB by 1.2 without touching alpha. */
-        candleColors[dataIndex * 4] = candleColors[dataIndex * 4] * HIGHLIGHT_BRIGHTNESS;
-        candleColors[dataIndex * 4 + 1] = candleColors[dataIndex * 4 + 1] * HIGHLIGHT_BRIGHTNESS;
-        candleColors[dataIndex * 4 + 2] = candleColors[dataIndex * 4 + 2] * HIGHLIGHT_BRIGHTNESS;
-
-        for (let w = 0; w < 2; w += 1) {
-          const wickIdx = (dataIndex * 2 + w) * 4;
-          wickColors[wickIdx] = wickColors[wickIdx] * HIGHLIGHT_BRIGHTNESS;
-          wickColors[wickIdx + 1] = wickColors[wickIdx + 1] * HIGHLIGHT_BRIGHTNESS;
-          wickColors[wickIdx + 2] = wickColors[wickIdx + 2] * HIGHLIGHT_BRIGHTNESS;
-        }
+        candleColors[candleOffset] *= HIGHLIGHT_BRIGHTNESS;
+        candleColors[candleOffset + 1] *= HIGHLIGHT_BRIGHTNESS;
+        candleColors[candleOffset + 2] *= HIGHLIGHT_BRIGHTNESS;
+        wickColors[wickOffset] *= HIGHLIGHT_BRIGHTNESS;
+        wickColors[wickOffset + 1] *= HIGHLIGHT_BRIGHTNESS;
+        wickColors[wickOffset + 2] *= HIGHLIGHT_BRIGHTNESS;
+        wickColors[wickOffset + 4] *= HIGHLIGHT_BRIGHTNESS;
+        wickColors[wickOffset + 5] *= HIGHLIGHT_BRIGHTNESS;
+        wickColors[wickOffset + 6] *= HIGHLIGHT_BRIGHTNESS;
       } else if (highlightState === 'faded') {
-        candleColors[dataIndex * 4 + 3] = candleColors[dataIndex * 4 + 3] * FADE_OPACITY;
-        for (let w = 0; w < 2; w += 1) {
-          const aIdx = (dataIndex * 2 + w) * 4 + 3;
-          wickColors[aIdx] = wickColors[aIdx] * FADE_OPACITY;
-        }
+        candleColors[candleOffset + 3] *= FADE_OPACITY;
+        wickColors[wickOffset + 3] *= FADE_OPACITY;
+        wickColors[wickOffset + 7] *= FADE_OPACITY;
       }
     }
 
@@ -137,9 +144,12 @@ export function useCandlestickPlotData(
     positionsPoolRef.current = { candleCenters, candleHeights, wickCenters, wickHeights };
 
     /* Hoist drawing-area offsets into scalars so the loop body doesn't re-read them. */
-    const left = drawingArea.left;
     const top = drawingArea.top;
-    const xDomain = xScale.domain();
+    /* Band scales are linear in domain index, so xScale(domain[i]) = x0 + step*i.
+     * Resolving the base position once (and folding in -left) avoids n hashmap
+     * lookups in the loop body. */
+    const xStep = xScale.step();
+    const x0 = n > 0 ? xScale(xScale.domain()[0])! - drawingArea.left : 0;
 
     for (let dataIndex = 0; dataIndex < n; dataIndex += 1) {
       const datum = series.data[dataIndex];
@@ -158,13 +168,12 @@ export function useCandlestickPlotData(
         continue;
       }
 
-      const scaledX = xScale(xDomain[dataIndex])!;
       const open = datum[0];
       const high = datum[1];
       const low = datum[2];
       const close = datum[3];
 
-      const x = scaledX - left;
+      const x = x0 + xStep * dataIndex;
       const scaledOpen = yScale(open);
       const scaledClose = yScale(close);
       const candleBottom = Math.min(scaledOpen, scaledClose) - top;
@@ -200,12 +209,8 @@ export function useCandlestickPlotData(
 
   return React.useMemo(
     () => ({
-      candleCenters: positions.candleCenters,
-      candleHeights: positions.candleHeights,
-      candleColors: colors.candleColors,
-      wickCenters: positions.wickCenters,
-      wickHeights: positions.wickHeights,
-      wickColors: colors.wickColors,
+      ...positions,
+      ...colors,
     }),
     [positions, colors],
   );

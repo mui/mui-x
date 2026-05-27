@@ -1,6 +1,6 @@
 import { type CartesianExtremumGetter, findMinMax } from '@mui/x-charts/internals';
 
-const getBaseExtremum: CartesianExtremumGetter<'ohlc'> = (params) => {
+export const getExtremumX: CartesianExtremumGetter<'ohlc'> = (params) => {
   const { axis, getFilters, isDefaultAxis } = params;
 
   const filter = getFilters?.({
@@ -13,56 +13,60 @@ const getBaseExtremum: CartesianExtremumGetter<'ohlc'> = (params) => {
   return findMinMax(data ?? []);
 };
 
-const getValueExtremum: CartesianExtremumGetter<'ohlc'> = (params) => {
+export const getExtremumY: CartesianExtremumGetter<'ohlc'> = (params) => {
   const { series, axis, getFilters, isDefaultAxis } = params;
 
-  return Object.keys(series)
-    .filter((seriesId) => {
-      const axisId = series[seriesId].yAxisId;
-      return axisId === axis.id || (isDefaultAxis && axisId === undefined);
-    })
-    .reduce(
-      (acc, seriesId) => {
-        const { data } = series[seriesId];
+  let min = Infinity;
+  let max = -Infinity;
 
-        const filter = getFilters?.({
-          currentAxisId: axis.id,
-          isDefaultAxis,
-          seriesXAxisId: series[seriesId].xAxisId,
-          seriesYAxisId: series[seriesId].yAxisId,
-        });
+  for (const seriesId in series) {
+    if (!Object.hasOwn(series, seriesId)) {
+      continue;
+    }
+    const s = series[seriesId];
+    const axisId = s.yAxisId;
+    if (axisId !== axis.id && !(isDefaultAxis && axisId === undefined)) {
+      continue;
+    }
 
-        const [seriesMin, seriesMax] = data?.reduce(
-          (seriesAcc, values, index) => {
-            if (values == null) {
-              return seriesAcc;
-            }
+    const filter = getFilters?.({
+      currentAxisId: axis.id,
+      isDefaultAxis,
+      seriesXAxisId: s.xAxisId,
+      seriesYAxisId: s.yAxisId,
+    });
 
-            if (
-              filter &&
-              (!filter({ x: null, y: values[0] }, index) ||
-                !filter({ x: null, y: values[1] }, index) ||
-                !filter({ x: null, y: values[2] }, index) ||
-                !filter({ x: null, y: values[3] }, index))
-            ) {
-              return seriesAcc;
-            }
+    const data = s.data;
+    if (!data) {
+      continue;
+    }
 
-            return [Math.min(...values, seriesAcc[0]), Math.max(...values, seriesAcc[1])];
-          },
-          [Infinity, -Infinity],
-        ) ?? [Infinity, -Infinity];
+    for (let i = 0; i < data.length; i += 1) {
+      const values = data[i];
+      if (values == null) {
+        continue;
+      }
+      const open = values[0];
+      const high = values[1];
+      const low = values[2];
+      const close = values[3];
+      if (
+        filter &&
+        (!filter({ x: null, y: open }, i) ||
+          !filter({ x: null, y: high }, i) ||
+          !filter({ x: null, y: low }, i) ||
+          !filter({ x: null, y: close }, i))
+      ) {
+        continue;
+      }
+      if (low < min) {
+        min = low;
+      }
+      if (high > max) {
+        max = high;
+      }
+    }
+  }
 
-        return [Math.min(seriesMin, acc[0]), Math.max(seriesMax, acc[1])];
-      },
-      [Infinity, -Infinity],
-    );
-};
-
-export const getExtremumX: CartesianExtremumGetter<'ohlc'> = (params) => {
-  return getBaseExtremum(params);
-};
-
-export const getExtremumY: CartesianExtremumGetter<'ohlc'> = (params) => {
-  return getValueExtremum(params);
+  return [min, max];
 };
