@@ -103,10 +103,6 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     await flushDebounce();
 
     store.disposeEffect()();
-    // Dispose is scheduled in a microtask (so a StrictMode-style remount
-    // within the same tick can cancel it); flush so the actual teardown
-    // runs before we publish.
-    await flushEffect();
 
     const updated = EventBuilder.new()
       .id('1')

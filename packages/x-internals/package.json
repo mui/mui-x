@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui/utils": "catalog:",
     "@mui/utils": "catalog:",
     "core-js-pure": "catalog:",
     "reselect": "catalog:",

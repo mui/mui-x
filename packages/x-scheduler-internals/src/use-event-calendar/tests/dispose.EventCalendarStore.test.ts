@@ -21,9 +21,6 @@ describe('Dispose - EventCalendarStore', () => {
     const initialNow = store.state.nowUpdatedEveryMinute;
 
     store.disposeEffect()();
-    // Dispose is scheduled in a microtask (so React StrictMode remount can
-    // cancel it); flush so the actual teardown runs.
-    await Promise.resolve();
 
     vi.advanceTimersByTime(ONE_MINUTE_IN_MS * 2);
 
@@ -36,7 +33,6 @@ describe('Dispose - EventCalendarStore', () => {
     store.subscribeEvent('eventsUpdated', handler);
 
     store.disposeEffect()();
-    await Promise.resolve();
 
     store.publishEvent('eventsUpdated', {
       deleted: [],
