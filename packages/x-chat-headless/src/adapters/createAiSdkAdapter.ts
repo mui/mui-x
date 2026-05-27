@@ -125,23 +125,46 @@ function parseStreamLine(rawLine: string): unknown | null {
   return JSON.parse(payload);
 }
 
-let syntheticIdCounter = 0;
-function nextSyntheticMessageId() {
-  syntheticIdCounter += 1;
-  return `ai-sdk-msg-${syntheticIdCounter.toString(36)}`;
-}
-
 function convertToChatStream(
   upstream: ReadableStream<AiSdkUIMessageChunk | Uint8Array>,
+  signal: AbortSignal,
 ): ReadableStream<ChatMessageChunk> {
   const reader = upstream.getReader();
   const decoder = new TextDecoder();
   let buffer = '';
+  let syntheticIdCounter = 0;
   // Per-response synthetic ID used when the AI SDK doesn't supply one on
   // `start`/`finish`. `processStream` in the headless package requires a
   // `messageId` on the `start` chunk to bind subsequent text/reasoning
   // deltas to the right assistant message.
   let syntheticMessageId: string | null = null;
+
+  const nextSyntheticMessageId = () => {
+    syntheticIdCounter += 1;
+    return `ai-sdk-msg-${syntheticIdCounter.toString(36)}`;
+  };
+
+  let hasAbortListener = false;
+  const cancelReader = () => {
+    if (hasAbortListener) {
+      signal.removeEventListener('abort', cancelReader);
+      hasAbortListener = false;
+    }
+    reader.cancel(signal.reason).catch(() => {});
+  };
+  const cleanupAbortListener = () => {
+    if (hasAbortListener) {
+      signal.removeEventListener('abort', cancelReader);
+      hasAbortListener = false;
+    }
+  };
+
+  if (signal.aborted) {
+    cancelReader();
+  } else {
+    signal.addEventListener('abort', cancelReader, { once: true });
+    hasAbortListener = true;
+  }
 
   const emit = (
     chunk: AiSdkUIMessageChunk,
@@ -152,6 +175,7 @@ function convertToChatStream(
         typeof (chunk as { errorText?: unknown }).errorText === 'string'
           ? (chunk as { errorText: string }).errorText
           : 'AI SDK stream emitted an error chunk.';
+      cleanupAbortListener();
       controller.error(new ChatStreamError(streamError(text)));
       return;
     }
@@ -197,6 +221,7 @@ function convertToChatStream(
             }
           }
           controller.close();
+          cleanupAbortListener();
           return;
         }
         if (value === undefined) {
@@ -224,6 +249,7 @@ function convertToChatStream(
                 streamError(`AI SDK stream produced invalid JSON: ${(err as Error).message}`),
               ),
             );
+            cleanupAbortListener();
             return;
           }
           newlineIndex = buffer.indexOf('\n');
@@ -234,6 +260,7 @@ function convertToChatStream(
       }
     },
     cancel(reason) {
+      cleanupAbortListener();
       reader.cancel(reason).catch(() => {});
     },
   });
@@ -347,7 +374,7 @@ export function createAiSdkAdapter(options: CreateAiSdkAdapterOptions): ChatAdap
         signal: input.signal,
       });
 
-      return convertToChatStream(upstream);
+      return convertToChatStream(upstream, input.signal);
     },
   };
 }
