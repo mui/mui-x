@@ -3,3 +3,4 @@ export * from '@mui/x-charts-pro/models';
 // End of re-export-block
 
 export * from './seriesType';
+export * from './chartsSlotsComponentsPropsPremium';
