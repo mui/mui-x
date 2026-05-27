@@ -126,11 +126,17 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
 
       if (!skipCache && responses.every((response) => response !== undefined)) {
+        // Bump the request id so any cache-miss request still in flight is treated as
+        // stale and won't override the cached data we're about to apply.
+        lastRequestId.current += 1;
         apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
           response: CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]),
           fetchParams,
           options: { skipCache, keepChildrenExpanded },
         });
+        if (standardRowsUpdateStrategyActive) {
+          apiRef.current.setLoading(false);
+        }
         return;
       }
 
@@ -371,10 +377,17 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
 
   const debouncedFetchRows = React.useMemo(() => debounce(fetchRows, 0), [fetchRows]);
   const handleFetchRowsOnParamsChange = React.useCallback(() => {
+    // Clear the rows first and immediately mark the grid as loading so the overlay
+    // selector never observes the intermediate `rows=[] && loading=false` state that
+    // would otherwise pick `noRowsOverlay`. Order matters: `setRows([])` rebuilds
+    // `state.rows` from `props.loading`, so the `setLoading(true)` call must come after
+    // it to survive the rebuild. This handler is only wired up when a standard strategy
+    // is active via the `runIf` guards on the returned `events` object.
     apiRef.current.setRows([]);
+    apiRef.current.setLoading(true);
     stopPolling();
     debouncedFetchRows();
-  }, [stopPolling, debouncedFetchRows, apiRef]);
+  }, [apiRef, stopPolling, debouncedFetchRows]);
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
