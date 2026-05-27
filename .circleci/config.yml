@@ -237,6 +237,8 @@ jobs:
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.60.0-noble
+    # Gen2 showed only marginal speedup here, not worth the price increase.
+    resource_class: medium
     steps:
       - checkout
       - install-deps
