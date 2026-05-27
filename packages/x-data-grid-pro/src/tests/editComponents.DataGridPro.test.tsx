@@ -1043,7 +1043,7 @@ describe('<DataGridPro /> - Edit components', () => {
             const privateApi = unwrapPrivateAPI(apiRef.current!);
             const cache = privateApi.caches.multiSelect;
             expect(cache).not.to.equal(undefined);
-            const metrics = cache.getOverflowMetrics('tags');
+            const metrics = cache.getOverflowMetrics();
             expect(metrics).not.to.equal(null);
             expect(metrics!.overflowChipWidths).to.have.length(3);
             metrics!.overflowChipWidths.forEach((w: number) => {

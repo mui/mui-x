@@ -10,11 +10,9 @@ import {
   COLUMNS_DIMENSION_PROPERTIES,
 } from '@mui/x-data-grid/internals';
 import { useGridEvent } from '@mui/x-data-grid';
-import type { GridColumnHeaderParams } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_MULTI_SELECT_COL_DEF } from '../../../colDef/gridMultiSelectColDef';
-import { GridMultiSelectMeasurer } from '../../../components/cell/GridMultiSelectMeasurer';
 import type {
   GridMultiSelectInternalCache,
   GridMultiSelectOverflowMetrics,
@@ -29,15 +27,14 @@ const DIMENSION_KEYS = new Set<string>(COLUMNS_DIMENSION_PROPERTIES);
 class GridMultiSelectCache implements GridMultiSelectInternalCache {
   private dragSubscribers = new Map<string, Set<(width: number) => void>>();
 
-  private metricsByField = new Map<string, GridMultiSelectOverflowMetrics>();
+  private overflowMetrics: GridMultiSelectOverflowMetrics | null = null;
 
-  private metricsSubscribers = new Map<
-    string,
-    Set<(metrics: GridMultiSelectOverflowMetrics | null) => void>
+  private metricsSubscribers = new Set<
+    (metrics: GridMultiSelectOverflowMetrics | null) => void
   >();
 
-  private notifyMetrics = (field: string, metrics: GridMultiSelectOverflowMetrics | null) => {
-    this.metricsSubscribers.get(field)?.forEach((cb) => cb(metrics));
+  private notifyMetrics = (metrics: GridMultiSelectOverflowMetrics | null) => {
+    this.metricsSubscribers.forEach((cb) => cb(metrics));
   };
 
   public subscribeDrag = (field: string, callback: (width: number) => void) => {
@@ -63,13 +60,13 @@ class GridMultiSelectCache implements GridMultiSelectInternalCache {
     this.dragSubscribers.get(field)?.forEach((cb) => cb(width));
   };
 
-  public getOverflowMetrics = (field: string) => {
-    return this.metricsByField.get(field) ?? null;
+  public getOverflowMetrics = () => {
+    return this.overflowMetrics;
   };
 
-  public setOverflowMetrics = (field: string, next: GridMultiSelectOverflowMetrics) => {
+  public setOverflowMetrics = (next: GridMultiSelectOverflowMetrics) => {
     // Skip no-op updates so subscribed cells don't re-render on every measurer ResizeObserver tick.
-    const prev = this.metricsByField.get(field);
+    const prev = this.overflowMetrics;
     if (
       prev &&
       prev.gap === next.gap &&
@@ -77,53 +74,25 @@ class GridMultiSelectCache implements GridMultiSelectInternalCache {
     ) {
       return;
     }
-    this.metricsByField.set(field, next);
-    this.notifyMetrics(field, next);
-  };
-
-  public deleteOverflowMetrics = (field: string) => {
-    if (!this.metricsByField.has(field)) {
-      return;
-    }
-    this.metricsByField.delete(field);
-    this.notifyMetrics(field, null);
+    this.overflowMetrics = next;
+    this.notifyMetrics(next);
   };
 
   public subscribeOverflowMetrics = (
-    field: string,
     callback: (metrics: GridMultiSelectOverflowMetrics | null) => void,
   ) => {
-    let bucket = this.metricsSubscribers.get(field);
-    if (!bucket) {
-      bucket = new Set();
-      this.metricsSubscribers.set(field, bucket);
-    }
-    bucket.add(callback);
+    this.metricsSubscribers.add(callback);
     return () => {
-      const current = this.metricsSubscribers.get(field);
-      if (!current) {
-        return;
-      }
-      current.delete(callback);
-      if (current.size === 0) {
-        this.metricsSubscribers.delete(field);
-      }
+      this.metricsSubscribers.delete(callback);
     };
   };
 
   public teardown = () => {
     this.dragSubscribers.clear();
     this.metricsSubscribers.clear();
-    this.metricsByField.clear();
+    this.overflowMetrics = null;
   };
 }
-
-const renderMultiSelectHeaderDefault = (params: GridColumnHeaderParams) => (
-  <React.Fragment>
-    {params.colDef.headerName ?? params.field}
-    <GridMultiSelectMeasurer field={params.field} />
-  </React.Fragment>
-);
 
 export const useGridMultiSelectPreProcessors = (
   apiRef: RefObject<GridPrivateApiPro>,
@@ -188,18 +157,6 @@ export const useGridMultiSelectPreProcessors = (
           newLookup = { ...lookup };
         }
         const userColumn = userColumnsLookup.get(field);
-        // Wrap the user's renderHeader (if any) so the per-column measurer is mounted
-        // regardless of customization. The measurer is hidden absolutely and does not
-        // displace the user's content.
-        const userRenderHeader = userColumn?.renderHeader;
-        const composedRenderHeader = userRenderHeader
-          ? (params: GridColumnHeaderParams) => (
-              <React.Fragment>
-                {userRenderHeader(params)}
-                <GridMultiSelectMeasurer field={params.field} />
-              </React.Fragment>
-            )
-          : renderMultiSelectHeaderDefault;
         // Start from the processed column state to keep dimensions, `hasBeenResized` and other
         // computed props. `column` carries string-type defaults (multiSelect isn't a core column
         // type), so overlay multiSelect defaults for keys the user didn't set, except dimensions
@@ -211,7 +168,6 @@ export const useGridMultiSelectPreProcessors = (
             (merged as any)[defaultKey] = GRID_MULTI_SELECT_COL_DEF[defaultKey];
           }
         }
-        merged.renderHeader = composedRenderHeader;
         newLookup[field] = merged;
       }
 

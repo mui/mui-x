@@ -114,13 +114,13 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
       if (!cache) {
         return () => {};
       }
-      return cache.subscribeOverflowMetrics(field, notify);
+      return cache.subscribeOverflowMetrics(notify);
     },
-    [privateApiRef, field],
+    [privateApiRef],
   );
   const getMetricsSnapshot = React.useCallback(
-    () => privateApiRef.current.caches.multiSelect?.getOverflowMetrics(field) ?? null,
-    [privateApiRef, field],
+    () => privateApiRef.current.caches.multiSelect?.getOverflowMetrics() ?? null,
+    [privateApiRef],
   );
   const overflowMetrics = useSyncExternalStore(
     subscribeMetrics,
