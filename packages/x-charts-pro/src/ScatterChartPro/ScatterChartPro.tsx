@@ -15,6 +15,7 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip, type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import type { TooltipPropsOverrides } from '@mui/x-charts/models';
 import { useScatterChartProps } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
@@ -44,7 +45,7 @@ export interface ScatterChartProSlotProps
    * Slot props for the tooltip component.
    * @default {}
    */
-  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>>;
+  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides;
 }
 
 export interface ScatterChartProProps
@@ -560,6 +561,33 @@ ScatterChartPro.propTypes = {
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
+      sizeMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          size: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.number.isRequired),
+            PropTypes.func,
+          ]).isRequired,
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          sizes: PropTypes.arrayOf(PropTypes.number).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+        PropTypes.shape({
+          sizes: PropTypes.arrayOf(PropTypes.number).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownSize: PropTypes.number,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+      ]),
       valueGetter: PropTypes.func,
     }),
   ),

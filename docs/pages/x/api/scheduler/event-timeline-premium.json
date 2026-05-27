@@ -22,7 +22,10 @@
     },
     "dateLocale": { "type": { "name": "object" }, "default": "enUS (English)" },
     "defaultPreferences": {
-      "type": { "name": "shape", "description": "{ ampm?: bool }" },
+      "type": {
+        "name": "shape",
+        "description": "{ ampm?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
+      },
       "default": "{ ampm: true }"
     },
     "defaultPreset": {
@@ -59,7 +62,12 @@
     "onPresetChange": { "type": { "name": "func" } },
     "onVisibleDateChange": { "type": { "name": "func" } },
     "onVisibleResourcesChange": { "type": { "name": "func" } },
-    "preferences": { "type": { "name": "shape", "description": "{ ampm?: bool }" } },
+    "preferences": {
+      "type": {
+        "name": "shape",
+        "description": "{ ampm?: bool, weekStartsOn?: 0<br>&#124;&nbsp;1<br>&#124;&nbsp;2<br>&#124;&nbsp;3<br>&#124;&nbsp;4<br>&#124;&nbsp;5<br>&#124;&nbsp;6 }"
+      }
+    },
     "preset": {
       "type": {
         "name": "enum",

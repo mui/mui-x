@@ -13,13 +13,20 @@ import {
   type RadialLineHighlightElementProps,
 } from './RadialLineHighlightElement';
 import getColor from './seriesConfig/getColor';
+import type { RadialLineHighlightPropsOverrides } from '../models/chartsSlotsComponentsPropsPremium';
 
 export interface RadialLineHighlightPlotSlots {
-  radialLineHighlight?: React.JSXElementConstructor<RadialLineHighlightElementProps>;
+  radialLineHighlight?: React.JSXElementConstructor<
+    RadialLineHighlightElementProps & RadialLineHighlightPropsOverrides
+  >;
 }
 
 export interface RadialLineHighlightPlotSlotProps {
-  radialLineHighlight?: SlotComponentPropsFromProps<RadialLineHighlightElementProps, {}, {}>;
+  radialLineHighlight?: SlotComponentPropsFromProps<
+    RadialLineHighlightElementProps,
+    RadialLineHighlightPropsOverrides,
+    {}
+  >;
 }
 
 export interface RadialLineHighlightPlotProps extends React.SVGAttributes<SVGGElement> {
