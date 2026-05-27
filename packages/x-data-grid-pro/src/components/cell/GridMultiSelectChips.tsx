@@ -11,7 +11,7 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid';
 import type { GridSlotProps, ValueOptions } from '@mui/x-data-grid';
-import { NotRendered, useSyncExternalStore } from '@mui/x-data-grid/internals';
+import { NotRendered, useSyncExternalStore, useTimeout } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import {
   DEFAULT_GAP,
@@ -173,15 +173,16 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
   const isResizingThisColumn =
     useGridSelector(privateApiRef, gridResizingColumnFieldSelector) === field;
   // Debounce the reveal so a quick double-click to autosize doesn't flash all chips.
+  const revealTimeout = useTimeout();
   const [revealWhileResizing, setRevealWhileResizing] = React.useState(false);
   React.useEffect(() => {
     if (!isResizingThisColumn) {
+      revealTimeout.clear();
       setRevealWhileResizing(false);
-      return undefined;
+      return;
     }
-    const timer = setTimeout(() => setRevealWhileResizing(true), RESIZE_REVEAL_DELAY_MS);
-    return () => clearTimeout(timer);
-  }, [isResizingThisColumn]);
+    revealTimeout.start(RESIZE_REVEAL_DELAY_MS, () => setRevealWhileResizing(true));
+  }, [isResizingThisColumn, revealTimeout]);
 
   const visibleCount = React.useMemo(() => {
     if (autoWrap || revealWhileResizing || values.length === 0) {
