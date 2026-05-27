@@ -1,3 +1,4 @@
+/// <reference path="./core-js-pure.d.ts" />
 import CoreJsDisposableStack from 'core-js-pure/actual/disposable-stack';
 import CoreJsAsyncDisposableStack from 'core-js-pure/actual/async-disposable-stack';
 
