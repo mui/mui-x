@@ -830,7 +830,7 @@ async function main() {
     // Always prompt for major version first
     const majorVersion = await selectMajorVersion(latestMajorVersion);
 
-    const latestTag = await findLatestTaggedVersionForMajor(majorVersion);
+    const latestTag = await findLatestTaggedVersionForMajor(majorVersion, upstreamRemote);
     const previousVersion = latestTag.startsWith('v') ? latestTag.slice(1) : latestTag;
     console.log(`Latest tag for major version ${majorVersion}: ${previousVersion}`);
 
