@@ -121,7 +121,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     expect(dataSource.persistEvents.called).to.equal(false);
   });
 
-  it('should not trigger registerStoreEffect callbacks after dispose', async () => {
+  it('should not start a new fetch when state changes after dispose', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
       persistEvents: noopPersistEvents,
@@ -141,6 +141,25 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     await flushDebounce();
 
     expect(dataSource.getEvents.calledOnce).to.equal(true);
+  });
+
+  it('should not fetch when disposed synchronously after construction', async () => {
+    const dataSource = {
+      getEvents: spy(async () => buildEvents()),
+      persistEvents: noopPersistEvents,
+    };
+    const store = new EventCalendarPremiumStore({ ...DEFAULT_PARAMS, dataSource }, adapter);
+    store.setViewConfig(buildViewConfig());
+
+    // Dispose synchronously, before the initial fetch's scheduled microtask
+    // had a chance to run — simulates a StrictMode mount-unmount cycle that
+    // happens within the same tick as construction.
+    store.disposeEffect()();
+
+    await flushEffect();
+    await flushDebounce();
+
+    expect(dataSource.getEvents.called).to.equal(false);
   });
 
   it('should be safe to call the dispose cleanup twice', async () => {

@@ -107,7 +107,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     expect(dataSource.persistEvents.called).to.equal(false);
   });
 
-  it('should not trigger registerStoreEffect callbacks after dispose', async () => {
+  it('should not start a new fetch when state changes after dispose', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
       persistEvents: noopPersistEvents,
@@ -128,6 +128,26 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     await flushDebounce();
 
     expect(dataSource.getEvents.calledOnce).to.equal(true);
+  });
+
+  it('should not fetch when disposed synchronously after construction', async () => {
+    const dataSource = {
+      getEvents: spy(async () => buildEvents()),
+      persistEvents: noopPersistEvents,
+    };
+    const params = { ...DEFAULT_PARAMS, dataSource };
+    const store = new EventTimelinePremiumStore(params, adapter);
+    store.updateStateFromParameters(params, adapter);
+
+    // Dispose synchronously, before the initial fetch's scheduled microtask
+    // had a chance to run — simulates a StrictMode mount-unmount cycle that
+    // happens within the same tick as construction.
+    store.disposeEffect()();
+
+    await flushEffect();
+    await flushDebounce();
+
+    expect(dataSource.getEvents.called).to.equal(false);
   });
 
   it('should be safe to call the dispose cleanup twice', async () => {
