@@ -40,7 +40,7 @@ Its signature matches the bar chart:
 ```js
 const clickHandler = (
   event, // The native mouse event emitted by the SVG component.
-  params, // An object that identifies the clicked rotation axis item and its series values.
+  params, // An object that identifies the clicked axis item and its series values.
 ) => {};
 ```
 

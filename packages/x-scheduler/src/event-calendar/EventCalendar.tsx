@@ -137,6 +137,7 @@ EventCalendar.propTypes = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * The view initially displayed in the calendar.
@@ -242,6 +243,7 @@ EventCalendar.propTypes = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * Config of the preferences menu.
@@ -256,6 +258,7 @@ EventCalendar.propTypes = {
       toggleEmptyDaysInAgenda: PropTypes.bool,
       toggleWeekendVisibility: PropTypes.bool,
       toggleWeekNumberVisibility: PropTypes.bool,
+      toggleWeekStartsOn: PropTypes.bool,
     }),
   ]),
   /**
