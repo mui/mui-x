@@ -265,7 +265,6 @@ export default function ResourceAndColorSection(props: ResourceSelectProps) {
                 key={resourceOption.value ?? NO_RESOURCE_VALUE}
                 value={resourceOption.value ?? NO_RESOURCE_VALUE}
                 aria-label={resourceOption.label}
-                aria-hidden={resourceOption.hidden || undefined}
                 className={classes.eventDialogResourceMenuItem}
                 style={
                   {
