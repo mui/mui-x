@@ -16,7 +16,7 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
       );
 
       if (seriesData?.datasetKeys && missingKeys.length > 0) {
-        incompleteDatasetKeysError('Scatter', seriesId, missingKeys)
+        incompleteDatasetKeysError('Scatter', seriesId, missingKeys);
       }
 
       let data: readonly ScatterValueType[];

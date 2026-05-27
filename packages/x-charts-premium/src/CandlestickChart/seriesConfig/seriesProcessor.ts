@@ -27,7 +27,7 @@ Either provide a data property to the series or use the dataset prop.`,
     );
 
     if (datasetKeys && missingKeys.length > 0) {
-   incompleteDatasetKeysError('OHLC', id, missingKeys);
+      incompleteDatasetKeysError('OHLC', id, missingKeys);
     }
 
     let data: DefaultizedOHLCSeriesType['data'];
