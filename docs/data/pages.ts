@@ -56,7 +56,7 @@ const schedulerPages: MuiPage[] = [
           },
           {
             pathname: '/x/react-scheduler/event-calendar/import-export',
-            title: 'Import & Export',
+            title: 'Import and Export',
             plan: 'premium',
             planned: true,
           },
@@ -86,7 +86,7 @@ const schedulerPages: MuiPage[] = [
           },
           {
             pathname: '/x/react-scheduler/event-timeline/import-export',
-            title: 'Import & Export',
+            title: 'Import and Export',
             planned: true,
           },
           { pathname: '/x/react-scheduler/event-timeline/preferences' },
