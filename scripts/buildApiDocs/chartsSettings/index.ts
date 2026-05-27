@@ -110,6 +110,7 @@ export default chartsApiPages;
       'x-charts-pro/src/SankeyChart/SankeyNodeLabelPlot.tsx',
       'x-charts-premium/src/ScatterChartPremium/webgl/ScatterWebGLPlot.tsx',
       'x-charts-premium/src/BarChartPremium/webgl/BarWebGLPlot.tsx',
+      'x-charts-premium/src/BarChartPremium/RangeBar/RangeBarWebGLPlot.tsx',
       'x-charts-premium/src/BarChartPremium/RangeBar/AnimatedRangeBarElement.tsx',
       'x-charts-premium/src/ChartsRenderer/ChartsRenderer.tsx',
       'x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx',
