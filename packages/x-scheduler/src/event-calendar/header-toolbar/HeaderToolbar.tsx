@@ -16,6 +16,7 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { getWeekNumber } from '@mui/x-scheduler-internals/internals';
 import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { PreferencesMenu } from './preferences-menu';
@@ -103,9 +104,9 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
+  const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
-  const weekStart = view === 'week' ? adapter.startOfWeek(visibleDate) : visibleDate;
-  const weekNumber = adapter.getWeekNumber(weekStart);
+  const weekNumber = getWeekNumber(adapter, visibleDate, weekStartsOn);
   const showViewSwitcher = views.length > 1;
   const showWeekLabel = showWeekNumber && (view === 'week' || view === 'day');
 
