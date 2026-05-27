@@ -320,6 +320,12 @@ export const createColumnsState = ({
   // A community `DataGrid` must not resolve a Pro/Premium-only column type even if a Pro grid
   // registered it globally in the same bundle (shared module registry). Fall back to the default
   // type def in that case, so the column behaves like a plain column.
+  // NOTE: this is a community-vs-paid gate only — it does not distinguish Pro from Premium. It is
+  // enough today because the only registered type (`multiSelect`) is available in both Pro and
+  // Premium. If a Pro-only or Premium-only column type is added later, make this plan-aware:
+  // track each type's minimum plan in the registry and compare it against the grid signature
+  // (DataGrid < DataGridPro < DataGridPremium), so e.g. a Premium-only type also falls back in
+  // `DataGridPro`.
   const isCommunity = apiRef.current.state.props?.signature === GridSignature.DataGrid;
   const getColTypeDef = (type: GridColDef['type']) =>
     isCommunity && !isCommunityColumnType(type)
