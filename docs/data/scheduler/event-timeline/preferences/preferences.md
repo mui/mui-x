@@ -8,7 +8,7 @@ components: EventTimelinePremium
 
 # Event Timeline - Preferences
 
-<p class="description">Let your user customize the component to their needs.</p>
+<p class="description">Customize timeline preferences including the time format.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
@@ -26,7 +26,7 @@ const defaultPreferences = {
 
 Available properties:
 
-- `ampm`: Whether the component should display the time in 12-hour format with AM/PM meridiem.
+- `ampm`: Whether the component displays time in 12-hour format with AM/PM.
 
 {{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
 
