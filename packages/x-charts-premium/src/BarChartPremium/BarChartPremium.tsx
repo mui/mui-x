@@ -34,6 +34,7 @@ import {
   type RangeBarSeriesType,
 } from '../models';
 import { RangeBarPlot } from './RangeBar/RangeBarPlot';
+import { RangeBarWebGLPlot } from './RangeBar/RangeBarWebGLPlot';
 import { FocusedRangeBar } from './RangeBar/FocusedRangeBar';
 
 import type {} from '../typeOverloads/modules';
@@ -144,6 +145,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
               </ChartsSvgLayer>
               <ChartsWebGLLayer>
                 <BarPlotPremium {...barPlotPremiumProps} />
+                <RangeBarWebGLPlot borderRadius={rangeBarPlotProps.borderRadius} />
               </ChartsWebGLLayer>
             </React.Fragment>
           )}
@@ -151,7 +153,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
             {renderer !== 'webgl' && <ChartsGrid {...gridProps} />}
             <g {...clipPathGroupProps}>
               {renderer !== 'webgl' && <BarPlotPremium {...barPlotPremiumProps} />}
-              <RangeBarPlot {...rangeBarPlotProps} />
+              {renderer !== 'webgl' && <RangeBarPlot {...rangeBarPlotProps} />}
               <ChartsOverlay {...overlayProps} />
               <ChartsAxisHighlight {...axisHighlightProps} />
               <FocusedBar />
