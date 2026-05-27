@@ -318,4 +318,73 @@ describe('<WeekView />', () => {
       expect(indicators.length).to.equal(0);
     });
   });
+
+  describe('weekStartsOn preference', () => {
+    const visibleDate = adapter.date('2025-01-08T00:00:00Z', 'default');
+
+    function getFirstDayColumnHeader() {
+      const grids = screen.getAllByRole('grid');
+      const dayTimeGrid = grids.find(
+        (grid) => grid.getAttribute('aria-rowcount') === '3',
+      ) as HTMLElement;
+      return within(dayTimeGrid).getAllByRole('columnheader')[0];
+    }
+
+    it('shows Sunday as the first column when weekStartsOn is 0', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          view="week"
+          defaultPreferences={{ weekStartsOn: 0 }}
+        />,
+      );
+
+      expect(getFirstDayColumnHeader().getAttribute('aria-label')).to.match(/sunday/i);
+    });
+
+    it('shows Monday as the first column when weekStartsOn is 1', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          view="week"
+          defaultPreferences={{ weekStartsOn: 1 }}
+        />,
+      );
+
+      expect(getFirstDayColumnHeader().getAttribute('aria-label')).to.match(/monday/i);
+    });
+
+    it('shows Saturday as the first column when weekStartsOn is 6', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          view="week"
+          defaultPreferences={{ weekStartsOn: 6 }}
+        />,
+      );
+
+      expect(getFirstDayColumnHeader().getAttribute('aria-label')).to.match(/saturday/i);
+    });
+
+    it('renders exactly 7 day columns regardless of weekStartsOn', () => {
+      render(
+        <EventCalendar
+          events={[]}
+          visibleDate={visibleDate}
+          view="week"
+          defaultPreferences={{ weekStartsOn: 1 }}
+        />,
+      );
+
+      const grids = screen.getAllByRole('grid');
+      const dayTimeGrid = grids.find(
+        (grid) => grid.getAttribute('aria-rowcount') === '3',
+      ) as HTMLElement;
+      const headerCells = within(dayTimeGrid).getAllByRole('columnheader');
+      expect(headerCells.length).to.equal(7);
+    });
+  });
 });
