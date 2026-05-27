@@ -186,12 +186,18 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
 
         const halfW = w * 0.5;
         const halfH = h * 0.5;
+        // Clamp the rasterized half-size to half a pixel. Otherwise the quad
+        // can fall entirely between two pixel centers and the bar gets culled
+        // by the rasterizer, creating moiré patterns when the user zooms out
+        // to a span where multiple bars share a pixel column.
+        const renderHalfW = halfW < 0.5 ? 0.5 : halfW;
+        const renderHalfH = halfH < 0.5 ? 0.5 : halfH;
 
         const c2 = cursor * 2;
         centers[c2] = bar.x + halfW - drawingAreaLeft;
         centers[c2 + 1] = bar.y + halfH - drawingAreaTop;
-        halfSizes[c2] = halfW;
-        halfSizes[c2 + 1] = halfH;
+        halfSizes[c2] = renderHalfW;
+        halfSizes[c2 + 1] = renderHalfH;
 
         const rgba = parseColor(bar.color);
         const c4 = cursor * 4;
