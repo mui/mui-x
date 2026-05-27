@@ -227,10 +227,6 @@ export class SchedulerDataManager {
     await this.processQueue();
   };
 
-  /**
-   * Terminal teardown: subsequent `queue`/`queueImmediate`/`setRequestSettled`
-   * calls become no-ops.
-   */
   [Symbol.dispose](): void {
     this.disposables.dispose();
   }
