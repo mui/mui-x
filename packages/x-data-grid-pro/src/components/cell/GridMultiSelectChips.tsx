@@ -4,12 +4,7 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import useForkRef from '@mui/utils/useForkRef';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import {
-  gridClasses,
-  gridResizingColumnFieldSelector,
-  useGridRootProps,
-  useGridSelector,
-} from '@mui/x-data-grid';
+import { gridClasses, useGridRootProps } from '@mui/x-data-grid';
 import type { GridSlotProps, ValueOptions } from '@mui/x-data-grid';
 import { NotRendered, useSyncExternalStore } from '@mui/x-data-grid/internals';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
@@ -45,14 +40,11 @@ const Chip = styled(NotRendered<GridSlotProps['baseChip']>, {
   },
 });
 
-const HYSTERESIS_PX = 4;
-
 export interface GridMultiSelectChipsProps<V extends ValueOptions = ValueOptions> extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
 > {
   values: any[];
-  field: string;
   columnWidth: number;
   optionByValue: Map<any, ValueOptions>;
   getOptionLabel: (option: ValueOptions) => string;
@@ -80,7 +72,6 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
 ) {
   const {
     values,
-    field,
     columnWidth,
     optionByValue,
     getOptionLabel,
@@ -99,11 +90,6 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
 
   const chipsRef = React.useRef<Map<number, HTMLDivElement>>(new Map());
   const chipWidthsRef = React.useRef<Map<number, number>>(new Map());
-  const prevVisibleCountRef = React.useRef<number>(values.length);
-  // Stable `column.width - container.width` offset (cell padding + borders), so during
-  // active drag we can derive container width from the resize event's `params.width`
-  // without per-cell DOM reads.
-  const widthOffsetRef = React.useRef<number | null>(null);
 
   const [measuredCount, setMeasuredCount] = React.useState(0);
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
@@ -138,31 +124,14 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
     setContainerWidth(null);
   }
 
-  // Re-measure on committed column width changes; active drag flows through the
-  // shared subscription below.
+  // Re-measure on committed column width changes (incl. when a resize finishes); we don't
+  // track live drag, matching how other cells reflow only once the resize is committed.
   useEnhancedEffect(() => {
     if (autoWrap || !containerRef.current) {
       return;
     }
-    const width = containerRef.current.getBoundingClientRect().width;
-    widthOffsetRef.current = columnWidth - width;
-    setContainerWidth(width);
+    setContainerWidth(containerRef.current.getBoundingClientRect().width);
   }, [columnWidth, autoWrap]);
-
-  React.useEffect(() => {
-    if (autoWrap) {
-      return undefined;
-    }
-    const cache = privateApiRef.current.caches.multiSelect;
-    if (!cache) {
-      return undefined;
-    }
-    return cache.subscribeDrag(field, (dragWidth) => {
-      if (widthOffsetRef.current !== null) {
-        setContainerWidth(dragWidth - widthOffsetRef.current);
-      }
-    });
-  }, [field, autoWrap, privateApiRef]);
 
   // Measure chip and container widths after render. `getBoundingClientRect` is sub-pixel,
   // which keeps the chip-fit math aligned with the browser's actual layout.
@@ -188,13 +157,6 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
   const overflowWidths = overflowMetrics?.overflowChipWidths ?? DEFAULT_OVERFLOW_CHIP_WIDTHS;
   const gap = overflowMetrics?.gap ?? DEFAULT_GAP;
 
-  const resizingField = useGridSelector(privateApiRef, gridResizingColumnFieldSelector);
-  const isDragResizingThisField = resizingField === field;
-
-  // Asymmetric hysteresis applies only during active drag: pointer jitter produces ±1-3 px
-  // micro-reversals that flip visibleCount between N and N+1 at the chip-fit boundary.
-  // Outside drag (autosize, prop-driven width changes, mount, theme changes) snap to the
-  // exact fit so a column sized to natural content reveals all chips with no `+N`.
   const visibleCount = React.useMemo(() => {
     if (autoWrap || values.length === 0) {
       return values.length;
@@ -202,40 +164,14 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
     if (containerWidth === null || containerWidth === 0 || measuredCount < values.length) {
       return values.length;
     }
-    const calculated = calculateVisibleCount(
+    return calculateVisibleCount(
       values.length,
       containerWidth,
       chipWidthsRef.current,
       overflowWidths,
       gap,
     );
-    const prev = prevVisibleCountRef.current;
-    if (isDragResizingThisField && calculated > prev) {
-      const conservative = calculateVisibleCount(
-        values.length,
-        containerWidth - HYSTERESIS_PX,
-        chipWidthsRef.current,
-        overflowWidths,
-        gap,
-      );
-      if (conservative < calculated) {
-        return Math.min(prev, values.length);
-      }
-    }
-    return calculated;
-  }, [
-    values.length,
-    measuredCount,
-    containerWidth,
-    autoWrap,
-    overflowWidths,
-    gap,
-    isDragResizingThisField,
-  ]);
-
-  useEnhancedEffect(() => {
-    prevVisibleCountRef.current = visibleCount;
-  }, [visibleCount]);
+  }, [values.length, measuredCount, containerWidth, autoWrap, overflowWidths, gap]);
 
   const hiddenCount = values.length - visibleCount;
 

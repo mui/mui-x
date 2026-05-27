@@ -222,7 +222,6 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
       <GridMultiSelectChips
         ref={cellRef}
         values={arrayValue}
-        field={colDef.field}
         columnWidth={colDef.computedWidth}
         autoWrap={isAutoHeight}
         optionByValue={optionByValue}

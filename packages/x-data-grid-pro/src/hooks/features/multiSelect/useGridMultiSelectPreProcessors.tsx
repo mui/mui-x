@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import type { RefObject } from '@mui/x-internals/types';
-import { throttle, type Cancelable } from '@mui/x-internals/throttle';
 import { fastArrayCompare } from '@mui/x-internals/fastArrayCompare';
 import {
   type GridStateColDef,
@@ -9,7 +8,6 @@ import {
   useGridRegisterPipeProcessor,
   COLUMNS_DIMENSION_PROPERTIES,
 } from '@mui/x-data-grid/internals';
-import { useGridEvent } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_MULTI_SELECT_COL_DEF } from '../../../colDef/gridMultiSelectColDef';
@@ -18,15 +16,11 @@ import type {
   GridMultiSelectOverflowMetrics,
 } from './gridMultiSelectInterfaces';
 
-const RESIZE_THROTTLE_MS = 32;
-
 // Dimensions are resolved/resized on the processed column state, so they must not be
 // overwritten by the static multiSelect defaults.
 const DIMENSION_KEYS = new Set<string>(COLUMNS_DIMENSION_PROPERTIES);
 
 class GridMultiSelectCache implements GridMultiSelectInternalCache {
-  private dragSubscribers = new Map<string, Set<(width: number) => void>>();
-
   private overflowMetrics: GridMultiSelectOverflowMetrics | null = null;
 
   private metricsSubscribers = new Set<
@@ -35,29 +29,6 @@ class GridMultiSelectCache implements GridMultiSelectInternalCache {
 
   private notifyMetrics = (metrics: GridMultiSelectOverflowMetrics | null) => {
     this.metricsSubscribers.forEach((cb) => cb(metrics));
-  };
-
-  public subscribeDrag = (field: string, callback: (width: number) => void) => {
-    let bucket = this.dragSubscribers.get(field);
-    if (!bucket) {
-      bucket = new Set();
-      this.dragSubscribers.set(field, bucket);
-    }
-    bucket.add(callback);
-    return () => {
-      const current = this.dragSubscribers.get(field);
-      if (!current) {
-        return;
-      }
-      current.delete(callback);
-      if (current.size === 0) {
-        this.dragSubscribers.delete(field);
-      }
-    };
-  };
-
-  public broadcast = (field: string, width: number) => {
-    this.dragSubscribers.get(field)?.forEach((cb) => cb(width));
   };
 
   public getOverflowMetrics = () => {
@@ -88,7 +59,6 @@ class GridMultiSelectCache implements GridMultiSelectInternalCache {
   };
 
   public teardown = () => {
-    this.dragSubscribers.clear();
     this.metricsSubscribers.clear();
     this.overflowMetrics = null;
   };
@@ -103,40 +73,13 @@ export const useGridMultiSelectPreProcessors = (
     [props.columns],
   );
 
-  // Single per-grid drag broadcaster keeps the EventManager listener count O(1)
-  // even when many multiSelect cells are visible.
   if (!apiRef.current.caches.multiSelect) {
     apiRef.current.caches.multiSelect = new GridMultiSelectCache();
   }
   const cache = apiRef.current.caches.multiSelect;
 
-  const throttledByFieldRef = React.useRef(
-    new Map<string, ((width: number) => void) & Cancelable>(),
-  );
-
-  useGridEvent(apiRef, 'columnResize', (params) => {
-    if (params.colDef.type !== 'multiSelect') {
-      return;
-    }
-    const { field } = params.colDef;
-    let throttled = throttledByFieldRef.current.get(field);
-    if (!throttled) {
-      throttled = throttle((width: number) => cache.broadcast(field, width), RESIZE_THROTTLE_MS);
-      throttledByFieldRef.current.set(field, throttled);
-    }
-    throttled(params.width);
-  });
-
-  useGridEvent(apiRef, 'columnResizeStop', () => {
-    throttledByFieldRef.current.forEach((t) => t.clear());
-    throttledByFieldRef.current.clear();
-  });
-
   React.useEffect(() => {
-    const throttles = throttledByFieldRef.current;
     return () => {
-      throttles.forEach((t) => t.clear());
-      throttles.clear();
       cache.teardown();
     };
   }, [cache]);

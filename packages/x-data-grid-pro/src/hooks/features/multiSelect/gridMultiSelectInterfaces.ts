@@ -15,15 +15,11 @@ export interface GridMultiSelectOverflowMetrics {
 
 /**
  * Per-grid cache for multiSelect runtime data.
- * - `subscribeDrag` / `broadcast`: throttled drag-resize broadcaster, so each cell does not
- *   register its own `columnResize` listener (keeps EventManager listener count O(1)).
- * - `getOverflowMetrics` / `setOverflowMetrics` / `subscribeOverflowMetrics`: grid-level
- *   overflow chip metrics produced by the single `GridMultiSelectMeasurer` mounted in the grid
- *   root, consumed by every multiSelect chip cell (the metrics are identical across columns).
+ * `getOverflowMetrics` / `setOverflowMetrics` / `subscribeOverflowMetrics`: grid-level overflow
+ * chip metrics produced by the single `GridMultiSelectMeasurer` mounted in the grid root,
+ * consumed by every multiSelect chip cell (the metrics are identical across columns).
  */
 export interface GridMultiSelectInternalCache {
-  subscribeDrag: (field: string, callback: (width: number) => void) => () => void;
-  broadcast: (field: string, width: number) => void;
   getOverflowMetrics: () => GridMultiSelectOverflowMetrics | null;
   setOverflowMetrics: (metrics: GridMultiSelectOverflowMetrics) => void;
   subscribeOverflowMetrics: (

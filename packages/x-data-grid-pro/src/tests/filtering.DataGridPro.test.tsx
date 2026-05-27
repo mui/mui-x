@@ -20,7 +20,6 @@ import {
   getGridStringOperators,
   type GridFilterItem,
 } from '@mui/x-data-grid-pro';
-import { unwrapPrivateAPI } from '@mui/x-data-grid-pro/internals';
 import {
   getColumnHeaderCell,
   getColumnValues,
@@ -1829,59 +1828,6 @@ describe('<DataGridPro /> - Filter', () => {
         await waitFor(() => {
           expect(select.textContent).to.equal('Frontend, Backend');
         });
-      });
-    });
-
-    describe('shared drag-resize subscription', () => {
-      it('should expose subscribeDrag on the multiSelect cache', () => {
-        render(<TestCaseMultiSelect />);
-        const privateApi = unwrapPrivateAPI(apiRef.current!);
-        const cache = privateApi.caches.multiSelect;
-        expect(cache).not.to.equal(undefined);
-        expect(typeof cache.subscribeDrag).to.equal('function');
-      });
-
-      it('should broadcast throttled drag width to subscribers', async () => {
-        render(<TestCaseMultiSelect />);
-        const privateApi = unwrapPrivateAPI(apiRef.current!);
-        const cache = privateApi.caches.multiSelect;
-        const received: number[] = [];
-        const unsubscribe = cache.subscribeDrag('tags', (width: number) => {
-          received.push(width);
-        });
-
-        const colDef = apiRef.current!.getColumn('tags');
-        await act(async () => {
-          apiRef.current!.publishEvent(
-            'columnResize',
-            { colDef, width: 250, element: null } as any,
-            {} as any,
-          );
-          // Trailing-edge throttle (32 ms); wait for it to flush.
-          await sleep(60);
-        });
-        expect(received).to.deep.equal([250]);
-        unsubscribe();
-      });
-
-      it('should stop receiving updates after unsubscribe', async () => {
-        render(<TestCaseMultiSelect />);
-        const privateApi = unwrapPrivateAPI(apiRef.current!);
-        const cache = privateApi.caches.multiSelect;
-        const received: number[] = [];
-        const unsubscribe = cache.subscribeDrag('tags', (w: number) => received.push(w));
-        unsubscribe();
-
-        const colDef = apiRef.current!.getColumn('tags');
-        await act(async () => {
-          apiRef.current!.publishEvent(
-            'columnResize',
-            { colDef, width: 300, element: null } as any,
-            {} as any,
-          );
-          await sleep(60);
-        });
-        expect(received).to.have.length(0);
       });
     });
   });
