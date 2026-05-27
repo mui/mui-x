@@ -225,7 +225,9 @@ describe('<DataGridPro /> - Column type: multiSelect', () => {
     it('should toggle the popup with Space', async () => {
       const { user } = render(<TestCaseOverflow />);
       await waitFor(() => {
-        expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).not.to.equal(null);
+        expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).not.to.equal(
+          null,
+        );
       });
       await act(async () => {
         apiRef.current!.setCellFocus(1, 'tags');
@@ -243,7 +245,9 @@ describe('<DataGridPro /> - Column type: multiSelect', () => {
     it('should close the popup on Escape and refocus the cell', async () => {
       const { user } = render(<TestCaseOverflow />);
       await waitFor(() => {
-        expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).not.to.equal(null);
+        expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).not.to.equal(
+          null,
+        );
       });
       await act(async () => {
         apiRef.current!.setCellFocus(1, 'tags');
@@ -264,7 +268,9 @@ describe('<DataGridPro /> - Column type: multiSelect', () => {
     it('should close the popup on click-away', async () => {
       const { user } = render(<TestCaseOverflow />);
       await waitFor(() => {
-        expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).not.to.equal(null);
+        expect(document.querySelector(`.${gridClasses.multiSelectCellOverflow}`)).not.to.equal(
+          null,
+        );
       });
       const overflow = document.querySelector(
         `.${gridClasses.multiSelectCellOverflow}`,
