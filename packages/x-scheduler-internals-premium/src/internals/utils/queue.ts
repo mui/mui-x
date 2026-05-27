@@ -228,16 +228,6 @@ export class SchedulerDataManager {
   };
 
   /**
-   * Soft reset: drops queued/pending/settled state but keeps the manager usable.
-   * Use `[Symbol.dispose]` for terminal teardown.
-   */
-  public clear = () => {
-    this.cancelQueuedRequests();
-    this.pendingRequests.clear();
-    this.settledRequests.clear();
-  };
-
-  /**
    * Terminal teardown: subsequent `queue`/`queueImmediate`/`setRequestSettled`
    * calls become no-ops.
    */
