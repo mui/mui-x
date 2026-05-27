@@ -57,7 +57,6 @@ export default function WebGLRangeBars() {
           { type: 'rangeBar', data: seriesB, label: 'Series B' },
         ]}
         initialZoom={[{ axisId: 'x', start: 0, end: 10 }]}
-        showToolbar
         height={300}
         renderer={renderer}
       />
