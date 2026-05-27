@@ -51,11 +51,15 @@ export default function WebGLRangeBars() {
         </RadioGroup>
       </FormControl>
       <BarChartPremium
-        xAxis={[{ data: xData, scaleType: 'band', zoom: { minSpan: 0.05 } }]}
+        xAxis={[
+          { id: 'x', data: xData, scaleType: 'band', zoom: { minSpan: 0.05 } },
+        ]}
         series={[
           { type: 'rangeBar', data: seriesA, label: 'Series A' },
           { type: 'rangeBar', data: seriesB, label: 'Series B' },
         ]}
+        initialZoom={[{ axisId: 'x', start: 0, end: 10 }]}
+        showToolbar
         height={300}
         renderer={renderer}
       />
