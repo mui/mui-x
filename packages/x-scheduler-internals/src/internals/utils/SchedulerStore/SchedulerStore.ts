@@ -79,7 +79,7 @@ export class SchedulerStore<
 
   private eventManager = new EventManager();
 
-  protected pluginDisposables = new DisposableStack();
+  protected disposables = new DisposableStack();
 
   public constructor(
     parameters: Parameters,
@@ -125,6 +125,11 @@ export class SchedulerStore<
     this.parameters = parameters;
     this.instanceName = instanceName;
     this.mapper = mapper;
+
+    // Registered first so they run last (LIFO): plugins added by subclasses
+    // dispose first, then the store's own resources.
+    this.disposables.defer(() => this.timeoutManager.clearAll());
+    this.disposables.defer(() => this.eventManager.removeAllListeners());
 
     const currentDate = new Date();
     const timeUntilNextMinuteMs =
@@ -253,14 +258,12 @@ export class SchedulerStore<
    */
   public disposeEffect = () => () => {
     try {
-      this.pluginDisposables.dispose();
+      this.disposables.dispose();
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') {
-        console.error('MUI X Scheduler: error while disposing plugins.', error);
+        console.error('MUI X Scheduler: error while disposing the store.', error);
       }
     }
-    this.timeoutManager.clearAll();
-    this.eventManager.removeAllListeners();
   };
 
   /**
