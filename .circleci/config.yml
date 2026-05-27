@@ -283,6 +283,10 @@ jobs:
     executor:
       name: code-infra/mui-node-browser
       playwright-img-version: v1.60.0-noble
+    # Gen2 makes the WebGL benchmarks slow enough to consistently
+    # time out the ScatterChartPremium cases past vitest's 120s
+    # limit, even with the polling fix from #22535.
+    resource_class: medium
     steps:
       - checkout
       - run:
