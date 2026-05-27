@@ -1,11 +1,13 @@
 'use client';
 import * as React from 'react';
+import { useZAxes } from '@mui/x-charts/hooks';
 
 import { useGeoData } from '../hooks/useGeoData';
 import { useGeoPath } from '../hooks/useGeoPath';
 import { useMapShapeSeries } from '../hooks/useMapShapeSeries';
 import { useGeoFeatureIndexesByName } from '../hooks/useGeoFeatureIndexesByName';
 import { MapShape } from './MapShape';
+import { mapShapeSeriesConfig } from './seriesConfig';
 
 export interface MapShapePlotProps {
   className?: string;
@@ -34,17 +36,28 @@ export function MapShapePlot(props: MapShapePlotProps) {
   const path = useGeoPath();
   const series = useMapShapeSeries();
   const featureIndexesByName = useGeoFeatureIndexesByName();
+  const { zAxis, zAxisIds } = useZAxes();
 
   if (!geoData || !path || series.length === 0) {
     return null;
   }
 
+  const defaultZAxisId = zAxisIds[0];
+
   return (
     <g className={className}>
-      {series.map(({ data, id, color: seriesColor, hidden }) => {
+      {series.map((seriesItem) => {
+        const { data, id, hidden, colorAxisId } = seriesItem;
         if (hidden) {
           return null;
         }
+        const colorAxis = zAxis[colorAxisId ?? defaultZAxisId];
+        const colorGetter = mapShapeSeriesConfig.colorProcessor(
+          seriesItem,
+          undefined,
+          undefined,
+          colorAxis,
+        );
         return (
           <g key={id} data-series={id}>
             {data.map((item, dataIndex) => {
@@ -69,7 +82,7 @@ export function MapShapePlot(props: MapShapePlotProps) {
                         seriesId={id}
                         dataIndex={dataIndex}
                         d={d}
-                        color={fill ?? item.color ?? seriesColor}
+                        color={fill ?? colorGetter(dataIndex)}
                         stroke={stroke}
                         strokeWidth={strokeWidth}
                       />

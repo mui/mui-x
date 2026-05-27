@@ -17,6 +17,11 @@ export interface MapShapeValueType {
    */
   value?: number;
   /**
+   * The value used to compute the color of the item through a color axis.
+   * Falls back to `value` when no `colorValue` is provided.
+   */
+  colorValue?: any;
+  /**
    * Label used in legends and tooltips.
    */
   label?: string;
@@ -40,6 +45,11 @@ export interface MapShapeSeriesType extends Omit<
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
+  /**
+   * The id of the color axis used to compute the color of the shapes.
+   * It points to the id of an axis defined with the `zAxis` prop.
+   */
+  colorAxisId?: string;
   /**
    * Formatter used to render values in tooltips or other data displays.
    * @param {MapShapeValueType} value The data entry to format.
