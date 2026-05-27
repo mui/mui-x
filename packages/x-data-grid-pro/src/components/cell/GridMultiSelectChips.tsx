@@ -45,6 +45,10 @@ const Chip = styled(NotRendered<GridSlotProps['baseChip']>, {
   },
 });
 
+// Delay before revealing all chips on resize start, so a quick double-click (autosize) — which
+// toggles the resizing state in short bursts — doesn't flash every chip.
+const RESIZE_REVEAL_DELAY_MS = 150;
+
 export interface GridMultiSelectChipsProps<V extends ValueOptions = ValueOptions> extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   'children'
@@ -168,9 +172,19 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
   // The `+N` overflow is recomputed once the resize is committed (see the `columnWidth` effect).
   const isResizingThisColumn =
     useGridSelector(privateApiRef, gridResizingColumnFieldSelector) === field;
+  // Debounce the reveal so a quick double-click to autosize doesn't flash all chips.
+  const [revealWhileResizing, setRevealWhileResizing] = React.useState(false);
+  React.useEffect(() => {
+    if (!isResizingThisColumn) {
+      setRevealWhileResizing(false);
+      return undefined;
+    }
+    const timer = setTimeout(() => setRevealWhileResizing(true), RESIZE_REVEAL_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [isResizingThisColumn]);
 
   const visibleCount = React.useMemo(() => {
-    if (autoWrap || isResizingThisColumn || values.length === 0) {
+    if (autoWrap || revealWhileResizing || values.length === 0) {
       return values.length;
     }
     if (containerWidth === null || containerWidth === 0 || measuredCount < values.length) {
@@ -188,7 +202,7 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
     measuredCount,
     containerWidth,
     autoWrap,
-    isResizingThisColumn,
+    revealWhileResizing,
     overflowWidths,
     gap,
   ]);
