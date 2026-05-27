@@ -19,6 +19,7 @@ import {
   type ChartsTooltipSlots,
   type ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
+import type { TooltipPropsOverrides } from '../models/chartsSlotsComponentsProps';
 import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
@@ -60,7 +61,7 @@ export interface ScatterChartSlotProps
    * Slot props for the tooltip component.
    * @default {}
    */
-  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>>;
+  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides;
 }
 
 export type ScatterSeries = MakeOptional<ScatterSeriesType, 'type'>;
