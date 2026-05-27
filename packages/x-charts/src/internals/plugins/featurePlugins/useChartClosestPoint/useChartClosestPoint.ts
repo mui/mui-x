@@ -65,16 +65,19 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         return 'outside-chart';
       }
 
-      let closestPoint: { dataIndex: number; seriesId: SeriesId; distanceSq: number } | undefined =
-        undefined;
+      let closestPoint:
+        | { dataIndex: number; seriesId: SeriesId; edgeDistance: number }
+        | undefined = undefined;
 
       for (const seriesId of seriesOrder ?? []) {
         const aSeries = (series ?? {})[seriesId];
-        const flatbush = flatbushMap.get(seriesId);
+        const entry = flatbushMap.get(seriesId);
 
-        if (!flatbush) {
+        if (!entry) {
           continue;
         }
+
+        const { flatbush, getItemRadius, maxItemRadius } = entry;
 
         const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
         const yAxisId = aSeries.yAxisId ?? defaultYAxisId;
@@ -82,7 +85,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         const xAxisZoom = selectorChartAxisZoomData(store.state, xAxisId);
         const yAxisZoom = selectorChartAxisZoomData(store.state, yAxisId);
         const maxRadius =
-          resolvedHitAreaRadius === 'item' ? aSeries.markerSize : resolvedHitAreaRadius;
+          resolvedHitAreaRadius === 'item' ? maxItemRadius : resolvedHitAreaRadius;
 
         const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
         const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
@@ -104,6 +107,8 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
           svgPoint.x,
           svgPoint.y,
           maxRadius,
+          1,
+          getItemRadius
         )[0];
 
         if (closestPointIndex === undefined) {
@@ -114,13 +119,20 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         const scaledX = xScale(point.x);
         const scaledY = yScale(point.y);
 
-        const distSq = (scaledX! - svgPoint.x) ** 2 + (scaledY! - svgPoint.y) ** 2;
+        const centerDist = Math.hypot(scaledX! - svgPoint.x, scaledY! - svgPoint.y);
+        const closestPointRadius = typeof getItemRadius === 'number' ? getItemRadius : getItemRadius(closestPointIndex);
+        const edgeDistance = centerDist - closestPointRadius;
 
-        if (closestPoint === undefined || distSq < closestPoint.distanceSq) {
+        if (edgeDistance > closestPointRadius && resolvedHitAreaRadius === 'item') {
+          continue;
+        }
+        if (closestPoint === undefined || edgeDistance < closestPoint.edgeDistance ||
+          (resolvedHitAreaRadius === 'item' && edgeDistance === closestPoint.edgeDistance)
+        ) {
           closestPoint = {
             dataIndex: closestPointIndex,
             seriesId,
-            distanceSq: distSq,
+            edgeDistance,
           };
         }
       }

@@ -3,6 +3,9 @@ import { type Flatbush } from '../../../Flatbush';
 import { type D3Scale } from '../../../../models/axis';
 import { isOrdinalScale } from '../../../scaleGuards';
 
+// Arbitrary large number to be sure we don't pull the entire dataset from flatbush when radius is not fixed.
+const LARGE_NUMBER = 50;
+
 export function findClosestPoints(
   flatbush: Flatbush,
   seriesData: readonly ScatterValueType[],
@@ -15,7 +18,8 @@ export function findClosestPoints(
   svgPointX: number,
   svgPointY: number,
   maxRadius: number = Infinity,
-  maxResults = 1,
+  maxResults: number = 1,
+  getItemRadius: number | ((dataIndex: number) => number) = 0,
 ) {
   const originalXScale = xScale.copy();
   const originalYScale = yScale.copy();
@@ -47,14 +51,56 @@ export function findClosestPoints(
     invertScale(yScale, svgPointY, (dataIndex) => seriesData[dataIndex]?.y),
   );
 
-  return flatbush.neighbors(
+  if (pointX === undefined || pointY === undefined) {
+    return [];
+  }
+
+  const withFixRadius = typeof getItemRadius === 'number';
+  const maxRadiusSq = Number.isFinite(maxRadius) ? maxRadius * maxRadius : Infinity;
+
+  // Pull every candidate whose lower-bound (box) distance is within the hit threshold.
+  // Any unpulled point j has box-dist > maxRadius, hence center-dist ≥ box-dist > maxRadius,
+  // so it cannot be a hit. We re-rank by true edge distance below.
+  const candidates = flatbush.neighbors(
     pointX,
     pointY,
-    maxResults,
-    maxRadius != null ? maxRadius * maxRadius : Infinity,
+    withFixRadius ? maxResults : LARGE_NUMBER,
+    maxRadiusSq,
     excludeIfOutsideDrawingArea,
     sqDistFn,
   );
+
+
+  if (withFixRadius) {
+    // If radius is constant, we can skip the expensive edge-distance calculation and return candidates in box-distance order.
+    return candidates;
+  }
+
+  // Re-rank by true (signed) edge distance. Negative values mean the cursor is inside
+  // the marker — those win over any outside marker, with deeper containment ranked first.
+  let ranked: { index: number; edge: number; centerDistSq: number }[] = [];
+  for (const i of candidates) {
+    const cx = originalXScale(seriesData[i].x)!;
+    const cy = originalYScale(seriesData[i].y)!;
+    const centerDistSq = sqDistFn(cx - pointX, cy - pointY);
+    // Preserve the existing hit-area semantics: hit means center distance ≤ maxRadius.
+    if (centerDistSq > maxRadiusSq) {
+      continue;
+    }
+    const edge = Math.sqrt(centerDistSq) - getItemRadius(i);
+    ranked.push({ index: i, edge, centerDistSq });
+  }
+  ranked.sort((a, b) => a.edge - b.edge);
+
+  // The pointer is inside multiple marks, we sore them by distance to the center.
+  const splitIndex = ranked.findIndex((d) => d.edge > 0);
+  if (splitIndex !== -1) {
+    ranked = [...ranked.slice(0, splitIndex).sort((a, b) => a.centerDistSq - b.centerDistSq), ...ranked.slice(splitIndex)];
+
+  }
+  return ranked
+    .slice(0, Math.min(ranked.length, maxResults))
+    .map((d) => d.index);
 }
 
 function invertScale<T>(scale: D3Scale, value: number, getDataPoint: (dataIndex: number) => T) {
