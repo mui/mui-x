@@ -1,6 +1,6 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { type SeriesId } from '@mui/x-charts/models';
-import { type SeriesProcessor } from '@mui/x-charts/internals';
+import { incompleteDatasetKeysError, type SeriesProcessor } from '@mui/x-charts/internals';
 import { type DefaultizedOHLCSeriesType } from '../../models';
 
 const candlestickValueFormatter: DefaultizedOHLCSeriesType['valueFormatter'] = (v) =>
@@ -27,10 +27,7 @@ Either provide a data property to the series or use the dataset prop.`,
     );
 
     if (datasetKeys && missingKeys.length > 0) {
-      throw new Error(
-        `MUI X Charts: OHLC series with id='${id}' has incomplete datasetKeys.
-Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
-      );
+   incompleteDatasetKeysError('OHLC', id, missingKeys);
     }
 
     let data: DefaultizedOHLCSeriesType['data'];
