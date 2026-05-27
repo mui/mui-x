@@ -285,12 +285,12 @@ describe('cubicBezierEasing comparison', () => {
     logResults('Scenario B — chart pattern (10k segments, build + 1 eval each)', results);
   });
 
-  it('Scenario C — author repro (1 curve, 9 evals, no warmup)', () => {
+  it('Scenario C — alex repro (1 curve, 9 evals, no warmup)', () => {
     const results = [
       measureMicro('internal (cubicRoots)', () => runScenarioC(easeAnimInternal)),
       measureMicro('bezier-easing v2', () => runScenarioC(animEaseV2)),
       measureMicro('bezier-easing v3', () => runScenarioC(animEaseV3)),
     ];
-    logResults('Scenario C — author repro (1 curve, 9 evals, no warmup)', results);
+    logResults('Scenario C — alex repro (1 curve, 9 evals, no warmup)', results);
   });
 });
