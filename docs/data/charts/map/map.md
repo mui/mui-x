@@ -74,6 +74,45 @@ Stacking it on top of a `GeoDataPlot` is convenient for highlighting a subset of
 
 {{"demo": "MapShapePlotDemo.js"}}
 
+## Mapping values to colors
+
+Each `mapShape` data point accepts a `colorValue` property used to compute its fill through
+a color axis defined with the `zAxis` prop.
+The axis `colorMap` configuration accepts the usual `'continuous'`, `'piecewise'`, or `'ordinal'` types.
+
+When no `colorValue` is provided, the item's `value` is used as a fallback.
+
+```tsx
+<Unstable_ChartsGeoDataProviderPremium
+  geoData={geoData}
+  series={[
+    {
+      type: 'mapShape',
+      data: countries.map((country) => ({
+        name: country.name,
+        colorValue: country.internetUsage,
+      })),
+    },
+  ]}
+  zAxis={[
+    {
+      colorMap: {
+        type: 'continuous',
+        min: 0,
+        max: 100,
+        color: ['#e3f2fd', '#0d47a1'],
+      },
+    },
+  ]}
+>
+  {/* ... */}
+</Unstable_ChartsGeoDataProviderPremium>
+```
+
+If several `zAxis` are defined, the series can target one explicitly with the `colorAxisId` property.
+
+{{"demo": "ColorScaleMapShape.js"}}
+
 ## Managing the highlight with `highlightScope`
 
 Each `mapShape` series accepts a `highlightScope` property that controls how hovering an item
