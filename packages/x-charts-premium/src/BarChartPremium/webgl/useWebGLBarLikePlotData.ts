@@ -28,6 +28,11 @@ export interface WebGLBarLikeItem {
 export interface WebGLBarLikeSeries<T extends WebGLBarLikeItem> {
   seriesId: SeriesId;
   data: readonly T[];
+  // The chart axis the bar widths come from. Used to clamp only the
+  // band-direction half-size to half a pixel (see the rasterization comment in
+  // the hot loop below); we leave the value-direction half-size alone so near-
+  // zero values stay near-zero instead of bleeding past the baseline.
+  layout?: 'vertical' | 'horizontal';
 }
 
 export interface WebGLBarLikePlotData {
@@ -167,6 +172,8 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
       const seriesId = processed.seriesId;
       const data = processed.data;
       const dataLength = data.length;
+      // In horizontal layout the band direction is y; otherwise it's x.
+      const bandIsY = processed.layout === 'horizontal';
 
       for (let i = 0; i < dataLength; i += 1) {
         const bar = data[i];
@@ -186,12 +193,14 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
 
         const halfW = w * 0.5;
         const halfH = h * 0.5;
-        // Clamp the rasterized half-size to half a pixel. Otherwise the quad
-        // can fall entirely between two pixel centers and the bar gets culled
-        // by the rasterizer, creating moiré patterns when the user zooms out
-        // to a span where multiple bars share a pixel column.
-        const renderHalfW = halfW < 0.5 ? 0.5 : halfW;
-        const renderHalfH = halfH < 0.5 ? 0.5 : halfH;
+        // Clamp the rasterized half-size in the band direction to half a
+        // pixel. Otherwise the quad can fall entirely between two pixel
+        // centers and the bar gets culled by the rasterizer, creating moire
+        // patterns when the user zooms out to a span where multiple bars
+        // share a pixel column. The value direction stays untouched so a bar
+        // representing a near-zero value doesn't bleed past the baseline.
+        const renderHalfW = !bandIsY && halfW < 0.5 ? 0.5 : halfW;
+        const renderHalfH = bandIsY && halfH < 0.5 ? 0.5 : halfH;
 
         const c2 = cursor * 2;
         centers[c2] = bar.x + halfW - drawingAreaLeft;
