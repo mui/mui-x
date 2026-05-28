@@ -113,6 +113,10 @@ export function FormContent(props: FormContentProps) {
   const recurringEventsPlugin = useStore(store, schedulerOtherSelectors.recurringEventsPlugin);
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const showRecurrence = useStore(store, schedulerOtherSelectors.areRecurringEventsAvailable);
+  const shouldEventRequireResource = useStore(
+    store,
+    schedulerOtherSelectors.shouldEventRequireResource,
+  );
 
   // Optional renderer hooks
   const { recurrenceTab: RecurrenceTabRenderer } = useEventDialogOptionalRenderers();
@@ -170,6 +174,11 @@ export function FormContent(props: FormContentProps) {
     const err = validateRange(adapter, start, end, controlled.allDay);
     if (err) {
       setErrors({ [err.field]: localeText.startDateAfterEndDateError });
+      return;
+    }
+
+    if (shouldEventRequireResource && controlled.resourceId === null) {
+      setErrors({ resource: localeText.requiredResourceError });
       return;
     }
 
@@ -258,6 +267,7 @@ export function FormContent(props: FormContentProps) {
                 readOnly: isPropertyReadOnly('title'),
                 'aria-label': localeText.eventTitleAriaLabel,
               },
+              formHelperText: { role: 'alert' },
             }}
             error={!!errors.title}
             helperText={errors.title}
