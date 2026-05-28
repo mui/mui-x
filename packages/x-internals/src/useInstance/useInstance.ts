@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import { useOnMount } from '@base-ui/utils/useOnMount';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 
