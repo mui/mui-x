@@ -59,17 +59,17 @@ This property defaults to 0 and is only available for ordinal axes, that is, axe
 ### Responsive tick adjustment
 
 :::warning
-This feature is experimental and may change in a future release. Opt in via the `experimentalFeatures.responsiveTickAdjustment` prop on any cartesian chart.
+This feature is experimental—not because its behavior is unstable, but because enabling it by default would change the look of existing charts. It's opt-in for now and is expected to become the default in a future major release.
 :::
 
-Enable `responsiveTickAdjustment` to let ordinal axes (`band` and `point` scales) thin out ticks automatically based on the chart's rendered size, so labels don't pile up on narrow charts.
+Enable `responsiveTickAdjustment` on bar-like charts (BarChart, BarChartPro, BarChartPremium, and any composition with `bar` or `rangeBar` series) to let ordinal axes (`band` and `point` scales) thin out ticks automatically based on the chart's rendered size, so labels don't pile up on narrow charts.
 
 The feature applies a 50-pixel default `tickSpacing` derived from the drawing area. It never overrides an explicit `tickSpacing`, `tickNumber`, or `tickInterval` set by your code—continuous axes are already size-aware through their default `tickNumber`.
 
 ```jsx
 <BarChart
-  xAxis={[{ data: days, scaleType: 'band' }]}
-  series={[{ data }]}
+  xAxis={[{ data: produce, scaleType: 'band' }]}
+  series={[{ data: sales }]}
   experimentalFeatures={{ responsiveTickAdjustment: true }}
 />
 ```
