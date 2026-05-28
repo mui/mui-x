@@ -6,7 +6,7 @@ import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 interface Disposable {
   /**
    * `useEffect`-style mount hook: invoked once on mount.
-   * @returns a cleanup function that disposes the instance synchronously.
+   * @returns {() => void} a cleanup function that disposes the instance synchronously.
    */
   disposeEffect: () => () => void;
 }
@@ -15,7 +15,7 @@ interface Disposable {
  * Production variant: lazily creates the instance on first render and wires
  * `disposeEffect` to the mount/unmount lifecycle. No StrictMode detection is
  * needed because StrictMode's double-mount only happens in development.
- * @returns the lazily-created instance.
+ * @returns {T} the lazily-created instance.
  */
 function useInstanceProduction<T extends Disposable>(factory: () => T): T {
   const instance = useRefWithInit(factory).current;
@@ -30,7 +30,7 @@ function useInstanceProduction<T extends Disposable>(factory: () => T): T {
  * means the mount→unmount→mount cycle is active and we must skip the cleanup
  * to keep the same instance alive across it. Dev-only trade-off: a real
  * unmount under `<StrictMode>` will also skip dispose.
- * @returns the lazily-created instance.
+ * @returns {T} the lazily-created instance.
  */
 function useInstanceDevelopment<T extends Disposable>(factory: () => T): T {
   const instance = useRefWithInit(factory).current;
