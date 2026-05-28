@@ -1,3 +1,4 @@
+import BezierEasing from 'bezier-easing';
 import { EPSILON } from '../../utils/epsilon';
 import type { CurveType } from '../../models/curve';
 import { getCurveFactory } from '../../internals/getCurve';
@@ -94,25 +95,36 @@ function cubicBezierCoeffs(
 }
 
 /**
- * Find parameter t such that the segment's x(t) ≈ targetX
+ * Evaluate y on a segment at the given x.
+ *
+ * Line segments are interpolated linearly. Bezier segments are normalized so
+ * their endpoints become (0, 0) and (1, 1), passed to `bezier-easing`, and
+ * the result is mapped back to pixel space.
+ *
+ * Some curve types produce control points that fall outside the segment's x
+ * range. `bezier-easing` cannot accept those, so the function falls back to
+ * linear interpolation in that case. The only caller is hit-detection, where
+ * that approximation is fine.
  */
-function findTForX(segment: CurveSegment, targetX: number): number {
+function evaluateSegmentYAtX(segment: CurveSegment, targetX: number): number {
+  const dx = segment.x1 - segment.x0;
+  if (dx === 0) {
+    return segment.y0;
+  }
+  const dy = segment.y1 - segment.y0;
   if (!isBezierSegment(segment)) {
-    // Linear segment.
-    const dx = segment.x1 - segment.x0;
-    return dx === 0 ? 0 : (targetX - segment.x0) / dx;
+    return segment.y0 + (dy * (targetX - segment.x0)) / dx;
   }
-  const xBezierCoeffs = cubicBezierCoeffs(segment.x0, segment.cpx1, segment.cpx2, segment.x1);
-
-  const polyToSolve: [number, number, number, number] = [...xBezierCoeffs];
-  polyToSolve[3] -= targetX;
-
-  const roots = cubicRoots(polyToSolve);
-  if (roots.length > 0) {
-    return roots[0];
+  const nx1 = (segment.cpx1 - segment.x0) / dx;
+  const nx2 = (segment.cpx2 - segment.x0) / dx;
+  if (nx1 < 0 || nx1 > 1 || nx2 < 0 || nx2 > 1) {
+    return segment.y0 + (dy * (targetX - segment.x0)) / dx;
   }
-
-  return -1;
+  const ny1 = dy === 0 ? 0 : (segment.cpy1 - segment.y0) / dy;
+  const ny2 = dy === 0 ? 0 : (segment.cpy2 - segment.y0) / dy;
+  const ease = BezierEasing(nx1, ny1, nx2, ny2);
+  const nt = (targetX - segment.x0) / dx;
+  return segment.y0 + dy * ease(nt);
 }
 
 /**
@@ -233,8 +245,7 @@ export function evaluateCurveY(
     const xMax = Math.max(segment.x0, segment.x1);
 
     if (targetX >= xMin && targetX <= xMax) {
-      const t = findTForX(segment, targetX);
-      return evaluateSegmentY(segment, t);
+      return evaluateSegmentYAtX(segment, targetX);
     }
   }
 
