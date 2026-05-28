@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { createRenderer, screen } from '@mui/internal-test-utils';
+import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '../adapters/chatAdapter';
 import type { ChatMessage } from '../types/chat-entities';
 import { ChatRoot } from '../chat/ChatRoot';
 import { ChatVariantProvider } from '../chat/internals/ChatVariantContext';
+import { useChatStore } from '../hooks/useChatStore';
 import type { MessageActionsProps } from './MessageActions';
 import { MessageActions } from './MessageActions';
 import { MessageAuthorLabel } from './MessageAuthorLabel';
@@ -19,6 +20,12 @@ import { MessageRoot } from './MessageRoot';
 import { createToolPartRenderer } from './parts/ToolPart';
 
 const { render } = createRenderer();
+
+let storeRef: ReturnType<typeof useChatStore> | null = null;
+function StoreCapture() {
+  storeRef = useChatStore();
+  return null;
+}
 
 function createAdapter(): ChatAdapter {
   return {
@@ -330,7 +337,7 @@ describe('MessageRoot', () => {
       'https://example.com/avatar.png',
     );
     expect(screen.getByText('Hello world')).not.to.equal(null);
-    expect(screen.getByText('Thoughts')).not.to.equal(null);
+    expect(screen.getByText('Reasoning')).not.to.equal(null);
     expect(screen.getByText('search')).not.to.equal(null);
     expect(screen.getByText('dynamic-search')).not.to.equal(null);
     expect(screen.getByText('spec.pdf')).not.to.equal(null);
@@ -402,6 +409,25 @@ describe('MessageRoot', () => {
     expect(screen.getByText('Bearbeitet')).not.to.equal(null);
   });
 
+  it('prefers roleDisplayNames over locale-driven author fallback labels', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[{ id: 'm-author', role: 'assistant', parts: [] }]}
+        roleDisplayNames={{ assistant: 'Support bot' }}
+      >
+        <ChatVariantProvider variant="compact">
+          <MessageRoot messageId="m-author">
+            <MessageAuthorLabel />
+          </MessageRoot>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByText('Support bot')).not.to.equal(null);
+    expect(screen.queryByText('Assistant')).to.equal(null);
+  });
+
   it('supports replacing all compound root slots and passes ownerState through them', () => {
     render(
       <ChatRoot adapter={createAdapter()} initialMessages={[fullMessage]}>
@@ -471,6 +497,31 @@ describe('MessageRoot', () => {
         </MessageRoot>
       </ChatRoot>,
     );
+
+    expect(screen.getByText('Error')).not.to.equal(null);
+  });
+
+  it('keeps the "Error" status label when a message-specific error is available', () => {
+    storeRef = null;
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[errorMessage]}>
+        <StoreCapture />
+        <MessageRoot messageId="m3">
+          <MessageMeta />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    act(() => {
+      storeRef!.setMessageError('m3', {
+        code: 'STREAM_ERROR',
+        message: 'Connection dropped',
+        source: 'stream',
+        recoverable: true,
+        retryable: true,
+        details: { messageId: 'm3' },
+      });
+    });
 
     expect(screen.getByText('Error')).not.to.equal(null);
   });

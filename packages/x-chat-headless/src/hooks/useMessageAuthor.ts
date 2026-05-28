@@ -18,6 +18,7 @@ export function useMessageAuthor(messageId: string) {
         user: localeText.messageAuthorUserLabel,
         assistant: localeText.messageAuthorAssistantLabel,
         system: localeText.messageAuthorSystemLabel,
+        ...store.parameters.roleDisplayNames,
       },
     }),
     [
