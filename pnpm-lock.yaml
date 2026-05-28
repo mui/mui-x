@@ -800,8 +800,8 @@ importers:
         specifier: workspace:^
         version: link:../x-internals/build
       bezier-easing:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^3.0.0
+        version: 3.0.0
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
@@ -830,9 +830,6 @@ importers:
       '@types/use-sync-external-store':
         specifier: 'catalog:'
         version: 1.5.0
-      bezier-easing-v3:
-        specifier: npm:bezier-easing@^3.0.0
-        version: bezier-easing@3.0.0
       csstype:
         specifier: 'catalog:'
         version: 3.2.3
@@ -6531,9 +6528,6 @@ packages:
 
   before-after-hook@4.0.0:
     resolution: {integrity: sha512-q6tR3RPqIB1pMiTRMFcZwuG5T8vwp+vUvEG0vuI6B+Rikh5BfPp2fQ82c925FOs+b0lcFQ8CFrL+KbilfZFhOQ==}
-
-  bezier-easing@2.1.0:
-    resolution: {integrity: sha512-gbIqZ/eslnUFC1tjEvtz0sgx+xTK20wDnYMIA27VA04R7w6xxXQPZDbibjA9DTWZRA2CXtwHykkVzlCaAJAZig==}
 
   bezier-easing@3.0.0:
     resolution: {integrity: sha512-lE85voPXiK99T8NHOfhaUqCZpJdP1gBbbTEvdBDdPB+phyvPZPNWalBe42eb6lKOYchP0qZrtBiRCARtT4edRQ==}
@@ -16264,8 +16258,6 @@ snapshots:
   before-after-hook@2.2.3: {}
 
   before-after-hook@4.0.0: {}
-
-  bezier-easing@2.1.0: {}
 
   bezier-easing@3.0.0: {}
 
