@@ -36,7 +36,10 @@
     "disableHitArea": { "type": { "name": "bool" } },
     "disableKeyboardNavigation": { "type": { "name": "bool" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ enablePositionBasedPointerInteraction?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ enablePositionBasedPointerInteraction?: bool, responsiveTickAdjustment?: bool }"
+      }
     },
     "height": { "type": { "name": "number" } },
     "hiddenItems": {

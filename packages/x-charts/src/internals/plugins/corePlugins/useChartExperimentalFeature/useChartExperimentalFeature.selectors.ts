@@ -14,9 +14,7 @@ import type {
  *   'responsiveTickAdjustment',
  * );
  */
-export const selectorChartExperimentalFeaturesState = <
-  K extends keyof ChartExperimentalFeatures,
->(
+export const selectorChartExperimentalFeaturesState = <K extends keyof ChartExperimentalFeatures>(
   state: ChartState<[UseChartExperimentalFeaturesSignature<ChartSeriesType>]>,
   featureName: K,
 ): ChartExperimentalFeatures[K] | undefined => state.experimentalFeatures?.[featureName];

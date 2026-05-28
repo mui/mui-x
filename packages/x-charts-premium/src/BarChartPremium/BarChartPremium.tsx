@@ -239,7 +239,9 @@ BarChartPremium.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    responsiveTickAdjustment: PropTypes.bool,
+  }),
   /**
    * Option to display a cartesian grid in the background.
    */

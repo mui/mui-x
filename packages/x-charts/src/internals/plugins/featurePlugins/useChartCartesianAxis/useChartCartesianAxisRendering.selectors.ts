@@ -56,8 +56,9 @@ import { selectorChartExperimentalFeaturesState } from '../../corePlugins/useCha
 /* `selectorChartExperimentalFeaturesState` takes a feature name as a
  * second argument, but `createSelectorMemoized` inputs are pure state
  * selectors. Wrap it to bind the feature name we care about. */
-const selectorResponsiveTickAdjustment = (state: Parameters<typeof selectorChartExperimentalFeaturesState>[0]) =>
-  selectorChartExperimentalFeaturesState(state, 'responsiveTickAdjustment');
+const selectorResponsiveTickAdjustment = (
+  state: Parameters<typeof selectorChartExperimentalFeaturesState>[0],
+) => selectorChartExperimentalFeaturesState(state, 'responsiveTickAdjustment');
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -464,7 +465,11 @@ export const selectorChartXAxis = createSelectorMemoized(
       domains,
       autoSizes,
       axesGap,
-      responsiveTickAdjustment: responsiveTickAdjustment ?? false,
+      /* Restrict the feature to bar-like charts: even when the flag is on,
+       * we only apply it if at least one bar or rangeBar series is present. */
+      responsiveTickAdjustment:
+        (responsiveTickAdjustment ?? false) &&
+        (formattedSeries.bar !== undefined || formattedSeries.rangeBar !== undefined),
     });
   },
 );
@@ -502,7 +507,11 @@ export const selectorChartYAxis = createSelectorMemoized(
       domains,
       autoSizes,
       axesGap,
-      responsiveTickAdjustment: responsiveTickAdjustment ?? false,
+      /* Restrict the feature to bar-like charts: even when the flag is on,
+       * we only apply it if at least one bar or rangeBar series is present. */
+      responsiveTickAdjustment:
+        (responsiveTickAdjustment ?? false) &&
+        (formattedSeries.bar !== undefined || formattedSeries.rangeBar !== undefined),
     });
   },
 );

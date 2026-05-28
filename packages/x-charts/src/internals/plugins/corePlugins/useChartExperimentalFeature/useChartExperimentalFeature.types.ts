@@ -15,7 +15,7 @@ interface LineExperimentalFeatures {
   enablePositionBasedPointerInteraction?: boolean;
 }
 
-interface CommonExperimentalFeatures {
+interface BarExperimentalFeatures {
   /**
    * Automatically reduces the number of ticks and tick labels on cartesian
    * axes based on the rendered drawing area size.
@@ -31,8 +31,16 @@ interface CommonExperimentalFeatures {
   responsiveTickAdjustment?: boolean;
 }
 
+/* True if any bar-like series (`bar` or `rangeBar`) is in `SeriesType`. */
+type HasBarLikeSeries<SeriesType extends ChartSeriesType> = 'bar' extends SeriesType
+  ? true
+  : 'rangeBar' extends SeriesType
+    ? true
+    : false;
+
 export type ChartExperimentalFeatures<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  CommonExperimentalFeatures & ('line' extends SeriesType ? LineExperimentalFeatures : {});
+  ('line' extends SeriesType ? LineExperimentalFeatures : {}) &
+    (HasBarLikeSeries<SeriesType> extends true ? BarExperimentalFeatures : {});
 
 export interface UseChartExperimentalFeaturesParameters<
   SeriesType extends ChartSeriesType = ChartSeriesType,
