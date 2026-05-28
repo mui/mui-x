@@ -229,6 +229,11 @@ catalogs:
 overrides:
   stylis: ^4.4.0
 
+patchedDependencies:
+  eslint-plugin-consistent-default-export-name@0.0.15:
+    hash: 3b477b1fe1acac94b495cfa37413ab9c93c30203146b4b108da935add29ef44a
+    path: patches/eslint-plugin-consistent-default-export-name@0.0.15.patch
+
 importers:
 
   .:
@@ -373,7 +378,7 @@ importers:
         version: 10.4.0(jiti@2.7.0)
       eslint-plugin-consistent-default-export-name:
         specifier: 0.0.15
-        version: 0.0.15
+        version: 0.0.15(patch_hash=3b477b1fe1acac94b495cfa37413ab9c93c30203146b4b108da935add29ef44a)
       eslint-plugin-jsdoc:
         specifier: 63.0.0
         version: 63.0.0(eslint@10.4.0(jiti@2.7.0))
@@ -16572,7 +16577,7 @@ snapshots:
       lodash.memoize: 4.1.2
       semver: 7.8.1
 
-  eslint-plugin-consistent-default-export-name@0.0.15:
+  eslint-plugin-consistent-default-export-name@0.0.15(patch_hash=3b477b1fe1acac94b495cfa37413ab9c93c30203146b4b108da935add29ef44a):
     dependencies:
       lodash: 4.17.21
       pkg-dir: 5.0.0
