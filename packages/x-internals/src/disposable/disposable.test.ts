@@ -1,5 +1,5 @@
 import { expect } from 'vitest';
-import { DisposableStack, AsyncDisposableStack } from './index';
+import { DisposableStack, AsyncDisposableStack, unwrapSuppressedErrors } from './index';
 
 describe('disposable', () => {
   describe('Symbol.dispose / Symbol.asyncDispose shim', () => {
@@ -34,6 +34,48 @@ describe('disposable', () => {
     it('should export a constructable AsyncDisposableStack', () => {
       expect(typeof AsyncDisposableStack).to.equal('function');
       expect(new AsyncDisposableStack().disposed).to.equal(false);
+    });
+  });
+
+  describe('unwrapSuppressedErrors', () => {
+    it('should return a single-element array for a non-SuppressedError', () => {
+      const error = new Error('plain');
+      expect(unwrapSuppressedErrors(error)).to.deep.equal([error]);
+    });
+
+    it('should flatten a SuppressedError chain outermost-first', () => {
+      const innermost = new Error('inner');
+      const middle = { error: new Error('middle'), suppressed: innermost };
+      const outer = { error: new Error('outer'), suppressed: middle };
+
+      const result = unwrapSuppressedErrors(outer);
+
+      expect(result).to.have.lengthOf(3);
+      expect((result[0] as Error).message).to.equal('outer');
+      expect((result[1] as Error).message).to.equal('middle');
+      expect((result[2] as Error).message).to.equal('inner');
+    });
+
+    it('should unwrap a real SuppressedError thrown by DisposableStack.dispose', () => {
+      const stack = new DisposableStack();
+      stack.defer(() => {
+        throw new Error('first');
+      });
+      stack.defer(() => {
+        throw new Error('second');
+      });
+
+      let caught: unknown;
+      try {
+        stack.dispose();
+      } catch (error) {
+        caught = error;
+      }
+
+      const result = unwrapSuppressedErrors(caught);
+      const messages = result.map((entry) => (entry as Error).message);
+      expect(messages).to.include('first');
+      expect(messages).to.include('second');
     });
   });
 });

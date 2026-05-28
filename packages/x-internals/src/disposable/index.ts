@@ -39,3 +39,24 @@ export const DisposableStack: typeof globalThis.DisposableStack =
 export const AsyncDisposableStack: typeof globalThis.AsyncDisposableStack =
   globalThis.AsyncDisposableStack ??
   (CoreJsAsyncDisposableStack as typeof globalThis.AsyncDisposableStack);
+
+/**
+ * Unwraps a `SuppressedError` chain (as produced by `DisposableStack.dispose()`
+ * when multiple disposers throw) into a flat list, outermost failure first.
+ * Returns `[error]` unchanged if it isn't a `SuppressedError`.
+ */
+export function unwrapSuppressedErrors(error: unknown): unknown[] {
+  const failures: unknown[] = [];
+  let current: unknown = error;
+  while (
+    typeof current === 'object' &&
+    current !== null &&
+    'error' in current &&
+    'suppressed' in current
+  ) {
+    failures.push((current as { error: unknown }).error);
+    current = (current as { suppressed: unknown }).suppressed;
+  }
+  failures.push(current);
+  return failures;
+}
