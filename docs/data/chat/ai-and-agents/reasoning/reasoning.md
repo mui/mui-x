@@ -108,7 +108,7 @@ const renderers: ChatPartRendererMap = {
     <Accordion defaultExpanded={false} sx={{ my: 1, bgcolor: 'action.hover' }}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="caption" color="text.secondary">
-          {part.state === 'streaming' ? 'Thinking...' : 'Reasoning'}
+          {part.state === 'streaming' ? 'Thinking…' : 'Reasoning'}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
@@ -137,7 +137,7 @@ function ReasoningPart({ part, showReasoning }) {
     <div style={{ opacity: 0.7, fontSize: '0.85em', fontStyle: 'italic' }}>
       <details>
         <summary>
-          {part.state === 'streaming' ? 'Thinking...' : 'Show reasoning'}
+          {part.state === 'streaming' ? 'Thinking…' : 'Show reasoning'}
         </summary>
         <p>{part.text}</p>
       </details>

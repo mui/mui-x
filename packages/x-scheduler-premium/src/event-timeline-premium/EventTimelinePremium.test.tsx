@@ -352,7 +352,7 @@ describe('<EventTimelinePremium />', () => {
     it('should call dataSource.getEvents when the timeline mounts', async () => {
       const dataSource = {
         getEvents: spy(async () => baseEvents),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
 
       render(
@@ -370,7 +370,7 @@ describe('<EventTimelinePremium />', () => {
     it('should call dataSource.getEvents again when navigating to a different range', async () => {
       const dataSource = {
         getEvents: spy(async () => baseEvents),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
 
       function Test() {
@@ -411,7 +411,7 @@ describe('<EventTimelinePremium />', () => {
           new Promise<SchedulerEvent[]>((resolve) => {
             resolveFetch = resolve;
           }),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
 
       render(
@@ -467,7 +467,7 @@ describe('<EventTimelinePremium />', () => {
     it('should render an error alert when dataSource.getEvents rejects', async () => {
       const dataSource = {
         getEvents: () => Promise.reject(new Error('Network error')),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
 
       render(
@@ -521,7 +521,7 @@ describe('<EventTimelinePremium />', () => {
           }
           return Promise.resolve(baseEvents);
         },
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
 
       function Test() {
@@ -571,7 +571,7 @@ describe('<EventTimelinePremium />', () => {
           }
           return baseEvents;
         },
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
 
       function Test() {
@@ -619,7 +619,7 @@ describe('<EventTimelinePremium />', () => {
       const nonError = { status: 500, toString: () => '500 Internal Server Error' };
       const dataSource = {
         getEvents: () => Promise.reject(nonError),
-        updateEvents: async () => ({ success: true }),
+        persistEvents: async () => ({ success: true }),
       };
 
       render(

@@ -5,16 +5,20 @@ import { type CurveType, type SeriesId } from '@mui/x-charts/models';
 import { type RadialLinePoint } from './useRadialLinePlotData';
 import { useItemHighlightState } from '../hooks';
 
-export interface RadialLineProps extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'points'> {
+export interface RadialLineOrAreaProps extends Omit<
+  React.SVGProps<SVGPathElement>,
+  'ref' | 'points'
+> {
   seriesId: SeriesId;
   color: string;
   hidden?: boolean;
-  points: RadialLinePoint[];
   curve?: CurveType;
+  points: RadialLinePoint[];
+  closePath?: boolean;
 }
 
-function RadialLine(props: RadialLineProps) {
-  const { seriesId, color, hidden, points, curve, ...other } = props;
+function RadialLine(props: RadialLineOrAreaProps) {
+  const { seriesId, color, hidden, points, curve, closePath, ...other } = props;
 
   const identifier = React.useMemo(() => ({ type: 'radialLine' as const, seriesId }), [seriesId]);
 
@@ -27,7 +31,7 @@ function RadialLine(props: RadialLineProps) {
     d3LineRadial<RadialLinePoint>()
       .angle((p) => p.angle)
       .radius((p) => p.radius)
-      .curve(getCurveFactory(curve))(points) || '';
+      .curve(getCurveFactory(curve))(closePath ? [...points, points[0]] : points) || '';
 
   const fadedOpacity = isFaded ? 0.3 : 1;
   return (

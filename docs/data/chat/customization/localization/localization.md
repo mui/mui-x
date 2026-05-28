@@ -76,7 +76,7 @@ This is useful when building custom slot components that need to access localize
 | `messageEditedLabel`                   | `"Edited"`               | Edited message indicator          |
 | `messageDeletedLabel`                  | `"Deleted"`              | Deleted message indicator         |
 | `messageReasoningLabel`                | `"Reasoning"`            | Reasoning part label              |
-| `messageReasoningStreamingLabel`       | `"Thinking..."`          | Reasoning part streaming label    |
+| `messageReasoningStreamingLabel`       | `"Thinking…"`            | Reasoning part streaming label    |
 | `messageToolInputLabel`                | `"Input"`                | Tool input label                  |
 | `messageToolOutputLabel`               | `"Output"`               | Tool output label                 |
 | `messageToolApproveButtonLabel`        | `"Approve"`              | Tool approval button              |
@@ -89,7 +89,7 @@ This is useful when building custom slot components that need to access localize
 | `scrollToBottomLabel`                  | `"Scroll to bottom"`     | Scroll-to-bottom affordance label |
 | `threadNoMessagesLabel`                | `"No messages yet"`      | Empty thread state                |
 | `genericErrorLabel`                    | `"Something went wrong"` | Generic error message             |
-| `loadingLabel`                         | `"Loading..."`           | Loading state label               |
+| `loadingLabel`                         | `"Loading…"`             | Loading state label               |
 | `suggestionsLabel`                     | `"Suggested prompts"`    | Suggestions section label         |
 | `messageListLabel`                     | `"Message log"`          | Message list aria-label           |
 | `messageLabel`                         | `"Message"`              | Individual message aria-label     |
@@ -98,14 +98,14 @@ This is useful when building custom slot components that need to access localize
 
 These keys accept parameters and return formatted strings:
 
-| Key                            | Signature                                    | Default behavior                                               |
-| :----------------------------- | :------------------------------------------- | :------------------------------------------------------------- |
-| `messageStatusLabel`           | `(status: ChatMessageStatus) => string`      | Maps status to human-readable label                            |
-| `toolStateLabel`               | `(state: ChatToolInvocationState) => string` | Maps tool state to label (for example, "Running...", "Failed") |
-| `messageTimestampLabel`        | `(dateTime: string) => string`               | Formats to `HH:MM` using `toLocaleTimeString`                  |
-| `conversationTimestampLabel`   | `(dateTime: string) => string`               | Time for today, `MMM DD` for older dates                       |
-| `typingIndicatorLabel`         | `(users: ChatLocaleTypingUser[]) => string`  | `"Alice is typing"` or `"Alice, Bob are typing"`               |
-| `scrollToBottomWithCountLabel` | `(unseenCount: number) => string`            | `"Scroll to bottom, N new messages"`                           |
+| Key                            | Signature                                    | Default behavior                                             |
+| :----------------------------- | :------------------------------------------- | :----------------------------------------------------------- |
+| `messageStatusLabel`           | `(status: ChatMessageStatus) => string`      | Maps status to human-readable label                          |
+| `toolStateLabel`               | `(state: ChatToolInvocationState) => string` | Maps tool state to label (for example, "Running…", "Failed") |
+| `messageTimestampLabel`        | `(dateTime: string) => string`               | Formats to `HH:MM` using `toLocaleTimeString`                |
+| `conversationTimestampLabel`   | `(dateTime: string) => string`               | Time for today, `MMM DD` for older dates                     |
+| `typingIndicatorLabel`         | `(users: ChatLocaleTypingUser[]) => string`  | `"Alice is typing"` or `"Alice, Bob are typing"`             |
+| `scrollToBottomWithCountLabel` | `(unseenCount: number) => string`            | `"Scroll to bottom, N new messages"`                         |
 
 ### Message status labels
 
@@ -127,10 +127,10 @@ The `toolStateLabel` function maps from `ChatToolInvocationState`:
 
 | State                | Default label         |
 | :------------------- | :-------------------- |
-| `input-streaming`    | `"Running..."`        |
-| `input-available`    | `"Running..."`        |
+| `input-streaming`    | `"Running…"`          |
+| `input-available`    | `"Running…"`          |
 | `approval-requested` | `"Awaiting approval"` |
-| `approval-responded` | `"Running..."`        |
+| `approval-responded` | `"Running…"`          |
 | `output-available`   | `"Completed"`         |
 | `output-error`       | `"Failed"`            |
 | `output-denied`      | `"Denied"`            |
@@ -145,13 +145,13 @@ const frenchLocale = {
   scrollToBottomLabel: 'Aller en bas',
   threadNoMessagesLabel: 'Aucun message',
   genericErrorLabel: 'Une erreur est survenue',
-  loadingLabel: 'Chargement...',
+  loadingLabel: 'Chargement…',
   retryButtonLabel: 'R\u00e9essayer',
   unreadMarkerLabel: 'Nouveaux messages',
   typingIndicatorLabel: (users) => {
     const names = users.map((u) => u.displayName ?? u.id).join(', ');
-    if (users.length === 1) return `${names} \u00e9crit...`;
-    return `${names} \u00e9crivent...`;
+    if (users.length === 1) return `${names} \u00e9crit…`;
+    return `${names} \u00e9crivent…`;
   },
   messageTimestampLabel: (dateTime) => {
     const d = new Date(dateTime);

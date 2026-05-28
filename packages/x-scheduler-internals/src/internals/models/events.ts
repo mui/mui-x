@@ -1,28 +1,27 @@
-import { SchedulerEventId, SchedulerEventUpdatedProperties } from '../../models';
+import { SchedulerEventId } from '../../models';
 
-interface SchedulerEventLookup {
+interface SchedulerEventLookup<TEvent extends object> {
   /**
-   * Fired after events are updated (created, updated, or deleted).
-   * Premium plugins can subscribe to this event to sync caches.
+   * Fired after events are created, updated or deleted.
+   * `created` and `updated` carry full event objects; `deleted` carries only ids.
    */
   eventsUpdated: {
     parameters: {
       deleted: SchedulerEventId[];
-      updated: Map<SchedulerEventId, SchedulerEventUpdatedProperties>;
-      created: SchedulerEventId[];
-      newEvents: any[];
+      updated: TEvent[];
+      created: TEvent[];
+      newEvents: TEvent[];
     };
   };
 }
 
-export type SchedulerEvents = keyof SchedulerEventLookup;
+export type SchedulerEvents = keyof SchedulerEventLookup<object>;
 
-export type SchedulerEventListener<E extends SchedulerEvents> = (
-  params: SchedulerEventParameters<E>,
+export type SchedulerEventListener<TEvent extends object, E extends SchedulerEvents> = (
+  params: SchedulerEventParameters<TEvent, E>,
 ) => void;
 
-export type SchedulerEventParameters<E extends SchedulerEvents> = SchedulerEventLookup[E] extends {
-  parameters: infer P;
-}
-  ? P
-  : undefined;
+export type SchedulerEventParameters<
+  TEvent extends object,
+  E extends SchedulerEvents,
+> = SchedulerEventLookup<TEvent>[E] extends { parameters: infer P } ? P : undefined;

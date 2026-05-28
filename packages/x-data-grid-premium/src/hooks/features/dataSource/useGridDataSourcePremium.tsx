@@ -201,7 +201,24 @@ See [server-side pivoting](https://mui.com/x/react-data-grid/server-side-data/pi
   );
 
   const handleRowGroupingModelChange = React.useCallback(() => {
+    // Clear the rows on every grouping model change to match the pre-fix behavior on
+    // non-standard strategies (e.g. lazy loading) where `setRows([])` is required to
+    // reset the existing grouping state.
     apiRef.current.setRows([]);
+    // The event listener is wired regardless of the active strategy
+    // (see `runIf(!pivotActive && !!props.dataSource, ...)` below), so we have to gate the
+    // `setLoading(true)` here. `fetchRows` only clears the loading flag when a standard
+    // strategy is active, and we don't want to leave the overlay stuck on lazy-loading or
+    // other non-standard strategies. Order matters too: `setRows([])` above rebuilds
+    // `state.rows` from `props.loading`, so the `setLoading(true)` call must come after
+    // it to survive the rebuild.
+    const currentStrategy = apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource);
+    const isStandardStrategyActive =
+      currentStrategy === DataSourceRowsUpdateStrategy.Default ||
+      currentStrategy === DataSourceRowsUpdateStrategy.GroupedData;
+    if (isStandardStrategyActive) {
+      apiRef.current.setLoading(true);
+    }
     stopPolling();
     debouncedFetchRows();
   }, [apiRef, debouncedFetchRows, stopPolling]);
