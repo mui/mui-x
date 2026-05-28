@@ -59,6 +59,14 @@ function useInstanceDevelopment<T extends Disposable>(factory: () => T): T {
 /**
  * Lazily creates an instance on first render and runs `instance.disposeEffect`
  * once on mount. The returned cleanup runs synchronously on unmount.
+ *
+ * `MUI_TEST_ENV` forces the development variant even when `NODE_ENV` resolves
+ * to `"production"` in the test bundle, so StrictMode handling stays active
+ * across CI environments where the NODE_ENV define may differ from the React
+ * build that's actually loaded.
  */
 export const useInstance =
-  process.env.NODE_ENV === 'production' ? useInstanceProduction : useInstanceDevelopment;
+  process.env.NODE_ENV === 'production' &&
+  typeof (globalThis as { MUI_TEST_ENV?: boolean }).MUI_TEST_ENV === 'undefined'
+    ? useInstanceProduction
+    : useInstanceDevelopment;
