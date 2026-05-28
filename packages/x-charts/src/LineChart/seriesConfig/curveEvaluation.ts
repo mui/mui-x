@@ -1,4 +1,5 @@
 import BezierEasing from 'bezier-easing';
+import { warnOnce } from '@mui/x-internals/warning';
 import { EPSILON } from '../../utils/epsilon';
 import type { CurveType } from '../../models/curve';
 import { getCurveFactory } from '../../internals/getCurve';
@@ -101,10 +102,8 @@ function cubicBezierCoeffs(
  * their endpoints become (0, 0) and (1, 1), passed to `bezier-easing`, and
  * the result is mapped back to pixel space.
  *
- * Some curve types produce control points that fall outside the segment's x
- * range. `bezier-easing` cannot accept those, so the function falls back to
- * linear interpolation in that case. The only caller is hit-detection, where
- * that approximation is fine.
+ * Warns once if a curve produces control points outside the segment's x
+ * range.
  */
 function evaluateSegmentYAtX(segment: CurveSegment, targetX: number): number {
   const dx = segment.x1 - segment.x0;
@@ -117,8 +116,12 @@ function evaluateSegmentYAtX(segment: CurveSegment, targetX: number): number {
   }
   const nx1 = (segment.cpx1 - segment.x0) / dx;
   const nx2 = (segment.cpx2 - segment.x0) / dx;
-  if (nx1 < 0 || nx1 > 1 || nx2 < 0 || nx2 > 1) {
-    return segment.y0 + (dy * (targetX - segment.x0)) / dx;
+  if (process.env.NODE_ENV !== 'production' && (nx1 < 0 || nx1 > 1 || nx2 < 0 || nx2 > 1)) {
+    warnOnce(
+      `MUI X Charts: a curve segment has control points outside its x range. ` +
+        `Please report the curve type and data at https://github.com/mui/mui-x/issues ` +
+        `so we can support it natively.`,
+    );
   }
   const ny1 = dy === 0 ? 0 : (segment.cpy1 - segment.y0) / dy;
   const ny2 = dy === 0 ? 0 : (segment.cpy2 - segment.y0) / dy;
