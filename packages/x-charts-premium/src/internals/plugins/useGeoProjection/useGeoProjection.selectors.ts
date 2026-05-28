@@ -20,6 +20,7 @@ import {
   type ExtendedFeatureCollection,
   type GeoProjection,
   type GeoPath,
+  type GeoConicProjection,
 } from '@mui/x-charts-vendor/d3-geo';
 import type {
   D3NamedProjection,
@@ -51,9 +52,7 @@ const PROJECTION_FACTORIES: Record<D3NamedProjection, (() => GeoProjection) | un
   naturalEarth1: geoNaturalEarth1,
 };
 
-const isConicProjection = (
-  projection: GeoProjection,
-): projection is GeoProjection & { parallels(parallels: [number, number]): GeoProjection } => {
+const isConicProjection = (projection: GeoProjection): projection is GeoConicProjection => {
   return 'parallels' in projection && typeof projection.parallels === 'function';
 };
 export const selectorChartGeoProjectionState = (
@@ -171,8 +170,8 @@ export const selectorChartProjection = createSelectorMemoized(
     }
     if (geoData) {
       if (isConicProjection(projection)) {
-        if (rotate && typeof projection.rotate === 'function') {
-          projection.rotate(rotate);
+        if (rotate) {
+          projection.rotate?.(rotate);
         }
 
         if (!scale) {
@@ -192,18 +191,18 @@ export const selectorChartProjection = createSelectorMemoized(
         return projection;
       }
 
-      if (rotate && typeof projection.rotate === 'function') {
-        projection.rotate(rotate);
+      if (rotate) {
+        projection.rotate?.(rotate);
       }
 
       if (scale) {
         projection.scale(scale);
-        projection.clipExtent([
+        projection.clipExtent?.([
           [drawingArea.left, drawingArea.top],
           [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],
         ]);
       } else {
-        projection.fitExtent(
+        projection.fitExtent?.(
           [
             [drawingArea.left, drawingArea.top],
             [drawingArea.left + drawingArea.width, drawingArea.top + drawingArea.height],

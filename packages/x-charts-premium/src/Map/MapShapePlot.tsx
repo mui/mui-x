@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useZAxes } from '@mui/x-charts/hooks';
-
 import { useGeoData } from '../hooks/useGeoData';
 import { useGeoPath } from '../hooks/useGeoPath';
 import { useMapShapeSeries } from '../hooks/useMapShapeSeries';

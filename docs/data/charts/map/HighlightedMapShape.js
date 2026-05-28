@@ -100,7 +100,7 @@ export default function HighlightedMapShape() {
           ]}
         >
           <ChartsSurface>
-            <GeoDataPlot fill="#86868644" stroke="#3a3a3a" strokeWidth={0.5} />
+            <GeoDataPlot fill="#f5f5f5" stroke="#bdbdbd" />
             <MapShapePlot />
           </ChartsSurface>
           <ChartsTooltip trigger="item" />
