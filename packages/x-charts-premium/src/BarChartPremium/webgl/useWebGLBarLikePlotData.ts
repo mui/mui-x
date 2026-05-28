@@ -28,10 +28,8 @@ export interface WebGLBarLikeItem {
 export interface WebGLBarLikeSeries<T extends WebGLBarLikeItem> {
   seriesId: SeriesId;
   data: readonly T[];
-  // The chart axis the bar widths come from. Used to clamp only the
-  // band-direction half-size to half a pixel (see the rasterization comment in
-  // the hot loop below); we leave the value-direction half-size alone so near-
-  // zero values stay near-zero instead of bleeding past the baseline.
+  // Drives whether the band axis is x (vertical layout) or y (horizontal). The
+  // dense-mode aggregation below uses this to fold bars along the band axis.
   layout?: 'vertical' | 'horizontal';
 }
 
@@ -175,6 +173,131 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
       // In horizontal layout the band direction is y; otherwise it's x.
       const bandIsY = processed.layout === 'horizontal';
 
+      // Find the first visible bar to size up the series. Bars in a band
+      // series share the same band pitch, so peeking at one is enough.
+      let probe: T | null = null;
+      for (let i = 0; i < dataLength; i += 1) {
+        const candidate = data[i];
+        if (
+          !candidate.hidden &&
+          candidate.value != null &&
+          candidate.width > 0 &&
+          candidate.height > 0
+        ) {
+          probe = candidate;
+          break;
+        }
+      }
+      if (probe === null) {
+        continue;
+      }
+
+      const bandPitch = bandIsY ? probe.height : probe.width;
+      // When the band pitch drops below a pixel, adjacent bars compete for
+      // the same pixel column. Per-bar rasterization produces moire patterns
+      // (the rasterizer drops bars whose quad falls between two pixel
+      // centers) and we can't show meaningful per-bar highlights at that
+      // density anyway. Collapse the series into a min/max envelope instead
+      // -- one rect per pixel column spanning the union of every bar that
+      // lands in that column, like an area chart.
+      if (bandPitch < 1) {
+        // Series-level highlight: dense mode loses individual dataIndex
+        // resolution, so query once with the probe and apply the result to
+        // every emitted column.
+        const seriesHighlight = getHighlightState({
+          type: highlightType,
+          seriesId,
+          dataIndex: probe.dataIndex,
+        });
+        const rgba = parseColor(probe.color);
+        let r = rgba[0];
+        let g = rgba[1];
+        let b = rgba[2];
+        let a = rgba[3];
+        if (seriesHighlight === 'highlighted') {
+          r = Math.min(255, r * HIGHLIGHTED_BRIGHTNESS);
+          g = Math.min(255, g * HIGHLIGHTED_BRIGHTNESS);
+          b = Math.min(255, b * HIGHLIGHTED_BRIGHTNESS);
+        } else if (seriesHighlight === 'faded') {
+          a *= FADED_OPACITY;
+        }
+
+        // Aggregate each bar into the pixel column its band-axis center
+        // falls in. `lowValues` / `highValues` store the value-axis bounds we
+        // need to emit one tall rect per occupied column. Two parallel
+        // arrays keyed by a Map of column -> slot index keep the hot path
+        // out of GC churn from per-entry object allocations.
+        const columnIndex = new Map<number, number>();
+        const lowValues: number[] = [];
+        const highValues: number[] = [];
+        for (let i = 0; i < dataLength; i += 1) {
+          const bar = data[i];
+          if (bar.hidden || bar.value == null || bar.width <= 0 || bar.height <= 0) {
+            continue;
+          }
+          const bandCenter = bandIsY ? bar.y + bar.height * 0.5 : bar.x + bar.width * 0.5;
+          const col = Math.floor(
+            bandCenter - (bandIsY ? drawingAreaTop : drawingAreaLeft),
+          );
+          const lo = bandIsY ? bar.x : bar.y;
+          const hi = bandIsY ? bar.x + bar.width : bar.y + bar.height;
+          const slot = columnIndex.get(col);
+          if (slot === undefined) {
+            columnIndex.set(col, lowValues.length);
+            lowValues.push(lo);
+            highValues.push(hi);
+          } else {
+            if (lo < lowValues[slot]) {
+              lowValues[slot] = lo;
+            }
+            if (hi > highValues[slot]) {
+              highValues[slot] = hi;
+            }
+          }
+        }
+
+        const slotEntries = columnIndex.entries();
+        let entry = slotEntries.next();
+        while (!entry.done) {
+          const [col, slot] = entry.value;
+          const lo = lowValues[slot];
+          const hi = highValues[slot];
+          const valueCenter = (lo + hi) * 0.5;
+          const valueHalf = (hi - lo) * 0.5;
+
+          const c2 = cursor * 2;
+          if (bandIsY) {
+            centers[c2] = valueCenter - drawingAreaLeft;
+            centers[c2 + 1] = col + 0.5;
+            halfSizes[c2] = valueHalf;
+            halfSizes[c2 + 1] = 0.5;
+          } else {
+            centers[c2] = col + 0.5;
+            centers[c2 + 1] = valueCenter - drawingAreaTop;
+            halfSizes[c2] = 0.5;
+            halfSizes[c2 + 1] = valueHalf;
+          }
+
+          const c4 = cursor * 4;
+          colors[c4] = r;
+          colors[c4 + 1] = g;
+          colors[c4 + 2] = b;
+          colors[c4 + 3] = a;
+
+          // Adjacent columns share edges in dense mode; rounded corners
+          // would only show at series start/end, not worth the bookkeeping.
+          cornerRadii[c4] = 0;
+          cornerRadii[c4 + 1] = 0;
+          cornerRadii[c4 + 2] = 0;
+          cornerRadii[c4 + 3] = 0;
+
+          cursor += 1;
+          entry = slotEntries.next();
+        }
+
+        continue;
+      }
+
       for (let i = 0; i < dataLength; i += 1) {
         const bar = data[i];
 
@@ -193,20 +316,12 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
 
         const halfW = w * 0.5;
         const halfH = h * 0.5;
-        // Clamp the rasterized half-size in the band direction to half a
-        // pixel. Otherwise the quad can fall entirely between two pixel
-        // centers and the bar gets culled by the rasterizer, creating moire
-        // patterns when the user zooms out to a span where multiple bars
-        // share a pixel column. The value direction stays untouched so a bar
-        // representing a near-zero value doesn't bleed past the baseline.
-        const renderHalfW = !bandIsY && halfW < 0.5 ? 0.5 : halfW;
-        const renderHalfH = bandIsY && halfH < 0.5 ? 0.5 : halfH;
 
         const c2 = cursor * 2;
         centers[c2] = bar.x + halfW - drawingAreaLeft;
         centers[c2 + 1] = bar.y + halfH - drawingAreaTop;
-        halfSizes[c2] = renderHalfW;
-        halfSizes[c2 + 1] = renderHalfH;
+        halfSizes[c2] = halfW;
+        halfSizes[c2 + 1] = halfH;
 
         const rgba = parseColor(bar.color);
         const c4 = cursor * 4;
