@@ -78,12 +78,18 @@ function ensureCapacity(pool: ArrayPool | null, maxCount: number): ArrayPool {
 // don't need a separate per-instance attribute on the GPU side.
 const HIGHLIGHTED_BRIGHTNESS = 1.2;
 const FADED_OPACITY = 0.3;
-// Band pitch (in CSS pixels) at which we switch from per-bar rendering to a
-// min/max envelope per pixel column. The visible moire kicks in before
-// adjacent bars fully overlap, because pixel-grid phase drift starts losing
-// bars as soon as their width approaches one pixel. Cutting over at two
-// pixels covers the transition.
-const DENSE_MODE_PITCH_PX = 1;
+// Natural barGapRatio gap below this threshold (in CSS pixels) is treated as
+// zero -- the bar's rendered band-axis half-size is expanded out to half the
+// pitch so adjacent quads meet exactly. Kills the dark hairlines the
+// rasterizer would otherwise leave behind when pixel centers happen to land
+// in a sub-pixel gap.
+const GAP_FILL_THRESHOLD_PX = 1;
+// Minimum rendered band-axis half-size. Any thinner and the quad can fall
+// between two pixel centers, getting culled by the rasterizer and producing
+// moire patterns at very high zoom-out. Combined with gap-fill, this turns
+// dense data into a continuous "last bar wins per pixel" stairstep instead
+// of striped culling.
+const MIN_BAND_HALF_SIZE_PX = 0.2;
 
 function setCornerRadii(
   radius: number,
@@ -214,123 +220,17 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
       } else {
         pitch = probe2.x - probe.x;
       }
-      // When the natural gap between adjacent bars is sub-pixel, the
-      // rasterizer can leave background pixels showing through where pixel
-      // centers happen to land in the gap, producing dark "flicker" lines as
-      // the user zooms. Pad each bar's rendered band-axis half-size out to
-      // half the pitch so adjacent quads meet exactly. Only kicks in when
-      // the gap is sub-pixel so larger gaps stay visible.
-      const fillSubPixelGap = pitch - barSize > 0 && pitch - barSize < 1;
-      const bandHalfFill = pitch * 0.5;
-      const bandPitch = barSize;
-      // When the band pitch drops below a couple of pixels, adjacent bars
-      // compete for the same pixel column. Per-bar rasterization produces
-      // moire patterns (the rasterizer drops bars whose quad falls between
-      // two pixel centers) and we can't show meaningful per-bar highlights
-      // at that density anyway. Collapse the series into a min/max envelope
-      // instead -- one rect per pixel column spanning the union of every
-      // bar that lands in that column, like an area chart.
-      if (bandPitch < DENSE_MODE_PITCH_PX) {
-        // Series-level highlight: dense mode loses individual dataIndex
-        // resolution, so query once with the probe and apply the result to
-        // every emitted column.
-        const seriesHighlight = getHighlightState({
-          type: highlightType,
-          seriesId,
-          dataIndex: probe.dataIndex,
-        });
-        const rgba = parseColor(probe.color);
-        let r = rgba[0];
-        let g = rgba[1];
-        let b = rgba[2];
-        let a = rgba[3];
-        if (seriesHighlight === 'highlighted') {
-          r = Math.min(255, r * HIGHLIGHTED_BRIGHTNESS);
-          g = Math.min(255, g * HIGHLIGHTED_BRIGHTNESS);
-          b = Math.min(255, b * HIGHLIGHTED_BRIGHTNESS);
-        } else if (seriesHighlight === 'faded') {
-          a *= FADED_OPACITY;
-        }
-
-        // Aggregate each bar into every pixel column its band-axis range
-        // overlaps. Bucketing on the center column alone leaves gaps when a
-        // bar straddles two columns -- the column the center misses ends up
-        // empty even though the bar physically covers it. The Map exists
-        // only to dedupe columns; the actual data lives in parallel arrays
-        // indexed by slot so emission can iterate a plain numeric range
-        // without re-entering the Map.
-        const columnSlot = new Map<number, number>();
-        const slotCols: number[] = [];
-        const slotLow: number[] = [];
-        const slotHigh: number[] = [];
-        for (let i = 0; i < dataLength; i += 1) {
-          const bar = data[i];
-          if (bar.hidden || bar.value == null || bar.width <= 0 || bar.height <= 0) {
-            continue;
-          }
-          const bandLo = bandIsY ? bar.y - drawingAreaTop : bar.x - drawingAreaLeft;
-          const bandHi = bandLo + (bandIsY ? bar.height : bar.width);
-          const lo = bandIsY ? bar.x : bar.y;
-          const hi = bandIsY ? bar.x + bar.width : bar.y + bar.height;
-          const startCol = Math.floor(bandLo);
-          // Subtract a hair so bars whose band-axis high lands exactly on a
-          // column boundary don't claim the next (empty) column.
-          const endCol = Math.floor(bandHi - 1e-6);
-          for (let col = startCol; col <= endCol; col += 1) {
-            const slot = columnSlot.get(col);
-            if (slot === undefined) {
-              columnSlot.set(col, slotCols.length);
-              slotCols.push(col);
-              slotLow.push(lo);
-              slotHigh.push(hi);
-            } else {
-              if (lo < slotLow[slot]) {
-                slotLow[slot] = lo;
-              }
-              if (hi > slotHigh[slot]) {
-                slotHigh[slot] = hi;
-              }
-            }
-          }
-        }
-
-        for (let k = 0; k < slotCols.length; k += 1) {
-          const col = slotCols[k];
-          const lo = slotLow[k];
-          const hi = slotHigh[k];
-          const valueCenter = (lo + hi) * 0.5;
-          const valueHalf = (hi - lo) * 0.5;
-
-          const c2 = cursor * 2;
-          if (bandIsY) {
-            centers[c2] = valueCenter - drawingAreaLeft;
-            centers[c2 + 1] = col + 0.5;
-            halfSizes[c2] = valueHalf;
-            halfSizes[c2 + 1] = 0.5;
-          } else {
-            centers[c2] = col + 0.5;
-            centers[c2 + 1] = valueCenter - drawingAreaTop;
-            halfSizes[c2] = 0.5;
-            halfSizes[c2 + 1] = valueHalf;
-          }
-
-          const c4 = cursor * 4;
-          colors[c4] = r;
-          colors[c4 + 1] = g;
-          colors[c4 + 2] = b;
-          colors[c4 + 3] = a;
-
-          // Adjacent columns share edges in dense mode; rounded corners
-          // would only show at series start/end, not worth the bookkeeping.
-          cornerRadii[c4] = 0;
-          cornerRadii[c4 + 1] = 0;
-          cornerRadii[c4 + 2] = 0;
-          cornerRadii[c4 + 3] = 0;
-
-          cursor += 1;
-        }
-
-        continue;
+      // Consider the natural barGapRatio gap to be zero when it's below the
+      // threshold. The bar's rendered band-axis half-size is padded out to
+      // half the pitch so adjacent quads meet exactly, killing the dark
+      // hairlines the rasterizer leaves where pixel centers land in the gap.
+      // The MIN_BAND_HALF_SIZE_PX floor keeps very thin bars from being
+      // dropped by the rasterizer at extreme zoom-out.
+      const gap = pitch - barSize;
+      const fillGap = gap > 0 && gap < GAP_FILL_THRESHOLD_PX;
+      let bandHalfRender = fillGap ? pitch * 0.5 : barSize * 0.5;
+      if (bandHalfRender < MIN_BAND_HALF_SIZE_PX) {
+        bandHalfRender = MIN_BAND_HALF_SIZE_PX;
       }
 
       for (let i = 0; i < dataLength; i += 1) {
@@ -351,18 +251,11 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
 
         const halfW = w * 0.5;
         const halfH = h * 0.5;
-        // Expand the band-axis half-size to swallow sub-pixel gaps between
-        // adjacent bars (see the `fillSubPixelGap` derivation above). The
-        // value-axis stays exact so near-zero bars don't get inflated.
-        let renderHalfW = halfW;
-        let renderHalfH = halfH;
-        if (fillSubPixelGap) {
-          if (bandIsY) {
-            renderHalfH = bandHalfFill;
-          } else {
-            renderHalfW = bandHalfFill;
-          }
-        }
+        // Apply the band-axis half-size derived once per series (see
+        // `bandHalfRender` above). Value axis stays exact so near-zero bars
+        // don't get inflated.
+        const renderHalfW = bandIsY ? halfW : bandHalfRender;
+        const renderHalfH = bandIsY ? bandHalfRender : halfH;
 
         const c2 = cursor * 2;
         centers[c2] = bar.x + halfW - drawingAreaLeft;
