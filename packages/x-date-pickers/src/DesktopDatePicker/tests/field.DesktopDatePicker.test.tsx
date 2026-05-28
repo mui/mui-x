@@ -103,13 +103,13 @@ describe('<DesktopDatePicker /> - Field', () => {
           },
         );
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         await view.user.keyboard('04');
-        await view.selectSectionAsync('day');
+        await view.selectSection('day');
         await view.user.keyboard('17');
         expectFieldValue(view.getSectionsContainer(), '04/17/YYYY');
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
         await view.user.keyboard('2023');
 
         await act(async () => {
@@ -120,7 +120,7 @@ describe('<DesktopDatePicker /> - Field', () => {
 
         expectFieldValue(view.getSectionsContainer(), '04/17/2023');
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
         await view.user.keyboard('2022');
         expectFieldValue(view.getSectionsContainer(), '04/17/2022');
       });

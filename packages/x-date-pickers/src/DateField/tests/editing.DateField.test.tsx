@@ -87,13 +87,13 @@ describe('<DateField /> - Editing', () => {
           },
         );
 
-        await view.selectSectionAsync('month');
+        await view.selectSection('month');
         await view.user.keyboard('04');
-        await view.selectSectionAsync('day');
+        await view.selectSection('day');
         await view.user.keyboard('17');
         expectFieldValue(view.getSectionsContainer(), '04/17/YYYY');
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
         await view.user.keyboard('2023');
 
         await act(async () => {
@@ -104,7 +104,7 @@ describe('<DateField /> - Editing', () => {
 
         expectFieldValue(view.getSectionsContainer(), '04/17/2023');
 
-        await view.selectSectionAsync('year');
+        await view.selectSection('year');
         await view.user.keyboard('2022');
         expectFieldValue(view.getSectionsContainer(), '04/17/2022');
       });
@@ -131,8 +131,8 @@ describe('<DateField /> - Editing', () => {
           },
         );
 
-        await view.selectSectionAsync('year');
-        view.pressKey(2, 'ArrowUp');
+        await view.selectSection('year');
+        await view.pressKey('ArrowUp');
 
         expectFieldValue(view.getSectionsContainer(), '06/04/2022');
       });
