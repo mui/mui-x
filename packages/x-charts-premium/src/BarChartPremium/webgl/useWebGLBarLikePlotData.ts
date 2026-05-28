@@ -83,7 +83,7 @@ const FADED_OPACITY = 0.3;
 // adjacent bars fully overlap, because pixel-grid phase drift starts losing
 // bars as soon as their width approaches one pixel. Cutting over at two
 // pixels covers the transition.
-const DENSE_MODE_PITCH_PX = 2;
+const DENSE_MODE_PITCH_PX = 1;
 
 function setCornerRadii(
   radius: number,
@@ -228,10 +228,13 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
           a *= FADED_OPACITY;
         }
 
-        // Aggregate each bar into the pixel column its band-axis center
-        // falls in. The Map exists only to dedupe columns; the actual data
-        // lives in parallel arrays indexed by slot so emission can iterate
-        // a plain numeric range without re-entering the Map.
+        // Aggregate each bar into every pixel column its band-axis range
+        // overlaps. Bucketing on the center column alone leaves gaps when a
+        // bar straddles two columns -- the column the center misses ends up
+        // empty even though the bar physically covers it. The Map exists
+        // only to dedupe columns; the actual data lives in parallel arrays
+        // indexed by slot so emission can iterate a plain numeric range
+        // without re-entering the Map.
         const columnSlot = new Map<number, number>();
         const slotCols: number[] = [];
         const slotLow: number[] = [];
@@ -241,24 +244,28 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
           if (bar.hidden || bar.value == null || bar.width <= 0 || bar.height <= 0) {
             continue;
           }
-          const bandCenter = bandIsY ? bar.y + bar.height * 0.5 : bar.x + bar.width * 0.5;
-          const col = Math.floor(
-            bandCenter - (bandIsY ? drawingAreaTop : drawingAreaLeft),
-          );
+          const bandLo = bandIsY ? bar.y - drawingAreaTop : bar.x - drawingAreaLeft;
+          const bandHi = bandLo + (bandIsY ? bar.height : bar.width);
           const lo = bandIsY ? bar.x : bar.y;
           const hi = bandIsY ? bar.x + bar.width : bar.y + bar.height;
-          const slot = columnSlot.get(col);
-          if (slot === undefined) {
-            columnSlot.set(col, slotCols.length);
-            slotCols.push(col);
-            slotLow.push(lo);
-            slotHigh.push(hi);
-          } else {
-            if (lo < slotLow[slot]) {
-              slotLow[slot] = lo;
-            }
-            if (hi > slotHigh[slot]) {
-              slotHigh[slot] = hi;
+          const startCol = Math.floor(bandLo);
+          // Subtract a hair so bars whose band-axis high lands exactly on a
+          // column boundary don't claim the next (empty) column.
+          const endCol = Math.floor(bandHi - 1e-6);
+          for (let col = startCol; col <= endCol; col += 1) {
+            const slot = columnSlot.get(col);
+            if (slot === undefined) {
+              columnSlot.set(col, slotCols.length);
+              slotCols.push(col);
+              slotLow.push(lo);
+              slotHigh.push(hi);
+            } else {
+              if (lo < slotLow[slot]) {
+                slotLow[slot] = lo;
+              }
+              if (hi > slotHigh[slot]) {
+                slotHigh[slot] = hi;
+              }
             }
           }
         }
