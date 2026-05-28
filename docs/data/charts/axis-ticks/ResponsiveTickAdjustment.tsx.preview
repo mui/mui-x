@@ -1,0 +1,9 @@
+<Box sx={{ width: `${widthPct}%` }}>
+  <BarChart
+    dataset={dataset}
+    xAxis={[{ dataKey: 'item', scaleType: 'band' }]}
+    series={[{ dataKey: 'sales', label: 'Units sold' }]}
+    height={300}
+    experimentalFeatures={{ responsiveTickAdjustment: enabled }}
+  />
+</Box>

@@ -15,8 +15,24 @@ interface LineExperimentalFeatures {
   enablePositionBasedPointerInteraction?: boolean;
 }
 
+interface CommonExperimentalFeatures {
+  /**
+   * Automatically reduces the number of ticks and tick labels on cartesian
+   * axes based on the rendered drawing area size.
+   *
+   * When enabled, ordinal axes (`band` / `point` scales) receive a default
+   * `tickSpacing` derived from the chart width/height, so a 12-month band
+   * axis on a 300px wide chart no longer renders 12 overlapping ticks.
+   *
+   * Continuous axes already pick a size-aware default `tickNumber`; this
+   * feature does not override explicit `tickNumber`, `tickSpacing`, or
+   * `tickInterval` values set by the consumer.
+   */
+  responsiveTickAdjustment?: boolean;
+}
+
 export type ChartExperimentalFeatures<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  'line' extends SeriesType ? LineExperimentalFeatures : {};
+  CommonExperimentalFeatures & ('line' extends SeriesType ? LineExperimentalFeatures : {});
 
 export interface UseChartExperimentalFeaturesParameters<
   SeriesType extends ChartSeriesType = ChartSeriesType,

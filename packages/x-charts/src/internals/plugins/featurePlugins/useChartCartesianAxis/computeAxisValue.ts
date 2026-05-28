@@ -81,6 +81,14 @@ export function resolveAxisSize(
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
+/**
+ * Default tick spacing (in pixels) applied to ordinal axes when the
+ * `responsiveTickAdjustment` experimental feature is enabled and the
+ * consumer hasn't set `tickSpacing` explicitly. Matches the 50px per tick
+ * heuristic used by `getDefaultTickNumber` for continuous axes.
+ */
+const RESPONSIVE_ORDINAL_TICK_SPACING = 50;
+
 export type ComputeResult<T extends ChartsAxisProps> = {
   axis: ComputedAxisConfig<T>;
   axisIds: AxisId[];
@@ -101,6 +109,13 @@ type ComputeCommonParams<SeriesType extends ChartSeriesType = ChartSeriesType> =
   >;
   autoSizes?: Record<AxisId, number>;
   axesGap?: number;
+  /**
+   * When true, ordinal axes (band/point) without an explicit `tickSpacing`
+   * receive a size-aware default so labels don't pile up on small charts.
+   * Continuous axes are left untouched (their default `tickNumber` is
+   * already size-aware via `getDefaultTickNumber`).
+   */
+  responsiveTickAdjustment?: boolean;
 };
 
 /**
@@ -166,6 +181,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
   domains,
   autoSizes,
   axesGap = 0,
+  responsiveTickAdjustment = false,
 }: ComputeCommonParams<SeriesType> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
@@ -206,6 +222,13 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
     if (isOrdinalScale(scale)) {
       const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
 
+      /* Responsive feature: for ordinal axes, default `tickSpacing` to a
+       * pixel-based value so labels/ticks thin out on small charts. Only
+       * applies when the consumer hasn't set `tickSpacing` themselves. */
+      const effectiveTickSpacing =
+        axis.tickSpacing ??
+        (responsiveTickAdjustment ? RESPONSIVE_ORDINAL_TICK_SPACING : undefined);
+
       if (isBandScale(scale) && isBandScaleConfig(axis)) {
         const desiredCategoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
         const ignoreGapRatios = shouldIgnoreGapRatios(scale, desiredCategoryGapRatio);
@@ -227,6 +250,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
            * discrepancy will hopefully not be noticeable. */
           scale: ignoreGapRatios ? scale.copy().padding(0) : scale,
           tickNumber,
+          tickSpacing: effectiveTickSpacing,
           colorScale:
             axis.colorMap &&
             (axis.colorMap.type === 'ordinal'
@@ -244,6 +268,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
           data,
           scale,
           tickNumber,
+          tickSpacing: effectiveTickSpacing,
           colorScale:
             axis.colorMap &&
             (axis.colorMap.type === 'ordinal'
