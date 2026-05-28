@@ -9,6 +9,7 @@ import {
   selectorProgressiveSeriesRevealedBatches,
   type UseProgressiveRenderingSignature,
 } from '../../internals/plugins/featurePlugins/useProgressiveRendering';
+import { selectorScatterSeriesRenderData } from './scatterRenderData.selectors';
 
 /**
  * @ignore - internal component.
@@ -16,12 +17,15 @@ import {
 function ScatterAsync(props: ScatterProps) {
   const { series, colorGetter, onItemClick, slots, slotProps, classes } = props;
 
-  const count = series.data.length;
-
   const store = useStore<[UseProgressiveRenderingSignature]>();
   const batchSize = store.use(selectorProgressiveBatchSize);
   const revealedBatches = store.use(selectorProgressiveSeriesRevealedBatches, series.id);
-  const nBatches = Math.max(1, Math.ceil(count / Math.max(1, batchSize)));
+  // Size batches by the number of *visible* points so that zooming in (which
+  // shrinks the filtered set in the selector) collapses the progressive wave
+  // into a single tick once everything fits in one batch.
+  const renderData = store.use(selectorScatterSeriesRenderData, series.id);
+  const count = renderData?.count ?? 0;
+  const nBatches = count === 0 ? 0 : Math.ceil(count / Math.max(1, batchSize));
 
   const batches: React.ReactNode[] = [];
   for (let b = 0; b < nBatches; b += 1) {

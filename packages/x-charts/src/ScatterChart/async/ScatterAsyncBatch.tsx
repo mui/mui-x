@@ -92,10 +92,11 @@ function ScatterAsyncBatchComponent(props: ScatterAsyncBatchProps) {
   const view = getScatterBatchView(renderData, start, end);
 
   const markers: React.ReactNode[] = [];
-  for (let local = 0; local < view.length / 2; local += 1) {
-    const dataIndex = start + local;
-    const x = view[local * 2];
-    const y = view[local * 2 + 1];
+  const nLocal = view.length / 3;
+  for (let local = 0; local < nLocal; local += 1) {
+    const x = view[local * 3];
+    const y = view[local * 3 + 1];
+    const dataIndex = view[local * 3 + 2];
 
     const dataPoint = { x, y, dataIndex, seriesId: series.id, type: 'scatter' as const };
     const highlightState = getHighlightState(dataPoint);
