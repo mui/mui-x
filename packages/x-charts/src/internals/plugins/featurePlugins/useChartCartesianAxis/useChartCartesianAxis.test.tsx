@@ -1,5 +1,6 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('useChartCartesianAxis', () => {
   const { render } = createRenderer();
@@ -8,7 +9,10 @@ describe('useChartCartesianAxis', () => {
     const manyCategories = Array.from({ length: 20 }, (_, i) => `cat-${i}`);
     const data = manyCategories.map((_, i) => i);
 
-    it('should render one tick per band when the feature is disabled', () => {
+    // In the browser, `getVisibleLabels` measures real label widths and hides
+    // the overlapping ones, so the "all 20 labels render" assertion only holds
+    // in jsdom where measurements are bypassed.
+    it.skipIf(!isJSDOM)('should render one tick per band when the feature is disabled', () => {
       render(
         <BarChart
           xAxis={[{ data: manyCategories, scaleType: 'band' }]}
@@ -42,7 +46,7 @@ describe('useChartCartesianAxis', () => {
       expect(tickLabels.length).toBeGreaterThan(0);
     });
 
-    it('should not override an explicit tickSpacing when the feature is enabled', () => {
+    it.skipIf(!isJSDOM)('should not override an explicit tickSpacing when the feature is enabled', () => {
       render(
         <BarChart
           xAxis={[{ data: manyCategories, scaleType: 'band', tickSpacing: 10 }]}
