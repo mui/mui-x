@@ -174,6 +174,32 @@ Charts use SVG for rendering, so you can customize them using the `sx` prop and 
 
 {{"demo": "SxStyling.js"}}
 
+### Text customization
+
+To customize axis tick labels and axis labels, use the `tickLabelStyle` and `labelStyle` properties on the axis configuration.
+These accept SVG style object.
+
+Charts only measure text from inline styles passed through these props.
+Any property that affects text size, such as `fontSize`, `fontWeight`, `fontFamily`, or `letterSpacing`, must be set through `tickLabelStyle` or `labelStyle`.
+
+:::warning
+Applying them through the `sx` prop, the `style` prop, or CSS class selectors renders the text at the new size but leaves the measurement at the original size, causing labels to overlap.
+
+Visual attributes such as `fill` don't affect measurement and can be set either way.
+:::
+
+```jsx
+// ❌ Layout is computed for the original size, labels overlap.
+<BarChart sx={{ [`.${axisClasses.tickLabel}`]: { fontSize: 18 } }} xAxis={[{ data }]} />
+
+// ✅ Layout is computed for the new size.
+<BarChart xAxis={[{ data, tickLabelStyle: { fontSize: 18 } }]} />
+```
+
+The demo below applies a custom font style to both axes and rotates the x-axis tick labels.
+
+{{"demo": "TextStyling.js"}}
+
 ### Drawing area background
 
 To set a background color in the drawing area, create an SVG `<rect>` element.
