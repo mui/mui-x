@@ -120,7 +120,7 @@ export const useGridInfiniteLoadingIntersection = (
           ref={triggerRef}
           // Force rerender on last row change to start observing the new trigger
           key={`trigger-${lastRowId}`}
-          role="presentation"
+          role="none"
         />
       );
     },

@@ -1,5 +1,6 @@
 import { type ScatterValueType } from '../../models';
 import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { incompleteDatasetKeysError } from '../../internals/incompleteDatasetKeysError';
 
 const seriesProcessor: SeriesProcessor<'scatter'> = (
   { series, seriesOrder },
@@ -15,12 +16,7 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
       );
 
       if (seriesData?.datasetKeys && missingKeys.length > 0) {
-        throw new Error(
-          `MUI X Charts: Scatter series with id="${seriesId}" has incomplete datasetKeys. ` +
-            `Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing. ` +
-            'Scatter plots require both "x" and "y" keys to map dataset values to coordinates. ' +
-            'Add the missing datasetKeys to the series configuration.',
-        );
+        incompleteDatasetKeysError('Scatter', seriesId, missingKeys);
       }
 
       let data: readonly ScatterValueType[];
@@ -28,15 +24,27 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
         data = dataset?.map(seriesData.valueGetter!) ?? [];
       } else if (datasetKeys) {
         data =
-          dataset?.map(
-            (d) =>
-              ({
-                x: d[datasetKeys.x] ?? null,
-                y: d[datasetKeys.y] ?? null,
-                z: datasetKeys.z && d[datasetKeys.z],
-                id: datasetKeys.id && d[datasetKeys.id],
-              }) as ScatterValueType,
-          ) ?? [];
+          dataset?.map((d) => {
+            const x = d[datasetKeys.x];
+            const y = d[datasetKeys.y];
+
+            const rep = { x, y } as ScatterValueType;
+
+            if (datasetKeys.colorValue !== undefined) {
+              rep.colorValue = d[datasetKeys.colorValue];
+            }
+            if (datasetKeys.sizeValue !== undefined) {
+              rep.sizeValue = d[datasetKeys.sizeValue];
+            }
+            if (datasetKeys.z !== undefined) {
+              rep.z = d[datasetKeys.z];
+            }
+            if (datasetKeys.id !== undefined) {
+              rep.id = d[datasetKeys.id] as string | number | undefined;
+            }
+
+            return rep;
+          }) ?? [];
       } else {
         data = seriesData.data ?? [];
       }

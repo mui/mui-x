@@ -19,6 +19,25 @@ describe('recurring-events/presets', () => {
         );
       }
     });
+
+    it('returns days starting on Monday when weekStartsOn=1', () => {
+      const visibleDate = adapter.date('2025-07-09T10:00:00Z', 'default'); // Wednesday
+      const days = getWeeklyDays(adapter, visibleDate, 1);
+
+      expect(days).to.have.length(7);
+      // Week starting Monday: MO TU WE TH FR SA SU
+      expect(days[0].code).to.equal('MO');
+      expect(days[6].code).to.equal('SU');
+    });
+
+    it('returns days starting on Sunday when weekStartsOn=0', () => {
+      const visibleDate = adapter.date('2025-07-09T10:00:00Z', 'default'); // Wednesday
+      const days = getWeeklyDays(adapter, visibleDate, 0);
+
+      expect(days).to.have.length(7);
+      expect(days[0].code).to.equal('SU');
+      expect(days[6].code).to.equal('SA');
+    });
   });
 
   describe('getMonthlyReference', () => {

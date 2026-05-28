@@ -199,7 +199,7 @@ EventTimelinePremium.propTypes = {
    */
   dataSource: PropTypes.shape({
     getEvents: PropTypes.func.isRequired,
-    updateEvents: PropTypes.func.isRequired,
+    persistEvents: PropTypes.func.isRequired,
   }),
   /**
    * The locale object from `date-fns` used to format dates.
@@ -215,6 +215,7 @@ EventTimelinePremium.propTypes = {
    */
   defaultPreferences: PropTypes.shape({
     ampm: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * The preset initially displayed in the timeline.
@@ -322,6 +323,7 @@ EventTimelinePremium.propTypes = {
    */
   preferences: PropTypes.shape({
     ampm: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * The preset currently displayed in the timeline.
