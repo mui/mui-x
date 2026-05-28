@@ -85,6 +85,7 @@
     "resourceColumnLabel": { "type": { "name": "string" } },
     "resourceModelStructure": { "type": { "name": "object" } },
     "resources": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "shouldEventRequireResource": { "type": { "name": "bool" }, "default": "true" },
     "showCurrentTimeIndicator": { "type": { "name": "bool" }, "default": "true" },
     "sx": {
       "type": {

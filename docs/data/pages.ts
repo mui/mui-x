@@ -714,6 +714,11 @@ const pages: MuiPage[] = [
             unstable: true,
           },
           {
+            pathname: '/x/react-charts/map',
+            plan: 'premium',
+            unstable: true,
+          },
+          {
             pathname: '/x/react-charts/#planned-charts',
             title: 'Future components',
             planned: true,
