@@ -476,8 +476,6 @@ export const selectorChartXAxis = createSelectorMemoized(
       domains,
       autoSizes,
       axesGap,
-      /* Restrict the feature to bar-like charts: even when the flag is on,
-       * we only apply it if at least one bar or rangeBar series is present. */
       responsiveTickAdjustment:
         (responsiveTickAdjustment ?? false) && hasBarLikeSeries(formattedSeries),
     });
@@ -517,8 +515,6 @@ export const selectorChartYAxis = createSelectorMemoized(
       domains,
       autoSizes,
       axesGap,
-      /* Restrict the feature to bar-like charts: even when the flag is on,
-       * we only apply it if at least one bar or rangeBar series is present. */
       responsiveTickAdjustment:
         (responsiveTickAdjustment ?? false) && hasBarLikeSeries(formattedSeries),
     });

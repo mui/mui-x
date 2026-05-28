@@ -17,16 +17,11 @@ interface LineExperimentalFeatures {
 
 interface BarExperimentalFeatures {
   /**
-   * Automatically reduces the number of ticks and tick labels on cartesian
-   * axes based on the rendered drawing area size.
+   * Automatically reduces the number of ticks and tick labels on ordinal axes
+   * (`band` / `point` scales) based on the rendered drawing area size.
    *
-   * When enabled, ordinal axes (`band` / `point` scales) receive a default
-   * `tickSpacing` derived from the chart width/height, so a 12-month band
-   * axis on a 300px wide chart no longer renders 12 overlapping ticks.
-   *
-   * Continuous axes already pick a size-aware default `tickNumber`; this
-   * feature does not override explicit `tickNumber`, `tickSpacing`, or
-   * `tickInterval` values set by the consumer.
+   * Explicit `tickNumber`, `tickSpacing`, or `tickInterval` values set by the
+   * consumer are not overridden.
    */
   responsiveTickAdjustment?: boolean;
 }
