@@ -85,15 +85,12 @@ export class SchedulerDataManager {
     this.maxQueuedRequests = options.maxQueuedRequests ?? MAX_QUEUED_REQUESTS;
     this.debounceMs = options.debounceMs ?? DEBOUNCE_MS;
 
-    // Registered in reverse of intended execution order: on dispose (LIFO)
-    // the manager stops accepting work, cancels its timers, then clears its
-    // bookkeeping.
     this.disposables.defer(() => {
+      this.cancelQueuedRequests();
+      this.timeoutManager.clearAll();
       this.pendingRequests.clear();
       this.settledRequests.clear();
     });
-    this.disposables.defer(() => this.timeoutManager.clearAll());
-    this.disposables.defer(() => this.cancelQueuedRequests());
   }
 
   /**
