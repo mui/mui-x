@@ -60,6 +60,17 @@ const selectorResponsiveTickAdjustment = (
   state: Parameters<typeof selectorChartExperimentalFeaturesState>[0],
 ) => selectorChartExperimentalFeaturesState(state, 'responsiveTickAdjustment');
 
+/**
+ * `rangeBar` is added to `ChartsSeriesConfig` via module augmentation in
+ * `@mui/x-charts-premium`, so the base `ProcessedSeries` type doesn't expose
+ * the key. Use indexed access through an untyped record to stay compatible
+ * with both packages.
+ */
+function hasBarLikeSeries(formattedSeries: object) {
+  const series = formattedSeries as Record<string, unknown>;
+  return series.bar !== undefined || series.rangeBar !== undefined;
+}
+
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
   zoom.forEach((zoomItem) => {
@@ -468,8 +479,7 @@ export const selectorChartXAxis = createSelectorMemoized(
       /* Restrict the feature to bar-like charts: even when the flag is on,
        * we only apply it if at least one bar or rangeBar series is present. */
       responsiveTickAdjustment:
-        (responsiveTickAdjustment ?? false) &&
-        (formattedSeries.bar !== undefined || formattedSeries.rangeBar !== undefined),
+        (responsiveTickAdjustment ?? false) && hasBarLikeSeries(formattedSeries),
     });
   },
 );
@@ -510,8 +520,7 @@ export const selectorChartYAxis = createSelectorMemoized(
       /* Restrict the feature to bar-like charts: even when the flag is on,
        * we only apply it if at least one bar or rangeBar series is present. */
       responsiveTickAdjustment:
-        (responsiveTickAdjustment ?? false) &&
-        (formattedSeries.bar !== undefined || formattedSeries.rangeBar !== undefined),
+        (responsiveTickAdjustment ?? false) && hasBarLikeSeries(formattedSeries),
     });
   },
 );
