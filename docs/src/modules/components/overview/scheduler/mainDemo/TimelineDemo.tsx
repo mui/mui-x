@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,6 +13,7 @@ import {
   DemoThemeSelector,
   SchedulerDemoThemeProvider,
 } from './DemoThemeSelector';
+import LicenseCard from '../LicenseCard';
 
 const presetOptions: { value: EventTimelinePremiumPreset; label: string }[] = [
   { value: 'dayAndHour', label: 'Time' },
@@ -34,64 +34,61 @@ export default function TimelineDemo() {
   };
 
   return (
-    <SchedulerDemoThemeProvider selectedTheme={selectedTheme}>
-      <Paper
-        elevation={0}
-        sx={{
-          height: 600,
-          width: '100%',
-          p: 1,
-          mb: 6,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 1,
-        }}
-      >
-        <Stack
-          direction="row"
-          sx={{
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: 1,
-          }}
-        >
-          <Select
-            aria-label="Timeline scale"
-            value={preset}
-            onChange={handlePresetChange}
-            size="small"
-            sx={{ width: 140 }}
-          >
-            {presetOptions.map(({ value, label }) => (
-              <MenuItem key={value} value={value}>
-                {label}
-              </MenuItem>
-            ))}
-          </Select>
-          <DemoThemeSelector
-            ariaLabel="Timeline demo theme"
-            selectedTheme={selectedTheme}
-            onThemeChange={(event) => {
-              setSelectedTheme(event.target.value as CustomThemeName);
+    <Stack>
+      <SchedulerDemoThemeProvider selectedTheme={selectedTheme}>
+        <Stack spacing={1} sx={{ height: 600, width: '100%', mb: 6 }}>
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              alignItems: 'center',
+              flexWrap: 'wrap',
             }}
-          />
-        </Stack>
+          >
+            <DemoThemeSelector
+              ariaLabel="Timeline demo theme"
+              selectedTheme={selectedTheme}
+              onThemeChange={(event) => {
+                setSelectedTheme(event.target.value as CustomThemeName);
+              }}
+            />
+            <Select
+              aria-label="Timeline scale"
+              value={preset}
+              onChange={handlePresetChange}
+              size="small"
+              sx={{ width: 140 }}
+            >
+              {presetOptions.map(({ value, label }) => (
+                <MenuItem key={value} value={value}>
+                  {label}
+                </MenuItem>
+              ))}
+            </Select>
+          </Stack>
 
-        <Box sx={{ minHeight: 0, flexGrow: 1 }}>
-          <EventTimelinePremium
-            apiRef={apiRef}
-            events={events}
-            onEventsChange={setEvents}
-            resources={timelineResources}
-            defaultVisibleDate={timelineDefaultVisibleDate}
-            preset={preset}
-            onPresetChange={setPreset}
-            areEventsResizable
-            areEventsDraggable
-          />
-        </Box>
-      </Paper>
-    </SchedulerDemoThemeProvider>
+          <Box sx={{ minHeight: 0, flexGrow: 1 }}>
+            <EventTimelinePremium
+              apiRef={apiRef}
+              events={events}
+              onEventsChange={setEvents}
+              resources={timelineResources}
+              defaultVisibleDate={timelineDefaultVisibleDate}
+              preset={preset}
+              onPresetChange={setPreset}
+              areEventsResizable
+              areEventsDraggable
+            />
+          </Box>
+        </Stack>
+      </SchedulerDemoThemeProvider>
+      <Stack direction="row" spacing={2} sx={{ flexDirection: { xs: 'column', md: 'row' }, mb: 6 }}>
+        <LicenseCard
+          plan="premium"
+          title="Premium-only component"
+          description="A horizontal, gantt-style view for representing events as continuous bars across resources. Included with any Scheduler Premium license, no separate purchase."
+        />
+      </Stack>
+    </Stack>
   );
 }
