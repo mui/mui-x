@@ -56,11 +56,31 @@ describe('<DateField /> - Editing', () => {
         expectFieldValue(view.getSectionsContainer(), '04 MMMM');
 
         await view.pressKey('S');
-        // // We reset the value displayed because the `onChange` callback did not update the controlled value.
+        // The controlled value did not change, but we keep the user's input visible
+        // so they can keep editing (e.g. the "Only update for valid values" pattern).
         expect(onChange.callCount).to.equal(1);
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 4));
         await waitFor(() => {
-          expectFieldValue(view.getSectionsContainer(), 'DD MMMM');
+          expectFieldValue(view.getSectionsContainer(), '04 Sep');
+        });
+      });
+
+      // Regression: https://github.com/mui/mui-x/issues/22113
+      it('should preserve already filled sections when the published date is rejected by the controlled value', async () => {
+        const view = renderWithProps({
+          value: null,
+          // No onChange handler: the controlled `value` stays null no matter what the field publishes.
+        });
+
+        await view.selectSection('month');
+        await view.user.keyboard('06');
+        await view.user.keyboard('15');
+        await view.user.keyboard('2025');
+
+        // Typing "2025" completes a valid date, which the field publishes.
+        // The controlled value did not update, but every section the user typed must remain.
+        await waitFor(() => {
+          expectFieldValue(view.getSectionsContainer(), '06/15/2025');
         });
       });
     },

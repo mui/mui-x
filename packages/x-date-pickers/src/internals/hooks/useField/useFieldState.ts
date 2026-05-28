@@ -356,7 +356,11 @@ export const useFieldState = <
           if (valueRef.current === value) {
             setState((prevState) => ({
               ...prevState,
-              sections: fieldValueManager.clearDateSections(state.sections, section),
+              // The published value was rejected (the controlled value did not change),
+              // so persist the user's input instead of clearing it.
+              // This lets patterns that filter out invalid values (see "Only update for valid values")
+              // keep partially typed sections visible while the user keeps editing.
+              sections: newSections,
               tempValueStrAndroid: null,
             }));
           }

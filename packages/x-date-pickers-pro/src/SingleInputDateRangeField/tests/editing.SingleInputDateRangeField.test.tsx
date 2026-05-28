@@ -129,12 +129,13 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         expectFieldValue(view.getSectionsContainer(), '04 MMMM – DD MMMM');
 
         await view.pressKey('S');
-        // // We reset the value displayed because the `onChange` callback did not update the controlled value.
+        // The controlled value did not change, but we keep the user's input visible
+        // so they can keep editing (e.g. the "Only update for valid values" pattern).
         expect(onChange.callCount).to.equal(1);
         expect(onChange.lastCall.firstArg[0]).toEqualDateTime(new Date(2022, 8, 4));
         expect(onChange.lastCall.firstArg[1]).to.equal(null);
         await waitFor(() => {
-          expectFieldValue(view.getSectionsContainer(), 'DD MMMM – DD MMMM');
+          expectFieldValue(view.getSectionsContainer(), '04 Sep – DD MMMM');
         });
       });
     },
