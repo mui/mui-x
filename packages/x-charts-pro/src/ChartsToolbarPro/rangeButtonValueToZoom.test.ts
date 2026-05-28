@@ -222,8 +222,8 @@ describe('rangeButtonValueToZoom', () => {
         [new Date(2024, 3, 1), new Date(2024, 8, 1)],
         ordinalDateParams,
       );
-      expect(result.start).to.be.closeTo((3 / 11) * 100, 0.1);
-      expect(result.end).to.be.closeTo((8 / 11) * 100, 0.1);
+      expect(result.start).to.be.closeTo((3 / 12) * 100, 0.1);
+      expect(result.end).to.be.closeTo((8 / 12) * 100, 0.1);
     });
 
     it('should clamp date range that starts before data', () => {
@@ -232,7 +232,7 @@ describe('rangeButtonValueToZoom', () => {
         ordinalDateParams,
       );
       expect(result.start).to.equal(0);
-      expect(result.end).to.be.closeTo((5 / 11) * 100, 0.1);
+      expect(result.end).to.be.closeTo((5 / 12) * 100, 0.1);
     });
 
     it('should clamp date range that ends after data', () => {
@@ -240,13 +240,13 @@ describe('rangeButtonValueToZoom', () => {
         [new Date(2024, 9, 1), new Date(2025, 6, 1)],
         ordinalDateParams,
       );
-      expect(result.start).to.be.closeTo((9 / 11) * 100, 0.1);
-      expect(result.end).to.equal(100);
+      expect(result.start).to.be.closeTo((9 / 12) * 100, 0.1);
+      expect(result.end).to.be.closeTo((11 / 12) * 100, 0.1);
     });
 
     it('should handle calendar interval { unit: "month", step: 3 }', () => {
       const result = rangeButtonValueToZoom({ unit: 'month', step: 3 }, ordinalDateParams);
-      expect(result.start).to.be.closeTo((8 / 11) * 100, 5);
+      expect(result.start).to.be.closeTo((8 / 12) * 100, 5);
       expect(result.end).to.equal(100);
     });
 
@@ -269,8 +269,8 @@ describe('rangeButtonValueToZoom', () => {
         ],
         domain: { min: 0, max: 4 },
       });
-      expect(result.start).to.be.closeTo((1 / 4) * 100, 0.1);
-      expect(result.end).to.be.closeTo((3 / 4) * 100, 0.1);
+      expect(result.start).to.be.closeTo((1 / 5) * 100, 0.1);
+      expect(result.end).to.be.closeTo((3 / 5) * 100, 0.1);
     });
 
     it('should work with date strings', () => {
@@ -279,8 +279,8 @@ describe('rangeButtonValueToZoom', () => {
         data: ['2024-01-01', '2024-04-01', '2024-07-01', '2024-10-01'],
         domain: { min: 0, max: 3 },
       });
-      expect(result.start).to.be.closeTo((1 / 3) * 100, 0.1);
-      expect(result.end).to.be.closeTo((2 / 3) * 100, 0.1);
+      expect(result.start).to.be.closeTo((1 / 4) * 100, 0.1);
+      expect(result.end).to.be.closeTo((2 / 4) * 100, 0.1);
     });
 
     it('should warn and fall back to continuous logic for non-date-like data', () => {
@@ -321,18 +321,19 @@ describe('rangeButtonValueToZoom', () => {
       domain: { min: 0, max: 5 },
     };
 
-    it('should match a string range to the matching axis value indices', () => {
+    it('should match a string range to the matching axis value indices on a band axis', () => {
       const result = rangeButtonValueToZoom(['Feb', 'May'], ordinalParams);
-      expect(result.start).to.be.closeTo((1 / 5) * 100, 0.1);
-      expect(result.end).to.be.closeTo((4 / 5) * 100, 0.1);
+      expect(result.start).to.be.closeTo((1 / 6) * 100, 0.1);
+      expect(result.end).to.be.closeTo((4 / 6) * 100, 0.1);
     });
 
-    it('should match the first and last categories', () => {
+    it('should match the first category and last band edge on a band axis', () => {
       const result = rangeButtonValueToZoom(['Jan', 'Jun'], ordinalParams);
-      expect(result).to.deep.equal({ start: 0, end: 100 });
+      expect(result.start).to.equal(0);
+      expect(result.end).to.be.closeTo((5 / 6) * 100, 0.1);
     });
 
-    it('should work on point axes', () => {
+    it('should work on point axes using maxIndex denominator', () => {
       const result = rangeButtonValueToZoom(['Mar', 'Apr'], {
         ...ordinalParams,
         scaleType: 'point',

@@ -134,37 +134,47 @@ export function rangeButtonValueToZoom(
   }
 
   const {
+    scaleType,
     domain: { min: domainMin, max: domainMax },
     data: ordinalData,
   } = params;
 
-  // String range — resolve each endpoint to its matching index on an ordinal axis.
-  if (Array.isArray(value) && (typeof value[0] === 'string' || typeof value[1] === 'string')) {
-    if (ordinalData) {
-      const startIndex = ordinalData.findIndex((item) => item === value[0]);
-      const endIndex = ordinalData.findIndex((item) => item === value[1]);
-      if (startIndex !== -1 && endIndex !== -1) {
-        const maxIndex = ordinalData.length - 1;
-        if (process.env.NODE_ENV !== 'production' && endIndex < startIndex) {
-          warnOnce([
-            'MUI X Charts: Range button received a range whose end value comes before its start value.',
-            'This produces an empty zoom range.',
-          ]);
-        }
+  // Ordinal axis range — resolve each endpoint to its matching value on the axis.
+  // Band/point axes can carry strings, numbers, or dates, so the match is by strict equality.
+  if (Array.isArray(value) && ordinalData) {
+    const startIndex = ordinalData.findIndex((item) => item === value[0]);
+    const endIndex = ordinalData.findIndex((item) => item === value[1]);
+    if (startIndex !== -1 && endIndex !== -1) {
+      if (process.env.NODE_ENV !== 'production' && endIndex < startIndex) {
+        warnOnce([
+          'MUI X Charts: Range button received a range whose end value comes before its start value.',
+          'This produces an empty zoom range.',
+        ]);
+      }
+      // Band items span [i/L, (i+1)/L] along the axis; point items sit at i/(L-1).
+      if (scaleType === 'band') {
         return {
-          start: maxIndex === 0 ? 0 : (startIndex / maxIndex) * 100,
-          end: maxIndex === 0 ? 100 : (endIndex / maxIndex) * 100,
+          start: (startIndex / ordinalData.length) * 100,
+          end: (endIndex / ordinalData.length) * 100,
         };
       }
+      const maxIndex = ordinalData.length - 1;
+      return {
+        start: maxIndex === 0 ? 0 : (startIndex / maxIndex) * 100,
+        end: maxIndex === 0 ? 100 : (endIndex / maxIndex) * 100,
+      };
     }
-    // The strings matched no axis value — fall through in case they are date strings.
+    // No match on the axis values — fall through in case they are date-like.
   }
 
   // For ordinal axes with date-like data, resolve date ranges and intervals to matching indices.
   const timestamps = ordinalData ? toTimestampArray(ordinalData) : undefined;
 
   if (timestamps) {
+    const isBand = scaleType === 'band';
+    const denominator = isBand ? timestamps.length : timestamps.length - 1;
     const maxIndex = timestamps.length - 1;
+    const toPercent = (i: number) => (denominator === 0 ? 0 : (i / denominator) * 100);
 
     if (Array.isArray(value)) {
       const startTarget = toTimestamp(value[0]) ?? Number.NaN;
@@ -180,8 +190,8 @@ export function rangeButtonValueToZoom(
       const startIndex = firstGte === -1 ? maxIndex : firstGte;
       const endIndex = lastLte === -1 ? 0 : lastLte;
       return {
-        start: (startIndex / maxIndex) * 100,
-        end: (endIndex / maxIndex) * 100,
+        start: toPercent(startIndex),
+        end: toPercent(endIndex),
       };
     }
 
@@ -192,7 +202,7 @@ export function rangeButtonValueToZoom(
     const firstGte = timestamps.findIndex((ts) => !Number.isNaN(ts) && ts >= targetStartMs);
     const startIndex = firstGte === -1 ? maxIndex : firstGte;
     return {
-      start: (startIndex / maxIndex) * 100,
+      start: toPercent(startIndex),
       end: 100,
     };
   }

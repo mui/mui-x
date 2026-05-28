@@ -5,9 +5,9 @@ import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { dataset } from '../dataset/gdpPerCapitaEvolution';
 
 // Time axis: calendar intervals, an absolute date range, a function, or a reset.
@@ -60,75 +60,6 @@ const months = [
 
 const sales = [42, 38, 55, 61, 73, 88, 95, 91, 70, 58, 49, 44];
 
-const tokenColor = {
-  string: 'success.main',
-  number: 'warning.main',
-  keyword: 'secondary.main',
-  key: 'primary.main',
-  plain: 'text.primary',
-};
-
-/** Renders a one-line code snippet with token colors from the theme palette. */
-function HighlightedCode({ code }) {
-  const nodes = [];
-  const tokenRegExp = /'[^']*'|[A-Za-z_]\w*|\d+\.?\d*/g;
-  let lastIndex = 0;
-  let tokenId = 0;
-  let match = tokenRegExp.exec(code);
-
-  while (match !== null) {
-    const token = match[0];
-    if (match.index > lastIndex) {
-      nodes.push(code.slice(lastIndex, match.index));
-    }
-
-    const rest = code.slice(match.index + token.length);
-    let type;
-    if (token[0] === "'") {
-      type = 'string';
-    } else if (/^\d/.test(token)) {
-      type = 'number';
-    } else if (token === 'null' || token === 'new') {
-      type = 'keyword';
-    } else if (/^\s*:/.test(rest)) {
-      type = 'key';
-    } else {
-      type = 'plain';
-    }
-
-    nodes.push(
-      <Box key={tokenId} component="span" sx={{ color: tokenColor[type] }}>
-        {token}
-      </Box>,
-    );
-    tokenId += 1;
-    lastIndex = match.index + token.length;
-    match = tokenRegExp.exec(code);
-  }
-  if (lastIndex < code.length) {
-    nodes.push(code.slice(lastIndex));
-  }
-
-  return (
-    <Box
-      component="pre"
-      sx={{
-        m: 0,
-        px: 1.5,
-        py: 1,
-        borderRadius: 1,
-        border: '1px solid',
-        borderColor: 'divider',
-        bgcolor: 'action.hover',
-        fontSize: '0.8125rem',
-        overflowX: 'auto',
-      }}
-    >
-      <code>{nodes}</code>
-    </Box>
-  );
-}
-
 export default function ZoomInitialRange() {
   const [chartType, setChartType] = React.useState('line');
   const [label, setLabel] = React.useState('10Y');
@@ -176,6 +107,8 @@ export default function ZoomInitialRange() {
       </Stack>
       <HighlightedCode
         code={`initialZoom={[{ axisId: 'x', value: ${preset.code} }]}`}
+        language="jsx"
+        copyButtonHidden
       />
       {chartType === 'line' ? (
         <LineChartPro
