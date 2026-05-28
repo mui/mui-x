@@ -7,11 +7,11 @@ githubLabel: 'scope: scheduler'
 
 # Scheduler - Quickstart
 
-<p class="description">Get up and running with the Event Calendar and Event Timeline components.</p>
+<p class="description">Install the MUI X Scheduler package to start building React calendars and event timelines.</p>
 
 ## Installation
 
-Install the Scheduler package that best suits your needs—Community, or Premium:
+Install the Scheduler package that best suits your needs—Community or Premium:
 
 {{"component": "modules/components/SchedulerInstallationInstructions.js"}}
 
