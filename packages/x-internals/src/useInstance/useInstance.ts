@@ -19,7 +19,17 @@ interface Disposable {
  */
 function useInstanceProduction<T extends Disposable>(factory: () => T): T {
   const instance = useRefWithInit(factory).current;
-  useOnMount(instance.disposeEffect);
+  useOnMount(() => {
+    // DEBUG: report which variant CI ends up picking.
+    // eslint-disable-next-line no-console
+    console.log(
+      '[useInstance debug]',
+      'NODE_ENV=', JSON.stringify(process.env.NODE_ENV),
+      'MUI_TEST_ENV=', (globalThis as { MUI_TEST_ENV?: boolean }).MUI_TEST_ENV,
+      'variant=production',
+    );
+    return instance.disposeEffect();
+  });
   return instance;
 }
 
@@ -47,6 +57,15 @@ function useInstanceDevelopment<T extends Disposable>(factory: () => T): T {
 
   useOnMount(() => {
     const cleanup = instance.disposeEffect();
+    // DEBUG: report what we detected so CI logs reveal whether StrictMode is being skipped.
+    // eslint-disable-next-line no-console
+    console.log(
+      '[useInstance debug]',
+      'NODE_ENV=', JSON.stringify(process.env.NODE_ENV),
+      'MUI_TEST_ENV=', (globalThis as { MUI_TEST_ENV?: boolean }).MUI_TEST_ENV,
+      'doubleInvoked=', doubleInvokedRef.current,
+      'variant=development',
+    );
     if (doubleInvokedRef.current === true) {
       return undefined;
     }
