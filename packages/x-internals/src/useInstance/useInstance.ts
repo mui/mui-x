@@ -19,59 +19,26 @@ interface Disposable {
  */
 function useInstanceProduction<T extends Disposable>(factory: () => T): T {
   const instance = useRefWithInit(factory).current;
-  useOnMount(() => {
-    // DEBUG: report which variant CI ends up picking.
-    // eslint-disable-next-line no-console
-    console.log(
-      '[useInstance debug]',
-      'NODE_ENV=', JSON.stringify(process.env.NODE_ENV),
-      'MUI_TEST_ENV=', (globalThis as { MUI_TEST_ENV?: boolean }).MUI_TEST_ENV,
-      'variant=production',
-    );
-    return instance.disposeEffect();
-  });
+  useOnMount(instance.disposeEffect);
   return instance;
 }
 
 /**
- * Development variant: detects StrictMode by counting how many times React
- * calls a `useState` lazy initializer on the first render. StrictMode dev
- * double-invokes lazy initializers (documented React behavior), so two calls
- * means the mount→unmount→mount cycle is active and we must skip the cleanup
- * to keep the same instance alive across it. Dev-only trade-off: a real
- * unmount under `<StrictMode>` will also skip dispose.
+ * Development variant: always builds the cleanup closure but never registers
+ * it with React. Trade-off: dev memory leaks on real unmounts. Reason: there
+ * is no synchronous way to detect StrictMode that works across React build
+ * configurations (StrictLegacyMode bits and `useState` lazy-initializer
+ * double-invocation are stripped or partial in some test bundles), and
+ * registering the cleanup disposes the instance during StrictMode's
+ * mount→unmount→mount cycle, which breaks every subsequent operation.
  * @returns {T} the lazily-created instance.
  */
 function useInstanceDevelopment<T extends Disposable>(factory: () => T): T {
   const instance = useRefWithInit(factory).current;
-
-  const doubleInvokedRef = React.useRef<boolean | null>(false);
-  React.useState(() => {
-    if (doubleInvokedRef.current === false) {
-      doubleInvokedRef.current = null;
-    } else {
-      doubleInvokedRef.current = true;
-    }
-    return null;
-  });
-
   useOnMount(() => {
-    const cleanup = instance.disposeEffect();
-    // DEBUG: report what we detected so CI logs reveal whether StrictMode is being skipped.
-    // eslint-disable-next-line no-console
-    console.log(
-      '[useInstance debug]',
-      'NODE_ENV=', JSON.stringify(process.env.NODE_ENV),
-      'MUI_TEST_ENV=', (globalThis as { MUI_TEST_ENV?: boolean }).MUI_TEST_ENV,
-      'doubleInvoked=', doubleInvokedRef.current,
-      'variant=development',
-    );
-    if (doubleInvokedRef.current === true) {
-      return undefined;
-    }
-    return cleanup;
+    instance.disposeEffect();
+    return undefined;
   });
-
   return instance;
 }
 
