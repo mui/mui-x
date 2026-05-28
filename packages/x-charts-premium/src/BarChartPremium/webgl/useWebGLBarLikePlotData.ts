@@ -78,6 +78,12 @@ function ensureCapacity(pool: ArrayPool | null, maxCount: number): ArrayPool {
 // don't need a separate per-instance attribute on the GPU side.
 const HIGHLIGHTED_BRIGHTNESS = 1.2;
 const FADED_OPACITY = 0.3;
+// Band pitch (in CSS pixels) at which we switch from per-bar rendering to a
+// min/max envelope per pixel column. The visible moire kicks in before
+// adjacent bars fully overlap, because pixel-grid phase drift starts losing
+// bars as soon as their width approaches one pixel. Cutting over at two
+// pixels covers the transition.
+const DENSE_MODE_PITCH_PX = 2;
 
 function setCornerRadii(
   radius: number,
@@ -193,14 +199,14 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
       }
 
       const bandPitch = bandIsY ? probe.height : probe.width;
-      // When the band pitch drops below a pixel, adjacent bars compete for
-      // the same pixel column. Per-bar rasterization produces moire patterns
-      // (the rasterizer drops bars whose quad falls between two pixel
-      // centers) and we can't show meaningful per-bar highlights at that
-      // density anyway. Collapse the series into a min/max envelope instead
-      // -- one rect per pixel column spanning the union of every bar that
-      // lands in that column, like an area chart.
-      if (bandPitch < 1) {
+      // When the band pitch drops below a couple of pixels, adjacent bars
+      // compete for the same pixel column. Per-bar rasterization produces
+      // moire patterns (the rasterizer drops bars whose quad falls between
+      // two pixel centers) and we can't show meaningful per-bar highlights
+      // at that density anyway. Collapse the series into a min/max envelope
+      // instead -- one rect per pixel column spanning the union of every
+      // bar that lands in that column, like an area chart.
+      if (bandPitch < DENSE_MODE_PITCH_PX) {
         // Series-level highlight: dense mode loses individual dataIndex
         // resolution, so query once with the probe and apply the result to
         // every emitted column.
@@ -223,13 +229,13 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
         }
 
         // Aggregate each bar into the pixel column its band-axis center
-        // falls in. `lowValues` / `highValues` store the value-axis bounds we
-        // need to emit one tall rect per occupied column. Two parallel
-        // arrays keyed by a Map of column -> slot index keep the hot path
-        // out of GC churn from per-entry object allocations.
-        const columnIndex = new Map<number, number>();
-        const lowValues: number[] = [];
-        const highValues: number[] = [];
+        // falls in. The Map exists only to dedupe columns; the actual data
+        // lives in parallel arrays indexed by slot so emission can iterate
+        // a plain numeric range without re-entering the Map.
+        const columnSlot = new Map<number, number>();
+        const slotCols: number[] = [];
+        const slotLow: number[] = [];
+        const slotHigh: number[] = [];
         for (let i = 0; i < dataLength; i += 1) {
           const bar = data[i];
           if (bar.hidden || bar.value == null || bar.width <= 0 || bar.height <= 0) {
@@ -241,27 +247,26 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
           );
           const lo = bandIsY ? bar.x : bar.y;
           const hi = bandIsY ? bar.x + bar.width : bar.y + bar.height;
-          const slot = columnIndex.get(col);
+          const slot = columnSlot.get(col);
           if (slot === undefined) {
-            columnIndex.set(col, lowValues.length);
-            lowValues.push(lo);
-            highValues.push(hi);
+            columnSlot.set(col, slotCols.length);
+            slotCols.push(col);
+            slotLow.push(lo);
+            slotHigh.push(hi);
           } else {
-            if (lo < lowValues[slot]) {
-              lowValues[slot] = lo;
+            if (lo < slotLow[slot]) {
+              slotLow[slot] = lo;
             }
-            if (hi > highValues[slot]) {
-              highValues[slot] = hi;
+            if (hi > slotHigh[slot]) {
+              slotHigh[slot] = hi;
             }
           }
         }
 
-        const slotEntries = columnIndex.entries();
-        let entry = slotEntries.next();
-        while (!entry.done) {
-          const [col, slot] = entry.value;
-          const lo = lowValues[slot];
-          const hi = highValues[slot];
+        for (let k = 0; k < slotCols.length; k += 1) {
+          const col = slotCols[k];
+          const lo = slotLow[k];
+          const hi = slotHigh[k];
           const valueCenter = (lo + hi) * 0.5;
           const valueHalf = (hi - lo) * 0.5;
 
@@ -292,7 +297,6 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
           cornerRadii[c4 + 3] = 0;
 
           cursor += 1;
-          entry = slotEntries.next();
         }
 
         continue;
