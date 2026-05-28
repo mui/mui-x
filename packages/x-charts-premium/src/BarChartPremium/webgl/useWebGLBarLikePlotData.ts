@@ -179,9 +179,12 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
       // In horizontal layout the band direction is y; otherwise it's x.
       const bandIsY = processed.layout === 'horizontal';
 
-      // Find the first visible bar to size up the series. Bars in a band
-      // series share the same band pitch, so peeking at one is enough.
+      // Find the first two visible bars in the series. Probe 1 sizes up the
+      // bars themselves; probe 2 reveals the center-to-center pitch in the
+      // band direction, which is what tells us whether the natural gap
+      // between bars is sub-pixel (and therefore shouldn't be visible).
       let probe: T | null = null;
+      let probe2: T | null = null;
       for (let i = 0; i < dataLength; i += 1) {
         const candidate = data[i];
         if (
@@ -190,15 +193,36 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
           candidate.width > 0 &&
           candidate.height > 0
         ) {
-          probe = candidate;
-          break;
+          if (probe === null) {
+            probe = candidate;
+          } else {
+            probe2 = candidate;
+            break;
+          }
         }
       }
       if (probe === null) {
         continue;
       }
 
-      const bandPitch = bandIsY ? probe.height : probe.width;
+      const barSize = bandIsY ? probe.height : probe.width;
+      let pitch: number;
+      if (probe2 === null) {
+        pitch = barSize;
+      } else if (bandIsY) {
+        pitch = probe2.y - probe.y;
+      } else {
+        pitch = probe2.x - probe.x;
+      }
+      // When the natural gap between adjacent bars is sub-pixel, the
+      // rasterizer can leave background pixels showing through where pixel
+      // centers happen to land in the gap, producing dark "flicker" lines as
+      // the user zooms. Pad each bar's rendered band-axis half-size out to
+      // half the pitch so adjacent quads meet exactly. Only kicks in when
+      // the gap is sub-pixel so larger gaps stay visible.
+      const fillSubPixelGap = pitch - barSize > 0 && pitch - barSize < 1;
+      const bandHalfFill = pitch * 0.5;
+      const bandPitch = barSize;
       // When the band pitch drops below a couple of pixels, adjacent bars
       // compete for the same pixel column. Per-bar rasterization produces
       // moire patterns (the rasterizer drops bars whose quad falls between
@@ -327,12 +351,24 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
 
         const halfW = w * 0.5;
         const halfH = h * 0.5;
+        // Expand the band-axis half-size to swallow sub-pixel gaps between
+        // adjacent bars (see the `fillSubPixelGap` derivation above). The
+        // value-axis stays exact so near-zero bars don't get inflated.
+        let renderHalfW = halfW;
+        let renderHalfH = halfH;
+        if (fillSubPixelGap) {
+          if (bandIsY) {
+            renderHalfH = bandHalfFill;
+          } else {
+            renderHalfW = bandHalfFill;
+          }
+        }
 
         const c2 = cursor * 2;
         centers[c2] = bar.x + halfW - drawingAreaLeft;
         centers[c2 + 1] = bar.y + halfH - drawingAreaTop;
-        halfSizes[c2] = halfW;
-        halfSizes[c2 + 1] = halfH;
+        halfSizes[c2] = renderHalfW;
+        halfSizes[c2 + 1] = renderHalfH;
 
         const rgba = parseColor(bar.color);
         const c4 = cursor * 4;
