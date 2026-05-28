@@ -99,7 +99,7 @@ const selectorChartParallels = createSelectorMemoized(
  * Features without a string `properties.name` are skipped; on duplicates,
  * the first occurrence wins.
  */
-export const selectorChartGeoFeatureIndexByName = createSelectorMemoized(
+export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
   selectorChartRawGeoData,
   (geoData): ReadonlyMap<string, number[]> => {
     const map = new Map<string, number[]>();
