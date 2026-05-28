@@ -1,4 +1,9 @@
-import type { CommonSeriesType, CommonDefaultizedProps, SeriesId } from '@mui/x-charts/internals';
+import type {
+  CommonSeriesType,
+  CommonDefaultizedProps,
+  SeriesId,
+  DatasetElementType,
+} from '@mui/x-charts/internals';
 import type { DefaultizedProps } from '@mui/x-internals/types';
 
 /**
@@ -16,6 +21,11 @@ export interface MapShapeValueType {
    * Numeric value associated with the feature.
    */
   value?: number;
+  /**
+   * The value used to compute the color of the item through a color axis.
+   * Falls back to `value` when no `colorValue` is provided.
+   */
+  colorValue?: any;
   /**
    * Label used in legends and tooltips.
    */
@@ -40,6 +50,43 @@ export interface MapShapeSeriesType extends Omit<
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */
   label?: string | ((location: 'tooltip' | 'legend') => string);
+  /**
+   * The id of the color axis used to compute the color of the shapes.
+   * It points to the id of an axis defined with the `zAxis` prop.
+   */
+  colorAxisId?: string;
+  /**
+   * A function to extract and transform the value from the `dataset` item.
+   * It receives the full dataset item and should return a map shape value.
+   * Can be used as an alternative to `datasetKeys`.
+   * @param {DatasetElementType<unknown>} item The full dataset item.
+   * @returns {MapShapeValueType} The transformed value.
+   */
+  valueGetter?: (item: DatasetElementType<unknown>) => MapShapeValueType;
+  /**
+   * The keys used to retrieve data from the dataset.
+   *
+   * When this prop is provided, `name` is required to match each entry with a
+   * GeoJSON feature. `label`, `value`, and `colorValue` are optional.
+   */
+  datasetKeys?: {
+    /**
+     * The key used to retrieve the feature name from the dataset.
+     */
+    name: string;
+    /**
+     * The key used to retrieve the item label from the dataset.
+     */
+    label?: string;
+    /**
+     * The key used to retrieve the item numeric value from the dataset.
+     */
+    value?: string;
+    /**
+     * The key used to retrieve the color value from the dataset.
+     */
+    colorValue?: string;
+  };
   /**
    * Formatter used to render values in tooltips or other data displays.
    * @param {MapShapeValueType} value The data entry to format.
