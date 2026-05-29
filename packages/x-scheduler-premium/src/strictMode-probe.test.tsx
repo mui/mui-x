@@ -10,10 +10,19 @@ describe('StrictMode behavior probe', () => {
     let effectCleanupCalls = 0;
     let memoCalls = 0;
 
+    // Replicate the OLD detection logic verbatim to see what it would observe today.
+    let oldDetectionResult: boolean | null = false;
+
     function Probe() {
       renderCalls += 1;
+      const doubleInvokedRef = React.useRef<boolean | null>(false);
       React.useState(() => {
         initializerCalls += 1;
+        if (doubleInvokedRef.current === false) {
+          doubleInvokedRef.current = null;
+        } else {
+          doubleInvokedRef.current = true;
+        }
         return null;
       });
       React.useMemo(() => {
@@ -22,6 +31,7 @@ describe('StrictMode behavior probe', () => {
       }, []);
       React.useEffect(() => {
         effectSetupCalls += 1;
+        oldDetectionResult = doubleInvokedRef.current;
         return () => {
           effectCleanupCalls += 1;
         };
@@ -47,6 +57,7 @@ describe('StrictMode behavior probe', () => {
       memoCalls,
       effectSetupCalls,
       effectCleanupCalls,
+      oldDetectionResult,
     };
 
     // Force the diagnostic into the failure message so it lands in CI logs unambiguously.
