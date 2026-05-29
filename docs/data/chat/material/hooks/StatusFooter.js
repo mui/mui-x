@@ -28,7 +28,7 @@ function StatusFooterContent() {
     return <LinearProgress />;
   }
   if (typingUserIds.length > 0) {
-    return <Typography variant="caption">Someone is typing...</Typography>;
+    return <Typography variant="caption">Someone is typing…</Typography>;
   }
   return null;
 }

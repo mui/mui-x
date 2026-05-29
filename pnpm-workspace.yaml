@@ -13,14 +13,14 @@ catalog:
   '@babel/preset-typescript': ^7.28.5
   '@babel/runtime': ^7.29.2
   '@babel/traverse': ^7.29.0
-  '@base-ui/react': ^1.4.1
-  '@base-ui/utils': ^0.2.8
-  '@date-fns/tz': ^1.4.1
+  '@base-ui/react': ^1.5.0
+  '@base-ui/utils': ^0.2.9
+  '@date-fns/tz': ^1.5.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.0.1
-  '@mui/internal-test-utils': 2.0.18-canary.23
+  '@mui/internal-test-utils': 2.0.18-canary.25
   '@mui/internal-core-docs': 9.0.2-canary.0
   '@mui/material': 9.0.1
   '@mui/stylis-plugin-rtl': 9.0.1
@@ -29,31 +29,31 @@ catalog:
   '@mui/utils': 9.0.1
   '@mui/x-internal-exceljs-fork': 4.4.5
   '@playwright/test': 1.60.0
-  '@react-spring/web': ^10.0.3
+  '@react-spring/web': ^10.1.0
   '@types/chance': ^1.1.8
   '@types/luxon': ^3.7.1
   '@types/moment-hijri': ^2.1.4
   '@types/moment-jalaali': ^0.7.9
   '@types/prop-types': ^15.7.15
-  '@types/react': 19.2.14
+  '@types/react': 19.2.15
   '@types/react-dom': 19.2.3
   '@types/react-router': ^5.1.20
   '@types/react-transition-group': ^4.4.12
   '@types/semver': ^7.7.1
   '@types/use-sync-external-store': ^1.5.0
-  '@typescript-eslint/parser': ^8.59.3
+  '@typescript-eslint/parser': ^8.59.4
   '@vitejs/plugin-react': ^6.0.2
   '@vitejs/plugin-react-swc': ^4.3.1
-  '@vitest/browser': ^4.1.6
-  '@vitest/browser-playwright': ^4.1.6
-  '@vitest/coverage-v8': ^4.1.6
-  '@vitest/ui': ^4.1.6
+  '@vitest/browser': ^4.1.7
+  '@vitest/browser-playwright': ^4.1.7
+  '@vitest/coverage-v8': ^4.1.7
+  '@vitest/ui': ^4.1.7
   babel-plugin-react-remove-properties: ^0.3.1
   chance: ^1.1.13
   clsx: ^2.1.1
   cross-env: ^10.1.0
   csstype: ^3.2.3
-  date-fns: ^4.1.0
+  date-fns: ^4.2.1
   date-fns-jalali: ^4.1.0-0
   dayjs: ^1.11.20
   es-toolkit: ^1.46.1
@@ -65,7 +65,7 @@ catalog:
   moment-hijri: ^3.0.0
   moment-jalaali: ^0.10.4
   moment-timezone: ^0.6.2
-  motion: ^12.38.0
+  motion: ^12.40.0
   playwright: 1.60.0
   prop-types: ^15.8.1
   rasterizehtml: ^1.4.1
@@ -73,17 +73,32 @@ catalog:
   react-dom: 19.2.6
   react-router: ^7.15.1
   react-transition-group: ^4.4.5
-  reselect: ^5.1.1
+  reselect: ^5.2.0
   rimraf: ^6.1.3
   serve: ^14.2.6
   stylis: ^4.4.0
-  tsx: ^4.22.0
+  tsx: ^4.22.3
   use-sync-external-store: ^1.6.0
-  vite: ^8.0.13
-  vitest: ^4.1.6
+  vite: ^8.0.14
+  vitest: ^4.1.7
   yargs: ^18.0.0
 
 engineStrict: true
+updateNotifier: false
+blockExoticSubdeps: true
+minimumReleaseAge: 4320
+minimumReleaseAgeExclude:
+  - '@mui/*'
+  - '@base-ui/*'
+trustPolicy: no-downgrade
+# Skip trust-policy checks for packages published more than 365 days ago.
+# Some widely-used legacy packages (notably semver@6.x — pulled in by @babel/core@7.x — plus
+# reselect@5.1.1 and parts of @octokit/*) dropped provenance attestation for specific releases,
+# triggering false-positive trust-downgrade errors. Packages that old have had ample time for
+# community review; supply-chain risk is most relevant within a shorter window.
+# TODO: drop once @babel/core stops depending on semver@^6.3.1 (no 6.x semver release has
+# provenance), and the other legacy packages restore provenance.
+trustPolicyIgnoreAfter: 525600
 
 enablePrePostScripts: true
 

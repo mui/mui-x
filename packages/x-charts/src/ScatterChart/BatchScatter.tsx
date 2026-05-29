@@ -9,6 +9,7 @@ import type { ScatterClasses } from './scatterClasses';
 import { useChartsContext } from '../context/ChartsProvider';
 import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
 import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
+import type { ScatterSizeGetter } from './seriesConfig/getMarkerSize';
 import {
   selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,
@@ -24,6 +25,7 @@ export interface BatchScatterProps {
   yScale: D3Scale;
   color: string;
   colorGetter?: ColorGetter<'scatter'>;
+  sizeGetter?: ScatterSizeGetter;
   // eslint-disable-next-line react/no-unused-prop-types
   classes?: Partial<ScatterClasses>;
   className?: string;
@@ -45,6 +47,7 @@ function useCreatePaths(
   yScale: D3Scale,
   color: string,
   colorGetter?: ColorGetter<'scatter'>,
+  sizeGetter?: ScatterSizeGetter,
 ) {
   const { instance } = useChartsContext();
   const getXPosition = getValueToPositionMapper(xScale);
@@ -63,7 +66,8 @@ function useCreatePaths(
       continue;
     }
 
-    const path = createPath(x, y, markerSize);
+    const radius = sizeGetter ? sizeGetter(i) : markerSize;
+    const path = createPath(x, y, radius);
     const fill = colorGetter ? colorGetter(i) : color;
 
     const tempPath = appendAtKey(temporaryPaths, fill, path);
@@ -83,18 +87,27 @@ function useCreatePaths(
   return paths;
 }
 
-export interface BatchScatterPathsProps {
+interface BatchScatterPathsProps {
   series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
   color: string;
   colorGetter?: ColorGetter<'scatter'>;
   markerSize: number;
+  sizeGetter?: ScatterSizeGetter;
 }
 
 function BatchScatterPaths(props: BatchScatterPathsProps) {
-  const { series, xScale, yScale, color, colorGetter, markerSize } = props;
-  const paths = useCreatePaths(series.data, markerSize, xScale, yScale, color, colorGetter);
+  const { series, xScale, yScale, color, colorGetter, markerSize, sizeGetter } = props;
+  const paths = useCreatePaths(
+    series.data,
+    markerSize,
+    xScale,
+    yScale,
+    color,
+    colorGetter,
+    sizeGetter,
+  );
 
   const children: React.ReactNode[] = [];
 
@@ -140,32 +153,34 @@ const Group = styled('g', {
  * You can read about all the limitations [here](https://mui.com/x/react-charts/scatter/#performance).
  */
 export function BatchScatter(props: BatchScatterProps) {
-  const { series, xScale, yScale, color, colorGetter, className } = props;
+  const { series, xScale, yScale, color, colorGetter, sizeGetter, className } = props;
 
   const { store } = useChartsContext<[UseChartHighlightSignature<'scatter'>]>();
   const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.id);
   const isSeriesFaded = store.use(selectorChartIsSeriesFaded, series.id);
-  const seriesHighlightedItem = store.use(selectorChartSeriesHighlightedItem, series.id);
+  const seriesHighlightedItemDataIndex = store.use(selectorChartSeriesHighlightedItem, series.id);
   const seriesUnfadedItem = store.use(selectorChartSeriesUnfadedItem, series.id);
   const highlightedModifier = 1.2;
-  const markerSize = series.markerSize * (isSeriesHighlighted ? highlightedModifier : 1);
+  const highlightMultiplier = isSeriesHighlighted ? highlightedModifier : 1;
+  const getMarkerRadius = (index: number) =>
+    (sizeGetter ? sizeGetter(index) : series.markerSize) * highlightMultiplier;
   const classes = useUtilityClasses(props);
 
   const siblings: React.ReactNode[] = [];
-  if (seriesHighlightedItem != null) {
-    const datum = series.data[seriesHighlightedItem];
+  if (seriesHighlightedItemDataIndex != null) {
+    const datum = series.data[seriesHighlightedItemDataIndex];
     const getXPosition = getValueToPositionMapper(xScale);
     const getYPosition = getValueToPositionMapper(yScale);
 
     siblings.push(
       <path
         key={`highlighted-${series.id}`}
-        fill={colorGetter ? colorGetter(seriesHighlightedItem) : color}
+        fill={colorGetter ? colorGetter(seriesHighlightedItemDataIndex) : color}
         data-highlighted
         d={createPath(
           getXPosition(datum.x),
           getYPosition(datum.y),
-          markerSize * highlightedModifier,
+          getMarkerRadius(seriesHighlightedItemDataIndex) * highlightedModifier,
         )}
       />,
     );
@@ -180,7 +195,11 @@ export function BatchScatter(props: BatchScatterProps) {
       <path
         key={`unfaded-${series.id}`}
         fill={colorGetter ? colorGetter(seriesUnfadedItem) : color}
-        d={createPath(getXPosition(datum.x), getYPosition(datum.y), markerSize)}
+        d={createPath(
+          getXPosition(datum.x),
+          getYPosition(datum.y),
+          getMarkerRadius(seriesUnfadedItem),
+        )}
       />,
     );
   }
@@ -199,7 +218,8 @@ export function BatchScatter(props: BatchScatterProps) {
           yScale={yScale}
           color={color}
           colorGetter={colorGetter}
-          markerSize={markerSize}
+          sizeGetter={getMarkerRadius}
+          markerSize={series.markerSize}
         />
       </Group>
       {siblings}

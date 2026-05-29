@@ -156,7 +156,7 @@ export function PickersSlideTransition(inProps: SlideTransitionProps) {
           classNames: transitionClasses,
         })
       }
-      role="presentation"
+      role="none"
       ownerState={ownerState}
     >
       <CSSTransition
