@@ -52,6 +52,7 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyPresetLabel: (date) => `Se répète tous les ans le ${date}`,
   noResourceAriaLabel: 'Aucune ressource',
   resourceLabel: 'Ressource',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Enregistrer',
   startDateAfterEndDateError: 'La date/heure de début doit être antérieure à la date/heure de fin.',
   startDateLabel: 'Date de début',

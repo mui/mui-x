@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
-import { adapter, storeClasses } from 'test/utils/scheduler';
+import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
 
-const DEFAULT_PARAMS = { events: [] };
+const DEFAULT_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };
 
 storeClasses.forEach((storeClass) => {
   describe(`Date - ${storeClass.name}`, () => {
