@@ -322,7 +322,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * When provided, events are fetched through the data source instead of the `events` prop.
    */
   dataSource?: SchedulerDataSource<TEvent>;
-  /*
+  /**
    * Configures how events are created.
    * If `false`, event creation is disabled.
    * If `true`, event creation is enabled with default configuration.
