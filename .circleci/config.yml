@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/023c96ed6ca37cdb1ff687787e61257c0960285a/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/d4c42f7a8a179675e95cd1ea1e56c69322dbc3b3/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -78,28 +78,8 @@ commands:
         type: string
         default: << pipeline.parameters.react-version >>
     steps:
-      # The orb's `package-overrides` path shells out to `pnpm dlx
-      # @mui/internal-code-infra@canary`, which under pnpm 11's default
-      # `strictDepBuilds: true` hangs on an interactive "Choose which packages
-      # to build" prompt in its temp install. Run the orb without overrides and
-      # apply them below via the workspace-installed `code-infra` binary, which
-      # picks up our `pnpm-workspace.yaml` settings.
       - code-infra/install-deps:
-          package-overrides: ''
-      - run:
-          name: Apply package version overrides
-          command: |
-            args=''
-            if [ '<< parameters.react-version >>' != 'stable' ]; then
-              args="$args react@<< parameters.react-version >>"
-            fi
-            if [ '<< pipeline.parameters.material-ui-version >>' != 'stable' ]; then
-              args="$args @mui/material@<< pipeline.parameters.material-ui-version >>"
-            fi
-            args="${args# }"
-            if [ -n "$args" ]; then
-              pnpm exec code-infra set-version-overrides --pkg $args
-            fi
+          package-overrides: react@<< parameters.react-version >> @mui/material@<< pipeline.parameters.material-ui-version >>
 
 jobs:
   test_unit:
