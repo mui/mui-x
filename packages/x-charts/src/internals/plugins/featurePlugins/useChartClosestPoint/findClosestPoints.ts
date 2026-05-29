@@ -70,7 +70,6 @@ export function findClosestPoints(
     sqDistFn,
   );
 
-
   if (withFixRadius) {
     // If radius is constant, we can skip the expensive edge-distance calculation and return candidates in box-distance order.
     return candidates;
@@ -95,12 +94,12 @@ export function findClosestPoints(
   // The pointer is inside multiple marks, we sore them by distance to the center.
   const splitIndex = ranked.findIndex((d) => d.edge > 0);
   if (splitIndex !== -1) {
-    ranked = [...ranked.slice(0, splitIndex).sort((a, b) => a.centerDistSq - b.centerDistSq), ...ranked.slice(splitIndex)];
-
+    ranked = [
+      ...ranked.slice(0, splitIndex).sort((a, b) => a.centerDistSq - b.centerDistSq),
+      ...ranked.slice(splitIndex),
+    ];
   }
-  return ranked
-    .slice(0, Math.min(ranked.length, maxResults))
-    .map((d) => d.index);
+  return ranked.slice(0, Math.min(ranked.length, maxResults)).map((d) => d.index);
 }
 
 function invertScale<T>(scale: D3Scale, value: number, getDataPoint: (dataIndex: number) => T) {

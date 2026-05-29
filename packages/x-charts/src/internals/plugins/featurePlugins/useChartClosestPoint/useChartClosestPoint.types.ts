@@ -65,6 +65,6 @@ export type UseChartClosestPointSignature<SeriesType extends ChartSeriesType = C
       UseChartInteractionSignature,
       UseChartHighlightSignature<SeriesType>,
       UseChartTooltipSignature,
-      UseChartZAxisSignature
+      UseChartZAxisSignature,
     ];
   }>;

@@ -73,7 +73,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         const aSeries = (series ?? {})[seriesId];
         const entry = flatbushMap.get(seriesId);
 
-        if (!entry|| aSeries.hidden) {
+        if (!entry || aSeries.hidden) {
           continue;
         }
 
@@ -84,8 +84,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 
         const xAxisZoom = selectorChartAxisZoomData(store.state, xAxisId);
         const yAxisZoom = selectorChartAxisZoomData(store.state, yAxisId);
-        const maxRadius =
-          resolvedHitAreaRadius === 'item' ? maxItemRadius : resolvedHitAreaRadius;
+        const maxRadius = resolvedHitAreaRadius === 'item' ? maxItemRadius : resolvedHitAreaRadius;
 
         const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
         const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
@@ -108,7 +107,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
           svgPoint.y,
           maxRadius,
           1,
-          getItemRadius
+          getItemRadius,
         )[0];
 
         if (closestPointIndex === undefined) {
@@ -120,13 +119,16 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         const scaledY = yScale(point.y);
 
         const centerDist = Math.hypot(scaledX! - svgPoint.x, scaledY! - svgPoint.y);
-        const closestPointRadius = typeof getItemRadius === 'number' ? getItemRadius : getItemRadius(closestPointIndex);
+        const closestPointRadius =
+          typeof getItemRadius === 'number' ? getItemRadius : getItemRadius(closestPointIndex);
         const edgeDistance = centerDist - closestPointRadius;
 
         if (edgeDistance > closestPointRadius && resolvedHitAreaRadius === 'item') {
           continue;
         }
-        if (closestPoint === undefined || edgeDistance < closestPoint.edgeDistance ||
+        if (
+          closestPoint === undefined ||
+          edgeDistance < closestPoint.edgeDistance ||
           (resolvedHitAreaRadius === 'item' && edgeDistance === closestPoint.edgeDistance)
         ) {
           closestPoint = {

@@ -52,7 +52,9 @@ import {
   selectorChartYAxisExtrema,
 } from './useChartAxisExtrema.selectors';
 import { selectorChartZAxis } from '../useChartZAxis';
-import getMarkerSize, { type ScatterSizeGetter } from '../../../../ScatterChart/seriesConfig/getMarkerSize';
+import getMarkerSize, {
+  type ScatterSizeGetter,
+} from '../../../../ScatterChart/seriesConfig/getMarkerSize';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -579,10 +581,10 @@ export const selectorChartSeriesFlatbushMap = createSelectorMemoized(
 
       const isFixedSize = !sizeAxis || !sizeAxis.sizeScale;
       const getItemRadius = isFixedSize
-        ? series.markerSize ?? 0
+        ? (series.markerSize ?? 0)
         : getMarkerSize(series, sizeAxis);
 
-      let maxItemRadius = isFixedSize ? getItemRadius as number : 0;
+      let maxItemRadius = isFixedSize ? (getItemRadius as number) : 0;
 
       const originalXScale = xAxesScaleMap[xAxisId];
       const originalYScale = yAxesScaleMap[yAxisId];
