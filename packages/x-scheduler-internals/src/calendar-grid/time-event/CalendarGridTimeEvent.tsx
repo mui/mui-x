@@ -128,8 +128,8 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
   const columnHeaderId = getCalendarGridHeaderCellId(rootId, columnIndex);
 
   const contextValue: CalendarGridTimeEventContext = React.useMemo(
-    () => ({ ...draggableEventContextValue, getSharedDragData, canDrag }),
-    [draggableEventContextValue, getSharedDragData, canDrag],
+    () => ({ ...draggableEventContextValue, getSharedDragData, canDrag, rootRef: ref }),
+    [draggableEventContextValue, getSharedDragData, canDrag, ref],
   );
 
   const element = useRenderElement('div', componentProps, {

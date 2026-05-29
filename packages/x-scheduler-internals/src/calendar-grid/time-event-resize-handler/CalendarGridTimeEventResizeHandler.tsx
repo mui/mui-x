@@ -5,6 +5,7 @@ import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEventResizeHandler } from '../../internals/utils/useEventResizeHandler';
 import { useCalendarGridTimeEventContext } from '../time-event/CalendarGridTimeEventContext';
+import { useTouchEventResizeHandler } from './useTouchEventResizeHandler';
 import type { CalendarGridTimeEvent } from '../time-event/CalendarGridTimeEvent';
 import { SchedulerEventSide } from '../../models';
 
@@ -20,6 +21,7 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       style,
       // Internal props
       side,
+      interaction = 'native',
       // Props forwarded to the DOM element
       ...elementProps
     } = componentProps;
@@ -29,6 +31,8 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
 
     // Ref hooks
     const ref = React.useRef<HTMLDivElement>(null);
+
+    const isPointerInteraction = interaction === 'pointer';
 
     // Feature hooks
     const getDragData = useStableCallback((input) => ({
@@ -43,7 +47,10 @@ export const CalendarGridTimeEventResizeHandler = React.forwardRef(
       contextValue,
       getDragData,
       canDrag: contextValue.canDrag,
+      disabled: isPointerInteraction,
     });
+
+    useTouchEventResizeHandler({ ref, side, enabled: enabled && isPointerInteraction });
 
     return useRenderElement('div', componentProps, {
       enabled,

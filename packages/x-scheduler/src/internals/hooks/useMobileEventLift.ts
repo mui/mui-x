@@ -63,6 +63,13 @@ export function useMobileEventLift(
   const [isLifted, setIsLifted] = React.useState(false);
   const rootRef = React.useRef<HTMLElement | null>(null);
   const suppressNextClickRef = React.useRef(false);
+  // Tracks the click-swallowing listener armed when a tap outside dismisses the lifted state.
+  // Kept outside the lifted effect so toggling `isLifted` (which tears that effect down) can't
+  // remove the listener before the about-to-fire click is swallowed.
+  const dismissSwallowRef = React.useRef<{ handler: (event: MouseEvent) => void; timer: number }>({
+    handler: () => {},
+    timer: 0,
+  });
 
   const { ref: longPressRef, lastPointerTypeRef } = useLongPress({
     enabled,
@@ -74,6 +81,41 @@ export function useMobileEventLift(
 
   const canDrag = useStableCallback(
     () => isLifted || lastPointerTypeRef.current !== 'touch',
+  );
+
+  // Swallow the single click produced by the tap that dismissed the lifted state, so that
+  // tapping outside only exits the lift — the next, separate tap is the one that creates an
+  // event (or activates whatever it lands on).
+  const armDismissClickSwallow = useStableCallback(() => {
+    const slot = dismissSwallowRef.current;
+    const disarm = () => {
+      if (slot.timer) {
+        clearTimeout(slot.timer);
+        slot.timer = 0;
+      }
+      document.removeEventListener('click', slot.handler, true);
+    };
+    disarm();
+    slot.handler = (event: MouseEvent) => {
+      event.stopPropagation();
+      event.preventDefault();
+      disarm();
+    };
+    document.addEventListener('click', slot.handler, true);
+    // Safety net: if the dismissing tap produces no click (e.g. it turned into a scroll),
+    // drop the listener so it can't swallow an unrelated later click.
+    slot.timer = setTimeout(disarm, 500) as unknown as number;
+  });
+
+  React.useEffect(
+    () => () => {
+      const slot = dismissSwallowRef.current;
+      if (slot.timer) {
+        clearTimeout(slot.timer);
+      }
+      document.removeEventListener('click', slot.handler, true);
+    },
+    [],
   );
 
   // Drop the lifted state once an in-flight drag/resize for this occurrence ends.
@@ -126,13 +168,14 @@ export function useMobileEventLift(
       const node = rootRef.current;
       if (node && event.target instanceof Node && !node.contains(event.target)) {
         setIsLifted(false);
+        armDismissClickSwallow();
       }
     };
     document.addEventListener('pointerdown', onOutsidePointerDown, true);
     return () => {
       document.removeEventListener('pointerdown', onOutsidePointerDown, true);
     };
-  }, [isLifted]);
+  }, [isLifted, armDismissClickSwallow]);
 
   const ref = useMergedRefs(longPressRef, clickSuppressRef);
 

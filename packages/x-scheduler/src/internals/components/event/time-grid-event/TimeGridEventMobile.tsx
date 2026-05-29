@@ -67,27 +67,22 @@ const TimeGridEventMobileResizeHandler = styled(CalendarGrid.TimeEventResizeHand
   slot: 'TimeGridEventMobileResizeHandler',
 })({
   position: 'absolute',
-  // experimenting with mobbile handlers
-
-  width: 10,
-  height: 10,
+  width: 14,
+  height: 14,
   borderRadius: '50%',
-  backgroundColor: 'var(--event-on-surface-subtle-secondary)',
-  // height: 4,
-  // left: 0,
-  // right: 0,
+  backgroundColor: 'var(--event-main)',
+  border: '2px solid var(--event-on-surface-subtle-primary)',
   zIndex: 3,
   cursor: 'ns-resize',
+  // Prevent the browser from scrolling/zooming while the resize gesture is in progress.
+  touchAction: 'none',
   '&[data-start]': {
-    // experimenting with mobbile handlers
-    top: -6,
+    top: -7,
     left: 6,
-    // top: 0,
   },
   '&[data-end]': {
-    bottom: -6,
+    bottom: -7,
     right: 6,
-    // bottom: 0,
   },
 });
 
@@ -154,6 +149,7 @@ export const TimeGridEventMobile = React.forwardRef(function TimeGridEventMobile
         <TimeGridEventMobileResizeHandler
           className={classes.timeGridEventResizeHandler}
           side="start"
+          interaction="pointer"
         />
       )}
       {content}
@@ -161,6 +157,7 @@ export const TimeGridEventMobile = React.forwardRef(function TimeGridEventMobile
         <TimeGridEventMobileResizeHandler
           className={classes.timeGridEventResizeHandler}
           side="end"
+          interaction="pointer"
         />
       )}
     </TimeGridEventMobileRoot>

@@ -14,6 +14,7 @@ export function useEventResizeHandler(
     side,
     getDragData,
     canDrag,
+    disabled = false,
     contextValue: { doesEventStartBeforeCollectionStart, doesEventEndAfterCollectionEnd },
   } = parameters;
 
@@ -29,7 +30,7 @@ export function useEventResizeHandler(
   );
 
   React.useEffect(() => {
-    if (!ref.current || !enabled) {
+    if (!ref.current || !enabled || disabled) {
       return undefined;
     }
 
@@ -41,7 +42,7 @@ export function useEventResizeHandler(
         disableNativeDragPreview({ nativeSetDragImage });
       },
     });
-  }, [ref, enabled, side, getDragData, canDragStable]);
+  }, [ref, enabled, disabled, side, getDragData, canDragStable]);
 
   return { state, enabled };
 }
@@ -63,6 +64,13 @@ export namespace useEventResizeHandler {
      * The date to edit when dragging the resize handler.
      */
     side: SchedulerEventSide;
+    /**
+     * How the resize gesture is initiated.
+     * - `'native'`: uses the native drag-and-drop API (best for mouse/desktop).
+     * - `'pointer'`: uses pointer events, so a plain touch + drag starts the resize (best for touch).
+     * @default 'native'
+     */
+    interaction?: 'native' | 'pointer';
   }
 
   export interface Parameters extends PublicParameters {
@@ -81,6 +89,12 @@ export namespace useEventResizeHandler {
      * Defaults to always allowing the drag.
      */
     canDrag?: () => boolean;
+    /**
+     * When `true`, the native drag-and-drop listeners are not attached. Used when the resize
+     * is driven by pointer events instead (see `useTouchEventResizeHandler`).
+     * @default false
+     */
+    disabled?: boolean;
     /**
      * The context value from the event component wrapping the resize handler.
      */

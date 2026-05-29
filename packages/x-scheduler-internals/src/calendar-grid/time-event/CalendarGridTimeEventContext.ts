@@ -15,6 +15,11 @@ export interface CalendarGridTimeEventContext extends useDraggableEvent.ContextV
    * Defaults to always allowing the drag when not provided.
    */
   canDrag?: () => boolean;
+  /**
+   * Ref to the event's root element. Used by the pointer-based resize handler to read the
+   * geometry of the column the event is positioned within (the root's offset parent).
+   */
+  rootRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export const CalendarGridTimeEventContext = React.createContext<
