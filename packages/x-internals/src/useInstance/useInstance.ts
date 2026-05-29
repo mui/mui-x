@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import { useOnMount } from '@base-ui/utils/useOnMount';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 
@@ -10,11 +11,47 @@ interface Disposable {
   disposeEffect: () => () => void;
 }
 
+// React 19 exposes shared internals under `__CLIENT_INTERNALS_…` with the
+// fiber under `A.getOwner()`; React 18 exposes them under `__SECRET_INTERNALS_…`
+// with the fiber under `ReactCurrentOwner.current`. `mode` is a bitfield on
+// the fiber; StrictLegacyMode (8) and StrictEffectsMode (16) together cover
+// both `<StrictMode>` flavors.
+const STRICT_MODE_BITS = 0b11000;
+
+interface ReactSharedInternalsLike {
+  A?: { getOwner?: () => { mode?: number } | null } | null;
+  ReactCurrentOwner?: { current?: { mode?: number } | null } | null;
+}
+
+const ReactInternals: ReactSharedInternalsLike | undefined =
+  (
+    React as unknown as {
+      __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?: ReactSharedInternalsLike;
+    }
+  ).__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE ??
+  (
+    React as unknown as {
+      __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED?: ReactSharedInternalsLike;
+    }
+  ).__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+function isInStrictMode(): boolean {
+  try {
+    const owner =
+      ReactInternals?.A?.getOwner?.() ?? ReactInternals?.ReactCurrentOwner?.current ?? null;
+    if (owner == null || typeof owner.mode !== 'number') {
+      return false;
+    }
+    return (owner.mode & STRICT_MODE_BITS) !== 0;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Production variant: lazily creates the instance on first render and wires
  * `disposeEffect` to the mount/unmount lifecycle. No StrictMode detection is
  * needed because StrictMode's double-mount only happens in development.
- * @returns {T} the lazily-created instance.
  */
 function useInstanceProduction<T extends Disposable>(factory: () => T): T {
   const instance = useRefWithInit(factory).current;
@@ -23,20 +60,19 @@ function useInstanceProduction<T extends Disposable>(factory: () => T): T {
 }
 
 /**
- * Development variant: always builds the cleanup closure but never registers
- * it with React. Trade-off: dev memory leaks on real unmounts. Reason: there
- * is no synchronous way to detect StrictMode that works across React build
- * configurations (StrictLegacyMode bits and `useState` lazy-initializer
- * double-invocation are stripped or partial in some test bundles), and
- * registering the cleanup disposes the instance during StrictMode's
- * mount→unmount→mount cycle, which breaks every subsequent operation.
- * @returns {T} the lazily-created instance.
+ * Development variant: detects StrictMode by reading the currently-rendering
+ * fiber's `mode` bits from React shared internals and skips the cleanup when
+ * set, so a single instance survives StrictMode's mount→unmount→mount cycle.
+ * Dev-only trade-off: a real unmount inside `<StrictMode>` also skips dispose.
  */
 function useInstanceDevelopment<T extends Disposable>(factory: () => T): T {
   const instance = useRefWithInit(factory).current;
+  // Captured during render because the owner fiber is only set while React
+  // is rendering — by the time the effect runs it's already null.
+  const strictModeRef = useRefWithInit(isInStrictMode);
   useOnMount(() => {
-    instance.disposeEffect();
-    return undefined;
+    const cleanup = instance.disposeEffect();
+    return strictModeRef.current ? undefined : cleanup;
   });
   return instance;
 }
@@ -44,14 +80,6 @@ function useInstanceDevelopment<T extends Disposable>(factory: () => T): T {
 /**
  * Lazily creates an instance on first render and runs `instance.disposeEffect`
  * once on mount. The returned cleanup runs synchronously on unmount.
- *
- * `MUI_TEST_ENV` forces the development variant even when `NODE_ENV` resolves
- * to `"production"` in the test bundle, so StrictMode handling stays active
- * across CI environments where the NODE_ENV define may differ from the React
- * build that's actually loaded.
  */
 export const useInstance =
-  process.env.NODE_ENV === 'production' &&
-  typeof (globalThis as { MUI_TEST_ENV?: boolean }).MUI_TEST_ENV === 'undefined'
-    ? useInstanceProduction
-    : useInstanceDevelopment;
+  process.env.NODE_ENV === 'production' ? useInstanceProduction : useInstanceDevelopment;
