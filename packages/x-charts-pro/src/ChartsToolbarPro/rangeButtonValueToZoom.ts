@@ -152,10 +152,11 @@ export function rangeButtonValueToZoom(
         ]);
       }
       // Band items span [i/L, (i+1)/L] along the axis; point items sit at i/(L-1).
+      // For band, the end index is inclusive, so the right edge of the band is `(endIndex + 1) / L`.
       if (scaleType === 'band') {
         return {
           start: (startIndex / ordinalData.length) * 100,
-          end: (endIndex / ordinalData.length) * 100,
+          end: ((endIndex + 1) / ordinalData.length) * 100,
         };
       }
       const maxIndex = ordinalData.length - 1;
@@ -192,7 +193,7 @@ export function rangeButtonValueToZoom(
       const endIndex = lastLte === -1 ? 0 : lastLte;
       return {
         start: toPercent(startIndex, 0),
-        end: toPercent(endIndex, 100),
+        end: toPercent(endIndex + (isBand ? 1 : 0), 100),
       };
     }
 

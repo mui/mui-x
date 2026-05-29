@@ -223,7 +223,7 @@ describe('rangeButtonValueToZoom', () => {
         ordinalDateParams,
       );
       expect(result.start).to.be.closeTo((3 / 12) * 100, 0.1);
-      expect(result.end).to.be.closeTo((8 / 12) * 100, 0.1);
+      expect(result.end).to.be.closeTo((9 / 12) * 100, 0.1);
     });
 
     it('should clamp date range that starts before data', () => {
@@ -232,7 +232,7 @@ describe('rangeButtonValueToZoom', () => {
         ordinalDateParams,
       );
       expect(result.start).to.equal(0);
-      expect(result.end).to.be.closeTo((5 / 12) * 100, 0.1);
+      expect(result.end).to.be.closeTo((6 / 12) * 100, 0.1);
     });
 
     it('should clamp date range that ends after data', () => {
@@ -241,7 +241,7 @@ describe('rangeButtonValueToZoom', () => {
         ordinalDateParams,
       );
       expect(result.start).to.be.closeTo((9 / 12) * 100, 0.1);
-      expect(result.end).to.be.closeTo((11 / 12) * 100, 0.1);
+      expect(result.end).to.equal(100);
     });
 
     it('should handle calendar interval { unit: "month", step: 3 }', () => {
@@ -270,7 +270,7 @@ describe('rangeButtonValueToZoom', () => {
         domain: { min: 0, max: 4 },
       });
       expect(result.start).to.be.closeTo((1 / 5) * 100, 0.1);
-      expect(result.end).to.be.closeTo((3 / 5) * 100, 0.1);
+      expect(result.end).to.be.closeTo((4 / 5) * 100, 0.1);
     });
 
     it('should work with date strings', () => {
@@ -280,7 +280,7 @@ describe('rangeButtonValueToZoom', () => {
         domain: { min: 0, max: 3 },
       });
       expect(result.start).to.be.closeTo((1 / 4) * 100, 0.1);
-      expect(result.end).to.be.closeTo((2 / 4) * 100, 0.1);
+      expect(result.end).to.be.closeTo((3 / 4) * 100, 0.1);
     });
 
     it('should warn and fall back to continuous logic for non-date-like data', () => {
@@ -324,13 +324,12 @@ describe('rangeButtonValueToZoom', () => {
     it('should match a string range to the matching axis value indices on a band axis', () => {
       const result = rangeButtonValueToZoom(['Feb', 'May'], ordinalParams);
       expect(result.start).to.be.closeTo((1 / 6) * 100, 0.1);
-      expect(result.end).to.be.closeTo((4 / 6) * 100, 0.1);
+      expect(result.end).to.be.closeTo((5 / 6) * 100, 0.1);
     });
 
-    it('should match the first category and last band edge on a band axis', () => {
+    it('should match the first and last categories on a band axis', () => {
       const result = rangeButtonValueToZoom(['Jan', 'Jun'], ordinalParams);
-      expect(result.start).to.equal(0);
-      expect(result.end).to.be.closeTo((5 / 6) * 100, 0.1);
+      expect(result).to.deep.equal({ start: 0, end: 100 });
     });
 
     it('should work on point axes using maxIndex denominator', () => {
