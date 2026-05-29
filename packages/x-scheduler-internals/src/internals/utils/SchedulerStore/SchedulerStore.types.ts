@@ -17,16 +17,21 @@ import {
   SchedulerEventSide,
 } from '../../../models';
 import { Adapter, DateLocale } from '../../../use-adapter/useAdapter.types';
+import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 
-export type SchedulerPlan = 'community' | 'premium';
+export interface StoredError {
+  /**
+   * The error itself. Non-Error rejections are wrapped, preserving the original via `cause`.
+   */
+  error: Error;
+  /**
+   * Stable identifier assigned at push time. Suitable as a React key and as the
+   * argument to `store.dismissError(key)`.
+   */
+  key: string;
+}
 
 export interface SchedulerState<TEvent extends object = any> {
-  /**
-   * The plan of the scheduler instance.
-   * Derived from the `instanceName` of the store.
-   * Used to gate premium features like recurring events.
-   */
-  plan: SchedulerPlan;
   /**
    * The adapter of the date library.
    * Not publicly exposed, is only set in state to avoid passing it to the selectors.
@@ -85,6 +90,10 @@ export interface SchedulerState<TEvent extends object = any> {
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    */
   areEventsDraggable: boolean;
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   */
+  shouldEventRequireResource: boolean;
   /**
    * Whether the event start or end can be dragged to change its duration without changing its other date.
    * If `true`, both start and end can be resized.
@@ -167,17 +176,36 @@ export interface SchedulerState<TEvent extends object = any> {
   isLoading: boolean;
   /**
    * The errors that occurred during data fetching.
+   * Each entry carries a stable `key` assigned at push time so the UI can use it
+   * directly as a React key and as the argument to `store.dismissError(key)`.
    */
-  errors: Error[];
+  errors: readonly StoredError[];
+  /**
+   * Plugin that provides recurring-events support. `null` when not attached.
+   */
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null;
+}
+
+/**
+ * Result of `dataSource.persistEvents`.
+ */
+export interface SchedulerPersistEventsResult {
+  success: boolean;
 }
 
 export interface SchedulerDataSource<TEvent extends object> {
   getEvents: (start: TemporalSupportedObject, end: TemporalSupportedObject) => Promise<TEvent[]>;
-  updateEvents: (parameters: {
+  /**
+   * Called when events are created, updated or deleted so the consumer can persist them.
+   *
+   * Throw to surface a custom error in `state.errors`. Return `{ success: false }`
+   * to abort the cache/state update with a generic error.
+   */
+  persistEvents: (parameters: {
     deleted: SchedulerEventId[];
-    updated: SchedulerEventId[];
-    created: SchedulerEventId[];
-  }) => Promise<{ success: boolean }>;
+    updated: TEvent[];
+    created: TEvent[];
+  }) => Promise<SchedulerPersistEventsResult>;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
@@ -246,6 +274,10 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * @default true
    */
   areEventsDraggable?: boolean;
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   */
+  shouldEventRequireResource?: boolean;
   /**
    * Whether the event start or end can be dragged to change its duration without changing its other date.
    * If `true`, both start and end can be resized.
@@ -348,9 +380,11 @@ export interface SchedulerParametersToStateMapper<
 > {
   /**
    * Gets the initial state of the store based on the initial parameters.
+   * `shouldEventRequireResource` is left for the mapper to set, because its default depends on the component
+   * (`false` on the Event Calendar, `true` on the Event Timeline).
    */
   getInitialState: (
-    schedulerInitialState: SchedulerState,
+    schedulerInitialState: Omit<SchedulerState, 'shouldEventRequireResource'>,
     parameters: Parameters,
     adapter: Adapter,
   ) => State;

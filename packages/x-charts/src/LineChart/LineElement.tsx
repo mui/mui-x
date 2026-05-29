@@ -10,6 +10,7 @@ import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
 import { useStore } from '../internals/store/useStore';
 import { type LineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+import type { LinePropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface LineElementOwnerState {
   seriesId: SeriesId;
@@ -27,11 +28,11 @@ export interface LineElementSlots {
    * The component that renders the line.
    * @default LineElementPath
    */
-  line?: React.JSXElementConstructor<AnimatedLineProps>;
+  line?: React.JSXElementConstructor<AnimatedLineProps & LinePropsOverrides>;
 }
 
 export interface LineElementSlotProps {
-  line?: SlotComponentPropsFromProps<AnimatedLineProps, {}, LineElementOwnerState>;
+  line?: SlotComponentPropsFromProps<AnimatedLineProps, LinePropsOverrides, LineElementOwnerState>;
 }
 
 export interface LineElementProps

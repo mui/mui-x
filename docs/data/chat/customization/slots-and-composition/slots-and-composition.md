@@ -44,7 +44,7 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 <ChatBox
   slotProps={{
     conversationList: { 'aria-label': 'Chat threads' },
-    composerInput: { placeholder: 'Ask anything...' },
+    composerInput: { placeholder: 'Ask anything…' },
     composerSendButton: { sx: { borderRadius: 6 } },
   }}
 />
@@ -196,7 +196,7 @@ const MyMessageContent: ChatBoxSlots['messageContent'] = (props) => {
 
 // Type-safe slotProps
 const mySlotProps: ChatBoxSlotProps = {
-  composerInput: { placeholder: 'Type here...' },
+  composerInput: { placeholder: 'Type here…' },
   messageList: { sx: { p: 2 } },
 };
 ```

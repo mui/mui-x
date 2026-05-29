@@ -18,6 +18,11 @@ export type EventCalendarPremiumApiRef<
 export interface EventCalendarPremiumProps<TEvent extends object, TResource extends object>
   extends React.HTMLAttributes<HTMLDivElement>, EventCalendarPremiumParameters<TEvent, TResource> {
   /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * @default false
+   */
+  shouldEventRequireResource?: boolean;
+  /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<EventCalendarClasses>;

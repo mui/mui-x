@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/7c091ffc8105f41363b1bd9907eca180c8c1d21e/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/023c96ed6ca37cdb1ff687787e61257c0960285a/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -57,6 +57,7 @@ default-job: &default-job
     BASE_BRANCH: master
   working_directory: /tmp/mui
   executor: code-infra/mui-node
+  resource_class: medium
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -107,7 +108,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     resource_class: xlarge
     steps:
       - checkout
@@ -148,7 +149,6 @@ jobs:
       - install-deps
       - code-infra/eslint
       - code-infra/stylelint
-      - code-infra/markdownlint
       - code-infra/valelint
   test_static:
     <<: *default-job
@@ -200,7 +200,7 @@ jobs:
             git add -A && git diff --exit-code --staged
   test_types:
     <<: *default-job
-    resource_class: medium+
+    resource_class: large
     steps:
       - checkout
       - install-deps
@@ -219,7 +219,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     steps:
       - checkout
       - install-deps:
@@ -234,7 +234,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
     steps:
       - checkout
       - install-deps
@@ -257,17 +257,15 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
+      playwright-img-version: v1.60.0-noble
+    resource_class: large
     steps:
       - checkout
       - install-deps:
           react-version: << parameters.react-version >>
       - run:
           name: Install ffmpeg
-          command: apt update && apt upgrade -y && apt install ffmpeg -y
-      - run:
-          name: Build packages
-          command: pnpm release:build
+          command: apt-get update && apt-get install ffmpeg --no-install-recommends -y
       - run:
           name: Run visual regression tests
           command: xvfb-run pnpm test:regressions
@@ -278,8 +276,7 @@ jobs:
     <<: *default-job
     executor:
       name: code-infra/mui-node-browser
-      playwright-img-version: v1.59.1-noble
-    resource_class: medium
+      playwright-img-version: v1.60.0-noble
     steps:
       - checkout
       - run:

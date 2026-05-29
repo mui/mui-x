@@ -1,7 +1,8 @@
+import { warnOnce } from '@mui/x-internals/warning';
 import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
 import { Adapter } from '../use-adapter';
-import { parseRRule, projectRRuleToTimezone } from '../internals/utils/recurring-events';
+import { SchedulerRecurringEventsPluginInterface } from '../internals/plugins/SchedulerRecurringEventsPlugin.types';
 import { TemporalTimezone } from '../base-ui-copy/types';
 import { resolveEventDate } from './resolveEventDate';
 
@@ -9,6 +10,7 @@ export function processEvent(
   model: SchedulerEvent,
   displayTimezone: TemporalTimezone,
   adapter: Adapter,
+  recurringEventsPlugin: SchedulerRecurringEventsPluginInterface | null = null,
 ): SchedulerProcessedEvent {
   const dataTimezone = model.timezone ?? 'default';
 
@@ -24,11 +26,29 @@ export function processEvent(
     ? resolvedExDates.map((exDate) => adapter.setTimezone(exDate, displayTimezone))
     : undefined;
 
-  const parsedDataRRule = model.rrule ? parseRRule(adapter, model.rrule, dataTimezone) : undefined;
+  if (recurringEventsPlugin == null && model.rrule != null) {
+    if (process.env.NODE_ENV !== 'production') {
+      warnOnce([
+        'MUI X Scheduler: Recurring events are a premium feature. The `rrule` property will be ignored.',
+        'Use <EventCalendarPremium /> or <EventTimelinePremium /> to enable recurring events.',
+      ]);
+    }
+  }
 
-  const displayTimezoneRRule = parsedDataRRule
-    ? projectRRuleToTimezone(adapter, parsedDataRRule, displayTimezone, startInstant)
-    : undefined;
+  const parsedDataRRule =
+    recurringEventsPlugin && model.rrule
+      ? recurringEventsPlugin.parseRRule(adapter, model.rrule, dataTimezone)
+      : undefined;
+
+  const displayTimezoneRRule =
+    recurringEventsPlugin && parsedDataRRule
+      ? recurringEventsPlugin.projectRRuleToTimezone(
+          adapter,
+          parsedDataRRule,
+          displayTimezone,
+          startInstant,
+        )
+      : undefined;
 
   return {
     id: model.id,

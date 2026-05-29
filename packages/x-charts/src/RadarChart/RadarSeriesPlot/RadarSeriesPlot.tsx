@@ -28,7 +28,7 @@ function RadarSeriesPlot(props: RadarSeriesPlotProps) {
           }
 
           return (
-            <g key={seriesId}>
+            <g key={seriesId} data-series={seriesId}>
               {
                 <path
                   key={seriesId}
