@@ -24,11 +24,13 @@ interface ReactSharedInternalsLike {
 }
 
 const ReactInternals: ReactSharedInternalsLike | undefined =
+  // eslint-disable-next-line no-underscore-dangle
   (
     React as unknown as {
       __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?: ReactSharedInternalsLike;
     }
   ).__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE ??
+  // eslint-disable-next-line no-underscore-dangle
   (
     React as unknown as {
       __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED?: ReactSharedInternalsLike;
@@ -42,6 +44,7 @@ function isInStrictMode(): boolean {
     if (owner == null || typeof owner.mode !== 'number') {
       return false;
     }
+    // eslint-disable-next-line no-bitwise
     return (owner.mode & STRICT_MODE_BITS) !== 0;
   } catch {
     return false;
@@ -52,6 +55,7 @@ function isInStrictMode(): boolean {
  * Production variant: lazily creates the instance on first render and wires
  * `disposeEffect` to the mount/unmount lifecycle. No StrictMode detection is
  * needed because StrictMode's double-mount only happens in development.
+ * @returns {T} the lazily-created instance.
  */
 function useInstanceProduction<T extends Disposable>(factory: () => T): T {
   const instance = useRefWithInit(factory).current;
@@ -64,6 +68,7 @@ function useInstanceProduction<T extends Disposable>(factory: () => T): T {
  * fiber's `mode` bits from React shared internals and skips the cleanup when
  * set, so a single instance survives StrictMode's mount→unmount→mount cycle.
  * Dev-only trade-off: a real unmount inside `<StrictMode>` also skips dispose.
+ * @returns {T} the lazily-created instance.
  */
 function useInstanceDevelopment<T extends Disposable>(factory: () => T): T {
   const instance = useRefWithInit(factory).current;
