@@ -6,11 +6,6 @@ import { WeekViewProps } from '@mui/x-scheduler/week-view';
 export interface StandaloneWeekViewPremiumProps<TEvent extends object, TResource extends object>
   extends WeekViewProps, EventCalendarPremiumParameters<TEvent, TResource> {
   /**
-   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
-   * @default false
-   */
-  shouldEventRequireResource?: boolean;
-  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
