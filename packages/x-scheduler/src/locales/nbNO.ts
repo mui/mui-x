@@ -52,6 +52,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyPresetLabel: (date) => `Gjentas årlig den ${date}`,
   noResourceAriaLabel: 'Ingen spesifikk ressurs',
   resourceLabel: 'Ressurs',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Lagre',
   startDateAfterEndDateError: 'Startdato/-tid må være før sluttdato/-tid.',
   startDateLabel: 'Startdato',

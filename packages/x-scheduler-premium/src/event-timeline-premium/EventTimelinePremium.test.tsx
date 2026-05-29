@@ -443,7 +443,10 @@ describe('<EventTimelinePremium />', () => {
 
   describe('error handling', () => {
     function renderErrorContainer(initialErrors: Error[]) {
-      const store = new EventTimelinePremiumStore({ events: [] }, adapter);
+      const store = new EventTimelinePremiumStore(
+        { events: [], resources: baseResources },
+        adapter,
+      );
       store.set(
         'errors',
         initialErrors.map((error, index) => ({ error, key: String(index) })),
@@ -638,7 +641,10 @@ describe('<EventTimelinePremium />', () => {
 
     it('should re-display the same Error instance after dismiss when pushed again with a new key', async () => {
       const sharedError = new Error('Shared error');
-      const store = new EventTimelinePremiumStore({ events: [] }, adapter);
+      const store = new EventTimelinePremiumStore(
+        { events: [], resources: baseResources },
+        adapter,
+      );
       store.set('errors', [{ error: sharedError, key: '1' }]);
 
       function Test() {

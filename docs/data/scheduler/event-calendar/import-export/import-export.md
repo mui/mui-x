@@ -1,11 +1,11 @@
 ---
 productId: x-scheduler
-title: React Scheduler component - Import & Export
+title: React Scheduler component - Import and Export
 packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
 ---
 
-# Event Calendar - Import & Export
+# Event Calendar - Import and Export
 
 <p class="description">Import and export events from the Event Calendar.</p>
 

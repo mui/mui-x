@@ -72,7 +72,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         const aSeries = (series ?? {})[seriesId];
         const flatbush = flatbushMap.get(seriesId);
 
-        if (!flatbush) {
+        if (!flatbush || aSeries.hidden) {
           continue;
         }
 
