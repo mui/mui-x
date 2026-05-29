@@ -114,26 +114,29 @@ Both variants share `useTimeGridEvent` (data attributes, position vars, draggabl
 
 ### How the variant is plugged in today
 
-`CompactDayTimeGrid` reuses `DayTimeGrid` and swaps the event card through an **internal-only** slot:
+`CompactDayTimeGrid` reuses `DayTimeGrid` and swaps the event card through an **internal-only** React context (`DayTimeGridInternalRenderersContext`). The desktop renderer is always used as a default; sibling views can override it by wrapping `DayTimeGrid` in the provider:
 
 ```tsx
-<DayTimeGrid
-  ref={forwardedRef}
-  days={days}
-  slots={{ timeGridEvent: TimeGridEventMobile }}
-  {...other}
-/>
+<DayTimeGridInternalRenderersContext.Provider value={{ timeGridEvent: TimeGridEventMobile }}>
+  <DayTimeGrid ref={forwardedRef} days={days} {...other} />
+</DayTimeGridInternalRenderersContext.Provider>
 ```
 
-The `slots` prop is marked `@internal`. It is **not** part of the public API. Only sibling views inside `@mui/x-scheduler` can use it.
+The context lives next to `DayTimeGrid` and is not exported from the package. `DayTimeGrid`'s public props stay unchanged — no `slots` (or any other override) prop appears in the types, so consumers can't reach it.
 
-This part is **up for debate**:
+This mirrors how the event dialog already injects the recurrence tab from premium via `EventDialogOptionalRenderersContext`. The semantics are slightly different though: here the desktop renderer is always there as a default and the context only overrides it (hence "Internal" rather than "Optional" — community already has a renderer, premium would only swap it).
 
-- The current shape keeps `CompactDayTimeGrid` thin (~10 lines) and keeps both variants behind the same component. Adding more variants later is one line.
-- The downside: `slots` prop is awkward - depends a lot on whether we want to allow for a public `event` slot later.
-- Alternatives considered:
-  - A `variant: 'comfortable' | 'compact'` prop on `DayTimeGrid` — change styling based on a prop. Makes things harder to maintain and custom logic will make the file even longer and harder to read.
-  - A separate `CompactDayTimeGrid` that does not go through `DayTimeGrid` — most decoupled, but duplicates the grid/scroll/header code that's the whole point of sharing. A lot of duplication, almost everything in the current `DayTimeGrid` is resued by the mobile.
-  - A React context that tells `DayTimeGrid` which event component to render
-  - Composition (a `<DayTimeGrid.Event>` subcomponent the consumer picks)
-  - `children` as the event renderer
+Why a context over a prop:
+
+- Keeps the `slots` name free on `DayTimeGrid` for a future public slots API. Zero migration when that lands.
+- `DayTimeGrid`'s public surface stays unchanged. No `@internal` prop in the types.
+- Codebase precedent — same pattern as the event dialog renderers.
+- Tests are unaffected: `DayTimeGrid` doesn't need to know the mobile path exists; only `CompactDayTimeGrid` wires the provider.
+
+Alternatives considered:
+
+- A `variant: 'comfortable' | 'compact'` prop on `DayTimeGrid` — change styling based on a prop. Makes things harder to maintain and custom logic will make the file even longer and harder to read.
+- A separate `CompactDayTimeGrid` that does not go through `DayTimeGrid` — most decoupled, but duplicates the grid/scroll/header code that's the whole point of sharing. A lot of duplication, almost everything in the current `DayTimeGrid` is reused by the mobile.
+- An `@internal` `slots` prop on `DayTimeGrid` — simpler, but the `@internal` tag is intent, not enforcement, and `slots` is the canonical public customization name across MUI X, which would block (or force a migration of) any future real public slots API on `DayTimeGrid`.
+- Composition (a `<DayTimeGrid.Event>` subcomponent the consumer picks)
+- `children` as the event renderer
