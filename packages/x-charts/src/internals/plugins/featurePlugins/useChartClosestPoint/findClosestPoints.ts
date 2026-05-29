@@ -91,12 +91,14 @@ export function findClosestPoints(
   }
   ranked.sort((a, b) => a.edge - b.edge);
 
-  // The pointer is inside multiple marks, we sore them by distance to the center.
-  const splitIndex = ranked.findIndex((d) => d.edge > 0);
+  // The pointer is inside multiple marks, we sort them by distance to the center. Priority is
+  // 1. marks that are under the pointer (negative edge distance) sorted by distance to the center
+  // 2. marks that are outside the pointer (positive edge distance) by distance to the edge
+  const splitIndex = ranked.findLastIndex((d) => d.edge < 0);
   if (splitIndex !== -1) {
     ranked = [
-      ...ranked.slice(0, splitIndex).sort((a, b) => a.centerDistSq - b.centerDistSq),
-      ...ranked.slice(splitIndex),
+      ...ranked.slice(0, splitIndex + 1).sort((a, b) => a.centerDistSq - b.centerDistSq),
+      ...ranked.slice(splitIndex + 1),
     ];
   }
   return ranked.slice(0, Math.min(ranked.length, maxResults)).map((d) => d.index);

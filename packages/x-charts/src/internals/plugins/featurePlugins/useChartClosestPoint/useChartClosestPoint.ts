@@ -18,6 +18,34 @@ import {
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { findClosestPoints } from './findClosestPoints';
 
+type ClosestPoint = { dataIndex: number; seriesId: SeriesId; edgeDistance: number; radius: number };
+
+/**
+ * Return `true` if the candidate point is closer to the pointer than the current closest point.
+ * By priority we prefer:
+ * 1. points that are under the pointer (negative edge distance) sorted by distance to the center.
+ * 2. points that are outside the pointer (positive edge distance) by distance to the edge.
+ */
+function isCloser(candidatePoint: ClosestPoint, currentClosestPoint: ClosestPoint | undefined) {
+  if (currentClosestPoint === undefined) {
+    return true;
+  }
+
+  if (candidatePoint.edgeDistance <= 0) {
+    if (currentClosestPoint.edgeDistance > 0) {
+      return true;
+    }
+    const candidateDistance = candidatePoint.edgeDistance + candidatePoint.radius;
+    const currentDistance = currentClosestPoint.edgeDistance + currentClosestPoint.radius;
+    return candidateDistance < currentDistance;
+  }
+  if (currentClosestPoint.edgeDistance <= 0) {
+    return false;
+  }
+
+  return candidatePoint.edgeDistance < currentClosestPoint.edgeDistance;
+}
+
 export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = ({
   params,
   store,
@@ -65,9 +93,7 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         return 'outside-chart';
       }
 
-      let closestPoint:
-        | { dataIndex: number; seriesId: SeriesId; edgeDistance: number }
-        | undefined = undefined;
+      let closestPoint: ClosestPoint | undefined = undefined;
 
       for (const seriesId of seriesOrder ?? []) {
         const aSeries = (series ?? {})[seriesId];
@@ -123,19 +149,18 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
           typeof getItemRadius === 'number' ? getItemRadius : getItemRadius(closestPointIndex);
         const edgeDistance = centerDist - closestPointRadius;
 
-        if (edgeDistance > closestPointRadius && resolvedHitAreaRadius === 'item') {
+        if (resolvedHitAreaRadius === 'item' && edgeDistance > 0) {
           continue;
         }
-        if (
-          closestPoint === undefined ||
-          edgeDistance < closestPoint.edgeDistance ||
-          (resolvedHitAreaRadius === 'item' && edgeDistance === closestPoint.edgeDistance)
-        ) {
-          closestPoint = {
-            dataIndex: closestPointIndex,
-            seriesId,
-            edgeDistance,
-          };
+
+        const newPoint = {
+          dataIndex: closestPointIndex,
+          seriesId,
+          edgeDistance,
+          radius: closestPointRadius,
+        };
+        if (isCloser(newPoint, closestPoint)) {
+          closestPoint = newPoint;
         }
       }
 
