@@ -15,7 +15,10 @@ import {
   eventTimelinePremiumPresetSelectors,
   timelineOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-internals-premium/event-timeline-premium-selectors';
-import { schedulerNowSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import {
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import {
   EventDialogProvider,
@@ -28,6 +31,7 @@ import { EventTimelinePremiumHeader } from './timeline-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
+import { EventTimelinePremiumSkeleton } from './event-skeleton';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 
 const EventTimelinePremiumContentRoot = styled('section', {
@@ -153,7 +157,7 @@ const EventTimelinePremiumEventsSubGridRow = styled(TimelineGrid.EventRow, {
   width: 'calc(var(--unit-count) * var(--unit-width))',
   minWidth: '100%',
   display: 'grid',
-  gridTemplateRows: `repeat(var(--lane-count, 1), minmax(calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1)}), auto))`,
+  gridTemplateRows: `repeat(var(--lane-count, 1), minmax(calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1.125)}), auto))`,
   rowGap: theme.spacing(0.5),
   position: 'relative',
   padding: theme.spacing(2, 0),
@@ -255,6 +259,7 @@ function EventRowContent({ resourceId }: { resourceId: SchedulerResourceId }) {
   const { onOpen: startEditing } = useEventDialogContext();
   const { placeholder } = useTimelineGridEventRowContext();
   const placeholderRef = React.useRef<HTMLDivElement | null>(null);
+  const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
   const orderedKeys = useStore(
     store,
@@ -278,6 +283,10 @@ function EventRowContent({ resourceId }: { resourceId: SchedulerResourceId }) {
     }
     startEditing(placeholderRef, placeholder.occurrence);
   }, [isCreatingAnEvent, placeholder, startEditing]);
+
+  if (isLoading) {
+    return <EventTimelinePremiumSkeleton />;
+  }
 
   return (
     <React.Fragment>
@@ -492,7 +501,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               )}
             </EventTimelinePremiumEventsHeaderCell>
           </EventTimelinePremiumHeaderRow>
-          <EventTimelinePremiumBodyScroller role="presentation">
+          <EventTimelinePremiumBodyScroller role="none">
             <EventTimelinePremiumTitleSubGrid
               ref={titleSubGridRef}
               className={classes.titleSubGrid}
@@ -503,7 +512,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             </EventTimelinePremiumTitleSubGrid>
             <EventTimelinePremiumEventsSubGridWrapper
               ref={eventsScrollerRef}
-              role="presentation"
+              role="none"
               className={classes.eventsSubGridWrapper}
             >
               <EventTimelinePremiumEventsSubGrid className={classes.eventsSubGrid}>

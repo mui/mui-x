@@ -10,6 +10,7 @@ import {
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-internals/models';
 import { getDayList } from '@mui/x-scheduler-internals/get-day-list';
+import { getStartOfWeek, getEndOfWeek, getWeekNumber } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
@@ -118,11 +119,12 @@ const monthVisibleDaysSelector = createSelectorMemoized(
   (state: State) => state.adapter,
   schedulerOtherSelectors.visibleDate,
   eventCalendarPreferenceSelectors.showWeekends,
-  (adapter, visibleDate, showWeekends) =>
+  eventCalendarPreferenceSelectors.weekStartsOn,
+  (adapter, visibleDate, showWeekends, weekStartsOn) =>
     getDayList({
       adapter,
-      start: adapter.startOfWeek(adapter.startOfMonth(visibleDate)),
-      end: adapter.endOfWeek(adapter.endOfMonth(visibleDate)),
+      start: getStartOfWeek(adapter, adapter.startOfMonth(visibleDate), weekStartsOn),
+      end: getEndOfWeek(adapter, adapter.endOfMonth(visibleDate), weekStartsOn),
       excludeWeekends: !showWeekends,
     }),
 );
@@ -132,11 +134,12 @@ const monthVisibleDaysSelector = createSelectorMemoized(
 const monthVisibleRowsSelector = createSelectorMemoized(
   (state: State) => state.adapter,
   monthVisibleDaysSelector,
-  (adapter, days) => {
+  eventCalendarPreferenceSelectors.weekStartsOn,
+  (adapter, days, weekStartsOn) => {
     const rows: SchedulerProcessedDate[][] = [];
     let weekNumber: number | null = null;
     for (const day of days) {
-      const dayWeekNumber = adapter.getWeekNumber(day.value);
+      const dayWeekNumber = getWeekNumber(adapter, day.value, weekStartsOn);
       if (weekNumber !== dayWeekNumber) {
         weekNumber = dayWeekNumber;
         rows.push([day]);

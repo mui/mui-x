@@ -19,6 +19,8 @@ describe('eventTimelineOccurrencePositionSelectors', () => {
         resources: parameters.resources,
         visibleDate: DEFAULT_TESTING_VISIBLE_DATE,
         preset: 'dayAndHour',
+        // Avoid the upstream `shouldEventRequireResource` warning when tests omit resources.
+        shouldEventRequireResource: false,
       },
       adapter,
     );

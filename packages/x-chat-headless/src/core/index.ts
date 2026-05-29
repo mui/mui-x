@@ -33,6 +33,17 @@ export {
 export type { ChatProviderProps } from '../ChatProvider';
 
 export type { ChatAdapter, PaginationDirection } from '../adapters/chatAdapter';
+export { createEchoAdapter } from '../adapters/createEchoAdapter';
+export type { CreateEchoAdapterOptions } from '../adapters/createEchoAdapter';
+export { createAiSdkAdapter } from '../adapters/createAiSdkAdapter';
+export type {
+  AiSdkChatInstance,
+  AiSdkUIMessageChunk,
+  CreateAiSdkAdapterChatOptions,
+  CreateAiSdkAdapterOptions,
+  CreateAiSdkAdapterRequest,
+  CreateAiSdkAdapterStreamOptions,
+} from '../adapters/createAiSdkAdapter';
 
 export type {
   ChatPartRenderer,

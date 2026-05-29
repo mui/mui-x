@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import { getDayList } from '@mui/x-scheduler-internals/get-day-list';
+import { getStartOfWeek, getEndOfWeek } from '@mui/x-scheduler-internals/internals';
 import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
@@ -15,11 +16,12 @@ const weekVisibleDaysSelector = createSelectorMemoized(
   (state: State) => state.adapter,
   schedulerOtherSelectors.visibleDate,
   eventCalendarPreferenceSelectors.showWeekends,
-  (adapter, visibleDate, showWeekends) =>
+  eventCalendarPreferenceSelectors.weekStartsOn,
+  (adapter, visibleDate, showWeekends, weekStartsOn) =>
     getDayList({
       adapter,
-      start: adapter.startOfWeek(visibleDate),
-      end: adapter.endOfWeek(visibleDate),
+      start: getStartOfWeek(adapter, visibleDate, weekStartsOn),
+      end: getEndOfWeek(adapter, visibleDate, weekStartsOn),
       excludeWeekends: !showWeekends,
     }),
 );
@@ -27,7 +29,11 @@ const weekVisibleDaysSelector = createSelectorMemoized(
 const WEEK_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addWeeks(
-      state.adapter.startOfWeek(schedulerOtherSelectors.visibleDate(state)),
+      getStartOfWeek(
+        state.adapter,
+        schedulerOtherSelectors.visibleDate(state),
+        eventCalendarPreferenceSelectors.weekStartsOn(state),
+      ),
       delta,
     ),
   visibleDaysSelector: weekVisibleDaysSelector,
