@@ -111,6 +111,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/charts-geo-data-provider-premium',
+    title: 'ChartsGeoDataProviderPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/charts-grid',
     title: 'ChartsGrid',
   },
@@ -270,6 +275,16 @@ const chartsApiPages: MuiPage[] = [
     title: 'GaugeContainer',
   },
   {
+    pathname: '/x/api/charts/geo-data-plot',
+    title: 'GeoDataPlot',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/graticule',
+    title: 'Graticule',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/heatmap',
     title: 'Heatmap',
     plan: 'pro',
@@ -327,6 +342,16 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/line-plot',
     title: 'LinePlot',
+  },
+  {
+    pathname: '/x/api/charts/map-shape',
+    title: 'MapShape',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/map-shape-plot',
+    title: 'MapShapePlot',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/mark-element',

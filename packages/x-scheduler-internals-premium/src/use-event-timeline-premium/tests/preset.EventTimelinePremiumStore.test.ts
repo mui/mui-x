@@ -1,9 +1,13 @@
 import { spy } from 'sinon';
-import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
+import { adapter, DEFAULT_TESTING_VISIBLE_DATE, ResourceBuilder } from 'test/utils/scheduler';
 import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
-const DEFAULT_PARAMS = { events: [], defaultVisibleDate: DEFAULT_TESTING_VISIBLE_DATE };
+const DEFAULT_PARAMS = {
+  events: [],
+  defaultVisibleDate: DEFAULT_TESTING_VISIBLE_DATE,
+  resources: [ResourceBuilder.new().build()],
+};
 
 describe('Preset - EventTimelinePremiumStore', () => {
   describe('Method: setPreset', () => {
