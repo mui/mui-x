@@ -9,10 +9,14 @@
   },
   "homepage": "https://mui.com/x/react-scheduler/",
   "exports": {
+    "./agenda-view-premium": "./src/agenda-view-premium/index.ts",
+    "./day-view-premium": "./src/day-view-premium/index.ts",
     "./event-calendar-premium": "./src/event-calendar-premium/index.ts",
     "./event-timeline-premium": "./src/event-timeline-premium/index.ts",
+    "./month-view-premium": "./src/month-view-premium/index.ts",
     "./use-event-calendar-premium-api-ref": "./src/use-event-calendar-premium-api-ref/index.ts",
     "./use-event-timeline-premium-api-ref": "./src/use-event-timeline-premium-api-ref/index.ts",
+    "./week-view-premium": "./src/week-view-premium/index.ts",
     "./locales": "./src/locales/index.ts",
     "./theme-augmentation": "./src/theme-augmentation/index.ts",
     "./internals": "./src/internals/index.ts"
