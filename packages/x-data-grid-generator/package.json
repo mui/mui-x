@@ -3,7 +3,7 @@
   "version": "9.3.0",
   "author": "MUI Team",
   "description": "Generate fake data for demo purposes only.",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },

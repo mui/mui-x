@@ -99,19 +99,23 @@ const selectorChartParallels = createSelectorMemoized(
  * Features without a string `properties.name` are skipped; on duplicates,
  * the first occurrence wins.
  */
-export const selectorChartGeoFeatureIndexByName = createSelectorMemoized(
+export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
   selectorChartRawGeoData,
-  (geoData): ReadonlyMap<string, number> => {
-    const map = new Map<string, number>();
+  (geoData): ReadonlyMap<string, number[]> => {
+    const map = new Map<string, number[]>();
     if (!geoData) {
       return map;
     }
     geoData.features.forEach((feature, index) => {
       const name = feature.properties?.name;
-      if (typeof name !== 'string' || map.has(name)) {
+      if (typeof name !== 'string') {
         return;
       }
-      map.set(name, index);
+      if (map.has(name)) {
+        map.get(name)!.push(index);
+        return;
+      }
+      map.set(name, [index]);
     });
     return map;
   },
