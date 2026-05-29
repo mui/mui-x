@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import { autoScrollForElements } from '@atlaskit/pragmatic-drag-and-drop-auto-scroll/element';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { CompositeList } from '../../base-ui-copy/composite/list/CompositeList';
+import { useAutoScrollForTimeGrid } from '../../use-auto-scroll-for-time-grid';
 
 export const CalendarGridTimeScrollableContent = React.forwardRef(
   function CalendarGridScrollableContent(
@@ -15,28 +15,19 @@ export const CalendarGridTimeScrollableContent = React.forwardRef(
       className,
       render,
       style,
+      // Internal props
+      scrollableRef,
       // Props forwarded to the DOM element
       ...elementProps
     } = componentProps;
 
-    const ref = React.useRef<HTMLDivElement>(null);
+    const ownRef = React.useRef<HTMLDivElement>(null);
     const columnsRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
-    React.useEffect(() => {
-      // TODO: Try to add the behavior back in the test
-      // For now, it causes the following error in JSDOM:
-      // "Auto scrolling has been attached to an element that appears not to be scrollable"
-      if (!ref.current || process.env.NODE_ENV === 'test') {
-        return undefined;
-      }
-
-      return autoScrollForElements({
-        element: ref.current,
-      });
-    });
+    useAutoScrollForTimeGrid(scrollableRef ?? ownRef);
 
     const element = useRenderElement('div', componentProps, {
-      ref: [forwardedRef, ref],
+      ref: [forwardedRef, ownRef],
       props: [elementProps],
     });
 
@@ -47,5 +38,11 @@ export const CalendarGridTimeScrollableContent = React.forwardRef(
 export namespace CalendarGridTimeScrollableContent {
   export interface State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State> {}
+  export interface Props extends BaseUIComponentProps<'div', State> {
+    /**
+     * Ref to the element that actually scrolls — used to register the drag-and-drop auto-scroll
+     * behavior on the correct container. Defaults to the rendered element of this component.
+     */
+    scrollableRef?: React.RefObject<HTMLElement | null>;
+  }
 }

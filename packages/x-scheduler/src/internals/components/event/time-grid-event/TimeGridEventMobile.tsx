@@ -3,9 +3,11 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { CSSObject, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
+import { useMobileEventLift } from '../../../hooks/useMobileEventLift';
 import { PaletteName } from '../../../utils/tokens';
 import { TimeGridEventProps } from './TimeGridEvent.types';
 import { useTimeGridEvent } from './useTimeGridEvent';
@@ -23,6 +25,10 @@ const TimeGridEventMobileRoot = styled(CalendarGrid.TimeEvent, {
   padding: theme.spacing(0.5, 0.7, 0.5, 0.7),
   '&[data-under-fifteen-minutes="true"]': {
     padding: theme.spacing(0, 0.5),
+  },
+  '&[data-lifted]': {
+    outline: '2px solid var(--event-main)',
+    outlineOffset: '-2px',
   },
 }));
 
@@ -63,25 +69,25 @@ const TimeGridEventMobileResizeHandler = styled(CalendarGrid.TimeEventResizeHand
   position: 'absolute',
   // experimenting with mobbile handlers
 
-  // width: 8,
-  // height: 8,
-  // borderRadius: '50%',
-  // backgroundColor: 'var(--event-on-surface-subtle-secondary)',
-  height: 4,
-  left: 0,
-  right: 0,
+  width: 10,
+  height: 10,
+  borderRadius: '50%',
+  backgroundColor: 'var(--event-on-surface-subtle-secondary)',
+  // height: 4,
+  // left: 0,
+  // right: 0,
   zIndex: 3,
   cursor: 'ns-resize',
   '&[data-start]': {
     // experimenting with mobbile handlers
-    // top: -5,
-    // left: 2,
-    top: 0,
+    top: -6,
+    left: 6,
+    // top: 0,
   },
   '&[data-end]': {
-    // bottom: -5,
-    // right: 2,
-    bottom: 0,
+    bottom: -6,
+    right: 6,
+    // bottom: 0,
   },
 });
 
@@ -94,6 +100,16 @@ export const TimeGridEventMobile = React.forwardRef(function TimeGridEventMobile
   const { classes } = useEventCalendarStyledContext();
   const { isDraggable, isStartResizable, isEndResizable, rootDataAttributes, rootPositionProps } =
     useTimeGridEvent(occurrence);
+
+  const {
+    isLifted,
+    canDrag,
+    ref: liftRef,
+  } = useMobileEventLift({
+    enabled: !!isDraggable && variant !== 'placeholder',
+    occurrenceKey: occurrence.key,
+  });
+  const mergedRef = useMergedRefs(forwardedRef, liftRef);
 
   const content = (
     <TimeGridEventMobileTitle className={classes.timeGridEventTitle}>
@@ -124,21 +140,24 @@ export const TimeGridEventMobile = React.forwardRef(function TimeGridEventMobile
   return (
     <TimeGridEventMobileRoot
       isDraggable={isDraggable}
+      canDrag={canDrag}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...rootDataAttributes}
       {...sharedProps}
+      ref={mergedRef}
+      data-lifted={isLifted || undefined}
       className={clsx(classes.timeGridEvent, sharedProps.className)}
     >
-      {isStartResizable && (
+      {isLifted && isStartResizable && (
         <TimeGridEventMobileResizeHandler
           className={classes.timeGridEventResizeHandler}
           side="start"
         />
       )}
       {content}
-      {isEndResizable && (
+      {isLifted && isEndResizable && (
         <TimeGridEventMobileResizeHandler
           className={classes.timeGridEventResizeHandler}
           side="end"

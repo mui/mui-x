@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import type { useDraggableEvent } from './useDraggableEvent';
 import { SchedulerEventSide } from '../../models';
 
@@ -12,12 +13,15 @@ export function useEventResizeHandler(
     ref,
     side,
     getDragData,
+    canDrag,
     contextValue: { doesEventStartBeforeCollectionStart, doesEventEndAfterCollectionEnd },
   } = parameters;
 
   const enabled =
     (side === 'start' && !doesEventStartBeforeCollectionStart) ||
     (side === 'end' && !doesEventEndAfterCollectionEnd);
+
+  const canDragStable = useStableCallback(() => canDrag?.() ?? true);
 
   const state: useEventResizeHandler.State = React.useMemo(
     () => ({ start: side === 'start', end: side === 'end' }),
@@ -31,12 +35,13 @@ export function useEventResizeHandler(
 
     return draggable({
       element: ref.current,
+      canDrag: () => canDragStable(),
       getInitialData: ({ input }) => getDragData(input),
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
     });
-  }, [ref, enabled, side, getDragData]);
+  }, [ref, enabled, side, getDragData, canDragStable]);
 
   return { state, enabled };
 }
@@ -71,6 +76,11 @@ export namespace useEventResizeHandler {
      * @returns {any} The shared drag data.
      */
     getDragData: (input: { clientX: number; clientY: number }) => any;
+    /**
+     * Called when a resize drag is about to start. Returning `false` aborts the attempt.
+     * Defaults to always allowing the drag.
+     */
+    canDrag?: () => boolean;
     /**
      * The context value from the event component wrapping the resize handler.
      */

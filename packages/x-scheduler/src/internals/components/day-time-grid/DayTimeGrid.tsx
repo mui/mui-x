@@ -342,6 +342,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const allDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
+  const scrollRootRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   // Selector hooks
@@ -479,11 +480,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         <div className={classes.dayTimeGridScrollablePlaceholder} />
       </DayTimeGridAllDayEventsGrid>
 
-      <DayTimeGridRoot className={classes.dayTimeGrid}>
+      <DayTimeGridRoot className={classes.dayTimeGrid} ref={scrollRootRef}>
         <DayTimeGridBody className={classes.dayTimeGridBody} ref={bodyRef}>
           <DayTimeGridScrollableContent
             className={classes.dayTimeGridScrollableContent}
-            as={CalendarGrid.TimeScrollableContent}
+            scrollableRef={scrollRootRef}
           >
             <DayTimeGridTimeAxis className={classes.dayTimeGridTimeAxis} aria-hidden="true">
               {Array.from({ length: 24 }, (_, hour) => (
