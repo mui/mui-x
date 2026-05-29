@@ -79,6 +79,18 @@ return (
 );
 ```
 
+## Require a resource
+
+Use the `shouldEventRequireResource` prop to control whether events must have a resource assigned.
+When `true`, the resource of an event cannot be cleared from the edit dialog and the form cannot be submitted with an empty resource.
+
+On the Event Timeline, `shouldEventRequireResource` defaults to `true` so that an event cannot be edited into a state where it would no longer be rendered.
+Set it to `false` to allow clearing the resource:
+
+```tsx
+<EventTimelinePremium shouldEventRequireResource={false} />
+```
+
 ## Resource properties
 
 ### Color
