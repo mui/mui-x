@@ -167,7 +167,8 @@ For ordinal (band/point) axes, an absolute range can also be expressed with the 
 Range values are only supported by the uncontrolled `initialZoom` prop. The controlled `zoomData` prop still expects explicit percentages.
 
 :::info
-Range values are resolved against the axis domain, which is only known after the chart has measured its size. With server-side rendering, the initial frame is rendered unzoomed and the zoom is applied on the client right after hydration.
+This feature does not support SSR.
+When providing a range value, the initial frame is rendered un-zoomed and the zoom is applied on the client right after hydration.
 :::
 
 {{"demo": "ZoomInitialRange.js"}}

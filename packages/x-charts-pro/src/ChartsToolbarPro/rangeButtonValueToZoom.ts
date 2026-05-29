@@ -174,7 +174,8 @@ export function rangeButtonValueToZoom(
     const isBand = scaleType === 'band';
     const denominator = isBand ? timestamps.length : timestamps.length - 1;
     const maxIndex = timestamps.length - 1;
-    const toPercent = (i: number) => (denominator === 0 ? 0 : (i / denominator) * 100);
+    const toPercent = (i: number, defaultPercent: number) =>
+      denominator === 0 ? defaultPercent : (i / denominator) * 100;
 
     if (Array.isArray(value)) {
       const startTarget = toTimestamp(value[0]) ?? Number.NaN;
@@ -190,8 +191,8 @@ export function rangeButtonValueToZoom(
       const startIndex = firstGte === -1 ? maxIndex : firstGte;
       const endIndex = lastLte === -1 ? 0 : lastLte;
       return {
-        start: toPercent(startIndex),
-        end: toPercent(endIndex),
+        start: toPercent(startIndex, 0),
+        end: toPercent(endIndex, 100),
       };
     }
 
@@ -202,7 +203,7 @@ export function rangeButtonValueToZoom(
     const firstGte = timestamps.findIndex((ts) => !Number.isNaN(ts) && ts >= targetStartMs);
     const startIndex = firstGte === -1 ? maxIndex : firstGte;
     return {
-      start: toPercent(startIndex),
+      start: toPercent(startIndex, 0),
       end: 100,
     };
   }

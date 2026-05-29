@@ -101,8 +101,9 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   }, [store, paramsZoomData, removeIsInteracting]);
 
   // Resolve `initialZoom` entries provided as range values (e.g. `{ axisId, value: { unit: 'month' } }`).
-  // These depend on the computed axis domains, which are only available after the first render,
-  // so they are resolved once on mount. A layout effect avoids a visible unzoomed frame.
+  // These depend on the computed axis domains, which are only available after the first render
+  // (unless the user provides explicit `width`/`height`), so they are resolved once on mount.
+  // A layout effect avoids a visible unzoomed frame.
   const hasResolvedInitialZoomRanges = React.useRef(false);
   useEnhancedEffect(() => {
     if (hasResolvedInitialZoomRanges.current) {
