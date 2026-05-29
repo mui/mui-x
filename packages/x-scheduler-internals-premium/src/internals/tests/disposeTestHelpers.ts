@@ -26,4 +26,5 @@ export const flushDebounce = () => vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
 export const DEFAULT_PARAMS = {
   events: [] as SchedulerEvent[],
   defaultVisibleDate: DEFAULT_TESTING_VISIBLE_DATE,
+  shouldEventRequireResource: false,
 };
