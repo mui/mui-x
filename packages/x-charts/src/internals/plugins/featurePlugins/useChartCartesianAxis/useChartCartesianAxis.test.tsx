@@ -46,22 +46,25 @@ describe('useChartCartesianAxis', () => {
       expect(tickLabels.length).toBeGreaterThan(0);
     });
 
-    it.skipIf(!isJSDOM)('should not override an explicit tickSpacing when the feature is enabled', () => {
-      render(
-        <BarChart
-          xAxis={[{ data: manyCategories, scaleType: 'band', tickSpacing: 10 }]}
-          series={[{ data }]}
-          width={300}
-          height={200}
-          margin={0}
-          experimentalFeatures={{ responsiveTickAdjustment: true }}
-        />,
-      );
+    it.skipIf(!isJSDOM)(
+      'should not override an explicit tickSpacing when the feature is enabled',
+      () => {
+        render(
+          <BarChart
+            xAxis={[{ data: manyCategories, scaleType: 'band', tickSpacing: 10 }]}
+            series={[{ data }]}
+            width={300}
+            height={200}
+            margin={0}
+            experimentalFeatures={{ responsiveTickAdjustment: true }}
+          />,
+        );
 
-      // tickSpacing of 10px on a ~280px area should keep every band's tick.
-      const tickLabels = screen.getAllByTestId('ChartsXAxisTickLabel');
-      expect(tickLabels).toHaveLength(manyCategories.length);
-    });
+        // tickSpacing of 10px on a ~280px area should keep every band's tick.
+        const tickLabels = screen.getAllByTestId('ChartsXAxisTickLabel');
+        expect(tickLabels).toHaveLength(manyCategories.length);
+      },
+    );
   });
 
   it('should throw an error when axis have duplicate ids', () => {
