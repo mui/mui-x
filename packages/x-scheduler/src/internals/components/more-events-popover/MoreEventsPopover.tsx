@@ -12,6 +12,7 @@ import {
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { eventCalendarOccurrencePositionSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { sortEventOccurrences } from '@mui/x-scheduler-internals/sort-event-occurrences';
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
 import { EventItem } from '../event/event-item/EventItem';
 import { createModal } from '../create-modal';
@@ -86,7 +87,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
     eventCalendarOccurrencePositionSelectors.visibleOccurrences,
   );
   const occurrences = React.useMemo(() => {
-    const result: SchedulerEventOccurrence[] = [];
+    const resolved: SchedulerEventOccurrence[] = [];
     for (const key of dayOccurrenceKeys) {
       const occurrence = visibleOccurrences.byKey.get(key);
       if (!occurrence) {
@@ -99,9 +100,9 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
         }
         continue;
       }
-      result.push(occurrence);
+      resolved.push(occurrence);
     }
-    return result;
+    return sortEventOccurrences(resolved);
   }, [dayOccurrenceKeys, visibleOccurrences, day.key]);
 
   React.useEffect(() => {

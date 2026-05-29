@@ -154,7 +154,7 @@ function sortKeysByDayInPlace(
   keysByDay: Map<string, string[]>,
   byKey: ReadonlyMap<string, SchedulerEventOccurrence>,
 ): void {
-  for (const keys of keysByDay.values()) {
+  for (const [dayKey, keys] of keysByDay) {
     if (keys.length < 2) {
       continue;
     }
@@ -162,7 +162,12 @@ function sortKeysByDayInPlace(
       const occA = byKey.get(a);
       const occB = byKey.get(b);
       if (!occA || !occB) {
-        return 0;
+        const missingKey = !occA ? a : b;
+        throw new Error(
+          `MUI X Scheduler: occurrence "${missingKey}" referenced by day "${dayKey}" is missing from \`byKey\`. ` +
+            "The agenda's occurrence index was built inconsistently, so it cannot be sorted. " +
+            'Make sure every key listed in `keysByDay` resolves in `byKey`.',
+        );
       }
       return (
         occA.displayTimezone.start.timestamp - occB.displayTimezone.start.timestamp ||
@@ -257,7 +262,14 @@ function trimOccurrencesToDays(
   const trimmedDayKeys: string[] = [];
   const referencedKeys = new Set<string>();
   for (const day of days) {
-    const keys = occurrences.keysByDay.get(day.key) ?? [];
+    const keys = occurrences.keysByDay.get(day.key);
+    if (keys === undefined) {
+      throw new Error(
+        `MUI X Scheduler: day "${day.key}" passed to \`trimOccurrencesToDays\` is missing from \`keysByDay\`. ` +
+          "The agenda's day list and occurrence index are out of sync, so the trim cannot proceed. " +
+          'Make sure every day passed to the trim is one that `appendChunk` already registered.',
+      );
+    }
     trimmedKeysByDay.set(day.key, keys.slice());
     trimmedDayKeys.push(day.key);
     for (const k of keys) {
@@ -268,9 +280,14 @@ function trimOccurrencesToDays(
   const trimmedByKey = new Map<string, SchedulerEventOccurrence>();
   for (const k of referencedKeys) {
     const occurrence = occurrences.byKey.get(k);
-    if (occurrence) {
-      trimmedByKey.set(k, occurrence);
+    if (!occurrence) {
+      throw new Error(
+        `MUI X Scheduler: occurrence "${k}" referenced by \`keysByDay\` is missing from \`byKey\`. ` +
+          "The agenda's occurrence index was built inconsistently, so it cannot be trimmed. " +
+          'Make sure every key listed in `keysByDay` resolves in `byKey`.',
+      );
     }
+    trimmedByKey.set(k, occurrence);
   }
 
   return {

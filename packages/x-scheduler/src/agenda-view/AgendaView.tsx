@@ -6,10 +6,7 @@ import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-internals/models';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
-import {
-  eventCalendarAgendaSelectors,
-  eventCalendarOccurrencePositionSelectors,
-} from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-internals/constants';
 import {
@@ -166,20 +163,30 @@ export const AgendaView = React.memo(
 
     // Selector hooks
     const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
-    const visibleOccurrences = useStore(
-      store,
-      eventCalendarOccurrencePositionSelectors.visibleOccurrences,
-    );
+    const visibleOccurrences = useStore(store, eventCalendarAgendaSelectors.visibleOccurrences);
 
     const daysWithOccurrences = React.useMemo(
       () =>
         days.map((date) => {
-          const keys = visibleOccurrences.keysByDay.get(date.key) ?? [];
-          const occurrencesForDay = keys
-            .map((key) => visibleOccurrences.byKey.get(key))
-            .filter(
-              (occurrence): occurrence is NonNullable<typeof occurrence> => occurrence != null,
+          const keys = visibleOccurrences.keysByDay.get(date.key);
+          if (keys === undefined) {
+            throw new Error(
+              `MUI X Scheduler: day "${date.key}" returned by the agenda's \`visibleDaysSelector\` is missing from \`visibleOccurrences.keysByDay\`. ` +
+                "The agenda's day list and occurrence index are out of sync, so the day's events cannot be rendered. " +
+                'This is an internal bug — please file an issue.',
             );
+          }
+          const occurrencesForDay = keys.map((key) => {
+            const occurrence = visibleOccurrences.byKey.get(key);
+            if (!occurrence) {
+              throw new Error(
+                `MUI X Scheduler: occurrence "${key}" referenced by day "${date.key}" is missing from \`visibleOccurrences.byKey\`. ` +
+                  "The agenda's occurrence index was built inconsistently, so the event cannot be rendered. " +
+                  'This is an internal bug — please file an issue.',
+              );
+            }
+            return occurrence;
+          });
           return { date, occurrences: occurrencesForDay };
         }),
       [days, visibleOccurrences],

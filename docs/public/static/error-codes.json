@@ -276,5 +276,14 @@
   "276": "MUI X Charts: %s series with id=\"%s\" has no data. The chart cannot render this series without data. Provide a data property to the series or use the dataset prop.",
   "277": "MUI X Scheduler: adapter.getDayOfWeek returned an unexpected value (%s). Expected an integer in the range 1–7. Check that your adapter implements getDayOfWeek correctly.",
   "278": "MUI X Scheduler: weekStartsOn must be an integer between 0 (Sunday) and 6 (Saturday), but received %s.",
-  "279": "MUI X Charts: %s series with id=\"%s\" has incomplete datasetKeys.Properties %s are missing."
+  "279": "MUI X Charts: %s series with id=\"%s\" has incomplete datasetKeys.Properties %s are missing.",
+  "280": "MUI X Scheduler: day \"%s\" returned by the agenda's `visibleDaysSelector` is missing from `visibleOccurrences.keysByDay`. The agenda's day list and occurrence index are out of sync, so the day's events cannot be rendered. This is an internal bug — please file an issue.",
+  "281": "MUI X Scheduler: occurrence \"%s\" referenced by day \"%s\" is missing from `visibleOccurrences.byKey`. The agenda's occurrence index was built inconsistently, so the event cannot be rendered. This is an internal bug — please file an issue.",
+  "282": "MUI X Scheduler: occurrence \"%s\" referenced by day \"%s\" is missing from `byKey`. The agenda's occurrence index was built inconsistently, so it cannot be sorted. Make sure every key listed in `keysByDay` resolves in `byKey`.",
+  "283": "MUI X Scheduler: day \"%s\" passed to `trimOccurrencesToDays` is missing from `keysByDay`. The agenda's day list and occurrence index are out of sync, so the trim cannot proceed. Make sure every day passed to the trim is one that `appendChunk` already registered.",
+  "284": "MUI X Scheduler: occurrence \"%s\" referenced by `keysByDay` is missing from `byKey`. The agenda's occurrence index was built inconsistently, so it cannot be trimmed. Make sure every key listed in `keysByDay` resolves in `byKey`.",
+  "285": "MUI X Scheduler: occurrence \"%s\" referenced by day \"%s\" is missing from `occurrencesByDay.byKey`. The occurrence index was built inconsistently, so the layout cannot be computed. Make sure every key listed in `keysByDay` resolves in `byKey`.",
+  "286": "MUI X Scheduler: `maxSpan` must be >= 1 (received %s). Set the view config's `timeGrid.maxSpan` to a positive integer (or omit it to default to 1).",
+  "287": "MUI X Scheduler: occurrence \"%s\" referenced by container \"%s\" is missing from `occurrencesByKey`. The occurrence index was built inconsistently, so the layout cannot be computed. Make sure every key listed for a container resolves in `occurrencesByKey`.",
+  "288": "MUI X Scheduler: invalid lane assignment for occurrence \"%s\" in container \"%s\": firstLane=%s, lastLane=%s. Expected 1 <= firstLane <= lastLane. This is a bug in `buildFirstLaneByKey`/`buildLastLaneByKey`."
 }
