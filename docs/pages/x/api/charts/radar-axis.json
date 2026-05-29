@@ -32,19 +32,19 @@
   "classes": [
     {
       "key": "axisLabel",
-      "className": "MuiRadarAxis-axisLabel",
+      "className": "MuiRadarChart-axisLabel",
       "description": "Styles applied to every radar axis label element.",
       "isGlobal": false
     },
     {
       "key": "axisLine",
-      "className": "MuiRadarAxis-axisLine",
+      "className": "MuiRadarChart-axisLine",
       "description": "Styles applied to the radar axis line element.",
       "isGlobal": false
     },
     {
       "key": "axisRoot",
-      "className": "MuiRadarAxis-axisRoot",
+      "className": "MuiRadarChart-axisRoot",
       "description": "Styles applied to the radar axis root element.",
       "isGlobal": false
     }

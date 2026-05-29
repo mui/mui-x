@@ -87,73 +87,73 @@
   "classes": [
     {
       "key": "bottom",
-      "className": "MuiChartsYAxis-bottom",
+      "className": "MuiChartsAxis-bottom",
       "description": "Styles applied to the bottom axis.",
       "isGlobal": false
     },
     {
       "key": "directionX",
-      "className": "MuiChartsYAxis-directionX",
+      "className": "MuiChartsAxis-directionX",
       "description": "Styles applied to x-axes.",
       "isGlobal": false
     },
     {
       "key": "directionY",
-      "className": "MuiChartsYAxis-directionY",
+      "className": "MuiChartsAxis-directionY",
       "description": "Styles applied to y-axes.",
       "isGlobal": false
     },
     {
       "key": "label",
-      "className": "MuiChartsYAxis-label",
+      "className": "MuiChartsAxis-label",
       "description": "Styles applied to the group containing the axis label.",
       "isGlobal": false
     },
     {
       "key": "left",
-      "className": "MuiChartsYAxis-left",
+      "className": "MuiChartsAxis-left",
       "description": "Styles applied to the left axis.",
       "isGlobal": false
     },
     {
       "key": "line",
-      "className": "MuiChartsYAxis-line",
+      "className": "MuiChartsAxis-line",
       "description": "Styles applied to the main line element.",
       "isGlobal": false
     },
     {
       "key": "right",
-      "className": "MuiChartsYAxis-right",
+      "className": "MuiChartsAxis-right",
       "description": "Styles applied to the right axis.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiChartsYAxis-root",
+      "className": "MuiChartsAxis-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
       "key": "tick",
-      "className": "MuiChartsYAxis-tick",
+      "className": "MuiChartsAxis-tick",
       "description": "Styles applied to ticks.",
       "isGlobal": false
     },
     {
       "key": "tickContainer",
-      "className": "MuiChartsYAxis-tickContainer",
+      "className": "MuiChartsAxis-tickContainer",
       "description": "Styles applied to group including the tick and its label.",
       "isGlobal": false
     },
     {
       "key": "tickLabel",
-      "className": "MuiChartsYAxis-tickLabel",
+      "className": "MuiChartsAxis-tickLabel",
       "description": "Styles applied to ticks label.\n\n⚠️ For performance reasons, only the inline styles get considered for bounding box computation.\nModifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.",
       "isGlobal": false
     },
     {
       "key": "top",
-      "className": "MuiChartsYAxis-top",
+      "className": "MuiChartsAxis-top",
       "description": "Styles applied to the top axis.",
       "isGlobal": false
     }

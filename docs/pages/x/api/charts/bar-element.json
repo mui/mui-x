@@ -25,37 +25,37 @@
   "classes": [
     {
       "key": "element",
-      "className": "MuiBarElement-element",
+      "className": "MuiBarChart-element",
       "description": "Styles applied to an individual bar element.",
       "isGlobal": false
     },
     {
       "key": "label",
-      "className": "MuiBarElement-label",
+      "className": "MuiBarChart-label",
       "description": "Styles applied to an individual bar label.",
       "isGlobal": false
     },
     {
       "key": "labelAnimate",
-      "className": "MuiBarElement-labelAnimate",
+      "className": "MuiBarChart-labelAnimate",
       "description": "Styles applied to a bar label when it is animated.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiBarElement-root",
+      "className": "MuiBarChart-root",
       "description": "Styles applied to the bar plot element.",
       "isGlobal": false
     },
     {
       "key": "series",
-      "className": "MuiBarElement-series",
+      "className": "MuiBarChart-series",
       "description": "Styles applied to the group surrounding a series' bar elements.",
       "isGlobal": false
     },
     {
       "key": "seriesLabels",
-      "className": "MuiBarElement-seriesLabels",
+      "className": "MuiBarChart-seriesLabels",
       "description": "Styles applied to the group surrounding a series' labels.",
       "isGlobal": false
     }

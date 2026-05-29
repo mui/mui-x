@@ -31,25 +31,25 @@
   "classes": [
     {
       "key": "dense",
-      "className": "MuiPickersShortcuts-dense",
+      "className": "MuiList-dense",
       "description": "Styles applied to the root element if dense.",
       "isGlobal": false
     },
     {
       "key": "padding",
-      "className": "MuiPickersShortcuts-padding",
+      "className": "MuiList-padding",
       "description": "Styles applied to the root element unless `disablePadding={true}`.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiPickersShortcuts-root",
+      "className": "MuiList-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
       "key": "subheader",
-      "className": "MuiPickersShortcuts-subheader",
+      "className": "MuiList-subheader",
       "description": "Styles applied to the root element if a `subheader` is provided.",
       "isGlobal": false
     }

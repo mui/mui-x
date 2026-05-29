@@ -31,32 +31,32 @@
       "name": "marker",
       "description": "The component that renders the marker for a scatter point.",
       "default": "ScatterMarker",
-      "class": "MuiScatterPlotPremium-marker"
+      "class": "MuiScatterChart-marker"
     },
     { "name": "scatter", "description": "", "class": null }
   ],
   "classes": [
     {
       "key": "focusedMark",
-      "className": "MuiScatterPlotPremium-focusedMark",
+      "className": "MuiScatterChart-focusedMark",
       "description": "Styles applied to the focused scatter mark element.",
       "isGlobal": false
     },
     {
       "key": "highlightedMark",
-      "className": "MuiScatterPlotPremium-highlightedMark",
+      "className": "MuiScatterChart-highlightedMark",
       "description": "Styles applied to the highlighted scatter mark element.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiScatterPlotPremium-root",
+      "className": "MuiScatterChart-root",
       "description": "Styles applied to the scatter plot element.",
       "isGlobal": false
     },
     {
       "key": "series",
-      "className": "MuiScatterPlotPremium-series",
+      "className": "MuiScatterChart-series",
       "description": "Styles applied to the group surrounding a series' scatter elements.",
       "isGlobal": false
     }

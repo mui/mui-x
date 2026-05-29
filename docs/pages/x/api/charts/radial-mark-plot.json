@@ -8,13 +8,13 @@
   "classes": [
     {
       "key": "mark",
-      "className": "MuiRadialMarkPlot-mark",
+      "className": "MuiRadialLineChart-mark",
       "description": "Styles applied to the mark element.",
       "isGlobal": false
     },
     {
       "key": "markPlot",
-      "className": "MuiRadialMarkPlot-markPlot",
+      "className": "MuiRadialLineChart-markPlot",
       "description": "Styles applied to the MarkPlot root element.",
       "isGlobal": false
     }

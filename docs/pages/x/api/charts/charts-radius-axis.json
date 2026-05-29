@@ -107,49 +107,49 @@
   "classes": [
     {
       "key": "centered",
-      "className": "MuiChartsRadiusAxis-centered",
+      "className": "MuiChartsRadialAxis-centered",
       "description": "Styles applied to the tick label when centered.",
       "isGlobal": false
     },
     {
       "key": "line",
-      "className": "MuiChartsRadiusAxis-line",
+      "className": "MuiChartsRadialAxis-line",
       "description": "Styles applied to the main line element.",
       "isGlobal": false
     },
     {
       "key": "radius",
-      "className": "MuiChartsRadiusAxis-radius",
+      "className": "MuiChartsRadialAxis-radius",
       "description": "Styles applied to the root element of radius axis.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiChartsRadiusAxis-root",
+      "className": "MuiChartsRadialAxis-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
       "key": "rotation",
-      "className": "MuiChartsRadiusAxis-rotation",
+      "className": "MuiChartsRadialAxis-rotation",
       "description": "Styles applied to the root element of rotation axis.",
       "isGlobal": false
     },
     {
       "key": "tick",
-      "className": "MuiChartsRadiusAxis-tick",
+      "className": "MuiChartsRadialAxis-tick",
       "description": "Styles applied to ticks.",
       "isGlobal": false
     },
     {
       "key": "tickContainer",
-      "className": "MuiChartsRadiusAxis-tickContainer",
+      "className": "MuiChartsRadialAxis-tickContainer",
       "description": "Styles applied to the group including the tick and its label.",
       "isGlobal": false
     },
     {
       "key": "tickLabel",
-      "className": "MuiChartsRadiusAxis-tickLabel",
+      "className": "MuiChartsRadialAxis-tickLabel",
       "description": "Styles applied to the tick label.",
       "isGlobal": false
     }
