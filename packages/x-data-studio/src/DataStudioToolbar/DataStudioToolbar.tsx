@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import type { SxProps } from '@mui/system';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
@@ -49,7 +49,7 @@ import {
   useDataStudioToolbarUtilityClasses,
   type DataStudioToolbarClasses,
 } from './dataStudioToolbarClasses';
-import type { DataStudioView } from '../DataStudio/DataStudio.types';
+import type { DataStudioSheet } from '../DataStudio/DataStudio.types';
 import {
   FunctionsIcon,
   MoreVertIcon,
@@ -61,7 +61,6 @@ import {
   ResetIcon,
   AutosizeIcon,
   PinIcon,
-  BarChartIcon,
 } from './icons';
 
 type ApiRefLike = RefObject<any | null>;
@@ -71,6 +70,14 @@ export interface DataStudioToolbarProps {
    * Reference to the active grid's API. When `null`, the toolbar renders in a disabled state.
    */
   apiRef: ApiRefLike;
+  /**
+   * Whether the inline Data Grid is the active surface. `false` when a custom
+   * view type (chart, pivot, …) owns the main pane — those bring their own grid,
+   * so the toolbar's grid-bound controls would dereference a detached `apiRef`.
+   * Defaults to `true` for backwards compatibility.
+   * @default true
+   */
+  gridActive?: boolean;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -82,14 +89,14 @@ export interface DataStudioToolbarProps {
   className?: string;
   /**
    * @ignore
-   * Currently active view (or `null` when a dataset tab is active without a view).
+   * Currently active view (or `null` when a dataSource tab is active without a view).
    * Provided by the parent `<DataStudio>`; absent when the toolbar is rendered standalone.
    */
-  activeView?: DataStudioView | null;
+  activeSheet?: DataStudioSheet | null;
   /**
    * @ignore
    * Baseline grid state used when the user clicks "Reset view" — typically the current view's
-   * `initialState` or the active dataset's default initial state. Provided by the parent
+   * `initialState` or the active dataSource's default initial state. Provided by the parent
    * `<DataStudio>`; absent when the toolbar is rendered standalone.
    */
   baselineInitialState?: GridInitialState;
@@ -102,15 +109,9 @@ export interface DataStudioToolbarProps {
   /**
    * @ignore
    * Called by the toolbar's "Add row" button. When omitted, the button is hidden.
-   * Sourced from the active dataset's `onAddRow` callback.
+   * Sourced from the active dataSource's `onAddRow` callback.
    */
   onAddRow?: () => void | Promise<void>;
-  /**
-   * @ignore
-   * Called by the toolbar's "+ Chart" button. When omitted, the button is hidden.
-   * Provided by the parent `<DataStudio>` and creates a new chart view.
-   */
-  onAddChart?: () => void;
 }
 
 const DataStudioToolbarRoot = styled('div', {
@@ -121,12 +122,13 @@ const DataStudioToolbarRoot = styled('div', {
   boxSizing: 'border-box',
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(0.25),
+  gap: theme.spacing(0.5),
   height: 44,
   borderRadius: 999,
-  padding: theme.spacing(0, 1.5),
-  margin: theme.spacing(0.75, 1, 0.5, 1),
-  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+  padding: theme.spacing(0, 1),
+  margin: theme.spacing(0.5, 1),
+  backgroundColor: (theme.vars || theme).palette.background.paper,
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   overflow: 'hidden',
   flexWrap: 'nowrap',
   '& > *': {
@@ -140,7 +142,7 @@ const DataStudioToolbarGroup = styled('div', {
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(0.25),
+  gap: theme.spacing(0.5),
   flex: '0 0 auto',
 }));
 
@@ -148,8 +150,8 @@ const DataStudioToolbarDivider = styled(Divider, {
   name: 'MuiDataStudioToolbar',
   slot: 'Divider',
 })(({ theme }) => ({
-  height: 18,
-  margin: theme.spacing(0, 0.75),
+  height: 20,
+  margin: theme.spacing(0, 0.5),
   borderColor: (theme.vars || theme).palette.divider,
   flex: '0 0 auto',
   alignSelf: 'center',
@@ -159,21 +161,35 @@ const DataStudioToolbarSearch = styled('div', {
   name: 'MuiDataStudioToolbar',
   slot: 'Search',
 })({
-  flex: '0 0 auto',
+  flex: '1 1 160px',
+  minWidth: 160,
+  maxWidth: 320,
+  display: 'flex',
 });
 
 const SearchInput = styled(OutlinedInput)(({ theme }) => ({
-  width: 220,
+  flex: '1 1 160px',
+  minWidth: 160,
+  maxWidth: 320,
   height: 32,
-  fontSize: '0.875rem',
+  fontSize: '0.8125rem',
   borderRadius: 999,
   paddingLeft: theme.spacing(0.5),
   paddingRight: theme.spacing(0.5),
+  transition: theme.transitions.create(['border-color', 'box-shadow'], {
+    duration: theme.transitions.duration.shortest,
+  }),
   '& .MuiOutlinedInput-notchedOutline': {
     border: `1px solid ${(theme.vars || theme).palette.divider}`,
+    transition: theme.transitions.create('border-color', {
+      duration: theme.transitions.duration.shortest,
+    }),
   },
   '&:hover .MuiOutlinedInput-notchedOutline': {
     borderColor: (theme.vars || theme).palette.text.disabled,
+  },
+  '&.Mui-focused': {
+    boxShadow: `0 0 0 3px ${theme.alpha((theme.vars || theme).palette.primary.main, 0.12)}`,
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
     borderColor: (theme.vars || theme).palette.primary.main,
@@ -183,7 +199,7 @@ const SearchInput = styled(OutlinedInput)(({ theme }) => ({
     height: 32,
     boxSizing: 'border-box',
     padding: theme.spacing(0, 0.5),
-    lineHeight: 1,
+    lineHeight: 'normal',
   },
 }));
 
@@ -193,8 +209,24 @@ const DensityTrigger = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   fontWeight: 400,
   fontSize: '0.8125rem',
-  padding: theme.spacing(0, 0.75),
+  lineHeight: 'normal',
+  padding: theme.spacing(0, 1),
   justifyContent: 'space-between',
+  backgroundColor: theme.alpha((theme.vars || theme).palette.text.primary, 0.04),
+  transition: theme.transitions.create(['background-color', 'border-color'], {
+    duration: theme.transitions.duration.shortest,
+  }),
+  '&:hover': {
+    backgroundColor: (theme.vars || theme).palette.action.hover,
+  },
+  '& .MuiButton-endIcon': {
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  '&[aria-expanded="true"] .MuiButton-endIcon': {
+    transform: 'rotate(180deg)',
+  },
 }));
 
 // Sheets-style "Add row" pill: text + leading icon, sized to nest into the 44px
@@ -202,22 +234,47 @@ const DensityTrigger = styled(Button)(({ theme }) => ({
 const AddRowButton = styled(Button)(({ theme }) => ({
   height: 32,
   textTransform: 'none',
-  fontWeight: 500,
+  fontWeight: 400,
   fontSize: '0.8125rem',
   padding: theme.spacing(0, 1),
   borderRadius: 999,
 }));
 
 const ToolbarIconButton = styled(IconButton)(({ theme }) => ({
-  width: 28,
-  height: 28,
-  padding: theme.spacing(0.5),
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: 32,
+  height: 32,
+  padding: theme.spacing(0.75),
   borderRadius: '50%',
   color: (theme.vars || theme).palette.text.primary,
+  transition: theme.transitions.create(['background-color', 'box-shadow', 'color'], {
+    duration: theme.transitions.duration.shortest,
+  }),
   '&:hover': {
     backgroundColor: (theme.vars || theme).palette.action.hover,
   },
-  '& svg': { fontSize: 18 },
+  '&:active': {
+    backgroundColor: (theme.vars || theme).palette.action.selected,
+  },
+  '&.Mui-selected, &[data-active="true"]': {
+    backgroundColor: theme.alpha((theme.vars || theme).palette.primary.main, 0.16),
+    color: (theme.vars || theme).palette.primary.main,
+    '&:hover': {
+      backgroundColor: theme.alpha((theme.vars || theme).palette.primary.main, 0.24),
+    },
+  },
+  '& svg': { fontSize: 20 },
+  // Expand the tappable area on coarse pointers without growing the visual box.
+  '@media (pointer: coarse)': {
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      inset: -6,
+    },
+  },
 }));
 
 const SaveViewPopperPaper = styled(Paper)(({ theme }) => ({
@@ -250,9 +307,9 @@ const DataStudioToolbarGhost = styled('div')(({ theme }) => ({
   left: 0,
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(0.25),
+  gap: theme.spacing(0.5),
   height: 44,
-  padding: theme.spacing(0, 1.5),
+  padding: theme.spacing(0, 1),
   visibility: 'hidden',
   pointerEvents: 'none',
   flexWrap: 'nowrap',
@@ -263,13 +320,13 @@ const DataStudioToolbarGhost = styled('div')(({ theme }) => ({
 const DataStudioToolbarOverflowPaper = styled(Paper)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(0.25),
+  gap: theme.spacing(0.5),
   height: 44,
   borderRadius: 999,
-  padding: theme.spacing(0, 1.5),
-  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+  padding: theme.spacing(0, 1),
+  backgroundColor: (theme.vars || theme).palette.background.paper,
   boxShadow: theme.shadows[3],
-  border: `1px solid ${alpha(theme.palette.primary.main, 0.18)}`,
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   '& > *': {
     alignSelf: 'center',
   },
@@ -356,19 +413,27 @@ const AGGREGATION_OPTIONS: { value: AggregationFn; label: string }[] = [
 function DataStudioToolbar(props: DataStudioToolbarProps) {
   const {
     apiRef,
+    gridActive = true,
     classes: classesProp,
     sx,
     className,
-    activeView,
+    activeSheet,
     baselineInitialState,
     onSaveCurrentView,
     onAddRow,
-    onAddChart,
   } = props;
   const classes = useDataStudioToolbarUtilityClasses(classesProp);
 
-  const [apiBound, setApiBound] = React.useState<boolean>(() => Boolean(apiRef.current?.state));
+  const [apiBound, setApiBound] = React.useState<boolean>(
+    () => gridActive && Boolean(apiRef.current?.state),
+  );
   React.useEffect(() => {
+    // Drop the binding when a custom view type owns the pane so the grid-bound
+    // controls stop reading the detached `apiRef`; re-poll when it returns.
+    if (!gridActive) {
+      setApiBound(false);
+      return undefined;
+    }
     if (apiBound) {
       return undefined;
     }
@@ -391,7 +456,7 @@ function DataStudioToolbar(props: DataStudioToolbarProps) {
         cancelAnimationFrame(frameId);
       }
     };
-  }, [apiRef, apiBound]);
+  }, [apiRef, apiBound, gridActive]);
 
   return (
     <DataStudioToolbarRoot
@@ -400,15 +465,14 @@ function DataStudioToolbar(props: DataStudioToolbarProps) {
       className={clsx(classes.root, className)}
       sx={sx}
     >
-      {apiBound ? (
+      {gridActive && apiBound ? (
         <ActiveToolbar
           apiRef={apiRef}
           classes={classes}
-          activeView={activeView ?? null}
+          activeSheet={activeSheet ?? null}
           baselineInitialState={baselineInitialState}
           onSaveCurrentView={onSaveCurrentView}
           onAddRow={onAddRow}
-          onAddChart={onAddChart}
         />
       ) : (
         <DisabledToolbar classes={classes} />
@@ -422,12 +486,11 @@ DataStudioToolbar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  activeView: PropTypes.object,
+  activeSheet: PropTypes.object,
   apiRef: PropTypes.shape({ current: PropTypes.any }),
   baselineInitialState: PropTypes.object,
   classes: PropTypes.object,
   className: PropTypes.string,
-  onAddChart: PropTypes.func,
   onAddRow: PropTypes.func,
   onSaveCurrentView: PropTypes.func,
   sx: PropTypes.oneOfType([
@@ -460,11 +523,10 @@ function DisabledToolbar({ classes }: { classes: DataStudioToolbarClasses }) {
 interface ActiveToolbarProps {
   apiRef: ApiRefLike;
   classes: DataStudioToolbarClasses;
-  activeView: DataStudioView | null;
+  activeSheet: DataStudioSheet | null;
   baselineInitialState: GridInitialState | undefined;
   onSaveCurrentView: ((input: { label: string; initialState: GridInitialState }) => void) | undefined;
   onAddRow: (() => void | Promise<void>) | undefined;
-  onAddChart: (() => void) | undefined;
 }
 
 interface ToolbarGroupSpec {
@@ -478,11 +540,10 @@ const OVERFLOW_TRIGGER_WIDTH = 36;
 function ActiveToolbar({
   apiRef,
   classes,
-  activeView,
+  activeSheet,
   baselineInitialState,
   onSaveCurrentView,
   onAddRow,
-  onAddChart,
 }: ActiveToolbarProps) {
   // ----- Grid selectors -----
   const quickFilterValues = useGridSelector(apiRef, gridQuickFilterValuesSelector);
@@ -510,7 +571,7 @@ function ActiveToolbar({
     typeof apiRef.current?.showSidebar === 'function';
   const hasAutosize = typeof apiRef.current?.autosizeColumns === 'function';
   const hasPinning = typeof apiRef.current?.pinColumn === 'function';
-  const hasDataSource = Boolean(apiRef.current?.dataSource);
+  const hasDataSource = Boolean(apiRef.current?.connector);
 
   // ----- Search state (synced to quick filter) -----
   const [searchDraft, setSearchDraft] = React.useState(() =>
@@ -703,7 +764,7 @@ function ActiveToolbar({
 
   // ----- View management -----
   const handleRefresh = () => {
-    apiRef.current?.dataSource?.fetchRows?.();
+    apiRef.current?.connector?.fetchRows?.();
   };
 
   const [saveViewAnchor, setSaveViewAnchor] = React.useState<HTMLElement | null>(null);
@@ -863,8 +924,8 @@ function ActiveToolbar({
           ) : null}
           <Tooltip
             title={
-              activeView
-                ? `Reset to "${typeof activeView.label === 'string' ? activeView.label : 'view'}" defaults`
+              activeSheet
+                ? `Reset to "${typeof activeSheet.label === 'string' ? activeSheet.label : 'view'}" defaults`
                 : 'Reset view'
             }
           >
@@ -1034,34 +1095,15 @@ function ActiveToolbar({
                 aria-label={pivotPanelOpen ? 'Close pivot panel' : 'Open pivot panel'}
                 aria-haspopup="true"
                 aria-expanded={pivotPanelOpen ? 'true' : undefined}
+                aria-pressed={pivotPanelOpen || pivotActive}
                 aria-controls={pivotPanelOpen ? pivotPanelId : undefined}
                 onClick={handlePivotPanelToggle}
-                sx={(theme) => ({
-                  backgroundColor:
-                    pivotPanelOpen || pivotActive
-                      ? alpha(theme.palette.primary.main, 0.18)
-                      : undefined,
-                })}
+                data-active={pivotPanelOpen || pivotActive ? 'true' : undefined}
               >
                 <PivotIcon fontSize="small" />
               </ToolbarIconButton>
             </Tooltip>
           ) : null}
-        </DataStudioToolbarGroup>
-      ),
-    });
-  }
-
-  if (onAddChart) {
-    middleGroups.push({
-      id: 'charts',
-      render: () => (
-        <DataStudioToolbarGroup className={classes.group}>
-          <Tooltip title="Add chart">
-            <ToolbarIconButton size="small" aria-label="Add chart" onClick={() => onAddChart()}>
-              <BarChartIcon fontSize="small" />
-            </ToolbarIconButton>
-          </Tooltip>
         </DataStudioToolbarGroup>
       ),
     });
@@ -1226,7 +1268,6 @@ function ActiveToolbar({
     sortModel.length,
     groupingModel.length,
     onAddRow,
-    onAddChart,
   ]);
 
   const overflowGroups = middleGroups.filter((g) => overflowedIds.has(g.id));
@@ -1307,9 +1348,7 @@ function ActiveToolbar({
               aria-haspopup="true"
               aria-expanded={overflowOpen}
               onClick={() => setOverflowOpen((open) => !open)}
-              sx={(theme) => ({
-                backgroundColor: overflowOpen ? alpha(theme.palette.primary.main, 0.18) : undefined,
-              })}
+              data-active={overflowOpen ? 'true' : undefined}
             >
               <MoreVertIcon fontSize="small" />
             </ToolbarIconButton>
