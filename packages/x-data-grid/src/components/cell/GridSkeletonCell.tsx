@@ -77,7 +77,7 @@ function GridSkeletonCell(props: GridSkeletonCellProps) {
   const classes = useUtilityClasses(ownerState);
 
   // Memo prevents the non-circular skeleton widths changing to random widths on every render
-  const skeletonProps = React.useMemo(() => {
+  const baseSkeletonProps = React.useMemo(() => {
     const isCircularContent = type === 'boolean' || type === 'actions';
 
     if (isCircularContent) {
@@ -98,9 +98,15 @@ function GridSkeletonCell(props: GridSkeletonCellProps) {
       variant: 'text',
       width: `${Math.round(randomNumberGenerator(min, max))}%`,
       height: CONTENT_HEIGHT,
-      ...skeletonPropsOverride,
     } as const;
-  }, [skeletonPropsOverride, type]);
+  }, [type]);
+
+  // Merge caller overrides outside the memo so an inline `skeletonProps` object
+  // doesn't bust the memo and re-roll the random width on every render
+  const skeletonProps =
+    skeletonPropsOverride && Object.keys(skeletonPropsOverride).length > 0
+      ? { ...baseSkeletonProps, ...skeletonPropsOverride }
+      : baseSkeletonProps;
 
   return (
     <div
