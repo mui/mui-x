@@ -75,6 +75,8 @@ export class NestedDataManager {
       this.queuedRequests.add(id);
       if (fetchParams?.[index]) {
         this.fetchParams.set(id, fetchParams[index]);
+      } else {
+        this.fetchParams.delete(id);
       }
       if (showChildrenLoading) {
         loadingIds[id] = true;
