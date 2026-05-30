@@ -56,8 +56,8 @@
     "@mui/x-tree-view": "workspace:^",
     "@mui/x-tree-view-pro": "workspace:^",
     "@react-spring/web": "catalog:",
-    "@tanstack/query-core": "^5.100.10",
-    "@tanstack/react-query": "^5.100.10",
+    "@tanstack/query-core": "^5.100.14",
+    "@tanstack/react-query": "^5.100.14",
     "chance": "catalog:",
     "clsx": "catalog:",
     "cross-env": "catalog:",
@@ -78,7 +78,7 @@
     "prop-types": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-hook-form": "^7.75.0",
+    "react-hook-form": "^7.76.1",
     "react-router": "catalog:",
     "react-runner": "^1.0.5",
     "react-simple-code-editor": "^0.14.1",
@@ -88,7 +88,10 @@
     "semver": "7.8.1",
     "styled-components": "^6.4.2",
     "stylis": "catalog:",
-    "webpack-bundle-analyzer": "^5.3.0"
+    "topojson-client": "^3.1.0",
+    "us-atlas": "^3.0.1",
+    "webpack-bundle-analyzer": "^5.3.0",
+    "world-atlas": "^2.0.2"
   },
   "devDependencies": {
     "@babel/preset-typescript": "catalog:",
@@ -102,6 +105,8 @@
     "@types/react-dom": "catalog:",
     "@types/semver": "catalog:",
     "@types/stylis": "4.2.7",
+    "@types/topojson-client": "^3.1.5",
+    "@types/topojson-specification": "^1.0.5",
     "@types/webpack-bundle-analyzer": "4.7.0",
     "gm": "1.25.1",
     "serve": "catalog:"
