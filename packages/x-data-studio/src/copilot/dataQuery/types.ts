@@ -2,11 +2,11 @@ import type { GridRowModel } from '@mui/x-data-grid';
 
 /**
  * Input shape for `queryStudioData`. Intentionally minimal in v1 — the agent
- * picks a dataset and an optional row limit; the data layer returns the
- * dataset's static rows (no filter / sort / aggregation yet).
+ * picks a dataSource and an optional row limit; the data layer returns the
+ * dataSource's static rows (no filter / sort / aggregation yet).
  */
 export interface StudioDataQueryInput {
-  datasetId: string;
+  dataSourceId: string;
   limit?: number;
 }
 
@@ -21,7 +21,7 @@ export interface StudioDataQueryColumnMeta {
  */
 export interface StudioDataQueryResult {
   meta: {
-    datasetId: string;
+    dataSourceId: string;
     rowCount: number;
     columns: ReadonlyArray<StudioDataQueryColumnMeta>;
   };

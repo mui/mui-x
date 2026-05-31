@@ -10,9 +10,9 @@ describe('createNextNavigationRoutingAdapter', () => {
     const adapter = createNextNavigationRoutingAdapter({
       router: { push: vi.fn(), replace: vi.fn() },
       pathname: '/studio',
-      searchParams: new URLSearchParams('dataset=customers&view=vip'),
+      searchParams: new URLSearchParams('dataSource=customers&sheet=vip'),
     });
-    expect(adapter.read()).toEqual({ activeDatasetId: 'customers', activeViewId: 'vip' });
+    expect(adapter.read()).toEqual({ activeDataSourceId: 'customers', activeSheetId: 'vip' });
   });
 
   it("calls router.push with the new URL for mode='push'", () => {
@@ -24,10 +24,10 @@ describe('createNextNavigationRoutingAdapter', () => {
       searchParams: new URLSearchParams('foo=bar'),
     });
 
-    adapter.write({ activeDatasetId: 'orders', activeViewId: null }, 'push');
+    adapter.write({ activeDataSourceId: 'orders', activeSheetId: null }, 'push');
 
     expect(push).toHaveBeenCalledTimes(1);
-    expect(push).toHaveBeenCalledWith('/studio?foo=bar&dataset=orders');
+    expect(push).toHaveBeenCalledWith('/studio?foo=bar&dataSource=orders');
     expect(replace).not.toHaveBeenCalled();
   });
 
@@ -40,9 +40,9 @@ describe('createNextNavigationRoutingAdapter', () => {
       searchParams: new URLSearchParams(''),
     });
 
-    adapter.write({ activeDatasetId: 'a', activeViewId: 'v1' }, 'replace');
+    adapter.write({ activeDataSourceId: 'a', activeSheetId: 'v1' }, 'replace');
 
-    expect(replace).toHaveBeenCalledWith('/studio?dataset=a&view=v1');
+    expect(replace).toHaveBeenCalledWith('/studio?dataSource=a&sheet=v1');
     expect(push).not.toHaveBeenCalled();
   });
 
@@ -51,10 +51,10 @@ describe('createNextNavigationRoutingAdapter', () => {
     const adapter = createNextNavigationRoutingAdapter({
       router: { push, replace: vi.fn() },
       pathname: '/studio',
-      searchParams: new URLSearchParams('dataset=old&view=stale&keep=me'),
+      searchParams: new URLSearchParams('dataSource=old&sheet=stale&keep=me'),
     });
 
-    adapter.write({ activeDatasetId: null, activeViewId: null }, 'push');
+    adapter.write({ activeDataSourceId: null, activeSheetId: null }, 'push');
 
     expect(push).toHaveBeenCalledWith('/studio?keep=me');
   });
@@ -65,12 +65,12 @@ describe('createNextNavigationRoutingAdapter', () => {
       router: { push, replace: vi.fn() },
       pathname: '/studio',
       searchParams: new URLSearchParams('ds=foo&v=bar'),
-      datasetParam: 'ds',
-      viewParam: 'v',
+      dataSourceParam: 'ds',
+      sheetParam: 'v',
     });
-    expect(adapter.read()).toEqual({ activeDatasetId: 'foo', activeViewId: 'bar' });
+    expect(adapter.read()).toEqual({ activeDataSourceId: 'foo', activeSheetId: 'bar' });
 
-    adapter.write({ activeDatasetId: 'baz', activeViewId: null }, 'push');
+    adapter.write({ activeDataSourceId: 'baz', activeSheetId: null }, 'push');
     expect(push).toHaveBeenCalledWith('/studio?ds=baz');
   });
 });
@@ -82,10 +82,10 @@ describe('createNextRouterRoutingAdapter', () => {
         push: vi.fn(),
         replace: vi.fn(),
         pathname: '/studio',
-        query: { dataset: 'customers', view: 'vip' },
+        query: { dataSource: 'customers', sheet: 'vip' },
       },
     });
-    expect(adapter.read()).toEqual({ activeDatasetId: 'customers', activeViewId: 'vip' });
+    expect(adapter.read()).toEqual({ activeDataSourceId: 'customers', activeSheetId: 'vip' });
   });
 
   it('handles repeated query params (string[]) by taking the first value', () => {
@@ -94,10 +94,10 @@ describe('createNextRouterRoutingAdapter', () => {
         push: vi.fn(),
         replace: vi.fn(),
         pathname: '/studio',
-        query: { dataset: ['a', 'b'] },
+        query: { dataSource: ['a', 'b'] },
       },
     });
-    expect(adapter.read()).toEqual({ activeDatasetId: 'a', activeViewId: null });
+    expect(adapter.read()).toEqual({ activeDataSourceId: 'a', activeSheetId: null });
   });
 
   it("calls router.push for mode='push' and preserves unrelated query params", () => {
@@ -107,19 +107,19 @@ describe('createNextRouterRoutingAdapter', () => {
         push,
         replace: vi.fn(),
         pathname: '/studio',
-        query: { dataset: 'old', view: 'gone', keep: 'me' },
+        query: { dataSource: 'old', sheet: 'gone', keep: 'me' },
       },
     });
 
-    adapter.write({ activeDatasetId: 'new', activeViewId: null }, 'push');
+    adapter.write({ activeDataSourceId: 'new', activeSheetId: null }, 'push');
 
     expect(push).toHaveBeenCalledTimes(1);
     const writtenUrl = push.mock.calls[0][0] as string;
     expect(writtenUrl.startsWith('/studio?')).toBe(true);
     const search = new URLSearchParams(writtenUrl.slice('/studio?'.length));
     expect(search.get('keep')).toBe('me');
-    expect(search.get('dataset')).toBe('new');
-    expect(search.has('view')).toBe(false);
+    expect(search.get('dataSource')).toBe('new');
+    expect(search.has('sheet')).toBe(false);
   });
 
   it("calls router.replace for mode='replace'", () => {
@@ -129,8 +129,8 @@ describe('createNextRouterRoutingAdapter', () => {
       router: { push, replace, pathname: '/studio', query: {} },
     });
 
-    adapter.write({ activeDatasetId: 'a', activeViewId: null }, 'replace');
-    expect(replace).toHaveBeenCalledWith('/studio?dataset=a');
+    adapter.write({ activeDataSourceId: 'a', activeSheetId: null }, 'replace');
+    expect(replace).toHaveBeenCalledWith('/studio?dataSource=a');
     expect(push).not.toHaveBeenCalled();
   });
 
@@ -138,10 +138,10 @@ describe('createNextRouterRoutingAdapter', () => {
     const push = vi.fn();
     const adapter = createNextRouterRoutingAdapter({
       router: { push, replace: vi.fn(), pathname: '/studio', query: { ds: 'x', v: 'y' } },
-      datasetParam: 'ds',
-      viewParam: 'v',
+      dataSourceParam: 'ds',
+      sheetParam: 'v',
     });
-    expect(adapter.read()).toEqual({ activeDatasetId: 'x', activeViewId: 'y' });
+    expect(adapter.read()).toEqual({ activeDataSourceId: 'x', activeSheetId: 'y' });
   });
 });
 
@@ -149,10 +149,10 @@ describe('createReactRouterRoutingAdapter', () => {
   it('reads from useSearchParams', () => {
     const adapter = createReactRouterRoutingAdapter({
       navigate: vi.fn(),
-      location: { pathname: '/studio', search: '?dataset=a&view=v1', hash: '' },
-      searchParams: new URLSearchParams('dataset=a&view=v1'),
+      location: { pathname: '/studio', search: '?dataSource=a&sheet=v1', hash: '' },
+      searchParams: new URLSearchParams('dataSource=a&sheet=v1'),
     });
-    expect(adapter.read()).toEqual({ activeDatasetId: 'a', activeViewId: 'v1' });
+    expect(adapter.read()).toEqual({ activeDataSourceId: 'a', activeSheetId: 'v1' });
   });
 
   it("calls navigate with replace=false for mode='push'", () => {
@@ -163,9 +163,9 @@ describe('createReactRouterRoutingAdapter', () => {
       searchParams: new URLSearchParams('keep=me'),
     });
 
-    adapter.write({ activeDatasetId: 'orders', activeViewId: null }, 'push');
+    adapter.write({ activeDataSourceId: 'orders', activeSheetId: null }, 'push');
 
-    expect(navigate).toHaveBeenCalledWith('/studio?keep=me&dataset=orders#section', {
+    expect(navigate).toHaveBeenCalledWith('/studio?keep=me&dataSource=orders#section', {
       replace: false,
     });
   });
@@ -178,8 +178,8 @@ describe('createReactRouterRoutingAdapter', () => {
       searchParams: new URLSearchParams(''),
     });
 
-    adapter.write({ activeDatasetId: 'a', activeViewId: null }, 'replace');
-    expect(navigate).toHaveBeenCalledWith('/studio?dataset=a', { replace: true });
+    adapter.write({ activeDataSourceId: 'a', activeSheetId: null }, 'replace');
+    expect(navigate).toHaveBeenCalledWith('/studio?dataSource=a', { replace: true });
   });
 
   it('honors custom param names', () => {
@@ -188,11 +188,11 @@ describe('createReactRouterRoutingAdapter', () => {
       navigate,
       location: { pathname: '/s', search: '?ds=alpha&v=beta', hash: '' },
       searchParams: new URLSearchParams('ds=alpha&v=beta'),
-      datasetParam: 'ds',
-      viewParam: 'v',
+      dataSourceParam: 'ds',
+      sheetParam: 'v',
     });
-    expect(adapter.read()).toEqual({ activeDatasetId: 'alpha', activeViewId: 'beta' });
-    adapter.write({ activeDatasetId: 'gamma', activeViewId: null }, 'push');
+    expect(adapter.read()).toEqual({ activeDataSourceId: 'alpha', activeSheetId: 'beta' });
+    adapter.write({ activeDataSourceId: 'gamma', activeSheetId: null }, 'push');
     expect(navigate).toHaveBeenCalledWith('/s?ds=gamma', { replace: false });
   });
 });

@@ -9,7 +9,7 @@ import {
   type GridRowModesModel,
   type GridValidRowModel,
 } from '@mui/x-data-grid';
-import type { DataStudioDataset } from './DataStudio.types';
+import type { DataStudioDataSource } from './DataStudio.types';
 
 const SaveIcon = createSvgIcon(
   <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z" />,
@@ -78,27 +78,27 @@ interface DataStudioGridApiLike {
 export interface DataStudioRowEditingResult<R extends GridValidRowModel> {
   /**
    * Columns with the `__dataStudioActions` column appended when the active
-   * dataset supports row editing (`dataSource.updateRow` or `dataSource.deleteRow`).
+   * dataSource supports row editing (`dataSource.updateRow` or `dataSource.deleteRow`).
    * Otherwise the input columns unchanged.
    */
   columns: GridColDef<R>[];
   /**
    * Pass to the grid alongside `editMode="row"`. `null` when row editing is
-   * disabled for this dataset — pass nothing to the grid in that case.
+   * disabled for this dataSource — pass nothing to the grid in that case.
    */
   rowModesModel: GridRowModesModel | null;
   onRowModesModelChange: (model: GridRowModesModel) => void;
   /**
-   * Trigger row creation through the dataset's `createRow`. Synthesizes a demo
+   * Trigger row creation through the dataSource's `createRow`. Synthesizes a demo
    * row from the column schema, clears the data-source cache, re-fetches, and
    * (if the new row is loaded in the current page) flips it into edit mode.
-   * `null` when the dataset doesn't expose `createRow`.
+   * `null` when the dataSource doesn't expose `createRow`.
    */
   onAddRow: (() => Promise<void>) | null;
 }
 
 /**
- * Built-in row editing for `<DataStudio>`. When the active dataset's
+ * Built-in row editing for `<DataStudio>`. When the active dataSource's
  * `dataSource` exposes `createRow`/`updateRow`/`deleteRow`, appends an actions
  * column (Edit/Save/Cancel/Delete) and provides the `onAddRow` handler that
  * the toolbar's "Add row" button calls. The actions column is keyed by
@@ -108,20 +108,20 @@ export interface DataStudioRowEditingResult<R extends GridValidRowModel> {
  * @returns {DataStudioRowEditingResult<R>} Decorated columns + state.
  */
 export function useDataStudioRowEditing<R extends GridValidRowModel>(options: {
-  dataset: DataStudioDataset<R> | null;
+  dataSource: DataStudioDataSource<R> | null;
   apiRef: DataStudioGridApiLike;
   onError?: (error: unknown) => void;
 }): DataStudioRowEditingResult<R> {
-  const { dataset, apiRef, onError } = options;
+  const { dataSource, apiRef, onError } = options;
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 
-  const datasetId = dataset?.id;
-  // Reset edit state when the active dataset changes so a row that was in
-  // edit mode in dataset A doesn't bleed into dataset B (whose rows have
+  const dataSourceId = dataSource?.id;
+  // Reset edit state when the active dataSource changes so a row that was in
+  // edit mode in dataSource A doesn't bleed into dataSource B (whose rows have
   // different ids anyway).
   React.useEffect(() => {
     setRowModesModel({});
-  }, [datasetId]);
+  }, [dataSourceId]);
 
   const reportError = React.useCallback(
     (error: unknown) => {
@@ -134,10 +134,10 @@ export function useDataStudioRowEditing<R extends GridValidRowModel>(options: {
     apiRef.current?.dataSource?.cache?.clear?.();
   }, [apiRef]);
 
-  const dataSource = dataset?.dataSource;
-  const hasUpdate = typeof dataSource?.updateRow === 'function';
-  const hasDelete = typeof dataSource?.deleteRow === 'function';
-  const hasCreate = typeof dataSource?.createRow === 'function';
+  const connector = dataSource?.connector;
+  const hasUpdate = typeof connector?.updateRow === 'function';
+  const hasDelete = typeof connector?.deleteRow === 'function';
+  const hasCreate = typeof connector?.createRow === 'function';
   const supportsRowEditing = hasUpdate || hasDelete;
 
   const handleEditClick = React.useCallback(
@@ -166,29 +166,29 @@ export function useDataStudioRowEditing<R extends GridValidRowModel>(options: {
 
   const handleDeleteClick = React.useCallback(
     (id: GridRowId) => async () => {
-      if (!dataSource?.deleteRow) {
+      if (!connector?.deleteRow) {
         return;
       }
       try {
         const row = apiRef.current?.getRow?.(id);
-        const deletedRow = await dataSource.deleteRow(id, row ?? undefined);
+        const deletedRow = await connector.deleteRow(id, row ?? undefined);
         clearCache();
         apiRef.current?.updateRows?.([deletedRow ?? { id, _action: 'delete' }]);
       } catch (error) {
         reportError(error);
       }
     },
-    [apiRef, clearCache, dataSource, reportError],
+    [apiRef, clearCache, connector, reportError],
   );
 
-  const datasetColumns = dataset?.columns;
+  const dataSourceColumns = dataSource?.columns;
   // Stabilize the empty-array fallback so downstream `useMemo`s don't re-run
-  // every render when no dataset is active.
+  // every render when no dataSource is active.
   const baseColumns = React.useMemo<readonly GridColDef[]>(
-    () => datasetColumns ?? [],
-    [datasetColumns],
+    () => dataSourceColumns ?? [],
+    [dataSourceColumns],
   );
-  const rowIdField = dataset?.rowIdField;
+  const rowIdField = dataSource?.rowIdField;
 
   const columns = React.useMemo<GridColDef<R>[]>(() => {
     if (!supportsRowEditing) {
@@ -265,10 +265,10 @@ export function useDataStudioRowEditing<R extends GridValidRowModel>(options: {
   ]);
 
   const onAddRow = React.useMemo<(() => Promise<void>) | null>(() => {
-    if (!hasCreate || !dataSource?.createRow) {
+    if (!hasCreate || !connector?.createRow) {
       return null;
     }
-    const createRow = dataSource.createRow;
+    const createRow = connector.createRow;
     return async () => {
       try {
         const demoRow = createDemoRow<R>(baseColumns, rowIdField);
@@ -296,7 +296,7 @@ export function useDataStudioRowEditing<R extends GridValidRowModel>(options: {
         reportError(error);
       }
     };
-  }, [hasCreate, dataSource, baseColumns, rowIdField, clearCache, apiRef, reportError]);
+  }, [hasCreate, connector, baseColumns, rowIdField, clearCache, apiRef, reportError]);
 
   return {
     columns,

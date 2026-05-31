@@ -7,13 +7,11 @@ import { styled, useColorScheme } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 import {
   GridUndoIcon,
   GridRedoIcon,
@@ -26,17 +24,8 @@ import {
 } from '@mui/x-data-grid';
 import type { RefObject } from '@mui/x-internals/types';
 import {
-  StarIcon,
-  FolderIcon,
-  CloudDoneIcon,
-  HistoryIcon,
-  AccountCircleIcon,
-  VideoCamIcon,
-  ShareIcon,
-  SparkleIcon,
   PrintIcon,
   FunctionsIcon,
-  InsertCommentIcon,
   BrightnessIcon,
   ChevronRightIcon,
 } from '../DataStudioToolbar/icons';
@@ -53,9 +42,13 @@ export interface DataStudioMenuBarProps {
    */
   apiRef: ApiRefLike;
   /**
-   * Document title shown in the top row.
+   * Whether the inline Data Grid is the active surface. `false` when a custom
+   * view type (chart, pivot, …) owns the main pane — those bring their own grid,
+   * so the menu bar's grid-bound menus would dereference a detached `apiRef`.
+   * Defaults to `true` for backwards compatibility.
+   * @default true
    */
-  title?: React.ReactNode;
+  gridActive?: boolean;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -78,106 +71,6 @@ const DataStudioMenuBarRoot = styled('div', {
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
-// Sizing tokens — pulled to the top so brand size, title indent and menu-strip
-// indent stay in sync if any of them changes.
-const MENU_BAR_HORIZONTAL_PADDING = 12; // px — same on the top row and the menu strip
-const BRAND_SIZE = 36;
-const BRAND_TITLE_GAP = 12;
-// Where the title (and menu strip) start, measured from the menubar left edge.
-const TITLE_INDENT = MENU_BAR_HORIZONTAL_PADDING + BRAND_SIZE + BRAND_TITLE_GAP;
-const ICON_BUTTON_SIZE = 32;
-const RIGHT_CLUSTER_ICON = 20;
-
-const DataStudioMenuBarTopRow = styled('div', {
-  name: 'MuiDataStudioMenuBar',
-  slot: 'TopRow',
-})(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(1, 1.5),
-  gap: `${BRAND_TITLE_GAP}px`,
-  minHeight: 48,
-}));
-
-const DataStudioMenuBarBrand = styled('div', {
-  name: 'MuiDataStudioMenuBar',
-  slot: 'Brand',
-})(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: BRAND_SIZE,
-  height: BRAND_SIZE,
-  borderRadius: 8,
-  backgroundColor: '#16a05b',
-  color: theme.palette.common.white,
-  fontSize: '1.125rem',
-  fontWeight: 700,
-  flex: '0 0 auto',
-}));
-
-const DataStudioMenuBarTitleWrapper = styled('div', {
-  name: 'MuiDataStudioMenuBar',
-  slot: 'Title',
-})({
-  display: 'flex',
-  flexDirection: 'column',
-  minWidth: 0,
-  flex: '0 1 auto',
-});
-
-const DataStudioMenuBarTitleRow = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.75),
-  minWidth: 0,
-}));
-
-const DataStudioMenuBarTitleText = styled(Typography)({
-  fontSize: '1.125rem',
-  fontWeight: 500,
-  lineHeight: 1.2,
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-});
-
-const DataStudioMenuBarStatus = styled('div', {
-  name: 'MuiDataStudioMenuBar',
-  slot: 'TitleStatus',
-})(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.25),
-  marginLeft: theme.spacing(0.5),
-  color: (theme.vars || theme).palette.text.secondary,
-  '& .MuiIconButton-root': {
-    width: 28,
-    height: 28,
-    padding: 4,
-  },
-}));
-
-const DataStudioMenuBarSpacer = styled('div')({
-  flex: '1 1 auto',
-});
-
-const DataStudioMenuBarRightCluster = styled('div', {
-  name: 'MuiDataStudioMenuBar',
-  slot: 'RightCluster',
-})(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.5),
-  flex: '0 0 auto',
-  color: (theme.vars || theme).palette.text.secondary,
-  '& .MuiIconButton-root': {
-    width: ICON_BUTTON_SIZE,
-    height: ICON_BUTTON_SIZE,
-    padding: (ICON_BUTTON_SIZE - RIGHT_CLUSTER_ICON) / 2,
-    color: 'inherit',
-  },
-}));
 
 const DataStudioMenuBarMenuStrip = styled('div', {
   name: 'MuiDataStudioMenuBar',
@@ -185,66 +78,36 @@ const DataStudioMenuBarMenuStrip = styled('div', {
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  // Match the top-row horizontal padding so the strip sits flush with the title's
-  // text baseline (TITLE_INDENT accounts for padding + brand width + gap).
+  // Match the toolbar's 16px left rail: 8px strip padding + 8px trigger padding
+  // lines the "File" label up with the toolbar content gutter below it.
   padding: theme.spacing(0.5, 1),
-  // paddingLeft: TITLE_INDENT,
-  gap: theme.spacing(0.25),
+  gap: theme.spacing(0.5),
 }));
 
 const DataStudioMenuBarMenuTrigger = styled(Button)(({ theme }) => ({
   minWidth: 0,
-  height: 28,
+  height: 32,
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   padding: theme.spacing(0, 1),
   textTransform: 'none',
   fontWeight: 400,
   fontSize: '0.8125rem',
-  lineHeight: 1,
+  lineHeight: 'normal',
   color: (theme.vars || theme).palette.text.primary,
   borderRadius: 4,
-}));
-
-const DataStudioMenuBarShareButton = styled(Button)(({ theme }) => ({
-  textTransform: 'none',
-  borderRadius: 999,
-  padding: theme.spacing(0.5, 2),
-  fontWeight: 500,
-  fontSize: '0.875rem',
-  backgroundColor: '#c2e7ff',
-  color: '#001d35',
-  boxShadow: 'none',
+  transition: theme.transitions.create(['background-color', 'border-color', 'box-shadow'], {
+    duration: theme.transitions.duration.shortest,
+  }),
   '&:hover': {
-    backgroundColor: '#a8d6f2',
-    boxShadow: 'none',
+    backgroundColor: theme.alpha((theme.vars || theme).palette.text.primary, 0.06),
   },
-  '&.Mui-disabled': {
-    backgroundColor: '#c2e7ff',
-    color: '#001d35',
-    opacity: 0.65,
+  '&[aria-expanded="true"]': {
+    backgroundColor: (theme.vars || theme).palette.action.selected,
   },
 }));
 
-const DataStudioMenuBarUpgradeButton = styled(Button)(({ theme }) => ({
-  textTransform: 'none',
-  borderRadius: 999,
-  padding: theme.spacing(0.5, 1.75),
-  fontWeight: 500,
-  fontSize: '0.875rem',
-  color: (theme.vars || theme).palette.text.primary,
-  border: `1px solid ${(theme.vars || theme).palette.divider}`,
-  backgroundColor: 'transparent',
-  boxShadow: 'none',
-  '&:hover': {
-    backgroundColor: (theme.vars || theme).palette.action.hover,
-    boxShadow: 'none',
-  },
-  '&.Mui-disabled': {
-    color: (theme.vars || theme).palette.text.primary,
-    border: `1px solid ${(theme.vars || theme).palette.divider}`,
-    backgroundColor: 'transparent',
-    opacity: 0.7,
-  },
-}));
 
 const DENSITY_LABELS: Record<GridDensity, string> = {
   compact: 'Compact',
@@ -302,13 +165,22 @@ const MENU_ORDER: MenuName[] = [
 ];
 
 function DataStudioMenuBar(props: DataStudioMenuBarProps) {
-  const { apiRef, title, classes: classesProp, sx, className } = props;
+  const { apiRef, gridActive = true, classes: classesProp, sx, className } = props;
   const classes = useDataStudioMenuBarUtilityClasses(classesProp);
 
   // Same boot-order pattern as the toolbar: poll requestAnimationFrame until the grid binds
-  // `apiRef.current` (the grid mounts as a sibling and the dataset may load async).
-  const [apiBound, setApiBound] = React.useState<boolean>(() => Boolean(apiRef.current?.state));
+  // `apiRef.current` (the grid mounts as a sibling and the dataSource may load async).
+  const [apiBound, setApiBound] = React.useState<boolean>(
+    () => gridActive && Boolean(apiRef.current?.state),
+  );
   React.useEffect(() => {
+    // When the inline grid isn't the active surface (a custom view type owns
+    // the pane), drop the binding so the grid-bound menus stop reading the
+    // detached `apiRef`. Re-polling resumes when the grid becomes active again.
+    if (!gridActive) {
+      setApiBound(false);
+      return undefined;
+    }
     if (apiBound) {
       return undefined;
     }
@@ -331,98 +203,16 @@ function DataStudioMenuBar(props: DataStudioMenuBarProps) {
         cancelAnimationFrame(frameId);
       }
     };
-  }, [apiRef, apiBound]);
+  }, [apiRef, apiBound, gridActive]);
 
   return (
     <DataStudioMenuBarRoot className={clsx(classes.root, className)} sx={sx}>
-      {/* <DataStudioMenuBarTopRow className={classes.topRow}>
-        <DataStudioMenuBarBrand className={classes.brand} aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M3 3h12l6 6v12H3z" opacity="0.95" />
-            <path d="M15 3v6h6" fill="white" opacity="0.45" />
-          </svg>
-        </DataStudioMenuBarBrand>
-        <DataStudioMenuBarTitleWrapper className={classes.title}>
-          <DataStudioMenuBarTitleRow>
-            <DataStudioMenuBarTitleText>{title ?? 'Untitled studio'}</DataStudioMenuBarTitleText>
-            <DataStudioMenuBarStatus className={classes.titleStatus}>
-              <Tooltip title="Add to favorites (coming soon)">
-                <span>
-                  <IconButton size="small" disabled aria-label="Favorite">
-                    <StarIcon sx={{ fontSize: 18 }} />
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip title="Move (coming soon)">
-                <span>
-                  <IconButton size="small" disabled aria-label="Move">
-                    <FolderIcon sx={{ fontSize: 18 }} />
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip title="Saved locally">
-                <IconButton size="small" aria-label="Saved">
-                  <CloudDoneIcon sx={{ fontSize: 18 }} />
-                </IconButton>
-              </Tooltip>
-            </DataStudioMenuBarStatus>
-          </DataStudioMenuBarTitleRow>
-        </DataStudioMenuBarTitleWrapper>
-        <DataStudioMenuBarSpacer />
-        <DataStudioMenuBarRightCluster className={classes.rightCluster}>
-          <Tooltip title="Version history (coming soon)">
-            <span>
-              <IconButton size="small" disabled aria-label="Version history">
-                <HistoryIcon sx={{ fontSize: RIGHT_CLUSTER_ICON }} />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title="Open chat (coming soon)">
-            <span>
-              <IconButton size="small" disabled aria-label="Open chat">
-                <InsertCommentIcon sx={{ fontSize: RIGHT_CLUSTER_ICON }} />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title="Start a meeting (coming soon)">
-            <span>
-              <IconButton size="small" disabled aria-label="Meeting">
-                <VideoCamIcon sx={{ fontSize: RIGHT_CLUSTER_ICON }} />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <DataStudioMenuBarShareButton
-            disableElevation
-            startIcon={<ShareIcon sx={{ fontSize: 18 }} />}
-            disabled
-          >
-            Share
-          </DataStudioMenuBarShareButton>
-          <DataStudioMenuBarUpgradeButton
-            disableElevation
-            startIcon={<SparkleIcon sx={{ fontSize: 18 }} />}
-            disabled
-          >
-            Upgrade
-          </DataStudioMenuBarUpgradeButton>
-          <Tooltip title="AI assistant (coming soon)">
-            <span>
-              <IconButton size="small" disabled aria-label="AI assistant">
-                <SparkleIcon sx={{ fontSize: RIGHT_CLUSTER_ICON }} />
-              </IconButton>
-            </span>
-          </Tooltip>
-          <Tooltip title="Account">
-            <span>
-              <IconButton size="small" disabled aria-label="Account">
-                <AccountCircleIcon sx={{ fontSize: 22 }} />
-              </IconButton>
-            </span>
-          </Tooltip>
-        </DataStudioMenuBarRightCluster>
-      </DataStudioMenuBarTopRow> */}
-      <DataStudioMenuBarMenuStrip className={classes.menuStrip} role="menubar">
-        {apiBound ? (
+      <DataStudioMenuBarMenuStrip
+        className={classes.menuStrip}
+        role="toolbar"
+        aria-label="Menu bar"
+      >
+        {gridActive && apiBound ? (
           <ActiveMenuStrip apiRef={apiRef} classes={classes} />
         ) : (
           <DisabledMenuStrip classes={classes} />
@@ -445,7 +235,6 @@ DataStudioMenuBar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  title: PropTypes.node,
 } as any;
 
 function DisabledMenuStrip({ classes }: { classes: DataStudioMenuBarClasses }) {

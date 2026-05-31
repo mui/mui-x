@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { alpha } from '@mui/material/styles';
 import { createSvgIcon } from '@mui/material/utils';
 import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
@@ -13,7 +12,7 @@ import Divider from '@mui/material/Divider';
 import type { GridValidRowModel } from '@mui/x-data-grid';
 import { styled } from '../internals/zero-styled';
 import type { DataStudioClasses } from './dataStudioClasses';
-import type { DataStudioDataset, DataStudioView } from './DataStudio.types';
+import type { DataStudioDataSource, DataStudioSheet } from './DataStudio.types';
 import type { DataStudioStateApi } from './useDataStudioState';
 
 const AddIcon = createSvgIcon(<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />, 'Add');
@@ -77,7 +76,7 @@ const DataStudioTabBarRoot = styled('div', {
 const DataStudioTabBarActions = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(0.25),
+  gap: theme.spacing(0.5),
   flex: '0 0 auto',
   paddingRight: theme.spacing(0.5),
 }));
@@ -91,7 +90,7 @@ const DataStudioTabBarActionIconButton = styled(IconButton)(({ theme }) => ({
 const DataStudioTabBarTabs = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  // gap: theme.spacing(0.25),
+  gap: theme.spacing(0.5),
   minWidth: 0,
   flex: 1,
   overflowX: 'auto',
@@ -107,33 +106,32 @@ const DataStudioTab = styled('div', {
   slot: 'Tab',
   overridesResolver: (_, styles) => styles.tab,
   shouldForwardProp: (prop) => prop !== 'ownerActive' && prop !== 'ownerKind',
-})<{ ownerActive?: boolean; ownerKind: 'dataset' | 'view' }>(({
+})<{ ownerActive?: boolean; ownerKind: 'dataSource' | 'sheet' }>(({
   theme,
   ownerActive,
   ownerKind,
 }) => {
-  const isDataset = ownerKind === 'dataset';
-  const primaryMain = theme.palette.primary.main;
-  const primaryColor = (theme.vars || theme).palette.primary.main;
+  const isDataset = ownerKind === 'dataSource';
+  const primaryMain = (theme.vars || theme).palette.primary.main;
+  const primaryDark = (theme.vars || theme).palette.primary.dark;
   const divider = (theme.vars || theme).palette.divider;
-  const paper = (theme.vars || theme).palette.background.paper;
 
-  // Active tab (most emphatic): primary-tinted background + primary text + primary outline.
-  // Dataset chips (idle): paper "pill" with 1px divider outline — reads as a fixed data source.
+  // Active tab (most emphatic): primary-tinted background + primary.dark text (AA) + primary outline.
+  //   The primary tint is reserved exclusively for the active tab so blue means "selected".
+  // Dataset chips (idle): neutral — transparent fill + 1px divider outline (a fixed data source).
   // View chips (idle): flat / no background — reads as a user sheet.
   let backgroundColor: string;
   let hoverBackgroundColor: string;
   let textColor: string;
   let boxShadow: string;
-  let fontWeight = theme.typography.fontWeightMedium;
+  const fontWeight = theme.typography.fontWeightMedium;
   if (ownerActive) {
-    backgroundColor = alpha(primaryMain, 0.15);
-    hoverBackgroundColor = alpha(primaryMain, 0.22);
-    textColor = primaryColor;
-    boxShadow = `inset 0 0 0 1px ${alpha(primaryMain, 0.6)}`;
-    // fontWeight = theme.typography.fontWeightBold;
+    backgroundColor = theme.alpha(primaryMain, 0.08);
+    hoverBackgroundColor = theme.alpha(primaryMain, 0.12);
+    textColor = primaryDark;
+    boxShadow = `inset 0 0 0 1px ${theme.alpha(primaryMain, 0.6)}`;
   } else if (isDataset) {
-    backgroundColor = alpha(primaryMain, 0.05);
+    backgroundColor = 'transparent';
     hoverBackgroundColor = (theme.vars || theme).palette.action.hover;
     textColor = (theme.vars || theme).palette.text.primary;
     boxShadow = `inset 0 0 0 1px ${divider}`;
@@ -147,13 +145,14 @@ const DataStudioTab = styled('div', {
   return {
     display: 'inline-flex',
     alignItems: 'center',
-    height: 36,
-    // borderRadius: 8,
+    height: 28,
+    borderRadius: 6,
     fontWeight,
     color: textColor,
     backgroundColor,
     boxShadow,
-    // Keep weight stable across active/inactive so labels don't reflow when selection changes.
+    // Keep weight stable across active/inactive so labels don't reflow when selection changes;
+    // weight + color (not size) carry the active state, so the nav type scale stays unified.
     fontSize: '0.8125rem',
     whiteSpace: 'nowrap',
     transition: theme.transitions.create(['background-color', 'box-shadow', 'color'], {
@@ -201,13 +200,12 @@ const DataStudioTabCaret = styled(IconButton, {
   overridesResolver: (_, styles) => styles.tabActions,
 })(({ theme }) => ({
   padding: 0,
-  width: 18,
-  height: 18,
-  marginLeft: theme.spacing(-0.25),
-  marginRight: theme.spacing(0.75),
-  color: (theme.vars || theme).palette.text.secondary,
-  borderRadius: 4,
-  '& svg': { fontSize: 16 },
+  width: 24,
+  height: 24,
+  marginRight: theme.spacing(0.5),
+  color: 'inherit',
+  borderRadius: theme.shape.borderRadius,
+  '& svg': { fontSize: 18 },
 }));
 
 const DataStudioTabRenameInput = styled(InputBase)(({ theme }) => ({
@@ -225,58 +223,60 @@ const DataStudioTabRenameInput = styled(InputBase)(({ theme }) => ({
 
 interface DataStudioTabBarProps<R extends GridValidRowModel> {
   classes: DataStudioClasses;
-  datasets: DataStudioDataset<R>[];
+  dataSources: DataStudioDataSource<R>[];
   state: DataStudioStateApi<R>;
 }
 
 export function DataStudioTabBar<R extends GridValidRowModel = any>(
   props: DataStudioTabBarProps<R>,
 ) {
-  const { classes, datasets, state } = props;
+  const { classes, dataSources, state } = props;
   const {
-    views,
-    activeDatasetId,
-    activeViewId,
-    selectDataset,
-    selectView,
-    addView,
-    renameView,
-    duplicateView,
-    deleteView,
-    moveView,
+    sheets,
+    activeDataSourceId,
+    activeSheetId,
+    selectDataSource,
+    selectSheet,
+    startComposing,
+    renameSheet,
+    duplicateSheet,
+    deleteSheet,
+    moveSheet,
   } = state;
 
-  const [renamingViewId, setRenamingViewId] = React.useState<string | null>(null);
+  const [renamingSheetId, setRenamingSheetId] = React.useState<string | null>(null);
   const [renameDraft, setRenameDraft] = React.useState('');
   const [menuState, setMenuState] = React.useState<{
-    viewId: string;
+    sheetId: string;
     anchor: HTMLElement;
   } | null>(null);
   const [listAnchor, setListAnchor] = React.useState<HTMLElement | null>(null);
-  const [datasetsCollapsed, setDatasetsCollapsed] = React.useState(false);
+  const [dataSourcesCollapsed, setDataSourcesCollapsed] = React.useState(false);
 
-  const beginRename = (view: DataStudioView) => {
-    setRenamingViewId(view.id);
-    setRenameDraft(String(view.label ?? ''));
+  const beginRename = (sheet: DataStudioSheet) => {
+    setRenamingSheetId(sheet.id);
+    setRenameDraft(String(sheet.label ?? ''));
   };
 
   const commitRename = () => {
-    if (renamingViewId === null) {
+    if (renamingSheetId === null) {
       return;
     }
     const trimmed = renameDraft.trim();
     if (trimmed.length > 0) {
-      renameView(renamingViewId, trimmed);
+      renameSheet(renamingSheetId, trimmed);
     }
-    setRenamingViewId(null);
+    setRenamingSheetId(null);
   };
 
   const cancelRename = () => {
-    setRenamingViewId(null);
+    setRenamingSheetId(null);
   };
 
-  const handleAddView = () => {
-    addView();
+  const handleAddSheet = () => {
+    // Open the Composer (prompt + template picker) rather than appending a
+    // default grid Sheet, so the user picks the Sheet type.
+    startComposing();
   };
 
   const scrollerRef = React.useRef<HTMLDivElement | null>(null);
@@ -307,7 +307,7 @@ export function DataStudioTabBar<R extends GridValidRowModel = any>(
       el.removeEventListener('scroll', updateScrollState);
       observer?.disconnect();
     };
-  }, [updateScrollState, datasets.length, views.length]);
+  }, [updateScrollState, dataSources.length, sheets.length]);
 
   const scrollByPage = (direction: 1 | -1) => {
     const el = scrollerRef.current;
@@ -324,16 +324,16 @@ export function DataStudioTabBar<R extends GridValidRowModel = any>(
     setListAnchor(null);
   };
 
-  const handleOpenActions = (event: React.MouseEvent<HTMLButtonElement>, viewId: string) => {
+  const handleOpenActions = (event: React.MouseEvent<HTMLButtonElement>, sheetId: string) => {
     event.stopPropagation();
-    setMenuState({ viewId, anchor: event.currentTarget });
+    setMenuState({ sheetId, anchor: event.currentTarget });
   };
   const handleCloseActions = () => {
     setMenuState(null);
   };
 
-  const menuView = menuState ? (views.find((view) => view.id === menuState.viewId) ?? null) : null;
-  const menuViewIndex = menuView ? views.findIndex((view) => view.id === menuView.id) : -1;
+  const menuSheet = menuState ? (sheets.find((sheet) => sheet.id === menuState.sheetId) ?? null) : null;
+  const menuSheetIndex = menuSheet ? sheets.findIndex((sheet) => sheet.id === menuSheet.id) : -1;
 
   const showScrollControls = canScrollLeft || canScrollRight;
 
@@ -343,9 +343,9 @@ export function DataStudioTabBar<R extends GridValidRowModel = any>(
         <DataStudioTabBarActionIconButton
           className={classes.tabAddButton}
           size="small"
-          aria-label="Add view"
-          onClick={handleAddView}
-          disabled={datasets.length === 0}
+          aria-label="Add sheet"
+          onClick={handleAddSheet}
+          disabled={dataSources.length === 0}
         >
           <AddIcon fontSize="small" />
         </DataStudioTabBarActionIconButton>
@@ -354,18 +354,18 @@ export function DataStudioTabBar<R extends GridValidRowModel = any>(
           size="small"
           aria-label="All tabs"
           onClick={handleOpenList}
-          disabled={datasets.length === 0 && views.length === 0}
+          disabled={dataSources.length === 0 && sheets.length === 0}
         >
           <MenuIcon fontSize="small" />
         </DataStudioTabBarActionIconButton>
-        {datasets.length > 0 ? (
+        {dataSources.length > 0 ? (
           <DataStudioTabBarActionIconButton
             size="small"
-            aria-label={datasetsCollapsed ? 'Show data sources' : 'Hide data sources'}
-            aria-pressed={datasetsCollapsed}
-            onClick={() => setDatasetsCollapsed((value) => !value)}
+            aria-label={dataSourcesCollapsed ? 'Show data sources' : 'Hide data sources'}
+            aria-pressed={dataSourcesCollapsed}
+            onClick={() => setDataSourcesCollapsed((value) => !value)}
           >
-            {datasetsCollapsed ? (
+            {dataSourcesCollapsed ? (
               <DoubleChevronRightIcon fontSize="small" />
             ) : (
               <DoubleChevronLeftIcon fontSize="small" />
@@ -374,34 +374,34 @@ export function DataStudioTabBar<R extends GridValidRowModel = any>(
         ) : null}
       </DataStudioTabBarActions>
       <DataStudioTabBarTabs ref={scrollerRef}>
-        {datasetsCollapsed
+        {dataSourcesCollapsed
           ? null
-          : datasets.map((dataset) => {
-              const isActive = activeViewId === null && dataset.id === activeDatasetId;
+          : dataSources.map((dataSource) => {
+              const isActive = activeSheetId === null && dataSource.id === activeDataSourceId;
               return (
                 <DataStudioTab
-                  key={dataset.id}
-                  ownerKind="dataset"
+                  key={dataSource.id}
+                  ownerKind="dataSource"
                   ownerActive={isActive}
                   className={clsx(classes.tab, classes.tabDataset, isActive && classes.tabActive)}
                 >
                   <DataStudioTabButton
                     type="button"
-                    onClick={() => selectDataset(dataset.id)}
+                    onClick={() => selectDataSource(dataSource.id)}
                     aria-current={isActive ? 'true' : undefined}
                   >
-                    <DataStudioTabLabel>{dataset.label}</DataStudioTabLabel>
+                    <DataStudioTabLabel>{dataSource.label}</DataStudioTabLabel>
                   </DataStudioTabButton>
                 </DataStudioTab>
               );
             })}
-        {views.map((view) => {
-          const isActive = view.id === activeViewId;
-          const isEditing = view.id === renamingViewId;
+        {sheets.map((sheet) => {
+          const isActive = sheet.id === activeSheetId;
+          const isEditing = sheet.id === renamingSheetId;
           return (
             <DataStudioTab
-              key={view.id}
-              ownerKind="view"
+              key={sheet.id}
+              ownerKind="sheet"
               ownerActive={isActive}
               className={clsx(classes.tab, classes.tabView, isActive && classes.tabActive)}
             >
@@ -420,23 +420,23 @@ export function DataStudioTabBar<R extends GridValidRowModel = any>(
                       cancelRename();
                     }
                   }}
-                  inputProps={{ 'aria-label': 'Rename view' }}
+                  inputProps={{ 'aria-label': 'Rename sheet' }}
                 />
               ) : (
                 <DataStudioTabButton
                   type="button"
-                  onClick={() => selectView(view.id)}
-                  onDoubleClick={() => beginRename(view)}
+                  onClick={() => selectSheet(sheet.id)}
+                  onDoubleClick={() => beginRename(sheet)}
                   aria-current={isActive ? 'true' : undefined}
                 >
-                  <DataStudioTabLabel>{view.label}</DataStudioTabLabel>
+                  <DataStudioTabLabel>{sheet.label}</DataStudioTabLabel>
                 </DataStudioTabButton>
               )}
               {!isEditing ? (
                 <DataStudioTabCaret
                   className={classes.tabActions}
-                  aria-label={`View options for ${String(view.label)}`}
-                  onClick={(event) => handleOpenActions(event, view.id)}
+                  aria-label={`Sheet options for ${String(sheet.label)}`}
+                  onClick={(event) => handleOpenActions(event, sheet.id)}
                 >
                   <ArrowDropDownIcon fontSize="inherit" />
                 </DataStudioTabCaret>
@@ -475,8 +475,8 @@ export function DataStudioTabBar<R extends GridValidRowModel = any>(
       >
         <MenuItem
           onClick={() => {
-            if (menuView) {
-              beginRename(menuView);
+            if (menuSheet) {
+              beginRename(menuSheet);
             }
             handleCloseActions();
           }}
@@ -488,8 +488,8 @@ export function DataStudioTabBar<R extends GridValidRowModel = any>(
         </MenuItem>
         <MenuItem
           onClick={() => {
-            if (menuView) {
-              duplicateView(menuView.id);
+            if (menuSheet) {
+              duplicateSheet(menuSheet.id);
             }
             handleCloseActions();
           }}
@@ -501,8 +501,8 @@ export function DataStudioTabBar<R extends GridValidRowModel = any>(
         </MenuItem>
         <MenuItem
           onClick={() => {
-            if (menuView) {
-              deleteView(menuView.id);
+            if (menuSheet) {
+              deleteSheet(menuSheet.id);
             }
             handleCloseActions();
           }}
@@ -514,10 +514,10 @@ export function DataStudioTabBar<R extends GridValidRowModel = any>(
         </MenuItem>
         <Divider />
         <MenuItem
-          disabled={menuViewIndex <= 0}
+          disabled={menuSheetIndex <= 0}
           onClick={() => {
-            if (menuView) {
-              moveView(menuView.id, -1);
+            if (menuSheet) {
+              moveSheet(menuSheet.id, -1);
             }
             handleCloseActions();
           }}
@@ -528,10 +528,10 @@ export function DataStudioTabBar<R extends GridValidRowModel = any>(
           <ListItemText>Move left</ListItemText>
         </MenuItem>
         <MenuItem
-          disabled={menuViewIndex === -1 || menuViewIndex >= views.length - 1}
+          disabled={menuSheetIndex === -1 || menuSheetIndex >= sheets.length - 1}
           onClick={() => {
-            if (menuView) {
-              moveView(menuView.id, 1);
+            if (menuSheet) {
+              moveSheet(menuSheet.id, 1);
             }
             handleCloseActions();
           }}
@@ -550,34 +550,34 @@ export function DataStudioTabBar<R extends GridValidRowModel = any>(
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
       >
-        {datasets.map((dataset) => {
-          const isActive = activeViewId === null && dataset.id === activeDatasetId;
+        {dataSources.map((dataSource) => {
+          const isActive = activeSheetId === null && dataSource.id === activeDataSourceId;
           return (
             <MenuItem
-              key={`ds-${dataset.id}`}
+              key={`ds-${dataSource.id}`}
               onClick={() => {
-                selectDataset(dataset.id);
+                selectDataSource(dataSource.id);
                 handleCloseList();
               }}
             >
               <ListItemIcon>{isActive ? <CheckIcon fontSize="small" /> : null}</ListItemIcon>
-              <ListItemText>{dataset.label}</ListItemText>
+              <ListItemText>{dataSource.label}</ListItemText>
             </MenuItem>
           );
         })}
-        {views.length > 0 ? <Divider /> : null}
-        {views.map((view) => {
-          const isActive = view.id === activeViewId;
+        {sheets.length > 0 ? <Divider /> : null}
+        {sheets.map((sheet) => {
+          const isActive = sheet.id === activeSheetId;
           return (
             <MenuItem
-              key={`v-${view.id}`}
+              key={`v-${sheet.id}`}
               onClick={() => {
-                selectView(view.id);
+                selectSheet(sheet.id);
                 handleCloseList();
               }}
             >
               <ListItemIcon>{isActive ? <CheckIcon fontSize="small" /> : null}</ListItemIcon>
-              <ListItemText>{view.label}</ListItemText>
+              <ListItemText>{sheet.label}</ListItemText>
             </MenuItem>
           );
         })}

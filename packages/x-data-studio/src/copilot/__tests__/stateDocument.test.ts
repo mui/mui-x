@@ -1,59 +1,47 @@
 import { describe, it, expect } from 'vitest';
-import type { DataStudioDataset } from '../../DataStudio/DataStudio.types';
+import type { DataStudioDataSource } from '../../DataStudio/DataStudio.types';
 import { snapshotState } from '../stateDocument';
 import { createFakeStateApi } from '../__testHarness__/createFakeStateApi';
 
-const DATASETS: ReadonlyArray<DataStudioDataset<any>> = [
+const DATASETS: ReadonlyArray<DataStudioDataSource<any>> = [
   { id: 'products', label: 'Products', columns: [{ field: 'name' }], rows: [] },
   { id: 'orders', label: 'Orders', columns: [{ field: 'orderId' }], rows: [] },
 ];
 
 describe('snapshotState', () => {
-  it('captures active dataset + active view + views into a normalized document', () => {
+  it('captures active dataSource + active view + views into a normalized document', () => {
     const { api } = createFakeStateApi({
-      datasets: DATASETS,
-      initialActiveDatasetId: 'products',
-      initialActiveViewId: 'v1',
-      initialViews: [
-        { id: 'v1', label: 'Sheet 1', datasetId: 'products' },
-        { id: 'v2', label: 'Chart 1', datasetId: 'orders', kind: 'chart' },
+      dataSources: DATASETS,
+      initialActiveDataSourceId: 'products',
+      initialActiveSheetId: 'v1',
+      initialSheets: [
+        { id: 'v1', label: 'Sheet 1', dataSourceId: 'products' },
+        { id: 'v2', label: 'Sheet 2', dataSourceId: 'orders' },
       ],
     });
     const doc = snapshotState(api, DATASETS);
-    expect(doc.active.datasetId).toBe('products');
-    expect(doc.active.viewId).toBe('v1');
-    expect(doc.datasets).toEqual([
+    expect(doc.active.dataSourceId).toBe('products');
+    expect(doc.active.sheetId).toBe('v1');
+    expect(doc.dataSources).toEqual([
       { id: 'products', label: 'Products' },
       { id: 'orders', label: 'Orders' },
     ]);
-    expect(doc.viewOrder).toEqual(['v1', 'v2']);
-    expect(doc.views.v1).toEqual({
+    expect(doc.sheetOrder).toEqual(['v1', 'v2']);
+    expect(doc.sheets.v1).toEqual({
       id: 'v1',
       label: 'Sheet 1',
-      datasetId: 'products',
-      kind: 'grid',
+      dataSourceId: 'products',
       initialState: {},
-      chartConfig: {},
     });
-    expect(doc.views.v2.kind).toBe('chart');
-  });
-
-  it('coerces missing kind to grid', () => {
-    const { api } = createFakeStateApi({
-      datasets: DATASETS,
-      initialViews: [{ id: 'v1', label: 'No kind', datasetId: 'products' }],
-    });
-    const doc = snapshotState(api, DATASETS);
-    expect(doc.views.v1.kind).toBe('grid');
   });
 
   it('returns null active selection when nothing is selected', () => {
     const { api } = createFakeStateApi({
-      datasets: DATASETS,
-      initialActiveDatasetId: '',
+      dataSources: DATASETS,
+      initialActiveDataSourceId: '',
     });
     const doc = snapshotState(api, DATASETS);
-    expect(doc.active.datasetId).toBeNull();
-    expect(doc.active.viewId).toBeNull();
+    expect(doc.active.dataSourceId).toBeNull();
+    expect(doc.active.sheetId).toBeNull();
   });
 });

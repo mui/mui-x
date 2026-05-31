@@ -8,10 +8,27 @@ import Tooltip from '@mui/material/Tooltip';
 import { createSvgIcon } from '@mui/material/utils';
 import type { GridColDef } from '@mui/x-data-grid';
 import { styled } from '../internals/zero-styled';
-import { pickMeasureColumns, pickBestDimension } from './columnHeuristics';
+import {
+  isDateLikeColumn,
+  isIdLikeColumn,
+  pickMeasureColumns,
+  pickBestDimension,
+} from './columnHeuristics';
+import {
+  DATE_GRANULARITIES,
+  DEFAULT_NUMERIC_BINS,
+  NUMERIC_BIN_OPTIONS,
+  dateBucket,
+  numericBucket,
+  numericBucketLabel,
+  numericExtent,
+  type DateGranularity,
+} from './binning';
 import type { DataStudioViewRenderProps, DataStudioViewType } from './types';
 
 const MAX_BREAKDOWN_ROWS = 6;
+// Binned (date/numeric) breakdowns show more rows so the histogram is legible.
+const MAX_BINNED_BREAKDOWN_ROWS = 12;
 const DEFAULT_METRIC_TILES = 3;
 // Rows sampled from a server connector to compute insights when no local rows
 // are available. Sample-based aggregates are approximate.
@@ -37,6 +54,10 @@ interface BreakdownTile {
   dimension: string;
   measure: string;
   agg: DashboardAggregation;
+  /** Bucket size when `dimension` is a date column. */
+  dateBin?: DateGranularity;
+  /** Bracket count when `dimension` is a numeric column. */
+  numericBins?: number;
 }
 type DashboardTile = MetricTile | BreakdownTile;
 
@@ -127,31 +148,51 @@ function aggregate(
   }
 }
 
-/** Group rows by `dimension` and aggregate `measure` per group (top N). */
+/** A breakdown group's display label plus the value used to order it. */
+interface BreakdownKey {
+  label: string;
+  sort: number | string;
+}
+
+// Group rows by `keyOf` and aggregate `measure` per group. Categorical breakdowns
+// sort by value (top N); binned (date/numeric) breakdowns sort by their natural
+// bucket order (chronological / ascending) and show more rows so the histogram reads.
 function groupAggregate(
   rows: ReadonlyArray<Record<string, unknown>>,
-  dimension: string,
+  keyOf: (row: Record<string, unknown>) => BreakdownKey | null,
   measure: string,
   agg: DashboardAggregation,
+  sortByKey: boolean,
 ): Array<{ key: string; value: number }> {
-  const buckets = new Map<string, Record<string, unknown>[]>();
+  const buckets = new Map<string, { sort: number | string; rows: Record<string, unknown>[] }>();
   for (const row of rows) {
-    const rawKey = row[dimension];
-    if (rawKey == null || rawKey === '') {
+    const key = keyOf(row);
+    if (key == null) {
       continue;
     }
-    const key = String(rawKey);
-    const list = buckets.get(key);
-    if (list) {
-      list.push(row);
+    const existing = buckets.get(key.label);
+    if (existing) {
+      existing.rows.push(row);
     } else {
-      buckets.set(key, [row]);
+      buckets.set(key.label, { sort: key.sort, rows: [row] });
     }
   }
-  return [...buckets.entries()]
-    .map(([key, groupRows]) => ({ key, value: aggregate(groupRows, measure, agg) ?? 0 }))
-    .sort((a, b) => b.value - a.value)
-    .slice(0, MAX_BREAKDOWN_ROWS);
+  const entries = [...buckets.entries()].map(([label, bucket]) => ({
+    key: label,
+    sort: bucket.sort,
+    value: aggregate(bucket.rows, measure, agg) ?? 0,
+  }));
+  entries.sort((a, b) => {
+    if (sortByKey) {
+      if (a.sort < b.sort) {
+        return -1;
+      }
+      return a.sort > b.sort ? 1 : 0;
+    }
+    return b.value - a.value;
+  });
+  const limit = sortByKey ? MAX_BINNED_BREAKDOWN_ROWS : MAX_BREAKDOWN_ROWS;
+  return entries.slice(0, limit).map(({ key, value }) => ({ key, value }));
 }
 
 /** Seed a sensible default set of tiles from a Data Source's columns + rows. */
@@ -447,6 +488,34 @@ function FieldSelect(props: {
   );
 }
 
+function OptionSelect<T extends string | number>(props: {
+  value: T;
+  options: ReadonlyArray<{ value: T; label: string }>;
+  ariaLabel: string;
+  onChange: (value: T) => void;
+}) {
+  return (
+    <TileSelect
+      variant="standard"
+      disableUnderline
+      value={props.value}
+      onChange={(event) => props.onChange(event.target.value as T)}
+      aria-label={props.ariaLabel}
+    >
+      {props.options.map((option) => (
+        <MenuItem key={option.value} value={option.value}>
+          {option.label}
+        </MenuItem>
+      ))}
+    </TileSelect>
+  );
+}
+
+const NUMERIC_BIN_SELECT_OPTIONS = NUMERIC_BIN_OPTIONS.map((value) => ({
+  value,
+  label: `${value} bins`,
+}));
+
 interface MetricTileProps {
   tile: MetricTile;
   rows: ReadonlyArray<Record<string, unknown>>;
@@ -502,7 +571,37 @@ function MetricTileView(props: MetricTileProps) {
 
 function BreakdownTileView(props: BreakdownTileProps) {
   const { tile, rows, columns, measureColumns, dimensionColumns, onChange, onRemove } = props;
-  const data = groupAggregate(rows, tile.dimension, tile.measure, tile.agg);
+  const dimensionColumn = columns.find((c) => c.field === tile.dimension);
+  const isDateDimension = Boolean(dimensionColumn && isDateLikeColumn(dimensionColumn));
+  const isNumericDimension = Boolean(
+    dimensionColumn && dimensionColumn.type === 'number' && !isDateDimension,
+  );
+  const dateBin = tile.dateBin ?? 'month';
+  const numericBins = tile.numericBins ?? DEFAULT_NUMERIC_BINS;
+  const extent = isNumericDimension ? numericExtent(rows, tile.dimension) : null;
+
+  // Build the group key: a date bucket, a numeric bracket (range label, ordered by
+  // its lower bound), or the raw categorical value.
+  const keyOf = (row: Record<string, unknown>): BreakdownKey | null => {
+    if (isDateDimension) {
+      const bucket = dateBucket(row[tile.dimension], dateBin);
+      return bucket == null ? null : { label: bucket, sort: bucket };
+    }
+    if (isNumericDimension && extent) {
+      const bound = numericBucket(Number(row[tile.dimension]), extent.min, extent.max, numericBins);
+      return bound == null
+        ? null
+        : { label: numericBucketLabel(bound, extent.min, extent.max, numericBins), sort: bound };
+    }
+    const raw = row[tile.dimension];
+    if (raw == null || raw === '') {
+      return null;
+    }
+    const label = String(raw);
+    return { label, sort: label };
+  };
+  const isBinned = isDateDimension || isNumericDimension;
+  const data = groupAggregate(rows, keyOf, tile.measure, tile.agg, isBinned);
   const max = data.reduce((acc, item) => Math.max(acc, item.value), 0);
   return (
     <BreakdownTileCard role="group" aria-label="Breakdown tile">
@@ -532,6 +631,22 @@ function BreakdownTileView(props: BreakdownTileProps) {
           ariaLabel="Dimension field"
           onChange={(dimension) => onChange({ dimension } as Partial<BreakdownTile>)}
         />
+        {isDateDimension ? (
+          <OptionSelect
+            value={dateBin}
+            options={DATE_GRANULARITIES}
+            ariaLabel="Date granularity"
+            onChange={(value) => onChange({ dateBin: value } as Partial<BreakdownTile>)}
+          />
+        ) : null}
+        {isNumericDimension ? (
+          <OptionSelect
+            value={numericBins}
+            options={NUMERIC_BIN_SELECT_OPTIONS}
+            ariaLabel="Bin count"
+            onChange={(value) => onChange({ numericBins: value } as Partial<BreakdownTile>)}
+          />
+        ) : null}
       </TileConfig>
       <BreakdownTitle>
         {columnLabel(
@@ -629,6 +744,12 @@ function DashboardView(props: DataStudioViewRenderProps<DashboardViewParams>) {
   );
   const dimensionColumns = React.useMemo(
     () => columns.filter((c) => c.type !== 'number' && c.field !== idField),
+    [columns, idField],
+  );
+  // Breakdowns can group by any non-id column — categorical, date (binned by
+  // granularity), or numeric (binned into brackets).
+  const breakdownDimensionColumns = React.useMemo(
+    () => columns.filter((c) => c.field !== idField && !isIdLikeColumn(c)),
     [columns, idField],
   );
 
@@ -782,7 +903,7 @@ function DashboardView(props: DataStudioViewRenderProps<DashboardViewParams>) {
                   rows={rows}
                   columns={columns}
                   measureColumns={measureColumns}
-                  dimensionColumns={dimensionColumns}
+                  dimensionColumns={breakdownDimensionColumns}
                   onChange={(patch) => updateTile(tile.id, patch)}
                   onRemove={() => removeTile(tile.id)}
                 />

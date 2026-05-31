@@ -3,10 +3,10 @@ import type { StudioHostAdapter } from '../studioHostAdapter';
 import type { StudioStateDocument } from '../stateDocument';
 
 export const viewLabelReconciler: PatchHandler<StudioHostAdapter, StudioStateDocument> = {
-  path: '/views/<id>/label',
+  path: '/sheets/<id>/label',
   allowedOps: ['replace'],
   guard: 'viewCrud',
-  phase: 'view',
+  phase: 'sheet',
   tier: 3,
   plan: 'community',
   reconcile: (_doc, op, ctx) => {
@@ -15,6 +15,6 @@ export const viewLabelReconciler: PatchHandler<StudioHostAdapter, StudioStateDoc
     if (typeof viewId !== 'string' || typeof op.value !== 'string') {
       return;
     }
-    ctx.adapter.api.stateApi.renameView(viewId, op.value);
+    ctx.adapter.api.stateApi.renameSheet(viewId, op.value);
   },
 };

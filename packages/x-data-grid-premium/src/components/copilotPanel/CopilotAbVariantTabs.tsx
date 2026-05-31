@@ -8,9 +8,8 @@ import {
   ChatMessageGroup,
   ChatMessageMeta,
 } from '@mui/x-chat';
-import { useChatStore } from '@mui/x-chat-headless';
-import type { ChatMessage as HeadlessChatMessage } from '@mui/x-chat-headless';
-import type { ToolPartSlots } from '@mui/x-chat-headless';
+import { useChatStore, useMessageIds } from '@mui/x-chat-headless';
+import type { ChatMessage as HeadlessChatMessage , ToolPartSlots } from '@mui/x-chat-headless';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { CopilotStreamingIndicator } from './CopilotStreamingIndicator';
 import { CopilotMessageMetadata } from './CopilotMessageMetadata';
@@ -326,7 +325,12 @@ function VariantTab({ variant, selected, message, isWinner, isLoser, onClick }: 
   );
 }
 
-interface CopilotAbVariantTabsProps {
+/**
+ * Resolved props consumed by the tabs renderer once the A/B pair has been
+ * located. Both call shapes (see {@link CopilotAbVariantTabsProps}) funnel
+ * into this internal component so the rendering logic lives in one place.
+ */
+interface CopilotAbVariantTabsBaseProps {
   /** Shared pair id — known from the leader's preamble before both
    *  variants have streamed. Required so feedback POSTs work even when
    *  one of the variants is still pending. */
@@ -334,14 +338,152 @@ interface CopilotAbVariantTabsProps {
   variantA: HeadlessChatMessage | undefined;
   variantB: HeadlessChatMessage | undefined;
   toolSlots: Record<string, Partial<ToolPartSlots>>;
+  /**
+   * Invoked when the user previews/picks a variant. When provided (the
+   * shared-panel slot shape), it replaces the default
+   * `apiRef.current.copilot.switchToVariant` call so the host can drive the
+   * replay/apply itself.
+   * @param {string} messageId The id of the picked variant's message.
+   */
+  onSwitchVariant?: (messageId: string) => void;
 }
 
-export function CopilotAbVariantTabs({
+/**
+ * Current `GridCopilotPanel` call shape: the panel has already located the
+ * A/B pair (variant messages + pair id) and supplies them directly, along
+ * with the merged tool slots.
+ */
+interface CopilotAbVariantTabsResolvedProps {
+  abPairId: string;
+  variantA: HeadlessChatMessage | undefined;
+  variantB: HeadlessChatMessage | undefined;
+  toolSlots: Record<string, Partial<ToolPartSlots>>;
+  message?: undefined;
+  onSwitchVariant?: (messageId: string) => void;
+}
+
+/**
+ * Shared-panel slot shape (`@mui/x-copilot`'s
+ * `CopilotChatPanelAbVariantTabsProps`): only the leader assistant message is
+ * supplied. The pair id and sibling variants are derived from the chat store,
+ * and tool slots fall back to the empty set (the host panel owns slot
+ * injection in that mode).
+ */
+interface CopilotAbVariantTabsMessageProps {
+  /** Leader assistant message of the A/B pair (carries `metadata.abPairId`). */
+  message: HeadlessChatMessage;
+  /**
+   * Called when the user switches A/B variant for a message.
+   * @param {string} messageId The id of the picked variant's message.
+   */
+  onSwitchVariant?: (messageId: string) => void;
+  abPairId?: undefined;
+  variantA?: undefined;
+  variantB?: undefined;
+  toolSlots?: Record<string, Partial<ToolPartSlots>>;
+}
+
+/**
+ * Props for {@link CopilotAbVariantTabs}.
+ *
+ * Supports two call shapes:
+ *
+ * - The current `GridCopilotPanel` shape
+ *   ({@link CopilotAbVariantTabsResolvedProps}), where the panel has already
+ *   resolved the A/B pair and passes `abPairId` + `variantA`/`variantB` +
+ *   `toolSlots` directly.
+ * - The shared panel's `abVariantTabs` slot shape
+ *   ({@link CopilotAbVariantTabsMessageProps}), where only the leader
+ *   `message` is provided; `abPairId` and the sibling variants are derived
+ *   from the chat store (the same store `GridCopilotPanel` reads), and an
+ *   optional `onSwitchVariant` callback overrides the default
+ *   `apiRef.current.copilot.switchToVariant` behavior.
+ */
+type CopilotAbVariantTabsProps =
+  | CopilotAbVariantTabsResolvedProps
+  | CopilotAbVariantTabsMessageProps;
+
+/**
+ * Derive an A/B pair (variant A / variant B messages) for `abPairId` by
+ * scanning the chat store — the same lookup `GridCopilotPanel`'s
+ * `CopilotMessageItem` performs. Used by the shared-panel slot path, which
+ * only receives the leader `message`.
+ * @param {string | undefined} abPairId The pair id to resolve siblings for.
+ * @returns {{ variantA: HeadlessChatMessage | undefined; variantB: HeadlessChatMessage | undefined }} The located sibling variants (each possibly undefined while streaming).
+ */
+function useAbPairFromStore(abPairId: string | undefined): {
+  variantA: HeadlessChatMessage | undefined;
+  variantB: HeadlessChatMessage | undefined;
+} {
+  const store = useChatStore();
+  const messageIds = useMessageIds();
+  const messagesById = store.state.messagesById;
+  return React.useMemo(() => {
+    if (!abPairId) {
+      return { variantA: undefined, variantB: undefined };
+    }
+    let variantA: HeadlessChatMessage | undefined;
+    let variantB: HeadlessChatMessage | undefined;
+    for (const otherId of messageIds) {
+      const other = messagesById[otherId];
+      if (!other || other.role !== 'assistant' || other.metadata?.abPairId !== abPairId) {
+        continue;
+      }
+      if (other.metadata?.abVariant === 'A' && !variantA) {
+        variantA = other;
+      } else if (other.metadata?.abVariant === 'B' && !variantB) {
+        variantB = other;
+      }
+      if (variantA && variantB) {
+        break;
+      }
+    }
+    return { variantA, variantB };
+  }, [abPairId, messageIds, messagesById]);
+}
+
+const EMPTY_TOOL_SLOTS: Record<string, Partial<ToolPartSlots>> = {};
+
+/**
+ * Tabbed A/B variant card. Accepts either the resolved `GridCopilotPanel`
+ * props or the shared-panel `{ message, onSwitchVariant }` slot shape; in the
+ * latter mode it resolves the pair from the chat store before delegating to
+ * the shared renderer. See {@link CopilotAbVariantTabsProps}.
+ */
+export function CopilotAbVariantTabs(props: CopilotAbVariantTabsProps) {
+  const derivedAbPairId = props.message?.metadata?.abPairId;
+  const derivedPair = useAbPairFromStore(props.message ? derivedAbPairId : undefined);
+
+  if (props.message) {
+    return (
+      <CopilotAbVariantTabsBase
+        abPairId={derivedAbPairId ?? ''}
+        variantA={derivedPair.variantA}
+        variantB={derivedPair.variantB}
+        toolSlots={props.toolSlots ?? EMPTY_TOOL_SLOTS}
+        onSwitchVariant={props.onSwitchVariant}
+      />
+    );
+  }
+
+  return (
+    <CopilotAbVariantTabsBase
+      abPairId={props.abPairId}
+      variantA={props.variantA}
+      variantB={props.variantB}
+      toolSlots={props.toolSlots}
+      onSwitchVariant={props.onSwitchVariant}
+    />
+  );
+}
+
+function CopilotAbVariantTabsBase({
   abPairId,
   variantA,
   variantB,
   toolSlots,
-}: CopilotAbVariantTabsProps) {
+  onSwitchVariant,
+}: CopilotAbVariantTabsBaseProps) {
   const store = useChatStore();
   const apiRef = useGridApiContext();
   const submitFeedback = useCopilotFeedback();
@@ -380,15 +522,20 @@ export function CopilotAbVariantTabs({
       const targetMessage = target === 'A' ? variantA : variantB;
       if (targetMessage) {
         try {
-          apiRef.current?.copilot?.switchToVariant?.(targetMessage.id);
+          if (onSwitchVariant) {
+            // Shared-panel slot mode: the host owns replay/apply.
+            onSwitchVariant(targetMessage.id);
+          } else {
+            apiRef.current?.copilot?.switchToVariant?.(targetMessage.id);
+          }
         } catch (err) {
-          // eslint-disable-next-line no-console
+
           console.warn('[Copilot] switchToVariant failed:', err);
         }
       }
       setActiveVariant(target);
     },
-    [activeVariant, variantA, variantB, apiRef],
+    [activeVariant, variantA, variantB, apiRef, onSwitchVariant],
   );
 
   // Explicit commit: POST `kind: 'ab-pick'` feedback and persist the
@@ -434,7 +581,7 @@ export function CopilotAbVariantTabs({
           metadata: { ...otherMessage.metadata, ...patch },
         });
       } catch (err) {
-        // eslint-disable-next-line no-console
+         
         console.warn('[Copilot] ab-pick feedback failed:', err);
       } finally {
         setSubmitting(false);

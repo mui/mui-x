@@ -485,7 +485,7 @@ function CopilotPdfReportCard(props: CopilotPdfReportCardProps) {
       // react-pdf — a malformed spec silently renders to an empty document.
       const issues = diagnoseSpec(normalizedSpec);
       if (issues.length > 0) {
-        // eslint-disable-next-line no-console
+         
         console.warn('[CopilotPdfReport] Spec issues:', issues, 'tree:', normalizedSpec);
         if (token === renderTokenRef.current) {
           setRenderError(`Spec issues: ${issues.join(' · ')}`);

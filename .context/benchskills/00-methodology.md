@@ -4,12 +4,12 @@
 
 **The harness inherits production defaults.** When you don't pass a flag, the harness asks `startStream` for its default, so production is the single source of truth. Specifically:
 
-| Setting | Source of truth | Harness flag to override |
-|---|---|---|
-| `maxSteps` (streamText stopWhen) | `startStream` default (currently 5) | `--max-steps=N` |
-| Tool naming scheme | canonical names | `--tool-scheme=<name>` |
-| Prompt variant | `buildSystemPromptV5` (prod default) | `--variants=v2,v5` (no override = V5 only) |
-| Enabled plugins | benchmark passes ALL 11 in `DEFAULT_COPILOT_PLUGINS` | n/a (intentional: maximum-coverage benchmark) |
+| Setting                          | Source of truth                                      | Harness flag to override                      |
+| -------------------------------- | ---------------------------------------------------- | --------------------------------------------- |
+| `maxSteps` (streamText stopWhen) | `startStream` default (currently 5)                  | `--max-steps=N`                               |
+| Tool naming scheme               | canonical names                                      | `--tool-scheme=<name>`                        |
+| Prompt variant                   | `buildSystemPromptV5` (prod default)                 | `--variants=v2,v5` (no override = V5 only)    |
+| Enabled plugins                  | benchmark passes ALL 11 in `DEFAULT_COPILOT_PLUGINS` | n/a (intentional: maximum-coverage benchmark) |
 
 A "production-parity" run is the one with **no overrides on the experiment flags**:
 
@@ -25,7 +25,6 @@ npx tsx scripts/test-copilot-quality.ts \
 If a number drops or rises in that run, it's the number production sees. Any other run (e.g. `--tool-scheme=verbose --max-steps=10`) is an **experiment**, not a baseline.
 
 ---
-
 
 ## Goal
 
@@ -43,15 +42,15 @@ The previous V2-vs-V5 sweep proved V5 wins on new-skill prompts. This run extend
 - **Prompts (50)**: the new test cases added for the skill benchmark — 30 exercise the 7 new instruction-only skills, 20 cover regression baseline (filter, sort, group/agg, chart, pivot, pdf-report, formula). Ids prefixed `skill-*` and `reg-*`. Filtered via `--new-prompts-only` (added to the harness for this run).
 - **Tool-naming schemes (7)**: each renames the 3 core tools + 2 client-handler skill tools.
 
-| Scheme | setGridState | runCommands | queryGridData | composePdfReport | answerWithFormula |
-|---|---|---|---|---|---|
-| baseline | setGridState | runCommands | queryGridData | composePdfReport | answerWithFormula |
-| verbs | applyGridPatches | executeGridCommands | requestGridData | composeReport | evaluateFormula |
-| short | patch | command | query | report | formula |
-| verbose | mutateGridConfiguration | triggerImperativeActions | inspectGridDataset | generatePrintableReport | computeScalarAnswer |
-| nouns | gridStateUpdate | gridCommandBatch | gridDataQuery | pdfReportRequest | formulaAnswer |
-| domain | configureGrid | invokeCommands | fetchGridSlice | buildPdf | solveFormula |
-| imperative | updateGrid | runOps | fetchData | makePdf | answer |
+| Scheme     | setGridState            | runCommands              | queryGridData      | composePdfReport        | answerWithFormula   |
+| ---------- | ----------------------- | ------------------------ | ------------------ | ----------------------- | ------------------- |
+| baseline   | setGridState            | runCommands              | queryGridData      | composePdfReport        | answerWithFormula   |
+| verbs      | applyGridPatches        | executeGridCommands      | requestGridData    | composeReport           | evaluateFormula     |
+| short      | patch                   | command                  | query              | report                  | formula             |
+| verbose    | mutateGridConfiguration | triggerImperativeActions | inspectGridDataset | generatePrintableReport | computeScalarAnswer |
+| nouns      | gridStateUpdate         | gridCommandBatch         | gridDataQuery      | pdfReportRequest        | formulaAnswer       |
+| domain     | configureGrid           | invokeCommands           | fetchGridSlice     | buildPdf                | solveFormula        |
+| imperative | updateGrid              | runOps                   | fetchData          | makePdf                 | answer              |
 
 - **Total calls**: 6 arms × 50 prompts × 7 schemes × 1 variant = **2100 calls**.
 
@@ -72,18 +71,18 @@ A call **passes** iff `classifyRun` returns zero failures.
 
 ## Pass criterion per prompt category
 
-| Category | Pass criterion |
-|---|---|
-| pivot-builder | `/pivot` patch present |
-| chart-suggest | `/charts/<id>` patch present |
-| outlier-hunt | `/sort` patch + `selection.selectVisibleTop` command |
-| what-if-ghost | 2× `answerWithFormula` calls in the same turn |
-| investigation-log | `queryGridData` called (relaxed — was multi-turn dependent) |
-| data-story | `queryGridData` called |
-| surprise-me | 2× `queryGridData` calls |
-| pdf-report (regression) | `queryGridData` + `composePdfReport` both called |
-| formula (regression) | `answerWithFormula` called |
-| filter / sort / group-agg / chart / pivot (regression) | matching patch path |
+| Category                                               | Pass criterion                                              |
+| ------------------------------------------------------ | ----------------------------------------------------------- |
+| pivot-builder                                          | `/pivot` patch present                                      |
+| chart-suggest                                          | `/charts/<id>` patch present                                |
+| outlier-hunt                                           | `/sort` patch + `selection.selectVisibleTop` command        |
+| what-if-ghost                                          | 2× `answerWithFormula` calls in the same turn               |
+| investigation-log                                      | `queryGridData` called (relaxed — was multi-turn dependent) |
+| data-story                                             | `queryGridData` called                                      |
+| surprise-me                                            | 2× `queryGridData` calls                                    |
+| pdf-report (regression)                                | `queryGridData` + `composePdfReport` both called            |
+| formula (regression)                                   | `answerWithFormula` called                                  |
+| filter / sort / group-agg / chart / pivot (regression) | matching patch path                                         |
 
 Hallucinated column references (e.g. `__row_group_by_columns_group__`) are an additional automatic fail mode regardless of category.
 
@@ -114,4 +113,4 @@ python3 .context/benchskills/parser.py /tmp/tool-scheme-multi.log
 - `investigation-log` measures only "did the model start an investigation" (one-turn `queryGridData` call), not whether a finding text was actually written. The real skill is multi-turn; the harness stops after step 1 via `stopWhen: stepCountIs(1)`.
 - `outlier-hunt` cannot truly detect outliers (no raw row access on backend); we measure whether the model emits the sort + top-N substitute the SKILL.md prescribes.
 - All 6 arms are small-to-mid models. Frontier models (Sonnet, GPT-5, Gemini Pro) not tested in this run.
-- Per-call latency varies 3-5× across arms (Haiku ~2s, Kimi-thinking ~10s); the report does not currently normalize for that.
+- Per-call latency varies 3-5× across arms (Haiku \~2s, Kimi-thinking \~10s); the report does not currently normalize for that.

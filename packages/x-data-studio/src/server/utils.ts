@@ -103,6 +103,7 @@ export function createDefaultDescriptor<
     },
     accessors,
     endpoints: options.schema?.endpoints,
+    joinGroup: options.joinGroup,
     meta: options.schema?.meta,
   };
 }

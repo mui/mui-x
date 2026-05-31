@@ -2,9 +2,9 @@
 
 _Across all arms and all 50 prompts._
 
-| Scheme | Calls | Pass | % | Avg latency | Total cost |
-| --- | --- | --- | --- | --- | --- |
-| baseline | 570 | 495 | 86.8% | 23638ms | $4.1117 |
+| Scheme   | Calls | Pass | %     | Avg latency | Total cost |
+| -------- | ----- | ---- | ----- | ----------- | ---------- |
+| baseline | 570   | 495  | 86.8% | 23638ms     | $4.1117    |
 
 ## Interpretation
 

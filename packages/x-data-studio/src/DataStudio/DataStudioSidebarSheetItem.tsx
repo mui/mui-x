@@ -9,7 +9,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import { createSvgIcon } from '@mui/material/utils';
 import { styled } from '../internals/zero-styled';
-import type { DataStudioView } from './DataStudio.types';
+import { getSheetTypeIcon } from './viewTypeIcons';
+import type { DataStudioSheet } from './DataStudio.types';
 import type { DataStudioStateApi } from './useDataStudioState';
 
 const MoreHorizIcon = createSvgIcon(
@@ -34,9 +35,9 @@ const ArrowUpIcon = createSvgIcon(
 );
 const ArrowDownIcon = createSvgIcon(<path d="m7 10 5 5 5-5z" />, 'ArrowDropDown');
 
-const SIDEBAR_VIEW_ITEM_KEBAB_CLASS = 'MuiDataStudio-SidebarViewItemKebab';
+const SIDEBAR_SHEET_ITEM_KEBAB_CLASS = 'MuiDataStudio-SidebarSheetItemKebab';
 
-const SidebarViewItemRoot = styled('div')(({ theme }) => ({
+const SidebarSheetItemRoot = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(0.5),
@@ -47,27 +48,41 @@ const SidebarViewItemRoot = styled('div')(({ theme }) => ({
   // user hovers the row (or when keyboard focus lands on it, for a11y).
   // The menu pops the button to `data-open="true"` while open so it stays
   // visible during interaction.
-  [`& .${SIDEBAR_VIEW_ITEM_KEBAB_CLASS}`]: {
-    opacity: 0,
+  [`& .${SIDEBAR_SHEET_ITEM_KEBAB_CLASS}`]: {
     transition: theme.transitions.create('opacity', {
       duration: theme.transitions.duration.shortest,
     }),
+    // Hide-on-rest only applies to fine pointers that can hover. On coarse
+    // pointers (touch) there is no hover, so keep the kebab visible (~0.5) as
+    // it is the only path to rename/delete.
+    opacity: 0.5,
+    '@media (hover: hover)': {
+      opacity: 0,
+    },
   },
-  [`&:hover .${SIDEBAR_VIEW_ITEM_KEBAB_CLASS}, & .${SIDEBAR_VIEW_ITEM_KEBAB_CLASS}:focus-visible, & .${SIDEBAR_VIEW_ITEM_KEBAB_CLASS}[data-open="true"]`]:
+  [`&:hover .${SIDEBAR_SHEET_ITEM_KEBAB_CLASS}, & .${SIDEBAR_SHEET_ITEM_KEBAB_CLASS}:focus-visible, & .${SIDEBAR_SHEET_ITEM_KEBAB_CLASS}[data-open="true"]`]:
     {
       opacity: 1,
     },
 }));
 
-const SidebarViewItemKebab = styled(IconButton)(({ theme }) => ({
-  padding: theme.spacing(0.25),
+const SidebarSheetItemKebab = styled(IconButton)(({ theme }) => ({
+  padding: theme.spacing(0.5),
   borderRadius: 4,
   color: (theme.vars || theme).palette.text.secondary,
   flex: '0 0 auto',
   '& svg': { fontSize: 16 },
 }));
 
-const SidebarViewItemLabel = styled('span')({
+const SidebarSheetItemTypeIcon = styled('span')(({ theme }) => ({
+  flex: '0 0 auto',
+  display: 'inline-flex',
+  alignItems: 'center',
+  color: (theme.vars || theme).palette.text.secondary,
+  '& svg': { fontSize: 16 },
+}));
+
+const SidebarSheetItemLabel = styled('span')({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
@@ -76,7 +91,7 @@ const SidebarViewItemLabel = styled('span')({
   display: 'block',
 });
 
-const SidebarViewItemRenameInput = styled(InputBase)({
+const SidebarSheetItemRenameInput = styled(InputBase)({
   font: 'inherit',
   color: 'inherit',
   flex: 1,
@@ -88,23 +103,23 @@ const SidebarViewItemRenameInput = styled(InputBase)({
   },
 });
 
-export interface DataStudioSidebarViewItemProps {
-  view: DataStudioView;
+export interface DataStudioSidebarSheetItemProps {
+  sheet: DataStudioSheet;
   index: number;
   total: number;
   state: Pick<
     DataStudioStateApi,
-    'renameView' | 'duplicateView' | 'deleteView' | 'moveView' | 'selectView'
+    'renameSheet' | 'duplicateSheet' | 'deleteSheet' | 'moveSheet' | 'selectSheet'
   >;
 }
 
-export function DataStudioSidebarViewItem(props: DataStudioSidebarViewItemProps) {
-  const { view, index, total, state } = props;
+export function DataStudioSidebarSheetItem(props: DataStudioSidebarSheetItemProps) {
+  const { sheet, index, total, state } = props;
   const [menuAnchor, setMenuAnchor] = React.useState<HTMLElement | null>(null);
   const [renameDraft, setRenameDraft] = React.useState<string | null>(null);
 
   const beginRename = () => {
-    setRenameDraft(String(view.label ?? ''));
+    setRenameDraft(String(sheet.label ?? ''));
   };
 
   const commitRename = () => {
@@ -113,7 +128,7 @@ export function DataStudioSidebarViewItem(props: DataStudioSidebarViewItemProps)
     }
     const trimmed = renameDraft.trim();
     if (trimmed.length > 0) {
-      state.renameView(view.id, trimmed);
+      state.renameSheet(sheet.id, trimmed);
     }
     setRenameDraft(null);
   };
@@ -135,11 +150,15 @@ export function DataStudioSidebarViewItem(props: DataStudioSidebarViewItemProps)
   const isRenaming = renameDraft !== null;
   const canMoveUp = index > 0;
   const canMoveDown = index < total - 1;
+  const TypeIcon = getSheetTypeIcon(sheet.type);
 
   return (
-    <SidebarViewItemRoot>
+    <SidebarSheetItemRoot>
+      <SidebarSheetItemTypeIcon aria-hidden>
+        <TypeIcon fontSize="inherit" />
+      </SidebarSheetItemTypeIcon>
       {isRenaming ? (
-        <SidebarViewItemRenameInput
+        <SidebarSheetItemRenameInput
           autoFocus
           value={renameDraft ?? ''}
           onChange={(event) => setRenameDraft(event.target.value)}
@@ -154,20 +173,20 @@ export function DataStudioSidebarViewItem(props: DataStudioSidebarViewItemProps)
               cancelRename();
             }
           }}
-          inputProps={{ 'aria-label': 'Rename view' }}
+          inputProps={{ 'aria-label': 'Rename sheet' }}
         />
       ) : (
-        <SidebarViewItemLabel onDoubleClick={beginRename}>{view.label}</SidebarViewItemLabel>
+        <SidebarSheetItemLabel onDoubleClick={beginRename}>{sheet.label}</SidebarSheetItemLabel>
       )}
-      <SidebarViewItemKebab
-        className={SIDEBAR_VIEW_ITEM_KEBAB_CLASS}
+      <SidebarSheetItemKebab
+        className={SIDEBAR_SHEET_ITEM_KEBAB_CLASS}
         data-open={menuAnchor ? 'true' : undefined}
         size="small"
-        aria-label={`View options for ${String(view.label)}`}
+        aria-label={`Sheet options for ${String(sheet.label)}`}
         onClick={handleOpenMenu}
       >
         <MoreHorizIcon fontSize="inherit" />
-      </SidebarViewItemKebab>
+      </SidebarSheetItemKebab>
 
       <Menu
         anchorEl={menuAnchor}
@@ -192,7 +211,7 @@ export function DataStudioSidebarViewItem(props: DataStudioSidebarViewItemProps)
           onClick={(event) => {
             event.stopPropagation();
             handleCloseMenu();
-            state.duplicateView(view.id);
+            state.duplicateSheet(sheet.id);
           }}
         >
           <ListItemIcon>
@@ -204,7 +223,7 @@ export function DataStudioSidebarViewItem(props: DataStudioSidebarViewItemProps)
           onClick={(event) => {
             event.stopPropagation();
             handleCloseMenu();
-            state.deleteView(view.id);
+            state.deleteSheet(sheet.id);
           }}
         >
           <ListItemIcon>
@@ -218,7 +237,7 @@ export function DataStudioSidebarViewItem(props: DataStudioSidebarViewItemProps)
           onClick={(event) => {
             event.stopPropagation();
             handleCloseMenu();
-            state.moveView(view.id, -1);
+            state.moveSheet(sheet.id, -1);
           }}
         >
           <ListItemIcon>
@@ -231,7 +250,7 @@ export function DataStudioSidebarViewItem(props: DataStudioSidebarViewItemProps)
           onClick={(event) => {
             event.stopPropagation();
             handleCloseMenu();
-            state.moveView(view.id, 1);
+            state.moveSheet(sheet.id, 1);
           }}
         >
           <ListItemIcon>
@@ -240,6 +259,6 @@ export function DataStudioSidebarViewItem(props: DataStudioSidebarViewItemProps)
           <ListItemText>Move down</ListItemText>
         </MenuItem>
       </Menu>
-    </SidebarViewItemRoot>
+    </SidebarSheetItemRoot>
   );
 }

@@ -25,8 +25,35 @@ import { assertKnownField, getAllowedFields, getPaginationRange } from './utils'
 
 interface KnexDataStudioRowsOptions {
   knex: Knex;
-  table: string;
+  /** Physical table for a plain source. Mutually exclusive with `from`. */
+  table?: string;
+  /**
+   * Base-query factory for a derived source (e.g. a joint source's JOIN
+   * subquery). Must return a FRESH builder per call — the engine clones and
+   * mutates it heavily (count, aggregate, extent, pivot-tuple queries each
+   * re-derive the base). Mutually exclusive with `table`.
+   * @returns {Knex.QueryBuilder} A fresh base query builder.
+   */
+  from?: () => Knex.QueryBuilder;
   computedFields?: DataStudioComputedFields;
+}
+
+/**
+ * The single point where the rows engine materialises its base query. A plain
+ * source supplies `table`; a derived source (joint source) supplies a `from`
+ * factory whose result the rest of the engine filters/groups/aggregates exactly
+ * as if it were a flat table.
+ */
+function getKnexBaseQuery(options: KnexDataStudioRowsOptions): Knex.QueryBuilder {
+  if (options.from) {
+    return options.from();
+  }
+  if (options.table != null) {
+    return options.knex(options.table);
+  }
+  throw /* minify-error-disabled */ new Error(
+    'MUI X: Knex rows options require either `table` or `from`.',
+  );
 }
 
 function escapeLike(value: unknown) {
@@ -43,6 +70,142 @@ function getKnexComputedFieldExpression(
   computedFields: DataStudioComputedFields | undefined,
 ): any {
   return computedFields?.[field]?.knex?.(knex) ?? field;
+}
+
+export function getKnexClientName(knex: Knex): string {
+  const client: any = knex.client;
+  return String(client?.config?.client ?? client?.dialect ?? '').toLowerCase();
+}
+
+// Quote a column identifier for inlining into a bin expression using knex's
+// native, dialect-correct quoting (so it matches the rest of the generated query
+// — e.g. backticks on better-sqlite3, not double quotes). Bin expressions are
+// reused in SELECT + GROUP BY, so they must carry no bound params.
+function quoteBinIdentifier(knex: Knex, field: string): string {
+  return knex.raw('??', [field]).toString();
+}
+
+/**
+ * SQL expression that buckets a date column to the requested granularity, per
+ * dialect (e.g. `strftime('%Y-%m', col)` on SQLite). Falls back to the raw column
+ * when the dialect is unknown so grouping still works (just unbucketed).
+ */
+function getKnexDateBinExpression(
+  knex: Knex,
+  field: string,
+  granularity: 'day' | 'month' | 'quarter' | 'year',
+): Knex.Raw | string {
+  const client = getKnexClientName(knex);
+  const col = quoteBinIdentifier(knex, field);
+  if (client.includes('sqlite')) {
+    switch (granularity) {
+      case 'year':
+        return knex.raw(`strftime('%Y', ${col})`);
+      case 'day':
+        return knex.raw(`strftime('%Y-%m-%d', ${col})`);
+      case 'quarter':
+        return knex.raw(
+          `strftime('%Y', ${col}) || '-Q' || ((cast(strftime('%m', ${col}) as integer) + 2) / 3)`,
+        );
+      case 'month':
+      default:
+        return knex.raw(`strftime('%Y-%m', ${col})`);
+    }
+  }
+  if (client.includes('pg') || client.includes('postgres')) {
+    switch (granularity) {
+      case 'year':
+        return knex.raw(`to_char(${col}, 'YYYY')`);
+      case 'day':
+        return knex.raw(`to_char(${col}, 'YYYY-MM-DD')`);
+      case 'quarter':
+        return knex.raw(`to_char(${col}, 'YYYY') || '-Q' || to_char(${col}, 'Q')`);
+      case 'month':
+      default:
+        return knex.raw(`to_char(${col}, 'YYYY-MM')`);
+    }
+  }
+  if (client.includes('mysql')) {
+    switch (granularity) {
+      case 'year':
+        return knex.raw(`date_format(${col}, '%Y')`);
+      case 'day':
+        return knex.raw(`date_format(${col}, '%Y-%m-%d')`);
+      case 'quarter':
+        return knex.raw(`concat(date_format(${col}, '%Y'), '-Q', quarter(${col}))`);
+      case 'month':
+      default:
+        return knex.raw(`date_format(${col}, '%Y-%m')`);
+    }
+  }
+  return field;
+}
+
+/**
+ * The GROUP-BY expression for a field: a server-side date bucket when the request
+ * declares a date `binning[field]`, otherwise the field's (possibly computed)
+ * expression. Numeric binning needs the column range, so it's resolved separately
+ * (async) by `getKnexNumericBinExpression`.
+ */
+function getKnexGroupExpression(
+  knex: Knex,
+  field: string,
+  computedFields: DataStudioComputedFields | undefined,
+  binning: DataStudioGetRowsParams['binning'],
+): any {
+  const directive = binning?.[field];
+  if (directive?.kind === 'date') {
+    return getKnexDateBinExpression(knex, field, directive.granularity);
+  }
+  return getKnexComputedFieldExpression(knex, field, computedFields);
+}
+
+/**
+ * The GROUP-BY expression that buckets a numeric column into `bins` equal-width
+ * brackets, keyed by the bracket's (rounded) lower bound. The column range is
+ * computed server-side from the scoped query, then inlined into the bucket
+ * expression (a dialect-agnostic `case`/`cast`/`round`).
+ */
+/**
+ * Resolves the numeric-bin GROUP BY expression as a **SQL string** (not a
+ * `knex.raw`). Returning a string is deliberate: this function is `async` (it
+ * runs a MIN/MAX query first), and an `async` function that `return`s a
+ * `knex.raw` has its promise *adopt* that raw — `knex.raw` is thenable, so
+ * `await`ing the result executes the bare expression as a standalone statement
+ * (`round(...)` → `near "round": syntax error`). The caller embeds the returned
+ * string into its own raw SELECT/GROUP BY.
+ */
+async function getKnexNumericBinExpression(
+  scopedQuery: Knex.QueryBuilder,
+  knex: Knex,
+  field: string,
+  computedFields: DataStudioComputedFields | undefined,
+  bins: number,
+): Promise<string> {
+  const fallback = getKnexComputedFieldExpression(knex, field, computedFields);
+  const fallbackSql =
+    typeof fallback === 'string' ? quoteBinIdentifier(knex, fallback) : fallback.toString();
+  const extent = (await scopedQuery
+    .clone()
+    .clearSelect()
+    .clearOrder()
+    .first({ binMin: knex.raw('min(??)', [field]), binMax: knex.raw('max(??)', [field]) })) as
+    | { binMin?: unknown; binMax?: unknown }
+    | undefined;
+  const min = Number(extent?.binMin);
+  const max = Number(extent?.binMax);
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min || bins <= 1) {
+    return fallbackSql;
+  }
+  const width = (max - min) / bins;
+  const col = quoteBinIdentifier(knex, field);
+  // Bracket lower bound = round(min + clamp(floor((col-min)/width), 0, bins-1) * width).
+  // The expression is reused in SELECT + GROUP BY, where knex mis-serialises a raw
+  // that contains ` as ` (e.g. `cast(... as int)`) or a top-level comma (`round(x, y)`)
+  // — so we floor with `floor()` and round with single-arg `round()` (like the date
+  // bucket starts with `strftime`). Buckets read as whole numbers.
+  const index = `case when ${col} >= ${max} then ${bins - 1} else floor((${col} - ${min}) / ${width}) end`;
+  return `round(${min} + (${index}) * ${width})`;
 }
 
 function getKnexComputedSelects(knex: Knex, computedFields: DataStudioComputedFields | undefined) {
@@ -218,9 +381,13 @@ function applyKnexGroupScope(
   computedFields: DataStudioComputedFields | undefined,
   groupFields: string[],
   groupKeys: string[],
+  binning: DataStudioGetRowsParams['binning'],
 ) {
   groupKeys.forEach((groupKey, index) => {
-    query.where(getKnexComputedFieldExpression(knex, groupFields[index], computedFields), groupKey);
+    query.where(
+      getKnexGroupExpression(knex, groupFields[index], computedFields, binning),
+      groupKey,
+    );
   });
 
   return query;
@@ -235,7 +402,7 @@ function createKnexFilteredQuery(
   rowIdField?: string,
 ) {
   const query = applyKnexFilters(
-    options.knex(options.table),
+    getKnexBaseQuery(options),
     params,
     columns,
     options.knex,
@@ -243,7 +410,14 @@ function createKnexFilteredQuery(
     rowIdField,
   );
 
-  return applyKnexGroupScope(query, options.knex, options.computedFields, groupFields, groupKeys);
+  return applyKnexGroupScope(
+    query,
+    options.knex,
+    options.computedFields,
+    groupFields,
+    groupKeys,
+    params.binning,
+  );
 }
 
 function createKnexCondition(
@@ -530,21 +704,51 @@ async function getKnexGroupedRows(
     };
   }
 
-  const groupExpression = getKnexComputedFieldExpression(
-    options.knex,
-    currentGroupField,
-    options.computedFields,
-  );
+  // Reuse the (binned or plain) group expression in SELECT + GROUP BY via raw SQL.
+  // knex's object-`select`/`groupBy` mis-serialise complex reused expressions, so
+  // derive the SQL string and use raw selects + `groupByRaw`.
+  const groupDirective = params.binning?.[currentGroupField];
+  let groupExpressionSql: string;
+  if (groupDirective?.kind === 'numeric') {
+    // Already a final SQL string (see `getKnexNumericBinExpression` — it must not
+    // return a thenable `knex.raw` from an `async` function).
+    groupExpressionSql = await getKnexNumericBinExpression(
+      scopedQuery,
+      options.knex,
+      currentGroupField,
+      options.computedFields,
+      groupDirective.bins,
+    );
+  } else {
+    const groupExpression = getKnexGroupExpression(
+      options.knex,
+      currentGroupField,
+      options.computedFields,
+      params.binning,
+    );
+    // A plain field name is quoted as an identifier; a `knex.raw` (date bin /
+    // computed field) is stringified.
+    groupExpressionSql =
+      typeof groupExpression === 'string'
+        ? quoteBinIdentifier(options.knex, groupExpression)
+        : groupExpression.toString();
+  }
   const groupQuery = scopedQuery
     .clone()
     .clearSelect()
     .clearOrder()
-    .select({
-      [currentGroupField]: groupExpression,
-      [DATA_STUDIO_GROUP_KEY_FIELD]: groupExpression,
-    })
+    .select(
+      options.knex.raw(
+        `${groupExpressionSql} as ${quoteBinIdentifier(options.knex, currentGroupField)}`,
+      ),
+    )
+    .select(
+      options.knex.raw(
+        `${groupExpressionSql} as ${quoteBinIdentifier(options.knex, DATA_STUDIO_GROUP_KEY_FIELD)}`,
+      ),
+    )
     .count({ [DATA_STUDIO_CHILDREN_COUNT_FIELD]: '*' })
-    .groupBy(groupExpression);
+    .groupByRaw(groupExpressionSql);
 
   selectKnexExpressions(
     groupQuery,
@@ -650,10 +854,11 @@ async function getKnexPivotRows(
     };
   }
 
-  const groupExpression = getKnexComputedFieldExpression(
+  const groupExpression = getKnexGroupExpression(
     options.knex,
     currentGroupField,
     options.computedFields,
+    params.binning,
   );
   const groupQuery = scopedQuery
     .clone()

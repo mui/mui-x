@@ -176,6 +176,12 @@ export interface DataStudioSourceBaseOptions<
   computedFields?: DataStudioComputedFields<R>;
   mutations?: DataStudioMutationOptions;
   hooks?: DataStudioSourceHooks<TContext>;
+  /**
+   * Opaque token shared by sources that can be joined together (e.g. all tables
+   * on one SQL connection). Surfaced on the descriptor so the join builder only
+   * offers joins between same-group sources.
+   */
+  joinGroup?: string;
 }
 
 export interface DataStudioEndpointRequest {

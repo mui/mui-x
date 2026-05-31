@@ -1,0 +1,49 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e1262]:
+      - generic [ref=e1263]:
+        - generic [ref=e1265]:
+          - generic [ref=e1266]: Dataset
+          - generic [ref=e1267]:
+            - combobox "Dataset" [ref=e1268] [cursor=pointer]: Customers
+            - textbox: customers
+            - img
+            - group:
+              - generic: Dataset
+        - generic [ref=e1269]: Configure the chart in the panel on the right.
+      - complementary "Chart configuration" [ref=e1270]:
+        - heading "Chart configuration" [level=6] [ref=e1271]
+        - paragraph [ref=e1272]: Coming soon. This panel will let you pick the chart type and bind columns to axes.
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - button "Add view" [ref=e680] [cursor=pointer]:
+          - img [ref=e612]
+        - button "All tabs" [ref=e681] [cursor=pointer]:
+          - img [ref=e615]
+        - button "Hide data sources" [ref=e682] [cursor=pointer]:
+          - img [ref=e618]
+      - generic [ref=e620]:
+        - button "Customers" [ref=e683] [cursor=pointer]:
+          - generic [ref=e623]: Customers
+        - button "Products" [ref=e684] [cursor=pointer]:
+          - generic [ref=e626]: Products
+        - button "Orders" [ref=e685] [cursor=pointer]:
+          - generic [ref=e629]: Orders
+        - generic [ref=e641]:
+          - button "Chart 1" [active] [ref=e686] [cursor=pointer]:
+            - generic [ref=e643]: Chart 1
+          - button "View options for Chart 1" [ref=e687] [cursor=pointer]:
+            - img [ref=e645]
+  - button "Open Next.js Dev Tools" [ref=e688] [cursor=pointer]:
+    - img [ref=e46]
+  - alert [ref=e49]: Coffee Beans - Data Studio demo - MUI X
+  - dialog "Cookie preferences" [ref=e689]:
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - img [ref=e54]
+        - generic [ref=e59]:
+          - heading "Cookie preferences" [level=2] [ref=e690]
+          - paragraph [ref=e61]: We use cookies to understand site usage and improve our content. This includes third-party analytics.
+      - generic [ref=e62]:
+        - button "Allow analytics" [ref=e691] [cursor=pointer]
+        - button "Essential only" [ref=e692] [cursor=pointer]

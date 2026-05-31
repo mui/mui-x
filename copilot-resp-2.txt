@@ -1,0 +1,42 @@
+data: {"type":"start"}
+
+data: {"type":"start-step"}
+
+data: {"type":"tool-input-start","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","toolName":"setGridState"}
+
+data: {"type":"tool-input-delta","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","inputTextDelta":""}
+
+data: {"type":"tool-input-delta","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","inputTextDelta":""}
+
+data: {"type":"tool-input-delta","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","inputTextDelta":"{\"patches\": \"{\\\"op\\\":\\\""}
+
+data: {"type":"tool-input-delta","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","inputTextDelta":"replace\\\",\\\"path\\\":\\\"/"}
+
+data: {"type":"tool-input-delta","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","inputTextDelta":"filter\\\",\\\"value\\\":{\\\""}
+
+data: {"type":"tool-input-delta","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","inputTextDelta":"items\\\":[{\\\"field\\\":\\\""}
+
+data: {"type":"tool-input-delta","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","inputTextDelta":"rating\\\",\\\"operator\\\":"}
+
+data: {"type":"tool-input-delta","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","inputTextDelta":"\\\">=\\\",\\\"value"}
+
+data: {"type":"tool-input-delta","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","inputTextDelta":"\\\":4}],\\\""}
+
+data: {"type":"tool-input-delta","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","inputTextDelta":"logicOperator\\\":\\\"and"}
+
+data: {"type":"tool-input-delta","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","inputTextDelta":"\\\"}}\""}
+
+data: {"type":"tool-input-delta","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","inputTextDelta":"}"}
+
+data: {"type":"tool-input-available","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","toolName":"setGridState","input":{"patches":"{\"op\":\"replace\",\"path\":\"/filter\",\"value\":{\"items\":[{\"field\":\"rating\",\"operator\":\">=\",\"value\":4}],\"logicOperator\":\"and\"}}"},"providerMetadata":{"openrouter":{"reasoning_details":[]}}}
+
+data: {"type":"tool-input-delta","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","inputTextDelta":""}
+
+data: {"type":"tool-input-available","toolCallId":"call_19e5f3dd9e3f47b2a6063a5e","toolName":"setGridState","input":{"patches":"{\"op\":\"replace\",\"path\":\"/filter\",\"value\":{\"items\":[{\"field\":\"rating\",\"operator\":\">=\",\"value\":4}],\"logicOperator\":\"and\"}}"}}
+
+data: {"type":"finish-step"}
+
+data: {"type":"finish","finishReason":"tool-calls","messageMetadata":{"modelId":"qwen/qwen3-coder-30b-a3b-instruct","costUsd":0.00037643,"elapsedTime":"2.0s","suggestions":["Sort by salary descending","Show only administrators","Group by company"],"suggestionsCostUsd":0.00043400000000000003,"suggestionsModelId":"google/gemini-3.1-flash-lite-preview"}}
+
+data: [DONE]
+

@@ -8,7 +8,7 @@ import {
   type DataStudioSourceHooks,
 } from '@mui/x-data-studio/server';
 // Cache-bust marker (date studio fix): bump to force Next.js dev server recompile.
-// 2026-05-22
+// 2026-05-31 (phase2 groupByRaw)
 
 const databasePathCandidates = [
   path.join(process.cwd(), 'data/data-studio/overview/coffee-beans.sqlite'),

@@ -73,7 +73,7 @@ export function buildPatchRegistry<TAdapter extends HostAdapter, TState = unknow
       if (existing && process.env.NODE_ENV !== 'production') {
         const overridesAllowed = pack.overrides?.includes(existing.packId);
         if (!overridesAllowed) {
-          // eslint-disable-next-line no-console
+           
           console.warn(
             `MUI X Copilot: pack "${pack.id}" overrode patch path "${handler.path}" from "${existing.packId}" ` +
               `without declaring \`overrides: ['${existing.packId}']\`.`,

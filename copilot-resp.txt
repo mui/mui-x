@@ -1,0 +1,80 @@
+data: {"type":"start"}
+
+data: {"type":"start-step"}
+
+data: {"type":"reasoning-start","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"The","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":"The","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"The","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" user wants to sort","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" user wants to sort","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" the grid","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" the grid","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" by the","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" by the","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" \"rating\" column","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" \"rating\" column","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" in descending order.","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" in descending order.","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" I need to emit","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" I need to emit","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" a `","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" a `","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":"setGridState`","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"setGridState`","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" patch to","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" patch to","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" the","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" the","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" `/sort` path","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" `/sort` path","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" with the appropriate sort","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" with the appropriate sort","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" configuration","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" configuration","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":". The column","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":". The column","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" \"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" \"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":"rating\" exists","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"rating\" exists","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" in the grid","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" in the grid","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" context, and the","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" context, and the","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" sort should","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" sort should","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" be descending","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" be descending","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" (\"","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" (\"","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":"desc\"). I'll","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"desc\"). I'll","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" prepare","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" prepare","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" the patch as","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" the patch as","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" a","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" a","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" JSONL string with","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" JSONL string with","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" a","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" a","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":" single `","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":" single `","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-delta","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","delta":"replace` operation.","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"replace` operation.","format":"unknown","index":0}]}}}
+
+data: {"type":"tool-input-start","toolCallId":"lubmuq4D7","toolName":"setGridState"}
+
+data: {"type":"tool-input-delta","toolCallId":"lubmuq4D7","inputTextDelta":"{\"patches\": \"{\\\"op\\\":\\\"replace\\\",\\\"path\\\":\\\"/sort\\\",\\\"value\\\":[{\\\"field\\\":\\\"rating\\\",\\\"sort\\\":\\\"desc\\\"}]}\"}"}
+
+data: {"type":"tool-input-available","toolCallId":"lubmuq4D7","toolName":"setGridState","input":{"patches":"{\"op\":\"replace\",\"path\":\"/sort\",\"value\":[{\"field\":\"rating\",\"sort\":\"desc\"}]}"},"providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"The user wants to sort the grid by the \"rating\" column in descending order. I need to emit a `setGridState` patch to the `/sort` path with the appropriate sort configuration. The column \"rating\" exists in the grid context, and the sort should be descending (\"desc\"). I'll prepare the patch as a JSONL string with a single `replace` operation.","format":"unknown","index":0}]}}}
+
+data: {"type":"reasoning-end","id":"gen-1779194889-oSj5g3rXT8T5IdJwQNnE","providerMetadata":{"openrouter":{"reasoning_details":[{"type":"reasoning.text","text":"The user wants to sort the grid by the \"rating\" column in descending order. I need to emit a `setGridState` patch to the `/sort` path with the appropriate sort configuration. The column \"rating\" exists in the grid context, and the sort should be descending (\"desc\"). I'll prepare the patch as a JSONL string with a single `replace` operation.","format":"unknown","index":0}]}}}
+
+data: {"type":"finish-step"}
+
+data: {"type":"finish","finishReason":"tool-calls","messageMetadata":{"modelId":"mistralai/mistral-small-2603","costUsd":0.0009059999999999999,"elapsedTime":"18.7s","suggestionsCostUsd":null}}
+
+data: [DONE]
+

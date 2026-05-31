@@ -1,37 +1,37 @@
-import type { DataStudioView } from './DataStudio.types';
+import type { DataStudioSheet } from './DataStudio.types';
 
 /**
  * Adapter contract used by `<DataStudio>` to persist the list of user-created
- * views across mounts (page reloads, navigation away and back, etc.).
+ * sheets across mounts (page reloads, navigation away and back, etc.).
  *
- * Views are persisted as a flat list — each view carries its own `datasetId`,
- * so multiple datasets in the same studio share a single persisted bucket.
- * Active selection (which view/dataset is open) is the routing adapter's
- * responsibility, not this one.
+ * Sheets are persisted as a flat list — each sheet carries its own
+ * `dataSourceId`, so multiple data sources in the same studio share a single
+ * persisted bucket. Active selection (which sheet/data source is open) is the
+ * routing adapter's responsibility, not this one.
  *
  * SSR contract: `read` must return `null` and `write` must be a no-op when no
  * storage is available. Neither may throw.
  */
-export interface DataStudioViewsPersistenceAdapter {
+export interface DataStudioSheetsPersistenceAdapter {
   /**
-   * Read the persisted list of views. Called once during hydration.
-   * @returns {DataStudioView[] | null} The persisted views, or `null` when
+   * Read the persisted list of sheets. Called once during hydration.
+   * @returns {DataStudioSheet[] | null} The persisted sheets, or `null` when
    *   nothing has been persisted yet (the component falls back to
-   *   `defaultViews`).
+   *   `defaultSheets`).
    */
-  read: () => DataStudioView[] | null;
+  read: () => DataStudioSheet[] | null;
   /**
-   * Persist the next list of views. Called every time the views list mutates
-   * (add, rename, duplicate, delete, move, updateView). Best-effort —
+   * Persist the next list of sheets. Called every time the sheets list mutates
+   * (add, rename, duplicate, delete, move, updateSheet). Best-effort —
    * implementations must swallow errors.
-   * @param {DataStudioView[]} views The next list of views.
+   * @param {DataStudioSheet[]} sheets The next list of sheets.
    */
-  write: (views: DataStudioView[]) => void;
+  write: (sheets: DataStudioSheet[]) => void;
 }
 
-export interface CreateLocalStorageViewsPersistenceAdapterOptions {
+export interface CreateLocalStorageSheetsPersistenceAdapterOptions {
   /**
-   * Logical namespace for the persisted views. Use distinct keys when the
+   * Logical namespace for the persisted sheets. Use distinct keys when the
    * same page hosts independent `<DataStudio>` instances.
    * @default 'default'
    */
@@ -39,25 +39,25 @@ export interface CreateLocalStorageViewsPersistenceAdapterOptions {
 }
 
 const DEFAULT_STORAGE_NAMESPACE = 'default';
-const STORAGE_KEY_PREFIX = 'mui-x-data-studio-views:v1';
-const VIEWS_PERSISTENCE_VERSION = 1;
+const STORAGE_KEY_PREFIX = 'mui-x-data-studio-sheets:v1';
+const SHEETS_PERSISTENCE_VERSION = 1;
 
-interface ViewsPersistenceState {
-  version: typeof VIEWS_PERSISTENCE_VERSION;
-  views: DataStudioView[];
+interface SheetsPersistenceState {
+  version: typeof SHEETS_PERSISTENCE_VERSION;
+  sheets: DataStudioSheet[];
 }
 
 function getStorageKey(namespace: string | undefined): string {
   return `${STORAGE_KEY_PREFIX}:${namespace ?? DEFAULT_STORAGE_NAMESPACE}`;
 }
 
-function getViewsLocalStorage(): Storage | null {
+function getSheetsLocalStorage(): Storage | null {
   if (typeof window === 'undefined') {
     return null;
   }
   try {
     const storage = window.localStorage;
-    const testKey = '__mui_x_data_studio_views_storage_test__';
+    const testKey = '__mui_x_data_studio_sheets_storage_test__';
     storage.setItem(testKey, testKey);
     storage.removeItem(testKey);
     return storage;
@@ -66,29 +66,37 @@ function getViewsLocalStorage(): Storage | null {
   }
 }
 
-function isPersistedView(value: unknown): value is DataStudioView {
+function isPersistedSheet(value: unknown): value is DataStudioSheet {
   if (typeof value !== 'object' || value === null) {
     return false;
   }
-  const candidate = value as { id?: unknown; datasetId?: unknown };
-  return typeof candidate.id === 'string' && typeof candidate.datasetId === 'string';
+  // Validate against the current `DataStudioSheet` shape: a stable `id` and a
+  // `dataSourceId` that is either a Data Source id (string) or `null` for a
+  // free-form sheet. (The legacy `views[]` container was dropped in the Sheet
+  // model rework — validating it here silently discarded every persisted
+  // sheet on read.)
+  const candidate = value as { id?: unknown; dataSourceId?: unknown };
+  return (
+    typeof candidate.id === 'string' &&
+    (typeof candidate.dataSourceId === 'string' || candidate.dataSourceId === null)
+  );
 }
 
 /**
- * Build a views-persistence adapter backed by `window.localStorage`. SSR-safe:
+ * Build a sheets-persistence adapter backed by `window.localStorage`. SSR-safe:
  * returns `null` from `read` and is a no-op on `write` when storage is
  * unavailable (no window, private mode, or quota error).
  *
- * @param {CreateLocalStorageViewsPersistenceAdapterOptions} [options] Optional config.
- * @returns {DataStudioViewsPersistenceAdapter} The persistence adapter.
+ * @param {CreateLocalStorageSheetsPersistenceAdapterOptions} [options] Optional config.
+ * @returns {DataStudioSheetsPersistenceAdapter} The persistence adapter.
  */
-export function createLocalStorageViewsPersistenceAdapter(
-  options: CreateLocalStorageViewsPersistenceAdapterOptions = {},
-): DataStudioViewsPersistenceAdapter {
+export function createLocalStorageSheetsPersistenceAdapter(
+  options: CreateLocalStorageSheetsPersistenceAdapterOptions = {},
+): DataStudioSheetsPersistenceAdapter {
   const storageKey = getStorageKey(options.key);
 
-  function read(): DataStudioView[] | null {
-    const storage = getViewsLocalStorage();
+  function read(): DataStudioSheet[] | null {
+    const storage = getSheetsLocalStorage();
     if (!storage) {
       return null;
     }
@@ -97,30 +105,30 @@ export function createLocalStorageViewsPersistenceAdapter(
       if (!raw) {
         return null;
       }
-      const parsed = JSON.parse(raw) as Partial<ViewsPersistenceState> | undefined;
+      const parsed = JSON.parse(raw) as Partial<SheetsPersistenceState> | undefined;
       if (
         !parsed ||
         typeof parsed !== 'object' ||
-        parsed.version !== VIEWS_PERSISTENCE_VERSION ||
-        !Array.isArray(parsed.views)
+        parsed.version !== SHEETS_PERSISTENCE_VERSION ||
+        !Array.isArray(parsed.sheets)
       ) {
         return null;
       }
-      return parsed.views.filter(isPersistedView);
+      return parsed.sheets.filter(isPersistedSheet);
     } catch {
       return null;
     }
   }
 
-  function write(views: DataStudioView[]): void {
-    const storage = getViewsLocalStorage();
+  function write(sheets: DataStudioSheet[]): void {
+    const storage = getSheetsLocalStorage();
     if (!storage) {
       return;
     }
     try {
-      const payload: ViewsPersistenceState = {
-        version: VIEWS_PERSISTENCE_VERSION,
-        views,
+      const payload: SheetsPersistenceState = {
+        version: SHEETS_PERSISTENCE_VERSION,
+        sheets,
       };
       storage.setItem(storageKey, JSON.stringify(payload));
     } catch {

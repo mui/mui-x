@@ -456,14 +456,14 @@ async function submitCopilotFeedback(payload) {
 export default function CopilotBackend() {
   const apiRef = React.useRef(null);
   const [dataSet, setDataSet] = React.useState('Employee');
-  // Demo-only A/B toggle, ON by default so visitors immediately see the
-  // tabbed A/B card and the variant-picker UX without having to flip a
-  // switch first. When ON, every request adds the `x-ab-test-force: on`
-  // header so the backend always serves a paired response (variant A on
-  // the open stream + variant B on the twin fetch) regardless of the
-  // server's `COPILOT_AB_TEST_RATE` env. Toggling OFF passes
-  // `x-ab-test-force: off` so the demo's mode stays deterministic.
-  const [abMode, setAbMode] = React.useState(true);
+  // Demo-only A/B toggle, OFF by default so the demo shows a normal
+  // single-response Copilot experience. When ON, every request adds the
+  // `x-ab-test-force: on` header so the backend always serves a paired
+  // response (variant A on the open stream + variant B on the twin
+  // fetch) regardless of the server's `COPILOT_AB_TEST_RATE` env.
+  // Toggling OFF passes `x-ab-test-force: off` so the demo's mode stays
+  // deterministic.
+  const [abMode, setAbMode] = React.useState(false);
   const abOptionsRef = React.useRef({
     forceAbMode: abMode ? 'on' : 'off',
   });

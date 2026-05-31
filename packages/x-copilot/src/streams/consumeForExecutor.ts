@@ -12,13 +12,13 @@ import {
 export interface ConsumeForExecutorOptions {
   executor: Executor;
   /** Per-message result snapshot — fired on each `finish` chunk. */
-  onResults?: (messageId: string, results: CopilotExecutionResult) => void;
+  onResults?(messageId: string, results: CopilotExecutionResult): void;
   /**
    * Per-call hook fired the moment a `setGridState` / `runCommands` tool call
    * completes. Receives the raw JSONL body so consumers can accumulate an
    * envelope cache for later replay (e.g. A/B `switchToVariant`).
    */
-  onAssembledBody?: (messageId: string, toolName: ToolName, body: string) => void;
+  onAssembledBody?(messageId: string, toolName: ToolName, body: string): void;
   /**
    * Decides whether a freshly-assembled tool body should be dispatched to
    * the executor. Returning `false` keeps the body buffered (via
@@ -27,15 +27,23 @@ export interface ConsumeForExecutorOptions {
    *
    * Defaults to apply-everything.
    */
-  shouldApply?: (messageId: string | undefined) => boolean;
+  shouldApply?(messageId: string | undefined): boolean;
   /**
    * Surfaces `message-metadata` chunks. The consumer uses this to populate a
    * per-messageId variant map so `shouldApply` can decide whether to dispatch.
    */
-  onMessageMetadata?: (
-    messageId: string,
-    metadata: Readonly<Record<string, unknown>>,
-  ) => void;
+  onMessageMetadata?(messageId: string, metadata: Readonly<Record<string, unknown>>): void;
+  /**
+   * Maps host-specific LLM-facing tool names onto the canonical executor wire
+   * names (`setGridState` / `runCommands`). Lets a host expose a domain name to
+   * the model and the chat UI — e.g. the Charts copilot calls its patch tool
+   * `updateChart` (so "grid" never leaks into the chart context) — while the
+   * executor still dispatches it through the shared `setGridState` path. Only
+   * the executor branch is remapped; the chat branch keeps the original name, so
+   * the rendered tool chip shows the host name. Unmapped names pass through
+   * unchanged, so Grid / Studio are unaffected.
+   */
+  toolNameAliases?: Readonly<Record<string, ToolName>>;
 }
 
 function dispatchAssembled(
@@ -72,7 +80,8 @@ export async function consumeForExecutor(
   stream: ReadableStream<ChatMessageChunk | ChatStreamEnvelope>,
   options: ConsumeForExecutorOptions,
 ): Promise<void> {
-  const { executor, onResults, onAssembledBody, shouldApply, onMessageMetadata } = options;
+  const { executor, onResults, onAssembledBody, shouldApply, onMessageMetadata, toolNameAliases } =
+    options;
   const reader = stream.getReader();
   const toolsById = new Map<string, ToolStreamState>();
   let nextToolIndex = 0;
@@ -118,7 +127,10 @@ export async function consumeForExecutor(
           break;
         }
         case 'tool-input-start': {
-          const toolName = chunk.toolName as string;
+          const rawToolName = chunk.toolName as string;
+          // Resolve a host alias (e.g. charts' `updateChart`) to the canonical
+          // executor wire name before dispatch; unmapped names pass through.
+          const toolName = toolNameAliases?.[rawToolName] ?? rawToolName;
           if (SUPPORTED_TOOL_NAMES.has(toolName as ToolName)) {
             toolsById.set(chunk.toolCallId, {
               toolName: toolName as ToolName,

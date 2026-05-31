@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
-import { type ChatSuggestion, useMessageContext } from '@mui/x-chat-headless';
+import { type ChatMessage, type ChatSuggestion, useMessageContext } from '@mui/x-chat-headless';
 
 // Augment the chat-headless message metadata shape so `message.metadata.modelId`
 // / `costUsd` / `elapsedTime` / `suggestions` are visible to TypeScript. The
@@ -99,9 +99,25 @@ function useExposeMetadata(): boolean {
   }, []);
 }
 
-function CopilotMessageMetadata() {
+/**
+ * Props for {@link CopilotMessageMetadata}.
+ *
+ * Matches the shared panel's `metadataCard` slot prop shape
+ * (`@mui/x-copilot`'s `CopilotChatPanelMetadataCardProps`) so this component can
+ * later be injected as that slot. When `message` is omitted, the message is read
+ * from `useMessageContext()` — the path the current `GridCopilotPanel` uses.
+ */
+interface CopilotMessageMetadataProps {
+  /**
+   * The assistant message whose metadata should be rendered. When omitted,
+   * falls back to the surrounding `useMessageContext()` message.
+   */
+  message?: ChatMessage;
+}
+
+function CopilotMessageMetadata(props: CopilotMessageMetadataProps = {}) {
   const ctx = useMessageContext();
-  const message = ctx.message;
+  const message = props.message ?? ctx.message;
   const exposeMetadata = useExposeMetadata();
   if (!message || message.role !== 'assistant') {
     return null;

@@ -2,8 +2,8 @@
  * Navigation state mirrored to a URL by a `DataStudioRoutingAdapter`.
  */
 export interface DataStudioRoutingState {
-  activeDatasetId: string | null;
-  activeViewId: string | null;
+  activeDataSourceId: string | null;
+  activeSheetId: string | null;
 }
 
 /**
@@ -14,7 +14,7 @@ export interface DataStudioRoutingState {
 export type DataStudioRoutingMode = 'push' | 'replace';
 
 /**
- * Adapter contract used by `<DataStudio>` to mirror the active dataset and view
+ * Adapter contract used by `<DataStudio>` to mirror the active dataSource and view
  * into an external routing source (URL, in-memory router, etc.) and react to
  * external navigation (back/forward).
  */
@@ -43,18 +43,18 @@ export interface DataStudioRoutingAdapter {
 
 export interface CreateSearchParamsRoutingAdapterOptions {
   /**
-   * Query-string key for the active dataset id.
-   * @default 'dataset'
+   * Query-string key for the active dataSource id.
+   * @default 'dataSource'
    */
-  datasetParam?: string;
+  dataSourceParam?: string;
   /**
-   * Query-string key for the active view id.
+   * Query-string key for the active sheet id.
    * @default 'view'
    */
-  viewParam?: string;
+  sheetParam?: string;
 }
 
-const SSR_STATE: DataStudioRoutingState = { activeDatasetId: null, activeViewId: null };
+const SSR_STATE: DataStudioRoutingState = { activeDataSourceId: null, activeSheetId: null };
 const ROUTING_CHANGE_EVENT = 'mui-data-studio-routing';
 
 function isBrowser(): boolean {
@@ -62,7 +62,7 @@ function isBrowser(): boolean {
 }
 
 /**
- * Build a routing adapter that mirrors the active dataset/view into the URL's
+ * Build a routing adapter that mirrors the active dataSource/view into the URL's
  * query string using `window.history` + `URLSearchParams`. Suitable for any
  * client-side app that exposes a real `window.location`; SSR returns the
  * neutral state and never throws.
@@ -73,8 +73,8 @@ function isBrowser(): boolean {
 export function createSearchParamsRoutingAdapter(
   options: CreateSearchParamsRoutingAdapterOptions = {},
 ): DataStudioRoutingAdapter {
-  const datasetParam = options.datasetParam ?? 'dataset';
-  const viewParam = options.viewParam ?? 'view';
+  const dataSourceParam = options.dataSourceParam ?? 'dataSource';
+  const sheetParam = options.sheetParam ?? 'sheet';
 
   // Snapshot cache: keep a reference-stable object for each unique search string.
   // `useSyncExternalStore` invokes `read` on every render and will loop if we
@@ -93,8 +93,8 @@ export function createSearchParamsRoutingAdapter(
     const params = new URLSearchParams(search);
     cachedSearch = search;
     cachedState = {
-      activeDatasetId: params.get(datasetParam),
-      activeViewId: params.get(viewParam),
+      activeDataSourceId: params.get(dataSourceParam),
+      activeSheetId: params.get(sheetParam),
     };
     return cachedState;
   }
@@ -104,15 +104,15 @@ export function createSearchParamsRoutingAdapter(
       return;
     }
     const params = new URLSearchParams(window.location.search);
-    if (next.activeDatasetId == null) {
-      params.delete(datasetParam);
+    if (next.activeDataSourceId == null) {
+      params.delete(dataSourceParam);
     } else {
-      params.set(datasetParam, next.activeDatasetId);
+      params.set(dataSourceParam, next.activeDataSourceId);
     }
-    if (next.activeViewId == null) {
-      params.delete(viewParam);
+    if (next.activeSheetId == null) {
+      params.delete(sheetParam);
     } else {
-      params.set(viewParam, next.activeViewId);
+      params.set(sheetParam, next.activeSheetId);
     }
     const query = params.toString();
     const url = `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`;

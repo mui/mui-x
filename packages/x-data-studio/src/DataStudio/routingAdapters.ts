@@ -9,7 +9,7 @@ interface SearchParamsLike {
   toString(): string;
 }
 
-const SSR_STATE: DataStudioRoutingState = { activeDatasetId: null, activeViewId: null };
+const SSR_STATE: DataStudioRoutingState = { activeDataSourceId: null, activeSheetId: null };
 
 function isBrowser(): boolean {
   return typeof window !== 'undefined' && typeof window.addEventListener !== 'undefined';
@@ -27,21 +27,21 @@ function subscribeToBrowserPopstate(onChange: () => void): () => void {
 
 function buildSearch(
   current: string | SearchParamsLike,
-  datasetParam: string,
-  viewParam: string,
+  dataSourceParam: string,
+  sheetParam: string,
   next: DataStudioRoutingState,
 ): string {
   const params =
     typeof current === 'string' ? new URLSearchParams(current) : new URLSearchParams(current.toString());
-  if (next.activeDatasetId == null) {
-    params.delete(datasetParam);
+  if (next.activeDataSourceId == null) {
+    params.delete(dataSourceParam);
   } else {
-    params.set(datasetParam, next.activeDatasetId);
+    params.set(dataSourceParam, next.activeDataSourceId);
   }
-  if (next.activeViewId == null) {
-    params.delete(viewParam);
+  if (next.activeSheetId == null) {
+    params.delete(sheetParam);
   } else {
-    params.set(viewParam, next.activeViewId);
+    params.set(sheetParam, next.activeSheetId);
   }
   return params.toString();
 }
@@ -62,10 +62,10 @@ export interface CreateNextNavigationRoutingAdapterOptions {
   pathname: string;
   /** The search params returned by `useSearchParams()` from `next/navigation`. */
   searchParams: SearchParamsLike;
-  /** Query-string key for the active dataset id. @default 'dataset' */
-  datasetParam?: string;
-  /** Query-string key for the active view id. @default 'view' */
-  viewParam?: string;
+  /** Query-string key for the active dataSource id. @default 'dataSource' */
+  dataSourceParam?: string;
+  /** Query-string key for the active sheet id. @default 'sheet' */
+  sheetParam?: string;
 }
 
 /**
@@ -82,8 +82,8 @@ export function createNextNavigationRoutingAdapter(
   options: CreateNextNavigationRoutingAdapterOptions,
 ): DataStudioRoutingAdapter {
   const { router, pathname, searchParams } = options;
-  const datasetParam = options.datasetParam ?? 'dataset';
-  const viewParam = options.viewParam ?? 'view';
+  const dataSourceParam = options.dataSourceParam ?? 'dataSource';
+  const sheetParam = options.sheetParam ?? 'sheet';
 
   // Live read: `searchParams` is a stable reference for a given URL but its
   // contents can change between renders when the user reuses an adapter that
@@ -96,8 +96,8 @@ export function createNextNavigationRoutingAdapter(
     if (cachedSource !== searchParams) {
       cachedSource = searchParams;
       cachedSnapshot = {
-        activeDatasetId: searchParams.get(datasetParam),
-        activeViewId: searchParams.get(viewParam),
+        activeDataSourceId: searchParams.get(dataSourceParam),
+        activeSheetId: searchParams.get(sheetParam),
       };
     }
     return cachedSnapshot;
@@ -106,7 +106,7 @@ export function createNextNavigationRoutingAdapter(
   return {
     read,
     write: (next: DataStudioRoutingState, mode: DataStudioRoutingMode) => {
-      const query = buildSearch(searchParams, datasetParam, viewParam, next);
+      const query = buildSearch(searchParams, dataSourceParam, sheetParam, next);
       const url = `${pathname}${query ? `?${query}` : ''}`;
       if (mode === 'push') {
         router.push(url);
@@ -132,10 +132,10 @@ export interface NextPagesRouterLike {
 export interface CreateNextRouterRoutingAdapterOptions {
   /** The router returned by `useRouter()` from `next/router`. */
   router: NextPagesRouterLike;
-  /** Query-string key for the active dataset id. @default 'dataset' */
-  datasetParam?: string;
-  /** Query-string key for the active view id. @default 'view' */
-  viewParam?: string;
+  /** Query-string key for the active dataSource id. @default 'dataSource' */
+  dataSourceParam?: string;
+  /** Query-string key for the active sheet id. @default 'sheet' */
+  sheetParam?: string;
 }
 
 function firstQueryValue(value: string | string[] | undefined): string | null {
@@ -159,8 +159,8 @@ export function createNextRouterRoutingAdapter(
   options: CreateNextRouterRoutingAdapterOptions,
 ): DataStudioRoutingAdapter {
   const { router } = options;
-  const datasetParam = options.datasetParam ?? 'dataset';
-  const viewParam = options.viewParam ?? 'view';
+  const dataSourceParam = options.dataSourceParam ?? 'dataSource';
+  const sheetParam = options.sheetParam ?? 'sheet';
 
   // Live read: `router` is typically a stable wrapper but its `query` is
   // re-assigned to a fresh object on every navigation. Cache by the current
@@ -173,8 +173,8 @@ export function createNextRouterRoutingAdapter(
     if (cachedQuery !== router.query) {
       cachedQuery = router.query;
       cachedSnapshot = {
-        activeDatasetId: firstQueryValue(router.query[datasetParam]),
-        activeViewId: firstQueryValue(router.query[viewParam]),
+        activeDataSourceId: firstQueryValue(router.query[dataSourceParam]),
+        activeSheetId: firstQueryValue(router.query[sheetParam]),
       };
     }
     return cachedSnapshot;
@@ -187,7 +187,7 @@ export function createNextRouterRoutingAdapter(
       // params (e.g. `[id]`) and unrelated query params survive the round-trip.
       const params = new URLSearchParams();
       for (const [key, value] of Object.entries(router.query)) {
-        if (key === datasetParam || key === viewParam) {
+        if (key === dataSourceParam || key === sheetParam) {
           continue;
         }
         const first = firstQueryValue(value);
@@ -195,7 +195,7 @@ export function createNextRouterRoutingAdapter(
           params.set(key, first);
         }
       }
-      const query = buildSearch(params.toString(), datasetParam, viewParam, next);
+      const query = buildSearch(params.toString(), dataSourceParam, sheetParam, next);
       const url = `${router.pathname}${query ? `?${query}` : ''}`;
       if (mode === 'push') {
         router.push(url);
@@ -228,10 +228,10 @@ export interface CreateReactRouterRoutingAdapterOptions {
   location: ReactRouterLocationLike;
   /** The first tuple element returned by `useSearchParams()` from `react-router-dom`. */
   searchParams: SearchParamsLike;
-  /** Query-string key for the active dataset id. @default 'dataset' */
-  datasetParam?: string;
-  /** Query-string key for the active view id. @default 'view' */
-  viewParam?: string;
+  /** Query-string key for the active dataSource id. @default 'dataSource' */
+  dataSourceParam?: string;
+  /** Query-string key for the active sheet id. @default 'sheet' */
+  sheetParam?: string;
 }
 
 /**
@@ -248,8 +248,8 @@ export function createReactRouterRoutingAdapter(
   options: CreateReactRouterRoutingAdapterOptions,
 ): DataStudioRoutingAdapter {
   const { navigate, location, searchParams } = options;
-  const datasetParam = options.datasetParam ?? 'dataset';
-  const viewParam = options.viewParam ?? 'view';
+  const dataSourceParam = options.dataSourceParam ?? 'dataSource';
+  const sheetParam = options.sheetParam ?? 'sheet';
 
   // Live read with reference-stable caching — see the Pages Router adapter
   // for the rationale.
@@ -260,8 +260,8 @@ export function createReactRouterRoutingAdapter(
     if (cachedSource !== searchParams) {
       cachedSource = searchParams;
       cachedSnapshot = {
-        activeDatasetId: searchParams.get(datasetParam),
-        activeViewId: searchParams.get(viewParam),
+        activeDataSourceId: searchParams.get(dataSourceParam),
+        activeSheetId: searchParams.get(sheetParam),
       };
     }
     return cachedSnapshot;
@@ -270,7 +270,7 @@ export function createReactRouterRoutingAdapter(
   return {
     read,
     write: (next: DataStudioRoutingState, mode: DataStudioRoutingMode) => {
-      const query = buildSearch(searchParams, datasetParam, viewParam, next);
+      const query = buildSearch(searchParams, dataSourceParam, sheetParam, next);
       const url = `${location.pathname}${query ? `?${query}` : ''}${location.hash}`;
       navigate(url, { replace: mode === 'replace' });
     },

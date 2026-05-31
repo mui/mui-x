@@ -4,7 +4,7 @@ import {
   makeExecutor,
   type Executor,
 } from '@mui/x-copilot';
-import type { DataStudioDataset } from '../../DataStudio/DataStudio.types';
+import type { DataStudioDataSource } from '../../DataStudio/DataStudio.types';
 import { buildStudioGuards, type StudioGuards } from '../guards';
 import { createStudioHostAdapter, type StudioHostAdapter } from '../studioHostAdapter';
 import { studioCommandPack, studioReconcilerPack } from '../studioPacks';
@@ -18,22 +18,22 @@ export interface TestExecutorContext {
 }
 
 export function createTestExecutor(options: {
-  datasets: ReadonlyArray<DataStudioDataset<any>>;
-  initialViews?: any[];
-  initialActiveDatasetId?: string;
-  initialActiveViewId?: string | null;
+  dataSources: ReadonlyArray<DataStudioDataSource<any>>;
+  initialSheets?: any[];
+  initialActiveDataSourceId?: string;
+  initialActiveSheetId?: string | null;
   guardOverrides?: Partial<StudioGuards>;
 }): TestExecutorContext {
   const fake = createFakeStateApi({
-    datasets: options.datasets,
-    initialViews: options.initialViews,
-    initialActiveDatasetId: options.initialActiveDatasetId,
-    initialActiveViewId: options.initialActiveViewId,
+    dataSources: options.dataSources,
+    initialSheets: options.initialSheets,
+    initialActiveDataSourceId: options.initialActiveDataSourceId,
+    initialActiveSheetId: options.initialActiveSheetId,
   });
   const guards = buildStudioGuards(options.guardOverrides);
   const host = createStudioHostAdapter({
     getStateApi: () => fake.api,
-    getDatasets: () => options.datasets,
+    getDataSources: () => options.dataSources,
     guards,
   });
   const commandRegistry = buildCommandRegistry<StudioHostAdapter, StudioStateDocument>(guards, [

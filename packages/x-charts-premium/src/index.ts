@@ -68,3 +68,6 @@ export * from './ChartsWebGLLayer';
 export * from './CandlestickChart';
 export * from './RadialLineChart';
 export * from './RadialBarChart';
+
+// Copilot
+export * from './copilot';

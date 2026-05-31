@@ -1,7 +1,7 @@
 import createKnex, { type Knex } from 'knex';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { DATA_STUDIO_PROTOCOL_VERSION, type DataStudioGetRowsParams } from '../models';
-import { createDataStudioDatasetsFromAPI } from '../createDataStudioDatasetsFromAPI';
+import { createDataStudioDataSourcesFromAPI } from '../createDataStudioDataSourcesFromAPI';
 import { createDataStudioDataSourceFromCSV } from './createDataStudioDataSourceFromCSV';
 import { createDataStudioDataSourceFromKnex } from './createDataStudioDataSourceFromKnex';
 import { createDataStudioDataSourceFromMongoDB } from './createDataStudioDataSourceFromMongoDB';
@@ -9,7 +9,11 @@ import { createDataStudioEndpointResponse } from './createDataStudioEndpoint';
 import { createDataStudioServer } from './createDataStudioServer';
 import { createNextDataStudioHandler } from './adapters';
 import { DataStudioServerError } from './errors';
-import { DATA_STUDIO_CHILDREN_COUNT_FIELD, DATA_STUDIO_GROUP_KEY_FIELD } from './synthesis';
+import {
+  DATA_STUDIO_CHILDREN_COUNT_FIELD,
+  DATA_STUDIO_GROUP_KEY_FIELD,
+  DATA_STUDIO_SYNTHETIC_ID_FIELD,
+} from './synthesis';
 
 function createParams(params: Partial<DataStudioGetRowsParams> = {}): DataStudioGetRowsParams {
   return {
@@ -64,6 +68,71 @@ describe('Data Studio server protocol', () => {
       rows: [{ id: 1, country: 'United States', total: 20 }],
       rowCount: 1,
     });
+  });
+
+  it('groups a date column by a server-side bin (month) over the whole source', async () => {
+    const dataSource = createDataStudioDataSourceFromCSV({
+      id: 'orders',
+      rowIdField: 'id',
+      rows: [
+        { id: 1, orderDate: '2024-01-05', amount: 10 },
+        { id: 2, orderDate: '2024-01-20', amount: 20 },
+        { id: 3, orderDate: '2024-02-15', amount: 7 },
+        // Non-ISO but JS-parseable — the in-memory adapter still buckets it.
+        { id: 4, orderDate: 'March 3, 2024', amount: 3 },
+      ],
+    });
+
+    const response = await dataSource.getRows(
+      createParams({
+        groupFields: ['orderDate'],
+        aggregationModel: { amount: 'sum' },
+        binning: { orderDate: { kind: 'date', granularity: 'month' } },
+      }),
+    );
+
+    const byKey = Object.fromEntries(
+      response.rows.map((row) => [row[DATA_STUDIO_GROUP_KEY_FIELD], row]),
+    );
+    expect(Object.keys(byKey).sort()).toEqual(['2024-01', '2024-02', '2024-03']);
+    expect(byKey['2024-01'].amount).toBe(30);
+    expect(byKey['2024-01'][DATA_STUDIO_CHILDREN_COUNT_FIELD]).toBe(2);
+    expect(byKey['2024-02'].amount).toBe(7);
+    expect(byKey['2024-03'].amount).toBe(3);
+  });
+
+  it('groups a numeric column into server-side equal-width brackets', async () => {
+    const dataSource = createDataStudioDataSourceFromCSV({
+      id: 'orders',
+      rowIdField: 'id',
+      // amount range [0, 100] → 5 bins → width 20 → buckets 0/20/40/60/80.
+      rows: [
+        { id: 1, amount: 0, qty: 1 },
+        { id: 2, amount: 5, qty: 1 },
+        { id: 3, amount: 25, qty: 1 },
+        { id: 4, amount: 95, qty: 1 },
+        { id: 5, amount: 100, qty: 1 }, // max clamps into the last bracket (80), not its own bin.
+      ],
+    });
+
+    const response = await dataSource.getRows(
+      createParams({
+        groupFields: ['amount'],
+        aggregationModel: { qty: 'sum' },
+        binning: { amount: { kind: 'numeric', bins: 5 } },
+      }),
+    );
+
+    const counts = Object.fromEntries(
+      response.rows.map((row) => [
+        row[DATA_STUDIO_GROUP_KEY_FIELD],
+        row[DATA_STUDIO_CHILDREN_COUNT_FIELD],
+      ]),
+    );
+    // 0 → [0,20); 5 → [0,20); 25 → [20,40); 95 → [80,100); 100 → clamped to [80,100).
+    expect(counts['0']).toBe(2);
+    expect(counts['20']).toBe(1);
+    expect(counts['80']).toBe(2);
   });
 
   it('serves schema and rows through a single endpoint action query', async () => {
@@ -153,7 +222,7 @@ describe('Data Studio server protocol', () => {
   });
 
   it('supports the Data Grid server-side data source feature contract end-to-end', async () => {
-    const dataSource = createDataStudioDataSourceFromCSV({
+    const serverDataSource = createDataStudioDataSourceFromCSV({
       id: 'sales',
       label: 'Sales',
       rowIdField: 'id',
@@ -165,7 +234,7 @@ describe('Data Studio server protocol', () => {
         { id: 4, country: 'FR', city: 'Paris', year: '2026', amount: 30 },
       ],
     });
-    const server = createDataStudioServer({ dataSources: [dataSource] });
+    const server = createDataStudioServer({ dataSources: [serverDataSource] });
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       const response = await createDataStudioEndpointResponse(server, {
         method: init?.method ?? 'GET',
@@ -180,20 +249,20 @@ describe('Data Studio server protocol', () => {
       } as Response;
     });
 
-    const [dataset] = await createDataStudioDatasetsFromAPI({
+    const [dataSource] = await createDataStudioDataSourcesFromAPI({
       schemaUrl: '/data-studio/sales/schema',
       fetch: fetchMock as typeof fetch,
     });
 
-    expect(dataset.dataSource?.getGroupKey).toEqual(expect.any(Function));
-    expect(dataset.dataSource?.getChildrenCount).toEqual(expect.any(Function));
-    expect(dataset.dataSource?.getAggregatedValue).toEqual(expect.any(Function));
-    expect(dataset.dataSource?.createRow).toEqual(expect.any(Function));
-    expect(dataset.dataSource?.updateRow).toEqual(expect.any(Function));
-    expect(dataset.dataSource?.deleteRow).toEqual(expect.any(Function));
+    expect(dataSource.connector?.getGroupKey).toEqual(expect.any(Function));
+    expect(dataSource.connector?.getChildrenCount).toEqual(expect.any(Function));
+    expect(dataSource.connector?.getAggregatedValue).toEqual(expect.any(Function));
+    expect(dataSource.connector?.createRow).toEqual(expect.any(Function));
+    expect(dataSource.connector?.updateRow).toEqual(expect.any(Function));
+    expect(dataSource.connector?.deleteRow).toEqual(expect.any(Function));
 
     await expect(
-      dataset.dataSource!.getRows(
+      dataSource.connector!.getRows(
         createParams({
           filterModel: { items: [{ field: 'country', operator: 'equals', value: 'US' }] },
           sortModel: [{ field: 'amount', sort: 'asc' }],
@@ -210,7 +279,7 @@ describe('Data Studio server protocol', () => {
       rowCount: 3,
     });
 
-    const rootGroups = await dataset.dataSource!.getRows(
+    const rootGroups = await dataSource.connector!.getRows(
       createParams({
         groupFields: ['country', 'city'],
         groupKeys: [],
@@ -233,11 +302,11 @@ describe('Data Studio server protocol', () => {
         amount: 45,
       }),
     ]);
-    expect(dataset.dataSource!.getGroupKey?.(rootGroups.rows[1])).toBe('US');
-    expect(dataset.dataSource!.getChildrenCount?.(rootGroups.rows[1])).toBe(3);
-    expect(dataset.dataSource!.getAggregatedValue?.(rootGroups.rows[1], 'amount')).toBe(45);
+    expect(dataSource.connector!.getGroupKey?.(rootGroups.rows[1])).toBe('US');
+    expect(dataSource.connector!.getChildrenCount?.(rootGroups.rows[1])).toBe(3);
+    expect(dataSource.connector!.getAggregatedValue?.(rootGroups.rows[1], 'amount')).toBe(45);
 
-    const cityGroups = await dataset.dataSource!.getRows(
+    const cityGroups = await dataSource.connector!.getRows(
       createParams({
         groupFields: ['country', 'city'],
         groupKeys: ['US'],
@@ -261,7 +330,7 @@ describe('Data Studio server protocol', () => {
       }),
     ]);
 
-    const leafRows = await dataset.dataSource!.getRows(
+    const leafRows = await dataSource.connector!.getRows(
       createParams({
         groupFields: ['country', 'city'],
         groupKeys: ['US', 'Boston'],
@@ -279,10 +348,10 @@ describe('Data Studio server protocol', () => {
         [DATA_STUDIO_GROUP_KEY_FIELD]: 1,
       }),
     ]);
-    expect(dataset.dataSource!.getGroupKey?.(leafRows.rows[0])).toBe('2');
-    expect(dataset.dataSource!.getGroupKey?.(leafRows.rows[1])).toBe('1');
+    expect(dataSource.connector!.getGroupKey?.(leafRows.rows[0])).toBe('2');
+    expect(dataSource.connector!.getGroupKey?.(leafRows.rows[1])).toBe('1');
 
-    const pivotRows = await dataset.dataSource!.getRows(
+    const pivotRows = await dataSource.connector!.getRows(
       createParams({
         pivotModel: {
           rows: [{ field: 'country' }],
@@ -319,10 +388,10 @@ describe('Data Studio server protocol', () => {
       ],
       rowCount: 2,
     });
-    expect(dataset.dataSource!.getAggregatedValue?.(pivotRows.rows[1], '2025>->amount')).toBe(35);
+    expect(dataSource.connector!.getAggregatedValue?.(pivotRows.rows[1], '2025>->amount')).toBe(35);
 
     await expect(
-      dataset.dataSource!.createRow!({
+      dataSource.connector!.createRow!({
         id: 5,
         country: 'DE',
         city: 'Berlin',
@@ -331,13 +400,13 @@ describe('Data Studio server protocol', () => {
       }),
     ).resolves.toMatchObject({ id: 5 });
     await expect(
-      dataset.dataSource!.updateRow!({
+      dataSource.connector!.updateRow!({
         rowId: 5,
         previousRow: { id: 5, amount: 25 },
         updatedRow: { id: 5, amount: 50 },
       }),
     ).resolves.toMatchObject({ id: 5, amount: 50 });
-    await expect(dataset.dataSource!.deleteRow!(5)).resolves.toMatchObject({
+    await expect(dataSource.connector!.deleteRow!(5)).resolves.toMatchObject({
       id: 5,
       _action: 'delete',
     });
@@ -979,6 +1048,106 @@ describe('createDataStudioDataSourceFromCSV', () => {
     ]);
   });
 
+  it('aggregates numeric edge cases (zero average, negatives, all-null groups)', async () => {
+    const dataSource = createDataStudioDataSourceFromCSV({
+      id: 'sales',
+      rowIdField: 'id',
+      rows: [
+        // group "zero" averages to exactly 0 (-5 + 5) — must report 0, not null.
+        { id: 1, bucket: 'zero', value: -5 },
+        { id: 2, bucket: 'zero', value: 5 },
+        // group "zeros" is all zeros — average is 0, sum is 0.
+        { id: 3, bucket: 'zeros', value: 0 },
+        { id: 4, bucket: 'zeros', value: 0 },
+        // group "neg" is all negative — min/max/avg must stay negative.
+        { id: 5, bucket: 'neg', value: -10 },
+        { id: 6, bucket: 'neg', value: -2 },
+        // group "empty" has no numeric values — every numeric aggregation is null.
+        { id: 7, bucket: 'empty', value: null },
+        { id: 8, bucket: 'empty', value: null },
+      ],
+    });
+
+    const response = await dataSource.getRows(
+      createParams({
+        groupFields: ['bucket'],
+        sortModel: [{ field: 'bucket', sort: 'asc' }],
+        aggregationModel: {
+          value: 'avg',
+        },
+      }),
+    );
+
+    const byBucket = Object.fromEntries(
+      response.rows.map((row) => [row.bucket, row.value]),
+    );
+
+    expect(byBucket).toEqual({
+      empty: null,
+      neg: -6,
+      zero: 0,
+      zeros: 0,
+    });
+  });
+
+  it('aggregates min/max/sum/avg consistently for a single negative-average group', async () => {
+    const dataSource = createDataStudioDataSourceFromCSV({
+      id: 'sales',
+      rowIdField: 'id',
+      rows: [
+        { id: 1, bucket: 'a', value: -8 },
+        { id: 2, bucket: 'a', value: 8 },
+        { id: 3, bucket: 'a', value: -3 },
+      ],
+    });
+
+    const get = (fn: string) =>
+      dataSource.getRows(
+        createParams({ groupFields: ['bucket'], aggregationModel: { value: fn } }),
+      );
+
+    const [sum, avg, min, max] = await Promise.all([
+      get('sum'),
+      get('avg'),
+      get('min'),
+      get('max'),
+    ]);
+
+    expect(sum.rows[0].value).toBe(-3);
+    expect(avg.rows[0].value).toBe(-1);
+    expect(min.rows[0].value).toBe(-8);
+    expect(max.rows[0].value).toBe(8);
+  });
+
+  it('computes min/max over text and date columns, not just numbers', async () => {
+    const dataSource = createDataStudioDataSourceFromCSV({
+      id: 'sales',
+      rowIdField: 'id',
+      rows: [
+        { id: 1, bucket: 'a', name: 'Charlie', date: '2024-03-10' },
+        { id: 2, bucket: 'a', name: 'Alice', date: '2024-01-05' },
+        { id: 3, bucket: 'a', name: 'Bob', date: '2024-12-31' },
+      ],
+    });
+
+    const get = (field: string, fn: string) =>
+      dataSource.getRows(
+        createParams({ groupFields: ['bucket'], aggregationModel: { [field]: fn } }),
+      );
+
+    const [nameMin, nameMax, dateMin, dateMax] = await Promise.all([
+      get('name', 'min'),
+      get('name', 'max'),
+      get('date', 'min'),
+      get('date', 'max'),
+    ]);
+
+    expect(nameMin.rows[0].name).toBe('Alice');
+    expect(nameMax.rows[0].name).toBe('Charlie');
+    expect(dateMin.rows[0].date).toBe('2024-01-05');
+    expect(dateMax.rows[0].date).toBe('2024-12-31');
+  });
+
   it('loads nested group children and applies lazy ranges', async () => {
     const dataSource = createDataStudioDataSourceFromCSV({
       id: 'sales',
@@ -1259,6 +1428,35 @@ describe('createDataStudioDataSourceFromKnex', () => {
       ],
       rowCount: 2,
     });
+  });
+
+  it('groups a numeric column into SQL equal-width brackets (server-side numeric binning)', async () => {
+    const dataSource = createDataStudioDataSourceFromKnex({
+      id: 'sales',
+      knex,
+      table: 'sales',
+      rowIdField: 'id',
+    });
+
+    // amount values 10/20/30 → range [10, 30] → 2 bins → width 10 → buckets 10/20.
+    // 10 → [10,20); 20 → [20,30); 30 → clamps into the last bracket (20), not its own bin.
+    const response = await dataSource.getRows(
+      createParams({
+        groupFields: ['amount'],
+        aggregationModel: { id: 'size' },
+        binning: { amount: { kind: 'numeric', bins: 2 } },
+      }),
+    );
+
+    const counts = Object.fromEntries(
+      response.rows.map((row) => [
+        String(row[DATA_STUDIO_GROUP_KEY_FIELD]),
+        row[DATA_STUDIO_CHILDREN_COUNT_FIELD],
+      ]),
+    );
+
+    expect(counts['10']).toBe(1);
+    expect(counts['20']).toBe(2);
   });
 
   it('runs SQL aggregate queries separately from paginated row reads', async () => {
@@ -1735,5 +1933,346 @@ describe('createDataStudioDataSourceFromMongoDB', () => {
       _action: 'delete',
     });
     expect(rows).toEqual([{ id: 1, country: 'US', amount: 20 }]);
+  });
+});
+
+describe('createDataStudioDataSourceFromKnex joint sources', () => {
+  let knex: Knex;
+
+  // A small star schema: orders (fact) joined to products + customers (dimensions).
+  const ordersJoin = {
+    base: 'orders',
+    joins: [
+      {
+        sourceId: 'products',
+        type: 'inner' as const,
+        on: [{ leftField: 'product_id', rightField: 'id' }],
+      },
+      {
+        sourceId: 'customers',
+        type: 'left' as const,
+        on: [{ leftField: 'customer_id', rightField: 'id' }],
+      },
+    ],
+    columns: [
+      { sourceId: 'products', field: 'category', as: 'category' },
+      { sourceId: 'customers', field: 'country', as: 'country' },
+      { sourceId: 'orders', field: 'amount', as: 'amount' },
+    ],
+  };
+
+  function createOrders() {
+    return createDataStudioDataSourceFromKnex({ id: 'orders', knex, table: 'orders', rowIdField: 'id' });
+  }
+
+  beforeAll(async () => {
+    knex = createKnex({
+      client: 'better-sqlite3',
+      connection: { filename: ':memory:' },
+      useNullAsDefault: true,
+    });
+
+    await knex.schema.createTable('products', (table) => {
+      table.integer('id').primary();
+      table.string('category');
+    });
+    await knex.schema.createTable('customers', (table) => {
+      table.integer('id').primary();
+      table.string('country');
+    });
+    await knex.schema.createTable('orders', (table) => {
+      table.integer('id').primary();
+      table.integer('product_id');
+      table.integer('customer_id');
+      table.integer('amount');
+    });
+
+    await knex('products').insert([
+      { id: 1, category: 'Bikes' },
+      { id: 2, category: 'Bikes' },
+      { id: 3, category: 'Parts' },
+    ]);
+    await knex('customers').insert([
+      { id: 1, country: 'US' },
+      { id: 2, country: 'FR' },
+    ]);
+    await knex('orders').insert([
+      { id: 1, product_id: 1, customer_id: 1, amount: 100 },
+      { id: 2, product_id: 2, customer_id: 1, amount: 50 },
+      { id: 3, product_id: 3, customer_id: 2, amount: 30 },
+      { id: 4, product_id: 1, customer_id: 2, amount: 20 },
+    ]);
+  });
+
+  afterAll(async () => {
+    await knex.destroy();
+  });
+
+  it('returns flat joined rows with a unique synthetic id per row', async () => {
+    const response = await createOrders().getRows(
+      createParams({ join: ordersJoin, sortModel: [{ field: 'amount', sort: 'asc' }] }),
+    );
+
+    expect(response.rowCount).toBe(4);
+    expect(response.rows.map((row) => ({ amount: row.amount, category: row.category, country: row.country }))).toEqual([
+      { amount: 20, category: 'Bikes', country: 'FR' },
+      { amount: 30, category: 'Parts', country: 'FR' },
+      { amount: 50, category: 'Bikes', country: 'US' },
+      { amount: 100, category: 'Bikes', country: 'US' },
+    ]);
+    const ids = response.rows.map((row) => row[DATA_STUDIO_SYNTHETIC_ID_FIELD]);
+    expect(ids.every(Boolean)).toBe(true);
+    expect(new Set(ids).size).toBe(4);
+  });
+
+  it('groups and aggregates over the joined result (many-to-one: no fan-out inflation)', async () => {
+    const response = await createOrders().getRows(
+      createParams({
+        join: ordersJoin,
+        groupFields: ['category'],
+        aggregationModel: { amount: 'sum' },
+        sortModel: [{ field: 'category', sort: 'asc' }],
+      }),
+    );
+
+    const byCategory = Object.fromEntries(
+      response.rows.map((row) => [row.category, row.amount]),
+    );
+    expect(byCategory).toEqual({ Bikes: 170, Parts: 30 });
+    // Star join is many-to-one, so the grouped total must equal the raw fact total.
+    const total = response.rows.reduce((sum, row) => sum + (row.amount as number), 0);
+    expect(total).toBe(200);
+  });
+
+  it('groups by a second dimension column from another joined table', async () => {
+    const response = await createOrders().getRows(
+      createParams({
+        join: ordersJoin,
+        groupFields: ['country'],
+        aggregationModel: { amount: 'sum' },
+        sortModel: [{ field: 'country', sort: 'asc' }],
+      }),
+    );
+
+    expect(Object.fromEntries(response.rows.map((row) => [row.country, row.amount]))).toEqual({
+      FR: 50,
+      US: 150,
+    });
+  });
+
+  it('applies server-side numeric binning over a joined column', async () => {
+    const response = await createOrders().getRows(
+      createParams({
+        join: ordersJoin,
+        groupFields: ['amount'],
+        aggregationModel: { amount: 'sum' },
+        binning: { amount: { kind: 'numeric', bins: 2 } },
+      }),
+    );
+
+    // amount range [20, 100] → 2 bins → width 40 → buckets 20 / 60.
+    const counts = Object.fromEntries(
+      response.rows.map((row) => [
+        String(row[DATA_STUDIO_GROUP_KEY_FIELD]),
+        row[DATA_STUDIO_CHILDREN_COUNT_FIELD],
+      ]),
+    );
+    expect(counts['20']).toBe(3); // 20, 30, 50
+    expect(counts['60']).toBe(1); // 100 (max clamps into the last bucket)
+  });
+
+  it('filters the joined result by a joined column', async () => {
+    const response = await createOrders().getRows(
+      createParams({
+        join: ordersJoin,
+        filterModel: { items: [{ field: 'category', operator: 'equals', value: 'Bikes' }] },
+        sortModel: [{ field: 'amount', sort: 'asc' }],
+      }),
+    );
+
+    expect(response.rowCount).toBe(3);
+    expect(response.rows.map((row) => row.amount)).toEqual([20, 50, 100]);
+  });
+
+  it('pivots the joined result (category × country)', async () => {
+    const response = await createOrders().getRows(
+      createParams({
+        join: ordersJoin,
+        pivotModel: {
+          rows: [{ field: 'category' }],
+          columns: [{ field: 'country' }],
+          values: [{ field: 'amount', aggFunc: 'sum' } as any],
+        },
+      }),
+    );
+
+    expect(response.pivotColumns).toBeDefined();
+    expect(response.rows.length).toBeGreaterThan(0);
+    expect(response.rows.map((row) => row.category).sort()).toEqual(['Bikes', 'Parts']);
+  });
+
+  it('rejects a request whose join base does not match the routed source', async () => {
+    const customers = createDataStudioDataSourceFromKnex({
+      id: 'customers',
+      knex,
+      table: 'customers',
+      rowIdField: 'id',
+    });
+    await expect(customers.getRows(createParams({ join: ordersJoin }))).rejects.toThrow(
+      /does not match the data source/,
+    );
+  });
+
+  it('rejects an output column referencing an unknown field', async () => {
+    await expect(
+      createOrders().getRows(
+        createParams({
+          join: {
+            ...ordersJoin,
+            columns: [{ sourceId: 'products', field: 'nope', as: 'nope' }],
+          },
+        }),
+      ),
+    ).rejects.toThrow(/not a column of data source "products"/);
+  });
+
+  it('rejects a joined source that is not a table on the connection', async () => {
+    await expect(
+      createOrders().getRows(
+        createParams({
+          join: {
+            ...ordersJoin,
+            joins: [
+              {
+                sourceId: 'ghost',
+                type: 'inner',
+                on: [{ leftField: 'product_id', rightField: 'id' }],
+              },
+            ],
+            columns: [{ sourceId: 'orders', field: 'amount', as: 'amount' }],
+          },
+        }),
+      ),
+    ).rejects.toThrow(/does not resolve to a readable table/);
+  });
+
+  it('rejects a reserved output alias', async () => {
+    await expect(
+      createOrders().getRows(
+        createParams({
+          join: {
+            ...ordersJoin,
+            columns: [{ sourceId: 'orders', field: 'amount', as: '__dataStudioAmount' }],
+          },
+        }),
+      ),
+    ).rejects.toThrow(/reserved/);
+  });
+
+  it('rejects duplicate output aliases', async () => {
+    await expect(
+      createOrders().getRows(
+        createParams({
+          join: {
+            ...ordersJoin,
+            columns: [
+              { sourceId: 'orders', field: 'amount', as: 'value' },
+              { sourceId: 'products', field: 'category', as: 'value' },
+            ],
+          },
+        }),
+      ),
+    ).rejects.toThrow(/Duplicate output alias/);
+  });
+
+  it('keeps unmatched joined rows with a RIGHT join', async () => {
+    // product 3 (Parts) has matching orders; add a product with no orders.
+    await knex('products').insert([{ id: 9, category: 'Ghost' }]);
+    try {
+      const response = await createOrders().getRows(
+        createParams({
+          join: {
+            base: 'orders',
+            joins: [
+              {
+                sourceId: 'products',
+                type: 'right',
+                on: [{ leftField: 'product_id', rightField: 'id' }],
+              },
+            ],
+            columns: [
+              { sourceId: 'products', field: 'category', as: 'category' },
+              { sourceId: 'orders', field: 'amount', as: 'amount' },
+            ],
+          },
+          sortModel: [{ field: 'amount', sort: 'asc' }],
+        }),
+      );
+
+      // The Ghost product is kept even though it has no order (amount null).
+      const ghost = response.rows.find((row) => row.category === 'Ghost');
+      expect(ghost).toBeDefined();
+      expect(ghost!.amount).toBe(null);
+      // Each kept row still has a stable, unique synthetic id.
+      const ids = response.rows.map((row) => row[DATA_STUDIO_SYNTHETIC_ID_FIELD]);
+      expect(new Set(ids).size).toBe(ids.length);
+    } finally {
+      await knex('products').where('id', 9).delete();
+    }
+  });
+
+  it('keeps unmatched rows from both sides with a FULL join', async () => {
+    // An order pointing at a non-existent product + a product with no orders.
+    await knex('products').insert([{ id: 9, category: 'Ghost' }]);
+    await knex('orders').insert([{ id: 99, product_id: 404, customer_id: 1, amount: 7 }]);
+    try {
+      const response = await createOrders().getRows(
+        createParams({
+          join: {
+            base: 'orders',
+            joins: [
+              {
+                sourceId: 'products',
+                type: 'full',
+                on: [{ leftField: 'product_id', rightField: 'id' }],
+              },
+            ],
+            columns: [
+              { sourceId: 'products', field: 'category', as: 'category' },
+              { sourceId: 'orders', field: 'amount', as: 'amount' },
+            ],
+          },
+        }),
+      );
+
+      // Unmatched product (no order) → amount null; unmatched order (no product) → category null.
+      expect(response.rows.some((row) => row.category === 'Ghost' && row.amount == null)).toBe(true);
+      expect(response.rows.some((row) => row.amount === 7 && row.category == null)).toBe(true);
+      const ids = response.rows.map((row) => row[DATA_STUDIO_SYNTHETIC_ID_FIELD]);
+      expect(new Set(ids).size).toBe(ids.length);
+    } finally {
+      await knex('orders').where('id', 99).delete();
+      await knex('products').where('id', 9).delete();
+    }
+  });
+
+  it('rejects an unsupported join type', async () => {
+    await expect(
+      createOrders().getRows(
+        createParams({
+          join: {
+            ...ordersJoin,
+            joins: [
+              {
+                sourceId: 'products',
+                type: 'cross' as any,
+                on: [{ leftField: 'product_id', rightField: 'id' }],
+              },
+            ],
+            columns: [{ sourceId: 'orders', field: 'amount', as: 'amount' }],
+          },
+        }),
+      ),
+    ).rejects.toThrow(/Unsupported join type "cross"/);
   });
 });

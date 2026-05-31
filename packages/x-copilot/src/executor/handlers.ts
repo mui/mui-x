@@ -43,7 +43,12 @@ export interface PatchHandler<TAdapter extends HostAdapter = HostAdapter, TState
     doc: TState,
     ctx: ExecutorContext<TAdapter, TState>,
   ) => ValidationResult;
-  /** Apply the patch to the host's API. Matches today's `reconcile` field. */
+  /**
+   * Apply the patch to the host's API. Matches today's `reconcile` field.
+   * @param doc
+   * @param op
+   * @param ctx
+   */
   reconcile: (doc: TState, op: JsonPatchOp, ctx: ExecutorContext<TAdapter, TState>) => unknown;
 }
 
@@ -61,10 +66,16 @@ export interface CommandHandler<
   /**
    * Slice paths this command must observe before running.
    * Consulted at dispatch (during streaming) and at deferred-drain.
+   * @param params
+   * @param ctx
    */
   dependsOn?: (params: P, ctx: ExecutorContext<TAdapter, TState>) => SlicePath[];
   validate?: (params: P, ctx: ExecutorContext<TAdapter, TState>) => ValidationResult;
-  /** Run the command. Matches today's `run` field. */
+  /**
+   * Run the command. Matches today's `run` field.
+   * @param params
+   * @param ctx
+   */
   run: (params: P, ctx: ExecutorContext<TAdapter, TState>) => unknown;
 }
 

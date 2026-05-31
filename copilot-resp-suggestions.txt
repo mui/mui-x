@@ -1,0 +1,28 @@
+data: {"type":"start"}
+
+data: {"type":"start-step"}
+
+data: {"type":"reasoning-start","id":"0"}
+
+data: {"type":"reasoning-delta","id":"0","delta":"The user wants to group by"}
+
+data: {"type":"reasoning-delta","id":"0","delta":" country and aggregate salary. I'll group by country and sum the salary."}
+
+data: {"type":"reasoning-delta","id":"0","delta":"","providerMetadata":{"anthropic":{"signature":"Ep8CClsIDRgCKkBMkyXzxglBOwPAw1TSyRbWV/sbBmawuJhNRh0xyUGZY0gpeblOQmBzkL1BEyFShJt8td/0l2DUcpv9GtMGWD7iMhFjbGF1ZGUtc29ubmV0LTQtNjgAEgwusGQxEgqaFRTey1EaDG7RHun5b8ZAHREpsiIw/dqqcfg0+0vF1Hk4SNE2B4a1Cu8r8dewxjc7e5L2C1YhlasF+Dtse+GcgN/zmX12KnJPXo3BHwJhoj/oo6ulTsuKcilSZUDOHSsPDH/HqkXVk7lKc8coNd6KENgkYBbqIuVuzEb7bRL5cv56nvM7UXOGV6gKODMvHeq8S+DBQY3dvBqKxRVRVS8e0tpsRuzSgvgBZwBmD42apY4BaiGHQILx9aQYAQ=="}}}
+
+data: {"type":"reasoning-end","id":"0"}
+
+data: {"type":"tool-input-start","toolCallId":"toolu_01AeDpFuHM6gkTxh4EnDUobN","toolName":"setGridState"}
+
+data: {"type":"tool-input-delta","toolCallId":"toolu_01AeDpFuHM6gkTxh4EnDUobN","inputTextDelta":"{\"patches\": \"{\\\"op\\\":\\\"replace\\\",\\\"path\\\":\\\"/grouping\\\",\\\"value\\\":[\\\"country\\\"]}\\n{\\\"op\\\":\\\"replace\\\",\\\"path\\\":\\\"/aggregation\\\",\\\"value\\\":{\\\"salary\\\":\\\"sum\\\"}}"}
+
+data: {"type":"tool-input-delta","toolCallId":"toolu_01AeDpFuHM6gkTxh4EnDUobN","inputTextDelta":"\"}"}
+
+data: {"type":"tool-input-available","toolCallId":"toolu_01AeDpFuHM6gkTxh4EnDUobN","toolName":"setGridState","input":{"patches":"{\"op\":\"replace\",\"path\":\"/grouping\",\"value\":[\"country\"]}\n{\"op\":\"replace\",\"path\":\"/aggregation\",\"value\":{\"salary\":\"sum\"}}"},"providerMetadata":{"anthropic":{"caller":{"type":"direct"}}}}
+
+data: {"type":"finish-step"}
+
+data: {"type":"finish","finishReason":"tool-calls","messageMetadata":{"modelId":"anthropic/claude-sonnet-4-6","costUsd":0.04154175,"elapsedTime":"2.9s","suggestionsCostUsd":null}}
+
+data: [DONE]
+

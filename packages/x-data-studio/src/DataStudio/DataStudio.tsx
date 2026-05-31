@@ -14,46 +14,68 @@ import { useDataStudioUtilityClasses } from './dataStudioClasses';
 import { DataStudioToolbar } from '../DataStudioToolbar';
 import { DataStudioMenuBar } from '../DataStudioMenuBar';
 import { DataStudioTabBar } from './DataStudioTabBar';
-import { DataStudioSidebarViewItem } from './DataStudioSidebarViewItem';
-import { DataStudioPremiumChartView } from './DataStudioPremiumChartView';
-import { DataStudioUpgradeChartView } from './DataStudioUpgradeChartView';
+import { DataStudioSidebarSheetItem } from './DataStudioSidebarSheetItem';
+import { DataStudioDataSourceView } from './DataStudioDataSourceView';
+import { DataStudioComposer } from './DataStudioComposer';
+import { resolveDataStudioViewType, UnknownViewType } from '../viewRegistry';
+import { getBuiltinSheetTemplates, getBuiltinViewTypes, resolveOverridable } from '../builtins';
 import { useDataStudioState } from './useDataStudioState';
 import { useDataStudioRowEditing } from './useDataStudioRowEditing';
 import { StudioCopilotPanel } from '../copilot';
 import { DataStudioCopilotShell, DefaultCopilotTrigger } from './DataStudioCopilotInternals';
 import { createDataStudioSessionCache } from './sessionCache';
 import {
-  createLocalStorageViewsPersistenceAdapter,
-  type DataStudioViewsPersistenceAdapter,
-} from './viewsPersistence';
+  DATA_STUDIO_SERVER_AGGREGATION_FUNCTIONS,
+  getDataStudioPivotingColDef,
+} from './gridDefaults';
+import {
+  createLocalStorageSheetsPersistenceAdapter,
+  type DataStudioSheetsPersistenceAdapter,
+} from './sheetsPersistence';
+import {
+  createLocalStorageJointSourcesPersistenceAdapter,
+  type DataStudioJointSourcesPersistenceAdapter,
+} from './jointSourcesPersistence';
+import { useDataStudioJointSources } from './useDataStudioJointSources';
+import { DataStudioJoinBuilder } from './DataStudioJoinBuilder';
+import { DataStudioSidebarJointSourceItem } from './DataStudioSidebarJointSourceItem';
+import type { DataStudioJoinDefinition } from '../models';
 import type { DataStudioRoutingState } from './routing';
 import type {
-  DataStudioChartViewComponent,
   DataStudioDataGridComponent,
   DataStudioDataGridProps,
-  DataStudioDataset,
+  DataStudioDataSource,
   DataStudioLayout,
   DataStudioMenuBarComponent,
   DataStudioPlan,
   DataStudioProps,
   DataStudioToolbarComponent,
-  DataStudioView,
+  DataStudioSheet,
+  DataStudioJointSourceConfig,
 } from './DataStudio.types';
 
 const EMPTY_ROUTING_STATE: DataStudioRoutingState = {
-  activeDatasetId: null,
-  activeViewId: null,
+  activeDataSourceId: null,
+  activeSheetId: null,
 };
 
 // Lazy singleton so multiple `<DataStudio>` mounts using the default
 // persistence share one localStorage adapter (and so the default factory only
 // runs once per page).
-let defaultViewsPersistence: DataStudioViewsPersistenceAdapter | null = null;
-function getDefaultViewsPersistence(): DataStudioViewsPersistenceAdapter {
-  if (defaultViewsPersistence == null) {
-    defaultViewsPersistence = createLocalStorageViewsPersistenceAdapter();
+let defaultSheetsPersistence: DataStudioSheetsPersistenceAdapter | null = null;
+function getDefaultSheetsPersistence(): DataStudioSheetsPersistenceAdapter {
+  if (defaultSheetsPersistence == null) {
+    defaultSheetsPersistence = createLocalStorageSheetsPersistenceAdapter();
   }
-  return defaultViewsPersistence;
+  return defaultSheetsPersistence;
+}
+
+let defaultJointSourcesPersistence: DataStudioJointSourcesPersistenceAdapter | null = null;
+function getDefaultJointSourcesPersistence(): DataStudioJointSourcesPersistenceAdapter {
+  if (defaultJointSourcesPersistence == null) {
+    defaultJointSourcesPersistence = createLocalStorageJointSourcesPersistenceAdapter();
+  }
+  return defaultJointSourcesPersistence;
 }
 
 function getDefaultDataGridForPlan(plan: DataStudioPlan): DataStudioDataGridComponent {
@@ -66,37 +88,19 @@ function getDefaultDataGridForPlan(plan: DataStudioPlan): DataStudioDataGridComp
   return DataGrid as DataStudioDataGridComponent;
 }
 
-function getDefaultChartViewForPlan(plan: DataStudioPlan): DataStudioChartViewComponent {
-  return plan === 'premium' ? DataStudioPremiumChartView : DataStudioUpgradeChartView;
-}
-
 const useThemeProps = createUseThemeProps('MuiDataStudio');
 const DATA_SOURCES_ITEM_ID = 'data-sources';
-const VIEWS_ITEM_ID = 'views';
+const SHEETS_ITEM_ID = 'sheets';
 const EMPTY_DATA_SOURCES_ITEM_ID = 'data-sources-empty';
-const EMPTY_VIEWS_ITEM_ID = 'views-empty';
+const EMPTY_SHEETS_ITEM_ID = 'sheets-empty';
 const DATA_SOURCE_ITEM_PREFIX = 'data-source:';
-const VIEW_ITEM_PREFIX = 'view:';
+const SHEET_ITEM_PREFIX = 'sheet:';
 const LOADING_DATA_SOURCE_ITEM_PREFIX = 'data-source-loading:';
-const DEFAULT_EXPANDED_ITEMS = [DATA_SOURCES_ITEM_ID, VIEWS_ITEM_ID];
+const DEFAULT_EXPANDED_ITEMS = [DATA_SOURCES_ITEM_ID, SHEETS_ITEM_ID];
 const DATA_SOURCE_LOADING_ITEM_WIDTHS = ['72%', '58%', '66%'];
-const DATA_STUDIO_PIVOT_FIELD_SEPARATOR = '>->';
-
-const DATA_STUDIO_SERVER_AGGREGATION_FUNCTIONS = {
-  sum: {},
-  avg: {},
-  min: {},
-  max: {},
-  size: {},
-  sizeTrue: {},
-  sizeFalse: {},
-};
-
-function getDataStudioPivotingColDef(originalColumnField: string, columnGroupPath: string[]) {
-  return {
-    field: columnGroupPath.concat(originalColumnField).join(DATA_STUDIO_PIVOT_FIELD_SEPARATOR),
-  };
-}
+// Marks the two top-level section headers ("Data Sources" / "Sheets") so their
+// labels can be styled as eyebrows, distinct from their leaf rows.
+const DATA_STUDIO_TREE_SECTION_CLASS = 'MuiDataStudio-treeSection';
 
 const DATA_STUDIO_DEFAULT_DATA_GRID_PROPS = {
   aggregationFunctions: DATA_STUDIO_SERVER_AGGREGATION_FUNCTIONS,
@@ -107,7 +111,9 @@ const DATA_STUDIO_DEFAULT_DATA_GRID_PROPS = {
   cellSelection: true,
   disableRowSelectionOnClick: true,
   disableVirtualization: false,
-  hideFooter: true,
+  // Show the footer so the preview reports the full row count + page navigation —
+  // the preview is the whole Data Source, not a capped sample.
+  hideFooter: false,
   disableColumnFilter: false,
   disableColumnMenu: false,
   disableColumnSelector: false,
@@ -116,11 +122,6 @@ const DATA_STUDIO_DEFAULT_DATA_GRID_PROPS = {
   // `lazyLoading` is intentionally disabled: when on, DataGridPremium turns off the
   // DataSource row grouping/aggregation/pivoting strategy (see useGridDataSourcePremium).
   lazyLoading: false,
-  // `pagination: false` hides the user-visible pagination footer. Note that the
-  // Premium data source still chunks getRows requests internally — the cached
-  // page size (default 100) is what `state.pagination.paginationModel.pageSize`
-  // reflects regardless of this prop.
-  pagination: false,
   pivotingColDef: getDataStudioPivotingColDef,
   // Data Studio owns its own toolbar (`DataStudioToolbar`); hide the grid's
   // built-in toolbar so the two don't double up.
@@ -173,10 +174,36 @@ const DataStudioTree = styled(SimpleTreeView, {
   padding: theme.spacing(1),
   '& .MuiTreeItem-content': {
     borderRadius: theme.shape.borderRadius,
+    transition: theme.transitions.create('background-color', {
+      duration: theme.transitions.duration.shortest,
+    }),
+    '&:hover': {
+      backgroundColor: (theme.vars || theme).palette.action.hover,
+    },
+    '&.Mui-selected': {
+      backgroundColor: theme.alpha((theme.vars || theme).palette.primary.main, 0.12),
+      color: (theme.vars || theme).palette.primary.main,
+      '&:hover': {
+        backgroundColor: theme.alpha((theme.vars || theme).palette.primary.main, 0.16),
+      },
+    },
   },
   '& .MuiTreeItem-label': {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    // Unify the tree leaf type with the sheet tab bar (0.8125rem).
+    fontSize: '0.8125rem',
+  },
+  // Scope the two section headers ("Data Sources" / "Sheets") as eyebrows so
+  // they outrank their leaf rows. Only the section header's own label (the
+  // direct content) is targeted, not its children's labels.
+  [`& .${DATA_STUDIO_TREE_SECTION_CLASS} > .MuiTreeItem-content .MuiTreeItem-label`]: {
+    fontSize: '0.6875rem',
+    fontWeight: theme.typography.fontWeightMedium,
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase',
+    color: (theme.vars || theme).palette.text.secondary,
   },
 }));
 
@@ -224,27 +251,13 @@ const DataStudioGrid = styled('div', {
   display: 'flex',
 });
 
-const DataStudioViewsAction = styled('div', {
+const DataStudioSheetsAction = styled('div', {
   name: 'MuiDataStudio',
-  slot: 'ViewsAction',
-  overridesResolver: (_, styles) => styles.viewsAction,
+  slot: 'SheetsAction',
+  overridesResolver: (_, styles) => styles.sheetsAction,
 })(({ theme }) => ({
   padding: theme.spacing(1),
   borderTop: `1px solid ${(theme.vars || theme).palette.divider}`,
-}));
-
-const DataStudioEmpty = styled('div', {
-  name: 'MuiDataStudio',
-  slot: 'Empty',
-  overridesResolver: (_, styles) => styles.empty,
-})(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minHeight: 160,
-  flex: 1,
-  color: (theme.vars || theme).palette.text.secondary,
-  ...theme.typography.body2,
 }));
 
 const DataStudioDataSourceSkeletonLabel = styled('span', {
@@ -257,8 +270,8 @@ const DataStudioDataSourceSkeletonLabel = styled('span', {
   height: 24,
 });
 
-function getDataSourceItemId(datasetId: string) {
-  return `${DATA_SOURCE_ITEM_PREFIX}${datasetId}`;
+function getDataSourceItemId(dataSourceId: string) {
+  return `${DATA_SOURCE_ITEM_PREFIX}${dataSourceId}`;
 }
 
 function getLoadingDataSourceItemId(index: number) {
@@ -273,13 +286,13 @@ function getDatasetIdFromTreeItemId(itemId: string | null) {
   return null;
 }
 
-function getViewItemId(viewId: string) {
-  return `${VIEW_ITEM_PREFIX}${viewId}`;
+function getSheetItemId(sheetId: string) {
+  return `${SHEET_ITEM_PREFIX}${sheetId}`;
 }
 
-function getViewIdFromTreeItemId(itemId: string | null) {
-  if (itemId?.startsWith(VIEW_ITEM_PREFIX)) {
-    return itemId.slice(VIEW_ITEM_PREFIX.length);
+function getSheetIdFromTreeItemId(itemId: string | null) {
+  if (itemId?.startsWith(SHEET_ITEM_PREFIX)) {
+    return itemId.slice(SHEET_ITEM_PREFIX.length);
   }
 
   return null;
@@ -296,8 +309,8 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
   const props = useThemeProps({ props: inProps, name: 'MuiDataStudio' });
 
   const {
-    activeDatasetId: activeDatasetIdProp,
-    activeViewId: activeViewIdProp,
+    activeDataSourceId: activeDataSourceIdProp,
+    activeSheetId: activeSheetIdProp,
     cacheOptions,
     cacheStrategy = 'shared',
     className,
@@ -305,22 +318,25 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     copilotChatAdapter,
     copilotPlugins,
     copilotFeatures,
-    datasets,
-    defaultViews,
-    initialActiveViewId,
-    initialDatasetId,
+    dataSources,
+    defaultSheets,
+    initialActiveSheetId,
+    initialDataSourceId,
     layout = 'sidebar',
     loading = false,
     plan = 'community',
-    onActiveDatasetChange,
-    onActiveViewChange,
-    onViewsChange,
+    onActiveDataSourceChange,
+    onActiveSheetChange,
+    onSheetsChange,
     routing,
-    viewsPersistence,
+    sheetsPersistence,
+    jointSourcesPersistence,
     slotProps,
     slots,
     sx,
-    views: viewsProp,
+    sheets: sheetsProp,
+    sheetTemplates,
+    viewTypes,
     ...other
   } = props;
 
@@ -339,22 +355,11 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     menuBarSlot === null
       ? null
       : ((menuBarSlot ?? DataStudioMenuBar) as DataStudioMenuBarComponent);
-  const ChartViewSlot: DataStudioChartViewComponent = (slots?.chartView ??
-    getDefaultChartViewForPlan(plan)) as DataStudioChartViewComponent;
   const internalApiRef = useGridApiRef();
-  // Empty apiRef handed to the toolbar + menu bar while a chart view is
-  // active. The real `effectiveApiRef` points at a now-unmounted main grid,
-  // and the toolbar/menu bar selectors would either subscribe to a disposed
-  // store or crash on `apiRef.current.state` reads. Using a fresh empty ref
-  // lets both surfaces render in their natural "no api bound yet" state —
-  // the toolbar shows the disabled search input + the menu bar shows the
-  // greyed-out File/Edit/View strip — so the layout stays consistent across
-  // grid ↔ chart switches without operating on a stale grid.
-  const chartViewApiRef = React.useRef(null);
 
   // Stable cache instance for this DataStudio mount. Options are captured on first render;
   // changing `cacheOptions` later won't recreate the cache (intentional — matches how
-  // `GridDataSourceCacheDefault` is treated by the grid). Use a controlled `dataset.dataSourceCache`
+  // `GridDataSourceCacheDefault` is treated by the grid). Use a controlled `dataSource.cache`
   // if you need to swap caches at runtime.
   const [sessionCache] = React.useState(() =>
     cacheStrategy === 'shared' ? createDataStudioSessionCache(cacheOptions) : null,
@@ -385,9 +390,9 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
   const getServerSnapshot = React.useCallback(() => EMPTY_ROUTING_STATE, []);
   const navState = React.useSyncExternalStore(subscribeFn, getSnapshot, getServerSnapshot);
 
-  // Microtask-coalesced URL writes. When a user action (e.g. `selectDataset`)
-  // synchronously fires multiple callbacks (`onActiveDatasetChange` followed by
-  // `onActiveViewChange(null, null)`), we collect the final state into the ref
+  // Microtask-coalesced URL writes. When a user action (e.g. `selectDataSource`)
+  // synchronously fires multiple callbacks (`onActiveDataSourceChange` followed by
+  // `onActiveSheetChange(null, null)`), we collect the final state into the ref
   // and emit a single `routing.write(..., 'push')` per logical navigation.
   const pendingWriteRef = React.useRef<DataStudioRoutingState | null>(null);
   const flushScheduledRef = React.useRef(false);
@@ -401,8 +406,8 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     }
     const urlState = routing!.read();
     if (
-      urlState.activeDatasetId === target.activeDatasetId &&
-      urlState.activeViewId === target.activeViewId
+      urlState.activeDataSourceId === target.activeDataSourceId &&
+      urlState.activeSheetId === target.activeSheetId
     ) {
       return;
     }
@@ -421,137 +426,233 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     [flushPendingWrite],
   );
 
+  // User-authored joint sources (never defined in code). `undefined` ⇒ default
+  // localStorage; `null` ⇒ opt-out. Built from the base `dataSources` and merged
+  // into one effective list so they flow everywhere base sources do.
+  const resolvedJointSourcesPersistence =
+    jointSourcesPersistence === undefined
+      ? getDefaultJointSourcesPersistence()
+      : jointSourcesPersistence;
+  const { jointSources, jointConfigs, createJointSource, updateJointSource, deleteJointSource } =
+    useDataStudioJointSources<R>({
+      dataSources,
+      persistence: resolvedJointSourcesPersistence,
+    });
+  const effectiveDataSources = React.useMemo(
+    () => (jointSources.length > 0 ? [...dataSources, ...jointSources] : dataSources),
+    [dataSources, jointSources],
+  );
+  const jointSourceIds = React.useMemo(
+    () => new Set(jointConfigs.map((config) => config.id)),
+    [jointConfigs],
+  );
+  const [isJoinBuilderOpen, setJoinBuilderOpen] = React.useState(false);
+  const [editingJointConfig, setEditingJointConfig] =
+    React.useState<DataStudioJointSourceConfig | null>(null);
+
   // Resolution priority: explicit controlled prop > routing-driven value > defaults.
   // Returning a defined value here makes `useDataStudioState` treat the axis as
   // controlled, which prevents the hook's uncontrolled state from getting out
   // of sync with the URL after a back/forward.
   let resolvedActiveDatasetId: string | undefined;
-  if (activeDatasetIdProp !== undefined) {
-    resolvedActiveDatasetId = activeDatasetIdProp;
+  if (activeDataSourceIdProp !== undefined) {
+    resolvedActiveDatasetId = activeDataSourceIdProp;
   } else if (isRoutingEnabled) {
-    resolvedActiveDatasetId = navState.activeDatasetId ?? initialDatasetId ?? datasets[0]?.id;
+    resolvedActiveDatasetId =
+      navState.activeDataSourceId ?? initialDataSourceId ?? effectiveDataSources[0]?.id;
   }
 
   let resolvedActiveViewId: string | null | undefined;
-  if (activeViewIdProp !== undefined) {
-    resolvedActiveViewId = activeViewIdProp;
+  if (activeSheetIdProp !== undefined) {
+    resolvedActiveViewId = activeSheetIdProp;
   } else if (isRoutingEnabled) {
-    resolvedActiveViewId = navState.activeViewId;
+    resolvedActiveViewId = navState.activeSheetId;
   }
 
   const handleActiveDatasetChange = React.useCallback(
-    (datasetId: string, dataset: DataStudioDataset<R>) => {
+    (dataSourceId: string, dataSource: DataStudioDataSource<R>) => {
       if (isRoutingEnabled) {
         const base = pendingWriteRef.current ?? routing!.read();
-        scheduleUrlWrite({ activeDatasetId: datasetId, activeViewId: base.activeViewId });
+        scheduleUrlWrite({ activeDataSourceId: dataSourceId, activeSheetId: base.activeSheetId });
       }
-      onActiveDatasetChange?.(datasetId, dataset);
+      onActiveDataSourceChange?.(dataSourceId, dataSource);
     },
-    [isRoutingEnabled, routing, scheduleUrlWrite, onActiveDatasetChange],
+    [isRoutingEnabled, routing, scheduleUrlWrite, onActiveDataSourceChange],
   );
 
-  const handleActiveViewChange = React.useCallback(
-    (viewId: string | null, view: DataStudioView | null) => {
+  const handleActiveSheetChange = React.useCallback(
+    (sheetId: string | null, sheet: DataStudioSheet | null) => {
       if (isRoutingEnabled) {
         const base = pendingWriteRef.current ?? routing!.read();
         scheduleUrlWrite({
-          activeDatasetId: view?.datasetId ?? base.activeDatasetId,
-          activeViewId: viewId,
+          activeDataSourceId: sheet?.dataSourceId ?? base.activeDataSourceId,
+          activeSheetId: sheetId,
         });
       }
-      onActiveViewChange?.(viewId, view);
+      onActiveSheetChange?.(sheetId, sheet);
     },
-    [isRoutingEnabled, routing, scheduleUrlWrite, onActiveViewChange],
+    [isRoutingEnabled, routing, scheduleUrlWrite, onActiveSheetChange],
   );
 
   // Resolve the persistence adapter. `undefined` ⇒ default localStorage; `null`
   // ⇒ opt-out. Persistence is only effective when `views` is uncontrolled —
   // a controlled consumer owns the source of truth and we stay out of the way.
-  const resolvedViewsPersistence =
-    viewsPersistence === undefined ? getDefaultViewsPersistence() : viewsPersistence;
-  const isPersistenceEnabled = resolvedViewsPersistence != null && viewsProp === undefined;
+  const resolvedSheetsPersistence =
+    sheetsPersistence === undefined ? getDefaultSheetsPersistence() : sheetsPersistence;
+  const isPersistenceEnabled = resolvedSheetsPersistence != null && sheetsProp === undefined;
 
-  const handleViewsChange = React.useCallback(
-    (nextViews: DataStudioView[]) => {
+  const handleSheetsChange = React.useCallback(
+    (nextSheets: DataStudioSheet[]) => {
       if (isPersistenceEnabled) {
-        resolvedViewsPersistence!.write(nextViews);
+        resolvedSheetsPersistence!.write(nextSheets);
       }
-      onViewsChange?.(nextViews);
+      onSheetsChange?.(nextSheets);
     },
-    [isPersistenceEnabled, resolvedViewsPersistence, onViewsChange],
+    [isPersistenceEnabled, resolvedSheetsPersistence, onSheetsChange],
   );
 
-  const hydrateViews = React.useCallback(() => {
+  const hydrateSheets = React.useCallback(() => {
     if (!isPersistenceEnabled) {
       return null;
     }
-    return resolvedViewsPersistence!.read();
-  }, [isPersistenceEnabled, resolvedViewsPersistence]);
+    return resolvedSheetsPersistence!.read();
+  }, [isPersistenceEnabled, resolvedSheetsPersistence]);
+
+  // The built-in templates + view types are active by default and plan-gated.
+  // The `viewTypes` / `sheetTemplates` props layer on top (append, override by
+  // key, or full add/remove/reorder via a `(defaults) => [...]` function).
+  const resolvedViewTypes = React.useMemo(
+    () => resolveOverridable(getBuiltinViewTypes(plan), viewTypes, (vt) => vt.type),
+    [plan, viewTypes],
+  );
+  const resolvedSheetTemplates = React.useMemo(
+    () => resolveOverridable(getBuiltinSheetTemplates(plan), sheetTemplates, (t) => t.id),
+    [plan, sheetTemplates],
+  );
 
   const state = useDataStudioState<R>({
-    datasets,
-    activeDatasetId: resolvedActiveDatasetId,
-    initialDatasetId,
-    onActiveDatasetChange: handleActiveDatasetChange,
-    views: viewsProp,
-    defaultViews,
-    onViewsChange: handleViewsChange,
-    activeViewId: resolvedActiveViewId,
-    initialActiveViewId,
-    onActiveViewChange: handleActiveViewChange,
+    dataSources: effectiveDataSources,
+    activeDataSourceId: resolvedActiveDatasetId,
+    initialDataSourceId,
+    onActiveDataSourceChange: handleActiveDatasetChange,
+    sheets: sheetsProp,
+    defaultSheets,
+    onSheetsChange: handleSheetsChange,
+    activeSheetId: resolvedActiveViewId,
+    initialActiveSheetId,
+    onActiveSheetChange: handleActiveSheetChange,
+    sheetTemplates: resolvedSheetTemplates,
     sessionCache,
-    hydrateViews,
+    hydrateSheets,
   });
 
-  const { activeDataset, activeView, activeViewId: stateActiveViewId } = state;
+  const { activeDataSource, activeSheet, activeSheetId: stateActiveViewId } = state;
 
-  // Clamp: if the URL asked for a dataset/view that doesn't exist, the hook
+  // ---- Joint source management (create / edit / delete) -------------------
+  // A joint source can only be built when at least two server-backed (joinable)
+  // base sources exist.
+  const joinableBaseCount = React.useMemo(
+    () => dataSources.filter((dataSource) => Boolean(dataSource.connector)).length,
+    [dataSources],
+  );
+  const handleSubmitJointSource = React.useCallback(
+    (input: { id?: string; label: string; definition: DataStudioJoinDefinition }) => {
+      if (input.id) {
+        updateJointSource(input.id, { label: input.label, definition: input.definition });
+        state.selectDataSource(input.id);
+      } else {
+        const jointSourceId = createJointSource({
+          label: input.label,
+          definition: input.definition,
+        });
+        state.selectDataSource(jointSourceId);
+      }
+    },
+    [createJointSource, updateJointSource, state],
+  );
+  const handleEditJointSource = React.useCallback(
+    (jointSourceId: string) => {
+      const config = jointConfigs.find((entry) => entry.id === jointSourceId);
+      if (config) {
+        setEditingJointConfig(config);
+        setJoinBuilderOpen(true);
+      }
+    },
+    [jointConfigs],
+  );
+  const handleDeleteJointSource = React.useCallback(
+    (jointSourceId: string) => {
+      deleteJointSource(jointSourceId);
+      // Fall back to a base source if the deleted joint source was active.
+      if (state.activeDataSource?.id === jointSourceId) {
+        const fallback = dataSources[0]?.id;
+        if (fallback) {
+          state.selectDataSource(fallback);
+        }
+      }
+    },
+    [deleteJointSource, state, dataSources],
+  );
+  const handleOpenNewJointSource = React.useCallback(() => {
+    setEditingJointConfig(null);
+    setJoinBuilderOpen(true);
+  }, []);
+  const handleCloseJointBuilder = React.useCallback(() => {
+    setJoinBuilderOpen(false);
+    setEditingJointConfig(null);
+  }, []);
+
+  // Clamp: if the URL asked for a dataSource/sheet that doesn't exist, the hook
   // falls back to a different one. Silently `replace` the URL so it reflects
   // what the user is actually looking at, without polluting history.
-  // Guarded against an empty `datasets` array so we don't clobber a valid id
-  // (e.g. `?dataset=customers`) before the schema has finished loading; the
-  // effect re-runs when `activeDataset` changes to a populated value.
+  // Guarded against an empty `dataSources` array so we don't clobber a valid id
+  // (e.g. `?dataSource=customers`) before the schema has finished loading; the
+  // effect re-runs when `activeDataSource` changes to a populated value.
   React.useEffect(() => {
-    if (!isRoutingEnabled || datasets.length === 0) {
+    if (!isRoutingEnabled || effectiveDataSources.length === 0) {
       return;
     }
     const urlState = routing!.read();
-    const resolvedDataset = activeDataset?.id ?? null;
-    const resolvedView = stateActiveViewId;
-    const datasetWasClamped =
-      urlState.activeDatasetId != null && urlState.activeDatasetId !== resolvedDataset;
-    const viewWasClamped = urlState.activeViewId != null && urlState.activeViewId !== resolvedView;
-    if (!datasetWasClamped && !viewWasClamped) {
+    const resolvedDataset = activeDataSource?.id ?? null;
+    const resolvedSheet = stateActiveViewId;
+    const dataSourceWasClamped =
+      urlState.activeDataSourceId != null && urlState.activeDataSourceId !== resolvedDataset;
+    const sheetWasClamped =
+      urlState.activeSheetId != null && urlState.activeSheetId !== resolvedSheet;
+    if (!dataSourceWasClamped && !sheetWasClamped) {
       return;
     }
-    routing!.write({ activeDatasetId: resolvedDataset, activeViewId: resolvedView }, 'replace');
-  }, [isRoutingEnabled, routing, activeDataset, stateActiveViewId, datasets.length]);
+    routing!.write(
+      { activeDataSourceId: resolvedDataset, activeSheetId: resolvedSheet },
+      'replace',
+    );
+  }, [isRoutingEnabled, routing, activeDataSource, stateActiveViewId, effectiveDataSources.length]);
 
-  // Highlight the active view's tree item when a view is selected (matches the
-  // tab bar's notion of "the view is the active tab"). Fall back to the dataset
-  // when no view is active.
+  // Highlight the active sheet's tree item when a sheet is selected (matches the
+  // tab bar's notion of "the sheet is the active tab"). Fall back to the dataSource
+  // when no sheet is active.
   let selectedTreeItemId: string | null = null;
-  if (activeView) {
-    selectedTreeItemId = getViewItemId(activeView.id);
-  } else if (activeDataset) {
-    selectedTreeItemId = getDataSourceItemId(activeDataset.id);
+  if (activeSheet) {
+    selectedTreeItemId = getSheetItemId(activeSheet.id);
+  } else if (activeDataSource) {
+    selectedTreeItemId = getDataSourceItemId(activeDataSource.id);
   }
-  const showDataSourcesLoading = loading && datasets.length === 0;
+  const showDataSourcesLoading = loading && effectiveDataSources.length === 0;
 
-  const callerApiRef = activeDataset?.slotProps?.dataGrid?.apiRef ?? slotProps?.dataGrid?.apiRef;
+  const callerApiRef = activeDataSource?.slotProps?.dataGrid?.apiRef ?? slotProps?.dataGrid?.apiRef;
   const effectiveApiRef = callerApiRef ?? internalApiRef;
 
-  // Built-in row editing: when the dataset's `dataSource` exposes
+  // Built-in row editing: when the dataSource's `dataSource` exposes
   // `createRow`/`updateRow`/`deleteRow`, the hook appends the actions column
-  // and produces the `onAddRow` handler the toolbar wires up. Datasets without
+  // and produces the `onAddRow` handler the toolbar wires up. DataSources without
   // those methods get their original columns unchanged.
   const rowEditing = useDataStudioRowEditing<R>({
-    dataset: activeDataset,
+    dataSource: activeDataSource,
     apiRef: effectiveApiRef as any,
-    // The dataset's `onDataSourceError` callback is typed against the grid's
+    // The dataSource's `onDataSourceError` callback is typed against the grid's
     // narrow error types; row-editing errors are plain `Error`s. Cast through
-    // `unknown` so the dataset handler gets the broader feed too.
-    onError: activeDataset?.onDataSourceError as ((error: unknown) => void) | undefined,
+    // `unknown` so the dataSource handler gets the broader feed too.
+    onError: activeDataSource?.onDataSourceError as ((error: unknown) => void) | undefined,
   });
 
   let dataSourceItems: React.ReactNode;
@@ -574,133 +675,145 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
         disabled
       />
     ));
-  } else if (datasets.length === 0) {
+  } else if (effectiveDataSources.length === 0) {
     dataSourceItems = (
       <TreeItem itemId={EMPTY_DATA_SOURCES_ITEM_ID} label="No data sources" disabled />
     );
   } else {
-    dataSourceItems = datasets.map((dataset) => (
-      <TreeItem key={dataset.id} itemId={getDataSourceItemId(dataset.id)} label={dataset.label} />
+    dataSourceItems = effectiveDataSources.map((dataSource) => (
+      <TreeItem
+        key={dataSource.id}
+        itemId={getDataSourceItemId(dataSource.id)}
+        label={
+          jointSourceIds.has(dataSource.id) ? (
+            <DataStudioSidebarJointSourceItem
+              label={dataSource.label}
+              jointSourceId={dataSource.id}
+              onEdit={handleEditJointSource}
+              onDelete={handleDeleteJointSource}
+            />
+          ) : (
+            dataSource.label
+          )
+        }
+      />
     ));
   }
 
-  const viewItems =
-    state.views.length === 0
+  const sheetItems =
+    state.sheets.length === 0
       ? [
           <TreeItem
-            key={EMPTY_VIEWS_ITEM_ID}
-            itemId={EMPTY_VIEWS_ITEM_ID}
-            label="No views yet"
+            key={EMPTY_SHEETS_ITEM_ID}
+            itemId={EMPTY_SHEETS_ITEM_ID}
+            label="No sheets yet"
             disabled
           />,
         ]
-      : state.views.map((view, index) => (
+      : state.sheets.map((sheet, index) => (
           <TreeItem
-            key={view.id}
-            itemId={getViewItemId(view.id)}
+            key={sheet.id}
+            itemId={getSheetItemId(sheet.id)}
             label={
-              <DataStudioSidebarViewItem
-                view={view}
+              <DataStudioSidebarSheetItem
+                sheet={sheet}
                 index={index}
-                total={state.views.length}
+                total={state.sheets.length}
                 state={state}
               />
             }
           />
         ));
 
-  const handleAddView = React.useCallback(() => {
-    state.addView();
+  const handleAddSheet = React.useCallback(() => {
+    // Open the Composer (prompt + template picker) so the user chooses what kind
+    // of Sheet to create, instead of silently appending a default grid Sheet.
+    state.startComposing();
   }, [state]);
 
   const handleTreeSelectionChange = React.useCallback(
     (_event: React.SyntheticEvent | null, itemIds: string | string[] | null) => {
       const itemId = Array.isArray(itemIds) ? (itemIds.at(0) ?? null) : itemIds;
-      const datasetId = getDatasetIdFromTreeItemId(itemId);
-      if (datasetId !== null) {
-        state.selectDataset(datasetId);
+      const dataSourceId = getDatasetIdFromTreeItemId(itemId);
+      if (dataSourceId !== null) {
+        state.selectDataSource(dataSourceId);
         return;
       }
-      const viewId = getViewIdFromTreeItemId(itemId);
-      if (viewId !== null) {
-        state.selectView(viewId);
+      const sheetId = getSheetIdFromTreeItemId(itemId);
+      if (sheetId !== null) {
+        state.selectSheet(sheetId);
       }
     },
     [state],
   );
 
-  const datasetSlotProps = activeDataset?.slotProps?.dataGrid;
-  const viewInitialState = activeView?.initialState;
+  const dataSourceSlotProps = activeDataSource?.slotProps?.dataGrid;
+  const sheetInitialState = activeSheet?.initialState;
   const mergedInitialState = React.useMemo(() => {
-    if (!viewInitialState) {
-      return datasetSlotProps?.initialState ?? slotProps?.dataGrid?.initialState;
+    if (!sheetInitialState) {
+      return dataSourceSlotProps?.initialState ?? slotProps?.dataGrid?.initialState;
     }
     return {
       ...(slotProps?.dataGrid?.initialState ?? {}),
-      ...(datasetSlotProps?.initialState ?? {}),
-      ...viewInitialState,
+      ...(dataSourceSlotProps?.initialState ?? {}),
+      ...sheetInitialState,
     };
-  }, [slotProps?.dataGrid?.initialState, datasetSlotProps?.initialState, viewInitialState]);
+  }, [slotProps?.dataGrid?.initialState, dataSourceSlotProps?.initialState, sheetInitialState]);
 
-  const activeDatasetCache = activeDataset?.dataSourceCache;
-  const activeDatasetId = activeDataset?.id;
-  // Per-dataset cache resolution. Order: explicit dataset override → strategy default.
+  const activeDataSourceCache = activeDataSource?.cache;
+  const activeDataSourceId = activeDataSource?.id;
+  // Per-dataSource cache resolution. Order: explicit dataSource override → strategy default.
   // `undefined` means "let the grid build its own default cache" (the legacy behavior).
   const resolvedDataSourceCache = React.useMemo(() => {
-    if (activeDatasetCache !== undefined) {
-      return activeDatasetCache;
+    if (activeDataSourceCache !== undefined) {
+      return activeDataSourceCache;
     }
     if (cacheStrategy === 'none') {
       return null;
     }
-    if (cacheStrategy === 'shared' && sessionCache && activeDatasetId) {
-      return sessionCache.forDataset(activeDatasetId);
+    if (cacheStrategy === 'shared' && sessionCache && activeDataSourceId) {
+      return sessionCache.forDataset(activeDataSourceId);
     }
     return undefined;
-  }, [activeDatasetCache, activeDatasetId, cacheStrategy, sessionCache]);
+  }, [activeDataSourceCache, activeDataSourceId, cacheStrategy, sessionCache]);
 
-  const isChartView = activeView?.kind === 'chart';
-
-  const handleChartDatasetChange = React.useCallback(
-    (datasetId: string) => {
-      if (!activeView) {
+  // The preview pane's "Chart" / "Pivot table" actions start the matching
+  // built-in template bound to the active Data Source. `startSheetFromTemplate`
+  // binds via the active Data Source id and returns null when the template
+  // isn't registered (e.g. a non-premium plan), in which case we fall back to a
+  // plain grid Sheet so the button is never dead.
+  const handleAddTemplateFromDataSource = React.useCallback(
+    (templateId: string, fallbackLabel: string) => {
+      if (!activeDataSource) {
         return;
       }
-      state.updateView(activeView.id, { datasetId });
+      const created = state.startSheetFromTemplate(templateId);
+      if (!created) {
+        state.addSheet({ dataSourceId: activeDataSource.id, label: fallbackLabel });
+      }
     },
-    [state, activeView],
+    [state, activeDataSource],
   );
 
-  const chartContent =
-    isChartView && activeView ? (
-      <ChartViewSlot
-        dataset={activeDataset}
-        datasets={datasets}
-        view={activeView}
-        onChangeDataset={handleChartDatasetChange}
-        dataSourceCache={resolvedDataSourceCache}
-        {...slotProps?.chartView}
-      />
-    ) : null;
-
-  const gridContent =
-    activeDataset === null ? (
-      <DataStudioEmpty className={classes.empty}>No data source selected</DataStudioEmpty>
-    ) : (
+  const gridElement =
+    activeDataSource === null ? null : (
       <DataGridSlot
-        key={`${activeDataset.id}::${activeView?.id ?? ''}`}
+        key={`${activeDataSource.id}::${activeSheet?.id ?? ''}`}
         {...DATA_STUDIO_DEFAULT_DATA_GRID_PROPS}
+        // Connector-backed Sources page through the whole dataset (server-side);
+        // client Sources keep all rows in one virtualized scroll.
+        pagination={activeDataSource.connector != null}
         {...slotProps?.dataGrid}
-        {...datasetSlotProps}
+        {...dataSourceSlotProps}
         initialState={mergedInitialState}
         columns={rowEditing.columns}
-        rows={activeDataset.rows ?? []}
-        rowIdField={activeDataset.rowIdField}
-        getRowId={activeDataset.getRowId}
-        dataSource={activeDataset.dataSource}
+        rows={activeDataSource.rows ?? []}
+        rowIdField={activeDataSource.rowIdField}
+        getRowId={activeDataSource.getRowId}
+        dataSource={activeDataSource.connector}
         dataSourceCache={resolvedDataSourceCache}
-        dataSourceRevalidateMs={activeDataset.dataSourceRevalidateMs}
-        onDataSourceError={activeDataset.onDataSourceError}
+        dataSourceRevalidateMs={activeDataSource.dataSourceRevalidateMs}
+        onDataSourceError={activeDataSource.onDataSourceError}
         apiRef={effectiveApiRef}
         {...(rowEditing.rowModesModel !== null && {
           editMode: 'row',
@@ -710,48 +823,193 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
       />
     );
 
-  const datasetTitle = typeof activeDataset?.label === 'string' ? activeDataset.label : undefined;
+  // Resolve the active sheet's view renderer. `'grid'` (the default) renders
+  // inline below — DataStudio owns the grid's apiRef, slot props, cache, and
+  // row-editing column decoration. Any other registered view type goes
+  // through `<ViewTypeComponent>`; unknown types render the friendly fallback.
+  const activeSheetType = activeSheet?.type;
+  const activeSheetViewType = activeSheet
+    ? resolveDataStudioViewType(resolvedViewTypes, activeSheetType)
+    : undefined;
+  const isCustomViewType = Boolean(activeSheet && activeSheetType && activeSheetType !== 'grid');
+  // A grid-backed view (e.g. the spreadsheet) renders its grid on the shared
+  // `apiRef`, so the menu bar / toolbar can bind to it.
+  const activeViewIsGridBacked = isCustomViewType && activeSheetViewType?.gridBacked === true;
+  // A view that owns its toolbar (the spreadsheet) suppresses the Data Studio
+  // grid toolbar — its database controls (sort/filter/pivot/…) don't apply.
+  const activeViewOwnsToolbar = isCustomViewType && activeSheetViewType?.ownsToolbar === true;
+  // The menu bar / toolbar are active when the inline grid is the surface OR a
+  // grid-backed view owns the pane (and not while composing).
+  const chromeGridActive =
+    !state.isComposing &&
+    (activeViewIsGridBacked || (activeDataSource != null && !isCustomViewType));
+
+  const handleSetActiveSheetParams = React.useCallback(
+    (next: Partial<Record<string, unknown>>) => {
+      if (!activeSheet) {
+        return;
+      }
+      state.updateSheet(activeSheet.id, {
+        params: { ...(activeSheet.params ?? {}), ...next },
+      });
+    },
+    [activeSheet, state],
+  );
+
+  // Re-bind the active Sheet to another Data Source (used by the Chart view's
+  // Data Source picker). Clears params so the view re-seeds defaults for the new
+  // Source's columns instead of carrying over now-invalid field references.
+  const handleChangeSheetDataSource = React.useCallback(
+    (dataSourceId: string | null) => {
+      if (!activeSheet) {
+        return;
+      }
+      state.updateSheet(activeSheet.id, { dataSourceId, params: {} });
+    },
+    [activeSheet, state],
+  );
+
+  // Let a view spawn (and activate) a new Sheet — e.g. the Pivot view creating a
+  // chart from its current configuration. Binds to the current Sheet's Data
+  // Source unless the request names another.
+  const handleCreateSheetFromView = React.useCallback(
+    (request: {
+      type: string;
+      label?: string;
+      params?: Record<string, unknown>;
+      dataSourceId?: string | null;
+    }) => {
+      const dataSourceId =
+        request.dataSourceId !== undefined
+          ? request.dataSourceId
+          : (activeSheet?.dataSourceId ?? activeDataSource?.id ?? null);
+      state.addSheet({
+        dataSourceId,
+        label: request.label,
+        type: request.type,
+        params: request.params,
+      });
+    },
+    [state, activeSheet, activeDataSource],
+  );
+
+  let customViewContent: React.ReactNode = null;
+  if (activeSheet && isCustomViewType) {
+    customViewContent = activeSheetViewType ? (
+      React.createElement(activeSheetViewType.Component, {
+        sheet: activeSheet,
+        dataSource: activeDataSource,
+        dataSources: effectiveDataSources,
+        onChangeDataSource: handleChangeSheetDataSource,
+        params: activeSheet.params ?? {},
+        setParams: handleSetActiveSheetParams,
+        plan,
+        apiRef: effectiveApiRef,
+        onCreateSheet: handleCreateSheetFromView,
+      })
+    ) : (
+      <UnknownViewType type={activeSheetType ?? ''} />
+    );
+  }
+
+  const handlePickTemplate = React.useCallback(
+    (templateId: string) => {
+      state.startSheetFromTemplate(templateId);
+    },
+    [state],
+  );
+  const handleSubmitPrompt = React.useCallback(
+    (prompt: string) => {
+      // Awaited internally; fire-and-forget here so the input clears
+      // immediately. The state hook resolves to null in v1 (no copilot
+      // adapter bridge yet) so nothing else needs to await.
+      void state.startSheetFromPrompt(prompt);
+    },
+    [state],
+  );
+
+  // Render path:
+  //   - Custom view type registered on the active sheet → its Component
+  //     (or unknown-type fallback).
+  //   - No data sources at all → Composer (front door for empty studios).
+  //   - Data source available, no sheet → preview pane wrapping the grid.
+  //   - Sheet active with 'grid' (default) → bare grid (sheet supplies
+  //     `initialState`).
+  // The Composer doubles as the "create a new Sheet" screen: it shows when the
+  // studio is empty (no Data Sources) AND on demand when the user clicks
+  // "Add new sheet" (`state.isComposing`). On-demand composing offers a Cancel
+  // back to whatever was active.
+  const composerElement = (
+    <DataStudioComposer
+      templates={resolvedSheetTemplates}
+      promptEnabled={copilotChatAdapter != null}
+      onSubmitPrompt={handleSubmitPrompt}
+      onPickTemplate={handlePickTemplate}
+      onCancel={
+        state.isComposing && (activeSheet != null || activeDataSource != null)
+          ? state.cancelComposing
+          : undefined
+      }
+    />
+  );
+
+  let gridContent: React.ReactNode;
+  if (state.isComposing) {
+    gridContent = composerElement;
+  } else if (customViewContent) {
+    gridContent = customViewContent;
+  } else if (activeDataSource === null) {
+    gridContent = composerElement;
+  } else if (activeSheet) {
+    gridContent = gridElement;
+  } else {
+    gridContent = (
+      <DataStudioDataSourceView
+        dataSource={activeDataSource}
+        onAddChartSheet={() => handleAddTemplateFromDataSource('chart', 'Chart')}
+        onAddPivotSheet={() => handleAddTemplateFromDataSource('pivot', 'Pivot table')}
+        onAddDashboardSheet={() => handleAddTemplateFromDataSource('dashboard', 'Dashboard')}
+      >
+        {gridElement}
+      </DataStudioDataSourceView>
+    );
+  }
 
   const mainPane = (
     <DataStudioMain className={classes.main}>
       {MenuBarSlot ? (
         <MenuBarSlot
-          // Remount on chart ↔ grid switch so the menu bar's internal
-          // `apiBound` state re-evaluates against the active apiRef. Without
-          // this, switching from grid (apiRef bound to main grid) to chart
-          // (apiRef intentionally empty) leaves the active menu strip mounted
-          // with a null `apiRef.current`, which crashes the grid selectors.
-          key={isChartView ? '__chart_view__' : '__grid_view__'}
-          apiRef={isChartView ? (chartViewApiRef as any) : effectiveApiRef}
-          title={datasetTitle}
+          apiRef={effectiveApiRef}
+          // The menu bar binds to the inline grid OR a grid-backed view's grid
+          // (spreadsheet/pivot/chart) via the shared apiRef; `chromeGridActive`
+          // is false only for non-grid surfaces and while composing.
+          gridActive={chromeGridActive}
           {...slotProps?.menuBar}
         />
       ) : null}
-      {ToolbarSlot ? (
+      {ToolbarSlot && !activeViewOwnsToolbar && !state.isComposing ? (
         <DataStudioToolbarArea className={classes.toolbarArea}>
           <DataStudioToolbarSlotWrap>
             {/*
-          Remount the toolbar on dataset switch so `useGridSelector`
+          Remount the toolbar on dataSource switch so `useGridSelector`
           subscriptions re-bind to the freshly-mounted grid's store and any
           per-mount local state (search draft, menu anchors) resets. Without
-          this key, the toolbar carries stale column metadata across datasets
-          and the user's quick-filter draft leaks between datasets.
+          this key, the toolbar carries stale column metadata across dataSources
+          and the user's quick-filter draft leaks between dataSources.
           */}
             <ToolbarSlot
-              key={`${activeDataset?.id ?? '__no-dataset__'}::${isChartView ? 'chart' : 'grid'}`}
-              apiRef={isChartView ? (chartViewApiRef as any) : effectiveApiRef}
-              activeView={activeView}
+              key={activeDataSource?.id ?? '__no-dataSource__'}
+              apiRef={effectiveApiRef}
+              // Custom view types (chart/pivot) own the pane with their own
+              // grid, detaching the inline `apiRef` — disable the grid-bound
+              // toolbar controls instead of dereferencing a null api.
+              gridActive={chromeGridActive}
+              activeSheet={activeSheet}
               baselineInitialState={mergedInitialState}
-              onAddRow={activeDataset?.onAddRow ?? rowEditing.onAddRow ?? undefined}
-              onAddChart={() =>
-                state.addView({
-                  kind: 'chart',
-                  datasetId: activeDataset?.id,
-                })
-              }
+              onAddRow={activeDataSource?.onAddRow ?? rowEditing.onAddRow ?? undefined}
               onSaveCurrentView={(input) =>
-                state.addView({
-                  datasetId: activeDataset?.id,
+                state.addSheet({
+                  dataSourceId: activeDataSource?.id,
                   label: input.label,
                   initialState: input.initialState,
                 })
@@ -764,9 +1022,7 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
           </DataStudioCopilotTriggerSlot>
         </DataStudioToolbarArea>
       ) : null}
-      <DataStudioGrid className={classes.grid}>
-        {isChartView ? chartContent : gridContent}
-      </DataStudioGrid>
+      <DataStudioGrid className={classes.grid}>{gridContent}</DataStudioGrid>
     </DataStudioMain>
   );
 
@@ -783,7 +1039,7 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
       <DataStudioCopilotShell
         inner={copilotChatAdapter}
         stateApi={state}
-        datasets={datasets}
+        dataSources={effectiveDataSources}
         features={copilotFeatures}
         plugins={copilotPlugins}
         Panel={CopilotPanelComponent}
@@ -797,31 +1053,55 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
                 selectedItems={selectedTreeItemId}
                 onSelectedItemsChange={handleTreeSelectionChange}
               >
-                <TreeItem itemId={DATA_SOURCES_ITEM_ID} label="Data Sources">
+                <TreeItem
+                  className={DATA_STUDIO_TREE_SECTION_CLASS}
+                  itemId={DATA_SOURCES_ITEM_ID}
+                  label="Data Sources"
+                >
                   {dataSourceItems}
                 </TreeItem>
-                <TreeItem itemId={VIEWS_ITEM_ID} label="Views">
-                  {viewItems}
+                <TreeItem
+                  className={DATA_STUDIO_TREE_SECTION_CLASS}
+                  itemId={SHEETS_ITEM_ID}
+                  label="Sheets"
+                >
+                  {sheetItems}
                 </TreeItem>
               </DataStudioTree>
-              <DataStudioViewsAction className={classes.viewsAction}>
+              <DataStudioSheetsAction className={classes.sheetsAction}>
+                <Button
+                  fullWidth
+                  size="small"
+                  variant="text"
+                  onClick={handleOpenNewJointSource}
+                  disabled={joinableBaseCount < 2}
+                >
+                  New joint source
+                </Button>
                 <Button
                   fullWidth
                   size="small"
                   variant="outlined"
-                  onClick={handleAddView}
-                  disabled={datasets.length === 0}
+                  onClick={handleAddSheet}
+                  disabled={effectiveDataSources.length === 0}
                 >
-                  Add new view
+                  Add new sheet
                 </Button>
-              </DataStudioViewsAction>
+              </DataStudioSheetsAction>
             </DataStudioSidebar>
+            <DataStudioJoinBuilder
+              open={isJoinBuilderOpen}
+              onClose={handleCloseJointBuilder}
+              dataSources={dataSources}
+              initialConfig={editingJointConfig}
+              onSubmit={handleSubmitJointSource}
+            />
             {mainPane}
           </React.Fragment>
         ) : (
           <React.Fragment>
             {mainPane}
-            <DataStudioTabBar classes={classes} datasets={datasets} state={state} />
+            <DataStudioTabBar classes={classes} dataSources={effectiveDataSources} state={state} />
           </React.Fragment>
         )}
       </DataStudioCopilotShell>
@@ -835,13 +1115,13 @@ DataStudio.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The active dataset id.
+   * The active dataSource id.
    */
-  activeDatasetId: PropTypes.string,
+  activeDataSourceId: PropTypes.string,
   /**
-   * The active view id (controlled). Pass `null` to indicate a dataset tab is active.
+   * The active sheet id (controlled). Pass `null` to indicate a dataSource tab is active.
    */
-  activeViewId: PropTypes.string,
+  activeSheetId: PropTypes.string,
   /**
    * Options forwarded to the shared session cache when `cacheStrategy === 'shared'`.
    * Ignored for the other strategies.
@@ -852,12 +1132,12 @@ DataStudio.propTypes = {
     ttl: PropTypes.number,
   }),
   /**
-   * Strategy applied to the Data Source cache used by every dataset.
+   * Strategy applied to the Data Source cache used by every dataSource.
    * See `DataStudioCacheStrategy` for the available values.
-   * A `dataset.dataSourceCache` set on an individual dataset always takes precedence.
+   * A `dataSource.cache` set on an individual dataSource always takes precedence.
    * @default 'shared'
    */
-  cacheStrategy: PropTypes.oneOf(['none', 'per-dataset', 'shared']),
+  cacheStrategy: PropTypes.oneOf(['none', 'per-dataSource', 'shared']),
   /**
    * Override or extend the styles applied to the component.
    */
@@ -888,10 +1168,9 @@ DataStudio.propTypes = {
    */
   copilotFeatures: PropTypes.shape({
     aggregation: PropTypes.bool,
-    chartEditing: PropTypes.bool,
     chartsIntegration: PropTypes.bool,
     dataQuery: PropTypes.bool,
-    datasetSwitching: PropTypes.bool,
+    dataSourceSwitching: PropTypes.bool,
     filter: PropTypes.bool,
     grouping: PropTypes.bool,
     mutations: PropTypes.bool,
@@ -914,12 +1193,21 @@ DataStudio.propTypes = {
     }),
   ),
   /**
-   * Datasets available in the studio.
+   * DataSources available in the studio.
    */
-  datasets: PropTypes.arrayOf(
+  dataSources: PropTypes.arrayOf(
     PropTypes.shape({
+      cache: PropTypes.shape({
+        clear: PropTypes.func.isRequired,
+        get: PropTypes.func.isRequired,
+        set: PropTypes.func.isRequired,
+      }),
+      chartDefaults: PropTypes.shape({
+        dimensions: PropTypes.arrayOf(PropTypes.string),
+        values: PropTypes.arrayOf(PropTypes.string),
+      }),
       columns: PropTypes.arrayOf(PropTypes.object).isRequired,
-      dataSource: PropTypes.shape({
+      connector: PropTypes.shape({
         createRow: PropTypes.func,
         deleteRow: PropTypes.func,
         getAggregatedValue: PropTypes.func,
@@ -928,44 +1216,52 @@ DataStudio.propTypes = {
         getRows: PropTypes.func.isRequired,
         updateRow: PropTypes.func,
       }),
-      dataSourceCache: PropTypes.shape({
-        clear: PropTypes.func.isRequired,
-        get: PropTypes.func.isRequired,
-        set: PropTypes.func.isRequired,
-      }),
       dataSourceRevalidateMs: PropTypes.number,
       getRowId: PropTypes.func,
       id: PropTypes.string.isRequired,
+      joinGroup: PropTypes.string,
       label: PropTypes.node,
       onAddRow: PropTypes.func,
       onDataSourceError: PropTypes.func,
       rowIdField: PropTypes.string,
       rows: PropTypes.arrayOf(PropTypes.object),
       slotProps: PropTypes.object,
+      supportsServerGrouping: PropTypes.bool,
     }),
   ).isRequired,
   /**
-   * Initial views displayed alongside datasets (uncontrolled).
-   * Ignored if `views` is provided.
+   * Initial sheets displayed alongside dataSources (uncontrolled).
+   * Ignored if `sheets` is provided.
    */
-  defaultViews: PropTypes.arrayOf(
+  defaultSheets: PropTypes.arrayOf(
     PropTypes.shape({
-      chartConfig: PropTypes.object,
-      datasetId: PropTypes.string.isRequired,
+      dataSourceId: PropTypes.string,
       id: PropTypes.string.isRequired,
       initialState: PropTypes.object,
-      kind: PropTypes.oneOf(['chart', 'grid']),
       label: PropTypes.node,
+      params: PropTypes.object,
+      type: PropTypes.string,
     }),
   ),
   /**
-   * The initially active view id (uncontrolled).
+   * The initially active sheet id (uncontrolled).
    */
-  initialActiveViewId: PropTypes.string,
+  initialActiveSheetId: PropTypes.string,
   /**
-   * The initially active dataset id.
+   * The initially active dataSource id.
    */
-  initialDatasetId: PropTypes.string,
+  initialDataSourceId: PropTypes.string,
+  /**
+   * Adapter persisting the user's joint sources (created in the UI from the base
+   * `dataSources`). Defaults to a `localStorage` adapter so joint sources are
+   * remembered across reloads. Pass `null` to disable persistence, or a custom
+   * adapter to back it with a server, IndexedDB, etc.
+   * @default createLocalStorageJointSourcesPersistenceAdapter()
+   */
+  jointSourcesPersistence: PropTypes.shape({
+    read: PropTypes.func.isRequired,
+    write: PropTypes.func.isRequired,
+  }),
   /**
    * Navigator layout.
    * - `'sidebar'`: tree navigator on the left.
@@ -979,44 +1275,99 @@ DataStudio.propTypes = {
    */
   loading: PropTypes.bool,
   /**
-   * Callback fired when the active dataset changes.
-   * @param {string} datasetId The selected dataset id.
-   * @param {DataStudioDataset<R>} dataset The selected dataset definition.
+   * Callback fired when the active dataSource changes.
+   * @param {string} dataSourceId The selected dataSource id.
+   * @param {DataStudioDataSource<R>} dataSource The selected dataSource definition.
    */
-  onActiveDatasetChange: PropTypes.func,
+  onActiveDataSourceChange: PropTypes.func,
   /**
-   * Callback fired when the active view changes. `null` means a dataset tab became active.
-   * @param {string | null} viewId The selected view id.
-   * @param {DataStudioView | null} view The selected view definition.
+   * Callback fired when the active sheet changes. `null` means a dataSource tab became active.
+   * @param {string | null} sheetId The selected sheet id.
+   * @param {DataStudioSheet | null} sheet The selected sheet definition.
    */
-  onActiveViewChange: PropTypes.func,
+  onActiveSheetChange: PropTypes.func,
   /**
-   * Callback fired when the list of views changes (add, rename, duplicate, delete, reorder).
-   * @param {DataStudioView[]} views The updated list of views.
+   * Callback fired when the list of sheets changes (add, rename, duplicate, delete, reorder).
+   * @param {DataStudioSheet[]} sheets The updated list of sheets.
    */
-  onViewsChange: PropTypes.func,
+  onSheetsChange: PropTypes.func,
   /**
    * MUI X plan to target. Selects the default Data Grid (community / Pro /
-   * Premium) and whether the built-in chart workspace is active.
+   * Premium).
    *
-   * Override the auto-resolved grid by passing `slots.dataGrid` explicitly;
-   * the chart workspace can likewise be overridden via `slots.chartView`.
+   * Override the auto-resolved grid by passing `slots.dataGrid` explicitly.
    * @default 'community'
    */
   plan: PropTypes.oneOf(['community', 'premium', 'pro']),
   /**
-   * Routing adapter that mirrors the active dataset and view into an external
+   * Routing adapter that mirrors the active dataSource and sheet into an external
    * source (typically the URL query string). Pass
    * `createSearchParamsRoutingAdapter()` for a `window.history`-based default,
    * or implement the interface to integrate with Next.js / React Router / etc.
    *
-   * Explicit `activeDatasetId` / `activeViewId` controlled props still win when set.
+   * Explicit `activeDataSourceId` / `activeSheetId` controlled props still win when set.
    */
   routing: PropTypes.shape({
     read: PropTypes.func.isRequired,
     subscribe: PropTypes.func.isRequired,
     write: PropTypes.func.isRequired,
   }),
+  /**
+   * Sheets displayed alongside dataSources (controlled).
+   * Each sheet targets a dataSource (or is free-form) and contains a single
+   * view in v1.
+   */
+  sheets: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataSourceId: PropTypes.string,
+      id: PropTypes.string.isRequired,
+      initialState: PropTypes.object,
+      label: PropTypes.node,
+      params: PropTypes.object,
+      type: PropTypes.string,
+    }),
+  ),
+  /**
+   * Persistence adapter for the list of sheets. Hydrated once on mount and
+   * called whenever the sheets list mutates (add, rename, duplicate, delete,
+   * move, updateSheet). Pass `null` to disable persistence.
+   *
+   * Defaults to `createLocalStorageSheetsPersistenceAdapter()` (localStorage,
+   * namespace `'default'`) so sheets are remembered across reloads
+   * out-of-the-box. Pass a custom adapter to back persistence with a server,
+   * IndexedDB, etc.
+   *
+   * Ignored when the `sheets` prop is provided (controlled mode — the consumer
+   * owns the source of truth).
+   * @default createLocalStorageSheetsPersistenceAdapter()
+   */
+  sheetsPersistence: PropTypes.shape({
+    read: PropTypes.func.isRequired,
+    write: PropTypes.func.isRequired,
+  }),
+  /**
+   * Sheet templates surfaced in the Composer (the empty-state main screen).
+   * Each template builds a `DataStudioSheet` from an optional active Data
+   * Source, then the Composer hands the result to `addSheet`.
+   *
+   * The plan-appropriate built-ins (Spreadsheet always; Pivot + Chart on
+   * `plan="premium"`) are active by default — omit this prop to use them
+   * as-is. Pass an array to add or override-by-`id`, or a `(defaults) => [...]`
+   * function to add / remove / reorder.
+   * @default getBuiltinSheetTemplates(plan)
+   */
+  sheetTemplates: PropTypes.oneOfType([
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        build: PropTypes.func.isRequired,
+        description: PropTypes.string,
+        icon: PropTypes.elementType,
+        id: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired,
+      }),
+    ),
+    PropTypes.func,
+  ]),
   /**
    * Props forwarded to the component slots.
    */
@@ -1034,37 +1385,31 @@ DataStudio.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * Views displayed alongside datasets (controlled).
-   * Each view targets a dataset and may carry an `initialState` applied to the Data Grid.
-   */
-  views: PropTypes.arrayOf(
-    PropTypes.shape({
-      chartConfig: PropTypes.object,
-      datasetId: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired,
-      initialState: PropTypes.object,
-      kind: PropTypes.oneOf(['chart', 'grid']),
-      label: PropTypes.node,
-    }),
-  ),
-  /**
-   * Persistence adapter for the list of views. Hydrated once on mount and
-   * called whenever the views list mutates (add, rename, duplicate, delete,
-   * move, updateView). Pass `null` to disable persistence.
+   * View types that render a Sheet's content area, keyed by `sheet.type`
+   * (defaulting to the inline `'grid'` renderer). The plan-appropriate
+   * built-ins (Spreadsheet always; Pivot + Chart on `plan="premium"`) are
+   * active by default — omit this prop to use them as-is.
    *
-   * Defaults to `createLocalStorageViewsPersistenceAdapter()` (localStorage,
-   * namespace `'default'`) so views are remembered across reloads
-   * out-of-the-box. Pass a custom adapter to back persistence with a server,
-   * IndexedDB, etc.
-   *
-   * Ignored when the `views` prop is provided (controlled mode — the consumer
-   * owns the source of truth).
-   * @default createLocalStorageViewsPersistenceAdapter()
+   * Pass an array to add or override-by-`type`, or a `(defaults) => [...]`
+   * function to add / remove / reorder. Unknown types render a friendly
+   * fallback. The AI agent can inspect each type's `paramsSchema` to construct
+   * valid `sheet.params` payloads.
+   * @default getBuiltinViewTypes(plan)
    */
-  viewsPersistence: PropTypes.shape({
-    read: PropTypes.func.isRequired,
-    write: PropTypes.func.isRequired,
-  }),
+  viewTypes: PropTypes.oneOfType([
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        Component: PropTypes.elementType,
+        defaultLabel: PropTypes.string,
+        gridBacked: PropTypes.bool,
+        icon: PropTypes.elementType,
+        ownsToolbar: PropTypes.bool,
+        paramsSchema: PropTypes.object,
+        type: PropTypes.string.isRequired,
+      }),
+    ),
+    PropTypes.func,
+  ]),
 } as any;
 
 export { DataStudio };

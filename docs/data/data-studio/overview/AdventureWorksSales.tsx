@@ -9,9 +9,9 @@ import {
 import type { GridColDef } from '@mui/x-data-grid-premium';
 import {
   DataStudio,
-  createDataStudioDatasetsFromAPI,
+  createDataStudioDataSourcesFromAPI,
   createNextRouterRoutingAdapter,
-  type DataStudioDataset,
+  type DataStudioDataSource,
 } from '@mui/x-data-studio';
 
 const demoTheme = extendTheme();
@@ -32,7 +32,7 @@ const formatUsd = (value: unknown) => (typeof value === 'number' ? usdCurrency.f
 const formatPercent = (value: unknown) =>
   typeof value === 'number' ? percent.format(value) : '';
 
-// Per-dataset map of fields that should render formatted in the grid. The
+// Per-dataSource map of fields that should render formatted in the grid. The
 // server stores raw numbers; this is the "user formats it" half of the
 // contract.
 const COLUMN_FORMATTERS: Record<string, Record<string, (value: unknown) => string>> = {
@@ -50,8 +50,8 @@ const COLUMN_FORMATTERS: Record<string, Record<string, (value: unknown) => strin
   },
 };
 
-function decorateColumns(datasetId: string, columns: readonly GridColDef[]): GridColDef[] {
-  const formatters = COLUMN_FORMATTERS[datasetId];
+function decorateColumns(dataSourceId: string, columns: readonly GridColDef[]): GridColDef[] {
+  const formatters = COLUMN_FORMATTERS[dataSourceId];
   if (!formatters) {
     return columns as GridColDef[];
   }
@@ -76,30 +76,30 @@ export default function AdventureWorksSales() {
     () => createNextRouterRoutingAdapter({ router }),
     [router],
   );
-  const [datasets, setDatasets] = React.useState<DataStudioDataset<AdventureWorksRow>[]>([]);
+  const [dataSources, setDataSources] = React.useState<DataStudioDataSource<AdventureWorksRow>[]>([]);
   const [schemaError, setSchemaError] = React.useState<string | null>(null);
   const [dataSourceError, setDataSourceError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(true);
 
   const handleDataSourceError = React.useCallback<
-    NonNullable<DataStudioDataset<AdventureWorksRow>['onDataSourceError']>
+    NonNullable<DataStudioDataSource<AdventureWorksRow>['onDataSourceError']>
   >((nextError) => {
     setDataSourceError(getErrorMessage(nextError));
   }, []);
 
   React.useEffect(() => {
     let active = true;
-    createDataStudioDatasetsFromAPI<AdventureWorksRow>({
+    createDataStudioDataSourcesFromAPI<AdventureWorksRow>({
       schemaUrl: '/data-studio/adventure-works/schema',
     }).then(
-      (nextDatasets) => {
+      (nextDataSources) => {
         if (!active) {
           return;
         }
-        setDatasets(
-          nextDatasets.map((dataset) => ({
-            ...dataset,
-            columns: decorateColumns(dataset.id, dataset.columns),
+        setDataSources(
+          nextDataSources.map((dataSource) => ({
+            ...dataSource,
+            columns: decorateColumns(dataSource.id, dataSource.columns),
             onDataSourceError: handleDataSourceError,
           })),
         );
@@ -146,7 +146,7 @@ export default function AdventureWorksSales() {
           )}
           <DataStudio
             plan="premium"
-            datasets={datasets}
+            dataSources={dataSources}
             loading={loading}
             layout="sidebar"
             routing={routing}

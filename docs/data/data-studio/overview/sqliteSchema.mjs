@@ -41,12 +41,12 @@ export const SCHEMA = {
   },
 };
 
-export function getColumnType(dataset, table, column) {
-  return SCHEMA[dataset]?.[table]?.[column]?.type ?? 'TEXT';
+export function getColumnType(dataSource, table, column) {
+  return SCHEMA[dataSource]?.[table]?.[column]?.type ?? 'TEXT';
 }
 
-export function getColumnParser(dataset, table, column) {
-  return SCHEMA[dataset]?.[table]?.[column]?.parser;
+export function getColumnParser(dataSource, table, column) {
+  return SCHEMA[dataSource]?.[table]?.[column]?.parser;
 }
 
 function isBlank(value) {

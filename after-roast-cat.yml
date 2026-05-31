@@ -1,0 +1,242 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e664]:
+      - generic [ref=e665]:
+        - generic [ref=e666]: Dataset
+        - generic [ref=e667]:
+          - combobox "Dataset" [ref=e1162] [cursor=pointer]: Products
+          - textbox: products
+          - img
+          - group:
+            - generic: Dataset
+      - generic [ref=e670]:
+        - generic:
+          - img
+          - img
+        - img [ref=e671]:
+          - generic [ref=e673]: No data to display
+        - generic:
+          - text: MUI X Missing license key
+          - generic: Open the browser console for details on how to resolve this.
+      - generic [ref=e1163]:
+        - toolbar [ref=e1164]:
+          - button "Columns" [ref=e1165] [cursor=pointer]:
+            - img [ref=e1166]
+          - button "Filters" [ref=e1168] [cursor=pointer]:
+            - img [ref=e1170]
+          - button "Pivot" [ref=e1172] [cursor=pointer]:
+            - img [ref=e1173]
+          - button "Charts" [expanded] [ref=e1175] [cursor=pointer]:
+            - img [ref=e1176]
+          - separator [ref=e1180]
+          - button "Export" [ref=e1181] [cursor=pointer]:
+            - img [ref=e1182]
+          - separator [ref=e1184]
+          - generic [ref=e1185]:
+            - button "Search" [ref=e1186] [cursor=pointer]:
+              - img [ref=e1187]
+            - generic "Search" [ref=e1189]:
+              - generic [ref=e1190]:
+                - img [ref=e1192]
+                - searchbox "Search…" [ref=e1194]
+                - group
+        - grid [ref=e1195]:
+          - row "Product ID Coffee Type Roast Type Size Unit Price Price per 100g Profit" [ref=e1196]:
+            - columnheader "Product ID" [ref=e1197] [cursor=pointer]:
+              - generic [ref=e1199]: Product ID
+              - generic [ref=e1200]:
+                - img
+            - columnheader "Coffee Type" [ref=e1201] [cursor=pointer]:
+              - generic [ref=e1203]: Coffee Type
+              - generic [ref=e1204]:
+                - img
+            - columnheader "Roast Type" [ref=e1205] [cursor=pointer]:
+              - generic [ref=e1207]: Roast Type
+              - generic [ref=e1208]:
+                - img
+            - columnheader "Size" [ref=e1209] [cursor=pointer]:
+              - generic [ref=e1211]: Size
+              - generic [ref=e1212]:
+                - img
+            - columnheader "Unit Price" [ref=e1213] [cursor=pointer]:
+              - generic [ref=e1215]: Unit Price
+              - generic [ref=e1216]:
+                - img
+            - columnheader "Price per 100g" [ref=e1217] [cursor=pointer]:
+              - generic [ref=e1219]: Price per 100g
+              - generic [ref=e1220]:
+                - img
+            - columnheader "Profit" [ref=e1221] [cursor=pointer]:
+              - generic [ref=e1223]: Profit
+              - generic [ref=e1224]:
+                - img
+          - rowgroup [ref=e1225]:
+            - row "A-L-0.2 Ara L 0.2 $3.89 $1.94 $0.35" [ref=e1226]:
+              - gridcell "A-L-0.2" [ref=e1227]
+              - gridcell "Ara" [ref=e1228]
+              - gridcell "L" [ref=e1229]
+              - gridcell "0.2" [ref=e1230]
+              - gridcell "$3.89" [ref=e1231]
+              - gridcell "$1.94" [ref=e1232]
+              - gridcell "$0.35" [ref=e1233]
+            - row "A-L-0.5 Ara L 0.5 $7.77 $1.55 $0.70" [ref=e1234]:
+              - gridcell "A-L-0.5" [ref=e1235]
+              - gridcell "Ara" [ref=e1236]
+              - gridcell "L" [ref=e1237]
+              - gridcell "0.5" [ref=e1238]
+              - gridcell "$7.77" [ref=e1239]
+              - gridcell "$1.55" [ref=e1240]
+              - gridcell "$0.70" [ref=e1241]
+            - row "A-L-1 Ara L 1 $12.95 $1.30 $1.17" [ref=e1242]:
+              - gridcell "A-L-1" [ref=e1243]
+              - gridcell "Ara" [ref=e1244]
+              - gridcell "L" [ref=e1245]
+              - gridcell "1" [ref=e1246]
+              - gridcell "$12.95" [ref=e1247]
+              - gridcell "$1.30" [ref=e1248]
+              - gridcell "$1.17" [ref=e1249]
+            - row "A-L-2.5 Ara L 2.5 $29.79 $1.19 $2.68" [ref=e1250]:
+              - gridcell "A-L-2.5" [ref=e1251]
+              - gridcell "Ara" [ref=e1252]
+              - gridcell "L" [ref=e1253]
+              - gridcell "2.5" [ref=e1254]
+              - gridcell "$29.79" [ref=e1255]
+              - gridcell "$1.19" [ref=e1256]
+              - gridcell "$2.68" [ref=e1257]
+            - row "A-M-0.2 Ara M 0.2 $3.38 $1.69 $0.30" [ref=e1258]:
+              - gridcell "A-M-0.2" [ref=e1259]
+              - gridcell "Ara" [ref=e1260]
+              - gridcell "M" [ref=e1261]
+              - gridcell "0.2" [ref=e1262]
+              - gridcell "$3.38" [ref=e1263]
+              - gridcell "$1.69" [ref=e1264]
+              - gridcell "$0.30" [ref=e1265]
+            - row "A-M-0.5 Ara M 0.5 $6.75 $1.35 $0.61" [ref=e1266]:
+              - gridcell "A-M-0.5" [ref=e1267]
+              - gridcell "Ara" [ref=e1268]
+              - gridcell "M" [ref=e1269]
+              - gridcell "0.5" [ref=e1270]
+              - gridcell "$6.75" [ref=e1271]
+              - gridcell "$1.35" [ref=e1272]
+              - gridcell "$0.61" [ref=e1273]
+            - row "A-M-1 Ara M 1 $11.25 $1.13 $1.01" [ref=e1274]:
+              - gridcell "A-M-1" [ref=e1275]
+              - gridcell "Ara" [ref=e1276]
+              - gridcell "M" [ref=e1277]
+              - gridcell "1" [ref=e1278]
+              - gridcell "$11.25" [ref=e1279]
+              - gridcell "$1.13" [ref=e1280]
+              - gridcell "$1.01" [ref=e1281]
+            - row "A-M-2.5 Ara M 2.5 $25.88 $1.04 $2.33" [ref=e1282]:
+              - gridcell "A-M-2.5" [ref=e1283]
+              - gridcell "Ara" [ref=e1284]
+              - gridcell "M" [ref=e1285]
+              - gridcell "2.5" [ref=e1286]
+              - gridcell "$25.88" [ref=e1287]
+              - gridcell "$1.04" [ref=e1288]
+              - gridcell "$2.33" [ref=e1289]
+            - row "A-D-0.2 Ara D 0.2 $2.99 $1.49 $0.27" [ref=e1290]:
+              - gridcell "A-D-0.2" [ref=e1291]
+              - gridcell "Ara" [ref=e1292]
+              - gridcell "D" [ref=e1293]
+              - gridcell "0.2" [ref=e1294]
+              - gridcell "$2.99" [ref=e1295]
+              - gridcell "$1.49" [ref=e1296]
+              - gridcell "$0.27" [ref=e1297]
+          - generic:
+            - text: MUI X Missing license key
+            - generic: Open the browser console for details on how to resolve this.
+        - generic [ref=e1301]: "Total Rows: 48"
+        - generic [ref=e1302]:
+          - generic [ref=e1304]:
+            - generic [ref=e1305]: Charts
+            - button "Sync chart" [pressed] [ref=e1306] [cursor=pointer]:
+              - img [ref=e1307]
+            - button "Close charts configuration" [ref=e1309] [cursor=pointer]:
+              - img [ref=e1310]
+          - tablist [ref=e1314]:
+            - tab "Chart" [ref=e1315] [cursor=pointer]
+            - tab "Fields" [selected] [ref=e1316] [cursor=pointer]: Fields
+            - tab "Customize" [ref=e1317] [cursor=pointer]
+          - tabpanel "Chart" [ref=e1352]:
+            - generic "Search fields" [ref=e1355]:
+              - generic [ref=e1356]:
+                - img [ref=e1358]
+                - searchbox "Search fields" [ref=e1360]
+                - group
+            - generic [ref=e1361]:
+              - generic [ref=e1363]:
+                - generic [ref=e1364]:
+                  - img [ref=e1366]
+                  - generic [ref=e1368]: Product ID
+                  - button "Field options" [ref=e1370] [cursor=pointer]:
+                    - img [ref=e1371]
+                - generic [ref=e1373]:
+                  - img [ref=e1375]
+                  - generic [ref=e1377]: Coffee Type
+                  - button "Field options" [ref=e1379] [cursor=pointer]:
+                    - img [ref=e1380]
+                - generic [ref=e1391]:
+                  - img [ref=e1393]
+                  - generic [ref=e1395]: Size
+                  - button "Field options" [ref=e1397] [cursor=pointer]:
+                    - img [ref=e1398]
+                - generic [ref=e1400]:
+                  - img [ref=e1402]
+                  - generic [ref=e1404]: Unit Price
+                  - button "Field options" [ref=e1406] [cursor=pointer]:
+                    - img [ref=e1407]
+                - generic [ref=e1409]:
+                  - img [ref=e1411]
+                  - generic [ref=e1413]: Price per 100g
+                  - button "Field options" [ref=e1415] [cursor=pointer]:
+                    - img [ref=e1416]
+                - generic [ref=e1418]:
+                  - img [ref=e1420]
+                  - generic [ref=e1422]: Profit
+                  - button "Field options" [ref=e1424] [cursor=pointer]:
+                    - img [ref=e1425]
+              - generic [ref=e1429]:
+                - generic [ref=e1430]:
+                  - button "Categories" [ref=e1431] [cursor=pointer]:
+                    - generic [ref=e1432]:
+                      - text: Categories
+                      - generic [ref=e1452]: "1"
+                    - img [ref=e1434]
+                  - generic [ref=e1454]:
+                    - img [ref=e1456]
+                    - generic [ref=e1458]:
+                      - generic [ref=e1459] [cursor=pointer]:
+                        - checkbox "Roast Type" [checked] [ref=e1460]
+                        - img [ref=e1461]
+                      - generic [ref=e1463]: Roast Type
+                    - button "Field options" [ref=e1465] [cursor=pointer]:
+                      - img [ref=e1466]
+                - generic [ref=e1438]:
+                  - button "Series" [ref=e1439]:
+                    - generic [ref=e1440]: Series
+                    - img [ref=e1442]
+                  - generic [ref=e1445]: Drag here to use column as Series
+    - generic [ref=e618]:
+      - generic [ref=e619]:
+        - button "Add view" [ref=e1343] [cursor=pointer]:
+          - img [ref=e621]
+        - button "All tabs" [ref=e1344] [cursor=pointer]:
+          - img [ref=e624]
+        - button "Hide data sources" [ref=e1345] [cursor=pointer]:
+          - img [ref=e627]
+      - generic [ref=e629]:
+        - button "Customers" [ref=e1346] [cursor=pointer]:
+          - generic [ref=e632]: Customers
+        - button "Products" [ref=e1347] [cursor=pointer]:
+          - generic [ref=e635]: Products
+        - button "Orders" [ref=e1348] [cursor=pointer]:
+          - generic [ref=e638]: Orders
+        - generic [ref=e881]:
+          - button "Chart 1" [ref=e1349] [cursor=pointer]:
+            - generic [ref=e883]: Chart 1
+          - button "View options for Chart 1" [ref=e1350] [cursor=pointer]:
+            - img [ref=e885]
+  - button "Open Next.js Dev Tools" [ref=e1351] [cursor=pointer]:
+    - img [ref=e645]
+  - alert [ref=e648]: Coffee Beans - Data Studio demo - MUI X

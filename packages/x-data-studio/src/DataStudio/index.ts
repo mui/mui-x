@@ -1,21 +1,24 @@
 export { DataStudio } from './DataStudio';
 export type {
   DataStudioCacheStrategy,
-  DataStudioChartConfig,
-  DataStudioChartViewComponent,
-  DataStudioChartViewProps,
   DataStudioDataGridComponent,
   DataStudioDataGridInjectedProps,
   DataStudioDataGridProps,
-  DataStudioDataset,
+  DataStudioDataSource,
   DataStudioLayout,
   DataStudioPlan,
   DataStudioProps,
+  DataStudioSheet,
+  DataStudioJointSourceConfig,
   DataStudioSlotProps,
   DataStudioSlots,
-  DataStudioView,
-  DataStudioViewKind,
+  DataStudioViewDefinition,
 } from './DataStudio.types';
+export {
+  createLocalStorageJointSourcesPersistenceAdapter,
+  type DataStudioJointSourcesPersistenceAdapter,
+  type CreateLocalStorageJointSourcesPersistenceAdapterOptions,
+} from './jointSourcesPersistence';
 export { dataStudioClasses, getDataStudioUtilityClass } from './dataStudioClasses';
 export type { DataStudioClasses, DataStudioClassKey } from './dataStudioClasses';
 export { createDataStudioSessionCache, DataStudioSessionCache } from './sessionCache';
@@ -41,8 +44,8 @@ export type {
   ReactRouterLocationLike,
   ReactRouterNavigateLike,
 } from './routingAdapters';
-export { createLocalStorageViewsPersistenceAdapter } from './viewsPersistence';
+export { createLocalStorageSheetsPersistenceAdapter } from './sheetsPersistence';
 export type {
-  CreateLocalStorageViewsPersistenceAdapterOptions,
-  DataStudioViewsPersistenceAdapter,
-} from './viewsPersistence';
+  CreateLocalStorageSheetsPersistenceAdapterOptions,
+  DataStudioSheetsPersistenceAdapter,
+} from './sheetsPersistence';

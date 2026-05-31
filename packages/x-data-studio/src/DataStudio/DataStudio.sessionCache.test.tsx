@@ -9,7 +9,7 @@ import type {
 import { DataStudio } from './DataStudio';
 import { DataStudioSessionCache, createDataStudioSessionCache } from './sessionCache';
 import { useDataStudioState } from './useDataStudioState';
-import type { DataStudioDataGridProps, DataStudioDataset } from './DataStudio.types';
+import type { DataStudioDataGridProps, DataStudioDataSource } from './DataStudio.types';
 
 const { render } = createRenderer();
 
@@ -29,7 +29,7 @@ const buildResponse = (rowCount: number): GridGetRowsResponse => ({
 });
 
 describe('DataStudioSessionCache', () => {
-  it('namespaces entries per dataset', () => {
+  it('namespaces entries per dataSource', () => {
     const cache = createDataStudioSessionCache();
     const a = cache.forDataset('a');
     const b = cache.forDataset('b');
@@ -45,7 +45,7 @@ describe('DataStudioSessionCache', () => {
     expect(cache.size).toBe(2);
   });
 
-  it('only clears its own namespace when a per-dataset view calls clear()', () => {
+  it('only clears its own namespace when a per-dataSource view calls clear()', () => {
     const cache = createDataStudioSessionCache();
     const a = cache.forDataset('a');
     const b = cache.forDataset('b');
@@ -131,7 +131,7 @@ describe('DataStudioSessionCache', () => {
 describe('useDataStudioState — cache invalidation API', () => {
   function HookProbe(props: { cache: DataStudioSessionCache | null }) {
     const state = useDataStudioState({
-      datasets: [
+      dataSources: [
         { id: 'a', label: 'A', columns: [] },
         { id: 'b', label: 'B', columns: [] },
       ],
@@ -139,7 +139,7 @@ describe('useDataStudioState — cache invalidation API', () => {
     });
     return (
       <div>
-        <button type="button" data-testid="invalidate-a" onClick={() => state.invalidateDataset('a')}>
+        <button type="button" data-testid="invalidate-a" onClick={() => state.invalidateDataSource('a')}>
           drop a
         </button>
         <button type="button" data-testid="invalidate-all" onClick={() => state.invalidateAll()}>
@@ -149,7 +149,7 @@ describe('useDataStudioState — cache invalidation API', () => {
     );
   }
 
-  it('invalidateDataset drops only the given namespace', () => {
+  it('invalidateDataSource drops only the given namespace', () => {
     const cache = createDataStudioSessionCache();
     cache.forDataset('a').set(buildParams(), buildResponse(1));
     cache.forDataset('b').set(buildParams(), buildResponse(2));
@@ -161,7 +161,7 @@ describe('useDataStudioState — cache invalidation API', () => {
     expect(cache.forDataset('b').get(buildParams())).not.toBeUndefined();
   });
 
-  it('invalidateAll is a no-op when no cache is wired (per-dataset / none strategies)', () => {
+  it('invalidateAll is a no-op when no cache is wired (per-dataSource / none strategies)', () => {
     render(<HookProbe cache={null} />);
     expect(() => fireEvent.click(screen.getByTestId('invalidate-all'))).not.toThrow();
   });
@@ -182,25 +182,25 @@ describe('<DataStudio /> — cacheStrategy', () => {
     return { Grid, calls };
   }
 
-  const datasetA: DataStudioDataset = {
+  const dataSourceA: DataStudioDataSource = {
     id: 'a',
     label: 'A',
     columns: [{ field: 'name', headerName: 'A' }],
   };
 
-  const datasetB: DataStudioDataset = {
+  const dataSourceB: DataStudioDataSource = {
     id: 'b',
     label: 'B',
     columns: [{ field: 'name', headerName: 'B' }],
   };
 
-  it("defaults to 'shared' and passes a per-dataset cache view to the grid", () => {
+  it("defaults to 'shared' and passes a per-dataSource cache view to the grid", () => {
     const { Grid, calls } = makeCapturingGrid();
 
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[datasetA, datasetB]}
+          dataSources={[dataSourceA, dataSourceB]}
           slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
         />
       </div>,
@@ -219,7 +219,7 @@ describe('<DataStudio /> — cacheStrategy', () => {
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[datasetA]}
+          dataSources={[dataSourceA]}
           cacheStrategy="none"
           slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
         />
@@ -229,14 +229,14 @@ describe('<DataStudio /> — cacheStrategy', () => {
     expect(calls.at(-1)!.dataSourceCache).toBeNull();
   });
 
-  it("passes undefined when cacheStrategy='per-dataset' (legacy default cache)", () => {
+  it("passes undefined when cacheStrategy='per-dataSource' (legacy default cache)", () => {
     const { Grid, calls } = makeCapturingGrid();
 
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[datasetA]}
-          cacheStrategy="per-dataset"
+          dataSources={[dataSourceA]}
+          cacheStrategy="per-dataSource"
           slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
         />
       </div>,
@@ -245,9 +245,9 @@ describe('<DataStudio /> — cacheStrategy', () => {
     expect(calls.at(-1)!.dataSourceCache).toBeUndefined();
   });
 
-  it('per-dataset dataSourceCache wins over the shared strategy', () => {
+  it('per-dataSource dataSourceCache wins over the shared strategy', () => {
     const { Grid, calls } = makeCapturingGrid();
-    const datasetCache: GridDataSourceCache = {
+    const dataSourceCache: GridDataSourceCache = {
       get: vi.fn(),
       set: vi.fn(),
       clear: vi.fn(),
@@ -256,30 +256,30 @@ describe('<DataStudio /> — cacheStrategy', () => {
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[{ ...datasetA, dataSourceCache: datasetCache }]}
+          dataSources={[{ ...dataSourceA, cache: dataSourceCache }]}
           slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
         />
       </div>,
     );
 
-    expect(calls.at(-1)!.dataSourceCache).toBe(datasetCache);
+    expect(calls.at(-1)!.dataSourceCache).toBe(dataSourceCache);
   });
 
-  it("passes a stable per-dataset cache view across renders when 'shared'", () => {
+  it("passes a stable per-dataSource cache view across renders when 'shared'", () => {
     const { Grid, calls } = makeCapturingGrid();
 
     const { setProps } = render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[datasetA, datasetB]}
-          initialDatasetId="a"
+          dataSources={[dataSourceA, dataSourceB]}
+          initialDataSourceId="a"
           slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
         />
       </div>,
     );
     const firstCache = calls.at(-1)!.dataSourceCache;
 
-    // Force a re-render without switching dataset.
+    // Force a re-render without switching dataSource.
     setProps({});
 
     const secondCache = calls.at(-1)!.dataSourceCache;

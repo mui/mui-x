@@ -655,6 +655,12 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-charts/quickstart', title: 'Quickstart' },
       { pathname: '/x/react-charts/examples', title: 'Examples' },
       {
+        pathname: '/x/react-charts/copilot',
+        title: 'Copilot',
+        plan: 'premium',
+        unstable: true,
+      },
+      {
         pathname: '/x/react-chart-components',
         subheader: 'Components',
         children: [

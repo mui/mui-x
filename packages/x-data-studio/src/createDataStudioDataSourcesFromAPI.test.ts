@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { GridGetRowsParams } from '@mui/x-data-grid';
 import { DATA_STUDIO_PROTOCOL_VERSION, type DataStudioSchemaResponse } from './models';
-import { createDataStudioDatasetsFromAPI } from './createDataStudioDatasetsFromAPI';
+import { createDataStudioDataSourcesFromAPI } from './createDataStudioDataSourcesFromAPI';
 
 const params: GridGetRowsParams = {
   sortModel: [],
@@ -19,8 +19,8 @@ function createResponse(body: unknown, init: Partial<Response> = {}) {
   } as Response;
 }
 
-describe('createDataStudioDatasetsFromAPI', () => {
-  it('loads schema descriptors and creates remote datasets', async () => {
+describe('createDataStudioDataSourcesFromAPI', () => {
+  it('loads schema descriptors and creates remote dataSources', async () => {
     const schema: DataStudioSchemaResponse = {
       version: DATA_STUDIO_PROTOCOL_VERSION,
       dataSources: [
@@ -55,20 +55,89 @@ describe('createDataStudioDatasetsFromAPI', () => {
       .mockResolvedValueOnce(createResponse(schema))
       .mockResolvedValueOnce(createResponse(rowsResponse));
 
-    const [dataset] = await createDataStudioDatasetsFromAPI({
+    const [dataSource] = await createDataStudioDataSourcesFromAPI({
       schemaUrl: '/data-studio/schema',
       fetch: fetchMock as typeof fetch,
     });
 
-    expect(dataset).toMatchObject({
+    expect(dataSource).toMatchObject({
       id: 'customers',
       label: 'Customers',
       columns: [{ field: 'name' }],
     });
-    expect(dataset.getRowId?.({ customerId: 'C-1' })).toBe('C-1');
+    expect(dataSource.getRowId?.({ customerId: 'C-1' })).toBe('C-1');
 
-    await expect(dataset.dataSource!.getRows(params)).resolves.toEqual(rowsResponse);
+    await expect(dataSource.connector!.getRows(params)).resolves.toEqual(rowsResponse);
     expect(fetchMock).toHaveBeenLastCalledWith('/custom/customers/rows', expect.any(Object));
+  });
+
+  it('forwards schema chartDefaults to the Data Source (enables server-side chart aggregation)', async () => {
+    const schema: DataStudioSchemaResponse = {
+      version: DATA_STUDIO_PROTOCOL_VERSION,
+      dataSources: [
+        {
+          id: 'orders',
+          label: 'Orders',
+          columns: [{ field: 'country' }, { field: 'sales' }],
+          capabilities: {
+            filtering: true,
+            sorting: true,
+            pagination: true,
+            lazyLoading: true,
+            editing: false,
+            createRow: false,
+            updateRow: false,
+            deleteRow: false,
+            rowGrouping: true,
+            aggregation: true,
+            pivoting: false,
+          },
+          chartDefaults: { dimensions: ['country'], values: ['sales'] },
+        },
+      ],
+    };
+    const fetchMock = vi.fn().mockResolvedValueOnce(createResponse(schema));
+
+    const [dataSource] = await createDataStudioDataSourcesFromAPI({
+      schemaUrl: '/data-studio/schema',
+      fetch: fetchMock as typeof fetch,
+    });
+
+    expect(dataSource.chartDefaults).toEqual({ dimensions: ['country'], values: ['sales'] });
+  });
+
+  it('omits chartDefaults when the schema descriptor does not declare it', async () => {
+    const schema: DataStudioSchemaResponse = {
+      version: DATA_STUDIO_PROTOCOL_VERSION,
+      dataSources: [
+        {
+          id: 'plain',
+          label: 'Plain',
+          columns: [{ field: 'name' }],
+          capabilities: {
+            filtering: true,
+            sorting: true,
+            pagination: true,
+            lazyLoading: true,
+            editing: false,
+            createRow: false,
+            updateRow: false,
+            deleteRow: false,
+            rowGrouping: false,
+            aggregation: false,
+            pivoting: false,
+          },
+        },
+      ],
+    };
+    const fetchMock = vi.fn().mockResolvedValueOnce(createResponse(schema));
+
+    const [dataSource] = await createDataStudioDataSourcesFromAPI({
+      schemaUrl: '/data-studio/schema',
+      fetch: fetchMock as typeof fetch,
+    });
+
+    expect(dataSource.chartDefaults).toBeUndefined();
   });
 
   it('derives the rows endpoint from the schema endpoint', async () => {
@@ -100,12 +169,12 @@ describe('createDataStudioDatasetsFromAPI', () => {
       .mockResolvedValueOnce(createResponse(schema))
       .mockResolvedValueOnce(createResponse({ rows: [], rowCount: 0 }));
 
-    const [dataset] = await createDataStudioDatasetsFromAPI({
+    const [dataSource] = await createDataStudioDataSourcesFromAPI({
       schemaUrl: '/data-studio/coffee-beans/schema',
       fetch: fetchMock as typeof fetch,
     });
 
-    await dataset.dataSource!.getRows(params);
+    await dataSource.connector!.getRows(params);
 
     expect(fetchMock).toHaveBeenLastCalledWith(
       '/data-studio/coffee-beans/rows',
@@ -143,18 +212,18 @@ describe('createDataStudioDatasetsFromAPI', () => {
       .mockResolvedValueOnce(createResponse(schema))
       .mockResolvedValue(createResponse({ id: 1 }));
 
-    const [dataset] = await createDataStudioDatasetsFromAPI({
+    const [dataSource] = await createDataStudioDataSourcesFromAPI({
       schemaUrl: '/data-studio/coffee-beans/schema',
       fetch: fetchMock as typeof fetch,
     });
 
-    await dataset.dataSource!.createRow!({ id: 1 });
-    await dataset.dataSource!.updateRow!({
+    await dataSource.connector!.createRow!({ id: 1 });
+    await dataSource.connector!.updateRow!({
       rowId: 1,
       previousRow: { id: 1 },
       updatedRow: { id: 1 },
     });
-    await dataset.dataSource!.deleteRow!(1);
+    await dataSource.connector!.deleteRow!(1);
 
     expect(fetchMock).toHaveBeenNthCalledWith(
       2,
@@ -207,14 +276,14 @@ describe('createDataStudioDatasetsFromAPI', () => {
     };
     const fetchMock = vi.fn(async () => createResponse(schema));
 
-    const [dataset] = await createDataStudioDatasetsFromAPI({
+    const [dataSource] = await createDataStudioDataSourcesFromAPI({
       schemaUrl: '/data-studio/schema',
       fetch: fetchMock as typeof fetch,
     });
 
-    expect(dataset.dataSource!.getGroupKey?.({ country: 'United States' })).toBe('United States');
-    expect(dataset.dataSource!.getChildrenCount?.({ childrenCount: 7 })).toBe(7);
-    expect(dataset.dataSource!.getAggregatedValue?.({ salesTotal: 220 }, 'sales')).toBe(220);
+    expect(dataSource.connector!.getGroupKey?.({ country: 'United States' })).toBe('United States');
+    expect(dataSource.connector!.getChildrenCount?.({ childrenCount: 7 })).toBe(7);
+    expect(dataSource.connector!.getAggregatedValue?.({ salesTotal: 220 }, 'sales')).toBe(220);
   });
 
   it('throws a Data Studio error when schema discovery fails', async () => {
@@ -223,7 +292,7 @@ describe('createDataStudioDatasetsFromAPI', () => {
     );
 
     await expect(
-      createDataStudioDatasetsFromAPI({
+      createDataStudioDataSourcesFromAPI({
         schemaUrl: '/missing/schema',
         fetch: fetchMock as typeof fetch,
       }),

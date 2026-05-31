@@ -11,6 +11,28 @@ export function getOrCreateMessage(
   const existingMessage = store.state.messagesById[messageId];
 
   if (existingMessage) {
+    // Once a message has reached a terminal status ('sent', 'read', 'error',
+    // 'cancelled') we MUST NOT flip it back to 'streaming'. Trailing chunks
+    // can legitimately arrive after `finish` (e.g. the Copilot backend emits
+    // a separate `message-metadata` frame with follow-up suggestions after
+    // its finish chunk). Without this guard the loading indicator would
+    // reappear and stay on forever, because every trailing chunk calls
+    // ensureAssistantMessage -> getOrCreateMessage.
+    const isTerminal =
+      existingMessage.status === 'sent' ||
+      existingMessage.status === 'read' ||
+      existingMessage.status === 'error' ||
+      existingMessage.status === 'cancelled';
+
+    if (isTerminal) {
+      if (!existingMessage.conversationId && conversationId) {
+        const nextMessage = { ...existingMessage, conversationId };
+        store.updateMessage(messageId, nextMessage);
+        return store.state.messagesById[messageId] ?? nextMessage;
+      }
+      return existingMessage;
+    }
+
     const nextMessage: ChatMessage =
       existingMessage.status === 'streaming'
         ? existingMessage

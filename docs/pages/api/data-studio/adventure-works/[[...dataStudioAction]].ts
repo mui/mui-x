@@ -155,6 +155,9 @@ Create request context with a user id before handling Data Studio requests.`,
       columns: buildColumnsForTable(columns),
       mutations: true,
       hooks: adventureWorksHooks,
+      // All tables live in one SQLite file, so any of them can be joined together
+      // in the UI's joint-source builder.
+      joinGroup: 'adventure-works',
     }),
   ),
 });

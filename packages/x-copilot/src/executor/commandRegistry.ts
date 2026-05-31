@@ -40,7 +40,7 @@ export function buildCommandRegistry<TAdapter extends HostAdapter, TState = unkn
       if (existing && process.env.NODE_ENV !== 'production') {
         const overridesAllowed = pack.overrides?.includes(existing.packId);
         if (!overridesAllowed) {
-          // eslint-disable-next-line no-console
+           
           console.warn(
             `MUI X Copilot: pack "${pack.id}" overrode command "${handler.type}" from "${existing.packId}" ` +
               `without declaring \`overrides: ['${existing.packId}']\`.`,

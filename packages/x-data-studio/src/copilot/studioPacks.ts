@@ -6,7 +6,7 @@ import type { StudioStateDocument } from './stateDocument';
 
 /**
  * The Studio's command pack. Aggregates every `CommandHandler` in
- * `commands/{view,dataset}.ts` into the x-copilot pack shape.
+ * `commands/{view,dataSource}.ts` into the x-copilot pack shape.
  */
 export const studioCommandPack: CommandPack<StudioHostAdapter, StudioStateDocument> = {
   id: 'data-studio',

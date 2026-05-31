@@ -5,16 +5,14 @@ import type {
   ChatStreamEnvelope,
 } from '@mui/x-chat-headless';
 import type { HostAdapter } from '../executor/hostAdapter';
-import type {
-  CommandPack,
-  PatchPack,
-} from '../executor/handlers';
+import type { CommandPack, PatchPack } from '../executor/handlers';
 import type { CopilotExecutionResult, Guards } from '../executor/types';
 import { buildCommandRegistry } from '../executor/commandRegistry';
 import { buildPatchRegistry } from '../executor/patchRegistry';
 import { makeExecutor, type Executor } from '../executor/createExecutor';
 import type { CopilotPlugin } from '../plugins/core';
 import { consumeForExecutor } from '../streams/consumeForExecutor';
+import type { ToolName } from '../streams/types';
 import { teeStream } from '../streams/teeStream';
 import type { CopilotAdapter } from './types';
 
@@ -67,6 +65,14 @@ export interface CreateCopilotAdapterOptions<
    * executor instances.
    */
   initialCarryState?: unknown;
+
+  /**
+   * Maps host LLM-facing tool names to the canonical executor wire names
+   * (`setGridState` / `runCommands`). Forwarded to `consumeForExecutor` so a host
+   * can rename its tools (e.g. charts' `updateChart`) without changing the shared
+   * executor. Unmapped names pass through, so Grid / Studio are unaffected.
+   */
+  toolNameAliases?: Readonly<Record<string, ToolName>>;
 }
 
 /**
@@ -93,6 +99,7 @@ export function createCopilotAdapter<
     enrichInput,
     onExecutionResult,
     initialCarryState,
+    toolNameAliases,
   } = options;
 
   if (initialCarryState !== undefined && host.setCarryState) {
@@ -133,6 +140,7 @@ export function createCopilotAdapter<
       consumeForExecutor(forExecutor, {
         executor,
         onResults: onExecutionResult,
+        toolNameAliases,
       }).catch(() => {
         // ignore
       });

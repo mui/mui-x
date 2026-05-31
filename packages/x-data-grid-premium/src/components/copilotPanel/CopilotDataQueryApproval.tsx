@@ -1,8 +1,10 @@
 'use client';
 import * as React from 'react';
 import { keyframes, styled } from '@mui/material/styles';
+import { useStore } from '@mui/x-internals/store';
 import { vars } from '@mui/x-data-grid-pro/internals';
-import { useMessage } from '@mui/x-chat-headless';
+import { chatSelectors, useChatStore, useMessage } from '@mui/x-chat-headless';
+import type { ChatMessage } from '@mui/x-chat-headless';
 import type { GridPrivateApiPremium } from '../../models/gridApiPremium';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { findToolPartByCallId } from '../../hooks/features/copilot/plugins/findToolPartByCallId';
@@ -20,9 +22,57 @@ interface CopilotDataQueryApprovalOwnerState {
   state: string;
 }
 
+/**
+ * Props for {@link CopilotDataQueryApproval}.
+ *
+ * Supports two call shapes:
+ *
+ * - The current `GridCopilotPanel` shape, where the tool part is located via
+ *   `ownerState.messageId` + `ownerState.toolCallId` (the message is read with
+ *   `useMessage(messageId)`).
+ * - The shared panel's `dataQueryApproval` slot shape (`@mui/x-copilot`'s
+ *   `CopilotChatPanelDataQueryApprovalProps`), where only a top-level
+ *   `toolCallId` is provided and the owning message is resolved from the chat
+ *   store. This lets the component later be injected as that slot without
+ *   changing the existing call site.
+ */
 interface CopilotDataQueryApprovalProps {
   className?: string;
   ownerState?: CopilotDataQueryApprovalOwnerState;
+  /**
+   * The id of the `queryGridData` tool call to render. When provided (the
+   * shared-panel slot shape), the owning message is looked up from the chat
+   * store. When omitted, the component falls back to `ownerState.messageId` /
+   * `ownerState.toolCallId`.
+   */
+  toolCallId?: string;
+}
+
+/**
+ * Resolve the message that owns a given tool-call id by scanning the chat
+ * store. Used by the shared-panel slot path, which only receives a
+ * `toolCallId` (no `messageId`).
+ * @param {string} toolCallId The tool-call id to locate. Empty string short-circuits to `null`.
+ * @returns {ChatMessage | null} The owning message, or `null` when not found.
+ */
+function useMessageByToolCallId(toolCallId: string): ChatMessage | null {
+  const store = useChatStore();
+  const messages = useStore(store, chatSelectors.messages);
+  return React.useMemo(() => {
+    if (!toolCallId) {
+      return null;
+    }
+    return (
+      messages.find((candidate) =>
+        candidate.parts?.some(
+          (part) =>
+            part.type === 'tool' &&
+            (part as { toolInvocation?: { toolCallId?: string } }).toolInvocation?.toolCallId ===
+              toolCallId,
+        ),
+      ) ?? null
+    );
+  }, [messages, toolCallId]);
 }
 
 const ApprovalRoot = styled('div', {
@@ -95,10 +145,19 @@ const PendingPulse = styled('div', {
 
 function CopilotDataQueryApproval(props: CopilotDataQueryApprovalProps) {
   const { className, ownerState } = props;
+  // Shared-panel slot path: only a top-level `toolCallId` is provided and the
+  // owning message must be resolved from the store. Current `GridCopilotPanel`
+  // path: the tool part is located via `ownerState.messageId` + `ownerState.toolCallId`.
+  const isSharedPanelShape = props.toolCallId != null;
   const messageId = ownerState?.messageId;
-  const toolCallId = ownerState?.toolCallId ?? '';
+  const toolCallId = isSharedPanelShape ? props.toolCallId! : (ownerState?.toolCallId ?? '');
   const apiRef = useGridApiContext();
-  const message = useMessage(messageId ?? '');
+  // Both lookups run unconditionally (rules of hooks); only the active path's
+  // result is used. `useMessage('')` and `useMessageByToolCallId('')` both
+  // short-circuit cheaply when their id is empty.
+  const messageById = useMessage(messageId ?? '');
+  const messageByToolCallId = useMessageByToolCallId(isSharedPanelShape ? toolCallId : '');
+  const message = isSharedPanelShape ? messageByToolCallId : messageById;
   const toolPart = findToolPartByCallId(message?.parts, toolCallId);
   const invocation = toolPart?.toolInvocation;
   const input = invocation?.input as GridDataQueryInput | undefined;

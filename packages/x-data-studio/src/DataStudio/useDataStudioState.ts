@@ -2,434 +2,509 @@
 import * as React from 'react';
 import type { GridInitialState, GridValidRowModel } from '@mui/x-data-grid';
 import type {
-  DataStudioChartConfig,
-  DataStudioDataset,
+  DataStudioDataSource,
   DataStudioProps,
-  DataStudioView,
-  DataStudioViewKind,
+  DataStudioSheet,
+  DataStudioSheetTemplate,
 } from './DataStudio.types';
 import type { DataStudioSessionCache } from './sessionCache';
 
 export interface DataStudioStateApi<R extends GridValidRowModel = any> {
-  activeDatasetId: string;
-  activeViewId: string | null;
-  activeDataset: DataStudioDataset<R> | null;
-  activeView: DataStudioView | null;
-  views: DataStudioView[];
-  selectDataset: (datasetId: string) => void;
-  selectView: (viewId: string) => void;
-  addView: (input?: {
-    datasetId?: string;
+  activeDataSourceId: string;
+  activeSheetId: string | null;
+  activeDataSource: DataStudioDataSource<R> | null;
+  activeSheet: DataStudioSheet | null;
+  sheets: DataStudioSheet[];
+  /**
+   * Whether the Composer (prompt + template picker) is shown as the
+   * "create a new Sheet" screen. Toggled by [[startComposing]] /
+   * [[cancelComposing]]; cleared automatically when a Sheet or Data Source
+   * becomes active.
+   */
+  isComposing: boolean;
+  /**
+   * Open the Composer to create a new Sheet (prompt + template picker) instead
+   * of immediately appending a default grid Sheet. Wired to the "Add new sheet"
+   * affordances in the sidebar and tab bar.
+   */
+  startComposing: () => void;
+  /** Dismiss the Composer without creating a Sheet. */
+  cancelComposing: () => void;
+  selectDataSource: (dataSourceId: string) => void;
+  selectSheet: (sheetId: string) => void;
+  addSheet: (input?: {
+    /**
+     * Data source binding:
+     *   - `undefined` (default): bind to the active data source.
+     *   - `string`: bind to the given data source id (returns `null` if unknown).
+     *   - `null`: free-form Sheet — no data source binding (used by the
+     *     Spreadsheet template).
+     */
+    dataSourceId?: string | null;
     label?: string;
     initialState?: GridInitialState;
-    kind?: DataStudioViewKind;
-    chartConfig?: DataStudioChartConfig;
-  }) => DataStudioView | null;
-  updateView: (
-    viewId: string,
+    type?: string;
+    params?: Record<string, unknown>;
+  }) => DataStudioSheet | null;
+  updateSheet: (
+    sheetId: string,
     patch: {
-      datasetId?: string;
-      chartConfig?: DataStudioChartConfig;
+      dataSourceId?: string | null;
       initialState?: GridInitialState;
+      type?: string;
+      params?: Record<string, unknown>;
     },
   ) => void;
-  renameView: (viewId: string, label: string) => void;
-  duplicateView: (viewId: string) => DataStudioView | null;
-  deleteView: (viewId: string) => void;
-  moveView: (viewId: string, delta: number) => void;
+  renameSheet: (sheetId: string, label: string) => void;
+  duplicateSheet: (sheetId: string) => DataStudioSheet | null;
+  deleteSheet: (sheetId: string) => void;
+  moveSheet: (sheetId: string, delta: number) => void;
   /**
-   * Drop every cached page for the given dataset.
-   * No-op unless `cacheStrategy === 'shared'`.
-   * @param {string} datasetId The dataset id to invalidate.
+   * Build a sheet from a registered template and append it.
+   * The active Data Source is forwarded to `template.build` so templates can
+   * bind the new sheet to it.
+   * @param {string} templateId Registry id of the template.
+   * @returns {DataStudioSheet | null} The new sheet, or `null` if the
+   *   template id is unknown or the build returned a sheet whose
+   *   `dataSourceId` doesn't match any registered Data Source.
    */
-  invalidateDataset: (datasetId: string) => void;
+  startSheetFromTemplate: (templateId: string) => DataStudioSheet | null;
   /**
-   * Drop every cached page across all datasets in this `<DataStudio>`.
+   * Hook for the Composer's AI prompt input. Resolves to the new sheet when
+   * the agent successfully constructed one, or `null` when no copilot
+   * adapter is wired or the prompt was rejected.
+   *
+   * v1 ships a placeholder: the prompt is dropped and the method resolves
+   * to `null`. Feature 06+ will route the prompt through `copilotChatAdapter`
+   * to build a `DataStudioSheet` from JSON the agent returns.
+   * @param {string} prompt The user's prompt text.
+   * @returns {Promise<DataStudioSheet | null>} The new sheet, or `null`.
+   */
+  startSheetFromPrompt: (prompt: string) => Promise<DataStudioSheet | null>;
+  /**
+   * Drop every cached page for the given dataSource.
+   * No-op unless `cacheStrategy === 'shared'`.
+   * @param {string} dataSourceId The dataSource id to invalidate.
+   */
+  invalidateDataSource: (dataSourceId: string) => void;
+  /**
+   * Drop every cached page across all dataSources in this `<DataStudio>`.
    * No-op unless `cacheStrategy === 'shared'`.
    */
   invalidateAll: () => void;
 }
 
-function getDatasetById<R extends GridValidRowModel>(
-  datasets: readonly DataStudioDataset<R>[],
-  datasetId: string | null | undefined,
+function getDataSourceById<R extends GridValidRowModel>(
+  dataSources: readonly DataStudioDataSource<R>[],
+  dataSourceId: string | null | undefined,
 ) {
-  if (datasetId == null) {
+  if (dataSourceId == null) {
     return undefined;
   }
-  return datasets.find((dataset) => dataset.id === datasetId);
+  return dataSources.find((dataSource) => dataSource.id === dataSourceId);
 }
 
-function getViewById(views: readonly DataStudioView[], viewId: string | null | undefined) {
-  if (viewId == null) {
+function getSheetById(sheets: readonly DataStudioSheet[], sheetId: string | null | undefined) {
+  if (sheetId == null) {
     return undefined;
   }
-  return views.find((view) => view.id === viewId);
+  return sheets.find((sheet) => sheet.id === sheetId);
 }
 
-let nextViewSeq = 0;
+let nextSheetSeq = 0;
 
-function createViewId() {
-  nextViewSeq += 1;
-  return `view-${Date.now().toString(36)}-${nextViewSeq.toString(36)}`;
+function createSheetId() {
+  nextSheetSeq += 1;
+  return `sheet-${Date.now().toString(36)}-${nextSheetSeq.toString(36)}`;
 }
 
-function getDefaultViewLabel(views: readonly DataStudioView[]) {
-  // Grid views auto-label as "Sheet N" using the global view count so the
-  // numbering matches the user's tab order.
-  let index = views.length + 1;
-  const existing = new Set(views.map((view) => String(view.label)));
+function getDefaultSheetLabel(sheets: readonly DataStudioSheet[]) {
+  let index = sheets.length + 1;
+  const existing = new Set(sheets.map((sheet) => String(sheet.label)));
   while (existing.has(`Sheet ${index}`)) {
     index += 1;
   }
   return `Sheet ${index}`;
 }
 
-function getDefaultChartLabel(views: readonly DataStudioView[]) {
-  // Charts get their own counter so "Chart 1, Chart 2, ..." stays continuous
-  // even when grid views are interleaved in the tab strip.
-  const chartCount = views.filter((view) => view.kind === 'chart').length;
-  let index = chartCount + 1;
-  const existing = new Set(views.map((view) => String(view.label)));
-  while (existing.has(`Chart ${index}`)) {
-    index += 1;
-  }
-  return `Chart ${index}`;
-}
-
 export function useDataStudioState<R extends GridValidRowModel = any>(
   props: Pick<
     DataStudioProps<R>,
-    | 'datasets'
-    | 'activeDatasetId'
-    | 'initialDatasetId'
-    | 'onActiveDatasetChange'
-    | 'views'
-    | 'defaultViews'
-    | 'onViewsChange'
-    | 'activeViewId'
-    | 'initialActiveViewId'
-    | 'onActiveViewChange'
+    | 'dataSources'
+    | 'activeDataSourceId'
+    | 'initialDataSourceId'
+    | 'onActiveDataSourceChange'
+    | 'sheets'
+    | 'defaultSheets'
+    | 'onSheetsChange'
+    | 'activeSheetId'
+    | 'initialActiveSheetId'
+    | 'onActiveSheetChange'
   > & {
+    /**
+     * The resolved (built-in + consumer override) Composer templates. Already
+     * flattened to an array by `<DataStudio>`; the `Overridable` prop shape is
+     * resolved upstream.
+     */
+    sheetTemplates?: ReadonlyArray<DataStudioSheetTemplate>;
     sessionCache?: DataStudioSessionCache | null;
     /**
-     * One-shot loader called on mount when `views` is uncontrolled. Returning a
-     * non-null array replaces the seeded uncontrolled views without firing
-     * `onViewsChange` (it's a hydration, not a user action).
-     * @returns {DataStudioView[] | null} The persisted views to hydrate, or
-     *   `null` to keep the initial `defaultViews`.
+     * One-shot loader called on mount when `sheets` is uncontrolled. Returning
+     * a non-null array replaces the seeded uncontrolled sheets without firing
+     * `onSheetsChange` (it's a hydration, not a user action).
+     * @returns {DataStudioSheet[] | null} The persisted sheets to hydrate, or
+     *   `null` to keep the initial `defaultSheets`.
      */
-    hydrateViews?: () => DataStudioView[] | null;
+    hydrateSheets?: () => DataStudioSheet[] | null;
   },
 ): DataStudioStateApi<R> {
   const {
-    datasets,
-    activeDatasetId: activeDatasetIdProp,
-    initialDatasetId,
-    onActiveDatasetChange,
-    views: viewsProp,
-    defaultViews,
-    onViewsChange,
-    activeViewId: activeViewIdProp,
-    initialActiveViewId,
-    onActiveViewChange,
+    dataSources,
+    activeDataSourceId: activeDataSourceIdProp,
+    initialDataSourceId,
+    onActiveDataSourceChange,
+    sheets: sheetsProp,
+    defaultSheets,
+    onSheetsChange,
+    activeSheetId: activeSheetIdProp,
+    initialActiveSheetId,
+    onActiveSheetChange,
+    sheetTemplates,
     sessionCache,
-    hydrateViews,
+    hydrateSheets,
   } = props;
 
-  const isDatasetControlled = activeDatasetIdProp !== undefined;
-  const isViewsControlled = viewsProp !== undefined;
-  const isActiveViewControlled = activeViewIdProp !== undefined;
+  const isDataSourceControlled = activeDataSourceIdProp !== undefined;
+  const isSheetsControlled = sheetsProp !== undefined;
+  const isActiveSheetControlled = activeSheetIdProp !== undefined;
 
-  const [uncontrolledDatasetId, setUncontrolledDatasetId] = React.useState(
-    () => initialDatasetId ?? datasets[0]?.id ?? '',
+  const [uncontrolledDataSourceId, setUncontrolledDataSourceId] = React.useState(
+    () => initialDataSourceId ?? dataSources[0]?.id ?? '',
   );
-  const [uncontrolledViews, setUncontrolledViews] = React.useState<DataStudioView[]>(
-    () => defaultViews ?? [],
+  const [uncontrolledSheets, setUncontrolledSheets] = React.useState<DataStudioSheet[]>(
+    () => defaultSheets ?? [],
   );
-  const [uncontrolledActiveViewId, setUncontrolledActiveViewId] = React.useState<string | null>(
-    () => initialActiveViewId ?? null,
+  const [uncontrolledActiveSheetId, setUncontrolledActiveSheetId] = React.useState<string | null>(
+    () => initialActiveSheetId ?? null,
   );
+  const [isComposing, setIsComposing] = React.useState(false);
 
-  const views = isViewsControlled ? viewsProp! : uncontrolledViews;
+  const startComposing = React.useCallback(() => setIsComposing(true), []);
+  const cancelComposing = React.useCallback(() => setIsComposing(false), []);
 
-  // Resolve the requested active view id and fall back to null if it points at a missing view.
-  const requestedActiveViewId = isActiveViewControlled
-    ? (activeViewIdProp ?? null)
-    : uncontrolledActiveViewId;
-  const activeView = getViewById(views, requestedActiveViewId) ?? null;
-  const activeViewId = activeView?.id ?? null;
+  const sheets = isSheetsControlled ? sheetsProp! : uncontrolledSheets;
 
-  // Active dataset: prefer the view's datasetId when a view is active.
-  const requestedDatasetId = isDatasetControlled
-    ? activeDatasetIdProp
-    : (activeView?.datasetId ?? uncontrolledDatasetId);
-  const activeDataset = getDatasetById(datasets, requestedDatasetId) ?? datasets[0] ?? null;
-  const activeDatasetId = activeDataset?.id ?? '';
+  const requestedActiveSheetId = isActiveSheetControlled
+    ? (activeSheetIdProp ?? null)
+    : uncontrolledActiveSheetId;
+  const activeSheet = getSheetById(sheets, requestedActiveSheetId) ?? null;
+  const activeSheetId = activeSheet?.id ?? null;
 
-  const selectDataset = React.useCallback(
-    (datasetId: string) => {
-      const nextDataset = getDatasetById(datasets, datasetId);
-      if (!nextDataset) {
+  const requestedDataSourceId = isDataSourceControlled
+    ? activeDataSourceIdProp
+    : (activeSheet?.dataSourceId ?? uncontrolledDataSourceId);
+  const activeDataSource =
+    getDataSourceById(dataSources, requestedDataSourceId) ?? dataSources[0] ?? null;
+  const activeDataSourceId = activeDataSource?.id ?? '';
+
+  const selectDataSource = React.useCallback(
+    (dataSourceId: string) => {
+      const nextDataSource = getDataSourceById(dataSources, dataSourceId);
+      if (!nextDataSource) {
         return;
       }
-      if (!isDatasetControlled) {
-        setUncontrolledDatasetId(datasetId);
+      setIsComposing(false);
+      if (!isDataSourceControlled) {
+        setUncontrolledDataSourceId(dataSourceId);
       }
-      if (!isActiveViewControlled) {
-        setUncontrolledActiveViewId(null);
+      if (!isActiveSheetControlled) {
+        setUncontrolledActiveSheetId(null);
       }
-      onActiveDatasetChange?.(datasetId, nextDataset);
-      // A view tab can only be active alongside a dataset, so picking a dataset
-      // tab implicitly clears the active view.
-      onActiveViewChange?.(null, null);
+      onActiveDataSourceChange?.(dataSourceId, nextDataSource);
+      onActiveSheetChange?.(null, null);
     },
     [
-      datasets,
-      isDatasetControlled,
-      isActiveViewControlled,
-      onActiveDatasetChange,
-      onActiveViewChange,
+      dataSources,
+      isDataSourceControlled,
+      isActiveSheetControlled,
+      onActiveDataSourceChange,
+      onActiveSheetChange,
     ],
   );
 
-  const selectView = React.useCallback(
-    (viewId: string) => {
-      const nextView = getViewById(views, viewId);
-      if (!nextView) {
+  const selectSheet = React.useCallback(
+    (sheetId: string) => {
+      const nextSheet = getSheetById(sheets, sheetId);
+      if (!nextSheet) {
         return;
       }
-      const nextDataset = getDatasetById(datasets, nextView.datasetId);
-      if (!isActiveViewControlled) {
-        setUncontrolledActiveViewId(viewId);
+      setIsComposing(false);
+      const nextDataSource =
+        nextSheet.dataSourceId != null
+          ? getDataSourceById(dataSources, nextSheet.dataSourceId)
+          : undefined;
+      if (!isActiveSheetControlled) {
+        setUncontrolledActiveSheetId(sheetId);
       }
-      if (!isDatasetControlled && nextDataset) {
-        setUncontrolledDatasetId(nextDataset.id);
+      if (!isDataSourceControlled && nextDataSource) {
+        setUncontrolledDataSourceId(nextDataSource.id);
       }
-      onActiveViewChange?.(viewId, nextView);
-      if (nextDataset) {
-        onActiveDatasetChange?.(nextDataset.id, nextDataset);
+      onActiveSheetChange?.(sheetId, nextSheet);
+      if (nextDataSource) {
+        onActiveDataSourceChange?.(nextDataSource.id, nextDataSource);
       }
     },
     [
-      datasets,
-      views,
-      isActiveViewControlled,
-      isDatasetControlled,
-      onActiveViewChange,
-      onActiveDatasetChange,
+      dataSources,
+      sheets,
+      isActiveSheetControlled,
+      isDataSourceControlled,
+      onActiveSheetChange,
+      onActiveDataSourceChange,
     ],
   );
 
-  // One-shot hydration: when uncontrolled and a loader is provided, replace the
-  // initially seeded views with the persisted list. Runs after first render so
-  // server-rendered markup matches the first client render (no hydration
-  // mismatch on `defaultViews`); persisted views then appear on commit.
-  // `onViewsChange` is intentionally NOT fired — this is a hydration, not a
-  // user mutation, and re-emitting would loop back through the same persistence
-  // adapter that just produced the value.
-  const hasHydratedViewsRef = React.useRef(false);
+  const hasHydratedSheetsRef = React.useRef(false);
   React.useEffect(() => {
-    if (hasHydratedViewsRef.current || isViewsControlled || !hydrateViews) {
+    if (hasHydratedSheetsRef.current || isSheetsControlled || !hydrateSheets) {
       return;
     }
-    hasHydratedViewsRef.current = true;
-    const hydrated = hydrateViews();
+    hasHydratedSheetsRef.current = true;
+    const hydrated = hydrateSheets();
     if (hydrated == null) {
       return;
     }
-    setUncontrolledViews(hydrated);
-  }, [isViewsControlled, hydrateViews]);
+    setUncontrolledSheets(hydrated);
+  }, [isSheetsControlled, hydrateSheets]);
 
-  const commitViews = React.useCallback(
-    (nextViews: DataStudioView[]) => {
-      if (!isViewsControlled) {
-        setUncontrolledViews(nextViews);
+  const commitSheets = React.useCallback(
+    (nextSheets: DataStudioSheet[]) => {
+      if (!isSheetsControlled) {
+        setUncontrolledSheets(nextSheets);
       }
-      onViewsChange?.(nextViews);
+      onSheetsChange?.(nextSheets);
     },
-    [isViewsControlled, onViewsChange],
+    [isSheetsControlled, onSheetsChange],
   );
 
-  const addView = React.useCallback<DataStudioStateApi<R>['addView']>(
+  const addSheet = React.useCallback<DataStudioStateApi<R>['addSheet']>(
     (input) => {
-      const datasetId = input?.datasetId ?? activeDatasetId;
-      const nextDataset = getDatasetById(datasets, datasetId);
-      if (!nextDataset) {
+      // `null` is the explicit "free-form" signal. `undefined` falls back to
+      // the active data source. Otherwise we look up the requested id.
+      const isFreeForm = input !== undefined && input.dataSourceId === null;
+      const requestedDataSourceId = isFreeForm
+        ? null
+        : (input?.dataSourceId ?? activeDataSourceId);
+      const nextDataSource = isFreeForm
+        ? null
+        : (getDataSourceById(dataSources, requestedDataSourceId) ?? null);
+      if (!isFreeForm && !nextDataSource) {
         return null;
       }
-      const kind: DataStudioViewKind = input?.kind ?? 'grid';
-      const label =
-        input?.label ?? (kind === 'chart' ? getDefaultChartLabel(views) : getDefaultViewLabel(views));
-      const newView: DataStudioView = {
-        id: createViewId(),
+      const label = input?.label ?? getDefaultSheetLabel(sheets);
+      const newSheet: DataStudioSheet = {
+        id: createSheetId(),
         label,
-        datasetId: nextDataset.id,
-        ...(kind === 'chart' ? { kind } : {}),
-        ...(input?.initialState && kind !== 'chart' ? { initialState: input.initialState } : {}),
-        ...(kind === 'chart' && input?.chartConfig ? { chartConfig: input.chartConfig } : {}),
+        dataSourceId: nextDataSource ? nextDataSource.id : null,
+        ...(input?.initialState ? { initialState: input.initialState } : {}),
+        ...(input?.type ? { type: input.type } : {}),
+        ...(input?.params ? { params: input.params } : {}),
       };
-      const nextViews = [...views, newView];
-      commitViews(nextViews);
-      if (!isActiveViewControlled) {
-        setUncontrolledActiveViewId(newView.id);
+      const nextSheets = [...sheets, newSheet];
+      commitSheets(nextSheets);
+      setIsComposing(false);
+      if (!isActiveSheetControlled) {
+        setUncontrolledActiveSheetId(newSheet.id);
       }
-      if (!isDatasetControlled) {
-        setUncontrolledDatasetId(nextDataset.id);
+      if (nextDataSource && !isDataSourceControlled) {
+        setUncontrolledDataSourceId(nextDataSource.id);
       }
-      onActiveViewChange?.(newView.id, newView);
-      onActiveDatasetChange?.(nextDataset.id, nextDataset);
-      return newView;
+      onActiveSheetChange?.(newSheet.id, newSheet);
+      if (nextDataSource) {
+        onActiveDataSourceChange?.(nextDataSource.id, nextDataSource);
+      }
+      return newSheet;
     },
     [
-      activeDatasetId,
-      datasets,
-      views,
-      commitViews,
-      isActiveViewControlled,
-      isDatasetControlled,
-      onActiveViewChange,
-      onActiveDatasetChange,
+      activeDataSourceId,
+      dataSources,
+      sheets,
+      commitSheets,
+      isActiveSheetControlled,
+      isDataSourceControlled,
+      onActiveSheetChange,
+      onActiveDataSourceChange,
     ],
   );
 
-  const updateView = React.useCallback<DataStudioStateApi<R>['updateView']>(
-    (viewId, patch) => {
-      const index = views.findIndex((view) => view.id === viewId);
+  const updateSheet = React.useCallback<DataStudioStateApi<R>['updateSheet']>(
+    (sheetId, patch) => {
+      const index = sheets.findIndex((sheet) => sheet.id === sheetId);
       if (index === -1) {
         return;
       }
-      const current = views[index];
-      const nextDatasetId = patch.datasetId ?? current.datasetId;
-      const hasDatasetChange = patch.datasetId !== undefined && patch.datasetId !== current.datasetId;
-      const hasChartConfigChange = patch.chartConfig !== undefined;
+      const current = sheets[index];
+      const nextDataSourceId =
+        patch.dataSourceId !== undefined ? patch.dataSourceId : current.dataSourceId;
+      const hasDataSourceChange =
+        patch.dataSourceId !== undefined && patch.dataSourceId !== current.dataSourceId;
       const hasInitialStateChange = patch.initialState !== undefined;
-      if (!hasDatasetChange && !hasChartConfigChange && !hasInitialStateChange) {
+      const hasTypeChange = patch.type !== undefined && patch.type !== current.type;
+      const hasParamsChange = patch.params !== undefined;
+      if (!hasDataSourceChange && !hasInitialStateChange && !hasTypeChange && !hasParamsChange) {
         return;
       }
-      // Only allow chartConfig on chart views; silently drop otherwise.
-      const nextChartConfig =
-        hasChartConfigChange && current.kind === 'chart' ? patch.chartConfig : current.chartConfig;
-      // Only allow initialState on grid views; silently drop otherwise.
-      const nextInitialState =
-        hasInitialStateChange && current.kind !== 'chart'
-          ? patch.initialState
-          : current.initialState;
-      const nextView: DataStudioView = {
+      const nextInitialState = hasInitialStateChange ? patch.initialState : current.initialState;
+      const nextSheet: DataStudioSheet = {
         ...current,
-        datasetId: nextDatasetId,
-        ...(nextChartConfig === undefined
-          ? { chartConfig: undefined }
-          : { chartConfig: nextChartConfig }),
+        dataSourceId: nextDataSourceId,
         ...(nextInitialState === undefined
           ? { initialState: undefined }
           : { initialState: nextInitialState }),
+        ...(hasTypeChange ? { type: patch.type } : {}),
+        ...(hasParamsChange ? { params: patch.params } : {}),
       };
-      const nextViews = views.slice();
-      nextViews[index] = nextView;
-      commitViews(nextViews);
-      if (hasDatasetChange) {
-        const nextDataset = getDatasetById(datasets, nextDatasetId);
-        if (nextDataset) {
-          if (!isDatasetControlled && activeViewId === viewId) {
-            setUncontrolledDatasetId(nextDataset.id);
+      const nextSheets = sheets.slice();
+      nextSheets[index] = nextSheet;
+      commitSheets(nextSheets);
+      if (hasDataSourceChange && nextDataSourceId != null) {
+        const nextDataSource = getDataSourceById(dataSources, nextDataSourceId);
+        if (nextDataSource) {
+          if (!isDataSourceControlled && activeSheetId === sheetId) {
+            setUncontrolledDataSourceId(nextDataSource.id);
           }
-          if (activeViewId === viewId) {
-            onActiveDatasetChange?.(nextDataset.id, nextDataset);
+          if (activeSheetId === sheetId) {
+            onActiveDataSourceChange?.(nextDataSource.id, nextDataSource);
           }
         }
       }
     },
     [
-      views,
-      datasets,
-      commitViews,
-      activeViewId,
-      isDatasetControlled,
-      onActiveDatasetChange,
+      sheets,
+      dataSources,
+      commitSheets,
+      activeSheetId,
+      isDataSourceControlled,
+      onActiveDataSourceChange,
     ],
   );
 
-  const renameView = React.useCallback(
-    (viewId: string, label: string) => {
+  const renameSheet = React.useCallback(
+    (sheetId: string, label: string) => {
       let didChange = false;
-      const nextViews = views.map((view) => {
-        if (view.id !== viewId || view.label === label) {
-          return view;
+      const nextSheets = sheets.map((sheet) => {
+        if (sheet.id !== sheetId || sheet.label === label) {
+          return sheet;
         }
         didChange = true;
-        return { ...view, label };
+        return { ...sheet, label };
       });
       if (!didChange) {
         return;
       }
-      commitViews(nextViews);
+      commitSheets(nextSheets);
     },
-    [views, commitViews],
+    [sheets, commitSheets],
   );
 
-  const duplicateView = React.useCallback<DataStudioStateApi<R>['duplicateView']>(
-    (viewId) => {
-      const index = views.findIndex((view) => view.id === viewId);
+  const duplicateSheet = React.useCallback<DataStudioStateApi<R>['duplicateSheet']>(
+    (sheetId) => {
+      const index = sheets.findIndex((sheet) => sheet.id === sheetId);
       if (index === -1) {
         return null;
       }
-      const source = views[index];
-      const copy: DataStudioView = {
+      const source = sheets[index];
+      const copy: DataStudioSheet = {
         ...source,
-        id: createViewId(),
+        id: createSheetId(),
         label: `${source.label} (copy)`,
       };
-      const nextViews = [...views.slice(0, index + 1), copy, ...views.slice(index + 1)];
-      commitViews(nextViews);
-      if (!isActiveViewControlled) {
-        setUncontrolledActiveViewId(copy.id);
+      const nextSheets = [...sheets.slice(0, index + 1), copy, ...sheets.slice(index + 1)];
+      commitSheets(nextSheets);
+      if (!isActiveSheetControlled) {
+        setUncontrolledActiveSheetId(copy.id);
       }
-      onActiveViewChange?.(copy.id, copy);
+      onActiveSheetChange?.(copy.id, copy);
       return copy;
     },
-    [views, commitViews, isActiveViewControlled, onActiveViewChange],
+    [sheets, commitSheets, isActiveSheetControlled, onActiveSheetChange],
   );
 
-  const deleteView = React.useCallback(
-    (viewId: string) => {
-      const index = views.findIndex((view) => view.id === viewId);
+  const deleteSheet = React.useCallback(
+    (sheetId: string) => {
+      const index = sheets.findIndex((sheet) => sheet.id === sheetId);
       if (index === -1) {
         return;
       }
-      const nextViews = views.filter((view) => view.id !== viewId);
-      commitViews(nextViews);
-      if (activeViewId === viewId) {
-        if (!isActiveViewControlled) {
-          setUncontrolledActiveViewId(null);
+      const nextSheets = sheets.filter((sheet) => sheet.id !== sheetId);
+      commitSheets(nextSheets);
+      if (activeSheetId === sheetId) {
+        if (!isActiveSheetControlled) {
+          setUncontrolledActiveSheetId(null);
         }
-        onActiveViewChange?.(null, null);
+        onActiveSheetChange?.(null, null);
       }
     },
-    [views, activeViewId, commitViews, isActiveViewControlled, onActiveViewChange],
+    [sheets, activeSheetId, commitSheets, isActiveSheetControlled, onActiveSheetChange],
   );
 
-  const moveView = React.useCallback(
-    (viewId: string, delta: number) => {
-      const index = views.findIndex((view) => view.id === viewId);
+  const moveSheet = React.useCallback(
+    (sheetId: string, delta: number) => {
+      const index = sheets.findIndex((sheet) => sheet.id === sheetId);
       if (index === -1) {
         return;
       }
       const targetIndex = index + delta;
-      if (targetIndex < 0 || targetIndex >= views.length) {
+      if (targetIndex < 0 || targetIndex >= sheets.length) {
         return;
       }
-      const nextViews = views.slice();
-      const [moved] = nextViews.splice(index, 1);
-      nextViews.splice(targetIndex, 0, moved);
-      commitViews(nextViews);
+      const nextSheets = sheets.slice();
+      const [moved] = nextSheets.splice(index, 1);
+      nextSheets.splice(targetIndex, 0, moved);
+      commitSheets(nextSheets);
     },
-    [views, commitViews],
+    [sheets, commitSheets],
   );
 
-  const invalidateDataset = React.useCallback(
-    (datasetId: string) => {
-      sessionCache?.invalidateDataset(datasetId);
+  const startSheetFromTemplate = React.useCallback<
+    DataStudioStateApi<R>['startSheetFromTemplate']
+  >(
+    (templateId) => {
+      const template = (sheetTemplates ?? []).find(
+        (candidate: DataStudioSheetTemplate) => candidate.id === templateId,
+      );
+      if (!template) {
+        return null;
+      }
+      const built = template.build({ dataSourceId: activeDataSourceId || null });
+      // The template may return any subset of sheet fields; everything we
+      // need flows through addSheet, which synthesizes the id + default label.
+      // `dataSourceId: null` is preserved explicitly so addSheet treats the
+      // result as a free-form Sheet (no data source binding).
+      return addSheet({
+        dataSourceId: built.dataSourceId === undefined ? undefined : built.dataSourceId,
+        label: typeof built.label === 'string' ? built.label : template.label,
+        initialState: built.initialState,
+        type: built.type,
+        params: built.params,
+      });
+    },
+    [sheetTemplates, addSheet, activeDataSourceId],
+  );
+
+  const startSheetFromPrompt = React.useCallback<
+    DataStudioStateApi<R>['startSheetFromPrompt']
+  >(
+    // v1 stub: the Composer disables the input unless a copilot adapter is
+    // wired, so this only runs in tests / programmatic usage. Returning null
+    // keeps the contract honest until the copilot bridge lands.
+    async () => null,
+    [],
+  );
+
+  const invalidateDataSource = React.useCallback(
+    (dataSourceId: string) => {
+      sessionCache?.invalidateDataSource(dataSourceId);
     },
     [sessionCache],
   );
@@ -439,20 +514,25 @@ export function useDataStudioState<R extends GridValidRowModel = any>(
   }, [sessionCache]);
 
   return {
-    activeDatasetId,
-    activeViewId,
-    activeDataset,
-    activeView,
-    views,
-    selectDataset,
-    selectView,
-    addView,
-    updateView,
-    renameView,
-    duplicateView,
-    deleteView,
-    moveView,
-    invalidateDataset,
+    activeDataSourceId,
+    activeSheetId,
+    activeDataSource,
+    activeSheet,
+    sheets,
+    isComposing,
+    startComposing,
+    cancelComposing,
+    selectDataSource,
+    selectSheet,
+    addSheet,
+    updateSheet,
+    renameSheet,
+    duplicateSheet,
+    deleteSheet,
+    moveSheet,
+    startSheetFromTemplate,
+    startSheetFromPrompt,
+    invalidateDataSource,
     invalidateAll,
   };
 }

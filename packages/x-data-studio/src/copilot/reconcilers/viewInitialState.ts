@@ -3,17 +3,17 @@ import type { StudioHostAdapter } from '../studioHostAdapter';
 import type { StudioStateDocument } from '../stateDocument';
 
 /**
- * Handles `/views/<id>/initialState` and any sub-path under it (e.g.
- * `/views/<id>/initialState/sorting/sortModel`). After the executor applies
- * the patch, we read the resulting subtree and forward it to `updateView`.
- * The currently-mounted Grid for the active view rehydrates from
+ * Handles `/sheets/<id>/initialState` and any sub-path under it (e.g.
+ * `/sheets/<id>/initialState/sorting/sortModel`). After the executor applies
+ * the patch, we read the resulting subtree and forward it to `updateSheet`.
+ * The currently-mounted Grid for the active sheet rehydrates from
  * `initialState` on its next mount; live in-place updates are a follow-up.
  */
 export const viewInitialStateReconciler: PatchHandler<StudioHostAdapter, StudioStateDocument> = {
-  path: '/views/<id>/initialState',
+  path: '/sheets/<id>/initialState',
   allowedOps: ['add', 'remove', 'replace'],
   guard: 'viewEditing',
-  phase: 'view',
+  phase: 'sheet',
   tier: 3,
   plan: 'community',
   reconcile: (doc, op, ctx) => {
@@ -22,10 +22,10 @@ export const viewInitialStateReconciler: PatchHandler<StudioHostAdapter, StudioS
     if (typeof viewId !== 'string') {
       return;
     }
-    const view = doc.views[viewId];
-    if (!view) {
+    const sheet = doc.sheets[viewId];
+    if (!sheet) {
       return;
     }
-    ctx.adapter.api.stateApi.updateView(viewId, { initialState: view.initialState });
+    ctx.adapter.api.stateApi.updateSheet(viewId, { initialState: sheet.initialState });
   },
 };

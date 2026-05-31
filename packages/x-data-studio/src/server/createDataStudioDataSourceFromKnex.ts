@@ -22,12 +22,22 @@ import {
 import { DataStudioServerError } from './errors';
 import { addComputedFieldColumns, getDataStudioSynthesisAccessors } from './synthesis';
 import { getKnexDataStudioRows } from './knexDataSourceRows';
+import { getKnexJoinRows } from './knexJoinSource';
 
 export interface CreateDataStudioDataSourceFromKnexOptions<
   TContext extends DataStudioRequestContext = DataStudioRequestContext,
 > extends DataStudioSourceBaseOptions<any, TContext> {
   knex: Knex;
   table: string;
+  /**
+   * Maps a joined data source id (from a `params.join` definition) to its
+   * physical table on this source's connection. Defaults to identity (the join
+   * references sources by their table name). Set this when source ids differ
+   * from table names.
+   * @param {string} sourceId The joined data source id from the join definition.
+   * @returns {string} The physical table name on this source's connection.
+   */
+  resolveJoinTable?: (sourceId: string) => string;
 }
 
 export interface CreateDataStudioDataSourcesFromKnexOptions {
@@ -194,6 +204,21 @@ export function createDataStudioDataSourceFromKnex<
 
     async getRows(params) {
       const schema = await this.getSchema();
+
+      if (params.join) {
+        // Self-handle a joint-source request: this (base/fact) source joins the
+        // referenced sibling tables on its own connection. See knexJoinSource.ts.
+        return getKnexJoinRows(
+          {
+            knex: options.knex,
+            baseSourceId: options.id,
+            baseTable: options.table,
+            baseRowIdField: schema.rowIdField,
+            resolveTable: options.resolveJoinTable ?? ((sourceId) => sourceId),
+          },
+          params,
+        );
+      }
 
       return getKnexDataStudioRows(options, params, schema.columns, schema.rowIdField);
     },

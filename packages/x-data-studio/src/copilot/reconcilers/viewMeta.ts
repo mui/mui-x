@@ -3,13 +3,13 @@ import type { StudioHostAdapter } from '../studioHostAdapter';
 import type { StudioStateDocument } from '../stateDocument';
 
 /**
- * Handles `/views/<id>/datasetId` — re-bind a view to a different dataset.
+ * Handles `/sheets/<id>/dataSourceId` — re-bind a sheet to a different dataSource.
  */
 export const viewMetaReconciler: PatchHandler<StudioHostAdapter, StudioStateDocument> = {
-  path: '/views/<id>/datasetId',
+  path: '/sheets/<id>/dataSourceId',
   allowedOps: ['replace'],
   guard: 'viewCrud',
-  phase: 'view',
+  phase: 'sheet',
   tier: 3,
   plan: 'community',
   reconcile: (_doc, op, ctx) => {
@@ -18,6 +18,6 @@ export const viewMetaReconciler: PatchHandler<StudioHostAdapter, StudioStateDocu
     if (typeof viewId !== 'string' || typeof op.value !== 'string') {
       return;
     }
-    ctx.adapter.api.stateApi.updateView(viewId, { datasetId: op.value });
+    ctx.adapter.api.stateApi.updateSheet(viewId, { dataSourceId: op.value });
   },
 };

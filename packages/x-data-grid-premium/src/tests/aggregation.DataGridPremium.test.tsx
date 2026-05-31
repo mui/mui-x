@@ -1075,6 +1075,42 @@ describe('<DataGridPremium /> - Aggregation', () => {
           ),
         ).to.equal(11.25);
       });
+
+      it('should return `0` when the values average to exactly zero', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.avg.apply(
+            { values: [-5, 5], field: 'value', groupId: 0 },
+            apiRef.current!,
+          ),
+        ).to.equal(0);
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.avg.apply(
+            { values: [0, 0], field: 'value', groupId: 0 },
+            apiRef.current!,
+          ),
+        ).to.equal(0);
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.avg.apply(
+            { values: [-10, 4, 6], field: 'value', groupId: 0 },
+            apiRef.current!,
+          ),
+        ).to.equal(0);
+      });
+
+      it('should return `null` when there are no numeric values', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.avg.apply(
+            { values: [], field: 'value', groupId: 0 },
+            apiRef.current!,
+          ),
+        ).to.equal(null);
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.avg.apply(
+            { values: ['a', '', null, undefined, NaN], field: 'value', groupId: 0 },
+            apiRef.current!,
+          ),
+        ).to.equal(null);
+      });
     });
 
     describe('`size`', () => {

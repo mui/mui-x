@@ -1,0 +1,516 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - img [ref=e8]
+          - generic [ref=e12]:
+            - paragraph [ref=e13]: Products
+            - generic [ref=e14]:
+              - generic "Add to favorites (coming soon)" [ref=e15]:
+                - button "Favorite" [disabled]:
+                  - img
+              - generic "Move (coming soon)" [ref=e16]:
+                - button "Move" [disabled]:
+                  - img
+              - button "Saved" [ref=e17] [cursor=pointer]:
+                - img [ref=e18]
+          - generic [ref=e20]:
+            - generic "Version history (coming soon)" [ref=e21]:
+              - button "Version history" [disabled]:
+                - img
+            - generic "Open chat (coming soon)" [ref=e22]:
+              - button "Open chat" [disabled]:
+                - img
+            - generic "Start a meeting (coming soon)" [ref=e23]:
+              - button "Meeting" [disabled]:
+                - img
+            - button "Share" [disabled]:
+              - generic:
+                - img
+              - text: Share
+            - button "Upgrade" [disabled]:
+              - generic:
+                - img
+              - text: Upgrade
+            - generic "AI assistant (coming soon)" [ref=e24]:
+              - button "AI assistant" [disabled]:
+                - img
+            - generic "Account" [ref=e25]:
+              - button "Account" [disabled]:
+                - img
+        - menubar [ref=e26]:
+          - button "File" [ref=e27] [cursor=pointer]
+          - button "Edit" [ref=e28] [cursor=pointer]
+          - button "View" [ref=e29] [cursor=pointer]
+          - button "Insert" [ref=e30] [cursor=pointer]
+          - button "Format" [ref=e31] [cursor=pointer]
+          - button "Data" [ref=e32] [cursor=pointer]
+          - button "Tools" [ref=e33] [cursor=pointer]
+          - button "Help" [ref=e34] [cursor=pointer]
+      - toolbar "Data Studio toolbar" [ref=e36]:
+        - generic [ref=e39]:
+          - img [ref=e41]
+          - textbox "Search" [ref=e43]
+          - group
+        - separator [ref=e44]
+        - button "Add row" [ref=e46] [cursor=pointer]:
+          - img [ref=e48]
+          - text: Add row
+        - separator [ref=e50]
+        - generic [ref=e51]:
+          - generic "Undo" [ref=e52]:
+            - button "Undo" [disabled]:
+              - img
+          - generic "Redo" [ref=e53]:
+            - button "Redo" [disabled]:
+              - img
+        - separator [ref=e54]
+        - 'button "Row density: Compact" [ref=e56] [cursor=pointer]':
+          - text: Compact
+          - img [ref=e58]
+        - separator [ref=e60]
+        - generic [ref=e61]:
+          - button "Refresh data" [ref=e62] [cursor=pointer]:
+            - img [ref=e63]
+          - button "Save current view" [ref=e65] [cursor=pointer]:
+            - img [ref=e66]
+          - button "Reset view" [ref=e68] [cursor=pointer]:
+            - img [ref=e69]
+        - separator [ref=e71]
+        - button "Sort" [ref=e73] [cursor=pointer]:
+          - generic [ref=e74]:
+            - img [ref=e75]
+            - generic: "0"
+        - separator [ref=e77]
+        - button "Filter" [ref=e79] [cursor=pointer]:
+          - generic [ref=e80]:
+            - img [ref=e81]
+            - generic: "0"
+        - separator [ref=e83]
+        - generic [ref=e84]:
+          - button "Columns" [ref=e85] [cursor=pointer]:
+            - img [ref=e86]
+          - button "Autosize columns" [ref=e89] [cursor=pointer]:
+            - img [ref=e90]
+          - generic "Pin column (focus a column header first)" [ref=e94]:
+            - button "Pin column" [disabled]:
+              - img
+        - separator [ref=e95]
+        - generic [ref=e96]:
+          - button "Group by" [ref=e97] [cursor=pointer]:
+            - generic [ref=e98]:
+              - img [ref=e99]
+              - generic: "0"
+          - generic "Aggregate numeric columns" [ref=e106]:
+            - button "Aggregate" [ref=e107] [cursor=pointer]:
+              - img [ref=e108]
+          - button "Open pivot panel" [ref=e110] [cursor=pointer]:
+            - img [ref=e111]
+        - separator [ref=e117]
+        - button "Add chart" [ref=e119] [cursor=pointer]:
+          - img [ref=e120]
+        - button "Export" [ref=e127] [cursor=pointer]:
+          - img [ref=e128]
+      - grid [ref=e132]:
+        - row "Select all rows Product ID Coffee Type Roast Type Size Unit Price Price per 100g Profit" [ref=e133]:
+          - columnheader "Select all rows" [ref=e134]:
+            - generic [ref=e136] [cursor=pointer]:
+              - checkbox "Select all rows" [ref=e137]
+              - img [ref=e138]
+            - img [ref=e141]
+          - columnheader "Product ID" [ref=e143] [cursor=pointer]:
+            - generic [ref=e145]: Product ID
+            - generic [ref=e146]:
+              - img
+          - columnheader "Coffee Type" [ref=e147] [cursor=pointer]:
+            - generic [ref=e149]: Coffee Type
+            - generic [ref=e150]:
+              - img
+          - columnheader "Roast Type" [ref=e151] [cursor=pointer]:
+            - generic [ref=e153]: Roast Type
+            - generic [ref=e154]:
+              - img
+          - columnheader "Size" [ref=e155] [cursor=pointer]:
+            - generic [ref=e157]: Size
+            - generic [ref=e158]:
+              - img
+          - columnheader "Unit Price" [ref=e159] [cursor=pointer]:
+            - generic [ref=e161]: Unit Price
+            - generic [ref=e162]:
+              - img
+          - columnheader "Price per 100g" [ref=e163] [cursor=pointer]:
+            - generic [ref=e165]: Price per 100g
+            - generic [ref=e166]:
+              - img
+          - columnheader "Profit" [ref=e167] [cursor=pointer]:
+            - generic [ref=e169]: Profit
+            - generic [ref=e170]:
+              - img
+          - columnheader [ref=e171]:
+            - generic [ref=e172]:
+              - img
+        - rowgroup [ref=e173]:
+          - row "Select row A-L-0.2 Ara L 0.2 $3.89 $1.94 $0.35" [ref=e174]:
+            - gridcell "Select row" [ref=e175]:
+              - generic [ref=e176] [cursor=pointer]:
+                - checkbox "Select row" [ref=e177]
+                - img [ref=e178]
+            - gridcell "A-L-0.2" [ref=e180]
+            - gridcell "Ara" [ref=e181]
+            - gridcell "L" [ref=e182]
+            - gridcell "0.2" [ref=e183]
+            - gridcell "$3.89" [ref=e184]
+            - gridcell "$1.94" [ref=e185]
+            - gridcell "$0.35" [ref=e186]
+            - gridcell [ref=e187]:
+              - menu [ref=e188]:
+                - menuitem "Edit" [ref=e189] [cursor=pointer]:
+                  - img [ref=e190]
+                - menuitem "Delete" [ref=e192] [cursor=pointer]:
+                  - img [ref=e193]
+          - row "Select row A-L-0.5 Ara L 0.5 $7.77 $1.55 $0.70" [ref=e195]:
+            - gridcell "Select row" [ref=e196]:
+              - generic [ref=e197] [cursor=pointer]:
+                - checkbox "Select row" [ref=e198]
+                - img [ref=e199]
+            - gridcell "A-L-0.5" [ref=e201]
+            - gridcell "Ara" [ref=e202]
+            - gridcell "L" [ref=e203]
+            - gridcell "0.5" [ref=e204]
+            - gridcell "$7.77" [ref=e205]
+            - gridcell "$1.55" [ref=e206]
+            - gridcell "$0.70" [ref=e207]
+            - gridcell [ref=e208]:
+              - menu [ref=e209]:
+                - menuitem "Edit" [ref=e210] [cursor=pointer]:
+                  - img [ref=e211]
+                - menuitem "Delete" [ref=e213] [cursor=pointer]:
+                  - img [ref=e214]
+          - row "Select row A-L-1 Ara L 1 $12.95 $1.30 $1.17" [ref=e216]:
+            - gridcell "Select row" [ref=e217]:
+              - generic [ref=e218] [cursor=pointer]:
+                - checkbox "Select row" [ref=e219]
+                - img [ref=e220]
+            - gridcell "A-L-1" [ref=e222]
+            - gridcell "Ara" [ref=e223]
+            - gridcell "L" [ref=e224]
+            - gridcell "1" [ref=e225]
+            - gridcell "$12.95" [ref=e226]
+            - gridcell "$1.30" [ref=e227]
+            - gridcell "$1.17" [ref=e228]
+            - gridcell [ref=e229]:
+              - menu [ref=e230]:
+                - menuitem "Edit" [ref=e231] [cursor=pointer]:
+                  - img [ref=e232]
+                - menuitem "Delete" [ref=e234] [cursor=pointer]:
+                  - img [ref=e235]
+          - row "Select row A-L-2.5 Ara L 2.5 $29.79 $1.19 $2.68" [ref=e237]:
+            - gridcell "Select row" [ref=e238]:
+              - generic [ref=e239] [cursor=pointer]:
+                - checkbox "Select row" [ref=e240]
+                - img [ref=e241]
+            - gridcell "A-L-2.5" [ref=e243]
+            - gridcell "Ara" [ref=e244]
+            - gridcell "L" [ref=e245]
+            - gridcell "2.5" [ref=e246]
+            - gridcell "$29.79" [ref=e247]
+            - gridcell "$1.19" [ref=e248]
+            - gridcell "$2.68" [ref=e249]
+            - gridcell [ref=e250]:
+              - menu [ref=e251]:
+                - menuitem "Edit" [ref=e252] [cursor=pointer]:
+                  - img [ref=e253]
+                - menuitem "Delete" [ref=e255] [cursor=pointer]:
+                  - img [ref=e256]
+          - row "Select row A-M-0.2 Ara M 0.2 $3.38 $1.69 $0.30" [ref=e258]:
+            - gridcell "Select row" [ref=e259]:
+              - generic [ref=e260] [cursor=pointer]:
+                - checkbox "Select row" [ref=e261]
+                - img [ref=e262]
+            - gridcell "A-M-0.2" [ref=e264]
+            - gridcell "Ara" [ref=e265]
+            - gridcell "M" [ref=e266]
+            - gridcell "0.2" [ref=e267]
+            - gridcell "$3.38" [ref=e268]
+            - gridcell "$1.69" [ref=e269]
+            - gridcell "$0.30" [ref=e270]
+            - gridcell [ref=e271]:
+              - menu [ref=e272]:
+                - menuitem "Edit" [ref=e273] [cursor=pointer]:
+                  - img [ref=e274]
+                - menuitem "Delete" [ref=e276] [cursor=pointer]:
+                  - img [ref=e277]
+          - row "Select row A-M-0.5 Ara M 0.5 $6.75 $1.35 $0.61" [ref=e279]:
+            - gridcell "Select row" [ref=e280]:
+              - generic [ref=e281] [cursor=pointer]:
+                - checkbox "Select row" [ref=e282]
+                - img [ref=e283]
+            - gridcell "A-M-0.5" [ref=e285]
+            - gridcell "Ara" [ref=e286]
+            - gridcell "M" [ref=e287]
+            - gridcell "0.5" [ref=e288]
+            - gridcell "$6.75" [ref=e289]
+            - gridcell "$1.35" [ref=e290]
+            - gridcell "$0.61" [ref=e291]
+            - gridcell [ref=e292]:
+              - menu [ref=e293]:
+                - menuitem "Edit" [ref=e294] [cursor=pointer]:
+                  - img [ref=e295]
+                - menuitem "Delete" [ref=e297] [cursor=pointer]:
+                  - img [ref=e298]
+          - row "Select row A-M-1 Ara M 1 $11.25 $1.13 $1.01" [ref=e300]:
+            - gridcell "Select row" [ref=e301]:
+              - generic [ref=e302] [cursor=pointer]:
+                - checkbox "Select row" [ref=e303]
+                - img [ref=e304]
+            - gridcell "A-M-1" [ref=e306]
+            - gridcell "Ara" [ref=e307]
+            - gridcell "M" [ref=e308]
+            - gridcell "1" [ref=e309]
+            - gridcell "$11.25" [ref=e310]
+            - gridcell "$1.13" [ref=e311]
+            - gridcell "$1.01" [ref=e312]
+            - gridcell [ref=e313]:
+              - menu [ref=e314]:
+                - menuitem "Edit" [ref=e315] [cursor=pointer]:
+                  - img [ref=e316]
+                - menuitem "Delete" [ref=e318] [cursor=pointer]:
+                  - img [ref=e319]
+          - row "Select row A-M-2.5 Ara M 2.5 $25.88 $1.04 $2.33" [ref=e321]:
+            - gridcell "Select row" [ref=e322]:
+              - generic [ref=e323] [cursor=pointer]:
+                - checkbox "Select row" [ref=e324]
+                - img [ref=e325]
+            - gridcell "A-M-2.5" [ref=e327]
+            - gridcell "Ara" [ref=e328]
+            - gridcell "M" [ref=e329]
+            - gridcell "2.5" [ref=e330]
+            - gridcell "$25.88" [ref=e331]
+            - gridcell "$1.04" [ref=e332]
+            - gridcell "$2.33" [ref=e333]
+            - gridcell [ref=e334]:
+              - menu [ref=e335]:
+                - menuitem "Edit" [ref=e336] [cursor=pointer]:
+                  - img [ref=e337]
+                - menuitem "Delete" [ref=e339] [cursor=pointer]:
+                  - img [ref=e340]
+          - row "Select row A-D-0.2 Ara D 0.2 $2.99 $1.49 $0.27" [ref=e342]:
+            - gridcell "Select row" [ref=e343]:
+              - generic [ref=e344] [cursor=pointer]:
+                - checkbox "Select row" [ref=e345]
+                - img [ref=e346]
+            - gridcell "A-D-0.2" [ref=e348]
+            - gridcell "Ara" [ref=e349]
+            - gridcell "D" [ref=e350]
+            - gridcell "0.2" [ref=e351]
+            - gridcell "$2.99" [ref=e352]
+            - gridcell "$1.49" [ref=e353]
+            - gridcell "$0.27" [ref=e354]
+            - gridcell [ref=e355]:
+              - menu [ref=e356]:
+                - menuitem "Edit" [ref=e357] [cursor=pointer]:
+                  - img [ref=e358]
+                - menuitem "Delete" [ref=e360] [cursor=pointer]:
+                  - img [ref=e361]
+          - row "Select row A-D-0.5 Ara D 0.5 $5.97 $1.19 $0.54" [ref=e363]:
+            - gridcell "Select row" [ref=e364]:
+              - generic [ref=e365] [cursor=pointer]:
+                - checkbox "Select row" [ref=e366]
+                - img [ref=e367]
+            - gridcell "A-D-0.5" [ref=e369]
+            - gridcell "Ara" [ref=e370]
+            - gridcell "D" [ref=e371]
+            - gridcell "0.5" [ref=e372]
+            - gridcell "$5.97" [ref=e373]
+            - gridcell "$1.19" [ref=e374]
+            - gridcell "$0.54" [ref=e375]
+            - gridcell [ref=e376]:
+              - menu [ref=e377]:
+                - menuitem "Edit" [ref=e378] [cursor=pointer]:
+                  - img [ref=e379]
+                - menuitem "Delete" [ref=e381] [cursor=pointer]:
+                  - img [ref=e382]
+          - row "Select row A-D-1 Ara D 1 $9.95 $1.00 $0.90" [ref=e384]:
+            - gridcell "Select row" [ref=e385]:
+              - generic [ref=e386] [cursor=pointer]:
+                - checkbox "Select row" [ref=e387]
+                - img [ref=e388]
+            - gridcell "A-D-1" [ref=e390]
+            - gridcell "Ara" [ref=e391]
+            - gridcell "D" [ref=e392]
+            - gridcell "1" [ref=e393]
+            - gridcell "$9.95" [ref=e394]
+            - gridcell "$1.00" [ref=e395]
+            - gridcell "$0.90" [ref=e396]
+            - gridcell [ref=e397]:
+              - menu [ref=e398]:
+                - menuitem "Edit" [ref=e399] [cursor=pointer]:
+                  - img [ref=e400]
+                - menuitem "Delete" [ref=e402] [cursor=pointer]:
+                  - img [ref=e403]
+          - row "Select row A-D-2.5 Ara D 2.5 $22.89 $0.92 $2.06" [ref=e405]:
+            - gridcell "Select row" [ref=e406]:
+              - generic [ref=e407] [cursor=pointer]:
+                - checkbox "Select row" [ref=e408]
+                - img [ref=e409]
+            - gridcell "A-D-2.5" [ref=e411]
+            - gridcell "Ara" [ref=e412]
+            - gridcell "D" [ref=e413]
+            - gridcell "2.5" [ref=e414]
+            - gridcell "$22.89" [ref=e415]
+            - gridcell "$0.92" [ref=e416]
+            - gridcell "$2.06" [ref=e417]
+            - gridcell [ref=e418]:
+              - menu [ref=e419]:
+                - menuitem "Edit" [ref=e420] [cursor=pointer]:
+                  - img [ref=e421]
+                - menuitem "Delete" [ref=e423] [cursor=pointer]:
+                  - img [ref=e424]
+          - row "Select row R-L-0.2 Rob L 0.2 $3.59 $1.79 $0.22" [ref=e426]:
+            - gridcell "Select row" [ref=e427]:
+              - generic [ref=e428] [cursor=pointer]:
+                - checkbox "Select row" [ref=e429]
+                - img [ref=e430]
+            - gridcell "R-L-0.2" [ref=e432]
+            - gridcell "Rob" [ref=e433]
+            - gridcell "L" [ref=e434]
+            - gridcell "0.2" [ref=e435]
+            - gridcell "$3.59" [ref=e436]
+            - gridcell "$1.79" [ref=e437]
+            - gridcell "$0.22" [ref=e438]
+            - gridcell [ref=e439]:
+              - menu [ref=e440]:
+                - menuitem "Edit" [ref=e441] [cursor=pointer]:
+                  - img [ref=e442]
+                - menuitem "Delete" [ref=e444] [cursor=pointer]:
+                  - img [ref=e445]
+          - row "Select row R-L-0.5 Rob L 0.5 $7.17 $1.43 $0.43" [ref=e447]:
+            - gridcell "Select row" [ref=e448]:
+              - generic [ref=e449] [cursor=pointer]:
+                - checkbox "Select row" [ref=e450]
+                - img [ref=e451]
+            - gridcell "R-L-0.5" [ref=e453]
+            - gridcell "Rob" [ref=e454]
+            - gridcell "L" [ref=e455]
+            - gridcell "0.5" [ref=e456]
+            - gridcell "$7.17" [ref=e457]
+            - gridcell "$1.43" [ref=e458]
+            - gridcell "$0.43" [ref=e459]
+            - gridcell [ref=e460]:
+              - menu [ref=e461]:
+                - menuitem "Edit" [ref=e462] [cursor=pointer]:
+                  - img [ref=e463]
+                - menuitem "Delete" [ref=e465] [cursor=pointer]:
+                  - img [ref=e466]
+          - row "Select row R-L-1 Rob L 1 $11.95 $1.20 $0.72" [ref=e468]:
+            - gridcell "Select row" [ref=e469]:
+              - generic [ref=e470] [cursor=pointer]:
+                - checkbox "Select row" [ref=e471]
+                - img [ref=e472]
+            - gridcell "R-L-1" [ref=e474]
+            - gridcell "Rob" [ref=e475]
+            - gridcell "L" [ref=e476]
+            - gridcell "1" [ref=e477]
+            - gridcell "$11.95" [ref=e478]
+            - gridcell "$1.20" [ref=e479]
+            - gridcell "$0.72" [ref=e480]
+            - gridcell [ref=e481]:
+              - menu [ref=e482]:
+                - menuitem "Edit" [ref=e483] [cursor=pointer]:
+                  - img [ref=e484]
+                - menuitem "Delete" [ref=e486] [cursor=pointer]:
+                  - img [ref=e487]
+          - row "Select row R-L-2.5 Rob L 2.5 $27.49 $1.10 $1.65" [ref=e489]:
+            - gridcell "Select row" [ref=e490]:
+              - generic [ref=e491] [cursor=pointer]:
+                - checkbox "Select row" [ref=e492]
+                - img [ref=e493]
+            - gridcell "R-L-2.5" [ref=e495]
+            - gridcell "Rob" [ref=e496]
+            - gridcell "L" [ref=e497]
+            - gridcell "2.5" [ref=e498]
+            - gridcell "$27.49" [ref=e499]
+            - gridcell "$1.10" [ref=e500]
+            - gridcell "$1.65" [ref=e501]
+            - gridcell [ref=e502]:
+              - menu [ref=e503]:
+                - menuitem "Edit" [ref=e504] [cursor=pointer]:
+                  - img [ref=e505]
+                - menuitem "Delete" [ref=e507] [cursor=pointer]:
+                  - img [ref=e508]
+          - row "Select row R-M-0.2 Rob M 0.2 $2.99 $1.49 $0.18" [ref=e510]:
+            - gridcell "Select row" [ref=e511]:
+              - generic [ref=e512] [cursor=pointer]:
+                - checkbox "Select row" [ref=e513]
+                - img [ref=e514]
+            - gridcell "R-M-0.2" [ref=e516]
+            - gridcell "Rob" [ref=e517]
+            - gridcell "M" [ref=e518]
+            - gridcell "0.2" [ref=e519]
+            - gridcell "$2.99" [ref=e520]
+            - gridcell "$1.49" [ref=e521]
+            - gridcell "$0.18" [ref=e522]
+            - gridcell [ref=e523]:
+              - menu [ref=e524]:
+                - menuitem "Edit" [ref=e525] [cursor=pointer]:
+                  - img [ref=e526]
+                - menuitem "Delete" [ref=e528] [cursor=pointer]:
+                  - img [ref=e529]
+          - row "Select row R-M-0.5 Rob M 0.5 $5.97 $1.19 $0.36" [ref=e531]:
+            - gridcell "Select row" [ref=e532]:
+              - generic [ref=e533] [cursor=pointer]:
+                - checkbox "Select row" [ref=e534]
+                - img [ref=e535]
+            - gridcell "R-M-0.5" [ref=e537]
+            - gridcell "Rob" [ref=e538]
+            - gridcell "M" [ref=e539]
+            - gridcell "0.5" [ref=e540]
+            - gridcell "$5.97" [ref=e541]
+            - gridcell "$1.19" [ref=e542]
+            - gridcell "$0.36" [ref=e543]
+            - gridcell [ref=e544]:
+              - menu [ref=e545]:
+                - menuitem "Edit" [ref=e546] [cursor=pointer]:
+                  - img [ref=e547]
+                - menuitem "Delete" [ref=e549] [cursor=pointer]:
+                  - img [ref=e550]
+          - row "Select row R-M-1 Rob M 1 $9.95 $1.00 $0.60" [ref=e552]:
+            - gridcell "Select row" [ref=e553]:
+              - generic [ref=e554] [cursor=pointer]:
+                - checkbox "Select row" [ref=e555]
+                - img [ref=e556]
+            - gridcell "R-M-1" [ref=e558]
+            - gridcell "Rob" [ref=e559]
+            - gridcell "M" [ref=e560]
+            - gridcell "1" [ref=e561]
+            - gridcell "$9.95" [ref=e562]
+            - gridcell "$1.00" [ref=e563]
+            - gridcell "$0.60" [ref=e564]
+            - gridcell [ref=e565]:
+              - menu [ref=e566]:
+                - menuitem "Edit" [ref=e567] [cursor=pointer]:
+                  - img [ref=e568]
+                - menuitem "Delete" [ref=e570] [cursor=pointer]:
+                  - img [ref=e571]
+        - generic:
+          - text: MUI X Missing license key
+          - generic: Open the browser console for details on how to resolve this.
+    - generic [ref=e575]:
+      - generic [ref=e576]:
+        - button "Add view" [ref=e577] [cursor=pointer]:
+          - img [ref=e578]
+        - button "All tabs" [ref=e580] [cursor=pointer]:
+          - img [ref=e581]
+        - button "Hide data sources" [ref=e583] [cursor=pointer]:
+          - img [ref=e584]
+      - generic [ref=e586]:
+        - button "Customers" [ref=e588] [cursor=pointer]:
+          - generic [ref=e589]: Customers
+        - button "Products" [ref=e591] [cursor=pointer]:
+          - generic [ref=e592]: Products
+        - button "Orders" [ref=e594] [cursor=pointer]:
+          - generic [ref=e595]: Orders
+  - button "Open Next.js Dev Tools" [ref=e601] [cursor=pointer]:
+    - img [ref=e602]
+  - alert [ref=e605]: Coffee Beans - Data Studio demo - MUI X

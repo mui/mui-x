@@ -15,7 +15,7 @@ import {
   useStudioCopilot,
   useStudioCopilotControls,
 } from '../copilot';
-import type { DataStudioDataset } from './DataStudio.types';
+import type { DataStudioDataSource } from './DataStudio.types';
 import type { DataStudioStateApi } from './useDataStudioState';
 
 const CopilotIcon = createSvgIcon(
@@ -48,10 +48,19 @@ export function StudioCopilotDrawer(props: StudioCopilotDrawerProps) {
       open={open}
       onClose={onClose}
       ModalProps={{ keepMounted: true }}
-      slotProps={{ paper: { sx: { boxShadow: 4 } } }}
+      slotProps={{
+        paper: {
+          'aria-label': 'Copilot',
+          sx: {
+            borderInlineStart: '1px solid',
+            borderColor: 'divider',
+            boxShadow: 4,
+          },
+        },
+      }}
     >
       <DrawerContainer>
-        <Panel {...panelProps} />
+        <Panel {...panelProps} onClose={onClose} />
       </DrawerContainer>
     </Drawer>
   );
@@ -85,7 +94,7 @@ export { StudioCopilotPanel };
 interface DataStudioCopilotMountProps {
   inner: ChatAdapter;
   stateApi: DataStudioStateApi<any>;
-  datasets: ReadonlyArray<DataStudioDataset<any>>;
+  dataSources: ReadonlyArray<DataStudioDataSource<any>>;
   features?: Partial<StudioGuards>;
   plugins?: ReadonlyArray<CopilotPlugin<any, any>>;
   Panel: React.ComponentType<StudioCopilotPanelProps>;
@@ -99,9 +108,9 @@ interface DataStudioCopilotMountProps {
  * rendered when `<DataStudio copilotChatAdapter>` is supplied.
  */
 export function DataStudioCopilotMount(props: DataStudioCopilotMountProps) {
-  const { inner, stateApi, datasets, features, plugins, Panel, children } = props;
+  const { inner, stateApi, dataSources, features, plugins, Panel, children } = props;
   const [open, setOpen] = React.useState(false);
-  const studio = useStudioCopilot({ inner, stateApi, datasets, features, plugins });
+  const studio = useStudioCopilot({ inner, stateApi, dataSources, features, plugins });
   // The query results map is updated imperatively on the underlying ref —
   // subscribe to results to force a re-read after each turn so panel renderers
   // see the latest cache.
@@ -141,7 +150,7 @@ export function DataStudioCopilotMount(props: DataStudioCopilotMountProps) {
 interface DataStudioCopilotShellProps {
   inner?: ChatAdapter;
   stateApi: DataStudioStateApi<any>;
-  datasets: ReadonlyArray<DataStudioDataset<any>>;
+  dataSources: ReadonlyArray<DataStudioDataSource<any>>;
   features?: Partial<StudioGuards>;
   plugins?: ReadonlyArray<CopilotPlugin<any, any>>;
   Panel: React.ComponentType<StudioCopilotPanelProps>;
@@ -154,7 +163,7 @@ interface DataStudioCopilotShellProps {
  * render path so its hooks fire only when the integration is actually on.
  */
 export function DataStudioCopilotShell(props: DataStudioCopilotShellProps) {
-  const { inner, stateApi, datasets, features, plugins, Panel, children } = props;
+  const { inner, stateApi, dataSources, features, plugins, Panel, children } = props;
   if (!inner) {
     return (
       <StudioCopilotProvider open={false} setOpen={() => {}} available={false}>
@@ -166,7 +175,7 @@ export function DataStudioCopilotShell(props: DataStudioCopilotShellProps) {
     <DataStudioCopilotMount
       inner={inner}
       stateApi={stateApi}
-      datasets={datasets}
+      dataSources={dataSources}
       features={features}
       plugins={plugins}
       Panel={Panel}

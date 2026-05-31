@@ -2,22 +2,22 @@
 
 _Each cell is the pass rate (%) for that (category, scheme) pair across the 6 arms._
 
-| Category | baseline | Total |
-| --- | --- | --- |
-| chart | 90.0% | **90.0%** |
-| chart-suggest | 95.0% | **95.0%** |
-| data-story | 83.3% | **83.3%** |
-| filter | 100.0% | **100.0%** |
-| formula | 100.0% | **100.0%** |
-| group-agg | 91.1% | **91.1%** |
-| investigation-log | 33.3% | **33.3%** |
-| outlier-hunt | 96.7% | **96.7%** |
-| pdf-report | 64.4% | **64.4%** |
-| pivot | 95.8% | **95.8%** |
-| pivot-builder | 100.0% | **100.0%** |
-| sort | 100.0% | **100.0%** |
-| surprise-me | 61.1% | **61.1%** |
-| what-if-ghost | 95.8% | **95.8%** |
+| Category          | baseline | Total      |
+| ----------------- | -------- | ---------- |
+| chart             | 90.0%    | **90.0%**  |
+| chart-suggest     | 95.0%    | **95.0%**  |
+| data-story        | 83.3%    | **83.3%**  |
+| filter            | 100.0%   | **100.0%** |
+| formula           | 100.0%   | **100.0%** |
+| group-agg         | 91.1%    | **91.1%**  |
+| investigation-log | 33.3%    | **33.3%**  |
+| outlier-hunt      | 96.7%    | **96.7%**  |
+| pdf-report        | 64.4%    | **64.4%**  |
+| pivot             | 95.8%    | **95.8%**  |
+| pivot-builder     | 100.0%   | **100.0%** |
+| sort              | 100.0%   | **100.0%** |
+| surprise-me       | 61.1%    | **61.1%**  |
+| what-if-ghost     | 95.8%    | **95.8%**  |
 
 ## How to read
 

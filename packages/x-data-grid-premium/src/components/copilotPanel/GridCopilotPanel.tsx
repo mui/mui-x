@@ -2,20 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
-import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
-import MenuList from '@mui/material/MenuList';
-import {
-  ChatComposer,
-  ChatMessage,
-  ChatMessageContent,
-  ChatMessageGroup,
-  ChatMessageList,
-  ChatMessageMeta,
-  ChatScrollToBottomAffordance,
-  ChatSuggestions,
-} from '@mui/x-chat';
 import type {
   ChatAdapter,
   ChatMessageChunk,
@@ -25,14 +13,8 @@ import type {
   ChatUser,
   ToolPartSlots,
 } from '@mui/x-chat-headless';
-import {
-  ChatRoot,
-  useChat,
-  useChatComposer,
-  useChatStore,
-  useMessageIds,
-} from '@mui/x-chat-headless';
-import { GridMenuIcon } from '@mui/x-data-grid';
+import { ChatRoot, useChat } from '@mui/x-chat-headless';
+import { CopilotChatPanelContent } from '@mui/x-copilot';
 import { createSvgIcon } from '@mui/x-data-grid/internals';
 import {
   CopilotPluginRenderProvider,
@@ -41,10 +23,7 @@ import {
 import { CopilotToolBlock } from './CopilotToolBlock';
 import { CopilotDataQueryApproval } from './CopilotDataQueryApproval';
 import { CopilotMessageMetadata } from './CopilotMessageMetadata';
-import { CopilotMessageFooter } from './CopilotMessageFooter';
 import { CopilotAbVariantTabs } from './CopilotAbVariantTabs';
-import { CopilotStreamingIndicator } from './CopilotStreamingIndicator';
-import { CopilotTurnSpacer } from './CopilotTurnSpacer';
 import { getGridCopilotLocalStorageAdapterController } from '../../hooks/features/copilot/createGridCopilotLocalStorageAdapter';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -223,401 +202,6 @@ const CopilotPanelRoot = styled('div', {
   overflow: 'hidden',
 });
 
-const CopilotPanelHeader = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelHeader',
-})({
-  flexShrink: 0,
-  display: 'flex',
-  alignItems: 'center',
-  gap: vars.spacing(0.5),
-  width: '100%',
-  boxSizing: 'border-box',
-  borderBottom: `1px solid ${vars.colors.border.base}`,
-  height: 52,
-  padding: vars.spacing(0, 0.75, 0, 1.5),
-});
-
-const CopilotPanelTitleGroup = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelTitleGroup',
-})({
-  flex: 1,
-  display: 'flex',
-  alignItems: 'center',
-  gap: vars.spacing(0.75),
-  minWidth: 0,
-});
-
-const CopilotPanelTitle = styled('span', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelTitle',
-})({
-  font: vars.typography.font.body,
-  fontWeight: vars.typography.fontWeight.medium,
-});
-
-const CopilotPanelBeta = styled('span', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelBeta',
-})({
-  display: 'inline-flex',
-  alignItems: 'center',
-  height: 20,
-  padding: vars.spacing(0, 0.75),
-  borderRadius: vars.radius.base,
-  font: vars.typography.font.small,
-  fontWeight: vars.typography.fontWeight.medium,
-  letterSpacing: 0.4,
-  color: vars.colors.foreground.accent,
-  background: vars.colors.background.base,
-});
-
-const CopilotPanelBody = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelBody',
-})({
-  flex: 1,
-  minHeight: 0,
-  display: 'flex',
-});
-
-const CopilotThreadRoot = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelThread',
-})({
-  flex: 1,
-  minHeight: 0,
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-  '--MuiChatMessage-avatarSize': '0px',
-  '& .MuiChatMessage-root': {
-    gridTemplateColumns: '0 1fr auto',
-    paddingInline: vars.spacing(2),
-  },
-  '& .MuiChatMessage-avatar': {
-    display: 'none',
-  },
-  '& .MuiChatMessage-content': {
-    maxWidth: '100%',
-  },
-  '& .MuiChatMessage-bubble': {
-    padding: '0 !important',
-    width: '100%',
-  },
-  '& .MuiChatMessage-roleUser .MuiChatMessage-content': {
-    alignItems: 'flex-end',
-  },
-  '& .MuiChatMessage-roleUser .MuiChatMessage-bubble': {
-    width: 'auto',
-    maxWidth: '78%',
-    padding: vars.spacing(1.25, 1.5),
-    borderRadius: vars.radius.base,
-    backgroundColor: vars.colors.background.base,
-    color: vars.colors.foreground.base,
-  },
-});
-
-const CopilotThreadBody = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelThreadBody',
-})({
-  flex: 1,
-  minHeight: 0,
-  display: 'flex',
-  flexDirection: 'column',
-});
-
-const CopilotEmptyThread = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelEmptyThread',
-})({
-  flex: 1,
-  minHeight: 0,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  padding: vars.spacing(4, 2, 2),
-});
-
-const CopilotEmptyHero = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelEmptyHero',
-})({
-  flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: vars.spacing(1),
-  textAlign: 'center',
-  minHeight: 180,
-});
-
-const CopilotEmptyHeroTitle = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelEmptyHeroTitle',
-})({
-  maxWidth: 360,
-  font: vars.typography.font.large,
-  fontWeight: vars.typography.fontWeight.bold,
-  color: vars.colors.foreground.accent,
-});
-
-const CopilotEmptyHeroHelper = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelEmptyHeroHelper',
-})({
-  maxWidth: 360,
-  font: vars.typography.font.body,
-  color: vars.colors.foreground.muted,
-});
-
-const CopilotComposerShell = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelComposerShell',
-})({
-  flexShrink: 0,
-  padding: vars.spacing(1, 1.5, 1.5),
-});
-
-const CopilotDisclaimer = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelDisclaimer',
-})({
-  textAlign: 'center',
-  marginTop: vars.spacing(1),
-  padding: vars.spacing(0, 0.5),
-  font: vars.typography.font.small,
-  fontWeight: vars.typography.fontWeight.medium,
-  color: vars.colors.foreground.muted,
-  fontSize: '8pt',
-});
-
-const PostTurnSuggestionsShell = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelPostTurnSuggestions',
-})({
-  marginBottom: vars.spacing(0.75),
-  // Force a single-row horizontal layout for the follow-up chips: they
-  // stack vertically by default (the underlying `ChatSuggestions` root
-  // uses `flexWrap: wrap` with a centered column on narrow panels). Side
-  // panels are tall + narrow, so a horizontal strip immediately above the
-  // composer keeps the chat scroll area unobstructed; chips overflowing
-  // the panel width scroll horizontally instead of pushing the composer
-  // down.
-  overflow: 'hidden',
-  '& .MuiChatSuggestions-root': {
-    display: 'flex',
-    flexWrap: 'nowrap',
-    justifyContent: 'flex-start',
-    overflowX: 'auto',
-    overflowY: 'hidden',
-    padding: vars.spacing(0.5, 0.25),
-    gap: vars.spacing(0.75),
-    // Tame the horizontal scrollbar to a thin track so it doesn't compete
-    // with the composer's send button for visual weight.
-    scrollbarWidth: 'thin',
-    '&::-webkit-scrollbar': {
-      height: 6,
-    },
-    '&::-webkit-scrollbar-thumb': {
-      borderRadius: 3,
-      background: vars.colors.border.base,
-    },
-  },
-  '& .MuiChatSuggestions-item': {
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-  },
-});
-
-const CopilotMenuRoot = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelMenu',
-})({
-  flex: 1,
-  minHeight: 0,
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-  background: vars.colors.background.base,
-});
-
-const CopilotMenuHeader = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelMenuHeader',
-})({
-  flexShrink: 0,
-  display: 'flex',
-  alignItems: 'center',
-  gap: vars.spacing(0.5),
-  minHeight: 52,
-  padding: vars.spacing(0, 0.75),
-});
-
-const CopilotMenuHeaderSpacer = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelMenuHeaderSpacer',
-})({
-  flex: 1,
-});
-
-const CopilotMenuHeaderTitle = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelMenuHeaderTitle',
-})({
-  flex: 1,
-  minWidth: 0,
-  font: vars.typography.font.body,
-  fontWeight: vars.typography.fontWeight.bold,
-  color: vars.colors.foreground.base,
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  paddingInlineStart: vars.spacing(0.5),
-});
-
-const CopilotListGroupHeader = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelListGroupHeader',
-})({
-  padding: vars.spacing(1.5, 1.25, 0.5),
-  font: vars.typography.font.body,
-  color: vars.colors.foreground.muted,
-});
-
-const CopilotMenuContent = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelMenuContent',
-})({
-  flex: 1,
-  minHeight: 0,
-  overflow: 'auto',
-  padding: vars.spacing(0.5, 1, 2),
-});
-
-const CopilotMenuSection = styled('section', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelMenuSection',
-})({
-  padding: vars.spacing(1, 0),
-  borderBottom: `1px solid ${vars.colors.border.base}`,
-  '&:last-of-type': {
-    borderBottom: 0,
-  },
-});
-
-const CopilotMenuSectionHeader = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelMenuSectionHeader',
-})({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: vars.spacing(1),
-  padding: vars.spacing(0, 1.25),
-  marginBottom: vars.spacing(0.5),
-});
-
-const CopilotMenuSectionTitle = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelMenuSectionTitle',
-})({
-  font: vars.typography.font.body,
-  fontWeight: vars.typography.fontWeight.bold,
-  color: vars.colors.foreground.base,
-});
-
-const CopilotMenuSectionAction = styled('button', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelMenuSectionAction',
-})({
-  border: 0,
-  padding: vars.spacing(0.25, 0.5),
-  borderRadius: vars.radius.base,
-  background: 'transparent',
-  font: vars.typography.font.body,
-  fontWeight: vars.typography.fontWeight.medium,
-  color: vars.colors.foreground.muted,
-  cursor: 'pointer',
-  '&:hover': {
-    color: vars.colors.foreground.accent,
-    background: `color-mix(in srgb, ${vars.colors.interactive.hover} calc(${vars.colors.interactive.hoverOpacity} * 100%), transparent)`,
-  },
-  '&:focus-visible': {
-    outline: `2px solid ${vars.colors.interactive.focus}`,
-    outlineOffset: 2,
-  },
-});
-
-const CopilotMenuList = styled(MenuList, {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelMenuList',
-})({
-  display: 'flex',
-  flexDirection: 'column',
-  padding: 0,
-  '& .MuiMenuItem-root': {
-    borderRadius: vars.radius.base,
-    minHeight: 40,
-    paddingBlock: vars.spacing(0.5),
-    paddingInline: vars.spacing(1.25),
-    gap: vars.spacing(1),
-  },
-  '& .MuiMenuItem-root.Mui-selected, & .MuiMenuItem-root[aria-current="true"]': {
-    background: `color-mix(in srgb, ${vars.colors.interactive.hover} calc(${vars.colors.interactive.hoverOpacity} * 100%), transparent)`,
-  },
-  '& .MuiListItemIcon-root': {
-    minWidth: 0,
-    color: vars.colors.foreground.muted,
-  },
-  '& .MuiListItemText-root': {
-    margin: 0,
-  },
-  '& .MuiListItemText-primary': {
-    font: vars.typography.font.body,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  '& .MuiListItemText-secondary': {
-    font: vars.typography.font.body,
-    color: vars.colors.foreground.muted,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-});
-
-const CopilotMenuRowTrailing = styled('span', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelMenuRowTrailing',
-})({
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: vars.spacing(1),
-  color: vars.colors.foreground.muted,
-});
-
-const CopilotMenuBadge = styled('span', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelMenuBadge',
-})({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minWidth: 36,
-  height: 20,
-  padding: vars.spacing(0, 0.75),
-  borderRadius: 999,
-  font: vars.typography.font.small,
-  fontWeight: vars.typography.fontWeight.medium,
-  color: '#fff',
-  background: vars.colors.interactive.focus,
-});
-
 const ECHO_DELAY_MS = 60;
 
 const COPILOT_AGENT: ChatUser = {
@@ -641,39 +225,6 @@ const DEFAULT_SUGGESTIONS: Array<ChatSuggestion | string> = [
 interface InitialCopilotConversationState {
   activeConversationId?: string;
   draftConversationId?: string;
-}
-
-function getSuggestionValue(suggestion: ChatSuggestion | string): string {
-  return typeof suggestion === 'string' ? suggestion : suggestion.value;
-}
-
-function getSuggestionLabel(suggestion: ChatSuggestion | string): string {
-  return typeof suggestion === 'string' ? suggestion : (suggestion.label ?? suggestion.value);
-}
-
-function formatConversationDate(
-  value: string | number | Date | undefined | null,
-  todayLabel: string,
-  yesterdayLabel: string,
-): string | undefined {
-  if (value == null) {
-    return undefined;
-  }
-  const date = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return undefined;
-  }
-  const now = new Date();
-  const startOfDay = (input: Date) =>
-    new Date(input.getFullYear(), input.getMonth(), input.getDate()).getTime();
-  const diffDays = Math.round((startOfDay(now) - startOfDay(date)) / 86_400_000);
-  if (diffDays <= 0) {
-    return todayLabel;
-  }
-  if (diffDays === 1) {
-    return yesterdayLabel;
-  }
-  return date.toLocaleDateString();
 }
 
 function splitText(text: string, size = 18): string[] {
@@ -763,165 +314,6 @@ const defaultEchoAdapter: ChatAdapter = {
 // Replaces the chat-headless default author label (which falls back to
 // `message.role`, rendering "assistant") with a branded "DataGrid Copilot"
 // label for assistant messages. User messages keep whatever label they have.
-const CopilotAuthorName = styled('div', {
-  name: 'MuiChatMessage',
-  slot: 'GroupAuthorName',
-  shouldForwardProp: (prop) =>
-    prop !== 'authorRole' &&
-    prop !== 'variant' &&
-    prop !== 'ownerState' &&
-    prop !== 'theme' &&
-    prop !== 'sx' &&
-    prop !== 'as',
-})<{ authorRole?: string; variant?: string }>(({ theme, authorRole, variant }) => {
-  const isCompact = variant === 'compact';
-  const isUser = authorRole === 'user';
-  const avatarOffset = `calc(var(--MuiChatMessage-avatarSize) + ${theme.spacing(2)} + ${theme.spacing(0.5)})`;
-  return {
-    fontSize: theme.typography.caption.fontSize,
-    fontWeight: theme.typography.fontWeightMedium,
-    color: isCompact
-      ? (theme.vars || theme).palette.primary.main
-      : (theme.vars || theme).palette.text.secondary,
-    ...(isCompact && {
-      gridArea: 'authorName',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: theme.spacing(1),
-      lineHeight: 1,
-    }),
-    ...(!isCompact && isUser && { textAlign: 'right' as const, paddingInlineEnd: avatarOffset }),
-    ...(!isCompact && !isUser && { paddingInlineStart: avatarOffset }),
-  };
-});
-
-function CopilotAuthorNameSlot(props: {
-  ownerState?: { authorRole?: string; variant?: string };
-  children?: React.ReactNode;
-}) {
-  const { ownerState, children, ...rest } = props;
-  const label = ownerState?.authorRole === 'assistant' ? 'DataGrid Copilot' : children;
-  return (
-    <CopilotAuthorName authorRole={ownerState?.authorRole} variant={ownerState?.variant} {...rest}>
-      {label}
-    </CopilotAuthorName>
-  );
-}
-
-function CopilotMessageItem({
-  id,
-  pluginToolSlots,
-}: {
-  id: string;
-  pluginToolSlots: Record<string, Partial<ToolPartSlots>>;
-}) {
-  const toolSlots = React.useMemo(
-    () => ({
-      setGridState: { root: CopilotToolBlock },
-      runCommands: { root: CopilotToolBlock },
-      queryGridData: { root: CopilotDataQueryApproval },
-      ...pluginToolSlots,
-    }),
-    [pluginToolSlots],
-  );
-
-  // A/B-pair detection: when an assistant message carries `abPairId`, we
-  // render a tabbed card instead of the standard message bubble. The card
-  // mounts as soon as VARIANT A's preamble lands — the twin (variant B)
-  // may still be streaming, in which case the Variant B tab shows a
-  // placeholder until B's first chunks arrive. That gives the user an
-  // immediate visual cue that an A/B comparison is in progress, instead
-  // of waiting for both responses to finish before the UI changes shape.
-  //
-  // Suppression rule: variant B's message (when it does arrive) is the
-  // FOLLOWER — its slot in the message list returns `null` so the tabbed
-  // card stays in variant A's chronological position.
-  const store = useChatStore();
-  const messageIds = useMessageIds();
-  const message = store.state.messagesById[id];
-  const abPairId = message?.metadata?.abPairId;
-  const abVariant = message?.metadata?.abVariant;
-  const pair = React.useMemo(() => {
-    if (!abPairId) {
-      return null;
-    }
-    let variantAId: string | undefined;
-    let variantBId: string | undefined;
-    for (const otherId of messageIds) {
-      const other = store.state.messagesById[otherId];
-      if (!other || other.role !== 'assistant') {
-        continue;
-      }
-      if (other.metadata?.abPairId !== abPairId) {
-        continue;
-      }
-      if (other.metadata?.abVariant === 'A' && !variantAId) {
-        variantAId = otherId;
-      } else if (other.metadata?.abVariant === 'B' && !variantBId) {
-        variantBId = otherId;
-      }
-      if (variantAId && variantBId) {
-        break;
-      }
-    }
-    if (!variantAId && !variantBId) {
-      return null;
-    }
-    return { variantAId, variantBId };
-  }, [abPairId, messageIds, store.state.messagesById]);
-
-  if (pair) {
-    // The follower (variant B) always suppresses — variant A's slot
-    // hosts the tabbed card. When variant A doesn't yet exist (rare
-    // edge case where B arrives first), variant B renders the card
-    // until A catches up.
-    const leaderId = pair.variantAId ?? pair.variantBId!;
-    if (id !== leaderId) {
-      return null;
-    }
-    const variantA = pair.variantAId ? store.state.messagesById[pair.variantAId] : undefined;
-    const variantB = pair.variantBId ? store.state.messagesById[pair.variantBId] : undefined;
-    if (variantA || variantB) {
-      return (
-        <CopilotAbVariantTabs
-          abPairId={abPairId!}
-          variantA={variantA}
-          variantB={variantB}
-          toolSlots={toolSlots}
-        />
-      );
-    }
-  }
-  // `abVariant` exists without a pair record: defensive fallback — keep the
-  // normal single-message rendering so the user at least sees the response.
-  void abVariant;
-
-  return (
-    <ChatMessageGroup messageId={id} slots={{ authorName: CopilotAuthorNameSlot }}>
-      <ChatMessage messageId={id}>
-        <ChatMessageContent
-          afterContent={
-            <React.Fragment>
-              <CopilotStreamingIndicator />
-              <CopilotMessageMetadata />
-              <CopilotMessageFooter />
-            </React.Fragment>
-          }
-          partProps={{
-            tool: {
-              toolSlots,
-            },
-          }}
-        />
-        <ChatMessageMeta />
-      </ChatMessage>
-    </ChatMessageGroup>
-  );
-}
-
-const EMPTY_QUERY_RESULTS = new Map() as unknown as ReadonlyMap<string, never>;
-
 function mergePluginToolSlots(
   plugins: readonly CopilotPlugin[] | undefined,
 ): Record<string, Partial<ToolPartSlots>> {
@@ -940,87 +332,7 @@ function mergePluginToolSlots(
   return merged;
 }
 
-/**
- * Compact chip strip rendered above the composer that surfaces the
- * suggestions emitted by the backend on every assistant turn
- * (`message.metadata.suggestions`). Stays visible after the empty-state
- * hero is gone (via `alwaysVisible`) so users always have a one-tap
- * follow-up. Renders nothing while the latest assistant message has no
- * suggestions yet.
- */
-function CopilotPostTurnSuggestions() {
-  const { messages } = useChat();
-  const lastSuggestions = React.useMemo<string[] | undefined>(() => {
-    for (let i = messages.length - 1; i >= 0; i -= 1) {
-      const m = messages[i];
-      if (m.role !== 'assistant') {
-        continue;
-      }
-      const metadata = m.metadata as { suggestions?: unknown } | undefined;
-      if (metadata?.suggestions && Array.isArray(metadata.suggestions)) {
-        const stringSuggestions = metadata.suggestions.filter(
-          (s): s is string => typeof s === 'string',
-        );
-        return stringSuggestions.length > 0 ? stringSuggestions : undefined;
-      }
-      return undefined;
-    }
-    return undefined;
-  }, [messages]);
-
-  if (!lastSuggestions || lastSuggestions.length === 0) {
-    return null;
-  }
-
-  return (
-    <PostTurnSuggestionsShell>
-      <ChatSuggestions suggestions={lastSuggestions.slice(0, 4)} alwaysVisible autoSubmit />
-    </PostTurnSuggestionsShell>
-  );
-}
-
-function CopilotComposer() {
-  return (
-    <CopilotComposerShell>
-      <CopilotPostTurnSuggestions />
-      <ChatComposer
-        variant="compact"
-        features={{ attachments: false }}
-        sx={{
-          margin: 0,
-        }}
-      />
-      <CopilotDisclaimer>Copilot can make mistakes. Check important results.</CopilotDisclaimer>
-    </CopilotComposerShell>
-  );
-}
-
-// Custom messageListContent slot that appends a dynamic spacer after the
-// rendered rows. The spacer claims one viewport-worth of vertical space
-// after the most recent user message so submitting a new prompt scrolls
-// it cleanly to the top of the visible area, leaving room below for the
-// assistant response to stream into.
-const CopilotMessageListContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { ownerState?: unknown }
->(function CopilotMessageListContent(props, ref) {
-  const { children, ownerState, ...rest } = props;
-  void ownerState;
-  return (
-    <div ref={ref} {...rest}>
-      {children}
-      <CopilotTurnSpacer />
-    </div>
-  );
-});
-
-CopilotMessageListContent.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
-  // ----------------------------------------------------------------------
-  ownerState: PropTypes.any,
-} as any;
+const EMPTY_QUERY_RESULTS = new Map() as unknown as ReadonlyMap<string, never>;
 
 /**
  * Re-executes `queryGridData` tool calls from the persisted message list so
@@ -1038,543 +350,10 @@ function CopilotQueryResultsHydrator() {
   return null;
 }
 
-function CopilotThreadView({
-  suggestions,
-  pluginToolSlots,
-}: {
-  suggestions: Array<ChatSuggestion | string>;
-  pluginToolSlots: Record<string, Partial<ToolPartSlots>>;
-}) {
-  const apiRef = useGridApiContext();
-  const messageIds = useMessageIds();
-
-  const renderItem = React.useCallback(
-    (params: { id: string }) => {
-      return <CopilotMessageItem id={params.id} pluginToolSlots={pluginToolSlots} />;
-    },
-    [pluginToolSlots],
-  );
-
-  return (
-    <CopilotThreadRoot>
-      <CopilotThreadBody>
-        <ChatMessageList
-          items={messageIds}
-          renderItem={renderItem}
-          autoScroll
-          overlay={
-            <React.Fragment>
-              {messageIds.length === 0 && (
-                <CopilotEmptyThread>
-                  <CopilotEmptyHero>
-                    <CopilotEmptyHeroTitle>
-                      {apiRef.current.getLocaleText('copilotPanelEmptyStateTitle')}
-                    </CopilotEmptyHeroTitle>
-                    <CopilotEmptyHeroHelper>
-                      {apiRef.current.getLocaleText('copilotPanelEmptyStateHelper')}
-                    </CopilotEmptyHeroHelper>
-                  </CopilotEmptyHero>
-                  <ChatSuggestions suggestions={suggestions.slice(0, 3)} autoSubmit />
-                </CopilotEmptyThread>
-              )}
-              <ChatScrollToBottomAffordance />
-            </React.Fragment>
-          }
-          sx={{
-            backgroundColor: 'transparent',
-            '& .MuiChatMessageList-content': {
-              paddingBlock: 1,
-            },
-          }}
-          slots={{
-            messageListContent: CopilotMessageListContent,
-          }}
-          slotProps={{
-            messageListOverlay: {
-              style: {
-                top: 0,
-                display: 'flex',
-              },
-            },
-          }}
-        />
-      </CopilotThreadBody>
-      <CopilotComposer />
-    </CopilotThreadRoot>
-  );
-}
-
-type CopilotPanelView = 'thread' | 'menu' | 'history' | 'suggestions';
-
-interface CopilotPanelContentProps {
-  suggestions: Array<ChatSuggestion | string>;
-  view: CopilotPanelView;
-  pluginToolSlots: Record<string, Partial<ToolPartSlots>>;
-  onOpenMenu: () => void;
-  onCloseMenu: () => void;
-  onSelectConversation: (conversationId: string) => void;
-  onOpenHistory: () => void;
-  onOpenSuggestions: () => void;
-  onNewConversation: () => void;
-}
-
-function CopilotThreadHeader({
-  onOpenMenu,
-  onNewConversation,
-}: Pick<CopilotPanelContentProps, 'onOpenMenu' | 'onNewConversation'>) {
-  const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
-  const classes = useUtilityClasses(rootProps);
-
-  return (
-    <CopilotPanelHeader className={classes.header}>
-      <CopilotPanelTitleGroup className={classes.titleGroup}>
-        <rootProps.slots.baseIconButton
-          {...rootProps.slotProps?.baseIconButton}
-          aria-label={apiRef.current.getLocaleText('copilotPanelMenu')}
-          onClick={onOpenMenu}
-        >
-          <GridMenuIcon fontSize="small" />
-        </rootProps.slots.baseIconButton>
-        <CopilotPanelTitle className={classes.title}>
-          {apiRef.current.getLocaleText('copilotPanelTitle')}
-        </CopilotPanelTitle>
-        <CopilotPanelBeta className={classes.beta}>
-          {apiRef.current.getLocaleText('copilotPanelBeta')}
-        </CopilotPanelBeta>
-      </CopilotPanelTitleGroup>
-      <rootProps.slots.baseIconButton
-        {...rootProps.slotProps?.baseIconButton}
-        aria-label={apiRef.current.getLocaleText('copilotPanelReload')}
-        onClick={onNewConversation}
-      >
-        <rootProps.slots.aiAssistantPanelNewConversationIcon fontSize="small" />
-      </rootProps.slots.baseIconButton>
-      <rootProps.slots.baseIconButton
-        {...rootProps.slotProps?.baseIconButton}
-        aria-label={apiRef.current.getLocaleText('copilotPanelClose')}
-        onClick={() => apiRef.current.hideSidebar()}
-      >
-        <rootProps.slots.copilotPanelCloseIcon fontSize="small" />
-      </rootProps.slots.baseIconButton>
-    </CopilotPanelHeader>
-  );
-}
-
-function CopilotMenuHeaderView({
-  title,
-  onBack,
-  onNewConversation,
-}: {
-  title?: string;
-  onBack: () => void;
-  onNewConversation?: () => void;
-}) {
-  const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
-
-  return (
-    <CopilotMenuHeader>
-      <rootProps.slots.baseIconButton
-        {...rootProps.slotProps?.baseIconButton}
-        aria-label={apiRef.current.getLocaleText('copilotPanelBack')}
-        onClick={onBack}
-      >
-        <CopilotChevronLeftIcon fontSize="small" />
-      </rootProps.slots.baseIconButton>
-      {title ? (
-        <CopilotMenuHeaderTitle>{title}</CopilotMenuHeaderTitle>
-      ) : (
-        <CopilotMenuHeaderSpacer />
-      )}
-      {onNewConversation ? (
-        <rootProps.slots.baseIconButton
-          {...rootProps.slotProps?.baseIconButton}
-          aria-label={apiRef.current.getLocaleText('copilotPanelReload')}
-          onClick={onNewConversation}
-        >
-          <CopilotComposeIcon fontSize="small" />
-        </rootProps.slots.baseIconButton>
-      ) : null}
-      <rootProps.slots.baseIconButton
-        {...rootProps.slotProps?.baseIconButton}
-        aria-label={apiRef.current.getLocaleText('copilotPanelClose')}
-        onClick={() => apiRef.current.hideSidebar()}
-      >
-        <rootProps.slots.copilotPanelCloseIcon fontSize="small" />
-      </rootProps.slots.baseIconButton>
-    </CopilotMenuHeader>
-  );
-}
-
-function CopilotMenuSectionView({
-  title,
-  showViewAll = true,
-  onViewAll,
-  children,
-}: {
-  title: string;
-  showViewAll?: boolean;
-  onViewAll?: () => void;
-  children: React.ReactNode;
-}) {
-  const apiRef = useGridApiContext();
-
-  return (
-    <CopilotMenuSection>
-      <CopilotMenuSectionHeader>
-        <CopilotMenuSectionTitle>{title}</CopilotMenuSectionTitle>
-        {showViewAll && onViewAll ? (
-          <CopilotMenuSectionAction type="button" onClick={onViewAll}>
-            {apiRef.current.getLocaleText('copilotPanelViewAll')}
-          </CopilotMenuSectionAction>
-        ) : null}
-      </CopilotMenuSectionHeader>
-      {children}
-    </CopilotMenuSection>
-  );
-}
-
-function CopilotMenuView({
-  suggestions,
-  onBack,
-  onNewConversation,
-  onSelectConversation,
-  onSelectSuggestion,
-  onOpenHistory,
-  onOpenSuggestions,
-}: {
-  suggestions: Array<ChatSuggestion | string>;
-  onBack: () => void;
-  onNewConversation: () => void;
-  onSelectConversation: (conversationId: string) => void;
-  onSelectSuggestion: () => void;
-  onOpenHistory: () => void;
-  onOpenSuggestions: () => void;
-}) {
-  const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
-  const { activeConversationId, conversations, setActiveConversation } = useChat();
-  const composer = useChatComposer();
-
-  const handleConversationClick = React.useCallback(
-    async (conversationId: string) => {
-      await setActiveConversation(conversationId);
-      onSelectConversation(conversationId);
-    },
-    [onSelectConversation, setActiveConversation],
-  );
-
-  const handleSuggestionClick = React.useCallback(
-    (value: string) => {
-      onSelectSuggestion();
-      composer.setValue(value);
-      void Promise.resolve().then(() => composer.submit());
-    },
-    [composer, onSelectSuggestion],
-  );
-
-  return (
-    <CopilotMenuRoot>
-      <CopilotMenuHeaderView onBack={onBack} onNewConversation={onNewConversation} />
-      <CopilotMenuContent>
-        <CopilotMenuSectionView
-          title={apiRef.current.getLocaleText('copilotPanelHistory')}
-          showViewAll={conversations.length > 0}
-          onViewAll={onOpenHistory}
-        >
-          <CopilotMenuList>
-            {conversations.length === 0 ? (
-              <rootProps.slots.baseMenuItem
-                inert
-                iconStart={<CopilotSubjectIcon fontSize="small" />}
-              >
-                {apiRef.current.getLocaleText('aiAssistantPanelEmptyConversation')}
-              </rootProps.slots.baseMenuItem>
-            ) : (
-              conversations.slice(0, 5).map((conversation) => (
-                <rootProps.slots.baseMenuItem
-                  key={conversation.id}
-                  aria-current={conversation.id === activeConversationId ? 'true' : undefined}
-                  selected={conversation.id === activeConversationId}
-                  iconStart={<CopilotSubjectIcon fontSize="small" />}
-                  onClick={() => {
-                    void handleConversationClick(conversation.id);
-                  }}
-                >
-                  {conversation.title ?? conversation.subtitle ?? conversation.id}
-                </rootProps.slots.baseMenuItem>
-              ))
-            )}
-          </CopilotMenuList>
-        </CopilotMenuSectionView>
-
-        <CopilotMenuSectionView
-          title={apiRef.current.getLocaleText('copilotPanelMoreSuggestions')}
-          onViewAll={onOpenSuggestions}
-        >
-          <CopilotMenuList>
-            {suggestions.map((suggestion) => {
-              const value = getSuggestionValue(suggestion);
-              return (
-                <rootProps.slots.baseMenuItem
-                  key={value}
-                  iconStart={<CopilotReturnArrowIcon fontSize="small" />}
-                  onClick={() => handleSuggestionClick(value)}
-                >
-                  {getSuggestionLabel(suggestion)}
-                </rootProps.slots.baseMenuItem>
-              );
-            })}
-          </CopilotMenuList>
-        </CopilotMenuSectionView>
-
-        <CopilotMenuSection>
-          <CopilotMenuList>
-            <rootProps.slots.baseMenuItem
-              iconStart={<CopilotSettingsIcon fontSize="small" />}
-              iconEnd={
-                <CopilotMenuRowTrailing>
-                  <CopilotMenuBadge>New</CopilotMenuBadge>
-                  <CopilotChevronRightIcon fontSize="small" />
-                </CopilotMenuRowTrailing>
-              }
-            >
-              {apiRef.current.getLocaleText('copilotPanelSettings')}
-            </rootProps.slots.baseMenuItem>
-            <rootProps.slots.baseMenuItem iconStart={<CopilotFeedbackIcon fontSize="small" />}>
-              {apiRef.current.getLocaleText('copilotPanelSendFeedback')}
-            </rootProps.slots.baseMenuItem>
-            <rootProps.slots.baseMenuItem iconStart={<CopilotReportIcon fontSize="small" />}>
-              {apiRef.current.getLocaleText('copilotPanelReport')}
-            </rootProps.slots.baseMenuItem>
-          </CopilotMenuList>
-        </CopilotMenuSection>
-      </CopilotMenuContent>
-    </CopilotMenuRoot>
-  );
-}
-
-const CopilotListItemSubtitle = styled('span', {
-  name: 'MuiDataGrid',
-  slot: 'CopilotPanelListItemSubtitle',
-})({
-  display: 'block',
-  font: vars.typography.font.small,
-  color: vars.colors.foreground.muted,
-});
-
-function CopilotHistoryListView({
-  onBack,
-  onNewConversation,
-  onSelectConversation,
-}: {
-  onBack: () => void;
-  onNewConversation: () => void;
-  onSelectConversation: (conversationId: string) => void;
-}) {
-  const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
-  const { activeConversationId, conversations, setActiveConversation } = useChat();
-
-  const handleConversationClick = React.useCallback(
-    async (conversationId: string) => {
-      await setActiveConversation(conversationId);
-      onSelectConversation(conversationId);
-    },
-    [onSelectConversation, setActiveConversation],
-  );
-
-  const sessionConversations = activeConversationId
-    ? conversations.filter((conversation) => conversation.id === activeConversationId)
-    : [];
-  const otherConversations = activeConversationId
-    ? conversations.filter((conversation) => conversation.id !== activeConversationId)
-    : conversations;
-
-  const todayLabel = apiRef.current.getLocaleText('copilotPanelToday');
-  const yesterdayLabel = apiRef.current.getLocaleText('copilotPanelYesterday');
-
-  const renderItem = (conversation: {
-    id: string;
-    title?: string;
-    subtitle?: string;
-    lastMessageAt?: string | number | Date | null;
-  }) => {
-    const subtitle =
-      formatConversationDate(conversation.lastMessageAt, todayLabel, yesterdayLabel) ??
-      conversation.subtitle;
-    return (
-      <rootProps.slots.baseMenuItem
-        key={conversation.id}
-        aria-current={conversation.id === activeConversationId ? 'true' : undefined}
-        selected={conversation.id === activeConversationId}
-        iconStart={<CopilotSubjectIcon fontSize="small" />}
-        onClick={() => {
-          void handleConversationClick(conversation.id);
-        }}
-      >
-        {subtitle ? (
-          <React.Fragment>
-            <span>{conversation.title ?? conversation.id}</span>
-            <CopilotListItemSubtitle>{subtitle}</CopilotListItemSubtitle>
-          </React.Fragment>
-        ) : (
-          (conversation.title ?? conversation.id)
-        )}
-      </rootProps.slots.baseMenuItem>
-    );
-  };
-
-  return (
-    <CopilotMenuRoot>
-      <CopilotMenuHeaderView
-        title={apiRef.current.getLocaleText('copilotPanelHistory')}
-        onBack={onBack}
-        onNewConversation={onNewConversation}
-      />
-      <CopilotMenuContent>
-        {sessionConversations.length > 0 ? (
-          <React.Fragment>
-            <CopilotListGroupHeader>
-              {apiRef.current.getLocaleText('copilotPanelSession')}
-            </CopilotListGroupHeader>
-            <CopilotMenuList>{sessionConversations.map(renderItem)}</CopilotMenuList>
-          </React.Fragment>
-        ) : null}
-        {otherConversations.length > 0 ? (
-          <React.Fragment>
-            <CopilotListGroupHeader>
-              {apiRef.current.getLocaleText('copilotPanelAll')}
-            </CopilotListGroupHeader>
-            <CopilotMenuList>{otherConversations.map(renderItem)}</CopilotMenuList>
-          </React.Fragment>
-        ) : null}
-        {sessionConversations.length === 0 && otherConversations.length === 0 ? (
-          <CopilotMenuList>
-            <rootProps.slots.baseMenuItem inert iconStart={<CopilotSubjectIcon fontSize="small" />}>
-              {apiRef.current.getLocaleText('aiAssistantPanelEmptyConversation')}
-            </rootProps.slots.baseMenuItem>
-          </CopilotMenuList>
-        ) : null}
-      </CopilotMenuContent>
-    </CopilotMenuRoot>
-  );
-}
-
-function CopilotSuggestionsListView({
-  suggestions,
-  onBack,
-  onSelectSuggestion,
-}: {
-  suggestions: Array<ChatSuggestion | string>;
-  onBack: () => void;
-  onSelectSuggestion: (value: string) => void;
-}) {
-  const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
-
-  return (
-    <CopilotMenuRoot>
-      <CopilotMenuHeaderView
-        title={apiRef.current.getLocaleText('copilotPanelMoreSuggestions')}
-        onBack={onBack}
-      />
-      <CopilotMenuContent>
-        <CopilotListGroupHeader>
-          {apiRef.current.getLocaleText('copilotPanelAsk')}
-        </CopilotListGroupHeader>
-        <CopilotMenuList>
-          {suggestions.map((suggestion) => {
-            const value = getSuggestionValue(suggestion);
-            return (
-              <rootProps.slots.baseMenuItem
-                key={value}
-                iconStart={<CopilotReturnArrowIcon fontSize="small" />}
-                onClick={() => onSelectSuggestion(value)}
-              >
-                {getSuggestionLabel(suggestion)}
-              </rootProps.slots.baseMenuItem>
-            );
-          })}
-        </CopilotMenuList>
-      </CopilotMenuContent>
-    </CopilotMenuRoot>
-  );
-}
-
-function CopilotPanelContent(props: CopilotPanelContentProps) {
-  const {
-    suggestions,
-    view,
-    pluginToolSlots,
-    onOpenMenu,
-    onCloseMenu,
-    onSelectConversation,
-    onOpenHistory,
-    onOpenSuggestions,
-    onNewConversation,
-  } = props;
-  const composer = useChatComposer();
-
-  const handleSelectSuggestion = React.useCallback(
-    (value: string) => {
-      onCloseMenu();
-      composer.setValue(value);
-      void Promise.resolve().then(() => composer.submit());
-    },
-    [composer, onCloseMenu],
-  );
-
-  if (view === 'menu') {
-    return (
-      <CopilotMenuView
-        suggestions={suggestions}
-        onBack={onCloseMenu}
-        onNewConversation={onNewConversation}
-        onSelectConversation={onSelectConversation}
-        onSelectSuggestion={onCloseMenu}
-        onOpenHistory={onOpenHistory}
-        onOpenSuggestions={onOpenSuggestions}
-      />
-    );
-  }
-
-  if (view === 'history') {
-    return (
-      <CopilotHistoryListView
-        onBack={onOpenMenu}
-        onNewConversation={onNewConversation}
-        onSelectConversation={onSelectConversation}
-      />
-    );
-  }
-
-  if (view === 'suggestions') {
-    return (
-      <CopilotSuggestionsListView
-        suggestions={suggestions}
-        onBack={onOpenMenu}
-        onSelectSuggestion={handleSelectSuggestion}
-      />
-    );
-  }
-
-  return (
-    <React.Fragment>
-      <CopilotThreadHeader onOpenMenu={onOpenMenu} onNewConversation={onNewConversation} />
-      <CopilotPanelBody>
-        <CopilotThreadView suggestions={suggestions} pluginToolSlots={pluginToolSlots} />
-      </CopilotPanelBody>
-    </React.Fragment>
-  );
-}
-
 function GridCopilotPanel() {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
-  const [view, setView] = React.useState<CopilotPanelView>('thread');
   const copilotPlugins = (rootProps as { copilotPlugins?: readonly CopilotPlugin[] })
     .copilotPlugins;
   const pluginToolSlots = React.useMemo(
@@ -1767,7 +546,6 @@ function GridCopilotPanel() {
 
   const handleNewConversation = React.useCallback(() => {
     handleReload();
-    setView('thread');
   }, [handleReload]);
 
   const handleSelectConversation = React.useCallback(
@@ -1778,7 +556,6 @@ function GridCopilotPanel() {
       draftSentRef.current = false;
       localStorageController?.persistActiveConversationId(conversationId);
       restoreConversationGridState(conversationId);
-      setView('thread');
     },
     [localStorageController, restoreConversationGridState],
   );
@@ -1860,6 +637,70 @@ function GridCopilotPanel() {
     };
   }, [baseAdapter, supportsPersistentHistory]);
 
+  const panelLocaleText = React.useMemo(
+    () => ({
+      title: apiRef.current.getLocaleText('copilotPanelTitle'),
+      beta: apiRef.current.getLocaleText('copilotPanelBeta'),
+      menu: apiRef.current.getLocaleText('copilotPanelMenu'),
+      back: apiRef.current.getLocaleText('copilotPanelBack'),
+      close: apiRef.current.getLocaleText('copilotPanelClose'),
+      reload: apiRef.current.getLocaleText('copilotPanelReload'),
+      history: apiRef.current.getLocaleText('copilotPanelHistory'),
+      session: apiRef.current.getLocaleText('copilotPanelSession'),
+      all: apiRef.current.getLocaleText('copilotPanelAll'),
+      today: apiRef.current.getLocaleText('copilotPanelToday'),
+      yesterday: apiRef.current.getLocaleText('copilotPanelYesterday'),
+      viewAll: apiRef.current.getLocaleText('copilotPanelViewAll'),
+      ask: apiRef.current.getLocaleText('copilotPanelAsk'),
+      moreSuggestions: apiRef.current.getLocaleText('copilotPanelMoreSuggestions'),
+      settings: apiRef.current.getLocaleText('copilotPanelSettings'),
+      sendFeedback: apiRef.current.getLocaleText('copilotPanelSendFeedback'),
+      report: apiRef.current.getLocaleText('copilotPanelReport'),
+      emptyStateTitle: apiRef.current.getLocaleText('copilotPanelEmptyStateTitle'),
+      emptyStateHelper: apiRef.current.getLocaleText('copilotPanelEmptyStateHelper'),
+      emptyConversation: apiRef.current.getLocaleText('aiAssistantPanelEmptyConversation'),
+      suggestions: apiRef.current.getLocaleText('aiAssistantSuggestions'),
+      promptFieldLabel: apiRef.current.getLocaleText('promptFieldLabel'),
+      promptFieldPlaceholder: apiRef.current.getLocaleText('promptFieldPlaceholder'),
+      promptFieldSend: apiRef.current.getLocaleText('promptFieldSend'),
+    }),
+    [apiRef],
+  );
+
+  const gridToolSlots = React.useMemo(
+    () => ({
+      setGridState: { root: CopilotToolBlock },
+      runCommands: { root: CopilotToolBlock },
+      queryGridData: { root: CopilotDataQueryApproval },
+      ...pluginToolSlots,
+    }),
+    [pluginToolSlots],
+  );
+
+  const panelSlots = React.useMemo(
+    () => ({
+      abVariantTabs: CopilotAbVariantTabs,
+      metadataCard: CopilotMessageMetadata,
+    }),
+    [],
+  );
+
+  const handleSwitchVariant = React.useCallback(
+    (messageId: string) => {
+      apiRef.current.copilot.switchToVariant(messageId);
+    },
+    [apiRef],
+  );
+
+  const handlePanelOpenChange = React.useCallback(
+    (nextOpen: boolean) => {
+      if (!nextOpen) {
+        apiRef.current.hideSidebar();
+      }
+    },
+    [apiRef],
+  );
+
   return (
     <CopilotPanelRoot className={classes.root}>
       <CopilotPluginRenderProvider value={pluginRenderContextValue}>
@@ -1887,16 +728,17 @@ function GridCopilotPanel() {
           }}
         >
           <CopilotQueryResultsHydrator />
-          <CopilotPanelContent
+          <CopilotChatPanelContent
+            open
+            onOpenChange={handlePanelOpenChange}
             suggestions={rootProps.copilotSuggestions ?? DEFAULT_SUGGESTIONS}
-            view={view}
-            pluginToolSlots={pluginToolSlots}
-            onOpenMenu={() => setView('menu')}
-            onCloseMenu={() => setView('thread')}
-            onSelectConversation={handleSelectConversation}
-            onOpenHistory={() => setView('history')}
-            onOpenSuggestions={() => setView('suggestions')}
+            localeText={panelLocaleText}
+            authorName="DataGrid Copilot"
+            toolSlots={gridToolSlots}
+            slots={panelSlots}
+            onSwitchVariant={handleSwitchVariant}
             onNewConversation={handleNewConversation}
+            onSelectConversation={handleSelectConversation}
           />
         </ChatRoot>
       </CopilotPluginRenderProvider>

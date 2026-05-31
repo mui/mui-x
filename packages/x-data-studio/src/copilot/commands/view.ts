@@ -5,10 +5,6 @@ import {
   invalid,
   ok,
 } from '@mui/x-copilot';
-import type {
-  DataStudioChartConfig,
-  DataStudioViewKind,
-} from '../../DataStudio/DataStudio.types';
 import type { StudioHostAdapter } from '../studioHostAdapter';
 import type { StudioStateDocument } from '../stateDocument';
 
@@ -16,11 +12,9 @@ type Handler<P> = CommandHandler<StudioHostAdapter, StudioStateDocument, P>;
 type Ctx = ExecutorContext<StudioHostAdapter, StudioStateDocument>;
 
 interface AddViewParams {
-  datasetId?: string;
+  dataSourceId?: string;
   label?: string;
-  kind?: DataStudioViewKind;
   initialState?: GridInitialState;
-  chartConfig?: DataStudioChartConfig;
 }
 
 interface SelectViewParams {
@@ -48,49 +42,43 @@ interface MoveViewParams {
 interface UpdateViewParams {
   viewId: string;
   patch: {
-    datasetId?: string;
-    chartConfig?: DataStudioChartConfig;
+    dataSourceId?: string;
     initialState?: GridInitialState;
   };
 }
 
-function findView(ctx: Ctx, viewId: string) {
-  return ctx.adapter.api.stateApi.views.find((view) => view.id === viewId);
+function findSheet(ctx: Ctx, viewId: string) {
+  return ctx.adapter.api.stateApi.sheets.find((sheet) => sheet.id === viewId);
 }
 
 export const studioAddView: Handler<AddViewParams> = {
-  type: 'studio.addView',
+  type: 'studio.addSheet',
   namespace: 'studio',
   tier: 3,
   plan: 'community',
   guard: 'viewCrud',
-  phase: 'view',
+  phase: 'sheet',
   validate: (params, ctx) => {
-    if (params?.datasetId != null) {
-      const exists = ctx.adapter.api.datasets.some((d) => d.id === params.datasetId);
+    if (params?.dataSourceId != null) {
+      const exists = ctx.adapter.api.dataSources.some((d) => d.id === params.dataSourceId);
       if (!exists) {
-        return invalid(`studio.addView: unknown datasetId '${params.datasetId}'`);
+        return invalid(`studio.addSheet: unknown dataSourceId '${params.dataSourceId}'`);
       }
-    }
-    if (params?.kind != null && params.kind !== 'grid' && params.kind !== 'chart') {
-      return invalid(`studio.addView: kind must be 'grid' or 'chart'`);
     }
     return ok();
   },
   run: (params, ctx) => {
-    const created = ctx.adapter.api.stateApi.addView({
-      datasetId: params?.datasetId,
+    const created = ctx.adapter.api.stateApi.addSheet({
+      dataSourceId: params?.dataSourceId,
       label: params?.label,
-      kind: params?.kind,
       initialState: params?.initialState,
-      chartConfig: params?.chartConfig,
     });
     return created ?? undefined;
   },
 };
 
 export const studioSelectView: Handler<SelectViewParams> = {
-  type: 'studio.selectView',
+  type: 'studio.selectSheet',
   namespace: 'studio',
   tier: 2,
   plan: 'community',
@@ -98,133 +86,133 @@ export const studioSelectView: Handler<SelectViewParams> = {
   phase: 'layout',
   validate: (params, ctx) => {
     if (!params || typeof params.viewId !== 'string') {
-      return invalid('studio.selectView requires { viewId }');
+      return invalid('studio.selectSheet requires { viewId }');
     }
-    if (!findView(ctx, params.viewId)) {
-      return invalid(`studio.selectView: unknown viewId '${params.viewId}'`);
+    if (!findSheet(ctx, params.viewId)) {
+      return invalid(`studio.selectSheet: unknown viewId '${params.viewId}'`);
     }
     return ok();
   },
   run: ({ viewId }, ctx) => {
-    ctx.adapter.api.stateApi.selectView(viewId);
+    ctx.adapter.api.stateApi.selectSheet(viewId);
   },
 };
 
 export const studioRenameView: Handler<RenameViewParams> = {
-  type: 'studio.renameView',
+  type: 'studio.renameSheet',
   namespace: 'studio',
   tier: 3,
   plan: 'community',
   guard: 'viewCrud',
-  phase: 'view',
+  phase: 'sheet',
   validate: (params, ctx) => {
     if (!params || typeof params.viewId !== 'string' || typeof params.label !== 'string') {
-      return invalid('studio.renameView requires { viewId, label }');
+      return invalid('studio.renameSheet requires { viewId, label }');
     }
-    if (!findView(ctx, params.viewId)) {
-      return invalid(`studio.renameView: unknown viewId '${params.viewId}'`);
+    if (!findSheet(ctx, params.viewId)) {
+      return invalid(`studio.renameSheet: unknown viewId '${params.viewId}'`);
     }
     return ok();
   },
   run: ({ viewId, label }, ctx) => {
-    ctx.adapter.api.stateApi.renameView(viewId, label);
+    ctx.adapter.api.stateApi.renameSheet(viewId, label);
   },
 };
 
 export const studioDuplicateView: Handler<DuplicateViewParams> = {
-  type: 'studio.duplicateView',
+  type: 'studio.duplicateSheet',
   namespace: 'studio',
   tier: 3,
   plan: 'community',
   guard: 'viewCrud',
-  phase: 'view',
+  phase: 'sheet',
   validate: (params, ctx) => {
     if (!params || typeof params.viewId !== 'string') {
-      return invalid('studio.duplicateView requires { viewId }');
+      return invalid('studio.duplicateSheet requires { viewId }');
     }
-    if (!findView(ctx, params.viewId)) {
-      return invalid(`studio.duplicateView: unknown viewId '${params.viewId}'`);
+    if (!findSheet(ctx, params.viewId)) {
+      return invalid(`studio.duplicateSheet: unknown viewId '${params.viewId}'`);
     }
     return ok();
   },
   run: ({ viewId }, ctx) => {
-    const copy = ctx.adapter.api.stateApi.duplicateView(viewId);
+    const copy = ctx.adapter.api.stateApi.duplicateSheet(viewId);
     return copy ?? undefined;
   },
 };
 
 export const studioDeleteView: Handler<DeleteViewParams> = {
-  type: 'studio.deleteView',
+  type: 'studio.deleteSheet',
   namespace: 'studio',
   tier: 3,
   plan: 'community',
   guard: 'viewCrud',
-  phase: 'view',
+  phase: 'sheet',
   validate: (params, ctx) => {
     if (!params || typeof params.viewId !== 'string') {
-      return invalid('studio.deleteView requires { viewId }');
+      return invalid('studio.deleteSheet requires { viewId }');
     }
-    if (!findView(ctx, params.viewId)) {
-      return invalid(`studio.deleteView: unknown viewId '${params.viewId}'`);
+    if (!findSheet(ctx, params.viewId)) {
+      return invalid(`studio.deleteSheet: unknown viewId '${params.viewId}'`);
     }
     return ok();
   },
   run: ({ viewId }, ctx) => {
-    ctx.adapter.api.stateApi.deleteView(viewId);
+    ctx.adapter.api.stateApi.deleteSheet(viewId);
   },
 };
 
 export const studioMoveView: Handler<MoveViewParams> = {
-  type: 'studio.moveView',
+  type: 'studio.moveSheet',
   namespace: 'studio',
   tier: 3,
   plan: 'community',
   guard: 'viewCrud',
-  phase: 'view',
+  phase: 'sheet',
   validate: (params, ctx) => {
     if (!params || typeof params.viewId !== 'string' || typeof params.delta !== 'number') {
-      return invalid('studio.moveView requires { viewId, delta }');
+      return invalid('studio.moveSheet requires { viewId, delta }');
     }
     if (!Number.isInteger(params.delta)) {
-      return invalid('studio.moveView: delta must be an integer');
+      return invalid('studio.moveSheet: delta must be an integer');
     }
-    if (!findView(ctx, params.viewId)) {
-      return invalid(`studio.moveView: unknown viewId '${params.viewId}'`);
+    if (!findSheet(ctx, params.viewId)) {
+      return invalid(`studio.moveSheet: unknown viewId '${params.viewId}'`);
     }
     return ok();
   },
   run: ({ viewId, delta }, ctx) => {
-    ctx.adapter.api.stateApi.moveView(viewId, delta);
+    ctx.adapter.api.stateApi.moveSheet(viewId, delta);
   },
 };
 
 export const studioUpdateView: Handler<UpdateViewParams> = {
-  type: 'studio.updateView',
+  type: 'studio.updateSheet',
   namespace: 'studio',
   tier: 3,
   plan: 'community',
   guard: 'viewCrud',
-  phase: 'view',
+  phase: 'sheet',
   validate: (params, ctx) => {
     if (!params || typeof params.viewId !== 'string' || !params.patch) {
-      return invalid('studio.updateView requires { viewId, patch }');
+      return invalid('studio.updateSheet requires { viewId, patch }');
     }
-    if (!findView(ctx, params.viewId)) {
-      return invalid(`studio.updateView: unknown viewId '${params.viewId}'`);
+    if (!findSheet(ctx, params.viewId)) {
+      return invalid(`studio.updateSheet: unknown viewId '${params.viewId}'`);
     }
-    if (params.patch.datasetId !== undefined) {
-      if (typeof params.patch.datasetId !== 'string') {
-        return invalid('studio.updateView: patch.datasetId must be a string');
+    if (params.patch.dataSourceId !== undefined) {
+      if (typeof params.patch.dataSourceId !== 'string') {
+        return invalid('studio.updateSheet: patch.dataSourceId must be a string');
       }
-      const exists = ctx.adapter.api.datasets.some((d) => d.id === params.patch.datasetId);
+      const exists = ctx.adapter.api.dataSources.some((d) => d.id === params.patch.dataSourceId);
       if (!exists) {
-        return invalid(`studio.updateView: unknown patch.datasetId '${params.patch.datasetId}'`);
+        return invalid(`studio.updateSheet: unknown patch.dataSourceId '${params.patch.dataSourceId}'`);
       }
     }
     return ok();
   },
   run: ({ viewId, patch }, ctx) => {
-    ctx.adapter.api.stateApi.updateView(viewId, patch);
+    ctx.adapter.api.stateApi.updateSheet(viewId, patch);
   },
 };
 

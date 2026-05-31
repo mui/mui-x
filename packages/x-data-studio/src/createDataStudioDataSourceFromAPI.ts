@@ -17,7 +17,7 @@ import {
   type DataStudioUpdateRowRequest,
 } from './models';
 
-export interface DataStudioDataSource extends Omit<GridDataSource, 'getRows'> {
+export interface DataStudioDataSourceConnector extends Omit<GridDataSource, 'getRows'> {
   /**
    * Loads rows through a Data Studio rows endpoint.
    * @param {DataStudioGetRowsParams} params The parameters required to fetch rows.
@@ -228,8 +228,8 @@ function createAggregatedValueAccessor(accessors: DataStudioDataSourceAccessors 
  */
 export function createDataStudioDataSourceFromAPI(
   options: CreateDataStudioDataSourceFromAPIOptions,
-): DataStudioDataSource {
-  const dataSource: DataStudioDataSource = {
+): DataStudioDataSourceConnector {
+  const dataSource: DataStudioDataSourceConnector = {
     async getRows(params) {
       return postDataStudioRequest<DataStudioGetRowsResponse>(
         options,

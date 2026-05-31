@@ -1,5 +1,5 @@
 import type { GridValidRowModel } from '@mui/x-data-grid';
-import type { DataStudioDataset } from './DataStudio';
+import type { DataStudioDataSource } from './DataStudio';
 import type { DataStudioDataSourceDescriptor, DataStudioSchemaResponse } from './models';
 import { DATA_STUDIO_SYNTHETIC_ID_FIELD } from './models';
 import { createDataStudioDataSourceFromAPI } from './createDataStudioDataSourceFromAPI';
@@ -9,7 +9,7 @@ type DataStudioRemoteEndpointResolver =
   | string
   | ((descriptor: DataStudioDataSourceDescriptor) => string);
 
-export interface CreateDataStudioDatasetsFromAPIOptions {
+export interface CreateDataStudioDataSourcesFromAPIOptions {
   /**
    * URL used to discover the Data Studio schema.
    */
@@ -81,7 +81,7 @@ function deriveEndpointUrl(schemaUrl: string, action: DataStudioRemoteEndpointAc
 
 function resolveEndpointUrl(
   descriptor: DataStudioDataSourceDescriptor,
-  options: CreateDataStudioDatasetsFromAPIOptions,
+  options: CreateDataStudioDataSourcesFromAPIOptions,
   action: DataStudioRemoteEndpointAction,
 ) {
   if (descriptor.endpoints?.[action]) {
@@ -97,7 +97,7 @@ function resolveEndpointUrl(
   return resolver ?? deriveEndpointUrl(options.schemaUrl, action);
 }
 
-function getDatasetLabel(descriptor: DataStudioDataSourceDescriptor) {
+function getDataSourceLabel(descriptor: DataStudioDataSourceDescriptor) {
   return descriptor.label;
 }
 
@@ -112,11 +112,11 @@ async function readRemoteErrorMessage(response: Response) {
 }
 
 /**
- * Loads a Data Studio schema and converts it into Data Studio datasets.
+ * Loads a Data Studio schema and converts it into Data Studio dataSources.
  */
-export async function createDataStudioDatasetsFromAPI<R extends GridValidRowModel = any>(
-  options: CreateDataStudioDatasetsFromAPIOptions,
-): Promise<DataStudioDataset<R>[]> {
+export async function createDataStudioDataSourcesFromAPI<R extends GridValidRowModel = any>(
+  options: CreateDataStudioDataSourcesFromAPIOptions,
+): Promise<DataStudioDataSource<R>[]> {
   const fetchFn = options.fetch ?? fetch;
   const response = await fetchFn(options.schemaUrl, {
     headers: {
@@ -140,10 +140,19 @@ Ensure the schema endpoint at "${options.schemaUrl}" returns a successful DataSt
 
   return schema.dataSources.map((descriptor) => ({
     id: descriptor.id,
-    label: getDatasetLabel(descriptor),
+    label: getDataSourceLabel(descriptor),
     columns: descriptor.columns,
     rowIdField: descriptor.rowIdField,
-    // Prefer the synthetic id field for server-side group rows so the dataset's
+    // Forward the server-declared chart grouping so server-backed charts can
+    // aggregate by default (the server vouches it can group by these fields).
+    ...(descriptor.chartDefaults ? { chartDefaults: descriptor.chartDefaults } : {}),
+    // The connector groups + aggregates server-side → charts can summarize the
+    // whole dataset instead of sampling.
+    supportsServerGrouping:
+      descriptor.capabilities.rowGrouping && descriptor.capabilities.aggregation,
+    // Forward the join group so the UI can offer joins between same-backend sources.
+    ...(descriptor.joinGroup ? { joinGroup: descriptor.joinGroup } : {}),
+    // Prefer the synthetic id field for server-side group rows so the dataSource's
     // `rowIdField` column never displays values like `data-studio-group/...`.
     getRowId: descriptor.rowIdField
       ? (row) =>
@@ -152,7 +161,7 @@ Ensure the schema endpoint at "${options.schemaUrl}" returns a successful DataSt
       : (row) =>
           (row[DATA_STUDIO_SYNTHETIC_ID_FIELD as keyof typeof row] as any) ??
           (row as { id?: any }).id,
-    dataSource: createDataStudioDataSourceFromAPI({
+    connector: createDataStudioDataSourceFromAPI({
       dataSourceId: descriptor.id,
       rowsUrl: resolveEndpointUrl(descriptor, options, 'rows'),
       createRowUrl: descriptor.capabilities.createRow

@@ -3,7 +3,7 @@ import * as React from 'react';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import type { CopilotPlugin } from '@mui/x-copilot';
 import { useCopilot, type UseCopilotReturn } from '@mui/x-copilot/hooks';
-import type { DataStudioDataset } from '../DataStudio/DataStudio.types';
+import type { DataStudioDataSource } from '../DataStudio/DataStudio.types';
 import type { DataStudioStateApi } from '../DataStudio/useDataStudioState';
 import {
   buildStudioGuards,
@@ -24,8 +24,8 @@ export interface UseStudioCopilotOptions {
   inner: ChatAdapter;
   /** Studio state API returned by `useDataStudioState`. */
   stateApi: DataStudioStateApi<any>;
-  /** Datasets currently configured on the studio. */
-  datasets: ReadonlyArray<DataStudioDataset<any>>;
+  /** DataSources currently configured on the studio. */
+  dataSources: ReadonlyArray<DataStudioDataSource<any>>;
   /** Optional override for the default guards. */
   features?: Partial<StudioGuards>;
   /** Optional copilot plugins (PDF, formula, custom). */
@@ -43,29 +43,29 @@ export interface UseStudioCopilotReturn extends UseCopilotReturn<StudioDataQuery
  * everything into the generic hook.
  */
 export function useStudioCopilot(options: UseStudioCopilotOptions): UseStudioCopilotReturn {
-  const { inner, stateApi, datasets, features, plugins } = options;
+  const { inner, stateApi, dataSources, features, plugins } = options;
 
   const guards = React.useMemo<StudioGuards>(
     () => (features ? buildStudioGuards(features) : DEFAULT_STUDIO_GUARDS),
     [features],
   );
 
-  // Capture stateApi + datasets via refs so the host adapter identity stays
+  // Capture stateApi + dataSources via refs so the host adapter identity stays
   // stable across renders. The adapter reads .current via the getter
   // functions every time a handler runs or a snapshot is taken.
   const stateApiRef = React.useRef(stateApi);
   stateApiRef.current = stateApi;
-  const datasetsRef = React.useRef(datasets);
-  datasetsRef.current = datasets;
+  const dataSourcesRef = React.useRef(dataSources);
+  dataSourcesRef.current = dataSources;
 
   const host = React.useMemo<StudioHostAdapter>(
     () =>
       createStudioHostAdapter({
         getStateApi: () => stateApiRef.current,
-        getDatasets: () => datasetsRef.current,
+        getDataSources: () => dataSourcesRef.current,
         guards,
         dataQuery: guards.dataQuery
-          ? createQueryStudioDataProvider(() => datasetsRef.current)
+          ? createQueryStudioDataProvider(() => dataSourcesRef.current)
           : undefined,
       }),
     [guards],

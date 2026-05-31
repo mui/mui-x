@@ -8,16 +8,14 @@ import type { Guards } from '@mui/x-copilot';
  *   can read state and answer questions but cannot change anything.
  * - `viewCrud`: add / rename / duplicate / delete / move views.
  * - `viewEditing`: edit a view's stored `initialState` (filters, sort, columns).
- * - `chartEditing`: edit a view's `chartConfig`.
- * - `datasetSwitching`: change the active dataset, invalidate caches.
+ * - `dataSourceSwitching`: change the active dataSource, invalidate caches.
  * - `dataQuery`: enable the `queryStudioData` approval-aware flow.
  */
 export interface StudioGuards extends Guards {
   mutations: boolean;
   viewCrud: boolean;
   viewEditing: boolean;
-  chartEditing: boolean;
-  datasetSwitching: boolean;
+  dataSourceSwitching: boolean;
   dataQuery: boolean;
 }
 
@@ -25,8 +23,7 @@ export const DEFAULT_STUDIO_GUARDS: StudioGuards = {
   mutations: true,
   viewCrud: true,
   viewEditing: true,
-  chartEditing: true,
-  datasetSwitching: true,
+  dataSourceSwitching: true,
   dataQuery: true,
 };
 

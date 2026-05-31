@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import type { DataStudioDataset } from '../../DataStudio/DataStudio.types';
+import type { DataStudioDataSource } from '../../DataStudio/DataStudio.types';
 import { createTestExecutor } from '../__testHarness__/createTestExecutor';
 
-const DATASETS: ReadonlyArray<DataStudioDataset<any>> = [
+const DATASETS: ReadonlyArray<DataStudioDataSource<any>> = [
   { id: 'products', label: 'Products', columns: [{ field: 'name' }], rows: [] },
   { id: 'orders', label: 'Orders', columns: [{ field: 'orderId' }], rows: [] },
 ];
@@ -12,158 +12,128 @@ function runCommands(commands: ReadonlyArray<{ type: string; params?: any }>) {
 }
 
 describe('Studio copilot commands', () => {
-  it('studio.addView creates a grid view bound to the active dataset', () => {
+  it('studio.addSheet creates a grid sheet bound to the active dataSource', () => {
     const { fake, executor } = createTestExecutor({
-      datasets: DATASETS,
-      initialActiveDatasetId: 'products',
+      dataSources: DATASETS,
+      initialActiveDataSourceId: 'products',
     });
     const result = executor.applyEnvelope({
-      runCommands: runCommands([{ type: 'studio.addView', params: { label: 'My View' } }]),
+      runCommands: runCommands([{ type: 'studio.addSheet', params: { label: 'My View' } }]),
     });
     expect(result.applied).toHaveLength(1);
     expect(result.applied[0].kind).toBe('command');
-    expect(fake.views).toHaveLength(1);
-    expect(fake.views[0].label).toBe('My View');
-    expect(fake.views[0].datasetId).toBe('products');
+    expect(fake.sheets).toHaveLength(1);
+    expect(fake.sheets[0].label).toBe('My View');
+    expect(fake.sheets[0].dataSourceId).toBe('products');
   });
 
-  it('studio.addView with kind=chart creates a chart view', () => {
+  it('studio.selectDataSource switches the active dataSource', () => {
     const { fake, executor } = createTestExecutor({
-      datasets: DATASETS,
-      initialActiveDatasetId: 'orders',
+      dataSources: DATASETS,
+      initialActiveDataSourceId: 'products',
     });
     executor.applyEnvelope({
-      runCommands: runCommands([
-        { type: 'studio.addView', params: { kind: 'chart', label: 'Sales Chart' } },
-      ]),
+      runCommands: runCommands([{ type: 'studio.selectDataSource', params: { dataSourceId: 'orders' } }]),
     });
-    expect(fake.views).toHaveLength(1);
-    expect(fake.views[0].kind).toBe('chart');
+    expect(fake.api.activeDataSourceId).toBe('orders');
   });
 
-  it('studio.selectDataset switches the active dataset', () => {
+  it('studio.selectDataSource rejects unknown dataSourceId via validation', () => {
     const { fake, executor } = createTestExecutor({
-      datasets: DATASETS,
-      initialActiveDatasetId: 'products',
-    });
-    executor.applyEnvelope({
-      runCommands: runCommands([{ type: 'studio.selectDataset', params: { datasetId: 'orders' } }]),
-    });
-    expect(fake.api.activeDatasetId).toBe('orders');
-  });
-
-  it('studio.selectDataset rejects unknown datasetId via validation', () => {
-    const { fake, executor } = createTestExecutor({
-      datasets: DATASETS,
-      initialActiveDatasetId: 'products',
+      dataSources: DATASETS,
+      initialActiveDataSourceId: 'products',
     });
     const result = executor.applyEnvelope({
-      runCommands: runCommands([{ type: 'studio.selectDataset', params: { datasetId: 'ghost' } }]),
+      runCommands: runCommands([{ type: 'studio.selectDataSource', params: { dataSourceId: 'ghost' } }]),
     });
     expect(result.applied).toHaveLength(0);
     expect(result.skipped).toHaveLength(1);
     expect(result.skipped[0].reason).toBe('invalid');
-    expect(fake.api.activeDatasetId).toBe('products');
+    expect(fake.api.activeDataSourceId).toBe('products');
   });
 
-  it('studio.renameView updates the view label', () => {
+  it('studio.renameSheet updates the sheet label', () => {
     const { fake, executor } = createTestExecutor({
-      datasets: DATASETS,
-      initialViews: [
-        { id: 'v1', label: 'Original', datasetId: 'products' },
+      dataSources: DATASETS,
+      initialSheets: [
+        { id: 'v1', label: 'Original', dataSourceId: 'products' },
       ],
     });
     executor.applyEnvelope({
       runCommands: runCommands([
-        { type: 'studio.renameView', params: { viewId: 'v1', label: 'Renamed' } },
+        { type: 'studio.renameSheet', params: { viewId: 'v1', label: 'Renamed' } },
       ]),
     });
-    expect(fake.views[0].label).toBe('Renamed');
+    expect(fake.sheets[0].label).toBe('Renamed');
   });
 
-  it('studio.deleteView removes the view', () => {
+  it('studio.deleteSheet removes the sheet', () => {
     const { fake, executor } = createTestExecutor({
-      datasets: DATASETS,
-      initialViews: [
-        { id: 'v1', label: 'Keep', datasetId: 'products' },
-        { id: 'v2', label: 'Drop', datasetId: 'products' },
+      dataSources: DATASETS,
+      initialSheets: [
+        { id: 'v1', label: 'Keep', dataSourceId: 'products' },
+        { id: 'v2', label: 'Drop', dataSourceId: 'products' },
       ],
     });
     executor.applyEnvelope({
-      runCommands: runCommands([{ type: 'studio.deleteView', params: { viewId: 'v2' } }]),
+      runCommands: runCommands([{ type: 'studio.deleteSheet', params: { viewId: 'v2' } }]),
     });
-    expect(fake.views.map((v) => v.id)).toEqual(['v1']);
+    expect(fake.sheets.map((v) => v.id)).toEqual(['v1']);
   });
 
-  it('studio.moveView reorders views by delta', () => {
+  it('studio.moveSheet reorders sheets by delta', () => {
     const { fake, executor } = createTestExecutor({
-      datasets: DATASETS,
-      initialViews: [
-        { id: 'v1', label: 'A', datasetId: 'products' },
-        { id: 'v2', label: 'B', datasetId: 'products' },
-        { id: 'v3', label: 'C', datasetId: 'products' },
+      dataSources: DATASETS,
+      initialSheets: [
+        { id: 'v1', label: 'A', dataSourceId: 'products' },
+        { id: 'v2', label: 'B', dataSourceId: 'products' },
+        { id: 'v3', label: 'C', dataSourceId: 'products' },
       ],
     });
     executor.applyEnvelope({
-      runCommands: runCommands([{ type: 'studio.moveView', params: { viewId: 'v1', delta: 2 } }]),
+      runCommands: runCommands([{ type: 'studio.moveSheet', params: { viewId: 'v1', delta: 2 } }]),
     });
-    expect(fake.views.map((v) => v.id)).toEqual(['v2', 'v3', 'v1']);
+    expect(fake.sheets.map((v) => v.id)).toEqual(['v2', 'v3', 'v1']);
   });
 
-  it('studio.duplicateView inserts a copy after the source', () => {
+  it('studio.duplicateSheet inserts a copy after the source', () => {
     const { fake, executor } = createTestExecutor({
-      datasets: DATASETS,
-      initialViews: [{ id: 'v1', label: 'Source', datasetId: 'products' }],
+      dataSources: DATASETS,
+      initialSheets: [{ id: 'v1', label: 'Source', dataSourceId: 'products' }],
     });
     executor.applyEnvelope({
-      runCommands: runCommands([{ type: 'studio.duplicateView', params: { viewId: 'v1' } }]),
+      runCommands: runCommands([{ type: 'studio.duplicateSheet', params: { viewId: 'v1' } }]),
     });
-    expect(fake.views).toHaveLength(2);
-    expect(fake.views[0].id).toBe('v1');
-    expect(fake.views[1].label).toBe('Source (copy)');
+    expect(fake.sheets).toHaveLength(2);
+    expect(fake.sheets[0].id).toBe('v1');
+    expect(fake.sheets[1].label).toBe('Source (copy)');
   });
 
-  it('studio.updateView edits chart config on a chart view', () => {
+  it('studio.invalidateDataSource and studio.invalidateAll record calls', () => {
     const { fake, executor } = createTestExecutor({
-      datasets: DATASETS,
-      initialViews: [{ id: 'v1', label: 'Chart', datasetId: 'products', kind: 'chart' }],
-    });
-    executor.applyEnvelope({
-      runCommands: runCommands([
-        {
-          type: 'studio.updateView',
-          params: { viewId: 'v1', patch: { chartConfig: { type: 'bar' } as any } },
-        },
-      ]),
-    });
-    expect((fake.views[0] as any).chartConfig).toEqual({ type: 'bar' });
-  });
-
-  it('studio.invalidateDataset and studio.invalidateAll record calls', () => {
-    const { fake, executor } = createTestExecutor({
-      datasets: DATASETS,
-      initialActiveDatasetId: 'products',
+      dataSources: DATASETS,
+      initialActiveDataSourceId: 'products',
     });
     executor.applyEnvelope({
       runCommands: runCommands([
-        { type: 'studio.invalidateDataset', params: { datasetId: 'orders' } },
+        { type: 'studio.invalidateDataSource', params: { dataSourceId: 'orders' } },
         { type: 'studio.invalidateAll' },
       ]),
     });
-    expect(fake.calls.map((c) => c.method)).toContain('invalidateDataset');
+    expect(fake.calls.map((c) => c.method)).toContain('invalidateDataSource');
     expect(fake.calls.map((c) => c.method)).toContain('invalidateAll');
   });
 
   it('tier-3 commands are disabled when guards.mutations === false', () => {
     const { fake, executor } = createTestExecutor({
-      datasets: DATASETS,
+      dataSources: DATASETS,
       guardOverrides: { mutations: false },
     });
     const result = executor.applyEnvelope({
-      runCommands: runCommands([{ type: 'studio.addView', params: { label: 'X' } }]),
+      runCommands: runCommands([{ type: 'studio.addSheet', params: { label: 'X' } }]),
     });
     expect(result.applied).toHaveLength(0);
     expect(result.skipped[0].reason).toBe('unknown');
-    expect(fake.views).toHaveLength(0);
+    expect(fake.sheets).toHaveLength(0);
   });
 });

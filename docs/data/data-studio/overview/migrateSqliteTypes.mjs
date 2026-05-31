@@ -18,7 +18,7 @@ import { SCHEMA, parseValue } from './sqliteSchema.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 
-const datasets = [
+const dataSources = [
   { name: 'coffee-beans', filename: 'coffee-beans.sqlite' },
   { name: 'adventure-works', filename: 'adventure-works.sqlite' },
 ];
@@ -41,7 +41,7 @@ function tableExists(db, table) {
   return Boolean(row);
 }
 
-function migrateTable(db, datasetName, tableName, columnSpec) {
+function migrateTable(db, dataSourceName, tableName, columnSpec) {
   if (!tableExists(db, tableName)) {
     console.warn(`  [skip] table "${tableName}" not present`);
     return;
@@ -131,8 +131,8 @@ function migrateDataset({ name, filename }) {
   }
   console.log(`\n${name} (${filename})`);
 
-  const dataset = SCHEMA[name];
-  if (!dataset) {
+  const dataSource = SCHEMA[name];
+  if (!dataSource) {
     console.warn(`[skip] ${name}: no schema entry`);
     return;
   }
@@ -140,7 +140,7 @@ function migrateDataset({ name, filename }) {
   const db = new Database(file);
   try {
     db.pragma('foreign_keys = OFF');
-    for (const [tableName, columnSpec] of Object.entries(dataset)) {
+    for (const [tableName, columnSpec] of Object.entries(dataSource)) {
       migrateTable(db, name, tableName, columnSpec);
     }
     db.exec('VACUUM');
@@ -149,6 +149,6 @@ function migrateDataset({ name, filename }) {
   }
 }
 
-datasets.forEach(migrateDataset);
+dataSources.forEach(migrateDataset);
 
 console.log('\nDone.');

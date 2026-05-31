@@ -882,6 +882,15 @@ importers:
       '@mui/x-charts-vendor':
         specifier: workspace:^
         version: link:../x-charts-vendor/build
+      '@mui/x-chat':
+        specifier: workspace:^
+        version: link:../x-chat/build
+      '@mui/x-chat-headless':
+        specifier: workspace:^
+        version: link:../x-chat-headless/build
+      '@mui/x-copilot':
+        specifier: workspace:^
+        version: link:../x-copilot/build
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../x-internals/build
@@ -1199,6 +1208,12 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.29.2
+      '@emotion/react':
+        specifier: ^11.9.0
+        version: 11.14.0(@types/react@19.2.14)(react@19.2.6)
+      '@emotion/styled':
+        specifier: ^11.8.1
+        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6)
       '@mui/utils':
         specifier: 'catalog:'
         version: 9.0.1(@types/react@19.2.14)(react@19.2.6)
@@ -1211,6 +1226,12 @@ importers:
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../x-internals/build
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
+      prop-types:
+        specifier: 'catalog:'
+        version: 15.8.1
     devDependencies:
       '@json-render/core':
         specifier: ^0.19.0
@@ -1218,12 +1239,24 @@ importers:
       '@json-render/react-pdf':
         specifier: ^0.19.0
         version: 0.19.0(react@19.2.6)(zod@4.4.3)
+      '@mui/icons-material':
+        specifier: 'catalog:'
+        version: 9.0.1(@mui/material@9.0.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.14)(react@19.2.6)
       '@mui/internal-test-utils':
         specifier: 'catalog:'
         version: 2.0.18-canary.23(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@playwright/test@1.60.0)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(@vitest/utils@4.1.6)(chai@6.2.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(vite@8.0.13(@types/node@24.5.2)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.43.1)(tsx@4.22.2)(yaml@2.8.1))(vitest@4.1.6)
+      '@mui/material':
+        specifier: 'catalog:'
+        version: 9.0.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@mui/system':
+        specifier: 'catalog:'
+        version: 9.0.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6))(@types/react@19.2.14)(react@19.2.6)
       '@react-pdf/renderer':
         specifier: ^4.3.2
         version: 4.5.1(react@19.2.6)
+      '@types/prop-types':
+        specifier: 'catalog:'
+        version: 15.7.15
       react:
         specifier: 'catalog:'
         version: 19.2.6

@@ -229,6 +229,52 @@ describe('processStream', () => {
     // And crucially: A's metadata was NOT overwritten by B's preamble.
     expect(store.state.messagesById.a1.metadata?.responseId).toBe('r-A');
     expect(store.state.messagesById.a1.metadata?.abVariant).toBe('A');
+    // Both sibling messages must remain in 'sent' status — trailing
+    // metadata frames must not re-open finalized messages.
+    expect(store.state.messagesById.a1.status).toBe('sent');
+    expect(store.state.messagesById.b1.status).toBe('sent');
+  });
+
+  it('keeps a finalized message in sent status when trailing metadata frames arrive', async () => {
+    // Regression: the Copilot backend emits a separate `message-metadata`
+    // frame carrying follow-up suggestions AFTER its `finish` chunk. The
+    // trailing chunk used to call ensureAssistantMessage -> getOrCreateMessage,
+    // which incorrectly flipped the message status from 'sent' back to
+    // 'streaming'. The UI's streaming indicator (which keys off
+    // message.status === 'streaming') would then stay on forever.
+    //
+    // `allowMultipleMessages: true` matches the grid Copilot runtime — its
+    // AB adapter always sets it so the read loop doesn't break on the
+    // first finish chunk, allowing trailing frames to be processed.
+    const store = new ChatStore();
+
+    await processStream(
+      store,
+      createStream([
+        { type: 'start', messageId: 'a1' },
+        { type: 'text-delta', id: 't1', delta: 'Hello' },
+        {
+          type: 'finish',
+          messageId: 'a1',
+          finishReason: 'stop',
+          messageMetadata: { modelId: 'model-A', costUsd: 0.001 },
+        } as any,
+        // Trailing suggestions frame — arrives AFTER finish. It should
+        // update metadata without re-opening the message.
+        {
+          type: 'message-metadata' as const,
+          messageMetadata: { suggestions: ['follow-up-A'] },
+        } as any,
+      ]),
+      { conversationId: 'c1', allowMultipleMessages: true },
+    );
+
+    expect(store.state.messagesById.a1.status).toBe('sent');
+    expect(store.state.messagesById.a1.metadata).toMatchObject({
+      modelId: 'model-A',
+      costUsd: 0.001,
+      suggestions: ['follow-up-A'],
+    });
   });
 
   it('finalizes the previous sibling even when no finish chunk fires before a new start', async () => {

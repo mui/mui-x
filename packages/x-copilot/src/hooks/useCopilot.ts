@@ -3,15 +3,12 @@ import * as React from 'react';
 import type { ChatAdapter, ChatMessage, ChatSendMessageInput } from '@mui/x-chat-headless';
 import type { HostAdapter } from '../executor/hostAdapter';
 import type { CommandPack, PatchPack } from '../executor/handlers';
-import type {
-  CopilotEnvelope,
-  CopilotExecutionResult,
-  Guards,
-} from '../executor/types';
+import type { CopilotEnvelope, CopilotExecutionResult, Guards } from '../executor/types';
 import { buildCommandRegistry } from '../executor/commandRegistry';
 import { buildPatchRegistry } from '../executor/patchRegistry';
 import { makeExecutor } from '../executor/createExecutor';
 import { createCopilotAdapter } from '../adapter/createCopilotAdapter';
+import type { ToolName } from '../streams/types';
 import type { CopilotAdapter } from '../adapter/types';
 import type { CopilotPlugin } from '../plugins/core';
 
@@ -43,6 +40,14 @@ export interface UseCopilotOptions<
 
   /** Optional initial carry state. */
   initialCarryState?: unknown;
+
+  /**
+   * Maps host LLM-facing tool names to the canonical executor wire names
+   * (`setGridState` / `runCommands`). Lets a host expose a domain-specific tool
+   * name to the model + chat UI (e.g. charts' `updateChart`) while the executor
+   * dispatches it through the shared path. Unmapped names pass through.
+   */
+  toolNameAliases?: Readonly<Record<string, ToolName>>;
 }
 
 export interface UseCopilotReturn<TQueryResult = unknown> {
@@ -71,11 +76,9 @@ export interface UseCopilotReturn<TQueryResult = unknown> {
  * generic adapter — hosts that need them currently provide their own wrappers
  * around `inner` before passing it in. (See follow-up streams work.)
  */
-export function useCopilot<
-  TAdapter extends HostAdapter,
-  TState = unknown,
-  TQueryResult = unknown,
->(options: UseCopilotOptions<TAdapter, TState, TQueryResult>): UseCopilotReturn<TQueryResult> {
+export function useCopilot<TAdapter extends HostAdapter, TState = unknown, TQueryResult = unknown>(
+  options: UseCopilotOptions<TAdapter, TState, TQueryResult>,
+): UseCopilotReturn<TQueryResult> {
   const {
     inner,
     host,
@@ -84,6 +87,7 @@ export function useCopilot<
     patchPacks,
     enrichInput,
     initialCarryState,
+    toolNameAliases,
   } = options;
 
   // Per-message results cache + listeners.
@@ -119,6 +123,7 @@ export function useCopilot<
       },
       dataQueryResultsCache: queryResultsRef.current,
       initialCarryState,
+      toolNameAliases,
     });
   }, [
     inner,
@@ -128,6 +133,7 @@ export function useCopilot<
     patchPacks,
     enrichInput,
     initialCarryState,
+    toolNameAliases,
   ]);
 
   const applyEnvelope = React.useCallback(

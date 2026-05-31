@@ -1,0 +1,53 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e630]:
+      - generic [ref=e631]:
+        - generic [ref=e633]:
+          - generic [ref=e634]: Dataset
+          - generic [ref=e635]:
+            - combobox [expanded] [ref=e655] [cursor=pointer]: Products
+            - textbox: products
+            - img
+            - group:
+              - generic: Dataset
+        - generic [ref=e637]: Configure the chart in the panel on the right.
+      - complementary [ref=e656]:
+        - heading [level=6] [ref=e657]: Chart configuration
+        - paragraph [ref=e640]: Coming soon. This panel will let you pick the chart type and bind columns to axes.
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - button [ref=e658] [cursor=pointer]:
+          - img [ref=e612]
+        - button [ref=e659] [cursor=pointer]:
+          - img [ref=e615]
+        - button [ref=e660] [cursor=pointer]:
+          - img [ref=e618]
+      - generic [ref=e620]:
+        - button [ref=e661] [cursor=pointer]:
+          - generic [ref=e623]: Customers
+        - button [ref=e662] [cursor=pointer]:
+          - generic [ref=e626]: Products
+        - button [ref=e663] [cursor=pointer]:
+          - generic [ref=e629]: Orders
+        - generic [ref=e641]:
+          - button [ref=e664] [cursor=pointer]:
+            - generic [ref=e643]: Chart 1
+          - button [ref=e665] [cursor=pointer]:
+            - img [ref=e645]
+  - button [ref=e666] [cursor=pointer]:
+    - img [ref=e46]
+  - alert [ref=e49]: Coffee Beans - Data Studio demo - MUI X
+  - dialog [ref=e667]:
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - img [ref=e54]
+        - generic [ref=e59]:
+          - heading [level=2] [ref=e668]: Cookie preferences
+          - paragraph [ref=e61]: We use cookies to understand site usage and improve our content. This includes third-party analytics.
+      - generic [ref=e62]:
+        - button [ref=e669] [cursor=pointer]: Allow analytics
+        - button [ref=e670] [cursor=pointer]: Essential only
+  - listbox "Dataset" [ref=e673]:
+    - option "Customers" [ref=e674] [cursor=pointer]
+    - option "Products" [active] [selected] [ref=e675] [cursor=pointer]: Products
+    - option "Orders" [ref=e676] [cursor=pointer]

@@ -16,7 +16,7 @@ export interface DataStudioClasses {
   /** Styles applied to the Data Grid wrapper. */
   grid: string;
   /** Styles applied to the views section action. */
-  viewsAction: string;
+  sheetsAction: string;
   /** Styles applied to the empty state. */
   empty: string;
   /** Styles applied to the bottom tab bar (tabs layout). */
@@ -25,7 +25,7 @@ export interface DataStudioClasses {
   tab: string;
   /** Styles applied to the active tab. */
   tabActive: string;
-  /** Styles applied to tabs that represent a dataset. */
+  /** Styles applied to tabs that represent a dataSource. */
   tabDataset: string;
   /** Styles applied to tabs that represent a user view. */
   tabView: string;
@@ -50,7 +50,7 @@ export const dataStudioClasses: DataStudioClasses = generateUtilityClasses('MuiD
   'main',
   'toolbarArea',
   'grid',
-  'viewsAction',
+  'sheetsAction',
   'empty',
   'tabBar',
   'tab',
@@ -69,7 +69,7 @@ const slots: Record<DataStudioClassKey, string[]> = {
   main: ['main'],
   toolbarArea: ['toolbarArea'],
   grid: ['grid'],
-  viewsAction: ['viewsAction'],
+  sheetsAction: ['sheetsAction'],
   empty: ['empty'],
   tabBar: ['tabBar'],
   tab: ['tab'],

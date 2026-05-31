@@ -1,5 +1,5 @@
 import type { HostAdapter, ToolStopContext, HostDataQueryProvider } from '@mui/x-copilot';
-import type { DataStudioDataset } from '../DataStudio/DataStudio.types';
+import type { DataStudioDataSource } from '../DataStudio/DataStudio.types';
 import type { DataStudioStateApi } from '../DataStudio/useDataStudioState';
 import { snapshotState, type StudioStateDocument } from './stateDocument';
 import type { StudioGuards } from './guards';
@@ -11,7 +11,7 @@ import type { StudioGuards } from './guards';
  */
 export interface StudioCopilotApi {
   readonly stateApi: DataStudioStateApi<any>;
-  readonly datasets: ReadonlyArray<DataStudioDataset<any>>;
+  readonly dataSources: ReadonlyArray<DataStudioDataSource<any>>;
 }
 
 export type StudioHostAdapter = HostAdapter<StudioStateDocument, StudioCopilotApi>;
@@ -25,8 +25,8 @@ interface CreateStudioHostAdapterOptions {
    * the adapter identity.
    */
   getStateApi: () => DataStudioStateApi<any>;
-  /** Live accessor for the datasets array. */
-  getDatasets: () => ReadonlyArray<DataStudioDataset<any>>;
+  /** Live accessor for the dataSources array. */
+  getDataSources: () => ReadonlyArray<DataStudioDataSource<any>>;
   guards: StudioGuards;
   dataQuery?: HostDataQueryProvider<any, any>;
 }
@@ -40,21 +40,21 @@ interface CreateStudioHostAdapterOptions {
 export function createStudioHostAdapter(
   options: CreateStudioHostAdapterOptions,
 ): StudioHostAdapter {
-  const { getStateApi, getDatasets, dataQuery } = options;
+  const { getStateApi, getDataSources, dataQuery } = options;
 
   const api: StudioCopilotApi = {
     get stateApi() {
       return getStateApi();
     },
-    get datasets() {
-      return getDatasets();
+    get dataSources() {
+      return getDataSources();
     },
   };
 
   return {
     id: 'data-studio',
     api,
-    snapshotState: () => snapshotState(getStateApi(), getDatasets()),
+    snapshotState: () => snapshotState(getStateApi(), getDataSources()),
     dataQuery,
     onPatchToolStop() {
       // No host-side reconciliation needed at setGridState tool stop today.

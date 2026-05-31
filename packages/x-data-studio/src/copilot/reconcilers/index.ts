@@ -4,16 +4,9 @@ import type { StudioStateDocument } from '../stateDocument';
 import { activeReconciler } from './active';
 import { viewLabelReconciler } from './viewLabel';
 import { viewMetaReconciler } from './viewMeta';
-import { viewChartConfigReconciler } from './viewChartConfig';
 import { viewInitialStateReconciler } from './viewInitialState';
 
-export {
-  activeReconciler,
-  viewLabelReconciler,
-  viewMetaReconciler,
-  viewChartConfigReconciler,
-  viewInitialStateReconciler,
-};
+export { activeReconciler, viewLabelReconciler, viewMetaReconciler, viewInitialStateReconciler };
 
 /**
  * View CRUD (add/delete/move) lives in commands — not patches. View state is
@@ -23,10 +16,4 @@ export {
  */
 export const ALL_STUDIO_PATCH_HANDLERS: ReadonlyArray<
   PatchHandler<StudioHostAdapter, StudioStateDocument>
-> = [
-  activeReconciler,
-  viewLabelReconciler,
-  viewMetaReconciler,
-  viewChartConfigReconciler,
-  viewInitialStateReconciler,
-];
+> = [activeReconciler, viewLabelReconciler, viewMetaReconciler, viewInitialStateReconciler];

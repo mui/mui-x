@@ -33,10 +33,10 @@ function coerceCellValue(raw: unknown): FormulaValue {
 }
 
 /**
- * Build a `FormulaDataSource` view over the currently active Studio dataset.
+ * Build a `FormulaDataSource` view over the currently active Studio dataSource.
  *
- * v1 limitation: only the dataset's **static `rows`** are visible to the
- * formula engine. Data-source-backed datasets (server-fed) don't expose a
+ * v1 limitation: only the dataSource's **static `rows`** are visible to the
+ * formula engine. Data-source-backed dataSources (server-fed) don't expose a
  * synchronous full-rows view today; the engine returns an empty row set in
  * that case. A future revision can read from the live `sessionCache`.
  */
@@ -44,12 +44,12 @@ export function createStudioFormulaDataSource(
   api: StudioCopilotApi,
   _scope: FormulaScope,
 ): FormulaDataSource {
-  const activeDataset = api.stateApi.activeDataset;
-  const rows: ReadonlyArray<GridRowModel> = Array.isArray(activeDataset?.rows)
-    ? (activeDataset!.rows as ReadonlyArray<GridRowModel>)
+  const activeDataSource = api.stateApi.activeDataSource;
+  const rows: ReadonlyArray<GridRowModel> = Array.isArray(activeDataSource?.rows)
+    ? (activeDataSource!.rows as ReadonlyArray<GridRowModel>)
     : [];
-  const idField = activeDataset?.rowIdField;
-  const columns = activeDataset?.columns ?? [];
+  const idField = activeDataSource?.rowIdField;
+  const columns = activeDataSource?.columns ?? [];
   const columnSet = new Set(columns.map((col) => col.field));
   const rowById = new Map<FormulaRowId, GridRowModel>();
   const rowIds: FormulaRowId[] = [];

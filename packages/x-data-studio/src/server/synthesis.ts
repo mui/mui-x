@@ -185,10 +185,6 @@ function aggregateValues(values: unknown[], aggregationFunction: string) {
         return typeof value === 'number' && !Number.isNaN(value) ? sum + value : sum;
       }, 0);
     case 'avg': {
-      if (values.length === 0) {
-        return null;
-      }
-
       let sum = 0;
       let valuesCount = 0;
 
@@ -199,45 +195,41 @@ function aggregateValues(values: unknown[], aggregationFunction: string) {
         }
       });
 
-      if (sum === 0 || valuesCount === 0) {
+      // Return `null` only when there is no numeric value to average. A valid
+      // average of exactly `0` (e.g. `[-5, 5]` or `[0, 0]`) must be reported as
+      // `0`, matching SQL `AVG` and the Data Grid's built-in `avg` aggregator.
+      if (valuesCount === 0) {
         return null;
       }
 
       return sum / valuesCount;
     }
-    case 'min': {
-      if (values.length === 0) {
-        return null;
-      }
-
-      let min: any = Infinity;
-      let hasValidValue = false;
-
-      values.forEach((value) => {
-        if (value != null && (value as any) < min) {
-          min = value;
-          hasValidValue = true;
-        }
-      });
-
-      return hasValidValue ? min : null;
-    }
+    case 'min':
     case 'max': {
-      if (values.length === 0) {
-        return null;
-      }
-
-      let max: any = -Infinity;
+      // Seed from the first non-null value rather than `±Infinity` so the
+      // comparison stays type-generic: this matches SQL `MIN`/`MAX` and the
+      // Data Grid's built-in comparators for text and date columns, not just
+      // numbers. `null`/`undefined` are skipped (SQL ignores NULLs).
+      let result: any = null;
       let hasValidValue = false;
 
       values.forEach((value) => {
-        if (value != null && (value as any) > max) {
-          max = value;
+        if (value == null) {
+          return;
+        }
+        if (!hasValidValue) {
+          result = value;
           hasValidValue = true;
+          return;
+        }
+        const isMore = (value as any) > result;
+        const isLess = (value as any) < result;
+        if (normalizedAggregationFunction === 'min' ? isLess : isMore) {
+          result = value;
         }
       });
 
-      return hasValidValue ? max : null;
+      return hasValidValue ? result : null;
     }
     case 'size':
       return values.filter((value) => typeof value !== 'undefined').length;
@@ -336,21 +328,129 @@ function sliceRows<R extends GridValidRowModel>(rows: R[], params: DataStudioGet
   return limit === 0 ? [] : rows.slice(offset, offset + limit);
 }
 
+function padTwo(value: number) {
+  return value < 10 ? `0${value}` : `${value}`;
+}
+
+// Server-side date bucket (mirrors `viewRegistry/binning.ts` `dateBucket`), used by
+// the in-memory adapter so a CSV/in-memory source can group a date column by month
+// etc. over the whole dataset. Operates on any JS-parseable date.
+function dateBinValue(
+  value: unknown,
+  granularity: 'day' | 'month' | 'quarter' | 'year',
+): string | null {
+  if (value == null || value === '') {
+    return null;
+  }
+  const date = value instanceof Date ? value : new Date(value as string | number);
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  switch (granularity) {
+    case 'year':
+      return `${year}`;
+    case 'quarter':
+      return `${year}-Q${Math.floor(month / 3) + 1}`;
+    case 'day':
+      return `${year}-${padTwo(month + 1)}-${padTwo(date.getDate())}`;
+    case 'month':
+    default:
+      return `${year}-${padTwo(month + 1)}`;
+  }
+}
+
+type NumericExtent = { min: number; max: number } | null;
+
+function numericExtentOf<R extends GridValidRowModel>(rows: R[], field: string): NumericExtent {
+  let min = Infinity;
+  let max = -Infinity;
+  for (const row of rows) {
+    const value = Number(row[field]);
+    if (Number.isFinite(value)) {
+      min = Math.min(min, value);
+      max = Math.max(max, value);
+    }
+  }
+  return Number.isFinite(min) && Number.isFinite(max) ? { min, max } : null;
+}
+
+// The bracket lower bound for a numeric value, rounded to match the knex adapter
+// (0 decimals when the bin width is >= 1, else 2).
+function numericBinValue(value: unknown, min: number, max: number, bins: number): number | null {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return null;
+  }
+  if (max <= min || bins <= 1) {
+    return min;
+  }
+  const width = (max - min) / bins;
+  let index = Math.floor((numeric - min) / width);
+  if (index >= bins) {
+    index = bins - 1;
+  }
+  if (index < 0) {
+    index = 0;
+  }
+  const decimals = width >= 1 ? 0 : 2;
+  const factor = 10 ** decimals;
+  return Math.round((min + index * width) * factor) / factor;
+}
+
+// The group value for a row + field: the date/numeric bucket when a binning
+// directive is declared, else the raw stringified value. `extent` is the numeric
+// column range, precomputed once per grouping level.
+function getSynthesisGroupValue(
+  row: GridValidRowModel,
+  field: string,
+  binning: DataStudioGetRowsParams['binning'],
+  extent: NumericExtent,
+) {
+  const directive = binning?.[field];
+  if (directive?.kind === 'date') {
+    return dateBinValue(row[field], directive.granularity) ?? '';
+  }
+  if (directive?.kind === 'numeric') {
+    if (!extent) {
+      return '';
+    }
+    const bucket = numericBinValue(row[field], extent.min, extent.max, directive.bins);
+    return bucket == null ? '' : String(bucket);
+  }
+  return stringify(row[field]);
+}
+
 function scopeRowsByGroupKeys<R extends GridValidRowModel>(
   rows: R[],
   groupFields: string[],
   groupKeys: string[],
+  binning: DataStudioGetRowsParams['binning'],
 ) {
+  const extents = groupKeys.map((_, index) =>
+    binning?.[groupFields[index]]?.kind === 'numeric'
+      ? numericExtentOf(rows, groupFields[index])
+      : null,
+  );
   return rows.filter((row) =>
-    groupKeys.every((groupKey, index) => stringify(row[groupFields[index]]) === groupKey),
+    groupKeys.every(
+      (groupKey, index) =>
+        getSynthesisGroupValue(row, groupFields[index], binning, extents[index]) === groupKey,
+    ),
   );
 }
 
-function groupByField<R extends GridValidRowModel>(rows: R[], field: string) {
+function groupByField<R extends GridValidRowModel>(
+  rows: R[],
+  field: string,
+  binning: DataStudioGetRowsParams['binning'],
+) {
+  const extent = binning?.[field]?.kind === 'numeric' ? numericExtentOf(rows, field) : null;
   const groups = new Map<string, R[]>();
 
   rows.forEach((row) => {
-    const groupKey = stringify(row[field]);
+    const groupKey = getSynthesisGroupValue(row, field, binning, extent);
     const groupRows = groups.get(groupKey);
 
     if (groupRows) {
@@ -528,7 +628,7 @@ function applyRowGrouping<R extends GridValidRowModel>(
 ): DataStudioGetRowsResponse {
   const groupFields = params.groupFields ?? [];
   const groupKeys = params.groupKeys ?? [];
-  const scopedRows = scopeRowsByGroupKeys(rows, groupFields, groupKeys);
+  const scopedRows = scopeRowsByGroupKeys(rows, groupFields, groupKeys, params.binning);
   const currentGroupField = groupFields[groupKeys.length];
   const aggregateRow = aggregateRows(scopedRows, params.aggregationModel, allowedFields);
 
@@ -544,7 +644,7 @@ function applyRowGrouping<R extends GridValidRowModel>(
     };
   }
 
-  const groupedRows = [...groupByField(scopedRows, currentGroupField)].map(
+  const groupedRows = [...groupByField(scopedRows, currentGroupField, params.binning)].map(
     ([groupKey, groupRows]) => {
       const nextGroupKeys = groupKeys.concat(groupKey);
       // Do NOT set `[options.rowIdField]` here — it would surface the synthetic
@@ -619,7 +719,7 @@ function applyPivoting<R extends GridValidRowModel>(
   const pivotModel = params.pivotModel!;
   const rowFields = getDataStudioPivotRowFields(pivotModel);
   const groupKeys = params.groupKeys ?? [];
-  const scopedRows = scopeRowsByGroupKeys(rows, rowFields, groupKeys);
+  const scopedRows = scopeRowsByGroupKeys(rows, rowFields, groupKeys, params.binning);
   const pivotTuples = getPivotTuples(scopedRows, pivotModel);
   const pivotColumns = buildDataStudioPivotColumnTree(pivotTuples);
   const aggregateRow = aggregatePivotValues(scopedRows, pivotModel, pivotTuples, allowedFields);
@@ -659,7 +759,7 @@ function applyPivoting<R extends GridValidRowModel>(
     };
   }
 
-  const groupedRows = [...groupByField(scopedRows, currentGroupField)].map(
+  const groupedRows = [...groupByField(scopedRows, currentGroupField, params.binning)].map(
     ([groupKey, groupRows]) => {
       const nextGroupKeys = groupKeys.concat(groupKey);
       // Synthetic id stays on `__dataStudioSyntheticId` only — see comment in

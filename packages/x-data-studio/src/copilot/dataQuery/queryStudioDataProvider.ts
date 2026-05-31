@@ -1,6 +1,6 @@
 import type { GridRowModel } from '@mui/x-data-grid';
 import type { HostDataQueryProvider } from '@mui/x-copilot';
-import type { DataStudioDataset } from '../../DataStudio/DataStudio.types';
+import type { DataStudioDataSource } from '../../DataStudio/DataStudio.types';
 import {
   QUERY_STUDIO_DATA_TOOL_NAME,
   type StudioDataQueryColumnMeta,
@@ -11,27 +11,27 @@ import {
 const DEFAULT_LIMIT = 100;
 const MAX_LIMIT = 1000;
 
-function findDataset(
-  datasets: ReadonlyArray<DataStudioDataset<any>>,
-  datasetId: string,
-): DataStudioDataset<any> | undefined {
-  return datasets.find((d) => d.id === datasetId);
+function findDataSource(
+  dataSources: ReadonlyArray<DataStudioDataSource<any>>,
+  dataSourceId: string,
+): DataStudioDataSource<any> | undefined {
+  return dataSources.find((d) => d.id === dataSourceId);
 }
 
 function projectColumns(
-  dataset: DataStudioDataset<any>,
+  dataSource: DataStudioDataSource<any>,
 ): ReadonlyArray<StudioDataQueryColumnMeta> {
-  return (dataset.columns ?? []).map((col) => ({
+  return (dataSource.columns ?? []).map((col) => ({
     field: col.field,
     headerName: typeof col.headerName === 'string' ? col.headerName : undefined,
   }));
 }
 
 function projectRows(
-  dataset: DataStudioDataset<any>,
+  dataSource: DataStudioDataSource<any>,
   limit: number,
 ): ReadonlyArray<GridRowModel> {
-  const raw = Array.isArray(dataset.rows) ? (dataset.rows as ReadonlyArray<GridRowModel>) : [];
+  const raw = Array.isArray(dataSource.rows) ? (dataSource.rows as ReadonlyArray<GridRowModel>) : [];
   if (raw.length <= limit) {
     return raw;
   }
@@ -40,12 +40,12 @@ function projectRows(
 
 /**
  * Build a `HostDataQueryProvider` that responds to `queryStudioData` calls
- * by reading from the active studio's static dataset rows. Data-source-backed
- * datasets return an empty row set today; full async query support is a
+ * by reading from the active studio's static dataSource rows. Data-source-backed
+ * dataSources return an empty row set today; full async query support is a
  * follow-up.
  */
 export function createQueryStudioDataProvider(
-  datasets: () => ReadonlyArray<DataStudioDataset<any>>,
+  dataSources: () => ReadonlyArray<DataStudioDataSource<any>>,
 ): HostDataQueryProvider<StudioDataQueryInput, StudioDataQueryResult> {
   return {
     toolNames: [QUERY_STUDIO_DATA_TOOL_NAME],
@@ -55,50 +55,50 @@ export function createQueryStudioDataProvider(
         return { ok: false, reason: 'queryStudioData input must be an object' };
       }
       const candidate = raw as Partial<StudioDataQueryInput>;
-      if (typeof candidate.datasetId !== 'string' || candidate.datasetId.trim() === '') {
-        return { ok: false, reason: 'queryStudioData requires { datasetId: string }' };
+      if (typeof candidate.dataSourceId !== 'string' || candidate.dataSourceId.trim() === '') {
+        return { ok: false, reason: 'queryStudioData requires { dataSourceId: string }' };
       }
       if (candidate.limit != null && (!Number.isFinite(candidate.limit) || candidate.limit < 0)) {
         return { ok: false, reason: 'queryStudioData.limit must be a non-negative number' };
       }
-      const exists = findDataset(datasets(), candidate.datasetId);
+      const exists = findDataSource(dataSources(), candidate.dataSourceId);
       if (!exists) {
-        return { ok: false, reason: `queryStudioData: unknown datasetId '${candidate.datasetId}'` };
+        return { ok: false, reason: `queryStudioData: unknown dataSourceId '${candidate.dataSourceId}'` };
       }
-      return { ok: true, input: { datasetId: candidate.datasetId, limit: candidate.limit } };
+      return { ok: true, input: { dataSourceId: candidate.dataSourceId, limit: candidate.limit } };
     },
 
     preview(input) {
-      const dataset = findDataset(datasets(), input.datasetId);
-      if (!dataset) {
-        return { meta: { datasetId: input.datasetId, rowCount: 0, columns: [] } };
+      const dataSource = findDataSource(dataSources(), input.dataSourceId);
+      if (!dataSource) {
+        return { meta: { dataSourceId: input.dataSourceId, rowCount: 0, columns: [] } };
       }
       const limit = Math.min(input.limit ?? DEFAULT_LIMIT, MAX_LIMIT);
-      const rows = projectRows(dataset, limit);
+      const rows = projectRows(dataSource, limit);
       return {
         meta: {
-          datasetId: dataset.id,
+          dataSourceId: dataSource.id,
           rowCount: rows.length,
-          columns: projectColumns(dataset),
+          columns: projectColumns(dataSource),
         },
       };
     },
 
     execute(input) {
-      const dataset = findDataset(datasets(), input.datasetId);
-      if (!dataset) {
+      const dataSource = findDataSource(dataSources(), input.dataSourceId);
+      if (!dataSource) {
         return {
-          meta: { datasetId: input.datasetId, rowCount: 0, columns: [] },
+          meta: { dataSourceId: input.dataSourceId, rowCount: 0, columns: [] },
           rows: [],
         };
       }
       const limit = Math.min(input.limit ?? DEFAULT_LIMIT, MAX_LIMIT);
-      const rows = projectRows(dataset, limit);
+      const rows = projectRows(dataSource, limit);
       return {
         meta: {
-          datasetId: dataset.id,
+          dataSourceId: dataSource.id,
           rowCount: rows.length,
-          columns: projectColumns(dataset),
+          columns: projectColumns(dataSource),
         },
         rows,
       };

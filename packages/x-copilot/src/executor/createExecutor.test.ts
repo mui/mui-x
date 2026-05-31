@@ -217,7 +217,7 @@ describe('x-copilot generic executor', () => {
       grid: DemoState;
       studio: { activeView: string | null };
     }
-    let hybridState: HybridState = {
+    const hybridState: HybridState = {
       grid: {
         sort: [],
         pivot: { active: false, model: { rows: [], cols: [] } },

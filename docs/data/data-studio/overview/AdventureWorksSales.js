@@ -9,7 +9,7 @@ import {
 
 import {
   DataStudio,
-  createDataStudioDatasetsFromAPI,
+  createDataStudioDataSourcesFromAPI,
   createNextRouterRoutingAdapter,
 } from '@mui/x-data-studio';
 
@@ -30,7 +30,7 @@ const formatUsd = (value) =>
 const formatPercent = (value) =>
   typeof value === 'number' ? percent.format(value) : '';
 
-// Per-dataset map of fields that should render formatted in the grid. The
+// Per-dataSource map of fields that should render formatted in the grid. The
 // server stores raw numbers; this is the "user formats it" half of the
 // contract.
 const COLUMN_FORMATTERS = {
@@ -48,8 +48,8 @@ const COLUMN_FORMATTERS = {
   },
 };
 
-function decorateColumns(datasetId, columns) {
-  const formatters = COLUMN_FORMATTERS[datasetId];
+function decorateColumns(dataSourceId, columns) {
+  const formatters = COLUMN_FORMATTERS[dataSourceId];
   if (!formatters) {
     return columns;
   }
@@ -74,7 +74,7 @@ export default function AdventureWorksSales() {
     () => createNextRouterRoutingAdapter({ router }),
     [router],
   );
-  const [datasets, setDatasets] = React.useState([]);
+  const [dataSources, setDataSources] = React.useState([]);
   const [schemaError, setSchemaError] = React.useState(null);
   const [dataSourceError, setDataSourceError] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
@@ -85,17 +85,17 @@ export default function AdventureWorksSales() {
 
   React.useEffect(() => {
     let active = true;
-    createDataStudioDatasetsFromAPI({
+    createDataStudioDataSourcesFromAPI({
       schemaUrl: '/data-studio/adventure-works/schema',
     }).then(
-      (nextDatasets) => {
+      (nextDataSources) => {
         if (!active) {
           return;
         }
-        setDatasets(
-          nextDatasets.map((dataset) => ({
-            ...dataset,
-            columns: decorateColumns(dataset.id, dataset.columns),
+        setDataSources(
+          nextDataSources.map((dataSource) => ({
+            ...dataSource,
+            columns: decorateColumns(dataSource.id, dataSource.columns),
             onDataSourceError: handleDataSourceError,
           })),
         );
@@ -142,7 +142,7 @@ export default function AdventureWorksSales() {
           )}
           <DataStudio
             plan="premium"
-            datasets={datasets}
+            dataSources={dataSources}
             loading={loading}
             layout="sidebar"
             routing={routing}

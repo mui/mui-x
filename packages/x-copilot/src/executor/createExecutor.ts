@@ -18,7 +18,10 @@ export interface ExecutorOptions<TAdapter extends HostAdapter, TState = unknown>
   guards: Guards;
   commandRegistry: CommandRegistry<TAdapter, TState>;
   patchRegistry: PatchRegistry<TAdapter, TState>;
-  /** Optional progress callback invoked after every dispatched line. */
+  /**
+   * Optional progress callback invoked after every dispatched line.
+   * @param result
+   */
   onProgress?: (result: CopilotExecutionResult) => void;
 }
 

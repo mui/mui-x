@@ -7,9 +7,9 @@ githubLabel: 'scope: data studio'
 
 # Data Studio - Copilot
 
-<p class="description">Drive Data Studio with a Copilot panel: add views, switch datasets, edit per-view grid state from chat.</p>
+<p class="description">Drive Data Studio with a Copilot panel: add views, switch dataSources, edit per-view grid state from chat.</p>
 
-The Studio Copilot is built on top of [`@mui/x-copilot`](https://mui.com/x/react-data-grid/copilot/). The Studio package wires the generic core to its imperative state machine — `useDataStudioState` — so the chat agent can drive view CRUD, dataset selection, view-level grid state edits, and chart config edits through a single seam.
+The Studio Copilot is built on top of [`@mui/x-copilot`](https://mui.com/x/react-data-grid/copilot/). The Studio package wires the generic core to its imperative state machine — `useDataStudioState` — so the chat agent can drive view CRUD, dataSource selection, view-level grid state edits, and chart config edits through a single seam.
 
 {{"demo": "StudioCopilot.js", "bg": "inline"}}
 
@@ -32,7 +32,7 @@ const chatAdapter = createStudioCopilotLocalStorageAdapter(myBackendAdapter, {
 });
 
 <DataStudio
-  datasets={datasets}
+  dataSources={dataSources}
   copilotChatAdapter={chatAdapter}
   copilotPlugins={COPILOT_PLUGINS}
 />;
@@ -50,19 +50,18 @@ When `copilotChatAdapter` is provided, Data Studio:
 The Copilot's executor recognizes two tool calls:
 
 - `runCommands` — JSONL of imperative commands. Studio registers ten:
-  `studio.addView`, `studio.selectView`, `studio.selectDataset`, `studio.updateView`,
+  `studio.addView`, `studio.selectView`, `studio.selectDataSource`, `studio.updateView`,
   `studio.renameView`, `studio.duplicateView`, `studio.deleteView`,
-  `studio.moveView`, `studio.invalidateDataset`, `studio.invalidateAll`.
+  `studio.moveView`, `studio.invalidateDataSource`, `studio.invalidateAll`.
 - `setGridState` — JSONL of [RFC 6902](https://www.rfc-editor.org/rfc/rfc6902) JSON Patch ops applied to the Studio state document. The supported slice paths are:
 
-  | Path                                | Effect                                                       |
-  | ----------------------------------- | ------------------------------------------------------------ |
-  | `/active/datasetId`                 | `stateApi.selectDataset(value)`                              |
-  | `/active/viewId`                    | `stateApi.selectView(value)`                                 |
-  | `/views/<id>/label`                 | `stateApi.renameView(id, value)`                             |
-  | `/views/<id>/datasetId`             | `stateApi.updateView(id, { datasetId: value })`              |
-  | `/views/<id>/initialState[/...]`    | `stateApi.updateView(id, { initialState: subtree })`         |
-  | `/views/<id>/chartConfig[/...]`     | `stateApi.updateView(id, { chartConfig: subtree })`          |
+  | Path                             | Effect                                               |
+  | -------------------------------- | ---------------------------------------------------- |
+  | `/active/dataSourceId`           | `stateApi.selectDataSource(value)`                   |
+  | `/active/viewId`                 | `stateApi.selectView(value)`                         |
+  | `/views/<id>/label`              | `stateApi.renameView(id, value)`                     |
+  | `/views/<id>/dataSourceId`       | `stateApi.updateView(id, { dataSourceId: value })`   |
+  | `/views/<id>/initialState[/...]` | `stateApi.updateView(id, { initialState: subtree })` |
 
   Views are keyed by id (not array index) so the agent can reference a view across turns without tracking array positions. View CRUD (add / delete / move) lives in `runCommands` so the order array stays in sync.
 
@@ -75,13 +74,12 @@ Each handler is gated by a guard flag. Pass `copilotFeatures` on `<DataStudio>` 
   copilotChatAdapter={adapter}
   copilotFeatures={{
     mutations: false,    // read-only mode
-    chartEditing: false, // hide /views/<id>/chartConfig handler
     dataQuery: false,    // disable the queryStudioData approval flow
   }}
 />
 ```
 
-The default guards enable every capability: `mutations`, `viewCrud`, `viewEditing`, `chartEditing`, `datasetSwitching`, `dataQuery`.
+The default guards enable every capability: `mutations`, `viewCrud`, `viewEditing`, `dataSourceSwitching`, `dataQuery`.
 
 ## Slots
 
@@ -97,7 +95,7 @@ The default guards enable every capability: `mutations`, `viewCrud`, `viewEditin
 
 ## Plugins
 
-The PDF and Formula plugins are host-agnostic; Studio re-exports them with bindings that read from the active dataset's rows + the Studio plugin render context. See the [Grid Copilot docs](https://mui.com/x/react-data-grid/copilot/#generating-pdf-reports-plugin) for the PDF spec format.
+The PDF and Formula plugins are host-agnostic; Studio re-exports them with bindings that read from the active dataSource's rows + the Studio plugin render context. See the [Grid Copilot docs](https://mui.com/x/react-data-grid/copilot/#generating-pdf-reports-plugin) for the PDF spec format.
 
 ## API
 

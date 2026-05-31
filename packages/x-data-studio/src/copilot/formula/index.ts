@@ -7,7 +7,7 @@ export { createStudioFormulaDataSource };
 
 /**
  * Studio-flavored Formula plugin. Wires the host-agnostic `formulaPlugin`
- * with a `FormulaDataSource` that reads from the active dataset's static
+ * with a `FormulaDataSource` that reads from the active dataSource's static
  * rows.
  */
 export function studioFormulaPlugin(

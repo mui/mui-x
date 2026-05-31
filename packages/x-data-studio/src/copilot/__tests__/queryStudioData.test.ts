@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import type { DataStudioDataset } from '../../DataStudio/DataStudio.types';
+import type { DataStudioDataSource } from '../../DataStudio/DataStudio.types';
 import { createQueryStudioDataProvider } from '../dataQuery';
 
-const DATASETS: ReadonlyArray<DataStudioDataset<any>> = [
+const DATASETS: ReadonlyArray<DataStudioDataSource<any>> = [
   {
     id: 'products',
     label: 'Products',
@@ -30,34 +30,34 @@ describe('queryStudioData provider', () => {
     expect(provider.toolNames).toEqual(['queryStudioData']);
   });
 
-  it('validateInput rejects missing datasetId', () => {
+  it('validateInput rejects missing dataSourceId', () => {
     const provider = createQueryStudioDataProvider(() => DATASETS);
     const result = provider.validateInput({});
     expect(result.ok).toBe(false);
   });
 
-  it('validateInput rejects unknown datasetId', () => {
+  it('validateInput rejects unknown dataSourceId', () => {
     const provider = createQueryStudioDataProvider(() => DATASETS);
-    const result = provider.validateInput({ datasetId: 'ghost' });
+    const result = provider.validateInput({ dataSourceId: 'ghost' });
     expect(result.ok).toBe(false);
   });
 
-  it('validateInput accepts a known datasetId', () => {
+  it('validateInput accepts a known dataSourceId', () => {
     const provider = createQueryStudioDataProvider(() => DATASETS);
-    const result = provider.validateInput({ datasetId: 'products', limit: 5 });
+    const result = provider.validateInput({ dataSourceId: 'products', limit: 5 });
     expect(result.ok).toBe(true);
     if (result.ok) {
-      expect(result.input.datasetId).toBe('products');
+      expect(result.input.dataSourceId).toBe('products');
       expect(result.input.limit).toBe(5);
     }
   });
 
   it('preview returns row count without exposing rows', () => {
     const provider = createQueryStudioDataProvider(() => DATASETS);
-    const result = provider.preview({ datasetId: 'products' });
+    const result = provider.preview({ dataSourceId: 'products' });
     expect(result).toEqual({
       meta: {
-        datasetId: 'products',
+        dataSourceId: 'products',
         rowCount: 3,
         columns: [
           { field: 'name', headerName: 'Name' },
@@ -69,22 +69,22 @@ describe('queryStudioData provider', () => {
 
   it('execute returns rows up to the limit', () => {
     const provider = createQueryStudioDataProvider(() => DATASETS);
-    const result = provider.execute({ datasetId: 'products', limit: 2 });
+    const result = provider.execute({ dataSourceId: 'products', limit: 2 });
     expect(result.meta.rowCount).toBe(2);
     expect(result.rows).toHaveLength(2);
     expect(result.rows[0].name).toBe('Apple');
   });
 
-  it('execute returns empty rows for a dataSource-only dataset', () => {
+  it('execute returns empty rows for a dataSource-only dataSource', () => {
     const provider = createQueryStudioDataProvider(() => DATASETS);
-    const result = provider.execute({ datasetId: 'orders' });
+    const result = provider.execute({ dataSourceId: 'orders' });
     expect(result.meta.rowCount).toBe(0);
     expect(result.rows).toEqual([]);
   });
 
   it('redactForBackend strips rows but keeps meta', () => {
     const provider = createQueryStudioDataProvider(() => DATASETS);
-    const result = provider.execute({ datasetId: 'products' });
+    const result = provider.execute({ dataSourceId: 'products' });
     const redacted = provider.redactForBackend!(result, 'call-1');
     expect(redacted).toEqual({ meta: result.meta });
   });

@@ -1,5 +1,5 @@
 // State document + host adapter
-export { snapshotState, type StudioStateDocument, type ViewDoc, type DatasetDoc } from './stateDocument';
+export { snapshotState, type StudioStateDocument, type SheetDoc, type DataSourceDoc } from './stateDocument';
 export {
   createStudioHostAdapter,
   type StudioHostAdapter,

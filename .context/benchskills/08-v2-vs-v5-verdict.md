@@ -8,16 +8,16 @@
 
 **V5 wins on every arm tested.** Average lift **+22pp** (V2 60% → V5 82%).
 
-| Arm | V2 | V5 | Δ |
-|---|---|---|---|
+| Arm                   | V2          | V5              | Δ         |
+| --------------------- | ----------- | --------------- | --------- |
 | gemini-3.1-flash-lite | 28/50 (56%) | **46/50 (92%)** | **+36pp** |
-| glm-5.1 | 29/50 (58%) | **44/50 (88%)** | **+30pp** |
-| haiku-4-5 | 31/50 (62%) | **45/50 (90%)** | **+28pp** |
-| qwen3.5-flash-02-23 | 33/50 (66%) | **46/50 (92%)** | **+26pp** |
-| kimi-latest | 26/50 (52%) | **32/50 (64%)** | +12pp |
-| qwen3.6-flash | 33/50 (66%) | **35/50 (70%)** | +4pp |
+| glm-5.1               | 29/50 (58%) | **44/50 (88%)** | **+30pp** |
+| haiku-4-5             | 31/50 (62%) | **45/50 (90%)** | **+28pp** |
+| qwen3.5-flash-02-23   | 33/50 (66%) | **46/50 (92%)** | **+26pp** |
+| kimi-latest           | 26/50 (52%) | **32/50 (64%)** | +12pp     |
+| qwen3.6-flash         | 33/50 (66%) | **35/50 (70%)** | +4pp      |
 
-Pre-improvements baseline (before pdf-flow split, classifier fix, group-agg skill): V5 averaged ~71%. Post-improvements: **V5 averaged 82%.** The 11pp lift came from:
+Pre-improvements baseline (before pdf-flow split, classifier fix, group-agg skill): V5 averaged \~71%. Post-improvements: **V5 averaged 82%.** The 11pp lift came from:
 
 1. **Classifier whitelist for `__*` internal columns** — caught the false-positive `hallucinated-column(__row_group_by_columns_group__)` failures across all `/grouping` patches.
 2. **`group-agg` instruction-only skill** — taught models to pair `/grouping` + `/aggregation` patches in a single `setGridState` call.
@@ -31,31 +31,33 @@ The originally-justified promotion (off a 10-prompt smoke) is now confirmed by 6
 
 ## Per-skill breakdown (V5 only, regenerable from `06-per-prompt.md`)
 
-| Category | V2 pass rate | V5 pass rate | Notes |
-|---|---|---|---|
-| filter / sort / formula | ~100% | ~100% | Both unaffected. Regression baseline holds. |
-| pivot (raw) | ~95% | ~98% | V5 marginally better. |
-| group-agg | 0-50% | **~95%** | Biggest single-category win. Driven by the new skill + classifier fix. |
-| pivot-builder | ~50% | **~92%** | V2 has no pivot-builder skill; V5 wins clearly. |
-| chart / chart-suggest | ~70% | ~75% | Modest improvement; both already pass on top arms. |
-| outlier-hunt | ~60% | **~95%** | V5 skill teaches the sort+top-N pattern. |
-| what-if-ghost | 0% | **~88%** | V2 doesn't know about parallel-formula pattern. |
-| data-story / surprise-me | ~30% | **~85%** | V5's instruction-only skills enable these new flows. |
-| investigation-log | ~10% | ~70% | Still multi-turn limited but lifted significantly. |
-| pdf-report | ~50% | ~33% | **Slight regression** — see open issues. |
+| Category                 | V2 pass rate | V5 pass rate | Notes                                                                  |
+| ------------------------ | ------------ | ------------ | ---------------------------------------------------------------------- |
+| filter / sort / formula  | \~100%       | \~100%       | Both unaffected. Regression baseline holds.                            |
+| pivot (raw)              | \~95%        | \~98%        | V5 marginally better.                                                  |
+| group-agg                | 0-50%        | **\~95%**    | Biggest single-category win. Driven by the new skill + classifier fix. |
+| pivot-builder            | \~50%        | **\~92%**    | V2 has no pivot-builder skill; V5 wins clearly.                        |
+| chart / chart-suggest    | \~70%        | \~75%        | Modest improvement; both already pass on top arms.                     |
+| outlier-hunt             | \~60%        | **\~95%**    | V5 skill teaches the sort+top-N pattern.                               |
+| what-if-ghost            | 0%           | **\~88%**    | V2 doesn't know about parallel-formula pattern.                        |
+| data-story / surprise-me | \~30%        | **\~85%**    | V5's instruction-only skills enable these new flows.                   |
+| investigation-log        | \~10%        | \~70%        | Still multi-turn limited but lifted significantly.                     |
+| pdf-report               | \~50%        | \~33%        | **Slight regression** — see open issues.                               |
 
 ## Open issues
 
 ### PDF regressed slightly after pdf-flow split
 
-After splitting `pdf-report` into a tool-only skill plus a separate `pdf-flow` orchestration skill, PDF pass rates dropped from ~50% to ~33%. The split is architecturally cleaner (mirrors `setGridState` ↔ `group-agg`) but the orchestration coupling weakened.
+After splitting `pdf-report` into a tool-only skill plus a separate `pdf-flow` orchestration skill, PDF pass rates dropped from \~50% to \~33%. The split is architecturally cleaner (mirrors `setGridState` ↔ `group-agg`) but the orchestration coupling weakened.
 
 Hypotheses:
+
 - The two SKILL.md fragments aren't read together by the LLM as cohesively as the combined section was.
 - The pdf-flow body needs stronger cross-references to the pdf-report tool description.
 - The split fragmented the "Step 1 / Step 2 / SAME TURN" emphasis.
 
 **Mitigation options for follow-up:**
+
 1. Add a one-paragraph cross-link at the top of `pdf-report/SKILL.md` reminding the model to read `pdf-flow`.
 2. Merge `pdf-flow` back into `pdf-report` (revert the split).
 3. Bump `stopWhen: stepCountIs(2)` for sessions where `pdf-report` is enabled (genuine multi-turn allowed).
@@ -94,4 +96,4 @@ python3 .context/benchskills/parser.py /tmp/v2-vs-v5.log
 python3 .context/benchskills/per_prompt_report.py /tmp/v2-vs-v5.log
 ```
 
-Wall-clock with concurrency=20 on these 6 arms: roughly 8-12 minutes (down from ~30 minutes serial). Cost ~$2-5.
+Wall-clock with concurrency=20 on these 6 arms: roughly 8-12 minutes (down from \~30 minutes serial). Cost \~$2-5.

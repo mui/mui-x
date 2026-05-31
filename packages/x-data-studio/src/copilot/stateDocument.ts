@@ -1,66 +1,56 @@
 import type { GridInitialState } from '@mui/x-data-grid';
-import type {
-  DataStudioChartConfig,
-  DataStudioDataset,
-  DataStudioView,
-} from '../DataStudio/DataStudio.types';
+import type { DataStudioDataSource, DataStudioSheet } from '../DataStudio/DataStudio.types';
 import type { DataStudioStateApi } from '../DataStudio/useDataStudioState';
 
 /**
- * Normalized representation of a DataStudio view as it appears in the copilot
- * state document. `kind` is always explicit (defaults to `'grid'` when the
- * source view omits it). `initialState` and `chartConfig` default to empty
- * objects so the agent can patch sub-paths without first creating the slot.
+ * Normalized representation of a DataStudio sheet as it appears in the copilot
+ * state document. `initialState` defaults to an empty object so the agent can
+ * patch sub-paths without first creating the slot.
  */
-export interface ViewDoc {
+export interface SheetDoc {
   id: string;
   label: string;
-  datasetId: string;
-  kind: 'grid' | 'chart';
+  dataSourceId: string | null;
   initialState: GridInitialState;
-  chartConfig: DataStudioChartConfig;
 }
 
-export interface DatasetDoc {
+export interface DataSourceDoc {
   id: string;
   label: string;
 }
 
 export interface StudioStateDocument {
   active: {
-    datasetId: string | null;
-    viewId: string | null;
+    dataSourceId: string | null;
+    sheetId: string | null;
   };
-  datasets: DatasetDoc[];
+  dataSources: DataSourceDoc[];
   /**
-   * Views keyed by id so `/views/<id>/...` paths can be addressed by the
+   * Sheets keyed by id so `/sheets/<id>/...` paths can be addressed by the
    * agent via plain JSON Patch (which has no ID-lookup for arrays).
    */
-  views: Record<string, ViewDoc>;
-  /** Display order. Mutated by view CRUD commands, not by direct patches. */
-  viewOrder: string[];
+  sheets: Record<string, SheetDoc>;
+  /** Display order. Mutated by sheet CRUD commands, not by direct patches. */
+  sheetOrder: string[];
 }
 
 function labelToString(label: unknown): string {
   return typeof label === 'string' ? label : String(label ?? '');
 }
 
-function normalizeView(view: DataStudioView): ViewDoc {
-  const kind: 'grid' | 'chart' = view.kind === 'chart' ? 'chart' : 'grid';
+function normalizeSheet(sheet: DataStudioSheet): SheetDoc {
   return {
-    id: view.id,
-    label: labelToString(view.label),
-    datasetId: view.datasetId,
-    kind,
-    initialState: view.initialState ?? {},
-    chartConfig: view.chartConfig ?? {},
+    id: sheet.id,
+    label: labelToString(sheet.label),
+    dataSourceId: sheet.dataSourceId,
+    initialState: sheet.initialState ?? {},
   };
 }
 
-function normalizeDataset(dataset: DataStudioDataset): DatasetDoc {
+function normalizeDataSource(dataSource: DataStudioDataSource): DataSourceDoc {
   return {
-    id: dataset.id,
-    label: labelToString(dataset.label),
+    id: dataSource.id,
+    label: labelToString(dataSource.label),
   };
 }
 
@@ -70,22 +60,22 @@ function normalizeDataset(dataset: DataStudioDataset): DatasetDoc {
  */
 export function snapshotState(
   stateApi: DataStudioStateApi<any>,
-  datasets: ReadonlyArray<DataStudioDataset<any>>,
+  dataSources: ReadonlyArray<DataStudioDataSource<any>>,
 ): StudioStateDocument {
-  const views: Record<string, ViewDoc> = {};
-  const viewOrder: string[] = [];
-  stateApi.views.forEach((view) => {
-    const normalized = normalizeView(view);
-    views[normalized.id] = normalized;
-    viewOrder.push(normalized.id);
+  const sheets: Record<string, SheetDoc> = {};
+  const sheetOrder: string[] = [];
+  stateApi.sheets.forEach((sheet) => {
+    const normalized = normalizeSheet(sheet);
+    sheets[normalized.id] = normalized;
+    sheetOrder.push(normalized.id);
   });
   return {
     active: {
-      datasetId: stateApi.activeDatasetId || null,
-      viewId: stateApi.activeViewId,
+      dataSourceId: stateApi.activeDataSourceId || null,
+      sheetId: stateApi.activeSheetId,
     },
-    datasets: datasets.map(normalizeDataset),
-    views,
-    viewOrder,
+    dataSources: dataSources.map(normalizeDataSource),
+    sheets,
+    sheetOrder,
   };
 }

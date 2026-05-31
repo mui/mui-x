@@ -12,14 +12,14 @@ export interface DataStudioSessionCacheOptions {
    */
   ttl?: number;
   /**
-   * Maximum number of entries kept in the cache across all datasets.
+   * Maximum number of entries kept in the cache across all dataSources.
    * When the cache grows beyond this number the least recently used entry is evicted.
    * @default 500
    */
   maxEntries?: number;
   /**
    * Function to generate the cache key portion derived from the request params.
-   * The dataset id is automatically prepended to the returned key to provide per-dataset
+   * The dataSource id is automatically prepended to the returned key to provide per-dataSource
    * namespacing, so this function does not need to be aware of it.
    * @param {GridGetRowsParams} params The params to generate the cache key from.
    * @returns {string} The cache key.
@@ -40,15 +40,15 @@ interface CacheEntry {
 const NAMESPACE_SEPARATOR = '\x00';
 
 /**
- * Session-scoped Data Source cache shared by every dataset in a single `<DataStudio>`.
+ * Session-scoped Data Source cache shared by every dataSource in a single `<DataStudio>`.
  *
  * - Backed by a single insertion-ordered `Map`, which gives O(1) LRU touch by
  *   delete-then-set on access.
  * - TTL behavior matches `GridDataSourceCacheDefault` from `@mui/x-data-grid`.
- * - `forDataset(id)` returns a per-dataset `GridDataSourceCache` view whose
- *   `clear()` only drops that dataset's entries. The Data Grid auto-clears on
- *   row mutations, and this ensures one dataset's mutation does not invalidate
- *   another dataset's cached pages.
+ * - `forDataset(id)` returns a per-dataSource `GridDataSourceCache` view whose
+ *   `clear()` only drops that dataSource's entries. The Data Grid auto-clears on
+ *   row mutations, and this ensures one dataSource's mutation does not invalidate
+ *   another dataSource's cached pages.
  */
 export class DataStudioSessionCache {
   private readonly cache: Map<string, CacheEntry>;
@@ -74,8 +74,8 @@ export class DataStudioSessionCache {
     return this.cache.size;
   }
 
-  private buildKey(datasetId: string, params: GridGetRowsParams): string {
-    return `${datasetId}${NAMESPACE_SEPARATOR}${this.getKey(params)}`;
+  private buildKey(dataSourceId: string, params: GridGetRowsParams): string {
+    return `${dataSourceId}${NAMESPACE_SEPARATOR}${this.getKey(params)}`;
   }
 
   private setEntry(key: string, value: GridGetRowsResponse): void {
@@ -105,16 +105,16 @@ export class DataStudioSessionCache {
     return entry.value;
   }
 
-  forDataset(datasetId: string): GridDataSourceCache {
+  forDataset(dataSourceId: string): GridDataSourceCache {
     return {
-      set: (params, value) => this.setEntry(this.buildKey(datasetId, params), value),
-      get: (params) => this.getEntry(this.buildKey(datasetId, params)),
-      clear: () => this.invalidateDataset(datasetId),
+      set: (params, value) => this.setEntry(this.buildKey(dataSourceId, params), value),
+      get: (params) => this.getEntry(this.buildKey(dataSourceId, params)),
+      clear: () => this.invalidateDataSource(dataSourceId),
     };
   }
 
-  invalidateDataset(datasetId: string): void {
-    const prefix = `${datasetId}${NAMESPACE_SEPARATOR}`;
+  invalidateDataSource(dataSourceId: string): void {
+    const prefix = `${dataSourceId}${NAMESPACE_SEPARATOR}`;
     for (const key of this.cache.keys()) {
       if (key.startsWith(prefix)) {
         this.cache.delete(key);

@@ -17,7 +17,7 @@ import type {
 import type {
   DataStudioDataGridInjectedProps,
   DataStudioDataGridProps,
-  DataStudioDataset,
+  DataStudioDataSource,
 } from './DataStudio.types';
 
 const { render } = createRenderer();
@@ -25,7 +25,7 @@ const { render } = createRenderer();
 type WriteCall = { state: DataStudioRoutingState; mode: DataStudioRoutingMode };
 
 function makeFakeRouter(
-  initial: DataStudioRoutingState = { activeDatasetId: null, activeViewId: null },
+  initial: DataStudioRoutingState = { activeDataSourceId: null, activeSheetId: null },
 ) {
   let state: DataStudioRoutingState = initial;
   const listeners = new Set<() => void>();
@@ -66,13 +66,13 @@ function makeCapturingGrid() {
   return { Grid, calls };
 }
 
-const datasetA: DataStudioDataset = {
+const dataSourceA: DataStudioDataSource = {
   id: 'a',
   label: 'Alpha',
   columns: [{ field: 'name', headerName: 'Name' }],
 };
 
-const datasetB: DataStudioDataset = {
+const dataSourceB: DataStudioDataSource = {
   id: 'b',
   label: 'Beta',
   columns: [{ field: 'name', headerName: 'Name' }],
@@ -89,7 +89,7 @@ describe('<DataStudio /> — routing adapter', () => {
     // initial render and is replaced with the parsed params one microtask
     // later, with the parent re-rendering but the adapter staying the same
     // reference (popstate never fires).
-    let backing: DataStudioRoutingState = { activeDatasetId: null, activeViewId: null };
+    let backing: DataStudioRoutingState = { activeDataSourceId: null, activeSheetId: null };
     const adapter: DataStudioRoutingAdapter = {
       // Live read so callers see the current value, not a snapshot frozen at adapter creation.
       read: () => backing,
@@ -102,7 +102,7 @@ describe('<DataStudio /> — routing adapter', () => {
       return (
         <div style={{ width: 500, height: 300 }}>
           <DataStudio
-            datasets={[
+            dataSources={[
               { id: 'a', label: 'Alpha', columns: [{ field: 'name', headerName: 'A' }] },
               { id: 'b', label: 'Beta', columns: [{ field: 'name', headerName: 'B' }] },
             ]}
@@ -114,46 +114,46 @@ describe('<DataStudio /> — routing adapter', () => {
     }
 
     const { setProps } = render(<Host />);
-    // First render: empty query → falls back to first dataset.
+    // First render: empty query → falls back to first dataSource.
     expect(lastDatasetColumnsLabel(calls)).toBe('A');
 
-    // Router becomes ready → query populated to ?dataset=b.
-    backing = { activeDatasetId: 'b', activeViewId: null };
+    // Router becomes ready → query populated to ?dataSource=b.
+    backing = { activeDataSourceId: 'b', activeSheetId: null };
     setProps({});
 
     expect(lastDatasetColumnsLabel(calls)).toBe('B');
   });
 
-  it('reads the active dataset id from the routing adapter on mount', () => {
-    const router = makeFakeRouter({ activeDatasetId: 'b', activeViewId: null });
+  it('reads the active dataSource id from the routing adapter on mount', () => {
+    const router = makeFakeRouter({ activeDataSourceId: 'b', activeSheetId: null });
     const { Grid, calls } = makeCapturingGrid();
 
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[datasetA, datasetB]}
+          dataSources={[dataSourceA, dataSourceB]}
           routing={router.adapter}
           slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
         />
       </div>,
     );
 
-    // The grid received dataset B's columns.
+    // The grid received dataSource B's columns.
     expect(lastDatasetColumnsLabel(calls)).toBe('Name');
-    // Grid is rendered with dataset B's keying — easier to assert by checking the
-    // dataset definition flowed through: `dataSource` is undefined for both, so use
+    // Grid is rendered with dataSource B's keying — easier to assert by checking the
+    // dataSource definition flowed through: `dataSource` is undefined for both, so use
     // a marker via `columns` length (both 1) → just rely on no clamp write.
     expect(router.writeCalls).toHaveLength(0);
   });
 
-  it("silently 'replace's the URL when it points at a missing dataset", () => {
-    const router = makeFakeRouter({ activeDatasetId: 'ghost', activeViewId: null });
+  it("silently 'replace's the URL when it points at a missing dataSource", () => {
+    const router = makeFakeRouter({ activeDataSourceId: 'ghost', activeSheetId: null });
     const { Grid } = makeCapturingGrid();
 
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[datasetA, datasetB]}
+          dataSources={[dataSourceA, dataSourceB]}
           routing={router.adapter}
           slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
         />
@@ -162,18 +162,18 @@ describe('<DataStudio /> — routing adapter', () => {
 
     expect(router.writeCalls).toHaveLength(1);
     expect(router.writeCalls[0].mode).toBe('replace');
-    expect(router.writeCalls[0].state).toEqual({ activeDatasetId: 'a', activeViewId: null });
+    expect(router.writeCalls[0].state).toEqual({ activeDataSourceId: 'a', activeSheetId: null });
   });
 
   it("silently 'replace's the URL when it points at a missing view", () => {
-    const router = makeFakeRouter({ activeDatasetId: 'a', activeViewId: 'missing' });
+    const router = makeFakeRouter({ activeDataSourceId: 'a', activeSheetId: 'missing' });
     const { Grid } = makeCapturingGrid();
 
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[datasetA]}
-          defaultViews={[]}
+          dataSources={[dataSourceA]}
+          defaultSheets={[]}
           routing={router.adapter}
           slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
         />
@@ -182,17 +182,17 @@ describe('<DataStudio /> — routing adapter', () => {
 
     expect(router.writeCalls).toHaveLength(1);
     expect(router.writeCalls[0].mode).toBe('replace');
-    expect(router.writeCalls[0].state).toEqual({ activeDatasetId: 'a', activeViewId: null });
+    expect(router.writeCalls[0].state).toEqual({ activeDataSourceId: 'a', activeSheetId: null });
   });
 
-  it("'push'es a new history entry when a dataset tab is clicked", async () => {
+  it("'push'es a new history entry when a dataSource tab is clicked", async () => {
     const router = makeFakeRouter();
     const { Grid } = makeCapturingGrid();
 
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[datasetA, datasetB]}
+          dataSources={[dataSourceA, dataSourceB]}
           routing={router.adapter}
           slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
         />
@@ -202,24 +202,24 @@ describe('<DataStudio /> — routing adapter', () => {
     // Empty URL on mount → no auto-write.
     expect(router.writeCalls).toHaveLength(0);
 
-    // Selecting dataset B via the sidebar tree triggers state.selectDataset.
+    // Selecting dataSource B via the sidebar tree triggers state.selectDataSource.
     fireEvent.click(screen.getByText('Beta'));
     // Writes are coalesced via queueMicrotask — wait for the next microtask.
     await flushMicrotasks();
 
     expect(router.writeCalls).toHaveLength(1);
     expect(router.writeCalls[0].mode).toBe('push');
-    expect(router.writeCalls[0].state).toEqual({ activeDatasetId: 'b', activeViewId: null });
+    expect(router.writeCalls[0].state).toEqual({ activeDataSourceId: 'b', activeSheetId: null });
   });
 
-  it("does not loop between visited datasets when the user goes back through A->B->C history", async () => {
+  it("does not loop between visited dataSources when the user goes back through A->B->C history", async () => {
     const router = makeFakeRouter();
     const { Grid, calls } = makeCapturingGrid();
 
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[
+          dataSources={[
             { id: 'a', label: 'Alpha', columns: [{ field: 'name', headerName: 'A' }] },
             { id: 'b', label: 'Beta', columns: [{ field: 'name', headerName: 'B' }] },
             { id: 'c', label: 'Gamma', columns: [{ field: 'name', headerName: 'C' }] },
@@ -236,36 +236,36 @@ describe('<DataStudio /> — routing adapter', () => {
     fireEvent.click(screen.getByText('Gamma'));
     await flushMicrotasks();
 
-    expect(router.writeCalls.map((c) => c.state.activeDatasetId)).toEqual(['b', 'c']);
+    expect(router.writeCalls.map((c) => c.state.activeDataSourceId)).toEqual(['b', 'c']);
     expect(router.writeCalls.every((c) => c.mode === 'push')).toBe(true);
     const writesAfterForward = router.writeCalls.length;
 
-    // Browser back: URL becomes ?dataset=b. The popstate handler updates
+    // Browser back: URL becomes ?dataSource=b. The popstate handler updates
     // `navState` — the studio must NOT push 'c' again (the regression).
     act(() => {
-      router.navigate({ activeDatasetId: 'b', activeViewId: null });
+      router.navigate({ activeDataSourceId: 'b', activeSheetId: null });
     });
     await flushMicrotasks();
     expect(router.writeCalls).toHaveLength(writesAfterForward);
     expect(lastDatasetColumnsLabel(calls)).toBe('B');
 
-    // Back again -> ?dataset=a. Still no extra writes.
+    // Back again -> ?dataSource=a. Still no extra writes.
     act(() => {
-      router.navigate({ activeDatasetId: 'a', activeViewId: null });
+      router.navigate({ activeDataSourceId: 'a', activeSheetId: null });
     });
     await flushMicrotasks();
     expect(router.writeCalls).toHaveLength(writesAfterForward);
     expect(lastDatasetColumnsLabel(calls)).toBe('A');
   });
 
-  it('re-renders to the new dataset when external navigation fires', () => {
-    const router = makeFakeRouter({ activeDatasetId: 'a', activeViewId: null });
+  it('re-renders to the new dataSource when external navigation fires', () => {
+    const router = makeFakeRouter({ activeDataSourceId: 'a', activeSheetId: null });
     const { Grid, calls } = makeCapturingGrid();
 
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[datasetA, datasetB]}
+          dataSources={[dataSourceA, dataSourceB]}
           routing={router.adapter}
           slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
         />
@@ -273,9 +273,9 @@ describe('<DataStudio /> — routing adapter', () => {
     );
 
     const callsBefore = calls.length;
-    // Simulate browser back/forward landing on dataset B.
+    // Simulate browser back/forward landing on dataSource B.
     act(() => {
-      router.navigate({ activeDatasetId: 'b', activeViewId: null });
+      router.navigate({ activeDataSourceId: 'b', activeSheetId: null });
     });
 
     expect(calls.length).toBeGreaterThan(callsBefore);
@@ -283,17 +283,17 @@ describe('<DataStudio /> — routing adapter', () => {
     expect(router.writeCalls).toHaveLength(0);
   });
 
-  it('explicit activeDatasetId controlled prop wins over the adapter', () => {
-    const router = makeFakeRouter({ activeDatasetId: 'a', activeViewId: null });
-    const onActiveDatasetChange = vi.fn();
+  it('explicit activeDataSourceId controlled prop wins over the adapter', () => {
+    const router = makeFakeRouter({ activeDataSourceId: 'a', activeSheetId: null });
+    const onActiveDataSourceChange = vi.fn();
     const { Grid } = makeCapturingGrid();
 
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[datasetA, datasetB]}
-          activeDatasetId="b"
-          onActiveDatasetChange={onActiveDatasetChange}
+          dataSources={[dataSourceA, dataSourceB]}
+          activeDataSourceId="b"
+          onActiveDataSourceChange={onActiveDataSourceChange}
           routing={router.adapter}
           slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
         />
@@ -303,7 +303,7 @@ describe('<DataStudio /> — routing adapter', () => {
     // URL said 'a' but the explicit controlled prop chose 'b' → 'replace' to silently align.
     expect(router.writeCalls).toHaveLength(1);
     expect(router.writeCalls[0].mode).toBe('replace');
-    expect(router.writeCalls[0].state).toEqual({ activeDatasetId: 'b', activeViewId: null });
+    expect(router.writeCalls[0].state).toEqual({ activeDataSourceId: 'b', activeSheetId: null });
   });
 
   it('behaves identically to routing={undefined} when routing={null}', () => {
@@ -312,25 +312,25 @@ describe('<DataStudio /> — routing adapter', () => {
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[datasetA, datasetB]}
+          dataSources={[dataSourceA, dataSourceB]}
           routing={null}
           slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
         />
       </div>,
     );
 
-    // Defaults to first dataset; no adapter so no router noise.
+    // Defaults to first dataSource; no adapter so no router noise.
     expect(calls.length).toBeGreaterThan(0);
   });
 
   it('does not write to the URL when the URL is empty on mount', () => {
-    const router = makeFakeRouter({ activeDatasetId: null, activeViewId: null });
+    const router = makeFakeRouter({ activeDataSourceId: null, activeSheetId: null });
     const { Grid } = makeCapturingGrid();
 
     render(
       <div style={{ width: 500, height: 300 }}>
         <DataStudio
-          datasets={[datasetA, datasetB]}
+          dataSources={[dataSourceA, dataSourceB]}
           routing={router.adapter}
           slots={{ dataGrid: Grid as any, toolbar: null, menuBar: null }}
         />
@@ -350,14 +350,14 @@ describe('createSearchParamsRoutingAdapter', () => {
     window.history.replaceState(null, '', '/test');
   });
 
-  it('reads the default `dataset` and `view` query params', () => {
-    window.history.replaceState(null, '', '/test?dataset=customers&view=v1');
+  it('reads the default `dataSource` and `view` query params', () => {
+    window.history.replaceState(null, '', '/test?dataSource=customers&sheet=v1');
     const adapter = createSearchParamsRoutingAdapter();
-    expect(adapter.read()).toEqual({ activeDatasetId: 'customers', activeViewId: 'v1' });
+    expect(adapter.read()).toEqual({ activeDataSourceId: 'customers', activeSheetId: 'v1' });
   });
 
   it('returns a reference-stable snapshot when the URL has not changed', () => {
-    window.history.replaceState(null, '', '/test?dataset=a');
+    window.history.replaceState(null, '', '/test?dataSource=a');
     const adapter = createSearchParamsRoutingAdapter();
     const first = adapter.read();
     const second = adapter.read();
@@ -369,9 +369,9 @@ describe('createSearchParamsRoutingAdapter', () => {
     const listener = vi.fn();
     adapter.subscribe(listener);
 
-    adapter.write({ activeDatasetId: 'orders', activeViewId: null }, 'push');
+    adapter.write({ activeDataSourceId: 'orders', activeSheetId: null }, 'push');
 
-    expect(window.location.search).toBe('?dataset=orders');
+    expect(window.location.search).toBe('?dataSource=orders');
     expect(listener).toHaveBeenCalledTimes(1);
   });
 
@@ -380,7 +380,7 @@ describe('createSearchParamsRoutingAdapter', () => {
     const pushSpy = vi.spyOn(window.history, 'pushState');
 
     const adapter = createSearchParamsRoutingAdapter();
-    adapter.write({ activeDatasetId: 'orders', activeViewId: null }, 'replace');
+    adapter.write({ activeDataSourceId: 'orders', activeSheetId: null }, 'replace');
 
     expect(replaceSpy).toHaveBeenCalledTimes(1);
     expect(pushSpy).not.toHaveBeenCalled();
@@ -390,18 +390,18 @@ describe('createSearchParamsRoutingAdapter', () => {
   });
 
   it('honors custom param names', () => {
-    const adapter = createSearchParamsRoutingAdapter({ datasetParam: 'ds', viewParam: 'v' });
+    const adapter = createSearchParamsRoutingAdapter({ dataSourceParam: 'ds', sheetParam: 'v' });
     window.history.replaceState(null, '', '/test?ds=alpha&v=beta');
-    expect(adapter.read()).toEqual({ activeDatasetId: 'alpha', activeViewId: 'beta' });
+    expect(adapter.read()).toEqual({ activeDataSourceId: 'alpha', activeSheetId: 'beta' });
 
-    adapter.write({ activeDatasetId: 'gamma', activeViewId: null }, 'push');
+    adapter.write({ activeDataSourceId: 'gamma', activeSheetId: null }, 'push');
     expect(window.location.search).toBe('?ds=gamma');
   });
 
   it('drops params on null values without leaving them in the URL', () => {
-    window.history.replaceState(null, '', '/test?dataset=a&view=v1&unrelated=keep');
+    window.history.replaceState(null, '', '/test?dataSource=a&sheet=v1&unrelated=keep');
     const adapter = createSearchParamsRoutingAdapter();
-    adapter.write({ activeDatasetId: null, activeViewId: null }, 'replace');
+    adapter.write({ activeDataSourceId: null, activeSheetId: null }, 'replace');
     expect(window.location.search).toBe('?unrelated=keep');
   });
 
@@ -411,9 +411,9 @@ describe('createSearchParamsRoutingAdapter', () => {
     delete global.window;
     try {
       const adapter = createSearchParamsRoutingAdapter();
-      expect(adapter.read()).toEqual({ activeDatasetId: null, activeViewId: null });
+      expect(adapter.read()).toEqual({ activeDataSourceId: null, activeSheetId: null });
       expect(() =>
-        adapter.write({ activeDatasetId: 'a', activeViewId: null }, 'push'),
+        adapter.write({ activeDataSourceId: 'a', activeSheetId: null }, 'push'),
       ).not.toThrow();
       const unsubscribe = adapter.subscribe(() => {});
       expect(() => unsubscribe()).not.toThrow();

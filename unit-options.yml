@@ -1,0 +1,124 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e664]:
+      - generic [ref=e665]:
+        - generic [ref=e666]:
+          - generic [ref=e667]: Dataset
+          - generic [ref=e668]:
+            - combobox "Dataset" [ref=e758] [cursor=pointer]: Products
+            - textbox: products
+            - img
+            - group:
+              - generic: Dataset
+        - group "Chart workspace view" [ref=e759]:
+          - button "Show chart" [pressed] [ref=e760] [cursor=pointer]: Chart
+          - button "Show data grid" [ref=e761] [cursor=pointer]: Data grid
+      - generic [ref=e673]:
+        - generic [ref=e675]:
+          - generic:
+            - img
+            - img
+          - img [ref=e676]:
+            - generic [ref=e678]: No data to display
+          - generic:
+            - text: MUI X Missing license key
+            - generic: Open the browser console for details on how to resolve this.
+        - generic [ref=e763]:
+          - generic [ref=e765]:
+            - generic [ref=e766]: Charts
+            - button "Sync chart" [pressed] [ref=e767] [cursor=pointer]:
+              - img [ref=e768]
+            - button "Close charts configuration" [ref=e770] [cursor=pointer]:
+              - img [ref=e771]
+          - tablist [ref=e775]:
+            - tab "Chart" [ref=e776] [cursor=pointer]
+            - tab "Fields" [selected] [ref=e777] [cursor=pointer]: Fields
+            - tab "Customize" [ref=e778] [cursor=pointer]
+          - tabpanel "Chart" [ref=e813]:
+            - generic "Search fields" [ref=e816]:
+              - generic [ref=e817]:
+                - img [ref=e819]
+                - searchbox "Search fields" [ref=e821]
+                - group
+            - generic [ref=e822]:
+              - generic [ref=e824]:
+                - generic [ref=e825]:
+                  - img [ref=e827]
+                  - generic [ref=e829]: Product ID
+                  - button "Field options" [ref=e831] [cursor=pointer]:
+                    - img [ref=e832]
+                - generic [ref=e834]:
+                  - img [ref=e836]
+                  - generic [ref=e838]: Coffee Type
+                  - button "Field options" [ref=e840] [cursor=pointer]:
+                    - img [ref=e841]
+                - generic [ref=e852]:
+                  - img [ref=e854]
+                  - generic [ref=e856]: Size
+                  - button "Field options" [ref=e858] [cursor=pointer]:
+                    - img [ref=e859]
+                - generic [ref=e861]:
+                  - img [ref=e863]
+                  - generic [ref=e865]: Unit Price
+                  - button "Field options" [expanded] [ref=e867] [cursor=pointer]:
+                    - img [ref=e868]
+                - generic [ref=e870]:
+                  - img [ref=e872]
+                  - generic [ref=e874]: Price per 100g
+                  - button "Field options" [ref=e876] [cursor=pointer]:
+                    - img [ref=e877]
+                - generic [ref=e879]:
+                  - img [ref=e881]
+                  - generic [ref=e883]: Profit
+                  - button "Field options" [ref=e885] [cursor=pointer]:
+                    - img [ref=e886]
+              - generic [ref=e890]:
+                - generic [ref=e891]:
+                  - button "Categories" [ref=e892]:
+                    - generic [ref=e893]:
+                      - text: Categories
+                      - generic [ref=e913]: "1"
+                    - img [ref=e895]
+                  - generic [ref=e915]:
+                    - img [ref=e917]
+                    - generic [ref=e919]:
+                      - generic [ref=e920] [cursor=pointer]:
+                        - checkbox "Roast Type" [checked] [ref=e921]
+                        - img [ref=e922]
+                      - generic [ref=e924]: Roast Type
+                    - button "Field options" [ref=e926] [cursor=pointer]:
+                      - img [ref=e927]
+                - generic [ref=e899]:
+                  - button "Series" [ref=e900]:
+                    - generic [ref=e901]: Series
+                    - img [ref=e903]
+                  - generic [ref=e906]: Drag here to use column as Series
+    - generic [ref=e618]:
+      - generic [ref=e619]:
+        - button "Add view" [ref=e804] [cursor=pointer]:
+          - img [ref=e621]
+        - button "All tabs" [ref=e805] [cursor=pointer]:
+          - img [ref=e624]
+        - button "Hide data sources" [ref=e806] [cursor=pointer]:
+          - img [ref=e627]
+      - generic [ref=e629]:
+        - button "Customers" [ref=e807] [cursor=pointer]:
+          - generic [ref=e632]: Customers
+        - button "Products" [ref=e808] [cursor=pointer]:
+          - generic [ref=e635]: Products
+        - button "Orders" [ref=e809] [cursor=pointer]:
+          - generic [ref=e638]: Orders
+        - generic [ref=e722]:
+          - button "Chart 1" [ref=e810] [cursor=pointer]:
+            - generic [ref=e724]: Chart 1
+          - button "View options for Chart 1" [ref=e811] [cursor=pointer]:
+            - img [ref=e726]
+  - button "Open Next.js Dev Tools" [ref=e812] [cursor=pointer]:
+    - img [ref=e645]
+  - alert [ref=e648]: Coffee Beans - Data Studio demo - MUI X
+  - tooltip "Field options" [ref=e929]:
+    - menu "Field options" [ref=e931]:
+      - menuitem "Add to Categories" [active] [ref=e932] [cursor=pointer]:
+        - generic [ref=e934]: Add to Categories
+      - menuitem "Add to Series" [ref=e935] [cursor=pointer]:
+        - generic [ref=e937]: Add to Series

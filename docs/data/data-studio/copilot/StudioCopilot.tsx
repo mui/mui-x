@@ -12,8 +12,8 @@ import {
 } from '@mui/x-chat-headless';
 import {
   DataStudio,
-  type DataStudioDataset,
-  type DataStudioView,
+  type DataStudioDataSource,
+  type DataStudioSheet,
   createStudioCopilotLocalStorageAdapter,
   studioFormulaPlugin,
   studioPdfReportPlugin,
@@ -43,7 +43,7 @@ const CUSTOMERS_ROWS = Array.from({ length: 15 }, (_, i) => ({
   ltv: Math.round(((i * 113) % 5000) + 200),
 }));
 
-const DATASETS: DataStudioDataset<any>[] = [
+const DATASETS: DataStudioDataSource<any>[] = [
   {
     id: 'sales',
     label: 'Sales',
@@ -78,8 +78,8 @@ const IS_DEV_HOST =
   /^(localhost|127\.0\.0\.1|0\.0\.0\.0)(:|$)/.test(window.location.host);
 const IS_DEPLOY = !IS_DEV_HOST && process.env.DEPLOY_ENV !== 'development';
 const BACKEND_URL = IS_DEPLOY
-  ? 'https://mui-backend-pr-1691.onrender.com/api/v1/datagrid/copilot'
-  : 'http://localhost:5055/api/v1/datagrid/copilot';
+  ? 'https://mui-backend-pr-1691.onrender.com/api/v1/datastudio/copilot'
+  : 'http://localhost:5055/api/v1/datastudio/copilot';
 const API_KEY = IS_DEPLOY
   ? atob(
       'c2stbXVpLTNnRkpJREhDdGNRajJxV3BaaURpUUZFSjV0ZXF4QlF0RlFMVnk3dHpIcjY1Q1hkZFd0SXBvVzRLUm9a',
@@ -91,9 +91,9 @@ const API_KEY = IS_DEPLOY
 /**
  * Build a Studio context payload the backend can feed into the system prompt.
  * Mirrors `buildGridContext` from `CopilotBackend.tsx` but exposes Studio's
- * imperative surface — datasets, views, and the `studio.*` command catalog.
+ * imperative surface — dataSources, views, and the `studio.*` command catalog.
  *
- * Built from `onViewsChange` / `onActiveDatasetChange` callbacks since the
+ * Built from `onSheetsChange` / `onActiveDataSourceChange` callbacks since the
  * Studio component doesn't expose its state API ref externally yet — that
  * keeps the demo close to what an integrator can do today.
  */
@@ -106,10 +106,8 @@ function buildStudioContext(
     viewsById[v.id] = {
       id: v.id,
       label: typeof v.label === 'string' ? v.label : String(v.label ?? ''),
-      datasetId: v.datasetId,
-      kind: v.kind === 'chart' ? 'chart' : 'grid',
+      dataSourceId: v.dataSourceId,
       initialState: v.initialState ?? {},
-      chartConfig: v.chartConfig ?? {},
     };
     viewOrder.push(v.id);
   });
@@ -117,8 +115,8 @@ function buildStudioContext(
     version: 1 as const,
     host: 'data-studio' as const,
     state: {
-      active: { datasetId: view.activeDatasetId, viewId: view.activeViewId },
-      datasets: view.datasets.map((d) => ({
+      active: { dataSourceId: view.activeDataSourceId, viewId: view.activeSheetId },
+      dataSources: view.dataSources.map((d) => ({
         id: d.id,
         label: typeof d.label === 'string' ? d.label : String(d.label ?? ''),
       })),
@@ -144,10 +142,10 @@ function buildStudioContext(
 }
 
 interface ContextRef {
-  views: ReadonlyArray<DataStudioView>;
-  activeDatasetId: string | null;
-  activeViewId: string | null;
-  datasets: ReadonlyArray<DataStudioDataset<any>>;
+  views: ReadonlyArray<DataStudioSheet>;
+  activeDataSourceId: string | null;
+  activeSheetId: string | null;
+  dataSources: ReadonlyArray<DataStudioDataSource<any>>;
 }
 
 function createBackendAdapter(ctxRef: React.MutableRefObject<ContextRef>): ChatAdapter {
@@ -170,9 +168,9 @@ function createBackendAdapter(ctxRef: React.MutableRefObject<ContextRef>): ChatA
         },
         body: JSON.stringify({
           query: userText,
-          // The backend reuses `gridContext` for any host today; we send
-          // `studioContext` too so a host-aware backend can branch on it.
-          gridContext: studioContext,
+          // The unified backend reads `studioContext` for the Data Studio
+          // route. Each host owns its own context field name (gridContext
+          // for the Data Grid, studioContext here).
           studioContext,
           copilotPlugins: Array.isArray(copilotPlugins) ? copilotPlugins : undefined,
           conversationId,
@@ -216,7 +214,7 @@ function pickRecipe(userText: string, viewIds: string[]): EnvelopeRecipe {
         {
           type: 'studio.addView',
           params: {
-            datasetId: isCustomers ? 'customers' : 'sales',
+            dataSourceId: isCustomers ? 'customers' : 'sales',
             kind: isChart ? 'chart' : 'grid',
             label: isChart ? 'Revenue chart' : 'Custom view',
           },
@@ -226,14 +224,14 @@ function pickRecipe(userText: string, viewIds: string[]): EnvelopeRecipe {
   }
   if (/switch to customers|select customers|show customers/.test(text)) {
     return {
-      reply: 'Switching to the Customers dataset.',
-      commands: [{ type: 'studio.selectDataset', params: { datasetId: 'customers' } }],
+      reply: 'Switching to the Customers dataSource.',
+      commands: [{ type: 'studio.selectDataSource', params: { dataSourceId: 'customers' } }],
     };
   }
   if (/switch to sales|select sales|show sales/.test(text)) {
     return {
-      reply: 'Switching to the Sales dataset.',
-      commands: [{ type: 'studio.selectDataset', params: { datasetId: 'sales' } }],
+      reply: 'Switching to the Sales dataSource.',
+      commands: [{ type: 'studio.selectDataSource', params: { dataSourceId: 'sales' } }],
     };
   }
   if (/rename .* (to|as) ([\w \-]+)/.test(text) && viewIds.length > 0) {
@@ -387,22 +385,22 @@ const COPILOT_PLUGINS = [studioFormulaPlugin(), studioPdfReportPlugin()];
 // ──────────────────────────────────────────────────────────────────────────
 
 export default function StudioCopilot() {
-  const [views, setViews] = React.useState<DataStudioView[]>([]);
-  const [activeDatasetId, setActiveDatasetId] = React.useState<string | null>(
+  const [views, setViews] = React.useState<DataStudioSheet[]>([]);
+  const [activeDataSourceId, setActiveDatasetId] = React.useState<string | null>(
     DATASETS[0]?.id ?? null,
   );
-  const [activeViewId, setActiveViewId] = React.useState<string | null>(null);
+  const [activeSheetId, setActiveViewId] = React.useState<string | null>(null);
   const viewIdsRef = React.useRef<string[]>([]);
   viewIdsRef.current = views.map((v) => v.id);
 
   const [useBackend, setUseBackend] = React.useState(false);
   const ctxRef = React.useRef<ContextRef>({
     views: [],
-    activeDatasetId,
-    activeViewId,
-    datasets: DATASETS,
+    activeDataSourceId,
+    activeSheetId,
+    dataSources: DATASETS,
   });
-  ctxRef.current = { views, activeDatasetId, activeViewId, datasets: DATASETS };
+  ctxRef.current = { views, activeDataSourceId, activeSheetId, dataSources: DATASETS };
 
   const adapter = React.useMemo<ChatAdapter>(() => {
     const inner = useBackend
@@ -434,14 +432,15 @@ export default function StudioCopilot() {
       </Stack>
       <Box sx={{ height: 600, width: '100%' }}>
         <DataStudio
-          datasets={DATASETS}
+          dataSources={DATASETS}
+          plan="premium"
           layout="tabs"
           copilotChatAdapter={adapter}
           copilotPlugins={COPILOT_PLUGINS}
-          defaultViews={[]}
-          onViewsChange={setViews}
-          onActiveDatasetChange={(id) => setActiveDatasetId(id)}
-          onActiveViewChange={(id) => setActiveViewId(id)}
+          defaultSheets={[]}
+          onSheetsChange={setViews}
+          onActiveDataSourceChange={(id) => setActiveDatasetId(id)}
+          onActiveSheetChange={(id) => setActiveViewId(id)}
         />
       </Box>
     </Box>

@@ -1,45 +1,43 @@
 import type { GridInitialState } from '@mui/x-data-grid';
 import type {
-  DataStudioChartConfig,
-  DataStudioDataset,
-  DataStudioView,
-  DataStudioViewKind,
+  DataStudioDataSource,
+  DataStudioSheet,
 } from '../../DataStudio/DataStudio.types';
 import type { DataStudioStateApi } from '../../DataStudio/useDataStudioState';
 
 /**
  * Recording fake `DataStudioStateApi` used by command/reconciler tests.
  * Mutates internal state so a single test can drive the agent and read back
- * the resulting `views` / active selection without rendering a real Studio.
+ * the resulting `sheets` / active selection without rendering a real Studio.
  */
 export interface FakeStudioState {
   api: DataStudioStateApi<any>;
-  /** Direct read-access to the internal views list for assertions. */
-  readonly views: DataStudioView[];
+  /** Direct read-access to the internal sheets list for assertions. */
+  readonly sheets: DataStudioSheet[];
   /** All method invocations, in order, with their arguments. */
   readonly calls: Array<{ method: string; args: ReadonlyArray<unknown> }>;
 }
 
 export interface CreateFakeStateApiOptions {
-  datasets: ReadonlyArray<DataStudioDataset<any>>;
-  initialViews?: DataStudioView[];
-  initialActiveDatasetId?: string | null;
-  initialActiveViewId?: string | null;
+  dataSources: ReadonlyArray<DataStudioDataSource<any>>;
+  initialSheets?: DataStudioSheet[];
+  initialActiveDataSourceId?: string | null;
+  initialActiveSheetId?: string | null;
 }
 
 let viewSeq = 0;
 function nextViewId() {
   viewSeq += 1;
-  return `fake-view-${viewSeq}`;
+  return `fake-sheet-${viewSeq}`;
 }
 
 export function createFakeStateApi(options: CreateFakeStateApiOptions): FakeStudioState {
-  const { datasets, initialViews = [], initialActiveDatasetId = null, initialActiveViewId = null } =
+  const { dataSources, initialSheets = [], initialActiveDataSourceId = null, initialActiveSheetId = null } =
     options;
 
-  const views: DataStudioView[] = initialViews.slice();
-  let activeDatasetId: string = initialActiveDatasetId ?? datasets[0]?.id ?? '';
-  let activeViewId: string | null = initialActiveViewId;
+  const sheets: DataStudioSheet[] = initialSheets.slice();
+  let activeDataSourceId: string = initialActiveDataSourceId ?? dataSources[0]?.id ?? '';
+  let activeSheetId: string | null = initialActiveSheetId;
   const calls: Array<{ method: string; args: ReadonlyArray<unknown> }> = [];
 
   function record(method: string, args: ReadonlyArray<unknown>) {
@@ -47,131 +45,138 @@ export function createFakeStateApi(options: CreateFakeStateApiOptions): FakeStud
   }
 
   const api: DataStudioStateApi<any> = {
-    get activeDatasetId() {
-      return activeDatasetId;
+    get activeDataSourceId() {
+      return activeDataSourceId;
     },
-    get activeViewId() {
-      return activeViewId;
+    get activeSheetId() {
+      return activeSheetId;
     },
-    get activeDataset() {
-      return datasets.find((d) => d.id === activeDatasetId) ?? null;
+    get activeDataSource() {
+      return dataSources.find((d) => d.id === activeDataSourceId) ?? null;
     },
-    get activeView() {
-      return views.find((v) => v.id === activeViewId) ?? null;
+    get activeSheet() {
+      return sheets.find((v) => v.id === activeSheetId) ?? null;
     },
-    get views() {
-      return views;
+    get sheets() {
+      return sheets;
     },
-    selectDataset(datasetId) {
-      record('selectDataset', [datasetId]);
-      if (datasets.some((d) => d.id === datasetId)) {
-        activeDatasetId = datasetId;
-        activeViewId = null;
+    isComposing: false,
+    startComposing() {
+      record('startComposing', []);
+    },
+    cancelComposing() {
+      record('cancelComposing', []);
+    },
+    selectDataSource(dataSourceId) {
+      record('selectDataSource', [dataSourceId]);
+      if (dataSources.some((d) => d.id === dataSourceId)) {
+        activeDataSourceId = dataSourceId;
+        activeSheetId = null;
       }
     },
-    selectView(viewId) {
-      record('selectView', [viewId]);
-      const target = views.find((v) => v.id === viewId);
-      if (target) {
-        activeViewId = viewId;
-        activeDatasetId = target.datasetId;
+    selectSheet(sheetId) {
+      record('selectSheet', [sheetId]);
+      const target = sheets.find((v) => v.id === sheetId);
+      if (target && target.dataSourceId != null) {
+        activeSheetId = sheetId;
+        activeDataSourceId = target.dataSourceId;
       }
     },
-    addView(input) {
-      record('addView', [input]);
-      const datasetId = input?.datasetId ?? activeDatasetId;
-      if (!datasets.some((d) => d.id === datasetId)) {
+    addSheet(input) {
+      record('addSheet', [input]);
+      const dataSourceId = input?.dataSourceId ?? activeDataSourceId;
+      if (!dataSources.some((d) => d.id === dataSourceId)) {
         return null;
       }
-      const kind: DataStudioViewKind = input?.kind ?? 'grid';
-      const newView: DataStudioView = {
+      const newSheet: DataStudioSheet = {
         id: nextViewId(),
-        label: input?.label ?? `view-${views.length + 1}`,
-        datasetId,
-        ...(kind === 'chart' ? { kind } : {}),
-        ...(input?.initialState && kind !== 'chart'
-          ? { initialState: input.initialState as GridInitialState }
-          : {}),
-        ...(kind === 'chart' && input?.chartConfig
-          ? { chartConfig: input.chartConfig as DataStudioChartConfig }
-          : {}),
+        label: input?.label ?? `sheet-${sheets.length + 1}`,
+        dataSourceId,
+        ...(input?.initialState ? { initialState: input.initialState as GridInitialState } : {}),
       };
-      views.push(newView);
-      activeViewId = newView.id;
-      activeDatasetId = datasetId;
-      return newView;
+      sheets.push(newSheet);
+      activeSheetId = newSheet.id;
+      activeDataSourceId = dataSourceId;
+      return newSheet;
     },
-    updateView(viewId, patch) {
-      record('updateView', [viewId, patch]);
-      const idx = views.findIndex((v) => v.id === viewId);
+    updateSheet(sheetId, patch) {
+      record('updateSheet', [sheetId, patch]);
+      const idx = sheets.findIndex((v) => v.id === sheetId);
       if (idx === -1) {
         return;
       }
-      const current = views[idx];
-      views[idx] = {
+      const current = sheets[idx];
+      sheets[idx] = {
         ...current,
-        ...(patch.datasetId !== undefined ? { datasetId: patch.datasetId } : {}),
-        ...(patch.chartConfig !== undefined ? { chartConfig: patch.chartConfig } : {}),
+        ...(patch.dataSourceId !== undefined ? { dataSourceId: patch.dataSourceId } : {}),
         ...(patch.initialState !== undefined ? { initialState: patch.initialState } : {}),
       };
     },
-    renameView(viewId, label) {
-      record('renameView', [viewId, label]);
-      const idx = views.findIndex((v) => v.id === viewId);
+    renameSheet(sheetId, label) {
+      record('renameSheet', [sheetId, label]);
+      const idx = sheets.findIndex((v) => v.id === sheetId);
       if (idx !== -1) {
-        views[idx] = { ...views[idx], label };
+        sheets[idx] = { ...sheets[idx], label };
       }
     },
-    duplicateView(viewId) {
-      record('duplicateView', [viewId]);
-      const idx = views.findIndex((v) => v.id === viewId);
+    duplicateSheet(sheetId) {
+      record('duplicateSheet', [sheetId]);
+      const idx = sheets.findIndex((v) => v.id === sheetId);
       if (idx === -1) {
         return null;
       }
-      const copy: DataStudioView = {
-        ...views[idx],
+      const copy: DataStudioSheet = {
+        ...sheets[idx],
         id: nextViewId(),
-        label: `${views[idx].label} (copy)`,
+        label: `${sheets[idx].label} (copy)`,
       };
-      views.splice(idx + 1, 0, copy);
-      activeViewId = copy.id;
+      sheets.splice(idx + 1, 0, copy);
+      activeSheetId = copy.id;
       return copy;
     },
-    deleteView(viewId) {
-      record('deleteView', [viewId]);
-      const idx = views.findIndex((v) => v.id === viewId);
+    deleteSheet(sheetId) {
+      record('deleteSheet', [sheetId]);
+      const idx = sheets.findIndex((v) => v.id === sheetId);
       if (idx !== -1) {
-        views.splice(idx, 1);
-        if (activeViewId === viewId) {
-          activeViewId = null;
+        sheets.splice(idx, 1);
+        if (activeSheetId === sheetId) {
+          activeSheetId = null;
         }
       }
     },
-    moveView(viewId, delta) {
-      record('moveView', [viewId, delta]);
-      const idx = views.findIndex((v) => v.id === viewId);
+    moveSheet(sheetId, delta) {
+      record('moveSheet', [sheetId, delta]);
+      const idx = sheets.findIndex((v) => v.id === sheetId);
       if (idx === -1) {
         return;
       }
       const targetIdx = idx + delta;
-      if (targetIdx < 0 || targetIdx >= views.length) {
+      if (targetIdx < 0 || targetIdx >= sheets.length) {
         return;
       }
-      const [moved] = views.splice(idx, 1);
-      views.splice(targetIdx, 0, moved);
+      const [moved] = sheets.splice(idx, 1);
+      sheets.splice(targetIdx, 0, moved);
     },
-    invalidateDataset(datasetId) {
-      record('invalidateDataset', [datasetId]);
+    invalidateDataSource(dataSourceId) {
+      record('invalidateDataSource', [dataSourceId]);
     },
     invalidateAll() {
       record('invalidateAll', []);
+    },
+    startSheetFromTemplate(templateId) {
+      record('startSheetFromTemplate', [templateId]);
+      return null;
+    },
+    async startSheetFromPrompt(prompt) {
+      record('startSheetFromPrompt', [prompt]);
+      return null;
     },
   };
 
   return {
     api,
-    get views() {
-      return views;
+    get sheets() {
+      return sheets;
     },
     get calls() {
       return calls;

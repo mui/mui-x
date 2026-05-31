@@ -11,56 +11,56 @@ type Handler<P> = CommandHandler<StudioHostAdapter, StudioStateDocument, P>;
 type Ctx = ExecutorContext<StudioHostAdapter, StudioStateDocument>;
 
 interface SelectDatasetParams {
-  datasetId: string;
+  dataSourceId: string;
 }
 
 interface InvalidateDatasetParams {
-  datasetId: string;
+  dataSourceId: string;
 }
 
-function findDataset(ctx: Ctx, datasetId: string) {
-  return ctx.adapter.api.datasets.find((d) => d.id === datasetId);
+function findDataSource(ctx: Ctx, dataSourceId: string) {
+  return ctx.adapter.api.dataSources.find((d) => d.id === dataSourceId);
 }
 
 export const studioSelectDataset: Handler<SelectDatasetParams> = {
-  type: 'studio.selectDataset',
+  type: 'studio.selectDataSource',
   namespace: 'studio',
   tier: 2,
   plan: 'community',
-  guard: 'datasetSwitching',
+  guard: 'dataSourceSwitching',
   phase: 'layout',
   validate: (params, ctx) => {
-    if (!params || typeof params.datasetId !== 'string') {
-      return invalid('studio.selectDataset requires { datasetId }');
+    if (!params || typeof params.dataSourceId !== 'string') {
+      return invalid('studio.selectDataSource requires { dataSourceId }');
     }
-    if (!findDataset(ctx, params.datasetId)) {
-      return invalid(`studio.selectDataset: unknown datasetId '${params.datasetId}'`);
+    if (!findDataSource(ctx, params.dataSourceId)) {
+      return invalid(`studio.selectDataSource: unknown dataSourceId '${params.dataSourceId}'`);
     }
     return ok();
   },
-  run: ({ datasetId }, ctx) => {
-    ctx.adapter.api.stateApi.selectDataset(datasetId);
+  run: ({ dataSourceId }, ctx) => {
+    ctx.adapter.api.stateApi.selectDataSource(dataSourceId);
   },
 };
 
 export const studioInvalidateDataset: Handler<InvalidateDatasetParams> = {
-  type: 'studio.invalidateDataset',
+  type: 'studio.invalidateDataSource',
   namespace: 'studio',
   tier: 3,
   plan: 'community',
-  guard: 'datasetSwitching',
+  guard: 'dataSourceSwitching',
   phase: 'history',
   validate: (params, ctx) => {
-    if (!params || typeof params.datasetId !== 'string') {
-      return invalid('studio.invalidateDataset requires { datasetId }');
+    if (!params || typeof params.dataSourceId !== 'string') {
+      return invalid('studio.invalidateDataSource requires { dataSourceId }');
     }
-    if (!findDataset(ctx, params.datasetId)) {
-      return invalid(`studio.invalidateDataset: unknown datasetId '${params.datasetId}'`);
+    if (!findDataSource(ctx, params.dataSourceId)) {
+      return invalid(`studio.invalidateDataSource: unknown dataSourceId '${params.dataSourceId}'`);
     }
     return ok();
   },
-  run: ({ datasetId }, ctx) => {
-    ctx.adapter.api.stateApi.invalidateDataset(datasetId);
+  run: ({ dataSourceId }, ctx) => {
+    ctx.adapter.api.stateApi.invalidateDataSource(dataSourceId);
   },
 };
 
@@ -69,14 +69,14 @@ export const studioInvalidateAll: Handler<void> = {
   namespace: 'studio',
   tier: 3,
   plan: 'community',
-  guard: 'datasetSwitching',
+  guard: 'dataSourceSwitching',
   phase: 'history',
   run: (_params, ctx) => {
     ctx.adapter.api.stateApi.invalidateAll();
   },
 };
 
-export const studioDatasetCommands: Array<CommandHandler<StudioHostAdapter, StudioStateDocument>> = [
+export const studioDataSourceCommands: Array<CommandHandler<StudioHostAdapter, StudioStateDocument>> = [
   studioSelectDataset,
   studioInvalidateDataset,
   studioInvalidateAll,
