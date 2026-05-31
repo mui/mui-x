@@ -1,5 +1,4 @@
 import { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
-import { isWeekend } from '../use-adapter/useAdapter';
 import { processDate } from '../process-date';
 import { TemporalAdapter } from '../base-ui-copy/types';
 
@@ -24,7 +23,7 @@ export function getDayList(parameters: GetDaytListParameters): GetDaytListReturn
   const days: TemporalSupportedObject[] = [];
 
   while (adapter.isBefore(current, end)) {
-    if (!excludeWeekends || !isWeekend(adapter, current)) {
+    if (!excludeWeekends || !adapter.isWeekend(current)) {
       days.push(current);
     }
 

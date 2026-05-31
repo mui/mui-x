@@ -289,6 +289,29 @@ export class TemporalAdapterDateFns implements TemporalAdapter {
     return startOfWeek(value, { locale: this.locale });
   };
 
+  public isWeekend = (value: Date) => {
+    const dayOfWeek = getDay(value);
+    const localeCode = this.locale.code;
+
+    if (localeCode) {
+      try {
+        const intlLocale = new Intl.Locale(localeCode);
+        const weekInfo: { weekend?: number[] } | undefined =
+          typeof (intlLocale as any).getWeekInfo === 'function'
+            ? (intlLocale as any).getWeekInfo()
+            : (intlLocale as any).weekInfo;
+        if (weekInfo?.weekend) {
+          const isoDay = dayOfWeek === 0 ? 7 : dayOfWeek;
+          return weekInfo.weekend.includes(isoDay);
+        }
+      } catch {
+        // Fall through to default
+      }
+    }
+
+    return dayOfWeek === 0 || dayOfWeek === 6;
+  };
+
   public startOfDay = (value: Date) => {
     return startOfDay(value);
   };

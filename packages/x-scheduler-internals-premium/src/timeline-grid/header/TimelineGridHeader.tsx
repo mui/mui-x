@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-internals/base-ui-copy';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { schedulerPreferenceSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
@@ -45,7 +44,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
             data-unit={level.unit}
             data-index={cell.index}
             data-unit-leaf={level.unit === timeResolution ? '' : undefined}
-            data-weekend={level.unit === 'day' && isWeekend(adapter, cell.date) ? '' : undefined}
+            data-weekend={level.unit === 'day' && adapter.isWeekend(cell.date) ? '' : undefined}
             style={{ '--span': cell.spanInTicks } as React.CSSProperties}
           >
             <time

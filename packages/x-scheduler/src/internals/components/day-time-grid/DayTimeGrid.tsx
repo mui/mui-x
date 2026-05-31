@@ -11,7 +11,6 @@ import {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-internals/models';
-import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
@@ -385,7 +384,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     setHasScroll(body.scrollHeight > body.clientHeight);
   }, [occurrencesMap]);
 
-  const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
+  const lastIsWeekend = adapter.isWeekend(days[days.length - 1].value);
 
   const template = adapter.date('2020-01-01T00:00:00', 'default');
 

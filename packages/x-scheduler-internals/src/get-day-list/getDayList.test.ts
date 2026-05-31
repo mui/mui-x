@@ -1,6 +1,5 @@
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
 import { getDayList } from './getDayList';
-import { isWeekend } from '../use-adapter';
 import { processDate } from '../process-date';
 
 describe('getDayList', () => {
@@ -52,7 +51,7 @@ describe('getDayList', () => {
     const start = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
     const expectedDays = Array.from({ length: 7 }, (_, i) =>
       processDate(adapter.addDays(start, i), adapter),
-    ).filter((day) => !isWeekend(adapter, day.value));
+    ).filter((day) => !adapter.isWeekend(day.value));
 
     expect(days).to.deep.equal(expectedDays);
   });
