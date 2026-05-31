@@ -56,16 +56,16 @@ export interface EventCalendarClasses extends EventDialogClasses {
   viewSwitcher: string;
   /** Styles applied to the preferences menu element. */
   preferencesMenu: string;
-  /** Styles applied to the resources legend root element. */
-  resourcesLegend: string;
-  /** Styles applied to the resources legend label element. */
-  resourcesLegendLabel: string;
-  /** Styles applied to resources legend item elements. */
-  resourcesLegendItem: string;
-  /** Styles applied to resources legend item name elements. */
-  resourcesLegendItemName: string;
-  /** Styles applied to resources legend item checkbox elements. */
-  resourcesLegendItemCheckbox: string;
+  /** Styles applied to the resources tree root element. */
+  resourcesTree: string;
+  /** Styles applied to the resources tree section label element. */
+  resourcesTreeLabel: string;
+  /** Styles applied to resources tree item elements. */
+  resourcesTreeItem: string;
+  /** Styles applied to resources tree item label elements. */
+  resourcesTreeItemLabel: string;
+  /** Styles applied to resources tree item checkbox elements. */
+  resourcesTreeItemCheckbox: string;
   /** Styles applied to the agenda view element. */
   agendaView: string;
   /** Styles applied to agenda view row elements. */
@@ -297,11 +297,11 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'headerToolbarDateNavigator',
     'viewSwitcher',
     'preferencesMenu',
-    'resourcesLegend',
-    'resourcesLegendLabel',
-    'resourcesLegendItem',
-    'resourcesLegendItemName',
-    'resourcesLegendItemCheckbox',
+    'resourcesTree',
+    'resourcesTreeLabel',
+    'resourcesTreeItem',
+    'resourcesTreeItemLabel',
+    'resourcesTreeItemCheckbox',
     'agendaView',
     'agendaViewRow',
     'agendaViewDayHeaderCell',
@@ -429,11 +429,11 @@ const slots = {
   headerToolbarDateNavigator: ['headerToolbarDateNavigator'],
   viewSwitcher: ['viewSwitcher'],
   preferencesMenu: ['preferencesMenu'],
-  resourcesLegend: ['resourcesLegend'],
-  resourcesLegendLabel: ['resourcesLegendLabel'],
-  resourcesLegendItem: ['resourcesLegendItem'],
-  resourcesLegendItemName: ['resourcesLegendItemName'],
-  resourcesLegendItemCheckbox: ['resourcesLegendItemCheckbox'],
+  resourcesTree: ['resourcesTree'],
+  resourcesTreeLabel: ['resourcesTreeLabel'],
+  resourcesTreeItem: ['resourcesTreeItem'],
+  resourcesTreeItemLabel: ['resourcesTreeItemLabel'],
+  resourcesTreeItemCheckbox: ['resourcesTreeItemCheckbox'],
   agendaView: ['agendaView'],
   agendaViewRow: ['agendaViewRow'],
   agendaViewDayHeaderCell: ['agendaViewDayHeaderCell'],

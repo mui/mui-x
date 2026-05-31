@@ -64,6 +64,9 @@
       "description": "The structure of the resource model. It defines how to read and write the properties of the resource model. If not provided, the resource model is assumed to match the <code>CalendarResource</code> interface."
     },
     "resources": { "description": "The resources the events can be assigned to." },
+    "shouldEventRequireResource": {
+      "description": "Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one."
+    },
     "showCurrentTimeIndicator": {
       "description": "Whether the component should display the current time indicator."
     },
@@ -412,9 +415,13 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog resource menu color dot element"
     },
-    "eventDialogResourceMenuColorRadioButton": {
+    "eventDialogResourceMenuColorToggle": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the event dialog resource menu color radio button element"
+      "nodeName": "the event dialog resource menu color toggle element"
+    },
+    "eventDialogResourceMenuColorToggleGroup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog resource menu color toggle group element"
     },
     "eventDialogResourceMenuItem": {
       "description": "Styles applied to {{nodeName}}.",
@@ -431,6 +438,10 @@
     "eventDialogSaveButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog save button element"
+    },
+    "eventDialogSectionFieldset": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog section fieldset element"
     },
     "eventDialogSectionHeaderTitle": {
       "description": "Styles applied to {{nodeName}}.",
@@ -696,25 +707,25 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "event item resource legend color elements"
     },
-    "resourcesLegend": {
+    "resourcesTree": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the resources legend root element"
+      "nodeName": "the resources tree root element"
     },
-    "resourcesLegendItem": {
+    "resourcesTreeItem": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "resources legend item elements"
+      "nodeName": "resources tree item elements"
     },
-    "resourcesLegendItemCheckbox": {
+    "resourcesTreeItemCheckbox": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "resources legend item checkbox elements"
+      "nodeName": "resources tree item checkbox elements"
     },
-    "resourcesLegendItemName": {
+    "resourcesTreeItemLabel": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "resources legend item name elements"
+      "nodeName": "resources tree item label elements"
     },
-    "resourcesLegendLabel": {
+    "resourcesTreeLabel": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the resources legend label element"
+      "nodeName": "the resources tree section label element"
     },
     "root": { "description": "Styles applied to the root element." },
     "sidePanel": {

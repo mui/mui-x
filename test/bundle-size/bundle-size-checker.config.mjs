@@ -71,6 +71,8 @@ export default defineConfig(async () => {
       ...treeViewComponents,
       '@mui/x-tree-view-pro',
       ...treeViewProComponents,
+      '@mui/x-license',
+      '@mui/x-license/internals',
     ],
     upload: !!process.env.CI,
     replace: {

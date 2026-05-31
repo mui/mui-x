@@ -1,0 +1,40 @@
+{
+  "props": {
+    "axisDirection": {
+      "type": { "name": "enum", "description": "'x'<br>&#124;&nbsp;'y'" },
+      "required": true
+    },
+    "axisId": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
+    "labelPosition": {
+      "type": {
+        "name": "enum",
+        "description": "'both'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'start'"
+      },
+      "default": "'end'"
+    },
+    "value": {
+      "type": { "name": "union", "description": "Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string" }
+    },
+    "valueFormatter": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: number | Date | string) => string",
+        "describedArgs": ["value"],
+        "returned": "string"
+      }
+    }
+  },
+  "name": "ChartsAxisHighlightValue",
+  "imports": [
+    "import { ChartsAxisHighlightValue } from '@mui/x-charts/ChartsAxisHighlightValue';",
+    "import { ChartsAxisHighlightValue } from '@mui/x-charts';",
+    "import { ChartsAxisHighlightValue } from '@mui/x-charts-pro';",
+    "import { ChartsAxisHighlightValue } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsAxisHighlightValue",
+  "filename": "/packages/x-charts/src/ChartsAxisHighlightValue/ChartsAxisHighlightValue.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/highlighting/\">Charts - Highlighting</a></li></ul>",
+  "cssComponent": false
+}

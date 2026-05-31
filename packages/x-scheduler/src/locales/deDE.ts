@@ -52,12 +52,13 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyPresetLabel: (date) => `Wird jährlich am ${date} wiederholt`,
   noResourceAriaLabel: 'Keine Ressource',
   resourceLabel: 'Ressource',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Speichern',
   startDateAfterEndDateError: 'Startdatum/-zeit muss vor dem Enddatum/-zeit liegen.',
   startDateLabel: 'Startdatum',
   startTimeLabel: 'Startzeit',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Alle Ereignisse',
   cancel: 'Abbrechen',
   confirm: 'Bestätigen',
@@ -68,11 +69,8 @@ const deDEDialog: Partial<EventDialogLocaleText> = {
 };
 
 const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocaleText>> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Ereignisse für ${resourceName} ausblenden`,
+  // ResourcesTree
   resourcesLabel: 'Ressourcen',
-  resourcesLegendSectionLabel: 'Ressourcenlegende',
-  showEventsLabel: (resourceName) => `Ereignisse für ${resourceName} anzeigen`,
 
   // ViewSwitcher
   agenda: 'Agenda',
@@ -100,6 +98,10 @@ const deDECalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Kalenderwoche anzeigen',
   timeFormat: 'Zeitformat',
   viewSpecificOptions: (view) => `Optionen der ${view}-Ansicht`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Ganztägig',

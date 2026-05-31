@@ -5,15 +5,15 @@ import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
-import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-internals/models';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
   schedulerResourceSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useAdapterContext } from '@mui/x-scheduler-headless/use-adapter-context';
+} from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import EventDialogHeader from './EventDialogHeader';
 import { useEventDialogStyledContext } from './EventDialogStyledContext';
 import { getRecurrenceLabel, hasProp } from './utils';

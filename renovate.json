@@ -1,7 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>mui/mui-public//renovate/default"],
-  "ignorePaths": ["**/bug-reproductions/**"],
   "schedule": "* 0-4 * * 1",
   "lockFileMaintenance": {
     "schedule": "* 0-4 2 * *"
@@ -14,6 +13,10 @@
     {
       "groupName": "react-spring",
       "matchPackageNames": ["@react-spring/**"]
+    },
+    {
+      "groupName": "Base UI",
+      "matchPackageNames": ["@base-ui/**"]
     },
     {
       "groupName": "bundling fixtures",
@@ -37,6 +40,13 @@
       "groupName": "fingerprintjs",
       "matchPackageNames": ["@fingerprintjs/fingerprintjs"],
       "allowedVersions": "< 4.0.0"
+    },
+    {
+      "description": "Prevent major version updates of pinned older @mui/x-license versions in the cross-major compat tests.",
+      "matchFileNames": ["test/x-license-compat/package.json"],
+      "matchPackageNames": ["@mui/x-license", "@mui/x-license-pro"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
     }
   ]
 }

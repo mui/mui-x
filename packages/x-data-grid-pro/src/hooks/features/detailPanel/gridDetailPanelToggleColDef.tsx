@@ -1,3 +1,5 @@
+import * as React from 'react';
+import visuallyHidden from '@mui/utils/visuallyHidden';
 import type { RefObject } from '@mui/x-internals/types';
 import { GRID_STRING_COL_DEF, type GridColDef, gridRowIdSelector } from '@mui/x-data-grid';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '@mui/x-data-grid/internals';
@@ -30,5 +32,5 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   },
   rowSpanValueGetter: (_, row, __, apiRef) => gridRowIdSelector(apiRef, row),
   renderCell: (params) => <GridDetailPanelToggleCell {...params} />,
-  renderHeader: ({ colDef }) => <div aria-label={colDef.headerName} role="presentation" />,
+  renderHeader: ({ colDef }) => <span style={visuallyHidden}>{colDef.headerName}</span>,
 };

@@ -1,5 +1,6 @@
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { describeAdapters, getFieldInputRoot } from 'test/utils/pickers';
+import { getFieldInputRoot } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
 // Regression: invalid state should not temporarily clear during keyboard spin when sections are still invalid
 // Reproduction steps covered:

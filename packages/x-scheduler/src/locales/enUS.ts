@@ -52,12 +52,13 @@ const enUSDialog: EventDialogLocaleText = {
   recurrenceYearlyPresetLabel: (date) => `Repeats annually on ${date}`,
   noResourceAriaLabel: 'No specific resource',
   resourceLabel: 'Resource',
+  requiredResourceError: 'A resource is required.',
   saveChanges: 'Save',
   startDateAfterEndDateError: 'Start date/time must be before end date/time.',
   startDateLabel: 'Start date',
   startTimeLabel: 'Start time',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'All events',
   cancel: 'Cancel',
   confirm: 'Confirm',
@@ -68,11 +69,8 @@ const enUSDialog: EventDialogLocaleText = {
 };
 
 const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> = {
-  // ResourcesLegend
-  hideEventsLabel: (resourceName) => `Hide events for ${resourceName}`,
+  // ResourcesTree
   resourcesLabel: 'Resources',
-  resourcesLegendSectionLabel: 'Resource legend',
-  showEventsLabel: (resourceName) => `Show events for ${resourceName}`,
 
   // ViewSwitcher
   agenda: 'Agenda',
@@ -100,6 +98,10 @@ const enUSCalendar: Omit<EventCalendarLocaleText, keyof EventDialogLocaleText> =
   showWeekNumber: 'Show week number',
   timeFormat: 'Time format',
   viewSpecificOptions: (view) => `${view} view options`,
+  startWeekOn: 'Start week on',
+  weekdaySunday: 'Sunday',
+  weekdayMonday: 'Monday',
+  weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'All day',

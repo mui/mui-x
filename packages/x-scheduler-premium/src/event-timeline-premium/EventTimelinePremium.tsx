@@ -8,9 +8,9 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   useExtractEventTimelinePremiumParameters,
   useEventTimelinePremium,
-} from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
-import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useInitializeApiRef } from '@mui/x-scheduler-headless/internals';
+} from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useId } from '@base-ui/utils/useId';
 import {
   eventDialogSlots,
@@ -19,6 +19,7 @@ import {
 } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
+import { EventTimelinePremiumErrorContainer } from './error-container';
 import {
   EventTimelinePremiumClasses,
   getEventTimelinePremiumUtilityClass,
@@ -38,6 +39,10 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     content: ['content'],
     grid: ['grid'],
     headerRow: ['headerRow'],
+    header: ['header'],
+    headerLevelRow: ['headerLevelRow'],
+    headerCell: ['headerCell'],
+    headerCellLabel: ['headerCellLabel'],
     titleHeaderCell: ['titleHeaderCell'],
     eventsHeaderCell: ['eventsHeaderCell'],
     eventsHeaderCellContent: ['eventsHeaderCellContent'],
@@ -55,29 +60,10 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     eventResizeHandler: ['eventResizeHandler'],
     eventLinesClamp: ['eventLinesClamp'],
     eventRecurringIcon: ['eventRecurringIcon'],
-    timeHeader: ['timeHeader'],
-    timeHeaderCell: ['timeHeaderCell'],
-    timeHeaderDayLabel: ['timeHeaderDayLabel'],
-    timeHeaderCellsRow: ['timeHeaderCellsRow'],
-    timeHeaderTimeCell: ['timeHeaderTimeCell'],
-    timeHeaderTimeLabel: ['timeHeaderTimeLabel'],
-    daysHeader: ['daysHeader'],
-    daysHeaderCell: ['daysHeaderCell'],
-    daysHeaderTime: ['daysHeaderTime'],
-    daysHeaderWeekDay: ['daysHeaderWeekDay'],
-    daysHeaderDayNumber: ['daysHeaderDayNumber'],
-    daysHeaderMonthStart: ['daysHeaderMonthStart'],
-    daysHeaderMonthStartLabel: ['daysHeaderMonthStartLabel'],
-    weeksHeader: ['weeksHeader'],
-    weeksHeaderCell: ['weeksHeaderCell'],
-    weeksHeaderDayLabel: ['weeksHeaderDayLabel'],
-    weeksHeaderDaysRow: ['weeksHeaderDaysRow'],
-    weeksHeaderDayCell: ['weeksHeaderDayCell'],
-    monthsHeader: ['monthsHeader'],
-    monthsHeaderYearLabel: ['monthsHeaderYearLabel'],
-    monthsHeaderMonthLabel: ['monthsHeaderMonthLabel'],
-    yearsHeader: ['yearsHeader'],
-    yearsHeaderYearLabel: ['yearsHeaderYearLabel'],
+    eventSkeleton: ['eventSkeleton'],
+    errorContainer: ['errorContainer'],
+    errorAlert: ['errorAlert'],
+    errorMessage: ['errorMessage'],
     ...eventDialogSlots,
   };
 
@@ -88,16 +74,11 @@ const EventTimelinePremiumRoot = styled('div', {
   name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
-  '--dayAndHour-cell-width': '64px',
-  '--day-cell-width': '120px',
-  '--dayAndWeek-cell-width': 'calc(64px * 7)',
-  // Each CSS unit is 1 day (6px); a month column therefore spans (days in that month) × 6px.
-  '--monthAndYear-cell-width': '6px',
-  '--year-cell-width': '200px',
   boxSizing: 'border-box',
   '*, *::before, *::after': {
     boxSizing: 'inherit',
   },
+  position: 'relative',
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
@@ -157,6 +138,7 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
             {...other}
           >
             <EventTimelinePremiumContent />
+            <EventTimelinePremiumErrorContainer />
             {watermark}
           </EventTimelinePremiumRoot>
         </EventDialogStyledContext.Provider>
@@ -217,7 +199,7 @@ EventTimelinePremium.propTypes = {
    */
   dataSource: PropTypes.shape({
     getEvents: PropTypes.func.isRequired,
-    updateEvents: PropTypes.func.isRequired,
+    persistEvents: PropTypes.func.isRequired,
   }),
   /**
    * The locale object from `date-fns` used to format dates.
@@ -233,13 +215,20 @@ EventTimelinePremium.propTypes = {
    */
   defaultPreferences: PropTypes.shape({
     ampm: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * The preset initially displayed in the timeline.
    * To render a controlled timeline, use the `preset` prop.
    * @default "dayAndHour"
    */
-  defaultPreset: PropTypes.oneOf(['day', 'dayAndHour', 'dayAndWeek', 'monthAndYear', 'year']),
+  defaultPreset: PropTypes.oneOf([
+    'dayAndHour',
+    'dayAndMonth',
+    'dayAndWeek',
+    'monthAndYear',
+    'year',
+  ]),
   /**
    * The date initially used to determine the visible date range.
    * To render a controlled component, use the `visibleDate` prop.
@@ -334,20 +323,21 @@ EventTimelinePremium.propTypes = {
    */
   preferences: PropTypes.shape({
     ampm: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * The preset currently displayed in the timeline.
    */
-  preset: PropTypes.oneOf(['day', 'dayAndHour', 'dayAndWeek', 'monthAndYear', 'year']),
+  preset: PropTypes.oneOf(['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']),
   /**
    * The presets available in the timeline.
    * The order is canonical (from most-zoomed-in to most-zoomed-out) and enforced internally,
    * so a future zoom API (`zoomIn()` / `zoomOut()`) behaves consistently regardless of the order
    * in which the presets are provided.
-   * @default ["dayAndHour", "day", "dayAndWeek", "monthAndYear", "year"]
+   * @default ["dayAndHour", "dayAndMonth", "dayAndWeek", "monthAndYear", "year"]
    */
   presets: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'dayAndHour', 'dayAndWeek', 'monthAndYear', 'year']).isRequired,
+    PropTypes.oneOf(['dayAndHour', 'dayAndMonth', 'dayAndWeek', 'monthAndYear', 'year']).isRequired,
   ),
   /**
    * Whether the calendar is in read-only mode.
@@ -369,6 +359,11 @@ EventTimelinePremium.propTypes = {
    * The resources the events can be assigned to.
    */
   resources: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * @default true
+   */
+  shouldEventRequireResource: PropTypes.bool,
   /**
    * Whether the component should display the current time indicator.
    * @default true

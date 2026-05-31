@@ -18,11 +18,11 @@ The `dayAndHour` preset displays a few days with hourly granularity—ideal for 
 
 {{"demo": "DayAndHourPreset.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Day preset
+## Day and month preset
 
-The `day` preset displays several weeks with daily granularity—ideal for bookings and short-term planning.
+The `dayAndMonth` preset displays several weeks with daily granularity grouped by month—ideal for bookings and short-term planning.
 
-{{"demo": "DayPreset.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "DayAndMonthPreset.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Day and week preset
 
@@ -45,7 +45,7 @@ The `year` preset displays decades with yearly granularity—ideal for high-leve
 ## Zoom in/out 🚧
 
 :::warning
-This feature isn't available yet, but it is planned — you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21596) to help us prioritize it.
+This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/21596) to help us prioritize it.
 Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
 :::
 

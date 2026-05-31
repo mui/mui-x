@@ -1,4 +1,4 @@
-import type { ContinuousScaleName, AxisConfig, ScaleName } from '../../../../models';
+import type { ContinuousScaleName, ScaleName } from '../../../../models';
 import {
   type ChartsAxisProps,
   isBandScaleConfig,
@@ -6,8 +6,6 @@ import {
   isContinuousScaleConfig,
   type ChartsRotationAxisProps,
   type ChartsRadiusAxisProps,
-  type PolarAxisDefaultized,
-  type AxisId,
   type PolarAxisConfig,
   type ComputedAxis,
 } from '../../../../models/axis';
@@ -28,12 +26,6 @@ import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
 import { scaleBand, scalePoint } from '../../../scales';
 import { type ComputedAxisConfig } from '../useChartCartesianAxis';
 import { EPSILON } from '../../../../utils/epsilon';
-
-export type DefaultizedAxisConfig<
-  AxisProps extends ChartsRotationAxisProps | ChartsRadiusAxisProps,
-> = {
-  [axisId: AxisId]: PolarAxisDefaultized<ScaleName, any, AxisProps>;
-};
 
 type RotationConfig = PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>;
 type RadiusConfig = PolarAxisConfig<ScaleName, any, ChartsRadiusAxisProps>;
@@ -82,13 +74,13 @@ type ComputeCommonParams<SeriesType extends ChartSeriesType = ChartSeriesType> =
 
 export function computeAxisValue<SeriesType extends ChartSeriesType>(
   options: ComputeCommonParams<SeriesType> & {
-    axis?: AxisConfig<'linear', any, ChartsRadiusAxisProps>[];
+    axis?: PolarAxisConfig<ScaleName, any, ChartsRadiusAxisProps>[];
     axisDirection: 'radius';
   },
 ): ComputeResult<ChartsRadiusAxisProps>;
 export function computeAxisValue<SeriesType extends ChartSeriesType>(
   options: ComputeCommonParams<SeriesType> & {
-    axis?: AxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
+    axis?: PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps>[];
     axisDirection: 'rotation';
   },
 ): ComputeResult<ChartsRotationAxisProps>;
@@ -99,7 +91,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
   seriesConfig,
   axisDirection,
 }: ComputeCommonParams<SeriesType> & {
-  axis?: AxisConfig<ScaleName, any, ChartsAxisProps>[];
+  axis?: PolarAxisConfig[];
   axisDirection: 'radius' | 'rotation';
 }) {
   if (allAxis === undefined) {
@@ -118,7 +110,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
 
   const completeAxis: ComputedAxisConfig<ChartsAxisProps> = {};
   allAxis.forEach((eachAxis, axisIndex) => {
-    const axis = eachAxis as Readonly<AxisConfig<ScaleName, any, Readonly<ChartsAxisProps>>>;
+    const axis = eachAxis as Readonly<PolarAxisConfig>;
     const { range, isFullCircle } = getRange(drawingArea, axisDirection, axis);
 
     const [minData, maxData] = getAxisExtremum(
@@ -225,6 +217,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
       scale: finalScale.domain(domain) as any,
       tickNumber,
       colorScale: axis.colorMap && getColorScale(axis.colorMap),
+      isFullCircle,
     } as ComputedAxis<ContinuousScaleName, any, ChartsAxisProps>;
   });
   return {

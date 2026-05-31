@@ -66,7 +66,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
             background: 'red',
             left: 0,
             bottom: 0,
-            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            // Doing the other way around crash on IE 11 "''" https://github.com/cssinjs/jss/issues/242
             content: '""',
             position: 'absolute',
             right: 0,
@@ -91,7 +91,7 @@ const PickersInputRoot = styled(PickersInputBaseRoot, {
             borderBottom: `1px solid ${bottomLineColor}`,
             left: 0,
             bottom: 0,
-            // Doing the other way around crash on IE11 "''" https://github.com/cssinjs/jss/issues/242
+            // Doing the other way around crash on IE 11 "''" https://github.com/cssinjs/jss/issues/242
             content: '"\\00a0"',
             position: 'absolute',
             right: 0,

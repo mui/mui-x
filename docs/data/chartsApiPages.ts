@@ -44,6 +44,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarPlot',
   },
   {
+    pathname: '/x/api/charts/bar-plot-premium',
+    title: 'BarPlotPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/candlestick-chart',
     title: 'CandlestickChart',
     plan: 'premium',
@@ -60,6 +65,10 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-axis-highlight',
     title: 'ChartsAxisHighlight',
+  },
+  {
+    pathname: '/x/api/charts/charts-axis-highlight-value',
+    title: 'ChartsAxisHighlightValue',
   },
   {
     pathname: '/x/api/charts/charts-axis-tooltip-content',
@@ -102,6 +111,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/charts-geo-data-provider-premium',
+    title: 'ChartsGeoDataProviderPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/charts-grid',
     title: 'ChartsGrid',
   },
@@ -118,8 +132,17 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartsLocalizationProvider',
   },
   {
+    pathname: '/x/api/charts/charts-radial-axis-highlight',
+    title: 'ChartsRadialAxisHighlight',
+  },
+  {
     pathname: '/x/api/charts/charts-radial-data-provider',
     title: 'ChartsRadialDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/charts-radial-data-provider-premium',
+    title: 'ChartsRadialDataProviderPremium',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/charts-radial-grid',
@@ -132,6 +155,10 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-reference-line',
     title: 'ChartsReferenceLine',
+  },
+  {
+    pathname: '/x/api/charts/charts-rotation-axis',
+    title: 'ChartsRotationAxis',
   },
   {
     pathname: '/x/api/charts/charts-surface',
@@ -248,6 +275,16 @@ const chartsApiPages: MuiPage[] = [
     title: 'GaugeContainer',
   },
   {
+    pathname: '/x/api/charts/geo-data-plot',
+    title: 'GeoDataPlot',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/graticule',
+    title: 'Graticule',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/heatmap',
     title: 'Heatmap',
     plan: 'pro',
@@ -278,6 +315,10 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/highlighted-scatter-mark',
+    title: 'HighlightedScatterMark',
+  },
+  {
     pathname: '/x/api/charts/line-chart',
     title: 'LineChart',
   },
@@ -301,6 +342,16 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/line-plot',
     title: 'LinePlot',
+  },
+  {
+    pathname: '/x/api/charts/map-shape',
+    title: 'MapShape',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/map-shape-plot',
+    title: 'MapShapePlot',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/mark-element',
@@ -386,8 +437,23 @@ const chartsApiPages: MuiPage[] = [
     plan: 'premium',
   },
   {
+    pathname: '/x/api/charts/radial-bar-chart',
+    title: 'RadialBarChart',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-bar-plot',
+    title: 'RadialBarPlot',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/radial-line-chart',
     title: 'RadialLineChart',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/radial-line-highlight-plot',
+    title: 'RadialLineHighlightPlot',
     plan: 'premium',
   },
   {
@@ -439,6 +505,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'ScatterChart',
   },
   {
+    pathname: '/x/api/charts/scatter-chart-premium',
+    title: 'ScatterChartPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/scatter-chart-pro',
     title: 'ScatterChartPro',
     plan: 'pro',
@@ -446,6 +517,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/scatter-plot',
     title: 'ScatterPlot',
+  },
+  {
+    pathname: '/x/api/charts/scatter-plot-premium',
+    title: 'ScatterPlotPremium',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/spark-line-chart',

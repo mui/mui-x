@@ -68,6 +68,9 @@
       "description": "The structure of the resource model. It defines how to read and write the properties of the resource model. If not provided, the resource model is assumed to match the <code>CalendarResource</code> interface."
     },
     "resources": { "description": "The resources the events can be assigned to." },
+    "shouldEventRequireResource": {
+      "description": "Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one."
+    },
     "showCurrentTimeIndicator": {
       "description": "Whether the component should display the current time indicator."
     },
@@ -94,33 +97,17 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the current time indicator circle element"
     },
-    "daysHeader": {
+    "errorAlert": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the days header root element"
+      "nodeName": "error alert elements"
     },
-    "daysHeaderCell": {
+    "errorContainer": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "days header cell elements"
+      "nodeName": "the error container element"
     },
-    "daysHeaderDayNumber": {
+    "errorMessage": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "days header day number elements"
-    },
-    "daysHeaderMonthStart": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "days header month start elements"
-    },
-    "daysHeaderMonthStartLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "days header month start label elements"
-    },
-    "daysHeaderTime": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "days header time elements"
-    },
-    "daysHeaderWeekDay": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "days header week day elements"
+      "nodeName": "error message elements"
     },
     "event": { "description": "Styles applied to {{nodeName}}.", "nodeName": "event elements" },
     "eventDialog": {
@@ -259,9 +246,13 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog resource menu color dot element"
     },
-    "eventDialogResourceMenuColorRadioButton": {
+    "eventDialogResourceMenuColorToggle": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the event dialog resource menu color radio button element"
+      "nodeName": "the event dialog resource menu color toggle element"
+    },
+    "eventDialogResourceMenuColorToggleGroup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog resource menu color toggle group element"
     },
     "eventDialogResourceMenuItem": {
       "description": "Styles applied to {{nodeName}}.",
@@ -278,6 +269,10 @@
     "eventDialogSaveButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the event dialog save button element"
+    },
+    "eventDialogSectionFieldset": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the event dialog section fieldset element"
     },
     "eventDialogSectionHeaderTitle": {
       "description": "Styles applied to {{nodeName}}.",
@@ -335,6 +330,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the events header cell content element"
     },
+    "eventSkeleton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "event skeleton elements rendered while events are loading"
+    },
     "eventsSubGrid": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the events sub-grid element"
@@ -348,47 +347,27 @@
       "nodeName": "the events sub-grid wrapper element"
     },
     "grid": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the grid element" },
+    "header": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the generic header (wraps all level rows)"
+    },
+    "headerCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each cell inside a header level row"
+    },
+    "headerCellLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the label element inside a header cell"
+    },
+    "headerLevelRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each level row inside the generic header"
+    },
     "headerRow": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the header row element"
-    },
-    "monthsHeader": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the months header root element"
-    },
-    "monthsHeaderMonthLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "months header month label elements"
-    },
-    "monthsHeaderYearLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "months header year label elements"
+      "nodeName": "the top row of the grid (contains the title and events headers)"
     },
     "root": { "description": "Styles applied to the root element." },
-    "timeHeader": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the time header root element"
-    },
-    "timeHeaderCell": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "time header cell elements"
-    },
-    "timeHeaderCellsRow": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the time header cells row element"
-    },
-    "timeHeaderDayLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the time header day label element"
-    },
-    "timeHeaderTimeCell": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "time header time cell elements"
-    },
-    "timeHeaderTimeLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "time header time label elements"
-    },
     "titleCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title cell element"
@@ -408,34 +387,6 @@
     "titleSubGrid": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title sub-grid element"
-    },
-    "weeksHeader": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the weeks header root element"
-    },
-    "weeksHeaderCell": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "weeks header cell elements"
-    },
-    "weeksHeaderDayCell": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "weeks header day cell elements"
-    },
-    "weeksHeaderDayLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "weeks header day label elements"
-    },
-    "weeksHeaderDaysRow": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the weeks header days row element"
-    },
-    "yearsHeader": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the years header root element"
-    },
-    "yearsHeaderYearLabel": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "years header year label elements"
     }
   }
 }

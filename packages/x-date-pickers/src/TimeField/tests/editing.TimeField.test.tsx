@@ -3,10 +3,10 @@ import { TimeField } from '@mui/x-date-pickers/TimeField';
 import {
   expectFieldValue,
   getCleanedSelectedContent,
-  describeAdapters,
   createPickerRenderer,
   buildFieldInteractions,
 } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
 describe('<TimeField /> - Editing', () => {
   describeAdapters('key: ArrowDown', TimeField, ({ adapter, testFieldKeyPress }) => {

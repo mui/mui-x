@@ -11,6 +11,7 @@ import {
 import { useTransformData } from './dataTransform/useTransformData';
 import { PieArcLabel, type PieArcLabelProps } from './PieArcLabel';
 import { getLabel } from '../internals/getLabel';
+import type { PieArcLabelPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 const RATIO = 180 / Math.PI;
 
@@ -43,11 +44,11 @@ function getItemLabel(
 }
 
 export interface PieArcLabelPlotSlots {
-  pieArcLabel?: React.JSXElementConstructor<PieArcLabelProps>;
+  pieArcLabel?: React.JSXElementConstructor<PieArcLabelProps & PieArcLabelPropsOverrides>;
 }
 
 export interface PieArcLabelPlotSlotProps {
-  pieArcLabel?: Partial<PieArcLabelProps>;
+  pieArcLabel?: Partial<PieArcLabelProps> & PieArcLabelPropsOverrides;
 }
 
 export interface PieArcLabelPlotProps

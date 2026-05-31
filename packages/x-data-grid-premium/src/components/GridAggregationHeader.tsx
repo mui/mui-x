@@ -33,11 +33,15 @@ const GridAggregationHeaderRoot = styled('div', {
 })<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
+  overflow: 'hidden',
+  minWidth: 0,
   [`&.${gridClasses['aggregationColumnHeader--alignRight']}`]: {
     alignItems: 'flex-end',
+    '& > *': { maxWidth: '100%' },
   },
   [`&.${gridClasses['aggregationColumnHeader--alignCenter']}`]: {
     alignItems: 'center',
+    '& > *': { maxWidth: '100%' },
   },
 });
 
