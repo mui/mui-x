@@ -68,7 +68,7 @@ Before the first tool call the model emits a reasoning chunk sequence:
 
 ```ts
 { type: 'reasoning-start', id }
-{ type: 'reasoning-delta', id, delta: 'Let me explore...' }
+{ type: 'reasoning-delta', id, delta: 'Let me explore…' }
 { type: 'reasoning-end', id }
 ```
 

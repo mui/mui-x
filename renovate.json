@@ -15,6 +15,10 @@
       "matchPackageNames": ["@react-spring/**"]
     },
     {
+      "groupName": "Base UI",
+      "matchPackageNames": ["@base-ui/**"]
+    },
+    {
       "groupName": "bundling fixtures",
       "matchFileNames": ["test/bundling/fixtures/**/package.json"],
       "schedule": "* * 1 1,7 *"

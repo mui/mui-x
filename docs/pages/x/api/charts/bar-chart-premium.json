@@ -64,7 +64,7 @@
     "initialZoom": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }<br>&#124;&nbsp;{ axisId: number<br>&#124;&nbsp;string, value?: Array&lt;Date&gt;<br>&#124;&nbsp;Array&lt;string&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;{ step?: number, unit: 'day'<br>&#124;&nbsp;'hour'<br>&#124;&nbsp;'microsecond'<br>&#124;&nbsp;'millisecond'<br>&#124;&nbsp;'minute'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'second'<br>&#124;&nbsp;'week'<br>&#124;&nbsp;'year' } }&gt;"
       }
     },
     "layout": {
@@ -169,7 +169,7 @@
     "zAxis": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }, data?: array, dataKey?: string, id?: string, max?: number, min?: number, valueGetter?: func }&gt;"
+        "description": "Array&lt;{ colorMap?: { color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }, data?: array, dataKey?: string, id?: string, max?: number, min?: number, sizeMap?: { max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, size: Array&lt;number&gt;<br>&#124;&nbsp;func, type: 'continuous' }<br>&#124;&nbsp;{ sizes: Array&lt;number&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }<br>&#124;&nbsp;{ sizes: Array&lt;number&gt;, type: 'ordinal', unknownSize?: number, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }, valueGetter?: func }&gt;"
       }
     },
     "zoomData": {
@@ -235,7 +235,7 @@
     { "name": "basePopper", "description": "", "class": null },
     {
       "name": "baseToggleButton",
-      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps>`.",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
       "class": null
     },
     { "name": "baseToggleButtonGroup", "description": "", "class": null },

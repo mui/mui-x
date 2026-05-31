@@ -215,14 +215,17 @@ export function useAxesTooltip<
         );
         // Test if the series uses the default axis
         if (tooltipItemIndex >= 0) {
-          const zAxisId = 'zAxisId' in seriesToAdd ? seriesToAdd.zAxisId : zAxisIds[0];
+          const colorAxisId =
+            ('colorAxisId' in seriesToAdd && seriesToAdd.colorAxisId) ||
+            ('zAxisId' in seriesToAdd && seriesToAdd.zAxisId) ||
+            zAxisIds[0];
           const { dataIndex } = tooltipAxes[tooltipItemIndex];
           const color =
             colorProcessors[seriesType]?.(
               seriesToAdd,
               xAxis[providedXAxisId],
               yAxis[providedYAxisId],
-              zAxisId ? zAxis[zAxisId] : undefined,
+              colorAxisId ? zAxis[colorAxisId] : undefined,
             )(dataIndex) ?? '';
 
           const rawValue = seriesToAdd.data[dataIndex] ?? null;

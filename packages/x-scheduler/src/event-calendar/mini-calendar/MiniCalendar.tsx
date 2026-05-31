@@ -12,7 +12,9 @@ import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getDayList } from '@mui/x-scheduler-internals/get-day-list';
+import { getStartOfWeek } from '@mui/x-scheduler-internals/internals';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { MiniCalendarProps } from './MiniCalendar.types';
 import { useEventCalendarStyledContext } from '../EventCalendarStyledContext';
@@ -158,6 +160,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
 
     const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+    const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
 
     const [displayedMonth, setDisplayedMonth] = React.useState<TemporalSupportedObject>(() =>
       adapter.startOfMonth(visibleDate),
@@ -172,7 +175,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     // Always show 6 weeks (42 days) for consistent height
     const days = React.useMemo(() => {
       const monthStart = adapter.startOfMonth(displayedMonth);
-      const gridStart = adapter.startOfWeek(monthStart);
+      const gridStart = getStartOfWeek(adapter, monthStart, weekStartsOn);
       // 6 weeks = 42 days, so end is 41 days after start
       const gridEnd = adapter.addDays(gridStart, 41);
       return getDayList({
@@ -180,7 +183,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
         start: gridStart,
         end: gridEnd,
       });
-    }, [adapter, displayedMonth]);
+    }, [adapter, displayedMonth, weekStartsOn]);
 
     // Group days into weeks
     const weeks = React.useMemo(() => {
