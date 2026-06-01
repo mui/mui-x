@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
@@ -15,7 +15,7 @@ export default function FilterPanelPlacementColumnHeaders() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPremium
+      <DataGrid
         {...data}
         loading={loading}
         showToolbar

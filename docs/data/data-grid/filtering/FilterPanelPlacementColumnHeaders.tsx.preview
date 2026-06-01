@@ -1,4 +1,4 @@
-<DataGridPremium
+<DataGrid
   {...data}
   loading={loading}
   showToolbar
