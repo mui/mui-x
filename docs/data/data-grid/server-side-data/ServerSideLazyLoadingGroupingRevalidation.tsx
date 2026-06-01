@@ -420,6 +420,7 @@ function ServerSideLazyLoadingGroupingRevalidation() {
           dataSourceRevalidateMs={3_000}
           disableColumnSorting
           disableColumnFilter
+          disablePivoting
         />
       </div>
     </Stack>
