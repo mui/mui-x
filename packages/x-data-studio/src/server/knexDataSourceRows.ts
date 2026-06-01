@@ -893,6 +893,33 @@ async function getKnexPivotRows(
   };
 }
 
+/**
+ * Validate every field the grouping/pivot/aggregation request references against
+ * the schema's allowed fields, before any SQL is built. Filters and sort already
+ * validate inline (`applyKnexFilterItem`, `applyKnexNativeSort`); these paths did
+ * not, so a stale/foreign field (e.g. a joint-source alias sent to a base source)
+ * reached the query builder and surfaced as a raw "no such column" DB error.
+ */
+function assertKnownRequestFields(params: DataStudioGetRowsParams, allowedFields: Set<string>) {
+  params.groupFields?.forEach((field) => assertKnownField(field, allowedFields));
+
+  if (params.pivotModel) {
+    getDataStudioPivotRowFields(params.pivotModel).forEach((field) =>
+      assertKnownField(field, allowedFields),
+    );
+    getDataStudioPivotColumnFields(params.pivotModel).forEach((field) =>
+      assertKnownField(field, allowedFields),
+    );
+    getDataStudioPivotValues(params.pivotModel).forEach((value) =>
+      assertKnownField(value.field, allowedFields),
+    );
+  }
+
+  Object.keys(params.aggregationModel ?? {}).forEach((field) =>
+    assertKnownField(field, allowedFields),
+  );
+}
+
 export function getKnexDataStudioRows(
   options: KnexDataStudioRowsOptions,
   params: DataStudioGetRowsParams,
@@ -900,6 +927,8 @@ export function getKnexDataStudioRows(
   rowIdField: string | undefined,
 ) {
   const allowedFields = getKnexAllowedFields(columns, options.computedFields, rowIdField);
+
+  assertKnownRequestFields(params, allowedFields);
 
   if (params.pivotModel) {
     return getKnexPivotRows(options, params, columns, rowIdField, allowedFields);

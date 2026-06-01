@@ -5,12 +5,12 @@ import type { CopilotPlugin } from '@mui/x-copilot';
 import { useCopilot, type UseCopilotReturn } from '@mui/x-copilot/hooks';
 import type { DataStudioDataSource } from '../DataStudio/DataStudio.types';
 import type { DataStudioStateApi } from '../DataStudio/useDataStudioState';
+import { buildStudioGuards, DEFAULT_STUDIO_GUARDS, type StudioGuards } from './guards';
 import {
-  buildStudioGuards,
-  DEFAULT_STUDIO_GUARDS,
-  type StudioGuards,
-} from './guards';
-import { createStudioHostAdapter, type StudioHostAdapter } from './studioHostAdapter';
+  createStudioHostAdapter,
+  type StudioHostAdapter,
+  type StudioCopilotJointSourcesApi,
+} from './studioHostAdapter';
 import { studioCommandPack, studioReconcilerPack } from './studioPacks';
 import { createQueryStudioDataProvider } from './dataQuery';
 import type { StudioDataQueryResult } from './dataQuery';
@@ -26,6 +26,8 @@ export interface UseStudioCopilotOptions {
   stateApi: DataStudioStateApi<any>;
   /** DataSources currently configured on the studio. */
   dataSources: ReadonlyArray<DataStudioDataSource<any>>;
+  /** Joint-source management API (configs + create/update/remove). */
+  jointSources: StudioCopilotJointSourcesApi;
   /** Optional override for the default guards. */
   features?: Partial<StudioGuards>;
   /** Optional copilot plugins (PDF, formula, custom). */
@@ -43,26 +45,29 @@ export interface UseStudioCopilotReturn extends UseCopilotReturn<StudioDataQuery
  * everything into the generic hook.
  */
 export function useStudioCopilot(options: UseStudioCopilotOptions): UseStudioCopilotReturn {
-  const { inner, stateApi, dataSources, features, plugins } = options;
+  const { inner, stateApi, dataSources, jointSources, features, plugins } = options;
 
   const guards = React.useMemo<StudioGuards>(
     () => (features ? buildStudioGuards(features) : DEFAULT_STUDIO_GUARDS),
     [features],
   );
 
-  // Capture stateApi + dataSources via refs so the host adapter identity stays
-  // stable across renders. The adapter reads .current via the getter
-  // functions every time a handler runs or a snapshot is taken.
+  // Capture live values via refs so the host adapter identity stays stable
+  // across renders. The adapter reads .current via the getter functions every
+  // time a handler runs or a snapshot is taken.
   const stateApiRef = React.useRef(stateApi);
   stateApiRef.current = stateApi;
   const dataSourcesRef = React.useRef(dataSources);
   dataSourcesRef.current = dataSources;
+  const jointSourcesRef = React.useRef(jointSources);
+  jointSourcesRef.current = jointSources;
 
   const host = React.useMemo<StudioHostAdapter>(
     () =>
       createStudioHostAdapter({
         getStateApi: () => stateApiRef.current,
         getDataSources: () => dataSourcesRef.current,
+        getJointSources: () => jointSourcesRef.current,
         guards,
         dataQuery: guards.dataQuery
           ? createQueryStudioDataProvider(() => dataSourcesRef.current)

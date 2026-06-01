@@ -18,20 +18,18 @@ describe('Studio copilot reconcilers', () => {
       initialActiveDataSourceId: 'products',
     });
     executor.applyEnvelope({
-      setGridState: runPatches([
-        { op: 'replace', path: '/active/dataSourceId', value: 'orders' },
-      ]),
+      setGridState: runPatches([{ op: 'replace', path: '/active/dataSourceId', value: 'orders' }]),
     });
     expect(fake.api.activeDataSourceId).toBe('orders');
   });
 
-  it('/active/viewId routes to selectSheet', () => {
+  it('/active/sheetId routes to selectSheet', () => {
     const { fake, executor } = createTestExecutor({
       dataSources: DATASETS,
       initialSheets: [{ id: 'v1', label: 'A', dataSourceId: 'products' }],
     });
     executor.applyEnvelope({
-      setGridState: runPatches([{ op: 'replace', path: '/active/viewId', value: 'v1' }]),
+      setGridState: runPatches([{ op: 'replace', path: '/active/sheetId', value: 'v1' }]),
     });
     expect(fake.api.activeSheetId).toBe('v1');
   });
@@ -42,9 +40,7 @@ describe('Studio copilot reconcilers', () => {
       initialSheets: [{ id: 'v1', label: 'Old', dataSourceId: 'products' }],
     });
     const result = executor.applyEnvelope({
-      setGridState: runPatches([
-        { op: 'replace', path: '/sheets/v1/label', value: 'New Title' },
-      ]),
+      setGridState: runPatches([{ op: 'replace', path: '/sheets/v1/label', value: 'New Title' }]),
     });
     expect(result.applied).toHaveLength(1);
     expect(fake.sheets[0].label).toBe('New Title');
@@ -80,6 +76,25 @@ describe('Studio copilot reconcilers', () => {
     expect(fake.sheets[0].initialState).toEqual({ filter: { filterModel: { items: [] } } });
   });
 
+  it('/sheets/<id>/params writes through updateSheet (chart/pivot config)', () => {
+    const { fake, executor } = createTestExecutor({
+      dataSources: DATASETS,
+      initialSheets: [{ id: 'v1', label: 'A', dataSourceId: 'products', type: 'chart' }],
+    });
+    executor.applyEnvelope({
+      setGridState: runPatches([
+        {
+          op: 'replace',
+          path: '/sheets/v1/params',
+          value: { summary: { groupBy: 'category', chartType: 'column' } },
+        },
+      ]),
+    });
+    expect(fake.sheets[0].params).toEqual({
+      summary: { groupBy: 'category', chartType: 'column' },
+    });
+  });
+
   it('viewEditing guard removes the handler from the registry', () => {
     const { fake, executor } = createTestExecutor({
       dataSources: DATASETS,
@@ -104,7 +119,7 @@ describe('Studio copilot reconcilers', () => {
     const result = executor.applyEnvelope({
       runCommands: JSON.stringify({
         type: 'studio.renameSheet',
-        params: { viewId: 'v1', label: 'Renamed' },
+        params: { sheetId: 'v1', label: 'Renamed' },
       }),
       setGridState: JSON.stringify({
         op: 'replace',

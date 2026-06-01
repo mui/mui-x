@@ -3,7 +3,7 @@ import type { StudioHostAdapter } from '../studioHostAdapter';
 import type { StudioStateDocument } from '../stateDocument';
 
 /**
- * Handles writes to `/active/dataSourceId` and `/active/viewId`. Navigation only:
+ * Handles writes to `/active/dataSourceId` and `/active/sheetId`. Navigation only:
  * the underlying state machine is responsible for clamping the active dataSource
  * when a sheet selection implies one.
  */
@@ -22,7 +22,7 @@ export const activeReconciler: PatchHandler<StudioHostAdapter, StudioStateDocume
       }
       return;
     }
-    if (op.path === '/active/viewId') {
+    if (op.path === '/active/sheetId') {
       if (typeof op.value === 'string') {
         stateApi.selectSheet(op.value);
       }

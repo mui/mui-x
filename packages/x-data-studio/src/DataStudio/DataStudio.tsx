@@ -39,6 +39,7 @@ import {
 import { useDataStudioJointSources } from './useDataStudioJointSources';
 import { DataStudioJoinBuilder } from './DataStudioJoinBuilder';
 import { DataStudioSidebarJointSourceItem } from './DataStudioSidebarJointSourceItem';
+import type { StudioCopilotJointSourcesApi } from '../copilot';
 import type { DataStudioJoinDefinition } from '../models';
 import type { DataStudioRoutingState } from './routing';
 import type {
@@ -446,6 +447,17 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
     () => new Set(jointConfigs.map((config) => config.id)),
     [jointConfigs],
   );
+  // Joint-source management surface handed to the copilot (it lives outside
+  // `stateApi`, so the host adapter receives it as a sibling api).
+  const copilotJointSources = React.useMemo<StudioCopilotJointSourcesApi>(
+    () => ({
+      configs: jointConfigs,
+      create: createJointSource,
+      update: updateJointSource,
+      remove: deleteJointSource,
+    }),
+    [jointConfigs, createJointSource, updateJointSource, deleteJointSource],
+  );
   const [isJoinBuilderOpen, setJoinBuilderOpen] = React.useState(false);
   const [editingJointConfig, setEditingJointConfig] =
     React.useState<DataStudioJointSourceConfig | null>(null);
@@ -748,7 +760,17 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
   );
 
   const dataSourceSlotProps = activeDataSource?.slotProps?.dataGrid;
-  const sheetInitialState = activeSheet?.initialState;
+  // A sheet's view state (pivot model, grouped/visible columns) references its
+  // bound source's columns. If routing has driven the active data source to
+  // differ from the sheet's binding, applying that view state would seed the
+  // grid with foreign field names (e.g. a joint-source pivot model on a base
+  // source) and serialize them into the rows request. Drop it in that case.
+  // Free-form sheets (no binding) keep their state.
+  const sheetMatchesActiveSource =
+    activeSheet == null ||
+    activeSheet.dataSourceId == null ||
+    activeSheet.dataSourceId === activeDataSource?.id;
+  const sheetInitialState = sheetMatchesActiveSource ? activeSheet?.initialState : undefined;
   const mergedInitialState = React.useMemo(() => {
     if (!sheetInitialState) {
       return dataSourceSlotProps?.initialState ?? slotProps?.dataGrid?.initialState;
@@ -901,7 +923,7 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
         dataSource: activeDataSource,
         dataSources: effectiveDataSources,
         onChangeDataSource: handleChangeSheetDataSource,
-        params: activeSheet.params ?? {},
+        params: sheetMatchesActiveSource ? (activeSheet.params ?? {}) : {},
         setParams: handleSetActiveSheetParams,
         plan,
         apiRef: effectiveApiRef,
@@ -1040,6 +1062,7 @@ const DataStudio = React.forwardRef(function DataStudio<R extends GridValidRowMo
         inner={copilotChatAdapter}
         stateApi={state}
         dataSources={effectiveDataSources}
+        jointSources={copilotJointSources}
         features={copilotFeatures}
         plugins={copilotPlugins}
         Panel={CopilotPanelComponent}
@@ -1173,6 +1196,7 @@ DataStudio.propTypes = {
     dataSourceSwitching: PropTypes.bool,
     filter: PropTypes.bool,
     grouping: PropTypes.bool,
+    jointSourceCrud: PropTypes.bool,
     mutations: PropTypes.bool,
     pivoting: PropTypes.bool,
     rowSelection: PropTypes.bool,

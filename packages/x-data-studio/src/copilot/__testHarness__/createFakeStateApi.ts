@@ -1,8 +1,5 @@
 import type { GridInitialState } from '@mui/x-data-grid';
-import type {
-  DataStudioDataSource,
-  DataStudioSheet,
-} from '../../DataStudio/DataStudio.types';
+import type { DataStudioDataSource, DataStudioSheet } from '../../DataStudio/DataStudio.types';
 import type { DataStudioStateApi } from '../../DataStudio/useDataStudioState';
 
 /**
@@ -32,8 +29,12 @@ function nextViewId() {
 }
 
 export function createFakeStateApi(options: CreateFakeStateApiOptions): FakeStudioState {
-  const { dataSources, initialSheets = [], initialActiveDataSourceId = null, initialActiveSheetId = null } =
-    options;
+  const {
+    dataSources,
+    initialSheets = [],
+    initialActiveDataSourceId = null,
+    initialActiveSheetId = null,
+  } = options;
 
   const sheets: DataStudioSheet[] = initialSheets.slice();
   let activeDataSourceId: string = initialActiveDataSourceId ?? dataSources[0]?.id ?? '';
@@ -109,7 +110,9 @@ export function createFakeStateApi(options: CreateFakeStateApiOptions): FakeStud
       sheets[idx] = {
         ...current,
         ...(patch.dataSourceId !== undefined ? { dataSourceId: patch.dataSourceId } : {}),
+        ...(patch.type !== undefined ? { type: patch.type } : {}),
         ...(patch.initialState !== undefined ? { initialState: patch.initialState } : {}),
+        ...(patch.params !== undefined ? { params: patch.params } : {}),
       };
     },
     renameSheet(sheetId, label) {

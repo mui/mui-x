@@ -292,12 +292,10 @@ export function useDataStudioState<R extends GridValidRowModel = any>(
       // `null` is the explicit "free-form" signal. `undefined` falls back to
       // the active data source. Otherwise we look up the requested id.
       const isFreeForm = input !== undefined && input.dataSourceId === null;
-      const requestedDataSourceId = isFreeForm
-        ? null
-        : (input?.dataSourceId ?? activeDataSourceId);
+      const targetDataSourceId = isFreeForm ? null : (input?.dataSourceId ?? activeDataSourceId);
       const nextDataSource = isFreeForm
         ? null
-        : (getDataSourceById(dataSources, requestedDataSourceId) ?? null);
+        : (getDataSourceById(dataSources, targetDataSourceId) ?? null);
       if (!isFreeForm && !nextDataSource) {
         return null;
       }
@@ -354,7 +352,22 @@ export function useDataStudioState<R extends GridValidRowModel = any>(
       if (!hasDataSourceChange && !hasInitialStateChange && !hasTypeChange && !hasParamsChange) {
         return;
       }
-      const nextInitialState = hasInitialStateChange ? patch.initialState : current.initialState;
+      // View state (pivot model, grouped columns, column visibility) references a
+      // specific source's columns, so rebinding to another source must drop it —
+      // otherwise stale field names (e.g. a joint-source pivot model) get sent to
+      // the new source and fail. Honor an explicit patch over the reset.
+      let nextInitialState = current.initialState;
+      if (hasInitialStateChange) {
+        nextInitialState = patch.initialState;
+      } else if (hasDataSourceChange) {
+        nextInitialState = undefined;
+      }
+      let nextParams = current.params;
+      if (hasParamsChange) {
+        nextParams = patch.params;
+      } else if (hasDataSourceChange) {
+        nextParams = {};
+      }
       const nextSheet: DataStudioSheet = {
         ...current,
         dataSourceId: nextDataSourceId,
@@ -362,7 +375,7 @@ export function useDataStudioState<R extends GridValidRowModel = any>(
           ? { initialState: undefined }
           : { initialState: nextInitialState }),
         ...(hasTypeChange ? { type: patch.type } : {}),
-        ...(hasParamsChange ? { params: patch.params } : {}),
+        ...(nextParams === undefined ? { params: undefined } : { params: nextParams }),
       };
       const nextSheets = sheets.slice();
       nextSheets[index] = nextSheet;
@@ -466,9 +479,7 @@ export function useDataStudioState<R extends GridValidRowModel = any>(
     [sheets, commitSheets],
   );
 
-  const startSheetFromTemplate = React.useCallback<
-    DataStudioStateApi<R>['startSheetFromTemplate']
-  >(
+  const startSheetFromTemplate = React.useCallback<DataStudioStateApi<R>['startSheetFromTemplate']>(
     (templateId) => {
       const template = (sheetTemplates ?? []).find(
         (candidate: DataStudioSheetTemplate) => candidate.id === templateId,
@@ -492,9 +503,7 @@ export function useDataStudioState<R extends GridValidRowModel = any>(
     [sheetTemplates, addSheet, activeDataSourceId],
   );
 
-  const startSheetFromPrompt = React.useCallback<
-    DataStudioStateApi<R>['startSheetFromPrompt']
-  >(
+  const startSheetFromPrompt = React.useCallback<DataStudioStateApi<R>['startSheetFromPrompt']>(
     // v1 stub: the Composer disables the input unless a copilot adapter is
     // wired, so this only runs in tests / programmatic usage. Returning null
     // keeps the contract honest until the copilot bridge lands.

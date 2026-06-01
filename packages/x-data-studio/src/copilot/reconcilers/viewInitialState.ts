@@ -18,14 +18,14 @@ export const viewInitialStateReconciler: PatchHandler<StudioHostAdapter, StudioS
   plan: 'community',
   reconcile: (doc, op, ctx) => {
     const tokens = op.path.split('/');
-    const viewId = tokens[2];
-    if (typeof viewId !== 'string') {
+    const sheetId = tokens[2];
+    if (typeof sheetId !== 'string') {
       return;
     }
-    const sheet = doc.sheets[viewId];
+    const sheet = doc.sheets[sheetId];
     if (!sheet) {
       return;
     }
-    ctx.adapter.api.stateApi.updateSheet(viewId, { initialState: sheet.initialState });
+    ctx.adapter.api.stateApi.updateSheet(sheetId, { initialState: sheet.initialState });
   },
 };

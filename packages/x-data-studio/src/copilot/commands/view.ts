@@ -1,10 +1,5 @@
 import type { GridInitialState } from '@mui/x-data-grid';
-import {
-  type CommandHandler,
-  type ExecutorContext,
-  invalid,
-  ok,
-} from '@mui/x-copilot';
+import { type CommandHandler, type ExecutorContext, invalid, ok } from '@mui/x-copilot';
 import type { StudioHostAdapter } from '../studioHostAdapter';
 import type { StudioStateDocument } from '../stateDocument';
 
@@ -14,41 +9,45 @@ type Ctx = ExecutorContext<StudioHostAdapter, StudioStateDocument>;
 interface AddViewParams {
   dataSourceId?: string;
   label?: string;
+  type?: string;
   initialState?: GridInitialState;
+  params?: Record<string, unknown>;
 }
 
 interface SelectViewParams {
-  viewId: string;
+  sheetId: string;
 }
 
 interface RenameViewParams {
-  viewId: string;
+  sheetId: string;
   label: string;
 }
 
 interface DuplicateViewParams {
-  viewId: string;
+  sheetId: string;
 }
 
 interface DeleteViewParams {
-  viewId: string;
+  sheetId: string;
 }
 
 interface MoveViewParams {
-  viewId: string;
+  sheetId: string;
   delta: number;
 }
 
 interface UpdateViewParams {
-  viewId: string;
+  sheetId: string;
   patch: {
     dataSourceId?: string;
+    type?: string;
     initialState?: GridInitialState;
+    params?: Record<string, unknown>;
   };
 }
 
-function findSheet(ctx: Ctx, viewId: string) {
-  return ctx.adapter.api.stateApi.sheets.find((sheet) => sheet.id === viewId);
+function findSheet(ctx: Ctx, sheetId: string) {
+  return ctx.adapter.api.stateApi.sheets.find((sheet) => sheet.id === sheetId);
 }
 
 export const studioAddView: Handler<AddViewParams> = {
@@ -71,7 +70,9 @@ export const studioAddView: Handler<AddViewParams> = {
     const created = ctx.adapter.api.stateApi.addSheet({
       dataSourceId: params?.dataSourceId,
       label: params?.label,
+      type: params?.type,
       initialState: params?.initialState,
+      params: params?.params,
     });
     return created ?? undefined;
   },
@@ -85,16 +86,16 @@ export const studioSelectView: Handler<SelectViewParams> = {
   guard: null,
   phase: 'layout',
   validate: (params, ctx) => {
-    if (!params || typeof params.viewId !== 'string') {
-      return invalid('studio.selectSheet requires { viewId }');
+    if (!params || typeof params.sheetId !== 'string') {
+      return invalid('studio.selectSheet requires { sheetId }');
     }
-    if (!findSheet(ctx, params.viewId)) {
-      return invalid(`studio.selectSheet: unknown viewId '${params.viewId}'`);
+    if (!findSheet(ctx, params.sheetId)) {
+      return invalid(`studio.selectSheet: unknown sheetId '${params.sheetId}'`);
     }
     return ok();
   },
-  run: ({ viewId }, ctx) => {
-    ctx.adapter.api.stateApi.selectSheet(viewId);
+  run: ({ sheetId }, ctx) => {
+    ctx.adapter.api.stateApi.selectSheet(sheetId);
   },
 };
 
@@ -106,16 +107,16 @@ export const studioRenameView: Handler<RenameViewParams> = {
   guard: 'viewCrud',
   phase: 'sheet',
   validate: (params, ctx) => {
-    if (!params || typeof params.viewId !== 'string' || typeof params.label !== 'string') {
-      return invalid('studio.renameSheet requires { viewId, label }');
+    if (!params || typeof params.sheetId !== 'string' || typeof params.label !== 'string') {
+      return invalid('studio.renameSheet requires { sheetId, label }');
     }
-    if (!findSheet(ctx, params.viewId)) {
-      return invalid(`studio.renameSheet: unknown viewId '${params.viewId}'`);
+    if (!findSheet(ctx, params.sheetId)) {
+      return invalid(`studio.renameSheet: unknown sheetId '${params.sheetId}'`);
     }
     return ok();
   },
-  run: ({ viewId, label }, ctx) => {
-    ctx.adapter.api.stateApi.renameSheet(viewId, label);
+  run: ({ sheetId, label }, ctx) => {
+    ctx.adapter.api.stateApi.renameSheet(sheetId, label);
   },
 };
 
@@ -127,16 +128,16 @@ export const studioDuplicateView: Handler<DuplicateViewParams> = {
   guard: 'viewCrud',
   phase: 'sheet',
   validate: (params, ctx) => {
-    if (!params || typeof params.viewId !== 'string') {
-      return invalid('studio.duplicateSheet requires { viewId }');
+    if (!params || typeof params.sheetId !== 'string') {
+      return invalid('studio.duplicateSheet requires { sheetId }');
     }
-    if (!findSheet(ctx, params.viewId)) {
-      return invalid(`studio.duplicateSheet: unknown viewId '${params.viewId}'`);
+    if (!findSheet(ctx, params.sheetId)) {
+      return invalid(`studio.duplicateSheet: unknown sheetId '${params.sheetId}'`);
     }
     return ok();
   },
-  run: ({ viewId }, ctx) => {
-    const copy = ctx.adapter.api.stateApi.duplicateSheet(viewId);
+  run: ({ sheetId }, ctx) => {
+    const copy = ctx.adapter.api.stateApi.duplicateSheet(sheetId);
     return copy ?? undefined;
   },
 };
@@ -149,16 +150,16 @@ export const studioDeleteView: Handler<DeleteViewParams> = {
   guard: 'viewCrud',
   phase: 'sheet',
   validate: (params, ctx) => {
-    if (!params || typeof params.viewId !== 'string') {
-      return invalid('studio.deleteSheet requires { viewId }');
+    if (!params || typeof params.sheetId !== 'string') {
+      return invalid('studio.deleteSheet requires { sheetId }');
     }
-    if (!findSheet(ctx, params.viewId)) {
-      return invalid(`studio.deleteSheet: unknown viewId '${params.viewId}'`);
+    if (!findSheet(ctx, params.sheetId)) {
+      return invalid(`studio.deleteSheet: unknown sheetId '${params.sheetId}'`);
     }
     return ok();
   },
-  run: ({ viewId }, ctx) => {
-    ctx.adapter.api.stateApi.deleteSheet(viewId);
+  run: ({ sheetId }, ctx) => {
+    ctx.adapter.api.stateApi.deleteSheet(sheetId);
   },
 };
 
@@ -170,19 +171,19 @@ export const studioMoveView: Handler<MoveViewParams> = {
   guard: 'viewCrud',
   phase: 'sheet',
   validate: (params, ctx) => {
-    if (!params || typeof params.viewId !== 'string' || typeof params.delta !== 'number') {
-      return invalid('studio.moveSheet requires { viewId, delta }');
+    if (!params || typeof params.sheetId !== 'string' || typeof params.delta !== 'number') {
+      return invalid('studio.moveSheet requires { sheetId, delta }');
     }
     if (!Number.isInteger(params.delta)) {
       return invalid('studio.moveSheet: delta must be an integer');
     }
-    if (!findSheet(ctx, params.viewId)) {
-      return invalid(`studio.moveSheet: unknown viewId '${params.viewId}'`);
+    if (!findSheet(ctx, params.sheetId)) {
+      return invalid(`studio.moveSheet: unknown sheetId '${params.sheetId}'`);
     }
     return ok();
   },
-  run: ({ viewId, delta }, ctx) => {
-    ctx.adapter.api.stateApi.moveSheet(viewId, delta);
+  run: ({ sheetId, delta }, ctx) => {
+    ctx.adapter.api.stateApi.moveSheet(sheetId, delta);
   },
 };
 
@@ -194,11 +195,11 @@ export const studioUpdateView: Handler<UpdateViewParams> = {
   guard: 'viewCrud',
   phase: 'sheet',
   validate: (params, ctx) => {
-    if (!params || typeof params.viewId !== 'string' || !params.patch) {
-      return invalid('studio.updateSheet requires { viewId, patch }');
+    if (!params || typeof params.sheetId !== 'string' || !params.patch) {
+      return invalid('studio.updateSheet requires { sheetId, patch }');
     }
-    if (!findSheet(ctx, params.viewId)) {
-      return invalid(`studio.updateSheet: unknown viewId '${params.viewId}'`);
+    if (!findSheet(ctx, params.sheetId)) {
+      return invalid(`studio.updateSheet: unknown sheetId '${params.sheetId}'`);
     }
     if (params.patch.dataSourceId !== undefined) {
       if (typeof params.patch.dataSourceId !== 'string') {
@@ -206,13 +207,15 @@ export const studioUpdateView: Handler<UpdateViewParams> = {
       }
       const exists = ctx.adapter.api.dataSources.some((d) => d.id === params.patch.dataSourceId);
       if (!exists) {
-        return invalid(`studio.updateSheet: unknown patch.dataSourceId '${params.patch.dataSourceId}'`);
+        return invalid(
+          `studio.updateSheet: unknown patch.dataSourceId '${params.patch.dataSourceId}'`,
+        );
       }
     }
     return ok();
   },
-  run: ({ viewId, patch }, ctx) => {
-    ctx.adapter.api.stateApi.updateSheet(viewId, patch);
+  run: ({ sheetId, patch }, ctx) => {
+    ctx.adapter.api.stateApi.updateSheet(sheetId, patch);
   },
 };
 

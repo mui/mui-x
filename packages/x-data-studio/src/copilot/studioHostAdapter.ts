@@ -1,8 +1,24 @@
 import type { HostAdapter, ToolStopContext, HostDataQueryProvider } from '@mui/x-copilot';
-import type { DataStudioDataSource } from '../DataStudio/DataStudio.types';
+import type {
+  DataStudioDataSource,
+  DataStudioJointSourceConfig,
+} from '../DataStudio/DataStudio.types';
+import type { DataStudioJoinDefinition } from '../models';
 import type { DataStudioStateApi } from '../DataStudio/useDataStudioState';
 import { snapshotState, type StudioStateDocument } from './stateDocument';
 import type { StudioGuards } from './guards';
+
+/**
+ * Joint-source mutations the copilot can drive. Sits alongside `stateApi`
+ * because joint sources live in a separate hook (`useDataStudioJointSources`),
+ * not on `DataStudioStateApi`.
+ */
+export interface StudioCopilotJointSourcesApi {
+  readonly configs: ReadonlyArray<DataStudioJointSourceConfig>;
+  create: (input: { label: string; definition: DataStudioJoinDefinition }) => string;
+  update: (id: string, input: { label: string; definition: DataStudioJoinDefinition }) => void;
+  remove: (id: string) => void;
+}
 
 /**
  * The host-side bundle the Studio command/reconciler handlers reach into at
@@ -12,6 +28,7 @@ import type { StudioGuards } from './guards';
 export interface StudioCopilotApi {
   readonly stateApi: DataStudioStateApi<any>;
   readonly dataSources: ReadonlyArray<DataStudioDataSource<any>>;
+  readonly jointSources: StudioCopilotJointSourcesApi;
 }
 
 export type StudioHostAdapter = HostAdapter<StudioStateDocument, StudioCopilotApi>;
@@ -23,10 +40,19 @@ interface CreateStudioHostAdapterOptions {
    * Live accessor for the Studio state API. Must always return the latest
    * value — the React hook wires this to a ref so re-renders don't invalidate
    * the adapter identity.
+   * @returns {DataStudioStateApi} The current Studio state API.
    */
   getStateApi: () => DataStudioStateApi<any>;
-  /** Live accessor for the dataSources array. */
+  /**
+   * Live accessor for the dataSources array.
+   * @returns {ReadonlyArray<DataStudioDataSource>} The current data sources.
+   */
   getDataSources: () => ReadonlyArray<DataStudioDataSource<any>>;
+  /**
+   * Live accessor for the joint-source management API.
+   * @returns {StudioCopilotJointSourcesApi} The joint-source management API.
+   */
+  getJointSources: () => StudioCopilotJointSourcesApi;
   guards: StudioGuards;
   dataQuery?: HostDataQueryProvider<any, any>;
 }
@@ -40,7 +66,7 @@ interface CreateStudioHostAdapterOptions {
 export function createStudioHostAdapter(
   options: CreateStudioHostAdapterOptions,
 ): StudioHostAdapter {
-  const { getStateApi, getDataSources, dataQuery } = options;
+  const { getStateApi, getDataSources, getJointSources, dataQuery } = options;
 
   const api: StudioCopilotApi = {
     get stateApi() {
@@ -49,12 +75,15 @@ export function createStudioHostAdapter(
     get dataSources() {
       return getDataSources();
     },
+    get jointSources() {
+      return getJointSources();
+    },
   };
 
   return {
     id: 'data-studio',
     api,
-    snapshotState: () => snapshotState(getStateApi(), getDataSources()),
+    snapshotState: () => snapshotState(getStateApi(), getDataSources(), getJointSources().configs),
     dataQuery,
     onPatchToolStop() {
       // No host-side reconciliation needed at setGridState tool stop today.

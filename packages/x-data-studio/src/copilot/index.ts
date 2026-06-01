@@ -1,18 +1,20 @@
 // State document + host adapter
-export { snapshotState, type StudioStateDocument, type SheetDoc, type DataSourceDoc } from './stateDocument';
+export {
+  snapshotState,
+  type StudioStateDocument,
+  type SheetDoc,
+  type DataSourceDoc,
+} from './stateDocument';
 export {
   createStudioHostAdapter,
   type StudioHostAdapter,
   type StudioCopilotApi,
+  type StudioCopilotJointSourcesApi,
   type StudioToolStopContext,
 } from './studioHostAdapter';
 
 // Guards
-export {
-  buildStudioGuards,
-  DEFAULT_STUDIO_GUARDS,
-  type StudioGuards,
-} from './guards';
+export { buildStudioGuards, DEFAULT_STUDIO_GUARDS, type StudioGuards } from './guards';
 
 // Command + patch packs (and the underlying handler arrays for testing)
 export { studioCommandPack, studioReconcilerPack } from './studioPacks';
@@ -52,10 +54,7 @@ export {
 } from './dataQuery';
 
 // Plugins (Studio-flavored)
-export {
-  studioFormulaPlugin,
-  createStudioFormulaDataSource,
-} from './formula';
+export { studioFormulaPlugin, createStudioFormulaDataSource } from './formula';
 export {
   studioPdfReportPlugin,
   COMPOSE_PDF_REPORT_TOOL_NAME,

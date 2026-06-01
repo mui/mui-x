@@ -11,6 +11,7 @@ import {
   StudioCopilotPanel,
   StudioCopilotProvider,
   type StudioCopilotPanelProps,
+  type StudioCopilotJointSourcesApi,
   type StudioGuards,
   useStudioCopilot,
   useStudioCopilotControls,
@@ -95,6 +96,7 @@ interface DataStudioCopilotMountProps {
   inner: ChatAdapter;
   stateApi: DataStudioStateApi<any>;
   dataSources: ReadonlyArray<DataStudioDataSource<any>>;
+  jointSources: StudioCopilotJointSourcesApi;
   features?: Partial<StudioGuards>;
   plugins?: ReadonlyArray<CopilotPlugin<any, any>>;
   Panel: React.ComponentType<StudioCopilotPanelProps>;
@@ -108,9 +110,16 @@ interface DataStudioCopilotMountProps {
  * rendered when `<DataStudio copilotChatAdapter>` is supplied.
  */
 export function DataStudioCopilotMount(props: DataStudioCopilotMountProps) {
-  const { inner, stateApi, dataSources, features, plugins, Panel, children } = props;
+  const { inner, stateApi, dataSources, jointSources, features, plugins, Panel, children } = props;
   const [open, setOpen] = React.useState(false);
-  const studio = useStudioCopilot({ inner, stateApi, dataSources, features, plugins });
+  const studio = useStudioCopilot({
+    inner,
+    stateApi,
+    dataSources,
+    jointSources,
+    features,
+    plugins,
+  });
   // The query results map is updated imperatively on the underlying ref —
   // subscribe to results to force a re-read after each turn so panel renderers
   // see the latest cache.
@@ -151,6 +160,7 @@ interface DataStudioCopilotShellProps {
   inner?: ChatAdapter;
   stateApi: DataStudioStateApi<any>;
   dataSources: ReadonlyArray<DataStudioDataSource<any>>;
+  jointSources: StudioCopilotJointSourcesApi;
   features?: Partial<StudioGuards>;
   plugins?: ReadonlyArray<CopilotPlugin<any, any>>;
   Panel: React.ComponentType<StudioCopilotPanelProps>;
@@ -163,7 +173,7 @@ interface DataStudioCopilotShellProps {
  * render path so its hooks fire only when the integration is actually on.
  */
 export function DataStudioCopilotShell(props: DataStudioCopilotShellProps) {
-  const { inner, stateApi, dataSources, features, plugins, Panel, children } = props;
+  const { inner, stateApi, dataSources, jointSources, features, plugins, Panel, children } = props;
   if (!inner) {
     return (
       <StudioCopilotProvider open={false} setOpen={() => {}} available={false}>
@@ -176,6 +186,7 @@ export function DataStudioCopilotShell(props: DataStudioCopilotShellProps) {
       inner={inner}
       stateApi={stateApi}
       dataSources={dataSources}
+      jointSources={jointSources}
       features={features}
       plugins={plugins}
       Panel={Panel}

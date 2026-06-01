@@ -33,7 +33,9 @@ describe('Studio copilot commands', () => {
       initialActiveDataSourceId: 'products',
     });
     executor.applyEnvelope({
-      runCommands: runCommands([{ type: 'studio.selectDataSource', params: { dataSourceId: 'orders' } }]),
+      runCommands: runCommands([
+        { type: 'studio.selectDataSource', params: { dataSourceId: 'orders' } },
+      ]),
     });
     expect(fake.api.activeDataSourceId).toBe('orders');
   });
@@ -44,7 +46,9 @@ describe('Studio copilot commands', () => {
       initialActiveDataSourceId: 'products',
     });
     const result = executor.applyEnvelope({
-      runCommands: runCommands([{ type: 'studio.selectDataSource', params: { dataSourceId: 'ghost' } }]),
+      runCommands: runCommands([
+        { type: 'studio.selectDataSource', params: { dataSourceId: 'ghost' } },
+      ]),
     });
     expect(result.applied).toHaveLength(0);
     expect(result.skipped).toHaveLength(1);
@@ -55,13 +59,11 @@ describe('Studio copilot commands', () => {
   it('studio.renameSheet updates the sheet label', () => {
     const { fake, executor } = createTestExecutor({
       dataSources: DATASETS,
-      initialSheets: [
-        { id: 'v1', label: 'Original', dataSourceId: 'products' },
-      ],
+      initialSheets: [{ id: 'v1', label: 'Original', dataSourceId: 'products' }],
     });
     executor.applyEnvelope({
       runCommands: runCommands([
-        { type: 'studio.renameSheet', params: { viewId: 'v1', label: 'Renamed' } },
+        { type: 'studio.renameSheet', params: { sheetId: 'v1', label: 'Renamed' } },
       ]),
     });
     expect(fake.sheets[0].label).toBe('Renamed');
@@ -76,7 +78,7 @@ describe('Studio copilot commands', () => {
       ],
     });
     executor.applyEnvelope({
-      runCommands: runCommands([{ type: 'studio.deleteSheet', params: { viewId: 'v2' } }]),
+      runCommands: runCommands([{ type: 'studio.deleteSheet', params: { sheetId: 'v2' } }]),
     });
     expect(fake.sheets.map((v) => v.id)).toEqual(['v1']);
   });
@@ -91,7 +93,7 @@ describe('Studio copilot commands', () => {
       ],
     });
     executor.applyEnvelope({
-      runCommands: runCommands([{ type: 'studio.moveSheet', params: { viewId: 'v1', delta: 2 } }]),
+      runCommands: runCommands([{ type: 'studio.moveSheet', params: { sheetId: 'v1', delta: 2 } }]),
     });
     expect(fake.sheets.map((v) => v.id)).toEqual(['v2', 'v3', 'v1']);
   });
@@ -102,7 +104,7 @@ describe('Studio copilot commands', () => {
       initialSheets: [{ id: 'v1', label: 'Source', dataSourceId: 'products' }],
     });
     executor.applyEnvelope({
-      runCommands: runCommands([{ type: 'studio.duplicateSheet', params: { viewId: 'v1' } }]),
+      runCommands: runCommands([{ type: 'studio.duplicateSheet', params: { sheetId: 'v1' } }]),
     });
     expect(fake.sheets).toHaveLength(2);
     expect(fake.sheets[0].id).toBe('v1');
@@ -135,5 +137,68 @@ describe('Studio copilot commands', () => {
     expect(result.applied).toHaveLength(0);
     expect(result.skipped[0].reason).toBe('unknown');
     expect(fake.sheets).toHaveLength(0);
+  });
+
+  const ORDERS_JOIN = {
+    base: 'products',
+    joins: [
+      {
+        sourceId: 'orders',
+        type: 'inner' as const,
+        on: [{ leftField: 'name', rightField: 'orderId' }],
+      },
+    ],
+    columns: [
+      { sourceId: 'products', field: 'name', as: 'name' },
+      { sourceId: 'orders', field: 'orderId', as: 'orderId' },
+    ],
+  };
+
+  it('studio.createJointSource creates a joint source from a valid definition', () => {
+    const { jointConfigs, executor } = createTestExecutor({
+      dataSources: DATASETS,
+      initialActiveDataSourceId: 'products',
+    });
+    const result = executor.applyEnvelope({
+      runCommands: runCommands([
+        {
+          type: 'studio.createJointSource',
+          params: { label: 'Products + Orders', definition: ORDERS_JOIN },
+        },
+      ]),
+    });
+    expect(result.applied).toHaveLength(1);
+    expect(jointConfigs).toHaveLength(1);
+    expect(jointConfigs[0].label).toBe('Products + Orders');
+    expect(jointConfigs[0].definition).toEqual(ORDERS_JOIN);
+  });
+
+  it('studio.createJointSource rejects an unknown base data source', () => {
+    const { jointConfigs, executor } = createTestExecutor({
+      dataSources: DATASETS,
+      initialActiveDataSourceId: 'products',
+    });
+    const result = executor.applyEnvelope({
+      runCommands: runCommands([
+        {
+          type: 'studio.createJointSource',
+          params: { label: 'Bad', definition: { ...ORDERS_JOIN, base: 'ghost' } },
+        },
+      ]),
+    });
+    expect(result.applied).toHaveLength(0);
+    expect(jointConfigs).toHaveLength(0);
+  });
+
+  it('studio.deleteJointSource removes an existing joint source', () => {
+    const { jointConfigs, executor } = createTestExecutor({
+      dataSources: DATASETS,
+      initialActiveDataSourceId: 'products',
+      initialJointConfigs: [{ id: 'j1', label: 'P+O', definition: ORDERS_JOIN }],
+    });
+    executor.applyEnvelope({
+      runCommands: runCommands([{ type: 'studio.deleteJointSource', params: { id: 'j1' } }]),
+    });
+    expect(jointConfigs).toHaveLength(0);
   });
 });

@@ -1078,9 +1078,7 @@ describe('createDataStudioDataSourceFromCSV', () => {
       }),
     );
 
-    const byBucket = Object.fromEntries(
-      response.rows.map((row) => [row.bucket, row.value]),
-    );
+    const byBucket = Object.fromEntries(response.rows.map((row) => [row.bucket, row.value]));
 
     expect(byBucket).toEqual({
       empty: null,
@@ -1577,6 +1575,40 @@ describe('createDataStudioDataSourceFromKnex', () => {
     });
   });
 
+  it('rejects unknown group/pivot/aggregation fields with a clear error (not a raw SQL error)', async () => {
+    const dataSource = createDataStudioDataSourceFromKnex({
+      id: 'sales',
+      knex,
+      table: 'sales',
+      rowIdField: 'id',
+    });
+
+    // A field that is not in the schema (e.g. a joint-source alias sent to a base
+    // source) must be rejected up front, not surfaced as a raw "no such column".
+    await expect(
+      dataSource.getRows(createParams({ groupFields: ['orders_Country'] })),
+    ).rejects.toThrow(/Unknown field "orders_Country"/);
+
+    await expect(
+      dataSource.getRows(
+        createParams({
+          pivotModel: {
+            rows: [{ field: 'orders_Country' }],
+            columns: [{ field: 'orders_Customer Name' }],
+            values: [{ field: 'amount', aggFunc: 'sum' }],
+          },
+          groupFields: ['orders_Country'],
+        }),
+      ),
+    ).rejects.toThrow(/Unknown field "orders_Country"/);
+
+    await expect(
+      dataSource.getRows(
+        createParams({ groupFields: ['country'], aggregationModel: { ghost: 'sum' } }),
+      ),
+    ).rejects.toThrow(/Unknown field "ghost"/);
+  });
+
   it('creates, updates, and deletes SQL rows when mutations are enabled', async () => {
     const dataSource = createDataStudioDataSourceFromKnex({
       id: 'sales',
@@ -1962,7 +1994,12 @@ describe('createDataStudioDataSourceFromKnex joint sources', () => {
   };
 
   function createOrders() {
-    return createDataStudioDataSourceFromKnex({ id: 'orders', knex, table: 'orders', rowIdField: 'id' });
+    return createDataStudioDataSourceFromKnex({
+      id: 'orders',
+      knex,
+      table: 'orders',
+      rowIdField: 'id',
+    });
   }
 
   beforeAll(async () => {
@@ -2014,7 +2051,13 @@ describe('createDataStudioDataSourceFromKnex joint sources', () => {
     );
 
     expect(response.rowCount).toBe(4);
-    expect(response.rows.map((row) => ({ amount: row.amount, category: row.category, country: row.country }))).toEqual([
+    expect(
+      response.rows.map((row) => ({
+        amount: row.amount,
+        category: row.category,
+        country: row.country,
+      })),
+    ).toEqual([
       { amount: 20, category: 'Bikes', country: 'FR' },
       { amount: 30, category: 'Parts', country: 'FR' },
       { amount: 50, category: 'Bikes', country: 'US' },
@@ -2035,9 +2078,7 @@ describe('createDataStudioDataSourceFromKnex joint sources', () => {
       }),
     );
 
-    const byCategory = Object.fromEntries(
-      response.rows.map((row) => [row.category, row.amount]),
-    );
+    const byCategory = Object.fromEntries(response.rows.map((row) => [row.category, row.amount]));
     expect(byCategory).toEqual({ Bikes: 170, Parts: 30 });
     // Star join is many-to-one, so the grouped total must equal the raw fact total.
     const total = response.rows.reduce((sum, row) => sum + (row.amount as number), 0);
@@ -2246,7 +2287,9 @@ describe('createDataStudioDataSourceFromKnex joint sources', () => {
       );
 
       // Unmatched product (no order) → amount null; unmatched order (no product) → category null.
-      expect(response.rows.some((row) => row.category === 'Ghost' && row.amount == null)).toBe(true);
+      expect(response.rows.some((row) => row.category === 'Ghost' && row.amount == null)).toBe(
+        true,
+      );
       expect(response.rows.some((row) => row.amount === 7 && row.category == null)).toBe(true);
       const ids = response.rows.map((row) => row[DATA_STUDIO_SYNTHETIC_ID_FIELD]);
       expect(new Set(ids).size).toBe(ids.length);

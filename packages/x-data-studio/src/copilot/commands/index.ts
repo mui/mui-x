@@ -3,10 +3,12 @@ import type { StudioHostAdapter } from '../studioHostAdapter';
 import type { StudioStateDocument } from '../stateDocument';
 import { studioViewCommands } from './view';
 import { studioDataSourceCommands } from './dataSource';
+import { studioJointSourceCommands } from './jointSource';
 
 export * from './view';
 export * from './dataSource';
+export * from './jointSource';
 
 export const ALL_STUDIO_COMMAND_HANDLERS: ReadonlyArray<
   CommandHandler<StudioHostAdapter, StudioStateDocument>
-> = [...studioViewCommands, ...studioDataSourceCommands];
+> = [...studioViewCommands, ...studioDataSourceCommands, ...studioJointSourceCommands];

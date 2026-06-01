@@ -10,6 +10,7 @@ import type { Guards } from '@mui/x-copilot';
  * - `viewEditing`: edit a view's stored `initialState` (filters, sort, columns).
  * - `dataSourceSwitching`: change the active dataSource, invalidate caches.
  * - `dataQuery`: enable the `queryStudioData` approval-aware flow.
+ * - `jointSourceCrud`: create / update / delete user-authored joint sources.
  */
 export interface StudioGuards extends Guards {
   mutations: boolean;
@@ -17,6 +18,7 @@ export interface StudioGuards extends Guards {
   viewEditing: boolean;
   dataSourceSwitching: boolean;
   dataQuery: boolean;
+  jointSourceCrud: boolean;
 }
 
 export const DEFAULT_STUDIO_GUARDS: StudioGuards = {
@@ -25,6 +27,7 @@ export const DEFAULT_STUDIO_GUARDS: StudioGuards = {
   viewEditing: true,
   dataSourceSwitching: true,
   dataQuery: true,
+  jointSourceCrud: true,
 };
 
 export function buildStudioGuards(overrides?: Partial<StudioGuards>): StudioGuards {

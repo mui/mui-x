@@ -14,10 +14,10 @@ export const viewMetaReconciler: PatchHandler<StudioHostAdapter, StudioStateDocu
   plan: 'community',
   reconcile: (_doc, op, ctx) => {
     const tokens = op.path.split('/');
-    const viewId = tokens[2];
-    if (typeof viewId !== 'string' || typeof op.value !== 'string') {
+    const sheetId = tokens[2];
+    if (typeof sheetId !== 'string' || typeof op.value !== 'string') {
       return;
     }
-    ctx.adapter.api.stateApi.updateSheet(viewId, { dataSourceId: op.value });
+    ctx.adapter.api.stateApi.updateSheet(sheetId, { dataSourceId: op.value });
   },
 };
