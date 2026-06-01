@@ -52,12 +52,13 @@ const roRODialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyPresetLabel: (date) => `Se repetă anual pe ${date}`,
   noResourceAriaLabel: 'Fără resursă',
   resourceLabel: 'Resursă',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salvează',
   startDateAfterEndDateError: 'Data/ora de început trebuie să fie înainte de data/ora de sfârșit.',
   startDateLabel: 'Data de început',
   startTimeLabel: 'Ora de început',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Toate evenimentele',
   cancel: 'Anulează',
   confirm: 'Confirmă',
@@ -97,6 +98,10 @@ const roROCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Afișează numărul săptămânii',
   timeFormat: 'Formatul orei',
   viewSpecificOptions: (view) => `Opțiuni pentru vizualizarea ${view}`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Toată ziua',

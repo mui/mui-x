@@ -4,7 +4,7 @@ import { getDateKey, TimeoutManager } from '@mui/x-scheduler-internals/internals
 
 const MAX_CONCURRENT_REQUESTS = 3;
 const MAX_QUEUED_REQUESTS = 3;
-const DEBOUNCE_MS = 150;
+export const DEBOUNCE_MS = 150;
 
 export enum RequestStatus {
   QUEUED,
@@ -132,6 +132,12 @@ export class SchedulerDataManager {
     await Promise.all(fetchPromises);
   };
 
+  /**
+   * The returned promise resolves when the debounce window flushes, NOT when this
+   * specific call's data has been fetched. If a subsequent `queue()` arrives within
+   * the debounce window, the previous promise resolves immediately and the new call
+   * takes over — callers shouldn't treat the resolution as a fetch-completion signal.
+   */
   public queue = async (ranges: DateRange[]) => {
     if (this.pendingDebounceResolve) {
       this.pendingDebounceResolve();
@@ -139,10 +145,9 @@ export class SchedulerDataManager {
     }
     this.timeoutManager.clearTimeout('debounce');
 
-    // Stage the new ranges (Overwriting previous rapid inputs)
-    this.stagedRanges = [...(this.stagedRanges ?? []), ...ranges];
+    this.stagedRanges = [...ranges];
 
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve, reject) => {
       this.pendingDebounceResolve = resolve;
       this.timeoutManager.startTimeout('debounce', this.debounceMs, async () => {
         this.pendingDebounceResolve = null;
@@ -152,8 +157,12 @@ export class SchedulerDataManager {
           this.stagedRanges = null;
         }
 
-        await this.processQueue();
-        resolve();
+        try {
+          await this.processQueue();
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
       });
     });
   };

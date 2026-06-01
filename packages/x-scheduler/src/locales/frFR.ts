@@ -52,12 +52,13 @@ const frFRDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyPresetLabel: (date) => `Se répète tous les ans le ${date}`,
   noResourceAriaLabel: 'Aucune ressource',
   resourceLabel: 'Ressource',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Enregistrer',
   startDateAfterEndDateError: 'La date/heure de début doit être antérieure à la date/heure de fin.',
   startDateLabel: 'Date de début',
   startTimeLabel: 'Heure de début',
 
-  // ScopeDialog
+  // RecurringScopeDialog
   all: 'Tous les évènements',
   cancel: 'Annuler',
   confirm: 'Confirmer',
@@ -97,6 +98,10 @@ const frFRCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Afficher le numéro de semaine',
   timeFormat: "Format de l'heure",
   viewSpecificOptions: (view) => `Options de la vue ${view}`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Toute la journée',

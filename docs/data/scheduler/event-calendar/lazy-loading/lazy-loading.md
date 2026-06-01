@@ -26,7 +26,7 @@ When `dataSource` is provided, the `events` prop is not needed because all event
 <EventCalendarPremium
   dataSource={{
     getEvents: async (start, end) => fetchEventsFromServer(start, end),
-    updateEvents: async ({ created, updated, deleted }) => {
+    persistEvents: async ({ created, updated, deleted }) => {
       // Persist changes to the server
       return { success: true };
     },
@@ -34,7 +34,7 @@ When `dataSource` is provided, the `events` prop is not needed because all event
 />
 ```
 
-The `updateEvents` method is called whenever events are created, updated, or deleted, letting you persist the changes back to the server.
+The `persistEvents` method is called whenever events are created, updated, or deleted, letting you persist the changes back to the server.
 
 {{"demo": "BasicDataSource.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -45,7 +45,7 @@ In a real-world scenario, you would replace it with your own server-side data fe
 
 ## Error handling
 
-When the `dataSource.getEvents` method rejects, the Scheduler displays an error state.
+When the `dataSource.getEvents` method rejects, the Event Calendar displays an error state.
 Use the toggle button to simulate a server error.
 
 {{"demo": "ErrorHandling.js", "bg": "inline", "defaultCodeOpen": false}}
