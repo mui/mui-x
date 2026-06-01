@@ -56,7 +56,15 @@ function parseChangeset(filePath) {
     }
   }
 
-  return { id: path.basename(filePath, '.md'), filePath, packages, summary: body.trim(), pr, author, tag };
+  return {
+    id: path.basename(filePath, '.md'),
+    filePath,
+    packages,
+    summary: body.trim(),
+    pr,
+    author,
+    tag,
+  };
 }
 
 /** Lowest-tier product hit for a changeset (drives section + default tag). */

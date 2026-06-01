@@ -31,11 +31,11 @@ files too, rendered in the existing MUI X format.
 
 ### Hybrid coverage
 
-| Changelog section | Source |
-| --- | --- |
-| Product sections (Data Grid, Pickers, Charts, Tree View, Scheduler, Codemod) | **changeset files** |
-| Docs / Core / Miscellaneous | commit scrape (unchanged) |
-| Contributors + highlights | GitHub API (unchanged) |
+| Changelog section                                                            | Source                    |
+| ---------------------------------------------------------------------------- | ------------------------- |
+| Product sections (Data Grid, Pickers, Charts, Tree View, Scheduler, Codemod) | **changeset files**       |
+| Docs / Core / Miscellaneous                                                  | commit scrape (unchanged) |
+| Contributors + highlights                                                    | GitHub API (unchanged)    |
 
 A changeset is required **only** when published source changes — docs/test/
 internal PRs are exempt. Renovate PRs are exempt.
@@ -66,12 +66,12 @@ Optional extra detail rendered as an indented continuation line.
 
 ## Files
 
-| File | Role |
-| --- | --- |
-| `config.mjs` | Product → tier map, default tags, package index (shared) |
-| `generate.mjs` | Render changesets → MUI X changelog format |
-| `validate.mjs` | Pattern checks (bump, tier convention, tag, summary) |
-| `sample/.changeset/` | Example changesets for the prototype |
+| File                                          | Role                                                        |
+| --------------------------------------------- | ----------------------------------------------------------- |
+| `config.mjs`                                  | Product → tier map, default tags, package index (shared)    |
+| `generate.mjs`                                | Render changesets → MUI X changelog format                  |
+| `validate.mjs`                                | Pattern checks (bump, tier convention, tag, summary)        |
+| `sample/.changeset/`                          | Example changesets for the prototype                        |
 | `../../.github/workflows/changeset-check.yml` | CI: validate patterns + require changeset on source changes |
 
 ## Run

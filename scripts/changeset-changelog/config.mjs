@@ -9,7 +9,10 @@
  * and mirrors the `logProductSection` calls in `scripts/changelogUtils.mjs`.
  */
 export const PRODUCTS = [
-  { name: 'Data Grid', tiers: { base: 'x-data-grid', pro: 'x-data-grid-pro', premium: 'x-data-grid-premium' } },
+  {
+    name: 'Data Grid',
+    tiers: { base: 'x-data-grid', pro: 'x-data-grid-pro', premium: 'x-data-grid-premium' },
+  },
   { name: 'Date and Time Pickers', tiers: { base: 'x-date-pickers', pro: 'x-date-pickers-pro' } },
   { name: 'Charts', tiers: { base: 'x-charts', pro: 'x-charts-pro', premium: 'x-charts-premium' } },
   { name: 'Tree View', tiers: { base: 'x-tree-view', pro: 'x-tree-view-pro' } },
