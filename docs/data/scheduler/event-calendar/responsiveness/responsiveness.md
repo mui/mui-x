@@ -27,10 +27,9 @@ This PR covers three things:
 What is **NOT** covered yet:
 
 - Mobile-friendly versions of the other views (month, agenda, day).
-- A mobile layout for the event dialog.
+- Real event editing on mobile. The editing drawer (see [Touch interactions](#touch-interactions)) is a mock that validates the gesture only — it does not edit the event yet.
 - Header responsiveness (toolbar, view switcher, side panel).
 - The public opt-in API. The variant is only availabble as a standalone view for now; the final DX is not decided.
-- [WIP] Touch / drag interactions on mobile. The current handles work but are not tuned for touch.
 
 ## Why a separate mobile view + responsive desktop
 
@@ -137,3 +136,20 @@ This part is **up for debate**:
   - A React context that tells `DayTimeGrid` which event component to render
   - Composition (a `<DayTimeGrid.Event>` subcomponent the consumer picks)
   - `children` as the event renderer
+
+## Touch interactions
+
+On the compact grid, touch gestures are deliberately split so they don't fight each other:
+
+- **Single tap** on an event _arms_ it: the resize handles and a selection outline appear, and the editing drawer opens below the grid. There is no custom long-press anymore — it used to conflict with the browser's native drag.
+- **Drag to move** is the browser's native drag: press, hold, and drag the event card. This is unchanged.
+- **Resize** by dragging the round handles on the top/bottom edges of an armed event (pointer-based, with autoscroll near the grid edges). The drawer stays open while you resize.
+- **The drawer** sits _below_ the grid rather than overlaying it: while open it shrinks the grid to make room. Tapping the drawer expands it to full height.
+- **Tapping anywhere on the grid** while editing (the empty grid _or_ another event) exits editing and disarms the resize — it does **not** create or arm anything. Only the _next_ tap, with the drawer closed, creates a new event or arms the tapped one.
+- **Creating an event** (a tap on the empty grid with nothing armed) drops a placeholder that already carries resize handles, so the new event's duration can be dragged out before it's saved.
+
+Arming is driven by a dedicated `CompactEventDrawer` context (its own `createModal` instance, separate from the event dialog and the store's editing state): a tap opens the drawer for that occurrence, and the drawer and the resize handles both read it.
+
+:::warning
+The editing drawer is a **mock** to validate the touch interaction only. It shows a placeholder label (`This is editable` / `This is non editable`) and does **not** edit the event. Wiring the drawer to real event editing is intentionally out of scope and will be handled in a follow-up.
+:::

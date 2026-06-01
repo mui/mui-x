@@ -7,7 +7,7 @@ import {
 import { screen, within } from '@mui/internal-test-utils';
 import { CompactDayTimeGrid } from '@mui/x-scheduler/compact-day-time-grid';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
-import { EventDialogProvider } from '../../internals/components/event-dialog';
+import { CompactEventDrawerProvider } from '../../internals/components/compact-event-drawer';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 
 describe('<CompactDayTimeGrid />', () => {
@@ -23,7 +23,7 @@ describe('<CompactDayTimeGrid />', () => {
         resources={[]}
         visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
       >
-        <EventDialogProvider>{ui}</EventDialogProvider>
+        <CompactEventDrawerProvider>{ui}</CompactEventDrawerProvider>
       </EventCalendarProvider>,
     );
   }

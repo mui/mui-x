@@ -212,3 +212,34 @@ export function EventDialogTrigger(props: EventDialogTriggerProps) {
 
   return <EventDialog.Trigger ref={ref} data={occurrence} {...other} />;
 }
+
+export interface CompactEventDialogProviderProps {
+  children: React.ReactNode;
+  /**
+   * Called when an event (or creation placeholder) becomes the trigger's active occurrence.
+   */
+  onOpen?: (occurrence: SchedulerRenderableEventOccurrence) => void;
+  /**
+   * Called when the trigger's active occurrence is cleared.
+   */
+  onClose?: () => void;
+}
+
+/**
+ * A minimal `EventDialog` provider for the compact (mobile) views.
+ *
+ * It only exists to satisfy the shared `EventDialogTrigger` (and the time-grid creation flow,
+ * which both consume this context) — it renders no popover form. The compact editing surface
+ * is the separate `CompactEventDrawer`; this provider just forwards the trigger's open/close
+ * to the caller (which bridges them into the drawer context), so the drawer stays decoupled
+ * from the event dialog and the store.
+ */
+export function CompactEventDialogProvider(props: CompactEventDialogProviderProps) {
+  const { children, onOpen, onClose } = props;
+
+  return (
+    <EventDialog.Provider render={() => null} onOpen={onOpen} onClose={onClose}>
+      {children}
+    </EventDialog.Provider>
+  );
+}

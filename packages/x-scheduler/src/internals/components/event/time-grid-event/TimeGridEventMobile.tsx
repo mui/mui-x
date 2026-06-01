@@ -3,11 +3,13 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { CSSObject, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useStore } from '@base-ui/utils/store';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
+import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
-import { useMobileEventLift } from '../../../hooks/useMobileEventLift';
+import { useCompactEventDrawerContext } from '../../compact-event-drawer';
 import { PaletteName } from '../../../utils/tokens';
 import { TimeGridEventProps } from './TimeGridEvent.types';
 import { useTimeGridEvent } from './useTimeGridEvent';
@@ -26,7 +28,7 @@ const TimeGridEventMobileRoot = styled(CalendarGrid.TimeEvent, {
   '&[data-under-fifteen-minutes="true"]': {
     padding: theme.spacing(0, 0.5),
   },
-  '&[data-lifted]': {
+  '&[data-armed]': {
     outline: '2px solid var(--event-main)',
     outlineOffset: '-2px',
   },
@@ -62,6 +64,20 @@ const TimeGridEventMobileTitle = styled(Typography, {
   ...mobileTitleLineClampSteps,
 }));
 
+// A creation placeholder rendered as a real `CalendarGrid.TimeEvent` (rather than the inert
+// `TimeEventPlaceholder`) so it can host pointer resize handles — letting the user size the
+// new event before it is saved.
+const TimeGridEventMobilePlaceholderRoot = styled(CalendarGrid.TimeEvent, {
+  name: 'MuiEventCalendar',
+  slot: 'TimeGridEventMobilePlaceholderRoot',
+})(({ theme }) => ({
+  ...getTimeGridEventRootStyles(theme),
+  padding: theme.spacing(0.5, 0.7),
+  backgroundColor: 'var(--event-surface-subtle-hover)',
+  border: '1px dashed var(--event-on-surface-subtle-secondary)',
+  color: 'var(--event-on-surface-subtle-primary)',
+}));
+
 const TimeGridEventMobileResizeHandler = styled(CalendarGrid.TimeEventResizeHandler, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventMobileResizeHandler',
@@ -93,18 +109,20 @@ export const TimeGridEventMobile = React.forwardRef(function TimeGridEventMobile
   const { occurrence, variant, className, ...other } = props;
 
   const { classes } = useEventCalendarStyledContext();
+  const store = useEventCalendarStoreContext();
   const { isDraggable, isStartResizable, isEndResizable, rootDataAttributes, rootPositionProps } =
     useTimeGridEvent(occurrence);
 
-  const {
-    isLifted,
-    canDrag,
-    ref: liftRef,
-  } = useMobileEventLift({
-    enabled: !!isDraggable && variant !== 'placeholder',
-    occurrenceKey: occurrence.key,
-  });
-  const mergedRef = useMergedRefs(forwardedRef, liftRef);
+  // A creation placeholder has no underlying event but should still be resizable, so it is
+  // rendered as a real event with forced handles (see below). Selecting the boolean (rather
+  // than the placeholder object) keeps every event from re-rendering on each resize move.
+  const isCreationPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.isCreating);
+
+  // A single tap on the event opens the compact drawer for it (via the EventDialogTrigger ->
+  // drawer bridge). We reuse that drawer selection to "arm" the event — revealing its resize
+  // handles and selection outline — without any custom long-press.
+  const { isOpen, data } = useCompactEventDrawerContext();
+  const isArmed = isOpen && data?.key === occurrence.key;
 
   const content = (
     <TimeGridEventMobileTitle className={classes.timeGridEventTitle}>
@@ -120,6 +138,35 @@ export const TimeGridEventMobile = React.forwardRef(function TimeGridEventMobile
   };
 
   if (variant === 'placeholder') {
+    // A creation placeholder is resizable: render it as a real event with forced pointer
+    // handles so the user can size the new event before saving it. Other placeholders (the
+    // transient drag/resize previews) stay inert.
+    if (isCreationPlaceholder) {
+      return (
+        <TimeGridEventMobilePlaceholderRoot
+          isDraggable={false}
+          eventId={occurrence.id}
+          occurrenceKey={occurrence.key}
+          renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
+          {...rootDataAttributes}
+          {...sharedProps}
+          className={clsx(classes.timeGridEventPlaceholder, sharedProps.className)}
+        >
+          <TimeGridEventMobileResizeHandler
+            className={classes.timeGridEventResizeHandler}
+            side="start"
+            interaction="pointer"
+          />
+          {content}
+          <TimeGridEventMobileResizeHandler
+            className={classes.timeGridEventResizeHandler}
+            side="end"
+            interaction="pointer"
+          />
+        </TimeGridEventMobilePlaceholderRoot>
+      );
+    }
+
     return (
       <TimeGridEventPlaceholder
         aria-hidden={true}
@@ -135,17 +182,15 @@ export const TimeGridEventMobile = React.forwardRef(function TimeGridEventMobile
   return (
     <TimeGridEventMobileRoot
       isDraggable={isDraggable}
-      canDrag={canDrag}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...rootDataAttributes}
       {...sharedProps}
-      ref={mergedRef}
-      data-lifted={isLifted || undefined}
+      data-armed={isArmed || undefined}
       className={clsx(classes.timeGridEvent, sharedProps.className)}
     >
-      {isLifted && isStartResizable && (
+      {isArmed && isStartResizable && (
         <TimeGridEventMobileResizeHandler
           className={classes.timeGridEventResizeHandler}
           side="start"
@@ -153,7 +198,7 @@ export const TimeGridEventMobile = React.forwardRef(function TimeGridEventMobile
         />
       )}
       {content}
-      {isLifted && isEndResizable && (
+      {isArmed && isEndResizable && (
         <TimeGridEventMobileResizeHandler
           className={classes.timeGridEventResizeHandler}
           side="end"

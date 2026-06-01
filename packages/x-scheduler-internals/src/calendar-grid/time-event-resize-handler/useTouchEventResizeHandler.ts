@@ -6,7 +6,7 @@ import { schedulerOccurrencePlaceholderSelectors } from '../../scheduler-selecto
 import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
 import { applyInternalDragOrResizeOccurrencePlaceholder } from '../../internals/utils/useDropTarget';
 import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
-import { SchedulerEventSide } from '../../models';
+import { SchedulerEventSide, SchedulerOccurrencePlaceholder } from '../../models';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
 import { useCalendarGridTimeEventContext } from '../time-event/CalendarGridTimeEventContext';
 
@@ -40,6 +40,15 @@ export function useTouchEventResizeHandler(parameters: useTouchEventResizeHandle
 
     let activePointerId: number | null = null;
     let session: ReturnType<typeof getSharedDragData> | null = null;
+    // Set instead of `session` when resizing a creation placeholder: it has no underlying
+    // event, so the gesture updates the creation placeholder in place rather than committing
+    // a drag/resize to an existing event.
+    let creationAnchor: {
+      start: SchedulerOccurrencePlaceholder['start'];
+      end: SchedulerOccurrencePlaceholder['end'];
+      surfaceType: SchedulerOccurrencePlaceholder['surfaceType'];
+      resourceId: SchedulerOccurrencePlaceholder['resourceId'];
+    } | null = null;
 
     // Maps a vertical pointer position to a precision-rounded date within the column.
     const getDateAtPointer = (clientY: number) => {
@@ -60,7 +69,7 @@ export function useTouchEventResizeHandler(parameters: useTouchEventResizeHandle
     };
 
     const onPointerMove = (event: PointerEvent) => {
-      if (session === null || event.pointerId !== activePointerId) {
+      if (event.pointerId !== activePointerId || (session === null && creationAnchor === null)) {
         return;
       }
       event.preventDefault();
@@ -70,15 +79,37 @@ export function useTouchEventResizeHandler(parameters: useTouchEventResizeHandle
         return;
       }
 
-      let newStart = session.start;
-      let newEnd = session.end;
+      // Resizing a creation placeholder: update it in place, keeping its `creation` type.
+      if (creationAnchor !== null) {
+        let newStart = creationAnchor.start;
+        let newEnd = creationAnchor.end;
+        if (side === 'start') {
+          const maxStartDate = adapter.addMinutes(creationAnchor.end, -EVENT_DRAG_PRECISION_MINUTE);
+          newStart = adapter.isBefore(cursorDate, maxStartDate) ? cursorDate : maxStartDate;
+        } else {
+          const minEndDate = adapter.addMinutes(creationAnchor.start, EVENT_DRAG_PRECISION_MINUTE);
+          newEnd = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
+        }
+
+        store.setOccurrencePlaceholder({
+          type: 'creation',
+          surfaceType: creationAnchor.surfaceType,
+          start: newStart,
+          end: newEnd,
+          resourceId: creationAnchor.resourceId,
+        });
+        return;
+      }
+
+      let newStart = session!.start;
+      let newEnd = session!.end;
       if (side === 'start') {
         // Keep at least one precision step between the new start and the fixed end.
-        const maxStartDate = adapter.addMinutes(session.end, -EVENT_DRAG_PRECISION_MINUTE);
+        const maxStartDate = adapter.addMinutes(session!.end, -EVENT_DRAG_PRECISION_MINUTE);
         newStart = adapter.isBefore(cursorDate, maxStartDate) ? cursorDate : maxStartDate;
       } else {
         // Keep at least one precision step between the fixed start and the new end.
-        const minEndDate = adapter.addMinutes(session.start, EVENT_DRAG_PRECISION_MINUTE);
+        const minEndDate = adapter.addMinutes(session!.start, EVENT_DRAG_PRECISION_MINUTE);
         newEnd = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
       }
 
@@ -87,10 +118,10 @@ export function useTouchEventResizeHandler(parameters: useTouchEventResizeHandle
         surfaceType: 'time-grid',
         start: newStart,
         end: newEnd,
-        eventId: session.eventId,
-        occurrenceKey: session.occurrenceKey,
-        originalOccurrence: session.originalOccurrence,
-        resourceId: session.originalOccurrence.resource ?? null,
+        eventId: session!.eventId,
+        occurrenceKey: session!.occurrenceKey,
+        originalOccurrence: session!.originalOccurrence,
+        resourceId: session!.originalOccurrence.resource ?? null,
       });
     };
 
@@ -103,9 +134,14 @@ export function useTouchEventResizeHandler(parameters: useTouchEventResizeHandle
       }
       activePointerId = null;
 
+      const wasResizingCreation = creationAnchor !== null;
       const wasResizing = session !== null;
       session = null;
-      if (!wasResizing) {
+      creationAnchor = null;
+
+      // A resized creation placeholder stays as-is — the user keeps editing the new event in
+      // the drawer; there is no existing event to commit the resize to.
+      if (wasResizingCreation || !wasResizing) {
         return;
       }
 
@@ -131,7 +167,18 @@ export function useTouchEventResizeHandler(parameters: useTouchEventResizeHandle
       event.stopPropagation();
       event.preventDefault();
 
-      session = getSharedDragData({ clientY: event.clientY });
+      const placeholder = schedulerOccurrencePlaceholderSelectors.value(store.state);
+      if (placeholder?.type === 'creation') {
+        // The placeholder has no underlying event, so `getSharedDragData` can't be used.
+        creationAnchor = {
+          start: placeholder.start,
+          end: placeholder.end,
+          surfaceType: placeholder.surfaceType,
+          resourceId: placeholder.resourceId,
+        };
+      } else {
+        session = getSharedDragData({ clientY: event.clientY });
+      }
       activePointerId = event.pointerId;
       handle.setPointerCapture(event.pointerId);
     };
@@ -150,17 +197,7 @@ export function useTouchEventResizeHandler(parameters: useTouchEventResizeHandle
         handle.releasePointerCapture(activePointerId);
       }
     };
-  }, [
-    ref,
-    side,
-    enabled,
-    store,
-    adapter,
-    columnStart,
-    columnEnd,
-    getSharedDragData,
-    rootRef,
-  ]);
+  }, [ref, side, enabled, store, adapter, columnStart, columnEnd, getSharedDragData, rootRef]);
 }
 
 export namespace useTouchEventResizeHandler {

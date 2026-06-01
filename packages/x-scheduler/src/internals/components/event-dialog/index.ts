@@ -1,6 +1,7 @@
 export {
   EventDialogContent,
   EventDialogProvider,
+  CompactEventDialogProvider,
   EventDialogTrigger,
   useEventDialogContext,
 } from './EventDialog';
