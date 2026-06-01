@@ -669,7 +669,8 @@ export const useGridDataSourceNestedLazyLoader = (
           dataRowIdToModelLookup,
           dataRowIds,
           tree: { ...tree },
-          totalRowCount: response.rowCount === undefined ? -1 : response.rowCount,
+          totalRowCount:
+            parentId === GRID_ROOT_GROUP_ID ? (response.rowCount ?? -1) : state.rows.totalRowCount,
         },
       }));
       privateApiRef.current.publishEvent('rowsSet');
