@@ -50,11 +50,10 @@ const NARROW_BREAKPOINT = 600;
  * `@container (max-width: 599.95px)` rule used in CSS so the JS
  * side can show/hide the drawer and menu button in sync.
  */
-function useContainerNarrow(ref: React.RefObject<HTMLElement | null>): boolean {
+function useContainerNarrow(el: HTMLElement | null): boolean {
   const [narrow, setNarrow] = React.useState(false);
 
   useEnhancedEffect(() => {
-    const el = ref.current;
     if (!el || typeof globalThis.ResizeObserver === 'undefined') {
       return undefined;
     }
@@ -67,7 +66,7 @@ function useContainerNarrow(ref: React.RefObject<HTMLElement | null>): boolean {
     });
     ro.observe(el);
     return () => ro.disconnect();
-  }, [ref]);
+  }, [el]);
 
   return narrow;
 }
@@ -122,7 +121,7 @@ interface ChatBoxContentProps {
   slots?: Partial<ChatBoxSlots>;
   slotProps?: ChatBoxSlotProps;
   features?: ChatBoxFeatures;
-  rootRef: React.RefObject<HTMLElement | null>;
+  rootEl: HTMLElement | null;
   layoutClassName?: string;
   conversationsPaneClassName?: string;
   threadPaneClassName?: string;
@@ -332,7 +331,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
     slots,
     slotProps,
     features,
-    rootRef,
+    rootEl,
     layoutClassName,
     conversationsPaneClassName,
     threadPaneClassName,
@@ -345,7 +344,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
 
   const autoScrollProp = features?.autoScroll ?? true;
 
-  const isNarrow = useContainerNarrow(rootRef);
+  const isNarrow = useContainerNarrow(rootEl);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const messageIds = useMessageIds();
