@@ -136,7 +136,6 @@ function getPackageVersion(pkg) {
 function main() {
   const changesetDir = process.argv[2] ?? path.join(process.cwd(), '.changeset');
   if (!fs.existsSync(changesetDir)) {
-    // eslint-disable-next-line no-console
     console.error(`No changeset directory at "${changesetDir}".`);
     process.exit(1);
   }

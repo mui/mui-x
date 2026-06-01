@@ -32,7 +32,7 @@ files too, rendered in the existing MUI X format.
 ### Hybrid coverage
 
 | Changelog section                                                            | Source                    |
-| ---------------------------------------------------------------------------- | ------------------------- |
+| :--------------------------------------------------------------------------- | :------------------------ |
 | Product sections (Data Grid, Pickers, Charts, Tree View, Scheduler, Codemod) | **changeset files**       |
 | Docs / Core / Miscellaneous                                                  | commit scrape (unchanged) |
 | Contributors + highlights                                                    | GitHub API (unchanged)    |
@@ -67,7 +67,7 @@ Optional extra detail rendered as an indented continuation line.
 ## Files
 
 | File                                          | Role                                                        |
-| --------------------------------------------- | ----------------------------------------------------------- |
+| :-------------------------------------------- | :---------------------------------------------------------- |
 | `config.mjs`                                  | Product → tier map, default tags, package index (shared)    |
 | `generate.mjs`                                | Render changesets → MUI X changelog format                  |
 | `validate.mjs`                                | Pattern checks (bump, tier convention, tag, summary)        |

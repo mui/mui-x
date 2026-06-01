@@ -110,17 +110,14 @@ function main() {
     const errors = validateFile(path.join(dir, file), index);
     if (errors.length > 0) {
       failed += 1;
-      // eslint-disable-next-line no-console
       console.error(`✗ ${file}`);
       for (const err of errors) {
-        // eslint-disable-next-line no-console
         console.error(`    - ${err}`);
       }
     }
   }
 
   if (failed > 0) {
-    // eslint-disable-next-line no-console
     console.error(`\n${failed}/${files.length} changeset file(s) failed validation.`);
     process.exit(1);
   }
