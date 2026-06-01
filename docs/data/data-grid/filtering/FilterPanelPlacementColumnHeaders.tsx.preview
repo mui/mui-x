@@ -1,0 +1,14 @@
+<DataGridPremium
+  {...data}
+  loading={loading}
+  showToolbar
+  slotProps={{
+    columnHeaders: {
+      ref: columnHeadersRef,
+    },
+    panel: {
+      placement: 'bottom-start',
+      target: columnHeadersRef.current,
+    },
+  }}
+/>
