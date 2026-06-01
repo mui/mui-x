@@ -276,5 +276,9 @@
   "276": "MUI X Charts: %s series with id=\"%s\" has no data. The chart cannot render this series without data. Provide a data property to the series or use the dataset prop.",
   "277": "MUI X Scheduler: adapter.getDayOfWeek returned an unexpected value (%s). Expected an integer in the range 1–7. Check that your adapter implements getDayOfWeek correctly.",
   "278": "MUI X Scheduler: weekStartsOn must be an integer between 0 (Sunday) and 6 (Saturday), but received %s.",
-  "279": "MUI X Charts: %s series with id=\"%s\" has incomplete datasetKeys.Properties %s are missing."
+  "279": "MUI X Charts: %s series with id=\"%s\" has incomplete datasetKeys.Properties %s are missing.",
+  "280": "MUI X Scheduler: <TimelineGrid.TitleRow /> and <TimelineGrid.EventRow /> must be rendered inside a <TimelineGrid.BodyRow />.",
+  "281": "MUI X Scheduler: EventTimelinePremiumVirtualizerContext is missing. Make sure the calling component is rendered inside <EventTimelinePremiumContent />.",
+  "282": "MUI X Scheduler: The timeline encountered an error while retrieving resources. This is likely a bug in MUI X. Please contact MUI support with details about your configuration and data.",
+  "283": "MUI X Scheduler: TitleColumnWidthProvider is missing."
 }

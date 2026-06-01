@@ -1846,6 +1846,9 @@ importers:
       '@mui/x-scheduler-internals-premium':
         specifier: workspace:^
         version: link:../x-scheduler-internals-premium/build
+      '@mui/x-virtualizer':
+        specifier: workspace:^
+        version: link:../x-virtualizer/build
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
