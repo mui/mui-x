@@ -47,6 +47,8 @@ export * from './plugins/featurePlugins/useChartVisibilityManager';
 export * from './plugins/featurePlugins/useChartKeyboardNavigation';
 export * from './plugins/featurePlugins/useChartClosestPoint';
 export * from './plugins/featurePlugins/useChartBrush';
+export * as useGeoProjectionSelectors from './plugins/featurePlugins/useGeoProjection/useGeoProjection.selectors';
+export * as useGeoProjectionTypes from './plugins/featurePlugins/useGeoProjection/useGeoProjection.types';
 export * from './plugins/featurePlugins/useChartItemClick';
 export * from './plugins/utils/selectors';
 export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
