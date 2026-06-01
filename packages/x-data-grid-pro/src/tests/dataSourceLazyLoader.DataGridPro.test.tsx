@@ -532,6 +532,79 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(rootChildren[50]).to.equal('row-50');
     });
 
+    it('should not re-apply stale expansion from before a sort to a later manual expansion', async () => {
+      // Three levels: G1 → G1a → G1a-leaf, plus leaf siblings to fill the viewport.
+      const deepTreeRows: Record<string, { id: string; name: string; childrenCount: number }[]> = {
+        '[]': [
+          { id: 'G1', name: 'G1', childrenCount: 1 },
+          { id: 'S1', name: 'S1', childrenCount: 0 },
+          { id: 'S2', name: 'S2', childrenCount: 0 },
+        ],
+        '["G1"]': [{ id: 'G1a', name: 'G1a', childrenCount: 1 }],
+        '["G1","G1a"]': [{ id: 'G1a-leaf', name: 'G1a-leaf', childrenCount: 0 }],
+      };
+
+      function TestDeepNestedLazy() {
+        apiRef = useGridApiRef();
+        const dataSource: GridDataSource = React.useMemo(
+          () => ({
+            getRows: async (params: GridGetRowsParams) => {
+              const rows = deepTreeRows[JSON.stringify(params.groupKeys ?? [])] ?? [];
+              const start = typeof params.start === 'number' ? params.start : 0;
+              const end = typeof params.end === 'number' ? params.end : rows.length - 1;
+              return { rows: rows.slice(start, end + 1), rowCount: rows.length };
+            },
+            getGroupKey: (row) => row.name,
+            getChildrenCount: (row) => row.childrenCount,
+          }),
+          [],
+        );
+
+        return (
+          <div style={{ width: 300, height: gridHeight }}>
+            <DataGridPro
+              apiRef={apiRef}
+              columns={[{ field: 'name', width: 200 }]}
+              dataSource={dataSource}
+              dataSourceCache={null}
+              lazyLoading
+              treeData
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+              }}
+              rowHeight={rowHeight}
+              columnHeaderHeight={columnHeaderHeight}
+              disableVirtualization={false}
+            />
+          </div>
+        );
+      }
+
+      render(<TestDeepNestedLazy />);
+      await waitFor(() => expect(apiRef.current!.getRow('G1')).not.to.equal(null));
+
+      // Expand the full chain so G1a is expanded before the sort snapshot is taken.
+      await act(async () => apiRef.current?.setRowChildrenExpansion('G1', true));
+      await waitFor(() => expect(apiRef.current!.getRow('G1a')).not.to.equal(null));
+      await act(async () => apiRef.current?.setRowChildrenExpansion('G1a', true));
+      await waitFor(() => expect(apiRef.current!.getRow('G1a-leaf')).not.to.equal(null));
+
+      // Sort: the tree is reset and the prior expansion is restored from the snapshot.
+      await act(async () => apiRef.current?.sortColumn('name', 'asc'));
+      await waitFor(() => expect(apiRef.current!.getRow('G1a-leaf')).not.to.equal(null));
+
+      // Manually collapse, then re-expand G1.
+      await act(async () => apiRef.current?.setRowChildrenExpansion('G1', false));
+      await waitFor(() => expect(apiRef.current!.getRow('G1a')).to.equal(null));
+      await act(async () => apiRef.current?.setRowChildrenExpansion('G1', true));
+      await waitFor(() => expect(apiRef.current!.getRow('G1a')).not.to.equal(null));
+
+      // The manual re-expansion must use the configured defaults (collapsed), not the
+      // pre-sort snapshot that had `G1a` expanded.
+      expect(apiRef.current!.getRowNode<GridGroupNode>('G1a')!.childrenExpanded).to.equal(false);
+      expect(apiRef.current!.getRow('G1a-leaf')).to.equal(null);
+    });
+
     it('should periodically revalidate root rows when dataSourceRevalidateMs is set', async () => {
       const localFetchRowsSpy = spy();
       render(
