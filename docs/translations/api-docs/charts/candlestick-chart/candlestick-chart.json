@@ -102,7 +102,7 @@
       }
     },
     "series": {
-      "description": "The series to display in the candlestick chart. An array of [[OHLCSeries]] objects.<br>Currently, only one OHLC series is supported. If would like to display more than one OHLC series, open an issue at <a href=\"https://github.com/mui/mui-x\">https://github.com/mui/mui-x</a> explaining your use case."
+      "description": "The series to display in the candlestick chart. An array of OHLCSeries objects.<br>Currently, only one OHLC series is supported. If would like to display more than one OHLC series, open an issue at <a href=\"https://github.com/mui/mui-x\">https://github.com/mui/mui-x</a> explaining your use case."
     },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {
@@ -121,10 +121,10 @@
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
     "xAxis": {
-      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of [[AxisConfig]] objects."
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
     "yAxis": {
-      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of [[AxisConfig]] objects."
+      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
     "zoomData": { "description": "The list of zoom data related to each axis." },
     "zoomInteractionConfig": { "description": "Configuration for zoom interactions." }
