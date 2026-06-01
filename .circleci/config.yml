@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  code-infra: https://raw.githubusercontent.com/mui/mui-public/d4c42f7a8a179675e95cd1ea1e56c69322dbc3b3/.circleci/orbs/code-infra.yml
+  code-infra: https://raw.githubusercontent.com/mui/mui-public/b11615377a5f3bd8a6bfbe5cb7fde87d7d55ff7b/.circleci/orbs/code-infra.yml
 
 parameters:
   browserstack-force:
@@ -78,41 +78,8 @@ commands:
         type: string
         default: << pipeline.parameters.react-version >>
     steps:
-      # NOTE: do not use the orb's `package-overrides` for non-stable versions.
-      # That path shells out to `pnpm dlx @mui/internal-code-infra@canary
-      # set-version-overrides`, whose install runs in an isolated /tmp dir that
-      # cannot see this repo's `pnpm-workspace.yaml`. With a cold CI store pnpm
-      # must build `sharp`/`unrs-resolver` there, and since `allowBuilds` does
-      # not apply it drops into the interactive "Choose which packages to build"
-      # picker and hangs until the 10-minute idle timeout. The orb's
-      # `--config.strict-dep-builds=false` only downgrades the error to a
-      # warning; it does not suppress the picker (verified on pnpm 11.1.0,
-      # 11.1.2 and 11.5.0). Instead install with empty overrides (plain
-      # `pnpm install` in the workspace, which honours `allowBuilds`) then apply
-      # overrides via the workspace-installed `code-infra`, whose `pnpm dedupe`
-      # also runs in-workspace and never hits the picker.
       - code-infra/install-deps:
-          package-overrides: ''
-      - run:
-          name: Apply package version overrides
-          # `set-version-overrides` ends with `pnpm dedupe`, which on pnpm 11
-          # exceeds Node's default ~2GB old-space heap on this lockfile and dies
-          # with "Reached heap limit" (same as the test_static dedupe). Give it
-          # the same 4GB cap.
-          environment:
-            NODE_OPTIONS: --max-old-space-size=4096
-          command: |
-            args=''
-            if [ '<< parameters.react-version >>' != 'stable' ]; then
-              args="$args react@<< parameters.react-version >>"
-            fi
-            if [ '<< pipeline.parameters.material-ui-version >>' != 'stable' ]; then
-              args="$args @mui/material@<< pipeline.parameters.material-ui-version >>"
-            fi
-            args="${args# }"
-            if [ -n "$args" ]; then
-              pnpm exec code-infra set-version-overrides --pkg $args
-            fi
+          package-overrides: react@<< parameters.react-version >> @mui/material@<< pipeline.parameters.material-ui-version >>
 
 jobs:
   test_unit:
