@@ -23,7 +23,7 @@ function CustomToolbar({ setFilterButtonEl }) {
   );
 }
 
-export default function CustomFilterPanelPosition() {
+export default function CustomFilterPanelPositionNoSnap() {
   const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,

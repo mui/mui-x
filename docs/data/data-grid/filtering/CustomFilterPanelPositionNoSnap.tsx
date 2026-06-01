@@ -32,7 +32,7 @@ function CustomToolbar({ setFilterButtonEl }: GridSlotProps['toolbar']) {
   );
 }
 
-export default function CustomFilterPanelPosition() {
+export default function CustomFilterPanelPositionNoSnap() {
   const { data, loading } = useDemoData({
     dataSet: 'Employee',
     visibleFields: VISIBLE_FIELDS,
