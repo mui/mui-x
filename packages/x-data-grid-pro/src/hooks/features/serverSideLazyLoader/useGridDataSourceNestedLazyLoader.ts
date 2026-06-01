@@ -627,12 +627,17 @@ export const useGridDataSourceNestedLazyLoader = (
         seenIds.add(rowId);
       }
 
+      // Keep skeleton rows in place (for both root and nested parents) instead of
+      // filtering them out. Dropping them here would collapse any unfetched gap
+      // above the replaced range — e.g. after a jump/fast scroll that loads a
+      // middle range while the rows above it are still skeletons — because
+      // `addRootSkeletonRows` only appends padding at the end. Leaving the
+      // skeletons at their indices keeps loaded rows at their real positions.
+      // The sort/filter reset path starts from an empty children list, so there are no
+      // skeletons to preserve and `addRootSkeletonRows` pads normally.
       tree[parentId] = {
         ...targetGroup,
-        children:
-          parentId === GRID_ROOT_GROUP_ID
-            ? targetGroupChildren.filter((childId) => tree[childId]?.type !== 'skeletonRow')
-            : targetGroupChildren,
+        children: targetGroupChildren,
         childrenFromPath: targetGroupChildrenFromPath,
       };
 

@@ -463,6 +463,75 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       );
     }
 
+    it('should keep loaded root rows at their real index after a scroll jump', async () => {
+      const ROOT_ROW_COUNT = 100;
+      const rootRows = Array.from({ length: ROOT_ROW_COUNT }, (_, index) => ({
+        id: `row-${index}`,
+        name: `Row ${index}`,
+        childrenCount: 0,
+      }));
+
+      function TestGapCase() {
+        apiRef = useGridApiRef();
+        const dataSource: GridDataSource = React.useMemo(
+          () => ({
+            getRows: async (params: GridGetRowsParams) => {
+              if ((params.groupKeys ?? []).length > 0) {
+                return { rows: [], rowCount: 0 };
+              }
+              const start = typeof params.start === 'number' ? params.start : 0;
+              const end = typeof params.end === 'number' ? params.end : rootRows.length - 1;
+              return { rows: rootRows.slice(start, end + 1), rowCount: rootRows.length };
+            },
+            getGroupKey: (row) => row.name,
+            getChildrenCount: (row) => row.childrenCount,
+          }),
+          [],
+        );
+
+        return (
+          <div style={{ width: 300, height: gridHeight }}>
+            <DataGridPro
+              apiRef={apiRef}
+              columns={[{ field: 'name', width: 200 }]}
+              dataSource={dataSource}
+              dataSourceCache={null}
+              lazyLoading
+              treeData
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+              }}
+              rowHeight={rowHeight}
+              columnHeaderHeight={columnHeaderHeight}
+              disableVirtualization={false}
+            />
+          </div>
+        );
+      }
+
+      render(<TestGapCase />);
+
+      // The first page of root rows loads at the top.
+      await waitFor(() => expect(apiRef.current!.getRow('row-0')).not.to.equal(null));
+
+      const getRootChildren = () =>
+        (apiRef.current!.state.rows.tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
+
+      // Jump straight to the middle, skipping the rows in between so they stay skeletons.
+      await act(async () => {
+        apiRef.current?.scroll({ top: 50 * rowHeight });
+      });
+
+      // The row scrolled into view gets fetched.
+      await waitFor(() => expect(apiRef.current!.getRow('row-50')).not.to.equal(null));
+
+      const rootChildren = getRootChildren();
+      // The loaded row must stay at index 50, with the unfetched range above it still skeletons.
+      expect(rootChildren.length).to.equal(ROOT_ROW_COUNT);
+      expect(rootChildren.indexOf('row-50')).to.equal(50);
+      expect(rootChildren[50]).to.equal('row-50');
+    });
+
     it('should periodically revalidate root rows when dataSourceRevalidateMs is set', async () => {
       const localFetchRowsSpy = spy();
       render(
