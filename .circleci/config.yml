@@ -95,6 +95,12 @@ commands:
           package-overrides: ''
       - run:
           name: Apply package version overrides
+          # `set-version-overrides` ends with `pnpm dedupe`, which on pnpm 11
+          # exceeds Node's default ~2GB old-space heap on this lockfile and dies
+          # with "Reached heap limit" (same as the test_static dedupe). Give it
+          # the same 4GB cap.
+          environment:
+            NODE_OPTIONS: --max-old-space-size=4096
           command: |
             args=''
             if [ '<< parameters.react-version >>' != 'stable' ]; then
