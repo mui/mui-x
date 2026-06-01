@@ -21,7 +21,7 @@ current changelog output essentially unchanged.
 
 Adopt [changesets](https://github.com/changesets/changesets) for **bump intent
 and version computation**, and source the **changelog body** from the changeset
-files too, rendered in the existing MUI X format.
+files too, rendered in the existing MUI X format.
 
 - Each PR that changes published `packages/x-*` source adds a `.changeset/*.md`
   file declaring the affected package(s), the bump, and a human-readable
@@ -46,7 +46,7 @@ internal PRs are exempt. Renovate PRs are exempt.
   Pro/Premium inherit via the "Same changes as ..., plus:" line. A Pro-only
   change lists `@mui/x-data-grid-pro`. CI enforces "at most one tier per product".
 - **`tag` frontmatter** (optional) sets the `[Tag]` bullet prefix for
-  component-level precision (e.g. `DateRangeCalendar`). Omitted → defaults from
+  component-level precision (for example, `DateRangeCalendar`). Omitted → defaults from
   the package (`x-data-grid` → `DataGrid`).
 - **`pr` / `author` frontmatter** (optional) override attribution. When absent,
   the generator git-blames the changeset file to its PR squash-merge commit.
@@ -69,7 +69,7 @@ Optional extra detail rendered as an indented continuation line.
 | File                                          | Role                                                        |
 | :-------------------------------------------- | :---------------------------------------------------------- |
 | `config.mjs`                                  | Product → tier map, default tags, package index (shared)    |
-| `generate.mjs`                                | Render changesets → MUI X changelog format                  |
+| `generate.mjs`                                | Render changesets → MUI X changelog format                  |
 | `validate.mjs`                                | Pattern checks (bump, tier convention, tag, summary)        |
 | `sample/.changeset/`                          | Example changesets for the prototype                        |
 | `../../.github/workflows/changeset-check.yml` | CI: validate patterns + require changeset on source changes |
