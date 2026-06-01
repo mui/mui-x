@@ -23,10 +23,7 @@ export interface GridPanelClasses {
   paper: string;
 }
 
-export interface GridPanelProps extends Pick<
-  GridSlotProps['basePopper'],
-  'id' | 'className' | 'target' | 'flip'
-> {
+export interface GridPanelProps extends Omit<GridSlotProps['basePopper'], 'ref'> {
   ref?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   /**
@@ -134,11 +131,48 @@ GridPanel.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  clickAwayMouseEvent: PropTypes.oneOf([
+    'onClick',
+    'onMouseDown',
+    'onMouseUp',
+    'onPointerDown',
+    'onPointerUp',
+    false,
+  ]),
+  clickAwayTouchEvent: PropTypes.oneOf(['onTouchEnd', 'onTouchStart', false]),
   flip: PropTypes.bool,
+  focusTrap: PropTypes.bool,
   id: PropTypes.string,
+  onClickAway: PropTypes.func,
   onClose: PropTypes.func,
+  onDidHide: PropTypes.func,
+  onDidShow: PropTypes.func,
+  onExited: PropTypes.func,
   open: PropTypes.bool.isRequired,
+  /**
+   * @default 'bottom'
+   */
+  placement: PropTypes.oneOf([
+    'auto-end',
+    'auto-start',
+    'auto',
+    'bottom-end',
+    'bottom-start',
+    'bottom',
+    'left-end',
+    'left-start',
+    'left',
+    'right-end',
+    'right-start',
+    'right',
+    'top-end',
+    'top-start',
+    'top',
+  ]),
+  role: PropTypes.string,
+  style: PropTypes.object,
   target: PropTypes /* @typescript-to-proptypes-ignore */.any,
+  transition: PropTypes.bool,
 } as any;
 
 export { GridPanel };
