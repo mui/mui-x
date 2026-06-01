@@ -940,6 +940,10 @@ export const useGridDataSourceNestedLazyLoader = (
 
   const handleRowExpansionChange = React.useCallback<GridEventListener<'rowExpansionChange'>>(
     (node) => {
+      // A manual expand/collapse ends the post-sort/filter restoration cascade.
+      // Drop the pre-reset snapshot so subsequent nested fetches read expansion state
+      // from the live tree instead of re-applying stale expansion from before the last reset.
+      previousTreeRef.current = null;
       if (node.childrenExpanded) {
         fetchVisibleSkeletonRows();
         return;
