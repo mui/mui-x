@@ -30,7 +30,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build",
+    "build": "code-infra build --flat",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -116,6 +116,8 @@
   },
   "exports": {
     ".": "./src/index.ts",
+    "./icons": "./src/icons/index.tsx",
+    "./internals/demo": "./src/internals/demo/index.ts",
     "./*": "./src/*/index.ts"
   }
 }

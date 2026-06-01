@@ -36,9 +36,9 @@ export const selectorChartsHighlightScopePerSeriesId = createSelector(
 export const selectorChartsHighlightedItem = createSelectorMemoized(
   selectHighlight,
   selectorChartsKeyboardItem,
-  function selectorChartsHighlightedItem(highlight, keyboardItem) {
-    return highlight.isControlled || highlight.lastUpdate === 'pointer'
-      ? highlight.item
+  function selectorChartsHighlightedItem(selectorHighlight, keyboardItem) {
+    return selectorHighlight.isControlled || selectorHighlight.lastUpdate === 'pointer'
+      ? selectorHighlight.item
       : keyboardItem;
   },
 );

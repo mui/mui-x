@@ -11,6 +11,17 @@ async function main() {
       // TODO: Seed crawler with stored links from e.g. mui.com/x/link-structure.json
       // /^\/(base-ui|joy-ui|store|toolpad)(\/|$)/,
     ],
+    ignores: [
+      // ComponentApiBuilder in @mui/monorepo unconditionally annotates the
+      // `slots` prop with `slotsApi: true`, which renders a
+      // "[Slots API](#slots)" link in the props table. However, SlotsSection
+      // bails out (returns null) when the component exposes no actual slot
+      // entries, so the `#slots` anchor never lands on the page. Affects
+      // ~17 charts/pickers pages on v8.x (e.g. bar-chart-premium, charts-x-axis,
+      // date-field). Remove this ignore once the upstream builder stops
+      // emitting the slotsApi annotation for components without slot data.
+      { href: '#slots' },
+    ],
     knownTargetsDownloadUrl: ['https://v7.mui.com/material-ui/link-structure.json'],
   });
 
