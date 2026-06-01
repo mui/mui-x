@@ -53,6 +53,7 @@ function createTestExecutor(options?: {
   const dataset = options?.dataset ?? DATASET;
 
   const guards: Guards = buildChartGuards(options?.guardOverrides);
+  let focus = {};
   const host = createChartsHostAdapter({
     getState: () => state,
     setState: (next) => {
@@ -60,6 +61,10 @@ function createTestExecutor(options?: {
       committed = next;
     },
     getDataset: () => dataset,
+    getFocus: () => focus,
+    setFocus: (next) => {
+      focus = next;
+    },
   });
 
   const commandRegistry = buildCommandRegistry<ChartsHostAdapter, ChartCopilotState>(guards, [
@@ -94,7 +99,13 @@ describe('Charts copilot reconcilers', () => {
     });
 
     it('rejects an unrenderable chart type in validate()', () => {
-      expect(chartTypeHandler.validate?.({ op: 'replace', path: '/type', value: 'scatter' }, EMPTY_CHART_COPILOT_STATE, {} as any)).toEqual({
+      expect(
+        chartTypeHandler.validate?.(
+          { op: 'replace', path: '/type', value: 'scatter' },
+          EMPTY_CHART_COPILOT_STATE,
+          {} as any,
+        ),
+      ).toEqual({
         ok: false,
         reason: expect.stringContaining('not renderable'),
       });
@@ -184,7 +195,10 @@ describe('Charts copilot reconcilers', () => {
     });
 
     it('rejects an unknown configuration key for the chart type in validate()', () => {
-      const doc: ChartCopilotState = { ...snapshotState(EMPTY_CHART_COPILOT_STATE), type: 'column' };
+      const doc: ChartCopilotState = {
+        ...snapshotState(EMPTY_CHART_COPILOT_STATE),
+        type: 'column',
+      };
       expect(
         chartConfigurationHandler.validate?.(
           { op: 'add', path: '/configuration/notARealKey', value: 1 },
@@ -253,14 +267,14 @@ describe('Charts copilot reconcilers', () => {
   });
 
   describe('/annotations and /overlays', () => {
-    it('adds a reference-line annotation', () => {
+    it('adds the first reference-line annotation via the whole-slice path', () => {
       const { executor, getCommitted } = createTestExecutor();
       const result = executor.applyEnvelope(
         envelope([
           {
             op: 'add',
-            path: '/annotations/target',
-            value: { id: 'target', kind: 'refLine', axis: 'y', value: 150 },
+            path: '/annotations',
+            value: { target: { id: 'target', kind: 'refLine', axis: 'y', value: 150 } },
           },
         ]),
       );
@@ -273,6 +287,23 @@ describe('Charts copilot reconcilers', () => {
       });
     });
 
+    it('adds an annotation by id once the slice exists', () => {
+      const { executor, getCommitted } = createTestExecutor({
+        initialState: { ...snapshotState(EMPTY_CHART_COPILOT_STATE), annotations: {} },
+      });
+      const result = executor.applyEnvelope(
+        envelope([
+          {
+            op: 'add',
+            path: '/annotations/peak',
+            value: { id: 'peak', kind: 'marker', at: 'max' },
+          },
+        ]),
+      );
+      expect(result.applied).toHaveLength(1);
+      expect(getCommitted()?.annotations?.peak?.kind).toBe('marker');
+    });
+
     it('rejects an annotation with an unknown kind', () => {
       const { executor } = createTestExecutor();
       const result = executor.applyEnvelope(
@@ -282,7 +313,7 @@ describe('Charts copilot reconcilers', () => {
       expect(result.skipped[0].reason).toBe('invalid');
     });
 
-    it('adds an SMA overlay on a line chart', () => {
+    it('adds an SMA overlay on a line chart via the whole-slice path', () => {
       const { executor, getCommitted } = createTestExecutor({
         initialState: {
           ...snapshotState(EMPTY_CHART_COPILOT_STATE),
@@ -294,8 +325,8 @@ describe('Charts copilot reconcilers', () => {
         envelope([
           {
             op: 'add',
-            path: '/overlays/sma',
-            value: { id: 'sma', kind: 'sma', target: 'revenue', period: 3 },
+            path: '/overlays',
+            value: { sma: { id: 'sma', kind: 'sma', target: 'revenue', period: 3 } },
           },
         ]),
       );
@@ -311,7 +342,11 @@ describe('Charts copilot reconcilers', () => {
       const ctx = { adapter: { api: { getDataset: () => DATASET } } } as any;
       expect(
         chartOverlayHandler.validate?.(
-          { op: 'add', path: '/overlays/sma', value: { id: 'sma', kind: 'sma', target: 'revenue' } },
+          {
+            op: 'add',
+            path: '/overlays/sma',
+            value: { id: 'sma', kind: 'sma', target: 'revenue' },
+          },
           doc,
           ctx,
         ),

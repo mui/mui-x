@@ -35,6 +35,10 @@ export interface ChartCopilotClasses {
   stepHistoryItem: string;
   /** Styles applied to the one-line numeric answer banner. */
   answerBanner: string;
+  /** Styles applied to the proactive anomaly suggestion chip. */
+  proactiveChip: string;
+  /** Styles applied to the focus breadcrumb (zoom/highlight indicator). */
+  focusBreadcrumb: string;
 }
 
 export type ChartCopilotClassKey = keyof ChartCopilotClasses;
@@ -60,6 +64,8 @@ export const chartCopilotClasses: ChartCopilotClasses = generateUtilityClasses('
   'stepHistory',
   'stepHistoryItem',
   'answerBanner',
+  'proactiveChip',
+  'focusBreadcrumb',
 ]);
 
 const slots: Record<ChartCopilotClassKey, string[]> = {
@@ -79,6 +85,8 @@ const slots: Record<ChartCopilotClassKey, string[]> = {
   stepHistory: ['stepHistory'],
   stepHistoryItem: ['stepHistoryItem'],
   answerBanner: ['answerBanner'],
+  proactiveChip: ['proactiveChip'],
+  focusBreadcrumb: ['focusBreadcrumb'],
 };
 
 export const useChartCopilotUtilityClasses = (

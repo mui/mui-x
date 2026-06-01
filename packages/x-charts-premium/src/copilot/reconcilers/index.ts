@@ -111,7 +111,8 @@ export const chartDimensionsHandler: ChartsPatchHandler = {
   phase: 'chart',
   tier: 2,
   plan: 'premium',
-  validate: (_op, doc, ctx) => validateItems(doc.dimensions, ctx.adapter.api.getDataset(), { requireNumeric: false }),
+  validate: (_op, doc, ctx) =>
+    validateItems(doc.dimensions, ctx.adapter.api.getDataset(), { requireNumeric: false }),
   reconcile: (doc, _op, ctx) => commit(doc, ctx),
 };
 
@@ -123,7 +124,8 @@ export const chartValuesHandler: ChartsPatchHandler = {
   phase: 'chart',
   tier: 2,
   plan: 'premium',
-  validate: (_op, doc, ctx) => validateItems(doc.values, ctx.adapter.api.getDataset(), { requireNumeric: true }),
+  validate: (_op, doc, ctx) =>
+    validateItems(doc.values, ctx.adapter.api.getDataset(), { requireNumeric: true }),
   reconcile: (doc, _op, ctx) => commit(doc, ctx),
 };
 
@@ -335,9 +337,91 @@ const OVERLAY_KINDS = new Set(['sma', 'ema', 'bollinger', 'forecast', 'trend', '
 /** Overlays are line series, so they only make sense on line/area charts. */
 const OVERLAY_CHART_TYPES = new Set<ChartCopilotChartType>(['line', 'area']);
 
-/** `/annotations/<id>` — reference lines / bands / markers / callouts. */
+function validateAnnotationValue(value: unknown, dataset: ChartCopilotDataset): ValidationResult {
+  const spec = value as Partial<AnnotationSpec> | null;
+  if (!spec || typeof spec !== 'object') {
+    return invalid(`annotation must be an object`);
+  }
+  if (!spec.kind || !ANNOTATION_KINDS.has(spec.kind)) {
+    return invalid(
+      `annotation kind '${String(spec.kind)}' is not one of refLine, band, marker, callout`,
+    );
+  }
+  if (spec.target !== undefined && !columnByField(dataset, spec.target)) {
+    return invalid(`annotation target '${spec.target}' is not a column in the bound dataset`);
+  }
+  if (spec.kind === 'band' && (typeof spec.from !== 'number' || typeof spec.to !== 'number')) {
+    return invalid(`a band annotation requires numeric 'from' and 'to' bounds`);
+  }
+  if (spec.kind === 'marker' && spec.at === undefined) {
+    return invalid(`a marker annotation requires 'at' (max, min, anomaly, or an index)`);
+  }
+  return ok();
+}
+
+function validateOverlayValue(
+  value: unknown,
+  doc: ChartCopilotState,
+  dataset: ChartCopilotDataset,
+): ValidationResult {
+  const spec = value as Partial<OverlaySpec> | null;
+  if (!spec || typeof spec !== 'object') {
+    return invalid(`overlay must be an object`);
+  }
+  if (!spec.kind || !OVERLAY_KINDS.has(spec.kind)) {
+    return invalid(`overlay kind '${String(spec.kind)}' is not a known overlay`);
+  }
+  if (!OVERLAY_CHART_TYPES.has(doc.type)) {
+    return invalid(
+      `overlays are only supported on line and area charts, not '${doc.type}' — switch the chart type first`,
+    );
+  }
+  const column = spec.target ? columnByField(dataset, spec.target) : undefined;
+  if (!column) {
+    return invalid(`overlay target '${String(spec.target)}' is not a column in the bound dataset`);
+  }
+  if (column.type !== 'number') {
+    return invalid(`overlay target '${spec.target}' must reference a numeric column`);
+  }
+  if (spec.period !== undefined && (typeof spec.period !== 'number' || spec.period < 1)) {
+    return invalid(`overlay period must be a number >= 1`);
+  }
+  return ok();
+}
+
+// Validate each entry of a whole `/annotations` or `/overlays` map.
+function validateSlice(
+  value: unknown,
+  validateEntry: (entry: unknown) => ValidationResult,
+): ValidationResult {
+  if (!value || typeof value !== 'object') {
+    return invalid(`expected a map of definitions keyed by id`);
+  }
+  for (const entry of Object.values(value as Record<string, unknown>)) {
+    const result = validateEntry(entry);
+    if (!result.ok) {
+      return result;
+    }
+  }
+  return ok();
+}
+
+/** `/annotations/<id>` — one reference line / band / marker / callout. */
 export const chartAnnotationHandler: ChartsPatchHandler = {
   path: '/annotations/<id>',
+  allowedOps: ['add', 'replace', 'remove'],
+  guard: 'annotate',
+  phase: 'chart',
+  tier: 2,
+  plan: 'premium',
+  validate: (op, _doc, ctx) =>
+    op.op === 'remove' ? ok() : validateAnnotationValue(op.value, ctx.adapter.api.getDataset()),
+  reconcile: (doc, _op, ctx) => commit(doc, ctx),
+};
+
+/** `/annotations` — replace/add the whole annotation map (works from empty). */
+export const chartAnnotationsHandler: ChartsPatchHandler = {
+  path: '/annotations',
   allowedOps: ['add', 'replace', 'remove'],
   guard: 'annotate',
   phase: 'chart',
@@ -347,32 +431,28 @@ export const chartAnnotationHandler: ChartsPatchHandler = {
     if (op.op === 'remove') {
       return ok();
     }
-    const spec = op.value as Partial<AnnotationSpec> | null;
-    if (!spec || typeof spec !== 'object') {
-      return invalid(`annotation must be an object`);
-    }
-    if (!spec.kind || !ANNOTATION_KINDS.has(spec.kind)) {
-      return invalid(
-        `annotation kind '${String(spec.kind)}' is not one of refLine, band, marker, callout`,
-      );
-    }
-    if (spec.target !== undefined && !columnByField(ctx.adapter.api.getDataset(), spec.target)) {
-      return invalid(`annotation target '${spec.target}' is not a column in the bound dataset`);
-    }
-    if (spec.kind === 'band' && (typeof spec.from !== 'number' || typeof spec.to !== 'number')) {
-      return invalid(`a band annotation requires numeric 'from' and 'to' bounds`);
-    }
-    if (spec.kind === 'marker' && spec.at === undefined) {
-      return invalid(`a marker annotation requires 'at' (max, min, anomaly, or an index)`);
-    }
-    return ok();
+    const dataset = ctx.adapter.api.getDataset();
+    return validateSlice(op.value, (entry) => validateAnnotationValue(entry, dataset));
   },
   reconcile: (doc, _op, ctx) => commit(doc, ctx),
 };
 
-/** `/overlays/<id>` — computed line overlays (SMA/EMA/forecast/trend/…). */
+/** `/overlays/<id>` — one computed line overlay (SMA/EMA/forecast/trend/…). */
 export const chartOverlayHandler: ChartsPatchHandler = {
   path: '/overlays/<id>',
+  allowedOps: ['add', 'replace', 'remove'],
+  guard: 'annotate',
+  phase: 'chart',
+  tier: 2,
+  plan: 'premium',
+  validate: (op, doc, ctx) =>
+    op.op === 'remove' ? ok() : validateOverlayValue(op.value, doc, ctx.adapter.api.getDataset()),
+  reconcile: (doc, _op, ctx) => commit(doc, ctx),
+};
+
+/** `/overlays` — replace/add the whole overlay map (works from empty). */
+export const chartOverlaysHandler: ChartsPatchHandler = {
+  path: '/overlays',
   allowedOps: ['add', 'replace', 'remove'],
   guard: 'annotate',
   phase: 'chart',
@@ -382,29 +462,8 @@ export const chartOverlayHandler: ChartsPatchHandler = {
     if (op.op === 'remove') {
       return ok();
     }
-    const spec = op.value as Partial<OverlaySpec> | null;
-    if (!spec || typeof spec !== 'object') {
-      return invalid(`overlay must be an object`);
-    }
-    if (!spec.kind || !OVERLAY_KINDS.has(spec.kind)) {
-      return invalid(`overlay kind '${String(spec.kind)}' is not a known overlay`);
-    }
-    if (!OVERLAY_CHART_TYPES.has(doc.type)) {
-      return invalid(
-        `overlays are only supported on line and area charts, not '${doc.type}' — switch the chart type first`,
-      );
-    }
-    const column = spec.target ? columnByField(ctx.adapter.api.getDataset(), spec.target) : undefined;
-    if (!column) {
-      return invalid(`overlay target '${String(spec.target)}' is not a column in the bound dataset`);
-    }
-    if (column.type !== 'number') {
-      return invalid(`overlay target '${spec.target}' must reference a numeric column`);
-    }
-    if (spec.period !== undefined && (typeof spec.period !== 'number' || spec.period < 1)) {
-      return invalid(`overlay period must be a number >= 1`);
-    }
-    return ok();
+    const dataset = ctx.adapter.api.getDataset();
+    return validateSlice(op.value, (entry) => validateOverlayValue(entry, doc, dataset));
   },
   reconcile: (doc, _op, ctx) => commit(doc, ctx),
 };
@@ -418,6 +477,8 @@ export const ALL_CHART_PATCH_HANDLERS: ChartsPatchHandler[] = [
   chartConfigurationHandler,
   chartTransformHandler,
   chartTransformKeyHandler,
+  chartAnnotationsHandler,
   chartAnnotationHandler,
+  chartOverlaysHandler,
   chartOverlayHandler,
 ];

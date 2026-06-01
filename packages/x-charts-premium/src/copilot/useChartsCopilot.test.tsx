@@ -67,6 +67,8 @@ function renderCopilot(state: { current: ChartCopilotState }, inner: ChatAdapter
         state.current = next;
       },
       getDataset: () => DATASET,
+      getFocus: () => ({}),
+      setFocus: () => {},
     }),
   );
 }
@@ -74,7 +76,10 @@ function renderCopilot(state: { current: ChartCopilotState }, inner: ChatAdapter
 describe('useChartsCopilot', () => {
   it('applies an envelope to the controlled chart state (sync path)', () => {
     const state = { current: snapshotState(EMPTY_CHART_COPILOT_STATE) };
-    const { result } = renderCopilot(state, createMockAdapter(() => []));
+    const { result } = renderCopilot(
+      state,
+      createMockAdapter(() => []),
+    );
 
     result.current.applyEnvelope({
       setGridState: JSON.stringify({ op: 'replace', path: '/type', value: 'line' }),
@@ -93,6 +98,8 @@ describe('useChartsCopilot', () => {
           state.current = next;
         },
         getDataset: () => DATASET,
+        getFocus: () => ({}),
+        setFocus: () => {},
         features: { chartsIntegration: false },
       }),
     );

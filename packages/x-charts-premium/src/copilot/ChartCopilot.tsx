@@ -6,6 +6,8 @@ import type { ChatAdapter, ChatOnFinish, ChatSuggestion } from '@mui/x-chat-head
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 import { ChartsRenderer, type ChartsRendererProps } from '../ChartsRenderer';
 import { EMPTY_CHART_COPILOT_STATE, type ChartCopilotState } from './chartState';
+import type { AnnotationSpec } from './annotations/types';
+import { EMPTY_FOCUS, resolveZoomData, type ChartFocusState } from './chartFocusState';
 import { resolveForRenderer, type ChartCopilotDataset } from './resolveForRenderer';
 import { resolveAnnotations, resolveOverlaySeries } from './resolveAnnotations';
 import { useChartsCopilot, type UseChartsCopilotReturn } from './useChartsCopilot';
@@ -15,11 +17,16 @@ import { useChartCopilotHistory } from './history';
 import {
   AnalyzeMenu,
   AnswerBanner,
+  ChartDataTable,
   ChartsCopilotPanel,
   ChartsCopilotPanelTrigger,
   ChartsCopilotProvider,
+  FocusBreadcrumb,
+  ProactiveAnomalyChip,
   StepHistory,
 } from './panel';
+
+const FOCUS_X_AXIS_ID = 'copilot-focus-x';
 
 export interface ChartCopilotProps {
   /** The dataset the chart is resolved against. */
@@ -146,61 +153,118 @@ interface ChartCopilotChartProps {
   height?: number;
   // When provided, renders this node (e.g. the Copilot trigger) in the toolbar.
   toolbarExtra?: React.ReactNode;
+  // When provided, shows the proactive anomaly suggestion chip (Copilot-only).
+  onMarkAnomaly?: (spec: AnnotationSpec) => void;
+  // Ephemeral Focus view state (zoom + highlight).
+  focus?: ChartFocusState;
 }
 
 function ChartCopilotChart(props: ChartCopilotChartProps) {
-  const { state, dataset, height, toolbarExtra } = props;
-  const { rendererProps, analyzeSeries, annotations } = React.useMemo(() => {
-    const resolved = resolveForRenderer(state, dataset);
-    const configuration =
-      height !== undefined ? { ...resolved.configuration, height } : resolved.configuration;
+  const { state, dataset, height, toolbarExtra, onMarkAnomaly, focus = EMPTY_FOCUS } = props;
+  const { rendererProps, analyzeSeries, annotations, categories, dimensionLabel } =
+    React.useMemo(() => {
+      const resolved = resolveForRenderer(state, dataset);
+      const configuration =
+        height !== undefined ? { ...resolved.configuration, height } : resolved.configuration;
 
-    // Overlays (SMA/trend/…) are line series, so only line/area charts host them.
-    // They are computed here from the *transformed* values, never cached, so they
-    // stay correct after a data-shaping change.
-    const supportsOverlays = state.type === 'line' || state.type === 'area';
-    const overlaySeries = supportsOverlays
-      ? resolveOverlaySeries(state.overlays, resolved.values)
-      : [];
-    const values =
-      overlaySeries.length > 0 ? [...resolved.values, ...overlaySeries] : resolved.values;
+      // Overlays (SMA/trend/…) are line series, so only line/area charts host them.
+      // They are computed here from the *transformed* values, never cached, so they
+      // stay correct after a data-shaping change.
+      const supportsOverlays = state.type === 'line' || state.type === 'area';
+      const overlaySeries = supportsOverlays
+        ? resolveOverlaySeries(state.overlays, resolved.values)
+        : [];
+      const values =
+        overlaySeries.length > 0 ? [...resolved.values, ...overlaySeries] : resolved.values;
 
-    return {
-      rendererProps: { ...resolved, values, configuration } satisfies ChartsRendererProps,
-      // Map the resolved (real, non-overlay) value items into the analyze shape.
-      analyzeSeries: resolved.values.map((value) => ({
-        id: value.id,
-        label: value.label,
-        data: value.data,
-      })),
-      annotations: resolveAnnotations(state.annotations, resolved.dimensions, resolved.values),
-    };
-  }, [state, dataset, height]);
+      return {
+        rendererProps: { ...resolved, values, configuration } satisfies ChartsRendererProps,
+        // Map the resolved (real, non-overlay) value items into the analyze shape.
+        analyzeSeries: resolved.values.map((value) => ({
+          id: value.id,
+          label: value.label,
+          data: value.data,
+        })),
+        annotations: resolveAnnotations(state.annotations, resolved.dimensions, resolved.values),
+        categories: resolved.dimensions[0]?.data ?? [],
+        dimensionLabel: resolved.dimensions[0]?.label ?? '',
+      };
+    }, [state, dataset, height]);
 
-  // Inject reference lines as children of the chart via the renderer's onRender
-  // seam (the convenience charts render children into the SVG).
+  // Inject reference lines (annotations) as children, and apply the ephemeral
+  // Focus view state (zoom + highlight) as controlled props, via the renderer's
+  // onRender seam — the convenience charts render children into the SVG and
+  // accept the Pro zoom/highlight props.
+  const focusActive = Boolean(focus.zoom || focus.highlight);
   const handleRender = React.useCallback<NonNullable<ChartsRendererProps['onRender']>>(
-    (_type, chartProps, Component) => (
-      <Component {...chartProps}>
-        {annotations.map((annotation) => (
-          <ChartsReferenceLine
-            key={annotation.id}
-            {...(annotation.axis === 'y' ? { y: annotation.value } : { x: annotation.value })}
-            label={annotation.label}
-            labelAlign="start"
-            lineStyle={{ strokeDasharray: '5 3' }}
-          />
-        ))}
-      </Component>
-    ),
-    [annotations],
+    (type, chartProps, Component) => {
+      let nextProps: Record<string, any> = chartProps;
+
+      // Highlight one series, fade the rest (not meaningful on a pie).
+      if (focus.highlight && type !== 'pie') {
+        nextProps = {
+          ...nextProps,
+          highlightedItem: { seriesId: focus.highlight.seriesId },
+          series: (nextProps.series ?? []).map((s: Record<string, any>) => ({
+            ...s,
+            highlightScope: { highlight: 'series', fade: 'global' },
+          })),
+        };
+      }
+
+      // Controlled zoom window (line/area only).
+      if (focus.zoom && (type === 'line' || type === 'area')) {
+        const zoomData = resolveZoomData(focus.zoom, categories, FOCUS_X_AXIS_ID);
+        if (zoomData) {
+          nextProps = {
+            ...nextProps,
+            xAxis: (nextProps.xAxis ?? []).map((axis: Record<string, any>, index: number) =>
+              index === 0 ? { ...axis, id: FOCUS_X_AXIS_ID, zoom: true } : axis,
+            ),
+            zoomData,
+          };
+        }
+      }
+
+      return (
+        <Component {...nextProps}>
+          {annotations.map((annotation) => (
+            <ChartsReferenceLine
+              key={annotation.id}
+              {...(annotation.axis === 'y' ? { y: annotation.value } : { x: annotation.value })}
+              label={annotation.label}
+              labelAlign="start"
+              lineStyle={{ strokeDasharray: '5 3' }}
+            />
+          ))}
+        </Component>
+      );
+    },
+    [annotations, focus, categories],
   );
 
   return (
     <React.Fragment>
       <AnalyzeMenu series={analyzeSeries} toolbarExtra={toolbarExtra} />
       <AnswerBanner series={analyzeSeries} />
-      <ChartsRenderer {...rendererProps} onRender={annotations.length > 0 ? handleRender : undefined} />
+      {onMarkAnomaly ? (
+        <ProactiveAnomalyChip
+          series={analyzeSeries}
+          categories={categories}
+          annotations={state.annotations}
+          onMark={onMarkAnomaly}
+        />
+      ) : null}
+      <ChartsRenderer
+        {...rendererProps}
+        onRender={annotations.length > 0 || focusActive ? handleRender : undefined}
+      />
+      <ChartDataTable
+        dimensionLabel={dimensionLabel}
+        categories={categories}
+        series={analyzeSeries}
+        caption={state.label}
+      />
     </React.Fragment>
   );
 }
@@ -225,22 +289,45 @@ function ChartCopilotMount(props: ChartCopilotMountProps) {
   const { inner, state, setState, dataset, features, suggestions, height } = props;
   const [open, setOpen] = React.useState(false);
 
+  // Ephemeral Focus view state (zoom + highlight). NOT in the spec doc and NOT
+  // historized — transient view navigation with its own breadcrumb + reset.
+  const [focus, setFocus] = React.useState<ChartFocusState>(EMPTY_FOCUS);
+
   // Stable getters/setter so the host adapter keeps its identity across renders
-  // while still reading the latest state/dataset.
+  // while still reading the latest state/dataset/focus.
   const stateRef = React.useRef(state);
   stateRef.current = state;
   const setStateRef = React.useRef(setState);
   setStateRef.current = setState;
   const datasetRef = React.useRef(dataset);
   datasetRef.current = dataset;
+  const focusRef = React.useRef(focus);
+  focusRef.current = focus;
 
   const getChartState = React.useCallback(() => stateRef.current, []);
   const getDataset = React.useCallback(() => datasetRef.current, []);
+  const getFocus = React.useCallback(() => focusRef.current, []);
 
   // Undoable step history. `applyState` restores a prior spec on undo/reset via
   // the *raw* controller setter, so it bypasses the per-turn capture below.
   const applyState = React.useCallback((next: ChartCopilotState) => setStateRef.current(next), []);
   const history = useChartCopilotHistory(applyState, dataset.columns);
+
+  // Proactive suggestion accepted: merge the annotation into the spec and record
+  // an undoable step. Uses the raw setter (not the executor seam), so it is a
+  // self-contained edit rather than part of a chat turn.
+  const handleMarkAnomaly = React.useCallback(
+    (spec: AnnotationSpec) => {
+      const before = stateRef.current;
+      const after: ChartCopilotState = {
+        ...before,
+        annotations: { ...(before.annotations ?? {}), [spec.id]: spec },
+      };
+      setStateRef.current(after);
+      history.record({ before, after, hadPatches: true, columns: datasetRef.current.columns });
+    },
+    [history],
+  );
 
   // Per-turn capture: `before` is the spec at the turn's first executor patch,
   // `after` is the spec at finish (recorded in `handleFinish`). The executor
@@ -261,6 +348,8 @@ function ChartCopilotMount(props: ChartCopilotMountProps) {
     getChartState,
     setChartState,
     getDataset,
+    getFocus,
+    setFocus,
     features,
   });
 
@@ -321,6 +410,7 @@ function ChartCopilotMount(props: ChartCopilotMountProps) {
   const [chatResetKey, setChatResetKey] = React.useState(0);
   const handleNewConversation = React.useCallback(() => {
     history.reset();
+    setFocus(EMPTY_FOCUS);
     localStorageController?.persistActiveConversationId(undefined);
     setChatResetKey((key) => key + 1);
   }, [history, localStorageController]);
@@ -335,11 +425,20 @@ function ChartCopilotMount(props: ChartCopilotMountProps) {
     >
       <ChartCopilotRoot>
         <ChartCopilotMain>
+          <FocusBreadcrumb
+            focus={focus}
+            seriesLabel={(seriesId) =>
+              dataset.columns.find((column) => column.field === seriesId)?.headerName ?? seriesId
+            }
+            onReset={() => setFocus(EMPTY_FOCUS)}
+          />
           <ChartCopilotChart
             state={state}
             dataset={dataset}
             height={height}
             toolbarExtra={<ChartsCopilotPanelTrigger />}
+            onMarkAnomaly={handleMarkAnomaly}
+            focus={focus}
           />
         </ChartCopilotMain>
         {/* Kept mounted (hidden when closed) so the conversation survives toggling. */}

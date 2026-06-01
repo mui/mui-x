@@ -1,5 +1,6 @@
 import type { HostAdapter } from '@mui/x-copilot';
 import { snapshotState, type ChartCopilotState } from './chartState';
+import type { ChartFocusState } from './chartFocusState';
 import type { ChartCopilotDataset } from './resolveForRenderer';
 
 /**
@@ -14,8 +15,10 @@ export interface ChartsCopilotApi {
   setChartState(next: ChartCopilotState): void;
   /** Live accessor for the dataset the chart is resolved against. */
   getDataset(): ChartCopilotDataset;
-  // TODO(M4): chartApiRef — imperative ChartsRenderer API ref for low-level reads.
-  // TODO(M3): runAnalysis — host-driven data-analysis hook for insight flows.
+  /** Live accessor for the ephemeral Focus view state (zoom + highlight). */
+  getFocus(): ChartFocusState;
+  /** Commit a new Focus view state (driven by the `focus.*` commands). */
+  setFocus(next: ChartFocusState): void;
 }
 
 export interface ChartsHostAdapter extends HostAdapter<ChartCopilotState, ChartsCopilotApi> {}
@@ -27,6 +30,10 @@ interface CreateChartsHostAdapterOptions {
   setState(state: ChartCopilotState): void;
   /** Live accessor for the dataset the chart resolves against. */
   getDataset(): ChartCopilotDataset;
+  /** Live accessor for the ephemeral Focus view state. */
+  getFocus(): ChartFocusState;
+  /** Commit a new Focus view state. */
+  setFocus(focus: ChartFocusState): void;
 }
 
 /**
@@ -39,12 +46,14 @@ interface CreateChartsHostAdapterOptions {
 export function createChartsHostAdapter(
   options: CreateChartsHostAdapterOptions,
 ): ChartsHostAdapter {
-  const { getState, setState, getDataset } = options;
+  const { getState, setState, getDataset, getFocus, setFocus } = options;
 
   const api: ChartsCopilotApi = {
     getChartState: () => getState(),
     setChartState: (next) => setState(next),
     getDataset: () => getDataset(),
+    getFocus: () => getFocus(),
+    setFocus: (next) => setFocus(next),
   };
 
   return {

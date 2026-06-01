@@ -4,6 +4,7 @@ import type { ChatAdapter } from '@mui/x-chat-headless';
 import type { Guards } from '@mui/x-copilot';
 import { useCopilot, type UseCopilotReturn } from '@mui/x-copilot/hooks';
 import type { ChartCopilotState } from './chartState';
+import type { ChartFocusState } from './chartFocusState';
 import type { ChartCopilotDataset } from './resolveForRenderer';
 import { buildChartGuards, type DEFAULT_CHART_GUARDS } from './guards';
 import { createChartsHostAdapter, type ChartsHostAdapter } from './chartsHostAdapter';
@@ -23,6 +24,10 @@ export interface UseChartsCopilotOptions {
   setChartState(state: ChartCopilotState): void;
   /** Live accessor for the dataset the chart resolves against. */
   getDataset(): ChartCopilotDataset;
+  /** Live accessor for the ephemeral Focus view state. */
+  getFocus(): ChartFocusState;
+  /** Commit a new Focus view state. */
+  setFocus(focus: ChartFocusState): void;
   /** Optional override for the default guards. */
   features?: Partial<Record<keyof typeof DEFAULT_CHART_GUARDS, boolean>>;
 }
@@ -38,7 +43,7 @@ export interface UseChartsCopilotReturn extends UseCopilotReturn {
  * hook. Patch-only for v1 — no plugins, approval, or multi-step follow-up.
  */
 export function useChartsCopilot(options: UseChartsCopilotOptions): UseChartsCopilotReturn {
-  const { inner, getChartState, setChartState, getDataset, features } = options;
+  const { inner, getChartState, setChartState, getDataset, getFocus, setFocus, features } = options;
 
   const guards = React.useMemo<Guards>(() => buildChartGuards(features), [features]);
 
@@ -51,6 +56,10 @@ export function useChartsCopilot(options: UseChartsCopilotOptions): UseChartsCop
   setChartStateRef.current = setChartState;
   const getDatasetRef = React.useRef(getDataset);
   getDatasetRef.current = getDataset;
+  const getFocusRef = React.useRef(getFocus);
+  getFocusRef.current = getFocus;
+  const setFocusRef = React.useRef(setFocus);
+  setFocusRef.current = setFocus;
 
   const host = React.useMemo<ChartsHostAdapter>(
     () =>
@@ -58,6 +67,8 @@ export function useChartsCopilot(options: UseChartsCopilotOptions): UseChartsCop
         getState: () => getChartStateRef.current(),
         setState: (next) => setChartStateRef.current(next),
         getDataset: () => getDatasetRef.current(),
+        getFocus: () => getFocusRef.current(),
+        setFocus: (next) => setFocusRef.current(next),
       }),
     [],
   );

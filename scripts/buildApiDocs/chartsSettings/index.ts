@@ -80,6 +80,11 @@ export default chartsApiPages;
     if (filename.includes('/context/')) {
       return true;
     }
+    // The Copilot components are internal building blocks of the charts Copilot
+    // feature and are not documented with dedicated API pages.
+    if (filename.includes('/copilot/')) {
+      return true;
+    }
     return [
       'x-charts/src/Gauge/GaugeReferenceArc.tsx',
       'x-charts/src/Gauge/GaugeValueArc.tsx',

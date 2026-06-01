@@ -1,4 +1,5 @@
 export * from './chartState';
+export * from './chartFocusState';
 export * from './transform';
 export * from './annotations/types';
 export * from './history';

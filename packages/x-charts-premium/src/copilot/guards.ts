@@ -9,12 +9,14 @@ import type { Guards } from '@mui/x-copilot';
  * - `annotate`: gates the annotation + computed-overlay handlers. On → the
  *   agent can add reference lines, bands, markers, and SMA/trend/forecast
  *   overlays.
+ * - `focus`: gates the `focus.*` view commands (zoom + highlight).
  * - `mutations`: gates tier-3 (mutation-class) handlers. Off → the agent can
  *   read state and answer questions but cannot change anything destructive.
  */
 export const DEFAULT_CHART_GUARDS = {
   chartsIntegration: true,
   annotate: true,
+  focus: true,
   mutations: false,
 } satisfies Guards;
 

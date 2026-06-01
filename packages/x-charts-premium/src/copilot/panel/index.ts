@@ -5,5 +5,8 @@ export * from './ChartsCopilotPanelTrigger';
 export * from './AnalyzeMenu';
 export * from './AnalyzePanels';
 export * from './AnswerBanner';
+export * from './ChartDataTable';
+export * from './FocusBreadcrumb';
+export * from './ProactiveAnomalyChip';
 export * from './ReceiptCard';
 export * from './StepHistory';
