@@ -1,0 +1,57 @@
+name: Changeset check
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions: {}
+
+jobs:
+  validate-patterns:
+    name: validate changeset patterns
+    runs-on: ubuntu-latest
+    # Renovate dependency PRs never carry a changeset — skip entirely.
+    if: ${{ github.actor != 'renovate[bot]' && !startsWith(github.head_ref, 'renovate/') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Full history so `changeset status` can diff against the base branch.
+          fetch-depth: 0
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.22.3'
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 1. Pattern checks (packages, bump, tier convention, tag, summary).
+      - name: Validate changeset patterns
+        run: node scripts/changeset-changelog/validate.mjs .changeset
+
+      # 2. Presence check — a changeset is required only when published
+      #    `packages/x-*` source changes. Docs/test/internal PRs are exempt.
+      - name: Require a changeset for published source changes
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git fetch --depth=1 origin "$BASE_REF"
+          changed=$(git diff --name-only "origin/$BASE_REF"...HEAD -- 'packages/x-*/src/**')
+          if [ -z "$changed" ]; then
+            echo "No published source changes — changeset not required."
+            exit 0
+          fi
+          added=$(git diff --name-only --diff-filter=A "origin/$BASE_REF"...HEAD -- '.changeset/*.md' \
+            | grep -v -i 'README.md' || true)
+          if [ -z "$added" ]; then
+            echo "::error::Published source changed but no changeset was added."
+            echo "Run \`pnpm changeset\` to declare the semver bump for this PR."
+            echo "Changed source files:"
+            echo "$changed"
+            exit 1
+          fi
+          echo "Changeset(s) added:"
+          echo "$added"
