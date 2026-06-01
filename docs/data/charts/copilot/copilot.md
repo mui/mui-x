@@ -25,7 +25,7 @@ Run the backend locally on port `5055` in development.
 
 The Copilot is one conversation, not six separate tools.
 A typical session flows from **Ask** to **Refine** to **Reshape**, with **Annotate**, **Focus**, and **Explain** layered on top.
-Each step leaves an editable [receipt](#receipts-and-undo) and an undo.
+The editing capabilities (Ask, Refine, Reshape, Annotate) each leave an editable [receipt](#receipts-and-undo) and an undo; **Focus** is a transient view with its own reset, and **Explain** only reads the chart back.
 
 ### Ask
 
@@ -51,34 +51,27 @@ The Copilot re-selects the matching renderer and morphs the chart; the receipt r
 
 ### Annotate
 
-:::warning
-In progress — the chart-spec slices and renderer overlays for this capability are still being built.
-:::
+Add reference lines, bands, computed overlays (moving average, trend, cumulative, forecast), and markers for the highest, lowest, or anomalous points.
+Each value is computed on the client from the visible data rather than guessed by the model — the model only chooses what to draw and where.
+When the data contains an unmarked anomaly, the Copilot also offers a one-click suggestion to mark it.
 
-Add reference lines, bands, computed overlays (moving average, trend, cumulative), and markers for the highest, lowest, or anomalous points.
-Each value is computed on the client from the visible data rather than guessed by the model.
-
-Planned prompts: _"Add a 3-month moving average"_, _"Mark the peak"_, _"Add a target line at 250"_.
+{{"demo": "ChartAnnotateDemo.js", "bg": "inline"}}
 
 ### Focus
 
-:::warning
-In progress — the zoom and highlight view state for this capability is still being built.
-:::
+Control zoom and series highlighting with natural language.
+Focus is ephemeral view state — separate from the chart document and the undo history — so it has its own breadcrumb showing the current view and a reset.
+The Copilot drives it through view commands rather than document edits.
 
-Control zoom and series highlighting with natural language, with a breadcrumb that shows the current view and a reset.
-
-Planned prompts: _"Zoom to the second half of the year"_, _"Highlight coffee"_, _"Reset the view"_.
+{{"demo": "ChartFocusDemo.js", "bg": "inline"}}
 
 ### Explain
 
-:::warning
-In progress — the grounded-summary context and narrative card for this capability are still being built.
-:::
+Read back a grounded narrative of the chart — the trend, the extremes, and a specific value — built from the same client-side statistics, with factual statements kept separate from any speculative interpretation.
+The Copilot reasons over a computed summary (per-series statistics, trend, and anomalies) sent alongside the chart, so the numbers it cites always match the data.
+A screen-reader-only data table mirrors the chart for non-visual access.
 
-Read back a grounded narrative of the chart — the trend, the extremes, and what changed — built from the same client-side statistics, with factual statements kept separate from any speculative interpretation.
-
-Planned prompts: _"Explain this chart"_, _"What is the trend?"_, _"What was coffee in July?"_.
+{{"demo": "ChartExplainDemo.js", "bg": "inline"}}
 
 ## Receipts and undo
 
@@ -94,6 +87,12 @@ The **Analyze** menu runs deterministic client-side math, independent of the cha
 - **Anomaly detection** — flags drops and spikes by rate of change.
 - **Forecast** — least-squares linear trend with R² and a projection.
 - **Indicators** — SMA, EMA, Bollinger Bands, Pivot Points, Linear Regression, RSI, and MACD.
+
+## Limitations
+
+The Copilot resolves the chart, applies the data-shaping layer (group-by aggregation, top-N, filters), and computes every statistic **on the client**, over the rows held in the browser.
+This suits the dashboard-scale datasets the charts render today (up to the order of a hundred thousand rows).
+It does not summarize or aggregate on a server, so it is not designed for very large or streaming datasets — that would move the data layer and the statistics behind a query engine.
 
 ## Quick start
 
