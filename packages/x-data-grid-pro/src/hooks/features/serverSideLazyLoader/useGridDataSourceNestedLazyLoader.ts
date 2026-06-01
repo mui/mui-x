@@ -21,6 +21,7 @@ import {
   type GridSkeletonRowNode,
   type GridEventListener,
   type GridRowId,
+  type GridRowModel,
   type GridLeafNode,
   type GridGetRowsResponse,
   type GridDataSourceGroupNode,
@@ -73,6 +74,30 @@ const GRID_SKELETON_ROW_NESTED_ID = 'auto-generated-skeleton-row-nested';
 const getSkeletonRowId = (index: number) => `${GRID_SKELETON_ROW_ROOT_ID}-${index}`;
 const getSkeletonNestedRowId = (index: number, parentId: GridRowId) =>
   `${GRID_SKELETON_ROW_NESTED_ID}-${parentId}-${index}`;
+
+/**
+ * Removes a row and its entire subtree from the working `tree`/`dataRowIdToModelLookup`
+ * copies. Ids in `skip` are left untouched, so a row that moved within the replaced range
+ * (and was re-added this pass) is kept.
+ */
+const deleteRowAndDescendants = (
+  tree: GridRowTreeConfig,
+  dataRowIdToModelLookup: Record<GridRowId, GridRowModel>,
+  rowId: GridRowId,
+  skip?: Set<GridRowId>,
+) => {
+  if (skip?.has(rowId)) {
+    return;
+  }
+  const node = tree[rowId];
+  if (node?.type === 'group') {
+    node.children.forEach((childId) =>
+      deleteRowAndDescendants(tree, dataRowIdToModelLookup, childId, skip),
+    );
+  }
+  delete tree[rowId];
+  delete dataRowIdToModelLookup[rowId];
+};
 
 /**
  * @requires useGridRows (state)
@@ -549,10 +574,9 @@ export const useGridDataSourceNestedLazyLoader = (
         const rowId = gridRowIdSelector(privateApiRef, rowModel);
         const [removedRowId] = targetGroupChildren.splice(startIndex + i, 1, rowId);
 
-        if (!seenIds.has(removedRowId)) {
-          delete dataRowIdToModelLookup[removedRowId];
-          delete tree[removedRowId];
-        }
+        // Drop the replaced row and any subtree it owned (skipping rows re-added this
+        // pass) so a changed id swapping out an expanded group leaves no orphans behind.
+        deleteRowAndDescendants(tree, dataRowIdToModelLookup, removedRowId, seenIds);
 
         let rowTreeNodeConfig: GridLeafNode | GridDataSourceGroupNode;
 
@@ -716,8 +740,9 @@ export const useGridDataSourceNestedLazyLoader = (
               depth: skeletonDepth,
             };
           }
-          delete tree[rowId];
-          delete dataRowIdToModelLookup[rowId];
+          // Remove the duplicate together with any subtree it owned.
+          // The following `replaceNestedRows` recomputes `dataRowIds` from the tree and re-inserts it.
+          deleteRowAndDescendants(tree, dataRowIdToModelLookup, rowId);
           duplicateRowCount += 1;
         }
       });

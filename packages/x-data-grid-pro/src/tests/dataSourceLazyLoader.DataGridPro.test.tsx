@@ -911,6 +911,82 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       expect(parentNode.children).to.include('A-0-updated');
     });
 
+    it('should not leave orphaned descendants when a changed id replaces an expanded group', async () => {
+      let returnUpdatedGroup = false;
+      const orphanTreeRows: Record<string, { id: string; name: string; childrenCount: number }[]> =
+        {
+          '[]': [{ id: 'P', name: 'P', childrenCount: 1 }],
+          '["P"]': [{ id: 'G', name: 'G', childrenCount: 2 }],
+          '["P","G"]': [
+            { id: 'G-0', name: 'G-0', childrenCount: 0 },
+            { id: 'G-1', name: 'G-1', childrenCount: 0 },
+          ],
+        };
+
+      function TestOrphanCase() {
+        apiRef = useGridApiRef();
+        const dataSource: GridDataSource = React.useMemo(
+          () => ({
+            getRows: async (params: GridGetRowsParams) => {
+              const groupKeys = params.groupKeys ?? [];
+              let rows = orphanTreeRows[JSON.stringify(groupKeys)] ?? [];
+              if (returnUpdatedGroup && groupKeys.length === 1) {
+                rows = rows.map((row) =>
+                  row.id === 'G' ? { ...row, id: 'G-updated', name: 'G-updated' } : row,
+                );
+              }
+              const start = typeof params.start === 'number' ? params.start : 0;
+              const end = typeof params.end === 'number' ? params.end : rows.length - 1;
+              return { rows: rows.slice(start, end + 1), rowCount: rows.length };
+            },
+            getGroupKey: (row) => row.name,
+            getChildrenCount: (row) => row.childrenCount,
+          }),
+          [],
+        );
+
+        return (
+          <div style={{ width: 300, height: gridHeight }}>
+            <DataGridPro
+              apiRef={apiRef}
+              columns={[{ field: 'name', width: 200 }]}
+              dataSource={dataSource}
+              dataSourceCache={null}
+              dataSourceRevalidateMs={0}
+              lazyLoading
+              treeData
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 10 }, rowCount: 0 },
+              }}
+              rowHeight={rowHeight}
+              columnHeaderHeight={columnHeaderHeight}
+              disableVirtualization={false}
+            />
+          </div>
+        );
+      }
+
+      render(<TestOrphanCase />);
+      await waitFor(() => expect(apiRef.current!.getRow('P')).not.to.equal(null));
+
+      // Expand P → G, then G → G-0, G-1 (the descendants that must be cleaned up later).
+      await act(async () => apiRef.current?.setRowChildrenExpansion('P', true));
+      await waitFor(() => expect(apiRef.current!.getRow('G')).not.to.equal(null));
+      await act(async () => apiRef.current?.setRowChildrenExpansion('G', true));
+      await waitFor(() => expect(apiRef.current!.getRow('G-0')).not.to.equal(null));
+
+      // Re-fetch P's children with a changed id for the expanded group G.
+      returnUpdatedGroup = true;
+      await act(async () => apiRef.current?.dataSource.fetchRows('P', { start: 0, end: 0 }));
+      await waitFor(() => expect(apiRef.current!.getRow('G-updated')).not.to.equal(null));
+
+      // G's previously-loaded children must not linger as orphans in the tree/dataRowIds.
+      expect(apiRef.current!.getRow('G-0')).to.equal(null);
+      expect(apiRef.current!.getRow('G-1')).to.equal(null);
+      expect(apiRef.current!.state.rows.dataRowIds).not.to.include('G-0');
+      expect(apiRef.current!.state.rows.dataRowIds).not.to.include('G-1');
+    });
+
     it('should not periodically revalidate when dataSourceRevalidateMs is zero', async () => {
       const localFetchRowsSpy = spy();
       render(
