@@ -12,7 +12,13 @@ import {
   createDataStudioDataSourcesFromAPI,
   createNextRouterRoutingAdapter,
   type DataStudioDataSource,
+  type DataStudioSheet,
 } from '@mui/x-data-studio';
+import {
+  type ContextRef,
+  createStudioCopilotAdapter,
+  STUDIO_COPILOT_PLUGINS,
+} from 'docs/data/data-studio/overview/studioCopilotBackend';
 
 const demoTheme = extendTheme();
 
@@ -23,12 +29,16 @@ const usdCurrency = new Intl.NumberFormat('en-US', {
   currency: 'USD',
 });
 
-const formatUsd = (value: unknown) => (typeof value === 'number' ? usdCurrency.format(value) : '');
+const formatUsd = (value: unknown) =>
+  typeof value === 'number' ? usdCurrency.format(value) : '';
 
 // Per-dataSource map of fields that should render formatted in the grid. The
 // server stores raw numbers; this is the "user formats it" half of the
 // contract.
-const COLUMN_FORMATTERS: Record<string, Record<string, (value: unknown) => string>> = {
+const COLUMN_FORMATTERS: Record<
+  string,
+  Record<string, (value: unknown) => string>
+> = {
   products: {
     'Unit Price': formatUsd,
     'Price per 100g': formatUsd,
@@ -40,7 +50,10 @@ const COLUMN_FORMATTERS: Record<string, Record<string, (value: unknown) => strin
   },
 };
 
-function decorateColumns(dataSourceId: string, columns: readonly GridColDef[]): GridColDef[] {
+function decorateColumns(
+  dataSourceId: string,
+  columns: readonly GridColDef[],
+): GridColDef[] {
   const formatters = COLUMN_FORMATTERS[dataSourceId];
   if (!formatters) {
     return columns as GridColDef[];
@@ -66,10 +79,32 @@ export default function CoffeeBeansSales() {
     () => createNextRouterRoutingAdapter({ router }),
     [router],
   );
-  const [dataSources, setDataSources] = React.useState<DataStudioDataSource<CoffeeBeanRow>[]>([]);
+  const [dataSources, setDataSources] = React.useState<
+    DataStudioDataSource<CoffeeBeanRow>[]
+  >([]);
   const [schemaError, setSchemaError] = React.useState<string | null>(null);
   const [dataSourceError, setDataSourceError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(true);
+
+  // Track the Studio surface so the Copilot backend can be handed an accurate
+  // `studioContext` (active dataSource/view + the user's views).
+  const [views, setViews] = React.useState<DataStudioSheet[]>([]);
+  const [activeDataSourceId, setActiveDataSourceId] = React.useState<string | null>(
+    null,
+  );
+  const [activeSheetId, setActiveSheetId] = React.useState<string | null>(null);
+  const ctxRef = React.useRef<ContextRef>({
+    views,
+    activeDataSourceId,
+    activeSheetId,
+    dataSources,
+  });
+  ctxRef.current = { views, activeDataSourceId, activeSheetId, dataSources };
+
+  const copilotChatAdapter = React.useMemo(
+    () => createStudioCopilotAdapter({ ctxRef, storageKey: 'coffee-beans-copilot' }),
+    [],
+  );
 
   const handleDataSourceError = React.useCallback<
     NonNullable<DataStudioDataSource<CoffeeBeanRow>['onDataSourceError']>
@@ -139,6 +174,11 @@ export default function CoffeeBeansSales() {
             dataSources={dataSources}
             loading={loading}
             routing={routing}
+            copilotChatAdapter={copilotChatAdapter}
+            copilotPlugins={STUDIO_COPILOT_PLUGINS}
+            onSheetsChange={setViews}
+            onActiveDataSourceChange={setActiveDataSourceId}
+            onActiveSheetChange={setActiveSheetId}
             sx={{
               height: '100dvh',
               bgcolor: 'background.paper',

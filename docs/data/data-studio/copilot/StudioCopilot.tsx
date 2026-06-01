@@ -97,34 +97,49 @@ const API_KEY = IS_DEPLOY
  * Studio component doesn't expose its state API ref externally yet — that
  * keeps the demo close to what an integrator can do today.
  */
-function buildStudioContext(
-  view: ContextRef,
-): Record<string, unknown> {
-  const viewsById: Record<string, unknown> = {};
-  const viewOrder: string[] = [];
-  view.views.forEach((v) => {
-    viewsById[v.id] = {
-      id: v.id,
-      label: typeof v.label === 'string' ? v.label : String(v.label ?? ''),
-      dataSourceId: v.dataSourceId,
-      initialState: v.initialState ?? {},
+function buildStudioContext(view: ContextRef): Record<string, unknown> {
+  // Mirrors the package's `snapshotState` shape (sheets keyed by id), which is
+  // what the backend `StudioStateDocumentSchema` (v2) validates against.
+  const sheetsById: Record<string, unknown> = {};
+  const sheetOrder: string[] = [];
+  view.views.forEach((sheet) => {
+    sheetsById[sheet.id] = {
+      id: sheet.id,
+      label:
+        typeof sheet.label === 'string' ? sheet.label : String(sheet.label ?? ''),
+      dataSourceId: sheet.dataSourceId,
+      type: sheet.type ?? 'grid',
+      initialState: sheet.initialState ?? {},
+      params: sheet.params ?? {},
     };
-    viewOrder.push(v.id);
+    sheetOrder.push(sheet.id);
   });
   return {
-    version: 1 as const,
+    version: 2 as const,
     host: 'data-studio' as const,
     state: {
-      active: { dataSourceId: view.activeDataSourceId, viewId: view.activeSheetId },
+      active: { dataSourceId: view.activeDataSourceId, sheetId: view.activeSheetId },
       dataSources: view.dataSources.map((d) => ({
         id: d.id,
         label: typeof d.label === 'string' ? d.label : String(d.label ?? ''),
+        columns: (d.columns ?? []).map((c) => ({
+          field: c.field,
+          ...(c.type ? { type: c.type } : {}),
+          ...(c.headerName ? { headerName: c.headerName } : {}),
+        })),
+        ...(d.supportsServerGrouping
+          ? { supportsServerGrouping: d.supportsServerGrouping }
+          : {}),
+        ...(d.joinGroup ? { joinGroup: d.joinGroup } : {}),
       })),
-      views: viewsById,
-      viewOrder,
+      sheets: sheetsById,
+      sheetOrder,
+      // This standalone demo does not track joint sources; a real <DataStudio>
+      // serializes its joint configs here.
+      jointSources: [],
     },
     catalog: {
-      version: 1 as const,
+      version: 2 as const,
       commands: ALL_STUDIO_COMMAND_HANDLERS.map((handler) => ({
         type: handler.type,
         namespace: handler.namespace,
@@ -148,7 +163,9 @@ interface ContextRef {
   dataSources: ReadonlyArray<DataStudioDataSource<any>>;
 }
 
-function createBackendAdapter(ctxRef: React.MutableRefObject<ContextRef>): ChatAdapter {
+function createBackendAdapter(
+  ctxRef: React.MutableRefObject<ContextRef>,
+): ChatAdapter {
   return createAiSdkAdapter({
     stream: async ({ conversationId, message, signal, metadata }) => {
       const userText = message.parts
@@ -198,7 +215,11 @@ function createBackendAdapter(ctxRef: React.MutableRefObject<ContextRef>): ChatA
 
 interface EnvelopeRecipe {
   reply: string;
-  patches?: Array<{ op: 'add' | 'remove' | 'replace'; path: string; value?: unknown }>;
+  patches?: Array<{
+    op: 'add' | 'remove' | 'replace';
+    path: string;
+    value?: unknown;
+  }>;
   commands?: Array<{ type: string; params?: unknown }>;
 }
 
@@ -225,17 +246,21 @@ function pickRecipe(userText: string, viewIds: string[]): EnvelopeRecipe {
   if (/switch to customers|select customers|show customers/.test(text)) {
     return {
       reply: 'Switching to the Customers dataSource.',
-      commands: [{ type: 'studio.selectDataSource', params: { dataSourceId: 'customers' } }],
+      commands: [
+        { type: 'studio.selectDataSource', params: { dataSourceId: 'customers' } },
+      ],
     };
   }
   if (/switch to sales|select sales|show sales/.test(text)) {
     return {
       reply: 'Switching to the Sales dataSource.',
-      commands: [{ type: 'studio.selectDataSource', params: { dataSourceId: 'sales' } }],
+      commands: [
+        { type: 'studio.selectDataSource', params: { dataSourceId: 'sales' } },
+      ],
     };
   }
-  if (/rename .* (to|as) ([\w \-]+)/.test(text) && viewIds.length > 0) {
-    const match = text.match(/rename .* (?:to|as) ([\w \-]+)/);
+  if (/rename .* (to|as) ([\w -]+)/.test(text) && viewIds.length > 0) {
+    const match = text.match(/rename .* (?:to|as) ([\w -]+)/);
     const newLabel = match?.[1]?.trim() ?? 'Renamed';
     return {
       reply: `Renaming the active view to "${newLabel}".`,
@@ -281,7 +306,10 @@ function pickRecipe(userText: string, viewIds: string[]): EnvelopeRecipe {
     return {
       reply: 'Deleting the active view.',
       commands: [
-        { type: 'studio.deleteView', params: { viewId: viewIds[viewIds.length - 1] } },
+        {
+          type: 'studio.deleteView',
+          params: { viewId: viewIds[viewIds.length - 1] },
+        },
       ],
     };
   }
@@ -292,8 +320,10 @@ function pickRecipe(userText: string, viewIds: string[]): EnvelopeRecipe {
   };
 }
 
+let idCounter = 0;
 function randomId(prefix: string) {
-  return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
+  idCounter += 1;
+  return `${prefix}-${idCounter.toString(36).padStart(8, '0')}`;
 }
 
 function mockStream(
@@ -353,7 +383,9 @@ function mockStream(
     async start(controller) {
       for (const chunk of chunks) {
         // eslint-disable-next-line no-await-in-loop
-        await new Promise((resolve) => setTimeout(resolve, 30));
+        await new Promise((resolve) => {
+          setTimeout(resolve, 30);
+        });
         controller.enqueue(chunk);
       }
       controller.close();
@@ -400,7 +432,12 @@ export default function StudioCopilot() {
     activeSheetId,
     dataSources: DATASETS,
   });
-  ctxRef.current = { views, activeDataSourceId, activeSheetId, dataSources: DATASETS };
+  ctxRef.current = {
+    views,
+    activeDataSourceId,
+    activeSheetId,
+    dataSources: DATASETS,
+  };
 
   const adapter = React.useMemo<ChatAdapter>(() => {
     const inner = useBackend

@@ -12,6 +12,10 @@ import {
   createDataStudioDataSourcesFromAPI,
   createNextRouterRoutingAdapter,
 } from '@mui/x-data-studio';
+import {
+  createStudioCopilotAdapter,
+  STUDIO_COPILOT_PLUGINS,
+} from 'docs/data/data-studio/overview/studioCopilotBackend';
 
 const demoTheme = extendTheme();
 
@@ -78,6 +82,25 @@ export default function AdventureWorksSales() {
   const [schemaError, setSchemaError] = React.useState(null);
   const [dataSourceError, setDataSourceError] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
+
+  // Track the Studio surface so the Copilot backend can be handed an accurate
+  // `studioContext` (active dataSource/view + the user's views).
+  const [views, setViews] = React.useState([]);
+  const [activeDataSourceId, setActiveDataSourceId] = React.useState(null);
+  const [activeSheetId, setActiveSheetId] = React.useState(null);
+  const ctxRef = React.useRef({
+    views,
+    activeDataSourceId,
+    activeSheetId,
+    dataSources,
+  });
+  ctxRef.current = { views, activeDataSourceId, activeSheetId, dataSources };
+
+  const copilotChatAdapter = React.useMemo(
+    () =>
+      createStudioCopilotAdapter({ ctxRef, storageKey: 'adventure-works-copilot' }),
+    [],
+  );
 
   const handleDataSourceError = React.useCallback((nextError) => {
     setDataSourceError(getErrorMessage(nextError));
@@ -146,6 +169,11 @@ export default function AdventureWorksSales() {
             loading={loading}
             layout="sidebar"
             routing={routing}
+            copilotChatAdapter={copilotChatAdapter}
+            copilotPlugins={STUDIO_COPILOT_PLUGINS}
+            onSheetsChange={setViews}
+            onActiveDataSourceChange={setActiveDataSourceId}
+            onActiveSheetChange={setActiveSheetId}
             sx={{
               height: '100dvh',
               bgcolor: 'background.paper',

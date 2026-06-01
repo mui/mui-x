@@ -90,31 +90,48 @@ const API_KEY = IS_DEPLOY
  * keeps the demo close to what an integrator can do today.
  */
 function buildStudioContext(view) {
-  const viewsById = {};
-  const viewOrder = [];
-  view.views.forEach((v) => {
-    viewsById[v.id] = {
-      id: v.id,
-      label: typeof v.label === 'string' ? v.label : String(v.label ?? ''),
-      dataSourceId: v.dataSourceId,
-      initialState: v.initialState ?? {},
+  // Mirrors the package's `snapshotState` shape (sheets keyed by id), which is
+  // what the backend `StudioStateDocumentSchema` (v2) validates against.
+  const sheetsById = {};
+  const sheetOrder = [];
+  view.views.forEach((sheet) => {
+    sheetsById[sheet.id] = {
+      id: sheet.id,
+      label:
+        typeof sheet.label === 'string' ? sheet.label : String(sheet.label ?? ''),
+      dataSourceId: sheet.dataSourceId,
+      type: sheet.type ?? 'grid',
+      initialState: sheet.initialState ?? {},
+      params: sheet.params ?? {},
     };
-    viewOrder.push(v.id);
+    sheetOrder.push(sheet.id);
   });
   return {
-    version: 1,
+    version: 2,
     host: 'data-studio',
     state: {
-      active: { dataSourceId: view.activeDataSourceId, viewId: view.activeSheetId },
+      active: { dataSourceId: view.activeDataSourceId, sheetId: view.activeSheetId },
       dataSources: view.dataSources.map((d) => ({
         id: d.id,
         label: typeof d.label === 'string' ? d.label : String(d.label ?? ''),
+        columns: (d.columns ?? []).map((c) => ({
+          field: c.field,
+          ...(c.type ? { type: c.type } : {}),
+          ...(c.headerName ? { headerName: c.headerName } : {}),
+        })),
+        ...(d.supportsServerGrouping
+          ? { supportsServerGrouping: d.supportsServerGrouping }
+          : {}),
+        ...(d.joinGroup ? { joinGroup: d.joinGroup } : {}),
       })),
-      views: viewsById,
-      viewOrder,
+      sheets: sheetsById,
+      sheetOrder,
+      // This standalone demo does not track joint sources; a real <DataStudio>
+      // serializes its joint configs here.
+      jointSources: [],
     },
     catalog: {
-      version: 1,
+      version: 2,
       commands: ALL_STUDIO_COMMAND_HANDLERS.map((handler) => ({
         type: handler.type,
         namespace: handler.namespace,
@@ -214,8 +231,8 @@ function pickRecipe(userText, viewIds) {
       ],
     };
   }
-  if (/rename .* (to|as) ([\w \-]+)/.test(text) && viewIds.length > 0) {
-    const match = text.match(/rename .* (?:to|as) ([\w \-]+)/);
+  if (/rename .* (to|as) ([\w -]+)/.test(text) && viewIds.length > 0) {
+    const match = text.match(/rename .* (?:to|as) ([\w -]+)/);
     const newLabel = match?.[1]?.trim() ?? 'Renamed';
     return {
       reply: `Renaming the active view to "${newLabel}".`,
@@ -275,8 +292,10 @@ function pickRecipe(userText, viewIds) {
   };
 }
 
+let idCounter = 0;
 function randomId(prefix) {
-  return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
+  idCounter += 1;
+  return `${prefix}-${idCounter.toString(36).padStart(8, '0')}`;
 }
 
 function mockStream(recipe) {
@@ -334,7 +353,9 @@ function mockStream(recipe) {
     async start(controller) {
       for (const chunk of chunks) {
         // eslint-disable-next-line no-await-in-loop
-        await new Promise((resolve) => setTimeout(resolve, 30));
+        await new Promise((resolve) => {
+          setTimeout(resolve, 30);
+        });
         controller.enqueue(chunk);
       }
       controller.close();
