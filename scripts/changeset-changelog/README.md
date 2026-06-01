@@ -1,3 +1,5 @@
+<!-- cspell:ignore frontmatter codemod -->
+
 # Proposal: changeset-sourced changelog
 
 > **Status:** proposal / prototype. Nothing here is wired into the live release
@@ -82,6 +84,9 @@ node scripts/changeset-changelog/generate.mjs scripts/changeset-changelog/sample
 
 # Validate (defaults to root .changeset)
 node scripts/changeset-changelog/validate.mjs scripts/changeset-changelog/sample/.changeset
+
+# Test the generator against the sample fixtures (Node test runner)
+node --test scripts/changeset-changelog/generate.test.mjs
 ```
 
 ## Not done yet (follow-up if accepted)
