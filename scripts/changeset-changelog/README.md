@@ -77,7 +77,13 @@ Optional extra detail rendered as an indented continuation line.
 ## Run
 
 ```bash
-# Render (defaults to root .changeset; pass a dir to override)
+# Render (defaults to root .changeset; pass a dir to override).
+# Outside the sample fixtures this CONSUMES (deletes) the changeset entry files,
+# like `changeset version`. Pass --keep for a dry run that leaves them in place.
+node scripts/changeset-changelog/generate.mjs            # renders + consumes .changeset
+node scripts/changeset-changelog/generate.mjs --keep     # renders only
+
+# The sample fixtures are never consumed (they back the tests/demo).
 node scripts/changeset-changelog/generate.mjs scripts/changeset-changelog/sample/.changeset
 
 # Validate (defaults to root .changeset)

@@ -18,8 +18,12 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
 import { PRODUCTS, TIER_META, TIER_RANK, DEFAULT_TAG, buildPackageIndex } from './config.mjs';
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const SAMPLE_DIR = path.resolve(here, 'sample', '.changeset');
 
 /** Minimal frontmatter parser for a changeset file. */
 function parseChangeset(filePath) {
@@ -134,11 +138,18 @@ function getPackageVersion(pkg) {
 }
 
 function main() {
-  const changesetDir = process.argv[2] ?? path.join(process.cwd(), '.changeset');
+  const argv = process.argv.slice(2);
+  // `--keep` (alias `--no-consume`) renders without deleting the changesets.
+  const keep = argv.includes('--keep') || argv.includes('--no-consume');
+  const dirArg = argv.find((arg) => !arg.startsWith('--'));
+  const changesetDir = dirArg ?? path.join(process.cwd(), '.changeset');
   if (!fs.existsSync(changesetDir)) {
     console.error(`No changeset directory at "${changesetDir}".`);
     process.exit(1);
   }
+  // The sample fixtures back the tests/demo, so they are never consumed.
+  const isSample = path.resolve(changesetDir) === SAMPLE_DIR;
+  const consume = !isSample && !keep;
   const index = buildPackageIndex();
 
   const changesets = fs
@@ -192,6 +203,16 @@ function main() {
 
   // eslint-disable-next-line no-console -- prototype output
   console.log(out.join('\n\n'));
+
+  // Consume the rendered changesets so they aren't counted in the next release.
+  if (consume) {
+    for (const changeset of changesets) {
+      fs.rmSync(changeset.filePath);
+    }
+    console.error(`Consumed ${changesets.length} changeset file(s) from "${changesetDir}".`);
+  } else if (isSample) {
+    console.error('Sample directory — changeset files kept.');
+  }
 }
 
 main();
