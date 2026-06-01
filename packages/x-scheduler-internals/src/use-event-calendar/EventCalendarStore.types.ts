@@ -30,7 +30,9 @@ export interface EventCalendarState extends SchedulerState {
   preferencesMenuConfig: EventCalendarPreferencesMenuConfig | false;
   /**
    * Config of the current view.
-   * Should not be used in selectors, only in event handlers.
+   * Read by view-scoped selectors via the dedicated `eventCalendarOccurrencePositionSelectors`
+   * module (and similar). Avoid reading `viewConfig` directly in arbitrary selectors —
+   * go through those wrappers so the empty-fallbacks are applied.
    */
   viewConfig: EventCalendarViewConfig | null;
 }

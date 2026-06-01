@@ -6,3 +6,4 @@ export * from './preferences';
 export * from './recurringEvent';
 export * from './dragAndDrop';
 export * from './calendarGrid';
+export * from './occurrences';

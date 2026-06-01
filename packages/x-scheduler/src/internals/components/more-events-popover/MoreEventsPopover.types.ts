@@ -1,20 +1,11 @@
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-internals/models';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
+import { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 
 export interface MoreEventsPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   open: boolean;
   /**
-   * The event occurrence to display in the popover.
+   * The day whose occurrences are listed.
    */
-  occurrences: SchedulerEventOccurrence[];
-  /**
-   * The total count of occurrences.
-   */
-  count: number;
-  /**
-   * The day data for the occurrences.
-   */
-  day: useEventOccurrencesWithDayGridPosition.DayData;
+  day: SchedulerProcessedDate;
   /**
    * The anchor element for the popover positioning.
    */

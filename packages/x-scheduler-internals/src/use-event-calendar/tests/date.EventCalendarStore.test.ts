@@ -1,9 +1,15 @@
 import { spy } from 'sinon';
 import { adapter } from 'test/utils/scheduler';
 import { EventCalendarStore } from '../EventCalendarStore';
-import { CalendarView } from '../../models';
+import { CalendarView, SchedulerOccurrencesByDay } from '../../models';
 
 const DEFAULT_PARAMS = { events: [] };
+
+const EMPTY_VISIBLE_OCCURRENCES: SchedulerOccurrencesByDay = {
+  byKey: new Map(),
+  keysByDay: new Map(),
+  dayKeys: [],
+};
 
 describe('Date - EventCalendarStore', () => {
   describe('Method: switchToDay', () => {
@@ -198,6 +204,7 @@ describe('Date - EventCalendarStore', () => {
       store.setViewConfig({
         siblingVisibleDateGetter,
         visibleDaysSelector: () => [],
+        visibleOccurrencesSelector: () => EMPTY_VISIBLE_OCCURRENCES,
       });
       store.goToPreviousVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);
@@ -224,6 +231,7 @@ describe('Date - EventCalendarStore', () => {
       store.setViewConfig({
         siblingVisibleDateGetter,
         visibleDaysSelector: () => [],
+        visibleOccurrencesSelector: () => EMPTY_VISIBLE_OCCURRENCES,
       });
       store.goToNextVisibleDate({} as any);
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(targetDate);

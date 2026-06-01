@@ -10,14 +10,13 @@ import {
   SchedulerProcessedDate,
 } from '@mui/x-scheduler-internals/models';
 import { getDayList } from '@mui/x-scheduler-internals/get-day-list';
-import { getStartOfWeek, getEndOfWeek } from '@mui/x-scheduler-internals/internals';
+import { getStartOfWeek, getEndOfWeek, getWeekNumber } from '@mui/x-scheduler-internals/internals';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { useEventCalendarView } from '@mui/x-scheduler-internals/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import type { EventCalendarState as State } from '@mui/x-scheduler-internals/use-event-calendar';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import clsx from 'clsx';
 import { MonthViewProps } from './MonthView.types';
@@ -116,25 +115,51 @@ const DAY_NUMBER_HEADER_HEIGHT = 22; // event height (18px) + gap (4px)
 const EVENT_HEIGHT = 18;
 const EVENT_GAP = 4; // theme.spacing(0.5) = 4px
 
+const monthVisibleDaysSelector = createSelectorMemoized(
+  (state: State) => state.adapter,
+  schedulerOtherSelectors.visibleDate,
+  eventCalendarPreferenceSelectors.showWeekends,
+  eventCalendarPreferenceSelectors.weekStartsOn,
+  (adapter, visibleDate, showWeekends, weekStartsOn) =>
+    getDayList({
+      adapter,
+      start: getStartOfWeek(adapter, adapter.startOfMonth(visibleDate), weekStartsOn),
+      end: getEndOfWeek(adapter, adapter.endOfMonth(visibleDate), weekStartsOn),
+      excludeWeekends: !showWeekends,
+    }),
+);
+
+// Group the visible days into week rows so the day-grid algorithm restarts each
+// multi-day event's lane on the first day of every new week.
+const monthVisibleRowsSelector = createSelectorMemoized(
+  (state: State) => state.adapter,
+  monthVisibleDaysSelector,
+  eventCalendarPreferenceSelectors.weekStartsOn,
+  (adapter, days, weekStartsOn) => {
+    const rows: SchedulerProcessedDate[][] = [];
+    let weekNumber: number | null = null;
+    for (const day of days) {
+      const dayWeekNumber = getWeekNumber(adapter, day.value, weekStartsOn);
+      if (weekNumber !== dayWeekNumber) {
+        weekNumber = dayWeekNumber;
+        rows.push([day]);
+      } else {
+        rows[rows.length - 1].push(day);
+      }
+    }
+    return rows;
+  },
+);
+
 const MONTH_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addMonths(
       state.adapter.startOfMonth(schedulerOtherSelectors.visibleDate(state)),
       delta,
     ),
-  visibleDaysSelector: createSelectorMemoized(
-    (state: State) => state.adapter,
-    schedulerOtherSelectors.visibleDate,
-    eventCalendarPreferenceSelectors.showWeekends,
-    eventCalendarPreferenceSelectors.weekStartsOn,
-    (adapter, visibleDate, showWeekends, weekStartsOn) =>
-      getDayList({
-        adapter,
-        start: getStartOfWeek(adapter, adapter.startOfMonth(visibleDate), weekStartsOn),
-        end: getEndOfWeek(adapter, adapter.endOfMonth(visibleDate), weekStartsOn),
-        excludeWeekends: !showWeekends,
-      }),
-  ),
+  visibleDaysSelector: monthVisibleDaysSelector,
+  visibleRowsSelector: monthVisibleRowsSelector,
+  dayGrid: {},
 };
 
 /**
@@ -157,29 +182,18 @@ export const MonthView = React.memo(
 
     // Selector hooks
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
-    const showWeekends = useStore(store, eventCalendarPreferenceSelectors.showWeekends);
 
     // State hooks
     const [maxEvents, setMaxEvents] = React.useState<number>(2);
 
     // Feature hooks
-    const { days } = useEventCalendarView(MONTH_VIEW_CONFIG);
-
-    const weeks = React.useMemo(() => {
-      const chunkSize = showWeekends ? 7 : 5;
-      const result: SchedulerProcessedDate[][] = [];
-      for (let i = 0; i < days.length; i += chunkSize) {
-        result.push(days.slice(i, i + chunkSize));
-      }
-      return result;
-    }, [days, showWeekends]);
+    useEventCalendarView(MONTH_VIEW_CONFIG);
+    const weeks = useStore(store, monthVisibleRowsSelector);
 
     const monthViewRowsPerType = React.useMemo(
       () => ({ 'day-grid': weeks.length }) as const,
       [weeks.length],
     );
-
-    const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
 
     useResizeObserver(
       cellRef,
@@ -238,7 +252,6 @@ export const MonthView = React.memo(
                   rowIndex={weekIdx}
                   maxEvents={maxEvents}
                   days={week}
-                  occurrencesMap={occurrencesMap}
                   firstDayRef={weekIdx === 0 ? cellRef : undefined}
                 />
               ))}

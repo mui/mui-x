@@ -210,7 +210,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   props: TimeGridEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, variant, className, ...other } = props;
+  const { occurrence, variant, firstLane, lastLane, className, ...other } = props;
 
   // Context hooks
   const store = useEventCalendarStoreContext();
@@ -284,8 +284,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     end: occurrence.displayTimezone.end,
     ref: forwardedRef,
     style: {
-      '--first-index': occurrence.position.firstIndex,
-      '--last-index': occurrence.position.lastIndex,
+      '--first-index': firstLane,
+      '--last-index': lastLane,
     } as React.CSSProperties,
     ...other,
     className: clsx(className, occurrence.className),

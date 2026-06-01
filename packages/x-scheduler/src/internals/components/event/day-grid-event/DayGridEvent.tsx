@@ -300,7 +300,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   props: DayGridEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, variant, style: styleProp, className, ...other } = props;
+  const { occurrence, variant, firstLane, cellSpan, style: styleProp, className, ...other } = props;
 
   // Context hooks
   const { classes, localeText } = useEventCalendarStyledContext();
@@ -411,8 +411,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     'data-variant': variant,
     'data-palette': color,
     style: {
-      '--grid-row': occurrence.position.index,
-      '--grid-column-span': occurrence.position.daySpan,
+      '--grid-row': firstLane,
+      '--grid-column-span': cellSpan,
       ...styleProp,
     } as React.CSSProperties,
     ...other,

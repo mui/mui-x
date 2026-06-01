@@ -1,23 +1,46 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store/useStore';
+import {
+  OCCURRENCE_PLACEHOLDER_KEY,
+  OccurrenceLanePosition,
+  SchedulerEventOccurrencePlaceholder,
+  SchedulerResourceId,
+} from '@mui/x-scheduler-internals/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from '@mui/x-scheduler-internals/internals';
 import { processDate } from '@mui/x-scheduler-internals/process-date';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
-import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { useEventTimelinePremiumStoreContext } from '../../use-event-timeline-premium-store-context';
-import { timelineOccurrencePlaceholderSelectors } from '../../event-timeline-premium-selectors';
+import {
+  eventTimelineOccurrencePositionSelectors,
+  timelineOccurrencePlaceholderSelectors,
+} from '../../event-timeline-premium-selectors';
 
+export interface TimelineRowPlaceholder {
+  /**
+   * The bare placeholder occurrence (no positional metadata).
+   */
+  occurrence: SchedulerEventOccurrencePlaceholder;
+  /**
+   * 1-based first lane the placeholder occupies in the row.
+   */
+  firstLane: number;
+  /**
+   * 1-based last lane the placeholder occupies (>= firstLane).
+   */
+  lastLane: number;
+}
+
+/**
+ * Computes the placeholder occurrence (creation, drag, resize) to render in a timeline
+ * resource row.
+ */
 export function usePlaceholderInRow(
-  parameters: usePlaceholderInRow.Parameters,
-): usePlaceholderInRow.ReturnValue {
-  const { occurrences, maxIndex, resourceId } = parameters;
-
-  // Context hooks
+  resourceId: SchedulerResourceId | null,
+): TimelineRowPlaceholder | null {
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  // Selector hooks
   const rawPlaceholder = useStore(
     store,
     timelineOccurrencePlaceholderSelectors.placeholderInResource,
@@ -28,6 +51,16 @@ export function usePlaceholderInRow(
     ? rawPlaceholder.eventId
     : null;
   const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
+  const positionForKey: OccurrenceLanePosition | null = useStore(
+    store,
+    eventTimelineOccurrencePositionSelectors.positionByKey,
+    rawPlaceholder && 'occurrenceKey' in rawPlaceholder ? rawPlaceholder.occurrenceKey : null,
+  );
+  const maxLane = useStore(
+    store,
+    eventTimelineOccurrencePositionSelectors.maxLaneForResource,
+    resourceId,
+  );
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
@@ -36,9 +69,9 @@ export function usePlaceholderInRow(
     const startProcessed = processDate(rawPlaceholder.start, adapter);
     const endProcessed = processDate(rawPlaceholder.end, adapter);
     const timezone = adapter.getTimezone(rawPlaceholder.start);
-    const sharedProperties = {
-      id: originalEventId ?? 'occurrence-placeholder',
-      key: 'occurrence-placeholder',
+    const sharedOccurrence: SchedulerEventOccurrencePlaceholder = {
+      id: originalEventId ?? OCCURRENCE_PLACEHOLDER_KEY,
+      key: OCCURRENCE_PLACEHOLDER_KEY,
       title: originalEvent ? originalEvent.title : '',
       resource: rawPlaceholder.resourceId ?? originalEvent?.resource,
       displayTimezone: {
@@ -48,49 +81,18 @@ export function usePlaceholderInRow(
       },
     };
 
-    if (rawPlaceholder.type === 'creation') {
-      return {
-        ...sharedProperties,
-        position: {
-          firstIndex: 1,
-          lastIndex: maxIndex,
-        },
-      };
+    if (rawPlaceholder.type === 'creation' || rawPlaceholder.type === 'external-drag') {
+      const occurrence: SchedulerEventOccurrencePlaceholder =
+        rawPlaceholder.type === 'external-drag'
+          ? { ...sharedOccurrence, title: rawPlaceholder.eventData.title ?? '' }
+          : sharedOccurrence;
+      return { occurrence, firstLane: 1, lastLane: maxLane };
     }
-
-    if (rawPlaceholder.type === 'external-drag') {
-      return {
-        ...sharedProperties,
-        title: rawPlaceholder.eventData.title ?? '',
-        position: {
-          firstIndex: 1,
-          lastIndex: maxIndex,
-        },
-      };
-    }
-
-    const position = occurrences.find(
-      (occurrence) => occurrence.key === rawPlaceholder.occurrenceKey,
-    )?.position ?? {
-      firstIndex: 1,
-      lastIndex: maxIndex,
-    };
 
     return {
-      ...sharedProperties,
-      position,
+      occurrence: sharedOccurrence,
+      firstLane: positionForKey?.firstLane ?? 1,
+      lastLane: positionForKey?.lastLane ?? maxLane,
     };
-  }, [rawPlaceholder, adapter, originalEvent, originalEventId, occurrences, maxIndex]);
-}
-
-export namespace usePlaceholderInRow {
-  export interface Parameters extends useEventOccurrencesWithTimelinePosition.ReturnValue {
-    /**
-     * The resource id of the row in which to render the placeholder.
-     */
-    resourceId: string | null;
-  }
-
-  export type ReturnValue =
-    useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
+  }, [rawPlaceholder, adapter, originalEvent, originalEventId, positionForKey, maxLane]);
 }

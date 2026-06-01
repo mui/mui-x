@@ -69,16 +69,14 @@ describe('TimelineGrid keyboard navigation', () => {
                 resourceId={resourceId}
                 data-testid={`events-${resourceId}`}
               >
-                {() => (
-                  <TimelineGrid.Event
-                    eventId={`event-${resourceId}`}
-                    occurrenceKey={`occ-${resourceId}`}
-                    start={processDate(DEFAULT_TESTING_VISIBLE_DATE, adapter)}
-                    end={processDate(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 1), adapter)}
-                    renderDragPreview={() => null}
-                    data-testid={`event-${resourceId}`}
-                  />
-                )}
+                <TimelineGrid.Event
+                  eventId={`event-${resourceId}`}
+                  occurrenceKey={`occ-${resourceId}`}
+                  start={processDate(DEFAULT_TESTING_VISIBLE_DATE, adapter)}
+                  end={processDate(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 1), adapter)}
+                  renderDragPreview={() => null}
+                  data-testid={`event-${resourceId}`}
+                />
               </TimelineGrid.EventRow>
             )}
           </TimelineGrid.SubGrid>

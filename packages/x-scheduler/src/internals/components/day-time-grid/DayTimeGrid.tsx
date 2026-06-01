@@ -4,13 +4,11 @@ import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
-import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-internals/use-event-occurrences-grouped-by-day';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
-import { eventCalendarViewSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import {
-  SchedulerEventOccurrence,
-  SchedulerProcessedDate,
-} from '@mui/x-scheduler-internals/models';
+  eventCalendarOccurrencePositionSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-internals/event-calendar-selectors';
+import { SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 import { isWeekend } from '@mui/x-scheduler-internals/use-adapter';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
@@ -21,7 +19,6 @@ import { DayTimeGridProps } from './DayTimeGrid.types';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
-import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 
@@ -343,18 +340,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
   const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
 
-  // Feature hooks
-  const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
-  const occurrences = useEventOccurrencesWithDayGridPosition({
-    days,
-    occurrencesMap,
-    shouldAddPosition: React.useCallback(
-      (occurrence: SchedulerEventOccurrence) =>
-        isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
-      [adapter],
-    ),
-  });
-
   const formatTime = useFormatTime();
 
   const [hasScroll, setHasScroll] = React.useState(false);
@@ -377,13 +362,20 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   );
 
   useIsoLayoutEffect(() => {
-    const body = bodyRef.current;
-    const allDayHeader = allDayHeaderWrapperRef.current;
-    if (!body || !allDayHeader) {
-      return;
-    }
-    setHasScroll(body.scrollHeight > body.clientHeight);
-  }, [occurrencesMap]);
+    const recomputeHasScroll = () => {
+      const body = bodyRef.current;
+      const allDayHeader = allDayHeaderWrapperRef.current;
+      if (!body || !allDayHeader) {
+        return;
+      }
+      setHasScroll(body.scrollHeight > body.clientHeight);
+    };
+
+    recomputeHasScroll();
+    return store.observe(eventCalendarOccurrencePositionSelectors.dayGridPositions, () => {
+      recomputeHasScroll();
+    });
+  }, [store]);
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
 
@@ -466,8 +458,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           end={end}
           className={classes.dayTimeGridAllDayEventsRow}
         >
-          {occurrences.days.map((day, index) => (
-            <DayGridCell key={day.key} day={day} row={occurrences} colIndex={index + 1} />
+          {days.map((day, index) => (
+            <DayGridCell key={day.key} day={day} colIndex={index + 1} />
           ))}
         </DayTimeGridAllDayEventsRow>
         <div className={classes.dayTimeGridScrollablePlaceholder} />
@@ -494,7 +486,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             </DayTimeGridTimeAxis>
 
             <DayTimeGridGrid className={classes.dayTimeGridGrid} role="row" aria-rowindex={3}>
-              {occurrences.days.map((day, index) => (
+              {days.map((day, index) => (
                 <TimeGridColumn
                   key={day.key}
                   day={day}

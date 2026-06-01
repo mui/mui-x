@@ -5,7 +5,6 @@ import { useStore } from '@base-ui/utils/store';
 import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-context';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
-import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-day-grid-position';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { getWeekNumber } from '@mui/x-scheduler-internals/internals';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
@@ -40,14 +39,13 @@ const MonthViewWeekNumberCell = styled('div', {
 }));
 
 export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
-  const { rowIndex, maxEvents, days, occurrencesMap, firstDayRef } = props;
+  const { rowIndex, maxEvents, days, firstDayRef } = props;
 
   const adapter = useAdapterContext();
   const store = useEventCalendarStoreContext();
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
   const weekStartsOn = useStore(store, eventCalendarPreferenceSelectors.weekStartsOn);
   const { schedulerId, classes, localeText } = useEventCalendarStyledContext();
-  const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
   const weekNumber = getWeekNumber(adapter, days[0].value, weekStartsOn);
 
   const { start, end } = React.useMemo(
@@ -80,13 +78,12 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
           {weekNumber}
         </MonthViewWeekNumberCell>
       )}
-      {occurrences.days.map((day, dayIdx) => (
+      {days.map((day, dayIdx) => (
         <MonthViewCell
           ref={dayIdx === 0 ? firstDayRef : undefined}
           key={day.key}
           day={day}
           maxEvents={maxEvents}
-          row={occurrences}
           colIndex={dayIdx + 1}
           ariaLabelledBy={weekNumberId}
         />

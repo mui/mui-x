@@ -29,7 +29,7 @@ describe('<TimelineGrid.Event />', () => {
           <EventTimelinePremiumProvider events={[]} resources={[ResourceBuilder.new().build()]}>
             <TimelineGrid.Root>
               <TimelineGrid.SubGrid>
-                <TimelineGrid.EventRow resourceId="r1">{() => node}</TimelineGrid.EventRow>
+                <TimelineGrid.EventRow resourceId="r1">{node}</TimelineGrid.EventRow>
               </TimelineGrid.SubGrid>
             </TimelineGrid.Root>
           </EventTimelinePremiumProvider>,

@@ -285,6 +285,13 @@ export interface SchedulerEventOccurrencePlaceholder extends SchedulerProcessedE
 }
 
 /**
+ * Shared `id` / `key` for the single placeholder occurrence rendered during a creation,
+ * drag or resize interaction. There is at most one placeholder per scheduler, so a fixed
+ * string is sufficient and lets consumers identify it across re-renders.
+ */
+export const OCCURRENCE_PLACEHOLDER_KEY = 'occurrence-placeholder';
+
+/**
  * Union of all event occurrence types that can be rendered by the scheduler.
  *
  * Includes both real event occurrences and temporary placeholder occurrences.
