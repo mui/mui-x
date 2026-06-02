@@ -167,7 +167,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
   it('should periodically revalidate root rows when dataSourceRevalidateMs is set', async () => {
     const localFetchRowsSpy = spy();
-    const { unmount } = render(
+    const { setProps, unmount } = render(
       <TestDataSource
         dataSourceCache={null}
         dataSourceRevalidateMs={1}
@@ -179,22 +179,23 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(localFetchRowsSpy.callCount).to.be.greaterThan(0);
     });
 
-    vi.useFakeTimers();
-    localFetchRowsSpy.resetHistory();
+    const callCountAfterFirstFetch = localFetchRowsSpy.callCount;
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(100);
+    // With `dataSourceRevalidateMs` set, the grid refetches on an interval, so
+    // the call count keeps growing on its own without any further prop change.
+    await waitFor(() => {
+      expect(localFetchRowsSpy.callCount).to.be.greaterThan(callCountAfterFirstFetch);
     });
 
-    expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
-
-    vi.useRealTimers();
+    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
+    // after unmount and leak polling into later tests.
+    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
   it('should periodically revalidate expanded nested rows when dataSourceRevalidateMs is set', async () => {
     const localFetchRowsSpy = spy();
-    const { user, unmount } = render(
+    const { setProps, user, unmount } = render(
       <TestDataSource
         dataSourceCache={null}
         dataSourceRevalidateMs={1}
@@ -214,27 +215,27 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(localFetchRowsSpy.callCount).to.be.greaterThan(1);
     });
 
-    vi.useFakeTimers();
     localFetchRowsSpy.resetHistory();
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(100);
+    // The expanded group is revalidated on the interval; wait for one of those
+    // background nested requests (a call carrying `groupKeys`) to be issued.
+    await waitFor(() => {
+      const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
+        const url = new URL(call.firstArg as string);
+        const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+        return groupKeys.length > 0;
+      });
+      expect(hasNestedGroupRequest).to.equal(true);
     });
 
-    const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
-      const url = new URL(call.firstArg as string);
-      const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
-      return groupKeys.length > 0;
-    });
-
-    expect(hasNestedGroupRequest).to.equal(true);
-
-    vi.useRealTimers();
+    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
+    // after unmount and leak polling into later tests.
+    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
   it('should keep selected nested rows selected during background nested revalidation', async () => {
-    const { user, unmount } = render(
+    const { setProps, user, unmount } = render(
       <TestDataSource dataSourceCache={null} dataSourceRevalidateMs={1} />,
     );
 
@@ -259,29 +260,29 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
     expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
 
-    vi.useFakeTimers();
     fetchRowsSpy.resetHistory();
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(100);
+    // Wait for a background nested revalidation (a call carrying `groupKeys`).
+    await waitFor(() => {
+      const hasNestedGroupRequest = fetchRowsSpy.getCalls().some((call) => {
+        const url = new URL(call.firstArg as string);
+        const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+        return groupKeys.length > 0;
+      });
+      expect(hasNestedGroupRequest).to.equal(true);
     });
-
-    const hasNestedGroupRequest = fetchRowsSpy.getCalls().some((call) => {
-      const url = new URL(call.firstArg as string);
-      const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
-      return groupKeys.length > 0;
-    });
-    expect(hasNestedGroupRequest).to.equal(true);
 
     expect(apiRef.current!.isRowSelected(firstChildId)).to.equal(true);
 
-    vi.useRealTimers();
+    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
+    // after unmount and leak polling into later tests.
+    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
   it('should not set children loading state during background nested revalidation', async () => {
     const localFetchRowsSpy = spy();
-    const { user, unmount } = render(
+    const { setProps, user, unmount } = render(
       <TestDataSource
         dataSourceCache={null}
         dataSourceRevalidateMs={1}
@@ -303,28 +304,29 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     const setChildrenLoadingSpy = spy(apiRef.current!.dataSource, 'setChildrenLoading');
 
-    vi.useFakeTimers();
     localFetchRowsSpy.resetHistory();
     setChildrenLoadingSpy.resetHistory();
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(100);
+    // Wait for a background nested revalidation (a call carrying `groupKeys`)...
+    await waitFor(() => {
+      const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
+        const url = new URL(call.firstArg as string);
+        const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
+        return groupKeys.length > 0;
+      });
+      expect(hasNestedGroupRequest).to.equal(true);
     });
 
-    const hasNestedGroupRequest = localFetchRowsSpy.getCalls().some((call) => {
-      const url = new URL(call.firstArg as string);
-      const groupKeys = JSON.parse(url.searchParams.get('groupKeys') || '[]');
-      return groupKeys.length > 0;
-    });
-    expect(hasNestedGroupRequest).to.equal(true);
-
+    // ...and confirm it never put the expanded group into a loading state.
     const hasLoadingTrueCall = setChildrenLoadingSpy
       .getCalls()
       .some((call) => call.args[0] === expandedRowId && call.args[1] === true);
     setChildrenLoadingSpy.restore();
     expect(hasLoadingTrueCall).to.equal(false);
 
-    vi.useRealTimers();
+    // Stop revalidation so an in-flight fetch can't re-arm the 1ms interval
+    // after unmount and leak polling into later tests.
+    setProps({ dataSourceRevalidateMs: 0 });
     unmount();
   });
 
