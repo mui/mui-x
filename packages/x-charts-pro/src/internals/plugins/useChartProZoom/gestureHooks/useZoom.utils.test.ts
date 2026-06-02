@@ -90,23 +90,17 @@ describe('translateZoom (Y axis pan)', () => {
   const dragDown = { x: 0, y: -50 };
 
   it('with reverse=false (cartesian Y), drag down shifts the view toward higher data values', () => {
-    const [zoom] = translateZoom(
-      [{ axisId: 'y', start: 30, end: 60 }],
-      dragDown,
-      drawingArea,
-      { y: yOptions },
-    );
+    const [zoom] = translateZoom([{ axisId: 'y', start: 30, end: 60 }], dragDown, drawingArea, {
+      y: yOptions,
+    });
     expect(zoom.start).to.be.greaterThan(30);
     expect(zoom.end).to.be.greaterThan(60);
   });
 
   it('with reverse=true (ordinal Y compensated: data[0] at top), drag down shifts toward data[0]', () => {
-    const [zoom] = translateZoom(
-      [{ axisId: 'y', start: 30, end: 60 }],
-      dragDown,
-      drawingArea,
-      { y: { ...yOptions, reverse: true } },
-    );
+    const [zoom] = translateZoom([{ axisId: 'y', start: 30, end: 60 }], dragDown, drawingArea, {
+      y: { ...yOptions, reverse: true },
+    });
     expect(zoom.start).to.be.lessThan(30);
     expect(zoom.end).to.be.lessThan(60);
   });
