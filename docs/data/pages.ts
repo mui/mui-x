@@ -756,6 +756,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/label' },
               { pathname: '/x/react-charts/legend' },
               { pathname: '/x/react-charts/localization' },
+              { pathname: '/x/react-charts/performance' },
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
               {
