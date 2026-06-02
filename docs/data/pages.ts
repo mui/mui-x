@@ -76,10 +76,7 @@ const schedulerPages: MuiPage[] = [
           { pathname: '/x/react-scheduler/event-timeline/editing' },
           { pathname: '/x/react-scheduler/event-timeline/presets' },
           { pathname: '/x/react-scheduler/event-timeline/lazy-loading' },
-          {
-            pathname: '/x/react-scheduler/event-timeline/virtualization',
-            planned: true,
-          },
+          { pathname: '/x/react-scheduler/event-timeline/virtualization' },
           {
             pathname: '/x/react-scheduler/event-timeline/filtering',
             planned: true,
@@ -713,6 +710,11 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-charts/radial-lines',
             title: 'Radial Lines',
+            plan: 'premium',
+            unstable: true,
+          },
+          {
+            pathname: '/x/react-charts/map',
             plan: 'premium',
             unstable: true,
           },

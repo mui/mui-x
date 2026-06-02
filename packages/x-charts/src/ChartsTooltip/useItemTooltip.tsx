@@ -70,9 +70,9 @@ export function useInternalItemTooltip<SeriesType extends ChartSeriesType>():
     : undefined;
 
   const colorAxisId: AxisId | undefined =
-    'colorAxisId' in itemSeries || 'zAxisId' in itemSeries
-      ? (itemSeries.colorAxisId ?? itemSeries.zAxisId ?? zAxisIds[0])
-      : zAxisIds[0];
+    ('colorAxisId' in itemSeries ? itemSeries.colorAxisId : undefined) ??
+    ('zAxisId' in itemSeries ? itemSeries.zAxisId : undefined) ??
+    zAxisIds[0];
 
   const mainAxis =
     // eslint-disable-next-line no-nested-ternary
