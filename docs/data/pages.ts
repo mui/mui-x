@@ -699,7 +699,6 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-charts/candlestick',
             plan: 'premium',
-            unstable: true,
           },
           {
             pathname: '/x/react-charts/radial-bars',
