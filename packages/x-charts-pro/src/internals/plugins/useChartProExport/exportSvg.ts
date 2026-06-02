@@ -2,7 +2,7 @@ import ownerDocument from '@mui/utils/ownerDocument';
 import { type ChartSvgExportOptions } from './useChartProExport.types';
 
 async function exportSvg(
-  chartRoot: HTMLElement,
+  chartRoot: Element,
   chartContainer: HTMLElement | SVGSVGElement,
   options?: ChartSvgExportOptions,
 ) {
