@@ -4,7 +4,10 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-import { RadialLineChart, RadialLineSeries } from '@mui/x-charts-premium/RadialLineChart';
+import {
+  RadialLineChart,
+  RadialLineSeries,
+} from '@mui/x-charts-premium/RadialLineChart';
 import { HighlightedCode } from '@mui/internal-core-docs/HighlightedCode';
 import { ChartsAxisData } from '@mui/x-charts/models';
 

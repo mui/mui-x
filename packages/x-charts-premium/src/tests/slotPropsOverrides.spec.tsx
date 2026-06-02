@@ -1,7 +1,4 @@
-import {
-  RadialLineChart,
-  type RadialLineChartSlots,
-} from '@mui/x-charts-premium/RadialLineChart';
+import { RadialLineChart, type RadialLineChartSlots } from '@mui/x-charts-premium/RadialLineChart';
 import {
   ScatterChartPremium,
   type ScatterChartPremiumSlots,
