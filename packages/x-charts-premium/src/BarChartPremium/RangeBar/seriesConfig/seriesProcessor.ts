@@ -1,6 +1,6 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { type SeriesId } from '@mui/x-charts/models';
-import { type SeriesProcessor } from '@mui/x-charts/internals';
+import { incompleteDatasetKeysError, type SeriesProcessor } from '@mui/x-charts/internals';
 import { type DefaultizedRangeBarSeriesType, type RangeBarValueType } from '../../../models';
 
 const rangeBarValueFormatter = (v: RangeBarValueType | null) =>
@@ -33,10 +33,7 @@ Either provide a data property to the series or use the dataset prop.`,
     );
 
     if (datasetKeys && missingKeys.length > 0) {
-      throw new Error(
-        `MUI X Charts: range bar series with id='${id}' has incomplete datasetKeys.
-Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
-      );
+      incompleteDatasetKeysError('RangeBar', id, missingKeys);
     }
 
     let data: DefaultizedRangeBarSeriesType['data'];

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-premium",
-  "version": "9.0.0-alpha.4",
+  "version": "9.0.0-alpha.7",
   "author": "MUI Team",
   "description": "The Premium plan edition of the scheduler components (MUI X).",
   "license": "SEE LICENSE IN LICENSE",
@@ -14,7 +14,8 @@
     "./use-event-calendar-premium-api-ref": "./src/use-event-calendar-premium-api-ref/index.ts",
     "./use-event-timeline-premium-api-ref": "./src/use-event-timeline-premium-api-ref/index.ts",
     "./locales": "./src/locales/index.ts",
-    "./theme-augmentation": "./src/theme-augmentation/index.ts"
+    "./theme-augmentation": "./src/theme-augmentation/index.ts",
+    "./internals": "./src/internals/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
@@ -56,6 +57,7 @@
     "@mui/x-scheduler": "workspace:^",
     "@mui/x-scheduler-internals": "workspace:^",
     "@mui/x-scheduler-internals-premium": "workspace:^",
+    "@mui/x-virtualizer": "workspace:^",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },

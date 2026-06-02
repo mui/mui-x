@@ -80,6 +80,15 @@ return (
 
 :::
 
+## Require a resource
+
+By default, an event on the Event Calendar can be saved without a resource — the edit dialog includes a "No resource" option in the resource picker.
+Set `shouldEventRequireResource` to `true` to make the resource mandatory: the "No resource" option is hidden and the form cannot be submitted with an empty resource.
+
+```tsx
+<EventCalendar shouldEventRequireResource />
+```
+
 ## Resource properties
 
 ### Color

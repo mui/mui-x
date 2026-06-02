@@ -4,8 +4,8 @@ import {
   buildFieldInteractions,
   expectFieldValue,
   adapterToUse,
-  describeAdapters,
 } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
 describe('<DesktopDatePicker /> - Field', () => {
   describe('Basic behaviors', () => {

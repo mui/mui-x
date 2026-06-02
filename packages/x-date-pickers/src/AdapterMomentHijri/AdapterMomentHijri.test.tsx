@@ -79,6 +79,7 @@ describe('<AdapterMomentHijri />', () => {
       describe(`test with the locale "${localeKey}"`, () => {
         const { render, adapter } = createPickerRenderer({
           adapterName: 'moment-hijri',
+          Adapter: AdapterMomentHijri,
           locale: localeObject,
         });
 

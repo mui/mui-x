@@ -1,9 +1,4 @@
-import type {
-  ChartsRadiusAxisProps,
-  ChartsRotationAxisProps,
-  ScaleName,
-  PolarAxisConfig,
-} from '../../../../models/axis';
+import type { ChartsRadialAxisProps, ScaleName, PolarAxisConfig } from '../../../../models/axis';
 import { type PolarChartSeriesType } from '../../../../models/seriesType/config';
 import {
   type PolarExtremumGetter,
@@ -16,7 +11,7 @@ import { isPolarSeriesType } from '../../../isPolar';
 const axisExtremumCallback = <SeriesType extends PolarChartSeriesType>(
   acc: PolarExtremumGetterResult,
   chartType: SeriesType,
-  axis: PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps | ChartsRadiusAxisProps>,
+  axis: PolarAxisConfig<ScaleName, any, ChartsRadialAxisProps>,
   axisDirection: 'rotation' | 'radius',
   seriesConfig: ChartSeriesConfig<SeriesType>,
   axisIndex: number,
@@ -41,7 +36,7 @@ const axisExtremumCallback = <SeriesType extends PolarChartSeriesType>(
 };
 
 export const getAxisExtremum = <SeriesType extends PolarChartSeriesType>(
-  axis: PolarAxisConfig<ScaleName, any, ChartsRotationAxisProps | ChartsRadiusAxisProps>,
+  axis: PolarAxisConfig<ScaleName, any, ChartsRadialAxisProps>,
   axisDirection: 'rotation' | 'radius',
   seriesConfig: ChartSeriesConfig<SeriesType>,
   axisIndex: number,

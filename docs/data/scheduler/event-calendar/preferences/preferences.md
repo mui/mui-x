@@ -60,6 +60,7 @@ You can customize which preferences are available in the preferences menu using 
 Available properties:
 
 - `toggleAmpm`: Show/hide the menu item that toggles 12/24‑hour time format.
+- `toggleWeekStartsOn`: Show/hide the menu item that changes the first day of the week.
 - `toggleWeekendVisibility`: Show/hide the menu item that toggles weekend visibility.
 - `toggleWeekNumberVisibility`: Show/hide the menu item that toggles week number visibility.
 - `toggleEmptyDaysInAgenda`: Show/hide the menu item that toggles the visibility of days with no event in the agenda view.

@@ -138,7 +138,12 @@ export const CalendarGridTimeColumn = React.forwardRef(function CalendarGridTime
   const element = useRenderElement('div', componentProps, {
     state,
     ref: [forwardedRef, dropTargetRef, listItemRef, cellRef],
-    props: [elementProps, { role: 'gridcell' }, keyboardProps, eventCreationProps],
+    props: [
+      { role: 'gridcell', 'aria-colindex': index + 1 },
+      keyboardProps,
+      eventCreationProps,
+      elementProps,
+    ],
   });
 
   return (

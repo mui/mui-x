@@ -12,6 +12,8 @@ import {
   Unstable_ChartsRadialGrid as ChartsRadialGrid,
   type ChartsRadialGridProps,
 } from '@mui/x-charts/ChartsRadialGrid';
+import { Unstable_ChartsRotationAxis as ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
+import { Unstable_ChartsRadiusAxis as ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
 import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsSurface } from '../ChartsSurface';
 import {
@@ -37,6 +39,10 @@ import type { RadialBarSeriesType } from '../models/seriesType/radialBar';
 import { type RadialBarChartPluginSignatures } from './RadialBarChart.plugins';
 import { RadialBarPlot } from './RadialBarPlot';
 import { useRadialBarChartProps } from './useRadialBarChartProps';
+import {
+  Unstable_ChartsRadialAxisHighlight as ChartsRadialAxisHighlight,
+  type ChartsRadialAxisHighlightProps,
+} from '../ChartsRadialAxisHighlight';
 
 export type RadialBarSeries = MakeOptional<RadialBarSeriesType, 'type'>;
 
@@ -67,6 +73,12 @@ export interface RadialBarChartProps
    * An array of [[RadialBarSeries]] objects.
    */
   series: Readonly<RadialBarSeries[]>;
+  /**
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @default { rotation: 'band' } or { radius: 'band' } according to the layout.
+   */
+  axisHighlight?: ChartsRadialAxisHighlightProps;
   /**
    * Option to display a radial grid in the background.
    */
@@ -122,6 +134,7 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
     clipPathGroupProps,
     overlayProps,
     legendProps,
+    axisHighlightProps,
     children,
   } = useRadialBarChartProps(props);
 
@@ -143,10 +156,13 @@ const RadialBarChart = React.forwardRef(function RadialBarChart(
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
         <ChartsSurface {...chartsSurfaceProps}>
           <ChartsRadialGrid {...gridProps} />
+          <ChartsRadialAxisHighlight {...axisHighlightProps} />
           <g {...clipPathGroupProps}>
             <RadialBarPlot />
             <ChartsOverlay {...overlayProps} />
           </g>
+          <ChartsRotationAxis />
+          <ChartsRadiusAxis />
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
@@ -166,6 +182,15 @@ RadialBarChart.propTypes = {
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
     }),
+  }),
+  /**
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/highlighting highlighting docs} for more details.
+   * @default { rotation: 'band' } or { radius: 'band' } according to the layout.
+   */
+  axisHighlight: PropTypes.shape({
+    radius: PropTypes.oneOf(['band', 'line', 'none']),
+    rotation: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
    * Color palette used to colorize multiple series.
@@ -226,12 +251,12 @@ RadialBarChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialBar']),
+        type: PropTypes.oneOf(['radialBar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialBar']).isRequired,
+        type: PropTypes.oneOf(['radialBar']),
       }),
     ]).isRequired,
   ),
@@ -247,11 +272,11 @@ RadialBarChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
   ]),
   /**
@@ -285,12 +310,12 @@ RadialBarChart.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialBar']),
+        type: PropTypes.oneOf(['radialBar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['radialBar']).isRequired,
+        type: PropTypes.oneOf(['radialBar']),
       }),
     ]).isRequired,
   ),
@@ -388,11 +413,11 @@ RadialBarChart.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['radialBar']).isRequired,
     }),
   ]),
   /**

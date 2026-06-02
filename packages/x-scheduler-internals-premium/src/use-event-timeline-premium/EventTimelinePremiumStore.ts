@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { warn } from '@base-ui/utils/warn';
+import { warnOnce } from '@mui/x-internals/warning';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import {
@@ -14,6 +15,7 @@ import {
   EventTimelinePremiumParameters,
 } from './EventTimelinePremiumStore.types';
 import { EventTimelinePremiumLazyLoadingPlugin } from './plugins/EventTimelinePremiumLazyLoadingPlugin';
+import { schedulerRecurringEventsPlugin } from '../internals/plugins/schedulerRecurringEventsPlugin';
 import {
   EVENT_TIMELINE_PREMIUM_PRESET_CONFIGS,
   getPresetPxPerDay,
@@ -28,6 +30,7 @@ const PRESET_ZOOM_ORDER: EventTimelinePremiumPreset[] = (
 
 export const DEFAULT_PRESETS: EventTimelinePremiumPreset[] = PRESET_ZOOM_ORDER;
 export const DEFAULT_PRESET: EventTimelinePremiumPreset = PRESET_ZOOM_ORDER[0];
+export const DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE = true;
 
 function sortPresetsByZoomOrder(
   presets: EventTimelinePremiumPreset[],
@@ -69,20 +72,45 @@ const deriveStateFromParameters = <TEvent extends object, TResource extends obje
 
 export const DEFAULT_PREFERENCES: EventTimelinePremiumPreferences = DEFAULT_SCHEDULER_PREFERENCES;
 
+function warnIfShouldEventRequireResourceMisconfigured(
+  shouldEventRequireResource: boolean,
+  resources: readonly unknown[] | undefined,
+) {
+  if (shouldEventRequireResource && (resources == null || resources.length === 0)) {
+    warnOnce([
+      'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+      'Users will not be able to select a resource, and events cannot be saved from the event dialog.',
+      'Either provide at least one resource, or set `shouldEventRequireResource={false}`.',
+    ]);
+  }
+}
+
 const mapper: SchedulerParametersToStateMapper<
   EventTimelinePremiumState,
   EventTimelinePremiumParameters<any, any>
 > = {
-  getInitialState: (schedulerInitialState, parameters) => ({
-    ...schedulerInitialState,
-    ...deriveStateFromParameters(parameters),
-    preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
-    preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
-  }),
+  getInitialState: (schedulerInitialState, parameters) => {
+    const shouldEventRequireResource =
+      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
+    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
+    return {
+      ...schedulerInitialState,
+      ...deriveStateFromParameters(parameters),
+      preset: parameters.preset ?? parameters.defaultPreset ?? DEFAULT_PRESET,
+      preferences: parameters.preferences ?? parameters.defaultPreferences ?? EMPTY_OBJECT,
+      shouldEventRequireResource,
+      hasInitialized: false,
+    };
+  },
   updateStateFromParameters: (newSchedulerState, parameters, updateModel) => {
+    const shouldEventRequireResource =
+      parameters.shouldEventRequireResource ?? DEFAULT_SHOULD_EVENT_REQUIRE_RESOURCE;
+    warnIfShouldEventRequireResourceMisconfigured(shouldEventRequireResource, parameters.resources);
     const newState: Partial<EventTimelinePremiumState> = {
       ...newSchedulerState,
       ...deriveStateFromParameters(parameters),
+      shouldEventRequireResource,
+      hasInitialized: true,
     };
 
     updateModel(newState, 'preset', 'defaultPreset');
@@ -107,7 +135,7 @@ export class EventTimelinePremiumStore<
     parameters: EventTimelinePremiumParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
-    super(parameters, adapter, 'EventTimelinePremiumStore', mapper);
+    super(parameters, adapter, 'EventTimelinePremiumStore', mapper, schedulerRecurringEventsPlugin);
 
     if (process.env.NODE_ENV !== 'production') {
       // Assert the initial state validity; `subscribe` only fires on subsequent state changes.

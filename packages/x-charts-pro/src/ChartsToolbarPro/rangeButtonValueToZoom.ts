@@ -41,6 +41,8 @@ export interface RangeButtonFunctionParams {
  *   @example { unit: 'year' } // Last year (step defaults to 1)
  * - `[start, end]` — An absolute date range.
  *   @example [new Date(2024, 0, 1), new Date(2024, 6, 1)] // Jan–Jul 2024
+ * - `[start, end]` of strings — A range between two axis values, for ordinal (band/point) axes.
+ *   @example ['Feb', 'May'] // From the 'Feb' category to the 'May' category
  * - `(params) => { start, end }` — A function that receives axis context (`scaleType`, `data`, `domain`) and returns zoom percentages (0-100).
  *   @example ({ domain }) => ({ start: 0, end: 50 }) // First half of data
  *   @example ({ data }) => {
@@ -53,6 +55,7 @@ export interface RangeButtonFunctionParams {
 export type RangeButtonValue =
   | { unit: RangeButtonIntervalUnit; step?: number }
   | [Date, Date]
+  | [string, string]
   | ((params: RangeButtonFunctionParams) => { start: number; end: number })
   | null;
 
@@ -131,19 +134,53 @@ export function rangeButtonValueToZoom(
   }
 
   const {
+    scaleType,
     domain: { min: domainMin, max: domainMax },
     data: ordinalData,
   } = params;
+
+  // Ordinal axis range — resolve each endpoint to its matching value on the axis.
+  // Band/point axes can carry strings, numbers, or dates, so the match is by strict equality.
+  if (Array.isArray(value) && ordinalData) {
+    const startIndex = ordinalData.findIndex((item) => item === value[0]);
+    const endIndex = ordinalData.findIndex((item) => item === value[1]);
+    if (startIndex !== -1 && endIndex !== -1) {
+      if (process.env.NODE_ENV !== 'production' && endIndex < startIndex) {
+        warnOnce([
+          'MUI X Charts: Range button received a range whose end value comes before its start value.',
+          'This produces an empty zoom range.',
+        ]);
+      }
+      // Band items span [i/L, (i+1)/L] along the axis; point items sit at i/(L-1).
+      // For band, the end index is inclusive, so the right edge of the band is `(endIndex + 1) / L`.
+      if (scaleType === 'band') {
+        return {
+          start: (startIndex / ordinalData.length) * 100,
+          end: ((endIndex + 1) / ordinalData.length) * 100,
+        };
+      }
+      const maxIndex = ordinalData.length - 1;
+      return {
+        start: maxIndex === 0 ? 0 : (startIndex / maxIndex) * 100,
+        end: maxIndex === 0 ? 100 : (endIndex / maxIndex) * 100,
+      };
+    }
+    // No match on the axis values — fall through in case they are date-like.
+  }
 
   // For ordinal axes with date-like data, resolve date ranges and intervals to matching indices.
   const timestamps = ordinalData ? toTimestampArray(ordinalData) : undefined;
 
   if (timestamps) {
+    const isBand = scaleType === 'band';
+    const denominator = isBand ? timestamps.length : timestamps.length - 1;
     const maxIndex = timestamps.length - 1;
+    const toPercent = (i: number, defaultPercent: number) =>
+      denominator === 0 ? defaultPercent : (i / denominator) * 100;
 
     if (Array.isArray(value)) {
-      const startTarget = value[0].getTime();
-      const endTarget = value[1].getTime();
+      const startTarget = toTimestamp(value[0]) ?? Number.NaN;
+      const endTarget = toTimestamp(value[1]) ?? Number.NaN;
       if (process.env.NODE_ENV !== 'production' && endTarget < startTarget) {
         warnOnce([
           'MUI X Charts: Range button received a date range whose end is before its start.',
@@ -155,8 +192,8 @@ export function rangeButtonValueToZoom(
       const startIndex = firstGte === -1 ? maxIndex : firstGte;
       const endIndex = lastLte === -1 ? 0 : lastLte;
       return {
-        start: (startIndex / maxIndex) * 100,
-        end: (endIndex / maxIndex) * 100,
+        start: toPercent(startIndex, 0),
+        end: toPercent(endIndex + (isBand ? 1 : 0), 100),
       };
     }
 
@@ -167,15 +204,15 @@ export function rangeButtonValueToZoom(
     const firstGte = timestamps.findIndex((ts) => !Number.isNaN(ts) && ts >= targetStartMs);
     const startIndex = firstGte === -1 ? maxIndex : firstGte;
     return {
-      start: (startIndex / maxIndex) * 100,
+      start: toPercent(startIndex, 0),
       end: 100,
     };
   }
 
   if (process.env.NODE_ENV !== 'production' && ordinalData !== undefined) {
     warnOnce([
-      'MUI X Charts: Range button received a date value for an ordinal axis whose data could not be parsed as dates.',
-      'The zoom range may not match the intended selection. Provide date-like axis data or use a function value.',
+      'MUI X Charts: Range button received a value for an ordinal axis whose data could not be matched.',
+      'The zoom range may not match the intended selection. Provide axis values that exist on the axis, date-like axis data, or use a function value.',
     ]);
   }
 
@@ -186,15 +223,16 @@ export function rangeButtonValueToZoom(
 
   // Absolute date range
   if (Array.isArray(value)) {
-    const [rangeStart, rangeEnd] = value;
-    if (process.env.NODE_ENV !== 'production' && rangeEnd.getTime() < rangeStart.getTime()) {
+    const rangeStart = toTimestamp(value[0]) ?? domainMin;
+    const rangeEnd = toTimestamp(value[1]) ?? domainMax;
+    if (process.env.NODE_ENV !== 'production' && rangeEnd < rangeStart) {
       warnOnce([
         'MUI X Charts: Range button received a date range whose end is before its start.',
         'This produces an empty zoom range.',
       ]);
     }
-    const startPercent = ((rangeStart.getTime() - domainMin) / domainRange) * 100;
-    const endPercent = ((rangeEnd.getTime() - domainMin) / domainRange) * 100;
+    const startPercent = ((rangeStart - domainMin) / domainRange) * 100;
+    const endPercent = ((rangeEnd - domainMin) / domainRange) * 100;
     return { start: startPercent, end: endPercent };
   }
 
@@ -203,6 +241,34 @@ export function rangeButtonValueToZoom(
   const startPercent = ((targetStartMs - domainMin) / domainRange) * 100;
 
   return { start: startPercent, end: 100 };
+}
+
+/**
+ * Builds the {@link RangeButtonFunctionParams} for an axis from its computed domain.
+ *
+ * For ordinal (band/point) axes the domain is index-based; for continuous axes it
+ * uses the first and last domain values.
+ *
+ * @param axis The axis scale type and data.
+ * @param domain The computed domain values of the axis.
+ * @returns The params to pass to {@link rangeButtonValueToZoom}, or `undefined` if the domain is too small to zoom.
+ */
+export function getRangeButtonDomainParams(
+  axis: { scaleType?: string; data?: readonly unknown[] },
+  domain: readonly unknown[] | undefined,
+): RangeButtonFunctionParams | undefined {
+  if (!domain || domain.length < 2) {
+    return undefined;
+  }
+  const scaleType = axis.scaleType ?? 'linear';
+  const isOrdinal = scaleType === 'band' || scaleType === 'point';
+  return {
+    scaleType,
+    data: axis.data,
+    domain: isOrdinal
+      ? { min: 0, max: domain.length - 1 }
+      : { min: Number(domain[0]), max: Number(domain[domain.length - 1]) },
+  };
 }
 
 /**

@@ -18,5 +18,6 @@ benchmark('BarChartPro with big data amount', () => (
     series={[{ data: yData }]}
     width={500}
     height={300}
+    skipAnimation
   />
 ));

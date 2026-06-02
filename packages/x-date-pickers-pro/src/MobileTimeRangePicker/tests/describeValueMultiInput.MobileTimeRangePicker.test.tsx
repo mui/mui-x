@@ -65,7 +65,7 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
       }
 
       // Go to the start date or the end date
-      await user.click(screen.getByRole('tab', { name: setEndDate ? 'End' : 'Start' }));
+      await user.click(await screen.findByRole('tab', { name: setEndDate ? 'End' : 'Start' }));
 
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hours = adapterToUse.format(
@@ -73,20 +73,22 @@ describe('<MobileTimeRangePicker /> - Describe Value Multi Input', () => {
         hasMeridiem ? 'hours12h' : 'hours24h',
       );
       const hoursNumber = adapterToUse.getHours(newValue[setEndDate ? 1 : 0]);
-      await user.click(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+      await user.click(await screen.findByRole('option', { name: `${parseInt(hours, 10)} hours` }));
       await user.click(
-        screen.getByRole('option', {
+        await screen.findByRole('option', {
           name: `${adapterToUse.getMinutes(newValue[setEndDate ? 1 : 0])} minutes`,
         }),
       );
       if (hasMeridiem) {
-        await user.click(screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }));
+        await user.click(
+          await screen.findByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
+        );
       }
       // Close the picker
       if (!isOpened) {
         await user.keyboard('{Escape}');
       } else {
-        const toolbarHourButtons = screen.getAllByRole('button', {
+        const toolbarHourButtons = await screen.findAllByRole('button', {
           name: adapterToUse.format(newValue[0], hasMeridiem ? 'hours12h' : 'hours24h'),
         });
         // return to the start time view in case we'd like to repeat the selection process

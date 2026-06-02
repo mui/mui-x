@@ -14,6 +14,7 @@ import colorProcessor from './getColor';
 import seriesProcessor from './seriesProcessor';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import descriptionGetter from './descriptionGetter';
+import getItemAtPosition from './getItemAtPosition';
 import { radiusExtremumGetter, rotationExtremumGetter } from './extremums';
 import tooltipGetter from './tooltip';
 
@@ -29,7 +30,7 @@ export const radialBarSeriesConfig: ChartSeriesTypeConfig<'radialBar'> = {
   rotationExtremumGetter,
   radiusExtremumGetter,
   getSeriesWithDefaultValues,
-  // getItemAtPosition,
+  getItemAtPosition,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,

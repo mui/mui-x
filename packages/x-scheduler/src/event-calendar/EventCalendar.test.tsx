@@ -1,13 +1,20 @@
+import * as React from 'react';
 import { act, screen, waitFor, within } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import {
+  adapter,
   createSchedulerRenderer,
   EventBuilder,
   ResourceBuilder,
   withinMonthView,
   dateLocaleFr,
 } from 'test/utils/scheduler';
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
+import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
+import { ErrorContainer } from '../internals/components/error-container';
+import { EventCalendarStyledContext } from './EventCalendarStyledContext';
+import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../internals/constants/defaultLocaleText';
 import {
   changeTo24HoursFormat,
   changeTo12HoursFormat,
@@ -252,9 +259,11 @@ describe('EventCalendar', () => {
     it('should allow to show / hide the week number using the UI in the month view', async () => {
       const { user } = render(<EventCalendar events={[]} defaultView="month" />);
 
-      // Week number should not be visible by default
-      const findWeekHeaders = () => screen.queryAllByRole('rowheader', { name: /week/i });
-      expect(await findWeekHeaders()).to.have.lengthOf(0);
+      // Week number should not be visible by default. Week-number labels are aria-hidden,
+      // so query by class instead of role.
+      const findWeekHeaders = () =>
+        document.querySelectorAll(`.${eventCalendarClasses.monthViewWeekNumberCell}`);
+      expect(findWeekHeaders()).to.have.lengthOf(0);
 
       // Show the week number
       await openPreferencesMenu(user);
@@ -262,7 +271,7 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
-      expect(await findWeekHeaders()).to.have.lengthOf.above(0);
+      await waitFor(() => expect(findWeekHeaders().length).to.be.above(0));
 
       // Hide the week number again
       await openPreferencesMenu(user);
@@ -270,7 +279,7 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
-      expect(await findWeekHeaders()).to.have.lengthOf(0);
+      await waitFor(() => expect(findWeekHeaders()).to.have.lengthOf(0));
     });
 
     it('should allow to change the time format using the UI in the week view', async () => {
@@ -430,6 +439,74 @@ describe('EventCalendar', () => {
       const eventElement = document.querySelector('.agenda-class');
       expect(eventElement).not.to.equal(null);
       expect(eventElement?.textContent).to.include('Agenda Event');
+    });
+  });
+
+  describe('ErrorContainer', () => {
+    function renderErrorContainer(initialErrors: Error[]) {
+      const store = new EventCalendarStore({ events: [] }, adapter);
+      store.set(
+        'errors',
+        initialErrors.map((error, index) => ({ error, key: String(index) })),
+      );
+
+      return {
+        store,
+        ...render(
+          <SchedulerStoreContext.Provider value={store as any}>
+            <EventCalendarStyledContext.Provider
+              value={{
+                schedulerId: 'test',
+                classes: eventCalendarClasses,
+                localeText: EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
+              }}
+            >
+              <ErrorContainer />
+            </EventCalendarStyledContext.Provider>
+          </SchedulerStoreContext.Provider>,
+        ),
+      };
+    }
+
+    it('should render multiple alerts when state.errors contains multiple errors', () => {
+      renderErrorContainer([new Error('First error'), new Error('Second error')]);
+
+      expect(document.querySelectorAll(`.${eventCalendarClasses.errorAlert}`).length).to.equal(2);
+      expect(screen.getByText('First error')).not.to.equal(null);
+      expect(screen.getByText('Second error')).not.to.equal(null);
+    });
+
+    it('should remove only the dismissed alert and keep the others', async () => {
+      const { user } = renderErrorContainer([new Error('First error'), new Error('Second error')]);
+
+      const closeButtons = screen.getAllByRole('button', { name: /close/i });
+      expect(closeButtons.length).to.equal(2);
+
+      await user.click(closeButtons[0]);
+
+      await waitFor(() => {
+        expect(document.querySelectorAll(`.${eventCalendarClasses.errorAlert}`).length).to.equal(1);
+      });
+      expect(screen.queryByText('First error')).to.equal(null);
+      expect(screen.getByText('Second error')).not.to.equal(null);
+    });
+
+    it('should re-display the same Error instance after dismiss when pushed again with a new key', async () => {
+      const sharedError = new Error('Shared error');
+      const { store, user } = renderErrorContainer([sharedError]);
+
+      await user.click(screen.getByRole('button', { name: /close/i }));
+      await waitFor(() => {
+        expect(screen.queryByText('Shared error')).to.equal(null);
+      });
+
+      await act(async () => {
+        store.set('errors', [{ error: sharedError, key: 'fresh' }]);
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Shared error')).not.to.equal(null);
+      });
     });
   });
 });

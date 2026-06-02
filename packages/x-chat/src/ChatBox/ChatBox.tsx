@@ -82,17 +82,18 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   } = props;
 
   const classes = useChatBoxUtilityClasses(classesProp);
-  const innerRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = React.useMemo(() => {
-    return (node: HTMLDivElement | null) => {
-      (innerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+  const [rootEl, setRootEl] = React.useState<HTMLDivElement | null>(null);
+  const handleRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      setRootEl(node);
       if (typeof ref === 'function') {
         ref(node);
       } else if (ref) {
         (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
       }
-    };
-  }, [ref]);
+    },
+    [ref],
+  );
 
   return (
     <ChatRoot
@@ -134,7 +135,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
               slots={slots}
               slotProps={slotProps}
               features={features}
-              rootRef={innerRef}
+              rootEl={rootEl}
               suggestions={suggestions}
               suggestionsAutoSubmit={suggestionsAutoSubmit}
               layoutClassName={classes.layout}
@@ -292,14 +293,10 @@ ChatBox.propTypes = {
       parts: PropTypes.arrayOf(
         PropTypes.oneOfType([
           PropTypes.shape({
-            state: PropTypes.oneOf(['done', 'streaming']),
-            text: PropTypes.string.isRequired,
-            type: PropTypes.oneOf(['text']).isRequired,
-          }),
-          PropTypes.shape({
-            state: PropTypes.oneOf(['done', 'streaming']),
-            text: PropTypes.string.isRequired,
-            type: PropTypes.oneOf(['reasoning']).isRequired,
+            data: PropTypes.any.isRequired,
+            id: PropTypes.string,
+            transient: PropTypes.bool,
+            type: PropTypes.object.isRequired,
           }),
           PropTypes.shape({
             filename: PropTypes.string,
@@ -309,24 +306,49 @@ ChatBox.propTypes = {
           }),
           PropTypes.shape({
             sourceId: PropTypes.string.isRequired,
-            title: PropTypes.string,
-            type: PropTypes.oneOf(['source-url']).isRequired,
-            url: PropTypes.string.isRequired,
-          }),
-          PropTypes.shape({
-            sourceId: PropTypes.string.isRequired,
             text: PropTypes.string,
             title: PropTypes.string,
             type: PropTypes.oneOf(['source-document']).isRequired,
           }),
           PropTypes.shape({
-            data: PropTypes.any.isRequired,
-            id: PropTypes.string,
-            transient: PropTypes.bool,
-            type: PropTypes.object.isRequired,
+            sourceId: PropTypes.string.isRequired,
+            title: PropTypes.string,
+            type: PropTypes.oneOf(['source-url']).isRequired,
+            url: PropTypes.string.isRequired,
           }),
           PropTypes.shape({
-            type: PropTypes.oneOf(['step-start']).isRequired,
+            state: PropTypes.oneOf(['done', 'streaming']),
+            text: PropTypes.string.isRequired,
+            type: PropTypes.oneOf(['reasoning']).isRequired,
+          }),
+          PropTypes.shape({
+            state: PropTypes.oneOf(['done', 'streaming']),
+            text: PropTypes.string.isRequired,
+            type: PropTypes.oneOf(['text']).isRequired,
+          }),
+          PropTypes.shape({
+            toolInvocation: PropTypes.shape({
+              approval: PropTypes.object,
+              callProviderMetadata: PropTypes.object,
+              errorText: PropTypes.string,
+              input: PropTypes.any,
+              output: PropTypes.any,
+              preliminary: PropTypes.bool,
+              providerExecuted: PropTypes.bool,
+              state: PropTypes.oneOf([
+                'approval-requested',
+                'approval-responded',
+                'input-available',
+                'input-streaming',
+                'output-available',
+                'output-denied',
+                'output-error',
+              ]).isRequired,
+              title: PropTypes.string,
+              toolCallId: PropTypes.string.isRequired,
+              toolName: PropTypes.string.isRequired,
+            }).isRequired,
+            type: PropTypes.oneOf(['dynamic-tool']).isRequired,
           }),
           PropTypes.shape({
             toolInvocation: PropTypes.shape({
@@ -353,28 +375,7 @@ ChatBox.propTypes = {
             type: PropTypes.oneOf(['tool']).isRequired,
           }),
           PropTypes.shape({
-            toolInvocation: PropTypes.shape({
-              approval: PropTypes.object,
-              callProviderMetadata: PropTypes.object,
-              errorText: PropTypes.string,
-              input: PropTypes.any,
-              output: PropTypes.any,
-              preliminary: PropTypes.bool,
-              providerExecuted: PropTypes.bool,
-              state: PropTypes.oneOf([
-                'approval-requested',
-                'approval-responded',
-                'input-available',
-                'input-streaming',
-                'output-available',
-                'output-denied',
-                'output-error',
-              ]).isRequired,
-              title: PropTypes.string,
-              toolCallId: PropTypes.string.isRequired,
-              toolName: PropTypes.string.isRequired,
-            }).isRequired,
-            type: PropTypes.oneOf(['dynamic-tool']).isRequired,
+            type: PropTypes.oneOf(['step-start']).isRequired,
           }),
         ]).isRequired,
       ).isRequired,
@@ -423,14 +424,10 @@ ChatBox.propTypes = {
       parts: PropTypes.arrayOf(
         PropTypes.oneOfType([
           PropTypes.shape({
-            state: PropTypes.oneOf(['done', 'streaming']),
-            text: PropTypes.string.isRequired,
-            type: PropTypes.oneOf(['text']).isRequired,
-          }),
-          PropTypes.shape({
-            state: PropTypes.oneOf(['done', 'streaming']),
-            text: PropTypes.string.isRequired,
-            type: PropTypes.oneOf(['reasoning']).isRequired,
+            data: PropTypes.any.isRequired,
+            id: PropTypes.string,
+            transient: PropTypes.bool,
+            type: PropTypes.object.isRequired,
           }),
           PropTypes.shape({
             filename: PropTypes.string,
@@ -440,24 +437,49 @@ ChatBox.propTypes = {
           }),
           PropTypes.shape({
             sourceId: PropTypes.string.isRequired,
-            title: PropTypes.string,
-            type: PropTypes.oneOf(['source-url']).isRequired,
-            url: PropTypes.string.isRequired,
-          }),
-          PropTypes.shape({
-            sourceId: PropTypes.string.isRequired,
             text: PropTypes.string,
             title: PropTypes.string,
             type: PropTypes.oneOf(['source-document']).isRequired,
           }),
           PropTypes.shape({
-            data: PropTypes.any.isRequired,
-            id: PropTypes.string,
-            transient: PropTypes.bool,
-            type: PropTypes.object.isRequired,
+            sourceId: PropTypes.string.isRequired,
+            title: PropTypes.string,
+            type: PropTypes.oneOf(['source-url']).isRequired,
+            url: PropTypes.string.isRequired,
           }),
           PropTypes.shape({
-            type: PropTypes.oneOf(['step-start']).isRequired,
+            state: PropTypes.oneOf(['done', 'streaming']),
+            text: PropTypes.string.isRequired,
+            type: PropTypes.oneOf(['reasoning']).isRequired,
+          }),
+          PropTypes.shape({
+            state: PropTypes.oneOf(['done', 'streaming']),
+            text: PropTypes.string.isRequired,
+            type: PropTypes.oneOf(['text']).isRequired,
+          }),
+          PropTypes.shape({
+            toolInvocation: PropTypes.shape({
+              approval: PropTypes.object,
+              callProviderMetadata: PropTypes.object,
+              errorText: PropTypes.string,
+              input: PropTypes.any,
+              output: PropTypes.any,
+              preliminary: PropTypes.bool,
+              providerExecuted: PropTypes.bool,
+              state: PropTypes.oneOf([
+                'approval-requested',
+                'approval-responded',
+                'input-available',
+                'input-streaming',
+                'output-available',
+                'output-denied',
+                'output-error',
+              ]).isRequired,
+              title: PropTypes.string,
+              toolCallId: PropTypes.string.isRequired,
+              toolName: PropTypes.string.isRequired,
+            }).isRequired,
+            type: PropTypes.oneOf(['dynamic-tool']).isRequired,
           }),
           PropTypes.shape({
             toolInvocation: PropTypes.shape({
@@ -484,28 +506,7 @@ ChatBox.propTypes = {
             type: PropTypes.oneOf(['tool']).isRequired,
           }),
           PropTypes.shape({
-            toolInvocation: PropTypes.shape({
-              approval: PropTypes.object,
-              callProviderMetadata: PropTypes.object,
-              errorText: PropTypes.string,
-              input: PropTypes.any,
-              output: PropTypes.any,
-              preliminary: PropTypes.bool,
-              providerExecuted: PropTypes.bool,
-              state: PropTypes.oneOf([
-                'approval-requested',
-                'approval-responded',
-                'input-available',
-                'input-streaming',
-                'output-available',
-                'output-denied',
-                'output-error',
-              ]).isRequired,
-              title: PropTypes.string,
-              toolCallId: PropTypes.string.isRequired,
-              toolName: PropTypes.string.isRequired,
-            }).isRequired,
-            type: PropTypes.oneOf(['dynamic-tool']).isRequired,
+            type: PropTypes.oneOf(['step-start']).isRequired,
           }),
         ]).isRequired,
       ).isRequired,

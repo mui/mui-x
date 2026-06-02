@@ -1,12 +1,8 @@
 import { spy } from 'sinon';
 import { DateTime } from 'luxon';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import {
-  createPickerRenderer,
-  expectFieldValue,
-  describeAdapters,
-  buildFieldInteractions,
-} from 'test/utils/pickers';
+import { createPickerRenderer, expectFieldValue, buildFieldInteractions } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 

@@ -1,7 +1,7 @@
 ---
 title: React Bar chart
 productId: x-charts
-components: BarChart, BarChartPro, BarElement, BarPlot, ChartsGrid, BarLabel
+components: BarChart, BarChartPro, BarElement, BarPlot, BarPlotPremium, ChartsGrid, BarLabel
 ---
 
 # Charts - Bars
@@ -275,8 +275,11 @@ When you set `skipAnimation` to `true`, the chart renders without animations.
 
 ## Performance
 
+### SVG batch rendering
+
 By default, each bar is drawn as an SVG `rect` element.
 With many bars, this can slow down rendering.
+
 To render bars more efficiently, you can set the `renderer` prop to `"svg-batch"`.
 This has some trade-offs:
 
@@ -290,6 +293,20 @@ This has some trade-offs:
 The example below uses the `renderer` prop to improve performance when rendering a dataset with 500 data points.
 
 {{"demo": "BarBatchRenderer.js"}}
+
+### WebGL renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+For even larger datasets, `BarChartPremium` supports a WebGL renderer that draws all bars from a single `<canvas>` element.
+Set the `renderer` prop to `"webgl"` to enable it.
+
+The WebGL renderer has the same trade-offs as the batch renderer, plus a few additional ones:
+
+- Per-bar DOM elements are not rendered, so custom slots that rely on them (such as a custom `bar` slot) are not applied.
+- The WebGL canvas only draws the bar shapes. Axes, grid, highlights, focus outlines, and bar labels continue to rely on SVG.
+- Range bar series still render as SVG regardless of the `renderer` prop.
+- Requires a browser with WebGL 2 support.
+
+{{"demo": "WebGLBars.js"}}
 
 ## Composition
 
