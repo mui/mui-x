@@ -30,7 +30,7 @@
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
     "initialZoom": {
-      "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
+      "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it.<br>Each entry is either explicit zoom percentages (<code>{ axisId, start, end }</code>) or a range value (<code>{ axisId, value }</code>) resolved against the axis domain."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": { "description": "Localized text for chart components." },

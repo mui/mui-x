@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
 import { useMessageIds } from '../hooks/useMessage';
@@ -114,7 +115,7 @@ function MessageListRenderedRow(props: MessageListRenderedRowProps) {
   const { id, index, renderItem, registerRowElement, onRowResize } = props;
   const rowRef = React.useRef<HTMLDivElement | null>(null);
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     registerRowElement(id, rowRef.current);
 
     return () => {
@@ -122,7 +123,7 @@ function MessageListRenderedRow(props: MessageListRenderedRowProps) {
     };
   }, [id, registerRowElement]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (!rowRef.current || typeof globalThis.ResizeObserver === 'undefined') {
       return undefined;
     }

@@ -230,8 +230,9 @@ describe('<EventTimelinePremium />', () => {
       // monthAndYear ticks per day (6px), so the total width depends on the actual
       // calendar days in the visible range — read it from the grid CSS variables.
       const grid = screen.getByRole('grid');
+      const container = grid.closest('section')!;
       const totalWidth =
-        parseFloat(grid.style.getPropertyValue('--unit-width')) *
+        parseFloat(container.style.getPropertyValue('--unit-width')) *
         parseFloat(grid.style.getPropertyValue('--unit-count'));
       const monthWidth = totalWidth / 36;
 
@@ -443,7 +444,10 @@ describe('<EventTimelinePremium />', () => {
 
   describe('error handling', () => {
     function renderErrorContainer(initialErrors: Error[]) {
-      const store = new EventTimelinePremiumStore({ events: [] }, adapter);
+      const store = new EventTimelinePremiumStore(
+        { events: [], resources: baseResources },
+        adapter,
+      );
       store.set(
         'errors',
         initialErrors.map((error, index) => ({ error, key: String(index) })),
@@ -638,7 +642,10 @@ describe('<EventTimelinePremium />', () => {
 
     it('should re-display the same Error instance after dismiss when pushed again with a new key', async () => {
       const sharedError = new Error('Shared error');
-      const store = new EventTimelinePremiumStore({ events: [] }, adapter);
+      const store = new EventTimelinePremiumStore(
+        { events: [], resources: baseResources },
+        adapter,
+      );
       store.set('errors', [{ error: sharedError, key: '1' }]);
 
       function Test() {
@@ -686,8 +693,9 @@ describe('<EventTimelinePremium />', () => {
       });
 
       let rootElement = screen.getByRole('grid');
+      let containerElement = rootElement.closest('section')!;
       // dayAndHour: tickWidth = 64px, 2 header rows (day + hour).
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('64px');
+      expect(containerElement.style.getPropertyValue('--unit-width')).to.equal('64px');
       expect(
         rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
       ).to.equal(2);
@@ -698,8 +706,9 @@ describe('<EventTimelinePremium />', () => {
       });
 
       rootElement = screen.getAllByRole('grid').at(-1) as HTMLElement;
+      containerElement = rootElement.closest('section')!;
       // day: tickWidth = 120px, 2 header rows (month + day).
-      expect(rootElement.style.getPropertyValue('--unit-width')).to.equal('120px');
+      expect(containerElement.style.getPropertyValue('--unit-width')).to.equal('120px');
       expect(
         rootElement.querySelectorAll(`.${eventTimelinePremiumClasses.headerLevelRow}`).length,
       ).to.equal(2);
