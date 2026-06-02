@@ -119,6 +119,7 @@ export interface PlaygroundCardProps {
 }
 
 const DEFAULT_PACKAGE_NAME = '@mui/x-chat';
+const docsDarkModeSelector = ':where([data-mui-color-scheme="dark"], .mode-dark) &';
 
 const defaultRegistryMetadata: Record<string, PlaygroundCardRegistryMetadata> = {
   ChatBox: {
@@ -712,10 +713,12 @@ function ClassCustomizationRow({
               borderRadius: 1,
               border: '1px solid',
               borderColor: item.parseError ? 'error.main' : 'divider',
-              bgcolor:
-                theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.25)' : 'rgba(255, 255, 255, 0.6)',
+              bgcolor: 'rgba(255, 255, 255, 0.6)',
               color: 'text.primary',
               outline: 'none',
+              [docsDarkModeSelector]: {
+                bgcolor: 'rgba(0, 0, 0, 0.25)',
+              },
               '&:focus-visible': {
                 borderColor: item.parseError ? 'error.main' : 'primary.main',
                 boxShadow: `0 0 0 2px ${theme.palette.primary.main}33`,
@@ -825,7 +828,7 @@ function CopyCodeBar({ getCode }: { getCode: () => string }) {
 
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -834,9 +837,11 @@ function CopyCodeBar({ getCode }: { getCode: () => string }) {
         py: 0.875,
         borderTop: '1px solid',
         borderColor: 'divider',
-        bgcolor:
-          theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)',
-      })}
+        bgcolor: 'rgba(0, 0, 0, 0.02)',
+        [docsDarkModeSelector]: {
+          bgcolor: 'rgba(255, 255, 255, 0.03)',
+        },
+      }}
     >
       <Typography
         variant="caption"
@@ -855,8 +860,7 @@ function CopyCodeBar({ getCode }: { getCode: () => string }) {
           gap: 0.5,
           border: '1px solid',
           borderColor: copied ? theme.palette.success.main : 'divider',
-          background:
-            theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.02)',
+          background: 'rgba(0, 0, 0, 0.02)',
           color: copied ? theme.palette.success.main : 'text.primary',
           fontSize: '0.7rem',
           fontWeight: 600,
@@ -864,6 +868,9 @@ function CopyCodeBar({ getCode }: { getCode: () => string }) {
           py: 0.5,
           borderRadius: 1,
           cursor: 'pointer',
+          [docsDarkModeSelector]: {
+            background: 'rgba(255, 255, 255, 0.04)',
+          },
           flexShrink: 0,
           transition: 'color 0.15s ease, border-color 0.15s ease',
           '&:hover': {
@@ -899,7 +906,7 @@ function CollapseChevronIcon({ direction }: { direction: 'left' | 'right' }) {
 function CollapseFooter({ onCollapse }: { onCollapse: () => void }) {
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         display: 'flex',
         justifyContent: 'flex-end',
         alignItems: 'center',
@@ -907,9 +914,11 @@ function CollapseFooter({ onCollapse }: { onCollapse: () => void }) {
         py: 0.5,
         borderTop: '1px solid',
         borderColor: 'divider',
-        bgcolor:
-          theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.02)',
-      })}
+        bgcolor: 'rgba(0, 0, 0, 0.02)',
+        [docsDarkModeSelector]: {
+          bgcolor: 'rgba(255, 255, 255, 0.03)',
+        },
+      }}
     >
       <Tooltip title="Collapse panel" placement="top" arrow>
         <Box
@@ -964,7 +973,10 @@ function CollapsedStrip({
         border: '1px solid',
         borderColor: 'divider',
         borderRadius: 2,
-        bgcolor: theme.palette.mode === 'dark' ? 'grey.900' : 'grey.50',
+        bgcolor: 'grey.50',
+        [docsDarkModeSelector]: {
+          bgcolor: 'grey.900',
+        },
         cursor: 'pointer',
         display: 'flex',
         flexDirection: 'column',
@@ -1193,7 +1205,10 @@ export function PlaygroundCard({
               borderRadius: 2,
               border: '1px solid',
               borderColor: 'divider',
-              bgcolor: (theme) => (theme.palette.mode === 'dark' ? 'grey.900' : 'grey.50'),
+              bgcolor: 'grey.50',
+              [docsDarkModeSelector]: {
+                bgcolor: 'grey.900',
+              },
               alignSelf: 'stretch',
               width: '100%',
               minWidth: 0,
@@ -1212,10 +1227,10 @@ export function PlaygroundCard({
                 flexShrink: 0,
                 borderBottom: '1px solid',
                 borderColor: 'divider',
-                bgcolor: (theme) =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.03)'
-                    : 'rgba(0, 0, 0, 0.02)',
+                bgcolor: 'rgba(0, 0, 0, 0.02)',
+                [docsDarkModeSelector]: {
+                  bgcolor: 'rgba(255, 255, 255, 0.03)',
+                },
               }}
             >
               {showTabs ? (

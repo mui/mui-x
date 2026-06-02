@@ -1,9 +1,10 @@
 import * as React from 'react';
 import HighlightedCodeWithTabs from '@mui/internal-core-docs/HighlightedCodeWithTabs';
+import { ThemeOptionsContext } from '@mui/internal-core-docs/ThemeContext';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -43,8 +44,33 @@ const themeOptions: { value: CustomThemeName; label: string }[] = [
   { value: 'neutralVibes', label: 'Neutral vibes' },
 ];
 
+// Keep mode-based sx callbacks aligned with the active CSS variables scheme.
+function createDefaultTheme(mode: 'light' | 'dark') {
+  const theme = createTheme(darkThemeManagement);
+  Object.assign(theme, theme.colorSchemes[mode]);
+  return theme;
+}
+
+function createDarkDefaultTheme() {
+  const theme = createTheme({
+    ...darkThemeManagement,
+    colorSchemes: {
+      light: true,
+      dark: {
+        palette: {
+          grey: darkGrey,
+          text: { primary: darkGrey[900], secondary: darkGrey[700] },
+          background: { default: darkGrey[50], paper: '#121113' },
+        },
+      },
+    },
+  });
+  Object.assign(theme, theme.colorSchemes.dark);
+  return theme;
+}
+
 export default function MainDemo() {
-  const brandingTheme = useTheme();
+  const { paletteMode } = React.useContext(ThemeOptionsContext);
   const [selectedView, setSelectedView] = React.useState<ChatView>('basic');
   const [selectedTheme, setSelectedTheme] = React.useState<CustomThemeName>('default');
   const selectedDemo = chatOverviewDemos[selectedView];
@@ -54,8 +80,8 @@ export default function MainDemo() {
     setSelectedTheme(event.target.value as CustomThemeName);
   };
 
-  const mode = selectedView === 'captions' ? 'dark' : brandingTheme.palette.mode;
-  const baseTheme = createTheme(darkThemeManagement, { palette: { mode } });
+  const mode = selectedView === 'captions' ? 'dark' : paletteMode;
+  const baseTheme = createDefaultTheme(mode);
   const softEdgesTheme = getSoftEdgesTheme(mode);
   const neutralVibesTheme = getNeutralVibesTheme(mode);
 
@@ -79,14 +105,7 @@ export default function MainDemo() {
       case 'neutralVibes':
         return getNeutralVibesTheme('dark');
       default:
-        return createTheme(darkThemeManagement, {
-          palette: {
-            mode: 'dark',
-            grey: darkGrey,
-            text: { primary: darkGrey[900], secondary: darkGrey[700] },
-            background: { default: darkGrey[50], paper: '#121113' },
-          },
-        });
+        return createDarkDefaultTheme();
     }
   };
 
@@ -128,7 +147,7 @@ export default function MainDemo() {
     );
   } else {
     demoContent = (
-      <ThemeProvider theme={getDarkThemeByName(selectedTheme)}>
+      <ThemeProvider theme={() => getDarkThemeByName(selectedTheme)}>
         <Paper
           variant="outlined"
           elevation={0}
@@ -162,7 +181,7 @@ export default function MainDemo() {
           ))}
         </Select>
       </Stack>
-      <ThemeProvider theme={getThemeByName(selectedTheme)}>{demoContent}</ThemeProvider>
+      <ThemeProvider theme={() => getThemeByName(selectedTheme)}>{demoContent}</ThemeProvider>
       <Paper variant="outlined" elevation={0} sx={{ width: '100%', overflow: 'hidden' }}>
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
