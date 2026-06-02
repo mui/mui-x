@@ -53,79 +53,79 @@
   "classes": [
     {
       "key": "end",
-      "className": "MuiPiecewiseColorLegend-end",
+      "className": "MuiPiecewiseColorLegendClasses-end",
       "description": "Styles applied to the legend with the labels after the color marks.",
       "isGlobal": false
     },
     {
       "key": "extremes",
-      "className": "MuiPiecewiseColorLegend-extremes",
+      "className": "MuiPiecewiseColorLegendClasses-extremes",
       "description": "Styles applied to the legend with the labels on the extremes of the color marks.",
       "isGlobal": false
     },
     {
       "key": "horizontal",
-      "className": "MuiPiecewiseColorLegend-horizontal",
+      "className": "MuiPiecewiseColorLegendClasses-horizontal",
       "description": "Styles applied to the legend in row layout.",
       "isGlobal": false
     },
     {
       "key": "inlineEnd",
-      "className": "MuiPiecewiseColorLegend-inlineEnd",
+      "className": "MuiPiecewiseColorLegendClasses-inlineEnd",
       "description": "Styles applied to the legend with the labels inlined after the color marks.",
       "isGlobal": false
     },
     {
       "key": "inlineStart",
-      "className": "MuiPiecewiseColorLegend-inlineStart",
+      "className": "MuiPiecewiseColorLegendClasses-inlineStart",
       "description": "Styles applied to the legend with the labels inlined before the color marks.",
       "isGlobal": false
     },
     {
       "key": "item",
-      "className": "MuiPiecewiseColorLegend-item",
+      "className": "MuiPiecewiseColorLegendClasses-item",
       "description": "Styles applied to the list items.",
       "isGlobal": false
     },
     {
       "key": "label",
-      "className": "MuiPiecewiseColorLegend-label",
+      "className": "MuiPiecewiseColorLegendClasses-label",
       "description": "Styles applied to the series label.",
       "isGlobal": false
     },
     {
       "key": "mark",
-      "className": "MuiPiecewiseColorLegend-mark",
+      "className": "MuiPiecewiseColorLegendClasses-mark",
       "description": "Styles applied to the marks.",
       "isGlobal": false
     },
     {
       "key": "maxLabel",
-      "className": "MuiPiecewiseColorLegend-maxLabel",
+      "className": "MuiPiecewiseColorLegendClasses-maxLabel",
       "description": "Styles applied to the list item that renders the `maxLabel`.",
       "isGlobal": false
     },
     {
       "key": "minLabel",
-      "className": "MuiPiecewiseColorLegend-minLabel",
+      "className": "MuiPiecewiseColorLegendClasses-minLabel",
       "description": "Styles applied to the list item that renders the `minLabel`.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiPiecewiseColorLegend-root",
+      "className": "MuiPiecewiseColorLegendClasses-root",
       "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
       "key": "start",
-      "className": "MuiPiecewiseColorLegend-start",
+      "className": "MuiPiecewiseColorLegendClasses-start",
       "description": "Styles applied to the legend with the labels before the color marks.",
       "isGlobal": false
     },
     {
       "key": "vertical",
-      "className": "MuiPiecewiseColorLegend-vertical",
+      "className": "MuiPiecewiseColorLegendClasses-vertical",
       "description": "Styles applied to the legend in column layout.",
       "isGlobal": false
     }
