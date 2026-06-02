@@ -86,7 +86,7 @@ export default function TimelineDemo() {
         <LicenseCard
           plan="premium"
           title="Premium-only component"
-          description="A horizontal, gantt-style view for representing events as continuous bars across resources. Included with any Scheduler Premium license, no separate purchase."
+          description="A horizontal resource timeline for scheduling resources, where each resource is displayed as a row, and allocations are continuous bars across time. Included in the Premium license, no separate purchase required."
         />
       </Stack>
     </Stack>
