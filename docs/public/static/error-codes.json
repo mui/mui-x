@@ -280,5 +280,7 @@
   "280": "MUI X Scheduler: <TimelineGrid.TitleRow /> and <TimelineGrid.EventRow /> must be rendered inside a <TimelineGrid.BodyRow />.",
   "281": "MUI X Scheduler: EventTimelinePremiumVirtualizerContext is missing. Make sure the calling component is rendered inside <EventTimelinePremiumContent />.",
   "282": "MUI X Scheduler: The timeline encountered an error while retrieving resources. This is likely a bug in MUI X. Please contact MUI support with details about your configuration and data.",
-  "283": "MUI X Scheduler: TitleColumnWidthProvider is missing."
+  "283": "MUI X Scheduler: TitleColumnWidthProvider is missing.",
+  "284": "MUI X Data Grid: Nested lazy loading does not support unknown children count for now.\nIf this is a use-case that you are interested in, please open an issue: https://github.com/mui/mui-x/issues/new?template=2.feature.yml",
+  "285": "MUI X Data Grid: Row count is unknown. Please provide a valid row count for lazy loading to work."
 }
