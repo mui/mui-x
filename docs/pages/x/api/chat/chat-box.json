@@ -20,6 +20,18 @@
         "description": "{ attachments?: { acceptedMimeTypes?: Array&lt;string&gt;, maxFileCount?: number, maxFileSize?: number, onAttachmentReject?: func }<br>&#124;&nbsp;bool, autoScroll?: { buffer?: number }<br>&#124;&nbsp;bool, conversationHeader?: bool, helperText?: bool, scrollToBottom?: bool, suggestions?: bool }"
       }
     },
+    "getMessageAuthorAvatarUrl": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.avatarUrl"
+    },
+    "getMessageAuthorDisplayName": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.displayName"
+    },
+    "getMessageAuthorId": {
+      "type": { "name": "func" },
+      "default": "(message) => message.author?.id"
+    },
     "initialActiveConversationId": { "type": { "name": "string" } },
     "initialComposerValue": { "type": { "name": "string" } },
     "initialConversations": {
@@ -38,6 +50,12 @@
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;{ avatarUrl?: string, displayName?: string, id: string, isOnline?: bool, metadata?: object, role?: 'assistant'<br>&#124;&nbsp;'system'<br>&#124;&nbsp;'user' }&gt;"
+      }
+    },
+    "roleDisplayNames": {
+      "type": {
+        "name": "shape",
+        "description": "{ assistant?: string, system?: string, user?: string }"
       }
     },
     "slotProps": { "type": { "name": "object" } },
