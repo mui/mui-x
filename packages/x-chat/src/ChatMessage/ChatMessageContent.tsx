@@ -642,15 +642,14 @@ function ChatToolPartSection({ ownerState, ...rest }: ChatToolPartSectionRenderP
   // The section component is reused across streamed invocation-state updates (same
   // element identity), so `useState(initialOpen)` alone never reacts to post-mount
   // transitions (e.g. `input-available` → `approval-requested`, or `output-available`).
-  // Sync on a false→true flip of `initialOpen` to auto-open when the new state warrants
-  // it, while leaving a user's manual collapse untouched otherwise.
-  const prevInitialOpenRef = React.useRef(initialOpen);
-  if (prevInitialOpenRef.current !== initialOpen) {
-    prevInitialOpenRef.current = initialOpen;
+  // Mirror the auto-open behavior of `ChatToolPartRoot`: force open when the section
+  // newly becomes one that should be open, while leaving a user's manual collapse
+  // untouched otherwise (the effect only re-runs when `initialOpen` flips).
+  React.useEffect(() => {
     if (initialOpen) {
       setOpen(true);
     }
-  }
+  }, [initialOpen]);
 
   return (
     <ChatToolPartSectionDetails
