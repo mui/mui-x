@@ -70,6 +70,8 @@ export interface ChartImageExportOptions extends ChartExportOptions {
   pixelRatio?: number;
 }
 
+export interface ChartSvgExportOptions extends ChartExportOptions {}
+
 export interface UseChartProExportPublicApi {
   /**
    * Opens the browser's print dialog, which can be used to print the chart or export it as PDF.
@@ -85,6 +87,7 @@ export interface UseChartProExportPublicApi {
    * @returns {void}
    */
   exportAsImage: (options?: ChartImageExportOptions) => void;
+  exportAsSvg: (options?: ChartSvgExportOptions) => void;
 }
 
 export interface UseChartProExportInstance extends UseChartProExportPublicApi {}
