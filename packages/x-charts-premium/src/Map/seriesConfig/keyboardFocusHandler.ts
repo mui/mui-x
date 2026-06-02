@@ -5,6 +5,9 @@ import {
 
 const mapShapeSeriesTypes = new Set(['mapShape'] as const);
 
+const allowCycles = false;
+const seriesMaxLength = true;
+
 /**
  * Move the focus across the shapes of the map series.
  *
@@ -12,6 +15,6 @@ const mapShapeSeriesTypes = new Set(['mapShape'] as const);
  * while `ArrowUp`/`ArrowDown` move between series.
  */
 const keyboardFocusHandler: KeyboardFocusHandler<'mapShape', 'mapShape'> =
-  createCommonKeyboardFocusHandler(mapShapeSeriesTypes);
+  createCommonKeyboardFocusHandler(mapShapeSeriesTypes, allowCycles, seriesMaxLength);
 
 export default keyboardFocusHandler;
