@@ -2,8 +2,8 @@ import Box from '@mui/material/Box';
 import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
 import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
-import { Unstable_ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
-import { Unstable_ChartsRadialDataProvider } from '@mui/x-charts/ChartsRadialDataProvider';
+import { ChartsRadialGrid } from '@mui/x-charts/ChartsRadialGrid';
+import { ChartsRadialDataProvider } from '@mui/x-charts/ChartsRadialDataProvider';
 
 export default function RadialGridPlayground() {
   return (
@@ -35,7 +35,7 @@ export default function RadialGridPlayground() {
       }
       renderDemo={(props) => (
         <Box sx={{ width: '100%', maxWidth: 400 }}>
-          <Unstable_ChartsRadialDataProvider
+          <ChartsRadialDataProvider
             height={300}
             rotationAxis={[
               {
@@ -58,16 +58,16 @@ export default function RadialGridPlayground() {
           >
             <ChartsLayerContainer>
               <ChartsSvgLayer>
-                <Unstable_ChartsRadialGrid
+                <ChartsRadialGrid
                   rotation={props.rotation}
                   radius={props.radius}
                 />
               </ChartsSvgLayer>
             </ChartsLayerContainer>
-          </Unstable_ChartsRadialDataProvider>
+          </ChartsRadialDataProvider>
         </Box>
       )}
-      getCode={({ props }) => `<Unstable_ChartsRadialDataProvider
+      getCode={({ props }) => `<ChartsRadialDataProvider
   rotationAxis={[{
     startAngle: ${props.startAngle},
     endAngle: ${props.endAngle},
@@ -79,8 +79,8 @@ export default function RadialGridPlayground() {
     tickNumber: ${props.radiusTickNumber},
   }]}
 >
-  <Unstable_ChartsRadialGrid ${[props.rotation && 'rotation', props.radius && 'radius'].filter(Boolean).join(' ')} />
-</Unstable_ChartsRadialDataProvider>`}
+  <ChartsRadialGrid ${[props.rotation && 'rotation', props.radius && 'radius'].filter(Boolean).join(' ')} />
+</ChartsRadialDataProvider>`}
     />
   );
 }
