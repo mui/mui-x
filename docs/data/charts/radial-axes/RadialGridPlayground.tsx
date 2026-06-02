@@ -58,10 +58,7 @@ export default function RadialGridPlayground() {
           >
             <ChartsLayerContainer>
               <ChartsSvgLayer>
-                <ChartsRadialGrid
-                  rotation={props.rotation}
-                  radius={props.radius}
-                />
+                <ChartsRadialGrid rotation={props.rotation} radius={props.radius} />
               </ChartsSvgLayer>
             </ChartsLayerContainer>
           </ChartsRadialDataProvider>
