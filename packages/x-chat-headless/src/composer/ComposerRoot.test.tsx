@@ -410,7 +410,7 @@ describe('ComposerRoot', () => {
     });
   });
 
-  it('renders helper text children first and falls back to the chat error message', async () => {
+  it('renders helper text children before falling back to the chat error message', async () => {
     const view = render(
       <ChatRoot adapter={createAdapter()}>
         <ComposerRoot>
@@ -436,6 +436,125 @@ describe('ComposerRoot', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('error-helper-text')).to.have.text('Network down');
+      expect(screen.getByTestId('error-helper-text')).to.have.attribute('role', 'alert');
+    });
+  });
+
+  it('submits an attachment-only draft with the default send button', async () => {
+    const originalCreateObjectURL = Object.getOwnPropertyDescriptor(URL, 'createObjectURL');
+    Object.defineProperty(URL, 'createObjectURL', {
+      configurable: true,
+      value: vi.fn(() => 'blob:hello.txt'),
+    });
+
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => createStream()),
+    });
+
+    try {
+      render(
+        <ChatRoot adapter={adapter} initialActiveConversationId="c1">
+          <ComposerRoot>
+            <ComposerAttachButton
+              slotProps={{ attachInput: { 'data-testid': 'attach-input' } as any }}
+            >
+              Attach
+            </ComposerAttachButton>
+            <ComposerSendButton />
+          </ComposerRoot>
+        </ChatRoot>,
+      );
+
+      const sendButton = screen.getByRole('button', { name: 'Send message' });
+      const input = screen.getByTestId('attach-input') as HTMLInputElement;
+
+      expect(sendButton).to.have.property('disabled', true);
+
+      fireEvent.change(input, {
+        target: {
+          files: [new File(['hello'], 'hello.txt', { type: 'text/plain' })],
+        },
+      });
+
+      await waitFor(() => {
+        expect(sendButton).to.have.property('disabled', false);
+      });
+
+      fireEvent.click(sendButton);
+
+      await waitFor(() => {
+        expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+      });
+
+      const sendInput = (adapter.sendMessage as any).mock.calls[0][0];
+      expect(sendInput.attachments).toHaveLength(1);
+      expect(sendInput.attachments[0].file.name).toBe('hello.txt');
+      expect(sendInput.message.parts).toEqual([
+        {
+          type: 'file',
+          mediaType: 'text/plain',
+          url: 'blob:hello.txt',
+          filename: 'hello.txt',
+        },
+      ]);
+    } finally {
+      if (originalCreateObjectURL) {
+        Object.defineProperty(URL, 'createObjectURL', originalCreateObjectURL);
+      } else {
+        Reflect.deleteProperty(URL, 'createObjectURL');
+      }
+    }
+  });
+
+  it('prevents the native form submit before calling the external onSubmit handler', async () => {
+    const onSubmit = vi.fn((event: React.FormEvent<HTMLFormElement>) => {
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    render(
+      <ChatRoot adapter={createAdapter()} initialActiveConversationId="c1">
+        <ComposerRoot onSubmit={onSubmit}>
+          <ComposerTextArea />
+          <ComposerSendButton />
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    fireEvent.change(screen.getByRole('textbox', { name: 'Message' }), {
+      target: { value: 'hello' },
+    });
+    fireEvent.submit(screen.getByRole('textbox', { name: 'Message' }).closest('form')!);
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('lets the external onSubmit suppress composer.submit() without allowing native navigation', async () => {
+    const adapter = createAdapter({
+      sendMessage: vi.fn(async () => createStream()),
+    });
+
+    render(
+      <ChatRoot adapter={adapter} initialActiveConversationId="c1">
+        <ComposerRoot
+          onSubmit={(event) => {
+            event.preventDefault();
+          }}
+        >
+          <ComposerTextArea />
+          <ComposerSendButton />
+        </ComposerRoot>
+      </ChatRoot>,
+    );
+
+    fireEvent.change(screen.getByRole('textbox', { name: 'Message' }), {
+      target: { value: 'hello' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Send message' }));
+
+    await waitFor(() => {
+      expect(adapter.sendMessage).not.toHaveBeenCalled();
     });
   });
 

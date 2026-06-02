@@ -78,6 +78,46 @@ describe('createConversationActions', () => {
       expect(store.state.messageIds).toEqual([]);
     });
 
+    it('clears stale messages when switching to a conversation without listMessages support', async () => {
+      const store = new ChatStore({ initialMessages: [userMessage] });
+      store.setActiveConversation('c2');
+      const adapter = createAdapter();
+      delete (adapter as any).listMessages;
+
+      const { loadConversationMessages } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+      });
+
+      await loadConversationMessages('c2');
+
+      expect(store.state.messageIds).toEqual([]);
+    });
+
+    it('keeps initial messages on initial load when listMessages is unavailable', async () => {
+      const store = new ChatStore({ initialMessages: [userMessage] });
+      store.setActiveConversation('c1');
+      const adapter = createAdapter();
+      delete (adapter as any).listMessages;
+
+      const { loadConversationMessages } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+      });
+
+      await loadConversationMessages('c1', { resetWhenUndefined: false });
+
+      expect(store.state.messageIds).toEqual(['m1']);
+    });
+
     it('calls adapter.listMessages and populates store on success', async () => {
       const store = new ChatStore();
       store.setActiveConversation('c1');
@@ -106,6 +146,52 @@ describe('createConversationActions', () => {
       expect(store.state.historyCursor).toBe('cursor-abc');
       expect(store.state.hasMoreHistory).toBe(true);
       expect(store.state.error).toBeNull();
+    });
+
+    it('clears stale message and history state while loading a new conversation', async () => {
+      const store = new ChatStore({
+        initialMessages: [{ id: 'old', role: 'user', parts: [] }],
+      });
+      store.setActiveConversation('c2');
+      store.setHistoryState({
+        cursor: 'old-cursor',
+        hasMore: true,
+      });
+
+      let resolveFetch!: (value: any) => void;
+      const adapter = createAdapter({
+        listMessages: vi.fn().mockReturnValue(
+          new Promise((resolve) => {
+            resolveFetch = resolve;
+          }),
+        ),
+      });
+
+      const { loadConversationMessages } = createConversationActions({
+        store,
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        stopStreaming: vi.fn(),
+        conversationNavigationRequestIdRef: { current: 0 },
+        conversationLoadRequestIdRef: { current: 0 },
+      });
+
+      const promise = loadConversationMessages('c2');
+
+      expect(store.state.messageIds).toEqual([]);
+      expect(store.state.historyCursor).toBeUndefined();
+      expect(store.state.hasMoreHistory).toBe(false);
+
+      resolveFetch({
+        messages: [{ id: 'new', role: 'assistant', parts: [] }],
+        cursor: 'new-cursor',
+        hasMore: true,
+      });
+      await promise;
+
+      expect(store.state.messageIds).toEqual(['new']);
+      expect(store.state.historyCursor).toBe('new-cursor');
+      expect(store.state.hasMoreHistory).toBe(true);
     });
 
     it('ignores stale response when requestId has changed during fetch', async () => {
