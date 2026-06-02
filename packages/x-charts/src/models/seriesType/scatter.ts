@@ -6,6 +6,7 @@ import {
   type SeriesId,
 } from './common';
 import { type DatasetElementType } from './config';
+import { type ScatterSampling } from './sampling';
 
 export type ScatterValueType = {
   x: number;
@@ -105,6 +106,15 @@ export interface ScatterSeriesType
      */
     markerSize?: number;
   };
+  /**
+   * The downsampling method used to reduce the number of rendered points for performance.
+   * Sampling only affects rendering: axis extremums, tooltips, highlight, and item interaction
+   * keep using the full data.
+   *
+   * The algorithms are provided by the Pro package (`@mui/x-charts-pro`). Setting this prop on a
+   * community chart has no effect.
+   */
+  sampling?: ScatterSampling;
 }
 
 /**
@@ -123,4 +133,11 @@ export interface DefaultizedScatterSeriesType extends DefaultizedProps<
 > {
   preview: MakeRequired<NonNullable<ScatterSeriesType['preview']>, 'markerSize'>;
   hidden: boolean;
+  /**
+   * The sorted subset of original data indices to render, computed by the sampling algorithm.
+   * When defined, rendering iterates this subset instead of every point. The full `data` array is
+   * left untouched so everything else keeps using the complete dataset.
+   * @ignore - populated by the sampling plugin of the Pro package.
+   */
+  sampledIndices?: number[];
 }

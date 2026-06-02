@@ -9,6 +9,7 @@ import {
 } from './common';
 import { type DatasetElementType } from './config';
 import { type BarItem, type BarLabelContext } from '../../BarChart';
+import { type BarSampling } from './sampling';
 
 export type BarValueType = number;
 
@@ -59,6 +60,15 @@ export interface CommonBarSeriesType {
    * @returns {string} The formatted label.
    */
   barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
+  /**
+   * The downsampling method used to reduce the number of rendered bars for performance.
+   * Sampling only affects rendering: axis extremums, tooltips, highlight, and item interaction
+   * keep using the full data.
+   *
+   * The algorithms are provided by the Pro package (`@mui/x-charts-pro`). Setting this prop on a
+   * community chart has no effect.
+   */
+  sampling?: BarSampling;
 }
 
 export interface BarSeriesType
@@ -97,4 +107,11 @@ export interface DefaultizedBarSeriesType extends DefaultizedProps<
   CommonDefaultizedProps | 'color' | 'layout' | 'minBarSize'
 > {
   hidden: boolean;
+  /**
+   * The sorted subset of original data indices to render, computed by the sampling algorithm.
+   * When defined, rendering iterates this subset instead of every bar. The full `data` and
+   * `stackedData` arrays are left untouched so everything else keeps using the complete dataset.
+   * @ignore - populated by the sampling plugin of the Pro package.
+   */
+  sampledIndices?: number[];
 }

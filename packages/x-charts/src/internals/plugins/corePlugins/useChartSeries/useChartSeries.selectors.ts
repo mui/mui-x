@@ -6,8 +6,9 @@ import { applySeriesProcessors } from './processSeries';
 import { selectorIsItemVisibleGetter } from '../../featurePlugins/useChartVisibilityManager';
 import { selectorChartSeriesConfig } from '../useChartSeriesConfig/useChartSeriesConfig.selectors';
 
-export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature> = (state) =>
-  state.series;
+export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature, 'series'> = (
+  state,
+) => state.series;
 
 export const selectorChartDefaultizedSeries = createSelector(
   selectorChartSeriesState,

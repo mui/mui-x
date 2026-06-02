@@ -28,6 +28,7 @@ export * from '../ChartsContainer/useChartsContainerProps';
 export * from '../ChartsDataProvider/useChartsDataProviderProps';
 export * from '../ChartsRadialDataProvider/useChartsRadialDataProviderProps';
 export * from './seriesSelectorOfType';
+export * from './seriesRenderedSelector';
 export { useSkipAnimation } from '../hooks/useSkipAnimation';
 export { useRegisterPointerInteractions } from './plugins/featurePlugins/shared/useRegisterPointerInteractions';
 

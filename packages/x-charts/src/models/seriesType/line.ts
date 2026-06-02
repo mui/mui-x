@@ -9,6 +9,7 @@ import type {
 } from './common';
 import { type DatasetElementType } from './config';
 import { type CurveType } from '../curve';
+import { type LineSampling } from './sampling';
 
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**
@@ -101,6 +102,15 @@ export interface CommonLineSeriesType {
    * @default 0
    */
   baseline?: number | 'min' | 'max';
+  /**
+   * The downsampling method used to reduce the number of rendered points for performance.
+   * Sampling only affects rendering: axis extremums, tooltips, highlight, and item interaction
+   * keep using the full data.
+   *
+   * The algorithms are provided by the Pro package (`@mui/x-charts-pro`). Setting this prop on a
+   * community chart has no effect.
+   */
+  sampling?: LineSampling;
 }
 
 export interface LineSeriesType
@@ -141,4 +151,11 @@ export interface DefaultizedLineSeriesType extends DefaultizedProps<
   CommonDefaultizedProps | 'color'
 > {
   hidden: boolean;
+  /**
+   * The sorted subset of original data indices to render, computed by the sampling algorithm.
+   * When defined, rendering iterates this subset instead of every point. The full `data` and
+   * `stackedData` arrays are left untouched so everything else keeps using the complete dataset.
+   * @ignore - populated by the sampling plugin of the Pro package.
+   */
+  sampledIndices?: number[];
 }

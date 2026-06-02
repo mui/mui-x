@@ -106,7 +106,24 @@ export function processBarDataForPlot(
         numberOfGroups: stackingGroups.length,
       });
 
-      for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
+      // When the series is downsampled (Pro feature), only the selected original indices are
+      // rendered. We keep `dataIndex` as the original index, so values, colors, and mask ids stay
+      // aligned with the full data.
+      const sampledIndices = series[seriesId].sampledIndices;
+      const barCount = sampledIndices ? sampledIndices.length : baseScaleConfig.data!.length;
+
+      // When downsampled, the kept bars are laid out on a uniform grid across the base-axis range,
+      // one slot per kept bar. The slot geometry is independent of where each bucket's representative
+      // happens to sit, so every rendered bar has the same width. The step is signed and measured
+      // from `range[0]`, so the layout follows the axis direction (including reversed axes). The
+      // range comes from the live (zoom-aware) scale, so the bars widen and shift smoothly as the
+      // user zooms and pans, while the kept set itself stays stable (zoom-level driven sampler).
+      const baseRange = baseScaleConfig.scale.range();
+      const reindexStep = sampledIndices ? (baseRange[1] - baseRange[0]) / barCount : 0;
+      const reindexThickness = Math.max(1, Math.abs(reindexStep) * 0.9);
+
+      for (let cursor = 0; cursor < barCount; cursor += 1) {
+        const dataIndex = sampledIndices ? sampledIndices[cursor] : cursor;
         const barDimensions = getBarDimensions(dataIndex, groupIndex);
 
         if (barDimensions == null) {
@@ -124,6 +141,19 @@ export function processBarDataForPlot(
           value: series[seriesId].data[dataIndex],
           maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
         };
+
+        if (sampledIndices) {
+          const edgeA = baseRange[0] + cursor * reindexStep;
+          const edgeB = baseRange[0] + (cursor + 1) * reindexStep;
+          const slotStart = Math.min(edgeA, edgeB) + (Math.abs(reindexStep) - reindexThickness) / 2;
+          if (verticalLayout) {
+            result.x = slotStart;
+            result.width = reindexThickness;
+          } else {
+            result.y = slotStart;
+            result.height = reindexThickness;
+          }
+        }
 
         if (
           result.x > xMax ||

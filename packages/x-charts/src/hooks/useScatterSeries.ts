@@ -2,7 +2,8 @@
 import { type ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { type SeriesId } from '../models/seriesType/common';
 import { type ChartSeriesDefaultized } from '../models/seriesType/config';
-import { useSeriesOfType, useAllSeriesOfType } from '../internals/seriesSelectorOfType';
+import { useSeriesOfType } from '../internals/seriesSelectorOfType';
+import { useAllRenderedSeriesOfType } from '../internals/seriesRenderedSelector';
 
 export type UseScatterSeriesReturnValue = ChartSeriesDefaultized<'scatter'>;
 export type UseScatterSeriesContextReturnValue = ProcessedSeries['scatter'];
@@ -41,5 +42,5 @@ export function useScatterSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the scatter series
  */
 export function useScatterSeriesContext(): UseScatterSeriesContextReturnValue {
-  return useAllSeriesOfType('scatter');
+  return useAllRenderedSeriesOfType('scatter');
 }

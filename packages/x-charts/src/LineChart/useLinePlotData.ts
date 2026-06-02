@@ -90,36 +90,44 @@ export function useLinePlotData(
 
         const shouldExpand = curve?.includes('step') && !strictStepCurve && isOrdinalScale(xScale);
 
+        // When the series is downsampled (Pro feature), only the selected original indices are
+        // rendered. We still index the full `data`/`visibleStackedData` arrays by the original
+        // index, so x/y stay correctly paired — we just skip the dropped points.
+        const sampledIndices = series[seriesId].sampledIndices;
+
+        const mapIndexToPoints = (x: any, index: number) => {
+          const nullData = data[index] == null;
+          if (shouldExpand) {
+            const rep = [{ x, y: visibleStackedData[index], nullData, isExtension: false }];
+            if (!nullData && (index === 0 || data[index - 1] == null)) {
+              rep.unshift({
+                x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
+                y: visibleStackedData[index],
+                nullData,
+                isExtension: true,
+              });
+            }
+            if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
+              rep.push({
+                x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
+                y: visibleStackedData[index],
+                nullData,
+                isExtension: true,
+              });
+            }
+            return rep;
+          }
+          return { x, y: visibleStackedData[index], nullData };
+        };
+
         const formattedData: {
           x: any;
           y: [number, number];
           nullData: boolean;
           isExtension?: boolean;
-        }[] =
-          xData?.flatMap((x, index) => {
-            const nullData = data[index] == null;
-            if (shouldExpand) {
-              const rep = [{ x, y: visibleStackedData[index], nullData, isExtension: false }];
-              if (!nullData && (index === 0 || data[index - 1] == null)) {
-                rep.unshift({
-                  x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
-                  y: visibleStackedData[index],
-                  nullData,
-                  isExtension: true,
-                });
-              }
-              if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
-                rep.push({
-                  x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
-                  y: visibleStackedData[index],
-                  nullData,
-                  isExtension: true,
-                });
-              }
-              return rep;
-            }
-            return { x, y: visibleStackedData[index], nullData };
-          }) ?? [];
+        }[] = sampledIndices
+          ? sampledIndices.flatMap((index) => mapIndexToPoints(xData?.[index], index))
+          : (xData?.flatMap((x, index) => mapIndexToPoints(x, index)) ?? []);
 
         const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;
         const hidden = series[seriesId].hidden;

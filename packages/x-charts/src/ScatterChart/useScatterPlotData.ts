@@ -20,7 +20,13 @@ export function useScatterPlotData(
       type: 'scatter';
     })[] = [];
 
-    for (let i = 0; i < series.data.length; i += 1) {
+    // When the series is downsampled (Pro feature), only the selected original indices are
+    // rendered. `series.data` is left untouched so item interaction keeps using the full data.
+    const sampledIndices = series.sampledIndices;
+    const length = sampledIndices ? sampledIndices.length : series.data.length;
+
+    for (let cursor = 0; cursor < length; cursor += 1) {
+      const i = sampledIndices ? sampledIndices[cursor] : cursor;
       const scatterPoint = series.data[i];
 
       const x = getXPosition(scatterPoint.x);
@@ -41,5 +47,5 @@ export function useScatterPlotData(
     }
 
     return temp;
-  }, [xScale, yScale, series.data, series.id, isPointInside]);
+  }, [xScale, yScale, series.data, series.id, series.sampledIndices, isPointInside]);
 }

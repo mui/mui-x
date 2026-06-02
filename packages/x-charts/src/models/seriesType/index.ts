@@ -59,4 +59,11 @@ export type {
 export * from './scatter';
 export * from './pie';
 export * from './radar';
+export type {
+  ChartSampler,
+  ChartSamplerParams,
+  LineSampling,
+  ScatterSampling,
+  BarSampling,
+} from './sampling';
 export type { AllSeriesType, DefaultizedSeriesType };
