@@ -322,6 +322,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "event resize handler elements"
     },
+    "eventsCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the events cell element in a body row"
+    },
     "eventsHeaderCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the events header cell element"
@@ -333,18 +337,6 @@
     "eventSkeleton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "event skeleton elements rendered while events are loading"
-    },
-    "eventsSubGrid": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the events sub-grid element"
-    },
-    "eventsSubGridRow": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the events sub-grid row element"
-    },
-    "eventsSubGridWrapper": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the events sub-grid wrapper element"
     },
     "grid": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the grid element" },
     "header": {
@@ -372,6 +364,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title cell element"
     },
+    "titleCellContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the title cell content wrapper element"
+    },
     "titleCellLegendColor": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title cell legend color element"
@@ -383,10 +379,6 @@
     "titleHeaderCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title header cell element"
-    },
-    "titleSubGrid": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the title sub-grid element"
     }
   }
 }

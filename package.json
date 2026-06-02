@@ -66,10 +66,10 @@
   "devDependencies": {
     "@atlaskit/pragmatic-drag-and-drop-unit-testing": "1.1.1",
     "@babel/core": "catalog:",
-    "@babel/plugin-syntax-typescript": "7.28.6",
-    "@babel/plugin-transform-object-rest-spread": "7.28.6",
+    "@babel/plugin-syntax-typescript": "7.29.7",
+    "@babel/plugin-transform-object-rest-spread": "7.29.7",
     "@babel/traverse": "catalog:",
-    "@babel/types": "7.29.0",
+    "@babel/types": "7.29.7",
     "@emotion/cache": "catalog:",
     "@inquirer/prompts": "8.4.3",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.20",
