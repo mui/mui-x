@@ -43,7 +43,7 @@
     "@mui/utils": "catalog:",
     "@mui/x-data-grid": "workspace:^",
     "@mui/x-data-grid-pro": "workspace:^",
-    "@mui/x-internal-exceljs-fork": "file:../../mui-x-internal-exceljs-fork-5.0.0.tgz",
+    "@mui/x-internal-exceljs-fork": "catalog:",
     "@mui/x-internals": "workspace:^",
     "@mui/x-license": "workspace:^",
     "clsx": "catalog:",

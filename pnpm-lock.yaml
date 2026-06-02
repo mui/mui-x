@@ -72,6 +72,9 @@ catalogs:
     '@mui/utils':
       specifier: 9.0.1
       version: 9.0.1
+    '@mui/x-internal-exceljs-fork':
+      specifier: 5.0.0
+      version: 5.0.0
     '@playwright/test':
       specifier: 1.60.0
       version: 1.60.0
@@ -1297,8 +1300,8 @@ importers:
         specifier: workspace:^
         version: link:../x-data-grid-pro/build
       '@mui/x-internal-exceljs-fork':
-        specifier: file:../../mui-x-internal-exceljs-fork-5.0.0.tgz
-        version: file:mui-x-internal-exceljs-fork-5.0.0.tgz
+        specifier: 'catalog:'
+        version: 5.0.0
       '@mui/x-internals':
         specifier: workspace:^
         version: link:../x-internals/build
@@ -4503,9 +4506,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/x-internal-exceljs-fork@file:mui-x-internal-exceljs-fork-5.0.0.tgz':
-    resolution: {integrity: sha512-uNynpTNq3SNxj3wHDqzOZr2s0myMIA34Q+pQOzGxITMTv6ALl3LWs/pz11DzWURcP1F6xZgclmwXIVo1zDtF0g==, tarball: file:mui-x-internal-exceljs-fork-5.0.0.tgz}
-    version: 5.0.0
+  '@mui/x-internal-exceljs-fork@5.0.0':
+    resolution: {integrity: sha512-gn73zruZbZFspNDRGVxhXG500VNHvCUrqTk/pL9c4Jh7NX/O2wg1OCBl73jxAjZgwP4QAVX/4LnjVIQlM/RWNA==}
     engines: {node: '>=14.17.0'}
 
   '@mui/x-internals@7.29.0':
@@ -13998,7 +14000,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.15
 
-  '@mui/x-internal-exceljs-fork@file:mui-x-internal-exceljs-fork-5.0.0.tgz':
+  '@mui/x-internal-exceljs-fork@5.0.0':
     dependencies:
       '@types/node': 14.18.63
       dayjs: 1.11.20
