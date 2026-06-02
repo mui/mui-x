@@ -705,13 +705,11 @@ const pages: MuiPage[] = [
             pathname: '/x/react-charts/radial-bars',
             title: 'Radial Bars',
             plan: 'premium',
-            unstable: true,
           },
           {
             pathname: '/x/react-charts/radial-lines',
             title: 'Radial Lines',
             plan: 'premium',
-            unstable: true,
           },
           {
             pathname: '/x/react-charts/map',
@@ -758,10 +756,7 @@ const pages: MuiPage[] = [
               { pathname: '/x/react-charts/localization' },
               { pathname: '/x/react-charts/stacking' },
               { pathname: '/x/react-charts/styling' },
-              {
-                pathname: '/x/react-charts/radial-axes',
-                unstable: true,
-              },
+              { pathname: '/x/react-charts/radial-axes' },
               { pathname: '/x/react-charts/references' },
               { pathname: '/x/react-charts/toolbar' },
               { pathname: '/x/react-charts/tooltip' },
