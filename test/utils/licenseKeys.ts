@@ -1,7 +1,10 @@
 // =============================================================================
 // Test license keys for use in test suites.
-// All keys contain T=true in their payload and are rejected outside test environments.
-// Import via '@mui/x-license/internals'.
+// All keys contain T=true in their payload and are rejected outside test
+// environments (published builds compile `__ALLOW_TEST_LICENSES__` to `false`).
+// These keys live under `test/` on purpose: they are test setup helpers and must
+// never be published to npm. Import via 'test/utils/licenseKeys' (or a relative
+// path from within `test/`).
 // =============================================================================
 
 /**

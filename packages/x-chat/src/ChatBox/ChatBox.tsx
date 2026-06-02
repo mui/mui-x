@@ -87,17 +87,18 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   } = props;
 
   const classes = useChatBoxUtilityClasses(classesProp);
-  const innerRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = React.useMemo(() => {
-    return (node: HTMLDivElement | null) => {
-      (innerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+  const [rootEl, setRootEl] = React.useState<HTMLDivElement | null>(null);
+  const handleRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      setRootEl(node);
       if (typeof ref === 'function') {
         ref(node);
       } else if (ref) {
         (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
       }
-    };
-  }, [ref]);
+    },
+    [ref],
+  );
 
   return (
     <ChatRoot
@@ -140,7 +141,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
               slots={slots}
               slotProps={slotProps}
               features={features}
-              rootRef={innerRef}
+              rootEl={rootEl}
               suggestions={suggestions}
               suggestionsAutoSubmit={suggestionsAutoSubmit}
               layoutClassName={classes.layout}

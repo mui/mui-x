@@ -46,8 +46,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./internals": "./src/internals/index.ts",
-    "./test-keys": "./src/test-keys.ts"
+    "./internals": "./src/internals/index.ts"
   },
   "imports": {
     "#formatErrorMessage": "@mui/x-internals/formatErrorMessage"

@@ -85,6 +85,7 @@
     "resourceColumnLabel": { "type": { "name": "string" } },
     "resourceModelStructure": { "type": { "name": "object" } },
     "resources": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "shouldEventRequireResource": { "type": { "name": "bool" }, "default": "true" },
     "showCurrentTimeIndicator": { "type": { "name": "bool" }, "default": "true" },
     "sx": {
       "type": {
@@ -463,6 +464,12 @@
       "isGlobal": false
     },
     {
+      "key": "eventsCell",
+      "className": "MuiEventTimelinePremium-eventsCell",
+      "description": "Styles applied to the events cell element in a body row.",
+      "isGlobal": false
+    },
+    {
       "key": "eventsHeaderCell",
       "className": "MuiEventTimelinePremium-eventsHeaderCell",
       "description": "Styles applied to the events header cell element.",
@@ -478,24 +485,6 @@
       "key": "eventSkeleton",
       "className": "MuiEventTimelinePremium-eventSkeleton",
       "description": "Styles applied to event skeleton elements rendered while events are loading.",
-      "isGlobal": false
-    },
-    {
-      "key": "eventsSubGrid",
-      "className": "MuiEventTimelinePremium-eventsSubGrid",
-      "description": "Styles applied to the events sub-grid element.",
-      "isGlobal": false
-    },
-    {
-      "key": "eventsSubGridRow",
-      "className": "MuiEventTimelinePremium-eventsSubGridRow",
-      "description": "Styles applied to the events sub-grid row element.",
-      "isGlobal": false
-    },
-    {
-      "key": "eventsSubGridWrapper",
-      "className": "MuiEventTimelinePremium-eventsSubGridWrapper",
-      "description": "Styles applied to the events sub-grid wrapper element.",
       "isGlobal": false
     },
     {
@@ -547,6 +536,12 @@
       "isGlobal": false
     },
     {
+      "key": "titleCellContent",
+      "className": "MuiEventTimelinePremium-titleCellContent",
+      "description": "Styles applied to the title cell content wrapper element.",
+      "isGlobal": false
+    },
+    {
       "key": "titleCellLegendColor",
       "className": "MuiEventTimelinePremium-titleCellLegendColor",
       "description": "Styles applied to the title cell legend color element.",
@@ -562,12 +557,6 @@
       "key": "titleHeaderCell",
       "className": "MuiEventTimelinePremium-titleHeaderCell",
       "description": "Styles applied to the title header cell element.",
-      "isGlobal": false
-    },
-    {
-      "key": "titleSubGrid",
-      "className": "MuiEventTimelinePremium-titleSubGrid",
-      "description": "Styles applied to the title sub-grid element.",
       "isGlobal": false
     }
   ],

@@ -52,6 +52,7 @@ const itITDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyPresetLabel: (date) => `Si ripete ogni anno il ${date}`,
   noResourceAriaLabel: 'Nessuna risorsa specifica',
   resourceLabel: 'Risorsa',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Salva',
   startDateAfterEndDateError: 'La data/ora di inizio deve essere precedente alla data/ora di fine.',
   startDateLabel: 'Data di inizio',

@@ -8,6 +8,11 @@ export interface DayViewProps extends ExportedDayTimeGridProps {}
 export interface StandaloneDayViewProps<TEvent extends object, TResource extends object>
   extends DayViewProps, EventCalendarParameters<TEvent, TResource> {
   /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * @default false
+   */
+  shouldEventRequireResource?: boolean;
+  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;

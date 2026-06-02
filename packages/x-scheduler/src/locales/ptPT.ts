@@ -52,6 +52,7 @@ const ptPTDialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyPresetLabel: (date) => `Repete anualmente em ${date}`,
   noResourceAriaLabel: 'Sem recurso',
   resourceLabel: 'Recurso',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Guardar',
   startDateAfterEndDateError: 'A data/hora de início deve ser anterior à data/hora de fim.',
   startDateLabel: 'Data de início',

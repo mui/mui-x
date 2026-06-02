@@ -70,10 +70,13 @@ export interface CommonLineSeriesType {
   strictStepCurve?: boolean;
   /**
    * Define which items of the series should display a mark.
-   * If can be a boolean that applies to all items.
+   * It can be a boolean that applies to all items.
+   * It can be `'start'` or `'end'` to only display a mark on the first or last item. Such marks reuse
+   * the line highlight element, so they are replaced by the highlighted item when the pointer
+   * highlights a value.
    * Or a callback that gets some item properties and returns true if the item should be displayed.
    */
-  showMark?: boolean | ((params: ShowMarkParams) => boolean);
+  showMark?: boolean | 'start' | 'end' | ((params: ShowMarkParams) => boolean);
   /**
    * The shape of the mark elements.
    * Using 'circle' renders a `<circle />` element, while all other options render a `<path />` instead. The path causes a small decrease in performance.
