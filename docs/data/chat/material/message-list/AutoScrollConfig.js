@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { ChatBox } from '@mui/x-chat';
@@ -15,7 +16,7 @@ export default function AutoScrollConfig() {
   const [autoScroll, setAutoScroll] = React.useState(true);
 
   return (
-    <div>
+    <Box sx={{ width: '100%', maxWidth: 520, mx: 'auto' }}>
       <FormControlLabel
         control={
           <Switch
@@ -38,6 +39,6 @@ export default function AutoScrollConfig() {
           borderRadius: 1,
         }}
       />
-    </div>
+    </Box>
   );
 }
