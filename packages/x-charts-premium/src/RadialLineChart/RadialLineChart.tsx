@@ -443,4 +443,4 @@ RadialLineChart.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { RadialLineChart as Unstable_RadialLineChart };
+export { RadialLineChart };
