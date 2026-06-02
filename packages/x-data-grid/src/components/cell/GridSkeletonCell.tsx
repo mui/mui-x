@@ -133,6 +133,7 @@ GridSkeletonCell.propTypes = {
   empty: PropTypes.bool,
   field: PropTypes.string,
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
+  skeletonProps: PropTypes.object,
   type: PropTypes.oneOf([
     'actions',
     'boolean',

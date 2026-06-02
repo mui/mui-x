@@ -256,6 +256,7 @@ ChartsToolbarPro.propTypes = {
       label: PropTypes.string.isRequired,
       value: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.instanceOf(Date).isRequired),
+        PropTypes.arrayOf(PropTypes.string.isRequired),
         PropTypes.func,
         PropTypes.shape({
           step: PropTypes.number,
