@@ -21,7 +21,4 @@ export {
   type OHLCSeries,
 } from './CandlestickChart';
 
-export {
-  CandlestickPlot,
-  type CandlestickPlotProps,
-} from './CandlestickPlot';
+export { CandlestickPlot, type CandlestickPlotProps } from './CandlestickPlot';
