@@ -210,6 +210,11 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
     const AvatarSlot = slots?.avatar;
     const hasAvatar = AvatarSlot !== null;
 
+    // The error surface is resolved through the `error` slot in both branches so custom
+    // message composition via `children` can still customize (or keep consistent) the
+    // error rendering, matching the slot-driven path below.
+    const ErrorComp = (slots?.error ?? ChatMessageError) as typeof ChatMessageError;
+
     // Build the inner tree from slots when no `children` were passed (slot-driven).
     // When `children` are provided, render them as-is for backward compatibility.
     let innerTree: React.ReactNode;
@@ -217,14 +222,13 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
       innerTree = (
         <React.Fragment>
           {children}
-          <ChatMessageError />
+          <ErrorComp {...(slotProps?.error ?? {})} />
         </React.Fragment>
       );
     } else {
       const ContentComp = (slots?.content ?? ChatMessageContent) as typeof ChatMessageContent;
       const MetaSlot = slots?.meta;
       const InlineMetaSlot = slots?.inlineMeta;
-      const ErrorComp = (slots?.error ?? ChatMessageError) as typeof ChatMessageError;
       const ActionsSlot = slots?.actions;
       const AvatarComp = (AvatarSlot ?? ChatMessageAvatar) as typeof ChatMessageAvatar;
 

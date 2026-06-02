@@ -94,4 +94,47 @@ describe('ChatMessageList', () => {
     expect(document.querySelector('.MuiChatMessage-root')).not.toBe(null);
     expect(document.querySelector('.MuiChatMessage-content')).not.toBe(null);
   });
+
+  it('groups against the rendered items subset, not the full conversation', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        members={[{ id: 'alice', displayName: 'Alice Author' }]}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            status: 'sent',
+            author: { id: 'alice' },
+            parts: [{ type: 'text', text: 'One' }],
+          },
+          {
+            id: 'm2',
+            role: 'assistant',
+            status: 'sent',
+            author: { id: 'alice' },
+            parts: [{ type: 'text', text: 'Two' }],
+          },
+          {
+            id: 'm3',
+            role: 'assistant',
+            status: 'sent',
+            author: { id: 'alice' },
+            parts: [{ type: 'text', text: 'Three' }],
+          },
+        ]}
+      >
+        <ChatConversation>
+          <ChatMessageList items={['m2', 'm3']} />
+        </ChatConversation>
+      </ChatRoot>,
+    );
+
+    // Only m2/m3 are rendered. m2 is the first row of the rendered list, so it must be
+    // treated as the start of a group (author label shown) — it would be wrongly grouped
+    // against the off-list m1 if grouping ran on the full conversation.
+    expect(screen.getByText('Two')).not.toBe(null);
+    expect(screen.queryByText('One')).toBe(null);
+    expect(document.body.textContent).toContain('Alice Author');
+  });
 });

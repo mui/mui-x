@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/internal-test-utils';
+import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import { ChatRoot, type ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
@@ -143,5 +143,22 @@ describe('ChatMessageGroup', () => {
     );
 
     expect(document.body.textContent).not.toContain('Alice Hidden');
+  });
+
+  it('forwards slots.message.root to ChatMessage instead of replacing the row', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Body text' }] }]}
+      >
+        <ChatMessageGroup messageId="m1" slots={{ message: { root: 'section' } }} />
+      </ChatRoot>,
+    );
+
+    // The message body still renders — the root slot only swaps the root element,
+    // it must not replace the whole ChatMessage row.
+    expect(screen.getByText('Body text')).not.toBe(null);
+    // …and the custom element is applied as the message root.
+    expect(document.querySelector('section.MuiChatMessage-root')).not.toBe(null);
   });
 });

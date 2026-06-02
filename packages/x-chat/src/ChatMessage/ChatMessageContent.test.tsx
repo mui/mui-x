@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createRenderer, screen } from '@mui/internal-test-utils';
+import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
-import { ChatRoot, MessageRoot } from '@mui/x-chat-headless';
+import { ChatRoot, MessageRoot, useChatStore } from '@mui/x-chat-headless';
 import { ChatMessageContent } from './ChatMessageContent';
 
 const { render } = createRenderer();
@@ -230,6 +230,113 @@ describe('ChatMessageContent', () => {
       expect(status).not.toBe(null);
       expect(status!.getAttribute('aria-label')).toBe('Completed');
       expect(status!.querySelector('svg')).not.toBe(null);
+    });
+
+    it('auto-opens the input section when the state transitions to approval-requested', () => {
+      let store!: ReturnType<typeof useChatStore>;
+      function CaptureStore() {
+        store = useChatStore();
+        return null;
+      }
+
+      render(
+        <ChatRoot
+          adapter={createAdapter()}
+          initialMessages={[
+            {
+              id: 'm1',
+              role: 'assistant',
+              parts: [
+                {
+                  type: 'tool',
+                  toolInvocation: {
+                    toolCallId: 'tc1',
+                    toolName: 'dangerousTool',
+                    state: 'input-available',
+                    input: { action: 'delete' },
+                  },
+                },
+              ],
+            },
+          ]}
+        >
+          <CaptureStore />
+          <MessageRoot messageId="m1">
+            <ChatMessageContent data-testid="message-content" />
+          </MessageRoot>
+        </ChatRoot>,
+      );
+
+      // The input section starts collapsed while the tool is `input-available`.
+      const inputDetailsBefore = screen.getByText('Tool called:').closest('details');
+      expect(inputDetailsBefore).not.toBe(null);
+      expect(inputDetailsBefore!.hasAttribute('open')).toBe(false);
+
+      // The same section component is reused when the state advances to
+      // `approval-requested`; it must now auto-open so the input being approved is visible.
+      act(() => {
+        store.updateMessage('m1', {
+          parts: [
+            {
+              type: 'tool',
+              toolInvocation: {
+                toolCallId: 'tc1',
+                toolName: 'dangerousTool',
+                state: 'approval-requested',
+                input: { action: 'delete' },
+              },
+            },
+          ],
+        });
+      });
+
+      const inputDetailsAfter = screen.getByText('Tool called:').closest('details');
+      expect(inputDetailsAfter!.hasAttribute('open')).toBe(true);
+    });
+
+    it('keeps the other Material tool slots when only one part slot is overridden', () => {
+      function CustomSummary({ children }: { children?: React.ReactNode }) {
+        return <strong data-testid="custom-summary">{children}</strong>;
+      }
+
+      render(
+        <ChatRoot
+          adapter={createAdapter()}
+          initialMessages={[
+            {
+              id: 'm1',
+              role: 'assistant',
+              parts: [
+                {
+                  type: 'tool',
+                  toolInvocation: {
+                    toolCallId: 'tc1',
+                    toolName: 'searchTool',
+                    state: 'output-available',
+                    input: { query: 'test' },
+                    output: { result: 'found' },
+                    title: 'Search Tool',
+                  },
+                },
+              ],
+            },
+          ]}
+        >
+          <MessageRoot messageId="m1">
+            <ChatMessageContent
+              data-testid="message-content"
+              partProps={{ tool: { slots: { sectionSummary: CustomSummary } } }}
+            />
+          </MessageRoot>
+        </ChatRoot>,
+      );
+
+      // The overridden slot is used…
+      expect(document.querySelector('[data-testid="custom-summary"]')).not.toBe(null);
+      // …and the other Material defaults survive: the collapsible root + the input/output
+      // section `<details>` elements (3 total) would collapse to plain divs if the partial
+      // override had replaced the whole slot map.
+      expect(document.querySelectorAll('details').length).toBe(3);
     });
   });
 

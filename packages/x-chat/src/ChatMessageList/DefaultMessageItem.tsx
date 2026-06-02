@@ -26,6 +26,14 @@ export interface ChatMessageRowSlotProps {
 
 export interface DefaultMessageItemProps {
   id: string;
+  /**
+   * Index of this row within the rendered list. Forwarded to the group so grouping
+   * (previous/next neighbor lookup) is computed against the rendered list rather than
+   * the full conversation when a custom `items` subset is used.
+   */
+  index?: number;
+  /** The rendered list's message ids. Forwarded to the group alongside `index`. */
+  items?: string[];
   slots?: ChatMessageRowSlots;
   slotProps?: ChatMessageRowSlotProps;
 }
@@ -45,6 +53,8 @@ export interface DefaultMessageItemProps {
  */
 export const DefaultMessageItem = React.memo(function DefaultMessageItem({
   id,
+  index,
+  items,
   slots,
   slotProps,
 }: DefaultMessageItemProps) {
@@ -53,6 +63,8 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
   return (
     <GroupSlot
       messageId={id}
+      index={index}
+      items={items}
       slots={{
         message: slots?.message,
       }}

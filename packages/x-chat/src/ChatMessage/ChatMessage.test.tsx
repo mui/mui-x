@@ -172,4 +172,33 @@ describe('ChatMessage', () => {
     // The current user's own user-role message IS marked as own.
     expect(meRoot!.getAttribute('data-is-own-message')).toBe('true');
   });
+
+  it('honors slots.error in the children composition path', () => {
+    function CustomError() {
+      return <div data-testid="custom-error">custom error</div>;
+    }
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            status: 'error',
+            parts: [{ type: 'text', text: 'Boom' }],
+          },
+        ]}
+      >
+        <ChatMessage messageId="m1" slots={{ error: CustomError }}>
+          <div data-testid="custom-child">child content</div>
+        </ChatMessage>
+      </ChatRoot>,
+    );
+
+    // Custom children render, and the error surface resolves through slots.error
+    // rather than being hardcoded to the default ChatMessageError.
+    expect(document.querySelector('[data-testid="custom-child"]')).not.toBe(null);
+    expect(document.querySelector('[data-testid="custom-error"]')).not.toBe(null);
+  });
 });

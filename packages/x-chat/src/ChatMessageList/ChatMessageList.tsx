@@ -145,18 +145,26 @@ const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListP
       return { rowSlotProps: row, listSlotProps: list };
     }, [slotProps]);
 
-    // Keep the default renderer stable; read latest slot overrides from refs so
-    // updates don't churn the virtualized list.
+    // Keep the default renderer stable; read latest slot overrides and the resolved
+    // `items` from refs so updates don't churn the virtualized list. `items` is read
+    // without destructuring so it still flows to MessageListRoot via `...other`.
     const rowSlotsRef = React.useRef(rowSlots);
     const rowSlotPropsRef = React.useRef(rowSlotProps);
+    const itemsRef = React.useRef<string[] | undefined>(undefined);
     rowSlotsRef.current = rowSlots;
     rowSlotPropsRef.current = rowSlotProps;
+    itemsRef.current = (other as { items?: string[] }).items;
 
+    // Forward `index` (rendered-list relative) and the rendered `items` so the group
+    // computes grouping against the rendered list — otherwise a custom `items` subset
+    // would regroup against the full conversation and drop avatars/author labels.
     const defaultRenderItem = React.useCallback(
-      ({ id }: { id: string; index: number }) => (
+      ({ id, index }: { id: string; index: number }) => (
         <DefaultMessageItem
           key={id}
           id={id}
+          index={index}
+          items={itemsRef.current}
           slots={rowSlotsRef.current}
           slotProps={rowSlotPropsRef.current}
         />

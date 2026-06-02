@@ -128,10 +128,13 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
     const classes = useChatMessageUtilityClasses(classesProp);
 
     // The inner-message slot map (`slots.message`) flows through to ChatMessage.
-    // The `root` slot is the group's own styled wrapper element (wrapper-only).
+    // `slots.root` (the group-level slot, handled below) is the group's own styled
+    // wrapper element. The message-level `root` slot lives inside `slots.message` and
+    // is interpreted by ChatMessage itself — we must NOT hoist it into the row
+    // component, otherwise a raw element (e.g. `'section'`) would receive `messageId`/
+    // `slots`/`slotProps` it can't read and the message body would disappear.
     const innerMessageSlots = slots?.message;
     const innerMessageSlotProps = slotProps?.message;
-    const MessageRootSlot = (innerMessageSlots?.root ?? ChatMessage) as typeof ChatMessage;
 
     // Track whether the avatar slot is explicitly nulled — used to mirror the
     // `noAvatar` class on the group wrapper so any descendant CSS that reads
@@ -149,15 +152,16 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
 
     // Render priority:
     // 1. Explicit `children` (legacy: caller provided their own composition)
-    // 2. Inner ChatMessage instance with the forwarded nested slot map
+    // 2. Inner ChatMessage instance with the forwarded nested slot map. The nested
+    //    map carries `root`, which ChatMessage applies to its own styled root (and
+    //    `slotProps.root` is applied there too), so we forward instead of replacing.
     const resolvedChildren =
       children ??
       (messageId ? (
-        <MessageRootSlot
+        <ChatMessage
           messageId={messageId}
           slots={innerMessageSlots}
           slotProps={innerMessageSlotProps}
-          {...(innerMessageSlotProps?.root ?? {})}
         />
       ) : null);
 

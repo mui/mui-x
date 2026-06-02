@@ -639,6 +639,19 @@ function ChatToolPartSection({ ownerState, ...rest }: ChatToolPartSectionRenderP
   }, [section, state]);
   const [open, setOpen] = React.useState(initialOpen);
 
+  // The section component is reused across streamed invocation-state updates (same
+  // element identity), so `useState(initialOpen)` alone never reacts to post-mount
+  // transitions (e.g. `input-available` → `approval-requested`, or `output-available`).
+  // Sync on a false→true flip of `initialOpen` to auto-open when the new state warrants
+  // it, while leaving a user's manual collapse untouched otherwise.
+  const prevInitialOpenRef = React.useRef(initialOpen);
+  if (prevInitialOpenRef.current !== initialOpen) {
+    prevInitialOpenRef.current = initialOpen;
+    if (initialOpen) {
+      setOpen(true);
+    }
+  }
+
   return (
     <ChatToolPartSectionDetails
       ownerState={ownerState}
@@ -1150,29 +1163,33 @@ const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentPr
             renderText: renderMarkdown,
             ...userPartProps?.text,
           },
+          // For each part type that ships a default Material `slots` map, spread the
+          // user's overrides first, then merge the nested `slots` so a partial slot
+          // override (e.g. `{ slots: { sectionSummary: Custom } }`) keeps the rest of
+          // the Material defaults instead of replacing the whole map.
           file: {
-            slots: filePartSlots,
             ...userPartProps?.file,
+            slots: { ...filePartSlots, ...userPartProps?.file?.slots },
           },
           tool: {
-            slots: toolPartSlots,
             ...userPartProps?.tool,
+            slots: { ...toolPartSlots, ...userPartProps?.tool?.slots },
           },
           'dynamic-tool': {
-            slots: toolPartSlots,
             ...userPartProps?.['dynamic-tool'],
+            slots: { ...toolPartSlots, ...userPartProps?.['dynamic-tool']?.slots },
           },
           reasoning: {
-            slots: reasoningPartSlots,
             ...userPartProps?.reasoning,
+            slots: { ...reasoningPartSlots, ...userPartProps?.reasoning?.slots },
           },
           'source-url': {
-            slots: sourceUrlPartSlots,
             ...userPartProps?.['source-url'],
+            slots: { ...sourceUrlPartSlots, ...userPartProps?.['source-url']?.slots },
           },
           'source-document': {
-            slots: sourceDocumentPartSlots,
             ...userPartProps?.['source-document'],
+            slots: { ...sourceDocumentPartSlots, ...userPartProps?.['source-document']?.slots },
           },
         }}
       />

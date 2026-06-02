@@ -75,7 +75,10 @@ const ChatConversationListScrollerStyled = styled('div', {
   height: '100%',
   overflow: 'hidden',
   flexShrink: 0,
-  '@container chatbox (max-width: 599.95px)': {
+  // Anonymous container query: ChatBox sets `containerType: 'inline-size'` without a
+  // `containerName`, so this matches the nearest size container (the ChatBox root) and
+  // hides the inline sidebar on narrow layouts. Mirrors `ChatBoxContent`'s JS observer.
+  '@container (max-width: 599.95px)': {
     display: 'none',
   },
 }));
