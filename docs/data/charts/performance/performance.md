@@ -62,10 +62,6 @@ Set the `skipAnimation` prop to render the final state directly, without transit
 <LineChart series={series} skipAnimation />
 ```
 
-:::info
-When `skipAnimation` is unset, charts already respect the user's [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion) setting and skip animations for users who opted out of motion.
-:::
-
 ## Remove marks from line charts
 
 If you set `showMark` to `true` for line series, a mark element is render for every data point.
