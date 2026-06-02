@@ -27,6 +27,10 @@ import {
   useChartProZoom,
   type UseChartProZoomSignature,
 } from '../internals/plugins/useChartProZoom';
+import {
+  useChartProSampling,
+  type UseChartProSamplingSignature,
+} from '../internals/plugins/useChartProSampling';
 
 export type ScatterChartProPluginSignatures = [
   UseChartZAxisSignature,
@@ -40,6 +44,7 @@ export type ScatterChartProPluginSignatures = [
   UseChartKeyboardNavigationSignature,
   UseChartProZoomSignature,
   UseChartProExportSignature,
+  UseChartProSamplingSignature,
 ];
 
 export const SCATTER_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartProPluginSignatures> =
@@ -55,4 +60,5 @@ export const SCATTER_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChar
     useChartKeyboardNavigation,
     useChartProZoom,
     useChartProExport,
+    useChartProSampling,
   ];
