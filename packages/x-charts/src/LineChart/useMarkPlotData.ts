@@ -63,7 +63,8 @@ export function useMarkPlotData(
           hidden,
         } = series[seriesId];
 
-        if (!showMark) {
+        // `'start'` and `'end'` marks are rendered by the `LineHighlightPlot` using the highlight element.
+        if (!showMark || showMark === 'start' || showMark === 'end') {
           continue;
         }
 

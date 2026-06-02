@@ -24,6 +24,12 @@ export interface TimelineGridRootContext {
    * The non-empty tuple shape guarantees at least one column type at the type level.
    */
   columnTypes: readonly [TimelineGridColumnType, ...TimelineGridColumnType[]];
+  /**
+   * The total number of logical rows in the grid.
+   * Used for keyboard navigation bounds checking (works with virtualization
+   * where only a subset of rows are in the DOM).
+   */
+  totalRowCount: number;
 }
 
 export const DEFAULT_COLUMN_TYPES = ['title', 'events'] as const satisfies readonly [
