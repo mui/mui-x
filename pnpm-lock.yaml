@@ -18505,10 +18505,6 @@ snapshots:
     dependencies:
       language-subtag-registry: 0.3.23
 
-  lazystream@1.0.1:
-    dependencies:
-      readable-stream: 2.3.8
-
   lerna@9.0.7(@swc/core@1.15.13)(@types/node@22.19.19)(babel-plugin-macros@3.1.0):
     dependencies:
       '@npmcli/arborist': 9.1.6
