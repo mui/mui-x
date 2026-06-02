@@ -87,7 +87,7 @@ describe('date-utils', () => {
       });
     });
 
-    describe('unknown locale / missing weekInfo (fallback: Saturday & Sunday)', () => {
+    describe('locale with no code property (skips Intl.Locale entirely, fallback: Saturday & Sunday)', () => {
       it('returns true for Saturday', () => {
         const sat = adapterUnknownLocale.date('2025-01-11T12:00:00Z', 'default');
         expect(adapterUnknownLocale.isWeekend(sat)).to.equal(true);

@@ -93,6 +93,65 @@ const FORMATS: TemporalAdapterFormats = {
   localizedNumericDate: 'P', // Note: Day and month are padded on enUS unlike Luxon
 };
 
+type LocaleWithWeekInfo = {
+  getWeekInfo?: () => { weekend?: number[] };
+  weekInfo?: { weekend?: number[] };
+};
+
+// Fallback data for browsers that don't implement Intl.Locale weekInfo (e.g. Firefox).
+// Source: Unicode CLDR — regions whose weekend differs from the global default (Sat+Sun).
+// Days are ISO day numbers: 1=Mon … 6=Sat, 7=Sun.
+const WEEKEND_BY_REGION: Record<string, number[]> = {
+  // Friday + Saturday
+  AE: [5, 6],
+  AF: [5, 6],
+  BH: [5, 6],
+  DZ: [5, 6],
+  EG: [5, 6],
+  IQ: [5, 6],
+  JO: [5, 6],
+  KW: [5, 6],
+  LY: [5, 6],
+  MA: [5, 6],
+  OM: [5, 6],
+  QA: [5, 6],
+  SA: [5, 6],
+  SD: [5, 6],
+  SY: [5, 6],
+  TN: [5, 6],
+  YE: [5, 6],
+  // Friday only
+  IR: [5],
+};
+
+const getWeekendDaysFromLocaleCode = (localeCode: string | undefined): number[] | null => {
+  if (!localeCode) {
+    return null;
+  }
+
+  // Try native Intl.Locale first (Chrome, Safari, Node).
+  if (typeof Intl.Locale === 'function') {
+    try {
+      const localeWithWeekInfo = new Intl.Locale(localeCode) as LocaleWithWeekInfo;
+      const weekInfo =
+        typeof localeWithWeekInfo.getWeekInfo === 'function'
+          ? localeWithWeekInfo.getWeekInfo()
+          : localeWithWeekInfo.weekInfo;
+
+      if (Array.isArray(weekInfo?.weekend) && weekInfo.weekend.length > 0) {
+        return weekInfo.weekend;
+      }
+    } catch {
+      // Unrecognised locale code — continue to region fallback.
+    }
+  }
+
+  // Fallback for browsers without weekInfo support (e.g. Firefox):
+  // extract the region subtag from the BCP 47 locale code and look it up.
+  const region = localeCode.split('-').find((part) => /^[A-Z]{2}$|^\d{3}$/.test(part));
+  return region !== undefined ? (WEEKEND_BY_REGION[region] ?? null) : null;
+};
+
 declare module '@mui/x-scheduler-internals/base-ui-copy/types' {
   interface TemporalSupportedObjectLookup {
     'date-fns': Date;
@@ -292,21 +351,11 @@ export class TemporalAdapterDateFns implements TemporalAdapter {
   public isWeekend = (value: Date) => {
     const dayOfWeek = getDay(value);
     const localeCode = this.locale.code;
+    const localeWeekendDays = getWeekendDaysFromLocaleCode(localeCode);
 
-    if (localeCode) {
-      try {
-        const intlLocale = new Intl.Locale(localeCode);
-        const weekInfo: { weekend?: number[] } | undefined =
-          typeof (intlLocale as any).getWeekInfo === 'function'
-            ? (intlLocale as any).getWeekInfo()
-            : (intlLocale as any).weekInfo;
-        if (weekInfo?.weekend) {
-          const isoDay = dayOfWeek === 0 ? 7 : dayOfWeek;
-          return weekInfo.weekend.includes(isoDay);
-        }
-      } catch {
-        // Fall through to default
-      }
+    if (localeWeekendDays) {
+      const isoDay = dayOfWeek === 0 ? 7 : dayOfWeek;
+      return localeWeekendDays.includes(isoDay);
     }
 
     return dayOfWeek === 0 || dayOfWeek === 6;
