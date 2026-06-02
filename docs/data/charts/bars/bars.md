@@ -275,8 +275,11 @@ When you set `skipAnimation` to `true`, the chart renders without animations.
 
 ## Performance
 
+### SVG batch rendering
+
 By default, each bar is drawn as an SVG `rect` element.
 With many bars, this can slow down rendering.
+
 To render bars more efficiently, you can set the `renderer` prop to `"svg-batch"`.
 This has some trade-offs:
 
