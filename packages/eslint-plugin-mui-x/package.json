@@ -6,13 +6,13 @@
   "type": "module",
   "main": "src/index.mjs",
   "dependencies": {
-    "@typescript-eslint/utils": "^8.59.4"
+    "@typescript-eslint/utils": "^8.60.0"
   },
   "devDependencies": {
     "@types/eslint": "9.6.1",
     "@types/react": "catalog:",
     "@typescript-eslint/parser": "catalog:",
-    "@typescript-eslint/rule-tester": "8.59.4"
+    "@typescript-eslint/rule-tester": "8.60.0"
   },
   "scripts": {
     "test": "vitest"
