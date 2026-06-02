@@ -176,7 +176,7 @@ describe('Core - EventTimelinePremiumStore', () => {
       // Dispose the store's pending timers; otherwise the `nowUpdatedEveryMinute` interval
       // would fire later, re-trigger the subscribe listener against the intentionally invalid
       // state left by this test, and leak an unhandled error into the test run.
-      store.disposeEffect()();
+      store[Symbol.dispose]();
     });
   });
 });

@@ -20,7 +20,7 @@ describe('Dispose - EventCalendarStore', () => {
     const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
     const initialNow = store.state.nowUpdatedEveryMinute;
 
-    store.disposeEffect()();
+    store[Symbol.dispose]();
 
     vi.advanceTimersByTime(ONE_MINUTE_IN_MS * 2);
 
@@ -32,7 +32,7 @@ describe('Dispose - EventCalendarStore', () => {
     const handler = spy();
     store.subscribeEvent('eventsUpdated', handler);
 
-    store.disposeEffect()();
+    store[Symbol.dispose]();
 
     store.publishEvent('eventsUpdated', {
       deleted: [],

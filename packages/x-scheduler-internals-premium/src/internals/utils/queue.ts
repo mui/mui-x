@@ -55,7 +55,11 @@ export class SchedulerDataManager {
 
   private debounceMs: number;
 
-  private timeoutManager = new TimeoutManager();
+  private readonly disposables = new DisposableStack();
+
+  // Registered first so `clearAll` runs last (LIFO) — the constructor's defer
+  // calls `cancelQueuedRequests`, which itself touches `timeoutManager`.
+  private timeoutManager = this.disposables.use(new TimeoutManager());
 
   // Requests waiting for the debounce timer to finish (rapid navigation buffer)
   private stagedRanges: DateRange[] | null = null;
@@ -63,8 +67,6 @@ export class SchedulerDataManager {
   private pendingDebounceResolve: (() => void) | null = null;
 
   private fetchFunction: (range: DateRange, adapter: Adapter) => Promise<void>;
-
-  private readonly disposables = new DisposableStack();
 
   public get disposed(): boolean {
     return this.disposables.disposed;
@@ -87,7 +89,6 @@ export class SchedulerDataManager {
 
     this.disposables.defer(() => {
       this.cancelQueuedRequests();
-      this.timeoutManager.clearAll();
       this.pendingRequests.clear();
       this.settledRequests.clear();
     });

@@ -1,6 +1,6 @@
 'use client';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
-import { useInstance } from '@mui/x-internals/useInstance';
+import { useDisposable } from '@mui/x-internals/useDisposable';
 import { useAdapter } from '../use-adapter/useAdapter';
 import { EventCalendarStore, ExtendableEventCalendarStore } from './EventCalendarStore';
 import { EventCalendarParameters } from './EventCalendarStore.types';
@@ -20,7 +20,7 @@ export function useEventCalendar<TEvent extends object, TResource extends object
 ): ExtendableEventCalendarStore<TEvent, TResource> {
   const adapter = useAdapter(parameters.dateLocale);
   const ResolvedStoreClass = StoreClass ?? EventCalendarStore;
-  const store = useInstance(() => new ResolvedStoreClass(parameters, adapter));
+  const store = useDisposable(() => new ResolvedStoreClass(parameters, adapter));
 
   useIsoLayoutEffect(
     () => store.updateStateFromParameters(parameters, adapter),

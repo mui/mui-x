@@ -40,7 +40,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     expect(dataSource.getEvents.calledOnce).to.equal(true);
     expect(store.state.eventIdList).to.have.length(0);
 
-    store.disposeEffect()();
+    store[Symbol.dispose]();
 
     resolveFetch(buildEvents());
     await flushEffect();
@@ -68,7 +68,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
 
     await flushEffect();
 
-    store.disposeEffect()();
+    store[Symbol.dispose]();
 
     await flushDebounce();
     await flushEffect();
@@ -88,7 +88,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    store.disposeEffect()();
+    store[Symbol.dispose]();
 
     const updated = EventBuilder.new()
       .id('1')
@@ -120,7 +120,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     await flushDebounce();
     expect(dataSource.getEvents.calledOnce).to.equal(true);
 
-    store.disposeEffect()();
+    store[Symbol.dispose]();
 
     store.goToNextVisibleDate(noopUIEvent);
 
@@ -130,7 +130,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     expect(dataSource.getEvents.calledOnce).to.equal(true);
   });
 
-  it('should be safe to call the dispose cleanup twice', async () => {
+  it('should be safe to dispose twice', async () => {
     const dataSource = {
       getEvents: spy(async () => buildEvents()),
       persistEvents: noopPersistEvents,
@@ -142,9 +142,8 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    const cleanup = store.disposeEffect();
-    cleanup();
-    expect(() => cleanup()).not.to.throw();
+    store[Symbol.dispose]();
+    expect(() => store[Symbol.dispose]()).not.to.throw();
   });
 
   it('should not crash when disposing after a cache-hit navigation', async () => {
@@ -169,7 +168,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(() => store.disposeEffect()()).not.to.throw();
+    expect(() => store[Symbol.dispose]()).not.to.throw();
     // No third fetch: the return navigation was served from the cache.
     expect(dataSource.getEvents.callCount).to.equal(2);
   });
@@ -208,7 +207,7 @@ describe('Dispose - EventTimelinePremiumStore', () => {
     await flushEffect();
     expect(dataSource.persistEvents.calledOnce).to.equal(true);
 
-    store.disposeEffect()();
+    store[Symbol.dispose]();
 
     rejectPersist(new Error('boom'));
     await flushEffect();

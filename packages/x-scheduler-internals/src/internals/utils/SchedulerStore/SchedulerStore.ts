@@ -75,11 +75,14 @@ export class SchedulerStore<
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
-  protected timeoutManager = new TimeoutManager();
-
-  private eventManager = new EventManager();
-
   protected readonly disposables = new DisposableStack();
+
+  // Registered first via field init so they're disposed last (LIFO): plugins
+  // added by subclasses in their constructors dispose first, then the store's
+  // own resources.
+  protected timeoutManager = this.disposables.use(new TimeoutManager());
+
+  private eventManager = this.disposables.adopt(new EventManager(), (m) => m.removeAllListeners());
 
   public constructor(
     parameters: Parameters,
@@ -125,11 +128,6 @@ export class SchedulerStore<
     this.parameters = parameters;
     this.instanceName = instanceName;
     this.mapper = mapper;
-
-    // Registered first so they run last (LIFO): plugins added by subclasses
-    // dispose first, then the store's own resources.
-    this.disposables.defer(() => this.timeoutManager.clearAll());
-    this.disposables.defer(() => this.eventManager.removeAllListeners());
 
     const currentDate = new Date();
     const timeUntilNextMinuteMs =
@@ -252,28 +250,25 @@ export class SchedulerStore<
   };
 
   /**
-   * Returns a cleanup function that disposes the store synchronously. Designed
-   * to be passed to a mount effect; the consumer (`useInstance`) handles the
-   * StrictMode double-invocation by suppressing the cleanup, so this method
-   * does not need to defer the teardown itself.
+   * Disposes the store synchronously. The React consumer (`useDisposable`)
+   * handles the StrictMode double-invocation by suppressing the simulated
+   * unmount, so this method does not need to defer the teardown itself.
    */
-  public disposeEffect = () => {
-    return () => {
-      if (this.disposables.disposed) {
-        return;
+  [Symbol.dispose](): void {
+    if (this.disposables.disposed) {
+      return;
+    }
+    try {
+      this.disposables.dispose();
+    } catch (error) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(
+          'MUI X Scheduler: error while disposing the store.',
+          ...unwrapSuppressedErrors(error),
+        );
       }
-      try {
-        this.disposables.dispose();
-      } catch (error) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error(
-            'MUI X Scheduler: error while disposing the store.',
-            ...unwrapSuppressedErrors(error),
-          );
-        }
-      }
-    };
-  };
+    }
+  }
 
   /**
    * Removes the error with the given key from `state.errors`.
