@@ -16,5 +16,5 @@
     { "path": "../x-telemetry/tsconfig.build.json" }
   ],
   "include": ["src/**/*.ts*"],
-  "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/test-keys.ts"]
+  "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
 }
