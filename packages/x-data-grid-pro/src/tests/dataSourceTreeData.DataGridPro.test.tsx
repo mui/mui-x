@@ -397,9 +397,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
-    expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
+    // `callCount` increments when the fetch starts, so wait for the children to
+    // actually be added to the tree before asserting on it.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+    });
   });
 
   it('should keep the nested data visible after the root level re-fetch and remove any stale rows', async () => {
@@ -441,9 +445,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
 
     // children are part of the tree
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
-    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
+    // `callCount` increments when the fetch starts, so wait for the children to
+    // actually be added to the tree before asserting on it.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+    });
 
     // refetch the root level
     act(() => {
@@ -454,13 +462,14 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(fetchRowsSpy.callCount).to.equal(3);
     });
 
-    // children are still part of the tree
-    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
-
-    // test row is not part of the tree anymore
-    expect(apiRef.current!.state.rows.tree[testRowId]).to.equal(undefined);
+    // children are still part of the tree, and the stale test row has been
+    // removed once the background re-fetch settles.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+      expect(apiRef.current!.state.rows.tree[testRowId]).to.equal(undefined);
+    });
   });
 
   it('should collapse the nested data if refetching the root level with `keepChildrenExpanded` set to `false`', async () => {
@@ -479,9 +488,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
-    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
+    // `callCount` increments when the fetch starts, so wait for the children to
+    // actually be added to the tree before asserting on it.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+    });
 
     fetchRowsSpy.resetHistory();
 
@@ -493,7 +506,10 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       expect(fetchRowsSpy.callCount).to.equal(1);
     });
 
-    expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
+    // Children collapse once the re-fetch settles, leaving only the root rows.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
+    });
   });
 
   // https://github.com/mui/mui-x/issues/21269
@@ -590,9 +606,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
-    expect(Object.keys(apiRef.current.state.rows.tree).length).to.equal(
-      10 + 1 + cell11ChildrenCount,
-    );
+    // `callCount` increments when the fetch starts, so wait for the children to
+    // actually be added to the tree before asserting on it.
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(
+        10 + 1 + cell11ChildrenCount,
+      );
+    });
   });
 
   // https://github.com/mui/mui-x/issues/21263
