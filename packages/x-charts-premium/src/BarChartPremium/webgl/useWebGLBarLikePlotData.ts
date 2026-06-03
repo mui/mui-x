@@ -177,8 +177,8 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
 
     let cursor = 0;
 
-    for (let s = 0; s < completedData.length; s += 1) {
-      const processed = completedData[s];
+    for (let seriesIndex = 0; seriesIndex < completedData.length; seriesIndex += 1) {
+      const processed = completedData[seriesIndex];
       const seriesId = processed.seriesId;
       const data = processed.data;
       const dataLength = data.length;
@@ -188,9 +188,13 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
       // Find the first two visible bars in the series. Probe 1 sizes up the
       // bars themselves; probe 2 reveals the center-to-center pitch in the
       // band direction, which is what tells us whether the natural gap
-      // between bars is sub-pixel (and therefore shouldn't be visible).
+      // between bars is sub-pixel (and therefore shouldn't be visible). Track
+      // each probe's dataIndex too so any null bars between them don't get
+      // baked into the pitch as if they were extra bandwidths.
       let probe: T | null = null;
+      let probeIndex = 0;
       let probe2: T | null = null;
+      let probe2Index = 0;
       for (let i = 0; i < dataLength; i += 1) {
         const candidate = data[i];
         if (
@@ -201,8 +205,10 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
         ) {
           if (probe === null) {
             probe = candidate;
+            probeIndex = i;
           } else {
             probe2 = candidate;
+            probe2Index = i;
             break;
           }
         }
@@ -211,14 +217,20 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
         continue;
       }
 
-      const barSize = bandIsY ? probe.height : probe.width;
+      // Round the bar size to whole pixels so the rendered band half-size
+      // stays stable as the user zooms; sub-pixel jitter shows up as an
+      // "accordion" effect where bar widths visibly oscillate around their
+      // target on every zoom step.
+      const barSize = Math.round(bandIsY ? probe.height : probe.width);
       let pitch: number;
       if (probe2 === null) {
         pitch = barSize;
-      } else if (bandIsY) {
-        pitch = probe2.y - probe.y;
       } else {
-        pitch = probe2.x - probe.x;
+        // Divide by the dataIndex gap so a null bar between the two probes
+        // doesn't inflate the pitch to two bandwidths.
+        const indexGap = probe2Index - probeIndex;
+        const span = bandIsY ? probe2.y - probe.y : probe2.x - probe.x;
+        pitch = span / indexGap;
       }
       // Consider the natural barGapRatio gap to be zero when it's below the
       // threshold. The bar's rendered band-axis half-size is padded out to
