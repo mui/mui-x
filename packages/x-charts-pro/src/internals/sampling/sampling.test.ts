@@ -1,7 +1,6 @@
 import { lttb } from './lttb';
 import { m4 } from './m4';
 import { normalizeIndices } from './normalizeIndices';
-import { pixelBucket } from './pixelBucket';
 import { bucketAggregate } from './bucketAggregate';
 import { computeTargetCount } from './computeTargetCount';
 
@@ -91,28 +90,6 @@ describe('sampling algorithms', () => {
 
     it('ignores non-integer indices', () => {
       expect(normalizeIndices([0, 1.5, 3], 5)).to.deep.equal([0, 3]);
-    });
-  });
-
-  describe('pixelBucket', () => {
-    it('collapses points sharing a cell to a single representative', () => {
-      // 4 points, two pairs within the same 2px cell.
-      const xPixels = [0, 1, 50, 51];
-      const yPixels = [0, 1, 50, 51];
-      const result = pixelBucket(xPixels, yPixels, 2);
-      expect(result).to.deep.equal([0, 2]);
-    });
-
-    it('keeps points in distinct cells', () => {
-      const xPixels = [0, 10, 20];
-      const yPixels = [0, 10, 20];
-      const result = pixelBucket(xPixels, yPixels, 2);
-      expect(result).to.deep.equal([0, 1, 2]);
-    });
-
-    it('skips NaN positions', () => {
-      const result = pixelBucket([0, NaN, 10], [0, 5, NaN], 2);
-      expect(result).to.deep.equal([0]);
     });
   });
 

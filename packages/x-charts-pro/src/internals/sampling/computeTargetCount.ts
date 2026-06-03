@@ -38,30 +38,6 @@ export function computeTargetCount(
  * @param pixelsPerPoint The base spacing between rendered points, in pixels.
  * @returns The target number of points, capped at `length`.
  */
-/**
- * Estimates the fraction of a series that is currently visible along one axis, from the ratio of
- * the drawing-area span to the full (zoomed) pixel span of the data. Returns a value in `(0, 1]`.
- *
- * @param scale The live, zoom-aware axis scale.
- * @param pixelSpan The drawing-area length along that axis.
- */
-export function estimateVisibleFraction(
-  scale: { domain: () => any[]; (value: any): number | undefined },
-  pixelSpan: number,
-): number {
-  const domain = scale.domain();
-  if (!domain || domain.length === 0) {
-    return 1;
-  }
-  const start = scale(domain[0]) ?? 0;
-  const end = scale(domain[domain.length - 1]) ?? 0;
-  const fullSpan = Math.abs(end - start);
-  if (!Number.isFinite(fullSpan) || fullSpan <= 0) {
-    return 1;
-  }
-  return Math.min(1, pixelSpan / fullSpan);
-}
-
 export function targetForZoomLevel(
   pixelSpan: number,
   zoomLevel: number,
