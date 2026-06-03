@@ -89,7 +89,7 @@ const GAP_FILL_THRESHOLD_PX = 1;
 // moire patterns at very high zoom-out. Combined with gap-fill, this turns
 // dense data into a continuous "last bar wins per pixel" stairstep instead
 // of striped culling.
-const MIN_BAND_HALF_SIZE_PX = 0.2;
+const MIN_BAND_HALF_SIZE_PX = 0.5;
 
 function setCornerRadii(
   radius: number,
