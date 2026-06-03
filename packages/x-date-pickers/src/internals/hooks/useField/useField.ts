@@ -201,11 +201,15 @@ export const useField = <
   });
 
   const handleRootMouseDown = useEventCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    // Skip propagated mousedowns from the clear / open buttons (their own
-    // handlers `preventDefault`), mirroring `handleRootClick`. No userland
-    // opt-out is exposed here: `rootProps.onMouseDown` is the section-
-    // selection mechanism for this field, so allowing consumers to suppress
-    // it would leave the field unable to focus a section on click.
+    // The `isDefaultPrevented` check skips mousedowns that have already been
+    // suppressed before this handler runs -- in particular, propagated events
+    // from the clear / open buttons whose own handlers `preventDefault`, and
+    // capture-phase parents that intentionally block field interactions.
+    // Userland `onMouseDown` calling `event.preventDefault()` does *not*
+    // suppress `rootProps.onMouseDown` here: the prevent fires *after* this
+    // check, and `rootProps.onMouseDown` is the section-selection mechanism
+    // for the field -- letting consumers disable it inline would leave the
+    // field unable to focus a section on click.
     if (event.isDefaultPrevented()) {
       return;
     }

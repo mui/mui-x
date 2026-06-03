@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { fireEvent, screen } from '@mui/internal-test-utils';
 import {
@@ -100,26 +101,30 @@ describe('<DateField /> - Selection', () => {
     it('should select the visually-containing section when clicking on a section separator', () => {
       // Regression guard: without explicit handling, the closest-by-distance
       // math could pick a different section than the one whose container
-      // visually owns the separator (e.g. the "/" after Month is part of
-      // Month's section span). The section is identified from the
+      // visually owns the separator. The section is identified from the
       // `[data-sectionindex]` ancestor, matching pre-PR Chromium-delegation
       // behavior, and resolved in mousedown so the user never sees the
       // first-section fallback flicker when the CSS user-modify gate
       // briefly bounces focus to the sections-container `tabindex=0`.
+      //
+      // We click the "/" after the *Day* section (data-sectionindex=1)
+      // rather than the one after Month, so the test discriminates between
+      // the `[data-sectionindex]` lookup (Day) and the closest-section
+      // fallback under zero-sized JSDOM rects (which always returns 0 =
+      // Month) -- if the `[data-sectionindex]` lookup were dropped, the
+      // assertion would fail.
       const view = renderWithProps({ defaultValue: adapterToUse.date('2022-04-11') });
 
-      const monthSection = view.getSection(0);
-      // The "/" between Month and Day is rendered as Month's `endSeparator`,
-      // so its parent has `data-sectionindex="0"`.
-      const slashAfterMonth = monthSection.parentElement!.querySelector<HTMLElement>(
+      const daySection = view.getSection(1);
+      const slashAfterDay = daySection.parentElement!.querySelector<HTMLElement>(
         '.MuiPickersInputBase-sectionAfter',
       )!;
-      expect(slashAfterMonth.textContent).to.equal('/');
+      expect(slashAfterDay.textContent).to.equal('/');
 
-      fireEvent.mouseDown(slashAfterMonth);
-      fireEvent.click(slashAfterMonth);
+      fireEvent.mouseDown(slashAfterDay);
+      fireEvent.click(slashAfterDay);
 
-      expect(getCleanedSelectedContent()).to.equal('04');
+      expect(getCleanedSelectedContent()).to.equal('11');
     });
 
     it('should not select any section on mousedown when the field is disabled', () => {
@@ -132,6 +137,46 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent()).to.equal('');
     });
 
+    it('should not select any section on a non-primary mousedown (e.g. right-click)', () => {
+      const view = renderWithProps({});
+
+      const sectionsContainer = view.getSectionsContainer();
+      // `button: 2` = secondary (right) mouse button. The early-return
+      // prevents focus theft and lets the context menu fire normally.
+      fireEvent.mouseDown(sectionsContainer, { button: 2 });
+
+      expect(getCleanedSelectedContent()).to.equal('');
+    });
+
+    it('should not select any section when a capture-phase parent calls preventDefault on mousedown', () => {
+      // Locks the `handleRootMouseDown` contract: an upstream `preventDefault`
+      // (e.g. a capture-phase parent intentionally blocking field interaction,
+      // or the clear/open buttons whose own handlers already preventDefault
+      // before propagation) suppresses the section selection. Userland inline
+      // `event.preventDefault()` from `onMouseDown` is intentionally *not*
+      // honored as an opt-out -- see the comment in `handleRootMouseDown`.
+      const view = renderWithProps({});
+
+      const sectionsContainer = view.getSectionsContainer();
+      const handler = (event: Event) => event.preventDefault();
+      sectionsContainer.parentElement!.addEventListener('mousedown', handler, true);
+
+      fireEvent.mouseDown(sectionsContainer);
+
+      sectionsContainer.parentElement!.removeEventListener('mousedown', handler, true);
+      expect(getCleanedSelectedContent()).to.equal('');
+    });
+
+    it('should forward mousedown to a userland `onMouseDown` consumer', () => {
+      const consumer = spy();
+      const view = renderWithProps({ onMouseDown: consumer });
+
+      fireEvent.mouseDown(view.getSectionsContainer());
+
+      expect(consumer.callCount).to.equal(1);
+      expect(consumer.lastCall.firstArg.type).to.equal('mousedown');
+    });
+
     it('should preserve the all-sections selection when clicking the sections container', async () => {
       const view = renderWithProps({});
       await view.selectSection('month');
@@ -140,9 +185,11 @@ describe('<DateField /> - Selection', () => {
 
       // mousedown's closest-section path must early-return when the field is
       // in 'all' mode so the Ctrl+A cursor-positioning click-handler keeps
-      // its semantics.
+      // its semantics. Fire both mousedown and click so the 0-tick
+      // containerClickTimeout in `handleClick` is also exercised.
       const sectionsContainer = view.getSectionsContainer();
       fireEvent.mouseDown(sectionsContainer);
+      fireEvent.click(sectionsContainer);
 
       expect(getCleanedSelectedContent()).to.equal('MM/DD/YYYY');
     });

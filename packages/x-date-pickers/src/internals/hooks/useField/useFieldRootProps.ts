@@ -208,9 +208,17 @@ export function useFieldRootProps(
       return;
     }
 
-    // Section selection is driven by focus, not click.
+    // For trusted pointer input, `handleMouseDown` already ran and set the
+    // section. This branch only matters for `click` events that arrive
+    // without a preceding `mousedown` (programmatic `element.click()`, some
+    // assistive-technology activations, synthetic event sequences in tests).
+    // Fall back to the first section so the field doesn't enter a "focused
+    // but no active section" state.
     if (!focused) {
       setFocused(true);
+      if (parsedSelectedSections == null) {
+        setSelectedSections(sectionOrder.startIndex);
+      }
     }
   });
 
@@ -244,15 +252,24 @@ export function useFieldRootProps(
     // delegation + section container `onClick`), fall back to the
     // closest-by-distance section for padding / past-last-section clicks.
     const sectionElement = target.closest<HTMLElement>('[data-sectionindex]');
-    const targetSectionIndex = sectionElement
+    const parsedIndex = sectionElement
       ? Number(sectionElement.dataset.sectionindex)
       : findClosestSectionIndexToPoint(sectionListRoot, event.clientX);
-    if (targetSectionIndex == null) {
+    // `Number(undefined) === NaN` and `NaN == null === false`, so guard
+    // explicitly here even though `data-sectionindex` is set by
+    // `useFieldSectionContainerProps` for every section in practice.
+    if (parsedIndex == null || !Number.isInteger(parsedIndex)) {
       return;
     }
     event.preventDefault();
     setFocused(true);
-    setSelectedSections(targetSectionIndex);
+    // Skip the redundant state update if the selected section is already the
+    // target, so userland `onSelectedSectionsChange` doesn't fire twice (once
+    // from here on mousedown, again from the section container's `onClick`
+    // on the click bubble).
+    if (parsedIndex !== parsedSelectedSections) {
+      setSelectedSections(parsedIndex);
+    }
   });
 
   const handleInput = useEventCallback((event: React.FormEvent<HTMLDivElement>) => {
@@ -347,8 +364,8 @@ export function useFieldRootProps(
 
 /**
  * Returns the index of the section whose horizontal center is closest to `clientX`.
- * Returns `null` only if the field renders zero sections (defensive — a
- * rendered field always has at least one).
+ * Returns `null` if the field renders no `[role="spinbutton"]` descendants
+ * (defensive — every section content span sets `role="spinbutton"` in practice).
  */
 function findClosestSectionIndexToPoint(root: HTMLElement, clientX: number): number | null {
   const sections = root.querySelectorAll<HTMLElement>('[role="spinbutton"]');
