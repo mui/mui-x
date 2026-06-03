@@ -7,7 +7,7 @@ import { Scatter, type ScatterProps, type ScatterSlotProps, type ScatterSlots } 
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
 import { useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
-import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
+import { scatterSeriesConfig } from './seriesConfig';
 import getMarkerSize from './seriesConfig/getMarkerSize';
 import { BatchScatter } from './BatchScatter';
 import { useUtilityClasses } from './scatterClasses';
@@ -125,6 +125,8 @@ ScatterPlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.

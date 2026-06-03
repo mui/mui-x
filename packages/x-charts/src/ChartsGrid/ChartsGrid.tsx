@@ -94,6 +94,10 @@ ChartsGrid.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
+  /**
    * Displays horizontal grid.
    */
   horizontal: PropTypes.bool,

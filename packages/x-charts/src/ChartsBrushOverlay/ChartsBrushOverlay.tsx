@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 import { useTheme } from '@mui/material/styles';
@@ -38,7 +39,7 @@ export interface ChartsBrushOverlayProps {
 /**
  * Component that renders visual feedback during brush interaction
  */
-export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
+function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
   const { className } = props;
   const store = useStore<[UseChartBrushSignature]>();
   const drawingArea = store.use(selectorChartDrawingArea);
@@ -120,3 +121,16 @@ export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
     </g>
   );
 }
+
+ChartsBrushOverlay.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * A CSS class name applied to the root element.
+   */
+  className: PropTypes.string,
+} as any;
+
+export { ChartsBrushOverlay };
