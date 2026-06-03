@@ -238,23 +238,25 @@ export default defineConfig(
   },
   baseSpecRules,
   {
-    files: [`packages/x-charts{,-*}/**/*${EXTENSION_TS}`],
+    files: [
+      `packages/x-charts{,-*}/**/*${EXTENSION_TS}`,
+      `packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`,
+    ],
     rules: {
-      'import/no-cycle': 'error',
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {
           fixStyle: 'inline-type-imports',
         },
       ],
-      // Charts have no semantics, so we often need to query by container
-      'testing-library/no-container': 'off',
     },
   },
   {
-    files: [`packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`],
+    files: [`packages/x-charts{,-*}/**/*${EXTENSION_TS}`],
     rules: {
-      '@typescript-eslint/consistent-type-imports': 'error',
+      'import/no-cycle': 'error',
+      // Charts have no semantics, so we often need to query by container
+      'testing-library/no-container': 'off',
     },
   },
   {
