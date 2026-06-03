@@ -41,6 +41,9 @@
     "eventColor": {
       "description": "The color palette used for all events. Can be overridden per resource using the <code>eventColor</code> property on the resource model. Can be overridden per event using the <code>color</code> property on the event model."
     },
+    "eventCreation": {
+      "description": "Configures how events are created. If <code>false</code>, event creation is disabled. If <code>true</code>, event creation is enabled with default configuration. If an object, event creation is enabled with the provided configuration."
+    },
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
     },

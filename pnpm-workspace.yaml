@@ -28,7 +28,7 @@ catalog:
   '@mui/system': 9.0.1
   '@mui/types': 9.0.0
   '@mui/utils': 9.0.1
-  '@mui/x-internal-exceljs-fork': 4.4.5
+  '@mui/x-internal-exceljs-fork': 5.0.0
   '@playwright/test': 1.60.0
   '@react-spring/web': ^10.1.0
   '@types/chance': ^1.1.8
@@ -101,17 +101,18 @@ trustPolicy: no-downgrade
 # provenance), and the other legacy packages restore provenance.
 trustPolicyIgnoreAfter: 525600
 
-ignoredBuiltDependencies:
-  - core-js
-  - msw
+enablePrePostScripts: true
 
-onlyBuiltDependencies:
-  - '@swc/core'
-  - '@vvago/vale'
-  - esbuild
-  - nx
-  - sharp
-  - unrs-resolver
+allowBuilds:
+  '@swc/core': true
+  '@vvago/vale': true
+  esbuild: true
+  nx: true
+  sharp: true
+  unrs-resolver: true
+  '@mui/x-telemetry': false
+  core-js: false
+  msw: false
 
 overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error
