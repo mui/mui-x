@@ -57,7 +57,7 @@ import {
   TEST_KEY_PRO_ANNUAL_Q1_2026,
   TEST_KEY_PRO_ANNUAL_V3,
   TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
-} from '@mui/x-license/test-keys';
+} from 'test/utils/licenseKeys';
 
 // `releaseInfo` / `releaseDate` is the base64-encoded ms timestamp the package was built at.
 // Pinning it well before any license expiry keeps the perpetual/annual logic from

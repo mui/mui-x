@@ -136,6 +136,63 @@ const RootWithBottomState = React.forwardRef(function RootWithBottomState(
   );
 });
 
+function StreamingMessageList() {
+  const [grown, setGrown] = React.useState(false);
+  const [messages, setMessages] = React.useState<ChatMessage[]>([
+    createMessage('m1', 'assistant'),
+    createMessage('m2', 'assistant'),
+    createMessage('m3', 'assistant'),
+    createMessage('m4', 'assistant'),
+    { ...createMessage('m-streaming', 'assistant'), status: 'streaming' },
+  ]);
+
+  return (
+    <ChatRoot adapter={createAdapter()} messages={messages}>
+      <button
+        onClick={() => {
+          setGrown(true);
+          // Mutate the streaming message so the prop reference changes (mirrors
+          // a real word-by-word stream). Status stays 'streaming' so the
+          // resize-driven auto-scroll path is exercised.
+          setMessages((previous) =>
+            previous.map((message) =>
+              message.id === 'm-streaming'
+                ? {
+                    ...message,
+                    parts: [{ type: 'text', text: 'grown' }],
+                  }
+                : message,
+            ),
+          );
+        }}
+        type="button"
+      >
+        grow streaming row
+      </button>
+      <MessageListRoot
+        // Buffer wider than the row growth so `isAtBottomRef.current` remains
+        // true after the in-place resize. Otherwise the bottom check itself
+        // (not the lifecycle bug we want to cover) would short-circuit the
+        // auto-scroll.
+        autoScroll={{ buffer: 60 }}
+        estimatedItemSize={40}
+        renderItem={({ id }) => (
+          <div
+            data-testid={`message-${id}`}
+            style={{
+              boxSizing: 'border-box',
+              height: id === 'm-streaming' && grown ? 80 : 40,
+            }}
+          >
+            {id}
+          </div>
+        )}
+        style={{ height: 160, overflowY: 'auto' }}
+      />
+    </ChatRoot>
+  );
+}
+
 function ControlledMessageList(props: {
   slots?: MessageListRootProps['slots'];
   autoScroll?: MessageListRootProps['autoScroll'];
@@ -537,6 +594,57 @@ describe('MessageListRoot', () => {
       expect(log.scrollTop).toBe(160);
     });
   });
+
+  it.skipIf(isJSDOM)('auto-scrolls when a streaming row grows in place', async () => {
+    render(<StreamingMessageList />);
+    const log = screen.getByRole('log');
+
+    await waitFor(() => {
+      expect(log.scrollHeight).toBeGreaterThan(160);
+    });
+
+    log.scrollTop = log.scrollHeight - log.clientHeight;
+    fireEvent.scroll(log);
+
+    fireEvent.click(screen.getByRole('button', { name: 'grow streaming row' }));
+
+    await waitFor(() => {
+      expect(log.scrollTop).toBe(log.scrollHeight - log.clientHeight);
+      expect(log.scrollHeight).toBe(240);
+    });
+  });
+
+  it.skipIf(isJSDOM)(
+    'auto-scrolls when a streaming row grows in place under React.StrictMode',
+    async () => {
+      // Regression: in StrictMode the initial effect runs mount → cleanup →
+      // mount, which previously left `isMountedRef.current` stuck at false
+      // because the effect body never restored it. That made
+      // `scheduleResizeRestore` bail before calling `scrollToBottom`, so
+      // streaming wraps no longer followed the bottom (visible in the Captions
+      // demo).
+      render(
+        <React.StrictMode>
+          <StreamingMessageList />
+        </React.StrictMode>,
+      );
+      const log = screen.getByRole('log');
+
+      await waitFor(() => {
+        expect(log.scrollHeight).toBeGreaterThan(160);
+      });
+
+      log.scrollTop = log.scrollHeight - log.clientHeight;
+      fireEvent.scroll(log);
+
+      fireEvent.click(screen.getByRole('button', { name: 'grow streaming row' }));
+
+      await waitFor(() => {
+        expect(log.scrollTop).toBe(log.scrollHeight - log.clientHeight);
+        expect(log.scrollHeight).toBe(240);
+      });
+    },
+  );
 
   it.skipIf(isJSDOM)('updates the internal bottom state as the user scrolls', async () => {
     render(

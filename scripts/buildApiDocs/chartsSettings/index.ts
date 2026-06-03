@@ -7,8 +7,9 @@ import {
   HookReactApi,
   findApiPages,
 } from '@mui/internal-api-docs-builder';
-import generateUtilityClass, { isGlobalState } from '@mui/utils/generateUtilityClass';
+import { isGlobalState } from '@mui/utils/generateUtilityClass';
 import { getComponentImports, getComponentInfo } from './getComponentInfo';
+import generateChartsClassName from './generateChartsClassName';
 
 type PageType = { pathname: string; title: string; plan?: 'community' | 'pro' | 'premium' };
 
@@ -143,7 +144,7 @@ export default chartsApiPages;
   sortingStrategies: {
     slotsSort: (a, b) => a.name.localeCompare(b.name),
   },
-  generateClassName: generateUtilityClass,
+  generateClassName: generateChartsClassName,
   isGlobalClassName: isGlobalState,
   nonComponentFolders: [
     ...getNonComponentFolders(),
