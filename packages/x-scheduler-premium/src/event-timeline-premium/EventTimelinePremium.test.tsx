@@ -7,7 +7,7 @@ import {
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { EventTimelinePremiumStore } from '@mui/x-scheduler-internals-premium/use-event-timeline-premium';
-import { EVENT_TIMELINE_DEFAULT_LOCALE_TEXT } from '@mui/x-scheduler/internals';
+import { ErrorContainer, SharedComponentsStyledContext } from '@mui/x-scheduler/internals';
 import {
   adapter,
   createSchedulerRenderer,
@@ -23,8 +23,6 @@ import {
 } from '@mui/x-scheduler-internals/models';
 import { EventTimelinePremiumPreset } from '@mui/x-scheduler-internals-premium/models';
 import { EventTimelineLocaleText } from '@mui/x-scheduler/models';
-import { EventTimelinePremiumStyledContext } from './EventTimelinePremiumStyledContext';
-import { EventTimelinePremiumErrorContainer } from './error-container';
 
 const engineering = ResourceBuilder.new().build();
 const design = ResourceBuilder.new().build();
@@ -455,15 +453,9 @@ describe('<EventTimelinePremium />', () => {
 
       return render(
         <SchedulerStoreContext.Provider value={store as any}>
-          <EventTimelinePremiumStyledContext.Provider
-            value={{
-              schedulerId: 'test',
-              classes: eventTimelinePremiumClasses,
-              localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-            }}
-          >
-            <EventTimelinePremiumErrorContainer />
-          </EventTimelinePremiumStyledContext.Provider>
+          <SharedComponentsStyledContext.Provider value={{ classes: eventTimelinePremiumClasses }}>
+            <ErrorContainer />
+          </SharedComponentsStyledContext.Provider>
         </SchedulerStoreContext.Provider>,
       );
     }
@@ -650,19 +642,15 @@ describe('<EventTimelinePremium />', () => {
 
       function Test() {
         const styledContextValue = React.useMemo(
-          () => ({
-            schedulerId: 'test',
-            classes: eventTimelinePremiumClasses,
-            localeText: EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
-          }),
+          () => ({ classes: eventTimelinePremiumClasses }),
           [],
         );
 
         return (
           <SchedulerStoreContext.Provider value={store as any}>
-            <EventTimelinePremiumStyledContext.Provider value={styledContextValue}>
-              <EventTimelinePremiumErrorContainer />
-            </EventTimelinePremiumStyledContext.Provider>
+            <SharedComponentsStyledContext.Provider value={styledContextValue}>
+              <ErrorContainer />
+            </SharedComponentsStyledContext.Provider>
           </SchedulerStoreContext.Provider>
         );
       }

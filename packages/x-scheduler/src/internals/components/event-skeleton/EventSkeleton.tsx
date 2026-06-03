@@ -1,19 +1,18 @@
 'use client';
-// TODO #22309: unify with EventTimelinePremiumSkeleton — diverges in props (`data-variant` required here), sizing (variant-based absolute positioning vs theme-derived height), and styled context. On unification, prefer the timeline's theme-derived sizing.
+import clsx from 'clsx';
 import Skeleton from '@mui/material/Skeleton';
 import { styled } from '@mui/material/styles';
-import clsx from 'clsx';
-import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
+import { useSharedComponentsStyledContext } from '../SharedComponentsStyledContext';
 
 export interface EventSkeletonProps {
-  'data-variant': 'time-column' | 'day-grid' | 'agenda';
+  'data-variant': 'time-column' | 'day-grid' | 'agenda' | 'timeline-row';
   className?: string;
 }
 
 const EventSkeletonRoot = styled(Skeleton, {
-  name: 'MuiEventCalendar',
-  slot: 'EventSkeleton',
-})({
+  name: 'MuiEventSkeleton',
+  slot: 'Root',
+})(({ theme }) => ({
   opacity: 0.5,
   '&[data-variant="time-column"]': {
     position: 'absolute',
@@ -29,10 +28,14 @@ const EventSkeletonRoot = styled(Skeleton, {
   '&[data-variant="agenda"]': {
     height: 28,
   },
-});
+  '&[data-variant="timeline-row"]': {
+    height: `calc(${theme.typography.body2.lineHeight}em + ${theme.spacing(1.125)})`,
+    width: '100%',
+  },
+}));
 
 export function EventSkeleton(props: EventSkeletonProps) {
-  const { classes } = useEventCalendarStyledContext();
+  const { classes } = useSharedComponentsStyledContext();
 
   return (
     <EventSkeletonRoot
