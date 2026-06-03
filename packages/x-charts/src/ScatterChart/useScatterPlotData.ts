@@ -3,6 +3,7 @@ import { type SeriesId } from '../models/seriesType/common';
 import { type D3Scale } from '../models/axis';
 import { getValueToPositionMapper } from '../hooks';
 import { type DefaultizedScatterSeriesType, type ScatterValueType } from '../models';
+import { useChartSampledIndices } from '../internals/seriesRenderedSelector';
 
 export function useScatterPlotData(
   series: DefaultizedScatterSeriesType,
@@ -10,6 +11,8 @@ export function useScatterPlotData(
   yScale: D3Scale,
   isPointInside: (x: number, y: number) => boolean,
 ) {
+  const sampledIndices = useChartSampledIndices()[series.id];
+
   return React.useMemo(() => {
     const getXPosition = getValueToPositionMapper(xScale);
     const getYPosition = getValueToPositionMapper(yScale);
@@ -22,7 +25,6 @@ export function useScatterPlotData(
 
     // When the series is downsampled (Pro feature), only the selected original indices are
     // rendered. `series.data` is left untouched so item interaction keeps using the full data.
-    const sampledIndices = series.sampledIndices;
     const length = sampledIndices ? sampledIndices.length : series.data.length;
 
     for (let cursor = 0; cursor < length; cursor += 1) {
@@ -47,5 +49,5 @@ export function useScatterPlotData(
     }
 
     return temp;
-  }, [xScale, yScale, series.data, series.id, series.sampledIndices, isPointInside]);
+  }, [xScale, yScale, series.data, series.id, sampledIndices, isPointInside]);
 }

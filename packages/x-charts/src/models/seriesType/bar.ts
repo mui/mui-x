@@ -107,11 +107,4 @@ export interface DefaultizedBarSeriesType extends DefaultizedProps<
   CommonDefaultizedProps | 'color' | 'layout' | 'minBarSize'
 > {
   hidden: boolean;
-  /**
-   * The sorted subset of original data indices to render, computed by the sampling algorithm.
-   * When defined, rendering iterates this subset instead of every bar. The full `data` and
-   * `stackedData` arrays are left untouched so everything else keeps using the complete dataset.
-   * @ignore - populated by the sampling plugin of the Pro package.
-   */
-  sampledIndices?: number[];
 }

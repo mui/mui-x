@@ -2,8 +2,7 @@
 import { type ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { type SeriesId } from '../models/seriesType/common';
 import { type ChartSeriesDefaultized } from '../models/seriesType/config';
-import { useSeriesOfType } from '../internals/seriesSelectorOfType';
-import { useAllRenderedSeriesOfType } from '../internals/seriesRenderedSelector';
+import { useSeriesOfType, useAllSeriesOfType } from '../internals/seriesSelectorOfType';
 
 export type UseBarSeriesReturnValue = ChartSeriesDefaultized<'bar'>;
 export type UseBarSeriesContextReturnValue = ProcessedSeries['bar'];
@@ -43,5 +42,5 @@ export function useBarSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the bar series
  */
 export function useBarSeriesContext(): UseBarSeriesContextReturnValue {
-  return useAllRenderedSeriesOfType('bar');
+  return useAllSeriesOfType('bar');
 }

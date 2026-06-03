@@ -17,6 +17,7 @@ import { useChartId } from '../hooks/useChartId';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import type { StackingGroupsType } from '../internals/stacking';
 import { type SeriesId } from '../models/seriesType';
+import { useChartSampledIndices } from '../internals/seriesRenderedSelector';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -33,12 +34,14 @@ export function useBarPlotData(
   const defaultYAxisId = useYAxes().yAxisIds[0];
 
   const chartId = useChartId();
+  const sampledIndicesBySeries = useChartSampledIndices();
 
   return processBarDataForPlot(
     drawingArea,
     chartId,
     seriesData.stackingGroups,
     seriesData.series,
+    sampledIndicesBySeries,
     xAxes,
     yAxes,
     defaultXAxisId,
@@ -51,6 +54,7 @@ export function processBarDataForPlot(
   chartId: string | undefined,
   stackingGroups: StackingGroupsType,
   series: Record<SeriesId, ChartSeriesDefaultized<'bar'>>,
+  sampledIndicesBySeries: Record<SeriesId, number[]>,
   xAxes: ComputedAxisConfig<ChartsXAxisProps>,
   yAxes: ComputedAxisConfig<ChartsYAxisProps>,
   defaultXAxisId: AxisId,
@@ -109,7 +113,7 @@ export function processBarDataForPlot(
       // When the series is downsampled (Pro feature), only the selected original indices are
       // rendered. We keep `dataIndex` as the original index, so values, colors, and mask ids stay
       // aligned with the full data.
-      const sampledIndices = series[seriesId].sampledIndices;
+      const sampledIndices = sampledIndicesBySeries[seriesId];
       const barCount = sampledIndices ? sampledIndices.length : baseScaleConfig.data!.length;
 
       // When downsampled, the kept bars are laid out on a uniform grid across the base-axis range,

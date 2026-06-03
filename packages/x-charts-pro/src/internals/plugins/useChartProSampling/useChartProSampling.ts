@@ -4,7 +4,7 @@ import { type UseChartProSamplingSignature } from './useChartProSampling.types';
 
 /**
  * Activates render-only downsampling. It registers the built-in samplers into the store so the
- * community `selectorChartSeriesRendered` selector applies them to series that set a `sampling`
+ * community `selectorChartSampledIndices` selector applies them to series that set a `sampling`
  * method. The plugin itself holds no interactive state — the algorithms are static.
  */
 export const useChartProSampling: ChartPlugin<UseChartProSamplingSignature> = () => {

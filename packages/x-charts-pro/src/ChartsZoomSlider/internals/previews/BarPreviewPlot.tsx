@@ -100,6 +100,8 @@ function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea, series
     chartId,
     stackingGroups,
     filteredSeries,
+    // The zoom slider preview always renders the full data, so no sampling is applied.
+    {},
     xAxes,
     yAxes,
     defaultXAxisId,

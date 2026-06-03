@@ -151,11 +151,4 @@ export interface DefaultizedLineSeriesType extends DefaultizedProps<
   CommonDefaultizedProps | 'color'
 > {
   hidden: boolean;
-  /**
-   * The sorted subset of original data indices to render, computed by the sampling algorithm.
-   * When defined, rendering iterates this subset instead of every point. The full `data` and
-   * `stackedData` arrays are left untouched so everything else keeps using the complete dataset.
-   * @ignore - populated by the sampling plugin of the Pro package.
-   */
-  sampledIndices?: number[];
 }

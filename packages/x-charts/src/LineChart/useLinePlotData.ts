@@ -9,6 +9,7 @@ import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
 import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { type SeriesId } from '../models/seriesType/common';
+import { useChartSampledIndices } from '../internals/seriesRenderedSelector';
 
 interface LinePlotDataPoint {
   d: string;
@@ -23,6 +24,7 @@ export function useLinePlotData(
   yAxes: ComputedAxisConfig<ChartsYAxisProps>,
 ) {
   const seriesData = useLineSeriesContext();
+  const sampledIndicesBySeries = useChartSampledIndices();
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
   const getGradientId = useChartGradientIdBuilder();
@@ -93,7 +95,7 @@ export function useLinePlotData(
         // When the series is downsampled (Pro feature), only the selected original indices are
         // rendered. We still index the full `data`/`visibleStackedData` arrays by the original
         // index, so x/y stay correctly paired — we just skip the dropped points.
-        const sampledIndices = series[seriesId].sampledIndices;
+        const sampledIndices = sampledIndicesBySeries[seriesId];
 
         const mapIndexToPoints = (x: any, index: number) => {
           const nullData = data[index] == null;
@@ -160,7 +162,15 @@ export function useLinePlotData(
     }
 
     return linePlotData;
-  }, [seriesData, defaultXAxisId, defaultYAxisId, xAxes, yAxes, getGradientId]);
+  }, [
+    seriesData,
+    sampledIndicesBySeries,
+    defaultXAxisId,
+    defaultYAxisId,
+    xAxes,
+    yAxes,
+    getGradientId,
+  ]);
 
   return allData;
 }
