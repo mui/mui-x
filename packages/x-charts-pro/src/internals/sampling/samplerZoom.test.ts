@@ -5,16 +5,6 @@ const LENGTH = 1000;
 const drawingArea = { left: 0, top: 0, width: 200, height: 200, right: 200, bottom: 200 };
 const xData = Array.from({ length: LENGTH }, (_, i) => i);
 
-// A scale whose full pixel span equals the drawing area, so the visible fraction is 1 and the
-// "show every visible point" shortcut does not trigger — keeping these tests on the LOD path.
-const makeScale = (domainMax: number, pixelSpan: number) => {
-  const scale = ((value: number) => (value / domainMax) * pixelSpan) as any;
-  scale.domain = () => [0, domainMax];
-  return scale;
-};
-const xScale = makeScale(LENGTH - 1, drawingArea.width);
-const yScale = makeScale(LENGTH - 1, drawingArea.height);
-
 describe('zoom-level-driven sampling', () => {
   describe('lineSampler', () => {
     const series = {
@@ -24,7 +14,7 @@ describe('zoom-level-driven sampling', () => {
     } as any;
 
     const sampleAtLevel = (zoomLevel: number) =>
-      lineSampler(series, { drawingArea, zoomLevel, xScale, yScale, xData, yData: undefined });
+      lineSampler(series, { drawingArea, zoomLevel, xData, yData: undefined });
 
     it('samples the whole series, preserving first and last index', () => {
       const result = sampleAtLevel(0);
@@ -48,19 +38,10 @@ describe('zoom-level-driven sampling', () => {
       expect(sampleAtLevel(2)).to.deep.equal(sampleAtLevel(2));
     });
 
-    it('renders every visible point once few enough remain in view', () => {
-      // Zoom so the data spans 40x the drawing area: only ~1/40 (~25 points) is visible, which is
-      // below the target, so the sampler defers to rendering everything (clipped by the plot).
-      const zoomedScale = makeScale(LENGTH - 1, drawingArea.width * 40);
-      const result = lineSampler(series, {
-        drawingArea,
-        zoomLevel: 0,
-        xScale: zoomedScale,
-        yScale,
-        xData,
-        yData: undefined,
-      });
-      expect(result).to.equal(null);
+    it('stops sampling once the zoom level grows the target past the series length', () => {
+      // A high enough level makes the target exceed the series length, so there is nothing to drop
+      // and the sampler defers to rendering everything (clipped by the plot).
+      expect(sampleAtLevel(20)).to.equal(null);
     });
   });
 
@@ -83,16 +64,12 @@ describe('zoom-level-driven sampling', () => {
       const level0 = scatterSampler(series, {
         drawingArea,
         zoomLevel: 0,
-        xScale,
-        yScale,
         xData: undefined,
         yData: undefined,
       })!.length;
       const level2 = scatterSampler(series, {
         drawingArea,
         zoomLevel: 2,
-        xScale,
-        yScale,
         xData: undefined,
         yData: undefined,
       })!.length;

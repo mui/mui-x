@@ -1,5 +1,5 @@
 import { type ChartSeriesSampler } from '@mui/x-charts/internals';
-import { DEFAULT_PIXELS_PER_POINT, estimateVisibleFraction } from '../computeTargetCount';
+import { DEFAULT_PIXELS_PER_POINT } from '../computeTargetCount';
 import { normalizeIndices } from '../normalizeIndices';
 
 /**
@@ -15,7 +15,7 @@ import { normalizeIndices } from '../normalizeIndices';
  */
 export const scatterSampler: ChartSeriesSampler<'scatter'> = (
   series,
-  { drawingArea, zoomLevel, xScale, yScale },
+  { drawingArea, zoomLevel },
 ) => {
   const method = series.sampling;
   if (!method) {
@@ -30,12 +30,9 @@ export const scatterSampler: ChartSeriesSampler<'scatter'> = (
     Math.max(2, Math.floor(drawingArea.width / DEFAULT_PIXELS_PER_POINT)) * levelFactor,
   );
 
-  // Render every point once few enough remain visible (zoomed into a small enough region of the
-  // cloud): the plot clips what is off-screen, so this shows the full visible data at that point.
-  const visibleFraction =
-    estimateVisibleFraction(xScale, drawingArea.width) *
-    estimateVisibleFraction(yScale, drawingArea.height);
-  if (length * visibleFraction <= countTarget) {
+  // The grid resolution grows with the zoom level, so zooming in reveals more points in discrete
+  // steps. Once the series fits the target there is nothing to drop.
+  if (length <= countTarget) {
     return null;
   }
 

@@ -1,5 +1,5 @@
 import { type ChartSeriesSampler } from '@mui/x-charts/internals';
-import { estimateVisibleFraction, targetForZoomLevel } from '../computeTargetCount';
+import { targetForZoomLevel } from '../computeTargetCount';
 import { normalizeIndices } from '../normalizeIndices';
 import { lttb } from '../lttb';
 import { m4 } from '../m4';
@@ -17,7 +17,7 @@ import { m4 } from '../m4';
  */
 export const lineSampler: ChartSeriesSampler<'line'> = (
   series,
-  { drawingArea, zoomLevel, xScale, xData },
+  { drawingArea, zoomLevel, xData },
 ) => {
   const method = series.sampling;
   if (!method) {
@@ -28,9 +28,9 @@ export const lineSampler: ChartSeriesSampler<'line'> = (
   const length = stacked?.length ?? series.data.length;
   const target = targetForZoomLevel(drawingArea.width, zoomLevel, length);
 
-  // Render everything once the series fits, or once few enough points remain visible (zoomed in):
-  // the plot clips what is off-screen, so this shows every visible point at full detail.
-  if (length <= target || length * estimateVisibleFraction(xScale, drawingArea.width) <= target) {
+  // The whole series is sampled to `target`, which grows with the zoom level, so zooming in adds
+  // detail in discrete steps. Once the series fits the target there is nothing to drop.
+  if (length <= target) {
     return null;
   }
 

@@ -1,5 +1,5 @@
 import { type ChartSeriesSampler } from '@mui/x-charts/internals';
-import { estimateVisibleFraction, targetForZoomLevel } from '../computeTargetCount';
+import { targetForZoomLevel } from '../computeTargetCount';
 import { normalizeIndices } from '../normalizeIndices';
 import { bucketAggregate } from '../bucketAggregate';
 
@@ -14,10 +14,7 @@ import { bucketAggregate } from '../bucketAggregate';
  *
  * Returns `null` when sampling is not set or would not reduce the rendered bar count.
  */
-export const barSampler: ChartSeriesSampler<'bar'> = (
-  series,
-  { drawingArea, zoomLevel, xScale, yScale },
-) => {
+export const barSampler: ChartSeriesSampler<'bar'> = (series, { drawingArea, zoomLevel }) => {
   const method = series.sampling;
   if (!method) {
     return null;
@@ -28,10 +25,9 @@ export const barSampler: ChartSeriesSampler<'bar'> = (
   const pixelSpan = horizontal ? drawingArea.height : drawingArea.width;
   const target = targetForZoomLevel(pixelSpan, zoomLevel, length);
 
-  // Render every bar once the series fits, or once few enough remain visible (zoomed in): the plot
-  // clips off-screen bars, so the visible ones render individually at the band scale's full width.
-  const baseScale = horizontal ? yScale : xScale;
-  if (length <= target || length * estimateVisibleFraction(baseScale, pixelSpan) <= target) {
+  // The whole series is bucketed to `target` representatives, which grows with the zoom level, so
+  // zooming in adds bars in discrete steps. Once the series fits the target there is nothing to drop.
+  if (length <= target) {
     return null;
   }
 

@@ -13,7 +13,6 @@ import {
   type DatasetType,
 } from '../../../../models/seriesType/config';
 import { type SeriesId } from '../../../../models/seriesType/common';
-import { type D3Scale } from '../../../../models/axis';
 import { type ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import {
   type SeriesLayoutGetterResult,
@@ -97,15 +96,6 @@ export type ChartSeriesSamplerContext = {
    * sampled shape stable while panning.
    */
   zoomLevel: number;
-  /**
-   * The live, zoom-aware x-axis scale. Used only to detect which points are currently visible, so
-   * that a sampler can render every visible point once few enough remain in view.
-   */
-  xScale: D3Scale;
-  /**
-   * The live, zoom-aware y-axis scale.
-   */
-  yScale: D3Scale;
   /**
    * The x-axis data array. Samplers read whichever axis they are indexed along: line and vertical
    * bar series sample along x, so they use this.

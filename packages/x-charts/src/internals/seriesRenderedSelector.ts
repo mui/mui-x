@@ -16,8 +16,6 @@ import {
   selectorChartRawYAxis,
   selectorChartDefaultXAxisId,
   selectorChartDefaultYAxisId,
-  selectorChartXScales,
-  selectorChartYScales,
 } from './plugins/featurePlugins/useChartCartesianAxis';
 import { useStore } from './store/useStore';
 
@@ -67,9 +65,9 @@ const EMPTY_SAMPLED_INDICES: Record<SeriesId, number[]> = {};
  * keep working on the full data. Only the plot hooks read this map (through `useChartSampledIndices`)
  * to skip the dropped points while rendering.
  *
- * The downsampling is driven by the quantized zoom level (not the live scale), so the sampled set is
- * stable while panning. The live scales are passed to the samplers only so they can render every
- * visible point once few enough remain in view. Returns an empty map when no sampler is registered.
+ * The downsampling is driven entirely by the quantized zoom level, never the live scale, so the
+ * selector recomputes only when the zoom level changes — not on every pan/zoom frame — and the
+ * sampled set stays stable while panning. Returns an empty map when no sampler is registered.
  */
 export const selectorChartSampledIndices = createSelectorMemoized(
   selectorChartSeriesProcessed,
@@ -80,8 +78,6 @@ export const selectorChartSampledIndices = createSelectorMemoized(
   selectorChartRawYAxis,
   selectorChartDefaultXAxisId,
   selectorChartDefaultYAxisId,
-  selectorChartXScales,
-  selectorChartYScales,
   function selectorChartSampledIndices(
     processedSeries,
     samplingState,
@@ -91,8 +87,6 @@ export const selectorChartSampledIndices = createSelectorMemoized(
     rawYAxes,
     defaultXAxisId,
     defaultYAxisId,
-    xScales,
-    yScales,
   ): Record<SeriesId, number[]> {
     const samplers = samplingState?.samplers;
     if (!samplers || drawingArea.width <= 0 || drawingArea.height <= 0) {
@@ -113,19 +107,12 @@ export const selectorChartSampledIndices = createSelectorMemoized(
         return;
       }
 
-      const buildContext = (series: any): ChartSeriesSamplerContext | null => {
+      const buildContext = (series: any): ChartSeriesSamplerContext => {
         const xAxisId = series.xAxisId ?? defaultXAxisId;
         const yAxisId = series.yAxisId ?? defaultYAxisId;
-        const xScale = xScales[xAxisId];
-        const yScale = yScales[yAxisId];
-        if (!xScale || !yScale) {
-          return null;
-        }
         return {
           drawingArea,
           zoomLevel,
-          xScale,
-          yScale,
           xData: rawXAxes?.find((axis) => axis.id === xAxisId)?.data,
           yData: rawYAxes?.find((axis) => axis.id === yAxisId)?.data,
         };
@@ -146,9 +133,6 @@ export const selectorChartSampledIndices = createSelectorMemoized(
           // Sample the representative member directly — its already-computed `visibleStackedData` is
           // the cumulative stack position — then share the indices with every member.
           const context = buildContext(group.series[samplingId]);
-          if (!context) {
-            continue;
-          }
           const indices = sampler(group.series[samplingId], context);
           if (indices) {
             for (const id of ids) {
@@ -163,9 +147,6 @@ export const selectorChartSampledIndices = createSelectorMemoized(
             continue;
           }
           const context = buildContext(series);
-          if (!context) {
-            continue;
-          }
           const indices = sampler(series, context);
           if (indices) {
             result[seriesId] = indices;
