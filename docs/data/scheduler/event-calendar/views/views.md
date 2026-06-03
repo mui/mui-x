@@ -3,7 +3,7 @@ productId: x-scheduler
 title: React Scheduler component
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
-components: EventCalendar, EventCalendarPremium, StandaloneAgendaView, StandaloneDayView, StandaloneWeekView, StandaloneMonthView
+components: EventCalendar, EventCalendarPremium, StandaloneAgendaView, StandaloneAgendaViewPremium, StandaloneDayView, StandaloneDayViewPremium, StandaloneWeekView, StandaloneWeekViewPremium, StandaloneMonthView, StandaloneMonthViewPremium
 ---
 
 # Event Calendar - Views
