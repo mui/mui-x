@@ -1,4 +1,4 @@
-import { type ChartSeriesSampler } from '@mui/x-charts/internals';
+import { type ChartSeriesSampler } from '../sampler.types';
 import { targetForZoomLevel } from '../computeTargetCount';
 import { normalizeIndices } from '../normalizeIndices';
 import { bucketAggregate } from '../bucketAggregate';

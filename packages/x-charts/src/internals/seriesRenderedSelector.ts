@@ -4,10 +4,6 @@ import { type SeriesId } from '../models/seriesType/common';
 import { type AxisId } from '../models/axis';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartDrawingArea } from './plugins/corePlugins/useChartDimensions';
-import {
-  type ProcessedSeries,
-  type ChartSeriesSamplerContext,
-} from './plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { type ChartRootSelector } from './plugins/utils/selectors';
 import { type UseChartSeriesSignature } from './plugins/corePlugins/useChartSeries';
 import {
@@ -66,9 +62,13 @@ const EMPTY_SAMPLED_INDICES: Record<SeriesId, number[]> = {};
  * keep working on the full data. Only the plot hooks read this map (through `useChartSampledIndices`)
  * to skip the dropped points while rendering.
  *
- * The downsampling is driven entirely by the quantized zoom level, never the live scale, so the
- * selector recomputes only when the zoom level changes — not on every pan/zoom frame — and the
- * sampled set stays stable while panning. Returns an empty map when no sampler is registered.
+ * The actual algorithm lives in the Pro package: this selector only gathers the inputs and delegates
+ * to the `computeSampledIndices` function the Pro sampling plugin puts in the store. Without that
+ * plugin (community, or no Pro sampling) it returns an empty map and nothing is sampled.
+ *
+ * Sampling is driven entirely by the quantized zoom level, never the live scale, so this selector
+ * recomputes only when the zoom level changes — not on every pan/zoom frame — and the sampled set
+ * stays stable while panning.
  */
 export const selectorChartSampledIndices = createSelectorMemoized(
   selectorChartSeriesProcessed,
@@ -89,74 +89,28 @@ export const selectorChartSampledIndices = createSelectorMemoized(
     defaultXAxisId,
     defaultYAxisId,
   ): Record<SeriesId, number[]> {
-    const samplers = samplingState?.samplers;
-    if (!samplers || drawingArea.width <= 0 || drawingArea.height <= 0) {
+    if (!samplingState || drawingArea.width <= 0 || drawingArea.height <= 0) {
       return EMPTY_SAMPLED_INDICES;
     }
 
-    const result: Record<SeriesId, number[]> = {};
-
-    (Object.keys(processedSeries) as (keyof ProcessedSeries)[]).forEach((type) => {
-      const sampler = samplers[type] as
-        | ((series: unknown, context: ChartSeriesSamplerContext) => number[] | null)
-        | undefined;
-      // The heterogeneous ProcessedSeries union does not narrow per key, so we work loosely here.
-      const group = processedSeries[type] as
-        | { series: Record<string, any>; seriesOrder: string[] }
-        | undefined;
-      if (!sampler || !group) {
-        return;
-      }
-
-      const buildContext = (series: any): ChartSeriesSamplerContext => {
-        const xAxisId = series.xAxisId ?? defaultXAxisId;
-        const yAxisId = series.yAxisId ?? defaultYAxisId;
-        return {
-          drawingArea,
-          zoomLevel,
-          xData: rawXAxes?.find((axis) => axis.id === xAxisId)?.data,
-          yData: rawYAxes?.find((axis) => axis.id === yAxisId)?.data,
-        };
-      };
-
-      const stackingGroups = (group as { stackingGroups?: { ids: string[] }[] }).stackingGroups;
-
-      if (Array.isArray(stackingGroups)) {
-        // Stacked series must keep the SAME indices to stay aligned, so each stacking group is
-        // sampled once and the result is shared by every member. Unstacked series are singleton
-        // groups, so this also covers the non-stacked case.
-        for (const stack of stackingGroups) {
-          const ids = stack.ids.filter((id) => group.series[id]);
-          const samplingId = ids.find((id) => group.series[id].sampling);
-          if (!samplingId) {
-            continue;
-          }
-          // Sample the representative member directly — its already-computed `visibleStackedData` is
-          // the cumulative stack position — then share the indices with every member.
-          const context = buildContext(group.series[samplingId]);
-          const indices = sampler(group.series[samplingId], context);
-          if (indices) {
-            for (const id of ids) {
-              result[id] = indices;
-            }
-          }
-        }
-      } else {
-        for (const seriesId of group.seriesOrder) {
-          const series = group.series[seriesId];
-          if (!series || !series.sampling) {
-            continue;
-          }
-          const context = buildContext(series);
-          const indices = sampler(series, context);
-          if (indices) {
-            result[seriesId] = indices;
-          }
-        }
-      }
+    const xAxisData: Record<AxisId, readonly (number | Date | string)[] | undefined> = {};
+    rawXAxes?.forEach((axis) => {
+      xAxisData[axis.id] = axis.data;
+    });
+    const yAxisData: Record<AxisId, readonly (number | Date | string)[] | undefined> = {};
+    rawYAxes?.forEach((axis) => {
+      yAxisData[axis.id] = axis.data;
     });
 
-    return result;
+    return samplingState.computeSampledIndices({
+      processedSeries,
+      drawingArea,
+      zoomLevel,
+      xAxisData,
+      yAxisData,
+      defaultXAxisId,
+      defaultYAxisId,
+    });
   },
 );
 

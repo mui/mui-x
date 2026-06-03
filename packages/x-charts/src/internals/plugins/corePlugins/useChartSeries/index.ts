@@ -6,9 +6,8 @@ export type {
   ProcessedSeries,
   SeriesIdToType,
   SeriesLayout,
-  ChartSeriesSampler,
-  ChartSeriesSamplers,
-  ChartSeriesSamplerContext,
+  ChartSampledIndicesInput,
+  ChartSampledIndicesComputer,
 } from './useChartSeries.types';
 export * from './useChartSeries.selectors';
 export * from './useChartSeriesLayout.selectors';

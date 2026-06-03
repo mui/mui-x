@@ -1,4 +1,4 @@
-import { type ChartSeriesSamplers } from '@mui/x-charts/internals';
+import { type ChartSeriesSamplers } from './sampler.types';
 import { lineSampler } from './samplers/lineSampler';
 import { scatterSampler } from './samplers/scatterSampler';
 import { barSampler } from './samplers/barSampler';

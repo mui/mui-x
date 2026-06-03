@@ -1,6 +1,6 @@
 import {
   type ChartPluginSignature,
-  type ChartSeriesSamplers,
+  type ChartSampledIndicesComputer,
   type UseChartSeriesSignature,
 } from '@mui/x-charts/internals';
 
@@ -11,9 +11,9 @@ export type UseChartProSamplingDefaultizedParameters = UseChartProSamplingParame
 export interface UseChartProSamplingState {
   sampling: {
     /**
-     * The samplers used to downsample series for rendering, keyed by series type.
+     * Computes the render-only sampled indices for every series that sets a `sampling` method.
      */
-    samplers: ChartSeriesSamplers;
+    computeSampledIndices: ChartSampledIndicesComputer;
   };
 }
 

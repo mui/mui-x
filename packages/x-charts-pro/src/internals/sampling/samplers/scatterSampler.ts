@@ -1,4 +1,4 @@
-import { type ChartSeriesSampler } from '@mui/x-charts/internals';
+import { type ChartSeriesSampler } from '../sampler.types';
 import { DEFAULT_PIXELS_PER_POINT } from '../computeTargetCount';
 import { normalizeIndices } from '../normalizeIndices';
 
