@@ -24,13 +24,7 @@ const CORRECT_PREFIX = 'MuiChartsAxisZoomSliderThumb';
 const LEGACY_PREFIX = 'MuiChartAxisZoomSliderThumb';
 
 export const chartsAxisZoomSliderThumbClasses: ChartsAxisZoomSliderThumbClasses =
-  generateUtilityClasses(CORRECT_PREFIX, [
-    'root',
-    'horizontal',
-    'vertical',
-    'start',
-    'end',
-  ]);
+  generateUtilityClasses(CORRECT_PREFIX, ['root', 'horizontal', 'vertical', 'start', 'end']);
 
 // Returns both the correct and legacy class names so existing CSS targeting the legacy
 // prefix continues to work.

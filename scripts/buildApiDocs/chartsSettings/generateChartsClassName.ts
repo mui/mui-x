@@ -9,7 +9,8 @@ const PACKAGE_ROOTS = [
 ];
 
 const GENERATE_UTILITY_CLASS_CALL = /generateUtilityClass(?:es)?\(\s*['"](Mui[A-Za-z0-9]+)['"]/;
-const MUI_NAME_CONST = /(?:const|let|var)\s+[A-Za-z0-9_]+\s*(?::\s*[A-Za-z0-9_<>[\]]+)?\s*=\s*['"](Mui[A-Za-z0-9]+)['"]/;
+const MUI_NAME_CONST =
+  /(?:const|let|var)\s+[A-Za-z0-9_]+\s*(?::\s*[A-Za-z0-9_<>[\]]+)?\s*=\s*['"](Mui[A-Za-z0-9]+)['"]/;
 const EXPORT_INTERFACE_CLASSES = /export\s+interface\s+([A-Z][A-Za-z0-9]*Classes)\b/g;
 const EXPORT_FACTORY_FN = /export\s+function\s+(get[A-Z][A-Za-z0-9]*UtilityClass)\b/g;
 const COMPOSE_CLASSES_CALL = /composeClasses\s*\([^,]+,\s*([A-Za-z][A-Za-z0-9_]*)/g;
@@ -90,7 +91,8 @@ function collectClassesFiles(): {
     const files = walk(root, (name) => /[Cc]lasses\.ts$/.test(name));
     for (const file of files) {
       const content = fs.readFileSync(file, 'utf8');
-      const muiNameMatch = content.match(GENERATE_UTILITY_CLASS_CALL) ?? content.match(MUI_NAME_CONST);
+      const muiNameMatch =
+        content.match(GENERATE_UTILITY_CLASS_CALL) ?? content.match(MUI_NAME_CONST);
       const interfaceNames = new Set<string>();
       for (const match of content.matchAll(EXPORT_INTERFACE_CLASSES)) {
         interfaceNames.add(match[1]);
