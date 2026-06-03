@@ -18,6 +18,7 @@ import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import type { StackingGroupsType } from '../internals/stacking';
 import { type SeriesId } from '../models/seriesType';
 import { useChartSampledIndices } from '../internals/seriesRenderedSelector';
+import { getBarSampledSlots, getBarSampledSlotPosition } from '../internals/barSampledSlot';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -118,13 +119,14 @@ export function processBarDataForPlot(
 
       // When downsampled, the kept bars are laid out on a uniform grid across the base-axis range,
       // one slot per kept bar. The slot geometry is independent of where each bucket's representative
-      // happens to sit, so every rendered bar has the same width. The step is signed and measured
-      // from `range[0]`, so the layout follows the axis direction (including reversed axes). The
-      // range comes from the live (zoom-aware) scale, so the bars widen and shift smoothly as the
-      // user zooms and pans, while the kept set itself stays stable (zoom-level driven sampler).
-      const baseRange = baseScaleConfig.scale.range();
-      const reindexStep = sampledIndices ? (baseRange[1] - baseRange[0]) / barCount : 0;
-      const reindexThickness = Math.max(1, Math.abs(reindexStep) * 0.9);
+      // happens to sit, so every rendered bar has the same width, and it follows the axis direction
+      // (including reversed axes). The range comes from the live (zoom-aware) scale, so the bars
+      // widen and shift smoothly as the user zooms and pans, while the kept set itself stays stable
+      // (zoom-level driven sampler). The same geometry drives the axis highlight, so the highlighted
+      // band stays aligned with the bar under the pointer.
+      const slots = sampledIndices
+        ? getBarSampledSlots(baseScaleConfig.scale.range(), barCount)
+        : null;
 
       for (let cursor = 0; cursor < barCount; cursor += 1) {
         const dataIndex = sampledIndices ? sampledIndices[cursor] : cursor;
@@ -146,16 +148,14 @@ export function processBarDataForPlot(
           maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
         };
 
-        if (sampledIndices) {
-          const edgeA = baseRange[0] + cursor * reindexStep;
-          const edgeB = baseRange[0] + (cursor + 1) * reindexStep;
-          const slotStart = Math.min(edgeA, edgeB) + (Math.abs(reindexStep) - reindexThickness) / 2;
+        if (slots) {
+          const { position, thickness } = getBarSampledSlotPosition(slots, cursor);
           if (verticalLayout) {
-            result.x = slotStart;
-            result.width = reindexThickness;
+            result.x = position;
+            result.width = thickness;
           } else {
-            result.y = slotStart;
-            result.height = reindexThickness;
+            result.y = position;
+            result.height = thickness;
           }
         }
 

@@ -1,6 +1,7 @@
 'use client';
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { type SeriesId } from '../models/seriesType/common';
+import { type AxisId } from '../models/axis';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import { selectorChartDrawingArea } from './plugins/corePlugins/useChartDimensions';
 import {
@@ -167,3 +168,59 @@ export const useChartSampledIndices = (): Record<SeriesId, number[]> => {
   const store = useStore();
   return store.use(selectorChartSampledIndices);
 };
+
+const EMPTY_BAND_SAMPLING: { x: Record<AxisId, number[]>; y: Record<AxisId, number[]> } = {
+  x: {},
+  y: {},
+};
+
+/**
+ * The sampled indices of bar series, grouped by the band axis they are laid out on (`x` for vertical
+ * bars, `y` for horizontal bars). When several sampled series share a band axis, the first one wins —
+ * they share the same uniform slot grid. Consumed by the axis highlight to align the highlighted band
+ * with the (repositioned) sampled bar under the pointer.
+ */
+export const selectorChartBarSampledBandIndices = createSelectorMemoized(
+  selectorChartSampledIndices,
+  selectorChartSeriesProcessed,
+  selectorChartDefaultXAxisId,
+  selectorChartDefaultYAxisId,
+  function selectorChartBarSampledBandIndices(
+    sampledIndices,
+    processedSeries,
+    defaultXAxisId,
+    defaultYAxisId,
+  ): { x: Record<AxisId, number[]>; y: Record<AxisId, number[]> } {
+    const barGroup = processedSeries.bar;
+    if (!barGroup) {
+      return EMPTY_BAND_SAMPLING;
+    }
+
+    const x: Record<AxisId, number[]> = {};
+    const y: Record<AxisId, number[]> = {};
+
+    for (const seriesId of barGroup.seriesOrder) {
+      const indices = sampledIndices[seriesId];
+      if (!indices) {
+        continue;
+      }
+      const series = barGroup.series[seriesId];
+      if (series.layout === 'horizontal') {
+        const axisId = series.yAxisId ?? defaultYAxisId;
+        if (!(axisId in y)) {
+          y[axisId] = indices;
+        }
+      } else {
+        const axisId = series.xAxisId ?? defaultXAxisId;
+        if (!(axisId in x)) {
+          x[axisId] = indices;
+        }
+      }
+    }
+
+    if (Object.keys(x).length === 0 && Object.keys(y).length === 0) {
+      return EMPTY_BAND_SAMPLING;
+    }
+    return { x, y };
+  },
+);
