@@ -45,7 +45,7 @@ export function createGetNextIndexFocusedItem<
   /**
    * If true, series max index is defined by the current series length and not all series.
    */
-  seriesMaxLength: boolean = false,
+  useCurrentSeriesMaxLength: boolean = false,
 ) {
   return function getNextIndexFocusedItem(
     currentItem: FocusedItemIdentifier<InSeriesType> | null,
@@ -75,7 +75,7 @@ export function createGetNextIndexFocusedItem<
       seriesId = nextSeries.seriesId;
     }
 
-    const maxLength = seriesMaxLength
+    const maxLength = useCurrentSeriesMaxLength
       ? (processedSeries[type]?.series[seriesId]?.data.length ?? 0)
       : getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
 
@@ -123,7 +123,7 @@ export function createGetPreviousIndexFocusedItem<
   /**
    * If true, series max index is defined by the current series length and not all series.
    */
-  seriesMaxLength: boolean = false,
+  useCurrentSeriesMaxLength: boolean = false,
 ) {
   return function getPreviousIndexFocusedItem(
     currentItem: FocusedItemIdentifier<InSeriesType> | null,
@@ -153,7 +153,7 @@ export function createGetPreviousIndexFocusedItem<
       seriesId = previousSeries.seriesId;
     }
 
-    const maxLength = seriesMaxLength
+    const maxLength = useCurrentSeriesMaxLength
       ? (processedSeries[type]?.series[seriesId]?.data.length ?? 0)
       : getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
 
