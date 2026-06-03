@@ -57,7 +57,7 @@ export default function SamplingBar() {
             width={320}
             height={180}
             skipAnimation
-            xAxis={[{ data: xData }]}
+            xAxis={[{ data: xData, tickSpacing: 40 }]}
             series={[{ data, sampling: variant.sampling }]}
           />
         </div>

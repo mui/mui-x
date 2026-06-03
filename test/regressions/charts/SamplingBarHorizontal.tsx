@@ -57,7 +57,7 @@ export default function SamplingBarHorizontal() {
             width={220}
             height={260}
             skipAnimation
-            yAxis={[{ data: yData }]}
+            yAxis={[{ data: yData, tickSpacing: 40 }]}
             series={[{ data, layout: 'horizontal', sampling: variant.sampling }]}
           />
         </div>
