@@ -6,7 +6,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import { interpolateBlues } from 'd3-scale-chromatic';
 import { feature as topojsonFeature } from 'topojson-client';
-import countriesTopology from 'world-atlas/countries-110m.json';
+import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';

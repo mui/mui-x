@@ -1,5 +1,6 @@
 {
   "props": {
+    "alwaysVisible": { "type": { "name": "bool" }, "default": "false" },
     "autoSubmit": { "type": { "name": "bool" }, "default": "false" },
     "suggestions": {
       "type": {

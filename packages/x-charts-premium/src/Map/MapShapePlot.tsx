@@ -6,6 +6,7 @@ import { useGeoPath } from '../hooks/useGeoPath';
 import { useMapShapeSeries } from '../hooks/useMapShapeSeries';
 import { useGeoFeatureIndexesByName } from '../hooks/useGeoFeatureIndexesByName';
 import { MapShape } from './MapShape';
+import { FocusedMapShape } from './FocusedMapShape';
 import { mapShapeSeriesConfig } from './seriesConfig';
 
 export interface MapShapePlotProps {
@@ -93,6 +94,7 @@ export function MapShapePlot(props: MapShapePlotProps) {
           </g>
         );
       })}
+      <FocusedMapShape />
     </g>
   );
 }
