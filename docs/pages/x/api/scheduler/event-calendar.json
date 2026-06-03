@@ -51,6 +51,12 @@
       },
       "default": "\"teal\""
     },
+    "eventCreation": {
+      "type": {
+        "name": "union",
+        "description": "{ duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
+      }
+    },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },

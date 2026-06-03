@@ -144,6 +144,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
               </ChartsSvgLayer>
               <ChartsWebGLLayer>
                 <BarPlotPremium {...barPlotPremiumProps} />
+                <RangeBarPlot {...rangeBarPlotProps} />
               </ChartsWebGLLayer>
             </React.Fragment>
           )}
@@ -151,7 +152,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
             {renderer !== 'webgl' && <ChartsGrid {...gridProps} />}
             <g {...clipPathGroupProps}>
               {renderer !== 'webgl' && <BarPlotPremium {...barPlotPremiumProps} />}
-              <RangeBarPlot {...rangeBarPlotProps} />
+              {renderer !== 'webgl' && <RangeBarPlot {...rangeBarPlotProps} />}
               <ChartsOverlay {...overlayProps} />
               <ChartsAxisHighlight {...axisHighlightProps} />
               <FocusedBar />
