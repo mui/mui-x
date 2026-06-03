@@ -2,12 +2,12 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
-import type {
-  GridOverlayType,
-  GridLoadingOverlayVariant,
+import {
+  type GridOverlayType,
+  type GridLoadingOverlayVariant,
 } from '../../hooks/features/overlays/gridOverlaysInterfaces';
 
 const GridPanelAnchor = styled('div', {

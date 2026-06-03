@@ -1,26 +1,26 @@
-import type {
-  GridApiCommon,
-  GridColumnReorderApi,
-  GridRowMultiSelectionApi,
-  GridRowProApi,
+import {
+  type GridApiCommon,
+  type GridColumnReorderApi,
+  type GridRowMultiSelectionApi,
+  type GridRowProApi,
 } from '@mui/x-data-grid';
-import type {
-  GridPrivateOnlyApiCommon,
-  GridInfiniteLoaderPrivateApi,
+import {
+  type GridPrivateOnlyApiCommon,
+  type GridInfiniteLoaderPrivateApi,
 } from '@mui/x-data-grid/internals';
-import type { GridInitialStatePro, GridStatePro } from './gridStatePro';
-import type {
-  GridColumnPinningApi,
-  GridDetailPanelApi,
-  GridRowPinningApi,
-  GridDetailPanelPrivateApi,
+import { type GridInitialStatePro, type GridStatePro } from './gridStatePro';
+import {
+  type GridColumnPinningApi,
+  type GridDetailPanelApi,
+  type GridRowPinningApi,
+  type GridDetailPanelPrivateApi,
 } from '../hooks';
-import type { GridRowReorderPrivateApi } from './gridRowReorderApi';
-import type {
-  GridDataSourceApiPro,
-  GridDataSourcePrivateApiPro,
+import { type GridRowReorderPrivateApi } from './gridRowReorderApi';
+import {
+  type GridDataSourceApiPro,
+  type GridDataSourcePrivateApiPro,
 } from '../hooks/features/dataSource/models';
-import type { DataGridProProcessedProps } from './dataGridProProps';
+import { type DataGridProProcessedProps } from './dataGridProProps';
 
 /**
  * The api of Data Grid Pro.

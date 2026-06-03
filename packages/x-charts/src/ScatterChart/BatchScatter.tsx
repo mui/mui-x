@@ -5,11 +5,11 @@ import { styled } from '@mui/material/styles';
 import { type DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
 import { type D3Scale } from '../models/axis';
 import { useUtilityClasses } from './scatterClasses';
-import type { ScatterClasses } from './scatterClasses';
+import { type ScatterClasses } from './scatterClasses';
 import { useChartsContext } from '../context/ChartsProvider';
 import { getValueToPositionMapper } from '../hooks/getValueToPositionMapper';
 import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import type { ScatterSizeGetter } from './seriesConfig/getMarkerSize';
+import { type ScatterSizeGetter } from './seriesConfig/getMarkerSize';
 import {
   selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,

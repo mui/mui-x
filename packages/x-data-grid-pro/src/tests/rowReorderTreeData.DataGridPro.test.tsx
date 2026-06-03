@@ -16,7 +16,7 @@ import {
   type IsRowReorderableParams,
 } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
-import type { RowReorderDropPosition } from '@mui/x-data-grid/internals';
+import { type RowReorderDropPosition } from '@mui/x-data-grid/internals';
 
 function createDragOverEvent(target: ChildNode, dropPosition: RowReorderDropPosition = 'above') {
   const dragOverEvent = createEvent.dragOver(target);

@@ -1,4 +1,4 @@
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   GRID_STRING_COL_DEF,
   type GridColDef,
@@ -16,7 +16,7 @@ import {
   isSingleSelectColDef,
   RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
-import type { GridApiPremium } from '../../../models/gridApiPremium';
+import { type GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
 import { GridDataSourceGroupingCriteriaCell } from '../../../components/GridDataSourceGroupingCriteriaCell';
@@ -26,8 +26,8 @@ import {
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
 } from './gridRowGroupingUtils';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
-import type { GridRowGroupingModel } from './gridRowGroupingInterfaces';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type GridRowGroupingModel } from './gridRowGroupingInterfaces';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 const GROUPING_COL_DEF_DEFAULT_PROPERTIES: Omit<GridColDef, 'field'> = {
   ...GRID_STRING_COL_DEF,

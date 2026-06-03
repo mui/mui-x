@@ -40,7 +40,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
+import { type DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
 

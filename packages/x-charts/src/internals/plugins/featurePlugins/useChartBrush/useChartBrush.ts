@@ -1,6 +1,6 @@
 'use client';
 import useEventCallback from '@mui/utils/useEventCallback';
-import type { PanEvent } from '@mui/x-internal-gestures/core';
+import { type PanEvent } from '@mui/x-internal-gestures/core';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { getChartPoint } from '../../../getChartPoint';

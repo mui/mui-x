@@ -1,36 +1,36 @@
-import type {
-  GridEventLookup,
-  GridExportDisplayOptions,
-  GridRowId,
-  GridValidRowModel,
+import {
+  type GridEventLookup,
+  type GridExportDisplayOptions,
+  type GridRowId,
+  type GridValidRowModel,
 } from '@mui/x-data-grid-pro';
-import type { GridAggregationCellMeta } from '@mui/x-data-grid-pro/internals';
-import type {
-  GridPipeProcessingLookupPro,
-  GridControlledStateEventLookupPro,
-  GridApiCachesPro,
-  GridEventLookupPro,
+import { type GridAggregationCellMeta } from '@mui/x-data-grid-pro/internals';
+import {
+  type GridPipeProcessingLookupPro,
+  type GridControlledStateEventLookupPro,
+  type GridApiCachesPro,
+  type GridEventLookupPro,
 } from '@mui/x-data-grid-pro/typeOverloads';
-import type {
-  GridGroupingValueGetter,
-  GridGroupingValueSetter,
-  GridPastedValueParser,
+import {
+  type GridGroupingValueGetter,
+  type GridGroupingValueSetter,
+  type GridPastedValueParser,
 } from '../models';
-import type {
-  GridRowGroupingModel,
-  GridAggregationModel,
-  GridAggregationHeaderMeta,
-  GridCellSelectionModel,
-  Conversation,
+import {
+  type GridRowGroupingModel,
+  type GridAggregationModel,
+  type GridAggregationHeaderMeta,
+  type GridCellSelectionModel,
+  type Conversation,
 } from '../hooks';
-import type { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
-import type { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
-import type { GridExcelExportOptions } from '../hooks/features/export/gridExcelExportInterface';
-import type {
-  GridPivotingInternalCache,
-  GridPivotModel,
+import { type GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
+import { type GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
+import { type GridExcelExportOptions } from '../hooks/features/export/gridExcelExportInterface';
+import {
+  type GridPivotingInternalCache,
+  type GridPivotModel,
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
-import type { GridSidebarValue } from '../hooks/features/sidebar/gridSidebarInterfaces';
+import { type GridSidebarValue } from '../hooks/features/sidebar/gridSidebarInterfaces';
 
 export interface GridControlledStateEventLookupPremium {
   /**

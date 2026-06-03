@@ -6,7 +6,7 @@ import { type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { type ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
 import { type ChartsAxisProps, type XAxis } from '@mui/x-charts/internals';
 import { type ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
-import type { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
+import { type ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
 import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
 import { type CandlestickChartProps } from './CandlestickChart';
 import { type CandlestickPlotProps } from './CandlestickPlot';

@@ -1,5 +1,5 @@
-import type { SeriesItemIdentifierWithType } from '../../../../../models/seriesType';
-import type { ChartSeriesType } from '../../../../../models/seriesType/config';
+import { type SeriesItemIdentifierWithType } from '../../../../../models/seriesType';
+import { type ChartSeriesType } from '../../../../../models/seriesType/config';
 import {
   type ChartsRotationAxisProps,
   type ChartsRadiusAxisProps,

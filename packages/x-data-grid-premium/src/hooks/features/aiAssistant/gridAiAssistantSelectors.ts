@@ -3,8 +3,8 @@ import {
   createRootSelector,
   createSelectorMemoized,
 } from '@mui/x-data-grid-pro/internals';
-import type { GridStatePremium } from '../../../models/gridStatePremium';
-import type { Conversation } from './gridAiAssistantInterfaces';
+import { type GridStatePremium } from '../../../models/gridStatePremium';
+import { type Conversation } from './gridAiAssistantInterfaces';
 
 const gridAiAssistantStateSelector = createRootSelector(
   (state: GridStatePremium) => state.aiAssistant,

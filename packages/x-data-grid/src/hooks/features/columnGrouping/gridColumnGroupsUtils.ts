@@ -4,8 +4,11 @@ import {
   type GridColumnGroup,
   isLeaf,
 } from '../../../models/gridColumnGrouping';
-import type { GridColDef } from '../../../models/colDef';
-import type { GridColumnGroupLookup, GridGroupingStructure } from './gridColumnGroupsInterfaces';
+import { type GridColDef } from '../../../models/colDef';
+import {
+  type GridColumnGroupLookup,
+  type GridGroupingStructure,
+} from './gridColumnGroupsInterfaces';
 
 type UnwrappedGroupingModel = { [key: GridColDef['field']]: GridColumnGroup['groupId'][] };
 

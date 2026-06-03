@@ -1,37 +1,37 @@
-import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import type {
-  CommonHighlightScope,
-  SeriesColor,
-  SeriesId,
-  ComputedXAxis,
-  ComputedYAxis,
-  PolarAxisDefaultized,
-  ChartsRadiusAxisProps,
-  ChartsRotationAxisProps,
+import { type DefaultizedProps, type MakeRequired } from '@mui/x-internals/types';
+import {
+  type CommonHighlightScope,
+  type SeriesColor,
+  type SeriesId,
+  type ComputedXAxis,
+  type ComputedYAxis,
+  type PolarAxisDefaultized,
+  type ChartsRadiusAxisProps,
+  type ChartsRotationAxisProps,
 } from '@mui/x-charts/internals';
-import type {
-  RangeBarValueType,
-  RangeBarSeriesType,
-  DefaultizedOHLCSeriesType,
-  OHLCItemIdentifier,
-  OHLCSeriesType,
-  OHLCValueType,
-  RadialLineSeriesType,
-  DefaultizedRadialLineSeriesType,
-  RadialLineItemIdentifier,
-  RadialBarSeriesType,
-  DefaultizedRadialBarSeriesType,
-  RadialBarItemIdentifier,
-  MapShapeSeriesType,
-  DefaultizedMapShapeSeriesType,
-  MapShapeItemIdentifier,
-  MapShapeValueType,
+import {
+  type RangeBarValueType,
+  type RangeBarSeriesType,
+  type DefaultizedOHLCSeriesType,
+  type OHLCItemIdentifier,
+  type OHLCSeriesType,
+  type OHLCValueType,
+  type RadialLineSeriesType,
+  type DefaultizedRadialLineSeriesType,
+  type RadialLineItemIdentifier,
+  type RadialBarSeriesType,
+  type DefaultizedRadialBarSeriesType,
+  type RadialBarItemIdentifier,
+  type MapShapeSeriesType,
+  type DefaultizedMapShapeSeriesType,
+  type MapShapeItemIdentifier,
+  type MapShapeValueType,
 } from '../models';
-import type {
-  DefaultizedRangeBarSeriesType,
-  RangeBarItemIdentifier,
+import {
+  type DefaultizedRangeBarSeriesType,
+  type RangeBarItemIdentifier,
 } from '../models/seriesType/rangeBar';
-import type { BarSeries } from '../BarChart';
+import { type BarSeries } from '../BarChart';
 
 declare module '@mui/x-charts/internals' {
   interface UseBarChartPropsExtensions {

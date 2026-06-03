@@ -1,7 +1,7 @@
-import type { ProPluginsPerSeriesType } from '@mui/x-charts-pro/internals';
-import type { ChartAnyPluginSignature, ChartPublicAPI } from '@mui/x-charts/internals';
-import type { BarChartPremiumPluginSignatures } from '../BarChartPremium/BarChartPremium.plugins';
-import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { type ProPluginsPerSeriesType } from '@mui/x-charts-pro/internals';
+import { type ChartAnyPluginSignature, type ChartPublicAPI } from '@mui/x-charts/internals';
+import { type BarChartPremiumPluginSignatures } from '../BarChartPremium/BarChartPremium.plugins';
+import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export type PremiumPluginsPerSeriesType = Omit<ProPluginsPerSeriesType, 'bar'> & {
   bar: BarChartPremiumPluginSignatures;

@@ -3,7 +3,7 @@ import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
-import type { AxisId } from '../../../../models/axis';
+import { type AxisId } from '../../../../models/axis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import {
   selectorChartXAxisExtrema,

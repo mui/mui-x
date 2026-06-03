@@ -1,4 +1,4 @@
-import type { Dataset } from '@mui/x-internals/types';
+import { type Dataset } from '@mui/x-internals/types';
 
 export type ChartState = {
   label?: string;

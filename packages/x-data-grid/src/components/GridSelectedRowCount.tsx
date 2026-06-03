@@ -9,7 +9,7 @@ import { vars } from '../constants/cssVariables';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import type { DataGridProcessedProps } from '../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../models/props/DataGridProps';
 
 interface SelectedRowCountProps {
   selectedRowCount: number;

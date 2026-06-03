@@ -6,7 +6,7 @@ import { useDrawingArea, useChartRootRef } from '@mui/x-charts/hooks';
 import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
 import { ChartsWebGLContext } from './ChartsWebGLContext';
 import { ChartsWebGLOrderContext } from './ChartsWebGLOrderContext';
-import type { ChartsWebGLContextValue, DrawEntry } from './ChartsWebGLLayer.types';
+import { type ChartsWebGLContextValue, type DrawEntry } from './ChartsWebGLLayer.types';
 
 export const ChartsWebGLLayer = React.forwardRef<
   HTMLCanvasElement,

@@ -14,7 +14,7 @@ import {
   isOrdinalScale,
 } from '@mui/x-charts/internals';
 import { evaluateCurveAtAngle, clampAngleRad, getAsNumber } from '@mui/x-charts/internals';
-import type { ScaleName, SeriesItemIdentifierWithType } from '@mui/x-charts/models';
+import { type ScaleName, type SeriesItemIdentifierWithType } from '@mui/x-charts/models';
 
 /**
  * For a continuous rotation axis, find the two data indices that bracket the pointer's angle position.

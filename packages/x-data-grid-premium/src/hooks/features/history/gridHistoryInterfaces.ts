@@ -1,4 +1,4 @@
-import type { GridRowId, GridEvents, GridValidRowModel } from '@mui/x-data-grid-pro';
+import { type GridRowId, type GridEvents, type GridValidRowModel } from '@mui/x-data-grid-pro';
 
 /**
  * Handler for a specific grid event

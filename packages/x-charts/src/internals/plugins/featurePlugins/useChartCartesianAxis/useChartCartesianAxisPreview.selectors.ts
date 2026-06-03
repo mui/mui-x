@@ -1,5 +1,5 @@
 import { createSelectorMemoized } from '@mui/x-internals/store';
-import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { type ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,

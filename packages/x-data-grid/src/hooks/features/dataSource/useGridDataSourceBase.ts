@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
-import type { GridGetRowsResponse, GridDataSourceCache } from '../../../models/gridDataSource';
+import { type GridGetRowsResponse, type GridDataSourceCache } from '../../../models/gridDataSource';
 import { runIf } from '../../../utils/utils';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -21,12 +21,16 @@ import { CacheChunkManager, DataSourceRowsUpdateStrategy } from './utils';
 import { GridDataSourceCacheDefault, type GridDataSourceCacheDefaultConfig } from './cache';
 import { GridGetRowsError, GridUpdateRowError } from './gridDataSourceError';
 
-import type { GridDataSourceApi, GridDataSourceApiBase, GridDataSourceBaseOptions } from './models';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type { GridStrategyProcessor } from '../../core/strategyProcessing';
-import type { GridEventListener } from '../../../models/events';
-import type { GridRowId } from '../../../models/gridRows';
+import {
+  type GridDataSourceApi,
+  type GridDataSourceApiBase,
+  type GridDataSourceBaseOptions,
+} from './models';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type GridStrategyProcessor } from '../../core/strategyProcessing';
+import { type GridEventListener } from '../../../models/events';
+import { type GridRowId } from '../../../models/gridRows';
 
 const noopCache: GridDataSourceCache = {
   clear: () => {},

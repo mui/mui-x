@@ -1,6 +1,6 @@
 import { gridClasses } from '../constants/gridClasses';
-import type { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
-import type { GridRowId } from '../models/gridRows';
+import { type GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
+import { type GridRowId } from '../models/gridRows';
 
 export function isOverflown(element: Element): boolean {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;

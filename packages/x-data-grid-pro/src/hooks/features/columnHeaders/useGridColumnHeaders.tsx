@@ -26,7 +26,7 @@ import {
 } from '@mui/x-data-grid/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 type OwnerState = DataGridProProcessedProps;
 

@@ -17,12 +17,12 @@ import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { type GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
-import type {
-  GridColDef,
-  GridSingleSelectColDef,
-  GridStateColDef,
+import {
+  type GridColDef,
+  type GridSingleSelectColDef,
+  type GridStateColDef,
 } from '../../../models/colDef/gridColDef';
 import { getValueFromValueOptions, getValueOptions } from './filterPanelUtils';
 import {

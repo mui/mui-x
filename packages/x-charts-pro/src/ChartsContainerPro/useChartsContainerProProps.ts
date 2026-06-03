@@ -5,8 +5,8 @@ import {
   useChartsContainerProps,
   type UseChartsContainerPropsReturnValue,
 } from '@mui/x-charts/internals';
-import type { ChartsDataProviderProProps } from '../ChartsDataProviderPro';
-import type { ChartsContainerProProps } from './ChartsContainerPro';
+import { type ChartsDataProviderProProps } from '../ChartsDataProviderPro';
+import { type ChartsContainerProProps } from './ChartsContainerPro';
 import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export type UseChartsContainerProPropsReturnValue<

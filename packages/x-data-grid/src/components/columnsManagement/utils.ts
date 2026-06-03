@@ -1,5 +1,5 @@
-import type { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
-import type { GridColumnsManagementProps } from './GridColumnsManagement';
+import { type GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
+import { type GridColumnsManagementProps } from './GridColumnsManagement';
 
 export const checkColumnVisibilityModelsSame = (
   a: GridColumnVisibilityModel,

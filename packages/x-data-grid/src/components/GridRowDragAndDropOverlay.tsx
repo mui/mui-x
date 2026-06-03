@@ -5,8 +5,8 @@ import { shouldForwardProp } from '@mui/system/createStyled';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { gridRowDropPositionSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
-import type { GridRowId } from '../models/gridRows';
-import type { RowReorderDropPosition } from '../models/api/gridRowApi';
+import { type GridRowId } from '../models/gridRows';
+import { type RowReorderDropPosition } from '../models/api/gridRowApi';
 
 export interface GridRowDragAndDropOverlayProps {
   rowId: GridRowId;

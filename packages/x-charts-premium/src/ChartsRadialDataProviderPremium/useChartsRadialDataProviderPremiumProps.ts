@@ -4,8 +4,8 @@ import {
   type PolarChartSeriesType,
   useChartsRadialDataProviderProps,
 } from '@mui/x-charts/internals';
-import type { ChartsRadialDataProviderPremiumProps } from './ChartsRadialDataProviderPremium';
-import type { RadialPremiumPluginSignatures } from './ChartsRadialDataProviderPremium.plugins';
+import { type ChartsRadialDataProviderPremiumProps } from './ChartsRadialDataProviderPremium';
+import { type RadialPremiumPluginSignatures } from './ChartsRadialDataProviderPremium.plugins';
 
 export const useChartsRadialDataProviderPremiumProps = <
   SeriesType extends PolarChartSeriesType = PolarChartSeriesType,

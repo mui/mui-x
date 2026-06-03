@@ -1,5 +1,5 @@
-import type { HighlightItemIdentifier, SeriesId } from '../../../../models/seriesType';
-import type { ChartsSeriesConfig, HighlightScope } from '../../../../models/seriesType/config';
+import { type HighlightItemIdentifier, type SeriesId } from '../../../../models/seriesType';
+import { type ChartsSeriesConfig, type HighlightScope } from '../../../../models/seriesType/config';
 
 type SeriesTypeWithBatchRendering =
   | 'bar'

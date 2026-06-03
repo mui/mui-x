@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { ChartsWebGLOrderContext } from './ChartsWebGLOrderContext';
-import type { ChartsWebGLContextValue, UseWebGLLayerValue } from './ChartsWebGLLayer.types';
+import { type ChartsWebGLContextValue, type UseWebGLLayerValue } from './ChartsWebGLLayer.types';
 
 export const ChartsWebGLContext = React.createContext<ChartsWebGLContextValue | null>(null);
 

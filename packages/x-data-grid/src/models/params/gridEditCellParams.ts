@@ -1,5 +1,5 @@
-import type { GridRowId, GridValidRowModel } from '../gridRows';
-import type { GridCellParams } from './gridCellParams';
+import { type GridRowId, type GridValidRowModel } from '../gridRows';
+import { type GridCellParams } from './gridCellParams';
 
 /**
  * Params passed to `apiRef.current.setEditCellValue`.

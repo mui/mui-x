@@ -3,15 +3,15 @@ import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsis
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import type { ChartPluginOptions, ChartResponse, ChartPlugin } from '../../models';
-import type { UseChartHighlightSignature } from './useChartHighlight.types';
-import type {
-  HighlightItemIdentifier,
-  HighlightItemIdentifierWithType,
-  SeriesItemIdentifier,
-  SeriesItemIdentifierWithType,
+import { type ChartPluginOptions, type ChartResponse, type ChartPlugin } from '../../models';
+import { type UseChartHighlightSignature } from './useChartHighlight.types';
+import {
+  type HighlightItemIdentifier,
+  type HighlightItemIdentifierWithType,
+  type SeriesItemIdentifier,
+  type SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
-import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { createIdentifierWithType } from '../../corePlugins/useChartSeries/useChartSeries';
 import { cleanIdentifier } from '../../corePlugins/useChartSeriesConfig/utils/cleanIdentifier';
 

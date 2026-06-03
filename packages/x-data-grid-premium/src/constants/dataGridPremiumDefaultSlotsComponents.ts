@@ -1,5 +1,5 @@
 import { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '@mui/x-data-grid-pro/internals';
-import type { GridPremiumSlotsComponent } from '../models';
+import { type GridPremiumSlotsComponent } from '../models';
 import { GridPremiumColumnMenu } from '../components/GridPremiumColumnMenu';
 import materialSlots from '../material';
 import { GridBottomContainer } from '../components/GridBottomContainer';

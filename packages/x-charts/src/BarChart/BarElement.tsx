@@ -7,7 +7,7 @@ import { type BarElementOwnerState, useUtilityClasses } from './barClasses';
 import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { AnimatedBarElement, type BarProps } from './AnimatedBarElement';
 import { useIsItemFocused } from '../hooks/useIsItemFocused';
-import type { BarPropsOverrides } from '../models/chartsSlotsComponentsProps';
+import { type BarPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface BarElementSlots {
   /**

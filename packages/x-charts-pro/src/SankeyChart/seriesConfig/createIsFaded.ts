@@ -1,5 +1,5 @@
-import type { HighlightItemIdentifierWithType } from '@mui/x-charts/models';
-import type { SankeyHighlightScope } from '../sankey.highlight.types';
+import { type HighlightItemIdentifierWithType } from '@mui/x-charts/models';
+import { type SankeyHighlightScope } from '../sankey.highlight.types';
 import { createSankeyIsHighlighted } from './createIsHighlighted';
 
 const DEFAULT_FADE = 'none';

@@ -12,7 +12,7 @@ import {
   GridArrowUpwardIcon,
   GridFilterAltIcon,
 } from '@mui/x-data-grid-pro';
-import type { GridPremiumIconSlotsComponent } from '../models';
+import { type GridPremiumIconSlotsComponent } from '../models';
 import {
   GridWorkspacesIcon,
   GridGroupWorkIcon,

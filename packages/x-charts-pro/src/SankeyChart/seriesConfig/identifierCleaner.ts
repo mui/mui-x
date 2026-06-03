@@ -1,4 +1,4 @@
-import type { IdentifierCleaner } from '@mui/x-charts/internals';
+import { type IdentifierCleaner } from '@mui/x-charts/internals';
 
 const identifierCleaner: IdentifierCleaner<'sankey'> = (identifier) => {
   if (identifier.subType === 'node') {

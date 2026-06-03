@@ -1,42 +1,42 @@
 import type * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type {
-  GridEventListener,
-  GridCallbackDetails,
-  GridRowParams,
-  GridRowId,
-  GridValidRowModel,
-  GridGroupNode,
-  GridFeatureMode,
-  GridListViewColDef,
-  GridGetRowsError,
-  GridUpdateRowError,
+import { type RefObject } from '@mui/x-internals/types';
+import {
+  type GridEventListener,
+  type GridCallbackDetails,
+  type GridRowParams,
+  type GridRowId,
+  type GridValidRowModel,
+  type GridGroupNode,
+  type GridFeatureMode,
+  type GridListViewColDef,
+  type GridGetRowsError,
+  type GridUpdateRowError,
 } from '@mui/x-data-grid';
-import type {
-  GridExperimentalFeatures,
-  DataGridPropsWithoutDefaultValue,
-  DataGridPropsWithDefaultValues,
-  DataGridPropsWithComplexDefaultValueAfterProcessing,
-  DataGridPropsWithComplexDefaultValueBeforeProcessing,
-  GridPinnedColumnFields,
-  DataGridProSharedPropsWithDefaultValue,
-  DataGridProSharedPropsWithoutDefaultValue,
+import {
+  type GridExperimentalFeatures,
+  type DataGridPropsWithoutDefaultValue,
+  type DataGridPropsWithDefaultValues,
+  type DataGridPropsWithComplexDefaultValueAfterProcessing,
+  type DataGridPropsWithComplexDefaultValueBeforeProcessing,
+  type GridPinnedColumnFields,
+  type DataGridProSharedPropsWithDefaultValue,
+  type DataGridProSharedPropsWithoutDefaultValue,
 } from '@mui/x-data-grid/internals';
-import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
-import type { GridApiPro } from './gridApiPro';
-import type {
-  GridGroupingColDefOverride,
-  GridGroupingColDefOverrideParams,
+import { type GridPinnedRowsProp } from '../hooks/features/rowPinning';
+import { type GridApiPro } from './gridApiPro';
+import {
+  type GridGroupingColDefOverride,
+  type GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
-import type { GridInitialStatePro } from './gridStatePro';
-import type { GridProSlotsComponent } from './gridProSlotsComponent';
-import type { GridProSlotProps } from './gridProSlotProps';
-import type {
-  GridDataSourcePro as GridDataSource,
-  GridGetRowsParamsPro as GridGetRowsParams,
+import { type GridInitialStatePro } from './gridStatePro';
+import { type GridProSlotsComponent } from './gridProSlotsComponent';
+import { type GridProSlotProps } from './gridProSlotProps';
+import {
+  type GridDataSourcePro as GridDataSource,
+  type GridGetRowsParamsPro as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
-import type { ReorderValidationContext } from '../hooks/features/rowReorder/models';
-import type { IsRowReorderableParams } from '../hooks/features/rowReorder';
+import { type ReorderValidationContext } from '../hooks/features/rowReorder/models';
+import { type IsRowReorderableParams } from '../hooks/features/rowReorder';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 

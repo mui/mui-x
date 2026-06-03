@@ -10,7 +10,7 @@ import {
   type GridRowTreeConfig,
 } from '@mui/x-data-grid';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { ReorderExecutionContext } from '../rowReorder/types';
+import { type ReorderExecutionContext } from '../rowReorder/types';
 import {
   BatchRowUpdater,
   collectAllDescendants,

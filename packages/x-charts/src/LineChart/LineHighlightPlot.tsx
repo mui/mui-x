@@ -14,8 +14,8 @@ import {
   selectorChartsHighlightXAxisIndex,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
-import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
-import type { LineHighlightPropsOverrides } from '../models/chartsSlotsComponentsProps';
+import { type UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
+import { type LineHighlightPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<

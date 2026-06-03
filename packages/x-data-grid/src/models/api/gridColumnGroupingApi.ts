@@ -1,5 +1,5 @@
-import type { GridColumnGroupLookup } from '../../hooks/features/columnGrouping/gridColumnGroupsInterfaces';
-import type { GridColumnGroup } from '../gridColumnGrouping';
+import { type GridColumnGroupLookup } from '../../hooks/features/columnGrouping/gridColumnGroupsInterfaces';
+import { type GridColumnGroup } from '../gridColumnGrouping';
 
 /**
  * The column grouping API interface that is available in the grid [[apiRef]].

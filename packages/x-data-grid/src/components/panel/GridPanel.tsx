@@ -9,9 +9,9 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../../constants/cssVariables';
 import { useCSSVariablesClass } from '../../utils/css/context';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { GridSlotProps } from '../../models/gridSlotsComponent';
+import { type GridSlotProps } from '../../models/gridSlotsComponent';
 import { NotRendered } from '../../utils/assert';
 
 type OwnerState = DataGridProcessedProps;

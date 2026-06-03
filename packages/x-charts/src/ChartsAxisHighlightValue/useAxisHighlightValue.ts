@@ -8,10 +8,10 @@ import {
   selectorChartYAxis,
   type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import type { ComputedAxis, AxisId } from '../models/axis';
-import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
-import type { ChartsAxisHighlightValuePosition } from './ChartsAxisHighlightValue';
-import type { ChartsAxisHighlightValueItemProps } from './ChartsAxisHighlightValueItem';
+import { type ComputedAxis, type AxisId } from '../models/axis';
+import { type UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
+import { type ChartsAxisHighlightValuePosition } from './ChartsAxisHighlightValue';
+import { type ChartsAxisHighlightValueItemProps } from './ChartsAxisHighlightValueItem';
 
 function getAxisValueFormatter(
   axis: ComputedAxis,

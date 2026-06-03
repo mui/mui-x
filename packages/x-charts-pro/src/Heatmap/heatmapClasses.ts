@@ -1,7 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import type { HeatmapCellOwnerState } from './HeatmapCell';
+import { type HeatmapCellOwnerState } from './HeatmapCell';
 
 export interface HeatmapClasses {
   /** Styles applied to the heatmap plot root element. */

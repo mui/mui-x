@@ -1,13 +1,13 @@
-import type {
-  GridValidRowModel,
-  GridRowId,
-  GridGetRowsResponse,
-  GridDataSource,
-  GridGetRowsParams,
+import {
+  type GridValidRowModel,
+  type GridRowId,
+  type GridGetRowsResponse,
+  type GridDataSource,
+  type GridGetRowsParams,
 } from '@mui/x-data-grid';
-import type {
-  GridDataSourceApiBase,
-  GridDataSourceFetchRowsParams,
+import {
+  type GridDataSourceApiBase,
+  type GridDataSourceFetchRowsParams,
 } from '@mui/x-data-grid/internals';
 
 export interface GridDataSourceState {

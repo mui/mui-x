@@ -3,7 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
-import type { ChartsXAxisProps, ComputedAxis, ScaleName } from '../models/axis';
+import { type ChartsXAxisProps, type ComputedAxis, type ScaleName } from '../models/axis';
 import { ChartsSingleXAxisTicks } from './ChartsSingleXAxisTicks';
 import { ChartsGroupedXAxisTicks } from './ChartsGroupedXAxisTicks';
 import { ChartsText, type ChartsTextProps } from '../ChartsText';

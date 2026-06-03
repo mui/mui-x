@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
-import type { AutocompleteProps } from '../../../models/gridBaseSlots';
+import { type AutocompleteProps } from '../../../models/gridBaseSlots';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import type { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
-import type { GridSingleSelectColDef, ValueOptions } from '../../../models/colDef/gridColDef';
+import { type GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
+import { type GridSingleSelectColDef, type ValueOptions } from '../../../models/colDef/gridColDef';
 import { getValueOptions, isSingleSelectColDef } from './filterPanelUtils';
 
 export type GridFilterInputMultipleSingleSelectProps = GridFilterInputValueProps<

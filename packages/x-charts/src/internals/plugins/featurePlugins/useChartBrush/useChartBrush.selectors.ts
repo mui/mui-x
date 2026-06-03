@@ -1,7 +1,7 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import type { ChartOptionalRootSelector } from '../../utils/selectors';
+import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import { selectorChartZoomOptionsLookup } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
-import type { UseChartBrushSignature } from './useChartBrush.types';
+import { type UseChartBrushSignature } from './useChartBrush.types';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 
 export const selectorBrush: ChartOptionalRootSelector<UseChartBrushSignature> = (state) =>

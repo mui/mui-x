@@ -1,5 +1,5 @@
-import type { GridControlledStateReasonLookup } from '../events/gridEventLookup';
-import type { GridApiCommon } from './gridApiCommon';
+import { type GridControlledStateReasonLookup } from '../events/gridEventLookup';
+import { type GridApiCommon } from './gridApiCommon';
 
 /**
  * Additional details passed to the callbacks

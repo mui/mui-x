@@ -6,7 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type OwnerState = DataGridProcessedProps;
 

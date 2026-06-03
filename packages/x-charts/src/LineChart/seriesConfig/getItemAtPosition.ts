@@ -1,17 +1,17 @@
-import type { UseChartCartesianAxisSignature } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
-import type { ChartState } from '../../internals/plugins/models/chart';
+import { type UseChartCartesianAxisSignature } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { type ChartState } from '../../internals/plugins/models/chart';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
 } from '../../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import { selectorAllSeriesOfType } from '../../internals/seriesSelectorOfType';
-import type { ProcessedSeries } from '../../internals/plugins/corePlugins/useChartSeries';
+import { type ProcessedSeries } from '../../internals/plugins/corePlugins/useChartSeries';
 import { getAxisIndex } from '../../internals/plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
-import type { SeriesItemIdentifierWithType } from '../../models/seriesType';
+import { type SeriesItemIdentifierWithType } from '../../models/seriesType';
 import { isOrdinalScale } from '../../internals/scaleGuards';
 import { getAsNumber } from '../../internals/getAsNumber';
 import { getValueToPositionMapper } from '../../hooks/getValueToPositionMapper';
-import type { ComputedAxis } from '../../models/axis';
+import { type ComputedAxis } from '../../models/axis';
 import { evaluateCurveY } from './curveEvaluation';
 
 /**

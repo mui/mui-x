@@ -1,10 +1,10 @@
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridEventPriority, useGridNativeEventListener } from '../../utils';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { serializeCellValue } from '../export/serializers/csvSerializer';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isCopyShortcut } from '../../../utils/keyboardUtils';
 import { gridRowSelectionCountSelector } from '../rowSelection';
 

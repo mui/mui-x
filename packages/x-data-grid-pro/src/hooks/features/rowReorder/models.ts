@@ -1,7 +1,10 @@
-import type { GridTreeNode, GridValidRowModel } from '@mui/x-data-grid';
-import type { RefObject } from '@mui/x-internals/types';
-import type { RowReorderDropPosition, RowReorderDragDirection } from '@mui/x-data-grid/internals';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type GridTreeNode, type GridValidRowModel } from '@mui/x-data-grid';
+import { type RefObject } from '@mui/x-internals/types';
+import {
+  type RowReorderDropPosition,
+  type RowReorderDragDirection,
+} from '@mui/x-data-grid/internals';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
 
 export type IsRowReorderableParams<R extends GridValidRowModel = any> = {
   row: R;

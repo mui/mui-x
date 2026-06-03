@@ -1,28 +1,28 @@
 import type * as React from 'react';
-import type {
-  GridCellIndexCoordinates,
-  GridScrollParams,
-  GridColDef,
-  GridCellCoordinates,
-  GridCellParams,
-  GridEditMode,
+import {
+  type GridCellIndexCoordinates,
+  type GridScrollParams,
+  type GridColDef,
+  type GridCellCoordinates,
+  type GridCellParams,
+  type GridEditMode,
 } from '../../../models';
-import type { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
-import type {
-  GridExportStateParams,
-  GridRestoreStatePreProcessingContext,
-  GridRestoreStatePreProcessingValue,
+import { type GridInitialStateCommunity } from '../../../models/gridStateCommunity';
+import {
+  type GridExportStateParams,
+  type GridRestoreStatePreProcessingContext,
+  type GridRestoreStatePreProcessingValue,
 } from '../../features/statePersistence/gridStatePersistenceInterface';
-import type {
-  GridHydrateColumnsValue,
-  GridPinnedColumnPosition,
+import {
+  type GridHydrateColumnsValue,
+  type GridPinnedColumnPosition,
 } from '../../features/columns/gridColumnsInterfaces';
-import type { GridRowEntry, GridRowId } from '../../../models/gridRows';
-import type { GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
-import type { GridPreferencePanelsValue } from '../../features/preferencesPanel';
-import type { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
-import type { HeightEntry } from '../../features/rows/gridRowsMetaInterfaces';
-import type { RowReorderDropPosition } from '../../../models/api/gridRowApi';
+import { type GridRowEntry, type GridRowId } from '../../../models/gridRows';
+import { type GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
+import { type GridPreferencePanelsValue } from '../../features/preferencesPanel';
+import { type GridGetRowsParams, type GridGetRowsResponse } from '../../../models/gridDataSource';
+import { type HeightEntry } from '../../features/rows/gridRowsMetaInterfaces';
+import { type RowReorderDropPosition } from '../../../models/api/gridRowApi';
 
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 

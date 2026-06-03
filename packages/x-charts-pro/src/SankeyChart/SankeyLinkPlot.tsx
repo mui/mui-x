@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import type { SankeyLinkIdentifierWithData } from './sankey.types';
+import { type SankeyLinkIdentifierWithData } from './sankey.types';
 import { SankeyLinkElement } from './SankeyLinkElement';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
 import { useUtilityClasses, type SankeyClasses } from './sankeyClasses';

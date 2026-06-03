@@ -1,8 +1,8 @@
-import type { SeriesItemIdentifierWithType } from '../../../../../models/seriesType';
-import type {
-  ChartSeriesDefaultized,
-  ChartSeriesType,
-  ChartsSeriesConfig,
+import { type SeriesItemIdentifierWithType } from '../../../../../models/seriesType';
+import {
+  type ChartSeriesDefaultized,
+  type ChartSeriesType,
+  type ChartsSeriesConfig,
 } from '../../../../../models/seriesType/config';
 import { type SeriesId } from '../../../../../models/seriesType/common';
 import {

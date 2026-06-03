@@ -1,6 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { type ChartRootSelector } from '../../utils/selectors';
-import type { UseChartDimensionsSignature } from './useChartDimensions.types';
+import { type UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartAxisSizes } from '../../featurePlugins/useChartCartesianAxis/useChartAxisSize.selectors';
 import { type ChartState } from '../../models/chart';
 

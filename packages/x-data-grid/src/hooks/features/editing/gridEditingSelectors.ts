@@ -1,6 +1,6 @@
 import { createSelector, createRootSelector } from '../../../utils/createSelector';
-import type { GridStateCommunity } from '../../../models/gridStateCommunity';
-import type { GridRowId } from '../../../models/gridRows';
+import { type GridStateCommunity } from '../../../models/gridStateCommunity';
+import { type GridRowId } from '../../../models/gridRows';
 import { GridEditModes, type GridEditMode } from '../../../models/gridEditRowModel';
 
 /**

@@ -1,4 +1,4 @@
-import type { GridSlotsComponent } from '../../../models';
+import { type GridSlotsComponent } from '../../../models';
 
 export type GridOverlayType =
   | keyof Pick<

@@ -1,9 +1,9 @@
-import type {
-  ChartState,
-  UseChartKeyboardNavigationSignature,
-  KeyboardFocusHandler,
+import {
+  type ChartState,
+  type UseChartKeyboardNavigationSignature,
+  type KeyboardFocusHandler,
 } from '@mui/x-charts/internals';
-import type { FocusedItemIdentifier } from '@mui/x-charts/models';
+import { type FocusedItemIdentifier } from '@mui/x-charts/models';
 
 function getFirstCell(
   state: Pick<ChartState<[UseChartKeyboardNavigationSignature], [], 'heatmap'>, 'series'>,

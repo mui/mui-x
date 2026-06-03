@@ -1,9 +1,9 @@
-import type {
-  AllSeriesType,
-  HighlightItemIdentifier,
-  HighlightItemIdentifierWithType,
-  SeriesItemIdentifier,
-  SeriesItemIdentifierWithType,
+import {
+  type AllSeriesType,
+  type HighlightItemIdentifier,
+  type HighlightItemIdentifierWithType,
+  type SeriesItemIdentifier,
+  type SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
 import { type ChartPluginSignature } from '../../models';

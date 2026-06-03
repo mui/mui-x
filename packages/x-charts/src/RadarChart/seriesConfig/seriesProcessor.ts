@@ -1,6 +1,6 @@
 import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
-import type { DefaultizedRadarSeriesType } from '../../models';
-import type { SeriesId } from '../../models/seriesType/common';
+import { type DefaultizedRadarSeriesType } from '../../models';
+import { type SeriesId } from '../../models/seriesType/common';
 
 const defaultRadarValueFormatter: DefaultizedRadarSeriesType['valueFormatter'] = (v) =>
   v == null ? '' : v.toLocaleString();

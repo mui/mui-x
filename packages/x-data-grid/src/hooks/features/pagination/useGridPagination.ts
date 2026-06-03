@@ -1,7 +1,7 @@
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   throwIfPageSizeExceedsTheLimit,
   getDefaultGridPaginationModel,

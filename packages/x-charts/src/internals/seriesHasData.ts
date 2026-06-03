@@ -1,6 +1,6 @@
-import type { SeriesId } from '../models/seriesType/common';
-import type { ChartSeriesType, ChartsSeriesConfig } from '../models/seriesType/config';
-import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries';
+import { type SeriesId } from '../models/seriesType/common';
+import { type ChartSeriesType, type ChartsSeriesConfig } from '../models/seriesType/config';
+import { type ProcessedSeries } from './plugins/corePlugins/useChartSeries';
 
 export function seriesHasData(
   series: ProcessedSeries<keyof ChartsSeriesConfig>,

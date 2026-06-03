@@ -1,6 +1,9 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import type { SeriesItemIdentifierWithType } from '../../../../models/seriesType';
-import type { ChartSeriesDefaultized, ChartSeriesType } from '../../../../models/seriesType/config';
+import { type SeriesItemIdentifierWithType } from '../../../../models/seriesType';
+import {
+  type ChartSeriesDefaultized,
+  type ChartSeriesType,
+} from '../../../../models/seriesType/config';
 import {
   type ProcessedSeries,
   selectorChartSeriesProcessed,
@@ -21,24 +24,24 @@ import {
   selectorChartsHasFocusedItem,
 } from '../useChartKeyboardNavigation';
 import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
-import type {
-  AxisId,
-  ChartsRadiusAxisProps,
-  ChartsRotationAxisProps,
-  ChartsXAxisProps,
-  ChartsYAxisProps,
+import {
+  type AxisId,
+  type ChartsRadiusAxisProps,
+  type ChartsRotationAxisProps,
+  type ChartsXAxisProps,
+  type ChartsYAxisProps,
 } from '../../../../models/axis';
-import type { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
+import { type ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
-import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { type ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { isCartesianSeries } from '../../../isCartesian';
 import {
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
 } from '../useChartPolarAxis/useChartPolarAxis.selectors';
-import type { ComputeResult as ComputePolarResult } from '../useChartPolarAxis/computeAxisValue';
-import type { ChartOptionalRootSelector } from '../../utils/selectors';
-import type { UseChartTooltipSignature } from './useChartTooltip.types';
+import { type ComputeResult as ComputePolarResult } from '../useChartPolarAxis/computeAxisValue';
+import { type ChartOptionalRootSelector } from '../../utils/selectors';
+import { type UseChartTooltipSignature } from './useChartTooltip.types';
 
 const selectTooltip: ChartOptionalRootSelector<UseChartTooltipSignature> = (state) => state.tooltip;
 

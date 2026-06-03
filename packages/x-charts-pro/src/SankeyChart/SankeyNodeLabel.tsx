@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import type { SankeyLayoutNode } from './sankey.types';
+import { type SankeyLayoutNode } from './sankey.types';
 import { useSankeyNodeHighlightState } from './sankeyHighlightHooks';
-import type { SeriesId } from '../models';
+import { type SeriesId } from '../models';
 import { useUtilityClasses } from './sankeyClasses';
 
 export interface SankeyNodeLabelProps {

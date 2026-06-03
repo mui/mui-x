@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   useGridEvent,
   useGridSelector,
@@ -11,9 +11,9 @@ import {
   type GridEventListener,
 } from '@mui/x-data-grid';
 import { getVisibleRows } from '@mui/x-data-grid/internals';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import type { GridFetchRowsParams } from '../../../models/gridFetchRowsParams';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type GridFetchRowsParams } from '../../../models/gridFetchRowsParams';
 import { findSkeletonRowsSection } from './utils';
 
 /**

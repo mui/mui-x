@@ -1,5 +1,9 @@
 import { linkHorizontal, type Link } from '@mui/x-charts-vendor/d3-shape';
-import type { SankeyExtraProperties, SankeyLink, SankeyNodeMinimal } from './sankey.types';
+import {
+  type SankeyExtraProperties,
+  type SankeyLink,
+  type SankeyNodeMinimal,
+} from './sankey.types';
 
 function horizontalSource(d: SankeyLink<true, {}, {}>): [number, number] {
   return [(d.source as SankeyNodeMinimal<{}, {}>).x1!, d.y0!];

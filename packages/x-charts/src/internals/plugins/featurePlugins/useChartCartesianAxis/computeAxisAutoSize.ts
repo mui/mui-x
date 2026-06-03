@@ -1,11 +1,11 @@
-import type {
-  DefaultedXAxis,
-  DefaultedYAxis,
-  AxisGroup,
-  ContinuousScaleName,
+import {
+  type DefaultedXAxis,
+  type DefaultedYAxis,
+  type AxisGroup,
+  type ContinuousScaleName,
 } from '../../../../models/axis';
 import { batchMeasureStrings } from '../../../domUtils';
-import type { ChartsTextStyle } from '../../../getWordsByLines';
+import { type ChartsTextStyle } from '../../../getWordsByLines';
 import { deg2rad } from '../../../angleConversion';
 import { getGraphemeCount } from '../../../getGraphemeCount';
 import { getScale } from '../../../getScale';

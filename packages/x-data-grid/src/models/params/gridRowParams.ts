@@ -1,5 +1,5 @@
-import type { GridValidRowModel, GridRowEntry, GridRowId } from '../gridRows';
-import type { GridColDef } from '../colDef/gridColDef';
+import { type GridValidRowModel, type GridRowEntry, type GridRowId } from '../gridRows';
+import { type GridColDef } from '../colDef/gridColDef';
 
 /**
  * Object passed as parameter in the row callbacks.

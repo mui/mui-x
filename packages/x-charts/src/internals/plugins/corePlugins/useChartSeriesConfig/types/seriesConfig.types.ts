@@ -1,15 +1,15 @@
 import type * as React from 'react';
-import type { SeriesProcessor } from './seriesProcessor.types';
-import type {
-  CartesianChartSeriesType,
-  ChartSeriesType,
-  ChartsSeriesConfig,
-  PolarChartSeriesType,
+import { type SeriesProcessor } from './seriesProcessor.types';
+import {
+  type CartesianChartSeriesType,
+  type ChartSeriesType,
+  type ChartsSeriesConfig,
+  type PolarChartSeriesType,
 } from '../../../../../models/seriesType/config';
-import type { ColorProcessor } from './colorProcessor.types';
-import type { CartesianExtremumGetter } from './cartesianExtremumGetter.types';
-import type { LegendGetter } from './legendGetter.types';
-import type { AxisTooltipGetter, TooltipGetter } from './tooltipGetter.types';
+import { type ColorProcessor } from './colorProcessor.types';
+import { type CartesianExtremumGetter } from './cartesianExtremumGetter.types';
+import { type LegendGetter } from './legendGetter.types';
+import { type AxisTooltipGetter, type TooltipGetter } from './tooltipGetter.types';
 import { type PolarExtremumGetter } from './polarExtremumGetter.types';
 import { type GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
 import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';

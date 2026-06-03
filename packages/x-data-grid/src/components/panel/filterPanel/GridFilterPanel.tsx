@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import type { SxProps, Theme } from '@mui/material/styles';
+import { type SxProps, type Theme } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { type GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
@@ -16,7 +16,7 @@ import {
   gridFilterableColumnDefinitionsSelector,
   gridFilterableColumnLookupSelector,
 } from '../../../hooks/features/columns/gridColumnsSelector';
-import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import { type GridColDef, type GridStateColDef } from '../../../models/colDef/gridColDef';
 
 export interface GetColumnForNewFilterArgs {
   currentFilters: GridFilterItem[];

@@ -1,33 +1,33 @@
-import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import type {
-  AxisId,
-  CommonHighlightScope,
-  SeriesId,
-  ComputedXAxis,
-  ComputedYAxis,
-  ZoomOptions,
+import { type DefaultizedProps, type MakeRequired } from '@mui/x-internals/types';
+import {
+  type AxisId,
+  type CommonHighlightScope,
+  type SeriesId,
+  type ComputedXAxis,
+  type ComputedYAxis,
+  type ZoomOptions,
 } from '@mui/x-charts/internals';
-import type {
-  DefaultizedFunnelSeriesType,
-  FunnelItemIdentifier,
-  FunnelSeriesType,
-  FunnelValueType,
+import {
+  type DefaultizedFunnelSeriesType,
+  type FunnelItemIdentifier,
+  type FunnelSeriesType,
+  type FunnelValueType,
 } from '../FunnelChart/funnel.types';
-import type {
-  HeatmapItemIdentifier,
-  HeatmapItemIdentifierWithData,
-  HeatmapSeriesType,
-  DefaultizedHeatmapSeriesType,
-  HeatmapValueType,
+import {
+  type HeatmapItemIdentifier,
+  type HeatmapItemIdentifierWithData,
+  type HeatmapSeriesType,
+  type DefaultizedHeatmapSeriesType,
+  type HeatmapValueType,
 } from '../models/seriesType/heatmap';
-import type {
-  SankeyLayout,
-  SankeySeriesType,
-  DefaultizedSankeySeriesType,
-  SankeyItemIdentifier,
-  SankeyItemIdentifierWithData,
+import {
+  type SankeyLayout,
+  type SankeySeriesType,
+  type DefaultizedSankeySeriesType,
+  type SankeyItemIdentifier,
+  type SankeyItemIdentifierWithData,
 } from '../SankeyChart/sankey.types';
-import type { SankeyHighlightScope } from '../SankeyChart/sankey.highlight.types';
+import { type SankeyHighlightScope } from '../SankeyChart/sankey.highlight.types';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {

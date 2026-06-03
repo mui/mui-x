@@ -1,30 +1,30 @@
 'use client';
 import * as React from 'react';
 import debounce from '@mui/utils/debounce';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { gridClasses } from '../../../constants/gridClasses';
-import type { GridEventListener, GridEventLookup } from '../../../models/events';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { GridFocusApi, GridFocusPrivateApi } from '../../../models/api/gridFocusApi';
-import type { GridCellParams } from '../../../models/params/gridCellParams';
+import { type GridEventListener, type GridEventLookup } from '../../../models/events';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type GridFocusApi, type GridFocusPrivateApi } from '../../../models/api/gridFocusApi';
+import { type GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridEvent } from '../../utils/useGridEvent';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isNavigationKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
   gridFocusCellSelector,
   gridFocusColumnGroupHeaderSelector,
 } from './gridFocusStateSelector';
 import { doesSupportPreventScroll } from '../../../utils/doesSupportPreventScroll';
-import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { type GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { clamp } from '../../../utils/utils';
-import type { GridCellCoordinates } from '../../../models/gridCell';
-import type { GridRowEntry, GridRowId } from '../../../models/gridRows';
+import { type GridCellCoordinates } from '../../../models/gridCell';
+import { type GridRowEntry, type GridRowId } from '../../../models/gridRows';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 
 export const focusStateInitializer: GridStateInitializer = (state) => ({

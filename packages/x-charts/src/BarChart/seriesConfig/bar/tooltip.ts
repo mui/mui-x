@@ -1,7 +1,7 @@
 import { getLineLikeTooltip } from '../../../internals/getLineLikeTooltip';
-import type {
-  AxisTooltipGetter,
-  TooltipGetter,
+import {
+  type AxisTooltipGetter,
+  type TooltipGetter,
 } from '../../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const tooltipGetter: TooltipGetter<'bar'> = (params) =>

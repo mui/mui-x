@@ -7,12 +7,12 @@ import {
   type GridValidRowModel,
 } from '@mui/x-data-grid';
 import { computeSlots, ROW_SELECTION_PROPAGATION_DEFAULT } from '@mui/x-data-grid/internals';
-import type {
-  DataGridProProps,
-  DataGridProProcessedProps,
-  DataGridProPropsWithDefaultValue,
+import {
+  type DataGridProProps,
+  type DataGridProProcessedProps,
+  type DataGridProPropsWithDefaultValue,
 } from '../models/dataGridProProps';
-import type { GridProSlotsComponent } from '../models';
+import { type GridProSlotsComponent } from '../models';
 import { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
 interface GetDataGridProPropsDefaultValues extends DataGridProProps {}

@@ -1,4 +1,4 @@
-import type { GridKeyValue } from './colDef/gridColDef';
+import { type GridKeyValue } from './colDef/gridColDef';
 
 export type GridValidRowModel = { [key: string | symbol]: any };
 

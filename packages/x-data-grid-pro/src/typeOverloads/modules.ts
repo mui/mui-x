@@ -1,13 +1,13 @@
-import type { GridRowId, GridPinnedColumnFields } from '@mui/x-data-grid';
-import type {
-  GridRowScrollEndParams,
-  GridRowOrderChangeParams,
-  GridFetchRowsParams,
+import { type GridRowId, type GridPinnedColumnFields } from '@mui/x-data-grid';
+import {
+  type GridRowScrollEndParams,
+  type GridRowOrderChangeParams,
+  type GridFetchRowsParams,
 } from '../models';
-import type { GridRenderHeaderFilterProps } from '../components/headerFiltering/GridHeaderFilterCell';
-import type { GridColumnPinningInternalCache } from '../hooks/features/columnPinning/gridColumnPinningInterface';
-import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
-import type { GridRowPinningInternalCache } from '../hooks/features/rowPinning/gridRowPinningInterface';
+import { type GridRenderHeaderFilterProps } from '../components/headerFiltering/GridHeaderFilterCell';
+import { type GridColumnPinningInternalCache } from '../hooks/features/columnPinning/gridColumnPinningInterface';
+import { type GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
+import { type GridRowPinningInternalCache } from '../hooks/features/rowPinning/gridRowPinningInterface';
 
 export interface GridColDefPro {
   /**

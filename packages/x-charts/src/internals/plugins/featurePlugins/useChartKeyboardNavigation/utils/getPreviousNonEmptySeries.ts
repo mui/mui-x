@@ -1,6 +1,6 @@
-import type { ChartSeriesType } from '../../../../../models/seriesType/config';
-import type { SeriesId } from '../../../../../models/seriesType/common';
-import type { ProcessedSeries } from '../../../corePlugins/useChartSeries';
+import { type ChartSeriesType } from '../../../../../models/seriesType/config';
+import { type SeriesId } from '../../../../../models/seriesType/common';
+import { type ProcessedSeries } from '../../../corePlugins/useChartSeries';
 import { getNonEmptySeriesArray } from './getNonEmptySeriesArray';
 
 /**

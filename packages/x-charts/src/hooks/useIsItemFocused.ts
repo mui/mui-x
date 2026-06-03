@@ -1,8 +1,8 @@
 'use client';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartsItemIsFocused } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
-import type { ChartSeriesType } from '../models/seriesType/config';
-import type { FocusedItemIdentifier } from '../models/seriesType';
+import { type ChartSeriesType } from '../models/seriesType/config';
+import { type FocusedItemIdentifier } from '../models/seriesType';
 
 type UseItemFocusedParams = FocusedItemIdentifier<ChartSeriesType>;
 

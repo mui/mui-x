@@ -1,4 +1,4 @@
-import type { KeyboardKey, PointerMode } from '@mui/x-internal-gestures/core';
+import { type KeyboardKey, type PointerMode } from '@mui/x-internal-gestures/core';
 
 export type ZoomInteractionConfig = {
   /**

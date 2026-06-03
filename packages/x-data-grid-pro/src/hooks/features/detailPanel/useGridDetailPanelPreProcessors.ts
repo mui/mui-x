@@ -1,13 +1,13 @@
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { gridClasses, type GridColDef } from '@mui/x-data-grid';
 import { useGridRegisterPipeProcessor, type GridPipeProcessor } from '@mui/x-data-grid/internals';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
   GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
 } from './gridDetailPanelToggleColDef';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
 import { gridDetailPanelExpandedRowIdsSelector } from './gridDetailPanelSelector';
 
 export const useGridDetailPanelPreProcessors = (

@@ -1,22 +1,22 @@
 import type * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridCellClassNamePropType } from '../gridCellClass';
-import type { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
-import type { GridFilterOperator } from '../gridFilterOperator';
-import type {
-  GridRenderCellParams,
-  GridRenderEditCellParams,
-  GridPreProcessEditCellProps,
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridCellClassNamePropType } from '../gridCellClass';
+import { type GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
+import { type GridFilterOperator } from '../gridFilterOperator';
+import {
+  type GridRenderCellParams,
+  type GridRenderEditCellParams,
+  type GridPreProcessEditCellProps,
 } from '../params/gridCellParams';
-import type { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
-import type { GridComparatorFn, GridSortDirection } from '../gridSortModel';
-import type { GridColType } from './gridColType';
-import type { GridRowParams } from '../params/gridRowParams';
-import type { GridValueOptionsParams } from '../params/gridValueOptionsParams';
-import type { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
-import type { GridEditCellProps } from '../gridEditRowModel';
-import type { GridValidRowModel } from '../gridRows';
-import type { GridApiCommunity } from '../api/gridApiCommunity';
+import { type GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
+import { type GridComparatorFn, type GridSortDirection } from '../gridSortModel';
+import { type GridColType } from './gridColType';
+import { type GridRowParams } from '../params/gridRowParams';
+import { type GridValueOptionsParams } from '../params/gridValueOptionsParams';
+import { type GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
+import { type GridEditCellProps } from '../gridEditRowModel';
+import { type GridValidRowModel } from '../gridRows';
+import { type GridApiCommunity } from '../api/gridApiCommunity';
 /**
  * Alignment used in position elements in Cells.
  */

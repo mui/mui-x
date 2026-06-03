@@ -1,6 +1,6 @@
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { type GridRowEntry, gridRowNodeSelector } from '@mui/x-data-grid';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
 
 interface GridRowRenderContext {
   firstRowIndex: number;

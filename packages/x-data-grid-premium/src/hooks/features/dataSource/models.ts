@@ -1,18 +1,18 @@
-import type {
-  GridColDef,
-  GridRowId,
-  GridValidRowModel,
-  GridDataSource,
-  GridGetRowsResponse,
-  GridGetRowsParams,
-  GridDataSourceApiBase,
-  GridDataSourcePrivateApi,
-  GridRowModel,
+import {
+  type GridColDef,
+  type GridRowId,
+  type GridValidRowModel,
+  type GridDataSource,
+  type GridGetRowsResponse,
+  type GridGetRowsParams,
+  type GridDataSourceApiBase,
+  type GridDataSourcePrivateApi,
+  type GridRowModel,
 } from '@mui/x-data-grid-pro';
-import type { GridDataSourceFetchRowsParams } from '@mui/x-data-grid-pro/internals';
+import { type GridDataSourceFetchRowsParams } from '@mui/x-data-grid-pro/internals';
 
-import type { GridAggregationModel } from '../aggregation/gridAggregationInterfaces';
-import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
+import { type GridAggregationModel } from '../aggregation/gridAggregationInterfaces';
+import { type GridPivotModel } from '../pivoting/gridPivotingInterfaces';
 
 export interface GridGetRowsResponsePivotColumn {
   key: string;

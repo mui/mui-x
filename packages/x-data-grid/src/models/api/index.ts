@@ -1,4 +1,4 @@
-import type { GridEditingApi } from './gridEditingApi';
+import { type GridEditingApi } from './gridEditingApi';
 
 export type { GridParamsApi } from './gridParamsApi';
 export type { GridCoreApi } from './gridCoreApi';

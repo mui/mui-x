@@ -6,7 +6,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import debounce from '@mui/utils/debounce';
 import { styled } from '@mui/material/styles';
 import { inputBaseClasses } from '@mui/material/InputBase';
-import type { TextFieldProps } from '../../models/gridBaseSlots';
+import { type TextFieldProps } from '../../models/gridBaseSlots';
 import { vars } from '../../constants/cssVariables';
 import {
   gridColumnDefinitionsSelector,
@@ -16,9 +16,9 @@ import {
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import type { GridColDef } from '../../models/colDef/gridColDef';
-import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type GridColDef } from '../../models/colDef/gridColDef';
+import { type GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { checkColumnVisibilityModelsSame, defaultSearchPredicate } from './utils';
 import { NotRendered } from '../../utils/assert';

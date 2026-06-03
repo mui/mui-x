@@ -5,7 +5,7 @@ import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 export type GridChartsPanelDataSearchProps = Pick<
   GridSlotProps['baseTextField'],

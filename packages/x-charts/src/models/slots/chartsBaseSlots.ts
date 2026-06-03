@@ -5,11 +5,11 @@ import {
   type ChartBaseToggleButtonProps,
   type ChartBaseToggleButtonGroupProps,
 } from './chartsBaseSlotProps';
-import type {
-  BaseButtonPropsOverrides,
-  BaseIconButtonPropsOverrides,
-  BaseToggleButtonPropsOverrides,
-  BaseToggleButtonGroupPropsOverrides,
+import {
+  type BaseButtonPropsOverrides,
+  type BaseIconButtonPropsOverrides,
+  type BaseToggleButtonPropsOverrides,
+  type BaseToggleButtonGroupPropsOverrides,
 } from '../chartsSlotsComponentsProps';
 
 export interface ChartsBaseSlots {

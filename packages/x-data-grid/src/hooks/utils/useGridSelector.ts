@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
-import type { GridApiCommon } from '../../models/api/gridApiCommon';
+import { type GridApiCommon } from '../../models/api/gridApiCommon';
 import { useLazyRef } from './useLazyRef';
 
 const defaultCompare = Object.is;

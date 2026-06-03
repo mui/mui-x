@@ -1,6 +1,6 @@
 import { createRootSelector, createSelector } from '../../../utils/createSelector';
-import type { GridStateCommunity } from '../../../models/gridStateCommunity';
-import type { GridRowId } from '../../../models/gridRows';
+import { type GridStateCommunity } from '../../../models/gridStateCommunity';
+import { type GridRowId } from '../../../models/gridRows';
 
 export const gridRowReorderStateSelector = createRootSelector(
   (state: GridStateCommunity) => state.rowReorder,

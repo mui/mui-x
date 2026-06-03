@@ -11,7 +11,7 @@ import {
   getAvailableAggregationFunctions,
 } from '../../../hooks/features/aggregation/gridAggregationUtils';
 import { gridAggregationModelSelector } from '../../../hooks/features/aggregation/gridAggregationSelectors';
-import type { GridAggregationModel } from '../../../hooks/features/aggregation/gridAggregationInterfaces';
+import { type GridAggregationModel } from '../../../hooks/features/aggregation/gridAggregationInterfaces';
 
 function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const { colDef } = props;

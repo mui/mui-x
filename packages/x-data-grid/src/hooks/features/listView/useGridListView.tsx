@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { GridListViewColDef } from '../../../models/colDef/gridColDef';
-import type { GridStateInitializer } from '../../utils/useGridInitializeState';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type { GridEventListener } from '../../../models/events';
+import { type GridListViewColDef } from '../../../models/colDef/gridColDef';
+import { type GridStateInitializer } from '../../utils/useGridInitializeState';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type GridEventListener } from '../../../models/events';
 import { gridDimensionsSelector } from '../dimensions';
 import { useGridEvent } from '../../utils/useGridEvent';
 

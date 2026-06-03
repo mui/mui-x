@@ -30,7 +30,7 @@ import { ChartsDataProvider } from '../ChartsDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
-import type { BarChartPluginSignatures } from './BarChart.plugins';
+import { type BarChartPluginSignatures } from './BarChart.plugins';
 import { FocusedBar } from './FocusedBar';
 
 export interface BarChartSlots

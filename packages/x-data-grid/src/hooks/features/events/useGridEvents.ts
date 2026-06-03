@@ -1,7 +1,7 @@
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridEventPriority } from '../../utils/useGridEvent';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 /**
  * @requires useGridFocus (event) - can be after, async only

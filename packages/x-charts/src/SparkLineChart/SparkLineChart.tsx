@@ -11,22 +11,22 @@ import { ChartsDataProvider } from '../ChartsDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartsTooltip } from '../ChartsTooltip';
-import type {
-  ChartsTooltipSlots,
-  ChartsTooltipSlotProps,
+import {
+  type ChartsTooltipSlots,
+  type ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import type { XAxis, YAxis } from '../models/axis';
-import type { LineSeriesType, BarSeriesType } from '../models/seriesType';
-import type { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
-import type { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
-import type { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
-import type {
-  LineHighlightPlotSlots,
-  LineHighlightPlotSlotProps,
+import { type XAxis, type YAxis } from '../models/axis';
+import { type LineSeriesType, type BarSeriesType } from '../models/seriesType';
+import { type AreaPlotSlots, type AreaPlotSlotProps } from '../LineChart/AreaPlot';
+import { type LinePlotSlots, type LinePlotSlotProps } from '../LineChart/LinePlot';
+import { type MarkPlotSlots, type MarkPlotSlotProps } from '../LineChart/MarkPlot';
+import {
+  type LineHighlightPlotSlots,
+  type LineHighlightPlotSlotProps,
 } from '../LineChart/LineHighlightPlot';
-import type { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
-import type { ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
+import { type BarPlotSlots, type BarPlotSlotProps } from '../BarChart/BarPlot';
+import { type ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
 import { FocusedLineMark } from '../LineChart/FocusedLineMark';
 
 export interface SparkLineChartSlots

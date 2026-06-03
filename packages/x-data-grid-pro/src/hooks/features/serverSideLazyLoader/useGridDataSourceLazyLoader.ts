@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import useEventCallback from '@mui/utils/useEventCallback';
@@ -30,9 +30,9 @@ import {
   runIf,
   DataSourceRowsUpdateStrategy,
 } from '@mui/x-data-grid/internals';
-import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection, adjustRowParams } from '../lazyLoader/utils';
 import { GRID_SKELETON_ROW_ROOT_ID } from '../lazyLoader/useGridLazyLoaderPreProcessors';
 

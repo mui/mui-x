@@ -1,8 +1,8 @@
 'use client';
-import type { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
-import type { SeriesId } from '../models/seriesType/common';
-import type { ChartSeriesDefaultized } from '../models/seriesType/config';
-import type { PieSeriesLayout } from '../models/seriesType/pie';
+import { type ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
+import { type SeriesId } from '../models/seriesType/common';
+import { type ChartSeriesDefaultized } from '../models/seriesType/config';
+import { type PieSeriesLayout } from '../models/seriesType/pie';
 import { useSeriesOfType, useAllSeriesOfType } from '../internals/seriesSelectorOfType';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartSeriesLayout } from '../internals/plugins/corePlugins/useChartSeries';

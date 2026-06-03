@@ -1,10 +1,13 @@
-import type { PieChartPluginSignatures } from '../PieChart/PieChart.plugins';
-import type { BarChartPluginSignatures } from '../BarChart/BarChart.plugins';
-import type { ScatterChartPluginSignatures } from '../ScatterChart/ScatterChart.plugins';
-import type { LineChartPluginSignatures } from '../LineChart/LineChart.plugins';
-import type { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
-import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
-import type { ChartPublicAPI } from '../internals/plugins/models';
+import { type PieChartPluginSignatures } from '../PieChart/PieChart.plugins';
+import { type BarChartPluginSignatures } from '../BarChart/BarChart.plugins';
+import { type ScatterChartPluginSignatures } from '../ScatterChart/ScatterChart.plugins';
+import { type LineChartPluginSignatures } from '../LineChart/LineChart.plugins';
+import {
+  type AllPluginSignatures,
+  type DefaultPluginSignatures,
+} from '../internals/plugins/allPlugins';
+import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import { type ChartPublicAPI } from '../internals/plugins/models';
 
 export type PluginsPerSeriesType = {
   line: LineChartPluginSignatures;

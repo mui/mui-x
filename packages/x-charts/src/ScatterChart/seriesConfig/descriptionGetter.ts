@@ -1,5 +1,5 @@
 import { getLabel } from '../../internals/getLabel';
-import type { DescriptionGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { type DescriptionGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const descriptionGetter: DescriptionGetter<'scatter'> = (params) => {
   const { identifier, series, xAxis, yAxis, localeText } = params;

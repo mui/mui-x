@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import { type GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 
 type GetPublicApiType<PrivateApi> = PrivateApi extends { getPublicApi: () => infer PublicApi }
   ? PublicApi

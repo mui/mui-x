@@ -5,7 +5,7 @@ import {
   type ChartsRadialGridProps,
 } from '@mui/x-charts/ChartsRadialGrid';
 import { Unstable_ChartsRadialDataProvider } from '../ChartsRadialDataProvider';
-import type { RadiusAxis, RotationAxis } from '../models';
+import { type RadiusAxis, type RotationAxis } from '../models';
 
 describe('<ChartsRadialGrid />', () => {
   const { render } = createRenderer();

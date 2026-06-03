@@ -4,12 +4,12 @@ import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { getBandSize } from '../../../../internals/getBandSize';
 import { isBandScale } from '../../../../internals/scaleGuards';
 import { getDataIndexForOrdinalScaleValue } from '../../../../internals/invertScale';
-import type {
-  ChartsRadialAxisProps,
-  ChartsCartesianAxisProps,
-  ComputedAxis,
+import {
+  type ChartsRadialAxisProps,
+  type ChartsCartesianAxisProps,
+  type ComputedAxis,
 } from '../../../../models/axis';
-import type { ScaleName, BarItemIdentifier, SeriesId } from '../../../../models';
+import { type ScaleName, type BarItemIdentifier, type SeriesId } from '../../../../models';
 
 export function getBandIndex(
   bandAxis: ComputedAxis<ScaleName, any, ChartsCartesianAxisProps | ChartsRadialAxisProps>,

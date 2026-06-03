@@ -5,9 +5,9 @@ import { gridRowCountSelector, gridRowsLoadingSelector } from '../rows';
 import { gridPinnedRowsCountSelector } from '../rows/gridRowsSelector';
 import { gridVisibleColumnDefinitionsSelector } from '../columns';
 import { gridPivotActiveSelector } from '../pivoting';
-import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type { GridOverlayType, GridLoadingOverlayVariant } from './gridOverlaysInterfaces';
+import { type GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type GridOverlayType, type GridLoadingOverlayVariant } from './gridOverlaysInterfaces';
 
 /**
  * Uses the grid state to determine which overlay to display.

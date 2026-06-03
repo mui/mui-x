@@ -8,7 +8,7 @@ import { useTicksGrouped } from '../hooks/useTicksGrouped';
 import { useAxisTicksProps } from './useAxisTicksProps';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartXAxisAutoSizeResults } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartAxisAutoSize.selectors';
-import type { UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 
 const DEFAULT_GROUPING_CONFIG = {
   tickSize: 6,

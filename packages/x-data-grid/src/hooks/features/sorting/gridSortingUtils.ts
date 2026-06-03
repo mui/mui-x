@@ -1,15 +1,15 @@
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { GridSortingModelApplier } from './gridSortingState';
-import type { GridRowId, GridTreeNode } from '../../../models';
-import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { GridStateCommunity } from '../../../models/gridStateCommunity';
-import type {
-  GridComparatorFn,
-  GridSortDirection,
-  GridSortItem,
-  GridSortModel,
-  GridSortCellParams,
+import { type GridSortingModelApplier } from './gridSortingState';
+import { type GridRowId, type GridTreeNode } from '../../../models';
+import { type GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type GridStateCommunity } from '../../../models/gridStateCommunity';
+import {
+  type GridComparatorFn,
+  type GridSortDirection,
+  type GridSortItem,
+  type GridSortModel,
+  type GridSortCellParams,
 } from '../../../models/gridSortModel';
 import { gridRowNodeSelector } from '../rows/gridRowsSelector';
 

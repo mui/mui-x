@@ -1,6 +1,6 @@
-import type { DefaultizedSeriesType } from '../models/seriesType';
-import type { ColorCallbackValue } from '../models/seriesType/common';
-import type { ChartSeriesType } from '../models/seriesType/config';
+import { type DefaultizedSeriesType } from '../models/seriesType';
+import { type ColorCallbackValue } from '../models/seriesType/common';
+import { type ChartSeriesType } from '../models/seriesType/config';
 import { getSeriesColorFn } from './getSeriesColorFn';
 
 type LineOrBarSeriesType = Extract<ChartSeriesType, 'line' | 'bar' | 'radialLine' | 'radialBar'>;

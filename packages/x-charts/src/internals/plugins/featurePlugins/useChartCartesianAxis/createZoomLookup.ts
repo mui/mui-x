@@ -1,5 +1,5 @@
-import type { AxisConfig, ScaleName } from '../../../../models';
-import type { AxisId, ChartsCartesianAxisProps } from '../../../../models/axis';
+import { type AxisConfig, type ScaleName } from '../../../../models';
+import { type AxisId, type ChartsCartesianAxisProps } from '../../../../models/axis';
 import { defaultizeZoom, getEffectiveZoomReverse } from './defaultizeZoom';
 import { type DefaultizedZoomOptions } from './useChartCartesianAxis.types';
 

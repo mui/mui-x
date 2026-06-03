@@ -7,9 +7,9 @@ import { type ChartsLegendSlotExtension } from '../ChartsLegend';
 import { type ChartsOverlayProps } from '../ChartsOverlay';
 
 import { type ChartsRadialDataProviderProps } from '../ChartsRadialDataProvider';
-import type { RadialBarChartProps } from './RadialBarChart';
-import type { ChartsWrapperProps } from '../ChartsWrapper';
-import type { ChartsRadialAxisHighlightProps } from '../ChartsRadialAxisHighlight';
+import { type RadialBarChartProps } from './RadialBarChart';
+import { type ChartsWrapperProps } from '../ChartsWrapper';
+import { type ChartsRadialAxisHighlightProps } from '../ChartsRadialAxisHighlight';
 import {
   RADIAL_BAR_CHART_PLUGINS,
   type RadialBarChartPluginSignatures,

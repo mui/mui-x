@@ -1,5 +1,5 @@
-import type { GridRowId, GridTreeNode } from '../../../models/gridRows';
-import type { GridSortModel } from '../../../models/gridSortModel';
+import { type GridRowId, type GridTreeNode } from '../../../models/gridRows';
+import { type GridSortModel } from '../../../models/gridSortModel';
 
 export interface GridSortingState {
   sortedRows: GridRowId[];

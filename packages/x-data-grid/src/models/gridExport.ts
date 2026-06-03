@@ -1,7 +1,7 @@
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridRowId } from './gridRows';
-import type { GridApiCommon } from './api';
-import type { GridApiCommunity } from './api/gridApiCommunity';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridRowId } from './gridRows';
+import { type GridApiCommon } from './api';
+import { type GridApiCommunity } from './api/gridApiCommunity';
 
 /**
  * The options applicable to any export format.

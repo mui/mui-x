@@ -1,6 +1,6 @@
 'use client';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import type { D3Scale } from '../models/axis';
+import { type D3Scale } from '../models/axis';
 
 /**
  * For a given scale return a function that map value to their position.

@@ -10,7 +10,7 @@ import {
   clampAngleRad,
   generateSvg2rotation,
 } from '@mui/x-charts/internals';
-import type { SeriesItemIdentifierWithType } from '@mui/x-charts/models';
+import { type SeriesItemIdentifierWithType } from '@mui/x-charts/models';
 
 export default function getItemAtPosition(
   state: ChartState<[UseChartPolarAxisSignature]>,

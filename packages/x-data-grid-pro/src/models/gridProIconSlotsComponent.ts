@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import type { BaseSlots } from '@mui/x-data-grid/internals';
+import { type BaseSlots } from '@mui/x-data-grid/internals';
 
 type IconProps = BaseSlots.IconProps;
 

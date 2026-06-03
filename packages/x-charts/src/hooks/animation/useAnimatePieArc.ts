@@ -2,7 +2,7 @@ import type * as React from 'react';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { useAnimate } from './useAnimate';
-import type { PieArcProps } from '../../PieChart';
+import { type PieArcProps } from '../../PieChart';
 
 type UseAnimatePieArcParams = Pick<
   PieArcProps,

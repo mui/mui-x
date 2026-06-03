@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import type { GridSlotProps } from '../models/gridSlotsComponent';
+import { type GridSlotProps } from '../models/gridSlotsComponent';
 import { NotRendered } from '../utils/assert';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';

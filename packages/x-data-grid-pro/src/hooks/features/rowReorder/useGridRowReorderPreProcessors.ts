@@ -1,11 +1,11 @@
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass, type GridColDef } from '@mui/x-data-grid';
 import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 

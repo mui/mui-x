@@ -10,9 +10,9 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGridSelector';
 import { checkboxPropsSelector } from '../../hooks/features/rowSelection/utils';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
-import type { GridRenderCellParams } from '../../models/params/gridCellParams';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
+import { type GridRenderCellParams } from '../../models/params/gridCellParams';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 

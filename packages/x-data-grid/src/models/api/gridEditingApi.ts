@@ -1,9 +1,9 @@
-import type { MuiBaseEvent } from '@mui/x-internals/types';
-import type { GridCellMode, GridRowMode } from '../gridCell';
-import type { GridCellModes, GridRowModes } from '../gridEditRowModel';
-import type { GridRowId, GridRowModel } from '../gridRows';
-import type { GridCellParams } from '../params/gridCellParams';
-import type { GridEditCellValueParams } from '../params/gridEditCellParams';
+import { type MuiBaseEvent } from '@mui/x-internals/types';
+import { type GridCellMode, type GridRowMode } from '../gridCell';
+import { type GridCellModes, type GridRowModes } from '../gridEditRowModel';
+import { type GridRowId, type GridRowModel } from '../gridRows';
+import { type GridCellParams } from '../params/gridCellParams';
+import { type GridEditCellValueParams } from '../params/gridEditCellParams';
 
 export type GridCellModesModelProps =
   | ({ mode: GridCellModes.View } & Omit<GridStopCellEditModeParams, 'id' | 'field'>)

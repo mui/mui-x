@@ -1,4 +1,4 @@
-import type { TooltipGetter } from '@mui/x-charts/internals';
+import { type TooltipGetter } from '@mui/x-charts/internals';
 
 export const tooltipGetter: TooltipGetter<'sankey'> = (params) => {
   const { identifier, series } = params;

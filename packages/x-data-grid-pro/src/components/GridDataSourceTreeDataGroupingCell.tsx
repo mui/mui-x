@@ -9,7 +9,7 @@ import {
 import { vars, gridRowSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-import type { DataGridProProcessedProps } from '../models/dataGridProProps';
+import { type DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,

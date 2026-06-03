@@ -9,7 +9,7 @@ import {
 } from './useChartSeriesConfig.types';
 import { serializeIdentifier as serializeIdentifierFn } from './utils/serializeIdentifier';
 import { cleanIdentifier as cleanIdentifierFn } from './utils/cleanIdentifier';
-import type { ChartSeriesConfig } from './types';
+import { type ChartSeriesConfig } from './types';
 
 export const useChartSeriesConfig: ChartPlugin<UseChartSeriesConfigSignature> = ({ store }) => {
   const serializeIdentifier: SerializeIdentifierFunction = useEventCallback((identifier) =>

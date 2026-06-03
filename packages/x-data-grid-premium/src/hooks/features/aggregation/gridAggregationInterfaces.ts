@@ -1,6 +1,11 @@
-import type { GridRowId, GridRowModel, GridColDef, GridValueFormatter } from '@mui/x-data-grid-pro';
-import type { GridAggregationPosition } from '@mui/x-data-grid-pro/internals';
-import type { GridApiPremium } from '../../../models/gridApiPremium';
+import {
+  type GridRowId,
+  type GridRowModel,
+  type GridColDef,
+  type GridValueFormatter,
+} from '@mui/x-data-grid-pro';
+import { type GridAggregationPosition } from '@mui/x-data-grid-pro/internals';
+import { type GridApiPremium } from '../../../models/gridApiPremium';
 
 export interface GridAggregationState {
   model: GridAggregationModel;

@@ -1,4 +1,4 @@
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
   type GridColDef,
@@ -8,8 +8,8 @@ import {
   type GridRowModel,
   type GridValidRowModel,
 } from '../../../models';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   getDefaultGridFilterModel,
   type GridAggregatedFilterItemApplier,

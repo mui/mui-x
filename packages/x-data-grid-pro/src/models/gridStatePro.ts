@@ -1,15 +1,15 @@
-import type {
-  GridInitialState as GridInitialStateCommunity,
-  GridState as GridStateCommunity,
-  GridColumnPinningState,
-  GridPinnedColumnFields,
+import {
+  type GridInitialState as GridInitialStateCommunity,
+  type GridState as GridStateCommunity,
+  type GridColumnPinningState,
+  type GridPinnedColumnFields,
 } from '@mui/x-data-grid';
-import type {
-  GridDetailPanelState,
-  GridDetailPanelInitialState,
-  GridColumnReorderState,
+import {
+  type GridDetailPanelState,
+  type GridDetailPanelInitialState,
+  type GridColumnReorderState,
 } from '../hooks';
-import type { GridDataSourceState } from '../hooks/features/dataSource/models';
+import { type GridDataSourceState } from '../hooks/features/dataSource/models';
 
 /**
  * The state of Data Grid Pro.

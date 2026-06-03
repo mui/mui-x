@@ -1,7 +1,7 @@
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import type { ChartsZoomSliderThumbOwnerState } from './ChartsAxisZoomSliderThumb';
+import { type ChartsZoomSliderThumbOwnerState } from './ChartsAxisZoomSliderThumb';
 
 export interface ChartsAxisZoomSliderThumbClasses {
   /** Styles applied to the root element. */

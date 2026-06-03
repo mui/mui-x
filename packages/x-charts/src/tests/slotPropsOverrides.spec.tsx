@@ -2,7 +2,7 @@ import { BarChart, type BarChartSlots } from '@mui/x-charts/BarChart';
 import { LineChart, type LineChartSlots } from '@mui/x-charts/LineChart';
 import { PieChart, type PieChartSlots } from '@mui/x-charts/PieChart';
 import { ScatterChart, type ScatterChartSlots } from '@mui/x-charts/ScatterChart';
-import type { PropsFromSlot } from '@mui/x-charts/models';
+import { type PropsFromSlot } from '@mui/x-charts/models';
 
 declare module '@mui/x-charts' {
   // Base slots

@@ -8,8 +8,8 @@ import { type ChartsLegendSlotExtension } from '../ChartsLegend';
 import { type ChartsOverlayProps } from '../ChartsOverlay';
 
 import { type ChartsRadialDataProviderProps } from '../ChartsRadialDataProvider';
-import type { RadialLineChartProps } from './RadialLineChart';
-import type { ChartsWrapperProps } from '../ChartsWrapper';
+import { type RadialLineChartProps } from './RadialLineChart';
+import { type ChartsWrapperProps } from '../ChartsWrapper';
 import {
   RADIAL_LINE_CHART_PLUGINS,
   type RadialLineChartPluginSignatures,

@@ -35,7 +35,7 @@ import {
   ChartsRadialDataProviderPremium,
   type ChartsRadialDataProviderPremiumProps,
 } from '../ChartsRadialDataProviderPremium';
-import type { RadialBarSeriesType } from '../models/seriesType/radialBar';
+import { type RadialBarSeriesType } from '../models/seriesType/radialBar';
 import { type RadialBarChartPluginSignatures } from './RadialBarChart.plugins';
 import { RadialBarPlot } from './RadialBarPlot';
 import { useRadialBarChartProps } from './useRadialBarChartProps';

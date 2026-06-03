@@ -6,7 +6,7 @@ import {
   ScatterChartPremium,
   type ScatterChartPremiumSlots,
 } from '@mui/x-charts-premium/ScatterChartPremium';
-import type { PropsFromSlot } from '@mui/x-charts/models';
+import { type PropsFromSlot } from '@mui/x-charts/models';
 // eslint-disable-next-line no-restricted-imports
 import type {} from '@mui/x-charts';
 

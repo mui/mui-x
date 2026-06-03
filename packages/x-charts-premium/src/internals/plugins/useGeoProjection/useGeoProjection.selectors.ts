@@ -22,11 +22,11 @@ import {
   type GeoPath,
   type GeoConicProjection,
 } from '@mui/x-charts-vendor/d3-geo';
-import type {
-  D3NamedProjection,
-  GeoProjectionInput,
-  UseGeoProjectionSignature,
-  UseGeoProjectionState,
+import {
+  type D3NamedProjection,
+  type GeoProjectionInput,
+  type UseGeoProjectionSignature,
+  type UseGeoProjectionState,
 } from './useGeoProjection.types';
 
 const PROJECTION_FACTORIES: Record<D3NamedProjection, (() => GeoProjection) | undefined> = {

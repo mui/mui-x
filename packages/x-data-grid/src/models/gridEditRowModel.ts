@@ -1,4 +1,4 @@
-import type { GridEditCellMeta } from './api/gridEditingApi';
+import { type GridEditCellMeta } from './api/gridEditingApi';
 
 export interface GridEditCellProps<V = any> {
   value?: V | undefined;

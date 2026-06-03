@@ -1,27 +1,27 @@
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
   GRID_TREE_DATA_GROUPING_FIELD,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '../../../internals/constants';
 import { isGroupingColumn } from '../../../internals/utils/gridRowGroupingUtils';
-import type { GridEventListener } from '../../../models/events';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { GridCellParams } from '../../../models/params/gridCellParams';
+import { type GridEventListener } from '../../../models/events';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type GridCellParams } from '../../../models/params/gridCellParams';
 import {
   gridVisibleColumnDefinitionsSelector,
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridEvent } from '../../utils/useGridEvent';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 import { gridClasses } from '../../../constants/gridClasses';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
-import type { GridRowId } from '../../../models';
+import { type GridRowId } from '../../../models';
 import { gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import {

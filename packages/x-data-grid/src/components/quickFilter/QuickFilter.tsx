@@ -11,7 +11,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { GridFilterModel } from '../../models';
+import { type GridFilterModel } from '../../models';
 
 export type QuickFilterProps = Omit<React.HTMLAttributes<HTMLDivElement>, 'className'> & {
   /**

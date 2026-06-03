@@ -4,7 +4,7 @@ import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { type UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { type ChartState } from '../../models/chart';
 import { computeAxisValue } from './computeAxisValue';
-import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { type ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 
 export const selectorChartPolarAxisState = (state: ChartState<[], [UseChartPolarAxisSignature]>) =>

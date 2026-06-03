@@ -1,11 +1,11 @@
-import type {
-  GridDataSourceCache,
-  GridGetRowsParams,
-  GridUpdateRowParams,
-  GridGetRowsOptions,
+import {
+  type GridDataSourceCache,
+  type GridGetRowsParams,
+  type GridUpdateRowParams,
+  type GridGetRowsOptions,
 } from '../../../models/gridDataSource';
-import type { GridRowId, GridRowModel } from '../../../models/gridRows';
-import type { GridDataSourceCacheDefaultConfig } from './cache';
+import { type GridRowId, type GridRowModel } from '../../../models/gridRows';
+import { type GridDataSourceCacheDefaultConfig } from './cache';
 
 /**
  * The parameters for the `fetchRows` method.

@@ -1,8 +1,8 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
-import type { PiecewiseColorLegendProps } from './PiecewiseColorLegend';
-import type { ChartsLegendSlotExtension } from './chartsLegend.types';
+import { type PiecewiseColorLegendProps } from './PiecewiseColorLegend';
+import { type ChartsLegendSlotExtension } from './chartsLegend.types';
 
 export interface PiecewiseColorLegendClasses {
   /** Styles applied to the root element. */

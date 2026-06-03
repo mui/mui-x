@@ -1,4 +1,4 @@
-import type { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
+import { type GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 
 /**
  * The preferences panel API interface that is available in the grid [[apiRef]].

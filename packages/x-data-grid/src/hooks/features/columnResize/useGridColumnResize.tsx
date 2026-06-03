@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useLazyRef from '@mui/utils/useLazyRef';
@@ -27,8 +27,8 @@ import {
   type GridColumnResizeApi,
   DEFAULT_GRID_AUTOSIZE_OPTIONS,
 } from './gridColumnResizeApi';
-import type { CursorCoordinates } from '../../../models/cursorCoordinates';
-import type { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
+import { type CursorCoordinates } from '../../../models/cursorCoordinates';
+import { type GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
 import { gridClasses } from '../../../constants/gridClasses';
 import {
   useGridEvent,
@@ -44,18 +44,18 @@ import {
   type ControllablePromise,
   createControllablePromise,
 } from '../../../utils/createControllablePromise';
-import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { type GridStateInitializer } from '../../utils/useGridInitializeState';
 import { clamp } from '../../../utils/utils';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridPinnedColumnPosition } from '../columns/gridColumnsInterfaces';
 import { gridColumnsStateSelector } from '../columns';
 import { gridDimensionsSelector } from '../dimensions';
 import { gridHeaderFilteringEnabledSelector } from '../headerFiltering';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type { GridColumnResizeParams } from '../../../models/params/gridColumnResizeParams';
-import type { GridStateColDef } from '../../../models/colDef/gridColDef';
-import type { GridEventListener } from '../../../models/events/gridEventListener';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type GridColumnResizeParams } from '../../../models/params/gridColumnResizeParams';
+import { type GridStateColDef } from '../../../models/colDef/gridColDef';
+import { type GridEventListener } from '../../../models/events/gridEventListener';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { gridResizingColumnFieldSelector } from './columnResizeSelector';
 
 type AutosizeOptionsRequired = Required<GridAutosizeOptions>;

@@ -1,5 +1,5 @@
-import type { ComponentsOverrides, ComponentsProps } from '@mui/material/styles';
-import type { DataGridProps } from '../models/props/DataGridProps';
+import { type ComponentsOverrides, type ComponentsProps } from '@mui/material/styles';
+import { type DataGridProps } from '../models/props/DataGridProps';
 
 export interface DataGridComponentsPropsList {
   MuiDataGrid: DataGridProps;

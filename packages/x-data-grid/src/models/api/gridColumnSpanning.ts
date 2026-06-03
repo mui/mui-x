@@ -1,6 +1,6 @@
-import type { GridStateColDef } from '../colDef/gridColDef';
-import type { GridColumnIndex, GridCellColSpanInfo } from '../gridColumnSpanning';
-import type { GridRowId } from '../gridRows';
+import { type GridStateColDef } from '../colDef/gridColDef';
+import { type GridColumnIndex, type GridCellColSpanInfo } from '../gridColumnSpanning';
+import { type GridRowId } from '../gridRows';
 
 /**
  * The Column Spanning API interface that is available in the grid `apiRef`.

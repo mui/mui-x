@@ -1,4 +1,4 @@
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   GRID_ROOT_GROUP_ID,
   gridClasses,
@@ -11,9 +11,9 @@ import {
   type GridUpdateRowParams,
 } from '@mui/x-data-grid';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { ReorderOperationType } from './types';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type ReorderOperationType } from './types';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 // Re-export to be made part of `rowReorderUtils`
 export { getNodePathInTree } from '../../../utils/tree/utils';

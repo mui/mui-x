@@ -1,4 +1,4 @@
-import type { GridProIconSlotsComponent } from '../models';
+import { type GridProIconSlotsComponent } from '../models';
 import { GridPushPinRightIcon, GridPushPinLeftIcon } from './icons';
 
 const iconSlots: GridProIconSlotsComponent = {

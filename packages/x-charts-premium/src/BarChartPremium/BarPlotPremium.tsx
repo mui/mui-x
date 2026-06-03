@@ -7,7 +7,7 @@ import {
   type BarPlotSlotProps,
   type BarPlotSlots,
 } from '@mui/x-charts/BarChart';
-import type { RendererType } from '@mui/x-charts/ScatterChart';
+import { type RendererType } from '@mui/x-charts/ScatterChart';
 import { BarWebGLPlot } from './webgl/BarWebGLPlot';
 
 export type BarPlotPremiumRenderer = RendererType | 'webgl';

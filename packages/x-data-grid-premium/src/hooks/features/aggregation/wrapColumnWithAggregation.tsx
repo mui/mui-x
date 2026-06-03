@@ -1,4 +1,4 @@
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { type GridColDef, type GridRowId, gridRowNodeSelector } from '@mui/x-data-grid-pro';
 import {
   type GridBaseColDef,
@@ -6,8 +6,8 @@ import {
   type GridAggregationPosition,
   GridFooterCell,
 } from '@mui/x-data-grid-pro/internals';
-import type { GridApiPremium } from '../../../models/gridApiPremium';
-import type { GridAggregationLookup, GridAggregationRule } from './gridAggregationInterfaces';
+import { type GridApiPremium } from '../../../models/gridApiPremium';
+import { type GridAggregationLookup, type GridAggregationRule } from './gridAggregationInterfaces';
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
 import { GridAggregationHeader } from '../../../components/GridAggregationHeader';
 import { gridPivotActiveSelector } from '../pivoting/gridPivotingSelectors';

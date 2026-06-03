@@ -1,11 +1,11 @@
-import type { GridColDef, GridRowModel } from '@mui/x-data-grid-pro';
-import type {
-  GridPivotingPrivateApiCommunity,
-  GridPivotingStatePartial,
+import { type GridColDef, type GridRowModel } from '@mui/x-data-grid-pro';
+import {
+  type GridPivotingPrivateApiCommunity,
+  type GridPivotingStatePartial,
 } from '@mui/x-data-grid/internals';
-import type { RefObject } from '@mui/x-internals/types';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
+import { type RefObject } from '@mui/x-internals/types';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type GridInitialStatePremium } from '../../../models/gridStatePremium';
 
 export type GridPivotingStaticPropsOverrides = {
   rowGroupingModel: DataGridPremiumProcessedProps['rowGroupingModel'];

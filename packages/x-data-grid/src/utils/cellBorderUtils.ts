@@ -1,4 +1,4 @@
-import type { DataGridProcessedProps } from '../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../models/props/DataGridProps';
 import { PinnedColumnPosition } from '../internals/constants';
 
 export const shouldCellShowRightBorder = (

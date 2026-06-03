@@ -1,6 +1,6 @@
 'use client';
 import { useTheme, useThemeProps } from '@mui/material/styles';
-import type { ChartsRadialDataProviderProps } from './ChartsRadialDataProvider';
+import { type ChartsRadialDataProviderProps } from './ChartsRadialDataProvider';
 import { type ChartsProviderProps } from '../context/ChartsProvider';
 import {
   type ChartAnyPluginSignature,

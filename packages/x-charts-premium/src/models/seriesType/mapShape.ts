@@ -1,10 +1,10 @@
-import type {
-  CommonSeriesType,
-  CommonDefaultizedProps,
-  SeriesId,
-  DatasetElementType,
+import {
+  type CommonSeriesType,
+  type CommonDefaultizedProps,
+  type SeriesId,
+  type DatasetElementType,
 } from '@mui/x-charts/internals';
-import type { DefaultizedProps } from '@mui/x-internals/types';
+import { type DefaultizedProps } from '@mui/x-internals/types';
 
 /**
  * A single entry of a `mapShape` series.

@@ -14,7 +14,7 @@ import {
   EMPTY_RENDER_CONTEXT,
 } from '@mui/x-virtualizer';
 import { useFirstRender } from '../utils/useFirstRender';
-import type { GridStateColDef } from '../../models/colDef/gridColDef';
+import { type GridStateColDef } from '../../models/colDef/gridColDef';
 import { createSelector } from '../../utils/createSelector';
 import { useGridSelector } from '../utils/useGridSelector';
 import {

@@ -1,4 +1,4 @@
-import type { NumberValue, ScalePoint } from '@mui/x-charts-vendor/d3-scale';
+import { type NumberValue, type ScalePoint } from '@mui/x-charts-vendor/d3-scale';
 import { scaleBand } from './scaleBand';
 
 /**

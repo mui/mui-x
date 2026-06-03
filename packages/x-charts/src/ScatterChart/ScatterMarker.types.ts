@@ -1,6 +1,6 @@
 import type * as React from 'react';
-import type { ScatterMarkerProps } from './ScatterMarker';
-import type { MarkerPropsOverrides } from '../models/chartsSlotsComponentsProps';
+import { type ScatterMarkerProps } from './ScatterMarker';
+import { type MarkerPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface ScatterMarkerSlots {
   /**

@@ -1,10 +1,15 @@
-import type { GridColDef } from '../colDef';
-import type { GridStateColDef } from '../colDef/gridColDef';
-import type { GridCellMode } from '../gridCell';
-import type { GridValidRowModel, GridRowId, GridTreeNode, GridRowModel } from '../gridRows';
-import type { GridCellParams } from '../params/gridCellParams';
-import type { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
-import type { GridRowParams } from '../params/gridRowParams';
+import { type GridColDef } from '../colDef';
+import { type GridStateColDef } from '../colDef/gridColDef';
+import { type GridCellMode } from '../gridCell';
+import {
+  type GridValidRowModel,
+  type GridRowId,
+  type GridTreeNode,
+  type GridRowModel,
+} from '../gridRows';
+import { type GridCellParams } from '../params/gridCellParams';
+import { type GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
+import { type GridRowParams } from '../params/gridRowParams';
 
 export interface GridParamsApi {
   /**

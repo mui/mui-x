@@ -1,8 +1,8 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import type {
-  UseChartVisibilityManagerSignature,
-  VisibilityIdentifierWithType,
-  VisibilityMap,
+import {
+  type UseChartVisibilityManagerSignature,
+  type VisibilityIdentifierWithType,
+  type VisibilityMap,
 } from './useChartVisibilityManager.types';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import {
@@ -10,7 +10,7 @@ import {
   type ChartSeriesConfig,
 } from '../../corePlugins/useChartSeriesConfig';
 import { serializeIdentifier } from '../../corePlugins/useChartSeriesConfig/utils/serializeIdentifier';
-import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
 
 /**
  * Selector to get the visibility manager state.

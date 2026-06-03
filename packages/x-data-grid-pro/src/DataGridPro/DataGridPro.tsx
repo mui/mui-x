@@ -14,12 +14,12 @@ import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import type { DataGridProProcessedProps, DataGridProProps } from '../models/dataGridProProps';
+import { type DataGridProProcessedProps, type DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
 import { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributesPro } from '../hooks/features/rows/useGridRowAriaAttributes';
-import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
+import { type GridApiPro, type GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 

@@ -1,4 +1,4 @@
-import type { ScaleBand, ScalePoint } from '@mui/x-charts-vendor/d3-scale';
+import { type ScaleBand, type ScalePoint } from '@mui/x-charts-vendor/d3-scale';
 import { type D3OrdinalScale, type D3Scale } from '../models/axis';
 
 export function isOrdinalScale<

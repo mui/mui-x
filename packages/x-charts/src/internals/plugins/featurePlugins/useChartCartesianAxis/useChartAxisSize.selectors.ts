@@ -8,7 +8,7 @@ import {
   selectorChartXAxisAutoSizes,
   selectorChartYAxisAutoSizes,
 } from './useChartAxisAutoSize.selectors';
-import type { AxisId, DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
+import { type AxisId, type DefaultedXAxis, type DefaultedYAxis } from '../../../../models/axis';
 import {
   DEFAULT_AXIS_SIZE_HEIGHT,
   DEFAULT_AXIS_SIZE_WIDTH,

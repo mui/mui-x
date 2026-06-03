@@ -15,17 +15,17 @@ import {
   selectorChartsKeyboardYAxisIndex,
 } from '../useChartKeyboardNavigation/useChartKeyboardNavigation.selectors';
 import { getAxisIndex } from './getAxisValue';
-import type { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
-import type { ChartState } from '../../models/chart';
-import type {
-  AxisItemIdentifier,
-  ChartsAxisProps,
-  ChartsXAxisProps,
-  ChartsYAxisProps,
+import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import { type ChartState } from '../../models/chart';
+import {
+  type AxisItemIdentifier,
+  type ChartsAxisProps,
+  type ChartsXAxisProps,
+  type ChartsYAxisProps,
 } from '../../../../models/axis';
-import type { ComputeResult } from './computeAxisValue';
+import { type ComputeResult } from './computeAxisValue';
 import { getValueToPositionMapper } from '../../../../hooks/getValueToPositionMapper';
-import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { type ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 
 const selectorChartControlledCartesianAxisTooltip = (

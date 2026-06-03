@@ -1,4 +1,4 @@
-import type { ProcessedBarData, ProcessedBarSeriesData } from '../types';
+import { type ProcessedBarData, type ProcessedBarSeriesData } from '../types';
 import { appendAtKey } from '../../internals/appendAtKey';
 
 const MAX_POINTS_PER_PATH = 1000;

@@ -1,4 +1,4 @@
-import type { ChartAnyPluginSignature, ChartPlugin } from './plugin';
+import { type ChartAnyPluginSignature, type ChartPlugin } from './plugin';
 
 type IsAny<T> = 0 extends 1 & T ? true : false;
 

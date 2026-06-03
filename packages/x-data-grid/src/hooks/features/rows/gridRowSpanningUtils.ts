@@ -1,10 +1,10 @@
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { getRowValue } from './gridRowsUtils';
-import type { GridRenderContext } from '../../../models';
-import type { GridValidRowModel } from '../../../models/gridRows';
-import type { GridColDef } from '../../../models/colDef';
-import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { RowRange } from './useGridRowSpanning';
+import { type GridRenderContext } from '../../../models';
+import { type GridValidRowModel } from '../../../models/gridRows';
+import { type GridColDef } from '../../../models/colDef';
+import { type GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type RowRange } from './useGridRowSpanning';
 
 export function getUnprocessedRange(testRange: RowRange, processedRange: RowRange) {
   if (

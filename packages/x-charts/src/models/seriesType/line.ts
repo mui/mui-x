@@ -1,11 +1,11 @@
 import { type DefaultizedProps } from '@mui/x-internals/types';
-import type { StackOffsetType } from '../stacking';
-import type {
-  CartesianSeriesType,
-  CommonDefaultizedProps,
-  CommonSeriesType,
-  SeriesId,
-  StackableSeriesType,
+import { type StackOffsetType } from '../stacking';
+import {
+  type CartesianSeriesType,
+  type CommonDefaultizedProps,
+  type CommonSeriesType,
+  type SeriesId,
+  type StackableSeriesType,
 } from './common';
 import { type DatasetElementType } from './config';
 import { type CurveType } from '../curve';

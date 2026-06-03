@@ -6,7 +6,7 @@ import {
   type GridColumnMenuProps,
   type GridColumnMenuItemProps,
 } from '@mui/x-data-grid-pro';
-import type { GridColumnMenuComponent } from '@mui/x-data-grid-pro/internals';
+import { type GridColumnMenuComponent } from '@mui/x-data-grid-pro/internals';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridColumnMenuAggregationItem } from './columnMenu/menuItems/GridColumnMenuAggregationItem';
 import { isGroupingColumn } from '../hooks/features/rowGrouping';

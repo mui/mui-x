@@ -1,4 +1,4 @@
-import type { Series } from '@mui/x-charts-vendor/d3-shape';
+import { type Series } from '@mui/x-charts-vendor/d3-shape';
 
 // Adapted from D3.js's offsetDiverging function https://github.com/d3/d3-shape/blob/main/src/offset/diverging.js
 // Hidden series (with all zero values) affect the stacking in a different way in our implementation compared to the D3 behavior.

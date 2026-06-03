@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { type Theme, type SxProps, styled } from '@mui/system';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

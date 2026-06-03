@@ -1,9 +1,9 @@
-import type {
-  CartesianChartSeriesType,
-  ChartSeriesDefaultized,
+import {
+  type CartesianChartSeriesType,
+  type ChartSeriesDefaultized,
 } from '../../../../../models/seriesType/config';
-import type { AxisConfig, AxisId } from '../../../../../models/axis';
-import type { SeriesId } from '../../../../../models/seriesType/common';
+import { type AxisConfig, type AxisId } from '../../../../../models/axis';
+import { type SeriesId } from '../../../../../models/seriesType/common';
 
 type CartesianExtremumGetterParams<SeriesType extends CartesianChartSeriesType> = {
   series: Record<SeriesId, ChartSeriesDefaultized<SeriesType>>;

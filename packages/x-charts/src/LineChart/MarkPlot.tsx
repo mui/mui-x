@@ -14,11 +14,11 @@ import {
   type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type AxisId } from '../models/axis';
-import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
+import { type UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import { useChartsContext } from '../context/ChartsProvider';
 import { useMarkPlotData } from './useMarkPlotData';
 import { useUtilityClasses } from './lineClasses';
-import type { MarkPropsOverrides } from '../models/chartsSlotsComponentsProps';
+import { type MarkPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps & MarkPropsOverrides>;

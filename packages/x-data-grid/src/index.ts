@@ -1,5 +1,8 @@
-import type { GridApiCommunity } from './models/api/gridApiCommunity';
-import type { GridInitialStateCommunity, GridStateCommunity } from './models/gridStateCommunity';
+import { type GridApiCommunity } from './models/api/gridApiCommunity';
+import {
+  type GridInitialStateCommunity,
+  type GridStateCommunity,
+} from './models/gridStateCommunity';
 import './material';
 
 export { useGridApiContext } from './hooks/utils/useGridApiContext';

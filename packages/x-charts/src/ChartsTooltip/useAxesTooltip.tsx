@@ -39,7 +39,7 @@ import {
   type ComposableCartesianChartSeriesType,
   composableCartesianSeriesTypes,
 } from '../models/seriesType/composition';
-import type { MarkShape } from '../models/seriesType';
+import { type MarkShape } from '../models/seriesType';
 
 export interface UseAxesTooltipReturnValue<
   SeriesType extends CartesianChartSeriesType | PolarChartSeriesType =

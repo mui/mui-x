@@ -11,7 +11,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { Collapsible, CollapsiblePanel, CollapsibleTrigger } from '../../collapsible';
 import { ResizablePanel, ResizablePanelHandle } from '../../resizablePanel';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridChartsPanelDataField } from './GridChartsPanelDataField';
 import {
   gridChartableColumnsSelector,
@@ -22,7 +22,7 @@ import {
 import { useGridPrivateApiContext } from '../../../hooks/utils/useGridPrivateApiContext';
 import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridChartIntegration';
 import { getBlockedSections } from '../../../hooks/features/chartsIntegration/utils';
-import type { GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
+import { type GridChartsIntegrationSection } from '../../../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
 import { gridRowGroupingSanitizedModelSelector } from '../../../hooks/features/rowGrouping/gridRowGroupingSelector';
 import { gridPivotModelSelector } from '../../../hooks/features/pivoting/gridPivotingSelectors';
 

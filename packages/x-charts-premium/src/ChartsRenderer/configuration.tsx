@@ -1,7 +1,7 @@
-import type {
-  GridChartsConfiguration,
-  GridChartsConfigurationOptions,
-  GridChartsConfigurationSection,
+import {
+  type GridChartsConfiguration,
+  type GridChartsConfigurationOptions,
+  type GridChartsConfigurationSection,
 } from '@mui/x-internals/types';
 import { DEFAULT_LOCALE, type ChartsLocaleText } from '@mui/x-charts/locales';
 import { PaletteOption } from './components/PaletteOption';

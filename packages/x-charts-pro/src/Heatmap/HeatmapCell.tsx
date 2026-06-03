@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import type { SeriesId } from '../models';
-import type { HeatmapClasses } from './heatmapClasses';
+import { type SeriesId } from '../models';
+import { type HeatmapClasses } from './heatmapClasses';
 
 export interface HeatmapCellOwnerState {
   seriesId: SeriesId;

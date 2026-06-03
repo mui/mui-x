@@ -1,29 +1,29 @@
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import resolveProps from '@mui/utils/resolveProps';
-import type {
-  GridColumnLookup,
-  GridColumnsState,
-  GridColumnsRawState,
-  GridColumnVisibilityModel,
-  GridColumnRawLookup,
-  GridColumnsInitialState,
+import {
+  type GridColumnLookup,
+  type GridColumnsState,
+  type GridColumnsRawState,
+  type GridColumnVisibilityModel,
+  type GridColumnRawLookup,
+  type GridColumnsInitialState,
 } from './gridColumnsInterfaces';
 import {
   DEFAULT_GRID_COL_TYPE_KEY,
   GRID_STRING_COL_DEF,
   getGridDefaultColumnTypes,
 } from '../../../colDef';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type GridColDef, type GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
-import type { GridApiCommon } from '../../../models/api/gridApiCommon';
-import type { GridRowEntry } from '../../../models/gridRows';
+import { type GridApiCommon } from '../../../models/api/gridApiCommon';
+import { type GridRowEntry } from '../../../models/gridRows';
 import { gridDensityFactorSelector } from '../density/densitySelector';
 import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
-import type { GridDimensions } from '../dimensions/gridDimensionsApi';
+import { type GridDimensions } from '../dimensions/gridDimensionsApi';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 

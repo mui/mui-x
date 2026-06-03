@@ -9,18 +9,18 @@ import {
   type GridEvents,
 } from '@mui/x-data-grid-pro';
 import { computeSlots } from '@mui/x-data-grid-pro/internals';
-import type {
-  DataGridPremiumProps,
-  DataGridPremiumProcessedProps,
-  DataGridPremiumPropsWithDefaultValue,
+import {
+  type DataGridPremiumProps,
+  type DataGridPremiumProcessedProps,
+  type DataGridPremiumPropsWithDefaultValue,
 } from '../models/dataGridPremiumProps';
-import type { GridPremiumSlotsComponent } from '../models';
+import { type GridPremiumSlotsComponent } from '../models';
 import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
 import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPremiumDefaultSlotsComponents';
 import { defaultGetPivotDerivedColumns } from '../hooks/features/pivoting/utils';
 import { defaultGetAggregationPosition } from '../hooks/features/aggregation/gridAggregationUtils';
 import { DEFAULT_HISTORY_VALIDATION_EVENTS } from '../hooks/features/history/constants';
-import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
+import { type GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
 
 interface GetDataGridPremiumPropsDefaultValues extends DataGridPremiumProps {}
 

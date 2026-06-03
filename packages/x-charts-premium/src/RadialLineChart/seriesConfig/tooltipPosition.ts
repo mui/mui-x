@@ -1,4 +1,4 @@
-import type { TooltipItemPositionGetter } from '@mui/x-charts/internals';
+import { type TooltipItemPositionGetter } from '@mui/x-charts/internals';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'radialLine'> = () => {
   // Todo: to implement

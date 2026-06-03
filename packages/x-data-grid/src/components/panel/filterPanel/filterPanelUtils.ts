@@ -1,5 +1,5 @@
-import type { GridColDef, GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
-import type { GridValueOptionsParams } from '../../../models/params/gridValueOptionsParams';
+import { type GridColDef, type GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
+import { type GridValueOptionsParams } from '../../../models/params/gridValueOptionsParams';
 
 export function isSingleSelectColDef(colDef: GridColDef | null): colDef is GridSingleSelectColDef {
   return colDef?.type === 'singleSelect';

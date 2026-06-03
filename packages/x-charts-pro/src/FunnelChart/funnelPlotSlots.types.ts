@@ -1,9 +1,9 @@
 import type * as React from 'react';
-import type { FunnelSectionProps } from './FunnelSection';
+import { type FunnelSectionProps } from './FunnelSection';
 import { type FunnelSectionLabelProps } from './FunnelSectionLabel';
-import type {
-  FunnelSectionPropsOverrides,
-  FunnelSectionLabelPropsOverrides,
+import {
+  type FunnelSectionPropsOverrides,
+  type FunnelSectionLabelPropsOverrides,
 } from '../models/chartsSlotsComponentsPropsPro';
 
 export interface FunnelPlotSlots {

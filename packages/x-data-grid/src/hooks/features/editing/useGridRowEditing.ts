@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
-import type { GridEventListener } from '../../../models/events/gridEventListener';
+import { type GridEventListener } from '../../../models/events/gridEventListener';
 import {
   GridEditModes,
   GridRowModes,
@@ -14,27 +14,27 @@ import {
   type GridEditCellProps,
   type GridEditRowProps,
 } from '../../../models/gridEditRowModel';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type {
-  GridRowEditingApi,
-  GridEditingSharedApi,
-  GridStopRowEditModeParams,
-  GridStartRowEditModeParams,
-  GridRowModesModel,
-  GridRowModesModelProps,
-  GridRowEditingPrivateApi,
-  GridEditingSharedPrivateApi,
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import {
+  type GridRowEditingApi,
+  type GridEditingSharedApi,
+  type GridStopRowEditModeParams,
+  type GridStartRowEditModeParams,
+  type GridRowModesModel,
+  type GridRowModesModelProps,
+  type GridRowEditingPrivateApi,
+  type GridEditingSharedPrivateApi,
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector, gridRowIsEditingSelector } from './gridEditingSelectors';
-import type { GridRowId, GridValidRowModel } from '../../../models/gridRows';
+import { type GridRowId, type GridValidRowModel } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
   gridColumnDefinitionsSelector,
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
-import type { GridCellParams } from '../../../models/params/gridCellParams';
+import { type GridCellParams } from '../../../models/params/gridCellParams';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
@@ -45,7 +45,7 @@ import {
 } from '../../../models/params/gridRowParams';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { getDefaultCellValue } from './utils';
-import type { GridUpdateRowParams } from '../../../models/gridDataSource';
+import { type GridUpdateRowParams } from '../../../models/gridDataSource';
 
 export const useGridRowEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,

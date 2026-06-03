@@ -1,5 +1,5 @@
 import { min } from '@mui/x-charts-vendor/d3-array';
-import type { SankeyLink, SankeyNode, SankeyNodeMinimal } from './sankey.types';
+import { type SankeyLink, type SankeyNode, type SankeyNodeMinimal } from './sankey.types';
 
 function targetDepth<WithPosition extends boolean>(d: SankeyLink<WithPosition, {}, {}>): number {
   return (d.target as SankeyNodeMinimal<{}, {}>).depth ?? 0;

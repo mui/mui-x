@@ -19,7 +19,7 @@ import {
   type ChartsOverlaySlotProps,
   type ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
-import type { MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
 import { type ChartsSlotProps, type ChartsSlots } from '@mui/x-charts/internals';
 import {

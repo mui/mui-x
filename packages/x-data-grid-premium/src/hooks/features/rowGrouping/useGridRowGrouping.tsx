@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   type GridEventListener,
   useGridEvent,
@@ -20,12 +20,12 @@ import {
   GridStrategyGroup,
   RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { type GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   gridRowGroupingModelSelector,
   gridRowGroupingSanitizedModelSelector,
 } from './gridRowGroupingSelector';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   getRowGroupingFieldFromGroupingCriteria,
   isGroupingColumn,
@@ -34,8 +34,8 @@ import {
   getGroupingRules,
   areGroupingRulesEqual,
 } from './gridRowGroupingUtils';
-import type { GridRowGroupingApi } from './gridRowGroupingInterfaces';
-import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
+import { type GridRowGroupingApi } from './gridRowGroupingInterfaces';
+import { type GridInitialStatePremium } from '../../../models/gridStatePremium';
 import { rowGroupingReorderValidator } from '../rowReorder/rowGroupingReorderValidator';
 
 export const rowGroupingStateInitializer: GridStateInitializer<

@@ -1,10 +1,10 @@
 import type * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridFilterItem } from './gridFilterItem';
-import type { GridColDef } from './colDef/gridColDef';
-import type { GridValidRowModel } from './gridRows';
-import type { GridApiCommunity } from './api/gridApiCommunity';
-import type { GridFilterInputValueProps } from './gridFilterInputComponent';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridFilterItem } from './gridFilterItem';
+import { type GridColDef } from './colDef/gridColDef';
+import { type GridValidRowModel } from './gridRows';
+import { type GridApiCommunity } from './api/gridApiCommunity';
+import { type GridFilterInputValueProps } from './gridFilterInputComponent';
 
 type ApplyFilterFn<R extends GridValidRowModel = any, V = any, F = V> = (
   value: V,

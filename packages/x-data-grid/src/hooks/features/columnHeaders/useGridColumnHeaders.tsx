@@ -3,13 +3,13 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { computeOffsetLeft } from '@mui/x-virtualizer';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
-import type { GridColumnsRenderContext } from '../../../models/params/gridScrollParams';
+import { type GridColumnsRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridEvent } from '../../utils/useGridEvent';
-import type { GridEventListener } from '../../../models/events';
+import { type GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
 import {
   gridColumnsTotalWidthSelector,
@@ -21,19 +21,19 @@ import {
 import { gridRenderContextColumnsSelector } from '../virtualization';
 import { gridVirtualizationLayoutModeSelector } from '../virtualization/gridVirtualizationSelectors';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
-import type { GridColumnGroup } from '../../../models/gridColumnGrouping';
-import type { GridStateColDef } from '../../../models/colDef/gridColDef';
-import type { GridSortColumnLookup } from '../sorting';
-import type { GridFilterActiveItemsLookup } from '../filter';
-import type { GridColumnGroupIdentifier, GridColumnIdentifier } from '../focus';
-import type { GridColumnMenuState } from '../columnMenu';
+import { type GridColumnGroup } from '../../../models/gridColumnGrouping';
+import { type GridStateColDef } from '../../../models/colDef/gridColDef';
+import { type GridSortColumnLookup } from '../sorting';
+import { type GridFilterActiveItemsLookup } from '../filter';
+import { type GridColumnGroupIdentifier, type GridColumnIdentifier } from '../focus';
+import { type GridColumnMenuState } from '../columnMenu';
 import {
   type GridColumnVisibilityModel,
   gridColumnPositionsSelector,
   gridVisiblePinnedColumnDefinitionsSelector,
   gridColumnLookupSelector,
 } from '../columns';
-import type { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
+import { type GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
 import { gridColumnGroupsUnwrappedModelSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { GridScrollbarFillerCell as ScrollbarFiller } from '../../../components/GridScrollbarFillerCell';
 import { getPinnedCellOffset } from '../../../internals/utils/getPinnedCellOffset';

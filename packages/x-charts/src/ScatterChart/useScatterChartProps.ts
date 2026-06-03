@@ -6,9 +6,9 @@ import { type ChartsGridProps } from '../ChartsGrid';
 import { type ChartsLegendSlotExtension } from '../ChartsLegend';
 import { type ChartsOverlayProps } from '../ChartsOverlay';
 import { type ChartsContainerProps } from '../ChartsContainer';
-import type { ScatterChartProps } from './ScatterChart';
-import type { ScatterPlotProps } from './ScatterPlot';
-import type { ChartsWrapperProps } from '../ChartsWrapper';
+import { type ScatterChartProps } from './ScatterChart';
+import { type ScatterPlotProps } from './ScatterPlot';
+import { type ChartsWrapperProps } from '../ChartsWrapper';
 import { SCATTER_CHART_PLUGINS, type ScatterChartPluginSignatures } from './ScatterChart.plugins';
 import { type UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 

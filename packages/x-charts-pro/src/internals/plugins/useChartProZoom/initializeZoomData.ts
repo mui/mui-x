@@ -1,5 +1,5 @@
 'use client';
-import type { AxisId, DefaultizedZoomOptions, ZoomData } from '@mui/x-charts/internals';
+import { type AxisId, type DefaultizedZoomOptions, type ZoomData } from '@mui/x-charts/internals';
 
 // This is helpful to avoid the need to provide the possibly auto-generated id for each axis.
 export function initializeZoomData(

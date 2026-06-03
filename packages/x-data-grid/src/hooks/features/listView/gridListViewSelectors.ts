@@ -1,6 +1,6 @@
 import { createRootSelector } from '../../../utils/createSelector';
-import type { GridStateCommunity } from '../../../models/gridStateCommunity';
-import type { GridStateColDef } from '../../../models/colDef/gridColDef';
+import { type GridStateCommunity } from '../../../models/gridStateCommunity';
+import { type GridStateColDef } from '../../../models/colDef/gridColDef';
 
 /**
  * Get the list view state

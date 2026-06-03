@@ -1,5 +1,5 @@
-import type { SeriesId } from '../models';
-import type { ChartSeriesType } from '../models/seriesType/config';
+import { type SeriesId } from '../models';
+import { type ChartSeriesType } from '../models/seriesType/config';
 
 /**
  * Cleans an identifier by extracting only type, seriesId, and dataIndex properties.

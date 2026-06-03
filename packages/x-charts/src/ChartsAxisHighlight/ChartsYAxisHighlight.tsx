@@ -12,7 +12,7 @@ import { useDrawingArea } from '../hooks';
 import { type ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
 import { type ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
 import { ChartsAxisHighlightPath } from './ChartsAxisHighlightPath';
-import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
+import { type UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 /**
  * @ignore - internal component.

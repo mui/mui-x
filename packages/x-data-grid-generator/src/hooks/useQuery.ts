@@ -9,7 +9,7 @@ import {
   getInitialState,
 } from './useDemoData';
 import { DEFAULT_SERVER_OPTIONS, loadServerRows } from './serverUtils';
-import type { ServerOptions, QueryOptions, PageInfo } from './serverUtils';
+import { type ServerOptions, type QueryOptions, type PageInfo } from './serverUtils';
 
 const DEFAULT_DATASET_OPTIONS: UseDemoDataOptions = {
   dataSet: 'Commodity',

@@ -1,4 +1,4 @@
-import type { DescriptionGetter } from '@mui/x-charts/internals';
+import { type DescriptionGetter } from '@mui/x-charts/internals';
 
 const descriptionGetter: DescriptionGetter<'sankey'> = (params) => {
   const { identifier, series, localeText } = params;

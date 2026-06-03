@@ -4,19 +4,19 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
-import type { MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional } from '@mui/x-internals/types';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
 import { SankeyPlot, type SankeyPlotProps } from './SankeyPlot';
 import { useSankeyChartProps } from './useSankeyChartProps';
-import type { SankeySeriesType } from './sankey.types';
+import { type SankeySeriesType } from './sankey.types';
 import { SankeyTooltip } from './SankeyTooltip';
-import type { SankeyChartSlotExtension } from './sankeySlots.types';
+import { type SankeyChartSlotExtension } from './sankeySlots.types';
 import { FocusedSankeyNode } from './FocusedSankeyNode';
 import { FocusedSankeyLink } from './FocusedSankeyLink';
 import { SankeyDataProvider } from './SankeyDataProvider';
-import type { ChartsContainerProProps } from '../ChartsContainerPro';
-import type { SankeyChartPluginSignatures } from './SankeyChart.plugins';
+import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import { type SankeyChartPluginSignatures } from './SankeyChart.plugins';
 
 export type SankeySeries = MakeOptional<SankeySeriesType, 'type'>;
 

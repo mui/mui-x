@@ -9,7 +9,7 @@ import {
   type SeriesIdToType,
   type SeriesLayout,
 } from './useChartSeries.types';
-import type { IsItemVisibleFunction } from '../../featurePlugins/useChartVisibilityManager';
+import { type IsItemVisibleFunction } from '../../featurePlugins/useChartVisibilityManager';
 
 /**
  * This method groups series by type and adds defaultized values such as the ids and colors.

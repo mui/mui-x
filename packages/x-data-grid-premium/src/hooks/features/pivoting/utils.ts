@@ -10,16 +10,16 @@ import {
   type GridGroupingColDefOverrideParams,
 } from '@mui/x-data-grid-pro';
 import { getDefaultColTypeDef } from '@mui/x-data-grid-pro/internals';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { COLUMN_GROUP_ID_SEPARATOR } from '../../../constants/columnGroups';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import type { GridAggregationModel } from '../aggregation';
-import type { GridApiPremium } from '../../../models/gridApiPremium';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type GridAggregationModel } from '../aggregation';
+import { type GridApiPremium } from '../../../models/gridApiPremium';
 import { isGroupingColumn } from '../rowGrouping';
-import type {
-  GridPivotingStaticPropsOverrides,
-  GridPivotingDynamicPropsOverrides,
-  GridPivotModel,
+import {
+  type GridPivotingStaticPropsOverrides,
+  type GridPivotingDynamicPropsOverrides,
+  type GridPivotModel,
 } from './gridPivotingInterfaces';
 import { defaultGetAggregationPosition } from '../aggregation/gridAggregationUtils';
 

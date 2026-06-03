@@ -6,8 +6,8 @@ import { getAreaPath } from './getAreaPath';
 import { useUtilityClasses, type RadarClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
-import type { SeriesId, HighlightItemIdentifierWithType } from '../../models/seriesType';
-import type { HighlightState } from '../../hooks/useItemHighlightState';
+import { type SeriesId, type HighlightItemIdentifierWithType } from '../../models/seriesType';
+import { type HighlightState } from '../../hooks/useItemHighlightState';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 interface GetPathPropsParams {

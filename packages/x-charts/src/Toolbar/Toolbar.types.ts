@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import type { ToolbarPropsOverrides } from '../models/chartsSlotsComponentsProps';
+import { type ToolbarPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface ChartsToolbarProps {}
 

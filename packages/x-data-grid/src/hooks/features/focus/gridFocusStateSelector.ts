@@ -1,6 +1,6 @@
 import { createSelector, createRootSelector } from '../../../utils/createSelector';
-import type { GridStateCommunity } from '../../../models/gridStateCommunity';
-import type { GridFocusState, GridTabIndexState } from './gridFocusState';
+import { type GridStateCommunity } from '../../../models/gridStateCommunity';
+import { type GridFocusState, type GridTabIndexState } from './gridFocusState';
 
 export const gridFocusStateSelector = createRootSelector(
   (state: GridStateCommunity) => state.focus,

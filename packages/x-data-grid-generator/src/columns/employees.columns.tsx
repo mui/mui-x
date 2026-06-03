@@ -28,7 +28,7 @@ import {
   renderEditBoolean,
 } from '../renderer';
 import { COUNTRY_ISO_OPTIONS_SORTED, type CountryIsoOption } from '../services/static-data';
-import type { GridColDefGenerator } from '../services/gridColDefGenerator';
+import { type GridColDefGenerator } from '../services/gridColDefGenerator';
 
 export const getEmployeeColumns = (): GridColDefGenerator[] => [
   {

@@ -1,5 +1,9 @@
 import { createSelector } from '@mui/x-internals/store';
-import type { ChartsCartesianAxisProps, AxisId, ChartsAxisProps } from '../../../../models/axis';
+import {
+  type ChartsCartesianAxisProps,
+  type AxisId,
+  type ChartsAxisProps,
+} from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,

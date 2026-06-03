@@ -1,8 +1,8 @@
-import type {
-  GridRowId,
-  GridRowIdToModelLookup,
-  GridRowsProp,
-  GridValidRowModel,
+import {
+  type GridRowId,
+  type GridRowIdToModelLookup,
+  type GridRowsProp,
+  type GridValidRowModel,
 } from '@mui/x-data-grid';
 
 export interface GridPinnedRowsProp<R extends GridValidRowModel = GridValidRowModel> {

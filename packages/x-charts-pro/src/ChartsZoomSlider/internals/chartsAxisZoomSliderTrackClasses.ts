@@ -1,6 +1,6 @@
 import composeClasses from '@mui/utils/composeClasses';
 import ClassNameGenerator from '@mui/utils/ClassNameGenerator';
-import type { ChartsAxisZoomSliderActiveTrackProps } from './ChartsAxisZoomSliderActiveTrack';
+import { type ChartsAxisZoomSliderActiveTrackProps } from './ChartsAxisZoomSliderActiveTrack';
 
 export interface ChartsAxisZoomSliderTrackClasses {
   /** Styles applied to the root element when it is horizontal. */

@@ -2,7 +2,7 @@ import {
   type ChartsTooltipContainerProps,
   type ChartsTooltipClasses,
 } from '@mui/x-charts/ChartsTooltip';
-import type { TooltipPropsOverrides } from '@mui/x-charts/models';
+import { type TooltipPropsOverrides } from '@mui/x-charts/models';
 
 export interface HeatmapTooltipSlots {
   /**

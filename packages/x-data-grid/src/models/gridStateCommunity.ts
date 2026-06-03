@@ -1,34 +1,34 @@
-import type {
-  GridColumnMenuState,
-  GridColumnsInitialState,
-  GridColumnsState,
-  GridColumnsGroupingState,
-  GridColumnPinningState,
-  GridDensityState,
-  GridDimensionsState,
-  GridFilterInitialState,
-  GridFilterState,
-  GridFocusState,
-  GridPaginationInitialState,
-  GridPaginationState,
-  GridPreferencePanelInitialState,
-  GridPreferencePanelState,
-  GridRowsState,
-  GridSortingInitialState,
-  GridSortingState,
-  GridTabIndexState,
-  GridVirtualizationState,
+import {
+  type GridColumnMenuState,
+  type GridColumnsInitialState,
+  type GridColumnsState,
+  type GridColumnsGroupingState,
+  type GridColumnPinningState,
+  type GridDensityState,
+  type GridDimensionsState,
+  type GridFilterInitialState,
+  type GridFilterState,
+  type GridFocusState,
+  type GridPaginationInitialState,
+  type GridPaginationState,
+  type GridPreferencePanelInitialState,
+  type GridPreferencePanelState,
+  type GridRowsState,
+  type GridSortingInitialState,
+  type GridSortingState,
+  type GridTabIndexState,
+  type GridVirtualizationState,
 } from '../hooks';
-import type { DataGridProcessedProps } from './props/DataGridProps';
-import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
-import type { GridEditingState } from './gridEditRowModel';
-import type { GridHeaderFilteringState } from './gridHeaderFilteringModel';
-import type { GridRowSelectionModel } from './gridRowSelectionModel';
-import type { GridVisibleRowsLookupState } from '../hooks/features/filter/gridFilterState';
-import type { GridColumnResizeState } from '../hooks/features/columnResize';
-import type { GridRowSpanningState } from '../hooks/features/rows/useGridRowSpanning';
-import type { GridListViewState } from '../hooks/features/listView/useGridListView';
-import type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowReorderInterfaces';
+import { type DataGridProcessedProps } from './props/DataGridProps';
+import { type GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
+import { type GridEditingState } from './gridEditRowModel';
+import { type GridHeaderFilteringState } from './gridHeaderFilteringModel';
+import { type GridRowSelectionModel } from './gridRowSelectionModel';
+import { type GridVisibleRowsLookupState } from '../hooks/features/filter/gridFilterState';
+import { type GridColumnResizeState } from '../hooks/features/columnResize';
+import { type GridRowSpanningState } from '../hooks/features/rows/useGridRowSpanning';
+import { type GridListViewState } from '../hooks/features/listView/useGridListView';
+import { type GridRowReorderState } from '../hooks/features/rowReorder/gridRowReorderInterfaces';
 
 /**
  * Some props are passed on the state to enable grid selectors to select

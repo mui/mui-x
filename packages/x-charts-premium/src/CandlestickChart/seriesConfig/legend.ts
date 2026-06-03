@@ -1,5 +1,5 @@
 import { getLabel, type LegendGetter } from '@mui/x-charts/internals';
-import type { SeriesLegendItemParams } from '@mui/x-charts/ChartsLegend';
+import { type SeriesLegendItemParams } from '@mui/x-charts/ChartsLegend';
 
 const legendGetter: LegendGetter<'ohlc'> = (params) => {
   const { seriesOrder, series } = params;

@@ -3,7 +3,7 @@ import {
   createSelectorMemoized,
   createRootSelector,
 } from '../../../utils/createSelector';
-import type { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { type GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   type GridColumnLookup,
   type GridPinnedColumnFields,

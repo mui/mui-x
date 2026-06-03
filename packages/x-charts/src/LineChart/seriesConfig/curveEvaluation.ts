@@ -1,7 +1,7 @@
 import BezierEasing from 'bezier-easing';
 import { warnOnce } from '@mui/x-internals/warning';
 import { EPSILON } from '../../utils/epsilon';
-import type { CurveType } from '../../models/curve';
+import { type CurveType } from '../../models/curve';
 import { getCurveFactory } from '../../internals/getCurve';
 import { clampAngleRad } from '../../internals/clampAngle';
 import { cubicRoots } from '../../internals/cubiqSolver';

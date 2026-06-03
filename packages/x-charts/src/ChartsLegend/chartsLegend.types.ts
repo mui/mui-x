@@ -1,8 +1,8 @@
-import type { ChartsLegendProps } from './ChartsLegend';
+import { type ChartsLegendProps } from './ChartsLegend';
 import { type ContinuousColorLegendProps } from './ContinuousColorLegend';
 import { type ChartsLegendPosition } from './legend.types';
 import { type PiecewiseColorLegendProps } from './PiecewiseColorLegend';
-import type { LegendPropsOverrides } from '../models/chartsSlotsComponentsProps';
+import { type LegendPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface ChartsLegendSlots {
   /**

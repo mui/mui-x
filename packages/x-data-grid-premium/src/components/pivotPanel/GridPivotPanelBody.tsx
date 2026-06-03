@@ -17,7 +17,7 @@ import { GridPivotPanelField } from './GridPivotPanelField';
 import { Collapsible, CollapsiblePanel, CollapsibleTrigger } from '../collapsible';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { ResizablePanel, ResizablePanelHandle } from '../resizablePanel';
-import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import { type DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
 type OwnerState = DataGridPremiumProcessedProps;
 

@@ -1,4 +1,4 @@
-import type { SeriesLegendItemParams } from '@mui/x-charts/ChartsLegend';
+import { type SeriesLegendItemParams } from '@mui/x-charts/ChartsLegend';
 import { getLabel, type LegendGetter } from '@mui/x-charts/internals';
 
 const legendGetter: LegendGetter<'mapShape'> = ({ seriesOrder, series }) => {

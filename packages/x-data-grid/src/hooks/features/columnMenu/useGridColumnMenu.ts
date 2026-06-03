@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger, useGridApiMethod, useGridEvent } from '../../utils';
 import { gridColumnMenuSelector } from './columnMenuSelector';
-import type { GridColumnMenuApi } from '../../../models';
-import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { type GridColumnMenuApi } from '../../../models';
+import { type GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   gridColumnLookupSelector,
   gridColumnVisibilityModelSelector,

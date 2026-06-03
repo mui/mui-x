@@ -1,6 +1,6 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
-import type { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
+import { type ChartSeriesDefaultized, type ChartSeriesType } from '../models/seriesType/config';
 import { type SeriesItemIdentifierWithType } from '../models/seriesType';
 import { selectorChartsTooltipItem } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { useStore } from '../internals/store/useStore';

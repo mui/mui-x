@@ -9,10 +9,10 @@ import {
   type GridRowsState,
   type GridTreeNode,
 } from '@mui/x-data-grid';
-import type { GridTreeDepths } from '@mui/x-data-grid/internals';
-import type { RowTreeBuilderGroupingCriterion } from './models';
-import type { DataGridProProps } from '../../models/dataGridProProps';
-import type { GridStatePro } from '../../models/gridStatePro';
+import { type GridTreeDepths } from '@mui/x-data-grid/internals';
+import { type RowTreeBuilderGroupingCriterion } from './models';
+import { type DataGridProProps } from '../../models/dataGridProProps';
+import { type GridStatePro } from '../../models/gridStatePro';
 
 export const getGroupRowIdFromPath = (path: RowTreeBuilderGroupingCriterion[]) => {
   const pathStr = path

@@ -1,4 +1,4 @@
-import type { GridColumnTypesRecord } from '../models/colDef/gridColumnTypesRecord';
+import { type GridColumnTypesRecord } from '../models/colDef/gridColumnTypesRecord';
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
 import { GRID_NUMERIC_COL_DEF } from './gridNumericColDef';
 import { GRID_DATE_COL_DEF, GRID_DATETIME_COL_DEF } from './gridDateColDef';

@@ -1,4 +1,4 @@
-import type { GridRowId, GridTreeNode } from './gridRows';
+import { type GridRowId, type GridTreeNode } from './gridRows';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
 

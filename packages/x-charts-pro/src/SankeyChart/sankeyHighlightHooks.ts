@@ -1,5 +1,5 @@
 import { selectorChartsHighlightState, useStore } from '@mui/x-charts/internals';
-import type { SankeyLinkIdentifier, SankeyNodeIdentifier } from './sankey.types';
+import { type SankeyLinkIdentifier, type SankeyNodeIdentifier } from './sankey.types';
 
 export function useSankeyNodeHighlightState(nodeIdentifier: SankeyNodeIdentifier) {
   const store = useStore();

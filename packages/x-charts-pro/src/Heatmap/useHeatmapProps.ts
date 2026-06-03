@@ -8,9 +8,9 @@ import {
   type ChartsLegendSlotExtension,
   ContinuousColorLegend,
 } from '@mui/x-charts/ChartsLegend';
-import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import { type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { type ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
-import type { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
+import { type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { HEATMAP_PLUGINS, type HeatmapPluginSignatures } from './Heatmap.plugins';
 import { type HeatmapProps } from './Heatmap';
 import { heatmapSeriesConfig } from './seriesConfig';

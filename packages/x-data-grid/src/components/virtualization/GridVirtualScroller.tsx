@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
@@ -15,7 +15,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridOverlays } from '../../hooks/features/overlays/useGridOverlays';
 import { GridHeaders } from '../GridHeaders';
 import { GridMainContainer as Container } from './GridMainContainer';
@@ -26,11 +26,11 @@ import { GridVirtualScrollerRenderZone as RenderZone } from './GridVirtualScroll
 import { GridVirtualScrollbar as Scrollbar, ScrollbarCorner } from './GridVirtualScrollbar';
 import { GridScrollShadows as ScrollShadows } from '../GridScrollShadows';
 import { GridOverlayWrapper } from '../base/GridOverlays';
-import type {
-  GridOverlayType,
-  GridLoadingOverlayVariant,
+import {
+  type GridOverlayType,
+  type GridLoadingOverlayVariant,
 } from '../../hooks/features/overlays/gridOverlaysInterfaces';
-import type { GridApiCommunity } from '../../models/api/gridApiCommunity';
+import { type GridApiCommunity } from '../../models/api/gridApiCommunity';
 import { useGridVirtualizer } from '../../hooks/core/useGridVirtualizer';
 
 type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {

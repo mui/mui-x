@@ -1,11 +1,11 @@
 import '../typeOverloads';
 
-import type { ChartAnyPluginSignature } from '@mui/x-charts/internals';
-import type {
-  ChartProApi as ChartProApiOriginal,
-  ProPluginsPerSeriesType,
+import { type ChartAnyPluginSignature } from '@mui/x-charts/internals';
+import {
+  type ChartProApi as ChartProApiOriginal,
+  type ProPluginsPerSeriesType,
 } from '../context/ChartProApi';
-import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export * from './ChartsContainerPro';
 

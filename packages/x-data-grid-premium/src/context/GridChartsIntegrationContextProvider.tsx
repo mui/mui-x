@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import { GridChartsIntegrationContext } from '../components/chartsIntegration/GridChartsIntegrationContext';
-import type {
-  ChartState,
-  GridChartsIntegrationContextValue,
+import {
+  type ChartState,
+  type GridChartsIntegrationContextValue,
 } from '../models/gridChartsIntegration';
 import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../hooks/features/chartsIntegration/useGridChartsIntegration';
 

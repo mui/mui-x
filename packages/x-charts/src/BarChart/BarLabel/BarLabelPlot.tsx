@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { type AnimationData } from '../types';
 import { BarLabelItem } from './BarLabelItem';
-import type { SeriesId } from '../../models/seriesType/common';
+import { type SeriesId } from '../../models/seriesType/common';
 import { type BarSeriesType, type BarValueType } from '../../models/seriesType/bar';
 import { type BarLabelFunction } from './BarLabel.types';
 

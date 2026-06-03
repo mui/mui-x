@@ -2,13 +2,13 @@ import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsis
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import type { ChartPlugin, ChartPluginOptions } from '../../models';
-import type { UseChartTooltipSignature } from './useChartTooltip.types';
-import type {
-  SeriesItemIdentifier,
-  SeriesItemIdentifierWithType,
+import { type ChartPlugin, type ChartPluginOptions } from '../../models';
+import { type UseChartTooltipSignature } from './useChartTooltip.types';
+import {
+  type SeriesItemIdentifier,
+  type SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
-import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { createIdentifierWithType } from '../../corePlugins/useChartSeries/useChartSeries';
 
 export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <

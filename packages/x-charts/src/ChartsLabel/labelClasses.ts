@@ -1,7 +1,7 @@
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import type { ChartsLabelProps } from './ChartsLabel';
+import { type ChartsLabelProps } from './ChartsLabel';
 
 export interface ChartsLabelClasses {
   /** Styles applied to the root element. */

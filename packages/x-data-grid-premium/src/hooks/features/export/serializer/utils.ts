@@ -1,6 +1,6 @@
 import type * as Excel from '@mui/x-internal-exceljs-fork';
-import type { GridColumnGroupLookup } from '@mui/x-data-grid/internals';
-import type { GridExcelExportOptions } from '../gridExcelExportInterface';
+import { type GridColumnGroupLookup } from '@mui/x-data-grid/internals';
+import { type GridExcelExportOptions } from '../gridExcelExportInterface';
 
 export const getExcelJs = async () => {
   const excelJsModule = await import('@mui/x-internal-exceljs-fork');

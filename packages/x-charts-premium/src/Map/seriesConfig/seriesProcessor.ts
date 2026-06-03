@@ -4,7 +4,7 @@ import {
   type ChartSeriesDefaultized,
   incompleteDatasetKeysError,
 } from '@mui/x-charts/internals';
-import type { MapShapeValueType } from '../../models/seriesType/mapShape';
+import { type MapShapeValueType } from '../../models/seriesType/mapShape';
 
 const defaultValueFormatter = ((v) =>
   v == null ? '' : String(v.value)) as ChartSeriesDefaultized<'mapShape'>['valueFormatter'];

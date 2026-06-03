@@ -1,4 +1,4 @@
-import type { ContinuousScaleName, ScaleName } from '../../../../models';
+import { type ContinuousScaleName, type ScaleName } from '../../../../models';
 import {
   type ChartsAxisProps,
   isBandScaleConfig,
@@ -18,7 +18,7 @@ import { getDefaultTickNumber, getTickNumber } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import { getAxisExtremum } from './getAxisExtremum';
-import type { ChartDrawingArea } from '../../../../hooks';
+import { type ChartDrawingArea } from '../../../../hooks';
 import { type ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { deg2rad } from '../../../angleConversion';

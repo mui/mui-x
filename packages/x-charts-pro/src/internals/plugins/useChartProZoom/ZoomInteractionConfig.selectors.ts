@@ -1,7 +1,7 @@
 import { createSelector } from '@mui/x-internals/store';
 import { selectorChartZoomOptionsLookup } from '@mui/x-charts/internals';
 import { selectorChartZoomState } from './useChartProZoom.selectors';
-import type { ZoomInteractionName, PanInteractionName } from './ZoomInteractionConfig.types';
+import { type ZoomInteractionName, type PanInteractionName } from './ZoomInteractionConfig.types';
 
 export const selectorZoomInteractionConfig = createSelector(
   selectorChartZoomState,

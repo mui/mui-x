@@ -1,9 +1,9 @@
-import type { ChartPluginSignature } from '../../models';
-import type { UseChartInteractionSignature } from '../useChartInteraction';
-import type { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
-import type { UseChartHighlightSignature } from '../useChartHighlight';
-import type { FocusedItemIdentifier } from '../../../../models/seriesType';
-import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import { type ChartPluginSignature } from '../../models';
+import { type UseChartInteractionSignature } from '../useChartInteraction';
+import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
+import { type UseChartHighlightSignature } from '../useChartHighlight';
+import { type FocusedItemIdentifier } from '../../../../models/seriesType';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
 
 export interface UseChartKeyboardNavigationInstance {}
 

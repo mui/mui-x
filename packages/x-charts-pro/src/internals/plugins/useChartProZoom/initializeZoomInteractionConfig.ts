@@ -1,11 +1,11 @@
 'use client';
 
-import type { AxisId, DefaultizedZoomOptions } from '@mui/x-charts/internals';
-import type {
-  ZoomInteractionConfig,
-  DefaultizedZoomInteractionConfig,
-  AnyInteraction,
-  AnyEntry,
+import { type AxisId, type DefaultizedZoomOptions } from '@mui/x-charts/internals';
+import {
+  type ZoomInteractionConfig,
+  type DefaultizedZoomInteractionConfig,
+  type AnyInteraction,
+  type AnyEntry,
 } from './ZoomInteractionConfig.types';
 
 export const initializeZoomInteractionConfig = (

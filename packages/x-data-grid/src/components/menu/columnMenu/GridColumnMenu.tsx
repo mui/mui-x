@@ -7,10 +7,10 @@ import { GridColumnMenuContainer } from './GridColumnMenuContainer';
 import { GridColumnMenuColumnsItem } from './menuItems/GridColumnMenuColumnsItem';
 import { GridColumnMenuFilterItem } from './menuItems/GridColumnMenuFilterItem';
 import { GridColumnMenuSortItem } from './menuItems/GridColumnMenuSortItem';
-import type {
-  GridColumnMenuProps,
-  GridGenericColumnMenuProps,
-  GridColumnMenuComponent,
+import {
+  type GridColumnMenuProps,
+  type GridGenericColumnMenuProps,
+  type GridColumnMenuComponent,
 } from './GridColumnMenuProps';
 
 export const GRID_COLUMN_MENU_SLOTS = {

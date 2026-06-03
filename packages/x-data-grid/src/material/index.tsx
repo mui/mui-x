@@ -14,7 +14,7 @@ import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
 import MUIListItemText, { listItemTextClasses } from '@mui/material/ListItemText';
-import type { MenuProps as MUIMenuProps } from '@mui/material/Menu';
+import { type MenuProps as MUIMenuProps } from '@mui/material/Menu';
 import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
@@ -70,10 +70,10 @@ import {
   GridLongTextCellExpandIcon,
   GridLongTextCellCollapseIcon,
 } from './icons';
-import type { GridIconSlotsComponent } from '../models';
-import type { GridBaseSlots } from '../models/gridSlotsComponent';
-import type { GridSlotProps as P } from '../models/gridSlotsComponentsProps';
-import type { PopperProps } from '../models/gridBaseSlots';
+import { type GridIconSlotsComponent } from '../models';
+import { type GridBaseSlots } from '../models/gridSlotsComponent';
+import { type GridSlotProps as P } from '../models/gridSlotsComponentsProps';
+import { type PopperProps } from '../models/gridBaseSlots';
 import { GridColumnUnsortedIcon } from '../components/GridColumnUnsortedIcon';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';

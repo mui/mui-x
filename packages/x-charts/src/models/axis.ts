@@ -1,38 +1,38 @@
 import type * as React from 'react';
-import type {
-  ScaleBand,
-  ScaleLinear,
-  ScaleLogarithmic,
-  ScaleOrdinal,
-  ScalePoint,
-  ScalePower,
-  ScaleSequential,
-  ScaleThreshold,
-  ScaleTime,
-  ScaleSymLog,
-  NumberValue,
+import {
+  type ScaleBand,
+  type ScaleLinear,
+  type ScaleLogarithmic,
+  type ScaleOrdinal,
+  type ScalePoint,
+  type ScalePower,
+  type ScaleSequential,
+  type ScaleThreshold,
+  type ScaleTime,
+  type ScaleSymLog,
+  type NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
 import { type SxProps } from '@mui/system/styleFunctionSx';
 import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
 import { type DatasetElementType } from './seriesType/config';
-import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { type DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
-import type { TickParams } from '../hooks/useTicks';
-import type {
-  AxisLinePropsOverrides,
-  AxisTickPropsOverrides,
-  AxisTickLabelPropsOverrides,
-  AxisLabelPropsOverrides,
-  XAxisPropsOverrides,
-  YAxisPropsOverrides,
+import { type TickParams } from '../hooks/useTicks';
+import {
+  type AxisLinePropsOverrides,
+  type AxisTickPropsOverrides,
+  type AxisTickLabelPropsOverrides,
+  type AxisLabelPropsOverrides,
+  type XAxisPropsOverrides,
+  type YAxisPropsOverrides,
 } from './chartsSlotsComponentsProps';
-import type { ChartsTextProps } from '../ChartsText';
-import type {
-  ContinuousColorConfig,
-  OrdinalColorConfig,
-  PiecewiseColorConfig,
+import { type ChartsTextProps } from '../ChartsText';
+import {
+  type ContinuousColorConfig,
+  type OrdinalColorConfig,
+  type PiecewiseColorConfig,
 } from './colorMapping';
-import type { OrdinalTimeTicks } from './timeTicks';
+import { type OrdinalTimeTicks } from './timeTicks';
 import { type ChartsTypeFeatureFlags } from './featureFlags';
 import { type ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
 

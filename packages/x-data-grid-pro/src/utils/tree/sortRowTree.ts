@@ -4,7 +4,7 @@ import {
   type GridRowId,
   type GridRowTreeConfig,
 } from '@mui/x-data-grid';
-import type { GridSortingModelApplier } from '@mui/x-data-grid/internals';
+import { type GridSortingModelApplier } from '@mui/x-data-grid/internals';
 
 interface SortRowTreeParams {
   rowTree: GridRowTreeConfig;

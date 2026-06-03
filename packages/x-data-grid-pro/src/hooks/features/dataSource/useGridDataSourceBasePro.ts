@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import useLazyRef from '@mui/utils/useLazyRef';
 import {
@@ -29,15 +29,15 @@ import {
   getTreeNodeDescendants,
 } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { NestedDataManager, RequestStatus, getGroupKeys } from './utils';
-import type {
-  GridDataSourceApiBasePro,
-  GridDataSourceApiPro,
-  GridDataSourcePrivateApiPro,
-  GridGetRowsParamsPro,
-  GridGetRowsResponsePro,
+import {
+  type GridDataSourceApiBasePro,
+  type GridDataSourceApiPro,
+  type GridDataSourcePrivateApiPro,
+  type GridGetRowsParamsPro,
+  type GridGetRowsResponsePro,
 } from './models';
 import { gridDataSourceErrorsSelector } from './gridDataSourceSelector';
 

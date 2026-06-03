@@ -1,6 +1,6 @@
-import type { HighlightItemIdentifierWithType } from '../../../../models/seriesType';
-import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
-import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
+import { type HighlightItemIdentifierWithType } from '../../../../models/seriesType';
+import { type ComposableChartSeriesType } from '../../../../models/seriesType/composition';
+import { type ChartSeriesType, type HighlightScope } from '../../../../models/seriesType/config';
 
 function alwaysFalse(): boolean {
   return false;

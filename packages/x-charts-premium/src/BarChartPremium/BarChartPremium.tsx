@@ -22,7 +22,7 @@ import { ChartsZoomSlider } from '@mui/x-charts-pro/ChartsZoomSlider';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useChartsContainerProProps } from '@mui/x-charts-pro/internals';
-import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
+import { type BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
 import { BarPlotPremium, type BarPlotPremiumProps } from './BarPlotPremium';
@@ -37,7 +37,7 @@ import { RangeBarPlot } from './RangeBar/RangeBarPlot';
 import { FocusedRangeBar } from './RangeBar/FocusedRangeBar';
 
 import type {} from '../typeOverloads/modules';
-import type { ChartsContainerPremiumProps } from '../ChartsContainerPremium';
+import { type ChartsContainerPremiumProps } from '../ChartsContainerPremium';
 
 export type RangeBarSeries = RangeBarSeriesType;
 

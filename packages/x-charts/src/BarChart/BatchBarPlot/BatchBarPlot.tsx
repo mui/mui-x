@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { BarItemIdentifier } from '../../models';
+import { type BarItemIdentifier } from '../../models';
 import { type ProcessedBarSeriesData } from '../types';
 import { useUtilityClasses } from '../barClasses';
 import { type IndividualBarPlotProps } from '../IndividualBarPlot';

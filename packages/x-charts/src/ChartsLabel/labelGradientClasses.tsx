@@ -1,7 +1,7 @@
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import type { ChartsLabelGradientProps } from './ChartsLabelGradient';
+import { type ChartsLabelGradientProps } from './ChartsLabelGradient';
 
 export interface ChartsLabelGradientClasses {
   /** Styles applied to the root element. */

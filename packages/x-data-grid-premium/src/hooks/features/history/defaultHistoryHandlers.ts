@@ -1,4 +1,4 @@
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   type GridCellEditStopParams,
@@ -8,13 +8,13 @@ import {
   gridVisibleColumnFieldsSelector,
   gridColumnFieldsSelector,
 } from '@mui/x-data-grid-pro';
-import type { GridApiPremium } from '../../../models/gridApiPremium';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import type {
-  GridHistoryEventHandler,
-  GridCellEditHistoryData,
-  GridRowEditHistoryData,
-  GridClipboardPasteHistoryData,
+import { type GridApiPremium } from '../../../models/gridApiPremium';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import {
+  type GridHistoryEventHandler,
+  type GridCellEditHistoryData,
+  type GridRowEditHistoryData,
+  type GridClipboardPasteHistoryData,
 } from './gridHistoryInterfaces';
 
 /**

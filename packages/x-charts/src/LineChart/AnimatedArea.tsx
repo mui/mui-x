@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useAnimateArea } from '../hooks/animation/useAnimateArea';
-import type { AreaElementOwnerState } from './AreaElement';
+import { type AreaElementOwnerState } from './AreaElement';
 import { AppearingMask } from './AppearingMask';
 
 export interface AnimatedAreaProps extends React.ComponentPropsWithoutRef<'path'> {

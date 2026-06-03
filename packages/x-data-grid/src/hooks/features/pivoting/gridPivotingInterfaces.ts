@@ -1,5 +1,5 @@
-import type { GridRowModelUpdate } from '@mui/x-data-grid';
-import type { GridColDef } from '../../../models/colDef';
+import { type GridRowModelUpdate } from '@mui/x-data-grid';
+import { type GridColDef } from '../../../models/colDef';
 
 export interface GridPivotingStatePartial {
   active: boolean;

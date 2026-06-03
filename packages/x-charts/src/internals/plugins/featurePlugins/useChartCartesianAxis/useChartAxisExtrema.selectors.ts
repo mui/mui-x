@@ -3,7 +3,7 @@ import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
-import type { AxisId } from '../../../../models/axis';
+import { type AxisId } from '../../../../models/axis';
 import { isBandScaleConfig, isPointScaleConfig } from '../../../../models/axis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import {
@@ -11,7 +11,7 @@ import {
   type ChartSeriesConfig,
 } from '../../corePlugins/useChartSeriesConfig';
 import { getAxisExtrema } from './getAxisExtrema';
-import type { CartesianChartSeriesType } from '../../../../models/seriesType/config';
+import { type CartesianChartSeriesType } from '../../../../models/seriesType/config';
 
 const EMPTY_EXTREMA: Record<AxisId, [number, number]> = {};
 

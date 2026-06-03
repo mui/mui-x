@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
@@ -34,9 +34,9 @@ import {
   GridCellModes,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
-import type { GridCellSelectionApi } from './gridCellSelectionInterfaces';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { type GridCellSelectionApi } from './gridCellSelectionInterfaces';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { CellValueUpdater } from '../clipboard/useGridClipboardImport';
 
 export const cellSelectionStateInitializer: GridStateInitializer<

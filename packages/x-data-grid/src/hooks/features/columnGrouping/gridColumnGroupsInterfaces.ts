@@ -1,4 +1,7 @@
-import type { GridColumnGroup, GridColumnGroupingModel } from '../../../models/gridColumnGrouping';
+import {
+  type GridColumnGroup,
+  type GridColumnGroupingModel,
+} from '../../../models/gridColumnGrouping';
 
 export type GridColumnGroupLookup = {
   [groupId: string]: Omit<GridColumnGroup, 'children'>;

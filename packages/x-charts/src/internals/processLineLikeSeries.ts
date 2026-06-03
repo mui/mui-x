@@ -8,13 +8,13 @@ import {
   type DatasetType,
 } from '../models/seriesType/config';
 import { type SeriesId } from '../models/seriesType/common';
-import type {
-  SeriesProcessorParams,
-  SeriesProcessorResult,
+import {
+  type SeriesProcessorParams,
+  type SeriesProcessorResult,
 } from './plugins/corePlugins/useChartSeriesConfig';
-import type { IsItemVisibleFunction } from './plugins/featurePlugins/useChartVisibilityManager';
-import type { DefaultizedLineSeriesType } from '../models';
-import type { MarkShape } from '../models/seriesType/line';
+import { type IsItemVisibleFunction } from './plugins/featurePlugins/useChartVisibilityManager';
+import { type DefaultizedLineSeriesType } from '../models';
+import { type MarkShape } from '../models/seriesType/line';
 
 const defaultShapes: MarkShape[] = [
   'circle',

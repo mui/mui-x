@@ -11,7 +11,7 @@ import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import getMarkerSize from './seriesConfig/getMarkerSize';
 import { BatchScatter } from './BatchScatter';
 import { useUtilityClasses } from './scatterClasses';
-import type { ScatterPropsOverrides } from '../models/chartsSlotsComponentsProps';
+import { type ScatterPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps & ScatterPropsOverrides>;

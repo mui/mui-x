@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import type { GridBaseIconProps } from '../models/gridSlotsComponentsProps';
-import type { GridSortDirection } from '../models/gridSortModel';
+import { type GridBaseIconProps } from '../models/gridSlotsComponentsProps';
+import { type GridSortDirection } from '../models/gridSortModel';
 
 export interface GridColumnUnsortedIconProps extends GridBaseIconProps {
   sortingOrder: GridSortDirection[];

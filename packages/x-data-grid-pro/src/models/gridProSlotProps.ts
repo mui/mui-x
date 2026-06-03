@@ -1,5 +1,5 @@
-import type { GridSlotsComponentsProps } from '@mui/x-data-grid/internals';
-import type { GridHeaderFilterCellProps } from '../components/headerFiltering/GridHeaderFilterCell';
+import { type GridSlotsComponentsProps } from '@mui/x-data-grid/internals';
+import { type GridHeaderFilterCellProps } from '../components/headerFiltering/GridHeaderFilterCell';
 
 // Overrides for module augmentation
 export interface HeaderFilterCellPropsOverrides {}

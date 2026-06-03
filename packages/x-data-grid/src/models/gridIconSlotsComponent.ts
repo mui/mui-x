@@ -1,6 +1,6 @@
 import type * as React from 'react';
-import type { IconProps } from './gridBaseSlots';
-import type { GridColumnUnsortedIconProps } from '../components/GridColumnUnsortedIcon';
+import { type IconProps } from './gridBaseSlots';
+import { type GridColumnUnsortedIconProps } from '../components/GridColumnUnsortedIcon';
 
 /**
  * Set of icons used in the grid component UI.

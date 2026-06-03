@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { GridSlotProps } from '../../models';
+import { type GridSlotProps } from '../../models';
 import { type QuickFilterState, useQuickFilterContext } from './QuickFilterContext';
 
 export type QuickFilterClearProps = Omit<GridSlotProps['baseIconButton'], 'className'> & {

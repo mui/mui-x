@@ -8,7 +8,7 @@ import {
   labelMarkClasses,
   useUtilityClasses,
 } from './labelMarkClasses';
-import type { MarkShape } from '../models/seriesType/line';
+import { type MarkShape } from '../models/seriesType/line';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 import { getSymbol } from '../internals/getSymbol';
 

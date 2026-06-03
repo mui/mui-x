@@ -1,5 +1,5 @@
-import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
-import type { GridColumnDimensionProperties } from './gridColumnsUtils';
+import { type GridColDef, type GridStateColDef } from '../../../models/colDef/gridColDef';
+import { type GridColumnDimensionProperties } from './gridColumnsUtils';
 
 export enum GridPinnedColumnPosition {
   LEFT = 'left',

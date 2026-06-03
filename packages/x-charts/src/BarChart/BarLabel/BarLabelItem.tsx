@@ -8,7 +8,7 @@ import { getBarLabel } from './getBarLabel';
 import { BarLabel, type BarLabelProps } from './BarLabel';
 import { useItemHighlightState } from '../../hooks/useItemHighlightState';
 import { type BarValueType } from '../../models';
-import type { BarLabelPropsOverrides } from '../../models/chartsSlotsComponentsProps';
+import { type BarLabelPropsOverrides } from '../../models/chartsSlotsComponentsProps';
 
 export interface BarLabelSlots {
   /**

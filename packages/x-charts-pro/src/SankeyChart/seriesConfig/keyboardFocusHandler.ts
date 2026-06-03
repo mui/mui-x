@@ -1,4 +1,4 @@
-import type { KeyboardFocusHandler, FocusedItemUpdater } from '@mui/x-charts/internals';
+import { type KeyboardFocusHandler, type FocusedItemUpdater } from '@mui/x-charts/internals';
 
 // ====================================================================================================================
 //

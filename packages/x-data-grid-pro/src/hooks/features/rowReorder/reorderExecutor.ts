@@ -1,5 +1,5 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import type { ReorderExecutionContext, ReorderOperation } from './types';
+import { type ReorderExecutionContext, type ReorderOperation } from './types';
 
 /**
  * Base class for all reorder operations.

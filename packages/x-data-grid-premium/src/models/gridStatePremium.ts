@@ -1,31 +1,31 @@
-import type {
-  GridInitialState as GridInitialStatePro,
-  GridState as GridStatePro,
+import {
+  type GridInitialState as GridInitialStatePro,
+  type GridState as GridStatePro,
 } from '@mui/x-data-grid-pro';
-import type {
-  GridRowGroupingState,
-  GridRowGroupingInitialState,
-  GridAggregationState,
-  GridAggregationInitialState,
-  GridCellSelectionModel,
+import {
+  type GridRowGroupingState,
+  type GridRowGroupingInitialState,
+  type GridAggregationState,
+  type GridAggregationInitialState,
+  type GridCellSelectionModel,
 } from '../hooks';
-import type {
-  GridPivotingInitialState,
-  GridPivotingState,
+import {
+  type GridPivotingInitialState,
+  type GridPivotingState,
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
-import type {
-  GridAiAssistantInitialState,
-  GridAiAssistantState,
+import {
+  type GridAiAssistantInitialState,
+  type GridAiAssistantState,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
-import type {
-  GridSidebarInitialState,
-  GridSidebarState,
+import {
+  type GridSidebarInitialState,
+  type GridSidebarState,
 } from '../hooks/features/sidebar/gridSidebarState';
-import type {
-  GridChartsIntegrationState,
-  GridChartsIntegrationInitialState,
+import {
+  type GridChartsIntegrationState,
+  type GridChartsIntegrationInitialState,
 } from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
-import type { GridHistoryState } from '../hooks/features/history/gridHistoryInterfaces';
+import { type GridHistoryState } from '../hooks/features/history/gridHistoryInterfaces';
 
 /**
  * The state of Data Grid Premium.

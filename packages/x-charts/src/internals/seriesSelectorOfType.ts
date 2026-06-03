@@ -3,7 +3,7 @@ import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { type ChartSeriesDefaultized, type ChartsSeriesConfig } from '../models/seriesType/config';
 import { type SeriesId } from '../models/seriesType/common';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
-import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries';
+import { type ProcessedSeries } from './plugins/corePlugins/useChartSeries';
 import { useStore } from './store/useStore';
 
 export const selectorAllSeriesOfType = createSelector(

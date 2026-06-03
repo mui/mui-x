@@ -1,4 +1,4 @@
-import type { GridFilterItem, GridLogicOperator } from './gridFilterItem';
+import { type GridFilterItem, type GridLogicOperator } from './gridFilterItem';
 
 /**
  * Model describing the filters to apply to the grid.

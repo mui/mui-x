@@ -4,7 +4,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import { type SeriesId } from '@mui/x-charts/internals';
 import { useUtilityClasses } from './heatmapClasses';
 import { HeatmapCell, type HeatmapCellOwnerState, type HeatmapCellProps } from './HeatmapCell';
-import type { CellPropsOverrides } from '../models/chartsSlotsComponentsPropsPro';
+import { type CellPropsOverrides } from '../models/chartsSlotsComponentsPropsPro';
 
 export interface HeatmapItemSlots {
   /**

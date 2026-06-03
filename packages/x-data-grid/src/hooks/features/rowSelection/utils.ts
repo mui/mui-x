@@ -1,4 +1,4 @@
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { GridSignature } from '../../../constants/signature';
 import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
@@ -6,15 +6,19 @@ import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { gridRowSelectionManagerSelector } from './gridRowSelectionSelector';
 import { gridRowsLookupSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { createSelector } from '../../../utils/createSelector';
-import type { GridGroupNode, GridRowId, GridRowTreeConfig } from '../../../models/gridRows';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type {
-  GridPrivateApiCommunity,
-  GridApiCommunity,
+import {
+  type GridGroupNode,
+  type GridRowId,
+  type GridRowTreeConfig,
+} from '../../../models/gridRows';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import {
+  type GridPrivateApiCommunity,
+  type GridApiCommunity,
 } from '../../../models/api/gridApiCommunity';
-import type { GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
-import type { RowSelectionManager } from '../../../models/gridRowSelectionManager';
-import type { GridRowParams } from '../../../models/params/gridRowParams';
+import { type GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
+import { type RowSelectionManager } from '../../../models/gridRowSelectionManager';
+import { type GridRowParams } from '../../../models/params/gridRowParams';
 import { gridColumnDefinitionsSelector } from '../columns';
 import { gridRowSelectableSelector } from '../../core/gridPropsSelectors';
 

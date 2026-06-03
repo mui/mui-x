@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { getThemeProps } from '@mui/system';
-import type {
-  DataGridProcessedProps,
-  DataGridProps,
-  DataGridForcedPropsKey,
-  DataGridPropsWithDefaultValues,
+import {
+  type DataGridProcessedProps,
+  type DataGridProps,
+  type DataGridForcedPropsKey,
+  type DataGridPropsWithDefaultValues,
 } from '../models/props/DataGridProps';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
 import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
-import type { GridSlotsComponent, GridValidRowModel } from '../models';
+import { type GridSlotsComponent, type GridValidRowModel } from '../models';
 import { computeSlots } from '../internals/utils';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../constants/dataGridPropsDefaultValues';
 

@@ -10,8 +10,8 @@ import {
   selectorChartSvgHeight,
 } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { useUtilityClasses } from './chartsSvgLayerClasses';
-import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
-import type { UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
+import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
+import { type UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
 
 export interface ChartsSvgLayerProps extends Omit<
   React.SVGProps<SVGSVGElement>,

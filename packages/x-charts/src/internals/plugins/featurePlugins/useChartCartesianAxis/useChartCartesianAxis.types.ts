@@ -1,26 +1,26 @@
-import type { ChartPluginSignature } from '../../models';
-import type { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
-import type {
-  ComputedAxis,
-  ScaleName,
-  AxisId,
-  ChartsAxisData,
-  YAxis,
-  XAxis,
-  DefaultedXAxis,
-  DefaultedYAxis,
-  AxisItemIdentifier,
+import { type ChartPluginSignature } from '../../models';
+import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
+import {
+  type ComputedAxis,
+  type ScaleName,
+  type AxisId,
+  type ChartsAxisData,
+  type YAxis,
+  type XAxis,
+  type DefaultedXAxis,
+  type DefaultedYAxis,
+  type AxisItemIdentifier,
 } from '../../../../models/axis';
-import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import type {
-  ZoomData,
-  ZoomOptions,
-  ZoomSliderPreviewOptions,
-  ZoomSliderShowTooltip,
+import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import {
+  type ZoomData,
+  type ZoomOptions,
+  type ZoomSliderPreviewOptions,
+  type ZoomSliderShowTooltip,
 } from './zoom.types';
-import type { UseChartInteractionSignature } from '../useChartInteraction';
-import type { ChartsAxisProps } from '../../../../ChartsAxis';
-import type { UseChartBrushSignature } from '../useChartBrush';
+import { type UseChartInteractionSignature } from '../useChartInteraction';
+import { type ChartsAxisProps } from '../../../../ChartsAxis';
+import { type UseChartBrushSignature } from '../useChartBrush';
 
 /**
  * The axes' configuration after computing.

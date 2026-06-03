@@ -1,49 +1,49 @@
 import type * as React from 'react';
-import type { GridToolbarProps } from '../components/toolbar/GridToolbar';
-import type { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
-import type { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
-import type { GridColumnsPanelProps } from '../components/panel/GridColumnsPanel';
-import type { GridFilterPanelProps } from '../components/panel/filterPanel/GridFilterPanel';
-import type { GridFooterContainerProps } from '../components/containers/GridFooterContainer';
-import type { GridOverlayProps } from '../components/containers/GridOverlay';
-import type { GridPanelProps } from '../components/panel/GridPanel';
-import type { GridSkeletonCellProps } from '../components/cell/GridSkeletonCell';
-import type { GridRowProps } from '../components/GridRow';
-import type { GridCellProps } from '../components/cell/GridCell';
-import type { GridColumnHeadersProps } from '../components/GridColumnHeaders';
-import type { GridDetailPanelsProps } from '../components/GridDetailPanels';
-import type { GridPinnedRowsProps } from '../components/GridPinnedRows';
-import type { GridColumnsManagementProps } from '../components/columnsManagement/GridColumnsManagement';
-import type { GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
-import type { GridRowCountProps } from '../components/GridRowCount';
-import type { GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
-import type { GridBottomContainerProps } from '../components/virtualization/GridBottomContainer';
-import type { GridRowId } from './gridRows';
-import type {
-  AutocompleteProps,
-  BadgeProps,
-  ButtonProps,
-  CheckboxProps,
-  ChipProps,
-  CircularProgressProps,
-  DividerProps,
-  IconButtonProps,
-  InputProps,
-  LinearProgressProps,
-  MenuListProps,
-  MenuItemProps,
-  PaginationProps,
-  PopperProps,
-  SelectProps,
-  SelectOptionProps,
-  SkeletonProps,
-  SwitchProps,
-  TextareaProps,
-  TooltipProps,
-  TextFieldProps,
-  IconProps,
-  TabsProps,
-  ToggleButtonProps,
+import { type GridToolbarProps } from '../components/toolbar/GridToolbar';
+import { type ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
+import { type GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
+import { type GridColumnsPanelProps } from '../components/panel/GridColumnsPanel';
+import { type GridFilterPanelProps } from '../components/panel/filterPanel/GridFilterPanel';
+import { type GridFooterContainerProps } from '../components/containers/GridFooterContainer';
+import { type GridOverlayProps } from '../components/containers/GridOverlay';
+import { type GridPanelProps } from '../components/panel/GridPanel';
+import { type GridSkeletonCellProps } from '../components/cell/GridSkeletonCell';
+import { type GridRowProps } from '../components/GridRow';
+import { type GridCellProps } from '../components/cell/GridCell';
+import { type GridColumnHeadersProps } from '../components/GridColumnHeaders';
+import { type GridDetailPanelsProps } from '../components/GridDetailPanels';
+import { type GridPinnedRowsProps } from '../components/GridPinnedRows';
+import { type GridColumnsManagementProps } from '../components/columnsManagement/GridColumnsManagement';
+import { type GridLoadingOverlayProps } from '../components/GridLoadingOverlay';
+import { type GridRowCountProps } from '../components/GridRowCount';
+import { type GridColumnHeaderSortIconProps } from '../components/columnHeaders/GridColumnHeaderSortIcon';
+import { type GridBottomContainerProps } from '../components/virtualization/GridBottomContainer';
+import { type GridRowId } from './gridRows';
+import {
+  type AutocompleteProps,
+  type BadgeProps,
+  type ButtonProps,
+  type CheckboxProps,
+  type ChipProps,
+  type CircularProgressProps,
+  type DividerProps,
+  type IconButtonProps,
+  type InputProps,
+  type LinearProgressProps,
+  type MenuListProps,
+  type MenuItemProps,
+  type PaginationProps,
+  type PopperProps,
+  type SelectProps,
+  type SelectOptionProps,
+  type SkeletonProps,
+  type SwitchProps,
+  type TextareaProps,
+  type TooltipProps,
+  type TextFieldProps,
+  type IconProps,
+  type TabsProps,
+  type ToggleButtonProps,
 } from './gridBaseSlots';
 
 type RootProps = React.HTMLAttributes<HTMLDivElement> & Record<`data-${string}`, string>;

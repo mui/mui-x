@@ -1,11 +1,11 @@
 import { isOrdinalScale } from '../../../scaleGuards';
 import { getAsNumber } from '../../../getAsNumber';
 import { findClosestIndex } from '../../../findClosestIndex';
-import type {
-  ChartsRadiusAxisProps,
-  ChartsRotationAxisProps,
-  ComputedAxis,
-  ScaleName,
+import {
+  type ChartsRadiusAxisProps,
+  type ChartsRotationAxisProps,
+  type ComputedAxis,
+  type ScaleName,
 } from '../../../../models/axis';
 import { clampAngleRad } from '../../../clampAngle';
 

@@ -1,11 +1,11 @@
-import type {
-  CartesianChartSeriesType,
-  ChartSeriesType,
+import {
+  type CartesianChartSeriesType,
+  type ChartSeriesType,
 } from '../../../../models/seriesType/config';
-import type { FocusedItemIdentifier } from '../../../../models/seriesType';
-import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
-import type { ChartState } from '../../models/chart';
-import type { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
+import { type FocusedItemIdentifier } from '../../../../models/seriesType';
+import { type UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
+import { type ChartState } from '../../models/chart';
+import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
 
 export type FocusedItemUpdater<
   SeriesType extends ChartSeriesType,

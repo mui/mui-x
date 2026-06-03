@@ -1,8 +1,8 @@
 import type * as Excel from '@mui/x-internal-exceljs-fork';
-import type {
-  GridFileExportOptions,
-  GridExportFormat as GridExportFormatCommunity,
-  GridExportExtension as GridExportExtensionCommunity,
+import {
+  type GridFileExportOptions,
+  type GridExportFormat as GridExportFormatCommunity,
+  type GridExportExtension as GridExportExtensionCommunity,
 } from '@mui/x-data-grid-pro';
 
 export type GridExportFormat = GridExportFormatCommunity | 'excel';

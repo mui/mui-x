@@ -8,7 +8,7 @@ import {
 } from '@mui/x-charts/internals';
 import { type ChartDrawingArea } from '@mui/x-charts/hooks';
 import { useTheme } from '@mui/material/styles';
-import type { DefaultizedOHLCSeriesType } from '../models';
+import { type DefaultizedOHLCSeriesType } from '../models';
 import { parseColor } from '../utils/webgl/parseColor';
 import getColor from './seriesConfig/getColor';
 

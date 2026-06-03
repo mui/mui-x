@@ -6,7 +6,7 @@ import { styled, type SxProps, type Theme } from '@mui/system';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type OwnerState = DataGridProcessedProps;
 

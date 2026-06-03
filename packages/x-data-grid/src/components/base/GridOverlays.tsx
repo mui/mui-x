@@ -7,11 +7,11 @@ import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridDimensionsSelector } from '../../hooks/features/dimensions';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import type {
-  GridOverlayType,
-  GridLoadingOverlayVariant,
+import {
+  type GridOverlayType,
+  type GridLoadingOverlayVariant,
 } from '../../hooks/features/overlays/gridOverlaysInterfaces';
 
 interface GridOverlaysProps {

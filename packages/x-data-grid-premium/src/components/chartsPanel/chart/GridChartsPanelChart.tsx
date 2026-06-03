@@ -3,8 +3,8 @@ import { styled } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
-import type { GridChartsConfigurationOptions } from '@mui/x-internals/types';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type GridChartsConfigurationOptions } from '@mui/x-internals/types';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export interface GridChartsPanelChartProps {

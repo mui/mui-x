@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
-import type { GridEventListener } from '../../../models/events';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type {
-  GridRowSelectionApi,
-  GridRowMultiSelectionApi,
+import { type GridEventListener } from '../../../models/events';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import {
+  type GridRowSelectionApi,
+  type GridRowMultiSelectionApi,
 } from '../../../models/api/gridRowSelectionApi';
-import type { GridGroupNode, GridRowId } from '../../../models/gridRows';
+import { type GridGroupNode, type GridRowId } from '../../../models/gridRows';
 import { GridSignature } from '../../../constants/signature';
 import { useGridEvent } from '../../utils/useGridEvent';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -38,13 +38,13 @@ import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../..
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
-import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { type GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../internals/constants';
 import { gridClasses } from '../../../constants/gridClasses';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
 import { isMultipleRowSelectionEnabled, findRowsToSelect, findRowsToDeselect } from './utils';
 import { runIf } from '../../../utils/utils';
-import type { GridRowSelectionModel } from '../../../models/gridRowSelectionModel';
+import { type GridRowSelectionModel } from '../../../models/gridRowSelectionModel';
 import { createRowSelectionManager } from '../../../models/gridRowSelectionManager';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 

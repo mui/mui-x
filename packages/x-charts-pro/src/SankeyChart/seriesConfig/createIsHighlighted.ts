@@ -1,9 +1,9 @@
-import type { ChartSeriesType } from '@mui/x-charts/internals';
-import type { HighlightItemIdentifierWithType } from '@mui/x-charts/models';
-import type {
-  SankeyHighlightScope,
-  SankeyLinkHighlight,
-  SankeyNodeHighlight,
+import { type ChartSeriesType } from '@mui/x-charts/internals';
+import { type HighlightItemIdentifierWithType } from '@mui/x-charts/models';
+import {
+  type SankeyHighlightScope,
+  type SankeyLinkHighlight,
+  type SankeyNodeHighlight,
 } from '../sankey.highlight.types';
 
 const DEFAULT_NODE_HIGHLIGHT = 'links';

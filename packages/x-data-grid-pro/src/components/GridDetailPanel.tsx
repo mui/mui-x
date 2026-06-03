@@ -6,7 +6,7 @@ import { vars } from '@mui/x-data-grid/internals';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-import type { DataGridProProcessedProps } from '../models/dataGridProProps';
+import { type DataGridProProcessedProps } from '../models/dataGridProProps';
 
 type OwnerState = DataGridProProcessedProps;
 

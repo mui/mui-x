@@ -5,9 +5,9 @@ import {
   type GridRowTreeConfig,
 } from '@mui/x-data-grid';
 import { buildRootGroup, type GridRowTreeCreationValue } from '@mui/x-data-grid/internals';
-import type { RowTreeBuilderNode, GridTreePathDuplicateHandler } from './models';
+import { type RowTreeBuilderNode, type GridTreePathDuplicateHandler } from './models';
 import { insertDataRowInTree } from './insertDataRowInTree';
-import type { DataGridProProps } from '../../models/dataGridProProps';
+import { type DataGridProProps } from '../../models/dataGridProProps';
 
 interface CreateRowTreeParams {
   previousTree: GridRowTreeConfig | null;

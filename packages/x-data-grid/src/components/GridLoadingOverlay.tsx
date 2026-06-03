@@ -2,13 +2,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import type { DataGridProcessedProps } from '../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridOverlay, type GridOverlayProps } from './containers/GridOverlay';
 import { GridSkeletonLoadingOverlay } from './GridSkeletonLoadingOverlay';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridRowCountSelector, useGridSelector } from '../hooks';
-import type { GridLoadingOverlayVariant } from '../hooks/features/overlays/gridOverlaysInterfaces';
+import { type GridLoadingOverlayVariant } from '../hooks/features/overlays/gridOverlaysInterfaces';
 
 export interface GridLoadingOverlayProps extends GridOverlayProps {
   /**

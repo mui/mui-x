@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { ChartsContextValue } from './ChartsProvider.types';
+import { type ChartsContextValue } from './ChartsProvider.types';
 
 /**
  * @ignore - internal component.

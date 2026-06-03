@@ -15,7 +15,7 @@ import {
   gridStringOrNumberComparator,
   type GridGetRowsResponse,
 } from '@mui/x-data-grid-premium';
-import type { GridStateColDef } from '@mui/x-data-grid-pro/internals';
+import { type GridStateColDef } from '@mui/x-data-grid-pro/internals';
 import { randomInt } from '../services/random-generator';
 
 const getAvailableAggregationFunctions = (columnType: GridColDef['type']) => {

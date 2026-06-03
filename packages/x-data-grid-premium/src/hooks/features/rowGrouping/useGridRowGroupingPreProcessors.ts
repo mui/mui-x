@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   gridColumnLookupSelector,
   type GridRowId,
@@ -21,7 +21,7 @@ import {
   getVisibleRowsLookup,
   RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   gridRowGroupingModelSelector,
   gridRowGroupingSanitizedModelSelector,
@@ -38,7 +38,7 @@ import {
   getCellGroupingCriteria,
   getGroupingRules,
 } from './gridRowGroupingUtils';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { type GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const useGridRowGroupingPreProcessors = (
   apiRef: RefObject<GridPrivateApiPremium>,

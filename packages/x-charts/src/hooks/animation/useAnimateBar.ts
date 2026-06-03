@@ -1,7 +1,7 @@
 import type * as React from 'react';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { useAnimate } from './useAnimate';
-import type { BarProps } from '../../BarChart/AnimatedBarElement';
+import { type BarProps } from '../../BarChart/AnimatedBarElement';
 
 type UseAnimateBarParams = Pick<
   BarProps,

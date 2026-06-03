@@ -1,12 +1,12 @@
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
-import type { GridColDef } from '../../../models/colDef/gridColDef';
+import { type GridColDef } from '../../../models/colDef/gridColDef';
 import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { getDataGridUtilityClass } from '../../../constants';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 

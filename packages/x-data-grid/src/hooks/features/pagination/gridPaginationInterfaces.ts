@@ -1,5 +1,8 @@
-import type { GridFeatureMode } from '../../../models/gridFeatureMode';
-import type { GridPaginationMeta, GridPaginationModel } from '../../../models/gridPaginationProps';
+import { type GridFeatureMode } from '../../../models/gridFeatureMode';
+import {
+  type GridPaginationMeta,
+  type GridPaginationModel,
+} from '../../../models/gridPaginationProps';
 
 export interface GridPaginationState {
   paginationModel: GridPaginationModel;

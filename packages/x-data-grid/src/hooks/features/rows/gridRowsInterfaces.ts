@@ -1,10 +1,10 @@
-import type {
-  GridRowEntry,
-  GridRowId,
-  GridRowTreeConfig,
-  GridValidRowModel,
+import {
+  type GridRowEntry,
+  type GridRowId,
+  type GridRowTreeConfig,
+  type GridValidRowModel,
 } from '../../../models/gridRows';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 export interface GridRowsInternalCache {
   /**

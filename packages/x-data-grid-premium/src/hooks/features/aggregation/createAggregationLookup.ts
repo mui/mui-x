@@ -1,4 +1,4 @@
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   gridColumnLookupSelector,
   type GridRowId,
@@ -10,12 +10,12 @@ import {
   type GridColumnLookup,
 } from '@mui/x-data-grid-pro';
 import { getVisibleRows, type GridAggregationPosition } from '@mui/x-data-grid-pro/internals';
-import type { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import type {
-  GridAggregationFunction,
-  GridAggregationLookup,
-  GridAggregationRules,
+import { type GridApiPremium, type GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import {
+  type GridAggregationFunction,
+  type GridAggregationLookup,
+  type GridAggregationRules,
 } from './gridAggregationInterfaces';
 
 type AggregatedValues = { aggregatedField: string; values: any[] }[];

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import type { LineElementOwnerState } from './LineElement';
+import { type LineElementOwnerState } from './LineElement';
 import { useAnimateLine } from '../hooks';
 import { AppearingMask } from './AppearingMask';
 

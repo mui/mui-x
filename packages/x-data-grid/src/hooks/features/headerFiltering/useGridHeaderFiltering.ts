@@ -1,20 +1,20 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type { GridHeaderFilteringState } from '../../../models/gridHeaderFilteringModel';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type GridHeaderFilteringState } from '../../../models/gridHeaderFilteringModel';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { type GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridLogger } from '../../utils';
 import {
   gridColumnLookupSelector,
   gridColumnVisibilityModelSelector,
   gridColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
-import type {
-  GridHeaderFilteringApi,
-  GridHeaderFilteringPrivateApi,
+import {
+  type GridHeaderFilteringApi,
+  type GridHeaderFilteringPrivateApi,
 } from '../../../models/api/gridHeaderFilteringApi';
 
 export const headerFilteringStateInitializer: GridStateInitializer = (

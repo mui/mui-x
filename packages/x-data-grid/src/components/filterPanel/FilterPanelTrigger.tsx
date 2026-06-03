@@ -13,7 +13,7 @@ import {
   useGridSelector,
 } from '../../hooks';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { GridSlotProps } from '../../models';
+import { type GridSlotProps } from '../../models';
 
 export interface FilterPanelState {
   /**

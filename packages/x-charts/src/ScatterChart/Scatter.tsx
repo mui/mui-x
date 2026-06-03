@@ -18,9 +18,9 @@ import {
 } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from './ScatterMarker';
 import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
-import type { ScatterSizeGetter } from './seriesConfig/getMarkerSize';
+import { type ScatterSizeGetter } from './seriesConfig/getMarkerSize';
 import { useUtilityClasses } from './scatterClasses';
-import type { ScatterClasses } from './scatterClasses';
+import { type ScatterClasses } from './scatterClasses';
 import { useScatterPlotData } from './useScatterPlotData';
 import { useChartsContext } from '../context/ChartsProvider';
 import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';

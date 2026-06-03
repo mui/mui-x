@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   gridRowTreeSelector,
   useFirstRender,
@@ -21,18 +21,18 @@ import {
   GRID_TREE_DATA_GROUPING_COL_DEF,
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from '../treeData/gridTreeDataGroupColDef';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { getParentPath, skipFiltering, skipSorting } from './utils';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
-import type {
-  GridGroupingColDefOverride,
-  GridGroupingColDefOverrideParams,
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
+import {
+  type GridGroupingColDefOverride,
+  type GridGroupingColDefOverrideParams,
 } from '../../../models/gridGroupingColDefOverride';
 import { GridDataSourceTreeDataGroupingCell } from '../../../components/GridDataSourceTreeDataGroupingCell';
 import { createRowTree } from '../../../utils/tree/createRowTree';
-import type {
-  GridTreePathDuplicateHandler,
-  RowTreeBuilderGroupingCriterion,
+import {
+  type GridTreePathDuplicateHandler,
+  type RowTreeBuilderGroupingCriterion,
 } from '../../../utils/tree/models';
 import { updateRowTree } from '../../../utils/tree/updateRowTree';
 import { getVisibleRowsLookup } from '../../../utils/tree/utils';

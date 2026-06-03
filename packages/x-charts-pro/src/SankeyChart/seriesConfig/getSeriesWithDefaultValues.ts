@@ -1,5 +1,10 @@
-import type { GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
-import type { SankeyNodeId, SankeyNode, SankeyLayoutLink, SankeyLayoutNode } from '../sankey.types';
+import { type GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
+import {
+  type SankeyNodeId,
+  type SankeyNode,
+  type SankeyLayoutLink,
+  type SankeyLayoutNode,
+} from '../sankey.types';
 import { sankey, type SankeyGraph } from '../d3Sankey';
 import { getNodeAlignFunction } from '../utils';
 

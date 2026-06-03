@@ -1,4 +1,4 @@
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   type GridColDef,
   type GridColumnGroupingModel,
@@ -9,14 +9,17 @@ import {
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
 
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import type {
-  GridPivotingDynamicPropsOverrides,
-  PivotingColDefCallback,
-  GridPivotModel,
+import { type GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import {
+  type GridPivotingDynamicPropsOverrides,
+  type PivotingColDefCallback,
+  type GridPivotModel,
 } from '../pivoting/gridPivotingInterfaces';
-import type { GridAggregationModel } from '../aggregation/gridAggregationInterfaces';
-import type { GridDataSourcePivotColumnGroupPath, GridGetRowsResponsePivotColumn } from './models';
+import { type GridAggregationModel } from '../aggregation/gridAggregationInterfaces';
+import {
+  type GridDataSourcePivotColumnGroupPath,
+  type GridGetRowsResponsePivotColumn,
+} from './models';
 
 export const getPropsOverrides = (
   pivotColumns: GridGetRowsResponsePivotColumn[],

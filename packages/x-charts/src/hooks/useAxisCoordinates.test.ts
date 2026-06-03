@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getXAxisCoordinates, getYAxisCoordinates } from './useAxisCoordinates';
-import type { ChartDrawingArea } from './useDrawingArea';
+import { type ChartDrawingArea } from './useDrawingArea';
 
 const drawingArea: ChartDrawingArea = {
   left: 50,

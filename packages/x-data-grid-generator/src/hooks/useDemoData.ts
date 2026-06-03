@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import { LRUCache } from 'lru-cache';
-import type { GridColumnVisibilityModel } from '@mui/x-data-grid-premium';
+import { type GridColumnVisibilityModel } from '@mui/x-data-grid-premium';
 import { type GridDemoData, getRealGridData } from '../services/real-data-service';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';
 import asyncWorker from '../services/asyncWorker';
-import type { GridColDefGenerator } from '../services/gridColDefGenerator';
+import { type GridColDefGenerator } from '../services/gridColDefGenerator';
 import {
   type AddPathToDemoDataOptions,
   type DemoTreeDataValue,

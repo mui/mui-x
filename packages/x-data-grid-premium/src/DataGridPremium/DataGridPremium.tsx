@@ -20,9 +20,9 @@ import {
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
-import type {
-  DataGridPremiumProcessedProps,
-  DataGridPremiumProps,
+import {
+  type DataGridPremiumProcessedProps,
+  type DataGridPremiumProps,
 } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
 import { Sidebar } from '../components/sidebar';
@@ -30,7 +30,7 @@ import { useGridAriaAttributesPremium } from '../hooks/utils/useGridAriaAttribut
 import { useGridRowAriaAttributesPremium } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { gridCellAggregationResultSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
+import { type GridApiPremium, type GridPrivateApiPremium } from '../models/gridApiPremium';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 import { gridSidebarOpenSelector } from '../hooks/features/sidebar';

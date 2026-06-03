@@ -13,7 +13,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridPivotActiveSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
 import { GridPivotPanelSearch } from './GridPivotPanelSearch';
-import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import { type DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
 export interface GridPivotPanelHeaderProps {
   searchValue: string;

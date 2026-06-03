@@ -1,5 +1,5 @@
 import type * as Excel from '@mui/x-internal-exceljs-fork';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   type GridRowId,
   type GridColDef,
@@ -17,8 +17,11 @@ import {
   gridHasColSpanSelector,
 } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
-import type { ColumnsStylesInterface, GridExcelExportOptions } from '../gridExcelExportInterface';
-import type { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
+import {
+  type ColumnsStylesInterface,
+  type GridExcelExportOptions,
+} from '../gridExcelExportInterface';
+import { type GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 import {
   addColumnGroupingHeaders,
   addSerializedRowToWorksheet,

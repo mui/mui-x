@@ -10,7 +10,7 @@ import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { ToolbarContext } from './ToolbarContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { sortByDocumentPosition } from './utils';
 
 export type ToolbarProps = React.HTMLAttributes<HTMLDivElement> & {

@@ -10,7 +10,7 @@ import { useStore } from '../internals/store/useStore';
 import { AnimatedArea, type AnimatedAreaProps } from './AnimatedArea';
 import { type SeriesId } from '../models/seriesType/common';
 import { type LineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
-import type { AreaPropsOverrides } from '../models/chartsSlotsComponentsProps';
+import { type AreaPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface AreaElementOwnerState {
   seriesId: SeriesId;

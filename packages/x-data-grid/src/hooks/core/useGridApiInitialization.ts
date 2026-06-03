@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { EventManager } from '@mui/x-internals/EventManager';
 import { Store } from '@mui/x-internals/store';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../../constants/signature';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import type { GridCoreApi } from '../../models';
-import type { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type GridCoreApi } from '../../models';
+import { type GridApiCommon, type GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 
 const SYMBOL_API_PRIVATE = Symbol('mui.api_private');
 

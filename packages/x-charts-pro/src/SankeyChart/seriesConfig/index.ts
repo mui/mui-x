@@ -1,4 +1,4 @@
-import type { SeriesLayoutGetter, ChartSeriesTypeConfig } from '@mui/x-charts/internals';
+import { type SeriesLayoutGetter, type ChartSeriesTypeConfig } from '@mui/x-charts/internals';
 import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 import { tooltipGetter } from './tooltipGetter';
 import { calculateSankeyLayout } from '../calculateSankeyLayout';

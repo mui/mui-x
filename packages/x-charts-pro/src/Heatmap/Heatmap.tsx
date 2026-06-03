@@ -11,7 +11,7 @@ import {
   type XAxis,
   type YAxis,
 } from '@mui/x-charts/internals';
-import type { TooltipPropsOverrides } from '@mui/x-charts/models';
+import { type TooltipPropsOverrides } from '@mui/x-charts/models';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import {

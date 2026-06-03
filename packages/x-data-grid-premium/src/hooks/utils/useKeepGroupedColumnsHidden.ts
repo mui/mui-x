@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   type GridApi,
   type GridColumnVisibilityModel,
   gridColumnVisibilityModelSelector,
 } from '@mui/x-data-grid-pro';
-import type { GridRowGroupingModel } from '../features/rowGrouping';
-import type { GridInitialStatePremium } from '../../models/gridStatePremium';
-import type { DataGridPremiumProps } from '../../models/dataGridPremiumProps';
+import { type GridRowGroupingModel } from '../features/rowGrouping';
+import { type GridInitialStatePremium } from '../../models/gridStatePremium';
+import { type DataGridPremiumProps } from '../../models/dataGridPremiumProps';
 
 const updateColumnVisibilityModel = (
   columnVisibilityModel: GridColumnVisibilityModel | undefined,

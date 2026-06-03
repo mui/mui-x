@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   useGridInitialization,
   useGridInitializeState,
@@ -56,8 +56,8 @@ import {
   type GridConfiguration,
   useFirstRender,
 } from '@mui/x-data-grid/internals';
-import type { GridPrivateApiPro } from '../models/gridApiPro';
-import type { DataGridProProcessedProps } from '../models/dataGridProProps';
+import { type GridPrivateApiPro } from '../models/gridApiPro';
+import { type DataGridProProcessedProps } from '../models/dataGridProProps';
 // Pro-only features
 import { useGridInfiniteLoader } from '../hooks/features/infiniteLoader/useGridInfiniteLoader';
 import {

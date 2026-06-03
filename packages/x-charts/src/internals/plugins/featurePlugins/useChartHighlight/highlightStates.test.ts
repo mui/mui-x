@@ -1,12 +1,12 @@
-import type { MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional } from '@mui/x-internals/types';
 import {
   isSeriesHighlighted,
   isSeriesFaded,
   getSeriesHighlightedDataIndex,
   getSeriesUnfadedDataIndex,
 } from './highlightStates';
-import type { SeriesId, SeriesItemIdentifierWithType } from '../../../../models/seriesType';
-import type { CommonHighlightScope } from './highlightConfig.types';
+import { type SeriesId, type SeriesItemIdentifierWithType } from '../../../../models/seriesType';
+import { type CommonHighlightScope } from './highlightConfig.types';
 
 describe('highlightStates', () => {
   const s1: SeriesId = 's1';

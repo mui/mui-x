@@ -1,5 +1,5 @@
 import { createGetBarDimensions } from '../../../internals/createGetBarDimensions';
-import type { TooltipItemPositionGetter } from '../../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { type TooltipItemPositionGetter } from '../../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'bar'> = (params) => {
   const { series, identifier, axesConfig, placement } = params;

@@ -5,8 +5,8 @@ import { styled, type SxProps, type Theme } from '@mui/material/styles';
 import { vars } from '../../constants/cssVariables';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import type { GridRenderCellParams } from '../../models/params/gridCellParams';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type GridRenderCellParams } from '../../models/params/gridCellParams';
 
 const GridFooterCellRoot = styled('div', {
   name: 'MuiDataGrid',

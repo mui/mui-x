@@ -4,7 +4,7 @@ import {
   isNumber,
   propValidatorsDataGrid,
 } from '@mui/x-data-grid/internals';
-import type { DataGridProProcessedProps } from '../models/dataGridProProps';
+import { type DataGridProProcessedProps } from '../models/dataGridProProps';
 
 export const propValidatorsDataGridPro: PropValidator<DataGridProProcessedProps>[] = [
   ...propValidatorsDataGrid,

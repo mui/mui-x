@@ -1,9 +1,9 @@
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { GridParamsApi, GridParamsPrivateApi } from '../../../models/api/gridParamsApi';
-import type { GridCellParams } from '../../../models/params/gridCellParams';
-import type { GridRowParams } from '../../../models/params/gridRowParams';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type GridParamsApi, type GridParamsPrivateApi } from '../../../models/api/gridParamsApi';
+import { type GridCellParams } from '../../../models/params/gridCellParams';
+import { type GridRowParams } from '../../../models/params/gridRowParams';
 import {
   getGridCellElement,
   getGridColumnHeaderElement,
@@ -11,10 +11,10 @@ import {
 } from '../../../utils/domUtils';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { gridRowNodeSelector } from './gridRowsSelector';
-import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
+import { type GridConfiguration } from '../../../models/configuration/gridConfiguration';
 
 class MissingRowIdError extends Error {}
 

@@ -1,13 +1,13 @@
-import type {
-  CommonSeriesType,
-  CommonLineSeriesType,
-  RadialSeriesType,
-  StackableSeriesType,
-  SeriesId,
-  CommonDefaultizedProps,
+import {
+  type CommonSeriesType,
+  type CommonLineSeriesType,
+  type RadialSeriesType,
+  type StackableSeriesType,
+  type SeriesId,
+  type CommonDefaultizedProps,
 } from '@mui/x-charts/internals';
-import type { CurveType, StackOffsetType } from '@mui/x-charts/models';
-import type { DefaultizedProps } from '@mui/x-internals/types';
+import { type CurveType, type StackOffsetType } from '@mui/x-charts/models';
+import { type DefaultizedProps } from '@mui/x-internals/types';
 
 export interface RadialLineSeriesType
   extends

@@ -10,11 +10,11 @@ import { type ChartsOverlayProps } from '../ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { type ChartsContainerProps } from '../ChartsContainer';
 import { type AreaPlotProps } from './AreaPlot';
-import type { LineChartProps } from './LineChart';
+import { type LineChartProps } from './LineChart';
 import { type LineHighlightPlotProps } from './LineHighlightPlot';
 import { type LinePlotProps } from './LinePlot';
 import { type MarkPlotProps } from './MarkPlot';
-import type { ChartsWrapperProps } from '../ChartsWrapper';
+import { type ChartsWrapperProps } from '../ChartsWrapper';
 import { LINE_CHART_PLUGINS, type LineChartPluginSignatures } from './LineChart.plugins';
 
 /**

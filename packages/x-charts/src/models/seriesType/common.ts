@@ -1,7 +1,7 @@
-import type { StackOffsetType, StackOrderType } from '../stacking';
-import type { ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
-import type { AxisId } from '../axis';
-import type { ChartSeriesType, HighlightScope } from './config';
+import { type StackOffsetType, type StackOrderType } from '../stacking';
+import { type ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
+import { type AxisId } from '../axis';
+import { type ChartSeriesType, type HighlightScope } from './config';
 
 /**
  * The unique identifier of a series.

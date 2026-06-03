@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridRegisterStrategyProcessor } from '../../core/strategyProcessing/useGridRegisterStrategyProcessor';
 import { useGridEvent as addEventHandler } from '../../utils/useGridEvent';
 import { useGridDataSourceBase } from './useGridDataSourceBase';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type { GridEventLookup } from '../../../models/events';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type GridEventLookup } from '../../../models/events';
 
 /**
  * Community version of the data source hook. Contains implementation of the `useGridDataSourceBase` hook.

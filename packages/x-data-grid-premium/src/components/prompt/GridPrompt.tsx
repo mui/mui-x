@@ -14,10 +14,10 @@ import { keyframes, styled } from '@mui/system';
 import { getValueOptions, isSingleSelectColDef, vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import type {
-  Prompt,
-  PromptResponse,
+import { type DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import {
+  type Prompt,
+  type PromptResponse,
 } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 

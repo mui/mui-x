@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { useFirstRender } from '../../utils/useFirstRender';
-import type { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
-import type { GridPipeProcessorGroup, GridPipeProcessor } from './gridPipeProcessingApi';
+import { type GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
+import { type GridPipeProcessorGroup, type GridPipeProcessor } from './gridPipeProcessingApi';
 
 export const useGridRegisterPipeProcessor = <
   PrivateApi extends GridPrivateApiCommon,

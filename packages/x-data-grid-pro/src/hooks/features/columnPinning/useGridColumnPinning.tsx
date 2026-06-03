@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   useGridSelector,
   gridVisibleColumnDefinitionsSelector,
@@ -21,10 +21,10 @@ import {
   type GridStateInitializer,
   type GridPinnedColumnFields,
 } from '@mui/x-data-grid/internals';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
-import type { GridInitialStatePro } from '../../../models/gridStatePro';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import type { GridColumnPinningApi } from './gridColumnPinningInterface';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type GridInitialStatePro } from '../../../models/gridStatePro';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type GridColumnPinningApi } from './gridColumnPinningInterface';
 
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState'>

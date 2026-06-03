@@ -1,7 +1,7 @@
 import { interpolateString } from '@mui/x-charts-vendor/d3-interpolate';
 import type * as React from 'react';
 import { useAnimate } from './useAnimate';
-import type { AnimatedAreaProps } from '../../LineChart';
+import { type AnimatedAreaProps } from '../../LineChart';
 
 type UseAnimateAreaParams = Pick<AnimatedAreaProps, 'd' | 'skipAnimation'> & {
   ref?: React.Ref<SVGPathElement>;

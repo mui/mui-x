@@ -30,7 +30,7 @@ import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/
 import { useAxisSystem } from '../hooks/useAxisSystem';
 import { useChartsLayerContainerRef } from '../hooks';
 import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
-import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
+import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 
 const selectorReturnFalse = () => false;
 const selectorReturnNull = () => null;

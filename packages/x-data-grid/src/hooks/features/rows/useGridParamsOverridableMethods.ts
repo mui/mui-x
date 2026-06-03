@@ -1,8 +1,8 @@
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { getRowValue as getRowValueFn } from './gridRowsUtils';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { GridParamsApi } from '../../../models/api/gridParamsApi';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type GridParamsApi } from '../../../models/api/gridParamsApi';
 
 export const useGridParamsOverridableMethods = (apiRef: RefObject<GridPrivateApiCommunity>) => {
   const getCellValue = React.useCallback<GridParamsApi['getCellValue']>(

@@ -1,13 +1,13 @@
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { gridPreferencePanelStateSelector } from './gridPreferencePanelSelector';
-import type { GridPreferencesPanelApi } from '../../../models/api/gridPreferencesPanelApi';
-import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { type GridPreferencesPanelApi } from '../../../models/api/gridPreferencesPanelApi';
+import { type GridStateInitializer } from '../../utils/useGridInitializeState';
 
 export const preferencePanelStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'initialState'>

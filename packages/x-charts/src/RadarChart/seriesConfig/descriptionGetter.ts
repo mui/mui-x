@@ -1,5 +1,5 @@
 import { getLabel } from '../../internals/getLabel';
-import type { DescriptionGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { type DescriptionGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const descriptionGetter: DescriptionGetter<'radar'> = (params) => {
   const { identifier, series, rotationAxis, localeText } = params;

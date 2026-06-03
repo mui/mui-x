@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import useForkRef from '@mui/utils/useForkRef';
-import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
+import { type GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';

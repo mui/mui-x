@@ -1,14 +1,14 @@
-import type { GridCellMode } from '../gridCell';
-import type {
-  GridRowId,
-  GridRowModel,
-  GridTreeNode,
-  GridTreeNodeWithRender,
-  GridValidRowModel,
+import { type GridCellMode } from '../gridCell';
+import {
+  type GridRowId,
+  type GridRowModel,
+  type GridTreeNode,
+  type GridTreeNodeWithRender,
+  type GridValidRowModel,
 } from '../gridRows';
-import type { GridStateColDef } from '../colDef/gridColDef';
-import type { GridEditCellProps } from '../gridEditRowModel';
-import type { GridApiCommunity } from '../api/gridApiCommunity';
+import { type GridStateColDef } from '../colDef/gridColDef';
+import { type GridEditCellProps } from '../gridEditRowModel';
+import { type GridApiCommunity } from '../api/gridApiCommunity';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.

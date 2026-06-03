@@ -13,10 +13,10 @@ import {
   useGridSelector,
   type ReorderExecutionContext,
 } from '@mui/x-data-grid-pro/internals';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { rowGroupingReorderExecutor } from '../rowReorder/rowGroupingReorderExecutor';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 export const useGridRowsOverridableMethods = (
   apiRef: RefObject<GridPrivateApiPremium>,

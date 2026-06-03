@@ -5,8 +5,8 @@ import { type RadarSeriesMarksProps } from './RadarSeriesPlot.types';
 import { useUtilityClasses, type RadarClasses } from '../radarClasses';
 import { useItemHighlightStateGetter } from '../../hooks/useItemHighlightStateGetter';
 import { type SeriesId } from '../../models/seriesType/common';
-import type { HighlightItemIdentifierWithType } from '../../models';
-import type { HighlightState } from '../../hooks/useItemHighlightState';
+import { type HighlightItemIdentifierWithType } from '../../models';
+import { type HighlightState } from '../../hooks/useItemHighlightState';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;

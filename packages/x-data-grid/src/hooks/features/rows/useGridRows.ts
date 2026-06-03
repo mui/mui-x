@@ -1,17 +1,17 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
-import type { GridEventListener } from '../../../models/events';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type {
-  GridRowApi,
-  GridRowProApi,
-  GridRowProPrivateApi,
+import { type GridEventListener } from '../../../models/events';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import {
+  type GridRowApi,
+  type GridRowProApi,
+  type GridRowProPrivateApi,
 } from '../../../models/api/gridRowApi';
-import type { GridRowId, GridGroupNode, GridLeafNode } from '../../../models/gridRows';
+import { type GridRowId, type GridGroupNode, type GridLeafNode } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -30,11 +30,11 @@ import { gridRowIdSelector } from '../../core/gridPropsSelectors';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridSignature } from '../../../constants/signature';
 import { useGridEvent } from '../../utils/useGridEvent';
-import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { type GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
-import type { GridRowsInternalCache } from './gridRowsInterfaces';
+import { type GridRowsInternalCache } from './gridRowsInterfaces';
 import {
   getTreeNodeDescendants,
   createRowsInternalCache,
@@ -50,7 +50,7 @@ import {
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { GridStrategyGroup } from '../../core/strategyProcessing';
 import { gridPivotActiveSelector } from '../pivoting';
-import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
+import { type GridConfiguration } from '../../../models/configuration/gridConfiguration';
 
 export const rowsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'dataSource' | 'rows' | 'rowCount' | 'getRowId' | 'loading'>

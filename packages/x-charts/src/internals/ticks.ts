@@ -1,4 +1,4 @@
-import type { TickParams } from '../hooks/useTicks';
+import { type TickParams } from '../hooks/useTicks';
 
 export function getTickNumber(params: TickParams, domain: any[], defaultTickNumber: number) {
   const { tickMaxStep, tickMinStep, tickNumber } = params;

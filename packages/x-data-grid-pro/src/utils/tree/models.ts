@@ -1,4 +1,4 @@
-import type { GridKeyValue, GridRowId } from '@mui/x-data-grid';
+import { type GridKeyValue, type GridRowId } from '@mui/x-data-grid';
 
 export interface RowTreeBuilderGroupingCriterion {
   field: string | null;

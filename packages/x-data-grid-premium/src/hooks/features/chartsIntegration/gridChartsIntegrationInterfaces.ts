@@ -1,5 +1,5 @@
-import type { GridColDef } from '@mui/x-data-grid-pro';
-import type { ChartState } from '../../../models/gridChartsIntegration';
+import { type GridColDef } from '@mui/x-data-grid-pro';
+import { type ChartState } from '../../../models/gridChartsIntegration';
 
 export type GridChartsIntegrationSection = 'dimensions' | 'values' | null;
 

@@ -1,4 +1,4 @@
-import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { type GridLocaleText } from '../models/api/gridLocaleTextApi';
 
 export interface Localization {
   components: {

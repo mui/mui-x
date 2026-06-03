@@ -1,5 +1,10 @@
-import type { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
-import type { ChartSeriesDefaultized } from '../models/seriesType/config';
+import {
+  type ChartsXAxisProps,
+  type ChartsYAxisProps,
+  type ComputedAxis,
+  type ScaleName,
+} from '../models/axis';
+import { type ChartSeriesDefaultized } from '../models/seriesType/config';
 import { findMinMax } from './findMinMax';
 import { getBandSize } from './getBandSize';
 

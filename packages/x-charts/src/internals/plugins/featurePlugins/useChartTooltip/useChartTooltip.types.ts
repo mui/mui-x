@@ -1,10 +1,10 @@
-import type { DefaultizedProps } from '@mui/x-internals/types';
-import type { ChartPluginSignature } from '../../models';
-import type {
-  SeriesItemIdentifier,
-  SeriesItemIdentifierWithType,
+import { type DefaultizedProps } from '@mui/x-internals/types';
+import { type ChartPluginSignature } from '../../models';
+import {
+  type SeriesItemIdentifier,
+  type SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
-import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
 
 export interface UseChartTooltipInstance {
   /**

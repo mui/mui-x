@@ -1,8 +1,8 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { type SeriesId } from '../../../../models/seriesType/common';
-import type { HighlightItemIdentifierWithType } from '../../../../models/seriesType';
-import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
-import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
+import { type HighlightItemIdentifierWithType } from '../../../../models/seriesType';
+import { type ChartSeriesType, type HighlightScope } from '../../../../models/seriesType/config';
+import { type ComposableChartSeriesType } from '../../../../models/seriesType/composition';
 import { type ChartRootSelector } from '../../utils/selectors';
 import { type UseChartHighlightSignature } from './useChartHighlight.types';
 import {

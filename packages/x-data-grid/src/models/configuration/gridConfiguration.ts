@@ -1,15 +1,15 @@
 import type * as React from 'react';
-import type {
-  GridRowAriaAttributesInternalHook,
-  GridRowsOverridableMethodsInternalHook,
+import {
+  type GridRowAriaAttributesInternalHook,
+  type GridRowsOverridableMethodsInternalHook,
 } from './gridRowConfiguration';
-import type { GridAggregationInternalHooks } from './gridAggregationConfiguration';
-import type { GridCellEditableInternalHook } from './gridCellEditableConfiguration';
-import type { GridCSSVariablesInterface } from '../../constants/cssVariables';
-import type { GridPrivateApiCommon } from '../api/gridApiCommon';
-import type { GridPrivateApiCommunity } from '../api/gridApiCommunity';
-import type { DataGridProcessedProps } from '../props/DataGridProps';
-import type { GridParamsOverridableMethodsInternalHook } from './gridParamsConfiguration';
+import { type GridAggregationInternalHooks } from './gridAggregationConfiguration';
+import { type GridCellEditableInternalHook } from './gridCellEditableConfiguration';
+import { type GridCSSVariablesInterface } from '../../constants/cssVariables';
+import { type GridPrivateApiCommon } from '../api/gridApiCommon';
+import { type GridPrivateApiCommunity } from '../api/gridApiCommunity';
+import { type DataGridProcessedProps } from '../props/DataGridProps';
+import { type GridParamsOverridableMethodsInternalHook } from './gridParamsConfiguration';
 
 export interface GridAriaAttributesInternalHook {
   useGridAriaAttributes: () => React.HTMLAttributes<HTMLElement>;

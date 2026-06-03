@@ -6,9 +6,9 @@ import { ChartsLoadingOverlay } from './ChartsLoadingOverlay';
 import { useSeries } from '../hooks/useSeries';
 import { type SeriesId } from '../models/seriesType/common';
 import { ChartsNoDataOverlay } from './ChartsNoDataOverlay';
-import type {
-  LoadingOverlayPropsOverrides,
-  NoDataOverlayPropsOverrides,
+import {
+  type LoadingOverlayPropsOverrides,
+  type NoDataOverlayPropsOverrides,
 } from '../models/chartsSlotsComponentsProps';
 
 export function useNoData() {

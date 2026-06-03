@@ -1,6 +1,6 @@
-import type { SeriesItemIdentifierWithType } from '../../../../../models';
-import type { ChartSeriesType } from '../../../../../models/seriesType/config';
-import type { ChartSeriesConfig } from '../types';
+import { type SeriesItemIdentifierWithType } from '../../../../../models';
+import { type ChartSeriesType } from '../../../../../models/seriesType/config';
+import { type ChartSeriesConfig } from '../types';
 
 /**
  * Cleans a series item identifier by extracting only the relevant properties

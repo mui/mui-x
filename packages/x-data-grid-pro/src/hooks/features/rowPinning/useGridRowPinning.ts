@@ -1,15 +1,18 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { useGridApiMethod } from '@mui/x-data-grid';
 import { getRowIdFromRowModel, type GridStateInitializer } from '@mui/x-data-grid/internals';
 
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
-import type { DataGridProProcessedProps, DataGridProProps } from '../../../models/dataGridProProps';
-import type {
-  GridPinnedRowsProp,
-  GridRowPinningApi,
-  GridRowPinningInternalCache,
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
+import {
+  type DataGridProProcessedProps,
+  type DataGridProProps,
+} from '../../../models/dataGridProProps';
+import {
+  type GridPinnedRowsProp,
+  type GridRowPinningApi,
+  type GridRowPinningInternalCache,
 } from './gridRowPinningInterface';
 
 function createPinnedRowsInternalCache(

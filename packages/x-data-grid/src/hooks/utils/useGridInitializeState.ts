@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
-import type { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import { type GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;

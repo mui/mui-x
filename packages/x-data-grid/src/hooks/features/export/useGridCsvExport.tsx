@@ -1,16 +1,16 @@
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import type { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
-import type { GridCsvExportOptions } from '../../../models/gridExport';
+import { type GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
+import { type GridCsvExportOptions } from '../../../models/gridExport';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { exportAs } from '../../../utils/exportAs';
 import { buildCSV } from './serializers/csvSerializer';
 import { getColumnsToExport, defaultGetRowsToExport } from './utils';
 import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { type GridExportDisplayOptions, GridCsvExportMenuItem } from '../../../components/toolbar';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 /**
  * @requires useGridColumns (state)

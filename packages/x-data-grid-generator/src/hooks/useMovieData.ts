@@ -1,4 +1,4 @@
-import type { GridColDef, GridRowModel } from '@mui/x-data-grid-premium';
+import { type GridColDef, type GridRowModel } from '@mui/x-data-grid-premium';
 
 export type Movie = {
   id: number;

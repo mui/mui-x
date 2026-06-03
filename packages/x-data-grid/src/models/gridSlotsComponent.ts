@@ -1,6 +1,6 @@
 import type * as React from 'react';
-import type { GridSlotProps } from './gridSlotsComponentsProps';
-import type { GridIconSlotsComponent } from './gridIconSlotsComponent';
+import { type GridSlotProps } from './gridSlotsComponentsProps';
+import { type GridIconSlotsComponent } from './gridIconSlotsComponent';
 
 export type { GridSlotProps } from './gridSlotsComponentsProps';
 

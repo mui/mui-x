@@ -10,7 +10,7 @@ import { useItemHighlightState } from '../hooks/useItemHighlightState';
 import { selectorChartExperimentalFeaturesState } from '../internals/plugins/corePlugins/useChartExperimentalFeature';
 import { useStore } from '../internals/store/useStore';
 import { type LineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
-import type { LinePropsOverrides } from '../models/chartsSlotsComponentsProps';
+import { type LinePropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface LineElementOwnerState {
   seriesId: SeriesId;

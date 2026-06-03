@@ -1,30 +1,42 @@
-import type { DefaultizedProps, MakeOptional, MakeRequired } from '@mui/x-internals/types';
-import type {
-  ScatterSeriesType,
-  DefaultizedScatterSeriesType,
-  ScatterItemIdentifier,
-  ScatterValueType,
+import {
+  type DefaultizedProps,
+  type MakeOptional,
+  type MakeRequired,
+} from '@mui/x-internals/types';
+import {
+  type ScatterSeriesType,
+  type DefaultizedScatterSeriesType,
+  type ScatterItemIdentifier,
+  type ScatterValueType,
 } from './scatter';
-import type { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
-import type { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
-import type {
-  PieSeriesType,
-  DefaultizedPieSeriesType,
-  PieItemIdentifier,
-  PieValueType,
-  DefaultizedPieValueType,
-  PieSeriesLayout,
+import {
+  type LineSeriesType,
+  type DefaultizedLineSeriesType,
+  type LineItemIdentifier,
+} from './line';
+import { type BarItemIdentifier, type BarSeriesType, type DefaultizedBarSeriesType } from './bar';
+import {
+  type PieSeriesType,
+  type DefaultizedPieSeriesType,
+  type PieItemIdentifier,
+  type PieValueType,
+  type DefaultizedPieValueType,
+  type PieSeriesLayout,
 } from './pie';
-import type { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
-import type { SeriesColor, SeriesId } from './common';
-import type {
-  ChartsRadiusAxisProps,
-  ChartsRotationAxisProps,
-  ComputedXAxis,
-  ComputedYAxis,
-  PolarAxisDefaultized,
+import {
+  type DefaultizedRadarSeriesType,
+  type RadarItemIdentifier,
+  type RadarSeriesType,
+} from './radar';
+import { type SeriesColor, type SeriesId } from './common';
+import {
+  type ChartsRadiusAxisProps,
+  type ChartsRotationAxisProps,
+  type ComputedXAxis,
+  type ComputedYAxis,
+  type PolarAxisDefaultized,
 } from '../axis';
-import type { CommonHighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
+import { type CommonHighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 
 export interface ChartsSeriesConfig {
   bar: {

@@ -6,8 +6,8 @@ import {
 } from '@mui/x-charts/internals';
 import { useChartsContainerProProps } from '@mui/x-charts-pro/internals';
 import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
-import type { ChartsContainerPremiumProps } from './ChartsContainerPremium';
-import type { ChartsDataProviderPremiumProps } from '../ChartsDataProviderPremium';
+import { type ChartsContainerPremiumProps } from './ChartsContainerPremium';
+import { type ChartsDataProviderPremiumProps } from '../ChartsDataProviderPremium';
 
 export type UseChartsContainerPremiumPropsReturnValue<
   SeriesType extends ChartSeriesType,

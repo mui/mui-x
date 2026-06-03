@@ -10,8 +10,8 @@ import {
 } from '@mui/x-data-grid';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridApiCommunity } from '@mui/x-data-grid/internals';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridApiCommunity } from '@mui/x-data-grid/internals';
 
 const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 

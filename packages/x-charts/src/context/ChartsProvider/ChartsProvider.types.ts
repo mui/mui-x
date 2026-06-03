@@ -1,15 +1,15 @@
 import { type Store } from '@mui/x-internals/store';
-import type {
-  ChartAnyPluginSignature,
-  ChartInstance,
-  ChartPublicAPI,
-  ChartState,
-  ConvertSignaturesIntoPlugins,
-  MergeSignaturesProperty,
+import {
+  type ChartAnyPluginSignature,
+  type ChartInstance,
+  type ChartPublicAPI,
+  type ChartState,
+  type ConvertSignaturesIntoPlugins,
+  type MergeSignaturesProperty,
 } from '../../internals/plugins/models';
-import type { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
-import type { UseChartBaseProps } from '../../internals/store/useCharts.types';
-import type { ChartSeriesType } from '../../models/seriesType/config';
+import { type ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
+import { type UseChartBaseProps } from '../../internals/store/useCharts.types';
+import { type ChartSeriesType } from '../../models/seriesType/config';
 
 export type ChartsContextValue<
   TSignatures extends readonly ChartAnyPluginSignature[],

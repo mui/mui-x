@@ -1,5 +1,5 @@
-import type { BarSeriesType } from '../models';
-import type { SeriesId } from '../models/seriesType/common';
+import { type BarSeriesType } from '../models';
+import { type SeriesId } from '../models/seriesType/common';
 
 export type AnimationData = {
   x: number;

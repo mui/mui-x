@@ -1,11 +1,11 @@
 import { type MakeOptional } from '@mui/x-internals/types';
 import { DEFAULT_RADIUS_AXIS_KEY, DEFAULT_ROTATION_AXIS_KEY } from '../../../../constants';
 import { type ScaleName } from '../../../../models';
-import type {
-  ChartsRotationAxisProps,
-  AxisId,
-  PolarAxisConfig,
-  ChartsRadiusAxisProps,
+import {
+  type ChartsRotationAxisProps,
+  type AxisId,
+  type PolarAxisConfig,
+  type ChartsRadiusAxisProps,
 } from '../../../../models/axis';
 import { type DatasetType } from '../../../../models/seriesType/config';
 

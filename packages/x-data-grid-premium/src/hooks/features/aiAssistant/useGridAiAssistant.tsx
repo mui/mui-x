@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   type GridRowSelectionModel,
@@ -21,14 +21,14 @@ import {
   type GridStateInitializer,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import type {
-  GridAiAssistantApi,
-  GridAiAssistantState,
-  Prompt,
-  PromptResponse,
+import { type GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import {
+  type GridAiAssistantApi,
+  type GridAiAssistantState,
+  type Prompt,
+  type PromptResponse,
 } from './gridAiAssistantInterfaces';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   gridAiAssistantConversationsSelector,
   gridAiAssistantActiveConversationSelector,

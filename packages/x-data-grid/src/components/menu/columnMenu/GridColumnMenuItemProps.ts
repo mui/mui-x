@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import type { GridColDef } from '../../../models/colDef/gridColDef';
+import { type GridColDef } from '../../../models/colDef/gridColDef';
 
 export interface GridColumnMenuItemProps {
   // Native Props

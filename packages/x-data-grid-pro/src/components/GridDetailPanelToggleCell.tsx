@@ -10,12 +10,12 @@ import {
 import { createSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import type { DataGridProProcessedProps } from '../models/dataGridProProps';
+import { type DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
   gridDetailPanelExpandedRowIdsSelector,
   gridDetailPanelExpandedRowsContentCacheSelector,
 } from '../hooks/features/detailPanel/gridDetailPanelSelector';
-import type { GridApiPro } from '../models';
+import { type GridApiPro } from '../models';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes']; isExpanded: boolean };
 

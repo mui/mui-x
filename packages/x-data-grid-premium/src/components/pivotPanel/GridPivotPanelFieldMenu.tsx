@@ -4,10 +4,10 @@ import * as React from 'react';
 import { GridMenu, useGridSelector } from '@mui/x-data-grid-pro';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { FieldTransferObject } from './GridPivotPanelBody';
+import { type FieldTransferObject } from './GridPivotPanelBody';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridPivotModelSelector } from '../../hooks/features/pivoting/gridPivotingSelectors';
-import type { DropPosition } from '../../hooks/features/pivoting/gridPivotingInterfaces';
+import { type DropPosition } from '../../hooks/features/pivoting/gridPivotingInterfaces';
 
 interface GridPivotPanelFieldMenuProps {
   field: string;

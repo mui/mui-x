@@ -1,5 +1,5 @@
 import { type DefaultizedProps } from '@mui/x-internals/types';
-import type { StackOffsetType } from '../stacking';
+import { type StackOffsetType } from '../stacking';
 import {
   type CartesianSeriesType,
   type CommonSeriesType,

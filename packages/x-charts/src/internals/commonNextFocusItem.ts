@@ -1,13 +1,13 @@
 import { getPreviousNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getPreviousNonEmptySeries';
 import { getMaxSeriesLength } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getMaxSeriesLength';
-import type { UseChartKeyboardNavigationSignature } from './plugins/featurePlugins/useChartKeyboardNavigation';
+import { type UseChartKeyboardNavigationSignature } from './plugins/featurePlugins/useChartKeyboardNavigation';
 import { getNextNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getNextNonEmptySeries';
 import { findVisibleDataIndex } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/findVisibleDataIndex';
-import type { ChartState } from './plugins/models/chart';
+import { type ChartState } from './plugins/models/chart';
 import { seriesHasData } from './seriesHasData';
-import type { ChartSeriesType } from '../models/seriesType/config';
-import type { SeriesId, FocusedItemIdentifier } from '../models/seriesType';
-import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries/useChartSeries.types';
+import { type ChartSeriesType } from '../models/seriesType/config';
+import { type SeriesId, type FocusedItemIdentifier } from '../models/seriesType';
+import { type ProcessedSeries } from './plugins/corePlugins/useChartSeries/useChartSeries.types';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 
 type ReturnedItem<OutSeriesType extends ChartSeriesType> = {

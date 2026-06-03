@@ -1,6 +1,6 @@
-import type { ComposableChartSeriesType } from '../../../../models/seriesType/composition';
-import type { HighlightItemIdentifierWithType } from '../../../../models';
-import type { ChartSeriesType, HighlightScope } from '../../../../models/seriesType/config';
+import { type ComposableChartSeriesType } from '../../../../models/seriesType/composition';
+import { type HighlightItemIdentifierWithType } from '../../../../models';
+import { type ChartSeriesType, type HighlightScope } from '../../../../models/seriesType/config';
 
 export type HighlightCreator<SeriesType extends ChartSeriesType> = (
   highlightScope: HighlightScope<SeriesType> | null | undefined,

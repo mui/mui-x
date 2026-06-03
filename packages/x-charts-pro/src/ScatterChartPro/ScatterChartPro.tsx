@@ -15,7 +15,7 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip, type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
-import type { TooltipPropsOverrides } from '@mui/x-charts/models';
+import { type TooltipPropsOverrides } from '@mui/x-charts/models';
 import { useScatterChartProps } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';

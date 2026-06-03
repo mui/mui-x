@@ -1,4 +1,4 @@
-import type { GetSeriesWithDefaultValues } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { type GetSeriesWithDefaultValues } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'scatter'> = (
   seriesData,

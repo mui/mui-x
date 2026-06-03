@@ -1,5 +1,5 @@
-import type { HighlightScope } from '@mui/x-charts/context';
-import type { HighlightItemIdentifier } from '@mui/x-charts/models';
+import { type HighlightScope } from '@mui/x-charts/context';
+import { type HighlightItemIdentifier } from '@mui/x-charts/models';
 
 function alwaysFalse(): boolean {
   return false;

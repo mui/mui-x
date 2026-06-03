@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   type GridStateInitializer,
   type GridPipeProcessor,
@@ -8,11 +8,11 @@ import {
   type GridRestoreStatePreProcessingContext,
   useGridEventPriority,
 } from '@mui/x-data-grid-pro/internals';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { gridSidebarStateSelector } from './gridSidebarSelector';
-import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import type { GridSidebarApi } from './gridSidebarInterfaces';
+import { type GridInitialStatePremium } from '../../../models/gridStatePremium';
+import { type GridSidebarApi } from './gridSidebarInterfaces';
 
 export const sidebarStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'initialState'>

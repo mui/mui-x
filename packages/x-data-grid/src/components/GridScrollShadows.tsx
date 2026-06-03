@@ -11,8 +11,8 @@ import {
 } from '../hooks';
 import { gridPinnedRowsSelector } from '../hooks/features/rows/gridRowsSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import type { DataGridProcessedProps } from '../models/props/DataGridProps';
-import type { GridEventListener } from '../models/events';
+import { type DataGridProcessedProps } from '../models/props/DataGridProps';
+import { type GridEventListener } from '../models/events';
 import { vars } from '../constants/cssVariables';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import {

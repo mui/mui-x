@@ -10,7 +10,7 @@ import {
   getTreeNodeDescendants,
 } from '@mui/x-data-grid/internals';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import type { GridTreePathDuplicateHandler, RowTreeBuilderNode } from './models';
+import { type GridTreePathDuplicateHandler, type RowTreeBuilderNode } from './models';
 import { insertDataRowInTree } from './insertDataRowInTree';
 import { removeDataRowFromTree } from './removeDataRowFromTree';
 import { getNodePathInTree } from './utils';

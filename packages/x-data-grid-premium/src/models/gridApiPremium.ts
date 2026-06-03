@@ -1,35 +1,39 @@
-import type { GridPrivateOnlyApiCommon } from '@mui/x-data-grid/internals';
-import type {
-  GridApiCommon,
-  GridColumnPinningApi,
-  GridDetailPanelApi,
-  GridDetailPanelPrivateApi,
-  GridRowPinningApi,
-  GridRowMultiSelectionApi,
-  GridColumnReorderApi,
-  GridRowProApi,
+import { type GridPrivateOnlyApiCommon } from '@mui/x-data-grid/internals';
+import {
+  type GridApiCommon,
+  type GridColumnPinningApi,
+  type GridDetailPanelApi,
+  type GridDetailPanelPrivateApi,
+  type GridRowPinningApi,
+  type GridRowMultiSelectionApi,
+  type GridColumnReorderApi,
+  type GridRowProApi,
 } from '@mui/x-data-grid-pro';
-import type { GridRowReorderPrivateApi } from '@mui/x-data-grid-pro/internals';
-import type { GridInitialStatePremium, GridStatePremium } from './gridStatePremium';
-import type { GridRowGroupingApi, GridExcelExportApi, GridAggregationApi } from '../hooks';
-import type { GridCellSelectionApi } from '../hooks/features/cellSelection/gridCellSelectionInterfaces';
-import type { DataGridPremiumProcessedProps } from './dataGridPremiumProps';
-import type {
-  GridDataSourcePremiumPrivateApi,
-  GridDataSourceApiPremium,
+import { type GridRowReorderPrivateApi } from '@mui/x-data-grid-pro/internals';
+import { type GridInitialStatePremium, type GridStatePremium } from './gridStatePremium';
+import {
+  type GridRowGroupingApi,
+  type GridExcelExportApi,
+  type GridAggregationApi,
+} from '../hooks';
+import { type GridCellSelectionApi } from '../hooks/features/cellSelection/gridCellSelectionInterfaces';
+import { type DataGridPremiumProcessedProps } from './dataGridPremiumProps';
+import {
+  type GridDataSourcePremiumPrivateApi,
+  type GridDataSourceApiPremium,
 } from '../hooks/features/dataSource/models';
-import type { GridAggregationPrivateApi } from '../hooks/features/aggregation/gridAggregationInterfaces';
-import type {
-  GridPivotingApi,
-  GridPivotingPrivateApi,
+import { type GridAggregationPrivateApi } from '../hooks/features/aggregation/gridAggregationInterfaces';
+import {
+  type GridPivotingApi,
+  type GridPivotingPrivateApi,
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
-import type { GridAiAssistantApi } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
-import type { GridSidebarApi } from '../hooks/features/sidebar/gridSidebarInterfaces';
-import type {
-  GridChartsIntegrationApi,
-  GridChartsIntegrationPrivateApi,
+import { type GridAiAssistantApi } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import { type GridSidebarApi } from '../hooks/features/sidebar/gridSidebarInterfaces';
+import {
+  type GridChartsIntegrationApi,
+  type GridChartsIntegrationPrivateApi,
 } from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
-import type { GridHistoryApi } from '../hooks/features/history/gridHistoryInterfaces';
+import { type GridHistoryApi } from '../hooks/features/history/gridHistoryInterfaces';
 
 /**
  * The api of Data Grid Premium.

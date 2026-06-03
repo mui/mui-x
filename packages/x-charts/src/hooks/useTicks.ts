@@ -1,7 +1,12 @@
 'use client';
 import * as React from 'react';
-import type { AxisConfig, D3ContinuousScale, D3OrdinalScale, D3Scale } from '../models/axis';
-import type { OrdinalTimeTicks, TickFrequencyDefinition } from '../models/timeTicks';
+import {
+  type AxisConfig,
+  type D3ContinuousScale,
+  type D3OrdinalScale,
+  type D3Scale,
+} from '../models/axis';
+import { type OrdinalTimeTicks, type TickFrequencyDefinition } from '../models/timeTicks';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 import { tickFrequencies } from '../utils/timeTicks';

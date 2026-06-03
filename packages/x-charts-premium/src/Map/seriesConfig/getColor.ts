@@ -1,4 +1,4 @@
-import type { ColorProcessor } from '@mui/x-charts/internals';
+import { type ColorProcessor } from '@mui/x-charts/internals';
 
 const getColor: ColorProcessor<'mapShape'> = (series, _mainAxis, _secondaryAxis, zAxis) => {
   const colorScale = zAxis?.colorScale;

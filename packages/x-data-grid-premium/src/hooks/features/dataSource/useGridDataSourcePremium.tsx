@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   useGridEvent as addEventHandler,
@@ -25,13 +25,13 @@ import {
   DataSourceRowsUpdateStrategy,
   getGroupKeys,
 } from '@mui/x-data-grid-pro/internals';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
-import type {
-  GridDataSourcePremiumPrivateApi,
-  GridGetRowsParamsPremium,
-  GridGetRowsResponsePremium,
+import {
+  type GridDataSourcePremiumPrivateApi,
+  type GridGetRowsParamsPremium,
+  type GridGetRowsResponsePremium,
 } from './models';
 import { getPropsOverrides, fetchParents } from './utils';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping/gridRowGroupingSelector';

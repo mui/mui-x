@@ -1,8 +1,8 @@
 import { getLabel } from './getLabel';
-import type { ChartSeriesType } from '../models/seriesType/config';
-import type {
-  TooltipGetterParams,
-  TooltipGetterResult,
+import { type ChartSeriesType } from '../models/seriesType/config';
+import {
+  type TooltipGetterParams,
+  type TooltipGetterResult,
 } from './plugins/corePlugins/useChartSeriesConfig';
 
 type LineLikeTooltipChartType = Extract<

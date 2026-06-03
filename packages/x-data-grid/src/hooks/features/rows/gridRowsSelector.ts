@@ -1,10 +1,10 @@
-import type { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { type GridRowId, type GridRowModel } from '../../../models/gridRows';
 import {
   createRootSelector,
   createSelector,
   createSelectorMemoized,
 } from '../../../utils/createSelector';
-import type { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { type GridStateCommunity } from '../../../models/gridStateCommunity';
 
 export const gridRowsStateSelector = createRootSelector((state: GridStateCommunity) => state.rows);
 

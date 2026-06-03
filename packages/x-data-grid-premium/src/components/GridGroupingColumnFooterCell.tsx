@@ -1,6 +1,6 @@
-import type { GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { type GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { vars, GridFooterCell } from '@mui/x-data-grid-pro/internals';
-import type { SxProps, Theme } from '@mui/system';
+import { type SxProps, type Theme } from '@mui/system';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 function GridGroupingColumnFooterCell(props: GridRenderCellParams) {

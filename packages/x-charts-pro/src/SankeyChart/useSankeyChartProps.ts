@@ -1,9 +1,9 @@
 import { DEFAULT_MARGINS } from '@mui/x-charts/constants';
 import { defaultizeMargin } from '@mui/x-charts/internals';
-import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
-import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
-import type { SankeyChartProps } from './SankeyChart';
-import type { ChartsContainerProProps } from '../ChartsContainerPro';
+import { type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import { type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
+import { type SankeyChartProps } from './SankeyChart';
+import { type ChartsContainerProProps } from '../ChartsContainerPro';
 import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
 
 /**

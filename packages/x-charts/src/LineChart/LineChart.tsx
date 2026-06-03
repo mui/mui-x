@@ -51,8 +51,8 @@ import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerPr
 import { ChartsDataProvider } from '../ChartsDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
-import type { LineChartPluginSignatures } from './LineChart.plugins';
-import type { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar';
+import { type LineChartPluginSignatures } from './LineChart.plugins';
+import { type ChartsToolbarSlots, type ChartsToolbarSlotProps } from '../Toolbar';
 import { FocusedLineMark } from './FocusedLineMark';
 
 export interface LineChartSlots

@@ -1,45 +1,53 @@
 import type * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type { SxProps } from '@mui/system';
-import type { Theme } from '@mui/material/styles';
-import type { GridDensity } from '../gridDensity';
-import type { GridEditMode } from '../gridEditRowModel';
-import type { GridFeatureMode } from '../gridFeatureMode';
-import type { Logger } from '../logger';
-import type { GridSortDirection, GridSortModel } from '../gridSortModel';
-import type { GridSlotsComponent } from '../gridSlotsComponent';
-import type { GridRowId, GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
-import type { GridEventListener } from '../events';
-import type { GridCallbackDetails, GridLocaleText } from '../api';
-import type { GridApiCommunity } from '../api/gridApiCommunity';
-import type {
-  GridColDef,
-  GridListViewColDef,
-  GridCheckboxSelectionColDef,
+import { type RefObject } from '@mui/x-internals/types';
+import { type SxProps } from '@mui/system';
+import { type Theme } from '@mui/material/styles';
+import { type GridDensity } from '../gridDensity';
+import { type GridEditMode } from '../gridEditRowModel';
+import { type GridFeatureMode } from '../gridFeatureMode';
+import { type Logger } from '../logger';
+import { type GridSortDirection, type GridSortModel } from '../gridSortModel';
+import { type GridSlotsComponent } from '../gridSlotsComponent';
+import {
+  type GridRowId,
+  type GridRowIdGetter,
+  type GridRowsProp,
+  type GridValidRowModel,
+} from '../gridRows';
+import { type GridEventListener } from '../events';
+import { type GridCallbackDetails, type GridLocaleText } from '../api';
+import { type GridApiCommunity } from '../api/gridApiCommunity';
+import {
+  type GridColDef,
+  type GridListViewColDef,
+  type GridCheckboxSelectionColDef,
 } from '../colDef/gridColDef';
-import type { GridClasses } from '../../constants/gridClasses';
-import type {
-  GridRowHeightParams,
-  GridRowHeightReturnValue,
-  GridRowParams,
-  GridRowSpacing,
-  GridRowSpacingParams,
-  GridRowClassNameParams,
+import { type GridClasses } from '../../constants/gridClasses';
+import {
+  type GridRowHeightParams,
+  type GridRowHeightReturnValue,
+  type GridRowParams,
+  type GridRowSpacing,
+  type GridRowSpacingParams,
+  type GridRowClassNameParams,
 } from '../params';
-import type { GridCellParams } from '../params/gridCellParams';
-import type { GridFilterModel } from '../gridFilterModel';
-import type { GridRowSelectionModel, GridRowSelectionPropagation } from '../gridRowSelectionModel';
-import type { GridInitialStateCommunity } from '../gridStateCommunity';
-import type { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
-import type { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
-import type { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
-import type { GridColumnGroupingModel } from '../gridColumnGrouping';
-import type { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
-import type { GridAutosizeOptions } from '../../hooks/features/columnResize';
-import type { GridDataSource, GridDataSourceCache } from '../gridDataSource';
-import type {
-  GridGetRowsError,
-  GridUpdateRowError,
+import { type GridCellParams } from '../params/gridCellParams';
+import { type GridFilterModel } from '../gridFilterModel';
+import {
+  type GridRowSelectionModel,
+  type GridRowSelectionPropagation,
+} from '../gridRowSelectionModel';
+import { type GridInitialStateCommunity } from '../gridStateCommunity';
+import { type GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
+import { type GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
+import { type GridCellModesModel, type GridRowModesModel } from '../api/gridEditingApi';
+import { type GridColumnGroupingModel } from '../gridColumnGrouping';
+import { type GridPaginationMeta, type GridPaginationModel } from '../gridPaginationProps';
+import { type GridAutosizeOptions } from '../../hooks/features/columnResize';
+import { type GridDataSource, type GridDataSourceCache } from '../gridDataSource';
+import {
+  type GridGetRowsError,
+  type GridUpdateRowError,
 } from '../../hooks/features/dataSource/gridDataSourceError';
 
 type CommonProps = {

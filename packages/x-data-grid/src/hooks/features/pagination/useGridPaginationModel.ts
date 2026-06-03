@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
 import debounce from '@mui/utils/debounce';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type { GridPaginationModelApi, GridPaginationState } from './gridPaginationInterfaces';
-import type { GridEventListener } from '../../../models/events';
-import type { GridPaginationModel } from '../../../models/gridPaginationProps';
-import type { GridFilterModel } from '../../../models/gridFilterModel';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type GridPaginationModelApi, type GridPaginationState } from './gridPaginationInterfaces';
+import { type GridEventListener } from '../../../models/events';
+import { type GridPaginationModel } from '../../../models/gridPaginationProps';
+import { type GridFilterModel } from '../../../models/gridFilterModel';
 import {
   gridFilterModelSelector,
   gridFilterActiveItemsSelector,

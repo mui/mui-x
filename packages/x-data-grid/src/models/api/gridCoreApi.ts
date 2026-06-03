@@ -1,10 +1,10 @@
 import type * as React from 'react';
-import type { EventManager, EventListenerOptions } from '@mui/x-internals/EventManager';
-import type { Store } from '@mui/x-internals/store';
-import type { GridEventPublisher, GridEventListener, GridEvents } from '../events';
-import type { GridApiCaches } from '../gridApiCaches';
-import type { GridApiCommon, GridPrivateApiCommon } from './gridApiCommon';
-import type { DataGridProcessedProps } from '../props/DataGridProps';
+import { type EventManager, type EventListenerOptions } from '@mui/x-internals/EventManager';
+import { type Store } from '@mui/x-internals/store';
+import { type GridEventPublisher, type GridEventListener, type GridEvents } from '../events';
+import { type GridApiCaches } from '../gridApiCaches';
+import { type GridApiCommon, type GridPrivateApiCommon } from './gridApiCommon';
+import { type DataGridProcessedProps } from '../props/DataGridProps';
 
 /**
  * The core API interface that is available in the grid `apiRef`.

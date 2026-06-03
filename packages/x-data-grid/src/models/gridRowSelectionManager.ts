@@ -1,5 +1,5 @@
-import type { GridRowId } from './gridRows';
-import type { GridRowSelectionModel } from './gridRowSelectionModel';
+import { type GridRowId } from './gridRows';
+import { type GridRowSelectionModel } from './gridRowSelectionModel';
 
 export interface RowSelectionManager {
   data: Set<GridRowId>;

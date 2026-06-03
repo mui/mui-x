@@ -1,5 +1,5 @@
 import { createSelector, createRootSelector } from '@mui/x-data-grid-pro/internals';
-import type { GridStatePremium } from '../../../models/gridStatePremium';
+import { type GridStatePremium } from '../../../models/gridStatePremium';
 
 const gridHistoryStateSelector = createRootSelector((state: GridStatePremium) => state.history);
 

@@ -4,9 +4,9 @@ import {
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
 import { computeAxisAutoSize, type AxisAutoSizeResult } from './computeAxisAutoSize';
-import type { AxisId } from '../../../../models/axis';
+import { type AxisId } from '../../../../models/axis';
 import { type UseChartDimensionsSignature } from '../../corePlugins/useChartDimensions/useChartDimensions.types';
-import type { ChartState } from '../../models';
+import { type ChartState } from '../../models';
 import {
   selectorChartXAxisDomainsForAutoSize,
   selectorChartYAxisDomainsForAutoSize,

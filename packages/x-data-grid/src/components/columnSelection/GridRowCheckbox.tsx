@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { GridRowCheckboxProps } from '../../models/gridSlotsComponentsProps';
+import { type GridRowCheckboxProps } from '../../models/gridSlotsComponentsProps';
 
 const GridRowCheckbox = forwardRef<HTMLButtonElement, GridRowCheckboxProps>(
   function GridRowCheckbox(props, ref) {

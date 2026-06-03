@@ -9,9 +9,9 @@ import { type UseChartHighlightSignature } from '../useChartHighlight';
 import { useStore } from '../../../store/useStore';
 import { useChartsContext } from '../../../../context/ChartsProvider';
 import { getChartPoint } from '../../../getChartPoint';
-import type { UseChartSeriesConfigSignature } from '../../corePlugins/useChartSeriesConfig';
-import type { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
-import type { UseChartPolarAxisSignature } from '../useChartPolarAxis';
+import { type UseChartSeriesConfigSignature } from '../../corePlugins/useChartSeriesConfig';
+import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
+import { type UseChartPolarAxisSignature } from '../useChartPolarAxis';
 
 /**
  * Hook that registers pointer interaction handlers on the chart container.

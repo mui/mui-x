@@ -1,5 +1,5 @@
-import type { GridApiPro } from '../models/gridApiPro';
-import type { GridInitialStatePro, GridStatePro } from '../models/gridStatePro';
+import { type GridApiPro } from '../models/gridApiPro';
+import { type GridInitialStatePro, type GridStatePro } from '../models/gridStatePro';
 
 export { useGridApiContext } from '../hooks/utils/useGridApiContext';
 export { useGridApiRef } from '../hooks/utils/useGridApiRef';

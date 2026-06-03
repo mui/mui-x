@@ -1,25 +1,25 @@
-import type { AutocompleteProps } from '@mui/material/Autocomplete';
-import type { BadgeProps } from '@mui/material/Badge';
-import type { CheckboxProps } from '@mui/material/Checkbox';
-import type { ChipProps } from '@mui/material/Chip';
-import type { CircularProgressProps } from '@mui/material/CircularProgress';
-import type { DividerProps } from '@mui/material/Divider';
-import type { LinearProgressProps } from '@mui/material/LinearProgress';
-import type { MenuListProps } from '@mui/material/MenuList';
-import type { MenuItemProps } from '@mui/material/MenuItem';
-import type { TextFieldProps } from '@mui/material/TextField';
-import type { SwitchProps } from '@mui/material/Switch';
-import type { ButtonProps } from '@mui/material/Button';
-import type { IconButtonProps } from '@mui/material/IconButton';
-import type { TablePaginationProps } from '@mui/material/TablePagination';
-import type { PopperProps } from '@mui/material/Popper';
-import type { TooltipProps } from '@mui/material/Tooltip';
-import type { InputProps } from '@mui/material/Input';
-import type { TextareaAutosizeProps } from '@mui/material/TextareaAutosize';
-import type { SelectProps } from '@mui/material/Select';
-import type { SkeletonProps } from '@mui/material/Skeleton';
-import type { ToggleButtonProps } from '@mui/material/ToggleButton';
-import type { TabsProps } from '@mui/material/Tabs';
+import { type AutocompleteProps } from '@mui/material/Autocomplete';
+import { type BadgeProps } from '@mui/material/Badge';
+import { type CheckboxProps } from '@mui/material/Checkbox';
+import { type ChipProps } from '@mui/material/Chip';
+import { type CircularProgressProps } from '@mui/material/CircularProgress';
+import { type DividerProps } from '@mui/material/Divider';
+import { type LinearProgressProps } from '@mui/material/LinearProgress';
+import { type MenuListProps } from '@mui/material/MenuList';
+import { type MenuItemProps } from '@mui/material/MenuItem';
+import { type TextFieldProps } from '@mui/material/TextField';
+import { type SwitchProps } from '@mui/material/Switch';
+import { type ButtonProps } from '@mui/material/Button';
+import { type IconButtonProps } from '@mui/material/IconButton';
+import { type TablePaginationProps } from '@mui/material/TablePagination';
+import { type PopperProps } from '@mui/material/Popper';
+import { type TooltipProps } from '@mui/material/Tooltip';
+import { type InputProps } from '@mui/material/Input';
+import { type TextareaAutosizeProps } from '@mui/material/TextareaAutosize';
+import { type SelectProps } from '@mui/material/Select';
+import { type SkeletonProps } from '@mui/material/Skeleton';
+import { type ToggleButtonProps } from '@mui/material/ToggleButton';
+import { type TabsProps } from '@mui/material/Tabs';
 
 declare module '@mui/x-data-grid' {
   interface BaseAutocompletePropsOverrides {

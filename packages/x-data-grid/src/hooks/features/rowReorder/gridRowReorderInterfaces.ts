@@ -1,5 +1,5 @@
-import type { GridRowId } from '../../../models/gridRows';
-import type { RowReorderDropPosition } from '../../../models/api/gridRowApi';
+import { type GridRowId } from '../../../models/gridRows';
+import { type RowReorderDropPosition } from '../../../models/api/gridRowApi';
 
 /**
  * The row reorder state.

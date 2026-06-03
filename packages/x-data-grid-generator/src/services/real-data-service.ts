@@ -1,10 +1,10 @@
-import type {
-  GridRowModel,
-  GridColumnVisibilityModel,
-  GridInitialState,
+import {
+  type GridRowModel,
+  type GridColumnVisibilityModel,
+  type GridInitialState,
 } from '@mui/x-data-grid-premium';
 import asyncWorker from './asyncWorker';
-import type { GridColDefGenerator, GridDataGeneratorContext } from './gridColDefGenerator';
+import { type GridColDefGenerator, type GridDataGeneratorContext } from './gridColDefGenerator';
 
 export interface GridDemoData {
   rows: GridRowModel[];

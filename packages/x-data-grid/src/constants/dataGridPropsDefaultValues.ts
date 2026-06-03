@@ -1,5 +1,5 @@
 import { GridEditModes } from '../models/gridEditRowModel';
-import type { DataGridPropsWithDefaultValues } from '../models/props/DataGridProps';
+import { type DataGridPropsWithDefaultValues } from '../models/props/DataGridProps';
 
 /**
  * The default values of `DataGridPropsWithDefaultValues` to inject in the props of DataGrid.

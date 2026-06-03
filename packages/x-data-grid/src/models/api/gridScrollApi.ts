@@ -1,5 +1,5 @@
-import type { GridCellIndexCoordinates } from '../gridCell';
-import type { GridScrollParams } from '../params/gridScrollParams';
+import { type GridCellIndexCoordinates } from '../gridCell';
+import { type GridScrollParams } from '../params/gridScrollParams';
 
 /**
  * The scroll API interface that is available in the grid [[apiRef]].

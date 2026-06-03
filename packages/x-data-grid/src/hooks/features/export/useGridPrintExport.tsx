@@ -1,18 +1,18 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridExpandedRowCountSelector } from '../filter/gridFilterSelector';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type { GridPrintExportOptions } from '../../../models/gridExport';
-import type { GridValidRowModel } from '../../../models/gridRows';
-import type {
-  GridInitialStateCommunity,
-  GridStateCommunity,
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type GridPrintExportOptions } from '../../../models/gridExport';
+import { type GridValidRowModel } from '../../../models/gridRows';
+import {
+  type GridInitialStateCommunity,
+  type GridStateCommunity,
 } from '../../../models/gridStateCommunity';
 import {
   gridColumnDefinitionsSelector,

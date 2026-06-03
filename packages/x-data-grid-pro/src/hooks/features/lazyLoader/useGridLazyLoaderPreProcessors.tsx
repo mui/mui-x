@@ -1,9 +1,9 @@
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
 import { GRID_ROOT_GROUP_ID, type GridGroupNode, type GridSkeletonRowNode } from '@mui/x-data-grid';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 export const GRID_SKELETON_ROW_ROOT_ID = 'auto-generated-skeleton-row-root';
 

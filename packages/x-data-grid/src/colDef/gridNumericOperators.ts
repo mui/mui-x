@@ -1,8 +1,8 @@
 import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilterInputValue';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
-import type { GridFilterOperator } from '../models/gridFilterOperator';
-import type { GridFilterInputValueProps } from '../models/gridFilterInputComponent';
-import type { GetApplyQuickFilterFn } from '../models/colDef/gridColDef';
+import { type GridFilterOperator } from '../models/gridFilterOperator';
+import { type GridFilterInputValueProps } from '../models/gridFilterInputComponent';
+import { type GetApplyQuickFilterFn } from '../models/colDef/gridColDef';
 
 const parseNumericValue = (value: unknown) => {
   if (value == null) {

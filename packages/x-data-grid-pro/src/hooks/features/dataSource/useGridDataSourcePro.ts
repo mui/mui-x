@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   useGridEvent as addEventHandler,
   useGridApiMethod,
@@ -10,10 +10,10 @@ import {
   type GridStateInitializer,
   useGridRegisterStrategyProcessor,
 } from '@mui/x-data-grid/internals';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { INITIAL_STATE, useGridDataSourceBasePro } from './useGridDataSourceBasePro';
-import type { GridGetRowsParamsPro } from './models';
+import { type GridGetRowsParamsPro } from './models';
 
 function getKeyPro(params: GridGetRowsParamsPro) {
   return JSON.stringify([

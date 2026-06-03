@@ -8,7 +8,7 @@ import {
   selectorChartPolarCenter,
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
-import type { ChartsRadiusAxisProps, D3Scale } from '../models/axis';
+import { type ChartsRadiusAxisProps, type D3Scale } from '../models/axis';
 import { useUtilityClasses } from './chartsRadiusAxisClasses';
 import { createGetLabelTextAnchors } from './createGetLabelTextAnchors';
 import { getLabelTransform } from './getLabelTransform';

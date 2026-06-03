@@ -1,9 +1,9 @@
-import type {
-  PolarChartSeriesType,
-  ChartSeriesDefaultized,
+import {
+  type PolarChartSeriesType,
+  type ChartSeriesDefaultized,
 } from '../../../../../models/seriesType/config';
-import type { PolarAxisConfig } from '../../../../../models/axis';
-import type { SeriesId } from '../../../../../models/seriesType/common';
+import { type PolarAxisConfig } from '../../../../../models/axis';
+import { type SeriesId } from '../../../../../models/seriesType/common';
 
 type PolarExtremumGetterParams<SeriesType extends PolarChartSeriesType> = {
   series: Record<SeriesId, ChartSeriesDefaultized<SeriesType>>;

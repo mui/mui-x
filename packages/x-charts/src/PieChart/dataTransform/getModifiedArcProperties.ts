@@ -1,4 +1,4 @@
-import type { DefaultizedPieSeriesType, PieSeriesLayout } from '../../models/seriesType/pie';
+import { type DefaultizedPieSeriesType, type PieSeriesLayout } from '../../models/seriesType/pie';
 import { deg2rad } from '../../internals/angleConversion';
 
 /**

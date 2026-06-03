@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import debounce from '@mui/utils/debounce';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   type GridColDef,
   gridColumnGroupsLookupSelector,
@@ -25,19 +25,19 @@ import {
   type GridRestoreStatePreProcessingContext,
 } from '@mui/x-data-grid-pro/internals';
 
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import type {
-  ChartState,
-  GridChartsIntegrationContextValue,
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type GridInitialStatePremium } from '../../../models/gridStatePremium';
+import { type GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import {
+  type ChartState,
+  type GridChartsIntegrationContextValue,
 } from '../../../models/gridChartsIntegration';
 import { getRowGroupingFieldFromGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
-import type {
-  GridChartsIntegrationApi,
-  GridChartsIntegrationItem,
-  GridChartsIntegrationPrivateApi,
-  GridChartsIntegrationState,
+import {
+  type GridChartsIntegrationApi,
+  type GridChartsIntegrationItem,
+  type GridChartsIntegrationPrivateApi,
+  type GridChartsIntegrationState,
 } from './gridChartsIntegrationInterfaces';
 import {
   gridChartsPanelOpenSelector,
@@ -55,10 +55,10 @@ import {
   getAggregationFunctionLabel,
   getAvailableAggregationFunctions,
 } from '../aggregation/gridAggregationUtils';
-import type { GridAggregationModel } from '../aggregation/gridAggregationInterfaces';
+import { type GridAggregationModel } from '../aggregation/gridAggregationInterfaces';
 import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
-import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
+import { type GridPivotModel } from '../pivoting/gridPivotingInterfaces';
 
 const EMPTY_CHART_INTEGRATION_CONTEXT: GridChartsIntegrationContextValue = {
   chartStateLookup: {},

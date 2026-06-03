@@ -1,6 +1,6 @@
 'use client';
 import { useTheme, useThemeProps } from '@mui/material/styles';
-import type { ChartsDataProviderProps } from './ChartsDataProvider';
+import { type ChartsDataProviderProps } from './ChartsDataProvider';
 import { type ChartsProviderProps } from '../context/ChartsProvider';
 import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesConfig';
 import {

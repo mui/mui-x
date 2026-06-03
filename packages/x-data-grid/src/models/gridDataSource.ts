@@ -1,9 +1,9 @@
-import type {
-  GridSortModel,
-  GridFilterModel,
-  GridRowModel,
-  GridPaginationModel,
-  GridRowId,
+import {
+  type GridSortModel,
+  type GridFilterModel,
+  type GridRowModel,
+  type GridPaginationModel,
+  type GridRowId,
 } from '.';
 
 export interface GridGetRowsParams {

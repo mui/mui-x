@@ -1,10 +1,10 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { createSelector, createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
-import type {
-  AxisId,
-  AxisItemIdentifier,
-  ChartsRotationAxisProps,
-  ChartsRadiusAxisProps,
+import {
+  type AxisId,
+  type AxisItemIdentifier,
+  type ChartsRotationAxisProps,
+  type ChartsRadiusAxisProps,
 } from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,

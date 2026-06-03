@@ -1,6 +1,6 @@
 import { serializeIdentifier } from './serializeIdentifier';
 import { barSeriesConfig } from '../../../../../BarChart/seriesConfig';
-import type { ChartSeriesConfig } from '../types';
+import { type ChartSeriesConfig } from '../types';
 
 describe('serializeIdentifier', () => {
   const seriesConfig = {

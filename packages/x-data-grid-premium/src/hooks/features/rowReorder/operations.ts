@@ -4,7 +4,7 @@ import {
   gridRowsLookupSelector,
   gridColumnLookupSelector,
 } from '@mui/x-data-grid-pro';
-import type { GridRowId, GridGroupNode, GridLeafNode } from '@mui/x-data-grid-pro';
+import { type GridRowId, type GridGroupNode, type GridLeafNode } from '@mui/x-data-grid-pro';
 import {
   BaseReorderOperation,
   rowReorderUtils,
@@ -13,7 +13,7 @@ import {
 } from '@mui/x-data-grid-pro/internals';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping';
 import { getGroupingRules, getCellGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { type GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 type ReorderExecutionContextType = ReorderExecutionContext<GridPrivateApiPremium>;
 

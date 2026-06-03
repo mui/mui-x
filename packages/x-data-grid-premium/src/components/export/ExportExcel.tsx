@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import type { GridSlotProps, RenderProp } from '@mui/x-data-grid';
+import { type GridSlotProps, type RenderProp } from '@mui/x-data-grid';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import type { GridExcelExportOptions } from '../../hooks/features/export';
+import { type GridExcelExportOptions } from '../../hooks/features/export';
 
 export type ExportExcelProps = GridSlotProps['baseButton'] & {
   /**

@@ -1,8 +1,8 @@
-import type { GridRowId, GridTreeNode, GridRowTreeConfig } from '@mui/x-data-grid';
-import type { RefObject } from '@mui/x-internals/types';
-import type { RowReorderDropPosition } from '@mui/x-data-grid/internals';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type GridRowId, type GridTreeNode, type GridRowTreeConfig } from '@mui/x-data-grid';
+import { type RefObject } from '@mui/x-internals/types';
+import { type RowReorderDropPosition } from '@mui/x-data-grid/internals';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 export type ReorderOperationType =
   | 'same-parent-swap'

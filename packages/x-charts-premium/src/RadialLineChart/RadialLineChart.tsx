@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import type { MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
 import {
   useChartsContainerProps,
@@ -48,7 +48,7 @@ import {
   ChartsRadialDataProviderPremium,
   type ChartsRadialDataProviderPremiumProps,
 } from '../ChartsRadialDataProviderPremium';
-import type { RadialLineSeriesType } from '../models/seriesType/radialLine';
+import { type RadialLineSeriesType } from '../models/seriesType/radialLine';
 
 export interface RadialLineChartSlots
   extends

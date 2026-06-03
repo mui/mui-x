@@ -1,5 +1,5 @@
 import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '@mui/x-data-grid/internals';
-import type { GridProSlotsComponent } from '../models';
+import { type GridProSlotsComponent } from '../models';
 import { GridProColumnMenu } from '../components/GridProColumnMenu';
 import { GridColumnHeaders } from '../components/GridColumnHeaders';
 import { GridHeaderFilterMenu } from '../components/headerFiltering/GridHeaderFilterMenu';

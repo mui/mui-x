@@ -1,10 +1,18 @@
-import type { ScaleOrdinal, ScaleSequential, ScaleThreshold } from '@mui/x-charts-vendor/d3-scale';
-import type {
-  ContinuousColorConfig,
-  OrdinalColorConfig,
-  PiecewiseColorConfig,
+import {
+  type ScaleOrdinal,
+  type ScaleSequential,
+  type ScaleThreshold,
+} from '@mui/x-charts-vendor/d3-scale';
+import {
+  type ContinuousColorConfig,
+  type OrdinalColorConfig,
+  type PiecewiseColorConfig,
 } from './colorMapping';
-import type { OrdinalSizeConfig, ContinuousSizeConfig, PiecewiseSizeConfig } from './sizeMapping';
+import {
+  type OrdinalSizeConfig,
+  type ContinuousSizeConfig,
+  type PiecewiseSizeConfig,
+} from './sizeMapping';
 import { type DatasetElementType } from './seriesType/config';
 
 export interface ZAxisConfig<V = any> {

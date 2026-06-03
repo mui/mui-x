@@ -1,9 +1,9 @@
 import type * as React from 'react';
 import { type ChartBaseIconProps, type ChartsIconSlots } from '@mui/x-charts/models';
-import type {
-  ZoomInIconPropsOverrides,
-  ZoomOutIconPropsOverrides,
-  ExportIconPropsOverrides,
+import {
+  type ZoomInIconPropsOverrides,
+  type ZoomOutIconPropsOverrides,
+  type ExportIconPropsOverrides,
 } from '../../models/chartsSlotsComponentsPropsPro';
 
 export interface ChartsIconSlotsPro extends ChartsIconSlots {

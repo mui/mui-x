@@ -21,16 +21,23 @@ import {
   type GridRowId,
   type GridEditCellProps,
 } from '../../models';
-import type { GridRenderEditCellParams, GridCellParams } from '../../models/params/gridCellParams';
-import type { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
-import type { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
+import {
+  type GridRenderEditCellParams,
+  type GridCellParams,
+} from '../../models/params/gridCellParams';
+import { type GridAlignment, type GridStateColDef } from '../../models/colDef/gridColDef';
+import {
+  type GridRowModel,
+  type GridTreeNode,
+  type GridTreeNodeWithRender,
+} from '../../models/gridRows';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
   gridFocusCellSelector,
   gridTabIndexCellSelector,
 } from '../../hooks/features/focus/gridFocusStateSelector';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { PinnedColumnPosition } from '../../internals/constants';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { usePinnedScrollOffset } from '../../hooks/utils/usePinnedScrollOffset';

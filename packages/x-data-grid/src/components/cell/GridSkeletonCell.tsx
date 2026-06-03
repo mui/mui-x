@@ -7,8 +7,8 @@ import { fastMemo } from '@mui/x-internals/fastMemo';
 import { createRandomNumberGenerator } from '../../utils/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import type { GridColType, GridSlotProps } from '../../models';
+import { type DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { type GridColType, type GridSlotProps } from '../../models';
 
 const CIRCULAR_CONTENT_SIZE = '1.3em';
 

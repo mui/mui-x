@@ -1,10 +1,10 @@
-import type { GridDataSourceApi } from '../../hooks/features/dataSource/models';
-import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
-import type { DataGridProcessedProps } from '../props/DataGridProps';
-import type { GridApiCommon, GridPrivateOnlyApiCommon } from './gridApiCommon';
-import type { GridColumnReorderApi } from './gridColumnApi';
-import type { GridRowProApi } from './gridRowApi';
-import type { GridRowMultiSelectionApi } from './gridRowSelectionApi';
+import { type GridDataSourceApi } from '../../hooks/features/dataSource/models';
+import { type GridInitialStateCommunity, type GridStateCommunity } from '../gridStateCommunity';
+import { type DataGridProcessedProps } from '../props/DataGridProps';
+import { type GridApiCommon, type GridPrivateOnlyApiCommon } from './gridApiCommon';
+import { type GridColumnReorderApi } from './gridColumnApi';
+import { type GridRowProApi } from './gridRowApi';
+import { type GridRowMultiSelectionApi } from './gridRowSelectionApi';
 
 /**
  * The API of the community version of the Data Grid.

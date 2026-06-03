@@ -1,4 +1,4 @@
-import type { GridSlotProps } from '@mui/x-data-grid';
+import { type GridSlotProps } from '@mui/x-data-grid';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 type BaseIconButtonProps = GridSlotProps['baseIconButton'];

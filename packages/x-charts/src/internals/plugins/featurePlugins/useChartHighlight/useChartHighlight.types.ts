@@ -1,9 +1,9 @@
 import { type DefaultizedProps } from '@mui/x-internals/types';
-import type {
-  HighlightItemIdentifierWithType,
-  HighlightItemIdentifier,
-  SeriesItemIdentifier,
-  SeriesItemIdentifierWithType,
+import {
+  type HighlightItemIdentifierWithType,
+  type HighlightItemIdentifier,
+  type SeriesItemIdentifier,
+  type SeriesItemIdentifierWithType,
 } from '../../../../models/seriesType';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { type ChartPluginSignature } from '../../models';

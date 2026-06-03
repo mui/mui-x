@@ -1,5 +1,5 @@
-import type { GridColDef } from './colDef';
-import type { GridRowId } from './gridRows';
+import { type GridColDef } from './colDef';
+import { type GridRowId } from './gridRows';
 
 /**
  * The mode of the cell.

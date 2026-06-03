@@ -1,14 +1,14 @@
-import type { RefObject } from '@mui/x-internals/types';
-import type {
-  GridRowTreeConfig,
-  GridFilterState,
-  GridFilterModel,
-  GridTreeNode,
-  GridGroupNode,
-  GridRowModel,
-  GridColDef,
-  GridKeyValue,
-  GridDataSource,
+import { type RefObject } from '@mui/x-internals/types';
+import {
+  type GridRowTreeConfig,
+  type GridFilterState,
+  type GridFilterModel,
+  type GridTreeNode,
+  type GridGroupNode,
+  type GridRowModel,
+  type GridColDef,
+  type GridKeyValue,
+  type GridDataSource,
 } from '@mui/x-data-grid-pro';
 import {
   passFilterLogic,
@@ -22,15 +22,15 @@ import {
   getRowValue,
   RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import type {
-  GridGroupingRule,
-  GridGroupingRules,
-  GridRowGroupingModel,
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import {
+  type GridGroupingRule,
+  type GridGroupingRules,
+  type GridRowGroupingModel,
 } from './gridRowGroupingInterfaces';
-import type { GridStatePremium } from '../../../models/gridStatePremium';
+import { type GridStatePremium } from '../../../models/gridStatePremium';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { type GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export {
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,

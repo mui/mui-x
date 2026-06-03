@@ -1,15 +1,15 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getStackingGroups } from '@mui/x-charts/internals';
-import type {
-  SeriesProcessorParams,
-  SeriesProcessorResult,
-  IsItemVisibleFunction,
-  DatasetElementType,
-  DatasetType,
+import {
+  type SeriesProcessorParams,
+  type SeriesProcessorResult,
+  type IsItemVisibleFunction,
+  type DatasetElementType,
+  type DatasetType,
 } from '@mui/x-charts/internals';
-import type { SeriesId } from '@mui/x-charts/models';
-import type { DefaultizedRadialBarSeriesType } from '../../models/seriesType/radialBar';
+import { type SeriesId } from '@mui/x-charts/models';
+import { type DefaultizedRadialBarSeriesType } from '../../models/seriesType/radialBar';
 
 const radialBarValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedRadialBarSeriesType['valueFormatter'];

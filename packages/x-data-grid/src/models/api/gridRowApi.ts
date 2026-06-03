@@ -1,9 +1,9 @@
-import type {
-  GridRowModel,
-  GridRowId,
-  GridRowModelUpdate,
-  GridValidRowModel,
-  GridTreeNode,
+import {
+  type GridRowModel,
+  type GridRowId,
+  type GridRowModelUpdate,
+  type GridValidRowModel,
+  type GridTreeNode,
 } from '../gridRows';
 
 export type RowReorderDropPosition = 'above' | 'below' | 'inside';

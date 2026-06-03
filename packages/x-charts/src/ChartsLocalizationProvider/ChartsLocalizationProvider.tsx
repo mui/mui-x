@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import type { ChartsLocaleText } from '../locales/utils/chartsLocaleTextApi';
+import { type ChartsLocaleText } from '../locales/utils/chartsLocaleTextApi';
 import { DEFAULT_LOCALE } from '../locales/enUS';
 
 export interface ChartsLocalizationContextValue {

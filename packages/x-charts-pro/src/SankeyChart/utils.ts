@@ -1,5 +1,5 @@
 import { sankeyLeft, sankeyRight, sankeyCenter, sankeyJustify } from './d3Sankey';
-import type { SankeyNodeOptions } from './sankey.types';
+import { type SankeyNodeOptions } from './sankey.types';
 
 export const getNodeAlignFunction = (align?: SankeyNodeOptions['align']) => {
   switch (align) {

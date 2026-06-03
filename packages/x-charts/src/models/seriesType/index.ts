@@ -1,5 +1,5 @@
-import type { DefaultizedProps, DistributiveOmit } from '@mui/x-internals/types';
-import type { ChartSeriesType, ChartsSeriesConfig } from './config';
+import { type DefaultizedProps, type DistributiveOmit } from '@mui/x-internals/types';
+import { type ChartSeriesType, type ChartsSeriesConfig } from './config';
 
 // Series definition
 

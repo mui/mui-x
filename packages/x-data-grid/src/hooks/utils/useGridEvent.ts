@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type { EventListenerOptions } from '@mui/x-internals/EventManager';
-import type { GridEventListener, GridEvents } from '../../models/events';
-import type { UnregisterToken } from '../../utils/cleanupTracking/CleanupTracking';
+import { type RefObject } from '@mui/x-internals/types';
+import { type EventListenerOptions } from '@mui/x-internals/EventManager';
+import { type GridEventListener, type GridEvents } from '../../models/events';
+import { type UnregisterToken } from '../../utils/cleanupTracking/CleanupTracking';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
-import type { GridApiCommon } from '../../models';
+import { type GridApiCommon } from '../../models';
 
 // Based on https://github.com/Bnaya/use-dispose-uncommitted/blob/main/src/finalization-registry-based-impl.ts
 // Check https://github.com/facebook/react/issues/15317 to get more information

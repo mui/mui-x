@@ -10,9 +10,9 @@ import {
   selectorChartXAxis,
   selectorChartYAxis,
 } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
-import type { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
-import type { ChartSeriesType } from '../../../../models/seriesType/config';
-import type { FocusedItemIdentifier } from '../../../../models/seriesType';
+import { type ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
+import { type FocusedItemIdentifier } from '../../../../models/seriesType';
 import {
   type AxisId,
   type AxisItemIdentifier,

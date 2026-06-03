@@ -13,7 +13,7 @@ import {
 import { extrapolateSeed, deepFreeze } from './useDemoData';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';
-import type { GridColDefGenerator } from '../services/gridColDefGenerator';
+import { type GridColDefGenerator } from '../services/gridColDefGenerator';
 import { getRealGridData, type GridDemoData } from '../services/real-data-service';
 import {
   addTreeDataOptionsToDemoData,
@@ -26,7 +26,7 @@ import {
   processPivotingRows,
   DEFAULT_SERVER_OPTIONS,
 } from './serverUtils';
-import type { ServerOptions } from './serverUtils';
+import { type ServerOptions } from './serverUtils';
 import { randomInt } from '../services';
 import { getMovieRows, getMovieColumns } from './useMovieData';
 

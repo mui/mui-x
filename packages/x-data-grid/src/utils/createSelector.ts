@@ -1,4 +1,4 @@
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   createSelector as baseCreateSelector,
   createSelectorMemoized as baseCreateSelectorMemoized,

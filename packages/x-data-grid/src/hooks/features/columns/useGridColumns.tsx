@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridEventListener } from '../../../models/events';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { GridColumnApi, GridColumnReorderApi } from '../../../models/api/gridColumnApi';
-import type { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridEventListener } from '../../../models/events';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type GridColumnApi, type GridColumnReorderApi } from '../../../models/api/gridColumnApi';
+import { type GridStateCommunity } from '../../../models/gridStateCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -18,7 +18,7 @@ import {
 } from './gridColumnsSelector';
 import { GridSignature } from '../../../constants/signature';
 import { useGridEvent } from '../../utils/useGridEvent';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   type GridPipeProcessor,
   useGridRegisterPipeProcessor,
@@ -31,15 +31,15 @@ import {
   type GridColumnVisibilityModel,
   EMPTY_PINNED_COLUMN_FIELDS,
 } from './gridColumnsInterfaces';
-import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { type GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   hydrateColumnsWidth,
   createColumnsState,
   COLUMNS_DIMENSION_PROPERTIES,
 } from './gridColumnsUtils';
 import { GridPreferencePanelsValue } from '../preferencesPanel';
-import type { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
-import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import { type GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
+import { type GridColDef, type GridStateColDef } from '../../../models/colDef/gridColDef';
 import {
   gridPivotActiveSelector,
   gridPivotInitialColumnsSelector,

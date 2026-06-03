@@ -1,14 +1,14 @@
 'use client';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { type ChartPlugin } from '../../models';
-import type { UseChartSeriesState, UseChartSeriesSignature } from './useChartSeries.types';
+import { type UseChartSeriesState, type UseChartSeriesSignature } from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { defaultizeSeries } from './processSeries';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
-import type {
-  SeriesItemIdentifier,
-  SeriesItemIdentifierWithType,
-  SeriesId,
+import {
+  type SeriesItemIdentifier,
+  type SeriesItemIdentifierWithType,
+  type SeriesId,
 } from '../../../../models/seriesType';
 
 type RetrunedType<SeriesType extends ChartSeriesType, Item> =

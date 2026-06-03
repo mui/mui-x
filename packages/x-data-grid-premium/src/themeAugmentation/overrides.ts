@@ -1,4 +1,4 @@
-import type { GridClassKey } from '@mui/x-data-grid';
+import { type GridClassKey } from '@mui/x-data-grid';
 
 export interface DataGridPremiumComponentNameToClassKey {
   MuiDataGrid: GridClassKey;

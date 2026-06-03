@@ -1,5 +1,5 @@
 import type * as React from 'react';
-import type { GridColDef } from '../colDef';
+import { type GridColDef } from '../colDef';
 
 /**
  * Set the types of the texts in the grid.

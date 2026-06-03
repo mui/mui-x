@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import type { ChartsContainerProProps } from '../ChartsContainerPro';
-import type { SankeySeriesType } from './sankey.types';
+import { type ChartsContainerProProps } from '../ChartsContainerPro';
+import { type SankeySeriesType } from './sankey.types';
 import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
 import { ChartsDataProviderPro } from '../ChartsDataProviderPro';
 import { sankeySeriesConfig } from './seriesConfig';

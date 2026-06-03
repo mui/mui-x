@@ -11,7 +11,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import { type DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { gridPivotActiveSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 
 type OwnerState = { classes: DataGridPremiumProcessedProps['classes'] };

@@ -1,12 +1,12 @@
 'use client';
 
-import type { SeriesId } from '@mui/x-charts/internals';
-import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import type { SankeyLink as D3SankeyLink, SankeyNode as D3SankeyNode } from './d3Sankey';
-import type {
-  SankeyHighlightScope,
-  SankeyLinkHighlightScope,
-  SankeyNodeHighlightScope,
+import { type SeriesId } from '@mui/x-charts/internals';
+import { type DefaultizedProps, type MakeRequired } from '@mui/x-internals/types';
+import { type SankeyLink as D3SankeyLink, type SankeyNode as D3SankeyNode } from './d3Sankey';
+import {
+  type SankeyHighlightScope,
+  type SankeyLinkHighlightScope,
+  type SankeyNodeHighlightScope,
 } from './sankey.highlight.types';
 
 export type SankeyNodeId = string | number;

@@ -1,4 +1,4 @@
-import type { ChartSeriesType, ChartsSeriesConfig } from './config';
+import { type ChartSeriesType, type ChartsSeriesConfig } from './config';
 
 export type ComposableCartesianChartSeriesType =
   | 'bar'

@@ -12,7 +12,7 @@ import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
 import { type AxisId } from '../models/axis';
 import getColor from './seriesConfig/getColor';
 import { useChartsContext } from '../context/ChartsProvider';
-import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
+import { type UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 export interface MarkPlotDataPoint {
   x: number;

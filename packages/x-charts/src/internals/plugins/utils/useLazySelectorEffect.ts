@@ -1,7 +1,7 @@
 'use client';
 /* eslint-disable react-compiler/react-compiler */
 import * as React from 'react';
-import type { Store } from '@mui/x-internals/store';
+import { type Store } from '@mui/x-internals/store';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { type ChartAnyPluginSignature, type ChartState } from '../models';
 

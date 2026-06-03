@@ -10,7 +10,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useOnMount from '@mui/utils/useOnMount';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   type GridStateInitializer,
   useGridApiMethod,
@@ -19,18 +19,18 @@ import {
   type GridPipeProcessor,
   gridPivotInitialColumnsSelector,
 } from '@mui/x-data-grid-pro/internals';
-import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type GridInitialStatePremium } from '../../../models/gridStatePremium';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { type GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { GridPivotPanel } from '../../../components/pivotPanel';
-import type {
-  GridPivotingApi,
-  GridPivotingPrivateApi,
-  GridPivotingPropsOverrides,
-  GridPivotingStaticPropsOverrides,
-  GridPivotingState,
-  GridPivotModel,
+import {
+  type GridPivotingApi,
+  type GridPivotingPrivateApi,
+  type GridPivotingPropsOverrides,
+  type GridPivotingStaticPropsOverrides,
+  type GridPivotingState,
+  type GridPivotModel,
 } from './gridPivotingInterfaces';
 import {
   gridPivotModelSelector,

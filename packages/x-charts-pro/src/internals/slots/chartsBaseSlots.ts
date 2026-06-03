@@ -7,12 +7,12 @@ import {
   type ChartBasePopperProps,
   type ChartBaseTooltipProps,
 } from './chartBaseSlotProps';
-import type {
-  BaseDividerPropsOverrides,
-  BaseMenuItemPropsOverrides,
-  BaseMenuListPropsOverrides,
-  BasePopperPropsOverrides,
-  BaseTooltipPropsOverrides,
+import {
+  type BaseDividerPropsOverrides,
+  type BaseMenuItemPropsOverrides,
+  type BaseMenuListPropsOverrides,
+  type BasePopperPropsOverrides,
+  type BaseTooltipPropsOverrides,
 } from '../../models/chartsSlotsComponentsPropsPro';
 
 export interface ChartsBaseSlotsPro extends ChartsBaseSlots {

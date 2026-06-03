@@ -1,6 +1,6 @@
-import type { SeriesLegendItemParams } from '../ChartsLegend';
-import type { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
-import type { SeriesProcessorResult } from './plugins/corePlugins/useChartSeriesConfig/types/seriesProcessor.types';
+import { type SeriesLegendItemParams } from '../ChartsLegend';
+import { type ChartSeriesDefaultized, type ChartSeriesType } from '../models/seriesType/config';
+import { type SeriesProcessorResult } from './plugins/corePlugins/useChartSeriesConfig/types/seriesProcessor.types';
 import { getLabel } from './getLabel';
 
 type SeriesTypeWithLegendFields = {

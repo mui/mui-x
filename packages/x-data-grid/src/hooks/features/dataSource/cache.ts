@@ -1,4 +1,4 @@
-import type { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
+import { type GridGetRowsParams, type GridGetRowsResponse } from '../../../models/gridDataSource';
 
 export type GridDataSourceCacheDefaultConfig = {
   /**

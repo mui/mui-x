@@ -1,5 +1,5 @@
 'use client';
-import type { AxisId, AxisScaleConfig, ScaleName } from '../models/axis';
+import { type AxisId, type AxisScaleConfig, type ScaleName } from '../models/axis';
 import { useRadiusAxis, useRotationAxis, useXAxis, useYAxis } from './useAxis';
 
 /**

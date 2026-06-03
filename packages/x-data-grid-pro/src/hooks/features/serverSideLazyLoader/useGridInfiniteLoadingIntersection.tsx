@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { useGridSelector, useGridApiMethod, gridDimensionsSelector } from '@mui/x-data-grid';
 import {
   type GridInfiniteLoaderPrivateApi,
@@ -9,8 +9,8 @@ import {
 } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { styled } from '@mui/material/styles';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 const InfiniteLoadingTriggerElement = styled('div', {
   slot: 'internal',

@@ -53,7 +53,7 @@ import {
   STATUS_OPTIONS,
   TAXCODE_OPTIONS,
 } from '../services/static-data';
-import type { GridColDefGenerator } from '../services/gridColDefGenerator';
+import { type GridColDefGenerator } from '../services/gridColDefGenerator';
 
 export const getCommodityColumns = (editable = false): GridColDefGenerator[] => [
   {

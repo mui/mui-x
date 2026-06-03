@@ -1,5 +1,5 @@
 import { rtlFlipSide } from '../../utils/rtlFlipSide';
-import type { PinnedColumnPosition } from '../constants';
+import { type PinnedColumnPosition } from '../constants';
 
 export function attachPinnedStyle(
   style: React.CSSProperties,

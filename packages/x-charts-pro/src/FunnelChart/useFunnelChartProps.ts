@@ -7,10 +7,10 @@ import { defaultizeMargin, type XAxis, type YAxis } from '@mui/x-charts/internal
 import { type ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { warnOnce } from '@mui/x-internals/warning';
 import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
-import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
+import { type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { FUNNEL_CHART_PLUGINS, type FunnelChartPluginSignatures } from './FunnelChart.plugins';
 import { type FunnelPlotProps } from './FunnelPlot';
-import type { FunnelChartProps } from './FunnelChart';
+import { type FunnelChartProps } from './FunnelChart';
 import { type ChartsContainerProProps } from '../ChartsContainerPro';
 
 function getCategoryAxisConfig(

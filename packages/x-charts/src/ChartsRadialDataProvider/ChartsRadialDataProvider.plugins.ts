@@ -22,7 +22,7 @@ import {
   useChartVisibilityManager,
   type UseChartVisibilityManagerSignature,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
-import type { PolarChartSeriesType } from '../models/seriesType/config';
+import { type PolarChartSeriesType } from '../models/seriesType/config';
 
 export const RADIAL_PLUGINS = [
   useChartTooltip,

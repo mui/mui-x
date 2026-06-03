@@ -7,11 +7,11 @@ import {
   type GridRowProApi,
 } from '@mui/x-data-grid';
 import { useGridRowsOverridableMethodsCommunity } from '@mui/x-data-grid/internals';
-import type { RefObject } from '@mui/x-internals/types';
-import type { ReorderExecutionContext } from '../rowReorder/types';
+import { type RefObject } from '@mui/x-internals/types';
+import { type ReorderExecutionContext } from '../rowReorder/types';
 import { treeDataReorderExecutor } from '../treeData/treeDataReorderExecutor';
-import type { GridPrivateApiPro } from '../../../models/gridApiPro';
-import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { type GridPrivateApiPro } from '../../../models/gridApiPro';
+import { type DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 export const useGridRowsOverridableMethods = (
   apiRef: RefObject<GridPrivateApiPro>,

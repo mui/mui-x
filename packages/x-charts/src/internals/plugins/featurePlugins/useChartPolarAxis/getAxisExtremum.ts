@@ -1,4 +1,8 @@
-import type { ChartsRadialAxisProps, ScaleName, PolarAxisConfig } from '../../../../models/axis';
+import {
+  type ChartsRadialAxisProps,
+  type ScaleName,
+  type PolarAxisConfig,
+} from '../../../../models/axis';
 import { type PolarChartSeriesType } from '../../../../models/seriesType/config';
 import {
   type PolarExtremumGetter,

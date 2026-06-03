@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useLegend } from '../hooks/useLegend';
-import type { Direction } from './direction';
+import { type Direction } from './direction';
 import { type SeriesLegendItemContext, type SeriesLegendItemParams } from './legendContext.types';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';

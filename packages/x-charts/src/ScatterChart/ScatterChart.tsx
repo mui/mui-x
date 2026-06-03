@@ -19,7 +19,7 @@ import {
   type ChartsTooltipSlots,
   type ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
-import type { TooltipPropsOverrides } from '../models/chartsSlotsComponentsProps';
+import { type TooltipPropsOverrides } from '../models/chartsSlotsComponentsProps';
 import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
@@ -35,8 +35,8 @@ import { useChartsContainerProps } from '../ChartsContainer/useChartsContainerPr
 import { ChartsDataProvider } from '../ChartsDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
-import type { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
-import type { ScatterChartPluginSignatures } from './ScatterChart.plugins';
+import { type UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
+import { type ScatterChartPluginSignatures } from './ScatterChart.plugins';
 import { FocusedScatterMark } from './FocusedScatterMark';
 
 export interface ScatterChartSlots

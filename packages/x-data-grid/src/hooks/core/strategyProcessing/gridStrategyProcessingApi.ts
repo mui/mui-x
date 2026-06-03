@@ -1,24 +1,24 @@
-import type {
-  GridRowTreeCreationParams,
-  GridRowTreeCreationValue,
-  GridRowsState,
+import {
+  type GridRowTreeCreationParams,
+  type GridRowTreeCreationValue,
+  type GridRowsState,
 } from '../../features/rows/gridRowsInterfaces';
-import type {
-  GridFilteringMethodParams,
-  GridFilteringMethodValue,
-  GridFilterState,
-  GridVisibleRowsLookupState,
+import {
+  type GridFilteringMethodParams,
+  type GridFilteringMethodValue,
+  type GridFilterState,
+  type GridVisibleRowsLookupState,
 } from '../../features/filter/gridFilterState';
-import type {
-  GridSortingMethodParams,
-  GridSortingMethodValue,
+import {
+  type GridSortingMethodParams,
+  type GridSortingMethodValue,
 } from '../../features/sorting/gridSortingState';
-import type {
-  GridGetRowsParams,
-  GridGetRowsResponse,
-  GridGetRowsOptions,
+import {
+  type GridGetRowsParams,
+  type GridGetRowsResponse,
+  type GridGetRowsOptions,
 } from '../../../models/gridDataSource';
-import type { GridRowId } from '../../../models/gridRows';
+import { type GridRowId } from '../../../models/gridRows';
 
 export type GridStrategyProcessorName = keyof GridStrategyProcessingLookup;
 

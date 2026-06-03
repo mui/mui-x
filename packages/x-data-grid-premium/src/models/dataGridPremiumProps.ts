@@ -1,50 +1,50 @@
-import type { RefObject } from '@mui/x-internals/types';
-import type {
-  GridCallbackDetails,
-  GridValidRowModel,
-  GridGroupNode,
-  GridEventListener,
-  GridGetRowsError,
-  GridUpdateRowError,
-  GridColDef,
-  GridLocaleTextApi,
-  GridEvents,
+import { type RefObject } from '@mui/x-internals/types';
+import {
+  type GridCallbackDetails,
+  type GridValidRowModel,
+  type GridGroupNode,
+  type GridEventListener,
+  type GridGetRowsError,
+  type GridUpdateRowError,
+  type GridColDef,
+  type GridLocaleTextApi,
+  type GridEvents,
 } from '@mui/x-data-grid-pro';
-import type {
-  GridExperimentalProFeatures,
-  DataGridProPropsWithDefaultValue,
-  DataGridProPropsWithoutDefaultValue,
-  DataGridPropsWithComplexDefaultValueAfterProcessing,
-  DataGridPropsWithComplexDefaultValueBeforeProcessing,
-  DataGridPremiumSharedPropsWithDefaultValue,
+import {
+  type GridExperimentalProFeatures,
+  type DataGridProPropsWithDefaultValue,
+  type DataGridProPropsWithoutDefaultValue,
+  type DataGridPropsWithComplexDefaultValueAfterProcessing,
+  type DataGridPropsWithComplexDefaultValueBeforeProcessing,
+  type DataGridPremiumSharedPropsWithDefaultValue,
 } from '@mui/x-data-grid-pro/internals';
-import type { GridRowGroupingModel } from '../hooks/features/rowGrouping';
-import type {
-  GridAggregationModel,
-  GridAggregationFunction,
-  GridAggregationFunctionDataSource,
-  GridAggregationPosition,
+import { type GridRowGroupingModel } from '../hooks/features/rowGrouping';
+import {
+  type GridAggregationModel,
+  type GridAggregationFunction,
+  type GridAggregationFunctionDataSource,
+  type GridAggregationPosition,
 } from '../hooks/features/aggregation';
-import type { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
-import type { GridPremiumSlotProps } from './gridPremiumSlotProps';
-import type { GridInitialStatePremium } from './gridStatePremium';
-import type { GridApiPremium } from './gridApiPremium';
-import type { GridCellSelectionModel } from '../hooks/features/cellSelection';
-import type {
-  GridPivotingColDefOverrides,
-  PivotingColDefCallback,
-  GridPivotModel,
+import { type GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
+import { type GridPremiumSlotProps } from './gridPremiumSlotProps';
+import { type GridInitialStatePremium } from './gridStatePremium';
+import { type GridApiPremium } from './gridApiPremium';
+import { type GridCellSelectionModel } from '../hooks/features/cellSelection';
+import {
+  type GridPivotingColDefOverrides,
+  type PivotingColDefCallback,
+  type GridPivotModel,
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
-import type {
-  GridDataSourcePremium as GridDataSource,
-  GridGetRowsParamsPremium as GridGetRowsParams,
+import {
+  type GridDataSourcePremium as GridDataSource,
+  type GridGetRowsParamsPremium as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
-import type {
-  Conversation,
-  PromptResponse,
-  PromptSuggestion,
+import {
+  type Conversation,
+  type PromptResponse,
+  type PromptSuggestion,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
-import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
+import { type GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 

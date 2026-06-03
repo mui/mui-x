@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { lruMemoize } from '@mui/x-internals/lruMemoize';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import type { GridEventListener } from '../../../models/events';
-import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import type { GridFilterApi } from '../../../models/api/gridFilterApi';
-import type { GridFilterItem } from '../../../models/gridFilterItem';
-import type { GridRowId } from '../../../models/gridRows';
-import type { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { type GridEventListener } from '../../../models/events';
+import { type DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { type GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { type GridFilterApi } from '../../../models/api/gridFilterApi';
+import { type GridFilterItem } from '../../../models/gridFilterItem';
+import { type GridRowId } from '../../../models/gridRows';
+import { type GridStateCommunity } from '../../../models/gridStateCommunity';
 import { useLazyRef } from '../../utils/useLazyRef';
 import { useGridEvent } from '../../utils/useGridEvent';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -34,9 +34,9 @@ import {
   passFilterLogic,
   shouldQuickFilterExcludeHiddenColumns,
 } from './gridFilterUtils';
-import type { GridStateInitializer } from '../../utils/useGridInitializeState';
-import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
-import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
+import { type GridStateInitializer } from '../../utils/useGridInitializeState';
+import { type ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
+import { type GridConfiguration } from '../../../models/configuration/gridConfiguration';
 
 export const filterStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>

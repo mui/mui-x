@@ -1,8 +1,8 @@
-import type {
-  ComputedAxis,
-  ProcessedSeries,
-  ChartState,
-  UseChartCartesianAxisSignature,
+import {
+  type ComputedAxis,
+  type ProcessedSeries,
+  type ChartState,
+  type UseChartCartesianAxisSignature,
 } from '@mui/x-charts/internals';
 import {
   selectorAllSeriesOfType,
@@ -10,10 +10,10 @@ import {
   selectorChartYAxis,
   getCartesianAxisIndex,
 } from '@mui/x-charts/internals';
-import type {
-  ChartsXAxisProps,
-  ChartsYAxisProps,
-  SeriesItemIdentifierWithData,
+import {
+  type ChartsXAxisProps,
+  type ChartsYAxisProps,
+  type SeriesItemIdentifierWithData,
 } from '@mui/x-charts/models';
 
 export default function getItemAtPosition(

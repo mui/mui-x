@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { gridRowIdSelector, type GridParamsApi } from '@mui/x-data-grid-pro';
 import { useGridParamsOverridableMethods as useGridParamsOverridableMethodsCommunity } from '@mui/x-data-grid-pro/internals';
-import type { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { gridCellAggregationResultSelector } from '../aggregation/gridAggregationSelectors';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { type GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const useGridParamsOverridableMethods = (apiRef: RefObject<GridPrivateApiPremium>) => {
   const communityMethods = useGridParamsOverridableMethodsCommunity(apiRef);

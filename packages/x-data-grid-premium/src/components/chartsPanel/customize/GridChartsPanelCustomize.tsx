@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import type {
-  GridChartsConfigurationSection,
-  GridChartsConfigurationControl,
+import {
+  type GridChartsConfigurationSection,
+  type GridChartsConfigurationControl,
 } from '@mui/x-internals/types';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import { GridOverlay, GridShadowScrollArea } from '@mui/x-data-grid-pro';
@@ -12,7 +12,7 @@ import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridCha
 import { Collapsible } from '../../collapsible/Collapsible';
 import { CollapsibleTrigger } from '../../collapsible/CollapsibleTrigger';
 import { CollapsiblePanel } from '../../collapsible/CollapsiblePanel';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { type DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../../../hooks/features/chartsIntegration/useGridChartsIntegration';
 
 interface GridChartsPanelCustomizeProps {

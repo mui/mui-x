@@ -4,8 +4,8 @@ import {
   type ChartSeriesType,
   useChartsDataProviderProps,
 } from '@mui/x-charts/internals';
-import type { ChartsDataProviderProProps } from './ChartsDataProviderPro';
-import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { type ChartsDataProviderProProps } from './ChartsDataProviderPro';
+import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export const useChartsDataProviderProProps = <
   SeriesType extends ChartSeriesType = ChartSeriesType,

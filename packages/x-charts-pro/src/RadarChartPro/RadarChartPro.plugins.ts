@@ -1,11 +1,11 @@
-import type {
-  ConvertSignaturesIntoPlugins,
-  UseChartHighlightSignature,
-  UseChartTooltipSignature,
-  UseChartInteractionSignature,
-  UseChartPolarAxisSignature,
-  UseChartVisibilityManagerSignature,
-  UseChartKeyboardNavigationSignature,
+import {
+  type ConvertSignaturesIntoPlugins,
+  type UseChartHighlightSignature,
+  type UseChartTooltipSignature,
+  type UseChartInteractionSignature,
+  type UseChartPolarAxisSignature,
+  type UseChartVisibilityManagerSignature,
+  type UseChartKeyboardNavigationSignature,
 } from '@mui/x-charts/internals';
 import { RADAR_PLUGINS } from '@mui/x-charts/internals';
 import {

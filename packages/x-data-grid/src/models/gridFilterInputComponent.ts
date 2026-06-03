@@ -1,8 +1,8 @@
 import type * as React from 'react';
-import type { RefObject } from '@mui/x-internals/types';
-import type { GridFilterItem } from './gridFilterItem';
-import type { GridApiCommon } from './api/gridApiCommon';
-import type { GridApiCommunity } from './api/gridApiCommunity';
+import { type RefObject } from '@mui/x-internals/types';
+import { type GridFilterItem } from './gridFilterItem';
+import { type GridApiCommon } from './api/gridApiCommon';
+import { type GridApiCommunity } from './api/gridApiCommunity';
 
 export type GridFilterInputSlotProps = {
   size?: 'small' | 'medium';

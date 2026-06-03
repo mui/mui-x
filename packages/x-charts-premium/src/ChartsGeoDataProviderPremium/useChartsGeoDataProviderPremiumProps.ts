@@ -7,7 +7,7 @@ import {
   type ChartsProviderProps,
   type ChartSeriesConfig,
 } from '@mui/x-charts/internals';
-import type { ChartsGeoDataProviderPremiumProps } from './ChartsGeoDataProviderPremium';
+import { type ChartsGeoDataProviderPremiumProps } from './ChartsGeoDataProviderPremium';
 import {
   GEO_PREMIUM_PLUGINS,
   type GeoPremiumPluginSignatures,
