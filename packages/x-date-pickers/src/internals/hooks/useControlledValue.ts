@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
-import type { PickerRangeValue, PickerValueManager, type PickerValidValue } from '../models';
+import type { PickerRangeValue, PickerValueManager, PickerValidValue } from '../models';
 import { type PickersTimezone, type PickerValidDate } from '../../models';
 import { usePickerAdapter } from '../../hooks/usePickerAdapter';
 

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { type MuiPickersAdapter, type OnErrorProps, type PickersTimezone } from '../models';
-import type { PickerValueManager, type PickerValidValue } from '../internals/models';
+import type { PickerValueManager, PickerValidValue } from '../internals/models';
 import { usePickerAdapter } from '../hooks';
 
 export type Validator<TValue extends PickerValidValue, TError, TValidationProps> = {

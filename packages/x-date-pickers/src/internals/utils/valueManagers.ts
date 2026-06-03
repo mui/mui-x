@@ -1,4 +1,4 @@
-import type { PickerValueManager, type PickerValue } from '../models';
+import type { PickerValueManager, PickerValue } from '../models';
 import {
   type DateValidationError,
   type TimeValidationError,
