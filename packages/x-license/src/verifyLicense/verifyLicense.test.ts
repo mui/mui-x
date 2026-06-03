@@ -1,16 +1,5 @@
 import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
-// eslint-disable-next-line import/extensions
-import generateReleaseInfo from '../../../../scripts/generateReleaseInfo.mjs';
-import {
-  verifyLicense,
-  parseLicenseTokens,
-  decodeLicense,
-  decodeLicenseVersion2,
-  decodeLicenseVersion3,
-} from './verifyLicense';
-import { LICENSE_STATUS } from '../utils/licenseStatus';
-import { NullableLicenseDetails } from '../utils/licenseDetails';
 import {
   TEST_LICENSE_KEY_PRO,
   TEST_KEY_V1,
@@ -29,7 +18,18 @@ import {
   TEST_KEY_PRO_PERPETUAL_Q1_2026_EXPIRED,
   TEST_KEY_INVALID,
   TEST_KEY_UNKNOWN_VERSION,
-} from '../test-keys';
+} from 'test/utils/licenseKeys';
+// eslint-disable-next-line import/extensions
+import generateReleaseInfo from '../../../../scripts/generateReleaseInfo.mjs';
+import {
+  verifyLicense,
+  parseLicenseTokens,
+  decodeLicense,
+  decodeLicenseVersion2,
+  decodeLicenseVersion3,
+} from './verifyLicense';
+import { LICENSE_STATUS } from '../utils/licenseStatus';
+import { NullableLicenseDetails } from '../utils/licenseDetails';
 
 const releaseDate = new Date(2018, 0, 0, 0, 0, 0, 0);
 const RELEASE_INFO = generateReleaseInfo(releaseDate);

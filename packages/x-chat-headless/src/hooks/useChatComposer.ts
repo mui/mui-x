@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@mui/x-internals/store';
+import { useStore, useStoreEffect } from '@mui/x-internals/store';
 import { useChatRuntimeContext } from '../internals/useChatRuntimeContext';
 import { chatSelectors } from '../selectors';
 import type { ChatDraftAttachment } from '../types/chat-entities';
@@ -43,7 +43,13 @@ function revokeAttachmentPreviewUrl(previewUrl: string) {
 export function useChatComposer<Cursor = string>(): UseChatComposerValue {
   const store = useChatStore<Cursor>();
   const { actions } = useChatRuntimeContext<Cursor>();
+  // URLs the composer currently owns (still attached to the draft).
   const ownedPreviewUrlsRef = React.useRef(new Map<string, string>());
+  // URLs that have been transferred to a sent message (#7). Each entry is
+  // keyed by `messageId` and holds the local-id → previewUrl mapping for
+  // attachments that message references. We revoke them when the message is
+  // removed from the store, or on unmount.
+  const messageOwnedPreviewUrlsRef = React.useRef(new Map<string, Map<string, string>>());
   const selectComposerValue = chatSelectors.composerValue as (
     state: ChatInternalState<Cursor>,
   ) => ReturnType<typeof chatSelectors.composerValue>;
@@ -53,6 +59,9 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
   const selectIsStreaming = chatSelectors.isStreaming as (
     state: ChatInternalState<Cursor>,
   ) => ReturnType<typeof chatSelectors.isStreaming>;
+  const selectMessageIds = chatSelectors.messageIds as (
+    state: ChatInternalState<Cursor>,
+  ) => ReturnType<typeof chatSelectors.messageIds>;
   const value = useStore(store, selectComposerValue);
   const attachments = useStore(store, selectComposerAttachments);
   const isSubmitting = useStore(store, selectIsStreaming);
@@ -77,13 +86,46 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
     }
   }, [attachments]);
 
+  // Revoke URLs once the message that owns them is removed from the store.
+  useStoreEffect(store, selectMessageIds, (previousIds, nextIds) => {
+    if (messageOwnedPreviewUrlsRef.current.size === 0) {
+      return;
+    }
+
+    const nextIdSet = new Set(nextIds);
+
+    for (const messageId of previousIds) {
+      if (nextIdSet.has(messageId)) {
+        continue;
+      }
+
+      const urlMap = messageOwnedPreviewUrlsRef.current.get(messageId);
+
+      if (!urlMap) {
+        continue;
+      }
+
+      for (const previewUrl of urlMap.values()) {
+        revokeAttachmentPreviewUrl(previewUrl);
+      }
+
+      messageOwnedPreviewUrlsRef.current.delete(messageId);
+    }
+  });
+
   React.useEffect(
     () => () => {
       for (const previewUrl of ownedPreviewUrlsRef.current.values()) {
         revokeAttachmentPreviewUrl(previewUrl);
       }
-
       ownedPreviewUrlsRef.current.clear();
+
+      for (const urlMap of messageOwnedPreviewUrlsRef.current.values()) {
+        for (const previewUrl of urlMap.values()) {
+          revokeAttachmentPreviewUrl(previewUrl);
+        }
+      }
+      messageOwnedPreviewUrlsRef.current.clear();
     },
     [],
   );
@@ -93,16 +135,24 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
       const localId = createLocalId();
       const previewUrl = createAttachmentPreviewUrl(file);
 
-      if (previewUrl) {
-        ownedPreviewUrlsRef.current.set(localId, previewUrl);
-      }
+      try {
+        store.addComposerAttachment({
+          localId,
+          file,
+          previewUrl,
+          status: 'queued',
+        });
 
-      store.addComposerAttachment({
-        localId,
-        file,
-        previewUrl,
-        status: 'queued',
-      });
+        if (previewUrl) {
+          ownedPreviewUrlsRef.current.set(localId, previewUrl);
+        }
+      } catch (error) {
+        if (previewUrl) {
+          revokeAttachmentPreviewUrl(previewUrl);
+        }
+
+        throw error;
+      }
     },
     [store],
   );
@@ -149,12 +199,22 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
 
     const messageId = createLocalId();
 
-    // Optimistic clear: release preview URL ownership and clear composer
-    // immediately so the UI feels responsive.  The URLs are still
-    // referenced by the message parts we are about to send, so we must
-    // NOT revoke them — just stop tracking ownership.
+    // Optimistic clear: transfer preview URL ownership from the composer to
+    // the outgoing message, then clear the composer immediately so the UI
+    // feels responsive. The URLs are still referenced by the message parts
+    // we're about to send, so we must NOT revoke them now (#7) — they live
+    // until the message itself is removed from the store (or the composer
+    // unmounts).
+    const transferredUrls = new Map<string, string>();
     for (const attachment of nextAttachments) {
-      ownedPreviewUrlsRef.current.delete(attachment.localId);
+      const ownedUrl = ownedPreviewUrlsRef.current.get(attachment.localId);
+      if (ownedUrl) {
+        transferredUrls.set(attachment.localId, ownedUrl);
+        ownedPreviewUrlsRef.current.delete(attachment.localId);
+      }
+    }
+    if (transferredUrls.size > 0) {
+      messageOwnedPreviewUrlsRef.current.set(messageId, transferredUrls);
     }
     store.clearComposer();
 
@@ -175,12 +235,18 @@ export function useChatComposer<Cursor = string>(): UseChatComposerValue {
       store.state.composerValue === '' &&
       store.state.composerAttachments.length === 0
     ) {
+      // Reclaim ownership of the transferred URLs back to the composer so
+      // they're cleaned up via the composer-attachment lifecycle if the user
+      // eventually removes them.
+      const previouslyTransferred = messageOwnedPreviewUrlsRef.current.get(messageId);
+      messageOwnedPreviewUrlsRef.current.delete(messageId);
+
       store.setComposerValue(nextValue);
       for (const attachment of nextAttachments) {
         store.addComposerAttachment(attachment);
-        // Re-claim preview URL ownership so cleanup revokes them if needed.
-        if (attachment.previewUrl) {
-          ownedPreviewUrlsRef.current.set(attachment.localId, attachment.previewUrl);
+        const previewUrl = previouslyTransferred?.get(attachment.localId) ?? attachment.previewUrl;
+        if (previewUrl) {
+          ownedPreviewUrlsRef.current.set(attachment.localId, previewUrl);
         }
       }
     }
