@@ -8,6 +8,10 @@
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
+    "renderer": {
+      "type": { "name": "enum", "description": "'svg-single'<br>&#124;&nbsp;'webgl'" },
+      "default": "'svg-single'"
+    },
     "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
