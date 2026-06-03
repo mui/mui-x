@@ -28,7 +28,7 @@ catalog:
   '@mui/system': 9.0.1
   '@mui/types': 9.0.0
   '@mui/utils': 9.0.1
-  '@mui/x-internal-exceljs-fork': 4.4.5
+  '@mui/x-internal-exceljs-fork': 5.0.0
   '@playwright/test': 1.60.0
   '@react-spring/web': ^10.1.0
   '@types/chance': ^1.1.8
