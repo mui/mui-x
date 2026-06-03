@@ -7,12 +7,13 @@ packages:
 
 catalog:
   '@atlaskit/pragmatic-drag-and-drop': ^1.8.1
-  '@babel/cli': ^7.28.6
-  '@babel/core': ^7.29.0
-  '@babel/plugin-transform-runtime': ^7.29.0
-  '@babel/preset-typescript': ^7.28.5
-  '@babel/runtime': ^7.29.2
-  '@babel/traverse': ^7.29.0
+  '@babel/cli': ^7.29.7
+  '@babel/core': ^7.29.7
+  '@babel/plugin-transform-modules-commonjs': ^7.29.7
+  '@babel/plugin-transform-runtime': ^7.29.7
+  '@babel/preset-typescript': ^7.29.7
+  '@babel/runtime': ^7.29.7
+  '@babel/traverse': ^7.29.7
   '@base-ui/react': ^1.5.0
   '@base-ui/utils': ^0.2.9
   '@date-fns/tz': ^1.5.0
@@ -27,9 +28,9 @@ catalog:
   '@mui/system': 9.0.1
   '@mui/types': 9.0.0
   '@mui/utils': 9.0.1
-  '@mui/x-internal-exceljs-fork': 4.4.5
+  '@mui/x-internal-exceljs-fork': 5.0.0
   '@playwright/test': 1.60.0
-  '@react-spring/web': ^10.0.3
+  '@react-spring/web': ^10.1.0
   '@types/chance': ^1.1.8
   '@types/luxon': ^3.7.1
   '@types/moment-hijri': ^2.1.4
@@ -65,7 +66,7 @@ catalog:
   moment-hijri: ^3.0.0
   moment-jalaali: ^0.10.4
   moment-timezone: ^0.6.2
-  motion: ^12.38.0
+  motion: ^12.40.0
   playwright: 1.60.0
   prop-types: ^15.8.1
   rasterizehtml: ^1.4.1
@@ -73,7 +74,7 @@ catalog:
   react-dom: 19.2.6
   react-router: ^7.15.1
   react-transition-group: ^4.4.5
-  reselect: ^5.1.1
+  reselect: ^5.2.0
   rimraf: ^6.1.3
   serve: ^14.2.6
   stylis: ^4.4.0
@@ -84,18 +85,34 @@ catalog:
   yargs: ^18.0.0
 
 engineStrict: true
+updateNotifier: false
+blockExoticSubdeps: true
+minimumReleaseAge: 4320
+minimumReleaseAgeExclude:
+  - '@mui/*'
+  - '@base-ui/*'
+trustPolicy: no-downgrade
+# Skip trust-policy checks for packages published more than 365 days ago.
+# Some widely-used legacy packages (notably semver@6.x — pulled in by @babel/core@7.x — plus
+# reselect@5.1.1 and parts of @octokit/*) dropped provenance attestation for specific releases,
+# triggering false-positive trust-downgrade errors. Packages that old have had ample time for
+# community review; supply-chain risk is most relevant within a shorter window.
+# TODO: drop once @babel/core stops depending on semver@^6.3.1 (no 6.x semver release has
+# provenance), and the other legacy packages restore provenance.
+trustPolicyIgnoreAfter: 525600
 
-ignoredBuiltDependencies:
-  - core-js
-  - msw
+enablePrePostScripts: true
 
-onlyBuiltDependencies:
-  - '@swc/core'
-  - '@vvago/vale'
-  - esbuild
-  - nx
-  - sharp
-  - unrs-resolver
+allowBuilds:
+  '@swc/core': true
+  '@vvago/vale': true
+  esbuild: true
+  nx: true
+  sharp: true
+  unrs-resolver: true
+  '@mui/x-telemetry': false
+  core-js: false
+  msw: false
 
 overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error

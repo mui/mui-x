@@ -51,6 +51,10 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
   props: ChatRootProps<Cursor>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const isActiveConversationIdControlled = Object.prototype.hasOwnProperty.call(
+    props,
+    'activeConversationId',
+  );
   const {
     children,
     slots,
@@ -61,6 +65,10 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
     density,
     members,
     currentUser,
+    roleDisplayNames,
+    getMessageAuthorId,
+    getMessageAuthorDisplayName,
+    getMessageAuthorAvatarUrl,
     messages,
     initialMessages,
     onMessagesChange,
@@ -99,13 +107,16 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
       adapter={adapter}
       members={members}
       currentUser={currentUser}
+      getMessageAuthorId={getMessageAuthorId}
+      getMessageAuthorDisplayName={getMessageAuthorDisplayName}
+      getMessageAuthorAvatarUrl={getMessageAuthorAvatarUrl}
       messages={messages}
       initialMessages={initialMessages}
       onMessagesChange={onMessagesChange}
       conversations={conversations}
       initialConversations={initialConversations}
       onConversationsChange={onConversationsChange}
-      activeConversationId={activeConversationId}
+      {...(isActiveConversationIdControlled ? { activeConversationId } : {})}
       initialActiveConversationId={initialActiveConversationId}
       onActiveConversationChange={onActiveConversationChange}
       composerValue={composerValue}
@@ -118,6 +129,7 @@ export const ChatRoot = React.forwardRef(function ChatRoot<Cursor = string>(
       streamFlushInterval={streamFlushInterval}
       partRenderers={partRenderers}
       storeClass={storeClass}
+      roleDisplayNames={roleDisplayNames}
     >
       <ChatLocaleProvider localeText={localeText}>
         {(() => {

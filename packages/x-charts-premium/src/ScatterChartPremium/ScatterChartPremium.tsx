@@ -14,6 +14,7 @@ import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsTooltip, type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import type { TooltipPropsOverrides } from '@mui/x-charts/models';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
@@ -44,7 +45,7 @@ export interface ScatterChartPremiumSlotProps
     Omit<ScatterChartSlotProps, 'toolbar' | 'tooltip'>,
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {
-  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>>;
+  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides;
 }
 
 export interface ScatterChartPremiumProps
@@ -359,13 +360,40 @@ ScatterChartPremium.propTypes = {
   /**
    * The list of zoom data related to each axis.
    * Used to initialize the zoom in a specific configuration without controlling it.
+   *
+   * Each entry is either explicit zoom percentages (`{ axisId, start, end }`) or a
+   * range value (`{ axisId, value }`) resolved against the axis domain.
    */
   initialZoom: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        end: PropTypes.number.isRequired,
+        start: PropTypes.number.isRequired,
+      }),
+      PropTypes.shape({
+        axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        value: PropTypes.oneOfType([
+          PropTypes.arrayOf(PropTypes.instanceOf(Date).isRequired),
+          PropTypes.arrayOf(PropTypes.string.isRequired),
+          PropTypes.func,
+          PropTypes.shape({
+            step: PropTypes.number,
+            unit: PropTypes.oneOf([
+              'day',
+              'hour',
+              'microsecond',
+              'millisecond',
+              'minute',
+              'month',
+              'second',
+              'week',
+              'year',
+            ]).isRequired,
+          }),
+        ]),
+      }),
+    ]).isRequired,
   ),
   /**
    * If `true`, a loading overlay is displayed.
