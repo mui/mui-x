@@ -79,6 +79,55 @@ function resolveImportPath(fromFile: string, specifier: string): string | null {
   return null;
 }
 
+// Files that knowingly violate the consistency checks below for backwards-compatibility
+// reasons (they dual-emit a legacy `MuiXxx` prefix alongside the correct one). Remove these
+// entries when the legacy prefixes are dropped — tracked at #22675 for v10.
+const KNOWN_INCONSISTENT_CLASSES_FILES = new Set([
+  path.join(process.cwd(), 'packages/x-charts/src/ChartsLegend/piecewiseColorLegendClasses.ts'),
+  path.join(
+    process.cwd(),
+    'packages/x-charts-pro/src/ChartsZoomSlider/internals/chartsAxisZoomSliderThumbClasses.ts',
+  ),
+]);
+
+function collectMuiNamesInFile(content: string): { source: string; muiName: string }[] {
+  const found: { source: string; muiName: string }[] = [];
+  for (const match of content.matchAll(new RegExp(GENERATE_UTILITY_CLASS_CALL, 'g'))) {
+    found.push({ source: 'generateUtilityClass call', muiName: match[1] });
+  }
+  for (const match of content.matchAll(new RegExp(MUI_NAME_CONST, 'g'))) {
+    found.push({ source: `const declaration`, muiName: match[1] });
+  }
+  return found;
+}
+
+function assertConsistent(file: string, interfaceNames: Set<string>, muiName: string): void {
+  if (KNOWN_INCONSISTENT_CLASSES_FILES.has(file)) {
+    return;
+  }
+  if (muiName.endsWith('Classes')) {
+    // The interface name leaked into the muiName literal (e.g. `MuiFooClasses` instead of
+    // `MuiFoo`). This is the bug pattern that bit `piecewiseColorLegendClasses`.
+    throw new Error(
+      `[generateChartsClassName] Suspicious muiName "${muiName}" in ${file}: ends with "Classes". ` +
+        `Expected the interface name (${Array.from(interfaceNames).join(', ')}) ` +
+        `stripped of the "Classes" suffix, not the full interface name.`,
+    );
+  }
+  for (const interfaceName of interfaceNames) {
+    const interfaceCore = interfaceName.replace(/Classes$/, '');
+    const muiCore = muiName.replace(/^Mui/, '');
+    if (!muiCore.includes(interfaceCore)) {
+      // muiName doesn't reference the interface core anywhere — likely a typo (the
+      // `chartsAxisZoomSliderThumbClasses` file is missing the `s` in `Charts`).
+      throw new Error(
+        `[generateChartsClassName] muiName "${muiName}" in ${file} does not contain ` +
+          `the core of interface "${interfaceName}" ("${interfaceCore}"). Possible typo.`,
+      );
+    }
+  }
+}
+
 function collectClassesFiles(): {
   classesFiles: ClassesFileInfo[];
   factoryOwnerByFn: Map<string, string>;
@@ -91,8 +140,18 @@ function collectClassesFiles(): {
     const files = walk(root, (name) => /[Cc]lasses\.ts$/.test(name));
     for (const file of files) {
       const content = fs.readFileSync(file, 'utf8');
-      const muiNameMatch =
-        content.match(GENERATE_UTILITY_CLASS_CALL) ?? content.match(MUI_NAME_CONST);
+      const allMuiNames = collectMuiNamesInFile(content);
+      const distinctMuiNames = Array.from(new Set(allMuiNames.map((m) => m.muiName)));
+      if (distinctMuiNames.length > 1 && !KNOWN_INCONSISTENT_CLASSES_FILES.has(file)) {
+        // Different detection paths (literal call vs. const declaration) disagreed on the
+        // owner muiName for the same file. This is almost always a bug (a typo or a
+        // copy-paste error); add the file to `KNOWN_INCONSISTENT_CLASSES_FILES` if it's
+        // intentional (e.g. dual-emit for backwards compat).
+        throw new Error(
+          `[generateChartsClassName] Inconsistent muiNames in ${file}: ` +
+            `${allMuiNames.map((m) => `"${m.muiName}" (${m.source})`).join(', ')}.`,
+        );
+      }
       const interfaceNames = new Set<string>();
       for (const match of content.matchAll(EXPORT_INTERFACE_CLASSES)) {
         interfaceNames.add(match[1]);
@@ -101,8 +160,11 @@ function collectClassesFiles(): {
       for (const match of content.matchAll(EXPORT_FACTORY_FN)) {
         factoryFns.add(match[1]);
       }
-      const ownerMuiName = muiNameMatch?.[1];
+      const ownerMuiName = distinctMuiNames[0];
       if (ownerMuiName) {
+        if (interfaceNames.size > 0) {
+          assertConsistent(file, interfaceNames, ownerMuiName);
+        }
         result.push({ modulePath: file, ownerMuiName, interfaceNames, factoryFns });
         for (const fn of factoryFns) {
           if (!factoryOwnerByFn.has(fn)) {
