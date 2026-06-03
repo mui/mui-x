@@ -25,7 +25,7 @@ Each series type has one recommended built-in method.
 | Method     | Series  | Description                                                                                                                                          |
 | :--------- | :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `'lttb'`   | line    | Largest-Triangle-Three-Buckets. Preserves peaks, troughs, and the overall shape. Best for lines.                                                     |
-| `'m4'`     | line    | Keeps the first, last, min, and max of each pixel column. The rasterized line is pixel-identical to drawing every point, at the cost of more points. |
+| `'m4'`     | line    | Keeps the first, last, min, and max of each column, preserving the line's full vertical extent. The densest, most shape-faithful line method, at the cost of more points. |
 | `'bucket'` | scatter | Keeps one representative point per grid cell, sized to the marker. Points that would overlap are visually redundant. Best for scatter.               |
 | `'bucket'` | bar     | Groups consecutive bars into pixel-width buckets and keeps the largest one. Best for bars.                                                           |
 
@@ -44,6 +44,9 @@ Scatter series use the `'bucket'` method, which keeps one point per grid cell si
 ## Bar charts
 
 Bar series use the `'bucket'` method to keep the most prominent bar in each pixel-width group.
+
+The kept bars are laid out on a uniform grid across the axis—fewer and wider—rather than at their original category positions, so a rendered bar no longer lines up with the axis tick of the value it represents.
+Tooltips and highlighting still read the full data, so they remain accurate for the kept bars even though their position is approximate.
 
 {{"demo": "SamplingBarChart.js"}}
 
