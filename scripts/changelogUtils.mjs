@@ -630,7 +630,7 @@ async function findLatestTaggedVersionForMajor(majorVersion, upstreamRemote = 'o
   // Fetch all tags from all remotes to ensure we have the latest tags.
   await $`git fetch --tags --all`;
   const { stdout } =
-    await $`git describe --tags --abbrev=0 --match ${`v${majorVersion || ''}*`} ${upstreamRemote}/v${majorVersion}.x`; // only include "version-tags"
+    await $`git describe --tags --abbrev=0 --match ${`v${majorVersion || ''}*`} ${upstreamRemote}`; // only include "version-tags"
   return stdout.trim();
 }
 
