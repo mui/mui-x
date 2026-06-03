@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils/types';
-import IconButton from '@mui/material/IconButton';
-import SvgIcon from '@mui/material/SvgIcon';
-import { SxProps, Theme } from '@mui/material/styles';
+import type * as React from 'react';
+import { type SlotComponentProps } from '@mui/utils/types';
+import type IconButton from '@mui/material/IconButton';
+import type SvgIcon from '@mui/material/SvgIcon';
+import { type SxProps, type Theme } from '@mui/material/styles';
 import {
-  ExportedPickersArrowSwitcherProps,
-  PickersArrowSwitcherSlots,
-  PickersArrowSwitcherSlotProps,
+  type ExportedPickersArrowSwitcherProps,
+  type PickersArrowSwitcherSlots,
+  type PickersArrowSwitcherSlotProps,
 } from '../internals/components/PickersArrowSwitcher';
-import { MonthValidationOptions } from '../internals/hooks/date-helpers-hooks';
-import { PickerValidDate, DateView, PickerOwnerState } from '../models';
-import { PickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
+import { type MonthValidationOptions } from '../internals/hooks/date-helpers-hooks';
+import { type PickerValidDate, type DateView, type PickerOwnerState } from '../models';
+import { type PickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
 
 export interface PickersCalendarHeaderSlots extends PickersArrowSwitcherSlots {
   /**

@@ -1,11 +1,11 @@
-import defaultMoment, { Moment, LongDateFormatKey } from 'moment';
+import defaultMoment, { type Moment, type LongDateFormatKey } from 'moment';
 import {
-  AdapterFormats,
-  AdapterOptions,
-  DateBuilderReturnType,
-  FieldFormatTokenMap,
-  MuiPickersAdapter,
-  PickersTimezone,
+  type AdapterFormats,
+  type AdapterOptions,
+  type DateBuilderReturnType,
+  type FieldFormatTokenMap,
+  type MuiPickersAdapter,
+  type PickersTimezone,
 } from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/

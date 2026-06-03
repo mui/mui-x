@@ -1,7 +1,7 @@
 import { adapterToUse } from 'test/utils/pickers';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { type PickerValidDate } from '@mui/x-date-pickers/models';
 import { calculateRangeChange, calculateRangePreview } from './date-range-manager';
-import { DateRange } from '../../models';
+import { type DateRange } from '../../models';
 
 const start2018 = adapterToUse.date('2018-01-01');
 const start2018EndOfDay = adapterToUse.date('2018-01-01T23:59:59.999Z');

@@ -1,5 +1,5 @@
 import type { FieldSection } from '../../models';
-import { RangePosition } from './pickers';
+import { type RangePosition } from './pickers';
 
 export interface FieldRangeSection extends FieldSection {
   dateName: RangePosition;

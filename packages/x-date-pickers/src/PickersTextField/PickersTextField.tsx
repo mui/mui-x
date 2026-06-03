@@ -13,15 +13,15 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import {
   getPickersTextFieldUtilityClass,
-  PickersTextFieldClasses,
+  type PickersTextFieldClasses,
 } from './pickersTextFieldClasses';
-import { PickersTextFieldProps } from './PickersTextField.types';
+import { type PickersTextFieldProps } from './PickersTextField.types';
 import { PickersOutlinedInput } from './PickersOutlinedInput';
 import { PickersFilledInput } from './PickersFilledInput';
 import { PickersInput } from './PickersInput';
 import { useFieldOwnerState } from '../internals/hooks/useFieldOwnerState';
 import { PickerTextFieldOwnerStateContext } from './usePickerTextFieldOwnerState';
-import { PickerTextFieldOwnerState } from '../models/fields';
+import { type PickerTextFieldOwnerState } from '../models/fields';
 
 const VARIANT_COMPONENT = {
   standard: PickersInput,

@@ -6,14 +6,14 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useRtl } from '@mui/system/RtlProvider';
 import { usePickerAdapter, usePickerTranslations } from '../../../hooks';
 import {
-  UseFieldInternalProps,
-  UseFieldState,
-  FieldParsedSelectedSections,
-  FieldChangeHandlerContext,
-  FieldSectionsValueBoundaries,
-  SectionOrdering,
-  UseFieldForwardedProps,
-  CharacterEditingQuery,
+  type UseFieldInternalProps,
+  type UseFieldState,
+  type FieldParsedSelectedSections,
+  type FieldChangeHandlerContext,
+  type FieldSectionsValueBoundaries,
+  type SectionOrdering,
+  type UseFieldForwardedProps,
+  type CharacterEditingQuery,
 } from './useField.types';
 import {
   mergeDateIntoReferenceDate,
@@ -26,19 +26,19 @@ import {
 } from './useField.utils';
 import { buildSectionsFromFormat } from './buildSectionsFromFormat';
 import {
-  FieldSelectedSections,
-  PickersTimezone,
-  PickerValidDate,
-  InferFieldSection,
-  PickerManager,
+  type FieldSelectedSections,
+  type PickersTimezone,
+  type PickerValidDate,
+  type InferFieldSection,
+  type PickerManager,
 } from '../../../models';
 import { useValidation } from '../../../validation';
 import { useControlledValue } from '../useControlledValue';
 import {
-  GetDefaultReferenceDateProps,
+  type GetDefaultReferenceDateProps,
   getSectionTypeGranularity,
 } from '../../utils/getDefaultReferenceDate';
-import { PickerValidValue } from '../../models';
+import { type PickerValidValue } from '../../models';
 
 const QUERY_LIFE_DURATION_MS = 5000;
 

@@ -7,7 +7,7 @@ import {
   getFieldInputRoot,
 } from 'test/utils/pickers';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import { type PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<TimeField /> - Describe Value', () => {
   const { render } = createPickerRenderer();

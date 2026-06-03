@@ -6,7 +6,7 @@ import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   getPickersFadeTransitionGroupUtilityClass,
-  PickersFadeTransitionGroupClasses,
+  type PickersFadeTransitionGroupClasses,
 } from './pickersFadeTransitionGroupClasses';
 
 export interface ExportedPickersFadeTransitionGroupProps {

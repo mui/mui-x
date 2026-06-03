@@ -1,13 +1,13 @@
-import { DateRangePickerDayClassKey } from '../DateRangePickerDay';
-import { DateRangeCalendarClassKey } from '../DateRangeCalendar';
-import { DateRangePickerToolbarClassKey } from '../DateRangePicker';
+import { type DateRangePickerDayClassKey } from '../DateRangePickerDay';
+import { type DateRangeCalendarClassKey } from '../DateRangeCalendar';
+import { type DateRangePickerToolbarClassKey } from '../DateRangePicker';
 import {
-  DateTimeRangePickerTabsClassKey,
-  DateTimeRangePickerToolbarClassKey,
+  type DateTimeRangePickerTabsClassKey,
+  type DateTimeRangePickerToolbarClassKey,
 } from '../DateTimeRangePicker';
-import { MultiInputDateRangeFieldClassKey } from '../MultiInputDateRangeField';
-import { MultiInputDateTimeRangeFieldClassKey } from '../MultiInputDateTimeRangeField';
-import { MultiInputTimeRangeFieldClassKey } from '../MultiInputTimeRangeField';
+import { type MultiInputDateRangeFieldClassKey } from '../MultiInputDateRangeField';
+import { type MultiInputDateTimeRangeFieldClassKey } from '../MultiInputDateTimeRangeField';
+import { type MultiInputTimeRangeFieldClassKey } from '../MultiInputTimeRangeField';
 
 // prettier-ignore
 export interface PickersProComponentNameToClassKey {

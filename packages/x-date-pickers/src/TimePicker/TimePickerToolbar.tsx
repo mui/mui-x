@@ -9,17 +9,20 @@ import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { arrayIncludes } from '../internals/utils/utils';
 import { usePickerAdapter, usePickerContext, usePickerTranslations } from '../hooks';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
+import {
+  type BaseToolbarProps,
+  type ExportedBaseToolbarProps,
+} from '../internals/models/props/toolbar';
 import {
   getTimePickerToolbarUtilityClass,
   timePickerToolbarClasses,
-  TimePickerToolbarClasses,
+  type TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
-import { PickerValue, TimeViewWithMeridiem } from '../internals/models';
+import { type PickerValue, type TimeViewWithMeridiem } from '../internals/models';
 import { formatMeridiem } from '../internals/utils/date-utils';
-import { AdapterFormats } from '../models';
+import { type AdapterFormats } from '../models';
 import {
-  PickerToolbarOwnerState,
+  type PickerToolbarOwnerState,
   useToolbarOwnerState,
 } from '../internals/hooks/useToolbarOwnerState';
 

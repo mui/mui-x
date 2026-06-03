@@ -1,7 +1,7 @@
-import { Theme } from '@mui/material/styles';
-import { SxProps, SystemStyleObject } from '@mui/system';
+import { type Theme } from '@mui/material/styles';
+import { type SxProps, type SystemStyleObject } from '@mui/system';
 import ownerDocument from '@mui/utils/ownerDocument';
-import * as React from 'react';
+import type * as React from 'react';
 
 /* Use it instead of .includes method for IE support */
 export function arrayIncludes<T>(array: T[] | readonly T[], itemOrItems: T | T[]) {

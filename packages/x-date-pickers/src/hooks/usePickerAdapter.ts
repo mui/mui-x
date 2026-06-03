@@ -3,9 +3,9 @@ import * as React from 'react';
 import { DEFAULT_LOCALE } from '../locales/enUS';
 import {
   PickerAdapterContext,
-  PickersAdapterContextValue,
+  type PickersAdapterContextValue,
 } from '../LocalizationProvider/LocalizationProvider';
-import { PickersLocaleText } from '../locales/utils/pickersLocaleTextApi';
+import { type PickersLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
 export const useLocalizationContext = () => {
   const localization = React.useContext(PickerAdapterContext);

@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import type { UseFieldInternalProps } from './useField';
-import { FieldRef } from '../../models';
-import { PickerRangeValue, PickerValue } from '../models';
+import { type FieldRef } from '../../models';
+import { type PickerRangeValue, type PickerValue } from '../models';
 
 export const PickerFieldPrivateContext = React.createContext<PickerFieldPrivateContextValue | null>(
   null,

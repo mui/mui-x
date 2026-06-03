@@ -1,15 +1,15 @@
 import {
-  DesktopTimePickerProps,
-  DesktopTimePickerSlots,
-  DesktopTimePickerSlotProps,
+  type DesktopTimePickerProps,
+  type DesktopTimePickerSlots,
+  type DesktopTimePickerSlotProps,
 } from '../DesktopTimePicker';
-import { BaseSingleInputFieldProps, TimeViewWithMeridiem } from '../internals/models';
+import { type BaseSingleInputFieldProps, type TimeViewWithMeridiem } from '../internals/models';
 import {
-  MobileTimePickerProps,
-  MobileTimePickerSlots,
-  MobileTimePickerSlotProps,
+  type MobileTimePickerProps,
+  type MobileTimePickerSlots,
+  type MobileTimePickerSlotProps,
 } from '../MobileTimePicker';
-import { ValidateTimeProps } from '../validation/validateTime';
+import { type ValidateTimeProps } from '../validation/validateTime';
 
 export interface TimePickerSlots extends DesktopTimePickerSlots, MobileTimePickerSlots {}
 

@@ -1,17 +1,17 @@
 import {
-  BasePickerProps,
-  UsePickerParameters,
-  ExportedBaseToolbarProps,
-  StaticOnlyPickerProps,
-  DateOrTimeViewWithMeridiem,
-  PickerRangeValue,
+  type BasePickerProps,
+  type UsePickerParameters,
+  type ExportedBaseToolbarProps,
+  type StaticOnlyPickerProps,
+  type DateOrTimeViewWithMeridiem,
+  type PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import {
-  ExportedPickersLayoutSlots,
-  ExportedPickersLayoutSlotProps,
+  type ExportedPickersLayoutSlots,
+  type ExportedPickersLayoutSlotProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import { UseRangePositionProps } from '../useRangePosition';
-import { PickerRangeStep } from '../../utils/createRangePickerStepNavigation';
+import { type UseRangePositionProps } from '../useRangePosition';
+import { type PickerRangeStep } from '../../utils/createRangePickerStepNavigation';
 
 export interface UseStaticRangePickerSlots extends ExportedPickersLayoutSlots<PickerRangeValue> {}
 

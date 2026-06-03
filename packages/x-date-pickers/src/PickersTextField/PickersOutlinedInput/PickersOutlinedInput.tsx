@@ -8,15 +8,15 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   pickersOutlinedInputClasses,
   getPickersOutlinedInputUtilityClass,
-  PickersOutlinedInputClasses,
+  type PickersOutlinedInputClasses,
 } from './pickersOutlinedInputClasses';
 import Outline from './Outline';
-import { PickersInputBase, PickersInputBaseProps } from '../PickersInputBase';
+import { PickersInputBase, type PickersInputBaseProps } from '../PickersInputBase';
 import {
   PickersInputBaseRoot,
   PickersInputBaseSectionsContainer,
 } from '../PickersInputBase/PickersInputBase';
-import { PickerTextFieldOwnerState } from '../../models/fields';
+import { type PickerTextFieldOwnerState } from '../../models/fields';
 
 export interface PickersOutlinedInputProps extends PickersInputBaseProps {
   notched?: boolean;

@@ -5,15 +5,15 @@ import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';
 import {
   usePicker,
   DIALOG_WIDTH,
-  DateOrTimeViewWithMeridiem,
+  type DateOrTimeViewWithMeridiem,
   PickerProvider,
-  PickerRangeValue,
+  type PickerRangeValue,
   extractRootForwardedProps,
   mergeSx,
 } from '@mui/x-date-pickers/internals';
 import {
-  UseStaticRangePickerParams,
-  UseStaticRangePickerProps,
+  type UseStaticRangePickerParams,
+  type UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
 import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';

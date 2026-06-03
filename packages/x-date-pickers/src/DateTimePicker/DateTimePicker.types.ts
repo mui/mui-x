@@ -1,16 +1,16 @@
 import {
-  DesktopDateTimePickerProps,
-  DesktopDateTimePickerSlots,
-  DesktopDateTimePickerSlotProps,
+  type DesktopDateTimePickerProps,
+  type DesktopDateTimePickerSlots,
+  type DesktopDateTimePickerSlotProps,
 } from '../DesktopDateTimePicker';
-import { BaseSingleInputFieldProps } from '../internals/models';
+import { type BaseSingleInputFieldProps } from '../internals/models';
 import {
-  MobileDateTimePickerProps,
-  MobileDateTimePickerSlots,
-  MobileDateTimePickerSlotProps,
+  type MobileDateTimePickerProps,
+  type MobileDateTimePickerSlots,
+  type MobileDateTimePickerSlotProps,
 } from '../MobileDateTimePicker';
-import { ValidateDateTimeProps } from '../validation';
-import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
+import { type ValidateDateTimeProps } from '../validation';
+import { type ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DateTimePickerSlots
   extends DesktopDateTimePickerSlots, MobileDateTimePickerSlots {}

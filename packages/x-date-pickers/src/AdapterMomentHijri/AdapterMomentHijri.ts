@@ -1,12 +1,12 @@
 /* v8 ignore next */
-import defaultHMoment, { Moment } from 'moment-hijri';
+import defaultHMoment, { type Moment } from 'moment-hijri';
 import { AdapterMoment } from '../AdapterMoment';
 import {
-  AdapterFormats,
-  AdapterOptions,
-  DateBuilderReturnType,
-  FieldFormatTokenMap,
-  MuiPickersAdapter,
+  type AdapterFormats,
+  type AdapterOptions,
+  type DateBuilderReturnType,
+  type FieldFormatTokenMap,
+  type MuiPickersAdapter,
 } from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/

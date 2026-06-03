@@ -8,7 +8,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import {
   getPickersSectionListUtilityClass,
   pickersSectionListClasses,
-  PickersSectionListClasses,
+  type PickersSectionListClasses,
 } from './pickersSectionListClasses';
 import type { PickersSectionListProps, PickersSectionElement } from './PickersSectionList.types';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';

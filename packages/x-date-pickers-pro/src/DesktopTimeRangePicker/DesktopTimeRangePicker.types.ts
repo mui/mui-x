@@ -1,14 +1,14 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import { DigitalTimePickerProps } from '@mui/x-date-pickers/internals';
+import { type MakeOptional } from '@mui/x-internals/types';
+import { type DigitalTimePickerProps } from '@mui/x-date-pickers/internals';
 import {
-  UseDesktopRangePickerSlots,
-  UseDesktopRangePickerSlotProps,
-  DesktopRangeOnlyPickerProps,
+  type UseDesktopRangePickerSlots,
+  type UseDesktopRangePickerSlotProps,
+  type DesktopRangeOnlyPickerProps,
 } from '../internals/hooks/useDesktopRangePicker';
 import {
-  BaseTimeRangePickerProps,
-  BaseTimeRangePickerSlots,
-  BaseTimeRangePickerSlotProps,
+  type BaseTimeRangePickerProps,
+  type BaseTimeRangePickerSlots,
+  type BaseTimeRangePickerSlotProps,
 } from '../TimeRangePicker/shared';
 
 export interface DesktopTimeRangePickerSlots

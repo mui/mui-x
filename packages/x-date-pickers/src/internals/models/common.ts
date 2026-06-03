@@ -1,4 +1,4 @@
-import { DateView, TimeView } from '../../models/views';
+import { type DateView, type TimeView } from '../../models/views';
 
 export type PickerOrientation = 'portrait' | 'landscape';
 

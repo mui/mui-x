@@ -1,4 +1,4 @@
-import { PickersLocaleText } from './utils/pickersLocaleTextApi';
+import { type PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 
 // This object is not Partial<PickersLocaleText> because it is the default values

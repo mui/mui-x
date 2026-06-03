@@ -2,8 +2,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { AdapterFormats, MuiPickersAdapter, PickerValidDate } from '../models';
-import { PickersInputLocaleText } from '../locales';
+import { type AdapterFormats, type MuiPickersAdapter, type PickerValidDate } from '../models';
+import { type PickersInputLocaleText } from '../locales';
 
 export interface PickersAdapterContextValue {
   defaultDates: {

@@ -9,9 +9,9 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
-import { SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
+import { type SingleInputDateTimeRangeFieldProps } from './SingleInputDateTimeRangeField.types';
 import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
-import { FieldType } from '../models';
+import { type FieldType } from '../models';
 
 type DateRangeFieldComponent = ((
   props: SingleInputDateTimeRangeFieldProps & React.RefAttributes<HTMLDivElement>,

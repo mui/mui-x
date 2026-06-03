@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { DateOrTimeViewWithMeridiem, PickerOrientation } from '../../../models';
+import { type DateOrTimeViewWithMeridiem, type PickerOrientation } from '../../../models';
 import { arrayIncludes } from '../../../utils/utils';
 
 function getOrientation(): PickerOrientation {

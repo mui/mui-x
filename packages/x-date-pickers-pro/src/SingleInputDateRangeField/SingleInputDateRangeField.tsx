@@ -9,9 +9,9 @@ import {
   PickerFieldUIContextProvider,
   useFieldTextFieldProps,
 } from '@mui/x-date-pickers/internals';
-import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
+import { type SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
-import { FieldType } from '../models';
+import { type FieldType } from '../models';
 
 type DateRangeFieldComponent = ((
   props: SingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,

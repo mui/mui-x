@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
-import { PickerLayoutOwnerState, PickersLayoutProps } from './PickersLayout.types';
+import { type PickerLayoutOwnerState, type PickersLayoutProps } from './PickersLayout.types';
 import {
   pickersLayoutClasses,
   getPickersLayoutUtilityClass,
-  PickersLayoutClasses,
+  type PickersLayoutClasses,
 } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
-import { PickerValidValue } from '../internals/models';
+import { type PickerValidValue } from '../internals/models';
 import { usePickerContext } from '../hooks/usePickerContext';
 
 const useUtilityClasses = (

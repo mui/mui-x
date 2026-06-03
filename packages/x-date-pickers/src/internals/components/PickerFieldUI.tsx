@@ -3,19 +3,19 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
-import MuiIconButton, { IconButtonProps } from '@mui/material/IconButton';
-import MuiInputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
-import { SvgIconProps } from '@mui/material/SvgIcon';
+import MuiIconButton, { type IconButtonProps } from '@mui/material/IconButton';
+import MuiInputAdornment, { type InputAdornmentProps } from '@mui/material/InputAdornment';
+import { type SvgIconProps } from '@mui/material/SvgIcon';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { warnOnce } from '@mui/x-internals/warning';
-import { MakeOptional, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { FieldOwnerState } from '../../models';
-import { useFieldOwnerState, UseFieldOwnerStateParameters } from '../hooks/useFieldOwnerState';
+import { type MakeOptional, type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type FieldOwnerState } from '../../models';
+import { useFieldOwnerState, type UseFieldOwnerStateParameters } from '../hooks/useFieldOwnerState';
 import { usePickerTranslations } from '../../hooks';
 import { ClearIcon as MuiClearIcon } from '../../icons';
 import { useNullablePickerContext } from '../hooks/useNullablePickerContext';
 import type { UseFieldReturnValue, UseFieldProps } from '../hooks/useField';
-import { PickersTextField, PickersTextFieldProps } from '../../PickersTextField';
+import { PickersTextField, type PickersTextFieldProps } from '../../PickersTextField';
 
 export const cleanFieldResponse = <
   TFieldResponse extends MakeOptional<

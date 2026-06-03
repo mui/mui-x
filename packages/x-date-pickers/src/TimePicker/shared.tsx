@@ -1,21 +1,24 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '@mui/x-internals/types';
-import { TimeClockSlots, TimeClockSlotProps } from '../TimeClock/TimeClock.types';
-import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
-import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
+import { type DefaultizedProps } from '@mui/x-internals/types';
+import { type TimeClockSlots, type TimeClockSlotProps } from '../TimeClock/TimeClock.types';
+import { type BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import {
-  TimePickerToolbarProps,
-  ExportedTimePickerToolbarProps,
+  type LocalizedComponent,
+  type PickersInputLocaleText,
+} from '../locales/utils/pickersLocaleTextApi';
+import {
+  type TimePickerToolbarProps,
+  type ExportedTimePickerToolbarProps,
   TimePickerToolbar,
 } from './TimePickerToolbar';
-import { TimeValidationError } from '../models';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
-import { TimeViewRendererProps } from '../timeViewRenderers';
+import { type TimeValidationError } from '../models';
+import { type PickerViewRendererLookup } from '../internals/hooks/usePicker';
+import { type TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/time';
-import { PickerValue, TimeViewWithMeridiem } from '../internals/models';
-import { ValidateTimePropsToDefault } from '../validation/validateTime';
+import { type BaseClockProps, type ExportedBaseClockProps } from '../internals/models/props/time';
+import { type PickerValue, type TimeViewWithMeridiem } from '../internals/models';
+import { type ValidateTimePropsToDefault } from '../validation/validateTime';
 import { useApplyDefaultValuesToTimeValidationProps } from '../managers/useTimeManager';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 

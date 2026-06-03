@@ -1,7 +1,7 @@
-import moment, { Moment } from 'moment-hijri';
+import moment, { type Moment } from 'moment-hijri';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
-import { AdapterFormats } from '@mui/x-date-pickers/models';
+import { type AdapterFormats } from '@mui/x-date-pickers/models';
 import {
   createPickerRenderer,
   expectFieldValue,

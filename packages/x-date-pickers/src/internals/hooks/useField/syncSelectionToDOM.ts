@@ -1,8 +1,8 @@
 import ownerDocument from '@mui/utils/ownerDocument';
-import { PickerValidValue } from '../../models';
+import { type PickerValidValue } from '../../models';
 import { getActiveElement } from '../../utils/utils';
-import { UseFieldDOMGetters } from './useField.types';
-import { UseFieldStateReturnValue } from './useFieldState';
+import { type UseFieldDOMGetters } from './useField.types';
+import { type UseFieldStateReturnValue } from './useFieldState';
 
 export function syncSelectionToDOM<TValue extends PickerValidValue>(
   parameters: SyncSelectionToDOMParameters<TValue>,

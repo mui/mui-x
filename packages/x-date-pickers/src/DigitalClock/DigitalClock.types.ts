@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { SlotComponentProps } from '@mui/utils/types';
-import MenuItem from '@mui/material/MenuItem';
-import { DigitalClockClasses } from './digitalClockClasses';
+import type * as React from 'react';
+import { type SlotComponentProps } from '@mui/utils/types';
+import type MenuItem from '@mui/material/MenuItem';
+import { type DigitalClockClasses } from './digitalClockClasses';
 import {
-  BaseClockProps,
-  DigitalClockOnlyProps,
-  ExportedBaseClockProps,
+  type BaseClockProps,
+  type DigitalClockOnlyProps,
+  type ExportedBaseClockProps,
 } from '../internals/models/props/time';
-import { PickerOwnerState, TimeView, PickerValidDate } from '../models';
+import { type PickerOwnerState, type TimeView, type PickerValidDate } from '../models';
 
 export interface ExportedDigitalClockProps extends ExportedBaseClockProps, DigitalClockOnlyProps {}
 

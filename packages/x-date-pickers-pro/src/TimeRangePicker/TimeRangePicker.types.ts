@@ -1,12 +1,12 @@
 import {
-  DesktopTimeRangePickerProps,
-  DesktopTimeRangePickerSlots,
-  DesktopTimeRangePickerSlotProps,
+  type DesktopTimeRangePickerProps,
+  type DesktopTimeRangePickerSlots,
+  type DesktopTimeRangePickerSlotProps,
 } from '../DesktopTimeRangePicker';
 import {
-  MobileTimeRangePickerProps,
-  MobileTimeRangePickerSlots,
-  MobileTimeRangePickerSlotProps,
+  type MobileTimeRangePickerProps,
+  type MobileTimeRangePickerSlots,
+  type MobileTimeRangePickerSlotProps,
 } from '../MobileTimeRangePicker';
 
 export interface TimeRangePickerSlots

@@ -1,15 +1,15 @@
 'use client';
-import * as React from 'react';
+import type * as React from 'react';
 import PropTypes from 'prop-types';
-import { useDateRangeManager, UseDateRangeManagerReturnValue } from '../managers';
+import { useDateRangeManager, type UseDateRangeManagerReturnValue } from '../managers';
 import {
   // The alias is needed to have the doc gen working.
   createMultiInputRangeField as createMultiInputDateRangeField,
-  MultiInputRangeFieldProps,
+  type MultiInputRangeFieldProps,
 } from '../internals/utils/createMultiInputRangeField';
 import {
   getMultiInputDateRangeFieldUtilityClass,
-  MultiInputDateRangeFieldClasses,
+  type MultiInputDateRangeFieldClasses,
 } from './multiInputDateRangeFieldClasses';
 
 export interface MultiInputDateRangeFieldProps extends MultiInputRangeFieldProps<UseDateRangeManagerReturnValue> {

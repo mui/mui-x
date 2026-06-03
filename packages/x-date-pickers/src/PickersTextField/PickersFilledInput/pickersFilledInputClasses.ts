@@ -1,6 +1,6 @@
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { PickersInputBaseClasses, pickersInputBaseClasses } from '../PickersInputBase';
+import { type PickersInputBaseClasses, pickersInputBaseClasses } from '../PickersInputBase';
 
 export interface PickersFilledInputClasses extends PickersInputBaseClasses {
   /** Styles applied to the root element unless `disableUnderline={true}`. */

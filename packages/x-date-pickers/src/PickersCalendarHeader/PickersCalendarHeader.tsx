@@ -17,13 +17,13 @@ import {
 } from '../internals/hooks/date-helpers-hooks';
 import {
   getPickersCalendarHeaderUtilityClass,
-  PickersCalendarHeaderClasses,
+  type PickersCalendarHeaderClasses,
   pickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
-import { PickersCalendarHeaderProps } from './PickersCalendarHeader.types';
-import { PickerOwnerState } from '../models/pickers';
+import { type PickersCalendarHeaderProps } from './PickersCalendarHeader.types';
+import { type PickerOwnerState } from '../models/pickers';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
-import { DateView } from '../models/views';
+import { type DateView } from '../models/views';
 
 const useUtilityClasses = (classes: Partial<PickersCalendarHeaderClasses> | undefined) => {
   const slots = {

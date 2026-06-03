@@ -6,15 +6,15 @@ import refType from '@mui/utils/refType';
 import Divider from '@mui/material/Divider';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
-import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
+import { type DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import { validateDateTime, extractValidationProps } from '../validation';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../internals/models';
+import { type DateOrTimeViewWithMeridiem, type PickerValue } from '../internals/models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
-import { PickerOwnerState } from '../models';
+import { type PickerOwnerState } from '../models';
 import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
@@ -28,8 +28,8 @@ import { digitalClockClasses } from '../DigitalClock';
 import { DesktopDateTimePickerLayout } from './DesktopDateTimePickerLayout';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 import {
-  PickerRendererInterceptorProps,
-  PickerViewRendererLookup,
+  type PickerRendererInterceptorProps,
+  type PickerViewRendererLookup,
 } from '../internals/hooks/usePicker';
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';

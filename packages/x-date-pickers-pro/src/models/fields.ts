@@ -1,6 +1,10 @@
-import * as React from 'react';
-import { PickerRangeValue, PickerValidValue, PickerValue } from '@mui/x-date-pickers/internals';
-import { FieldRef, PickerFieldSlotProps } from '@mui/x-date-pickers/models';
+import type * as React from 'react';
+import {
+  type PickerRangeValue,
+  type PickerValidValue,
+  type PickerValue,
+} from '@mui/x-date-pickers/internals';
+import { type FieldRef, type PickerFieldSlotProps } from '@mui/x-date-pickers/models';
 import type { UseMultiInputRangeFieldTextFieldProps } from '../hooks/useMultiInputRangeField';
 
 export type { FieldRangeSection } from '@mui/x-date-pickers/internals';

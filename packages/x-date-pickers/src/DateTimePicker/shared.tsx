@@ -1,36 +1,43 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps } from '@mui/x-internals/types';
-import { DateOrTimeView, DateTimeValidationError } from '../models';
+import { type DefaultizedProps } from '@mui/x-internals/types';
+import { type DateOrTimeView, type DateTimeValidationError } from '../models';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
 import {
-  DateCalendarSlots,
-  DateCalendarSlotProps,
-  ExportedDateCalendarProps,
+  type DateCalendarSlots,
+  type DateCalendarSlotProps,
+  type ExportedDateCalendarProps,
 } from '../DateCalendar/DateCalendar.types';
-import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
-import { DateTimePickerTabs, DateTimePickerTabsProps } from './DateTimePickerTabs';
-import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
+import { type BasePickerInputProps } from '../internals/models/props/basePickerProps';
+import { DateTimePickerTabs, type DateTimePickerTabsProps } from './DateTimePickerTabs';
+import {
+  type LocalizedComponent,
+  type PickersInputLocaleText,
+} from '../locales/utils/pickersLocaleTextApi';
 import {
   DateTimePickerToolbar,
-  DateTimePickerToolbarProps,
-  ExportedDateTimePickerToolbarProps,
+  type DateTimePickerToolbarProps,
+  type ExportedDateTimePickerToolbarProps,
 } from './DateTimePickerToolbar';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker';
-import { DateViewRendererProps } from '../dateViewRenderers';
-import { TimeViewRendererProps } from '../timeViewRenderers';
+import { type PickerViewRendererLookup } from '../internals/hooks/usePicker';
+import { type DateViewRendererProps } from '../dateViewRenderers';
+import { type TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { BaseClockProps, DigitalTimePickerProps } from '../internals/models/props/time';
-import { DateOrTimeViewWithMeridiem, PickerValue, TimeViewWithMeridiem } from '../internals/models';
+import { type BaseClockProps, type DigitalTimePickerProps } from '../internals/models/props/time';
 import {
-  ExportedValidateDateTimeProps,
-  ValidateDateTimePropsToDefault,
+  type DateOrTimeViewWithMeridiem,
+  type PickerValue,
+  type TimeViewWithMeridiem,
+} from '../internals/models';
+import {
+  type ExportedValidateDateTimeProps,
+  type ValidateDateTimePropsToDefault,
 } from '../validation/validateDateTime';
 import { resolveTimeViewsResponse } from '../internals/utils/date-time-utils';
-import { DigitalClockSlotProps, DigitalClockSlots } from '../DigitalClock';
+import { type DigitalClockSlotProps, type DigitalClockSlots } from '../DigitalClock';
 import {
-  MultiSectionDigitalClockSlotProps,
-  MultiSectionDigitalClockSlots,
+  type MultiSectionDigitalClockSlotProps,
+  type MultiSectionDigitalClockSlots,
 } from '../MultiSectionDigitalClock';
 import { useApplyDefaultValuesToDateTimeValidationProps } from '../managers/useDateTimeManager';
 

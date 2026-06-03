@@ -9,7 +9,7 @@ import {
   usePreviousMonthDisabled,
 } from '@mui/x-date-pickers/internals';
 import { usePickerAdapter, usePickerTranslations } from '@mui/x-date-pickers/hooks';
-import { PickersRangeCalendarHeaderProps } from './PickersRangeCalendarHeader.types';
+import { type PickersRangeCalendarHeaderProps } from './PickersRangeCalendarHeader.types';
 
 type PickersRangeCalendarHeaderComponent = ((
   props: PickersRangeCalendarHeaderProps & React.RefAttributes<HTMLDivElement>,

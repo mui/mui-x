@@ -7,7 +7,7 @@ import {
   formatFullTimeValue,
 } from 'test/utils/pickers';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import { type PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<DigitalClock /> - Describe Value', () => {
   const { render } = createPickerRenderer();

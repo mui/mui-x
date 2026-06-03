@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import Stack, { StackProps } from '@mui/material/Stack';
+import Stack, { type StackProps } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
@@ -16,12 +16,12 @@ import {
 import { useSplitFieldProps } from '@mui/x-date-pickers/hooks';
 import { PickersTextField } from '@mui/x-date-pickers/PickersTextField';
 import {
-  CreateMultiInputRangeFieldParameters,
-  CreateMultiInputRangeFieldReturnValue,
-  MultiInputRangeFieldProps,
+  type CreateMultiInputRangeFieldParameters,
+  type CreateMultiInputRangeFieldReturnValue,
+  type MultiInputRangeFieldProps,
 } from './createMultiInputRangeField.types';
 import { useMultiInputRangeField } from '../../../hooks/useMultiInputRangeField';
-import { PickerAnyRangeManager } from '../../models/managers';
+import { type PickerAnyRangeManager } from '../../models/managers';
 import { useTextFieldProps } from './useTextFieldProps';
 
 export function createMultiInputRangeField<TManager extends PickerAnyRangeManager>({

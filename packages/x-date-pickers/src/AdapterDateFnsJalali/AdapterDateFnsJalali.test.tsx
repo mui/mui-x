@@ -8,7 +8,7 @@ import {
 } from 'test/utils/pickers';
 import { enUS } from 'date-fns/locale';
 import { faIR } from 'date-fns-jalali/locale/fa-IR';
-import { AdapterFormats } from '@mui/x-date-pickers/models';
+import { type AdapterFormats } from '@mui/x-date-pickers/models';
 
 describe('<AdapterDateFnsJalali />', () => {
   describeJalaliAdapter(AdapterDateFnsJalali, {});

@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import InputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
+import InputAdornment, { type InputAdornmentProps } from '@mui/material/InputAdornment';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { screen } from '@mui/internal-test-utils';
 import { createPickerRenderer } from 'test/utils/pickers';

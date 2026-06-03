@@ -1,9 +1,9 @@
 import * as React from 'react';
 import DialogContent from '@mui/material/DialogContent';
 import Fade from '@mui/material/Fade';
-import MuiDialog, { DialogProps as MuiDialogProps, dialogClasses } from '@mui/material/Dialog';
-import { PaperProps as MuiPaperProps } from '@mui/material/Paper';
-import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
+import MuiDialog, { type DialogProps as MuiDialogProps, dialogClasses } from '@mui/material/Dialog';
+import { type PaperProps as MuiPaperProps } from '@mui/material/Paper';
+import { type TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
 import { usePickerContext } from '../../hooks';

@@ -1,32 +1,41 @@
-import * as React from 'react';
-import { SxProps } from '@mui/system';
-import { Theme } from '@mui/material/styles';
-import { SlotComponentProps } from '@mui/utils/types';
-import { DefaultizedProps } from '@mui/x-internals/types';
+import type * as React from 'react';
+import { type SxProps } from '@mui/system';
+import { type Theme } from '@mui/material/styles';
+import { type SlotComponentProps } from '@mui/utils/types';
+import { type DefaultizedProps } from '@mui/x-internals/types';
 import {
-  PickersCalendarHeader,
-  PickersCalendarHeaderProps,
-  PickersCalendarHeaderSlots,
-  PickersCalendarHeaderSlotProps,
+  type PickersCalendarHeader,
+  type PickersCalendarHeaderProps,
+  type PickersCalendarHeaderSlots,
+  type PickersCalendarHeaderSlotProps,
 } from '../PickersCalendarHeader';
-import { DayCalendarSlots, DayCalendarSlotProps, ExportedDayCalendarProps } from './DayCalendar';
-import { DateCalendarClasses } from './dateCalendarClasses';
-import { BaseDateValidationProps } from '../internals/models/validation';
-import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
-import { DateView, PickerOwnerState, PickerValidDate, TimezoneProps } from '../models';
 import {
-  ExportedYearCalendarProps,
-  YearCalendarSlots,
-  YearCalendarSlotProps,
+  type DayCalendarSlots,
+  type DayCalendarSlotProps,
+  type ExportedDayCalendarProps,
+} from './DayCalendar';
+import { type DateCalendarClasses } from './dateCalendarClasses';
+import { type BaseDateValidationProps } from '../internals/models/validation';
+import { type ExportedUseViewsOptions } from '../internals/hooks/useViews';
+import {
+  type DateView,
+  type PickerOwnerState,
+  type PickerValidDate,
+  type TimezoneProps,
+} from '../models';
+import {
+  type ExportedYearCalendarProps,
+  type YearCalendarSlots,
+  type YearCalendarSlotProps,
 } from '../YearCalendar/YearCalendar.types';
 import {
-  ExportedMonthCalendarProps,
-  MonthCalendarSlots,
-  MonthCalendarSlotProps,
+  type ExportedMonthCalendarProps,
+  type MonthCalendarSlots,
+  type MonthCalendarSlotProps,
 } from '../MonthCalendar/MonthCalendar.types';
-import { ExportedValidateDateProps } from '../validation/validateDate';
-import { FormProps } from '../internals/models/formProps';
-import { PickerValue } from '../internals/models';
+import { type ExportedValidateDateProps } from '../validation/validateDate';
+import { type FormProps } from '../internals/models/formProps';
+import { type PickerValue } from '../internals/models';
 
 export interface DateCalendarSlots
   extends PickersCalendarHeaderSlots, DayCalendarSlots, MonthCalendarSlots, YearCalendarSlots {

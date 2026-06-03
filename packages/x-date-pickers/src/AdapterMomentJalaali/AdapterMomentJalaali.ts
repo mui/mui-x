@@ -1,12 +1,12 @@
 /* v8 ignore next */
-import defaultJMoment, { Moment } from 'moment-jalaali';
+import defaultJMoment, { type Moment } from 'moment-jalaali';
 import { AdapterMoment } from '../AdapterMoment';
 import {
-  AdapterFormats,
-  AdapterOptions,
-  DateBuilderReturnType,
-  FieldFormatTokenMap,
-  MuiPickersAdapter,
+  type AdapterFormats,
+  type AdapterOptions,
+  type DateBuilderReturnType,
+  type FieldFormatTokenMap,
+  type MuiPickersAdapter,
 } from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/

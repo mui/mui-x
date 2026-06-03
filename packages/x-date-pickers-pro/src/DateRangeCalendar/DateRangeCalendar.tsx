@@ -11,33 +11,33 @@ import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import { Watermark } from '@mui/x-license/internals';
 import {
-  BaseDateValidationProps,
+  type BaseDateValidationProps,
   DayCalendar,
-  DayCalendarSlots,
-  DayCalendarSlotProps,
+  type DayCalendarSlots,
+  type DayCalendarSlotProps,
   useReduceAnimations,
   useCalendarState,
-  PickerSelectionState,
+  type PickerSelectionState,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   useControlledValue,
   useViews,
-  PickerRangeValue,
+  type PickerRangeValue,
   usePickerPrivateContext,
   areDatesEqual,
   useApplyDefaultValuesToDateValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { warnOnce } from '@mui/x-internals/warning';
-import { PickerValidDate } from '@mui/x-date-pickers/models';
+import { type PickerValidDate } from '@mui/x-date-pickers/models';
 import { usePickerAdapter } from '@mui/x-date-pickers/hooks';
 import {
-  DateRangeCalendarClasses,
+  type DateRangeCalendarClasses,
   dateRangeCalendarClasses,
   getDateRangeCalendarUtilityClass,
 } from './dateRangeCalendarClasses';
 import {
-  DateRangeCalendarProps,
-  DateRangeCalendarDefaultizedProps,
-  DateRangeCalendarOwnerState,
+  type DateRangeCalendarProps,
+  type DateRangeCalendarDefaultizedProps,
+  type DateRangeCalendarOwnerState,
 } from './DateRangeCalendar.types';
 import {
   isEndOfRange,
@@ -50,7 +50,7 @@ import {
   calculateRangePreview,
   resolveReferenceDate,
 } from '../internals/utils/date-range-manager';
-import { RangePosition } from '../models';
+import { type RangePosition } from '../models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
@@ -58,7 +58,7 @@ import { useRangePosition } from '../internals/hooks/useRangePosition';
 import { DAY_RANGE_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import {
   PickersRangeCalendarHeader,
-  PickersRangeCalendarHeaderProps,
+  type PickersRangeCalendarHeaderProps,
 } from '../PickersRangeCalendarHeader';
 import { useNullablePickerRangePositionContext } from '../internals/hooks/useNullablePickerRangePositionContext';
 

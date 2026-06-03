@@ -2,11 +2,11 @@ import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import type { FieldChangeHandler } from './useField.types';
 import {
-  PickerAnyManager,
-  PickerManagerError,
-  PickerManagerFieldInternalProps,
-  PickerManagerFieldInternalPropsWithDefaults,
-  PickerManagerValue,
+  type PickerAnyManager,
+  type PickerManagerError,
+  type PickerManagerFieldInternalProps,
+  type PickerManagerFieldInternalPropsWithDefaults,
+  type PickerManagerValue,
 } from '../../models';
 import { useNullablePickerContext } from '../useNullablePickerContext';
 import { useNullableFieldPrivateContext } from '../useNullableFieldPrivateContext';

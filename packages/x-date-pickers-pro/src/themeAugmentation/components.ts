@@ -1,8 +1,11 @@
-import { ComponentsProps } from '@mui/material/styles';
-import { ComponentsOverrides, PickerToolbarOwnerState } from '@mui/x-date-pickers/internals';
-import { FieldOwnerState, PickerOwnerState } from '@mui/x-date-pickers/models';
-import { DateRangeCalendarOwnerState } from '../DateRangeCalendar/DateRangeCalendar.types';
-import { DateRangePickerDayOwnerState } from '../DateRangePickerDay/DateRangePickerDay.types';
+import { type ComponentsProps } from '@mui/material/styles';
+import {
+  type ComponentsOverrides,
+  type PickerToolbarOwnerState,
+} from '@mui/x-date-pickers/internals';
+import { type FieldOwnerState, type PickerOwnerState } from '@mui/x-date-pickers/models';
+import { type DateRangeCalendarOwnerState } from '../DateRangeCalendar/DateRangeCalendar.types';
+import { type DateRangePickerDayOwnerState } from '../DateRangePickerDay/DateRangePickerDay.types';
 
 export interface PickersProComponents<Theme = unknown> {
   MuiDateRangeCalendar?: {

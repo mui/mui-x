@@ -1,21 +1,21 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import useTimeout from '@mui/utils/useTimeout';
 import {
-  InferFieldSection,
-  MuiPickersAdapter,
-  PickersTimezone,
-  PickerValidDate,
+  type InferFieldSection,
+  type MuiPickersAdapter,
+  type PickersTimezone,
+  type PickerValidDate,
 } from '../../../models';
 import {
-  FieldSectionsValueBoundaries,
-  UseFieldDOMGetters,
-  UseFieldInternalProps,
+  type FieldSectionsValueBoundaries,
+  type UseFieldDOMGetters,
+  type UseFieldInternalProps,
 } from './useField.types';
-import { UseFieldStateReturnValue } from './useFieldState';
+import { type UseFieldStateReturnValue } from './useFieldState';
 import { getActiveElement } from '../../utils/utils';
-import { UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
+import { type UseFieldCharacterEditingReturnValue } from './useFieldCharacterEditing';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
-import { PickerAnyManager, PickerValidValue } from '../../models';
+import { type PickerAnyManager, type PickerValidValue } from '../../models';
 import { usePickerAdapter } from '../../../hooks/usePickerAdapter';
 import {
   cleanDigitSectionValue,

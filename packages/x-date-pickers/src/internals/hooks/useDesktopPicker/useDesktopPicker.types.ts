@@ -1,23 +1,27 @@
-import * as React from 'react';
-import { MakeRequired, SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { BasePickerProps } from '../../models/props/basePickerProps';
+import type * as React from 'react';
+import { type MakeRequired, type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type BasePickerProps } from '../../models/props/basePickerProps';
 import {
-  PickerPopperSlots,
-  PickerPopperSlotProps,
+  type PickerPopperSlots,
+  type PickerPopperSlotProps,
 } from '../../components/PickerPopper/PickerPopper';
-import { UsePickerParameters, UsePickerNonStaticProps, UsePickerProps } from '../usePicker';
-import { PickerFieldSlotProps, PickerOwnerState } from '../../../models';
 import {
-  ExportedPickersLayoutSlots,
-  ExportedPickersLayoutSlotProps,
-  PickersLayoutSlotProps,
+  type UsePickerParameters,
+  type UsePickerNonStaticProps,
+  type UsePickerProps,
+} from '../usePicker';
+import { type PickerFieldSlotProps, type PickerOwnerState } from '../../../models';
+import {
+  type ExportedPickersLayoutSlots,
+  type ExportedPickersLayoutSlotProps,
+  type PickersLayoutSlotProps,
 } from '../../../PickersLayout/PickersLayout.types';
-import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
+import { type DateOrTimeViewWithMeridiem, type PickerValue } from '../../models';
 import {
-  PickerFieldUISlotsFromContext,
-  PickerFieldUISlotPropsFromContext,
+  type PickerFieldUISlotsFromContext,
+  type PickerFieldUISlotPropsFromContext,
 } from '../../components/PickerFieldUI';
-import { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
+import { type PickerStep } from '../../utils/createNonRangePickerStepNavigation';
 
 export interface UseDesktopPickerSlots
   extends

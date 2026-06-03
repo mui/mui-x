@@ -1,6 +1,6 @@
-import { DateCalendar, DateCalendarProps } from '../DateCalendar';
-import { DateView } from '../models';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import { DateCalendar, type DateCalendarProps } from '../DateCalendar';
+import { type DateView } from '../models';
+import { type DateOrTimeViewWithMeridiem } from '../internals/models';
 import { isDatePickerView } from '../internals/utils/date-utils';
 
 export interface DateViewRendererProps<TView extends DateOrTimeViewWithMeridiem> extends Omit<

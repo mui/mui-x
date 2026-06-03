@@ -1,10 +1,10 @@
 import {
-  ExportedPickerFieldUIProps,
-  PickerFieldUISlots,
-  PickerFieldUISlotProps,
+  type ExportedPickerFieldUIProps,
+  type PickerFieldUISlots,
+  type PickerFieldUISlotProps,
 } from '@mui/x-date-pickers/internals';
-import { BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
-import { DateTimeRangeManagerFieldInternalProps } from '../managers/useDateTimeRangeManager';
+import { type BuiltInFieldTextFieldProps } from '@mui/x-date-pickers/models';
+import { type DateTimeRangeManagerFieldInternalProps } from '../managers/useDateTimeRangeManager';
 
 export interface UseSingleInputDateTimeRangeFieldProps
   extends DateTimeRangeManagerFieldInternalProps, ExportedPickerFieldUIProps {}

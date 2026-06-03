@@ -1,5 +1,5 @@
-import { FieldSection, MuiPickersAdapter, PickerValidDate } from '../../../models';
-import { PickersLocaleText } from '../../../locales';
+import { type FieldSection, type MuiPickersAdapter, type PickerValidDate } from '../../../models';
+import { type PickersLocaleText } from '../../../locales';
 import {
   applyLocalizedDigits,
   cleanLeadingZeros,

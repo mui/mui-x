@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import Typography, { TypographyProps } from '@mui/material/Typography';
+import Typography, { type TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   getPickersToolbarTextUtilityClass,
-  PickersToolbarTextClasses,
+  type PickersToolbarTextClasses,
 } from './pickersToolbarTextClasses';
 
 export interface ExportedPickersToolbarTextProps extends Omit<

@@ -1,12 +1,12 @@
 import type { MakeRequired } from '@mui/x-internals/types';
-import { validateTime, Validator } from '@mui/x-date-pickers/validation';
+import { validateTime, type Validator } from '@mui/x-date-pickers/validation';
 import {
-  TimeValidationProps,
-  BaseTimeValidationProps,
-  PickerRangeValue,
+  type TimeValidationProps,
+  type BaseTimeValidationProps,
+  type PickerRangeValue,
 } from '@mui/x-date-pickers/internals';
 import { isRangeValid } from '../internals/utils/date-utils';
-import { TimeRangeValidationError } from '../models';
+import { type TimeRangeValidationError } from '../models';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 
 /**

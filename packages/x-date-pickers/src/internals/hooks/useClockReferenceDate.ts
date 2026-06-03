@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { MuiPickersAdapter, PickersTimezone, PickerValidDate } from '../../models';
+import { type MuiPickersAdapter, type PickersTimezone, type PickerValidDate } from '../../models';
 import { singleItemValueManager } from '../utils/valueManagers';
 import { getTodayDate } from '../utils/date-utils';
 import { SECTION_TYPE_GRANULARITY } from '../utils/getDefaultReferenceDate';
-import { PickerValue } from '../models';
+import { type PickerValue } from '../models';
 
 export const useClockReferenceDate = <TProps extends {}>({
   value,

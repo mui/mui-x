@@ -5,15 +5,15 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
-  MonthCalendarSlotProps,
-  MonthCalendarSlots,
-  MonthButtonOwnerState,
+  type MonthCalendarSlotProps,
+  type MonthCalendarSlots,
+  type MonthButtonOwnerState,
 } from './MonthCalendar.types';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import {
   getMonthCalendarUtilityClass,
   monthCalendarClasses,
-  MonthCalendarClasses,
+  type MonthCalendarClasses,
 } from './monthCalendarClasses';
 
 export interface MonthCalendarButtonProps {

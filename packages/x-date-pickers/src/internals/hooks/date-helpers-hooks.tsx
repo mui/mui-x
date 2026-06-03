@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { PickerOnChangeFn } from './useViews';
+import { type PickerOnChangeFn } from './useViews';
 import { getMeridiem, convertToMeridiem } from '../utils/time-utils';
-import { PickerSelectionState } from './usePicker';
-import { PickersTimezone, PickerValidDate } from '../../models';
+import { type PickerSelectionState } from './usePicker';
+import { type PickersTimezone, type PickerValidDate } from '../../models';
 import { usePickerAdapter } from '../../hooks/usePickerAdapter';
 
 export interface MonthValidationOptions {

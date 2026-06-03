@@ -1,4 +1,7 @@
-import { DateRangePicker, DateRangePickerProps } from '@mui/x-date-pickers-pro/DateRangePicker';
+import {
+  DateRangePicker,
+  type DateRangePickerProps,
+} from '@mui/x-date-pickers-pro/DateRangePicker';
 import { screen } from '@mui/internal-test-utils/createRenderer';
 import { spy } from 'sinon';
 import {

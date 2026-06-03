@@ -41,8 +41,8 @@ import { startOfWeek } from 'date-fns-jalali/startOfWeek';
 import { startOfYear } from 'date-fns-jalali/startOfYear';
 import { isWithinInterval } from 'date-fns-jalali/isWithinInterval';
 import { faIR as defaultLocale } from 'date-fns-jalali/locale/fa-IR';
-import { Locale as DateFnsLocale } from 'date-fns-jalali/locale';
-import { AdapterFormats, AdapterOptions, MuiPickersAdapter } from '../models';
+import { type Locale as DateFnsLocale } from 'date-fns-jalali/locale';
+import { type AdapterFormats, type AdapterOptions, type MuiPickersAdapter } from '../models';
 import { AdapterDateFnsBase } from '../AdapterDateFnsBase';
 
 const defaultFormats: AdapterFormats = {

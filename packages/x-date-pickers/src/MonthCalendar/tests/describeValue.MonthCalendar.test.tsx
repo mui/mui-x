@@ -1,7 +1,7 @@
 import { screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, adapterToUse, describeValue } from 'test/utils/pickers';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
-import { PickerValue } from '@mui/x-date-pickers/internals';
+import { type PickerValue } from '@mui/x-date-pickers/internals';
 
 describe('<MonthCalendar /> - Describe Value', () => {
   const { render } = createPickerRenderer();

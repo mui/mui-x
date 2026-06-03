@@ -1,4 +1,4 @@
-import { DateOrTimeViewWithMeridiem } from '../models/common';
+import { type DateOrTimeViewWithMeridiem } from '../models/common';
 import { createStepNavigation } from './createStepNavigation';
 
 export function createNonRangePickerStepNavigation(

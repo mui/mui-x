@@ -1,15 +1,15 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { type DefaultizedProps } from '@mui/x-internals/types';
 import {
-  DateOrTimeView,
-  DateView,
-  MuiPickersAdapter,
-  TimeStepOptions,
-  TimeView,
+  type DateOrTimeView,
+  type DateView,
+  type MuiPickersAdapter,
+  type TimeStepOptions,
+  type TimeView,
 } from '../../models';
 import { resolveTimeFormat, isTimeView, isInternalTimeView } from './time-utils';
 import { isDatePickerView, resolveDateFormat } from './date-utils';
-import { DateOrTimeViewWithMeridiem } from '../models';
-import { DigitalTimePickerProps } from '../models/props/time';
+import { type DateOrTimeViewWithMeridiem } from '../models';
+import { type DigitalTimePickerProps } from '../models/props/time';
 
 export const resolveDateTimeFormat = (
   adapter: MuiPickersAdapter,

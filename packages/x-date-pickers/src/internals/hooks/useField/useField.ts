@@ -6,19 +6,22 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { warnOnce } from '@mui/x-internals/warning';
 import { parseSelectedSections } from './useField.utils';
 import {
-  UseFieldDOMGetters,
-  UseFieldParameters,
-  UseFieldProps,
-  UseFieldReturnValue,
+  type UseFieldDOMGetters,
+  type UseFieldParameters,
+  type UseFieldProps,
+  type UseFieldReturnValue,
 } from './useField.types';
 import { getActiveElement } from '../../utils/utils';
-import { FieldSectionType } from '../../../models';
+import { type FieldSectionType } from '../../../models';
 import { useSplitFieldProps } from '../../../hooks';
-import { PickersSectionElement, PickersSectionListRef } from '../../../PickersSectionList';
+import {
+  type PickersSectionElement,
+  type PickersSectionListRef,
+} from '../../../PickersSectionList';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { useFieldState } from './useFieldState';
 import { useFieldInternalPropsWithDefaults } from './useFieldInternalPropsWithDefaults';
-import { PickerValidValue } from '../../models';
+import { type PickerValidValue } from '../../models';
 import { syncSelectionToDOM } from './syncSelectionToDOM';
 import { useFieldRootProps } from './useFieldRootProps';
 import { useFieldHiddenInputProps } from './useFieldHiddenInputProps';

@@ -1,4 +1,4 @@
-import { FieldRangeSection } from '@mui/x-date-pickers/internals';
+import { type FieldRangeSection } from '@mui/x-date-pickers/internals';
 
 export const splitDateRangeSections = (sections: FieldRangeSection[]) => {
   const startDateSections: FieldRangeSection[] = [];
