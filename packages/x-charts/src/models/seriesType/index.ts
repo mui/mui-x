@@ -49,21 +49,16 @@ export type {
   LineSeriesType,
   LineItemIdentifier,
   DefaultizedLineSeriesType,
+  LineSeriesExtension,
 } from './line';
 export type {
   BarValueType,
   BarSeriesType,
   BarItemIdentifier,
   DefaultizedBarSeriesType,
+  BarSeriesExtension,
 } from './bar';
 export * from './scatter';
 export * from './pie';
 export * from './radar';
-export type {
-  DataSampler,
-  DataSamplerParams,
-  LineSampling,
-  ScatterSampling,
-  BarSampling,
-} from './sampling';
 export type { AllSeriesType, DefaultizedSeriesType };

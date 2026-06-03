@@ -9,14 +9,18 @@ import {
 } from './common';
 import { type DatasetElementType } from './config';
 import { type BarItem, type BarLabelContext } from '../../BarChart';
-import { type BarSampling } from './sampling';
+
+/**
+ * Extension point for bar series props. Augmented by Pro and Premium.
+ */
+export interface BarSeriesExtension {}
 
 export type BarValueType = number;
 
 /**
  * @internal The series type shared by the bar and radialBar charts
  */
-export interface CommonBarSeriesType {
+export interface CommonBarSeriesType extends BarSeriesExtension {
   /**
    * Data associated to each bar.
    */
@@ -60,15 +64,6 @@ export interface CommonBarSeriesType {
    * @returns {string} The formatted label.
    */
   barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
-  /**
-   * The downsampling method used to reduce the number of rendered bars for performance.
-   * Sampling only affects rendering: axis extremums, tooltips, highlight, and item interaction
-   * keep using the full data.
-   *
-   * The algorithms are provided by the Pro package (`@mui/x-charts-pro`). Setting this prop on a
-   * community chart has no effect.
-   */
-  sampling?: BarSampling;
 }
 
 export interface BarSeriesType

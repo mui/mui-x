@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
-import { type DataSampler, type ScatterSampling } from '@mui/x-charts/models';
+import { type DataSampler, type ScatterSampling } from '@mui/x-charts-pro/models';
 
 // Deterministic data so the screenshots are stable.
 function createRandom(seed: number) {

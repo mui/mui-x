@@ -113,6 +113,7 @@ export * from '../models/seriesType/config';
 export * from '../models/seriesType/common';
 export * from '../models/seriesType/line';
 export * from '../models/seriesType/bar';
+export * from '../models/seriesType/scatter';
 
 export * from '../models/z-axis';
 export * from '../models/axis';

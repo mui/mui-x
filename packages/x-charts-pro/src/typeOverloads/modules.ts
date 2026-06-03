@@ -28,6 +28,7 @@ import type {
   SankeyItemIdentifierWithData,
 } from '../SankeyChart/sankey.types';
 import type { SankeyHighlightScope } from '../SankeyChart/sankey.highlight.types';
+import type { LineSampling, BarSampling, ScatterSampling } from '../models/sampling';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {
@@ -104,5 +105,32 @@ declare module '@mui/x-charts/internals' {
 
   interface AxisConfigExtension {
     zoom?: boolean | ZoomOptions;
+  }
+
+  interface LineSeriesExtension {
+    /**
+     * The downsampling method used to reduce the number of rendered points for performance.
+     * Sampling affects rendering only. Axis extremums, tooltips, highlighting, and item interaction
+     * still use the complete dataset.
+     */
+    sampling?: LineSampling;
+  }
+
+  interface BarSeriesExtension {
+    /**
+     * The downsampling method used to reduce the number of rendered bars for performance.
+     * Sampling affects rendering only. Axis extremums, tooltips, highlighting, and item interaction
+     * still use the complete dataset.
+     */
+    sampling?: BarSampling;
+  }
+
+  interface ScatterSeriesExtension {
+    /**
+     * The downsampling method used to reduce the number of rendered points for performance.
+     * Sampling affects rendering only. Axis extremums, tooltips, highlighting, and item interaction
+     * still use the complete dataset.
+     */
+    sampling?: ScatterSampling;
   }
 }

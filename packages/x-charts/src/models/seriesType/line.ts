@@ -9,7 +9,11 @@ import type {
 } from './common';
 import { type DatasetElementType } from './config';
 import { type CurveType } from '../curve';
-import { type LineSampling } from './sampling';
+
+/**
+ * Extension point for line series props. Augmented by Pro and Premium.
+ */
+export interface LineSeriesExtension {}
 
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**
@@ -39,7 +43,7 @@ export type MarkShape = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'tr
 /**
  * @internal The series type shared by the line and radialLine charts
  */
-export interface CommonLineSeriesType {
+export interface CommonLineSeriesType extends LineSeriesExtension {
   /**
    * Data associated to the line.
    */
@@ -105,15 +109,6 @@ export interface CommonLineSeriesType {
    * @default 0
    */
   baseline?: number | 'min' | 'max';
-  /**
-   * The downsampling method used to reduce the number of rendered points for performance.
-   * Sampling only affects rendering: axis extremums, tooltips, highlight, and item interaction
-   * keep using the full data.
-   *
-   * The algorithms are provided by the Pro package (`@mui/x-charts-pro`). Setting this prop on a
-   * community chart has no effect.
-   */
-  sampling?: LineSampling;
 }
 
 export interface LineSeriesType

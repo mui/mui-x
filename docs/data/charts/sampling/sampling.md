@@ -63,7 +63,7 @@ Set `sampling` to a function to use a custom downsampling strategy.
 The function (a `DataSampler`) is called with a single parameters object and returns the indices of the points to render.
 
 ```tsx
-import { DataSampler } from '@mui/x-charts/models';
+import { DataSampler } from '@mui/x-charts-pro/models';
 
 const sampler: DataSampler = (params) => {
   // ...inspect params, return the indices to render

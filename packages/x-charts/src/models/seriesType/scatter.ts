@@ -6,7 +6,11 @@ import {
   type SeriesId,
 } from './common';
 import { type DatasetElementType } from './config';
-import { type ScatterSampling } from './sampling';
+
+/**
+ * Extension point for scatter series props. Augmented by Pro and Premium.
+ */
+export interface ScatterSeriesExtension {}
 
 export type ScatterValueType = {
   x: number;
@@ -31,7 +35,10 @@ export type ScatterValueType = {
 };
 
 export interface ScatterSeriesType
-  extends CommonSeriesType<ScatterValueType | null, 'scatter'>, CartesianSeriesType {
+  extends
+    CommonSeriesType<ScatterValueType | null, 'scatter'>,
+    CartesianSeriesType,
+    ScatterSeriesExtension {
   type: 'scatter';
   data?: readonly ScatterValueType[];
   /**
@@ -106,15 +113,6 @@ export interface ScatterSeriesType
      */
     markerSize?: number;
   };
-  /**
-   * The downsampling method used to reduce the number of rendered points for performance.
-   * Sampling only affects rendering: axis extremums, tooltips, highlight, and item interaction
-   * keep using the full data.
-   *
-   * The algorithms are provided by the Pro package (`@mui/x-charts-pro`). Setting this prop on a
-   * community chart has no effect.
-   */
-  sampling?: ScatterSampling;
 }
 
 /**

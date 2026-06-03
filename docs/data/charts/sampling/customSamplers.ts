@@ -1,4 +1,4 @@
-import { type DataSampler } from '@mui/x-charts/models';
+import { type DataSampler } from '@mui/x-charts-pro/models';
 
 /**
  * A custom Min/Max sampler.

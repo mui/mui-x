@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
-import { type DataSampler, type LineSampling } from '@mui/x-charts/models';
+import { type DataSampler, type LineSampling } from '@mui/x-charts-pro/models';
 
 // Deterministic data so the screenshots are stable.
 function createRandom(seed: number) {
