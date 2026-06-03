@@ -311,6 +311,7 @@
   { "name": "FocusedHeatmapCell", "kind": "Function" },
   { "name": "FocusedItemIdentifier", "kind": "TypeAlias" },
   { "name": "FocusedLineMark", "kind": "Function" },
+  { "name": "FocusedMapShape", "kind": "Function" },
   { "name": "FocusedPieArc", "kind": "Function" },
   { "name": "FocusedRadarMark", "kind": "Function" },
   { "name": "FocusedRangeBar", "kind": "Function" },
