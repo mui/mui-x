@@ -18,8 +18,13 @@ export interface ChartsAxisZoomSliderThumbClasses {
 
 export type ChartsAxisZoomSliderThumbClassKey = keyof ChartsAxisZoomSliderThumbClasses;
 
+const CORRECT_PREFIX = 'MuiChartsAxisZoomSliderThumb';
+// TODO v10: remove `MuiChartAxisZoomSliderThumb`. Kept for backwards compatibility with
+// users targeting the historically-incorrect prefix (missing the `s` in `Charts`).
+const LEGACY_PREFIX = 'MuiChartAxisZoomSliderThumb';
+
 export const chartsAxisZoomSliderThumbClasses: ChartsAxisZoomSliderThumbClasses =
-  generateUtilityClasses('MuiChartAxisZoomSliderThumb', [
+  generateUtilityClasses(CORRECT_PREFIX, [
     'root',
     'horizontal',
     'vertical',
@@ -27,8 +32,10 @@ export const chartsAxisZoomSliderThumbClasses: ChartsAxisZoomSliderThumbClasses 
     'end',
   ]);
 
+// Returns both the correct and legacy class names so existing CSS targeting the legacy
+// prefix continues to work.
 export function getAxisZoomSliderThumbUtilityClass(slot: string) {
-  return generateUtilityClass('MuiChartAxisZoomSliderThumb', slot);
+  return `${generateUtilityClass(CORRECT_PREFIX, slot)} ${generateUtilityClass(LEGACY_PREFIX, slot)}`;
 }
 
 export const useUtilityClasses = (ownerState: ChartsZoomSliderThumbOwnerState) => {
