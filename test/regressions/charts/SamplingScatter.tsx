@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
-import { type ChartSampler, type ScatterSampling } from '@mui/x-charts/models';
+import { type DataSampler, type ScatterSampling } from '@mui/x-charts/models';
 
 // Deterministic data so the screenshots are stable.
 function createRandom(seed: number) {
@@ -27,7 +27,7 @@ const data = Array.from({ length: COUNT }, (_, i) => {
   };
 });
 
-const minMax: ChartSampler = ({ length, target, getValue }) => {
+const minMax: DataSampler = ({ length, target, getValue }) => {
   const bucketCount = Math.max(1, Math.floor(target / 2));
   const bucketSize = length / bucketCount;
   const indices: number[] = [0, length - 1];

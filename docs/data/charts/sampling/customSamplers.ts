@@ -1,17 +1,17 @@
-import { type ChartSampler } from '@mui/x-charts/models';
+import { type DataSampler } from '@mui/x-charts/models';
 
 /**
  * A custom Min/Max sampler.
  *
  * It splits the series into buckets and keeps the index of the lowest and highest value of each
  * bucket, which preserves the vertical extent (peaks and spikes) of noisy signals. It is a plain
- * example of the {@link ChartSampler} contract: given the series length, a target number of points,
+ * example of the {@link DataSampler} contract: given the series length, a target number of points,
  * and a `getValue` accessor, return the indices of the points to render.
  *
  * The function is deterministic (the same input always yields the same indices), so the chart does
  * not flicker while panning.
  */
-export const minMaxSampler: ChartSampler = ({ length, target, getValue }) => {
+export const minMaxSampler: DataSampler = ({ length, target, getValue }) => {
   const bucketCount = Math.max(1, Math.floor(target / 2));
   const bucketSize = length / bucketCount;
   const indices: number[] = [0, length - 1];

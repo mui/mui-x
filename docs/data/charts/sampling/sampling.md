@@ -60,12 +60,12 @@ Series in the same stacking group are sampled together, on the combined shape of
 ## Custom sampling functions
 
 Set `sampling` to a function to use a custom downsampling strategy.
-The function (a `ChartSampler`) is called with a single parameters object and returns the indices of the points to render.
+The function (a `DataSampler`) is called with a single parameters object and returns the indices of the points to render.
 
 ```tsx
-import { ChartSampler } from '@mui/x-charts/models';
+import { DataSampler } from '@mui/x-charts/models';
 
-const sampler: ChartSampler = (params) => {
+const sampler: DataSampler = (params) => {
   // ...inspect params, return the indices to render
   return [0, 1, 2];
 };

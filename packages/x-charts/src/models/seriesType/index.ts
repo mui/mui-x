@@ -60,8 +60,8 @@ export * from './scatter';
 export * from './pie';
 export * from './radar';
 export type {
-  ChartSampler,
-  ChartSamplerParams,
+  DataSampler,
+  DataSamplerParams,
   LineSampling,
   ScatterSampling,
   BarSampling,

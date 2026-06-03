@@ -5,7 +5,7 @@
  * than the raw data so the same function works across series types, and it returns the indices of
  * the points to keep.
  */
-export interface ChartSamplerParams<TValue = number> {
+export interface DataSamplerParams<TValue = number> {
   /**
    * The number of points in the series.
    */
@@ -50,7 +50,7 @@ export interface ChartSamplerParams<TValue = number> {
  *
  * @example
  * // Keep the local minimum and maximum of every bucket.
- * const minMax: ChartSampler = ({ length, target, getValue }) => {
+ * const minMax: DataSampler = ({ length, target, getValue }) => {
  *   const indices: number[] = [];
  *   const bucketCount = Math.max(1, Math.floor(target / 2));
  *   const bucketSize = length / bucketCount;
@@ -68,13 +68,13 @@ export interface ChartSamplerParams<TValue = number> {
  *   return indices;
  * };
  *
- * @param {ChartSamplerParams} params The series size, target count, and value/position accessors.
+ * @param {DataSamplerParams} params The series size, target count, and value/position accessors.
  * @returns {number[]} The indices of the points to render.
  */
-export type ChartSampler<TValue = number> = (params: ChartSamplerParams<TValue>) => number[];
+export type DataSampler<TValue = number> = (params: DataSamplerParams<TValue>) => number[];
 
 /**
- * Downsampling method for line series: a built-in method or a custom {@link ChartSampler}.
+ * Downsampling method for line series: a built-in method or a custom {@link DataSampler}.
  */
 export type LineSampling =
   /**
@@ -87,24 +87,24 @@ export type LineSampling =
    * rasterized line is identical to drawing every point, at the cost of more rendered points.
    */
   | 'm4'
-  | ChartSampler;
+  | DataSampler;
 
 /**
- * Downsampling method for scatter series: a built-in method or a custom {@link ChartSampler}.
+ * Downsampling method for scatter series: a built-in method or a custom {@link DataSampler}.
  */
 export type ScatterSampling =
   /**
    * Keeps one representative point per grid cell, sized to the marker. Points that would overlap are
    * visually redundant. Recommended for scatter charts.
    */
-  'bucket' | ChartSampler;
+  'bucket' | DataSampler;
 
 /**
- * Downsampling method for bar series: a built-in method or a custom {@link ChartSampler}.
+ * Downsampling method for bar series: a built-in method or a custom {@link DataSampler}.
  */
 export type BarSampling =
   /**
    * Buckets consecutive bars into pixel-width buckets and renders one representative bar per bucket
    * (the one with the largest absolute value). Recommended for bar charts.
    */
-  'bucket' | ChartSampler;
+  'bucket' | DataSampler;

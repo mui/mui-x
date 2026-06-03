@@ -3,7 +3,7 @@
  *
  * It splits the series into buckets and keeps the index of the lowest and highest value of each
  * bucket, which preserves the vertical extent (peaks and spikes) of noisy signals. It is a plain
- * example of the {@link ChartSampler} contract: given the series length, a target number of points,
+ * example of the {@link DataSampler} contract: given the series length, a target number of points,
  * and a `getValue` accessor, return the indices of the points to render.
  *
  * The function is deterministic (the same input always yields the same indices), so the chart does
