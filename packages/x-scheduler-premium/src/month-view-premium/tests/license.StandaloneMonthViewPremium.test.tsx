@@ -2,7 +2,7 @@ import { screen } from '@mui/internal-test-utils';
 import { StandaloneMonthViewPremium } from '@mui/x-scheduler-premium/month-view-premium';
 import { LicenseInfo } from '@mui/x-license';
 import { clearLicenseStatusCache } from '@mui/x-license/internals';
-import { TEST_LICENSE_KEY_PREMIUM, TEST_LICENSE_KEY_PRO } from '@mui/x-license/test-keys';
+import { TEST_LICENSE_KEY_PREMIUM, TEST_LICENSE_KEY_PRO } from 'test/utils/licenseKeys';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
