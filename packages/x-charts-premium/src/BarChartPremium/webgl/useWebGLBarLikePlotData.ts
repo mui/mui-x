@@ -185,6 +185,12 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
       // In horizontal layout the band direction is y; otherwise it's x.
       const bandIsY = processed.layout === 'horizontal';
 
+      // `hidden` is series-level (mirrored onto every bar by useBarPlotData),
+      // so a single peek skips the whole series when the user hid it.
+      if (dataLength === 0 || data[0].hidden) {
+        continue;
+      }
+
       // Find the first two visible bars in the series. Probe 1 sizes up the
       // bars themselves; probe 2 reveals the center-to-center pitch in the
       // band direction, which is what tells us whether the natural gap
@@ -197,12 +203,7 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
       let probe2Index = 0;
       for (let i = 0; i < dataLength; i += 1) {
         const candidate = data[i];
-        if (
-          !candidate.hidden &&
-          candidate.value != null &&
-          candidate.width > 0 &&
-          candidate.height > 0
-        ) {
+        if (candidate.value != null && candidate.width > 0 && candidate.height > 0) {
           if (probe === null) {
             probe = candidate;
             probeIndex = i;
@@ -248,9 +249,6 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
       for (let i = 0; i < dataLength; i += 1) {
         const bar = data[i];
 
-        if (bar.hidden) {
-          continue;
-        }
         const value = bar.value;
         if (value == null) {
           continue;
