@@ -1,5 +1,5 @@
 import { type ChartPlugin } from '@mui/x-charts/internals';
-import { computeSampledIndices } from '../../sampling/computeSampledIndices';
+import { computeSampledIndices } from './sampling/computeSampledIndices';
 import { type UseChartProSamplingSignature } from './useChartProSampling.types';
 
 /**

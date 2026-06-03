@@ -11,7 +11,7 @@ export * from '../Heatmap/HeatmapSVGPlot';
 export type * from '../Heatmap/Heatmap.types';
 export { selectorHeatmapItemAtPosition } from '../plugins/selectors/useChartHeatmapPosition.selectors';
 export * from './ChartsWatermark';
-export * from './sampling';
+export * from './plugins/useChartProSampling/sampling';
 export {
   useChartProSampling,
   type UseChartProSamplingSignature,
