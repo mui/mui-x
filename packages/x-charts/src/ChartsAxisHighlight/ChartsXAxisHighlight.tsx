@@ -33,9 +33,10 @@ export default function ChartsXHighlight(props: {
 
   const { top, height } = useDrawingArea();
 
-  const store = useStore<
-    [UseChartCartesianAxisSignature, UseChartBrushSignature, UseChartInteractionSignature]
-  >();
+  const store =
+    useStore<
+      [UseChartCartesianAxisSignature, UseChartBrushSignature, UseChartInteractionSignature]
+    >();
   const axisXValues = store.use(selectorChartsHighlightXAxisValue);
   const xAxes = store.use(selectorChartXAxis);
   const sampledBandIndices = store.use(selectorChartBarSampledBandIndices);

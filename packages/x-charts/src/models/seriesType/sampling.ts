@@ -75,11 +75,6 @@ export type ChartSampler<TValue = number> = (params: ChartSamplerParams<TValue>)
 
 /**
  * Downsampling method for line series: a built-in method or a custom {@link ChartSampler}.
- *
- * Sampling reduces the number of points actually rendered to improve performance on large datasets.
- * It only affects rendering: axis extremums, tooltips, highlight, and item interaction keep using
- * the full data. Sampling is provided by the Pro package (`@mui/x-charts-pro`); setting it on a
- * community chart has no effect.
  */
 export type LineSampling =
   /**
@@ -96,7 +91,6 @@ export type LineSampling =
 
 /**
  * Downsampling method for scatter series: a built-in method or a custom {@link ChartSampler}.
- * See {@link LineSampling} for the general behavior of sampling.
  */
 export type ScatterSampling =
   /**
@@ -107,7 +101,6 @@ export type ScatterSampling =
 
 /**
  * Downsampling method for bar series: a built-in method or a custom {@link ChartSampler}.
- * See {@link LineSampling} for the general behavior of sampling.
  */
 export type BarSampling =
   /**

@@ -22,12 +22,12 @@ The chart then renders a representative subset of the points sized to the availa
 
 Each series type has one recommended built-in method.
 
-| Method     | Series  | Description                                                                                                                                          |
-| :--------- | :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `'lttb'`   | line    | Largest-Triangle-Three-Buckets. Preserves peaks, troughs, and the overall shape. Best for lines.                                                     |
+| Method     | Series  | Description                                                                                                                                                               |
+| :--------- | :------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `'lttb'`   | line    | Largest-Triangle-Three-Buckets. Preserves peaks, troughs, and the overall shape. Best for lines.                                                                          |
 | `'m4'`     | line    | Keeps the first, last, min, and max of each column, preserving the line's full vertical extent. The densest, most shape-faithful line method, at the cost of more points. |
-| `'bucket'` | scatter | Keeps one representative point per grid cell, sized to the marker. Points that would overlap are visually redundant. Best for scatter.               |
-| `'bucket'` | bar     | Groups consecutive bars into pixel-width buckets and keeps the largest one. Best for bars.                                                           |
+| `'bucket'` | scatter | Keeps one representative point per grid cell, sized to the marker. Points that would overlap are visually redundant. Best for scatter.                                    |
+| `'bucket'` | bar     | Groups consecutive bars into pixel-width buckets and keeps the largest one. Best for bars.                                                                                |
 
 The `Min/Max` option in the demos below is a [custom function](#custom-sampling-functions), not a built-in method.
 Use the toggle to compare the strategies on the same data.
@@ -82,7 +82,7 @@ The parameters object describes the series and how much detail to keep, without 
 | `length`      | `number`                    | The number of points in the series.                                                                                                                                                                                                   |
 | `target`      | `number`                    | The recommended number of points to keep. Derived from the drawing-area size and zoom level (it doubles roughly every 2x zoom). Returning about this many keeps performance and density consistent, but you may return more or fewer. |
 | `zoomLevel`   | `number`                    | The quantized zoom level: `0` when not zoomed, increasing by one roughly every 2x zoom.                                                                                                                                               |
-| `getValue`    | `(index: number) => number` | Returns the value of the point at `index` (the y value, or the cumulative top for stacked series).                                                                                                                                  |
+| `getValue`    | `(index: number) => number` | Returns the value of the point at `index` (the y value, or the cumulative top for stacked series).                                                                                                                                    |
 | `getPosition` | `(index: number) => number` | Returns the position of the point at `index` along the sampled axis: the x value for line and vertical bar series, the data x for scatter, or the index when no numeric position exists.                                              |
 
 ### Return value

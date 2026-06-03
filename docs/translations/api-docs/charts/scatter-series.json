@@ -25,6 +25,9 @@
     },
     "markerSize": { "description": "Size of the markers in the scatter plot, in pixels." },
     "preview": { "description": "" },
+    "sampling": {
+      "description": "The downsampling method used to reduce the number of rendered points for performance.<br />Sampling only affects rendering: axis extremums, tooltips, highlight, and item interaction<br />keep using the full data.<br /><br />The algorithms are provided by the Pro package (<code>@mui/x-charts-pro</code>). Setting this prop on a<br />community chart has no effect."
+    },
     "sizeAxisId": {
       "description": "The id of the size axis used to compute the size of the scatter points.<br />It points to the id of an axis defined with the <code>zAxis</code> prop."
     },

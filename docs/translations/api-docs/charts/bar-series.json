@@ -28,6 +28,9 @@
     "minBarSize": {
       "description": "If provided, the value will be used as the minimum size of the bar in pixels.<br />This is useful to avoid bars with a size of 0.<br /><br />The property is ignored if the series value is <code>null</code> or <code>0</code>.<br />It also doesn&#39;t work with stacked series."
     },
+    "sampling": {
+      "description": "The downsampling method used to reduce the number of rendered bars for performance.<br />Sampling only affects rendering: axis extremums, tooltips, highlight, and item interaction<br />keep using the full data.<br /><br />The algorithms are provided by the Pro package (<code>@mui/x-charts-pro</code>). Setting this prop on a<br />community chart has no effect."
+    },
     "stack": {
       "description": "The key that identifies the stacking group.<br />Series with the same <code>stack</code> property will be stacked together."
     },

@@ -33,9 +33,10 @@ export default function ChartsYHighlight(props: {
 
   const { left, width } = useDrawingArea();
 
-  const store = useStore<
-    [UseChartCartesianAxisSignature, UseChartBrushSignature, UseChartInteractionSignature]
-  >();
+  const store =
+    useStore<
+      [UseChartCartesianAxisSignature, UseChartBrushSignature, UseChartInteractionSignature]
+    >();
   const axisYValues = store.use(selectorChartsHighlightYAxisValue);
   const yAxes = store.use(selectorChartYAxis);
   const sampledBandIndices = store.use(selectorChartBarSampledBandIndices);
