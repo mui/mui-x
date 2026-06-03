@@ -89,6 +89,7 @@ StandaloneWeekView.propTypes = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * The view initially displayed in the calendar.
@@ -141,6 +142,12 @@ StandaloneWeekView.propTypes = {
     'red',
     'teal',
   ]),
+  /**
+   * Configures how events are created.
+   * If `false`, event creation is disabled.
+   * If `true`, event creation is enabled with default configuration.
+   * If an object, event creation is enabled with the provided configuration.
+   */
   eventCreation: PropTypes.oneOfType([
     PropTypes.shape({
       duration: PropTypes.number,
@@ -188,6 +195,7 @@ StandaloneWeekView.propTypes = {
     showEmptyDaysInAgenda: PropTypes.bool,
     showWeekends: PropTypes.bool,
     showWeekNumber: PropTypes.bool,
+    weekStartsOn: PropTypes.oneOf([0, 1, 2, 3, 4, 5, 6]),
   }),
   /**
    * Config of the preferences menu.
@@ -202,6 +210,7 @@ StandaloneWeekView.propTypes = {
       toggleEmptyDaysInAgenda: PropTypes.bool,
       toggleWeekendVisibility: PropTypes.bool,
       toggleWeekNumberVisibility: PropTypes.bool,
+      toggleWeekStartsOn: PropTypes.bool,
     }),
   ]),
   /**
@@ -219,6 +228,11 @@ StandaloneWeekView.propTypes = {
    * The resources the events can be assigned to.
    */
   resources: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * @default false
+   */
+  shouldEventRequireResource: PropTypes.bool,
   /**
    * Whether the component should display the current time indicator.
    * @default true

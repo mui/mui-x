@@ -31,6 +31,12 @@ export function getErrorMessage(fallbackMessage: string, error: unknown): string
   return error instanceof Error && error.message ? error.message : fallbackMessage;
 }
 
+export function getMessageIdFromError(error: ChatError | null): string | undefined {
+  const messageId = error?.details?.messageId;
+
+  return typeof messageId === 'string' && messageId !== '' ? messageId : undefined;
+}
+
 export function findAssistantMessageIdsForRetry(
   store: ChatStore<unknown>,
   userMessageId: string,

@@ -453,12 +453,14 @@ describe('<DataGridPro /> - Rows', () => {
       const { setProps } = render(
         <TestCaseVirtualization nbRows={5} nbCols={2} height={160} rowBufferPx={0} />,
       );
-      expect(getRows()).to.have.length(1);
+      // `getIndexesToRender` renders one extra row past the visible viewport so
+      // there is no empty space if the user starts scrolling, hence the +1.
+      expect(getRows()).to.have.length(2);
       setProps({
         height: 220,
       });
       await waitFor(() => {
-        expect(getRows()).to.have.length(3);
+        expect(getRows()).to.have.length(4);
       });
     });
 
@@ -529,6 +531,9 @@ describe('<DataGridPro /> - Rows', () => {
       const n = 2;
       const columnWidth = 100;
       const columnBufferPx = n * columnWidth;
+      // `getIndexesToRender` renders one extra column past the visible viewport
+      // (or past the buffer) so a horizontal scroll does not leave empty space.
+      const extra = 1;
       render(
         <TestCaseVirtualization
           width={width + border * 2}
@@ -537,12 +542,14 @@ describe('<DataGridPro /> - Rows', () => {
         />,
       );
       const firstRow = getRow(0);
-      expect($$(firstRow, '[role="gridcell"]')).to.have.length(Math.floor(width / columnWidth) + n);
+      expect($$(firstRow, '[role="gridcell"]')).to.have.length(
+        Math.floor(width / columnWidth) + n + extra,
+      );
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       await act(async () => virtualScroller.scrollTo({ left: 301 }));
       await waitFor(() => {
         expect($$(firstRow, '[role="gridcell"]')).to.have.length(
-          n + 1 + Math.floor(width / columnWidth) + n,
+          n + 1 + Math.floor(width / columnWidth) + n + extra,
         );
       });
     });

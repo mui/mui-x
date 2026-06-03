@@ -52,6 +52,7 @@ const nbNODialog: Partial<EventDialogLocaleText> = {
   recurrenceYearlyPresetLabel: (date) => `Gjentas årlig den ${date}`,
   noResourceAriaLabel: 'Ingen spesifikk ressurs',
   resourceLabel: 'Ressurs',
+  // requiredResourceError: 'A resource is required.',
   saveChanges: 'Lagre',
   startDateAfterEndDateError: 'Startdato/-tid må være før sluttdato/-tid.',
   startDateLabel: 'Startdato',
@@ -97,6 +98,10 @@ const nbNOCalendar: Partial<Omit<EventCalendarLocaleText, keyof EventDialogLocal
   showWeekNumber: 'Vis ukenummer',
   timeFormat: 'Tidsformat',
   viewSpecificOptions: (view) => `${view} visningsalternativer`,
+  // startWeekOn: 'Start week on',
+  // weekdaySunday: 'Sunday',
+  // weekdayMonday: 'Monday',
+  // weekdaySaturday: 'Saturday',
 
   // WeekView
   allDay: 'Hele dagen',

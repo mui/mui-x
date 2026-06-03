@@ -108,14 +108,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         return;
       }
 
-      if (parentId && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
-        options.fetchRowChildren?.([parentId]);
-        return;
-      }
-
-      options.clearDataSourceState?.();
-
-      const { skipCache, keepChildrenExpanded, ...getRowsParams } = params || {};
+      const { skipCache, keepChildrenExpanded, showChildrenLoading, ...getRowsParams } =
+        params || {};
 
       const fetchParams = {
         ...gridGetRowsParamsSelector(apiRef),
@@ -123,11 +117,21 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         ...getRowsParams,
       };
 
+      if (parentId && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
+        options.fetchRowChildren?.([parentId], [fetchParams], showChildrenLoading);
+        return;
+      }
+
+      options.clearDataSourceState?.();
+
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
 
       if (!skipCache && responses.every((response) => response !== undefined)) {
-        apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
+        // Bump the request id so any cache-miss request still in flight is treated as
+        // stale and won't override the cached data we're about to apply.
+        lastRequestId.current += 1;
+        apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
           response: CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]),
           fetchParams,
           options: { skipCache, keepChildrenExpanded },
@@ -153,7 +157,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         cacheResponses.forEach((response, key) => cache.set(key, response));
 
         if (lastRequestId.current === requestId) {
-          apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
+          apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
             response: getRowsResponse,
             fetchParams,
             options: { skipCache, keepChildrenExpanded },
@@ -161,7 +165,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         }
       } catch (originalError) {
         if (lastRequestId.current === requestId) {
-          apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
+          apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
             error: originalError as Error,
             fetchParams,
             options: { skipCache, keepChildrenExpanded },
@@ -241,7 +245,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       }, [] as GridRowId[]);
 
       if (expandedGroupIds.length > 0) {
-        fetchRowChildrenOption(expandedGroupIds, { showChildrenLoading: false });
+        fetchRowChildrenOption(expandedGroupIds, [], false);
       }
     };
 
@@ -271,7 +275,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       const cacheResponses = cacheChunkManager.splitResponse(fetchParams, response);
       cacheResponses.forEach((cacheResponse, key) => cache.set(key, cacheResponse));
 
-      apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
+      apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
         response,
         fetchParams,
         options: {},
@@ -297,7 +301,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     pollingIntervalRef.current = setInterval(revalidate, revalidateMs);
   });
 
-  const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRowsUpdate'>>(
+  const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRootRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
         // `handleDataUpdate` is the `Default` strategy processor, so honouring
@@ -383,6 +387,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     // `GroupedData` (tree data / row grouping), skipping the synchronous `setRows([])`
     // would leave the existing tree merged on top of the new response and render rows
     // in stale sort order (https://github.com/mui/mui-x/pull/21619).
+    // This handler is only wired up when a standard strategy is active via the `runIf`
+    // guards on the returned `events` object.
     const activeStrategy = apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource);
     const keepPreviousData =
       props.dataSourceKeepPreviousData && activeStrategy === DataSourceRowsUpdateStrategy.Default;
@@ -432,7 +438,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     if (
       currentStrategy !== DataSourceRowsUpdateStrategy.Default &&
       currentStrategy !== DataSourceRowsUpdateStrategy.LazyLoading &&
-      currentStrategy !== DataSourceRowsUpdateStrategy.GroupedData
+      currentStrategy !== DataSourceRowsUpdateStrategy.GroupedData &&
+      currentStrategy !== DataSourceRowsUpdateStrategy.LazyLoadedGroupedData
     ) {
       return undefined;
     }
@@ -454,7 +461,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     debouncedFetchRows,
     strategyProcessor: {
       strategyName: DataSourceRowsUpdateStrategy.Default,
-      group: 'dataSourceRowsUpdate' as const,
+      group: 'dataSourceRootRowsUpdate' as const,
       processor: handleDataUpdate,
     },
     setStrategyAvailability,

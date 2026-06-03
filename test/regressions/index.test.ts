@@ -3,6 +3,7 @@ import * as childProcess from 'child_process';
 import { type Browser, chromium, type ConsoleMessage, type Page } from '@playwright/test';
 import fs from 'node:fs/promises';
 import { test as base } from 'vitest';
+import { minimatch } from 'minimatch';
 
 declare global {
   interface Window {
@@ -27,22 +28,74 @@ const timeSensitiveSuites = [
 
 interface RouteConfig {
   /**
+   * Set to `false` to skip the screenshot for this route. Defaults to `true`
+   * when no rule matches.
+   */
+  enabled?: boolean;
+  /**
+   * Override the playwright viewport for the route. Defaults to
+   * `DEFAULT_VIEWPORT` when no rule matches.
+   */
+  viewport?: { width: number; height: number };
+  /**
    * Wait for this selector before screenshotting, on top of the testcase
    * `aria-busy` gate (which only tracks font loading, not async demo data).
    */
   waitForSelector?: string;
 }
 
-// Per-route overrides, keyed by exact route url (`/${suite}/${name}`).
-const TEST_CONFIG: Record<string, RouteConfig> = {
-  '/test-regressions-data-grid/DataGridScrollRestoration': {
-    // The grid remounts when its async demo-data arrives
-    // (`key={String(loading)}`) and then restores its scroll. `aria-busy`
-    // doesn't cover that; sequential runs used to leave enough time, but
-    // pooled pages under concurrency don't, so wait for rendered rows.
-    waitForSelector: '.MuiDataGrid-row .MuiDataGrid-cell',
+interface RouteRule extends RouteConfig {
+  /** Minimatch glob against the route URL (`/${suite}/${name}`). */
+  test: string;
+}
+
+const DEFAULT_VIEWPORT = { width: 1000, height: 700 };
+
+// Per-route overrides matched back-to-front against the route URL — the last
+// matching rule wins, and rules don't inherit from each other (an override
+// must restate any field it cares about). Mirrors the rule-array pattern in
+// mui-material's `test/regressions/demoMeta.ts`.
+const TEST_RULES: RouteRule[] = [
+  // Routes with dedicated `test` blocks elsewhere in this file (clicks,
+  // mouse positioning, ...) — the generic screenshot pass would race with
+  // those, so opt out here rather than dropping them from the bundle.
+  {
+    test: '/docs-charts-tooltip/Interaction',
+    // There is a dedicated test for it in this file, and this is why we don't
+    // exclude it with the glob pattern in test/regressions/testsBySuite.ts.
+    enabled: false,
   },
-};
+  {
+    test: '/test-regressions-charts/LineChartPointerInteraction',
+    // Dedicated tests handle mouse positioning.
+    enabled: false,
+  },
+
+  // Overview composites embed desktop-breakpoint media queries that don't
+  // match at the default 1000x700 viewport, leaving panes hidden in
+  // screenshots. Bump per product so each captures its live-docs desktop
+  // layout.
+  { test: '/test-regressions-overviews-pickers/**', viewport: { width: 1280, height: 800 } },
+  { test: '/test-regressions-overviews-scheduler/**', viewport: { width: 1440, height: 900 } },
+
+  {
+    test: '/test-regressions-data-grid/DataGridScrollRestoration',
+    // The grid restores its scroll to top:2000/left:2000 after an async remount.
+    // `aria-rowindex` is the absolute dataset position, so a mid-viewport row for
+    // the restored scroll (top:2000, 52px rows => row ~41 => aria-rowindex 43)
+    // only enters the DOM once the virtualizer has rendered the scrolled window.
+    waitForSelector: '.MuiDataGrid-row[aria-rowindex="43"] .MuiDataGrid-cell',
+  },
+];
+
+function getRouteConfig(routeUrl: string): RouteConfig | undefined {
+  for (let i = TEST_RULES.length - 1; i >= 0; i -= 1) {
+    if (minimatch(routeUrl, TEST_RULES[i].test)) {
+      return TEST_RULES[i];
+    }
+  }
+  return undefined;
+}
 
 await main();
 
@@ -51,6 +104,10 @@ async function main() {
 
   const browser = await chromium.launch({
     args: [
+      // Force grayscale antialiasing — `-webkit-font-smoothing: antialiased`
+      // is a no-op on Linux Chromium, so without this flag screenshots pick
+      // up LCD subpixel color fringes that vary across hosts.
+      '--disable-lcd-text',
       // We could add the hide-scrollbars flag, which should improve argos
       // flaky tests based on the scrollbars.
       // '--hide-scrollbars',
@@ -143,16 +200,13 @@ async function main() {
           async ({ pooled }) => {
             const { page, errors } = pooled;
 
-            if (/^\/docs-charts-tooltip\/Interaction/.test(route.url)) {
-              // Ignore tooltip interaction demo screenshot.
-              // There is a dedicated test for it in this file, and this is why we don't exclude it with the glob pattern in test/regressions/testsBySuite.ts
+            const routeConfig = getRouteConfig(route.url);
+
+            if (routeConfig?.enabled === false) {
               return;
             }
 
-            if (/LineChartPointerInteraction/.test(route.url)) {
-              // Ignore pointer interaction screenshot — dedicated tests handle mouse positioning.
-              return;
-            }
+            await page.setViewportSize(routeConfig?.viewport ?? DEFAULT_VIEWPORT);
 
             await navigateToTest(page, route.url);
 
@@ -165,9 +219,11 @@ async function main() {
               `[data-testid="testcase"][data-testpath="${route.url}"]:not([aria-busy="true"])`,
             );
 
-            const routeConfig = TEST_CONFIG[route.url];
             if (routeConfig?.waitForSelector) {
-              await page.waitForSelector(routeConfig.waitForSelector);
+              // Scope the wait to this route's testcase: pooled pages keep the
+              // previous route's DOM around briefly, and a global selector could
+              // match a leftover grid instead of the one being screenshotted.
+              await testcase.waitForSelector(routeConfig.waitForSelector);
             }
 
             await page.evaluate(async () => {

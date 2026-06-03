@@ -1,4 +1,4 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, ResourceBuilder } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import {
@@ -42,6 +42,7 @@ describe('Core - EventCalendarStore', () => {
         processedResourceLookup: new Map(),
         readOnly: false,
         recurringEventsPlugin: null,
+        shouldEventRequireResource: false,
         resourceChildrenIdLookup: new Map(),
         resourceIdList: [],
         resourceModelStructure: undefined,
@@ -57,6 +58,35 @@ describe('Core - EventCalendarStore', () => {
 
       expect(store.state).to.deep.equal(expectedState);
     });
+
+    it('should default `shouldEventRequireResource` to `false`', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.shouldEventRequireResource).to.equal(false);
+    });
+
+    it('should respect an explicit `shouldEventRequireResource={true}`', () => {
+      const store = new EventCalendarStore(
+        {
+          ...DEFAULT_PARAMS,
+          shouldEventRequireResource: true,
+          resources: [ResourceBuilder.new().build()],
+        },
+        adapter,
+      );
+      expect(store.state.shouldEventRequireResource).to.equal(true);
+    });
+
+    it('should warn in dev when `shouldEventRequireResource` is `true` but no resources are configured', () => {
+      expect(() => {
+        // eslint-disable-next-line no-new
+        new EventCalendarStore(
+          { ...DEFAULT_PARAMS, shouldEventRequireResource: true, resources: [] },
+          adapter,
+        );
+      }).toWarnDev([
+        'MUI X Scheduler: `shouldEventRequireResource` is `true` but no resources are configured.',
+      ]);
+    });
   });
 
   describe('updater', () => {
@@ -70,6 +100,21 @@ describe('Core - EventCalendarStore', () => {
 
       store.updateStateFromParameters(newParams, adapter);
       expect(store.state.views).to.deep.equal(['day', 'week']);
+    });
+
+    it('should sync `shouldEventRequireResource` when parameters update', () => {
+      const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
+      expect(store.state.shouldEventRequireResource).to.equal(false);
+
+      store.updateStateFromParameters(
+        {
+          ...DEFAULT_PARAMS,
+          shouldEventRequireResource: true,
+          resources: [ResourceBuilder.new().build()],
+        },
+        adapter,
+      );
+      expect(store.state.shouldEventRequireResource).to.equal(true);
     });
 
     it('should respect controlled `view` (updates to new value)', () => {
