@@ -1,24 +1,21 @@
 'use client';
-// TODO #22309: unify with EventTimelinePremiumErrorContainer. Both variants are
-// structurally identical now; the only differences left are the styled-component names
-// and the styled-context hook.
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
+import { useSharedComponentsStyledContext } from '../SharedComponentsStyledContext';
 
 export interface ErrorContainerProps {
   className?: string;
 }
 
 const ErrorContainerRoot = styled('div', {
-  name: 'MuiEventCalendar',
-  slot: 'ErrorContainer',
+  name: 'MuiEventErrorContainer',
+  slot: 'Root',
 })({
   position: 'absolute',
   zIndex: 1300,
@@ -31,15 +28,15 @@ const ErrorContainerRoot = styled('div', {
 });
 
 const ErrorAlert = styled(Alert, {
-  name: 'MuiEventCalendar',
-  slot: 'ErrorAlert',
+  name: 'MuiEventErrorContainer',
+  slot: 'Alert',
 })({
   maxWidth: 400,
 });
 
 const ErrorMessage = styled(Typography, {
-  name: 'MuiEventCalendar',
-  slot: 'ErrorMessage',
+  name: 'MuiEventErrorContainer',
+  slot: 'Message',
 })({
   wordBreak: 'break-word',
   display: '-webkit-box',
@@ -52,8 +49,8 @@ const ErrorMessage = styled(Typography, {
 
 export function ErrorContainer(props: ErrorContainerProps) {
   const { className } = props;
-  const store = useEventCalendarStoreContext();
-  const { classes } = useEventCalendarStyledContext();
+  const store = useSchedulerStoreContext();
+  const { classes } = useSharedComponentsStyledContext();
   const errors = useStore(store, schedulerOtherSelectors.errors);
 
   return (
