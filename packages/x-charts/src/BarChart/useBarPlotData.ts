@@ -17,7 +17,10 @@ import { useChartId } from '../hooks/useChartId';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import type { StackingGroupsType } from '../internals/stacking';
 import { type SeriesId } from '../models/seriesType';
-import { useChartSampledIndices } from '../internals/seriesRenderedSelector';
+import {
+  useChartSampledIndices,
+  isContiguousSampling,
+} from '../internals/seriesRenderedSelector';
 import { getBarSampledSlots, getBarSampledSlotPosition } from '../internals/barSampledSlot';
 
 export function useBarPlotData(
@@ -124,9 +127,15 @@ export function processBarDataForPlot(
       // widen and shift smoothly as the user zooms and pans, while the kept set itself stays stable
       // (zoom-level driven sampler). The same geometry drives the axis highlight, so the highlighted
       // band stays aligned with the bar under the pointer.
-      const slots = sampledIndices
-        ? getBarSampledSlots(baseScaleConfig.scale.range(), barCount)
-        : null;
+      //
+      // Windowed (deep-zoom "show every visible bar") series are the exception: their indices are a
+      // contiguous slice of the real data, so they render at their true band positions — slotting a
+      // visible subset across the whole range would shift and resize the bars as the override kicks
+      // in.
+      const slots =
+        sampledIndices && !isContiguousSampling(sampledIndices)
+          ? getBarSampledSlots(baseScaleConfig.scale.range(), barCount)
+          : null;
 
       for (let cursor = 0; cursor < barCount; cursor += 1) {
         const dataIndex = sampledIndices ? sampledIndices[cursor] : cursor;
