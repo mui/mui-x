@@ -92,9 +92,6 @@ export function useLinePlotData(
 
         const shouldExpand = curve?.includes('step') && !strictStepCurve && isOrdinalScale(xScale);
 
-        // When the series is downsampled (Pro feature), only the selected original indices are
-        // rendered. We still index the full `data`/`visibleStackedData` arrays by the original
-        // index, so x/y stay correctly paired — we just skip the dropped points.
         const sampledIndices = sampledIndicesBySeries[seriesId];
 
         const mapIndexToPoints = (x: any, index: number) => {

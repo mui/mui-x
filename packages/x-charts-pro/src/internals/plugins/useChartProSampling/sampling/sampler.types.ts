@@ -2,13 +2,8 @@ import type { ChartSeriesType, ChartSeriesDefaultized } from '@mui/x-charts/inte
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 
 /**
- * Context passed to a series sampler.
- *
- * Sampling is intentionally decoupled from the live (continuously-changing) axis scale and from the
- * pan position: it operates on the whole series in data space and is driven by a quantized
- * `zoomLevel`. This keeps the sampled set stable while panning and during sub-level zooming, so the
- * rendered shape does not flicker. The plot hooks still position the kept points with the live scale,
- * so zoom and pan stay smooth.
+ * Context passed to a series sampler. Sampling runs over the whole series in data space, driven by
+ * the quantized `zoomLevel` rather than the live scale, so the kept set stays stable while panning.
  */
 export type ChartSeriesSamplerContext = {
   /**
@@ -16,10 +11,8 @@ export type ChartSeriesSamplerContext = {
    */
   drawingArea: ChartDrawingArea;
   /**
-   * The quantized zoom level: `0` when not zoomed, increasing by one roughly every 2x zoom. The
-   * target point count doubles with each level, so detail is added in discrete steps rather than
-   * continuously. The level (not the live scale) drives the downsampling, which is what keeps the
-   * sampled shape stable while panning.
+   * The quantized zoom level: `0` when not zoomed, +1 roughly every 2x zoom. The target point count
+   * doubles with each level, so detail is added in discrete steps.
    */
   zoomLevel: number;
   /**

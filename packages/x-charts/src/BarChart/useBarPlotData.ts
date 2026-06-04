@@ -17,10 +17,7 @@ import { useChartId } from '../hooks/useChartId';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import type { StackingGroupsType } from '../internals/stacking';
 import { type SeriesId } from '../models/seriesType';
-import {
-  useChartSampledIndices,
-  isContiguousSampling,
-} from '../internals/seriesRenderedSelector';
+import { useChartSampledIndices, isContiguousSampling } from '../internals/seriesRenderedSelector';
 import { getBarSampledSlots, getBarSampledSlotPosition } from '../internals/barSampledSlot';
 
 export function useBarPlotData(
@@ -114,24 +111,13 @@ export function processBarDataForPlot(
         numberOfGroups: stackingGroups.length,
       });
 
-      // When the series is downsampled (Pro feature), only the selected original indices are
-      // rendered. We keep `dataIndex` as the original index, so values, colors, and mask ids stay
-      // aligned with the full data.
       const sampledIndices = sampledIndicesBySeries[seriesId];
       const barCount = sampledIndices ? sampledIndices.length : baseScaleConfig.data!.length;
 
-      // When downsampled, the kept bars are laid out on a uniform grid across the base-axis range,
-      // one slot per kept bar. The slot geometry is independent of where each bucket's representative
-      // happens to sit, so every rendered bar has the same width, and it follows the axis direction
-      // (including reversed axes). The range comes from the live (zoom-aware) scale, so the bars
-      // widen and shift smoothly as the user zooms and pans, while the kept set itself stays stable
-      // (zoom-level driven sampler). The same geometry drives the axis highlight, so the highlighted
-      // band stays aligned with the bar under the pointer.
-      //
-      // Windowed (deep-zoom "show every visible bar") series are the exception: their indices are a
-      // contiguous slice of the real data, so they render at their true band positions — slotting a
-      // visible subset across the whole range would shift and resize the bars as the override kicks
-      // in.
+      // Downsampled bars are laid on a uniform slot grid (fewer, wider, evenly filling the axis)
+      // rather than their sparse real positions. A contiguous window is the show-all case: those
+      // bars keep their true positions, since slotting a visible subset across the whole range would
+      // shift and resize them as the override kicks in.
       const slots =
         sampledIndices && !isContiguousSampling(sampledIndices)
           ? getBarSampledSlots(baseScaleConfig.scale.range(), barCount)

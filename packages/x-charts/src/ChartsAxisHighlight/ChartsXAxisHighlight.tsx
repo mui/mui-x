@@ -52,8 +52,7 @@ export default function ChartsXHighlight(props: {
     const xScale = xAxis.scale;
     const getXPosition = getValueToPositionMapper(xScale);
 
-    // For a sampled bar axis the bars are repositioned onto a uniform slot grid, so the band
-    // highlight is drawn over the slot under the pointer rather than at the value's original band.
+    // Sampled bars sit on a uniform slot grid, so highlight the slot under the pointer.
     const sampledIndices = sampledBandIndices.x[axisId];
     if (type === 'band' && sampledIndices !== undefined && pointerX !== null) {
       const slots = getBarSampledSlots(xScale.range(), sampledIndices.length);

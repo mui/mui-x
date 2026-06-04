@@ -28,8 +28,6 @@ export const lineSampler: ChartSeriesSampler<'line'> = (
   const length = stacked?.length ?? series.data.length;
   const target = targetForZoomLevel(drawingArea.width, zoomLevel, length);
 
-  // The whole series is sampled to `target`, which grows with the zoom level, so zooming in adds
-  // detail in discrete steps. Once the series fits the target there is nothing to drop.
   if (length <= target) {
     return null;
   }

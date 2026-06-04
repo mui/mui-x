@@ -74,11 +74,8 @@ export type SeriesIdToType = ReadonlyMap<SeriesId, ChartSeriesType>;
 
 /**
  * The inputs the sampling computation needs, gathered by the community sampled-indices selector and
- * handed to the Pro `computeSampledIndices` function.
- *
- * Kept to plain data (no live axis scales, no cartesian-plugin types) so the core series plugin
- * state stays free of feature-plugin dependencies. Sampling runs in data space and is driven by the
- * quantized `zoomLevel`, so the rendered shape stays stable while panning.
+ * handed to the Pro `computeSampledIndices` function. Kept to plain data (no live scales, no
+ * cartesian-plugin types) so the core series plugin state stays free of feature-plugin dependencies.
  */
 export interface ChartSampledIndicesInput {
   /**

@@ -3,11 +3,8 @@ import { samplerRegistry } from './samplerRegistry';
 import { type ChartSeriesSamplerContext } from './sampler.types';
 
 /**
- * Computes the render-only sampled indices for every series that sets a `sampling` method.
- *
- * Provided to the store by the Pro sampling plugin and called by the community sampled-indices
- * selector. Runs in data space, driven by the quantized zoom level, so the kept set is stable while
- * panning. The series objects are never mutated — the result is a sidecar map keyed by series id.
+ * Computes the render-only sampled indices for every series that sets a `sampling` method. Put in
+ * the store by the Pro sampling plugin and called by the community sampled-indices selector.
  *
  * @param {ChartSampledIndicesInput} input The processed series and geometry to sample against.
  * @returns {Record<SeriesId, number[]>} The indices to render, keyed by series id.
@@ -47,17 +44,15 @@ export function computeSampledIndices(input: ChartSampledIndicesInput): Record<S
     const stackingGroups = (group as { stackingGroups?: { ids: string[] }[] }).stackingGroups;
 
     if (Array.isArray(stackingGroups)) {
-      // Stacked series must keep the SAME indices to stay aligned, so each stacking group is sampled
-      // once and the result is shared by every member. Unstacked series are singleton groups, so
-      // this also covers the non-stacked case.
+      // Members of a stack must share indices to stay aligned, so each group is sampled once (on a
+      // representative member, whose `visibleStackedData` is the cumulative position) and the result
+      // is shared. Unstacked series are singleton groups, so this covers them too.
       for (const stack of stackingGroups) {
         const ids = stack.ids.filter((id) => group.series[id]);
         const samplingId = ids.find((id) => group.series[id].sampling);
         if (!samplingId) {
           continue;
         }
-        // Sample the representative member directly — its already-computed `visibleStackedData` is
-        // the cumulative stack position — then share the indices with every member.
         const context = buildContext(group.series[samplingId]);
         const indices = sampler(group.series[samplingId], context);
         if (indices) {

@@ -23,8 +23,6 @@ export function useScatterPlotData(
       type: 'scatter';
     })[] = [];
 
-    // When the series is downsampled (Pro feature), only the selected original indices are
-    // rendered. `series.data` is left untouched so item interaction keeps using the full data.
     const length = sampledIndices ? sampledIndices.length : series.data.length;
 
     for (let cursor = 0; cursor < length; cursor += 1) {

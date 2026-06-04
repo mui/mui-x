@@ -27,12 +27,10 @@ export const selectorChartSamplingState: ChartRootSelector<UseChartSeriesSignatu
 ) => state.sampling;
 
 /**
- * A quantized zoom level derived from the zoom state: `0` when not zoomed, increasing by one each
- * time the visible range roughly halves. The level is measured against the axis's full zoom extent
- * (`maxEnd - minStart`), not a fixed 0–100 span, so an axis that can only be zoomed within part of
- * its range still reaches level 0 when fully zoomed out. This is a primitive number, so the
- * sampled-indices selector below only recomputes when the level actually changes — not on every
- * frame of a zoom or pan gesture. That is what keeps the sampled shape stable (no flicker).
+ * A quantized zoom level: `0` when not zoomed, +1 each time the visible range roughly halves,
+ * measured against the axis's zoom extent (`maxEnd - minStart`). Being a primitive, it lets the
+ * sampler below recompute only when the level changes — not every pan frame — so the sampled shape
+ * stays stable while panning.
  */
 export const selectorChartSamplingZoomLevel = createSelector(
   selectorChartZoomMap,
@@ -46,8 +44,6 @@ export const selectorChartSamplingZoomLevel = createSelector(
       const fullRange = maxEnd - minStart;
       const span = zoom.end - zoom.start;
       if (span > 0 && span < fullRange) {
-        // `floor` keeps level 0 until the visible range has roughly halved, so the first reflow
-        // only happens after a meaningful zoom rather than on the first wheel tick.
         level = Math.max(level, Math.floor(Math.log2(fullRange / span)));
       }
     });
@@ -58,19 +54,10 @@ export const selectorChartSamplingZoomLevel = createSelector(
 const EMPTY_SAMPLED_INDICES: Record<SeriesId, number[]> = {};
 
 /**
- * The render-only downsampling result: a map from series id to the sorted subset of original data
- * indices to render. This is a sidecar to the series data — the series objects themselves are never
- * mutated, so extremums, axis domain, tooltip, highlight, keyboard navigation and item interaction
- * keep working on the full data. Only the plot hooks read this map (through `useChartSampledIndices`)
- * to skip the dropped points while rendering.
- *
- * The actual algorithm lives in the Pro package: this selector only gathers the inputs and delegates
- * to the `computeSampledIndices` function the Pro sampling plugin puts in the store. Without that
- * plugin (community, or no Pro sampling) it returns an empty map and nothing is sampled.
- *
- * Sampling is driven entirely by the quantized zoom level, never the live scale, so this selector
- * recomputes only when the zoom level changes — not on every pan/zoom frame — and the sampled set
- * stays stable while panning.
+ * Render-only sampled indices per series id: a sidecar that only the plot hooks read, leaving the
+ * series data (and so extremums, tooltips, highlight, interaction) untouched. The algorithm lives in
+ * the Pro package — this selector gathers the inputs and delegates to the `computeSampledIndices`
+ * function the Pro plugin puts in the store; without it, nothing is sampled.
  */
 export const selectorChartSampledIndices = createSelectorMemoized(
   selectorChartSeriesProcessed,
@@ -117,27 +104,18 @@ export const selectorChartSampledIndices = createSelectorMemoized(
 );
 
 /**
- * The target spacing (in pixels) between rendered points, matching the Pro sampler default. Used to
- * size the render budget for the "show every visible point" check below. Duplicated here (rather than
- * imported from the Pro package, which the community package cannot depend on) so the deep-zoom
- * override stays cheap and lives next to its only consumers.
+ * Target spacing (px) between rendered points, matching the Pro sampler default. Duplicated here
+ * because the community package cannot depend on the Pro package.
  */
 const PIXELS_PER_POINT = 4;
 
 /**
- * Layers a "show every visible point" pass on top of the stable sampled indices.
+ * Adds the dropped points back once the visible range is zoomed in far enough that they all fit the
+ * render budget, so the user sees real data instead of an approximation (bounded to the drawing
+ * area). Line and bar use a contiguous index window; scatter uses a pixel test.
  *
- * Once the visible range has been zoomed in far enough that every point inside it fits within the
- * render budget, the dropped points are added back so the user sees the real, full-resolution data
- * instead of an approximation — only the points still inside the (clipped) drawing area are
- * rendered, so the count stays bounded. Line and bar use a contiguous index window (the data index
- * follows the axis position); scatter, which is not position-ordered, filters by the visible x/y
- * value rectangle instead.
- *
- * The expensive sampling stays in `selectorChartSampledIndices` (driven by the quantized zoom level,
- * so it is stable while panning). This layer only re-slices the visible subset, so it is cheap even
- * though it follows the pan position. When not zoomed it returns the sampled result unchanged (same
- * reference), so the common case pays nothing.
+ * A cheap pan-aware layer over `selectorChartSampledIndices` (which stays quantized and stable): it
+ * only re-slices the visible subset, and returns the sampled result unchanged when not zoomed.
  */
 export const selectorChartSampledIndicesVisible = createSelectorMemoized(
   selectorChartSampledIndices,
@@ -164,7 +142,6 @@ export const selectorChartSampledIndicesVisible = createSelectorMemoized(
     defaultXAxisId,
     defaultYAxisId,
   ): Record<SeriesId, number[]> {
-    // Nothing sampled, or not zoomed in: the sampled result already covers everything.
     if (!samplingState || zoomLevel <= 0) {
       return sampledIndices;
     }
@@ -172,8 +149,7 @@ export const selectorChartSampledIndicesVisible = createSelectorMemoized(
     const renderBudget = (pixelSpan: number, length: number) =>
       Math.min(length, Math.max(2, Math.floor(pixelSpan / PIXELS_PER_POINT)) * 2 ** zoomLevel);
 
-    // The visible data window of an axis, as a `[start, end]` fraction of its full zoom extent.
-    // `null` when the axis is not zoomed (so its whole extent is visible).
+    // `null` when the axis is not zoomed, so its whole extent is visible.
     const visibleWindow = (axisId: AxisId): { start: number; end: number } | null => {
       const zoom = zoomMap?.get(axisId);
       if (!zoom) {
@@ -197,8 +173,7 @@ export const selectorChartSampledIndicesVisible = createSelectorMemoized(
       result[seriesId] = indices;
     };
 
-    // Line and bar are index-ordered (data index follows the axis position), so a contiguous index
-    // window matches the visible range.
+    // Line and bar are index-ordered, so a contiguous index window matches the visible range.
     (['line', 'bar'] as const).forEach((type) => {
       const group = processedSeries[type] as
         | { series: Record<string, any>; seriesOrder: string[] }
@@ -208,7 +183,6 @@ export const selectorChartSampledIndicesVisible = createSelectorMemoized(
       }
 
       for (const seriesId of group.seriesOrder) {
-        // Only series that were actually downsampled can be restored.
         if (!sampledIndices[seriesId]) {
           continue;
         }
@@ -229,7 +203,6 @@ export const selectorChartSampledIndicesVisible = createSelectorMemoized(
         const end = Math.min(length, Math.ceil(window.end * length));
         const windowLength = end - start;
 
-        // Show every visible point only once they all fit within the render budget.
         if (windowLength > 0 && windowLength <= target) {
           const indices = new Array<number>(windowLength);
           for (let i = 0; i < windowLength; i += 1) {
@@ -240,10 +213,8 @@ export const selectorChartSampledIndicesVisible = createSelectorMemoized(
       }
     });
 
-    // Scatter is not index-ordered, so the visible region is a value rectangle rather than an index
-    // window. Project each point through the zoom-aware scales and keep the ones whose pixel falls
-    // inside the drawing area — the same on-screen test the scatter plot itself uses — once few
-    // enough remain.
+    // Scatter is not index-ordered, so visibility is a pixel test (the same one the plot uses for
+    // `isPointInside`) rather than an index window.
     const scatterGroup = processedSeries.scatter as
       | { series: Record<string, any>; seriesOrder: string[] }
       | undefined;
@@ -299,10 +270,9 @@ export const selectorChartSampledIndicesVisible = createSelectorMemoized(
 );
 
 /**
- * Whether a series' render indices are a contiguous run — the shape the deep-zoom override produces
- * when it restores every visible point (a bucket or LTTB sample is always sparse). Bars use this to
- * render such a window at their real band positions instead of the uniform sampled slots, and the
- * axis highlight uses it to fall back to the normal band path.
+ * Whether a series' render indices are a contiguous run — the shape the deep-zoom override produces,
+ * versus an always-sparse downsample. Bars use it to render such a window at real band positions
+ * instead of the uniform sampled slots (and the axis highlight to pick the matching path).
  */
 export const isContiguousSampling = (indices: number[]): boolean =>
   indices.length > 0 && indices[indices.length - 1] - indices[0] === indices.length - 1;
@@ -322,10 +292,9 @@ const EMPTY_BAND_SAMPLING: { x: Record<AxisId, number[]>; y: Record<AxisId, numb
 };
 
 /**
- * The sampled indices of bar series, grouped by the band axis they are laid out on (`x` for vertical
- * bars, `y` for horizontal bars). When several sampled series share a band axis, the first one wins —
- * they share the same uniform slot grid. Consumed by the axis highlight to align the highlighted band
- * with the (repositioned) sampled bar under the pointer.
+ * Sampled bar indices grouped by their band axis (`x` for vertical, `y` for horizontal bars), the
+ * first sampled series winning per axis. Consumed by the axis highlight to align the highlighted
+ * band with the repositioned sampled bar under the pointer.
  */
 export const selectorChartBarSampledBandIndices = createSelectorMemoized(
   selectorChartSampledIndicesVisible,
@@ -348,8 +317,8 @@ export const selectorChartBarSampledBandIndices = createSelectorMemoized(
 
     for (const seriesId of barGroup.seriesOrder) {
       const indices = sampledIndices[seriesId];
-      // Windowed (show-all) bars render at real band positions, so the normal band highlight
-      // applies — they must not go through the slot-aligned highlight path.
+      // Windowed (show-all) bars render at real band positions, so they use the normal band
+      // highlight, not the slot-aligned path.
       if (!indices || isContiguousSampling(indices)) {
         continue;
       }

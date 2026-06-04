@@ -30,8 +30,6 @@ export const scatterSampler: ChartSeriesSampler<'scatter'> = (
     Math.max(2, Math.floor(drawingArea.width / DEFAULT_PIXELS_PER_POINT)) * levelFactor,
   );
 
-  // The grid resolution grows with the zoom level, so zooming in reveals more points in discrete
-  // steps. Once the series fits the target there is nothing to drop.
   if (length <= countTarget) {
     return null;
   }
@@ -49,9 +47,8 @@ export const scatterSampler: ChartSeriesSampler<'scatter'> = (
     );
   }
 
-  // Built-in `'bucket'`: build a data-space grid whose resolution grows with the zoom level. Keeping
-  // one point per cell mirrors collapsing points that would share a pixel, but stays stable across
-  // pans.
+  // Built-in `'bucket'`: keep one point per data-space grid cell. Runs in data space (not pixels)
+  // so the kept set stays stable across pans.
   let minX = Infinity;
   let maxX = -Infinity;
   let minY = Infinity;
@@ -63,9 +60,8 @@ export const scatterSampler: ChartSeriesSampler<'scatter'> = (
     maxY = Math.max(maxY, data[i].y);
   }
 
-  // Size the grid to ~2x the mark: points within a marker's width of each other overlap, so
-  // collapsing them to one per cell stays visually faithful while meaningfully reducing the count.
-  // Smaller marks keep more points; larger marks keep fewer.
+  // Cells ~2x the mark: points within a marker's width of each other overlap, so collapsing them to
+  // one stays visually faithful.
   const markSize = (series.markerSize > 0 ? series.markerSize : DEFAULT_PIXELS_PER_POINT) * 2;
   const cellsX = Math.max(1, (drawingArea.width / markSize) * levelFactor);
   const cellsY = Math.max(1, (drawingArea.height / markSize) * levelFactor);

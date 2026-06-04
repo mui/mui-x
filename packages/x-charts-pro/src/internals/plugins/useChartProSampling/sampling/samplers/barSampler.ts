@@ -25,8 +25,6 @@ export const barSampler: ChartSeriesSampler<'bar'> = (series, { drawingArea, zoo
   const pixelSpan = horizontal ? drawingArea.height : drawingArea.width;
   const target = targetForZoomLevel(pixelSpan, zoomLevel, length);
 
-  // The whole series is bucketed to `target` representatives, which grows with the zoom level, so
-  // zooming in adds bars in discrete steps. Once the series fits the target there is nothing to drop.
   if (length <= target) {
     return null;
   }

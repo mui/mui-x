@@ -51,8 +51,7 @@ export default function ChartsYHighlight(props: {
     const yScale = yAxis.scale;
     const getYPosition = getValueToPositionMapper(yScale);
 
-    // For a sampled horizontal-bar axis the bars are repositioned onto a uniform slot grid, so the
-    // band highlight is drawn over the slot under the pointer rather than at the value's band.
+    // Sampled bars sit on a uniform slot grid, so highlight the slot under the pointer.
     const sampledIndices = sampledBandIndices.y[axisId];
     if (type === 'band' && sampledIndices !== undefined && pointerY !== null) {
       const slots = getBarSampledSlots(yScale.range(), sampledIndices.length);

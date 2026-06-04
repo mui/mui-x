@@ -96,8 +96,6 @@ export function useAreaPlotData(
 
         const shouldExpand = curve?.includes('step') && !strictStepCurve && isOrdinalScale(xScale);
 
-        // When the series is downsampled (Pro feature), only the selected original indices are
-        // rendered, while the full `data`/`visibleStackedData` arrays stay index-aligned.
         const sampledIndices = sampledIndicesBySeries[seriesId];
 
         const mapIndexToPoints = (x: any, index: number) => {
