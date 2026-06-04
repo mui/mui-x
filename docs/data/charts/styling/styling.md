@@ -49,7 +49,7 @@ See the dedicated documentation sections for each chart component to learn more 
 
 - [Bar charts](/x/react-charts/bars/#color-scale)
 - [Line charts](/x/react-charts/lines/#color-scale)
-- [Scatter charts](/x/react-charts/scatter/#color-scale)
+- [Bubble charts](/x/react-charts/bubble/#mapping-data-to-color)
 
 The `colorMap` property accepts three kinds of objects for color maps: piecewise, continuous, and ordinal.
 
