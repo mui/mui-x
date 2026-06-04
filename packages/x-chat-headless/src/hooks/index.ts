@@ -6,3 +6,4 @@ export * from './useChatStore';
 export * from './useChatStatus';
 export * from './useConversation';
 export * from './useMessage';
+export * from './useMessageError';

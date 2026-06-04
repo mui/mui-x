@@ -4,6 +4,17 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "axisHighlight": {
+      "type": {
+        "name": "shape",
+        "description": "{ radius?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none', rotation?: 'band'<br>&#124;&nbsp;'line'<br>&#124;&nbsp;'none' }"
+      },
+      "default": "{ rotation: 'band' } or { radius: 'band' } according to the layout.",
+      "seeMoreLink": {
+        "url": "https://mui.com/x/react-charts/highlighting",
+        "text": "highlighting docs"
+      }
+    },
     "colors": {
       "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
       "default": "rainbowSurgePalette"
@@ -17,21 +28,21 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radialBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radialBar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radialBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radialBar' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex: number, seriesId: string, type: 'radialBar' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
+        "description": "{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'radialBar' }"
       }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type?: 'radialBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type: 'radialBar' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId: string, type: 'radialBar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: string, type?: 'radialBar' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -83,7 +94,7 @@
     "tooltipItem": {
       "type": {
         "name": "union",
-        "description": "{ dataIndex: number, seriesId: string, type: 'radialBar' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string }"
+        "description": "{ dataIndex: number, seriesId: string }<br>&#124;&nbsp;{ dataIndex: number, seriesId: string, type: 'radialBar' }"
       }
     },
     "width": { "type": { "name": "number" } }
@@ -98,7 +109,7 @@
     { "name": "baseIconButton", "description": "", "class": null },
     {
       "name": "baseToggleButton",
-      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps>`.",
+      "description": "Note: MUI's `ToggleButton` has an incompatible `href` prop, so it must be cast:\n`ToggleButton as unknown as React.ComponentType<ChartBaseToggleButtonProps & BaseToggleButtonPropsOverrides>`.",
       "class": null
     },
     { "name": "baseToggleButtonGroup", "description": "", "class": null },

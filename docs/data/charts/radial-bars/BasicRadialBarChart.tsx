@@ -42,7 +42,7 @@ export default function BasicRadialBarChart() {
         },
       ]}
       rotationAxis={[{ scaleType: 'band', data: months }]}
-      radiusAxis={[{ scaleType: 'linear', minRadius: 20 }]}
+      radiusAxis={[{ scaleType: 'linear', minRadius: 20, position: 'none' }]}
       grid={{ rotation: true, radius: true }}
     />
   );

@@ -16,12 +16,19 @@
 //       - KV=3: added `Q=` / `AT=` tokens; the format issued today
 //   - commercial package the license is presented to (data-grid-pro, charts-pro, tree-view-pro)
 //
-// All five majors are pinned to specific published versions (see this workspace's
-// package.json) so the matrix is locked to actual released contracts, not in-flight
-// workspace changes. Pinned v9 was built with `__ALLOW_TEST_LICENSES__` inlined as `false`,
-// which would normally reject every `T=true` test fixture; the workspace's vitest config
-// patches that single guard at transform time so the pinned v9 verifyLicense runs as if
-// test licenses were allowed (see vitest.config.jsdom.mts).
+// Older majors (v5–v8) are pinned to specific published versions via npm aliases (see
+// this workspace's package.json) so the matrix is locked to those released contracts.
+// v9 (the current major) uses the `@mui/x-license` workspace dep, so it auto-tracks
+// whatever is in the repo, no Renovate bump PR after every release.
+//
+// When v10 ships (rationale: https://github.com/mui/mui-x/pull/22504):
+//   #npm-tag-reference
+//   - Switch the workspace dep target to the new major (i.e. v10 becomes the workspace).
+//   - Pin v9 here as an npm alias to its latest published 9.x, e.g.:
+//       "x-license-v9": "npm:@mui/x-license@9.X.Y"
+//     (use an exact version, not a range, the matrix should be locked to a frozen
+//     released contract, the same way v5–v8 are pinned today).
+//   - Drop the oldest pin (v5) if it's out of support by then.
 //
 // A failing cell is a real backwards-compat regression, either the wire format changed in a
 // way an older major can't decode, or we shipped a token an older major doesn't recognize.
@@ -41,10 +48,8 @@ import { verifyLicense as verifyLicenseV5, LicenseStatus as STATUS_V5 } from 'x-
 import { verifyLicense as verifyLicenseV6, LICENSE_STATUS as STATUS_V6 } from 'x-license-v6';
 import { verifyLicense as verifyLicenseV7, LICENSE_STATUS as STATUS_V7 } from 'x-license-v7';
 import { verifyLicense as verifyLicenseV8, LICENSE_STATUS as STATUS_V8 } from 'x-license-v8';
-import {
-  verifyLicense as verifyLicenseV9,
-  LicenseStatus as STATUS_V9,
-} from 'x-license-v9/internals';
+import { verifyLicense } from '@mui/x-license/internals';
+import type { LicenseStatus } from '@mui/x-license/internals';
 import {
   TEST_KEY_V1,
   TEST_LICENSE_KEY_PRO,
@@ -52,7 +57,7 @@ import {
   TEST_KEY_PRO_ANNUAL_Q1_2026,
   TEST_KEY_PRO_ANNUAL_V3,
   TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
-} from '@mui/x-license/test-keys';
+} from 'test/utils/licenseKeys';
 
 // `releaseInfo` / `releaseDate` is the base64-encoded ms timestamp the package was built at.
 // Pinning it well before any license expiry keeps the perpetual/annual logic from
@@ -126,13 +131,13 @@ const licenseMajors: ReadonlyArray<{
     // Empty `version` skips the v9-specific upgrade gate; we're verifying wire-format
     // compatibility here, not v9's plan-version enforcement.
     call: (licenseKey, packageName) =>
-      verifyLicenseV9({
+      verifyLicense({
         packageInfo: { releaseDate: RELEASE_INFO, version: '', name: packageName },
         licenseKey,
       }).status,
-    // v9's published `internals` doesn't re-export the LICENSE_STATUS enum at runtime,
+    // v9's `internals` doesn't re-export the LICENSE_STATUS enum at runtime,
     // but the value is just the string 'Valid' (same as every other major).
-    valid: 'Valid' as STATUS_V9,
+    valid: 'Valid' as LicenseStatus,
   },
 ];
 

@@ -13,4 +13,8 @@ const allSchedulerPreferencesSelector = createSelectorMemoized(
 export const schedulerPreferenceSelectors = {
   all: allSchedulerPreferencesSelector,
   ampm: createSelector(allSchedulerPreferencesSelector, (preferences) => preferences.ampm),
+  weekStartsOn: createSelector(
+    allSchedulerPreferencesSelector,
+    (preferences) => preferences.weekStartsOn,
+  ),
 };
