@@ -1,14 +1,65 @@
 {
-  "props": {},
+  "props": {
+    "renderer": {
+      "type": {
+        "name": "enum",
+        "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'<br>&#124;&nbsp;'webgl'"
+      },
+      "required": true
+    },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
+        "describedArgs": ["event", "scatterItemIdentifier"]
+      }
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
   "name": "ScatterPlotPremium",
   "imports": [
     "import { ScatterPlotPremium } from '@mui/x-charts-premium/ScatterChartPremium';",
     "import { ScatterPlotPremium } from '@mui/x-charts-premium';"
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "focusedMark",
+      "className": "MuiScatterPlotPremium-focusedMark",
+      "description": "Styles applied to the focused scatter mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlightedMark",
+      "className": "MuiScatterPlotPremium-highlightedMark",
+      "description": "Styles applied to the highlighted scatter mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "marker",
+      "className": "MuiScatterPlotPremium-marker",
+      "description": "Styles applied to an individual scatter marker element.\nNot applied when using the `svg-batch` renderer.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiScatterPlotPremium-root",
+      "description": "Styles applied to the scatter plot element.",
+      "isGlobal": false
+    },
+    {
+      "key": "series",
+      "className": "MuiScatterPlotPremium-series",
+      "description": "Styles applied to the group surrounding a series' scatter elements.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiScatterPlotPremium",
   "filename": "/packages/x-charts-premium/src/ScatterChartPremium/ScatterPlotPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li></ul>"
 }

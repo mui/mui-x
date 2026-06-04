@@ -11,7 +11,7 @@
     "hidden": { "type": { "name": "bool" }, "default": "false" },
     "isFaded": { "type": { "name": "bool" }, "default": "false" },
     "isHighlighted": { "type": { "name": "bool" }, "default": "false" },
-    "skipAnimation": { "type": { "name": "bool" } }
+    "skipAnimation": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "MarkElement",
   "imports": [
@@ -20,12 +20,60 @@
     "import { MarkElement } from '@mui/x-charts-pro';",
     "import { MarkElement } from '@mui/x-charts-premium';"
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "area",
+      "className": "MuiMarkElement-area",
+      "description": "Styles applied to the area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "areaPlot",
+      "className": "MuiMarkElement-areaPlot",
+      "description": "Styles applied to the AreaPlot root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlight",
+      "className": "MuiMarkElement-highlight",
+      "description": "Styles applied to the highlight element.",
+      "isGlobal": false
+    },
+    {
+      "key": "line",
+      "className": "MuiMarkElement-line",
+      "description": "Styles applied to the line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "linePlot",
+      "className": "MuiMarkElement-linePlot",
+      "description": "Styles applied to the LinePlot root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiMarkElement-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markAnimate",
+      "className": "MuiMarkElement-markAnimate",
+      "description": "Styles applied to a mark element when it is animated.",
+      "isGlobal": false
+    },
+    {
+      "key": "markPlot",
+      "className": "MuiMarkElement-markPlot",
+      "description": "Styles applied to the MarkPlot root element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiMarkElement",
   "filename": "/packages/x-charts/src/LineChart/MarkElement.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>"
 }

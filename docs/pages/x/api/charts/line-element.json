@@ -21,13 +21,55 @@
       "name": "line",
       "description": "The component that renders the line.",
       "default": "LineElementPath",
-      "class": null
+      "class": "MuiLineElement-line"
     }
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "area",
+      "className": "MuiLineElement-area",
+      "description": "Styles applied to the area element.",
+      "isGlobal": false
+    },
+    {
+      "key": "areaPlot",
+      "className": "MuiLineElement-areaPlot",
+      "description": "Styles applied to the AreaPlot root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "highlight",
+      "className": "MuiLineElement-highlight",
+      "description": "Styles applied to the highlight element.",
+      "isGlobal": false
+    },
+    {
+      "key": "linePlot",
+      "className": "MuiLineElement-linePlot",
+      "description": "Styles applied to the LinePlot root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiLineElement-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markAnimate",
+      "className": "MuiLineElement-markAnimate",
+      "description": "Styles applied to a mark element when it is animated.",
+      "isGlobal": false
+    },
+    {
+      "key": "markPlot",
+      "className": "MuiLineElement-markPlot",
+      "description": "Styles applied to the MarkPlot root element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiLineElement",
   "filename": "/packages/x-charts/src/LineChart/LineElement.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/areas-demo/\">Charts - Areas demos</a></li>\n<li><a href=\"/x/react-charts/line-demo/\">Charts - Line demos</a></li>\n<li><a href=\"/x/react-charts/lines/\">Charts - Lines</a></li></ul>"
 }

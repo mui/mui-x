@@ -54,6 +54,5 @@
   "muiName": "MuiPieArcLabel",
   "filename": "/packages/x-charts/src/PieChart/PieArcLabel.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/pie-demo/\">Charts - Pie demos</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/pie-demo/\">Charts - Pie demos</a></li></ul>"
 }
