@@ -23,8 +23,8 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@9.4.0`
 
-- [data grid] Fix `avg` aggregation when the average is zero (#22652) @mj12albert
-- [data grid] Inherit icon fontSize from baseIconButton size (#22187) @imxv
+- [DataGrid] Fix `avg` aggregation when the average is zero (#22652) @mj12albert
+- [DataGrid] Inherit icon `fontSize` from `baseIconButton` size (#22187) @imxv
 - [DataGrid] Fix `noRowsOverlay` flicker between `dataSource` re-fetches (#22465) @LukasTy
 
 #### `@mui/x-data-grid-pro@9.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -32,6 +32,16 @@ The following team members contributed to this release:
 Same changes as in `@mui/x-data-grid@9.4.0`.
 
 #### `@mui/x-data-grid-premium@9.4.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+> This release includes a version bump of the `@mui/x-internal-exceljs-fork` package to address the vulnerable dependencies.
+> The following CVEs are fixed:
+>
+> - <https://github.com/advisories/GHSA-ph9p-34f9-6g65>
+> - <https://github.com/isaacs/minimatch/security/advisories/GHSA-23c5-xmqv-rm74>
+> - <https://github.com/advisories/GHSA-w5hq-g745-h8pq>
+>
+> To make this security update possible, we bumped the `node` version requirement from `>=14.0.0` to `>=14.17.0`.
+> [Node.js 14.17.0](https://nodejs.org/en/blog/release/v14.17.0) was released in May 2021, so we consider it safe to bump the requirement without causing issues for our users.
 
 Same changes as in `@mui/x-data-grid-pro@9.4.0`, plus:
 
@@ -63,10 +73,9 @@ Same changes as in `@mui/x-date-pickers@9.4.0`.
 - [charts] Remove unused proptypes (#22618) @alexfauquette
 - [charts] Support focus on map shapes (#22649) @alexfauquette
 - [charts] Support module augmentation for slots (#22519) @sai6855
-- [charts] Support multiple marker size in findClosestPoint (#22622) @alexfauquette
-- [charts] Support range-bar series in WebGL bar renderer (#22607) @JCQuintas
+- [charts] Support multiple marker size in `findClosestPoint` (#22622) @alexfauquette
 - [charts] Upgrade bezier-easing to v3 and use it for line chart hit-detection (#22608) @sai6855
-- [charts] Use useLayoutEffect with ResizeObserver (#22646) @JCQuintas
+- [charts] Use `useLayoutEffect` with `ResizeObserver` (#22646) @JCQuintas
 
 #### `@mui/x-charts-pro@9.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -88,7 +97,7 @@ Same changes as in `@mui/x-charts-pro@9.4.0`, plus:
 
 - [scheduler] Add a prop to control whether the resource of an event can be cleared (#22464) @rita-codes
 - [scheduler] Add week number labels to agenda, day and week views (#22594) @mustafajw07
-- [scheduler] Add weekStartsOn preference and update date functions to support custom week start (#22426) @mustafajw07
+- [scheduler] Add `weekStartsOn` preference and update date functions to support custom week start (#22426) @mustafajw07
 - [scheduler] Export premium version of the standalone views (#22621) @flaviendelangle
 - [scheduler] Implement timeline virtualization (#22339) @romgrk
 - [scheduler] Split scheduler overview (#22453) @joserodolfofreitas
