@@ -13,8 +13,6 @@ components: ScatterChart, ScatterChartPro, ScatterChartPremium
 A bubble chart is a scatter chart where each point can have a variable size and color determined by data values.
 The x and y positions encode two variables, while the bubble size and color encode additional ones.
 
-The examples on this page use `ScatterChart` with z-axis configuration.
-
 ## Mapping data to color
 
 As with other charts, you can modify the [series colors](/x/react-charts/styling/#colors) either directly, or with the color palette.
