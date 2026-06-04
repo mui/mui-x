@@ -38,7 +38,7 @@ const CustomMessageContent = React.forwardRef(
   },
 );
 
-<ChatBox slots={{ message: { content: CustomMessageContent } }} />;
+<ChatBox slots={{ messageContent: CustomMessageContent }} />;
 ```
 
 This keeps the default rendering behavior—part iteration, reasoning blocks, source citations, and tool invocations—and only changes the visual container.

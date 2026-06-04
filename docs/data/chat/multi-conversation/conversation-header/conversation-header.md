@@ -58,7 +58,7 @@ Use the `hasConversation` flag to hide action buttons or show a placeholder when
 
 ## Setting the title and subtitle
 
-`ChatConversationTitle` renders the conversation name from `conversation.title`. `ChatConversationSubtitle` renders the secondary line from `conversation.subtitle`, which can include participant names, a presence indicator, or any descriptive text.
+`ChatConversationTitle` renders the conversation name from `conversationTitle`. `ChatConversationSubtitle` renders the secondary line from `conversationSubtitle`, which can include participant names, a presence indicator, or any descriptive text.
 
 The `ChatConversation` type provides these fields:
 
@@ -143,10 +143,10 @@ function CustomHeader(props) {
 }
 ```
 
-Pass `CustomHeader` through `ChatBox`'s `slots.conversation.header` prop:
+Pass `CustomHeader` through `ChatBox`'s `slots.conversationHeader` prop:
 
 ```tsx
-<ChatBox slots={{ conversation: { header: CustomHeader } }} />
+<ChatBox slots={{ conversationHeader: CustomHeader }} />
 ```
 
 ## Customizing the title with conversation state
