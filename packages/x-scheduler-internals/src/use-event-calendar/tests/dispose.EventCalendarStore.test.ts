@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { disposeSymbol } from '@mui/x-internals/disposable';
 import { adapter } from 'test/utils/scheduler';
 import { EventCalendarStore } from '../EventCalendarStore';
 
@@ -20,7 +21,7 @@ describe('Dispose - EventCalendarStore', () => {
     const store = new EventCalendarStore(DEFAULT_PARAMS, adapter);
     const initialNow = store.state.nowUpdatedEveryMinute;
 
-    store[Symbol.dispose]();
+    store[disposeSymbol]();
 
     vi.advanceTimersByTime(ONE_MINUTE_IN_MS * 2);
 
@@ -32,7 +33,7 @@ describe('Dispose - EventCalendarStore', () => {
     const handler = spy();
     store.subscribeEvent('eventsUpdated', handler);
 
-    store[Symbol.dispose]();
+    store[disposeSymbol]();
 
     store.publishEvent('eventsUpdated', {
       deleted: [],

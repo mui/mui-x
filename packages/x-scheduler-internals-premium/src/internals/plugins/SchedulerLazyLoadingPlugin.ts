@@ -1,4 +1,4 @@
-import { DisposableStack } from '@mui/x-internals/disposable';
+import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
 import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import {
   SchedulerState,
@@ -100,7 +100,7 @@ export class SchedulerLazyLoadingPlugin<
     }
   }
 
-  [Symbol.dispose](): void {
+  [disposeSymbol](): void {
     this.disposables.dispose();
   }
 

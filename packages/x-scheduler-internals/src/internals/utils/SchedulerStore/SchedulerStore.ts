@@ -1,4 +1,4 @@
-import { DisposableStack, unwrapSuppressedErrors } from '@mui/x-internals/disposable';
+import { DisposableStack, disposeSymbol, unwrapSuppressedErrors } from '@mui/x-internals/disposable';
 import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
@@ -254,7 +254,7 @@ export class SchedulerStore<
    * handles the StrictMode double-invocation by suppressing the simulated
    * unmount, so this method does not need to defer the teardown itself.
    */
-  [Symbol.dispose](): void {
+  [disposeSymbol](): void {
     if (this.disposables.disposed) {
       return;
     }

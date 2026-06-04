@@ -1,4 +1,4 @@
-import { DisposableStack } from '@mui/x-internals/disposable';
+import { DisposableStack, disposeSymbol } from '@mui/x-internals/disposable';
 import { TemporalSupportedObject } from '@mui/x-scheduler-internals/models';
 import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
 import { getDateKey, TimeoutManager } from '@mui/x-scheduler-internals/internals';
@@ -228,7 +228,7 @@ export class SchedulerDataManager {
     await this.processQueue();
   };
 
-  [Symbol.dispose](): void {
+  [disposeSymbol](): void {
     this.disposables.dispose();
   }
 

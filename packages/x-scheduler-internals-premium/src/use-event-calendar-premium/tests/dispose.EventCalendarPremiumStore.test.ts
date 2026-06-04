@@ -1,6 +1,7 @@
 import { spy } from 'sinon';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { adapter, DEFAULT_TESTING_VISIBLE_DATE, EventBuilder } from 'test/utils/scheduler';
+import { disposeSymbol } from '@mui/x-internals/disposable';
 import type { SchedulerEvent, SchedulerProcessedDate } from '@mui/x-scheduler-internals/models';
 import {
   buildEvents,
@@ -56,7 +57,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     expect(dataSource.getEvents.calledOnce).to.equal(true);
     expect(store.state.eventIdList).to.have.length(0);
 
-    store[Symbol.dispose]();
+    store[disposeSymbol]();
 
     resolveFetch(buildEvents());
     await flushEffect();
@@ -83,7 +84,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
 
     await flushEffect();
 
-    store[Symbol.dispose]();
+    store[disposeSymbol]();
 
     await flushDebounce();
     await flushEffect();
@@ -102,7 +103,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    store[Symbol.dispose]();
+    store[disposeSymbol]();
 
     const updated = EventBuilder.new()
       .id('1')
@@ -133,7 +134,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     await flushDebounce();
     expect(dataSource.getEvents.calledOnce).to.equal(true);
 
-    store[Symbol.dispose]();
+    store[disposeSymbol]();
 
     store.goToDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 30), noopUIEvent);
 
@@ -154,8 +155,8 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    store[Symbol.dispose]();
-    expect(() => store[Symbol.dispose]()).not.to.throw();
+    store[disposeSymbol]();
+    expect(() => store[disposeSymbol]()).not.to.throw();
   });
 
   it('should not crash when disposing after a cache-hit navigation', async () => {
@@ -179,7 +180,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     await flushEffect();
     await flushDebounce();
 
-    expect(() => store[Symbol.dispose]()).not.to.throw();
+    expect(() => store[disposeSymbol]()).not.to.throw();
     // No third fetch: the return navigation was served from the cache.
     expect(dataSource.getEvents.callCount).to.equal(2);
   });
@@ -217,7 +218,7 @@ describe('Dispose - EventCalendarPremiumStore', () => {
     await flushEffect();
     expect(dataSource.persistEvents.calledOnce).to.equal(true);
 
-    store[Symbol.dispose]();
+    store[disposeSymbol]();
 
     rejectPersist(new Error('boom'));
     await flushEffect();

@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import '../disposable';
 import { useOnMount } from '@base-ui/utils/useOnMount';
+import { disposeSymbol } from '../disposable';
 
 interface Disposable {
-  [Symbol.dispose](): void;
+  [disposeSymbol](): void;
 }
 
 // React 19 exposes shared internals under `__CLIENT_INTERNALS_…` with the
@@ -69,7 +69,7 @@ function useDisposableProduction<T extends Disposable>(factory: () => T): T {
   const ref = React.useRef<Mounted<T> | typeof UNINITIALIZED>(UNINITIALIZED);
   if (ref.current === UNINITIALIZED) {
     const inst = factory() as Mounted<T>;
-    const cleanup = () => inst[Symbol.dispose]();
+    const cleanup = () => inst[disposeSymbol]();
     inst[MOUNT] = () => cleanup;
     ref.current = inst;
   }
@@ -94,7 +94,7 @@ function useDisposableDevelopment<T extends Disposable>(factory: () => T): T {
     if (isInStrictMode()) {
       inst[MOUNT] = NOOP_MOUNT;
     } else {
-      const cleanup = () => inst[Symbol.dispose]();
+      const cleanup = () => inst[disposeSymbol]();
       inst[MOUNT] = () => cleanup;
     }
     ref.current = inst;
@@ -104,7 +104,7 @@ function useDisposableDevelopment<T extends Disposable>(factory: () => T): T {
 }
 
 /**
- * Lazily creates an instance on first render and runs its `[Symbol.dispose]`
+ * Lazily creates an instance on first render and runs its `[disposeSymbol]`
  * once on unmount. The cleanup runs synchronously; in development StrictMode's
  * simulated unmount is detected and skipped so the same instance survives the
  * double mount.

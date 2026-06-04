@@ -2,39 +2,40 @@
 import CoreJsDisposableStack from 'core-js-pure/actual/disposable-stack';
 import CoreJsAsyncDisposableStack from 'core-js-pure/actual/async-disposable-stack';
 
-// Ensure `Symbol.dispose` / `Symbol.asyncDispose` exist on the global `Symbol`
-// so that classes declaring `[Symbol.dispose]() {}` key their methods on the
-// well-known symbol — without this, on runtimes that don't yet ship the
-// explicit resource management proposal the method ends up keyed on the
-// string "undefined" and the `using` syntax can't find it. Uses `Symbol.for`
-// so we share the registry symbol with core-js-pure's own fallback path.
-if (typeof Symbol.dispose !== 'symbol') {
-  Object.defineProperty(Symbol, 'dispose', {
-    value: Symbol.for('Symbol.dispose'),
-    configurable: true,
-  });
-}
-if (typeof Symbol.asyncDispose !== 'symbol') {
-  Object.defineProperty(Symbol, 'asyncDispose', {
-    value: Symbol.for('Symbol.asyncDispose'),
-    configurable: true,
-  });
-}
+/**
+ * Well-known `Symbol.dispose`. Resolves to the native well-known symbol when
+ * the runtime ships the explicit resource management proposal; otherwise falls
+ * back to `Symbol.for('Symbol.dispose')`, the same registry symbol the
+ * `core-js-pure` ponyfill uses, so `DisposableStack#use` finds the method.
+ *
+ * Consumers should key dispose methods on this constant —
+ * `class Foo { [disposeSymbol]() {} }` — rather than `Symbol.dispose`, so the
+ * class works on runtimes without the proposal.
+ */
+export const disposeSymbol: typeof Symbol.dispose =
+  typeof Symbol.dispose === 'symbol'
+    ? Symbol.dispose
+    : (Symbol.for('Symbol.dispose') as typeof Symbol.dispose);
 
 /**
- * Spec-compliant `DisposableStack`. Importing this module is a side effect:
- * it patches `Symbol.dispose` / `Symbol.asyncDispose` onto the global `Symbol`
- * so that `[Symbol.dispose]() {}` class syntax works at definition time.
- *
- * Prefers the platform's native class when present; falls back to the
- * `core-js-pure` ponyfill otherwise.
+ * Well-known `Symbol.asyncDispose`. See {@link disposeSymbol} for the
+ * native/fallback resolution rules.
+ */
+export const asyncDisposeSymbol: typeof Symbol.asyncDispose =
+  typeof Symbol.asyncDispose === 'symbol'
+    ? Symbol.asyncDispose
+    : (Symbol.for('Symbol.asyncDispose') as typeof Symbol.asyncDispose);
+
+/**
+ * Spec-compliant `DisposableStack`. Prefers the platform's native class when
+ * present; falls back to the `core-js-pure` ponyfill otherwise.
  */
 export const DisposableStack: typeof globalThis.DisposableStack =
   globalThis.DisposableStack ?? (CoreJsDisposableStack as typeof globalThis.DisposableStack);
 
 /**
- * Spec-compliant `AsyncDisposableStack`. See {@link DisposableStack} for the
- * import-time side effects on `Symbol.asyncDispose`.
+ * Spec-compliant `AsyncDisposableStack`. Prefers the platform's native class
+ * when present; falls back to the `core-js-pure` ponyfill otherwise.
  */
 export const AsyncDisposableStack: typeof globalThis.AsyncDisposableStack =
   globalThis.AsyncDisposableStack ??

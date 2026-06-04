@@ -1,27 +1,45 @@
 import { expect } from 'vitest';
-import { DisposableStack, AsyncDisposableStack, unwrapSuppressedErrors } from './index';
+import {
+  AsyncDisposableStack,
+  DisposableStack,
+  asyncDisposeSymbol,
+  disposeSymbol,
+  unwrapSuppressedErrors,
+} from './index';
 
 describe('disposable', () => {
-  describe('Symbol.dispose / Symbol.asyncDispose shim', () => {
-    it('should define Symbol.dispose on the global Symbol', () => {
-      expect(typeof Symbol.dispose).to.equal('symbol');
+  describe('disposeSymbol / asyncDisposeSymbol', () => {
+    it('should export disposeSymbol as a symbol', () => {
+      expect(typeof disposeSymbol).to.equal('symbol');
     });
 
-    it('should define Symbol.asyncDispose on the global Symbol', () => {
-      expect(typeof Symbol.asyncDispose).to.equal('symbol');
+    it('should export asyncDisposeSymbol as a symbol', () => {
+      expect(typeof asyncDisposeSymbol).to.equal('symbol');
     });
 
-    it('should let `[Symbol.dispose]() {}` class syntax key methods correctly', () => {
+    it('should let `[disposeSymbol]() {}` class syntax key methods correctly', () => {
       class Disposable {
         public ran = false;
 
-        [Symbol.dispose]() {
+        [disposeSymbol]() {
           this.ran = true;
         }
       }
       const instance = new Disposable();
-      instance[Symbol.dispose]();
+      instance[disposeSymbol]();
       expect(instance.ran).to.equal(true);
+    });
+
+    it('should let DisposableStack#use find a method keyed on disposeSymbol', () => {
+      let ran = false;
+      const stack = new DisposableStack();
+      stack.use({
+        [disposeSymbol]() {
+          ran = true;
+        },
+      });
+      stack.dispose();
+      expect(ran).to.equal(true);
     });
   });
 

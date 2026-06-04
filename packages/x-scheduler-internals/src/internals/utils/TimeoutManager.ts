@@ -1,4 +1,4 @@
-import '@mui/x-internals/disposable';
+import { disposeSymbol } from '@mui/x-internals/disposable';
 
 export class TimeoutManager {
   private timeoutIds: Map<string, number> = new Map();
@@ -49,7 +49,7 @@ export class TimeoutManager {
     this.intervalIds.clear();
   };
 
-  [Symbol.dispose](): void {
+  [disposeSymbol](): void {
     this.clearAll();
   }
 }
