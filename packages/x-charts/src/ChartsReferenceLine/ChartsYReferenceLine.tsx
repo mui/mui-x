@@ -117,7 +117,6 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
     return null;
   }
 
-
   if (yPosition < top || yPosition > top + height) {
     return null;
   }

@@ -3,7 +3,13 @@ import { getSizeScale } from './sizeScale';
 describe('sizeScale', () => {
   describe('continuous', () => {
     it('maps values linearly between two sizes', () => {
-      const scale = getSizeScale({ type: 'continuous', min: 0, max: 100, size: [2, 20], interpolator: 'linear' });
+      const scale = getSizeScale({
+        type: 'continuous',
+        min: 0,
+        max: 100,
+        size: [2, 20],
+        interpolator: 'linear',
+      });
       expect(scale(0)).to.equal(2);
       expect(scale(50)).to.equal(11);
       expect(scale(100)).to.equal(20);
