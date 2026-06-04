@@ -1,6 +1,6 @@
 'use client';
-import { SankeyLinkLabel } from './SankeyLinkLabel';
 import PropTypes from 'prop-types';
+import { SankeyLinkLabel } from './SankeyLinkLabel';
 import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
 import { useUtilityClasses, type SankeyClasses } from './sankeyClasses';
 
