@@ -512,7 +512,7 @@
     },
     "eventSkeleton": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "event skeleton elements"
+      "nodeName": "the event skeleton element"
     },
     "headerToolbar": {
       "description": "Styles applied to {{nodeName}}.",

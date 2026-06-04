@@ -1,19 +1,7 @@
 'use client';
 import * as React from 'react';
-
-export interface ErrorContainerClasses {
-  /** Styles applied to the error container element. */
-  errorContainer: string;
-  /** Styles applied to the error alert element. */
-  errorAlert: string;
-  /** Styles applied to the error message element. */
-  errorMessage: string;
-}
-
-export interface EventSkeletonClasses {
-  /** Styles applied to the event skeleton element. */
-  eventSkeleton: string;
-}
+import { ErrorContainerClasses } from './error-container/errorContainerClasses';
+import { EventSkeletonClasses } from './event-skeleton/eventSkeletonClasses';
 
 /**
  * Styling injected by the consuming product into the shared internal components

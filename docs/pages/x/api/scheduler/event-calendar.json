@@ -751,7 +751,7 @@
     {
       "key": "eventSkeleton",
       "className": "MuiEventCalendar-eventSkeleton",
-      "description": "Styles applied to event skeleton elements.",
+      "description": "Styles applied to the event skeleton element.",
       "isGlobal": false
     },
     {
