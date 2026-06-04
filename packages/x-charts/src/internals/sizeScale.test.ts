@@ -3,10 +3,24 @@ import { getSizeScale } from './sizeScale';
 describe('sizeScale', () => {
   describe('continuous', () => {
     it('maps values linearly between two sizes', () => {
-      const scale = getSizeScale({ type: 'continuous', min: 0, max: 100, size: [2, 20] });
+      const scale = getSizeScale({ type: 'continuous', min: 0, max: 100, size: [2, 20], interpolator: 'linear' });
       expect(scale(0)).to.equal(2);
       expect(scale(50)).to.equal(11);
       expect(scale(100)).to.equal(20);
+    });
+
+    it('maps values between two sizes with square roots by default', () => {
+      const scale = getSizeScale({ type: 'continuous', min: 0, max: 100, size: [2, 20] });
+      expect(scale(0)).to.equal(2);
+      // 25 = 1/4 of the way from 0 to 100, so size should be sqrt(0.25) = 0.5 of the way from 2 to 20
+      expect(scale(25)).to.equal(11);
+      expect(scale(100)).to.equal(20);
+    });
+
+    it('clamps values when size is an array', () => {
+      const scale = getSizeScale({ type: 'continuous', min: 0, max: 100, size: [2, 20] });
+      expect(scale(-5)).to.equal(2);
+      expect(scale(150)).to.equal(20);
     });
 
     it('supports an interpolation function', () => {
