@@ -8,8 +8,9 @@ _Jun 4, 2026_
 
 We'd like to extend a big thank you to the 21 contributors who made this release possible. Here are some highlights ✨:
 
+- 🎉 Scheduler is now in Beta shipping with Timeline vitualization and lazy loading
 - 📆 Implement Event Timeline virtualization (#22339)
-- ⭕ Introduce bubble charts (#22537)
+- 🫧 Introduce bubble charts (#22537)
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -65,11 +66,12 @@ Same changes as in `@mui/x-date-pickers@9.4.0`.
 - [charts] Add functionality to hide elements during chart export (#22525) @sai6855
 - [charts] Add option to show marks only on the first/last values (#22645) @alexfauquette
 - [charts] Add text customization section and demo for axis labels (#22597) @sai6855
-- [charts] Allow axes to scale according the visible series only (#22566) @alexfauquette
+- [charts] Allow axes to scale according to the visible series only (#22566) @alexfauquette
 - [charts] Correctly handle different identifiers for each series (#22556) @sai6855
 - [charts] Fix inverted Y axis zoom/pan on ordinal scales (#22654) @JCQuintas
 - [charts] Introduce bubble charts (#22537) @alexfauquette
 - [charts] Let scatter chart tooltip ignore hidden series (#22614) @alexfauquette
+- [charts] Make `'sqrt'` size mapping the default (#22683) @alexfauquette
 - [charts] Remove unused proptypes (#22618) @alexfauquette
 - [charts] Support focus on map shapes (#22649) @alexfauquette
 - [charts] Support module augmentation for slots (#22519) @sai6855
