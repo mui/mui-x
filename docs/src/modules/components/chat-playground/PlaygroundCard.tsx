@@ -122,10 +122,13 @@ const defaultRegistryMetadata: Record<string, PlaygroundCardRegistryMetadata> = 
   ChatBox: {
     status: 'core',
     slots: [
-      'conversation',
-      'messagesList',
-      'message',
-      'composer',
+      'conversationRoot',
+      'conversationList',
+      'messageList',
+      'messageGroup',
+      'messageContent',
+      'composerRoot',
+      'composerInput',
       'suggestions',
       'scrollToBottom',
       'typingIndicator',
