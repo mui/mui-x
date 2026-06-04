@@ -1,6 +1,7 @@
 export * from './GeoDataPlot';
 export * from './MapShapePlot';
 export * from './MapShape';
+export * from './FocusedMapShape';
 export * from './Graticule';
 
 // Types useful to the public API of the Map charts

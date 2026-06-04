@@ -39,6 +39,10 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   inProps: ChatBoxProps<Cursor>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const isActiveConversationIdControlled = Object.prototype.hasOwnProperty.call(
+    inProps,
+    'activeConversationId',
+  );
   const props = useThemeProps({ props: inProps, name: 'MuiChatBox' });
 
   const {
@@ -46,6 +50,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
     adapter,
     members,
     currentUser,
+    roleDisplayNames,
     messages,
     initialMessages,
     onMessagesChange,
@@ -82,30 +87,32 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
   } = props;
 
   const classes = useChatBoxUtilityClasses(classesProp);
-  const innerRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = React.useMemo(() => {
-    return (node: HTMLDivElement | null) => {
-      (innerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+  const [rootEl, setRootEl] = React.useState<HTMLDivElement | null>(null);
+  const handleRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      setRootEl(node);
       if (typeof ref === 'function') {
         ref(node);
       } else if (ref) {
         (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
       }
-    };
-  }, [ref]);
+    },
+    [ref],
+  );
 
   return (
     <ChatRoot
       adapter={adapter}
       members={members}
       currentUser={currentUser}
+      roleDisplayNames={roleDisplayNames}
       messages={messages}
       initialMessages={initialMessages}
       onMessagesChange={onMessagesChange}
       conversations={conversations}
       initialConversations={initialConversations}
       onConversationsChange={onConversationsChange}
-      activeConversationId={activeConversationId}
+      {...(isActiveConversationIdControlled ? { activeConversationId } : {})}
       initialActiveConversationId={initialActiveConversationId}
       onActiveConversationChange={onActiveConversationChange}
       composerValue={composerValue}
@@ -134,7 +141,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
               slots={slots}
               slotProps={slotProps}
               features={features}
-              rootRef={innerRef}
+              rootEl={rootEl}
               suggestions={suggestions}
               suggestionsAutoSubmit={suggestionsAutoSubmit}
               layoutClassName={classes.layout}
@@ -196,7 +203,9 @@ ChatBox.propTypes = {
     }),
   ),
   /**
-   * The local user sending messages. If omitted, derived from `members` by finding the entry with `role === 'user'`.
+   * The local user sending messages.
+   * If omitted, derived from `members` by finding the entry with `role === 'user'`.
+   * Also used to enrich message authors when a rendered message resolves to `currentUser.id`.
    */
   currentUser: PropTypes.shape({
     avatarUrl: PropTypes.string,
@@ -238,6 +247,25 @@ ChatBox.propTypes = {
     scrollToBottom: PropTypes.bool,
     suggestions: PropTypes.bool,
   }),
+  /**
+   * Used to determine the avatar URL for a given message author.
+   * Falls back to `message.author?.avatarUrl`, then to the matched member's `avatarUrl`.
+   * @default (message) => message.author?.avatarUrl
+   */
+  getMessageAuthorAvatarUrl: PropTypes.func,
+  /**
+   * Used to determine the display name for a given message author.
+   * Falls back to `message.author?.displayName`, then to the matched member's `displayName`.
+   * @default (message) => message.author?.displayName
+   */
+  getMessageAuthorDisplayName: PropTypes.func,
+  /**
+   * Used to determine the author id for a given message.
+   * The resolved id is used to match message authors against `currentUser`,
+   * `members`, and active conversation participants.
+   * @default (message) => message.author?.id
+   */
+  getMessageAuthorId: PropTypes.func,
   /**
    * The initial active conversation ID when uncontrolled. Ignored after initialization and when `activeConversationId` is provided.
    */
@@ -393,7 +421,9 @@ ChatBox.propTypes = {
   ),
   localeText: PropTypes.object,
   /**
-   * All participants in the chat. The current (local) user is derived as the first member with `role === 'user'`, unless `currentUser` is provided explicitly.
+   * Known chat participants.
+   * Used to derive the local user / assistant user when explicit props are omitted,
+   * and to enrich message authors by resolved author id at render time.
    */
   members: PropTypes.arrayOf(
     PropTypes.shape({
@@ -539,6 +569,14 @@ ChatBox.propTypes = {
     'step-start': PropTypes.func,
     text: PropTypes.func,
     tool: PropTypes.func,
+  }),
+  /**
+   * Locale-driven fallback labels for messages without explicit author information.
+   */
+  roleDisplayNames: PropTypes.shape({
+    assistant: PropTypes.string,
+    system: PropTypes.string,
+    user: PropTypes.string,
   }),
   /**
    * The extra props for the slot components.

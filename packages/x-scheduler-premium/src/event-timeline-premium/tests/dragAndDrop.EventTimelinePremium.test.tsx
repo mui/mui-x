@@ -23,7 +23,7 @@ const resources: SchedulerResource[] = [engineering, design];
  */
 function getEventRow(resourceId: string): HTMLElement {
   const row = document.querySelector<HTMLElement>(
-    `.MuiEventTimeline-eventsSubGridRow[data-resource-id="${resourceId}"]`,
+    `.MuiEventTimeline-eventsCell[data-resource-id="${resourceId}"]`,
   );
   if (!row) {
     throw new Error(`Could not find event row for resource "${resourceId}"`);
@@ -36,7 +36,7 @@ function getEventRow(resourceId: string): HTMLElement {
  */
 function mockAllEventRowBounds() {
   const rows = document.querySelectorAll<HTMLElement>(
-    `.MuiEventTimeline-eventsSubGridRow[data-drop-target-for-element]`,
+    `.MuiEventTimeline-eventsCell[data-drop-target-for-element]`,
   );
   for (const row of rows) {
     mockElementBounds(row, { left: 0, width: 6720, height: 40 });

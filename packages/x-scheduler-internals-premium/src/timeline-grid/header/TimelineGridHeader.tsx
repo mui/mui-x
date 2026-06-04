@@ -18,6 +18,7 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
     render,
     style,
     classNames,
+    tickRange,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
@@ -33,10 +34,28 @@ export const TimelineGridHeader = React.forwardRef(function TimelineGridHeader(
   const weekStartsOn = useStore(store, schedulerPreferenceSelectors.weekStartsOn);
 
   const children = headers.map((level, levelIndex) => {
-    const cells = iterate(adapter, level.unit, timeResolution, start, end, weekStartsOn);
+    const allCells = iterate(adapter, level.unit, timeResolution, start, end, weekStartsOn);
+
+    let cells: ReturnType<typeof iterate>;
+    let offsetInTicks = 0;
+
+    if (tickRange) {
+      const filtered = filterCellsByTickRange(
+        allCells,
+        tickRange.firstTickIndex,
+        tickRange.lastTickIndex,
+      );
+      cells = filtered.visibleCells;
+      offsetInTicks = filtered.offsetInTicks;
+    } else {
+      cells = allCells;
+    }
 
     return (
       <div key={`${level.unit}:${levelIndex}`} className={classNames?.row} data-level={levelIndex}>
+        {offsetInTicks > 0 && (
+          <div role="none" style={{ width: `calc(var(--unit-width) * ${offsetInTicks})` }} />
+        )}
         {cells.map((cell) => (
           <div
             key={cell.key}
@@ -92,5 +111,55 @@ export namespace TimelineGridHeader {
       cell?: string;
       label?: string;
     };
+    /**
+     * When provided, only header cells overlapping this tick range are rendered.
+     * Tick indices are zero-based relative to the preset's tick grid (not the
+     * virtualizer's column model which includes the pinned title column).
+     */
+    tickRange?: {
+      firstTickIndex: number;
+      lastTickIndex: number;
+    };
   }
+}
+
+/**
+ * Filters a level's cells to those overlapping a tick range and computes
+ * the tick offset of the first visible cell within that level.
+ */
+function filterCellsByTickRange(
+  cells: ReturnType<typeof iterate>,
+  firstTickIndex: number,
+  lastTickIndex: number,
+): { visibleCells: ReturnType<typeof iterate>; offsetInTicks: number } {
+  let tickCursor = 0;
+  let firstVisibleIdx = -1;
+  let lastVisibleIdx = -1;
+
+  for (let i = 0; i < cells.length; i += 1) {
+    const cellEnd = tickCursor + cells[i].spanInTicks;
+    // Cell overlaps [firstTickIndex, lastTickIndex) if cellEnd > first && tickCursor < last
+    if (cellEnd > firstTickIndex && tickCursor < lastTickIndex) {
+      if (firstVisibleIdx === -1) {
+        firstVisibleIdx = i;
+      }
+      lastVisibleIdx = i;
+    }
+    tickCursor = cellEnd;
+  }
+
+  if (firstVisibleIdx === -1) {
+    return { visibleCells: [], offsetInTicks: 0 };
+  }
+
+  // Offset = tick position of the first visible cell
+  let offsetInTicks = 0;
+  for (let i = 0; i < firstVisibleIdx; i += 1) {
+    offsetInTicks += cells[i].spanInTicks;
+  }
+
+  return {
+    visibleCells: cells.slice(firstVisibleIdx, lastVisibleIdx + 1),
+    offsetInTicks,
+  };
 }

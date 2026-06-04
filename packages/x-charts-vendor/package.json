@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-vendor",
-  "version": "9.0.0",
+  "version": "9.4.0",
   "author": "MUI Team",
   "description": "Vendored dependencies for MUI X Charts.",
   "license": "MIT AND ISC",
@@ -30,8 +30,8 @@
     "@types/d3-timer": "^3.0.2",
     "d3-array": "^3.2.4",
     "d3-color": "^3.1.0",
-    "d3-geo": "^3.1.1",
     "d3-format": "^3.1.2",
+    "d3-geo": "^3.1.1",
     "d3-interpolate": "^3.0.1",
     "d3-path": "^3.1.0",
     "d3-scale": "^4.0.2",
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@babel/cli": "catalog:",
-    "@babel/plugin-transform-modules-commonjs": "7.28.6",
+    "@babel/plugin-transform-modules-commonjs": "catalog:",
     "@babel/plugin-transform-runtime": "catalog:",
     "babel-plugin-module-resolver": "5.0.3",
     "execa": "catalog:",

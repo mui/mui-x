@@ -92,6 +92,14 @@ ChatSuggestions.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * By default, suggestions only render when the active thread has no messages
+   * (treating them as an empty-state affordance). Set to `true` to render the
+   * suggestions regardless of message count — e.g. as a "next prompt" row above
+   * the composer in an active conversation.
+   * @default false
+   */
+  alwaysVisible: PropTypes.bool,
+  /**
    * Whether to auto-submit when a suggestion is clicked.
    * @default false
    */

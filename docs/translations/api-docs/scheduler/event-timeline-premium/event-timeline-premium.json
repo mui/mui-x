@@ -41,6 +41,9 @@
     "eventColor": {
       "description": "The color palette used for all events. Can be overridden per resource using the <code>eventColor</code> property on the resource model. Can be overridden per event using the <code>color</code> property on the event model."
     },
+    "eventCreation": {
+      "description": "Configures how events are created. If <code>false</code>, event creation is disabled. If <code>true</code>, event creation is enabled with default configuration. If an object, event creation is enabled with the provided configuration."
+    },
     "eventModelStructure": {
       "description": "The structure of the event model. It defines how to read and write the properties of the event model. If not provided, the event model is assumed to match the <code>CalendarEvent</code> interface."
     },
@@ -99,7 +102,7 @@
     },
     "errorAlert": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "error alert elements"
+      "nodeName": "the error alert element"
     },
     "errorContainer": {
       "description": "Styles applied to {{nodeName}}.",
@@ -107,7 +110,7 @@
     },
     "errorMessage": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "error message elements"
+      "nodeName": "the error message element"
     },
     "event": { "description": "Styles applied to {{nodeName}}.", "nodeName": "event elements" },
     "eventDialog": {
@@ -322,6 +325,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "event resize handler elements"
     },
+    "eventsCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the events cell element in a body row"
+    },
     "eventsHeaderCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the events header cell element"
@@ -332,19 +339,7 @@
     },
     "eventSkeleton": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "event skeleton elements rendered while events are loading"
-    },
-    "eventsSubGrid": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the events sub-grid element"
-    },
-    "eventsSubGridRow": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the events sub-grid row element"
-    },
-    "eventsSubGridWrapper": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the events sub-grid wrapper element"
+      "nodeName": "the event skeleton element"
     },
     "grid": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the grid element" },
     "header": {
@@ -372,6 +367,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title cell element"
     },
+    "titleCellContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the title cell content wrapper element"
+    },
     "titleCellLegendColor": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title cell legend color element"
@@ -383,10 +382,6 @@
     "titleHeaderCell": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the title header cell element"
-    },
-    "titleSubGrid": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the title sub-grid element"
     }
   }
 }

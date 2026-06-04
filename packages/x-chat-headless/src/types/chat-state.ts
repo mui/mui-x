@@ -18,6 +18,7 @@ export interface ChatInternalState<Cursor = string> {
   activeConversationId?: string;
   messageIds: string[];
   messagesById: Record<string, ChatMessage>;
+  messageErrorsById: Record<string, ChatError | undefined>;
   /** Tracks which users are typing per conversation: { [conversationId]: { [userId]: isTyping } } */
   typingByConversation: Record<string, Record<string, boolean>>;
   activeStreamAbortController: AbortController | null;
