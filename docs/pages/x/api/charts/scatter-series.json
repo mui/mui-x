@@ -30,7 +30,7 @@
         "description": "{<br />  /**<br />   * The size of the preview marker in pixels.<br />   * @default 1<br />   */<br />  markerSize?: number<br />}"
       }
     },
-    "sampling": { "type": { "description": "ScatterSampling" } },
+    "sampling": { "type": { "description": "ScatterSampling" }, "isProPlan": true },
     "sizeAxisId": { "type": { "description": "string" } },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
     "valueGetter": {

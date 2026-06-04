@@ -24,7 +24,7 @@
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" }
     },
     "labelMarkType": { "type": { "description": "ChartsLabelMarkType" } },
-    "sampling": { "type": { "description": "LineSampling" } },
+    "sampling": { "type": { "description": "LineSampling" }, "isProPlan": true },
     "shape": { "type": { "description": "MarkShape" } },
     "showMark": {
       "type": {
