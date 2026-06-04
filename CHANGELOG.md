@@ -18,7 +18,7 @@ Special thanks go out to these community members for their valuable contribution
 @imxv, @mixelburg, @mustafajw07
 
 The following team members contributed to this release:
-@aemartos, @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @joserodolfofreitas, @LukasTy, @MBilalShafi, @michelengelen, @mj12albert, @oliviertassinari, @rita-codes, @romgrk, @sai6855
+@aemartos, @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @hasdfa, @Janpot, @JCQuintas, @joserodolfofreitas, @LukasTy, @MBilalShafi, @michelengelen, @mj12albert, @noraleonte, @oliviertassinari, @rita-codes, @romgrk, @sai6855
 
 ### Data Grid
 
@@ -95,6 +95,44 @@ Same changes as in `@mui/x-charts-pro@9.4.0`, plus:
 
 ### Scheduler
 
+#### Breaking changes
+
+The theme `styleOverrides` slots for the skeleton and the error container were
+renamed and unified. The CSS utility class names (for example
+`.MuiEventCalendar-eventSkeleton`) are **not** affected — only
+`theme.components.*` overrides need updating.
+
+**Event skeleton**
+
+| Before                                  | After                          |
+| --------------------------------------- | ------------------------------ |
+| `MuiEventCalendar` slot `EventSkeleton` | `MuiEventSkeleton` slot `Root` |
+| `MuiEventTimeline` slot `EventSkeleton` | `MuiEventSkeleton` slot `Root` |
+
+**Error container**
+
+| Before                                                        | After                                   |
+| ------------------------------------------------------------- | --------------------------------------- |
+| `MuiEventCalendar` / `MuiEventTimeline` slot `ErrorContainer` | `MuiEventErrorContainer` slot `Root`    |
+| `MuiEventCalendar` / `MuiEventTimeline` slot `ErrorAlert`     | `MuiEventErrorContainer` slot `Alert`   |
+| `MuiEventCalendar` / `MuiEventTimeline` slot `ErrorMessage`   | `MuiEventErrorContainer` slot `Message` |
+
+If you customized these through the theme, update the component name and slot
+names accordingly:
+
+```diff
+ components: {
+-  MuiEventCalendar: {
++  MuiEventSkeleton: {
+     styleOverrides: {
+-      EventSkeleton: { /* ... */ },
++      Root: { /* ... */ },
+     },
+    },
+  },
+ }
+```
+
 #### `@mui/x-scheduler@9.0.0-beta.0`
 
 - [scheduler] Add a prop to control whether the resource of an event can be cleared (#22464) @rita-codes
@@ -103,6 +141,7 @@ Same changes as in `@mui/x-charts-pro@9.4.0`, plus:
 - [scheduler] Export premium version of the standalone views (#22621) @flaviendelangle
 - [scheduler] Implement timeline virtualization (#22339) @romgrk
 - [scheduler] Split scheduler overview (#22453) @joserodolfofreitas
+- [scheduler] Unify `EventSkeleton` and `ErrorContainer` between `EventCalendar` and `EventTimeline` (#22676) @noraleonte
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
