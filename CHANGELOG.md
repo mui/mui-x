@@ -93,6 +93,16 @@ Same changes as in `@mui/x-charts-pro@9.4.0`, plus:
 - [charts-premium] Create a map component (#22440) @alexfauquette
 - [charts-premium] Fix `onAxisClick` for radial bar and lines (#22522) @alexfauquette
 
+### Tree View
+
+#### `@mui/x-tree-view@9.4.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@9.4.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@9.4.0`.
+
 ### Scheduler
 
 #### Breaking changes
