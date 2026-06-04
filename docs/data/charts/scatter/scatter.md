@@ -73,7 +73,7 @@ Otherwise, click behavior matches the [interaction section](#interaction), and t
 A bubble chart is a scatter chart where the size and color of each point encode additional data values.
 Use the `sizeAxisId` and `colorAxisId` props on a series to map per-point data to size or color through a z-axis.
 
-See the [Bubble chart](/x/react-charts/scatter/bubble/) page for demos and details.
+See the [Bubble chart](/x/react-charts/bubble/) page for demos and details.
 
 ## Styling
 
