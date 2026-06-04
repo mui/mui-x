@@ -127,7 +127,7 @@ Same changes as in `@mui/x-scheduler@9.0.0-beta.0`.
 - [core] Prepare for TypeScript 6 bump (#22551) @LukasTy
 - [core] Use CircleCI Gen2 resource classes (#22610) @LukasTy
 - [infra] Fix broken tag retrieval on `master` during release (#22174) @michelengelen
-- [infra] Group Base UI renovate updates (#22590) @LukasTy
+- [infra] Group Base UI renovate updates (#22590) @LukasTy
 - [pnpm] Add security settings to pnpm-workspace.yaml (#22611) @Janpot
 - [release] Fix release PR scripts (#22680) @JCQuintas
 - [test] Add a Tree View regression test for lazy loading with getChildrenCount returning -1 (#22605) @mixelburg
