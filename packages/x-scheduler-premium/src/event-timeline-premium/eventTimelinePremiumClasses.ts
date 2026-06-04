@@ -10,9 +10,7 @@ import {
 } from '@mui/x-scheduler/internals';
 
 export interface EventTimelinePremiumClasses
-  extends EventDialogClasses,
-    ErrorContainerClasses,
-    EventSkeletonClasses {
+  extends EventDialogClasses, ErrorContainerClasses, EventSkeletonClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the content section element. */

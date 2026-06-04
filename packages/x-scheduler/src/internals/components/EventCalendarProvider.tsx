@@ -47,10 +47,7 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
     }),
     [schedulerId],
   );
-  const sharedComponentsStyledValue = React.useMemo(
-    () => ({ classes: eventCalendarClasses }),
-    [],
-  );
+  const sharedComponentsStyledValue = React.useMemo(() => ({ classes: eventCalendarClasses }), []);
 
   return (
     <UnstyledEventCalendarProvider {...other}>

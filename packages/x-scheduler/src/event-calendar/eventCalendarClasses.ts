@@ -18,9 +18,7 @@ import {
 } from '../internals/components/event-skeleton/eventSkeletonClasses';
 
 export interface EventCalendarClasses
-  extends EventDialogClasses,
-    ErrorContainerClasses,
-    EventSkeletonClasses {
+  extends EventDialogClasses, ErrorContainerClasses, EventSkeletonClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the side panel element. */
