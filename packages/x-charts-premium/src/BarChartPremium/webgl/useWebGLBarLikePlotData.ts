@@ -28,8 +28,6 @@ export interface WebGLBarLikeItem {
 export interface WebGLBarLikeSeries<T extends WebGLBarLikeItem> {
   seriesId: SeriesId;
   data: readonly T[];
-  // Drives whether the band axis is x (vertical layout) or y (horizontal). The
-  // dense-mode aggregation below uses this to fold bars along the band axis.
   layout?: 'vertical' | 'horizontal';
 }
 
@@ -78,17 +76,11 @@ function ensureCapacity(pool: ArrayPool | null, maxCount: number): ArrayPool {
 // don't need a separate per-instance attribute on the GPU side.
 const HIGHLIGHTED_BRIGHTNESS = 1.2;
 const FADED_OPACITY = 0.3;
-// Natural barGapRatio gap below this threshold (in CSS pixels) is treated as
-// zero -- the bar's rendered band-axis half-size is expanded out to half the
-// pitch so adjacent quads meet exactly. Kills the dark hairlines the
-// rasterizer would otherwise leave behind when pixel centers happen to land
-// in a sub-pixel gap.
+// Gaps below this (CSS px) get filled by expanding band half-size to half the
+// step, avoiding sub-pixel hairlines from the rasterizer.
 const GAP_FILL_THRESHOLD_PX = 1;
-// Minimum rendered band-axis half-size. Any thinner and the quad can fall
-// between two pixel centers, getting culled by the rasterizer and producing
-// moire patterns at very high zoom-out. Combined with gap-fill, this turns
-// dense data into a continuous "last bar wins per pixel" stairstep instead
-// of striped culling.
+// Floor to keep thin quads from falling between pixel centers and getting
+// culled at extreme zoom-out.
 const MIN_BAND_HALF_SIZE_PX = 0.5;
 
 function setCornerRadii(
@@ -182,21 +174,16 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
       const seriesId = processed.seriesId;
       const data = processed.data;
       const dataLength = data.length;
-      // In horizontal layout the band direction is y; otherwise it's x.
       const bandIsY = processed.layout === 'horizontal';
 
-      // `hidden` is series-level (mirrored onto every bar by useBarPlotData),
-      // so a single peek skips the whole series when the user hid it.
+      // `hidden` is series-level (mirrored onto every bar by useBarPlotData);
+      // peek at the first bar to skip the whole series.
       if (dataLength === 0 || data[0].hidden) {
         continue;
       }
 
-      // Find the first two visible bars in the series. Probe 1 sizes up the
-      // bars themselves; probe 2 reveals the center-to-center pitch in the
-      // band direction, which is what tells us whether the natural gap
-      // between bars is sub-pixel (and therefore shouldn't be visible). Track
-      // each probe's dataIndex too so any null bars between them don't get
-      // baked into the pitch as if they were extra bandwidths.
+      // Probe 1 = bar size; probe 2 = center-to-center step. Track dataIndex
+      // so null bars between probes don't inflate the step.
       let probe: T | null = null;
       let probeIndex = 0;
       let probe2: T | null = null;
@@ -218,30 +205,25 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
         continue;
       }
 
-      // Round the bar size to whole pixels so the rendered band half-size
-      // stays stable as the user zooms; sub-pixel jitter shows up as an
-      // "accordion" effect where bar widths visibly oscillate around their
-      // target on every zoom step.
-      const barSize = Math.round(bandIsY ? probe.height : probe.width);
-      let pitch: number;
+      // Round to whole pixels so the rendered half-size stays stable across
+      // zoom steps; sub-pixel jitter causes an "accordion" effect.
+      const rawBarSize = bandIsY ? probe.height : probe.width;
+      const barSize = Math.round(rawBarSize);
+      let step: number;
       if (probe2 === null) {
-        pitch = barSize;
+        step = barSize;
       } else {
-        // Divide by the dataIndex gap so a null bar between the two probes
-        // doesn't inflate the pitch to two bandwidths.
         const indexGap = probe2Index - probeIndex;
         const span = bandIsY ? probe2.y - probe.y : probe2.x - probe.x;
-        pitch = span / indexGap;
+        step = span / indexGap;
       }
-      // Consider the natural barGapRatio gap to be zero when it's below the
-      // threshold. The bar's rendered band-axis half-size is padded out to
-      // half the pitch so adjacent quads meet exactly, killing the dark
-      // hairlines the rasterizer leaves where pixel centers land in the gap.
-      // The MIN_BAND_HALF_SIZE_PX floor keeps very thin bars from being
-      // dropped by the rasterizer at extreme zoom-out.
-      const gap = pitch - barSize;
-      const fillGap = gap > 0 && gap < GAP_FILL_THRESHOLD_PX;
-      let bandHalfRender = fillGap ? pitch * 0.5 : barSize * 0.5;
+      // Use the linear lower bound of the gap (`step - rawBarSize - 0.5`)
+      // rather than `step - barSize`: rounding makes the discrete gap jump by
+      // 1px at zoom boundaries, flipping `fillGap` and causing visible
+      // oscillation. The lower bound is continuous in zoom.
+      const gapLowerBound = step - rawBarSize - 0.5;
+      const fillGap = gapLowerBound > 0 && gapLowerBound < GAP_FILL_THRESHOLD_PX;
+      let bandHalfRender = fillGap ? step * 0.5 : barSize * 0.5;
       if (bandHalfRender < MIN_BAND_HALF_SIZE_PX) {
         bandHalfRender = MIN_BAND_HALF_SIZE_PX;
       }
@@ -261,9 +243,7 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
 
         const halfW = w * 0.5;
         const halfH = h * 0.5;
-        // Apply the band-axis half-size derived once per series (see
-        // `bandHalfRender` above). Value axis stays exact so near-zero bars
-        // don't get inflated.
+        // Value axis stays exact; band axis uses the per-series override.
         const renderHalfW = bandIsY ? halfW : bandHalfRender;
         const renderHalfH = bandIsY ? bandHalfRender : halfH;
 
