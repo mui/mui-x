@@ -197,7 +197,11 @@ export const selectorChartSampledIndicesVisible = createSelectorMemoized(
         }
 
         const length = (series.visibleStackedData ?? series.data)?.length ?? 0;
-        const target = renderBudget(horizontal ? drawingArea.height : drawingArea.width, length);
+        const pixelSpan = horizontal ? drawingArea.height : drawingArea.width;
+        const target =
+          type === 'bar'
+            ? Math.min(length, Math.max(2, Math.floor(pixelSpan / PIXELS_PER_POINT)))
+            : renderBudget(pixelSpan, length);
 
         const start = Math.max(0, Math.floor(window.start * length));
         const end = Math.min(length, Math.ceil(window.end * length));

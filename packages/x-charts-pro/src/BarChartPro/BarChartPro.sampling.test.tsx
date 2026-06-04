@@ -78,6 +78,43 @@ describe('<BarChartPro /> - Sampling', () => {
     expect(getBars(full).length).to.be.greaterThan(BAR_COUNT / 2);
   });
 
+  it('keeps bars at a readable width across the sampled-to-real zoom transition', () => {
+    // A large dataset so sampling stays active across several zoom levels.
+    const bigData = Array.from({ length: 4000 }, (_, i) => Math.sin(i / 11) * 50);
+    const bigX = Array.from({ length: 4000 }, (_, i) => i);
+
+    // Visible-window length is `(end - start)% * 4000`. The 45-55 window (400 points) is past the
+    // point where the old zoom-scaled budget swapped to ~400 sub-pixel real bars; the pixel-limited
+    // budget keeps it near the ~width/4 budget instead.
+    const windows = [
+      { start: 30, end: 70 }, // 1600 pts
+      { start: 45, end: 55 }, // 400 pts
+      { start: 48, end: 52 }, // 160 pts
+      { start: 49, end: 51 }, // 80 pts — fits the budget, shown as real bars
+    ];
+
+    windows.forEach((window) => {
+      const { container, unmount } = render(
+        <BarChartPro
+          {...baseProps}
+          xAxis={[{ data: bigX, zoom: true, id: 'x' }]}
+          series={[{ data: bigData, sampling: 'bucket' }]}
+          initialZoom={[{ axisId: 'x', ...window }]}
+        />,
+      );
+
+      const bars = getBars(container);
+      const widths = bars.map((bar) => Number(bar.getAttribute('width')));
+
+      // Never explodes into a sub-pixel forest: the count stays near the pixel budget (~width/4).
+      expect(bars.length).to.be.lessThan(260);
+      // Every bar stays readable — no sudden thinning at the hand-off.
+      expect(Math.min(...widths)).to.be.greaterThan(2);
+
+      unmount();
+    });
+  });
+
   it('samples and lays out uniformly on a reversed axis', () => {
     const { container } = render(
       <BarChartPro
