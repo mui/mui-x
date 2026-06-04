@@ -117,6 +117,14 @@ The mapped value comes from the `sizeValue` property on each data point, or from
 The `sizeMap` supports the same `continuous`, `piecewise`, and `ordinal` types as `colorMap`, but it maps values to a marker radius in pixels.
 A series can set both `colorAxisId` and `sizeAxisId` to style points by two values at once.
 
+:::info
+By default the `sizeMap` with type `'continuouse'` maps values to radius using a square root scale.
+This makes the values proportional to the surface instead of the radius.
+
+You can change that behavior with the option `sizeMap.interpolator: 'log' | 'linear' | 'sqrt'`.
+Or by providing a function to `sizeMap.size`.
+:::
+
 {{"demo": "SizeScale.js"}}
 
 ### Grid
