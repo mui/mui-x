@@ -55,9 +55,12 @@ describe('zoom-level-driven sampling', () => {
       }
       return [...indices];
     };
+    // Scatter targets the 2D cell count, which grows fast with zoom, so use a larger series to keep
+    // it from saturating to the full length at the levels under test.
+    const SCATTER_LENGTH = 100_000;
     const series = {
       sampling: everyNth,
-      data: Array.from({ length: LENGTH }, (_, i) => ({ x: i, y: i, id: i })),
+      data: Array.from({ length: SCATTER_LENGTH }, (_, i) => ({ x: i, y: i, id: i })),
     } as any;
 
     it('keeps more points as the zoom level increases', () => {

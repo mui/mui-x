@@ -29,7 +29,7 @@ Each series type has one recommended built-in method.
 | `'bucket'` | scatter | Keeps one representative point per grid cell, sized to the marker. Points that would overlap are visually redundant. Best for scatter.                                    |
 | `'bucket'` | bar     | Groups consecutive bars into pixel-width buckets and keeps the largest one. Best for bars.                                                                                |
 
-The `Min/Max` option in the demos below is a [custom function](#custom-sampling-functions), not a built-in method.
+The extra toggle in the demos below—`Min/Max` for line and bar, `Random` for scatter—is a [custom function](#custom-sampling-functions), not a built-in method.
 Use the toggle to compare the strategies on the same data.
 All the demos on this page have zoom enabled: zoom in to see detail return as fewer points share the visible range.
 
@@ -90,7 +90,7 @@ The parameters object describes the series and how much detail to keep, without 
 Return an array of the indices to render. The chart renders them as-is, so they must be valid: unique integers in `[0, length)`, in ascending order. A `Set` is an easy way to keep them unique.
 
 The function must be **deterministic**—returning the same indices for the same parameters—otherwise the chart flickers while panning.
-The `Min/Max` toggle in the demos above is implemented as a custom sampler.
+The `Min/Max` and `Random` toggles in the demos above are implemented as custom samplers.
 
 ## How it works
 

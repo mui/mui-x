@@ -24,10 +24,13 @@ export const scatterSampler: ChartSeriesSampler<'scatter'> = (
   const data = series.data;
   const length = data.length;
   const levelFactor = 2 ** Math.max(0, zoomLevel);
-  const countTarget = Math.min(
-    length,
-    Math.max(2, Math.floor(drawingArea.width / DEFAULT_PIXELS_PER_POINT)) * levelFactor,
-  );
+
+  // Cells ~2x the mark: points within a marker's width of each other overlap, so collapsing them to
+  // one stays visually faithful. The target is the 2D cell count, matching the cloud's density.
+  const markSize = (series.markerSize > 0 ? series.markerSize : DEFAULT_PIXELS_PER_POINT) * 2;
+  const cellsX = Math.max(1, (drawingArea.width / markSize) * levelFactor);
+  const cellsY = Math.max(1, (drawingArea.height / markSize) * levelFactor);
+  const countTarget = Math.min(length, Math.ceil(cellsX * cellsY));
 
   if (length <= countTarget) {
     return null;
@@ -56,11 +59,6 @@ export const scatterSampler: ChartSeriesSampler<'scatter'> = (
     maxY = Math.max(maxY, data[i].y);
   }
 
-  // Cells ~2x the mark: points within a marker's width of each other overlap, so collapsing them to
-  // one stays visually faithful.
-  const markSize = (series.markerSize > 0 ? series.markerSize : DEFAULT_PIXELS_PER_POINT) * 2;
-  const cellsX = Math.max(1, (drawingArea.width / markSize) * levelFactor);
-  const cellsY = Math.max(1, (drawingArea.height / markSize) * levelFactor);
   const cellSizeX = (maxX - minX || 1) / cellsX;
   const cellSizeY = (maxY - minY || 1) / cellsY;
 

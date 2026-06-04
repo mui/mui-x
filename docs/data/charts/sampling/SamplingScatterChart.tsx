@@ -1,21 +1,33 @@
 import * as React from 'react';
+import { Chance } from 'chance';
 import Box from '@mui/material/Box';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
+import { type DataSampler } from '@mui/x-charts-pro/models';
 import { electricityGeneration2024Hourly } from '../dataset/electricityGeneration2024Hourly';
 import { carbonEmissions2024Hourly } from '../dataset/carbonEmissions2024Hourly';
-import { minMaxSampler } from './customSamplers';
 
-// 'min-max' maps to a custom sampling function (see customSamplers.ts); 'bucket' is the built-in.
-type MethodChoice = 'none' | 'bucket' | 'min-max';
+// A custom sampler that keeps a random subset of the points. It re-seeds `chance` on every call, so
+// the same parameters always yield the same indices — otherwise the chart would flicker while panning.
+const randomSampler: DataSampler = ({ length, target }) => {
+  const chance = new Chance(42);
+  const indices = new Set<number>();
+  while (indices.size < Math.min(target, length)) {
+    indices.add(chance.integer({ min: 0, max: length - 1 }));
+  }
+  return [...indices].sort((a, b) => a - b);
+};
+
+// 'random' maps to the custom sampling function above; 'bucket' is the built-in.
+type MethodChoice = 'none' | 'bucket' | 'random';
 
 const samplingFor = (method: MethodChoice) => {
   if (method === 'none') {
     return undefined;
   }
-  if (method === 'min-max') {
-    return minMaxSampler;
+  if (method === 'random') {
+    return randomSampler;
   }
   return method;
 };
@@ -43,7 +55,7 @@ export default function SamplingScatterChart() {
         >
           <ToggleButton value="none">None ({data.length} points)</ToggleButton>
           <ToggleButton value="bucket">Bucket</ToggleButton>
-          <ToggleButton value="min-max">Min/Max</ToggleButton>
+          <ToggleButton value="random">Random</ToggleButton>
         </ToggleButtonGroup>
       </Box>
       <ScatterChartPro
