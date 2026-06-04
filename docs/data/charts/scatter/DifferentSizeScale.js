@@ -1,32 +1,42 @@
 import * as React from 'react';
-import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
+import { ChartsReferenceLine } from '@mui/x-charts-pro/ChartsReferenceLine';
 
-const values = [1, 2, 5, 9, 10, 12, 15, 29, 50, 60, 90, 100];
+const values = [1, 2, 3, 5, 7, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100];
 
-const series = ['sqrt', 'linear', 'log'].map((interpolator) => ({
-  data: values.map((v, i) => ({ x: i + 1, y: interpolator, sizeValue: v })),
+const scales = ['linear', 'sqrt', 'log'];
+const series = scales.map((interpolator) => ({
+  data: values.map((v) => ({ x: v, y: interpolator, sizeValue: v })),
   sizeAxisId: interpolator,
 }));
 
 export default function DifferentSizeScale() {
   return (
-    <ScatterChart
+    <ScatterChartPro
       height={300}
       grid={{ horizontal: true, vertical: true }}
+      // @ts-expect-error - scatter are not supposed to contain string values for now
       series={series}
-      yAxis={[{ scaleType: 'point', data: ['sqrt', 'linear', 'log'] }]}
+      yAxis={[{ scaleType: 'band', data: scales }]}
+      xAxis={[{ zoom: true }]}
       zAxis={[
         {
           id: 'sqrt',
-          sizeMap: { type: 'continuous', min: 5, max: 90, size: [3, 20] },
+          sizeMap: {
+            type: 'continuous',
+            min: 5,
+            max: 100,
+            size: [2, 30],
+            interpolator: 'sqrt',
+          },
         },
         {
           id: 'linear',
           sizeMap: {
             type: 'continuous',
             min: 5,
-            max: 90,
-            size: [3, 20],
+            max: 100,
+            size: [2, 30],
             interpolator: 'linear',
           },
         },
@@ -35,12 +45,15 @@ export default function DifferentSizeScale() {
           sizeMap: {
             type: 'continuous',
             min: 5,
-            max: 90,
-            size: [3, 20],
+            max: 100,
+            size: [2, 30],
             interpolator: 'log',
           },
         },
       ]}
-    />
+      slots={{ tooltip: () => null }}
+    >
+      <ChartsReferenceLine x={5} label="min" labelAlign="start" />
+    </ScatterChartPro>
   );
 }
