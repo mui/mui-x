@@ -73,7 +73,6 @@ Same changes as in `@mui/x-date-pickers@9.4.0`.
 - [charts] Let scatter chart tooltip ignore hidden series (#22614) @alexfauquette
 - [charts] Make `'sqrt'` size mapping the default (#22683) @alexfauquette
 - [charts] Remove unused proptypes (#22618) @alexfauquette
-- [charts] Support focus on map shapes (#22649) @alexfauquette
 - [charts] Support module augmentation for slots (#22519) @sai6855
 - [charts] Support multiple marker size in `findClosestPoint` (#22622) @alexfauquette
 - [charts] Upgrade bezier-easing to v3 and use it for line chart hit-detection (#22608) @sai6855
@@ -90,7 +89,7 @@ Same changes as in `@mui/x-charts@9.4.0`, plus:
 
 Same changes as in `@mui/x-charts-pro@9.4.0`, plus:
 
-- [charts-premium] Create a map component (#22440) @alexfauquette
+- [charts-premium] Support range-bar series in WebGL bar renderer (#22607) @JCQuintas
 - [charts-premium] Fix `onAxisClick` for radial bar and lines (#22522) @alexfauquette
 
 ### Scheduler
