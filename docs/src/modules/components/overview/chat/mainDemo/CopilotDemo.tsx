@@ -343,9 +343,7 @@ export default function CopilotDemo() {
               suggestionsAutoSubmit
               slots={{ emptyState: CopilotEmptyState }}
               slotProps={{
-                composer: {
-                  root: { variant: 'compact', sx: { mx: 1.5, mb: 1.5 } },
-                },
+                composerRoot: { variant: 'compact', sx: { mx: 1.5, mb: 1.5 } },
               }}
               features={{
                 conversationHeader: false,
