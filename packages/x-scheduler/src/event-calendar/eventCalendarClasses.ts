@@ -87,6 +87,10 @@ export interface EventCalendarClasses
   agendaViewYearAndMonthLabel: string;
   /** Styles applied to the agenda view events list element. */
   agendaViewEventsList: string;
+  /** Styles applied to agenda view week number label elements. */
+  agendaViewWeekNumberLabel: string;
+  /** Styles applied to agenda view week number row elements. */
+  agendaViewWeekNumberRow: string;
   /** Styles applied to the month view root element. */
   monthView: string;
   /** Styles applied to the month view grid element. */
@@ -241,6 +245,8 @@ export interface EventCalendarClasses
   headerToolbarTodayButton: string;
   /** Styles applied to the header toolbar next button element. */
   headerToolbarNextButton: string;
+  /** Styles applied to the header toolbar week number element. */
+  headerToolbarWeekNumber: string;
   /** Styles applied to the preferences menu button element. */
   preferencesMenuButton: string;
   /** Styles applied to the preferences menu list element. */
@@ -310,6 +316,8 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'agendaViewWeekDayNameLabel',
     'agendaViewYearAndMonthLabel',
     'agendaViewEventsList',
+    'agendaViewWeekNumberLabel',
+    'agendaViewWeekNumberRow',
     'monthView',
     'monthViewGrid',
     'monthViewHeader',
@@ -387,6 +395,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'headerToolbarPreviousButton',
     'headerToolbarTodayButton',
     'headerToolbarNextButton',
+    'headerToolbarWeekNumber',
     'preferencesMenuButton',
     'preferencesMenuList',
     'preferencesMenuListItemIcon',
@@ -440,6 +449,8 @@ const slots = {
   agendaViewWeekDayNameLabel: ['agendaViewWeekDayNameLabel'],
   agendaViewYearAndMonthLabel: ['agendaViewYearAndMonthLabel'],
   agendaViewEventsList: ['agendaViewEventsList'],
+  agendaViewWeekNumberLabel: ['agendaViewWeekNumberLabel'],
+  agendaViewWeekNumberRow: ['agendaViewWeekNumberRow'],
   monthView: ['monthView'],
   monthViewGrid: ['monthViewGrid'],
   monthViewHeader: ['monthViewHeader'],
@@ -517,6 +528,7 @@ const slots = {
   headerToolbarPreviousButton: ['headerToolbarPreviousButton'],
   headerToolbarTodayButton: ['headerToolbarTodayButton'],
   headerToolbarNextButton: ['headerToolbarNextButton'],
+  headerToolbarWeekNumber: ['headerToolbarWeekNumber'],
   preferencesMenuButton: ['preferencesMenuButton'],
   preferencesMenuList: ['preferencesMenuList'],
   preferencesMenuListItemIcon: ['preferencesMenuListItemIcon'],

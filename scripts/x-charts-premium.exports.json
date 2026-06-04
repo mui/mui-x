@@ -620,6 +620,7 @@
   { "name": "RangeBarItemIdentifier", "kind": "TypeAlias" },
   { "name": "RangeBarPlot", "kind": "Function" },
   { "name": "RangeBarPlotProps", "kind": "Interface" },
+  { "name": "RangeBarPlotRenderer", "kind": "TypeAlias" },
   { "name": "RangeBarPlotSlotProps", "kind": "Interface" },
   { "name": "RangeBarPlotSlots", "kind": "Interface" },
   { "name": "RangeBarSeries", "kind": "TypeAlias" },
