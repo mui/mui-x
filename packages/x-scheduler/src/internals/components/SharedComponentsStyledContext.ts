@@ -33,7 +33,8 @@ export function useSharedComponentsStyledContext(): SharedComponentsStyledContex
     throw new Error(
       'MUI X Scheduler: useSharedComponentsStyledContext must be used within a SharedComponentsStyledContext.Provider. ' +
         'The shared internal components require the product to inject their utility classes. ' +
-        'Ensure the component is rendered inside an EventCalendar or EventTimelinePremium component.',
+        'Ensure the component is rendered inside an EventCalendar, EventCalendarPremium, or EventTimelinePremium component, ' +
+        'a standalone view, or another component that provides SharedComponentsStyledContext.',
     );
   }
   return value;
