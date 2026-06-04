@@ -217,8 +217,6 @@ async function findForkRemote() {
       console.log('No specific fork remote found, defaulting to "origin"');
       return 'origin';
     }
-
-    console.log(`Found fork remote: ${forkRemote}`);
     return forkRemote;
   } catch (error) {
     console.error('Error finding fork remote:', error);
@@ -806,7 +804,7 @@ async function main() {
 
     // Find the fork remote
     const forkRemote = await findForkRemote();
-    console.log(`Found fork remote: ${upstreamRemote}`);
+    console.log(`Found fork remote: ${forkRemote}`);
 
     const latestMajorVersion = await findLatestMajorVersion();
     console.log(`Found latest major version: ${latestMajorVersion}`);

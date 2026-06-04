@@ -118,6 +118,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "agenda view week day name label elements"
     },
+    "agendaViewWeekNumberLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "agenda view week number label elements"
+    },
+    "agendaViewWeekNumberRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "agenda view week number row elements"
+    },
     "agendaViewYearAndMonthLabel": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "agenda view year and month label elements"
@@ -512,7 +520,7 @@
     },
     "eventSkeleton": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "event skeleton elements"
+      "nodeName": "the event skeleton element"
     },
     "headerToolbar": {
       "description": "Styles applied to {{nodeName}}.",
@@ -549,6 +557,10 @@
     "headerToolbarTodayButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the header toolbar today button element"
+    },
+    "headerToolbarWeekNumber": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the header toolbar week number element"
     },
     "mainPanel": {
       "description": "Styles applied to {{nodeName}}.",

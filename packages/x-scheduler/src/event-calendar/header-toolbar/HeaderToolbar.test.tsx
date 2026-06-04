@@ -1,5 +1,6 @@
 import { screen, within, fireEvent } from '@mui/internal-test-utils';
-import { createSchedulerRenderer } from 'test/utils/scheduler';
+import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { adapter, createSchedulerRenderer } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { HeaderToolbar } from './HeaderToolbar';
 
@@ -122,5 +123,115 @@ describe('<ViewSwitcher />', () => {
     expect(menuItems).toHaveLength(2);
     expect(menuItems[0]).to.have.text('Agenda');
     expect(menuItems[1]).to.have.text('Week');
+  });
+});
+
+describe('week number badge', () => {
+  const { render } = createSchedulerRenderer();
+
+  const standaloneDefaults = {
+    events: [],
+    resources: [],
+  };
+
+  it('does not render the week number badge by default in week view', () => {
+    render(
+      <EventCalendarProvider {...standaloneDefaults}>
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).to.equal(null);
+  });
+
+  it('renders the week number badge in week view when showWeekNumber is enabled', () => {
+    render(
+      <EventCalendarProvider {...standaloneDefaults} preferences={{ showWeekNumber: true }}>
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).not.to.equal(null);
+  });
+
+  it('renders the week number badge in day view when showWeekNumber is enabled', () => {
+    render(
+      <EventCalendarProvider
+        {...standaloneDefaults}
+        view="day"
+        preferences={{ showWeekNumber: true }}
+      >
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).not.to.equal(null);
+  });
+
+  it('does not render the week number badge in month view even when showWeekNumber is enabled', () => {
+    render(
+      <EventCalendarProvider
+        {...standaloneDefaults}
+        view="month"
+        preferences={{ showWeekNumber: true }}
+      >
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).to.equal(null);
+  });
+
+  it('does not render the week number badge in agenda view even when showWeekNumber is enabled', () => {
+    render(
+      <EventCalendarProvider
+        {...standaloneDefaults}
+        view="agenda"
+        preferences={{ showWeekNumber: true }}
+      >
+        <HeaderToolbar />
+      </EventCalendarProvider>,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).to.equal(null);
+  });
+
+  it('shows "Week 1" for Jan 5 2025 when weekStartsOn=1', () => {
+    const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
+
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={visibleDate}
+        view="week"
+        preferences={{ showWeekNumber: true, weekStartsOn: 1 }}
+      />,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).not.to.equal(null);
+    expect(badge).to.have.text('Week 1');
+  });
+
+  it('shows "Week 2" for Jan 5 2025 when weekStartsOn=0 (regression)', () => {
+    const visibleDate = adapter.date('2025-01-05T00:00:00Z', 'default');
+
+    render(
+      <EventCalendar
+        events={[]}
+        visibleDate={visibleDate}
+        view="week"
+        preferences={{ showWeekNumber: true, weekStartsOn: 0 }}
+      />,
+    );
+
+    const badge = document.querySelector(`.${eventCalendarClasses.headerToolbarWeekNumber}`);
+    expect(badge).not.to.equal(null);
+    expect(badge).to.have.text('Week 2');
   });
 });
