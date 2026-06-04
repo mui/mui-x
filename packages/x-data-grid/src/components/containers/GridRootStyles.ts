@@ -49,6 +49,8 @@ const elementOverrides = {
     'actionsCell',
     'booleanCell',
     'cell',
+    'cellContent',
+    'cellContentInner',
     'cell--editable',
     'cell--editing',
     'cell--flex',
@@ -161,7 +163,16 @@ export const GridRootStyles = styled('div', {
     // - For `styled` components, declare overrides in the component itself.
     elementOverrides.children.forEach((key) => {
       overrides.push({ [`& .${c[key]}`]: styles[key] });
+
+      // Preserve backward compatibility:
+      // text-overflow and whitespace styles moved from `.cell` to `.cellContentInner`,
+      // so existing `styleOverrides.cell` customizations that control truncation
+      // must still affect the element responsible for text truncation.
+      if (key === 'cell' && styles.cell && styles.cellContentInner === undefined) {
+        overrides.push({ [`& .${c.cellContentInner}`]: styles[key] });
+      }
     });
+
     return overrides;
   },
 })<{ ownerState: OwnerState }>(() => {
@@ -321,6 +332,19 @@ export const GridRootStyles = styled('div', {
         minWidth: 'max-content !important',
         maxWidth: 'max-content !important',
       },
+
+      [`& .${c.cellContent}`]: {
+        overflow: 'visible !important',
+        whiteSpace: 'nowrap',
+        minWidth: 'max-content !important',
+      },
+
+      [`& .${c.cellContentInner}`]: {
+        overflow: 'visible !important',
+        whiteSpace: 'nowrap',
+        minWidth: 'max-content !important',
+      },
+
       [`& .${c.groupingCriteriaCell}`]: {
         width: 'unset',
       },
@@ -631,32 +655,42 @@ export const GridRootStyles = styled('div', {
       position: 'relative',
     },
 
+    // Keep cell vertical alignment stable regardless of `line-height` (see #47118).
+    // Cells inherit the root typography `line-height` and use flex centering
+    // so their vertical position doesn't change when `line-height` varies.
     /* Cell styles */
     [`& .${c.cell}`]: {
       flex: '0 0 auto',
       height: 'var(--height)',
       width: 'var(--width)',
-      display: 'flex',
-      alignItems: 'center',
-      lineHeight: 'inherit', // -1px for the border
-
+      lineHeight: 'inherit',
       boxSizing: 'border-box',
       borderTop: `1px solid var(--rowBorderColor)`,
       minWidth: 0,
       overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      textOverflow: 'ellipsis',
       '&.Mui-selected': selectedStyles,
     },
 
-    [`& .${c.cell} > span`]: {
-      display: 'block',
+    [`& .${c.cellContent}`]: {
       flex: '1 1 auto',
-      minWidth: '0',
+      minWidth: 0,
       overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
+      height: '100%',
+      alignSelf: 'stretch',
+      display: 'flex',
+      alignItems: 'center',
+      width: '100%',
     },
+
+    // cellContentInner — handles ellipsis and alignment for cell content
+    [`& .${c.cellContentInner}`]: {
+      minWidth: 0,
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      width: '100%',
+    },
+
     [`& .${c['virtualScrollerContent--overflowed']} .${c['row--lastVisible']} .${c.cell}`]: {
       borderTopColor: 'transparent',
     },
@@ -678,6 +712,13 @@ export const GridRootStyles = styled('div', {
       whiteSpace: 'initial',
       lineHeight: 'inherit',
     },
+
+    [`& .${c['row--dynamicHeight']} .${c.cellContentInner}`]: {
+      whiteSpace: 'initial',
+      overflow: 'visible',
+      textOverflow: 'unset',
+    },
+
     [`& .${c.cellEmpty}`]: {
       flex: 1,
       padding: 0,
@@ -725,6 +766,12 @@ export const GridRootStyles = styled('div', {
       display: 'inline-flex',
       alignItems: 'center',
       gridGap: vars.spacing(1),
+
+      [`& .${c.cellContent}`]: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        gridGap: vars.spacing(1),
+      },
     },
     [`& .${c.rowReorderCell}`]: {
       display: 'inline-flex',
@@ -761,17 +808,33 @@ export const GridRootStyles = styled('div', {
       lineHeight: 'inherit',
     },
     [`& .${c['cell--textLeft']}`]: {
-      textAlign: 'left',
-      justifyContent: 'flex-start',
+      [`& .${c.cellContent}`]: {
+        justifyContent: 'flex-start',
+      },
+      [`& .${c.cellContentInner}`]: {
+        justifyContent: 'flex-start',
+        textAlign: 'left',
+      },
     },
     [`& .${c['cell--textRight']}`]: {
-      textAlign: 'right',
-      justifyContent: 'flex-end',
+      [`& .${c.cellContent}`]: {
+        justifyContent: 'flex-end',
+      },
+      [`& .${c.cellContentInner}`]: {
+        justifyContent: 'flex-end',
+        textAlign: 'right',
+      },
     },
     [`& .${c['cell--textCenter']}`]: {
-      textAlign: 'center',
-      justifyContent: 'center',
+      [`& .${c.cellContent}`]: {
+        justifyContent: 'center',
+      },
+      [`& .${c.cellContentInner}`]: {
+        justifyContent: 'center',
+        textAlign: 'center',
+      },
     },
+
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       position: 'sticky',
       zIndex: 30,

@@ -160,6 +160,15 @@ export interface GridClasses {
    */
   cellCheckbox: string;
   /**
+   * Styles applied to the inner content of a cell for proper text overflow.
+   */
+  cellContent: string;
+  /**
+   * Styles applied to the inner content wrapper of a cell.
+   * Handles text truncation and overflow behavior.
+   */
+  cellContentInner: string;
+  /**
    * Styles applied to the empty cell element.
    */
   cellEmpty: string;
@@ -1009,6 +1018,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--pinnedRight',
   'cell--selectionMode',
   'cell',
+  'cellContent',
+  'cellContentInner',
   'cellCheckbox',
   'cellEmpty',
   'cellSkeleton',

@@ -32,7 +32,7 @@ import {
 } from '../../hooks/features/focus/gridFocusStateSelector';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridPinnedColumnPosition } from '../../hooks/features/columns/gridColumnsInterfaces';
-import { PinnedColumnPosition } from '../../internals/constants';
+import { PinnedColumnPosition, GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../internals/constants';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { gridEditCellStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 import { attachPinnedStyle } from '../../internals/utils';
@@ -444,9 +444,22 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     title = valueString;
   }
 
-  // Wrap text in a span so ellipsis works with the flex cell layout
-  if (typeof children === 'string') {
-    children = <span>{children}</span>;
+  // For the special detail-panel toggle field, allow returning a native element
+  // (e.g. a <button>) directly so callers can provide a custom toggle without
+  // being wrapped by the default cell content containers. See tests that
+  // assert the toggle is the direct child of the cell.
+  if (
+    column.field === GRID_DETAIL_PANEL_TOGGLE_FIELD &&
+    React.isValidElement(children) &&
+    typeof children.type === 'string'
+  ) {
+    // render the native element directly
+  } else {
+    children = (
+      <div className={gridClasses.cellContent}>
+        <div className={gridClasses.cellContentInner}>{children}</div>
+      </div>
+    );
   }
 
   const draggableEventHandlers = disableDragEvents
