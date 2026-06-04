@@ -427,6 +427,12 @@ describe('<EventTimelinePremium />', () => {
           document.querySelectorAll(`.${eventTimelinePremiumClasses.eventSkeleton}`).length,
         ).to.be.greaterThan(0);
       });
+      // The timeline renders the `timeline-row` variant, which drives its own CSS.
+      expect(
+        document.querySelectorAll(
+          `.${eventTimelinePremiumClasses.eventSkeleton}[data-variant="timeline-row"]`,
+        ).length,
+      ).to.be.greaterThan(0);
       expect(screen.queryByText(event1.title)).to.equal(null);
 
       resolveFetch(baseEvents);
