@@ -17,7 +17,23 @@ export type GridDataSourceCacheDefaultConfig = {
 };
 
 export function getKeyDefault(params: GridGetRowsParams) {
-  return JSON.stringify([params.filterModel, params.sortModel, params.start, params.end]);
+  // `groupKeys`/`groupFields` are Pro/Premium server-side row-grouping params (not
+  // on the base `GridGetRowsParams`, hence the cast). They MUST be part of the key:
+  // a group-children fetch shares the same filter/sort/start/end as the root grouped
+  // page, so omitting them collides the two cache entries and the grid serves the
+  // parent page instead of fetching the children — expanding a group renders nothing.
+  const { groupKeys, groupFields } = params as GridGetRowsParams & {
+    groupKeys?: unknown;
+    groupFields?: unknown;
+  };
+  return JSON.stringify([
+    params.filterModel,
+    params.sortModel,
+    params.start,
+    params.end,
+    groupKeys ?? [],
+    groupFields ?? [],
+  ]);
 }
 
 export class GridDataSourceCacheDefault {

@@ -23,13 +23,29 @@ export interface DataStudioSessionCacheOptions {
    * namespacing, so this function does not need to be aware of it.
    * @param {GridGetRowsParams} params The params to generate the cache key from.
    * @returns {string} The cache key.
-   * @default JSON.stringify([filterModel, sortModel, start, end])
+   * @default JSON.stringify([filterModel, sortModel, start, end, groupKeys, groupFields])
    */
   getKey?: (params: GridGetRowsParams) => string;
 }
 
 function defaultGetKey(params: GridGetRowsParams) {
-  return JSON.stringify([params.filterModel, params.sortModel, params.start, params.end]);
+  // `groupKeys` (root vs each expanded group) and `groupFields` (which column is
+  // grouped) MUST be part of the key: a group-children fetch shares the same
+  // filter/sort/start/end as the root grouped page, so omitting them collides the
+  // two cache entries and the grid serves the parent page instead of fetching the
+  // children — expanding a group then renders nothing.
+  const { groupKeys, groupFields } = params as GridGetRowsParams & {
+    groupKeys?: unknown;
+    groupFields?: unknown;
+  };
+  return JSON.stringify([
+    params.filterModel,
+    params.sortModel,
+    params.start,
+    params.end,
+    groupKeys ?? [],
+    groupFields ?? [],
+  ]);
 }
 
 interface CacheEntry {

@@ -126,6 +126,49 @@ describe('DataStudioSessionCache', () => {
     expect(getKey).toHaveBeenCalled();
     expect(a.get(buildParams())).not.toBeUndefined();
   });
+
+  // Regression: a group-children fetch shares filter/sort/start/end with the root
+  // grouped page; if `groupKeys` is omitted from the key the child read hits the
+  // root entry, the grid never fetches, and expanding a group renders nothing.
+  it('keys the root grouped page separately from each expanded group (groupKeys)', () => {
+    const cache = createDataStudioSessionCache();
+    const a = cache.forDataset('a');
+    const groupFields = ['reseller_key'];
+    const root = buildParams({ groupKeys: [], groupFields } as Partial<GridGetRowsParams>);
+    const groupTen = buildParams({ groupKeys: ['10'], groupFields } as Partial<GridGetRowsParams>);
+    const groupEleven = buildParams({
+      groupKeys: ['11'],
+      groupFields,
+    } as Partial<GridGetRowsParams>);
+
+    a.set(root, buildResponse(636));
+
+    // Expanding a group must NOT be served the root page's cache entry.
+    expect(a.get(groupTen)).toBeUndefined();
+
+    // Distinct groups are cached independently.
+    a.set(groupTen, buildResponse(267));
+    expect(a.get(groupTen)).not.toBeUndefined();
+    expect(a.get(groupEleven)).toBeUndefined();
+    // The root entry is untouched by the child reads/writes.
+    expect(a.get(root)).not.toBeUndefined();
+  });
+
+  it('keys grouping by different columns separately (groupFields)', () => {
+    const cache = createDataStudioSessionCache();
+    const a = cache.forDataset('a');
+    const byReseller = buildParams({
+      groupKeys: ['10'],
+      groupFields: ['reseller_key'],
+    } as Partial<GridGetRowsParams>);
+    const byProduct = buildParams({
+      groupKeys: ['10'],
+      groupFields: ['product_key'],
+    } as Partial<GridGetRowsParams>);
+
+    a.set(byReseller, buildResponse(1));
+    expect(a.get(byProduct)).toBeUndefined();
+  });
 });
 
 describe('useDataStudioState — cache invalidation API', () => {
