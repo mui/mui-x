@@ -144,11 +144,9 @@ export default function BubbleChartCO2Emissions() {
             dataKey: 'population',
             sizeMap: {
               type: 'continuous',
-              min: 0,
+              min: 1_000,
               max: 1_500_000_000,
-              // Use a square-root interpolation so the bubble area stays
-              // roughly proportional to the population.
-              size: (t) => 3 + 15 * Math.sqrt(t),
+              size: [3, 25],
             },
           },
           {
