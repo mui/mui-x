@@ -22,7 +22,7 @@ const xData = Array.from({ length: COUNT }, (_, i) => i);
 const minMax: DataSampler = ({ length, target, getValue }) => {
   const bucketCount = Math.max(1, Math.floor(target / 2));
   const bucketSize = length / bucketCount;
-  const indices: number[] = [0, length - 1];
+  const indices = new Set<number>([0]);
   for (let bucket = 0; bucket < bucketCount; bucket += 1) {
     const start = Math.floor(bucket * bucketSize);
     const end = Math.min(length, Math.floor((bucket + 1) * bucketSize));
@@ -36,9 +36,10 @@ const minMax: DataSampler = ({ length, target, getValue }) => {
         max = i;
       }
     }
-    indices.push(min, max);
+    indices.add(Math.min(min, max)).add(Math.max(min, max));
   }
-  return indices;
+  indices.add(length - 1);
+  return [...indices];
 };
 
 const variants: { label: string; sampling: BarSampling | undefined }[] = [

@@ -89,11 +89,11 @@ describe('<LineChartPro /> - Sampling', () => {
 
   it('accepts a custom sampling function', () => {
     const everyTenth = ({ length }: { length: number }) => {
-      const indices: number[] = [];
+      const indices = new Set<number>();
       for (let i = 0; i < length; i += 10) {
-        indices.push(i);
+        indices.add(i);
       }
-      return indices;
+      return [...indices];
     };
     const { container } = render(
       <LineChartPro {...baseProps} series={[{ data, sampling: everyTenth, showMark: false }]} />,

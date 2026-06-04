@@ -1,6 +1,5 @@
 import { type ChartSeriesSampler } from '../sampler.types';
 import { targetForZoomLevel } from '../computeTargetCount';
-import { normalizeIndices } from '../normalizeIndices';
 import { lttb } from '../lttb';
 import { m4 } from '../m4';
 
@@ -36,16 +35,13 @@ export const lineSampler: ChartSeriesSampler<'line'> = (
     xData && typeof xData[index] === 'number' ? (xData[index] as number) : index;
 
   if (typeof method === 'function') {
-    return normalizeIndices(
-      method({
-        length,
-        target,
-        zoomLevel,
-        getValue: (index) => stacked[index][1],
-        getPosition: getXValue,
-      }),
+    return method({
       length,
-    );
+      target,
+      zoomLevel,
+      getValue: (index) => stacked[index][1],
+      getPosition: getXValue,
+    });
   }
 
   switch (method) {

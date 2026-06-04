@@ -49,11 +49,11 @@ describe('zoom-level-driven sampling', () => {
     // A custom sampler (stride sampling) — also exercises the function-dispatch path.
     const everyNth = ({ length, target }: { length: number; target: number }) => {
       const step = Math.max(1, Math.ceil(length / target));
-      const indices: number[] = [];
+      const indices = new Set<number>();
       for (let i = 0; i < length; i += step) {
-        indices.push(i);
+        indices.add(i);
       }
-      return indices;
+      return [...indices];
     };
     const series = {
       sampling: everyNth,

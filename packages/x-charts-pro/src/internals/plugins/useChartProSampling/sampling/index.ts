@@ -1,5 +1,4 @@
 export { computeTargetCount, targetForZoomLevel } from './computeTargetCount';
-export { normalizeIndices } from './normalizeIndices';
 export { lttb } from './lttb';
 export { m4 } from './m4';
 export { bucketAggregate } from './bucketAggregate';

@@ -43,15 +43,16 @@ export interface DataSamplerParams<TValue = number> {
 /**
  * A custom sampling function.
  *
- * It returns the indices of the points to render, in any order (they are sorted and de-duplicated
- * before use; out-of-range indices are ignored). Sampling only affects rendering, so the function
- * must not mutate anything and should be deterministic — returning the same indices for the same
- * params — otherwise the chart will flicker while panning.
+ * It returns the indices of the points to render. The chart renders them as-is, so they must be
+ * valid: unique integers in `[0, length)`, in ascending order. Sampling only affects rendering, so
+ * the function must not mutate anything and should be deterministic — returning the same indices for
+ * the same params — otherwise the chart will flicker while panning.
  *
  * @example
  * // Keep the local minimum and maximum of every bucket.
  * const minMax: DataSampler = ({ length, target, getValue }) => {
- *   const indices: number[] = [];
+ *   // A Set keeps the indices unique; spread it to an array before returning.
+ *   const indices = new Set<number>();
  *   const bucketCount = Math.max(1, Math.floor(target / 2));
  *   const bucketSize = length / bucketCount;
  *   for (let b = 0; b < bucketCount; b += 1) {
@@ -63,13 +64,14 @@ export interface DataSamplerParams<TValue = number> {
  *       if (getValue(i) < getValue(min)) min = i;
  *       if (getValue(i) > getValue(max)) max = i;
  *     }
- *     indices.push(min, max);
+ *     // Each bucket sits after the previous one, so adding min before max stays ascending.
+ *     indices.add(Math.min(min, max)).add(Math.max(min, max));
  *   }
- *   return indices;
+ *   return [...indices];
  * };
  *
  * @param {DataSamplerParams} params The series size, target count, and value/position accessors.
- * @returns {number[]} The indices of the points to render.
+ * @returns {number[]} The indices to render: unique, in ascending order.
  */
 export type DataSampler<TValue = number> = (params: DataSamplerParams<TValue>) => number[];
 

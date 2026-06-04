@@ -1,6 +1,5 @@
 import { type ChartSeriesSampler } from '../sampler.types';
 import { targetForZoomLevel } from '../computeTargetCount';
-import { normalizeIndices } from '../normalizeIndices';
 import { bucketAggregate } from '../bucketAggregate';
 
 /**
@@ -30,16 +29,13 @@ export const barSampler: ChartSeriesSampler<'bar'> = (series, { drawingArea, zoo
   }
 
   if (typeof method === 'function') {
-    return normalizeIndices(
-      method({
-        length,
-        target,
-        zoomLevel,
-        getValue: (index) => series.data[index] ?? 0,
-        getPosition: (index) => index,
-      }),
+    return method({
       length,
-    );
+      target,
+      zoomLevel,
+      getValue: (index) => series.data[index] ?? 0,
+      getPosition: (index) => index,
+    });
   }
 
   return bucketAggregate(series.data, target);

@@ -87,7 +87,7 @@ The parameters object describes the series and how much detail to keep, without 
 
 ### Return value
 
-Return an array of the indices to render. The indices are sorted and de-duplicated, and out-of-range values are ignored, so they can be returned in any order.
+Return an array of the indices to render. The chart renders them as-is, so they must be valid: unique integers in `[0, length)`, in ascending order. A `Set` is an easy way to keep them unique.
 
 The function must be **deterministic**—returning the same indices for the same parameters—otherwise the chart flickers while panning.
 The `Min/Max` toggle in the demos above is implemented as a custom sampler.

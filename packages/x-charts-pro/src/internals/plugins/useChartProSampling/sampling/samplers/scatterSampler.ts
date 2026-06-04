@@ -1,6 +1,5 @@
 import { type ChartSeriesSampler } from '../sampler.types';
 import { DEFAULT_PIXELS_PER_POINT } from '../computeTargetCount';
-import { normalizeIndices } from '../normalizeIndices';
 
 /**
  * Computes the rendered indices for a scatter series, dispatching on the `sampling` method (the
@@ -35,16 +34,13 @@ export const scatterSampler: ChartSeriesSampler<'scatter'> = (
   }
 
   if (typeof method === 'function') {
-    return normalizeIndices(
-      method({
-        length,
-        target: countTarget,
-        zoomLevel,
-        getValue: (index) => data[index].y,
-        getPosition: (index) => data[index].x,
-      }),
+    return method({
       length,
-    );
+      target: countTarget,
+      zoomLevel,
+      getValue: (index) => data[index].y,
+      getPosition: (index) => data[index].x,
+    });
   }
 
   // Built-in `'bucket'`: keep one point per data-space grid cell. Runs in data space (not pixels)

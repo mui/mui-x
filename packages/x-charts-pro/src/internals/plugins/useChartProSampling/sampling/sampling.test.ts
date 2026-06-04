@@ -1,6 +1,5 @@
 import { lttb } from './lttb';
 import { m4 } from './m4';
-import { normalizeIndices } from './normalizeIndices';
 import { bucketAggregate } from './bucketAggregate';
 import { computeTargetCount } from './computeTargetCount';
 
@@ -80,16 +79,6 @@ describe('sampling algorithms', () => {
 
     it('returns every index when columns cannot reduce the count', () => {
       expect(m4([0, 1, 2, 3], 2)).to.deep.equal([0, 1, 2, 3]);
-    });
-  });
-
-  describe('normalizeIndices', () => {
-    it('sorts, de-duplicates, and drops out-of-range indices', () => {
-      expect(normalizeIndices([5, 2, 2, 9, -1, 7], 8)).to.deep.equal([2, 5, 7]);
-    });
-
-    it('ignores non-integer indices', () => {
-      expect(normalizeIndices([0, 1.5, 3], 5)).to.deep.equal([0, 3]);
     });
   });
 
