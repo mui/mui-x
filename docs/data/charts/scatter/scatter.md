@@ -75,6 +75,16 @@ Use the `sizeAxisId` and `colorAxisId` props on a series to map per-point data t
 
 See the [Bubble chart](/x/react-charts/bubble/) page for demos and details.
 
+By default the `sizeMap` property with type `'continuous'` transforms values into radius using a square root scale.
+This makes the values proportional to the surface instead of the radius.
+
+You can change that behavior with the option `sizeMap.interpolator: 'log' | 'linear' | 'sqrt'`.
+Or by providing a function to `sizeMap.size`.
+
+In such case we recommend you to inform the reader about your decision since size could be miss leading.
+
+{{"demo": "DifferentSizeScale.js"}}
+
 ### Grid
 
 You can add a grid in the background of the chart with the `grid` prop.
