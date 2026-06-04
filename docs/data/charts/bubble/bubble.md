@@ -52,7 +52,7 @@ See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) 
 
 ## Mapping data to size
 
-You can map a value to the size of each scatter point.
+You can also map a value to the size of each scatter point.
 
 Set a `sizeMap` on a z-axis and point the series to it with the `sizeAxisId` prop.
 The mapped value comes from the `sizeValue` property on each data point, or from the z-axis data.
@@ -61,3 +61,13 @@ The `sizeMap` supports the same `continuous`, `piecewise`, and `ordinal` types a
 A series can set both `colorAxisId` and `sizeAxisId` to style points by two values at once.
 
 {{"demo": "SizeScale.js"}}
+
+By default the `sizeMap` property with type `'continuous'` transforms values into radius using a square root scale.
+This makes the values proportional to the surface instead of the radius.
+
+You can change that behavior with the option `sizeMap.interpolator: 'log' | 'linear' | 'sqrt'`.
+Or by providing a function to `sizeMap.size`.
+
+In such case we recommend you to inform the reader about your decision since size could be miss leading.
+
+{{"demo": "DifferentSizeScale.js"}}

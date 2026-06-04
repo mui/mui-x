@@ -75,67 +75,6 @@ Use the `sizeAxisId` and `colorAxisId` props on a series to map per-point data t
 
 See the [Bubble chart](/x/react-charts/bubble/) page for demos and details.
 
-## Styling
-
-### Color scale
-
-As with other charts, you can modify the [series colors](/x/react-charts/styling/#colors) either directly, or with the color palette.
-
-You can also modify the color by using the axes' `colorMap`, which maps values to colors.
-Scatter charts use the following, in order of priority:
-
-1. The z-axis color
-2. The y-axis color
-3. The x-axis color
-4. The series color
-
-:::info
-The z-axis is a third axis that lets you style scatter points by a value other than position.
-Pass it with the `zAxis` prop.
-
-The mapped value can come from the `colorValue` property on each series data point, or from the z-axis data.
-You can set the color value in three ways:
-
-```jsx
-<ScatterChart
-  // First option
-  series={[{ data: [{ id: 0, x: 1, y: 1, colorValue: 5 }] }]}
-  // Second option
-  zAxis={[{ data: [5] }]}
-  // Third option
-  dataset={[{ price: 5 }]}
-  zAxis={[{ dataKey: 'price' }]}
-/>
-```
-
-:::
-
-See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for the `colorMap` properties.
-
-{{"demo": "ColorScale.js"}}
-
-### Size scale (Bubble chart)
-
-You can also map a value to the size of each scatter point.
-
-Set a `sizeMap` on a z-axis and point the series to it with the `sizeAxisId` prop.
-The mapped value comes from the `sizeValue` property on each data point, or from the z-axis data.
-
-The `sizeMap` supports the same `continuous`, `piecewise`, and `ordinal` types as `colorMap`, but it maps values to a marker radius in pixels.
-A series can set both `colorAxisId` and `sizeAxisId` to style points by two values at once.
-
-{{"demo": "SizeScale.js"}}
-
-By default the `sizeMap` property with type `'continuous'` transforms values into radius using a square root scale.
-This makes the values proportional to the surface instead of the radius.
-
-You can change that behavior with the option `sizeMap.interpolator: 'log' | 'linear' | 'sqrt'`.
-Or by providing a function to `sizeMap.size`.
-
-In such case we recommend you to inform the reader about your decision since size could be miss leading.
-
-{{"demo": "DifferentSizeScale.js"}}
-
 ### Grid
 
 You can add a grid in the background of the chart with the `grid` prop.
