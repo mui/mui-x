@@ -210,6 +210,49 @@ describe('ChatBox', () => {
       );
       expect(screen.queryByRole('button', { name: 'Add attachment' })).toBe(null);
     });
+
+    it('features.attachments=false overrides a provided composerAttachButton slot', () => {
+      function CustomAttach() {
+        return <button type="button" data-testid="custom-attach" />;
+      }
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          features={{ attachments: false }}
+          slots={{ composerAttachButton: CustomAttach }}
+        >
+          {null}
+        </ChatBox>,
+      );
+      expect(screen.queryByTestId('custom-attach')).toBe(null);
+    });
+  });
+
+  describe('flat slots (context distribution)', () => {
+    it('distributes a ChatBox-level message slot down to a rendered message', () => {
+      function CustomAvatar() {
+        return <div data-testid="ctx-avatar" />;
+      }
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialMessages={[
+            {
+              id: 'm1',
+              role: 'assistant',
+              author: { id: 'a' },
+              parts: [{ type: 'text', text: 'Hi' }],
+            },
+          ]}
+          slots={{ messageAvatar: CustomAvatar }}
+        >
+          {null}
+        </ChatBox>,
+      );
+      // The slot is provided only at the ChatBox level and reaches the deep
+      // ChatMessage through the ChatSlots context (no prop drilling).
+      expect(screen.getByTestId('ctx-avatar')).not.toBe(null);
+    });
   });
 
   describe('feature: helperText', () => {

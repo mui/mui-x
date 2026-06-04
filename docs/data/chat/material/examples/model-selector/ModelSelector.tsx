@@ -45,9 +45,7 @@ export default function ModelSelector() {
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
       slots={{
-        conversation: {
-          headerActions: ModelSelectControl,
-        },
+        conversationHeaderActions: ModelSelectControl,
       }}
       sx={{
         height: 500,

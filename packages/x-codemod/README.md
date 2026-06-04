@@ -518,34 +518,6 @@ Rewrites the legacy `InputProps`, `inputProps`, `InputLabelProps` and `FormHelpe
 npx @mui/x-codemod@next v9.0.0/pickers/migrate-text-field-props <path>
 ```
 
-### Chat codemods
-
-#### `migrate-slots`
-
-Rewrites flat `slots` / `slotProps` keys on `ChatBox` (and related chat components) into the new nested-by-family shape introduced in v9.0.0 alpha. Handles both the pre-rename keys (`messageAvatar`, `composerSendButton`, …) and the post-rename flat keys (`avatar`, `send`, …), lifting them under `message.*`, `messagesList.*`, `conversation.*`, or `composer.*`.
-
-```diff
- <ChatBox
-   adapter={adapter}
-   slots={{
--    messageAvatar: CustomAvatar,
--    composerSendButton: CustomSend,
--    conversationHeader: CustomHeader,
-+    conversation: { header: CustomHeader },
-+    message: { avatar: CustomAvatar },
-+    composer: { send: CustomSend },
-   }}
- />
-```
-
-The transform is idempotent: running it on already-nested code is a no-op. It only touches object literals passed as the `slots` or `slotProps` JSX attribute, so locale-text keys (for example, `composerSendButtonLabel`) are left untouched.
-
-<!-- #npm-tag-reference -->
-
-```bash
-npx @mui/x-codemod@latest v9.0.0/chat/migrate-slots <path|folder>
-```
-
 ## v8.0.0
 
 ### 🚀 `preset-safe` for v8.0.0

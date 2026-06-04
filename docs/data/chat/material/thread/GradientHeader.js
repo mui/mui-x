@@ -30,9 +30,7 @@ export default function GradientHeader() {
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
       slots={{
-        conversation: {
-          header: CustomHeader,
-        },
+        conversationHeader: CustomHeader,
       }}
       sx={{
         height: 500,

@@ -9,6 +9,7 @@ import {
   type ChatVariant,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { ChatSlotsProvider } from '../internals/ChatSlotsContext';
 import { useChatBoxUtilityClasses } from './chatBoxClasses';
 import { ChatBoxContent } from './ChatBoxContent';
 import type { ChatBoxProps } from './ChatBox.types';
@@ -157,20 +158,20 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
             sx={sx}
             {...other}
           >
-            <ChatBoxContent
-              variant={variant}
-              slots={slots}
-              slotProps={slotProps}
-              features={features}
-              layoutMode={layoutMode}
-              layoutModeBreakpoints={layoutModeBreakpoints}
-              rootRef={innerRef}
-              suggestions={suggestions}
-              suggestionsAutoSubmit={suggestionsAutoSubmit}
-              layoutClassName={classes.layout}
-              conversationsPaneClassName={classes.conversationsPane}
-              threadPaneClassName={classes.threadPane}
-            />
+            <ChatSlotsProvider slots={slots} slotProps={slotProps}>
+              <ChatBoxContent
+                variant={variant}
+                features={features}
+                layoutMode={layoutMode}
+                layoutModeBreakpoints={layoutModeBreakpoints}
+                rootRef={innerRef}
+                suggestions={suggestions}
+                suggestionsAutoSubmit={suggestionsAutoSubmit}
+                layoutClassName={classes.layout}
+                conversationsPaneClassName={classes.conversationsPane}
+                threadPaneClassName={classes.threadPane}
+              />
+            </ChatSlotsProvider>
           </ChatBoxStyled>
         </ChatDensityProvider>
       </ChatVariantProvider>
@@ -615,19 +616,32 @@ ChatBox.propTypes = {
     user: PropTypes.string,
   }),
   /**
-   * Props forwarded to each slot. Mirrors the structure of `slots`.
+   * Props forwarded to each slot. Mirrors the flat keys of `slots`.
    */
   slotProps: PropTypes.object,
   /**
-   * The components used for each slot inside the ChatBox, organised by family.
+   * The components used for each slot inside the ChatBox. Keys are flat and
+   * prefixed by area:
    *
-   * - `conversation.*` — the conversation wrapper, list, header, title, subtitle, header info, header actions.
-   * - `messagesList.*` — the list scroller, group wrapper, date divider, unread marker.
-   * - `message.*` — per-row parts (root, avatar, content, meta, inlineMeta, error, actions, authorName).
-   *   Pass `null` to a presentational slot (`avatar`, `meta`, `inlineMeta`, `actions`, `authorName`) to hide it and collapse the surrounding layout.
-   * - `composer.*` — root, input, send, attach, attachmentList, toolbar, helperText.
-   *   Pass `null` to `send` / `attach` to hide the button.
-   * - Standalone slots (`typingIndicator`, `scrollToBottom`, `suggestions`, `emptyState`, layout pieces) stay flat at the top level.
+   * - Layout — `root`, `layout`, `conversationsPane`, `threadPane`.
+   * - Conversation — `conversationRoot`, `conversationList`, `conversationHeader`,
+   *   `conversationHeaderInfo`, `conversationTitle`, `conversationSubtitle`,
+   *   `conversationHeaderActions`.
+   * - Message list — `messageList`, `messageGroup`, `dateDivider`, `unreadMarker`.
+   * - Message — `messageRoot`, `messageAvatar`, `messageContent`, `messageMeta`,
+   *   `messageInlineMeta`, `messageError`, `messageActions`, `messageAuthorName`.
+   *   Pass `null` to a presentational slot (`messageAvatar`, `messageMeta`,
+   *   `messageInlineMeta`, `messageActions`, `messageAuthorName`) to hide it and
+   *   collapse the surrounding layout.
+   * - Composer — `composerRoot`, `composerInput`, `composerSendButton`,
+   *   `composerAttachButton`, `composerAttachmentList`, `composerToolbar`,
+   *   `composerHelperText`. Pass `null` to `composerSendButton` /
+   *   `composerAttachButton` to hide the button.
+   * - Widgets — `typingIndicator`, `scrollToBottom`, `suggestions`, `emptyState`.
+   *
+   * `*Root` slots (`conversationRoot`, `messageRoot`, `composerRoot`) are
+   * wrapper-only: they swap the styled element while the default children still
+   * render inside.
    */
   slots: PropTypes.object,
   /**

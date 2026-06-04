@@ -74,9 +74,7 @@ export default function SlotOverrides() {
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
       slots={{
-        message: {
-          content: CustomMessageContent,
-        },
+        messageContent: CustomMessageContent,
       }}
       sx={{
         height: 500,

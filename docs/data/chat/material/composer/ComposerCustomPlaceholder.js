@@ -17,9 +17,7 @@ export default function ComposerCustomPlaceholder() {
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
       slotProps={{
-        composer: {
-          input: { placeholder: 'Ask me anything...' },
-        },
+        composerInput: { placeholder: 'Ask me anything...' },
       }}
       sx={{
         height: 400,

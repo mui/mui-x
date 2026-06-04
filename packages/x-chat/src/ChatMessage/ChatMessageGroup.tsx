@@ -7,20 +7,33 @@ import { MessageGroup, type MessageGroupProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 import { ChatMessage, type ChatMessageSlots, type ChatMessageSlotProps } from './ChatMessage';
+import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageGroup');
 
-export interface ChatMessageGroupSlots {
-  /** The styled group wrapper element. */
-  root?: React.ElementType;
-  /** Nested slot map forwarded to the inner ChatMessage. */
-  message?: Partial<ChatMessageSlots>;
-}
+/**
+ * Flat slot keys for `ChatMessageGroup` — part of the message-rendering pipeline
+ * vocabulary. `messageGroup` is the styled group wrapper (wrapper-only); the
+ * `message*` keys are mapped onto the inner `ChatMessage`'s short local slots.
+ * A subset of the public `ChatBoxSlots`.
+ */
+type ChatMessageGroupSlotKeys =
+  | 'messageGroup'
+  | 'messageRoot'
+  | 'messageAvatar'
+  | 'messageContent'
+  | 'messageMeta'
+  | 'messageInlineMeta'
+  | 'messageError'
+  | 'messageActions'
+  | 'messageAuthorName';
 
-export interface ChatMessageGroupSlotProps {
-  root?: Record<string, unknown>;
-  message?: ChatMessageSlotProps;
-}
+export interface ChatMessageGroupSlots extends Pick<ChatBoxSlots, ChatMessageGroupSlotKeys> {}
+
+export interface ChatMessageGroupSlotProps extends Pick<
+  ChatBoxSlotProps,
+  ChatMessageGroupSlotKeys
+> {}
 
 export interface ChatMessageGroupProps extends Omit<MessageGroupProps, 'slots' | 'slotProps'> {
   className?: string;
@@ -127,24 +140,40 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
     } = props;
     const classes = useChatMessageUtilityClasses(classesProp);
 
-    // The inner-message slot map (`slots.message`) flows through to ChatMessage.
-    // `slots.root` (the group-level slot, handled below) is the group's own styled
-    // wrapper element. The message-level `root` slot lives inside `slots.message` and
-    // is interpreted by ChatMessage itself — we must NOT hoist it into the row
-    // component, otherwise a raw element (e.g. `'section'`) would receive `messageId`/
-    // `slots`/`slotProps` it can't read and the message body would disappear.
-    const innerMessageSlots = slots?.message;
-    const innerMessageSlotProps = slotProps?.message;
+    // Map the flat `message*` keys onto the inner `ChatMessage`'s short local
+    // slots. `messageRoot` swaps ChatMessage's own styled root — it is applied by
+    // ChatMessage (not hoisted to the row component), so a raw element (e.g.
+    // `'section'`) never receives `messageId`/`slots` it can't read.
+    const innerMessageSlots: Partial<ChatMessageSlots> = {
+      root: slots?.messageRoot,
+      avatar: slots?.messageAvatar,
+      content: slots?.messageContent,
+      meta: slots?.messageMeta,
+      inlineMeta: slots?.messageInlineMeta,
+      error: slots?.messageError,
+      actions: slots?.messageActions,
+      authorName: slots?.messageAuthorName,
+    };
+    const innerMessageSlotProps: ChatMessageSlotProps = {
+      root: slotProps?.messageRoot,
+      avatar: slotProps?.messageAvatar,
+      content: slotProps?.messageContent,
+      meta: slotProps?.messageMeta,
+      inlineMeta: slotProps?.messageInlineMeta,
+      error: slotProps?.messageError,
+      actions: slotProps?.messageActions,
+      authorName: slotProps?.messageAuthorName,
+    };
 
     // Track whether the avatar slot is explicitly nulled — used to mirror the
     // `noAvatar` class on the group wrapper so any descendant CSS that reads
     // `var(--MuiChatMessage-avatarSize)` can collapse the reserved space.
-    const hasAvatar = innerMessageSlots?.avatar !== null;
+    const hasAvatar = slots?.messageAvatar !== null;
 
     // `authorName` is rendered by the headless MessageGroup (group-level), but
-    // consumer-facing it lives under `slots.message.authorName` so all per-row
-    // overrides cluster in one namespace. Null hides the label entirely.
-    const authorNameOverride = innerMessageSlots?.authorName;
+    // consumer-facing it lives under the flat `messageAuthorName` key so all
+    // per-row overrides cluster in one namespace. Null hides the label entirely.
+    const authorNameOverride = slots?.messageAuthorName;
     const AuthorNameSlot =
       authorNameOverride === null
         ? (HiddenAuthorName as React.ElementType)
@@ -152,9 +181,7 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
 
     // Render priority:
     // 1. Explicit `children` (legacy: caller provided their own composition)
-    // 2. Inner ChatMessage instance with the forwarded nested slot map. The nested
-    //    map carries `root`, which ChatMessage applies to its own styled root (and
-    //    `slotProps.root` is applied there too), so we forward instead of replacing.
+    // 2. Inner ChatMessage instance with the mapped short slot map.
     const resolvedChildren =
       children ??
       (messageId ? (
@@ -171,7 +198,7 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
         messageId={messageId}
         {...other}
         slots={{
-          group: (slots?.root ?? ChatMessageGroupStyled) as React.ElementType,
+          group: (slots?.messageGroup ?? ChatMessageGroupStyled) as React.ElementType,
           authorName: AuthorNameSlot,
           groupTimestamp: ChatMessageGroupTimestampStyled,
         }}
@@ -179,9 +206,9 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
           group: {
             className: clsx(classes.group, !hasAvatar && classes.noAvatar, className),
             sx,
-            ...(slotProps?.root ?? {}),
+            ...(slotProps?.messageGroup ?? {}),
           } as any,
-          authorName: innerMessageSlotProps?.authorName as any,
+          authorName: slotProps?.messageAuthorName as any,
         }}
       >
         {resolvedChildren}

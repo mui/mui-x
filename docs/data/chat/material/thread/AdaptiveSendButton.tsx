@@ -48,9 +48,7 @@ export default function AdaptiveSendButton() {
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
       slots={{
-        composer: {
-          send: CustomSendButton,
-        },
+        composerSendButton: CustomSendButton,
       }}
       sx={{
         height: 500,

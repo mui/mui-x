@@ -34,7 +34,7 @@ describe('ChatComposerAttachButton', () => {
     render(
       <ChatBox
         adapter={createAdapter()}
-        slotProps={{ composer: { attach: { className: 'custom-attach-btn' } } }}
+        slotProps={{ composerAttachButton: { className: 'custom-attach-btn' } }}
       >
         {null}
       </ChatBox>,

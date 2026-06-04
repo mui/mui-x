@@ -113,7 +113,7 @@ describe('ChatMessageGroup', () => {
             parts: [{ type: 'text', text: 'Hi' }],
           },
         ]}
-        slots={{ message: { authorName: CustomLabel } }}
+        slots={{ messageAuthorName: CustomLabel }}
       >
         {null}
       </ChatBox>,
@@ -138,7 +138,7 @@ describe('ChatMessageGroup', () => {
             parts: [{ type: 'text', text: 'Hi' }],
           },
         ]}
-        slots={{ message: { authorName: null } }}
+        slots={{ messageAuthorName: null }}
       >
         {null}
       </ChatBox>,
@@ -153,7 +153,7 @@ describe('ChatMessageGroup', () => {
         adapter={createAdapter()}
         initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Body text' }] }]}
       >
-        <ChatMessageGroup messageId="m1" slots={{ message: { root: 'section' } }} />
+        <ChatMessageGroup messageId="m1" slots={{ messageRoot: 'section' }} />
       </ChatRoot>,
     );
 

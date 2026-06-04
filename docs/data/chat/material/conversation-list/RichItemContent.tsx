@@ -110,10 +110,8 @@ export default function RichItemContent() {
         );
       }}
       slotProps={{
-        conversation: {
-          list: {
-            slots: { itemContent: RichItemContentSlot },
-          },
+        conversationList: {
+          slots: { itemContent: RichItemContentSlot },
         },
       }}
       sx={{

@@ -92,9 +92,22 @@ const ChatMessageListContentStyled = styled('div', {
   };
 });
 
-// The row renderer wants the nested `messagesList` and `message` families.
-// Everything else on `slots` belongs to `MessageListRoot` (list-level).
-const ROW_SLOT_KEYS: ReadonlyArray<keyof ChatMessageRowSlots> = ['messagesList', 'message'];
+// The row renderer wants the flat message-pipeline keys (group wrapper, dividers,
+// and per-row `message*` parts). Everything else on `slots` (e.g. `messageList`,
+// `messageListScroller`, `messageListContent`) belongs to `MessageListRoot`.
+const ROW_SLOT_KEYS: ReadonlyArray<keyof ChatMessageRowSlots> = [
+  'messageGroup',
+  'dateDivider',
+  'unreadMarker',
+  'messageRoot',
+  'messageAvatar',
+  'messageContent',
+  'messageMeta',
+  'messageInlineMeta',
+  'messageError',
+  'messageActions',
+  'messageAuthorName',
+];
 
 const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListProps>(
   function ChatMessageList(inProps, ref) {

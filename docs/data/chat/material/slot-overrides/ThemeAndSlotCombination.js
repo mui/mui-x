@@ -55,9 +55,7 @@ export default function ThemeAndSlotCombination() {
         initialConversations={[minimalConversation]}
         initialMessages={minimalMessages}
         slots={{
-          message: {
-            avatar: BotAvatar,
-          },
+          messageAvatar: BotAvatar,
         }}
         sx={{
           height: 500,

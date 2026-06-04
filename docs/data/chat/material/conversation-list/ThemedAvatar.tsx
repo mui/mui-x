@@ -86,10 +86,8 @@ export default function ThemedAvatar() {
         );
       }}
       slotProps={{
-        conversation: {
-          list: {
-            slots: { itemAvatar: ThemedAvatarSlot },
-          },
+        conversationList: {
+          slots: { itemAvatar: ThemedAvatarSlot },
         },
       }}
       sx={{

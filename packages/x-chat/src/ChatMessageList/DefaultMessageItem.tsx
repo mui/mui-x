@@ -1,28 +1,30 @@
 'use client';
 import * as React from 'react';
 import { ChatMessageGroup } from '../ChatMessage/ChatMessageGroup';
-import type {
-  ChatBoxMessageSlots,
-  ChatBoxMessageSlotProps,
-  ChatBoxMessagesListSlots,
-  ChatBoxMessagesListSlotProps,
-} from '../ChatBox/ChatBox.types';
+import { useChatSlots } from '../internals/ChatSlotsContext';
+import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
 
 /**
- * Per-row slot interface shared by `ChatBox` and `ChatMessageList`.
- *
- * Reuses ChatBox's nested message-list / message families so the same
- * slot path works at both levels.
+ * Flat per-row slot keys shared by `ChatBox` and `ChatMessageList` — the
+ * message-rendering pipeline vocabulary (group wrapper, dividers, and the
+ * per-row `message*` parts). A subset of the public `ChatBoxSlots`.
  */
-export interface ChatMessageRowSlots {
-  messagesList?: ChatBoxMessagesListSlots;
-  message?: ChatBoxMessageSlots;
-}
+type ChatMessageRowSlotKeys =
+  | 'messageGroup'
+  | 'dateDivider'
+  | 'unreadMarker'
+  | 'messageRoot'
+  | 'messageAvatar'
+  | 'messageContent'
+  | 'messageMeta'
+  | 'messageInlineMeta'
+  | 'messageError'
+  | 'messageActions'
+  | 'messageAuthorName';
 
-export interface ChatMessageRowSlotProps {
-  messagesList?: ChatBoxMessagesListSlotProps;
-  message?: ChatBoxMessageSlotProps;
-}
+export interface ChatMessageRowSlots extends Pick<ChatBoxSlots, ChatMessageRowSlotKeys> {}
+
+export interface ChatMessageRowSlotProps extends Pick<ChatBoxSlotProps, ChatMessageRowSlotKeys> {}
 
 export interface DefaultMessageItemProps {
   id: string;
@@ -42,36 +44,36 @@ export interface DefaultMessageItemProps {
  * Default message-row composition used by `ChatBox` and `ChatMessageList`
  * when no custom `renderItem` is provided.
  *
- * `slots.messagesList.group` swaps the group component itself.
- * `slots.message` forwards (as the nested map) into the chosen group so it
- * can hand it down to the inner `ChatMessage`. Presentational `null` slots
- * collapse layout as before.
+ * Slots are read from the `ChatSlots` context (the `ChatBox` path) unless passed
+ * explicitly via props (the standalone `ChatMessageList` path, which partitions
+ * its own flat slots and forwards the row keys here). `messageGroup` swaps the
+ * group component; the flat `message*` keys flow into the group, which maps them
+ * onto the inner `ChatMessage`'s short local slots.
  *
  * Memoized because this is the per-row component inside the virtualized list:
- * when scroll-driven re-renders pass the same id/slots/slotProps references
- * (the parent reads them from refs), the shallow compare short-circuits.
+ * `ChatBox`'s `renderItem` carries no slot payload (it reads context), so
+ * scroll-driven re-renders short-circuit on the shallow id/index/items compare.
  */
 export const DefaultMessageItem = React.memo(function DefaultMessageItem({
   id,
   index,
   items,
-  slots,
-  slotProps,
+  slots: slotsProp,
+  slotProps: slotPropsProp,
 }: DefaultMessageItemProps) {
-  const GroupSlot = (slots?.messagesList?.group ?? ChatMessageGroup) as typeof ChatMessageGroup;
+  const context = useChatSlots();
+  const slots = slotsProp ?? context.slots;
+  const slotProps = slotPropsProp ?? context.slotProps;
+  const GroupSlot = (slots.messageGroup ?? ChatMessageGroup) as typeof ChatMessageGroup;
 
   return (
     <GroupSlot
       messageId={id}
       index={index}
       items={items}
-      slots={{
-        message: slots?.message,
-      }}
-      slotProps={{
-        message: slotProps?.message,
-      }}
-      {...(slotProps?.messagesList?.group ?? {})}
+      slots={slots}
+      slotProps={slotProps}
+      {...(slotProps.messageGroup ?? {})}
     />
   );
 });

@@ -42,9 +42,7 @@ export default function SlotBasicReplacement() {
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
       slots={{
-        message: {
-          avatar: CustomAvatar,
-        },
+        messageAvatar: CustomAvatar,
       }}
       sx={{
         height: 500,

@@ -68,9 +68,7 @@ export default function MessageGrouping() {
       initialConversations={[conversation]}
       initialMessages={messages}
       slotProps={{
-        messagesList: {
-          group: { groupKey: createTimeWindowGroupKey(60_000) },
-        },
+        messageGroup: { groupKey: createTimeWindowGroupKey(60_000) },
       }}
       sx={{
         height: 400,

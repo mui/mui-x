@@ -45,10 +45,10 @@
       "description": "Locale-driven fallback labels for messages without explicit author information."
     },
     "slotProps": {
-      "description": "Props forwarded to each slot. Mirrors the structure of <code>slots</code>."
+      "description": "Props forwarded to each slot. Mirrors the flat keys of <code>slots</code>."
     },
     "slots": {
-      "description": "The components used for each slot inside the ChatBox, organised by family.<br>- <code>conversation.*</code> — the conversation wrapper, list, header, title, subtitle, header info, header actions. - <code>messagesList.*</code> — the list scroller, group wrapper, date divider, unread marker. - <code>message.*</code> — per-row parts (root, avatar, content, meta, inlineMeta, error, actions, authorName).   Pass <code>null</code> to a presentational slot (<code>avatar</code>, <code>meta</code>, <code>inlineMeta</code>, <code>actions</code>, <code>authorName</code>) to hide it and collapse the surrounding layout. - <code>composer.*</code> — root, input, send, attach, attachmentList, toolbar, helperText.   Pass <code>null</code> to <code>send</code> / <code>attach</code> to hide the button. - Standalone slots (<code>typingIndicator</code>, <code>scrollToBottom</code>, <code>suggestions</code>, <code>emptyState</code>, layout pieces) stay flat at the top level."
+      "description": "The components used for each slot inside the ChatBox. Keys are flat and prefixed by area:<br>- Layout — <code>root</code>, <code>layout</code>, <code>conversationsPane</code>, <code>threadPane</code>. - Conversation — <code>conversationRoot</code>, <code>conversationList</code>, <code>conversationHeader</code>,   <code>conversationHeaderInfo</code>, <code>conversationTitle</code>, <code>conversationSubtitle</code>,   <code>conversationHeaderActions</code>. - Message list — <code>messageList</code>, <code>messageGroup</code>, <code>dateDivider</code>, <code>unreadMarker</code>. - Message — <code>messageRoot</code>, <code>messageAvatar</code>, <code>messageContent</code>, <code>messageMeta</code>,   <code>messageInlineMeta</code>, <code>messageError</code>, <code>messageActions</code>, <code>messageAuthorName</code>.   Pass <code>null</code> to a presentational slot (<code>messageAvatar</code>, <code>messageMeta</code>,   <code>messageInlineMeta</code>, <code>messageActions</code>, <code>messageAuthorName</code>) to hide it and   collapse the surrounding layout. - Composer — <code>composerRoot</code>, <code>composerInput</code>, <code>composerSendButton</code>,   <code>composerAttachButton</code>, <code>composerAttachmentList</code>, <code>composerToolbar</code>,   <code>composerHelperText</code>. Pass <code>null</code> to <code>composerSendButton</code> /   <code>composerAttachButton</code> to hide the button. - Widgets — <code>typingIndicator</code>, <code>scrollToBottom</code>, <code>suggestions</code>, <code>emptyState</code>.<br><code>*Root</code> slots (<code>conversationRoot</code>, <code>messageRoot</code>, <code>composerRoot</code>) are wrapper-only: they swap the styled element while the default children still render inside."
     },
     "storeClass": { "description": "The store class to use for this provider." },
     "streamFlushInterval": {
@@ -66,17 +66,39 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "composer": "",
-    "conversation": "",
+    "composerAttachButton": "Attach button. Pass <code>null</code> to hide just the button while keeping the rest of the attachment pipeline (drag/drop, paste). Use <code>features.attachments: false</code> to disable attachments entirely.",
+    "composerAttachmentList": "",
+    "composerHelperText": "",
+    "composerInput": "",
+    "composerRoot": "",
+    "composerSendButton": "Send button. Pass <code>null</code> to hide it; the form still submits on Enter.",
+    "composerToolbar": "",
+    "conversationHeader": "",
+    "conversationHeaderActions": "",
+    "conversationHeaderInfo": "",
+    "conversationList": "",
+    "conversationRoot": "",
     "conversationsPane": "",
+    "conversationSubtitle": "",
+    "conversationTitle": "",
+    "dateDivider": "",
     "emptyState": "",
     "layout": "",
-    "message": "",
-    "messagesList": "",
+    "messageActions": "Actions row component (receives <code>{ messageId }</code>). Pass <code>null</code> (or omit) to hide actions.",
+    "messageAuthorName": "Author name label rendered by the group wrapper (default variant: above the bubble; compact variant: inside the message grid). Pass <code>null</code> to hide.",
+    "messageAvatar": "Avatar component. Pass <code>null</code> to hide the avatar entirely and drop the reserved avatar grid track.",
+    "messageContent": "",
+    "messageError": "Error card shown under the bubble when the message status is <code>error</code>.",
+    "messageGroup": "",
+    "messageInlineMeta": "Inline meta rendered inside the bubble (default variant). Pass <code>null</code> to hide.",
+    "messageList": "",
+    "messageMeta": "External meta (compact variant). Pass <code>null</code> to hide.",
+    "messageRoot": "",
     "root": "",
     "scrollToBottom": "",
     "suggestions": "",
     "threadPane": "",
-    "typingIndicator": ""
+    "typingIndicator": "",
+    "unreadMarker": ""
   }
 }

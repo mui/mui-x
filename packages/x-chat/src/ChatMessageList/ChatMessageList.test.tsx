@@ -84,7 +84,7 @@ describe('ChatMessageList', () => {
         initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] }]}
       >
         <ChatConversation>
-          <ChatMessageList slots={{ message: { avatar: CustomAvatar } }} />
+          <ChatMessageList slots={{ messageAvatar: CustomAvatar }} />
         </ChatConversation>
       </ChatRoot>,
     );

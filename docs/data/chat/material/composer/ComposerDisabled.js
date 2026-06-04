@@ -17,9 +17,7 @@ export default function ComposerDisabled() {
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
       slotProps={{
-        composer: {
-          root: { disabled: true },
-        },
+        composerRoot: { disabled: true },
       }}
       sx={{
         height: 400,

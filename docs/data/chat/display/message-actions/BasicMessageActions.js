@@ -37,9 +37,7 @@ export default function BasicMessageActions() {
       initialConversations={[minimalConversation]}
       initialMessages={minimalMessages}
       slots={{
-        message: {
-          actions: MyMessageActions,
-        },
+        messageActions: MyMessageActions,
       }}
       sx={{
         height: 500,

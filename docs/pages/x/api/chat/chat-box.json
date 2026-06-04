@@ -93,10 +93,64 @@
     { "name": "layout", "description": "", "class": "MuiChatBox-layout" },
     { "name": "conversationsPane", "description": "", "class": "MuiChatBox-conversationsPane" },
     { "name": "threadPane", "description": "", "class": "MuiChatBox-threadPane" },
-    { "name": "conversation", "description": "", "class": null },
-    { "name": "messagesList", "description": "", "class": null },
-    { "name": "message", "description": "", "class": null },
-    { "name": "composer", "description": "", "class": null },
+    { "name": "conversationRoot", "description": "", "class": null },
+    { "name": "conversationList", "description": "", "class": null },
+    { "name": "conversationHeader", "description": "", "class": null },
+    { "name": "conversationHeaderInfo", "description": "", "class": null },
+    { "name": "conversationTitle", "description": "", "class": null },
+    { "name": "conversationSubtitle", "description": "", "class": null },
+    { "name": "conversationHeaderActions", "description": "", "class": null },
+    { "name": "messageList", "description": "", "class": null },
+    { "name": "messageGroup", "description": "", "class": null },
+    { "name": "dateDivider", "description": "", "class": null },
+    { "name": "unreadMarker", "description": "", "class": null },
+    { "name": "messageRoot", "description": "", "class": null },
+    {
+      "name": "messageAvatar",
+      "description": "Avatar component. Pass `null` to hide the avatar entirely and drop the\nreserved avatar grid track.",
+      "class": null
+    },
+    { "name": "messageContent", "description": "", "class": null },
+    {
+      "name": "messageMeta",
+      "description": "External meta (compact variant). Pass `null` to hide.",
+      "class": null
+    },
+    {
+      "name": "messageInlineMeta",
+      "description": "Inline meta rendered inside the bubble (default variant). Pass `null` to hide.",
+      "class": null
+    },
+    {
+      "name": "messageError",
+      "description": "Error card shown under the bubble when the message status is `error`.",
+      "class": null
+    },
+    {
+      "name": "messageActions",
+      "description": "Actions row component (receives `{ messageId }`). Pass `null` (or omit) to\nhide actions.",
+      "class": null
+    },
+    {
+      "name": "messageAuthorName",
+      "description": "Author name label rendered by the group wrapper (default variant: above the\nbubble; compact variant: inside the message grid). Pass `null` to hide.",
+      "class": null
+    },
+    { "name": "composerRoot", "description": "", "class": null },
+    { "name": "composerInput", "description": "", "class": null },
+    {
+      "name": "composerSendButton",
+      "description": "Send button. Pass `null` to hide it; the form still submits on Enter.",
+      "class": null
+    },
+    {
+      "name": "composerAttachButton",
+      "description": "Attach button. Pass `null` to hide just the button while keeping the rest of\nthe attachment pipeline (drag/drop, paste). Use `features.attachments: false`\nto disable attachments entirely.",
+      "class": null
+    },
+    { "name": "composerAttachmentList", "description": "", "class": null },
+    { "name": "composerToolbar", "description": "", "class": null },
+    { "name": "composerHelperText", "description": "", "class": null },
     { "name": "typingIndicator", "description": "", "class": null },
     { "name": "scrollToBottom", "description": "", "class": null },
     { "name": "suggestions", "description": "", "class": null },
