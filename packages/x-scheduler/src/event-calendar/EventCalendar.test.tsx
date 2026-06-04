@@ -13,8 +13,7 @@ import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-cale
 import { EventCalendarStore } from '@mui/x-scheduler-internals/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-store-context';
 import { ErrorContainer } from '../internals/components/error-container';
-import { EventCalendarStyledContext } from './EventCalendarStyledContext';
-import { EVENT_CALENDAR_DEFAULT_LOCALE_TEXT } from '../internals/constants/defaultLocaleText';
+import { SharedComponentsStyledContext } from '../internals/components/SharedComponentsStyledContext';
 import {
   changeTo24HoursFormat,
   changeTo12HoursFormat,
@@ -454,15 +453,9 @@ describe('EventCalendar', () => {
         store,
         ...render(
           <SchedulerStoreContext.Provider value={store as any}>
-            <EventCalendarStyledContext.Provider
-              value={{
-                schedulerId: 'test',
-                classes: eventCalendarClasses,
-                localeText: EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
-              }}
-            >
+            <SharedComponentsStyledContext.Provider value={{ classes: eventCalendarClasses }}>
               <ErrorContainer />
-            </EventCalendarStyledContext.Provider>
+            </SharedComponentsStyledContext.Provider>
           </SchedulerStoreContext.Provider>,
         ),
       };
