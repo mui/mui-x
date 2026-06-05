@@ -130,7 +130,7 @@
     {
       "key": "errorAlert",
       "className": "MuiEventTimelinePremium-errorAlert",
-      "description": "Styles applied to error alert elements.",
+      "description": "Styles applied to the error alert element.",
       "isGlobal": false
     },
     {
@@ -142,7 +142,7 @@
     {
       "key": "errorMessage",
       "className": "MuiEventTimelinePremium-errorMessage",
-      "description": "Styles applied to error message elements.",
+      "description": "Styles applied to the error message element.",
       "isGlobal": false
     },
     {
@@ -490,7 +490,7 @@
     {
       "key": "eventSkeleton",
       "className": "MuiEventTimelinePremium-eventSkeleton",
-      "description": "Styles applied to event skeleton elements rendered while events are loading.",
+      "description": "Styles applied to the event skeleton element.",
       "isGlobal": false
     },
     {

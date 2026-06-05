@@ -91,61 +91,61 @@
       "name": "root",
       "description": "The component that renders the root.",
       "default": "'div'",
-      "class": "MuiChartsTooltipContainer-root"
+      "class": "MuiChartsTooltip-root"
     }
   ],
   "classes": [
     {
       "key": "axisValueCell",
-      "className": "MuiChartsTooltipContainer-axisValueCell",
+      "className": "MuiChartsTooltip-axisValueCell",
       "description": "Styles applied to the axisValueCell element. Only available for axis tooltip.",
       "isGlobal": false
     },
     {
       "key": "cell",
-      "className": "MuiChartsTooltipContainer-cell",
+      "className": "MuiChartsTooltip-cell",
       "description": "Styles applied to the cell element.",
       "isGlobal": false
     },
     {
       "key": "labelCell",
-      "className": "MuiChartsTooltipContainer-labelCell",
+      "className": "MuiChartsTooltip-labelCell",
       "description": "Styles applied to the labelCell element.",
       "isGlobal": false
     },
     {
       "key": "mark",
-      "className": "MuiChartsTooltipContainer-mark",
+      "className": "MuiChartsTooltip-mark",
       "description": "Styles applied to the mark element.",
       "isGlobal": false
     },
     {
       "key": "markContainer",
-      "className": "MuiChartsTooltipContainer-markContainer",
+      "className": "MuiChartsTooltip-markContainer",
       "description": "Styles applied to the markContainer element.",
       "isGlobal": false
     },
     {
       "key": "paper",
-      "className": "MuiChartsTooltipContainer-paper",
+      "className": "MuiChartsTooltip-paper",
       "description": "Styles applied to the paper element.",
       "isGlobal": false
     },
     {
       "key": "row",
-      "className": "MuiChartsTooltipContainer-row",
+      "className": "MuiChartsTooltip-row",
       "description": "Styles applied to the row element.",
       "isGlobal": false
     },
     {
       "key": "table",
-      "className": "MuiChartsTooltipContainer-table",
+      "className": "MuiChartsTooltip-table",
       "description": "Styles applied to the table element.",
       "isGlobal": false
     },
     {
       "key": "valueCell",
-      "className": "MuiChartsTooltipContainer-valueCell",
+      "className": "MuiChartsTooltip-valueCell",
       "description": "Styles applied to the valueCell element.",
       "isGlobal": false
     }
