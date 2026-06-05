@@ -102,7 +102,7 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
     axisId,
   } = props;
 
-  const { left, width } = useDrawingArea();
+  const { top, height, left, width } = useDrawingArea();
   const yAxisScale = useYScale(axisId);
 
   const yPosition = yAxisScale(y as any);
@@ -114,6 +114,10 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
         'error',
       );
     }
+    return null;
+  }
+
+  if (yPosition < top || yPosition > top + height) {
     return null;
   }
 

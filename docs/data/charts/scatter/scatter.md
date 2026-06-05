@@ -119,6 +119,16 @@ A series can set both `colorAxisId` and `sizeAxisId` to style points by two valu
 
 {{"demo": "SizeScale.js"}}
 
+By default the `sizeMap` property with type `'continuous'` transforms values into radius using a square root scale.
+This makes the values proportional to the surface instead of the radius.
+
+You can change that behavior with the option `sizeMap.interpolator: 'log' | 'linear' | 'sqrt'`.
+Or by providing a function to `sizeMap.size`.
+
+In such case we recommend you to inform the reader about your decision since size could be miss leading.
+
+{{"demo": "DifferentSizeScale.js"}}
+
 ### Grid
 
 You can add a grid in the background of the chart with the `grid` prop.
