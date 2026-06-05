@@ -74,11 +74,21 @@ const ChatSuggestions = React.forwardRef<HTMLDivElement, ChatSuggestionsProps>(
         }}
         slotProps={{
           ...slotProps,
-          root: {
-            className: clsx(classes.root, className),
-            sx,
-            ...(slotProps?.root as object),
-          } as any,
+          // `root` supports the object and the `(ownerState) => props` callback
+          // forms. Preserve the callback (composing the default class/sx with its
+          // result) instead of spreading a function into an empty object, which
+          // would silently drop the consumer's owner-state-driven root props.
+          root: (typeof slotProps?.root === 'function'
+            ? (ownerState: any) => ({
+                className: clsx(classes.root, className),
+                sx,
+                ...((slotProps.root as (os: any) => object)(ownerState) ?? {}),
+              })
+            : {
+                className: clsx(classes.root, className),
+                sx,
+                ...(slotProps?.root as object),
+              }) as any,
           item: {
             className: classes.item,
             ...(slotProps?.item as object),

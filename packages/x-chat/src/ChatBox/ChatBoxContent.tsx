@@ -518,7 +518,6 @@ function AboveComposerSuggestions(props: {
   const { SuggestionsComponent, suggestions, autoSubmit, consumerSlotProps } = props;
   const consumerSuggestionsSlotProps = (consumerSlotProps?.slotProps as any) ?? {};
   const consumerRootSlotProp = consumerSuggestionsSlotProps.root ?? {};
-  const consumerRootSx = consumerRootSlotProp.sx;
   // Two visual modes keyed off the `data-empty` attribute that SuggestionsRoot
   // sets when the thread has zero messages:
   // - empty (data-empty present): vertical column of pills, centered. Reads as a
@@ -551,12 +550,27 @@ function AboveComposerSuggestions(props: {
       '& .MuiChatSuggestions-item': { flex: '0 0 auto' },
     },
   };
-  let mergedRootSx: unknown = aboveComposerDefaultsSx;
-  if (Array.isArray(consumerRootSx)) {
-    mergedRootSx = [aboveComposerDefaultsSx, ...consumerRootSx];
-  } else if (consumerRootSx) {
-    mergedRootSx = [aboveComposerDefaultsSx, consumerRootSx];
-  }
+  // Prepend the above-composer defaults to whatever `sx` the consumer supplied,
+  // keeping their override last so it wins.
+  const mergeRootSx = (consumerSx: unknown): unknown => {
+    if (Array.isArray(consumerSx)) {
+      return [aboveComposerDefaultsSx, ...consumerSx];
+    }
+    if (consumerSx) {
+      return [aboveComposerDefaultsSx, consumerSx];
+    }
+    return aboveComposerDefaultsSx;
+  };
+  // `root` slotProps support both the object form and the `(ownerState) => props`
+  // callback form. Preserve the callback instead of spreading it into an empty
+  // object (which would silently drop the consumer's owner-state-driven props).
+  const rootSlotProp =
+    typeof consumerRootSlotProp === 'function'
+      ? (ownerState: any) => {
+          const resolved = consumerRootSlotProp(ownerState) ?? {};
+          return { ...resolved, sx: mergeRootSx(resolved.sx) };
+        }
+      : { ...consumerRootSlotProp, sx: mergeRootSx(consumerRootSlotProp.sx) };
   return (
     <SuggestionsComponent
       suggestions={suggestions}
@@ -566,10 +580,7 @@ function AboveComposerSuggestions(props: {
       slotProps={
         {
           ...consumerSuggestionsSlotProps,
-          root: {
-            ...consumerRootSlotProp,
-            sx: mergedRootSx,
-          },
+          root: rootSlotProp,
         } as any
       }
     />

@@ -368,6 +368,32 @@ describe('ChatBox', () => {
       expect(root).not.toBe(null);
       expect(root!.hasAttribute('data-empty')).toBe(false);
     });
+
+    it('applies a function-form suggestions root slotProp in the active-thread path', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          suggestions={['Tell me a joke']}
+          initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] }]}
+          slotProps={{
+            suggestions: {
+              slotProps: {
+                root: (() => ({ 'data-fn-root': 'applied' })) as any,
+              },
+            },
+          }}
+        >
+          {null}
+        </ChatBox>,
+      );
+      const root = document.querySelector('.MuiChatSuggestions-root');
+      expect(root).not.toBe(null);
+      // The above-composer (active-thread) path must preserve the callback form of
+      // `slotProps.suggestions.slotProps.root` rather than replacing it with `{ sx }`.
+      expect(root!.getAttribute('data-fn-root')).toBe('applied');
+      // …while the above-composer layout default still applies (not the empty state).
+      expect(root!.hasAttribute('data-empty')).toBe(false);
+    });
   });
 
   describe('composer', () => {
