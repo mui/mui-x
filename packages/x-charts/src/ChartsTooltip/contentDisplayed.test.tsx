@@ -586,4 +586,30 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
       });
     });
   });
+
+  describe('container prop', () => {
+    it('should render the tooltip inside the provided container', async () => {
+      const customContainer = document.createElement('div');
+      document.body.appendChild(customContainer);
+
+      const { user, container } = render(
+        <BarChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1', label: 'S1' }]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'axis', container: customContainer } }}
+        />,
+        { wrapper },
+      );
+      const svg = container.querySelector('svg')!;
+
+      await user.pointer({ target: svg, coords: { x: 198, y: 60 } });
+
+      await waitFor(() => {
+        expect(customContainer.querySelector(`.${chartsTooltipClasses.root}`)).not.to.equal(null);
+      });
+
+      document.body.removeChild(customContainer);
+    });
+  });
 });
