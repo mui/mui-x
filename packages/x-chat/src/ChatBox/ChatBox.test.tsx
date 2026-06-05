@@ -5,6 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from './ChatBox';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 const { render } = createRenderer();
 
 function createAdapter(overrides: Partial<ChatAdapter> = {}): ChatAdapter {
@@ -417,37 +419,43 @@ describe('ChatBox', () => {
       expect(threadPane.style.backgroundColor).toBe('rgb(7, 8, 9)');
     });
 
-    it('keeps the conversation list width controlled by the ChatBox layout pane', async () => {
-      render(
-        <ChatBox
-          adapter={createAdapter()}
-          initialConversations={conversations}
-          initialActiveConversationId="c1"
-          features={conversationListFeatures}
-          variant="compact"
-          data-resize-width="720"
-          sx={{ height: 480 }}
-        >
-          {null}
-        </ChatBox>,
-      );
+    // Computed layout width is only meaningful in a real browser; JSDOM does not
+    // resolve `width: 100%` against the pane, so this assertion runs browser-only.
+    it.skipIf(isJSDOM)(
+      'keeps the conversation list width controlled by the ChatBox layout pane',
+      async () => {
+        render(
+          <ChatBox
+            adapter={createAdapter()}
+            initialConversations={conversations}
+            initialActiveConversationId="c1"
+            features={conversationListFeatures}
+            variant="compact"
+            data-resize-width="720"
+            sx={{ height: 480 }}
+          >
+            {null}
+          </ChatBox>,
+        );
 
-      await waitFor(() => {
-        expect(screen.getByRole('listbox')).not.toBe(null);
-      });
+        await waitFor(() => {
+          expect(screen.getByRole('listbox')).not.toBe(null);
+        });
 
-      const conversationList = document.querySelector(
-        '.MuiChatConversationList-root',
-      ) as HTMLElement;
-      const scroller = document.querySelector('.MuiChatConversationList-scroller') as HTMLElement;
+        const conversationList = document.querySelector(
+          '.MuiChatConversationList-root',
+        ) as HTMLElement;
+        const scroller = document.querySelector('.MuiChatConversationList-scroller') as HTMLElement;
 
-      expect(
-        window
-          .getComputedStyle(conversationList)
-          .getPropertyValue('--ChatBox-conversationListWidth'),
-      ).toBe('220px');
-      expect(scroller).toHaveComputedStyle({ width: '100%' });
-    });
+        expect(
+          window
+            .getComputedStyle(conversationList)
+            .getPropertyValue('--ChatBox-conversationListWidth'),
+        ).toBe('220px');
+        // `width: 100%` resolves against the 220px pane, so the scroller fills it.
+        expect(scroller).toHaveComputedStyle({ width: '220px' });
+      },
+    );
 
     it('shows the conversation menu button only when the chat box container is narrow', async () => {
       const { rerender } = render(
