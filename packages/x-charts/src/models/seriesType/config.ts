@@ -100,7 +100,7 @@ export interface ChartsSeriesConfig {
     series: DefaultizedScatterSeriesType;
     seriesLayout: {};
     seriesProp: ScatterSeriesType;
-    valueType: ScatterValueType;
+    valueType: ScatterValueType | null;
     itemIdentifier: ScatterItemIdentifier;
     itemIdentifierWithData: ScatterItemIdentifier;
     axisType: 'cartesian';
