@@ -75,9 +75,12 @@ const ChatConversationListScrollerStyled = styled('div', {
   height: '100%',
   overflow: 'hidden',
   flexShrink: 0,
-  '@container chatbox (max-width: 599.95px)': {
-    display: 'none',
-  },
+  // Conversation-list visibility is driven by `ChatBox`'s JS layout: in narrow
+  // (auto) modes it renders a drawer instead of the inline sidebar, and the
+  // headless `ConversationListRoot` pins an inline `display: flex` on this
+  // scroller. A width-based `@container { display: none }` here could never win
+  // against that inline style and would only bite forced `layoutMode="standard"`
+  // (where the sidebar must stay visible), so the scroller carries no such hide.
 }));
 
 // Plain-div viewport: the scroller above is a regular div (not ScrollArea.Root),

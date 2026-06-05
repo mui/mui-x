@@ -257,6 +257,52 @@ describe('ChatBox', () => {
     });
   });
 
+  describe('rendered list context', () => {
+    it('groups messages against the rendered items subset, not the full conversation', () => {
+      function GroupAuthorName(props: { children?: React.ReactNode }) {
+        return <div data-testid="group-author">{props.children}</div>;
+      }
+
+      // Two consecutive messages from the same author form a single group in the
+      // full conversation, so only the first one starts a group (shows the author
+      // name). Narrowing the rendered list to just the second message must make it
+      // a group start — which only happens if `renderItem` forwards the rendered
+      // `index`/`items` instead of letting the group fall back to the full thread.
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          members={[{ id: 'alice', displayName: 'Alice' }]}
+          initialMessages={[
+            {
+              id: 'm1',
+              role: 'assistant',
+              status: 'sent',
+              author: { id: 'alice' },
+              parts: [{ type: 'text', text: 'one' }],
+            },
+            {
+              id: 'm2',
+              role: 'assistant',
+              status: 'sent',
+              author: { id: 'alice' },
+              parts: [{ type: 'text', text: 'two' }],
+            },
+          ]}
+          slots={{ messageAuthorName: GroupAuthorName }}
+          slotProps={{ messageList: { items: ['m2'] } }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      // Only the subset renders…
+      expect(screen.queryByText('one')).toBe(null);
+      expect(screen.getByText('two')).not.toBe(null);
+      // …and the subset's first row is treated as a group start (author shown).
+      expect(screen.getByTestId('group-author').textContent).toBe('Alice');
+    });
+  });
+
   describe('feature: helperText', () => {
     it('hides helper text when features.helperText=false', () => {
       render(
@@ -456,6 +502,33 @@ describe('ChatBox', () => {
         expect(scroller).toHaveComputedStyle({ width: '220px' });
       },
     );
+
+    // Forcing `layoutMode="standard"` on a narrow container renders the inline
+    // sidebar rather than a drawer. The headless `ConversationListRoot` pins an
+    // inline `display: flex` on the scroller, so the sidebar stays visible at
+    // narrow widths (the scroller carries no width-based hide that could blank it).
+    it('keeps the forced-standard sidebar scroller visible on a narrow container', async () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialConversations={conversations}
+          initialActiveConversationId="c1"
+          features={conversationListFeatures}
+          layoutMode="standard"
+          data-resize-width="480"
+          sx={{ height: 480 }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).not.toBe(null);
+      });
+
+      const scroller = document.querySelector('.MuiChatConversationList-scroller') as HTMLElement;
+      expect(scroller.style.display).toBe('flex');
+    });
 
     it('shows the conversation menu button only when the chat box container is narrow', async () => {
       const { rerender } = render(

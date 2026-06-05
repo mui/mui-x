@@ -701,12 +701,22 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const MessageListComponent = (slots.messageList ?? ChatMessageList) as typeof ChatMessageList;
   const SuggestionsComponent = (slots.suggestions ?? ChatSuggestions) as typeof ChatSuggestions;
 
+  // The rendered id list — `slotProps.messageList.items` lets a consumer narrow
+  // the thread; otherwise the full conversation order is used. `useMessageIds()`
+  // returns a stable reference, so forwarding it does not churn row memoization.
+  const renderedItemIds = (slotProps.messageList?.items ?? messageIds) as string[];
+
   // The per-row slots/slotProps are read from the `ChatSlots` context inside
   // `DefaultMessageItem`, so `renderItem` carries no slot payload and stays
-  // stable across scroll-driven re-renders of the virtualized list.
+  // stable across scroll-driven re-renders of the virtualized list. The rendered
+  // `index` and `items` ARE forwarded so the group computes grouping (prev/next
+  // neighbor lookup) against the rendered list rather than falling back to the
+  // full conversation — important when `slotProps.messageList.items` is a subset.
   const renderItem = React.useCallback(
-    ({ id }: { id: string; index: number }) => <DefaultMessageItem key={id} id={id} />,
-    [],
+    ({ id, index }: { id: string; index: number }) => (
+      <DefaultMessageItem key={id} id={id} index={index} items={renderedItemIds} />
+    ),
+    [renderedItemIds],
   );
 
   const drawerConversationListSlotProps = React.useMemo(
