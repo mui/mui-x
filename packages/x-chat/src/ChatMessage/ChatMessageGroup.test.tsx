@@ -163,4 +163,23 @@ describe('ChatMessageGroup', () => {
     // …and the custom element is applied as the message root.
     expect(document.querySelector('section.MuiChatMessage-root')).not.toBe(null);
   });
+
+  it('uses slots.messageGroup as the group wrapper, not the whole row', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Body text' }] }]}
+        slots={{ messageGroup: 'section' }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    // The custom element wraps the group; the default message tree still renders
+    // inside it (it must not replace the whole row and leave it empty).
+    const group = document.querySelector('section.MuiChatMessage-group');
+    expect(group).not.toBe(null);
+    expect(group?.querySelector('.MuiChatMessage-root')).not.toBe(null);
+    expect(screen.getByText('Body text')).not.toBe(null);
+  });
 });

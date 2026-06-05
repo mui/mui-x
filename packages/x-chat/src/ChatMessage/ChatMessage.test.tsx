@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
-import { ChatRoot } from '@mui/x-chat-headless';
+import { ChatRoot, ChatVariantProvider } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
 import { ChatMessage } from './ChatMessage';
 
@@ -200,5 +200,56 @@ describe('ChatMessage', () => {
     // rather than being hardcoded to the default ChatMessageError.
     expect(document.querySelector('[data-testid="custom-child"]')).not.toBe(null);
     expect(document.querySelector('[data-testid="custom-error"]')).not.toBe(null);
+  });
+
+  it('renders custom children only (no slot tree) in compact mode', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            author: { id: 'a' },
+            parts: [{ type: 'text', text: 'slot text' }],
+          },
+        ]}
+      >
+        <ChatVariantProvider variant="compact">
+          <ChatMessage messageId="m1">
+            <div data-testid="custom-child">custom</div>
+          </ChatMessage>
+        </ChatVariantProvider>
+      </ChatRoot>,
+    );
+
+    // Consumer-provided children win in every variant, including compact: the
+    // slot-driven message content must not be appended after them.
+    expect(document.querySelector('[data-testid="custom-child"]')).not.toBe(null);
+    expect(document.body.textContent).not.toContain('slot text');
+  });
+
+  it('renders the group author label inside compact messages', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        variant="compact"
+        members={[{ id: 'alice', displayName: 'Alice' }]}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            author: { id: 'alice' },
+            parts: [{ type: 'text', text: 'Hi' }],
+          },
+        ]}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    // The compact author label is delivered via `groupAuthorName` and rendered by
+    // the slot-driven message tree.
+    expect(document.body.textContent).toContain('Alice');
   });
 });

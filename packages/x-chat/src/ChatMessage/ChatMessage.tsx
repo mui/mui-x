@@ -73,6 +73,13 @@ export interface ChatMessageProps extends Omit<MessageRootProps, 'slots' | 'slot
   classes?: Partial<ChatMessageClasses>;
   slots?: Partial<ChatMessageSlots>;
   slotProps?: ChatMessageSlotProps;
+  /**
+   * @ignore
+   * Internal: the group's author label, injected by the headless `MessageGroup`
+   * in compact mode so it can share the message's CSS grid. Not part of a
+   * consumer's custom composition (which uses `children`).
+   */
+  groupAuthorName?: React.ReactNode;
 }
 
 const ChatMessageStyled = styled('div', {
@@ -192,6 +199,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
       sx,
       messageId,
       children,
+      groupAuthorName,
       ...other
     } = props;
     const classes = useChatMessageUtilityClasses(classesProp);
@@ -216,12 +224,12 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
     const ErrorComp = (slots?.error ?? ChatMessageError) as typeof ChatMessageError;
 
     // Build the inner tree from slots when no `children` were passed (slot-driven).
-    // When `children` are provided in non-compact mode, render them as-is for
-    // backward compatibility. In compact mode, `children` is the headless group's
-    // injected authorName element (see MessageGroup), so render the slot-driven
-    // tree and let it land in the message's CSS grid alongside the slot children.
+    // When a consumer provides `children`, render them as-is for backward-compatible
+    // custom composition — in every variant, including compact. The compact author
+    // label is delivered separately via `groupAuthorName` (see headless MessageGroup),
+    // so it never conflates with a consumer's children.
     let innerTree: React.ReactNode;
-    if (children !== undefined && !isCompact) {
+    if (children !== undefined) {
       innerTree = (
         <React.Fragment>
           {children}
@@ -251,7 +259,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
 
       innerTree = (
         <React.Fragment>
-          {children}
+          {groupAuthorName}
           {hasAvatar && <AvatarComp {...(slotProps?.avatar ?? {})} />}
           <ContentComp afterContent={inlineMeta} {...(slotProps?.content ?? {})} />
           {externalMeta}
@@ -294,6 +302,13 @@ ChatMessage.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * @ignore
+   * Internal: the group's author label, injected by the headless `MessageGroup`
+   * in compact mode so it can share the message's CSS grid. Not part of a
+   * consumer's custom composition (which uses `children`).
+   */
+  groupAuthorName: PropTypes.node,
   isGrouped: PropTypes.bool,
   messageId: PropTypes.string.isRequired,
   slotProps: PropTypes.object,

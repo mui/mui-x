@@ -14,7 +14,10 @@ const useThemeProps = createUseThemeProps('MuiChatMessageMeta');
 export interface ChatMessageMetaProps extends MessageMetaProps {
   className?: string;
   sx?: SxProps<Theme>;
-  classes?: Partial<ChatMessageClasses>;
+  // `ChatMessageMeta` only applies the `meta` class; the rest of the shared
+  // `MuiChatMessage-*` namespace (avatar, root, role/state classes, …) is applied
+  // by `ChatMessage`/`ChatMessageGroup`, so don't advertise them on this component.
+  classes?: Partial<Pick<ChatMessageClasses, 'meta'>>;
 }
 
 const ChatMessageMetaStyled = styled('div', {

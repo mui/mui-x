@@ -64,11 +64,15 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
   const context = useChatSlots();
   const slots = slotsProp ?? context.slots;
   const slotProps = slotPropsProp ?? context.slotProps;
-  const GroupSlot = (slots.messageGroup ?? ChatMessageGroup) as typeof ChatMessageGroup;
 
+  // Always render `ChatMessageGroup`. It consumes `slots.messageGroup` as the
+  // group's wrapper element (and `slotProps.messageGroup` as that wrapper's
+  // props), so the default avatar/content/meta tree still renders inside it.
+  // Hoisting `messageGroup` to the row component here would let a plain wrapper
+  // element (e.g. `'section'`) replace the entire row and render empty, with the
+  // internal `messageId`/`index`/`items` props leaking onto the DOM node.
   return (
-    <GroupSlot
-      {...(slotProps.messageGroup ?? {})}
+    <ChatMessageGroup
       messageId={id}
       index={index}
       items={items}
