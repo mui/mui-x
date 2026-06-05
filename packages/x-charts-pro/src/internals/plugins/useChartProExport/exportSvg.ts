@@ -21,8 +21,6 @@ async function exportSvg(
 
   let css = '';
 
-  console.log({ root, chartRoot, rootCandidate });
-
   for (const sheet of root.styleSheets) {
     try {
       for (const rule of sheet.cssRules) {
