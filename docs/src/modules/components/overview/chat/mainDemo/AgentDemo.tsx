@@ -1227,14 +1227,9 @@ export default function AgentDemo() {
       variant="compact"
       density="compact"
       slots={{
-        conversation: {
-          list: AgentTaskTree,
-          header: AgentHeaderBar,
-        },
-
-        composer: {
-          root: AgentComposer,
-        },
+        conversationList: AgentTaskTree,
+        conversationHeader: AgentHeaderBar,
+        composerRoot: AgentComposer,
       }}
       onActiveConversationChange={(nextId) => {
         if (nextId) {

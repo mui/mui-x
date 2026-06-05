@@ -636,24 +636,17 @@ export default function MessengerDemo() {
       messages={messages}
       features={{ conversationList: true }}
       slots={{
-        conversation: {
-          list: MessengerConversationSidebar,
-        },
+        conversationList: MessengerConversationSidebar,
       }}
       slotProps={{
-        conversation: {
-          list: {
-            activeFilter,
-            onFilterChange: setActiveFilter,
-            searchValue,
-            onSearchChange: setSearchValue,
-          } as React.ComponentProps<typeof MessengerConversationSidebar>,
-        },
-
-        composer: {
-          root: {
-            variant: 'compact',
-          },
+        conversationList: {
+          activeFilter,
+          onFilterChange: setActiveFilter,
+          searchValue,
+          onSearchChange: setSearchValue,
+        } as React.ComponentProps<typeof MessengerConversationSidebar>,
+        composerRoot: {
+          variant: 'compact',
         },
       }}
       onActiveConversationChange={(nextId) => {
