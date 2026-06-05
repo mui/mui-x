@@ -620,11 +620,18 @@ const ChatToolPartSectionSummaryStyled = styled('summary', {
   },
 }));
 
-interface ChatToolPartSectionRenderProps extends React.HTMLAttributes<HTMLDetailsElement> {
+interface ChatToolPartSectionRenderProps extends React.DetailsHTMLAttributes<HTMLDetailsElement> {
   ownerState?: { section?: 'input' | 'output'; state?: string };
 }
 
-function ChatToolPartSection({ ownerState, ...rest }: ChatToolPartSectionRenderProps) {
+function ChatToolPartSection({
+  ownerState,
+  onToggle: onToggleProp,
+  // The disclosure is controlled internally; ignore a consumer-supplied `open`
+  // so a slotProps override can't desync the `<details>` from the auto-open state.
+  open: _openProp,
+  ...rest
+}: ChatToolPartSectionRenderProps) {
   const section = ownerState?.section;
   const state = ownerState?.state;
   const initialOpen = React.useMemo(() => {
@@ -653,11 +660,14 @@ function ChatToolPartSection({ ownerState, ...rest }: ChatToolPartSectionRenderP
   return (
     <ChatToolPartSectionDetails
       ownerState={ownerState}
-      open={open}
-      onToggle={(event: React.SyntheticEvent<HTMLDetailsElement>) => {
-        setOpen((event.currentTarget as HTMLDetailsElement).open);
-      }}
       {...rest}
+      open={open}
+      onToggle={(event: React.ToggleEvent<HTMLDetailsElement>) => {
+        setOpen((event.currentTarget as HTMLDetailsElement).open);
+        // Forward to a consumer handler (e.g. slotProps.section.onToggle) so the
+        // disclosure can be observed without clobbering the controlled updater.
+        onToggleProp?.(event);
+      }}
     />
   );
 }

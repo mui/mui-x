@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { act, createRenderer, screen } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
+import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
 import { ChatRoot, MessageRoot, useChatStore } from '@mui/x-chat-headless';
 import { ChatMessageContent } from './ChatMessageContent';
@@ -359,6 +359,55 @@ describe('ChatMessageContent', () => {
       // section `<details>` elements (3 total) would collapse to plain divs if the partial
       // override had replaced the whole slot map.
       expect(document.querySelectorAll('details').length).toBe(3);
+    });
+
+    it('forwards a consumer section onToggle without breaking the controlled disclosure', () => {
+      const handleToggle = vi.fn();
+      render(
+        <ChatRoot
+          adapter={createAdapter()}
+          initialMessages={[
+            {
+              id: 'm1',
+              role: 'assistant',
+              parts: [
+                {
+                  type: 'tool',
+                  toolInvocation: {
+                    toolCallId: 'tc1',
+                    toolName: 'searchTool',
+                    state: 'output-available',
+                    input: { query: 'test' },
+                    output: { result: 'found' },
+                    title: 'Search Tool',
+                  },
+                },
+              ],
+            },
+          ]}
+        >
+          <MessageRoot messageId="m1">
+            <ChatMessageContent
+              data-testid="message-content"
+              partProps={{ tool: { slotProps: { section: { onToggle: handleToggle } } } }}
+            />
+          </MessageRoot>
+        </ChatRoot>,
+      );
+
+      // The input section starts collapsed (only the output is auto-opened).
+      const inputDetails = screen.getByText('Tool called:').closest('details')!;
+      expect(inputDetails.hasAttribute('open')).toBe(false);
+
+      // Simulate the user expanding it (native <details> toggle).
+      inputDetails.open = true;
+      fireEvent(inputDetails, new Event('toggle'));
+
+      // The consumer handler is observed…
+      expect(handleToggle).toHaveBeenCalledTimes(1);
+      // …and the internal controlled updater still runs, so the section stays open.
+      // A clobbered updater would let React snap `open` back to false on re-render.
+      expect(inputDetails.hasAttribute('open')).toBe(true);
     });
   });
 
