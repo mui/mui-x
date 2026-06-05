@@ -12,6 +12,7 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 import DefaultCloseIcon from '../icons/DefaultCloseIcon';
 import DefaultFileIcon from '../icons/DefaultFileIcon';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerAttachmentList');
 
@@ -169,11 +170,13 @@ const ChatComposerAttachmentList = React.forwardRef<
       }}
       slotProps={{
         ...slotProps,
-        attachmentList: {
-          className: clsx(classes.attachmentList, className),
-          sx,
-          ...(slotProps?.attachmentList as object),
-        } as any,
+        attachmentList: mergeSlotProps(
+          {
+            className: clsx(classes.attachmentList, className),
+            sx,
+          },
+          slotProps?.attachmentList,
+        ) as any,
       }}
     >
       {children ?? <DefaultAttachmentListContent />}

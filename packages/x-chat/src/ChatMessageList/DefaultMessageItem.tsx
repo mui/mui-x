@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import { ChatMessageGroup } from '../ChatMessage/ChatMessageGroup';
+import { ChatDateDivider } from '../ChatMessage/ChatDateDivider';
+import { ChatUnreadMarker } from '../ChatIndicators/ChatUnreadMarker';
 import { useChatSlots } from '../internals/ChatSlotsContext';
 import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
 
@@ -65,19 +67,47 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
   const slots = slotsProp ?? context.slots;
   const slotProps = slotPropsProp ?? context.slotProps;
 
-  // Always render `ChatMessageGroup`. It consumes `slots.messageGroup` as the
-  // group's wrapper element (and `slotProps.messageGroup` as that wrapper's
-  // props), so the default avatar/content/meta tree still renders inside it.
-  // Hoisting `messageGroup` to the row component here would let a plain wrapper
-  // element (e.g. `'section'`) replace the entire row and render empty, with the
-  // internal `messageId`/`index`/`items` props leaking onto the DOM node.
+  // Row-level dividers. Both the date divider and the unread marker are
+  // self-suppressing: they read `messageId`/`index`/`items` and render only at
+  // their boundary (a new calendar day, or the first unread message derived from
+  // the active conversation's `unreadCount`/`readState`), returning null otherwise.
+  // `null` hides the slot entirely; `undefined` falls back to the default component.
+  const DateDividerComponent = (slots.dateDivider ?? ChatDateDivider) as React.ElementType;
+  const UnreadMarkerComponent = (slots.unreadMarker ?? ChatUnreadMarker) as React.ElementType;
+
   return (
-    <ChatMessageGroup
-      messageId={id}
-      index={index}
-      items={items}
-      slots={slots}
-      slotProps={slotProps}
-    />
+    <React.Fragment>
+      {slots.dateDivider !== null && (
+        <DateDividerComponent
+          {...(slotProps.dateDivider ?? {})}
+          messageId={id}
+          index={index}
+          items={items}
+        />
+      )}
+      {slots.unreadMarker !== null && (
+        <UnreadMarkerComponent
+          {...(slotProps.unreadMarker ?? {})}
+          messageId={id}
+          index={index}
+          items={items}
+        />
+      )}
+      {/*
+        Always render `ChatMessageGroup`. It consumes `slots.messageGroup` as the
+        group's wrapper element (and `slotProps.messageGroup` as that wrapper's
+        props), so the default avatar/content/meta tree still renders inside it.
+        Hoisting `messageGroup` to the row component here would let a plain wrapper
+        element (e.g. `'section'`) replace the entire row and render empty, with the
+        internal `messageId`/`index`/`items` props leaking onto the DOM node.
+      */}
+      <ChatMessageGroup
+        messageId={id}
+        index={index}
+        items={items}
+        slots={slots}
+        slotProps={slotProps}
+      />
+    </React.Fragment>
   );
 });

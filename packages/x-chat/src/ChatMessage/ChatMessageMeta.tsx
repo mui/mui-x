@@ -8,6 +8,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageMeta');
 
@@ -101,11 +102,13 @@ const ChatMessageMeta = React.forwardRef<HTMLDivElement, ChatMessageMetaProps>(
         }}
         slotProps={{
           ...slotProps,
-          meta: {
-            className: clsx(classes.meta, className),
-            sx,
-            ...(slotProps?.meta as object),
-          } as any,
+          meta: mergeSlotProps(
+            {
+              className: clsx(classes.meta, className),
+              sx,
+            },
+            slotProps?.meta,
+          ) as any,
         }}
       />
     );

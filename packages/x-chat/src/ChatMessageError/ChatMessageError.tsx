@@ -13,6 +13,7 @@ import {
   useMessage,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   useChatMessageErrorUtilityClasses,
   type ChatMessageErrorClasses,
@@ -145,13 +146,15 @@ const ChatMessageError = React.forwardRef<HTMLDivElement, ChatMessageErrorProps>
         }}
         slotProps={{
           ...slotProps,
-          root: {
-            className: clsx(classes.root, className),
-            sx,
-            messageClassName: classes.message,
-            retryButtonClassName: classes.retryButton,
-            ...(slotProps?.root as object),
-          } as any,
+          root: mergeSlotProps(
+            {
+              className: clsx(classes.root, className),
+              sx,
+              messageClassName: classes.message,
+              retryButtonClassName: classes.retryButton,
+            },
+            slotProps?.root,
+          ) as any,
         }}
       />
     );

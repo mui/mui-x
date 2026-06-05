@@ -79,6 +79,33 @@ describe('ChatMessageError', () => {
     expect(screen.getByRole('button', { name: 'Retry' })).not.to.equal(null);
   });
 
+  it('preserves a function-form root slotProp instead of dropping it', () => {
+    storeRef = null;
+    render(
+      <ChatRoot adapter={createAdapter()} initialMessages={[errorMessage]}>
+        <StoreCapture />
+        <MessageRoot messageId="m1">
+          <ChatMessageError slotProps={{ root: (() => ({ 'data-fn-root': 'applied' })) as any }} />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    act(() => {
+      storeRef!.setMessageError('m1', {
+        code: 'SEND_ERROR',
+        message: 'Send failed',
+        source: 'send',
+        recoverable: true,
+        retryable: true,
+        details: { messageId: 'm1' },
+      });
+    });
+
+    // The `(ownerState) => props` callback form of slotProps.root must be resolved,
+    // not spread as an object (which would drop its owner-state-driven props).
+    expect(screen.getByRole('alert').getAttribute('data-fn-root')).to.equal('applied');
+  });
+
   it('invokes the runtime retry action when the retry button is clicked', async () => {
     const sendMessage = vi.fn(async () => {
       return new ReadableStream({

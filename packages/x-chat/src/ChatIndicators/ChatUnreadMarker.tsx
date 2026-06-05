@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import { UnreadMarker, type UnreadMarkerProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   useChatUnreadMarkerUtilityClasses,
   type ChatUnreadMarkerClasses,
@@ -58,15 +59,19 @@ const ChatUnreadMarker = React.forwardRef<HTMLDivElement, ChatUnreadMarkerProps>
         }}
         slotProps={{
           ...slotProps,
-          root: {
-            className: clsx(classes.root, className),
-            sx,
-            ...(slotProps?.root as object),
-          } as any,
-          label: {
-            className: classes.label,
-            ...(slotProps?.label as object),
-          } as any,
+          root: mergeSlotProps(
+            {
+              className: clsx(classes.root, className),
+              sx,
+            },
+            slotProps?.root,
+          ) as any,
+          label: mergeSlotProps(
+            {
+              className: classes.label,
+            },
+            slotProps?.label,
+          ) as any,
         }}
       />
     );

@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { MessageAvatar, type MessageAvatarProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageAvatar');
 
@@ -60,10 +61,12 @@ const ChatMessageAvatar = React.forwardRef<HTMLDivElement, ChatMessageAvatarProp
         }}
         slotProps={{
           ...slotProps,
-          avatar: {
-            className: clsx(classes.avatar, className),
-            ...(slotProps?.avatar as object),
-          } as any,
+          avatar: mergeSlotProps(
+            {
+              className: clsx(classes.avatar, className),
+            },
+            slotProps?.avatar,
+          ) as any,
         }}
       />
     );

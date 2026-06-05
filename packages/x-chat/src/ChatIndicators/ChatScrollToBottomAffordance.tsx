@@ -6,6 +6,7 @@ import { SxProps, Theme } from '@mui/system';
 import IconButton from '@mui/material/IconButton';
 import { ScrollToBottomAffordance, type ScrollToBottomAffordanceProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   useChatScrollToBottomAffordanceUtilityClasses,
   type ChatScrollToBottomAffordanceClasses,
@@ -78,12 +79,14 @@ const ChatScrollToBottomAffordance = React.forwardRef<
       }}
       slotProps={{
         ...slotProps,
-        root: {
-          size: 'small',
-          className: clsx(classes.root, className),
-          sx,
-          ...(slotProps?.root as object),
-        } as any,
+        root: mergeSlotProps(
+          {
+            size: 'small',
+            className: clsx(classes.root, className),
+            sx,
+          },
+          slotProps?.root,
+        ) as any,
       }}
     />
   );

@@ -6,6 +6,7 @@ import { SxProps, Theme } from '@mui/system';
 import { MessageActions, type MessageActionsProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageActions');
 
@@ -64,11 +65,13 @@ const ChatMessageActions = React.forwardRef<HTMLDivElement, ChatMessageActionsPr
         }}
         slotProps={{
           ...slotProps,
-          actions: {
-            className: clsx(classes.actions, className),
-            sx,
-            ...(slotProps?.actions as object),
-          } as any,
+          actions: mergeSlotProps(
+            {
+              className: clsx(classes.actions, className),
+              sx,
+            },
+            slotProps?.actions,
+          ) as any,
         }}
       />
     );

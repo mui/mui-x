@@ -6,6 +6,7 @@ import { SxProps, Theme } from '@mui/system';
 import { MessageListDateDivider, type MessageListDateDividerProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatDateDivider');
 
@@ -65,11 +66,13 @@ const ChatDateDivider = React.forwardRef<HTMLDivElement, ChatDateDividerProps>(
         }}
         slotProps={{
           ...slotProps,
-          divider: {
-            className: clsx(classes.dateDivider, className),
-            sx,
-            ...(slotProps?.divider as object),
-          } as any,
+          divider: mergeSlotProps(
+            {
+              className: clsx(classes.dateDivider, className),
+              sx,
+            },
+            slotProps?.divider,
+          ) as any,
         }}
       />
     );

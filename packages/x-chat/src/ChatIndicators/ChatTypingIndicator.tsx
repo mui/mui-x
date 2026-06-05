@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import { TypingIndicator, type TypingIndicatorProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   useChatTypingIndicatorUtilityClasses,
   type ChatTypingIndicatorClasses,
@@ -48,11 +49,13 @@ const ChatTypingIndicator = React.forwardRef<HTMLDivElement, ChatTypingIndicator
         }}
         slotProps={{
           ...slotProps,
-          root: {
-            className: clsx(classes.root, className),
-            sx,
-            ...(slotProps?.root as object),
-          } as any,
+          root: mergeSlotProps(
+            {
+              className: clsx(classes.root, className),
+              sx,
+            },
+            slotProps?.root,
+          ) as any,
         }}
       />
     );

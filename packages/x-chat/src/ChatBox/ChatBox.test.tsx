@@ -201,6 +201,86 @@ describe('ChatBox', () => {
     });
   });
 
+  describe('row dividers', () => {
+    it('renders a date divider at a calendar-day boundary in the default list', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialMessages={[
+            {
+              id: 'm1',
+              role: 'user',
+              createdAt: '2026-03-13T10:00:00.000Z',
+              parts: [{ type: 'text', text: 'Day one' }],
+            },
+            {
+              id: 'm2',
+              role: 'user',
+              createdAt: '2026-03-14T10:00:00.000Z',
+              parts: [{ type: 'text', text: 'Day two' }],
+            },
+          ]}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      // One day boundary (m1→m2) → exactly one self-suppressing divider renders.
+      expect(document.querySelectorAll('.MuiChatMessage-dateDivider').length).toBe(1);
+    });
+
+    it('hides date dividers when slots.dateDivider is null', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          slots={{ dateDivider: null }}
+          initialMessages={[
+            {
+              id: 'm1',
+              role: 'user',
+              createdAt: '2026-03-13T10:00:00.000Z',
+              parts: [{ type: 'text', text: 'Day one' }],
+            },
+            {
+              id: 'm2',
+              role: 'user',
+              createdAt: '2026-03-14T10:00:00.000Z',
+              parts: [{ type: 'text', text: 'Day two' }],
+            },
+          ]}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      expect(document.querySelector('.MuiChatMessage-dateDivider')).toBe(null);
+    });
+
+    it('renders the unread marker at the conversation unread boundary', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialConversations={[{ id: 'c1', title: 'General', unreadCount: 1 }]}
+          initialActiveConversationId="c1"
+          initialMessages={[
+            { id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Read' }] },
+            {
+              id: 'm2',
+              role: 'assistant',
+              status: 'sent',
+              parts: [{ type: 'text', text: 'Unread' }],
+            },
+          ]}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      // unreadCount=1 over 2 messages → boundary before the last → one marker renders.
+      expect(document.querySelector('.MuiChatUnreadMarker-root')).not.toBe(null);
+    });
+  });
+
   describe('feature: conversationList', () => {
     it('does not render the conversation list by default', () => {
       render(

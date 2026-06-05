@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import { ConversationHeaderInfo, type ConversationHeaderInfoProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   useChatConversationUtilityClasses,
   type ChatConversationClasses,
@@ -47,11 +48,13 @@ const ChatConversationHeaderInfo = React.forwardRef<
       }}
       slotProps={{
         ...slotProps,
-        headerInfo: {
-          className: clsx(classes.headerInfo, className),
-          sx,
-          ...(slotProps?.headerInfo as object),
-        } as any,
+        headerInfo: mergeSlotProps(
+          {
+            className: clsx(classes.headerInfo, className),
+            sx,
+          },
+          slotProps?.headerInfo,
+        ) as any,
       }}
     />
   );
