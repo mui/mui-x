@@ -123,7 +123,22 @@ export function processBarDataForPlot(
           ? getBarSampledSlots(baseScaleConfig.scale.range(), barCount)
           : null;
 
-      for (let cursor = 0; cursor < barCount; cursor += 1) {
+      // Slot position is linear in the cursor, so under zoom (where the band range is extended past
+      // the drawing area) most slots fall off-screen. Iterate only the visible cursor window instead
+      // of all `barCount` bars — otherwise a deeply-zoomed large series builds and culls hundreds of
+      // thousands of off-screen bars every frame.
+      let cursorStart = 0;
+      let cursorEnd = barCount;
+      if (slots && slots.step !== 0) {
+        const visibleMin = verticalLayout ? xMin : yMin;
+        const visibleMax = verticalLayout ? xMax : yMax;
+        const a = (visibleMin - slots.range[0]) / slots.step;
+        const b = (visibleMax - slots.range[0]) / slots.step;
+        cursorStart = Math.max(0, Math.floor(Math.min(a, b)) - 1);
+        cursorEnd = Math.min(barCount, Math.ceil(Math.max(a, b)) + 2);
+      }
+
+      for (let cursor = cursorStart; cursor < cursorEnd; cursor += 1) {
         const dataIndex = sampledIndices ? sampledIndices[cursor] : cursor;
         const barDimensions = getBarDimensions(dataIndex, groupIndex);
 
