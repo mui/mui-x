@@ -41,7 +41,7 @@ Same changes as in `@mui/x-data-grid@8.29.0`.
 
 Same changes as in `@mui/x-data-grid-pro@8.29.0`, plus:
 
-- [DataGridPremium] Update exceljs fork (@cherniavskii) (#22668) @github-actions[bot]
+- [DataGridPremium] Update exceljs fork (#22668) @cherniavskii
 
 ### Date and Time Pickers
 
