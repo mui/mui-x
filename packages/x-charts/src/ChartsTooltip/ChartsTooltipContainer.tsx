@@ -254,8 +254,6 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
             popperRef={popperRef}
             anchorEl={itemPosition ? anchorRef.current : pointerAnchorEl}
             modifiers={modifiers}
-            container={other.container ?? chartsLayerContainerRef.current}
-            popperOptions={{ ...other.popperOptions, strategy: 'fixed' }}
           >
             {children}
           </ChartsTooltipRoot>

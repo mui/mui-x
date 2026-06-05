@@ -116,9 +116,9 @@ You can pass those props to the tooltip using `slotProps.tooltip`, or directly t
 
 ## Portaling the tooltip
 
-By default, the tooltip is rendered inside the chart container with a fixed position.
+By default, the tooltip is rendered in a [portal](https://react.dev/reference/react-dom/createPortal) attached to the document's body.
 
-To render the tooltip outside, use the `container` prop to provide the element that receives the tooltip.
+To render it in a different element, use the `container` prop to provide the element that receives the tooltip.
 You can pass it through `slotProps.tooltip`, or directly to `ChartsTooltip`/`ChartsTooltipContainer` when composing a custom component.
 
 ```jsx
