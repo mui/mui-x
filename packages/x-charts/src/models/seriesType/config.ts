@@ -12,7 +12,6 @@ import type {
   DefaultizedPieSeriesType,
   PieItemIdentifier,
   PieValueType,
-  DefaultizedPieValueType,
   PieSeriesLayout,
 } from './pie';
 import type { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
