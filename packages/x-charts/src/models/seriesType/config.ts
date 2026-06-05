@@ -96,11 +96,11 @@ export interface ChartsSeriesConfig {
   };
   scatter: {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
-      MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;
+      MakeRequired<SeriesColor<ScatterValueType>, 'color'>;
     series: DefaultizedScatterSeriesType;
     seriesLayout: {};
     seriesProp: ScatterSeriesType;
-    valueType: ScatterValueType | null;
+    valueType: ScatterValueType;
     itemIdentifier: ScatterItemIdentifier;
     itemIdentifierWithData: ScatterItemIdentifier;
     axisType: 'cartesian';
