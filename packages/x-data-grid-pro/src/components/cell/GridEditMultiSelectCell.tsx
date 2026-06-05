@@ -456,6 +456,121 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
   );
 }
 
+GridEditMultiSelectAutocomplete.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * GridApi that let you manipulate the grid.
+   */
+  api: PropTypes.object.isRequired,
+  /**
+   * The mode of the cell.
+   */
+  cellMode: PropTypes.object.isRequired,
+  changeReason: PropTypes.oneOfType([PropTypes.any, PropTypes.object]).isRequired,
+  /**
+   * The column of the row that the current cell belongs to.
+   */
+  colDef: PropTypes.object.isRequired,
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.any.isRequired,
+  /**
+   * The cell value formatted with the column valueFormatter.
+   */
+  formattedValue: PropTypes.any,
+  getOptionLabel: PropTypes.func.isRequired,
+  getOptionValue: PropTypes.func.isRequired,
+  /**
+   * If true, the cell is the active element.
+   */
+  hasFocus: PropTypes.shape({
+    valueOf: PropTypes.func.isRequired,
+  }).isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.any.isRequired,
+  /**
+   * If true, the cell is editable.
+   */
+  isEditable: PropTypes.oneOfType([
+    PropTypes.any,
+    PropTypes.shape({
+      valueOf: PropTypes.func.isRequired,
+    }),
+  ]).isRequired,
+  isProcessingProps: PropTypes.oneOfType([
+    PropTypes.any,
+    PropTypes.shape({
+      valueOf: PropTypes.func.isRequired,
+    }),
+  ]).isRequired,
+  isValidating: PropTypes.oneOfType([
+    PropTypes.any,
+    PropTypes.shape({
+      valueOf: PropTypes.func.isRequired,
+    }),
+  ]).isRequired,
+  onDismiss: PropTypes.func.isRequired,
+  /**
+   * Callback called when the value is changed by the user.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {any[]} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
+   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   */
+  onValueChange: PropTypes.oneOfType([PropTypes.any, PropTypes.func]).isRequired,
+  /**
+   * The row model of the row that the current cell belongs to.
+   */
+  row: PropTypes.any.isRequired,
+  /**
+   * The node of the row that the current cell belongs to.
+   */
+  rowNode: PropTypes.object.isRequired,
+  selectedOptions: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.any,
+      PropTypes.shape({
+        label: PropTypes.any.isRequired,
+        value: PropTypes.any.isRequired,
+      }),
+    ]),
+  ).isRequired,
+  /**
+   * Props passed to internal components.
+   */
+  slotProps: PropTypes.oneOfType([PropTypes.any, PropTypes.object]).isRequired,
+  /**
+   * the tabIndex value.
+   */
+  tabIndex: PropTypes.shape({
+    toExponential: PropTypes.func.isRequired,
+    toFixed: PropTypes.func.isRequired,
+    toLocaleString: PropTypes.func.isRequired,
+    toPrecision: PropTypes.func.isRequired,
+    toString: PropTypes.func.isRequired,
+    valueOf: PropTypes.func.isRequired,
+  }).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
+  value: PropTypes.any,
+  valueOptions: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.any,
+      PropTypes.shape({
+        label: PropTypes.any.isRequired,
+        value: PropTypes.any.isRequired,
+      }),
+    ]),
+  ).isRequired,
+} as any;
+
 GridEditMultiSelectCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
