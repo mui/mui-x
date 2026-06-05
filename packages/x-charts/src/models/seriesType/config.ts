@@ -130,7 +130,7 @@ export interface ChartsSeriesConfig {
     itemIdentifierWithData: PieItemIdentifier;
     // `formattedValue` is the output of `valueFormatter`, so it cannot be part of the
     // value the formatter receives (the formatter is called to compute it).
-    valueType: Omit<DefaultizedPieValueType, 'formattedValue'>;
+    valueType: PieValueType;
     highlightScope: CommonHighlightScope;
     descriptionGetterParams: {
       identifier: PieItemIdentifier;
