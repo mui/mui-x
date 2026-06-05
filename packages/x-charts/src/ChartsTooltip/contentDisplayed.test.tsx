@@ -2,6 +2,8 @@ import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { BarChart, type BarChartProps } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { getCenter } from 'test/utils/charts/getCenter';
+import { onTestFinished } from 'vitest';
 import { useItemTooltip } from './useItemTooltip';
 import { useBarSeries } from '../hooks';
 import { ChartsTooltipContainer } from './ChartsTooltipContainer';
@@ -316,6 +318,98 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
           'current',
           '400',
         ]);
+      });
+    });
+  });
+
+  describe('visibility filtering', () => {
+    it('should filter hidden series using hiddenItems prop', async () => {
+      const { user, container, setProps } = render(
+        <BarChart
+          {...config}
+          series={[
+            { dataKey: 'v1', id: 'series-1', label: 'S1' },
+            { dataKey: 'v2', id: 'series-2', label: 'S2' },
+          ]}
+          hiddenItems={[]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'axis' } }}
+        />,
+        { wrapper },
+      );
+
+      const svg = container.querySelector('svg')!;
+
+      // Trigger the tooltip
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 198,
+          y: 60,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const firstRow = ['S1', '4'];
+        const secondRow = ['S2', '2'];
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          // Header
+          'A',
+          ...firstRow,
+          ...secondRow,
+        ]);
+      });
+
+      // Rerender with S2 hidden
+      setProps({ hiddenItems: [{ type: 'bar', seriesId: 'series-2' }] });
+
+      // Trigger tooltip again
+      await user.pointer({
+        target: svg,
+        coords: {
+          x: 201,
+          y: 60,
+        },
+      });
+
+      await waitFor(() => {
+        const cells = document.querySelectorAll<HTMLElement>(cellSelector);
+        const firstRow = ['S1', '1'];
+        // S2 should NOT be in tooltip - only one row
+        expect([...cells].map((cell) => cell.textContent)).to.deep.equal([
+          // Header
+          'B',
+          ...firstRow,
+        ]);
+      });
+    });
+  });
+
+  describe('container prop', () => {
+    it('should render the tooltip inside the provided container', async () => {
+      const customContainer = document.createElement('div');
+      document.body.appendChild(customContainer);
+
+      onTestFinished(() => {
+        document.body.removeChild(customContainer);
+      });
+
+      const { user, container } = render(
+        <BarChart
+          {...config}
+          series={[{ dataKey: 'v1', id: 's1', label: 'S1' }]}
+          xAxis={[{ dataKey: 'x', position: 'none' }]}
+          slotProps={{ tooltip: { trigger: 'axis', container: customContainer } }}
+        />,
+        { wrapper },
+      );
+      const svg = container.querySelector('svg')!;
+
+      await user.pointer({ target: svg, coords: { x: 198, y: 60 } });
+
+      await waitFor(() => {
+        expect(customContainer.querySelector(`.${chartsTooltipClasses.root}`)).not.to.equal(null);
       });
     });
   });
