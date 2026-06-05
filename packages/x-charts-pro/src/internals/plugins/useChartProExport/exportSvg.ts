@@ -42,26 +42,28 @@ async function exportSvg(
 
   clonedContainer.insertBefore(styleEl, clonedContainer.firstChild);
 
-  chartRoot.querySelectorAll('.MuiChartsLegend-label').forEach((element, i) => {
+  chartRoot.querySelectorAll('.MuiChartsLegend-series').forEach((seriesEle, i) => {
+    const element = seriesEle.children[1] as HTMLElement;
+    const markEl = seriesEle.children[0] as HTMLElement;
+
     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     const textRect = element.getBoundingClientRect();
 
     const svgRect = container!.getBoundingClientRect();
     text.setAttribute('x', `${textRect.left - svgRect.left}`); // svg-local position
-    text.setAttribute('y', `${textRect.top - svgRect.top}`); // Adjusting y to account for text height
+    text.setAttribute('y', `${seriesEle.getBoundingClientRect().top - svgRect.top}`); // Adjusting y to account for text height
     text.textContent = element.textContent || '';
     text.setAttribute('font-family', getComputedStyle(element).fontFamily);
     text.setAttribute('font-size', getComputedStyle(element).fontSize);
 
     clonedContainer.appendChild(text);
-    const markEl = chartRoot.querySelectorAll('.MuiChartsLabelMark-root')[i]!;
     const markRect = markEl.getBoundingClientRect();
 
     const markSvg = markEl.children[0].cloneNode(true) as SVGElement;
     markSvg.setAttribute('width', `${markRect.width}`);
     markSvg.setAttribute('height', `${markRect.height}`);
     markSvg.setAttribute('x', `${markRect.left - svgRect.left}`); // svg-local position
-    markSvg.setAttribute('y', `${markRect.top - svgRect.top}`);
+    markSvg.setAttribute('y', `${seriesEle.getBoundingClientRect().top - svgRect.top}`);
     clonedContainer.appendChild(markSvg);
   });
 
