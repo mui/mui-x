@@ -68,12 +68,12 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
 
   return (
     <GroupSlot
+      {...(slotProps.messageGroup ?? {})}
       messageId={id}
       index={index}
       items={items}
       slots={slots}
       slotProps={slotProps}
-      {...(slotProps.messageGroup ?? {})}
     />
   );
 });

@@ -95,7 +95,7 @@ describe('ChatMessageGroup', () => {
     expect(document.body.textContent).toContain('Alice Author');
   });
 
-  it('overrides the author label via slots.message.authorName', () => {
+  it('overrides the author label via slots.messageAuthorName', () => {
     function CustomLabel(props: { children?: React.ReactNode }) {
       return <span data-testid="custom-author-name">[{props.children}]</span>;
     }
@@ -124,7 +124,7 @@ describe('ChatMessageGroup', () => {
     );
   });
 
-  it('hides the author label when slots.message.authorName is null', () => {
+  it('hides the author label when slots.messageAuthorName is null', () => {
     render(
       <ChatBox
         adapter={createAdapter()}
@@ -147,7 +147,7 @@ describe('ChatMessageGroup', () => {
     expect(document.body.textContent).not.toContain('Alice Hidden');
   });
 
-  it('forwards slots.message.root to ChatMessage instead of replacing the row', () => {
+  it('forwards slots.messageRoot to ChatMessage instead of replacing the row', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
