@@ -5,14 +5,13 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import { MessageListDateDivider, type MessageListDateDividerProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatDateDivider');
 
 export interface ChatDateDividerProps extends MessageListDateDividerProps {
   className?: string;
   sx?: SxProps<Theme>;
-  classes?: Partial<ChatMessageClasses>;
 }
 
 const ChatDateDividerStyled = styled('div', {
@@ -51,8 +50,8 @@ const ChatDateDividerLabelStyled = styled('div', {
 const ChatDateDivider = React.forwardRef<HTMLDivElement, ChatDateDividerProps>(
   function ChatDateDivider(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatDateDivider' });
-    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
-    const classes = useChatMessageUtilityClasses(classesProp);
+    const { slots, slotProps, className, sx, ...other } = props;
+    const classes = useChatMessageUtilityClasses(undefined);
 
     return (
       <MessageListDateDivider
@@ -82,7 +81,6 @@ ChatDateDivider.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  classes: PropTypes.object,
   className: PropTypes.string,
   formatDate: PropTypes.func,
   index: PropTypes.number,

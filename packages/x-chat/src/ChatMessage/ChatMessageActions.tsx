@@ -5,14 +5,13 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import { MessageActions, type MessageActionsProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageActions');
 
 export interface ChatMessageActionsProps extends MessageActionsProps {
   className?: string;
   sx?: SxProps<Theme>;
-  classes?: Partial<ChatMessageClasses>;
 }
 
 const ChatMessageActionsStyled = styled('div', {
@@ -52,8 +51,8 @@ const ChatMessageActionsStyled = styled('div', {
 const ChatMessageActions = React.forwardRef<HTMLDivElement, ChatMessageActionsProps>(
   function ChatMessageActions(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageActions' });
-    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
-    const classes = useChatMessageUtilityClasses(classesProp);
+    const { slots, slotProps, className, sx, ...other } = props;
+    const classes = useChatMessageUtilityClasses(undefined);
 
     return (
       <MessageActions
@@ -81,7 +80,6 @@ ChatMessageActions.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  classes: PropTypes.object,
   className: PropTypes.string,
   slotProps: PropTypes.object,
   slots: PropTypes.object,

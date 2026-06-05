@@ -6,7 +6,7 @@ import { alpha } from '@mui/material/styles';
 import { MessageContent, type MessageContentProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useCopyToClipboard } from '../internals/useCopyToClipboard';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { renderMarkdown } from './renderMarkdown';
 
 // ---------------------------------------------------------------------------
@@ -151,7 +151,6 @@ const useThemeProps = createUseThemeProps('MuiChatMessageContent');
 
 export interface ChatMessageContentProps extends MessageContentProps {
   className?: string;
-  classes?: Partial<ChatMessageClasses>;
 }
 
 const ChatMessageContentStyled = styled('div', {
@@ -1123,15 +1122,8 @@ const sourceDocumentPartSlots = {
 const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentProps>(
   function ChatMessageContent(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageContent' });
-    const {
-      slots,
-      slotProps,
-      className,
-      classes: classesProp,
-      partProps: userPartProps,
-      ...other
-    } = props;
-    const classes = useChatMessageUtilityClasses(classesProp);
+    const { slots, slotProps, className, partProps: userPartProps, ...other } = props;
+    const classes = useChatMessageUtilityClasses(undefined);
 
     return (
       <MessageContent
@@ -1206,7 +1198,6 @@ ChatMessageContent.propTypes = {
    * Useful for placing inline metadata (e.g. timestamp, status) inside the bubble.
    */
   afterContent: PropTypes.node,
-  classes: PropTypes.object,
   className: PropTypes.string,
   /**
    * Props forwarded to the built-in unstyled part renderer components.

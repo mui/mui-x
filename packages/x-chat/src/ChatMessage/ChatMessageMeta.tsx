@@ -7,17 +7,13 @@ import { MessageMeta, type MessageMetaProps } from '@mui/x-chat-headless';
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageMeta');
 
 export interface ChatMessageMetaProps extends MessageMetaProps {
   className?: string;
   sx?: SxProps<Theme>;
-  // `ChatMessageMeta` only applies the `meta` class; the rest of the shared
-  // `MuiChatMessage-*` namespace (avatar, root, role/state classes, …) is applied
-  // by `ChatMessage`/`ChatMessageGroup`, so don't advertise them on this component.
-  classes?: Partial<Pick<ChatMessageClasses, 'meta'>>;
 }
 
 const ChatMessageMetaStyled = styled('div', {
@@ -91,8 +87,8 @@ const ChatMessageStatusSlot = React.forwardRef<HTMLSpanElement, any>(function Ch
 const ChatMessageMeta = React.forwardRef<HTMLDivElement, ChatMessageMetaProps>(
   function ChatMessageMeta(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageMeta' });
-    const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
-    const classes = useChatMessageUtilityClasses(classesProp);
+    const { slots, slotProps, className, sx, ...other } = props;
+    const classes = useChatMessageUtilityClasses(undefined);
 
     return (
       <MessageMeta
@@ -121,7 +117,6 @@ ChatMessageMeta.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  classes: PropTypes.object,
   className: PropTypes.string,
   slotProps: PropTypes.object,
   slots: PropTypes.object,

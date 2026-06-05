@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import { MessageGroup, type MessageGroupProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { ChatMessage, type ChatMessageSlots, type ChatMessageSlotProps } from './ChatMessage';
 import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
 
@@ -38,7 +38,6 @@ export interface ChatMessageGroupSlotProps extends Pick<
 export interface ChatMessageGroupProps extends Omit<MessageGroupProps, 'slots' | 'slotProps'> {
   className?: string;
   sx?: SxProps<Theme>;
-  classes?: Partial<ChatMessageClasses>;
   slots?: ChatMessageGroupSlots;
   slotProps?: ChatMessageGroupSlotProps;
 }
@@ -128,17 +127,8 @@ const ChatMessageGroupTimestampStyled = styled('span', {
 const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>(
   function ChatMessageGroup(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageGroup' });
-    const {
-      slots,
-      slotProps,
-      className,
-      classes: classesProp,
-      sx,
-      children,
-      messageId,
-      ...other
-    } = props;
-    const classes = useChatMessageUtilityClasses(classesProp);
+    const { slots, slotProps, className, sx, children, messageId, ...other } = props;
+    const classes = useChatMessageUtilityClasses(undefined);
 
     // Map the flat `message*` keys onto the inner `ChatMessage`'s short local
     // slots. `messageRoot` swaps ChatMessage's own styled root — it is applied by
@@ -223,7 +213,6 @@ ChatMessageGroup.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
-  classes: PropTypes.object,
   className: PropTypes.string,
   /**
    * A function that maps a message to a group key.

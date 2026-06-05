@@ -1,10 +1,1 @@
-{
-  "componentDescription": "",
-  "propDescriptions": {},
-  "classDescriptions": {
-    "meta": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the message meta element"
-    }
-  }
-}
+{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }

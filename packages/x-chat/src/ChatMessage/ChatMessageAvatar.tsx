@@ -4,13 +4,12 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { MessageAvatar, type MessageAvatarProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
+import { useChatMessageUtilityClasses } from './chatMessageClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageAvatar');
 
 export interface ChatMessageAvatarProps extends MessageAvatarProps {
   className?: string;
-  classes?: Partial<ChatMessageClasses>;
 }
 
 const ChatMessageAvatarStyled = styled('div', {
@@ -48,8 +47,8 @@ const ChatMessageAvatarStyled = styled('div', {
 const ChatMessageAvatar = React.forwardRef<HTMLDivElement, ChatMessageAvatarProps>(
   function ChatMessageAvatar(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageAvatar' });
-    const { slots, slotProps, className, classes: classesProp, ...other } = props;
-    const classes = useChatMessageUtilityClasses(classesProp);
+    const { slots, slotProps, className, ...other } = props;
+    const classes = useChatMessageUtilityClasses(undefined);
 
     return (
       <MessageAvatar
@@ -76,7 +75,6 @@ ChatMessageAvatar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
-  classes: PropTypes.object,
   className: PropTypes.string,
   slotProps: PropTypes.object,
   slots: PropTypes.object,

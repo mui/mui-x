@@ -5,14 +5,7 @@
     "import { ChatMessageMeta } from '@mui/x-chat/ChatMessage';",
     "import { ChatMessageMeta } from '@mui/x-chat';"
   ],
-  "classes": [
-    {
-      "key": "meta",
-      "className": "MuiChatMessageMeta-meta",
-      "description": "Styles applied to the message meta element.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "muiName": "MuiChatMessageMeta",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageMeta.tsx",
   "inheritance": null,
