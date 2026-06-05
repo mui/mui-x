@@ -50,8 +50,12 @@ async function exportSvg(
     const textRect = element.getBoundingClientRect();
 
     const svgRect = container!.getBoundingClientRect();
-    text.setAttribute('x', `${textRect.left - svgRect.left}`); // svg-local position
-    text.setAttribute('y', `${seriesEle.getBoundingClientRect().top - svgRect.top}`); // Adjusting y to account for text height
+    text.setAttribute('x', `${textRect.left - svgRect.left}`);
+    text.setAttribute(
+      'y',
+      `${seriesEle.getBoundingClientRect().top - svgRect.top + seriesEle.getBoundingClientRect().height / 2}`,
+    );
+    text.setAttribute('dominant-baseline', 'central');
     text.textContent = element.textContent || '';
     text.setAttribute('font-family', getComputedStyle(element).fontFamily);
     text.setAttribute('font-size', getComputedStyle(element).fontSize);
@@ -62,8 +66,9 @@ async function exportSvg(
     const markSvg = markEl.children[0].cloneNode(true) as SVGElement;
     markSvg.setAttribute('width', `${markRect.width}`);
     markSvg.setAttribute('height', `${markRect.height}`);
-    markSvg.setAttribute('x', `${markRect.left - svgRect.left}`); // svg-local position
+    markSvg.setAttribute('x', `${markRect.left - svgRect.left}`);
     markSvg.setAttribute('y', `${seriesEle.getBoundingClientRect().top - svgRect.top}`);
+
     clonedContainer.appendChild(markSvg);
   });
 
