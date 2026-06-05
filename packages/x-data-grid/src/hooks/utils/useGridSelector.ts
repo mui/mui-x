@@ -34,9 +34,11 @@ const createRefs = () =>
 const EMPTY = [] as unknown[];
 
 type Refs<T> = {
-  // `state` stores the selected value returned by this hook. `storeState` stores the
-  // grid store object that produced it, so the mounted-phase catch-up can detect updates
-  // that happened before the subscription was attached without subscribing during render.
+  // `state` is the selected value currently returned by this hook. `storeState` is the
+  // store state object identity from which it was computed. The store always replaces its
+  // state object on every change, so comparing identities lets the post-commit catch-up
+  // (and its StrictMode re-runs) skip recomputing the selector when nothing changed between
+  // render and commit, while still applying any update that slipped in during that window.
   state: T;
   storeState: GridStateCommunity | null;
   equals: <U = T>(a: U, b: U) => boolean;
@@ -113,6 +115,11 @@ export function useGridSelector<Api extends GridApiCommon, Args, T>(
     EMPTY,
   );
 
+  // Subscribe only after commit so a render that never mounts (e.g. suspended during
+  // hydration) cannot receive store updates and trigger a state update before mount (#17077).
+  // A layout effect (not a passive one) runs `updateState` synchronously before paint, so any
+  // store change that happened between render and commit (including from a child ref callback
+  // or child layout effect) is applied without a stale first frame.
   useEnhancedEffect(() => {
     updateState();
     return apiRef.current.store.subscribe(updateState);
