@@ -8,7 +8,7 @@ components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, Ra
 
 <p class="description">Let users export a chart as an image or in PDF format.</p>
 
-Charts can be exported as images, or as PDFs using the browser's native print dialog.
+Charts can be exported as images, as SVG files, or as PDFs using the browser's native print dialog.
 The exporting feature is available for the following charts:
 
 - `LineChartPro`
@@ -177,3 +177,21 @@ apiRef.current?.exportAsImage({ pixelRatio: 3 });
 ```
 
 {{"demo": "ExportChartAsImage.js"}}
+
+### Export as SVG
+
+The `apiRef` prop also exposes the `exportAsSvg()` method to export the chart as a standalone SVG file.
+Unlike image export, this requires no extra dependency.
+
+The output is vector-based, so it stays crisp at any size and remains editable in design tools such as Figma.
+Series rendered to a canvas (for example, the WebGL renderer) cannot be vectorized and are embedded as a raster image inside the SVG, while the rest of the chart (axes, labels, legend) stays vector.
+
+```tsx
+apiRef.current?.exportAsSvg({ fileName: 'my-chart' });
+```
+
+{{"demo": "ExportChartAsSvg.js"}}
+
+:::warning
+Styles served from a cross-origin stylesheet cannot be read for security reasons and are omitted from the exported SVG, the same way they are for image export.
+:::

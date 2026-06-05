@@ -92,12 +92,12 @@ function buildLegendGroup(
   return group;
 }
 
-function exportSvg(
+async function exportSvg(
   chartRoot: Element,
   chartContainer: HTMLElement | SVGSVGElement,
   options?: ChartSvgExportOptions,
 ) {
-  const { fileName, nonce } = options ?? {};
+  const { fileName, nonce, copyStyles = true, onBeforeExport } = options ?? {};
   const doc = ownerDocument(chartRoot);
 
   const layers = collectLayers(chartContainer);
@@ -131,13 +131,15 @@ function exportSvg(
 
   /* Inline the resolved page styles so the file renders standalone. Read from the chart's own
    * root, which is a ShadowRoot when the chart lives in shadow DOM, otherwise the document. */
-  const styleRoot = chartContainer.getRootNode();
-  const styleEl = doc.createElementNS(SVG_NS, 'style');
-  if (nonce) {
-    styleEl.setAttribute('nonce', nonce);
+  if (copyStyles) {
+    const styleRoot = chartContainer.getRootNode();
+    const styleEl = doc.createElementNS(SVG_NS, 'style');
+    if (nonce) {
+      styleEl.setAttribute('nonce', nonce);
+    }
+    styleEl.textContent = collectCssText(styleRoot instanceof ShadowRoot ? styleRoot : doc);
+    outSvg.appendChild(styleEl);
   }
-  styleEl.textContent = collectCssText(styleRoot instanceof ShadowRoot ? styleRoot : doc);
-  outSvg.appendChild(styleEl);
 
   // Composite the plot layers in z-order (DOM order).
   layers.forEach((layer) => {
@@ -161,6 +163,7 @@ function exportSvg(
       /* Nest the SVG layer, giving it an explicit position/size so the nested `<svg>` doesn't
        * collapse without the dimensions it used to inherit from CSS. */
       const clone = layer.element.cloneNode(true) as SVGSVGElement;
+      clone.querySelectorAll('[data-hide-on-export]').forEach((el) => el.remove());
       clone.setAttribute('x', `${x}`);
       clone.setAttribute('y', `${y}`);
       clone.setAttribute('width', `${layerRect.width}`);
@@ -174,6 +177,9 @@ function exportSvg(
   if (legendGroup) {
     outSvg.appendChild(legendGroup);
   }
+
+  // Let consumers tweak the output SVG (add a title, watermark, etc.) before serialization.
+  await onBeforeExport?.(outSvg);
 
   const svgString = new XMLSerializer().serializeToString(outSvg);
 
