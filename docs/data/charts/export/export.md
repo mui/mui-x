@@ -1,7 +1,7 @@
 ---
 title: Charts - Export
 productId: x-charts
-components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, RadarChartPro, SankeyChart
+components: ScatterChartPro, BarChartPro, LineChartPro, Heatmap, FunnelChart, RadarChartPro, SankeyChart, ChartsToolbarSvgExportTrigger
 ---
 
 # Charts - Export [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { useChartsSlots } from '@mui/x-charts/internals';
@@ -49,5 +50,26 @@ const ChartsToolbarSvgExportTrigger = forwardRef<
 
   return <React.Fragment>{element}</React.Fragment>;
 });
+
+ChartsToolbarSvgExportTrigger.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  id: PropTypes.string,
+  options: PropTypes.shape({
+    copyStyles: PropTypes.bool,
+    disableToolbarButton: PropTypes.bool,
+    fileName: PropTypes.string,
+    nonce: PropTypes.string,
+    onBeforeExport: PropTypes.func,
+  }),
+  render: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+  size: PropTypes.oneOf(['large', 'medium', 'small']),
+  style: PropTypes.object,
+  tabIndex: PropTypes.number,
+} as any;
 
 export { ChartsToolbarSvgExportTrigger };

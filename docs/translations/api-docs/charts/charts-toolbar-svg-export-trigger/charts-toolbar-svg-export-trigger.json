@@ -1,0 +1,5 @@
+{
+  "componentDescription": "A button that triggers an SVG export.\nIt renders the `baseButton` slot.",
+  "propDescriptions": {},
+  "classDescriptions": {}
+}
