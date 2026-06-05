@@ -26,7 +26,7 @@ Unlike headless table libraries, you can start building immediately without impl
 
 ### Comparisons
 
-#### AG Grid
+#### Comparison with AG Grid
 
 AG Grid is a framework-agnostic solution that supports React, Vue, and Angular.
 Here's how the MUI X Data Grid differs:
@@ -35,7 +35,7 @@ Here's how the MUI X Data Grid differs:
 - **Material UI integration**: Seamless integration with Material UI's design system and theming, allowing you to maintain visual consistency across your application
 - **Component composition**: Highly composable architecture that lets you customize individual parts while maintaining the full-featured grid experience
 
-#### TanStack Table
+#### Comparison with TanStack Table
 
 TanStack Table (formerly React Table) is a headless table library that provides table logic without any UI.
 Here's how the MUI X Data Grid differs:
