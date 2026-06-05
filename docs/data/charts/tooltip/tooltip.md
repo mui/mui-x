@@ -133,10 +133,8 @@ You can pass these props to the tooltip using `slotProps.tooltip`, or directly t
 ## Portaling the tooltip
 
 By default, the tooltip is rendered inside the chart container with a fixed position.
-This means plain `overflow: hidden` ancestors don't clip it.
-But an ancestor that establishes a containing block for fixed elements—through `transform`, `filter`, or `will-change`—combined with `overflow: hidden` does clip the tooltip (a common case when a chart sits inside a virtualized list or a transformed cell).
 
-To render the tooltip outside of such an ancestor, use the `container` prop to provide the element that receives the tooltip—`document.body` in most cases.
+To render the tooltip outside, use the `container` prop to provide the element that receives the tooltip.
 You can pass it through `slotProps.tooltip`, or directly to `ChartsTooltip`/`ChartsTooltipContainer` when composing a custom component.
 
 ```jsx
