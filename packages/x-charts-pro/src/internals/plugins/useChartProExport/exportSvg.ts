@@ -185,7 +185,7 @@ async function exportSvg(
 
   const blob = new Blob([svgString], { type: 'image/svg+xml' });
   const url = URL.createObjectURL(blob);
-  triggerDownload(url, fileName || `${document.title}.svg`);
+  triggerDownload(url, `${fileName || document.title}.svg`);
   URL.revokeObjectURL(url);
 }
 
