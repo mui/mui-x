@@ -61,23 +61,25 @@ yarn add rasterizehtml
 
 ## Export options
 
-Export behavior can be modified with [print](/x/api/charts/chart-print-export-options/) and [image export](/x/api/charts/chart-image-export-options/) options.
+Export behavior can be modified with [print](/x/api/charts/chart-print-export-options/), [image export](/x/api/charts/chart-image-export-options/), and [SVG export](/x/api/charts/chart-svg-export-options/) options.
 These options can be passed to the built-in toolbar using `slotProps.toolbar`, and are then automatically displayed.
 
 You can customize their respective behaviors by passing an options object to `slotProps.toolbar`, or to the export trigger itself if you're using a custom toolbar:
 
 ```tsx
 // Default toolbar:
-<BarChartPro slotProps={{ toolbar: { printOptions, imageExportOptions } }} />
+<BarChartPro slotProps={{ toolbar: { printOptions, imageExportOptions, svgExportOptions } }} />
 
 // Custom trigger:
 <ChartsToolbarImageExportTrigger options={imageExportOptions} />
 <ChartsToolbarPrintExportTrigger options={printExportOptions} />
+<ChartsToolbarSvgExportTrigger options={svgExportOptions} />
 ```
 
 ### Export formats
 
-To disable the print export, set the `disableToolbarButton` property to `true`.
+To disable the print export, set the `disableToolbarButton` property to `true` on `printOptions`.
+The SVG export can be disabled the same way through `svgExportOptions`.
 
 You can customize image export formats by providing an array of objects to the `imageExportOptions` property.
 These objects must contain the `type` property which specifies the image format.
@@ -95,8 +97,8 @@ The name of the exported file has been customized to resemble the chart's title.
 
 To add custom styles or modify the chart's appearance before exporting, use the `onBeforeExport` callback.
 
-When exporting, the chart is first rendered into an iframe and then exported as an image or PDF.
-The `onBeforeExport` callback gives you access to the iframe before the export process starts.
+For image and PDF export, the chart is first rendered into an iframe, so `onBeforeExport` receives that iframe before the export process starts.
+SVG export has no iframe, so its `onBeforeExport` receives the `<svg>` element to be exported instead.
 
 For example, you can add the title and caption to the exported chart as shown below:
 
