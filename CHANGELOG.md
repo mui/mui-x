@@ -29,6 +29,16 @@ Same changes as in `@mui/x-data-grid@8.29.0`.
 
 #### `@mui/x-data-grid-premium@8.29.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
+> This release includes a version bump of the `@mui/x-internal-exceljs-fork` package to address the vulnerable dependencies.
+> The following CVEs are fixed:
+>
+> - <https://github.com/advisories/GHSA-ph9p-34f9-6g65>
+> - <https://github.com/isaacs/minimatch/security/advisories/GHSA-23c5-xmqv-rm74>
+> - <https://github.com/advisories/GHSA-w5hq-g745-h8pq>
+>
+> To make this security update possible, we bumped the `node` version requirement from `>=14.0.0` to `>=14.17.0`.
+> [Node.js 14.17.0](https://nodejs.org/en/blog/release/v14.17.0) was released in May 2021, so we consider it safe to bump the requirement without causing issues for our users.
+
 Same changes as in `@mui/x-data-grid-pro@8.29.0`, plus:
 
 - [DataGridPremium] Update exceljs fork (@cherniavskii) (#22668) @github-actions[bot]
