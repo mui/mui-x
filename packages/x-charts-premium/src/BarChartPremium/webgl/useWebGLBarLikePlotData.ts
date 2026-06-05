@@ -28,6 +28,7 @@ export interface WebGLBarLikeItem {
 export interface WebGLBarLikeSeries<T extends WebGLBarLikeItem> {
   seriesId: SeriesId;
   data: readonly T[];
+  layout?: 'vertical' | 'horizontal';
 }
 
 export interface WebGLBarLikePlotData {
@@ -75,6 +76,12 @@ function ensureCapacity(pool: ArrayPool | null, maxCount: number): ArrayPool {
 // don't need a separate per-instance attribute on the GPU side.
 const HIGHLIGHTED_BRIGHTNESS = 1.2;
 const FADED_OPACITY = 0.3;
+// Gaps below this (CSS px) get filled by expanding band half-size to half the
+// step, avoiding sub-pixel hairlines from the rasterizer.
+const GAP_FILL_THRESHOLD_PX = 1;
+// Floor to keep thin quads from falling between pixel centers and getting
+// culled at extreme zoom-out.
+const MIN_BAND_HALF_SIZE_PX = 0.5;
 
 function setCornerRadii(
   radius: number,
@@ -162,18 +169,68 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
 
     let cursor = 0;
 
-    for (let s = 0; s < completedData.length; s += 1) {
-      const processed = completedData[s];
+    for (let seriesIndex = 0; seriesIndex < completedData.length; seriesIndex += 1) {
+      const processed = completedData[seriesIndex];
       const seriesId = processed.seriesId;
       const data = processed.data;
       const dataLength = data.length;
+      const bandIsY = processed.layout === 'horizontal';
+
+      // `hidden` is series-level (mirrored onto every bar by useBarPlotData);
+      // peek at the first bar to skip the whole series.
+      if (dataLength === 0 || data[0].hidden) {
+        continue;
+      }
+
+      // Probe 1 = bar size; probe 2 = center-to-center step. Track dataIndex
+      // so null bars between probes don't inflate the step.
+      let probe: T | null = null;
+      let probeIndex = 0;
+      let probe2: T | null = null;
+      let probe2Index = 0;
+      for (let i = 0; i < dataLength; i += 1) {
+        const candidate = data[i];
+        if (candidate.value != null && candidate.width > 0 && candidate.height > 0) {
+          if (probe === null) {
+            probe = candidate;
+            probeIndex = i;
+          } else {
+            probe2 = candidate;
+            probe2Index = i;
+            break;
+          }
+        }
+      }
+      if (probe === null) {
+        continue;
+      }
+
+      // Round to whole pixels so the rendered half-size stays stable across
+      // zoom steps; sub-pixel jitter causes an "accordion" effect.
+      const rawBarSize = bandIsY ? probe.height : probe.width;
+      const barSize = Math.round(rawBarSize);
+      let step: number;
+      if (probe2 === null) {
+        step = barSize;
+      } else {
+        const indexGap = probe2Index - probeIndex;
+        const span = bandIsY ? probe2.y - probe.y : probe2.x - probe.x;
+        step = span / indexGap;
+      }
+      // Use the linear lower bound of the gap (`step - rawBarSize - 0.5`)
+      // rather than `step - barSize`: rounding makes the discrete gap jump by
+      // 1px at zoom boundaries, flipping `fillGap` and causing visible
+      // oscillation. The lower bound is continuous in zoom.
+      const gapLowerBound = step - rawBarSize - 0.5;
+      const fillGap = gapLowerBound > 0 && gapLowerBound < GAP_FILL_THRESHOLD_PX;
+      let bandHalfRender = fillGap ? step * 0.5 : barSize * 0.5;
+      if (bandHalfRender < MIN_BAND_HALF_SIZE_PX) {
+        bandHalfRender = MIN_BAND_HALF_SIZE_PX;
+      }
 
       for (let i = 0; i < dataLength; i += 1) {
         const bar = data[i];
 
-        if (bar.hidden) {
-          continue;
-        }
         const value = bar.value;
         if (value == null) {
           continue;
@@ -186,12 +243,15 @@ export function useWebGLBarLikePlotData<T extends WebGLBarLikeItem>(
 
         const halfW = w * 0.5;
         const halfH = h * 0.5;
+        // Value axis stays exact; band axis uses the per-series override.
+        const renderHalfW = bandIsY ? halfW : bandHalfRender;
+        const renderHalfH = bandIsY ? bandHalfRender : halfH;
 
         const c2 = cursor * 2;
         centers[c2] = bar.x + halfW - drawingAreaLeft;
         centers[c2 + 1] = bar.y + halfH - drawingAreaTop;
-        halfSizes[c2] = halfW;
-        halfSizes[c2 + 1] = halfH;
+        halfSizes[c2] = renderHalfW;
+        halfSizes[c2 + 1] = renderHalfH;
 
         const rgba = parseColor(bar.color);
         const c4 = cursor * 4;
