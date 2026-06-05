@@ -44,8 +44,9 @@ const selectorValueA = (apiRef: any) =>
 const selectorValueB = (apiRef: any) =>
   (apiRef.current.state as TestState).selectorTestState.b ?? 0;
 
-describe('useGridSelector', () => {
-  const { render } = createRenderer();
+// Run in both StrictMode on and off
+describe.each([true, false])('useGridSelector (strict: %s)', (strict) => {
+  const { render } = createRenderer({ strict });
 
   it('should catch store updates fired before the selector subscription is attached', () => {
     const apiRef = createApiRef({ selectorTestState: { value: 0 } });
