@@ -3,6 +3,7 @@ import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { BarChart, type BarChartProps, barClasses } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getCenter } from 'test/utils/charts/getCenter';
+import { onTestFinished } from 'vitest';
 import { useItemTooltip } from './useItemTooltip';
 import { useBarSeries } from '../hooks';
 import { ChartsTooltipContainer } from './ChartsTooltipContainer';
@@ -592,6 +593,10 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
       const customContainer = document.createElement('div');
       document.body.appendChild(customContainer);
 
+      onTestFinished(() => {
+        document.body.removeChild(customContainer);
+      });
+
       const { user, container } = render(
         <BarChart
           {...config}
@@ -608,8 +613,6 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
       await waitFor(() => {
         expect(customContainer.querySelector(`.${chartsTooltipClasses.root}`)).not.to.equal(null);
       });
-
-      document.body.removeChild(customContainer);
     });
   });
 });
