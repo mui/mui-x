@@ -8,13 +8,13 @@
   "classes": [
     {
       "key": "area",
-      "className": "MuiRadialAreaPlot-area",
+      "className": "MuiRadialLineChart-area",
       "description": "Styles applied to the area element.",
       "isGlobal": false
     },
     {
       "key": "areaPlot",
-      "className": "MuiRadialAreaPlot-areaPlot",
+      "className": "MuiRadialLineChart-areaPlot",
       "description": "Styles applied to the AreaPlot root element.",
       "isGlobal": false
     }

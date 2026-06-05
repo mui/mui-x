@@ -21,49 +21,49 @@
       "name": "line",
       "description": "The component that renders the line.",
       "default": "LineElementPath",
-      "class": "MuiLineElement-line"
+      "class": "MuiLineChart-line"
     }
   ],
   "classes": [
     {
       "key": "area",
-      "className": "MuiLineElement-area",
+      "className": "MuiLineChart-area",
       "description": "Styles applied to the area element.",
       "isGlobal": false
     },
     {
       "key": "areaPlot",
-      "className": "MuiLineElement-areaPlot",
+      "className": "MuiLineChart-areaPlot",
       "description": "Styles applied to the AreaPlot root element.",
       "isGlobal": false
     },
     {
       "key": "highlight",
-      "className": "MuiLineElement-highlight",
+      "className": "MuiLineChart-highlight",
       "description": "Styles applied to the highlight element.",
       "isGlobal": false
     },
     {
       "key": "linePlot",
-      "className": "MuiLineElement-linePlot",
+      "className": "MuiLineChart-linePlot",
       "description": "Styles applied to the LinePlot root element.",
       "isGlobal": false
     },
     {
       "key": "mark",
-      "className": "MuiLineElement-mark",
+      "className": "MuiLineChart-mark",
       "description": "Styles applied to the mark element.",
       "isGlobal": false
     },
     {
       "key": "markAnimate",
-      "className": "MuiLineElement-markAnimate",
+      "className": "MuiLineChart-markAnimate",
       "description": "Styles applied to a mark element when it is animated.",
       "isGlobal": false
     },
     {
       "key": "markPlot",
-      "className": "MuiLineElement-markPlot",
+      "className": "MuiLineChart-markPlot",
       "description": "Styles applied to the MarkPlot root element.",
       "isGlobal": false
     }

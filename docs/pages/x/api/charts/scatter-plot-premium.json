@@ -29,31 +29,31 @@
   "classes": [
     {
       "key": "focusedMark",
-      "className": "MuiScatterPlotPremium-focusedMark",
+      "className": "MuiScatterChart-focusedMark",
       "description": "Styles applied to the focused scatter mark element.",
       "isGlobal": false
     },
     {
       "key": "highlightedMark",
-      "className": "MuiScatterPlotPremium-highlightedMark",
+      "className": "MuiScatterChart-highlightedMark",
       "description": "Styles applied to the highlighted scatter mark element.",
       "isGlobal": false
     },
     {
       "key": "marker",
-      "className": "MuiScatterPlotPremium-marker",
+      "className": "MuiScatterChart-marker",
       "description": "Styles applied to an individual scatter marker element.\nNot applied when using the `svg-batch` renderer.",
       "isGlobal": false
     },
     {
       "key": "root",
-      "className": "MuiScatterPlotPremium-root",
+      "className": "MuiScatterChart-root",
       "description": "Styles applied to the scatter plot element.",
       "isGlobal": false
     },
     {
       "key": "series",
-      "className": "MuiScatterPlotPremium-series",
+      "className": "MuiScatterChart-series",
       "description": "Styles applied to the group surrounding a series' scatter elements.",
       "isGlobal": false
     }

@@ -8,13 +8,13 @@
   "classes": [
     {
       "key": "line",
-      "className": "MuiRadialLinePlot-line",
+      "className": "MuiRadialLineChart-line",
       "description": "Styles applied to the line element.",
       "isGlobal": false
     },
     {
       "key": "linePlot",
-      "className": "MuiRadialLinePlot-linePlot",
+      "className": "MuiRadialLineChart-linePlot",
       "description": "Styles applied to the LinePlot root element.",
       "isGlobal": false
     }
