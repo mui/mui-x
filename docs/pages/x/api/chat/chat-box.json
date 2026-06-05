@@ -89,28 +89,88 @@
     "import { ChatBox } from '@mui/x-chat';"
   ],
   "slots": [
-    { "name": "root", "description": "", "class": "MuiChatBox-root" },
-    { "name": "layout", "description": "", "class": "MuiChatBox-layout" },
-    { "name": "conversationsPane", "description": "", "class": "MuiChatBox-conversationsPane" },
-    { "name": "threadPane", "description": "", "class": "MuiChatBox-threadPane" },
-    { "name": "conversationRoot", "description": "", "class": null },
-    { "name": "conversationList", "description": "", "class": null },
-    { "name": "conversationHeader", "description": "", "class": null },
-    { "name": "conversationHeaderInfo", "description": "", "class": null },
-    { "name": "conversationTitle", "description": "", "class": null },
-    { "name": "conversationSubtitle", "description": "", "class": null },
-    { "name": "conversationHeaderActions", "description": "", "class": null },
-    { "name": "messageList", "description": "", "class": null },
-    { "name": "messageGroup", "description": "", "class": null },
-    { "name": "dateDivider", "description": "", "class": null },
-    { "name": "unreadMarker", "description": "", "class": null },
-    { "name": "messageRoot", "description": "", "class": null },
+    {
+      "name": "root",
+      "description": "The outermost `ChatBox` container element.",
+      "class": "MuiChatBox-root"
+    },
+    {
+      "name": "layout",
+      "description": "Wrapper that arranges the conversations pane and the thread pane.",
+      "class": "MuiChatBox-layout"
+    },
+    {
+      "name": "conversationsPane",
+      "description": "Container for the conversation-list sidebar (or drawer on narrow widths).",
+      "class": "MuiChatBox-conversationsPane"
+    },
+    {
+      "name": "threadPane",
+      "description": "Container for the active thread — the message list plus the composer.",
+      "class": "MuiChatBox-threadPane"
+    },
+    {
+      "name": "conversationRoot",
+      "description": "Styled root of `<ChatConversation>` (wrapper-only); the default header,\nmessage list and composer continue to render inside it.",
+      "class": null
+    },
+    {
+      "name": "conversationList",
+      "description": "The conversation-list sidebar component.",
+      "class": null
+    },
+    {
+      "name": "conversationHeader",
+      "description": "The header bar rendered above the message list.",
+      "class": null
+    },
+    {
+      "name": "conversationHeaderInfo",
+      "description": "The title + subtitle group inside the header.",
+      "class": null
+    },
+    {
+      "name": "conversationTitle",
+      "description": "The conversation title element.",
+      "class": null
+    },
+    {
+      "name": "conversationSubtitle",
+      "description": "The conversation subtitle element (participants, status, etc.).",
+      "class": null
+    },
+    {
+      "name": "conversationHeaderActions",
+      "description": "The actions area on the trailing side of the header.",
+      "class": null
+    },
+    {
+      "name": "messageList",
+      "description": "Styled root of the scrollable `<ChatMessageList>` (wrapper-only).",
+      "class": null
+    },
+    {
+      "name": "messageGroup",
+      "description": "The per-author group wrapper around consecutive messages.",
+      "class": null
+    },
+    {
+      "name": "dateDivider",
+      "description": "The date separator rendered between message groups.",
+      "class": null
+    },
+    { "name": "unreadMarker", "description": "The \"new messages\" marker.", "class": null },
+    {
+      "name": "messageRoot",
+      "description": "Styled root of `<ChatMessage>` (wrapper-only); the default avatar/content/meta\ntree still renders inside it.",
+      "class": null
+    },
     {
       "name": "messageAvatar",
       "description": "Avatar component. Pass `null` to hide the avatar entirely and drop the\nreserved avatar grid track.",
       "class": null
     },
-    { "name": "messageContent", "description": "", "class": null },
+    { "name": "messageContent", "description": "The message bubble component.", "class": null },
     {
       "name": "messageMeta",
       "description": "External meta (compact variant). Pass `null` to hide.",
@@ -136,8 +196,12 @@
       "description": "Author name label rendered by the group wrapper (default variant: above the\nbubble; compact variant: inside the message grid). Pass `null` to hide.",
       "class": null
     },
-    { "name": "composerRoot", "description": "", "class": null },
-    { "name": "composerInput", "description": "", "class": null },
+    {
+      "name": "composerRoot",
+      "description": "Styled root of `<ChatComposer>` (wrapper-only); the default attach/input/send/\ntoolbar render inside it.",
+      "class": null
+    },
+    { "name": "composerInput", "description": "The auto-resizing text input.", "class": null },
     {
       "name": "composerSendButton",
       "description": "Send button. Pass `null` to hide it; the form still submits on Enter.",
@@ -148,13 +212,37 @@
       "description": "Attach button. Pass `null` to hide just the button while keeping the rest of\nthe attachment pipeline (drag/drop, paste). Use `features.attachments: false`\nto disable attachments entirely.",
       "class": null
     },
-    { "name": "composerAttachmentList", "description": "", "class": null },
-    { "name": "composerToolbar", "description": "", "class": null },
-    { "name": "composerHelperText", "description": "", "class": null },
-    { "name": "typingIndicator", "description": "", "class": null },
-    { "name": "scrollToBottom", "description": "", "class": null },
-    { "name": "suggestions", "description": "", "class": null },
-    { "name": "emptyState", "description": "", "class": null }
+    {
+      "name": "composerAttachmentList",
+      "description": "The pending-attachment preview list.",
+      "class": null
+    },
+    {
+      "name": "composerToolbar",
+      "description": "The composer toolbar (button row).",
+      "class": null
+    },
+    {
+      "name": "composerHelperText",
+      "description": "The helper / disclaimer text below the input.",
+      "class": null
+    },
+    {
+      "name": "typingIndicator",
+      "description": "The animated typing indicator shown while the assistant responds.",
+      "class": null
+    },
+    {
+      "name": "scrollToBottom",
+      "description": "The floating scroll-to-bottom button.",
+      "class": null
+    },
+    { "name": "suggestions", "description": "The prompt-suggestion chips.", "class": null },
+    {
+      "name": "emptyState",
+      "description": "Custom content rendered when the thread has no messages.",
+      "class": null
+    }
   ],
   "classes": [],
   "spread": true,

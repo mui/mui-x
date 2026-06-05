@@ -55,9 +55,13 @@ import { type ChatBoxClasses } from './chatBoxClasses';
 
 /** Outer layout singletons. */
 interface ChatBoxLayoutSlots {
+  /** The outermost `ChatBox` container element. */
   root?: React.ElementType;
+  /** Wrapper that arranges the conversations pane and the thread pane. */
   layout?: React.ElementType;
+  /** Container for the conversation-list sidebar (or drawer on narrow widths). */
   conversationsPane?: React.ElementType;
+  /** Container for the active thread — the message list plus the composer. */
   threadPane?: React.ElementType;
 }
 
@@ -74,12 +78,22 @@ interface ChatBoxLayoutSlotProps {
  * message list + composer) continues to render inside it.
  */
 interface ChatBoxConversationSlots {
+  /**
+   * Styled root of `<ChatConversation>` (wrapper-only); the default header,
+   * message list and composer continue to render inside it.
+   */
   conversationRoot?: React.ElementType;
+  /** The conversation-list sidebar component. */
   conversationList?: React.ElementType;
+  /** The header bar rendered above the message list. */
   conversationHeader?: React.ElementType;
+  /** The title + subtitle group inside the header. */
   conversationHeaderInfo?: React.ElementType;
+  /** The conversation title element. */
   conversationTitle?: React.ElementType;
+  /** The conversation subtitle element (participants, status, etc.). */
   conversationSubtitle?: React.ElementType;
+  /** The actions area on the trailing side of the header. */
   conversationHeaderActions?: React.ElementType;
 }
 
@@ -98,9 +112,13 @@ interface ChatBoxConversationSlotProps {
  * (wrapper-only); `messageGroup` swaps the per-author group wrapper.
  */
 interface ChatBoxMessageListSlots {
+  /** Styled root of the scrollable `<ChatMessageList>` (wrapper-only). */
   messageList?: React.ElementType;
+  /** The per-author group wrapper around consecutive messages. */
   messageGroup?: React.ElementType;
+  /** The date separator rendered between message groups. */
   dateDivider?: React.ElementType;
+  /** The "new messages" marker. */
   unreadMarker?: React.ElementType;
 }
 
@@ -117,12 +135,17 @@ interface ChatBoxMessageListSlotProps {
  * piece and collapse the surrounding layout (avatar grid track, etc.).
  */
 interface ChatBoxMessageSlots {
+  /**
+   * Styled root of `<ChatMessage>` (wrapper-only); the default avatar/content/meta
+   * tree still renders inside it.
+   */
   messageRoot?: React.ElementType;
   /**
    * Avatar component. Pass `null` to hide the avatar entirely and drop the
    * reserved avatar grid track.
    */
   messageAvatar?: React.ElementType | null;
+  /** The message bubble component. */
   messageContent?: React.ElementType;
   /** External meta (compact variant). Pass `null` to hide. */
   messageMeta?: React.ElementType | null;
@@ -158,7 +181,12 @@ interface ChatBoxMessageSlotProps {
  * (wrapper-only); the default attach/input/send/toolbar render inside it.
  */
 interface ChatBoxComposerSlots {
+  /**
+   * Styled root of `<ChatComposer>` (wrapper-only); the default attach/input/send/
+   * toolbar render inside it.
+   */
   composerRoot?: React.ElementType;
+  /** The auto-resizing text input. */
   composerInput?: React.ElementType;
   /** Send button. Pass `null` to hide it; the form still submits on Enter. */
   composerSendButton?: React.ElementType | null;
@@ -168,8 +196,11 @@ interface ChatBoxComposerSlots {
    * to disable attachments entirely.
    */
   composerAttachButton?: React.ElementType | null;
+  /** The pending-attachment preview list. */
   composerAttachmentList?: React.ElementType;
+  /** The composer toolbar (button row). */
   composerToolbar?: React.ElementType;
+  /** The helper / disclaimer text below the input. */
   composerHelperText?: React.ElementType;
 }
 
@@ -185,9 +216,13 @@ interface ChatBoxComposerSlotProps {
 
 /** Standalone widgets. */
 interface ChatBoxWidgetSlots {
+  /** The animated typing indicator shown while the assistant responds. */
   typingIndicator?: React.ElementType;
+  /** The floating scroll-to-bottom button. */
   scrollToBottom?: React.ElementType;
+  /** The prompt-suggestion chips. */
   suggestions?: React.ElementType;
+  /** Custom content rendered when the thread has no messages. */
   emptyState?: React.ElementType;
 }
 
