@@ -637,6 +637,7 @@ describe('<DataGridPro /> - Columns', () => {
       });
     });
 
+    // Regression test for https://github.com/mui/mui-x/issues/22505
     it('should wait for all rows to be rendered on mount when rows fit the viewport', async () => {
       const shortValue = 'Nike';
       const wideValue = 'Lululemon Athletica International Collection';
@@ -646,6 +647,8 @@ describe('<DataGridPro /> - Columns', () => {
 
         React.useEffect(() => {
           if (!showValue) {
+            // Hack to make the test fail similar to https://github.com/mui/mui-x/issues/22505
+            // in our test env
             Promise.resolve().then(() => {
               Promise.resolve().then(() => setShowValue(true));
             });
