@@ -151,7 +151,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
         render(<TestCase />);
 
-        expect(rootElementInLayoutEffect).not.to.equal(null);
+        // Assert against the actual mounted root node because `rootElementInLayoutEffect` starts as `undefined`.
+        // A plain null check would pass if the effect never captured the node.
+        expect(rootElementInLayoutEffect).to.equal(document.querySelector(`.${gridClasses.root}`));
       });
 
       describe('`classes` prop', () => {
