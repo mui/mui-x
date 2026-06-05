@@ -5,6 +5,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.29.0
+<!-- generated comparing v8.28.7..v8.x -->
+_Jun 5, 2026_
+
+We'd like to extend a big thank you to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡️ Update exceljs fork (#22668)
+- 🐞 Bugfixes
+
+The following team members contributed to this release:
+@brijeshb42, @cherniavskii
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.29.0`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@8.29.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.29.0`.
+
+#### `@mui/x-data-grid-premium@8.29.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.29.0`, plus:
+
+- [DataGridPremium] Update exceljs fork (@cherniavskii) (#22668) @github-actions[bot]
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.29.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.29.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.29.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.29.0`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@8.29.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.29.0`.
+
+#### `@mui/x-charts-premium@8.29.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.29.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.29.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.29.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.29.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.29.0`
+
+Internal changes.
+
+### Core
+
+- [code-infra] Backport flat build setup to v8.x (#22536) @brijeshb42
+
 ## 8.28.7
 
 _May 20, 2026_
