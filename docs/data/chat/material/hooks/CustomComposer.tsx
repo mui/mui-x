@@ -13,11 +13,20 @@ import {
   minimalMessages,
 } from 'docs/data/chat/material/examples/shared/demoData';
 
-function CustomComposerContent() {
+const CustomComposerContent = React.forwardRef(function CustomComposerContent(
+  props: React.HTMLAttributes<HTMLDivElement> & { ownerState?: unknown },
+  ref: React.Ref<HTMLDivElement>,
+) {
+  // `composerRoot` is a wrapper-only slot: ChatBox injects a `ref` and form props
+  // into it. Forward the ref and spread the injected props so the slot contract is
+  // satisfied (no ref warning, form/data props preserved). Drop the internal
+  // `ownerState` and the default `children` — this composition renders its own
+  // composer UI from the headless hook instead.
+  const { ownerState, children, ...rootProps } = props;
   const { value, setValue, submit, isSubmitting, addAttachment } = useChatComposer();
 
   return (
-    <Stack direction="row" spacing={1} sx={{ p: 1 }}>
+    <Stack ref={ref} direction="row" spacing={1} {...rootProps} sx={{ p: 1 }}>
       <TextField
         fullWidth
         size="small"
@@ -49,7 +58,7 @@ function CustomComposerContent() {
       </Button>
     </Stack>
   );
-}
+});
 
 const adapter = createEchoAdapter();
 

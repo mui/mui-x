@@ -156,6 +156,49 @@ describe('ChatBox', () => {
       );
       expect(document.querySelector('.MuiChatConversationHeader-root')).toBe(null);
     });
+
+    it('keeps the back navigation when the header is hidden in split layout', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          layoutMode="split"
+          initialConversations={[{ id: 'c1', title: 'General' }]}
+          initialActiveConversationId="c1"
+          features={{ conversationList: true, conversationHeader: false }}
+          sx={{ height: 480 }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      // The header chrome is gone…
+      expect(document.querySelector('.MuiChatConversationHeader-root')).toBe(null);
+      // …but the back-to-list affordance must survive, or split/narrow users get
+      // trapped in the thread with no built-in way back to the conversation list.
+      expect(screen.getByRole('button', { name: 'Back to conversations' })).not.toBe(null);
+    });
+  });
+
+  describe('feature: emptyState', () => {
+    it('resolves a function-form emptyState slotProp', () => {
+      function CustomEmpty(props: React.HTMLAttributes<HTMLDivElement>) {
+        return <div data-testid="custom-empty" {...props} />;
+      }
+
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          slots={{ emptyState: CustomEmpty }}
+          slotProps={{ emptyState: (() => ({ 'data-fn-empty': 'applied' })) as any }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      // The empty-state slotProps callback form must be resolved, not spread as an
+      // object (which would drop its owner-state-driven props).
+      expect(screen.getByTestId('custom-empty').getAttribute('data-fn-empty')).toBe('applied');
+    });
   });
 
   describe('feature: conversationList', () => {

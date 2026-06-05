@@ -218,6 +218,19 @@ const ChatBoxConversationOverlayPanel = styled('div', {
   pointerEvents: 'auto',
 });
 
+// A minimal bar that carries only the back/menu navigation affordances when the
+// full conversation header chrome is disabled (`features.conversationHeader:
+// false`). In split/overlay layouts these buttons are the only built-in way back
+// to the conversation list, so they must survive even without the header.
+const ChatBoxHeaderNavBar = styled('div', {
+  name: 'MuiChatBox',
+  slot: 'HeaderNavBar',
+})({
+  display: 'flex',
+  alignItems: 'center',
+  flexShrink: 0,
+});
+
 const DefaultBackIcon = React.memo(function DefaultBackIcon() {
   return (
     <svg
@@ -269,22 +282,8 @@ function DefaultConversationHeader({
   const { slots, slotProps } = useChatSlots();
   const localeText = useChatLocaleText();
 
-  if (features?.conversationHeader === false) {
-    return null;
-  }
-  const ConversationHeaderComponent = (slots.conversationHeader ??
-    ChatConversationHeader) as typeof ChatConversationHeader;
-  const ConversationHeaderInfoComponent = (slots.conversationHeaderInfo ??
-    ChatConversationHeaderInfo) as typeof ChatConversationHeaderInfo;
-  const ConversationTitleComponent = (slots.conversationTitle ??
-    ChatConversationTitle) as typeof ChatConversationTitle;
-  const ConversationSubtitleComponent = (slots.conversationSubtitle ??
-    ChatConversationSubtitle) as typeof ChatConversationSubtitle;
-  const ConversationHeaderActionsComponent = (slots.conversationHeaderActions ??
-    ChatConversationHeaderActions) as typeof ChatConversationHeaderActions;
-
-  return (
-    <ConversationHeaderComponent {...(slotProps.conversationHeader ?? {})}>
+  const navButtons = (
+    <React.Fragment>
       {showBackButton && (
         <Tooltip title={localeText.conversationHeaderBackLabel}>
           <IconButton
@@ -309,6 +308,31 @@ function DefaultConversationHeader({
           </IconButton>
         </Tooltip>
       )}
+    </React.Fragment>
+  );
+
+  if (features?.conversationHeader === false) {
+    // The header chrome is disabled, but the back/menu navigation must remain or
+    // narrow-screen users get trapped in the thread with no way back to the list.
+    if (!showBackButton && !showMenuButton) {
+      return null;
+    }
+    return <ChatBoxHeaderNavBar>{navButtons}</ChatBoxHeaderNavBar>;
+  }
+  const ConversationHeaderComponent = (slots.conversationHeader ??
+    ChatConversationHeader) as typeof ChatConversationHeader;
+  const ConversationHeaderInfoComponent = (slots.conversationHeaderInfo ??
+    ChatConversationHeaderInfo) as typeof ChatConversationHeaderInfo;
+  const ConversationTitleComponent = (slots.conversationTitle ??
+    ChatConversationTitle) as typeof ChatConversationTitle;
+  const ConversationSubtitleComponent = (slots.conversationSubtitle ??
+    ChatConversationSubtitle) as typeof ChatConversationSubtitle;
+  const ConversationHeaderActionsComponent = (slots.conversationHeaderActions ??
+    ChatConversationHeaderActions) as typeof ChatConversationHeaderActions;
+
+  return (
+    <ConversationHeaderComponent {...(slotProps.conversationHeader ?? {})}>
+      {navButtons}
       <ConversationHeaderInfoComponent {...(slotProps.conversationHeaderInfo ?? {})}>
         <ConversationTitleComponent {...(slotProps.conversationTitle ?? {})} />
         <ConversationSubtitleComponent {...(slotProps.conversationSubtitle ?? {})} />
@@ -605,6 +629,13 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const showSuggestions =
     features?.suggestions !== false && !!suggestions && suggestions.length > 0;
   const CustomEmptyStateComponent = slots.emptyState;
+  // `slotProps.emptyState` is typed as `SlotComponentProps`, so it can be the
+  // `(ownerState) => props` callback form. Resolve it (ownerState is empty) rather
+  // than spreading the function as an object, which would drop its className/sx/handlers.
+  const customEmptyStateProps =
+    typeof slotProps.emptyState === 'function'
+      ? (slotProps.emptyState as (ownerState: {}) => object)({})
+      : (slotProps.emptyState ?? {});
 
   const autoScrollProp = features?.autoScroll ?? true;
   const { activeConversationId, setActiveConversation } = useChat();
@@ -917,7 +948,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
             {showCustomEmptyState && CustomEmptyStateComponent && (
               <ChatBoxCustomEmptyStateOverlay>
                 <ChatBoxCustomEmptyStateInner>
-                  <CustomEmptyStateComponent {...(slotProps.emptyState ?? {})} />
+                  <CustomEmptyStateComponent {...customEmptyStateProps} />
                 </ChatBoxCustomEmptyStateInner>
               </ChatBoxCustomEmptyStateOverlay>
             )}
