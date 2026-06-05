@@ -15,6 +15,7 @@ export const elGRLocaleText: Partial<ChartsLocaleText> = {
   // Toolbar Export Menu
   toolbarExportPrint: 'Εκτύπωση',
   toolbarExportImage: (mimeType) => `Εξαγωγή ως ${imageMimeTypes[mimeType] ?? mimeType}`,
+  // toolbarExportSvg: 'Export as SVG',
 
   // Charts renderer configuration
   chartTypeBar: 'Μπάρα',
