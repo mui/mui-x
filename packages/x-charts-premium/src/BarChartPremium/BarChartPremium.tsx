@@ -11,9 +11,10 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';
+import { ChartsSvgLayer } from '@mui/x-charts/ChartsSvgLayer';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { BarPlot, FocusedBar, type BarSeries } from '@mui/x-charts/BarChart';
+import { FocusedBar, type BarSeries } from '@mui/x-charts/BarChart';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -24,6 +25,8 @@ import { useChartsContainerProProps } from '@mui/x-charts-pro/internals';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
+import { BarPlotPremium, type BarPlotPremiumProps } from './BarPlotPremium';
+import { ChartsWebGLLayer } from '../ChartsWebGLLayer';
 import { ChartsDataProviderPremium } from '../ChartsDataProviderPremium';
 import {
   type BarItemIdentifier,
@@ -34,6 +37,7 @@ import { RangeBarPlot } from './RangeBar/RangeBarPlot';
 import { FocusedRangeBar } from './RangeBar/FocusedRangeBar';
 
 import type {} from '../typeOverloads/modules';
+import type { ChartsContainerPremiumProps } from '../ChartsContainerPremium';
 
 export type RangeBarSeries = RangeBarSeriesType;
 
@@ -41,10 +45,17 @@ export interface BarChartPremiumSlots extends BarChartProSlots {}
 
 export interface BarChartPremiumSlotProps extends BarChartProSlotProps {}
 
-export interface BarChartPremiumProps extends Omit<
-  BarChartProProps,
-  'series' | 'onItemClick' | 'slots' | 'slotProps'
-> {
+export interface BarChartPremiumProps
+  extends
+    Omit<
+      BarChartProProps,
+      'apiRef' | 'slots' | 'slotProps' | 'seriesConfig' | 'plugins' | 'series' | 'renderer'
+    >,
+    Omit<
+      ChartsContainerPremiumProps<'bar', BarChartPremiumPluginSignatures>,
+      'series' | 'slots' | 'slotProps'
+    >,
+    Pick<BarPlotPremiumProps, 'renderer'> {
   /**
    * Overridable component slots.
    * @default {}
@@ -90,7 +101,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   const {
     chartsWrapperProps,
     chartsContainerProps,
-    barPlotProps,
+    barPlotPremiumProps,
     rangeBarPlotProps,
     gridProps,
     clipPathProps,
@@ -116,6 +127,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
+  const renderer = barPlotPremiumProps.renderer;
 
   return (
     <ChartsDataProviderPremium<'bar' | 'rangeBar', BarChartPremiumPluginSignatures>
@@ -124,22 +136,35 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
       <ChartsWrapper {...chartsWrapperProps} ref={ref}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps}>
-          <ChartsGrid {...gridProps} />
-          <g {...clipPathGroupProps}>
-            <BarPlot {...barPlotProps} />
-            <RangeBarPlot {...rangeBarPlotProps} />
-            <ChartsOverlay {...overlayProps} />
-            <ChartsAxisHighlight {...axisHighlightProps} />
-            <FocusedBar />
-            <FocusedRangeBar />
-          </g>
-          <ChartsAxis {...chartsAxisProps} />
-          <ChartsZoomSlider />
-          <ChartsBrushOverlay />
-          <ChartsClipPath {...clipPathProps} />
-          {children}
-        </ChartsSurface>
+        <ChartsLayerContainer>
+          {renderer === 'webgl' && (
+            <React.Fragment>
+              <ChartsSvgLayer>
+                <ChartsGrid {...gridProps} />
+              </ChartsSvgLayer>
+              <ChartsWebGLLayer>
+                <BarPlotPremium {...barPlotPremiumProps} />
+                <RangeBarPlot {...rangeBarPlotProps} />
+              </ChartsWebGLLayer>
+            </React.Fragment>
+          )}
+          <ChartsSvgLayer {...chartsSurfaceProps}>
+            {renderer !== 'webgl' && <ChartsGrid {...gridProps} />}
+            <g {...clipPathGroupProps}>
+              {renderer !== 'webgl' && <BarPlotPremium {...barPlotPremiumProps} />}
+              {renderer !== 'webgl' && <RangeBarPlot {...rangeBarPlotProps} />}
+              <ChartsOverlay {...overlayProps} />
+              <ChartsAxisHighlight {...axisHighlightProps} />
+              <FocusedBar />
+              <FocusedRangeBar />
+            </g>
+            <ChartsAxis {...chartsAxisProps} />
+            <ChartsZoomSlider />
+            <ChartsBrushOverlay />
+            <ChartsClipPath {...clipPathProps} />
+            {children}
+          </ChartsSvgLayer>
+        </ChartsLayerContainer>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartsDataProviderPremium>
@@ -252,12 +277,12 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']),
+        type: PropTypes.oneOf(['bar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']).isRequired,
+        type: PropTypes.oneOf(['bar']),
       }),
     ]).isRequired,
   ),
@@ -283,11 +308,11 @@ BarChartPremium.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar']).isRequired,
     }),
   ]),
   /**
@@ -321,25 +346,52 @@ BarChartPremium.propTypes = {
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']),
+        type: PropTypes.oneOf(['bar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
         seriesId: PropTypes.string.isRequired,
-        type: PropTypes.oneOf(['bar']).isRequired,
+        type: PropTypes.oneOf(['bar']),
       }),
     ]).isRequired,
   ),
   /**
    * The list of zoom data related to each axis.
    * Used to initialize the zoom in a specific configuration without controlling it.
+   *
+   * Each entry is either explicit zoom percentages (`{ axisId, start, end }`) or a
+   * range value (`{ axisId, value }`) resolved against the axis domain.
    */
   initialZoom: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        end: PropTypes.number.isRequired,
+        start: PropTypes.number.isRequired,
+      }),
+      PropTypes.shape({
+        axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        value: PropTypes.oneOfType([
+          PropTypes.arrayOf(PropTypes.instanceOf(Date).isRequired),
+          PropTypes.arrayOf(PropTypes.string.isRequired),
+          PropTypes.func,
+          PropTypes.shape({
+            step: PropTypes.number,
+            unit: PropTypes.oneOf([
+              'day',
+              'hour',
+              'microsecond',
+              'millisecond',
+              'minute',
+              'month',
+              'second',
+              'week',
+              'year',
+            ]).isRequired,
+          }),
+        ]),
+      }),
+    ]).isRequired,
   ),
   /**
    * The direction of the bar elements.
@@ -426,11 +478,12 @@ BarChartPremium.propTypes = {
    * The type of renderer to use for the bar plot.
    * - `svg-single`: Renders every bar in a `<rect />` element.
    * - `svg-batch`: Batch renders bars in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   * - `webgl`: Renders bars using WebGL for better performance with very large datasets, at the cost of some limitations.
    *                Read more: https://mui.com/x/react-charts/bars/#performance
    *
    * @default 'svg-single'
    */
-  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single', 'webgl']),
   /**
    * The series to display in the bar chart.
    * An array of [[BarSeries]] or [[RangeBarSeries]] objects.
@@ -485,11 +538,11 @@ BarChartPremium.propTypes = {
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['bar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
       seriesId: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['bar']).isRequired,
     }),
   ]),
   /**
@@ -515,15 +568,6 @@ BarChartPremium.propTypes = {
     PropTypes.shape({
       colorMap: PropTypes.oneOfType([
         PropTypes.shape({
-          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
-          type: PropTypes.oneOf(['ordinal']).isRequired,
-          unknownColor: PropTypes.string,
-          values: PropTypes.arrayOf(
-            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
-              .isRequired,
-          ),
-        }),
-        PropTypes.shape({
           color: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.string.isRequired),
             PropTypes.func,
@@ -539,12 +583,52 @@ BarChartPremium.propTypes = {
           ).isRequired,
           type: PropTypes.oneOf(['piecewise']).isRequired,
         }),
+        PropTypes.shape({
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownColor: PropTypes.string,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
       ]),
       data: PropTypes.array,
       dataKey: PropTypes.string,
       id: PropTypes.string,
       max: PropTypes.number,
       min: PropTypes.number,
+      sizeMap: PropTypes.oneOfType([
+        PropTypes.shape({
+          interpolator: PropTypes.oneOf(['linear', 'log', 'sqrt']),
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          size: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          size: PropTypes.func.isRequired,
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          sizes: PropTypes.arrayOf(PropTypes.number).isRequired,
+          thresholds: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]).isRequired,
+          ).isRequired,
+          type: PropTypes.oneOf(['piecewise']).isRequired,
+        }),
+        PropTypes.shape({
+          sizes: PropTypes.arrayOf(PropTypes.number).isRequired,
+          type: PropTypes.oneOf(['ordinal']).isRequired,
+          unknownSize: PropTypes.number,
+          values: PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number, PropTypes.string])
+              .isRequired,
+          ),
+        }),
+      ]),
       valueGetter: PropTypes.func,
     }),
   ),
@@ -566,6 +650,12 @@ BarChartPremium.propTypes = {
       PropTypes.oneOfType([
         PropTypes.oneOf(['drag', 'pressAndDrag', 'wheel']),
         PropTypes.shape({
+          allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
+        }),
+        PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['drag']).isRequired,
@@ -575,31 +665,15 @@ BarChartPremium.propTypes = {
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['pressAndDrag']).isRequired,
         }),
-        PropTypes.shape({
-          allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['wheel']).isRequired,
-        }),
       ]).isRequired,
     ),
     zoom: PropTypes.arrayOf(
       PropTypes.oneOfType([
         PropTypes.oneOf(['brush', 'doubleTapReset', 'pinch', 'tapAndDrag', 'wheel']),
         PropTypes.shape({
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['wheel']).isRequired,
-        }),
-        PropTypes.shape({
-          pointerMode: PropTypes.any,
-          requiredKeys: PropTypes.array,
-          type: PropTypes.oneOf(['pinch']).isRequired,
-        }),
-        PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+          type: PropTypes.oneOf(['brush']).isRequired,
         }),
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
@@ -609,7 +683,17 @@ BarChartPremium.propTypes = {
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
-          type: PropTypes.oneOf(['brush']).isRequired,
+          type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['pinch']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
         }),
       ]).isRequired,
     ),

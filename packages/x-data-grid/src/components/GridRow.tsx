@@ -6,6 +6,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
+import { vars } from '../constants/cssVariables';
 import type { GridRowEventLookup } from '../models/events';
 import type { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridCellModes } from '../models/gridEditRowModel';
@@ -345,6 +346,15 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
           height={rowHeight}
           field={column.field}
           align={column.align}
+          skeletonProps={{
+            style: {
+              marginLeft:
+                indexRelativeToAllColumns === 0 && rowNode.depth > 0
+                  ? // TODO: Make the factor configurable
+                    vars.spacing(rowNode.depth * 2)
+                  : '0px',
+            },
+          }}
         />
       );
     }
@@ -486,13 +496,9 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       ref={handleRef}
     >
       {leftCells}
-      <div
-        role="presentation"
-        className={gridClasses.cellOffsetLeft}
-        style={{ width: offsetLeft }}
-      />
+      <div role="none" className={gridClasses.cellOffsetLeft} style={{ width: offsetLeft }} />
       {cells}
-      <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
+      <div role="none" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
       <GridRowDragAndDropOverlay rowId={rowId} />
     </div>

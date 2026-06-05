@@ -16,7 +16,13 @@ export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useAreaPlotData } from '../LineChart/useAreaPlotData';
 export { useLinePlotData } from '../LineChart/useLinePlotData';
 export * from '../BarChart/useBarChartProps';
-export { processBarDataForPlot } from '../BarChart/useBarPlotData';
+export { processBarDataForPlot, useBarPlotData } from '../BarChart/useBarPlotData';
+export type {
+  BorderRadiusSide,
+  MaskData,
+  ProcessedBarData,
+  ProcessedBarSeriesData,
+} from '../BarChart/types';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartsContainer/useChartsContainerProps';
 export * from '../ChartsDataProvider/useChartsDataProviderProps';
@@ -45,7 +51,7 @@ export * from './plugins/featurePlugins/useChartItemClick';
 export * from './plugins/utils/selectors';
 export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
 export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
-export { getAxisIndex as getPolarAxisIndex } from './plugins/featurePlugins/useChartPolarAxis/getAxisIndex';
+export { getRotationAxisIndex } from './plugins/featurePlugins/useChartPolarAxis/getAxisIndex';
 
 export * from './store/useCharts';
 export * from './store/useStore';
@@ -74,6 +80,8 @@ export * from './consumeSlots';
 export * from './consumeThemeProps';
 export * from './defaultizeMargin';
 export * from './colorScale';
+export * from './sizeScale';
+export * from './incompleteDatasetKeysError';
 export * from './ticks';
 export * from './dateHelpers';
 export * from './invertScale';
@@ -82,6 +90,9 @@ export * from './findMinMax';
 export * from './commonNextFocusItem';
 export { createCommonKeyboardFocusHandler } from './createCommonKeyboardFocusHandler';
 export { getSeriesColorFn } from './getSeriesColorFn';
+export { resolveColorProcessor } from './resolveColorProcessor';
+export { processLineLikeSeries } from './processLineLikeSeries';
+export { getLineLikeTooltip } from './getLineLikeTooltip';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
 export * from './plugins/utils/defaultSeriesConfig';

@@ -1,0 +1,52 @@
+{
+  "props": {
+    "borderRadius": { "type": { "name": "number" } },
+    "className": { "type": { "name": "string" } },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: MouseEvent, barItemIdentifier: BarItemIdentifier) => void",
+        "describedArgs": ["event", "barItemIdentifier"]
+      }
+    },
+    "renderer": {
+      "type": {
+        "name": "enum",
+        "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'<br>&#124;&nbsp;'webgl'"
+      },
+      "default": "'svg-single'"
+    },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "BarPlotPremium",
+  "imports": [
+    "import { BarPlotPremium } from '@mui/x-charts-premium/BarChartPremium';",
+    "import { BarPlotPremium } from '@mui/x-charts-premium';"
+  ],
+  "slots": [
+    {
+      "name": "bar",
+      "description": "The component that renders the bar.",
+      "default": "BarElementPath",
+      "class": null
+    },
+    {
+      "name": "barLabel",
+      "description": "The component that renders the bar label.",
+      "default": "BarLabel",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "muiName": "MuiBarPlotPremium",
+  "filename": "/packages/x-charts-premium/src/BarChartPremium/BarPlotPremium.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
+  "cssComponent": false
+}

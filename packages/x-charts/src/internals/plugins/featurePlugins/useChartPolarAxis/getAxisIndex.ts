@@ -13,10 +13,8 @@ import { clampAngleRad } from '../../../clampAngle';
  * For a pointer coordinate, this function returns the value and dataIndex associated.
  * Returns `-1` if the coordinate does not match a value.
  */
-export function getAxisIndex(
-  axisConfig:
-    | ComputedAxis<ScaleName, any, ChartsRadiusAxisProps>
-    | ComputedAxis<ScaleName, any, ChartsRotationAxisProps>,
+export function getRotationAxisIndex(
+  axisConfig: ComputedAxis<ScaleName, any, ChartsRotationAxisProps>,
   pointerValue: number,
 ): number {
   const { scale, data: axisData, reverse, isFullCircle } = axisConfig;
@@ -55,6 +53,44 @@ export function getAxisIndex(
     }
   } else {
     dataIndex = Math.floor(angleGap / scale.step());
+  }
+  if (dataIndex < 0 || dataIndex >= axisData.length) {
+    return -1;
+  }
+
+  return reverse ? axisData.length - 1 - dataIndex : dataIndex;
+}
+
+/**
+ * For a pointer coordinate, this function returns the value and dataIndex associated.
+ * Returns `-1` if the coordinate does not match a value.
+ */
+export function getRadiusAxisIndex(
+  axisConfig: ComputedAxis<ScaleName, any, ChartsRadiusAxisProps>,
+  pointerValue: number,
+): number {
+  const { scale, data: axisData, reverse } = axisConfig;
+
+  if (!isOrdinalScale(scale)) {
+    if (axisData === undefined) {
+      return -1;
+    }
+
+    const valueAsNumber = getAsNumber(scale.invert(pointerValue));
+
+    return findClosestIndex(axisData, valueAsNumber);
+  }
+
+  if (!axisData) {
+    return -1;
+  }
+
+  let dataIndex: number;
+  const distFromStart = pointerValue - Math.min(...scale.range());
+  if (scale.bandwidth() === 0) {
+    dataIndex = Math.floor((distFromStart + scale.step() / 2) / scale.step());
+  } else {
+    dataIndex = Math.floor(distFromStart / scale.step());
   }
   if (dataIndex < 0 || dataIndex >= axisData.length) {
     return -1;

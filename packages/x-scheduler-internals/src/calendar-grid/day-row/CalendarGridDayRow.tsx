@@ -36,7 +36,7 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [elementProps, { role: 'row' }],
+    props: [{ role: 'row', 'aria-rowindex': rowIndex + 2 }, elementProps],
   });
 
   return (

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { screen } from '@mui/internal-test-utils';
-import { describeAdapters } from 'test/utils/pickers';
+import { describeAdapters } from 'test/utils/pickers/describeAdapters';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];

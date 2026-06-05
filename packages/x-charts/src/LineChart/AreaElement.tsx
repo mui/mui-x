@@ -10,6 +10,7 @@ import { useStore } from '../internals/store/useStore';
 import { AnimatedArea, type AnimatedAreaProps } from './AnimatedArea';
 import { type SeriesId } from '../models/seriesType/common';
 import { type LineClasses, useUtilityClasses as useLineUtilityClasses } from './lineClasses';
+import type { AreaPropsOverrides } from '../models/chartsSlotsComponentsProps';
 
 export interface AreaElementOwnerState {
   seriesId: SeriesId;
@@ -25,11 +26,11 @@ export interface AreaElementSlots {
    * The component that renders the area.
    * @default AnimatedArea
    */
-  area?: React.JSXElementConstructor<AnimatedAreaProps>;
+  area?: React.JSXElementConstructor<AnimatedAreaProps & AreaPropsOverrides>;
 }
 
 export interface AreaElementSlotProps {
-  area?: SlotComponentPropsFromProps<AnimatedAreaProps, {}, AreaElementOwnerState>;
+  area?: SlotComponentPropsFromProps<AnimatedAreaProps, AreaPropsOverrides, AreaElementOwnerState>;
 }
 
 export interface AreaElementProps

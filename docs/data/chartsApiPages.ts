@@ -44,6 +44,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarPlot',
   },
   {
+    pathname: '/x/api/charts/bar-plot-premium',
+    title: 'BarPlotPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/candlestick-chart',
     title: 'CandlestickChart',
     plan: 'premium',
@@ -104,6 +109,11 @@ const chartsApiPages: MuiPage[] = [
     pathname: '/x/api/charts/charts-data-provider-pro',
     title: 'ChartsDataProviderPro',
     plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/charts-geo-data-provider-premium',
+    title: 'ChartsGeoDataProviderPremium',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/charts-grid',
@@ -228,6 +238,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/focused-map-shape',
+    title: 'FocusedMapShape',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/focused-radar-mark',
     title: 'FocusedRadarMark',
   },
@@ -263,6 +278,16 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/gauge-container',
     title: 'GaugeContainer',
+  },
+  {
+    pathname: '/x/api/charts/geo-data-plot',
+    title: 'GeoDataPlot',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/graticule',
+    title: 'Graticule',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/heatmap',
@@ -322,6 +347,16 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/line-plot',
     title: 'LinePlot',
+  },
+  {
+    pathname: '/x/api/charts/map-shape',
+    title: 'MapShape',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/map-shape-plot',
+    title: 'MapShapePlot',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/mark-element',

@@ -1,6 +1,10 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "axisHighlight": {
+      "description": "The configuration of axes highlight.",
+      "seeMoreText": "See {{link}} for more details."
+    },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -95,7 +99,7 @@
   "slotDescriptions": {
     "baseButton": "",
     "baseIconButton": "",
-    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps&gt;</code>.",
+    "baseToggleButton": "Note: MUI&#39;s <code>ToggleButton</code> has an incompatible <code>href</code> prop, so it must be cast: <code>ToggleButton as unknown as React.ComponentType&lt;ChartBaseToggleButtonProps &amp; BaseToggleButtonPropsOverrides&gt;</code>.",
     "baseToggleButtonGroup": "",
     "legend": "Custom rendering of the legend.",
     "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",

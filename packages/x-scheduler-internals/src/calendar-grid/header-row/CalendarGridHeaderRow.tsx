@@ -21,7 +21,7 @@ export const CalendarGridHeaderRow = React.forwardRef(function CalendarGridHeade
 
   const element = useRenderElement('div', componentProps, {
     ref: [forwardedRef],
-    props: [elementProps, { role: 'row' }],
+    props: [{ role: 'row', 'aria-rowindex': 1 }, elementProps],
   });
 
   return <CompositeList elementsRef={cellsRefs}>{element}</CompositeList>;

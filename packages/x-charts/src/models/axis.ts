@@ -18,6 +18,14 @@ import { type DatasetElementType } from './seriesType/config';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
+import type {
+  AxisLinePropsOverrides,
+  AxisTickPropsOverrides,
+  AxisTickLabelPropsOverrides,
+  AxisLabelPropsOverrides,
+  XAxisPropsOverrides,
+  YAxisPropsOverrides,
+} from './chartsSlotsComponentsProps';
 import type { ChartsTextProps } from '../ChartsText';
 import type {
   ContinuousColorConfig,
@@ -26,6 +34,7 @@ import type {
 } from './colorMapping';
 import type { OrdinalTimeTicks } from './timeTicks';
 import { type ChartsTypeFeatureFlags } from './featureFlags';
+import { type ChartsRadialAxisClasses } from '../ChartsRadiusAxis/sharedRadialAxisClasses';
 
 export type AxisId = string | number;
 
@@ -58,41 +67,45 @@ export interface ChartsAxisSlots {
    * Custom component for the axis main line.
    * @default 'line'
    */
-  axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  axisLine?: React.JSXElementConstructor<
+    React.SVGAttributes<SVGPathElement> & AxisLinePropsOverrides
+  >;
   /**
    * Custom component for the axis tick.
    * @default 'line'
    */
-  axisTick?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  axisTick?: React.JSXElementConstructor<
+    React.SVGAttributes<SVGPathElement> & AxisTickPropsOverrides
+  >;
   /**
    * Custom component for tick label.
    * @default ChartsText
    */
-  axisTickLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  axisTickLabel?: React.JSXElementConstructor<ChartsTextProps & AxisTickLabelPropsOverrides>;
   /**
    * Custom component for axis label.
    * @default ChartsText
    */
-  axisLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  axisLabel?: React.JSXElementConstructor<ChartsTextProps & AxisLabelPropsOverrides>;
   /**
    * Custom component for the x-axis.
    * @default ChartsXAxis
    */
-  xAxis?: React.JSXElementConstructor<ChartsXAxisProps>;
+  xAxis?: React.JSXElementConstructor<ChartsXAxisProps & XAxisPropsOverrides>;
   /**
    * Custom component for the y-axis.
    * @default ChartsYAxis
    */
-  yAxis?: React.JSXElementConstructor<ChartsYAxisProps>;
+  yAxis?: React.JSXElementConstructor<ChartsYAxisProps & YAxisPropsOverrides>;
 }
 
 export interface ChartsAxisSlotProps {
-  axisLine?: Partial<React.SVGAttributes<SVGPathElement>>;
-  axisTick?: Partial<React.SVGAttributes<SVGPathElement>>;
-  axisTickLabel?: Partial<ChartsTextProps>;
-  axisLabel?: Partial<ChartsTextProps>;
-  xAxis?: Partial<ChartsXAxisProps>;
-  yAxis?: Partial<ChartsYAxisProps>;
+  axisLine?: Partial<React.SVGAttributes<SVGPathElement>> & AxisLinePropsOverrides;
+  axisTick?: Partial<React.SVGAttributes<SVGPathElement>> & AxisTickPropsOverrides;
+  axisTickLabel?: Partial<ChartsTextProps> & AxisTickLabelPropsOverrides;
+  axisLabel?: Partial<ChartsTextProps> & AxisLabelPropsOverrides;
+  xAxis?: Partial<ChartsXAxisProps> & XAxisPropsOverrides;
+  yAxis?: Partial<ChartsYAxisProps> & YAxisPropsOverrides;
 }
 
 export interface ChartsAxisProps extends TickParams {
@@ -221,6 +234,28 @@ export interface ChartsRotationAxisProps extends ChartsAxisProps {
    * The gap between the axis and the label.
    */
   labelGap?: number;
+  /**
+   * The position of the rotation axis.
+   * It can be 'inside' or 'outside'.
+   * @default 'outside'
+   */
+  position?: 'inside' | 'outside' | 'none';
+  /**
+   * Set the position of the tick labels relative to the axis line.
+   * `'after'` places them outside the arc, `'before'` inside.
+   * @default position === 'outside' ? 'after' : 'before'
+   */
+  tickLabelPosition?: 'after' | 'before';
+  /**
+   * Set the position of the tick relative to the axis line.
+   * `'after'` places them outside the arc, `'before'` inside.
+   * @default position === 'outside' ? 'after' : 'before'
+   */
+  tickPosition?: 'after' | 'before';
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsRadialAxisClasses>;
 }
 
 export interface ChartsRadiusAxisProps extends ChartsAxisProps {
@@ -233,6 +268,29 @@ export interface ChartsRadiusAxisProps extends ChartsAxisProps {
    * The maximal radius.
    */
   maxRadius?: number;
+  /**
+   * The position of the axis in polar coordinates.
+   * It can be 'start', 'end', or a specific angle in degrees.
+   * @default 'start'
+   */
+  position?: 'start' | 'end' | number | 'none';
+  /**
+   * Set the position of the tick labels relative to the axis line.
+   * The before/after is defined based on clockwise direction.
+   * Using `'auto'` sets it to `'before'` if position is `'start'` and `'after'` otherwise.
+   * @default 'auto'
+   */
+  tickLabelPosition?: 'center' | 'after' | 'before' | 'auto';
+  /**
+   * Set the position of the tick relative to the axis line.
+   * The before/after is defined based on clockwise direction.
+   * @default position === 'start' ? 'before' : 'after'
+   */
+  tickPosition?: 'after' | 'before';
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsRadialAxisClasses>;
 }
 
 export type ScaleName = keyof AxisScaleConfig;
@@ -539,6 +597,11 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
     | 'nice'
     | 'strict'
     | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
+  /**
+   * Defines the series used to compute the axis domain.
+   * @default "all"
+   */
+  domainSeries?: 'all' | 'visible';
   /**
    * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
    */
