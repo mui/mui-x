@@ -736,6 +736,21 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
     }
   }, [drawerOpen, restoreDrawerFocus]);
 
+  // Close the narrow overlay when the active conversation changes via ANY selection
+  // path. The item `onClick` close (wired in createConversationListSlotProps) only
+  // covers pointer clicks; `ConversationListRoot` also selects on Enter, calling
+  // `setActiveConversation` directly without firing the item onClick — which would
+  // otherwise leave the overlay open with focus trapped. Guard on the previous id so
+  // opening the overlay while a conversation is already active doesn't self-close.
+  const previousActiveConversationIdRef = React.useRef(activeConversationId);
+  React.useEffect(() => {
+    const changed = previousActiveConversationIdRef.current !== activeConversationId;
+    previousActiveConversationIdRef.current = activeConversationId;
+    if (changed && drawerOpen) {
+      handleDrawerClose();
+    }
+  }, [activeConversationId, drawerOpen, handleDrawerClose]);
+
   const ScrollToBottomComponent = (slots.scrollToBottom ??
     ChatScrollToBottomAffordance) as typeof ChatScrollToBottomAffordance;
   const ConversationListComponent = (slots.conversationList ??

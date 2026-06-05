@@ -784,6 +784,47 @@ describe('ChatBox', () => {
       });
     });
 
+    it('closes the narrow overlay when a conversation is selected via keyboard', async () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialConversations={conversations}
+          features={conversationListFeatures}
+          data-resize-width="480"
+          sx={{ height: 480 }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      const chatBox = document.querySelector('.MuiChatBox-root') as HTMLElement;
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Open conversations' })).not.toBe(null);
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: 'Open conversations' }));
+
+      await waitFor(() => {
+        expect(chatBox.querySelector('[class*="MuiChatBox-conversationOverlay"]')).not.toBe(null);
+      });
+
+      // Select a conversation with the keyboard. `ConversationListRoot`'s Enter
+      // handler calls `setActiveConversation` directly, bypassing the item onClick
+      // where the overlay close is otherwise wired.
+      const option = screen.getByRole('option', { name: 'General' });
+      act(() => {
+        option.focus();
+      });
+      fireEvent.keyDown(option, { key: 'Enter' });
+
+      // The overlay must close on keyboard selection too, not just pointer clicks —
+      // otherwise focus stays trapped in the modal after the thread changed.
+      await waitFor(() => {
+        expect(chatBox.querySelector('[class*="MuiChatBox-conversationOverlay"]')).toBe(null);
+      });
+    });
+
     it('stretches the thread pane to full width in narrow mode', async () => {
       render(
         <ChatBox
