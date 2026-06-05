@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { createRenderer, screen } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
+import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from './ChatBox';
 
@@ -40,6 +41,29 @@ describe('ChatBox', () => {
     it('renders empty state text when no messages', () => {
       render(<ChatBox adapter={createAdapter()}>{null}</ChatBox>);
       expect(screen.getByText('No messages yet')).not.toBe(null);
+    });
+
+    it('does not treat theme defaultProps.activeConversationId as a controlled prop', async () => {
+      const listMessages = vi.fn().mockResolvedValue({ messages: [] });
+      const theme = createTheme({
+        components: {
+          MuiChatBox: {
+            defaultProps: {
+              activeConversationId: 'theme-default',
+            },
+          },
+        },
+      } as any);
+
+      render(
+        <ThemeProvider theme={theme}>
+          <ChatBox adapter={createAdapter({ listMessages })}>{null}</ChatBox>
+        </ThemeProvider>,
+      );
+
+      await waitFor(() => {
+        expect(listMessages).not.toHaveBeenCalled();
+      });
     });
   });
 

@@ -11,6 +11,7 @@ import legendGetter from './legend';
 import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import descriptionGetter from './descriptionGetter';
+import keyboardFocusHandler from './keyboardFocusHandler';
 
 export const mapShapeSeriesConfig: ChartSeriesTypeConfig<'mapShape'> = {
   seriesProcessor,
@@ -18,6 +19,7 @@ export const mapShapeSeriesConfig: ChartSeriesTypeConfig<'mapShape'> = {
   legendGetter,
   tooltipGetter,
   getSeriesWithDefaultValues,
+  keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
   descriptionGetter,

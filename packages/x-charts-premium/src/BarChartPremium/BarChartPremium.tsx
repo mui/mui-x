@@ -144,6 +144,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
               </ChartsSvgLayer>
               <ChartsWebGLLayer>
                 <BarPlotPremium {...barPlotPremiumProps} />
+                <RangeBarPlot {...rangeBarPlotProps} />
               </ChartsWebGLLayer>
             </React.Fragment>
           )}
@@ -151,7 +152,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
             {renderer !== 'webgl' && <ChartsGrid {...gridProps} />}
             <g {...clipPathGroupProps}>
               {renderer !== 'webgl' && <BarPlotPremium {...barPlotPremiumProps} />}
-              <RangeBarPlot {...rangeBarPlotProps} />
+              {renderer !== 'webgl' && <RangeBarPlot {...rangeBarPlotProps} />}
               <ChartsOverlay {...overlayProps} />
               <ChartsAxisHighlight {...axisHighlightProps} />
               <FocusedBar />
@@ -600,12 +601,16 @@ BarChartPremium.propTypes = {
       min: PropTypes.number,
       sizeMap: PropTypes.oneOfType([
         PropTypes.shape({
+          interpolator: PropTypes.oneOf(['linear', 'log', 'sqrt']),
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          size: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.number.isRequired),
-            PropTypes.func,
-          ]).isRequired,
+          size: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          size: PropTypes.func.isRequired,
           type: PropTypes.oneOf(['continuous']).isRequired,
         }),
         PropTypes.shape({

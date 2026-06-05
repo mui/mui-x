@@ -33,6 +33,7 @@ import { useAdapterContext } from '@mui/x-scheduler-internals/use-adapter-contex
 import {
   EventDialogProvider,
   EventDialogTrigger,
+  EventSkeleton,
   useEventDialogContext,
   getCellFocusBackground,
 } from '@mui/x-scheduler/internals';
@@ -42,7 +43,6 @@ import { EventTimelinePremiumHeader } from './timeline-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
-import { EventTimelinePremiumSkeleton } from './event-skeleton';
 import { useEventTimelinePremiumStyledContext } from '../EventTimelinePremiumStyledContext';
 import {
   EventTimelinePremiumVirtualizerContext,
@@ -589,7 +589,7 @@ function EventRowContent({
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   if (isLoading) {
-    return <EventTimelinePremiumSkeleton />;
+    return <EventSkeleton data-variant="timeline-row" />;
   }
 
   return (

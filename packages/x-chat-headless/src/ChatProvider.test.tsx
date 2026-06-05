@@ -202,6 +202,17 @@ describe('ChatProvider', () => {
     expect(result.current.partRenderers).toEqual({});
   });
 
+  it('forwards role display names to the store parameters', () => {
+    const roleDisplayNames = { assistant: 'Assistent' };
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter(),
+      roleDisplayNames,
+    });
+    const { result } = renderHook(() => useChatStoreContext(), { wrapper: Wrapper });
+
+    expect(result.current.parameters.roleDisplayNames).toBe(roleDisplayNames);
+  });
+
   it('calls uncontrolled onChange callbacks for internal store mutations', () => {
     const onMessagesChange = spy();
     const onConversationsChange = spy();
@@ -223,8 +234,9 @@ describe('ChatProvider', () => {
       result.current.setComposerValue('Draft one');
     });
 
-    expect(onMessagesChange.callCount).toBe(1);
-    expect(onMessagesChange.lastCall.args[0]).toEqual([message1]);
+    expect(onMessagesChange.callCount).toBe(2);
+    expect(onMessagesChange.getCall(0).args[0]).toEqual([message1]);
+    expect(onMessagesChange.lastCall.args[0]).toEqual([]);
     expect(onConversationsChange.callCount).toBe(1);
     expect(onConversationsChange.lastCall.args[0]).toEqual([conversation1]);
     expect(onActiveConversationChange.callCount).toBe(1);
@@ -321,36 +333,80 @@ describe('ChatProvider', () => {
   });
 
   it('passes streamFlushInterval through to streaming behavior', async () => {
+    vi.useFakeTimers();
+    let controller: ReadableStreamDefaultController<any> | undefined;
     const adapter: ChatAdapter = {
-      async sendMessage() {
+      sendMessage: vi.fn(async () => {
         return new ReadableStream({
-          start(controller) {
-            controller.enqueue({ type: 'start', messageId: 'a1' });
-            controller.enqueue({ type: 'text-delta', id: 'text-1', delta: 'Hello' });
-            controller.enqueue({ type: 'text-delta', id: 'text-1', delta: ' world' });
-            controller.enqueue({ type: 'finish', messageId: 'a1' });
-            controller.close();
+          start(nextController) {
+            controller = nextController;
           },
         });
-      },
+      }),
     };
-    const { Wrapper } = createProviderWrapper({
-      adapter,
-      streamFlushInterval: 0,
-    });
-    const { result } = renderHook(
-      () => {
-        const store = useChatStoreContext();
-        const runtime = useChatRuntimeContext();
-        return { store, runtime };
-      },
-      { wrapper: Wrapper },
-    );
 
-    // streamFlushInterval is passed through — we verify by checking it doesn't error
-    // and the store initializes correctly
-    expect(result.current.store).toBeDefined();
-    expect(result.current.runtime.adapter).toBe(adapter);
+    try {
+      const { Wrapper } = createProviderWrapper({
+        adapter,
+        streamFlushInterval: 50,
+      });
+      const { result } = renderHook(
+        () => {
+          const store = useChatStoreContext();
+          const runtime = useChatRuntimeContext();
+          return { store, runtime };
+        },
+        { wrapper: Wrapper },
+      );
+
+      let sendPromise: Promise<void> | undefined;
+      act(() => {
+        sendPromise = result.current.runtime.actions.sendMessage({
+          parts: [{ type: 'text', text: 'Hello' }],
+        });
+      });
+
+      await act(async () => {
+        await Promise.resolve();
+      });
+
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+      expect(controller).not.toBe(undefined);
+
+      act(() => {
+        controller!.enqueue({ type: 'start', messageId: 'a1' });
+        controller!.enqueue({ type: 'text-delta', id: 'text-1', delta: 'Buffered' });
+      });
+      await act(async () => {
+        await Promise.resolve();
+      });
+
+      expect(result.current.store.state.messagesById.a1.parts).toEqual([]);
+
+      act(() => {
+        vi.advanceTimersByTime(49);
+      });
+      expect(result.current.store.state.messagesById.a1.parts).toEqual([]);
+
+      await act(async () => {
+        vi.advanceTimersByTime(1);
+      });
+
+      expect(result.current.store.state.messagesById.a1.parts).toEqual([
+        { type: 'text', text: 'Buffered', state: 'streaming' },
+      ]);
+
+      act(() => {
+        controller!.enqueue({ type: 'finish', messageId: 'a1' });
+        controller!.close();
+      });
+
+      await act(async () => {
+        await sendPromise;
+      });
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('store reference stays stable when adapter changes', () => {

@@ -34,19 +34,25 @@ export function createConversationActions<Cursor = string>(params: {
     conversationLoadRequestIdRef.current += 1;
     const requestId = conversationLoadRequestIdRef.current;
     const { resetWhenUndefined = true } = options;
+    const shouldResetMessages = resetWhenUndefined && store.parameters.messages === undefined;
 
     if (conversationId == null) {
-      if (resetWhenUndefined) {
+      if (shouldResetMessages) {
         store.resetMessages();
       }
       return;
     }
 
     if (!runtimeRef.current.adapter.listMessages) {
+      if (shouldResetMessages) {
+        store.resetMessages();
+      }
       return;
     }
 
-    store.resetMessages();
+    if (shouldResetMessages) {
+      store.resetMessages();
+    }
 
     try {
       const result = await runtimeRef.current.adapter.listMessages({
