@@ -34,11 +34,11 @@ const createRefs = () =>
 const EMPTY = [] as unknown[];
 
 type Refs<T> = {
-  // `state` is the selected value currently returned by this hook. `storeState` is the
-  // store state object identity from which it was computed. The store always replaces its
-  // state object on every change, so comparing identities lets the post-commit catch-up
-  // (and its StrictMode re-runs) skip recomputing the selector when nothing changed between
-  // render and commit, while still applying any update that slipped in during that window.
+  // `state` holds the value this hook currently returns.
+  // `storeState` remembers which store state that value was computed from.
+  // The store creates a new state object on every update, so comparing `storeState`
+  // with the current `store.state` allows `updateState` to skip needless selector
+  // calls and to catch updates that happened before the hook subscribed to the store.
   state: T;
   storeState: GridStateCommunity | null;
   equals: <U = T>(a: U, b: U) => boolean;
@@ -115,11 +115,14 @@ export function useGridSelector<Api extends GridApiCommon, Args, T>(
     EMPTY,
   );
 
-  // Subscribe only after commit so a render that never mounts (e.g. suspended during
-  // hydration) cannot receive store updates and trigger a state update before mount (#17077).
-  // A layout effect (not a passive one) runs `updateState` synchronously before paint, so any
-  // store change that happened between render and commit (including from a child ref callback
-  // or child layout effect) is applied without a stale first frame.
+  // Why subscribe in an effect instead of during render: a component can render without
+  // ever mounting (e.g. when it suspends during hydration). If it subscribed during render,
+  // it could receive a store update and call `setState` before being mounted (#17077).
+  // Effects only run for mounted components, so subscribing here is safe.
+  //
+  // Using a layout effect because the store may already have changed
+  // between render and mount (e.g. from a child's ref callback or layout effect).
+  // `updateState()` picks up such changes, so the corrected value is shown right away instead of in a second frame.
   useEnhancedEffect(() => {
     updateState();
     return apiRef.current.store.subscribe(updateState);
