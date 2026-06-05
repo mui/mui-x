@@ -233,6 +233,7 @@
   { "name": "ChartsTooltipSlots", "kind": "Interface" },
   { "name": "ChartsTooltipTable", "kind": "Variable" },
   { "name": "ChartsTypeFeatureFlags", "kind": "Interface" },
+  { "name": "ChartSvgExportOptions", "kind": "Interface" },
   { "name": "ChartsWrapper", "kind": "Variable" },
   { "name": "ChartsWrapperOwnerState", "kind": "Interface" },
   { "name": "ChartsWrapperProps", "kind": "Interface" },
