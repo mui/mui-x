@@ -15,6 +15,7 @@ export const ptBRLocaleText: Partial<ChartsLocaleText> = {
   // Toolbar Export Menu
   toolbarExportPrint: 'Imprimir',
   toolbarExportImage: (mimeType) => `Exportar como ${imageMimeTypes[mimeType] ?? mimeType}`,
+  // toolbarExportSvg: 'Export as SVG',
 
   // Charts renderer configuration
   chartTypeBar: 'Barra',

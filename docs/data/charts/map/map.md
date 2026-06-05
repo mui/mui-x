@@ -1,7 +1,7 @@
 ---
 title: React Map chart
 productId: x-charts
-components: ChartsGeoDataProviderPremium, GeoDataPlot, MapShapePlot, MapShape, Graticule
+components: ChartsGeoDataProviderPremium, GeoDataPlot, MapShapePlot, MapShape, Graticule, FocusedMapShape
 ---
 
 # Charts - Map [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
