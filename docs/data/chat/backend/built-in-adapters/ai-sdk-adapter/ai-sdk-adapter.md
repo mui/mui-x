@@ -33,14 +33,14 @@ A server route uses `streamText(...).toUIMessageStreamResponse()`, and the clien
 
 ```ts
 // app/api/chat/route.ts
-import { streamText, convertToCoreMessages } from 'ai';
+import { streamText, convertToModelMessages } from 'ai';
 import { openai } from '@ai-sdk/openai';
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
   const result = streamText({
     model: openai('gpt-4o-mini'),
-    messages: convertToCoreMessages(messages),
+    messages: convertToModelMessages(messages),
   });
   return result.toUIMessageStreamResponse();
 }
