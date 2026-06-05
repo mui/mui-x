@@ -22,7 +22,7 @@ catalog:
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': 9.0.1
   '@mui/internal-test-utils': 2.0.18-canary.25
-  '@mui/internal-core-docs': 'https://pkg.pr.new/mui/material-ui/@mui/internal-core-docs@03027e4'
+  '@mui/internal-core-docs': 9.0.2-canary.2
   '@mui/material': 9.0.1
   '@mui/stylis-plugin-rtl': 9.0.1
   '@mui/system': 9.0.1
@@ -107,7 +107,7 @@ overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
+  caniuse-lite: ^1.0.30001793
 
 patchedDependencies:
   eslint-plugin-consistent-default-export-name@0.0.15: patches/eslint-plugin-consistent-default-export-name@0.0.15.patch
-  caniuse-lite: ^1.0.30001793
