@@ -156,10 +156,14 @@
     },
     {
       "name": "dateDivider",
-      "description": "The date separator rendered between message groups.",
+      "description": "The date separator rendered between message groups. Pass `null` to hide it.",
       "class": null
     },
-    { "name": "unreadMarker", "description": "The \"new messages\" marker.", "class": null },
+    {
+      "name": "unreadMarker",
+      "description": "The \"new messages\" marker. Pass `null` to hide it.",
+      "class": null
+    },
     {
       "name": "messageRoot",
       "description": "Styled root of `<ChatMessage>` (wrapper-only); the default avatar/content/meta\ntree still renders inside it.",

@@ -116,10 +116,10 @@ interface ChatBoxMessageListSlots {
   messageList?: React.ElementType;
   /** The per-author group wrapper around consecutive messages. */
   messageGroup?: React.ElementType;
-  /** The date separator rendered between message groups. */
-  dateDivider?: React.ElementType;
-  /** The "new messages" marker. */
-  unreadMarker?: React.ElementType;
+  /** The date separator rendered between message groups. Pass `null` to hide it. */
+  dateDivider?: React.ElementType | null;
+  /** The "new messages" marker. Pass `null` to hide it. */
+  unreadMarker?: React.ElementType | null;
 }
 
 interface ChatBoxMessageListSlotProps {
