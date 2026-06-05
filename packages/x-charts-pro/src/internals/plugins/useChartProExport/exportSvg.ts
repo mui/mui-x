@@ -10,17 +10,14 @@ type ExportLayer =
   | { kind: 'svg'; element: SVGSVGElement }
   | { kind: 'canvas'; element: HTMLCanvasElement };
 
-/**
- * Classifies the chart container's child layers into the ones we can export.
- * SVG layers are kept as-is; canvas layers (e.g. the WebGL series) may be nested
- * inside a positioning wrapper, so we search non-SVG children for a `<canvas>`.
- */
 function collectLayers(chartContainer: Element): ExportLayer[] {
   const layers: ExportLayer[] = [];
   for (const child of chartContainer.children) {
     if (child instanceof SVGSVGElement) {
       layers.push({ kind: 'svg', element: child });
     } else {
+      /* Canvas layers (e.g. the WebGL series) can be nested inside a positioning wrapper,
+       * so we look for a `<canvas>` inside non-SVG children. */
       const canvas = child instanceof HTMLCanvasElement ? child : child.querySelector('canvas');
       if (canvas) {
         layers.push({ kind: 'canvas', element: canvas });
@@ -30,10 +27,6 @@ function collectLayers(chartContainer: Element): ExportLayer[] {
   return layers;
 }
 
-/**
- * Collects the CSS rules reachable from the given root into a single string.
- * Cross-origin stylesheets throw on `cssRules` access and are silently skipped.
- */
 function collectCssText(root: Document | ShadowRoot): string {
   let css = '';
   for (const sheet of root.styleSheets) {
@@ -42,17 +35,12 @@ function collectCssText(root: Document | ShadowRoot): string {
         css += `${rule.cssText}\n`;
       }
     } catch {
-      // Cross-origin stylesheet — `cssRules` access throws. Skip it.
+      // Cross-origin stylesheets throw on `cssRules` access. Skip them.
     }
   }
   return css;
 }
 
-/**
- * Re-serializes the HTML legend as native SVG nodes (`<svg>` mark + `<text>` label),
- * positioned relative to the export origin. Returns a `<g>` containing all legend items,
- * or `null` when there is no legend.
- */
 function buildLegendGroup(
   chartRoot: Element,
   doc: Document,
@@ -71,8 +59,8 @@ function buildLegendGroup(
     const labelEl = seriesEl.children[1] as HTMLElement | undefined;
     const seriesRect = seriesEl.getBoundingClientRect();
 
-    // Marker: clone the rendered mark SVG and give it an explicit position/size,
-    // since outside its wrapper `<div>` it no longer inherits CSS dimensions.
+    /* Clone the rendered mark and give it an explicit position/size, since outside its
+     * wrapper it no longer inherits dimensions from CSS. */
     const markSvg = markEl?.children[0]?.cloneNode(true) as SVGElement | undefined;
     if (markSvg && markEl) {
       const markRect = markEl.getBoundingClientRect();
@@ -83,8 +71,8 @@ function buildLegendGroup(
       group.appendChild(markSvg);
     }
 
-    // Label: re-emit as `<text>`, vertically centered against the series item so it
-    // aligns with the mark regardless of font size.
+    /* Re-emit the label as `<text>`, vertically centered on the item so it stays aligned
+     * with the mark regardless of font size. */
     if (labelEl) {
       const labelRect = labelEl.getBoundingClientRect();
       const labelStyles = getComputedStyle(labelEl);
@@ -104,14 +92,6 @@ function buildLegendGroup(
   return group;
 }
 
-/**
- * Exports the chart as a standalone, self-contained SVG file.
- *
- * The chart can be composed of several stacked layers (e.g. an SVG grid, a WebGL/canvas
- * series layer, and an SVG axis layer). They are composited into a single output `<svg>`
- * in z-order: SVG layers are nested as-is and `<canvas>` layers are embedded as `<image>`.
- * The HTML legend is re-serialized as native SVG so it stays editable in design tools.
- */
 function exportSvg(
   chartRoot: Element,
   chartContainer: HTMLElement | SVGSVGElement,
@@ -130,8 +110,8 @@ function exportSvg(
     );
   }
 
-  // The export must cover both the plot layers and the legend, which can sit on any side.
-  // Use the union of their bounding boxes as the output canvas and the export origin.
+  /* The export must cover both the plot and the legend, which can sit on any side, so we use
+   * the union of their bounding boxes as the output canvas and the export origin. */
   const legendEl = chartRoot.querySelector(`.${legendClasses.root}`);
   const rects = [chartContainer.getBoundingClientRect()];
   if (legendEl) {
@@ -149,8 +129,8 @@ function exportSvg(
   outSvg.setAttribute('height', `${height}`);
   outSvg.setAttribute('viewBox', `0 0 ${width} ${height}`);
 
-  // Inline the resolved page styles so the file renders standalone. Read from the chart's
-  // own root (a ShadowRoot when the chart lives in shadow DOM, otherwise the document).
+  /* Inline the resolved page styles so the file renders standalone. Read from the chart's own
+   * root, which is a ShadowRoot when the chart lives in shadow DOM, otherwise the document. */
   const styleRoot = chartContainer.getRootNode();
   const styleEl = doc.createElementNS(SVG_NS, 'style');
   if (nonce) {
@@ -166,19 +146,20 @@ function exportSvg(
     const y = layerRect.top - originTop;
 
     if (layer.kind === 'canvas') {
-      // Canvas/WebGL series can't be vectorized — embed as a raster `<image>`.
+      /* Canvas/WebGL series can't be vectorized, so embed them as a raster `<image>`. We set both
+       * `href` (SVG 2, browsers) and `xlink:href` (older renderers and design tools). */
       const dataUrl = layer.element.toDataURL();
       const image = doc.createElementNS(SVG_NS, 'image');
       image.setAttribute('x', `${x}`);
       image.setAttribute('y', `${y}`);
       image.setAttribute('width', `${layerRect.width}`);
       image.setAttribute('height', `${layerRect.height}`);
-      // Set both forms: `href` (SVG 2, browsers) and `xlink:href` (older renderers/editors).
       image.setAttribute('href', dataUrl);
       image.setAttributeNS(XLINK_NS, 'xlink:href', dataUrl);
       outSvg.appendChild(image);
     } else {
-      // SVG layer — nest it, giving it an explicit position/size so it doesn't collapse.
+      /* Nest the SVG layer, giving it an explicit position/size so the nested `<svg>` doesn't
+       * collapse without the dimensions it used to inherit from CSS. */
       const clone = layer.element.cloneNode(true) as SVGSVGElement;
       clone.setAttribute('x', `${x}`);
       clone.setAttribute('y', `${y}`);
@@ -188,7 +169,7 @@ function exportSvg(
     }
   });
 
-  // Re-serialize the HTML legend on top.
+  // Re-serialize the HTML legend as native SVG nodes on top of the plot.
   const legendGroup = buildLegendGroup(chartRoot, doc, originLeft, originTop);
   if (legendGroup) {
     outSvg.appendChild(legendGroup);
