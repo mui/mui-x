@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { type PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
@@ -238,6 +239,17 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       pointerUpdate.clear();
     };
   }, [chartsLayerContainerRef, positionRef, isTooltipNodeAnchored]);
+
+  // When anchored to a node/chart position, the anchor element keeps the same ref but moves
+  // via its `left`/`top` styles. Popper does not observe those style changes, so it must be
+  // told to recompute whenever the resolved position changes (e.g. once the drawing area is
+  // measured, or on resize/zoom with a controlled tooltip).
+  useEnhancedEffect(() => {
+    if (!isTooltipNodeAnchored) {
+      return;
+    }
+    popperRef.current?.update();
+  }, [isTooltipNodeAnchored, itemPosition?.x, itemPosition?.y]);
 
   const pointerAnchorEl = React.useMemo(
     () => ({
