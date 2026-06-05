@@ -188,9 +188,9 @@ expect(cleanText(input.value)).to.equal('04-17-2022');
 
 ### End-to-end testing with Playwright
 
-The field's accessible DOM structure exposes a single, form-submittable element that supports both interaction and assertion: a visually-hidden `<input>` rendered alongside the `role="group"` container.
-When the picker has a `label`, that label becomes the accessible name of both the group and the hidden input (the field wires `<label htmlFor={id}>` automatically), which lets you scope the locator on pages that render more than one picker.
-Unlike the visible section spans, the hidden input doesn't contain the invisible Unicode characters mentioned above, so assertions don't need any cleanup.
+The field's accessible DOM structure renders a visually-hidden, form-submittable `<input>` alongside the `role="group"` container that holds the editable sections.
+This hidden input is a stable target for filling a value and asserting it: unlike the visible section spans, its value doesn't contain the invisible Unicode characters mentioned above, so assertions don't need any cleanup.
+When the picker has a `label`, that label becomes the accessible name of both the group and the hidden input (the field wires `<label htmlFor={id}>` automatically), which lets you scope the locators on pages that render more than one picker.
 
 Given a labeled picker:
 
@@ -198,23 +198,45 @@ Given a labeled picker:
 <DatePicker label="Departure" />
 ```
 
-The minimum pattern to fill a date and assert its value:
+**Recommended: click the field, then fill the hidden input.**
+Clicking the visible field focuses it deterministically before the fill resolves:
+
+```ts
+const field = page.getByRole('group', { name: 'Departure' });
+const input = field.getByRole('textbox', { includeHidden: true });
+
+await field.click();
+await input.fill('02/12/2020');
+await expect(input).toHaveValue('02/12/2020');
+```
+
+`includeHidden: true` is only required to _locate_ the input, since it carries `aria-hidden="true"`.
+The `.fill()` itself works because the visually-hidden input is a 1px clipped element (not `display: none`), so it passes Playwright's editability checks.
+
+**Single-locator alternative.**
+You can keep everything on the hidden input, focusing it before the fill:
 
 ```ts
 const input = page.getByRole('textbox', { includeHidden: true, name: 'Departure' });
+
 await input.focus();
 await input.fill('02/12/2020');
 await expect(input).toHaveValue('02/12/2020');
 ```
 
-The explicit `.focus()` is required: without it Playwright's `.fill()` doesn't propagate the change event through to the field's section state.
-`includeHidden: true` is only required for the locator to find the element, since the input carries `aria-hidden="true"`.
-`.fill()` itself is allowed because the visually-hidden input is a 1px clipped element (not `display: none`), so Playwright's actionability checks pass.
+:::warning
+Focusing the hidden input redirects focus to the editable sections.
+A bare `input.fill()` _without_ the preceding `.focus()` is silently dropped because focus moves away mid-fill - this is especially visible on a pre-filled field, where the value reverts to its previous content.
+The explicit `.focus()` works around it, but it relies on the focus settling before the fill resolves, so it can still be flaky under load.
+Prefer clicking the field first when you can.
+:::
 
-If you need to drive individual sections (for example, keyboard-flow tests), scope through the field's group so the section roles stay unambiguous when multiple pickers are present:
+To drive individual sections (for example, keyboard-flow tests), click the field first, then fill each `spinbutton`:
 
 ```ts
 const field = page.getByRole('group', { name: 'Departure' });
+
+await field.click();
 await field.getByRole('spinbutton', { name: 'Month' }).fill('04');
 await field.getByRole('spinbutton', { name: 'Day' }).fill('11');
 await field.getByRole('spinbutton', { name: 'Year' }).fill('2022');
