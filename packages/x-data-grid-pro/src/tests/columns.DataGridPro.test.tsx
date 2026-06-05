@@ -635,6 +635,33 @@ describe('<DataGridPro /> - Columns', () => {
       });
     });
 
+    it('should wait for all rows to be rendered on mount when rows fit the viewport', async () => {
+      const autosizeRows = [
+        { id: 0, brand: 'Nike' },
+        { id: 1, brand: 'Adidas' },
+        { id: 2, brand: 'Puma' },
+        { id: 3, brand: 'Reebok' },
+        { id: 4, brand: 'Asics' },
+        { id: 5, brand: 'New Balance' },
+        { id: 6, brand: 'Lululemon Athletica International Collection' },
+      ];
+      const autosizeColumns = [{ field: 'brand' }];
+
+      render(
+        <Test
+          rows={autosizeRows}
+          columns={autosizeColumns}
+          autosizeOnMount
+          autosizeOptions={{ columns: ['brand'], includeOutliers: true }}
+        />,
+      );
+
+      await waitFor(() => {
+        const wideCell = getCell(6, 0);
+        expect(wideCell.scrollWidth).to.be.at.most(wideCell.clientWidth);
+      });
+    });
+
     it('should work with flex columns', async () => {
       const { user } = render(
         <Test
