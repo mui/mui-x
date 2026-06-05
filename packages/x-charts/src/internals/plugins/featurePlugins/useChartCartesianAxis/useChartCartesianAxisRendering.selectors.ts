@@ -546,8 +546,9 @@ export const selectorChartSeriesFlatbushMap = createSelectorMemoized(
   selectorChartDefaultXAxisId,
   selectorChartDefaultYAxisId,
   selectorChartZAxis,
-  selectorChartDrawingArea,
-
+  // Points are built in [0, 1] normalized space (see below), so the Flatbush index is
+  // independent of the drawing area. Listing it as an input would force a full rebuild on
+  // every resize for nothing.
   function selectChartSeriesFlatbushMap(
     allSeries,
     xAxesScaleMap,
