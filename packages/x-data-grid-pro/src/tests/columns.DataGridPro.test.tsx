@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { type RefObject } from '@mui/x-internals/types';
@@ -10,6 +11,7 @@ import {
   gridColumnFieldsSelector,
   type GridApi,
   type GridAutosizeOptions,
+  type GridColDef,
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell, getRow } from 'test/utils/helperFn';
@@ -636,6 +638,23 @@ describe('<DataGridPro /> - Columns', () => {
     });
 
     it('should wait for all rows to be rendered on mount when rows fit the viewport', async () => {
+      const shortValue = 'Nike';
+      const wideValue = 'Lululemon Athletica International Collection';
+
+      function DeferredCellContent({ value }: { value: string }) {
+        const [showValue, setShowValue] = React.useState(value === shortValue);
+
+        React.useEffect(() => {
+          if (!showValue) {
+            Promise.resolve().then(() => {
+              Promise.resolve().then(() => setShowValue(true));
+            });
+          }
+        }, [showValue]);
+
+        return <span>{showValue ? value : shortValue}</span>;
+      }
+
       const autosizeRows = [
         { id: 0, brand: 'Nike' },
         { id: 1, brand: 'Adidas' },
@@ -643,9 +662,14 @@ describe('<DataGridPro /> - Columns', () => {
         { id: 3, brand: 'Reebok' },
         { id: 4, brand: 'Asics' },
         { id: 5, brand: 'New Balance' },
-        { id: 6, brand: 'Lululemon Athletica International Collection' },
+        { id: 6, brand: wideValue },
       ];
-      const autosizeColumns = [{ field: 'brand' }];
+      const autosizeColumns: GridColDef[] = [
+        {
+          field: 'brand',
+          renderCell: ({ value }) => <DeferredCellContent value={value} />,
+        },
+      ];
 
       render(
         <Test
@@ -658,6 +682,7 @@ describe('<DataGridPro /> - Columns', () => {
 
       await waitFor(() => {
         const wideCell = getCell(6, 0);
+        expect(wideCell.textContent).to.equal(wideValue);
         expect(wideCell.scrollWidth).to.be.at.most(wideCell.clientWidth);
       });
     });
