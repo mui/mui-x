@@ -14,6 +14,10 @@ export function useCopyToClipboard(resetMs: number = 2000): UseCopyToClipboardRe
   const mountedRef = React.useRef(true);
 
   React.useEffect(() => {
+    // Reset on (re)mount: StrictMode and remounts run the cleanup below before
+    // mounting again, so relying on the initial ref value would leave the hook
+    // permanently flagged as unmounted and silently swallow every state update.
+    mountedRef.current = true;
     return () => {
       mountedRef.current = false;
       if (resetTimerRef.current !== null) {
