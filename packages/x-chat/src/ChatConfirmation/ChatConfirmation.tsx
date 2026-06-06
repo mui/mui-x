@@ -159,13 +159,23 @@ const ChatConfirmation = React.forwardRef<HTMLDivElement, ChatConfirmationProps>
       ...other
     } = props;
     const classes = useChatConfirmationUtilityClasses(classesProp);
+    const messageId = React.useId();
 
     return (
-      <ChatConfirmationRoot ref={ref} className={clsx(classes.root, className)} sx={sx} {...other}>
+      <ChatConfirmationRoot
+        ref={ref}
+        className={clsx(classes.root, className)}
+        sx={sx}
+        role="alertdialog"
+        aria-describedby={messageId}
+        {...other}
+      >
         <ChatConfirmationIcon className={classes.icon}>
           <WarningIcon />
         </ChatConfirmationIcon>
-        <ChatConfirmationMessage className={classes.message}>{message}</ChatConfirmationMessage>
+        <ChatConfirmationMessage id={messageId} className={classes.message}>
+          {message}
+        </ChatConfirmationMessage>
         <ChatConfirmationActions className={classes.actions}>
           <ChatConfirmationCancelButton
             type="button"

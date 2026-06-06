@@ -9,6 +9,7 @@ import {
   type ConversationRootProps,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   useChatConversationUtilityClasses,
   type ChatConversationClasses,
@@ -51,11 +52,13 @@ const ChatConversation = React.forwardRef<HTMLDivElement, ChatConversationProps>
         }}
         slotProps={{
           ...slotProps,
-          root: {
-            className: clsx(classes.root, className),
-            sx,
-            ...slotProps?.root,
-          } as any,
+          root: mergeSlotProps(
+            {
+              className: clsx(classes.root, className),
+              sx,
+            },
+            slotProps?.root,
+          ) as any,
         }}
       />
     );

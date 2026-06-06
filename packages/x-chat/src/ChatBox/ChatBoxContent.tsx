@@ -37,6 +37,7 @@ import type {
   ChatBoxLayoutModeBreakpoints,
 } from './ChatBox.types';
 import { useChatSlots } from '../internals/ChatSlotsContext';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import DefaultSendIcon from '../icons/DefaultSendIcon';
 import DefaultAttachIcon from '../icons/DefaultAttachIcon';
 import DefaultMenuIcon from '../icons/DefaultMenuIcon';
@@ -49,12 +50,12 @@ const DEFAULT_SPLIT_BREAKPOINT = 450;
  * Observes the ChatBox root element's inline size so the JS behavior
  * can stay aligned with container-query-driven layout changes.
  */
-function useContainerWidth(ref: React.RefObject<HTMLElement | null>): number | null {
+function useContainerWidth(element: HTMLElement | null): number | null {
   const [width, setWidth] = React.useState<number | null>(null);
 
   React.useEffect(() => {
-    const el = ref.current;
-    if (!el) {
+    if (!element) {
+      setWidth(null);
       return undefined;
     }
 
@@ -62,7 +63,7 @@ function useContainerWidth(ref: React.RefObject<HTMLElement | null>): number | n
       setWidth(nextWidth);
     };
 
-    const initialWidth = el.getBoundingClientRect().width;
+    const initialWidth = element.getBoundingClientRect().width;
     if (initialWidth > 0) {
       updateWidth(initialWidth);
     }
@@ -84,9 +85,9 @@ function useContainerWidth(ref: React.RefObject<HTMLElement | null>): number | n
         updateWidth(nextWidth);
       }
     });
-    ro.observe(el);
+    ro.observe(element);
     return () => ro.disconnect();
-  }, [ref]);
+  }, [element]);
 
   return width;
 }
@@ -255,7 +256,7 @@ interface ChatBoxContentProps {
   features?: ChatBoxFeatures;
   layoutMode?: ChatBoxLayoutMode;
   layoutModeBreakpoints?: Partial<ChatBoxLayoutModeBreakpoints>;
-  rootRef: React.RefObject<HTMLElement | null>;
+  rootElement: HTMLElement | null;
   layoutClassName?: string;
   conversationsPaneClassName?: string;
   threadPaneClassName?: string;
@@ -357,43 +358,32 @@ function mergeConversationListItemSlotProps(itemSlotProps: any, handleDrawerClos
       ...externalProps,
       onClick: (event: React.MouseEvent) => {
         externalProps?.onClick?.(event);
-        handleDrawerClose();
+        if (!event.defaultPrevented) {
+          handleDrawerClose();
+        }
+      },
+      onKeyDown: (event: React.KeyboardEvent) => {
+        externalProps?.onKeyDown?.(event);
+        if (
+          !event.defaultPrevented &&
+          (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar')
+        ) {
+          handleDrawerClose();
+        }
       },
     };
   };
 }
 
 function mergeConversationListLayoutSlotProps(slotProp: any, extraStyle: React.CSSProperties) {
-  return (ownerState: any) => {
-    const externalProps = typeof slotProp === 'function' ? slotProp(ownerState) : (slotProp ?? {});
-
-    return {
-      ...externalProps,
-      style: {
-        ...extraStyle,
-        ...(externalProps?.style ?? {}),
-      },
-    };
-  };
+  return mergeSlotProps({ style: extraStyle }, slotProp);
 }
 
 function mergeLayoutSlotProps(
   slotProp: any,
   internalProps: { className?: string; style?: React.CSSProperties },
 ) {
-  return (ownerState: any) => {
-    const externalProps = typeof slotProp === 'function' ? slotProp(ownerState) : (slotProp ?? {});
-    const className = [internalProps.className, externalProps?.className].filter(Boolean).join(' ');
-
-    return {
-      ...externalProps,
-      ...(className ? { className } : {}),
-      style: {
-        ...(internalProps.style ?? {}),
-        ...(externalProps?.style ?? {}),
-      },
-    };
-  };
+  return mergeSlotProps(internalProps, slotProp);
 }
 
 function createConversationListSlotProps(
@@ -557,7 +547,7 @@ function AboveComposerSuggestions(props: {
     ...consumerRest
   } = consumerSlotProps ?? {};
   const consumerSuggestionsSlotProps = (consumerNestedSlotProps as any) ?? {};
-  const consumerRootSlotProp = consumerSuggestionsSlotProps.root ?? {};
+  const consumerRootSlotProp = consumerSuggestionsSlotProps.root;
   // Two visual modes keyed off the `data-empty` attribute that SuggestionsRoot
   // sets when the thread has zero messages:
   // - empty (data-empty present): vertical column of pills, centered. Reads as a
@@ -590,33 +580,14 @@ function AboveComposerSuggestions(props: {
       '& .MuiChatSuggestions-item': { flex: '0 0 auto' },
     },
   };
-  // Compose the root `sx`: above-composer layout defaults (base), then the consumer's
-  // top-level `sx`, then the more-specific nested `slotProps.root.sx` — later layers
-  // win. Folding the top-level `sx` here is what preserves `slotProps={{ suggestions:
-  // { sx } }}` in the active-thread path.
-  const mergeRootSx = (nestedRootSx: unknown): unknown => {
-    const layers: unknown[] = [aboveComposerDefaultsSx];
-    const push = (value: unknown) => {
-      if (Array.isArray(value)) {
-        layers.push(...value);
-      } else if (value) {
-        layers.push(value);
-      }
-    };
-    push(consumerTopLevelSx);
-    push(nestedRootSx);
-    return layers.length === 1 ? aboveComposerDefaultsSx : layers;
-  };
-  // `root` slotProps support both the object form and the `(ownerState) => props`
-  // callback form. Preserve the callback instead of spreading it into an empty
-  // object (which would silently drop the consumer's owner-state-driven props).
-  const rootSlotProp =
-    typeof consumerRootSlotProp === 'function'
-      ? (ownerState: any) => {
-          const resolved = consumerRootSlotProp(ownerState) ?? {};
-          return { ...resolved, sx: mergeRootSx(resolved.sx) };
-        }
-      : { ...consumerRootSlotProp, sx: mergeRootSx(consumerRootSlotProp.sx) };
+  const rootBaseSx =
+    consumerTopLevelSx == null
+      ? aboveComposerDefaultsSx
+      : [
+          aboveComposerDefaultsSx,
+          ...(Array.isArray(consumerTopLevelSx) ? consumerTopLevelSx : [consumerTopLevelSx]),
+        ];
+  const rootSlotProp = mergeSlotProps({ sx: rootBaseSx }, consumerRootSlotProp as any);
   return (
     <SuggestionsComponent
       suggestions={suggestions}
@@ -633,13 +604,25 @@ function AboveComposerSuggestions(props: {
   );
 }
 
+function createMarkedConversationListComponent(
+  Component: React.ElementType,
+): typeof ChatConversationList {
+  const MarkedConversationList = React.forwardRef<HTMLDivElement, any>(
+    function MarkedConversationList(props, ref) {
+      return <Component ref={ref} {...props} />;
+    },
+  );
+  markChatLayoutPane(MarkedConversationList, 'conversations');
+  return MarkedConversationList as typeof ChatConversationList;
+}
+
 export function ChatBoxContent(props: ChatBoxContentProps) {
   const {
     variant,
     features,
     layoutMode,
     layoutModeBreakpoints,
-    rootRef,
+    rootElement,
     layoutClassName,
     conversationsPaneClassName,
     threadPaneClassName,
@@ -662,7 +645,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const autoScrollProp = features?.autoScroll ?? true;
   const { activeConversationId, setActiveConversation } = useChat();
 
-  const containerWidth = useContainerWidth(rootRef);
+  const containerWidth = useContainerWidth(rootElement);
   const normalizedBreakpoints = React.useMemo(
     () => normalizeLayoutModeBreakpoints(layoutModeBreakpoints),
     [layoutModeBreakpoints],
@@ -698,8 +681,24 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   const conversations = useConversations();
   const localeText = useChatLocaleText();
   const hasConversationList = features?.conversationList === true && conversations.length > 0;
+  const {
+    slots: messageListConsumerSlots,
+    items: messageListItems,
+    ...messageListConsumerProps
+  } = (slotProps.messageList ?? {}) as Partial<ChatMessageListProps>;
+  const messageListSlots = React.useMemo(
+    () => ({
+      ...(messageListConsumerSlots ?? {}),
+      ...(slots.messageList ? { messageList: slots.messageList } : {}),
+    }),
+    [messageListConsumerSlots, slots.messageList],
+  );
+  // The rendered id list — `slotProps.messageList.items` lets a consumer narrow
+  // the thread; otherwise the full conversation order is used. `useMessageIds()`
+  // returns a stable reference, so forwarding it does not churn row memoization.
+  const renderedItemIds = (messageListItems ?? messageIds) as string[];
 
-  const isEmptyThread = messageIds.length === 0;
+  const isEmptyThread = renderedItemIds.length === 0;
   const showCustomEmptyState = isEmptyThread && Boolean(CustomEmptyStateComponent);
   const showDefaultEmptyState = isEmptyThread && !CustomEmptyStateComponent && !showSuggestions;
   const showCenterSuggestions = isEmptyThread && !CustomEmptyStateComponent && showSuggestions;
@@ -775,25 +774,14 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
 
   const ScrollToBottomComponent = (slots.scrollToBottom ??
     ChatScrollToBottomAffordance) as typeof ChatScrollToBottomAffordance;
-  const ConversationListComponent = (slots.conversationList ??
-    ChatConversationList) as typeof ChatConversationList;
-  // `messageList` is a wrapper-only slot: it swaps ChatMessageList's scrollable
-  // root *element*, not the whole component. Routed into ChatMessageList's own
-  // `messageList` root slot below (merged with any consumer `slotProps.messageList.slots`)
-  // so the default rows still render inside a custom element like `slots={{ messageList: 'section' }}`.
-  // Replacing the whole component instead would drop the list renderer (no messages).
-  const { slots: messageListConsumerSlots, ...messageListConsumerProps } = (slotProps.messageList ??
-    {}) as Partial<ChatMessageListProps>;
-  const messageListSlots = {
-    ...(messageListConsumerSlots ?? {}),
-    ...(slots.messageList ? { messageList: slots.messageList } : {}),
-  };
+  const ConversationListComponent = React.useMemo(
+    () =>
+      slots.conversationList
+        ? createMarkedConversationListComponent(slots.conversationList)
+        : ChatConversationList,
+    [slots.conversationList],
+  );
   const SuggestionsComponent = (slots.suggestions ?? ChatSuggestions) as typeof ChatSuggestions;
-
-  // The rendered id list — `slotProps.messageList.items` lets a consumer narrow
-  // the thread; otherwise the full conversation order is used. `useMessageIds()`
-  // returns a stable reference, so forwarding it does not churn row memoization.
-  const renderedItemIds = (slotProps.messageList?.items ?? messageIds) as string[];
 
   // The per-row slots/slotProps are read from the `ChatSlots` context inside
   // `DefaultMessageItem`, so `renderItem` carries no slot payload and stays
@@ -830,59 +818,77 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
     !hasConversationList || !isMobileSplitView || Boolean(activeConversationId);
   const showDrawerMenuButton = hasConversationList && isNarrow && !isMobileSplitView;
   const showBackButton = hasConversationList && isMobileSplitView && Boolean(activeConversationId);
-  let conversationsPaneStyle: React.CSSProperties;
-
-  if (isMobileSplitView) {
-    conversationsPaneStyle = {
-      width: '100%',
-      flex: '1 1 100%',
-      minWidth: 0,
-      overflow: 'hidden',
-    };
-  } else if (isNarrow) {
-    conversationsPaneStyle = {
-      width: 0,
-      flex: '0 0 0px',
-      overflow: 'visible',
-    };
-  } else {
-    conversationsPaneStyle = {
+  const conversationsPaneStyle = React.useMemo<React.CSSProperties>(() => {
+    if (isMobileSplitView) {
+      return {
+        width: '100%',
+        flex: '1 1 100%',
+        minWidth: 0,
+        overflow: 'hidden',
+      };
+    }
+    if (isNarrow) {
+      return {
+        width: 0,
+        flex: '0 0 0px',
+        overflow: 'visible',
+      };
+    }
+    return {
       width: 'var(--ChatBox-conversationListWidth, 260px)',
       flex: '0 0 var(--ChatBox-conversationListWidth, 260px)',
       minWidth: 0,
       overflow: 'hidden',
     };
-  }
+  }, [isMobileSplitView, isNarrow]);
+  const threadPaneStyle = React.useMemo<React.CSSProperties>(
+    () => ({
+      flex: 1,
+      width: isNarrow ? '100%' : undefined,
+      minWidth: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+    }),
+    [isNarrow],
+  );
+  const chatLayoutSlots = React.useMemo(
+    () => ({
+      root: slots.layout,
+      conversationsPane: slots.conversationsPane,
+      threadPane: slots.threadPane,
+    }),
+    [slots.conversationsPane, slots.layout, slots.threadPane],
+  );
+  const chatLayoutSlotProps = React.useMemo(
+    () => ({
+      root: mergeLayoutSlotProps(slotProps.layout, {
+        className: layoutClassName,
+        style: { flex: 1, minHeight: 0 },
+      }),
+      conversationsPane: mergeLayoutSlotProps(slotProps.conversationsPane, {
+        className: conversationsPaneClassName,
+        style: conversationsPaneStyle,
+      }),
+      threadPane: mergeLayoutSlotProps(slotProps.threadPane, {
+        className: threadPaneClassName,
+        style: threadPaneStyle,
+      }),
+    }),
+    [
+      conversationsPaneClassName,
+      conversationsPaneStyle,
+      layoutClassName,
+      slotProps.conversationsPane,
+      slotProps.layout,
+      slotProps.threadPane,
+      threadPaneClassName,
+      threadPaneStyle,
+    ],
+  );
 
   return (
-    <ChatLayout
-      slots={{
-        root: slots.layout,
-        conversationsPane: slots.conversationsPane,
-        threadPane: slots.threadPane,
-      }}
-      slotProps={{
-        root: mergeLayoutSlotProps(slotProps.layout, {
-          className: layoutClassName,
-          style: { flex: 1, minHeight: 0 },
-        }),
-        conversationsPane: mergeLayoutSlotProps(slotProps.conversationsPane, {
-          className: conversationsPaneClassName,
-          style: conversationsPaneStyle,
-        }),
-        threadPane: mergeLayoutSlotProps(slotProps.threadPane, {
-          className: threadPaneClassName,
-          style: {
-            flex: 1,
-            width: isNarrow ? '100%' : undefined,
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-          },
-        }),
-      }}
-    >
+    <ChatLayout slots={chatLayoutSlots} slotProps={chatLayoutSlotProps}>
       {hasConversationList && !isNarrow && (
         <ConversationListComponent variant={variant} {...(slotProps.conversationList ?? {})} />
       )}
@@ -953,7 +959,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
           <ChatBoxMessageListWrapper>
             <ChatMessageList
               renderItem={renderItem}
-              items={messageIds}
+              items={renderedItemIds}
               autoScroll={autoScrollProp}
               overlay={
                 <React.Fragment>

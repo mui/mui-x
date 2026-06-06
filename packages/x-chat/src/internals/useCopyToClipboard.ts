@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 
-export type CopyState = 'idle' | 'copied';
+export type CopyState = 'idle' | 'copied' | 'error';
 
 export interface UseCopyToClipboardResult {
   copyState: CopyState;
@@ -11,14 +11,34 @@ export interface UseCopyToClipboardResult {
 export function useCopyToClipboard(resetMs: number = 2000): UseCopyToClipboardResult {
   const [copyState, setCopyState] = React.useState<CopyState>('idle');
   const resetTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const mountedRef = React.useRef(true);
 
   React.useEffect(() => {
     return () => {
+      mountedRef.current = false;
       if (resetTimerRef.current !== null) {
         clearTimeout(resetTimerRef.current);
       }
     };
   }, []);
+
+  const setTemporaryState = React.useCallback(
+    (nextState: CopyState) => {
+      if (!mountedRef.current) {
+        return;
+      }
+      setCopyState(nextState);
+      if (resetTimerRef.current !== null) {
+        clearTimeout(resetTimerRef.current);
+      }
+      resetTimerRef.current = setTimeout(() => {
+        if (mountedRef.current) {
+          setCopyState('idle');
+        }
+      }, resetMs);
+    },
+    [resetMs],
+  );
 
   const copy = React.useCallback(
     (value: string) => {
@@ -28,23 +48,20 @@ export function useCopyToClipboard(resetMs: number = 2000): UseCopyToClipboardRe
         typeof navigator === 'undefined' ||
         typeof navigator.clipboard?.writeText !== 'function'
       ) {
+        setTemporaryState('error');
         return;
       }
 
       navigator.clipboard.writeText(value).then(
         () => {
-          setCopyState('copied');
-          if (resetTimerRef.current !== null) {
-            clearTimeout(resetTimerRef.current);
-          }
-          resetTimerRef.current = setTimeout(() => setCopyState('idle'), resetMs);
+          setTemporaryState('copied');
         },
         () => {
-          // Clipboard write failed (e.g. permissions denied) — no-op
+          setTemporaryState('error');
         },
       );
     },
-    [resetMs],
+    [setTemporaryState],
   );
 
   return { copyState, copy };

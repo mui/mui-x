@@ -9,6 +9,7 @@ import {
   type ChatVariant,
   type ChatDensity,
   type ChatAttachmentsConfig,
+  type MessageGroupSlotProps,
 } from '@mui/x-chat-headless';
 import type { ChatConversationProps } from '../ChatConversation/ChatConversation';
 import type { ChatConversationListProps } from '../ChatConversationList/ChatConversationList';
@@ -21,6 +22,7 @@ import type { ChatMessageListProps } from '../ChatMessageList/ChatMessageList';
 import type { ChatMessageProps } from '../ChatMessage/ChatMessage';
 import type { ChatMessageAvatarProps } from '../ChatMessage/ChatMessageAvatar';
 import type { ChatMessageContentProps } from '../ChatMessage/ChatMessageContent';
+import type { ChatMessageInlineMetaProps } from '../ChatMessage/ChatMessageInlineMeta';
 import type { ChatMessageMetaProps } from '../ChatMessage/ChatMessageMeta';
 import type { ChatMessageActionsProps } from '../ChatMessage/ChatMessageActions';
 import type { ChatMessageGroupProps } from '../ChatMessage/ChatMessageGroup';
@@ -175,10 +177,10 @@ interface ChatBoxMessageSlotProps {
   messageAvatar?: Partial<ChatMessageAvatarProps>;
   messageContent?: Partial<ChatMessageContentProps>;
   messageMeta?: Partial<ChatMessageMetaProps>;
-  messageInlineMeta?: Record<string, unknown>;
+  messageInlineMeta?: Partial<ChatMessageInlineMetaProps>;
   messageError?: Partial<ChatMessageErrorProps>;
   messageActions?: Partial<ChatMessageActionsProps>;
-  messageAuthorName?: Record<string, unknown>;
+  messageAuthorName?: MessageGroupSlotProps['authorName'];
 }
 
 /**
@@ -235,7 +237,7 @@ interface ChatBoxWidgetSlotProps {
   typingIndicator?: Partial<ChatTypingIndicatorProps>;
   scrollToBottom?: Partial<ChatScrollToBottomAffordanceProps>;
   suggestions?: Partial<ChatSuggestionsProps>;
-  emptyState?: SlotComponentProps<'div', { sx?: SxProps<Theme> }, {}>;
+  emptyState?: SlotComponentProps<React.ElementType, { sx?: SxProps<Theme> }, {}>;
 }
 
 export interface ChatBoxSlots

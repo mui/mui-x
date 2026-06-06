@@ -12,6 +12,7 @@ import {
   useChatDensity,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   useChatMessageListUtilityClasses,
   type ChatMessageListClasses,
@@ -200,20 +201,26 @@ const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListP
         }}
         slotProps={{
           ...listSlotProps,
-          messageList: {
-            className: clsx(classes.root, className),
-            sx,
-            ...listSlotProps?.messageList,
-          } as any,
-          messageListScroller: {
-            className: classes.scroller,
-            ...listSlotProps?.messageListScroller,
-          } as any,
-          messageListContent: {
-            className: classes.content,
-            ownerState: { density },
-            ...listSlotProps?.messageListContent,
-          } as any,
+          messageList: mergeSlotProps(
+            {
+              className: clsx(classes.root, className),
+              sx,
+            },
+            listSlotProps?.messageList,
+          ) as any,
+          messageListScroller: mergeSlotProps(
+            {
+              className: classes.scroller,
+            },
+            listSlotProps?.messageListScroller,
+          ) as any,
+          messageListContent: mergeSlotProps(
+            {
+              className: classes.content,
+              ownerState: { density },
+            },
+            listSlotProps?.messageListContent,
+          ) as any,
         }}
       />
     );

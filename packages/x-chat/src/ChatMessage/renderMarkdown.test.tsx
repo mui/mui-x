@@ -51,6 +51,41 @@ describe('renderMarkdown', () => {
       expect(anchor!.textContent).toBe('label');
     });
 
+    it('renders links with balanced parentheses in the URL', () => {
+      render(
+        <React.Fragment>{renderMarkdown('[label](https://example.com/a_(b))')}</React.Fragment>,
+      );
+      const anchor = document.querySelector('a');
+      expect(anchor).not.toBeNull();
+      expect(anchor!.getAttribute('href')).toBe('https://example.com/a_(b)');
+      expect(anchor!.textContent).toBe('label');
+    });
+
+    it('parses inline formatting in link labels', () => {
+      render(
+        <React.Fragment>{renderMarkdown('[**bold** label](https://example.com)')}</React.Fragment>,
+      );
+      const anchor = document.querySelector('a');
+      expect(anchor).not.toBeNull();
+      const strong = anchor!.querySelector('strong');
+      expect(strong).not.toBeNull();
+      expect(strong!.textContent).toBe('bold');
+      expect(anchor!.textContent).toBe('bold label');
+    });
+
+    it('renders image syntax as an image', () => {
+      render(
+        <React.Fragment>
+          {renderMarkdown('![Preview](https://example.com/image_(1).png)')}
+        </React.Fragment>,
+      );
+      const image = document.querySelector('img');
+      expect(image).not.toBeNull();
+      expect(image!.getAttribute('alt')).toBe('Preview');
+      expect(image!.getAttribute('src')).toBe('https://example.com/image_(1).png');
+      expect(document.querySelector('a')).toBeNull();
+    });
+
     it('renders [^1] footnote as <sup>', () => {
       render(<React.Fragment>{renderMarkdown('See here[^1]')}</React.Fragment>);
       const sup = document.querySelector('sup');

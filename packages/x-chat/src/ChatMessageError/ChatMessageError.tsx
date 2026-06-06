@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import Button from '@mui/material/Button';
+import { alpha } from '@mui/material/styles';
 import {
   MessageError,
   type MessageErrorProps,
@@ -22,13 +23,11 @@ import {
 const useThemeProps = createUseThemeProps('MuiChatMessageError');
 
 function getErrorCardBackground(theme: Theme & { vars?: any }) {
+  const opacity = theme.palette.mode === 'dark' ? 0.16 : 0.08;
   if (theme.vars) {
-    return `rgba(${theme.vars.palette.error.mainChannel} / 0.08)`;
+    return `rgba(${theme.vars.palette.error.mainChannel} / ${opacity})`;
   }
-  if (theme.palette.mode === 'dark') {
-    return 'rgba(244, 67, 54, 0.16)';
-  }
-  return 'rgba(244, 67, 54, 0.08)';
+  return alpha(theme.palette.error.main, opacity);
 }
 
 export interface ChatMessageErrorProps extends MessageErrorProps {
@@ -106,7 +105,14 @@ const ChatMessageErrorSlot = React.forwardRef<HTMLDivElement, any>(
       message?.status === 'streaming';
 
     return (
-      <ChatMessageErrorRoot ref={ref} ownerState={ownerState} className={className} {...other}>
+      <ChatMessageErrorRoot
+        ref={ref}
+        ownerState={ownerState}
+        className={className}
+        role="alert"
+        aria-live="assertive"
+        {...other}
+      >
         <ChatMessageErrorMessage className={messageClassName}>
           {children ?? ownerState.chatError?.message}
         </ChatMessageErrorMessage>

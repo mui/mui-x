@@ -6,16 +6,18 @@ import { SxProps, Theme } from '@mui/system';
 import {
   MessageRoot,
   type MessageRootProps,
+  type MessageGroupSlotProps,
   useChatVariant,
   useMessage,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 import { ChatMessageError, type ChatMessageErrorProps } from '../ChatMessageError/ChatMessageError';
 import { ChatMessageAvatar, type ChatMessageAvatarProps } from './ChatMessageAvatar';
 import { ChatMessageContent, type ChatMessageContentProps } from './ChatMessageContent';
 import { ChatMessageMeta, type ChatMessageMetaProps } from './ChatMessageMeta';
-import { ChatMessageInlineMeta } from './ChatMessageInlineMeta';
+import { ChatMessageInlineMeta, type ChatMessageInlineMetaProps } from './ChatMessageInlineMeta';
 import { ChatMessageActions, type ChatMessageActionsProps } from './ChatMessageActions';
 
 const useThemeProps = createUseThemeProps('MuiChatMessage');
@@ -61,10 +63,10 @@ export interface ChatMessageSlotProps {
   avatar?: Partial<ChatMessageAvatarProps>;
   content?: Partial<ChatMessageContentProps>;
   meta?: Partial<ChatMessageMetaProps>;
-  inlineMeta?: Record<string, unknown>;
+  inlineMeta?: Partial<ChatMessageInlineMetaProps>;
   error?: Partial<ChatMessageErrorProps>;
   actions?: Partial<ChatMessageActionsProps>;
-  authorName?: Record<string, unknown>;
+  authorName?: MessageGroupSlotProps['authorName'];
 }
 
 export interface ChatMessageProps extends Omit<MessageRootProps, 'slots' | 'slotProps'> {
@@ -282,11 +284,18 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
           root: slots?.root ?? ChatMessageStyled,
         }}
         slotProps={{
-          root: {
-            className: clsx(classes.root, stateClasses, !hasAvatar && classes.noAvatar, className),
-            sx,
-            ...slotProps?.root,
-          } as any,
+          root: mergeSlotProps(
+            {
+              className: clsx(
+                classes.root,
+                stateClasses,
+                !hasAvatar && classes.noAvatar,
+                className,
+              ),
+              sx,
+            },
+            slotProps?.root,
+          ) as any,
         }}
       >
         {innerTree}

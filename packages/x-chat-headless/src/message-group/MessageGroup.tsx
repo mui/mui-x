@@ -208,12 +208,17 @@ export const MessageGroup = React.forwardRef(function MessageGroup(
   return (
     <Group {...groupProps}>
       {defaultAuthorName}
-      {children ? (
+      {children !== undefined ? (
         // When custom children are provided (e.g. from DefaultMessageItem),
         // pass `isGrouped` via cloneElement so the inner MessageRoot/ChatMessage
         // receives the correct grouping state for its context.
         React.Children.map(children, (child) => {
-          if (!React.isValidElement(child) || typeof child.type === 'string') {
+          if (
+            !React.isValidElement(child) ||
+            typeof child.type === 'string' ||
+            child.type === React.Fragment ||
+            !('messageId' in (child.props as Record<string, unknown>))
+          ) {
             return child;
           }
           const clone = child as React.ReactElement<Record<string, unknown>>;

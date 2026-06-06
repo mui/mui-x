@@ -23,6 +23,15 @@ describe('ChatConfirmation', () => {
     expect(screen.getByRole('button', { name: 'Cancel' })).not.toBe(null);
   });
 
+  it('exposes alertdialog semantics and describes the dialog with the message', () => {
+    render(<ChatConfirmation message="Are you sure?" />);
+    const dialog = screen.getByRole('alertdialog');
+    const descriptionId = dialog.getAttribute('aria-describedby');
+
+    expect(descriptionId).not.toBe(null);
+    expect(document.getElementById(descriptionId!)!.textContent).toBe('Are you sure?');
+  });
+
   it('renders custom confirmLabel and cancelLabel', () => {
     render(<ChatConfirmation message="msg" confirmLabel="Yes" cancelLabel="No" />);
     expect(screen.getByRole('button', { name: 'Yes' })).not.toBe(null);

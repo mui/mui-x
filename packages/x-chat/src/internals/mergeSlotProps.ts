@@ -1,4 +1,108 @@
 import type { SlotComponentProps } from '@mui/utils/types';
+import clsx from 'clsx';
+import type * as React from 'react';
+
+type AnySlotProps = Record<string, any>;
+
+function isEventHandlerKey(key: string): boolean {
+  return key.length > 2 && key.startsWith('on') && key[2] === key[2].toUpperCase();
+}
+
+function isRefLike(value: unknown): value is React.Ref<unknown> {
+  return typeof value === 'function' || (value != null && typeof value === 'object');
+}
+
+function setRef(ref: React.Ref<unknown>, value: unknown) {
+  if (typeof ref === 'function') {
+    ref(value);
+    return;
+  }
+
+  (ref as React.MutableRefObject<unknown>).current = value;
+}
+
+function mergeRefs(baseRef: React.Ref<unknown> | undefined, consumerRef: React.Ref<unknown>) {
+  if (baseRef === undefined) {
+    return consumerRef;
+  }
+
+  return (value: unknown) => {
+    setRef(baseRef, value);
+    setRef(consumerRef, value);
+  };
+}
+
+function mergeSx(baseSx: unknown, consumerSx: unknown): unknown {
+  if (baseSx == null) {
+    return consumerSx;
+  }
+  if (consumerSx == null) {
+    return baseSx;
+  }
+
+  return [
+    ...(Array.isArray(baseSx) ? baseSx : [baseSx]),
+    ...(Array.isArray(consumerSx) ? consumerSx : [consumerSx]),
+  ];
+}
+
+function mergeResolvedSlotProps(base: AnySlotProps, consumer: AnySlotProps): AnySlotProps {
+  const result: AnySlotProps = { ...base };
+  const eventHandlerMap = new Map<string, Array<(...args: any[]) => any>>();
+
+  for (const source of [base, consumer]) {
+    for (const [key, value] of Object.entries(source)) {
+      if (value === undefined) {
+        continue;
+      }
+
+      if (isEventHandlerKey(key) && typeof value === 'function') {
+        const handlers = eventHandlerMap.get(key) ?? [];
+        handlers.push(value);
+        eventHandlerMap.set(key, handlers);
+      }
+    }
+  }
+
+  for (const [key, value] of Object.entries(consumer)) {
+    if (value === undefined) {
+      continue;
+    }
+
+    if (isEventHandlerKey(key) && typeof value === 'function') {
+      continue;
+    }
+
+    if (key === 'className') {
+      result.className = clsx(base.className, value);
+    } else if (key === 'sx') {
+      result.sx = mergeSx(base.sx, value);
+    } else if (key === 'style') {
+      result.style = { ...(base.style ?? {}), ...(value ?? {}) };
+    } else if (key === 'ref' && isRefLike(value)) {
+      result.ref = mergeRefs(base.ref, value);
+    } else {
+      result[key] = value;
+    }
+  }
+
+  for (const [key, handlers] of eventHandlerMap) {
+    result[key] =
+      handlers.length === 1
+        ? handlers[0]
+        : (...args: any[]) => {
+            for (const handler of handlers) {
+              handler(...args);
+
+              if (args[0] != null && typeof args[0] === 'object' && args[0].defaultPrevented) {
+                break;
+              }
+            }
+          };
+  }
+
+  return result;
+}
 
 /**
  * Merge a Material wrapper's default slot props (`base`, e.g. the resolved
@@ -8,23 +112,34 @@ import type { SlotComponentProps } from '@mui/utils/types';
  * The Material chat components pre-compute their default slot props as a plain
  * object before handing them to the headless slot. Spreading the consumer slot
  * prop with `...(slotProps?.x as object)` silently flattens a callback to `{}`,
- * dropping owner-state-driven `className`/`sx`/handlers. This helper keeps the
- * callback: when the consumer prop is a function it returns a function that
- * resolves it and layers `base` underneath (so the consumer's resolved props win,
- * matching the object-spread merge order); otherwise it returns a plain object.
+ * dropping owner-state-driven `className`/`sx`/handlers. A plain spread also
+ * lets the consumer overwrite wrapper classes, top-level `sx`, refs, and
+ * internal handlers. This helper keeps the callback form and merges React props
+ * with the same rules used by slot utilities: class names concatenate, `sx`
+ * layers are appended, styles merge, refs compose, handlers chain, and ordinary
+ * props still let the consumer win.
  *
  * @param base Default props the wrapper always applies (e.g. `className`, `sx`).
  * @param consumer The consumer slot prop (object form, callback form, or undefined).
  */
 export function mergeSlotProps<OwnerState>(
-  base: Record<string, unknown>,
+  base: AnySlotProps,
   consumer: SlotComponentProps<any, Record<string, unknown>, OwnerState> | undefined,
-): Record<string, unknown> | ((ownerState: OwnerState) => Record<string, unknown>) {
+): AnySlotProps | ((ownerState: OwnerState) => AnySlotProps) {
   if (typeof consumer === 'function') {
-    return (ownerState: OwnerState) => ({
-      ...base,
-      ...((consumer as (os: OwnerState) => Record<string, unknown>)(ownerState) ?? {}),
-    });
+    return (ownerState: OwnerState) =>
+      mergeResolvedSlotProps(
+        base,
+        ((consumer as (os: OwnerState) => AnySlotProps | undefined)(ownerState) ??
+          {}) as AnySlotProps,
+      );
   }
-  return { ...base, ...((consumer as Record<string, unknown>) ?? {}) };
+  return mergeResolvedSlotProps(base, ((consumer as AnySlotProps) ?? {}) as AnySlotProps);
+}
+
+export function resolveSlotProps<OwnerState>(
+  slotProps: AnySlotProps | ((ownerState: OwnerState) => AnySlotProps),
+  ownerState: OwnerState,
+): AnySlotProps {
+  return typeof slotProps === 'function' ? slotProps(ownerState) : slotProps;
 }

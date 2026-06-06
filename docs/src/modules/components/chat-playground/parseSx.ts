@@ -5,6 +5,7 @@ export interface ParsedSx {
 
 const IDENTIFIER_CHAR = /[A-Za-z0-9_$]/;
 const DIGIT = /[0-9]/;
+const UNSAFE_OBJECT_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
 
 /**
  * A tiny recursive-descent parser for a safe subset of JavaScript object-literal
@@ -84,6 +85,9 @@ class SxParser {
     for (;;) {
       this.skipTrivia();
       const key = this.parseKey();
+      if (UNSAFE_OBJECT_KEYS.has(key)) {
+        throw new Error('Unsafe object keys are not allowed.');
+      }
       this.skipTrivia();
       if (this.peek() !== ':') {
         throw new Error('Expected ":" after a property key.');
@@ -253,6 +257,9 @@ class SxParser {
           !(this.input[this.pos] === '*' && this.input[this.pos + 1] === '/')
         ) {
           this.pos += 1;
+        }
+        if (this.pos >= this.input.length) {
+          throw new Error('Unterminated comment.');
         }
         this.pos += 2;
         continue;

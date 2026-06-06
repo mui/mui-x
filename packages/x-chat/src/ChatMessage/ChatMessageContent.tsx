@@ -2,9 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { alpha } from '@mui/material/styles';
 import { MessageContent, type MessageContentProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useCopyToClipboard } from '../internals/useCopyToClipboard';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { renderMarkdown } from './renderMarkdown';
@@ -169,6 +169,7 @@ const ChatMessageContentStyled = styled('div', {
 const ChatMessageBubbleStyled = styled('div', {
   name: 'MuiChatMessage',
   slot: 'Bubble',
+  shouldForwardProp: (prop) => prop !== 'ownerState',
   overridesResolver: (_, styles) => styles.bubble,
 })<{ ownerState?: { role?: string; variant?: string; isOwnMessage?: boolean } }>(({
   theme,
@@ -254,14 +255,14 @@ const ChatMessageBubbleStyled = styled('div', {
       padding: theme.spacing(1),
       fontSize: theme.typography.caption.fontSize,
       background: isOwn
-        ? alpha(theme.palette.common.white, 0.15)
+        ? theme.alpha(theme.palette.common.white, 0.15)
         : (theme.vars || theme).palette.action.hover,
     },
     '& code': {
       fontFamily: 'monospace',
       fontSize: '0.875em',
       background: isOwn
-        ? alpha(theme.palette.common.white, 0.15)
+        ? theme.alpha(theme.palette.common.white, 0.15)
         : (theme.vars || theme).palette.action.hover,
       padding: '0.1em 0.3em',
     },
@@ -323,29 +324,33 @@ const ChatToolPartDetailsStyled = styled('details', {
 // Collapsible root: manages open/close state, auto-opens when approval is requested
 function ChatToolPartRoot({
   ownerState,
+  onToggle: onToggleProp,
+  open: _openProp,
   ...rest
 }: {
   ownerState?: { state?: string };
+  onToggle?: React.ToggleEventHandler<HTMLDetailsElement>;
+  open?: boolean;
   [key: string]: unknown;
 }) {
   const state = ownerState?.state;
-  const [open, setOpen] = React.useState(
-    () => state === 'approval-requested' || state === 'input-streaming',
-  );
+  const shouldAutoOpen = state === 'approval-requested' || state === 'input-streaming';
+  const [open, setOpen] = React.useState(() => shouldAutoOpen);
 
   React.useEffect(() => {
-    if (state === 'approval-requested') {
+    if (shouldAutoOpen) {
       setOpen(true);
     }
-  }, [state]);
+  }, [shouldAutoOpen]);
 
   return (
     <ChatToolPartDetailsStyled
       {...(rest as React.ComponentPropsWithRef<typeof ChatToolPartDetailsStyled>)}
       ownerState={ownerState}
       open={open}
-      onToggle={(event: React.SyntheticEvent<HTMLDetailsElement>) => {
+      onToggle={(event: React.ToggleEvent<HTMLDetailsElement>) => {
         setOpen((event.currentTarget as HTMLDetailsElement).open);
+        onToggleProp?.(event);
       }}
     />
   );
@@ -780,6 +785,8 @@ function ChatToolPartSectionContent({
 }: ChatToolPartSectionContentRenderProps) {
   const text = typeof children === 'string' ? children : React.Children.toArray(children).join('');
   const { copyState, copy } = useCopyToClipboard();
+  const copyLabel =
+    copyState === 'copied' ? 'Copied' : copyState === 'error' ? 'Copy failed' : 'Copy to clipboard';
   return (
     <ChatToolPartSectionContentWrapper {...rest}>
       <ChatToolPartSectionContentPre>{children}</ChatToolPartSectionContentPre>
@@ -787,8 +794,8 @@ function ChatToolPartSectionContent({
         <ChatToolPartSectionCopyButton
           type="button"
           onClick={() => copy(text)}
-          title={copyState === 'copied' ? 'Copied!' : 'Copy'}
-          aria-label={copyState === 'copied' ? 'Copied' : 'Copy to clipboard'}
+          title={copyLabel}
+          aria-label={copyLabel}
         >
           {copyState === 'copied' ? <CheckSvgIcon /> : <CopySvgIcon />}
         </ChatToolPartSectionCopyButton>
@@ -1157,14 +1164,18 @@ const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentPr
         }}
         slotProps={{
           ...slotProps,
-          content: {
-            className: clsx(classes.content, className),
-            ...slotProps?.content,
-          } as any,
-          bubble: {
-            className: classes.bubble,
-            ...slotProps?.bubble,
-          } as any,
+          content: mergeSlotProps(
+            {
+              className: clsx(classes.content, className),
+            },
+            slotProps?.content,
+          ) as any,
+          bubble: mergeSlotProps(
+            {
+              className: classes.bubble,
+            },
+            slotProps?.bubble,
+          ) as any,
         }}
         partProps={{
           // Spread first so the specific entries below always override.

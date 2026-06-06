@@ -11,6 +11,7 @@ import {
   type ChatVariant,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import {
   chatComposerClasses,
   useChatComposerUtilityClasses,
@@ -264,16 +265,18 @@ const ChatComposer = React.forwardRef<HTMLFormElement, ChatComposerProps>(
         }}
         slotProps={{
           ...slotProps,
-          root: {
-            className: clsx(
-              classes.root,
-              isCompact && classes.variantCompact,
-              disabled && classes.disabled,
-              className,
-            ),
-            sx,
-            ...slotProps?.root,
-          } as any,
+          root: mergeSlotProps(
+            {
+              className: clsx(
+                classes.root,
+                isCompact && classes.variantCompact,
+                disabled && classes.disabled,
+                className,
+              ),
+              sx,
+            },
+            slotProps?.root,
+          ) as any,
         }}
       >
         {children ?? defaultContent}

@@ -212,6 +212,68 @@ describe('MessageGroup', () => {
     expect(screen.getByTestId('custom-group-child')).to.have.text('Custom child');
   });
 
+  it('treats explicit null children as custom empty content', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          createMessage('m1', {
+            displayName: 'Assistant',
+            text: 'Default content should not render',
+          }),
+        ]}
+      >
+        <MessageGroup messageId="m1">{null}</MessageGroup>
+      </ChatRoot>,
+    );
+
+    expect(screen.queryByText('Default content should not render')).to.equal(null);
+  });
+
+  it('does not inject grouping props into fragments or arbitrary wrapper children', () => {
+    function Wrapper(props: React.HTMLAttributes<HTMLDivElement>) {
+      const { children, ...other } = props;
+      return (
+        <div
+          data-has-grouped={String('isGrouped' in other)}
+          data-has-author={String('groupAuthorName' in other)}
+          data-testid="custom-wrapper"
+        >
+          {children}
+        </div>
+      );
+    }
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          createMessage('m1', {
+            displayName: 'Assistant',
+            text: 'First',
+          }),
+          createMessage('m2', {
+            displayName: 'Assistant',
+            text: 'Second',
+          }),
+        ]}
+      >
+        <MessageGroup messageId="m1">
+          <React.Fragment>
+            <span data-testid="fragment-child">Fragment child</span>
+          </React.Fragment>
+        </MessageGroup>
+        <MessageGroup messageId="m2">
+          <Wrapper>Wrapped child</Wrapper>
+        </MessageGroup>
+      </ChatRoot>,
+    );
+
+    expect(screen.getByTestId('fragment-child')).not.to.equal(null);
+    expect(screen.getByTestId('custom-wrapper')).to.have.attribute('data-has-grouped', 'false');
+    expect(screen.getByTestId('custom-wrapper')).to.have.attribute('data-has-author', 'false');
+  });
+
   it('resolves group author data from members', () => {
     render(
       <ChatRoot

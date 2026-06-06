@@ -32,6 +32,7 @@ import {
   useChatConversationListUtilityClasses,
   type ChatConversationListClasses,
 } from './chatConversationListClasses';
+import { mergeSlotProps, resolveSlotProps } from '../internals/mergeSlotProps';
 
 const useThemeProps = createUseThemeProps('MuiChatConversationList');
 
@@ -167,6 +168,9 @@ const ChatConversationListItemStyled = styled('div', {
     padding: theme.spacing(0.75, 1.5),
     borderRadius: theme.shape.borderRadius,
     '&:hover .MuiChatConversationList-itemActions': {
+      opacity: 1,
+    },
+    '&:focus-within .MuiChatConversationList-itemActions': {
       opacity: 1,
     },
   }),
@@ -310,6 +314,9 @@ const ChatConversationListItemActionsRoot = styled('div', {
     }),
     '@media (prefers-reduced-motion: reduce)': {
       transition: 'none',
+    },
+    '&:focus-within': {
+      opacity: 1,
     },
   }),
 }));
@@ -707,6 +714,7 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
     const isCompact = variant === 'compact';
 
     const resolvedSlots: Partial<ConversationListRootSlots> = {
+      ...slots,
       root: slots?.root ?? ChatConversationListStyled,
       scroller: slots?.scroller ?? ChatConversationListScrollerStyled,
       viewport: slots?.viewport ?? ChatConversationListViewportStyled,
@@ -720,68 +728,56 @@ const ChatConversationList = React.forwardRef<HTMLDivElement, ChatConversationLi
       timestamp: slots?.timestamp ?? ChatConversationListTimestampStyled,
       unreadBadge: slots?.unreadBadge ?? ChatConversationListUnreadBadgeStyled,
       itemActions: slots?.itemActions ?? ChatConversationListItemActionsStyled,
-      ...slots,
     };
 
     // The headless `root` slot is typed as `SlotComponentProps<'div', ...>`,
     // which intentionally does NOT include `sx`. We funnel `sx` to the styled
     // root via a localized assertion — strictly typing the rest of the slot
     // wiring still catches signature drift.
-    const rootSlotProps = {
-      className: clsx(classes.root, isCompact && classes.compact, className),
-      sx,
-      ...slotProps?.root,
-    } as unknown as ConversationListRootSlotProps['root'];
+    const rootSlotProps = mergeSlotProps(
+      {
+        className: clsx(classes.root, isCompact && classes.compact, className),
+        sx,
+      },
+      slotProps?.root,
+    ) as unknown as ConversationListRootSlotProps['root'];
 
     const resolvedSlotProps: ConversationListRootSlotProps = {
       ...slotProps,
       root: rootSlotProps,
-      scroller: {
-        className: classes.scroller,
-        ...slotProps?.scroller,
-      },
+      scroller: mergeSlotProps({ className: classes.scroller }, slotProps?.scroller) as any,
       item: (ownerState: ConversationListItemOwnerState) => {
-        const externalItemProps =
-          typeof slotProps?.item === 'function' ? slotProps.item(ownerState) : slotProps?.item;
-
-        return {
-          className: clsx(
-            classes.item,
-            ownerState.selected && classes.itemSelected,
-            ownerState.unread && classes.itemUnread,
-            ownerState.focused && classes.itemFocused,
+        return resolveSlotProps(
+          mergeSlotProps(
+            {
+              className: clsx(
+                classes.item,
+                ownerState.selected && classes.itemSelected,
+                ownerState.unread && classes.itemUnread,
+                ownerState.focused && classes.itemFocused,
+              ),
+            },
+            slotProps?.item,
           ),
-          ...externalItemProps,
-        };
+          ownerState,
+        );
       },
-      itemAvatar: {
-        className: classes.itemAvatar,
-        ...slotProps?.itemAvatar,
-      },
-      itemContent: {
-        className: classes.itemContent,
-        ...slotProps?.itemContent,
-      },
-      title: {
-        className: classes.itemTitle,
-        ...slotProps?.title,
-      },
-      preview: {
-        className: classes.itemPreview,
-        ...slotProps?.preview,
-      },
-      timestamp: {
-        className: classes.itemTimestamp,
-        ...slotProps?.timestamp,
-      },
-      unreadBadge: {
-        className: classes.itemUnreadBadge,
-        ...slotProps?.unreadBadge,
-      },
-      itemActions: {
-        className: classes.itemActions,
-        ...slotProps?.itemActions,
-      },
+      itemAvatar: mergeSlotProps({ className: classes.itemAvatar }, slotProps?.itemAvatar) as any,
+      itemContent: mergeSlotProps(
+        { className: classes.itemContent },
+        slotProps?.itemContent,
+      ) as any,
+      title: mergeSlotProps({ className: classes.itemTitle }, slotProps?.title) as any,
+      preview: mergeSlotProps({ className: classes.itemPreview }, slotProps?.preview) as any,
+      timestamp: mergeSlotProps({ className: classes.itemTimestamp }, slotProps?.timestamp) as any,
+      unreadBadge: mergeSlotProps(
+        { className: classes.itemUnreadBadge },
+        slotProps?.unreadBadge,
+      ) as any,
+      itemActions: mergeSlotProps(
+        { className: classes.itemActions },
+        slotProps?.itemActions,
+      ) as any,
     };
 
     return (

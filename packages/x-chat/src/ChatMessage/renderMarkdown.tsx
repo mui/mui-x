@@ -25,40 +25,130 @@ function sanitizeUrl(url: string): string {
 }
 
 type InlinePattern = {
-  regex: RegExp;
-  render: (match: RegExpExecArray, key: number) => React.ReactNode;
+  find: (text: string) => InlineMatch | null;
 };
 
+type InlineMatch = {
+  index: number;
+  length: number;
+  render: (key: number) => React.ReactNode;
+};
+
+function createRegexInlinePattern(
+  regex: RegExp,
+  render: (match: RegExpExecArray, key: number) => React.ReactNode,
+): InlinePattern {
+  return {
+    find(text) {
+      const match = regex.exec(text);
+
+      if (!match) {
+        return null;
+      }
+
+      return {
+        index: match.index,
+        length: match[0].length,
+        render: (key) => render(match, key),
+      };
+    },
+  };
+}
+
+function findBalancedParenthesisEnd(text: string, start: number) {
+  let depth = 0;
+
+  for (let i = start; i < text.length; i += 1) {
+    const char = text[i];
+
+    if (char === '(') {
+      depth += 1;
+    } else if (char === ')') {
+      if (depth === 0) {
+        return i;
+      }
+      depth -= 1;
+    }
+  }
+
+  return -1;
+}
+
+function createLinkInlinePattern({ image }: { image: boolean }): InlinePattern {
+  return {
+    find(text) {
+      let startIndex = image ? text.indexOf('![') : text.indexOf('[');
+
+      while (startIndex !== -1) {
+        if (!image && text[startIndex - 1] === '!') {
+          startIndex = text.indexOf('[', startIndex + 1);
+          continue;
+        }
+
+        const labelStart = startIndex + (image ? 2 : 1);
+        const labelEnd = text.indexOf(']', labelStart);
+
+        if (labelEnd === -1 || text[labelEnd + 1] !== '(') {
+          startIndex = text.indexOf(image ? '![' : '[', startIndex + 1);
+          continue;
+        }
+
+        const urlStart = labelEnd + 2;
+        const urlEnd = findBalancedParenthesisEnd(text, urlStart);
+
+        if (urlEnd === -1) {
+          startIndex = text.indexOf(image ? '![' : '[', startIndex + 1);
+          continue;
+        }
+
+        const label = text.slice(labelStart, labelEnd);
+        const url = text.slice(urlStart, urlEnd);
+
+        return {
+          index: startIndex,
+          length: urlEnd + 1 - startIndex,
+          render: (key) =>
+            image ? (
+              <img key={key} src={sanitizeUrl(url)} alt={label} />
+            ) : (
+              <a key={key} href={sanitizeUrl(url)} target="_blank" rel="noopener noreferrer">
+                {parseInline(label)}
+              </a>
+            ),
+        };
+      }
+
+      return null;
+    },
+  };
+}
+
 const INLINE_PATTERNS: InlinePattern[] = [
+  createLinkInlinePattern({ image: true }),
+  createLinkInlinePattern({ image: false }),
   {
     // Bold: **text** or __text__
-    regex: /\*\*(.+?)\*\*|__(.+?)__/,
-    render: (m, k) => <strong key={k}>{parseInline(m[1] ?? m[2])}</strong>,
+    ...createRegexInlinePattern(/\*\*(.+?)\*\*|__(.+?)__/, (m, k) => (
+      <strong key={k}>{parseInline(m[1] ?? m[2])}</strong>
+    )),
   },
-  {
+  createRegexInlinePattern(
     // Inline code: `text` — before italic so backtick content is not parsed further
-    regex: /`([^`]+)`/,
-    render: (m, k) => <code key={k}>{m[1]}</code>,
-  },
+    /`([^`]+)`/,
+    (m, k) => <code key={k}>{m[1]}</code>,
+  ),
   {
     // Italic: *text* or _text_ (not preceded/followed by same char)
-    regex: /(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)|(?<!_)_(?!_)(.+?)(?<!_)_(?!_)/,
-    render: (m, k) => <em key={k}>{parseInline(m[1] ?? m[2])}</em>,
-  },
-  {
-    // Footnote citation: [^1] → superscript marker
-    regex: /\[\^(\d+)\]/,
-    render: (m, k) => <sup key={k}>[{m[1]}]</sup>,
-  },
-  {
-    // Link: [label](url)
-    regex: /\[([^\]]+)\]\(([^)]+)\)/,
-    render: (m, k) => (
-      <a key={k} href={sanitizeUrl(m[2])} target="_blank" rel="noopener noreferrer">
-        {m[1]}
-      </a>
+    ...createRegexInlinePattern(
+      /(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)|(?<!_)_(?!_)(.+?)(?<!_)_(?!_)/,
+      (m, k) => <em key={k}>{parseInline(m[1] ?? m[2])}</em>,
     ),
   },
+  createRegexInlinePattern(
+    // Footnote citation: [^1] → superscript marker
+    /\[\^(\d+)\]/,
+    (m, k) => <sup key={k}>[{m[1]}]</sup>,
+  ),
 ];
 
 function parseInline(text: string): React.ReactNode {
@@ -71,18 +161,16 @@ function parseInline(text: string): React.ReactNode {
   let key = 0;
 
   while (remaining.length > 0) {
-    let firstMatch: RegExpExecArray | null = null;
-    let firstPattern: InlinePattern | null = null;
+    let firstMatch: InlineMatch | null = null;
 
     for (const pattern of INLINE_PATTERNS) {
-      const m = pattern.regex.exec(remaining);
+      const m = pattern.find(remaining);
       if (m && (firstMatch === null || m.index < firstMatch.index)) {
         firstMatch = m;
-        firstPattern = pattern;
       }
     }
 
-    if (!firstMatch || !firstPattern) {
+    if (!firstMatch) {
       result.push(remaining);
       break;
     }
@@ -90,9 +178,9 @@ function parseInline(text: string): React.ReactNode {
     if (firstMatch.index > 0) {
       result.push(remaining.slice(0, firstMatch.index));
     }
-    result.push(firstPattern.render(firstMatch, key));
+    result.push(firstMatch.render(key));
     key += 1;
-    remaining = remaining.slice(firstMatch.index + firstMatch[0].length);
+    remaining = remaining.slice(firstMatch.index + firstMatch.length);
   }
 
   if (result.length === 0) {

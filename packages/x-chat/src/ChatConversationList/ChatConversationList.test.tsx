@@ -111,4 +111,28 @@ describe('ChatConversationList', () => {
     // MuiChatConversationList-scrollbar slot is overridden by NoopScrollbar which renders null
     expect(document.querySelector('[data-scrollbar]')).toBe(null);
   });
+
+  it('keeps fallback scrollbar slots when explicit undefined values are provided', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialConversations={[{ id: 'c1', title: 'General' }]}
+        features={conversationListFeatures}
+        slotProps={{
+          conversationList: {
+            slots: {
+              scrollbar: undefined,
+              scrollbarThumb: undefined,
+              viewport: undefined,
+            },
+          } as any,
+        }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    expect(document.querySelector('.MuiChatConversationList-scroller')).not.toBe(null);
+    expect(document.querySelector('[data-scrollbar]')).toBe(null);
+  });
 });

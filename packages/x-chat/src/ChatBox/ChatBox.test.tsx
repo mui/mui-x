@@ -2,7 +2,7 @@ import * as React from 'react';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { ChatAdapter } from '@mui/x-chat-headless';
+import { useChatStatus, type ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from './ChatBox';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -90,6 +90,38 @@ describe('ChatBox', () => {
     it('renders empty state text when no messages', () => {
       render(<ChatBox adapter={createAdapter()}>{null}</ChatBox>);
       expect(screen.getByText('No messages yet')).not.toBe(null);
+    });
+
+    it('renders children inside the internal ChatProvider', () => {
+      function StatusChild() {
+        const { isStreaming } = useChatStatus();
+        return <div data-testid="chatbox-child">{String(isStreaming)}</div>;
+      }
+
+      render(
+        <ChatBox adapter={createAdapter()}>
+          <StatusChild />
+        </ChatBox>,
+      );
+
+      expect(screen.getByTestId('chatbox-child')).to.have.text('false');
+    });
+
+    it('honors the root slot and merges root slotProps with wrapper classes', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          slots={{ root: 'section' }}
+          slotProps={{ root: { 'data-testid': 'custom-root', className: 'custom-root' } as any }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      const root = screen.getByTestId('custom-root');
+      expect(root.tagName).toBe('SECTION');
+      expect(root.className).to.include('MuiChatBox-root');
+      expect(root.className).to.include('custom-root');
     });
 
     it('does not treat theme defaultProps.activeConversationId as a controlled prop', async () => {
@@ -405,6 +437,29 @@ describe('ChatBox', () => {
       // ChatMessage through the ChatSlots context (no prop drilling).
       expect(screen.getByTestId('ctx-avatar')).not.toBe(null);
     });
+
+    it('forwards messageInlineMeta slotProps to the default inline meta', async () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialMessages={[
+            {
+              id: 'm1',
+              role: 'assistant',
+              createdAt: '2026-06-06T12:00:00.000Z',
+              parts: [{ type: 'text', text: 'Hello' }],
+            },
+          ]}
+          slotProps={{ messageInlineMeta: { 'data-testid': 'inline-meta' } as any }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId('inline-meta')).not.toBe(null);
+      });
+    });
   });
 
   describe('rendered list context', () => {
@@ -543,6 +598,21 @@ describe('ChatBox', () => {
       expect(root!.getAttribute('data-fn-root')).toBe('applied');
       // …while the above-composer layout default still applies (not the empty state).
       expect(root!.hasAttribute('data-empty')).toBe(false);
+    });
+
+    it('shows the empty state when a rendered message subset is empty', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] }]}
+          slotProps={{ messageList: { items: [] } as any }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      expect(screen.getByText('No messages yet')).not.toBe(null);
+      expect(screen.queryByText('Hello')).toBe(null);
     });
 
     it.skipIf(isJSDOM)('applies a top-level suggestions sx in the active-thread path', () => {
@@ -866,6 +936,43 @@ describe('ChatBox', () => {
 
       // The overlay must close on keyboard selection too, not just pointer clicks —
       // otherwise focus stays trapped in the modal after the thread changed.
+      await waitFor(() => {
+        expect(chatBox.querySelector('[class*="MuiChatBox-conversationOverlay"]')).toBe(null);
+      });
+    });
+
+    it('closes the narrow overlay when the already-active conversation is reselected via keyboard', async () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialConversations={conversations}
+          initialActiveConversationId="c1"
+          features={conversationListFeatures}
+          data-resize-width="480"
+          sx={{ height: 480 }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      const chatBox = document.querySelector('.MuiChatBox-root') as HTMLElement;
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Open conversations' })).not.toBe(null);
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: 'Open conversations' }));
+
+      await waitFor(() => {
+        expect(chatBox.querySelector('[class*="MuiChatBox-conversationOverlay"]')).not.toBe(null);
+      });
+
+      const option = screen.getByRole('option', { name: 'General' });
+      act(() => {
+        option.focus();
+      });
+      fireEvent.keyDown(option, { key: 'Enter' });
+
       await waitFor(() => {
         expect(chatBox.querySelector('[class*="MuiChatBox-conversationOverlay"]')).toBe(null);
       });

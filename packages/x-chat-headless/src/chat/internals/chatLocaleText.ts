@@ -9,6 +9,8 @@ export interface ChatLocaleText {
   composerSendButtonLabel: string;
   composerAttachButtonLabel: string;
   composerAttachInputLabel: string;
+  composerAttachmentFallbackLabel: string;
+  composerRemoveAttachmentLabel(fileName: string): string;
   messageCopyButtonLabel: string;
   messageCopyCodeButtonLabel: string;
   messageCopiedCodeButtonLabel: string;
@@ -110,6 +112,8 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   composerSendButtonLabel: 'Send message',
   composerAttachButtonLabel: 'Add attachment',
   composerAttachInputLabel: 'Upload file',
+  composerAttachmentFallbackLabel: 'Attachment',
+  composerRemoveAttachmentLabel: (fileName) => `Remove ${fileName}`,
   messageCopyButtonLabel: 'Copy',
   messageCopyCodeButtonLabel: 'Copy code',
   messageCopiedCodeButtonLabel: 'Copied',

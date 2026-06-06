@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { MessageMeta } from '@mui/x-chat-headless';
+import PropTypes from 'prop-types';
+import { MessageMeta, type MessageMetaProps } from '@mui/x-chat-headless';
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { styled } from '../internals/zero-styled';
@@ -90,6 +91,8 @@ const InlineStatusSlot = React.forwardRef<HTMLSpanElement, any>(function InlineS
   );
 });
 
+export interface ChatMessageInlineMetaProps extends MessageMetaProps {}
+
 /**
  * Wrapper that renders a spacer + the MessageMeta absolutely positioned at the
  * bottom-right of the parent bubble. Uses the Telegram-style "spacer + absolute
@@ -98,19 +101,32 @@ const InlineStatusSlot = React.forwardRef<HTMLSpanElement, any>(function InlineS
  *
  * Must be rendered inside a bubble with `position: relative`.
  */
+function ChatMessageInlineMeta(props: ChatMessageInlineMetaProps) {
+  const { slots, slotProps, ...other } = props;
 
-function ChatMessageInlineMeta() {
   return (
     <React.Fragment>
       <ChatMessageInlineMetaSpacer aria-hidden="true" />
       <MessageMeta
+        {...other}
         slots={{
           meta: ChatMessageInlineMetaContainer,
           status: InlineStatusSlot,
+          ...slots,
         }}
+        slotProps={slotProps}
       />
     </React.Fragment>
   );
 }
+
+ChatMessageInlineMeta.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
+} as any;
 
 export { ChatMessageInlineMeta };

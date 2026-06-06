@@ -66,4 +66,17 @@ describe('parseSx', () => {
   it('rejects bare identifier values (CSS values must be quoted)', () => {
     expect(parseSx('{ color: red }').error).to.not.equal(undefined);
   });
+
+  it('rejects object keys that could mutate prototypes', () => {
+    expect(parseSx('{ __proto__: { polluted: true } }').error).to.equal(
+      'Unsafe object keys are not allowed.',
+    );
+    expect(parseSx('{ constructor: { prototype: { polluted: true } } }').error).to.equal(
+      'Unsafe object keys are not allowed.',
+    );
+  });
+
+  it('rejects unterminated block comments', () => {
+    expect(parseSx('{ color: "red" /* missing end }').error).to.equal('Unterminated comment.');
+  });
 });

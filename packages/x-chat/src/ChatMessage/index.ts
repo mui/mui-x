@@ -8,6 +8,8 @@ export { ChatMessageContent } from './ChatMessageContent';
 export type { ChatMessageContentProps } from './ChatMessageContent';
 export { ChatMessageMeta } from './ChatMessageMeta';
 export type { ChatMessageMetaProps } from './ChatMessageMeta';
+export { ChatMessageInlineMeta } from './ChatMessageInlineMeta';
+export type { ChatMessageInlineMetaProps } from './ChatMessageInlineMeta';
 export { ChatMessageActions } from './ChatMessageActions';
 export type { ChatMessageActionsProps } from './ChatMessageActions';
 export { ChatMessageGroup } from './ChatMessageGroup';

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { mergeSlotProps } from './mergeSlotProps';
 
 describe('mergeSlotProps', () => {
@@ -6,17 +6,39 @@ describe('mergeSlotProps', () => {
     expect(mergeSlotProps({ className: 'base' }, undefined)).to.deep.equal({ className: 'base' });
   });
 
-  it('merges an object-form consumer prop over the base', () => {
-    const result = mergeSlotProps({ className: 'base', sx: { p: 1 } }, {
-      className: 'custom',
-      'data-x': '1',
-    } as any);
-    expect(result).to.deep.equal({ className: 'custom', sx: { p: 1 }, 'data-x': '1' });
+  it('merges an object-form consumer prop without dropping wrapper props', () => {
+    const baseClick = vi.fn();
+    const consumerClick = vi.fn();
+    const result = mergeSlotProps(
+      {
+        className: 'base',
+        sx: { p: 1 },
+        style: { display: 'flex', color: 'red' },
+        onClick: baseClick,
+      },
+      {
+        className: 'custom',
+        sx: { m: 1 },
+        style: { color: 'blue' },
+        onClick: consumerClick,
+        'data-x': '1',
+      } as any,
+    ) as any;
+
+    expect(result.className).to.equal('base custom');
+    expect(result.sx).to.deep.equal([{ p: 1 }, { m: 1 }]);
+    expect(result.style).to.deep.equal({ display: 'flex', color: 'blue' });
+    expect(result['data-x']).to.equal('1');
+
+    result.onClick({ defaultPrevented: false });
+    expect(baseClick).toHaveBeenCalledTimes(1);
+    expect(consumerClick).toHaveBeenCalledTimes(1);
   });
 
-  it('preserves the callback form and layers the base underneath the resolved props', () => {
+  it('preserves the callback form and merges resolved props', () => {
     const consumer = ((ownerState: { variant: string }) => ({
       className: `custom-${ownerState.variant}`,
+      sx: { m: 1 },
       onClick: () => {},
     })) as any;
 
@@ -26,10 +48,21 @@ describe('mergeSlotProps', () => {
     const resolved = (result as (os: { variant: string }) => Record<string, unknown>)({
       variant: 'compact',
     });
-    // base sx survives, the callback's resolved props win on conflict, handlers pass through.
-    expect(resolved.className).to.equal('custom-compact');
-    expect(resolved.sx).to.deep.equal({ p: 1 });
+    expect(resolved.className).to.equal('base custom-compact');
+    expect(resolved.sx).to.deep.equal([{ p: 1 }, { m: 1 }]);
     expect(typeof resolved.onClick).to.equal('function');
+  });
+
+  it('composes refs instead of letting a consumer ref replace the wrapper ref', () => {
+    const baseRef = { current: null as HTMLDivElement | null };
+    const consumerRef = vi.fn();
+    const result = mergeSlotProps({ ref: baseRef }, { ref: consumerRef } as any) as any;
+    const node = {} as HTMLDivElement;
+
+    result.ref(node);
+
+    expect(baseRef.current).to.equal(node);
+    expect(consumerRef).toHaveBeenCalledWith(node);
   });
 
   it('tolerates a callback that returns nullish', () => {

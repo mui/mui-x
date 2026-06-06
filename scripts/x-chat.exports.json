@@ -86,6 +86,7 @@
   { "name": "ChatMessageGroup", "kind": "Variable" },
   { "name": "ChatMessageGroupProps", "kind": "Interface" },
   { "name": "ChatMessageInlineMeta", "kind": "Function" },
+  { "name": "ChatMessageInlineMetaProps", "kind": "Interface" },
   { "name": "ChatMessageList", "kind": "Variable" },
   { "name": "chatMessageListClasses", "kind": "Variable" },
   { "name": "ChatMessageListClasses", "kind": "Interface" },

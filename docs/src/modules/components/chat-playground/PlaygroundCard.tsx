@@ -528,11 +528,15 @@ function CheckIcon() {
 
 function TabButton({
   label,
+  id,
+  controls,
   hasIndicator,
   active,
   onClick,
 }: {
   label: string;
+  id: string;
+  controls: string;
   hasIndicator?: boolean;
   active: boolean;
   onClick: () => void;
@@ -541,8 +545,12 @@ function TabButton({
     <Box
       component="button"
       type="button"
+      id={id}
+      role="tab"
       onClick={onClick}
       aria-selected={active}
+      aria-controls={controls}
+      tabIndex={active ? 0 : -1}
       sx={(theme) => ({
         position: 'relative',
         display: 'inline-flex',
@@ -613,6 +621,8 @@ function ClassCustomizationRow({
   const hasOverride = item.sx.trim().length > 0;
   const [open, setOpen] = React.useState(defaultOpen ?? hasOverride);
   const [draft, setDraft] = React.useState(item.sx);
+  const inputId = React.useId();
+  const errorId = `${inputId}-error`;
   React.useEffect(() => {
     setDraft(item.sx);
   }, [item.sx]);
@@ -692,8 +702,12 @@ function ClassCustomizationRow({
           ) : null}
           <Box
             component="textarea"
+            id={inputId}
             value={draft}
             placeholder={CLASS_PLACEHOLDER}
+            aria-label={`sx override for ${item.selector ?? item.name}`}
+            aria-invalid={item.parseError ? true : undefined}
+            aria-describedby={item.parseError ? errorId : undefined}
             spellCheck={false}
             onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
               setDraft(event.target.value)
@@ -729,6 +743,7 @@ function ClassCustomizationRow({
           />
           {item.parseError ? (
             <Typography
+              id={errorId}
               variant="caption"
               color="error"
               sx={(theme) => ({
@@ -801,7 +816,7 @@ function ResetButton({ onClick, label = 'Reset' }: { onClick: () => void; label?
 }
 
 function CopyCodeBar({ getCode }: { getCode: () => string }) {
-  const [copied, setCopied] = React.useState(false);
+  const [copyState, setCopyState] = React.useState<'idle' | 'copied' | 'error'>('idle');
   const timeoutRef = React.useRef<number | undefined>(undefined);
   React.useEffect(
     () => () => {
@@ -811,22 +826,29 @@ function CopyCodeBar({ getCode }: { getCode: () => string }) {
     },
     [],
   );
+  const setTemporaryCopyState = React.useCallback((nextState: 'copied' | 'error') => {
+    setCopyState(nextState);
+    if (timeoutRef.current !== undefined) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => setCopyState('idle'), 1500) as unknown as number;
+  }, []);
 
   const handleCopy = React.useCallback(async () => {
     const code = getCode();
     try {
-      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      if (typeof navigator === 'undefined' || !navigator.clipboard?.writeText) {
+        setTemporaryCopyState('error');
+      } else {
         await navigator.clipboard.writeText(code);
+        setTemporaryCopyState('copied');
       }
-      setCopied(true);
-      if (timeoutRef.current !== undefined) {
-        clearTimeout(timeoutRef.current);
-      }
-      timeoutRef.current = setTimeout(() => setCopied(false), 1500) as unknown as number;
     } catch {
-      // ignore — clipboard may be blocked in iframes
+      setTemporaryCopyState('error');
     }
-  }, [getCode]);
+  }, [getCode, setTemporaryCopyState]);
+  const copied = copyState === 'copied';
+  const copyFailed = copyState === 'error';
 
   return (
     <Box
@@ -861,9 +883,17 @@ function CopyCodeBar({ getCode }: { getCode: () => string }) {
           alignItems: 'center',
           gap: 0.5,
           border: '1px solid',
-          borderColor: copied ? theme.palette.success.main : 'divider',
+          borderColor: copied
+            ? theme.palette.success.main
+            : copyFailed
+              ? theme.palette.error.main
+              : 'divider',
           background: 'rgba(0, 0, 0, 0.02)',
-          color: copied ? theme.palette.success.main : 'text.primary',
+          color: copied
+            ? theme.palette.success.main
+            : copyFailed
+              ? theme.palette.error.main
+              : 'text.primary',
           fontSize: '0.7rem',
           fontWeight: 600,
           px: 1,
@@ -876,13 +906,21 @@ function CopyCodeBar({ getCode }: { getCode: () => string }) {
           flexShrink: 0,
           transition: 'color 0.15s ease, border-color 0.15s ease',
           '&:hover': {
-            borderColor: copied ? theme.palette.success.main : theme.palette.primary.main,
-            color: copied ? theme.palette.success.main : theme.palette.primary.main,
+            borderColor: copied
+              ? theme.palette.success.main
+              : copyFailed
+                ? theme.palette.error.main
+                : theme.palette.primary.main,
+            color: copied
+              ? theme.palette.success.main
+              : copyFailed
+                ? theme.palette.error.main
+                : theme.palette.primary.main,
           },
         })}
       >
         {copied ? <CheckIcon /> : <CopyIcon />}
-        {copied ? 'Copied' : 'Copy code'}
+        {copied ? 'Copied' : copyFailed ? 'Copy failed' : 'Copy code'}
       </Box>
     </Box>
   );
@@ -1079,6 +1117,10 @@ export function PlaygroundCard({
   const [controlsCollapsed, setControlsCollapsed] = React.useState(defaultControlsCollapsed);
   const overridesCount = classesOverrideCount;
   const componentId = title.replace(/[^a-zA-Z0-9]/g, '');
+  const propsTabId = `${componentId}-props-tab`;
+  const propsPanelId = `${componentId}-props-panel`;
+  const classesTabId = `${componentId}-classes-tab`;
+  const classesPanelId = `${componentId}-classes-panel`;
   const inferredComponentName =
     componentNameProp ?? registry?.componentName ?? getComponentName(title);
   const defaultMetadata = defaultRegistryMetadata[inferredComponentName];
@@ -1250,12 +1292,16 @@ export function PlaygroundCard({
                 >
                   <TabButton
                     label="Props"
+                    id={propsTabId}
+                    controls={propsPanelId}
                     active={activeTab === 'props'}
                     onClick={() => setActiveTab('props')}
                   />
                   {hasClassesTab ? (
                     <TabButton
                       label="Classes"
+                      id={classesTabId}
+                      controls={classesPanelId}
                       hasIndicator={classesOverrideCount > 0}
                       active={activeTab === 'classes'}
                       onClick={() => setActiveTab('classes')}
@@ -1295,6 +1341,9 @@ export function PlaygroundCard({
             >
               {activeTab === 'props' && controls ? (
                 <Box
+                  id={propsPanelId}
+                  role="tabpanel"
+                  aria-labelledby={propsTabId}
                   sx={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -1308,6 +1357,9 @@ export function PlaygroundCard({
               ) : null}
               {activeTab === 'classes' && classCustomizations ? (
                 <Box
+                  id={classesPanelId}
+                  role="tabpanel"
+                  aria-labelledby={classesTabId}
                   sx={{
                     px: 1.5,
                     py: 0.5,

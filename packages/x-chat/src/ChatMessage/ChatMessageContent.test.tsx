@@ -409,6 +409,105 @@ describe('ChatMessageContent', () => {
       // A clobbered updater would let React snap `open` back to false on re-render.
       expect(inputDetails.hasAttribute('open')).toBe(true);
     });
+
+    it('forwards a consumer root onToggle without breaking the controlled disclosure', () => {
+      const handleToggle = vi.fn();
+      render(
+        <ChatRoot
+          adapter={createAdapter()}
+          initialMessages={[
+            {
+              id: 'm1',
+              role: 'assistant',
+              parts: [
+                {
+                  type: 'tool',
+                  toolInvocation: {
+                    toolCallId: 'tc1',
+                    toolName: 'searchTool',
+                    state: 'output-available',
+                    input: {},
+                    output: {},
+                  },
+                },
+              ],
+            },
+          ]}
+        >
+          <MessageRoot messageId="m1">
+            <ChatMessageContent
+              data-testid="message-content"
+              partProps={{ tool: { slotProps: { root: { onToggle: handleToggle } } } }}
+            />
+          </MessageRoot>
+        </ChatRoot>,
+      );
+
+      const rootDetails = document.querySelector('details')!;
+      rootDetails.open = true;
+      fireEvent(rootDetails, new Event('toggle'));
+
+      expect(handleToggle).toHaveBeenCalledTimes(1);
+      expect(rootDetails.hasAttribute('open')).toBe(true);
+    });
+
+    it('auto-opens the root when a reused tool transitions to a streaming state', () => {
+      let store!: ReturnType<typeof useChatStore>;
+      function CaptureStore() {
+        store = useChatStore();
+        return null;
+      }
+
+      render(
+        <ChatRoot
+          adapter={createAdapter()}
+          initialMessages={[
+            {
+              id: 'm1',
+              role: 'assistant',
+              parts: [
+                {
+                  type: 'tool',
+                  toolInvocation: {
+                    toolCallId: 'tc1',
+                    toolName: 'searchTool',
+                    state: 'input-available',
+                    input: {},
+                  },
+                },
+              ],
+            },
+          ]}
+        >
+          <CaptureStore />
+          <MessageRoot messageId="m1">
+            <ChatMessageContent data-testid="message-content" />
+          </MessageRoot>
+        </ChatRoot>,
+      );
+
+      const rootDetailsBefore = document.querySelector('details')!;
+      expect(rootDetailsBefore.hasAttribute('open')).toBe(false);
+
+      act(() => {
+        store.updateMessage('m1', {
+          parts: [
+            {
+              type: 'tool',
+              toolInvocation: {
+                toolCallId: 'tc1',
+                toolName: 'searchTool',
+                state: 'input-streaming',
+                input: {},
+              },
+            },
+          ],
+        });
+      });
+
+      const rootDetailsAfter = document.querySelector('details')!;
+      expect(rootDetailsAfter.hasAttribute('open')).toBe(true);
+    });
   });
 
   describe('source-url part', () => {

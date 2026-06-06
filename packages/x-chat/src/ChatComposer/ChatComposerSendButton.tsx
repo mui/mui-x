@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import { ComposerSendButton, type ComposerSendButtonProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerSendButton');
@@ -76,11 +77,13 @@ const ChatComposerSendButton = React.forwardRef<HTMLButtonElement, ChatComposerS
         }}
         slotProps={{
           ...slotProps,
-          sendButton: {
-            className: clsx(classes.sendButton, className),
-            sx,
-            ...slotProps?.sendButton,
-          } as any,
+          sendButton: mergeSlotProps(
+            {
+              className: clsx(classes.sendButton, className),
+              sx,
+            },
+            slotProps?.sendButton,
+          ) as any,
         }}
       />
     );

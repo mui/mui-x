@@ -109,6 +109,7 @@ export type { ChatMessageContentProps } from './ChatMessage/ChatMessageContent';
 export { ChatMessageMeta } from './ChatMessage/ChatMessageMeta';
 export type { ChatMessageMetaProps } from './ChatMessage/ChatMessageMeta';
 export { ChatMessageInlineMeta } from './ChatMessage/ChatMessageInlineMeta';
+export type { ChatMessageInlineMetaProps } from './ChatMessage/ChatMessageInlineMeta';
 export { ChatMessageActions } from './ChatMessage/ChatMessageActions';
 export type { ChatMessageActionsProps } from './ChatMessage/ChatMessageActions';
 export { ChatMessageGroup } from './ChatMessage/ChatMessageGroup';

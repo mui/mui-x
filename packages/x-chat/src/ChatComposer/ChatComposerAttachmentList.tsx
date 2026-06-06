@@ -6,6 +6,7 @@ import { SxProps, Theme } from '@mui/system';
 import {
   ComposerAttachmentList,
   useChatComposer,
+  useChatLocaleText,
   type ComposerAttachmentListProps,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
@@ -126,28 +127,32 @@ function DefaultAttachmentListContent() {
   // Read directly from the store so the list renders even outside a `ChatComposer` —
   // useful for custom layouts and isolated previews. `ChatProvider` is still required.
   const composer = useChatComposer();
+  const localeText = useChatLocaleText();
 
   return (
     <React.Fragment>
-      {composer.attachments.map((attachment) => (
-        <AttachmentChip key={attachment.localId}>
-          {attachment.previewUrl ? (
-            <AttachmentThumbnail src={attachment.previewUrl} alt={attachment.file.name} />
-          ) : (
-            <AttachmentFileIconWrapper>
-              <DefaultFileIcon />
-            </AttachmentFileIconWrapper>
-          )}
-          <AttachmentFileName>{attachment.file.name}</AttachmentFileName>
-          <AttachmentRemoveButton
-            type="button"
-            aria-label={`Remove ${attachment.file.name}`}
-            onClick={() => composer.removeAttachment(attachment.localId)}
-          >
-            <DefaultCloseIcon />
-          </AttachmentRemoveButton>
-        </AttachmentChip>
-      ))}
+      {composer.attachments.map((attachment) => {
+        const fileName = attachment.file.name || localeText.composerAttachmentFallbackLabel;
+        return (
+          <AttachmentChip key={attachment.localId}>
+            {attachment.previewUrl ? (
+              <AttachmentThumbnail src={attachment.previewUrl} alt={fileName} />
+            ) : (
+              <AttachmentFileIconWrapper>
+                <DefaultFileIcon />
+              </AttachmentFileIconWrapper>
+            )}
+            <AttachmentFileName>{fileName}</AttachmentFileName>
+            <AttachmentRemoveButton
+              type="button"
+              aria-label={localeText.composerRemoveAttachmentLabel(fileName)}
+              onClick={() => composer.removeAttachment(attachment.localId)}
+            >
+              <DefaultCloseIcon />
+            </AttachmentRemoveButton>
+          </AttachmentChip>
+        );
+      })}
     </React.Fragment>
   );
 }

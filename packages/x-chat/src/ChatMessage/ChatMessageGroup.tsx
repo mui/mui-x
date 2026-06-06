@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import { MessageGroup, type MessageGroupProps } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
 import { ChatMessage, type ChatMessageSlots, type ChatMessageSlotProps } from './ChatMessage';
 import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
@@ -222,11 +223,13 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
           groupTimestamp: ChatMessageGroupTimestampStyled,
         }}
         slotProps={{
-          group: {
-            className: clsx(classes.group, !hasAvatar && classes.noAvatar, className),
-            sx,
-            ...messageGroupWrapperProps,
-          } as any,
+          group: mergeSlotProps(
+            {
+              className: clsx(classes.group, !hasAvatar && classes.noAvatar, className),
+              sx,
+            },
+            messageGroupWrapperProps as any,
+          ) as any,
           authorName: slotProps?.messageAuthorName as any,
         }}
       >

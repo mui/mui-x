@@ -9,6 +9,7 @@ import {
   type ComposerHelperTextOwnerState,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useChatComposerUtilityClasses, type ChatComposerClasses } from './chatComposerClasses';
 
 const useThemeProps = createUseThemeProps('MuiChatComposerHelperText');
@@ -53,11 +54,13 @@ const ChatComposerHelperText = React.forwardRef<HTMLParagraphElement, ChatCompos
         }}
         slotProps={{
           ...slotProps,
-          helperText: {
-            className: clsx(classes.helperText, className),
-            sx,
-            ...slotProps?.helperText,
-          } as any,
+          helperText: mergeSlotProps(
+            {
+              className: clsx(classes.helperText, className),
+              sx,
+            },
+            slotProps?.helperText,
+          ) as any,
         }}
       />
     );

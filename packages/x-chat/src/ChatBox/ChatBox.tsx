@@ -10,6 +10,7 @@ import {
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { ChatSlotsProvider } from '../internals/ChatSlotsContext';
+import { mergeSlotProps, resolveSlotProps } from '../internals/mergeSlotProps';
 import { useChatBoxUtilityClasses } from './chatBoxClasses';
 import { ChatBoxContent } from './ChatBoxContent';
 import type { ChatBoxProps } from './ChatBox.types';
@@ -102,14 +103,15 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
     features,
     layoutMode,
     layoutModeBreakpoints,
+    children,
     ...other
   } = props;
 
   const classes = useChatBoxUtilityClasses(classesProp);
-  const innerRef = React.useRef<HTMLDivElement | null>(null);
+  const [rootElement, setRootElement] = React.useState<HTMLDivElement | null>(null);
   const handleRef = React.useCallback(
     (node: HTMLDivElement | null) => {
-      innerRef.current = node;
+      setRootElement(node);
       if (typeof ref === 'function') {
         ref(node);
       } else if (ref) {
@@ -117,6 +119,21 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
       }
     },
     [ref],
+  );
+  const ownerState = React.useMemo(() => ({ variant }), [variant]);
+  const RootComponent = (slots?.root ?? ChatBoxStyled) as React.ElementType;
+  const rootSlotProps = resolveSlotProps(
+    mergeSlotProps(
+      {
+        ref: handleRef,
+        ...(typeof RootComponent === 'string' ? {} : { ownerState }),
+        className: clsx(classes.root, className),
+        sx,
+        ...other,
+      },
+      slotProps?.root,
+    ),
+    ownerState,
   );
 
   return (
@@ -152,28 +169,23 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
     >
       <ChatVariantProvider variant={variant}>
         <ChatDensityProvider density={density}>
-          <ChatBoxStyled
-            ref={handleRef}
-            ownerState={{ variant }}
-            className={clsx(classes.root, className)}
-            sx={sx}
-            {...other}
-          >
+          <RootComponent {...rootSlotProps}>
             <ChatSlotsProvider slots={slots} slotProps={slotProps}>
               <ChatBoxContent
                 variant={variant}
                 features={features}
                 layoutMode={layoutMode}
                 layoutModeBreakpoints={layoutModeBreakpoints}
-                rootRef={innerRef}
+                rootElement={rootElement}
                 suggestions={suggestions}
                 suggestionsAutoSubmit={suggestionsAutoSubmit}
                 layoutClassName={classes.layout}
                 conversationsPaneClassName={classes.conversationsPane}
                 threadPaneClassName={classes.threadPane}
               />
+              {children}
             </ChatSlotsProvider>
-          </ChatBoxStyled>
+          </RootComponent>
         </ChatDensityProvider>
       </ChatVariantProvider>
     </ChatRoot>

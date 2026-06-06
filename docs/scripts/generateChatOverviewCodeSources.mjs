@@ -33,7 +33,8 @@ async function main() {
     '',
     ...entries.flatMap((entry) => [
       `// Source: ${entry.relativePath}`,
-      `export const ${entry.exportName} = ${JSON.stringify(entry.content)};`,
+      `export const ${entry.exportName} =`,
+      `  ${JSON.stringify(entry.content)};`,
       '',
     ]),
   ]
