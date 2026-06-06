@@ -99,10 +99,9 @@ describe('mergeSlotProps', () => {
     // Base prevents default: consumer is skipped.
     const blockingBase = vi.fn((event: { preventDefault: () => void }) => event.preventDefault());
     const consumerAfter = vi.fn();
-    const blocked = mergeSlotProps(
-      { onClick: blockingBase },
-      { onClick: consumerAfter } as any,
-    ) as any;
+    const blocked = mergeSlotProps({ onClick: blockingBase }, {
+      onClick: consumerAfter,
+    } as any) as any;
     blocked.onClick(makeEvent());
     expect(blockingBase).toHaveBeenCalledTimes(1);
     expect(consumerAfter).toHaveBeenCalledTimes(0);
@@ -122,6 +121,8 @@ describe('mergeSlotProps', () => {
 
   it('resolveSlotProps returns object props as-is and resolves the callback form', () => {
     expect(resolveSlotProps({ a: 1 }, {})).to.deep.equal({ a: 1 });
-    expect(resolveSlotProps((os: { n: number }) => ({ a: os.n }), { n: 2 })).to.deep.equal({ a: 2 });
+    expect(resolveSlotProps((os: { n: number }) => ({ a: os.n }), { n: 2 })).to.deep.equal({
+      a: 2,
+    });
   });
 });

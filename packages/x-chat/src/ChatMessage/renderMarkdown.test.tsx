@@ -116,9 +116,7 @@ describe('renderMarkdown', () => {
     });
 
     it('strips an optional CommonMark title from a link href', () => {
-      render(
-        <React.Fragment>{renderMarkdown('[label](https://example.com "t")')}</React.Fragment>,
-      );
+      render(<React.Fragment>{renderMarkdown('[label](https://example.com "t")')}</React.Fragment>);
       const anchor = document.querySelector('a')!;
       expect(anchor.getAttribute('href')).toBe('https://example.com');
       expect(anchor.textContent).toBe('label');

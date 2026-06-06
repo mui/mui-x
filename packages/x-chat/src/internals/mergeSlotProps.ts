@@ -24,7 +24,10 @@ function setRef(ref: React.Ref<unknown>, value: unknown) {
   (ref as React.MutableRefObject<unknown>).current = value;
 }
 
-function mergeRefs(baseRef: React.Ref<unknown> | undefined | null, consumerRef: React.Ref<unknown>) {
+function mergeRefs(
+  baseRef: React.Ref<unknown> | undefined | null,
+  consumerRef: React.Ref<unknown>,
+) {
   if (baseRef == null) {
     return consumerRef;
   }

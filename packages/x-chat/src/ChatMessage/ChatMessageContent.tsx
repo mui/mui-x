@@ -785,8 +785,12 @@ function ChatToolPartSectionContent({
 }: ChatToolPartSectionContentRenderProps) {
   const text = typeof children === 'string' ? children : React.Children.toArray(children).join('');
   const { copyState, copy } = useCopyToClipboard();
-  const copyLabel =
-    copyState === 'copied' ? 'Copied' : copyState === 'error' ? 'Copy failed' : 'Copy to clipboard';
+  let copyLabel = 'Copy to clipboard';
+  if (copyState === 'copied') {
+    copyLabel = 'Copied';
+  } else if (copyState === 'error') {
+    copyLabel = 'Copy failed';
+  }
   return (
     <ChatToolPartSectionContentWrapper {...rest}>
       <ChatToolPartSectionContentPre>{children}</ChatToolPartSectionContentPre>

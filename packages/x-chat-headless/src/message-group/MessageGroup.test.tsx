@@ -259,6 +259,7 @@ describe('MessageGroup', () => {
         ]}
       >
         <MessageGroup messageId="m1">
+          {/* eslint-disable-next-line react/jsx-no-useless-fragment -- the single-child fragment is the case under test: fragment children must render without grouping props being injected */}
           <React.Fragment>
             <span data-testid="fragment-child">Fragment child</span>
           </React.Fragment>
