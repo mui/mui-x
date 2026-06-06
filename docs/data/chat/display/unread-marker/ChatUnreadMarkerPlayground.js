@@ -12,19 +12,13 @@ import {
 import { useCustomizations } from 'docs/src/modules/components/chat-playground/useCustomizations';
 import { users } from 'docs/src/modules/components/chat-playground/data';
 
-const conversation = {
-  id: 'unread-playground',
-  title: 'Unread thread',
-  participants: [users.me, users.assistant],
-  unreadCount: 1,
-  readState: 'unread',
-};
+const CONVERSATION_ID = 'unread-playground';
 
 function buildMessages(count) {
   const base = Date.UTC(2026, 4, 3, 8, 30, 0);
   return Array.from({ length: count }, (_, i) => ({
     id: `unread-msg-${i}`,
-    conversationId: conversation.id,
+    conversationId: CONVERSATION_ID,
     role: 'assistant',
     author: users.assistant,
     createdAt: new Date(base + i * 60_000).toISOString(),
@@ -48,6 +42,20 @@ export default function ChatUnreadMarkerPlayground() {
   const classesCustomizations = useCustomizations(CLASS_DEFS);
   const messages = React.useMemo(() => buildMessages(count), [count]);
   const safeBoundary = Math.min(boundary, count - 1);
+
+  // The headless UnreadMarker derives its boundary from the conversation's
+  // `unreadCount` (boundary = messageCount - unreadCount). Keep it in sync with
+  // the slider so the marker renders at the selected index for any message count.
+  const conversation = React.useMemo(
+    () => ({
+      id: CONVERSATION_ID,
+      title: 'Unread thread',
+      participants: [users.me, users.assistant],
+      unreadCount: count - safeBoundary,
+      readState: 'unread',
+    }),
+    [count, safeBoundary],
+  );
 
   const markerSx = classesCustomizations.toClassesSx();
 
