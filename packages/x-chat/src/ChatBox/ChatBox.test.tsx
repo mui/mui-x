@@ -281,6 +281,33 @@ describe('ChatBox', () => {
     });
   });
 
+  describe('slot: messageList', () => {
+    it('treats slots.messageList as a wrapper-only root with rows rendered inside', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialMessages={[
+            { id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello list' }] },
+          ]}
+          slots={{ messageList: 'section' }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      // The custom element becomes the scrollable list root…
+      const section = document.querySelector('section.MuiChatMessageList-root');
+      expect(section).not.toBe(null);
+      // …and the default rows still render inside it — `messageList` is wrapper-only,
+      // not a whole-component replacement that would drop the list renderer.
+      expect(screen.getByText('Hello list')).not.toBe(null);
+      expect(section?.querySelector('.MuiChatMessage-root')).not.toBe(null);
+      // Internal list props must not leak onto the wrapper element.
+      expect(section?.hasAttribute('renderItem')).toBe(false);
+      expect(section?.hasAttribute('items')).toBe(false);
+    });
+  });
+
   describe('feature: conversationList', () => {
     it('does not render the conversation list by default', () => {
       render(

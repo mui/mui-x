@@ -26,7 +26,7 @@ import { ChatComposerAttachButton } from '../ChatComposer/ChatComposerAttachButt
 import { ChatComposerAttachmentList } from '../ChatComposer/ChatComposerAttachmentList';
 import { ChatComposerToolbar } from '../ChatComposer/ChatComposerToolbar';
 import { ChatComposerHelperText } from '../ChatComposer/ChatComposerHelperText';
-import { ChatMessageList } from '../ChatMessageList/ChatMessageList';
+import { ChatMessageList, type ChatMessageListProps } from '../ChatMessageList/ChatMessageList';
 import { DefaultMessageItem } from '../ChatMessageList/DefaultMessageItem';
 import { ChatScrollToBottomAffordance } from '../ChatIndicators/ChatScrollToBottomAffordance';
 import { ChatSuggestions, type ChatSuggestionsProps } from '../ChatSuggestions/ChatSuggestions';
@@ -755,7 +755,17 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
     ChatScrollToBottomAffordance) as typeof ChatScrollToBottomAffordance;
   const ConversationListComponent = (slots.conversationList ??
     ChatConversationList) as typeof ChatConversationList;
-  const MessageListComponent = (slots.messageList ?? ChatMessageList) as typeof ChatMessageList;
+  // `messageList` is a wrapper-only slot: it swaps ChatMessageList's scrollable
+  // root *element*, not the whole component. Routed into ChatMessageList's own
+  // `messageList` root slot below (merged with any consumer `slotProps.messageList.slots`)
+  // so the default rows still render inside a custom element like `slots={{ messageList: 'section' }}`.
+  // Replacing the whole component instead would drop the list renderer (no messages).
+  const { slots: messageListConsumerSlots, ...messageListConsumerProps } = (slotProps.messageList ??
+    {}) as Partial<ChatMessageListProps>;
+  const messageListSlots = {
+    ...(messageListConsumerSlots ?? {}),
+    ...(slots.messageList ? { messageList: slots.messageList } : {}),
+  };
   const SuggestionsComponent = (slots.suggestions ?? ChatSuggestions) as typeof ChatSuggestions;
 
   // The rendered id list — `slotProps.messageList.items` lets a consumer narrow
@@ -919,7 +929,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
             showMenuButton={showDrawerMenuButton}
           />
           <ChatBoxMessageListWrapper>
-            <MessageListComponent
+            <ChatMessageList
               renderItem={renderItem}
               items={messageIds}
               autoScroll={autoScrollProp}
@@ -958,7 +968,8 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
                   )}
                 </React.Fragment>
               }
-              {...(slotProps.messageList ?? {})}
+              {...messageListConsumerProps}
+              {...(Object.keys(messageListSlots).length > 0 ? { slots: messageListSlots } : {})}
             />
             {showCustomEmptyState && CustomEmptyStateComponent && (
               <ChatBoxCustomEmptyStateOverlay>

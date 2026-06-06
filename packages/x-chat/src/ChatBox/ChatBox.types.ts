@@ -108,11 +108,16 @@ interface ChatBoxConversationSlotProps {
 }
 
 /**
- * Message-list chrome. `messageList` swaps the whole `<ChatMessageList>`
- * (wrapper-only); `messageGroup` swaps the per-author group wrapper.
+ * Message-list chrome. `messageList` swaps the scrollable root *element* of
+ * `<ChatMessageList>` (wrapper-only — the default rows still render inside);
+ * `messageGroup` swaps the per-author group wrapper.
  */
 interface ChatBoxMessageListSlots {
-  /** Styled root of the scrollable `<ChatMessageList>` (wrapper-only). */
+  /**
+   * Styled scrollable root element of `<ChatMessageList>` (wrapper-only). The
+   * default message rows render inside it, so a plain element such as `'section'`
+   * wraps the list rather than replacing it.
+   */
   messageList?: React.ElementType;
   /** The per-author group wrapper around consecutive messages. */
   messageGroup?: React.ElementType;

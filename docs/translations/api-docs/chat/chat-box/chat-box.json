@@ -91,7 +91,7 @@
     "messageError": "Error card shown under the bubble when the message status is <code>error</code>.",
     "messageGroup": "The per-author group wrapper around consecutive messages.",
     "messageInlineMeta": "Inline meta rendered inside the bubble (default variant). Pass <code>null</code> to hide.",
-    "messageList": "Styled root of the scrollable <code>&lt;ChatMessageList&gt;</code> (wrapper-only).",
+    "messageList": "Styled scrollable root element of <code>&lt;ChatMessageList&gt;</code> (wrapper-only). The default message rows render inside it, so a plain element such as <code>&#39;section&#39;</code> wraps the list rather than replacing it.",
     "messageMeta": "External meta (compact variant). Pass <code>null</code> to hide.",
     "messageRoot": "Styled root of <code>&lt;ChatMessage&gt;</code> (wrapper-only); the default avatar/content/meta tree still renders inside it.",
     "root": "The outermost <code>ChatBox</code> container element.",

@@ -146,7 +146,7 @@
     },
     {
       "name": "messageList",
-      "description": "Styled root of the scrollable `<ChatMessageList>` (wrapper-only).",
+      "description": "Styled scrollable root element of `<ChatMessageList>` (wrapper-only). The\ndefault message rows render inside it, so a plain element such as `'section'`\nwraps the list rather than replacing it.",
       "class": null
     },
     {
