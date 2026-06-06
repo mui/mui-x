@@ -544,6 +544,25 @@ describe('ChatBox', () => {
       // …while the above-composer layout default still applies (not the empty state).
       expect(root!.hasAttribute('data-empty')).toBe(false);
     });
+
+    it.skipIf(isJSDOM)('applies a top-level suggestions sx in the active-thread path', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          suggestions={['Tell me a joke']}
+          initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] }]}
+          slotProps={{ suggestions: { sx: { color: 'rgb(1, 2, 3)' } } }}
+        >
+          {null}
+        </ChatBox>,
+      );
+      // The consumer's top-level `slotProps.suggestions.sx` must survive the
+      // above-composer layout `sx` injection (it's folded into the root `sx`),
+      // not be overwritten as it was before.
+      const root = document.querySelector('.MuiChatSuggestions-root') as HTMLElement;
+      expect(root).not.toBe(null);
+      expect(window.getComputedStyle(root).color).toBe('rgb(1, 2, 3)');
+    });
   });
 
   describe('composer', () => {

@@ -546,7 +546,17 @@ function AboveComposerSuggestions(props: {
   consumerSlotProps: Partial<ChatSuggestionsProps> | undefined;
 }) {
   const { SuggestionsComponent, suggestions, autoSubmit, consumerSlotProps } = props;
-  const consumerSuggestionsSlotProps = (consumerSlotProps?.slotProps as any) ?? {};
+  // Split out the consumer's top-level `sx` and nested slotProps. The top-level `sx`
+  // must be folded into the root `sx` below: we inject the above-composer layout via
+  // `slotProps.root.sx`, and ChatSuggestions applies `slotProps.root` after its own
+  // top-level `sx`, so leaving the consumer `sx` at the top level would let our
+  // injected root `sx` overwrite it (it's honored in the empty-state path).
+  const {
+    sx: consumerTopLevelSx,
+    slotProps: consumerNestedSlotProps,
+    ...consumerRest
+  } = consumerSlotProps ?? {};
+  const consumerSuggestionsSlotProps = (consumerNestedSlotProps as any) ?? {};
   const consumerRootSlotProp = consumerSuggestionsSlotProps.root ?? {};
   // Two visual modes keyed off the `data-empty` attribute that SuggestionsRoot
   // sets when the thread has zero messages:
@@ -580,16 +590,22 @@ function AboveComposerSuggestions(props: {
       '& .MuiChatSuggestions-item': { flex: '0 0 auto' },
     },
   };
-  // Prepend the above-composer defaults to whatever `sx` the consumer supplied,
-  // keeping their override last so it wins.
-  const mergeRootSx = (consumerSx: unknown): unknown => {
-    if (Array.isArray(consumerSx)) {
-      return [aboveComposerDefaultsSx, ...consumerSx];
-    }
-    if (consumerSx) {
-      return [aboveComposerDefaultsSx, consumerSx];
-    }
-    return aboveComposerDefaultsSx;
+  // Compose the root `sx`: above-composer layout defaults (base), then the consumer's
+  // top-level `sx`, then the more-specific nested `slotProps.root.sx` — later layers
+  // win. Folding the top-level `sx` here is what preserves `slotProps={{ suggestions:
+  // { sx } }}` in the active-thread path.
+  const mergeRootSx = (nestedRootSx: unknown): unknown => {
+    const layers: unknown[] = [aboveComposerDefaultsSx];
+    const push = (value: unknown) => {
+      if (Array.isArray(value)) {
+        layers.push(...value);
+      } else if (value) {
+        layers.push(value);
+      }
+    };
+    push(consumerTopLevelSx);
+    push(nestedRootSx);
+    return layers.length === 1 ? aboveComposerDefaultsSx : layers;
   };
   // `root` slotProps support both the object form and the `(ownerState) => props`
   // callback form. Preserve the callback instead of spreading it into an empty
@@ -606,7 +622,7 @@ function AboveComposerSuggestions(props: {
       suggestions={suggestions}
       autoSubmit={autoSubmit}
       alwaysVisible
-      {...(consumerSlotProps ?? {})}
+      {...consumerRest}
       slotProps={
         {
           ...consumerSuggestionsSlotProps,
