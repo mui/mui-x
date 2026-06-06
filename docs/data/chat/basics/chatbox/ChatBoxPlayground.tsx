@@ -67,10 +67,12 @@ export interface ChatBoxPlaygroundProps {
   hideHeader?: boolean;
   /** Override one or more starting values for the playground controls. */
   defaults?: Partial<typeof DEFAULTS>;
+  /** Start with the controls/props panel collapsed (preview-only until expanded). */
+  defaultControlsCollapsed?: boolean;
 }
 
 export default function ChatBoxPlayground(props: ChatBoxPlaygroundProps = {}) {
-  const { hideHeader, defaults: defaultsOverride } = props;
+  const { hideHeader, defaults: defaultsOverride, defaultControlsCollapsed } = props;
   const defaults = React.useMemo(
     () => ({ ...DEFAULTS, ...defaultsOverride }),
     [defaultsOverride],
@@ -207,6 +209,7 @@ ${featuresLines}
       title="ChatBox"
       description="Full chat surface — conversation list, header, message list, composer, suggestions, and affordances."
       hideHeader={hideHeader}
+      defaultControlsCollapsed={defaultControlsCollapsed}
       previewFill
       previewMinHeight={520}
       span={3}

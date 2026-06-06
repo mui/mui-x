@@ -116,6 +116,8 @@ export interface PlaygroundCardProps {
   copyCode?: () => string;
   /** Hide the card header (title + description + divider). */
   hideHeader?: boolean;
+  /** Start with the controls/props panel collapsed (preview-only until expanded). */
+  defaultControlsCollapsed?: boolean;
 }
 
 const DEFAULT_PACKAGE_NAME = '@mui/x-chat';
@@ -1065,6 +1067,7 @@ export function PlaygroundCard({
   onClassesReset,
   copyCode,
   hideHeader = false,
+  defaultControlsCollapsed = false,
 }: PlaygroundCardProps) {
   const classesOverrideCount = React.useMemo(
     () => classCustomizations?.filter((entry) => entry.sx.trim()).length ?? 0,
@@ -1073,7 +1076,7 @@ export function PlaygroundCard({
   const hasClassesTab = (classCustomizations?.length ?? 0) > 0;
   const showTabs = hasClassesTab;
   const [activeTab, setActiveTab] = React.useState<ControlsTab>('props');
-  const [controlsCollapsed, setControlsCollapsed] = React.useState(false);
+  const [controlsCollapsed, setControlsCollapsed] = React.useState(defaultControlsCollapsed);
   const overridesCount = classesOverrideCount;
   const componentId = title.replace(/[^a-zA-Z0-9]/g, '');
   const inferredComponentName =

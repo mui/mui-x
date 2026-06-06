@@ -112,7 +112,9 @@ export default function MainDemo() {
   let demoContent: React.ReactNode;
 
   if (selectedView === 'basic') {
-    demoContent = <ChatBoxPlayground hideHeader defaults={BASIC_PLAYGROUND_DEFAULTS} />;
+    demoContent = (
+      <ChatBoxPlayground hideHeader defaultControlsCollapsed defaults={BASIC_PLAYGROUND_DEFAULTS} />
+    );
   } else if (selectedView === 'messenger') {
     demoContent = (
       <Paper variant="outlined" elevation={0} sx={{ height: 600, width: '100%' }}>

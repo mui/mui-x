@@ -57,7 +57,7 @@ function indent(input, prefix) {
 }
 
 export default function ChatBoxPlayground(props = {}) {
-  const { hideHeader, defaults: defaultsOverride } = props;
+  const { hideHeader, defaults: defaultsOverride, defaultControlsCollapsed } = props;
   const defaults = React.useMemo(
     () => ({ ...DEFAULTS, ...defaultsOverride }),
     [defaultsOverride],
@@ -192,6 +192,7 @@ ${featuresLines}
       title="ChatBox"
       description="Full chat surface — conversation list, header, message list, composer, suggestions, and affordances."
       hideHeader={hideHeader}
+      defaultControlsCollapsed={defaultControlsCollapsed}
       previewFill
       previewMinHeight={520}
       span={3}
