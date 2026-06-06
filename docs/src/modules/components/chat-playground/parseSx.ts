@@ -57,7 +57,11 @@ class SxParser {
     if (ch === '"' || ch === "'") {
       return this.parseString(ch);
     }
-    if (ch === '-' || (ch !== undefined && DIGIT.test(ch))) {
+    if (
+      ch === '-' ||
+      (ch === '.' && DIGIT.test(this.input[this.pos + 1] ?? '')) ||
+      (ch !== undefined && DIGIT.test(ch))
+    ) {
       return this.parseNumber();
     }
     if (this.matchKeyword('true')) {
@@ -176,8 +180,23 @@ class SxParser {
           case 'r':
             out += '\r';
             break;
+          case '\\':
+            out += '\\';
+            break;
+          case "'":
+            out += "'";
+            break;
+          case '"':
+            out += '"';
+            break;
+          case '`':
+            out += '`';
+            break;
           default:
-            out += esc ?? '';
+            // Preserve the backslash for unrecognized escapes (e.g. CSS unicode
+            // escapes like `\2022`) so the literal reaches the style engine
+            // intact instead of silently dropping the backslash.
+            out += esc === undefined ? '\\' : `\\${esc}`;
             break;
         }
         this.pos += 2;

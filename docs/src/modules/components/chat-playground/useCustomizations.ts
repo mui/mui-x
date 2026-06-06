@@ -58,7 +58,9 @@ export function useCustomizations<K extends string>(
     setValues((prev) => {
       const next = buildInitialValues(defs);
       for (const k of keys) {
-        if (prev[k] != null && prev[k] !== '') {
+        // Preserve any previously-present value, including an empty string the
+        // user intentionally cleared (only genuinely new keys take the seed).
+        if (k in prev) {
           next[k] = prev[k];
         }
       }

@@ -849,6 +849,12 @@ function CopyCodeBar({ getCode }: { getCode: () => string }) {
   }, [getCode, setTemporaryCopyState]);
   const copied = copyState === 'copied';
   const copyFailed = copyState === 'error';
+  let copyButtonText = 'Copy code';
+  if (copied) {
+    copyButtonText = 'Copied';
+  } else if (copyFailed) {
+    copyButtonText = 'Copy failed';
+  }
 
   return (
     <Box
@@ -878,49 +884,42 @@ function CopyCodeBar({ getCode }: { getCode: () => string }) {
         component="button"
         type="button"
         onClick={handleCopy}
-        sx={(theme) => ({
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 0.5,
-          border: '1px solid',
-          borderColor: copied
-            ? theme.palette.success.main
-            : copyFailed
-              ? theme.palette.error.main
-              : 'divider',
-          background: 'rgba(0, 0, 0, 0.02)',
-          color: copied
-            ? theme.palette.success.main
-            : copyFailed
-              ? theme.palette.error.main
-              : 'text.primary',
-          fontSize: '0.7rem',
-          fontWeight: 600,
-          px: 1,
-          py: 0.5,
-          borderRadius: 1,
-          cursor: 'pointer',
-          [docsDarkModeSelector]: {
-            background: 'rgba(255, 255, 255, 0.04)',
-          },
-          flexShrink: 0,
-          transition: 'color 0.15s ease, border-color 0.15s ease',
-          '&:hover': {
-            borderColor: copied
-              ? theme.palette.success.main
-              : copyFailed
-                ? theme.palette.error.main
-                : theme.palette.primary.main,
-            color: copied
-              ? theme.palette.success.main
-              : copyFailed
-                ? theme.palette.error.main
-                : theme.palette.primary.main,
-          },
-        })}
+        sx={(theme) => {
+          let stateColor: string | undefined;
+          if (copied) {
+            stateColor = theme.palette.success.main;
+          } else if (copyFailed) {
+            stateColor = theme.palette.error.main;
+          }
+
+          return {
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 0.5,
+            border: '1px solid',
+            borderColor: stateColor ?? 'divider',
+            background: 'rgba(0, 0, 0, 0.02)',
+            color: stateColor ?? 'text.primary',
+            fontSize: '0.7rem',
+            fontWeight: 600,
+            px: 1,
+            py: 0.5,
+            borderRadius: 1,
+            cursor: 'pointer',
+            [docsDarkModeSelector]: {
+              background: 'rgba(255, 255, 255, 0.04)',
+            },
+            flexShrink: 0,
+            transition: 'color 0.15s ease, border-color 0.15s ease',
+            '&:hover': {
+              borderColor: stateColor ?? theme.palette.primary.main,
+              color: stateColor ?? theme.palette.primary.main,
+            },
+          };
+        }}
       >
         {copied ? <CheckIcon /> : <CopyIcon />}
-        {copied ? 'Copied' : copyFailed ? 'Copy failed' : 'Copy code'}
+        {copyButtonText}
       </Box>
     </Box>
   );
@@ -1117,10 +1116,58 @@ export function PlaygroundCard({
   const [controlsCollapsed, setControlsCollapsed] = React.useState(defaultControlsCollapsed);
   const overridesCount = classesOverrideCount;
   const componentId = title.replace(/[^a-zA-Z0-9]/g, '');
-  const propsTabId = `${componentId}-props-tab`;
-  const propsPanelId = `${componentId}-props-panel`;
-  const classesTabId = `${componentId}-classes-tab`;
-  const classesPanelId = `${componentId}-classes-panel`;
+  // Unique per instance so colliding/normalized titles can't yield duplicate DOM
+  // ids or cross-wired tab/panel ARIA. The readable `componentId` stays the Paper
+  // id / anchor target.
+  const ariaIdBase = React.useId();
+  const propsTabId = `${ariaIdBase}-props-tab`;
+  const propsPanelId = `${ariaIdBase}-props-panel`;
+  const classesTabId = `${ariaIdBase}-classes-tab`;
+  const classesPanelId = `${ariaIdBase}-classes-panel`;
+  const tabs = React.useMemo<ControlsTab[]>(
+    () => (hasClassesTab ? ['props', 'classes'] : ['props']),
+    [hasClassesTab],
+  );
+  const handleTabsKeyDown = React.useCallback(
+    (event: React.KeyboardEvent<HTMLElement>) => {
+      const currentIndex = tabs.indexOf(activeTab);
+      let nextIndex: number | undefined;
+
+      // Horizontal tablist: Left/Right move between tabs (ArrowUp/Down are for
+      // vertical tablists per the ARIA tabs pattern).
+      switch (event.key) {
+        case 'ArrowRight':
+          nextIndex = (currentIndex + 1) % tabs.length;
+          break;
+        case 'ArrowLeft':
+          nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+          break;
+        case 'Home':
+          nextIndex = 0;
+          break;
+        case 'End':
+          nextIndex = tabs.length - 1;
+          break;
+        default:
+          return;
+      }
+
+      const nextTab = tabs[nextIndex];
+
+      if (!nextTab) {
+        return;
+      }
+
+      event.preventDefault();
+      setActiveTab(nextTab);
+      // `getElementById` avoids constructing a CSS selector from a generated id
+      // (which may contain characters that are invalid in a selector).
+      event.currentTarget.ownerDocument
+        .getElementById(nextTab === 'props' ? propsTabId : classesTabId)
+        ?.focus();
+    },
+    [activeTab, classesTabId, propsTabId, tabs],
+  );
   const inferredComponentName =
     componentNameProp ?? registry?.componentName ?? getComponentName(title);
   const defaultMetadata = defaultRegistryMetadata[inferredComponentName];
@@ -1281,6 +1328,8 @@ export function PlaygroundCard({
               {showTabs ? (
                 <Box
                   role="tablist"
+                  aria-orientation="horizontal"
+                  onKeyDown={handleTabsKeyDown}
                   sx={{
                     display: 'flex',
                     alignItems: 'center',

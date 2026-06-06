@@ -79,4 +79,30 @@ describe('parseSx', () => {
   it('rejects unterminated block comments', () => {
     expect(parseSx('{ color: "red" /* missing end }').error).to.equal('Unterminated comment.');
   });
+
+  it('preserves the backslash in unrecognized escapes (CSS unicode) while collapsing standard ones', () => {
+    // Input text: { content: '\2022' } — the CSS bullet escape must round-trip
+    // with its backslash intact, not become "2022".
+    expect(parseSx("{ content: '\\2022' }")).to.deep.equal({
+      value: { content: '\\2022' },
+      error: undefined,
+    });
+    // Standard escapes still collapse to a single character.
+    expect(parseSx("{ content: '\\\\' }")).to.deep.equal({
+      value: { content: '\\' },
+      error: undefined,
+    });
+    expect(parseSx("{ content: '\\'' }")).to.deep.equal({
+      value: { content: "'" },
+      error: undefined,
+    });
+  });
+
+  it('parses leading-dot decimals consistently with their negative form', () => {
+    expect(parseSx('{ opacity: .5 }')).to.deep.equal({
+      value: { opacity: 0.5 },
+      error: undefined,
+    });
+    expect(parseSx('{ x: -.5 }')).to.deep.equal({ value: { x: -0.5 }, error: undefined });
+  });
 });

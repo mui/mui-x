@@ -241,19 +241,33 @@ function createStream(messageId: string, text: string) {
     { type: 'finish', messageId, finishReason: 'stop' },
   ];
 
+  const timers: ReturnType<typeof setTimeout>[] = [];
+  let cancelled = false;
+
   return new ReadableStream<ChatMessageChunk>({
     start(controller) {
       chunks.forEach((chunk, index) => {
-        setTimeout(
-          () => {
-            controller.enqueue(chunk);
-            if (index === chunks.length - 1) {
-              controller.close();
-            }
-          },
-          90 * (index + 1),
+        timers.push(
+          setTimeout(
+            () => {
+              // The consumer can cancel mid-stream (unmount, or a new prompt
+              // before this echo finishes); don't enqueue on a closed controller.
+              if (cancelled) {
+                return;
+              }
+              controller.enqueue(chunk);
+              if (index === chunks.length - 1) {
+                controller.close();
+              }
+            },
+            90 * (index + 1),
+          ),
         );
       });
+    },
+    cancel() {
+      cancelled = true;
+      timers.forEach((timer) => clearTimeout(timer));
     },
   });
 }

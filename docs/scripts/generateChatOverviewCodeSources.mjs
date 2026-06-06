@@ -17,7 +17,7 @@ const sourceFiles = {
 
 const outputPath = path.join(mainDemoRoot, 'generatedCodeSources.ts');
 
-async function main() {
+async function buildOutput() {
   const entries = await Promise.all(
     Object.entries(sourceFiles).map(async ([exportName, filePath]) => {
       const content = await fs.readFile(filePath, 'utf8');
@@ -41,7 +41,30 @@ async function main() {
     .join('\n')
     .trimEnd();
 
-  await fs.writeFile(outputPath, `${body}\n`, 'utf8');
+  return `${body}\n`;
+}
+
+async function main() {
+  // `--check` regenerates in-memory and fails if the committed artifact drifted
+  // from its source files (so CI can guard against forgetting to regenerate),
+  // without writing anything.
+  const check = process.argv.includes('--check');
+  const output = await buildOutput();
+
+  if (!check) {
+    await fs.writeFile(outputPath, output, 'utf8');
+    return;
+  }
+
+  const current = await fs.readFile(outputPath, 'utf8').catch(() => '');
+  if (current !== output) {
+    const relativeOutput = path.relative(docsRoot, outputPath).replaceAll(path.sep, '/');
+    console.error(
+      `${relativeOutput} is out of date. Run ` +
+        '`node docs/scripts/generateChatOverviewCodeSources.mjs` and commit the result.',
+    );
+    process.exitCode = 1;
+  }
 }
 
 main().catch((error) => {
