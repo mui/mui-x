@@ -13,6 +13,9 @@ function isRefLike(value: unknown): value is React.Ref<unknown> {
 }
 
 function setRef(ref: React.Ref<unknown>, value: unknown) {
+  if (ref == null) {
+    return;
+  }
   if (typeof ref === 'function') {
     ref(value);
     return;
@@ -21,8 +24,8 @@ function setRef(ref: React.Ref<unknown>, value: unknown) {
   (ref as React.MutableRefObject<unknown>).current = value;
 }
 
-function mergeRefs(baseRef: React.Ref<unknown> | undefined, consumerRef: React.Ref<unknown>) {
-  if (baseRef === undefined) {
+function mergeRefs(baseRef: React.Ref<unknown> | undefined | null, consumerRef: React.Ref<unknown>) {
+  if (baseRef == null) {
     return consumerRef;
   }
 
@@ -79,8 +82,12 @@ function mergeResolvedSlotProps(base: AnySlotProps, consumer: AnySlotProps): Any
       result.sx = mergeSx(base.sx, value);
     } else if (key === 'style') {
       result.style = { ...(base.style ?? {}), ...(value ?? {}) };
-    } else if (key === 'ref' && isRefLike(value)) {
-      result.ref = mergeRefs(base.ref, value);
+    } else if (key === 'ref') {
+      // Only compose when the consumer ref is ref-like; a nullish/invalid ref
+      // keeps `base.ref` rather than clobbering the internal ref with `null`.
+      if (isRefLike(value)) {
+        result.ref = mergeRefs(base.ref, value);
+      }
     } else {
       result[key] = value;
     }

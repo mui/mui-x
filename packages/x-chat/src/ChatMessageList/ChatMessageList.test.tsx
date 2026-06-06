@@ -95,6 +95,32 @@ describe('ChatMessageList', () => {
     expect(document.querySelector('.MuiChatMessage-content')).not.toBe(null);
   });
 
+  it('preserves Material list slot defaults when list slots are explicitly undefined', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello' }] }]}
+      >
+        <ChatConversation>
+          <ChatMessageList
+            slots={
+              {
+                messageList: undefined,
+                messageListScroller: undefined,
+                messageListContent: undefined,
+              } as any
+            }
+          />
+        </ChatConversation>
+      </ChatRoot>,
+    );
+
+    expect(document.querySelector('.MuiChatMessageList-root')).not.toBe(null);
+    expect(document.querySelector('.MuiChatMessageList-scroller')).not.toBe(null);
+    expect(document.querySelector('.MuiChatMessageList-content')).not.toBe(null);
+    expect(document.querySelector('style[href="base-ui-disable-scrollbar"]')).toBe(null);
+  });
+
   it('groups against the rendered items subset, not the full conversation', () => {
     render(
       <ChatRoot

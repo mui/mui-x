@@ -550,6 +550,8 @@ export const ConversationListRoot = markChatLayoutPane(
             moveFocus(currentIndex - pageSize);
             return;
           case 'Enter':
+          case ' ':
+          case 'Spacebar':
             event.preventDefault();
             void setActiveConversation(id);
             return;

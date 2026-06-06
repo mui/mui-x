@@ -166,8 +166,11 @@ const ChatConfirmation = React.forwardRef<HTMLDivElement, ChatConfirmationProps>
         ref={ref}
         className={clsx(classes.root, className)}
         sx={sx}
-        role="alertdialog"
-        aria-describedby={messageId}
+        // Inline, non-modal confirmation card: a labelled `group` (named by its
+        // message) rather than `alertdialog`, which would promise modal focus
+        // management this card neither provides nor needs.
+        role="group"
+        aria-labelledby={messageId}
         {...other}
       >
         <ChatConfirmationIcon className={classes.icon}>

@@ -13,7 +13,12 @@ export interface ChatSlotsContextValue {
   slotProps: ChatBoxSlotProps;
 }
 
-const EMPTY_SLOTS: ChatSlotsContextValue = { slots: {}, slotProps: {} };
+// Frozen so the shared singleton returned to every out-of-provider consumer can
+// never be mutated into a poisoned default for the others.
+const EMPTY_SLOTS: ChatSlotsContextValue = Object.freeze({
+  slots: Object.freeze({}),
+  slotProps: Object.freeze({}),
+});
 
 /**
  * Distributes the flat `ChatBox` slots/slotProps to the message-rendering
@@ -48,13 +53,4 @@ export function ChatSlotsProvider(props: ChatSlotsProviderProps) {
  */
 export function useChatSlots(): ChatSlotsContextValue {
   return React.useContext(ChatSlotsContext) ?? EMPTY_SLOTS;
-}
-
-/**
- * Whether a `ChatSlotsProvider` ancestor exists. `ChatMessageList` uses this to
- * self-seed a provider from its own props only when standalone (so it does not
- * shadow ChatBox's provider when nested).
- */
-export function useHasChatSlotsProvider(): boolean {
-  return React.useContext(ChatSlotsContext) != null;
 }

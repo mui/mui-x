@@ -194,10 +194,10 @@ const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListP
         {...other}
         renderItem={renderItem}
         slots={{
+          ...listSlots,
           messageList: listSlots.messageList ?? ChatMessageListStyled,
           messageListScroller: listSlots.messageListScroller ?? ChatMessageListScrollerStyled,
           messageListContent: listSlots.messageListContent ?? ChatMessageListContentStyled,
-          ...listSlots,
         }}
         slotProps={{
           ...listSlotProps,

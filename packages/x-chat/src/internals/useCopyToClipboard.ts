@@ -12,6 +12,9 @@ export function useCopyToClipboard(resetMs: number = 2000): UseCopyToClipboardRe
   const [copyState, setCopyState] = React.useState<CopyState>('idle');
   const resetTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const mountedRef = React.useRef(true);
+  // Monotonic token so a late-resolving write from a superseded `copy()` call
+  // cannot overwrite the state set by a newer one.
+  const copyTokenRef = React.useRef(0);
 
   React.useEffect(() => {
     // Reset on (re)mount: StrictMode and remounts run the cleanup below before
@@ -56,14 +59,30 @@ export function useCopyToClipboard(resetMs: number = 2000): UseCopyToClipboardRe
         return;
       }
 
-      navigator.clipboard.writeText(value).then(
-        () => {
-          setTemporaryState('copied');
-        },
-        () => {
+      copyTokenRef.current += 1;
+      const token = copyTokenRef.current;
+      const isCurrent = () => token === copyTokenRef.current;
+
+      try {
+        // `writeText` can reject (permission denied) or, in some engines, throw
+        // synchronously (document not focused) — handle both as 'error'.
+        navigator.clipboard.writeText(value).then(
+          () => {
+            if (isCurrent()) {
+              setTemporaryState('copied');
+            }
+          },
+          () => {
+            if (isCurrent()) {
+              setTemporaryState('error');
+            }
+          },
+        );
+      } catch {
+        if (isCurrent()) {
           setTemporaryState('error');
-        },
-      );
+        }
+      }
     },
     [setTemporaryState],
   );

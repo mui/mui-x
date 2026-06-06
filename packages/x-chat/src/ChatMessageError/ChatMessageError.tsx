@@ -21,14 +21,19 @@ import {
 
 const useThemeProps = createUseThemeProps('MuiChatMessageError');
 
-function getErrorCardBackground(
+function getErrorCardBackgroundStyles(
   theme: Theme & { vars?: any; alpha: (color: string, value: number) => string },
 ) {
-  const opacity = theme.palette.mode === 'dark' ? 0.16 : 0.08;
-  // `theme.alpha` resolves against `palette.error.main` in both the static and
-  // CSS-vars themes, so it stays SSR-safe without a hand-rolled `rgba(... / x)`
-  // channel fallback (and avoids the imported `alpha()` CSS-vars hazard).
-  return theme.alpha(theme.palette.error.main, opacity);
+  // Scheme-scoped via `applyStyles` so the dark-mode tint (0.16) actually applies
+  // under runtime CSS-vars color-scheme switching, instead of the mode being read
+  // once at styled time and baked from the default scheme. `theme.alpha` keeps the
+  // color SSR-safe (and avoids the imported `alpha()` CSS-vars hazard).
+  return {
+    backgroundColor: theme.alpha(theme.palette.error.main, 0.08),
+    ...theme.applyStyles('dark', {
+      backgroundColor: theme.alpha(theme.palette.error.main, 0.16),
+    }),
+  };
 }
 
 export interface ChatMessageErrorProps extends MessageErrorProps {
@@ -55,7 +60,7 @@ const ChatMessageErrorRoot = styled('div', {
   border: `1px solid ${(theme.vars || theme).palette.error.main}`,
   borderRadius: theme.shape.borderRadius,
   color: (theme.vars || theme).palette.error.main,
-  backgroundColor: getErrorCardBackground(theme),
+  ...getErrorCardBackgroundStyles(theme),
   fontSize: theme.typography.body2.fontSize,
   lineHeight: theme.typography.body2.lineHeight,
   ...(ownerState?.isOwnMessage && {
@@ -110,8 +115,9 @@ const ChatMessageErrorSlot = React.forwardRef<HTMLDivElement, any>(
         ref={ref}
         ownerState={ownerState}
         className={className}
+        // `role="alert"` already implies `aria-live="assertive"`; no explicit
+        // live region needed.
         role="alert"
-        aria-live="assertive"
         {...other}
       >
         <ChatMessageErrorMessage className={messageClassName}>
@@ -142,6 +148,7 @@ const ChatMessageError = React.forwardRef<HTMLDivElement, ChatMessageErrorProps>
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageError' });
     const { slots, slotProps, className, classes: classesProp, sx, ...other } = props;
     const classes = useChatMessageErrorUtilityClasses(classesProp);
+    const hasCustomRoot = Boolean(slots?.root);
 
     return (
       <MessageError
@@ -157,8 +164,15 @@ const ChatMessageError = React.forwardRef<HTMLDivElement, ChatMessageErrorProps>
             {
               className: clsx(classes.root, className),
               sx,
-              messageClassName: classes.message,
-              retryButtonClassName: classes.retryButton,
+              // Private sub-element classNames only reach the built-in slot; a
+              // custom `slots.root` shouldn't receive (and possibly leak to the
+              // DOM) these internal props.
+              ...(hasCustomRoot
+                ? {}
+                : {
+                    messageClassName: classes.message,
+                    retryButtonClassName: classes.retryButton,
+                  }),
             },
             slotProps?.root,
           ) as any,

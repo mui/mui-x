@@ -199,15 +199,16 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
     // Render priority:
     // 1. Explicit `children` (legacy: caller provided their own composition)
     // 2. Inner ChatMessage instance with the mapped short slot map.
-    const resolvedChildren =
-      children ??
-      (messageId ? (
+    let resolvedChildren = children;
+    if (children === undefined) {
+      resolvedChildren = messageId ? (
         <ChatMessage
           messageId={messageId}
           slots={innerMessageSlots}
           slotProps={innerMessageSlotProps}
         />
-      ) : null);
+      ) : null;
+    }
 
     return (
       <MessageGroup

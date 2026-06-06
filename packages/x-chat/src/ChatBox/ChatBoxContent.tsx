@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useChat, useMessageIds, useConversations } from '@mui/x-chat-headless';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -53,7 +54,12 @@ const DEFAULT_SPLIT_BREAKPOINT = 450;
 function useContainerWidth(element: HTMLElement | null): number | null {
   const [width, setWidth] = React.useState<number | null>(null);
 
-  React.useEffect(() => {
+  // Layout effect (SSR-safe via useEnhancedEffect) so the initial measurement is
+  // committed before paint: a narrow container reflects its overlay/split mode on
+  // the first visible frame instead of flashing the wide 'standard' layout. The
+  // first render still resolves to 'standard' (width null) on both server and
+  // client, so hydration stays consistent.
+  useEnhancedEffect(() => {
     if (!element) {
       setWidth(null);
       return undefined;
@@ -223,6 +229,9 @@ const ChatBoxConversationOverlayPanel = styled('div', {
   height: '100%',
   maxWidth: '100%',
   pointerEvents: 'auto',
+  // Keep scroll momentum inside the overlay; the in-box overlay (unlike the old
+  // Modal-based Drawer) has no document scroll lock, so contain overscroll.
+  overscrollBehavior: 'contain',
 });
 
 // A minimal bar that carries only the back/menu navigation affordances when the
@@ -670,8 +679,6 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
     return 'standard';
   }, [containerWidth, layoutMode, normalizedBreakpoints]);
   const isNarrow = resolvedLayoutMode !== 'standard';
-  const isFullWidthDrawer =
-    containerWidth == null ? false : containerWidth < normalizedBreakpoints.split;
   const isMobileSplitView = resolvedLayoutMode === 'split';
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const drawerCloseButtonRef = React.useRef<HTMLButtonElement | null>(null);
@@ -904,9 +911,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
               onKeyDown={handleDrawerKeyDown}
               tabIndex={-1}
               style={{
-                width: isFullWidthDrawer
-                  ? '100%'
-                  : 'min(var(--ChatBox-conversationListWidth, 260px), 100%)',
+                width: 'min(var(--ChatBox-conversationListWidth, 260px), 100%)',
               }}
             >
               <ChatBoxDrawerContent>

@@ -72,6 +72,9 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
   // their boundary (a new calendar day, or the first unread message derived from
   // the active conversation's `unreadCount`/`readState`), returning null otherwise.
   // `null` hides the slot entirely; `undefined` falls back to the default component.
+  // A custom slot must therefore be a component (it receives `messageId`/`index`/
+  // `items`); a raw host element would both fail to self-suppress and leak those as
+  // DOM attributes.
   const DateDividerComponent = (slots.dateDivider ?? ChatDateDivider) as React.ElementType;
   const UnreadMarkerComponent = (slots.unreadMarker ?? ChatUnreadMarker) as React.ElementType;
 

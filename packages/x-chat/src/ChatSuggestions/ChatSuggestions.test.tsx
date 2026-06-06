@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/internal-test-utils';
-import { describe, expect, it } from 'vitest';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
 
@@ -69,5 +69,68 @@ describe('ChatSuggestions', () => {
       </ChatBox>,
     );
     expect(document.querySelector('.custom-suggestions')).not.toBe(null);
+  });
+
+  it('composes object-form suggestion item onClick with selection and auto-submit', async () => {
+    const handleItemClick = vi.fn();
+    const sendMessage = vi.fn<ChatAdapter['sendMessage']>(async () => {
+      return new ReadableStream({
+        start(c) {
+          c.close();
+        },
+      });
+    });
+
+    render(
+      <ChatBox
+        adapter={createAdapter({ sendMessage })}
+        suggestions={['Run diagnostics']}
+        suggestionsAutoSubmit
+        slotProps={{
+          suggestions: {
+            slotProps: {
+              item: { onClick: handleItemClick },
+            },
+          },
+        }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Run diagnostics' }));
+
+    expect(handleItemClick).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(sendMessage).toHaveBeenCalledTimes(1);
+    });
+    expect(sendMessage.mock.calls[0]![0].message.parts).toEqual([
+      { type: 'text', text: 'Run diagnostics' },
+    ]);
+  });
+
+  it('composes callback-form suggestion item onClick with composer prefill', () => {
+    const handleItemClick = vi.fn();
+
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        suggestions={['Explain slots']}
+        slotProps={{
+          suggestions: {
+            slotProps: {
+              item: () => ({ onClick: handleItemClick }),
+            },
+          },
+        }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Explain slots' }));
+
+    expect(handleItemClick).toHaveBeenCalledTimes(1);
+    expect((screen.getByRole('textbox') as HTMLTextAreaElement).value).toBe('Explain slots');
   });
 });

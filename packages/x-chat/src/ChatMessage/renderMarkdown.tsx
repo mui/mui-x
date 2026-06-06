@@ -7,7 +7,9 @@ import { ChatCodeBlock } from '../ChatCodeBlock';
 // Inline parser — bold, italic, inline-code, links
 // ---------------------------------------------------------------------------
 
-const SAFE_URL_PROTOCOLS = ['http:', 'https:', 'mailto:'];
+// Kept in sync with the headless `safeUri` allow-list so links behave the same
+// across markdown and source/file parts.
+const SAFE_URL_PROTOCOLS = ['http:', 'https:', 'mailto:', 'tel:'];
 
 function sanitizeUrl(url: string): string {
   try {
@@ -16,8 +18,10 @@ function sanitizeUrl(url: string): string {
       return url;
     }
   } catch {
-    // Relative URLs (no protocol) are allowed through as-is
-    if (!url.includes(':')) {
+    // Relative URLs (no protocol) are allowed through as-is, but reject
+    // protocol-relative forms (`//host`, `\\host`, `/\host`) which resolve to an
+    // external origin despite carrying no explicit scheme.
+    if (!url.includes(':') && !/^[/\\]{2}/.test(url)) {
       return url;
     }
   }
@@ -102,7 +106,11 @@ function createLinkInlinePattern({ image }: { image: boolean }): InlinePattern {
         }
 
         const label = text.slice(labelStart, labelEnd);
-        const url = text.slice(urlStart, urlEnd);
+        const rawDestination = text.slice(urlStart, urlEnd).trim();
+        // Strip an optional CommonMark title (`url "title"` / `url 'title'`) so
+        // it is not folded into the href/src.
+        const titleMatch = /\s+(["']).*\1\s*$/.exec(rawDestination);
+        const url = titleMatch ? rawDestination.slice(0, titleMatch.index) : rawDestination;
 
         return {
           index: startIndex,

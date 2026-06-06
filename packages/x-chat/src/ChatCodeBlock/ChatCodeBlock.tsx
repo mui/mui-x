@@ -154,6 +154,12 @@ const ChatCodeBlock = React.forwardRef<HTMLDivElement, ChatCodeBlockProps>(
     const { copyState, copy } = useCopyToClipboard();
 
     const handleCopy = () => copy(children);
+    let copyButtonLabel = 'Copy';
+    if (copyState === 'copied') {
+      copyButtonLabel = 'Copied!';
+    } else if (copyState === 'error') {
+      copyButtonLabel = 'Copy failed';
+    }
 
     return (
       <ChatCodeBlockRoot ref={ref} className={clsx(classes.root, className)} sx={sx} {...other}>
@@ -165,7 +171,8 @@ const ChatCodeBlock = React.forwardRef<HTMLDivElement, ChatCodeBlockProps>(
             type="button"
             className={classes.copyButton}
             onClick={handleCopy}
-            title={copyState === 'copied' ? 'Copied!' : 'Copy'}
+            aria-label={copyButtonLabel}
+            title={copyButtonLabel}
           >
             {copyState === 'copied' ? <CheckIcon /> : <CopyIcon />}
           </ChatCodeBlockCopyButton>

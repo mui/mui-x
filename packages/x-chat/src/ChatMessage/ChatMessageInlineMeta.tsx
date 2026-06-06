@@ -5,6 +5,8 @@ import { MessageMeta, type MessageMetaProps } from '@mui/x-chat-headless';
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { styled } from '../internals/zero-styled';
+import { mergeSlotProps } from '../internals/mergeSlotProps';
+import { chatMessageClasses } from './chatMessageClasses';
 
 /**
  * Invisible inline element that reserves space for the absolutely-positioned meta.
@@ -106,7 +108,10 @@ function ChatMessageInlineMeta(props: ChatMessageInlineMetaProps) {
 
   return (
     <React.Fragment>
-      <ChatMessageInlineMetaSpacer aria-hidden="true" />
+      <ChatMessageInlineMetaSpacer
+        className={chatMessageClasses.inlineMetaSpacer}
+        aria-hidden="true"
+      />
       <MessageMeta
         {...other}
         slots={{
@@ -114,7 +119,13 @@ function ChatMessageInlineMeta(props: ChatMessageInlineMetaProps) {
           status: InlineStatusSlot,
           ...slots,
         }}
-        slotProps={slotProps}
+        slotProps={{
+          ...slotProps,
+          meta: mergeSlotProps(
+            { className: chatMessageClasses.inlineMeta },
+            slotProps?.meta,
+          ) as any,
+        }}
       />
     </React.Fragment>
   );

@@ -86,6 +86,44 @@ describe('renderMarkdown', () => {
       expect(document.querySelector('a')).toBeNull();
     });
 
+    it('neutralizes a javascript: URL in a link', () => {
+      render(<React.Fragment>{renderMarkdown('[x](javascript:alert(1))')}</React.Fragment>);
+      expect(document.querySelector('a')!.getAttribute('href')).toBe('#');
+    });
+
+    it('neutralizes javascript: and data: URLs in images', () => {
+      render(<React.Fragment>{renderMarkdown('![x](javascript:alert(1))')}</React.Fragment>);
+      expect(document.querySelector('img')!.getAttribute('src')).toBe('#');
+    });
+
+    it('neutralizes a data: URL in an image', () => {
+      render(<React.Fragment>{renderMarkdown('![x](data:text/html,hi)')}</React.Fragment>);
+      expect(document.querySelector('img')!.getAttribute('src')).toBe('#');
+    });
+
+    it('rejects protocol-relative // URLs (treated as external)', () => {
+      render(<React.Fragment>{renderMarkdown('[x](//evil.example.com)')}</React.Fragment>);
+      expect(document.querySelector('a')!.getAttribute('href')).toBe('#');
+    });
+
+    it('strips an optional CommonMark title from an image src', () => {
+      render(
+        <React.Fragment>
+          {renderMarkdown('![alt](https://example.com/x.png "a title")')}
+        </React.Fragment>,
+      );
+      expect(document.querySelector('img')!.getAttribute('src')).toBe('https://example.com/x.png');
+    });
+
+    it('strips an optional CommonMark title from a link href', () => {
+      render(
+        <React.Fragment>{renderMarkdown('[label](https://example.com "t")')}</React.Fragment>,
+      );
+      const anchor = document.querySelector('a')!;
+      expect(anchor.getAttribute('href')).toBe('https://example.com');
+      expect(anchor.textContent).toBe('label');
+    });
+
     it('renders [^1] footnote as <sup>', () => {
       render(<React.Fragment>{renderMarkdown('See here[^1]')}</React.Fragment>);
       const sup = document.querySelector('sup');

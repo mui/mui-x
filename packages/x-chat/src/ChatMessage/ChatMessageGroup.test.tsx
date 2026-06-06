@@ -164,6 +164,21 @@ describe('ChatMessageGroup', () => {
     expect(document.querySelector('section.MuiChatMessage-root')).not.toBe(null);
   });
 
+  it('treats children={null} as explicit empty content', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[{ id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hidden' }] }]}
+      >
+        <ChatMessageGroup messageId="m1">{null}</ChatMessageGroup>
+      </ChatRoot>,
+    );
+
+    expect(document.querySelector('.MuiChatMessage-group')).not.toBe(null);
+    expect(document.querySelector('.MuiChatMessage-root')).toBe(null);
+    expect(screen.queryByText('Hidden')).toBe(null);
+  });
+
   it('uses slots.messageGroup as the group wrapper, not the whole row', () => {
     render(
       <ChatBox

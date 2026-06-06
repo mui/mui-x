@@ -23,13 +23,15 @@ describe('ChatConfirmation', () => {
     expect(screen.getByRole('button', { name: 'Cancel' })).not.toBe(null);
   });
 
-  it('exposes alertdialog semantics and describes the dialog with the message', () => {
+  it('exposes a labelled group named by its message', () => {
     render(<ChatConfirmation message="Are you sure?" />);
-    const dialog = screen.getByRole('alertdialog');
-    const descriptionId = dialog.getAttribute('aria-describedby');
+    // Inline confirmation card: a `group` named by the message, not an
+    // `alertdialog` (which would imply modal focus management).
+    const group = screen.getByRole('group', { name: 'Are you sure?' });
 
-    expect(descriptionId).not.toBe(null);
-    expect(document.getElementById(descriptionId!)!.textContent).toBe('Are you sure?');
+    expect(group).not.toBe(null);
+    const labelId = group.getAttribute('aria-labelledby');
+    expect(document.getElementById(labelId!)!.textContent).toBe('Are you sure?');
   });
 
   it('renders custom confirmLabel and cancelLabel', () => {
