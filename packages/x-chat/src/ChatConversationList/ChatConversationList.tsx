@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import {
   ConversationListRoot,
+  markChatLayoutPane,
   ConversationListItemAvatar,
   ConversationListItemContent,
   ConversationListTitle,
@@ -817,5 +818,12 @@ ChatConversationList.propTypes = {
    */
   variant: PropTypes.oneOf(['compact', 'default']),
 } as any;
+
+// Mirror the headless `ConversationListRoot` pane marker on the Material wrapper so
+// `ChatLayout` assigns it to the conversations pane (the symbol lives on the headless
+// primitive, not this wrapper). Without it, a split layout with the list visible and
+// no active conversation — a single unmarked child — falls back to the thread pane,
+// skipping the `conversationsPane` slot/styles.
+markChatLayoutPane(ChatConversationList, 'conversations');
 
 export { ChatConversationList };

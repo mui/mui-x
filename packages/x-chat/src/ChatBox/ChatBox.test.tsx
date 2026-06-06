@@ -852,6 +852,33 @@ describe('ChatBox', () => {
       });
     });
 
+    it('places the split conversation list in the conversations pane when no conversation is active', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          layoutMode="split"
+          initialConversations={conversations}
+          features={conversationListFeatures}
+          sx={{ height: 480 }}
+          slotProps={{
+            conversationsPane: { 'data-testid': 'conversations-pane' } as any,
+            threadPane: { 'data-testid': 'thread-pane' } as any,
+          }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      // Split layout, list visible, no active conversation → the list is the only
+      // child of ChatLayout. It must be assigned to the conversations pane (the
+      // Material wrapper carries the pane marker), not fall back to the thread pane.
+      const conversationsPane = screen.getByTestId('conversations-pane');
+      const listbox = screen.getByRole('listbox');
+      expect(conversationsPane.contains(listbox)).toBe(true);
+      // The thread pane has no child here, so it isn't rendered as a conversations host.
+      expect(screen.queryByTestId('thread-pane')).toBe(null);
+    });
+
     it('stretches the thread pane to full width in narrow mode', async () => {
       render(
         <ChatBox

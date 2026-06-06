@@ -6,6 +6,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import {
   ChatLayout,
+  markChatLayoutPane,
   useChatLocaleText,
   useChatVariant,
   type ChatSuggestion,
@@ -194,6 +195,11 @@ const ChatBoxConversationOverlay = styled('div', {
   zIndex: theme.zIndex.modal,
   pointerEvents: 'none',
 }));
+// The narrow overlay is the conversation-list drawer, so it belongs to the
+// conversations pane. Marking it keeps ChatLayout's pane resolution unambiguous —
+// once any sibling (the thread view) is marked, every direct child must be marked
+// or ChatLayout warns about a mixed/undeterminable set.
+markChatLayoutPane(ChatBoxConversationOverlay, 'conversations');
 
 const ChatBoxConversationOverlayBackdrop = styled('div', {
   name: 'MuiChatBox',
