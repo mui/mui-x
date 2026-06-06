@@ -1132,7 +1132,18 @@ const sourceDocumentPartSlots = {
 const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentProps>(
   function ChatMessageContent(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageContent' });
-    const { slots, slotProps, className, partProps: userPartProps, ...other } = props;
+    // `classes` is intentionally not a prop on this sub-part (it shares the
+    // `MuiChatMessage-*` namespace owned by `ChatMessage`). Drop a JS/theme-injected
+    // `classes` so it can't leak onto the DOM slot via `...other`.
+    const {
+      slots,
+      slotProps,
+      className,
+      partProps: userPartProps,
+      classes: classesProp,
+      ...other
+    } = props as ChatMessageContentProps & { classes?: unknown };
+    void classesProp;
     const classes = useChatMessageUtilityClasses(undefined);
 
     return (

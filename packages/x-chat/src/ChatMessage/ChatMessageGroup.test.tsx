@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
-import { ChatRoot, type ChatAdapter } from '@mui/x-chat-headless';
+import { ChatRoot, createTimeWindowGroupKey, type ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
 import { ChatMessageGroup } from './ChatMessageGroup';
 
@@ -181,5 +181,52 @@ describe('ChatMessageGroup', () => {
     expect(group).not.toBe(null);
     expect(group?.querySelector('.MuiChatMessage-root')).not.toBe(null);
     expect(screen.getByText('Body text')).not.toBe(null);
+  });
+
+  it('forwards slotProps.messageGroup.groupKey to the headless MessageGroup', () => {
+    const farApartSameAuthor = [
+      {
+        id: 'm1',
+        role: 'assistant' as const,
+        status: 'sent' as const,
+        author: { id: 'bot' },
+        createdAt: '2026-03-14T10:00:00.000Z',
+        parts: [{ type: 'text' as const, text: 'one' }],
+      },
+      {
+        id: 'm2',
+        role: 'assistant' as const,
+        status: 'sent' as const,
+        author: { id: 'bot' },
+        createdAt: '2026-03-14T12:00:00.000Z',
+        parts: [{ type: 'text' as const, text: 'two' }],
+      },
+    ];
+    const members = [{ id: 'bot', displayName: 'Bot', avatarUrl: 'https://example.com/bot.png' }];
+
+    // Default author-based grouping: the two same-author messages form one group,
+    // so the follow-up's avatar is hidden — a single avatar renders.
+    const { unmount } = render(
+      <ChatBox adapter={createAdapter()} members={members} initialMessages={farApartSameAuthor}>
+        {null}
+      </ChatBox>,
+    );
+    expect(screen.getAllByRole('img')).to.have.length(1);
+    unmount();
+
+    // A time-window `groupKey` passed via `slotProps.messageGroup` must reach the
+    // headless MessageGroup (not leak onto the wrapper): the messages are 2h apart,
+    // so they fall into separate groups and both render their avatar.
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        members={members}
+        initialMessages={farApartSameAuthor}
+        slotProps={{ messageGroup: { groupKey: createTimeWindowGroupKey(60_000) } }}
+      >
+        {null}
+      </ChatBox>,
+    );
+    expect(screen.getAllByRole('img')).to.have.length(2);
   });
 });

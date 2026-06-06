@@ -127,8 +127,34 @@ const ChatMessageGroupTimestampStyled = styled('span', {
 const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>(
   function ChatMessageGroup(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageGroup' });
-    const { slots, slotProps, className, sx, children, messageId, ...other } = props;
+    const {
+      slots,
+      slotProps,
+      className,
+      sx,
+      children,
+      messageId,
+      classes: classesProp,
+      ...other
+    } = props as ChatMessageGroupProps & { classes?: unknown };
+    void classesProp;
     const classes = useChatMessageUtilityClasses(undefined);
+
+    // `slotProps.messageGroup` is typed `Partial<ChatMessageGroupProps>`, so it can
+    // carry MessageGroup-primitive props (notably `groupKey` for time-window
+    // grouping) alongside wrapper styling. Route the primitives to the headless
+    // `<MessageGroup>` and keep only wrapper props (className/sx/DOM) on the group
+    // slot — otherwise `groupKey` is ignored and these non-DOM props leak onto the
+    // wrapper element. Row-structural values (index/items/messageId) from the props
+    // win, so the slotProps copies act only as a fallback.
+    const {
+      groupKey: messageGroupGroupKey,
+      index: messageGroupIndex,
+      items: messageGroupItems,
+      messageId: messageGroupMessageIdProp,
+      ...messageGroupWrapperProps
+    } = (slotProps?.messageGroup ?? {}) as Partial<ChatMessageGroupProps>;
+    void messageGroupMessageIdProp;
 
     // Map the flat `message*` keys onto the inner `ChatMessage`'s short local
     // slots. `messageRoot` swaps ChatMessage's own styled root — it is applied by
@@ -186,6 +212,9 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
       <MessageGroup
         ref={ref}
         messageId={messageId}
+        {...(messageGroupGroupKey !== undefined ? { groupKey: messageGroupGroupKey } : {})}
+        {...(messageGroupIndex !== undefined ? { index: messageGroupIndex } : {})}
+        {...(messageGroupItems !== undefined ? { items: messageGroupItems } : {})}
         {...other}
         slots={{
           group: (slots?.messageGroup ?? ChatMessageGroupStyled) as React.ElementType,
@@ -196,7 +225,7 @@ const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>
           group: {
             className: clsx(classes.group, !hasAvatar && classes.noAvatar, className),
             sx,
-            ...(slotProps?.messageGroup ?? {}),
+            ...messageGroupWrapperProps,
           } as any,
           authorName: slotProps?.messageAuthorName as any,
         }}

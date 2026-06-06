@@ -51,7 +51,17 @@ const ChatDateDividerLabelStyled = styled('div', {
 const ChatDateDivider = React.forwardRef<HTMLDivElement, ChatDateDividerProps>(
   function ChatDateDivider(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatDateDivider' });
-    const { slots, slotProps, className, sx, ...other } = props;
+    // Drop a JS/theme-injected `classes` (not a prop on this sub-part — it shares
+    // the `MuiChatMessage-*` namespace) so it can't leak onto the DOM via `...other`.
+    const {
+      slots,
+      slotProps,
+      className,
+      sx,
+      classes: classesProp,
+      ...other
+    } = props as ChatDateDividerProps & { classes?: unknown };
+    void classesProp;
     const classes = useChatMessageUtilityClasses(undefined);
 
     return (

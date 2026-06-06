@@ -48,7 +48,16 @@ const ChatMessageAvatarStyled = styled('div', {
 const ChatMessageAvatar = React.forwardRef<HTMLDivElement, ChatMessageAvatarProps>(
   function ChatMessageAvatar(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageAvatar' });
-    const { slots, slotProps, className, ...other } = props;
+    // Drop a JS/theme-injected `classes` (not a prop on this sub-part — it shares
+    // the `MuiChatMessage-*` namespace) so it can't leak onto the DOM via `...other`.
+    const {
+      slots,
+      slotProps,
+      className,
+      classes: classesProp,
+      ...other
+    } = props as ChatMessageAvatarProps & { classes?: unknown };
+    void classesProp;
     const classes = useChatMessageUtilityClasses(undefined);
 
     return (

@@ -88,7 +88,17 @@ const ChatMessageStatusSlot = React.forwardRef<HTMLSpanElement, any>(function Ch
 const ChatMessageMeta = React.forwardRef<HTMLDivElement, ChatMessageMetaProps>(
   function ChatMessageMeta(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageMeta' });
-    const { slots, slotProps, className, sx, ...other } = props;
+    // Drop a JS/theme-injected `classes` (not a prop on this sub-part — it shares
+    // the `MuiChatMessage-*` namespace) so it can't leak onto the DOM via `...other`.
+    const {
+      slots,
+      slotProps,
+      className,
+      sx,
+      classes: classesProp,
+      ...other
+    } = props as ChatMessageMetaProps & { classes?: unknown };
+    void classesProp;
     const classes = useChatMessageUtilityClasses(undefined);
 
     return (
