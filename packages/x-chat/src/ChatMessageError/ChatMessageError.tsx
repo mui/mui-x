@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import Button from '@mui/material/Button';
-import { alpha } from '@mui/material/styles';
 import {
   MessageError,
   type MessageErrorProps,
@@ -22,12 +21,14 @@ import {
 
 const useThemeProps = createUseThemeProps('MuiChatMessageError');
 
-function getErrorCardBackground(theme: Theme & { vars?: any }) {
+function getErrorCardBackground(
+  theme: Theme & { vars?: any; alpha: (color: string, value: number) => string },
+) {
   const opacity = theme.palette.mode === 'dark' ? 0.16 : 0.08;
-  if (theme.vars) {
-    return `rgba(${theme.vars.palette.error.mainChannel} / ${opacity})`;
-  }
-  return alpha(theme.palette.error.main, opacity);
+  // `theme.alpha` resolves against `palette.error.main` in both the static and
+  // CSS-vars themes, so it stays SSR-safe without a hand-rolled `rgba(... / x)`
+  // channel fallback (and avoids the imported `alpha()` CSS-vars hazard).
+  return theme.alpha(theme.palette.error.main, opacity);
 }
 
 export interface ChatMessageErrorProps extends MessageErrorProps {
