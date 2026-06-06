@@ -8,16 +8,12 @@ import type {
   GridColumnRawLookup,
   GridColumnsInitialState,
 } from './gridColumnsInterfaces';
-import {
-  DEFAULT_GRID_COL_TYPE_KEY,
-  GRID_STRING_COL_DEF,
-  getGridDefaultColumnTypes,
-} from '../../../colDef';
+import { DEFAULT_GRID_COL_TYPE_KEY, getGridDefaultColumnTypes } from '../../../colDef';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
-import { clamp } from '../../../utils/utils';
+import { clamp, isNumber } from '../../../utils/utils';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
 import type { GridRowEntry } from '../../../models/gridRows';
 import { gridDensityFactorSelector } from '../density/densitySelector';
@@ -30,6 +26,9 @@ export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'f
 export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];
 
 const COLUMN_TYPES = getGridDefaultColumnTypes();
+
+const resolveColumnDimension = (value: number | undefined, fallback: number) =>
+  isNumber(value) ? value : fallback;
 
 /**
  * Computes width for flex columns.
@@ -158,7 +157,6 @@ export function computeFlexColumnsWidth({
 /**
  * Compute the `computedWidth` (ie: the width the column should have during rendering) based on the `width` / `flex` / `minWidth` / `maxWidth` properties of `GridColDef`.
  * The columns already have been merged with there `type` default values for `minWidth`, `maxWidth` and `width`, thus the `!` for those properties below.
- * TODO: Unit test this function in depth and only keep basic cases for the whole grid testing.
  * TODO: Improve the `GridColDef` typing to reflect the fact that `minWidth` / `maxWidth` and `width` can't be null after the merge with the `type` default values.
  */
 export const hydrateColumnsWidth = (
@@ -183,10 +181,12 @@ export const hydrateColumnsWidth = (
         totalFlexUnits += column.flex;
         isFlex = true;
       } else {
+        const defaultColumnTypeDef = getDefaultColTypeDef(column.type);
+
         computedWidth = clamp(
-          column.width || GRID_STRING_COL_DEF.width!,
-          column.minWidth || GRID_STRING_COL_DEF.minWidth!,
-          column.maxWidth || GRID_STRING_COL_DEF.maxWidth!,
+          resolveColumnDimension(column.width, defaultColumnTypeDef.width!),
+          resolveColumnDimension(column.minWidth, defaultColumnTypeDef.minWidth!),
+          resolveColumnDimension(column.maxWidth, defaultColumnTypeDef.maxWidth!),
         );
       }
 

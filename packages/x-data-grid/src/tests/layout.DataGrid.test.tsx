@@ -316,6 +316,19 @@ describe('<DataGrid /> - Layout & warnings', () => {
         });
       });
 
+      it('should allow a non-flex column to be narrower than the default minimum width', () => {
+        const rows = [{ id: 1, flag: true }];
+        const columns: GridColDef[] = [{ field: 'flag', width: 30, minWidth: 0, type: 'boolean' }];
+
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid columns={columns} rows={rows} />
+          </div>,
+        );
+
+        expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '30px' });
+      });
+
       it('should set the first column to be twice as wide as the second one', () => {
         const rows = [
           {
