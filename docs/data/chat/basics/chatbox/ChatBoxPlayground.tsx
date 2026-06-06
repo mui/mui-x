@@ -125,9 +125,11 @@ export default function ChatBoxPlayground(props: ChatBoxPlaygroundProps = {}) {
 
   // split / overlay layouts only make sense alongside the conversation list and
   // its header, so force them on (and lock the toggles) for those modes.
-  const layoutRequiresConversation = layoutMode === 'split' || layoutMode === 'overlay';
+  const layoutRequiresConversation =
+    layoutMode === 'split' || layoutMode === 'overlay';
   const effectiveConversationList = layoutRequiresConversation || conversationList;
-  const effectiveConversationHeader = layoutRequiresConversation || conversationHeader;
+  const effectiveConversationHeader =
+    layoutRequiresConversation || conversationHeader;
   const layoutLockHint = layoutRequiresConversation
     ? `Required by layoutMode="${layoutMode}".`
     : undefined;
