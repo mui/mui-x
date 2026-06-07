@@ -7,7 +7,7 @@ import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useCopyToClipboard } from '../internals/useCopyToClipboard';
 import { useChatMessageUtilityClasses } from './chatMessageClasses';
-import { renderMarkdown } from './renderMarkdown';
+import { renderStreamingMarkdown } from './renderMarkdown';
 
 // ---------------------------------------------------------------------------
 // Inline SVG icons — kept module-local to avoid an @mui/icons-material dep.
@@ -783,7 +783,14 @@ function ChatToolPartSectionContent({
   children,
   ...rest
 }: ChatToolPartSectionContentRenderProps) {
-  const text = typeof children === 'string' ? children : React.Children.toArray(children).join('');
+  // Only join string children — `React.Children.toArray(...).join('')` would turn
+  // element children into "[object Object]", copying garbage to the clipboard.
+  const text =
+    typeof children === 'string'
+      ? children
+      : React.Children.toArray(children)
+          .filter((child): child is string => typeof child === 'string')
+          .join('');
   const { copyState, copy } = useCopyToClipboard();
   let copyLabel = 'Copy to clipboard';
   if (copyState === 'copied') {
@@ -1187,7 +1194,7 @@ const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentPr
           // the Material-slot merges for the known ones.
           ...userPartProps,
           text: {
-            renderText: renderMarkdown,
+            renderText: renderStreamingMarkdown,
             ...userPartProps?.text,
           },
           // For each part type that ships a default Material `slots` map, spread the

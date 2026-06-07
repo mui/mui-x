@@ -1,303 +1,88 @@
 'use client';
 import * as React from 'react';
+import Markdown, { RuleType, type MarkdownToJSX } from 'markdown-to-jsx';
 import { normalizeMarkdownForRender } from '@mui/x-chat-headless/internals';
 import { ChatCodeBlock } from '../ChatCodeBlock';
-
-// ---------------------------------------------------------------------------
-// Inline parser — bold, italic, inline-code, links
-// ---------------------------------------------------------------------------
+import { useStreamingMarkdownRepair } from '../internals/streamingMarkdownRepair';
 
 // Kept in sync with the headless `safeUri` allow-list so links behave the same
 // across markdown and source/file parts.
 const SAFE_URL_PROTOCOLS = ['http:', 'https:', 'mailto:', 'tel:'];
 
-function sanitizeUrl(url: string): string {
+// Applied by markdown-to-jsx to every link `href` / image `src`. Returns the value
+// when safe, or `null` to drop the attribute — so a `javascript:`/`data:`/
+// protocol-relative URL (or remend's `streamdown:incomplete-link` placeholder for a
+// half-streamed link) renders as inert text rather than a navigable target.
+const sanitizer: NonNullable<MarkdownToJSX.Options['sanitizer']> = (value) => {
   try {
-    const parsed = new URL(url);
-    if (SAFE_URL_PROTOCOLS.includes(parsed.protocol)) {
-      return url;
-    }
+    const parsed = new URL(value);
+    return SAFE_URL_PROTOCOLS.includes(parsed.protocol) ? value : null;
   } catch {
-    // Relative URLs (no protocol) are allowed through as-is, but reject
-    // protocol-relative forms (`//host`, `\\host`, `/\host`) which resolve to an
-    // external origin despite carrying no explicit scheme.
-    if (!url.includes(':') && !/^[/\\]{2}/.test(url)) {
-      return url;
+    // Relative URLs (no scheme) are allowed; reject protocol-relative `//host`,
+    // which resolves to an external origin despite carrying no explicit scheme.
+    if (!value.includes(':') && !/^[/\\]{2}/.test(value)) {
+      return value;
     }
-  }
-  return '#';
-}
-
-type InlinePattern = {
-  find: (text: string) => InlineMatch | null;
-};
-
-type InlineMatch = {
-  index: number;
-  length: number;
-  render: (key: number) => React.ReactNode;
-};
-
-function createRegexInlinePattern(
-  regex: RegExp,
-  render: (match: RegExpExecArray, key: number) => React.ReactNode,
-): InlinePattern {
-  return {
-    find(text) {
-      const match = regex.exec(text);
-
-      if (!match) {
-        return null;
-      }
-
-      return {
-        index: match.index,
-        length: match[0].length,
-        render: (key) => render(match, key),
-      };
-    },
-  };
-}
-
-function findBalancedParenthesisEnd(text: string, start: number) {
-  let depth = 0;
-
-  for (let i = start; i < text.length; i += 1) {
-    const char = text[i];
-
-    if (char === '(') {
-      depth += 1;
-    } else if (char === ')') {
-      if (depth === 0) {
-        return i;
-      }
-      depth -= 1;
-    }
-  }
-
-  return -1;
-}
-
-function createLinkInlinePattern({ image }: { image: boolean }): InlinePattern {
-  return {
-    find(text) {
-      let startIndex = image ? text.indexOf('![') : text.indexOf('[');
-
-      while (startIndex !== -1) {
-        if (!image && text[startIndex - 1] === '!') {
-          startIndex = text.indexOf('[', startIndex + 1);
-          continue;
-        }
-
-        const labelStart = startIndex + (image ? 2 : 1);
-        const labelEnd = text.indexOf(']', labelStart);
-
-        if (labelEnd === -1 || text[labelEnd + 1] !== '(') {
-          startIndex = text.indexOf(image ? '![' : '[', startIndex + 1);
-          continue;
-        }
-
-        const urlStart = labelEnd + 2;
-        const urlEnd = findBalancedParenthesisEnd(text, urlStart);
-
-        if (urlEnd === -1) {
-          startIndex = text.indexOf(image ? '![' : '[', startIndex + 1);
-          continue;
-        }
-
-        const label = text.slice(labelStart, labelEnd);
-        const rawDestination = text.slice(urlStart, urlEnd).trim();
-        // Strip an optional CommonMark title (`url "title"` / `url 'title'`) so
-        // it is not folded into the href/src.
-        const titleMatch = /\s+(["']).*\1\s*$/.exec(rawDestination);
-        const url = titleMatch ? rawDestination.slice(0, titleMatch.index) : rawDestination;
-
-        return {
-          index: startIndex,
-          length: urlEnd + 1 - startIndex,
-          render: (key) =>
-            image ? (
-              <img key={key} src={sanitizeUrl(url)} alt={label} />
-            ) : (
-              <a key={key} href={sanitizeUrl(url)} target="_blank" rel="noopener noreferrer">
-                {parseInline(label)}
-              </a>
-            ),
-        };
-      }
-
-      return null;
-    },
-  };
-}
-
-const INLINE_PATTERNS: InlinePattern[] = [
-  createLinkInlinePattern({ image: true }),
-  createLinkInlinePattern({ image: false }),
-  {
-    // Bold: **text** or __text__
-    ...createRegexInlinePattern(/\*\*(.+?)\*\*|__(.+?)__/, (m, k) => (
-      <strong key={k}>{parseInline(m[1] ?? m[2])}</strong>
-    )),
-  },
-  createRegexInlinePattern(
-    // Inline code: `text` — before italic so backtick content is not parsed further
-    /`([^`]+)`/,
-    (m, k) => <code key={k}>{m[1]}</code>,
-  ),
-  {
-    // Italic: *text* or _text_ (not preceded/followed by same char)
-    ...createRegexInlinePattern(
-      /(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)|(?<!_)_(?!_)(.+?)(?<!_)_(?!_)/,
-      (m, k) => <em key={k}>{parseInline(m[1] ?? m[2])}</em>,
-    ),
-  },
-  createRegexInlinePattern(
-    // Footnote citation: [^1] → superscript marker
-    /\[\^(\d+)\]/,
-    (m, k) => <sup key={k}>[{m[1]}]</sup>,
-  ),
-];
-
-function parseInline(text: string): React.ReactNode {
-  if (!text) {
     return null;
   }
+};
 
-  const result: React.ReactNode[] = [];
-  let remaining = text;
-  let key = 0;
-
-  while (remaining.length > 0) {
-    let firstMatch: InlineMatch | null = null;
-
-    for (const pattern of INLINE_PATTERNS) {
-      const m = pattern.find(remaining);
-      if (m && (firstMatch === null || m.index < firstMatch.index)) {
-        firstMatch = m;
-      }
-    }
-
-    if (!firstMatch) {
-      result.push(remaining);
-      break;
-    }
-
-    if (firstMatch.index > 0) {
-      result.push(remaining.slice(0, firstMatch.index));
-    }
-    result.push(firstMatch.render(key));
-    key += 1;
-    remaining = remaining.slice(firstMatch.index + firstMatch.length);
-  }
-
-  if (result.length === 0) {
-    return null;
-  }
-  if (result.length === 1) {
-    return result[0];
-  }
-  return <React.Fragment>{result}</React.Fragment>;
-}
-
-// ---------------------------------------------------------------------------
-// Block parser — code fences, headers, lists, paragraphs
-// ---------------------------------------------------------------------------
-
-function isStructuralLine(line: string): boolean {
-  return (
-    /^```/.test(line) || /^#{1,6}\s/.test(line) || /^[-*+]\s/.test(line) || /^\d+\.\s/.test(line)
-  );
-}
-
-function parseBlocks(text: string): React.ReactNode[] {
-  const lines = text.split('\n');
-  const result: React.ReactNode[] = [];
-  let key = 0;
-  let i = 0;
-
-  while (i < lines.length) {
-    const line = lines[i];
-
-    const fenceMatch = /^```(\w*)/.exec(line);
-    if (fenceMatch) {
-      const lang = fenceMatch[1];
-      const codeLines: string[] = [];
-      i += 1;
-      while (i < lines.length && !lines[i].startsWith('```')) {
-        codeLines.push(lines[i]);
-        i += 1;
-      }
-      i += 1;
-      result.push(
-        <ChatCodeBlock key={key} language={lang || undefined}>
-          {codeLines.join('\n')}
-        </ChatCodeBlock>,
+const markdownOptions: MarkdownToJSX.Options = {
+  // Always emit block-level wrappers (so a lone line becomes a `<p>`, matching the
+  // chat bubble's `& p`/`& pre` styling), but use a Fragment wrapper so no extra
+  // DOM node is introduced around multi-block content.
+  forceBlock: true,
+  wrapper: React.Fragment,
+  // Untrusted model output: never transcribe raw HTML into JSX.
+  disableParsingRawHTML: true,
+  sanitizer,
+  overrides: {
+    // Open links in a new tab; the sanitizer above already neutralised the href.
+    a: { props: { target: '_blank', rel: 'noopener noreferrer' } },
+  },
+  // Route fenced code blocks to the themed ChatCodeBlock, which owns the copy
+  // button, language label, and optional highlighter slot.
+  renderRule(next, node, _renderChildren, state) {
+    if (node.type === RuleType.codeBlock) {
+      return (
+        <ChatCodeBlock key={state.key} language={node.lang || undefined}>
+          {node.text}
+        </ChatCodeBlock>
       );
-      key += 1;
-      continue;
     }
-
-    const headerMatch = /^(#{1,6})\s+(.+)/.exec(line);
-    if (headerMatch) {
-      const level = headerMatch[1].length as 1 | 2 | 3 | 4 | 5 | 6;
-      const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-      result.push(<Tag key={key}>{parseInline(headerMatch[2])}</Tag>);
-      key += 1;
-      i += 1;
-      continue;
-    }
-
-    if (/^[-*+]\s/.test(line)) {
-      const items: React.ReactNode[] = [];
-      while (i < lines.length && /^[-*+]\s/.test(lines[i])) {
-        items.push(<li key={key}>{parseInline(lines[i].replace(/^[-*+]\s+/, ''))}</li>);
-        key += 1;
-        i += 1;
-      }
-      result.push(<ul key={key}>{items}</ul>);
-      key += 1;
-      continue;
-    }
-
-    if (/^\d+\.\s/.test(line)) {
-      const items: React.ReactNode[] = [];
-      while (i < lines.length && /^\d+\.\s/.test(lines[i])) {
-        items.push(<li key={key}>{parseInline(lines[i].replace(/^\d+\.\s+/, ''))}</li>);
-        key += 1;
-        i += 1;
-      }
-      result.push(<ol key={key}>{items}</ol>);
-      key += 1;
-      continue;
-    }
-
-    if (line.trim() === '') {
-      i += 1;
-      continue;
-    }
-
-    const paraLines: string[] = [];
-    while (i < lines.length && lines[i].trim() !== '' && !isStructuralLine(lines[i])) {
-      paraLines.push(lines[i]);
-      i += 1;
-    }
-
-    if (paraLines.length > 0) {
-      result.push(<p key={key}>{parseInline(paraLines.join('\n'))}</p>);
-      key += 1;
-    }
-  }
-
-  return result;
-}
+    return next();
+  },
+};
 
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
+/**
+ * Renders a markdown string to React elements via `markdown-to-jsx`. Output stays
+ * XSS-safe by construction (React elements, no `dangerouslySetInnerHTML`); only
+ * link/image URLs are guarded, by {@link sanitizer}.
+ */
 export function renderMarkdown(text: string): React.ReactNode {
-  const normalized = normalizeMarkdownForRender(text);
-  const blocks = parseBlocks(normalized);
-  return blocks.length === 1 ? blocks[0] : <React.Fragment>{blocks}</React.Fragment>;
+  return <Markdown options={markdownOptions}>{normalizeMarkdownForRender(text)}</Markdown>;
 }
+
+/**
+ * Streaming-aware markdown text part used as the default `renderText`. Repairs
+ * incomplete markdown before rendering — via `remend` once it has lazily loaded,
+ * and the dep-free fallback (unbalanced-fence completion) until then — so partial
+ * syntax arriving mid-stream renders cleanly instead of leaking raw markers.
+ */
+function StreamingMarkdownText({ text }: { text: string }): React.ReactElement {
+  const repair = useStreamingMarkdownRepair();
+  const source = React.useMemo(() => repair(text), [repair, text]);
+  return <Markdown options={markdownOptions}>{source}</Markdown>;
+}
+
+/**
+ * Default `renderText` for the `text` part. Stable module-level identity so it does
+ * not churn the headless `TextPart` `useMemo`.
+ */
+export const renderStreamingMarkdown = (text: string): React.ReactNode => (
+  <StreamingMarkdownText text={text} />
+);
