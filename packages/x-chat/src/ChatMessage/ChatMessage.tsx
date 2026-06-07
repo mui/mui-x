@@ -41,8 +41,11 @@ export interface ChatMessageSlots {
    * The inline meta component (default variant; rendered inside the bubble). Pass `null` to hide it.
    */
   inlineMeta: React.ElementType | null;
-  /** The error component rendered under the bubble when status === 'error'. */
-  error: React.ElementType;
+  /**
+   * The error component rendered under the bubble when status === 'error'.
+   * Pass `null` to hide the error surface entirely (no component is mounted).
+   */
+  error: React.ElementType | null;
   /**
    * The actions component, rendered under the bubble.
    * Receives `{ messageId }` as props.
@@ -222,7 +225,8 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
 
     // The error surface is resolved through the `error` slot in both branches so custom
     // message composition via `children` can still customize (or keep consistent) the
-    // error rendering, matching the slot-driven path below.
+    // error rendering, matching the slot-driven path below. `null` hides it entirely.
+    const hasError = slots?.error !== null;
     const ErrorComp = (slots?.error ?? ChatMessageError) as typeof ChatMessageError;
 
     // Build the inner tree from slots when no `children` were passed (slot-driven).
@@ -235,7 +239,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
       innerTree = (
         <React.Fragment>
           {children}
-          <ErrorComp {...(slotProps?.error ?? {})} />
+          {hasError && <ErrorComp {...(slotProps?.error ?? {})} />}
         </React.Fragment>
       );
     } else {
@@ -265,7 +269,7 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
           {hasAvatar && <AvatarComp {...(slotProps?.avatar ?? {})} />}
           <ContentComp afterContent={inlineMeta} {...(slotProps?.content ?? {})} />
           {externalMeta}
-          <ErrorComp {...(slotProps?.error ?? {})} />
+          {hasError && <ErrorComp {...(slotProps?.error ?? {})} />}
           {ActionsSlot && (
             <ChatMessageActions {...(slotProps?.actions ?? {})}>
               <ActionsSlot messageId={messageId} />

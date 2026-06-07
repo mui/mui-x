@@ -8,6 +8,36 @@ export interface UseCopyToClipboardResult {
   copy: (value: string) => void;
 }
 
+/**
+ * Synchronous `document.execCommand('copy')` fallback for environments without the
+ * async Clipboard API (insecure `http://` origins, older browsers). Runs inside the
+ * click handler's user gesture, so the copy is permitted. Returns whether it worked.
+ */
+function legacyCopy(value: string): boolean {
+  if (typeof document === 'undefined' || typeof document.execCommand !== 'function') {
+    return false;
+  }
+  const textarea = document.createElement('textarea');
+  textarea.value = value;
+  textarea.setAttribute('readonly', '');
+  // Keep it out of the layout/viewport so it can't scroll the page or flash.
+  textarea.style.position = 'fixed';
+  textarea.style.top = '0';
+  textarea.style.left = '0';
+  textarea.style.opacity = '0';
+  textarea.style.pointerEvents = 'none';
+  document.body.appendChild(textarea);
+  try {
+    textarea.select();
+    textarea.setSelectionRange(0, value.length);
+    return document.execCommand('copy');
+  } catch {
+    return false;
+  } finally {
+    document.body.removeChild(textarea);
+  }
+}
+
 export function useCopyToClipboard(resetMs: number = 2000): UseCopyToClipboardResult {
   const [copyState, setCopyState] = React.useState<CopyState>('idle');
   const resetTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -49,39 +79,38 @@ export function useCopyToClipboard(resetMs: number = 2000): UseCopyToClipboardRe
 
   const copy = React.useCallback(
     (value: string) => {
-      // Guard against environments without the async Clipboard API
-      // (older browsers, insecure contexts, some test runners).
-      if (
-        typeof navigator === 'undefined' ||
-        typeof navigator.clipboard?.writeText !== 'function'
-      ) {
-        setTemporaryState('error');
-        return;
-      }
-
       copyTokenRef.current += 1;
       const token = copyTokenRef.current;
       const isCurrent = () => token === copyTokenRef.current;
 
-      try {
-        // `writeText` can reject (permission denied) or, in some engines, throw
-        // synchronously (document not focused) — handle both as 'error'.
-        navigator.clipboard.writeText(value).then(
-          () => {
-            if (isCurrent()) {
-              setTemporaryState('copied');
-            }
-          },
-          () => {
-            if (isCurrent()) {
-              setTemporaryState('error');
-            }
-          },
-        );
-      } catch {
-        if (isCurrent()) {
-          setTemporaryState('error');
+      // Prefer the async Clipboard API when available (secure contexts, modern
+      // browsers). Fall back to the synchronous `execCommand` path otherwise, so
+      // insecure (`http://`) origins and older browsers still copy.
+      if (typeof navigator !== 'undefined' && typeof navigator.clipboard?.writeText === 'function') {
+        try {
+          // `writeText` can reject (permission denied) or, in some engines, throw
+          // synchronously (document not focused) — fall back to `execCommand`
+          // before surfacing an error.
+          navigator.clipboard.writeText(value).then(
+            () => {
+              if (isCurrent()) {
+                setTemporaryState('copied');
+              }
+            },
+            () => {
+              if (isCurrent()) {
+                setTemporaryState(legacyCopy(value) ? 'copied' : 'error');
+              }
+            },
+          );
+          return;
+        } catch {
+          // Fall through to the legacy path below.
         }
+      }
+
+      if (isCurrent()) {
+        setTemporaryState(legacyCopy(value) ? 'copied' : 'error');
       }
     },
     [setTemporaryState],

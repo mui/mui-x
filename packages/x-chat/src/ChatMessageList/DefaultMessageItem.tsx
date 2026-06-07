@@ -4,6 +4,7 @@ import { ChatMessageGroup } from '../ChatMessage/ChatMessageGroup';
 import { ChatDateDivider } from '../ChatMessage/ChatDateDivider';
 import { ChatUnreadMarker } from '../ChatIndicators/ChatUnreadMarker';
 import { useChatSlots } from '../internals/ChatSlotsContext';
+import { resolveSlotProps } from '../internals/mergeSlotProps';
 import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
 
 /**
@@ -82,7 +83,7 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
     <React.Fragment>
       {slots.dateDivider !== null && (
         <DateDividerComponent
-          {...(slotProps.dateDivider ?? {})}
+          {...resolveSlotProps(slotProps.dateDivider ?? {}, { messageId: id, index, items })}
           messageId={id}
           index={index}
           items={items}
@@ -90,7 +91,7 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
       )}
       {slots.unreadMarker !== null && (
         <UnreadMarkerComponent
-          {...(slotProps.unreadMarker ?? {})}
+          {...resolveSlotProps(slotProps.unreadMarker ?? {}, { messageId: id, index, items })}
           messageId={id}
           index={index}
           items={items}

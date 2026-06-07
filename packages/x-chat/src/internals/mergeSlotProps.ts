@@ -75,7 +75,10 @@ function mergeResolvedSlotProps(base: AnySlotProps, consumer: AnySlotProps): Any
       continue;
     }
 
-    if (isEventHandlerKey(key) && typeof value === 'function') {
+    if (isEventHandlerKey(key)) {
+      // Function handlers are chained via `eventHandlerMap` below. A non-function
+      // (e.g. `null`/`undefined`) handler from the consumer must not fall through
+      // to the `else` branch and clobber the base handler.
       continue;
     }
 
@@ -85,6 +88,11 @@ function mergeResolvedSlotProps(base: AnySlotProps, consumer: AnySlotProps): Any
       result.sx = mergeSx(base.sx, value);
     } else if (key === 'style') {
       result.style = { ...(base.style ?? {}), ...(value ?? {}) };
+    } else if (key === 'ownerState') {
+      // Internal ownerState (e.g. the wrapper-computed `density`/`variant`) must
+      // not be clobbered by a consumer-supplied slot prop; merge with the base
+      // taking precedence on conflicting keys.
+      result.ownerState = { ...(value as object), ...(base.ownerState as object) };
     } else if (key === 'ref') {
       // Only compose when the consumer ref is ref-like; a nullish/invalid ref
       // keeps `base.ref` rather than clobbering the internal ref with `null`.

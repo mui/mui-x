@@ -158,8 +158,11 @@ interface ChatBoxMessageSlots {
   messageMeta?: React.ElementType | null;
   /** Inline meta rendered inside the bubble (default variant). Pass `null` to hide. */
   messageInlineMeta?: React.ElementType | null;
-  /** Error card shown under the bubble when the message status is `error`. */
-  messageError?: React.ElementType;
+  /**
+   * Error card shown under the bubble when the message status is `error`.
+   * Pass `null` to hide the error surface entirely (no component is mounted).
+   */
+  messageError?: React.ElementType | null;
   /**
    * Actions row component (receives `{ messageId }`). Pass `null` (or omit) to
    * hide actions.

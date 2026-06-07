@@ -76,6 +76,9 @@ describe('ChatMessageError', () => {
 
     const alert = screen.getByRole('alert');
     expect(alert.textContent).to.contain('Send failed');
+    // Polite (not assertive) so loading a conversation with historical errors
+    // does not interrupt the screen reader with every past failure.
+    expect(alert.getAttribute('aria-live')).to.equal('polite');
     expect(screen.getByRole('button', { name: 'Retry' })).not.to.equal(null);
   });
 

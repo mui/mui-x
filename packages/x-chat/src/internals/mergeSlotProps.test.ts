@@ -119,6 +119,22 @@ describe('mergeSlotProps', () => {
     expect(result.ref).to.equal(baseRef);
   });
 
+  it('keeps the base handler when the consumer passes a null handler', () => {
+    const baseClick = vi.fn();
+    const result = mergeSlotProps({ onClick: baseClick }, { onClick: null } as any) as any;
+    result.onClick(makeEvent());
+    expect(baseClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not let a consumer clobber the internal ownerState', () => {
+    const result = mergeSlotProps(
+      { ownerState: { density: 'compact', internal: true } },
+      { ownerState: { density: 'comfortable', extra: 1 } } as any,
+    ) as any;
+    // Base wins on conflicts (`density`), consumer-only keys are kept (`extra`).
+    expect(result.ownerState).to.deep.equal({ density: 'compact', internal: true, extra: 1 });
+  });
+
   it('resolveSlotProps returns object props as-is and resolves the callback form', () => {
     expect(resolveSlotProps({ a: 1 }, {})).to.deep.equal({ a: 1 });
     expect(resolveSlotProps((os: { n: number }) => ({ a: os.n }), { n: 2 })).to.deep.equal({

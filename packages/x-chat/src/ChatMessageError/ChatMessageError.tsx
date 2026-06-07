@@ -115,9 +115,15 @@ const ChatMessageErrorSlot = React.forwardRef<HTMLDivElement, any>(
         ref={ref}
         ownerState={ownerState}
         className={className}
-        // `role="alert"` already implies `aria-live="assertive"`; no explicit
-        // live region needed.
-        role="alert"
+        // The headless `MessageError` injects `role="alert"` (assertive implicit
+        // live region). Loading a conversation that already contains failed
+        // messages would otherwise blast every historical error on mount,
+        // interrupting the screen reader. An explicit `aria-live="polite"` wins
+        // over the role's implicit assertive value (per WAI-ARIA), keeping the
+        // alert semantics while announcing politely. `{...other}` keeps the
+        // headless `role`. `aria-atomic` reads the whole card as one unit.
+        aria-live="polite"
+        aria-atomic="true"
         {...other}
       >
         <ChatMessageErrorMessage className={messageClassName}>
