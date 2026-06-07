@@ -300,9 +300,7 @@ describe('renderMarkdown', () => {
     // must not throw or hang on such partial input (the previous hand-rolled parser
     // could spin forever; markdown-to-jsx cannot).
     it('renders a bare heading marker without throwing', () => {
-      expect(() =>
-        render(<React.Fragment>{renderMarkdown('## ')}</React.Fragment>),
-      ).not.toThrow();
+      expect(() => render(<React.Fragment>{renderMarkdown('## ')}</React.Fragment>)).not.toThrow();
     });
 
     it('renders a single bare hash marker without throwing', () => {

@@ -86,7 +86,10 @@ export function useCopyToClipboard(resetMs: number = 2000): UseCopyToClipboardRe
       // Prefer the async Clipboard API when available (secure contexts, modern
       // browsers). Fall back to the synchronous `execCommand` path otherwise, so
       // insecure (`http://`) origins and older browsers still copy.
-      if (typeof navigator !== 'undefined' && typeof navigator.clipboard?.writeText === 'function') {
+      if (
+        typeof navigator !== 'undefined' &&
+        typeof navigator.clipboard?.writeText === 'function'
+      ) {
         try {
           // `writeText` can reject (permission denied) or, in some engines, throw
           // synchronously (document not focused) — fall back to `execCommand`

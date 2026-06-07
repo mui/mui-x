@@ -127,10 +127,9 @@ describe('mergeSlotProps', () => {
   });
 
   it('does not let a consumer clobber the internal ownerState', () => {
-    const result = mergeSlotProps(
-      { ownerState: { density: 'compact', internal: true } },
-      { ownerState: { density: 'comfortable', extra: 1 } } as any,
-    ) as any;
+    const result = mergeSlotProps({ ownerState: { density: 'compact', internal: true } }, {
+      ownerState: { density: 'comfortable', extra: 1 },
+    } as any) as any;
     // Base wins on conflicts (`density`), consumer-only keys are kept (`extra`).
     expect(result.ownerState).to.deep.equal({ density: 'compact', internal: true, extra: 1 });
   });
