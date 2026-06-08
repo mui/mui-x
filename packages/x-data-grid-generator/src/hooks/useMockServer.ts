@@ -59,6 +59,7 @@ interface UseMockServerOptions {
   maxColumns?: number;
   visibleFields?: string[];
   editable?: boolean;
+  multiSelect?: boolean;
   treeData?: AddPathToDemoDataOptions;
   derivedColumns?: boolean;
 }
@@ -71,7 +72,7 @@ interface GridMockServerData {
 
 interface ColumnsOptions extends Pick<
   UseMockServerOptions,
-  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'derivedColumns'
+  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'derivedColumns' | 'multiSelect'
 > {}
 
 const GET_DEFAULT_DATASET_OPTIONS: UseMockServerOptions = {
@@ -97,6 +98,9 @@ const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] |
       throw new Error('MUI X: Unknown dataset');
   }
 
+  if (!options.multiSelect) {
+    columns = columns.filter((col) => col.type !== 'multiSelect');
+  }
   if (options.visibleFields) {
     columns = columns.map((col) => ({ ...col, hide: !options.visibleFields?.includes(col.field) }));
   }
@@ -196,6 +200,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
       maxColumns: options.maxColumns,
       visibleFields: options.visibleFields,
       derivedColumns: options.derivedColumns,
+      multiSelect: options.multiSelect,
     });
   }, [
     options.dataSet,
@@ -203,6 +208,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     options.maxColumns,
     options.visibleFields,
     options.derivedColumns,
+    options.multiSelect,
   ]);
 
   const initialState = React.useMemo(
@@ -235,13 +241,17 @@ export const useMockServer = <T extends GridGetRowsResponse>(
 
   const getChildrenCount = React.useMemo(() => {
     if (isTreeData) {
-      return (row: GridRowModel): number => row.descendantCount;
+      return (row: GridRowModel): number => row.childrenCount;
     }
     return undefined;
   }, [isTreeData]);
 
   React.useEffect(() => {
-    const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}`;
+    const treeDataKey =
+      (options.treeData?.maxDepth ?? 1) > 1
+        ? `${options.treeData?.maxDepth}-${options.treeData?.averageChildren ?? 2}-${options.treeData?.groupingField ?? ''}`
+        : 'false';
+    const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}-treeData:${treeDataKey}`;
 
     // Cache to allow fast switch between the JavaScript and TypeScript version
     // of the demos.
@@ -364,7 +374,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
           params,
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
-          nestedPagination ?? false,
+          nestedPagination ?? (params.start !== undefined && params.end !== undefined),
         );
 
         getRowsResponse = {
@@ -397,6 +407,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
           params,
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
+          params.start !== undefined && params.end !== undefined,
         );
 
         getRowsResponse = {

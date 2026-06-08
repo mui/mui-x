@@ -125,6 +125,7 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
             bottomContainerHeight,
             minimalContentHeight,
             columnsTotalWidth,
+            viewportOuterSize,
           } = dimensions;
 
           const verticalScrollbarSize = needsVerticalScrollbar ? scrollbarSize : 0;
@@ -143,8 +144,8 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
           );
 
           style = {
-            width,
-            height,
+            width: cssMax(width, viewportOuterSize.width - verticalScrollbarSize),
+            height: cssMax(height, viewportOuterSize.height - horizontalScrollbarSize),
             flex: '0 0 auto',
           } as React.CSSProperties;
         }
@@ -366,6 +367,13 @@ function cssAdd(a: string | number | undefined, b: string | number | undefined) 
     return a + b;
   }
   return `calc(${valueToCSSString(a)} + ${valueToCSSString(b)})`;
+}
+
+function cssMax(a: string | number | undefined, b: string | number | undefined) {
+  if (typeof a === 'number' && typeof b === 'number') {
+    return Math.max(a, b);
+  }
+  return `max(${valueToCSSString(a)}, ${valueToCSSString(b)})`;
 }
 
 function valueToCSSString(value: string | number | undefined) {

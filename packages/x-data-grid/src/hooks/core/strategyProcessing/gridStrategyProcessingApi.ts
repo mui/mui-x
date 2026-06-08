@@ -18,6 +18,7 @@ import type {
   GridGetRowsResponse,
   GridGetRowsOptions,
 } from '../../../models/gridDataSource';
+import type { GridRowId } from '../../../models/gridRows';
 
 export type GridStrategyProcessorName = keyof GridStrategyProcessingLookup;
 
@@ -29,7 +30,7 @@ export enum GridStrategyGroup {
 export type GridStrategyGroupValue = `${GridStrategyGroup}`;
 
 export interface GridStrategyProcessingLookup {
-  dataSourceRowsUpdate: {
+  dataSourceRootRowsUpdate: {
     group: GridStrategyGroup.DataSource;
     params:
       | {
@@ -41,6 +42,23 @@ export interface GridStrategyProcessingLookup {
           error: Error;
           fetchParams: GridGetRowsParams;
           options: GridGetRowsOptions;
+        };
+    value: void;
+  };
+  dataSourceNestedRowsUpdate: {
+    group: GridStrategyGroup.DataSource;
+    params:
+      | {
+          parentId: GridRowId;
+          path: string[];
+          response: GridGetRowsResponse;
+          fetchParams: GridGetRowsParams;
+        }
+      | {
+          parentId: GridRowId;
+          path: string[];
+          error: Error;
+          fetchParams: GridGetRowsParams;
         };
     value: void;
   };
