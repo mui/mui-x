@@ -108,6 +108,8 @@ overrides:
   # @TODO: Debug a fix separately and remove the override
   stylis: ^4.4.0
   caniuse-lite: ^1.0.30001793
+  # @TODO: Remove in the v6 bump PR.
+  typescript: 5.9.3
 
 patchedDependencies:
   eslint-plugin-consistent-default-export-name@0.0.15: patches/eslint-plugin-consistent-default-export-name@0.0.15.patch
