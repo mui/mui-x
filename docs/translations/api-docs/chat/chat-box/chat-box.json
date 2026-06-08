@@ -88,7 +88,7 @@
     "messageAuthorName": "Author name label rendered by the group wrapper (default variant: above the bubble; compact variant: inside the message grid). Pass <code>null</code> to hide.",
     "messageAvatar": "Avatar component. Pass <code>null</code> to hide the avatar entirely and drop the reserved avatar grid track.",
     "messageContent": "The message bubble component.",
-    "messageError": "Error card shown under the bubble when the message status is <code>error</code>.",
+    "messageError": "Error card shown under the bubble when the message status is <code>error</code>. Pass <code>null</code> to hide the error surface entirely (no component is mounted).",
     "messageGroup": "The per-author group wrapper around consecutive messages.",
     "messageInlineMeta": "Inline meta rendered inside the bubble (default variant). Pass <code>null</code> to hide.",
     "messageList": "Styled scrollable root element of <code>&lt;ChatMessageList&gt;</code> (wrapper-only). The default message rows render inside it, so a plain element such as <code>&#39;section&#39;</code> wraps the list rather than replacing it.",

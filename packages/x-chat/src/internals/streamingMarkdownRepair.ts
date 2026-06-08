@@ -75,6 +75,15 @@ export function useStreamingMarkdownRepair(): RepairMarkdown {
   const [repair, setRepair] = React.useState<RepairMarkdown>(() => fallbackRepair);
 
   React.useEffect(() => {
+    // Skip the lazy `remend` upgrade under test. `remend` resolves from node_modules,
+    // so the async `setRepair` below would land after a test's synchronous render and
+    // trip React's "update not wrapped in act(...)" warning, which `vitest-fail-on-console`
+    // turns into a failure across every component that renders markdown. The fallback
+    // repair still runs, and `loadRemend`'s real wiring is covered directly in
+    // `streamingMarkdownRepair.test.ts` via an injected importer.
+    if (process.env.NODE_ENV === 'test') {
+      return undefined;
+    }
     let active = true;
     loadRemend().then((fn) => {
       // Only update when `remend` actually loaded (a different function). When it
