@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { BarPlot } from '@mui/x-charts/BarChart';
+import { BarPlot, FocusedBar } from '@mui/x-charts/BarChart';
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
@@ -100,6 +100,7 @@ export default function BarScatterCompostion() {
           <BarPlot />
           <ScatterPlot />
           <ChartsXAxis axisId="bar" />
+          <FocusedBar />
           <ChartsYAxis />
         </ChartsSurface>
       </ChartsDataProvider>
