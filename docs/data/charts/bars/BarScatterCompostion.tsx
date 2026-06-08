@@ -103,6 +103,7 @@ export default function BarScatterCompostion() {
           <ScatterPlot />
           <ChartsXAxis axisId="bar" />
           <FocusedBar />
+          <FocusedScatterMark />
           <ChartsYAxis />
         </ChartsSurface>
       </ChartsDataProvider>
