@@ -23,7 +23,7 @@ export interface UsePanOnPressGestureOptions {
   /**
    * Called once when a pan ends.
    * @param {PanEvent} event The original pan end event.
-  */
+   */
   onPanEnd?: (event: PanEvent) => void;
 }
 
@@ -34,7 +34,10 @@ export interface UsePanOnPressGestureOptions {
  * the rAF throttling. What to do with the delta is entirely up to `onPan` — cartesian
  * zoom translates an axis range, a map translates the projection, etc.
  */
-export function usePanOnPressGesture(instance: GestureInstance, options: UsePanOnPressGestureOptions): void {
+export function usePanOnPressGesture(
+  instance: GestureInstance,
+  options: UsePanOnPressGestureOptions,
+): void {
   const { enabled, config, onPanStart, onPan, onPanEnd } = options;
   const { chartsLayerContainerRef } = instance;
 
@@ -61,7 +64,7 @@ export function usePanOnPressGesture(instance: GestureInstance, options: UsePanO
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
     if (element === null || !enabled) {
-      return () => { };
+      return () => {};
     }
 
     let isInteracting = false;
@@ -97,7 +100,10 @@ export function usePanOnPressGesture(instance: GestureInstance, options: UsePanO
     };
 
     const panHandler = instance.addInteractionListener('zoomPressAndDrag', handlePan);
-    const panStartHandler = instance.addInteractionListener('zoomPressAndDragStart', handlePanStart);
+    const panStartHandler = instance.addInteractionListener(
+      'zoomPressAndDragStart',
+      handlePanStart,
+    );
     const panEndHandler = instance.addInteractionListener('zoomPressAndDragEnd', handlePanEnd);
 
     return () => {

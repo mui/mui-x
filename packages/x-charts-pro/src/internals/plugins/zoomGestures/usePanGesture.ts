@@ -23,7 +23,7 @@ export interface UsePanGestureOptions {
   /**
    * Called once when a pan ends.
    * @param {PanEvent} event The original pan end event.
-  */
+   */
   onPanEnd?: (event: PanEvent) => void;
 }
 
@@ -61,7 +61,7 @@ export function usePanGesture(instance: GestureInstance, options: UsePanGestureO
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
     if (element === null || !enabled) {
-      return () => { };
+      return () => {};
     }
 
     let isInteracting = false;

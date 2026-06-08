@@ -28,7 +28,6 @@ export const useZoomOnPinch = (
 
   const isZoomOnPinchEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 
-
   usePinchGesture(instance, {
     enabled: isZoomOnPinchEnabled,
     requiredKeys: config?.requiredKeys,
@@ -58,5 +57,4 @@ export const useZoomOnPinch = (
       });
     },
   });
-
 };

@@ -41,7 +41,7 @@ export function usePinchGesture(instance: GestureInstance, options: UsePinchGest
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
     if (element === null || !enabled) {
-      return () => { };
+      return () => {};
     }
 
     const latest = { point: { x: 0, y: 0 }, deltaScale: 0, direction: 0, valid: false };

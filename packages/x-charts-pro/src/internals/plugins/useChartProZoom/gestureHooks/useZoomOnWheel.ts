@@ -53,8 +53,7 @@ export const useZoomOnWheel = (
 
           return { axisId: zoom.axisId, start: newMinRange, end: newMaxRange };
         });
-      })
-    }
-  })
-
+      });
+    },
+  });
 };
