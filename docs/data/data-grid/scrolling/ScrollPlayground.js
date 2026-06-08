@@ -24,6 +24,7 @@ export default function ScrollPlayground() {
   const { data, loading } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
+    multiSelect: true,
   });
 
   React.useEffect(() => {
