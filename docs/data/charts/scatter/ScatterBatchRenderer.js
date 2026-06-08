@@ -41,12 +41,22 @@ const scatterChartsParams = {
       },
     }),
   ),
-  xAxis: [{ min: 0, label: 'Electricity Generation (GWh)' }],
-  yAxis: [{ min: 0, width: 60, label: 'Life-cycle Carbon Intensity (gCO₂eq/kWh)' }],
+  xAxis: [
+    { min: 0, label: 'Electricity Generation (GWh)', domainSeries: 'visible' },
+  ],
+  yAxis: [
+    {
+      min: 0,
+      width: 60,
+      label: 'Life-cycle Carbon Intensity (gCO₂eq/kWh)',
+      domainSeries: 'visible',
+    },
+  ],
   height: 400,
   colors: schemePaired,
   slotProps: {
     legend: {
+      toggleVisibilityOnClick: true,
       position: { vertical: 'bottom' },
       sx: { justifyContent: 'center' },
     },

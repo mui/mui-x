@@ -1,7 +1,9 @@
 [
   { "name": "AgendaView", "kind": "Variable" },
+  { "name": "AgendaViewProps", "kind": "Interface" },
   { "name": "CompactDayTimeGrid", "kind": "Variable" },
   { "name": "DayView", "kind": "Variable" },
+  { "name": "DayViewProps", "kind": "Interface" },
   { "name": "EventCalendar", "kind": "Variable" },
   { "name": "EventCalendarApiRef", "kind": "TypeAlias" },
   { "name": "eventCalendarClasses", "kind": "Variable" },
@@ -12,13 +14,19 @@
   { "name": "EventCalendarStyledContextValue", "kind": "Interface" },
   { "name": "getEventCalendarUtilityClass", "kind": "Function" },
   { "name": "MonthView", "kind": "Variable" },
+  { "name": "MonthViewProps", "kind": "Interface" },
   { "name": "StandaloneAgendaView", "kind": "Variable" },
+  { "name": "StandaloneAgendaViewProps", "kind": "Interface" },
   { "name": "StandaloneCompactDayTimeGrid", "kind": "Variable" },
   { "name": "StandaloneDayView", "kind": "Variable" },
+  { "name": "StandaloneDayViewProps", "kind": "Interface" },
   { "name": "StandaloneEvent", "kind": "Variable" },
   { "name": "StandaloneMonthView", "kind": "Variable" },
+  { "name": "StandaloneMonthViewProps", "kind": "Interface" },
   { "name": "StandaloneWeekView", "kind": "Variable" },
+  { "name": "StandaloneWeekViewProps", "kind": "Interface" },
   { "name": "useEventCalendarStyledContext", "kind": "Function" },
   { "name": "useEventCalendarUtilityClasses", "kind": "Variable" },
-  { "name": "WeekView", "kind": "Variable" }
+  { "name": "WeekView", "kind": "Variable" },
+  { "name": "WeekViewProps", "kind": "Interface" }
 ]

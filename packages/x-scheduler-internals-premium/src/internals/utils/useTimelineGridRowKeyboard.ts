@@ -1,31 +1,31 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
-import {
-  useCompositeListItem,
-  useCompositeListContext,
-} from '@mui/x-scheduler-internals/base-ui-copy';
 import type { TimelineGridColumnType } from '../../models/timelineGrid';
 import { useTimelineGridRootContext } from '../../timeline-grid/root/TimelineGridRootContext';
-import { useTimelineGridSubGridContext } from '../../timeline-grid/sub-grid/TimelineGridSubGridContext';
+import { useTimelineGridBodyRowContext } from '../../timeline-grid/body-row/TimelineGridBodyRowContext';
 
 /**
- * Handles arrow-key navigation and focus syncing for a timeline grid row.
+ * Handles arrow-key navigation and focus syncing for a timeline grid row cell.
+ *
+ * Must be used inside a `<TimelineGrid.BodyRow />`. The component inherits its
+ * index from the parent row and acts as a focusable cell within it.
+ * Uses `totalRowCount` from the root context for bounds checking, which works
+ * correctly with virtualization where only a subset of rows exist in the DOM.
  */
 export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridColumnType }): {
   rowRef: React.RefObject<HTMLDivElement | null>;
-  listItemRef: (node: HTMLDivElement | null) => void;
   index: number;
   hasFocus: boolean;
   handleKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => boolean;
   handleFocus: (event: React.FocusEvent<HTMLDivElement>) => void;
 } {
   const { columnType } = params;
-  useTimelineGridSubGridContext();
-  const { focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes } =
+  const { focusedCell, setFocusedCell, clearFocusedCellIfMatches, columnTypes, totalRowCount } =
     useTimelineGridRootContext();
-  const { ref: listItemRef, index } = useCompositeListItem();
-  const { elementsRef } = useCompositeListContext();
+
+  const bodyRowContext = useTimelineGridBodyRowContext();
+  const index = bodyRowContext.index;
 
   if (process.env.NODE_ENV !== 'production') {
     if (columnTypes.indexOf(columnType) === -1) {
@@ -54,7 +54,6 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
   React.useEffect(() => clearOnUnmount, [clearOnUnmount]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): boolean => {
-    const totalRows = elementsRef.current.length;
     const typeIndex = columnTypes.indexOf(columnType);
 
     if (event.key === 'ArrowUp') {
@@ -66,7 +65,7 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
     }
     if (event.key === 'ArrowDown') {
       event.preventDefault();
-      if (index < totalRows - 1) {
+      if (index < totalRowCount - 1) {
         setFocusedCell({ columnType, rowIndex: index + 1 });
       }
       return true;
@@ -94,5 +93,5 @@ export function useTimelineGridRowKeyboard(params: { columnType: TimelineGridCol
     }
   };
 
-  return { rowRef, listItemRef, index, hasFocus, handleKeyDown, handleFocus };
+  return { rowRef, index, hasFocus, handleKeyDown, handleFocus };
 }
