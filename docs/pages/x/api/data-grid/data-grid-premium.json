@@ -2276,6 +2276,30 @@
       "isGlobal": false
     },
     {
+      "key": "editMultiSelectCellChip",
+      "className": "MuiDataGridPremium-editMultiSelectCellChip",
+      "description": "Styles applied to each chip in the edit multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellOverflow",
+      "className": "MuiDataGridPremium-editMultiSelectCellOverflow",
+      "description": "Styles applied to the overflow \"+N\" chip in the edit multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellPopperContent",
+      "className": "MuiDataGridPremium-editMultiSelectCellPopperContent",
+      "description": "Styles applied to the edit multi-select cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellPopup",
+      "className": "MuiDataGridPremium-editMultiSelectCellPopup",
+      "description": "Styles applied to the edit multi-select cell popup.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGridPremium-filterForm",
       "description": "Styles applied to the root of the filter form component.",
@@ -2453,12 +2477,6 @@
       "key": "multiSelectCellChip",
       "className": "MuiDataGridPremium-multiSelectCellChip",
       "description": "Styles applied to each chip in the multi-select cell.",
-      "isGlobal": false
-    },
-    {
-      "key": "multiSelectCellChip--hidden",
-      "className": "MuiDataGridPremium-multiSelectCellChip--hidden",
-      "description": "Styles applied to hidden chips in the multi-select cell that overflow the container.",
       "isGlobal": false
     },
     {

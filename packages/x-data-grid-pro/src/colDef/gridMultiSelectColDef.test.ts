@@ -110,6 +110,34 @@ describe('GRID_MULTI_SELECT_COL_DEF', () => {
     it('returns undefined for an empty string', () => {
       expect(parse('')).to.equal(undefined);
     });
+
+    it('drops duplicate values', () => {
+      expect(parse('React, React, TypeScript')).to.deep.equal(['React', 'TypeScript']);
+    });
+
+    it('drops duplicates matched via different casing/labels (object options)', () => {
+      expect(parse('frontend, FE', objectOptionsColumn)).to.deep.equal(['fe']);
+    });
+  });
+
+  describe('sortComparator', () => {
+    const sortComparator = GRID_MULTI_SELECT_COL_DEF.sortComparator as (v1: any, v2: any) => number;
+
+    it('sorts empty arrays before non-empty ones', () => {
+      expect(sortComparator([], ['React'])).to.equal(-1);
+      expect(sortComparator(['React'], [])).to.equal(1);
+      expect(sortComparator([], [])).to.equal(0);
+      expect(sortComparator(null, undefined)).to.equal(0);
+    });
+
+    it('orders alphabetically by joined values', () => {
+      expect(sortComparator(['a'], ['b'])).to.be.lessThan(0);
+      expect(sortComparator(['b'], ['a'])).to.be.greaterThan(0);
+    });
+
+    it('preserves element boundaries so ["a","bc"] and ["ab","c"] do not collide', () => {
+      expect(sortComparator(['a', 'bc'], ['ab', 'c'])).to.not.equal(0);
+    });
   });
 
   describe('valueFormatter', () => {

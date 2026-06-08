@@ -1275,6 +1275,22 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the edit multi-select cell root element"
     },
+    "editMultiSelectCellChip": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "each chip in the edit multi-select cell"
+    },
+    "editMultiSelectCellOverflow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the overflow &quot;+N&quot; chip in the edit multi-select cell"
+    },
+    "editMultiSelectCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell popper content"
+    },
+    "editMultiSelectCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit multi-select cell popup"
+    },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
@@ -1388,10 +1404,6 @@
     "multiSelectCellChip": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "each chip in the multi-select cell"
-    },
-    "multiSelectCellChip--hidden": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "hidden chips in the multi-select cell that overflow the container"
     },
     "multiSelectCellOverflow": {
       "description": "Styles applied to {{nodeName}}.",

@@ -70,7 +70,9 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
     if (empty2) {
       return 1;
     }
-    return v1.join('').localeCompare(v2.join(''));
+    // Join with a separator so element boundaries are preserved — otherwise
+    // ['a','bc'] and ['ab','c'] would both collapse to "abc" and compare equal.
+    return v1.join(',').localeCompare(v2.join(','));
   },
   rowSpanValueGetter: ((value: (string | number)[]) => multiSelectKey(value)) as any,
   renderCell: renderMultiSelectCell,
@@ -138,6 +140,8 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
       })
       .filter((v): v is string | number => v !== null);
 
-    return validValues.length > 0 ? validValues : undefined;
+    // Drop duplicates so a paste like "React, React" stores a single value.
+    const uniqueValues = Array.from(new Set(validValues));
+    return uniqueValues.length > 0 ? uniqueValues : undefined;
   },
 };

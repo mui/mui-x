@@ -1645,6 +1645,30 @@
       "isGlobal": false
     },
     {
+      "key": "editMultiSelectCellChip",
+      "className": "MuiDataGrid-editMultiSelectCellChip",
+      "description": "Styles applied to each chip in the edit multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellOverflow",
+      "className": "MuiDataGrid-editMultiSelectCellOverflow",
+      "description": "Styles applied to the overflow \"+N\" chip in the edit multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellPopperContent",
+      "className": "MuiDataGrid-editMultiSelectCellPopperContent",
+      "description": "Styles applied to the edit multi-select cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellPopup",
+      "className": "MuiDataGrid-editMultiSelectCellPopup",
+      "description": "Styles applied to the edit multi-select cell popup.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGrid-filterForm",
       "description": "Styles applied to the root of the filter form component.",
@@ -1822,12 +1846,6 @@
       "key": "multiSelectCellChip",
       "className": "MuiDataGrid-multiSelectCellChip",
       "description": "Styles applied to each chip in the multi-select cell.",
-      "isGlobal": false
-    },
-    {
-      "key": "multiSelectCellChip--hidden",
-      "className": "MuiDataGrid-multiSelectCellChip--hidden",
-      "description": "Styles applied to hidden chips in the multi-select cell that overflow the container.",
       "isGlobal": false
     },
     {

@@ -526,7 +526,7 @@ export interface GridClasses {
    */
   multiSelectCellChip: string;
   /**
-   * Styles applied to hidden chips in the multi-select cell that overflow the container.
+   * @ignore - do not document.
    */
   'multiSelectCellChip--hidden': string;
   /**
@@ -545,6 +545,26 @@ export interface GridClasses {
    * Styles applied to the edit multi-select cell root element.
    */
   editMultiSelectCell: string;
+  /**
+   * Styles applied to each chip in the edit multi-select cell.
+   */
+  editMultiSelectCellChip: string;
+  /**
+   * @ignore - do not document.
+   */
+  'editMultiSelectCellChip--hidden': string;
+  /**
+   * Styles applied to the overflow "+N" chip in the edit multi-select cell.
+   */
+  editMultiSelectCellOverflow: string;
+  /**
+   * Styles applied to the edit multi-select cell popup.
+   */
+  editMultiSelectCellPopup: string;
+  /**
+   * Styles applied to the edit multi-select cell popper content.
+   */
+  editMultiSelectCellPopperContent: string;
   /**
    * Styles applied to the filter icon element.
    */
@@ -1235,6 +1255,11 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'multiSelectCellPopup',
   'multiSelectCellPopperContent',
   'editMultiSelectCell',
+  'editMultiSelectCellChip',
+  'editMultiSelectCellChip--hidden',
+  'editMultiSelectCellOverflow',
+  'editMultiSelectCellPopup',
+  'editMultiSelectCellPopperContent',
   'filler',
   'filterForm',
   'filterFormDeleteIcon',
