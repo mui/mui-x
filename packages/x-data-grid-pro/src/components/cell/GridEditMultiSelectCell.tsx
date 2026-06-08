@@ -468,8 +468,8 @@ GridEditMultiSelectAutocomplete.propTypes = {
   /**
    * The mode of the cell.
    */
-  cellMode: PropTypes.object.isRequired,
-  changeReason: PropTypes.oneOfType([PropTypes.any, PropTypes.object]).isRequired,
+  cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
   /**
    * The column of the row that the current cell belongs to.
    */
@@ -477,7 +477,7 @@ GridEditMultiSelectAutocomplete.propTypes = {
   /**
    * The column field of the cell that triggered the event.
    */
-  field: PropTypes.any.isRequired,
+  field: PropTypes.string.isRequired,
   /**
    * The cell value formatted with the column valueFormatter.
    */
@@ -487,34 +487,17 @@ GridEditMultiSelectAutocomplete.propTypes = {
   /**
    * If true, the cell is the active element.
    */
-  hasFocus: PropTypes.shape({
-    valueOf: PropTypes.func.isRequired,
-  }).isRequired,
+  hasFocus: PropTypes.bool.isRequired,
   /**
    * The grid row id.
    */
-  id: PropTypes.any.isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * If true, the cell is editable.
    */
-  isEditable: PropTypes.oneOfType([
-    PropTypes.any,
-    PropTypes.shape({
-      valueOf: PropTypes.func.isRequired,
-    }),
-  ]).isRequired,
-  isProcessingProps: PropTypes.oneOfType([
-    PropTypes.any,
-    PropTypes.shape({
-      valueOf: PropTypes.func.isRequired,
-    }),
-  ]).isRequired,
-  isValidating: PropTypes.oneOfType([
-    PropTypes.any,
-    PropTypes.shape({
-      valueOf: PropTypes.func.isRequired,
-    }),
-  ]).isRequired,
+  isEditable: PropTypes.bool,
+  isProcessingProps: PropTypes.bool,
+  isValidating: PropTypes.bool,
   onDismiss: PropTypes.func.isRequired,
   /**
    * Callback called when the value is changed by the user.
@@ -522,7 +505,7 @@ GridEditMultiSelectAutocomplete.propTypes = {
    * @param {any[]} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
-  onValueChange: PropTypes.oneOfType([PropTypes.any, PropTypes.func]).isRequired,
+  onValueChange: PropTypes.func,
   /**
    * The row model of the row that the current cell belongs to.
    */
@@ -533,28 +516,23 @@ GridEditMultiSelectAutocomplete.propTypes = {
   rowNode: PropTypes.object.isRequired,
   selectedOptions: PropTypes.arrayOf(
     PropTypes.oneOfType([
-      PropTypes.any,
+      PropTypes.number,
+      PropTypes.object,
       PropTypes.shape({
-        label: PropTypes.any.isRequired,
+        label: PropTypes.string.isRequired,
         value: PropTypes.any.isRequired,
       }),
-    ]),
+      PropTypes.string,
+    ]).isRequired,
   ).isRequired,
   /**
    * Props passed to internal components.
    */
-  slotProps: PropTypes.oneOfType([PropTypes.any, PropTypes.object]).isRequired,
+  slotProps: PropTypes.object,
   /**
    * the tabIndex value.
    */
-  tabIndex: PropTypes.shape({
-    toExponential: PropTypes.func.isRequired,
-    toFixed: PropTypes.func.isRequired,
-    toLocaleString: PropTypes.func.isRequired,
-    toPrecision: PropTypes.func.isRequired,
-    toString: PropTypes.func.isRequired,
-    valueOf: PropTypes.func.isRequired,
-  }).isRequired,
+  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
   /**
    * The cell value.
    * If the column has `valueGetter`, use `params.row` to directly access the fields.
@@ -562,12 +540,14 @@ GridEditMultiSelectAutocomplete.propTypes = {
   value: PropTypes.any,
   valueOptions: PropTypes.arrayOf(
     PropTypes.oneOfType([
-      PropTypes.any,
+      PropTypes.number,
+      PropTypes.object,
       PropTypes.shape({
-        label: PropTypes.any.isRequired,
+        label: PropTypes.string.isRequired,
         value: PropTypes.any.isRequired,
       }),
-    ]),
+      PropTypes.string,
+    ]).isRequired,
   ).isRequired,
 } as any;
 
@@ -626,6 +606,10 @@ GridEditMultiSelectCell.propTypes = {
    * The node of the row that the current cell belongs to.
    */
   rowNode: PropTypes.object.isRequired,
+  /**
+   * Props passed to internal components.
+   */
+  slotProps: PropTypes.object,
   /**
    * the tabIndex value.
    */

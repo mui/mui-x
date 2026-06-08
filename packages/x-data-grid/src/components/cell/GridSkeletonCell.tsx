@@ -141,6 +141,7 @@ GridSkeletonCell.propTypes = {
     'date',
     'dateTime',
     'longText',
+    'multiSelect',
     'number',
     'singleSelect',
     'string',
