@@ -70,10 +70,18 @@ Otherwise, click behavior matches the [interaction section](#interaction), and t
 
 ## Bubble chart
 
-A bubble chart is a scatter chart where the size and color of each point encode additional data values.
-Use the `sizeAxisId` and `colorAxisId` props on a series to map per-point data to size or color through a z-axis.
+Scatter chart supports size and color scales to represent two additional values per mark.
+
+Those are configured with
+
+- `sizeValue`/`colorValue` provide the marks data (either directly in the `data` or with the `datasetKeys`)
+- `sizeAxisId`/`colorAxisId` series property indicate the `zAxis` scale to be used.
 
 See the [Bubble chart](/x/react-charts/bubble/) page for demos and details.
+
+{{"demo": "../bubble/BubbleChartCO2Emissions.js"}}
+
+## Styling
 
 ### Grid
 
@@ -109,6 +117,8 @@ To keep the legend and tooltip in sync with the custom shape, set the `labelMark
 
 Use the `markerSize` prop on each series to set the size of scatter points.
 For circles, `markerSize` is the radius in pixels.
+
+See the [Bubble chart page](/x/react-charts/bubble/) to modify mark size based on their value.
 
 {{"demo": "ScatterCustomSize.js"}}
 
