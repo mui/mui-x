@@ -674,6 +674,7 @@ const pages: MuiPage[] = [
             title: 'Scatter',
             children: [
               { pathname: '/x/react-charts/scatter', title: 'Scatter overview' },
+              { pathname: '/x/react-charts/bubble', title: 'Bubble' },
               { pathname: '/x/react-charts/scatter-demo', title: 'Demo' },
             ],
           },

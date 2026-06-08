@@ -141,6 +141,12 @@ export default defineConfig(
       // turn off global react compiler plugin as it's controlled per package on this repo
       'react-compiler/react-compiler': 'off',
       'react/react-in-jsx-scope': 'off',
+
+      // Modern browsers imply rel="noopener" for target="_blank", so no rel is required.
+      // See https://github.com/mui/material-ui/pull/40447
+      // TODO move to mui/mui-public.
+      'react/jsx-no-target-blank': 'off',
+
       'import/no-relative-packages': 'error',
       'import/no-restricted-paths': [
         'error',
