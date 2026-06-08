@@ -487,7 +487,7 @@ type ControlsTab = 'props' | 'classes';
 
 function RefreshIcon() {
   return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
     </svg>
   );
@@ -500,6 +500,7 @@ function ChevronIcon({ open }: { open: boolean }) {
       height="10"
       viewBox="0 0 24 24"
       fill="currentColor"
+      aria-hidden="true"
       style={{
         transition: 'transform 0.15s ease-in-out',
         transform: open ? 'rotate(90deg)' : 'rotate(0deg)',
@@ -512,7 +513,7 @@ function ChevronIcon({ open }: { open: boolean }) {
 
 function CopyIcon() {
   return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
     </svg>
   );
@@ -520,7 +521,7 @@ function CopyIcon() {
 
 function CheckIcon() {
   return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
     </svg>
   );
@@ -536,7 +537,9 @@ function TabButton({
 }: {
   label: string;
   id: string;
-  controls: string;
+  // Omitted when the controlled panel isn't mounted, so `aria-controls` never
+  // dangles at a non-existent element.
+  controls?: string;
   hasIndicator?: boolean;
   active: boolean;
   onClick: () => void;
@@ -1342,7 +1345,7 @@ export function PlaygroundCard({
                   <TabButton
                     label="Props"
                     id={propsTabId}
-                    controls={propsPanelId}
+                    controls={controls ? propsPanelId : undefined}
                     active={activeTab === 'props'}
                     onClick={() => setActiveTab('props')}
                   />

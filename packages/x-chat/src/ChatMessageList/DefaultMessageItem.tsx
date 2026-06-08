@@ -1,11 +1,26 @@
 'use client';
 import * as React from 'react';
+import { warnOnce } from '@mui/x-internals/warning';
 import { ChatMessageGroup } from '../ChatMessage/ChatMessageGroup';
 import { ChatDateDivider } from '../ChatMessage/ChatDateDivider';
 import { ChatUnreadMarker } from '../ChatIndicators/ChatUnreadMarker';
 import { useChatSlots } from '../internals/ChatSlotsContext';
 import { resolveSlotProps } from '../internals/mergeSlotProps';
 import type { ChatBoxSlots, ChatBoxSlotProps } from '../ChatBox/ChatBox.types';
+
+function warnIfHostElementRowSlot(slotName: 'dateDivider' | 'unreadMarker', value: unknown) {
+  if (process.env.NODE_ENV === 'production') {
+    return;
+  }
+  if (typeof value === 'string') {
+    warnOnce([
+      `MUI X: The \`${slotName}\` slot was given a host element (e.g. \`'div'\`).`,
+      `The ${slotName} is a self-suppressing row component: it reads \`messageId\`/\`index\`/\`items\` and renders only at its boundary, returning \`null\` otherwise.`,
+      `A host element ignores those props (leaking them onto the DOM node) and renders on every message row.`,
+      `Pass a component, or \`null\` to hide the slot entirely.`,
+    ]);
+  }
+}
 
 /**
  * Flat per-row slot keys shared by `ChatBox` and `ChatMessageList` — the
@@ -78,6 +93,9 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
   // DOM attributes.
   const DateDividerComponent = (slots.dateDivider ?? ChatDateDivider) as React.ElementType;
   const UnreadMarkerComponent = (slots.unreadMarker ?? ChatUnreadMarker) as React.ElementType;
+
+  warnIfHostElementRowSlot('dateDivider', slots.dateDivider);
+  warnIfHostElementRowSlot('unreadMarker', slots.unreadMarker);
 
   return (
     <React.Fragment>

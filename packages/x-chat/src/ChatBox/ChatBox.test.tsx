@@ -142,9 +142,14 @@ describe('ChatBox', () => {
         </ThemeProvider>,
       );
 
-      await waitFor(() => {
-        expect(listMessages).not.toHaveBeenCalled();
-      });
+      // Flush mount effects + microtasks. A controlled `activeConversationId` would
+      // trigger `listMessages` here; an uncontrolled theme default must not. (A
+      // `waitFor(() => not.toHaveBeenCalled())` would pass on its first synchronous
+      // poll and never actually wait for a late call.)
+      // eslint-disable-next-line testing-library/no-unnecessary-act
+      await act(async () => {});
+
+      expect(listMessages).not.toHaveBeenCalled();
     });
 
     it('resolves message avatars from getter-based author ids', () => {

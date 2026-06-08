@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Radio from '@mui/material/Radio';
@@ -9,16 +8,7 @@ import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-
-function RefreshIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
-    </svg>
-  );
-}
 
 export interface BaseControlProps {
   label: string;
@@ -438,123 +428,6 @@ export function TextControl({
   );
 }
 
-export interface SxTextareaControlProps {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  description?: string;
-  parseError?: string;
-  placeholder?: string;
-}
-
-export function SxTextareaControl({
-  label,
-  value,
-  onChange,
-  description,
-  parseError,
-  placeholder = '{ /* sx object */ }',
-}: SxTextareaControlProps) {
-  const [draft, setDraft] = React.useState(value);
-  React.useEffect(() => {
-    setDraft(value);
-  }, [value]);
-
-  return (
-    <Stack spacing={0.5} sx={{ width: '100%', minWidth: 0 }}>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'baseline',
-          gap: 1,
-          minWidth: 0,
-        }}
-      >
-        <Typography
-          variant="caption"
-          sx={(theme) => ({
-            fontFamily: theme.typography.fontFamilyCode ?? 'Menlo, monospace',
-            fontSize: '0.72rem',
-            fontWeight: 500,
-            color: 'text.primary',
-            overflowWrap: 'anywhere',
-            minWidth: 0,
-          })}
-        >
-          {label}
-        </Typography>
-        {value ? (
-          <Box
-            component="button"
-            type="button"
-            onClick={() => onChange('')}
-            sx={{
-              border: 'none',
-              background: 'none',
-              cursor: 'pointer',
-              color: 'text.secondary',
-              fontSize: '0.65rem',
-              p: 0,
-              flexShrink: 0,
-              '&:hover': { color: 'primary.main' },
-            }}
-          >
-            Reset
-          </Box>
-        ) : null}
-      </Box>
-      {description ? (
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          sx={{ fontSize: '0.65rem', lineHeight: 1.4 }}
-        >
-          {description}
-        </Typography>
-      ) : null}
-      <TextField
-        size="small"
-        multiline
-        minRows={2}
-        maxRows={8}
-        value={draft}
-        placeholder={placeholder}
-        onChange={(event) => setDraft(event.target.value)}
-        onBlur={() => {
-          if (draft !== value) {
-            onChange(draft);
-          }
-        }}
-        error={Boolean(parseError)}
-        sx={{
-          '& .MuiOutlinedInput-root': {
-            fontSize: '0.7rem',
-            fontFamily: (theme) => theme.typography.fontFamilyCode ?? 'Menlo, monospace',
-            alignItems: 'flex-start',
-          },
-          '& .MuiOutlinedInput-input': {
-            py: 0.625,
-            lineHeight: 1.5,
-          },
-        }}
-      />
-      {parseError ? (
-        <Typography
-          variant="caption"
-          color="error"
-          sx={{
-            fontSize: '0.65rem',
-            fontFamily: (theme) => theme.typography.fontFamilyCode ?? 'Menlo, monospace',
-          }}
-        >
-          {parseError}
-        </Typography>
-      ) : null}
-    </Stack>
-  );
-}
-
 export interface DividerLabelProps {
   children: React.ReactNode;
 }
@@ -588,74 +461,5 @@ export function DividerLabel({ children }: DividerLabelProps) {
         {children}
       </Typography>
     </Box>
-  );
-}
-
-export interface ResetButtonProps {
-  onClick: () => void;
-  tooltip?: string;
-  disabled?: boolean;
-}
-
-export function ResetButton({
-  onClick,
-  tooltip = 'Reset to defaults',
-  disabled = false,
-}: ResetButtonProps) {
-  return (
-    <Tooltip title={tooltip} arrow placement="top">
-      <Button
-        size="small"
-        variant="text"
-        onClick={onClick}
-        disabled={disabled}
-        startIcon={<RefreshIcon />}
-        sx={{
-          textTransform: 'none',
-          color: 'text.secondary',
-          fontSize: '0.7rem',
-          py: 0.25,
-          '&:hover': {
-            color: 'primary.main',
-            bgcolor: 'action.hover',
-          },
-        }}
-      >
-        Reset
-      </Button>
-    </Tooltip>
-  );
-}
-
-export interface ControlGroupProps {
-  label: string;
-  description?: string;
-  children: React.ReactNode;
-}
-
-export function ControlGroup({ label, description, children }: ControlGroupProps) {
-  return (
-    <Stack spacing={1}>
-      <Stack spacing={0.25}>
-        <Typography
-          variant="caption"
-          sx={{
-            fontWeight: 600,
-            textTransform: 'uppercase',
-            letterSpacing: 0.5,
-            color: 'text.secondary',
-            fontSize: '0.65rem',
-          }}
-        >
-          {label}
-        </Typography>
-        {description ? (
-          <Typography variant="caption" color="text.secondary">
-            {description}
-          </Typography>
-        ) : null}
-      </Stack>
-      <Stack spacing={1}>{children}</Stack>
-    </Stack>
   );
 }

@@ -15,11 +15,14 @@ export type RepairMarkdown = (text: string) => string;
  */
 export const fallbackRepair: RepairMarkdown = normalizeMarkdownForRender;
 
-// `remend` is an ESM-only package. A *static* `import 'remend'` would break the
-// package's CJS build (`require()` of an ES module throws `ERR_REQUIRE_ESM`). The
-// specifier is read from a variable and annotated so bundlers (Vite/webpack) leave
-// it as a genuine runtime import rather than trying to resolve it at build time —
-// which also keeps things working when the optional peer simply isn't installed.
+// `remend` is an ESM-only package and a declared dependency of this package. The
+// build downlevels dynamic `import()` to `require()` in the CJS output, and a static
+// `require()` of an ES module throws `ERR_REQUIRE_ESM`. Reading the specifier from a
+// variable (plus the `@vite-ignore`/`webpackIgnore` hints) keeps that `require`/
+// `import` dynamic and unanalyzable, so it stays a genuine runtime import that fails
+// gracefully at call time instead of at build time. The `.catch` in `loadRemend`
+// then degrades to `fallbackRepair` — so a runtime that can't resolve the specifier
+// (or a CJS `require()` of the ESM module) costs nothing beyond the failed attempt.
 const REMEND_SPECIFIER = 'remend';
 function defaultRemendImporter(): Promise<unknown> {
   // eslint-disable-next-line jsdoc/no-bad-blocks -- bundler hint comments, not JSDoc
@@ -29,10 +32,10 @@ function defaultRemendImporter(): Promise<unknown> {
 let remendPromise: Promise<RepairMarkdown> | undefined;
 
 /**
- * Lazily loads `remend` and returns a repair function. The dynamic `import()` works
- * from both the ESM and CJS builds; if it rejects — because the build downlevelled
- * it to a `require()` of the ESM-only module, or the optional peer isn't installed —
- * it transparently degrades to {@link fallbackRepair}. Cached after the first call.
+ * Lazily loads `remend` and returns a repair function. If the import rejects — e.g.
+ * the CJS build downlevelled it to a `require()` of the ESM-only module, or a
+ * consumer's bundler can't resolve the runtime specifier — it transparently degrades
+ * to {@link fallbackRepair}. Cached after the first call.
  *
  * @param importer Injectable for tests; defaults to `() => import('remend')`.
  */

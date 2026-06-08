@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
@@ -196,7 +196,11 @@ describe('ChatComposerTextArea', () => {
     fireEvent.keyDown(textbox, { key: 'Enter' });
 
     expect(handleKeyDown).toHaveBeenCalledTimes(1);
-    await Promise.resolve();
+    // Flush effects + the microtask queue so a (would-be) async submit has a chance
+    // to run before we assert it did not — a single `await Promise.resolve()` only
+    // drains one microtask and can pass before a deferred submit lands.
+    // eslint-disable-next-line testing-library/no-unnecessary-act
+    await act(async () => {});
     expect(sendMessage).toHaveBeenCalledTimes(0);
   });
 });

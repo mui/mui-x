@@ -10,11 +10,19 @@ export interface UseCopyToClipboardResult {
 
 /**
  * Synchronous `document.execCommand('copy')` fallback for environments without the
- * async Clipboard API (insecure `http://` origins, older browsers). Runs inside the
- * click handler's user gesture, so the copy is permitted. Returns whether it worked.
+ * async Clipboard API (insecure `http://` origins, older browsers). When called
+ * synchronously from the click handler it runs inside the user gesture, so the copy
+ * is permitted. When reached from the async Clipboard rejection path the gesture may
+ * already have lapsed and the browser can block `execCommand` — which is why this
+ * returns whether it actually succeeded rather than assuming it did.
  */
 function legacyCopy(value: string): boolean {
-  if (typeof document === 'undefined' || typeof document.execCommand !== 'function') {
+  if (
+    typeof document === 'undefined' ||
+    typeof document.execCommand !== 'function' ||
+    // `document.body` can be null very early in page life; appending below would throw.
+    document.body == null
+  ) {
     return false;
   }
   const textarea = document.createElement('textarea');
