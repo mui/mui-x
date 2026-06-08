@@ -231,10 +231,9 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
 
       await user.click(screen.getByRole('button', { name: /open event/i }));
 
-      // ClickAwayListener uses 'onMouseDown', so fire click first (sets placeholder)
-      // then mousedown outside to close and clear it.
+      // ClickAwayListener uses 'onClick': clicking an empty cell fires the button's onClick
+      // (sets the placeholder), then bubbles to the document where ClickAwayListener clears it.
       fireEvent.click(emptyCellBtn);
-      fireEvent.mouseDown(document.body);
 
       expect(storeRef!.state.occurrencePlaceholder).to.equal(null);
     });

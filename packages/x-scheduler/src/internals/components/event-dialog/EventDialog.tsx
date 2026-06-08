@@ -186,7 +186,7 @@ export const EventDialogContent = React.forwardRef(function EventDialogContent(
   return (
     <ClickAwayListener
       onClickAway={handleClickAway}
-      mouseEvent={open && !isScopeDialogOpen ? 'onMouseDown' : false}
+      mouseEvent={open && !isScopeDialogOpen ? 'onClick' : false}
       touchEvent={false}
     >
       <EventDialogRoot
