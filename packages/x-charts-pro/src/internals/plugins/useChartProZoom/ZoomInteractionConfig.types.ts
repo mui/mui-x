@@ -36,17 +36,17 @@ export type DefaultizedZoomInteractionConfig = {
   pan: Entry<PanInteraction>;
 };
 
-export type ZoomInteraction =
+type ZoomInteraction =
   | WheelInteraction
   | PinchInteraction
   | TapAndDragInteraction
   | DoubleTapResetInteraction
   | BrushInteraction;
-export type PanInteraction = DragInteraction | PressAndDragInteraction | WheelPanInteraction;
+type PanInteraction = DragInteraction | PressAndDragInteraction | WheelPanInteraction;
 
 export type ZoomInteractionName = ZoomInteraction['type'];
 export type PanInteractionName = PanInteraction['type'];
-export type InteractionMode = Exclude<PointerMode, 'pen'>;
+type InteractionMode = Exclude<PointerMode, 'pen'>;
 
 type AllKeysProp = {
   /**
@@ -83,42 +83,42 @@ type Unpack<T> = {
   [K in keyof T]: T[K] extends object ? Unpack<T[K]> : T[K];
 };
 
-export type WheelInteraction = Unpack<
+type WheelInteraction = Unpack<
   {
     type: 'wheel';
   } & NoModeProp &
-    AllKeysProp
+  AllKeysProp
 >;
 
-export type PinchInteraction = Unpack<
+type PinchInteraction = Unpack<
   {
     type: 'pinch';
   } & NoModeProp &
-    NoKeysProp
+  NoKeysProp
 >;
 
-export type DragInteraction = Unpack<
+type DragInteraction = Unpack<
   {
     type: 'drag';
   } & AllModeProp &
-    AllKeysProp
+  AllKeysProp
 >;
 
-export type TapAndDragInteraction = Unpack<
+type TapAndDragInteraction = Unpack<
   {
     type: 'tapAndDrag';
   } & AllModeProp &
-    AllKeysProp
+  AllKeysProp
 >;
 
-export type PressAndDragInteraction = Unpack<
+type PressAndDragInteraction = Unpack<
   {
     type: 'pressAndDrag';
   } & AllModeProp &
-    AllKeysProp
+  AllKeysProp
 >;
 
-export type WheelPanInteraction = Unpack<
+type WheelPanInteraction = Unpack<
   {
     type: 'wheel';
     /**
@@ -130,21 +130,21 @@ export type WheelPanInteraction = Unpack<
      */
     allowedDirection?: 'x' | 'y' | 'xy';
   } & NoModeProp &
-    AllKeysProp
+  AllKeysProp
 >;
 
-export type DoubleTapResetInteraction = Unpack<
+type DoubleTapResetInteraction = Unpack<
   {
     type: 'doubleTapReset';
   } & AllModeProp &
-    AllKeysProp
+  AllKeysProp
 >;
 
-export type BrushInteraction = Unpack<
+type BrushInteraction = Unpack<
   {
     type: 'brush';
   } & AllModeProp &
-    AllKeysProp
+  AllKeysProp
 >;
 
 export type AnyInteraction = {
