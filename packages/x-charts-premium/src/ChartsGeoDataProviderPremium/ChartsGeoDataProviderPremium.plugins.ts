@@ -18,6 +18,10 @@ import {
   useGeoProjection,
   type UseGeoProjectionSignature,
 } from '../internals/plugins/useGeoProjection';
+import {
+  useGeoProjectionZoom,
+  type UseGeoProjectionZoomSignature,
+} from '../internals/plugins/useGeoProjectionZoom';
 
 export const GEO_PREMIUM_PLUGINS = [
   useChartZAxis,
@@ -28,6 +32,7 @@ export const GEO_PREMIUM_PLUGINS = [
   useChartVisibilityManager,
   useChartProExport,
   useGeoProjection,
+  useGeoProjectionZoom,
 ] as const;
 
 export type GeoPremiumPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
@@ -39,4 +44,5 @@ export type GeoPremiumPluginSignatures<SeriesType extends ChartSeriesType = Char
   UseChartVisibilityManagerSignature<SeriesType>,
   UseChartProExportSignature,
   UseGeoProjectionSignature,
+  UseGeoProjectionZoomSignature,
 ];
