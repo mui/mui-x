@@ -7,11 +7,11 @@ async function main() {
     seedUrls: ['/x'],
     // Target paths to ignore during link checking
     ignoredPaths: [
-      // Internal links not on this server
-      // TODO: Seed crawler with stored links from e.g. mui.com/x/link-structure.json
-      // /^\/(base-ui|joy-ui|store|toolpad)(\/|$)/,
+      // Links to other MUI products that are not served by this server.
+      // TODO: Validate these against stored links once link-structure.json is
+      // published for each product (e.g. mui.com/material-ui/link-structure.json).
+      /^\/(material-ui|base-ui|joy-ui|system|store|toolpad)(\/|$)/,
     ],
-    knownTargetsDownloadUrl: ['https://mui.com/material-ui/link-structure.json'],
   });
 
   process.exit(issues.length);
