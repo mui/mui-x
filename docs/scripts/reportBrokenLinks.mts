@@ -7,10 +7,12 @@ async function main() {
     seedUrls: ['/x'],
     // Target paths to ignore during link checking
     ignoredPaths: [
-      // Links to other MUI products that are not served by this server.
+      // Links to other MUI products and main-site pages (blog, pricing, etc.)
+      // that are not served by this `/x`-only docs export. They resolve on the
+      // live mui.com site but 404 in this isolated preview build.
       // TODO: Validate these against stored links once link-structure.json is
       // published for each product (e.g. mui.com/material-ui/link-structure.json).
-      /^\/(material-ui|base-ui|joy-ui|system|store|toolpad)(\/|$)/,
+      /^\/(material-ui|base-ui|joy-ui|system|store|toolpad|blog|pricing|about|careers)(\/|$)/,
     ],
   });
 
