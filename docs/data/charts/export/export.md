@@ -97,8 +97,8 @@ The name of the exported file has been customized to resemble the chart's title.
 
 To add custom styles or modify the chart's appearance before exporting, use the `onBeforeExport` callback.
 
-For image and PDF export, the chart is first rendered into an iframe, so `onBeforeExport` receives that iframe before the export process starts.
-SVG export has no iframe, so its `onBeforeExport` receives the `<svg>` element to be exported instead.
+For image and PDF export, `onBeforeExport` receives the iframe the chart is rendered into before the export process starts.
+SVG export serializes an SVG document, so its `onBeforeExport` receives the `<svg>` element to be exported instead.
 
 For example, you can add the title and caption to the exported chart as shown below:
 
@@ -193,6 +193,10 @@ apiRef.current?.exportAsSvg({ fileName: 'my-chart' });
 ```
 
 {{"demo": "ExportChartAsSvg.js"}}
+
+:::info
+The chart is always exported in light mode, regardless of the color scheme of the page it is rendered in.
+:::
 
 :::warning
 Styles served from a cross-origin stylesheet cannot be read for security reasons and are omitted from the exported SVG, the same way they are for image export.
