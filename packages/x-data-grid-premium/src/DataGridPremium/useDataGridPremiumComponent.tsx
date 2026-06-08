@@ -63,6 +63,7 @@ import {
   useGridLazyLoader,
   useGridLazyLoaderPreProcessors,
   useGridDataSourceLazyLoader,
+  useGridDataSourceNestedLazyLoader,
   useGridInfiniteLoadingIntersection,
   headerFilteringStateInitializer,
   useGridHeaderFiltering,
@@ -239,6 +240,7 @@ export const useDataGridPremiumComponent = (
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);
   useGridDataSourceLazyLoader(apiRef, props);
+  useGridDataSourceNestedLazyLoader(apiRef, props);
   useGridInfiniteLoadingIntersection(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridCsvExport(apiRef, props);

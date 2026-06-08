@@ -1050,30 +1050,32 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
 
     describe('`avg`', () => {
+      const applyAvgAggregation = (values: unknown[]) =>
+        GRID_AGGREGATION_FUNCTIONS.avg.apply({
+          values,
+          field: 'value',
+          groupId: 0,
+        });
+
       it('should work with numbers', () => {
-        expect(
-          GRID_AGGREGATION_FUNCTIONS.avg.apply(
-            {
-              values: [0, 10, 12, 23],
-              field: 'value',
-              groupId: 0,
-            },
-            apiRef.current!,
-          ),
-        ).to.equal(11.25);
+        expect(applyAvgAggregation([0, 10, 12, 23])).to.equal(11.25);
       });
 
       it('should ignore non-numbers', () => {
         expect(
-          GRID_AGGREGATION_FUNCTIONS.avg.apply(
-            {
-              values: [0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true],
-              field: 'value',
-              groupId: 0,
-            },
-            apiRef.current!,
-          ),
+          applyAvgAggregation([0, 10, 12, 23, 'a', '', undefined, null, NaN, {}, true]),
         ).to.equal(11.25);
+      });
+
+      it('should return 0 when the numeric values average to 0', () => {
+        expect(applyAvgAggregation([-5, 5])).to.equal(0);
+        expect(applyAvgAggregation([0, 0])).to.equal(0);
+        expect(applyAvgAggregation([-10, 4, 6])).to.equal(0);
+        expect(applyAvgAggregation([0, 'a', '', undefined, null, NaN, {}, true])).to.equal(0);
+      });
+
+      it('should return null when there are no numeric values', () => {
+        expect(applyAvgAggregation(['a', '', undefined, null, NaN, {}, true])).to.equal(null);
       });
     });
 

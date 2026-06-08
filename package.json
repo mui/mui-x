@@ -1,5 +1,5 @@
 {
-  "version": "9.3.0",
+  "version": "9.4.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -66,16 +66,16 @@
   "devDependencies": {
     "@atlaskit/pragmatic-drag-and-drop-unit-testing": "1.1.1",
     "@babel/core": "catalog:",
-    "@babel/plugin-syntax-typescript": "7.28.6",
-    "@babel/plugin-transform-object-rest-spread": "7.28.6",
+    "@babel/plugin-syntax-typescript": "7.29.7",
+    "@babel/plugin-transform-object-rest-spread": "7.29.7",
     "@babel/traverse": "catalog:",
-    "@babel/types": "7.29.0",
+    "@babel/types": "7.29.7",
     "@emotion/cache": "catalog:",
-    "@inquirer/prompts": "8.4.3",
+    "@inquirer/prompts": "8.5.1",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.20",
     "@mui/internal-babel-plugin-minify-errors": "2.0.8-canary.27",
     "@mui/internal-bundle-size-checker": "1.0.9-canary.81",
-    "@mui/internal-code-infra": "0.0.4-canary.50",
+    "@mui/internal-code-infra": "0.0.4-canary.54",
     "@mui/internal-api-docs-builder": "1.0.1-canary.1",
     "@mui/internal-markdown": "3.0.8-canary.3",
     "@mui/internal-netlify-cache": "0.0.3-canary.5",
@@ -90,7 +90,7 @@
     "@playwright/test": "catalog:",
     "@types/babel__core": "7.20.5",
     "@types/babel__traverse": "7.28.0",
-    "@types/node": "22.19.3",
+    "@types/node": "22.19.19",
     "@types/picomatch": "4.0.3",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
@@ -109,9 +109,9 @@
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
     "es-toolkit": "catalog:",
-    "eslint": "9.39.4",
+    "eslint": "10.4.1",
     "eslint-plugin-consistent-default-export-name": "0.0.15",
-    "eslint-plugin-jsdoc": "62.9.0",
+    "eslint-plugin-jsdoc": "63.0.1",
     "eslint-plugin-mui-x": "workspace:^",
     "execa": "catalog:",
     "globby": "16.2.0",
@@ -131,7 +131,7 @@
     "serve": "catalog:",
     "sinon": "22.0.0",
     "string-replace-loader": "3.3.0",
-    "stylelint": "17.11.1",
+    "stylelint": "17.12.0",
     "tsx": "catalog:",
     "typescript": "5.9.3",
     "unist-util-visit": "5.1.0",
@@ -144,9 +144,9 @@
   "config": {
     "valeVersion": "3.14.2"
   },
-  "packageManager": "pnpm@10.33.4",
+  "packageManager": "pnpm@11.5.0",
   "engines": {
-    "pnpm": "10.33.4",
-    "node": ">=22.18"
+    "pnpm": "11.5.0",
+    "node": ">=22.22.3"
   }
 }
