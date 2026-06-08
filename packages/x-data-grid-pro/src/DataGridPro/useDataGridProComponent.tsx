@@ -96,6 +96,9 @@ import {
 import { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
 import { useGridDataSourceNestedLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceNestedLazyLoader';
 import { useGridInfiniteLoadingIntersection } from '../hooks/features/serverSideLazyLoader/useGridInfiniteLoadingIntersection';
+import { registerMultiSelectColumnType } from '../colDef/registerMultiSelectColumnType';
+
+registerMultiSelectColumnType();
 
 export const useDataGridProComponent = (
   apiRef: RefObject<GridPrivateApiPro>,
