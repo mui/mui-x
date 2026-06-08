@@ -27,6 +27,8 @@ import {
   randomRateType,
   randomContractType,
   randomTaxCode,
+  randomTradeTags,
+  randomCertifications,
 } from '../services';
 import {
   renderCountry,
@@ -52,6 +54,8 @@ import {
   RATE_TYPE_OPTIONS,
   STATUS_OPTIONS,
   TAXCODE_OPTIONS,
+  TRADE_TAG_OPTIONS,
+  CERTIFICATION_OPTIONS,
 } from '../services/static-data';
 import type { GridColDefGenerator } from '../services/gridColDefGenerator';
 
@@ -72,6 +76,15 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     headerName: 'Commodity',
     generateData: randomCommodity,
     width: 180,
+    editable,
+  },
+  {
+    field: 'tags',
+    headerName: 'Tags',
+    generateData: randomTradeTags,
+    type: 'multiSelect',
+    valueOptions: TRADE_TAG_OPTIONS,
+    width: 220,
     editable,
   },
   {
@@ -324,6 +337,15 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     generateData: randomCreatedDate,
     type: 'date',
     width: 150,
+    editable,
+  },
+  {
+    field: 'certifications',
+    headerName: 'Certifications',
+    generateData: randomCertifications,
+    type: 'multiSelect',
+    valueOptions: CERTIFICATION_OPTIONS,
+    width: 200,
     editable,
   },
 ];

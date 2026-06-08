@@ -54,7 +54,7 @@ const INLINE_PATTERNS: InlinePattern[] = [
     // Link: [label](url)
     regex: /\[([^\]]+)\]\(([^)]+)\)/,
     render: (m, k) => (
-      <a key={k} href={sanitizeUrl(m[2])} target="_blank" rel="noopener noreferrer">
+      <a key={k} href={sanitizeUrl(m[2])} target="_blank">
         {m[1]}
       </a>
     ),
