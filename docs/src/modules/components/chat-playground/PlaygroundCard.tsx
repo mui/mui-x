@@ -1068,7 +1068,7 @@ function CollapsedStrip({
           lineHeight: 1,
         })}
       >
-        Click to expand
+        Expand playground
       </Box>
       <Box aria-hidden sx={{ transform: 'rotate(90deg)', display: 'inline-flex' }}>
         <CollapseChevronIcon direction="right" />
