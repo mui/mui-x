@@ -47,14 +47,36 @@ function isInStrictMode(): boolean {
   }
 }
 
+// `true` when React shared internals are reachable, i.e. we are running on
+// React (18 or 19) and can read the rendering fiber's `mode` bits. Preact and
+// other runtimes don't expose them — and don't replay StrictMode's double
+// mount — so the production variant is correct there.
+const CAN_DETECT_STRICT_MODE = ReactInternals != null;
+
 // Module-private symbol used to stash the `useOnMount` callback on the
 // instance during the first render so subsequent renders can pass the same
 // reference into `useOnMount` without allocating a fresh closure.
 const MOUNT = Symbol('useDisposable.mount');
 
+// Module-private symbol holding the dev-only StrictMode bookkeeping that lets
+// the mount callback distinguish StrictMode's simulated unmount from a real
+// one and assert our render-time detection was correct.
+const DEV_STATE = Symbol('useDisposable.devState');
+
+interface DevState {
+  // What `isInStrictMode()` reported at construction time.
+  detectedStrict: boolean;
+  // How many times this instance has been mounted. StrictMode replays the
+  // mount→unmount→mount cycle on the *same* instance, so a second mount only
+  // ever happens under StrictMode.
+  mountCount: number;
+  // Whether we've already run the instance's `[disposeSymbol]`.
+  disposed: boolean;
+}
+
 type Mounted<T> = T & { [MOUNT]: () => (() => void) | undefined };
 
-const NOOP_MOUNT = () => undefined;
+type MountedDev<T> = T & { [MOUNT]: () => () => void; [DEV_STATE]: DevState };
 
 const UNINITIALIZED: unique symbol = Symbol();
 
@@ -79,24 +101,46 @@ function useDisposableProduction<T extends Disposable>(factory: () => T): T {
 
 /**
  * Development variant: detects StrictMode by reading the currently-rendering
- * fiber's `mode` bits from React shared internals and stashes a no-op mount
- * callback when set, so a single instance survives StrictMode's mount→
- * unmount→mount cycle. Dev-only trade-off: a real unmount inside
- * `<StrictMode>` also skips dispose.
+ * fiber's `mode` bits from React shared internals so the same instance
+ * survives StrictMode's mount→unmount→mount cycle.
+ *
+ * The mount callback counts mounts to keep the detection honest:
+ * - it skips dispose on StrictMode's *first* (simulated) unmount only, and
+ *   disposes on every real unmount — including the final one inside
+ *   `<StrictMode>`, so no instance is leaked in dev;
+ * - if the instance is mounted a second time but was already disposed, our
+ *   render-time detection produced a false negative. Rather than silently
+ *   hand back a dead instance (which is the failure that motivated this hook),
+ *   it throws so the bug surfaces immediately.
  * @returns {T} the lazily-created instance.
  */
 function useDisposableDevelopment<T extends Disposable>(factory: () => T): T {
-  const ref = React.useRef<Mounted<T> | typeof UNINITIALIZED>(UNINITIALIZED);
+  const ref = React.useRef<MountedDev<T> | typeof UNINITIALIZED>(UNINITIALIZED);
   if (ref.current === UNINITIALIZED) {
-    const inst = factory() as Mounted<T>;
+    const inst = factory() as MountedDev<T>;
     // Captured during render because the owner fiber is only set while React
     // is rendering — by the time the effect runs it's already null.
-    if (isInStrictMode()) {
-      inst[MOUNT] = NOOP_MOUNT;
-    } else {
-      const cleanup = () => inst[disposeSymbol]();
-      inst[MOUNT] = () => cleanup;
-    }
+    const state: DevState = { detectedStrict: isInStrictMode(), mountCount: 0, disposed: false };
+    inst[DEV_STATE] = state;
+    inst[MOUNT] = () => {
+      state.mountCount += 1;
+      if (state.mountCount > 1 && state.disposed) {
+        throw new Error(
+          'MUI X: useDisposable failed to detect React StrictMode.\n' +
+            "The instance was disposed on StrictMode's simulated unmount and is about to be reused while torn down.\n" +
+            'This is an internal invariant violation — please report it at https://github.com/mui/mui-x/issues.',
+        );
+      }
+      return () => {
+        // Skip StrictMode's simulated unmount (the first unmount, when strict
+        // mode was detected); dispose on every real unmount.
+        if (state.detectedStrict && state.mountCount < 2) {
+          return;
+        }
+        state.disposed = true;
+        inst[disposeSymbol]();
+      };
+    };
     ref.current = inst;
   }
   useOnMount(ref.current[MOUNT]);
@@ -107,7 +151,10 @@ function useDisposableDevelopment<T extends Disposable>(factory: () => T): T {
  * Lazily creates an instance on first render and runs its `[disposeSymbol]`
  * once on unmount. The cleanup runs synchronously; in development StrictMode's
  * simulated unmount is detected and skipped so the same instance survives the
- * double mount.
+ * double mount. On runtimes without readable React internals (e.g. Preact,
+ * which doesn't replay the double mount) the production variant is used.
  */
 export const useDisposable =
-  process.env.NODE_ENV === 'production' ? useDisposableProduction : useDisposableDevelopment;
+  process.env.NODE_ENV === 'production' || !CAN_DETECT_STRICT_MODE
+    ? useDisposableProduction
+    : useDisposableDevelopment;
