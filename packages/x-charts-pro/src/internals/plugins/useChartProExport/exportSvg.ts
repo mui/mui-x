@@ -6,7 +6,9 @@ import { type ChartSvgExportOptions } from './useChartProExport.types';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const XLINK_NS = 'http://www.w3.org/1999/xlink';
-const LAYER_CONTAINER_ROOT_CLASS = 'MuiChartsLayerContainer-root';
+// Temporary marker used to locate the chart container inside the cloned tree.
+const CONTAINER_MARKER = 'data-mui-svg-export-container';
+const LEGEND_TOP_PADDING = 16;
 
 type ExportLayer =
   | { kind: 'svg'; element: SVGSVGElement }
@@ -111,8 +113,7 @@ async function exportSvg(
     canvas.toDataURL(),
   );
 
-  /* Render the chart into an isolated iframe forced to light mode, so every style read and the
-   * inlined stylesheet resolve in light mode regardless of the page's current color scheme. */
+  // Render into an isolated iframe forced to light mode so all styles resolve in light mode.
   const iframe = createExportIframe(fileName);
   const iframeLoaded = new Promise<void>((resolve) => {
     iframe.onload = () => resolve();
@@ -124,17 +125,25 @@ async function exportSvg(
     const exportDoc = iframe.contentDocument!;
     exportDoc.documentElement.setAttribute('data-mui-color-scheme', 'light');
 
+    // Mark the live container so we can find its clone reliably (no class-name dependency).
+    chartContainer.setAttribute(CONTAINER_MARKER, '');
     const chartClone = chartRoot.cloneNode(true) as Element;
+    chartContainer.removeAttribute(CONTAINER_MARKER);
+
     chartClone.querySelectorAll('[data-hide-on-export]').forEach((el) => el.remove());
     exportDoc.body.replaceChildren(chartClone);
     exportDoc.body.style.margin = '0px';
     exportDoc.body.style.display = 'block';
-    exportDoc.body.style.width = 'fit-content';
+    // The chart wrapper is `flex: 1`, so size the body to the live chart or the clone collapses.
+    const rootRect = chartRoot.getBoundingClientRect();
+    exportDoc.body.style.width = `${rootRect.width}px`;
+    exportDoc.body.style.height = `${rootRect.height}px`;
 
     // Load the page styles into the iframe so the clone lays out and renders in light mode.
     await Promise.all(loadStyleSheets(exportDoc, styleSource, nonce));
 
-    const containerClone = chartClone.querySelector(`.${LAYER_CONTAINER_ROOT_CLASS}`);
+    const containerClone = chartClone.querySelector(`[${CONTAINER_MARKER}]`);
+    containerClone?.removeAttribute(CONTAINER_MARKER);
     const layers = containerClone ? collectLayers(containerClone) : [];
 
     if (!containerClone || layers.length === 0) {
@@ -145,15 +154,15 @@ async function exportSvg(
       );
     }
 
-    /* The plot and legend can sit on any side, so the output spans the union of their bounding
-     * boxes, with the top-left of that union as the export origin. */
+    // Span the union of the plot and legend boxes; their top-left is the export origin.
     const legendClone = chartClone.querySelector(`.${legendClasses.root}`);
     const rects = [containerClone.getBoundingClientRect()];
     if (legendClone) {
       rects.push(legendClone.getBoundingClientRect());
     }
+    const topPadding = legendClone ? LEGEND_TOP_PADDING : 0;
     const originLeft = Math.min(...rects.map((rect) => rect.left));
-    const originTop = Math.min(...rects.map((rect) => rect.top));
+    const originTop = Math.min(...rects.map((rect) => rect.top)) - topPadding;
     const width = Math.max(...rects.map((rect) => rect.right)) - originLeft;
     const height = Math.max(...rects.map((rect) => rect.bottom)) - originTop;
 
