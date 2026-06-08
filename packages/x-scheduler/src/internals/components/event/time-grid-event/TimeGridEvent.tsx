@@ -30,6 +30,8 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     backgroundColor: 'var(--event-surface-subtle-hover)',
   },
   '&[data-editing]': {
+    backgroundColor: 'var(--event-surface-selected)',
+    color: 'var(--event-on-surface-selected)',
     '&:hover': {
       backgroundColor: 'var(--event-surface-selected-hover)',
     },

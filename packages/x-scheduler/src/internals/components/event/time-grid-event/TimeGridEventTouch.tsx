@@ -24,15 +24,18 @@ const TimeGridEventTouchRoot = styled(CalendarGrid.TimeEvent, {
   '&[data-under-fifteen-minutes="true"]': {
     padding: theme.spacing(0, 0.5),
   },
+  '&[data-editing]': {
+    backgroundColor: 'var(--event-surface-selected)',
+    color: 'var(--event-on-surface-selected)',
+  },
 }));
 
 const TOUCH_TITLE_LINE_HEIGHT_PX = 12;
-const TOUCH_EVENT_VERTICAL_PADDING_PX = 4;
 const TOUCH_TITLE_MAX_LINES = 24;
 
 const touchTitleLineClampSteps: CSSObject = {};
 for (let lines = 2; lines <= TOUCH_TITLE_MAX_LINES; lines += 1) {
-  const minHeight = TOUCH_EVENT_VERTICAL_PADDING_PX + lines * TOUCH_TITLE_LINE_HEIGHT_PX;
+  const minHeight = lines * TOUCH_TITLE_LINE_HEIGHT_PX;
   touchTitleLineClampSteps[`@container (min-height: ${minHeight}px)`] = {
     WebkitLineClamp: lines,
     maxHeight: `${lines * TOUCH_TITLE_LINE_HEIGHT_PX}px`,
