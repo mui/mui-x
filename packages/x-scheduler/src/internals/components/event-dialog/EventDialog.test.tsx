@@ -282,8 +282,8 @@ describe('<EventDialogContent /> — community (no recurring-events plugin)', ()
       await user.click(screen.getByRole('button', { name: /open event/i }));
       expect(openEventIdChanges.at(-1)).to.equal(DEFAULT_EVENT.id);
 
-      // Mousedown outside closes the dialog (ClickAwayListener uses 'onMouseDown').
-      fireEvent.mouseDown(document.body);
+      // Click outside closes the dialog (ClickAwayListener uses 'onClick').
+      await user.click(document.body);
       expect(openEventIdChanges.at(-1)).to.equal(null);
     });
   });
