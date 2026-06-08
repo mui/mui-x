@@ -764,6 +764,10 @@ const pages: MuiPage[] = [
                 unstable: true,
               },
               { pathname: '/x/react-charts/references' },
+              {
+                pathname: '/x/react-charts/sampling',
+                plan: 'pro',
+              },
               { pathname: '/x/react-charts/toolbar' },
               { pathname: '/x/react-charts/tooltip' },
               {

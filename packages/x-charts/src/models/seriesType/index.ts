@@ -49,12 +49,14 @@ export type {
   LineSeriesType,
   LineItemIdentifier,
   DefaultizedLineSeriesType,
+  LineSeriesExtension,
 } from './line';
 export type {
   BarValueType,
   BarSeriesType,
   BarItemIdentifier,
   DefaultizedBarSeriesType,
+  BarSeriesExtension,
 } from './bar';
 export * from './scatter';
 export * from './pie';

@@ -11,6 +11,7 @@ import StackedBarChartRoundedIcon from '@mui/icons-material/StackedBarChartRound
 import StyleRoundedIcon from '@mui/icons-material/StyleRounded';
 import ZoomInRoundedIcon from '@mui/icons-material/ZoomIn';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import CompressRoundedIcon from '@mui/icons-material/CompressRounded';
 import Box from '@mui/material/Box';
 
 const content = [
@@ -68,6 +69,11 @@ const content = [
     title: 'Export',
     link: '/x/react-charts/export/',
     icon: <FileDownloadIcon fontSize="small" color="primary" />,
+  },
+  {
+    title: 'Sampling',
+    link: '/x/react-charts/sampling/',
+    icon: <CompressRoundedIcon fontSize="small" color="primary" />,
   },
 ];
 

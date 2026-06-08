@@ -28,6 +28,7 @@ export * from '../ChartsContainer/useChartsContainerProps';
 export * from '../ChartsDataProvider/useChartsDataProviderProps';
 export * from '../ChartsRadialDataProvider/useChartsRadialDataProviderProps';
 export * from './seriesSelectorOfType';
+export * from './seriesRenderedSelector';
 export { useSkipAnimation } from '../hooks/useSkipAnimation';
 export { useRegisterPointerInteractions } from './plugins/featurePlugins/shared/useRegisterPointerInteractions';
 
@@ -112,6 +113,7 @@ export * from '../models/seriesType/config';
 export * from '../models/seriesType/common';
 export * from '../models/seriesType/line';
 export * from '../models/seriesType/bar';
+export * from '../models/seriesType/scatter';
 
 export * from '../models/z-axis';
 export * from '../models/axis';

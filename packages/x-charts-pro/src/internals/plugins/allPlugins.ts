@@ -22,6 +22,7 @@ import {
 } from '@mui/x-charts/internals';
 import { useChartProExport, type UseChartProExportSignature } from './useChartProExport';
 import { useChartProZoom, type UseChartProZoomSignature } from './useChartProZoom';
+import { useChartProSampling, type UseChartProSamplingSignature } from './useChartProSampling';
 
 export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
@@ -34,6 +35,7 @@ export type AllPluginSignatures<SeriesType extends ChartSeriesType = ChartSeries
   UseChartVisibilityManagerSignature<SeriesType>,
   UseChartProZoomSignature,
   UseChartProExportSignature,
+  UseChartProSamplingSignature,
   UseChartVisibilityManagerSignature<SeriesType>,
 ];
 
@@ -51,6 +53,7 @@ export const ALL_PLUGINS = [
   useChartVisibilityManager,
   useChartProZoom,
   useChartProExport,
+  useChartProSampling,
   useChartVisibilityManager,
 ];
 
@@ -65,6 +68,7 @@ export type DefaultPluginSignatures<SeriesType extends ChartSeriesType = ChartSe
   UseChartVisibilityManagerSignature<SeriesType>,
   UseChartProZoomSignature,
   UseChartProExportSignature,
+  UseChartProSamplingSignature,
   UseChartVisibilityManagerSignature<SeriesType>,
 ];
 
@@ -81,5 +85,6 @@ export const DEFAULT_PLUGINS = [
   useChartVisibilityManager,
   useChartProZoom,
   useChartProExport,
+  useChartProSampling,
   useChartVisibilityManager,
 ];

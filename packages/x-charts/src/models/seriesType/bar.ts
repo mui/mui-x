@@ -10,12 +10,17 @@ import {
 import { type DatasetElementType } from './config';
 import { type BarItem, type BarLabelContext } from '../../BarChart';
 
+/**
+ * Extension point for bar series props. Augmented by Pro and Premium.
+ */
+export interface BarSeriesExtension {}
+
 export type BarValueType = number;
 
 /**
  * @internal The series type shared by the bar and radialBar charts
  */
-export interface CommonBarSeriesType {
+export interface CommonBarSeriesType extends BarSeriesExtension {
   /**
    * Data associated to each bar.
    */

@@ -3,6 +3,7 @@ import { type SeriesId } from '../models/seriesType/common';
 import { type D3Scale } from '../models/axis';
 import { getValueToPositionMapper } from '../hooks';
 import { type DefaultizedScatterSeriesType, type ScatterValueType } from '../models';
+import { useChartSampledIndices } from '../internals/seriesRenderedSelector';
 
 export function useScatterPlotData(
   series: DefaultizedScatterSeriesType,
@@ -10,6 +11,8 @@ export function useScatterPlotData(
   yScale: D3Scale,
   isPointInside: (x: number, y: number) => boolean,
 ) {
+  const sampledIndices = useChartSampledIndices()[series.id];
+
   return React.useMemo(() => {
     const getXPosition = getValueToPositionMapper(xScale);
     const getYPosition = getValueToPositionMapper(yScale);
@@ -20,7 +23,10 @@ export function useScatterPlotData(
       type: 'scatter';
     })[] = [];
 
-    for (let i = 0; i < series.data.length; i += 1) {
+    const length = sampledIndices ? sampledIndices.length : series.data.length;
+
+    for (let cursor = 0; cursor < length; cursor += 1) {
+      const i = sampledIndices ? sampledIndices[cursor] : cursor;
       const scatterPoint = series.data[i];
 
       const x = getXPosition(scatterPoint.x);
@@ -41,5 +47,5 @@ export function useScatterPlotData(
     }
 
     return temp;
-  }, [xScale, yScale, series.data, series.id, isPointInside]);
+  }, [xScale, yScale, series.data, series.id, sampledIndices, isPointInside]);
 }

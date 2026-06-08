@@ -10,6 +10,11 @@ import type {
 import { type DatasetElementType } from './config';
 import { type CurveType } from '../curve';
 
+/**
+ * Extension point for line series props. Augmented by Pro and Premium.
+ */
+export interface LineSeriesExtension {}
+
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**
    * The item index.
@@ -38,7 +43,7 @@ export type MarkShape = 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'tr
 /**
  * @internal The series type shared by the line and radialLine charts
  */
-export interface CommonLineSeriesType {
+export interface CommonLineSeriesType extends LineSeriesExtension {
   /**
    * Data associated to the line.
    */

@@ -8,11 +8,19 @@ import {
   selectorChartXAxis,
   type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { selectorChartsInteractionPointerX } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { selectorChartBarSampledBandIndices } from '../internals/seriesRenderedSelector';
+import {
+  getBarSampledSlots,
+  getBarSampledSlotAtCoordinate,
+  getBarSampledSlotPosition,
+} from '../internals/barSampledSlot';
 import { useDrawingArea } from '../hooks';
 import { type ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
 import { type ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
 import { ChartsAxisHighlightPath } from './ChartsAxisHighlightPath';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 
 /**
  * @ignore - internal component.
@@ -25,9 +33,14 @@ export default function ChartsXHighlight(props: {
 
   const { top, height } = useDrawingArea();
 
-  const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
+  const store =
+    useStore<
+      [UseChartCartesianAxisSignature, UseChartBrushSignature, UseChartInteractionSignature]
+    >();
   const axisXValues = store.use(selectorChartsHighlightXAxisValue);
   const xAxes = store.use(selectorChartXAxis);
+  const sampledBandIndices = store.use(selectorChartBarSampledBandIndices);
+  const pointerX = store.use(selectorChartsInteractionPointerX);
 
   if (axisXValues.length === 0) {
     return null;
@@ -38,6 +51,22 @@ export default function ChartsXHighlight(props: {
 
     const xScale = xAxis.scale;
     const getXPosition = getValueToPositionMapper(xScale);
+
+    // Sampled bars sit on a uniform slot grid, so highlight the slot under the pointer.
+    const sampledIndices = sampledBandIndices.x[axisId];
+    if (type === 'band' && sampledIndices !== undefined && pointerX !== null) {
+      const slots = getBarSampledSlots(xScale.range(), sampledIndices.length);
+      const cursor = getBarSampledSlotAtCoordinate(slots, pointerX);
+      const { position, thickness } = getBarSampledSlotPosition(slots, cursor);
+      return (
+        <ChartsAxisHighlightPath
+          key={`${axisId}-${value}`}
+          d={`M ${position} ${top} l ${thickness} 0 l 0 ${height} l ${-thickness} 0 Z`}
+          className={classes.root}
+          ownerState={{ axisHighlight: 'band' }}
+        />
+      );
+    }
 
     const isXScaleOrdinal = type === 'band' && value !== null && isOrdinalScale(xScale);
 

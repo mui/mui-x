@@ -17,6 +17,8 @@ import { useChartId } from '../hooks/useChartId';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import type { StackingGroupsType } from '../internals/stacking';
 import { type SeriesId } from '../models/seriesType';
+import { useChartSampledIndices, isContiguousSampling } from '../internals/seriesRenderedSelector';
+import { getBarSampledSlots, getBarSampledSlotPosition } from '../internals/barSampledSlot';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -33,12 +35,14 @@ export function useBarPlotData(
   const defaultYAxisId = useYAxes().yAxisIds[0];
 
   const chartId = useChartId();
+  const sampledIndicesBySeries = useChartSampledIndices();
 
   return processBarDataForPlot(
     drawingArea,
     chartId,
     seriesData.stackingGroups,
     seriesData.series,
+    sampledIndicesBySeries,
     xAxes,
     yAxes,
     defaultXAxisId,
@@ -51,6 +55,7 @@ export function processBarDataForPlot(
   chartId: string | undefined,
   stackingGroups: StackingGroupsType,
   series: Record<SeriesId, ChartSeriesDefaultized<'bar'>>,
+  sampledIndicesBySeries: Record<SeriesId, number[]>,
   xAxes: ComputedAxisConfig<ChartsXAxisProps>,
   yAxes: ComputedAxisConfig<ChartsYAxisProps>,
   defaultXAxisId: AxisId,
@@ -106,7 +111,20 @@ export function processBarDataForPlot(
         numberOfGroups: stackingGroups.length,
       });
 
-      for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
+      const sampledIndices = sampledIndicesBySeries[seriesId];
+      const barCount = sampledIndices ? sampledIndices.length : baseScaleConfig.data!.length;
+
+      // Downsampled bars are laid on a uniform slot grid (fewer, wider, evenly filling the axis)
+      // rather than their sparse real positions. A contiguous window is the show-all case: those
+      // bars keep their true positions, since slotting a visible subset across the whole range would
+      // shift and resize them as the override kicks in.
+      const slots =
+        sampledIndices && !isContiguousSampling(sampledIndices)
+          ? getBarSampledSlots(baseScaleConfig.scale.range(), barCount)
+          : null;
+
+      for (let cursor = 0; cursor < barCount; cursor += 1) {
+        const dataIndex = sampledIndices ? sampledIndices[cursor] : cursor;
         const barDimensions = getBarDimensions(dataIndex, groupIndex);
 
         if (barDimensions == null) {
@@ -124,6 +142,17 @@ export function processBarDataForPlot(
           value: series[seriesId].data[dataIndex],
           maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
         };
+
+        if (slots) {
+          const { position, thickness } = getBarSampledSlotPosition(slots, cursor);
+          if (verticalLayout) {
+            result.x = position;
+            result.width = thickness;
+          } else {
+            result.y = position;
+            result.height = thickness;
+          }
+        }
 
         if (
           result.x > xMax ||

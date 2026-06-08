@@ -7,6 +7,11 @@ import {
 } from './common';
 import { type DatasetElementType } from './config';
 
+/**
+ * Extension point for scatter series props. Augmented by Pro and Premium.
+ */
+export interface ScatterSeriesExtension {}
+
 export type ScatterValueType = {
   x: number;
   y: number;
@@ -30,7 +35,10 @@ export type ScatterValueType = {
 };
 
 export interface ScatterSeriesType
-  extends CommonSeriesType<ScatterValueType | null, 'scatter'>, CartesianSeriesType {
+  extends
+    CommonSeriesType<ScatterValueType | null, 'scatter'>,
+    CartesianSeriesType,
+    ScatterSeriesExtension {
   type: 'scatter';
   data?: readonly ScatterValueType[];
   /**

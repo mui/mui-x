@@ -33,6 +33,9 @@
     "labelMarkType": {
       "description": "Defines the mark type for the series.<br /><br />There is a default mark type for each series type."
     },
+    "sampling": {
+      "description": "The downsampling method used to reduce the number of rendered points for performance.<br />Sampling affects rendering only. Axis extremums, tooltips, highlighting, and item interaction<br />still use the complete dataset."
+    },
     "shape": {
       "description": "The shape of the mark elements.<br />Using &#39;circle&#39; renders a <code>&amp;lt;circle /&amp;gt;</code> element, while all other options render a <code>&amp;lt;path /&amp;gt;</code> instead. The path causes a small decrease in performance.<br />By default, each series has a different shape, cycling through <code>&#39;circle&#39;</code>, <code>&#39;square&#39;</code>, <code>&#39;diamond&#39;</code>, <code>&#39;cross&#39;</code>, <code>&#39;star&#39;</code>, <code>&#39;triangle&#39;</code>, <code>&#39;wye&#39;</code>.<br />If there are more than 7 series, the shapes will repeat."
     },
