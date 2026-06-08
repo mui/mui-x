@@ -3,10 +3,6 @@ import { vi } from 'vitest';
 import { createRenderer, ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
 import { LicenseInfo, Unstable_LicenseInfoProvider as LicenseInfoProvider } from '@mui/x-license';
 import { isJSDOM } from 'test/utils/skipIf';
-import type { MuiCommercialPackageName } from '../utils/commercialPackages';
-import { useLicenseVerifier, clearLicenseStatusCache } from './useLicenseVerifier';
-// eslint-disable-next-line import/extensions
-import generateReleaseInfo from '../../../../scripts/generateReleaseInfo.mjs';
 import {
   TEST_LICENSE_KEY_PRO,
   TEST_LICENSE_KEY_PREMIUM,
@@ -15,7 +11,11 @@ import {
   TEST_KEY_PREMIUM_SUBSCRIPTION_FUTURE,
   TEST_KEY_PRO_ANNUAL_Q1_2026_V3,
   TEST_KEY_PREMIUM_ANNUAL_Q1_2026_V3,
-} from '../test-keys';
+} from 'test/utils/licenseKeys';
+import type { MuiCommercialPackageName } from '../utils/commercialPackages';
+import { useLicenseVerifier, clearLicenseStatusCache } from './useLicenseVerifier';
+// eslint-disable-next-line import/extensions
+import generateReleaseInfo from '../../../../scripts/generateReleaseInfo.mjs';
 
 const releaseDate = new Date(3000, 0, 0, 0, 0, 0, 0);
 const RELEASE_INFO = generateReleaseInfo(releaseDate);

@@ -20,12 +20,18 @@ const schedulerApiPages: MuiPage[] = [
     title: 'StandaloneAgendaView',
   },
   {
-    pathname: '/x/api/scheduler/standalone-compact-day-time-grid',
-    title: 'StandaloneCompactDayTimeGrid',
+    pathname: '/x/api/scheduler/standalone-agenda-view-premium',
+    title: 'StandaloneAgendaViewPremium',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/scheduler/standalone-day-view',
     title: 'StandaloneDayView',
+  },
+  {
+    pathname: '/x/api/scheduler/standalone-day-view-premium',
+    title: 'StandaloneDayViewPremium',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/scheduler/standalone-event',
@@ -36,8 +42,18 @@ const schedulerApiPages: MuiPage[] = [
     title: 'StandaloneMonthView',
   },
   {
+    pathname: '/x/api/scheduler/standalone-month-view-premium',
+    title: 'StandaloneMonthViewPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/scheduler/standalone-week-view',
     title: 'StandaloneWeekView',
+  },
+  {
+    pathname: '/x/api/scheduler/standalone-week-view-premium',
+    title: 'StandaloneWeekViewPremium',
+    plan: 'premium',
   },
 ];
 export default schedulerApiPages;

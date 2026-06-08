@@ -44,10 +44,6 @@ export const getTimeGridEventRootStyles = (theme: Theme): CSSObject => ({
     outline: '2px solid var(--event-surface-accent)',
     outlineOffset: 2,
   },
-  '&[data-editing]': {
-    backgroundColor: 'var(--event-surface-selected)',
-    color: 'var(--event-on-surface-selected)',
-  },
   variants: getPaletteVariants(theme),
   [`@container ${EVENT_CALENDAR_CONTAINER_NAME} (width < 550px)`]: {
     '--time-grid-event-column-gap': '0px',

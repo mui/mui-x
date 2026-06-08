@@ -3,12 +3,12 @@ productId: x-scheduler
 title: React Scheduler component - Responsiveness
 packageName: '@mui/x-scheduler'
 githubLabel: 'scope: scheduler'
-components: StandaloneWeekView, StandaloneCompactDayTimeGrid
+components: StandaloneWeekView
 ---
 
 # Event Calendar - Responsiveness 🧪
 
-<p class="description">How the Event Calendar adapts to narrow widths.</p>
+<p class="description">How the Event Calendar adapts its typography to narrow widths.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader", "design": false}}
 
@@ -20,37 +20,37 @@ This is a POC. APIs may change before release.
 
 This PR covers three things:
 
-- A dedicated mobile day/time grid (`CompactDayTimeGrid`) - future dedicated 1-3-7 day views for mobile, keeping them together while during the initial discussions for simpicity.
-- A responsive typography layer for the existing desktop views (container queries - can be later extended for more responsiveness optimization on all othher views).
-- A split of the time-grid event into two variants (desktop and mobile) + extracted shared logic & styling.
+- Dedicated touch-optimized views for narrow widths: `CompactDayView`, `CompactThreeDayView` and `CompactWeekView` (1-, 3- and 7-day), all sharing the same compact day/time grid.
+- A responsive typography layer for the existing desktop views (container queries - can be later extended for more responsiveness optimization on all other views).
+- A split of the time-grid event into two variants (desktop and touch) + extracted shared logic & styling.
 
 What is **NOT** covered yet:
 
 - Mobile-friendly versions of the other views (month, agenda, day).
 - Real event editing on mobile. The editing drawer (see [Touch interactions](#touch-interactions)) is a mock that validates the gesture only — it does not edit the event yet.
 - Header responsiveness (toolbar, view switcher, side panel).
-- The public opt-in API. The variant is only availabble as a standalone view for now; the final DX is not decided.
+- The public opt-in API. The compact views are only available as standalone views for now; the final DX is not decided.
 
-## Why a separate mobile view + responsive desktop
+## Why separate touch views + responsive desktop
 
 The desktop `WeekView` is built for wide screens. On a phone it doesn't fit, even after shrinking. Some things just don't translate: drag-to-create (not available yet) needs the right padding, event cards show start/end time, hover, etc.
 
 2 directions:
 
-1. Make the existing views adapt down to ~400px. CSS only, container queries, no JavaScript. Not a aperfect solution, but no broken views on smaller screens.
-2. Ship a dedicated mobile day/time grid for the best mobile experience.
+1. Make the existing views adapt down to ~400px. CSS only, container queries, no JavaScript. Not a perfect solution, but no broken views on smaller screens.
+2. Ship dedicated touch-optimized views for the best mobile experience.
 
-The mobile view is **opt-in**. We do not auto-switch on viewport width. The final opt-in API (prop, hook, view registry) is still TBD.
+The compact views are **opt-in**. We do not auto-switch on viewport width. The final opt-in API (prop, hook, view registry) is still TBD.
 
 {{"demo": "CompactWeekView.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-`CompactDayTimeGrid` accepts a `dayCount` prop (`1`, `3`, or `7`). This is temporary — it's the simplest way to demo a mobile-friendly day count without designing the final API. Once the opt-in story is settled, this prop will likely go away.
+The compact day count is split across three separate views (`CompactDayView`, `CompactThreeDayView`, `CompactWeekView`) rather than a single `dayCount` prop. The demo above switches between them. The final opt-in story is still TBD.
 :::
 
 ## Responsive typography
 
-The desktop views now read their font sizes and a few key dimensions from CSS custom properties. A wrapper around the view sets `container-type: inline-size` and a container name. Container queries inside the calendar retarget the variables at narrower widths.
+The views read their font sizes and a few key dimensions from CSS custom properties. A wrapper around the view sets `container-type: inline-size` and a container name. Container queries inside the calendar retarget the variables at narrower widths, so the typography scales down without any JavaScript or viewport detection.
 
 ### Tokens
 
@@ -102,38 +102,36 @@ The demo below renders `StandaloneWeekView` with `width: 100%` and a `max-width`
 
 {{"demo": "ResponsiveTypographyDemo.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## TimeGridEvent vs. TimeGridEventMobile
+## TimeGridEvent vs. TimeGridEventTouch
 
 The event card on the time grid is now split in two variants:
 
 - **`TimeGridEvent`** — desktop. Title + start/end time. Right padding for drag-to-create. Resize handles shown on hover.
-- **`TimeGridEventMobile`** — mobile. Title only (wraps, then ellipsizes). No right padding.
+- **`TimeGridEventTouch`** — touch. Title only (wraps, then ellipsizes). No right padding. Resize handles and a selection outline appear only when the event is armed.
 
 Both variants share `useTimeGridEvent` (data attributes, position vars, draggable/resizable flags) and shared styles in [TimeGridEventShared.tsx](https://github.com/mui/mui-x/blob/HEAD/packages/x-scheduler/src/internals/components/event/time-grid-event/TimeGridEventShared.tsx). The rest of the rendering is handled individually.
 
 ### How the variant is plugged in today
 
-`CompactDayTimeGrid` reuses `DayTimeGrid` and swaps the event card through an **internal-only** slot:
+The compact views share a single internal `CompactDayTimeGrid` layout that reuses `DayTimeGrid` and swaps the event card through an **internal-only** React context (`DayTimeGridInternalRenderersContext`) rather than a public slot:
 
 ```tsx
-<DayTimeGrid
-  ref={forwardedRef}
-  days={days}
-  slots={{ timeGridEvent: TimeGridEventMobile }}
-  {...other}
-/>
+<DayTimeGridInternalRenderersContext.Provider
+  value={{ timeGridEvent: TimeGridEventTouch }}
+>
+  <DayTimeGrid ref={forwardedRef} days={days} {...other} />
+</DayTimeGridInternalRenderersContext.Provider>
 ```
 
-The `slots` prop is marked `@internal`. It is **not** part of the public API. Only sibling views inside `@mui/x-scheduler` can use it.
+The context is internal. It is **not** part of the public API. Only sibling views inside `@mui/x-scheduler` can use it.
 
 This part is **up for debate**:
 
-- The current shape keeps `CompactDayTimeGrid` thin (~10 lines) and keeps both variants behind the same component. Adding more variants later is one line.
-- The downside: `slots` prop is awkward - depends a lot on whether we want to allow for a public `event` slot later.
+- The context keeps the shared `CompactDayTimeGrid` layout thin and keeps both variants behind the same `DayTimeGrid`. Adding more renderers later is one line, with no extra props on the public surface.
 - Alternatives considered:
+  - A `slots={{ timeGridEvent }}` prop on `DayTimeGrid` — explicit, but adds an awkward `slots` prop that depends on whether we want a public `event` slot later.
   - A `variant: 'comfortable' | 'compact'` prop on `DayTimeGrid` — change styling based on a prop. Makes things harder to maintain and custom logic will make the file even longer and harder to read.
-  - A separate `CompactDayTimeGrid` that does not go through `DayTimeGrid` — most decoupled, but duplicates the grid/scroll/header code that's the whole point of sharing. A lot of duplication, almost everything in the current `DayTimeGrid` is resued by the mobile.
-  - A React context that tells `DayTimeGrid` which event component to render
+  - A separate compact grid that does not go through `DayTimeGrid` — most decoupled, but duplicates the grid/scroll/header code that's the whole point of sharing.
   - Composition (a `<DayTimeGrid.Event>` subcomponent the consumer picks)
   - `children` as the event renderer
 

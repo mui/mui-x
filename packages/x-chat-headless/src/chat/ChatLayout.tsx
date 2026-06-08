@@ -153,8 +153,11 @@ export const ChatLayout = React.forwardRef(function ChatLayout(
     },
     additionalProps: {
       style: {
+        display: 'flex',
+        flexDirection: 'column',
         minHeight: 0,
         minWidth: 0,
+        overflow: 'hidden',
       },
     },
   });
@@ -166,8 +169,12 @@ export const ChatLayout = React.forwardRef(function ChatLayout(
     },
     additionalProps: {
       style: {
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
         minHeight: 0,
         minWidth: 0,
+        overflow: 'hidden',
       },
     },
   });

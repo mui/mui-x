@@ -11,11 +11,12 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-interna
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { TimeGridEventComponent } from '../event/time-grid-event/TimeGridEvent.types';
+import { TimeGridEvent as DesktopTimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventSkeleton } from '../event-skeleton';
 import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
 import { getCellFocusBackground } from '../../utils/tokens';
+import { useDayTimeGridInternalRenderers } from './DayTimeGridInternalRenderersContext';
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
@@ -78,7 +79,7 @@ const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
 }));
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
-  const { day, showCurrentTimeIndicator, index, colIndex, timeGridEvent } = props;
+  const { day, showCurrentTimeIndicator, index, colIndex } = props;
 
   const adapter = useAdapterContext();
   const { classes } = useEventCalendarStyledContext();
@@ -106,7 +107,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
         index={index}
         occurrences={occurrences}
         maxIndex={maxIndex}
-        timeGridEvent={timeGridEvent}
       />
     </DayTimeGridColumn>
   );
@@ -119,7 +119,6 @@ function ColumnInteractiveLayer({
   index,
   occurrences,
   maxIndex,
-  timeGridEvent: TimeGridEventComponentSlot,
 }: {
   start: TemporalSupportedObject;
   end: TemporalSupportedObject;
@@ -127,12 +126,12 @@ function ColumnInteractiveLayer({
   index: number;
   occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];
   maxIndex: number;
-  timeGridEvent: TimeGridEventComponent;
 }) {
   // Context hooks
   const store = useEventCalendarStoreContext();
   const { onOpen: startEditing } = useEventDialogContext();
   const { classes } = useEventCalendarStyledContext();
+  const { timeGridEvent: TimeGridEvent = DesktopTimeGridEvent } = useDayTimeGridInternalRenderers();
 
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);
@@ -163,12 +162,10 @@ function ColumnInteractiveLayer({
       {!isLoading &&
         occurrences.map((occurrence) => (
           <EventDialogTrigger key={occurrence.key} occurrence={occurrence}>
-            <TimeGridEventComponentSlot occurrence={occurrence} variant="regular" />
+            <TimeGridEvent occurrence={occurrence} variant="regular" />
           </EventDialogTrigger>
         ))}
-      {placeholder != null && (
-        <TimeGridEventComponentSlot occurrence={placeholder} variant="placeholder" />
-      )}
+      {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
         <DayTimeGridCurrentTimeIndicator
           className={classes.dayTimeGridCurrentTimeIndicator}
@@ -190,7 +187,6 @@ interface TimeGridColumnProps {
   index: number;
   colIndex: number;
   showCurrentTimeIndicator: boolean;
-  timeGridEvent: TimeGridEventComponent;
 }
 
 /**
