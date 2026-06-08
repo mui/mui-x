@@ -10,7 +10,6 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { legendClasses, ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { GDPdata } from '../dataset/gdpGrowth';
-import { FocusedLineMark } from '@mui/x-charts/LineChart';
 
 const chartSetting = {
   xAxis: [
@@ -104,7 +103,6 @@ export default function BarScatterCompostion() {
           <ScatterPlot />
           <ChartsXAxis axisId="bar" />
           <FocusedBar />
-
           <ChartsYAxis />
         </ChartsSurface>
       </ChartsDataProvider>
