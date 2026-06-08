@@ -8,11 +8,12 @@ import type {
   GridColumnRawLookup,
   GridColumnsInitialState,
 } from './gridColumnsInterfaces';
+import { GRID_STRING_COL_DEF } from '../../../colDef';
 import {
-  DEFAULT_GRID_COL_TYPE_KEY,
-  GRID_STRING_COL_DEF,
-  getGridDefaultColumnTypes,
-} from '../../../colDef';
+  getRegisteredColumnTypeDef,
+  isCommunityColumnType,
+} from '../../../colDef/gridColumnTypesRegistry';
+import { GridSignature } from '../../../constants/signature';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -28,8 +29,6 @@ import type { GridDimensions } from '../dimensions/gridDimensionsApi';
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
 export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];
-
-const COLUMN_TYPES = getGridDefaultColumnTypes();
 
 /**
  * Computes width for flex columns.
@@ -298,11 +297,7 @@ const applyInitialState = (
 };
 
 export function getDefaultColTypeDef(type: GridColDef['type']) {
-  let colDef = COLUMN_TYPES[DEFAULT_GRID_COL_TYPE_KEY];
-  if (type && COLUMN_TYPES[type]) {
-    colDef = COLUMN_TYPES[type];
-  }
-  return colDef;
+  return getRegisteredColumnTypeDef(type);
 }
 
 export const createColumnsState = ({
@@ -321,6 +316,21 @@ export const createColumnsState = ({
   apiRef: RefObject<GridApiCommunity>;
 }) => {
   const isInsideStateInitializer = !apiRef.current.state.columns;
+
+  // A community `DataGrid` must not resolve a Pro/Premium-only column type even if a Pro grid
+  // registered it globally in the same bundle (shared module registry). Fall back to the default
+  // type def in that case, so the column behaves like a plain column.
+  // NOTE: this is a community-vs-paid gate only — it does not distinguish Pro from Premium. It is
+  // enough today because the only registered type (`multiSelect`) is available in both Pro and
+  // Premium. If a Pro-only or Premium-only column type is added later, make this plan-aware:
+  // track each type's minimum plan in the registry and compare it against the grid signature
+  // (DataGrid < DataGridPro < DataGridPremium), so e.g. a Premium-only type also falls back in
+  // `DataGridPro`.
+  const isCommunity = apiRef.current.state.props?.signature === GridSignature.DataGrid;
+  const getColTypeDef = (type: GridColDef['type']) =>
+    isCommunity && !isCommunityColumnType(type)
+      ? getDefaultColTypeDef(undefined)
+      : getDefaultColTypeDef(type);
 
   let columnsState: Omit<GridColumnsRawState, 'lookup'> & {
     lookup: { [field: string]: Omit<GridStateColDef, 'computedWidth'> };
@@ -360,7 +370,7 @@ export const createColumnsState = ({
 
     if (existingState == null) {
       existingState = {
-        ...getDefaultColTypeDef(newColumn.type),
+        ...getColTypeDef(newColumn.type),
         field,
         hasBeenResized: false,
       };
@@ -372,7 +382,7 @@ export const createColumnsState = ({
     // If the column type has changed - merge the existing state with the default column type definition
     if (existingState && existingState.type !== newColumn.type) {
       existingState = {
-        ...getDefaultColTypeDef(newColumn.type),
+        ...getColTypeDef(newColumn.type),
         field,
       };
     }
@@ -389,7 +399,7 @@ export const createColumnsState = ({
     });
 
     const mergedProps = {
-      ...getDefaultColTypeDef(newColumn.type),
+      ...getColTypeDef(newColumn.type),
       hasBeenResized,
       field,
     };
