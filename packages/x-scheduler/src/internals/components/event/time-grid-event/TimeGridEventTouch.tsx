@@ -15,9 +15,9 @@ import {
   TimeGridEventPlaceholder,
 } from './TimeGridEventShared';
 
-const TimeGridEventMobileRoot = styled(CalendarGrid.TimeEvent, {
+const TimeGridEventTouchRoot = styled(CalendarGrid.TimeEvent, {
   name: 'MuiEventCalendar',
-  slot: 'TimeGridEventMobileRoot',
+  slot: 'TimeGridEventTouchRoot',
 })<{ palette?: PaletteName }>(({ theme }) => ({
   ...getTimeGridEventRootStyles(theme),
   padding: theme.spacing(0.5, 0.7, 0.5, 0.7),
@@ -26,66 +26,55 @@ const TimeGridEventMobileRoot = styled(CalendarGrid.TimeEvent, {
   },
 }));
 
-const MOBILE_TITLE_LINE_HEIGHT_PX = 12;
-const MOBILE_EVENT_VERTICAL_PADDING_PX = 4;
-const MOBILE_TITLE_MAX_LINES = 24;
+const TOUCH_TITLE_LINE_HEIGHT_PX = 12;
+const TOUCH_EVENT_VERTICAL_PADDING_PX = 4;
+const TOUCH_TITLE_MAX_LINES = 24;
 
-const mobileTitleLineClampSteps: CSSObject = {};
-for (let lines = 2; lines <= MOBILE_TITLE_MAX_LINES; lines += 1) {
-  const minHeight = MOBILE_EVENT_VERTICAL_PADDING_PX + lines * MOBILE_TITLE_LINE_HEIGHT_PX;
-  mobileTitleLineClampSteps[`@container (min-height: ${minHeight}px)`] = {
+const touchTitleLineClampSteps: CSSObject = {};
+for (let lines = 2; lines <= TOUCH_TITLE_MAX_LINES; lines += 1) {
+  const minHeight = TOUCH_EVENT_VERTICAL_PADDING_PX + lines * TOUCH_TITLE_LINE_HEIGHT_PX;
+  touchTitleLineClampSteps[`@container (min-height: ${minHeight}px)`] = {
     WebkitLineClamp: lines,
-    maxHeight: `${lines * MOBILE_TITLE_LINE_HEIGHT_PX}px`,
+    maxHeight: `${lines * TOUCH_TITLE_LINE_HEIGHT_PX}px`,
   };
 }
 
-const TimeGridEventMobileTitle = styled(Typography, {
+const TimeGridEventTouchTitle = styled(Typography, {
   name: 'MuiEventCalendar',
-  slot: 'TimeGridEventMobileTitle',
+  slot: 'TimeGridEventTouchTitle',
 })(({ theme }) => ({
   margin: 0,
   color: 'var(--event-on-surface-subtle-primary)',
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: 'var(--EventCalendar-fontSize-eventTitle)',
-  lineHeight: `${MOBILE_TITLE_LINE_HEIGHT_PX}px`,
+  lineHeight: `${TOUCH_TITLE_LINE_HEIGHT_PX}px`,
   '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',
   },
   ...linesClampStyles(1),
-  maxHeight: `${MOBILE_TITLE_LINE_HEIGHT_PX}px`,
-  ...mobileTitleLineClampSteps,
+  maxHeight: `${TOUCH_TITLE_LINE_HEIGHT_PX}px`,
+  ...touchTitleLineClampSteps,
 }));
 
-const TimeGridEventMobileResizeHandler = styled(CalendarGrid.TimeEventResizeHandler, {
+const TimeGridEventTouchResizeHandler = styled(CalendarGrid.TimeEventResizeHandler, {
   name: 'MuiEventCalendar',
-  slot: 'TimeGridEventMobileResizeHandler',
+  slot: 'TimeGridEventTouchResizeHandler',
 })({
   position: 'absolute',
-  // experimenting with mobbile handlers
-
-  // width: 8,
-  // height: 8,
-  // borderRadius: '50%',
-  // backgroundColor: 'var(--event-on-surface-subtle-secondary)',
   height: 4,
   left: 0,
   right: 0,
   zIndex: 3,
   cursor: 'ns-resize',
   '&[data-start]': {
-    // experimenting with mobbile handlers
-    // top: -5,
-    // left: 2,
     top: 0,
   },
   '&[data-end]': {
-    // bottom: -5,
-    // right: 2,
     bottom: 0,
   },
 });
 
-export const TimeGridEventMobile = React.forwardRef(function TimeGridEventMobile(
+export const TimeGridEventTouch = React.forwardRef(function TimeGridEventTouch(
   props: TimeGridEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
@@ -96,9 +85,9 @@ export const TimeGridEventMobile = React.forwardRef(function TimeGridEventMobile
     useTimeGridEvent(occurrence);
 
   const content = (
-    <TimeGridEventMobileTitle className={classes.timeGridEventTitle}>
+    <TimeGridEventTouchTitle className={classes.timeGridEventTitle}>
       {occurrence.title}
-    </TimeGridEventMobileTitle>
+    </TimeGridEventTouchTitle>
   );
 
   const sharedProps = {
@@ -122,7 +111,7 @@ export const TimeGridEventMobile = React.forwardRef(function TimeGridEventMobile
   }
 
   return (
-    <TimeGridEventMobileRoot
+    <TimeGridEventTouchRoot
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
@@ -132,18 +121,18 @@ export const TimeGridEventMobile = React.forwardRef(function TimeGridEventMobile
       className={clsx(classes.timeGridEvent, sharedProps.className)}
     >
       {isStartResizable && (
-        <TimeGridEventMobileResizeHandler
+        <TimeGridEventTouchResizeHandler
           className={classes.timeGridEventResizeHandler}
           side="start"
         />
       )}
       {content}
       {isEndResizable && (
-        <TimeGridEventMobileResizeHandler
+        <TimeGridEventTouchResizeHandler
           className={classes.timeGridEventResizeHandler}
           side="end"
         />
       )}
-    </TimeGridEventMobileRoot>
+    </TimeGridEventTouchRoot>
   );
 });

@@ -4,8 +4,9 @@ import { TimeGridEventComponent } from '../event/time-grid-event/TimeGridEvent.t
 
 /**
  * Components internally overridable inside `DayTimeGrid`. The desktop renderer is always
- * provided as a default; sibling views in `@mui/x-scheduler` (e.g. `CompactDayTimeGrid`)
- * wrap `DayTimeGrid` with this provider to swap in a different variant.
+ * provided as a default; sibling views in `@mui/x-scheduler` (e.g. the compact views
+ * `CompactDayView`, `CompactThreeDayView`, `CompactWeekView`) wrap `DayTimeGrid` with this
+ * provider to swap in a different variant.
  */
 export interface DayTimeGridInternalRenderers {
   /**

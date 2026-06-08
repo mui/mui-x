@@ -1,4 +1,4 @@
-import { StandaloneCompactDayTimeGrid } from '@mui/x-scheduler/compact-day-time-grid';
+import { StandaloneCompactThreeDayView } from '@mui/x-scheduler/compact-three-day-view';
 import { eventCalendarClasses as classes } from '@mui/x-scheduler/event-calendar';
 import {
   createSchedulerRenderer,
@@ -7,13 +7,13 @@ import {
 } from 'test/utils/scheduler';
 import { describeConformance } from 'test/utils/describeConformance';
 
-describe('<StandaloneCompactDayTimeGrid /> - Describe Conformance', () => {
+describe('<StandaloneCompactThreeDayView /> - Describe Conformance', () => {
   const { render } = createSchedulerRenderer({
     clockConfig: new Date(DEFAULT_TESTING_VISIBLE_DATE_STR),
   });
 
   describeConformance(
-    <StandaloneCompactDayTimeGrid
+    <StandaloneCompactThreeDayView
       events={[]}
       visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
       view="week"
