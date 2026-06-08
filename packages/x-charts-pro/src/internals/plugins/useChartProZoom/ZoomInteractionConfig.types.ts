@@ -87,35 +87,35 @@ type WheelInteraction = Unpack<
   {
     type: 'wheel';
   } & NoModeProp &
-  AllKeysProp
+    AllKeysProp
 >;
 
 type PinchInteraction = Unpack<
   {
     type: 'pinch';
   } & NoModeProp &
-  NoKeysProp
+    NoKeysProp
 >;
 
 type DragInteraction = Unpack<
   {
     type: 'drag';
   } & AllModeProp &
-  AllKeysProp
+    AllKeysProp
 >;
 
 type TapAndDragInteraction = Unpack<
   {
     type: 'tapAndDrag';
   } & AllModeProp &
-  AllKeysProp
+    AllKeysProp
 >;
 
 type PressAndDragInteraction = Unpack<
   {
     type: 'pressAndDrag';
   } & AllModeProp &
-  AllKeysProp
+    AllKeysProp
 >;
 
 type WheelPanInteraction = Unpack<
@@ -130,21 +130,21 @@ type WheelPanInteraction = Unpack<
      */
     allowedDirection?: 'x' | 'y' | 'xy';
   } & NoModeProp &
-  AllKeysProp
+    AllKeysProp
 >;
 
 type DoubleTapResetInteraction = Unpack<
   {
     type: 'doubleTapReset';
   } & AllModeProp &
-  AllKeysProp
+    AllKeysProp
 >;
 
 type BrushInteraction = Unpack<
   {
     type: 'brush';
   } & AllModeProp &
-  AllKeysProp
+    AllKeysProp
 >;
 
 export type AnyInteraction = {

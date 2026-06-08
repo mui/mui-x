@@ -42,7 +42,7 @@ export function useWheelGesture(instance: GestureInstance, options: UseWheelGest
   React.useEffect(() => {
     const element = chartsLayerContainerRef.current;
     if (element === null || !enabled) {
-      return () => { };
+      return () => {};
     }
 
     const handler = instance.addInteractionListener('zoomTurnWheel', (event) => {
@@ -66,8 +66,8 @@ export function useWheelGesture(instance: GestureInstance, options: UseWheelGest
       }
 
       event.detail.srcEvent.preventDefault();
-      
-      onWheelRef.current(point,  event.detail.srcEvent as WheelEvent);
+
+      onWheelRef.current(point, event.detail.srcEvent as WheelEvent);
     });
 
     return () => {
