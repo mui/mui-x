@@ -93,9 +93,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       x: defaultizeXAxis(xAxis, dataset, axesGap),
       y: defaultizeYAxis(yAxis, dataset, axesGap),
     });
-    // `drawingArea` intentionally excluded: this effect re-syncs raw axis config from props only.
-    // Resize must not re-mint the raw-axis array identity, which would cascade a full extrema/domain/scale rebuild.
-    // Auto-size layout flows through the axis selectors (computeAxisValue), not this effect.
   }, [xAxis, yAxis, dataset, axesGap, store]);
 
   const usedXAxis = xAxisIds[0];
