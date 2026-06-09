@@ -326,7 +326,7 @@ export const countryData = {
     continent: 'South America',
     worldAtlasName: 'Paraguay',
   },
-  PSE: { country: 'West Bank and Gaza', continent: 'Asia', worldAtlasName: '' },
+  PSE: { country: 'Palestine', continent: 'Asia', worldAtlasName: 'Palestine' },
   PYF: {
     country: 'French Polynesia',
     continent: 'Oceania',

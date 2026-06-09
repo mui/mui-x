@@ -212,7 +212,7 @@ export const countryData: Record<
   PRK: { country: 'North Korea', continent: 'Asia', worldAtlasName: 'North Korea' },
   PRT: { country: 'Portugal', continent: 'Europe', worldAtlasName: 'Portugal' },
   PRY: { country: 'Paraguay', continent: 'South America', worldAtlasName: 'Paraguay' },
-  PSE: { country: 'West Bank and Gaza', continent: 'Asia', worldAtlasName: '' },
+  PSE: { country: 'Palestine', continent: 'Asia', worldAtlasName: 'Palestine' },
   PYF: { country: 'French Polynesia', continent: 'Oceania', worldAtlasName: 'Fr. Polynesia' },
   QAT: { country: 'Qatar', continent: 'Asia', worldAtlasName: 'Qatar' },
   ROU: { country: 'Romania', continent: 'Europe', worldAtlasName: 'Romania' },
