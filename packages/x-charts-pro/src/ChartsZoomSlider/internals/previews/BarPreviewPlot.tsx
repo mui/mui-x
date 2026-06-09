@@ -14,7 +14,7 @@ import {
   useYAxes,
 } from '@mui/x-charts/hooks';
 import { BarElement } from '@mui/x-charts/BarChart';
-import { processBarDataForPlot } from '@mui/x-charts/internals';
+import { processBarDataForPlot, useChartSampledIndices } from '@mui/x-charts/internals';
 import { type PreviewPlotProps } from './PreviewPlot.types';
 
 interface BarPreviewPlotProps extends PreviewPlotProps {
@@ -75,6 +75,7 @@ function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea, series
   const defaultYAxisId = useYAxes().yAxisIds[0];
 
   const chartId = useChartId();
+  const sampledIndicesBySeries = useChartSampledIndices();
 
   const seriesIdsSet = seriesIds ? new Set(seriesIds) : undefined;
 
@@ -100,8 +101,7 @@ function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea, series
     chartId,
     stackingGroups,
     filteredSeries,
-    // The zoom slider preview always renders the full data, so no sampling is applied.
-    {},
+    sampledIndicesBySeries,
     xAxes,
     yAxes,
     defaultXAxisId,
