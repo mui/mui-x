@@ -258,7 +258,7 @@ export const countryData = {
   MKD: {
     country: 'North Macedonia',
     continent: 'Europe',
-    worldAtlasName: 'North Macedonia',
+    worldAtlasName: 'Macedonia',
   },
   MLI: { country: 'Mali', continent: 'Africa', worldAtlasName: 'Mali' },
   MLT: { country: 'Malta', continent: 'Europe', worldAtlasName: 'Malta' },

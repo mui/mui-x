@@ -173,7 +173,7 @@ export const countryData: Record<
   MDV: { country: 'Maldives', continent: 'Asia', worldAtlasName: 'Maldives' },
   MEX: { country: 'Mexico', continent: 'North America', worldAtlasName: 'Mexico' },
   MHL: { country: 'Marshall Islands', continent: 'Oceania', worldAtlasName: 'Marshall Is.' },
-  MKD: { country: 'North Macedonia', continent: 'Europe', worldAtlasName: 'North Macedonia' },
+  MKD: { country: 'North Macedonia', continent: 'Europe', worldAtlasName: 'Macedonia' },
   MLI: { country: 'Mali', continent: 'Africa', worldAtlasName: 'Mali' },
   MLT: { country: 'Malta', continent: 'Europe', worldAtlasName: 'Malta' },
   MMR: { country: 'Myanmar', continent: 'Asia', worldAtlasName: 'Myanmar' },

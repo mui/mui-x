@@ -70,8 +70,10 @@ export function useDragOnPressGesture(
     const accumulated = { x: 0, y: 0 };
 
     const handlePanStart = (event: PanEvent) => {
-      isInteracting = true;
-      handlersRef.current.onPanStart?.(event);
+      if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
+        isInteracting = true;
+        handlersRef.current.onPanStart?.(event);
+      }
     };
     const handlePanEnd = (event: PanEvent) => {
       isInteracting = false;
