@@ -242,7 +242,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
               cause: childrenFetchError,
             }),
           );
-        } else {
+        } else if (process.env.NODE_ENV !== 'production') {
           warnOnce(
             [
               'MUI X: A call to `dataSource.getRows()` threw an error which was not handled because `onDataSourceError()` is missing.',

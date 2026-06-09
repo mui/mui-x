@@ -48,6 +48,12 @@
       },
       "default": "\"teal\""
     },
+    "eventCreation": {
+      "type": {
+        "name": "union",
+        "description": "{ duration?: number, interaction?: 'click'<br>&#124;&nbsp;'double-click' }<br>&#124;&nbsp;bool"
+      }
+    },
     "eventModelStructure": { "type": { "name": "object" } },
     "events": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
@@ -152,6 +158,18 @@
       "key": "agendaViewWeekDayNameLabel",
       "className": "MuiEventCalendar-agendaViewWeekDayNameLabel",
       "description": "Styles applied to agenda view week day name label elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "agendaViewWeekNumberLabel",
+      "className": "MuiEventCalendar-agendaViewWeekNumberLabel",
+      "description": "Styles applied to agenda view week number label elements.",
+      "isGlobal": false
+    },
+    {
+      "key": "agendaViewWeekNumberRow",
+      "className": "MuiEventCalendar-agendaViewWeekNumberRow",
+      "description": "Styles applied to agenda view week number row elements.",
       "isGlobal": false
     },
     {
@@ -745,7 +763,7 @@
     {
       "key": "eventSkeleton",
       "className": "MuiEventCalendar-eventSkeleton",
-      "description": "Styles applied to event skeleton elements.",
+      "description": "Styles applied to the event skeleton element.",
       "isGlobal": false
     },
     {
@@ -800,6 +818,12 @@
       "key": "headerToolbarTodayButton",
       "className": "MuiEventCalendar-headerToolbarTodayButton",
       "description": "Styles applied to the header toolbar today button element.",
+      "isGlobal": false
+    },
+    {
+      "key": "headerToolbarWeekNumber",
+      "className": "MuiEventCalendar-headerToolbarWeekNumber",
+      "description": "Styles applied to the header toolbar week number element.",
       "isGlobal": false
     },
     {

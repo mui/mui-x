@@ -91,7 +91,7 @@
     "topojson-client": "^3.1.0",
     "us-atlas": "^3.0.1",
     "webpack-bundle-analyzer": "^5.3.0",
-    "world-atlas": "^2.0.2"
+    "visionscarto-world-atlas": "^1.0.0"
   },
   "devDependencies": {
     "@babel/preset-typescript": "catalog:",
@@ -105,8 +105,8 @@
     "@types/react-dom": "catalog:",
     "@types/semver": "catalog:",
     "@types/stylis": "4.2.7",
-    "@types/topojson-client": "^3.1.5",
-    "@types/topojson-specification": "^1.0.5",
+    "@types/topojson-client": "3.1.5",
+    "@types/topojson-specification": "1.0.5",
     "@types/webpack-bundle-analyzer": "4.7.0",
     "gm": "1.25.1",
     "serve": "catalog:"

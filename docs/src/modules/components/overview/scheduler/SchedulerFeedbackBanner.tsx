@@ -45,7 +45,6 @@ export default function SchedulerFeedbackBanner() {
         <Link
           href={FEEDBACK_FORM_URL}
           target="_blank"
-          rel="noopener noreferrer"
           sx={(theme) => ({
             fontWeight: 'semiBold',
             color: 'primary.700',
