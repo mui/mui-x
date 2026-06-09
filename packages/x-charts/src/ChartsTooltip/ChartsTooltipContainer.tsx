@@ -77,11 +77,11 @@ type PopperSlots = NonNullable<PopperProps['slots']>;
 
 type PopperSlotProps = NonNullable<PopperProps['slotProps']>;
 
-export interface ChartsTooltipContainerSlots extends PopperSlots { }
+export interface ChartsTooltipContainerSlots extends PopperSlots {}
 
-export interface ChartsTooltipContainerSlotProps extends PopperSlotProps { }
+export interface ChartsTooltipContainerSlotProps extends PopperSlotProps {}
 
-export interface ChartsTooltipContainerClasses extends ChartsTooltipClasses { }
+export interface ChartsTooltipContainerClasses extends ChartsTooltipClasses {}
 
 export interface ChartsTooltipContainerProps<
   T extends TriggerOptions = TriggerOptions,
@@ -113,10 +113,10 @@ export interface ChartsTooltipContainerProps<
    * @default 'pointer'
    */
   anchor?: T extends 'item'
-  ? 'pointer' | 'node'
-  : T extends 'axis'
-  ? 'pointer' | 'chart'
-  : 'pointer';
+    ? 'pointer' | 'node'
+    : T extends 'axis'
+      ? 'pointer' | 'chart'
+      : 'pointer';
   /**
    * Determines the tooltip position relatively to the anchor.
    */
@@ -212,7 +212,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   React.useEffect(() => {
     const svgElement = chartsLayerContainerRef.current;
     if (svgElement === null) {
-      return () => { };
+      return () => {};
     }
 
     if (isTooltipNodeAnchored) {
@@ -283,13 +283,13 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       },
       ...(!isMouse
         ? [
-          {
-            name: 'flip',
-            options: {
-              fallbackPlacements: ['top-end', 'top-start', 'bottom-end', 'bottom'],
+            {
+              name: 'flip',
+              options: {
+                fallbackPlacements: ['top-end', 'top-start', 'bottom-end', 'bottom'],
+              },
             },
-          },
-        ]
+          ]
         : []), // Keep default behavior
       { name: 'preventOverflow', options: { altAxis: true } },
     ],
