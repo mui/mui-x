@@ -334,12 +334,19 @@ describe('Data Studio Coffee Beans SQLite data source', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({
-      rowCount: 3,
+      rowCount: 4,
       rows: [
+        // 12 customers have an empty `Country`; SQL `GROUP BY` surfaces them as
+        // their own blank group (akin to the Data Grid's "(Blanks)" group).
+        expect.objectContaining({
+          Country: '',
+          [DATA_STUDIO_GROUP_KEY_FIELD]: '',
+          [DATA_STUDIO_CHILDREN_COUNT_FIELD]: 12,
+        }),
         expect.objectContaining({
           Country: 'Ireland',
           [DATA_STUDIO_GROUP_KEY_FIELD]: 'Ireland',
-          [DATA_STUDIO_CHILDREN_COUNT_FIELD]: 149,
+          [DATA_STUDIO_CHILDREN_COUNT_FIELD]: 150,
         }),
         expect.objectContaining({
           Country: 'United Kingdom',
@@ -349,7 +356,7 @@ describe('Data Studio Coffee Beans SQLite data source', () => {
         expect.objectContaining({
           Country: 'United States',
           [DATA_STUDIO_GROUP_KEY_FIELD]: 'United States',
-          [DATA_STUDIO_CHILDREN_COUNT_FIELD]: 781,
+          [DATA_STUDIO_CHILDREN_COUNT_FIELD]: 782,
         }),
       ],
     });
