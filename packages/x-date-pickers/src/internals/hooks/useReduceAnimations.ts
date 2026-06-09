@@ -2,6 +2,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 const PREFERS_REDUCED_MOTION = '@media (prefers-reduced-motion: reduce)';
 
+// XXX: discuss this
 // detect if user agent has Android version < 10 or iOS version < 13
 const mobileVersionMatches =
   typeof navigator !== 'undefined' && navigator.userAgent.match(/android\s(\d+)|OS\s(\d+)/i);
