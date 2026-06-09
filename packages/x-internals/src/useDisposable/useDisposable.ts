@@ -10,9 +10,12 @@ interface Disposable {
 // React 19 exposes shared internals under `__CLIENT_INTERNALS_…` with the
 // fiber under `A.getOwner()`; React 18 exposes them under `__SECRET_INTERNALS_…`
 // with the fiber under `ReactCurrentOwner.current`. `mode` is a bitfield on
-// the fiber; StrictLegacyMode (8) and StrictEffectsMode (16) together cover
-// both `<StrictMode>` flavors.
-const STRICT_MODE_BITS = 0b11000;
+// the fiber. We key on StrictEffectsMode (16) only — the React 18+ bit that
+// actually triggers the mount→unmount→mount replay this hook guards against.
+// React 17's StrictMode sets StrictLegacyMode (8) but does not replay effects,
+// so it must not be treated as a double mount (doing so would skip a real,
+// single dispose).
+const STRICT_MODE_BITS = 0b10000;
 
 interface ReactSharedInternalsLike {
   A?: { getOwner?: () => { mode?: number } | null } | null;
@@ -46,12 +49,6 @@ function isInStrictMode(): boolean {
     return false;
   }
 }
-
-// `true` when React shared internals are reachable, i.e. we are running on
-// React (18 or 19) and can read the rendering fiber's `mode` bits. Preact and
-// other runtimes don't expose them — and don't replay StrictMode's double
-// mount — so the production variant is correct there.
-const CAN_DETECT_STRICT_MODE = ReactInternals != null;
 
 // Module-private symbol used to stash the `useOnMount` callback on the
 // instance during the first render so subsequent renders can pass the same
@@ -151,10 +148,9 @@ function useDisposableDevelopment<T extends Disposable>(factory: () => T): T {
  * Lazily creates an instance on first render and runs its `[disposeSymbol]`
  * once on unmount. The cleanup runs synchronously; in development StrictMode's
  * simulated unmount is detected and skipped so the same instance survives the
- * double mount. On runtimes without readable React internals (e.g. Preact,
- * which doesn't replay the double mount) the production variant is used.
+ * double mount. The development variant degrades to production behaviour on
+ * runtimes that don't replay the double mount (Preact, React 17) because no
+ * readable StrictEffectsMode bit is found, so no runtime branching is needed.
  */
 export const useDisposable =
-  process.env.NODE_ENV === 'production' || !CAN_DETECT_STRICT_MODE
-    ? useDisposableProduction
-    : useDisposableDevelopment;
+  process.env.NODE_ENV === 'production' ? useDisposableProduction : useDisposableDevelopment;
