@@ -6,7 +6,7 @@ import { isJSDOM } from 'test/utils/skipIf';
 describe('useChartCartesianAxis', () => {
   const { render } = createRenderer();
 
-  describe('experimentalFeatures.useNewResponsiveTickAdjustment', () => {
+  describe('experimentalFeatures.useNewDefaultTickSpacing', () => {
     const manyCategories = Array.from({ length: 20 }, (_, i) => `cat-${i}`);
     const data = manyCategories.map((_, i) => i);
 
@@ -36,7 +36,7 @@ describe('useChartCartesianAxis', () => {
           width={300}
           height={200}
           margin={0}
-          experimentalFeatures={{ useNewResponsiveTickAdjustment: true }}
+          experimentalFeatures={{ useNewDefaultTickSpacing: true }}
         />,
       );
 
@@ -57,7 +57,7 @@ describe('useChartCartesianAxis', () => {
             width={300}
             height={200}
             margin={0}
-            experimentalFeatures={{ useNewResponsiveTickAdjustment: true }}
+            experimentalFeatures={{ useNewDefaultTickSpacing: true }}
           />,
         );
 
@@ -75,7 +75,7 @@ describe('useChartCartesianAxis', () => {
           width={300}
           height={200}
           margin={0}
-          experimentalFeatures={{ useNewResponsiveTickAdjustment: true }}
+          experimentalFeatures={{ useNewDefaultTickSpacing: true }}
         />,
       );
 

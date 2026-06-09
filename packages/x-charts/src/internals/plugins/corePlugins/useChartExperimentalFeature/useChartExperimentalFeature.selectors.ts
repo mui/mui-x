@@ -11,7 +11,7 @@ import type {
  * @example
  * const enabled = store.use(
  *   selectorChartExperimentalFeaturesState,
- *   'useNewResponsiveTickAdjustment',
+ *   'useNewDefaultTickSpacing',
  * );
  */
 export const selectorChartExperimentalFeaturesState = <K extends keyof ChartExperimentalFeatures>(

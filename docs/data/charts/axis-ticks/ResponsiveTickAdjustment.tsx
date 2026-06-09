@@ -164,7 +164,7 @@ export default function ResponsiveTickAdjustment() {
               onChange={(event) => setEnabled(event.target.checked)}
             />
           }
-          label="experimentalFeatures.useNewResponsiveTickAdjustment"
+          label="experimentalFeatures.useNewDefaultTickSpacing"
         />
       </Stack>
       <Box sx={{ width: `${widthPct}%`, transition: 'width 120ms ease-out' }}>
@@ -173,7 +173,7 @@ export default function ResponsiveTickAdjustment() {
           xAxis={[{ dataKey: 'item', scaleType: 'band' }]}
           series={[{ dataKey: 'sales', label: 'Units sold' }]}
           height={300}
-          experimentalFeatures={{ useNewResponsiveTickAdjustment: enabled }}
+          experimentalFeatures={{ useNewDefaultTickSpacing: enabled }}
         />
       </Box>
     </Stack>

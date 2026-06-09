@@ -62,7 +62,7 @@ This property defaults to 0 and is only available for ordinal axes, that is, axe
 This feature is experimental—not because its behavior is unstable, but because enabling it by default would change the look of existing charts. It's opt-in for now and is expected to become the default in a future major release.
 :::
 
-Enable `useNewResponsiveTickAdjustment` on any cartesian chart (BarChart, LineChart, ScatterChart, Heatmap, and their Pro/Premium variants) to let ordinal axes (`band` and `point` scales) thin out ticks automatically based on the chart's rendered size, so labels don't pile up on narrow charts.
+Enable `useNewDefaultTickSpacing` on any cartesian chart (BarChart, LineChart, ScatterChart, Heatmap, and their Pro/Premium variants) to let ordinal axes (`band` and `point` scales) thin out ticks automatically based on the chart's rendered size, so labels don't pile up on narrow charts.
 
 The feature applies a 50-pixel default `tickSpacing` derived from the drawing area. It never overrides an explicit `tickSpacing`, `tickNumber`, or `tickInterval` set by your code—continuous axes are already size-aware through their default `tickNumber`.
 
@@ -70,7 +70,7 @@ The feature applies a 50-pixel default `tickSpacing` derived from the drawing ar
 <BarChart
   xAxis={[{ data: produce, scaleType: 'band' }]}
   series={[{ data: sales }]}
-  experimentalFeatures={{ useNewResponsiveTickAdjustment: true }}
+  experimentalFeatures={{ useNewDefaultTickSpacing: true }}
 />
 ```
 

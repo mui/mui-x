@@ -34,7 +34,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ enablePositionBasedPointerInteraction?: bool, useNewResponsiveTickAdjustment?: bool }"
+        "description": "{ enablePositionBasedPointerInteraction?: bool, useNewDefaultTickSpacing?: bool }"
       }
     },
     "grid": {

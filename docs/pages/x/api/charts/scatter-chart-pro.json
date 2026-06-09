@@ -44,7 +44,7 @@
       "deprecationInfo": "Use <code>disableHitArea</code> instead."
     },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ useNewResponsiveTickAdjustment?: bool }" }
+      "type": { "name": "shape", "description": "{ useNewDefaultTickSpacing?: bool }" }
     },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }

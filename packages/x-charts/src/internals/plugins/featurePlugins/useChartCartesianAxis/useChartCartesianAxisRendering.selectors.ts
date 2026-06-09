@@ -58,7 +58,7 @@ import { selectorChartExperimentalFeaturesState } from '../../corePlugins/useCha
  * selectors. Wrap it to bind the feature name we care about. */
 const selectorResponsiveTickAdjustment = (
   state: Parameters<typeof selectorChartExperimentalFeaturesState>[0],
-) => selectorChartExperimentalFeaturesState(state, 'useNewResponsiveTickAdjustment');
+) => selectorChartExperimentalFeaturesState(state, 'useNewDefaultTickSpacing');
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();

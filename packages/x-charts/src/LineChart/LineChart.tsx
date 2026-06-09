@@ -273,7 +273,7 @@ LineChart.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     enablePositionBasedPointerInteraction: PropTypes.bool,
-    useNewResponsiveTickAdjustment: PropTypes.bool,
+    useNewDefaultTickSpacing: PropTypes.bool,
   }),
   /**
    * Option to display a cartesian grid in the background.

@@ -26,7 +26,7 @@ interface CartesianExperimentalFeatures {
    * Explicit `tickNumber`, `tickSpacing`, or `tickInterval` values set by the
    * consumer are not overridden.
    */
-  useNewResponsiveTickAdjustment?: boolean;
+  useNewDefaultTickSpacing?: boolean;
 }
 
 /* True if any cartesian series (which can have `band` / `point` scales) is in `SeriesType`. */
