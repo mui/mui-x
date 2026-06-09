@@ -14,7 +14,7 @@
       },
       "required": true
     },
-    "type": { "type": { "description": "'actions'" }, "default": "'actions'", "required": true },
+    "type": { "type": { "description": "'actions'" }, "required": true },
     "aggregable": {
       "type": { "description": "boolean" },
       "default": "true",
