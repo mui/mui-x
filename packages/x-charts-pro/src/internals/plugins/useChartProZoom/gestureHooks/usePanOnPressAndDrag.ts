@@ -25,6 +25,7 @@ export const usePanOnPressAndDrag = (
     Object.values(optionsLookup).some((v) => v.panning) && Boolean(config);
 
   usePanOnPressGesture(instance, {
+    config: config ?? undefined,
     enabled: isPanOnPressAndDragEnabled,
     onPan: (delta) => {
       setZoomDataCallback((prev) =>

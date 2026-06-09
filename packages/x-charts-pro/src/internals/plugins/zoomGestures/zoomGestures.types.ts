@@ -20,7 +20,7 @@ export interface GestureInstance {
  * Pointer/keyboard gating for a pan gesture, mirroring the options accepted by
  * `instance.updateZoomInteractionListeners('zoomPan', …)`.
  */
-export interface PanGestureConfig {
+export interface GestureConfig {
   requiredKeys?: KeyboardKey[];
   pointerMode?: PointerMode[];
   mouse?: { requiredKeys?: KeyboardKey[] };

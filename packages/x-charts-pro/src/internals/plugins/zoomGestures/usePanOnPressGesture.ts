@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { type PanEvent } from '@mui/x-internal-gestures/core';
-import { type ChartPoint, type GestureInstance, type PanGestureConfig } from './zoomGestures.types';
+import type { PanEvent } from '@mui/x-internal-gestures/core';
+import type { ChartPoint, GestureInstance, GestureConfig } from './zoomGestures.types';
 
 export interface UsePanOnPressGestureOptions {
   /** Whether the gesture is active. */
   enabled: boolean;
   /** Pointer/keyboard gating forwarded to the interaction listener. */
-  config?: PanGestureConfig;
+  config?: GestureConfig;
   /**
    * Called once when a pan starts.
    * @param {PanEvent} event The original pan start event.
