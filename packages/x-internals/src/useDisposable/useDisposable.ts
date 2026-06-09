@@ -10,11 +10,13 @@ interface Disposable {
 // React 19 exposes shared internals under `__CLIENT_INTERNALS_…` with the
 // fiber under `A.getOwner()`; React 18 exposes them under `__SECRET_INTERNALS_…`
 // with the fiber under `ReactCurrentOwner.current`. `mode` is a bitfield on
-// the fiber. We key on StrictEffectsMode (16) only — the React 18+ bit that
-// actually triggers the mount→unmount→mount replay this hook guards against.
-// React 17's StrictMode sets StrictLegacyMode (8) but does not replay effects,
-// so it must not be treated as a double mount (doing so would skip a real,
-// single dispose).
+// the fiber. We key on StrictEffectsMode (16) — the bit a concurrent-root
+// `<StrictMode>` sets on React 18/19, and the bit that actually drives the
+// mount→unmount→mount effect replay this hook guards against. Setups that
+// don't replay effects (legacy-root StrictMode, React 17, Preact) don't set
+// it, so they fall through to a single, normal dispose. Bit values are
+// React-version-specific; if a future React renumbers them and detection
+// misfires, the mount counter throws rather than silently leaking.
 const STRICT_MODE_BITS = 0b10000;
 
 interface ReactSharedInternalsLike {
