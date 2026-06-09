@@ -275,7 +275,7 @@ export const AgendaView = React.memo(
                           occurrence={occurrence}
                           date={date}
                           variant="regular"
-                          ariaLabelledBy={`DayHeaderCell-${date.key}`}
+                          ariaLabelledBy={`${schedulerId}-DayHeaderCell-${date.key}`}
                         />
                       </EventDialogTrigger>
                     </li>

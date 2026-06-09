@@ -81,7 +81,7 @@ Each day group in the agenda carries `aria-labelledby` pointing to its day heade
 
 ### Main calendar region
 
-The main calendar view area is rendered as a `<section>` element with `aria-label="Calendar content"`, providing a named landmark region that assistive technology users can navigate to directly.
+The main calendar view area is rendered as a `<section>` element with a localized `aria-label` (default: `"Calendar content"`), providing a named landmark region that assistive technology users can navigate to directly.
 
 ## Keyboard interactions
 
@@ -175,6 +175,9 @@ The following keys are specifically relevant to accessibility:
 
 ```ts
 {
+  // Main calendar region
+  calendarContentAriaLabel: 'Calendar content',
+
   // Event dialog
   closeButtonAriaLabel: 'Close',
   eventTitleAriaLabel: 'Event title',
