@@ -46,6 +46,7 @@ export function useBarChartPremiumProps(props: BarChartPremiumProps) {
     slots: props.slots,
     slotProps: props.slotProps,
     borderRadius: props.borderRadius,
+    renderer: renderer === 'webgl' ? 'webgl' : undefined,
   };
 
   return {

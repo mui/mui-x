@@ -1,43 +1,38 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { feature as topojsonFeature } from 'topojson-client';
-import countriesTopology from 'world-atlas/countries-110m.json';
+import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsLegend } from '@mui/x-charts-premium/ChartsLegend';
 import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
 import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
+import {
+  withCountryCodeAsName,
+  countriesInContinent,
+  countryData,
+} from '../dataset/countryData';
 
-const countries = topojsonFeature(
-  countriesTopology as any,
-  'countries',
-) as unknown as ExtendedFeatureCollection;
+const countries = withCountryCodeAsName(
+  topojsonFeature(
+    countriesTopology as any,
+    'countries',
+  ) as unknown as ExtendedFeatureCollection,
+);
 
-const continents = {
-  Africa: [
-    'Algeria',
-    'Angola',
-    'Egypt',
-    'Ethiopia',
-    'Kenya',
-    'Morocco',
-    'Nigeria',
-    'South Africa',
-    'Sudan',
-    'Tanzania',
-  ],
-  Asia: ['China', 'India', 'Indonesia', 'Iran', 'Japan', 'Kazakhstan', 'Mongolia'],
-  Europe: [
-    'France',
-    'Germany',
-    'Italy',
-    'Poland',
-    'Spain',
-    'Sweden',
-    'United Kingdom',
-  ],
-};
+const getContinentData = (continent: string) =>
+  countriesInContinent[continent].map((code) => ({
+    name: code,
+    label: countryData[code as keyof typeof countryData].country,
+  }));
+
+const northAmerica = getContinentData('North America');
+const southAmerica = getContinentData('South America');
+const europe = getContinentData('Europe');
+const asia = getContinentData('Asia');
+const africa = getContinentData('Africa');
+const oceania = getContinentData('Oceania');
 
 export default function VisibleMapShape() {
   return (
@@ -49,21 +44,45 @@ export default function VisibleMapShape() {
         series={[
           {
             type: 'mapShape',
-            label: 'Africa',
-            color: '#ef6c00',
-            data: continents.Africa.map((name) => ({ name })),
+            label: 'North America',
+            color: '#fb8c00',
+            valueFormatter: () => '',
+            data: northAmerica,
           },
           {
             type: 'mapShape',
-            label: 'Asia',
-            color: '#8e24aa',
-            data: continents.Asia.map((name) => ({ name })),
+            label: 'South America',
+            color: '#43a047',
+            valueFormatter: () => '',
+            data: southAmerica,
           },
           {
             type: 'mapShape',
             label: 'Europe',
             color: '#1e88e5',
-            data: continents.Europe.map((name) => ({ name })),
+            valueFormatter: () => '',
+            data: europe,
+          },
+          {
+            type: 'mapShape',
+            label: 'Asia',
+            color: '#e53935',
+            valueFormatter: () => '',
+            data: asia,
+          },
+          {
+            type: 'mapShape',
+            label: 'Africa',
+            color: '#fdd835',
+            valueFormatter: () => '',
+            data: africa,
+          },
+          {
+            type: 'mapShape',
+            label: 'Oceania',
+            color: '#8e24aa',
+            valueFormatter: () => '',
+            data: oceania,
           },
         ]}
       >

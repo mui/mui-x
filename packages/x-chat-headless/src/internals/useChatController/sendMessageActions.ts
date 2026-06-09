@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { ChatAdapter } from '../../adapters';
-import { processStream } from '../../stream';
+import { processStream, type ProcessStreamResult } from '../../stream';
 import type { ChatStore } from '../../store';
 import type { ChatMessage, ChatOnData, ChatOnFinish, ChatOnToolCall } from '../../types';
 import type { ChatDraftAttachment } from '../../types/chat-entities';
@@ -14,6 +14,7 @@ import {
   findAssistantMessageIdsForRetry,
   removeAssistantMessageIds,
 } from './useChatControllerHelpers';
+import { getFinishMessage } from '../../stream/streamHelpers';
 
 export interface SendMessageActionsRuntimeRef<Cursor = string> {
   adapter: ChatAdapter<Cursor>;
@@ -39,6 +40,125 @@ export function createSendMessageActions<Cursor = string>(params: {
   // effects before the store subscription causes a re-render that makes the guard
   // effective. This flag is set immediately before any async work.
   let isSending = false;
+  const attachmentsByUserMessageId = new Map<string, ChatDraftAttachment[]>();
+
+  function pruneAttachmentsByMessageIds(messageIds: readonly string[]) {
+    if (attachmentsByUserMessageId.size === 0) {
+      return;
+    }
+
+    const activeMessageIds = new Set(messageIds);
+
+    for (const messageId of attachmentsByUserMessageId.keys()) {
+      if (!activeMessageIds.has(messageId)) {
+        attachmentsByUserMessageId.delete(messageId);
+      }
+    }
+  }
+
+  async function processStreamWithReconnect(
+    stream: Awaited<ReturnType<ChatAdapter<Cursor>['sendMessage']>>,
+    conversationId: string | undefined,
+    abortController: AbortController,
+  ): Promise<ProcessStreamResult> {
+    const adapter = runtimeRef.current.adapter;
+    const shouldDeferFinish = Boolean(adapter.reconnectToStream);
+    const processOptions = {
+      conversationId,
+      signal: abortController.signal,
+      flushInterval: runtimeRef.current.streamFlushInterval,
+      onToolCall: runtimeRef.current.onToolCall,
+      onFinish: shouldDeferFinish ? undefined : runtimeRef.current.onFinish,
+      onData: runtimeRef.current.onData,
+    };
+    const emitDeferredFinish = async (result: ProcessStreamResult) => {
+      if (!shouldDeferFinish || !runtimeRef.current.onFinish) {
+        return;
+      }
+
+      await runtimeRef.current.onFinish({
+        message: getFinishMessage(storeUnknown, result.messageId, conversationId, result.status),
+        messages: getMessages(storeUnknown),
+        isAbort: result.isAbort,
+        isDisconnect: result.isDisconnect,
+        isError: result.isError,
+        finishReason: result.finishReason,
+      });
+    };
+
+    const result = await processStream(store, stream, processOptions);
+
+    if (
+      !result.isDisconnect ||
+      !result.messageId ||
+      !adapter.reconnectToStream ||
+      abortController.signal.aborted
+    ) {
+      await emitDeferredFinish(result);
+      return result;
+    }
+
+    try {
+      store.setStreaming(true);
+      const reconnectStream = await adapter.reconnectToStream({
+        conversationId,
+        messageId: result.messageId,
+        signal: abortController.signal,
+      });
+
+      if (!reconnectStream || abortController.signal.aborted) {
+        store.setStreaming(false);
+        await emitDeferredFinish(result);
+        return result;
+      }
+
+      return await processStream(store, reconnectStream, {
+        ...processOptions,
+        onFinish: runtimeRef.current.onFinish,
+        messageId: result.messageId,
+        reconnectFromSequence: result.nextSequence,
+        seenEventIds: result.seenEventIds,
+      });
+    } catch (error) {
+      store.setStreaming(false);
+
+      if (abortController.signal.aborted) {
+        const cancelledResult: ProcessStreamResult = {
+          messageId: result.messageId,
+          status: 'cancelled',
+          isAbort: true,
+          isDisconnect: false,
+          isError: false,
+        };
+        await emitDeferredFinish(cancelledResult);
+        return cancelledResult;
+      }
+
+      store.setError(
+        createRuntimeError(
+          'STREAM_ERROR',
+          getErrorMessage('Unable to reconnect to the message stream.', error),
+          'stream',
+          true,
+          true,
+          {
+            messageId: result.messageId,
+            conversationId,
+          },
+        ),
+      );
+
+      const errorResult: ProcessStreamResult = {
+        messageId: result.messageId,
+        status: 'error',
+        isAbort: false,
+        isDisconnect: true,
+        isError: true,
+      };
+      await emitDeferredFinish(errorResult);
+      return errorResult;
+    }
+  }
 
   async function sendExistingMessage(
     message: ChatMessage,
@@ -60,6 +180,13 @@ export function createSendMessageActions<Cursor = string>(params: {
     store.addMessage(nextMessage);
     store.setStreaming(true);
     store.setError(null);
+    store.clearMessageError(nextMessage.id);
+
+    if (attachments && attachments.length > 0) {
+      attachmentsByUserMessageId.set(nextMessage.id, attachments);
+    } else {
+      attachmentsByUserMessageId.delete(nextMessage.id);
+    }
 
     const abortController = new AbortController();
     store.setActiveStreamAbortController(abortController);
@@ -73,14 +200,7 @@ export function createSendMessageActions<Cursor = string>(params: {
         signal: abortController.signal,
       });
 
-      const result = await processStream(store, stream, {
-        conversationId,
-        signal: abortController.signal,
-        flushInterval: runtimeRef.current.streamFlushInterval,
-        onToolCall: runtimeRef.current.onToolCall,
-        onFinish: runtimeRef.current.onFinish,
-        onData: runtimeRef.current.onData,
-      });
+      const result = await processStreamWithReconnect(stream, conversationId, abortController);
 
       let status: 'cancelled' | 'error' | 'sent';
       if (result.status === 'cancelled') {
@@ -91,6 +211,11 @@ export function createSendMessageActions<Cursor = string>(params: {
         status = 'sent';
       }
       store.updateMessage(nextMessage.id, { status });
+
+      if (status === 'sent') {
+        attachmentsByUserMessageId.delete(nextMessage.id);
+        store.clearMessageError(nextMessage.id);
+      }
 
       if (result.messageId) {
         assistantMessageIdByUserMessageIdRef.current.set(nextMessage.id, result.messageId);
@@ -115,17 +240,22 @@ export function createSendMessageActions<Cursor = string>(params: {
       }
 
       setRuntimeError(
-        createRuntimeError(
-          'SEND_ERROR',
-          getErrorMessage('Unable to send the message.', error),
-          'send',
-          true,
-          true,
-          {
-            messageId: nextMessage.id,
-            conversationId,
-          },
-        ),
+        (() => {
+          const runtimeError = createRuntimeError(
+            'SEND_ERROR',
+            getErrorMessage('Unable to send the message.', error),
+            'send',
+            true,
+            true,
+            {
+              messageId: nextMessage.id,
+              conversationId,
+            },
+          );
+
+          store.setMessageError(nextMessage.id, runtimeError);
+          return runtimeError;
+        })(),
       );
       store.setStreaming(false);
     } finally {
@@ -151,6 +281,13 @@ export function createSendMessageActions<Cursor = string>(params: {
   }
 
   async function retry(messageId: string): Promise<void> {
+    // Hoist the streaming guard above any destructive work so retrying while a
+    // stream is in flight is a clean no-op rather than wiping prior assistant
+    // messages and then silently bailing inside `sendExistingMessage` (#2).
+    if (isSending || store.state.isStreaming) {
+      return;
+    }
+
     const message = store.state.messagesById[messageId];
 
     if (!message || message.role !== 'user') {
@@ -168,9 +305,10 @@ export function createSendMessageActions<Cursor = string>(params: {
       assistantMessageIds,
       assistantMessageIdByUserMessageIdRef.current,
     );
+    pruneAttachmentsByMessageIds(store.state.messageIds);
 
-    await sendExistingMessage(message);
+    await sendExistingMessage(message, attachmentsByUserMessageId.get(messageId));
   }
 
-  return { sendMessage, retry };
+  return { sendMessage, retry, pruneAttachmentsByMessageIds };
 }

@@ -1,7 +1,7 @@
 ---
 title: React Map chart
 productId: x-charts
-components: ChartsGeoDataProviderPremium, GeoDataPlot, MapShapePlot, MapShape, Graticule
+components: ChartsGeoDataProviderPremium, GeoDataPlot, MapShapePlot, MapShape, Graticule, FocusedMapShape
 ---
 
 # Charts - Map [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
@@ -73,6 +73,86 @@ Each item is joined to a GeoJSON feature through its `name` property
 Stacking it on top of a `GeoDataPlot` is convenient for highlighting a subset of features over the full geography.
 
 {{"demo": "MapShapePlotDemo.js"}}
+
+## Mapping values to colors
+
+Each `mapShape` data point accepts a `colorValue` property used to compute its fill through
+a color axis defined with the `zAxis` prop.
+The axis `colorMap` configuration accepts the usual `'continuous'`, `'piecewise'`, or `'ordinal'` types.
+
+When no `colorValue` is provided, the item's `value` is used as a fallback.
+
+```tsx
+<Unstable_ChartsGeoDataProviderPremium
+  geoData={geoData}
+  series={[
+    {
+      type: 'mapShape',
+      data: countries.map((country) => ({
+        name: country.name,
+        colorValue: country.internetUsage,
+      })),
+    },
+  ]}
+  zAxis={[
+    {
+      colorMap: {
+        type: 'continuous',
+        min: 0,
+        max: 100,
+        color: ['#e3f2fd', '#0d47a1'],
+      },
+    },
+  ]}
+>
+  {/* ... */}
+</Unstable_ChartsGeoDataProviderPremium>
+```
+
+If several `zAxis` are defined, the series can target one explicitly with the `colorAxisId` property.
+
+{{"demo": "ColorScaleMapShape.js"}}
+
+## Using a dataset
+
+If your data is stored in an array of objects, you can pass it once on the provider with the `dataset` prop and let each series read its fields with `datasetKeys`.
+The `name` key is required to match each entry with a GeoJSON feature; `label`, `value`, and `colorValue` are optional.
+
+```tsx
+<Unstable_ChartsGeoDataProviderPremium
+  geoData={geoData}
+  dataset={countries}
+  series={[
+    {
+      type: 'mapShape',
+      datasetKeys: {
+        name: 'code',
+        label: 'country',
+        colorValue: 'internetUsage',
+      },
+    },
+  ]}
+>
+  {/* ... */}
+</Unstable_ChartsGeoDataProviderPremium>
+```
+
+When the dataset values need to be transformed, use `valueGetter` instead of `datasetKeys`. It receives the dataset item and must return a `MapShapeValueType`.
+
+```tsx
+series={[
+  {
+    type: 'mapShape',
+    valueGetter: (item) => ({
+      name: item.code,
+      label: item.country,
+      colorValue: item.internetUsage / 100,
+    }),
+  },
+]}
+```
+
+See the [Dataset](/x/react-charts/dataset/) page to learn more.
 
 ## Managing the highlight with `highlightScope`
 

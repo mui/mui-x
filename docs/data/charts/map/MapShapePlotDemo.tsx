@@ -1,47 +1,18 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { feature as topojsonFeature } from 'topojson-client';
-import countriesTopology from 'world-atlas/countries-110m.json';
+import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
 import { type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
+import { EU_COUNTRIES, countryData } from '../dataset/countryData';
 
 const countries = topojsonFeature(
   countriesTopology as any,
   'countries',
 ) as unknown as ExtendedFeatureCollection;
-
-const euMembers = [
-  'Austria',
-  'Belgium',
-  'Bulgaria',
-  'Croatia',
-  'Cyprus',
-  'Czechia',
-  'Denmark',
-  'Estonia',
-  'Finland',
-  'France',
-  'Germany',
-  'Greece',
-  'Hungary',
-  'Ireland',
-  'Italy',
-  'Latvia',
-  'Lithuania',
-  'Luxembourg',
-  'Malta',
-  'Netherlands',
-  'Poland',
-  'Portugal',
-  'Romania',
-  'Slovakia',
-  'Slovenia',
-  'Spain',
-  'Sweden',
-];
 
 export default function MapShapePlotDemo() {
   return (
@@ -55,7 +26,7 @@ export default function MapShapePlotDemo() {
             type: 'mapShape',
             label: 'European Union',
             color: '#1976d2',
-            data: euMembers.map((name) => ({ name })),
+            data: EU_COUNTRIES.map((code) => ({ name: countryData[code].country })),
             valueFormatter: (point) => point.name,
           },
         ]}

@@ -1,13 +1,14 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { feature as topojsonFeature } from 'topojson-client';
-import countriesTopology from 'world-atlas/countries-110m.json';
+import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 
 import { ChartsLegend } from '@mui/x-charts-premium/ChartsLegend';
+import { countryData, EU_COUNTRIES } from '../dataset/countryData';
 
 const countries = topojsonFeature(countriesTopology, 'countries');
 
@@ -37,35 +38,10 @@ export default function BasicGeoDataPlot() {
             id: 'EU',
             color: 'blue',
             highlightScope: { highlight: 'item', fade: 'series' },
-            data: [
-              { name: 'Austria' },
-              { name: 'Belgium' },
-              { name: 'Bulgaria' },
-              { name: 'Croatia' },
-              { name: 'Cyprus' },
-              { name: 'Czechia' },
-              { name: 'Denmark' },
-              { name: 'Estonia' },
-              { name: 'France' },
-              { name: 'Finland' },
-              { name: 'Germany' },
-              { name: 'Hungary' },
-              { name: 'Ireland' },
-              { name: 'Italy' },
-              { name: 'Latvia' },
-              { name: 'Lithuania' },
-              { name: 'Luxembourg' },
-              { name: 'Greece' },
-              { name: 'Malta' },
-              { name: 'Netherlands' },
-              { name: 'Poland' },
-              { name: 'Portugal' },
-              { name: 'Romania' },
-              { name: 'Slovakia' },
-              { name: 'Slovenia' },
-              { name: 'Spain' },
-              { name: 'Sweden' },
-            ],
+            data: EU_COUNTRIES.map((code) => ({
+              name: countryData[code].worldAtlasName,
+              label: countryData[code].country,
+            })),
             valueFormatter: (point) =>
               point.value != null ? `${point.value} units` : 'No data',
           },

@@ -2,6 +2,8 @@ import {
   scaleOrdinal,
   scaleThreshold,
   scaleSequential,
+  scaleSequentialSqrt,
+  scaleSequentialLog,
   type ScaleOrdinal,
   type ScaleThreshold,
   type ScaleSequential,
@@ -10,7 +12,22 @@ import {
   type ContinuousSizeConfig,
   type PiecewiseSizeConfig,
   type OrdinalSizeConfig,
+  type ContinuousSizeConfigWithFunctionInterpolator,
 } from '../models/sizeMapping';
+
+const isFunctionInterpolator = <Value extends number | Date>(
+  config: ContinuousSizeConfig<Value>,
+): config is ContinuousSizeConfigWithFunctionInterpolator<Value> => {
+  return typeof config.size === 'function';
+};
+
+function getClampedSize(sizes: readonly [number, number]) {
+  const [minSize, maxSize] = sizes;
+  return (t: number) => {
+    const clampedT = Math.max(Math.min(t, 1), 0);
+    return minSize + clampedT * (maxSize - minSize);
+  };
+}
 
 export function getSequentialSizeScale<Value extends number | Date>(
   config: ContinuousSizeConfig<Value> | PiecewiseSizeConfig<Value>,
@@ -19,7 +36,21 @@ export function getSequentialSizeScale<Value extends number | Date>(
     return scaleThreshold(config.thresholds, config.sizes);
   }
 
-  return scaleSequential([config.min ?? 0, config.max ?? 100], config.size);
+  if (isFunctionInterpolator(config)) {
+    return scaleSequential([config.min ?? 0, config.max ?? 100], config.size);
+  }
+
+  const interpolator = config.interpolator ?? 'sqrt';
+
+  switch (interpolator) {
+    case 'log':
+      return scaleSequentialLog([config.min ?? 0, config.max ?? 100], getClampedSize(config.size));
+    case 'linear':
+      return scaleSequential([config.min ?? 0, config.max ?? 100], getClampedSize(config.size));
+    case 'sqrt':
+    default:
+      return scaleSequentialSqrt([config.min ?? 0, config.max ?? 100], getClampedSize(config.size));
+  }
 }
 
 export function getOrdinalSizeScale(

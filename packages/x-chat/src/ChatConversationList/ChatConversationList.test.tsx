@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/internal-test-utils';
+import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it } from 'vitest';
 import type { ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from '../ChatBox/ChatBox';
@@ -53,7 +53,7 @@ describe('ChatConversationList', () => {
     expect(items.length).toBe(2);
   });
 
-  it('applies MuiChatConversationList-itemSelected class on the active conversation', () => {
+  it('applies MuiChatConversationList-itemSelected class on the active conversation', async () => {
     render(
       <ChatBox
         adapter={createAdapter()}
@@ -67,10 +67,11 @@ describe('ChatConversationList', () => {
       </ChatBox>,
     );
 
-    const selectedItem = document.querySelector('.MuiChatConversationList-itemSelected');
-    expect(selectedItem).not.toBe(null);
-    // Only one item should be selected
-    expect(document.querySelectorAll('.MuiChatConversationList-itemSelected').length).toBe(1);
+    await waitFor(() => {
+      const selectedItem = document.querySelector('.MuiChatConversationList-itemSelected');
+      expect(selectedItem).not.toBe(null);
+      expect(document.querySelectorAll('.MuiChatConversationList-itemSelected').length).toBe(1);
+    });
   });
 
   it('applies MuiChatConversationList-itemUnread class to unread conversations', () => {

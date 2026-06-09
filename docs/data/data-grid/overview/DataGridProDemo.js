@@ -7,6 +7,7 @@ export default function DataGridProDemo() {
     dataSet: 'Commodity',
     rowLength: 100000,
     editable: true,
+    multiSelect: true,
   });
 
   return (

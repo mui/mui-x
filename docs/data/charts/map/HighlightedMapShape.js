@@ -4,38 +4,34 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { feature as topojsonFeature } from 'topojson-client';
-import countriesTopology from 'world-atlas/countries-110m.json';
+import countriesTopology from 'visionscarto-world-atlas/world/110m.json';
 import { Unstable_ChartsGeoDataProviderPremium as ChartsGeoDataProviderPremium } from '@mui/x-charts-premium/ChartsGeoDataProviderPremium';
 import { GeoDataPlot, MapShapePlot } from '@mui/x-charts-premium/Map';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
 
-const countries = topojsonFeature(countriesTopology, 'countries');
+import {
+  withCountryCodeAsName,
+  countriesInContinent,
+  countryData,
+} from '../dataset/countryData';
 
-const americas = [
-  'Argentina',
-  'Bolivia',
-  'Brazil',
-  'Chile',
-  'Colombia',
-  'Ecuador',
-  'Paraguay',
-  'Peru',
-  'Uruguay',
-  'Venezuela',
-];
+const countries = withCountryCodeAsName(
+  topojsonFeature(countriesTopology, 'countries'),
+);
 
-const europe = [
-  'France',
-  'Germany',
-  'Italy',
-  'Poland',
-  'Portugal',
-  'Romania',
-  'Spain',
-  'Sweden',
-  'United Kingdom',
-];
+const getContinentData = (continent) =>
+  countriesInContinent[continent].map((code) => ({
+    name: code,
+    label: countryData[code].country,
+  }));
+
+const northAmerica = getContinentData('North America');
+const southAmerica = getContinentData('South America');
+const europe = getContinentData('Europe');
+const asia = getContinentData('Asia');
+const africa = getContinentData('Africa');
+const oceania = getContinentData('Oceania');
 
 export default function HighlightedMapShape() {
   const [highlight, setHighlight] = React.useState('item');
@@ -55,17 +51,51 @@ export default function HighlightedMapShape() {
           series={[
             {
               type: 'mapShape',
+              label: 'North America',
+              color: '#fb8c00',
+              highlightScope: { highlight, fade },
+              valueFormatter: () => '',
+              data: northAmerica,
+            },
+            {
+              type: 'mapShape',
               label: 'South America',
               color: '#43a047',
               highlightScope: { highlight, fade },
-              data: americas.map((name) => ({ name })),
+              valueFormatter: () => '',
+              data: southAmerica,
             },
             {
               type: 'mapShape',
               label: 'Europe',
               color: '#1e88e5',
               highlightScope: { highlight, fade },
-              data: europe.map((name) => ({ name })),
+              valueFormatter: () => '',
+              data: europe,
+            },
+            {
+              type: 'mapShape',
+              label: 'Asia',
+              color: '#e53935',
+              highlightScope: { highlight, fade },
+              valueFormatter: () => '',
+              data: asia,
+            },
+            {
+              type: 'mapShape',
+              label: 'Africa',
+              color: '#fdd835',
+              highlightScope: { highlight, fade },
+              valueFormatter: () => '',
+              data: africa,
+            },
+            {
+              type: 'mapShape',
+              label: 'Oceania',
+              color: '#8e24aa',
+              highlightScope: { highlight, fade },
+              valueFormatter: () => '',
+              data: oceania,
             },
           ]}
         >
