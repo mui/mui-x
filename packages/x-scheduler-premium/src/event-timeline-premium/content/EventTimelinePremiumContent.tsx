@@ -168,7 +168,6 @@ const EventTimelinePremiumEventsHeaderCellContent = styled('div', {
   height: '100%',
   width: 'calc(var(--unit-count) * var(--unit-width))',
   minWidth: '100%',
-  transform: 'translateX(calc(-1 * var(--events-scroll-left, 0) * 1px))',
 });
 
 const EventTimelinePremiumScrollerContent = styled('div', {
@@ -218,7 +217,6 @@ const EventTimelinePremiumEventsCell = styled(TimelineGrid.EventRow, {
   alignContent: 'start',
   zIndex: 1,
   borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-  transform: 'translateX(calc(-1 * var(--events-scroll-left, 0) * 1px))',
   '&:focus-visible': {
     outline: 'none',
     backgroundColor: getCellFocusBackground(theme),
