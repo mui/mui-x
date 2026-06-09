@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import type { PanEvent } from '@mui/x-internal-gestures/core';
-import type { ChartPoint, GestureInstance, PanGestureConfig } from './zoomGestures.types';
+import { type PanEvent } from '@mui/x-internal-gestures/core';
+import { type ChartPoint, type GestureInstance, type PanGestureConfig } from './zoomGestures.types';
 
-export interface UsePanOnPressGestureOptions {
+export interface UseDragGestureOptions {
   /** Whether the gesture is active. */
   enabled: boolean;
   /** Pointer/keyboard gating forwarded to the interaction listener. */
@@ -34,10 +34,7 @@ export interface UsePanOnPressGestureOptions {
  * the rAF throttling. What to do with the delta is entirely up to `onPan` — cartesian
  * zoom translates an axis range, a map translates the projection, etc.
  */
-export function usePanOnPressGesture(
-  instance: GestureInstance,
-  options: UsePanOnPressGestureOptions,
-): void {
+export function useDragGesture(instance: GestureInstance, options: UseDragGestureOptions): void {
   const { enabled, config, onPanStart, onPan, onPanEnd } = options;
   const { chartsLayerContainerRef } = instance;
 
@@ -51,7 +48,7 @@ export function usePanOnPressGesture(
     if (!enabled) {
       return;
     }
-    instance.updateZoomInteractionListeners('zoomPressAndDrag', {
+    instance.updateZoomInteractionListeners('zoomPan', {
       requiredKeys: config?.requiredKeys,
       pointerMode: config?.pointerMode,
       pointerOptions: {
@@ -72,8 +69,10 @@ export function usePanOnPressGesture(
     const accumulated = { x: 0, y: 0 };
 
     const handlePanStart = (event: PanEvent) => {
-      isInteracting = true;
-      handlersRef.current.onPanStart?.(event);
+      if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
+        isInteracting = true;
+        handlersRef.current.onPanStart?.(event);
+      }
     };
     const handlePanEnd = (event: PanEvent) => {
       isInteracting = false;
@@ -99,12 +98,9 @@ export function usePanOnPressGesture(
       throttled();
     };
 
-    const panHandler = instance.addInteractionListener('zoomPressAndDrag', handlePan);
-    const panStartHandler = instance.addInteractionListener(
-      'zoomPressAndDragStart',
-      handlePanStart,
-    );
-    const panEndHandler = instance.addInteractionListener('zoomPressAndDragEnd', handlePanEnd);
+    const panHandler = instance.addInteractionListener('zoomPan', handlePan);
+    const panStartHandler = instance.addInteractionListener('zoomPanStart', handlePanStart);
+    const panEndHandler = instance.addInteractionListener('zoomPanEnd', handlePanEnd);
 
     return () => {
       panHandler.cleanup();

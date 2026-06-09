@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { getChartPoint } from '@mui/x-charts/internals';
 import { type KeyboardKey } from '@mui/x-internal-gestures/core';
 import { type ChartPoint, type GestureInstance } from './zoomGestures.types';
@@ -45,6 +46,8 @@ export function useWheelGesture(instance: GestureInstance, options: UseWheelGest
       return () => {};
     }
 
+    const rafThrottledOnWheel = rafThrottle(onWheelRef.current);
+
     const handler = instance.addInteractionListener('zoomTurnWheel', (event) => {
       const point = getChartPoint(element, {
         clientX: event.detail.centroid.x,
@@ -67,7 +70,7 @@ export function useWheelGesture(instance: GestureInstance, options: UseWheelGest
 
       event.detail.srcEvent.preventDefault();
 
-      onWheelRef.current(point, event.detail.srcEvent as WheelEvent);
+      rafThrottledOnWheel(point, event.detail.srcEvent as WheelEvent);
     });
 
     return () => {
@@ -77,6 +80,7 @@ export function useWheelGesture(instance: GestureInstance, options: UseWheelGest
         startedOutsideTimeoutRef.current = null;
       }
       startedOutsideRef.current = false;
+      rafThrottledOnWheel.clear();
     };
   }, [chartsLayerContainerRef, enabled, instance]);
 }

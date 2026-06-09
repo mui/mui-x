@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { type PanEvent } from '@mui/x-internal-gestures/core';
-import { type ChartPoint, type GestureInstance, type PanGestureConfig } from './zoomGestures.types';
+import type { PanEvent } from '@mui/x-internal-gestures/core';
+import type { ChartPoint, GestureInstance, PanGestureConfig } from './zoomGestures.types';
 
-export interface UsePanGestureOptions {
+export interface UseDragOnPressGestureOptions {
   /** Whether the gesture is active. */
   enabled: boolean;
   /** Pointer/keyboard gating forwarded to the interaction listener. */
@@ -28,13 +28,14 @@ export interface UsePanGestureOptions {
 }
 
 /**
- * Generic drag-to-pan gesture binding, decoupled from any coordinate system.
+ * Generic drag-to-pan gesture binding.
  *
- * It owns the listener lifecycle, the per-frame accumulation of the pixel delta, and
- * the rAF throttling. What to do with the delta is entirely up to `onPan` — cartesian
- * zoom translates an axis range, a map translates the projection, etc.
+ * It owns the listener lifecycle, and allows the user to create their own interactions by providing the delta change of the interaction.
  */
-export function usePanGesture(instance: GestureInstance, options: UsePanGestureOptions): void {
+export function useDragOnPressGesture(
+  instance: GestureInstance,
+  options: UseDragOnPressGestureOptions,
+): void {
   const { enabled, config, onPanStart, onPan, onPanEnd } = options;
   const { chartsLayerContainerRef } = instance;
 
@@ -48,7 +49,7 @@ export function usePanGesture(instance: GestureInstance, options: UsePanGestureO
     if (!enabled) {
       return;
     }
-    instance.updateZoomInteractionListeners('zoomPan', {
+    instance.updateZoomInteractionListeners('zoomPressAndDrag', {
       requiredKeys: config?.requiredKeys,
       pointerMode: config?.pointerMode,
       pointerOptions: {
@@ -69,10 +70,8 @@ export function usePanGesture(instance: GestureInstance, options: UsePanGestureO
     const accumulated = { x: 0, y: 0 };
 
     const handlePanStart = (event: PanEvent) => {
-      if (!(event.detail.target as SVGElement)?.closest('[data-charts-zoom-slider]')) {
-        isInteracting = true;
-        handlersRef.current.onPanStart?.(event);
-      }
+      isInteracting = true;
+      handlersRef.current.onPanStart?.(event);
     };
     const handlePanEnd = (event: PanEvent) => {
       isInteracting = false;
@@ -98,9 +97,12 @@ export function usePanGesture(instance: GestureInstance, options: UsePanGestureO
       throttled();
     };
 
-    const panHandler = instance.addInteractionListener('zoomPan', handlePan);
-    const panStartHandler = instance.addInteractionListener('zoomPanStart', handlePanStart);
-    const panEndHandler = instance.addInteractionListener('zoomPanEnd', handlePanEnd);
+    const panHandler = instance.addInteractionListener('zoomPressAndDrag', handlePan);
+    const panStartHandler = instance.addInteractionListener(
+      'zoomPressAndDragStart',
+      handlePanStart,
+    );
+    const panEndHandler = instance.addInteractionListener('zoomPressAndDragEnd', handlePanEnd);
 
     return () => {
       panHandler.cleanup();
