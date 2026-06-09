@@ -1313,5 +1313,31 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(portalInput).toHaveFocus();
       },
     );
+
+    it('should wire pasted csv through pastedValueParser into a multiSelect array', async () => {
+      const columns: GridColDef[] = [
+        {
+          field: 'tags',
+          type: 'multiSelect',
+          editable: true,
+          width: 280,
+          valueOptions: ['React', 'TypeScript', 'Node.js'],
+        },
+      ];
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPremium apiRef={apiRef} columns={columns} rows={[{ id: 0, tags: ['React'] }]} />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await user.click(cell);
+
+      paste(cell, 'React, TypeScript');
+
+      await waitFor(() => {
+        expect(apiRef.current!.getRow(0).tags).to.deep.equal(['React', 'TypeScript']);
+      });
+    });
   });
 });
