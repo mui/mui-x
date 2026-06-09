@@ -119,7 +119,7 @@ Pass `sx` overrides to any internal subcomponent using `slotProps` without repla
 <ChatBox
   slotProps={{
     conversationList: { 'aria-label': 'Chat threads' },
-    composerInput: { placeholder: 'Ask anything...' },
+    composerInput: { placeholder: 'Ask anything…' },
     composerSendButton: { sx: { borderRadius: 6 } },
   }}
 />

@@ -81,6 +81,7 @@ export * from './consumeThemeProps';
 export * from './defaultizeMargin';
 export * from './colorScale';
 export * from './sizeScale';
+export * from './incompleteDatasetKeysError';
 export * from './ticks';
 export * from './dateHelpers';
 export * from './invertScale';

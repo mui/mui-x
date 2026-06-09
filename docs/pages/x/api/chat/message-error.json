@@ -1,0 +1,23 @@
+{
+  "props": {},
+  "name": "MessageError",
+  "imports": [
+    "import { MessageError } from '@mui/x-chat/headless';",
+    "import { MessageError } from '@mui/x-chat/headless';"
+  ],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The root element of the per-message error primitive.\nRendered with `role=\"alert\"` so screen readers announce the error.",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiMessageError",
+  "filename": "/packages/x-chat-headless/src/message/MessageError.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-chat/behavior/error-handling/\">Chat - Error Handling</a></li></ul>",
+  "cssComponent": false
+}

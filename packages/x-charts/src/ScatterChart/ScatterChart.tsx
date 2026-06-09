@@ -19,6 +19,7 @@ import {
   type ChartsTooltipSlots,
   type ChartsTooltipSlotProps,
 } from '../ChartsTooltip/ChartTooltip.types';
+import type { TooltipPropsOverrides } from '../models/chartsSlotsComponentsProps';
 import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
@@ -60,7 +61,7 @@ export interface ScatterChartSlotProps
    * Slot props for the tooltip component.
    * @default {}
    */
-  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>>;
+  tooltip?: Partial<ChartsTooltipProps<'item' | 'none'>> & TooltipPropsOverrides;
 }
 
 export type ScatterSeries = MakeOptional<ScatterSeriesType, 'type'>;
@@ -562,12 +563,16 @@ ScatterChart.propTypes = {
       min: PropTypes.number,
       sizeMap: PropTypes.oneOfType([
         PropTypes.shape({
+          interpolator: PropTypes.oneOf(['linear', 'log', 'sqrt']),
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          size: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.number.isRequired),
-            PropTypes.func,
-          ]).isRequired,
+          size: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          size: PropTypes.func.isRequired,
           type: PropTypes.oneOf(['continuous']).isRequired,
         }),
         PropTypes.shape({

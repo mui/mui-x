@@ -1,4 +1,4 @@
-import { defaultizeZoom } from './defaultizeZoom';
+import { defaultizeZoom, getEffectiveZoomReverse } from './defaultizeZoom';
 import { type ZoomOptions } from './zoom.types';
 import {
   DEFAULT_X_AXIS_KEY,
@@ -46,7 +46,12 @@ export function defaultizeXAxis(
       id,
       position,
       height,
-      zoom: defaultizeZoom(axisConfig.zoom, id, 'x', axisConfig.reverse),
+      zoom: defaultizeZoom(
+        axisConfig.zoom,
+        id,
+        'x',
+        getEffectiveZoomReverse('x', axisConfig.scaleType, axisConfig.reverse),
+      ),
     };
 
     // Increment the offset for the next axis
@@ -116,7 +121,12 @@ export function defaultizeYAxis(
       id,
       position,
       width,
-      zoom: defaultizeZoom(axisConfig.zoom, id, 'y', axisConfig.reverse),
+      zoom: defaultizeZoom(
+        axisConfig.zoom,
+        id,
+        'y',
+        getEffectiveZoomReverse('y', axisConfig.scaleType, axisConfig.reverse),
+      ),
     };
 
     // Increment the offset for the next axis

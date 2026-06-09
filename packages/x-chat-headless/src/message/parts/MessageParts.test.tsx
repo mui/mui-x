@@ -63,10 +63,10 @@ describe('ReasoningPart', () => {
       parts: [{ type: 'reasoning', text: 'Some reasoning', state: 'streaming' }],
     });
 
-    // Default streaming label is "Thinking..."
-    expect(screen.getByText('Thinking...')).not.to.equal(null);
+    // Default streaming label is "Thinking…"
+    expect(screen.getByText('Thinking…')).not.to.equal(null);
     // The details element should be open when streaming
-    const details = screen.getByText('Thinking...').closest('details');
+    const details = screen.getByText('Thinking…').closest('details');
 
     expect(details).not.to.equal(null);
     expect(details!.hasAttribute('open')).to.equal(true);
@@ -126,6 +126,63 @@ describe('ReasoningPart', () => {
     );
 
     expect(screen.getByTestId('custom-summary')).not.to.equal(null);
+  });
+});
+
+describe('ToolPart sectionSummary slot', () => {
+  it('passes summaryLabel and previewValue through ownerState to a custom sectionSummary', () => {
+    let receivedOwnerState: any = null;
+
+    function CustomSectionSummary(props: React.HTMLAttributes<HTMLElement> & { ownerState?: any }) {
+      const { ownerState, children, ...other } = props;
+      receivedOwnerState = ownerState;
+      return (
+        <strong data-testid="custom-section-summary" {...other}>
+          {children}
+        </strong>
+      );
+    }
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            parts: [
+              {
+                type: 'tool',
+                toolInvocation: {
+                  toolCallId: 'tc1',
+                  toolName: 'search',
+                  state: 'output-available',
+                  input: { query: 'hello' },
+                  output: { results: ['world'] },
+                },
+              },
+            ],
+          },
+        ]}
+      >
+        <MessageRoot messageId="m1">
+          <MessageContent
+            partProps={{
+              tool: {
+                slots: {
+                  sectionSummary: CustomSectionSummary,
+                },
+              },
+            }}
+          />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getAllByTestId('custom-section-summary').length).to.equal(2);
+    expect(receivedOwnerState).not.to.equal(null);
+    expect(receivedOwnerState.summaryLabel).to.be.a('string');
+    expect(receivedOwnerState.previewValue).to.be.a('string');
   });
 });
 

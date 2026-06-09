@@ -55,33 +55,31 @@ describe('TimelineGrid keyboard navigation', () => {
             <TimelineGrid.Cell>title header</TimelineGrid.Cell>
             <TimelineGrid.Cell>events header</TimelineGrid.Cell>
           </TimelineGrid.Row>
-          <TimelineGrid.SubGrid>
-            {(resourceId) => (
-              <TimelineGrid.TitleRow key={resourceId} data-testid={`title-${resourceId}`}>
-                <TimelineGrid.Cell>{resourceId}</TimelineGrid.Cell>
-              </TimelineGrid.TitleRow>
-            )}
-          </TimelineGrid.SubGrid>
-          <TimelineGrid.SubGrid>
-            {(resourceId) => (
-              <TimelineGrid.EventRow
+          <div role="rowgroup">
+            {resourcesProp.map(({ id: resourceId }, index) => (
+              <TimelineGrid.BodyRow
                 key={resourceId}
-                resourceId={resourceId}
-                data-testid={`events-${resourceId}`}
+                index={index}
+                data-testid={`row-${resourceId}`}
               >
-                {() => (
-                  <TimelineGrid.Event
-                    eventId={`event-${resourceId}`}
-                    occurrenceKey={`occ-${resourceId}`}
-                    start={processDate(DEFAULT_TESTING_VISIBLE_DATE, adapter)}
-                    end={processDate(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 1), adapter)}
-                    renderDragPreview={() => null}
-                    data-testid={`event-${resourceId}`}
-                  />
-                )}
-              </TimelineGrid.EventRow>
-            )}
-          </TimelineGrid.SubGrid>
+                <TimelineGrid.TitleRow data-testid={`title-${resourceId}`}>
+                  <TimelineGrid.Cell>{resourceId}</TimelineGrid.Cell>
+                </TimelineGrid.TitleRow>
+                <TimelineGrid.EventRow resourceId={resourceId} data-testid={`events-${resourceId}`}>
+                  {() => (
+                    <TimelineGrid.Event
+                      eventId={`event-${resourceId}`}
+                      occurrenceKey={`occ-${resourceId}`}
+                      start={processDate(DEFAULT_TESTING_VISIBLE_DATE, adapter)}
+                      end={processDate(adapter.addHours(DEFAULT_TESTING_VISIBLE_DATE, 1), adapter)}
+                      renderDragPreview={() => null}
+                      data-testid={`event-${resourceId}`}
+                    />
+                  )}
+                </TimelineGrid.EventRow>
+              </TimelineGrid.BodyRow>
+            ))}
+          </div>
           {children}
         </TimelineGrid.Root>
         {onStoreMount && (
@@ -94,62 +92,68 @@ describe('TimelineGrid keyboard navigation', () => {
     );
   }
 
-  function getTitleRows() {
-    return within(screen.getAllByRole('rowgroup')[0]).getAllByRole('row');
+  function getBodyRows() {
+    return screen.getByRole('rowgroup')
+      ? within(screen.getByRole('rowgroup')).getAllByRole('row')
+      : [];
   }
 
-  function getEventsRows() {
-    return within(screen.getAllByRole('rowgroup')[1]).getAllByRole('row');
+  function getTitleCells() {
+    return getBodyRows().map((row) => row.querySelector('[data-testid^="title-"]') as HTMLElement);
+  }
+
+  function getEventsCells() {
+    return getBodyRows().map((row) => row.querySelector('[data-testid^="events-"]') as HTMLElement);
   }
 
   describe('vertical navigation (ArrowUp / ArrowDown)', () => {
     it('should move focus to the next row on ArrowDown', async () => {
       const { user } = render(<Grid />);
 
-      const rows = getEventsRows();
+      const cells = getEventsCells();
       act(() => {
-        rows[0].focus();
+        cells[0].focus();
       });
       await user.keyboard('{ArrowDown}');
 
-      expect(rows[1]).toHaveFocus();
+      expect(cells[1]).toHaveFocus();
     });
 
     it('should move focus to the previous row on ArrowUp', async () => {
       const { user } = render(<Grid />);
 
-      const rows = getEventsRows();
+      const cells = getEventsCells();
       act(() => {
-        rows[1].focus();
+        cells[1].focus();
       });
       await user.keyboard('{ArrowUp}');
 
-      expect(rows[0]).toHaveFocus();
+      expect(cells[0]).toHaveFocus();
     });
 
     it('should not move past the first row on ArrowUp', async () => {
       const { user } = render(<Grid />);
 
-      const rows = getEventsRows();
+      const cells = getEventsCells();
       act(() => {
-        rows[0].focus();
+        cells[0].focus();
       });
       await user.keyboard('{ArrowUp}');
 
-      expect(rows[0]).toHaveFocus();
+      expect(cells[0]).toHaveFocus();
     });
 
     it('should not move past the last row on ArrowDown', async () => {
       const { user } = render(<Grid />);
 
-      const rows = getEventsRows();
-      const lastRow = rows[rows.length - 1];
+      const cells = getEventsCells();
+      const lastCell = cells[cells.length - 1];
       act(() => {
-        lastRow.focus();
+        lastCell.focus();
       });
       await user.keyboard('{ArrowDown}');
 
-      expect(lastRow).toHaveFocus();
+      expect(lastCell).toHaveFocus();
     });
   });
 
@@ -158,73 +162,73 @@ describe('TimelineGrid keyboard navigation', () => {
       const { user } = render(<Grid />);
 
       act(() => {
-        getTitleRows()[0].focus();
+        getTitleCells()[0].focus();
       });
       await user.keyboard('{ArrowRight}');
 
-      expect(getEventsRows()[0]).toHaveFocus();
+      expect(getEventsCells()[0]).toHaveFocus();
     });
 
     it('should move focus from events to title on ArrowLeft', async () => {
       const { user } = render(<Grid />);
 
       act(() => {
-        getEventsRows()[0].focus();
+        getEventsCells()[0].focus();
       });
       await user.keyboard('{ArrowLeft}');
 
-      expect(getTitleRows()[0]).toHaveFocus();
+      expect(getTitleCells()[0]).toHaveFocus();
     });
 
     it('should preserve row index when switching columns', async () => {
       const { user } = render(<Grid />);
 
       act(() => {
-        getTitleRows()[1].focus();
+        getTitleCells()[1].focus();
       });
       await user.keyboard('{ArrowRight}');
-      expect(getEventsRows()[1]).toHaveFocus();
+      expect(getEventsCells()[1]).toHaveFocus();
 
       await user.keyboard('{ArrowLeft}');
-      expect(getTitleRows()[1]).toHaveFocus();
+      expect(getTitleCells()[1]).toHaveFocus();
     });
 
     it('should not move past the leftmost column on ArrowLeft', async () => {
       const { user } = render(<Grid />);
 
       act(() => {
-        getTitleRows()[0].focus();
+        getTitleCells()[0].focus();
       });
       await user.keyboard('{ArrowLeft}');
 
-      expect(getTitleRows()[0]).toHaveFocus();
+      expect(getTitleCells()[0]).toHaveFocus();
     });
 
     it('should not move past the rightmost column on ArrowRight', async () => {
       const { user } = render(<Grid />);
 
       act(() => {
-        getEventsRows()[0].focus();
+        getEventsCells()[0].focus();
       });
       await user.keyboard('{ArrowRight}');
 
-      expect(getEventsRows()[0]).toHaveFocus();
+      expect(getEventsCells()[0]).toHaveFocus();
     });
 
     it('should follow the order defined by a custom `columnTypes` prop', async () => {
       const { user } = render(<Grid columnTypes={['events', 'title']} />);
 
       act(() => {
-        getEventsRows()[0].focus();
+        getEventsCells()[0].focus();
       });
       await user.keyboard('{ArrowRight}');
-      expect(getTitleRows()[0]).toHaveFocus();
+      expect(getTitleCells()[0]).toHaveFocus();
 
       await user.keyboard('{ArrowLeft}');
-      expect(getEventsRows()[0]).toHaveFocus();
+      expect(getEventsCells()[0]).toHaveFocus();
 
       await user.keyboard('{ArrowLeft}');
-      expect(getEventsRows()[0]).toHaveFocus();
+      expect(getEventsCells()[0]).toHaveFocus();
     });
   });
 
@@ -239,9 +243,9 @@ describe('TimelineGrid keyboard navigation', () => {
         />,
       );
 
-      const rows = getEventsRows();
+      const cells = getEventsCells();
       act(() => {
-        rows[0].focus();
+        cells[0].focus();
       });
       await user.keyboard('{Enter}');
 
@@ -250,7 +254,7 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(store!.state.occurrencePlaceholder?.surfaceType).to.equal('timeline');
     });
 
-    it('should not create a placeholder on Enter from a title row', async () => {
+    it('should not create a placeholder on Enter from a title cell', async () => {
       let store: AnyEventCalendarStore | null = null;
       const { user } = render(
         <Grid
@@ -261,7 +265,7 @@ describe('TimelineGrid keyboard navigation', () => {
       );
 
       act(() => {
-        getTitleRows()[0].focus();
+        getTitleCells()[0].focus();
       });
       await user.keyboard('{Enter}');
 
@@ -278,7 +282,7 @@ describe('TimelineGrid keyboard navigation', () => {
         />,
       );
 
-      const event = getEventsRows()[0].querySelector(
+      const event = getEventsCells()[0].querySelector(
         '[data-testid^="event-"]',
       ) as HTMLElement | null;
       expect(event).not.to.equal(null);
@@ -302,26 +306,26 @@ describe('TimelineGrid keyboard navigation', () => {
       );
 
       act(() => {
-        getEventsRows()[0].focus();
+        getEventsCells()[0].focus();
       });
       await user.keyboard('{Enter}');
 
       expect(store!.state.occurrencePlaceholder).to.equal(null);
     });
 
-    it('should expose `data-creation-disabled` on event rows when event creation is disabled', () => {
+    it('should expose `data-creation-disabled` on event cells when event creation is disabled', () => {
       render(<Grid eventCreation={false} />);
 
-      getEventsRows().forEach((row) => {
-        expect(row).to.have.attribute('data-creation-disabled');
+      getEventsCells().forEach((cell) => {
+        expect(cell).to.have.attribute('data-creation-disabled');
       });
     });
 
     it('should not expose `data-creation-disabled` when event creation is enabled', () => {
       render(<Grid />);
 
-      getEventsRows().forEach((row) => {
-        expect(row).not.to.have.attribute('data-creation-disabled');
+      getEventsCells().forEach((cell) => {
+        expect(cell).not.to.have.attribute('data-creation-disabled');
       });
     });
   });
@@ -337,13 +341,13 @@ describe('TimelineGrid keyboard navigation', () => {
         </React.Fragment>,
       );
 
-      const eventsRows = getEventsRows();
-      const events = eventsRows.map(
-        (row) => row.querySelector('[data-testid^="event-"]') as HTMLElement,
+      const eventsCells = getEventsCells();
+      const events = eventsCells.map(
+        (cell) => cell.querySelector('[data-testid^="event-"]') as HTMLElement,
       );
 
       act(() => {
-        eventsRows[0].focus();
+        eventsCells[0].focus();
       });
       expect(events[0]).to.have.attribute('tabindex', '0');
 
@@ -354,7 +358,7 @@ describe('TimelineGrid keyboard navigation', () => {
       expect(events[1]).to.have.attribute('tabindex', '-1');
     });
 
-    it('should update `focusedCell` when focus lands on a descendant of the row', () => {
+    it('should update `focusedCell` when focus lands on a descendant of the cell', () => {
       const focusedCellRef: { current: TimelineGridCellCoordinates | null } = { current: null };
       function FocusedCellInspector() {
         const { focusedCell } = useTimelineGridRootContext();
@@ -369,7 +373,7 @@ describe('TimelineGrid keyboard navigation', () => {
         </Grid>,
       );
 
-      const event = getEventsRows()[1].querySelector('[data-testid^="event-"]') as HTMLElement;
+      const event = getEventsCells()[1].querySelector('[data-testid^="event-"]') as HTMLElement;
       act(() => {
         event.focus();
       });
@@ -395,9 +399,9 @@ describe('TimelineGrid keyboard navigation', () => {
         </Grid>,
       );
 
-      const eventsRows = getEventsRows();
+      const eventsCells = getEventsCells();
       act(() => {
-        eventsRows[0].focus();
+        eventsCells[0].focus();
       });
       expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 0 });
 
@@ -406,7 +410,7 @@ describe('TimelineGrid keyboard navigation', () => {
       // that does not update `focusedCell`, so only the deferred recheck can
       // prevent clearing.
       act(() => {
-        eventsRows[0].blur();
+        eventsCells[0].blur();
         screen.getByTestId('inside-button').focus();
       });
       await Promise.resolve();
@@ -431,7 +435,7 @@ describe('TimelineGrid keyboard navigation', () => {
 
       // Focus row 0, then arrow-down so focusedCell points to row 1.
       act(() => {
-        getEventsRows()[0].focus();
+        getEventsCells()[0].focus();
       });
       await user.keyboard('{ArrowDown}');
       expect(focusedCellRef.current).to.deep.equal({ columnType: 'events', rowIndex: 1 });
@@ -445,38 +449,35 @@ describe('TimelineGrid keyboard navigation', () => {
   });
 
   describe('aria-rowindex', () => {
-    it('should set `aria-rowindex` on the header and shift data rows to reserve row 1', async () => {
+    it('should set `aria-rowindex` on the header and body rows', async () => {
       render(<Grid />);
 
       expect(screen.getByTestId('header-row')).to.have.attribute('aria-rowindex', '1');
-      getTitleRows().forEach((row, i) => {
-        expect(row).to.have.attribute('aria-rowindex', String(i + 2));
-      });
-      getEventsRows().forEach((row, i) => {
+      getBodyRows().forEach((row, i) => {
         expect(row).to.have.attribute('aria-rowindex', String(i + 2));
       });
     });
   });
 
   describe('event tabIndex follows row focus', () => {
-    it('should make events tabbable only when their parent row is focused', async () => {
+    it('should make events tabbable only when their parent cell is focused', async () => {
       const { user } = render(<Grid />);
 
-      const eventsRows = getEventsRows();
-      const events = eventsRows.map((row) => row.querySelector('[data-testid^="event-"]')!);
+      const eventsCells = getEventsCells();
+      const events = eventsCells.map((cell) => cell.querySelector('[data-testid^="event-"]')!);
 
-      // Before any row is focused, all events are not tabbable
+      // Before any cell is focused, all events are not tabbable
       expect(events[0]).to.have.attribute('tabindex', '-1');
       expect(events[1]).to.have.attribute('tabindex', '-1');
 
-      // Focus row 0 → its event becomes tabbable
+      // Focus cell 0 → its event becomes tabbable
       act(() => {
-        eventsRows[0].focus();
+        eventsCells[0].focus();
       });
       expect(events[0]).to.have.attribute('tabindex', '0');
       expect(events[1]).to.have.attribute('tabindex', '-1');
 
-      // Navigate to row 1 → row 1's event becomes tabbable, row 0's not
+      // Navigate to cell 1 → cell 1's event becomes tabbable, cell 0's not
       await user.keyboard('{ArrowDown}');
       expect(events[0]).to.have.attribute('tabindex', '-1');
       expect(events[1]).to.have.attribute('tabindex', '0');
@@ -484,11 +485,10 @@ describe('TimelineGrid keyboard navigation', () => {
   });
 
   describe('dev-mode errors', () => {
-    it('should throw when a row is rendered outside <TimelineGrid.SubGrid />', () => {
+    it('should throw when a row is rendered outside <TimelineGrid.BodyRow />', () => {
       const errorRef = React.createRef<any>();
       const errorMessage =
-        'MUI X Scheduler: TimelineGridSubGridContext is missing. ' +
-        '<TimelineGrid.TitleRow /> and <TimelineGrid.EventRow /> must be placed within <TimelineGrid.SubGrid />.';
+        'MUI X Scheduler: <TimelineGrid.TitleRow /> and <TimelineGrid.EventRow /> must be rendered inside a <TimelineGrid.BodyRow />.';
       const expectedError = reactMajor < 19 ? ['The above error occurred in the'] : [errorMessage];
 
       expect(() =>
@@ -544,9 +544,9 @@ describe('TimelineGrid keyboard navigation', () => {
               visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
             >
               <TimelineGrid.Root columnTypes={['events']}>
-                <TimelineGrid.SubGrid>
+                <TimelineGrid.BodyRow index={0}>
                   <TimelineGrid.TitleRow />
-                </TimelineGrid.SubGrid>
+                </TimelineGrid.BodyRow>
               </TimelineGrid.Root>
             </EventTimelinePremiumProvider>
           </ErrorBoundary>,
@@ -572,9 +572,9 @@ describe('TimelineGrid keyboard navigation', () => {
               resources={resources}
               visibleDate={DEFAULT_TESTING_VISIBLE_DATE}
             >
-              <TimelineGrid.SubGrid>
+              <TimelineGrid.BodyRow index={0}>
                 <TimelineGrid.TitleRow />
-              </TimelineGrid.SubGrid>
+              </TimelineGrid.BodyRow>
             </EventTimelinePremiumProvider>
           </ErrorBoundary>,
         ),

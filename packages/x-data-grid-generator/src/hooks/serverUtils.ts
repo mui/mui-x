@@ -343,13 +343,12 @@ const applyAggregation = (
   return aggregateValues;
 };
 
-const generateParentRows = (pathsToAutogenerate: Set<string>): GridValidRowModel[] => {
-  return Array.from(pathsToAutogenerate).map((path) => {
-    const pathArray = path.split(',');
+const generateParentRows = (pathsToAutogenerate: Iterable<string[]>): GridValidRowModel[] => {
+  return Array.from(pathsToAutogenerate).map((pathArray) => {
     return {
       id: `auto-generated-parent-${pathArray.join('-')}`,
-      path: pathArray.slice(0, pathArray.length),
-      group: pathArray.slice(-1)[0],
+      path: pathArray.slice(),
+      group: pathArray[pathArray.length - 1],
     };
   });
 };
@@ -616,11 +615,14 @@ export const processTreeDataRows = (
   let childRowsWithDescendantCounts = childRows.map((row) => {
     const descendants = findTreeDataRowChildren(filteredRows, row[pathKey], pathKey, -1);
     const descendantCount = descendants.length;
+    const children = findTreeDataRowChildren(filteredRows, row[pathKey], pathKey, 1);
+    const childrenCount = children.length;
     if (descendantCount > 0 && queryOptions.aggregationModel) {
       // Parent row, compute aggregation
       return {
         ...row,
         descendantCount,
+        childrenCount,
         ...applyAggregation(
           queryOptions.aggregationModel,
           columnsWithDefaultColDef,
@@ -629,7 +631,7 @@ export const processTreeDataRows = (
         ),
       };
     }
-    return { ...row, descendantCount } as GridRowModel;
+    return { ...row, descendantCount, childrenCount } as GridRowModel;
   });
 
   if (queryOptions.sortModel) {
@@ -651,15 +653,23 @@ export const processTreeDataRows = (
     );
   }
 
-  if (queryOptions.paginationModel && (queryOptions.groupKeys.length === 0 || nestedPagination)) {
-    // Only paginate root rows, grid should refetch root rows when `paginationModel` updates
-    // Except when nested pagination is enabled, in which case we paginate the children of the current group node
-    const { pageSize, page } = queryOptions.paginationModel;
-    if (pageSize < childRowsWithDescendantCounts.length) {
+  // Apply pagination using start/end if provided, otherwise fall back to paginationModel
+  if (queryOptions.groupKeys.length === 0 || nestedPagination) {
+    if (queryOptions.start !== undefined && queryOptions.end !== undefined) {
+      // Use start/end for range-based pagination (needed for nested lazy loading)
       childRowsWithDescendantCounts = childRowsWithDescendantCounts.slice(
-        page * pageSize,
-        (page + 1) * pageSize,
+        queryOptions.start,
+        queryOptions.end + 1,
       );
+    } else if (queryOptions.paginationModel) {
+      // Fall back to paginationModel for backward compatibility
+      const { pageSize, page } = queryOptions.paginationModel;
+      if (pageSize < childRowsWithDescendantCounts.length) {
+        childRowsWithDescendantCounts = childRowsWithDescendantCounts.slice(
+          page * pageSize,
+          page * pageSize + pageSize,
+        );
+      }
     }
   }
 
@@ -678,6 +688,7 @@ export const processRowGroupingRows = (
   queryOptions: ServerSideQueryOptions,
   serverOptions: ServerOptions,
   columnsWithDefaultColDef: GridColDef[],
+  nestedPagination: boolean,
 ): Promise<NestedDataRowsResponse> => {
   const { minDelay = 100, maxDelay = 300 } = serverOptions;
   const pathKey = 'path';
@@ -698,7 +709,7 @@ export const processRowGroupingRows = (
 
   const delay = randomInt(minDelay, maxDelay);
 
-  const pathsToAutogenerate = new Set<string>();
+  const pathsToAutogenerate = new Map<string, string[]>();
   let rowsWithPaths = rows;
   const rowsWithMissingGroups: GridValidRowModel[] = [];
 
@@ -707,15 +718,24 @@ export const processRowGroupingRows = (
 
   if (groupFields.length > 0) {
     rowsWithPaths = rows.reduce<GridValidRowModel[]>((acc, row) => {
-      const partialPath = groupFields.map((field) => {
+      const partialPath: (string | undefined)[] = groupFields.map((field) => {
         const colDef = columnsWithDefaultColDef.find(({ field: f }) => f === field);
+        const rawValue = row[field];
+        // multiSelect (array) grouping: empty → missing group, non-empty → sorted-joined
+        // key so `['A','B']` and `['B','A']` collapse to one group (matches client).
+        if (Array.isArray(rawValue)) {
+          if (rawValue.length === 0) {
+            return undefined;
+          }
+          return [...rawValue].sort().join(',');
+        }
         if (colDef?.groupingValueGetter) {
-          return String(colDef.groupingValueGetter(row[field] as never, row, colDef, apiRef));
+          return String(colDef.groupingValueGetter(rawValue as never, row, colDef, apiRef));
         }
         if (colDef?.valueGetter) {
-          return String(colDef.valueGetter(row[field] as never, row, colDef, apiRef));
+          return String(colDef.valueGetter(rawValue as never, row, colDef, apiRef));
         }
-        return String(row[field]);
+        return String(rawValue);
       });
       for (let index = 0; index < partialPath.length; index += 1) {
         const value = partialPath[index];
@@ -725,20 +745,20 @@ export const processRowGroupingRows = (
           }
           return acc;
         }
-        const parentPath = partialPath.slice(0, index + 1);
-        const strigifiedPath = parentPath.join(',');
-        if (!pathsToAutogenerate.has(strigifiedPath)) {
-          pathsToAutogenerate.add(strigifiedPath);
+        const parentPath = partialPath.slice(0, index + 1) as string[];
+        const key = JSON.stringify(parentPath);
+        if (!pathsToAutogenerate.has(key)) {
+          pathsToAutogenerate.set(key, parentPath);
         }
       }
-      acc.push({ ...row, path: [...partialPath, ''] });
+      acc.push({ ...row, path: [...(partialPath as string[]), ''] });
       return acc;
     }, []);
   } else {
     rowsWithPaths = rows.map((row) => ({ ...row, path: [''] }));
   }
 
-  const autogeneratedRows = generateParentRows(pathsToAutogenerate);
+  const autogeneratedRows = generateParentRows(pathsToAutogenerate.values());
 
   // apply plain filtering
   const filteredRows = getTreeDataFilteredRows(
@@ -768,11 +788,14 @@ export const processRowGroupingRows = (
       ({ id }) => typeof id !== 'string' || !id.startsWith('auto-generated-parent-'),
     );
     const descendantCount = descendants.length;
+    const children = findTreeDataRowChildren(filteredRows, row[pathKey], pathKey, 1);
+    const childrenCount = children.length;
     if (descendantCount > 0 && queryOptions.aggregationModel) {
       // Parent row, compute aggregation
       return {
         ...row,
         descendantCount,
+        childrenCount,
         ...applyAggregation(
           queryOptions.aggregationModel,
           columnsWithDefaultColDef,
@@ -781,7 +804,7 @@ export const processRowGroupingRows = (
         ),
       };
     }
-    return { ...row, descendantCount } as GridRowModel;
+    return { ...row, descendantCount, childrenCount } as GridRowModel;
   });
 
   if (queryOptions.sortModel) {
@@ -804,14 +827,23 @@ export const processRowGroupingRows = (
     );
   }
 
-  if (queryOptions.paginationModel && queryOptions.groupKeys.length === 0) {
-    // Only paginate root rows, grid should refetch root rows when `paginationModel` updates
-    const { pageSize, page } = queryOptions.paginationModel;
-    if (pageSize < childRowsWithDescendantCounts.length) {
+  // Apply pagination using start/end if provided, otherwise fall back to paginationModel
+  if (queryOptions.groupKeys.length === 0 || nestedPagination) {
+    if (queryOptions.start !== undefined && queryOptions.end !== undefined) {
+      // Use start/end for range-based pagination (needed for nested lazy loading)
       childRowsWithDescendantCounts = childRowsWithDescendantCounts.slice(
-        page * pageSize,
-        (page + 1) * pageSize,
+        queryOptions.start,
+        queryOptions.end + 1,
       );
+    } else if (queryOptions.paginationModel) {
+      // Fall back to paginationModel for backward compatibility
+      const { pageSize, page } = queryOptions.paginationModel;
+      if (pageSize < childRowsWithDescendantCounts.length) {
+        childRowsWithDescendantCounts = childRowsWithDescendantCounts.slice(
+          page * pageSize,
+          (page + 1) * pageSize,
+        );
+      }
     }
   }
 
@@ -971,13 +1003,13 @@ export const processPivotingRows = (
   const pivotColumnKeys = Array.from(uniqueColumnGroups.keys());
 
   // Add paths and generate parent rows based on `visibleRows` (pivot row fields)
-  const pathsToAutogenerate = new Set<string>();
+  const pathsToAutogenerate = new Map<string, string[]>();
   let rowsWithPaths = filteredRows;
   const rowsWithMissingGroups: GridValidRowModel[] = [];
 
   if (visibleRows.length > 0) {
     rowsWithPaths = filteredRows.reduce<GridValidRowModel[]>((acc, row) => {
-      const partialPath = visibleRows.map((pivotRow) => {
+      const partialPath: (string | undefined)[] = visibleRows.map((pivotRow) => {
         const field = pivotRow.field;
         const colDef = columnLookup.get(field);
         if (colDef?.groupingValueGetter) {
@@ -997,20 +1029,20 @@ export const processPivotingRows = (
           }
           return acc;
         }
-        const parentPath = partialPath.slice(0, index + 1);
-        const stringifiedPath = parentPath.join(',');
-        if (!pathsToAutogenerate.has(stringifiedPath)) {
-          pathsToAutogenerate.add(stringifiedPath);
+        const parentPath = partialPath.slice(0, index + 1) as string[];
+        const key = JSON.stringify(parentPath);
+        if (!pathsToAutogenerate.has(key)) {
+          pathsToAutogenerate.set(key, parentPath);
         }
       }
-      acc.push({ ...row, path: [...partialPath, ''] });
+      acc.push({ ...row, path: [...(partialPath as string[]), ''] });
       return acc;
     }, []);
   } else {
     rowsWithPaths = filteredRows.map((row) => ({ ...row, path: [''] }));
   }
 
-  const autogeneratedRows = generateParentRows(pathsToAutogenerate);
+  const autogeneratedRows = generateParentRows(pathsToAutogenerate.values());
 
   // Apply tree data filtering to include missing parents and children
   const filteredRowsWithGroups = getTreeDataFilteredRows(

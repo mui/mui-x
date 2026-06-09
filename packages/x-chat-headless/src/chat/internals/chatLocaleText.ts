@@ -40,8 +40,19 @@ export interface ChatLocaleText {
   messageListLabel: string;
   messageLabel: string;
   conversationHeaderMenuLabel: string;
+  conversationHeaderBackLabel: string;
+  conversationHeaderCloseLabel: string;
   conversationHeaderNewChatLabel: string;
   conversationHeaderSettingsLabel: string;
+  /** Default author label used when a message's `role` is `'user'` and no
+   * displayName was resolved from `message.author`, members, or `currentUser`. */
+  messageAuthorUserLabel: string;
+  /** Default author label used when a message's `role` is `'assistant'`
+   * and no displayName was resolved from `message.author` or members. */
+  messageAuthorAssistantLabel: string;
+  /** Default author label used when a message's `role` is `'system'`
+   * and no displayName was resolved from `message.author` or members. */
+  messageAuthorSystemLabel: string;
 }
 
 function getUserLabel(user: ChatLocaleTypingUser) {
@@ -84,10 +95,10 @@ const messageStatusLabels: Record<ChatMessageStatus, string> = {
 };
 
 const toolStateLabels: Record<ChatToolInvocationState, string> = {
-  'input-streaming': 'Running...',
-  'input-available': 'Running...',
+  'input-streaming': 'Running…',
+  'input-available': 'Running…',
   'approval-requested': 'Awaiting approval',
-  'approval-responded': 'Running...',
+  'approval-responded': 'Running…',
   'output-available': 'Completed',
   'output-error': 'Failed',
   'output-denied': 'Denied',
@@ -105,9 +116,9 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   messageEditedLabel: 'Edited',
   messageDeletedLabel: 'Deleted',
   messageReasoningLabel: 'Reasoning',
-  messageReasoningStreamingLabel: 'Thinking...',
-  messageToolInputLabel: 'Input',
-  messageToolOutputLabel: 'Output',
+  messageReasoningStreamingLabel: 'Thinking…',
+  messageToolInputLabel: 'Tool called',
+  messageToolOutputLabel: 'Tool result',
   messageToolApproveButtonLabel: 'Approve',
   messageToolDenyButtonLabel: 'Deny',
   conversationListNoConversationsLabel: 'No conversations',
@@ -119,7 +130,7 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   threadNoMessagesLabel: 'No messages yet',
   threadNoMessagesHelperText: 'Type a message to get started',
   genericErrorLabel: 'Something went wrong',
-  loadingLabel: 'Loading...',
+  loadingLabel: 'Loading…',
   messageStatusLabel: (status) => messageStatusLabels[status],
   toolStateLabel: (state) => toolStateLabels[state],
   messageTimestampLabel: (dateTime) => formatMessageTimestamp(dateTime),
@@ -138,6 +149,11 @@ export const CHAT_DEFAULT_LOCALE_TEXT: ChatLocaleText = {
   messageListLabel: 'Message log',
   messageLabel: 'Message',
   conversationHeaderMenuLabel: 'Open conversations',
+  conversationHeaderBackLabel: 'Back to conversations',
+  conversationHeaderCloseLabel: 'Close conversations',
   conversationHeaderNewChatLabel: 'New chat',
   conversationHeaderSettingsLabel: 'Settings',
+  messageAuthorUserLabel: 'User',
+  messageAuthorAssistantLabel: 'Assistant',
+  messageAuthorSystemLabel: 'System',
 };
