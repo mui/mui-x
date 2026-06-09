@@ -341,6 +341,13 @@ Since all layers are absolutely positioned, they stack on top of each other in t
 
 ## Examples
 
+### Weather forecast
+
+This example composes bars, lines, axes, a tooltip, and custom SVG layers to create a compact weather forecast.
+The precipitation range, weather icons, wind lines, and wind arrows use chart scales through hooks, so they stay aligned with the plotted data.
+
+{{"demo": "WeatherComposition.js" }}
+
 ### Bell curve
 
 This example demonstrates how to combine scatter and line plots to overlay a normal distribution curve (known as a bell curve) over scattered data points.
