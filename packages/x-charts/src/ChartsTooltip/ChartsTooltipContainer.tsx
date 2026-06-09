@@ -77,11 +77,11 @@ type PopperSlots = NonNullable<PopperProps['slots']>;
 
 type PopperSlotProps = NonNullable<PopperProps['slotProps']>;
 
-export interface ChartsTooltipContainerSlots extends PopperSlots {}
+export interface ChartsTooltipContainerSlots extends PopperSlots { }
 
-export interface ChartsTooltipContainerSlotProps extends PopperSlotProps {}
+export interface ChartsTooltipContainerSlotProps extends PopperSlotProps { }
 
-export interface ChartsTooltipContainerClasses extends ChartsTooltipClasses {}
+export interface ChartsTooltipContainerClasses extends ChartsTooltipClasses { }
 
 export interface ChartsTooltipContainerProps<
   T extends TriggerOptions = TriggerOptions,
@@ -113,10 +113,10 @@ export interface ChartsTooltipContainerProps<
    * @default 'pointer'
    */
   anchor?: T extends 'item'
-    ? 'pointer' | 'node'
-    : T extends 'axis'
-      ? 'pointer' | 'chart'
-      : 'pointer';
+  ? 'pointer' | 'node'
+  : T extends 'axis'
+  ? 'pointer' | 'chart'
+  : 'pointer';
   /**
    * Determines the tooltip position relatively to the anchor.
    */
@@ -185,11 +185,6 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   }
 
   const chartsLayerContainerRef = useChartsLayerContainerRef();
-  // Anchor element kept in state (via a callback ref) rather than a plain ref: assigning a ref
-  // does not trigger a re-render, so Popper would keep its initial `anchorEl={null}` and never
-  // position the node-anchored tooltip. The state update on mount hands Popper the real element.
-  // A real DOM node (not a virtual element) is used so Popper can track its scroll parents and
-  // keep the tooltip glued to the anchor while scrolling.
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
 
   const classes = useUtilityClasses(propClasses);
@@ -217,7 +212,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   React.useEffect(() => {
     const svgElement = chartsLayerContainerRef.current;
     if (svgElement === null) {
-      return () => {};
+      return () => { };
     }
 
     if (isTooltipNodeAnchored) {
@@ -245,10 +240,6 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     };
   }, [chartsLayerContainerRef, positionRef, isTooltipNodeAnchored]);
 
-  // When anchored to a node/chart position, the anchor element stays the same node but moves
-  // via its `left`/`top` styles. Popper does not observe those style changes, so it must be told
-  // to recompute whenever the resolved position changes (e.g. once the drawing area is measured,
-  // or on resize/zoom with a controlled tooltip).
   useEnhancedEffect(() => {
     if (!isTooltipNodeAnchored) {
       return;
@@ -292,13 +283,13 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       },
       ...(!isMouse
         ? [
-            {
-              name: 'flip',
-              options: {
-                fallbackPlacements: ['top-end', 'top-start', 'bottom-end', 'bottom'],
-              },
+          {
+            name: 'flip',
+            options: {
+              fallbackPlacements: ['top-end', 'top-start', 'bottom-end', 'bottom'],
             },
-          ]
+          },
+        ]
         : []), // Keep default behavior
       { name: 'preventOverflow', options: { altAxis: true } },
     ],
