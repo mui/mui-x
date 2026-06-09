@@ -20,6 +20,11 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
 
   const { store, rootRef } = useTreeViewContext<SimpleTreeViewStore<any>>();
   const childrenIdAttrToIdRef = React.useRef<Map<string, string>>(new Map());
+  // Re-run the children-discovery effect below whenever a child registers/unregisters, so it
+  // picks up children once they are mounted in the DOM. This is required because some transition
+  // components (for example `@mui/material`'s `Collapse`) mount the children in a deferred render
+  // that does not re-render this provider on its own.
+  const [, rerender] = React.useReducer((s: number) => s + 1, 0);
 
   React.useEffect(() => {
     if (!rootRef.current) {
@@ -57,9 +62,14 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
 
   const value = React.useMemo<TreeViewChildrenItemContextValue>(
     () => ({
-      registerChild: (childIdAttribute, childItemId) =>
-        childrenIdAttrToIdRef.current.set(childIdAttribute, childItemId),
-      unregisterChild: (childIdAttribute) => childrenIdAttrToIdRef.current.delete(childIdAttribute),
+      registerChild: (childIdAttribute, childItemId) => {
+        childrenIdAttrToIdRef.current.set(childIdAttribute, childItemId);
+        rerender();
+      },
+      unregisterChild: (childIdAttribute) => {
+        childrenIdAttrToIdRef.current.delete(childIdAttribute);
+        rerender();
+      },
       parentId: itemId,
     }),
     [itemId],

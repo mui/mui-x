@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { fireEvent, act } from '@mui/internal-test-utils';
+import { fireEvent, act, waitFor } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import { TreeViewAnyStore } from '../../models';
@@ -880,7 +880,7 @@ describeTreeView<TreeViewAnyStore>(
           expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.2']);
         });
 
-        it('should select all the children when selecting a collapsed parent and then expanding', () => {
+        it('should select all the children when selecting a collapsed parent and then expanding', async () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -890,7 +890,9 @@ describeTreeView<TreeViewAnyStore>(
 
           fireEvent.click(view.getItemCheckboxInput('1'));
           fireEvent.click(view.getItemContent('1'));
-          expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1', '1.2']);
+          await waitFor(() => {
+            expect(view.getSelectedTreeItems()).to.deep.equal(['1', '1.1', '1.2']);
+          });
         });
       });
 
