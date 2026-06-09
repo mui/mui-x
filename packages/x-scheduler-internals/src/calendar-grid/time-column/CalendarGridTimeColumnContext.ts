@@ -35,6 +35,18 @@ export interface CalendarGridTimeColumnContext {
     input: { clientY: number };
     elementRef: React.RefObject<HTMLElement | null>;
   }) => number;
+  /**
+   * Maps a pointer position to a precision-rounded date within this column.
+   *
+   * This is the geometry resolver consumed by the pointer-based resize
+   * (`useEventPointerResizeHandler`). It reads the column's own element, so it is robust to
+   * DOM/positioning changes (unlike walking `offsetParent`). The vertical axis is used here;
+   * other surfaces (e.g. a day row) provide their own resolver using the relevant axis.
+   * @param {{ clientX: number, clientY: number }} input The pointer coordinates.
+   * @returns {TemporalSupportedObject | null} The date under the pointer, or `null` when the
+   * column is not measurable yet.
+   */
+  getDateAtPointer: (input: { clientX: number; clientY: number }) => TemporalSupportedObject | null;
 }
 
 export const CalendarGridTimeColumnContext = React.createContext<

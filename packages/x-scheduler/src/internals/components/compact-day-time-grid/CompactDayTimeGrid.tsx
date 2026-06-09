@@ -14,6 +14,7 @@ import {
   CompactEventDrawerProvider,
   useCompactEventDrawerContext,
 } from '../compact-event-drawer';
+import { ArmedOccurrenceProvider, useDisarmOnOutsidePointer } from '../armed-occurrence';
 
 // Every compact (touch) view renders its events through the same touch variant.
 const COMPACT_RENDERERS: DayTimeGridInternalRenderers = {
@@ -48,46 +49,33 @@ const CompactDayTimeGridContainer = React.forwardRef(function CompactDayTimeGrid
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { isOpen, onClose } = useCompactEventDrawerContext();
+  const { isOpen, data, onClose } = useCompactEventDrawerContext();
   const contentRef = React.useRef<HTMLDivElement>(null);
 
-  // While the drawer is open, the first tap anywhere on the grid exits editing (closing the
-  // drawer and disarming the resize) and is swallowed — it does NOT create an event or arm
-  // another one. Only the next tap, with the drawer closed, creates or arms.
-  React.useEffect(() => {
-    const content = contentRef.current;
-    if (!isOpen || !content) {
-      return undefined;
-    }
-    const onClickCapture = (event: MouseEvent) => {
-      // A resize gesture ends with a click on its handle — ignore it so finishing a resize
-      // doesn't close the drawer or disarm the event.
-      if (
-        event.target instanceof Element &&
-        event.target.closest(`.${eventCalendarClasses.timeGridEventResizeHandler}`)
-      ) {
-        return;
-      }
-      // Swallow the click so it reaches neither the column's create handler nor an event's
-      // open trigger.
-      event.stopPropagation();
-      event.preventDefault();
-      onClose();
-    };
-    content.addEventListener('click', onClickCapture, true);
-    return () => {
-      content.removeEventListener('click', onClickCapture, true);
-    };
-  }, [isOpen, onClose]);
+  // The drawer is the current producer of arming: the open occurrence is the armed one.
+  const armedKey = isOpen ? (data?.key ?? null) : null;
+
+  // While an occurrence is armed, the first tap anywhere on the grid exits editing (disarming and
+  // closing the drawer) and is swallowed — it does NOT create an event or arm another one. Only
+  // the next tap, with nothing armed, creates or arms. A tap that finishes a resize gesture lands
+  // on the handle and is ignored so it doesn't disarm.
+  useDisarmOnOutsidePointer({
+    ref: contentRef,
+    active: isOpen,
+    onDisarm: onClose,
+    ignoreSelector: `.${eventCalendarClasses.timeGridEventResizeHandler}`,
+  });
 
   return (
     <DayTimeGridInternalRenderersContext.Provider value={COMPACT_RENDERERS}>
-      <CompactDayTimeGridRoot>
-        <CompactDayTimeGridContent ref={contentRef}>
-          <DayTimeGrid ref={forwardedRef} {...props} />
-        </CompactDayTimeGridContent>
-        <CompactEventDrawer />
-      </CompactDayTimeGridRoot>
+      <ArmedOccurrenceProvider armedKey={armedKey} onDisarm={onClose}>
+        <CompactDayTimeGridRoot>
+          <CompactDayTimeGridContent ref={contentRef}>
+            <DayTimeGrid ref={forwardedRef} {...props} />
+          </CompactDayTimeGridContent>
+          <CompactEventDrawer />
+        </CompactDayTimeGridRoot>
+      </ArmedOccurrenceProvider>
     </DayTimeGridInternalRenderersContext.Provider>
   );
 });

@@ -3,20 +3,17 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { CSSObject, styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { useStore } from '@base-ui/utils/store';
 import { CalendarGrid } from '@mui/x-scheduler-internals/calendar-grid';
-import { schedulerOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-internals/use-event-calendar-store-context';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useEventCalendarStyledContext } from '../../../../event-calendar/EventCalendarStyledContext';
-import { useCompactEventDrawerContext } from '../../compact-event-drawer';
+import { useArmedOccurrence } from '../../armed-occurrence';
 import { PaletteName } from '../../../utils/tokens';
 import { TimeGridEventProps } from './TimeGridEvent.types';
 import { useTimeGridEvent } from './useTimeGridEvent';
 import {
   getTimeGridEventRootStyles,
+  getTouchResizeHandleStyles,
   linesClampStyles,
-  TimeGridEventPlaceholder,
 } from './TimeGridEventShared';
 
 const TimeGridEventTouchRoot = styled(CalendarGrid.TimeEvent, {
@@ -74,33 +71,15 @@ const TimeGridEventTouchPlaceholderRoot = styled(CalendarGrid.TimeEvent, {
   ...getTimeGridEventRootStyles(theme),
   padding: theme.spacing(0.5, 0.7),
   backgroundColor: 'var(--event-surface-subtle-hover)',
-  border: '1px dashed var(--event-on-surface-subtle-secondary)',
+  outline: '2px solid var(--event-main)',
+  outlineOffset: '-2px',
   color: 'var(--event-on-surface-subtle-primary)',
 }));
 
 const TimeGridEventTouchResizeHandler = styled(CalendarGrid.TimeEventResizeHandler, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventTouchResizeHandler',
-})({
-  position: 'absolute',
-  width: 14,
-  height: 14,
-  borderRadius: '50%',
-  backgroundColor: 'var(--event-main)',
-  border: '2px solid var(--event-on-surface-subtle-primary)',
-  zIndex: 3,
-  cursor: 'ns-resize',
-  // Prevent the browser from scrolling/zooming while the resize gesture is in progress.
-  touchAction: 'none',
-  '&[data-start]': {
-    top: -7,
-    left: 6,
-  },
-  '&[data-end]': {
-    bottom: -7,
-    right: 6,
-  },
-});
+})(getTouchResizeHandleStyles());
 
 export const TimeGridEventTouch = React.forwardRef(function TimeGridEventTouch(
   props: TimeGridEventProps,
@@ -109,20 +88,17 @@ export const TimeGridEventTouch = React.forwardRef(function TimeGridEventTouch(
   const { occurrence, variant, className, ...other } = props;
 
   const { classes } = useEventCalendarStyledContext();
-  const store = useEventCalendarStoreContext();
   const { isDraggable, isStartResizable, isEndResizable, rootDataAttributes, rootPositionProps } =
     useTimeGridEvent(occurrence);
 
   // A creation placeholder has no underlying event but should still be resizable, so it is
   // rendered as a real event with forced handles (see below). Selecting the boolean (rather
   // than the placeholder object) keeps every event from re-rendering on each resize move.
-  const isCreationPlaceholder = useStore(store, schedulerOccurrencePlaceholderSelectors.isCreating);
 
-  // A single tap on the event opens the compact drawer for it (via the EventDialogTrigger ->
-  // drawer bridge). We reuse that drawer selection to "arm" the event — revealing its resize
-  // handles and selection outline — without any custom long-press.
-  const { isOpen, data } = useCompactEventDrawerContext();
-  const isArmed = isOpen && data?.key === occurrence.key;
+  // A single tap on the event arms it (today via the compact drawer; see ArmedOccurrenceProvider),
+  // revealing its resize handles and selection outline without any custom long-press. The event
+  // depends only on the surface-agnostic arming context, not on the drawer itself.
+  const { isArmed } = useArmedOccurrence(occurrence.key);
 
   const content = (
     <TimeGridEventTouchTitle className={classes.timeGridEventTitle}>
@@ -137,45 +113,32 @@ export const TimeGridEventTouch = React.forwardRef(function TimeGridEventTouch(
     className: clsx(className, occurrence.className),
   };
 
-  if (variant === 'placeholder') {
+  if (variant === 'placeholder' && true) {
     // A creation placeholder is resizable: render it as a real event with forced pointer
     // handles so the user can size the new event before saving it. Other placeholders (the
     // transient drag/resize previews) stay inert.
-    if (isCreationPlaceholder) {
-      return (
-        <TimeGridEventTouchPlaceholderRoot
-          isDraggable={false}
-          eventId={occurrence.id}
-          occurrenceKey={occurrence.key}
-          renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
-          {...rootDataAttributes}
-          {...sharedProps}
-          className={clsx(classes.timeGridEventPlaceholder, sharedProps.className)}
-        >
-          <TimeGridEventTouchResizeHandler
-            className={classes.timeGridEventResizeHandler}
-            side="start"
-            interaction="pointer"
-          />
-          {content}
-          <TimeGridEventTouchResizeHandler
-            className={classes.timeGridEventResizeHandler}
-            side="end"
-            interaction="pointer"
-          />
-        </TimeGridEventTouchPlaceholderRoot>
-      );
-    }
-
     return (
-      <TimeGridEventPlaceholder
-        aria-hidden={true}
+      <TimeGridEventTouchPlaceholderRoot
+        isDraggable={false}
+        eventId={occurrence.id}
+        occurrenceKey={occurrence.key}
+        renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
         {...rootDataAttributes}
         {...sharedProps}
         className={clsx(classes.timeGridEventPlaceholder, sharedProps.className)}
       >
+        <TimeGridEventTouchResizeHandler
+          className={classes.timeGridEventResizeHandler}
+          side="start"
+          interaction="pointer"
+        />
         {content}
-      </TimeGridEventPlaceholder>
+        <TimeGridEventTouchResizeHandler
+          className={classes.timeGridEventResizeHandler}
+          side="end"
+          interaction="pointer"
+        />
+      </TimeGridEventTouchPlaceholderRoot>
     );
   }
 
