@@ -869,7 +869,6 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
           '--header-height': `${headerHeight}px`,
           '--filler-height': `${fillerHeight}px`,
           '--has-scroll-x': Number(hasBottomScrollbar),
-          '--has-scroll-y': Number(hasScrollY),
         } as React.CSSProperties
       }
     >
