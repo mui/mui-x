@@ -158,7 +158,7 @@ export const selectorChartProjection = createSelectorMemoized(
         if (process.env.NODE_ENV !== 'production') {
           console.error(
             `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
-            `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
+              `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
           );
         }
         return null;

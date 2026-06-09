@@ -35,7 +35,6 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'mapShape'> = (params
 
   const [[x0, y0], [x1, y1]] = path.bounds(feature);
 
-
   switch (placement) {
     case 'right':
       return { x: x1, y: (y0 + y1) / 2 };

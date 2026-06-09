@@ -15,7 +15,7 @@ export type GeoTooltipPosition = {
   geoData: ExtendedFeatureCollection | null;
   projection: GeoProjection | null;
   featureIndexesByName: ReadonlyMap<string, number[]>;
-}
+};
 
 export interface TooltipPositionGetterAxesConfig {
   x?: ComputedXAxis;
