@@ -39,7 +39,8 @@
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "dependencies": {
-    "@babel/runtime": "catalog:"
+    "@babel/runtime": "catalog:",
+    "@base-ui/utils": "catalog:"
   },
   "sideEffects": false,
   "exports": {

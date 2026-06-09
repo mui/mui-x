@@ -6,6 +6,8 @@
  * 2. Providing methods to check if specific keys are pressed
  */
 
+import { platform } from '@base-ui/utils/platform';
+
 /**
  * Type definition for keyboard keys
  */
@@ -103,9 +105,7 @@ export class KeyboardManager {
 
     return keys.every((key) => {
       if (key === 'ControlOrMeta') {
-        // May be "deprecated" on types, but it is still the best option for cross-platform detection
-        // https://stackoverflow.com/a/71785253/24269134
-        return navigator.platform.includes('Mac')
+        return platform.os.mac
           ? this.pressedKeys.has('Meta')
           : this.pressedKeys.has('Control');
       }
