@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
@@ -184,6 +185,12 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   }
 
   const chartsLayerContainerRef = useChartsLayerContainerRef();
+  // Anchor element kept in state (via a callback ref) rather than a plain ref: assigning a ref
+  // does not trigger a re-render, so Popper would keep its initial `anchorEl={null}` and never
+  // position the node-anchored tooltip. The state update on mount hands Popper the real element.
+  // A real DOM node (not a virtual element) is used so Popper can track its scroll parents and
+  // keep the tooltip glued to the anchor while scrolling.
+  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
 
   const classes = useUtilityClasses(propClasses);
 
@@ -238,9 +245,10 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     };
   }, [chartsLayerContainerRef, positionRef, isTooltipNodeAnchored]);
 
-  // The node/chart anchor is a virtual element whose rect is derived from `itemPosition`. Popper
-  // does not know when that resolved position changes (e.g. once the drawing area is measured, or
-  // on resize/zoom with a controlled tooltip), so ask it to recompute when the position changes.
+  // When anchored to a node/chart position, the anchor element stays the same node but moves
+  // via its `left`/`top` styles. Popper does not observe those style changes, so it must be told
+  // to recompute whenever the resolved position changes (e.g. once the drawing area is measured,
+  // or on resize/zoom with a controlled tooltip).
   useEnhancedEffect(() => {
     if (!isTooltipNodeAnchored) {
       return;
@@ -264,35 +272,6 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     }),
     [positionRef],
   );
-
-  // Virtual anchor for the node/chart-positioned tooltip. `itemPosition` is in the chart's
-  // coordinate space, so it is offset by the layer container's viewport position. Using a virtual
-  // element (rather than a real DOM node referenced through a ref) means Popper always receives a
-  // non-null anchor and positions on mount, without relying on an extra render to feed in a ref.
-  const nodeAnchorEl = React.useMemo(() => {
-    if (itemPosition === null) {
-      return null;
-    }
-    const { x, y } = itemPosition;
-    return {
-      getBoundingClientRect: () => {
-        const containerRect = chartsLayerContainerRef.current?.getBoundingClientRect();
-        const left = (containerRect?.left ?? 0) + x;
-        const top = (containerRect?.top ?? 0) + y;
-        return {
-          x: left,
-          y: top,
-          top,
-          left,
-          right: left,
-          bottom: top,
-          width: 0,
-          height: 0,
-          toJSON: () => '',
-        };
-      },
-    };
-  }, [itemPosition, chartsLayerContainerRef]);
 
   const isMouse = pointerType === 'mouse' || isFineMainPointer;
   const isTouch = pointerType === 'touch' || !isFineMainPointer;
@@ -331,29 +310,50 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   }
 
   return (
-    <NoSsr>
-      {isOpen && (
-        <ChartsTooltipRoot
-          {...other}
-          // The key is here to make sure the tooltip uses the new anchor immediately.
-          key={itemPosition ? 'charts-anchored' : 'charts-pointer'}
-          className={classes?.root}
-          open={isOpen}
-          placement={
-            other.placement ??
-            position ??
-            (!isTooltipNodeAnchored && isMouse ? 'right-start' : 'top')
-          }
-          popperRef={popperRef}
-          anchorEl={itemPosition ? nodeAnchorEl : pointerAnchorEl}
-          modifiers={modifiers}
-          container={other.container ?? chartsLayerContainerRef.current}
-          popperOptions={{ ...other.popperOptions, strategy: 'fixed' }}
-        >
-          {children}
-        </ChartsTooltipRoot>
-      )}
-    </NoSsr>
+    <React.Fragment>
+      {chartsLayerContainerRef.current &&
+        ReactDOM.createPortal(
+          <div
+            ref={setAnchorEl}
+            style={{
+              position: 'absolute',
+              display: 'hidden',
+              left: itemPosition?.x ?? 0,
+              top: itemPosition?.y ?? 0,
+              pointerEvents: 'none',
+              opacity: 0,
+              // TODO: Is this true for a div as well?
+              // On ios a rect with no width/height is not detectable by the popper.js
+              width: 1,
+              height: 1,
+            }}
+          />,
+          chartsLayerContainerRef.current,
+        )}
+      <NoSsr>
+        {isOpen && (
+          <ChartsTooltipRoot
+            {...other}
+            // The key is here to make sure the tooltip uses the new anchor immediately.
+            key={itemPosition ? 'charts-anchored' : 'charts-pointer'}
+            className={classes?.root}
+            open={isOpen}
+            placement={
+              other.placement ??
+              position ??
+              (!isTooltipNodeAnchored && isMouse ? 'right-start' : 'top')
+            }
+            popperRef={popperRef}
+            anchorEl={itemPosition ? anchorEl : pointerAnchorEl}
+            modifiers={modifiers}
+            container={other.container ?? chartsLayerContainerRef.current}
+            popperOptions={{ ...other.popperOptions, strategy: 'fixed' }}
+          >
+            {children}
+          </ChartsTooltipRoot>
+        )}
+      </NoSsr>
+    </React.Fragment>
   );
 }
 
