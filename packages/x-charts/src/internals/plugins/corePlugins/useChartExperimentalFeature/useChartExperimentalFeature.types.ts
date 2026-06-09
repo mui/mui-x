@@ -1,5 +1,8 @@
 import { type ChartPluginSignature } from '../../models';
-import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import type {
+  CartesianChartSeriesType,
+  ChartSeriesType,
+} from '../../../../models/seriesType/config';
 
 interface LineExperimentalFeatures {
   /**
@@ -15,7 +18,7 @@ interface LineExperimentalFeatures {
   enablePositionBasedPointerInteraction?: boolean;
 }
 
-interface BarExperimentalFeatures {
+interface CartesianExperimentalFeatures {
   /**
    * Automatically reduces the number of ticks and tick labels on ordinal axes
    * (`band` / `point` scales) based on the rendered drawing area size.
@@ -23,19 +26,19 @@ interface BarExperimentalFeatures {
    * Explicit `tickNumber`, `tickSpacing`, or `tickInterval` values set by the
    * consumer are not overridden.
    */
-  responsiveTickAdjustment?: boolean;
+  useNewResponsiveTickAdjustment?: boolean;
 }
 
-/* True if any bar-like series (`bar` or `rangeBar`) is in `SeriesType`. */
-type HasBarLikeSeries<SeriesType extends ChartSeriesType> = 'bar' extends SeriesType
-  ? true
-  : 'rangeBar' extends SeriesType
-    ? true
-    : false;
+/* True if any cartesian series (which can have `band` / `point` scales) is in `SeriesType`. */
+type HasCartesianSeries<SeriesType extends ChartSeriesType> = [
+  Extract<SeriesType, CartesianChartSeriesType>,
+] extends [never]
+  ? false
+  : true;
 
 export type ChartExperimentalFeatures<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ('line' extends SeriesType ? LineExperimentalFeatures : {}) &
-    (HasBarLikeSeries<SeriesType> extends true ? BarExperimentalFeatures : {});
+    (HasCartesianSeries<SeriesType> extends true ? CartesianExperimentalFeatures : {});
 
 export interface UseChartExperimentalFeaturesParameters<
   SeriesType extends ChartSeriesType = ChartSeriesType,

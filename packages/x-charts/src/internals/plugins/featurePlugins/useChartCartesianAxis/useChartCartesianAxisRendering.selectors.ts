@@ -58,18 +58,7 @@ import { selectorChartExperimentalFeaturesState } from '../../corePlugins/useCha
  * selectors. Wrap it to bind the feature name we care about. */
 const selectorResponsiveTickAdjustment = (
   state: Parameters<typeof selectorChartExperimentalFeaturesState>[0],
-) => selectorChartExperimentalFeaturesState(state, 'responsiveTickAdjustment');
-
-/**
- * `rangeBar` is added to `ChartsSeriesConfig` via module augmentation in
- * `@mui/x-charts-premium`, so the base `ProcessedSeries` type doesn't expose
- * the key. Use indexed access through an untyped record to stay compatible
- * with both packages.
- */
-function hasBarLikeSeries(formattedSeries: object) {
-  const series = formattedSeries as Record<string, unknown>;
-  return series.bar !== undefined || series.rangeBar !== undefined;
-}
+) => selectorChartExperimentalFeaturesState(state, 'useNewResponsiveTickAdjustment');
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -476,8 +465,7 @@ export const selectorChartXAxis = createSelectorMemoized(
       domains,
       autoSizes,
       axesGap,
-      responsiveTickAdjustment:
-        (responsiveTickAdjustment ?? false) && hasBarLikeSeries(formattedSeries),
+      responsiveTickAdjustment: responsiveTickAdjustment ?? false,
     });
   },
 );
@@ -515,8 +503,7 @@ export const selectorChartYAxis = createSelectorMemoized(
       domains,
       autoSizes,
       axesGap,
-      responsiveTickAdjustment:
-        (responsiveTickAdjustment ?? false) && hasBarLikeSeries(formattedSeries),
+      responsiveTickAdjustment: responsiveTickAdjustment ?? false,
     });
   },
 );

@@ -258,7 +258,9 @@ FunnelChart.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    useNewResponsiveTickAdjustment: PropTypes.bool,
+  }),
   /**
    * The gap, in pixels, between funnel sections.
    * @default 0

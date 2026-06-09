@@ -1,11 +1,12 @@
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('useChartCartesianAxis', () => {
   const { render } = createRenderer();
 
-  describe('experimentalFeatures.responsiveTickAdjustment', () => {
+  describe('experimentalFeatures.useNewResponsiveTickAdjustment', () => {
     const manyCategories = Array.from({ length: 20 }, (_, i) => `cat-${i}`);
     const data = manyCategories.map((_, i) => i);
 
@@ -35,7 +36,7 @@ describe('useChartCartesianAxis', () => {
           width={300}
           height={200}
           margin={0}
-          experimentalFeatures={{ responsiveTickAdjustment: true }}
+          experimentalFeatures={{ useNewResponsiveTickAdjustment: true }}
         />,
       );
 
@@ -56,7 +57,7 @@ describe('useChartCartesianAxis', () => {
             width={300}
             height={200}
             margin={0}
-            experimentalFeatures={{ responsiveTickAdjustment: true }}
+            experimentalFeatures={{ useNewResponsiveTickAdjustment: true }}
           />,
         );
 
@@ -65,6 +66,23 @@ describe('useChartCartesianAxis', () => {
         expect(tickLabels).toHaveLength(manyCategories.length);
       },
     );
+
+    it('should thin ticks on a non-bar cartesian chart when the feature is enabled', () => {
+      render(
+        <LineChart
+          xAxis={[{ data: manyCategories, scaleType: 'point' }]}
+          series={[{ data }]}
+          width={300}
+          height={200}
+          margin={0}
+          experimentalFeatures={{ useNewResponsiveTickAdjustment: true }}
+        />,
+      );
+
+      const tickLabels = screen.getAllByTestId('ChartsXAxisTickLabel');
+      expect(tickLabels.length).toBeLessThan(manyCategories.length);
+      expect(tickLabels.length).toBeGreaterThan(0);
+    });
   });
 
   it('should throw an error when axis have duplicate ids', () => {
