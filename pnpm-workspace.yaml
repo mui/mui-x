@@ -114,6 +114,7 @@ allowBuilds:
   '@mui/x-telemetry': false
   core-js: false
   msw: false
+  core-js-pure: false
 
 overrides:
   # Pin the version otherwise emotion uses its own version resulting in docs build error
