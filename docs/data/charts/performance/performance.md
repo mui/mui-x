@@ -80,6 +80,20 @@ showMark: 'start';
 
 See [Line charts—Optimization](/x/react-charts/lines/#optimization) for more details.
 
+## Sample dense series [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+A cartesian chart renders one SVG node per data point, so a dense series floods the DOM even though most points map to the same pixels.
+Sampling renders only a representative subset sized to the available width, while keeping the full dataset for axis extremums, tooltips, highlighting, and interaction.
+
+Set the `sampling` prop on a line, bar, or scatter series of the Pro charts:
+
+```jsx
+<LineChartPro series={[{ data, sampling: 'lttb' }]} />
+```
+
+Unlike a more efficient renderer (below), sampling reduces the number of rendered items rather than the cost of each, so the two can be combined.
+See [Sampling](/x/react-charts/sampling/) for the available methods, custom samplers, and live demos.
+
 ## Use a more efficient renderer
 
 By default, each item is drawn as its own SVG element—a `<rect>` per bar, a `<circle>` per scatter point.

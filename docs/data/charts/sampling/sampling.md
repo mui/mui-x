@@ -15,6 +15,11 @@ Sampling reduces the number of points that are **rendered**, while keeping the f
 
 Sampling is available on the Pro version of line, scatter, and bar charts.
 
+:::info
+The demos on this page use small datasets so the page stays responsive when you toggle sampling off.
+With a realistic large dataset, rendering every point (sampling off) can freeze the browser tab—which is the problem sampling solves.
+:::
+
 ## Sampling methods
 
 Set the `sampling` prop on a series to a built-in method, or to a [custom function](#custom-sampling-functions).
@@ -99,5 +104,5 @@ Keep the following in mind:
 
 - **Rendering uses the sampled data only.** The drawn geometry behaves as if the dropped values never existed—bars, in particular, are laid out across the full width as if only the kept categories existed, so they become fewer and wider rather than thin with gaps.
 - **Everything else uses the full data.** Tooltips, the axis domain, and item interaction always read the complete dataset. As a result, hovering a point that was dropped from a sampled scatter series does not highlight it.
-- **Sampling follows zoom in discrete levels.** The whole series is sampled to a target count that doubles at each zoom level, rather than being recomputed continuously. Sampling runs in data space and does not depend on the live scale, so the rendered shape stays stable while panning and only changes resolution in steps as you zoom—avoiding flicker. The plot still positions the kept points with the live scale, so the motion itself stays smooth.
+- **Sampling changes in steps as you zoom, not continuously.** Each time you zoom in by about 2x, the target number of rendered points doubles, so detail comes back in discrete steps. Between those steps the kept points are fixed: panning does not recompute them, so points don't flicker in and out as the view moves. Their positions still come from the live scale, so panning and zooming themselves stay smooth.
 - **Stacked series share their sampling.** Each series is sampled against its own axes, but series in the same stacking group are sampled once—on the combined silhouette of the stack—and the result is shared by every member, so the stacked layers stay aligned on the same points.
