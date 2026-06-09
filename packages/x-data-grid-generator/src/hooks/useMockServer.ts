@@ -59,6 +59,7 @@ interface UseMockServerOptions {
   maxColumns?: number;
   visibleFields?: string[];
   editable?: boolean;
+  multiSelect?: boolean;
   treeData?: AddPathToDemoDataOptions;
   derivedColumns?: boolean;
 }
@@ -71,7 +72,7 @@ interface GridMockServerData {
 
 interface ColumnsOptions extends Pick<
   UseMockServerOptions,
-  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'derivedColumns'
+  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'derivedColumns' | 'multiSelect'
 > {}
 
 const GET_DEFAULT_DATASET_OPTIONS: UseMockServerOptions = {
@@ -97,6 +98,9 @@ const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] |
       throw new Error('MUI X: Unknown dataset');
   }
 
+  if (!options.multiSelect) {
+    columns = columns.filter((col) => col.type !== 'multiSelect');
+  }
   if (options.visibleFields) {
     columns = columns.map((col) => ({ ...col, hide: !options.visibleFields?.includes(col.field) }));
   }
@@ -196,6 +200,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
       maxColumns: options.maxColumns,
       visibleFields: options.visibleFields,
       derivedColumns: options.derivedColumns,
+      multiSelect: options.multiSelect,
     });
   }, [
     options.dataSet,
@@ -203,6 +208,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
     options.maxColumns,
     options.visibleFields,
     options.derivedColumns,
+    options.multiSelect,
   ]);
 
   const initialState = React.useMemo(

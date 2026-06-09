@@ -235,7 +235,7 @@ export function handleProcessRowUpdateError(
 ): void {
   if (onProcessRowUpdateError) {
     onProcessRowUpdateError(error);
-  } else {
+  } else if (process.env.NODE_ENV !== 'production') {
     warnOnce(
       [
         'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
