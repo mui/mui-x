@@ -18,6 +18,34 @@ import {
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { findClosestPoints } from './findClosestPoints';
 
+type ClosestPoint = { dataIndex: number; seriesId: SeriesId; edgeDistance: number; radius: number };
+
+/**
+ * Return `true` if the candidate point is closer to the pointer than the current closest point.
+ * By priority we prefer:
+ * 1. points that are under the pointer (negative edge distance) sorted by distance to the center.
+ * 2. points that are outside the pointer (positive edge distance) by distance to the edge.
+ */
+function isCloser(candidatePoint: ClosestPoint, currentClosestPoint: ClosestPoint | undefined) {
+  if (currentClosestPoint === undefined) {
+    return true;
+  }
+
+  if (candidatePoint.edgeDistance <= 0) {
+    if (currentClosestPoint.edgeDistance > 0) {
+      return true;
+    }
+    const candidateDistance = candidatePoint.edgeDistance + candidatePoint.radius;
+    const currentDistance = currentClosestPoint.edgeDistance + currentClosestPoint.radius;
+    return candidateDistance < currentDistance;
+  }
+  if (currentClosestPoint.edgeDistance <= 0) {
+    return false;
+  }
+
+  return candidatePoint.edgeDistance < currentClosestPoint.edgeDistance;
+}
+
 export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = ({
   params,
   store,
@@ -65,24 +93,24 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         return 'outside-chart';
       }
 
-      let closestPoint: { dataIndex: number; seriesId: SeriesId; distanceSq: number } | undefined =
-        undefined;
+      let closestPoint: ClosestPoint | undefined = undefined;
 
       for (const seriesId of seriesOrder ?? []) {
         const aSeries = (series ?? {})[seriesId];
-        const flatbush = flatbushMap.get(seriesId);
+        const entry = flatbushMap.get(seriesId);
 
-        if (!flatbush) {
+        if (!entry || aSeries.hidden) {
           continue;
         }
+
+        const { flatbush, getItemRadius, maxItemRadius } = entry;
 
         const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
         const yAxisId = aSeries.yAxisId ?? defaultYAxisId;
 
         const xAxisZoom = selectorChartAxisZoomData(store.state, xAxisId);
         const yAxisZoom = selectorChartAxisZoomData(store.state, yAxisId);
-        const maxRadius =
-          resolvedHitAreaRadius === 'item' ? aSeries.markerSize : resolvedHitAreaRadius;
+        const maxRadius = resolvedHitAreaRadius === 'item' ? maxItemRadius : resolvedHitAreaRadius;
 
         const xZoomStart = (xAxisZoom?.start ?? 0) / 100;
         const xZoomEnd = (xAxisZoom?.end ?? 100) / 100;
@@ -104,6 +132,8 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
           svgPoint.x,
           svgPoint.y,
           maxRadius,
+          1,
+          getItemRadius,
         )[0];
 
         if (closestPointIndex === undefined) {
@@ -114,14 +144,23 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         const scaledX = xScale(point.x);
         const scaledY = yScale(point.y);
 
-        const distSq = (scaledX! - svgPoint.x) ** 2 + (scaledY! - svgPoint.y) ** 2;
+        const centerDist = Math.hypot(scaledX! - svgPoint.x, scaledY! - svgPoint.y);
+        const closestPointRadius =
+          typeof getItemRadius === 'number' ? getItemRadius : getItemRadius(closestPointIndex);
+        const edgeDistance = centerDist - closestPointRadius;
 
-        if (closestPoint === undefined || distSq < closestPoint.distanceSq) {
-          closestPoint = {
-            dataIndex: closestPointIndex,
-            seriesId,
-            distanceSq: distSq,
-          };
+        if (resolvedHitAreaRadius === 'item' && edgeDistance > 0) {
+          continue;
+        }
+
+        const newPoint = {
+          dataIndex: closestPointIndex,
+          seriesId,
+          edgeDistance,
+          radius: closestPointRadius,
+        };
+        if (isCloser(newPoint, closestPoint)) {
+          closestPoint = newPoint;
         }
       }
 

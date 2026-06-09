@@ -19,6 +19,12 @@ The `RadialLineChart` component accepts `series`, `rotationAxis`, and `radiusAxi
 
 {{"demo": "BasicRadialLineChart.js", "bg": "outline"}}
 
+## Closing path
+
+To draw the line between the last and first point of the series, set the series property `closePath` to `true`.
+
+{{"demo": "ClosedOpenRadialLineChart.js", "bg": "outline"}}
+
 ## Axes
 
 Like for line series, the rotation axis can have any scale type, and the radius axis can use any continuous scale type.
@@ -47,6 +53,20 @@ The radial line interaction uses the [pointer based interaction](/x/react-charts
 :::
 
 {{"demo": "ElementHighlights.js", "bg": "outline"}}
+
+## Axis Click
+
+The `RadialLineChart` provides an `onAxisClick` handler that fires when the user clicks anywhere in the chart area.
+Its signature matches the bar chart:
+
+```js
+const clickHandler = (
+  event, // The native mouse event emitted by the SVG component.
+  params, // An object that identifies the clicked rotation axis item and its series values.
+) => {};
+```
+
+{{"demo": "RadialLineClick.js", "bg": "outline"}}
 
 ## Composition
 

@@ -169,4 +169,44 @@ describe('iterate()', () => {
       );
     });
   });
+
+  describe('weekStartsOn', () => {
+    it('should start the first week cell on Monday when weekStartsOn is 1', () => {
+      // Range: 2025-01-08 (Wednesday) to 2025-01-22 (Wednesday).
+      // With weekStartsOn=1 the first week cell must start on Mon 2025-01-06.
+      const start = adapter.date('2025-01-08T00:00:00Z', 'default');
+      const end = adapter.date('2025-01-22T23:59:59.999Z', 'default');
+
+      const cells = iterate(adapter, 'week', 'day', start, end, 1);
+
+      // The aligned `date` on the first cell should be Jan 6 (Monday).
+      expect(adapter.getDate(cells[0].date)).to.equal(6);
+      expect(adapter.getMonth(cells[0].date)).to.equal(0); // January
+    });
+
+    it('should start the first week cell on Sunday when weekStartsOn is 0', () => {
+      // Range: same Wed-to-Wed. With weekStartsOn=0 first cell aligns to Sun 2025-01-05.
+      const start = adapter.date('2025-01-08T00:00:00Z', 'default');
+      const end = adapter.date('2025-01-22T23:59:59.999Z', 'default');
+
+      const cells = iterate(adapter, 'week', 'day', start, end, 0);
+
+      // The aligned `date` on the first cell should be Jan 5 (Sunday).
+      expect(adapter.getDate(cells[0].date)).to.equal(5);
+      expect(adapter.getMonth(cells[0].date)).to.equal(0); // January
+    });
+
+    it('should produce the same result as default when weekStartsOn is undefined', () => {
+      const start = adapter.date('2025-01-08T00:00:00Z', 'default');
+      const end = adapter.date('2025-01-22T23:59:59.999Z', 'default');
+
+      const withUndefined = iterate(adapter, 'week', 'day', start, end, undefined);
+      const withoutArg = iterate(adapter, 'week', 'day', start, end);
+
+      expect(withUndefined.length).to.equal(withoutArg.length);
+      withUndefined.forEach((cell, i) => {
+        expect(adapter.isSameDay(cell.date, withoutArg[i].date)).to.equal(true);
+      });
+    });
+  });
 });

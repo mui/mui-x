@@ -33,7 +33,7 @@ If your data is stored in an array of objects, you can use the `dataset` helper 
 It accepts an array of objects such as `dataset={[{a: 1, b: 32, c: 873}, {a: 2, b: 41, c: 182}, ...]}`.
 
 Scatter series use a different pattern than other charts: use the `datasetKeys` property with an object that has required `x` and `y` keys.
-You can also include optional `id` and `z` keys.
+You can also include optional `id`, `colorValue`, and `sizeValue` keys.
 
 See the [Dataset](/x/react-charts/dataset/) page to learn more.
 
@@ -68,44 +68,20 @@ When `hitAreaRadius` is `"item"`, the user must click directly on the point, and
 
 Otherwise, click behavior matches the [interaction section](#interaction), and the mouse event comes from the SVG container.
 
+## Bubble chart
+
+Scatter chart supports size and color scales to represent two additional values per mark.
+
+Those are configured with
+
+- `sizeValue`/`colorValue` provide the marks data (either directly in the `data` or with the `datasetKeys`)
+- `sizeAxisId`/`colorAxisId` series property indicate the `zAxis` scale to be used.
+
+See the [Bubble chart](/x/react-charts/bubble/) page for demos and details.
+
+{{"demo": "../bubble/BubbleChartCO2Emissions.js"}}
+
 ## Styling
-
-### Color scale
-
-As with other charts, you can modify the [series colors](/x/react-charts/styling/#colors) either directly, or with the color palette.
-
-You can also modify the color by using the axes' `colorMap`, which maps values to colors.
-Scatter charts use the following, in order of priority:
-
-1. The z-axis color
-2. The y-axis color
-3. The x-axis color
-4. The series color
-
-:::info
-The z-axis is a third axis that lets you style scatter points by a value other than position.
-Pass it with the `zAxis` prop.
-
-The mapped value can come from the `z` property on each series data point, or from the z-axis data.
-You can set the z value in three ways:
-
-```jsx
-<ScatterChart
-  // First option
-  series={[{ data: [{ id: 0, x: 1, y: 1, z: 5 }] }]}
-  // Second option
-  zAxis={[{ data: [5] }]}
-  // Third option
-  dataset={[{ price: 5 }]}
-  zAxis={[{ dataKey: 'price' }]}
-/>
-```
-
-:::
-
-See [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors) for the `colorMap` properties.
-
-{{"demo": "ColorScale.js"}}
 
 ### Grid
 
@@ -142,6 +118,8 @@ To keep the legend and tooltip in sync with the custom shape, set the `labelMark
 Use the `markerSize` prop on each series to set the size of scatter points.
 For circles, `markerSize` is the radius in pixels.
 
+See the [Bubble chart page](/x/react-charts/bubble/) to modify mark size based on their value.
+
 {{"demo": "ScatterCustomSize.js"}}
 
 ## Plot customization
@@ -156,6 +134,8 @@ See [Custom components](/x/react-charts/components/) for more ways to customize 
 {{"demo": "CustomScatter.js"}}
 
 ## Performance
+
+### SVG batch rendering
 
 Scatter charts can have many points, which can slow down rendering.
 By default, points are drawn with SVG `circle` elements, which may be slow for large datasets.

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-scheduler-internals-premium",
-  "version": "9.0.0-alpha.6",
+  "version": "9.0.0-beta.0",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Scheduler internals.",
   "license": "SEE LICENSE IN LICENSE",
@@ -10,6 +10,7 @@
   "homepage": "https://mui.com/x/react-scheduler/",
   "exports": {
     "./models": "./src/models/index.ts",
+    "./internals": "./src/internals/index.ts",
     "./use-event-calendar-premium": "./src/use-event-calendar-premium/index.ts",
     "./use-event-calendar-premium-store-context": "./src/use-event-calendar-premium-store-context/index.ts",
     "./timeline-grid": "./src/timeline-grid/index.ts",

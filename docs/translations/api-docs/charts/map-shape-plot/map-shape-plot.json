@@ -1,0 +1,11 @@
+{
+  "componentDescription": "Renders series mapShape items.",
+  "propDescriptions": {
+    "fill": {
+      "description": "Fill color applied to every feature path. Overrides item and series colors."
+    },
+    "stroke": { "description": "Stroke color applied to every feature path." },
+    "strokeWidth": { "description": "Stroke width applied to every feature path." }
+  },
+  "classDescriptions": {}
+}
