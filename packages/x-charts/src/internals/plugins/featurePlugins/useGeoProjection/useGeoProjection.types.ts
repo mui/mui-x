@@ -1,4 +1,3 @@
-
 import { type GeoProjection, type ExtendedFeatureCollection } from '@mui/x-charts-vendor/d3-geo';
 import { type ChartPluginSignature } from '../../models/plugin';
 
