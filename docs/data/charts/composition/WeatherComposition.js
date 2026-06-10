@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -12,7 +13,6 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { forecast } from './weatherForecast';
-import { useTheme } from '@mui/material/styles';
 
 export default function WeatherComposition() {
   return (
