@@ -62,7 +62,7 @@ import getMarkerSize, {
  * selectors. Wrap it to bind the feature name we care about. */
 const selectorResponsiveTickAdjustment = (
   state: Parameters<typeof selectorChartExperimentalFeaturesState>[0],
-) => selectorChartExperimentalFeaturesState(state, 'useNewDefaultTickSpacing');
+) => selectorChartExperimentalFeaturesState(state, 'useNewDefaultTickSpacing') || true; // Dumb modification to see the impact on the entire docs
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
