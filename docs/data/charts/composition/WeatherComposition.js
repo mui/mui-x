@@ -14,6 +14,7 @@ import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 import { forecast } from './weatherForecast';
+import { WeatherIcon } from './WeatherIcon';
 
 export default function WeatherComposition() {
   const [highlightedAxis, setHighlightedAxis] = React.useState([]);
@@ -119,7 +120,6 @@ function ForecastChart(props) {
       margin={{ top: 64, right: 24, bottom: 8, left: 36 }}
     >
       <ChartsGrid horizontal />
-      <ChartsAxisHighlight x="band" />
       <DayAndTimeHeader />
       <MaxPrecipitationBars />
       <BarPlot />
@@ -128,7 +128,9 @@ function ForecastChart(props) {
       <WeatherMarkers />
       <ChartsYAxis axisId="precipitation" />
       <ChartsYAxis disableLine axisId="temperature" />
-      <ChartsTooltip />
+      <ChartsAxisHighlight x="band" />
+      <ChartsAxisHighlight x="line" />
+      <ChartsTooltip position="top" />
     </ChartsContainer>
   );
 }
@@ -188,51 +190,16 @@ function WindChart(props) {
       sx={{ [`& [data-series=gust]`]: { strokeDasharray: '4 4' } }}
     >
       <ChartsGrid horizontal />
-      <ChartsAxisHighlight x="line" />
       <LinePlot />
       <LineHighlightPlot />
       <ChartsYAxis axisId="wind" label="Wind m/s" />
-      <ChartsTooltip sx={{ [`& [data-series=gust]`]: { strokeDasharray: '4 4' } }} />
-    </ChartsContainer>
-  );
-}
-
-function WeatherIcon({ type }) {
-  const isRain = type === 'rain';
-  const isMoon = type === 'moon-cloud';
-  const isSun = type === 'partly-cloudy';
-
-  return (
-    <g>
-      {isSun && (
-        <g transform="translate(-7 -7)">
-          <circle r={5} fill="#ffd54f" stroke="#f57f17" strokeWidth={1.2} />
-          <path
-            d="M 0 -10 V -7 M 0 7 V 10 M -10 0 H -7 M 7 0 H 10 M -7 -7 L -5 -5 M 7 -7 L 5 -5"
-            stroke="#f57f17"
-            strokeWidth={1.2}
-            strokeLinecap="round"
-          />
-        </g>
-      )}
-      {isMoon && (
-        <path d="M -7 -10 A 3 3 0 0 0 -7 4 A 15 15 0 0 1 -7 -10 Z" fill="#90a4ae" />
-      )}
-      <path
-        d="M -8 1 A 7 7 0 0 1 5 -3 A 5 5 0 0 1 9 7 H -9 A 5 5 0 0 1 -8 1 Z"
-        fill={isRain ? '#bbdefb' : '#cfd8dc'}
-        stroke={isRain ? '#1976d2' : '#78909c'}
-        strokeWidth={1.4}
+      <ChartsAxisHighlight x="band" />
+      <ChartsAxisHighlight x="line" />
+      <ChartsTooltip
+        position="bottom"
+        sx={{ [`& [data-series=gust]`]: { strokeDasharray: '4 4' } }}
       />
-      {isRain && (
-        <path
-          d="M -5 11 L -7 15 M 0 11 L -2 15 M 5 11 L 3 15"
-          stroke="#1976d2"
-          strokeWidth={1.2}
-          strokeLinecap="round"
-        />
-      )}
-    </g>
+    </ChartsContainer>
   );
 }
 
@@ -359,56 +326,6 @@ function MaxPrecipitationBars() {
     </g>
   );
 }
-
-// function WindLines() {
-//   const xScale = useXScale<'band'>();
-//   const yScale = useYScale<'linear'>('wind');
-//   const { top, height } = useDrawingArea();
-//   const points = forecast
-//     .map(
-//       (item) =>
-//         `${(xScale(item.time) ?? 0) + xScale.bandwidth() / 2},${yScale(item.wind)}`,
-//     )
-//     .join(' ');
-//   const gustPoints = forecast
-//     .map(
-//       (item) =>
-//         `${(xScale(item.time) ?? 0) + xScale.bandwidth() / 2},${yScale(item.gust)}`,
-//     )
-//     .join(' ');
-//   const arrowY = top + height + 20;
-
-//   return (
-//     <g aria-hidden="true">
-//       <polyline
-//         points={gustPoints}
-//         fill="none"
-//         stroke="#7c4dff"
-//         strokeWidth={1.5}
-//         strokeDasharray="4 4"
-//       />
-//       <polyline points={points} fill="none" stroke="#7e22ce" strokeWidth={2.5} />
-//       {forecast.map((item) => {
-//         const x = (xScale(item.time) ?? 0) + xScale.bandwidth() / 2;
-//         return (
-//           <g
-//             key={item.time.toString()}
-//             transform={`translate(${x}, ${arrowY}) rotate(${item.windDirection})`}
-//           >
-//             <path
-//               d="M 0 -8 L 0 5 M -4 1 L 0 6 L 4 1"
-//               fill="none"
-//               stroke="#455a64"
-//               strokeWidth={1.4}
-//               strokeLinecap="round"
-//               strokeLinejoin="round"
-//             />
-//           </g>
-//         );
-//       })}
-//     </g>
-//   );
-// }
 
 function LegendItem({ color, label, dashed = false, hatch = false }) {
   return (
