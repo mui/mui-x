@@ -11,17 +11,18 @@ export interface UseWheelGestureOptions {
   /** Keys that must be held for the wheel to trigger the gesture. */
   requiredKeys?: KeyboardKey[];
   /**
-   * Called on each wheel tick that lands inside the drawing area.
+   * Called on each wheel tick inside the drawing area.
    *
    * @param {ChartPoint} point The wheel focal point, in SVG coordinates.
-   * @param {WheelEvent} event The raw `WheelEvent`.
+   * @param {WheelEvent} event The `WheelEvent`.
    */
   onWheel: (point: ChartPoint, event: WheelEvent) => void;
 }
 
 /**
- * Generic wheel gesture binding. Handles the "started outside the chart" guard and
- * `preventDefault`, then forwards the focal point and wheel delta to `onWheel`.
+ * Generic wheel gesture binding.
+ *
+ * It owns the listener lifecycle, and lets you create your own interactions from the focal point and wheel event it forwards to `onWheel`.
  */
 export function useWheelGesture(instance: GestureInstance, options: UseWheelGestureOptions): void {
   const { enabled, requiredKeys, onWheel } = options;

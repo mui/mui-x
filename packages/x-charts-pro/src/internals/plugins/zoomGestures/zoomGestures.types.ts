@@ -4,10 +4,6 @@ import type { UseChartInteractionListenerInstance } from '@mui/x-charts/internal
 
 /**
  * The minimal slice of a chart instance required to bind zoom/pan gestures.
- *
- * Every method here is provided by core plugins (`useChartInteractionListener`,
- * `useChartDimensions`, `useChartElementRef`), so any chart — cartesian or not —
- * can consume these gesture hooks.
  */
 export interface GestureInstance {
   chartsLayerContainerRef: React.RefObject<HTMLDivElement | null>;
@@ -17,8 +13,7 @@ export interface GestureInstance {
 }
 
 /**
- * Pointer/keyboard gating for a pan gesture, mirroring the options accepted by
- * `instance.updateZoomInteractionListeners('zoomPan', …)`.
+ * Pointer and keyboard gating for a pan gesture.
  */
 export interface PanGestureConfig {
   requiredKeys?: KeyboardKey[];

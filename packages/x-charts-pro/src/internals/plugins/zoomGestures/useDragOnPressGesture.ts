@@ -7,30 +7,30 @@ import type { ChartPoint, GestureInstance, PanGestureConfig } from './zoomGestur
 export interface UseDragOnPressGestureOptions {
   /** Whether the gesture is active. */
   enabled: boolean;
-  /** Pointer/keyboard gating forwarded to the interaction listener. */
+  /** Pointer and keyboard gating for the gesture. */
   config?: PanGestureConfig;
   /**
-   * Called once when a pan starts.
-   * @param {PanEvent} event The original pan start event.
+   * Called when the drag starts.
+   * @param {PanEvent} event The pan start event.
    */
   onPanStart?: (event: PanEvent) => void;
   /**
-   * Throttled call of the pan event
-   * @param {ChartPoint} delta The accumulated pixel delta since the last call.
-   * @param {PanEvent} event The original pan event.
+   * Called (rAF-throttled) on each drag update.
+   * @param {ChartPoint} delta The pixel delta since the last call.
+   * @param {PanEvent} event The pan event.
    */
   onPan: (delta: ChartPoint, event: PanEvent) => void;
   /**
-   * Called once when a pan ends.
-   * @param {PanEvent} event The original pan end event.
+   * Called when the drag ends.
+   * @param {PanEvent} event The pan end event.
    */
   onPanEnd?: (event: PanEvent) => void;
 }
 
 /**
- * Generic drag-to-pan gesture binding.
+ * Generic press-and-drag-to-pan gesture binding.
  *
- * It owns the listener lifecycle, and allows the user to create their own interactions by providing the delta change of the interaction.
+ * It owns the listener lifecycle, and lets you create your own interactions by providing the delta change of the interaction.
  */
 export function useDragOnPressGesture(
   instance: GestureInstance,

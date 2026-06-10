@@ -7,32 +7,30 @@ import { type ChartPoint, type GestureInstance, type PanGestureConfig } from './
 export interface UseDragGestureOptions {
   /** Whether the gesture is active. */
   enabled: boolean;
-  /** Pointer/keyboard gating forwarded to the interaction listener. */
+  /** Pointer and keyboard gating for the gesture. */
   config?: PanGestureConfig;
   /**
-   * Called once when a pan starts.
-   * @param {PanEvent} event The original pan start event.
+   * Called when the drag starts.
+   * @param {PanEvent} event The pan start event.
    */
   onPanStart?: (event: PanEvent) => void;
   /**
-   * Throttled call of the pan event
-   * @param {ChartPoint} delta The accumulated pixel delta since the last call.
-   * @param {PanEvent} event The original pan event.
+   * Called (rAF-throttled) on each drag update.
+   * @param {ChartPoint} delta The pixel delta since the last call.
+   * @param {PanEvent} event The pan event.
    */
   onPan: (delta: ChartPoint, event: PanEvent) => void;
   /**
-   * Called once when a pan ends.
-   * @param {PanEvent} event The original pan end event.
+   * Called when the drag ends.
+   * @param {PanEvent} event The pan end event.
    */
   onPanEnd?: (event: PanEvent) => void;
 }
 
 /**
- * Generic drag-to-pan gesture binding, decoupled from any coordinate system.
+ * Generic drag-to-pan gesture binding.
  *
- * It owns the listener lifecycle, the per-frame accumulation of the pixel delta, and
- * the rAF throttling. What to do with the delta is entirely up to `onPan` — cartesian
- * zoom translates an axis range, a map translates the projection, etc.
+ * It owns the listener lifecycle, and lets you create your own interactions by providing the delta change of the interaction.
  */
 export function useDragGesture(instance: GestureInstance, options: UseDragGestureOptions): void {
   const { enabled, config, onPanStart, onPan, onPanEnd } = options;
