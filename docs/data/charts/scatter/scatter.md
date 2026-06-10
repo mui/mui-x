@@ -141,7 +141,10 @@ Scatter charts can have many points, which can slow down rendering.
 By default, points are drawn with SVG `circle` elements, which can be slow for large datasets.
 
 The `renderer` prop selects how points are drawn.
-When it is not set, the renderer is chosen automatically based on the number of points: the progressive renderer above an internal threshold, the single renderer otherwise.
+The `renderer` prop selects how points are drawn.
+The default value is set to `'svg-single'`.
+
+Set `experimentalFeatures.progressiveRendering` to `true` to get the renderer chosen automatically based on the number of points: `'svg-progressive'` is used when above 2.000 points, `'svg-single'` otherwise.
 
 ### Choosing a renderer
 
