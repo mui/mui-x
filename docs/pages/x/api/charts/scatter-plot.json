@@ -12,7 +12,7 @@
         "name": "enum",
         "description": "'svg-batch'<br>&#124;&nbsp;'svg-progressive'<br>&#124;&nbsp;'svg-single'"
       },
-      "default": "undefined (auto)"
+      "default": "'svg-single'"
     },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
