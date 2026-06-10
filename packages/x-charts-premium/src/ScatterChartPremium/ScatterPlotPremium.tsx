@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   ScatterPlot,
+  type RendererType,
   type ScatterPlotProps,
   type ScatterPlotSlots,
   type ScatterPlotSlotProps,
@@ -20,7 +21,7 @@ export interface ScatterPlotPremiumProps extends Omit<ScatterPlotProps, 'rendere
    * - `svg-batch`: Renders all scatter items in a single batched SVG path.
    * - `webgl`: Renders scatter items using WebGL for better performance, at the cost of some limitations.
    */
-  renderer: 'svg-single' | 'svg-batch' | 'webgl';
+  renderer: RendererType | 'webgl';
   /**
    * Overridable component slots.
    * @default {}
