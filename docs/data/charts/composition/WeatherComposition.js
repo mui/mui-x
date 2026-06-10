@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -18,11 +17,15 @@ import {
   useAxesTooltip,
 } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLabelMark } from '@mui/x-charts/ChartsLabel';
-import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 import { forecast } from './weatherForecast';
-import { WeatherIcon } from './WeatherIcon';
+import {
+  DayAndTimeHeader,
+  WeatherMarkers,
+  MaxPrecipitationBars,
+  LegendItem,
+} from './WeatherCompositionComponents';
 
 export default function WeatherComposition() {
   const [highlightedAxis, setHighlightedAxis] = React.useState([]);
@@ -235,150 +238,6 @@ function WeatherTooltip({ type }) {
         </tbody>
       </ChartsTooltipTable>
     </ChartsTooltipPaper>
-  );
-}
-
-function DayAndTimeHeader() {
-  const xScale = useXScale();
-  const { top, height } = useDrawingArea();
-  const theme = useTheme();
-
-  // Get the start/end time value grouped per day.
-  const days = React.useMemo(() => {
-    return xScale.domain().reduce((acc, date) => {
-      if (
-        acc.length === 0 ||
-        date.getDate() !== acc[acc.length - 1].start.getDate()
-      ) {
-        return [...acc, { start: date, end: date }];
-      }
-      return [
-        ...acc.slice(0, acc.length - 1),
-        { start: acc[acc.length - 1].start, end: date },
-      ];
-    }, []);
-  }, [xScale]);
-
-  return (
-    <g fontSize={12} fill={theme.palette.text.secondary}>
-      {days.map(({ start, end }, dayIndex) => {
-        const endDay =
-          xScale(end) + xScale.step() - (xScale.step() - xScale.bandwidth()) / 2;
-        const middleDay = (xScale(end) + xScale(start)) / 2;
-
-        const labelX = dayIndex === 0 ? endDay : middleDay;
-        const showLine = dayIndex !== days.length - 1;
-
-        return (
-          <g>
-            <text x={labelX} y={top - 30} textAnchor="middle" fontWeight={600}>
-              {start.toLocaleDateString('en-US', {
-                weekday: 'short',
-                day: 'numeric',
-                month: 'short',
-              })}
-            </text>
-            {showLine && (
-              <line
-                x1={endDay}
-                x2={endDay}
-                y1={top - 22}
-                y2={top + height}
-                stroke={theme.palette.text.secondary}
-                strokeDasharray="8 8"
-                opacity={0.5}
-              />
-            )}
-          </g>
-        );
-      })}
-      {forecast.map((item) => {
-        const x = (xScale(item.time) ?? 0) + xScale.bandwidth() / 2;
-        return (
-          <text key={item.time.toString()} x={x} y={top - 8} textAnchor="middle">
-            {item.time.toLocaleTimeString('en-US', { hour: 'numeric' })}
-          </text>
-        );
-      })}
-    </g>
-  );
-}
-
-function WeatherMarkers() {
-  const xScale = useXScale();
-  const yScale = useYScale('temperature');
-
-  return (
-    <g aria-hidden="true">
-      {forecast.map((item) => {
-        const x = (xScale(item.time) ?? 0) + xScale.bandwidth() / 2;
-        const y = (yScale(item.temperature) ?? 0) - 26;
-
-        return (
-          <g key={item.time.toISOString()} transform={`translate(${x}, ${y})`}>
-            <WeatherIcon type={item.icon} />
-          </g>
-        );
-      })}
-    </g>
-  );
-}
-
-function MaxPrecipitationBars() {
-  const xScale = useXScale();
-  const yScale = useYScale('precipitation');
-  const zero = yScale(0) ?? 0;
-  const barWidth = xScale.bandwidth() * 0.56;
-
-  return (
-    <g aria-hidden="true">
-      <defs>
-        <pattern
-          id="weather-max-precipitation"
-          width={6}
-          height={6}
-          patternUnits="userSpaceOnUse"
-          patternTransform="rotate(45)"
-        >
-          <rect width={6} height={6} fill="#e3f2fd" />
-          <line x1={0} x2={0} y1={0} y2={6} stroke="#64b5f6" strokeWidth={2} />
-        </pattern>
-      </defs>
-      {forecast.map((item) => {
-        const valueY = yScale(item.maxPrecipitation) ?? zero;
-        const x = (xScale(item.time) ?? 0) + (xScale.bandwidth() - barWidth) / 2;
-        return (
-          <rect
-            key={item.time.toISOString()}
-            x={x}
-            y={valueY}
-            width={barWidth}
-            height={zero - valueY}
-            fill="url(#weather-max-precipitation)"
-            opacity={item.maxPrecipitation === 0 ? 0 : 1}
-          />
-        );
-      })}
-    </g>
-  );
-}
-
-function LegendItem({ color, label, dashed = false, hatch = false }) {
-  return (
-    <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center' }}>
-      <Box
-        sx={{
-          width: 18,
-          height: 3,
-          borderTop: dashed ? `2px dashed ${color}` : undefined,
-          bgcolor: dashed ? 'transparent' : color,
-          backgroundImage: hatch
-            ? `repeating-linear-gradient(45deg, ${color} 0, ${color} 2px, transparent 2px, transparent 5px)`
-            : undefined,
-        }}
-      />
-      <Typography variant="caption">{label}</Typography>
-    </Stack>
   );
 }
 
