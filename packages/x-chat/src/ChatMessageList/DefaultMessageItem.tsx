@@ -22,6 +22,43 @@ function warnIfHostElementRowSlot(slotName: 'dateDivider' | 'unreadMarker', valu
   }
 }
 
+function warnIfDividerSlotWithoutFeature(
+  slotName: 'dateDivider' | 'unreadMarker',
+  hasCustomization: boolean,
+) {
+  if (process.env.NODE_ENV === 'production') {
+    return;
+  }
+  if (hasCustomization) {
+    warnOnce([
+      `MUI X: A \`${slotName}\` slot or slotProps entry was provided, but the \`${slotName}\` feature is disabled.`,
+      `Dividers are opt-in and render nothing unless enabled, so the customization has no effect.`,
+      `Pass \`features={{ ${slotName}: true }}\` to render it.`,
+    ]);
+  }
+}
+
+/**
+ * Opt-in row dividers rendered by the default message row. Shared by `ChatBox`
+ * (`features` prop) and the standalone `ChatMessageList` (`features` prop).
+ */
+export interface ChatMessageListFeatures {
+  /**
+   * Whether to render a date divider between messages whose `createdAt` values
+   * fall on different calendar days. Use the `dateDivider` slot to customize the
+   * rendered component once enabled.
+   * @default false
+   */
+  dateDivider?: boolean;
+  /**
+   * Whether to render the unread "new messages" marker above the first unread
+   * message (derived from the active conversation's `unreadCount` / `readState`).
+   * Use the `unreadMarker` slot to customize the rendered component once enabled.
+   * @default false
+   */
+  unreadMarker?: boolean;
+}
+
 /**
  * Flat per-row slot keys shared by `ChatBox` and `ChatMessageList` — the
  * message-rendering pipeline vocabulary (group wrapper, dividers, and the
@@ -56,6 +93,11 @@ export interface DefaultMessageItemProps {
   items?: string[];
   slots?: ChatMessageRowSlots;
   slotProps?: ChatMessageRowSlotProps;
+  /**
+   * Opt-in row dividers. Both are disabled by default; pass `{ dateDivider: true }`
+   * and/or `{ unreadMarker: true }` to render them.
+   */
+  features?: ChatMessageListFeatures;
 }
 
 /**
@@ -78,28 +120,42 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
   items,
   slots: slotsProp,
   slotProps: slotPropsProp,
+  features,
 }: DefaultMessageItemProps) {
   const context = useChatSlots();
   const slots = slotsProp ?? context.slots;
   const slotProps = slotPropsProp ?? context.slotProps;
 
-  // Row-level dividers. Both the date divider and the unread marker are
-  // self-suppressing: they read `messageId`/`index`/`items` and render only at
-  // their boundary (a new calendar day, or the first unread message derived from
-  // the active conversation's `unreadCount`/`readState`), returning null otherwise.
-  // `null` hides the slot entirely; `undefined` falls back to the default component.
-  // A custom slot must therefore be a component (it receives `messageId`/`index`/
-  // `items`); a raw host element would both fail to self-suppress and leak those as
-  // DOM attributes.
+  // Row-level dividers are opt-in capabilities: absent unless the corresponding
+  // feature flag is enabled. Once enabled, both the date divider and the unread
+  // marker are self-suppressing: they read `messageId`/`index`/`items` and render
+  // only at their boundary (a new calendar day, or the first unread message derived
+  // from the active conversation's `unreadCount`/`readState`), returning null
+  // otherwise. The slot then customizes the rendered component (`undefined` falls
+  // back to the default; `null` still hides it). A custom slot must be a component
+  // (it receives `messageId`/`index`/`items`); a raw host element would both fail
+  // to self-suppress and leak those as DOM attributes.
+  const showDateDivider = features?.dateDivider === true && slots.dateDivider !== null;
+  const showUnreadMarker = features?.unreadMarker === true && slots.unreadMarker !== null;
   const DateDividerComponent = (slots.dateDivider ?? ChatDateDivider) as React.ElementType;
   const UnreadMarkerComponent = (slots.unreadMarker ?? ChatUnreadMarker) as React.ElementType;
 
   warnIfHostElementRowSlot('dateDivider', slots.dateDivider);
   warnIfHostElementRowSlot('unreadMarker', slots.unreadMarker);
+  warnIfDividerSlotWithoutFeature(
+    'dateDivider',
+    features?.dateDivider !== true &&
+      (slots.dateDivider != null || slotProps.dateDivider != null),
+  );
+  warnIfDividerSlotWithoutFeature(
+    'unreadMarker',
+    features?.unreadMarker !== true &&
+      (slots.unreadMarker != null || slotProps.unreadMarker != null),
+  );
 
   return (
     <React.Fragment>
-      {slots.dateDivider !== null && (
+      {showDateDivider && (
         <DateDividerComponent
           {...resolveSlotProps(slotProps.dateDivider ?? {}, { messageId: id, index, items })}
           messageId={id}
@@ -107,7 +163,7 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
           items={items}
         />
       )}
-      {slots.unreadMarker !== null && (
+      {showUnreadMarker && (
         <UnreadMarkerComponent
           {...resolveSlotProps(slotProps.unreadMarker ?? {}, { messageId: id, index, items })}
           messageId={id}

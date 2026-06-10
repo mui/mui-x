@@ -69,6 +69,8 @@ If you need to share state with external components, wrap them in a single `Chat
   adapter={adapter}
   features={{
     conversationList: true, // show the conversation sidebar / drawer
+    dateDivider: true, // show date separators between calendar days
+    unreadMarker: true, // show the "new messages" marker
     attachments: false, // hide the attach button
     helperText: false, // hide the helper text
     scrollToBottom: false, // disable scroll-to-bottom affordance

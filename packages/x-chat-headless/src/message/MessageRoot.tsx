@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
+import useForkRef from '@mui/utils/useForkRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useMessage } from '../hooks/useMessage';
 import { useMessageAuthor } from '../hooks/useMessageAuthor';
@@ -8,6 +10,12 @@ import { useChatVariant } from '../chat/internals/ChatVariantContext';
 import { useChatDensity } from '../chat/internals/ChatDensityContext';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
 import { getDataAttributes } from '../internals/getDataAttributes';
+import { mergeReactProps } from '../internals/mergeReactProps';
+import {
+  focusFirstFocusableDescendant,
+  useMessageRovingContext,
+  useMessageRovingItem,
+} from '../message-list/internals/MessageRovingContext';
 import { MessageContextProvider } from './internals/MessageContext';
 import { type MessageRootOwnerState } from './message.types';
 
@@ -78,6 +86,43 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
     }),
     [density, isGrouped, message, messageId, resolvedAuthor, variant],
   );
+  // Roving focus: inside a `MessageListRoot` with roving enabled, the article
+  // is the list's roving tabindex item (the whole list is a single Tab stop).
+  // Outside a roving list the context is null and the article stays a plain,
+  // non-focusable container.
+  const roving = useMessageRovingContext();
+  const rovingItem = useMessageRovingItem(messageId);
+  const localRootRef = React.useRef<HTMLElement | null>(null);
+  const registerRovingRef = React.useCallback(
+    (element: HTMLElement | null) => {
+      localRootRef.current = element;
+      roving?.registerItemRef(messageId, element);
+    },
+    [messageId, roving],
+  );
+  const handleRef = useForkRef(ref, registerRovingRef);
+
+  // Entering drill-in (Enter on the focused article) moves focus to the first
+  // focusable descendant once the actionable re-render has restored the
+  // interior controls' tab order. Skipped when focus is already inside (e.g.
+  // the user clicked a control directly).
+  useEnhancedEffect(() => {
+    if (!rovingItem.actionable) {
+      return;
+    }
+
+    const article = localRootRef.current;
+    if (article == null) {
+      return;
+    }
+
+    if (article.contains(document.activeElement) && document.activeElement !== article) {
+      return;
+    }
+
+    focusFirstFocusableDescendant(article);
+  }, [rovingItem.actionable]);
+
   const Root = slots?.root ?? 'div';
   const rootProps = useSlotProps({
     elementType: Root,
@@ -85,7 +130,7 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
     externalForwardedProps: other,
     ownerState,
     additionalProps: {
-      ref,
+      ref: handleRef,
       // `article` is the correct landmark for a self-contained unit of content
       // (each chat message is a discrete piece of content in a feed).
       // Screen readers announce "article" when entering, which helps users
@@ -94,6 +139,14 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
       'aria-label': resolvedAuthor?.displayName
         ? `Message from ${resolvedAuthor.displayName}`
         : localeText.messageLabel,
+      // Hint assistive tech to defer announcing the streaming message until
+      // it completes (best effort; the message list's status announcer
+      // carries the explicit streaming announcements).
+      'aria-busy': ownerState.streaming || undefined,
+      ...(rovingItem.enabled && {
+        tabIndex: rovingItem.focused ? 0 : -1,
+        'data-actionable': rovingItem.actionable ? 'true' : undefined,
+      }),
       ...getDataAttributes({
         role: ownerState.role,
         status: ownerState.status,
@@ -105,9 +158,27 @@ export const MessageRoot = React.forwardRef(function MessageRoot(
     },
   });
 
+  // The roving handlers are merged on top of the resolved slot props so
+  // consumer-provided handlers (via `slotProps.root` or forwarded props) keep
+  // running — `useSlotProps` alone would let one silently drop the other.
+  const composedRootProps =
+    roving == null
+      ? rootProps
+      : mergeReactProps(rootProps, {
+          onFocus: () => {
+            roving.onItemFocus(messageId);
+          },
+          onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => {
+            roving.onItemKeyDown(event, messageId);
+          },
+          onBlur: (event: React.FocusEvent<HTMLElement>) => {
+            roving.onItemBlur(event, messageId);
+          },
+        });
+
   return (
     <MessageContextProvider value={ownerState}>
-      <Root {...rootProps}>{children}</Root>
+      <Root {...composedRootProps}>{children}</Root>
     </MessageContextProvider>
   );
 }) as MessageRootComponent;

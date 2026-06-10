@@ -8,7 +8,6 @@ import {
   ChatChrome,
   ScopedChat,
 } from 'docs/src/modules/components/chat-playground/sharedProviders';
-import { MessageBubble } from 'docs/src/modules/components/chat-playground/MessageBubble';
 import {
   ChoiceControl,
   DividerLabel,
@@ -55,6 +54,7 @@ function buildMessages(messageCount, spanDays) {
 const DEFAULTS = {
   count: 8,
   spanDays: true,
+  dateDivider: true,
   autoScroll: true,
   autoScrollBuffer: 150,
   showOverlay: false,
@@ -79,6 +79,7 @@ const CLASS_DEFS = [
 export default function ChatMessageListPlayground() {
   const [count, setCount] = React.useState(DEFAULTS.count);
   const [spanDays, setSpanDays] = React.useState(DEFAULTS.spanDays);
+  const [dateDivider, setDateDivider] = React.useState(DEFAULTS.dateDivider);
   const [autoScroll, setAutoScroll] = React.useState(DEFAULTS.autoScroll);
   const [autoScrollBuffer, setAutoScrollBuffer] = React.useState(
     DEFAULTS.autoScrollBuffer,
@@ -91,6 +92,7 @@ export default function ChatMessageListPlayground() {
   const handleReset = React.useCallback(() => {
     setCount(DEFAULTS.count);
     setSpanDays(DEFAULTS.spanDays);
+    setDateDivider(DEFAULTS.dateDivider);
     setAutoScroll(DEFAULTS.autoScroll);
     setAutoScrollBuffer(DEFAULTS.autoScrollBuffer);
     setShowOverlay(DEFAULTS.showOverlay);
@@ -145,7 +147,7 @@ export default function ChatMessageListPlayground() {
   return (
     <PlaygroundCard
       title="ChatMessageList"
-      description="Virtualised scroller with auto-scroll, date dividers and an overlay slot."
+      description="Virtualised scroller with auto-scroll, opt-in date dividers and an overlay slot."
       previewMinHeight={360}
       span={2}
       onReset={handleReset}
@@ -172,6 +174,12 @@ export default function ChatMessageListPlayground() {
             onChange={setAutoScrollBuffer}
           />
           <SwitchControl
+            label="features.dateDivider"
+            checked={dateDivider}
+            onChange={setDateDivider}
+            helperText="Opt-in day separators between calendar days."
+          />
+          <SwitchControl
             label="overlay"
             checked={showOverlay}
             onChange={setShowOverlay}
@@ -189,7 +197,7 @@ export default function ChatMessageListPlayground() {
             label="span multiple days"
             checked={spanDays}
             onChange={setSpanDays}
-            helperText="Triggers ChatDateDivider rendering."
+            helperText="Creates the day boundaries the divider renders at."
           />
           <DividerLabel>chrome provider</DividerLabel>
           <ChoiceControl
@@ -226,8 +234,8 @@ export default function ChatMessageListPlayground() {
                 items={messages.map((m) => m.id)}
                 autoScroll={autoScrollValue}
                 overlay={overlay}
+                features={{ dateDivider }}
                 sx={listSx}
-                renderItem={({ id }) => <MessageBubble key={id} messageId={id} />}
               />
             </Box>
           </ChatChrome>

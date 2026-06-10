@@ -790,6 +790,15 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   );
   const SuggestionsComponent = (slots.suggestions ?? ChatSuggestions) as typeof ChatSuggestions;
 
+  // The opt-in divider feature flags, normalized to an identity-stable object so
+  // an inline `features={{ ... }}` on ChatBox doesn't churn the memoized rows.
+  const showDateDivider = features?.dateDivider === true;
+  const showUnreadMarker = features?.unreadMarker === true;
+  const rowFeatures = React.useMemo(
+    () => ({ dateDivider: showDateDivider, unreadMarker: showUnreadMarker }),
+    [showDateDivider, showUnreadMarker],
+  );
+
   // The per-row slots/slotProps are read from the `ChatSlots` context inside
   // `DefaultMessageItem`, so `renderItem` carries no slot payload and stays
   // stable across scroll-driven re-renders of the virtualized list. The rendered
@@ -798,9 +807,15 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
   // full conversation — important when `slotProps.messageList.items` is a subset.
   const renderItem = React.useCallback(
     ({ id, index }: { id: string; index: number }) => (
-      <DefaultMessageItem key={id} id={id} index={index} items={renderedItemIds} />
+      <DefaultMessageItem
+        key={id}
+        id={id}
+        index={index}
+        items={renderedItemIds}
+        features={rowFeatures}
+      />
     ),
-    [renderedItemIds],
+    [renderedItemIds, rowFeatures],
   );
 
   const drawerConversationListSlotProps = React.useMemo(

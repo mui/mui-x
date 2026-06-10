@@ -24,15 +24,24 @@ const ChatMessageActionsStyled = styled('div', {
   display: 'inline-flex',
   alignItems: 'center',
   gap: theme.spacing(0.25),
+  // `visibility: hidden` (not just opacity) removes the action buttons from
+  // the tab order and from hit-testing while hidden, so tabbing through the
+  // chat never stops on an invisible control. Actions are revealed on hover
+  // (mouse), when the user drills into the focused message with Enter
+  // (`data-actionable` set by the roving message list), or while focus is
+  // inside the actions themselves. Visibility flips at the end of the
+  // opacity fade when hiding, and immediately when revealing.
   opacity: 0,
-  transition: theme.transitions.create('opacity', {
+  visibility: 'hidden',
+  transition: theme.transitions.create(['opacity', 'visibility'], {
     duration: theme.transitions.duration.short,
   }),
   '@media (prefers-reduced-motion: reduce)': {
     transition: 'none',
   },
-  '.MuiChatMessage-root:hover &, .MuiChatMessage-root:focus-within &': {
+  '.MuiChatMessage-root:hover &, .MuiChatMessage-root[data-actionable="true"] &, &:focus-within': {
     opacity: 1,
+    visibility: 'visible',
   },
   ...(ownerState?.isOwnMessage && {
     justifySelf: 'end',

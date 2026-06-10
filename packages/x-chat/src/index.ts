@@ -134,6 +134,7 @@ export type {
 // ─── ChatMessageList ──────────────────────────────────────────────────────────
 export { ChatMessageList } from './ChatMessageList/ChatMessageList';
 export type { ChatMessageListProps } from './ChatMessageList/ChatMessageList';
+export type { ChatMessageListFeatures } from './ChatMessageList/DefaultMessageItem';
 export {
   chatMessageListClasses,
   getChatMessageListUtilityClass,

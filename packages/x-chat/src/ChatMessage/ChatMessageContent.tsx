@@ -2,7 +2,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { MessageContent, type MessageContentProps } from '@mui/x-chat-headless';
+import {
+  MessageContent,
+  useMessageContentTabIndex,
+  type MessageContentProps,
+} from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useCopyToClipboard } from '../internals/useCopyToClipboard';
@@ -792,6 +796,9 @@ function ChatToolPartSectionContent({
           .filter((child): child is string => typeof child === 'string')
           .join('');
   const { copyState, copy } = useCopyToClipboard();
+  // Inside a roving message list the copy button leaves the tab order until
+  // the user drills into the message (Enter); it stays mouse-clickable.
+  const contentTabIndex = useMessageContentTabIndex();
   let copyLabel = 'Copy to clipboard';
   if (copyState === 'copied') {
     copyLabel = 'Copied';
@@ -807,6 +814,7 @@ function ChatToolPartSectionContent({
           onClick={() => copy(text)}
           title={copyLabel}
           aria-label={copyLabel}
+          tabIndex={contentTabIndex}
         >
           {copyState === 'copied' ? <CheckSvgIcon /> : <CopySvgIcon />}
         </ChatToolPartSectionCopyButton>

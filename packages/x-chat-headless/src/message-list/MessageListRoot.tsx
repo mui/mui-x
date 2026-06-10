@@ -4,8 +4,10 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { SlotComponentProps } from '@mui/utils/types';
 import { useChat } from '../hooks/useChat';
+import { useChatStore } from '../hooks/useChatStore';
 import { useMessageIds } from '../hooks/useMessage';
 import { useChatLocaleText } from '../chat/internals/ChatLocaleContext';
+import { useRovingFocus } from '../internals/useRovingFocus';
 import { useMessageListBehavior } from './useMessageListBehavior';
 import {
   ScrollRoot,
@@ -16,6 +18,10 @@ import {
   thumbStyle,
 } from '../internals/ScrollAreaSlots';
 import { MessageListContextProvider } from './internals/MessageListContext';
+import {
+  MessageRovingProvider,
+  useMessageRovingController,
+} from './internals/MessageRovingContext';
 import { type MessageListRootOwnerState } from './messageList.types';
 
 const DEFAULT_ESTIMATED_ITEM_SIZE = 84;
@@ -23,6 +29,11 @@ const DEFAULT_AUTO_SCROLL_BUFFER = 150;
 
 export interface MessageListRootHandle {
   scrollToBottom(options?: { behavior?: ScrollBehavior }): void;
+  /**
+   * Move the roving focus to the given message (defaults to the newest one)
+   * and focus its article element.
+   */
+  focusMessage(id?: string): void;
 }
 
 export interface MessageListRootSlots {
@@ -75,6 +86,16 @@ export interface MessageListRootProps extends Omit<
    * @default true
    */
   autoScroll?: boolean | MessageListRootAutoScrollConfig;
+  /**
+   * Whether the message list manages a roving tabindex over its messages:
+   * the list is a single Tab stop, ArrowUp/ArrowDown (plus Home/End) move
+   * focus between messages, Enter drills into a message's interior controls
+   * and Escape returns to the message.
+   *
+   * Disable when rendering fully custom rows that manage focus themselves.
+   * @default true
+   */
+  enableRovingFocus?: boolean;
   slots?: Partial<MessageListRootSlots>;
   slotProps?: MessageListRootSlotProps;
 }
@@ -311,13 +332,34 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     estimatedItemSize = DEFAULT_ESTIMATED_ITEM_SIZE,
     onReachTop,
     autoScroll = true,
+    enableRovingFocus = true,
     slots,
     slotProps,
     ...other
   } = props;
   const defaultItems = useMessageIds();
   const { hasMoreHistory, loadMoreHistory, messages, isStreaming: isAdapterStreaming } = useChat();
+  const store = useChatStore();
   const itemIds = itemsProp ?? defaultItems;
+
+  // One tab stop for the whole list: a roving tabindex over the message
+  // articles. No `onActivate` (Enter is drill-in, not selection), no
+  // type-ahead (messages have no short stable label), and no Page keys
+  // (PageUp/PageDown keep their native scrolling — the only keyboard way to
+  // read a message taller than the viewport). `fallback: 'last'` keeps the
+  // tab stop on the newest message until the user interacts.
+  const roving = useRovingFocus({
+    itemIds,
+    restoreKey: store,
+    scope: 'message-list',
+    fallback: 'last',
+    enablePageKeys: false,
+    restoreFocusOnMount: false,
+  });
+  const rovingContextValue = useMessageRovingController({
+    enabled: enableRovingFocus,
+    roving,
+  });
 
   // Combine adapter-level streaming (active stream via processStream) with
   // message-level streaming (any message with status 'streaming').  This
@@ -350,24 +392,35 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     isStreaming,
   });
 
+  const { setFocusedId, focusItem } = roving;
   React.useImperativeHandle(
     ref,
     () => ({
       scrollToBottom: behavior.scrollToBottom,
+      focusMessage: (id?: string) => {
+        const targetId = id ?? itemIds[itemIds.length - 1];
+        if (targetId == null) {
+          return;
+        }
+        setFocusedId(targetId);
+        focusItem(targetId);
+      },
     }),
-    [behavior.scrollToBottom],
+    [behavior.scrollToBottom, focusItem, itemIds, setFocusedId],
   );
 
   return (
-    <StaticMessageListView
-      behavior={behavior}
-      getItemKey={getItemKey}
-      itemIds={itemIds}
-      overlay={overlay}
-      other={other}
-      renderItem={renderItem}
-      slotProps={slotProps}
-      slots={slots}
-    />
+    <MessageRovingProvider value={rovingContextValue}>
+      <StaticMessageListView
+        behavior={behavior}
+        getItemKey={getItemKey}
+        itemIds={itemIds}
+        overlay={overlay}
+        other={other}
+        renderItem={renderItem}
+        slotProps={slotProps}
+        slots={slots}
+      />
+    </MessageRovingProvider>
   );
 }) as MessageListRootComponent;

@@ -123,9 +123,15 @@ interface ChatBoxMessageListSlots {
   messageList?: React.ElementType;
   /** The per-author group wrapper around consecutive messages. */
   messageGroup?: React.ElementType;
-  /** The date separator rendered between message groups. Pass `null` to hide it. */
+  /**
+   * The date separator rendered between message groups. Only rendered when
+   * `features.dateDivider` is enabled. Pass `null` to hide it.
+   */
   dateDivider?: React.ElementType | null;
-  /** The "new messages" marker. Pass `null` to hide it. */
+  /**
+   * The "new messages" marker. Only rendered when `features.unreadMarker` is
+   * enabled. Pass `null` to hide it.
+   */
   unreadMarker?: React.ElementType | null;
 }
 
@@ -271,6 +277,20 @@ export interface ChatBoxFeatures {
    */
   conversationList?: boolean;
   /**
+   * Whether to render a date divider between messages whose `createdAt` values
+   * fall on different calendar days. Use the `dateDivider` slot to customize the
+   * rendered component once enabled.
+   * @default false
+   */
+  dateDivider?: boolean;
+  /**
+   * Whether to render the unread "new messages" marker above the first unread
+   * message (derived from the active conversation's `unreadCount` / `readState`).
+   * Use the `unreadMarker` slot to customize the rendered component once enabled.
+   * @default false
+   */
+  unreadMarker?: boolean;
+  /**
    * Whether to show the scroll-to-bottom affordance button when the user has scrolled up.
    * @default true
    */
@@ -368,6 +388,8 @@ export interface ChatBoxProps<Cursor = string> extends Omit<
    *   `conversationHeaderInfo`, `conversationTitle`, `conversationSubtitle`,
    *   `conversationHeaderActions`.
    * - Message list — `messageList`, `messageGroup`, `dateDivider`, `unreadMarker`.
+   *   The divider slots render only when the matching `features.dateDivider` /
+   *   `features.unreadMarker` flag is enabled.
    * - Message — `messageRoot`, `messageAvatar`, `messageContent`, `messageMeta`,
    *   `messageInlineMeta`, `messageError`, `messageActions`, `messageAuthorName`.
    *   Pass `null` to a presentational slot (`messageAvatar`, `messageMeta`,

@@ -32,7 +32,7 @@ Inside `ChatBox`, the message list renders a subtree of themed components:
 
 ```text
 ChatMessageList                     ← scrollable container
-  MessageListDateDivider            ← date separator between message groups
+  MessageListDateDivider            ← date separator between message groups (opt-in)
   ChatMessageGroup                  ← groups consecutive same-author messages
     ChatMessage                     ← individual message row
       ChatMessageAvatar             ← author avatar
@@ -78,10 +78,11 @@ The message list preserves the current scroll position during prepend so the use
 
 ## Date dividers
 
-When consecutive messages span different calendar dates, a date divider is rendered automatically between them.
+When consecutive messages span different calendar dates, a date divider can be rendered between them.
 The divider shows a localized date string and is styled as a centered label with horizontal rules.
+Dividers are disabled by default—enable them with `features={{ dateDivider: true }}`.
 
-Customize the date format through `slotProps`. The demo below uses a short month + day format:
+Customize the date format through `slotProps`. The demo below enables the feature and uses a short month + day format:
 
 {{"demo": "DateDividerFormat.js", "defaultCodeOpen": false, "bg": "inline"}}
 

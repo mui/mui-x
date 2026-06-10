@@ -21,6 +21,7 @@ import {
   DefaultMessageItem,
   type ChatMessageRowSlots,
   type ChatMessageRowSlotProps,
+  type ChatMessageListFeatures,
 } from './DefaultMessageItem';
 
 const useThemeProps = createUseThemeProps('MuiChatMessageList');
@@ -44,6 +45,13 @@ export interface ChatMessageListProps extends Omit<
   renderItem?: MessageListRootProps['renderItem'];
   slots?: Partial<ChatMessageListSlots>;
   slotProps?: ChatMessageListSlotProps;
+  /**
+   * Feature flags for the opt-in row dividers rendered by the default row.
+   * Both are disabled by default; pass `{ dateDivider: true }` and/or
+   * `{ unreadMarker: true }` to render them. Ignored when a custom `renderItem`
+   * replaces the default row.
+   */
+  features?: ChatMessageListFeatures;
   className?: string;
   sx?: SxProps<Theme>;
   classes?: Partial<ChatMessageListClasses>;
@@ -117,6 +125,7 @@ const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListP
       renderItem: renderItemProp,
       slots,
       slotProps,
+      features,
       className,
       classes: classesProp,
       sx,
@@ -159,14 +168,25 @@ const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListP
       return { rowSlotProps: row, listSlotProps: list };
     }, [slotProps]);
 
+    // Normalize the divider feature flags into an identity-stable object so an
+    // inline `features={{ ... }}` doesn't churn the memoized rows on every render.
+    const showDateDivider = features?.dateDivider === true;
+    const showUnreadMarker = features?.unreadMarker === true;
+    const rowFeatures = React.useMemo<ChatMessageListFeatures>(
+      () => ({ dateDivider: showDateDivider, unreadMarker: showUnreadMarker }),
+      [showDateDivider, showUnreadMarker],
+    );
+
     // Keep the default renderer stable; read latest slot overrides and the resolved
     // `items` from refs so updates don't churn the virtualized list. `items` is read
     // without destructuring so it still flows to MessageListRoot via `...other`.
     const rowSlotsRef = React.useRef(rowSlots);
     const rowSlotPropsRef = React.useRef(rowSlotProps);
+    const rowFeaturesRef = React.useRef(rowFeatures);
     const itemsRef = React.useRef<string[] | undefined>(undefined);
     rowSlotsRef.current = rowSlots;
     rowSlotPropsRef.current = rowSlotProps;
+    rowFeaturesRef.current = rowFeatures;
     itemsRef.current = (other as { items?: string[] }).items;
 
     // Forward `index` (rendered-list relative) and the rendered `items` so the group
@@ -181,6 +201,7 @@ const ChatMessageList = React.forwardRef<MessageListRootHandle, ChatMessageListP
           items={itemsRef.current}
           slots={rowSlotsRef.current}
           slotProps={rowSlotPropsRef.current}
+          features={rowFeaturesRef.current}
         />
       ),
       [],
@@ -252,7 +273,27 @@ ChatMessageList.propTypes = {
   ]),
   classes: PropTypes.object,
   className: PropTypes.string,
+  /**
+   * Whether the message list manages a roving tabindex over its messages:
+   * the list is a single Tab stop, ArrowUp/ArrowDown (plus Home/End) move
+   * focus between messages, Enter drills into a message's interior controls
+   * and Escape returns to the message.
+   *
+   * Disable when rendering fully custom rows that manage focus themselves.
+   * @default true
+   */
+  enableRovingFocus: PropTypes.bool,
   estimatedItemSize: PropTypes.number,
+  /**
+   * Feature flags for the opt-in row dividers rendered by the default row.
+   * Both are disabled by default; pass `{ dateDivider: true }` and/or
+   * `{ unreadMarker: true }` to render them. Ignored when a custom `renderItem`
+   * replaces the default row.
+   */
+  features: PropTypes.shape({
+    dateDivider: PropTypes.bool,
+    unreadMarker: PropTypes.bool,
+  }),
   getItemKey: PropTypes.func,
   items: PropTypes.arrayOf(PropTypes.string),
   onReachTop: PropTypes.func,

@@ -121,6 +121,64 @@ describe('ChatMessageList', () => {
     expect(document.querySelector('style[href="base-ui-disable-scrollbar"]')).toBe(null);
   });
 
+  it('does not render row dividers by default when used standalone', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'user',
+            createdAt: '2026-03-13T10:00:00.000Z',
+            parts: [{ type: 'text', text: 'Day one' }],
+          },
+          {
+            id: 'm2',
+            role: 'user',
+            createdAt: '2026-03-14T10:00:00.000Z',
+            parts: [{ type: 'text', text: 'Day two' }],
+          },
+        ]}
+      >
+        <ChatConversation>
+          <ChatMessageList />
+        </ChatConversation>
+      </ChatRoot>,
+    );
+
+    // Dividers are an opt-in feature; a day boundary alone must not render one.
+    expect(document.querySelector('.MuiChatMessage-dateDivider')).toBe(null);
+  });
+
+  it('renders the date divider when features.dateDivider is enabled standalone', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'user',
+            createdAt: '2026-03-13T10:00:00.000Z',
+            parts: [{ type: 'text', text: 'Day one' }],
+          },
+          {
+            id: 'm2',
+            role: 'user',
+            createdAt: '2026-03-14T10:00:00.000Z',
+            parts: [{ type: 'text', text: 'Day two' }],
+          },
+        ]}
+      >
+        <ChatConversation>
+          <ChatMessageList features={{ dateDivider: true }} />
+        </ChatConversation>
+      </ChatRoot>,
+    );
+
+    // One day boundary (m1→m2) → exactly one self-suppressing divider renders.
+    expect(document.querySelectorAll('.MuiChatMessage-dateDivider').length).toBe(1);
+  });
+
   it('groups against the rendered items subset, not the full conversation', () => {
     render(
       <ChatRoot

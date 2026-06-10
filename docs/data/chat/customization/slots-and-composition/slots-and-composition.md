@@ -87,7 +87,7 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 | `messageError`      | `ChatMessageError`      | `<div>`  | Error card under a failed message     |
 | `messageActions`    | `ChatMessageActions`    | `<div>`  | Hover action menu                     |
 | `messageAuthorName` | —                       | `<div>`  | Author name label above the group     |
-| `dateDivider`       | `ChatDateDivider`       | `<div>`  | Date separator between groups         |
+| `dateDivider`       | `ChatDateDivider`       | `<div>`  | Date separator between groups (requires `features.dateDivider`) |
 
 ### Composer slots
 
@@ -106,7 +106,7 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 | Slot name         | Default component              | Element    | Description                            |
 | :---------------- | :----------------------------- | :--------- | :------------------------------------- |
 | `typingIndicator` | `ChatTypingIndicator`          | `<div>`    | Animated dots while assistant responds |
-| `unreadMarker`    | `ChatUnreadMarker`             | `<div>`    | "New messages" marker                  |
+| `unreadMarker`    | `ChatUnreadMarker`             | `<div>`    | "New messages" marker (requires `features.unreadMarker`) |
 | `scrollToBottom`  | `ChatScrollToBottomAffordance` | `<button>` | Floating scroll-to-bottom button       |
 | `suggestions`     | `ChatSuggestions`              | `<div>`    | Prompt suggestion chips                |
 
@@ -116,7 +116,7 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 - **Standalone components use short keys.** The flat, prefixed names above (for example, `messageAvatar`, `composerSendButton`) apply to `ChatBox`. When you render a leaf component directly, it uses its own short keys — `<ChatMessage slots={{ avatar: MyAvatar }} />`, not `messageAvatar`.
 - **`*Root` slots are wrapper-only.** `conversationRoot`, `messageRoot`, and `composerRoot` swap the styled root element while the default children still render inside. To replace a region entirely, compose it yourself with the headless hooks.
 
-The `typingIndicator` and `unreadMarker` slots are surfaced for standalone composition but are not rendered by `ChatBox`'s default layout. To use them, render the standalone components in a custom layout with `ChatProvider`.
+The `dateDivider` and `unreadMarker` slots are opt-in: `ChatBox` only renders them when the matching `features.dateDivider` / `features.unreadMarker` flag is enabled. The `typingIndicator` slot is surfaced for standalone composition but is not rendered by `ChatBox`'s default layout—render the standalone component in a custom layout with `ChatProvider`.
 :::
 
 ## Hiding a slot
@@ -151,6 +151,8 @@ The `autoScroll` feature flag controls scroll behavior rather than slot visibili
 ```
 
 To conditionally show a custom component, keep the feature flag enabled and handle visibility in your slot component instead.
+
+Most feature flags default to `true`. The opt-in flags — `conversationList`, `dateDivider`, and `unreadMarker` — default to `false`, so their slots render only after you enable them.
 
 ## `slotProps` reference
 

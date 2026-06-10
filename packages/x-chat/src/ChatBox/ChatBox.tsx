@@ -281,9 +281,11 @@ ChatBox.propTypes = {
     ]),
     conversationHeader: PropTypes.bool,
     conversationList: PropTypes.bool,
+    dateDivider: PropTypes.bool,
     helperText: PropTypes.bool,
     scrollToBottom: PropTypes.bool,
     suggestions: PropTypes.bool,
+    unreadMarker: PropTypes.bool,
   }),
   /**
    * Used to determine the avatar URL for a given message author.
@@ -641,6 +643,8 @@ ChatBox.propTypes = {
    *   `conversationHeaderInfo`, `conversationTitle`, `conversationSubtitle`,
    *   `conversationHeaderActions`.
    * - Message list — `messageList`, `messageGroup`, `dateDivider`, `unreadMarker`.
+   *   The divider slots render only when the matching `features.dateDivider` /
+   *   `features.unreadMarker` flag is enabled.
    * - Message — `messageRoot`, `messageAvatar`, `messageContent`, `messageMeta`,
    *   `messageInlineMeta`, `messageError`, `messageActions`, `messageAuthorName`.
    *   Pass `null` to a presentational slot (`messageAvatar`, `messageMeta`,

@@ -17,3 +17,5 @@ export {
   renderDefaultTextPart,
   renderDefaultToolPart,
 } from '../message/defaultMessagePartRenderers';
+export { useRovingFocus } from './useRovingFocus';
+export type { UseRovingFocusParameters, UseRovingFocusReturn } from './useRovingFocus';

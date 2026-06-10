@@ -33,10 +33,11 @@ Grouping is based on:
 
 ## Date dividers
 
-When consecutive messages span different calendar dates, a date divider is rendered automatically between them.
+When consecutive messages span different calendar dates, a date divider can be rendered between them.
 The divider shows a localized date string and is styled as a centered label with horizontal rules.
+Dividers are disabled by default—enable them with `features={{ dateDivider: true }}`.
 
-The demo below shows how to customize the date format through `slotProps`:
+The demo below enables the feature and customizes the date format through `slotProps`:
 
 {{"demo": "../../material/message-list/DateDividerFormat.js", "defaultCodeOpen": false, "bg": "inline"}}
 
@@ -64,7 +65,7 @@ Inside `ChatBox`, the message list renders this component tree:
 
 ```text
 ChatMessageList                     ← scrollable container
-  ChatDateDivider                   ← date separator between groups
+  ChatDateDivider                   ← date separator between groups (opt-in)
   ChatMessageGroup                  ← groups consecutive same-author messages
     ChatMessage                     ← individual message row
       ChatMessageAvatar             ← author avatar
@@ -98,7 +99,7 @@ The following slots are available for customization through `ChatBox`:
 | `meta`        | `ChatMessageMeta`    | Timestamp, status, streaming progress, edited label |
 | `actions`     | `ChatMessageActions` | Hover action menu                                   |
 | `group`       | `ChatMessageGroup`   | Same-author message group                           |
-| `dateDivider` | `ChatDateDivider`    | Date separator                                      |
+| `dateDivider` | `ChatDateDivider`    | Date separator (requires `features.dateDivider`)    |
 
 ## See also
 

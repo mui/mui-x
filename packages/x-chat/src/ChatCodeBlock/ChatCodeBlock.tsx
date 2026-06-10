@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
+import { useMessageContentTabIndex } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { useCopyToClipboard } from '../internals/useCopyToClipboard';
 import { useChatCodeBlockUtilityClasses, type ChatCodeBlockClasses } from './chatCodeBlockClasses';
@@ -152,6 +153,9 @@ const ChatCodeBlock = React.forwardRef<HTMLDivElement, ChatCodeBlockProps>(
     const classes = useChatCodeBlockUtilityClasses(classesProp);
 
     const { copyState, copy } = useCopyToClipboard();
+    // Inside a roving message list the copy button leaves the tab order until
+    // the user drills into the message (Enter); it stays mouse-clickable.
+    const contentTabIndex = useMessageContentTabIndex();
 
     const handleCopy = () => copy(children);
     let copyButtonLabel = 'Copy';
@@ -173,6 +177,7 @@ const ChatCodeBlock = React.forwardRef<HTMLDivElement, ChatCodeBlockProps>(
             onClick={handleCopy}
             aria-label={copyButtonLabel}
             title={copyButtonLabel}
+            tabIndex={contentTabIndex}
           >
             {copyState === 'copied' ? <CheckIcon /> : <CopyIcon />}
           </ChatCodeBlockCopyButton>

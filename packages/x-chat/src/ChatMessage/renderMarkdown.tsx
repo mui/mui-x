@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import Markdown, { RuleType, type MarkdownToJSX } from 'markdown-to-jsx';
+import { useMessageContentTabIndex } from '@mui/x-chat-headless';
 import { normalizeMarkdownForRender } from '@mui/x-chat-headless/internals';
 import { ChatCodeBlock } from '../ChatCodeBlock';
 import { useStreamingMarkdownRepair } from '../internals/streamingMarkdownRepair';
@@ -27,6 +28,20 @@ const sanitizer: NonNullable<MarkdownToJSX.Options['sanitizer']> = (value) => {
   }
 };
 
+// Markdown links open in a new tab (the sanitizer above already neutralised the
+// href) and participate in the message list's drill-in model: inside a roving
+// list they stay out of the tab order until the user drills into the message
+// with Enter, keeping the whole list a single Tab stop. Mouse clicks work
+// throughout, and outside a roving list the tab order is untouched.
+function MarkdownLink({ children, ...other }: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+  const contentTabIndex = useMessageContentTabIndex();
+  return (
+    <a target="_blank" rel="noopener noreferrer" tabIndex={contentTabIndex} {...other}>
+      {children}
+    </a>
+  );
+}
+
 const markdownOptions: MarkdownToJSX.Options = {
   // Always emit block-level wrappers (so a lone line becomes a `<p>`, matching the
   // chat bubble's `& p`/`& pre` styling), but use a Fragment wrapper so no extra
@@ -37,8 +52,7 @@ const markdownOptions: MarkdownToJSX.Options = {
   disableParsingRawHTML: true,
   sanitizer,
   overrides: {
-    // Open links in a new tab; the sanitizer above already neutralised the href.
-    a: { props: { target: '_blank', rel: 'noopener noreferrer' } },
+    a: { component: MarkdownLink },
   },
   // Route fenced code blocks to the themed ChatCodeBlock, which owns the copy
   // button, language label, and optional highlighter slot.

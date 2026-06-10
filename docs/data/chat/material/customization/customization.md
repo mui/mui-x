@@ -138,7 +138,7 @@ This is useful for setting `aria-label` attributes, `sx` overrides, or other com
 | `messageMeta`          | `Partial<ChatMessageMetaProps>`              | Message timestamp       |
 | `messageActions`       | `Partial<ChatMessageActionsProps>`           | Message action menu     |
 | `messageGroup`         | `Partial<ChatMessageGroupProps>`             | Message group container |
-| `dateDivider`          | `Partial<ChatDateDividerProps>`              | Date separator          |
+| `dateDivider`          | `Partial<ChatDateDividerProps>`              | Date separator (requires `features.dateDivider`) |
 | `composerRoot`         | `Partial<ChatComposerProps>`                 | Composer form root      |
 | `composerInput`        | `Partial<ChatComposerTextAreaProps>`         | Composer textarea       |
 | `composerSendButton`   | `Partial<ChatComposerSendButtonProps>`       | Send button             |
@@ -146,7 +146,7 @@ This is useful for setting `aria-label` attributes, `sx` overrides, or other com
 | `composerToolbar`      | `Partial<ChatComposerToolbarProps>`          | Toolbar container       |
 | `composerHelperText`   | `Partial<ChatComposerHelperTextProps>`       | Helper text below input |
 | `typingIndicator`      | `Partial<ChatTypingIndicatorProps>`          | Typing indicator        |
-| `unreadMarker`         | `Partial<ChatUnreadMarkerProps>`             | Unread marker           |
+| `unreadMarker`         | `Partial<ChatUnreadMarkerProps>`             | Unread marker (requires `features.unreadMarker`) |
 | `scrollToBottom`       | `Partial<ChatScrollToBottomAffordanceProps>` | Scroll to bottom button |
 
 ## slots
@@ -193,7 +193,7 @@ const CustomMessageContent = React.forwardRef(
 | `messageMeta`               | `ChatMessageMeta`               | Message timestamp and status |
 | `messageActions`            | `ChatMessageActions`            | Message action menu          |
 | `messageGroup`              | `ChatMessageGroup`              | Groups consecutive messages  |
-| `dateDivider`               | `ChatDateDivider`               | Date boundary separator      |
+| `dateDivider`               | `ChatDateDivider`               | Date boundary separator (requires `features.dateDivider`) |
 | `composerRoot`              | `ChatComposer`                  | Composer form                |
 | `composerInput`             | `ChatComposerTextArea`          | Textarea input               |
 | `composerSendButton`        | `ChatComposerSendButton`        | Send button                  |
@@ -201,7 +201,7 @@ const CustomMessageContent = React.forwardRef(
 | `composerToolbar`           | `ChatComposerToolbar`           | Toolbar container            |
 | `composerHelperText`        | `ChatComposerHelperText`        | Helper text                  |
 | `typingIndicator`           | `ChatTypingIndicator`           | Typing indicator             |
-| `unreadMarker`              | `ChatUnreadMarker`              | Unread message marker        |
+| `unreadMarker`              | `ChatUnreadMarker`              | Unread message marker (requires `features.unreadMarker`) |
 | `scrollToBottom`            | `ChatScrollToBottomAffordance`  | Scroll to bottom affordance  |
 
 ## See also

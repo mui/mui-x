@@ -239,24 +239,38 @@ describe('ChatBox', () => {
   });
 
   describe('row dividers', () => {
-    it('renders a date divider at a calendar-day boundary in the default list', () => {
+    const dayBoundaryMessages = [
+      {
+        id: 'm1',
+        role: 'user' as const,
+        createdAt: '2026-03-13T10:00:00.000Z',
+        parts: [{ type: 'text' as const, text: 'Day one' }],
+      },
+      {
+        id: 'm2',
+        role: 'user' as const,
+        createdAt: '2026-03-14T10:00:00.000Z',
+        parts: [{ type: 'text' as const, text: 'Day two' }],
+      },
+    ];
+
+    it('does not render date dividers by default', () => {
+      render(
+        <ChatBox adapter={createAdapter()} initialMessages={dayBoundaryMessages}>
+          {null}
+        </ChatBox>,
+      );
+
+      // Dividers are an opt-in feature; a day boundary alone must not render one.
+      expect(document.querySelector('.MuiChatMessage-dateDivider')).toBe(null);
+    });
+
+    it('renders a date divider at a calendar-day boundary when features.dateDivider is enabled', () => {
       render(
         <ChatBox
           adapter={createAdapter()}
-          initialMessages={[
-            {
-              id: 'm1',
-              role: 'user',
-              createdAt: '2026-03-13T10:00:00.000Z',
-              parts: [{ type: 'text', text: 'Day one' }],
-            },
-            {
-              id: 'm2',
-              role: 'user',
-              createdAt: '2026-03-14T10:00:00.000Z',
-              parts: [{ type: 'text', text: 'Day two' }],
-            },
-          ]}
+          features={{ dateDivider: true }}
+          initialMessages={dayBoundaryMessages}
         >
           {null}
         </ChatBox>,
@@ -266,25 +280,13 @@ describe('ChatBox', () => {
       expect(document.querySelectorAll('.MuiChatMessage-dateDivider').length).toBe(1);
     });
 
-    it('hides date dividers when slots.dateDivider is null', () => {
+    it('hides date dividers when slots.dateDivider is null even with the feature enabled', () => {
       render(
         <ChatBox
           adapter={createAdapter()}
+          features={{ dateDivider: true }}
           slots={{ dateDivider: null }}
-          initialMessages={[
-            {
-              id: 'm1',
-              role: 'user',
-              createdAt: '2026-03-13T10:00:00.000Z',
-              parts: [{ type: 'text', text: 'Day one' }],
-            },
-            {
-              id: 'm2',
-              role: 'user',
-              createdAt: '2026-03-14T10:00:00.000Z',
-              parts: [{ type: 'text', text: 'Day two' }],
-            },
-          ]}
+          initialMessages={dayBoundaryMessages}
         >
           {null}
         </ChatBox>,
@@ -293,10 +295,35 @@ describe('ChatBox', () => {
       expect(document.querySelector('.MuiChatMessage-dateDivider')).toBe(null);
     });
 
-    it('renders the unread marker at the conversation unread boundary', () => {
+    it('does not render the unread marker by default', () => {
       render(
         <ChatBox
           adapter={createAdapter()}
+          initialConversations={[{ id: 'c1', title: 'General', unreadCount: 1 }]}
+          initialActiveConversationId="c1"
+          initialMessages={[
+            { id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Read' }] },
+            {
+              id: 'm2',
+              role: 'assistant',
+              status: 'sent',
+              parts: [{ type: 'text', text: 'Unread' }],
+            },
+          ]}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      // Opt-in feature; an unread boundary alone must not render the marker.
+      expect(document.querySelector('.MuiChatUnreadMarker-root')).toBe(null);
+    });
+
+    it('renders the unread marker at the unread boundary when features.unreadMarker is enabled', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          features={{ unreadMarker: true }}
           initialConversations={[{ id: 'c1', title: 'General', unreadCount: 1 }]}
           initialActiveConversationId="c1"
           initialMessages={[

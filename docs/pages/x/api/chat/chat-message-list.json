@@ -4,6 +4,10 @@
       "type": { "name": "union", "description": "{ buffer?: number }<br>&#124;&nbsp;bool" },
       "default": "true"
     },
+    "enableRovingFocus": { "type": { "name": "bool" }, "default": "true" },
+    "features": {
+      "type": { "name": "shape", "description": "{ dateDivider?: bool, unreadMarker?: bool }" }
+    },
     "renderItem": { "type": { "name": "func" } }
   },
   "name": "ChatMessageList",

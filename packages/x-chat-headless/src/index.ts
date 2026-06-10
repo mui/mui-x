@@ -204,7 +204,14 @@ export {
 export { getDefaultMessagePartRenderer } from './message/defaultMessagePartRenderers';
 export { MessageGroup, createTimeWindowGroupKey } from './message-group';
 export { SuggestionItem, SuggestionsRoot } from './suggestions';
-export { MessageListDateDivider, MessageListRoot, useMessageListContext } from './message-list';
+export {
+  MessageListDateDivider,
+  MessageListRoot,
+  useMessageActionable,
+  useMessageContentTabIndex,
+  useMessageListContext,
+  useMessageRovingItem,
+} from './message-list';
 
 export type {
   ChatLayoutProps,
@@ -382,6 +389,7 @@ export type {
   MessageListRootProps,
   MessageListRootSlotProps,
   MessageListRootSlots,
+  MessageRovingState,
 } from './message-list';
 
 // OwnerState types

@@ -113,6 +113,17 @@ const ChatMessageStyled = styled('div', {
   };
   const paddingBottom = densityPaddingBlock[ownerState?.density ?? 'standard'];
 
+  // The article is the message list's roving tabindex item, so it needs a
+  // visible keyboard focus indicator (WCAG 2.4.7). Inset so the ring is not
+  // clipped by the scroller's overflow.
+  const focusRing = {
+    '&:focus-visible': {
+      outline: `2px solid ${(theme.vars || theme).palette.primary.main}`,
+      outlineOffset: -2,
+      borderRadius: theme.shape.borderRadius,
+    },
+  };
+
   if (isCompact) {
     // Compact: avatar and author name share the first row, content below.
     // For grouped messages (not first in group) the avatar column stays for alignment
@@ -126,6 +137,7 @@ const ChatMessageStyled = styled('div', {
       paddingInline: theme.spacing(2),
       paddingBlock: `0 ${paddingBottom}`,
       fontFamily: theme.typography.fontFamily,
+      ...focusRing,
       ...(isGrouped
         ? {
             gridTemplateColumns: 'var(--MuiChatMessage-avatarSize) 1fr auto',
@@ -174,6 +186,7 @@ const ChatMessageStyled = styled('div', {
       paddingBlockEnd: theme.spacing(0.25),
     },
     fontFamily: theme.typography.fontFamily,
+    ...focusRing,
     ...(isOwnMessage && {
       gridTemplateColumns: isGrouped ? '1fr var(--MuiChatMessage-avatarSize)' : '1fr auto',
       gridTemplateAreas: isGrouped

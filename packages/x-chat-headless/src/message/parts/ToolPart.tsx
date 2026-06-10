@@ -11,6 +11,7 @@ import type { ChatPartRenderer, ChatPartRendererProps } from '../../renderers/ch
 import type { ChatRole } from '../../types/chat-entities';
 import { useChat } from '../../hooks/useChat';
 import { useChatLocaleText } from '../../chat/internals/ChatLocaleContext';
+import { useMessageContentTabIndex } from '../../message-list/internals/MessageRovingContext';
 import { formatStructuredValue } from './partUtils';
 
 type ToolPart = ChatToolMessagePart | ChatDynamicToolMessagePart;
@@ -108,6 +109,9 @@ function ToolPayloadSection(props: {
   const { label, ownerState, section, slotProps, slots, value } = props;
   const formatted = React.useMemo(() => formatStructuredValue(value), [value]);
   const previewValue = React.useMemo(() => buildPreviewValue(formatted), [formatted]);
+  // Inside a roving message list the section disclosure leaves the tab order
+  // until the user drills into the message (Enter); it stays mouse-clickable.
+  const contentTabIndex = useMessageContentTabIndex();
   const sectionOwnerState = React.useMemo<ToolPartSectionOwnerState>(
     () => ({
       ...ownerState,
@@ -129,6 +133,9 @@ function ToolPayloadSection(props: {
     elementType: SectionSummary,
     externalSlotProps: slotProps?.sectionSummary,
     ownerState: sectionOwnerState,
+    additionalProps: {
+      tabIndex: contentTabIndex,
+    },
   });
   const sectionContentProps = useSlotProps({
     elementType: SectionContent,
@@ -211,10 +218,17 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
       className,
     },
   });
+  // Inside a roving message list the tool's interactive elements (disclosure
+  // header, approve/deny buttons) leave the tab order until the user drills
+  // into the message (Enter); they stay mouse-clickable.
+  const contentTabIndex = useMessageContentTabIndex();
   const headerProps = useSlotProps({
     elementType: Header,
     externalSlotProps: resolvedSlotProps?.header,
     ownerState,
+    additionalProps: {
+      tabIndex: contentTabIndex,
+    },
   });
   const titleProps = useSlotProps({
     elementType: Title,
@@ -246,11 +260,17 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
     elementType: ApproveButton,
     externalSlotProps: resolvedSlotProps?.approveButton,
     ownerState,
+    additionalProps: {
+      tabIndex: contentTabIndex,
+    },
   });
   const denyButtonProps = useSlotProps({
     elementType: DenyButton,
     externalSlotProps: resolvedSlotProps?.denyButton,
     ownerState,
+    additionalProps: {
+      tabIndex: contentTabIndex,
+    },
   });
   const { toolInvocation } = part;
   const toolTitle = toolInvocation.title ?? toolInvocation.toolName;

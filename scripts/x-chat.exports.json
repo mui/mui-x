@@ -91,6 +91,7 @@
   { "name": "chatMessageListClasses", "kind": "Variable" },
   { "name": "ChatMessageListClasses", "kind": "Interface" },
   { "name": "ChatMessageListClassKey", "kind": "TypeAlias" },
+  { "name": "ChatMessageListFeatures", "kind": "Interface" },
   { "name": "ChatMessageListProps", "kind": "Interface" },
   { "name": "ChatMessageMeta", "kind": "Variable" },
   { "name": "ChatMessageMetaProps", "kind": "Interface" },

@@ -195,12 +195,12 @@ Pass additional props to any slot without replacing the component:
 
 ### Messages list
 
-| Slot           | Default            | Description                   |
-| :------------- | :----------------- | :---------------------------- |
-| `messageList`  | `ChatMessageList`  | Scrollable message container  |
-| `messageGroup` | `ChatMessageGroup` | Same-author message group     |
-| `dateDivider`  | `ChatDateDivider`  | Date separator between groups |
-| `unreadMarker` | `ChatUnreadMarker` | "New messages" marker         |
+| Slot           | Default            | Description                                                  |
+| :------------- | :----------------- | :----------------------------------------------------------- |
+| `messageList`  | `ChatMessageList`  | Scrollable message container                                 |
+| `messageGroup` | `ChatMessageGroup` | Same-author message group                                    |
+| `dateDivider`  | `ChatDateDivider`  | Date separator between groups (requires `features.dateDivider`) |
+| `unreadMarker` | `ChatUnreadMarker` | "New messages" marker (requires `features.unreadMarker`)     |
 
 ### Per message
 
@@ -245,6 +245,8 @@ Toggle built-in features on or off. When disabled, the corresponding slot is **n
   adapter={adapter}
   features={{
     conversationList: true, // show the conversation sidebar
+    dateDivider: true, // show date separators between calendar days
+    unreadMarker: true, // show the "new messages" marker
     attachments: false, // hide attach button
     helperText: false, // hide helper text
     scrollToBottom: false, // hide scroll-to-bottom button
@@ -253,6 +255,8 @@ Toggle built-in features on or off. When disabled, the corresponding slot is **n
   }}
 />
 ```
+
+`conversationList`, `dateDivider`, and `unreadMarker` are opt-in and default to `false`; the other flags default to `true`.
 
 ## Hiding a slot
 

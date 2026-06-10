@@ -26,7 +26,7 @@ Toggle role, status, density, and grouping on a single `ChatMessage` bubble:
 
 ### Message list
 
-`ChatMessageList` virtualizes rendering, manages auto-scroll, and inserts dividers between days:
+`ChatMessageList` virtualizes rendering, manages auto-scroll, and can insert opt-in dividers between days:
 
 {{"demo": "ChatMessageListPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -109,7 +109,7 @@ Inside `ChatBox`, the message list renders a subtree of themed components:
 
 ```text
 ChatMessageList                     ← scrollable container
-  MessageListDateDivider            ← date separator between message groups
+  MessageListDateDivider            ← date separator between message groups (opt-in)
   ChatMessageGroup                  ← groups consecutive same-author messages
     ChatMessage                     ← individual message row
       ChatMessageAvatar             ← author avatar
@@ -133,9 +133,14 @@ See [Message appearance](/x/react-chat/display/message-appearance/) for grouping
 
 ### Date dividers
 
-When consecutive messages span different calendar dates, the message list renders a date divider automatically between them.
+When consecutive messages span different calendar dates, the message list can render a date divider between them.
+Dividers are disabled by default—enable them with the `dateDivider` feature flag:
 
-See [Message appearance](/x/react-chat/display/message-appearance/) for date divider customization.
+```tsx
+<ChatBox adapter={adapter} features={{ dateDivider: true }} />
+```
+
+See [Date divider](/x/react-chat/display/date-divider/) and [Message appearance](/x/react-chat/display/message-appearance/) for customization.
 
 ### Auto-scrolling
 

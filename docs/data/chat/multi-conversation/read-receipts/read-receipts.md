@@ -60,6 +60,12 @@ This `unread` flag drives both the badge visibility and the bold title weight in
 `ChatUnreadMarker` is an in-thread divider that appears inside the message list at the boundary between already-read messages and the first unread message.
 It displays a "New messages" label (localizable via `unreadMarkerLabel`) styled as a horizontal rule with a centered caption.
 
+The marker is disabled by default. Enable it on `ChatBox` (or a standalone `ChatMessageList`) with the `unreadMarker` feature flag:
+
+```tsx
+<ChatBox adapter={adapter} features={{ unreadMarker: true }} />
+```
+
 The component is position-aware: it reads `unreadCount` and `readState` from the active `ChatConversation` and calculates which message index sits at the read/unread boundary.
 It renders itself only for that one message and returns `null` for every other message, so you can render it inside every list item without any extra bookkeeping:
 
@@ -83,10 +89,11 @@ The marker chooses its position using these rules:
 
 ### Customizing `ChatUnreadMarker`
 
-Pass `slotProps.unreadMarker` on `ChatBox` to forward extra props, or swap the component entirely with `slots.unreadMarker`:
+With the feature enabled, pass `slotProps.unreadMarker` on `ChatBox` to forward extra props, or swap the component entirely with `slots.unreadMarker`:
 
 ```tsx
 <ChatBox
+  features={{ unreadMarker: true }}
   slotProps={{
     unreadMarker: {
       label: <strong>Unread messages below</strong>,
