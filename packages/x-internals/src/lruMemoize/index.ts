@@ -1,1 +1,2 @@
-export { lruMemoize } from 'reselect';
+export { lruMemoize } from './lruMemoize';
+export type { LruMemoizeOptions } from './lruMemoize';

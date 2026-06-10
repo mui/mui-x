@@ -1,24 +1,39 @@
-import {
-  lruMemoize,
-  createSelectorCreator,
-  OverrideMemoizeOptions,
-  UnknownMemoizer,
-} from 'reselect';
+import { lruMemoize, LruMemoizeOptions } from '../lruMemoize/lruMemoize';
+import { weakMapMemoize } from './weakMapMemoize';
 import type { CreateSelectorFunction } from './createSelectorType';
 
 export type { CreateSelectorFunction } from './createSelectorType';
 
 /* eslint-disable no-underscore-dangle */ // __cacheKey__
 
-const reselectCreateSelector = createSelectorCreator({
-  memoize: lruMemoize,
-  memoizeOptions: {
-    maxSize: 1,
-    equalityCheck: Object.is,
-  },
-});
+interface MemoizedSelectorOptions {
+  memoizeOptions?: LruMemoizeOptions;
+}
 
-type SelectorWithArgs = ReturnType<typeof reselectCreateSelector> & { selectorArgs: any[3] };
+/**
+ * Combines input selectors and a combiner into a single memoized selector,
+ * with the same memoization strategy as `reselect`:
+ * the combiner is memoized on its input values (latest call only),
+ * while the selector itself is memoized on its arguments with a weak cache.
+ */
+function createMemoizedSelector(
+  selectorsAndCombiner: Function[],
+  options?: MemoizedSelectorOptions,
+): SelectorWithArgs {
+  const combiner = selectorsAndCombiner[selectorsAndCombiner.length - 1];
+  const inputSelectors = selectorsAndCombiner.slice(0, -1);
+  const memoizedCombiner = lruMemoize(
+    combiner as (...args: any[]) => any,
+    options?.memoizeOptions ?? { equalityCheck: Object.is },
+  );
+
+  return weakMapMemoize((...args: any[]) => {
+    const values = inputSelectors.map((inputSelector) => inputSelector(...args));
+    return memoizedCombiner(...values);
+  }) as unknown as SelectorWithArgs;
+}
+
+type SelectorWithArgs = ((...args: any[]) => any) & { selectorArgs: any[3] };
 
 /**
  * Creates a selector function that can be used to derive values from the store's state.
@@ -134,7 +149,7 @@ export const createSelector = ((
 /* eslint-enable id-denylist */
 
 export const createSelectorMemoizedWithOptions =
-  (options?: OverrideMemoizeOptions<UnknownMemoizer>): CreateSelectorFunction =>
+  (options?: MemoizedSelectorOptions): CreateSelectorFunction =>
   (...inputs: any[]) => {
     type CacheKey = { id: number };
 
@@ -166,13 +181,13 @@ export const createSelectorMemoizedWithOptions =
     let fn = cache.get(cacheKey);
     if (!fn) {
       const selectors = inputs.length === 1 ? [((x: any) => x), combiner] : inputs
-      let reselectArgs = inputs;
+      let selectorsAndCombiner = inputs;
       const selectorArgs = [undefined, undefined, undefined];
       switch (argsLength) {
         case 0:
           break;
         case 1: {
-          reselectArgs = [
+          selectorsAndCombiner = [
             ...selectors.slice(0, -1),
             () => selectorArgs[0],
             combiner
@@ -180,7 +195,7 @@ export const createSelectorMemoizedWithOptions =
           break;
         }
         case 2: {
-          reselectArgs = [
+          selectorsAndCombiner = [
             ...selectors.slice(0, -1),
             () => selectorArgs[0],
             () => selectorArgs[1],
@@ -189,7 +204,7 @@ export const createSelectorMemoizedWithOptions =
           break;
         }
         case 3: {
-          reselectArgs = [
+          selectorsAndCombiner = [
             ...selectors.slice(0, -1),
             () => selectorArgs[0],
             () => selectorArgs[1],
@@ -205,11 +220,7 @@ export const createSelectorMemoizedWithOptions =
               'Consider restructuring your selector to use fewer arguments.',
           );
       }
-      if (options) {
-        reselectArgs = [...reselectArgs, options];
-      }
-
-      fn = reselectCreateSelector(...(reselectArgs as any)) as unknown as SelectorWithArgs;
+      fn = createMemoizedSelector(selectorsAndCombiner as Function[], options);
       fn.selectorArgs = selectorArgs;
 
       cache.set(cacheKey, fn);
