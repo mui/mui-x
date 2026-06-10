@@ -12,6 +12,7 @@ import {
   RadarSeriesMarks,
   type RadarChartSlotProps,
   type RadarChartSlots,
+  FocusedRadarMark,
 } from '@mui/x-charts/RadarChart';
 import { useThemeProps } from '@mui/material/styles';
 import { useRadarChartProps } from '@mui/x-charts/internals';
@@ -101,6 +102,7 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
           <RadarSeriesArea />
           {highlight === 'axis' && <RadarAxisHighlight />}
           <RadarSeriesMarks />
+          <FocusedRadarMark />
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>

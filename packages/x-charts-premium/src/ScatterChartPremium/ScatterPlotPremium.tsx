@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { ScatterPlot, type ScatterPlotProps } from '@mui/x-charts/ScatterChart';
+import { ScatterPlot, type RendererType, type ScatterPlotProps } from '@mui/x-charts/ScatterChart';
 import { ScatterWebGLPlot } from './webgl/ScatterWebGLPlot';
 
 export interface ScatterPlotPremiumProps extends Omit<ScatterPlotProps, 'renderer'> {
@@ -10,7 +10,7 @@ export interface ScatterPlotPremiumProps extends Omit<ScatterPlotProps, 'rendere
    * - `svg-batch`: Renders all scatter items in a single batched SVG path.
    * - `webgl`: Renders scatter items using WebGL for better performance, at the cost of some limitations.
    */
-  renderer: 'svg-single' | 'svg-batch' | 'webgl';
+  renderer: RendererType | 'webgl';
 }
 
 export function ScatterPlotPremium({ renderer, ...props }: ScatterPlotPremiumProps) {
