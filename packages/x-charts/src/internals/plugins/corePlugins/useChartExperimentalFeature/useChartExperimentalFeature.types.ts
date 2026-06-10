@@ -1,5 +1,8 @@
 import { type ChartPluginSignature } from '../../models';
-import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import type {
+  CartesianChartSeriesType,
+  ChartSeriesType,
+} from '../../../../models/seriesType/config';
 
 interface LineExperimentalFeatures {
   /**
@@ -15,8 +18,27 @@ interface LineExperimentalFeatures {
   enablePositionBasedPointerInteraction?: boolean;
 }
 
+interface CartesianExperimentalFeatures {
+  /**
+   * Automatically reduces the number of ticks and tick labels on ordinal axes
+   * (`band` / `point` scales) based on the rendered drawing area size.
+   *
+   * Explicit `tickNumber`, `tickSpacing`, or `tickInterval` values set by the
+   * consumer are not overridden.
+   */
+  useNewDefaultTickSpacing?: boolean;
+}
+
+/* True if any cartesian series (which can have `band` / `point` scales) is in `SeriesType`. */
+type HasCartesianSeries<SeriesType extends ChartSeriesType> = [
+  Extract<SeriesType, CartesianChartSeriesType>,
+] extends [never]
+  ? false
+  : true;
+
 export type ChartExperimentalFeatures<SeriesType extends ChartSeriesType = ChartSeriesType> =
-  'line' extends SeriesType ? LineExperimentalFeatures : {};
+  ('line' extends SeriesType ? LineExperimentalFeatures : {}) &
+    (HasCartesianSeries<SeriesType> extends true ? CartesianExperimentalFeatures : {});
 
 export interface UseChartExperimentalFeaturesParameters<
   SeriesType extends ChartSeriesType = ChartSeriesType,

@@ -56,6 +56,28 @@ This property defaults to 0 and is only available for ordinal axes, that is, axe
 
 {{"demo": "TickSpacing.js"}}
 
+### Responsive tick adjustment
+
+:::warning
+This feature is experimental—not because its behavior is unstable, but because enabling it by default would change the look of existing charts. It's opt-in for now and is expected to become the default in a future major release.
+:::
+
+Enable `useNewDefaultTickSpacing` on any cartesian chart (BarChart, LineChart, ScatterChart, Heatmap, and their Pro/Premium variants) to let ordinal axes (`band` and `point` scales) thin out ticks automatically based on the chart's rendered size, so labels don't pile up on narrow charts.
+
+The feature applies a 50-pixel default `tickSpacing` derived from the drawing area. It never overrides an explicit `tickSpacing`, `tickNumber`, or `tickInterval` set by your code—continuous axes are already size-aware through their default `tickNumber`.
+
+```jsx
+<BarChart
+  xAxis={[{ data: produce, scaleType: 'band' }]}
+  series={[{ data: sales }]}
+  experimentalFeatures={{ useNewDefaultTickSpacing: true }}
+/>
+```
+
+Drag the slider in the demo below to shrink the chart and toggle the feature to see ticks adapt.
+
+{{"demo": "ResponsiveTickAdjustment.js"}}
+
 ### Fixed tick position
 
 If you want more control over the tick position, you can use the `tickInterval` property.

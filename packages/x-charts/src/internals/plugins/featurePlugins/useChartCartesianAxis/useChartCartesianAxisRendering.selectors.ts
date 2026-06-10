@@ -51,10 +51,18 @@ import {
   selectorChartXAxisExtrema,
   selectorChartYAxisExtrema,
 } from './useChartAxisExtrema.selectors';
+import { selectorChartExperimentalFeaturesState } from '../../corePlugins/useChartExperimentalFeature/useChartExperimentalFeature.selectors';
 import { selectorChartZAxis } from '../useChartZAxis';
 import getMarkerSize, {
   type ScatterSizeGetter,
 } from '../../../../ScatterChart/seriesConfig/getMarkerSize';
+
+/* `selectorChartExperimentalFeaturesState` takes a feature name as a
+ * second argument, but `createSelectorMemoized` inputs are pure state
+ * selectors. Wrap it to bind the feature name we care about. */
+const selectorResponsiveTickAdjustment = (
+  state: Parameters<typeof selectorChartExperimentalFeaturesState>[0],
+) => selectorChartExperimentalFeaturesState(state, 'useNewDefaultTickSpacing');
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();
@@ -437,6 +445,7 @@ export const selectorChartXAxis = createSelectorMemoized(
   selectorChartXScales,
   selectorChartXAxisAutoSizes,
   selectorChartCartesianAxesGap,
+  selectorResponsiveTickAdjustment,
 
   function selectorChartXAxis(
     drawingArea,
@@ -447,6 +456,7 @@ export const selectorChartXAxis = createSelectorMemoized(
     scales,
     autoSizes,
     axesGap,
+    responsiveTickAdjustment,
   ) {
     return computeAxisValue({
       scales,
@@ -459,6 +469,7 @@ export const selectorChartXAxis = createSelectorMemoized(
       domains,
       autoSizes,
       axesGap,
+      responsiveTickAdjustment: responsiveTickAdjustment ?? false,
     });
   },
 );
@@ -472,6 +483,7 @@ export const selectorChartYAxis = createSelectorMemoized(
   selectorChartYScales,
   selectorChartYAxisAutoSizes,
   selectorChartCartesianAxesGap,
+  selectorResponsiveTickAdjustment,
 
   function selectorChartYAxis(
     drawingArea,
@@ -482,6 +494,7 @@ export const selectorChartYAxis = createSelectorMemoized(
     scales,
     autoSizes,
     axesGap,
+    responsiveTickAdjustment,
   ) {
     return computeAxisValue({
       scales,
@@ -494,6 +507,7 @@ export const selectorChartYAxis = createSelectorMemoized(
       domains,
       autoSizes,
       axesGap,
+      responsiveTickAdjustment: responsiveTickAdjustment ?? false,
     });
   },
 );
