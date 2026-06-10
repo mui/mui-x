@@ -107,11 +107,7 @@ export interface CommonLineSeriesType {
 }
 
 export interface LineSeriesType
-  extends
-    CommonSeriesType<number | null, 'line'>,
-    CartesianSeriesType,
-    StackableSeriesType,
-    CommonLineSeriesType {
+  extends CommonSeriesType<'line'>, CartesianSeriesType, StackableSeriesType, CommonLineSeriesType {
   type: 'line';
   /**
    * Defines how stacked series handle negative values.
