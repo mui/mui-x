@@ -7,16 +7,13 @@ import {
   type ChartsSlots,
   type ChartsSlotProps,
 } from '@mui/x-charts/internals';
+import { ChartsRadialGrid, type ChartsRadialGridProps } from '@mui/x-charts/ChartsRadialGrid';
 import {
-  Unstable_ChartsRadialGrid as ChartsRadialGrid,
-  type ChartsRadialGridProps,
-} from '@mui/x-charts/ChartsRadialGrid';
-import {
-  Unstable_ChartsRadialAxisHighlight as ChartsRadialAxisHighlight,
+  ChartsRadialAxisHighlight,
   type ChartsRadialAxisHighlightProps,
 } from '@mui/x-charts/ChartsRadialAxisHighlight';
-import { Unstable_ChartsRadiusAxis as ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
-import { Unstable_ChartsRotationAxis as ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
+import { ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';
+import { ChartsRotationAxis } from '@mui/x-charts/ChartsRotationAxis';
 import { ChartsLegend, type ChartsLegendSlots, type ChartsLegendSlotProps } from '../ChartsLegend';
 import { ChartsSurface } from '../ChartsSurface';
 import {
@@ -443,4 +440,4 @@ RadialLineChart.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { RadialLineChart as Unstable_RadialLineChart };
+export { RadialLineChart };
