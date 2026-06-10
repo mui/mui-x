@@ -7,6 +7,7 @@ import {
   type ScatterChartProps,
   type ScatterChartSlots,
   type ScatterChartSlotProps,
+  FocusedScatterMark,
 } from '@mui/x-charts/ScatterChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -155,6 +156,7 @@ const ScatterChartPremium = React.forwardRef(function ScatterChartPremium(
             )}
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
+            <FocusedScatterMark />
             <ChartsBrushOverlay />
             {children}
           </ChartsSvgLayer>

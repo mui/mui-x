@@ -324,6 +324,20 @@ If you're not using the axis highlight or the tooltip, consider disabling this f
 
 :::
 
+### Focus indicator
+
+Keyboard navigation is enabled by default, but the focus highlight is rendered by a dedicated SVG element that isn't included automatically when composing a chart.
+To make the focused item visible, add the focus component matching your series type—such as `FocusedBar`, `FocusedLineMark`, or `FocusedScatterMark`—inside the SVG.
+
+```jsx
+<ChartsContainer>
+  <BarPlot />
+  <FocusedBar />
+</ChartsContainer>
+```
+
+See [Accessibility—Composition](/x/react-charts/accessibility/#composition) for the full list of focus components per series type.
+
 ## Layering
 
 Use `ChartsLayerContainer`, `ChartsSvgLayer` and `ChartsWebGLLayer` to create multiple layers of elements that share the same coordinate system.
