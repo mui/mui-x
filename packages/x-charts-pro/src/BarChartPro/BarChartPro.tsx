@@ -7,6 +7,7 @@ import {
   type BarChartSlotProps,
   type BarChartSlots,
   BarPlot,
+  FocusedBar,
 } from '@mui/x-charts/BarChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -115,6 +116,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
             <BarPlot {...barPlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
+            <FocusedBar />
           </g>
           <ChartsAxis {...chartsAxisProps} />
           <ChartsZoomSlider />
