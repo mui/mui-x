@@ -21,9 +21,7 @@ export type OHLCValueType = [number, number, number, number];
 export type OHLCField = 'open' | 'high' | 'low' | 'close';
 
 export interface OHLCSeriesType
-  extends
-    Omit<CommonSeriesType<OHLCValueType | null, 'ohlc'>, 'valueFormatter'>,
-    CartesianSeriesType {
+  extends Omit<CommonSeriesType<'ohlc'>, 'valueFormatter'>, CartesianSeriesType {
   type: 'ohlc';
   /**
    * The OHLC data points.
