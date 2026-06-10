@@ -202,8 +202,12 @@ function WeatherTooltip({ type }: { type: 'weather' | 'wind' }) {
           {rows.map((row) => (
             <ChartsTooltipRow key={row.label} >
               <ChartsTooltipCell component="th">
-                <ChartsLabelMark type={row.mark} color={row.color} />
-                {row.label}
+                <Box
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                >
+                  <ChartsLabelMark type={row.mark} color={row.color} />
+                  {row.label}
+                </Box>
               </ChartsTooltipCell>
               <ChartsTooltipCell component="td">{row.value}</ChartsTooltipCell>
             </ChartsTooltipRow>

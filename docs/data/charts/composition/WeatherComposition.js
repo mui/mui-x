@@ -26,13 +26,10 @@ import { WeatherIcon } from './WeatherIcon';
 
 export default function WeatherComposition() {
   const [highlightedAxis, setHighlightedAxis] = React.useState([]);
-  const [tooltipAxis, setTooltipAxis] = React.useState([]);
 
   const sync = {
     highlightedAxis,
     onHighlightedAxisChange: setHighlightedAxis,
-    tooltipAxis,
-    onTooltipAxisChange: setTooltipAxis,
   };
 
   return (
@@ -102,28 +99,7 @@ function ForecastChart(props) {
           width: 56,
         },
       ]}
-      series={[
-        {
-          id: 'precipitation',
-          type: 'bar',
-          dataKey: 'precipitation',
-          yAxisId: 'precipitation',
-          label: 'Precipitation',
-          color: colors.precipitation,
-          valueFormatter: (value) => (value !== null ? `${value}mm` : ''),
-        },
-        {
-          id: 'temperature',
-          type: 'line',
-          dataKey: 'temperature',
-          yAxisId: 'temperature',
-          label: 'Temperature',
-          color: colors.temperature,
-          showMark: false,
-          curve: 'natural',
-          valueFormatter: (value) => (value !== null ? `${value}°C` : ''),
-        },
-      ]}
+      series={weatherSeries}
       height={310}
       margin={{ top: 64, right: 24, bottom: 8, left: 36 }}
     >
@@ -139,16 +115,69 @@ function ForecastChart(props) {
       <ChartsAxisHighlight x="band" />
       <ChartsAxisHighlight x="line" />
       <ChartsTooltipContainer>
-        <WeatherTooltip />
+        <WeatherTooltip type="weather" />
       </ChartsTooltipContainer>
     </ChartsContainer>
   );
 }
 
-function WeatherTooltip() {
+function WindChart(props) {
+  return (
+    <ChartsContainer
+      {...props}
+      dataset={forecast}
+      xAxis={[
+        {
+          id: 'time',
+          scaleType: 'band',
+          dataKey: 'time',
+          height: 0,
+          valueFormatter: (value) =>
+            value.toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              hour: 'numeric',
+            }),
+        },
+      ]}
+      yAxis={[
+        {
+          id: 'wind',
+          position: 'right',
+          min: 0,
+          width: 56,
+          tickInterval: [0, 4, 8],
+        },
+      ]}
+      series={windSeries}
+      height={150}
+      margin={{ top: 8, right: 24, bottom: 32, left: 86 }}
+      sx={{ [`& [data-series=gust]`]: { strokeDasharray: '4 4' } }}
+    >
+      <ChartsGrid horizontal />
+      <LinePlot />
+      <LineHighlightPlot />
+      <ChartsYAxis axisId="wind" label="Wind m/s" />
+      <ChartsAxisHighlight x="band" />
+      <ChartsAxisHighlight x="line" />
+      <ChartsTooltipContainer>
+        <WeatherTooltip type="wind" />
+      </ChartsTooltipContainer>
+    </ChartsContainer>
+  );
+}
+
+function WeatherTooltip({ type }) {
   const tooltipData = useAxesTooltip();
 
-  if (!tooltipData || tooltipData.length === 0) {
+  if (
+    !tooltipData ||
+    tooltipData.length === 0 ||
+    (type === 'weather' &&
+      !tooltipData[0].seriesItems.some((item) => item.seriesId === 'temperature')) ||
+    (type === 'wind' &&
+      !tooltipData[0].seriesItems.some((item) => item.seriesId === 'wind'))
+  ) {
     return null;
   }
 
@@ -195,8 +224,10 @@ function WeatherTooltip() {
           {rows.map((row) => (
             <ChartsTooltipRow key={row.label}>
               <ChartsTooltipCell component="th">
-                <ChartsLabelMark type={row.mark} color={row.color} />
-                {row.label}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <ChartsLabelMark type={row.mark} color={row.color} />
+                  {row.label}
+                </Box>
               </ChartsTooltipCell>
               <ChartsTooltipCell component="td">{row.value}</ChartsTooltipCell>
             </ChartsTooltipRow>
@@ -204,70 +235,6 @@ function WeatherTooltip() {
         </tbody>
       </ChartsTooltipTable>
     </ChartsTooltipPaper>
-  );
-}
-
-function WindChart(props) {
-  return (
-    <ChartsContainer
-      {...props}
-      dataset={forecast}
-      xAxis={[
-        {
-          id: 'time',
-          scaleType: 'band',
-          dataKey: 'time',
-          height: 0,
-          valueFormatter: (value) =>
-            value.toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-              hour: 'numeric',
-            }),
-        },
-      ]}
-      yAxis={[
-        {
-          id: 'wind',
-          position: 'right',
-          min: 0,
-          width: 56,
-          tickInterval: [0, 4, 8],
-        },
-      ]}
-      series={[
-        {
-          id: 'wind',
-          type: 'line',
-          dataKey: 'wind',
-          yAxisId: 'wind',
-          label: 'Wind',
-          color: colors.wind,
-          curve: 'linear',
-          valueFormatter: (value) => (value !== null ? `${value} m/s` : ''),
-        },
-        {
-          id: 'gust',
-          type: 'line',
-          dataKey: 'gust',
-          yAxisId: 'wind',
-          label: 'Wind gust',
-          color: colors.windGust,
-          curve: 'linear',
-          valueFormatter: (value) => (value !== null ? `${value} m/s` : ''),
-        },
-      ]}
-      height={150}
-      margin={{ top: 20, right: 24, bottom: 32, left: 86 }}
-      sx={{ [`& [data-series=gust]`]: { strokeDasharray: '4 4' } }}
-    >
-      <ChartsGrid horizontal />
-      <LinePlot />
-      <LineHighlightPlot />
-      <ChartsYAxis axisId="wind" label="Wind m/s" />
-      <ChartsAxisHighlight x="band" />
-      <ChartsAxisHighlight x="line" />
-    </ChartsContainer>
   );
 }
 
@@ -422,3 +389,49 @@ const colors = {
   wind: '#7e22ce',
   windGust: '#7c4dff',
 };
+
+const weatherSeries = [
+  {
+    id: 'precipitation',
+    type: 'bar',
+    dataKey: 'precipitation',
+    yAxisId: 'precipitation',
+    label: 'Precipitation',
+    color: colors.precipitation,
+    valueFormatter: (value) => (value !== null ? `${value}mm` : ''),
+  },
+  {
+    id: 'temperature',
+    type: 'line',
+    dataKey: 'temperature',
+    yAxisId: 'temperature',
+    label: 'Temperature',
+    color: colors.temperature,
+    showMark: false,
+    curve: 'natural',
+    valueFormatter: (value) => (value !== null ? `${value}°C` : ''),
+  },
+];
+
+const windSeries = [
+  {
+    id: 'wind',
+    type: 'line',
+    dataKey: 'wind',
+    yAxisId: 'wind',
+    label: 'Wind',
+    color: colors.wind,
+    curve: 'linear',
+    valueFormatter: (value) => (value !== null ? `${value} m/s` : ''),
+  },
+  {
+    id: 'gust',
+    type: 'line',
+    dataKey: 'gust',
+    yAxisId: 'wind',
+    label: 'Wind gust',
+    color: colors.windGust,
+    curve: 'linear',
+    valueFormatter: (value) => (value !== null ? `${value} m/s` : ''),
+  },
+];
