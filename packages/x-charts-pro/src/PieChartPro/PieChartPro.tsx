@@ -7,6 +7,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import {
+  FocusedPieArc,
   type PieChartProps,
   type PieChartSlotProps,
   type PieChartSlots,
@@ -115,6 +116,7 @@ const PieChartPro = React.forwardRef<HTMLDivElement, PieChartProProps>(
           )}
           <ChartsSurface {...chartsSurfaceProps}>
             <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
+            <FocusedPieArc />
             <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
             {children}
           </ChartsSurface>

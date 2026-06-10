@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import {
+  FocusedScatterMark,
   type ScatterChartProps,
   type ScatterChartSlotProps,
   type ScatterChartSlots,
@@ -131,6 +132,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           </g>
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
+          <FocusedScatterMark />
           <ChartsBrushOverlay />
           {children}
         </ChartsSurface>
