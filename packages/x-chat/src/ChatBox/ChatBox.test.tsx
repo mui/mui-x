@@ -1152,6 +1152,8 @@ describe('ChatBox', () => {
       );
 
       const menuButton = await screen.findByRole('button', { name: 'Open conversations' });
+      expect(menuButton).to.have.attribute('aria-haspopup', 'dialog');
+      expect(menuButton).to.have.attribute('aria-expanded', 'false');
       act(() => {
         menuButton.focus();
       });
@@ -1159,6 +1161,10 @@ describe('ChatBox', () => {
 
       const dialog = await screen.findByRole('dialog', { name: 'Open conversations' });
       expect(dialog).to.have.attribute('aria-modal', 'true');
+      expect(screen.getByRole('button', { name: 'Open conversations' })).to.have.attribute(
+        'aria-expanded',
+        'true',
+      );
       const closeButton = dialog.querySelector(
         'button[aria-label="Close conversations"]',
       ) as HTMLButtonElement;
@@ -1278,6 +1284,97 @@ describe('ChatBox', () => {
         'c1',
         'c1',
       ]);
+    });
+  });
+
+  describe('accessibility', () => {
+    it('exposes navigation/region/form landmarks with locale-driven names', async () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialConversations={[{ id: 'c1', title: 'General' }]}
+          initialActiveConversationId="c1"
+          features={conversationListFeatures}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('navigation', { name: 'Conversations' })).not.toBe(null);
+      });
+      expect(screen.getByRole('region', { name: 'Conversation' })).not.toBe(null);
+      expect(screen.getByRole('form', { name: 'Message composer' })).not.toBe(null);
+      expect(screen.getByRole('log')).not.toBe(null);
+      // The streaming-transition announcer is always rendered (empty until a
+      // response streams).
+      expect(screen.getByRole('status')).not.toBe(null);
+    });
+
+    it('lets localeText override the landmark names', () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          localeText={{
+            composerLandmarkLabel: 'Write here',
+            threadLandmarkLabel: 'Active chat',
+          }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      expect(screen.getByRole('form', { name: 'Write here' })).not.toBe(null);
+      expect(screen.getByRole('region', { name: 'Active chat' })).not.toBe(null);
+    });
+
+    it('keeps message content controls out of the tab order until Enter drills in', async () => {
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialMessages={[
+            {
+              id: 'm1',
+              role: 'assistant',
+              parts: [
+                {
+                  type: 'text',
+                  text: 'See [the docs](https://example.com)\n\n```js\nconst a = 1;\n```',
+                },
+              ],
+            },
+          ]}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      const article = screen.getByRole('article');
+      const link = screen.getByRole('link', { name: 'the docs' });
+      const copyButton = screen.getByRole('button', { name: 'Copy' });
+
+      // The article is the single tab stop; its interior controls are managed
+      // out of the tab order but stay mouse-clickable.
+      expect(article).to.have.attribute('tabindex', '0');
+      expect(link).to.have.attribute('tabindex', '-1');
+      expect(copyButton).to.have.attribute('tabindex', '-1');
+
+      act(() => {
+        article.focus();
+      });
+      fireEvent.keyDown(article, { key: 'Enter' });
+
+      expect(article).to.have.attribute('data-actionable', 'true');
+      await waitFor(() => {
+        expect(document.activeElement).toBe(link);
+      });
+      // Drilled in: the controls regain their natural tab order.
+      expect(link).not.to.have.attribute('tabindex');
+      expect(copyButton).not.to.have.attribute('tabindex');
+
+      fireEvent.keyDown(link, { key: 'Escape' });
+      expect(document.activeElement).toBe(article);
+      expect(link).to.have.attribute('tabindex', '-1');
     });
   });
 });
