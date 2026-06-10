@@ -1,4 +1,5 @@
 import {
+  type Gesture,
   type MoveEvent,
   type PanEvent,
   type PanGestureOptions,
@@ -136,6 +137,8 @@ export interface UseChartInteractionListenerParameters {}
 
 export interface UseChartInteractionListenerState {}
 
+export type RegisterGestures = (gestures: Gesture<string>[]) => void;
+
 export interface UseChartInteractionListenerInstance {
   /**
    * Adds an interaction listener to the SVG element.
@@ -151,6 +154,14 @@ export interface UseChartInteractionListenerInstance {
    * @param options The options to apply to the interaction.
    */
   updateZoomInteractionListeners: UpdateZoomInteractionListeners;
+  /**
+   * Registers additional gestures on the chart interaction element.
+   * Allows feature plugins to register the gestures they need, so the gesture
+   * implementations are only bundled together with the plugin using them.
+   *
+   * @param gestures The gestures to register.
+   */
+  registerGestures: RegisterGestures;
 }
 
 export type UseChartInteractionListenerSignature = ChartPluginSignature<{

@@ -4,22 +4,25 @@ import {
   GestureManager,
   MoveGesture,
   PanGesture,
-  PinchGesture,
-  PressAndDragGesture,
   PressGesture,
-  TapAndDragGesture,
   TapGesture,
-  TurnWheelGesture,
+  type PinchGesture,
+  type PressAndDragGesture,
+  type TapAndDragGesture,
+  type TurnWheelGesture,
 } from '@mui/x-internal-gestures/core';
 import { type ChartPlugin } from '../../models';
 import {
   type UseChartInteractionListenerSignature,
   type AddInteractionListener,
+  type RegisterGestures,
   type UpdateZoomInteractionListeners,
 } from './useChartInteractionListener.types';
 
 const preventDefault = (event: Event) => event.preventDefault();
 
+// The zoom gestures are part of the type, but their implementations are only
+// registered (and bundled) by the plugins using them. See `registerGestures`.
 type GestureManagerTyped = GestureManager<
   string,
   | PanGesture<'pan'>
@@ -72,40 +75,6 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
             threshold: 0,
             maxPointers: 1,
           }),
-          // Zoom gestures
-          new PanGesture({
-            name: 'zoomPan',
-            threshold: 0,
-            preventIf: ['zoomTapAndDrag', 'zoomPressAndDrag'],
-          }),
-          new PinchGesture({
-            name: 'zoomPinch',
-            threshold: 5,
-          }),
-          new TurnWheelGesture({
-            name: 'zoomTurnWheel',
-            sensitivity: 0.01,
-            initialDelta: 1,
-            passive: false,
-          }),
-          new TurnWheelGesture({
-            name: 'panTurnWheel',
-            sensitivity: 0.5,
-            passive: false,
-          }),
-          new TapAndDragGesture({
-            name: 'zoomTapAndDrag',
-            dragThreshold: 10,
-          }),
-          new PressAndDragGesture({
-            name: 'zoomPressAndDrag',
-            dragThreshold: 10,
-            preventIf: ['zoomPinch'],
-          }),
-          new TapGesture({
-            name: 'zoomDoubleTapReset',
-            taps: 2,
-          }),
         ],
       });
     }
@@ -117,23 +86,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       return undefined;
     }
 
-    gestureManager.registerElement(
-      [
-        'pan',
-        'move',
-        'zoomPinch',
-        'zoomPan',
-        'zoomTurnWheel',
-        'panTurnWheel',
-        'tap',
-        'quickPress',
-        'zoomTapAndDrag',
-        'zoomPressAndDrag',
-        'zoomDoubleTapReset',
-        'brush',
-      ],
-      svg,
-    );
+    gestureManager.registerElement(['pan', 'move', 'tap', 'quickPress', 'brush'], svg);
 
     return () => {
       // Cleanup gesture manager
@@ -168,6 +121,28 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
     [chartsLayerContainerRef, gestureManagerRef],
   );
 
+  // Allows feature plugins (e.g. the pro zoom plugin) to register the gestures they
+  // need, so the gesture implementations are only bundled with the plugin using them.
+  // The core gestures are registered before feature plugins run their effects.
+  const registerGestures: RegisterGestures = React.useCallback(
+    (gestures) => {
+      const svg = chartsLayerContainerRef.current;
+      const gestureManager = gestureManagerRef.current;
+      if (!gestureManager || !svg) {
+        return;
+      }
+
+      gestureManager.addGestures(gestures);
+      gestureManager.registerElement(
+        gestures.map((gesture) => gesture.name) as Parameters<
+          GestureManagerTyped['registerElement']
+        >[0],
+        svg,
+      );
+    },
+    [chartsLayerContainerRef, gestureManagerRef],
+  );
+
   React.useEffect(() => {
     const svg = chartsLayerContainerRef.current;
 
@@ -188,6 +163,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
     instance: {
       addInteractionListener,
       updateZoomInteractionListeners,
+      registerGestures,
     },
   };
 };

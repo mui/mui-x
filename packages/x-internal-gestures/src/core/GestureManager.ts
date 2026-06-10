@@ -169,6 +169,24 @@ export class GestureManager<
   }
 
   /**
+   * Add gesture templates to the manager's template registry after construction.
+   * Templates already registered under the same name are kept untouched, making
+   * this method safe to call from React effects that may run multiple times.
+   *
+   * This allows optional gestures to be registered lazily by the feature using
+   * them, so they are only bundled when that feature is.
+   *
+   * @param gestures - The gesture instances to use as templates
+   */
+  public addGestures(gestures: Gesture<GestureName>[]): void {
+    gestures.forEach((gesture) => {
+      if (!this.gestureTemplates.has(gesture.name)) {
+        this.addGestureTemplate(gesture);
+      }
+    });
+  }
+
+  /**
    * Add a gesture template to the manager's template registry.
    * Templates serve as prototypes that can be cloned for individual elements.
    *
