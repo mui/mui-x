@@ -1,28 +1,30 @@
-import { adapter, storeClasses } from 'test/utils/scheduler';
+import { adapter, ResourceBuilder, storeClasses } from 'test/utils/scheduler';
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
+
+const BASE_PARAMS = { events: [], resources: [ResourceBuilder.new().build()] };
 
 storeClasses.forEach((storeClass) => {
   describe(`schedulerOtherSelectors - ${storeClass.name}`, () => {
     describe('isEditedEvent', () => {
       it('should return false when no event is active', () => {
-        const store = new storeClass.Value({ events: [] }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
         expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(false);
       });
 
       it('should return true when the given event ID matches the active event', () => {
-        const store = new storeClass.Value({ events: [] }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
         store.setEditedEventId('event-1');
         expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(true);
       });
 
       it('should return false when a different event is active', () => {
-        const store = new storeClass.Value({ events: [] }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
         store.setEditedEventId('event-2');
         expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(false);
       });
 
       it('should return false after the active event is cleared', () => {
-        const store = new storeClass.Value({ events: [] }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS }, adapter);
         store.setEditedEventId('event-1');
         expect(schedulerOtherSelectors.isEditedEvent(store.state, 'event-1')).to.equal(true);
 
@@ -34,7 +36,7 @@ storeClasses.forEach((storeClass) => {
     describe('visibleDate', () => {
       it('should return the visibleDate with the default display timezone applied', () => {
         const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
-        const state = new storeClass.Value({ events: [], visibleDate }, adapter).state;
+        const state = new storeClass.Value({ ...BASE_PARAMS, visibleDate }, adapter).state;
         const result = schedulerOtherSelectors.visibleDate(state);
 
         expect(result).toEqualDateTime(visibleDate);
@@ -43,7 +45,7 @@ storeClasses.forEach((storeClass) => {
       it('should apply the configured display timezone to the visibleDate', () => {
         const visibleDate = adapter.date('2025-07-03T12:00:00Z', 'default');
         const state = new storeClass.Value(
-          { events: [], visibleDate, displayTimezone: 'America/New_York' },
+          { ...BASE_PARAMS, visibleDate, displayTimezone: 'America/New_York' },
           adapter,
         ).state;
         const result = schedulerOtherSelectors.visibleDate(state);
@@ -54,7 +56,7 @@ storeClasses.forEach((storeClass) => {
 
       it('should return same reference when inputs have not changed', () => {
         const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
-        const state = new storeClass.Value({ events: [], visibleDate }, adapter).state;
+        const state = new storeClass.Value({ ...BASE_PARAMS, visibleDate }, adapter).state;
         const result1 = schedulerOtherSelectors.visibleDate(state);
         const result2 = schedulerOtherSelectors.visibleDate(state);
 
@@ -63,11 +65,11 @@ storeClasses.forEach((storeClass) => {
 
       it('should return a new reference when visibleDate changes', () => {
         const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
-        const store = new storeClass.Value({ events: [], visibleDate }, adapter);
+        const store = new storeClass.Value({ ...BASE_PARAMS, visibleDate }, adapter);
         const result1 = schedulerOtherSelectors.visibleDate(store.state);
 
         const newVisibleDate = adapter.date('2025-07-04T00:00:00Z', 'default');
-        store.updateStateFromParameters({ events: [], visibleDate: newVisibleDate }, adapter);
+        store.updateStateFromParameters({ ...BASE_PARAMS, visibleDate: newVisibleDate }, adapter);
         const result2 = schedulerOtherSelectors.visibleDate(store.state);
 
         expect(result1).to.not.equal(result2);
@@ -77,13 +79,13 @@ storeClasses.forEach((storeClass) => {
       it('should return a new reference when display timezone changes', () => {
         const visibleDate = adapter.date('2025-07-03T12:00:00Z', 'default');
         const store = new storeClass.Value(
-          { events: [], visibleDate, displayTimezone: 'default' },
+          { ...BASE_PARAMS, visibleDate, displayTimezone: 'default' },
           adapter,
         );
         const result1 = schedulerOtherSelectors.visibleDate(store.state);
 
         store.updateStateFromParameters(
-          { events: [], visibleDate, displayTimezone: 'America/New_York' },
+          { ...BASE_PARAMS, visibleDate, displayTimezone: 'America/New_York' },
           adapter,
         );
         const result2 = schedulerOtherSelectors.visibleDate(store.state);

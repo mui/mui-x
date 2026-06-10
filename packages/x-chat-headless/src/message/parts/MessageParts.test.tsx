@@ -129,6 +129,63 @@ describe('ReasoningPart', () => {
   });
 });
 
+describe('ToolPart sectionSummary slot', () => {
+  it('passes summaryLabel and previewValue through ownerState to a custom sectionSummary', () => {
+    let receivedOwnerState: any = null;
+
+    function CustomSectionSummary(props: React.HTMLAttributes<HTMLElement> & { ownerState?: any }) {
+      const { ownerState, children, ...other } = props;
+      receivedOwnerState = ownerState;
+      return (
+        <strong data-testid="custom-section-summary" {...other}>
+          {children}
+        </strong>
+      );
+    }
+
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'm1',
+            role: 'assistant',
+            parts: [
+              {
+                type: 'tool',
+                toolInvocation: {
+                  toolCallId: 'tc1',
+                  toolName: 'search',
+                  state: 'output-available',
+                  input: { query: 'hello' },
+                  output: { results: ['world'] },
+                },
+              },
+            ],
+          },
+        ]}
+      >
+        <MessageRoot messageId="m1">
+          <MessageContent
+            partProps={{
+              tool: {
+                slots: {
+                  sectionSummary: CustomSectionSummary,
+                },
+              },
+            }}
+          />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    expect(screen.getAllByTestId('custom-section-summary').length).to.equal(2);
+    expect(receivedOwnerState).not.to.equal(null);
+    expect(receivedOwnerState.summaryLabel).to.be.a('string');
+    expect(receivedOwnerState.previewValue).to.be.a('string');
+  });
+});
+
 describe('FilePart', () => {
   it('renders <img> inside link for image mediaType', () => {
     renderWithMessage({
