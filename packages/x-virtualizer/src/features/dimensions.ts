@@ -619,6 +619,34 @@ function useRowsMeta(
   };
 }
 
+// Content-box size of the node, i.e. the same box that `ResizeObserver` reports via `entry.contentRect`.
+// The initial synchronous read has to use the same box model as the observer,
+// otherwise a root with a border or padding gets a different size on the first observer tick
+// and the grid visibly jumps.
+// We can't just use `clientWidth`/`clientHeight` because they round to integers, and we need to keep sub-pixel precision here
+// (https://github.com/mui/mui-x/issues/9550, https://github.com/mui/mui-x/issues/15721).
+function measureContentBoxSize(node: Element): Size {
+  const bounds = node.getBoundingClientRect();
+  let { width, height } = bounds;
+  const style = ownerDocument(node).defaultView?.getComputedStyle(node);
+  if (style) {
+    width -=
+      parseFloat(style.borderLeftWidth) +
+      parseFloat(style.borderRightWidth) +
+      parseFloat(style.paddingLeft) +
+      parseFloat(style.paddingRight);
+    height -=
+      parseFloat(style.borderTopWidth) +
+      parseFloat(style.borderBottomWidth) +
+      parseFloat(style.paddingTop) +
+      parseFloat(style.paddingBottom);
+  }
+  return {
+    width: roundToDecimalPlaces(width, 1),
+    height: roundToDecimalPlaces(height, 1),
+  };
+}
+
 export function observeRootNode(
   node: Element | null,
   store: Store<BaseState>,
@@ -627,11 +655,8 @@ export function observeRootNode(
   if (!node) {
     return undefined;
   }
-  const bounds = node.getBoundingClientRect();
-  const initialSize = {
-    width: roundToDecimalPlaces(bounds.width, 1),
-    height: roundToDecimalPlaces(bounds.height, 1),
-  };
+
+  const initialSize = measureContentBoxSize(node);
   if (store.state.rootSize === Size.EMPTY || !Size.equals(initialSize, store.state.rootSize)) {
     setRootSize(initialSize);
   }
@@ -660,7 +685,8 @@ export function observeRootNode(
 }
 
 const scrollbarSizeCache = new WeakMap<Element, number>();
-function measureScrollbarSize(element: Element | null, scrollbarSize: number | undefined) {
+
+export function measureScrollbarSize(element: Element | null, scrollbarSize?: number | undefined) {
   if (scrollbarSize !== undefined) {
     return scrollbarSize;
   }
@@ -675,15 +701,28 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
   }
 
   const htmlElement = element as HTMLElement;
+  const doc = ownerDocument(element);
+  const style = doc.defaultView?.getComputedStyle(htmlElement);
 
   // First, try measuring `element` directly. When `element` is a scroll widget
   // that already has overflowing content (the typical case for the timeline's
   // virtual scrollbars), its rendered scrollbar reflects whatever
   // `scrollbar-width` / `::-webkit-scrollbar` styling is applied to *this*
   // element, which is exactly what we need.
+  //
+  // Only trust this on an axis that can actually scroll (`overflow: auto` or `scroll`) and is currently overflowing.
+  // Otherwise a bordered, non-scrolling element reports its border as
+  // the scrollbar size (`offsetWidth - clientWidth` is just the border when there is no scrollbar),
+  // which is wrong and causes a one-frame layout jump once the component mounts.
+  const canScrollY = style?.overflowY === 'auto' || style?.overflowY === 'scroll';
+  const canScrollX = style?.overflowX === 'auto' || style?.overflowX === 'scroll';
   const directSize = Math.max(
-    htmlElement.offsetWidth - htmlElement.clientWidth,
-    htmlElement.offsetHeight - htmlElement.clientHeight,
+    canScrollY && htmlElement.scrollHeight > htmlElement.clientHeight
+      ? htmlElement.offsetWidth - htmlElement.clientWidth
+      : 0,
+    canScrollX && htmlElement.scrollWidth > htmlElement.clientWidth
+      ? htmlElement.offsetHeight - htmlElement.clientHeight
+      : 0,
   );
   if (directSize > 0) {
     scrollbarSizeCache.set(element, directSize);
@@ -694,18 +733,13 @@ function measureScrollbarSize(element: Element | null, scrollbarSize: number | u
   // inherited, so copy it from the target element's computed style; otherwise
   // a parent that opts into `scrollbar-width: thin` would still be measured
   // with default scrollbar size.
-  const doc = ownerDocument(element);
-  const view = doc.defaultView;
   const scrollDiv = doc.createElement('div');
   scrollDiv.style.width = '99px';
   scrollDiv.style.height = '99px';
   scrollDiv.style.position = 'absolute';
   scrollDiv.style.overflow = 'scroll';
-  if (view) {
-    const computed = view.getComputedStyle(htmlElement);
-    if (computed.scrollbarWidth) {
-      scrollDiv.style.scrollbarWidth = computed.scrollbarWidth;
-    }
+  if (style?.scrollbarWidth) {
+    scrollDiv.style.scrollbarWidth = style.scrollbarWidth;
   }
   scrollDiv.className = 'scrollDiv';
   element.appendChild(scrollDiv);
