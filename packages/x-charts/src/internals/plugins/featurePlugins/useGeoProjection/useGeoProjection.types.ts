@@ -61,6 +61,8 @@ export interface UseGeoProjectionState {
     translate: [number, number] | null;
     rotate: [number, number] | null;
     scale: number | null;
+    // TODO: Remove factories from the state when some maps move to MIT package.
+    factories: Record<D3NamedProjection, (() => GeoProjection) | undefined>;
     /**
      * The two standard parallels used by conic projections, if applicable.
      * Used for projection 'conicConformal', 'conicEqualArea', 'conicEquidistant'.

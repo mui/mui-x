@@ -1,20 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import {
-  geoAlbers,
-  geoAlbersUsa,
-  geoAzimuthalEqualArea,
-  geoAzimuthalEquidistant,
-  geoConicConformal,
-  geoConicEqualArea,
-  geoConicEquidistant,
-  geoEqualEarth,
-  geoEquirectangular,
-  geoGnomonic,
-  geoMercator,
-  geoNaturalEarth1,
-  geoOrthographic,
-  geoStereographic,
-  geoTransverseMercator,
   geoPath,
   type ExtendedFeatureCollection,
   type GeoProjection,
@@ -30,29 +15,6 @@ import type {
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { type ChartState } from '../../models/chart';
 import { type GeoTooltipPosition } from '../../corePlugins/useChartSeriesConfig';
-
-const PROJECTION_FACTORIES: Record<D3NamedProjection, (() => GeoProjection) | undefined> = {
-  // Azimuthal projections (https://d3js.org/d3-geo/azimuthal)
-  azimuthalEqualArea: geoAzimuthalEqualArea,
-  azimuthalEquidistant: geoAzimuthalEquidistant,
-  gnomonic: geoGnomonic,
-  orthographic: geoOrthographic,
-  stereographic: geoStereographic,
-
-  // Conic projections (https://d3js.org/d3-geo/conic)
-  conicConformal: geoConicConformal,
-  conicEqualArea: geoConicEqualArea,
-  conicEquidistant: geoConicEquidistant,
-  albers: geoAlbers,
-  albersUsa: geoAlbersUsa, // Special composition for the USA with an edge case for Alaska and Hawaii.
-
-  // Cylindrical projections (https://d3js.org/d3-geo/cylindrical)
-  equirectangular: geoEquirectangular,
-  mercator: geoMercator,
-  transverseMercator: geoTransverseMercator,
-  equalEarth: geoEqualEarth,
-  naturalEarth1: geoNaturalEarth1,
-};
 
 const isConicProjection = (projection: GeoProjection): projection is GeoConicProjection => {
   return 'parallels' in projection && typeof projection.parallels === 'function';
@@ -71,6 +33,12 @@ export const selectorChartGeoData: (
 export const selectorChartRawProjection = createSelector(
   selectorChartGeoProjectionState,
   (geoProjection): GeoProjectionInput | null => geoProjection?.projection ?? null,
+);
+
+export const selectorChartProjectionFactory = createSelector(
+  selectorChartGeoProjectionState,
+  (geoProjection): Record<D3NamedProjection, (() => GeoProjection) | undefined> | null =>
+    geoProjection?.factories ?? null,
 );
 
 export const selectorChartRawScale = createSelector(
@@ -133,6 +101,7 @@ export const selectorChartGeoFeatureIndexesByName = createSelectorMemoized(
  */
 export const selectorChartProjection = createSelectorMemoized(
   selectorChartRawProjection,
+  selectorChartProjectionFactory,
   selectorChartGeoData,
   selectorChartParallels,
   selectorChartRotate,
@@ -141,6 +110,7 @@ export const selectorChartProjection = createSelectorMemoized(
   selectorChartDrawingArea,
   (
     projectionInput,
+    projectionFactory,
     geoData,
     parallels,
     rotate,
@@ -148,17 +118,17 @@ export const selectorChartProjection = createSelectorMemoized(
     scale,
     drawingArea,
   ): GeoProjection | null => {
-    if (!projectionInput) {
+    if (!projectionInput || !projectionFactory) {
       return null;
     }
     let projection: GeoProjection;
     if (typeof projectionInput === 'string') {
-      const factory = PROJECTION_FACTORIES[projectionInput];
+      const factory = projectionFactory[projectionInput];
       if (!factory) {
         if (process.env.NODE_ENV !== 'production') {
           console.error(
             `MUI X Charts: Unknown projection name '${projectionInput}'. ` +
-              `Expected one of: ${Object.keys(PROJECTION_FACTORIES).join(', ')}.`,
+              `Expected one of: ${Object.keys(projectionFactory).join(', ')}.`,
           );
         }
         return null;
