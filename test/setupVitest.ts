@@ -11,6 +11,8 @@ import { configure, isJsdom } from '@mui/internal-test-utils';
 import { LicenseInfo } from '@mui/x-license';
 import { TEST_LICENSE_KEY_PREMIUM } from './utils/licenseKeys';
 
+(globalThis as any).MUI_TEST_ENV = true;
+
 setupVitest({ emotion: true });
 
 configure({
