@@ -33,7 +33,7 @@ export default function WeatherComposition() {
 
         <WindChart />
       </Stack>
-      <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap', rowGap: 0.5 }}>
+      <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap', rowGap: 0.5, justifyContent: 'center' }}>
         <LegendItem color={colors.temperature} label="Temperature C" />
         <LegendItem color={colors.precipitation} label="Precipitation mm" />
         <LegendItem color={colors.maxPrecipitation} label="Max precip. mm" hatch />
