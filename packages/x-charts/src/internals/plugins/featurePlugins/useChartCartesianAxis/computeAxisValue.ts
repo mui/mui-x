@@ -81,6 +81,9 @@ export function resolveAxisSize(
 const DEFAULT_CATEGORY_GAP_RATIO = 0.2;
 const DEFAULT_BAR_GAP_RATIO = 0.1;
 
+/* Matches the 50px-per-tick heuristic used by `getDefaultTickNumber` for continuous axes. */
+const RESPONSIVE_ORDINAL_TICK_SPACING = 50;
+
 export type ComputeResult<T extends ChartsAxisProps> = {
   axis: ComputedAxisConfig<T>;
   axisIds: AxisId[];
@@ -101,6 +104,8 @@ type ComputeCommonParams<SeriesType extends ChartSeriesType = ChartSeriesType> =
   >;
   autoSizes?: Record<AxisId, number>;
   axesGap?: number;
+  /* When true, ordinal axes without an explicit `tickSpacing` get a size-aware default. */
+  responsiveTickAdjustment?: boolean;
 };
 
 /**
@@ -166,6 +171,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
   domains,
   autoSizes,
   axesGap = 0,
+  responsiveTickAdjustment = false,
 }: ComputeCommonParams<SeriesType> & {
   axis?: DefaultedAxis[];
   axisDirection: 'x' | 'y';
@@ -206,6 +212,10 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
     if (isOrdinalScale(scale)) {
       const scaleRange = axisDirection === 'y' ? [range[1], range[0]] : range;
 
+      const effectiveTickSpacing =
+        axis.tickSpacing ??
+        (responsiveTickAdjustment ? RESPONSIVE_ORDINAL_TICK_SPACING : undefined);
+
       if (isBandScale(scale) && isBandScaleConfig(axis)) {
         const desiredCategoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
         const ignoreGapRatios = shouldIgnoreGapRatios(scale, desiredCategoryGapRatio);
@@ -227,6 +237,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
            * discrepancy will hopefully not be noticeable. */
           scale: ignoreGapRatios ? scale.copy().padding(0) : scale,
           tickNumber,
+          tickSpacing: effectiveTickSpacing,
           colorScale:
             axis.colorMap &&
             (axis.colorMap.type === 'ordinal'
@@ -244,6 +255,7 @@ export function computeAxisValue<SeriesType extends ChartSeriesType>({
           data,
           scale,
           tickNumber,
+          tickSpacing: effectiveTickSpacing,
           colorScale:
             axis.colorMap &&
             (axis.colorMap.type === 'ordinal'
