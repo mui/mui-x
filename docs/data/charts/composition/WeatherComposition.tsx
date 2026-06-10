@@ -9,7 +9,15 @@ import { LineHighlightPlot, LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import {
+  ChartsTooltipContainer,
+  ChartsTooltipPaper,
+  ChartsTooltipTable,
+  ChartsTooltipRow,
+  ChartsTooltipCell,
+  useAxesTooltip,
+} from '@mui/x-charts/ChartsTooltip';
+import { ChartsLabelMark } from '@mui/x-charts/ChartsLabel';
 import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { AxisItemIdentifier } from '@mui/x-charts/models';
@@ -20,13 +28,10 @@ export default function WeatherComposition() {
   const [highlightedAxis, setHighlightedAxis] = React.useState<
     AxisItemIdentifier[]
   >([]);
-  const [tooltipAxis, setTooltipAxis] = React.useState<AxisItemIdentifier[]>([]);
 
   const sync = {
     highlightedAxis,
     onHighlightedAxisChange: setHighlightedAxis,
-    tooltipAxis,
-    onTooltipAxisChange: setTooltipAxis,
   };
 
   return (
@@ -44,7 +49,6 @@ export default function WeatherComposition() {
         })}
       >
         <ForecastChart {...sync} />
-
         <WindChart {...sync} />
       </Stack>
       <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap', rowGap: 0.5, justifyContent: 'center' }}>
@@ -61,8 +65,6 @@ export default function WeatherComposition() {
 type AxisSyncProps = {
   highlightedAxis: AxisItemIdentifier[];
   onHighlightedAxisChange: (axisItems: AxisItemIdentifier[]) => void;
-  tooltipAxis: AxisItemIdentifier[];
-  onTooltipAxisChange: (axisItems: AxisItemIdentifier[]) => void;
 };
 
 function ForecastChart(props: AxisSyncProps) {
@@ -100,30 +102,7 @@ function ForecastChart(props: AxisSyncProps) {
           width: 56,
         },
       ]}
-      series={[
-        {
-          id: 'precipitation',
-          type: 'bar',
-          dataKey: 'precipitation',
-          yAxisId: 'precipitation',
-          label: 'Precipitation',
-          color: colors.precipitation,
-          valueFormatter: (value: number | null) =>
-            value !== null ? `${value}mm` : '',
-        },
-        {
-          id: 'temperature',
-          type: 'line',
-          dataKey: 'temperature',
-          yAxisId: 'temperature',
-          label: 'Temperature',
-          color: colors.temperature,
-          showMark: false,
-          curve: 'natural',
-          valueFormatter: (value: number | null) =>
-            value !== null ? `${value}°C` : '',
-        },
-      ]}
+      series={weatherSeries}
       height={310}
       margin={{ top: 64, right: 24, bottom: 8, left: 36 }}
     >
@@ -139,7 +118,9 @@ function ForecastChart(props: AxisSyncProps) {
       <ChartsYAxis disableLine axisId="temperature" />
       <ChartsAxisHighlight x="band" />
       <ChartsAxisHighlight x="line" />
-      <ChartsTooltip position="top" />
+      <ChartsTooltipContainer>
+        <WeatherTooltip type='weather' />
+      </ChartsTooltipContainer>
     </ChartsContainer>
   );
 }
@@ -172,32 +153,9 @@ function WindChart(props: AxisSyncProps) {
           tickInterval: [0, 4, 8],
         },
       ]}
-      series={[
-        {
-          id: 'wind',
-          type: 'line',
-          dataKey: 'wind',
-          yAxisId: 'wind',
-          label: 'Wind',
-          color: colors.wind,
-          curve: 'linear',
-          valueFormatter: (value: number | null) =>
-            value !== null ? `${value} m/s` : '',
-        },
-        {
-          id: 'gust',
-          type: 'line',
-          dataKey: 'gust',
-          yAxisId: 'wind',
-          label: 'Wind gust',
-          color: colors.windGust,
-          curve: 'linear',
-          valueFormatter: (value: number | null) =>
-            value !== null ? `${value} m/s` : '',
-        },
-      ]}
+      series={windSeries}
       height={150}
-      margin={{ top: 20, right: 24, bottom: 32, left: 86 }}
+      margin={{ top: 8, right: 24, bottom: 32, left: 86 }}
       sx={{ [`& [data-series=gust]`]: { strokeDasharray: '4 4' } }}
     >
       <ChartsGrid horizontal />
@@ -207,8 +165,52 @@ function WindChart(props: AxisSyncProps) {
       <ChartsYAxis axisId="wind" label="Wind m/s" />
       <ChartsAxisHighlight x="band" />
       <ChartsAxisHighlight x="line" />
-      <ChartsTooltip position="bottom" sx={{ [`& [data-series=gust]`]: { strokeDasharray: '4 4' } }} />
+      <ChartsTooltipContainer>
+        <WeatherTooltip type="wind" />
+      </ChartsTooltipContainer>
     </ChartsContainer>
+  );
+}
+
+function WeatherTooltip({ type }: { type: 'weather' | 'wind' }) {
+  const tooltipData = useAxesTooltip();
+
+  if (!tooltipData || tooltipData.length === 0 || (type === 'weather' && !tooltipData[0].seriesItems.some((item) => item.seriesId === 'temperature')) || (type === 'wind' && !tooltipData[0].seriesItems.some((item) => item.seriesId === 'wind'))) {
+    return null;
+  }
+
+  const { dataIndex, axisFormattedValue } = tooltipData[0];
+  const item = forecast[dataIndex];
+
+  if (!item) {
+    return null;
+  }
+
+  const rows = [
+    { label: 'Temperature', color: colors.temperature, mark: 'line', value: `${item.temperature}°C` },
+    { label: 'Precipitation', color: colors.precipitation, mark: 'square', value: `${item.precipitation}mm` },
+    { label: 'Max precip.', color: colors.maxPrecipitation, mark: 'square', value: `${item.maxPrecipitation}mm` },
+    { label: 'Wind', color: colors.wind, mark: 'line', value: `${item.wind} m/s` },
+    { label: 'Wind gust', color: colors.windGust, mark: 'line', value: `${item.gust} m/s` },
+  ] as const;
+
+  return (
+    <ChartsTooltipPaper>
+      <ChartsTooltipTable>
+        <Typography component="caption">{axisFormattedValue}</Typography>
+        <tbody>
+          {rows.map((row) => (
+            <ChartsTooltipRow key={row.label} >
+              <ChartsTooltipCell component="th">
+                <ChartsLabelMark type={row.mark} color={row.color} />
+                {row.label}
+              </ChartsTooltipCell>
+              <ChartsTooltipCell component="td">{row.value}</ChartsTooltipCell>
+            </ChartsTooltipRow>
+          ))}
+        </tbody>
+      </ChartsTooltipTable>
+    </ChartsTooltipPaper>
   );
 }
 
@@ -340,7 +342,6 @@ function MaxPrecipitationBars() {
   );
 }
 
-
 function LegendItem({
   color,
   label,
@@ -370,6 +371,7 @@ function LegendItem({
   );
 }
 
+
 const colors = {
   temperature: '#c21807',
   precipitation: '#1565c0',
@@ -377,3 +379,54 @@ const colors = {
   wind: '#7e22ce',
   windGust: '#7c4dff',
 };
+
+
+const weatherSeries = [
+  {
+    id: 'precipitation',
+    type: 'bar',
+    dataKey: 'precipitation',
+    yAxisId: 'precipitation',
+    label: 'Precipitation',
+    color: colors.precipitation,
+    valueFormatter: (value: number | null) =>
+      value !== null ? `${value}mm` : '',
+  },
+  {
+    id: 'temperature',
+    type: 'line',
+    dataKey: 'temperature',
+    yAxisId: 'temperature',
+    label: 'Temperature',
+    color: colors.temperature,
+    showMark: false,
+    curve: 'natural',
+    valueFormatter: (value: number | null) =>
+      value !== null ? `${value}°C` : '',
+  },
+] as const
+
+const windSeries = [
+  {
+    id: 'wind',
+    type: 'line',
+    dataKey: 'wind',
+    yAxisId: 'wind',
+    label: 'Wind',
+    color: colors.wind,
+    curve: 'linear',
+    valueFormatter: (value: number | null) =>
+      value !== null ? `${value} m/s` : '',
+  },
+  {
+    id: 'gust',
+    type: 'line',
+    dataKey: 'gust',
+    yAxisId: 'wind',
+    label: 'Wind gust',
+    color: colors.windGust,
+    curve: 'linear',
+    valueFormatter: (value: number | null) =>
+      value !== null ? `${value} m/s` : '',
+  },
+] as const;

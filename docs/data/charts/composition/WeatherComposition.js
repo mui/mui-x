@@ -9,7 +9,15 @@ import { LineHighlightPlot, LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import {
+  ChartsTooltipContainer,
+  ChartsTooltipPaper,
+  ChartsTooltipTable,
+  ChartsTooltipRow,
+  ChartsTooltipCell,
+  useAxesTooltip,
+} from '@mui/x-charts/ChartsTooltip';
+import { ChartsLabelMark } from '@mui/x-charts/ChartsLabel';
 import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
@@ -130,8 +138,72 @@ function ForecastChart(props) {
       <ChartsYAxis disableLine axisId="temperature" />
       <ChartsAxisHighlight x="band" />
       <ChartsAxisHighlight x="line" />
-      <ChartsTooltip position="top" />
+      <ChartsTooltipContainer>
+        <WeatherTooltip />
+      </ChartsTooltipContainer>
     </ChartsContainer>
+  );
+}
+
+function WeatherTooltip() {
+  const tooltipData = useAxesTooltip();
+
+  if (!tooltipData || tooltipData.length === 0) {
+    return null;
+  }
+
+  const { dataIndex, axisFormattedValue } = tooltipData[0];
+  const item = forecast[dataIndex];
+
+  if (!item) {
+    return null;
+  }
+
+  const rows = [
+    {
+      label: 'Temperature',
+      color: colors.temperature,
+      mark: 'line',
+      value: `${item.temperature}°C`,
+    },
+    {
+      label: 'Precipitation',
+      color: colors.precipitation,
+      mark: 'square',
+      value: `${item.precipitation}mm`,
+    },
+    {
+      label: 'Max precip.',
+      color: colors.maxPrecipitation,
+      mark: 'square',
+      value: `${item.maxPrecipitation}mm`,
+    },
+    { label: 'Wind', color: colors.wind, mark: 'line', value: `${item.wind} m/s` },
+    {
+      label: 'Wind gust',
+      color: colors.windGust,
+      mark: 'line',
+      value: `${item.gust} m/s`,
+    },
+  ];
+
+  return (
+    <ChartsTooltipPaper>
+      <ChartsTooltipTable>
+        <Typography component="caption">{axisFormattedValue}</Typography>
+        <tbody>
+          {rows.map((row) => (
+            <ChartsTooltipRow key={row.label}>
+              <ChartsTooltipCell component="th">
+                <ChartsLabelMark type={row.mark} color={row.color} />
+                {row.label}
+              </ChartsTooltipCell>
+              <ChartsTooltipCell component="td">{row.value}</ChartsTooltipCell>
+            </ChartsTooltipRow>
+          ))}
+        </tbody>
+      </ChartsTooltipTable>
+    </ChartsTooltipPaper>
   );
 }
 
@@ -195,10 +267,6 @@ function WindChart(props) {
       <ChartsYAxis axisId="wind" label="Wind m/s" />
       <ChartsAxisHighlight x="band" />
       <ChartsAxisHighlight x="line" />
-      <ChartsTooltip
-        position="bottom"
-        sx={{ [`& [data-series=gust]`]: { strokeDasharray: '4 4' } }}
-      />
     </ChartsContainer>
   );
 }
@@ -250,7 +318,8 @@ function DayAndTimeHeader() {
                 y1={top - 22}
                 y2={top + height}
                 stroke={theme.palette.text.secondary}
-                strokeDasharray="4 4"
+                strokeDasharray="8 8"
+                opacity={0.5}
               />
             )}
           </g>
