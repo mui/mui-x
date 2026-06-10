@@ -26,10 +26,6 @@ export default function getBabelConfig(api) {
     },
   ]);
 
-  const removePropTypesPlugin = baseConfig.plugins.find(
-    (p) => p[2] === 'babel-plugin-transform-react-remove-prop-types',
-  );
-
   const displayNamePlugin = baseConfig.plugins.find(
     (p) => p[2] === '@mui/internal-babel-plugin-display-name',
   );
