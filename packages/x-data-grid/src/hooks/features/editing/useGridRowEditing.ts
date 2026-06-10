@@ -673,7 +673,8 @@ export const useGridRowEditing = (
           newProps = { ...newProps, isProcessingProps: true };
           updateOrDeleteFieldState(id, field, newProps);
 
-          const { [field]: ignoredField, ...otherFieldsProps } = editingState[id];
+          const otherFieldsProps = { ...editingState[id] };
+          delete otherFieldsProps[field];
 
           const promise = Promise.resolve(
             column.preProcessEditCellProps({
@@ -719,7 +720,8 @@ export const useGridRowEditing = (
           updateOrDeleteFieldState(id, thisField, fieldProps);
 
           editingState = gridEditRowsStateSelector(apiRef);
-          const { [thisField]: ignoredField, ...otherFieldsProps } = editingState[id];
+          const otherFieldsProps = { ...editingState[id] };
+          delete otherFieldsProps[thisField];
 
           const promise = Promise.resolve(
             fieldColumn.preProcessEditCellProps({

@@ -56,7 +56,8 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const handleAggregationItemChange = (event: React.ChangeEvent<unknown>) => {
     const newAggregationItem = (event.target as HTMLSelectElement | null)?.value || undefined;
     const currentModel = gridAggregationModelSelector(apiRef);
-    const { [colDef.field]: columnItem, ...otherColumnItems } = currentModel;
+    const otherColumnItems = { ...currentModel };
+    delete otherColumnItems[colDef.field];
     const newModel: GridAggregationModel =
       newAggregationItem == null
         ? otherColumnItems

@@ -112,7 +112,8 @@ export const useGridPipeProcessing = (apiRef: RefObject<GridPrivateApiCommon>) =
     cache.current[group]!.appliers[id] = applier;
 
     return () => {
-      const { [id]: removedGroupApplier, ...otherAppliers } = cache.current[group]!.appliers;
+      const otherAppliers = { ...cache.current[group]!.appliers };
+      delete otherAppliers[id];
       cache.current[group]!.appliers = otherAppliers;
     };
   }, []);

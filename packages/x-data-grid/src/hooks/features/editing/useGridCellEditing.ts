@@ -296,7 +296,9 @@ export const useGridCellEditing = (
       if (newProps !== null) {
         newModel[id] = { ...newModel[id], [field]: { ...newProps } };
       } else {
-        const { [field]: fieldToRemove, ...otherFields } = newModel[id]; // Ensure that we have a new object, not a reference
+        // Ensure that we have a new object, not a reference
+        const otherFields = { ...newModel[id] };
+        delete otherFields[field];
         newModel[id] = otherFields;
         if (Object.keys(newModel[id]).length === 0) {
           delete newModel[id];

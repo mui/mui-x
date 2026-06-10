@@ -78,8 +78,8 @@ export const useGridStrategyProcessing = (apiRef: RefObject<GridPrivateApiCommon
   >(
     (strategyName, processorName, processor: GridStrategyProcessor<any>) => {
       const cleanup = () => {
-        const { [strategyName]: removedPreProcessor, ...otherProcessors } =
-          strategiesCache.current[processorName]!;
+        const otherProcessors = { ...strategiesCache.current[processorName]! };
+        delete otherProcessors[strategyName];
         strategiesCache.current[processorName] = otherProcessors;
       };
 
