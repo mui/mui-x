@@ -36,10 +36,7 @@ export interface MapShapeValueType {
   color?: string;
 }
 
-export interface MapShapeSeriesType extends Omit<
-  CommonSeriesType<MapShapeValueType, 'mapShape'>,
-  'valueFormatter'
-> {
+export interface MapShapeSeriesType extends Omit<CommonSeriesType<'mapShape'>, 'valueFormatter'> {
   type: 'mapShape';
   /**
    * The data points to render. Each entry is joined to a feature in `geoData`
