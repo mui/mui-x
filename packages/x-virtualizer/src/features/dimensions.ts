@@ -619,6 +619,10 @@ function useRowsMeta(
   };
 }
 
+function parsePx(value: string): number {
+  return parseFloat(value) || 0;
+}
+
 // Content-box size of the node, i.e. the same box that `ResizeObserver` reports via `entry.contentRect`.
 // The initial synchronous read has to use the same box model as the observer,
 // otherwise a root with a border or padding gets a different size on the first observer tick
@@ -631,15 +635,15 @@ function measureContentBoxSize(node: Element): Size {
   const style = ownerDocument(node).defaultView?.getComputedStyle(node);
   if (style) {
     width -=
-      parseFloat(style.borderLeftWidth) +
-      parseFloat(style.borderRightWidth) +
-      parseFloat(style.paddingLeft) +
-      parseFloat(style.paddingRight);
+      parsePx(style.borderLeftWidth) +
+      parsePx(style.borderRightWidth) +
+      parsePx(style.paddingLeft) +
+      parsePx(style.paddingRight);
     height -=
-      parseFloat(style.borderTopWidth) +
-      parseFloat(style.borderBottomWidth) +
-      parseFloat(style.paddingTop) +
-      parseFloat(style.paddingBottom);
+      parsePx(style.borderTopWidth) +
+      parsePx(style.borderBottomWidth) +
+      parsePx(style.paddingTop) +
+      parsePx(style.paddingBottom);
   }
   return {
     width: roundToDecimalPlaces(width, 1),
