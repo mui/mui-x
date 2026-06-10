@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import {
+  FocusedScatterMark,
   type ScatterChartProps,
   type ScatterChartSlotProps,
   type ScatterChartSlots,
@@ -131,6 +132,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           </g>
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
+          <FocusedScatterMark />
           <ChartsBrushOverlay />
           {children}
         </ChartsSurface>
@@ -563,12 +565,16 @@ ScatterChartPro.propTypes = {
       min: PropTypes.number,
       sizeMap: PropTypes.oneOfType([
         PropTypes.shape({
+          interpolator: PropTypes.oneOf(['linear', 'log', 'sqrt']),
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          size: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.number.isRequired),
-            PropTypes.func,
-          ]).isRequired,
+          size: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          size: PropTypes.func.isRequired,
           type: PropTypes.oneOf(['continuous']).isRequired,
         }),
         PropTypes.shape({
