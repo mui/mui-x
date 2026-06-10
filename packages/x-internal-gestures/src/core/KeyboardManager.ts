@@ -105,7 +105,8 @@ export class KeyboardManager {
 
     return keys.every((key) => {
       if (key === 'ControlOrMeta') {
-        return platform.os.mac
+        // Apple platforms (incl. iPadOS with a keyboard) use Cmd/Meta as the primary modifier.
+        return platform.os.apple
           ? this.pressedKeys.has('Meta')
           : this.pressedKeys.has('Control');
       }
