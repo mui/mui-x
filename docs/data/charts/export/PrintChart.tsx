@@ -14,7 +14,7 @@ import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
 import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';
 import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
-import { Unstable_SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import { data } from './randomData';
 import { heatmapData } from './heatmapData';
 
@@ -198,7 +198,7 @@ function Chart<T extends ChartType = ChartType>({
       );
     case 'sankey':
       return (
-        <Unstable_SankeyChart
+        <SankeyChart
           apiRef={apiRef as React.RefObject<ChartProApi<'sankey'> | undefined>}
           height={300}
           series={sankeySeries}

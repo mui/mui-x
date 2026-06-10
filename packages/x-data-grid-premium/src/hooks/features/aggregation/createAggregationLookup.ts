@@ -14,6 +14,7 @@ import type { GridApiPremium, GridPrivateApiPremium } from '../../../models/grid
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type {
   GridAggregationFunction,
+  GridAggregationFunctionDataSource,
   GridAggregationLookup,
   GridAggregationRules,
 } from './gridAggregationInterfaces';
@@ -151,15 +152,31 @@ const getGroupAggregatedValueDataSource = (
   apiRef: RefObject<GridPrivateApiPremium>,
   aggregatedFields: string[],
   position: GridAggregationPosition,
+  aggregationRules: GridAggregationRules,
+  columnsLookup: GridColumnLookup,
 ) => {
   const groupAggregationLookup: GridAggregationLookup[GridRowId] = {};
+  const rowLookup = gridRowsLookupSelector(apiRef);
 
   for (let j = 0; j < aggregatedFields.length; j += 1) {
     const aggregatedField = aggregatedFields[j];
+    const value = apiRef.current.resolveGroupAggregation?.(groupId, aggregatedField) ?? '';
+    const aggregationFunction = aggregationRules[aggregatedField]
+      ?.aggregationFunction as GridAggregationFunctionDataSource;
+    const rowForFormatter = rowLookup[groupId] || { id: groupId, [aggregatedField]: value };
+    const formattedValue = aggregationFunction?.valueFormatter
+      ? aggregationFunction.valueFormatter(
+          value as never,
+          rowForFormatter,
+          columnsLookup[aggregatedField],
+          apiRef,
+        )
+      : undefined;
 
     groupAggregationLookup[aggregatedField] = {
       position,
-      value: apiRef.current.resolveGroupAggregation?.(groupId, aggregatedField) ?? '',
+      value,
+      formattedValue,
     };
   }
 
@@ -225,6 +242,8 @@ export const createAggregationLookup = ({
           apiRef,
           aggregatedFields,
           position,
+          aggregationRules,
+          columnsLookup,
         );
       }
     } else if (groupNode.children.length) {

@@ -15,9 +15,3 @@ components: Scatter, ScatterChart, ScatterPlot
 ## MultipleYAxesScatterChart
 
 {{"demo": "MultipleYAxesScatterChart.js"}}
-
-## Bulble charts
-
-You can mix the color and size scale to represent 4 different dimensions in a single chart.
-
-{{"demo": "BubbleChartCO2Emissions.js"}}

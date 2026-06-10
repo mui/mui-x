@@ -1,64 +1,5 @@
 {
-  "props": {
-    "axisId": { "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
-    "className": { "type": { "name": "string" } },
-    "disableLine": { "type": { "name": "bool" }, "default": "false" },
-    "disableTicks": { "type": { "name": "bool" }, "default": "false" },
-    "label": { "type": { "name": "string" } },
-    "labelStyle": { "type": { "name": "object" } },
-    "maxRadius": { "type": { "name": "number" } },
-    "minRadius": { "type": { "name": "number" } },
-    "position": {
-      "type": {
-        "name": "union",
-        "description": "'end'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'start'<br>&#124;&nbsp;number"
-      },
-      "default": "'start'"
-    },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "additionalInfo": { "slotsApi": true }
-    },
-    "tickInterval": {
-      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },
-      "default": "'auto'"
-    },
-    "tickLabelInterval": {
-      "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;func" },
-      "default": "'auto'"
-    },
-    "tickLabelPlacement": {
-      "type": { "name": "enum", "description": "'middle'<br>&#124;&nbsp;'tick'" },
-      "default": "'middle'"
-    },
-    "tickLabelPosition": {
-      "type": {
-        "name": "enum",
-        "description": "'after'<br>&#124;&nbsp;'auto'<br>&#124;&nbsp;'before'<br>&#124;&nbsp;'center'"
-      },
-      "default": "'auto'"
-    },
-    "tickLabelStyle": { "type": { "name": "object" } },
-    "tickMaxStep": { "type": { "name": "number" } },
-    "tickMinStep": { "type": { "name": "number" } },
-    "tickNumber": { "type": { "name": "number" } },
-    "tickPlacement": {
-      "type": {
-        "name": "enum",
-        "description": "'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start'"
-      },
-      "default": "'extremities'"
-    },
-    "tickPosition": {
-      "type": { "name": "enum", "description": "'after'<br>&#124;&nbsp;'before'" },
-      "default": "position === 'start' ? 'before' : 'after'"
-    },
-    "tickSize": { "type": { "name": "number" }, "default": "6" },
-    "tickSpacing": { "type": { "name": "number" }, "default": "0" }
-  },
+  "props": {},
   "name": "ChartsRadiusAxis",
   "imports": [
     "import { ChartsRadiusAxis } from '@mui/x-charts/ChartsRadiusAxis';",
@@ -66,58 +7,10 @@
     "import { ChartsRadiusAxis } from '@mui/x-charts-pro';",
     "import { ChartsRadiusAxis } from '@mui/x-charts-premium';"
   ],
-  "classes": [
-    {
-      "key": "centered",
-      "className": "MuiChartsRadialAxis-centered",
-      "description": "Styles applied to the tick label when centered.",
-      "isGlobal": false
-    },
-    {
-      "key": "line",
-      "className": "MuiChartsRadialAxis-line",
-      "description": "Styles applied to the main line element.",
-      "isGlobal": false
-    },
-    {
-      "key": "radius",
-      "className": "MuiChartsRadialAxis-radius",
-      "description": "Styles applied to the root element of radius axis.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChartsRadialAxis-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "rotation",
-      "className": "MuiChartsRadialAxis-rotation",
-      "description": "Styles applied to the root element of rotation axis.",
-      "isGlobal": false
-    },
-    {
-      "key": "tick",
-      "className": "MuiChartsRadialAxis-tick",
-      "description": "Styles applied to ticks.",
-      "isGlobal": false
-    },
-    {
-      "key": "tickContainer",
-      "className": "MuiChartsRadialAxis-tickContainer",
-      "description": "Styles applied to the group including the tick and its label.",
-      "isGlobal": false
-    },
-    {
-      "key": "tickLabel",
-      "className": "MuiChartsRadialAxis-tickLabel",
-      "description": "Styles applied to the tick label.",
-      "isGlobal": false
-    }
-  ],
+  "classes": [],
   "muiName": "MuiChartsRadiusAxis",
   "filename": "/packages/x-charts/src/ChartsRadiusAxis/ChartsRadiusAxis.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/radial-axes/\">Charts - Radial axes</a></li>\n<li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a> 🧪</a></li></ul>"
+  "demos": "<ul><li><a href=\"/x/react-charts/radial-axes/\">Charts - Radial axes</a></li>\n<li><a href=\"/x/react-charts/radial-bars/\">Charts - Radial Bars <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
+  "cssComponent": false
 }

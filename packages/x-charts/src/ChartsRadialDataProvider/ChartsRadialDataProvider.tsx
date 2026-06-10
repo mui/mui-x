@@ -150,4 +150,4 @@ ChartsRadialDataProvider.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { ChartsRadialDataProvider as Unstable_ChartsRadialDataProvider };
+export { ChartsRadialDataProvider };

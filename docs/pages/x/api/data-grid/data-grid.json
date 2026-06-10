@@ -702,6 +702,12 @@
       "class": null
     },
     {
+      "name": "baseModal",
+      "description": "The custom Modal component used in the grid.",
+      "default": "Modal",
+      "class": null
+    },
+    {
       "name": "baseTextField",
       "description": "The custom TextField component used in the grid.",
       "default": "TextField",
@@ -1640,6 +1646,36 @@
       "isGlobal": false
     },
     {
+      "key": "editMultiSelectCell",
+      "className": "MuiDataGrid-editMultiSelectCell",
+      "description": "Styles applied to the edit multi-select cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellChip",
+      "className": "MuiDataGrid-editMultiSelectCellChip",
+      "description": "Styles applied to each chip in the edit multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellOverflow",
+      "className": "MuiDataGrid-editMultiSelectCellOverflow",
+      "description": "Styles applied to the overflow \"+N\" chip in the edit multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellPopperContent",
+      "className": "MuiDataGrid-editMultiSelectCellPopperContent",
+      "description": "Styles applied to the edit multi-select cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "editMultiSelectCellPopup",
+      "className": "MuiDataGrid-editMultiSelectCellPopup",
+      "description": "Styles applied to the edit multi-select cell popup.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGrid-filterForm",
       "description": "Styles applied to the root of the filter form component.",
@@ -1805,6 +1841,36 @@
       "key": "menuOpen",
       "className": "MuiDataGrid-menuOpen",
       "description": "Styles applied to the menu icon element if the menu is open.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCell",
+      "className": "MuiDataGrid-multiSelectCell",
+      "description": "Styles applied to the multi-select cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellChip",
+      "className": "MuiDataGrid-multiSelectCellChip",
+      "description": "Styles applied to each chip in the multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellOverflow",
+      "className": "MuiDataGrid-multiSelectCellOverflow",
+      "description": "Styles applied to the overflow \"+N\" chip in the multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellPopperContent",
+      "className": "MuiDataGrid-multiSelectCellPopperContent",
+      "description": "Styles applied to the multi-select cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellPopup",
+      "className": "MuiDataGrid-multiSelectCellPopup",
+      "description": "Styles applied to the multi-select cell expand popup.",
       "isGlobal": false
     },
     {
