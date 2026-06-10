@@ -1,7 +1,8 @@
 import * as React from 'react';
 import InterfaceApiPage from 'docs/src/modules/components/InterfaceApiPage';
 import layoutConfig from 'docs/src/modules/utils/dataGridLayoutConfig';
-import { mapApiPageTranslations } from '@mui/internal-core-docs/mapApiPageTranslations';
+import { mapApiPageTranslation } from '@mui/internal-core-docs/mapApiPageTranslations';
+import translation from 'docs/translations/api-docs/charts/axis-config.json';
 import jsonPageContent from './axis-config.json';
 
 export default function Page(props) {
@@ -12,11 +13,6 @@ export default function Page(props) {
 }
 
 export async function getStaticProps() {
-  const req = require.context(
-    'docs/translations/api-docs/charts/',
-    false,
-    /\.\/axis-config.*.json$/,
-  );
-  const descriptions = mapApiPageTranslations(req);
+  const descriptions = mapApiPageTranslation(translation);
   return { props: { descriptions } };
 }

@@ -101,6 +101,5 @@
   "muiName": "MuiChatConversationList",
   "filename": "/packages/x-chat/src/ChatConversationList/ChatConversationList.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/multi-conversation/conversation-list/\">Chat - Conversation List</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/multi-conversation/conversation-list/\">Chat - Conversation List</a></li></ul>"
 }

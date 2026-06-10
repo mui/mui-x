@@ -13,6 +13,5 @@
   "muiName": "MuiMessageContent",
   "filename": "/packages/x-chat-headless/src/message/MessageContent.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/headless/messages/\">Chat - Headless messages</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/headless/messages/\">Chat - Headless messages</a></li></ul>"
 }

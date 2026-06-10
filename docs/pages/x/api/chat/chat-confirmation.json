@@ -54,6 +54,5 @@
   "muiName": "MuiChatConfirmation",
   "filename": "/packages/x-chat/src/ChatConfirmation/ChatConfirmation.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/ai-and-agents/tool-approval/\">Chat - Tool Approval</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/ai-and-agents/tool-approval/\">Chat - Tool Approval</a></li></ul>"
 }

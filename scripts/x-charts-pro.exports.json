@@ -187,6 +187,8 @@
   { "name": "ChartsRadialGridClassKey", "kind": "TypeAlias" },
   { "name": "ChartsRadialGridProps", "kind": "Interface" },
   { "name": "ChartsRadiusAxisProps", "kind": "Interface" },
+  { "name": "ChartsRadiusAxisSlotProps", "kind": "Interface" },
+  { "name": "ChartsRadiusAxisSlots", "kind": "Interface" },
   { "name": "ChartsReferenceLine", "kind": "Function" },
   { "name": "ChartsReferenceLineClasses", "kind": "Interface" },
   { "name": "ChartsReferenceLineClassKey", "kind": "TypeAlias" },

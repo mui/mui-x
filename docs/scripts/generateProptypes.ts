@@ -75,6 +75,44 @@ function sortPropTypeUnions(propType: any): void {
   }
 }
 
+function replaceNestedUndefinedNodes(propType: any, parentType?: string): any {
+  if (propType == null) {
+    return propType;
+  }
+
+  if (propType.type === 'UndefinedNode') {
+    return parentType === 'UnionNode' ? propType : { type: 'any' };
+  }
+
+  if (propType.type === 'array') {
+    propType.arrayType = replaceNestedUndefinedNodes(propType.arrayType, propType.type);
+    return propType;
+  }
+
+  if (propType.type === 'InterfaceNode') {
+    propType.types = (propType.types ?? []).map(([name, value]: [string, any]) => {
+      return [name, replaceNestedUndefinedNodes(value, propType.type)];
+    });
+    return propType;
+  }
+
+  if (propType.type === 'UnionNode') {
+    propType.types = (propType.types ?? []).map((type: any) => {
+      return replaceNestedUndefinedNodes(type, propType.type);
+    });
+    if (
+      propType.types.every(
+        (type: any) =>
+          type?.type === 'UndefinedNode' || (type?.type === 'LiteralNode' && type.value === 'null'),
+      )
+    ) {
+      return { type: 'any' };
+    }
+  }
+
+  return propType;
+}
+
 /**
  * Normalizes the order of union members across every component prop so that
  * the generated propTypes do not churn when the TypeScript module graph
@@ -82,8 +120,37 @@ function sortPropTypeUnions(propType: any): void {
  */
 function makePropTypesDeterministic(components: any[]): void {
   components.forEach((component) => {
-    component.types?.forEach((definition: any) => sortPropTypeUnions(definition.propType));
+    component.types?.forEach((definition: any) => {
+      definition.propType = replaceNestedUndefinedNodes(definition.propType);
+      sortPropTypeUnions(definition.propType);
+    });
   });
+}
+
+function countOccurrences(source: string, searchValue: string): number {
+  return source.split(searchValue).length - 1;
+}
+
+function isRequiredValidator(source: string): boolean {
+  return /\.isRequired\s*$/.test(source);
+}
+
+function didGeneratedValidatorRegress(previous: string | undefined, generated: string): boolean {
+  if (previous === undefined) {
+    return false;
+  }
+
+  const previousAnyCount = countOccurrences(previous, 'PropTypes.any');
+  const generatedAnyCount = countOccurrences(generated, 'PropTypes.any');
+
+  return (
+    generatedAnyCount > previousAnyCount ||
+    (!isRequiredValidator(previous) && isRequiredValidator(generated)) ||
+    generated.includes('PropTypes.oneOf([null])') ||
+    (previous.includes('PropTypes.oneOf(') && !generated.includes('PropTypes.oneOf(')) ||
+    (previous.includes('PropTypes.bool') && generated.includes('valueOf')) ||
+    (previous.includes('PropTypes.number') && generated.includes('toExponential'))
+  );
 }
 
 async function generateProptypes(project: XTypeScriptProject, sourceFile: string) {
@@ -200,7 +267,11 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
         const ignoreGenerated =
           previous !== undefined &&
           previous.startsWith('PropTypes /* @typescript-to-proptypes-ignore */');
-        return usedCustomValidator || ignoreGenerated ? previous! : generated;
+        const keepPrevious =
+          usedCustomValidator ||
+          ignoreGenerated ||
+          didGeneratedValidatorRegress(previous, generated);
+        return keepPrevious ? previous! : generated;
       },
       shouldInclude: ({ component, prop }) => {
         if (['children', 'state'].includes(prop.name) && component.name.startsWith('DataGrid')) {

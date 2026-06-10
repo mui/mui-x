@@ -4,7 +4,7 @@
   "3": "MUI X Charts: %s should be a continuous type to display the bar series of id \"%s\". Bar charts require a continuous scale (like \"linear\" or \"log\") for the value axis. Change the scaleType to a continuous type such as \"linear\".",
   "4": "MUI X Charts: The ChartsReferenceLine cannot have both `x` and `y` props set. A reference line can only be vertical (x) or horizontal (y), not both. Remove either the `x` or `y` prop.",
   "5": "MUI X Charts: The ChartsReferenceLine requires either an `x` or `y` prop. Without a value, the reference line cannot be positioned on the chart. Provide either an `x` value for a vertical line or a `y` value for a horizontal line.",
-  "6": "MUI X: Prop '%s' is required but wasn't specified",
+  "6": "Prop '%s' is required but wasn't specified",
   "7": "MUI X: Expected prop '%s' to be of type Element",
   "8": "MUI X Charts: ChartsGroupedXAxis only supports the `band` and `point` scale types. Grouped axis ticks require an ordinal scale to display category groupings. Use a band or point scale type for the x-axis, or use a non-grouped axis component.",
   "9": "MUI X Charts: ChartsGroupedYAxis only supports the `band` and `point` scale types. Grouped axis ticks require an ordinal scale to display category groupings. Use a band or point scale type for the y-axis, or use a non-grouped axis component.",
