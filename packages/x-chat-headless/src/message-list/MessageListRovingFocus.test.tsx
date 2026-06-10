@@ -229,6 +229,95 @@ describe('MessageListRoot roving focus', () => {
     expect(getArticleByMessageId('m1')).not.to.have.attribute('data-actionable');
   });
 
+  it('re-enters the controls when Enter is pressed while already drilled in', () => {
+    render(
+      <ChatRoot
+        adapter={createAdapter()}
+        initialMessages={[createMessage('m1'), createMessage('m2')]}
+      >
+        <MessageListRoot
+          renderItem={({ id }) => (
+            <MessageRoot messageId={id}>
+              {id === 'm2' ? (
+                <button data-testid="inner-action" tabIndex={-1} type="button">
+                  copy
+                </button>
+              ) : (
+                id
+              )}
+            </MessageRoot>
+          )}
+        />
+      </ChatRoot>,
+    );
+
+    act(() => {
+      getArticleByMessageId('m2').focus();
+    });
+    fireEvent.keyDown(getArticleByMessageId('m2'), { key: 'Enter' });
+    expect(document.activeElement).toBe(screen.getByTestId('inner-action'));
+
+    // Click back onto the article body: focus returns to the article but the
+    // message stays actionable (focus never left it).
+    act(() => {
+      getArticleByMessageId('m2').focus();
+    });
+    expect(getArticleByMessageId('m2')).to.have.attribute('data-actionable', 'true');
+
+    // Enter again is a same-id no-op for the state, so the focus move must be
+    // issued directly.
+    fireEvent.keyDown(getArticleByMessageId('m2'), { key: 'Enter' });
+    expect(document.activeElement).toBe(screen.getByTestId('inner-action'));
+  });
+
+  it('clears the drill-in state when the actionable message unmounts', () => {
+    function Harness() {
+      const [items, setItems] = React.useState(['m1', 'm2']);
+      return (
+        <ChatRoot
+          adapter={createAdapter()}
+          initialMessages={[createMessage('m1'), createMessage('m2')]}
+        >
+          <button onClick={() => setItems(['m1'])} type="button">
+            remove
+          </button>
+          <button onClick={() => setItems(['m1', 'm2'])} type="button">
+            restore
+          </button>
+          <MessageListRoot
+            items={items}
+            renderItem={({ id }) => (
+              <MessageRoot messageId={id}>
+                {id === 'm2' ? (
+                  <button data-testid="inner-action" tabIndex={-1} type="button">
+                    copy
+                  </button>
+                ) : (
+                  id
+                )}
+              </MessageRoot>
+            )}
+          />
+        </ChatRoot>
+      );
+    }
+    render(<Harness />);
+
+    act(() => {
+      getArticleByMessageId('m2').focus();
+    });
+    fireEvent.keyDown(getArticleByMessageId('m2'), { key: 'Enter' });
+    expect(document.activeElement).toBe(screen.getByTestId('inner-action'));
+
+    // Unmounting fires no focusout — deregistration must clear the state so
+    // the restored message does not come back pre-drilled.
+    fireEvent.click(screen.getByRole('button', { name: 'remove' }));
+    fireEvent.click(screen.getByRole('button', { name: 'restore' }));
+
+    expect(getArticleByMessageId('m2')).not.to.have.attribute('data-actionable');
+    expect(screen.getByTestId('inner-action')).to.have.attribute('tabindex', '-1');
+  });
+
   it('ignores Enter on a message without focusable content', () => {
     render(
       <ChatRoot

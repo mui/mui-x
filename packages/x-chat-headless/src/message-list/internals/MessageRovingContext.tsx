@@ -188,6 +188,12 @@ export function useMessageRovingController(
       },
       getState: () => stateRef.current!,
       registerItemRef: (id: string, element: HTMLElement | null) => {
+        // An unmounting article fires no focusout, so a message removed while
+        // drilled into (conversation switch, list churn) would leave a stale
+        // actionable id behind — clear it on deregistration.
+        if (element == null && stateRef.current!.actionableId === id) {
+          setState({ actionableId: undefined });
+        }
         rovingRef.current.registerItemRef(id, element);
       },
       onItemFocus: (id: string) => {
@@ -214,7 +220,14 @@ export function useMessageRovingController(
           const article = event.currentTarget as HTMLElement;
           if (hasFocusableContent(article)) {
             event.preventDefault();
-            setState({ actionableId: id });
+            if (stateRef.current!.actionableId === id) {
+              // Already actionable (e.g. the user clicked back onto the
+              // article while drilled in): no state flip happens, so the
+              // article's focus effect won't re-run — move focus directly.
+              focusFirstFocusableDescendant(article);
+            } else {
+              setState({ actionableId: id });
+            }
           }
           return;
         }
