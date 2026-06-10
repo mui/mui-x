@@ -51,10 +51,17 @@ Set the series `area` property to `true` to fill the area under the line.
 
 ### Marks
 
-Add `showMark: true` to display marks.
+Add `showMark: true` to display marks for all values.
+
+It also accept a values `'start'` or `'end'` to display a mark on the first (or last) value of the series
 
 To modify the mark, use the property `shape`.
 It accepts 7 shapes: `'circle'`, `'square'`, `'diamond'`, `'cross'`, `'star'`, `'triangle'`, and `'wye'`.
+
+:::info
+The `'start' | 'end'` options render the highlight marks instead of the regular marks.
+As a result, while the pointer highlights a value, the start/end mark is replaced by the highlighted one.
+:::
 
 {{"demo": "LineMarkShape.js", "bg": "outline"}}
 
@@ -180,6 +187,13 @@ This uses the same curve interpolation as the rendered line (for example, `monot
 
 {{"demo": "LinePointerInteraction.js"}}
 
+### Highlight
+
+The line highlight display marks on top of the lines and marks.
+Even if you set `showMark: false`.
+
+You can turn off this behavior with the `disableHighlight` series property or the `disableLineItemHighlight` prop on the line chart.
+
 ## Styling
 
 ### Grid
@@ -244,16 +258,13 @@ Do not use `baseline` with stacked areas; the result will not match expectations
 
 ### Optimization
 
-Use the `showMark` series property to show mark elements.
-It accepts a boolean or a callback.
-The demo below uses a callback to show a mark only every two data points.
+Avoid displaying [marks](#marks) for large dataset.
 
-When a value is highlighted, a mark is drawn for that value.
-If the chart already shows marks (`showMark={true}`), the highlight mark is drawn on top.
+Either pass `'start'` or `'end'` to `showMark` to limit the number of element rendered on screen while keeping a mark for accessibility.
 
-You can turn off this behavior with the `disableHighlight` series property or the `disableLineItemHighlight` prop on the line chart.
+Or you can display a subset of the marks by providing a callback to `showMarks`.
 
-The demo shows one mark for every value with an even index.
+This demo shows one mark for values with even index.
 The highlighted point always shows a mark, whether its index is even or odd.
 
 {{"demo": "MarkOptimization.js"}}

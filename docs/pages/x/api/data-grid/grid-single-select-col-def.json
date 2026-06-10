@@ -18,11 +18,7 @@
       "default": "{defaultGetOptionValue}",
       "required": true
     },
-    "type": {
-      "type": { "description": "'singleSelect'" },
-      "default": "'singleSelect'",
-      "required": true
-    },
+    "type": { "type": { "description": "'singleSelect'" }, "required": true },
     "aggregable": {
       "type": { "description": "boolean" },
       "default": "true",

@@ -45,8 +45,9 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   const adapter = useAdapterContext();
   const store = useEventTimelinePremiumStoreContext();
 
-  const { rowRef, listItemRef, index, hasFocus, handleKeyDown, handleFocus } =
-    useTimelineGridRowKeyboard({ columnType: 'events' });
+  const { rowRef, hasFocus, handleKeyDown, handleFocus } = useTimelineGridRowKeyboard({
+    columnType: 'events',
+  });
 
   // Selector hooks
   const presetConfig = useStore(store, eventTimelinePremiumPresetSelectors.config);
@@ -134,13 +135,17 @@ export const TimelineGridEventRow = React.forwardRef(function TimelineGridEventR
   };
 
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, dropTargetRef, listItemRef, rowRef],
+    ref: [forwardedRef, dropTargetRef, rowRef],
     state,
     stateAttributesMapping,
     props: [
       elementProps,
-      // Reserve aria-rowindex=1 for the grid header row.
-      { role: 'row', 'aria-rowindex': index + 2, children },
+      {
+        children,
+        style: {
+          '--lane-count': occurrencesWithPosition.maxIndex,
+        } as React.CSSProperties,
+      },
       keyboardProps,
       eventCreationProps,
     ],

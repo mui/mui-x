@@ -13,13 +13,14 @@ import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useId } from '@base-ui/utils/useId';
 import {
+  ErrorContainer,
+  SharedComponentsStyledContext,
   eventDialogSlots,
   EventDialogStyledContext,
   EVENT_TIMELINE_DEFAULT_LOCALE_TEXT,
 } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
-import { EventTimelinePremiumErrorContainer } from './error-container';
 import {
   EventTimelinePremiumClasses,
   getEventTimelinePremiumUtilityClass,
@@ -46,12 +47,10 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     titleHeaderCell: ['titleHeaderCell'],
     eventsHeaderCell: ['eventsHeaderCell'],
     eventsHeaderCellContent: ['eventsHeaderCellContent'],
-    titleSubGrid: ['titleSubGrid'],
-    eventsSubGridWrapper: ['eventsSubGridWrapper'],
-    eventsSubGrid: ['eventsSubGrid'],
-    eventsSubGridRow: ['eventsSubGridRow'],
+    eventsCell: ['eventsCell'],
     titleCellRow: ['titleCellRow'],
     titleCell: ['titleCell'],
+    titleCellContent: ['titleCellContent'],
     titleCellLegendColor: ['titleCellLegendColor'],
     currentTimeIndicator: ['currentTimeIndicator'],
     currentTimeIndicatorCircle: ['currentTimeIndicatorCircle'],
@@ -128,19 +127,23 @@ const EventTimelinePremium = React.forwardRef(function EventTimelinePremium<
     [schedulerId, classes, mergedLocaleText],
   );
 
+  const sharedComponentsStyledContextValue = React.useMemo(() => ({ classes }), [classes]);
+
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <EventTimelinePremiumStyledContext.Provider value={timelineStyledContextValue}>
         <EventDialogStyledContext.Provider value={dialogStyledContextValue}>
-          <EventTimelinePremiumRoot
-            ref={forwardedRef}
-            className={clsx(classes.root, className)}
-            {...other}
-          >
-            <EventTimelinePremiumContent />
-            <EventTimelinePremiumErrorContainer />
-            {watermark}
-          </EventTimelinePremiumRoot>
+          <SharedComponentsStyledContext.Provider value={sharedComponentsStyledContextValue}>
+            <EventTimelinePremiumRoot
+              ref={forwardedRef}
+              className={clsx(classes.root, className)}
+              {...other}
+            >
+              <EventTimelinePremiumContent />
+              <ErrorContainer />
+              {watermark}
+            </EventTimelinePremiumRoot>
+          </SharedComponentsStyledContext.Provider>
         </EventDialogStyledContext.Provider>
       </EventTimelinePremiumStyledContext.Provider>
     </SchedulerStoreContext.Provider>
@@ -274,6 +277,12 @@ EventTimelinePremium.propTypes = {
     'red',
     'teal',
   ]),
+  /**
+   * Configures how events are created.
+   * If `false`, event creation is disabled.
+   * If `true`, event creation is enabled with default configuration.
+   * If an object, event creation is enabled with the provided configuration.
+   */
   eventCreation: PropTypes.oneOfType([
     PropTypes.shape({
       duration: PropTypes.number,
@@ -359,6 +368,11 @@ EventTimelinePremium.propTypes = {
    * The resources the events can be assigned to.
    */
   resources: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Whether each event must be assigned to a resource. When true, the resource cannot be cleared in the edit dialog and the form cannot be submitted without one.
+   * @default true
+   */
+  shouldEventRequireResource: PropTypes.bool,
   /**
    * Whether the component should display the current time indicator.
    * @default true

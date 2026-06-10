@@ -454,6 +454,161 @@ describe('<EventDialogContent open />', () => {
     expect(updated.resource).to.equal(undefined);
   });
 
+  describe('shouldEventRequireResource', () => {
+    const eventWithoutResource: SchedulerEvent = { ...DEFAULT_EVENT, resource: undefined };
+    const eventWithoutResourceOccurrence = EventBuilder.new(adapter)
+      .id(eventWithoutResource.id)
+      .title(eventWithoutResource.title)
+      .description(eventWithoutResource.description)
+      .span(eventWithoutResource.start, eventWithoutResource.end)
+      .toOccurrence();
+
+    it('should not show the "No resource" option in the dropdown when `shouldEventRequireResource={true}`', async () => {
+      const { user } = render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          shouldEventRequireResource
+          storeClass={PremiumTestStore}
+        >
+          <TestEventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+
+      expect(screen.queryByRole('option', { name: /no resource/i })).to.equal(null);
+      expect(screen.getByRole('option', { name: /work/i })).not.to.equal(null);
+      expect(screen.getByRole('option', { name: /personal/i })).not.to.equal(null);
+    });
+
+    it('should show the "No resource" option when `shouldEventRequireResource={false}`', async () => {
+      const { user } = render(
+        <EventCalendarProvider
+          events={[DEFAULT_EVENT]}
+          resources={resources}
+          shouldEventRequireResource={false}
+          storeClass={PremiumTestStore}
+        >
+          <TestEventDialogContent open {...defaultProps} />
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+
+      expect(screen.getByRole('option', { name: /no resource/i })).not.to.equal(null);
+    });
+
+    it('should block submit and not call `onEventsChange` when `shouldEventRequireResource={true}` and the event has no resource', async () => {
+      const onEventsChange = spy();
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[eventWithoutResource]}
+          onEventsChange={onEventsChange}
+          resources={resources}
+          shouldEventRequireResource
+          storeClass={PremiumTestStore}
+        >
+          <TestEventDialogContent
+            open
+            {...defaultProps}
+            occurrence={eventWithoutResourceOccurrence}
+          />
+        </EventCalendarProvider>,
+      );
+
+      expect(screen.queryByText(/a resource is required/i)).to.equal(null);
+      // An unassigned resource is not the same as an invalid one: the Select reflects
+      // the current state ("No resource") and the error label flags the validation.
+      expect(screen.queryByText(/invalid resource/i)).to.equal(null);
+      expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(
+        /no resource/i,
+      );
+
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(onEventsChange.called).to.equal(false);
+      expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
+    });
+
+    it('should unblock submit and clear the error after a resource is selected', async () => {
+      const onEventsChange = spy();
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[eventWithoutResource]}
+          onEventsChange={onEventsChange}
+          resources={resources}
+          shouldEventRequireResource
+          storeClass={PremiumTestStore}
+        >
+          <TestEventDialogContent
+            open
+            {...defaultProps}
+            occurrence={eventWithoutResourceOccurrence}
+          />
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getByRole('button', { name: /save/i }));
+      expect(onEventsChange.called).to.equal(false);
+      expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
+
+      await user.click(screen.getByRole('combobox', { name: /resource/i }));
+      await user.click(await screen.findByRole('option', { name: /work/i }));
+
+      // The error should clear as soon as a valid resource is picked, not only after the next save.
+      expect(screen.queryByText(/a resource is required/i)).to.equal(null);
+
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(onEventsChange.calledOnce).to.equal(true);
+      expect(onEventsChange.firstCall.firstArg[0].resource).to.equal(workResource.id);
+    });
+
+    it('should block submit on a Calendar creation placeholder when `shouldEventRequireResource={true}` and no resource is selected', async () => {
+      const onEventsChange = spy();
+      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
+      const end = adapter.date('2025-05-26T08:30:00Z', 'default');
+
+      const creationOccurrence = EventBuilder.new(adapter)
+        .id('tmp')
+        .span(start.toISOString(), end.toISOString())
+        .toOccurrence();
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[]}
+          onEventsChange={onEventsChange}
+          resources={resources}
+          shouldEventRequireResource
+          storeClass={PremiumTestStore}
+        >
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
+            onMount={(store) =>
+              store.setOccurrencePlaceholder({
+                type: 'creation',
+                surfaceType: 'time-grid',
+                start,
+                end,
+                lockSurfaceType: false,
+                resourceId: null,
+              })
+            }
+          />
+          <TestEventDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+        </EventCalendarProvider>,
+      );
+
+      await user.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(onEventsChange.called).to.equal(false);
+      expect(screen.getByText(/a resource is required/i)).not.to.equal(null);
+    });
+  });
+
   describe('Event creation', () => {
     it('should change surface of the placeholder to day-grid when all-day is changed to true', async () => {
       const start = adapter.date('2025-05-26T07:30:00Z', 'default');

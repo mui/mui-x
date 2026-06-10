@@ -7,6 +7,7 @@ import {
   type BarChartSlotProps,
   type BarChartSlots,
   BarPlot,
+  FocusedBar,
 } from '@mui/x-charts/BarChart';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -115,6 +116,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
             <BarPlot {...barPlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
+            <FocusedBar />
           </g>
           <ChartsAxis {...chartsAxisProps} />
           <ChartsZoomSlider />
@@ -315,13 +317,40 @@ BarChartPro.propTypes = {
   /**
    * The list of zoom data related to each axis.
    * Used to initialize the zoom in a specific configuration without controlling it.
+   *
+   * Each entry is either explicit zoom percentages (`{ axisId, start, end }`) or a
+   * range value (`{ axisId, value }`) resolved against the axis domain.
    */
   initialZoom: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      end: PropTypes.number.isRequired,
-      start: PropTypes.number.isRequired,
-    }),
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        end: PropTypes.number.isRequired,
+        start: PropTypes.number.isRequired,
+      }),
+      PropTypes.shape({
+        axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        value: PropTypes.oneOfType([
+          PropTypes.arrayOf(PropTypes.instanceOf(Date).isRequired),
+          PropTypes.arrayOf(PropTypes.string.isRequired),
+          PropTypes.func,
+          PropTypes.shape({
+            step: PropTypes.number,
+            unit: PropTypes.oneOf([
+              'day',
+              'hour',
+              'microsecond',
+              'millisecond',
+              'minute',
+              'month',
+              'second',
+              'week',
+              'year',
+            ]).isRequired,
+          }),
+        ]),
+      }),
+    ]).isRequired,
   ),
   /**
    * The direction of the bar elements.
@@ -529,12 +558,16 @@ BarChartPro.propTypes = {
       min: PropTypes.number,
       sizeMap: PropTypes.oneOfType([
         PropTypes.shape({
+          interpolator: PropTypes.oneOf(['linear', 'log', 'sqrt']),
           max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
           min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-          size: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.number.isRequired),
-            PropTypes.func,
-          ]).isRequired,
+          size: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+          type: PropTypes.oneOf(['continuous']).isRequired,
+        }),
+        PropTypes.shape({
+          max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+          size: PropTypes.func.isRequired,
           type: PropTypes.oneOf(['continuous']).isRequired,
         }),
         PropTypes.shape({
