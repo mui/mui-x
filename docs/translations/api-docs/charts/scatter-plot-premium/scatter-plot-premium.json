@@ -29,10 +29,6 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the highlighted scatter mark element"
     },
-    "marker": {
-      "description": "Styles applied to {{nodeName}}. Not applied when using the <code>svg-batch</code> renderer.",
-      "nodeName": "an individual scatter marker element"
-    },
     "root": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the scatter plot element"
@@ -41,5 +37,9 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the group surrounding a series&#39; scatter elements"
     }
+  },
+  "slotDescriptions": {
+    "marker": "The component that renders the marker for a scatter point.",
+    "scatter": ""
   }
 }

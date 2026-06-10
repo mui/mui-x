@@ -194,16 +194,6 @@ ChartsRotationAxis.propTypes = {
    */
   position: PropTypes.oneOf(['inside', 'none', 'outside']),
   /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
-  /**
    * The start angle (in deg).
    */
   startAngle: PropTypes.number,

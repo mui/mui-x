@@ -26,6 +26,15 @@
     "import { ScatterPlotPremium } from '@mui/x-charts-premium/ScatterChartPremium';",
     "import { ScatterPlotPremium } from '@mui/x-charts-premium';"
   ],
+  "slots": [
+    {
+      "name": "marker",
+      "description": "The component that renders the marker for a scatter point.",
+      "default": "ScatterMarker",
+      "class": "MuiScatterChart-marker"
+    },
+    { "name": "scatter", "description": "", "class": null }
+  ],
   "classes": [
     {
       "key": "focusedMark",
@@ -37,12 +46,6 @@
       "key": "highlightedMark",
       "className": "MuiScatterChart-highlightedMark",
       "description": "Styles applied to the highlighted scatter mark element.",
-      "isGlobal": false
-    },
-    {
-      "key": "marker",
-      "className": "MuiScatterChart-marker",
-      "description": "Styles applied to an individual scatter marker element.\nNot applied when using the `svg-batch` renderer.",
       "isGlobal": false
     },
     {

@@ -15,8 +15,6 @@
     "position": {
       "description": "The position of the rotation axis. It can be &#39;inside&#39; or &#39;outside&#39;."
     },
-    "slotProps": { "description": "The props used for each component slot." },
-    "slots": { "description": "Overridable component slots." },
     "startAngle": { "description": "The start angle (in deg)." },
     "tickInterval": {
       "description": "Defines which ticks are displayed. Its value can be: - &#39;auto&#39; In such case the ticks are computed based on axis scale and other parameters. - a filtering function of the form <code>(value, index) =&gt; boolean</code> which is available only if the axis has &quot;point&quot; scale. - an array containing the values where ticks should be displayed."

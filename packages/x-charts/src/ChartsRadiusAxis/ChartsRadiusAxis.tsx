@@ -216,16 +216,6 @@ ChartsRadiusAxis.propTypes = {
    * @default 'start'
    */
   position: PropTypes.oneOfType([PropTypes.oneOf(['end', 'none', 'start']), PropTypes.number]),
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps: PropTypes.object,
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

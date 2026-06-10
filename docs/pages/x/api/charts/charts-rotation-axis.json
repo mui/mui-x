@@ -16,12 +16,6 @@
       },
       "default": "'outside'"
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "additionalInfo": { "slotsApi": true }
-    },
     "startAngle": { "type": { "name": "number" } },
     "tickInterval": {
       "type": { "name": "union", "description": "'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func" },

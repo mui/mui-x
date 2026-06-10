@@ -1,8 +1,17 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ScatterPlot, type ScatterPlotProps } from '@mui/x-charts/ScatterChart';
+import {
+  ScatterPlot,
+  type ScatterPlotProps,
+  type ScatterPlotSlots,
+  type ScatterPlotSlotProps,
+} from '@mui/x-charts/ScatterChart';
 import { ScatterWebGLPlot } from './webgl/ScatterWebGLPlot';
+
+export interface ScatterPlotPremiumSlots extends ScatterPlotSlots {}
+
+export interface ScatterPlotPremiumSlotProps extends ScatterPlotSlotProps {}
 
 export interface ScatterPlotPremiumProps extends Omit<ScatterPlotProps, 'renderer'> {
   /**
@@ -12,6 +21,16 @@ export interface ScatterPlotPremiumProps extends Omit<ScatterPlotProps, 'rendere
    * - `webgl`: Renders scatter items using WebGL for better performance, at the cost of some limitations.
    */
   renderer: 'svg-single' | 'svg-batch' | 'webgl';
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: ScatterPlotPremiumSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: ScatterPlotPremiumSlotProps;
 }
 
 function ScatterPlotPremium({ renderer, ...props }: ScatterPlotPremiumProps) {
