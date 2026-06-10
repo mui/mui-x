@@ -12,9 +12,22 @@ import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
+import { AxisItemIdentifier } from '@mui/x-charts/models';
 import { forecast, type IconType } from './weatherForecast';
 
 export default function WeatherComposition() {
+  const [highlightedAxis, setHighlightedAxis] = React.useState<
+    AxisItemIdentifier[]
+  >([]);
+  const [tooltipAxis, setTooltipAxis] = React.useState<AxisItemIdentifier[]>([]);
+
+  const sync = {
+    highlightedAxis,
+    onHighlightedAxisChange: setHighlightedAxis,
+    tooltipAxis,
+    onTooltipAxisChange: setTooltipAxis,
+  };
+
   return (
     <Stack spacing={1} sx={{ width: '100%' }}>
       <Stack
@@ -29,9 +42,9 @@ export default function WeatherComposition() {
           },
         })}
       >
-        <ForecastChart />
+        <ForecastChart {...sync} />
 
-        <WindChart />
+        <WindChart {...sync} />
       </Stack>
       <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap', rowGap: 0.5, justifyContent: 'center' }}>
         <LegendItem color={colors.temperature} label="Temperature C" />
@@ -44,9 +57,17 @@ export default function WeatherComposition() {
   );
 }
 
-function ForecastChart() {
+type AxisSyncProps = {
+  highlightedAxis: AxisItemIdentifier[];
+  onHighlightedAxisChange: (axisItems: AxisItemIdentifier[]) => void;
+  tooltipAxis: AxisItemIdentifier[];
+  onTooltipAxisChange: (axisItems: AxisItemIdentifier[]) => void;
+};
+
+function ForecastChart(props: AxisSyncProps) {
   return (
     <ChartsContainer
+      {...props}
       dataset={forecast}
       xAxis={[
         {
@@ -106,7 +127,7 @@ function ForecastChart() {
       margin={{ top: 64, right: 24, bottom: 8, left: 36 }}
     >
       <ChartsGrid horizontal />
-      <ChartsAxisHighlight x="band" />
+
       <DayAndTimeHeader />
       <MaxPrecipitationBars />
       <BarPlot />
@@ -115,14 +136,17 @@ function ForecastChart() {
       <WeatherMarkers />
       <ChartsYAxis axisId="precipitation" />
       <ChartsYAxis disableLine axisId="temperature" />
-      <ChartsTooltip />
+      <ChartsAxisHighlight x="band" />
+      <ChartsAxisHighlight x="line" />
+      <ChartsTooltip position="top" />
     </ChartsContainer>
   );
 }
 
-function WindChart() {
+function WindChart(props: AxisSyncProps) {
   return (
     <ChartsContainer
+      {...props}
       dataset={forecast}
       xAxis={[
         {
@@ -176,11 +200,13 @@ function WindChart() {
       sx={{ [`& [data-series=gust]`]: { strokeDasharray: '4 4' } }}
     >
       <ChartsGrid horizontal />
-      <ChartsAxisHighlight x="line" />
+
       <LinePlot />
       <LineHighlightPlot />
       <ChartsYAxis axisId="wind" label="Wind m/s" />
-      <ChartsTooltip sx={{ [`& [data-series=gust]`]: { strokeDasharray: '4 4' } }} />
+      <ChartsAxisHighlight x="band" />
+      <ChartsAxisHighlight x="line" />
+      <ChartsTooltip position="bottom" sx={{ [`& [data-series=gust]`]: { strokeDasharray: '4 4' } }} />
     </ChartsContainer>
   );
 }
@@ -351,55 +377,6 @@ function MaxPrecipitationBars() {
   );
 }
 
-// function WindLines() {
-//   const xScale = useXScale<'band'>();
-//   const yScale = useYScale<'linear'>('wind');
-//   const { top, height } = useDrawingArea();
-//   const points = forecast
-//     .map(
-//       (item) =>
-//         `${(xScale(item.time) ?? 0) + xScale.bandwidth() / 2},${yScale(item.wind)}`,
-//     )
-//     .join(' ');
-//   const gustPoints = forecast
-//     .map(
-//       (item) =>
-//         `${(xScale(item.time) ?? 0) + xScale.bandwidth() / 2},${yScale(item.gust)}`,
-//     )
-//     .join(' ');
-//   const arrowY = top + height + 20;
-
-//   return (
-//     <g aria-hidden="true">
-//       <polyline
-//         points={gustPoints}
-//         fill="none"
-//         stroke="#7c4dff"
-//         strokeWidth={1.5}
-//         strokeDasharray="4 4"
-//       />
-//       <polyline points={points} fill="none" stroke="#7e22ce" strokeWidth={2.5} />
-//       {forecast.map((item) => {
-//         const x = (xScale(item.time) ?? 0) + xScale.bandwidth() / 2;
-//         return (
-//           <g
-//             key={item.time.toString()}
-//             transform={`translate(${x}, ${arrowY}) rotate(${item.windDirection})`}
-//           >
-//             <path
-//               d="M 0 -8 L 0 5 M -4 1 L 0 6 L 4 1"
-//               fill="none"
-//               stroke="#455a64"
-//               strokeWidth={1.4}
-//               strokeLinecap="round"
-//               strokeLinejoin="round"
-//             />
-//           </g>
-//         );
-//       })}
-//     </g>
-//   );
-// }
 
 function LegendItem({
   color,

@@ -12,9 +12,20 @@ import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
+
 import { forecast } from './weatherForecast';
 
 export default function WeatherComposition() {
+  const [highlightedAxis, setHighlightedAxis] = React.useState([]);
+  const [tooltipAxis, setTooltipAxis] = React.useState([]);
+
+  const sync = {
+    highlightedAxis,
+    onHighlightedAxisChange: setHighlightedAxis,
+    tooltipAxis,
+    onTooltipAxisChange: setTooltipAxis,
+  };
+
   return (
     <Stack spacing={1} sx={{ width: '100%' }}>
       <Stack
@@ -29,10 +40,14 @@ export default function WeatherComposition() {
           },
         })}
       >
-        <ForecastChart />
-        <WindChart />
+        <ForecastChart {...sync} />
+        <WindChart {...sync} />
       </Stack>
-      <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap', rowGap: 0.5 }}>
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ flexWrap: 'wrap', rowGap: 0.5, justifyContent: 'center' }}
+      >
         <LegendItem color={colors.temperature} label="Temperature C" />
         <LegendItem color={colors.precipitation} label="Precipitation mm" />
         <LegendItem color={colors.maxPrecipitation} label="Max precip. mm" hatch />
@@ -43,9 +58,10 @@ export default function WeatherComposition() {
   );
 }
 
-function ForecastChart() {
+function ForecastChart(props) {
   return (
     <ChartsContainer
+      {...props}
       dataset={forecast}
       xAxis={[
         {
@@ -117,9 +133,10 @@ function ForecastChart() {
   );
 }
 
-function WindChart() {
+function WindChart(props) {
   return (
     <ChartsContainer
+      {...props}
       dataset={forecast}
       xAxis={[
         {
