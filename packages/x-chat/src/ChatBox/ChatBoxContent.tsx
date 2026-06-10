@@ -288,12 +288,14 @@ function DefaultConversationHeader({
   showBackButton,
   onMenuClick,
   showMenuButton,
+  menuExpanded,
 }: {
   features?: ChatBoxFeatures;
   onBackClick?: () => void;
   showBackButton?: boolean;
   onMenuClick?: () => void;
   showMenuButton?: boolean;
+  menuExpanded?: boolean;
 }) {
   const { slots, slotProps } = useChatSlots();
   const localeText = useChatLocaleText();
@@ -317,6 +319,10 @@ function DefaultConversationHeader({
           <IconButton
             size="small"
             aria-label={localeText.conversationHeaderMenuLabel}
+            // The button opens the conversation-list drawer (a dialog with a
+            // focus trap); expose that relationship to assistive technology.
+            aria-haspopup="dialog"
+            aria-expanded={menuExpanded ?? false}
             onClick={onMenuClick}
             sx={{ mr: 1 }}
           >
@@ -390,7 +396,12 @@ function mergeConversationListLayoutSlotProps(slotProp: any, extraStyle: React.C
 
 function mergeLayoutSlotProps(
   slotProp: any,
-  internalProps: { className?: string; style?: React.CSSProperties },
+  internalProps: {
+    className?: string;
+    style?: React.CSSProperties;
+    role?: string;
+    'aria-label'?: string;
+  },
 ) {
   return mergeSlotProps(internalProps, slotProp);
 }
@@ -891,6 +902,10 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
       conversationsPane: mergeLayoutSlotProps(slotProps.conversationsPane, {
         className: conversationsPaneClassName,
         style: conversationsPaneStyle,
+        // Landmark for the conversations sidebar, so assistive technology can
+        // jump between the sidebar, the thread region, and the composer form.
+        role: 'navigation',
+        'aria-label': localeText.conversationListLandmarkLabel,
       }),
       threadPane: mergeLayoutSlotProps(slotProps.threadPane, {
         className: threadPaneClassName,
@@ -901,6 +916,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
       conversationsPaneClassName,
       conversationsPaneStyle,
       layoutClassName,
+      localeText.conversationListLandmarkLabel,
       slotProps.conversationsPane,
       slotProps.layout,
       slotProps.threadPane,
@@ -975,6 +991,7 @@ export function ChatBoxContent(props: ChatBoxContentProps) {
             showBackButton={showBackButton}
             onMenuClick={handleMenuClick}
             showMenuButton={showDrawerMenuButton}
+            menuExpanded={drawerOpen}
           />
           <ChatBoxMessageListWrapper>
             <ChatMessageList

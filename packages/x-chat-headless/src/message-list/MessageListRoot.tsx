@@ -43,6 +43,12 @@ export interface MessageListRootSlots {
   messageListOverlay: React.ElementType;
   messageListScrollbar: React.ElementType;
   messageListScrollbarThumb: React.ElementType;
+  /**
+   * The visually-hidden `role="status"` element announcing streaming
+   * transitions ("Assistant is responding" / "Response complete") to screen
+   * readers. Pass `null`-rendering component to silence the announcements.
+   */
+  messageListStatus: React.ElementType;
 }
 
 export interface MessageListRootSlotProps {
@@ -52,6 +58,7 @@ export interface MessageListRootSlotProps {
   messageListOverlay?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
   messageListScrollbar?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
   messageListScrollbarThumb?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
+  messageListStatus?: SlotComponentProps<'div', {}, MessageListRootOwnerState>;
 }
 
 export interface MessageListRootAutoScrollConfig {
@@ -109,6 +116,7 @@ interface MessageListViewProps {
   overlay: React.ReactNode;
   renderItem: MessageListRootProps['renderItem'];
   getItemKey: NonNullable<MessageListRootProps['getItemKey']>;
+  statusAnnouncement: string;
   slots: Partial<MessageListRootSlots> | undefined;
   slotProps: MessageListRootSlotProps | undefined;
   other: Omit<
@@ -210,6 +218,20 @@ const overlayStyle: React.CSSProperties = {
   pointerEvents: 'none',
 };
 
+// Standard visually-hidden recipe: present in the accessibility tree (the
+// status live region must stay rendered) but invisible and out of layout.
+const visuallyHiddenStyle: React.CSSProperties = {
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: 'hidden',
+  clip: 'rect(0 0 0 0)',
+  whiteSpace: 'nowrap',
+  border: 0,
+};
+
 // Fallback styles used when the outer `messageList` slot is overridden
 // (which removes the ScrollArea context).
 const fallbackRootStyle: React.CSSProperties = {
@@ -223,7 +245,17 @@ const fallbackScrollerStyle: React.CSSProperties = {
 };
 
 function StaticMessageListView(props: MessageListViewProps) {
-  const { itemIds, overlay, renderItem, getItemKey, slots, slotProps, other, behavior } = props;
+  const {
+    itemIds,
+    overlay,
+    renderItem,
+    getItemKey,
+    statusAnnouncement,
+    slots,
+    slotProps,
+    other,
+    behavior,
+  } = props;
   const localeText = useChatLocaleText();
   // When the outer messageList slot is overridden, the ScrollArea context is
   // absent, so the scroller / scrollbar must fall back to plain elements.
@@ -237,6 +269,7 @@ function StaticMessageListView(props: MessageListViewProps) {
     slots?.messageListScrollbar ?? (hasScrollArea ? ScrollScrollbar : 'div');
   const MessageListScrollbarThumb =
     slots?.messageListScrollbarThumb ?? (hasScrollArea ? ScrollThumb : 'div');
+  const MessageListStatus = slots?.messageListStatus ?? 'div';
   const messageListProps = useSlotProps({
     elementType: MessageList,
     externalSlotProps: slotProps?.messageList,
@@ -289,6 +322,18 @@ function StaticMessageListView(props: MessageListViewProps) {
       style: thumbStyle,
     },
   });
+  const statusProps = useSlotProps({
+    elementType: MessageListStatus,
+    externalSlotProps: slotProps?.messageListStatus,
+    ownerState: behavior.ownerState,
+    additionalProps: {
+      // `role="status"` is an implicit polite, atomic live region. It only
+      // ever carries the short streaming-transition announcements (never the
+      // streamed content itself), so it cannot spam screen readers per token.
+      role: 'status',
+      style: visuallyHiddenStyle,
+    },
+  });
 
   return (
     <MessageListContextProvider value={behavior.contextValue}>
@@ -315,6 +360,7 @@ function StaticMessageListView(props: MessageListViewProps) {
         {overlay != null ? (
           <MessageListOverlay {...messageListOverlayProps}>{overlay}</MessageListOverlay>
         ) : null}
+        <MessageListStatus {...statusProps}>{statusAnnouncement}</MessageListStatus>
       </MessageList>
     </MessageListContextProvider>
   );
@@ -369,6 +415,26 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
   const isAnyMessageStreaming = messages.some((m) => m.status === 'streaming');
   const isStreaming = isAdapterStreaming || isAnyMessageStreaming;
 
+  // Announce streaming transitions (start / complete) through the
+  // visually-hidden status live region. Only transitions are announced —
+  // never the streamed content — so screen readers hear exactly two short
+  // messages per response instead of every token. The streaming article
+  // itself additionally carries `aria-busy` (see MessageRoot).
+  const localeText = useChatLocaleText();
+  const [statusAnnouncement, setStatusAnnouncement] = React.useState('');
+  const prevIsStreamingRef = React.useRef(isStreaming);
+  React.useEffect(() => {
+    if (prevIsStreamingRef.current === isStreaming) {
+      return;
+    }
+    prevIsStreamingRef.current = isStreaming;
+    setStatusAnnouncement(
+      isStreaming
+        ? localeText.responseStreamingStartedAnnouncement
+        : localeText.responseStreamingCompletedAnnouncement,
+    );
+  }, [isStreaming, localeText]);
+
   const autoScrollEnabled = autoScroll !== false;
   let autoScrollBuffer: number;
   if (!autoScrollEnabled) {
@@ -420,6 +486,7 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
         renderItem={renderItem}
         slotProps={slotProps}
         slots={slots}
+        statusAnnouncement={statusAnnouncement}
       />
     </MessageRovingProvider>
   );
