@@ -8,7 +8,7 @@ import {
   TemporalTimezone,
 } from '@mui/x-scheduler-internals/models';
 import { Adapter } from '@mui/x-scheduler-internals/use-adapter';
-import { EventDialogLocaleText } from '../../../models';
+import { EventDialogLocaleText, SchedulerWeekday } from '../../../models';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 export interface ControlledValue {
@@ -22,6 +22,16 @@ export interface ControlledValue {
   recurrenceSelection: RecurringEventPresetKey | null | 'custom';
   rruleDraft: SchedulerProcessedEventRecurrenceRule;
 }
+
+const WEEKDAYS: SchedulerWeekday[] = [
+  'sunday',
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+];
 
 export type EndsSelection = 'never' | 'after' | 'until';
 
@@ -93,8 +103,9 @@ export function getRecurrenceLabel(
     case 'DAILY':
       return localeText.recurrenceDailyPresetLabel;
     case 'WEEKLY': {
-      const weekday = adapter.format(start.value, 'weekday');
-      return localeText.recurrenceWeeklyPresetLabel(weekday);
+      const weekday = WEEKDAYS[adapter.toJsDate(start.value).getDay()];
+      const weekdayName = adapter.format(start.value, 'weekday');
+      return localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName });
     }
     case 'MONTHLY': {
       const date = adapter.getDate(start.value);

@@ -38,6 +38,7 @@ import {
   EventDialogTabPanel,
   EventDialogTabContent,
 } from '@mui/x-scheduler/internals';
+import { SchedulerWeekday } from '@mui/x-scheduler/models';
 
 const SectionHeaderTitle = styled('legend', {
   name: 'MuiEventDialog',
@@ -368,7 +369,18 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     controlled.rruleDraft,
   );
 
-  const weekday = adapter.format(occurrence.displayTimezone.start.value, 'weekday');
+  const WEEKDAYS: SchedulerWeekday[] = [
+    'sunday',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+  ];
+
+  const weekday = WEEKDAYS[adapter.toJsDate(occurrence.displayTimezone.start.value).getDay()];
+  const weekdayName = adapter.format(occurrence.displayTimezone.start.value, 'weekday');
   const dateForYearlyOption = formatDayOfMonthAndMonthFullLetter(
     occurrence.displayTimezone.start.value,
     adapter,
@@ -381,7 +393,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     { label: `${localeText.recurrenceNoRepeat}`, value: null },
     { label: `${localeText.recurrenceDailyPresetLabel}`, value: 'DAILY' },
     {
-      label: `${localeText.recurrenceWeeklyPresetLabel(weekday)}`,
+      label: `${localeText.recurrenceWeeklyPresetLabel({ weekday, weekdayName })}`,
       value: 'WEEKLY',
     },
     {
