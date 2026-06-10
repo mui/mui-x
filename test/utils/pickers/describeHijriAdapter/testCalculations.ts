@@ -135,6 +135,10 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
     expect(adapter.getDate(testDateIso)).to.equal(21);
   });
 
+  it('Method: getDaysInMonth', () => {
+    expect(adapter.getDaysInMonth(testDateIso)).to.equal(30);
+  });
+
   it('Method: setYear', () => {
     expect(adapter.setYear(testDateIso, 1441)).toEqualDateTime('2019-10-20T11:44:00.000Z');
   });
