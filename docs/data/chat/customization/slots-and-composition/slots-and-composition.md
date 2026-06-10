@@ -75,18 +75,18 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 
 ### Message list slots
 
-| Slot name           | Default component       | Element  | Description                           |
-| :------------------ | :---------------------- | :------- | :------------------------------------ |
-| `messageList`       | `ChatMessageList`       | `<div>`  | Scrollable message container          |
-| `messageGroup`      | `ChatMessageGroup`      | `<div>`  | Same-author message group             |
-| `messageRoot`       | `ChatMessage`           | `<div>`  | Individual message row (wrapper-only) |
-| `messageAvatar`     | `ChatMessageAvatar`     | `<div>`  | Author avatar                         |
-| `messageContent`    | `ChatMessageContent`    | `<div>`  | Message bubble                        |
-| `messageMeta`       | `ChatMessageMeta`       | `<div>`  | Timestamp (compact variant)           |
-| `messageInlineMeta` | `ChatMessageInlineMeta` | `<span>` | Inline timestamp inside the bubble    |
-| `messageError`      | `ChatMessageError`      | `<div>`  | Error card under a failed message     |
-| `messageActions`    | `ChatMessageActions`    | `<div>`  | Hover action menu                     |
-| `messageAuthorName` | —                       | `<div>`  | Author name label above the group     |
+| Slot name           | Default component       | Element  | Description                                                     |
+| :------------------ | :---------------------- | :------- | :-------------------------------------------------------------- |
+| `messageList`       | `ChatMessageList`       | `<div>`  | Scrollable message container                                    |
+| `messageGroup`      | `ChatMessageGroup`      | `<div>`  | Same-author message group                                       |
+| `messageRoot`       | `ChatMessage`           | `<div>`  | Individual message row (wrapper-only)                           |
+| `messageAvatar`     | `ChatMessageAvatar`     | `<div>`  | Author avatar                                                   |
+| `messageContent`    | `ChatMessageContent`    | `<div>`  | Message bubble                                                  |
+| `messageMeta`       | `ChatMessageMeta`       | `<div>`  | Timestamp (compact variant)                                     |
+| `messageInlineMeta` | `ChatMessageInlineMeta` | `<span>` | Inline timestamp inside the bubble                              |
+| `messageError`      | `ChatMessageError`      | `<div>`  | Error card under a failed message                               |
+| `messageActions`    | `ChatMessageActions`    | `<div>`  | Hover action menu                                               |
+| `messageAuthorName` | —                       | `<div>`  | Author name label above the group                               |
 | `dateDivider`       | `ChatDateDivider`       | `<div>`  | Date separator between groups (requires `features.dateDivider`) |
 
 ### Composer slots
@@ -103,12 +103,12 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 
 ### Indicator slots
 
-| Slot name         | Default component              | Element    | Description                            |
-| :---------------- | :----------------------------- | :--------- | :------------------------------------- |
-| `typingIndicator` | `ChatTypingIndicator`          | `<div>`    | Animated dots while assistant responds |
+| Slot name         | Default component              | Element    | Description                                              |
+| :---------------- | :----------------------------- | :--------- | :------------------------------------------------------- |
+| `typingIndicator` | `ChatTypingIndicator`          | `<div>`    | Animated dots while assistant responds                   |
 | `unreadMarker`    | `ChatUnreadMarker`             | `<div>`    | "New messages" marker (requires `features.unreadMarker`) |
-| `scrollToBottom`  | `ChatScrollToBottomAffordance` | `<button>` | Floating scroll-to-bottom button       |
-| `suggestions`     | `ChatSuggestions`              | `<div>`    | Prompt suggestion chips                |
+| `scrollToBottom`  | `ChatScrollToBottomAffordance` | `<button>` | Floating scroll-to-bottom button                         |
+| `suggestions`     | `ChatSuggestions`              | `<div>`    | Prompt suggestion chips                                  |
 
 :::warning
 **Two things to know about the slot names:**

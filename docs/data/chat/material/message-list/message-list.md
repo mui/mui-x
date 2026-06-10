@@ -186,11 +186,55 @@ function CustomScrollIndicator() {
 
 ## Accessibility
 
-The message list includes built-in ARIA attributes:
+### Keyboard navigation
 
-- The scroller element has `role="log"` and `aria-live="polite"` for screen reader announcements
-- Date dividers use `role="separator"`
-- The `aria-label` is derived from the locale text system
+The message list is a single Tab stop: a roving tabindex over the `role="article"` messages keeps only one message in the tab order at a time, so tabbing from the composer to the rest of the application never walks through every message.
+
+{{"demo": "KeyboardNavigation.js", "defaultCodeOpen": false, "bg": "inline"}}
+
+| Key                                              | Action                                                                                           |
+| :----------------------------------------------- | :----------------------------------------------------------------------------------------------- |
+| <kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd> | Enter or leave the message list (a single stop)                                                  |
+| <kbd>Arrow Up</kbd> / <kbd>Arrow Down</kbd>      | Move focus to the previous / next message                                                        |
+| <kbd>Home</kbd> / <kbd>End</kbd>                 | Move focus to the first / latest message                                                         |
+| <kbd>Page Up</kbd> / <kbd>Page Down</kbd>        | Native scrolling (kept unbound so a message taller than the viewport stays readable by keyboard) |
+| <kbd>Enter</kbd>                                 | Drill into the focused message's controls (links, copy buttons, tool output, actions)            |
+| <kbd>Escape</kbd>                                | Return from a message's controls to the message                                                  |
+
+Before the user interacts, the tab stop tracks the newest message.
+The tab stop is remembered per list, so leaving and re-entering the message list returns focus to the same message.
+
+### Interior controls and drill-in
+
+Interactive content inside messages—links in Markdown, code-block copy buttons, tool and reasoning disclosures, source and file links—stays out of the tab order until the user drills into the focused message with <kbd>Enter</kbd>, and leaves it again on <kbd>Escape</kbd>.
+All controls remain mouse-clickable throughout.
+Message actions are additionally hidden (`visibility: hidden`) until the message is hovered or drilled into.
+
+Custom interactive content rendered inside a message can participate in this model with the `useMessageContentTabIndex()` hook (or `useMessageActionable()` for full control), both exported from `@mui/x-chat-headless`:
+
+```tsx
+function CustomControl() {
+  const tabIndex = useMessageContentTabIndex();
+  return (
+    <button type="button" tabIndex={tabIndex}>
+      …
+    </button>
+  );
+}
+```
+
+Outside a roving message list both hooks leave the natural tab order untouched, so the same component works in standalone message compositions.
+
+Set `enableRovingFocus={false}` on the message list to opt out entirely (for example when rendering fully custom rows that manage focus themselves).
+
+### Screen readers
+
+- The scroller element has `role="log"` and `aria-live="polite"`, so newly arriving complete messages are announced.
+- A streaming message carries `aria-busy="true"` while it streams, hinting assistive technology to defer reading it until it completes.
+- A visually hidden `role="status"` region announces streaming transitions—"Assistant is responding" and "Response complete"—exactly once each, never per streamed token. The strings come from the locale text system (`responseStreamingStartedAnnouncement`, `responseStreamingCompletedAnnouncement`).
+- Each message is a `role="article"` labeled "Message from {author}".
+- Date dividers use `role="separator"`.
+- The list `aria-label` is derived from the locale text system.
 
 ## Slots
 

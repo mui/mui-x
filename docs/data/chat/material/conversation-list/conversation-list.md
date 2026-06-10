@@ -163,7 +163,11 @@ The `conversation` object in `ownerState` lets you derive everything you need to
 ## Accessibility notes
 
 The default list uses `role="listbox"` on the root and `role="option"` with `aria-selected` on each row.
-Roving focus is managed automatically: only one row is in the tab order at a time, and `ArrowUp`, `ArrowDown`, `Home`, `End`, and `Enter` are handled automatically.
+Roving focus is managed automatically: only one row is in the tab order at a time, and `ArrowUp`, `ArrowDown`, `Home`, `End`, `PageUp`, `PageDown`, and `Enter` are handled automatically.
+The [message list](/x/react-chat/material/message-list/#accessibility) shares the same roving model, so both lists feel identical to keyboard users.
+
+When rendered inside `ChatBox`, the sidebar pane is exposed as a `navigation` landmark named through the locale text system (`conversationListLandmarkLabel`), alongside the thread `region` and composer `form` landmarks—so assistive technology can jump directly between the sidebar, the thread, and the composer.
+On narrow layouts the sidebar becomes a modal drawer: the header menu button exposes `aria-haspopup="dialog"` and `aria-expanded`, focus is trapped inside the drawer, and <kbd>Escape</kbd> closes it and restores focus to the button.
 
 Custom `item` slot components must forward all `...props` to the DOM element they render so the `role`, `aria-selected`, and keyboard handler props are preserved.
 Failing to spread `...props` breaks both keyboard navigation and screen-reader semantics.

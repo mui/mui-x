@@ -50,15 +50,15 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 
 ### Message list slots
 
-| Slot name        | Default component    | Element | Description                   |
-| :--------------- | :------------------- | :------ | :---------------------------- |
-| `messageList`    | `ChatMessageList`    | `<div>` | Scrollable message container  |
-| `messageRoot`    | `ChatMessage`        | `<div>` | Individual message row        |
-| `messageAvatar`  | `ChatMessageAvatar`  | `<div>` | Author avatar                 |
-| `messageContent` | `ChatMessageContent` | `<div>` | Message bubble                |
-| `messageMeta`    | `ChatMessageMeta`    | `<div>` | Timestamp and delivery status |
-| `messageActions` | `ChatMessageActions` | `<div>` | Hover action menu             |
-| `messageGroup`   | `ChatMessageGroup`   | `<div>` | Same-author message group     |
+| Slot name        | Default component    | Element | Description                                                     |
+| :--------------- | :------------------- | :------ | :-------------------------------------------------------------- |
+| `messageList`    | `ChatMessageList`    | `<div>` | Scrollable message container                                    |
+| `messageRoot`    | `ChatMessage`        | `<div>` | Individual message row                                          |
+| `messageAvatar`  | `ChatMessageAvatar`  | `<div>` | Author avatar                                                   |
+| `messageContent` | `ChatMessageContent` | `<div>` | Message bubble                                                  |
+| `messageMeta`    | `ChatMessageMeta`    | `<div>` | Timestamp and delivery status                                   |
+| `messageActions` | `ChatMessageActions` | `<div>` | Hover action menu                                               |
+| `messageGroup`   | `ChatMessageGroup`   | `<div>` | Same-author message group                                       |
 | `dateDivider`    | `ChatDateDivider`    | `<div>` | Date separator between groups (requires `features.dateDivider`) |
 
 ### Composer slots
@@ -74,12 +74,12 @@ Use `slotProps` to pass additional props to either the default or a custom slot 
 
 ### Indicator slots
 
-| Slot name         | Default component              | Element    | Description                            |
-| :---------------- | :----------------------------- | :--------- | :------------------------------------- |
-| `typingIndicator` | `ChatTypingIndicator`          | `<div>`    | Animated dots while assistant responds |
+| Slot name         | Default component              | Element    | Description                                              |
+| :---------------- | :----------------------------- | :--------- | :------------------------------------------------------- |
+| `typingIndicator` | `ChatTypingIndicator`          | `<div>`    | Animated dots while assistant responds                   |
 | `unreadMarker`    | `ChatUnreadMarker`             | `<div>`    | "New messages" marker (requires `features.unreadMarker`) |
-| `scrollToBottom`  | `ChatScrollToBottomAffordance` | `<button>` | Floating scroll-to-bottom button       |
-| `suggestions`     | `ChatSuggestions`              | `<div>`    | Prompt suggestion chips                |
+| `scrollToBottom`  | `ChatScrollToBottomAffordance` | `<button>` | Floating scroll-to-bottom button                         |
+| `suggestions`     | `ChatSuggestions`              | `<div>`    | Prompt suggestion chips                                  |
 
 :::info
 The `dateDivider` and `unreadMarker` slots are opt-in: `ChatBox` only renders them when the matching `features.dateDivider` / `features.unreadMarker` flag is enabled. The `typingIndicator` slot is defined in the type interface but is not currently consumed by `ChatBox`'s internal composition—use the standalone component directly in a custom layout with `ChatProvider`.

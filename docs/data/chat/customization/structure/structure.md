@@ -195,12 +195,12 @@ Pass additional props to any slot without replacing the component:
 
 ### Messages list
 
-| Slot           | Default            | Description                                                  |
-| :------------- | :----------------- | :----------------------------------------------------------- |
-| `messageList`  | `ChatMessageList`  | Scrollable message container                                 |
-| `messageGroup` | `ChatMessageGroup` | Same-author message group                                    |
+| Slot           | Default            | Description                                                     |
+| :------------- | :----------------- | :-------------------------------------------------------------- |
+| `messageList`  | `ChatMessageList`  | Scrollable message container                                    |
+| `messageGroup` | `ChatMessageGroup` | Same-author message group                                       |
 | `dateDivider`  | `ChatDateDivider`  | Date separator between groups (requires `features.dateDivider`) |
-| `unreadMarker` | `ChatUnreadMarker` | "New messages" marker (requires `features.unreadMarker`)     |
+| `unreadMarker` | `ChatUnreadMarker` | "New messages" marker (requires `features.unreadMarker`)        |
 
 ### Per message
 

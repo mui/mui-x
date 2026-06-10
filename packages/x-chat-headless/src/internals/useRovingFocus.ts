@@ -50,11 +50,14 @@ export interface UseRovingFocusParameters {
    * Invoked on Enter / Space. When omitted those keys are ignored by the hook
    * and fall through to the consumer (the message list uses Enter for
    * drill-in instead of activation).
+   * @param {string} id The id of the item the key was pressed on.
    */
   onActivate?: (id: string) => void;
   /**
    * Type-ahead label accessor. When omitted, printable keys are ignored by
    * the hook and fall through to the consumer.
+   * @param {string} id The id of the candidate item.
+   * @returns {string | undefined} The label to match the type-ahead buffer against.
    */
   getTypeAheadLabel?: (id: string) => string | undefined;
   /**
@@ -216,8 +219,9 @@ export function useRovingFocus(params: UseRovingFocusParameters): UseRovingFocus
 
       for (let offset = 1; offset <= total; offset += 1) {
         const candidateId = itemIds[(fromIndex + offset) % total];
-        const label = (candidateId == null ? undefined : getTypeAheadLabel(candidateId))
-          ?.toLowerCase();
+        const label = (
+          candidateId == null ? undefined : getTypeAheadLabel(candidateId)
+        )?.toLowerCase();
 
         if (label != null && label.startsWith(lowercase)) {
           setFocusedId(candidateId);

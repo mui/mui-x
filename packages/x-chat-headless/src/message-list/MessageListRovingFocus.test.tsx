@@ -22,7 +22,11 @@ function createAdapter(): ChatAdapter {
   };
 }
 
-function createMessage(id: string, role: ChatMessage['role'] = 'assistant', text = id): ChatMessage {
+function createMessage(
+  id: string,
+  role: ChatMessage['role'] = 'assistant',
+  text = id,
+): ChatMessage {
   return {
     id,
     role,
@@ -41,8 +45,8 @@ function getArticleByMessageId(id: string) {
 }
 
 function getTabbableArticleIds() {
-  return Array.from(document.querySelectorAll('[role="article"][tabindex="0"]')).map(
-    (article) => article.closest('[data-message-id]')?.getAttribute('data-message-id'),
+  return Array.from(document.querySelectorAll('[role="article"][tabindex="0"]')).map((article) =>
+    article.closest('[data-message-id]')?.getAttribute('data-message-id'),
   );
 }
 
@@ -286,10 +290,7 @@ describe('MessageListRoot roving focus', () => {
     render(
       <ChatRoot
         adapter={createAdapter()}
-        initialMessages={[
-          createMessage('m1'),
-          { ...createMessage('m2'), status: 'streaming' },
-        ]}
+        initialMessages={[createMessage('m1'), { ...createMessage('m2'), status: 'streaming' }]}
       >
         <MessageListRoot renderItem={renderMessageItem} />
       </ChatRoot>,
@@ -342,9 +343,7 @@ describe('MessageListRoot roving focus', () => {
 
     // The roving state lives outside React context values, so moving focus
     // must not punch through the memoized row components.
-    expect(Object.fromEntries(renderCounts)).to.deep.equal(
-      Object.fromEntries(countsAfterMount),
-    );
+    expect(Object.fromEntries(renderCounts)).to.deep.equal(Object.fromEntries(countsAfterMount));
   });
 
   it('announces streaming transitions once each, never per token', () => {

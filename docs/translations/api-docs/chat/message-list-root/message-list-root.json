@@ -15,6 +15,7 @@
     "messageListOverlay": "",
     "messageListScrollbar": "",
     "messageListScrollbarThumb": "",
-    "messageListScroller": ""
+    "messageListScroller": "",
+    "messageListStatus": "The visually-hidden <code>role=&quot;status&quot;</code> element announcing streaming transitions (&quot;Assistant is responding&quot; / &quot;Response complete&quot;) to screen readers. Pass <code>null</code>-rendering component to silence the announcements."
   }
 }

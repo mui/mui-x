@@ -144,8 +144,7 @@ export const DefaultMessageItem = React.memo(function DefaultMessageItem({
   warnIfHostElementRowSlot('unreadMarker', slots.unreadMarker);
   warnIfDividerSlotWithoutFeature(
     'dateDivider',
-    features?.dateDivider !== true &&
-      (slots.dateDivider != null || slotProps.dateDivider != null),
+    features?.dateDivider !== true && (slots.dateDivider != null || slotProps.dateDivider != null),
   );
   warnIfDividerSlotWithoutFeature(
     'unreadMarker',

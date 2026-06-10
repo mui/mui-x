@@ -8,7 +8,12 @@
     { "name": "messageListContent", "description": "", "class": null },
     { "name": "messageListOverlay", "description": "", "class": null },
     { "name": "messageListScrollbar", "description": "", "class": null },
-    { "name": "messageListScrollbarThumb", "description": "", "class": null }
+    { "name": "messageListScrollbarThumb", "description": "", "class": null },
+    {
+      "name": "messageListStatus",
+      "description": "The visually-hidden `role=\"status\"` element announcing streaming\ntransitions (\"Assistant is responding\" / \"Response complete\") to screen\nreaders. Pass `null`-rendering component to silence the announcements.",
+      "class": null
+    }
   ],
   "classes": [],
   "spread": true,
