@@ -52,8 +52,8 @@ export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick' | 'cl
    * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
    *                Read more: https://mui.com/x/react-charts/scatter/#performance
    *
-   * When not set, the renderer is chosen automatically: `svg-progressive` above an internal point-count threshold, `svg-single` otherwise.
-   * @default undefined (auto)
+   * When not set, defaults to `svg-single`. Enable the `progressiveRendering` experimental feature to auto-select `svg-progressive` above an internal point-count threshold; this will become the default in the next major version.
+   * @default 'svg-single'
    */
   renderer?: RendererType | 'svg-progressive';
 }
@@ -167,8 +167,8 @@ ScatterPlot.propTypes = {
    * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
    *                Read more: https://mui.com/x/react-charts/scatter/#performance
    *
-   * When not set, the renderer is chosen automatically: `svg-progressive` above an internal point-count threshold, `svg-single` otherwise.
-   * @default undefined (auto)
+   * When not set, defaults to `svg-single`. Enable the `progressiveRendering` experimental feature to auto-select `svg-progressive` above an internal point-count threshold; this will become the default in the next major version.
+   * @default 'svg-single'
    */
   renderer: PropTypes.oneOf(['svg-batch', 'svg-progressive', 'svg-single']),
   /**

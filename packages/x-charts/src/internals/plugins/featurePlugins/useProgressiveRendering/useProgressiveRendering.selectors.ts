@@ -3,6 +3,7 @@ import { type SeriesId } from '../../../../models/seriesType/common';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import { selectorChartExperimentalFeaturesState } from '../../corePlugins/useChartExperimentalFeature';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import { type UseProgressiveRenderingSignature } from './useProgressiveRendering.types';
 import type { RendererType } from '../../../../ScatterChart';
@@ -149,12 +150,17 @@ export const selectorProgressiveSeriesRevealedBatches = createSelector(
  * `renderer`:
  * - `svg-single` / `svg-batch`: never (those are non-progressive renderers).
  * - `svg-progressive`: always.
- * - unset (auto): only above {@link PROGRESSIVE_POINT_THRESHOLD} total points.
+ * - unset (auto): only when the `progressiveRendering` experimental feature is
+ *   enabled and the total point count is above
+ *   {@link PROGRESSIVE_POINT_THRESHOLD}. The flag keeps the auto behavior
+ *   opt-in so the default (`svg-single`) stays non-breaking.
  */
 export const selectorShouldUseProgressiveRenderer = createSelector(
   selectorChartSeriesProcessed,
+  selectorChartExperimentalFeaturesState,
   (
     processedSeries,
+    experimentalFeatures,
     seriesIds: readonly SeriesId[],
     renderer: RendererType | 'svg-progressive' | undefined,
   ) => {
@@ -163,6 +169,9 @@ export const selectorShouldUseProgressiveRenderer = createSelector(
     }
     if (renderer === 'svg-progressive') {
       return true;
+    }
+    if (!experimentalFeatures?.progressiveRendering) {
+      return false;
     }
     let totalPoints = 0;
     for (const seriesId of seriesIds) {
