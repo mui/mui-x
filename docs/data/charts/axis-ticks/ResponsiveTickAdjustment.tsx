@@ -170,7 +170,9 @@ export default function ResponsiveTickAdjustment() {
       <Box sx={{ width: `${widthPct}%`, transition: 'width 120ms ease-out' }}>
         <BarChart
           dataset={dataset}
-          xAxis={[{ dataKey: 'item', scaleType: 'band' }]}
+          xAxis={[
+            { dataKey: 'item', scaleType: 'band', tickLabelStyle: { angle: -45 } },
+          ]}
           series={[{ dataKey: 'sales', label: 'Units sold' }]}
           height={300}
           experimentalFeatures={{ useNewDefaultTickSpacing: enabled }}
