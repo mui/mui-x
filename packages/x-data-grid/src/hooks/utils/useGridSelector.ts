@@ -59,11 +59,13 @@ export function useGridSelector<Api extends GridApiCommon, Args, T>(
   args: Args = undefined as Args,
   equals: <U = T>(a: U, b: U) => boolean = defaultCompare,
 ) {
-  if (!apiRef.current.state) {
-    warnOnce([
-      'MUI X: `useGridSelector` has been called before the initialization of the state.',
-      'This hook can only be used inside the context of the grid.',
-    ]);
+  if (process.env.NODE_ENV !== 'production') {
+    if (!apiRef.current.state) {
+      warnOnce([
+        'MUI X: `useGridSelector` has been called before the initialization of the state.',
+        'This hook can only be used inside the context of the grid.',
+      ]);
+    }
   }
 
   const refs = useLazyRef<Refs<T>, never>(createRefs);

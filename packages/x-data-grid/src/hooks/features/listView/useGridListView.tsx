@@ -76,12 +76,14 @@ export function useGridListView(
   }, [apiRef, props.listViewColumn]);
 
   React.useEffect(() => {
-    if (props.listView && !props.listViewColumn) {
-      warnOnce([
-        'MUI X: The `listViewColumn` prop must be set if `listView` is enabled.',
-        'To fix, pass a column definition to the `listViewColumn` prop, e.g. `{ field: "example", renderCell: (params) => <div>{params.row.id}</div> }`.',
-        'For more details, see https://mui.com/x/react-data-grid/list-view/',
-      ]);
+    if (process.env.NODE_ENV !== 'production') {
+      if (props.listView && !props.listViewColumn) {
+        warnOnce([
+          'MUI X: The `listViewColumn` prop must be set if `listView` is enabled.',
+          'To fix, pass a column definition to the `listViewColumn` prop, e.g. `{ field: "example", renderCell: (params) => <div>{params.row.id}</div> }`.',
+          'For more details, see https://mui.com/x/react-data-grid/list-view/',
+        ]);
+      }
     }
   }, [props.listView, props.listViewColumn]);
 }
