@@ -138,15 +138,14 @@ When a user navigates to the previous or next time span (for example, clicking *
 ## Event dialog
 
 The Event Dialog is a non-modal dialog (`aria-modal="false"`) that floats next to the event that opened it.
+The dialog is labeled by its event title via `aria-labelledby`.
 
 ### Read-only dialog
 
-- Uses `aria-labelledby` pointing to a title with `id="${schedulerId}-draggable-dialog-title"`.
 - The Close button carries a localized `aria-label` (default: `"Close"`).
 
 ### Editable dialog
 
-- Uses `aria-labelledby` pointing to a title with `id="${schedulerId}-event-dialog-title"`.
 - The event title input is labeled with a localized `aria-label` (default: `"Event title"`).
 - The color picker group has an `aria-label` (default: `"Event color"`), and each individual color option button is labeled (for example, `"Select green as event color"`).
 - The Recurrence tab panel uses `role="tabpanel"` with `aria-labelledby` pointing to its tab.
