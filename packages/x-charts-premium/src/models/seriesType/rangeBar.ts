@@ -10,8 +10,7 @@ import { type DefaultizedProps } from '@mui/x-internals/types';
 /** [start, end] */
 export type RangeBarValueType = [number, number];
 
-export interface RangeBarSeriesType
-  extends CommonSeriesType<RangeBarValueType | null, 'rangeBar'>, CartesianSeriesType {
+export interface RangeBarSeriesType extends CommonSeriesType<'rangeBar'>, CartesianSeriesType {
   type: 'rangeBar';
   /**
    * Data associated to each range bar.

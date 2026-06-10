@@ -30,6 +30,7 @@ export default function ServerSidePivotingGroupExpansion() {
       rowLength: 5,
       dataSet: 'Commodity',
       maxColumns: 20,
+      multiSelect: true,
     },
     { useCursorPagination: false },
   );
