@@ -32,14 +32,24 @@ Available properties:
 {{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::success
-You can also control the preferences using the `preferences` prop:
+You can also control the preferences using the `preferences` prop.
+The Event Timeline has no built-in preferences UI, so changes are driven entirely from your own UI:
 
 ```tsx
-const [preferences] = React.useState<Partial<EventTimelinePremiumPreferences>>({
-  ampm: false,
-});
+const [preferences, setPreferences] = React.useState<
+  Partial<EventTimelinePremiumPreferences>
+>({ ampm: false });
 
-return <EventTimelinePremium preferences={preferences} />;
+return (
+  <React.Fragment>
+    <button
+      onClick={() => setPreferences((prev) => ({ ...prev, ampm: !prev.ampm }))}
+    >
+      Toggle AM/PM
+    </button>
+    <EventTimelinePremium preferences={preferences} />
+  </React.Fragment>
+);
 ```
 
 :::
