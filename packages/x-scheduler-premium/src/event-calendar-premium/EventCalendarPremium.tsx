@@ -9,15 +9,13 @@ import { SchedulerStoreContext } from '@mui/x-scheduler-internals/use-scheduler-
 import { useInitializeApiRef } from '@mui/x-scheduler-internals/internals';
 import { useEventCalendarPremium } from '@mui/x-scheduler-internals-premium/use-event-calendar-premium';
 import {
-  useEventCalendarUtilityClasses,
-  EventCalendarStyledContext,
-} from '@mui/x-scheduler/event-calendar';
-import {
   EventDialogStyledContext,
   EventDialogProvider,
   EventCalendarRoot,
   SharedComponentsStyledContext,
   EVENT_CALENDAR_DEFAULT_LOCALE_TEXT,
+  EventCalendarStyledContext,
+  useEventCalendarUtilityClasses,
 } from '@mui/x-scheduler/internals';
 import { PREMIUM_EVENT_DIALOG_OPTIONAL_RENDERERS } from '../internals/eventDialogOptionalRenderers';
 import { EventCalendarPremiumProps } from './EventCalendarPremium.types';
