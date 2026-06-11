@@ -153,10 +153,10 @@ const adapter = createAiSdkAdapter({
 
 ## Options
 
-| Option   | Type                                              | Notes                                                                                        |                                                                      |
-| :------- | :------------------------------------------------ | :------------------------------------------------------------------------------------------- | :------------------------------------------------------------------- |
-| `stream` | `(req) => ReadableStream<AiSdkUIMessageChunk \    | Uint8Array>`                                                                                 | Token streaming. Bytes are decoded for both NDJSON and SSE framings. |
-| `chat`   | `AiSdkChatInstance` (matches `useChat()`'s shape) | Whole-reply integration with `@ai-sdk/react`—see Pattern C above for the streaming tradeoff. |                                                                      |
+| Option   | Type                                                         | Notes                                                                                        |
+| :------- | :----------------------------------------------------------- | :------------------------------------------------------------------------------------------- |
+| `stream` | `(req) => ReadableStream<AiSdkUIMessageChunk \| Uint8Array>` | Token streaming. Bytes are decoded for both NDJSON and SSE framings.                         |
+| `chat`   | `AiSdkChatInstance` (matches `useChat()`'s shape)            | Whole-reply integration with `@ai-sdk/react`—see Pattern C above for the streaming tradeoff. |
 
 AI SDK `error` chunks (`{ type: 'error', errorText }`) are converted to `ChatStreamError` and surfaced through the chat's built-in error UI.
 Unknown chunk types pass through unchanged so newer protocol additions don't require an adapter update.

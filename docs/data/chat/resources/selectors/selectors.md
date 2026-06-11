@@ -22,38 +22,38 @@ import { chatSelectors, useChatStore } from '@mui/x-chat/headless';
 
 These selectors read a single field from the store and return it directly:
 
-| Selector               | Return type                        | Description                        |                        |
-| :--------------------- | :--------------------------------- | :--------------------------------- | :--------------------- |
-| `messageIds`           | `string[]`                         | Ordered message IDs                |                        |
-| `messagesById`         | `Record<string, ChatMessage>`      | Message map by ID                  |                        |
-| `conversationIds`      | `string[]`                         | Ordered conversation IDs           |                        |
-| `conversationsById`    | `Record<string, ChatConversation>` | Conversation map by ID             |                        |
-| `activeConversationId` | `string \                          | undefined`                         | Active conversation ID |
-| `isStreaming`          | `boolean`                          | Whether a stream is active         |                        |
-| `hasMoreHistory`       | `boolean`                          | Whether more history can be loaded |                        |
-| `error`                | `ChatError \                       | null`                              | Current runtime error  |
-| `composerValue`        | `string`                           | Current draft text                 |                        |
-| `composerAttachments`  | `ChatDraftAttachment[]`            | Draft attachments                  |                        |
+| Selector               | Return type                        | Description                        |
+| :--------------------- | :--------------------------------- | :--------------------------------- |
+| `messageIds`           | `string[]`                         | Ordered message IDs                |
+| `messagesById`         | `Record<string, ChatMessage>`      | Message map by ID                  |
+| `conversationIds`      | `string[]`                         | Ordered conversation IDs           |
+| `conversationsById`    | `Record<string, ChatConversation>` | Conversation map by ID             |
+| `activeConversationId` | `string \| undefined`              | Active conversation ID             |
+| `isStreaming`          | `boolean`                          | Whether a stream is active         |
+| `hasMoreHistory`       | `boolean`                          | Whether more history can be loaded |
+| `error`                | `ChatError \| null`                | Current runtime error              |
+| `composerValue`        | `string`                           | Current draft text                 |
+| `composerAttachments`  | `ChatDraftAttachment[]`            | Draft attachments                  |
 
 ## Derived selectors
 
 These selectors combine multiple store fields and memoize the result:
 
-| Selector             | Return type          | Description                                       |                                |
-| :------------------- | :------------------- | :------------------------------------------------ | :----------------------------- |
-| `messages`           | `ChatMessage[]`      | All messages as an array (derived from IDs + map) |                                |
-| `conversations`      | `ChatConversation[]` | All conversations as an array                     |                                |
-| `activeConversation` | `ChatConversation \  | undefined`                                        | The active conversation record |
-| `messageCount`       | `number`             | Number of messages                                |                                |
-| `conversationCount`  | `number`             | Number of conversations                           |                                |
+| Selector             | Return type                     | Description                                       |
+| :------------------- | :------------------------------ | :------------------------------------------------ |
+| `messages`           | `ChatMessage[]`                 | All messages as an array (derived from IDs + map) |
+| `conversations`      | `ChatConversation[]`            | All conversations as an array                     |
+| `activeConversation` | `ChatConversation \| undefined` | The active conversation record                    |
+| `messageCount`       | `number`                        | Number of messages                                |
+| `conversationCount`  | `number`                        | Number of conversations                           |
 
 ## Parameterized selectors
 
-| Selector        | Signature                                      | Description                                            |                           |
-| :-------------- | :--------------------------------------------- | :----------------------------------------------------- | :------------------------ |
-| `message`       | `(state, id: string) => ChatMessage \          | undefined`                                             | Single message by ID      |
-| `conversation`  | `(state, id: string) => ChatConversation \     | undefined`                                             | Single conversation by ID |
-| `typingUserIds` | `(state, conversationId?: string) => string[]` | User IDs typing in a conversation (defaults to active) |                           |
+| Selector        | Signature                                              | Description                                            |
+| :-------------- | :----------------------------------------------------- | :----------------------------------------------------- |
+| `message`       | `(state, id: string) => ChatMessage \| undefined`      | Single message by ID                                   |
+| `conversation`  | `(state, id: string) => ChatConversation \| undefined` | Single conversation by ID                              |
+| `typingUserIds` | `(state, conversationId?: string) => string[]`         | User IDs typing in a conversation (defaults to active) |
 
 ## Using selectors with `useChatStore()`
 

@@ -85,10 +85,10 @@ This flag tells the message list that an additional page of history can be fetch
 
 The normalized store tracks history pagination state:
 
-| Internal field   | Type       | Description                       |                                       |
-| :--------------- | :--------- | :-------------------------------- | :------------------------------------ |
-| `hasMoreHistory` | `boolean`  | Whether more history is available |                                       |
-| `historyCursor`  | `Cursor \  | undefined`                        | Pagination cursor for history loading |
+| Internal field   | Type                  | Description                           |
+| :--------------- | :-------------------- | :------------------------------------ |
+| `hasMoreHistory` | `boolean`             | Whether more history is available     |
+| `historyCursor`  | `Cursor \| undefined` | Pagination cursor for history loading |
 
 ## Loading older messages
 

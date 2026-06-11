@@ -138,13 +138,13 @@ The hook returns:
 
 The attachment type used by the composer:
 
-| Property     | Type         | Description                                 |                                              |          |                         |
-| :----------- | :----------- | :------------------------------------------ | :------------------------------------------- | :------- | :---------------------- |
-| `localId`    | `string`     | Unique identifier for this draft attachment |                                              |          |                         |
-| `file`       | `File`       | The browser File object                     |                                              |          |                         |
-| `previewUrl` | `string \    | undefined`                                  | Object URL for image previews (auto-created) |          |                         |
-| `status`     | `'queued' \  | 'uploading' \                               | 'uploaded' \                                 | 'error'` | Upload lifecycle status |
-| `progress`   | `number \    | undefined`                                  | Upload progress (0–100)                      |          |                         |
+| Property     | Type                                               | Description                                  |
+| :----------- | :------------------------------------------------- | :------------------------------------------- |
+| `localId`    | `string`                                           | Unique identifier for this draft attachment  |
+| `file`       | `File`                                             | The browser File object                      |
+| `previewUrl` | `string \| undefined`                              | Object URL for image previews (auto-created) |
+| `status`     | `'queued' \| 'uploading' \| 'uploaded' \| 'error'` | Upload lifecycle status                      |
+| `progress`   | `number \| undefined`                              | Upload progress (0–100)                      |
 
 ## Compact composer variants
 

@@ -49,12 +49,12 @@ controller.enqueue({
 });
 ```
 
-| Field        | Type       | Description                          |                               |
-| :----------- | :--------- | :----------------------------------- | :---------------------------- |
-| `toolCallId` | `string`   | The tool invocation being gated      |                               |
-| `toolName`   | `string`   | Name of the tool requesting approval |                               |
-| `input`      | `object`   | The tool's input, shown to the user  |                               |
-| `approvalId` | `string \  | undefined`                           | Optional distinct approval ID |
+| Field        | Type                  | Description                          |
+| :----------- | :-------------------- | :----------------------------------- |
+| `toolCallId` | `string`              | The tool invocation being gated      |
+| `toolName`   | `string`              | Name of the tool requesting approval |
+| `input`      | `object`              | The tool's input, shown to the user  |
+| `approvalId` | `string \| undefined` | Optional distinct approval ID        |
 
 When this chunk arrives, the tool invocation moves to `state: 'approval-requested'`.
 

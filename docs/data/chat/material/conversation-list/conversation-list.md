@@ -74,10 +74,10 @@ Because the full `conversation` object is included, custom slot components can r
 
 ### Root ownerState
 
-| Field                  | Type       | Description                   |                                    |
-| :--------------------- | :--------- | :---------------------------- | :--------------------------------- |
-| `conversationCount`    | `number`   | Total number of conversations |                                    |
-| `activeConversationId` | `string \  | undefined`                    | Currently selected conversation ID |
+| Field                  | Type                  | Description                        |
+| :--------------------- | :-------------------- | :--------------------------------- |
+| `conversationCount`    | `number`              | Total number of conversations      |
+| `activeConversationId` | `string \| undefined` | Currently selected conversation ID |
 
 ## Overriding the avatar
 

@@ -39,26 +39,26 @@ It returns both the public state fields and every runtime action in a single obj
 
 ### State
 
-| Field                  | Type                 | Description                             |                               |
-| :--------------------- | :------------------- | :-------------------------------------- | :---------------------------- |
-| `messages`             | `ChatMessage[]`      | All messages in the active conversation |                               |
-| `conversations`        | `ChatConversation[]` | All conversations                       |                               |
-| `activeConversationId` | `string \            | undefined`                              | Currently active conversation |
-| `isStreaming`          | `boolean`            | Whether a response is being streamed    |                               |
-| `hasMoreHistory`       | `boolean`            | Whether older messages can be loaded    |                               |
-| `error`                | `ChatError \         | null`                                   | Current error state           |
+| Field                  | Type                  | Description                             |
+| :--------------------- | :-------------------- | :-------------------------------------- |
+| `messages`             | `ChatMessage[]`       | All messages in the active conversation |
+| `conversations`        | `ChatConversation[]`  | All conversations                       |
+| `activeConversationId` | `string \| undefined` | Currently active conversation           |
+| `isStreaming`          | `boolean`             | Whether a response is being streamed    |
+| `hasMoreHistory`       | `boolean`             | Whether older messages can be loaded    |
+| `error`                | `ChatError \| null`   | Current error state                     |
 
 ### Actions
 
-| Method                    | Signature                                                   | Description                  |                        |
-| :------------------------ | :---------------------------------------------------------- | :--------------------------- | :--------------------- |
-| `sendMessage`             | `(input: UseChatSendMessageInput) => Promise<void>`         | Send a user message          |                        |
-| `stopStreaming`           | `() => void`                                                | Abort the active stream      |                        |
-| `loadMoreHistory`         | `() => Promise<void>`                                       | Load older messages          |                        |
-| `setActiveConversation`   | `(id: string \                                              | undefined) => Promise<void>` | Switch conversations   |
-| `retry`                   | `(messageId: string) => Promise<void>`                      | Retry a failed message       |                        |
-| `setError`                | `(error: ChatError \                                        | null) => void`               | Update the error state |
-| `addToolApprovalResponse` | `(input: ChatAddToolApproveResponseInput) => Promise<void>` | Approve or deny a tool call  |                        |
+| Method                    | Signature                                                   | Description                 |
+| :------------------------ | :---------------------------------------------------------- | :-------------------------- |
+| `sendMessage`             | `(input: UseChatSendMessageInput) => Promise<void>`         | Send a user message         |
+| `stopStreaming`           | `() => void`                                                | Abort the active stream     |
+| `loadMoreHistory`         | `() => Promise<void>`                                       | Load older messages         |
+| `setActiveConversation`   | `(id: string \| undefined) => Promise<void>`                | Switch conversations        |
+| `retry`                   | `(messageId: string) => Promise<void>`                      | Retry a failed message      |
+| `setError`                | `(error: ChatError \| null) => void`                        | Update the error state      |
+| `addToolApprovalResponse` | `(input: ChatAddToolApproveResponseInput) => Promise<void>` | Approve or deny a tool call |
 
 ### `UseChatSendMessageInput`
 
@@ -162,12 +162,12 @@ function DraftArea() {
 
 A lightweight hook for status indicators, loading spinners, and error banners.
 
-| Field            | Type          | Description                                              |                     |
-| :--------------- | :------------ | :------------------------------------------------------- | :------------------ |
-| `isStreaming`    | `boolean`     | Whether a response is being streamed                     |                     |
-| `hasMoreHistory` | `boolean`     | Whether older messages can be loaded                     |                     |
-| `error`          | `ChatError \  | null`                                                    | Current error state |
-| `typingUserIds`  | `string[]`    | IDs of users currently typing in the active conversation |                     |
+| Field            | Type                | Description                                              |
+| :--------------- | :------------------ | :------------------------------------------------------- |
+| `isStreaming`    | `boolean`           | Whether a response is being streamed                     |
+| `hasMoreHistory` | `boolean`           | Whether older messages can be loaded                     |
+| `error`          | `ChatError \| null` | Current error state                                      |
+| `typingUserIds`  | `string[]`          | IDs of users currently typing in the active conversation |
 
 Use this hook when you need to show a status chip, typing indicator, or error banner without subscribing to the full message list.
 
