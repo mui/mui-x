@@ -248,7 +248,9 @@ ScatterChartPremium.propTypes = {
   /**
    * Options to enable features planned for the next major.
    */
-  experimentalFeatures: PropTypes.object,
+  experimentalFeatures: PropTypes.shape({
+    progressiveRendering: PropTypes.bool,
+  }),
   /**
    * Option to display a cartesian grid in the background.
    */
