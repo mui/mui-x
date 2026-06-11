@@ -70,7 +70,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
   const { subscribeCloseHandler } = useEventDialogContext();
 
   React.useEffect(() => {
-    subscribeCloseHandler(() => {
+    return subscribeCloseHandler(() => {
       onClose();
     });
   }, [subscribeCloseHandler, onClose]);
