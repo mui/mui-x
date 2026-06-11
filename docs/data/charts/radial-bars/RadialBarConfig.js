@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import ChartsUsageDemo from 'docs/src/modules/components/ChartsUsageDemo';
-import { Unstable_RadialBarChart as RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
+import { RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
 import { balanceSheet, addLabels } from '../bars/netflixsBalanceSheet';
 
 const baseSeries = addLabels([
@@ -108,7 +108,7 @@ export default function RadialBarConfig() {
       barGapRatio: ${props.barGapRatio},
     },
   ]`;
-        return `import { Unstable_RadialBarChart as RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
+        return `import { RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
 
 <RadialBarChart
   // ...
