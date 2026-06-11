@@ -76,13 +76,14 @@ Same changes as in `@mui/x-charts-pro@9.5.0`, plus:
 
 #### `@mui/x-scheduler@9.0.0-beta.1`
 
-- [scheduler] Show scope dialog when deleting a recurring event (#22552) @Anexus5919
+Internal changes.
 
 #### `@mui/x-scheduler-premium@9.0.0-beta.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in `@mui/x-scheduler@9.0.0-beta.1`, plus:
 
 - [scheduler] Remove dead CSS variable writes in `EventTimelinePremiumContent` (#22720) @rita-codes
+- [scheduler] Show scope dialog when deleting a recurring event (#22552) @Anexus5919
 
 ### Core
 
