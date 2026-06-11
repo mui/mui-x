@@ -104,6 +104,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
     elements,
     areAllSectionsEmpty,
     onClick,
+    onMouseDown,
     onKeyDown,
     onKeyUp,
     onPaste,
@@ -222,6 +223,7 @@ const PickersTextField = React.forwardRef(function PickersTextField(
           elements={elements}
           areAllSectionsEmpty={areAllSectionsEmpty}
           onClick={onClick}
+          onMouseDown={onMouseDown}
           onKeyDown={onKeyDown}
           onKeyUp={onKeyUp}
           onInput={onInput}
@@ -360,6 +362,7 @@ PickersTextField.propTypes = {
   onFocus: PropTypes.func.isRequired,
   onInput: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
+  onMouseDown: PropTypes.func.isRequired,
   onPaste: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
   /**
