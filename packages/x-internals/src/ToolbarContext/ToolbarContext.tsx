@@ -165,6 +165,7 @@ export function ToolbarContextProvider({ children }: React.PropsWithChildren) {
         // Last item has been removed from the items array
         const item = sortedItems[sortedItems.length - 1];
         if (item) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setFocusableItemId(item.id);
           item.ref.current?.focus();
         }

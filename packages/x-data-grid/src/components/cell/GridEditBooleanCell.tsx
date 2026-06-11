@@ -87,6 +87,7 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
   );
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setValueState(value);
   }, [value]);
 

@@ -400,6 +400,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       return;
     }
     const newCache = getCache(props.dataSourceCache, options.cacheOptions);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCache((prevCache) => (prevCache !== newCache ? newCache : prevCache));
   }, [props.dataSourceCache, options.cacheOptions]);
 

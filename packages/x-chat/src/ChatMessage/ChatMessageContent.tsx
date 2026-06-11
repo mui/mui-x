@@ -183,6 +183,7 @@ function ChatToolPartRoot({
 
   React.useEffect(() => {
     if (state === 'approval-requested') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOpen(true);
     }
   }, [state]);

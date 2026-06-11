@@ -425,6 +425,7 @@ export const ConversationListRoot = markChatLayoutPane(
         return;
       }
 
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFocusedConversationId(
         getInitialFocusedConversationId(
           conversations,

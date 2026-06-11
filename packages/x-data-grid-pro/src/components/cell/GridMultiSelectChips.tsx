@@ -178,6 +178,7 @@ function GridMultiSelectChipsImpl<V extends ValueOptions = ValueOptions>(
   React.useEffect(() => {
     if (!isResizingThisColumn) {
       revealTimeout.clear();
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRevealWhileResizing(false);
       return;
     }

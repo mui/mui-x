@@ -486,6 +486,7 @@ export const useFieldState = <
   // But we can't use `useEnhancedEffect` which is always called before the second `onChange` call and then would cause false positives.
   React.useEffect(() => {
     if (state.tempValueStrAndroid != null && activeSectionIndex != null) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       clearActiveSection();
     }
   }, [state.sections]); // eslint-disable-line react-hooks/exhaustive-deps

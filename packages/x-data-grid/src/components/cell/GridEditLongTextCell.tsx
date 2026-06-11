@@ -156,6 +156,7 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
 
   React.useEffect(() => {
     if (meta?.changeReason !== 'debouncedSetEditCellValue') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setValueState(value);
     }
   }, [meta, value]);
