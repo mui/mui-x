@@ -2,11 +2,9 @@
 
 ## 9.5.0
 
-<!-- generated comparing v9.4.0..master -->
+_Jun 11, 2026_
 
-_Jun 10, 2026_
-
-We'd like to extend a big thank you to the 7 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 New [`multiSelect` column type for Data Grid Pro](https://mui.com/x/react-data-grid/column-definition/#MultiSelectColumn)
 - 🐞 Bugfixes
@@ -15,13 +13,14 @@ We'd like to extend a big thank you to the 7 contributors who made this release 
 Special thanks go out to community member @mustafajw07 for their valuable contribution.
 
 The following team members contributed to this release:
-@alexfauquette, @JCQuintas, @rita-codes, @rluzists1, @sai6855, @siriwatknp
+@alexfauquette, @JCQuintas, @rita-codes, @rluzists1, @sai6855, @siriwatknp, @arminmeh, @brijeshb42
 
 ### Data Grid
 
 #### `@mui/x-data-grid@9.5.0`
 
 - [DataGrid] Restrict warning messages to non-production environments in various components (#22461) @sai6855
+- [DataGrid] Prevent React state update before mount (#22374) @arminmeh
 
 #### `@mui/x-data-grid-pro@9.5.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -62,7 +61,7 @@ Same changes as in `@mui/x-date-pickers@9.5.0`.
 
 Same changes as in `@mui/x-charts@9.5.0`, plus:
 
-- [charts-pro] Add missing focuse highlight (#22689) @alexfauquette
+- [charts-pro] Add missing focus highlight (#22689) @alexfauquette
 
 #### `@mui/x-charts-premium@9.5.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -74,13 +73,14 @@ Same changes as in `@mui/x-charts-pro@9.5.0`, plus:
 
 ### Scheduler
 
-#### `@mui/x-scheduler@9.0.0-beta.0`
+#### `@mui/x-scheduler-premium@9.0.0-beta.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 - [scheduler] Remove dead CSS variable writes in `EventTimelinePremiumContent` (#22720) @rita-codes
 
-#### `@mui/x-scheduler-premium@9.0.0-beta.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+### Core
 
-Same changes as in `@mui/x-scheduler@9.0.0-beta.0`.
+- [docs-infra] Fix immutable cache headers for `/\_next/static` assets (#22747) @brijeshb42
+- [docs-infra] Prefix `/\_next/static` cache header rule with `/x` basePath (#22748) @brijeshb42
 
 ### Docs
 
