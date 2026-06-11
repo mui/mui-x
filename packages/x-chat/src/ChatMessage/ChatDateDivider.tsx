@@ -99,6 +99,22 @@ ChatDateDivider.propTypes = {
   index: PropTypes.number,
   items: PropTypes.arrayOf(PropTypes.string),
   messageId: PropTypes.string.isRequired,
+  /**
+   * Decides whether the divider renders above the message, replacing the
+   * built-in rule when provided. `date`/`previousDate` are the parsed
+   * `createdAt` values (`null` when missing or invalid); `previousMessage`
+   * is `null` for the first message in the list.
+   * @param {object} params The parameters used to decide whether to render the divider.
+   * @param {ChatMessage} params.message The message the divider would render above.
+   * @param {ChatMessage | null} params.previousMessage The previous message, or `null` for the first message in the list.
+   * @param {number} params.index The index of the message in the list.
+   * @param {Date | null} params.date The parsed `createdAt` of the message, or `null` when missing or invalid.
+   * @param {Date | null} params.previousDate The parsed `createdAt` of the previous message, or `null` when missing or invalid.
+   * @returns {boolean} `true` to render the divider above the message.
+   * @default Renders when `message.createdAt` falls on a different UTC
+   * calendar day than the previous message's.
+   */
+  shouldShowDivider: PropTypes.func,
   slotProps: PropTypes.object,
   slots: PropTypes.object,
   sx: PropTypes.oneOfType([

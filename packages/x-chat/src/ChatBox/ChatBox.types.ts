@@ -4,6 +4,7 @@ import { Theme } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/utils/types';
 import {
   type ChatRootProps,
+  type ChatFeatures,
   type MessageListRootAutoScrollConfig,
   type ChatSuggestion,
   type ChatVariant,
@@ -19,7 +20,10 @@ import type { ChatConversationSubtitleProps } from '../ChatConversation/ChatConv
 import type { ChatConversationHeaderInfoProps } from '../ChatConversation/ChatConversationHeaderInfo';
 import type { ChatConversationHeaderActionsProps } from '../ChatConversation/ChatConversationHeaderActions';
 import type { ChatMessageListProps } from '../ChatMessageList/ChatMessageList';
-import type { ChatMessageProps } from '../ChatMessage/ChatMessage';
+import type {
+  ChatMessageProps,
+  ChatMessageActionsResolveContext,
+} from '../ChatMessage/ChatMessage';
 import type { ChatMessageAvatarProps } from '../ChatMessage/ChatMessageAvatar';
 import type { ChatMessageContentProps } from '../ChatMessage/ChatMessageContent';
 import type { ChatMessageInlineMetaProps } from '../ChatMessage/ChatMessageInlineMeta';
@@ -170,8 +174,9 @@ interface ChatBoxMessageSlots {
    */
   messageError?: React.ElementType | null;
   /**
-   * Actions row component (receives `{ messageId }`). Pass `null` (or omit) to
-   * hide actions.
+   * Actions row component (receives `{ messageId }`). Pass `null` to hide
+   * actions entirely; omit to render only the declarative `extraActions` from
+   * `slotProps.messageActions` if provided.
    */
   messageActions?: React.ElementType | null;
   /**
@@ -188,7 +193,14 @@ interface ChatBoxMessageSlotProps {
   messageMeta?: Partial<ChatMessageMetaProps>;
   messageInlineMeta?: Partial<ChatMessageInlineMetaProps>;
   messageError?: Partial<ChatMessageErrorProps>;
-  messageActions?: Partial<ChatMessageActionsProps>;
+  /**
+   * Props for the message actions row. Pass a function of the message context
+   * to vary props per message — most commonly returning `extraActions`
+   * (declarative action buttons) only for assistant rows.
+   */
+  messageActions?:
+    | Partial<ChatMessageActionsProps>
+    | ((context: ChatMessageActionsResolveContext) => Partial<ChatMessageActionsProps>);
   messageAuthorName?: MessageGroupSlotProps['authorName'];
 }
 
@@ -267,7 +279,27 @@ export interface ChatBoxSlotProps
     ChatBoxComposerSlotProps,
     ChatBoxWidgetSlotProps {}
 
-export interface ChatBoxFeatures {
+export interface ChatBoxFeatures extends ChatFeatures {
+  /**
+   * Whether the runtime sends outbound typing signals through `adapter.setTyping()`
+   * automatically as the user composes a message.
+   *
+   * When enabled and the adapter implements `setTyping()`, the runtime calls it
+   * for the active conversation: `{ isTyping: true }` when the composer value
+   * changes from empty (`''`) to non-empty, and `{ isTyping: false }` when it
+   * changes back to empty — including when a message is sent (sending clears the
+   * composer). Switching conversations clears typing on the previous one and
+   * re-signals on the new one if a draft is present; mounting with an initial
+   * draft signals `true`; unmounting signals a final `false`. Keystrokes that
+   * keep the composer non-empty produce no additional calls, there is no
+   * built-in idle timeout, and failures are swallowed with a dev-only warning.
+   *
+   * When disabled (the default), the runtime never calls `setTyping()`; wire it
+   * up manually (e.g. on composer `onChange`) instead. If you enable this flag,
+   * remove any manual wiring to avoid double-firing.
+   * @default false
+   */
+  typingSignal?: boolean;
   /**
    * Whether to render the built-in conversation list sidebar / drawer.
    * When disabled, `ChatBox` renders only the active thread surface even if

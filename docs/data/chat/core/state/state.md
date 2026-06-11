@@ -104,22 +104,23 @@ You can switch from uncontrolled to controlled at any time without changing the 
 
 The store keeps data in a normalized shape for efficient streaming and updates:
 
-| Internal field                | Type                                      | Description                                  |
-| :---------------------------- | :---------------------------------------- | :------------------------------------------- |
-| `messageIds`                  | `string[]`                                | Ordered message IDs                          |
-| `messagesById`                | `Record<string, ChatMessage>`             | Message records by ID                        |
-| `conversationIds`             | `string[]`                                | Ordered conversation IDs                     |
-| `conversationsById`           | `Record<string, ChatConversation>`        | Conversation records by ID                   |
-| `activeConversationId`        | `string \| undefined`                     | Active conversation                          |
-| `typingByConversation`        | `Record<string, Record<string, boolean>>` | Typing state per conversation per user       |
-| `isStreaming`                 | `boolean`                                 | Whether a stream is active                   |
-| `hasMoreHistory`              | `boolean`                                 | Whether more history is available            |
-| `historyCursor`               | `Cursor \| undefined`                     | Pagination cursor for history loading        |
-| `composerValue`               | `string`                                  | Current draft text                           |
-| `composerIsComposing`         | `boolean`                                 | Whether an IME composition session is active |
-| `composerAttachments`         | `ChatDraftAttachment[]`                   | File attachments in the draft                |
-| `error`                       | `ChatError \| null`                       | Current error state                          |
-| `activeStreamAbortController` | `AbortController \| null`                 | Controller for aborting the active stream    |
+| Internal field                | Type                                      | Description                                                                     |
+| :---------------------------- | :---------------------------------------- | :------------------------------------------------------------------------------ |
+| `messageIds`                  | `string[]`                                | Ordered message IDs                                                             |
+| `messagesById`                | `Record<string, ChatMessage>`             | Message records by ID                                                           |
+| `conversationIds`             | `string[]`                                | Ordered conversation IDs                                                        |
+| `conversationsById`           | `Record<string, ChatConversation>`        | Conversation records by ID                                                      |
+| `activeConversationId`        | `string \| undefined`                     | Active conversation                                                             |
+| `typingByConversation`        | `Record<string, Record<string, boolean>>` | Typing state per conversation per user                                          |
+| `isStreaming`                 | `boolean`                                 | Whether a stream is active                                                      |
+| `hasMoreHistory`              | `boolean`                                 | Whether more history is available                                               |
+| `isLoadingHistory`            | `boolean`                                 | Whether a history fetch is currently in flight (initial page or older messages) |
+| `historyCursor`               | `Cursor \| undefined`                     | Pagination cursor for history loading                                           |
+| `composerValue`               | `string`                                  | Current draft text                                                              |
+| `composerIsComposing`         | `boolean`                                 | Whether an IME composition session is active                                    |
+| `composerAttachments`         | `ChatDraftAttachment[]`                   | File attachments in the draft                                                   |
+| `error`                       | `ChatError \| null`                       | Current error state                                                             |
+| `activeStreamAbortController` | `AbortController \| null`                 | Controller for aborting the active stream                                       |
 
 This normalization is why streaming updates are efficient—updating one message does not require rebuilding the entire thread array.
 

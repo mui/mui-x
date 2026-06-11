@@ -8,6 +8,9 @@
     "features": {
       "type": { "name": "shape", "description": "{ dateDivider?: bool, unreadMarker?: bool }" }
     },
+    "onReachBottom": { "type": { "name": "func" } },
+    "onReachTop": { "type": { "name": "func" } },
+    "overlay": { "type": { "name": "node" }, "default": "null" },
     "renderItem": { "type": { "name": "func" } }
   },
   "name": "ChatMessageList",

@@ -30,6 +30,7 @@ The message list automatically scrolls to the bottom when:
 - Streaming content grows (token-by-token updates).
 
 The auto-scroll behavior is gated by a **buffer**—if the user has scrolled more than `buffer` pixels away from the bottom, automatic scrolling pauses so the user can read earlier messages without interruption.
+The same buffer defines the bottom zone for the message list's `onReachBottom` callback, which fires once each time the viewport enters it.
 
 ### Configuration
 

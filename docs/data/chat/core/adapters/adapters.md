@@ -54,6 +54,9 @@ interface ChatAdapter<Cursor = string> {
   ): Promise<ReadableStream<ChatMessageChunk | ChatStreamEnvelope>>;
 
   // Optional
+  regenerate?(
+    input: ChatRegenerateInput,
+  ): Promise<ReadableStream<ChatMessageChunk | ChatStreamEnvelope>>;
   listConversations?(
     input?: ChatListConversationsInput<Cursor>,
   ): Promise<ChatListConversationsResult<Cursor>>;
@@ -92,6 +95,24 @@ interface ChatSendMessageInput {
 ```
 
 The `signal` is connected to `stopStreaming()`—when the user cancels, the signal aborts, giving the adapter a chance to clean up.
+
+### Regenerating responses
+
+Regenerates the assistant reply identified by `messageId`, returning a fresh response stream (same shape as `sendMessage`).
+
+```ts
+interface ChatRegenerateInput {
+  conversationId?: string;
+  messageId: string; // the assistant message being regenerated (already removed)
+  message: ChatMessage; // the user message that prompted the reply
+  messages: ChatMessage[]; // thread context up to and including `message`
+  signal: AbortSignal;
+}
+```
+
+`regenerate` is **optional**: regeneration works without implementing it. When the adapter omits `regenerate`, the runtime re-sends the anchoring user message through `sendMessage`. Implement it when your backend distinguishes regeneration from a fresh send—for example, the [Vercel AI SDK](/x/react-chat/integrations/ai-sdk/) uses `trigger: 'regenerate-message'`.
+
+The UI is driven by the runtime, not by calling the adapter directly: trigger regeneration with [`chat.regenerate(message.id)`](/x/react-chat/customization/structure/#adding-a-regenerate-action-on-assistant-messages). If the adapter call rejects before any output streams, the runtime restores the removed reply (no data is lost). Once the stream starts, partial output is kept with the stream-reported status.
 
 ### Listing conversations
 
@@ -145,6 +166,7 @@ Returns `null` if reconnection is not possible.
 ### Sending typing indicators
 
 Sends a typing indicator to the backend.
+When `features.typingSignal` is enabled, the runtime calls this automatically—see [Real-time adapters](/x/react-chat/backend/real-time-adapters/).
 
 ```ts
 interface ChatSetTypingInput {

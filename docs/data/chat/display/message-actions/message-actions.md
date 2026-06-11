@@ -71,9 +71,18 @@ Override the `actions` slot through `ChatBox`:
 
 ### Accessing message context
 
-Inside a custom actions component, use the `ownerState` prop to access the current message data and show different actions for user and assistant messages:
+Inside a custom actions component, use the `ownerState` prop to access the current message data and show different actions for user and assistant messages.
+Reach the runtime actions with [`useChatActions()`](/x/react-chat/core/hooks/)—it returns `sendMessage`, `retry`, `regenerate`, and the rest without subscribing to message state, so the toolbar does not re-render while a response streams:
 
 {{"demo": "RoleBasedMessageActions.js", "defaultCodeOpen": false, "bg": "inline"}}
+
+## Adding actions declaratively
+
+Instead of replacing the `messageActions` slot component, pass a function to `slotProps.messageActions` and return `extraActions`.
+The function receives the message context, so you can target specific rows—for example, a working "Regenerate" button on assistant replies.
+Each action's `onClick` receives `(event, { message, chat })`; call `chat.regenerate(message.id)` to request a fresh reply through the runtime:
+
+{{"demo": "ExtraActionsMessageActions.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Owner state
 

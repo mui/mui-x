@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { warnOnce } from '@mui/x-internals/warning';
 import type { ChatAdapter } from '../../adapters';
 import { processStream, type ProcessStreamResult } from '../../stream';
 import type { ChatStore } from '../../store';
@@ -13,6 +14,7 @@ import {
   getErrorMessage,
   findAssistantMessageIdsForRetry,
   removeAssistantMessageIds,
+  resolveRegenerateAnchor,
 } from './useChatControllerHelpers';
 import { getFinishMessage } from '../../stream/streamHelpers';
 
@@ -310,5 +312,144 @@ export function createSendMessageActions<Cursor = string>(params: {
     await sendExistingMessage(message, attachmentsByUserMessageId.get(messageId));
   }
 
-  return { sendMessage, retry, pruneAttachmentsByMessageIds };
+  async function regenerate(messageId: string): Promise<void> {
+    // Hoist the streaming guard above any destructive work — same as `retry`.
+    if (isSending || store.state.isStreaming) {
+      return;
+    }
+
+    const resolution = resolveRegenerateAnchor(
+      storeUnknown,
+      messageId,
+      assistantMessageIdByUserMessageIdRef.current,
+    );
+
+    if (!resolution) {
+      if (process.env.NODE_ENV !== 'production') {
+        warnOnce([
+          'MUI X Chat: `regenerate()` could not resolve the target message.',
+          'The id must reference an assistant reply (or the user message that prompted it); regeneration is skipped, so the UI will not change.',
+          'Pass the `message.id` of an assistant message that follows a user message in the active conversation.',
+        ]);
+      }
+      return;
+    }
+
+    const { anchorUserMessageId, assistantMessageIds } = resolution;
+    const anchorMessage = store.state.messagesById[anchorUserMessageId];
+
+    if (!anchorMessage) {
+      return;
+    }
+
+    const adapter = runtimeRef.current.adapter;
+
+    // Fallback path: no `adapter.regenerate` — remove the resolved run and
+    // re-send the anchor user message through the existing send pipeline. This
+    // makes `regenerate` work against any adapter; `adapter.regenerate` is an
+    // opt-in transport refinement. `sendExistingMessage`'s own postlude provides
+    // the `onError` behavior here.
+    if (!adapter.regenerate) {
+      removeAssistantMessageIds(
+        storeUnknown,
+        assistantMessageIds,
+        assistantMessageIdByUserMessageIdRef.current,
+      );
+      pruneAttachmentsByMessageIds(store.state.messageIds);
+
+      await sendExistingMessage(
+        anchorMessage,
+        attachmentsByUserMessageId.get(anchorUserMessageId),
+      );
+      return;
+    }
+
+    // Adapter path. Set `isSending` synchronously, before any `await`, so the
+    // Strict Mode double-invocation guard is effective (the same failure mode
+    // the flag defeats in `sendExistingMessage`).
+    isSending = true;
+
+    const conversationId = anchorMessage.conversationId ?? store.state.activeConversationId;
+
+    // Snapshot the assistant-run messages so we can roll back if the adapter
+    // call rejects before any output streams (rollback precedent:
+    // `addToolApprovalResponse`).
+    const removedMessages = assistantMessageIds
+      .map((id) => store.state.messagesById[id])
+      .filter((message): message is ChatMessage => message != null);
+
+    removeAssistantMessageIds(
+      storeUnknown,
+      assistantMessageIds,
+      assistantMessageIdByUserMessageIdRef.current,
+    );
+    pruneAttachmentsByMessageIds(store.state.messageIds);
+
+    store.setStreaming(true);
+    store.setError(null);
+
+    const abortController = new AbortController();
+    store.setActiveStreamAbortController(abortController);
+
+    try {
+      const stream = await adapter.regenerate({
+        conversationId,
+        messageId,
+        message: anchorMessage,
+        messages: getMessages(storeUnknown),
+        signal: abortController.signal,
+      });
+
+      const result = await processStreamWithReconnect(stream, conversationId, abortController);
+
+      if (result.messageId) {
+        assistantMessageIdByUserMessageIdRef.current.set(anchorUserMessageId, result.messageId);
+      }
+
+      // Postlude (mirrors `sendExistingMessage` — `processStreamWithReconnect`
+      // never fires `onError` itself): surface mid-stream errors through the
+      // public callback. Partial output is kept with the stream-reported status.
+      if (result.isError && store.state.error) {
+        runtimeRef.current.onError?.(store.state.error);
+      }
+    } catch (error) {
+      if (abortController.signal.aborted) {
+        store.setStreaming(false);
+        return;
+      }
+
+      if (store.state.error?.source === 'stream') {
+        runtimeRef.current.onError?.(store.state.error);
+        return;
+      }
+
+      // Pre-stream rejection: restore the snapshot assistant messages (D4) and
+      // surface a REGENERATE_ERROR.
+      for (const removedMessage of removedMessages) {
+        store.addMessage(removedMessage);
+      }
+
+      store.setStreaming(false);
+      setRuntimeError(
+        createRuntimeError(
+          'REGENERATE_ERROR',
+          getErrorMessage('Unable to regenerate the response.', error),
+          'send',
+          true,
+          true,
+          {
+            messageId,
+            conversationId,
+          },
+        ),
+      );
+    } finally {
+      isSending = false;
+      if (store.state.activeStreamAbortController === abortController) {
+        store.setActiveStreamAbortController(null);
+      }
+    }
+  }
+
+  return { sendMessage, retry, regenerate, pruneAttachmentsByMessageIds };
 }

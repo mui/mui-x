@@ -99,7 +99,7 @@ export type {
 
 // ─── ChatMessage ──────────────────────────────────────────────────────────────
 export { ChatMessage } from './ChatMessage/ChatMessage';
-export type { ChatMessageProps } from './ChatMessage/ChatMessage';
+export type { ChatMessageProps, ChatMessageActionsResolveContext } from './ChatMessage/ChatMessage';
 export { ChatMessageAvatar } from './ChatMessage/ChatMessageAvatar';
 export type { ChatMessageAvatarProps } from './ChatMessage/ChatMessageAvatar';
 export { ChatMessageAuthorLabel } from './ChatMessage/ChatMessageAuthorLabel';
@@ -111,7 +111,11 @@ export type { ChatMessageMetaProps } from './ChatMessage/ChatMessageMeta';
 export { ChatMessageInlineMeta } from './ChatMessage/ChatMessageInlineMeta';
 export type { ChatMessageInlineMetaProps } from './ChatMessage/ChatMessageInlineMeta';
 export { ChatMessageActions } from './ChatMessage/ChatMessageActions';
-export type { ChatMessageActionsProps } from './ChatMessage/ChatMessageActions';
+export type {
+  ChatMessageActionsProps,
+  ChatMessageExtraAction,
+  ChatMessageExtraActionContext,
+} from './ChatMessage/ChatMessageActions';
 export { ChatMessageGroup } from './ChatMessage/ChatMessageGroup';
 export type { ChatMessageGroupProps } from './ChatMessage/ChatMessageGroup';
 export { ChatDateDivider } from './ChatMessage/ChatDateDivider';

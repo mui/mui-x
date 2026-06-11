@@ -5,13 +5,16 @@ import clsx from 'clsx';
 import { SxProps, Theme } from '@mui/system';
 import {
   MessageRoot,
+  type ChatMessageStatus,
+  type ChatRole,
+  type ChatMessage as ChatMessageEntity,
   type MessageRootProps,
   type MessageGroupSlotProps,
   useChatVariant,
   useMessage,
 } from '@mui/x-chat-headless';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
-import { mergeSlotProps } from '../internals/mergeSlotProps';
+import { mergeSlotProps, resolveSlotProps } from '../internals/mergeSlotProps';
 import { useChatMessageUtilityClasses, type ChatMessageClasses } from './chatMessageClasses';
 import { ChatMessageError, type ChatMessageErrorProps } from '../ChatMessageError/ChatMessageError';
 import { ChatMessageAvatar, type ChatMessageAvatarProps } from './ChatMessageAvatar';
@@ -49,7 +52,8 @@ export interface ChatMessageSlots {
   /**
    * The actions component, rendered under the bubble.
    * Receives `{ messageId }` as props.
-   * Pass `null` (or omit) to hide actions entirely.
+   * Pass `null` to hide actions entirely; omit to render only `extraActions`
+   * (from `slotProps.actions`) if provided.
    */
   actions: React.ElementType | null;
   /**
@@ -61,6 +65,19 @@ export interface ChatMessageSlots {
   authorName: React.ElementType | null;
 }
 
+/**
+ * Message context passed to a function-valued `slotProps.actions` (and the flat
+ * `slotProps.messageActions`), so a consumer can return per-message action props
+ * — most commonly `extraActions` for assistant rows.
+ */
+export interface ChatMessageActionsResolveContext {
+  message: ChatMessageEntity | null;
+  messageId: string;
+  role?: ChatRole;
+  status?: ChatMessageStatus;
+  streaming: boolean;
+}
+
 export interface ChatMessageSlotProps {
   root?: any;
   avatar?: Partial<ChatMessageAvatarProps>;
@@ -68,7 +85,9 @@ export interface ChatMessageSlotProps {
   meta?: Partial<ChatMessageMetaProps>;
   inlineMeta?: Partial<ChatMessageInlineMetaProps>;
   error?: Partial<ChatMessageErrorProps>;
-  actions?: Partial<ChatMessageActionsProps>;
+  actions?:
+    | Partial<ChatMessageActionsProps>
+    | ((context: ChatMessageActionsResolveContext) => Partial<ChatMessageActionsProps>);
   authorName?: MessageGroupSlotProps['authorName'];
 }
 
@@ -276,6 +295,23 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
       const externalMeta =
         isCompact && MetaSlot !== null ? <MetaComp {...(slotProps?.meta ?? {})} /> : null;
 
+      // Resolve the actions slotProps against the message context — the same
+      // place the dateDivider/unreadMarker precedent resolves row-level function
+      // slotProps. The documented `({ message }) => ({ extraActions })` recipe
+      // works verbatim because `message` is the first key of the context.
+      const actionsContext: ChatMessageActionsResolveContext = {
+        message,
+        messageId,
+        role: message?.role,
+        status: message?.status,
+        streaming: message?.status === 'streaming',
+      };
+      const resolvedActionsProps = resolveSlotProps(
+        slotProps?.actions ?? {},
+        actionsContext,
+      ) as Partial<ChatMessageActionsProps>;
+      const hasExtraActions = (resolvedActionsProps.extraActions?.length ?? 0) > 0;
+
       innerTree = (
         <React.Fragment>
           {groupAuthorName}
@@ -283,9 +319,14 @@ const ChatMessage = React.forwardRef<HTMLDivElement, ChatMessageProps>(
           <ContentComp afterContent={inlineMeta} {...(slotProps?.content ?? {})} />
           {externalMeta}
           {hasError && <ErrorComp {...(slotProps?.error ?? {})} />}
-          {ActionsSlot && (
-            <ChatMessageActions {...(slotProps?.actions ?? {})}>
-              <ActionsSlot messageId={messageId} />
+          {/*
+          Render the bar when the slot is not explicitly `null` and there is
+          content: a slot component, or resolved `extraActions`. `null` wins
+          over `extraActions` (the presentational slot is fully removed).
+          */}
+          {ActionsSlot !== null && (ActionsSlot || hasExtraActions) && (
+            <ChatMessageActions message={message} {...resolvedActionsProps}>
+              {ActionsSlot ? <ActionsSlot messageId={messageId} /> : null}
             </ChatMessageActions>
           )}
         </React.Fragment>

@@ -10,6 +10,15 @@
     "features": {
       "description": "Feature flags for the opt-in row dividers rendered by the default row. Both are disabled by default; pass <code>{ dateDivider: true }</code> and/or <code>{ unreadMarker: true }</code> to render them. Ignored when a custom <code>renderItem</code> replaces the default row."
     },
+    "onReachBottom": {
+      "description": "Callback fired when the viewport enters the bottom zone of the list — within <code>autoScroll.buffer</code> pixels (150 by default; <code>estimatedItemSize</code> when <code>autoScroll</code> is disabled) of the bottom edge. Fires once per entry: it does not fire again until the user scrolls away from the bottom and back. Entries caused by programmatic scrolls (<code>scrollToBottom()</code>, the scroll-to-bottom affordance, the forced scroll after the user sends a message) count. It does not fire on mount, while the list stays pinned to the bottom during streaming, when new messages arrive while already at the bottom, or when the conversation (item set) is switched. Growing the buffer so that it newly encloses the current position counts as entering the zone."
+    },
+    "onReachTop": {
+      "description": "Callback fired when the viewport enters the top zone of the list — within <code>estimatedItemSize</code> pixels (84 by default) of the top edge. Fires once per entry: it does not fire again until the user scrolls away from the top, past the threshold, and back. It is coupled to history loading: it only fires when more history is available and no history page load is in flight, right before the next page is requested."
+    },
+    "overlay": {
+      "description": "Floating layer rendered above the message list, anchored to its bottom edge; pointer-transparent."
+    },
     "renderItem": {
       "description": "Render a custom row for each message. When omitted, the default row used by <code>ChatBox</code> is rendered (group → message → avatar → content, with conditional inline meta, external meta in compact variant, and message actions slot). Provide a function to fully replace the row; use slot overrides to tweak individual sub-components without losing the default chrome."
     }

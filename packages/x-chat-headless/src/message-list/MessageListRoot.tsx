@@ -75,11 +75,35 @@ export interface MessageListRootProps extends Omit<
   'children'
 > {
   items?: string[];
+  /**
+   * Floating layer rendered above the message list, anchored to its bottom edge; pointer-transparent.
+   * @default null
+   */
   overlay?: React.ReactNode;
   renderItem(params: { id: string; index: number }): React.ReactNode;
   getItemKey?: (id: string, index: number) => React.Key;
   estimatedItemSize?: number;
+  /**
+   * Callback fired when the viewport enters the top zone of the list — within
+   * `estimatedItemSize` pixels (84 by default) of the top edge. Fires once per
+   * entry: it does not fire again until the user scrolls away from the top,
+   * past the threshold, and back. It is coupled to history loading: it only
+   * fires when more history is available and no history page load is in
+   * flight, right before the next page is requested.
+   */
   onReachTop?: () => void;
+  /**
+   * Callback fired when the viewport enters the bottom zone of the list — within
+   * `autoScroll.buffer` pixels (150 by default; `estimatedItemSize` when `autoScroll`
+   * is disabled) of the bottom edge. Fires once per entry: it does not fire again until
+   * the user scrolls away from the bottom and back. Entries caused by programmatic
+   * scrolls (`scrollToBottom()`, the scroll-to-bottom affordance, the forced scroll
+   * after the user sends a message) count. It does not fire on mount, while the list
+   * stays pinned to the bottom during streaming, when new messages arrive while already
+   * at the bottom, or when the conversation (item set) is switched. Growing the buffer
+   * so that it newly encloses the current position counts as entering the zone.
+   */
+  onReachBottom?: () => void;
   /**
    * Controls automatic scrolling to the bottom when new messages arrive or
    * streaming content grows, as long as the user is within `buffer` pixels of
@@ -124,6 +148,7 @@ interface MessageListViewProps {
     | 'estimatedItemSize'
     | 'getItemKey'
     | 'items'
+    | 'onReachBottom'
     | 'onReachTop'
     | 'renderItem'
     | 'slotProps'
@@ -377,6 +402,7 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     getItemKey = (id) => id,
     estimatedItemSize = DEFAULT_ESTIMATED_ITEM_SIZE,
     onReachTop,
+    onReachBottom,
     autoScroll = true,
     enableRovingFocus = true,
     slots,
@@ -450,6 +476,7 @@ export const MessageListRoot = React.forwardRef(function MessageListRoot(
     itemIds,
     estimatedItemSize,
     onReachTop,
+    onReachBottom,
     messages,
     hasMoreHistory,
     loadMoreHistory,

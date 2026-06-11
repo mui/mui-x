@@ -229,6 +229,113 @@ describe('ChatMessage', () => {
     expect(document.body.textContent).not.toContain('slot text');
   });
 
+  it('resolves a function-valued slotProps.messageActions with the message context (role-conditional extraActions)', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialMessages={[
+          { id: 'u1', role: 'user', parts: [{ type: 'text', text: 'Q' }] },
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A' }],
+          },
+        ]}
+        slotProps={{
+          messageActions: ({ message }) =>
+            message?.role === 'assistant'
+              ? {
+                  extraActions: [{ id: 'regenerate', label: 'Regenerate', onClick: () => {} }],
+                }
+              : {},
+        }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    // Only assistant rows get the regenerate button.
+    const buttons = document.querySelectorAll('button[data-action="regenerate"]');
+    expect(buttons.length).toBe(1);
+  });
+
+  it('renders the actions row with extraActions alone (no slots.messageActions component)', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A' }],
+          },
+        ]}
+        slotProps={{
+          messageActions: { extraActions: [{ id: 'x', label: 'X', onClick: () => {} }] },
+        }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    expect(document.querySelector('.MuiChatMessage-actions')).not.toBe(null);
+    expect(document.querySelector('button[data-action="x"]')).not.toBe(null);
+  });
+
+  it('slots.messageActions: null hides the row even when extraActions are returned', () => {
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A' }],
+          },
+        ]}
+        slots={{ messageActions: null }}
+        slotProps={{
+          messageActions: { extraActions: [{ id: 'x', label: 'X', onClick: () => {} }] },
+        }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    expect(document.querySelector('.MuiChatMessage-actions')).toBe(null);
+    expect(document.querySelector('button[data-action="x"]')).toBe(null);
+  });
+
+  it('keeps the object-form slotProps.messageActions working (regression)', () => {
+    function CustomActions() {
+      return <button type="button">Custom</button>;
+    }
+
+    render(
+      <ChatBox
+        adapter={createAdapter()}
+        initialMessages={[
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A' }],
+          },
+        ]}
+        slots={{ messageActions: CustomActions }}
+        slotProps={{ messageActions: { className: 'object-form-actions' } }}
+      >
+        {null}
+      </ChatBox>,
+    );
+
+    expect(document.querySelector('.object-form-actions')).not.toBe(null);
+    expect(document.body.textContent).toContain('Custom');
+  });
+
   it('renders the group author label inside compact messages', () => {
     render(
       <ChatBox

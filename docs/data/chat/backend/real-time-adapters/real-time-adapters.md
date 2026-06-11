@@ -74,7 +74,12 @@ The available event shapes are shown below:
 ## Sending typing indicators
 
 Implement `setTyping()` to send a typing indicator to your backend when the user is composing a message.
-The runtime calls it when the composer value changes from empty to non-empty (and vice versa).
+
+Outbound typing signals are opt-in.
+When `features.typingSignal` is enabled (default `false`) and the adapter implements `setTyping()`, the runtime calls it automatically for the active conversation: `{ isTyping: true }` when the composer value changes from empty (`''`) to non-empty, and `{ isTyping: false }` when it changes back to empty—including when a message is sent, since sending clears the composer.
+Switching conversations sends `{ isTyping: false }` for the previous conversation and, if the draft is non-empty, `{ isTyping: true }` for the new one; the same applies at mount when an initial draft is present, and unmounting sends a final `{ isTyping: false }`.
+Keystrokes that keep the composer non-empty produce no additional calls, there is no built-in idle timeout, and `setTyping()` failures are swallowed (dev-only warning).
+With the flag off—the default—the runtime never calls `setTyping()`; if you enable it, remove any manual composer `onChange` wiring to avoid double-firing.
 
 ```ts
 interface ChatSetTypingInput {

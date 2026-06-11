@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { clearWarningsCache } from '@mui/x-internals/warning';
 import { ChatStore } from '../../store/ChatStore';
 import { createSendMessageActions } from './sendMessageActions';
 import type { ChatAdapter } from '../../adapters';
@@ -591,4 +592,520 @@ describe('createSendMessageActions', () => {
       expect(store.state.messagesById.u1.status).toBe('sent');
     });
   });
+
+  describe('regenerate', () => {
+    beforeEach(() => {
+      // `warnOnce` dedupes by message across the process; reset so each
+      // warning-asserting test observes its own warning.
+      clearWarningsCache();
+    });
+
+    function makeThread(): ChatMessage[] {
+      return [
+        { id: 'u1', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Hello' }] },
+        { id: 'a1', role: 'assistant', status: 'sent', parts: [{ type: 'text', text: 'First' }] },
+      ];
+    }
+
+    it('removes the old assistant run and streams a new reply via adapter.regenerate', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      store.setActiveConversation('c1');
+      let capturedInput: any;
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation((input) => {
+          capturedInput = input;
+          return Promise.resolve(
+            createStream([
+              { type: 'start', messageId: 'a2' },
+              { type: 'text-delta', id: 't2', delta: 'Second' },
+              { type: 'finish', messageId: 'a2', finishReason: 'stop' },
+            ]),
+          );
+        }),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+      });
+
+      await regenerate('a1');
+
+      expect(adapter.regenerate).toHaveBeenCalledTimes(1);
+      expect(adapter.sendMessage).not.toHaveBeenCalled();
+      expect(capturedInput.messageId).toBe('a1');
+      expect(capturedInput.message.id).toBe('u1');
+      // The removed assistant run must be excluded from the thread context.
+      expect(capturedInput.messages.map((m: ChatMessage) => m.id)).toEqual(['u1']);
+      expect(store.state.messagesById.a1).toBeUndefined();
+      expect(store.state.messagesById.a2).toBeDefined();
+      // Anchor user message status never leaves 'sent'.
+      expect(store.state.messagesById.u1.status).toBe('sent');
+      expect(store.state.isStreaming).toBe(false);
+      expect(store.state.activeStreamAbortController).toBeNull();
+    });
+
+    it('resolves the anchor from an assistant id and removes the whole contiguous run with an empty map', async () => {
+      const store = new ChatStore({
+        initialMessages: [
+          { id: 'u1', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Hi' }] },
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'One' }],
+          },
+          {
+            id: 'a2',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Two' }],
+          },
+        ],
+      });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockResolvedValue(
+          createStream([
+            { type: 'start', messageId: 'a3' },
+            { type: 'finish', messageId: 'a3', finishReason: 'stop' },
+          ]),
+        ),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      // Clicking the first assistant message of a multi-message run removes BOTH.
+      await regenerate('a1');
+
+      expect(store.state.messagesById.a1).toBeUndefined();
+      expect(store.state.messagesById.a2).toBeUndefined();
+      expect(store.state.messagesById.a3).toBeDefined();
+    });
+
+    it('removes the whole run including a non-mapped sibling when the anchor has a ref mapping', async () => {
+      // One send streamed two assistant messages; only 'a2' is in the ref map.
+      // Regenerating the non-mapped sibling 'a1' must still clear both — the
+      // exact case findAssistantMessageIdsForRetry's short-circuit gets wrong.
+      const store = new ChatStore({
+        initialMessages: [
+          { id: 'u1', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Hi' }] },
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'One' }],
+          },
+          {
+            id: 'a2',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Two' }],
+          },
+        ],
+      });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockResolvedValue(
+          createStream([
+            { type: 'start', messageId: 'a3' },
+            { type: 'finish', messageId: 'a3', finishReason: 'stop' },
+          ]),
+        ),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a2']]) },
+      });
+
+      await regenerate('a1');
+
+      expect(store.state.messagesById.a1).toBeUndefined();
+      expect(store.state.messagesById.a2).toBeUndefined();
+      expect(store.state.messagesById.a3).toBeDefined();
+    });
+
+    it('treats a user id directly as the anchor', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockResolvedValue(
+          createStream([
+            { type: 'start', messageId: 'a2' },
+            { type: 'finish', messageId: 'a2', finishReason: 'stop' },
+          ]),
+        ),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('u1');
+
+      expect((adapter.regenerate as any).mock.calls[0][0].message.id).toBe('u1');
+      expect(store.state.messagesById.a1).toBeUndefined();
+    });
+
+    it('falls back to adapter.sendMessage with the anchor user message when regenerate is unimplemented', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      const adapter = createAdapter({
+        sendMessage: vi.fn().mockResolvedValue(
+          createStream([
+            { type: 'start', messageId: 'a2' },
+            { type: 'finish', messageId: 'a2', finishReason: 'stop' },
+          ]),
+        ),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+      });
+
+      await regenerate('a1');
+
+      expect(adapter.sendMessage).toHaveBeenCalledTimes(1);
+      expect((adapter.sendMessage as any).mock.calls[0][0].message.id).toBe('u1');
+      expect(store.state.messagesById.a1).toBeUndefined();
+      expect(store.state.messagesById.a2).toBeDefined();
+    });
+
+    it('no-ops while streaming', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      store.setStreaming(true);
+      const adapter = createAdapter({ regenerate: vi.fn() });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await regenerate('a1');
+
+      expect(adapter.regenerate).not.toHaveBeenCalled();
+      expect(store.state.messagesById.a1).toBeDefined();
+    });
+
+    it('collapses synchronous double-invocation into a single adapter call', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      let resolveStream!: (s: ReadableStream<any>) => void;
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation(
+          () =>
+            new Promise((resolve) => {
+              resolveStream = resolve;
+            }),
+        ),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+      });
+
+      // Fire twice without awaiting — the second must be a no-op because
+      // `isSending` is set synchronously before the first `await`.
+      const first = regenerate('a1');
+      const second = regenerate('a1');
+
+      resolveStream(
+        createStream([
+          { type: 'start', messageId: 'a2' },
+          { type: 'finish', messageId: 'a2', finishReason: 'stop' },
+        ]),
+      );
+
+      await Promise.all([first, second]);
+
+      expect(adapter.regenerate).toHaveBeenCalledTimes(1);
+    });
+
+    it('no-ops with a dev warning for an unknown id', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      const adapter = createAdapter({ regenerate: vi.fn() });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await expect(() => regenerate('nope')).toWarnDev([
+        'MUI X Chat: `regenerate()` could not resolve the target message.',
+      ]);
+
+      expect(adapter.regenerate).not.toHaveBeenCalled();
+    });
+
+    it('no-ops for an assistant message with no preceding user message', async () => {
+      const store = new ChatStore({
+        initialMessages: [
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Orphan' }],
+          },
+        ],
+      });
+      const adapter = createAdapter({ regenerate: vi.fn() });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map() },
+      });
+
+      await expect(() => regenerate('a1')).toWarnDev([
+        'MUI X Chat: `regenerate()` could not resolve the target message.',
+      ]);
+
+      expect(adapter.regenerate).not.toHaveBeenCalled();
+      expect(store.state.messagesById.a1).toBeDefined();
+    });
+
+    it('restores the removed assistant run and sets REGENERATE_ERROR when adapter.regenerate rejects', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      store.setActiveConversation('c1');
+      const onError = vi.fn();
+      const setRuntimeError = vi.fn();
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockRejectedValue(new Error('Regen failed')),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter, onError } },
+        setRuntimeError,
+        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+      });
+
+      await regenerate('a1');
+
+      // The removed assistant message is restored (D4).
+      expect(store.state.messagesById.a1).toBeDefined();
+      expect(setRuntimeError).toHaveBeenCalledTimes(1);
+      expect(setRuntimeError.mock.calls[0][0].code).toBe('REGENERATE_ERROR');
+      expect(setRuntimeError.mock.calls[0][0].message).toBe('Regen failed');
+      expect(setRuntimeError.mock.calls[0][0].details.messageId).toBe('a1');
+      expect(store.state.isStreaming).toBe(false);
+    });
+
+    it('fires onError on a mid-stream error and keeps partial output (no rollback)', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      store.setActiveConversation('c1');
+      const onError = vi.fn();
+      // Stream a start (partial output) then close without a terminal chunk,
+      // with no reconnect support → processStream reports an error.
+      const adapter = createAdapter({
+        regenerate: vi
+          .fn()
+          .mockResolvedValue(createStream([{ type: 'start', messageId: 'a2' }])),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter, onError } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+      });
+
+      await regenerate('a1');
+
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(store.state.error?.code).toBe('STREAM_ERROR');
+      // Partial output kept — the new assistant message exists, not rolled back
+      // to the old one.
+      expect(store.state.messagesById.a2).toBeDefined();
+      expect(store.state.messagesById.a1).toBeUndefined();
+      expect(store.state.isStreaming).toBe(false);
+    });
+
+    it('retains a partial assistant message and sets no error when aborted mid-stream', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      store.setActiveConversation('c1');
+      const setRuntimeError = vi.fn();
+      const pendingStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue({ type: 'start', messageId: 'a2' });
+        },
+        cancel() {},
+      });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockResolvedValue(pendingStream),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError,
+        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+      });
+
+      const promise = regenerate('a1');
+
+      await waitForCondition(() => store.state.activeStreamAbortController != null);
+      store.state.activeStreamAbortController?.abort();
+
+      await promise;
+
+      expect(store.state.error).toBeNull();
+      expect(setRuntimeError).not.toHaveBeenCalled();
+      expect(store.state.messagesById.a2).toBeDefined();
+    });
+
+    it('updates the user→assistant mapping to the new assistant id after success', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      const ref: { current: Map<string, string> } = { current: new Map([['u1', 'a1']]) };
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockResolvedValue(
+          createStream([
+            { type: 'start', messageId: 'a2' },
+            { type: 'finish', messageId: 'a2', finishReason: 'stop' },
+          ]),
+        ),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: ref,
+      });
+
+      await regenerate('a1');
+
+      expect(ref.current.get('u1')).toBe('a2');
+    });
+
+    it('reuses an id streamed under the old assistant id (server id reuse)', async () => {
+      const store = new ChatStore({ initialMessages: makeThread() });
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockResolvedValue(
+          createStream([
+            { type: 'start', messageId: 'a1' },
+            { type: 'text-delta', id: 't', delta: 'Regenerated' },
+            { type: 'finish', messageId: 'a1', finishReason: 'stop' },
+          ]),
+        ),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: { current: new Map([['u1', 'a1']]) },
+      });
+
+      await regenerate('a1');
+
+      expect(store.state.messagesById.a1).toBeDefined();
+      expect(store.state.messagesById.a1.parts).toEqual([
+        { type: 'text', text: 'Regenerated', state: 'done' },
+      ]);
+    });
+
+    it('regenerates a mid-thread turn without removing later turns', async () => {
+      const store = new ChatStore({
+        initialMessages: [
+          { id: 'u1', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Q1' }] },
+          {
+            id: 'a1',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A1' }],
+          },
+          { id: 'u2', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Q2' }] },
+          {
+            id: 'a2',
+            role: 'assistant',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'A2' }],
+          },
+        ],
+      });
+      let capturedMessages: ChatMessage[] = [];
+      const adapter = createAdapter({
+        regenerate: vi.fn().mockImplementation((input) => {
+          capturedMessages = input.messages;
+          return Promise.resolve(
+            createStream([
+              { type: 'start', messageId: 'a1b' },
+              { type: 'finish', messageId: 'a1b', finishReason: 'stop' },
+            ]),
+          );
+        }),
+      });
+
+      const { regenerate } = createSendMessageActions({
+        store,
+        storeUnknown: asUnknown(store),
+        runtimeRef: { current: { adapter } },
+        setRuntimeError: vi.fn(),
+        assistantMessageIdByUserMessageIdRef: {
+          current: new Map([
+            ['u1', 'a1'],
+            ['u2', 'a2'],
+          ]),
+        },
+      });
+
+      await regenerate('a1');
+
+      // Only the first turn's reply is removed; later turns remain.
+      expect(store.state.messagesById.a1).toBeUndefined();
+      expect(store.state.messagesById.a1b).toBeDefined();
+      expect(store.state.messagesById.u2).toBeDefined();
+      expect(store.state.messagesById.a2).toBeDefined();
+      // Thread context sent to the adapter stops at the anchor (u1), excluding
+      // the removed reply.
+      expect(capturedMessages.map((m) => m.id)).toEqual(['u1', 'u2', 'a2']);
+    });
+  });
 });
+
+async function waitForCondition(predicate: () => boolean, timeoutMs = 1000): Promise<void> {
+  const start = Date.now();
+  while (!predicate()) {
+    if (Date.now() - start > timeoutMs) {
+      throw new Error('waitForCondition timed out');
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await new Promise((resolve) => {
+      setTimeout(resolve, 5);
+    });
+  }
+}

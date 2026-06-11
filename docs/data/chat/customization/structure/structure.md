@@ -74,18 +74,20 @@ function MySendButton(props) {
 
 ### Adding a "Regenerate" action on assistant messages
 
+The function form of `slotProps.messageActions` receives the message context, so you can append declarative `extraActions` to specific rows — here, a "Regenerate" button on assistant replies. Each action's `onClick` receives `(event, { message, chat })`; call `chat.regenerate(message.id)` to drop the existing reply and request a fresh one through the runtime.
+
 ```tsx
 <ChatBox
   adapter={adapter}
   slotProps={{
     messageActions: ({ message }) =>
-      message.role === 'assistant'
+      message?.role === 'assistant'
         ? {
             extraActions: [
               {
                 id: 'regenerate',
                 label: 'Regenerate',
-                onClick: () => adapter.regenerate(message.id),
+                onClick: (event, { chat }) => chat.regenerate(message.id),
               },
             ],
           }
@@ -93,6 +95,8 @@ function MySendButton(props) {
   }}
 />
 ```
+
+Regeneration is allowed mid-thread: regenerating an earlier assistant message replaces only that reply and leaves later turns untouched. It works against any adapter — when the adapter does not implement `regenerate`, the runtime re-sends the anchoring user message instead.
 
 ### Showing a custom empty state
 
@@ -212,7 +216,7 @@ Pass additional props to any slot without replacing the component:
 | `messageMeta`       | `ChatMessageMeta`       | External timestamp (compact variant)  |
 | `messageInlineMeta` | `ChatMessageInlineMeta` | Inline timestamp (default variant)    |
 | `messageError`      | `ChatMessageError`      | Error card shown when status is error |
-| `messageActions`    | `ChatMessageActions`    | Hover action menu (`null` to hide)    |
+| `messageActions`    | `ChatMessageActions`    | Hover action bar (`null` to hide). The `slotProps` function form receives the message context; return `extraActions` to append declarative buttons |
 | `messageAuthorName` | styled `div`            | Author name label (`null` to hide)    |
 
 ### Composer

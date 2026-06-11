@@ -1,1 +1,39 @@
-{ "componentDescription": "", "propDescriptions": {}, "classDescriptions": {} }
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "shouldShowDivider": {
+      "description": "Decides whether the divider renders above the message, replacing the built-in rule when provided. <code>date</code>/<code>previousDate</code> are the parsed <code>createdAt</code> values (<code>null</code> when missing or invalid); <code>previousMessage</code> is <code>null</code> for the first message in the list.",
+      "typeDescriptions": {
+        "params": {
+          "name": "params",
+          "description": "The parameters used to decide whether to render the divider."
+        },
+        "params.message": {
+          "name": "params.message",
+          "description": "The message the divider would render above."
+        },
+        "params.previousMessage": {
+          "name": "params.previousMessage",
+          "description": "The previous message, or <code>null</code> for the first message in the list."
+        },
+        "params.index": {
+          "name": "params.index",
+          "description": "The index of the message in the list."
+        },
+        "params.date": {
+          "name": "params.date",
+          "description": "The parsed <code>createdAt</code> of the message, or <code>null</code> when missing or invalid."
+        },
+        "params.previousDate": {
+          "name": "params.previousDate",
+          "description": "The parsed <code>createdAt</code> of the previous message, or <code>null</code> when missing or invalid."
+        },
+        "boolean": {
+          "name": "boolean",
+          "description": "<code>true</code> to render the divider above the message."
+        }
+      }
+    }
+  },
+  "classDescriptions": {}
+}

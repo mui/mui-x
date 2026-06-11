@@ -85,10 +85,13 @@ This flag tells the message list that an additional page of history can be fetch
 
 The normalized store tracks history pagination state:
 
-| Internal field   | Type                  | Description                           |
-| :--------------- | :-------------------- | :------------------------------------ |
-| `hasMoreHistory` | `boolean`             | Whether more history is available     |
-| `historyCursor`  | `Cursor \| undefined` | Pagination cursor for history loading |
+| Store field        | Type                  | Description                                                                     |
+| :----------------- | :-------------------- | :------------------------------------------------------------------------------ |
+| `hasMoreHistory`   | `boolean`             | Whether more history is available                                               |
+| `isLoadingHistory` | `boolean`             | Whether a history fetch is currently in flight (initial page or older messages) |
+| `historyCursor`    | `Cursor \| undefined` | Pagination cursor for history loading                                           |
+
+All three fields are readable through `useChat()` or the corresponding selectors (`selectHasMoreHistory`, `selectIsLoadingHistory`).
 
 ## Loading older messages
 
@@ -105,9 +108,23 @@ The runtime drives history loading in these steps:
 
 ## History loading indicator
 
-While `listMessages` is in flight, the runtime blocks duplicate requests (a debounce guard prevents overlapping loads).
+While a history fetch is in flight, the runtime blocks duplicate scroll-triggered requests (an in-flight guard prevents overlapping loads—there is no debounce).
 However, `ChatBox` and `ChatMessageList` do not render a built-in loading indicator during history fetches.
-To show a spinner or skeleton at the top of the list while older messages are loading, use the `overlay` prop on `ChatMessageList` combined with the `hasMoreHistory` and `isStreaming` values from `useChat`.
+To show a spinner or skeleton while messages are loading, use the `overlay` prop on `ChatMessageList` combined with the `isLoadingHistory` value from `useChat`:
+
+```tsx
+const { isLoadingHistory } = useChat();
+
+<ChatMessageList overlay={isLoadingHistory ? <HistoryLoadingIndicator /> : null} />;
+```
+
+`isLoadingHistory` is `true` whenever a history fetch for the active conversation is in flight—both the initial page fetched when a conversation opens and the older pages fetched when the user scrolls to the top.
+Its initial value is `false`, so server-rendered markup is stable; the flag flips after mount while the first page is being fetched.
+Switching conversations resets the flag along with the rest of the message state.
+One edge case: with controlled `messages` and `setActiveConversation(undefined)`, the flag can stay `true` briefly until the in-flight request settles.
+
+The `overlay` slot renders as a floating, pointer-transparent layer anchored to the bottom edge of the list—it does not appear at the top.
+To pin an indicator to the top of the list instead, override the overlay slot's styling, for example through `slotProps.messageListOverlay`.
 
 ## Error handling
 

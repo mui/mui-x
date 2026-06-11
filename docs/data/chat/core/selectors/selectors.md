@@ -26,18 +26,19 @@ The demo below shows selectors driving row-level subscriptions in a chat thread:
 
 These selectors read a single field from the store and return it directly:
 
-| Selector               | Return type                        | Description                        |
-| :--------------------- | :--------------------------------- | :--------------------------------- |
-| `messageIds`           | `string[]`                         | Ordered message IDs                |
-| `messagesById`         | `Record<string, ChatMessage>`      | Message map by ID                  |
-| `conversationIds`      | `string[]`                         | Ordered conversation IDs           |
-| `conversationsById`    | `Record<string, ChatConversation>` | Conversation map by ID             |
-| `activeConversationId` | `string \| undefined`              | Active conversation ID             |
-| `isStreaming`          | `boolean`                          | Whether a stream is active         |
-| `hasMoreHistory`       | `boolean`                          | Whether more history can be loaded |
-| `error`                | `ChatError \| null`                | Current runtime error              |
-| `composerValue`        | `string`                           | Current draft text                 |
-| `composerAttachments`  | `ChatDraftAttachment[]`            | Draft attachments                  |
+| Selector               | Return type                        | Description                          |
+| :--------------------- | :--------------------------------- | :----------------------------------- |
+| `messageIds`           | `string[]`                         | Ordered message IDs                  |
+| `messagesById`         | `Record<string, ChatMessage>`      | Message map by ID                    |
+| `conversationIds`      | `string[]`                         | Ordered conversation IDs             |
+| `conversationsById`    | `Record<string, ChatConversation>` | Conversation map by ID               |
+| `activeConversationId` | `string \| undefined`              | Active conversation ID               |
+| `isStreaming`          | `boolean`                          | Whether a stream is active           |
+| `hasMoreHistory`       | `boolean`                          | Whether more history can be loaded   |
+| `isLoadingHistory`     | `boolean`                          | Whether a history fetch is in flight |
+| `error`                | `ChatError \| null`                | Current runtime error                |
+| `composerValue`        | `string`                           | Current draft text                   |
+| `composerAttachments`  | `ChatDraftAttachment[]`            | Draft attachments                    |
 
 ### Derived selectors
 

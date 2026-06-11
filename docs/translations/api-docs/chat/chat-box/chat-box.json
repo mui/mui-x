@@ -84,7 +84,7 @@
     "dateDivider": "The date separator rendered between message groups. Only rendered when <code>features.dateDivider</code> is enabled. Pass <code>null</code> to hide it.",
     "emptyState": "Custom content rendered when the thread has no messages.",
     "layout": "Wrapper that arranges the conversations pane and the thread pane.",
-    "messageActions": "Actions row component (receives <code>{ messageId }</code>). Pass <code>null</code> (or omit) to hide actions.",
+    "messageActions": "Actions row component (receives <code>{ messageId }</code>). Pass <code>null</code> to hide actions entirely; omit to render only the declarative <code>extraActions</code> from <code>slotProps.messageActions</code> if provided.",
     "messageAuthorName": "Author name label rendered by the group wrapper (default variant: above the bubble; compact variant: inside the message grid). Pass <code>null</code> to hide.",
     "messageAvatar": "Avatar component. Pass <code>null</code> to hide the avatar entirely and drop the reserved avatar grid track.",
     "messageContent": "The message bubble component.",

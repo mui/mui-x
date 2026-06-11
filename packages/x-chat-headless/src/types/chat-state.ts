@@ -8,6 +8,7 @@ export interface ChatPublicState<Cursor = string> {
   messageCount: number;
   isStreaming: boolean;
   hasMoreHistory: boolean;
+  isLoadingHistory: boolean;
   historyCursor?: Cursor;
   error: ChatError | null;
 }
@@ -24,6 +25,7 @@ export interface ChatInternalState<Cursor = string> {
   activeStreamAbortController: AbortController | null;
   isStreaming: boolean;
   hasMoreHistory: boolean;
+  isLoadingHistory: boolean;
   historyCursor?: Cursor;
   composerValue: string;
   composerIsComposing: boolean;

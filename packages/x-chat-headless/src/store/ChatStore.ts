@@ -225,6 +225,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       activeStreamAbortController: null,
       isStreaming: false,
       hasMoreHistory: false,
+      isLoadingHistory: false,
       historyCursor: undefined,
       composerValue,
       composerIsComposing: false,
@@ -533,6 +534,10 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
     this.set('isStreaming', value);
   };
 
+  public setHistoryLoading = (value: boolean) => {
+    this.set('isLoadingHistory', value);
+  };
+
   public setActiveStreamAbortController = (value: AbortController | null) => {
     this.set('activeStreamAbortController', value);
   };
@@ -593,6 +598,7 @@ export class ChatStore<Cursor = string> extends Store<ChatInternalState<Cursor>>
       activeStreamAbortController: null,
       isStreaming: false,
       hasMoreHistory: false,
+      isLoadingHistory: false,
       historyCursor: undefined,
       error: null,
     });

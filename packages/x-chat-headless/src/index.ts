@@ -25,6 +25,7 @@ import { MessageListDateDivider, MessageListRoot } from './message-list';
 export { ChatProvider } from './ChatProvider';
 
 export { useChat } from './hooks/useChat';
+export { useChatActions } from './hooks/useChatActions';
 export { useChatComposer } from './hooks/useChatComposer';
 export { useChatOnToolCall } from './hooks/useChatOnToolCall';
 export { useChatPartRenderer } from './hooks/useChatPartRenderer';
@@ -43,6 +44,7 @@ export {
   selectActiveConversationId,
   selectIsStreaming,
   selectHasMoreHistory,
+  selectIsLoadingHistory,
   selectError,
   selectMessages,
   selectMessage,
@@ -58,9 +60,10 @@ export {
   selectTypingUserIdsForActiveConversation,
 } from './selectors/chatSelectors';
 
-export type { ChatProviderProps } from './ChatProvider';
+export type { ChatProviderProps, ChatFeatures } from './ChatProvider';
 
-export type { ChatAdapter, PaginationDirection } from './adapters/chatAdapter';
+export type { ChatAdapter, ChatRegenerateInput, PaginationDirection } from './adapters/chatAdapter';
+export type { ChatRuntimeActions } from './internals/useChatController';
 export { createEchoAdapter } from './adapters/createEchoAdapter';
 export type { CreateEchoAdapterOptions } from './adapters/createEchoAdapter';
 export { createAiSdkAdapter } from './adapters/createAiSdkAdapter';

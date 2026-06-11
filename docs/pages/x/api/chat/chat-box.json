@@ -17,7 +17,7 @@
     "features": {
       "type": {
         "name": "shape",
-        "description": "{ attachments?: { acceptedMimeTypes?: Array&lt;string&gt;, maxFileCount?: number, maxFileSize?: number, onAttachmentReject?: func }<br>&#124;&nbsp;bool, autoScroll?: { buffer?: number }<br>&#124;&nbsp;bool, conversationHeader?: bool, conversationList?: bool, dateDivider?: bool, helperText?: bool, scrollToBottom?: bool, suggestions?: bool, unreadMarker?: bool }"
+        "description": "{ attachments?: { acceptedMimeTypes?: Array&lt;string&gt;, maxFileCount?: number, maxFileSize?: number, onAttachmentReject?: func }<br>&#124;&nbsp;bool, autoScroll?: { buffer?: number }<br>&#124;&nbsp;bool, conversationHeader?: bool, conversationList?: bool, dateDivider?: bool, helperText?: bool, scrollToBottom?: bool, suggestions?: bool, typingSignal?: bool, unreadMarker?: bool }"
       }
     },
     "getMessageAuthorAvatarUrl": {
@@ -192,7 +192,7 @@
     },
     {
       "name": "messageActions",
-      "description": "Actions row component (receives `{ messageId }`). Pass `null` (or omit) to\nhide actions.",
+      "description": "Actions row component (receives `{ messageId }`). Pass `null` to hide\nactions entirely; omit to render only the declarative `extraActions` from\n`slotProps.messageActions` if provided.",
       "class": null
     },
     {

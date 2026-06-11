@@ -17,6 +17,7 @@ export {
   selectActiveConversationId,
   selectIsStreaming,
   selectHasMoreHistory,
+  selectIsLoadingHistory,
   selectError,
   selectMessages,
   selectMessage,

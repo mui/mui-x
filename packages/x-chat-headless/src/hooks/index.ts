@@ -1,4 +1,5 @@
 export * from './useChat';
+export * from './useChatActions';
 export * from './useChatComposer';
 export * from './useChatOnToolCall';
 export * from './useChatPartRenderer';

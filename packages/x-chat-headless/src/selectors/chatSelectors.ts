@@ -15,6 +15,7 @@ export const chatSelectors = {
   activeConversationId: createSelector((state: State) => state.activeConversationId),
   isStreaming: createSelector((state: State) => state.isStreaming),
   hasMoreHistory: createSelector((state: State) => state.hasMoreHistory),
+  isLoadingHistory: createSelector((state: State) => state.isLoadingHistory),
   error: createSelector((state: State) => state.error),
   messages: createSelectorMemoized(
     (state: State) => state.messageIds,
@@ -137,6 +138,7 @@ export const selectConversationsById = chatSelectors.conversationsById;
 export const selectActiveConversationId = chatSelectors.activeConversationId;
 export const selectIsStreaming = chatSelectors.isStreaming;
 export const selectHasMoreHistory = chatSelectors.hasMoreHistory;
+export const selectIsLoadingHistory = chatSelectors.isLoadingHistory;
 export const selectError = chatSelectors.error;
 export const selectMessages = chatSelectors.messages;
 export const selectMessage = chatSelectors.message;

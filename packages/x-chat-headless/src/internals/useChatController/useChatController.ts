@@ -21,6 +21,8 @@ import {
 import { createRealtimeActions } from './realtimeActions';
 import { createConversationActions } from './conversationActions';
 import { createSendMessageActions } from './sendMessageActions';
+import { createTypingActions } from './typingActions';
+import type { ChatFeatures } from '../../ChatProvider';
 
 export type { UseChatSendMessageInput };
 
@@ -31,6 +33,7 @@ export interface ChatRuntimeActions<Cursor = string> {
   loadMoreHistory(): Promise<void>;
   setActiveConversation(id: string | undefined): Promise<void>;
   retry(messageId: string): Promise<void>;
+  regenerate(messageId: string): Promise<void>;
   setError(error: ChatError | null): void;
   addToolApprovalResponse(input: ChatAddToolApproveResponseInput): Promise<void>;
 }
@@ -43,6 +46,7 @@ interface UseChatControllerParameters<Cursor = string> {
   onData?: ChatOnData;
   onError?: (error: ChatError) => void;
   streamFlushInterval?: number;
+  features?: ChatFeatures;
 }
 
 export function useChatController<Cursor = string>({
@@ -53,6 +57,7 @@ export function useChatController<Cursor = string>({
   onData,
   onError,
   streamFlushInterval,
+  features,
 }: UseChatControllerParameters<Cursor>): ChatRuntimeActions<Cursor> {
   const runtimeRef = React.useRef({
     adapter,
@@ -61,10 +66,12 @@ export function useChatController<Cursor = string>({
     onData,
     onError,
     streamFlushInterval,
+    features,
   });
   const assistantMessageIdByUserMessageIdRef = React.useRef(new Map<string, string>());
   const conversationNavigationRequestIdRef = React.useRef(0);
   const conversationLoadRequestIdRef = React.useRef(0);
+  const historyLoadRequestIdRef = React.useRef(0);
   const storeUnknown = asCursorAgnosticChatStore(store);
 
   runtimeRef.current = {
@@ -74,6 +81,7 @@ export function useChatController<Cursor = string>({
     onData,
     onError,
     streamFlushInterval,
+    features,
   };
 
   const setRuntimeError = React.useCallback(
@@ -107,12 +115,13 @@ export function useChatController<Cursor = string>({
         stopStreaming,
         conversationNavigationRequestIdRef,
         conversationLoadRequestIdRef,
+        historyLoadRequestIdRef,
       }),
 
     [setRuntimeError, stopStreaming, store],
   );
 
-  const { sendMessage, retry, pruneAttachmentsByMessageIds } = React.useMemo(
+  const { sendMessage, retry, regenerate, pruneAttachmentsByMessageIds } = React.useMemo(
     () =>
       createSendMessageActions({
         store,
@@ -218,6 +227,16 @@ export function useChatController<Cursor = string>({
     [storeUnknown, conversationNavigationRequestIdRef],
   );
 
+  const {
+    handleComposerValueChange,
+    handleActiveConversationChange,
+    syncTypingSignal,
+    disposeTyping,
+  } = React.useMemo(
+    () => createTypingActions({ store: storeUnknown, runtimeRef }),
+    [storeUnknown],
+  );
+
   React.useEffect(() => {
     let isDisposed = false;
 
@@ -317,6 +336,21 @@ export function useChatController<Cursor = string>({
     },
   );
 
+  // Outbound typing signals (feature-gated via `features.typingSignal`). The
+  // conversation subscription is registered before the composer one so that,
+  // when a single controlled `setState` changes both keys, the old
+  // conversation's `false` is flushed before the composer transition runs.
+  useStoreEffect(store, (state) => state.activeConversationId, handleActiveConversationChange);
+  useStoreEffect(store, (state) => state.composerValue, handleComposerValueChange);
+
+  const typingSignalEnabled = features?.typingSignal === true;
+  React.useEffect(() => {
+    // Runs at mount (seeds a non-empty `initialComposerValue` draft) and on flag flips.
+    syncTypingSignal(typingSignalEnabled);
+  }, [typingSignalEnabled, syncTypingSignal]);
+
+  React.useEffect(() => () => disposeTyping(), [disposeTyping]);
+
   React.useEffect(() => {
     if (store.state.activeConversationId != null) {
       void loadConversationMessages(store.state.activeConversationId, {
@@ -341,12 +375,14 @@ export function useChatController<Cursor = string>({
       loadMoreHistory,
       setActiveConversation,
       retry,
+      regenerate,
       setError,
       addToolApprovalResponse,
     }),
     [
       addToolApprovalResponse,
       loadMoreHistory,
+      regenerate,
       retry,
       sendMessage,
       setActiveConversation,

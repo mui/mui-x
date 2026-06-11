@@ -1,4 +1,4 @@
-import type { ChatAdapter, ChatSendMessageInput } from './chatAdapter';
+import type { ChatAdapter, ChatRegenerateInput, ChatSendMessageInput } from './chatAdapter';
 import type { ChatMessage } from '../types/chat-entities';
 import type { ChatError } from '../types/chat-error';
 import type { ChatMessageChunk } from '../types/chat-stream';
@@ -26,6 +26,15 @@ export interface CreateAiSdkAdapterRequest {
   messages: ChatMessage[];
   attachments?: ChatSendMessageInput['attachments'];
   metadata?: ChatSendMessageInput['metadata'];
+  /**
+   * AI SDK trigger discriminant: `'submit-message'` for fresh sends,
+   * `'regenerate-message'` for regenerations (mirrors AI SDK's
+   * `prepareSendMessagesRequest`). A server that ignores it simply treats a
+   * regeneration as a re-send.
+   */
+  trigger: 'submit-message' | 'regenerate-message';
+  /** Set when `trigger === 'regenerate-message'`: id of the assistant message being regenerated. */
+  regenerateMessageId?: string;
   signal: AbortSignal;
 }
 
@@ -62,6 +71,14 @@ export interface AiSdkChatInstance {
     options?: unknown,
   ) => Promise<unknown>;
   stop: () => void;
+  /* eslint-disable jsdoc/require-param, jsdoc/require-returns */
+  /**
+   * AI SDK v5 `useChat().regenerate`. Optional: when absent the adapter omits
+   * `regenerate` and the MUI X runtime falls back to re-sending through
+   * `sendMessage`.
+   */
+  regenerate?: (options?: { messageId?: string }) => Promise<unknown>;
+  /* eslint-enable jsdoc/require-param, jsdoc/require-returns */
   messages: ReadonlyArray<{
     id: string;
     role: string;
@@ -300,8 +317,35 @@ function coerceToBytes(value: unknown): Uint8Array {
   return out;
 }
 
+// Emit a single (already-complete) assistant reply as the canonical 5-chunk
+// stream `processStream` consumes. Used by the `{ chat }` adapter, where
+// `useChat`'s `sendMessage`/`regenerate` resolve only after streaming finishes.
+function emitWholeReplyStream(replyText: string, replyId: string): ReadableStream<ChatMessageChunk> {
+  const partId = `${replyId}-text`;
+
+  return new ReadableStream<ChatMessageChunk>({
+    start(controller) {
+      controller.enqueue({ type: 'start', messageId: replyId });
+      controller.enqueue({ type: 'text-start', id: partId });
+      controller.enqueue({ type: 'text-delta', id: partId, delta: replyText });
+      controller.enqueue({ type: 'text-end', id: partId });
+      controller.enqueue({ type: 'finish', messageId: replyId, finishReason: 'stop' });
+      controller.close();
+    },
+  });
+}
+
+function getTrailingAssistantText(
+  message: AiSdkChatInstance['messages'][number] | undefined,
+): string {
+  if (message == null) {
+    return '';
+  }
+  return message.parts.map((part) => (part.type === 'text' ? (part.text ?? '') : '')).join('');
+}
+
 function createChatBasedAdapter(chat: AiSdkChatInstance): ChatAdapter {
-  return {
+  const adapter: ChatAdapter = {
     async sendMessage(input: ChatSendMessageInput) {
       const userText = getMessageText(input.message);
       const files = input.attachments?.map((attachment) => attachment.file);
@@ -322,24 +366,40 @@ function createChatBasedAdapter(chat: AiSdkChatInstance): ChatAdapter {
       const last = chat.messages[chat.messages.length - 1];
       const isNewAssistantReply =
         last != null && last.role === 'assistant' && chat.messages.length > lengthBefore;
-      const replyText = isNewAssistantReply
-        ? last.parts.map((part) => (part.type === 'text' ? (part.text ?? '') : '')).join('')
-        : '';
+      const replyText = isNewAssistantReply ? getTrailingAssistantText(last) : '';
       const replyId = isNewAssistantReply ? last.id : `reply-${input.message.id}`;
-      const partId = `${replyId}-text`;
 
-      return new ReadableStream<ChatMessageChunk>({
-        start(controller) {
-          controller.enqueue({ type: 'start', messageId: replyId });
-          controller.enqueue({ type: 'text-start', id: partId });
-          controller.enqueue({ type: 'text-delta', id: partId, delta: replyText });
-          controller.enqueue({ type: 'text-end', id: partId });
-          controller.enqueue({ type: 'finish', messageId: replyId, finishReason: 'stop' });
-          controller.close();
-        },
-      });
+      return emitWholeReplyStream(replyText, replyId);
     },
   };
+
+  // Only expose `regenerate` when the underlying chat instance supports it, so
+  // the runtime's capability check (`adapter.regenerate`) stays accurate and
+  // falls back to a re-send otherwise.
+  if (typeof chat.regenerate === 'function') {
+    adapter.regenerate = async (input: ChatRegenerateInput) => {
+      const onAbort = () => chat.stop();
+      input.signal.addEventListener('abort', onAbort, { once: true });
+
+      try {
+        await chat.regenerate!({ messageId: input.messageId });
+      } finally {
+        input.signal.removeEventListener('abort', onAbort);
+      }
+
+      // AI SDK regeneration replaces the message in place, so the "new reply"
+      // length heuristic from `sendMessage` does not apply — read the trailing
+      // assistant message unconditionally.
+      const last = chat.messages[chat.messages.length - 1];
+      const replyText = getTrailingAssistantText(last);
+      const replyId =
+        last != null && last.role === 'assistant' ? last.id : `reply-${input.messageId}`;
+
+      return emitWholeReplyStream(replyText, replyId);
+    };
+  }
+
+  return adapter;
 }
 
 /**
@@ -371,6 +431,19 @@ export function createAiSdkAdapter(options: CreateAiSdkAdapterOptions): ChatAdap
         messages: input.messages,
         attachments: input.attachments,
         metadata: input.metadata,
+        trigger: 'submit-message',
+        signal: input.signal,
+      });
+
+      return convertToChatStream(upstream, input.signal);
+    },
+    async regenerate(input: ChatRegenerateInput) {
+      const upstream = await streamFn({
+        // The anchor user message that prompted the reply being regenerated.
+        message: input.message,
+        messages: input.messages,
+        trigger: 'regenerate-message',
+        regenerateMessageId: input.messageId,
         signal: input.signal,
       });
 

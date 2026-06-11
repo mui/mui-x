@@ -165,6 +165,7 @@ const ChatBox = React.forwardRef(function ChatBox<Cursor = string>(
       partRenderers={partRenderers}
       storeClass={storeClass}
       localeText={localeText}
+      features={features}
       slotProps={{ root: { style: { display: 'contents' } } }}
     >
       <ChatVariantProvider variant={variant}>
@@ -205,6 +206,7 @@ ChatBox.propTypes = {
     loadMore: PropTypes.func,
     markRead: PropTypes.func,
     reconnectToStream: PropTypes.func,
+    regenerate: PropTypes.func,
     sendMessage: PropTypes.func.isRequired,
     setTyping: PropTypes.func,
     stop: PropTypes.func,
@@ -285,6 +287,7 @@ ChatBox.propTypes = {
     helperText: PropTypes.bool,
     scrollToBottom: PropTypes.bool,
     suggestions: PropTypes.bool,
+    typingSignal: PropTypes.bool,
     unreadMarker: PropTypes.bool,
   }),
   /**

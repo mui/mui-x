@@ -2,6 +2,7 @@ import * as React from 'react';
 import { act, renderHook, waitFor } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatAdapter } from '../adapters';
+import { createEchoAdapter } from '../adapters/createEchoAdapter';
 import { ChatProvider, type ChatProviderProps } from '../ChatProvider';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
 import { useChat } from './useChat';
@@ -667,6 +668,62 @@ describe('useChat', () => {
     expect(result.current.hasMoreHistory).toBe(false);
   });
 
+  it('exposes isLoadingHistory transitioning false → true → false across the initial history load, mirrored by useChatStatus', async () => {
+    let resolveListMessages!: (value: any) => void;
+    const adapter = createAdapter({
+      listMessages: vi.fn(
+        () =>
+          new Promise<any>((resolve) => {
+            resolveListMessages = resolve;
+          }),
+      ),
+    });
+    const { Wrapper } = createProviderWrapper({
+      adapter,
+      initialActiveConversationId: 'c1',
+    });
+
+    const observedFlags: boolean[] = [];
+    const { result } = renderHook(
+      () => {
+        const chat = useChat();
+        const status = useChatStatus();
+        observedFlags.push(chat.isLoadingHistory);
+        return { chat, status };
+      },
+      { wrapper: Wrapper },
+    );
+
+    // The flag is false on the very first render (SSR-safe) and flips to true
+    // once the client effect kicks off the initial history fetch.
+    expect(observedFlags[0]).toBe(false);
+
+    await waitFor(() => {
+      expect(result.current.chat.isLoadingHistory).toBe(true);
+    });
+    expect(result.current.status.isLoadingHistory).toBe(true);
+
+    await act(async () => {
+      resolveListMessages({
+        messages: [
+          {
+            id: 'm1',
+            conversationId: 'c1',
+            role: 'user',
+            status: 'sent',
+            parts: [{ type: 'text', text: 'Hello' }],
+          },
+        ],
+        cursor: undefined,
+        hasMore: false,
+      });
+    });
+
+    expect(result.current.chat.isLoadingHistory).toBe(false);
+    expect(result.current.status.isLoadingHistory).toBe(false);
+    expect(result.current.chat.messages.map((message) => message.id)).toEqual(['m1']);
+  });
+
   it('does not double-fire loadConversationMessages on initial mount with initialActiveConversationId', async () => {
     const adapter = createAdapter({
       listMessages: vi.fn(async () => ({
@@ -802,6 +859,41 @@ describe('useChat', () => {
       parts: [{ type: 'text', text: 'Second answer', state: 'done' }],
       createdAt: expect.any(String),
     });
+  });
+
+  it('exposes a stable regenerate action that drives the store via createEchoAdapter', async () => {
+    const adapter = createEchoAdapter({ delayMs: 0, respond: () => 'Regenerated reply' });
+    const { Wrapper } = createProviderWrapper({ adapter });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    const initialRegenerate = result.current.regenerate;
+    expect(typeof initialRegenerate).toBe('function');
+
+    await act(async () => {
+      await result.current.sendMessage({
+        id: 'user-1',
+        conversationId: 'c1',
+        parts: [{ type: 'text', text: 'Hello' }],
+      });
+    });
+
+    const assistantId = result.current.messages[1].id;
+    expect(result.current.messages.map((m) => m.role)).toEqual(['user', 'assistant']);
+
+    await act(async () => {
+      await result.current.regenerate(assistantId);
+    });
+
+    // The action reference is stable across re-renders.
+    expect(result.current.regenerate).toBe(initialRegenerate);
+    expect(result.current.messages.map((m) => m.role)).toEqual(['user', 'assistant']);
+    expect(result.current.messages[0].id).toBe('user-1');
+    // The old assistant message was replaced with a fresh reply.
+    expect(result.current.messages[1].id).not.toBe(assistantId);
+    expect(result.current.messages[1].parts).toEqual([
+      { type: 'text', text: 'Regenerated reply', state: 'done' },
+    ]);
+    expect(result.current.isStreaming).toBe(false);
   });
 
   it('updates tool approval state locally and forwards the response to the adapter', async () => {

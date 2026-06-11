@@ -43,6 +43,7 @@ It supports:
 - row rendering through `renderItem({ id, index })`
 - item reordering through the `items` prop
 - `onReachTop`
+- `onReachBottom`
 - automatic history loading when the list reaches the top edge
 - scroll anchoring when items are prepended
 - unseen-message counting while the list is away from the bottom
@@ -60,6 +61,11 @@ The list tracks whether the user is at the bottom of the thread and how many uns
 That behavior powers `Indicators.ScrollToBottomAffordance`.
 
 It also preserves the viewport when older messages are prepended, which keeps infinite-scroll histories from jumping as the user reads.
+
+The list fires `onReachBottom` once each time the viewport enters the bottom zone—within the auto-scroll `buffer` (150 px by default; `estimatedItemSize` when `autoScroll` is disabled).
+Programmatic scrolls (`scrollToBottom()`, the scroll-to-bottom affordance) and the forced scroll after the user sends a message count as entries.
+It does not refire while the list stays pinned to the bottom during streaming, and switching conversations never fires it by itself.
+The canonical use case is marking messages as read once the user scrolls to the latest message—see [read receipts](/x/react-chat/multi-conversation/read-receipts/).
 
 ### Imperative scroll handle
 

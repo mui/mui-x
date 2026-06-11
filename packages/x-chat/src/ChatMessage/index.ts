@@ -1,5 +1,5 @@
 export { ChatMessage } from './ChatMessage';
-export type { ChatMessageProps } from './ChatMessage';
+export type { ChatMessageProps, ChatMessageActionsResolveContext } from './ChatMessage';
 export { ChatMessageAvatar } from './ChatMessageAvatar';
 export type { ChatMessageAvatarProps } from './ChatMessageAvatar';
 export { ChatMessageAuthorLabel } from './ChatMessageAuthorLabel';
@@ -11,7 +11,11 @@ export type { ChatMessageMetaProps } from './ChatMessageMeta';
 export { ChatMessageInlineMeta } from './ChatMessageInlineMeta';
 export type { ChatMessageInlineMetaProps } from './ChatMessageInlineMeta';
 export { ChatMessageActions } from './ChatMessageActions';
-export type { ChatMessageActionsProps } from './ChatMessageActions';
+export type {
+  ChatMessageActionsProps,
+  ChatMessageExtraAction,
+  ChatMessageExtraActionContext,
+} from './ChatMessageActions';
 export { ChatMessageGroup } from './ChatMessageGroup';
 export type { ChatMessageGroupProps } from './ChatMessageGroup';
 export { ChatDateDivider } from './ChatDateDivider';

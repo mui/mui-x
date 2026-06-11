@@ -296,7 +296,31 @@ ChatMessageList.propTypes = {
   }),
   getItemKey: PropTypes.func,
   items: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * Callback fired when the viewport enters the bottom zone of the list — within
+   * `autoScroll.buffer` pixels (150 by default; `estimatedItemSize` when `autoScroll`
+   * is disabled) of the bottom edge. Fires once per entry: it does not fire again until
+   * the user scrolls away from the bottom and back. Entries caused by programmatic
+   * scrolls (`scrollToBottom()`, the scroll-to-bottom affordance, the forced scroll
+   * after the user sends a message) count. It does not fire on mount, while the list
+   * stays pinned to the bottom during streaming, when new messages arrive while already
+   * at the bottom, or when the conversation (item set) is switched. Growing the buffer
+   * so that it newly encloses the current position counts as entering the zone.
+   */
+  onReachBottom: PropTypes.func,
+  /**
+   * Callback fired when the viewport enters the top zone of the list — within
+   * `estimatedItemSize` pixels (84 by default) of the top edge. Fires once per
+   * entry: it does not fire again until the user scrolls away from the top,
+   * past the threshold, and back. It is coupled to history loading: it only
+   * fires when more history is available and no history page load is in
+   * flight, right before the next page is requested.
+   */
   onReachTop: PropTypes.func,
+  /**
+   * Floating layer rendered above the message list, anchored to its bottom edge; pointer-transparent.
+   * @default null
+   */
   overlay: PropTypes.node,
   /**
    * Render a custom row for each message. When omitted, the default row used by

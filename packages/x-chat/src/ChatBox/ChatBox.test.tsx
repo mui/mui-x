@@ -2,7 +2,7 @@ import * as React from 'react';
 import { act, createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useChatStatus, type ChatAdapter } from '@mui/x-chat-headless';
+import { createEchoAdapter, useChatStatus, type ChatAdapter } from '@mui/x-chat-headless';
 import { ChatBox } from './ChatBox';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -370,6 +370,28 @@ describe('ChatBox', () => {
       expect(section?.hasAttribute('renderItem')).toBe(false);
       expect(section?.hasAttribute('items')).toBe(false);
     });
+
+    it('forwards onReachBottom through slotProps.messageList without leaking it to the DOM', () => {
+      const onReachBottom = vi.fn();
+      render(
+        <ChatBox
+          adapter={createAdapter()}
+          initialMessages={[
+            { id: 'm1', role: 'user', parts: [{ type: 'text', text: 'Hello bottom' }] },
+          ]}
+          slotProps={{ messageList: { onReachBottom } }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      // The recipe's exact shape type-checks and renders; the callback must not
+      // be spread onto the scroller element as an unknown DOM attribute.
+      const log = screen.getByRole('log');
+      expect(screen.getByText('Hello bottom')).not.toBe(null);
+      expect(log.hasAttribute('onReachBottom')).toBe(false);
+      expect(log.hasAttribute('onreachbottom')).toBe(false);
+    });
   });
 
   describe('feature: conversationList', () => {
@@ -677,6 +699,40 @@ describe('ChatBox', () => {
     it('renders send button', () => {
       render(<ChatBox adapter={createAdapter()}>{null}</ChatBox>);
       expect(screen.getByRole('button', { name: 'Send message' })).not.toBe(null);
+    });
+
+    it('fires adapter.setTyping once when typing with features.typingSignal enabled', () => {
+      const setTyping = vi.fn(async () => {});
+      render(
+        <ChatBox
+          adapter={createAdapter({ setTyping })}
+          initialActiveConversationId="c1"
+          features={{ typingSignal: true }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      const textarea = screen.getByPlaceholderText('Type a message');
+      fireEvent.change(textarea, { target: { value: 'h' } });
+      fireEvent.change(textarea, { target: { value: 'he' } });
+
+      expect(setTyping).toHaveBeenCalledTimes(1);
+      expect(setTyping).toHaveBeenCalledWith({ conversationId: 'c1', isTyping: true });
+    });
+
+    it('does not call adapter.setTyping when the feature is off (default)', () => {
+      const setTyping = vi.fn(async () => {});
+      render(
+        <ChatBox adapter={createAdapter({ setTyping })} initialActiveConversationId="c1">
+          {null}
+        </ChatBox>,
+      );
+
+      const textarea = screen.getByPlaceholderText('Type a message');
+      fireEvent.change(textarea, { target: { value: 'hello' } });
+
+      expect(setTyping).not.toHaveBeenCalled();
     });
   });
 
@@ -1375,6 +1431,63 @@ describe('ChatBox', () => {
       fireEvent.keyDown(link, { key: 'Escape' });
       expect(document.activeElement).toBe(article);
       expect(link).to.have.attribute('tabindex', '-1');
+    });
+  });
+
+  describe('extraActions regenerate recipe (flat key, end-to-end)', () => {
+    it('renders the regenerate button only on assistant rows and replaces the reply on click', async () => {
+      let replyCount = 0;
+      const adapter = createEchoAdapter({
+        delayMs: 0,
+        respond: () => {
+          replyCount += 1;
+          return `Reply ${replyCount}`;
+        },
+      });
+
+      render(
+        <ChatBox
+          adapter={adapter}
+          initialMessages={[
+            { id: 'u1', role: 'user', status: 'sent', parts: [{ type: 'text', text: 'Q' }] },
+            {
+              id: 'a1',
+              role: 'assistant',
+              status: 'sent',
+              parts: [{ type: 'text', text: 'Reply 0' }],
+            },
+          ]}
+          slotProps={{
+            messageActions: ({ message }) =>
+              message?.role === 'assistant'
+                ? {
+                    extraActions: [
+                      {
+                        id: 'regenerate',
+                        label: 'Regenerate',
+                        onClick: (event, { chat }) => chat.regenerate(message.id),
+                      },
+                    ],
+                  }
+                : {},
+          }}
+        >
+          {null}
+        </ChatBox>,
+      );
+
+      // Only the assistant row exposes the regenerate button.
+      const buttons = document.querySelectorAll('button[data-action="regenerate"]');
+      expect(buttons.length).toBe(1);
+      expect(document.body.textContent).toContain('Reply 0');
+
+      fireEvent.click(buttons[0]);
+
+      await waitFor(() => {
+        expect(document.body.textContent).toContain('Reply 1');
+      });
+      // The old assistant reply is gone, replaced by the regenerated one.
+      expect(document.body.textContent).not.toContain('Reply 0');
     });
   });
 });
