@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
-import { forecast } from './weatherForecast';
+import { forecast } from '../dataset/weatherForecast';
 
 export function WeatherIcon({ type }) {
   const isRain = type === 'rain';

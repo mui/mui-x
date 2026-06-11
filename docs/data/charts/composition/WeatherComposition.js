@@ -19,13 +19,13 @@ import {
 import { ChartsLabelMark } from '@mui/x-charts/ChartsLabel';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
-import { forecast } from './weatherForecast';
+import { forecast } from '../dataset/weatherForecast';
 import {
   DayAndTimeHeader,
   WeatherMarkers,
   MaxPrecipitationBars,
   LegendItem,
-} from './WeatherCompositionComponents';
+} from './weatherCompositionComponents';
 
 export default function WeatherComposition() {
   const [highlightedAxis, setHighlightedAxis] = React.useState([]);
