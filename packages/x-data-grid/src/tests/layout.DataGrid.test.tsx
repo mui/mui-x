@@ -128,6 +128,34 @@ describe('<DataGrid /> - Layout & warnings', () => {
         expect(ref.current).to.equal(container.firstChild?.firstChild);
       });
 
+      it('mounts the root element during the first SPA commit', () => {
+        let rootElementInLayoutEffect: HTMLDivElement | null | undefined;
+        let renderCount = 0;
+
+        function TestCase() {
+          const apiRef = useGridApiRef();
+
+          React.useLayoutEffect(() => {
+            renderCount += 1;
+            if (renderCount === 1) {
+              rootElementInLayoutEffect = apiRef.current!.rootElementRef.current;
+            }
+          }, [apiRef]);
+
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid apiRef={apiRef} {...baselineProps} />
+            </div>
+          );
+        }
+
+        render(<TestCase />);
+
+        // Assert against the actual mounted root node because `rootElementInLayoutEffect` starts as `undefined`.
+        // A plain null check would pass if the effect never captured the node.
+        expect(rootElementInLayoutEffect).to.equal(document.querySelector(`.${gridClasses.root}`));
+      });
+
       describe('`classes` prop', () => {
         it("should apply the `root` rule name's value as a class to the root grid component", () => {
           const classes = {
