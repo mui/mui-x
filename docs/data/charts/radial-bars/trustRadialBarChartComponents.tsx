@@ -39,13 +39,17 @@ function TrustTooltipContent() {
           <Typography variant="body2" color="text.secondary">
             2025
           </Typography>
-          <Typography variant="body2">{country.trust2025.toFixed(1)} / 10</Typography>
+          <Typography variant="body2">
+            {country.trust2025.toFixed(1)} / 10
+          </Typography>
         </Stack>
         <Stack direction="row" sx={{ justifyContent: 'space-between', gap: 3 }}>
           <Typography variant="body2" color="text.secondary">
             2013
           </Typography>
-          <Typography variant="body2">{country.trust2013.toFixed(1)} / 10</Typography>
+          <Typography variant="body2">
+            {country.trust2013.toFixed(1)} / 10
+          </Typography>
         </Stack>
         <Stack direction="row" sx={{ justifyContent: 'space-between', gap: 3 }}>
           <Typography variant="body2" color="text.secondary">
@@ -53,7 +57,10 @@ function TrustTooltipContent() {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ fontWeight: 'medium', color: increased ? 'success.main' : 'error.main' }}
+            sx={{
+              fontWeight: 'medium',
+              color: increased ? 'success.main' : 'error.main',
+            }}
           >
             {increased ? '▲' : '▼'} {increased ? '+' : ''}
             {difference.toFixed(1)}
