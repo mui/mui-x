@@ -32,19 +32,14 @@ Available properties:
 {{"demo": "DefaultPreferences.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::success
-You can also control the preferences using `preferences` and `onPreferencesChange` props:
+You can also control the preferences using the `preferences` prop:
 
 ```tsx
-const [preferences, setPreferences] = React.useState<
-  Partial<EventTimelinePremiumPreferences>
->({});
+const [preferences] = React.useState<Partial<EventTimelinePremiumPreferences>>({
+  ampm: false,
+});
 
-return (
-  <EventTimelinePremium
-    preferences={preferences}
-    onPreferencesChange={setPreferences}
-  />
-);
+return <EventTimelinePremium preferences={preferences} />;
 ```
 
 :::
