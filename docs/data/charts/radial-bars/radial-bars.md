@@ -8,6 +8,15 @@ components: ChartsRadialDataProvider, ChartsRadialDataProviderPremium, ChartsRad
 
 <p class="description">Use radial bar charts to compare values along periodic categories.</p>
 
+## Overview
+
+Radial bar charts plot values in polar coordinates, with each bar growing along the radius from a shared center.
+This circular layout reads naturally for periodic or cyclic data—months, hours of the day, or compass directions—and offers a compact display for medium-sized bar datasets that would stretch a straight axis.
+
+The chart below compares average trust in others (people aged 16 and over) across Europe between 2013 and 2025.
+
+{{"demo": "TrustRadialBarChart.js" }}
+
 ## Basics
 
 The `RadialBarChart` is similar to the [`BarChart`](/x/react-charts/bars/) but uses polar coordinates.
@@ -40,11 +49,3 @@ const clickHandler = (
 ```
 
 {{"demo": "RadialBarClick.js"}}
-
-## Comparing values across categories
-
-Radial bars are well suited to comparing a value across many periodic categories.
-The demo below compares self-reported trust in others among European youth between 2013 and 2024/25.
-It passes custom SVG as `children` to draw the 2013 reference outline, radial country labels, trend markers, and the EU average ring—reading the rotation and radius scales through the `useRotationAxis` and `useRadiusAxis` hooks.
-
-{{"demo": "TrustRadialBarChart.js", "bg": "outline"}}
