@@ -59,6 +59,11 @@ export default defineConfig({
   },
   test: {
     globals: true,
+    server: {
+      deps: {
+        inline: [/@mui[/\\]material/],
+      },
+    },
     setupFiles: [fileURLToPath(new URL('test/setupVitest.ts', import.meta.url))],
     // Required for some tests that contain early returns or conditional tests.
     passWithNoTests: true,
