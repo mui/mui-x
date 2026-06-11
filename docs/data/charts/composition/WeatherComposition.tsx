@@ -25,7 +25,7 @@ import {
   WeatherMarkers,
   MaxPrecipitationBars,
   LegendItem,
-} from './WeatherCompositionComponents';
+} from './weatherCompositionComponents';
 
 export default function WeatherComposition() {
   const [highlightedAxis, setHighlightedAxis] = React.useState<AxisItemIdentifier[]>(
