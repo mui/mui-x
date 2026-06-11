@@ -91,6 +91,7 @@ function ForecastChart(props) {
           id: 'temperature',
           min: 6,
           max: 26,
+          width: 50,
           valueFormatter: (value) => `${value}°`,
         },
         {
