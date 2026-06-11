@@ -2,6 +2,7 @@
 productId: x-chat
 title: Building an adapter
 packageName: '@mui/x-chat'
+components: ChatBox
 githubLabel: 'scope: chat'
 ---
 
@@ -12,11 +13,13 @@ githubLabel: 'scope: chat'
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 Build a `ChatAdapter` from scratch by starting with a minimum viable adapter (`sendMessage` only), then progressively add history loading and conversation management.
+This page is the hands-on tutorial — for the complete interface reference, see [Adapters](/x/react-chat/backend/adapters/).
 
 ## Step 1: Building a minimal adapter
 
 The only required method is `sendMessage`.
 It receives the user's message and must return a `ReadableStream` of typed chunks.
+The `message` argument is a `ChatMessage` — its content lives in a `parts` array (text, files, and other part types), not a plain string. See [Messages](/x/react-chat/basics/messages/) for the full shape.
 
 ```tsx
 import { ChatBox } from '@mui/x-chat';
@@ -47,6 +50,7 @@ If your backend does not return a `ReadableStream` natively (for example, you ar
 
 The stream must begin with a `start` chunk and end with `finish` or `abort`.
 Text arrives in `text-start` / `text-delta` / `text-end` triplets:
+These are only the text chunks — for the complete list of chunk types (reasoning, tools, sources, files, and more), see the [chunk type reference](/x/react-chat/behavior/streaming/#chunk-type-reference).
 
 ```tsx
 const adapter: ChatAdapter = {
@@ -65,7 +69,9 @@ const adapter: ChatAdapter = {
 };
 ```
 
-For a real integration, read from the backend inside the `start` callback and enqueue chunks as they arrive:
+The `messageId` identifies the assistant message being streamed and must be unique per message — the next example generates one per request.
+
+For a real integration, read from the backend inside the `start` callback and enqueue chunks as they arrive — here the adapter extracts the plain text from the message's first `parts` entry before posting it:
 
 ```tsx
 const adapter: ChatAdapter = {
@@ -110,7 +116,7 @@ const adapter: ChatAdapter = {
 
 ## Step 3: Wiring up the abort signal
 
-`input.signal` is an `AbortSignal` that fires when the user clicks the stop button.
+The `signal` argument is an `AbortSignal` that fires when streaming is cancelled — for example when the headless `stopStreaming()` action from `useChat()` is called. (`ChatBox` does not render a stop button by default; its send button is disabled while streaming.)
 Pass it to your `fetch` call so the HTTP request is cancelled automatically:
 
 ```tsx
@@ -132,10 +138,16 @@ stop() {
 },
 ```
 
+`stop()` takes no arguments and returns nothing. The runtime calls it in addition to aborting the signal — not instead of it — so keep passing `signal` to your requests.
+
+The following demo combines Steps 2 and 3: a hand-rolled adapter that streams a canned reply chunk by chunk. `ChatBox` does not render a stop button of its own, so the demo adds one with the headless `stopStreaming()` action — pressing it mid-stream fires the abort signal.
+
+{{"demo": "ManualStreamAdapterDemo.js"}}
+
 ## Step 4: Adding message history
 
 Implement `listMessages` to load history when the user opens a conversation.
-The runtime calls it whenever `activeConversationId` changes to a conversation that has no messages in the store yet.
+The runtime calls it whenever the active conversation changes to one that has no messages in the store yet.
 
 ```tsx
 const adapter: ChatAdapter = {
@@ -165,7 +177,7 @@ The runtime calls it once on startup, before any user interaction.
 ```tsx
 const adapter: ChatAdapter = {
   async sendMessage(input) {
-    /* ... */
+    /* ... from Step 1 ... */
   },
 
   async listMessages(input) {
@@ -199,12 +211,9 @@ The runtime calls it automatically after detecting a disconnected stream, with o
 
 ```tsx
 async reconnectToStream({ conversationId, messageId, signal }) {
-  const params = new URLSearchParams();
-  if (conversationId) params.set('conversationId', conversationId);
-  if (messageId) params.set('messageId', messageId);
   const res = await fetch('/api/chat/reconnect', {
     method: 'POST',
-    body: params.toString(),
+    body: JSON.stringify({ conversationId, messageId }),
     signal,
   });
   if (res.status === 404) return null; // message no longer resumable
@@ -229,6 +238,10 @@ const adapter: ChatAdapter = {
       signal,
     });
     return res.body!;
+  },
+
+  stop() {
+    fetch('/api/chat/cancel', { method: 'POST' });
   },
 
   async listMessages({ conversationId, cursor }) {
@@ -266,6 +279,8 @@ You do not need to catch errors inside adapter methods—the runtime handles the
 
 When an adapter method throws, the runtime records a `ChatError`, surfaces it through the built-in error UI and the `onError` callback, and marks the error `recoverable` or `retryable` when applicable.
 
+Errors marked `retryable` expose a retry action in the built-in error UI. See [Error handling](/x/react-chat/behavior/error-handling/) for the full error model and customization options.
+
 To handle errors at the application level:
 
 ```tsx
@@ -279,8 +294,9 @@ To handle errors at the application level:
 
 ## See also
 
-- See [Adapters](/x/react-chat/backend/adapters/) for details.
-- See [Streaming](/x/react-chat/behavior/streaming/) for details.
-- See [Real-time adapters](/x/react-chat/backend/real-time-adapters/) for details on `subscribe()`, `setTyping()`, and `markRead()`.
+- See [Adapters](/x/react-chat/backend/adapters/) for the full `ChatAdapter` interface reference and pagination cursor typing.
+- See [Streaming](/x/react-chat/behavior/streaming/) for the stream lifecycle, envelopes, and the chunk type reference.
+- See [Real-time adapters](/x/react-chat/backend/real-time-adapters/) for push-based updates with `subscribe()`, `setTyping()`, and `markRead()`.
+- See [Error handling](/x/react-chat/behavior/error-handling/) for the `ChatError` model and error UI.
 
 ## API

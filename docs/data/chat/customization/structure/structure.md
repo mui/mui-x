@@ -16,6 +16,14 @@ components: ChatBox
 
 The recipes below cover common customizations.
 
+{{"demo": "StructureRecipes.js"}}
+
+Several of the recipes below applied at once.
+
+Snippets assume an `adapter` is already created — see [Adapters](/x/react-chat/backend/adapters/).
+
+**Layout and features**
+
 ### Hiding the attach button
 
 ```tsx
@@ -27,6 +35,14 @@ The recipes below cover common customizations.
 ```tsx
 <ChatBox adapter={adapter} features={{ conversationList: true }} />
 ```
+
+### Hiding the scroll-to-bottom button
+
+```tsx
+<ChatBox adapter={adapter} features={{ scrollToBottom: false }} />
+```
+
+**Composer**
 
 ### Changing the composer placeholder
 
@@ -40,6 +56,7 @@ The recipes below cover common customizations.
 ### Replacing the send button with a custom icon
 
 ```tsx
+import IconButton from '@mui/material/IconButton';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 
 function MySendButton(props) {
@@ -53,6 +70,8 @@ function MySendButton(props) {
 <ChatBox adapter={adapter} slots={{ composerSendButton: MySendButton }} />;
 ```
 
+**Messages**
+
 ### Hiding avatars entirely
 
 ```tsx
@@ -62,6 +81,7 @@ function MySendButton(props) {
 ### Rendering tool calls as cards instead of JSON
 
 ```tsx
+// ToolCard is your own component.
 <ChatBox
   adapter={adapter}
   partRenderers={{
@@ -101,24 +121,43 @@ Regeneration is allowed mid-thread: regenerating an earlier assistant message re
 ### Showing a custom empty state
 
 ```tsx
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+
 <ChatBox
   adapter={adapter}
   slots={{
     emptyState: () => (
       <Stack alignItems="center" spacing={1} sx={{ p: 4 }}>
-        <SparkleIcon />
+        <AutoAwesomeIcon />
         <Typography variant="h6">Ask me anything</Typography>
       </Stack>
     ),
   }}
-/>
+/>;
 ```
 
-### Hiding the scroll-to-bottom button
+### Wrapping an existing slot instead of replacing it
+
+The custom component receives the same props as the default. Render the original inside it:
 
 ```tsx
-<ChatBox adapter={adapter} features={{ scrollToBottom: false }} />
+import Box from '@mui/material/Box';
+import { ChatMessageContent } from '@mui/x-chat';
+
+function HighlightedMessage(props) {
+  return (
+    <Box sx={{ outline: props.message.flagged ? '2px solid red' : 'none' }}>
+      <ChatMessageContent {...props} />
+    </Box>
+  );
+}
+
+<ChatBox adapter={adapter} slots={{ messageContent: HighlightedMessage }} />;
 ```
+
+**Localization**
 
 ### Translating the whole UI
 
@@ -133,23 +172,22 @@ import { chatEnUS } from '@mui/x-chat/locales';
 
 See [Localization](#localization) for details.
 
-### Wrapping an existing slot instead of replacing it
+## Layout and structural props
 
-The custom component receives the same props as the default—render the original inside it:
+A handful of `ChatBox` props shape the overall structure independently of slots:
+
+| Prop                    | Values                                         | Purpose                                                        |
+| :---------------------- | :--------------------------------------------- | :------------------------------------------------------------- |
+| `variant`               | `'default'` \| `'compact'`                     | Visual layout: full spacing with avatars, or Messenger-style   |
+| `density`               | `'compact'` \| `'standard'` \| `'comfortable'` | Vertical spacing between messages                              |
+| `layoutMode`            | `'standard'` \| `'overlay'` \| `'split'`       | Forces the responsive layout instead of deriving it from width |
+| `layoutModeBreakpoints` | `Partial<ChatBoxLayoutModeBreakpoints>`        | Container-width breakpoints used when `layoutMode` is omitted  |
 
 ```tsx
-import { ChatMessageContent } from '@mui/x-chat';
-
-function HighlightedMessage(props) {
-  return (
-    <Box sx={{ outline: props.message.flagged ? '2px solid red' : 'none' }}>
-      <ChatMessageContent {...props} />
-    </Box>
-  );
-}
-
-<ChatBox adapter={adapter} slots={{ messageContent: HighlightedMessage }} />;
+<ChatBox variant="compact" density="comfortable" layoutMode="split" />
 ```
+
+See [Variants and density](/x/react-chat/basics/variants-and-density/) and [Layout](/x/react-chat/basics/layout/) for the live demos.
 
 ## Swapping slots
 
@@ -188,14 +226,15 @@ Pass additional props to any slot without replacing the component:
 
 ### Conversation
 
-| Slot                        | Default                         | Description                   |
-| :-------------------------- | :------------------------------ | :---------------------------- |
-| `conversationRoot`          | `ChatConversation`              | Thread wrapper element        |
-| `conversationList`          | `ChatConversationList`          | Conversation sidebar list     |
-| `conversationHeader`        | `ChatConversationHeader`        | Header bar above message list |
-| `conversationTitle`         | `ChatConversationTitle`         | Conversation name             |
-| `conversationSubtitle`      | `ChatConversationSubtitle`      | Secondary line                |
-| `conversationHeaderActions` | `ChatConversationHeaderActions` | Action buttons in header      |
+| Slot                        | Default                         | Description                          |
+| :-------------------------- | :------------------------------ | :----------------------------------- |
+| `conversationRoot`          | `ChatConversation`              | Thread wrapper element               |
+| `conversationList`          | `ChatConversationList`          | Conversation sidebar list            |
+| `conversationHeader`        | `ChatConversationHeader`        | Header bar above message list        |
+| `conversationHeaderInfo`    | `ChatConversationHeaderInfo`    | Title + subtitle group in the header |
+| `conversationTitle`         | `ChatConversationTitle`         | Conversation name                    |
+| `conversationSubtitle`      | `ChatConversationSubtitle`      | Secondary line                       |
+| `conversationHeaderActions` | `ChatConversationHeaderActions` | Action buttons in header             |
 
 ### Messages list
 
@@ -208,16 +247,16 @@ Pass additional props to any slot without replacing the component:
 
 ### Per message
 
-| Slot                | Default                 | Description                           |
-| :------------------ | :---------------------- | :------------------------------------ |
-| `messageRoot`       | `ChatMessage`           | Individual message row                |
-| `messageAvatar`     | `ChatMessageAvatar`     | Author avatar (`null` to hide)        |
-| `messageContent`    | `ChatMessageContent`    | Message bubble                        |
-| `messageMeta`       | `ChatMessageMeta`       | External timestamp (compact variant)  |
-| `messageInlineMeta` | `ChatMessageInlineMeta` | Inline timestamp (default variant)    |
-| `messageError`      | `ChatMessageError`      | Error card shown when status is error |
+| Slot                | Default                 | Description                                                                                                                                        |
+| :------------------ | :---------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `messageRoot`       | `ChatMessage`           | Individual message row                                                                                                                             |
+| `messageAvatar`     | `ChatMessageAvatar`     | Author avatar (`null` to hide)                                                                                                                     |
+| `messageContent`    | `ChatMessageContent`    | Message bubble                                                                                                                                     |
+| `messageMeta`       | `ChatMessageMeta`       | External timestamp (compact variant)                                                                                                               |
+| `messageInlineMeta` | `ChatMessageInlineMeta` | Inline timestamp (default variant)                                                                                                                 |
+| `messageError`      | `ChatMessageError`      | Error card shown when status is error                                                                                                              |
 | `messageActions`    | `ChatMessageActions`    | Hover action bar (`null` to hide). The `slotProps` function form receives the message context; return `extraActions` to append declarative buttons |
-| `messageAuthorName` | styled `div`            | Author name label (`null` to hide)    |
+| `messageAuthorName` | styled `div`            | Author name label (`null` to hide)                                                                                                                 |
 
 ### Composer
 
@@ -242,13 +281,14 @@ Pass additional props to any slot without replacing the component:
 
 ## Feature flags
 
-Toggle built-in features on or off. When disabled, the corresponding slot is **not rendered**—even if you provide a custom component:
+Toggle built-in features on or off. When disabled, the corresponding slot is **not rendered**, even if you provide a custom component:
 
 ```tsx
 <ChatBox
   adapter={adapter}
   features={{
     conversationList: true, // show the conversation sidebar
+    conversationHeader: true, // show the header bar above the message list
     dateDivider: true, // show date separators between calendar days
     unreadMarker: true, // show the "new messages" marker
     attachments: false, // hide attach button
@@ -261,6 +301,8 @@ Toggle built-in features on or off. When disabled, the corresponding slot is **n
 ```
 
 `conversationList`, `dateDivider`, and `unreadMarker` are opt-in and default to `false`; the other flags default to `true`.
+
+Note: the feature flag is `helperText`, while the corresponding slot is named `composerHelperText`.
 
 ## Hiding a slot
 
@@ -276,10 +318,13 @@ Import the slot types for type-safe custom components:
 
 ```tsx
 import type { ChatBoxSlots, ChatBoxSlotProps } from '@mui/x-chat';
+import { ChatMessageContent } from '@mui/x-chat';
 
-const MyMessageContent: ChatBoxSlots['content'] = (props) => {
-  return <div className="custom-bubble" {...props} />;
-};
+const MyMessageContent: ChatBoxSlots['messageContent'] = (props) => (
+  <Box className="custom-bubble">
+    <ChatMessageContent {...props} />
+  </Box>
+);
 ```
 
 ## Localization
@@ -324,33 +369,83 @@ Every user-facing string is customizable via the `localeText` prop:
 
 ### All locale keys
 
-| Key                                    | Default                  | Description               |
-| :------------------------------------- | :----------------------- | :------------------------ |
-| `composerInputPlaceholder`             | `"Type a message"`       | Composer placeholder      |
-| `composerSendButtonLabel`              | `"Send message"`         | Send button aria-label    |
-| `composerAttachButtonLabel`            | `"Add attachment"`       | Attach button aria-label  |
-| `messageCopyButtonLabel`               | `"Copy"`                 | Copy message button       |
-| `messageCopyCodeButtonLabel`           | `"Copy code"`            | Copy code block button    |
-| `messageCopiedCodeButtonLabel`         | `"Copied"`               | Copied confirmation       |
-| `messageReasoningLabel`                | `"Reasoning"`            | Reasoning part label      |
-| `messageReasoningStreamingLabel`       | `"Thinking..."`          | Reasoning streaming label |
-| `messageToolApproveButtonLabel`        | `"Approve"`              | Tool approval button      |
-| `messageToolDenyButtonLabel`           | `"Deny"`                 | Tool denial button        |
-| `conversationListNoConversationsLabel` | `"No conversations"`     | Empty conversation list   |
-| `unreadMarkerLabel`                    | `"New messages"`         | Unread marker             |
-| `retryButtonLabel`                     | `"Retry"`                | Retry button              |
-| `scrollToBottomLabel`                  | `"Scroll to bottom"`     | Scroll affordance         |
-| `threadNoMessagesLabel`                | `"No messages yet"`      | Empty thread              |
-| `genericErrorLabel`                    | `"Something went wrong"` | Generic error             |
-| `loadingLabel`                         | `"Loading..."`           | Loading state             |
-| `suggestionsLabel`                     | `"Suggested prompts"`    | Suggestions section       |
+**Composer**
+
+| Key                               | Default            | Description                          |
+| :-------------------------------- | :----------------- | :----------------------------------- |
+| `composerInputPlaceholder`        | `"Type a message"` | Composer placeholder                 |
+| `composerInputAriaLabel`          | `"Message"`        | Composer input accessible name       |
+| `composerSendButtonLabel`         | `"Send message"`   | Send button aria-label               |
+| `composerAttachButtonLabel`       | `"Add attachment"` | Attach button aria-label             |
+| `composerAttachInputLabel`        | `"Upload file"`    | Hidden file input accessible name    |
+| `composerAttachmentFallbackLabel` | `"Attachment"`     | Fallback name for unnamed attachment |
+
+**Messages**
+
+| Key                              | Default         | Description                 |
+| :------------------------------- | :-------------- | :-------------------------- |
+| `messageCopyButtonLabel`         | `"Copy"`        | Copy message button         |
+| `messageCopyCodeButtonLabel`     | `"Copy code"`   | Copy code block button      |
+| `messageCopiedCodeButtonLabel`   | `"Copied"`      | Copied confirmation         |
+| `messageEditedLabel`             | `"Edited"`      | Edited message badge        |
+| `messageDeletedLabel`            | `"Deleted"`     | Deleted message placeholder |
+| `messageReasoningLabel`          | `"Reasoning"`   | Reasoning part label        |
+| `messageReasoningStreamingLabel` | `"Thinking…"`   | Reasoning streaming label   |
+| `messageToolInputLabel`          | `"Tool called"` | Tool input section label    |
+| `messageToolOutputLabel`         | `"Tool result"` | Tool output section label   |
+| `messageToolApproveButtonLabel`  | `"Approve"`     | Tool approval button        |
+| `messageToolDenyButtonLabel`     | `"Deny"`        | Tool denial button          |
+
+**Conversations**
+
+| Key                                    | Default                   | Description                     |
+| :------------------------------------- | :------------------------ | :------------------------------ |
+| `conversationListNoConversationsLabel` | `"No conversations"`      | Empty conversation list         |
+| `conversationListSearchPlaceholder`    | `"Search conversations"`  | Conversation search placeholder |
+| `conversationHeaderMenuLabel`          | `"Open conversations"`    | Header menu button              |
+| `conversationHeaderBackLabel`          | `"Back to conversations"` | Header back button              |
+| `conversationHeaderCloseLabel`         | `"Close conversations"`   | Header close button             |
+| `conversationHeaderNewChatLabel`       | `"New chat"`              | Header new-chat button          |
+| `conversationHeaderSettingsLabel`      | `"Settings"`              | Header settings button          |
+
+**Status and indicators**
+
+| Key                          | Default                           | Description              |
+| :--------------------------- | :-------------------------------- | :----------------------- |
+| `unreadMarkerLabel`          | `"New messages"`                  | Unread marker            |
+| `retryButtonLabel`           | `"Retry"`                         | Retry button             |
+| `reconnectButtonLabel`       | `"Reconnect"`                     | Reconnect button         |
+| `scrollToBottomLabel`        | `"Scroll to bottom"`              | Scroll affordance        |
+| `threadNoMessagesLabel`      | `"No messages yet"`               | Empty thread             |
+| `threadNoMessagesHelperText` | `"Type a message to get started"` | Empty-thread helper text |
+| `genericErrorLabel`          | `"Something went wrong"`          | Generic error            |
+| `loadingLabel`               | `"Loading…"`                      | Loading state            |
+| `suggestionsLabel`           | `"Suggested prompts"`             | Suggestions section      |
+
+**Accessibility and announcements**
+
+| Key                                      | Default                     | Description                               |
+| :--------------------------------------- | :-------------------------- | :---------------------------------------- |
+| `messageListLabel`                       | `"Message log"`             | Message list accessible name              |
+| `messageLabel`                           | `"Message"`                 | Single message accessible name            |
+| `messageActionsLabel`                    | `"Message actions"`         | Message actions container accessible name |
+| `messageAuthorUserLabel`                 | `"User"`                    | Default author label for user role        |
+| `messageAuthorAssistantLabel`            | `"Assistant"`               | Default author label for assistant role   |
+| `messageAuthorSystemLabel`               | `"System"`                  | Default author label for system role      |
+| `conversationListLandmarkLabel`          | `"Conversations"`           | Conversations sidebar landmark name       |
+| `threadLandmarkLabel`                    | `"Conversation"`            | Active thread landmark name               |
+| `composerLandmarkLabel`                  | `"Message composer"`        | Composer form landmark name               |
+| `responseStreamingStartedAnnouncement`   | `"Assistant is responding"` | Announced when streaming starts           |
+| `responseStreamingCompletedAnnouncement` | `"Response complete"`       | Announced when streaming completes        |
 
 Function keys accept parameters:
 
-| Key                            | Signature              | Default                  |
-| :----------------------------- | :--------------------- | :----------------------- |
-| `messageStatusLabel`           | `(status) => string`   | Maps status to label     |
-| `toolStateLabel`               | `(state) => string`    | Maps tool state to label |
-| `messageTimestampLabel`        | `(dateTime) => string` | Formats to `HH:MM`       |
-| `typingIndicatorLabel`         | `(users) => string`    | `"Alice is typing"`      |
-| `scrollToBottomWithCountLabel` | `(count) => string`    | `"N new messages"`       |
+| Key                             | Signature              | Default                              |
+| :------------------------------ | :--------------------- | :----------------------------------- |
+| `messageStatusLabel`            | `(status) => string`   | Maps status to label                 |
+| `toolStateLabel`                | `(state) => string`    | Maps tool state to label             |
+| `messageTimestampLabel`         | `(dateTime) => string` | Formats to `HH:MM`                   |
+| `conversationTimestampLabel`    | `(dateTime) => string` | Relative day or `HH:MM`              |
+| `typingIndicatorLabel`          | `(users) => string`    | `"Alice is typing"`                  |
+| `scrollToBottomWithCountLabel`  | `(count) => string`    | `"Scroll to bottom, N new messages"` |
+| `composerRemoveAttachmentLabel` | `(fileName) => string` | `"Remove {fileName}"`                |

@@ -8,12 +8,16 @@ components: ChatUnreadMarker
 
 # Chat - Read receipts
 
-<p class="description">Track unread conversations and mark them as read when users open them.</p>
+<p class="description">Track unread conversations and mark them as read when you call markRead.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Read receipts let users see which conversations have unread messages and mark them as read when opened.
+Read receipts let users see which conversations have unread messages and let you mark them as read — for example, when a conversation is opened or scrolled to the bottom — by calling the adapter's `markRead()` method.
 Three pieces work together: the `readState` and `unreadCount` fields on `ChatConversation`, the `markRead()` adapter method, and the `read` real-time event.
+
+In the demo below, one conversation starts unread. Open it from the sidebar: the "New messages" divider marks the unread boundary, and scrolling to the bottom of the thread fires `onReachBottom`, which calls `markRead` — the sidebar badge and the divider clear together.
+
+{{"demo": "ReadReceiptsTwoPane.js", "bg": "inline"}}
 
 ## Conversation read state
 
@@ -67,7 +71,8 @@ The marker is disabled by default. Enable it on `ChatBox` (or a standalone `Chat
 ```
 
 The component is position-aware: it reads `unreadCount` and `readState` from the active `ChatConversation` and calculates which message index sits at the read/unread boundary.
-It renders itself only for that one message and returns `null` for every other message, so you can render it inside every list item without any extra bookkeeping:
+It renders itself only for that one message and returns `null` for every other message, so you can render it inside every list item without any extra bookkeeping.
+With the feature flag enabled, the default message row renders the marker for you — the snippet below is only needed when you provide your own `renderItem` callback. The `id` and `index` values come from the message list's `renderItem` contract — see the [ChatMessageList API](/x/react-chat/api/chat-message-list/).
 
 ```tsx
 // Inside a custom renderItem callback
@@ -86,6 +91,9 @@ The marker chooses its position using these rules:
 - When `unreadCount` is set and greater than zero, the marker appears before the last `unreadCount` messages (`items.length - unreadCount`).
 - When `unreadCount` is absent but `readState` is `'unread'`, the marker appears before the very first message.
 - When the conversation is fully read (or no conversation is active), the marker renders nothing.
+
+The rendered root has `role="separator"` so assistive technology announces the read/unread boundary, and exposes `data-has-boundary` for styling and tests.
+See the [Unread marker page](/x/react-chat/display/unread-marker/) for the full accessibility behavior.
 
 ### Customizing `ChatUnreadMarker`
 
@@ -117,6 +125,8 @@ const theme = createTheme({
 });
 ```
 
+For the full list of props, slots, and classes, see the [ChatUnreadMarker API](/x/react-chat/api/chat-unread-marker/) and the interactive playground on the [Unread marker page](/x/react-chat/display/unread-marker/).
+
 ## Marking messages as read
 
 Implement `markRead` to signal to your backend that the user has seen a conversation or a specific message:
@@ -137,7 +147,7 @@ async markRead({ conversationId, messageId }) {
 },
 ```
 
-The runtime does not call `markRead` automatically—call it from a UI event handler when the user opens or scrolls through a conversation.
+The runtime does not call `markRead` automatically. Call it from a UI event handler when the user opens or scrolls through a conversation.
 
 ### Triggering `markRead` when a conversation becomes active
 
@@ -198,6 +208,7 @@ const activeConversationIdRef = React.useRef<string | undefined>(undefined);
 `onReachBottom` fires once per entry into the bottom zone (the auto-scroll `buffer`, 150 px by default), so `markRead` is not called repeatedly while the user stays at the bottom.
 It does not fire when new messages arrive while the user is already at the bottom, nor when switching conversations.
 Combine it with the `onActiveConversationChange` recipe above to cover conversation activation and conversations that open already scrolled to the bottom.
+The demo at the top of this page implements this pattern.
 
 ## Real-time read events
 
@@ -247,5 +258,6 @@ Or provide initial conversations directly:
 ## See also
 
 - [Conversation list](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that displays the unread badge.
+- [Unread marker](/x/react-chat/display/unread-marker/) for the standalone component guide and playground.
 - [Real-time sync](/x/react-chat/multi-conversation/real-time-sync/) for the full real-time event reference, including `read` events.
 - [Adapter interface reference](/x/react-chat/backend/adapters/) for the full contract between your backend and the chat runtime, including `markRead()`.

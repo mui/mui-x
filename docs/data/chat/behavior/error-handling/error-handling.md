@@ -195,6 +195,8 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 }
 ```
 
+Use the [`useMessageError(messageId)`](/x/react-chat/resources/hooks/#usemessageerrormessageid) hook to read a single message's error from your own components.
+
 ## See also
 
 - [Streaming](/x/react-chat/behavior/streaming/) for stream lifecycle and disconnect handling.

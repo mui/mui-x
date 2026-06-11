@@ -81,12 +81,17 @@ const CLASS_DEFS = [
 export default function ChatMessageActionsPlayground() {
   const [showCopy, setShowCopy] = React.useState(true);
   const [showLike, setShowLike] = React.useState(true);
+  const [revealed, setRevealed] = React.useState(true);
   const [variant, setVariant] = React.useState('default');
   const [density, setDensity] = React.useState('standard');
   const classesCustomizations = useCustomizations(CLASS_DEFS);
   const message = React.useMemo(
     () =>
-      makeMessage('assistant', 'read', 'Hover this bubble to reveal the actions.'),
+      makeMessage(
+        'assistant',
+        'read',
+        'Toggle "reveal actions", or hover this bubble.',
+      ),
     [],
   );
 
@@ -113,6 +118,12 @@ export default function ChatMessageActionsPlayground() {
             checked={showLike}
             onChange={setShowLike}
           />
+          <DividerLabel>visibility</DividerLabel>
+          <SwitchControl
+            label="reveal actions"
+            checked={revealed}
+            onChange={setRevealed}
+          />
           <DividerLabel>chrome provider</DividerLabel>
           <ChoiceControl
             label="ChatChrome.variant"
@@ -135,7 +146,18 @@ export default function ChatMessageActionsPlayground() {
           activeConversationId={conversation.id}
         >
           <ChatChrome variant={variant} density={density}>
-            <Box sx={{ width: '100%', ...wrapperSx }}>
+            <Box
+              sx={{
+                width: '100%',
+                ...(revealed && {
+                  '& .MuiChatMessage-actions': {
+                    opacity: 1,
+                    visibility: 'visible',
+                  },
+                }),
+                ...wrapperSx,
+              }}
+            >
               <ChatMessageGroup messageId={message.id}>
                 <ChatMessageComponent messageId={message.id}>
                   <ChatMessageAvatar />

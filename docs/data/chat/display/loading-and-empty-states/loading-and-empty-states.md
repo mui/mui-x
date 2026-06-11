@@ -15,11 +15,11 @@ components: ChatMessageSkeleton
 ## Displaying a loading skeleton
 
 `ChatMessageSkeleton` renders animated shimmer lines that serve as a placeholder while message content is loading.
-Use it during initial data fetching or when loading older messages via history pagination.
+Use it during initial data fetching or when loading older messages via [history pagination](/x/react-chat/multi-conversation/history-and-pagination/).
 
-### Adjusting the playground
+### Interactive playground
 
-The demo below lets you adjust the number of shimmer lines:
+Use the demo below to adjust the number of shimmer lines:
 
 {{"demo": "ChatMessageSkeletonPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -46,6 +46,28 @@ Set the `lines` prop to control how many shimmer lines are displayed:
 <ChatMessageSkeleton lines={2} />
 <ChatMessageSkeleton lines={5} />
 ```
+
+### Using the skeleton while messages load
+
+Nothing renders the skeleton automatically — you decide where it appears.
+Render skeletons in the message area while the fetch is in flight, then swap to `ChatMessageList` once the data arrives.
+Set `aria-busy` on the swapping container and `aria-hidden` on each skeleton so assistive technology treats the placeholders as decorative.
+
+{{"demo": "LoadingSkeletonInList.js", "defaultCodeOpen": false, "bg": "inline"}}
+
+When older messages are being fetched via history pagination, render a skeleton at the top of the list instead.
+The `isLoadingHistory` flag from `useChat()` reports when a page is in flight.
+It is `true` during the initial history fetch and during `loadMoreHistory`, which is why the same flag drives both placements:
+
+```tsx
+const { isLoadingHistory } = useChat();
+// At the top of the message area:
+{
+  isLoadingHistory && <ChatMessageSkeleton lines={2} aria-hidden />;
+}
+```
+
+See [History and pagination](/x/react-chat/multi-conversation/history-and-pagination/) for the full pagination API.
 
 ### Slots
 
@@ -77,6 +99,14 @@ Customize the skeleton appearance through slot replacement:
 When a conversation exists but has no messages yet, `ChatBox` renders an empty message list area with the composer ready for input.
 This is the state users see when they start a new conversation.
 
+:::info
+**Loading vs. empty:** these are distinct states.
+Render the skeleton while a fetch is in flight (your loading flag is `true`), and the empty state only once the fetch resolves with `messages.length === 0`.
+Rendering the empty state during the fetch causes a flash of "How can I help you?" before history appears.
+:::
+
+The message area below is intentionally empty — only the conversation header and the composer render:
+
 {{"demo": "../../material/examples/empty-state/EmptyState.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 Key characteristics of the empty state:
@@ -84,7 +114,7 @@ Key characteristics of the empty state:
 - The message list area is visible but empty
 - The composer is ready for input
 - The conversation header is visible (if configured)
-- No visual artifacts appear when the message list is empty
+- The list area collapses cleanly — no leftover dividers, scroll affordances, or placeholder rows
 
 ### Custom empty state content
 
@@ -111,6 +141,8 @@ function TypingIndicator({ message }) {
   return <span className="typing-cursor" />;
 }
 ```
+
+For a live, configurable streaming demo, see [Streaming](/x/react-chat/behavior/streaming/).
 
 ## See also
 

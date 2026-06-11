@@ -7,30 +7,35 @@ githubLabel: 'scope: chat'
 
 # Chat - Hooks Reference
 
-<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat</code>.</p>
+<p class="description">Read chat state and trigger runtime actions from your own components using hooks exported from <code>@mui/x-chat/headless</code>.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 `ChatBox` covers most use cases out of the box, but sometimes you need to reach into chat state from components that live outside `ChatBox` — a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
 
 The hook layer makes this possible.
-Every hook subscribes to a precise slice of the normalized store, so components only re-render when their own data changes.
+Each hook subscribes only to the state it returns, so components re-render only when that data changes.
 
 ## Import
 
-All hooks are exported from `@mui/x-chat`:
+All hooks are exported from the `@mui/x-chat/headless` entry point (re-exported from `@mui/x-chat-headless`):
 
 ```tsx
 import {
   useChat,
+  useChatActions,
   useChatComposer,
   useChatStatus,
   useConversations,
   useConversation,
   useMessageIds,
   useMessage,
+  useMessageError,
   useChatOnToolCall,
   useChatPartRenderer,
+  useChatVariant,
+  useChatDensity,
+  useChatLocaleText,
   useChatStore,
 } from '@mui/x-chat/headless';
 ```
@@ -38,7 +43,7 @@ import {
 ## Provider requirement
 
 Every hook listed on this page must be called inside a component that has a `<ChatProvider>` (or `<ChatBox>`) ancestor in the tree.
-Calling a hook outside a provider throws an error at development time.
+Calling a hook outside a provider throws an error in both development and production builds, so there is no silent fallback — always make sure a provider is present.
 
 `ChatBox` renders a `ChatProvider` internally, so hooks work naturally inside any component rendered as a child or descendant of `ChatBox`:
 
@@ -58,6 +63,28 @@ export default function App() {
 ```
 
 If you are building a custom layout without `ChatBox`, wrap your tree in `<ChatProvider>` and use hooks freely anywhere inside.
+
+## Hooks in action
+
+The following demo is built entirely from hooks — no `ChatBox` — composing `useMessageIds()` + `useMessage(id)` for the thread, `useChatStatus()` for the progress indicator, `useChatComposer()` for the input, and `useChatStore()` for the message counter.
+Send a message to watch the echo adapter stream a reply.
+
+{{"demo": "HooksHeadlessChat.js"}}
+
+## Choosing the right hook
+
+| Goal                                                     | Hook                                         |
+| :------------------------------------------------------- | :------------------------------------------- |
+| Prototype or component that needs both state and actions | `useChat()`                                  |
+| Action buttons that must not re-render on streaming      | `useChatActions()`                           |
+| Status chip, typing indicator, or error banner           | `useChatStatus()`                            |
+| Conversation list or sidebar                             | `useConversations()` / `useConversation(id)` |
+| Thread with many messages (efficient rendering)          | `useMessageIds()` + `useMessage(id)`         |
+| Per-message error state and retry affordances            | `useMessageError(messageId)`                 |
+| Custom composer with text and attachments                | `useChatComposer()`                          |
+| Custom tool part that respects provider callbacks        | `useChatOnToolCall()`                        |
+| Custom part renderer lookup                              | `useChatPartRenderer(partType)`              |
+| Custom selector or store subscription                    | `useChatStore()` + `chatSelectors`           |
 
 ## State hooks
 
@@ -87,6 +114,7 @@ const {
   loadMoreHistory, // () => Promise<void>
   setActiveConversation, // (id: string | undefined) => Promise<void>
   retry, // (messageId: string) => Promise<void>
+  regenerate, // (messageId: string) => Promise<void> — re-run an assistant response in place
   setError, // (error: ChatError | null) => void
   addToolApprovalResponse, // (input: ChatAddToolApproveResponseInput) => Promise<void>
   reloadConversations, // () => Promise<void> — planned API stub, not yet implemented
@@ -95,7 +123,9 @@ const {
 } = useChat();
 ```
 
-Because `useChat()` subscribes to multiple store slices at once, it re-renders on any state change.
+The three planned-API stubs (`reloadConversations`, `reloadMessages`, `reconnectRealtime`) reject with an explanatory error in development builds and resolve as silent no-ops in production — do not rely on them until they are implemented.
+
+Because `useChat()` subscribes to several store slices at once — messages, conversations, the active conversation ID, streaming, history, and error state — it re-renders whenever any of them change.
 For components that render long message lists or need fine-grained control over re-renders, prefer the narrower hooks below.
 
 ```tsx
@@ -241,6 +271,27 @@ function MessageRow({ id }: { id: string }) {
 
 This pattern scales to threads with hundreds of messages because no unnecessary re-renders propagate up the tree.
 
+### `useMessageError(messageId)`
+
+Returns the `ChatError` associated with the given message, or `null` when the message has no error.
+Message-scoped errors are stored independently from the global runtime `error`, so multiple failed messages can each retain their own error state at the same time.
+Use it inside a message row to render a per-message error indicator or retry affordance alongside `retry(messageId)` from `useChat()`.
+
+```ts
+const error: ChatError | null = useMessageError(messageId);
+```
+
+### `useChatActions()`
+
+Returns the stable runtime-actions object (`sendMessage`, `retry`, `regenerate`, `stopStreaming`, …) without subscribing to any store state — the component never re-renders on chat updates.
+Pass `optional: true` to get `null` instead of a throw outside a provider.
+Prefer it over `useChat()` in action-only UI such as message action bars.
+
+```ts
+const actions: ChatRuntimeActions = useChatActions();
+const maybeActions: ChatRuntimeActions | null = useChatActions(true);
+```
+
 ## Input hook
 
 ### `useChatComposer()`
@@ -266,6 +317,7 @@ The hook handles several details automatically:
 - **Object URL lifecycle** — preview URLs for image attachments are created on add and revoked on remove or unmount.
 - **IME safety** — `submit` is a no-op during an active IME composition session (relevant for East Asian input methods).
 - **Double-send prevention** — `submit` is blocked when `isSubmitting` is `true`.
+- **SSR safety** — object URL creation and revocation are skipped when the `URL` API is unavailable, so the hook is safe to render on the server.
 
 ```tsx
 function CustomComposer() {
@@ -332,6 +384,8 @@ function ToolMessagePart({ invocation }: { invocation: ChatToolInvocation }) {
 }
 ```
 
+This example is illustrative — the effect re-runs if the component remounts, so a production implementation should track already-handled invocation IDs (for example in a ref or an external set) to avoid invoking the callback twice for the same tool call.
+
 ### `useChatPartRenderer(partType)`
 
 Looks up a renderer registered in the `partRenderers` map on `ChatProvider`.
@@ -368,6 +422,34 @@ function UnknownPart({ part, message, index }) {
 }
 ```
 
+## Context hooks
+
+Context hooks read presentation context provided by `ChatRoot` (which `ChatBox` renders internally) rather than store state.
+
+### `useChatVariant()`
+
+Returns the active chat variant (`'default' | 'compact'`). Use it in custom slots to match the styling the surrounding chat uses.
+
+### `useChatDensity()`
+
+Returns the active density (`'compact' | 'standard' | 'comfortable'`). See [Customization—Look and feel](/x/react-chat/customization/look-and-feel/) for how density is configured.
+
+### `useChatLocaleText()`
+
+Returns the resolved locale-text object so custom components can reuse the same translated strings as the built-in UI. See [Customization—Structure—Localization](/x/react-chat/customization/structure/#localization) for registering translations.
+
+## Headless primitive hooks
+
+These hooks support authors of custom headless primitives and slots. They read component-scoped context (not the chat store) and throw outside their owning primitive:
+
+- `useComposerContext()` — the composer primitive's shared context (used inside `Composer.*` slot replacements).
+- `useMessageListContext()` — the message-list primitive's shared context.
+- `useMessageRovingItem(messageId)` — wires a custom message row into the list's roving-focus model (tabindex + focus handlers).
+- `useMessageActionable()` — whether the focused message is in the actionable (drilled-in) state.
+- `useMessageContentTabIndex()` — the tab index custom interactive message content should apply.
+
+See the [Accessibility](/x/react-chat/material/message-list/#accessibility) page for the roving-focus and drill-in model these hooks implement.
+
 ## Advanced: `useChatStore()`
 
 Returns the underlying `ChatStore<Cursor>` instance directly.
@@ -390,6 +472,8 @@ function MessageCounter() {
 }
 ```
 
+Custom selectors must return referentially stable values for unchanged state. A selector that builds a new array or object on every call — such as `(state) => state.messages.filter(...)` — makes the component re-render on every store update, because the selected value never compares equal. Prefer selecting primitives or existing references, and memoize derived collections.
+
 `useChatStore()` gives you access to all selectors in `chatSelectors` and the full store mutation API.
 
 :::warning
@@ -397,24 +481,9 @@ Use it sparingly — the dedicated hooks above are simpler, better typed, and re
 Direct store access is considered advanced API and is more likely to require changes during upgrades.
 :::
 
-## Choosing the right hook
-
-| Goal                                                     | Hook                                         |
-| :------------------------------------------------------- | :------------------------------------------- |
-| Prototype or component that needs both state and actions | `useChat()`                                  |
-| Status chip, typing indicator, or error banner           | `useChatStatus()`                            |
-| Conversation list or sidebar                             | `useConversations()` / `useConversation(id)` |
-| Thread with many messages (efficient rendering)          | `useMessageIds()` + `useMessage(id)`         |
-| Custom composer with text and attachments                | `useChatComposer()`                          |
-| Custom tool part that respects provider callbacks        | `useChatOnToolCall()`                        |
-| Custom part renderer lookup                              | `useChatPartRenderer(partType)`              |
-| Custom selector or store subscription                    | `useChatStore()` + `chatSelectors`           |
-
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the interface that the actions in these hooks call into.
 - [Selectors Reference](/x/react-chat/resources/selectors/) for the full `chatSelectors` map used with `useChatStore()`.
 - [Controlled State](/x/react-chat/backend/controlled-state/) for `ChatProvider` props and the controlled/uncontrolled model.
 - [Events & Callbacks](/x/react-chat/resources/events-and-callbacks/) for `onFinish`, `onToolCall`, `onData`, and `onError`.
-
-## API

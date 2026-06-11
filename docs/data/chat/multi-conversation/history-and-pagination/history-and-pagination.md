@@ -18,7 +18,8 @@ The `listMessages` adapter method lets you load that history page by page using 
 ## Loading message history
 
 Implement `listMessages` to load message history when the user opens a conversation.
-The runtime calls it whenever `activeConversationId` changes to a non-null conversation, clearing any previously loaded messages before fetching the new page.
+The runtime calls it whenever `activeConversationId` changes to a non-null conversation, clearing any previously loaded messages before fetching the new page (when `messages` is uncontrolled—with a controlled `messages` prop, the store is never reset).
+`listMessages` supersedes the deprecated `loadMore(cursor)` method—the runtime only falls back to `loadMore` for scroll-triggered loads when `listMessages` is not implemented.
 
 ```ts
 interface ChatListMessagesInput<Cursor> {
@@ -34,15 +35,24 @@ interface ChatListMessagesResult<Cursor> {
 }
 ```
 
+The runtime always requests `direction: 'backward'`—the newest page first, then progressively older pages as the user scrolls up. The `'forward'` value exists on the input type for adapters that are also called directly (for example, to fill gaps after a reconnect), but `ChatBox` never passes it. Adapters that only serve `ChatBox` can ignore the field.
+
+`hasMore` defaults to `false`—if your adapter omits it, the runtime assumes the history is complete and stops paginating.
+
 A typical implementation fetches from a REST endpoint:
 
-```tsx
-async listMessages({ conversationId, cursor }) {
-  const params = new URLSearchParams({ cursor: cursor ?? '' });
-  const res = await fetch(`/api/conversations/${conversationId}/messages?${params}`);
-  const { messages, nextCursor, hasMore } = await res.json();
-  return { messages, cursor: nextCursor, hasMore };
-},
+```ts
+const adapter: ChatAdapter = {
+  // ...
+  async listMessages({ conversationId, cursor }) {
+    const params = new URLSearchParams({ cursor: cursor ?? '' });
+    const res = await fetch(
+      `/api/conversations/${conversationId}/messages?${params}`,
+    );
+    const { messages, nextCursor, hasMore } = await res.json();
+    return { messages, cursor: nextCursor, hasMore };
+  },
+};
 ```
 
 ## Cursor-based pagination
@@ -83,7 +93,7 @@ The cursor type flows automatically through `ChatBox`, the store, hooks, and all
 When `listMessages` returns `hasMore: true`, the runtime sets `hasMoreHistory` to `true` in the store.
 This flag tells the message list that an additional page of history can be fetched when the user scrolls to the top.
 
-The normalized store tracks history pagination state:
+The chat store exposes the history pagination state—readable from `useChat()` or via `chatSelectors`:
 
 | Store field        | Type                  | Description                                                                     |
 | :----------------- | :-------------------- | :------------------------------------------------------------------------------ |
@@ -95,16 +105,19 @@ All three fields are readable through `useChat()` or the corresponding selectors
 
 ## Loading older messages
 
+These store fields drive the scroll-triggered flow.
 When `hasMoreHistory` is `true`, the message list automatically calls `listMessages` with the stored `historyCursor` as soon as the user scrolls to the top of the list.
 `ChatBox` does not render a separate button—the load is triggered by the scroll position.
 
 The runtime drives history loading in these steps:
 
-1. User opens a conversation—runtime calls `listMessages({ conversationId })`.
+1. User opens a conversation—runtime calls `listMessages({ conversationId, direction: 'backward' })`.
 2. Adapter returns messages plus `{ cursor: nextCursor, hasMore: true }`.
 3. Runtime stores messages, sets `hasMoreHistory: true` and `historyCursor: nextCursor`.
-4. User scrolls to the top—runtime automatically calls `listMessages({ conversationId, cursor: nextCursor })`.
+4. User scrolls to the top—runtime automatically calls `listMessages({ conversationId, cursor: nextCursor, direction: 'backward' })`.
 5. Adapter returns the next page. If `hasMore: false`, no further automatic loads are triggered.
+
+{{"demo": "HistoryPaginationDemo.js", "bg": "inline"}}
 
 ## History loading indicator
 

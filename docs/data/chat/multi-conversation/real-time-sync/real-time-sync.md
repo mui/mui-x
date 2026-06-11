@@ -46,26 +46,29 @@ async subscribe({ onEvent }) {
 },
 ```
 
+The demo below wires a simulated backend through `subscribe()`. Each button emits a real-time event so you can watch the typing indicator, presence chip, incoming message bubble, and unread badge react without any composer input.
+
+{{"demo": "RealtimeSyncSimulation.js"}}
+
 ## Event types
 
-The `onEvent` callback receives `ChatRealtimeEvent` objects.
-There are nine event variants organized in five categories.
+The `onEvent` callback receives `ChatRealtimeEvent` objects — a discriminated union on the `type` field, grouped into the following categories:
 
 ### Conversation events
 
-| Event type             | Payload              | Store effect                                                           |
-| :--------------------- | :------------------- | :--------------------------------------------------------------------- |
-| `conversation-added`   | `{ conversation }`   | Adds the conversation to the store                                     |
-| `conversation-updated` | `{ conversation }`   | Upserts the conversation record (replaces if present, adds if missing) |
-| `conversation-removed` | `{ conversationId }` | Removes the conversation and resets active ID if it matched            |
+| Event type             | Payload              | Store effect                                                             |
+| :--------------------- | :------------------- | :----------------------------------------------------------------------- |
+| `conversation-added`   | `{ conversation }`   | Adds the conversation to the store                                       |
+| `conversation-updated` | `{ conversation }`   | Merges the payload into the existing conversation, or adds it if missing |
+| `conversation-removed` | `{ conversationId }` | Removes the conversation and resets active ID if it matched              |
 
 ### Message events
 
-| Event type        | Payload                          | Store effect                                                      |
-| :---------------- | :------------------------------- | :---------------------------------------------------------------- |
-| `message-added`   | `{ message }`                    | Adds the message to the store                                     |
-| `message-updated` | `{ message }`                    | Upserts the message record (replaces if present, adds if missing) |
-| `message-removed` | `{ messageId, conversationId? }` | Removes the message from the store                                |
+| Event type        | Payload                          | Store effect                                                        |
+| :---------------- | :------------------------------- | :------------------------------------------------------------------ |
+| `message-added`   | `{ message }`                    | Adds the message to the store                                       |
+| `message-updated` | `{ message }`                    | Merges the payload into the existing message, or adds it if missing |
+| `message-removed` | `{ messageId, conversationId? }` | Removes the message from the store                                  |
 
 ### Typing events
 
@@ -81,9 +84,9 @@ There are nine event variants organized in five categories.
 
 ### Read events
 
-| Event type | Payload                                   | Store effect                          |
-| :--------- | :---------------------------------------- | :------------------------------------ |
-| `read`     | `{ conversationId, messageId?, userId? }` | Updates the conversation's read state |
+| Event type | Payload                                   | Store effect                                                                                                                              |
+| :--------- | :---------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
+| `read`     | `{ conversationId, messageId?, userId? }` | Marks the conversation read (sets readState and resets unreadCount); messageId and userId are accepted but currently have no store effect |
 
 ## Dispatching events from the backend
 
@@ -111,7 +114,11 @@ The available event shapes are shown below:
 { type: 'read', conversationId: string, messageId?: string, userId?: string }
 ```
 
+For `*-updated` events, the payload is shallow-merged into the stored record — omitted fields are preserved. For `conversation-updated`, only `id` is required, so send `id` plus the fields that changed. For `message-updated`, the `ChatMessage` type always requires `id`, `role`, and `parts`; other fields are optional and merged. If the record is not in the store yet, the payload is inserted as-is, so send a complete record when the entity may not be loaded. For `*-added` events, send the full record — the same required fields apply (`id` for conversations; `id`, `role`, and `parts` for messages).
+
 ## Consuming realtime state
+
+This section covers scalar state that decorates existing records — typing, presence, and read status.
 
 ### Typing indicators
 
@@ -123,7 +130,14 @@ function TypingIndicator() {
 
   if (typingUserIds.length === 0) return null;
 
-  return <span>{typingUserIds.length} user(s) typing…</span>;
+  return (
+    <span>
+      {typingUserIds.length === 1
+        ? 'Someone is'
+        : `${typingUserIds.length} people are`}{' '}
+      typing…
+    </span>
+  );
 }
 ```
 
@@ -152,6 +166,8 @@ onEvent({
 });
 ```
 
+Presence events only affect users that appear in the `participants` of a loaded conversation. An event for a user who is not a participant anywhere is silently ignored.
+
 ### Read state
 
 Read events update the `readState` and `unreadCount` fields on `ChatConversation`. Use `useConversation(id)` to reflect read status in the UI:
@@ -163,6 +179,10 @@ onEvent({
   messageId: 'msg-42',
 });
 ```
+
+The optional `messageId` and `userId` fields are part of the wire type for forward compatibility, but the runtime currently ignores them — only the conversation-level read state is updated.
+
+Inbound `read` events update the store automatically, but the outbound direction is manual: the runtime never calls the `markRead()` adapter method for you — see [Read receipts](/x/react-chat/multi-conversation/read-receipts/) for wiring patterns.
 
 ## Collection synchronization
 
@@ -238,6 +258,12 @@ subscribe({ onEvent }) {
 },
 ```
 
+### Event delivery guarantees
+
+Re-delivering events after a reconnect is safe: `*-added` and `*-updated` events with an already-known `id` update the existing record instead of duplicating it, so backends can replay a window of recent events on reconnect without deduplication on the client.
+
+Message events are applied to the thread store regardless of their `conversationId`. If your backend streams events for many conversations over one connection, filter message events to the active conversation before calling `onEvent` (for example, read the active id from your own state, or only subscribe to the active conversation's channel). Conversation, typing, presence, and read events carry their own ids and are always safe to forward.
+
 ## Sending typing indicators
 
 Implement the `setTyping()` adapter method to send typing indicators to your backend when the user is composing a message:
@@ -258,7 +284,8 @@ async setTyping({ conversationId, isTyping }) {
 },
 ```
 
-The runtime calls `setTyping()` when the composer value changes from empty to non-empty (and vice versa).
+Outbound typing signals are opt-in: enable `features.typingSignal` (off by default) and implement `setTyping()`. When enabled, the runtime calls `setTyping()` with `isTyping: true` when the composer transitions from empty (literally `''`) to non-empty, and `isTyping: false` when it transitions back — including when sending a message clears the composer. Switching the active conversation while a draft is non-empty signals `isTyping: false` for the previous conversation and `isTyping: true` for the new one. The runtime never calls it repeatedly while typing continues and provides no built-in idle timeout; rejected `setTyping()` promises are swallowed (with a dev-only warning). See [Real-time adapters](/x/react-chat/backend/real-time-adapters/) for the full contract.
+
 To receive typing indicators from other users, push `typing` events through the `onEvent` callback in `subscribe()`.
 
 ## See also
@@ -266,3 +293,4 @@ To receive typing indicators from other users, push `typing` events through the 
 - See [Read receipts](/x/react-chat/multi-conversation/read-receipts/) for the `markRead()` adapter method and unread badge display.
 - See [Conversation list](/x/react-chat/multi-conversation/conversation-list/) for the sidebar that reflects real-time conversation updates.
 - See [Adapters](/x/react-chat/backend/adapters/) for the full `subscribe()` and `setTyping()` method reference.
+- See the [Hooks reference](/x/react-chat/resources/hooks/) for the full `useChatStatus()`, `useConversation()`, and `useConversations()` selector surface.

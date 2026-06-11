@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { ChatTypingIndicator } from '@mui/x-chat';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import {
@@ -17,7 +18,7 @@ import {
 } from 'docs/src/modules/components/chat-playground/useCustomizations';
 import { users } from 'docs/src/modules/components/chat-playground/data';
 
-const candidates = [users.assistant, users.alice];
+const candidates = [users.alice, users.mira];
 
 type ClassKey = 'root';
 
@@ -34,6 +35,14 @@ export default function ChatTypingIndicatorPlayground() {
   );
 
   const indicatorSx = classesCustomizations.toClassesSx();
+
+  const label = React.useMemo(() => {
+    if (count === 0) {
+      return '(renders nothing)';
+    }
+    const names = candidates.slice(0, count).map((u) => u.displayName ?? u.id);
+    return `${names.join(', ')}${count === 1 ? ' is typing' : ' are typing'}`;
+  }, [count]);
 
   return (
     <PlaygroundCard
@@ -63,6 +72,13 @@ export default function ChatTypingIndicatorPlayground() {
           <TypingEffect conversationId={emptyConversation.id} userIds={userIds} />
           <Box sx={{ width: '100%' }}>
             <ChatTypingIndicator sx={indicatorSx as any} />
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{ display: 'block', mt: 1 }}
+            >
+              count: {count} · data-count=&quot;{count}&quot; · label: {label}
+            </Typography>
           </Box>
         </ScopedChat>
       }

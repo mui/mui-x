@@ -57,4 +57,4 @@ Reach for `slots` or `partRenderers` only when the theme can't express what you 
 ## Next steps
 
 - [Look and feel](/x/react-chat/customization/look-and-feel/)—theming, brand examples (Slack, WhatsApp, ChatGPT, Claude, v0.dev), Tailwind
-- [Structure](/x/react-chat/customization/structure/)—slots, `slotProps`, feature flags, custom part renderers, localization
+- [Structure](/x/react-chat/customization/structure/)—customization recipes, slots, `slotProps`, feature flags, structural props, part renderers, and localization

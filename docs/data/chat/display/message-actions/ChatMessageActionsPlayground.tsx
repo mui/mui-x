@@ -94,12 +94,17 @@ const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
 export default function ChatMessageActionsPlayground() {
   const [showCopy, setShowCopy] = React.useState(true);
   const [showLike, setShowLike] = React.useState(true);
+  const [revealed, setRevealed] = React.useState(true);
   const [variant, setVariant] = React.useState<ChatVariant>('default');
   const [density, setDensity] = React.useState<ChatDensity>('standard');
   const classesCustomizations = useCustomizations<ClassKey>(CLASS_DEFS);
   const message = React.useMemo(
     () =>
-      makeMessage('assistant', 'read', 'Hover this bubble to reveal the actions.'),
+      makeMessage(
+        'assistant',
+        'read',
+        'Toggle "reveal actions", or hover this bubble.',
+      ),
     [],
   );
 
@@ -126,6 +131,12 @@ export default function ChatMessageActionsPlayground() {
             checked={showLike}
             onChange={setShowLike}
           />
+          <DividerLabel>visibility</DividerLabel>
+          <SwitchControl
+            label="reveal actions"
+            checked={revealed}
+            onChange={setRevealed}
+          />
           <DividerLabel>chrome provider</DividerLabel>
           <ChoiceControl<ChatVariant>
             label="ChatChrome.variant"
@@ -148,7 +159,18 @@ export default function ChatMessageActionsPlayground() {
           activeConversationId={conversation.id}
         >
           <ChatChrome variant={variant} density={density}>
-            <Box sx={{ width: '100%', ...(wrapperSx as object) }}>
+            <Box
+              sx={{
+                width: '100%',
+                ...(revealed && {
+                  '& .MuiChatMessage-actions': {
+                    opacity: 1,
+                    visibility: 'visible',
+                  },
+                }),
+                ...(wrapperSx as object),
+              }}
+            >
               <ChatMessageGroup messageId={message.id}>
                 <ChatMessageComponent messageId={message.id}>
                   <ChatMessageAvatar />
