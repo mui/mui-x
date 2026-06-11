@@ -35,6 +35,10 @@ import {
   useChartVisibilityManager,
   type UseChartVisibilityManagerSignature,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
+import {
+  useProgressiveRendering,
+  type UseProgressiveRenderingSignature,
+} from '../internals/plugins/featurePlugins/useProgressiveRendering';
 
 export type ScatterChartPluginSignatures = [
   UseChartZAxisSignature,
@@ -46,6 +50,7 @@ export type ScatterChartPluginSignatures = [
   UseChartVisibilityManagerSignature<'scatter'>,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
+  UseProgressiveRenderingSignature,
 ];
 
 export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPluginSignatures> = [
@@ -58,4 +63,5 @@ export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPlu
   useChartVisibilityManager,
   useChartClosestPoint,
   useChartKeyboardNavigation,
+  useProgressiveRendering,
 ];

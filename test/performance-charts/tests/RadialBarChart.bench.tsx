@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Unstable_RadialBarChart as RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
+import { RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
 import { benchmark } from '@mui/internal-benchmark';
 
 const categoryCount = 60;

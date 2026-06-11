@@ -1164,6 +1164,60 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
   });
 
+  describe('colDef: multiSelect', () => {
+    it('should expose only `size` in the column menu Aggregation select', async () => {
+      const { user } = await render(
+        <Test
+          rows={[
+            { id: 0, tags: ['React'] },
+            { id: 1, tags: ['Vue'] },
+          ]}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'Vue'],
+            },
+          ]}
+        />,
+      );
+
+      await act(async () => apiRef.current?.showColumnMenu('tags'));
+      await user.click(screen.getByLabelText('Aggregation'));
+      const listbox = screen.getByRole('listbox', { name: 'Aggregation' });
+      const optionTexts = within(listbox)
+        .getAllByRole('option')
+        .map((o) => o.textContent);
+      // Listbox always renders an empty placeholder ("...") before the allowed functions.
+      expect(optionTexts).to.deep.equal(['...', 'size']);
+    });
+
+    it('should aggregate with `size` and render the count in the footer', async () => {
+      await render(
+        <Test
+          rows={[
+            { id: 0, tags: ['React'] },
+            { id: 1, tags: ['Vue', 'TypeScript'] },
+            { id: 2, tags: [] },
+          ]}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'Vue', 'TypeScript'],
+            },
+          ]}
+          initialState={{ aggregation: { model: { tags: 'size' } } }}
+        />,
+      );
+
+      const tagsValues = getColumnValues(1);
+      expect(tagsValues[tagsValues.length - 1]).to.equal('3');
+    });
+  });
+
   describe('"no rows" overlay', () => {
     it('should display "no rows" overlay and not show aggregation footer when there are no rows', async () => {
       await render(
