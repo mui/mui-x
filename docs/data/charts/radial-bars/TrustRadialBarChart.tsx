@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
 import { europeanYouthTrust } from '../dataset/europeanYouthTrust';
-import { EuAverageRing } from './euAverageRing';
-import { PreviousTrustData } from './previousTrustData';
+import { EuAverageRing, PreviousTrustData } from './trustRadialBarChartComponents';
 
 const CURRENT_COLOR = '#7fa8c9';
 const PREVIOUS_COLOR = '#e8896b';
