@@ -103,7 +103,13 @@ export function PreviousTrustData({ currentColor, previousColor }) {
         const [prevEndX, prevEndY] = point(previousRadius, end);
         const previousLine = `M ${prevStartX} ${prevStartY} A ${previousRadius} ${previousRadius} 0 0 1 ${prevEndX} ${prevEndY}`;
 
-        const [markerX, markerY] = point(currentRadius + 11, mid);
+        // Increase arrow sits past the blue (current) bar, decrease arrow past
+        // the red (previous) line, both at a static distance.
+        const markerGap = 11;
+        const markerRadius = increased
+          ? currentRadius + markerGap
+          : previousRadius + markerGap;
+        const [markerX, markerY] = point(markerRadius, mid);
         const markerRotation = (mid * 180) / Math.PI;
         const markerPoints = increased ? '0,-6 -5,3 5,3' : '0,6 -5,-3 5,-3';
 
