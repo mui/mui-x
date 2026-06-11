@@ -62,11 +62,7 @@ export interface CommonBarSeriesType {
 }
 
 export interface BarSeriesType
-  extends
-    CommonSeriesType<BarValueType | null, 'bar'>,
-    CartesianSeriesType,
-    StackableSeriesType,
-    CommonBarSeriesType {
+  extends CommonSeriesType<'bar'>, CartesianSeriesType, StackableSeriesType, CommonBarSeriesType {
   type: 'bar';
   /**
    * The placement of the bar label. It accepts the following values:

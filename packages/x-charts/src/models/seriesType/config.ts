@@ -12,7 +12,6 @@ import type {
   DefaultizedPieSeriesType,
   PieItemIdentifier,
   PieValueType,
-  DefaultizedPieValueType,
   PieSeriesLayout,
 } from './pie';
 import type { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
@@ -96,7 +95,7 @@ export interface ChartsSeriesConfig {
   };
   scatter: {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
-      MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;
+      MakeRequired<SeriesColor<ScatterValueType>, 'color'>;
     series: DefaultizedScatterSeriesType;
     seriesLayout: {};
     seriesProp: ScatterSeriesType;
@@ -128,7 +127,9 @@ export interface ChartsSeriesConfig {
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
     itemIdentifier: PieItemIdentifier;
     itemIdentifierWithData: PieItemIdentifier;
-    valueType: DefaultizedPieValueType;
+    // `formattedValue` is the output of `valueFormatter`, so it cannot be part of the
+    // value the formatter receives (the formatter is called to compute it).
+    valueType: PieValueType;
     highlightScope: CommonHighlightScope;
     descriptionGetterParams: {
       identifier: PieItemIdentifier;
