@@ -35,4 +35,5 @@ export const schedulerOtherSelectors = {
   ),
   isLoading: createSelector((state: State) => state.isLoading),
   errors: createSelector((state: State) => state.errors),
+  openEventId: createSelector((state: State) => state.openEventId),
 };

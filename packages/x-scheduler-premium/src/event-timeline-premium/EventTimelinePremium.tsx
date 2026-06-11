@@ -163,6 +163,7 @@ EventTimelinePremium.propTypes = {
     current: PropTypes.shape({
       goToNextVisibleDate: PropTypes.func,
       goToPreviousVisibleDate: PropTypes.func,
+      setOpenEventId: PropTypes.func,
       setVisibleDate: PropTypes.func,
     }),
   }),

@@ -82,6 +82,7 @@ EventCalendar.propTypes = {
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
+      setOpenEventId: PropTypes.func,
       setVisibleDate: PropTypes.func,
     }),
   }),

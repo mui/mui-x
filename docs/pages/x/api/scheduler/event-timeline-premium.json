@@ -3,7 +3,7 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { goToNextVisibleDate?: func, goToPreviousVisibleDate?: func, setVisibleDate?: func } }"
+        "description": "{ current?: { goToNextVisibleDate?: func, goToPreviousVisibleDate?: func, setOpenEventId?: func, setVisibleDate?: func } }"
       }
     },
     "areEventsDraggable": { "type": { "name": "bool" }, "default": "true" },

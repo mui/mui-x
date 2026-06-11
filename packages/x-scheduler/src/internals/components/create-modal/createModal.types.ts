@@ -24,6 +24,17 @@ export type ContextValue<TData> = {
   subscribeCloseHandler: (handler: () => void) => () => void;
 };
 
+export interface ModalImperativeHandle<TData> {
+  /**
+   * Imperatively open the modal with the given data and optional anchor element.
+   */
+  open: (data: TData, anchorRef?: React.RefObject<HTMLElement | null>) => void;
+  /**
+   * Imperatively close the modal.
+   */
+  close: () => void;
+}
+
 export interface ProviderProps<TData> {
   children: React.ReactNode;
   /**
@@ -37,6 +48,10 @@ export interface ProviderProps<TData> {
   }) => React.ReactNode;
   onOpen?: (data: TData) => void;
   onClose?: () => void;
+  /**
+   * Ref that exposes imperative open/close methods.
+   */
+  imperativeRef?: React.Ref<ModalImperativeHandle<TData>>;
 }
 
 export interface TriggerProps<TData> {
