@@ -301,7 +301,7 @@ async subscribe({ onEvent }) {
 },
 ```
 
-See [Realtime events](/x/react-chat/behavior/realtime-events/) for details.
+See [Real-time events](/x/react-chat/core/realtime/) for details.
 
 ### Sending tool approval responses
 
