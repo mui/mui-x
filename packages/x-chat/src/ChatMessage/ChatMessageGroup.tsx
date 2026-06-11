@@ -127,6 +127,14 @@ function ChatMessageGroupDefaultContent({ messageId }: { messageId: string }) {
   );
 }
 
+ChatMessageGroupDefaultContent.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  messageId: PropTypes.string.isRequired,
+} as any;
+
 const ChatMessageGroup = React.forwardRef<HTMLDivElement, ChatMessageGroupProps>(
   function ChatMessageGroup(inProps, ref) {
     const props = useThemeProps({ props: inProps, name: 'MuiChatMessageGroup' });

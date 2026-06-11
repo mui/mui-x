@@ -112,6 +112,5 @@
   "muiName": "MuiChatMessageAuthorLabel",
   "filename": "/packages/x-chat/src/ChatMessage/ChatMessageAuthorLabel.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message Appearance</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/display/message-appearance/\">Chat - Message Appearance</a></li></ul>"
 }

@@ -25,6 +25,5 @@
   "muiName": "MuiChatMessageSkeleton",
   "filename": "/packages/x-chat/src/ChatMessageSkeleton/ChatMessageSkeleton.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-chat/display/loading-and-empty-states/\">Chat - Loading &amp; Empty States</a></li></ul>",
-  "cssComponent": false
+  "demos": "<ul><li><a href=\"/x/react-chat/display/loading-and-empty-states/\">Chat - Loading &amp; Empty States</a></li></ul>"
 }
