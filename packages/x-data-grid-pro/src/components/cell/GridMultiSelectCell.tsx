@@ -177,6 +177,7 @@ function GridMultiSelectCell<V extends ValueOptions = ValueOptions>(
       return;
     }
     if (!hasFocus) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPopupOpen(false);
       return;
     }

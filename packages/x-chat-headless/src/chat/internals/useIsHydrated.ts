@@ -8,6 +8,7 @@ export function useIsHydrated() {
   const [isHydrated, setIsHydrated] = React.useState(false);
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsHydrated(true);
   }, []);
 

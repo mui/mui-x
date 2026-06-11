@@ -137,6 +137,7 @@ export default defineConfig(
     },
     rules: {
       '@typescript-eslint/no-redeclare': 'error',
+      '@typescript-eslint/no-shadow': 'off',
       'mui/straight-quotes': 'error',
       // turn off global react compiler plugin as it's controlled per package on this repo
       'react-compiler/react-compiler': 'off',
@@ -271,6 +272,7 @@ export default defineConfig(
   {
     files: [`**/*${EXTENSION_TEST_FILE}`, `test/**/*${EXTENSION_TS}`],
     rules: {
+      'react-hooks/set-state-in-effect': 'off',
       'no-restricted-imports': [
         'error',
         {
@@ -342,6 +344,7 @@ export default defineConfig(
     rules: {
       '@next/next/no-img-element': 'off',
       'react/jsx-filename-extension': 'off',
+      'react-hooks/set-state-in-effect': 'off',
     },
   },
 

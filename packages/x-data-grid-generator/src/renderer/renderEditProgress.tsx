@@ -77,6 +77,7 @@ function EditProgress(props: GridRenderEditCellParams<any, number>) {
   };
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setValueState(Number(value));
   }, [value]);
 

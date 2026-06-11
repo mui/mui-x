@@ -138,6 +138,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
   );
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setValueState((state) => {
       if (
         valueTransformed.parsed !== state.parsed &&

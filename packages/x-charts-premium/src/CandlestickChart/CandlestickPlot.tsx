@@ -76,6 +76,7 @@ function CandlestickWebGLPlotImpl({
 
   React.useEffect(() => {
     const prog = new CandlestickWebGLProgram(gl);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setProgram(prog);
 
     return () => {
