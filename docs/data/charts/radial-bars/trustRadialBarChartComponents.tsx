@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { useDrawingArea, useRotationAxis, useRadiusAxis } from '@mui/x-charts/hooks';
 import { ChartsTooltipContainer, useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import {
-  euAverageTrust2024,
+  euAverageTrust2025,
   europeanYouthTrust,
 } from '../dataset/europeanYouthTrust';
 
@@ -25,7 +25,7 @@ function TrustTooltipContent() {
     return null;
   }
 
-  const difference = country.trust2024 - country.trust2013;
+  const difference = country.trust2025 - country.trust2013;
   const increased = difference >= 0;
 
   return (
@@ -37,9 +37,9 @@ function TrustTooltipContent() {
         <Typography sx={{ fontWeight: 'medium' }}>{country.country}</Typography>
         <Stack direction="row" sx={{ justifyContent: 'space-between', gap: 3 }}>
           <Typography variant="body2" color="text.secondary">
-            2024/25
+            2025
           </Typography>
-          <Typography variant="body2">{country.trust2024.toFixed(1)} / 10</Typography>
+          <Typography variant="body2">{country.trust2025.toFixed(1)} / 10</Typography>
         </Stack>
         <Stack direction="row" sx={{ justifyContent: 'space-between', gap: 3 }}>
           <Typography variant="body2" color="text.secondary">
@@ -64,7 +64,7 @@ function TrustTooltipContent() {
   );
 }
 
-/** Item tooltip showing the 2013 and 2024/25 values and their difference. */
+/** Item tooltip showing the 2013 and 2025 values and their difference. */
 export function TrustTooltip() {
   return (
     <ChartsTooltipContainer trigger="item">
@@ -94,9 +94,9 @@ export function PreviousTrustData({
         }
         const end = start + bandwidth;
         const mid = start + bandwidth / 2;
-        const currentRadius = radiusScale(country.trust2024);
+        const currentRadius = radiusScale(country.trust2025);
         const previousRadius = radiusScale(country.trust2013);
-        const increased = country.trust2024 >= country.trust2013;
+        const increased = country.trust2025 >= country.trust2013;
 
         // Arc line marking the 2013 level: two band edges at the previous
         // radius joined by a circular arc (SVG `A` command).
@@ -131,7 +131,7 @@ export function PreviousTrustData({
   );
 }
 
-/** Dashed ring at the EU average of the 2024/25 values. */
+/** Dashed ring at the EU average of the 2025 values. */
 export function EuAverageRing() {
   const geometry = usePolarGeometry();
   if (!geometry) {
@@ -139,7 +139,7 @@ export function EuAverageRing() {
   }
 
   const { cx, cy, radiusScale } = geometry;
-  const radius = radiusScale(euAverageTrust2024);
+  const radius = radiusScale(euAverageTrust2025);
 
   return (
     <g transform={`translate(${cx} ${cy})`}>
@@ -159,7 +159,7 @@ export function EuAverageRing() {
         fontStyle="italic"
         fill="#757575"
       >
-        EU average 2024/25
+        EU average 2025
       </text>
     </g>
   );

@@ -24,8 +24,8 @@ export default function TrustRadialBarChart() {
       slots={{ tooltip: TrustTooltip }}
       series={[
         {
-          dataKey: 'trust2024',
-          label: '2024/25 trust',
+          dataKey: 'trust2025',
+          label: '2025 trust',
           color: CURRENT_COLOR,
           highlightScope,
           valueFormatter: trustFormatter,
@@ -46,7 +46,7 @@ export default function TrustRadialBarChart() {
           min: 0,
           max: 10,
           minRadius: 130,
-          tickInterval: [6, 8, 10],
+          tickInterval: [2, 4, 6, 8, 10],
         },
       ]}
       grid={{ radius: true }}
