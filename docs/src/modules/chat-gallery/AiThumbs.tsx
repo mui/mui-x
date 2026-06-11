@@ -11,6 +11,16 @@ export function ChatMessageSourcesThumb() {
   );
 }
 
+export function ChatMessageSourceThumb() {
+  return (
+    <ThumbCanvas>
+      <Card>
+        <SourceList focusIndex={0} />
+      </Card>
+    </ThumbCanvas>
+  );
+}
+
 export function ChatCodeBlockThumb() {
   return (
     <ThumbCanvas>

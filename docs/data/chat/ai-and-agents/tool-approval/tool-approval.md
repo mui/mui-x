@@ -14,30 +14,30 @@ components: ChatConfirmation
 
 Tool approval lets you pause the agent when it requests a potentially dangerous action, present the user with an approve/deny interface, and resume or cancel the tool execution based on the user's decision.
 
-## Interactive playground
-
-Preview the `ChatConfirmation` UI in different states:
-
-{{"demo": "ChatConfirmationPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
-
 ## Approval workflow
 
 The approval lifecycle extends the standard tool invocation states with two phases:
 
-| State                | Description                           |
-| :------------------- | :------------------------------------ |
-| `input-streaming`    | Tool input JSON is being streamed     |
-| `input-available`    | Tool input is fully available         |
-| `approval-requested` | Stream pauses—user approval is needed |
-| `approval-responded` | User has responded, stream continues  |
-| `output-available`   | Tool output is ready (if approved)    |
-| `output-denied`      | User denied the tool call             |
+| State                | Description                            |
+| :------------------- | :------------------------------------- |
+| `input-streaming`    | Tool input JSON is being streamed      |
+| `input-available`    | Tool input is fully available          |
+| `approval-requested` | Stream pauses; user approval is needed |
+| `approval-responded` | User has responded, stream continues   |
+| `output-available`   | Tool output is ready (if approved)     |
+| `output-denied`      | User denied the tool call              |
 
 The stream pauses at `approval-requested` until your UI calls `addToolApprovalResponse()`.
 
+## Approving a tool call in action
+
+Send the suggested prompt; the stream pauses at `approval-requested` until you approve or deny the call.
+
+{{"demo": "ToolApprovalFlow.js", "bg": "inline"}}
+
 ## Triggering an approval request
 
-When the backend determines a tool call needs user approval, it sends a `tool-approval-request` chunk:
+When the backend determines a tool call needs user approval, it sends a [`tool-approval-request` chunk](/x/react-chat/behavior/streaming/) (see [Building an adapter](/x/react-chat/backend/building-an-adapter/) for the server side):
 
 ```ts
 controller.enqueue({
@@ -49,12 +49,13 @@ controller.enqueue({
 });
 ```
 
-| Field        | Type                  | Description                          |
-| :----------- | :-------------------- | :----------------------------------- |
-| `toolCallId` | `string`              | The tool invocation being gated      |
-| `toolName`   | `string`              | Name of the tool requesting approval |
-| `input`      | `object`              | The tool's input, shown to the user  |
-| `approvalId` | `string \| undefined` | Optional distinct approval ID        |
+| Field        | Type                       | Description                                                                                                                                        |
+| :----------- | :------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `toolCallId` | `string`                   | The tool invocation being gated                                                                                                                    |
+| `toolName`   | `string`                   | Name of the tool requesting approval                                                                                                               |
+| `input`      | `ChatToolInput<TToolName>` | The tool's input (typed per tool; `unknown` for dynamic tools), shown to the user                                                                  |
+| `approvalId` | `string \| undefined`      | Optional distinct approval ID. Stored on the invocation as `toolInvocation.approvalId`; respond with it when present, otherwise with `toolCallId`. |
+| `dynamic`    | `true \| undefined`        | Set to `true` when gating a dynamic (unregistered) tool; required on dynamic-tool approval chunks.                                                 |
 
 When this chunk arrives, the tool invocation moves to `state: 'approval-requested'`.
 
@@ -64,7 +65,7 @@ Implement `addToolApprovalResponse` on your adapter to send the user's decision 
 
 ```ts
 interface ChatAddToolApproveResponseInput {
-  id: string; // the approval request ID from the stream chunk
+  id: string; // the chunk's approvalId when provided, otherwise the toolCallId
   approved: boolean; // true = approved, false = denied
   reason?: string; // optional reason surfaced to the model when denied
 }
@@ -79,6 +80,11 @@ async addToolApprovalResponse({ id, approved, reason }) {
 },
 ```
 
+Two behaviors are worth calling out:
+
+- `reason` is stored on the invocation as `toolInvocation.approval.reason`, and the built-in tool widget displays it when the call ends in `output-denied`; otherwise it is only sent to your backend. The built-in **Deny** button sends no reason — provide a custom renderer (see [Registering custom renderers for tool approval](#registering-custom-renderers-for-tool-approval)) to collect one.
+- If your adapter's `addToolApprovalResponse` rejects, the built-in widget re-enables its buttons and the error is reported through the chat error channel (`onError`); the invocation stays in `approval-requested` so the user can retry.
+
 ## Responding to approval requests in the UI
 
 Use `useChat()` to call `addToolApprovalResponse` from your component:
@@ -88,13 +94,13 @@ const { addToolApprovalResponse } = useChat();
 
 // Approve
 await addToolApprovalResponse({
-  id: toolCall.toolCallId,
+  id: toolCall.approvalId ?? toolCall.toolCallId,
   approved: true,
 });
 
 // Deny with reason
 await addToolApprovalResponse({
-  id: toolCall.toolCallId,
+  id: toolCall.approvalId ?? toolCall.toolCallId,
   approved: false,
   reason: 'User declined the operation',
 });
@@ -115,6 +121,12 @@ import { ChatConfirmation } from '@mui/x-chat';
   onCancel={() => agent.cancel()}
 />;
 ```
+
+### Interactive playground
+
+Preview the `ChatConfirmation` UI in different states:
+
+{{"demo": "ChatConfirmationPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Custom labels
 
@@ -169,7 +181,7 @@ const adapter = React.useMemo(
 
 ## Relationship to tool-call approval
 
-The built-in tool part `approval-requested` state handles the narrow case of approving a specific tool call—it renders inside the collapsible tool widget. `ChatConfirmation` is a broader, more prominent pattern for any "human-in-the-loop" checkpoint that does not require a structured tool invocation.
+The built-in tool part `approval-requested` state handles the narrow case of approving a specific tool call: it renders inside the collapsible tool widget. `ChatConfirmation` is a broader, more prominent pattern for any "human-in-the-loop" checkpoint that does not require a structured tool invocation.
 
 Use the stream-based `tool-approval-request` when:
 
@@ -199,13 +211,13 @@ const renderers: ChatPartRendererMap = {
           input={toolInvocation.input}
           onApprove={() =>
             addToolApprovalResponse({
-              id: toolInvocation.toolCallId,
+              id: toolInvocation.approvalId ?? toolInvocation.toolCallId,
               approved: true,
             })
           }
           onDeny={(reason) =>
             addToolApprovalResponse({
-              id: toolInvocation.toolCallId,
+              id: toolInvocation.approvalId ?? toolInvocation.toolCallId,
               approved: false,
               reason,
             })
@@ -222,6 +234,14 @@ const renderers: ChatPartRendererMap = {
   <MyChat />
 </ChatProvider>;
 ```
+
+## Accessibility
+
+- `ChatConfirmation` is an inline, non-modal `group` labeled by its message. It does not steal focus or trap it, so it sits naturally in the message flow.
+- It is deliberately **not** an `alertdialog`: that role promises modal focus management the card neither provides nor needs. If you require blocking confirmation, render it inside your own modal (for example a MUI [`Dialog`](https://mui.com/material-ui/react-dialog/)) and manage focus there.
+- The built-in inline tool widget's **Approve** and **Deny** controls are native `button` elements, disabled while a response is pending.
+
+For the full keyboard model and ARIA structure of the chat UI, see the [Accessibility](/x/react-chat/accessibility/) page.
 
 ## See also
 

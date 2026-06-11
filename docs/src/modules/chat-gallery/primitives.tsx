@@ -908,7 +908,7 @@ export function ScrollFab() {
 
 // === AI / rich content =====================================================
 
-export function SourceList() {
+export function SourceList({ focusIndex }: { focusIndex?: number } = {}) {
   const t = useTokens();
   const layout = useLayout();
   const startY = 48;
@@ -919,8 +919,12 @@ export function SourceList() {
       <rect x={32} y={16} width={88} height={20} rx={6} fill={t.accent} />
       {[1, 2, 3].map((n, i) => {
         const y = startY + 16 + i * (cardH + gap);
+        // When a source is focused, accent-stroke that card and dim the rest —
+        // the same focus pattern the other gallery primitives use.
+        const isFocused = focusIndex === i;
+        const dimmed = focusIndex !== undefined && !isFocused;
         return (
-          <g key={n}>
+          <g key={n} opacity={dimmed ? 0.4 : 1}>
             <rect
               x={32}
               y={y}
@@ -928,7 +932,8 @@ export function SourceList() {
               height={cardH}
               rx={12}
               fill={t.surface}
-              stroke={t.accentLight}
+              stroke={isFocused ? t.accent : t.accentLight}
+              strokeWidth={isFocused ? 2 : 1}
             />
             <circle
               cx={48 + 16}

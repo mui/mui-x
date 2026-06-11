@@ -73,8 +73,8 @@ export default function ChatMessageAvatarPlayground() {
   return (
     <PlaygroundCard
       title="ChatMessageAvatar"
-      description="Author avatar slot — falls back to initials when no avatarUrl is set."
-      previewMinHeight={180}
+      description="Author avatar slot—falls back to initials when no avatarUrl is set."
+      previewMinHeight={120}
       classCustomizations={classesCustomizations.customizations}
       onClassesReset={classesCustomizations.reset}
       controls={
@@ -102,7 +102,7 @@ export default function ChatMessageAvatarPlayground() {
           activeConversationId={conversation.id}
         >
           <ChatChrome variant={variant} density="standard">
-            <Box sx={{ width: '100%', ...(avatarSx as object) }}>
+            <Box sx={{ width: '100%', ...avatarSx }}>
               <ChatMessageGroup messageId={message.id}>
                 <ChatMessageComponent messageId={message.id}>
                   <ChatMessageAvatar />

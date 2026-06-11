@@ -168,13 +168,12 @@ function RealtimeSyncInner({ emit }: { emit: (event: ChatRealtimeEvent) => void 
         <Stack
           direction="row"
           spacing={1}
-          alignItems="center"
-          justifyContent="space-between"
+          sx={{ alignItems: 'center', justifyContent: 'space-between' }}
         >
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
             {support?.title ?? 'Support'}
           </Typography>
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <Chip
               size="small"
               color={onlineNames === 'nobody' ? 'default' : 'success'}

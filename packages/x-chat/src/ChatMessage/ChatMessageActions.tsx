@@ -270,6 +270,7 @@ ChatMessageActions.propTypes = {
         PropTypes.shape({
           toolInvocation: PropTypes.shape({
             approval: PropTypes.object,
+            approvalId: PropTypes.string,
             callProviderMetadata: PropTypes.object,
             errorText: PropTypes.string,
             input: PropTypes.any,
@@ -294,6 +295,7 @@ ChatMessageActions.propTypes = {
         PropTypes.shape({
           toolInvocation: PropTypes.shape({
             approval: PropTypes.object,
+            approvalId: PropTypes.string,
             callProviderMetadata: PropTypes.object,
             errorText: PropTypes.string,
             input: PropTypes.any,

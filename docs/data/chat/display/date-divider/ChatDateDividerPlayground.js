@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { ChatDateDivider } from '@mui/x-chat';
+import { ChatDateDivider, ChatMessage } from '@mui/x-chat';
 
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
@@ -74,6 +74,16 @@ const CLASS_DEFS = [
     selector: '.MuiChatMessage-dateDivider',
     description: 'The date divider element.',
   },
+  {
+    name: 'dateDividerLine',
+    selector: '.MuiChatMessage-dateDividerLine',
+    description: 'The horizontal rule on each side of the label.',
+  },
+  {
+    name: 'dateDividerLabel',
+    selector: '.MuiChatMessage-dateDividerLabel',
+    description: 'The formatted day label.',
+  },
 ];
 
 export default function ChatDateDividerPlayground() {
@@ -102,7 +112,7 @@ export default function ChatDateDividerPlayground() {
     <PlaygroundCard
       title="ChatDateDivider"
       description="Day separator between message clusters — uses caption + divider tokens."
-      previewMinHeight={140}
+      previewMinHeight={220}
       classCustomizations={classesCustomizations.customizations}
       onClassesReset={classesCustomizations.reset}
       controls={
@@ -135,7 +145,16 @@ export default function ChatDateDividerPlayground() {
           messages={messages}
           activeConversationId={conversation.id}
         >
-          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          <Box
+            sx={{
+              width: '100%',
+              maxWidth: 420,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+            }}
+          >
+            <ChatMessage messageId="date-prior" />
             <ChatDateDivider
               messageId="date-target"
               index={1}
@@ -143,6 +162,7 @@ export default function ChatDateDividerPlayground() {
               formatDate={FORMATTERS[format]}
               sx={dividerSx}
             />
+            <ChatMessage messageId="date-target" />
           </Box>
         </ScopedChat>
       }

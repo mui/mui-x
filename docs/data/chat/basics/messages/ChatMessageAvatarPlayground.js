@@ -61,8 +61,8 @@ export default function ChatMessageAvatarPlayground() {
   return (
     <PlaygroundCard
       title="ChatMessageAvatar"
-      description="Author avatar slot — falls back to initials when no avatarUrl is set."
-      previewMinHeight={180}
+      description="Author avatar slot—falls back to initials when no avatarUrl is set."
+      previewMinHeight={120}
       classCustomizations={classesCustomizations.customizations}
       onClassesReset={classesCustomizations.reset}
       controls={

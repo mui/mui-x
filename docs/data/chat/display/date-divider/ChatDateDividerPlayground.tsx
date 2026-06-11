@@ -1,7 +1,10 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { ChatDateDivider } from '@mui/x-chat';
-import type { ChatConversation, ChatMessage } from '@mui/x-chat/headless';
+import { ChatDateDivider, ChatMessage } from '@mui/x-chat';
+import type {
+  ChatConversation,
+  ChatMessage as ChatMessageType,
+} from '@mui/x-chat/headless';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
 import {
@@ -27,7 +30,7 @@ type FormatChoice = 'default' | 'iso' | 'relative';
 
 const NOW = new Date('2026-05-03T09:00:00.000Z');
 
-function makeMessage(id: string, day: Day): ChatMessage {
+function makeMessage(id: string, day: Day): ChatMessageType {
   const created = new Date(NOW);
   if (day === 'yesterday') {
     created.setUTCDate(NOW.getUTCDate() - 1);
@@ -78,13 +81,23 @@ const FORMATTERS: Record<
   relative: relativeFormat,
 };
 
-type ClassKey = 'dateDivider';
+type ClassKey = 'dateDivider' | 'dateDividerLine' | 'dateDividerLabel';
 
 const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
   {
     name: 'dateDivider',
     selector: '.MuiChatMessage-dateDivider',
     description: 'The date divider element.',
+  },
+  {
+    name: 'dateDividerLine',
+    selector: '.MuiChatMessage-dateDividerLine',
+    description: 'The horizontal rule on each side of the label.',
+  },
+  {
+    name: 'dateDividerLabel',
+    selector: '.MuiChatMessage-dateDividerLabel',
+    description: 'The formatted day label.',
   },
 ];
 
@@ -96,7 +109,7 @@ export default function ChatDateDividerPlayground() {
   // ChatDateDivider only renders at a calendar boundary, so we seed a prior
   // message with an old `createdAt` to guarantee the boundary regardless of
   // the selected `day`.
-  const messages = React.useMemo<ChatMessage[]>(() => {
+  const messages = React.useMemo<ChatMessageType[]>(() => {
     const prior = makeMessage('date-prior', 'lastYear');
     // For `lastYear`, pull the prior even further back so the boundary still triggers.
     if (day === 'lastYear') {
@@ -114,7 +127,7 @@ export default function ChatDateDividerPlayground() {
     <PlaygroundCard
       title="ChatDateDivider"
       description="Day separator between message clusters — uses caption + divider tokens."
-      previewMinHeight={140}
+      previewMinHeight={220}
       classCustomizations={classesCustomizations.customizations}
       onClassesReset={classesCustomizations.reset}
       controls={
@@ -147,7 +160,16 @@ export default function ChatDateDividerPlayground() {
           messages={messages}
           activeConversationId={conversation.id}
         >
-          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          <Box
+            sx={{
+              width: '100%',
+              maxWidth: 420,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+            }}
+          >
+            <ChatMessage messageId="date-prior" />
             <ChatDateDivider
               messageId="date-target"
               index={1}
@@ -155,6 +177,7 @@ export default function ChatDateDividerPlayground() {
               formatDate={FORMATTERS[format]}
               sx={dividerSx as any}
             />
+            <ChatMessage messageId="date-target" />
           </Box>
         </ScopedChat>
       }

@@ -51,15 +51,19 @@ It returns both the public state fields and every runtime action in a single obj
 
 ### Actions
 
-| Method                    | Signature                                                   | Description                 |
-| :------------------------ | :---------------------------------------------------------- | :-------------------------- |
-| `sendMessage`             | `(input: UseChatSendMessageInput) => Promise<void>`         | Send a user message         |
-| `stopStreaming`           | `() => void`                                                | Abort the active stream     |
-| `loadMoreHistory`         | `() => Promise<void>`                                       | Load older messages         |
-| `setActiveConversation`   | `(id: string \| undefined) => Promise<void>`                | Switch conversations        |
-| `retry`                   | `(messageId: string) => Promise<void>`                      | Retry a failed message      |
-| `setError`                | `(error: ChatError \| null) => void`                        | Update the error state      |
-| `addToolApprovalResponse` | `(input: ChatAddToolApproveResponseInput) => Promise<void>` | Approve or deny a tool call |
+| Method                    | Signature                                                   | Description                           |
+| :------------------------ | :---------------------------------------------------------- | :------------------------------------ |
+| `sendMessage`             | `(input: UseChatSendMessageInput) => Promise<void>`         | Send a user message                   |
+| `stopStreaming`           | `() => void`                                                | Abort the active stream               |
+| `loadMoreHistory`         | `() => Promise<void>`                                       | Load older messages                   |
+| `setActiveConversation`   | `(id: string \| undefined) => Promise<void>`                | Switch conversations                  |
+| `retry`                   | `(messageId: string) => Promise<void>`                      | Retry a failed message                |
+| `regenerate`              | `(messageId: string) => Promise<void>`                      | Re-run an assistant response in place |
+| `setError`                | `(error: ChatError \| null) => void`                        | Update the error state                |
+| `addToolApprovalResponse` | `(input: ChatAddToolApproveResponseInput) => Promise<void>` | Approve or deny a tool call           |
+| `reloadConversations`     | `() => Promise<void>`                                       | Planned API stub, not yet implemented |
+| `reloadMessages`          | `(conversationId?: string) => Promise<void>`                | Planned API stub, not yet implemented |
+| `reconnectRealtime`       | `() => Promise<void>`                                       | Planned API stub, not yet implemented |
 
 ### `UseChatSendMessageInput`
 

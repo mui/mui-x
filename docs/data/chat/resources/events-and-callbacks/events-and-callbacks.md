@@ -24,6 +24,12 @@ Use them for logging, analytics, side effects, and error handling without modify
 | `onData`     | When a `data-*` chunk arrives during streaming | Transient data, app-level side effects |
 | `onError`    | When any runtime error surfaces                | Error reporting, toast notifications   |
 
+`onFinish`, `onToolCall`, and `onData` may return a promise — the runtime awaits them, so keep long-running work out of the hot path. `onError` is fire-and-forget.
+
+The following demo wires all four callbacks to an event log so you can observe their relative timing:
+
+{{"demo": "CallbackEventLog.js"}}
+
 ## Observing stream completion
 
 The `onFinish` callback fires when a stream finishes, aborts, disconnects, or errors.
@@ -65,13 +71,15 @@ The `onFinish` callback fires in four scenarios:
 | :--------- | :-------- | :------------- | :-------- | :---------------------------- |
 | Success    | `false`   | `false`        | `false`   | Stream completed normally     |
 | User abort | `true`    | `false`        | `false`   | User clicked the stop button  |
-| Disconnect | `false`   | `true`         | `false`   | Connection dropped mid-stream |
+| Disconnect | `false`   | `true`         | `true`    | Connection dropped mid-stream |
 | Error      | `false`   | `false`        | `true`    | Stream ended with an error    |
+
+A disconnect is also reported as an error: the message is marked as errored and `onError` fires with `code: 'STREAM_ERROR'`.
 
 ## Observing tool invocations
 
 The `onToolCall` callback fires when a tool invocation state changes during streaming.
-Use it for side effects outside the message list—logging, analytics, or triggering external workflows.
+Use it for side effects outside the message list: logging, analytics, or triggering external workflows.
 
 ```ts
 interface ChatOnToolCallPayload {
@@ -86,7 +94,7 @@ interface ChatOnToolCallPayload {
     console.log(`Tool ${toolCall.toolName}: ${toolCall.state}`);
 
     if (toolCall.state === 'output-available') {
-      // Tool execution completed—trigger follow-up
+      // Tool execution completed, trigger follow-up
       analytics.track('tool_executed', { tool: toolCall.toolName });
     }
   }}
@@ -111,25 +119,35 @@ The `onData` callback fires when a `data-*` chunk arrives during streaming.
 Use it for transient data that should trigger app-level side effects without being persisted in the message.
 
 ```ts
-type ChatOnData = (part: ChatDataMessagePart) => void;
+type ChatOnData = (part: ChatDataMessagePart) => void | Promise<void>;
 ```
 
 ```tsx
 <ChatBox
   adapter={adapter}
   onData={(part) => {
-    if (part.type === 'progress') {
+    if (part.type === 'data-progress') {
       setProgressPercent(part.data.percent);
     }
   }}
 />
 ```
 
-Use `onData` for backend-driven UI updates that are transient—progress bars, status indicators, or notifications that shouldn't be stored as message parts.
+Register the `data-progress` payload in `ChatDataPartMap` so `part.data` is typed — see [Type augmentation](/x/react-chat/core/types/):
+
+```ts
+declare module '@mui/x-chat/types' {
+  interface ChatDataPartMap {
+    'data-progress': { percent: number };
+  }
+}
+```
+
+Use `onData` for backend-driven UI updates that are transient: progress bars, status indicators, or notifications that shouldn't be stored as message parts.
 
 ## Handling errors
 
-The `onError` callback fires when any runtime error surfaces—from adapter methods, stream processing, or rendering.
+The `onError` callback fires when any runtime error surfaces, whether from adapter methods, stream processing, or rendering.
 
 ```ts
 type ChatOnError = (error: ChatError) => void;
@@ -146,7 +164,12 @@ type ChatOnError = (error: ChatError) => void;
 
     // Report to error tracking
     Sentry.captureException(new Error(error.message), {
-      tags: { source: error.source },
+      tags: { code: error.code, source: error.source },
+      extra: {
+        recoverable: error.recoverable,
+        retryable: error.retryable,
+        ...error.details,
+      },
     });
   }}
 />
@@ -159,7 +182,8 @@ type ChatErrorCode =
   | 'HISTORY_ERROR'
   | 'SEND_ERROR'
   | 'STREAM_ERROR'
-  | 'REALTIME_ERROR';
+  | 'REALTIME_ERROR'
+  | 'REGENERATE_ERROR';
 
 interface ChatError {
   code: ChatErrorCode; // machine-readable error code
@@ -185,13 +209,13 @@ type ChatErrorSource = 'send' | 'stream' | 'history' | 'render' | 'adapter';
 
 ## Reading errors in components
 
-Errors also surface through hooks, so you can display them in custom UI:
+Prefer the hooks below over `onError` when you want to render error state in the UI rather than fire a side effect. Errors also surface through hooks, so you can display them in custom UI:
 
 ```tsx
 // Via useChat()
 const { error } = useChat();
 
-// Via useChatStatus()—lighter weight, no message subscriptions
+// Via useChatStatus(), lighter weight, no message subscriptions
 const { error } = useChatStatus();
 ```
 
@@ -221,8 +245,14 @@ All callbacks are registered as props on `ChatBox` or `ChatProvider`:
 </ChatProvider>
 ```
 
+Callback identity matters: `ChatProvider` memoizes its runtime context on these props, so inline arrow functions invalidate it on every render and re-render all chat components. Declare handlers outside the component or wrap them in `useCallback`.
+
+:::warning
+Exceptions thrown from `onFinish`, `onToolCall`, or `onData` (including rejected promises) are not swallowed: they fail the in-flight send — the message is marked as errored and `onError` receives a runtime error. Wrap risky side effects in `try`/`catch` if they shouldn't abort the stream.
+:::
+
 ## See also
 
 - [Adapters](/x/react-chat/backend/adapters/) for the adapter interface that produces these events.
 - [Controlled state](/x/react-chat/backend/controlled-state/) for the full `ChatProvider` props reference.
-- [Hooks reference—`useChatStatus`](/x/react-chat/resources/hooks/#usechatstatus) for reading error state in components.
+- [Hooks reference: `useChatStatus`](/x/react-chat/resources/hooks/#usechatstatus) for reading error state in components.

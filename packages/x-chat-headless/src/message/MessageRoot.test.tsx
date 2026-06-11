@@ -898,6 +898,89 @@ describe('ToolPart', () => {
     expect(denyButton).to.have.property('disabled', false);
   });
 
+  it('responds with the approvalId when the invocation carries one', async () => {
+    const addToolApprovalResponse = vi.fn(async () => {});
+    const approvalMessage: ChatMessage = {
+      id: 't10',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'dynamic-tool',
+          toolInvocation: {
+            toolCallId: 'tc10',
+            toolName: 'delete-files',
+            state: 'approval-requested',
+            input: { path: '/tmp/cache' },
+            approvalId: 'approval-10',
+          },
+        },
+      ],
+    };
+
+    render(
+      <ChatRoot
+        adapter={{ ...createAdapter(), addToolApprovalResponse }}
+        initialMessages={[approvalMessage]}
+      >
+        <MessageRoot messageId="t10">
+          <MessageContent />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    const approveButton = screen.getByRole('button', { name: 'Approve' });
+
+    await act(async () => {
+      approveButton.click();
+    });
+
+    expect(addToolApprovalResponse).toHaveBeenCalledWith({
+      id: 'approval-10',
+      approved: true,
+    });
+  });
+
+  it('falls back to the toolCallId when no approvalId is set', async () => {
+    const addToolApprovalResponse = vi.fn(async () => {});
+    const approvalMessage: ChatMessage = {
+      id: 't11',
+      role: 'assistant',
+      parts: [
+        {
+          type: 'dynamic-tool',
+          toolInvocation: {
+            toolCallId: 'tc11',
+            toolName: 'delete-files',
+            state: 'approval-requested',
+            input: { path: '/tmp/cache' },
+          },
+        },
+      ],
+    };
+
+    render(
+      <ChatRoot
+        adapter={{ ...createAdapter(), addToolApprovalResponse }}
+        initialMessages={[approvalMessage]}
+      >
+        <MessageRoot messageId="t11">
+          <MessageContent />
+        </MessageRoot>
+      </ChatRoot>,
+    );
+
+    const denyButton = screen.getByRole('button', { name: 'Deny' });
+
+    await act(async () => {
+      denyButton.click();
+    });
+
+    expect(addToolApprovalResponse).toHaveBeenCalledWith({
+      id: 'tc11',
+      approved: false,
+    });
+  });
+
   it('createToolPartRenderer produces a valid renderer function', () => {
     // eslint-disable-next-line testing-library/render-result-naming-convention -- not a render result
     const partFactory = createToolPartRenderer({ className: 'custom-tool' });

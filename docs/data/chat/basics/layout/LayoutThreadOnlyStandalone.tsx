@@ -85,7 +85,7 @@ export default function LayoutThreadOnlyStandalone() {
             <ChatComposer>
               <ChatComposerTextArea
                 aria-label="Message"
-                placeholder="Ask the assistant a question..."
+                placeholder="Type a message…"
               />
               <ChatComposerToolbar>
                 <ChatComposerAttachButton>

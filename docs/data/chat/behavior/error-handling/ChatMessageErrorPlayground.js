@@ -59,6 +59,8 @@ export default function ChatMessageErrorPlayground() {
   // but we can subscribe to the retry button click via the global event bus on
   // the store. For the demo we attach a global listener that ticks the
   // "last retry" indicator below.
+  // In a real app, call useChat().retry(messageId) instead — this event bus
+  // exists only so the demo caption can observe the click.
   React.useEffect(() => {
     function onRetry() {
       setLastRetryAt(new Date().toLocaleTimeString());
@@ -141,6 +143,11 @@ export default function ChatMessageErrorPlayground() {
             }}
           >
             <ChatMessage messageId={message.id} />
+            <Typography variant="caption" color="text.secondary" sx={{ pl: 1 }}>
+              {enabled
+                ? `ChatError — code: ${code} · source: send · retryable: ${retryable}`
+                : 'Error disabled'}
+            </Typography>
             <Typography variant="caption" color="text.secondary" sx={{ pl: 1 }}>
               {lastRetryAt
                 ? `Last retry click: ${lastRetryAt}`

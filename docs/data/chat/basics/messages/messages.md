@@ -3,7 +3,7 @@ productId: x-chat
 title: Messages
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatMessageList, ChatMessageGroup
+components: ChatMessageList, ChatMessageGroup, ChatMessageAvatar, ChatMessageAuthorLabel, ChatMessageContent, ChatMessageMeta, ChatMessageInlineMeta
 ---
 
 # Chat - Messages
@@ -18,13 +18,13 @@ Toggle role, status, density, and grouping on a single `ChatMessage` bubble:
 
 {{"demo": "ChatMessagePlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Message groups
+### Group playground
 
 `ChatMessageGroup` collapses consecutive messages from the same author into a single visual cluster:
 
 {{"demo": "ChatMessageGroupPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Message list
+### List playground
 
 `ChatMessageList` virtualizes rendering, manages auto-scroll, and can insert opt-in dividers between days:
 
@@ -35,23 +35,23 @@ Toggle role, status, density, and grouping on a single `ChatMessage` bubble:
 Every message in the chat system is represented by the `ChatMessage` interface:
 
 ```tsx
-import type { ChatMessage } from '@mui/x-chat';
+import type { ChatMessage } from '@mui/x-chat/headless';
 ```
 
 A `ChatMessage` has the following shape:
 
-| Field            | Type                  | Description                                                                                        |
-| :--------------- | :-------------------- | :------------------------------------------------------------------------------------------------- |
-| `id`             | `string`              | Unique identifier for the message                                                                  |
-| `role`           | `ChatRole`            | `'user'`, `'assistant'`, or `'system'`                                                             |
-| `parts`          | `ChatMessagePart[]`   | Content parts that make up the message body (text, files, tools, etc.)                             |
-| `status`         | `ChatMessageStatus`   | Delivery lifecycle: `'pending'`, `'sending'`, `'streaming'`, `'sent'`, `'error'`, or `'cancelled'` |
-| `author`         | `ChatUser`            | The author payload used for inline identity data and member matching                               |
-| `createdAt`      | `string`              | ISO 8601 timestamp when the message was created                                                    |
-| `updatedAt`      | `string`              | ISO 8601 timestamp when the message was last updated                                               |
-| `editedAt`       | `string`              | ISO 8601 timestamp if the message was edited                                                       |
-| `conversationId` | `string`              | The conversation this message belongs to                                                           |
-| `metadata`       | `ChatMessageMetadata` | Extensible metadata object for custom data                                                         |
+| Field            | Type                  | Description                                                                                                  |
+| :--------------- | :-------------------- | :----------------------------------------------------------------------------------------------------------- |
+| `id`             | `string`              | Unique identifier for the message                                                                            |
+| `role`           | `ChatRole`            | `'user'`, `'assistant'`, or `'system'`                                                                       |
+| `parts`          | `ChatMessagePart[]`   | Content parts that make up the message body (text, files, tools, etc.)                                       |
+| `status`         | `ChatMessageStatus`   | Delivery lifecycle: `'pending'`, `'sending'`, `'streaming'`, `'sent'`, `'read'`, `'error'`, or `'cancelled'` |
+| `author`         | `ChatUser`            | The author payload used for inline identity data and member matching                                         |
+| `createdAt`      | `string`              | ISO 8601 timestamp when the message was created                                                              |
+| `updatedAt`      | `string`              | ISO 8601 timestamp when the message was last updated                                                         |
+| `editedAt`       | `string`              | ISO 8601 timestamp if the message was edited                                                                 |
+| `conversationId` | `string`              | The conversation this message belongs to                                                                     |
+| `metadata`       | `ChatMessageMetadata` | Extensible metadata object for custom data                                                                   |
 
 `author.id` is the canonical identity key for message rendering.
 If you pass `members`, `currentUser`, or active conversation `participants`, chat components use that id to enrich missing display names and avatars at render time.
@@ -80,7 +80,7 @@ This part-based model means a single message can contain mixed content—for exa
 Messages progress through a status lifecycle:
 
 ```text
-pending → sending → streaming → sent
+pending → sending → streaming → sent → read
                  \→ error
                  \→ cancelled
 ```
@@ -89,6 +89,7 @@ pending → sending → streaming → sent
 - **sending**—the message has been dispatched; waiting for the first response chunk.
 - **streaming**—the assistant is actively generating tokens.
 - **sent**—the response is complete.
+- **read**—the recipient has seen the message. The runtime never infers this state; supply it from your data source or adapter. The meta slots render it as a double checkmark.
 - **error**—the adapter encountered an error.
 - **cancelled**—the user or application cancelled the response.
 
@@ -101,6 +102,7 @@ import { ChatMessageList, ChatMessageGroup, ChatMessage } from '@mui/x-chat';
 :::info
 When using `ChatBox`, the message list is already included as a built-in part of the composition.
 You only need to import these components directly when building a custom layout.
+`ChatMessage` is a compound row component—its rendering surface is configured through the slot components below (Avatar, Author label, Content, Meta, Inline meta), each with its own API page.
 :::
 
 ## Component anatomy
@@ -148,16 +150,33 @@ The message list automatically scrolls to the bottom when the user sends a new m
 
 See [Scrolling](/x/react-chat/behavior/scrolling/) for buffer configuration and scroll-to-bottom affordance.
 
+## Accessibility
+
+The message list is a single Tab stop: a roving tabindex over the `role="article"` messages keeps only one message in the tab order at a time, so tabbing through the page never walks every message.
+
+- <kbd>Arrow Up</kbd> / <kbd>Arrow Down</kbd> and <kbd>Home</kbd> / <kbd>End</kbd> move between messages.
+- <kbd>Enter</kbd> drills into the focused message's links, copy buttons, and actions; <kbd>Escape</kbd> returns to the message.
+- The scroller is a `role="log"` polite live region, and a visually hidden `role="status"` region announces streaming transitions ("Assistant is responding" / "Response complete") exactly once each.
+- The thread, composer, and conversation list are exposed as labeled landmarks.
+
+{{"demo": "../../material/message-list/KeyboardNavigation.js", "defaultCodeOpen": false, "bg": "inline"}}
+
+Set `enableRovingFocus={false}` on the message list to opt out, and use the `useMessageContentTabIndex()` hook from `@mui/x-chat/headless` to let custom interactive content participate.
+
+See the complete model—including the drill-in lifecycle, per-list focus memory, and locale keys—on the [Accessibility](/x/react-chat/accessibility/) page and in [Message list—Accessibility](/x/react-chat/material/message-list/#accessibility).
+
 ## Standalone usage
 
-When building a custom layout outside of `ChatBox`, render `ChatMessageList` directly inside `ChatProvider`.
-The demo below isolates the message surface with only the provider, a bounded frame, and the message list composition:
+When building a custom layout outside of `ChatBox`, render `ChatMessageList` inside `ChatConversation` within a `ChatProvider`.
+The demo below isolates the message surface with only the provider, an active conversation scope, a bounded frame, and the message list composition:
 
 {{"demo": "StandaloneMessages.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ### Message slots
 
-Each slot inside the `ChatMessage` row has its own playground — iterate on a single surface at a time.
+Each slot inside the `ChatMessage` row has its own playground—iterate on a single surface at a time.
+
+Jump to: [Avatar](#avatar) · [Author label](#author-label) · [Content](#content) · [Meta](#meta) · [Inline meta](#inline-meta)
 
 #### Avatar
 

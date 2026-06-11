@@ -2,7 +2,7 @@
 productId: x-chat
 title: Chat - Headless messages
 packageName: '@mui/x-chat/headless'
-components: MessageRoot, MessageAvatar, MessageAuthorLabel, MessageContent, MessageMeta, MessageActions, MessageGroup, MessageListDateDivider
+components: MessageRoot, MessageAvatar, MessageAuthorLabel, MessageContent, MessageMeta, MessageActions, MessageError, MessageGroup, MessageListDateDivider
 githubLabel: 'scope: chat'
 ---
 

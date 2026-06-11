@@ -53,7 +53,7 @@ export default function ChatConfirmationPlayground() {
   return (
     <PlaygroundCard
       title="ChatConfirmation"
-      description="Inline tool-call gating using palette.warning tokens."
+      description="A confirmation card for gating a tool call before it runs."
       previewMinHeight={220}
       classCustomizations={classesCustomizations.customizations}
       onClassesReset={classesCustomizations.reset}

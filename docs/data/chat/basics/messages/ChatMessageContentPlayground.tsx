@@ -73,7 +73,7 @@ export default function ChatMessageContentPlayground() {
   const text =
     content === 'markdown'
       ? `**Markdown** is rendered automatically:\n\n- bullet one\n- bullet two\n\nInline \`code\` works too.`
-      : `Plain text with no formatting — just wraps naturally.`;
+      : `Plain text with no formatting—just wraps naturally.`;
 
   const message = React.useMemo(() => makeMessage(role, 'read', text), [role, text]);
 
@@ -82,7 +82,7 @@ export default function ChatMessageContentPlayground() {
   return (
     <PlaygroundCard
       title="ChatMessageContent"
-      description="Bubble interior — handles markdown, code fences and tool/source parts."
+      description="Bubble interior—handles markdown, code fences and tool/source parts."
       previewMinHeight={220}
       span={2}
       classCustomizations={classesCustomizations.customizations}
@@ -118,7 +118,7 @@ export default function ChatMessageContentPlayground() {
           activeConversationId={conversation.id}
         >
           <ChatChrome variant={variant} density="standard">
-            <Box sx={{ width: '100%', ...(contentSx as object) }}>
+            <Box sx={{ width: '100%', ...contentSx }}>
               <ChatMessageGroup messageId={message.id}>
                 <ChatMessageComponent messageId={message.id}>
                   <ChatMessageAvatar />

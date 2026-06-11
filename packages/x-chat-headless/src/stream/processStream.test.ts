@@ -578,6 +578,7 @@ describe('processStream', () => {
           toolCallId: 'tool-1',
           toolName: 'search',
           input: { query: 'weather' },
+          approvalId: 'approval-1',
         },
         { type: 'finish', messageId: 'a1' },
       ]),
@@ -588,6 +589,7 @@ describe('processStream', () => {
     expect(toolPart.toolInvocation.toolCallId).toBe('tool-1');
     expect(toolPart.toolInvocation.toolName).toBe('search');
     expect(toolPart.toolInvocation.input).toEqual({ query: 'weather' });
+    expect(toolPart.toolInvocation.approvalId).toBe('approval-1');
     expect(toolPart.toolInvocation.state).toBe('approval-requested');
   });
 
@@ -603,6 +605,7 @@ describe('processStream', () => {
           toolCallId: 'tool-1',
           toolName: 'dynamic-search',
           input: { query: 'weather' },
+          approvalId: 'approval-1',
           dynamic: true,
         },
         { type: 'finish', messageId: 'a1' },
@@ -613,6 +616,7 @@ describe('processStream', () => {
       .parts[0] as ChatDynamicToolMessagePart<'dynamic-search'>;
     expect(toolPart.type).toBe('dynamic-tool');
     expect(toolPart.toolInvocation.toolName).toBe('dynamic-search');
+    expect(toolPart.toolInvocation.approvalId).toBe('approval-1');
     expect(toolPart.toolInvocation.state).toBe('approval-requested');
   });
 

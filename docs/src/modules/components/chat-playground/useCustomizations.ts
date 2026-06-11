@@ -1,4 +1,6 @@
 import * as React from 'react';
+import type { Theme } from '@mui/material/styles';
+import type { SystemStyleObject } from '@mui/system/styleFunctionSx';
 import type { PlaygroundClassCustomization } from './PlaygroundCard';
 import { parseSx } from './parseSx';
 
@@ -29,10 +31,10 @@ export interface UseCustomizationsResult<K extends string> {
   /**
    * Build the merged outer `sx` object for class customizations.
    * Pass a `base` to seed initial keys; the `root` entry merges flat,
-   * everything else nests under its selector. Returned as a plain
-   * record — the caller passes it directly to a component's `sx`.
+   * everything else nests under its selector. Returned as a style object
+   * — the caller passes it directly to a component's `sx`.
    */
-  toClassesSx: (base?: Record<string, unknown>) => Record<string, unknown>;
+  toClassesSx: (base?: SystemStyleObject<Theme>) => SystemStyleObject<Theme>;
 }
 
 function buildInitialValues<K extends string>(
@@ -89,7 +91,7 @@ export function useCustomizations<K extends string>(
   }, [defs]);
 
   const toClassesSx = React.useCallback(
-    (base?: Record<string, unknown>): Record<string, unknown> => {
+    (base?: SystemStyleObject<Theme>): SystemStyleObject<Theme> => {
       const out: Record<string, unknown> = { ...(base ?? {}) };
       for (const def of defs) {
         const parsed = parseSx(values[def.name]);
@@ -102,7 +104,7 @@ export function useCustomizations<K extends string>(
           out[`& ${def.selector}`] = parsed.value;
         }
       }
-      return out;
+      return out as SystemStyleObject<Theme>;
     },
     [defs, values],
   );

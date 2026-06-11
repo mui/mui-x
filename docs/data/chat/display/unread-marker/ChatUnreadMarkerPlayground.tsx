@@ -8,6 +8,7 @@ import { MessageBubble } from 'docs/src/modules/components/chat-playground/Messa
 import {
   DividerLabel,
   NumberControl,
+  TextControl,
 } from 'docs/src/modules/components/chat-playground/controls';
 import {
   useCustomizations,
@@ -37,13 +38,14 @@ const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
   {
     name: 'label',
     selector: '.MuiChatUnreadMarker-label',
-    description: 'The "New" label inside the divider.',
+    description: 'The "New messages" label inside the divider.',
   },
 ];
 
 export default function ChatUnreadMarkerPlayground() {
   const [count, setCount] = React.useState(4);
   const [boundary, setBoundary] = React.useState(2);
+  const [label, setLabel] = React.useState('');
   const classesCustomizations = useCustomizations<ClassKey>(CLASS_DEFS);
   const messages = React.useMemo(() => buildMessages(count), [count]);
   const safeBoundary = Math.min(boundary, count - 1);
@@ -89,6 +91,13 @@ export default function ChatUnreadMarkerPlayground() {
             onChange={setBoundary}
             helperText="Where the marker is rendered — drives messageId prop."
           />
+          <DividerLabel>props</DividerLabel>
+          <TextControl
+            label="label"
+            value={label}
+            onChange={setLabel}
+            helperText="Empty = locale default (New messages)."
+          />
         </React.Fragment>
       }
       preview={
@@ -101,7 +110,11 @@ export default function ChatUnreadMarkerPlayground() {
             {messages.map((message, i) => (
               <React.Fragment key={message.id}>
                 {i === safeBoundary ? (
-                  <ChatUnreadMarker messageId={message.id} sx={markerSx as any} />
+                  <ChatUnreadMarker
+                    messageId={message.id}
+                    label={label || undefined}
+                    sx={markerSx as any}
+                  />
                 ) : null}
                 <MessageBubble messageId={message.id} />
               </React.Fragment>

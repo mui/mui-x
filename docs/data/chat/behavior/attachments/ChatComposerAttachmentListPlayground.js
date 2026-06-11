@@ -22,8 +22,8 @@ const POOL = [
 
 const PROGRESS_BY_STATUS = {
   queued: 0,
-  uploading: 0.45,
-  uploaded: 1,
+  uploading: 45,
+  uploaded: 100,
   error: 0,
 };
 
@@ -92,7 +92,7 @@ export default function ChatComposerAttachmentListPlayground() {
           <ChoiceControl
             label="status"
             value={status}
-            options={['uploading', 'uploaded', 'error']}
+            options={['queued', 'uploading', 'uploaded', 'error']}
             onChange={setStatus}
           />
         </React.Fragment>

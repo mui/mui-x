@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   Card,
   DateDivider,
-  ScrollFab,
   SkeletonRows,
   SuggestionCards,
   ThumbCanvas,
@@ -107,5 +106,3 @@ export function ChatDateDividerThumb() {
     </ThumbCanvas>
   );
 }
-
-void ScrollFab;

@@ -15,16 +15,11 @@ export function ChatMessageGroupThumb() {
     <ThumbCanvas>
       <Card>
         <Messages y={64} gap={0}>
-          <Group h={300} />
+          <MessageGroup count={3} />
         </Messages>
       </Card>
     </ThumbCanvas>
   );
-}
-
-function Group({ h }: { h?: number }) {
-  void h;
-  return <MessageGroup count={3} />;
 }
 
 export function ChatMessageThumb() {

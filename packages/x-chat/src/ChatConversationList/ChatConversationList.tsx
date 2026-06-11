@@ -295,7 +295,7 @@ const ChatConversationListUnreadBadgeRoot = styled('div', {
 }));
 
 // ---------------------------------------------------------------------------
-// Item actions — visible on hover in compact mode, always available in default.
+// Item actions — only rendered in the compact variant, revealed on hover/focus.
 // ---------------------------------------------------------------------------
 
 const ChatConversationListItemActionsRoot = styled('div', {

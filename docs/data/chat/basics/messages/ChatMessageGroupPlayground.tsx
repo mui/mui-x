@@ -33,10 +33,10 @@ const conversation: ChatConversation = {
 
 const sampleSnippets = [
   'Three quick notes on theming.',
-  'First — the avatar only renders for the first message in a group.',
-  'Second — bubbles tighten vertically when grouped.',
-  'Third — the meta line stays attached to the last bubble.',
-  'Bonus — try toggling the variant on the right.',
+  'First—the avatar only renders for the first message in a group.',
+  'Second—bubbles tighten vertically when grouped.',
+  'Third—the meta line stays attached to the last bubble.',
+  'Bonus—try toggling the variant on the right.',
 ];
 
 const DEFAULTS = {

@@ -7,6 +7,7 @@ import type {
   ChatAddToolApproveResponseInput,
   ChatMessage,
   ChatOnData,
+  ChatOnError,
   ChatOnFinish,
   ChatOnToolCall,
 } from '../../types';
@@ -44,7 +45,7 @@ interface UseChatControllerParameters<Cursor = string> {
   onToolCall?: ChatOnToolCall;
   onFinish?: ChatOnFinish;
   onData?: ChatOnData;
-  onError?: (error: ChatError) => void;
+  onError?: ChatOnError;
   streamFlushInterval?: number;
   features?: ChatFeatures;
 }
@@ -156,7 +157,7 @@ export function useChatController<Cursor = string>({
           message.parts.some(
             (part) =>
               (part.type === 'tool' || part.type === 'dynamic-tool') &&
-              part.toolInvocation.toolCallId === id,
+              (part.toolInvocation.toolCallId === id || part.toolInvocation.approvalId === id),
           ),
       );
 
@@ -172,7 +173,7 @@ export function useChatController<Cursor = string>({
           parts: assistantMessage.parts.map((part) => {
             if (
               (part.type !== 'tool' && part.type !== 'dynamic-tool') ||
-              part.toolInvocation.toolCallId !== id
+              (part.toolInvocation.toolCallId !== id && part.toolInvocation.approvalId !== id)
             ) {
               return part;
             }
@@ -232,10 +233,7 @@ export function useChatController<Cursor = string>({
     handleActiveConversationChange,
     syncTypingSignal,
     disposeTyping,
-  } = React.useMemo(
-    () => createTypingActions({ store: storeUnknown, runtimeRef }),
-    [storeUnknown],
-  );
+  } = React.useMemo(() => createTypingActions({ store: storeUnknown, runtimeRef }), [storeUnknown]);
 
   React.useEffect(() => {
     let isDisposed = false;

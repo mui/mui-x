@@ -2,7 +2,13 @@ import * as React from 'react';
 import { ChatBoxThumb } from './ChatBoxThumb';
 import { ChatConversationThumb } from './ChatConversationThumb';
 import { ChatConversationListThumb, ChatMessageListThumb } from './LayoutThumbs';
-import { ChatConversationHeaderThumb } from './HeaderThumbs';
+import {
+  ChatConversationHeaderActionsThumb,
+  ChatConversationHeaderInfoThumb,
+  ChatConversationHeaderThumb,
+  ChatConversationSubtitleThumb,
+  ChatConversationTitleThumb,
+} from './HeaderThumbs';
 import {
   ChatMessageActionsThumb,
   ChatMessageAuthorLabelThumb,
@@ -17,7 +23,12 @@ import {
 import {
   ChatComposerAttachButtonThumb,
   ChatComposerAttachmentListThumb,
+  ChatComposerHelperTextThumb,
+  ChatComposerLabelThumb,
+  ChatComposerSendButtonThumb,
+  ChatComposerTextAreaThumb,
   ChatComposerThumb,
+  ChatComposerToolbarThumb,
 } from './ComposerThumbs';
 import {
   ChatDateDividerThumb,
@@ -27,7 +38,12 @@ import {
   ChatTypingIndicatorThumb,
   ChatUnreadMarkerThumb,
 } from './StateThumbs';
-import { ChatCodeBlockThumb, ChatConfirmationThumb, ChatMessageSourcesThumb } from './AiThumbs';
+import {
+  ChatCodeBlockThumb,
+  ChatConfirmationThumb,
+  ChatMessageSourceThumb,
+  ChatMessageSourcesThumb,
+} from './AiThumbs';
 
 export type ChatGallerySectionId =
   | 'full-surfaces'
@@ -89,6 +105,38 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     sectionId: 'layout-and-navigation',
     href: '/x/react-chat/multi-conversation/conversation-header/',
     Thumbnail: ChatConversationHeaderThumb,
+  },
+  {
+    id: 'chat-conversation-header-info',
+    name: 'ChatConversationHeaderInfo',
+    status: 'slot',
+    sectionId: 'layout-and-navigation',
+    href: '/x/react-chat/multi-conversation/conversation-header/',
+    Thumbnail: ChatConversationHeaderInfoThumb,
+  },
+  {
+    id: 'chat-conversation-title',
+    name: 'ChatConversationTitle',
+    status: 'slot',
+    sectionId: 'layout-and-navigation',
+    href: '/x/react-chat/multi-conversation/conversation-header/',
+    Thumbnail: ChatConversationTitleThumb,
+  },
+  {
+    id: 'chat-conversation-subtitle',
+    name: 'ChatConversationSubtitle',
+    status: 'slot',
+    sectionId: 'layout-and-navigation',
+    href: '/x/react-chat/multi-conversation/conversation-header/',
+    Thumbnail: ChatConversationSubtitleThumb,
+  },
+  {
+    id: 'chat-conversation-header-actions',
+    name: 'ChatConversationHeaderActions',
+    status: 'slot',
+    sectionId: 'layout-and-navigation',
+    href: '/x/react-chat/multi-conversation/conversation-header/',
+    Thumbnail: ChatConversationHeaderActionsThumb,
   },
 
   // === Messages ===
@@ -183,6 +231,30 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     Thumbnail: ChatComposerThumb,
   },
   {
+    id: 'chat-composer-label',
+    name: 'ChatComposerLabel',
+    status: 'slot',
+    sectionId: 'composer',
+    href: '/x/react-chat/basics/composer/',
+    Thumbnail: ChatComposerLabelThumb,
+  },
+  {
+    id: 'chat-composer-text-area',
+    name: 'ChatComposerTextArea',
+    status: 'slot',
+    sectionId: 'composer',
+    href: '/x/react-chat/basics/composer/',
+    Thumbnail: ChatComposerTextAreaThumb,
+  },
+  {
+    id: 'chat-composer-toolbar',
+    name: 'ChatComposerToolbar',
+    status: 'slot',
+    sectionId: 'composer',
+    href: '/x/react-chat/basics/composer/',
+    Thumbnail: ChatComposerToolbarThumb,
+  },
+  {
     id: 'chat-composer-attach-button',
     name: 'ChatComposerAttachButton',
     status: 'slot',
@@ -197,6 +269,22 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     sectionId: 'composer',
     href: '/x/react-chat/behavior/attachments/',
     Thumbnail: ChatComposerAttachmentListThumb,
+  },
+  {
+    id: 'chat-composer-send-button',
+    name: 'ChatComposerSendButton',
+    status: 'slot',
+    sectionId: 'composer',
+    href: '/x/react-chat/basics/composer/',
+    Thumbnail: ChatComposerSendButtonThumb,
+  },
+  {
+    id: 'chat-composer-helper-text',
+    name: 'ChatComposerHelperText',
+    status: 'slot',
+    sectionId: 'composer',
+    href: '/x/react-chat/basics/composer/',
+    Thumbnail: ChatComposerHelperTextThumb,
   },
 
   // === States ===
@@ -257,6 +345,14 @@ export const CHAT_GALLERY: ChatGalleryEntry[] = [
     sectionId: 'ai-and-rich-content',
     href: '/x/react-chat/display/message-parts/sources-and-citations/',
     Thumbnail: ChatMessageSourcesThumb,
+  },
+  {
+    id: 'chat-message-source',
+    name: 'ChatMessageSource',
+    status: 'presentational',
+    sectionId: 'ai-and-rich-content',
+    href: '/x/react-chat/display/message-parts/sources-and-citations/',
+    Thumbnail: ChatMessageSourceThumb,
   },
   {
     id: 'chat-code-block',

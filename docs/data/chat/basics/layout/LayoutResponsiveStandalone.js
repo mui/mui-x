@@ -197,7 +197,7 @@ export default function LayoutResponsiveStandalone() {
                   <ChatComposer>
                     <ChatComposerTextArea
                       aria-label="Message"
-                      placeholder="Type a message..."
+                      placeholder="Type a message…"
                     />
                     <ChatComposerToolbar>
                       <ChatComposerAttachButton>

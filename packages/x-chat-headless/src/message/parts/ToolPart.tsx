@@ -281,7 +281,7 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
       setPendingApproval(true);
       try {
         await addToolApprovalResponse({
-          id: toolInvocation.toolCallId,
+          id: toolInvocation.approvalId ?? toolInvocation.toolCallId,
           approved,
         });
       } catch {
@@ -290,7 +290,7 @@ export const ToolPartInner = React.forwardRef(function ToolPartRenderer(
         setPendingApproval(false);
       }
     },
-    [addToolApprovalResponse, toolInvocation.toolCallId],
+    [addToolApprovalResponse, toolInvocation.approvalId, toolInvocation.toolCallId],
   );
 
   const showInput =

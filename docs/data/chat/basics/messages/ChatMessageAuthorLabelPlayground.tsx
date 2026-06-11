@@ -65,7 +65,7 @@ export default function ChatMessageAuthorLabelPlayground() {
     <PlaygroundCard
       title="ChatMessageAuthorLabel"
       description="Author display name rendered above grouped messages."
-      previewMinHeight={140}
+      previewMinHeight={96}
       classCustomizations={classesCustomizations.customizations}
       onClassesReset={classesCustomizations.reset}
       controls={
@@ -85,7 +85,7 @@ export default function ChatMessageAuthorLabelPlayground() {
           messages={[message]}
           activeConversationId={conversation.id}
         >
-          <Box sx={{ width: '100%', ...(labelSx as object) }}>
+          <Box sx={{ width: '100%', ...labelSx }}>
             <ChatMessageGroup messageId={message.id}>
               <ChatMessageComponent messageId={message.id}>
                 <ChatMessageAuthorLabel />

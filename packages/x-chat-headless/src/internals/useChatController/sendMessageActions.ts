@@ -3,7 +3,13 @@ import { warnOnce } from '@mui/x-internals/warning';
 import type { ChatAdapter } from '../../adapters';
 import { processStream, type ProcessStreamResult } from '../../stream';
 import type { ChatStore } from '../../store';
-import type { ChatMessage, ChatOnData, ChatOnFinish, ChatOnToolCall } from '../../types';
+import type {
+  ChatMessage,
+  ChatOnData,
+  ChatOnError,
+  ChatOnFinish,
+  ChatOnToolCall,
+} from '../../types';
 import type { ChatDraftAttachment } from '../../types/chat-entities';
 import type { ChatError } from '../../types/chat-error';
 import { createLocalId } from '../createLocalId';
@@ -24,7 +30,7 @@ export interface SendMessageActionsRuntimeRef<Cursor = string> {
   onToolCall?: ChatOnToolCall;
   onFinish?: ChatOnFinish;
   onData?: ChatOnData;
-  onError?: (error: ChatError) => void;
+  onError?: ChatOnError;
 }
 
 export function createSendMessageActions<Cursor = string>(params: {
@@ -357,10 +363,7 @@ export function createSendMessageActions<Cursor = string>(params: {
       );
       pruneAttachmentsByMessageIds(store.state.messageIds);
 
-      await sendExistingMessage(
-        anchorMessage,
-        attachmentsByUserMessageId.get(anchorUserMessageId),
-      );
+      await sendExistingMessage(anchorMessage, attachmentsByUserMessageId.get(anchorUserMessageId));
       return;
     }
 

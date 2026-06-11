@@ -12,16 +12,20 @@ components: ChatBox
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
+Streaming makes responses feel immediate: instead of waiting for the full completion, the user sees text appear as the model produces it.
+This page is for adapter authors — it specifies the chunk protocol the runtime consumes and how each chunk becomes UI state.
+
 The Chat component streams assistant responses token-by-token.
 The adapter's `sendMessage()` method returns a `ReadableStream<ChatMessageChunk | ChatStreamEnvelope>`.
 The runtime reads this stream, processes each chunk, and updates the normalized store so that UI components re-render incrementally.
+The demo below streams a canned response token-by-token so you can watch chunks land and tune the flush interval.
 
 ## Stream lifecycle
 
 Every stream must follow this lifecycle:
 
 1. **`start`** — Begin a new assistant message. The runtime creates the message shell and sets its status to `'streaming'`.
-2. **Content chunks** — Text, reasoning, tool, source, file, or data chunks populate the message parts.
+2. **Content chunks** — Text, reasoning, tool, source, file, data, or metadata chunks populate the message.
 3. **`finish`** or **`abort`** — Terminal chunk. `finish` marks the message as `'sent'`; `abort` marks it as `'cancelled'`.
 
 If the stream closes without a terminal chunk, the runtime treats it as a disconnect (see [Handling errors and disconnects](#handling-errors-and-disconnects) below).
@@ -100,7 +104,7 @@ Envelopes are useful for SSE-based transports where chunks might arrive out of o
 ## Controlling the flush interval
 
 The runtime batches rapid text and reasoning deltas before applying them to the store.
-The `streamFlushInterval` prop on `ChatBox` (or `ChatProvider`) controls the batching window.
+The `streamFlushInterval` prop on [`ChatBox`](/x/api/chat/chat-box/) (or `ChatProvider`) controls the batching window.
 The default is **16 ms** (approximately one frame at 60 fps).
 
 Override the default by passing a custom interval to the `streamFlushInterval` prop:
@@ -113,6 +117,8 @@ Override the default by passing a custom interval to the `streamFlushInterval` p
 Lower values mean faster visual updates but more store mutations.
 Higher values reduce mutation frequency at the cost of perceived latency.
 :::
+
+{{"demo": "ChatStreamingPlayground.js"}}
 
 ## Stopping and cancelling streams
 
@@ -130,7 +136,7 @@ async sendMessage({ message, signal }) {
 },
 ```
 
-If your backend requires explicit cancellation (for example, sending a separate cancel request), implement the optional `stop()` method on the adapter alongside the signal:
+If your backend requires explicit cancellation (for example, sending a separate cancel request), implement the optional [`stop()`](/x/react-chat/backend/adapters/#stopping-in-flight-requests) method on the adapter alongside the signal:
 
 ```tsx
 stop() {
@@ -138,7 +144,7 @@ stop() {
 },
 ```
 
-You can also stop streaming programmatically using the `useChat()` hook:
+You can also stop streaming programmatically using the [`useChat()`](/x/react-chat/resources/hooks/#usechat) hook:
 
 ```tsx
 const { stopStreaming } = useChat();
@@ -149,7 +155,7 @@ stopStreaming();
 
 ## Reconnecting to streams
 
-Implement the adapter's `reconnectToStream()` method to resume an interrupted stream—for example, when an SSE connection drops mid-response:
+Implement the adapter's [`reconnectToStream()`](/x/react-chat/backend/adapters/#resuming-an-interrupted-stream) method to resume an interrupted stream — for example, when an SSE connection drops mid-response:
 
 ```tsx
 async reconnectToStream({ conversationId, messageId, signal }) {
@@ -165,7 +171,7 @@ async reconnectToStream({ conversationId, messageId, signal }) {
 
 Return `null` if the interrupted message cannot be resumed.
 The runtime calls `reconnectToStream()` automatically after detecting a disconnected stream.
-It makes one reconnect attempt for the interrupted assistant `messageId`; returning `null` leaves the recoverable stream error in place.
+It makes one reconnect attempt for the interrupted assistant `messageId`; if you return `null`, the message stays in `'error'` status and the runtime calls `onError` with the recoverable stream error.
 
 ## Handling errors and disconnects
 
@@ -182,15 +188,20 @@ See [Error handling](/x/react-chat/behavior/error-handling/) for more details.
 
 ## Chunk type reference
 
-Full reference of every chunk type the runtime accepts.
+Full reference of every chunk type the runtime accepts, grouped by family.
+Skip to the table you need: [lifecycle](#lifecycle-chunks), [text](#text-chunks), [reasoning](#reasoning-chunks), [tool](#tool-chunks), [source, file, and data](#source-file-and-data-chunks), [step boundaries](#step-boundary-chunks), [metadata](#metadata-chunks).
 
 ### Lifecycle chunks
 
-| Chunk type | Fields                       | Description                    |
-| :--------- | :--------------------------- | :----------------------------- |
-| `start`    | `messageId`                  | Begin a new assistant message  |
-| `finish`   | `messageId`, `finishReason?` | Complete the assistant message |
-| `abort`    | `messageId`                  | Cancel the assistant message   |
+| Chunk type | Fields                       | Description                                                               |
+| :--------- | :--------------------------- | :------------------------------------------------------------------------ |
+| `start`    | `messageId`, `author?`       | Begin a new assistant message; `author` sets the assistant message author |
+| `finish`   | `messageId`, `finishReason?` | Complete the assistant message                                            |
+| `abort`    | `messageId`                  | Cancel the assistant message                                              |
+
+The optional `finishReason` is an adapter-defined string (for example `'stop'` or `'length'`).
+The runtime doesn't interpret or display it — it forwards the value verbatim to the
+`onFinish` callback so your application can react to how the response ended.
 
 ### Text chunks
 
@@ -215,16 +226,16 @@ Reasoning chunks create a `ChatReasoningMessagePart`, useful for chain-of-though
 
 ### Tool chunks
 
-| Chunk type              | Fields                                           | Description                   |
-| :---------------------- | :----------------------------------------------- | :---------------------------- |
-| `tool-input-start`      | `toolCallId`, `toolName`, `dynamic?`             | Begin a tool invocation       |
-| `tool-input-delta`      | `toolCallId`, `inputTextDelta`                   | Stream tool input JSON        |
-| `tool-input-available`  | `toolCallId`, `toolName`, `input`                | Tool input is fully available |
-| `tool-input-error`      | `toolCallId`, `errorText`                        | Tool input parsing failed     |
-| `tool-approval-request` | `toolCallId`, `toolName`, `input`, `approvalId?` | Request user approval         |
-| `tool-output-available` | `toolCallId`, `output`, `preliminary?`           | Tool output is available      |
-| `tool-output-error`     | `toolCallId`, `errorText`                        | Tool execution failed         |
-| `tool-output-denied`    | `toolCallId`, `reason?`                          | User denied the tool call     |
+| Chunk type              | Fields                                                       | Description                   |
+| :---------------------- | :----------------------------------------------------------- | :---------------------------- |
+| `tool-input-start`      | `toolCallId`, `toolName`, `dynamic?`                         | Begin a tool invocation       |
+| `tool-input-delta`      | `toolCallId`, `inputTextDelta`                               | Stream tool input JSON        |
+| `tool-input-available`  | `toolCallId`, `toolName`, `input`, `dynamic?`                | Tool input is fully available |
+| `tool-input-error`      | `toolCallId`, `errorText`                                    | Tool input parsing failed     |
+| `tool-approval-request` | `toolCallId`, `toolName`, `input`, `approvalId?`, `dynamic?` | Request user approval         |
+| `tool-output-available` | `toolCallId`, `output`, `preliminary?`                       | Tool output is available      |
+| `tool-output-error`     | `toolCallId`, `errorText`                                    | Tool execution failed         |
+| `tool-output-denied`    | `toolCallId`, `reason?`                                      | User denied the tool call     |
 
 The `toolInvocation.state` tracks the tool lifecycle: `'input-streaming'` → `'input-available'` → `'approval-requested'` → `'output-available'` (or `'output-error'` / `'output-denied'`).
 
@@ -250,6 +261,15 @@ If `transient` is `true`, the part is not persisted in the message.
 
 Step chunks create `ChatStepStartMessagePart` entries, useful for showing multi-step agentic processing in the UI.
 
+### Metadata chunks
+
+| Chunk type         | Fields     | Description                                       |
+| :----------------- | :--------- | :------------------------------------------------ |
+| `message-metadata` | `metadata` | Merge partial metadata into the assistant message |
+
+Metadata chunks do not create a message part — the partial `metadata` object is shallow-merged into `ChatMessage.metadata`.
+Type the payload by augmenting the `ChatMessageMetadata` registry interface (see [Type augmentation](/x/react-chat/core/types/)).
+
 ## Mapping chunks to message parts
 
 The stream processor maps chunks to `ChatMessagePart` entries:
@@ -257,9 +277,10 @@ The stream processor maps chunks to `ChatMessagePart` entries:
 1. `text-start` creates a new `ChatTextMessagePart` with `state: 'streaming'`.
 2. `text-delta` appends to the existing text part.
 3. `text-end` sets `state: 'done'`.
-4. Tool chunks follow a similar lifecycle, updating `toolInvocation.state` through each phase.
+4. Tool chunks update `toolInvocation.state` through each phase. While input streams, `tool-input-delta` keeps the invocation in `'input-streaming'` — the runtime doesn't assemble a partial `input` from the deltas; the complete, parsed `input` arrives with `tool-input-available`.
 5. Source, file, and data chunks each create their corresponding part type immediately.
 6. `start-step` creates a `ChatStepStartMessagePart` separator.
+7. `message-metadata` merges into the message's `metadata` field without creating a part.
 
 The message's `status` field also updates through the stream:
 
@@ -271,6 +292,7 @@ The message's `status` field also updates through the stream:
 
 ## See also
 
+- [Building an adapter](/x/react-chat/backend/building-an-adapter/) for a step-by-step guide to producing these streams.
 - [Adapter](/x/react-chat/backend/adapters/) for details on the interface that produces streams.
 - [Error handling](/x/react-chat/behavior/error-handling/) for details on the error model and recovery.
 - [Scrolling](/x/react-chat/behavior/scrolling/) for details on how auto-scroll follows streaming content.

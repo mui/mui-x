@@ -38,10 +38,41 @@ const DEFAULTS = {
   showComposer: true,
 };
 
-type ClassKey = 'root';
+type ClassKey =
+  | 'root'
+  | 'header'
+  | 'headerInfo'
+  | 'headerActions'
+  | 'title'
+  | 'subtitle';
 
 const CLASS_DEFS: ReadonlyArray<CustomizationDef<ClassKey>> = [
   { name: 'root', description: 'The outermost element of ChatConversation.' },
+  {
+    name: 'header',
+    selector: '.MuiChatConversation-header',
+    description: 'The conversation header bar.',
+  },
+  {
+    name: 'headerInfo',
+    selector: '.MuiChatConversation-headerInfo',
+    description: 'The title/subtitle group in the header.',
+  },
+  {
+    name: 'headerActions',
+    selector: '.MuiChatConversation-headerActions',
+    description: 'The actions area on the right of the header.',
+  },
+  {
+    name: 'title',
+    selector: '.MuiChatConversation-title',
+    description: 'The conversation title element.',
+  },
+  {
+    name: 'subtitle',
+    selector: '.MuiChatConversation-subtitle',
+    description: 'The conversation subtitle element.',
+  },
 ];
 
 export default function ChatConversationPlayground() {

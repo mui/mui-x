@@ -75,7 +75,7 @@ export default function ChatMessageMetaPlayground() {
     <PlaygroundCard
       title="ChatMessageMeta"
       description="External meta (timestamp + delivery status) used by compact bubbles."
-      previewMinHeight={200}
+      previewMinHeight={140}
       classCustomizations={classesCustomizations.customizations}
       onClassesReset={classesCustomizations.reset}
       controls={
@@ -109,7 +109,7 @@ export default function ChatMessageMetaPlayground() {
           activeConversationId={conversation.id}
         >
           <ChatChrome variant={variant} density="standard">
-            <Box sx={{ width: '100%', ...(metaSx as object) }}>
+            <Box sx={{ width: '100%', ...metaSx }}>
               <ChatMessageGroup messageId={message.id}>
                 <ChatMessageComponent messageId={message.id}>
                   <ChatMessageAvatar />

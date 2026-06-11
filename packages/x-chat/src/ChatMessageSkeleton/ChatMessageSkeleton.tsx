@@ -44,6 +44,9 @@ const ChatMessageSkeletonLineStyled = styled('div', {
   )`,
   backgroundSize: '400% 100%',
   animation: `${shimmerKeyframes} 1.4s ease infinite`,
+  '@media (prefers-reduced-motion: reduce)': {
+    animation: 'none',
+  },
   '&:last-child': {
     width: '60%',
   },

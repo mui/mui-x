@@ -12,7 +12,7 @@ const adapter = createEchoAdapter();
 
 function CustomEmptyState() {
   return (
-    <Stack alignItems="center" spacing={1} sx={{ p: 4 }}>
+    <Stack spacing={1} sx={{ alignItems: 'center', p: 4 }}>
       <AutoAwesomeIcon />
       <Typography variant="h6">Ask me anything</Typography>
     </Stack>

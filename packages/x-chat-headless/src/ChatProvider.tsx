@@ -10,8 +10,7 @@ import {
 import type { ChatPartRendererMap } from './renderers';
 import { defaultPartRenderers } from './renderers/defaultPartRenderers';
 import { type ChatStoreConstructor, type ChatStoreParameters } from './store';
-import type { ChatOnData, ChatOnFinish, ChatOnToolCall } from './types';
-import type { ChatError } from './types/chat-error';
+import type { ChatOnData, ChatOnError, ChatOnFinish, ChatOnToolCall } from './types';
 import { ChatStoreContext } from './internals/useChatStoreContext';
 
 /**
@@ -53,7 +52,7 @@ export interface ChatProviderProps<Cursor = string> extends Omit<
   onToolCall?: ChatOnToolCall;
   onFinish?: ChatOnFinish;
   onData?: ChatOnData;
-  onError?: (error: ChatError) => void;
+  onError?: ChatOnError;
   /**
    * Flush interval in milliseconds for batching rapid streaming deltas before applying them to the store.
    * @default 16

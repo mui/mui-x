@@ -94,6 +94,35 @@ Customize the skeleton appearance through slot replacement:
 | `.MuiChatMessageSkeleton-root` | Root container  |
 | `.MuiChatMessageSkeleton-line` | Individual line |
 
+### Accessibility
+
+`ChatMessageSkeleton` is purely decorative: it renders plain `div` elements with no `role` or `aria-*` attributes of its own, so assistive technology is not informed that messages are loading.
+
+The Chat components announce other lifecycle stages automatically—the message list is a `role="log"` polite live region for arriving messages, a hidden `role="status"` region announces streaming transitions, and a streaming message carries `aria-busy="true"`—but none of these fire during initial or history loading. Wire the loading state up explicitly:
+
+```tsx
+import { visuallyHidden } from '@mui/utils';
+
+<div aria-busy={isLoading}>
+  {isLoading ? (
+    <React.Fragment>
+      <ChatMessageSkeleton aria-hidden="true" />
+      <span role="status" style={visuallyHidden}>
+        Loading messages…
+      </span>
+    </React.Fragment>
+  ) : (
+    children
+  )}
+</div>;
+```
+
+- Set `aria-hidden="true"` on the skeleton (extra props are forwarded to the root slot) so the shimmer lines are removed from the accessibility tree.
+- Set `aria-busy` on the container that swaps between skeleton and content.
+- Use a `role="status"` element for the announcement—it is a polite live region, so it does not interrupt the user.
+
+The shimmer animation pauses automatically when the user requests reduced motion (`prefers-reduced-motion: reduce`).
+
 ## Empty state
 
 When a conversation exists but has no messages yet, `ChatBox` renders an empty message list area with the composer ready for input.
@@ -149,3 +178,4 @@ For a live, configurable streaming demo, see [Streaming](/x/react-chat/behavior/
 - [Message appearance](/x/react-chat/display/message-appearance/) for details on the overall message layout.
 - [Text and Markdown](/x/react-chat/display/message-parts/text-and-markdown/) for details on streaming text display.
 - [Message list](/x/react-chat/basics/messages/) for details on auto-scroll behavior during streaming.
+- [Accessibility](/x/react-chat/accessibility/) for the keyboard navigation and screen reader model.

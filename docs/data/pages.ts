@@ -901,6 +901,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-chat', title: 'Overview' },
       { pathname: '/x/react-chat/quickstart', title: 'Quickstart' },
       { pathname: '/x/react-chat/all-components', title: 'Components' },
+      { pathname: '/x/react-chat/accessibility', title: 'Accessibility' },
       {
         pathname: '/x/react-chat/main-features',
         subheader: 'Main features',

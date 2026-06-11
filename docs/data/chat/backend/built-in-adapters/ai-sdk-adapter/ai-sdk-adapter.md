@@ -7,12 +7,14 @@ githubLabel: 'scope: chat'
 
 # Chat - Vercel AI SDK adapter
 
-<p class="description">Connect the Vercel AI SDK to the chat runtime by streaming <code>streamText</code> and <code>useChat</code> results into the chat UI.</p>
+<p class="description">Connect the Vercel AI SDK to the chat runtime by piping <code>streamText</code> output, or a <code>useChat</code> instance, into the chat UI.</p>
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 The chunk types `createAiSdkAdapter` accepts match the AI SDK's [UI Message Stream protocol](https://ai-sdk.dev/docs/ai-sdk-ui/stream-protocol) structurally, so no runtime dependency on the `ai` package is needed.
 Install `ai` to get full type info on the values you pass in, or skip it and rely on the local mirror.
+
+Use this adapter when your backend speaks the AI SDK's UI Message Stream; for prototyping without a backend see the [Echo adapter](/x/react-chat/backend/built-in-adapters/echo-adapter/), and for other protocols see [Building an adapter](/x/react-chat/backend/building-an-adapter/).
 
 ## Demo
 
@@ -24,9 +26,10 @@ Ask it anything about Material UI or MUI X—it streams text and reasoning bac
 :::warning
 The MUI docs assistant endpoint is rate-limited to 20 requests per window for fair public usage.
 If you hit the limit, the error surfaces in the chat's built-in error UI.
+The offline demo under Pattern B works without any backend if you hit the limit.
 :::
 
-## Pattern A—Streaming from a server route
+## Pattern A: Streaming from a server route
 
 The most common setup.
 A server route uses `streamText(...).toUIMessageStreamResponse()`, and the client adapter pipes the response body straight into the chat:
@@ -74,8 +77,9 @@ export default function ChatPage() {
 ```
 
 Both NDJSON (`{json}\n`) and SSE (`data: {json}\n\n` with `[DONE]`) wire framings are decoded automatically—whichever shape your server emits, it works.
+The request body shape is defined by your backend, not the adapter—the adapter only consumes the response stream, so send whatever message format your route expects.
 
-## Pattern B—Streaming in-process
+## Pattern B: Streaming in-process
 
 Skip the server route when the model can be called in the same process (worker with proxied API keys, edge runtime, server actions returning a stream).
 `.toUIMessageStream()` yields the same chunk shapes as a fetch response, just as JavaScript objects rather than bytes:
@@ -83,6 +87,7 @@ Skip the server route when the model can be called in the same process (worker w
 ```tsx
 import { streamText } from 'ai';
 import { openai } from '@ai-sdk/openai';
+import { createAiSdkAdapter } from '@mui/x-chat/headless';
 
 const adapter = createAiSdkAdapter({
   stream: ({ message }) =>
@@ -99,7 +104,11 @@ const adapter = createAiSdkAdapter({
 Don't call this from a browser component with raw API keys—those keys would ship to your bundle. Use Pattern A for client-side apps.
 :::
 
-## Pattern C—Sharing state with `useChat`
+The demo below simulates `toUIMessageStream()` with a hand-built object stream, so you can watch the token-by-token flow without any backend:
+
+{{"demo": "AiSdkMockStreamDemo.js", "bg": "inline"}}
+
+## Pattern C: Sharing state with `useChat`
 
 If you already drive state through `useChat` and want the chat to render alongside other UI bound to the same `chat` object (a streaming status badge, a sidebar with message counts), hand the `chat` instance to the adapter directly:
 
@@ -107,16 +116,16 @@ If you already drive state through `useChat` and want the chat to render alongsi
 'use client';
 import * as React from 'react';
 import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
 import { ChatBox } from '@mui/x-chat';
 import { createAiSdkAdapter } from '@mui/x-chat/headless';
 
 export default function ChatPage() {
-  const chat = useChat({ api: '/api/chat' });
+  const chat = useChat({
+    transport: new DefaultChatTransport({ api: '/api/chat' }),
+  });
 
-  const adapter = React.useMemo(
-    () => createAiSdkAdapter({ chat }),
-    [chat.sendMessage, chat.stop],
-  );
+  const adapter = React.useMemo(() => createAiSdkAdapter({ chat }), [chat]);
 
   return (
     <React.Fragment>
@@ -127,16 +136,19 @@ export default function ChatPage() {
 }
 ```
 
+Keep the memo keyed on the whole `chat` object, matching the adapter's own guidance—recreating the adapter when `chat` changes is fine, because the runtime reads it through a ref.
+
 This integration trades token-by-token streaming for a unified state object.
 `useChat.sendMessage` only resolves after the full reply has streamed in, so the chat shows the assistant message whole.
 If you need both real-time tokens **and** shared state, prefer Pattern A and call `chat.setMessages` from a `useChat` `onFinish` callback when you need a copy.
 
-## Pattern D—Reusing a transport
+## Pattern D: Reusing a transport
 
 When you've already configured a transport (custom headers, body transforms, auth interceptors), forward its `sendMessages` method to `{ stream }`:
 
 ```tsx
 import { DefaultChatTransport } from 'ai';
+import { createAiSdkAdapter } from '@mui/x-chat/headless';
 
 const transport = new DefaultChatTransport({
   api: '/api/chat',
@@ -153,13 +165,27 @@ const adapter = createAiSdkAdapter({
 
 ## Options
 
+All option and request types—`CreateAiSdkAdapterOptions`, `CreateAiSdkAdapterStreamOptions`, `CreateAiSdkAdapterChatOptions`, `CreateAiSdkAdapterRequest`, `AiSdkUIMessageChunk`, and `AiSdkChatInstance`—are exported from `@mui/x-chat` and `@mui/x-chat/headless`.
+
 | Option   | Type                                                         | Notes                                                                                        |
 | :------- | :----------------------------------------------------------- | :------------------------------------------------------------------------------------------- |
 | `stream` | `(req) => ReadableStream<AiSdkUIMessageChunk \| Uint8Array>` | Token streaming. Bytes are decoded for both NDJSON and SSE framings.                         |
 | `chat`   | `AiSdkChatInstance` (matches `useChat()`'s shape)            | Whole-reply integration with `@ai-sdk/react`—see Pattern C above for the streaming tradeoff. |
 
+The `stream` callback receives a `CreateAiSdkAdapterRequest`:
+
+| Field         | Type                                             | Notes                                                                                             |
+| :------------ | :----------------------------------------------- | :------------------------------------------------------------------------------------------------ |
+| `message`     | `ChatMessage`                                    | The message just sent.                                                                            |
+| `messages`    | `ChatMessage[]`                                  | Full conversation history, including `message`.                                                   |
+| `attachments` | `ChatSendMessageInput['attachments']` (optional) | Files attached in the composer—forward them in your request body if your backend accepts uploads. |
+| `metadata`    | `ChatSendMessageInput['metadata']` (optional)    | Arbitrary send metadata passed by the caller.                                                     |
+| `signal`      | `AbortSignal`                                    | Aborts when the user presses stop—pass it to `fetch`.                                             |
+
 AI SDK `error` chunks (`{ type: 'error', errorText }`) are converted to `ChatStreamError` and surfaced through the chat's built-in error UI.
 Unknown chunk types pass through unchanged so newer protocol additions don't require an adapter update.
+If `start`, `finish`, or `abort` chunks arrive without a `messageId`, the adapter synthesizes one so deltas still bind to the right assistant message.
+Malformed JSON mid-stream raises a `ChatStreamError` surfaced through the same error UI.
 
 ## See also
 
@@ -167,4 +193,4 @@ Unknown chunk types pass through unchanged so newer protocol additions don't req
 - See [Adapters](/x/react-chat/backend/adapters/) for the full adapter interface reference.
 - See [Building an adapter](/x/react-chat/backend/building-an-adapter/) for writing your own from scratch.
 - See [Streaming](/x/react-chat/behavior/streaming/) for the chunk protocol reference.
-- See [Vercel AI SDK—Stream protocol](https://ai-sdk.dev/docs/ai-sdk-ui/stream-protocol) for the UI Message Stream spec.
+- See [Vercel AI SDK: Stream protocol](https://ai-sdk.dev/docs/ai-sdk-ui/stream-protocol) for the UI Message Stream spec.

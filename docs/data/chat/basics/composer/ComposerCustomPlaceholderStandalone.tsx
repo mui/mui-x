@@ -5,7 +5,7 @@ import { ComposerDemoShell } from './ComposerDemoShell';
 export default function ComposerCustomPlaceholderStandalone() {
   return (
     <ComposerDemoShell
-      inputProps={{ placeholder: 'Ask me anything...' }}
+      inputProps={{ placeholder: 'Ask anything…' }}
       helperText="This standalone example customizes the textarea placeholder directly."
     />
   );

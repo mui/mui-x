@@ -57,7 +57,7 @@ export default function ChatMessageAuthorLabelPlayground() {
     <PlaygroundCard
       title="ChatMessageAuthorLabel"
       description="Author display name rendered above grouped messages."
-      previewMinHeight={140}
+      previewMinHeight={96}
       classCustomizations={classesCustomizations.customizations}
       onClassesReset={classesCustomizations.reset}
       controls={

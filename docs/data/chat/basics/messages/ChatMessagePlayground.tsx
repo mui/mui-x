@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import {
   ChatMessage as ChatMessageComponent,
   ChatMessageAvatar,
@@ -125,7 +126,7 @@ export default function ChatMessagePlayground() {
   return (
     <PlaygroundCard
       title="ChatMessage (bubble)"
-      description="Single message bubble — toggle role, status, density, grouping."
+      description="Single message bubble—toggle role, status, density, grouping."
       previewMinHeight={260}
       span={2}
       onReset={handleReset}
@@ -183,6 +184,10 @@ export default function ChatMessagePlayground() {
             options={['compact', 'standard', 'comfortable'] as const}
             onChange={setDensity}
           />
+          <Typography variant="caption" color="text.secondary">
+            variant and density mainly affect meta and bubble spacing—see the Meta
+            and Inline meta playgrounds below.
+          </Typography>
         </React.Fragment>
       }
       preview={

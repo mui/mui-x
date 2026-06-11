@@ -29,6 +29,10 @@ export interface ChatMessageClasses {
   inlineMeta: string;
   /** Styles applied to the date divider element. */
   dateDivider: string;
+  /** Styles applied to the horizontal rule on each side of the date divider label. */
+  dateDividerLine: string;
+  /** Styles applied to the formatted day label inside the date divider. */
+  dateDividerLabel: string;
   /** Applied when the message role is 'user' */
   roleUser: string;
   /** Applied when the message role is 'assistant' */
@@ -61,6 +65,8 @@ export const chatMessageClasses: ChatMessageClasses = generateUtilityClasses('Mu
   'inlineMetaSpacer',
   'inlineMeta',
   'dateDivider',
+  'dateDividerLine',
+  'dateDividerLabel',
   'roleUser',
   'roleAssistant',
   'streaming',
@@ -82,6 +88,8 @@ const slots: Record<ChatMessageClassKey, string[]> = {
   inlineMetaSpacer: ['inlineMetaSpacer'],
   inlineMeta: ['inlineMeta'],
   dateDivider: ['dateDivider'],
+  dateDividerLine: ['dateDividerLine'],
+  dateDividerLabel: ['dateDividerLabel'],
   roleUser: ['roleUser'],
   roleAssistant: ['roleAssistant'],
   streaming: ['streaming'],

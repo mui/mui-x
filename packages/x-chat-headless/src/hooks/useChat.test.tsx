@@ -5,6 +5,7 @@ import type { ChatAdapter } from '../adapters';
 import { createEchoAdapter } from '../adapters/createEchoAdapter';
 import { ChatProvider, type ChatProviderProps } from '../ChatProvider';
 import type { ChatConversation, ChatMessage } from '../types/chat-entities';
+import type { ChatToolMessagePart } from '../types/chat-message-parts';
 import { useChat } from './useChat';
 import { useChatStatus } from './useChatStatus';
 import { useChatStore } from './useChatStore';
@@ -966,6 +967,123 @@ describe('useChat', () => {
         },
       ],
     });
+  });
+
+  it('matches the invocation by a distinct approvalId and flips it optimistically', async () => {
+    const addToolApprovalResponse = vi.fn(async () => {});
+    const approvalMessage: ChatMessage = {
+      id: 'assistant-1',
+      conversationId: 'c1',
+      role: 'assistant',
+      status: 'sent',
+      parts: [
+        {
+          type: 'tool',
+          toolInvocation: {
+            toolCallId: 'tool-1',
+            toolName: 'search',
+            state: 'approval-requested',
+            input: { query: 'weather' },
+            approvalId: 'approval-1',
+          },
+        },
+      ],
+    };
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter({
+        addToolApprovalResponse,
+        listMessages: vi.fn(async () => ({
+          messages: [approvalMessage],
+          cursor: undefined,
+          hasMore: false,
+        })),
+      }),
+      initialActiveConversationId: 'c1',
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(result.current.messages).toHaveLength(1);
+    });
+
+    await act(async () => {
+      // Respond with the distinct approvalId rather than the toolCallId.
+      await result.current.addToolApprovalResponse({
+        id: 'approval-1',
+        approved: true,
+        reason: 'Approved',
+      });
+    });
+
+    expect(addToolApprovalResponse).toHaveBeenCalledWith({
+      id: 'approval-1',
+      approved: true,
+      reason: 'Approved',
+    });
+    const invocation = (result.current.messages[0].parts[0] as ChatToolMessagePart).toolInvocation;
+    expect(invocation.state).toBe('approval-responded');
+    expect(invocation.approval).toEqual({ approved: true, reason: 'Approved' });
+  });
+
+  it('rolls back the optimistic flip when responding by approvalId and the adapter rejects', async () => {
+    const onError = vi.fn();
+    const approvalMessage: ChatMessage = {
+      id: 'assistant-1',
+      conversationId: 'c1',
+      role: 'assistant',
+      status: 'sent',
+      parts: [
+        {
+          type: 'tool',
+          toolInvocation: {
+            toolCallId: 'tool-1',
+            toolName: 'search',
+            state: 'approval-requested',
+            input: { query: 'weather' },
+            approvalId: 'approval-1',
+          },
+        },
+      ],
+    };
+    const { Wrapper } = createProviderWrapper({
+      adapter: createAdapter({
+        addToolApprovalResponse: vi.fn(async () => {
+          throw new Error('Adapter error');
+        }),
+        listMessages: vi.fn(async () => ({
+          messages: [approvalMessage],
+          cursor: undefined,
+          hasMore: false,
+        })),
+      }),
+      initialActiveConversationId: 'c1',
+      onError,
+    });
+    const { result } = renderHook(() => useChat(), { wrapper: Wrapper });
+
+    await waitFor(() => {
+      expect(result.current.messages).toHaveLength(1);
+    });
+
+    await act(async () => {
+      await result.current.addToolApprovalResponse({
+        id: 'approval-1',
+        approved: true,
+        reason: 'Approved',
+      });
+    });
+
+    expect(result.current.error).toEqual(
+      expect.objectContaining({
+        code: 'SEND_ERROR',
+        message: 'Adapter error',
+      }),
+    );
+    expect(onError).toHaveBeenCalled();
+    // The optimistic flip is rolled back to the original approval-requested state.
+    const invocation = (result.current.messages[0].parts[0] as ChatToolMessagePart).toolInvocation;
+    expect(invocation.state).toBe('approval-requested');
+    expect(invocation.approval).toBeUndefined();
   });
 
   it('completes the tool approval flow from request to approved output', async () => {

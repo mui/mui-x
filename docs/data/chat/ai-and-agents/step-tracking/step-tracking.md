@@ -12,12 +12,12 @@ components: ChatMessageContent
 
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
-Agentic AI workflows often involve multiple processing steps—reasoning, tool calls, intermediate results, and a final answer.
+Agentic AI workflows often involve multiple processing steps: reasoning, tool calls, and a final text answer.
 Step tracking lets you visually delimit these phases in the message stream so users can follow the agent's progress.
 
 ## Step boundary chunks
 
-The streaming protocol provides two chunks for step boundaries:
+The [streaming protocol](/x/react-chat/behavior/streaming/) provides two chunks for step boundaries:
 
 | Chunk type    | Description                 |
 | :------------ | :-------------------------- |
@@ -121,9 +121,22 @@ const adapter: ChatAdapter = {
 The `step-start` parts act as delimiters in the message's `parts` array.
 Render them as visual separators, progress indicators, or collapsible sections.
 
+### Default rendering
+
+By default, `step-start` parts render as an unstyled `<div role="separator" />`.
+This keeps the accessible structure of the message intact but is visually invisible.
+Register a `partRenderers['step-start']` entry to make steps visible.
+
+:::info
+When writing a custom step delimiter, preserve the `role="separator"` semantics so assistive technology still perceives the step boundary.
+Material UI's `Divider` renders `role="separator"` automatically.
+:::
+
+{{"demo": "StepTrackingDemo.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Step delimiter renderer
 
-Register a custom renderer for `step-start` parts:
+Register a custom renderer for `step-start` parts (see [Custom parts](/x/react-chat/display/message-parts/custom-parts/) for the full `ChatPartRendererMap` API):
 
 ```tsx
 const renderers: ChatPartRendererMap = {
@@ -133,6 +146,7 @@ const renderers: ChatPartRendererMap = {
       .filter((part) => part.type === 'step-start').length;
     return (
       <div
+        role="separator"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -155,9 +169,12 @@ const renderers: ChatPartRendererMap = {
 </ChatProvider>;
 ```
 
+The `partRenderers` prop is accepted by both `ChatProvider` and `ChatBox`.
+Pass it to whichever component you mount.
+
 ### Step progress with Material UI
 
-For a more polished UI, use Material UI components to show step progress:
+For a styled delimiter, use Material UI components:
 
 ```tsx
 import Divider from '@mui/material/Divider';
@@ -169,7 +186,7 @@ const renderers: ChatPartRendererMap = {
       .slice(0, index + 1)
       .filter((part) => part.type === 'step-start').length;
     return (
-      <Divider sx={{ my: 1 }}>
+      <Divider sx={{ my: 1 }} role="separator">
         <Typography variant="caption" color="text.secondary">
           Step {stepNumber}
         </Typography>
@@ -179,7 +196,9 @@ const renderers: ChatPartRendererMap = {
 };
 ```
 
-## Step structure in the parts array
+For an alternative approach that renders an animated, live-updating task list from a custom tool part instead of `step-start` delimiters, see the [Plan and task example](/x/react-chat/material/examples/plan-task/).
+
+## Grouping parts by step
 
 After streaming, the message's `parts` array contains `step-start` entries interleaved with the content parts for each step:
 
@@ -205,8 +224,27 @@ After streaming, the message's `parts` array contains `step-start` entries inter
 ];
 ```
 
-This structure makes it straightforward to group parts by step when building custom renderers.
-Iterate through the parts and treat each `step-start` as a new group boundary.
+Group the parts into per-step sections by treating each `step-start` as a new group boundary:
+
+```ts
+function groupPartsByStep(parts: ChatMessagePart[]): ChatMessagePart[][] {
+  const groups: ChatMessagePart[][] = [];
+  for (const part of parts) {
+    if (part.type === 'step-start' || groups.length === 0) {
+      groups.push([]);
+    }
+    if (part.type !== 'step-start') {
+      groups[groups.length - 1].push(part);
+    }
+  }
+  return groups;
+}
+```
+
+Each group can then be rendered as its own section, for example inside a Material UI `Accordion` for collapsible steps.
+
+While the assistant message is still streaming (`message.status === 'streaming'`), the last `step-start` part marks the step currently in progress.
+Use this to render a spinner or "running" state on the final group.
 
 ## Steps with reasoning and tool calls
 
@@ -247,3 +285,4 @@ controller.enqueue({ type: 'finish-step' });
 - See [Reasoning](/x/react-chat/ai-and-agents/reasoning/) for displaying LLM thinking traces.
 - See [Streaming](/x/react-chat/behavior/streaming/) for the full chunk protocol reference including step boundary chunks.
 - See [Tool approval](/x/react-chat/ai-and-agents/tool-approval/) for human-in-the-loop checkpoints within agent steps.
+- See the [Plan and task example](/x/react-chat/material/examples/plan-task/) for agent progress rendered from a custom tool part, an alternative to `step-start` delimiters.

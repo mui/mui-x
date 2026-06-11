@@ -157,6 +157,9 @@ export default function MainDemo() {
         >
           <CaptionsDemo />
         </Paper>
+        <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+          The Captions preset always renders in dark mode, Google Meet-style.
+        </Typography>
       </ThemeProvider>
     );
   }
@@ -205,15 +208,27 @@ export default function MainDemo() {
               {selectedDemo.title}
             </Typography>
           </div>
-          <Button
-            size="small"
-            href={selectedDemoSourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            endIcon={<ArrowForwardIcon />}
-          >
-            More info
-          </Button>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+            {selectedDemo.docsPagePath && (
+              <Button
+                size="small"
+                variant="contained"
+                href={selectedDemo.docsPagePath}
+                endIcon={<ArrowForwardIcon />}
+              >
+                Open full example
+              </Button>
+            )}
+            <Button
+              size="small"
+              href={selectedDemoSourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              endIcon={<ArrowForwardIcon />}
+            >
+              View source on GitHub
+            </Button>
+          </Stack>
         </Stack>
         <Box
           sx={{

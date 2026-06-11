@@ -55,6 +55,7 @@ export type {
 export type {
   ChatAddToolApproveResponseInput,
   ChatOnData,
+  ChatOnError,
   ChatOnFinish,
   ChatOnFinishPayload,
   ChatOnToolCall,
@@ -81,7 +82,7 @@ export type {
   ConversationReadState,
 } from '../types/chat-entities';
 
-export type { ChatError, ChatErrorCode } from '../types/chat-error';
+export type { ChatError, ChatErrorCode, ChatErrorSource } from '../types/chat-error';
 
 export type {
   ChatBuiltInMessagePart,

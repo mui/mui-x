@@ -13,7 +13,11 @@ components: ChatMessageContent
 {{"component": "@mui/internal-core-docs/ComponentLinkHeader"}}
 
 Tool calling lets an AI assistant invoke external functions during a conversation.
-The runtime handles the full tool lifecycle: streaming tool input, making the input available, executing the tool, and displaying the output—all through the streaming chunk protocol.
+The runtime tracks the full tool lifecycle through the streaming chunk protocol — streaming tool input, exposing the parsed input, and surfacing the tool's output and errors — so you can render each stage. Executing the tool itself is your backend's (or adapter's) responsibility.
+
+The demo below streams a `get_weather` tool call through `input-streaming` → `input-available` → `output-available` and renders each stage with a custom tool card:
+
+{{"demo": "ToolCallingLifecycle.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Tool message part structure
 
@@ -63,21 +67,24 @@ The `toolInvocation.state` field tracks the tool lifecycle through well-defined 
 | `output-denied`      | User denied the tool call                  |
 
 The typical progression is: `input-streaming` -> `input-available` -> `output-available`.
-When human-in-the-loop approval is required, the flow includes `approval-requested` -> `approval-responded` between input and output.
+When [human-in-the-loop approval](/x/react-chat/ai-and-agents/tool-approval/) is required, the flow includes `approval-requested` -> `approval-responded` between input and output.
 
 ## Stream chunk protocol
 
 Tool chunks in the streaming protocol drive the state transitions:
 
-| Chunk type              | Fields                                 | Description                   |
-| :---------------------- | :------------------------------------- | :---------------------------- |
-| `tool-input-start`      | `toolCallId`, `toolName`, `dynamic?`   | Begin a tool invocation       |
-| `tool-input-delta`      | `toolCallId`, `inputTextDelta`         | Stream tool input JSON        |
-| `tool-input-available`  | `toolCallId`, `toolName`, `input`      | Tool input is fully available |
-| `tool-input-error`      | `toolCallId`, `errorText`              | Tool input parsing failed     |
-| `tool-output-available` | `toolCallId`, `output`, `preliminary?` | Tool output is available      |
-| `tool-output-error`     | `toolCallId`, `errorText`              | Tool execution failed         |
-| `tool-output-denied`    | `toolCallId`, `reason?`                | User denied the tool call     |
+| Chunk type              | Fields                                                       | Description                            |
+| :---------------------- | :----------------------------------------------------------- | :------------------------------------- |
+| `tool-input-start`      | `toolCallId`, `toolName`, `dynamic?`                         | Begin a tool invocation                |
+| `tool-input-delta`      | `toolCallId`, `inputTextDelta`                               | Stream tool input JSON                 |
+| `tool-input-available`  | `toolCallId`, `toolName`, `input`, `dynamic?`                | Tool input is fully available          |
+| `tool-input-error`      | `toolCallId`, `errorText`                                    | Tool input parsing failed              |
+| `tool-approval-request` | `approvalId?`, `toolCallId`, `toolName`, `input`, `dynamic?` | Request user approval before execution |
+| `tool-output-available` | `toolCallId`, `output`, `preliminary?`                       | Tool output is available               |
+| `tool-output-error`     | `toolCallId`, `errorText`                                    | Tool execution failed                  |
+| `tool-output-denied`    | `toolCallId`, `reason?`                                      | User denied the tool call              |
+
+For the approval request/response flow, see [Tool approval](/x/react-chat/ai-and-agents/tool-approval/).
 
 ### Tool input streaming
 
@@ -148,7 +155,7 @@ Register `onToolCall` on `ChatProvider` to observe every tool invocation state c
 </ChatProvider>
 ```
 
-The callback fires on every state change—not just when output is available. Use it for side effects outside the store: logging, analytics, and external API calls.
+The callback fires on every state change — not just when output is available. Use it for side effects that live outside the chat state — logging, analytics, and external API calls.
 
 ### Callback payload structure
 
@@ -158,7 +165,7 @@ interface ChatOnToolCallPayload {
 }
 ```
 
-The `toolCall` object includes `toolCallId`, `toolName`, `state`, `input`, `output`, `errorText`, and `approval` fields—all typed based on your `ChatToolDefinitionMap` augmentation.
+The `toolCall` object includes `toolCallId`, `toolName`, `state`, `input`, `output`, `errorText`, and `approval` fields — all typed based on your `ChatToolDefinitionMap` augmentation.
 
 ## Tool type registry
 
@@ -193,7 +200,20 @@ controller.enqueue({
   toolName: 'user_defined_tool',
   dynamic: true,
 });
+// ...stream the input deltas, then mark the input as available —
+// the `dynamic: true` flag must be repeated here for the same call.
+controller.enqueue({
+  type: 'tool-input-available',
+  toolCallId: 'call-2',
+  toolName: 'user_defined_tool',
+  input: { query: 'anything' },
+  dynamic: true,
+});
 ```
+
+:::warning
+The `dynamic: true` flag must be set on every chunk that identifies the tool — `tool-input-start`, `tool-input-available`, and `tool-approval-request` — for the same `toolCallId`, not just the first one. Omitting it on later chunks causes TypeScript to treat the chunk as a registered tool.
+:::
 
 Dynamic tool invocations use `ChatDynamicToolInvocation` with untyped `input` and `output` (`unknown`):
 
@@ -206,23 +226,43 @@ interface ChatDynamicToolInvocation<TToolName extends string = string> {
   output?: unknown;
   errorText?: string;
   approval?: ChatToolApproval;
+  providerExecuted?: boolean;
+  title?: string;
   callProviderMetadata?: Record<string, unknown>;
+  preliminary?: boolean;
 }
 ```
+
+`ChatDynamicToolInvocation` has the same shape as `ChatToolInvocation` — the only difference is that `input` and `output` are typed as `unknown`.
 
 ## Rendering tool parts
 
 Register custom renderers for tool parts through the `partRenderers` prop on `ChatProvider`:
 
 ```tsx
+function ToolCard({ invocation }: { invocation: ChatToolInvocation }) {
+  switch (invocation.state) {
+    case 'input-streaming':
+      return <Skeleton>Calling {invocation.toolName}…</Skeleton>;
+    case 'output-available':
+      return <pre>{JSON.stringify(invocation.output, null, 2)}</pre>;
+    case 'output-error':
+      return <Alert severity="error">{invocation.errorText}</Alert>;
+    default:
+      return <pre>{JSON.stringify(invocation.input, null, 2)}</pre>;
+  }
+}
+
 const renderers: ChatPartRendererMap = {
-  tool: ({ part, message, index }) => <ToolCard invocation={part.toolInvocation} />,
+  tool: ({ part }) => <ToolCard invocation={part.toolInvocation} />,
 };
 
 <ChatProvider adapter={adapter} partRenderers={renderers}>
   <MyChat />
 </ChatProvider>;
 ```
+
+See the demo at the top of this page for a complete `ToolCard` implementation.
 
 Use `useChatPartRenderer('tool')` inside any component to look up the registered renderer:
 
@@ -234,9 +274,14 @@ function MessagePart({ part, message, index }) {
     return renderer({ part, message, index });
   }
 
+  // Render your own fallback here — parts without a registered renderer
+  // are otherwise dropped. Built-in components like <ChatMessageContent />
+  // only consult this hook first and fall back to their default part rendering.
   return null;
 }
 ```
+
+When building custom tool cards, announce state transitions to assistive technology — for example with a polite live region when output arrives — and keep interactive elements reachable through the message list's keyboard navigation. See the [message list accessibility model](/x/react-chat/material/message-list/#accessibility) for details.
 
 ## See also
 

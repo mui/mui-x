@@ -15,7 +15,7 @@ components: ChatLayout
 ## Overview
 
 `ChatLayout` arranges a **conversation pane** and a **thread pane** in the chat surface.
-The surrounding runtime setup is delegated to `ChatProvider`, and the pane contents are yours to compose.
+The surrounding runtime setup is delegated to [`ChatProvider`](/x/react-chat/headless/); you supply the pane contents as children, and `ChatLayout` only assigns each child to a pane and positions it.
 
 ## Composition structure
 
@@ -27,7 +27,7 @@ ChatLayout
   ChatConversation                  ← thread shell, derives the active conversation
     ChatConversationHeader          ← header bar with divider styling
       ChatConversationTitle         ← conversation name
-      ChatConversationSubtitle     ← secondary line (participants, presence, etc.)
+      ChatConversationSubtitle      ← secondary line (participants, presence, etc.)
       ChatConversationHeaderActions ← action area (archive, mute, context menu)
     ChatMessageList                 ← scrollable message area
       ChatMessageGroup              ← groups consecutive same-author messages
@@ -45,6 +45,29 @@ ChatLayout
 
 `ChatLayout` is exported from `@mui/x-chat/headless`; every component below it in the tree is exported from `@mui/x-chat`.
 
+## Two-pane layout
+
+The default composition renders the conversation list and the active thread side by side.
+Select a conversation in the sidebar to switch the thread:
+
+{{"demo": "LayoutTwoPaneStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Sizing the panes
+
+`ChatLayout` wraps each pane in a slot: `conversationsPane` and `threadPane` (plus `root` for the flex container).
+By default the thread pane flexes to fill the remaining width.
+Use `slotProps` to set a fixed sidebar width:
+
+```tsx
+<ChatLayout
+  slotProps={{
+    conversationsPane: { style: { width: '280px', flex: '0 0 280px' } },
+  }}
+>
+```
+
+Each pane slot receives a `pane` owner state (`'conversations'` or `'thread'`), so a custom slot component can style both panes from one implementation.
+
 ## Thread-only mode
 
 When your application manages conversations externally, render only the thread pane inside `ChatLayout`.
@@ -59,7 +82,7 @@ In thread-only mode the active conversation fills the entire `ChatLayout` contai
 Because `ChatLayout` only decides where panes go, you can assemble the thread from individual Material UI components directly.
 Use this approach to insert additional UI between the header and the message list, or to move controls within the thread pane.
 
-The example below shows a fully assembled thread pane that doesn't rely on `ChatBox` layout defaults:
+The example below shows a fully assembled thread pane that doesn't rely on the layout defaults bundled into [`ChatBox`](/x/react-chat/basics/chatbox/), the all-in-one component:
 
 ```tsx
 import {
@@ -117,9 +140,27 @@ function CustomThread() {
 }
 ```
 
-Wrap `CustomThread` with a `ChatProvider` from `@mui/x-chat/headless` to wire runtime state to your adapter.
+{{"demo": "LayoutRecomposedStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
 
-`ChatLayout` also supports split configurations that render the conversation list and thread side by side.
+Wrap `CustomThread` with a [`ChatProvider`](/x/react-chat/headless/) from `@mui/x-chat/headless` to wire runtime state to your adapter.
+
+### Pane assignment
+
+`ChatLayout` inspects its direct children to decide which pane each one belongs to.
+`ChatConversationList` is assigned to the conversations pane and `ChatConversation` to the thread pane automatically.
+
+If you wrap a pane child in another component (`styled()`, `React.memo()`, or a custom wrapper), `ChatLayout` can no longer identify it.
+Unidentified children fall back to positional assignment: a single child fills the thread pane, and with several children the unidentified ones fill the conversations pane first, then the thread pane.
+Instead of relying on this fallback, set the `pane` prop on the direct child explicitly:
+
+```tsx
+<ChatLayout>
+  <MySidebar pane="conversations" />
+  <MyThread pane="thread" />
+</ChatLayout>
+```
+
+In development, `ChatLayout` warns in the console when it can identify some children but not others.
 
 ## Responsive layout
 
@@ -135,6 +176,8 @@ The demo below keeps the logic explicit so you can swap it for route-based navig
 
 {{"demo": "LayoutResponsiveStandalone.js", "bg": "inline", "defaultCodeOpen": false}}
 
+When collapsing to a single pane, keep the navigation accessible: label the conversation list (for example `aria-label="Conversations"`) and give the narrow-mode back control an explicit label such as `aria-label="Back to conversations"`, as the demo above does.
+
 Explicit responsive logic keeps narrow-mode transitions straightforward to customize.
 
 Set explicit dimensions on the parent element that wraps `ChatLayout`:
@@ -144,3 +187,5 @@ Set explicit dimensions on the parent element that wraps `ChatLayout`:
   <ChatLayout>{/* conversation pane + thread pane */}</ChatLayout>
 </Box>
 ```
+
+For the unstyled primitives behind this page, see the [headless layout documentation](/x/react-chat/headless/layout/).

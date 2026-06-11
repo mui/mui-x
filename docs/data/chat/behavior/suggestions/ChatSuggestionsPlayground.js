@@ -3,7 +3,11 @@ import Box from '@mui/material/Box';
 import { ChatSuggestions } from '@mui/x-chat';
 import { PlaygroundCard } from 'docs/src/modules/components/chat-playground/PlaygroundCard';
 import { ScopedChat } from 'docs/src/modules/components/chat-playground/sharedProviders';
-import { emptyConversation } from 'docs/src/modules/components/chat-playground/sharedFixtures';
+import {
+  directoryConversations,
+  emptyConversation,
+  groupThreadMessages,
+} from 'docs/src/modules/components/chat-playground/sharedFixtures';
 import {
   DividerLabel,
   NumberControl,
@@ -35,6 +39,7 @@ export default function ChatSuggestionsPlayground() {
   const [count, setCount] = React.useState(4);
   const [autoSubmit, setAutoSubmit] = React.useState(false);
   const [alwaysVisible, setAlwaysVisible] = React.useState(false);
+  const [hasMessages, setHasMessages] = React.useState(false);
   const [first, setFirst] = React.useState(POOL[0]);
   const classesCustomizations = useCustomizations(CLASS_DEFS);
 
@@ -48,7 +53,7 @@ export default function ChatSuggestionsPlayground() {
   return (
     <PlaygroundCard
       title="ChatSuggestions"
-      description="Pill-style prompts shown when the active thread is empty."
+      description="Pill-style prompts for the active thread. By default they only render while the thread is empty; alwaysVisible keeps them available as a next-prompt row."
       previewMinHeight={180}
       classCustomizations={classesCustomizations.customizations}
       onClassesReset={classesCustomizations.reset}
@@ -67,6 +72,13 @@ export default function ChatSuggestionsPlayground() {
             onChange={setAlwaysVisible}
             helperText="Render even when the active thread has messages."
           />
+          <DividerLabel>preview state</DividerLabel>
+          <SwitchControl
+            label="thread has messages"
+            checked={hasMessages}
+            onChange={setHasMessages}
+            helperText="Seed the preview thread with messages. With alwaysVisible off, the suggestions render nothing."
+          />
           <DividerLabel>suggestions data</DividerLabel>
           <NumberControl
             label="suggestion count"
@@ -80,8 +92,11 @@ export default function ChatSuggestionsPlayground() {
       }
       preview={
         <ScopedChat
-          conversations={[emptyConversation]}
-          activeConversationId={emptyConversation.id}
+          conversations={
+            hasMessages ? [directoryConversations[0]] : [emptyConversation]
+          }
+          messages={hasMessages ? groupThreadMessages : undefined}
+          activeConversationId={hasMessages ? 'styling' : emptyConversation.id}
         >
           <Box sx={{ width: '100%' }}>
             <ChatSuggestions

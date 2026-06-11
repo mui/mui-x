@@ -150,7 +150,7 @@ export default function ChatCodeBlockPlayground() {
             value={highlighter}
             options={[
               { value: 'none', label: 'none (raw)' },
-              { value: 'tokens', label: 'tokens (keywords/strings)' },
+              { value: 'tokens', label: 'tokens (realistic reference)' },
               { value: 'rainbow', label: 'rainbow (demo only)' },
             ]}
             onChange={setHighlighter}

@@ -23,7 +23,6 @@ const initialMessages = [
 
 const adapter = createEchoAdapter({
   respond: (text) => `You typed: "${text || 'nothing'}".`,
-  delayMs: 300,
 });
 
 export default function EchoAdapterDemo() {

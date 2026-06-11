@@ -45,7 +45,7 @@ const messages: ChatMessageEntity[] = [
     role: 'assistant',
     author: demoUsers.agent,
     createdAt: '2026-03-15T09:30:00.000Z',
-    text: 'Default assistant bubble — pulls from `palette.background.paper` and `divider`.',
+    text: 'Default assistant bubble — uses palette.grey[100] (light) / palette.grey[800] (dark).',
   }),
   createTextMessage({
     id: 'states-msg-user',

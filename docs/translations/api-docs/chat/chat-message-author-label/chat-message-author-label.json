@@ -26,6 +26,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the date divider element"
     },
+    "dateDividerLabel": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the formatted day label inside the date divider"
+    },
+    "dateDividerLine": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the horizontal rule on each side of the date divider label"
+    },
     "error": { "description": "Applied when the message has an error status" },
     "group": {
       "description": "Styles applied to {{nodeName}}.",

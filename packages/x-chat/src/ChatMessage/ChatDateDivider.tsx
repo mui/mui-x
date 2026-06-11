@@ -83,6 +83,8 @@ const ChatDateDivider = React.forwardRef<HTMLDivElement, ChatDateDividerProps>(
             },
             slotProps?.divider,
           ) as any,
+          line: mergeSlotProps({ className: classes.dateDividerLine }, slotProps?.line) as any,
+          label: mergeSlotProps({ className: classes.dateDividerLabel }, slotProps?.label) as any,
         }}
       />
     );

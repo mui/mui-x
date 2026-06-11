@@ -199,7 +199,7 @@ Override it through the `localeText` prop on `ChatBox` or `ChatRoot` to change o
 ```
 
 `displayName` is optional on `ChatLocaleTypingUser` (`Pick<ChatUser, 'id' | 'displayName'>`), so the `?? users[0].id` fallback avoids rendering "undefined tippt".
-See [Localization](/x/react-chat/customization/localization/) for the full set of overridable strings.
+See [Localization](/x/react-chat/customization/structure/#localization) for the full set of overridable strings.
 
 ### Owner state
 
@@ -252,5 +252,5 @@ import { ChatTypingIndicator } from '@mui/x-chat';
 ## See also
 
 - [Adapter](/x/react-chat/backend/adapters/) for details on the `setTyping()` and `subscribe()` methods.
-- [Localization](/x/react-chat/customization/localization/) to translate the typing label.
+- [Localization](/x/react-chat/customization/structure/#localization) to translate the typing label.
 - [`ChatTypingIndicator`](/x/api/chat/chat-typing-indicator/) API reference.

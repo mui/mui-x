@@ -166,7 +166,7 @@ const adapter: ChatAdapter = {
 };
 ```
 
-When `hasMore` is `true`, `ChatBox` shows a "Load earlier messages" control that calls `listMessages` again with the previous cursor.
+When `hasMore` is `true`, `ChatBox` automatically loads earlier messages as the user scrolls to the top of the list, calling `listMessages` again with the previous cursor. See [History and pagination](/x/react-chat/multi-conversation/history-and-pagination/).
 
 ## Step 5: Listing conversations
 

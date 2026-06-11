@@ -63,7 +63,7 @@ export default function ChatMessageMetaPlayground() {
     <PlaygroundCard
       title="ChatMessageMeta"
       description="External meta (timestamp + delivery status) used by compact bubbles."
-      previewMinHeight={200}
+      previewMinHeight={140}
       classCustomizations={classesCustomizations.customizations}
       onClassesReset={classesCustomizations.reset}
       controls={

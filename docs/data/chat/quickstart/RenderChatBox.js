@@ -24,6 +24,7 @@ export default function RenderChatBox() {
       initialConversations={initialConversations}
       initialActiveConversationId={CONVERSATION_ID}
       initialMessages={initialMessages}
+      // ChatBox fills its container — give it an explicit height in your layout.
       sx={{
         height: 500,
         border: '1px solid',

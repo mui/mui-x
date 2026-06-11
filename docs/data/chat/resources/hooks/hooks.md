@@ -448,7 +448,7 @@ These hooks support authors of custom headless primitives and slots. They read c
 - `useMessageActionable()` — whether the focused message is in the actionable (drilled-in) state.
 - `useMessageContentTabIndex()` — the tab index custom interactive message content should apply.
 
-See the [Accessibility](/x/react-chat/material/message-list/#accessibility) page for the roving-focus and drill-in model these hooks implement.
+See the [Accessibility](/x/react-chat/accessibility/) page for the roving-focus and drill-in model these hooks implement.
 
 ## Advanced: `useChatStore()`
 

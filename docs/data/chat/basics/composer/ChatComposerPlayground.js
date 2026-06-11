@@ -160,7 +160,7 @@ export default function ChatComposerPlayground() {
     <PlaygroundCard
       title="ChatComposer"
       description="Form surface for the prompt — attachment list, textarea, toolbar."
-      previewMinHeight={260}
+      previewMinHeight={180}
       span={2}
       onReset={handleReset}
       classCustomizations={classesCustomizations.customizations}

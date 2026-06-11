@@ -108,7 +108,7 @@ export default function ChatMessageInlineMetaPlayground() {
           activeConversationId={conversation.id}
         >
           <ChatChrome variant="default" density="standard">
-            <Box sx={{ width: '100%', ...(inlineSx as object) }}>
+            <Box sx={{ width: '100%', ...inlineSx }}>
               <ChatMessageGroup messageId={message.id}>
                 <ChatMessageComponent messageId={message.id}>
                   <ChatMessageAvatar />

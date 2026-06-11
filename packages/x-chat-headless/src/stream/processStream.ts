@@ -486,6 +486,7 @@ export async function processStream<Cursor = string>(
                     toolCallId: chunk.toolCallId,
                     toolName: chunk.toolName,
                     input: chunk.input,
+                    approvalId: chunk.approvalId,
                     state: 'approval-requested',
                   },
                 }
@@ -495,6 +496,7 @@ export async function processStream<Cursor = string>(
                     toolCallId: chunk.toolCallId,
                     toolName: chunk.toolName,
                     input: chunk.input,
+                    approvalId: chunk.approvalId,
                     state: 'approval-requested',
                   },
                 },
@@ -502,6 +504,7 @@ export async function processStream<Cursor = string>(
             ...invocation,
             toolName: chunk.toolName,
             input: chunk.input as ChatToolInvocation['input'],
+            approvalId: chunk.approvalId,
             state: 'approval-requested',
           }),
         );

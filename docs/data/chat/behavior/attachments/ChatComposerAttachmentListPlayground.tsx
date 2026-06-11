@@ -31,8 +31,8 @@ const POOL: FileSpec[] = [
 
 const PROGRESS_BY_STATUS: Record<ChatDraftAttachmentStatus, number> = {
   queued: 0,
-  uploading: 0.45,
-  uploaded: 1,
+  uploading: 45,
+  uploaded: 100,
   error: 0,
 };
 
@@ -109,7 +109,7 @@ export default function ChatComposerAttachmentListPlayground() {
           <ChoiceControl<ChatDraftAttachmentStatus>
             label="status"
             value={status}
-            options={['uploading', 'uploaded', 'error'] as const}
+            options={['queued', 'uploading', 'uploaded', 'error'] as const}
             onChange={setStatus}
           />
         </React.Fragment>

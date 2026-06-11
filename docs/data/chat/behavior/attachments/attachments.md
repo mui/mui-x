@@ -18,15 +18,16 @@ Selected files are queued as draft attachments and previewed in the composer are
 ## Playground
 
 The demos below let you tune the attach button and the pending-attachment list:
+The attachment-list playground seeds draft attachments directly into the chat store so that every status can be previewed without uploading files — in an app, attachments are added through the file picker or `addAttachment()`.
 
 {{"demo": "ChatComposerAttachButtonPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
 {{"demo": "ChatComposerAttachmentListPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Enabling attachments
+## Disabling attachments
 
 Attachments are enabled by default.
-Hide the attach button entirely by setting the `attachments` feature flag to `false`:
+To hide the attach button entirely, set the `attachments` feature flag to `false`:
 
 ```tsx
 <ChatBox adapter={adapter} features={{ attachments: false }} />
@@ -56,6 +57,10 @@ Pass a configuration object to the `attachments` feature flag to control which f
 />
 ```
 
+Try attaching a file that is not an image or PDF, or one larger than 500 KB:
+
+{{"demo": "AttachmentValidation.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Attachments configuration reference
 
 | Property             | Type                                              | Default     | Description                                                                                                                                                                |
@@ -84,12 +89,12 @@ queued  -->  uploading  -->  uploaded  -->  (sent with message)
                    -->  error
 ```
 
-| Status      | Description                                                          |
-| :---------- | :------------------------------------------------------------------- |
-| `queued`    | File has been selected and is waiting to be processed.               |
-| `uploading` | File upload is in progress. The `progress` field tracks 0--100.      |
-| `uploaded`  | Upload completed. The file is ready to be sent with the message.     |
-| `error`     | Upload failed. The attachment can be removed or retried by the user. |
+| Status      | Description                                                                            |
+| :---------- | :------------------------------------------------------------------------------------- |
+| `queued`    | File has been selected and is waiting to be processed.                                 |
+| `uploading` | File upload is in progress. The `progress` field tracks upload progress from 0 to 100. |
+| `uploaded`  | Upload completed. The file is ready to be sent with the message.                       |
+| `error`     | Upload failed. The attachment can be removed by the user.                              |
 
 ### Draft attachment type reference
 
@@ -99,11 +104,13 @@ queued  -->  uploading  -->  uploaded  -->  (sent with message)
 | `file`       | `File`                                             | The browser File object                      |
 | `previewUrl` | `string \| undefined`                              | Object URL for image previews (auto-created) |
 | `status`     | `'queued' \| 'uploading' \| 'uploaded' \| 'error'` | Upload lifecycle status                      |
-| `progress`   | `number \| undefined`                              | Upload progress (0--100)                     |
+| `progress`   | `number \| undefined`                              | Upload progress percentage (0 to 100)        |
+
+For image files, `previewUrl` is an object URL that the composer creates and revokes automatically — when the attachment is removed, after the message that references it is removed, or on unmount. Don't call `URL.revokeObjectURL()` on it yourself.
 
 ## Managing attachments programmatically
 
-The `useChatComposer()` hook provides direct access to attachment state:
+Most apps only need the `features` configuration above. Reach for the `useChatComposer()` hook when you're building a custom attachment UI outside the built-in composer:
 
 ```tsx
 import { useChatComposer } from '@mui/x-chat/headless';
@@ -129,6 +136,8 @@ function AttachmentManager() {
 }
 ```
 
+The table below covers the attachment-related members. See the [Composer page](/x/react-chat/basics/composer/) for the complete `useChatComposer()` reference.
+
 | Method             | Type                        | Description                 |
 | :----------------- | :-------------------------- | :-------------------------- |
 | `attachments`      | `ChatDraftAttachment[]`     | Queued file attachments     |
@@ -138,7 +147,7 @@ function AttachmentManager() {
 
 ## Sending attachments through the adapter
 
-When the user submits a message with attachments, the adapter's `sendMessage()` method receives them in the input:
+On submit, the runtime hands the queued attachments to your adapter's `sendMessage()` method — this is where files actually leave the browser:
 
 ```tsx
 async sendMessage({ message, attachments, signal }) {
