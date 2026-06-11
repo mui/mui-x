@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { type PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
@@ -184,7 +185,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   }
 
   const chartsLayerContainerRef = useChartsLayerContainerRef();
-  const anchorRef = React.useRef<HTMLDivElement | null>(null);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
 
   const classes = useUtilityClasses(propClasses);
 
@@ -238,6 +239,13 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       pointerUpdate.clear();
     };
   }, [chartsLayerContainerRef, positionRef, isTooltipNodeAnchored]);
+
+  useEnhancedEffect(() => {
+    if (!isTooltipNodeAnchored) {
+      return;
+    }
+    popperRef.current?.update();
+  }, [isTooltipNodeAnchored, itemPosition?.x, itemPosition?.y]);
 
   const pointerAnchorEl = React.useMemo(
     () => ({
@@ -297,7 +305,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       {chartsLayerContainerRef.current &&
         ReactDOM.createPortal(
           <div
-            ref={anchorRef}
+            ref={setAnchorEl}
             style={{
               position: 'absolute',
               display: 'hidden',
@@ -327,9 +335,9 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
               (!isTooltipNodeAnchored && isMouse ? 'right-start' : 'top')
             }
             popperRef={popperRef}
-            anchorEl={itemPosition ? anchorRef.current : pointerAnchorEl}
+            anchorEl={itemPosition ? anchorEl : pointerAnchorEl}
             modifiers={modifiers}
-            container={chartsLayerContainerRef.current}
+            container={other.container ?? chartsLayerContainerRef.current}
             popperOptions={{ ...other.popperOptions, strategy: 'fixed' }}
           >
             {children}

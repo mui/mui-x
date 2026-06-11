@@ -43,7 +43,9 @@
       "deprecated": true,
       "deprecationInfo": "Use <code>disableHitArea</code> instead."
     },
-    "experimentalFeatures": { "type": { "name": "object" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ progressiveRendering?: bool }" }
+    },
     "grid": {
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
@@ -120,7 +122,10 @@
       }
     },
     "renderer": {
-      "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
+      "type": {
+        "name": "enum",
+        "description": "'svg-batch'<br>&#124;&nbsp;'svg-progressive'<br>&#124;&nbsp;'svg-single'"
+      },
       "default": "'svg-single'"
     },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
@@ -251,6 +256,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-charts/src/ScatterChart/ScatterChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/bubble/\">Charts - Bubble</a></li>\n<li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>",
   "cssComponent": false
 }
