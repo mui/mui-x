@@ -40,3 +40,10 @@ const clickHandler = (
 ```
 
 {{"demo": "RadialBarClick.js"}}
+
+## Comparing values across categories
+
+Radial bars are well suited to comparing a value across many periodic categories.
+The demo below compares self-reported trust in others among European youth between 2013 and 2024/25.
+
+{{"demo": "TrustRadialBarChart.js", "bg": "outline"}}
