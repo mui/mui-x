@@ -17,6 +17,7 @@ import { Adapter } from '../../../use-adapter/useAdapter.types';
 import { SchedulerParameters, SchedulerState } from './SchedulerStore.types';
 import { SchedulerRecurringEventsPluginInterface } from '../../plugins/SchedulerRecurringEventsPlugin.types';
 import { dateToEventString } from '../date-utils';
+import { createLocalId } from '../createLocalId';
 
 /**
  * Determines if the occurrence placeholder has changed in a meaningful way that requires updating the store.
@@ -172,7 +173,7 @@ export function createEventModel<TEvent extends object>(
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
   adapter: Adapter,
 ) {
-  const id = crypto.randomUUID();
+  const id = createLocalId();
 
   const formatNewDate = (value: string | TemporalSupportedObject): string => {
     if (typeof value === 'string') {
