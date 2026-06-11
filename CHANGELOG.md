@@ -11,7 +11,7 @@ We'd like to extend a big thank you to the 9 contributors who made this release 
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-Special thanks go out to community member @mustafajw07 for their valuable contribution.
+Special thanks go out to community members @mustafajw07 and @Anexus5919 for their valuable contribution.
 
 The following team members contributed to this release:
 @alexfauquette, @JCQuintas, @rita-codes, @rluzists1, @sai6855, @siriwatknp, @arminmeh, @brijeshb42
@@ -74,7 +74,13 @@ Same changes as in `@mui/x-charts-pro@9.5.0`, plus:
 
 ### Scheduler
 
+#### `@mui/x-scheduler@9.0.0-beta.1`
+
+- [scheduler] Show scope dialog when deleting a recurring event (#22552) @Anexus5919
+
 #### `@mui/x-scheduler-premium@9.0.0-beta.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-scheduler@9.0.0-beta.1`, plus:
 
 - [scheduler] Remove dead CSS variable writes in `EventTimelinePremiumContent` (#22720) @rita-codes
 
@@ -82,6 +88,7 @@ Same changes as in `@mui/x-charts-pro@9.5.0`, plus:
 
 - [docs-infra] Fix immutable cache headers for `/\_next/static` assets (#22747) @brijeshb42
 - [docs-infra] Prefix `/\_next/static` cache header rule with `/x` basePath (#22748) @brijeshb42
+- [code-infra] Update dependencies to resolve Dependabot security alerts (#22714) @Janpot
 
 ### Docs
 
