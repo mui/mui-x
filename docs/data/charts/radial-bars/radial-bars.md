@@ -45,5 +45,6 @@ const clickHandler = (
 
 Radial bars are well suited to comparing a value across many periodic categories.
 The demo below compares self-reported trust in others among European youth between 2013 and 2024/25.
+It passes custom SVG as `children` to draw the 2013 reference outline, radial country labels, trend markers, and the EU average ring—reading the rotation and radius scales through the `useRotationAxis` and `useRadiusAxis` hooks.
 
 {{"demo": "TrustRadialBarChart.js", "bg": "outline"}}
