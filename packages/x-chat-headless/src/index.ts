@@ -16,7 +16,7 @@ import {
   ComposerTextArea,
   ComposerToolbar,
 } from './composer';
-import { ConversationListRoot } from './conversation-list';
+import { ConversationListItem, ConversationListRoot } from './conversation-list';
 import { ScrollToBottomAffordance, TypingIndicator, UnreadMarker } from './indicators';
 import { MessageActions, MessageAvatar, MessageContent, MessageMeta, MessageRoot } from './message';
 import { MessageListDateDivider, MessageListRoot } from './message-list';
@@ -477,6 +477,7 @@ export const Conversation = {
 
 export const ConversationList = {
   Root: ConversationListRoot,
+  Item: ConversationListItem,
 };
 
 export const Composer = {
