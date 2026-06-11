@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
 import { europeanYouthTrust } from '../dataset/europeanYouthTrust';
-import { EuAverageRing, PreviousTrustData } from './trustRadialBarChartComponents';
+import {
+  EuAverageRing,
+  PreviousTrustData,
+  TrustTooltip,
+} from './trustRadialBarChartComponents';
 
 const CURRENT_COLOR = '#7fa8c9';
 const PREVIOUS_COLOR = '#e8896b';
@@ -17,13 +21,13 @@ export default function TrustRadialBarChart() {
       height={600}
       margin={{ top: 24, bottom: 24, left: 24, right: 24 }}
       hideLegend
+      slots={{ tooltip: TrustTooltip }}
       series={[
         {
           dataKey: 'trust2024',
           label: '2024/25 trust',
           color: CURRENT_COLOR,
           highlightScope,
-          layout: 'horizontal',
           valueFormatter: trustFormatter,
         },
       ]}

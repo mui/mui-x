@@ -1,5 +1,9 @@
 import * as React from 'react';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { useDrawingArea, useRotationAxis, useRadiusAxis } from '@mui/x-charts/hooks';
+import { ChartsTooltipContainer, useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import {
   euAverageTrust2024,
   europeanYouthTrust,
@@ -8,6 +12,65 @@ import {
 interface PreviousTrustDataProps {
   currentColor: string;
   previousColor: string;
+}
+
+function TrustTooltipContent() {
+  const item = useItemTooltip<'radialBar'>();
+  if (!item) {
+    return null;
+  }
+
+  const country = europeanYouthTrust[item.identifier.dataIndex];
+  if (!country) {
+    return null;
+  }
+
+  const difference = country.trust2024 - country.trust2013;
+  const increased = difference >= 0;
+
+  return (
+    <Paper
+      elevation={0}
+      sx={{ m: 1, p: 1.5, border: 'solid', borderWidth: 2, borderColor: 'divider' }}
+    >
+      <Stack spacing={1}>
+        <Typography sx={{ fontWeight: 'medium' }}>{country.country}</Typography>
+        <Stack direction="row" sx={{ justifyContent: 'space-between', gap: 3 }}>
+          <Typography variant="body2" color="text.secondary">
+            2024/25
+          </Typography>
+          <Typography variant="body2">{country.trust2024.toFixed(1)} / 10</Typography>
+        </Stack>
+        <Stack direction="row" sx={{ justifyContent: 'space-between', gap: 3 }}>
+          <Typography variant="body2" color="text.secondary">
+            2013
+          </Typography>
+          <Typography variant="body2">{country.trust2013.toFixed(1)} / 10</Typography>
+        </Stack>
+        <Stack direction="row" sx={{ justifyContent: 'space-between', gap: 3 }}>
+          <Typography variant="body2" color="text.secondary">
+            Change
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{ fontWeight: 'medium', color: increased ? 'success.main' : 'error.main' }}
+          >
+            {increased ? '▲' : '▼'} {increased ? '+' : ''}
+            {difference.toFixed(1)}
+          </Typography>
+        </Stack>
+      </Stack>
+    </Paper>
+  );
+}
+
+/** Item tooltip showing the 2013 and 2024/25 values and their difference. */
+export function TrustTooltip() {
+  return (
+    <ChartsTooltipContainer trigger="item">
+      <TrustTooltipContent />
+    </ChartsTooltipContainer>
+  );
 }
 
 /** Per-country 2013 reference line plus the up/down trend marker. */
