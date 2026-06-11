@@ -49,7 +49,10 @@ export default function TrustRadialBarChart() {
       grid={{ radius: true }}
     >
       <EuAverageRing />
-      <PreviousTrustData currentColor={CURRENT_COLOR} previousColor={PREVIOUS_COLOR} />
+      <PreviousTrustData
+        currentColor={CURRENT_COLOR}
+        previousColor={PREVIOUS_COLOR}
+      />
     </RadialBarChart>
   );
 }

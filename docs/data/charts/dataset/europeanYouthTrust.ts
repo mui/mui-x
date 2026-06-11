@@ -37,5 +37,4 @@ export const europeanYouthTrust = [
 ];
 
 export const euAverageTrust2024 =
-  europeanYouthTrust.reduce((sum, d) => sum + d.trust2024, 0) /
-  europeanYouthTrust.length;
+  europeanYouthTrust.reduce((sum, d) => sum + d.trust2024, 0) / europeanYouthTrust.length;

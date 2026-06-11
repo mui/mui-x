@@ -8,7 +8,10 @@ interface PreviousTrustDataProps {
 }
 
 /** Per-country 2013 reference line plus the up/down trend marker. */
-export function PreviousTrustData({ currentColor, previousColor }: PreviousTrustDataProps) {
+export function PreviousTrustData({
+  currentColor,
+  previousColor,
+}: PreviousTrustDataProps) {
   const geometry = usePolarGeometry();
   if (!geometry) {
     return null;
@@ -41,9 +44,19 @@ export function PreviousTrustData({ currentColor, previousColor }: PreviousTrust
 
         return (
           <g key={country.country}>
-            <path d={previousLine} fill="none" stroke={previousColor} strokeWidth={2.5} />
-            <g transform={`translate(${markerX} ${markerY}) rotate(${markerRotation})`}>
-              <polygon points={markerPoints} fill={increased ? currentColor : previousColor} />
+            <path
+              d={previousLine}
+              fill="none"
+              stroke={previousColor}
+              strokeWidth={2.5}
+            />
+            <g
+              transform={`translate(${markerX} ${markerY}) rotate(${markerRotation})`}
+            >
+              <polygon
+                points={markerPoints}
+                fill={increased ? currentColor : previousColor}
+              />
             </g>
           </g>
         );

@@ -14,7 +14,13 @@ export function EuAverageRing() {
 
   return (
     <g transform={`translate(${cx} ${cy})`}>
-      <circle r={radius} fill="none" stroke="#757575" strokeWidth={1} strokeDasharray="4 4" />
+      <circle
+        r={radius}
+        fill="none"
+        stroke="#757575"
+        strokeWidth={1}
+        strokeDasharray="4 4"
+      />
       <text
         x={0}
         y={-radius - 6}
