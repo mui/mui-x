@@ -49,7 +49,7 @@ const TimeGridEventTouchTitle = styled(Typography, {
   margin: 0,
   color: 'var(--event-on-surface-subtle-primary)',
   fontWeight: theme.typography.fontWeightMedium,
-  fontSize: 'var(--EventCalendar-fontSize-eventTitle)',
+  fontSize: 'var(--EventCalendar-fontSize-eventTitle, 0.75rem)',
   lineHeight: `${TOUCH_TITLE_LINE_HEIGHT_PX}px`,
   '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',

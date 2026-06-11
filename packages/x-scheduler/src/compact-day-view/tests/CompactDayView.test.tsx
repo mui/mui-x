@@ -55,4 +55,19 @@ describe('<CompactDayView />', () => {
     const timeElements = root.querySelectorAll(`.${eventCalendarClasses.timeGridEventTime}`);
     expect(timeElements.length).to.equal(0);
   });
+
+  it('should render the resize handlers for a resizable event', () => {
+    const event = EventBuilder.new()
+      .title('Resizable Event')
+      .span('2025-07-03T10:00:00Z', '2025-07-03T11:00:00Z')
+      .resizable(true)
+      .build();
+
+    renderWithProviders(<CompactDayView />, [event]);
+
+    const handlers = getDayTimeGrid().querySelectorAll(
+      `.${eventCalendarClasses.timeGridEventResizeHandler}`,
+    );
+    expect(handlers.length).to.equal(2);
+  });
 });

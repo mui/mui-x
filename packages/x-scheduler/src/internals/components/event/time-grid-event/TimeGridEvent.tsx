@@ -62,7 +62,7 @@ const TimeGridEventTitle = styled(Typography, {
   margin: 0,
   color: 'var(--event-on-surface-subtle-primary)',
   fontWeight: theme.typography.fontWeightMedium,
-  fontSize: 'var(--EventCalendar-fontSize-eventTitle)',
+  fontSize: 'var(--EventCalendar-fontSize-eventTitle, 0.75rem)',
   lineHeight: 1.43,
   paddingRight: theme.spacing(1.5),
   height: 'fit-content',
@@ -82,7 +82,7 @@ const TimeGridEventTime = styled('time', {
 })(({ theme }) => ({
   color: 'var(--event-on-surface-subtle-secondary)',
   fontWeight: theme.typography.fontWeightRegular,
-  fontSize: 'var(--EventCalendar-fontSize-timeText)',
+  fontSize: 'var(--EventCalendar-fontSize-timeText, 0.75rem)',
   lineHeight: 1.43,
   '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',
@@ -108,6 +108,7 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   right: 3,
   bottom: 3,
   padding: theme.spacing(0.25),
+  fontSize: 'var(--EventCalendar-fontSize-recurringIcon, 1.25rem)',
   color: 'var(--event-on-surface-subtle-secondary)',
   '[data-editing] &': {
     color: 'var(--event-on-surface-selected)',
@@ -191,7 +192,6 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           <TimeGridEventRecurringIcon
             className={classes.timeGridEventRecurringIcon}
             aria-hidden="true"
-            fontSize="small"
           />
         )}
       </React.Fragment>

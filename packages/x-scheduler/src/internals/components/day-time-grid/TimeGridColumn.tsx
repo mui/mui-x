@@ -11,7 +11,6 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-interna
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-internals/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-internals/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-internals/scheduler-selectors';
-import { TimeGridEvent as DesktopTimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventSkeleton } from '../event-skeleton';
 import { EventDialogTrigger, useEventDialogContext } from '../event-dialog/EventDialog';
 import { useEventCalendarStyledContext } from '../../../event-calendar/EventCalendarStyledContext';
@@ -131,7 +130,7 @@ function ColumnInteractiveLayer({
   const store = useEventCalendarStoreContext();
   const { onOpen: startEditing } = useEventDialogContext();
   const { classes } = useEventCalendarStyledContext();
-  const { timeGridEvent: TimeGridEvent = DesktopTimeGridEvent } = useDayTimeGridInternalRenderers();
+  const { timeGridEvent: TimeGridEvent } = useDayTimeGridInternalRenderers();
 
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);

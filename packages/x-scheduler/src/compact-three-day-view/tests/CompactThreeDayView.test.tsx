@@ -1,4 +1,8 @@
-import { createSchedulerRenderer, DEFAULT_TESTING_VISIBLE_DATE } from 'test/utils/scheduler';
+import {
+  adapter,
+  createSchedulerRenderer,
+  DEFAULT_TESTING_VISIBLE_DATE,
+} from 'test/utils/scheduler';
 import { within } from '@mui/internal-test-utils';
 import { CompactThreeDayView } from '@mui/x-scheduler/compact-three-day-view';
 import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
@@ -42,10 +46,14 @@ describe('<CompactThreeDayView />', () => {
 
     const root = getDayTimeGrid();
     const headerCells = within(root).getAllByRole('columnheader');
-    // visibleDate is 2025-07-03 (Thursday). The 3-day range should include 3, 4, 5.
     const labels = headerCells.map((cell) => cell.getAttribute('aria-label'));
-    expect(labels[0]).to.match(/3$/);
-    expect(labels[1]).to.match(/4$/);
-    expect(labels[2]).to.match(/5$/);
+
+    // The 3-day range starts at visibleDate and shows 3 consecutive days. Derive the expected
+    // day-of-month from the adapter (rather than matching a bare digit) so the assertion does
+    // not also accept dates such as "13"/"23" when matching "3".
+    labels.forEach((label, index) => {
+      const expectedDay = adapter.getDate(adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, index));
+      expect(label).to.match(new RegExp(`\\b${expectedDay}$`));
+    });
   });
 });
