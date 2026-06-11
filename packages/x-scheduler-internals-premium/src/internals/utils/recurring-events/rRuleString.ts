@@ -18,12 +18,32 @@ const SUPPORTED_RRULE_KEYS = new Set([
   'COUNT',
 ]);
 
+// Fails to compile if `RecurringEventFrequency` changes, keeping the runtime check in sync with the type.
+const SUPPORTED_FREQUENCIES: Record<SchedulerProcessedEventRecurrenceRule['freq'], true> = {
+  DAILY: true,
+  WEEKLY: true,
+  MONTHLY: true,
+  YEARLY: true,
+};
+
+function validateFreq(freq: string): SchedulerProcessedEventRecurrenceRule['freq'] {
+  if (!Object.prototype.hasOwnProperty.call(SUPPORTED_FREQUENCIES, freq)) {
+    throw new Error(
+      `MUI X Scheduler: Invalid FREQ value "${freq}". ` +
+        'The frequency must be one of DAILY, WEEKLY, MONTHLY, or YEARLY. ' +
+        'Provide a supported frequency value.',
+    );
+  }
+  return freq as SchedulerProcessedEventRecurrenceRule['freq'];
+}
+
 export function parseRRule(
   adapter: Adapter,
   input: string | SchedulerEventRecurrenceRule,
   timezone: TemporalTimezone,
 ): SchedulerProcessedEventRecurrenceRule {
   if (typeof input === 'object') {
+    validateFreq(input.freq);
     if (input.until != null) {
       return {
         ...input,
@@ -72,7 +92,7 @@ export function parseRRule(
   }
 
   const rrule: SchedulerProcessedEventRecurrenceRule = {
-    freq: rruleObject.FREQ as SchedulerProcessedEventRecurrenceRule['freq'],
+    freq: validateFreq(rruleObject.FREQ),
   };
 
   if (rruleObject.INTERVAL) {
