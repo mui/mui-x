@@ -294,6 +294,22 @@ export default defineConfig(
     },
   },
 
+  // Type-aware check: flag ignored cleanup/unsubscribe return values (leaks).
+  // Like @typescript-eslint/no-floating-promises, but for returned functions.
+  {
+    files: [`packages/*/src/**/*${EXTENSION_TS}`],
+    ignores: ['**/*.d.ts', `**/*.spec${EXTENSION_TS}`, `**/*.test${EXTENSION_TS}`],
+    rules: {
+      'mui/no-floating-cleanup': 'error',
+    },
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: dirname,
+        project: ['./tsconfig.json'],
+      },
+    },
+  },
+
   // TODO remove, shouldn't disable prop-type generation rule.
   // lot of public components are missing it.
   {
