@@ -136,7 +136,10 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
   });
 
   it('Method: getDaysInMonth', () => {
+    // Safar 1440 is a 30-day Hijri month.
     expect(adapter.getDaysInMonth(testDateIso)).to.equal(30);
+    // Muharram 1446 is a 29-day Hijri month.
+    expect(adapter.getDaysInMonth(adapter.date('2024-07-20T11:44:00.000Z')!)).to.equal(29);
   });
 
   it('Method: setYear', () => {
