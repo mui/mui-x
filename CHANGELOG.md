@@ -7,6 +7,7 @@ _Jun 11, 2026_
 We'd like to extend a big thank you to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 New [`multiSelect` column type for Data Grid Pro](https://mui.com/x/react-data-grid/column-definition/#MultiSelectColumn)
+- 🚀 New [renderer="svg-progressive"](https://mui.com/x/react-charts/scatter/#progressive-renderer) paints scatter points in batched frames so large datasets render smoothly without blocking the main thread.
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
