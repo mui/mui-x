@@ -1,129 +1,13 @@
 import * as React from 'react';
 import { RadialBarChart } from '@mui/x-charts-premium/RadialBarChart';
-import { useDrawingArea, useRadiusAxis, useRotationAxis } from '@mui/x-charts/hooks';
 import { europeanYouthTrust } from '../dataset/europeanYouthTrust';
+import { EuAverageRing } from './euAverageRing';
+import { PreviousTrustData } from './previousTrustData';
 
 const CURRENT_COLOR = '#7fa8c9';
 const PREVIOUS_COLOR = '#e8896b';
 
-const euAverage =
-  europeanYouthTrust.reduce((sum, d) => sum + d.trust2024, 0) /
-  europeanYouthTrust.length;
-
 const trustFormatter = (value) => (value == null ? '' : `${value.toFixed(1)} / 10`);
-
-/**
- * Custom overlay drawn inside the chart's SVG (passed as `children`).
- * It reads the rotation/radius scales through chart hooks to position:
- * - the 2013 reference outline for each country,
- * - the radial country labels,
- * - the up/down trend markers,
- * - the EU average ring.
- */
-function TrustDecorations() {
-  const { left, top, width, height } = useDrawingArea();
-  const rotationAxis = useRotationAxis();
-  const radiusAxis = useRadiusAxis();
-
-  if (!rotationAxis || !radiusAxis) {
-    return null;
-  }
-
-  const cx = left + width / 2;
-  const cy = top + height / 2;
-  const angleScale = rotationAxis.scale;
-  const bandwidth = rotationAxis.scale.bandwidth();
-  const radiusScale = radiusAxis.scale;
-  const baseRadius = radiusScale(0);
-
-  // Polar (0 = up, clockwise) to local cartesian, relative to the chart center.
-  const point = (radius, angle) => [
-    radius * Math.sin(angle),
-    -radius * Math.cos(angle),
-  ];
-
-  return (
-    <g transform={`translate(${cx} ${cy})`}>
-      <circle
-        r={radiusScale(euAverage)}
-        fill="none"
-        stroke="#9e9e9e"
-        strokeWidth={1}
-        strokeDasharray="4 4"
-      />
-      <text
-        x={0}
-        y={-radiusScale(euAverage) - 6}
-        textAnchor="middle"
-        fontSize={11}
-        fontStyle="italic"
-        fill="#757575"
-      >
-        EU average 2024/25
-      </text>
-      {europeanYouthTrust.map((country) => {
-        const start = angleScale(country.country);
-        if (start == null) {
-          return null;
-        }
-        const end = start + bandwidth;
-        const mid = start + bandwidth / 2;
-        const currentRadius = radiusScale(country.trust2024);
-        const previousRadius = radiusScale(country.trust2013);
-        const increased = country.trust2024 >= country.trust2013;
-
-        // Arc line marking the 2013 level: two band edges at the previous
-        // radius joined by a circular arc (SVG `A` command).
-        const [prevStartX, prevStartY] = point(previousRadius, start);
-        const [prevEndX, prevEndY] = point(previousRadius, end);
-        const previousLine = `M ${prevStartX} ${prevStartY} A ${previousRadius} ${previousRadius} 0 0 1 ${prevEndX} ${prevEndY}`;
-
-        let labelRotation = (mid * 180) / Math.PI - 90;
-        let labelAnchor = 'start';
-        if (labelRotation > 90) {
-          labelRotation -= 180;
-          labelAnchor = 'end';
-        } else if (labelRotation < -90) {
-          labelRotation += 180;
-          labelAnchor = 'end';
-        }
-        const [labelX, labelY] = point(baseRadius + 8, mid);
-
-        const [markerX, markerY] = point(currentRadius + 11, mid);
-        const markerRotation = (mid * 180) / Math.PI;
-        const markerPoints = increased ? '0,-6 -5,3 5,3' : '0,6 -5,-3 5,-3';
-
-        return (
-          <g key={country.country}>
-            <path
-              d={previousLine}
-              fill="none"
-              stroke={PREVIOUS_COLOR}
-              strokeWidth={2.5}
-            />
-            <text
-              transform={`translate(${labelX} ${labelY}) rotate(${labelRotation})`}
-              textAnchor={labelAnchor}
-              dominantBaseline="middle"
-              fontSize={11}
-              fill="#37474f"
-            >
-              {country.country}
-            </text>
-            <g
-              transform={`translate(${markerX} ${markerY}) rotate(${markerRotation})`}
-            >
-              <polygon
-                points={markerPoints}
-                fill={increased ? CURRENT_COLOR : PREVIOUS_COLOR}
-              />
-            </g>
-          </g>
-        );
-      })}
-    </g>
-  );
-}
 
 const highlightScope = { highlight: 'item', fade: 'none' };
 
@@ -147,8 +31,8 @@ export default function TrustRadialBarChart() {
         {
           scaleType: 'band',
           dataKey: 'country',
-          startAngle: 8,
-          endAngle: 352,
+          startAngle: 0,
+          endAngle: 354,
           categoryGapRatio: 0.25,
         },
       ]}
@@ -163,7 +47,11 @@ export default function TrustRadialBarChart() {
       ]}
       grid={{ radius: true }}
     >
-      <TrustDecorations />
+      <EuAverageRing />
+      <PreviousTrustData
+        currentColor={CURRENT_COLOR}
+        previousColor={PREVIOUS_COLOR}
+      />
     </RadialBarChart>
   );
 }

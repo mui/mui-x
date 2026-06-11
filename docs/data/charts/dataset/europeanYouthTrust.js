@@ -35,3 +35,7 @@ export const europeanYouthTrust = [
   { country: 'Türkiye', trust2024: 5.0, trust2013: 5.6 },
   { country: 'France', trust2024: 5.6, trust2013: 6.2 },
 ];
+
+export const euAverageTrust2024 =
+  europeanYouthTrust.reduce((sum, d) => sum + d.trust2024, 0) /
+  europeanYouthTrust.length;
