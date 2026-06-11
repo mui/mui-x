@@ -41,7 +41,7 @@ const TimePicker = React.forwardRef(function TimePicker(
   return <MobileTimePicker ref={ref} {...(other as MobileTimePickerProps)} />;
 }) as TimePickerComponent;
 
-TimePicker.propTypes = {
+TimePicker.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

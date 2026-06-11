@@ -44,7 +44,7 @@ const StandaloneWeekViewPremium = React.forwardRef(function StandaloneWeekViewPr
   );
 }) as StandaloneWeekViewPremiumComponent;
 
-StandaloneWeekViewPremium.propTypes = {
+StandaloneWeekViewPremium.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

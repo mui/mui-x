@@ -32,7 +32,7 @@ const StandaloneMonthView = React.forwardRef(function StandaloneMonthView<
   );
 }) as StandaloneMonthViewComponent;
 
-StandaloneMonthView.propTypes = {
+StandaloneMonthView.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |

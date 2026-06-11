@@ -282,7 +282,7 @@ const ChatToolPartIconComponent = React.forwardRef<HTMLSpanElement, ChatToolPart
   },
 );
 
-ChatToolPartIconComponent.propTypes = {
+ChatToolPartIconComponent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -764,7 +764,7 @@ const ChatMessageContent = React.forwardRef<HTMLDivElement, ChatMessageContentPr
   },
 );
 
-ChatMessageContent.propTypes = {
+ChatMessageContent.propTypes /* remove-proptypes */ = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
