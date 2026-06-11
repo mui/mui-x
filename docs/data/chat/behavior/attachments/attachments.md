@@ -106,7 +106,7 @@ queued  -->  uploading  -->  uploaded  -->  (sent with message)
 The `useChatComposer()` hook provides direct access to attachment state:
 
 ```tsx
-import { useChatComposer } from '@mui/x-chat';
+import { useChatComposer } from '@mui/x-chat/headless';
 
 function AttachmentManager() {
   const composer = useChatComposer();

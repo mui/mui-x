@@ -3,7 +3,7 @@ productId: x-chat
 title: Chat React components
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatRoot, ChatLayout
+components: ChatBox
 ---
 
 {{"component": "modules/components/overview/XLogo.tsx"}}

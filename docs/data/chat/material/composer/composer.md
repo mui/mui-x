@@ -3,7 +3,7 @@ productId: x-chat
 title: Chat - Composer
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ComposerRoot, ComposerTextArea, ComposerSendButton, ComposerAttachButton, ComposerToolbar, ComposerHelperText
+components: ChatComposer, ChatComposerTextArea, ChatComposerSendButton, ChatComposerAttachButton, ChatComposerToolbar, ChatComposerHelperText
 ---
 
 # Chat - Composer
@@ -106,7 +106,7 @@ The demo below mirrors the current composer value above the chat surface:
 For deeper control, the `useChatComposer()` hook provides direct access to the composer state:
 
 ```tsx
-import { useChatComposer } from '@mui/x-chat';
+import { useChatComposer } from '@mui/x-chat/headless';
 
 function ComposerInfo() {
   const composer = useChatComposer();

@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Layout
-packageName: '@mui/x-chat'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 components: ChatLayout
 ---
@@ -43,7 +43,7 @@ ChatLayout
         ChatComposerSendButton
 ```
 
-All of these components are exported from `@mui/x-chat`.
+`ChatLayout` is exported from `@mui/x-chat/headless`; every component below it in the tree is exported from `@mui/x-chat`.
 
 ## Thread-only mode
 

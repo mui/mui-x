@@ -1,7 +1,7 @@
 ---
 productId: x-chat
 title: Localization
-packageName: '@mui/x-chat'
+packageName: '@mui/x-chat/headless'
 githubLabel: 'scope: chat'
 components: ChatRoot
 ---

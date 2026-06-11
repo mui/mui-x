@@ -3,7 +3,7 @@ productId: x-chat
 title: Chat - Material UI customization
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatRoot
+components: ChatBox
 ---
 
 # Chat - Customization

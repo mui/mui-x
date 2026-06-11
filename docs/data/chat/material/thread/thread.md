@@ -3,7 +3,7 @@ productId: x-chat
 title: Chat - Thread
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ConversationRoot, ConversationHeader, ConversationTitle, ConversationSubtitle, ConversationHeaderActions
+components: ChatConversation, ChatConversationHeader, ChatConversationTitle, ChatConversationSubtitle, ChatConversationHeaderActions
 ---
 
 # Chat - Thread
@@ -281,7 +281,7 @@ It inserts a custom warning banner between the header and the message list:
 
 {{"demo": "ThreadRecomposition.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-Wrap your custom thread with a `ChatProvider` from `@mui/x-chat` to wire runtime state to your adapter.
+Wrap your custom thread with a `ChatProvider` from `@mui/x-chat/headless` to wire runtime state to your adapter.
 
 ## See also
 

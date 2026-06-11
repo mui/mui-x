@@ -21,7 +21,7 @@ You author the adapter once and pass it directly to `ChatBox`:
 
 ```tsx
 import { ChatBox } from '@mui/x-chat';
-import type { ChatAdapter } from '@mui/x-chat';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 
 const adapter: ChatAdapter = {
   async sendMessage({ message, signal }) {
@@ -48,7 +48,7 @@ The full interface is generic over your pagination cursor type.
 The default cursor type is `string`, which covers the majority of REST and cursor-based APIs:
 
 ```ts
-import type { ChatAdapter } from '@mui/x-chat';
+import type { ChatAdapter } from '@mui/x-chat/headless';
 
 interface ChatAdapter<Cursor = string> {
   // Required
@@ -405,7 +405,7 @@ To handle errors at the application level, use the `onError` callback prop:
 If you are building a custom layout using hooks instead of `ChatBox`, wire the adapter to `ChatProvider` directly:
 
 ```tsx
-import { ChatProvider } from '@mui/x-chat';
+import { ChatProvider } from '@mui/x-chat/headless';
 
 export default function App() {
   return (

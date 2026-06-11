@@ -159,7 +159,7 @@ No additional setup is required beyond implementing `setTyping()` and `subscribe
 When building a custom layout with `ChatRoot`, place the `TypingIndicator` anywhere inside the provider tree:
 
 ```tsx
-import { ChatRoot } from '@mui/x-chat';
+import { ChatRoot } from '@mui/x-chat/headless';
 import { Indicators } from '@mui/x-chat/headless';
 
 <ChatRoot adapter={adapter}>

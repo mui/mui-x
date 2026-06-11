@@ -7,7 +7,7 @@ githubLabel: 'scope: chat'
 
 # Chat - Hooks
 
-<p class="description">Read chat state and trigger runtime actions from any component using the hooks exported from <code>@mui/x-chat</code>.</p>
+<p class="description">Read chat state and trigger runtime actions from any component using the hooks exported from <code>@mui/x-chat/headless</code>.</p>
 
 `ChatBox` covers most use cases, but you may need to reach into chat state from components that live outside `ChatBox`—a page header that shows streaming status, a sidebar that renders conversation metadata, or a custom toolbar that controls the composer.
 
@@ -15,7 +15,7 @@ Every hook subscribes to a precise slice of the normalized store, so components 
 
 ## Import
 
-All hooks are exported from `@mui/x-chat`:
+All hooks are exported from `@mui/x-chat/headless`:
 
 ```tsx
 import {
@@ -29,7 +29,7 @@ import {
   useChatOnToolCall,
   useChatPartRenderer,
   useChatStore,
-} from '@mui/x-chat';
+} from '@mui/x-chat/headless';
 ```
 
 ## Provider requirement
@@ -295,7 +295,7 @@ const store: ChatStore<Cursor> = useChatStore();
 Use it with `useStore()` from `@mui/x-internals/store` to create a custom subscription:
 
 ```tsx
-import { useChatStore, chatSelectors } from '@mui/x-chat';
+import { useChatStore, chatSelectors } from '@mui/x-chat/headless';
 import { useStore } from '@mui/x-internals/store';
 
 function MessageCounter() {

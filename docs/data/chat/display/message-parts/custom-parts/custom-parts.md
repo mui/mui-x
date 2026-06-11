@@ -102,7 +102,7 @@ Register renderers on `ChatProvider` using the `partRenderers` prop:
 Use `useChatPartRenderer()` to retrieve a registered renderer in any component:
 
 ```tsx
-import { useChatPartRenderer } from '@mui/x-chat';
+import { useChatPartRenderer } from '@mui/x-chat/headless';
 
 function MyMessagePart({ part }) {
   const renderer = useChatPartRenderer(part.type);
@@ -118,7 +118,7 @@ function MyMessagePart({ part }) {
 When you only need to customize one or two part types and keep defaults for the rest, use `getDefaultMessagePartRenderer()`:
 
 ```tsx
-import { getDefaultMessagePartRenderer } from '@mui/x-chat';
+import { getDefaultMessagePartRenderer } from '@mui/x-chat/headless';
 
 function renderPart(part, message, index) {
   // Custom rendering for one part type

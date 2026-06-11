@@ -3,7 +3,7 @@ productId: x-chat
 title: Chat - Conversation list
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ConversationListRoot, ConversationListItem, ConversationListItemAvatar, ConversationListTitle, ConversationListPreview, ConversationListTimestamp, ConversationListUnreadBadge
+components: ChatConversationList
 ---
 
 # Chat - Conversation list
