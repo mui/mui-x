@@ -68,7 +68,7 @@ Same changes as in `@mui/x-charts@9.5.0`, plus:
 Same changes as in `@mui/x-charts-pro@9.5.0`, plus:
 
 - [charts-premium] Set `Heatmap` WebGL render as stable (#22665) @alexfauquette
-- [charts-premium] Stabilize candle stick charts (#22666) @alexfauquette
+- [charts-premium] Stabilize candlestick charts (#22666) @alexfauquette
 - [charts-premium] Stabilize the radial charts (#22655) @alexfauquette
 
 ### Scheduler
