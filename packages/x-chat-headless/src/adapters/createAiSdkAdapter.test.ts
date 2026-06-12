@@ -194,7 +194,11 @@ describe('createAiSdkAdapter — { stream } branch', () => {
     expect(finish.messageId).toBe(start.messageId);
   });
 
-  it('resets synthetic messageId generation for each stream', async () => {
+  it('assigns a unique synthetic messageId to each stream', async () => {
+    // Each send must get a *distinct* synthetic id. If the adapter reused the
+    // same id across sends, processStream would key every reply to the same
+    // assistant message and append sequential replies into a single bubble
+    // (the "user sends 1, then 2, and reply 2 merges into reply 1" bug).
     const adapter = createAiSdkAdapter({
       stream: () =>
         makeReadableStream<AiSdkUIMessageChunk>([{ type: 'start' }, { type: 'finish' }]),
@@ -224,7 +228,7 @@ describe('createAiSdkAdapter — { stream } branch', () => {
 
     expect(firstFinish.messageId).toBe(firstStart.messageId);
     expect(secondFinish.messageId).toBe(secondStart.messageId);
-    expect(secondStart.messageId).toBe(firstStart.messageId);
+    expect(secondStart.messageId).not.toBe(firstStart.messageId);
   });
 
   it('preserves a messageId when the AI SDK does provide one', async () => {

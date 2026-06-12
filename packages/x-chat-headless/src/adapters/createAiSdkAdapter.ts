@@ -145,21 +145,18 @@ function parseStreamLine(rawLine: string): unknown | null {
 function convertToChatStream(
   upstream: ReadableStream<AiSdkUIMessageChunk | Uint8Array>,
   signal: AbortSignal,
+  nextSyntheticMessageId: () => string,
 ): ReadableStream<ChatMessageChunk> {
   const reader = upstream.getReader();
   const decoder = new TextDecoder();
   let buffer = '';
-  let syntheticIdCounter = 0;
   // Per-response synthetic ID used when the AI SDK doesn't supply one on
   // `start`/`finish`. `processStream` in the headless package requires a
   // `messageId` on the `start` chunk to bind subsequent text/reasoning
-  // deltas to the right assistant message.
+  // deltas to the right assistant message. The id generator is owned by the
+  // adapter (not this per-call closure) so every response gets a distinct id;
+  // see `createAiSdkAdapter` for why a per-call counter would collide.
   let syntheticMessageId: string | null = null;
-
-  const nextSyntheticMessageId = () => {
-    syntheticIdCounter += 1;
-    return `ai-sdk-msg-${syntheticIdCounter.toString(36)}`;
-  };
 
   let hasAbortListener = false;
   const cancelReader = () => {
@@ -424,6 +421,18 @@ export function createAiSdkAdapter(options: CreateAiSdkAdapterOptions): ChatAdap
 
   const streamFn = (options as CreateAiSdkAdapterStreamOptions).stream;
 
+  // Counter lives at adapter scope so each response gets a *unique* synthetic
+  // message id. Backends that omit `messageId` on their `start`/`finish` chunks
+  // (e.g. the AI SDK's bare `{ type: 'start' }`) rely on the adapter to supply
+  // one. If the counter were scoped per `convertToChatStream` call it would
+  // reset to the same first id on every send, so processStream would key every
+  // reply to the same assistant message and append them into a single bubble.
+  let syntheticIdCounter = 0;
+  const nextSyntheticMessageId = () => {
+    syntheticIdCounter += 1;
+    return `ai-sdk-msg-${syntheticIdCounter.toString(36)}`;
+  };
+
   return {
     async sendMessage(input: ChatSendMessageInput) {
       const upstream = await streamFn({
@@ -435,7 +444,7 @@ export function createAiSdkAdapter(options: CreateAiSdkAdapterOptions): ChatAdap
         signal: input.signal,
       });
 
-      return convertToChatStream(upstream, input.signal);
+      return convertToChatStream(upstream, input.signal, nextSyntheticMessageId);
     },
     async regenerate(input: ChatRegenerateInput) {
       const upstream = await streamFn({
@@ -447,7 +456,7 @@ export function createAiSdkAdapter(options: CreateAiSdkAdapterOptions): ChatAdap
         signal: input.signal,
       });
 
-      return convertToChatStream(upstream, input.signal);
+      return convertToChatStream(upstream, input.signal, nextSyntheticMessageId);
     },
   };
 }
