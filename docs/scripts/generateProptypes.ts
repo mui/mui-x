@@ -14,6 +14,10 @@ const COMPONENTS_WITHOUT_PROPTYPES = [
   'AnimatedBarElement',
   /* RadarDataProvider is disabled because many `any` were being generated. More info: https://github.com/mui/mui-x/pull/17968 */
   'RadarDataProvider',
+  /* The compact views are internal for now: exported only for experiments, no public propTypes yet. */
+  '/StandaloneCompactDayView.tsx',
+  '/StandaloneCompactThreeDayView.tsx',
+  '/StandaloneCompactWeekView.tsx',
 ];
 
 /**
