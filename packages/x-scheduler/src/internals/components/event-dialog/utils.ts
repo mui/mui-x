@@ -34,7 +34,7 @@ const WEEKDAYS: SchedulerWeekday[] = [
 ];
 
 export const getWeekdayToken = (adapter: Adapter, value: TemporalSupportedObject) => {
-  return WEEKDAYS[adapter.getDayOfWeek(value)];
+  return WEEKDAYS[adapter.toJsDate(value).getDay()];
 };
 
 export type EndsSelection = 'never' | 'after' | 'until';
