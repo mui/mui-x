@@ -283,6 +283,83 @@ function MessagePart({ part, message, index }) {
 
 When building custom tool cards, announce state transitions to assistive technology — for example with a polite live region when output arrives — and keep interactive elements reachable through the message list's keyboard navigation. See the [message list accessibility model](/x/react-chat/material/message-list/#accessibility) for details.
 
+## Default expanded state
+
+The built-in tool card rendered by `ChatMessageContent` is a collapsible disclosure.
+By default it opens while the tool gathers input or awaits approval and never collapses on its own.
+Use `partProps.tool.defaultExpanded` to control that per tool — for example to keep a noisy tool collapsed, or to expand a tool while it runs and collapse it once it finishes.
+
+`defaultExpanded` is a map keyed by `toolName`, with a `'*'` fallback for every other tool.
+Each value is either a static `boolean` (applied to the card and its `input`/`output` sections) or a resolver `(ownerState) => boolean | undefined`:
+
+```tsx
+<ChatBox
+  adapter={adapter}
+  slotProps={{
+    messageContent: {
+      partProps: {
+        tool: {
+          defaultExpanded: {
+            // Expand `write` while it runs, collapse it when the tool ends;
+            // leave its input/output sections at their default.
+            write: (ownerState) =>
+              ownerState.section
+                ? undefined
+                : ownerState.state === 'input-streaming' ||
+                  ownerState.state === 'input-available',
+            search: true, // always expanded
+            '*': undefined, // built-in default for everything else
+          },
+        },
+      },
+    },
+  }}
+/>
+```
+
+A resolver's returned `boolean` is applied on every state transition, so returning `false` collapses a card when its tool ends. Returning `undefined` — or omitting the tool — keeps the built-in behavior. The `ownerState` exposes:
+
+- `toolName`, `state`, and `role` of the invocation;
+- `isMessageStreaming` — whether the whole message is still streaming (`message.status === 'streaming'`);
+- `section` — `'input'` or `'output'` for a section, and `undefined` for the card root, so a single resolver can scope its decision.
+
+`defaultExpanded` controls only whether a disclosure is open; section _visibility_ still follows the tool state (the output section appears once output is available). When a policy collapses a card that holds keyboard focus, focus moves to its summary so it is never dropped.
+
+### Targeting a group of tools
+
+Map keys are matched by exact `toolName`; only the literal `'*'` key is special, as the fallback for tools without their own entry.
+There is no glob matching on keys — a key such as `'write*'` matches a tool literally named `write*`, not a prefix.
+
+To target a group of tools — for example every tool whose name starts with `write` — read `ownerState.toolName` inside the `'*'` resolver and return `undefined` for the rest so they keep the built-in behavior:
+
+```tsx
+defaultExpanded={{
+  '*': (ownerState) => {
+    if (ownerState.section || !ownerState.toolName.startsWith('write')) {
+      return undefined; // sections and non-write tools: built-in default
+    }
+    // every write* tool: expand while running, collapse when done
+    return (
+      ownerState.state === 'input-streaming' || ownerState.state === 'input-available'
+    );
+  },
+}}
+```
+
+An exact key takes precedence over `'*'`: when `defaultExpanded[toolName]` exists, that entry is used and `'*'` is not consulted, even if the exact entry's resolver returns `undefined`. This lets you combine one-off overrides with a group rule:
+
+```tsx
+defaultExpanded={{
+  search: true, // one specific tool, always expanded
+  '*': (ownerState) =>
+    ownerState.toolName.startsWith('write') && !ownerState.section ? true : undefined,
+}}
+```
+
+The playground below maps a few common policies to presets — pick one, then step the tool state and toggle message streaming to watch the card respond:
+
+{{"demo": "ToolCardExpansionPlayground.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## See also
 
 - [Tool approval](/x/react-chat/ai-and-agents/tool-approval/) for details on human-in-the-loop approval of tool calls.

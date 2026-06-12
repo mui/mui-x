@@ -102,6 +102,8 @@ export type {
   ToolPartSectionOwnerState,
   ToolPartSlotProps,
   ToolPartSlots,
+  ChatToolExpand,
+  ChatToolGetExpanded,
 } from './parts';
 
 // Part utilities

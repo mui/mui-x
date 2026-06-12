@@ -6,7 +6,10 @@ import {
   MessageContent,
   useMessageContentTabIndex,
   type MessageContentProps,
+  type ToolPartOwnerState,
+  type ToolPartSectionOwnerState,
 } from '@mui/x-chat-headless';
+import { useToolDisclosure } from '@mui/x-chat-headless/internals';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { mergeSlotProps } from '../internals/mergeSlotProps';
 import { useCopyToClipboard } from '../internals/useCopyToClipboard';
@@ -325,37 +328,69 @@ const ChatToolPartDetailsStyled = styled('details', {
   },
 }));
 
-// Collapsible root: manages open/close state, auto-opens when approval is requested
+// The package's built-in (no-policy) auto-open defaults, named once so the card root
+// and its sections share a single source of truth. `useToolDisclosure` applies these
+// with rising-edge semantics and layers the consumer's `defaultExpanded` policy on top.
+function toolRootDefaultOpen(state?: string): boolean {
+  return state === 'approval-requested' || state === 'input-streaming';
+}
+
+function toolSectionDefaultOpen(section?: 'input' | 'output', state?: string): boolean {
+  if (section === 'input') {
+    return state === 'input-streaming' || state === 'approval-requested';
+  }
+  if (section === 'output') {
+    return state === 'output-available';
+  }
+  return false;
+}
+
+// Wires a styled `<details>` slot to `useToolDisclosure`: owns the controlled open
+// state + ref (for focus safety) and chains a consumer-supplied `onToggle`.
+function useControlledDisclosure(
+  ownerState: ToolPartOwnerState | ToolPartSectionOwnerState,
+  builtInOpen: boolean,
+  onToggleProp?: React.ToggleEventHandler<HTMLDetailsElement>,
+) {
+  const ref = React.useRef<HTMLDetailsElement>(null);
+  const [open, setOpen] = useToolDisclosure(ownerState, builtInOpen, ref);
+  return {
+    ref,
+    open,
+    onToggle: (event: React.ToggleEvent<HTMLDetailsElement>) => {
+      setOpen((event.currentTarget as HTMLDetailsElement).open);
+      onToggleProp?.(event);
+    },
+  };
+}
+
+// Collapsible root: open/close state is owned by `useToolDisclosure`, which applies
+// the consumer's `defaultExpanded` policy when present and otherwise falls back to the
+// built-in rising-edge auto-open (approval requested / input streaming).
 function ChatToolPartRoot({
   ownerState,
   onToggle: onToggleProp,
   open: _openProp,
   ...rest
 }: {
-  ownerState?: { state?: string };
+  ownerState?: ToolPartOwnerState;
   onToggle?: React.ToggleEventHandler<HTMLDetailsElement>;
   open?: boolean;
   [key: string]: unknown;
 }) {
-  const state = ownerState?.state;
-  const shouldAutoOpen = state === 'approval-requested' || state === 'input-streaming';
-  const [open, setOpen] = React.useState(() => shouldAutoOpen);
-
-  React.useEffect(() => {
-    if (shouldAutoOpen) {
-      setOpen(true);
-    }
-  }, [shouldAutoOpen]);
+  const { ref, open, onToggle } = useControlledDisclosure(
+    ownerState as ToolPartOwnerState,
+    toolRootDefaultOpen(ownerState?.state),
+    onToggleProp,
+  );
 
   return (
     <ChatToolPartDetailsStyled
       {...(rest as React.ComponentPropsWithRef<typeof ChatToolPartDetailsStyled>)}
+      ref={ref}
       ownerState={ownerState}
       open={open}
-      onToggle={(event: React.ToggleEvent<HTMLDetailsElement>) => {
-        setOpen((event.currentTarget as HTMLDetailsElement).open);
-        onToggleProp?.(event);
-      }}
+      onToggle={onToggle}
     />
   );
 }
@@ -641,42 +676,24 @@ function ChatToolPartSection({
   open: _openProp,
   ...rest
 }: ChatToolPartSectionRenderProps) {
-  const section = ownerState?.section;
-  const state = ownerState?.state;
-  const initialOpen = React.useMemo(() => {
-    if (section === 'input') {
-      return state === 'input-streaming' || state === 'approval-requested';
-    }
-    if (section === 'output') {
-      return state === 'output-available';
-    }
-    return false;
-  }, [section, state]);
-  const [open, setOpen] = React.useState(initialOpen);
-
-  // The section component is reused across streamed invocation-state updates (same
-  // element identity), so `useState(initialOpen)` alone never reacts to post-mount
-  // transitions (e.g. `input-available` → `approval-requested`, or `output-available`).
-  // Mirror the auto-open behavior of `ChatToolPartRoot`: force open when the section
-  // newly becomes one that should be open, while leaving a user's manual collapse
-  // untouched otherwise (the effect only re-runs when `initialOpen` flips).
-  React.useEffect(() => {
-    if (initialOpen) {
-      setOpen(true);
-    }
-  }, [initialOpen]);
+  // Built-in section default: input opens while the tool gathers/awaits input,
+  // output opens once it is available. `useToolDisclosure` layers the consumer's
+  // `defaultExpanded` policy (which sees `ownerState.section`) on top, and keeps a
+  // user's manual collapse untouched between state transitions. A consumer
+  // `onToggle` (e.g. slotProps.section.onToggle) is chained without desyncing it.
+  const { ref, open, onToggle } = useControlledDisclosure(
+    ownerState as ToolPartSectionOwnerState,
+    toolSectionDefaultOpen(ownerState?.section, ownerState?.state),
+    onToggleProp,
+  );
 
   return (
     <ChatToolPartSectionDetails
       ownerState={ownerState}
       {...rest}
+      ref={ref}
       open={open}
-      onToggle={(event: React.ToggleEvent<HTMLDetailsElement>) => {
-        setOpen((event.currentTarget as HTMLDetailsElement).open);
-        // Forward to a consumer handler (e.g. slotProps.section.onToggle) so the
-        // disclosure can be observed without clobbering the controlled updater.
-        onToggleProp?.(event);
-      }}
+      onToggle={onToggle}
     />
   );
 }
@@ -1257,6 +1274,7 @@ ChatMessageContent.propTypes = {
   partProps: PropTypes.shape({
     'dynamic-tool': PropTypes.shape({
       className: PropTypes.string,
+      defaultExpanded: PropTypes.object,
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       toolSlotProps: PropTypes.object,
@@ -1287,6 +1305,7 @@ ChatMessageContent.propTypes = {
     }),
     tool: PropTypes.shape({
       className: PropTypes.string,
+      defaultExpanded: PropTypes.object,
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       toolSlotProps: PropTypes.object,

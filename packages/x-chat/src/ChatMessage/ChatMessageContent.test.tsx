@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import type { ChatAdapter, ChatMessage } from '@mui/x-chat-headless';
+import type { ChatAdapter, ChatMessage, ChatToolExpand } from '@mui/x-chat-headless';
 import { ChatRoot, MessageRoot, useChatStore } from '@mui/x-chat-headless';
 import { ChatMessageContent } from './ChatMessageContent';
 
@@ -507,6 +507,159 @@ describe('ChatMessageContent', () => {
 
       const rootDetailsAfter = document.querySelector('details')!;
       expect(rootDetailsAfter.hasAttribute('open')).toBe(true);
+    });
+  });
+
+  describe('tool part — defaultExpanded', () => {
+    function renderTool(message: ChatMessage, defaultExpanded: Record<string, ChatToolExpand>) {
+      let store!: ReturnType<typeof useChatStore>;
+      function CaptureStore() {
+        store = useChatStore();
+        return null;
+      }
+      const view = render(
+        <ChatRoot adapter={createAdapter()} initialMessages={[message]}>
+          <CaptureStore />
+          <MessageRoot messageId={message.id}>
+            <ChatMessageContent
+              data-testid="message-content"
+              partProps={{ tool: { defaultExpanded } }}
+            />
+          </MessageRoot>
+        </ChatRoot>,
+      );
+      return { ...view, getStore: () => store };
+    }
+
+    const toolMessage = (
+      toolInvocation: Extract<ChatMessage['parts'][number], { type: 'tool' }>['toolInvocation'],
+      status?: ChatMessage['status'],
+    ): ChatMessage => ({
+      id: 'm1',
+      role: 'assistant',
+      status,
+      parts: [{ type: 'tool', toolInvocation }],
+    });
+
+    const rootDetails = () => document.querySelector('details')!;
+
+    it('collapses a card the built-in default would open (write: false)', () => {
+      renderTool(
+        toolMessage({ toolCallId: 'tc1', toolName: 'write', state: 'input-streaming', input: {} }),
+        { write: false },
+      );
+      // built-in would open on input-streaming; the policy keeps it collapsed.
+      expect(rootDetails().hasAttribute('open')).toBe(false);
+    });
+
+    it('expands a card the built-in default would leave collapsed (write: true)', () => {
+      renderTool(
+        toolMessage({
+          toolCallId: 'tc1',
+          toolName: 'write',
+          state: 'output-available',
+          input: {},
+          output: {},
+        }),
+        { write: true },
+      );
+      expect(rootDetails().hasAttribute('open')).toBe(true);
+    });
+
+    it('collapses the card when the tool ends (resolver scoped to the root)', () => {
+      const { getStore } = renderTool(
+        toolMessage({ toolCallId: 'tc1', toolName: 'write', state: 'input-streaming', input: {} }),
+        {
+          write: (os) =>
+            os.section
+              ? undefined
+              : os.state === 'input-streaming' || os.state === 'input-available',
+        },
+      );
+      expect(rootDetails().hasAttribute('open')).toBe(true);
+      act(() => {
+        getStore().updateMessage('m1', {
+          parts: [
+            {
+              type: 'tool',
+              toolInvocation: {
+                toolCallId: 'tc1',
+                toolName: 'write',
+                state: 'output-available',
+                input: {},
+                output: {},
+              },
+            },
+          ],
+        });
+      });
+      expect(rootDetails().hasAttribute('open')).toBe(false);
+    });
+
+    it('applies the "*" fallback to tools without their own entry', () => {
+      renderTool(
+        toolMessage({
+          toolCallId: 'tc1',
+          toolName: 'unknownTool',
+          state: 'output-available',
+          input: {},
+          output: {},
+        }),
+        { '*': true },
+      );
+      expect(rootDetails().hasAttribute('open')).toBe(true);
+    });
+
+    it('prefers a per-tool entry over the "*" fallback', () => {
+      renderTool(
+        toolMessage({
+          toolCallId: 'tc1',
+          toolName: 'write',
+          state: 'output-available',
+          input: {},
+          output: {},
+        }),
+        { write: true, '*': false },
+      );
+      expect(rootDetails().hasAttribute('open')).toBe(true);
+    });
+
+    it('controls an input/output section via ownerState.section', () => {
+      // The output section auto-opens by default; the policy force-collapses it while
+      // leaving the card root at its built-in (collapsed) state.
+      renderTool(
+        toolMessage({
+          toolCallId: 'tc1',
+          toolName: 'write',
+          state: 'output-available',
+          input: { a: 1 },
+          output: { b: 2 },
+        }),
+        { write: (os) => (os.section === 'output' ? false : undefined) },
+      );
+      const outputDetails = screen.getByText('Tool result:').closest('details')!;
+      expect(outputDetails.hasAttribute('open')).toBe(false);
+    });
+
+    it('keeps the card open while the message streams, then collapses when it ends', () => {
+      const { getStore } = renderTool(
+        toolMessage(
+          {
+            toolCallId: 'tc1',
+            toolName: 'write',
+            state: 'output-available',
+            input: {},
+            output: {},
+          },
+          'streaming',
+        ),
+        { write: (os) => (os.section ? undefined : os.isMessageStreaming) },
+      );
+      expect(rootDetails().hasAttribute('open')).toBe(true);
+      act(() => {
+        getStore().updateMessage('m1', { status: 'sent' });
+      });
+      expect(rootDetails().hasAttribute('open')).toBe(false);
     });
   });
 

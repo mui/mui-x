@@ -4,7 +4,7 @@
     "partProps": {
       "type": {
         "name": "shape",
-        "description": "{ dynamic-tool?: { className?: string, slotProps?: object, slots?: object, toolSlotProps?: object, toolSlots?: object }, file?: { className?: string, slotProps?: object, slots?: object }, reasoning?: { className?: string, slotProps?: object, slots?: object }, source-document?: { className?: string, slotProps?: object, slots?: object }, source-url?: { className?: string, slotProps?: object, slots?: object }, text?: { renderText?: func }, tool?: { className?: string, slotProps?: object, slots?: object, toolSlotProps?: object, toolSlots?: object } }"
+        "description": "{ dynamic-tool?: { className?: string, defaultExpanded?: object, slotProps?: object, slots?: object, toolSlotProps?: object, toolSlots?: object }, file?: { className?: string, slotProps?: object, slots?: object }, reasoning?: { className?: string, slotProps?: object, slots?: object }, source-document?: { className?: string, slotProps?: object, slots?: object }, source-url?: { className?: string, slotProps?: object, slots?: object }, text?: { renderText?: func }, tool?: { className?: string, defaultExpanded?: object, slotProps?: object, slots?: object, toolSlotProps?: object, toolSlots?: object } }"
       }
     }
   },
