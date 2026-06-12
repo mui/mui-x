@@ -58,12 +58,15 @@ function ChartsGrid(inProps: ChartsGridProps) {
 
   const classes = useUtilityClasses(props);
 
-  const horizontalAxis = yAxis[yAxisIds[0]];
-  const verticalAxis = xAxis[xAxisIds[0]];
+  // While the async cartesian-axis pipeline is in `pending`, `xAxisIds` /
+  // `yAxisIds` are empty and the axis lookups return `undefined`. Skip the
+  // grid until the next-tick commit lands.
+  const horizontalAxis = yAxisIds[0] !== undefined ? yAxis[yAxisIds[0]] : undefined;
+  const verticalAxis = xAxisIds[0] !== undefined ? xAxis[xAxisIds[0]] : undefined;
 
   return (
     <GridRoot {...other} className={clsx(classes.root, className)}>
-      {vertical && (
+      {vertical && verticalAxis && (
         <ChartsGridVertical
           axis={verticalAxis}
           start={drawingArea.top}
@@ -72,7 +75,7 @@ function ChartsGrid(inProps: ChartsGridProps) {
         />
       )}
 
-      {horizontal && (
+      {horizontal && horizontalAxis && (
         <ChartsGridHorizontal
           axis={horizontalAxis}
           start={drawingArea.left}

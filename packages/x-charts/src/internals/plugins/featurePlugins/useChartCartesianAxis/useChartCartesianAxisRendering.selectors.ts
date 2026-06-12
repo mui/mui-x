@@ -520,12 +520,14 @@ export const selectorChartRawAxis = createSelector(
 
 export const selectorChartDefaultXAxisId = createSelector(
   selectorChartRawXAxis,
-  (xAxes) => xAxes![0].id,
+  // The async cartesian-axis pipeline starts in `pending` with an empty
+  // axis array; return `undefined` until the next-tick commit lands.
+  (xAxes) => xAxes?.[0]?.id,
 );
 
 export const selectorChartDefaultYAxisId = createSelector(
   selectorChartRawYAxis,
-  (yAxes) => yAxes![0].id,
+  (yAxes) => yAxes?.[0]?.id,
 );
 
 export type ScatterFlatbushEntry = {
@@ -558,7 +560,8 @@ export const selectorChartSeriesFlatbushMap = createSelectorMemoized(
     const validSeries = allSeries.scatter;
     const flatbushMap = new Map<SeriesId, ScatterFlatbushEntry>();
 
-    if (!validSeries) {
+    if (!validSeries || defaultXAxisId === undefined || defaultYAxisId === undefined) {
+      // Axes not yet committed by the async pipeline — return an empty map.
       return flatbushMap;
     }
 

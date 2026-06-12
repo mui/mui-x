@@ -9,6 +9,25 @@ import { selectorChartSeriesConfig } from '../useChartSeriesConfig/useChartSerie
 export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature> = (state) =>
   state.series;
 
+/**
+ * Lifecycle status of the async series-processing pipeline.
+ * - 'pending' — defaultize step is queued or running in a microtask
+ * - 'success' — last result is committed
+ * - 'error' — last result threw; the plugin re-throws this
+ */
+export const selectorChartSeriesStatus = createSelector(
+  selectorChartSeriesState,
+  (seriesState) => seriesState.status ?? 'success',
+);
+
+/**
+ * Last error captured by the async series-processing pipeline (if any).
+ */
+export const selectorChartSeriesError = createSelector(
+  selectorChartSeriesState,
+  (seriesState) => seriesState.error,
+);
+
 export const selectorChartDefaultizedSeries = createSelector(
   selectorChartSeriesState,
   (seriesState) => seriesState.defaultizedSeries,

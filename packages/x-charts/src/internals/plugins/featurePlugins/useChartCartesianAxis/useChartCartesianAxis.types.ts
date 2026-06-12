@@ -12,6 +12,7 @@ import type {
   AxisItemIdentifier,
 } from '../../../../models/axis';
 import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import type { AsyncStatus } from '../../utils/asyncResource';
 import type {
   ZoomData,
   ZoomOptions,
@@ -127,6 +128,16 @@ export interface UseChartCartesianAxisState {
     axesGap: number;
     x: DefaultedXAxis[];
     y: DefaultedYAxis[];
+    /**
+     * Lifecycle status of the async axis pipeline (load + defaultize).
+     * Optional for backwards compatibility with state fixtures that pre-date
+     * the async pipeline; absent is treated as 'success'.
+     */
+    status?: AsyncStatus;
+    /**
+     * Set when `status === 'error'`. The plugin re-throws this from its body.
+     */
+    error?: Error;
   };
   /**
    * The controlled axis item highlighted.
