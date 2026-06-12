@@ -53,7 +53,7 @@ Only `sendMessage` is required.
 Every other method is optional and incrementally adopted — start with just `sendMessage` and add methods as your product grows.
 
 | Method                    | Required | The runtime calls it when…                                                                                                          |
-| ------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| :------------------------ | :------- | :---------------------------------------------------------------------------------------------------------------------------------- |
 | `sendMessage`             | Yes      | the user submits a message in the composer                                                                                          |
 | `listConversations`       | No       | `ChatBox` mounts                                                                                                                    |
 | `listMessages`            | No       | the active conversation changes and has no messages in the store                                                                    |
@@ -316,7 +316,7 @@ When an adapter method throws, the runtime:
 Each `ChatError` also carries a `code`, which you can read from `useChat().error.code` or the `onError` callback when building custom error UIs:
 
 | Code                 | Recorded when                                  |
-| -------------------- | ---------------------------------------------- |
+| :------------------- | :--------------------------------------------- |
 | `'HISTORY_ERROR'`    | loading conversations or message history fails |
 | `'SEND_ERROR'`       | `sendMessage` rejects before a stream starts   |
 | `'STREAM_ERROR'`     | the response stream errors mid-flight          |

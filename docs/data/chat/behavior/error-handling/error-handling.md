@@ -205,7 +205,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 }
 ```
 
-Use the [`useMessageError(messageId)`](/x/react-chat/resources/hooks/#usemessageerrormessageid) hook to read a single message's error from your own components.
+Use the [`useMessageError(messageId)`](/x/react-chat/resources/hooks/#usemessageerror-messageid) hook to read a single message's error from your own components.
 
 ## See also
 

@@ -3,7 +3,7 @@ productId: x-chat
 title: Chat - Composer
 packageName: '@mui/x-chat'
 githubLabel: 'scope: chat'
-components: ChatComposer, ChatComposerTextArea, ChatComposerSendButton, ChatComposerAttachButton, ChatComposerToolbar, ChatComposerHelperText
+components: ChatComposerTextArea, ChatComposerSendButton, ChatComposerAttachButton, ChatComposerToolbar, ChatComposerHelperText
 ---
 
 # Chat - Composer

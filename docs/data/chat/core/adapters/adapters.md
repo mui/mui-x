@@ -110,7 +110,7 @@ interface ChatRegenerateInput {
 }
 ```
 
-`regenerate` is **optional**: regeneration works without implementing it. When the adapter omits `regenerate`, the runtime re-sends the anchoring user message through `sendMessage`. Implement it when your backend distinguishes regeneration from a fresh send—for example, the [Vercel AI SDK](/x/react-chat/integrations/ai-sdk/) uses `trigger: 'regenerate-message'`.
+`regenerate` is **optional**: regeneration works without implementing it. When the adapter omits `regenerate`, the runtime re-sends the anchoring user message through `sendMessage`. Implement it when your backend distinguishes regeneration from a fresh send—for example, the [Vercel AI SDK](/x/react-chat/backend/built-in-adapters/ai-sdk-adapter/) uses `trigger: 'regenerate-message'`.
 
 The UI is driven by the runtime, not by calling the adapter directly: trigger regeneration with [`chat.regenerate(message.id)`](/x/react-chat/customization/structure/#adding-a-regenerate-action-on-assistant-messages). If the adapter call rejects before any output streams, the runtime restores the removed reply (no data is lost). Once the stream starts, partial output is kept with the stream-reported status.
 

@@ -72,7 +72,7 @@ The marker is disabled by default. Enable it on `ChatBox` (or a standalone `Chat
 
 The component is position-aware: it reads `unreadCount` and `readState` from the active `ChatConversation` and calculates which message index sits at the read/unread boundary.
 It renders itself only for that one message and returns `null` for every other message, so you can render it inside every list item without any extra bookkeeping.
-With the feature flag enabled, the default message row renders the marker for you — the snippet below is only needed when you provide your own `renderItem` callback. The `id` and `index` values come from the message list's `renderItem` contract — see the [ChatMessageList API](/x/react-chat/api/chat-message-list/).
+With the feature flag enabled, the default message row renders the marker for you — the snippet below is only needed when you provide your own `renderItem` callback. The `id` and `index` values come from the message list's `renderItem` contract — see the [ChatMessageList API](/x/api/chat/chat-message-list/).
 
 ```tsx
 // Inside a custom renderItem callback
@@ -125,7 +125,7 @@ const theme = createTheme({
 });
 ```
 
-For the full list of props, slots, and classes, see the [ChatUnreadMarker API](/x/react-chat/api/chat-unread-marker/) and the interactive playground on the [Unread marker page](/x/react-chat/display/unread-marker/).
+For the full list of props, slots, and classes, see the [ChatUnreadMarker API](/x/api/chat/chat-unread-marker/) and the interactive playground on the [Unread marker page](/x/react-chat/display/unread-marker/).
 
 ## Marking messages as read
 
