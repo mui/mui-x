@@ -262,12 +262,18 @@ export interface ChartsRadiusAxisProps extends ChartsAxisProps {
   axis?: 'radius';
   /**
    * The minimal radius.
+   * Can be a number (in pixels), a pixel string (for example `'20px'`), or a percentage string
+   * (for example `'20%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default 0
    */
-  minRadius?: number;
+  minRadius?: number | string;
   /**
    * The maximal radius.
+   * Can be a number (in pixels), a pixel string (for example `'80px'`), or a percentage string
+   * (for example `'80%'`) relative to the available radius (half the smallest side of the drawing area).
+   * @default The available radius (half the smallest side of the drawing area).
    */
-  maxRadius?: number;
+  maxRadius?: number | string;
   /**
    * The position of the axis in polar coordinates.
    * It can be 'start', 'end', or a specific angle in degrees.
