@@ -44,7 +44,7 @@ describe('shouldUpdateOccurrencePlaceholder', () => {
     expect(shouldUpdateOccurrencePlaceholder(adapter, previous, next)).to.equal(true);
   });
 
-  it('returns true when isHidden is removed in next (drag re-enters the surface)', () => {
+  it('should return true when isHidden is removed in next (drag re-enters the surface)', () => {
     const previous = createPlaceholder({ isHidden: true });
     const next = createPlaceholder();
     expect(shouldUpdateOccurrencePlaceholder(adapter, previous, next)).to.equal(true);
